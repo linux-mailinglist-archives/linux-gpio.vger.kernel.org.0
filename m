@@ -2,71 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74902223BA3
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 14:49:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB855223BBF
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 14:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgGQMtF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 08:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgGQMs7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:48:59 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7118B207FB;
-        Fri, 17 Jul 2020 12:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594990139;
-        bh=5POnxabUMyqHA1KxDC3Te6qQKnu8fFa8/yigj7vMA2A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2uJXQ1KfkRiG4WbZZf4pM/IYginKG2nTtWy/qrZp7ICtuC25ONpKgTlR0nhflNE5t
-         u4nTdxiavRPloJYgVH1tyKiL+mVOXDqf9h5PcQVnPU6JCzvQPhm+Q1mFa8Ey1vj8MU
-         AugpzmI4sHeoRDoyLqhcsAhurpb+Cu5GEF3pqqBM=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jwPnO-00Ccsm-0z; Fri, 17 Jul 2020 13:48:58 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
-Date:   Fri, 17 Jul 2020 13:48:49 +0100
-Message-Id: <159499001592.546505.17916680802608483979.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716083905.287-1-yuzenghui@huawei.com>
-References: <20200716083905.287-1-yuzenghui@huawei.com>
+        id S1726901AbgGQM4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 08:56:41 -0400
+Received: from fallback10.mail.ru ([94.100.178.50]:36662 "EHLO
+        fallback10.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgGQM4l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 08:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=NObxhum/a2XzOZo4yKZBQmrDj2MqYhgPvhjEx06g028=;
+        b=pxWL+vB0OdTdFx7lPPSz0/+nTbmfEoJUR8XSu0YRHQNsmaGBY2fqZtwP/emRa6RAPrILXXos6KIrHbV9IvobjMgz+JRgz1Vx7PAHdrszWIgPD9dhHhlXANyiznFT5mrXorJdwNW6v+S6FziG/sJp0a1rnHdqqRiX+xDwust96Rk=;
+Received: from [10.161.64.58] (port=35948 helo=smtp50.i.mail.ru)
+        by fallback10.m.smailru.net with esmtp (envelope-from <fido_max@inbox.ru>)
+        id 1jwPuo-00042H-NY
+        for linux-gpio@vger.kernel.org; Fri, 17 Jul 2020 15:56:38 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=NObxhum/a2XzOZo4yKZBQmrDj2MqYhgPvhjEx06g028=;
+        b=pxWL+vB0OdTdFx7lPPSz0/+nTbmfEoJUR8XSu0YRHQNsmaGBY2fqZtwP/emRa6RAPrILXXos6KIrHbV9IvobjMgz+JRgz1Vx7PAHdrszWIgPD9dhHhlXANyiznFT5mrXorJdwNW6v+S6FziG/sJp0a1rnHdqqRiX+xDwust96Rk=;
+Received: by smtp50.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+        id 1jwPum-0002ED-In; Fri, 17 Jul 2020 15:56:36 +0300
+To:     linux-gpio@vger.kernel.org
+Cc:     bgolaszewski@baylibre.com, linus.walleij@linaro.org
+From:   Maxim Kochetkov <fido_max@inbox.ru>
+Subject: gpiolib gpio_chrdev_release duration is about 30 ms
+Message-ID: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
+Date:   Fri, 17 Jul 2020 15:56:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, marex@denx.de, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-7564579A: 78E4E2B564C1792B
+X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC9B2E8FCD3A562362C0B1A6BAAEF55006182A05F538085040F82B387E9F848B1CAB9A26C9818407F8536DAB29EF6E70E2887D52B245FDD90E
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7F2393C4755A27B53EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637367CCE42412B8BE38638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FCA5BBF97EF41494474F089A7778E8C3165026602F4E960E9A389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0CB629EEF1311BF91D2E47CDBA5A96583BD4B6F7A4D31EC0BB23A54CFFDBC96A8389733CBF5DBD5E9D5E8D9A59859A8B65FF0BFC5AEE34BE6CC7F00164DA146DA6F5DAA56C3B73B23666F7B5397D5B1B93AA81AA40904B5D9A18204E546F3947C724336BCC0EE1BA86136E347CC761E074AD6D5ED66289B52C79FDBAFFB82A7259735652A29929C6C725E5C173C3A84C36EDE6B9188BA9AD7BA3038C0950A5D36B5C8C57E37DE458BFCBE8621B972A70D67F23339F89546C55F5C1EE8F4F765FCE987C591F5696A4475ECD9A6C639B01BBD4B6F7A4D31EC0BC0CAF46E325F83A522CA9DD8327EE4930A3850AC1BE2E735E4A630A5B664A4FFC4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
+X-C8649E89: 74F645C069E3B1B4D86CBD6A734ED51C250D3E70029BEC630CE2BB3A9E0A6A3D510FDD9BE9EDF4E7
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy9HhMaofhU1tw==
+X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB24254EB45F4CC46C3314B680F4BFD70BD2B9B2FA0AF6579CB0EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
+X-Mras: Ok
+X-7564579A: B8F34718100C35BD
+X-77F55803: 6242723A09DB00B4147F32E2E3FD3168DE2A8C9985EE8C2D83F0C290355244F268F3CF0E9FE49B69877E34D63D09EFC9627B634B6B66B094264C209251EFB195269C742E85EF9C92
+X-7FA49CB5: 0D63561A33F958A526FAC18C57BAF8CAFAA4CEFC47F648E9E79444843F25DD1E8941B15DA834481FA18204E546F3947C17119E5299B287EEF6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8B2EE5AD8F952D28FBA471835C12D1D977C4224003CC8364764DC0A47125153FC0D81D268191BDAD3DC09775C1D3CA48CF7CB2176D36798DBBBA3038C0950A5D36C8A9BA7A39EFB76633AA9177FDEE801F35872C767BF85DA29E625A9149C048EE0A3850AC1BE2E735843AE0F20224B8D04AD6D5ED66289B524E70A05D1297E1BB35872C767BF85DA227C277FBC8AE2E8BDC0F6C5B2EEF3D0C75ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF57285124B2A10EEC6C00306258E7E6ABB4E4A6367B16DE6309
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy8rBNmgBaPDzA==
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C90054F94DD2E9EA85DB6D1DE39FE8D7E5B9107E95B8AD09773E21BDEAF2E8698D5DCC099ADC76E806A99D50E20E2BC48EF5A30D242760C51EA9CEAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 16 Jul 2020 16:39:05 +0800, Zenghui Yu wrote:
-> The is_fwnode_irqchip() helper will check if the fwnode_handle is empty.
-> There is no need to perform a redundant check outside of it.
+Hi.
 
-Applied to irq/irqchip-5.9, thanks!
+I'm using libgpiod in userspace.
+I have 6 gpiochip's on my board.
+gpiod_line_find takes about 300ms to find GPIO line.
 
-[1/1] genirq/irqdomain: Remove redundant NULL pointer check on fwnode
-      commit: 47903428b0e9db7a6251aa696fd1b2fc5de98545
+gpiod_line_find calls gpiod_foreach_chip
+then gpiod_chip_iter_next
+then gpiod_chip_close then close(chip->fd)
+then we are going to kernel gpiolib gpio_chrdev_release
+then atomic_notifier_chain_unregister
+then synchronize_rcu()
 
-Cheers,
+synchronize_rcu takes about 30 ms (6*30ms=280ms)
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
+I tried to remove synchronize_rcu from atomic_notifier_chain_unregister 
+and gpiod_line_find takes about 2ms now.
 
