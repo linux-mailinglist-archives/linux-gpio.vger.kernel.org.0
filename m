@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B76EE224143
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 19:00:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 018F622413D
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 19:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgGQRAl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 13:00:41 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:21061 "EHLO
+        id S1727961AbgGQRAf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 13:00:35 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:46867 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726938AbgGQRAc (ORCPT
+        by vger.kernel.org with ESMTP id S1727926AbgGQRAf (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:32 -0400
+        Fri, 17 Jul 2020 13:00:35 -0400
 X-IronPort-AV: E=Sophos;i="5.75,362,1589209200"; 
-   d="scan'208";a="52419821"
+   d="scan'208";a="52419826"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Jul 2020 02:00:30 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 18 Jul 2020 02:00:33 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9500D40061A0;
-        Sat, 18 Jul 2020 02:00:28 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CC8B40061A0;
+        Sat, 18 Jul 2020 02:00:30 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
@@ -28,9 +28,9 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 1/2] pinctrl: sh-pfc: r8a7790: Add USB1 PWEN pin and group
-Date:   Fri, 17 Jul 2020 18:00:24 +0100
-Message-Id: <1595005225-11519-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 2/2] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and xHCI
+Date:   Fri, 17 Jul 2020 18:00:25 +0100
+Message-Id: <1595005225-11519-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -39,57 +39,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add USB1 PWEN pin and group for USB1 interface.
+Enable support for HSUSB, USB2.0 and xHCI on iWave RZ/G1H carrier board.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 42 +++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-index f524401fec5f..39ba1e7cc1c3 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-@@ -3611,6 +3611,13 @@ static const unsigned int usb1_pins[] = {
- static const unsigned int usb1_mux[] = {
- 	USB1_PWEN_MARK, USB1_OVC_MARK,
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+index e90aaf1c94f0..f4910e709b87 100644
+--- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+@@ -131,6 +131,30 @@
+ 	};
  };
-+static const unsigned int usb1_pwen_pins[] = {
-+	/* PWEN */
-+	RCAR_GP_PIN(5, 20),
+ 
++&hsusb {
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
 +};
-+static const unsigned int usb1_pwen_mux[] = {
-+	USB1_PWEN_MARK,
++
++&pci0 {
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++	/* Disable hsusb to enable USB2.0 host mode support on J2 */
++	/* status = "okay"; */
 +};
- /* - USB2 ------------------------------------------------------------------- */
- static const unsigned int usb2_pins[] = {
- 	/* PWEN, OVC */
-@@ -3939,7 +3946,7 @@ static const unsigned int vin3_clk_mux[] = {
++
++&pci1 {
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&pci2 {
++	/* Disable xhci to enable USB2.0 host mode support on J23 bottom port */
++	/* status = "okay"; */
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		groups = "avb_mdio", "avb_gmii";
+@@ -168,6 +192,16 @@
+ 		groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
+ 		function = "ssi";
+ 	};
++
++	usb0_pins: usb0 {
++		groups = "usb0";
++		function = "usb0";
++	};
++
++	usb1_pins: usb1 {
++		groups = "usb1_pwen";
++		function = "usb1";
++	};
  };
  
- static const struct {
--	struct sh_pfc_pin_group common[289];
-+	struct sh_pfc_pin_group common[290];
- 	struct sh_pfc_pin_group automotive[1];
- } pinmux_groups = {
- 	.common = {
-@@ -4193,6 +4200,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(usb0),
- 		SH_PFC_PIN_GROUP(usb0_ovc_vbus),
- 		SH_PFC_PIN_GROUP(usb1),
-+		SH_PFC_PIN_GROUP(usb1_pwen),
- 		SH_PFC_PIN_GROUP(usb2),
- 		VIN_DATA_PIN_GROUP(vin0_data, 24),
- 		VIN_DATA_PIN_GROUP(vin0_data, 20),
-@@ -4640,6 +4648,7 @@ static const char * const usb0_groups[] = {
- 
- static const char * const usb1_groups[] = {
- 	"usb1",
-+	"usb1_pwen",
+ &rcar_sound {
+@@ -222,3 +256,11 @@
+ &ssi4 {
+ 	shared-pin;
  };
- 
- static const char * const usb2_groups[] = {
++
++&usbphy {
++	status = "okay";
++};
++
++&xhci {
++	status = "okay";
++};
 -- 
 2.17.1
 
