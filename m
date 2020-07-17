@@ -2,148 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E65C1223C5C
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A027223CD6
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:37:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgGQNXN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 09:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgGQNXM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:23:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 292DD2064B;
-        Fri, 17 Jul 2020 13:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594992191;
-        bh=YXmOefMvlOs7G1IJ3/xGseJf7pS/JY+GgUOoWYCRdsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iHGfSp04sqXJQGRHKlCZEVORFrAeFfBcvjwv355yCV8T6VUkl3GdsRlSeMV4e25Sz
-         NrGX9IhzqSeUa/5SSfAylaRUiv28hLSgYvwA/tiAiqobuA2T+Zdes/mMzw30FEFnkR
-         yKxrtUYcsWx1fcspFFMyM94qyDRRJRU9dONpKnNs=
-Date:   Fri, 17 Jul 2020 15:23:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>, Jon Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Adam Ford <aford173@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Olof Johansson <olof@lixom.net>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-Message-ID: <20200717132303.GB2984939@kroah.com>
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
- <20200717121436.GA2953399@kroah.com>
- <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+        id S1726512AbgGQNhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 09:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgGQNhZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 09:37:25 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE17DC061755
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 06:37:24 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z24so12653910ljn.8
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 06:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=APP62M5KJnavAoumKi5PAm/yFARTAUHaqqfP4O6ogbw=;
+        b=AJt327ZmU6sPumfnVeQR5qa8+PkRfY0SX4r8p0uWw5gmDDxHWs0wQL32a4krd/89np
+         AP5UT8yP6pojwefApB9GkhD3VyOcAKZOqlUTnCXuQKaFNo318WfkgID8A6cLUu6PeYa7
+         73tbI8RIjDjJkk/dcutwvXi+/N05bcNLTwNgsi+G0pUMUTqr36vgpbEXeGJmo1UlhrNj
+         olOeQadzKF3A+RP5fuCD1zr1uvUToxMfBbeobPlgnzGmC7GD0qlNeWSWhBk0y1t299Jx
+         LFFpu+I02T9rq2F5Uf8d6QnYmmDS0bH95ErItdidLkcYmAFL9IIdn4Cfl4VA3CnX63Rc
+         CyIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=APP62M5KJnavAoumKi5PAm/yFARTAUHaqqfP4O6ogbw=;
+        b=jYvlCWpSF0eCVVWJa7nbW8FtOYZXk6TcOdI0C9xzgdiE3hsVSlT3Z20D4rsuMbZCtZ
+         h2SRg9Qz9XP+iDSJZSlSoi3s3bN4No0oPsdLTFsBlU6+hGB39MntgCGcQkv0zt2tCNQY
+         Jj9TN8iB1A0tlZH8q5HSy6gTYsOisxmu2jXxsSVNmd8iZDY45tdrC9IR/Xcu40OOILS9
+         PDrtxaTvZwCddikhSpiwWr+3IBpjcu1w/sNVU6XehO+y73+DezHGkOzNYK/IoSxGJFnx
+         wD175XGAeiujG1zOGQwuNPQ2p0VD6MdeWt5oKO9M2erE3yab0nUPHxC1Z/qgaKvoIph/
+         0wQA==
+X-Gm-Message-State: AOAM533RSvWmfWw9AAwj/K7iOjNBZzSQp7fWRWkEyvTcnoisOMlht/uY
+        FsJv81o4n4s9mw56Q4rRj4To/DWEnJ2HiqF2KhQhQQ==
+X-Google-Smtp-Source: ABdhPJyDBwdNSvOponEGA/XoJ0GjdQLAWB568mug+gHjjG/nwgdM7/StDRcbqk31IOvJ/EGHfhT6dhrHW+0AbC6EDMs=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr4306904ljc.104.1594993043263;
+ Fri, 17 Jul 2020 06:37:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
+In-Reply-To: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jul 2020 15:37:12 +0200
+Message-ID: <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
+Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
+To:     Maxim Kochetkov <fido_max@inbox.ru>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 03:02:54PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 17, 2020 at 2:16 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Fri, Jul 17, 2020 at 02:01:16PM +0200, Linus Walleij wrote:
-> > > While I am a big fan of the Android GKI initiative this needs to be aligned
-> > > with the Linux core maintainers, so let's ask Greg. I am also paging
-> > > John Stultz on this: he is close to this action.
-> > >
-> > > They both know the Android people very well.
-> > >
-> > > So there is a rationale like this going on: in order to achieve GKI goals
-> > > and have as much as possible of the Linux kernel stashed into loadable
-> > > kernel modules, it has been elevated to modus operandi amongst
-> > > the developers pushing this change that it is OK to pile up a load of
-> > > modules that cannot ever be unloaded.
-> >
-> > Why can't the module be unloaded?  Is it just because they never
-> > implement the proper "remove all resources allocated" logic in a remove
-> > function, or something else?
-> 
-> For the core kernel parts, it's usually for the lack of tracking of who
-> is using the resource provided by the driver, as the subsystems tend
-> to be written around x86's "everything is built-in" model.
-> 
-> For instance, a PCIe host bridge might rely on the IOMMU, a
-> clock controller, an interrupt controller, a pin controller and a reset
-> controller. The host bridge can still be probed at reduced functionality
-> if some of these are missing, or it can use deferred probing when
-> some others are missing at probe time.
-> 
-> If we want all of drivers to be unloaded again, we need to do one
-> of two things:
-> 
-> a) track dependencies, so that removing one of the devices
->     underneath leads to everything depending on it to get removed
->     as well or will be notified about it going away and can stop using
->     it. This is the model used in the network subsystem, where
->     any ethernet driver can be unloaded and everything using the
->     device gets torn down.
-> 
-> b) use reference counting on the device or (at the minimum)
->     try_module_get()/module_put() calls for all such resources
->     so as long as the pci host bridge is there, so none of the devices
->     it uses will go away when they are still used.
-> 
-> Traditionally, we would have considered the PCIe host bridge to
-> be a fundamental part of the system, implying that everything it
-> uses is also fundamental, and there was no need to track
-> usage at all, just to ensure the probing is done in the right order.
+Hi Maxim,
 
-Yeah, ick, for IOMMU and stuff like this, no, load it once and never
-unload it makes much more sense.
+On Fri, Jul 17, 2020 at 2:56 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
 
-Just know how to dynamically load the specific driver out of a
-collection of them, and all should be fine.
+> I'm using libgpiod in userspace.
+> I have 6 gpiochip's on my board.
+> gpiod_line_find takes about 300ms to find GPIO line.
+>
+> gpiod_line_find calls gpiod_foreach_chip
+> then gpiod_chip_iter_next
+> then gpiod_chip_close then close(chip->fd)
+> then we are going to kernel gpiolib gpio_chrdev_release
+> then atomic_notifier_chain_unregister
+> then synchronize_rcu()
+>
+> synchronize_rcu takes about 30 ms (6*30ms=280ms)
+>
+> I tried to remove synchronize_rcu from atomic_notifier_chain_unregister
+> and gpiod_line_find takes about 2ms now.
 
-> > > As a minimum requirement I would expect this to be marked by
-> > >
-> > > struct device_driver {
-> > >    (...)
-> > >     /* This module absolutely cannot be unbound */
-> > >    .suppress_bind_attrs = true;
-> > > };
-> >
-> > No, that's not what bind/unbind is really for.  That's a per-subsystem
-> > choice as to if you want to allow devices to be added/removed from
-> > drivers at runtime.  It has nothing to do with module load/unload.
-> 
-> It's a one-way dependency: If we can't allow the device to be
-> unbound, then we also should not allow module unloading because
-> that forces an unbind.
+Interesting! Can you provide some context? Are you just testing because
+curious or do you need to meet a design objective?
 
-Ok, then turn that off for the subsystems this does not support, no
-objection from me.  It's just a fun hack that people use for testing out
-drivers on new devices, and for virtual devices.
+Did you use ftrace or similar instrumentation to drill down and find
+where time is spent?
 
-thanks,
-
-greg k-h
+Yours,
+Linus Walleij
