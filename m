@@ -2,95 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C635223D2F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB503223D70
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgGQNoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 09:44:20 -0400
-Received: from smtp48.i.mail.ru ([94.100.177.108]:59370 "EHLO smtp48.i.mail.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgGQNoU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:44:20 -0400
-X-Greylist: delayed 2861 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jul 2020 09:44:19 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=kh5wuKEi0rw79GCM0tHQndYjyVD4Ap4Wz6eWfkrClKs=;
-        b=IA27W7TVeqBU4sAsa8D1EEwqhvUgBg0u1XFb/GExoleSoI1NyrTWrfjVULbJUiazGFKPJxURmCFNcBe4xmEELbfdDV2fKTZ1odwMtHvBGCGYyHuEiEViZHmlQ6h1uGt3znZWfKR9sltRGHK7eyUlZp7aL8p2OsiFbeMd5qYNZoM=;
-Received: by smtp48.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
-        id 1jwQev-0003eG-HS; Fri, 17 Jul 2020 16:44:17 +0300
-Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
- <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
-From:   Maxim Kochetkov <fido_max@inbox.ru>
-Message-ID: <9f141fd1-3c73-c839-b7ad-529a61645031@inbox.ru>
-Date:   Fri, 17 Jul 2020 16:44:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726852AbgGQNzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 09:55:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:39399 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgGQNzI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 09:55:08 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M27ix-1jyLZL49bF-002Vsh; Fri, 17 Jul 2020 15:55:07 +0200
+Received: by mail-qv1-f52.google.com with SMTP id ed14so4261995qvb.2;
+        Fri, 17 Jul 2020 06:55:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531ODp20DY28PbUj0yWR7rLEccpc5k8Ovz5CcAi35OHgcqR/9gD8
+        Tvvv1Fy9VKCD9+Zbm+HqK4SdN4v/sKAQSLPye4g=
+X-Google-Smtp-Source: ABdhPJx8LtIaLQvziKo3lourUrEUkUS4ZMZUlWIjb/0jYwIJLV5qk1IAswyVggaESYzsgRC5Y1NVn7LRruYETW4HxFQ=
+X-Received: by 2002:a0c:f802:: with SMTP id r2mr9068143qvn.197.1594994105686;
+ Fri, 17 Jul 2020 06:55:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp48.i.mail.ru; auth=pass smtp.auth=fido_max@inbox.ru smtp.mailfrom=fido_max@inbox.ru
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC8C6DDDA81CAC925A1649AE829B35E875182A05F538085040A7326E6647923DA28F627B927FF4DB1B31D200EA6C0F8E1856D14DDA4F1F77D3
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE72847AA60176ABEF3EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063715F166F2542EEE4C8638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FCFF7055EEDF52C4FF8A1F8490E0B463034436006E7F579C8E389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0D9442B0B5983000E8941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C3CA5A41EBD8A3A0199FA2833FD35BB23DF004C906525384309383FD4D963104D47B076A6E789B0E975F5C1EE8F4F765FCB43D85947FB923253AA81AA40904B5D9CF19DD082D7633A0FEB97ECC69AE80BD3AA81AA40904B5D98AA50765F7900637ACB8A4D18BD750D9D81D268191BDAD3D18080C068C56568E156CCFE7AF13BCA413377AFFFEAFD26923F8577A6DFFEA7CA60C52B68663E2D593EC92FD9297F6715571747095F342E857739F23D657EF2BD5E8D9A59859A8B66F6A3E018CF4DC80089D37D7C0E48F6C5571747095F342E857739F23D657EF2B6825BDBE14D8E7028C9DFF55498CEFB0BD9CCCA9EDD067B1EDA766A37F9254B7
-X-C8649E89: 7A9803CE3BA91129237D4260330B54E0A5C68945EA9D8E5F95CA3A3E610280F79A0FC3F32F9EC09A
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy/9fBaXEqPTBQ==
-X-Mailru-Internal-Actual: A:0.90678115368868
-X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB247B4F270C6BDE20563350FD734DA95EF98F0AAA4051A5F5B9EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
-X-Mras: Ok
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com> <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
+ <20200717132101.GA2984939@kroah.com>
+In-Reply-To: <20200717132101.GA2984939@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 15:54:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:dEZrwx+hzGiTO58D77scQNmTcn4qBOJ4MxH9Pt6/XGIoFsCYPgx
+ 8+8Z4oqNp0EXx8voOmSwoJLPt4yIRYSbema98zXDcFZfv44gguS59RhHC/ya+BWeCtQf/0a
+ 6JHum5COraJZ+48BGLVoiz/b2W/SxC7DRMhVrgkUlhBIk+XN/0UaZWqxAvsA/jrwJLNNtTu
+ u21KH88s+7Z/WD4Y2NvdQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:T+04+9APdXo=:t1jJfhZF3ic/+H9We7UQqy
+ Qv7PMTQSjEKLQ9zt7L9oPnutUjn92bqyPYD3EGItpRVHV8BuVHnJk+knywJI+DQwsnJNfdqR+
+ 2Dv0/ttH/40MpY8NPGYKnjSPaQG0u7j76oZFyWLM7/hnvdHGyoO1MdD9pbBqYJqsI0nnp50d7
+ ebBD1424kWkXyko5xVMrr3AnUXte7L9sSkXRK8dCbwzz3L0LbIIJYkxRkRkmunJoCI30TQFT5
+ A+zWR8QNISc6+S3ZZyTfjUtDVAEVrKzQ8hxioaARllP+++KZvtrOh3Se8e9qeeHJw/ty/zzsz
+ GAl/UOeq4tnZrX1oTmkQ01n3DyGLnMIyxDr5E5FP/Hm5tL1w0nd6OOrZdQ3V/AOgnUt2OWJET
+ qFZcWSlQIH25VVbNOZFFW63AGwWFtS99F9Pi4M4bzLRPyrLQKzXEdG70CTczsqfb78bfgaGy1
+ 8NyZRAzmU+3RQ+RZB0ygTDXTpDnIFF8SP84dopLVQnaHdWgDtNXXFp9/kiYhZTKo96ejesz9b
+ SBBP5+zY02C4JsITREaZUBzlrl/PZBlu0c0snwmFuhKp82EBuU31MjOm+DM83R9WtidiypJl0
+ EiQKpsb22Oh85iGS1W0nScYAzadPD8Iuk3t9dqRVW/fRkhMsikm/RGMz/Dtj4uah2YqUbmGdd
+ hPUHWRkCkiDqRrHGKjbcwECPRVBt2uPhhKhVb8itKSkJtETIH0Pbqc4M3xGNY/rDw0KCG0z85
+ aERgimF5OMx5YKbWPb9W0KrsL6o4QWZQfOsON0fzXMIRwpZC1/xfqNXByf6dFn3Lvh3IQUqUL
+ tGmDQLPTzk7SlprMXch4LQU+xA5P4k7WHQkR1ShZj4NIoj1Qu4PQvfWen/LoibFmDzeNC7eeI
+ 6ng9/YWmAETYF/rBDMuSWS6vUDmg0C5chGLA2Z84k0OOO7C2a8RXxiBdz1A7vtNkaApNcLATv
+ 3Mjhgmu1DFrzzpQ8gL2dpKCj23Wzf1Qm1t4yyUYoZzLxxXOJ6+NXc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-------------------------------------------
-#define GPIOS_NUM 8
-static char* gpio_names[GPIOS_NUM] = {"IO0", "IO1", "IO2", "IO3", "WR", 
-"CS", "OE", "ADD_EN"};
-................
-gpio_init() {
+On Fri, Jul 17, 2020 at 3:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
+> > Hi Greg,
+> >
+> > On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > Android is just finally pushing vendors to get their code upstream,
+> > > which is a good thing to see.  And building things as a module is an
+> > > even better thing as now it is finally allowing arm64 systems to be
+> > > built to support more than one specific hardware platform at runtime.
+> >
+> > Can you please stop spreading this FUD?
+>
+> For many many SoCs today, this is not true.  Their drivers are required
+> to be built in and will not work as modules, as we are seeing the
+> patches try to fix.
 
-     int i;
-     for (i = 0; i < GPIOS_NUM; ++i) {
-         syslog(LOG_INFO,"%s %d",__FUNCTION__,__LINE__);
-         gpio_lines[i] = gpiod_line_find(gpio_names[i]);
-         syslog(LOG_INFO,"%s %d",__FUNCTION__,__LINE__);
-     }
-}
--------------------------------------------
-I used syslog/printk to measure time.
-syslog in example shows about 300ms on each gpiod_line_find call.
-17.07.2020 16:37, Linus Walleij пишет:
-> Hi Maxim,
-> 
-> On Fri, Jul 17, 2020 at 2:56 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
-> 
->> I'm using libgpiod in userspace.
->> I have 6 gpiochip's on my board.
->> gpiod_line_find takes about 300ms to find GPIO line.
->>
->> gpiod_line_find calls gpiod_foreach_chip
->> then gpiod_chip_iter_next
->> then gpiod_chip_close then close(chip->fd)
->> then we are going to kernel gpiolib gpio_chrdev_release
->> then atomic_notifier_chain_unregister
->> then synchronize_rcu()
->>
->> synchronize_rcu takes about 30 ms (6*30ms=280ms)
->>
->> I tried to remove synchronize_rcu from atomic_notifier_chain_unregister
->> and gpiod_line_find takes about 2ms now.
-> 
-> Interesting! Can you provide some context? Are you just testing because
-> curious or do you need to meet a design objective?
-> 
-> Did you use ftrace or similar instrumentation to drill down and find
-> where time is spent?
-> 
-> Yours,
-> Linus Walleij
-> 
+There are two different points here:
+
+a) having drivers as loadable modules: I think everyone agrees this
+is a good thing in general. Having more of them makes smaller kernels,
+which is good. arm64 is no different from arm32 and powerpc here,
+and probably a bit better than x86, which requires all platform specific
+core code (PC, numachip, UV, ScaleMP, ...) to be built-in.
+
+b) supporting multiple hardware platforms at runtime: this is totally
+unrelated to the platform specific drivers being loadable modules.
+arm64 is a little better here than arm32 and powerpc, which need more
+than one configuration to support all hardware, about the same as
+x86 or s390 and much better than most others that have to chose
+a machine at compile time.
+
+> > As I said before, Arm64 kernels have supported more than one specific
+> > hardware platform at runtime from the beginning of the arm64 port
+> > (assumed the needed platform support has been enabled in the kernel
+> >  config, of course).
+> > Even most arm32 kernels support this, since the introduction of the
+> > CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
+> > introduced arm32 platform is usually v7, and must conform to this.
+> > The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
+> > due to architectural issues (the latter still support clusters of
+> > platforms in a single kernel).
+>
+> I think the confusion here is that this really does not work well, if at
+> all, on most "high end" SoC chips due to the collection of different
+> things all of the vendors ship to their customers.  This is the work
+> that is trying to be fixed up here.
+>
+> And look at the driver core work for many driver subsystems to be fixed
+> up just to get a single kernel image to work on multiple platforms.
+> Just because older ones did it, doesn't mean it actually works today :)
+
+Can you give a specific example? The only problem I'm aware of for
+those SoCs is drivers being outside of the mainline kernel. Clearly
+having support for loadable modules helps SoC vendors because it
+allows them to support a new platform with an existing binary kernel
+by shipping third-party driver modules, but for stuff that is already
+in mainline, we could in theory support all hardware in a single gigantic
+binary kernel with no support for loadable modules at all.
+
+      Arnd
