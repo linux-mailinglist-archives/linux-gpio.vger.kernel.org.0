@@ -2,73 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB855223BBF
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 14:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26410223BDB
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGQM4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 08:56:41 -0400
-Received: from fallback10.mail.ru ([94.100.178.50]:36662 "EHLO
-        fallback10.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgGQM4l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 08:56:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=NObxhum/a2XzOZo4yKZBQmrDj2MqYhgPvhjEx06g028=;
-        b=pxWL+vB0OdTdFx7lPPSz0/+nTbmfEoJUR8XSu0YRHQNsmaGBY2fqZtwP/emRa6RAPrILXXos6KIrHbV9IvobjMgz+JRgz1Vx7PAHdrszWIgPD9dhHhlXANyiznFT5mrXorJdwNW6v+S6FziG/sJp0a1rnHdqqRiX+xDwust96Rk=;
-Received: from [10.161.64.58] (port=35948 helo=smtp50.i.mail.ru)
-        by fallback10.m.smailru.net with esmtp (envelope-from <fido_max@inbox.ru>)
-        id 1jwPuo-00042H-NY
-        for linux-gpio@vger.kernel.org; Fri, 17 Jul 2020 15:56:38 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=NObxhum/a2XzOZo4yKZBQmrDj2MqYhgPvhjEx06g028=;
-        b=pxWL+vB0OdTdFx7lPPSz0/+nTbmfEoJUR8XSu0YRHQNsmaGBY2fqZtwP/emRa6RAPrILXXos6KIrHbV9IvobjMgz+JRgz1Vx7PAHdrszWIgPD9dhHhlXANyiznFT5mrXorJdwNW6v+S6FziG/sJp0a1rnHdqqRiX+xDwust96Rk=;
-Received: by smtp50.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
-        id 1jwPum-0002ED-In; Fri, 17 Jul 2020 15:56:36 +0300
-To:     linux-gpio@vger.kernel.org
-Cc:     bgolaszewski@baylibre.com, linus.walleij@linaro.org
-From:   Maxim Kochetkov <fido_max@inbox.ru>
-Subject: gpiolib gpio_chrdev_release duration is about 30 ms
-Message-ID: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
-Date:   Fri, 17 Jul 2020 15:56:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726629AbgGQNDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 09:03:15 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:43175 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgGQNDP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 09:03:15 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MTiLj-1kPt8u0C9F-00U51X; Fri, 17 Jul 2020 15:03:13 +0200
+Received: by mail-qk1-f173.google.com with SMTP id l6so8600047qkc.6;
+        Fri, 17 Jul 2020 06:03:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530mCiCYf9tTIJWUd/6WM6kGqzkyWI6uR6i3/wyO9zPppOQcz3b2
+        vlRhhqzZQ3lvUCFli22IOBSqeoWWsN/Rn3KkU1Y=
+X-Google-Smtp-Source: ABdhPJyuO3LBCBkI4UHoemjYpeb6qR3u+uWtsrdd2uoqpmSfLP4xlUiKZiLFZ4iPFUZK+KoMfzD0cl9SuOcz2YgadL4=
+X-Received: by 2002:a37:9004:: with SMTP id s4mr345881qkd.286.1594990990628;
+ Fri, 17 Jul 2020 06:03:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-7564579A: 78E4E2B564C1792B
-X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC9B2E8FCD3A562362C0B1A6BAAEF55006182A05F538085040F82B387E9F848B1CAB9A26C9818407F8536DAB29EF6E70E2887D52B245FDD90E
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7F2393C4755A27B53EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637367CCE42412B8BE38638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FCA5BBF97EF41494474F089A7778E8C3165026602F4E960E9A389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0CB629EEF1311BF91D2E47CDBA5A96583BD4B6F7A4D31EC0BB23A54CFFDBC96A8389733CBF5DBD5E9D5E8D9A59859A8B65FF0BFC5AEE34BE6CC7F00164DA146DA6F5DAA56C3B73B23666F7B5397D5B1B93AA81AA40904B5D9A18204E546F3947C724336BCC0EE1BA86136E347CC761E074AD6D5ED66289B52C79FDBAFFB82A7259735652A29929C6C725E5C173C3A84C36EDE6B9188BA9AD7BA3038C0950A5D36B5C8C57E37DE458BFCBE8621B972A70D67F23339F89546C55F5C1EE8F4F765FCE987C591F5696A4475ECD9A6C639B01BBD4B6F7A4D31EC0BC0CAF46E325F83A522CA9DD8327EE4930A3850AC1BE2E735E4A630A5B664A4FFC4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
-X-C8649E89: 74F645C069E3B1B4D86CBD6A734ED51C250D3E70029BEC630CE2BB3A9E0A6A3D510FDD9BE9EDF4E7
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy9HhMaofhU1tw==
-X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB24254EB45F4CC46C3314B680F4BFD70BD2B9B2FA0AF6579CB0EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4147F32E2E3FD3168DE2A8C9985EE8C2D83F0C290355244F268F3CF0E9FE49B69877E34D63D09EFC9627B634B6B66B094264C209251EFB195269C742E85EF9C92
-X-7FA49CB5: 0D63561A33F958A526FAC18C57BAF8CAFAA4CEFC47F648E9E79444843F25DD1E8941B15DA834481FA18204E546F3947C17119E5299B287EEF6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8B2EE5AD8F952D28FBA471835C12D1D977C4224003CC8364764DC0A47125153FC0D81D268191BDAD3DC09775C1D3CA48CF7CB2176D36798DBBBA3038C0950A5D36C8A9BA7A39EFB76633AA9177FDEE801F35872C767BF85DA29E625A9149C048EE0A3850AC1BE2E735843AE0F20224B8D04AD6D5ED66289B524E70A05D1297E1BB35872C767BF85DA227C277FBC8AE2E8BDC0F6C5B2EEF3D0C75ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF57285124B2A10EEC6C00306258E7E6ABB4E4A6367B16DE6309
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy8rBNmgBaPDzA==
-X-Mailru-MI: 800
-X-Mailru-Sender: A5480F10D64C90054F94DD2E9EA85DB6D1DE39FE8D7E5B9107E95B8AD09773E21BDEAF2E8698D5DCC099ADC76E806A99D50E20E2BC48EF5A30D242760C51EA9CEAB4BC95F72C04283CDA0F3B3F5B9367
-X-Mras: Ok
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com> <20200717121436.GA2953399@kroah.com>
+In-Reply-To: <20200717121436.GA2953399@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jul 2020 15:02:54 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+Message-ID: <CAK8P3a3Ds4O5yRtGSMbNN8R5dPcdb1HJTY=W5eyToFQ-UhzkBw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Adam Ford <aford173@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PnQgfgYwfYuuBJpj1xktjWOKhKrYJMPulmrPaQn13yympd5z086
+ fFNKoxjp399F/B0P/4xk4EeGefedP7JmZ8flmq6GwPByEKWy6VleOI/Q2UBESg7z0hq3FHA
+ MebFneHpbr8IwlCDLrpvtRXEKweddZpXhS2WPgnpcb1Ar7lfqVXUZHTlsZj3CcM1/rQKw5i
+ hAhvJ+QCfY0KNFmSgbHDQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uuxEPBDLxAo=:ZBHYdUNSQHm+QtoJnY+ioX
+ hohXKN6vTf1tWwYkMveqTS4QC6l6N1Ytq/2WVNTkzu3QQZP70LjkwD8JrRv1A+x49q3su6oVm
+ d7hQNiTJ50b9bpSQQ2CPQR1adHflwe1f9nGe8bbbP9hVeRENlJ+Ogf4XqDJRmXZV+2lIPx34v
+ b98Zujh7DXaV9S3ce/lhErC4tUngUsesrmwqnftOTx4RccGwVNLUrAQgJp2WxhX5CiPF+oK3n
+ YQwL9ku7FruvORB/GFv+BdMCrfALHUKn+waeQSGjktmDcsaCzQQTuWk4ni7rW+5jazKniCf4V
+ hLXg6vyuB3OwxFMEl7zhsQYiU9vx17oJKh/03NpF+FmrbBrulp6EyciHqAtmMpc6w6kG+i+aD
+ JT4nbDc2ZxUlwQaOXzTvoY5T5a/Uc6JLPjtsJDqqGkxGL0+o6+4DAZhiAFnUOJsOTzkVttR+F
+ q+vJxrsDpVD1hdHO9u9pmvWZywq3aTDHzlmpDSe6NpUqfGXdW/ollh46Ai80DJGXXawrYWuJ7
+ ciatQsAfLwL1wsDDSYkzyv1WvNO7DMpLgLAIz6jhscLDiJ1O8Cwg5EG/TqOMWVE6YzO0v9WVr
+ yRr+36ZQ41H7iwJCerFnhpLuUY+FD9o2x4sdMF/OuwI7nBNdG7eESphX7S9jCne+qQwthtQpK
+ WO5lhUrCEPQ1KpKeXVqGuRn7RkFvHIGrGBGilMi/sWy8I7UHY3qV/Ut/3ukwyFrYRptchvIL7
+ DpqUwx9CpSzblDKDv2OVsnB/Kt9saeRpNxro26kC513QwvWUiTOLEAWmbCzYQ4J9dG8ZQCbGf
+ Vcadvn6WC/l5TfLDoZVfLyKM5KMO2zoKLKJjs9zCtFDg/6vAHZ9HaXqjQabbgqPzQM1BIEuJD
+ xx3wEtvydBAje4ONy21hE+5LNAcPXK3k4BiLaUpqESs0709kZpAmBlb4wp6eZz2/H7n9HhdMM
+ hqxBCKTdYNABvk4FdLZs+apHThFjRmPaCyP7w/LG5jZllZBdgayRs
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi.
+On Fri, Jul 17, 2020 at 2:16 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, Jul 17, 2020 at 02:01:16PM +0200, Linus Walleij wrote:
+> > While I am a big fan of the Android GKI initiative this needs to be aligned
+> > with the Linux core maintainers, so let's ask Greg. I am also paging
+> > John Stultz on this: he is close to this action.
+> >
+> > They both know the Android people very well.
+> >
+> > So there is a rationale like this going on: in order to achieve GKI goals
+> > and have as much as possible of the Linux kernel stashed into loadable
+> > kernel modules, it has been elevated to modus operandi amongst
+> > the developers pushing this change that it is OK to pile up a load of
+> > modules that cannot ever be unloaded.
+>
+> Why can't the module be unloaded?  Is it just because they never
+> implement the proper "remove all resources allocated" logic in a remove
+> function, or something else?
 
-I'm using libgpiod in userspace.
-I have 6 gpiochip's on my board.
-gpiod_line_find takes about 300ms to find GPIO line.
+For the core kernel parts, it's usually for the lack of tracking of who
+is using the resource provided by the driver, as the subsystems tend
+to be written around x86's "everything is built-in" model.
 
-gpiod_line_find calls gpiod_foreach_chip
-then gpiod_chip_iter_next
-then gpiod_chip_close then close(chip->fd)
-then we are going to kernel gpiolib gpio_chrdev_release
-then atomic_notifier_chain_unregister
-then synchronize_rcu()
+For instance, a PCIe host bridge might rely on the IOMMU, a
+clock controller, an interrupt controller, a pin controller and a reset
+controller. The host bridge can still be probed at reduced functionality
+if some of these are missing, or it can use deferred probing when
+some others are missing at probe time.
 
-synchronize_rcu takes about 30 ms (6*30ms=280ms)
+If we want all of drivers to be unloaded again, we need to do one
+of two things:
 
-I tried to remove synchronize_rcu from atomic_notifier_chain_unregister 
-and gpiod_line_find takes about 2ms now.
+a) track dependencies, so that removing one of the devices
+    underneath leads to everything depending on it to get removed
+    as well or will be notified about it going away and can stop using
+    it. This is the model used in the network subsystem, where
+    any ethernet driver can be unloaded and everything using the
+    device gets torn down.
 
+b) use reference counting on the device or (at the minimum)
+    try_module_get()/module_put() calls for all such resources
+    so as long as the pci host bridge is there, so none of the devices
+    it uses will go away when they are still used.
+
+Traditionally, we would have considered the PCIe host bridge to
+be a fundamental part of the system, implying that everything it
+uses is also fundamental, and there was no need to track
+usage at all, just to ensure the probing is done in the right order.
+
+> > As a minimum requirement I would expect this to be marked by
+> >
+> > struct device_driver {
+> >    (...)
+> >     /* This module absolutely cannot be unbound */
+> >    .suppress_bind_attrs = true;
+> > };
+>
+> No, that's not what bind/unbind is really for.  That's a per-subsystem
+> choice as to if you want to allow devices to be added/removed from
+> drivers at runtime.  It has nothing to do with module load/unload.
+
+It's a one-way dependency: If we can't allow the device to be
+unbound, then we also should not allow module unloading because
+that forces an unbind.
+
+      Arnd
