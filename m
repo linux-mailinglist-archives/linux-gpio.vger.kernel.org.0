@@ -2,136 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CC0E223541
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 09:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0908223613
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 09:39:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgGQHPW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 03:15:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10662 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgGQHPW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 03:15:22 -0400
-IronPort-SDR: gmIj8f1vY0PwJtoxy64Y77CezPIXO9Kovg029N3UgXfJX3Oisjr99eMjCJ9oRuHNiov434pwgM
- vroZMwTQTDjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234400353"
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="234400353"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:15:18 -0700
-IronPort-SDR: Khy1S/wlWAp+D46uetcQbZv89YW8jH2J8zZ+nqHv9A6s09UTwPiaaBLCq7/XbAbnBnFNWO5dXD
- jXvWaYlHI52g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="430758934"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jul 2020 00:15:15 -0700
-Subject: Re: [kbuild-all] Re: [gpio:ib-for-each-clump 4/4]
- include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type
- unsigned long
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>, kbuild-all@lists.01.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <202007170339.nHjeGJBw%lkp@intel.com>
- <CAHp75VezG1ZnC-1UWea2Q-q-=c_32HOcBTXrd7cy4HzB-uW8JA@mail.gmail.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <4cd8eb7e-f21f-29a7-08ab-c691c1260c55@intel.com>
-Date:   Fri, 17 Jul 2020 15:14:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727042AbgGQHio (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 03:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgGQHio (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 03:38:44 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098A9C061755;
+        Fri, 17 Jul 2020 00:38:44 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a8so6959505edy.1;
+        Fri, 17 Jul 2020 00:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HYlYHaXrSBXNi0NVDqqqHS+e0SeY67sAsg23gifnEls=;
+        b=EyE6mm8hEbMtxJ+oyKyxzn3TqzKqFG6VN8VirfUtyDZKe8t0Qw+Va9Dg1tJSaoMjeb
+         40wVa4SukSIw80AHHt+iSsSGftd8HWeVwXEhYxbIRrrqKG7v0227ZsuiNYk5FcGFq3jv
+         OELSbp7utYhT5EDGe1O9GEOylhsBK39Nf8vJUIHtrsdCf9V9CUFU2iREu9qJXseas9QZ
+         MzneKq61QmKfC0EKHS76qAQFDp5PnXyp3zCsufMAP+bbx1rKtAYvddpqTU03sMHM+1im
+         Kbhs6aS5NLMsULVy72wkf+ORqSycTQBmnK4nt5WKrw0Jku8FdT/f6RFJJg7xu47yqZPk
+         ga3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HYlYHaXrSBXNi0NVDqqqHS+e0SeY67sAsg23gifnEls=;
+        b=oPUx1h2CGIdMi4Fv+HafVD/q3oE785LrHxJIY47MFMeChtni+SXwtcRrFvVCAmzrwg
+         wyK5urfNR9OhqEoDUehyjNEK9IcDjlrRhBDPdiv0P1QfgwAAwNWJ4rfk96mHS1tmE4z/
+         TA6GHuLWwEH5fs0xo8UYvftTycWvBABWa3IhHJPw572UyJYraUXEOSW20mMHoL75ZWzi
+         H8pQkScn+9lHsASh7aejfk5n6uEpqDQFCMGB/srb2AFzASw2yZqkWoobD6fDq2BRRt5X
+         qZDUIvmtqUj8mrCgJ35M8m0EGEoeHvySjHLz29AbuL8cTohYdzoYq3Z7XDlOy8d5C8s6
+         oUaw==
+X-Gm-Message-State: AOAM532G2cMq6JD6mVuAHmILChebia8ZO/M57s2/Z8uLucPI8wL+6wsC
+        AfthNVSgJw7vs7epb8oaY5GJ54LPkTrm2r1gKqk=
+X-Google-Smtp-Source: ABdhPJxQYjnXkfM8fJrQdkfzoCNdIh8vAoQXVxzKyrXC0Fj3imagKRKKoeb6nvJLoOdtJ7W+TxVYoP2s03ArnQ62KTU=
+X-Received: by 2002:aa7:dd10:: with SMTP id i16mr8203210edv.227.1594971522683;
+ Fri, 17 Jul 2020 00:38:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VezG1ZnC-1UWea2Q-q-=c_32HOcBTXrd7cy4HzB-uW8JA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1594708863.git.frank@allwinnertech.com> <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
+In-Reply-To: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Fri, 17 Jul 2020 15:38:14 +0800
+Message-ID: <CAEExFWss+KWSDu4VNa8JCkT7QOrgeYCausO0KxkXCbnXE3+-0g@mail.gmail.com>
+Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>, clabbe@baylibre.com,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        stefan@olimex.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 7/17/20 5:25 AM, Andy Shevchenko wrote:
-> On Thu, Jul 16, 2020 at 11:13 PM kernel test robot <lkp@intel.com> wrote:
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git ib-for-each-clump
->> head:   3358c938236d6a1be51124fbbb2698e50689d382
->> commit: 3358c938236d6a1be51124fbbb2698e50689d382 [4/4] gpio: xilinx: Utilize generic bitmap_get_value and _set_value.
->> config: alpha-randconfig-s031-20200716 (attached as .config)
->> compiler: alpha-linux-gcc (GCC) 9.3.0
->> reproduce:
->>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # apt-get install sparse
->>          # sparse version: v0.6.2-49-g707c5017-dirty
->>          git checkout 3358c938236d6a1be51124fbbb2698e50689d382
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=alpha
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->>
->> sparse warnings: (new ones prefixed by >>)
->>
->>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
->>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
->>     include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
->>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
->>>> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
->> vim +639 include/linux/bitmap.h
->>
->> 169c474fb22d8a5 William Breathitt Gray 2019-12-04  613
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  614  /**
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  615   * bitmap_set_value - set n-bit value within a memory region
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  616   * @map: address to the bitmap memory region
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  617   * @value: value of nbits
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  618   * @start: bit offset of the n-bit value
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  619   * @nbits: size of value in bits
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  620   */
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  621  static inline void bitmap_set_value(unsigned long *map,
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  622                                      unsigned long value,
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  623                                      unsigned long start, unsigned long nbits)
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  624  {
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  625          const size_t index = BIT_WORD(start);
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  626          const unsigned long offset = start % BITS_PER_LONG;
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  627          const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  628          const unsigned long space = ceiling - start;
-> If start == 0:
->    index = 0, offset = 0, ceiling = 64, space = 64
+On Fri, Jul 17, 2020 at 12:28 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  629
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  630          value &= GENMASK(nbits - 1, 0);
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  631
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  632          if (space >= nbits) {
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  633                  map[index] &= ~(GENMASK(nbits + offset - 1, offset));
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  634                  map[index] |= value << offset;
-> if nbits > space...
+> On 14/07/2020 08:55, Frank Lee wrote:
+> > From: Yangtao Li <frank@allwinnertech.com>
 >
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  635          } else {
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  636                  map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  637                  map[index] |= value << offset;
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @638                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @639                  map[index + 1] |= (value >> space);
-> space = 64...
->
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  640          }
->> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  641  }
-> I don't see the test case for this. Can you provide one?
->
+> Do you expect me to pick patches 7,8,9 or ack them ?
 >
 
-Hi Andy,
+Please pick it.
 
-Sparse doesn't check the if condition, it found the issues related to 
-the below two lines
-when bitmap_set_value was first time used in this commit.
-
-e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @638                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
-e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @639                  map[index + 1] |= (value >> space);
-
-Best Regards,
-Rong Chen
-
+Thx,
+Yangtao
