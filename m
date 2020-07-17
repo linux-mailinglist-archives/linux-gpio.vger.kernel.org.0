@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D3C72230DC
+	by mail.lfdr.de (Postfix) with ESMTP id CF9102230DF
 	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 03:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgGQB4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726204AbgGQB4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 16 Jul 2020 21:56:04 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:37794 "EHLO
+Received: from lucky1.263xmail.com ([211.157.147.132]:37790 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbgGQB4D (ORCPT
+        with ESMTP id S1726233AbgGQB4D (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 21:56:03 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 8D32DEC08D;
-        Fri, 17 Jul 2020 09:52:35 +0800 (CST)
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 7396BEC3AB;
+        Fri, 17 Jul 2020 09:52:47 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17009T140099633260288S1594950754349190_;
-        Fri, 17 Jul 2020 09:52:35 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P18496T139713866360576S1594950764823899_;
+        Fri, 17 Jul 2020 09:52:46 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4339edc153396fc21e5612d10d58466a>
+X-UNIQUE-TAG: <472f7c30acc06362d3fcfdbc3e8dc8ce>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
@@ -38,8 +38,8 @@ Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
         david.wu@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
 Subject: [PATCH 06/13] pinctrl: rockchip: do codingstyle
-Date:   Fri, 17 Jul 2020 09:52:32 +0800
-Message-Id: <20200717015232.14099-1-jay.xu@rock-chips.com>
+Date:   Fri, 17 Jul 2020 09:52:43 +0800
+Message-Id: <20200717015243.14149-1-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717014908.13914-1-jay.xu@rock-chips.com>
 References: <20200717014908.13914-1-jay.xu@rock-chips.com>
