@@ -2,125 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 431B52242F1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 20:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F009A2242FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 20:18:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgGQSMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 14:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
+        id S1727946AbgGQSQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 14:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgGQSMx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 14:12:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56ACC0619D2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:12:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z13so12088976wrw.5
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:12:52 -0700 (PDT)
+        with ESMTP id S1726104AbgGQSQa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 14:16:30 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA10C0619D2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:16:29 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id t15so6790727pjq.5
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=upQFUli2BQIGphggAgwr2cwewfby5/PoH7Z2pUjM4Zw=;
-        b=GevRKqO8V0nIo6VlLT39Y80u7jyMrcnpKhYLBSxM2rYq9grq7LaAmuC6H/QwH4UY8k
-         NIbIgkG5TDF1KmGYTF2NvExwLc8uC2hqfAjbkBuUDBMGRz/J/g7r3BRuzZ42pxw80uT9
-         hz8/N6qdGkD5jAvD1ZTrhEhm/T+L1/PJSvOlYf1PR/nmcgaZrlO9oig0SgTNPC2VQCkq
-         GEakW/zxNS6EemXQQYzzVtyKz2CxKkzwT8kN+qVTnRvbM4p7LR1KhIbT68TszE4/mO8Y
-         VdY7Xott9If0xVkN8dFssdk5hYzpxKDnIRGULu3fQDsKHJCyb41l7+lEGxbXlwuFCPaj
-         0X6w==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=t9tnXftIXiEv6I1DzHwkwdyHwR6/Of/QZHWPKBe3OHQ=;
+        b=zHk/Wd5Nrx/DCv4r1vnUAfAUU4JDQI3isPcdfsLjqo6MY6bLcJjKnX8Fr1cj69knc0
+         TRBx/7OVV87Sgipkdu3h824Ot3IXs2oE7S6aR+3jrDP4toP6VxTZWvZlM/uji1YIKLnd
+         W7wfAAGEVbpxnzS/PwMXcypmKFApPX7xScSxtl7iZOHG3bi0fjbYUvFdvzbmKKo3Jada
+         vY9VkrbIqIHKP2p7lLvx0dFtwD7PG9WhCFzTyiclugQdmzUy6eKqmlvGU4I0SY19I1O5
+         V2nYp8wsBEIiwk8BRgxfMgMpHkPTg1ExTmA1EX6Z4VH2otRyQebbsZTOUdybrJzLFGWY
+         Zefw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=upQFUli2BQIGphggAgwr2cwewfby5/PoH7Z2pUjM4Zw=;
-        b=XbFKOZY/Vtwx+pzNxprUZsJsXwy2Bk6589nuQYHULZuu96YqL/F+4vm8wG2vRvji0G
-         OhMk9ci5GTKHKrQwsZzro5sCDeW8ucjCBje1p95YYd6xA8sZl6CPA7U1rjDqlCdPrHyR
-         ZKVgMqkqM2V5pyflMfCWILxm+U2bwjCo+er1yLm/4TDSDRXU5o/TaQVyWRNnZKEWebkV
-         gewRiolGj5PlYarD/FYo3+v7ypi4ST8v1eEIYorNNWo736Xap2DwD5CT6lG2Zr3DPKoj
-         rZ7rMLjFmxFAUliGcblV3WhtdREefM6QdZGU2deu30+pq4EOjEonHOpqhkV7MngfegtV
-         u48g==
-X-Gm-Message-State: AOAM530XCXM9lPJz9PfWUMS3e4TCOTvk914OpPFjPfXNmp0Q4SoK0jkI
-        tG/O/oMFB6lsS2jghmR0kiLMYA==
-X-Google-Smtp-Source: ABdhPJx0ec7bpGVb4a5i7w/ggaTEBxYQtbPa16wKdFAoxK1bjIScZtUp4P7w0Ui/3jJxO8Md5G7r+g==
-X-Received: by 2002:adf:a3d0:: with SMTP id m16mr10938057wrb.232.1595009571526;
-        Fri, 17 Jul 2020 11:12:51 -0700 (PDT)
-Received: from localhost.localdomain (94.197.121.234.threembb.co.uk. [94.197.121.234])
-        by smtp.gmail.com with ESMTPSA id y77sm17081135wmd.36.2020.07.17.11.12.48
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=t9tnXftIXiEv6I1DzHwkwdyHwR6/Of/QZHWPKBe3OHQ=;
+        b=JvLxc3yDiO/sbvbLZnNfq7YdKhIzceoyIg1b5C3KD+BoUy0+9prFRGjGxaPcib0WyW
+         P0+F001PipJLAHgb33b4EpL72trZika33AVeDWQIpeq4cZ5Ozzm91uz/kVz31ARkK9Zr
+         siMiGlHw7wbq+dSmb34YYXdWw2DxILuLf4YNWfeuoZeGUCIkXN7Xebr0YsJqE1+3V5cS
+         oZX8iNsy0M1rp+pldvjqSOIO4cxGi8oSUO8eLVI23tKQYaqpq7XsfYsNtUJjr17/BbzP
+         t0ny9fof4MG3d464gbq8RaFJFW13qwvUX3RSNsdbkYLNCOO565TD4jjdsifYRazs/UJu
+         A2WA==
+X-Gm-Message-State: AOAM531xwsjk5dc2YbDKSzd8Y96/PmBsoO4Lcn3/zq4eQL1KBZKnfKna
+        sxqo5+W1Ect1Zs5aBOB6UyZKH1EV99U=
+X-Google-Smtp-Source: ABdhPJzxzspo77nX8cyI8SdA9ONy8Lqnx7gShrRYXvIW7Cc3S0xkEeQW8w+u+sqKwk4Gq1RnXS2Q3w==
+X-Received: by 2002:a17:90a:f007:: with SMTP id bt7mr11192575pjb.214.1595009788728;
+        Fri, 17 Jul 2020 11:16:28 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id f15sm8298413pfk.58.2020.07.17.11.16.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 11:12:50 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2] gpio: omap: handle pin config bias flags
-Date:   Fri, 17 Jul 2020 20:12:21 +0200
-Message-Id: <20200717181220.1773543-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 17 Jul 2020 11:16:27 -0700 (PDT)
+Message-ID: <5f11eafb.1c69fb81.5ef26.a7f5@mx.google.com>
+Date:   Fri, 17 Jul 2020 11:16:27 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc5-69-g70d7cd6c82a9
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
+ 8 warnings (v5.8-rc5-69-g70d7cd6c82a9)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Modify omap_gpio_set_config() to handle pin config bias flags by calling
-gpiochip_generic_config().
+linusw/for-next build: 7 builds: 0 failed, 7 passed, 8 warnings (v5.8-rc5-6=
+9-g70d7cd6c82a9)
 
-The pin group for the gpio line must have the corresponding pinconf
-properties:
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.8-rc5-69-g70d7cd6c82a9/
 
-PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
-PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
+Tree: linusw
+Branch: for-next
+Git Describe: v5.8-rc5-69-g70d7cd6c82a9
+Git Commit: 70d7cd6c82a906bfc45e5043fed5456d46a92662
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-This is necessary for pcs_pinconf_set() to find the requested bias
-parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
+Warnings Detected:
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Link: https://lore.kernel.org/r/20200715213738.1640030-1-drew@beagleboard.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #size-cells (1) differs from / (2)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #address-cells (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
+ (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
+lls (1) differs from / (2)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
+1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
+differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpio-omap.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-V2 changes:
-- adjust the braces to match the correct coding style
-- Linus: should I be creating a patch that is just the delta for the
-  braces?
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index b8e2ecc3eade..0ccb31de0b67 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -896,12 +896,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 				unsigned long config)
- {
- 	u32 debounce;
-+	int ret = -ENOTSUPP;
-+
-+	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-+	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-+	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
-+		ret = gpiochip_generic_config(chip, offset, config);
-+	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
-+		debounce = pinconf_to_config_argument(config);
-+		ret = omap_gpio_debounce(chip, offset, debounce);
-+	}
- 
--	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
--		return -ENOTSUPP;
--
--	debounce = pinconf_to_config_argument(config);
--	return omap_gpio_debounce(chip, offset, debounce);
-+	return ret;
- }
- 
- static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
--- 
-2.25.1
-
+For more info write to <info@kernelci.org>
