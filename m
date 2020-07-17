@@ -2,136 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00DAF223216
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 06:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79839223258
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 06:28:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgGQEWE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 00:22:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3459 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgGQEWE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:22:04 -0400
-IronPort-SDR: sU5VNibHq+Hz32b5rPmbhAljXDYy+EyqbrB6u2PnKUGK6iFip8ZA8Ii5jgHL8wi5FnnPpOVr+G
- 1n9Jtdi/+zoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129619577"
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="129619577"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 21:22:04 -0700
-IronPort-SDR: AmLsTemywGf9ERgg3hYL6YXBw/4rB0VJFzlkSxGhBvjG+Jm5k6LpKIeMaL9Nx2SZ2bTatObz+E
- n7UpZ2ABe1AQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,361,1589266800"; 
-   d="scan'208";a="325333558"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 21:22:03 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwHso-000053-EZ; Fri, 17 Jul 2020 04:22:02 +0000
-Date:   Fri, 17 Jul 2020 12:21:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:no-irqchip-nested-threading] BUILD SUCCESS
- c60bfca53cf0da71f4f37d787f0ee6530ff9ac17
-Message-ID: <5f112739.ECeOi8NU9OaKf77C%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725856AbgGQE2G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 00:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgGQE2G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 00:28:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD55C08C5CE
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so9596201wru.6
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=cqQG+5HHP8FdB3WQLW9wGhsG7SeC7f21rTf6GbiqGayG4UG+Eb/ZxDPESsqFDBOneb
+         lEHteZt/4j7lwXdMwlfN7AdtgbvYmDW+2kPVuSVJSBxwsTSsgv41w+4VCt/Ceg/Qf3gL
+         goYjFGpMHwtDxONpZtwPovrBtog3pC5e3idIBg5Jp2GzhGV4UpPUHG0HFJ5YNbBobQc0
+         GLdY8dcZdbBInXqVuhNQPCBXdS3js1eFHfC/jjTDmX0aCvGeIxVSGpbiF9R4LQkkHkpM
+         sU/J9G4w5VTmV1l9GuHqO1IwyQNmDi9jCG/Llh8/+vJjwhcTSbA5fECuc1o+BYKL0d5A
+         44bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=h7Ujhso3S6o/4jEFujbU+UegC7wsLzREPq2+HoXTt9o2jr2JQith81eoae29EKGXRH
+         ZwQw3F+SaKHX4JZsOJayHK9aIhiAqZ/9eXtnOSgNGWbDADg7nX1Wevo6Vbr3oSnE19BS
+         l09LctJUkLNN2Pur0kJOywqjt8HRA8cD7txuKVDlzeiBLrKin11NBn9wbISacyKJvJLE
+         3rL7yaVgt3v08iIbez7/2dKHHjQS5eXVoInDXiK42/ii7mVdEAawydjDFM54iNYIw7ON
+         ADgP8ThgHyHj1IHtNlLGmkjNzf/kNp2jC3wS6iWBQLe4WjT39/8FJ+K1s0ME/gmF5djD
+         MM9w==
+X-Gm-Message-State: AOAM531hmU7GGj5ZdUqMzH/BoksH35g1//CaCSrIY2L36tfYi4sgdNYa
+        DhgkTKaCL3dvDFlFBOlv7w3J8g==
+X-Google-Smtp-Source: ABdhPJz608hYHsiwyB/EN+L+jwqQLZomE0K0feZYaj9wTWfFYhecxH/LFSN0LliZKeegIqo1mKBqpQ==
+X-Received: by 2002:adf:9283:: with SMTP id 3mr8013554wrn.231.1594960083192;
+        Thu, 16 Jul 2020 21:28:03 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
+        by smtp.googlemail.com with ESMTPSA id u186sm11862848wmu.10.2020.07.16.21.28.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 21:28:02 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, lee.jones@linaro.org,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <cover.1594708863.git.frank@allwinnertech.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
+Date:   Fri, 17 Jul 2020 06:28:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  no-irqchip-nested-threading
-branch HEAD: c60bfca53cf0da71f4f37d787f0ee6530ff9ac17  gpio: adnp: Use irqchip template
+On 14/07/2020 08:55, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
 
-elapsed time: 725m
+Do you expect me to pick patches 7,8,9 or ack them ?
 
-configs tested: 74
-configs skipped: 1
+> v4:
+> -drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
+> -fix dcdc1 regulator name
+> -get rid of underscore in dts node name
+> -Some trivial things in yaml files
+> 
+> v3:
+> -Add pmu and nmi support
+> -Add read data mask for calibration
+> -Code style
+> -Some trivial things in yaml files
+> 
+> v2:
+> -Some naming consistency
+> -Repair email address
+> -Fix mmc clock
+> -Don't export system clock
+> -Fix checkpatch warning
+> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
+> 
+> Yangtao Li (16):
+>   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
+>     R-CCU
+>   clk: sunxi-ng: add support for the Allwinner A100 CCU
+>   dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+>   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+>   pinctrl: sunxi: add support for the Allwinner A100 pin controller
+>   dt-bindings: nvmem: SID: add binding for A100's SID controller
+>   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
+>   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
+>     sun50i_h6_ths_calibrate
+>   thermal: sun8i: Add A100's THS controller support
+>   mfd: axp20x: Allow the AXP803 to be probed by I2C
+>   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+>   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+>   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+>   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+>   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+>   arm64: allwinner: A100: add support for Allwinner Perf1 board
+> 
+>  .../devicetree/bindings/arm/sunxi.yaml        |    5 +
+>  .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
+>  .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
+>  .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
+>  .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
+>  arch/arm64/boot/dts/allwinner/Makefile        |    1 +
+>  .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
+>  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
+>  drivers/clk/sunxi-ng/Kconfig                  |   10 +
+>  drivers/clk/sunxi-ng/Makefile                 |    2 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
+>  drivers/mfd/axp20x-i2c.c                      |    2 +
+>  drivers/pinctrl/sunxi/Kconfig                 |   10 +
+>  drivers/pinctrl/sunxi/Makefile                |    2 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
+>  drivers/thermal/sun8i_thermal.c               |   16 +-
+>  include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
+>  include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
+>  include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+>  include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+>  26 files changed, 3308 insertions(+), 68 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
