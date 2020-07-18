@@ -2,94 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17F0D224E04
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 22:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28BF3224E1B
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 23:26:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGRUwE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Jul 2020 16:52:04 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57755 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgGRUwE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jul 2020 16:52:04 -0400
-X-Originating-IP: 91.175.115.186
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id A793CC0002;
-        Sat, 18 Jul 2020 20:52:01 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1728106AbgGRV0N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Jul 2020 17:26:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:27081 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbgGRV0M (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 18 Jul 2020 17:26:12 -0400
+IronPort-SDR: deNim4eI9y8G1UyocYEWJteg31hTWI60G/U/Ts8e+8V91wtuNVS+myiERXAJKBfBh1450EUtza
+ bZDcg0EGXS6Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="129339394"
+X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
+   d="scan'208";a="129339394"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 14:26:12 -0700
+IronPort-SDR: DGjhCHZAtDN1Kb+VE/HyUouJmuIygw8ibfY8pzSajKNVWJEJWFIJVqkHjTX80TGM/e81R6h8gK
+ 5pUIZZL9Elnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,368,1589266800"; 
+   d="scan'208";a="287154880"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jul 2020 14:26:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 84CDF109; Sun, 19 Jul 2020 00:26:09 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v1 2/5] ARM/orion/gpio: Make use of for_each_requested_gpio()
-In-Reply-To: <20200615150545.87964-3-andriy.shevchenko@linux.intel.com>
-References: <20200615150545.87964-1-andriy.shevchenko@linux.intel.com> <20200615150545.87964-3-andriy.shevchenko@linux.intel.com>
-Date:   Sat, 18 Jul 2020 22:52:00 +0200
-Message-ID: <87sgdo35sf.fsf@FE-laptop>
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/3] gpio: aggregator: Further improvements
+Date:   Sun, 19 Jul 2020 00:26:05 +0300
+Message-Id: <20200718212608.65328-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+Patch 1 makes sparse happy about locking and, in my opinion, improves
+readability, though increases LOC count.
+Patch 2 simplifies parser by using existing helpers.
+Patch 3 refactors loop in parser for better readability in my opinion.
 
-> Make use of for_each_requested_gpio() instead of home grown analogue.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Cc: Gregory Clement <gregory.clement@bootlin.com>
+It might be you have different opinions about patches 1 and 3, we may discuss.
 
-Applied on mvebu/arm
+Compile tested only.
 
-Thanks,
+Andy Shevchenko (3):
+  gpio: aggregator: Refactor ->{get,set}_multiple() to make Sparse happy
+  gpio: aggregator: Simplify isrange() by  using get_option()
+  gpio: aggregator: Assign name and offsets only once in a loop
 
-Gregory
-> ---
->  arch/arm/plat-orion/gpio.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-> index 26a531ebb6e9..734f0be4f14a 100644
-> --- a/arch/arm/plat-orion/gpio.c
-> +++ b/arch/arm/plat-orion/gpio.c
-> @@ -442,6 +442,7 @@ static void orion_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->  
->  	struct orion_gpio_chip *ochip = gpiochip_get_data(chip);
->  	u32 out, io_conf, blink, in_pol, data_in, cause, edg_msk, lvl_msk;
-> +	const char *label;
->  	int i;
->  
->  	out	= readl_relaxed(GPIO_OUT(ochip));
-> @@ -453,15 +454,10 @@ static void orion_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->  	edg_msk	= readl_relaxed(GPIO_EDGE_MASK(ochip));
->  	lvl_msk	= readl_relaxed(GPIO_LEVEL_MASK(ochip));
->  
-> -	for (i = 0; i < chip->ngpio; i++) {
-> -		const char *label;
-> +	for_each_requested_gpio(chip, i, label) {
->  		u32 msk;
->  		bool is_out;
->  
-> -		label = gpiochip_is_requested(chip, i);
-> -		if (!label)
-> -			continue;
-> -
->  		msk = 1 << i;
->  		is_out = !(io_conf & msk);
->  
-> -- 
-> 2.27.0.rc2
->
+ drivers/gpio/gpio-aggregator.c | 110 +++++++++++++++++----------------
+ 1 file changed, 57 insertions(+), 53 deletions(-)
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.27.0
+
