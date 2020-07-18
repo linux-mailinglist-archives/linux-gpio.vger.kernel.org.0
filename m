@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C6922247FB
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 04:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B0C02247F8
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 04:06:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGRCGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 22:06:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28907 "EHLO mga03.intel.com"
+        id S1726817AbgGRCGa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 22:06:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50729 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbgGRCGl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 22:06:41 -0400
-IronPort-SDR: iE8yAiraWRLAR/jFEqiZAqn0xzYsUN618o31wBdJ1ovgjV4hrIlUX4ZEw7g0WtvQ0KqWdWQhSW
- e0i/vsUV679g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="149694382"
+        id S1726665AbgGRCGa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jul 2020 22:06:30 -0400
+IronPort-SDR: wfdgjLtFwx2GYjS+IJxKZoOAgUKutmphOnp7CtQA5N8qnvXHDTf39REu2k4YYJ3LTPHQDnQUuz
+ P2naK61b+plg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="137173725"
 X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
-   d="scan'208";a="149694382"
+   d="scan'208";a="137173725"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 19:06:40 -0700
-IronPort-SDR: eHgd1l4czdC8UsdwRUMgUTyDGWUf4eWEqJ+d1Mc0ML9VaVThndPSbzf4klGLOFMbq/IYoy8lQs
- zdbyWEmy9sPA==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 19:06:29 -0700
+IronPort-SDR: WnXNqd+zn4w2Bgo2kL7OLhoINkwJAwwi9bSPYzOPYBZ1yydEkvw8lfqoQ+Z4frLSm3EDylP9Oh
+ UMvXokHiS1nA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
-   d="scan'208";a="361515073"
+   d="scan'208";a="282960671"
 Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 17 Jul 2020 19:06:39 -0700
+  by orsmga003.jf.intel.com with ESMTP; 17 Jul 2020 19:06:27 -0700
 Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jwcFK-0000aV-Hf; Sat, 18 Jul 2020 02:06:38 +0000
-Date:   Sat, 18 Jul 2020 10:05:46 +0800
+        id 1jwcF8-0000aM-NM; Sat, 18 Jul 2020 02:06:26 +0000
+Date:   Sat, 18 Jul 2020 10:05:48 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-usb] BUILD SUCCESS
- b84efced84146e09ba546dcbbdf57cc9370f781c
-Message-ID: <5f1258fa.SMoychdUZHER+dWE%lkp@intel.com>
+Subject: [gpio:no-irqchip-nested-threading] BUILD SUCCESS
+ d20743e24eec787d0333d423479ea2f137496f06
+Message-ID: <5f1258fc.v1OewrljYQFB8hiS%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,8 +46,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-usb
-branch HEAD: b84efced84146e09ba546dcbbdf57cc9370f781c  usb: ohci-omap: Convert to use GPIO descriptors
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  no-irqchip-nested-threading
+branch HEAD: d20743e24eec787d0333d423479ea2f137496f06  gpio: crystalcove: Use irqchip template
 
 elapsed time: 722m
 
