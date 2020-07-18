@@ -2,94 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA54F2248A2
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 06:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C6E42248D4
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jul 2020 07:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725763AbgGREZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Jul 2020 00:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgGREZz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jul 2020 00:25:55 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33EB5C0619D2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 21:25:55 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id l6so6246176plt.7
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 21:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Gn+1oJ/W4PWZPcp/x0FJpcDKALoEGh5RUDkh7FtXjeM=;
-        b=iwTWJ8DXnuzVKnsSi1K7n6b2nC6xqHbe1N6vIdG7WNRYgl6MHiQdPL6DjR2Rwm7hfw
-         lOl4iqhqB+bCSXpq4VGB5P3DUCA6gungWfRvr5/lDe24TMGBENAVWP6Y3x+Q59pV1GBe
-         rczSIAUKXTpSqQzuEEKaUcTDGdNPsTrASTIVppFd3fr6rRojcW/iOUOGsN+cRDAllNt7
-         jDFkqkGqyucmXsPIk5EuS9jOMoyoo4EdCsjNLsVckn/ZKgQqsxSm1E3nzxw2o7WzL0ii
-         ooOq3fPPpV88FKVT40nLnWQBJLz5sgI+aE+scxybtHgv54TAisqY9lIo5sLL5t4Mc1q+
-         ac2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gn+1oJ/W4PWZPcp/x0FJpcDKALoEGh5RUDkh7FtXjeM=;
-        b=D+cdU1hCShayuikwUJJ941lvw7JfIVfc19+QxH36XgKB5ZyZtRGDqQkLwdT617ond8
-         RBnVyYkuMW/hkm4d2lFDFXOBQmIaksYO9xTF/77YMiZIRqauPUheBIWFp7JYc+q0tNIQ
-         jO80SIM2GGOL1is+jUjfP1OFuGlXBxAsLzS6rFcCiASLRpqmyPtmkk/N4iFyF3Z44h+9
-         rN4j+VVuajlRt1WVFxZ/cUGWriCF7jfbPYtvH7xiCMlLqcdClND2tXgPNX29Hfw+46Ba
-         vSrztLkFtZfimpZ1+tbF+K6E7Qv/FiStrXz18RmP7j5OxIvoF1PbllF+/oITuuAFJYjt
-         DQ0A==
-X-Gm-Message-State: AOAM532O05tN1RNm3fE63AW1wPY3htPabdKjaY786tVnaUc83huNJLdP
-        rZTbGCSV1VoEvR6lYaQWu70=
-X-Google-Smtp-Source: ABdhPJzJg4dlDibAVN1E/V4zohFHP4xfrW5hUm4uMZ7QsaLW+eGACWPNatQSw8Ux1HtXMU3bMdtsjw==
-X-Received: by 2002:a17:90b:1045:: with SMTP id gq5mr13007802pjb.30.1595046354525;
-        Fri, 17 Jul 2020 21:25:54 -0700 (PDT)
-Received: from sol ([118.209.58.72])
-        by smtp.gmail.com with ESMTPSA id 207sm9206077pfa.100.2020.07.17.21.25.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 21:25:53 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 12:25:48 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Maxim Kochetkov <fido_max@inbox.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
-Message-ID: <20200718042548.GA43247@sol>
-References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
- <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
- <190bca20-946f-52f9-64f8-8971da17d38b@inbox.ru>
- <CAHp75VfQdTtbiHjhBuf3czdKAgmiQeALo7CaqW36oEkSGSHUBA@mail.gmail.com>
+        id S1725868AbgGRFFZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Jul 2020 01:05:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61789 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbgGRFFY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 18 Jul 2020 01:05:24 -0400
+IronPort-SDR: 7J1N+M51sgn8nIaBIvMPHkkD2FIYVb1KuvmFsN/1K9hqSatnqy1aRAB7YMcoOc262qtAfQBPRe
+ VJoCB8gESgQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9685"; a="147686936"
+X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
+   d="scan'208";a="147686936"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 22:05:23 -0700
+IronPort-SDR: mzIuUkYLC3HY8TNVQaiTsMepFA3P1GhJEefDWXaIJ6uUDSao+Tb8suS7AtHuo/3zfZ/fmvTyb0
+ LtDzjjxbcQgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,365,1589266800"; 
+   d="scan'208";a="270979509"
+Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jul 2020 22:05:20 -0700
+Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jwf2F-0000cv-W5; Sat, 18 Jul 2020 05:05:19 +0000
+Date:   Sat, 18 Jul 2020 13:03:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 8d93caaf4f6b7de4a1df082aec932c959ce0b63c
+Message-ID: <5f1282ac.tEaUrHxx/5omVbRH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfQdTtbiHjhBuf3czdKAgmiQeALo7CaqW36oEkSGSHUBA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:07:04PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 17, 2020 at 5:17 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
-> >
-> > I need a small userspace program to do some GPIO magic to communicate
-> > other hardware like devmem. This program takes about 2,5 seconds just to
-> > find GPIO lines by name.
-> >
-> > replacing synchronize_rcu to synchronize_rcu_expedited in
-> > atomic_notifier_chain_unregister gives the same boost as removing
-> > synchronize_rcu
-> 
-> Have you tried to replace an atomic notifier call with a regular one?
-> IIRC it's still not clear why atomic is used there.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
+branch HEAD: 8d93caaf4f6b7de4a1df082aec932c959ce0b63c  Merge branch 'devel' into for-next
 
-Indeed, I recently submitted a patch to switch the
-atomic_notifier_call_chain to blocking_notifier_call_chain, as some of
-the chained calls can sleep.
-Not sure if that is related, or if the change would make this case better
-or worse, but it would be interesting to find out.
-The patch is in the current gpio/devel, btw.
+elapsed time: 834m
 
-Cheers,
-Kent.
+configs tested: 107
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+powerpc                      ppc64e_defconfig
+arm                           viper_defconfig
+ia64                             alldefconfig
+sh                           se7721_defconfig
+h8300                            allyesconfig
+powerpc                 linkstation_defconfig
+sparc                       sparc32_defconfig
+arm                          badge4_defconfig
+powerpc                      pmac32_defconfig
+riscv                          rv32_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200717
+i386                 randconfig-a005-20200717
+i386                 randconfig-a002-20200717
+i386                 randconfig-a006-20200717
+i386                 randconfig-a003-20200717
+i386                 randconfig-a004-20200717
+x86_64               randconfig-a012-20200716
+x86_64               randconfig-a011-20200716
+x86_64               randconfig-a016-20200716
+x86_64               randconfig-a014-20200716
+x86_64               randconfig-a013-20200716
+x86_64               randconfig-a015-20200716
+i386                 randconfig-a016-20200717
+i386                 randconfig-a011-20200717
+i386                 randconfig-a015-20200717
+i386                 randconfig-a012-20200717
+i386                 randconfig-a013-20200717
+i386                 randconfig-a014-20200717
+x86_64               randconfig-a005-20200717
+x86_64               randconfig-a006-20200717
+x86_64               randconfig-a002-20200717
+x86_64               randconfig-a001-20200717
+x86_64               randconfig-a003-20200717
+x86_64               randconfig-a004-20200717
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
