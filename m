@@ -2,132 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 666322252D0
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jul 2020 18:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0A54225385
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jul 2020 20:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgGSQeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Jul 2020 12:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
+        id S1726570AbgGSSgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Jul 2020 14:36:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgGSQeg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jul 2020 12:34:36 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAD7C0619D2
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 09:34:36 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id k7so7309749vso.2
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 09:34:36 -0700 (PDT)
+        with ESMTP id S1726009AbgGSSgC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jul 2020 14:36:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4427C0619D2;
+        Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id k27so9263802pgm.2;
+        Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=s6r98q2ynb+5ExTfukADiWvI04wnKRnstSenMP2+KI8=;
-        b=xCZVf2DmDmaWXIzYm0+ZV8awOGMODqgWIZDCGyBkiFDXCXgl8Io1MNSJUVTrq+be10
-         dVSggN97MvlQXWWyr2e4rutdGpso+3Jnvcp92ishcNNfaSY6ntKYsxC2qzZw3B1c3VLh
-         Zm20CDVFvoanxiSZf3yRGqaDvqCTZSFAFgiRo1zuX+xCR0dmvs/cHaxZqr4bHdj+bBob
-         SEQdDJacCIIaos/PXvYLy5HZ9lW7a8O1pLiMx3Wk9leCJVz7z1XKnB0nC7cJPmEWECp4
-         V5xrPz4j7ZSay+p69NXcEfDjMFtOXNzTNUEM+gSxrYFHcRlV3WXxnOgLw9IK1kO47ksk
-         8kOg==
+        bh=sY6yoJK7n313gNhifc/ruWkdji4zjYN/sZWct3ewZp8=;
+        b=dKZLawbb1kpmrdq+ONhwPuDhDtRLQ5sf0Fx6hybaSuP7JQegE9OwVqrIZEhBDumtnd
+         IIazLgfYVkOjidxMIipflq1hTSXNjFsAMV2rwnsQi7r4Vs6WrxN7dRCh5A7SJel+sxnR
+         i19mGf+CQLZDraTPdiAdvwPbHxx6O1q26WGP4O9qimCOeK7RLqTU7BtLF3sP4MiJT1Ia
+         1/0+pSSF1ALgB886ntm0tGhOlf25yHPVbKR5aql/Itnjl7V3Rc6Q4AkhIER9Bj+Pnkbs
+         YBNIMlV+x4zTbJFNfA8xIxZPCN7TXWYwT2n3O5m1RaNjY9gCpEPGnsOe94s0dxuDWqUl
+         SROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=s6r98q2ynb+5ExTfukADiWvI04wnKRnstSenMP2+KI8=;
-        b=d8HqRcQ5rw/DdCXdjJaM94NibFo2RoKQijD3vGtdGuKCM3Z26QFBVaj8YB2g1WqZDj
-         GbdP4/07ER+54f1TMzMLg6GtI1k7+klNIb0eLUuGWGYai1ZX54IJrmNVuD4iZZyLpBNz
-         olaOVY/hNlJ+UGkTJ3Bn2hSmf+BH3L+J+QMOMsTqmhEOZrU3O4lBECvsF5jy5+CSCocA
-         4wDl0DquasdaJqvOjgcLdvIMcyyl3mbRE1Qvyi8fjmSJtO7G3NucSNjrdyc1Z9RgQFyL
-         EjY4wcm1bRwbjw7qNaLMzoh8/CPukVGrCJKo9kBqoOOKyTJo/NvMISBhQIVJldTC82hd
-         A/cA==
-X-Gm-Message-State: AOAM53058eT00RzH9QuHEIK0ZCssjY3dM6Sida2a44DvRlchKTW0NLDg
-        JLQegg/5H836CN2/Qr5ZzurKAiLBDyt/Xu0fAtctv316z68=
-X-Google-Smtp-Source: ABdhPJzIhVw2a/5aPEbj/V8jWngCnnjRQfnq732djKOdF3BIG1fuYVcnJgeYcz0RPQnz28U/l9LBfVluH2jiutFcaxU=
-X-Received: by 2002:a67:c997:: with SMTP id y23mr13005092vsk.90.1595176475794;
- Sun, 19 Jul 2020 09:34:35 -0700 (PDT)
+        bh=sY6yoJK7n313gNhifc/ruWkdji4zjYN/sZWct3ewZp8=;
+        b=UfE6Q1eetbKvevEPKHp9eJG2CM5rGrLqoSiqvknKJ5XSrxyjytzKErjilmfINZyz1x
+         f419a/eB3m9FgjxGWivCMvVDK1f9UyCe12H7Ma5tWYjFkb+I2xZxOL0d8IPWwJfaf3x/
+         e/bJPjTratBAvBWovnO2vqQelfkVy+wTvdNrWWH1fBQFHqJLRBszcVn+egIQV+TomdhO
+         XKqZZw4Ey6w3vMrsAtDQS55zlaJPYhPJfycAFQxgaW1Vr6RWkEq2tQZzuWCzGOvGzDLH
+         9aITDJDQF425FbFQs4cEGiWFSHyJTB33Qgvqihy/b1IrArwI6CBDLOAqiZBaab1XF+w0
+         HX2A==
+X-Gm-Message-State: AOAM531kAL95AYwGFKGHsQ1e12jcV6Mhy3e0rWxp0qZJ4o494tDazKER
+        aiRUDtzyb3Dv/cf0wazmE+Ky8eet7rjsmg2Fu/k=
+X-Google-Smtp-Source: ABdhPJysOG+lEBrx7r/irP580NL19hL0iNrok9ERpQjiyv4dBgaa/kolMq3BlTQ0I0wZHRDRiHkVtsMc4h3epTTRirI=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr16517190pgi.203.1595183762060;
+ Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717141924.57887-1-linus.walleij@linaro.org>
-In-Reply-To: <20200717141924.57887-1-linus.walleij@linaro.org>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Sun, 19 Jul 2020 19:34:23 +0300
-Message-ID: <CAPLW+4kX_1YNDNNeqzQGHZmnr0PYKHsrN++jw9-jOYv6Da3UuQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: max732x: Use irqchip template
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com> <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com> <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com> <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com> <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+ <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com> <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
+ <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+In-Reply-To: <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 19 Jul 2020 21:35:45 +0300
+Message-ID: <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Rodolfo Giometti <giometti@enneenne.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Jul 16, 2020 at 6:17 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+> On 16/07/2020 15:38, Linus Walleij wrote:
 
-On Fri, 17 Jul 2020 at 17:19, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> This makes the driver use the irqchip template to assign
-> properties to the gpio_irq_chip instead of using the
-> explicit calls to gpiochip_irqchip_add_nested() and
-> gpiochip_set_nested_irqchip(). The irqchip is instead
-> added while adding the gpiochip.
->
-> Cc: Sam Protsenko <semen.protsenko@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+...
 
-I can test it on my MAX7325 board with BeagleBone Black in a day or
-two. Do you want me to verify your patch on top of linux-mainline or
-linux-next? Also, is there any specific stuff you want me to look at,
-or making sure there are no regressions w.r.t. IRQ from the chip is
-enough?
+> I see but this interface is not designed for such complex usage nor to compete
+> with the current character interface! It is designed to allow boards
+> manufactures to "describe" some I/O lines that are not used by any driver in the
+> device tree,
 
-Thanks!
+Why are they not in firmware tables? Platform is a set of hardware
+that makes it so.
+If something is not in DT, then there is no possible way to know what
+is that line?
 
->  drivers/gpio/gpio-max732x.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> index 63472f308857..347415344a20 100644
-> --- a/drivers/gpio/gpio-max732x.c
-> +++ b/drivers/gpio/gpio-max732x.c
-> @@ -503,6 +503,8 @@ static int max732x_irq_setup(struct max732x_chip *chip,
->
->         if (((pdata && pdata->irq_base) || client->irq)
->                         && has_irq != INT_NONE) {
-> +               struct gpio_irq_chip *girq;
-> +
->                 if (pdata)
->                         irq_base = pdata->irq_base;
->                 chip->irq_features = has_irq;
-> @@ -517,19 +519,17 @@ static int max732x_irq_setup(struct max732x_chip *chip,
->                                 client->irq);
->                         return ret;
->                 }
-> -               ret =  gpiochip_irqchip_add_nested(&chip->gpio_chip,
-> -                                                  &max732x_irq_chip,
-> -                                                  irq_base,
-> -                                                  handle_simple_irq,
-> -                                                  IRQ_TYPE_NONE);
-> -               if (ret) {
-> -                       dev_err(&client->dev,
-> -                               "could not connect irqchip to gpiochip\n");
-> -                       return ret;
-> -               }
-> -               gpiochip_set_nested_irqchip(&chip->gpio_chip,
-> -                                           &max732x_irq_chip,
-> -                                           client->irq);
-> +
-> +               girq = &chip->gpio_chip.irq;
-> +               girq->chip = &max732x_irq_chip;
-> +               /* This will let us handle the parent IRQ in the driver */
-> +               girq->parent_handler = NULL;
-> +               girq->num_parents = 0;
-> +               girq->parents = NULL;
-> +               girq->default_type = IRQ_TYPE_NONE;
-> +               girq->handler = handle_simple_irq;
-> +               girq->threaded = true;
-> +               girq->first = irq_base; /* FIXME: get rid of this */
->         }
->
->         return 0;
-> --
-> 2.26.2
->
+Or in other words how does the OS know that the certain line is
+connected to a relay?
+
+> and that users may desire to manage in a very simple manner. Let's
+> thing about relay lines, or just a locked/unlocked input line which can be
+> easily polled.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
