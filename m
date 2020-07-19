@@ -2,76 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6514E225139
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jul 2020 12:13:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C76A12251F2
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jul 2020 15:23:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgGSKNO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Jul 2020 06:13:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50256 "EHLO
+        id S1726051AbgGSNXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Jul 2020 09:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSKNO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jul 2020 06:13:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F42C0619D2
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 03:13:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k5so8486010pjg.3
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 03:13:14 -0700 (PDT)
+        with ESMTP id S1726038AbgGSNXJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jul 2020 09:23:09 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1B0C0619D4
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 06:23:09 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 22so19826651wmg.1
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Jul 2020 06:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9fJzhOTvhNEns/hzardq5QHeFxBstkkjDsLALyfOW8=;
-        b=MghnsEpbpeKj0AEeUb9dpERonPubVt4Hs4LkF+CjLoLjzzTE6ElbeF/M/rwEg1JNNv
-         OeeWeccbktelQnB1n4LyO48Ql6el3sBHhT5rznAcl5B8cbNELDOy0jqE1MW0I5/WFJrB
-         HHDhy+crNcie4POzcsQ6EnjJkMvb/a26CtdV8SO3s903vHL37UhCrcsn813IGXpBY9nh
-         1B82PtOstIJF94HBoHKBwYCVxoUBvBbCfDe4IfRzSh+1Xsr+7uU4nB8Al51a+FrdVt1y
-         vyHliAk0xm6IYq+HOfcXnjiOlEWI4bdlVpyyY5yM2odH+7MiTiuB7tnZokalLH3PLDBg
-         HuHg==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uuzrtuHN21oOAZxIlittwwnGBTHcg7DOnqANihEyN2Y=;
+        b=mDzm0vp/+eWsDlF0dQwnZFx8Yq3+hGPmU7PkW7ss76VWEulTAsRDUW0FLb29vYTT0b
+         o8O9qRwThNCVgWAzGlALOPWCH35bZtsz/jiiTGRAN1Aj2+lepPqYH/WiH4MM2mE2Hbck
+         0NskG4tlnn6AWjL3WHwmpxAlsodHPeRKrCwzs83oOd0r3sTMaF9Ai/zqAJdIzK6tm0Z/
+         fbDS9doxPMOGNnxU9i/BZvZ965OOqV+wQjYtGoICBI3nXGtAviwfrgw48hsC7wIphYsT
+         z080dzmbMiPxfRdhJau/XXvvqnNBGD6jlVIJzjax5nc5bGRLxlaFYMTMfKspYxQXst6P
+         V92g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9fJzhOTvhNEns/hzardq5QHeFxBstkkjDsLALyfOW8=;
-        b=gUZYeWYvXYp92nNhVJUk012DE5nXnIAg1xJcTAu20IfkeGovNQNy6B+sMGc0iRFO/L
-         BwuofSFP7y471DsG/0R7A4/4HT7xdB13SKSdlljj1GnC+bx7p1QbQhmMGbAXvCB93FAV
-         qjpO4gG63FLisC0wpnMAYqPrQo1weq6VaB/gQr12He/brmykNpRQ8LFpXZw6zUxGwo2v
-         iZ6/FmXIp7vwoOa0bY6tgv0CBcy39af2SVDYqh3nfBifldYbsSEXBs3uZUbU9Mk6T7bf
-         btFHDem71suUDvI62JGZ6oDsuLLnJ2H4VEfyaHwAiyyRfFK40I+PqblMpatRB0IE8w+6
-         /SFA==
-X-Gm-Message-State: AOAM530pI1pTLnUsf6fm/cC3ll1o93i/52ZT9sFQuZAr5I9tuxxgHXJq
-        3SjFYEkay3uvnnyMumngtJ3iN9ZwMjELVXKVUIg=
-X-Google-Smtp-Source: ABdhPJxpDge9AOzxBoGhEpR86N9E9mcEQDPF9YdBN78pnNHuCzSke3BYrGYFvGcwaYaXL+sFZEixbZve1gmAzZYX4KA=
-X-Received: by 2002:a17:902:b098:: with SMTP id p24mr3341046plr.18.1595153593663;
- Sun, 19 Jul 2020 03:13:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uuzrtuHN21oOAZxIlittwwnGBTHcg7DOnqANihEyN2Y=;
+        b=psXq5HWLkTWZnqDCCo6/g4fuSWJ3IMA7vPUbkO03ryRFzH98lvXn+pSghtQ8ZgOlq2
+         R0AslzGaDJ7HIetBvC4//2fbYZhmkjWBGn2FRGcge3uo1o6JscOGLgpJTsF7f9DLa4qy
+         3YJ6CEtESF5uW9tK2lQOC3dctC0Yw+VVb9TfJXlOhO3tzdIx1vAgCxXbnexBR5sifCgK
+         jqikR6k6lMyWIpeO1YVJqj9PxJP3sL/k//dwlHELoucCcJN7my8M65r6gGuTC4cV45sp
+         wSwsobsiqxsiIrALNPWootjy66DEOyHduBQRTAuxn1JhYx8bFnsuv4aqYN0cixC3sTly
+         6BdQ==
+X-Gm-Message-State: AOAM532+3yDBVuhLK3WfVSLEHiDP57thcDwaCifYYICYBZr6Dp0c1/Le
+        gqB7xZY1KzlU2sBkoC9A5RujoGvSWaNPRA==
+X-Google-Smtp-Source: ABdhPJys3kBCZ/Ng9Jd/mHjjve9HkWa6Z66C4tFzOLZMlEx5dj9cchomB6LLyg490qdZo8QF8Dz9EA==
+X-Received: by 2002:a1c:2805:: with SMTP id o5mr17859971wmo.25.1595164987582;
+        Sun, 19 Jul 2020 06:23:07 -0700 (PDT)
+Received: from localhost.localdomain (188.29.165.134.threembb.co.uk. [188.29.165.134])
+        by smtp.gmail.com with ESMTPSA id q188sm27193851wma.46.2020.07.19.06.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jul 2020 06:23:06 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v2] pinctrl: core: print gpio in pins debugfs file
+Date:   Sun, 19 Jul 2020 15:22:01 +0200
+Message-Id: <20200719132200.1878265-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200718212608.65328-1-andriy.shevchenko@linux.intel.com> <20200718212608.65328-4-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200718212608.65328-4-andriy.shevchenko@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 19 Jul 2020 13:12:57 +0300
-Message-ID: <CAHp75VfSZVYK2yzmdjG=v+XyjtDzyQ-6VEU4_5rUXG-kZn3BhA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpio: aggregator: Assign name and offsets only
- once in a loop
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 12:26 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The for-loop looks a bit hard to read when we extract two arguments
-> per iteration. The 'do {} while (true)' makes it easier to read
-> despite being infinite loop.
+If there is a gpio range mapping for the pin, then print out the gpio
+number for the pin in the debugfs 'pins' file.
 
-This is not gonna work.
-Please, discard this patch from the series.
+Here is an example output on the BeagleBone Black from:
+/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
 
+pin 103 (PIN103) GPIO-113 44e1099c 00000027 pinctrl-single
+pin 104 (PIN104) GPIO-114 44e109a0 0000002c pinctrl-single
+pin 105 (PIN105) GPIO-115 44e109a4 00000027 pinctrl-single
+pin 106 (PIN106) GPIO-116 44e109a8 00000027 pinctrl-single
+pin 107 (PIN107) GPIO-117 44e109ac 00000027 pinctrl-single
+pin 108 (PIN108) GPIO-19 44e109b0 00000027 pinctrl-single
+pin 109 (PIN109) GPIO-20 44e109b4 00000027 pinctrl-single
+pin 110 (PIN110) NA 44e109b8 00000030 pinctrl-single
+pin 111 (PIN111) NA 44e109bc 00000028 pinctrl-single
+pin 112 (PIN112) NA 44e109c0 00000030 pinctrl-single
+pin 113 (PIN113) NA 44e109c4 00000028 pinctrl-single
+pin 114 (PIN114) NA 44e109c8 00000028 pinctrl-single
+
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+v2 changes:
+- print 'NA' if pin does not have a GPIO number
+- change gpio_num from unsigned to unsigned int per checkpatch
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 821242bb4b16..8478025926a2 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1601,6 +1601,8 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 	struct pinctrl_dev *pctldev = s->private;
+ 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 	unsigned i, pin;
++	struct pinctrl_gpio_range *range;
++	unsigned int gpio_num;
+ 
+ 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+ 
+@@ -1618,6 +1620,18 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
++		gpio_num = 0;
++		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
++			if ((pin >= range->pin_base) &&
++			    (pin < (range->pin_base + range->npins)))
++				gpio_num = range->base + (pin - range->pin_base);
++		}
++
++		if (gpio_num > 0)
++			seq_printf(s, "GPIO-%u ", gpio_num);
++		else
++			seq_puts(s, "NA ");
++
+ 		/* Driver-specific info per pin */
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
