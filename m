@@ -2,147 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F3C92258D5
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 09:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B10BF2259C8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 10:14:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgGTHnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 03:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgGTHnR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 03:43:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813FFC0619D6
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so24115202wmo.1
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=IVK09e1ld+9cwoXx1bqDODaFImU/E8BERDq0mWlu1Dh3gZ8IilQ3NLb5AgUJs2EZ6A
-         DOpTQs9i1N8ia2cP2g7Hb9P6XoaJ7E0SsvqJvP109FQdN1+ZnJhAs2U+kTjtokXyi7kX
-         KZWHKc+5M16aNSA+dKO3bVZQ3Ch6eBOqPwHOhmW6ZcCXCA9lkNv0mus2J2Dg295523dN
-         wlMsuRQmfpFIbc8P/E473L2Usu9r1pSH6N0HzqC+VSRl0++AZtaLlfi6afz/RKsfOi1+
-         pBDqXeB4fWSWXBmqduD5AQBaV8vSZx9hm2B0U5J2k7sG/cAbFhzBStssMGIksHjKYPH5
-         ApOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=IoPwuPEAVcc4+W867FhfnztTGlV55wVDiW+u/eeCsHbFbzt5CJugG3cR9xxljXVnlw
-         axjLxZky+NTBMY+hC0d65Q5jCfivOP1KWl48II+0XgzG5+S+f3eZMJQEdWZ9AXebPshb
-         aJIzWLyZMkRQ/U40cuJKUHlnFNWP6wW7IfhCKBruvOjPNRMnsmfadkYfPmbWLqsFOlYs
-         iPM/kVIFklnmEeGN7EMmzq/wA4cSy/9dAiWjOP3hhbZ7R9Da33StaEQH1DRTY/5CA0gb
-         +uAWZ3FGO/wQZj7uH5lWQGaAZzQaNKv8NIYjmQbKrlB/6uZfEC4wmsFfhpdimPRrmDFh
-         iHQA==
-X-Gm-Message-State: AOAM531uPG24cWsvmyjgFxddiHlPZwR2whnoUVQ2gbO/rWc0DWGxh2Su
-        0ne0xNQPIRz1TwZySLFQRgTMiA==
-X-Google-Smtp-Source: ABdhPJzdJSdBbBWM2quCXUnipLg3+n/33qPK8Rxd7dlcJHIfTbXk90f6awCJz9w28J/D1s9VK8ooPw==
-X-Received: by 2002:a1c:408b:: with SMTP id n133mr20209577wma.88.1595230995865;
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id o7sm17531643wrv.50.2020.07.20.00.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 08:43:12 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1725845AbgGTIOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 04:14:52 -0400
+Received: from smtp51.i.mail.ru ([94.100.177.111]:59000 "EHLO smtp51.i.mail.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgGTIOw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=EcLM7uKMsiORseKJACDv7+uuR50BGrYrWOpmNRGZ1S8=;
+        b=UGNv8jmCJdsJSBKYkKS7XWSm0CZPVY8SoJDb1VuTZDOKHHzJvidLoh3H33t+juoGcDFDbl/u++pn04Y0BC1pd0PwpNAFq0+HCICvHiUk7M2yD3dlVhcnVUXcj/QnGzTn4REtN2fl9ro0NUb1XAznawuPqMI6SwVLnnY1UoL9WX4=;
+Received: by smtp51.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+        id 1jxQwi-0004fj-DA; Mon, 20 Jul 2020 11:14:48 +0300
+Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200720074312.GL3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc>
- <20200717090656.GF3165313@dell>
- <52d85ea1ddc488762df547168e2001e9@walle.cc>
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
+ <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
+ <190bca20-946f-52f9-64f8-8971da17d38b@inbox.ru>
+ <CAHp75VfQdTtbiHjhBuf3czdKAgmiQeALo7CaqW36oEkSGSHUBA@mail.gmail.com>
+ <20200718042548.GA43247@sol>
+From:   Maxim Kochetkov <fido_max@inbox.ru>
+Message-ID: <7a22761d-c930-3597-6bf1-c799f70a47f8@inbox.ru>
+Date:   Mon, 20 Jul 2020 11:14:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200718042548.GA43247@sol>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <52d85ea1ddc488762df547168e2001e9@walle.cc>
+Authentication-Results: smtp51.i.mail.ru; auth=pass smtp.auth=fido_max@inbox.ru smtp.mailfrom=fido_max@inbox.ru
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC7183BC094B6F43973D86AAEB5F7F36A6182A05F5380850409833DE0D0DF3B0A572145BD1616FEAEC7A2706531F25CA427C7D8BDADE976749
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE79961E86438F5BDAEEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006379B0255B5E5688AF88638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC3198A535E5195FFABA676E34E6076D1243E1FED7EE6248C6389733CBF5DBD5E913377AFFFEAFD269A417C69337E82CC2CC7F00164DA146DAFE8445B8C89999725571747095F342E8C26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE71AE4D56B06699BBC9FA2833FD35BB23DF004C906525384309383FD4D963104D47B076A6E789B0E975F5C1EE8F4F765FC8E65E1C3733EDF1A3AA81AA40904B5D9CF19DD082D7633A0FEB97ECC69AE80BD3AA81AA40904B5D98AA50765F7900637A0C832920C108451D81D268191BDAD3D18080C068C56568E156CCFE7AF13BCA413377AFFFEAFD26923F8577A6DFFEA7C054662F8F2CA352F93EC92FD9297F6715571747095F342E857739F23D657EF2BD5E8D9A59859A8B6300D3B61E77C8D3B089D37D7C0E48F6C5571747095F342E857739F23D657EF2B6825BDBE14D8E7028C9DFF55498CEFB0BD9CCCA9EDD067B1EDA766A37F9254B7
+X-C8649E89: E960A6522D0EF3BD89367B65ABBD375FB09F471C3227DFD24CA68903CB919DCD8AE94DC3EAB57286
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojURwlcvcvMAk39vKUWwVNxQ==
+X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB2447A7ED55EE0ED42D24EDC104805D8A9CC229C8A6E59C67F7EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
+X-Mras: Ok
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Jul 2020, Michael Walle wrote:
+It works fine with this patch. Thank you so much!
 
-> Am 2020-07-17 11:06, schrieb Lee Jones:
-> > On Mon, 06 Jul 2020, Michael Walle wrote:
-> > 
-> > > There are I2C devices which contain several different functions but
-> > > doesn't require any special access functions. For these kind of
-> > > drivers
-> > > an I2C regmap should be enough.
-> > > 
-> > > Create an I2C driver which creates an I2C regmap and enumerates its
-> > > children. If a device wants to use this as its MFD core driver, it has
-> > > to add an individual compatible string. It may provide its own regmap
-> > > configuration.
-> > > 
-> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
-> > > instance.
-> > > 
-> > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > ---
-> > > Changes since v4:
-> > >  - new patch. Lee, please bear with me. I didn't want to delay the
-> > >    new version (where a lot of remarks on the other patches were
-> > >    addressed) even more, just because we haven't figured out how
-> > >    to deal with the MFD part. So for now, I've included this one.
-> > > 
-> > >  drivers/mfd/Kconfig          |  9 +++++++
-> > >  drivers/mfd/Makefile         |  1 +
-> > >  drivers/mfd/simple-mfd-i2c.c | 50
-> > > ++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 60 insertions(+)
-> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 33df0837ab41..f1536a710aca 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called si476x-core.
-> > > 
-> > > +config MFD_SIMPLE_MFD_I2C
-> > > +	tristate "Simple regmap based I2C devices"
-> > 
-> > Doesn't look like tristate to me.
-> > 
-> > Haven't you made this builtin only?
+18.07.2020 07:25, Kent Gibson пишет:
+> On Fri, Jul 17, 2020 at 06:07:04PM +0300, Andy Shevchenko wrote:
+>> On Fri, Jul 17, 2020 at 5:17 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
+>>>
+>>> I need a small userspace program to do some GPIO magic to communicate
+>>> other hardware like devmem. This program takes about 2,5 seconds just to
+>>> find GPIO lines by name.
+>>>
+>>> replacing synchronize_rcu to synchronize_rcu_expedited in
+>>> atomic_notifier_chain_unregister gives the same boost as removing
+>>> synchronize_rcu
+>>
+>> Have you tried to replace an atomic notifier call with a regular one?
+>> IIRC it's still not clear why atomic is used there.
+>>
 > 
-> Mh yeah, I forgot to change it to module in the driver. I don't
-> know whats better though, have it tristate or just offer a boolean
-> option because it should be small anyway. What do you think?
-> My interrupt driver will force it to boolean anyway.
-
-Better to give consumers the choice I think.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Indeed, I recently submitted a patch to switch the
+> atomic_notifier_call_chain to blocking_notifier_call_chain, as some of
+> the chained calls can sleep.
+> Not sure if that is related, or if the change would make this case better
+> or worse, but it would be interesting to find out.
+> The patch is in the current gpio/devel, btw.
+> 
+> Cheers,
+> Kent.
+> 
