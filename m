@@ -2,76 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C73226142
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 15:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C1C226188
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 16:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGTNqr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 09:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49696 "EHLO
+        id S1726491AbgGTODj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 10:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgGTNqr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 09:46:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDCCC0619D2
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 06:46:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b25so20289458ljp.6
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 06:46:46 -0700 (PDT)
+        with ESMTP id S1725815AbgGTODj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 10:03:39 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA13C061794
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:03:39 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id u25so9782743lfm.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8qtN5L8/xZpkQuUDdQgpDbwS59vLxj0mGpt2DoBoy94=;
-        b=eXsM1TqXMP0+Ycllxnt287iVoc4UP/VmkbTLyen6E3H8sTZIqd9z05gN/mMJfdmKmk
-         BoJo8MyzlEYp7ARXgkpltQj640PDZyIDVmJw8pr5I0qCjR5l4sA3Zs+PRacBBLXeWwSI
-         P/+0oQIeqpm3sV+uW1mN67zbkry7xF0VlZgjis++Euub9b1vv95MLRcvI5OCWJ4QlQCb
-         SuRNmhUdtMlzKM0Nmoz9Hv5kpvsp2YDTORZGw+lWD9umaFAaMgicUR+ONXSdsGOfBxzz
-         1rNvJhmUA1bS+pr1aejUW00ivh6s7iEjEE6htmYQ7BUmzXFlo5mlJrh17Ymq50aOh1Ap
-         0zsA==
+        bh=4AGV/Qaxh/I6F4LFiDi5lh+HB1lovQ7a2JPMBACmb9E=;
+        b=TQLE7kXLPkX+nlWBAq+iSeC8FzdztZgHBjoGZMNYNP7zq7H3OnGOYhIfDyjGaYpZsu
+         nRJPti3v7lcTqUFQMyuae6dHQ3ozhmh+550Lgkp8ImBYIkcbRh1dTfiJJo7uflHs7oZ5
+         3i4mxheFG8YU0JvNM2vHUYOKy1BDZpu+NbVmlzOEPrVHufKyLVHIR7OXrh84R5CXzez1
+         ly5RHC85gHiGtIdCLXuooswbu6/7zSjD/fWSuqrZNq62mJhKl4vcTWqUZ10e9q03grCI
+         +6JonYINKTfVfx8mVvsy/Q99hXRZ3QWt1ZSvcPetCbR6/du9XM5H9WpfFSk827NCKzzH
+         qyvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8qtN5L8/xZpkQuUDdQgpDbwS59vLxj0mGpt2DoBoy94=;
-        b=iPwvNmArKX/b5svE0JauGUvufDuYlF3E5Y32cigWif3JVZVKwQHfKPFh71JYBSJTNB
-         W/Wn1iV0iIK3yrbhCrjDQtKfUbaN/Nus1CwPQqiFJqLGYPCCuDfSQacf+SCnECy5S8+U
-         xaFtp/7snyK+QjVYlf23qB/N7QbG0CxUmXZd3puXnxDDFDuj/olb9sa9NzyW9XW1oEwH
-         93zkUHcpbU+v6y4P8cB/aAfZ191N2PSjI+OUMn3/Q4zNqCvj/+QGj35jWHt3lLM5CLZm
-         iMrEnt1nWtImsnptJ3RH6Vl3wqFzu801u80wC5+r4iMi2hQmw7N8xegBdwMHjO37Z2qK
-         ZjZg==
-X-Gm-Message-State: AOAM531FZfJzaKFxl8rMFlnI1kK8S5+gIq9GMFL/+YMtWopqlRl6GIXY
-        ixWAJF0j/6RwhOxj7OYaVSVmiIJox2mCi2znp0GBKw==
-X-Google-Smtp-Source: ABdhPJzRSIGPw4xCiw8wIgSx2BFb3C3mWivZPGkHLMXSE3njtM+f1mImRq6NBxxseL7B9Y8eFbRc4USvjpMyv+bDbIo=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr9943001ljc.104.1595252805400;
- Mon, 20 Jul 2020 06:46:45 -0700 (PDT)
+        bh=4AGV/Qaxh/I6F4LFiDi5lh+HB1lovQ7a2JPMBACmb9E=;
+        b=H7ogY9a7r1oZ5FTNa2V4uMqgvTeBJCkjg2OPXVxebN16kop32rT+D5hD7H6KPvsf7C
+         2kLVXcQ3B3UiRTPIGa4eaSiebj5yJ6a7ZdQN3CwdSppwLCzyQClTSX9iMg2+vTKyIpXf
+         HWY3EaWd/PrH1KmLCT2z7aEma/Onkd2gZA6JoMDB31pd968iJnpaqC8uaZaC+LGh4ksB
+         wwUqS1GBpgHoJJaH8RT44JQJjPwUymZ24rqoIzlnqLiOtY814uty94WTucGA9lTj5Qqb
+         SiusfsMl5bflTTABQ5ltlSA5M1SD1dhg3G/YgRsbD2nBwY+piFK6Z7H2DT8pjNgDAXjh
+         HoRQ==
+X-Gm-Message-State: AOAM5314mql0pCLT/YTe0mnJiqKxYG6lkPE99ZQMU9+Cml5qc+3OSt5G
+        Dgc2Z3fS2idAB6Q2DBG/xLcLwzJT617deR7w8sjA2A==
+X-Google-Smtp-Source: ABdhPJzkZlA3KWl9yIJEt4QJBvyKwNFV+Mmho1BqTwNxp9C4SgN8Bn3fLZ/UFDc98h5kPnzx4NTMY60oDDniAmvE35c=
+X-Received: by 2002:a05:6512:3150:: with SMTP id s16mr10972368lfi.47.1595253817568;
+ Mon, 20 Jul 2020 07:03:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717014908.13914-1-jay.xu@rock-chips.com> <20200717014908.13914-2-jay.xu@rock-chips.com>
-In-Reply-To: <20200717014908.13914-2-jay.xu@rock-chips.com>
+References: <20200717181220.1773543-1-drew@beagleboard.org>
+In-Reply-To: <20200717181220.1773543-1-drew@beagleboard.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 15:46:34 +0200
-Message-ID: <CACRpkdYyZ3GHYo0vB-1UpW+EtiTXgeRuOhOuB0XxUNXN11N9-w@mail.gmail.com>
-Subject: Re: [PATCH 01/13] pinctrl: rockchip: add nr_pins to rockchip_pin_ctrl
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        David Wu <david.wu@rock-chips.com>
+Date:   Mon, 20 Jul 2020 16:03:24 +0200
+Message-ID: <CACRpkda=yQio47Wy=EkDX6X4e1nECkU9=XdAHM+wqRPWJL-cEA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: omap: handle pin config bias flags
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 3:49 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+On Fri, Jul 17, 2020 at 8:12 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-> Add nr_pins to rockchip_pin_ctrl by hand, instead of calculating during
-> driver probe. This patch is prepare work for making rockchip_pin_ctrl to
-> be const type.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> V2 changes:
+> - adjust the braces to match the correct coding style
 
-I'm letting Heiko review this series, to me it looks all right.
+Thanks
+
+> - Linus: should I be creating a patch that is just the delta for the
+>   braces?
+
+No, I noticed I mistakenly applied it to the pinctrl tree instead
+of GPIO so I had to revert it there anyway. I applied this
+version to the GPIO tree instead.
 
 Yours,
 Linus Walleij
