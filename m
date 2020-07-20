@@ -2,55 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95083226286
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 16:50:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE1DA226294
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 16:52:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgGTOuA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 10:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgGTOt7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 10:49:59 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2F6C061794
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:49:59 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so18149082wrv.9
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5sLF/sPtlwCH+sd1O451ya1iBl+DQ2/XqJaaGU21mgI=;
-        b=YQRnFSl35dnimP+3Mm9aYrKDK3uJXYMZ4Ak+ue/Nqc7tr1kInNtXTk0DYha0Yh+Yek
-         h+dKxcCsLDywGd5wg0uWuxPBjtjpM1BZOz/Ehz9MDIQFr9lDfcS1cYs3ohH5b2QTY+Kz
-         lLStffj6cr7AAQ42WG/icBHZeGX/fNgLqV9iJdUpC+fkmL1fnYHrF4QNaRxYz4ImwZgg
-         qx3Z2raaSfO7XLym7u7Xric5roAQH3veO1/eLkhTBDM/oo/YJ62mJ+CUA38aJ6yGCDMQ
-         s6nW3mrRdNNmo7BFw1chkkpZ/yg0/tQgYpjcpfzPopeh8zn+J7PCf3pcwnnOLStuf1mi
-         I23w==
+        id S1728517AbgGTOwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 10:52:24 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40313 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgGTOwX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 10:52:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f139so25476128wmf.5;
+        Mon, 20 Jul 2020 07:52:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5sLF/sPtlwCH+sd1O451ya1iBl+DQ2/XqJaaGU21mgI=;
-        b=eA+iS7iiuS0F99lVy68BmidMPG2PTvuRxnBE+XqPN8gFDeuaobiVwD7FDf9IkTVsl7
-         DskqXhO4ORZCxUfJaRvE5kNX4si/o3LNhldj7qFUJSRe88Y2Yt+z8LQL+O43cOEOCUp5
-         zsfG1F+8cgyd0FK/uL+u+ujex3PqIoWst9BsF+4VSg70szBspaCYkZs4v5stJYduB/ai
-         Igz7h+qxc2D9Ph2upOGJ3wx0PeIrerdgl6X9oJq3zyB61ikQYnOWSUg5dp/tByTrADWX
-         o4NXVT89CAbuNNUdEEA+zcaCHkEsPLH3XUy1/kxLenaC1nRBYSao1qNG4p7c4yitwogx
-         Wx2g==
-X-Gm-Message-State: AOAM5314JXUFOshw8iCoA//hJ6ofl1tLLDACBkFjCBb0bpGL0LWxJ2iJ
-        jVtrrhQvKRNk4gX8EmNdGTKBzQ==
-X-Google-Smtp-Source: ABdhPJx0eSsScLmjCgILcg+D8bH0FTIV+nC0ejd3OMEzJ1s6c+El1M6A71SDWbhwZcOtRtQs59Thiw==
-X-Received: by 2002:adf:dcc9:: with SMTP id x9mr8738276wrm.153.1595256597966;
-        Mon, 20 Jul 2020 07:49:57 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id b139sm226738wmd.19.2020.07.20.07.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 07:49:57 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:49:55 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2V8ErK/fpx1GjjJkd7zr33gxU0FS1gxM3mR4Aw7EoUo=;
+        b=kXcauw4KWo52NLMGVnOA6rGdU7uF0CPKTxV/9N4B5J2kYLnVS74ASrrkqQ2q0/8/vC
+         BBdVbZFfsbzKqLOYA9+u0v1q56P/4WZvSg6mHY8sqCctN0jDAPGfMT27U+8Pwrruufn2
+         MG1BdGxygDhR8O5PvrmMGh5yaDtNrWys9S8OSxjgchwxswem3mJMhBM0WNg7Le0K317n
+         SBsG4H4+/0dOBIiMQwStQxTtLRN8aQbgG11EpyWhE5hRoILxmIY4bXPej3KEBvDaIhu9
+         mDhErdpXzNyAHvm4eazhQVMC5lrs3TSrcPqnhj9ey7kv97ivvT3FIqXxKiOYLwk/wy4H
+         er1w==
+X-Gm-Message-State: AOAM532JdA18aOwXpRG5w0+20jq5epioKu827I3eTonpvT4DXlszSSBP
+        5ozWqV8HTGpOlve7vCwYsfs=
+X-Google-Smtp-Source: ABdhPJwRT/a/cgcWM1P23aYPfb2HdGx66D1g8ZjbrhYnGQTfAXhRD4/WPbzkCbY4g9aop+qAOC4HsQ==
+X-Received: by 2002:a1c:4343:: with SMTP id q64mr21957889wma.20.1595256741833;
+        Mon, 20 Jul 2020 07:52:21 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.200])
+        by smtp.googlemail.com with ESMTPSA id 33sm36808145wri.16.2020.07.20.07.52.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jul 2020 07:52:21 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 16:52:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -58,45 +43,47 @@ Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org
 Subject: Re: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious
  misuse of kerneldoc to standard comment blocks
-Message-ID: <20200720144955.GD3368211@dell>
+Message-ID: <20200720145219.GA23990@kozik-lap>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
  <20200713144930.1034632-7-lee.jones@linaro.org>
  <20200720142714.GA6747@kozik-lap>
+ <20200720144955.GD3368211@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720142714.GA6747@kozik-lap>
+In-Reply-To: <20200720144955.GD3368211@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Jul 2020, Krzysztof Kozlowski wrote:
-
-> On Mon, Jul 13, 2020 at 03:49:11PM +0100, Lee Jones wrote:
-> > No attempt has been made to document either of the demoted functions here.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
-> > 
-> > Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> > Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Cc: Thomas Abraham <thomas.ab@samsung.com>
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+On Mon, Jul 20, 2020 at 03:49:55PM +0100, Lee Jones wrote:
+> On Mon, 20 Jul 2020, Krzysztof Kozlowski wrote:
 > 
-> Thanks, applied.
+> > On Mon, Jul 13, 2020 at 03:49:11PM +0100, Lee Jones wrote:
+> > > No attempt has been made to document either of the demoted functions here.
+> > > 
+> > > Fixes the following W=1 kernel build warning(s):
+> > > 
+> > >  drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
+> > >  drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
+> > > 
+> > > Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> > > Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> > > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > Cc: Thomas Abraham <thomas.ab@samsung.com>
+> > > Cc: linux-samsung-soc@vger.kernel.org
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+> > 
+> > Thanks, applied.
+> 
+> Same as the others.  Already in -next.
 
-Same as the others.  Already in -next.
+Thanks for letting me know. I dropped all of them.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
+
