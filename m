@@ -2,78 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA96422618E
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 16:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B422261BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 16:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725792AbgGTOFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 10:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S1726383AbgGTOQm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 10:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgGTOFd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 10:05:33 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9231CC0619D2
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:05:33 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h22so20367206lji.9
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:05:33 -0700 (PDT)
+        with ESMTP id S1725970AbgGTOQm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 10:16:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12952C061794
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:16:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id j11so20407251ljo.7
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 07:16:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bdUe0ZPVosL7Z4WJYy/0J3RKrsJsZRzmUChTLrXGltA=;
-        b=B+lyXPAPcJEGlKO6a8Jog7GPdTUGPIyIGEwfQSUPh1vUrYwjCvqP+RYm6xyhHkFJqf
-         6DzsMS8XMIW/cXmQeeKCr+nowdpwHbgzHZ8sU0ubiVrHbDJjddA7m9D5ynKmoahqNp8n
-         ArZ7l3/E3DxkhUlDtGsSA8J55b5iWSMibz8qJ/V/nalShSB4VUqNN6RZUMGbMh9Pabms
-         vaJcdRa5xLqCxqf+mnZRNu/UGyQVT13CSoA2QeklJQ5IGO1TfGV+1WD9igeLU29QNXLY
-         53DouSIWzkRm4a1pIt9ShzxhLuhih50eONVPlZn5eGrmBjZiljZ9jfolUKkmjggr2QbY
-         TzNQ==
+        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
+        b=D0FdBC7SOJT1hoV2IiUH6Eaq72kKwsLCWcjJhyuRbRsxO7Rst9US5bLsUu/uswLx+r
+         BA1JKJ1DqJJKTxfUSkxYMzWt9tGuNubOZLSnCwjmfEF4p5x5NMDCBGPR99F6nqtqMqTX
+         0pHVdSY91l8NVK16xRWRY4o0e6C5N8l10mAfQENoAyqsEIy3VgCGQWKE9iqfk5g7xOEb
+         GqXf2mNYaeQDmxtXnxtxkRzJ0POTkULXYoC7/WMpjOfeWOy1J11ZCm9SgY/Jn6hnZtRu
+         hkb3o2K9e4NAg1UMqo4+dj3I8NIpxw5ZPF5/u/yM7oW/U42AJe1vE4pE+hE4Pm5Hk7GO
+         82WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bdUe0ZPVosL7Z4WJYy/0J3RKrsJsZRzmUChTLrXGltA=;
-        b=P5R88/TywIpSt3mQU1pVN+X3HaMbjVdgOEV4FZmoEgUKARO/WjKrF5sR+1z4XiV7HH
-         ueBLEExLztgxE58rGfMeRTaZnx/aSBv+GbbephT40Q2KLp8ketQOVz4/KnqeWGRiTAKu
-         pgzXFKeR0VO9x1xMBVS6+WynUTBJcrXCMGFnTi3gEidaRZJGGkfi0M3w5aiO4Zk/vDCd
-         fJCLwfGs1MpWz/qTTwBsuXN49LtlPKJiIKQ3SagViUAw9xhvvqAx98m4egGljFmG3+Qh
-         bopUwWEBF2ZUepENF8O3OSSE0hB7cVHjf6fr07iNU+xh9p8U5o9B459miyAbjJ402U7v
-         L1Hg==
-X-Gm-Message-State: AOAM5322QZpRujMiLzTDuR+TQvu35WYQs2bE4NWZaH+7YK6Og0dJD3Sl
-        coaYkkmi/S0PzopN01rFaKgUKuBY5pw+Shclf/MDqg==
-X-Google-Smtp-Source: ABdhPJwlxLkDNR9YPaaSHjCmjPSd1/6njPLm9AlnI7yvRmTCzkh9tqcIVMbnPI+PsHQ0pWClZfQEbRBp1gKwEuG5GNU=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr9730976lji.338.1595253931811;
- Mon, 20 Jul 2020 07:05:31 -0700 (PDT)
+        bh=CfVCU5mHCDeITY1rM//7ZpN//MVZr1rSQIhyKmVtOzg=;
+        b=FN6HCuHBLZRngyUGeTe+LraBL3gBs2WGFmj0LPSUs7yCAnxvm2MVaitkExprBO2fUH
+         VKVISmSvMRJoIY2TL1CTn255kSqjqT6xc/3YFpNnx6Mrt3wlYcKcAxSvTXp/PRWskzti
+         m6G2zxTl0SXz5fM6LrpI6Bpt5h9724h/XQe1sZ1pRmgp4PuvUwL41f7rq/sjafFnyinN
+         rTPJxFVjjogDFWg1M1+sXXluCZQr1p9xHLo8CiqA2yO+/X5rF0TqL8vbInULgjEgGf4l
+         7ArwyY6OkNlOAXNx5cYkT+7u+tHJarvBVtMYsIk5x7gSpxBlYK31ixjxO0cly7GtE0Oz
+         owbQ==
+X-Gm-Message-State: AOAM533lk6uyZXLFwxzKJnd8yb3OgTiPRZMWZZoWslPdeptuCxE2cmU+
+        Rs/9BsK0NXKWTTEa7j5J6fe7eBcaK8+90YaozW8Fmw==
+X-Google-Smtp-Source: ABdhPJxCdtE5WzgJ33QEckSvFwyWtiAS2vzwpoohX8wqofbxOOkD2khe7ZOVTsb84s/0pYwurWaEsvPkRPvE3gGmlv4=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr11280888ljc.286.1595254600586;
+ Mon, 20 Jul 2020 07:16:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715213738.1640030-1-drew@beagleboard.org>
- <CAHp75VfYXuZgtkUvrm0VGX7CcyZoC2mzC_x4mVhzVCeTjZpiJg@mail.gmail.com>
- <CAPgEAj4gJsZLWDEkjfF+THcD92y6HL8T00NWzpECLDdXQYLVfA@mail.gmail.com> <20200717194246.GA1775009@x1>
-In-Reply-To: <20200717194246.GA1775009@x1>
+References: <20200718120807.19714-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200718120807.19714-1-grandmaster@al2klimov.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 20 Jul 2020 16:05:20 +0200
-Message-ID: <CACRpkdZqARhG7ZtmhL5RJ1HOBYHDufzbYu_u-sH3RKUGF6=-ew@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: omap: handle pin config bias flags
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+Date:   Mon, 20 Jul 2020 16:16:29 +0200
+Message-ID: <CACRpkdYXS09FNE3k9e2rc36zcPrpJTBiptVTe35R+_efNZ0VNw@mail.gmail.com>
+Subject: Re: [PATCH] pinctl: ti: iodelay: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        ext Tony Lindgren <tony@atomide.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 9:42 PM Drew Fustini <drew@beagleboard.org> wrote:
+On Sat, Jul 18, 2020 at 2:08 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
 
-> Sorry for the noise.  I failed to realize that I had already sent v2
-> (regarding the handling of the return value).  I have now submitted v3
-> patch [0] to fix the braces formatting that Andy pointed out.
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Oh, OK I applied the v3 instead. To the GPIO tree.
+Patch applied as uncontroversial.
 
 Yours,
 Linus Walleij
