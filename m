@@ -2,79 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B10BF2259C8
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 10:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21DF02259D0
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 10:17:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgGTIOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 04:14:52 -0400
-Received: from smtp51.i.mail.ru ([94.100.177.111]:59000 "EHLO smtp51.i.mail.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgGTIOw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=EcLM7uKMsiORseKJACDv7+uuR50BGrYrWOpmNRGZ1S8=;
-        b=UGNv8jmCJdsJSBKYkKS7XWSm0CZPVY8SoJDb1VuTZDOKHHzJvidLoh3H33t+juoGcDFDbl/u++pn04Y0BC1pd0PwpNAFq0+HCICvHiUk7M2yD3dlVhcnVUXcj/QnGzTn4REtN2fl9ro0NUb1XAznawuPqMI6SwVLnnY1UoL9WX4=;
-Received: by smtp51.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
-        id 1jxQwi-0004fj-DA; Mon, 20 Jul 2020 11:14:48 +0300
-Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726254AbgGTIRY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 04:17:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTIRY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 04:17:24 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FE7C061794
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 01:17:23 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id f12so17088588eja.9
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 01:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=46j7Dn5MEAHJtn0suMXqVFDrZeSh7nUoyIL19nPzl0Y=;
+        b=c4wJa+dLCqLMzgm4hcg3Jwf9eZXoikb/medTIK/niFSbiP9s0gsH5Q91j0GdHearDQ
+         HsGl4M0H2099EO627e1E51ATLA3mJvrltyfOYXmx30hq31JrThxyVZlJBer747F6O8/x
+         iTvFQY9kY7266Lv3vOeY5T1ZegL/uz+d98hxFNJQUWlxLJsEjyFsH07rXwgdohP1wc6p
+         tz0XAnG5ORjgfM1Le8+6sB1pUjHM1G9jcTYLGO4Ny8Yftbk4/QISejJj4XvJ6v/t5Vjm
+         XWpyPu5FhnAwA28BRRxnLmSvd4xzJww50ux3rsKG+oAqSUMLbcVsmCuFpQffFvxgorW7
+         7tIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=46j7Dn5MEAHJtn0suMXqVFDrZeSh7nUoyIL19nPzl0Y=;
+        b=cEraPxBlNGvhRja5beIGarTckSot53Jv4XCcl7yUyvnqCHM1V/LfUJPvV6mBAlYdHj
+         oU8JsxP71TFGZ2Typ1+hJ+wUbFZOvFaRB3Ln3VBj2ITeS+oJSCSz5gggFg28ah7n1LZi
+         KvBYYe5wPxFG9Sx8eSvjOLFXLb4XUL50RuKmpEDcBY2IVNaCQEypgQDyZepA0ESMR/zx
+         m5tHP15ky0JadKkL/7wpWJ4OiOssd8v/sErlDFOg/2avcPrZxi05vpvqHkDg0/t/5q60
+         sMgmPmHuLq8HaTE54sWeeBJ7Ufy+pSU1yb0qlFDUzF4/tS2d3TCFNaDg7NYU+YMZPgf6
+         bBuQ==
+X-Gm-Message-State: AOAM5318ESua7tq6kxkKfMrcDVtnewUFQAFepC39pPFVEZN/rz1ikVxI
+        d4M5r3R87XNAhjvSfwgiNePsZap1AMfz99jI0LOvL/GKaEY=
+X-Google-Smtp-Source: ABdhPJy0rAmpAf6RnG5QxTyVO73cdbc27ZV833fxW+bRehVyY0dT+TX3Jt8wfuQasSMB26lcIlHa7sPXVQDiYW3XE8Q=
+X-Received: by 2002:a17:906:8688:: with SMTP id g8mr19265716ejx.505.1595233042407;
+ Mon, 20 Jul 2020 01:17:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com> <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com> <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com> <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com> <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+ <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com> <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
+ <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com> <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+In-Reply-To: <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Jul 2020 10:17:09 +0200
+Message-ID: <CACRpkdY+amtrDE4gaSU5Du2CUivxo6gnUV5zZOcaJJ8=md-4Kg@mail.gmail.com>
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rodolfo Giometti <giometti@enneenne.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
- <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
- <190bca20-946f-52f9-64f8-8971da17d38b@inbox.ru>
- <CAHp75VfQdTtbiHjhBuf3czdKAgmiQeALo7CaqW36oEkSGSHUBA@mail.gmail.com>
- <20200718042548.GA43247@sol>
-From:   Maxim Kochetkov <fido_max@inbox.ru>
-Message-ID: <7a22761d-c930-3597-6bf1-c799f70a47f8@inbox.ru>
-Date:   Mon, 20 Jul 2020 11:14:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200718042548.GA43247@sol>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp51.i.mail.ru; auth=pass smtp.auth=fido_max@inbox.ru smtp.mailfrom=fido_max@inbox.ru
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC7183BC094B6F43973D86AAEB5F7F36A6182A05F5380850409833DE0D0DF3B0A572145BD1616FEAEC7A2706531F25CA427C7D8BDADE976749
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE79961E86438F5BDAEEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006379B0255B5E5688AF88638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC3198A535E5195FFABA676E34E6076D1243E1FED7EE6248C6389733CBF5DBD5E913377AFFFEAFD269A417C69337E82CC2CC7F00164DA146DAFE8445B8C89999725571747095F342E8C26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE71AE4D56B06699BBC9FA2833FD35BB23DF004C906525384309383FD4D963104D47B076A6E789B0E975F5C1EE8F4F765FC8E65E1C3733EDF1A3AA81AA40904B5D9CF19DD082D7633A0FEB97ECC69AE80BD3AA81AA40904B5D98AA50765F7900637A0C832920C108451D81D268191BDAD3D18080C068C56568E156CCFE7AF13BCA413377AFFFEAFD26923F8577A6DFFEA7C054662F8F2CA352F93EC92FD9297F6715571747095F342E857739F23D657EF2BD5E8D9A59859A8B6300D3B61E77C8D3B089D37D7C0E48F6C5571747095F342E857739F23D657EF2B6825BDBE14D8E7028C9DFF55498CEFB0BD9CCCA9EDD067B1EDA766A37F9254B7
-X-C8649E89: E960A6522D0EF3BD89367B65ABBD375FB09F471C3227DFD24CA68903CB919DCD8AE94DC3EAB57286
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojURwlcvcvMAk39vKUWwVNxQ==
-X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB2447A7ED55EE0ED42D24EDC104805D8A9CC229C8A6E59C67F7EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
-X-Mras: Ok
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It works fine with this patch. Thank you so much!
+On Sun, Jul 19, 2020 at 8:36 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Jul 16, 2020 at 6:17 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+> > On 16/07/2020 15:38, Linus Walleij wrote:
+>
+> > I see but this interface is not designed for such complex usage nor to compete
+> > with the current character interface! It is designed to allow boards
+> > manufactures to "describe" some I/O lines that are not used by any driver in the
+> > device tree,
+>
+> Why are they not in firmware tables? Platform is a set of hardware
+> that makes it so.
+> If something is not in DT, then there is no possible way to know what
+> is that line?
+>
+> Or in other words how does the OS know that the certain line is
+> connected to a relay?
 
-18.07.2020 07:25, Kent Gibson пишет:
-> On Fri, Jul 17, 2020 at 06:07:04PM +0300, Andy Shevchenko wrote:
->> On Fri, Jul 17, 2020 at 5:17 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
->>>
->>> I need a small userspace program to do some GPIO magic to communicate
->>> other hardware like devmem. This program takes about 2,5 seconds just to
->>> find GPIO lines by name.
->>>
->>> replacing synchronize_rcu to synchronize_rcu_expedited in
->>> atomic_notifier_chain_unregister gives the same boost as removing
->>> synchronize_rcu
->>
->> Have you tried to replace an atomic notifier call with a regular one?
->> IIRC it's still not clear why atomic is used there.
->>
-> 
-> Indeed, I recently submitted a patch to switch the
-> atomic_notifier_call_chain to blocking_notifier_call_chain, as some of
-> the chained calls can sleep.
-> Not sure if that is related, or if the change would make this case better
-> or worse, but it would be interesting to find out.
-> The patch is in the current gpio/devel, btw.
-> 
-> Cheers,
-> Kent.
-> 
+IIUC Rodolfo's idea is to provide this with a DT compatible.
+The use case will be industrial automation-ish tasks from userspace.
+
+Currently the only mechanism we have in the device tree to
+assign a use for a line is the "gpio-line-names" property,
+which creates a name that is reported upward to the character
+device.
+
+Rodolfo's patch is for scripting use cases, assigning some lines
+for some cases to be handled by scripts, not the character device.
+
+What I am a bit worried about is if this would be a Linuxism, as DT
+should be OS neutral.
+
+Yours,
+Linus Walleij
