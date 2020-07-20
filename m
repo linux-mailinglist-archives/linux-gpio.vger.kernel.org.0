@@ -2,140 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8F6122548C
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 00:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 940642258BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 09:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgGSWbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Jul 2020 18:31:35 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38139 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSWbe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jul 2020 18:31:34 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B5C8F22FEC;
-        Mon, 20 Jul 2020 00:31:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595197891;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h4N28ZYWIcbmHLT9PzLmmIKU9hPLYoVHxRdShOC5C/M=;
-        b=N3H6X4pTPOFXN6bxZLOMhel7mRPg4vOcbE8OI1ADuH7cXiYE+9ibZZV3pFhuM7xrRn33ch
-        mX6K7klggfZZgIqkaS9Gtjt15lU60QqayRU7HmZ37umopWGQglE5lXEsck7mXnLfvPn0bh
-        A1ddZKFhuuBU1Zomb0T/y9yJvuTsELo=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jul 2020 00:31:29 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726901AbgGTHiK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 03:38:10 -0400
+Received: from smtpweb146.aruba.it ([62.149.158.146]:51159 "EHLO
+        smtpweb146.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHiK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 03:38:10 -0400
+Received: from [192.168.1.134] ([93.146.66.165])
+        by smtpcmd05.ad.aruba.it with bizsmtp
+        id 5Ke52302y3Zw7e501Ke679; Mon, 20 Jul 2020 09:38:07 +0200
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-In-Reply-To: <20200717090656.GF3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc> <20200717090656.GF3165313@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <52d85ea1ddc488762df547168e2001e9@walle.cc>
-X-Sender: michael@walle.cc
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+ <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
+ <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+ <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com>
+ <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
+ <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+ <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <a80dda59-4037-e67b-d99c-7dcdcb44a8f4@enneenne.com>
+Date:   Mon, 20 Jul 2020 09:38:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1595230687; bh=GKkOGIGhCBY9lAbMSnioB/xi0FLqCI9XkJzBUYXRyq8=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=Q/sM94YqyKWgCxRnrE8kZTBHfBp7DrbVkIe8dGc2dqp7GkLb36bDj6rhpHPJPjtYg
+         p3LadMsQnWhia+OtJAprGIfs5RNfqqhkvzXzd/Nz/E2/qjyaF9lIuA99IMm6UbzpTa
+         1AUQC58YoGbKhjJiFE8cxLNJkM90wyrCudQ9FMejb3rMQRTfEpQAUlFe5OfWeP4X8P
+         fDw49wU3AvzJBlbezlQ51OYvgZSwuITnZScrpZTL4XNEF9IILZq4S0XkPX2ClivjHz
+         G6BWEpyDid/J5XohaUPlaf94stQDK7X0rYDEHTVB/3grsdBTYQb74GSEw9iyzbPADQ
+         rZCdCMQmI3GUw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-07-17 11:06, schrieb Lee Jones:
-> On Mon, 06 Jul 2020, Michael Walle wrote:
+On 19/07/2020 20:35, Andy Shevchenko wrote:
+> On Thu, Jul 16, 2020 at 6:17 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> On 16/07/2020 15:38, Linus Walleij wrote:
 > 
->> There are I2C devices which contain several different functions but
->> doesn't require any special access functions. For these kind of 
->> drivers
->> an I2C regmap should be enough.
->> 
->> Create an I2C driver which creates an I2C regmap and enumerates its
->> children. If a device wants to use this as its MFD core driver, it has
->> to add an individual compatible string. It may provide its own regmap
->> configuration.
->> 
->> Subdevices can use dev_get_regmap() on the parent to get their regmap
->> instance.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->> Changes since v4:
->>  - new patch. Lee, please bear with me. I didn't want to delay the
->>    new version (where a lot of remarks on the other patches were
->>    addressed) even more, just because we haven't figured out how
->>    to deal with the MFD part. So for now, I've included this one.
->> 
->>  drivers/mfd/Kconfig          |  9 +++++++
->>  drivers/mfd/Makefile         |  1 +
->>  drivers/mfd/simple-mfd-i2c.c | 50 
->> ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 60 insertions(+)
->>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
->> 
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 33df0837ab41..f1536a710aca 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
->>  	  To compile this driver as a module, choose M here: the
->>  	  module will be called si476x-core.
->> 
->> +config MFD_SIMPLE_MFD_I2C
->> +	tristate "Simple regmap based I2C devices"
+> ...
 > 
-> Doesn't look like tristate to me.
+>> I see but this interface is not designed for such complex usage nor to compete
+>> with the current character interface! It is designed to allow boards
+>> manufactures to "describe" some I/O lines that are not used by any driver in the
+>> device tree,
 > 
-> Haven't you made this builtin only?
-
-Mh yeah, I forgot to change it to module in the driver. I don't
-know whats better though, have it tristate or just offer a boolean
-option because it should be small anyway. What do you think?
-My interrupt driver will force it to boolean anyway.
-
+> Why are they not in firmware tables? Platform is a set of hardware
+> that makes it so.
+> If something is not in DT, then there is no possible way to know what
+> is that line?
 > 
->> +	depends on I2C
->> +	select MFD_CORE
-> 
-> Why?
+> Or in other words how does the OS know that the certain line is
+> connected to a relay?
 
-leftover :( I'll remove it.
+I'm sorry but I'm not sure to understand you.
 
+I think that within the DT the board developer should describe his/her hardware
+in the most detailed manner for drivers and, as last step, for the userspace.
+The OS should only knows such IO lines whose are driver related while other ones
+(such as a relay or a generic digital input such as a lock/unlock signal) should
+be described for the userspace.
 
->> +	select REGMAP_I2C
->> +	help
->> +	  This is a consolidated driver for all MFD devices which are
->> +	  basically just a regmap bus driver.
-> 
-> Please expand on this.  I think it deserves greater explanation.
+At the moment the only way to "describe" a digital output/input not related to
+any driver is by using the led or uinput interface that are not designed for
+such purposes! My suggestion is to give a proper/dedicated description of such
+IO lines.
 
-ok.
+Ciao,
 
-> 
->>  config MFD_SM501
->>  	tristate "Silicon Motion SM501"
->>  	depends on HAS_DMA
+Rodolfo
 
 -- 
--michael
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
