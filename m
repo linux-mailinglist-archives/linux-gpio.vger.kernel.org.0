@@ -2,56 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 417C6225E49
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 14:19:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 937B9226126
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jul 2020 15:39:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgGTMT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jul 2020 08:19:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33298 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgGTMT0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:19:26 -0400
-IronPort-SDR: CuOZiaL6kxA7mjtMKii8OW77v2hb3rMHoHdTSyokwYk0eF8/8M5M5w5kPGxS1Z3NhFrHoFdBOV
- a1qHFNvQB+kQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9687"; a="147849022"
-X-IronPort-AV: E=Sophos;i="5.75,374,1589266800"; 
-   d="scan'208";a="147849022"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 05:19:25 -0700
-IronPort-SDR: zgsJ13n28luTSR4ioZyCdgHfqSl5akBFO5AoqSvf3+QB8AJcFHIHuPHtIjETDKfhZFEYo4JVlp
- XsKLEo3DormQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
-   d="scan'208";a="392016971"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Jul 2020 05:19:23 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 20 Jul 2020 15:19:23 +0300
-Date:   Mon, 20 Jul 2020 15:19:23 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1] pinctrl: intel: Add Intel Emmitsburg pin controller
- support
-Message-ID: <20200720121923.GI5180@lahna.fi.intel.com>
-References: <20200716124244.50797-1-andriy.shevchenko@linux.intel.com>
+        id S1728424AbgGTNjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jul 2020 09:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgGTNjH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jul 2020 09:39:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA8AC0619D2
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 06:39:07 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so20276952ljn.4
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jul 2020 06:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SZUWsa00iYf7K4HBHvDEC7hUnyTTw9NrXYfUvdxiJpg=;
+        b=heDejIMJKRXAtiwM4h6NQUEF4C8R+h9OzJFFP+tx2PpKbFI2hUWSzTXkRZ5BekWopZ
+         kkmHaTiWp+56nihbet+WZkRgccJ+WY102U7/bX1toov424jnra2iCMxgAaLdXldEDN9m
+         /M8CrZMGUnAdq3bLWETEuv7OnckZaZ7GNi/Zuv2LR76FQP+GkPBC7iWl1Isv1tTs42FF
+         a+kNCmhUgNF5Ky1orT1rf+r2/pdGrZr1F8A4yIGvL3Hjqp/vvU3qdtlqbklKCbpDSO4/
+         /GttKdlO6SXUGc+AMPh+wpuKfytoLCdVR9ceEA9QCUEUVTGf+BvfnCLlMrY8DbFi+EID
+         sVlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SZUWsa00iYf7K4HBHvDEC7hUnyTTw9NrXYfUvdxiJpg=;
+        b=ZdlSM/Uo/29XCYqXrfFIMbybtdvLNWbR1jaXP9cpr7M8jO+hIYW/UN1s90ZyZr64yB
+         eeqhgpWeYTgcyE/ks38bPq2oojiA0R0KYZCy6udV+4HInTWDxlRzgVO1TQrTWHvZ02A5
+         N7lKKOIIvS37UgZS2+017tuHglXWOJC7vBWUim+2x+caZSRHWkKgkSET2Aw796TeoGp4
+         q7sYhktj0dPfAz221IEd9OnztqKZ3scDjcXncpfvJxkS3kRtUkVVhUC35Y+wfvPmobS5
+         cHt+4AklnQawQaQi1dT2jQRsHPECx/VYvPxkQ91XOSKpMBXHdxRDqppURnys/R7bD5T6
+         LkWQ==
+X-Gm-Message-State: AOAM531RD7Haxb2eCH/CmmZ+2wpFzU3iZvdPxEqqXjIUsBsMaoCVBnjK
+        vPcVuiwf83DJClP/QNaFCWYt5DStYgTbtwQrUY739g==
+X-Google-Smtp-Source: ABdhPJzHGab0xEgyMQVlieVYjfPMYKbHimCOGtZ21uJ+KasO8fWcs9EFajtwAK+p4doX0sdbOccThgfvXySb191nTxI=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr11205367ljc.286.1595252345768;
+ Mon, 20 Jul 2020 06:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716124244.50797-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200716212213.GA17623@embeddedor>
+In-Reply-To: <20200716212213.GA17623@embeddedor>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Jul 2020 15:38:54 +0200
+Message-ID: <CACRpkdaBuvbtswYczwsSx9-YOLODs5x8YvWSB4bpMbXpvoPLrA@mail.gmail.com>
+Subject: Re: [PATCH][next] pinctrl: qcom: spmi-gpio: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:42:44PM +0300, Andy Shevchenko wrote:
-> This driver adds pinctrl/GPIO support for Intel Emmitsburg PCH. The
-> GPIO controller is based on the next generation GPIO hardware but still
-> compatible with the one supported by the Intel core pinctrl/GPIO driver.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, Jul 16, 2020 at 11:16 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1].
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Patch applied, I don't see any controversy here.
+
+Yours,
+Linus Walleij
