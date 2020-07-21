@@ -2,74 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09DC4228198
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:04:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7312281A4
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:06:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgGUOEq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 10:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50428 "EHLO
+        id S1728483AbgGUOGJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 10:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUOEq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:04:46 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C45C061794
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z24so24176817ljn.8
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
+        with ESMTP id S1726120AbgGUOGI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:06:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746DDC061794
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:06:08 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w17so10293385ply.11
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
-        b=yLLccylqygcGxLogT7uDUU7Zoo5Gf+rgoWnJxkrvtrNuUUC2Rm99zffl7dgXLUcsxV
-         JUsR4Mi/ot+fvK33v6Uu9vN0B0j5hKnXMEescl1VOpltOAT9W+Gc7AkhEo0n8b2nQ3N9
-         d/+3tCKJOzeU0p9NOt2e8P3KvgBHGGWOMJu6pZa/vhd+Kz+Aay2PlVhVJ3TIu9jZxoPC
-         r0KQv2Q360/8fCEcxHhs7RkvZv/6qZQ6+getRlZ//wMfZEIDwVEjPXekSUXa5CcHoapM
-         VtDgPKHLENtTXQEZU/5R51RZaY8KybsI0FcI9GKc9mCGpjhucIPruaTfi5edb2oyHwpN
-         f/VQ==
+        bh=VFB5vh6AufGC6WpKoyAFXSI5EpOWIJYPxaUol5nZWAc=;
+        b=gV5pJV4MkGJqTuKxhaCVAWyT0LCeSiMicMkR08WeOqX6QMxX6Z1JGOBvjI2HqVdWC1
+         MXYBhUdx6amc4bHKXnqBglg64WcQecbxjEWE54hJ6hWZilsS5jhe4n1T+nQ3rxcwayIj
+         f/teD19YX46LKcNs90AfxLLPrwdtAbvfB1bGud2adP5b6A6LSiaZSWONr33GODf+XmVP
+         iEre/zOac4PRDSuz0b+CESSi25Xs86V1oJmEdn2/RxvXW7HtITZEEjGnu8xd/Qf/gMLg
+         eUD3F1Js9RghCg4y01glYxkliLaqiKp1zZsNiHqJkH5sU7ygunAFYSW8GWa6DqgiZq7E
+         z1Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
-        b=fhKc08vDcbAxu+gbpmqxOCoKr5RFJUuGrAclYS7CDGPdRWHMmiNnxfwvDIiqieYeYY
-         t27KRJ2QwSfitKb61JhpqxjlI0c4yPGNEg6zX+bV5w25MmiZNlNZLI8NEdi94W4MnwLh
-         0E9n8neqts9YRLGxYmeRcPb2a75MZMfheP3n8c3cDnOURLmoCs5LXO+El8A4EK/v9CsT
-         AhTOEI2fM+ueWiM56wLmLS4PQoR21gcmH7F1h7+N33yBTpfyt8M9pAAZsgd804KcTpA9
-         FVFnJcndEhSYl9eKqUHrRevc/X4i2QdbThmv4ZiWIPlOGi0vWD5XbOQIYY2/CpEmk5bV
-         rE5A==
-X-Gm-Message-State: AOAM533p1V1efZI6SJ3jBi/PfVe3zp5NCyO0lF6e6bQBNl2EC8alRz2t
-        eNFq584rDzjHurV/k8t4GseSrtDzwIHPFBfeGULDmg==
-X-Google-Smtp-Source: ABdhPJypCfBIap1qfVyDPf9GKnF6IcierHr4eIXAb39wsTOTb1+XEiOppOE1PPcvOhD3UUXSdtIpISL/xoX/eMJE4Q8=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr13595138ljg.100.1595340284205;
- Tue, 21 Jul 2020 07:04:44 -0700 (PDT)
+        bh=VFB5vh6AufGC6WpKoyAFXSI5EpOWIJYPxaUol5nZWAc=;
+        b=lrs4PyTmx5hTEh92QWP1JJrx+5pv9ygjsxXU4SHWND3bIC0P1lIJ3D98osTRtSSRPt
+         PYAXoqsmwnUNXHmjJGkloqtbmS1DkKDCGr1AciMP3RDLkNcuzdZJqnUUVIm5iH/n5l+E
+         kjhsrZSfF498SsXoBwzGmo0yepyWtXKPfdXQo+U/GGK2/NLIFFnAsC0ASmqYDUbbxWyv
+         3BaTjFnL5Mb7t+j19v3duQO3ANjX1ALRsdgZIWpJ02pKYkjiM2T7WxwPwi6/ENct9T5Z
+         Q67I0Fh9W77xe7hnVgcelvnYQFGSlYVStkt+pUGGy1R9pgCH0E+5iN7lVoWVcpBJeKfn
+         +gFQ==
+X-Gm-Message-State: AOAM5300Tg5NQ+8e2zqMNQ+Qm9nBof4x27rRH8UfIUeuCQ5hBcrgrpa9
+        Zj1ZuCz+6YI5+75SkzvY7T84rIoX7TmSWVwju/o=
+X-Google-Smtp-Source: ABdhPJy+ZfrbywABcQ6C4w1RNP4mdDkPBY5DjttHAxoLJr1ReztdyQ68aIw+tFkR7e5SKk9dkccNC3VUEnBMdWF9dmQ=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr5258576pjb.129.1595340367934;
+ Tue, 21 Jul 2020 07:06:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200720154548.12453-1-paul@crapouillou.net>
-In-Reply-To: <20200720154548.12453-1-paul@crapouillou.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 21 Jul 2020 16:04:33 +0200
-Message-ID: <CACRpkdaqOFgjNkD0m0A3XTXYfh10YuAVYKxd-8cFk0WDsC0mZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200721131829.GA67334@black.fi.intel.com> <CACRpkdYcKKQNwk905J+mOAXY-hCx0Pku2wKikMccX6yqECT0Mw@mail.gmail.com>
+In-Reply-To: <CACRpkdYcKKQNwk905J+mOAXY-hCx0Pku2wKikMccX6yqECT0Mw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Jul 2020 17:05:53 +0300
+Message-ID: <CAHp75Ve=mck42XNbLY3d5w3saOdMkbQusLjEYuNgo5HOz=9iWw@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 5.9-1
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 5:45 PM Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
-> Ingenic SoCs.
+On Tue, Jul 21, 2020 at 4:59 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Jul 21, 2020 at 3:18 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 >
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > ARM/orion/gpio:
+> >  -  Make use of for_each_requested_gpio()
+> >
+> > at91:
+> >  -  Make use of for_each_requested_gpio()
+> (...)
+> > gpio:
+> >  -  xra1403: Make use of for_each_requested_gpio()
+> >  -  mvebu: Make use of for_each_requested_gpio()
+>
+> Are these dependent on this:
+>
+> > gpiolib:
+> >  -  Introduce for_each_requested_gpio_in_range() macro
+>
+> Because if they only need for_each_requested_gpio()
+> I could just merge it to the gpio tree, since I have merged
+> the immutable branch for that into both trees. Then I'd
+> prefer to have one pinctrl and one gpio pull request.
+>
+> However if they explicitly need for_each_requested_gpio_in_range()
+> I say I can compromise and merge it all into pinctrl.
 
-Patch applied.
+It uses usual practice, i.e. merge of immutable branches. The pin
+control stuff is dependent on this immutable branch (first patch).
 
-Yours,
-Linus Walleij
+I would like to avoid rebasing and doing it differently.
+
+P.S. It should be no-op from Git perspective.
+
+-- 
+With Best Regards,
+Andy Shevchenko
