@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 914632282BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:51:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 084C52282BE
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:51:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgGUOuv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 10:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        id S1729951AbgGUOuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 10:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728064AbgGUOus (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:50:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807AAC061794;
-        Tue, 21 Jul 2020 07:50:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so3154128wmf.5;
-        Tue, 21 Jul 2020 07:50:48 -0700 (PDT)
+        with ESMTP id S1729935AbgGUOuv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:50:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4EA8C0619DB;
+        Tue, 21 Jul 2020 07:50:50 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so3175902wmo.1;
+        Tue, 21 Jul 2020 07:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wjTgQI+41EvFAwx0NyOwWkTwxupqkoNnMMp/Owe0Gtc=;
-        b=OzBO5Vr4Hy68lnPjQ94xutNXTOKyNEI53yTxtB0gJa1j7pjQSvIU/qRv1/YI3UqagB
-         D5M3xd8xXiSVD/QPfvB73JQ5gQ6PP40UtbRy1X02uu5kyld0rkmVjs2yUkGPemg+kOlD
-         gLV3wn/6MAU6azFbKwm10yzWg5mNwj07JG9TmSdGeSJLnx7vxQelJefhvkJITRMlb6Fo
-         /N0eH8MX5Ao6ZLwWk6RAVdqUwIUg/KSiqfcjj/2VW6TT2Vh/AKNevcmY4oBT7rQoh//H
-         LrBdjQXiphUjiUaNEdHUqpqAQz19uKfLkoM60T10ffPSusGUOzbmf5kDJlcazjZ9z049
-         QcLA==
+        bh=5sbT+EI8mugvtDF1VmyRGRysnMof7B0jYDdWMIy2HI0=;
+        b=DRLaKFx9Yg18d3fsC4dq4Tutzsdy6fluMD0LtlH/yLc1uhOmhW4ShJGu1dlYv25VD8
+         ccVk0yhXMEM0VcZFfDqjqsQB0t/yOvIqT9LRe2v/KL9JX/LvvXAgvPGeFn4+5LA8QCdu
+         pLRFgGua2Hzk7r4+C2sHqZku00PT4YRtW9ZBLOS57RUHt8ujqRrw4/soo5/IgFqePPQK
+         BsQoB/LmR54g38R0aONrRtc+sErfTsRW2W8OzWGcG7zyhWBFNbz2WK4TaJvUtF6EYVsD
+         jJ/TNLoLwpfAodeLH7MetejzxfesVoBlR2ou5mAJsfopm/k4hzJ86PH3O+b3Mg/Ay98A
+         AA3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wjTgQI+41EvFAwx0NyOwWkTwxupqkoNnMMp/Owe0Gtc=;
-        b=O3ZeT1i/AWJR9fL9I1drKKfMmuCZsWwPRh5CZOgQ9NYQGBlFhgBBkCsE9JDyJefZDB
-         V9LJyl3EfI3N9BnVgngXkawaBvOOoDmuDDmVEuH/q5S43iu+3BTmFU22CEfXEYgUhA0K
-         jGBXlWWHL+L1sLf/gM6WqatAJ8dEAD0UQWoEdGAAVGvAIPKnDhd7xSzyd+4N7az6x0fS
-         TmCyHRJAt11o6lIVjiHVDxr6FyWo6TEXMtybpsLf95b9f5fib/yIz+VrUM617iwY/TWG
-         nct2AsNxiFRJgyqdpGQ2pq6+RqFjZuKmauaGYjxAlyZ8WfivPOAAYdGE+y3/99RorJU/
-         1Ocw==
-X-Gm-Message-State: AOAM5334Cf2z0yc4lsHeHb5FRL2APg0cXppn1PnurCceHZMgrIwNmKFt
-        5lMvefnzgZRV6mFTz3V761U=
-X-Google-Smtp-Source: ABdhPJwm7WzbM4duMtwzxm+ZD2FPYZtyN9Cg/bJy3jrSud6aeAD2fIN8bZIbNFc7ABt/Qj1EJ1RHOQ==
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr4318341wmb.53.1595343047215;
-        Tue, 21 Jul 2020 07:50:47 -0700 (PDT)
+        bh=5sbT+EI8mugvtDF1VmyRGRysnMof7B0jYDdWMIy2HI0=;
+        b=d5JmjERn4buzCt0e/nxjpf2Nc3emmi4UsrElL28sRWeYn7gaX75/EMmCnmDcL0Y9JV
+         PpBcaLQjB5ZB16NHjyeKUpgG5ZXvr3PJ/ha8H2wUIMrxlE/H4h+rJMLi9f2e/28f+B6f
+         gRZd7yFcOrn6+g/Q8d+YSq4/s5Kl5JMPGOL2El0lTAwno9GGQZuhiZEFa9EuGqvuV3Km
+         75/9olhrwyv83icv5WgVD+HDih4YdPUpM4bHMGua9i8kkwxgcU/NR1fbQJoZW7gWZ69v
+         tv0x2jrMFteizwwrYkxg3I6vlec3bB4ZgnwE5twEnoaWmEAjnYfXi76MW2m/bZVi42P4
+         1p4w==
+X-Gm-Message-State: AOAM532DocAWgDLcaQ8VWXRqNvlnGDnfyZmP8IBuKJWnIB+MDB+gXO+6
+        KPWtmj1DgxxYKcvOg1iiMGX3LQEkei4=
+X-Google-Smtp-Source: ABdhPJy+TAFyeakasuFJKIjC1q/8wwM5dtpY4HMzP61PSnDXKJxr3Y6/tmu6A4eiKUn7d878gcf7Gg==
+X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr4715479wme.177.1595343049583;
+        Tue, 21 Jul 2020 07:50:49 -0700 (PDT)
 Received: from localhost ([156.204.74.63])
-        by smtp.gmail.com with ESMTPSA id 26sm3478799wmj.25.2020.07.21.07.50.46
+        by smtp.gmail.com with ESMTPSA id a11sm14803596wrq.0.2020.07.21.07.50.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:50:46 -0700 (PDT)
+        Tue, 21 Jul 2020 07:50:49 -0700 (PDT)
 From:   Abanoub Sameh <abanoubsameh8@gmail.com>
 X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
 To:     andy.shevchenko@gmail.com
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Abanoub Sameh <abanoubsameh@protonmail.com>
-Subject: [PATCH 3/4] gpio: gpio-msic.c: fixed coding style issues
-Date:   Tue, 21 Jul 2020 16:50:26 +0200
-Message-Id: <20200721145027.770268-3-abanoubsameh@protonmail.com>
+Subject: [PATCH 4/4] gpio: gpio-msic.c: fixed a coding style error
+Date:   Tue, 21 Jul 2020 16:50:27 +0200
+Message-Id: <20200721145027.770268-4-abanoubsameh@protonmail.com>
 X-Mailer: git-send-email 2.28.0.rc0
 In-Reply-To: <20200721145027.770268-1-abanoubsameh@protonmail.com>
 References: <20200721145027.770268-1-abanoubsameh@protonmail.com>
@@ -66,33 +66,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Added a lined between declarations and other statements according to the
-kenel coding style.
+Removed space before comma to fix coding style error.
 
 Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
 ---
- drivers/gpio/gpio-msic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpio-msic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-msic.c b/drivers/gpio/gpio-msic.c
-index 0bef1a5a9b70..84e00e0ab953 100644
+index 84e00e0ab953..37664e7b3ddd 100644
 --- a/drivers/gpio/gpio-msic.c
 +++ b/drivers/gpio/gpio-msic.c
-@@ -166,12 +166,14 @@ static int msic_irq_type(struct irq_data *data, unsigned int type)
- static int msic_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct msic_gpio *mg = gpiochip_get_data(chip);
-+
- 	return mg->irq_base + offset;
+@@ -140,7 +140,7 @@ static void msic_gpio_set(struct gpio_chip *chip, unsigned int offset, int value
+ 	if (reg < 0)
+ 		return;
+ 
+-	intel_msic_reg_update(reg, !!value , MSIC_GPIO_DOUT_MASK);
++	intel_msic_reg_update(reg, !!value, MSIC_GPIO_DOUT_MASK);
  }
  
- static void msic_bus_lock(struct irq_data *data)
- {
- 	struct msic_gpio *mg = irq_data_get_irq_chip_data(data);
-+
- 	mutex_lock(&mg->buslock);
- }
- 
+ /*
 -- 
 2.28.0.rc0
 
