@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C361F227BDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 11:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64336227BDA
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 11:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgGUJf5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728751AbgGUJf5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 21 Jul 2020 05:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728632AbgGUJfx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 05:35:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5204BC061794;
-        Tue, 21 Jul 2020 02:35:53 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so1790829wmc.1;
-        Tue, 21 Jul 2020 02:35:53 -0700 (PDT)
+        with ESMTP id S1725984AbgGUJfz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 05:35:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8119BC0619D8;
+        Tue, 21 Jul 2020 02:35:55 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s10so20445107wrw.12;
+        Tue, 21 Jul 2020 02:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b92BE/hZKY+gjwucuuS/CMUVSb/8weeCwi6EiQ13/T0=;
-        b=BYZzWnhKho+7IhZbgt1uwwO5vjJXiLRuXun3UhFahfYTJ9Ecqy4SM8OKuxFjrv3OFA
-         eHZu+VN7npH4nrETvKSGQ6I6MX7+Zju3UcHhCyeSsbaiWJArCw+lAP+CcS6j11mEKRwc
-         LmP4xlcQ1ypQ8CqlVpGLRDnzPKbckj/XQDVj7P6vndTFkAxcF11fSISP9/djDj7V8+BE
-         KBIhZG5gnTylkmsjLGqWnoiFB1C0cKsyEu9Lt9ICMGm5P0KahqsfsbjBhATY5VCE0s7X
-         qjrpfUr4zRDRQq9Vir5WZlF9X+tR/ltmMpFPxlbx+vLc3bq4EF9oXK1bJUQdz3YhCBRr
-         bKmQ==
+        bh=rlfZOGrG0Y0g+jvfYXyQSQK2g13qrRx8rGSIeVgX6ck=;
+        b=RTnMrToASJ8SSq+foC+yfYpXpCrjb/b2iWaLnfA94cKjgQAEfn6b3grnhH7uLNLk86
+         4b8krhKft2HT3mIHSwvS0nUkZMndajX4R81dAsup+enEMOVcv7GFF9BNVSFnW1gjjGpv
+         mpsfHwwrpx69LkvtFIajJ1zGX5GkPc0yKSrf5EIERCYKuz7bXLJwxxNXPumN96Letuu9
+         UZeevIUN1WlI9GOa+YYWqPyqBDJjPGLIUe50EXLaYbezqtXWPCbg2sZrXMzL3kYsL8px
+         Z/fgazAxGc9zUIVMUgTwYH4ywPgabUzvIG/ZI9S8YuUt6ohUjCbgRuD0qnr6OgnRVKHb
+         jzCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b92BE/hZKY+gjwucuuS/CMUVSb/8weeCwi6EiQ13/T0=;
-        b=V4qsdyUjUwxozodrvjSa00sU0Fpa0RnhFRdJhdKO4VUQ2lQerX6P4uKVSXh4uNZPU8
-         uPr74+j4Kk/E+NIiAmjRZsh0lM0O1TEJWAepr5vM5ODKhTt2ji2XGLeR1QDUhWCUzJXR
-         91iSvTOYEOBgd7UpD5uVrFPU5llBsjvZKbZUACvjNeI2zyjkLdncVASrqXJGBINMCwmZ
-         GmYXYMFIXgJuKA2+DNXzAKFlXSRWR2cInFuG8CpzzMf4iqmANf4Y/jwUwgrfPtoLlf08
-         vkBA3DOPAEBmE+VcK+XQ4clbBODDmIYPz1dAWvl7lxJbUcZ/8EqqEASkrzHXBeCPcdRe
-         AzyA==
-X-Gm-Message-State: AOAM5331NPks3aarZfOHT3TdIYcQCKokQdqgw9yiyFTJ48+oGCUK8ObC
-        QvXb/miQ+ZLlYqH6j0qp7BxThvKUARc=
-X-Google-Smtp-Source: ABdhPJyBNyJwPjy80glpvSMcfdPeLiN3zcdkRiJc4bBAr4n/kW0yC9pJQMTiAI4QuWitczTvA0pYYw==
-X-Received: by 2002:a1c:e008:: with SMTP id x8mr1604694wmg.129.1595324152053;
-        Tue, 21 Jul 2020 02:35:52 -0700 (PDT)
+        bh=rlfZOGrG0Y0g+jvfYXyQSQK2g13qrRx8rGSIeVgX6ck=;
+        b=gg+E0QLAFpoFf/1VhyC2JHDz76WlR/hD5arz/j4VuAPVNfDi6rQKNehAtI8OPrKOhI
+         Pjii5/ByZgo/Mseob6egOFBxpTNPfU60+B5x+YaZBGvSUIW+TzAxat5q4J6QqeOQqn4s
+         aGMVDgRLBo2YLGHAmVbUadNa9Tk1uywcFIgT0aykie68GUy+OjOSNRDLFbUoMyAuXySt
+         QJ3rHZVGkEZlXv9mebZPbq4uuLJjgXN3Wx8Xrxr84CxVfzsScCW4UXivpa2uQ7Lfa5J/
+         T6+ltAsL8ch6LVdlKvimepJjNju14Clyuq9IrXc3McWWxvAYF1PgE/Wu/KjsmPZ8iiI9
+         XbYw==
+X-Gm-Message-State: AOAM5306bYyBwu1vZ0k0U4EU6xOVVn8Yfn0zv3cHGkmF26Vb5ETv3fiL
+        Gxx94n6b/cFFb9/jgtlki80=
+X-Google-Smtp-Source: ABdhPJx22BZ6n4kitvTRKQRXnwykuYiF0WVTdv7k3VOS5x6WTousSMYo9V7AOHGWQbRghEUHhU1seg==
+X-Received: by 2002:a5d:68c7:: with SMTP id p7mr27321548wrw.16.1595324154292;
+        Tue, 21 Jul 2020 02:35:54 -0700 (PDT)
 Received: from localhost ([41.37.22.226])
-        by smtp.gmail.com with ESMTPSA id 1sm2678392wmf.0.2020.07.21.02.35.51
+        by smtp.gmail.com with ESMTPSA id u20sm2649645wmm.15.2020.07.21.02.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 02:35:51 -0700 (PDT)
+        Tue, 21 Jul 2020 02:35:53 -0700 (PDT)
 From:   Abanoub Sameh <abanoubsameh8@gmail.com>
 X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
 To:     andy.shevchenko@gmail.com
 Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Abanoub Sameh <abanoubsameh@protonmail.com>
-Subject: [PATCH 5/7] gpio: fixed coding style issues in gpio-msic.c
-Date:   Tue, 21 Jul 2020 11:35:20 +0200
-Message-Id: <20200721093522.2309530-5-abanoubsameh@protonmail.com>
+Subject: [PATCH 6/7] gpio: fixed coding style issues in gpio-pch.c
+Date:   Tue, 21 Jul 2020 11:35:21 +0200
+Message-Id: <20200721093522.2309530-6-abanoubsameh@protonmail.com>
 X-Mailer: git-send-email 2.28.0.rc0
 In-Reply-To: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
 References: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
@@ -68,131 +68,59 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
 ---
- drivers/gpio/gpio-msic.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-pch.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpio-msic.c b/drivers/gpio/gpio-msic.c
-index 7e3c96e4ab2c..37664e7b3ddd 100644
---- a/drivers/gpio/gpio-msic.c
-+++ b/drivers/gpio/gpio-msic.c
-@@ -43,9 +43,9 @@ struct msic_gpio {
- 	struct mutex		buslock;
- 	struct gpio_chip	chip;
- 	int			irq;
--	unsigned		irq_base;
-+	unsigned int		irq_base;
- 	unsigned long		trig_change_mask;
--	unsigned		trig_type;
-+	unsigned int		trig_type;
+diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
+index e96d28bf43b4..039822978eaf 100644
+--- a/drivers/gpio/gpio-pch.c
++++ b/drivers/gpio/gpio-pch.c
+@@ -95,7 +95,7 @@ struct pch_gpio {
+ 	spinlock_t spinlock;
  };
  
- /*
-@@ -58,7 +58,7 @@ struct msic_gpio {
-  * GPIO1HV0..GPIO1HV3: high voltage, bank 1, gpio_base + 20
-  */
- 
--static int msic_gpio_to_ireg(unsigned offset)
-+static int msic_gpio_to_ireg(unsigned int offset)
+-static void pch_gpio_set(struct gpio_chip *gpio, unsigned nr, int val)
++static void pch_gpio_set(struct gpio_chip *gpio, unsigned int nr, int val)
  {
- 	if (offset >= MSIC_NUM_GPIO)
- 		return -EINVAL;
-@@ -73,7 +73,7 @@ static int msic_gpio_to_ireg(unsigned offset)
- 	return INTEL_MSIC_GPIO1HV0CTLI - offset + 20;
+ 	u32 reg_val;
+ 	struct pch_gpio *chip =	gpiochip_get_data(gpio);
+@@ -112,14 +112,14 @@ static void pch_gpio_set(struct gpio_chip *gpio, unsigned nr, int val)
+ 	spin_unlock_irqrestore(&chip->spinlock, flags);
  }
  
--static int msic_gpio_to_oreg(unsigned offset)
-+static int msic_gpio_to_oreg(unsigned int offset)
+-static int pch_gpio_get(struct gpio_chip *gpio, unsigned nr)
++static int pch_gpio_get(struct gpio_chip *gpio, unsigned int nr)
  {
- 	if (offset >= MSIC_NUM_GPIO)
- 		return -EINVAL;
-@@ -88,7 +88,7 @@ static int msic_gpio_to_oreg(unsigned offset)
- 	return INTEL_MSIC_GPIO1HV0CTLO - offset + 20;
+ 	struct pch_gpio *chip =	gpiochip_get_data(gpio);
+ 
+ 	return !!(ioread32(&chip->reg->pi) & BIT(nr));
  }
  
--static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+-static int pch_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
++static int pch_gpio_direction_output(struct gpio_chip *gpio, unsigned int nr,
+ 				     int val)
  {
- 	int reg;
- 
-@@ -100,10 +100,10 @@ static int msic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- }
- 
- static int msic_gpio_direction_output(struct gpio_chip *chip,
--			unsigned offset, int value)
-+			unsigned int offset, int value)
- {
- 	int reg;
--	unsigned mask;
-+	unsigned int mask;
- 
- 	value = (!!value) | MSIC_GPIO_DIR_OUT;
- 	mask = MSIC_GPIO_DIR_MASK | MSIC_GPIO_DOUT_MASK;
-@@ -115,7 +115,7 @@ static int msic_gpio_direction_output(struct gpio_chip *chip,
- 	return intel_msic_reg_update(reg, value, mask);
- }
- 
--static int msic_gpio_get(struct gpio_chip *chip, unsigned offset)
-+static int msic_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	u8 r;
- 	int ret;
-@@ -132,7 +132,7 @@ static int msic_gpio_get(struct gpio_chip *chip, unsigned offset)
- 	return !!(r & MSIC_GPIO_DIN_MASK);
- }
- 
--static void msic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+static void msic_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	int reg;
- 
-@@ -140,7 +140,7 @@ static void msic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 	if (reg < 0)
- 		return;
- 
--	intel_msic_reg_update(reg, !!value , MSIC_GPIO_DOUT_MASK);
-+	intel_msic_reg_update(reg, !!value, MSIC_GPIO_DOUT_MASK);
- }
- 
- /*
-@@ -148,7 +148,7 @@ static void msic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-  * irq_desc->lock held. We can not access the scu bus here, so we
-  * store the change and update in the bus_sync_unlock() function below
-  */
--static int msic_irq_type(struct irq_data *data, unsigned type)
-+static int msic_irq_type(struct irq_data *data, unsigned int type)
- {
- 	struct msic_gpio *mg = irq_data_get_irq_chip_data(data);
- 	u32 gpio = data->irq - mg->irq_base;
-@@ -163,15 +163,17 @@ static int msic_irq_type(struct irq_data *data, unsigned type)
+ 	struct pch_gpio *chip =	gpiochip_get_data(gpio);
+@@ -146,7 +146,7 @@ static int pch_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
  	return 0;
  }
  
--static int msic_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-+static int msic_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+-static int pch_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
++static int pch_gpio_direction_input(struct gpio_chip *gpio, unsigned int nr)
  {
- 	struct msic_gpio *mg = gpiochip_get_data(chip);
-+
- 	return mg->irq_base + offset;
+ 	struct pch_gpio *chip =	gpiochip_get_data(gpio);
+ 	u32 pm;
+@@ -196,9 +196,10 @@ static void __maybe_unused pch_gpio_restore_reg_conf(struct pch_gpio *chip)
+ 		iowrite32(chip->pch_gpio_reg.gpio_use_sel_reg, &chip->reg->gpio_use_sel);
  }
  
- static void msic_bus_lock(struct irq_data *data)
+-static int pch_gpio_to_irq(struct gpio_chip *gpio, unsigned offset)
++static int pch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
  {
- 	struct msic_gpio *mg = irq_data_get_irq_chip_data(data);
+ 	struct pch_gpio *chip = gpiochip_get_data(gpio);
 +
- 	mutex_lock(&mg->buslock);
+ 	return chip->irq_base + offset;
  }
- 
-@@ -183,8 +185,9 @@ static void msic_bus_sync_unlock(struct irq_data *data)
- 	u8 trig = 0;
- 
- 	/* We can only get one change at a time as the buslock covers the
--	   entire transaction. The irq_desc->lock is dropped before we are
--	   called but that is fine */
-+	 * entire transaction. The irq_desc->lock is dropped before we are
-+	 * called but that is fine
-+	 */
- 	if (mg->trig_change_mask) {
- 		offset = __ffs(mg->trig_change_mask);
  
 -- 
 2.28.0.rc0
