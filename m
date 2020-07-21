@@ -2,61 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F3A6227BD2
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 11:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 690EE227BD4
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 11:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgGUJfn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 05:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
+        id S1728119AbgGUJfq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 05:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJfm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 05:35:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B62FC061794;
-        Tue, 21 Jul 2020 02:35:42 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so2122468wmh.4;
-        Tue, 21 Jul 2020 02:35:42 -0700 (PDT)
+        with ESMTP id S1725984AbgGUJfp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 05:35:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71668C061794;
+        Tue, 21 Jul 2020 02:35:45 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so2135339wmg.1;
+        Tue, 21 Jul 2020 02:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4yhgkqbsnYfJYCERold44+/ri3htU91RXGcg84HkdV8=;
-        b=W8AuH6MfBCWy9CRyCRe8DjaCBTNVbpzRZShjzBRD0aveb7WQsKbttnHKMqqBMrIaNd
-         EUKSZe4lHPWnwhIGxptNRnmN2vFLqsp26KUgIlptGPHjdo0W/ctYBuwgyHIjk16PwSUK
-         4agWLrG6qodi4oiizNeJOyIQqn9nb7Jyk7SzmfOUtN+FU6xfxSGy7jLnhYbBdu6hZ7ey
-         GbzzufQPwraL6nXi5tQkcxokq85dRdEMnG82goMp3rVIuuM/dxcp1A+CSaTbek5T3BWN
-         johE6DLm+kazgiP2ny4YoptYGh44D49xXj26R34boIUPb95prwl3elVIZ+goILShUNDL
-         yGuw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HWuKB7PmI5zL2tIhTuwiGGKPwqUnluDFvI5sx+qxpJA=;
+        b=cHTnop5Hj6eX688aIRLcIR01WIC3cGyykY2GVZD93V8zg5ZXAFX29ZqrfHTvuaKSSr
+         OHey8VJRxedN+snX2I7rVGUWu32jehupcu2PC8JX7tWFh8Hgh1+W6s/gua1cZkDz1bVm
+         8bvwEtA/gtvigbcckZGHEbawjtUjEQU93BAMrylGv1vMN93zyZzgokR0z5UUdVqwnVHJ
+         RLJ8mQkLY7IEG5L7qvI4G+p0TURttRKv/p2ArajTeXyQG4WrouqlnzJpyNFIBnN4j9pH
+         IbyrkJoTbGFo0rXYJNnyA7i2jgfg5wUe2zXfaeYB6q/16zZ2VNyAOvPHyb9/kLk3JHRC
+         vNYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4yhgkqbsnYfJYCERold44+/ri3htU91RXGcg84HkdV8=;
-        b=sNbsiN7Fj7mGIHHQDDcwxaQ8r2hL/rPGnWGURCaSbKafNTjFOK4/U6ifj2xQoOmsuh
-         HSQhQD1H/P2mEiAIugElAFb1GLXC5vUCPBatMPXW2gKnrqBChSgvmxZUf2aWuNLADZA5
-         y09L/BdxV/H2a3rqzwTI3Q5PFIsRQkXL4A61naxG8ifNEOorAAl4etg707Lq17xr07PB
-         3hVY/eoYY19n4OQgrv8DtTEjworSZwSt11jy3DOmYbUKCQGA7rPUY7LNIqyHjlhLLOGq
-         Uu8wWskUr12/+VoB3zukPEbTrTRgCRPvzsGBsBrojs9n08dNmK/qTiyD1nzmk/9xJeH0
-         iBZA==
-X-Gm-Message-State: AOAM530/spaX43fszaO9Joq1NHeN7Phw61HScUnaiZHCFicIWxRFFuR7
-        5fPE8Uezxr8kV64deu2RuwU=
-X-Google-Smtp-Source: ABdhPJysqlKEkciHKD8bwfKwYCSK2N14ryXtdaDYN/HKPF/sQDxNcYdDCGU/iY3QqOwYpuxwscCJ4A==
-X-Received: by 2002:a1c:bc54:: with SMTP id m81mr3192451wmf.22.1595324141171;
-        Tue, 21 Jul 2020 02:35:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HWuKB7PmI5zL2tIhTuwiGGKPwqUnluDFvI5sx+qxpJA=;
+        b=AGJytsifm50SA4XmdBa/rB8oxh2HxcU43ef3RtBsu3HW+MT5nhFcxdA/qBLXTJomln
+         cIA9aHCSwectKNfezt1ybgaG5bqMsyEK5uFx4+QLiq0qNpePvdXy0eZFgpvUMCZLrohm
+         89+3MLue0qv0wk6vPiW2vyEF8WEkCCFgxJj5RgjbBVTn3s/mLbN6HKirjPf9X5gG2vlm
+         Cpy/HZsBqdlJY3fVZz+u1ORfciFKJe9q8Q5AzLVKbTCJApSfxC+AU2D1h80XvaaKGrQ3
+         gQnjccE8ibD1lPnfCHVi4RVNdWXPg66D7YBZhs3pr5F8bzmfhQc70d24vcnDfin9qIUl
+         oncA==
+X-Gm-Message-State: AOAM532DF4QxfG8CP7xGh6ftHc+vw8W/qMilj8XxX+zeHSqhNpRSQg1i
+        aORKwHqzlaHGTGzttnF6uRM=
+X-Google-Smtp-Source: ABdhPJytJ/Myg2uE1sGv60yAjbAuPmfvxzFhzZb+itrQ72oIM0CvxLljwii2/7v/+pwJw4c9qSN3/w==
+X-Received: by 2002:a7b:c44d:: with SMTP id l13mr3391116wmi.66.1595324144139;
+        Tue, 21 Jul 2020 02:35:44 -0700 (PDT)
 Received: from localhost ([41.37.22.226])
-        by smtp.gmail.com with ESMTPSA id z10sm36909296wrm.21.2020.07.21.02.35.40
+        by smtp.gmail.com with ESMTPSA id v12sm25452878wrs.2.2020.07.21.02.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 02:35:40 -0700 (PDT)
+        Tue, 21 Jul 2020 02:35:43 -0700 (PDT)
 From:   Abanoub Sameh <abanoubsameh8@gmail.com>
 X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
 To:     andy.shevchenko@gmail.com
 Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Abanoub Sameh <abanoubsameh@protonmail.com>
-Subject: [PATCH 1/7] gpio: fixed coding style issues in gpio-crystalcove.c
-Date:   Tue, 21 Jul 2020 11:35:16 +0200
-Message-Id: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
+Subject: [PATCH 2/7] gpio: fixed coding style issues in gpio-ich.c
+Date:   Tue, 21 Jul 2020 11:35:17 +0200
+Message-Id: <20200721093522.2309530-2-abanoubsameh@protonmail.com>
 X-Mailer: git-send-email 2.28.0.rc0
+In-Reply-To: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
+References: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -66,58 +68,117 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
 ---
- drivers/gpio/gpio-crystalcove.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-ich.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
-index 14d1f4c933b6..9391722ec107 100644
---- a/drivers/gpio/gpio-crystalcove.c
-+++ b/drivers/gpio/gpio-crystalcove.c
-@@ -129,7 +129,7 @@ static void crystalcove_update_irq_ctrl(struct crystalcove_gpio *cg, int gpio)
- 	regmap_update_bits(cg->regmap, reg, CTLI_INTCNT_BE, cg->intcnt_value);
+diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
+index 9960bb8b0f5b..de56c013a658 100644
+--- a/drivers/gpio/gpio-ich.c
++++ b/drivers/gpio/gpio-ich.c
+@@ -74,8 +74,8 @@ struct ichx_desc {
+ 	u32 use_sel_ignore[3];
+ 
+ 	/* Some chipsets have quirks, let these use their own request/get */
+-	int (*request)(struct gpio_chip *chip, unsigned offset);
+-	int (*get)(struct gpio_chip *chip, unsigned offset);
++	int (*request)(struct gpio_chip *chip, unsigned int offset);
++	int (*get)(struct gpio_chip *chip, unsigned int offset);
+ 
+ 	/*
+ 	 * Some chipsets don't let reading output values on GPIO_LVL register
+@@ -100,7 +100,7 @@ static int modparam_gpiobase = -1;	/* dynamic */
+ module_param_named(gpiobase, modparam_gpiobase, int, 0444);
+ MODULE_PARM_DESC(gpiobase, "The GPIO number base. -1 means dynamic, which is the default.");
+ 
+-static int ichx_write_bit(int reg, unsigned nr, int val, int verify)
++static int ichx_write_bit(int reg, unsigned int nr, int val, int verify)
+ {
+ 	unsigned long flags;
+ 	u32 data, tmp;
+@@ -132,7 +132,7 @@ static int ichx_write_bit(int reg, unsigned nr, int val, int verify)
+ 	return (verify && data != tmp) ? -EPERM : 0;
  }
  
--static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned gpio)
-+static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned int gpio)
+-static int ichx_read_bit(int reg, unsigned nr)
++static int ichx_read_bit(int reg, unsigned int nr)
  {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	int reg = to_reg(gpio, CTRL_OUT);
-@@ -140,7 +140,7 @@ static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned gpio)
- 	return regmap_write(cg->regmap, reg, CTLO_INPUT_SET);
+ 	unsigned long flags;
+ 	u32 data;
+@@ -152,12 +152,12 @@ static int ichx_read_bit(int reg, unsigned nr)
+ 	return !!(data & BIT(bit));
  }
  
--static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned gpio,
-+static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned int gpio,
- 				    int value)
+-static bool ichx_gpio_check_available(struct gpio_chip *gpio, unsigned nr)
++static bool ichx_gpio_check_available(struct gpio_chip *gpio, unsigned int nr)
  {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
-@@ -152,7 +152,7 @@ static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned gpio,
- 	return regmap_write(cg->regmap, reg, CTLO_OUTPUT_SET | value);
+ 	return !!(ichx_priv.use_gpio & BIT(nr / 32));
  }
  
--static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned gpio)
-+static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+-static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned nr)
++static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned int nr)
  {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	unsigned int val;
-@@ -169,7 +169,7 @@ static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ 	if (ichx_read_bit(GPIO_IO_SEL, nr))
+ 		return GPIO_LINE_DIRECTION_IN;
+@@ -165,7 +165,7 @@ static int ichx_gpio_get_direction(struct gpio_chip *gpio, unsigned nr)
+ 	return GPIO_LINE_DIRECTION_OUT;
  }
  
- static void crystalcove_gpio_set(struct gpio_chip *chip,
--				 unsigned gpio, int value)
-+				 unsigned int gpio, int value)
+-static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
++static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned int nr)
  {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	int reg = to_reg(gpio, CTRL_OUT);
-@@ -183,7 +183,7 @@ static void crystalcove_gpio_set(struct gpio_chip *chip,
- 		regmap_update_bits(cg->regmap, reg, 1, 0);
+ 	/*
+ 	 * Try setting pin as an input and verify it worked since many pins
+@@ -174,7 +174,7 @@ static int ichx_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
+ 	return ichx_write_bit(GPIO_IO_SEL, nr, 1, 1);
  }
  
--static int crystalcove_irq_type(struct irq_data *data, unsigned type)
-+static int crystalcove_irq_type(struct irq_data *data, unsigned int type)
+-static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
++static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned int nr,
+ 					int val)
  {
- 	struct crystalcove_gpio *cg =
- 		gpiochip_get_data(irq_data_get_irq_chip_data(data));
+ 	/* Disable blink hardware which is available for GPIOs from 0 to 31. */
+@@ -191,12 +191,12 @@ static int ichx_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
+ 	return ichx_write_bit(GPIO_IO_SEL, nr, 0, 1);
+ }
+ 
+-static int ichx_gpio_get(struct gpio_chip *chip, unsigned nr)
++static int ichx_gpio_get(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	return ichx_read_bit(GPIO_LVL, nr);
+ }
+ 
+-static int ich6_gpio_get(struct gpio_chip *chip, unsigned nr)
++static int ich6_gpio_get(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	unsigned long flags;
+ 	u32 data;
+@@ -223,7 +223,7 @@ static int ich6_gpio_get(struct gpio_chip *chip, unsigned nr)
+ 	}
+ }
+ 
+-static int ichx_gpio_request(struct gpio_chip *chip, unsigned nr)
++static int ichx_gpio_request(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	if (!ichx_gpio_check_available(chip, nr))
+ 		return -ENXIO;
+@@ -240,7 +240,7 @@ static int ichx_gpio_request(struct gpio_chip *chip, unsigned nr)
+ 	return ichx_read_bit(GPIO_USE_SEL, nr) ? 0 : -ENODEV;
+ }
+ 
+-static int ich6_gpio_request(struct gpio_chip *chip, unsigned nr)
++static int ich6_gpio_request(struct gpio_chip *chip, unsigned int nr)
+ {
+ 	/*
+ 	 * Fixups for bits 16 and 17 are necessary on the Intel ICH6/3100
+@@ -254,7 +254,7 @@ static int ich6_gpio_request(struct gpio_chip *chip, unsigned nr)
+ 	return ichx_gpio_request(chip, nr);
+ }
+ 
+-static void ichx_gpio_set(struct gpio_chip *chip, unsigned nr, int val)
++static void ichx_gpio_set(struct gpio_chip *chip, unsigned int nr, int val)
+ {
+ 	ichx_write_bit(GPIO_LVL, nr, val, 0);
+ }
 -- 
 2.28.0.rc0
 
