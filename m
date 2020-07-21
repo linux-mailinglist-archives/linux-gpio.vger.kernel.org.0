@@ -2,60 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97552227D2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 12:37:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF58F227D32
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 12:38:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgGUKhm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 06:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
+        id S1727043AbgGUKiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 06:38:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgGUKhm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 06:37:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B203C061794;
-        Tue, 21 Jul 2020 03:37:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so2316401wmi.3;
-        Tue, 21 Jul 2020 03:37:42 -0700 (PDT)
+        with ESMTP id S1726084AbgGUKiU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 06:38:20 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58816C061794;
+        Tue, 21 Jul 2020 03:38:20 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so2359174wmi.4;
+        Tue, 21 Jul 2020 03:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
         bh=SC074S5TfJChQy0mxoc20RhFnNGoJ86cVYJOpO7wX5U=;
-        b=Zaw2hdmHR8s3lyvVJx4SqTkq6+ee7nDPa6I2j9HmI+6dQe6WNmm3Ox6QxprsZNI0/O
-         1ozhzlOk0fcy28eprvoIQAAcs3T1FEkf8gVoz9F4GLqW7F0ZzfmQ/46Q74ZDMU11r09/
-         zNkouSquU/djLMZ94/sb37UpaP9TMEauqxCMUrs4+h/+bkyqgmFRCvtMQQOrIQS2co2J
-         y4eLjUqM7hfz0oLMqAH9CspT18iqdd90r+IQs5nSQpxLYvWUt3gym/cfyZMmY3wRDFkZ
-         IsjmJFTt/rOmQMxD8TrpwOjoqA+E9Ude2n3PY6DLJzmztf5UeVcc+JdniBd3SnPmurAr
-         OcVQ==
+        b=ENnz1zns7P8tGooQCl81npvPaJHpgL6+P2wPzYD7hWIYo3n6hlzYRevTVFtVeIg2bc
+         jwZ3upRSlOaHJp+j/Y8P8XupmsfCkRoKxTOs/ecmBNbo/tx46hU9nCnCW1JuF6K4qgem
+         XX7mmDF40EHHBSRl6DcczaZ0sbmuHEb8E7I5tMDqNYoRNQeyfOa9nIzt/jHvHF13B+Bn
+         30wdmr8V5ErhhKfiLdkWVkOF2qhrmyS8+04s1QSxiZ6mQseuP43DgsYhJCaMg2zz2w5z
+         QTXcxQwA1OF79bUeZfe+zCDEsy7IN3SuudNGhCxd4Nq8aR916u2555hW7v8sOwTUyx1N
+         QMrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
         bh=SC074S5TfJChQy0mxoc20RhFnNGoJ86cVYJOpO7wX5U=;
-        b=DZymrDGuMG/0tFzzABe2JV41/IL78iG4j+yBdXE+g4G+HPgf0zKhFgA+FA3Hq2qb/x
-         vzXPKrOt/gwV3i+9Q/ikMs/W2p5sAdern3Bc/5KWd8T25YtZfob+21tzJE01EQuO3RRZ
-         JXfK+KJ+zvwaVxgnNgvYweE68qHve1VB+jGUMQXUxb9aWC00AygtKGEHzBP9ZSeKb1oZ
-         NJfgru2F4eOROE8pUZeO5LNUYdBkod5Xvmm4mA3zkijGlyfeqtQic6vDs0hasaMzrOF3
-         yp8CmeADgIlsxaXROqL/euOfD9mWvxsFbQ0fE9xVKVX1O3iUVRNb1oe85z3Vq35WH4kF
-         y2XA==
-X-Gm-Message-State: AOAM530y8OW3RpIt2zbDjwXysebDqDz/DsOekLjzgwzA6JZndLf1X5l5
-        wjsMr0Ym//QM0Qfs2G5IkcQ=
-X-Google-Smtp-Source: ABdhPJwbWqiEgyOgGMQcFdMyvgUQxUHXGeQE07kR88F9mlI9K9tnrTcl5r62VwpnKifpEKpYug+dbQ==
-X-Received: by 2002:a1c:5459:: with SMTP id p25mr3365244wmi.148.1595327860678;
-        Tue, 21 Jul 2020 03:37:40 -0700 (PDT)
+        b=KRTlWLJUWlt0gey3rX9COkAiACNBKPdYS96qUEEukWa5bPcmwCL4FMTXFkfsq6EIN7
+         3wqIEYF1Rad1tv3ELV7nYcAR9Sf9OU5So4AzY6gIvRf9vLx+ucOFsiiK9vwWw5/VnQVs
+         w40B6/3WgFQeRpRlwkDqzoZB3Fu0WCwFhLhYzGtOoTU8I8W6f6yF+nrV/oTfeXG2ZX68
+         oBnT5MG8iUv21p7/sZXPJLVDk7EqIOLmrrfNVqFcxRKjJ99bqFrLnzOD/ZTiWDM3iqxI
+         eqfuEigaqqgUWJlXbh2Aq6idGiRLNeBybShSwLVTBDfNpGdknUm1lN3ynSMMiCawCwGQ
+         75lg==
+X-Gm-Message-State: AOAM533Rg0H0uxuija4UUPuPNdaBFKD0HFEn8it4tF2bq12s4fWWfs2t
+        eW7JDbgCtXcW1ZMMT/IN8xY=
+X-Google-Smtp-Source: ABdhPJxxOKvimwoNy2jxT9cg1ArptvJTUY1G0aG5NWrDFTRnaME5GGWOSEaWFiDI/jYoXKM5zhT7Sw==
+X-Received: by 2002:a1c:3245:: with SMTP id y66mr3267921wmy.64.1595327898936;
+        Tue, 21 Jul 2020 03:38:18 -0700 (PDT)
 Received: from localhost ([156.204.216.226])
-        by smtp.gmail.com with ESMTPSA id q3sm2774348wmq.22.2020.07.21.03.37.39
+        by smtp.gmail.com with ESMTPSA id c10sm10302923wro.84.2020.07.21.03.38.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 03:37:40 -0700 (PDT)
+        Tue, 21 Jul 2020 03:38:18 -0700 (PDT)
 From:   Abanoub Sameh <abanoubsameh8@gmail.com>
 X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
 To:     linus.walleij@linaro.org
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Abanoub Sameh <abanoubsameh@protonmail.com>
 Subject: [PATCH] gpio: fixed some coding style issues in gpiolib files
-Date:   Tue, 21 Jul 2020 12:36:34 +0200
-Message-Id: <20200721103634.2939493-1-abanoubsameh@protonmail.com>
+Date:   Tue, 21 Jul 2020 12:36:35 +0200
+Message-Id: <20200721103634.2939493-2-abanoubsameh@protonmail.com>
 X-Mailer: git-send-email 2.28.0.rc0
+In-Reply-To: <20200721103634.2939493-1-abanoubsameh@protonmail.com>
+References: <20200721103634.2939493-1-abanoubsameh@protonmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
