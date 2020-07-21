@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 750AA228186
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:01:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2221C228196
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:03:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgGUOB6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 10:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
+        id S1728139AbgGUODw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 10:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgGUOB6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:01:58 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC027C061794
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:01:57 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id b30so9444394lfj.12
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:01:57 -0700 (PDT)
+        with ESMTP id S1726710AbgGUODw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:03:52 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA752C0619DB
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:03:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so21348445wrw.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zfFskMNtglDTQfBBXBTFkB3EO8hjOPBd0mwqDur9izY=;
-        b=unByUORwpDe58ka9VTTmpLdpZrw/vxiO6uzNq3h9vdG3Sv0PkvMz/RmtsiHFCADtMh
-         Gi97zLhuvAsYRmBWVQgG2Gt9LvZyq/0iFcZx6D3W11vAGu20JEKZvmJQah/6BNpjrB0h
-         HI+oVnQo2e+8jVUUmodblD3pX/k9YUN59crIborYSl7fZrcvEKKEGqHQzB6r2JAeuXfE
-         khMnXfGoQtDVRQlBko1ugctOG11W4iG00HdKnsroMltF9Ri8zHRdy5CGjo1ziraCJ9ym
-         e3t1RlZ7EC+y+bDc7SJCYEU0HGCSU2/YCsJX+RxV2qiHUCXjiidCq1GUJMK99MMTW2Hz
-         2JeA==
+        bh=NfVwMqC0uQWqEXEYVAIidH5sBEC97K0Eu+a0jsNaLKY=;
+        b=PzWnn8luK9wl6PGEsGK2ImTxulWmPdYNOiSWEyzjQfRdbJk4gQfgX7qUATANX0nAjW
+         bbL0yFiwhqAgEcu63UZper1tkX/FFfdod5D4hQ5uM4O9Jtbe9I27IJU7B5dgNSCmqxLB
+         P0HVj9sqNaJycs6cItW8xGlLod2JtT5TaDS0F/BRxuFkOEJdrTCmq2SSzpLYUSDsDfc/
+         YG54UEQOeaSAfG8qhctZh30yNjWcrS3MgXofd9toe731uJmd8ZDHHqs9il5wffvRezqW
+         4cTLSbPPm0SA9zLhQ82hxtNcUul7NN/Rra6mpFERTIAI5rN/rTXVhnRoOHLj2Rwg2mHf
+         jm5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zfFskMNtglDTQfBBXBTFkB3EO8hjOPBd0mwqDur9izY=;
-        b=fqBpOZczT4/U8gMHhp8AJEfQDvN3qXpEYyPLQkdzh9jMH9fJiv3OLFKs9/cAvAM1PI
-         gWK9bUb7pwd9vc5JuqGqe22FUNPJEXtbPAep88Zlp4Fkleb96O71U/LoPaojLnM4uGDR
-         pkEEeYdLk0dJ/hiXSdPlthlGcMbHNezPno423rrhD4RDxVhTiTKtpuPu1WSxqUJYfmve
-         gn+2yANfa2yPfEkT0hMHDsXVeTpLM3+JMfbwZAblMkgjfIj9hxDXy3+wEcSzlH8Pm+Jp
-         40NgKV4Mq/Hy1M4EIf8BPXD+IcBZ4buIrFcY5Z/ClDkvnDcpaD14/B76pRota6uDhhB4
-         TL+A==
-X-Gm-Message-State: AOAM53350o0K4FhOHkcjLuKKbxJlpa1sIa2s4Y1W1Te73jxCS8TrWIL8
-        htshvV3VujSC9Wgk3AuUYotl5P17jxM=
-X-Google-Smtp-Source: ABdhPJxfpNNhW7ljKRWR6QDU4hW99Bqx9Qw9fXNG3Ig76ifa4LUmFyZXustR7UMwHjGprweKmPpNAA==
-X-Received: by 2002:a05:6512:36cf:: with SMTP id e15mr5093821lfs.149.1595340116049;
-        Tue, 21 Jul 2020 07:01:56 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id z12sm5365983lfh.61.2020.07.21.07.01.55
+        bh=NfVwMqC0uQWqEXEYVAIidH5sBEC97K0Eu+a0jsNaLKY=;
+        b=a7LjG641qdcQqtIa+Kd2ca+2pPEqVigF7TNnKrJ3SKBUgz27ISw4R7fWZI3Vpx3+VR
+         ldfdMGWJUzuE7mW5x0XdHfKCStArjHyCi6d+Aw20HpIzjBXczOlv/fJlDDMuePlRWCOm
+         zXLe4C8wmE6xWHUzvWq5GJ6k3+79nZ6l8k1q697ktUkXz8OQC9nnoh/905/trulIQi+U
+         sUisbvrk9GIkFumb55jxCD7N+Isdt2dNoL/oKNaRf61Hc0XtN5WWCXyZSmPBhKnuvpEc
+         10szNgE9vZNUYmWyCiICgqLHNBvjPqunC/absxpYUA73yXpfj8zsabUyWEy1QWqVCqda
+         EZaw==
+X-Gm-Message-State: AOAM533KwCzCF8m3Qp0HbdjeYw9UvdL/O2BmFnnN6ClZTcaMhMOnMrHj
+        jJrQ8TrkQsol3ulj5JnvHO8WWQ==
+X-Google-Smtp-Source: ABdhPJxkr+yVQH10n0lVsc27YqVqO+bGf0Gx8/dmhlMhsEiD6eVWN29Tmcqw0W+PtL2RxJv4RUcuOQ==
+X-Received: by 2002:a5d:69d2:: with SMTP id s18mr14514125wrw.408.1595340230395;
+        Tue, 21 Jul 2020 07:03:50 -0700 (PDT)
+Received: from localhost.localdomain (103.red-88-29-77.staticip.rima-tde.net. [88.29.77.103])
+        by smtp.gmail.com with ESMTPSA id c194sm3740003wme.8.2020.07.21.07.03.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 07:01:55 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Tue, 21 Jul 2020 07:03:49 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] gpio: crystalcove: Use irqchip template
-Date:   Tue, 21 Jul 2020 16:01:53 +0200
-Message-Id: <20200721140153.369171-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v3] pinctrl: core: print gpio in pins debugfs file
+Date:   Tue, 21 Jul 2020 16:02:34 +0200
+Message-Id: <20200721140233.2063475-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -66,72 +67,85 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes the driver use the irqchip template to assign
-properties to the gpio_irq_chip instead of using the
-explicit calls to gpiochip_irqchip_add_nested() and
-gpiochip_set_nested_irqchip(). The irqchip is instead
-added while adding the gpiochip.
+If there is a gpio range mapping for the pin, then print out the gpio
+chip and line index for the pin in the debugfs 'pins' file with the
+format: "[gpiochip-label]:line-[index] "
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->V2:
-- Fixed a variable name ch->cg
----
- drivers/gpio/gpio-crystalcove.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+For example, here is a section of 'pins' the PocketBeagle (AM3358):
+/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
 
-diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
-index 14d1f4c933b6..39349b0e6923 100644
---- a/drivers/gpio/gpio-crystalcove.c
-+++ b/drivers/gpio/gpio-crystalcove.c
-@@ -330,6 +330,7 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
- 	int retval;
- 	struct device *dev = pdev->dev.parent;
- 	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
-+	struct gpio_irq_chip *girq;
+pin 25 (PIN25) gpio-32-63:line-25 44e10864 00000037 pinctrl-single 
+pin 26 (PIN26) gpio-32-63:line-26 44e10868 00000037 pinctrl-single 
+pin 27 (PIN27) gpio-32-63:line-27 44e1086c 00000037 pinctrl-single 
+pin 28 (PIN28) NA 44e10870 00000036 pinctrl-single 
+pin 29 (PIN29) NA 44e10874 00000006 pinctrl-single 
+pin 30 (PIN30) gpio-32-63:line-28 44e10878 00000027 pinctrl-single 
+pin 31 (PIN31) gpio-32-63:line-29 44e1087c 00000037 pinctrl-single 
+pin 32 (PIN32) gpio-32-63:line-30 44e10880 00000037 pinctrl-single 
+pin 33 (PIN33) gpio-32-63:line-31 44e10884 00000037 pinctrl-single 
+pin 34 (PIN34) gpio-64-95:line-0 44e10888 00000037 pinctrl-single 
+pin 35 (PIN35) gpio-64-95:line-1 44e1088c 00000037 pinctrl-single 
+
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+
+v3 changes:
+- gpio column is now gpiochip label and line index
+
+v2 changes:
+- print 'NA' if pin does not have a GPIO number
+- change gpio_num from unsigned to unsigned int per checkpatch
+---
+ drivers/pinctrl/core.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 821242bb4b16..a23dc264cae7 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -27,6 +27,7 @@
+ #include <linux/pinctrl/machine.h>
  
- 	if (irq < 0)
- 		return irq;
-@@ -353,14 +354,15 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
- 	cg->chip.dbg_show = crystalcove_gpio_dbg_show;
- 	cg->regmap = pmic->regmap;
+ #ifdef CONFIG_GPIOLIB
++#include "../gpio/gpiolib.h"
+ #include <asm-generic/gpio.h>
+ #endif
  
--	retval = devm_gpiochip_add_data(&pdev->dev, &cg->chip, cg);
--	if (retval) {
--		dev_warn(&pdev->dev, "add gpio chip error: %d\n", retval);
--		return retval;
--	}
--
--	gpiochip_irqchip_add_nested(&cg->chip, &crystalcove_irqchip, 0,
--				    handle_simple_irq, IRQ_TYPE_NONE);
-+	girq = &cg->chip.irq;
-+	girq->chip = &crystalcove_irqchip;
-+	/* This will let us handle the parent IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->parents = NULL;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_simple_irq;
-+	girq->threaded = true;
+@@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 	struct pinctrl_dev *pctldev = s->private;
+ 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 	unsigned i, pin;
++	struct pinctrl_gpio_range *range;
++	unsigned int gpio_num;
++	struct gpio_chip *chip;
  
- 	retval = request_threaded_irq(irq, NULL, crystalcove_gpio_irq_handler,
- 				      IRQF_ONESHOT, KBUILD_MODNAME, cg);
-@@ -370,7 +372,11 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
- 		return retval;
- 	}
+ 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
  
--	gpiochip_set_nested_irqchip(&cg->chip, &crystalcove_irqchip, irq);
-+	retval = devm_gpiochip_add_data(&pdev->dev, &cg->chip, cg);
-+	if (retval) {
-+		dev_warn(&pdev->dev, "add gpio chip error: %d\n", retval);
-+		return retval;
-+	}
+@@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
  
- 	return 0;
- }
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
++#ifdef CONFIG_GPIOLIB
++		gpio_num = 0;
++		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
++			if ((pin >= range->pin_base) &&
++			    (pin < (range->pin_base + range->npins))) {
++				gpio_num = range->base + (pin - range->pin_base);
++				break;
++			}
++		}
++		chip = gpio_to_chip(gpio_num);
++		if (chip && chip->gpiodev && chip->gpiodev->base)
++			seq_printf(s, "%s:line-%u ", chip->label,
++				gpio_num - chip->gpiodev->base);
++		else
++			seq_puts(s, "NA ");
++#endif
++
+ 		/* Driver-specific info per pin */
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
 -- 
-2.26.2
+2.25.1
 
