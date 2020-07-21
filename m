@@ -2,158 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0701B22804C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 14:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01746228083
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 15:04:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgGUMwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 08:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
+        id S1727805AbgGUND4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 09:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgGUMwa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 08:52:30 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685E4C061794
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 05:52:30 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u25so11606905lfm.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 05:52:30 -0700 (PDT)
+        with ESMTP id S1726673AbgGUNDz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 09:03:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3804AC061794
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 06:03:55 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so23987149ljl.3
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 06:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5p9l2h7oULuMDcdpJWOvN0sr4rIBBOAw+sXoQ3u2g7o=;
-        b=o4u/PqPqzxiQElL8rBTc4vdmM7RVLBpjy39iUyUzMuQ79QMX05IXLkOAHtsE/l5/Nv
-         1uQzuosFiLIRWDam3WX3EXEhrRJ0m1ywUl1fKs5UArH8rFxzqTbusVLw/iPyB8/ihRyt
-         RGfo8Ze+Kwh161jbWBW/cENcOVDaXfA9gXXFaZCqN/kCd4Vg9he4p6fpg1obAZArtYbA
-         vh6kAyKOgu5vE1VMDXkLesottgKOxToLrBjognlGaDPGeEOyONOBqjAjam3qb4eqhco9
-         1oFdfYZ7gbgzjlcx9WtADry6t9jQsOZsaa/aLsdLgvbLLSSiy6xr82otdSvECVH07f+L
-         cbMA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wKkM1VGKKIbnmCvk5KckH99yZiVJcwCKKQ/vhbDuoHQ=;
+        b=dYQwTicaG8ejcCuzoYtSYx6+UqPhSlf9Te+Ho5wXkgsPQi9m57UOh4SYVN0P4ln51a
+         gQw1QWh1JldSpBNTNE7vg8pyINOEDMwLub7FWm9dlp/CuL/NUOx+MQMo2P4+Kzkf4omQ
+         lw+qvjNsCMw7Gtnc6Te7k8S2/PEi80G5QWWH/t1behuGbVhjek5Qc5EZwC9dNCsNto61
+         lT8ngoj45wbB2nn6RvoJCy/lb6jKMMkUzRHxz3Du0xcn7Sg+C4YQCCByJ+7RP+HN/A04
+         z7ZscU6WG+Ii4vhcIc7PDiEtf/zX7TYopHX9jLjFJ09gIVe320SxiFaC+62Qpo5YC1GJ
+         zFRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5p9l2h7oULuMDcdpJWOvN0sr4rIBBOAw+sXoQ3u2g7o=;
-        b=LHk9udAJapBMfcVIze7bog86zZpicZvllbKHpTzsOJEXr7250VbH6C4SGbE0YvtQId
-         0xxe7b1W4n7Jn7Dow4MkkfiZNGAPeF9SIAxWi6BPPCch5/IVUO9uwUThJaYTDmZvd/OJ
-         w0xcKelQibFZdLSo+XLrvqHR6JC85brZySpX6bSU8z/5z/5C1Mw2kSpYUB6uqDRNVJ7y
-         SJ/BMLyXbtzfJ96sop6stlIqCb/QGK+unBn61fgV491o3R77ntDMQb283mPwSDxvZW+h
-         PQI+DvKPCRCmx8RTV/uzM87jGRF6jVB4i/UAgLsx4lLjB9yr96KmPM2q2Mm1ad5mYZmv
-         od4g==
-X-Gm-Message-State: AOAM533wUDbjGa7J+Qlm8+dwyXnY9ggoTNjWV8D0TwCRW9HF0oUzUDox
-        rFA5+bgNGR2Mkj+VKH3IF1A8FRIYWeo=
-X-Google-Smtp-Source: ABdhPJwTZQgcDz3MDHybMAwN4BxmA5K5DKvPPlEkYtl+UeUQ8M7bOixNXZ4sXB59WbbyAr+U4l5Flg==
-X-Received: by 2002:a05:6512:6cc:: with SMTP id u12mr12623251lff.148.1595335948559;
-        Tue, 21 Jul 2020 05:52:28 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id b9sm2308825lfi.88.2020.07.21.05.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 05:52:27 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        Jason Kridner <jkridner@gmail.com>
-Subject: [PATCH] pinctrl: mcp23s08: Use irqchip template
-Date:   Tue, 21 Jul 2020 14:52:23 +0200
-Message-Id: <20200721125223.344411-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wKkM1VGKKIbnmCvk5KckH99yZiVJcwCKKQ/vhbDuoHQ=;
+        b=HsH3NHulGSc/PmCBKCQ0j5AP9jiHUVKaaUNROtcFXYX04Z7wvvIvwyM+alHJa+aoUE
+         xE4gi17JuH2Zz6HAFoyY2MpJsO9B8gIK3G3AisPCHAw1Sx2o/M4vaWf/Wk5p1UEhB/zl
+         phIO59uqwmZ6A89ruBQBBh7E8ZFLsI1UywtIzbCfaA56Js42V/0tPe7cZbtnzJT0HN33
+         IFuy1yOtlJq/WEZnozS+xgPypi+D80AlG5IIohjcJZti+ZOAwQpfeaJix+xpucVPCl/s
+         jOkQL04fcmOg/xngUSYcDlqj6pOdJZP66oYyz43DNtM3BwYElhKPcU1W40O9QemNgPlq
+         XAbA==
+X-Gm-Message-State: AOAM5306N9agX1cCehNOibP5e7RKqVwEjj9Q43myj1sfHw+cuL7FH0G6
+        EpLGzo6SYolmi4iEAakLzwgkd07l3isEdaxx2T/JZDGrbT7C6g==
+X-Google-Smtp-Source: ABdhPJxQCjghR90yXcH99+Tcp0YiMNXZMOeGjmUuSFHDdFNPWcjE4bzfZxd5AHNdZIoBUFRGjyOaZtWHZtRJzFxSpkQ=
+X-Received: by 2002:a2e:810a:: with SMTP id d10mr12478242ljg.144.1595336633464;
+ Tue, 21 Jul 2020 06:03:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200719210926.152305-1-colton.w.lewis@protonmail.com>
+In-Reply-To: <20200719210926.152305-1-colton.w.lewis@protonmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 21 Jul 2020 15:03:42 +0200
+Message-ID: <CACRpkdbGzKbnj3ocEO5wTO1edB9ov_1BRh=hh6wC8EYyZd1arw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Correct kernel-doc inconsistency
+To:     Colton Lewis <colton.w.lewis@protonmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes the driver use the irqchip template to assign
-properties to the gpio_irq_chip instead of using the
-explicit calls to gpiochip_irqchip_add_nested() and
-gpiochip_set_nested_irqchip(). The irqchip is instead
-added while adding the gpiochip.
+Hi Colton,
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jan Kundrát <jan.kundrat@cesnet.cz>
-Cc: Phil Reid <preid@electromag.com.au>
-Cc: Lars Poeschel <poeschel@lemonage.de>
-Cc: Jason Kridner <jkridner@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-mcp23s08.c | 44 ++++++++++--------------------
- 1 file changed, 14 insertions(+), 30 deletions(-)
+thanks for your patch!
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 151931b593f6..42b12ea14d6b 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -522,29 +522,6 @@ static int mcp23s08_irq_setup(struct mcp23s08 *mcp)
- 	return 0;
- }
- 
--static int mcp23s08_irqchip_setup(struct mcp23s08 *mcp)
--{
--	struct gpio_chip *chip = &mcp->chip;
--	int err;
--
--	err =  gpiochip_irqchip_add_nested(chip,
--					   &mcp->irq_chip,
--					   0,
--					   handle_simple_irq,
--					   IRQ_TYPE_NONE);
--	if (err) {
--		dev_err(chip->parent,
--			"could not connect irqchip to gpiochip: %d\n", err);
--		return err;
--	}
--
--	gpiochip_set_nested_irqchip(chip,
--				    &mcp->irq_chip,
--				    mcp->irq);
--
--	return 0;
--}
--
- /*----------------------------------------------------------------------*/
- 
- int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-@@ -589,10 +566,6 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 	if (ret < 0)
- 		goto fail;
- 
--	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
--	if (ret < 0)
--		goto fail;
--
- 	mcp->irq_controller =
- 		device_property_read_bool(dev, "interrupt-controller");
- 	if (mcp->irq && mcp->irq_controller) {
-@@ -629,11 +602,22 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 	}
- 
- 	if (mcp->irq && mcp->irq_controller) {
--		ret = mcp23s08_irqchip_setup(mcp);
--		if (ret)
--			goto fail;
-+		struct gpio_irq_chip *girq = &mcp->chip.irq;
-+
-+		girq->chip = &mcp->irq_chip;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler = NULL;
-+		girq->num_parents = 0;
-+		girq->parents = NULL;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_simple_irq;
-+		girq->threaded = true;
- 	}
- 
-+	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-+	if (ret < 0)
-+		goto fail;
-+
- 	mcp->pinctrl_desc.pctlops = &mcp_pinctrl_ops;
- 	mcp->pinctrl_desc.confops = &mcp_pinconf_ops;
- 	mcp->pinctrl_desc.npins = mcp->chip.ngpio;
--- 
-2.26.2
+On Sun, Jul 19, 2020 at 11:09 PM Colton Lewis
+<colton.w.lewis@protonmail.com> wrote:
 
+> Silence documentation build warnings by correcting kernel-doc comment
+> for gpiochip_add_data function.
+>
+> ./include/linux/gpio/driver.h:512: warning: Function parameter or member 'gc' not described in 'gpiochip_add_data'
+> ./include/linux/gpio/driver.h:512: warning: Excess function parameter 'chip' description in 'gpiochip_add_data'
+>
+> Signed-off-by: Colton Lewis <colton.w.lewis@protonmail.com>
+
+This does not apply to my current "devel" branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
+
+Could you rebase and respin?
+
+Yours,
+Linus Walleij
