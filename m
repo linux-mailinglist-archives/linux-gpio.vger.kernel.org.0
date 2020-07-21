@@ -2,189 +2,349 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 659A5227C5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 12:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97552227D2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 12:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgGUKC1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 06:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
+        id S1726719AbgGUKhm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 06:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgGUKC0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 06:02:26 -0400
+        with ESMTP id S1726084AbgGUKhm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 06:37:42 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594ACC061794
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 03:02:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so2215290wmg.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 03:02:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B203C061794;
+        Tue, 21 Jul 2020 03:37:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so2316401wmi.3;
+        Tue, 21 Jul 2020 03:37:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LXWJCowc0TREvbjAFrJcW6WDmYauV/HzFHklqSleKGI=;
-        b=NyGM2ib39t5HdWX/yZihc94g5vIwvO6FMUuuklnBtkF7GkEfI/bvyr1ZgtohONXZ2U
-         g3YczbF+uKpG+6issqxVrQSswIZ5cnCSyuiN07Wh8HGAnq47ZpfBV1RzZvznLdfTuyPX
-         U1vQAbyfoBaW9j3gsqHIVRa1yqVpuv6G+4iYqCg2VMoPE48lNAVlaJU9jrVIb10g1i1+
-         nOEm//h4RO6Bk6LBOnZ5cKxij2p1mfs83XWXe/C/zpRHdalQ4TwXwAq8oM2cw2igI0vy
-         WPuNedAFTYK2hErY11998GWKxbLuSZERkiGYr3O6eMnBUo7d+uGPLOlmTMyIPPDy/mnH
-         kOmQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SC074S5TfJChQy0mxoc20RhFnNGoJ86cVYJOpO7wX5U=;
+        b=Zaw2hdmHR8s3lyvVJx4SqTkq6+ee7nDPa6I2j9HmI+6dQe6WNmm3Ox6QxprsZNI0/O
+         1ozhzlOk0fcy28eprvoIQAAcs3T1FEkf8gVoz9F4GLqW7F0ZzfmQ/46Q74ZDMU11r09/
+         zNkouSquU/djLMZ94/sb37UpaP9TMEauqxCMUrs4+h/+bkyqgmFRCvtMQQOrIQS2co2J
+         y4eLjUqM7hfz0oLMqAH9CspT18iqdd90r+IQs5nSQpxLYvWUt3gym/cfyZMmY3wRDFkZ
+         IsjmJFTt/rOmQMxD8TrpwOjoqA+E9Ude2n3PY6DLJzmztf5UeVcc+JdniBd3SnPmurAr
+         OcVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LXWJCowc0TREvbjAFrJcW6WDmYauV/HzFHklqSleKGI=;
-        b=ZejMwcCN6lSKjXemfY+Iwdq/VwGDxgUJ5fbW1vUo9aH5db4EwUUlZLCk1TxiD8RTwY
-         6lKN8qaxPMwJs13JXMM0G357nEFMOdHE1b+XfbAgOc4S7j1uRrkEYZm58Mn39mp9d6ox
-         Y4le2pFHJN5B+WLBhmicuDGlmZtvEiOcI+8eE17RvRN4Y0yLfE2J90vGByXQJavCfydm
-         hvQrUPpsXvmsAXx1i2w1VEMStJ0dSq35CvCVvtZ2egunT/TwFvDdGpi7D/mmRZZ7VR8I
-         3DBWV+deloCGgKuGWS3HgZdF1+2LEs8u571zPwRGGmXMZfn8np77FL9+AdZvVs17n7vk
-         4/HQ==
-X-Gm-Message-State: AOAM532depfUq3y+g0dn2nJ817vuqgClpchqH+Slt9FUkXqS3Yt8tXfo
-        WhvJPy0I7gy3swV93S+M7pxhlA==
-X-Google-Smtp-Source: ABdhPJwycFYkseyCKVGffVD6STOTbPVKmTSoGXNyjoKWWuia0Y5D5FEXPKUrP5pRzdfA0DNPCxMsEw==
-X-Received: by 2002:a1c:4086:: with SMTP id n128mr3474979wma.118.1595325744941;
-        Tue, 21 Jul 2020 03:02:24 -0700 (PDT)
-Received: from x1 (103.red-88-29-77.staticip.rima-tde.net. [88.29.77.103])
-        by smtp.gmail.com with ESMTPSA id o9sm36880324wrs.1.2020.07.21.03.02.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SC074S5TfJChQy0mxoc20RhFnNGoJ86cVYJOpO7wX5U=;
+        b=DZymrDGuMG/0tFzzABe2JV41/IL78iG4j+yBdXE+g4G+HPgf0zKhFgA+FA3Hq2qb/x
+         vzXPKrOt/gwV3i+9Q/ikMs/W2p5sAdern3Bc/5KWd8T25YtZfob+21tzJE01EQuO3RRZ
+         JXfK+KJ+zvwaVxgnNgvYweE68qHve1VB+jGUMQXUxb9aWC00AygtKGEHzBP9ZSeKb1oZ
+         NJfgru2F4eOROE8pUZeO5LNUYdBkod5Xvmm4mA3zkijGlyfeqtQic6vDs0hasaMzrOF3
+         yp8CmeADgIlsxaXROqL/euOfD9mWvxsFbQ0fE9xVKVX1O3iUVRNb1oe85z3Vq35WH4kF
+         y2XA==
+X-Gm-Message-State: AOAM530y8OW3RpIt2zbDjwXysebDqDz/DsOekLjzgwzA6JZndLf1X5l5
+        wjsMr0Ym//QM0Qfs2G5IkcQ=
+X-Google-Smtp-Source: ABdhPJwbWqiEgyOgGMQcFdMyvgUQxUHXGeQE07kR88F9mlI9K9tnrTcl5r62VwpnKifpEKpYug+dbQ==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr3365244wmi.148.1595327860678;
+        Tue, 21 Jul 2020 03:37:40 -0700 (PDT)
+Received: from localhost ([156.204.216.226])
+        by smtp.gmail.com with ESMTPSA id q3sm2774348wmq.22.2020.07.21.03.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 03:02:23 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 12:02:21 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v3] gpio: omap: handle pin config bias flags
-Message-ID: <20200721100221.GA1982085@x1>
-References: <20200717194043.1774643-1-drew@beagleboard.org>
- <f27995fd-5885-9dbf-c42e-73dbe69fcfab@embeddedor.com>
+        Tue, 21 Jul 2020 03:37:40 -0700 (PDT)
+From:   Abanoub Sameh <abanoubsameh8@gmail.com>
+X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
+Subject: [PATCH] gpio: fixed some coding style issues in gpiolib files
+Date:   Tue, 21 Jul 2020 12:36:34 +0200
+Message-Id: <20200721103634.2939493-1-abanoubsameh@protonmail.com>
+X-Mailer: git-send-email 2.28.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f27995fd-5885-9dbf-c42e-73dbe69fcfab@embeddedor.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 05:38:51PM -0500, Gustavo A. R. Silva wrote:
-> Hi Drew,
-> 
-> Somehow I ran into this patch in Linus' tree:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=for-next&id=75dec56710dfafd37daa95e756c5d1840932ba90
-> 
-> Please, see some comments below...
-> 
-> On 7/17/20 14:40, Drew Fustini wrote:
-> > Modify omap_gpio_set_config() to handle pin config bias flags by calling
-> > gpiochip_generic_config().
-> > 
-> > The pin group for the gpio line must have the corresponding pinconf
-> > properties:
-> > 
-> > PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
-> > PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
-> > 
-> > This is necessary for pcs_pinconf_set() to find the requested bias
-> > parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
-> > 
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> > Link: https://lore.kernel.org/r/20200715213738.1640030-1-drew@beagleboard.org
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  drivers/gpio/gpio-omap.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > 
-> > v3 changes:
-> > - adjust the braces to match the correct coding style
-> > - note: I originally re-submitted this as v2 by accident when it should
-> >   have been v3. Sorry for the noise.
-> > 
-> > v2 changes:
-> > - simplify handling of -ENOTSUPP return value per Grygorii's suggestion
-> > 
-> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> > index b8e2ecc3eade..0ccb31de0b67 100644
-> > --- a/drivers/gpio/gpio-omap.c
-> > +++ b/drivers/gpio/gpio-omap.c
-> > @@ -896,12 +896,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
-> >  				unsigned long config)
-> >  {
-> >  	u32 debounce;
-> > +	int ret = -ENOTSUPP;
-> > +
-> > +	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
-> > +		ret = gpiochip_generic_config(chip, offset, config);
-> > +	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
-> > +		debounce = pinconf_to_config_argument(config);
-> > +		ret = omap_gpio_debounce(chip, offset, debounce);
-> > +	}
-> >  
-> > -	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
-> > -		return -ENOTSUPP;
-> > -
-> > -	debounce = pinconf_to_config_argument(config);
-> > -	return omap_gpio_debounce(chip, offset, debounce);
-> > +	return ret;
-> >  }
-> >  
-> >  static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> > 
-> 
-> Maybe next time you could consider coding something like this, instead:
-> 
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index 8dd86b9fae53..7fbe0c9e1fc1 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -899,16 +899,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
->         u32 debounce;
->         int ret = -ENOTSUPP;
-> 
-> -       if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-> -           (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-> -           (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
-> -       {
-> +       switch (pinconf_to_config_param(config)) {
-> +       case PIN_CONFIG_BIAS_DISABLE:
-> +       case PIN_CONFIG_BIAS_PULL_UP:
-> +       case PIN_CONFIG_BIAS_PULL_DOWN:
->                 ret = gpiochip_generic_config(chip, offset, config);
-> -       }
-> -       else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
-> -       {
-> +               break;
-> +       case PIN_CONFIG_INPUT_DEBOUNCE:
->                 debounce = pinconf_to_config_argument(config);
->                 ret = omap_gpio_debounce(chip, offset, debounce);
-> +               break;
-> +       default:
-> +               break;
->         }
-> 
->         return ret;
-> 
-> It looks a bit more readable and cleaner. :)
-> 
-> Thanks
-> --
-> Gustavo
+Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+---
+ drivers/gpio/gpiolib-acpi.c   |  3 ++-
+ drivers/gpio/gpiolib-devres.c | 16 ++++++++--------
+ drivers/gpio/gpiolib-legacy.c |  6 +++---
+ drivers/gpio/gpiolib-of.c     |  3 +--
+ drivers/gpio/gpiolib.c        | 34 +++++++++++++++++-----------------
+ 5 files changed, 31 insertions(+), 31 deletions(-)
 
-Gustavo - thanks very much for the feedback.  I appreciate getting these
-insights into best practices.
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 9276051663da..c0a2f66ec552 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -277,6 +277,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 
+ 	if (pin <= 255) {
+ 		char ev_name[5];
++
+ 		sprintf(ev_name, "_%c%02hhX",
+ 			agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
+ 			pin);
+@@ -1094,7 +1095,7 @@ static void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip)
+ 						    NULL, achip);
+ 	if (ACPI_FAILURE(status))
+ 		dev_err(chip->parent,
+-		        "Failed to install GPIO OpRegion handler\n");
++			"Failed to install GPIO OpRegion handler\n");
+ }
+ 
+ static void acpi_gpiochip_free_regions(struct acpi_gpio_chip *achip)
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 5c91c4365da1..a138928d21cf 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -382,14 +382,14 @@ EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
+ 
+ static void devm_gpio_release(struct device *dev, void *res)
+ {
+-	unsigned *gpio = res;
++	unsigned int *gpio = res;
+ 
+ 	gpio_free(*gpio);
+ }
+ 
+ static int devm_gpio_match(struct device *dev, void *res, void *data)
+ {
+-	unsigned *this = res, *gpio = data;
++	unsigned int *this = res, *gpio = data;
+ 
+ 	return *this == *gpio;
+ }
+@@ -409,12 +409,12 @@ static int devm_gpio_match(struct device *dev, void *res, void *data)
+  *      separately, devm_gpio_free() must be used.
+  */
+ 
+-int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
++int devm_gpio_request(struct device *dev, unsigned int gpio, const char *label)
+ {
+-	unsigned *dr;
++	unsigned int *dr;
+ 	int rc;
+ 
+-	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
++	dr = devres_alloc(devm_gpio_release, sizeof(unsigned int), GFP_KERNEL);
+ 	if (!dr)
+ 		return -ENOMEM;
+ 
+@@ -438,13 +438,13 @@ EXPORT_SYMBOL_GPL(devm_gpio_request);
+  *	@flags:	GPIO configuration as specified by GPIOF_*
+  *	@label:	a literal description string of this GPIO
+  */
+-int devm_gpio_request_one(struct device *dev, unsigned gpio,
++int devm_gpio_request_one(struct device *dev, unsigned int gpio,
+ 			  unsigned long flags, const char *label)
+ {
+-	unsigned *dr;
++	unsigned int *dr;
+ 	int rc;
+ 
+-	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
++	dr = devres_alloc(devm_gpio_release, sizeof(unsigned int), GFP_KERNEL);
+ 	if (!dr)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
+index 30e2476a6dc4..c4f2e8eb4c98 100644
+--- a/drivers/gpio/gpiolib-legacy.c
++++ b/drivers/gpio/gpiolib-legacy.c
+@@ -6,7 +6,7 @@
+ 
+ #include "gpiolib.h"
+ 
+-void gpio_free(unsigned gpio)
++void gpio_free(unsigned int gpio)
+ {
+ 	gpiod_free(gpio_to_desc(gpio));
+ }
+@@ -18,7 +18,7 @@ EXPORT_SYMBOL_GPL(gpio_free);
+  * @flags:	GPIO configuration as specified by GPIOF_*
+  * @label:	a literal description string of this GPIO
+  */
+-int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
++int gpio_request_one(unsigned int gpio, unsigned long flags, const char *label)
+ {
+ 	struct gpio_desc *desc;
+ 	int err;
+@@ -65,7 +65,7 @@ int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
+ }
+ EXPORT_SYMBOL_GPL(gpio_request_one);
+ 
+-int gpio_request(unsigned gpio, const char *label)
++int gpio_request(unsigned int gpio, const char *label)
+ {
+ 	struct gpio_desc *desc = gpio_to_desc(gpio);
+ 
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 219eb0054233..15be8a7030a6 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -316,9 +316,8 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
+ 	desc = of_get_named_gpiod_flags(node, propname,
+ 					index, &flags);
+ 
+-	if (!desc || IS_ERR(desc)) {
++	if (!desc || IS_ERR(desc))
+ 		return desc;
+-	}
+ 
+ 	active_low = flags & OF_GPIO_ACTIVE_LOW;
+ 	single_ended = flags & OF_GPIO_SINGLE_ENDED;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4fa075d49fbc..0d94dd7fdb24 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -105,7 +105,7 @@ static inline void desc_set_label(struct gpio_desc *d, const char *label)
+  * The GPIO descriptor associated with the given GPIO, or %NULL if no GPIO
+  * with the given number exists in the system.
+  */
+-struct gpio_desc *gpio_to_desc(unsigned gpio)
++struct gpio_desc *gpio_to_desc(unsigned int gpio)
+ {
+ 	struct gpio_device *gdev;
+ 	unsigned long flags;
+@@ -215,7 +215,7 @@ static int gpiochip_find_base(int ngpio)
+ int gpiod_get_direction(struct gpio_desc *desc)
+ {
+ 	struct gpio_chip *gc;
+-	unsigned offset;
++	unsigned int offset;
+ 	int ret;
+ 
+ 	gc = gpiod_to_chip(desc);
+@@ -974,6 +974,7 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
+ 	if (le->eflags & GPIOEVENT_REQUEST_RISING_EDGE
+ 	    && le->eflags & GPIOEVENT_REQUEST_FALLING_EDGE) {
+ 		int level = gpiod_get_value_cansleep(le->desc);
++
+ 		if (level)
+ 			/* Emit low-to-high event */
+ 			ge.id = GPIOEVENT_EVENT_RISING_EDGE;
+@@ -1620,7 +1621,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ {
+ 	unsigned long	flags;
+ 	int		ret = 0;
+-	unsigned	i;
++	unsigned int	i;
+ 	int		base = gc->base;
+ 	struct gpio_device *gdev;
+ 
+@@ -2128,9 +2129,8 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
+ 						   unsigned int *type)
+ {
+ 	/* We support standard DT translation */
+-	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
++	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2)
+ 		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
+-	}
+ 
+ 	/* This is for board files and others not using DT */
+ 	if (is_fwnode_irqchip(fwspec->fwnode)) {
+@@ -2441,7 +2441,7 @@ void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
+ 
+-static int gpiochip_to_irq(struct gpio_chip *gc, unsigned offset)
++static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct irq_domain *domain = gc->irq.domain;
+ 
+@@ -2601,6 +2601,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 	/* If a parent irqdomain is provided, let's build a hierarchy */
+ 	if (gpiochip_hierarchy_is_hierarchical(gc)) {
+ 		int ret = gpiochip_hierarchy_add_domain(gc);
++
+ 		if (ret)
+ 			return ret;
+ 	} else {
+@@ -2835,7 +2836,7 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
+  * @gc: the gpiochip owning the GPIO
+  * @offset: the offset of the GPIO to request for GPIO function
+  */
+-int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset)
++int gpiochip_generic_request(struct gpio_chip *gc, unsigned int offset)
+ {
+ #ifdef CONFIG_PINCTRL
+ 	if (list_empty(&gc->gpiodev->pin_ranges))
+@@ -2851,7 +2852,7 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
+  * @gc: the gpiochip to request the gpio function for
+  * @offset: the offset of the GPIO to free from GPIO function
+  */
+-void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset)
++void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	pinctrl_gpio_free(gc->gpiodev->base + offset);
+ }
+@@ -2863,7 +2864,7 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+  * @offset: the offset of the GPIO to apply the configuration
+  * @config: the configuration to be applied
+  */
+-int gpiochip_generic_config(struct gpio_chip *gc, unsigned offset,
++int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+ 			    unsigned long config)
+ {
+ 	return pinctrl_gpio_set_config(gc->gpiodev->base + offset, config);
+@@ -3011,7 +3012,7 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ 	struct gpio_chip	*gc = desc->gdev->chip;
+ 	int			ret;
+ 	unsigned long		flags;
+-	unsigned		offset;
++	unsigned int		offset;
+ 
+ 	if (label) {
+ 		label = kstrdup_const(label, GFP_KERNEL);
+@@ -3188,7 +3189,7 @@ void gpiod_free(struct gpio_desc *desc)
+  * help with diagnostics, and knowing that the signal is used as a GPIO
+  * can help avoid accidentally multiplexing it to another controller.
+  */
+-const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned offset)
++const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct gpio_desc *desc;
+ 
+@@ -3292,7 +3293,7 @@ static int gpio_set_config(struct gpio_desc *desc, enum pin_config_param mode)
+ {
+ 	struct gpio_chip *gc = desc->gdev->chip;
+ 	unsigned long config;
+-	unsigned arg;
++	unsigned int arg;
+ 
+ 	switch (mode) {
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+@@ -3485,8 +3486,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 			ret = gpiod_direction_input(desc);
+ 			goto set_output_flag;
+ 		}
+-	}
+-	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
++	} else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
+ 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_SOURCE);
+ 		if (!ret)
+ 			goto set_output_value;
+@@ -3547,7 +3547,7 @@ EXPORT_SYMBOL_GPL(gpiod_set_config);
+  * 0 on success, %-ENOTSUPP if the controller doesn't support setting the
+  * debounce time.
+  */
+-int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
++int gpiod_set_debounce(struct gpio_desc *desc, unsigned int debounce)
+ {
+ 	unsigned long config;
+ 
+@@ -5407,9 +5407,9 @@ core_initcall(gpiolib_dev_init);
+ 
+ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
+ {
+-	unsigned		i;
++	unsigned int		i;
+ 	struct gpio_chip	*gc = gdev->chip;
+-	unsigned		gpio = gdev->base;
++	unsigned int		gpio = gdev->base;
+ 	struct gpio_desc	*gdesc = &gdev->descs[0];
+ 	bool			is_out;
+ 	bool			is_irq;
+-- 
+2.28.0.rc0
 
-Linus - should I submit a patch?
-
-I'm not sure if it is better to limit churn, or make sure the code is
-structured as best is possible.
-
-Thanks,
-Drew
