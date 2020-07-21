@@ -2,173 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 250EC22818E
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09DC4228198
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jul 2020 16:04:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgGUODG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 10:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
+        id S1728342AbgGUOEq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 10:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbgGUODF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:03:05 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE788C061794
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:03:05 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so10776250pfm.4
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:03:05 -0700 (PDT)
+        with ESMTP id S1726436AbgGUOEq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 10:04:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C45C061794
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z24so24176817ljn.8
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jul 2020 07:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vMy0jowKuKG9iOwg5BzKHvER052rqqm9MnIHKRam7bg=;
-        b=dXMsOqXFkabLJXBnul9OKAXGVAEmQTQH/XCpFw9GqHQx4f6475NOs2J7WGZgdhFEtO
-         Zamu1+BNk7F1q/GoRPsoQERjM1qc0G7A05Za/FifKwKxU8ebAYNu6URwSF1mxuCBLYIh
-         tKWNmR4olUxqEfBiP1vzHuWJ2NMYLMt0XMi/FmnDkKI/cTVYEm++ObsNLFwqUM1lzHll
-         q1Ss3MCIP3XfEcDTU3XJ0RjyvBcUqEkGl+MKmb40SX6E7m0HxEHmtgMcujIlgkNgkojQ
-         RC4Hx3c6Mu1wxrBof0hCVI4lpj6AiKwoBIl+5LjAW3wxNsOc5DqKSfXgyf8dEFggZ+jX
-         UkKw==
+         :cc;
+        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
+        b=yLLccylqygcGxLogT7uDUU7Zoo5Gf+rgoWnJxkrvtrNuUUC2Rm99zffl7dgXLUcsxV
+         JUsR4Mi/ot+fvK33v6Uu9vN0B0j5hKnXMEescl1VOpltOAT9W+Gc7AkhEo0n8b2nQ3N9
+         d/+3tCKJOzeU0p9NOt2e8P3KvgBHGGWOMJu6pZa/vhd+Kz+Aay2PlVhVJ3TIu9jZxoPC
+         r0KQv2Q360/8fCEcxHhs7RkvZv/6qZQ6+getRlZ//wMfZEIDwVEjPXekSUXa5CcHoapM
+         VtDgPKHLENtTXQEZU/5R51RZaY8KybsI0FcI9GKc9mCGpjhucIPruaTfi5edb2oyHwpN
+         f/VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vMy0jowKuKG9iOwg5BzKHvER052rqqm9MnIHKRam7bg=;
-        b=bIEy95eRx7cuRx2MbPJqha5KGSB6bVhHub/SkY1AifF0no0nWdPi0Qbmbb54z77wQ/
-         cV0wTYF6sW5vSsCAVrxmqWKE/wF9o9kb4zWfPVt+fJs7huFxR/q3Cx5A4CBfpOz94V/k
-         5YHmffwhye8Y9REvw2PrUIzUgKmOvbDfRPLFfsLdP6YG356hL7moIeBqLmt2XtvcKiVg
-         1rEOnKqHYLGDEKunB0aSwGNQMS3O4OhpgvMANoTq7llf+W8qGM7DL3LygSgl2ExXULur
-         sygejybhxfd7HCccfVftbBfa/kfuVFMgX51OAtSdXkPQTU8nAendZTTFExy0XgKYuRt0
-         v/uA==
-X-Gm-Message-State: AOAM5307W7W6sbw+TlFRFsCIb1inaJZU6u6SZjcEtYJfMvK6MULVvMKM
-        RDtASaAD0uIpCUn4OJWV0OwG9W4nl81VOw48/xAgwxFc
-X-Google-Smtp-Source: ABdhPJwgMZwOZNHwgSCAsKkE2St0wGd1/rMx0V6WXecRUEAJvLq7XfNEFVhi9872FSuac+i8kbwIx9rvoYydrg1np6M=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr22118140pgn.4.1595340185271;
- Tue, 21 Jul 2020 07:03:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=UtktXB94UoE1zwpGw4L7DaOAMB9VthZKcyfMWewtchM=;
+        b=fhKc08vDcbAxu+gbpmqxOCoKr5RFJUuGrAclYS7CDGPdRWHMmiNnxfwvDIiqieYeYY
+         t27KRJ2QwSfitKb61JhpqxjlI0c4yPGNEg6zX+bV5w25MmiZNlNZLI8NEdi94W4MnwLh
+         0E9n8neqts9YRLGxYmeRcPb2a75MZMfheP3n8c3cDnOURLmoCs5LXO+El8A4EK/v9CsT
+         AhTOEI2fM+ueWiM56wLmLS4PQoR21gcmH7F1h7+N33yBTpfyt8M9pAAZsgd804KcTpA9
+         FVFnJcndEhSYl9eKqUHrRevc/X4i2QdbThmv4ZiWIPlOGi0vWD5XbOQIYY2/CpEmk5bV
+         rE5A==
+X-Gm-Message-State: AOAM533p1V1efZI6SJ3jBi/PfVe3zp5NCyO0lF6e6bQBNl2EC8alRz2t
+        eNFq584rDzjHurV/k8t4GseSrtDzwIHPFBfeGULDmg==
+X-Google-Smtp-Source: ABdhPJypCfBIap1qfVyDPf9GKnF6IcierHr4eIXAb39wsTOTb1+XEiOppOE1PPcvOhD3UUXSdtIpISL/xoX/eMJE4Q8=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr13595138ljg.100.1595340284205;
+ Tue, 21 Jul 2020 07:04:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721125223.344411-1-linus.walleij@linaro.org>
-In-Reply-To: <20200721125223.344411-1-linus.walleij@linaro.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jul 2020 17:02:50 +0300
-Message-ID: <CAHp75VfNcKfa6x43bq7E7QQLiPfNkqwbzZBaa816NbC-SYsjjg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mcp23s08: Use irqchip template
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        Jason Kridner <jkridner@gmail.com>
+References: <20200720154548.12453-1-paul@crapouillou.net>
+In-Reply-To: <20200720154548.12453-1-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 21 Jul 2020 16:04:33 +0200
+Message-ID: <CACRpkdaqOFgjNkD0m0A3XTXYfh10YuAVYKxd-8cFk0WDsC0mZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 3:53 PM Linus Walleij <linus.walleij@linaro.org> wr=
-ote:
->
-> This makes the driver use the irqchip template to assign
-> properties to the gpio_irq_chip instead of using the
-> explicit calls to gpiochip_irqchip_add_nested() and
-> gpiochip_set_nested_irqchip(). The irqchip is instead
-> added while adding the gpiochip.
+On Mon, Jul 20, 2020 at 5:45 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-For the code
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-I can't test right now, though.
+> Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
+> Ingenic SoCs.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz>
-> Cc: Phil Reid <preid@electromag.com.au>
-> Cc: Lars Poeschel <poeschel@lemonage.de>
-> Cc: Jason Kridner <jkridner@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/pinctrl-mcp23s08.c | 44 ++++++++++--------------------
->  1 file changed, 14 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl=
--mcp23s08.c
-> index 151931b593f6..42b12ea14d6b 100644
-> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> @@ -522,29 +522,6 @@ static int mcp23s08_irq_setup(struct mcp23s08 *mcp)
->         return 0;
->  }
->
-> -static int mcp23s08_irqchip_setup(struct mcp23s08 *mcp)
-> -{
-> -       struct gpio_chip *chip =3D &mcp->chip;
-> -       int err;
-> -
-> -       err =3D  gpiochip_irqchip_add_nested(chip,
-> -                                          &mcp->irq_chip,
-> -                                          0,
-> -                                          handle_simple_irq,
-> -                                          IRQ_TYPE_NONE);
-> -       if (err) {
-> -               dev_err(chip->parent,
-> -                       "could not connect irqchip to gpiochip: %d\n", er=
-r);
-> -               return err;
-> -       }
-> -
-> -       gpiochip_set_nested_irqchip(chip,
-> -                                   &mcp->irq_chip,
-> -                                   mcp->irq);
-> -
-> -       return 0;
-> -}
-> -
->  /*----------------------------------------------------------------------=
-*/
->
->  int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-> @@ -589,10 +566,6 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct =
-device *dev,
->         if (ret < 0)
->                 goto fail;
->
-> -       ret =3D devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> -       if (ret < 0)
-> -               goto fail;
-> -
->         mcp->irq_controller =3D
->                 device_property_read_bool(dev, "interrupt-controller");
->         if (mcp->irq && mcp->irq_controller) {
-> @@ -629,11 +602,22 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct=
- device *dev,
->         }
->
->         if (mcp->irq && mcp->irq_controller) {
-> -               ret =3D mcp23s08_irqchip_setup(mcp);
-> -               if (ret)
-> -                       goto fail;
-> +               struct gpio_irq_chip *girq =3D &mcp->chip.irq;
-> +
-> +               girq->chip =3D &mcp->irq_chip;
-> +               /* This will let us handle the parent IRQ in the driver *=
-/
-> +               girq->parent_handler =3D NULL;
-> +               girq->num_parents =3D 0;
-> +               girq->parents =3D NULL;
-> +               girq->default_type =3D IRQ_TYPE_NONE;
-> +               girq->handler =3D handle_simple_irq;
-> +               girq->threaded =3D true;
->         }
->
-> +       ret =3D devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-> +       if (ret < 0)
-> +               goto fail;
-> +
->         mcp->pinctrl_desc.pctlops =3D &mcp_pinctrl_ops;
->         mcp->pinctrl_desc.confops =3D &mcp_pinconf_ops;
->         mcp->pinctrl_desc.npins =3D mcp->chip.ngpio;
-> --
-> 2.26.2
->
+Patch applied.
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
