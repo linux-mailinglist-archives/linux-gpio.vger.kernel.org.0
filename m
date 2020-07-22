@@ -2,177 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D47B8228E36
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 04:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 775BC228E66
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 05:09:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbgGVCdM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jul 2020 22:33:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:61695 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731595AbgGVCdM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:33:12 -0400
-IronPort-SDR: 6KXXB4wjEr4EhcJ6RUvBRuIhIjBqWl91Pg8kMDtDbuFMCI38riO4xY2Xl7CIhp2+nBnue/6QNT
- UaYC02k1zybg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="214904719"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="214904719"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 19:33:11 -0700
-IronPort-SDR: rUyI199OPhCbOWcru/ZPv7m825wDcpUbcrmSW1oK0UTlFYhuqDEFVKXwWkUvwVhBemNCMoa1Jb
- r+O0dWkl3oPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="432221376"
-Received: from lkp-server02.sh.intel.com (HELO 7dd7ac9fbea4) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jul 2020 19:33:09 -0700
-Received: from kbuild by 7dd7ac9fbea4 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jy4ZB-0000K3-AU; Wed, 22 Jul 2020 02:33:09 +0000
-Date:   Wed, 22 Jul 2020 10:32:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:no-irqchip-nested-threading] BUILD SUCCESS
- fefc8bd07b1eaaa958ab759c9af8dcda928686eb
-Message-ID: <5f17a530.U3huhua/KignR10N%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731857AbgGVDJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jul 2020 23:09:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:15979 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731781AbgGVDJZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jul 2020 23:09:25 -0400
+X-UUID: f19401ce502c4e3ebc32a63fbb087877-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EQlBNdgxDDQYmxmxAAY+m5Jl7VPvZcgaU2N1aVAS/UA=;
+        b=VlXzJ8wVm7greNXxv565ne8y6i2sXYMTtiJEJ3xb7TesYg/NrtmWy4KUe2UNDWqSAtVZqpCiWT+0w3pQixkmlxbdmPjnOmcYa9omcTXXLWSuThPeu/wVIqUbCj4g1YFcYsrI8GC3Zg+GmNJgT3hPHIrxITlcoXV2eTXk0l4qkoM=;
+X-UUID: f19401ce502c4e3ebc32a63fbb087877-20200722
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 65081969; Wed, 22 Jul 2020 11:09:20 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 11:09:19 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 11:09:19 +0800
+Message-ID: <1595387359.12347.0.camel@mtkswgap22>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: remove UART3 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 22 Jul 2020 11:09:19 +0800
+In-Reply-To: <22a7a43b-1345-f316-f212-4d956ada50c4@gmail.com>
+References: <20200721054033.18520-1-hanks.chen@mediatek.com>
+         <20200721054033.18520-2-hanks.chen@mediatek.com>
+         <22a7a43b-1345-f316-f212-4d956ada50c4@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  no-irqchip-nested-threading
-branch HEAD: fefc8bd07b1eaaa958ab759c9af8dcda928686eb  gpio: Retire the explicit gpio irqchip code
+T24gV2VkLCAyMDIwLTA3LTIyIGF0IDAwOjEwICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjEvMDcvMjAyMCAwNzo0MCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiByZW1v
+dmUgdGhlIHJlZHVuZGFudCBjbGsgaW50ZXJmYWNlIG9mIHVhcnQuDQo+ID4gDQo+ID4gRml4ZXM6
+IDcxMDc3NGUwNDg2MSAoImNsazogbWVkaWF0ZWs6IEFkZCBNVDY3NzkgY2xvY2sgc3VwcG9ydCIp
+DQo+IA0KPiBUaGVzZSBhcmUgY29zbWV0aWMgY2hhbmdlcy4gVGhleSBkb24ndCBmaXggYW55IGJ1
+Zywgc28gd2Ugd29uJ3QgbmVlZCBhIEZpeGVzIHRhZyANCj4gaGVyZS4gTmVpdGhlciBvbiAyLzIu
+DQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCkdvdCBpdCwgSSdsbCByZW1vdmUgaXQg
+aW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFua3MhDQoNCkhhbmtzDQoNCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBIYW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGlu
+Y2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ2Nzc5LWNsay5oIHwgMSAtDQo+ID4gICAxIGZpbGUg
+Y2hhbmdlZCwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0
+LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sv
+bXQ2Nzc5LWNsay5oDQo+ID4gaW5kZXggYjA4MzEzOWFmYmQyLi4yYjVmMjM1NGQ3ZWIgMTAwNjQ0
+DQo+ID4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9tdDY3NzktY2xrLmgNCj4gPiAr
+KysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaA0KPiA+IEBAIC0yMjks
+NyArMjI5LDYgQEANCj4gPiAgICNkZWZpbmUgQ0xLX0lORlJBX1VBUlQwCQkJMjENCj4gPiAgICNk
+ZWZpbmUgQ0xLX0lORlJBX1VBUlQxCQkJMjINCj4gPiAgICNkZWZpbmUgQ0xLX0lORlJBX1VBUlQy
+CQkJMjMNCj4gPiAtI2RlZmluZSBDTEtfSU5GUkFfVUFSVDMJCQkyNA0KPiA+ICAgI2RlZmluZSBD
+TEtfSU5GUkFfR0NFXzI2TQkJMjUNCj4gPiAgICNkZWZpbmUgQ0xLX0lORlJBX0NRX0RNQV9GUEMJ
+CTI2DQo+ID4gICAjZGVmaW5lIENMS19JTkZSQV9CVElGCQkJMjcNCj4gPiANCg0K
 
-elapsed time: 729m
-
-configs tested: 115
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-mips                  cavium_octeon_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                        vexpress_defconfig
-sh                             shx3_defconfig
-arm                      integrator_defconfig
-sh                               alldefconfig
-mips                         bigsur_defconfig
-arm                           sama5_defconfig
-arm                           omap1_defconfig
-mips                            e55_defconfig
-c6x                         dsk6455_defconfig
-m68k                         amcore_defconfig
-arm                          simpad_defconfig
-openrisc                         allyesconfig
-mips                   sb1250_swarm_defconfig
-arm                         shannon_defconfig
-arm                      footbridge_defconfig
-s390                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200719
-i386                 randconfig-a006-20200719
-i386                 randconfig-a002-20200719
-i386                 randconfig-a005-20200719
-i386                 randconfig-a003-20200719
-i386                 randconfig-a004-20200719
-i386                 randconfig-a003-20200721
-i386                 randconfig-a005-20200721
-i386                 randconfig-a004-20200721
-i386                 randconfig-a006-20200721
-i386                 randconfig-a002-20200721
-i386                 randconfig-a001-20200721
-i386                 randconfig-a015-20200719
-i386                 randconfig-a011-20200719
-i386                 randconfig-a016-20200719
-i386                 randconfig-a012-20200719
-i386                 randconfig-a013-20200719
-i386                 randconfig-a014-20200719
-x86_64               randconfig-a005-20200719
-x86_64               randconfig-a002-20200719
-x86_64               randconfig-a006-20200719
-x86_64               randconfig-a001-20200719
-x86_64               randconfig-a003-20200719
-x86_64               randconfig-a004-20200719
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
