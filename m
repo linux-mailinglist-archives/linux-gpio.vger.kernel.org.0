@@ -2,157 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9141229839
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 14:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3711222993F
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 15:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbgGVM3X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 08:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGVM3X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 08:29:23 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEB4C0619DC
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id p14so1388917wmg.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
-        b=zC/nKfBrLXsHpRuQ+z39G/DxnJ20Yqs3ARHl1smLLddGrYhyVPM+tVH/F8sCbehehy
-         NeEBI58h3Xfba84vb/G+9dE5iq71Gnujv/m8UQqkMiHLxzBp4MKirflIDr112hSHTETp
-         Vmob1UjeZ7Gkn/OQUVmjW9Y38c4fwJD3STIz2bxxt7N6BxSgBv6HBn68j1VE8DhbUfbG
-         rzWEkTEb0OWVATuL/3E5XiXv/bJ475I0BU4estyhRlYhXTaC5AL2eP7xRDI9wBk8qSK8
-         315/yM5zg96U/mQJ4MbGWTR2IDlM/eSIFXk8zgshjkPRzu1tHCDZNygJboH6VLVQtJU6
-         tFnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
-        b=hgz1naq4DLRM3DsyxyXqVx3jlkR3Dzf8DTMSDQQmB25ciRDc/QeMlTlHUDzvIVrCQK
-         IJEgli7ql3bOEKy4xgaGzDJqUSBrASrxf2IwqyH72c7lLDyrtpdYVjkpRgwP9okCGwqH
-         c/Q1yPAHvgWeiI9J6i+YSQcNe0aJkuC3wB8LywUNtq2+MafXBHd+uUVf46qfJ4il8lNc
-         WM2hYRwn9OnpBwHF7SbQxrtf6/PlF7qH/cumuKJdW9bcQQOEl7joJBYnjLWfpgGxvirH
-         o0vNcVobjy7hR46Svb3m4JYF81GhfQFNujoZb8aVxBK0cD3TiJx0tYeLLjqdx/kpBoIH
-         /5/w==
-X-Gm-Message-State: AOAM530Qo2JHAztcbL3mZOg40jzhXTHkqE6/8BQP4FGW22nMScOXpbLb
-        mRAxBFWDPmIJF9tJiOo+/kN8Qg==
-X-Google-Smtp-Source: ABdhPJza2fPEqYYKevpudtxYAEP4TkXuRkD+NMrK9DYbGa9mewMaSnuJMSk2BAeUfX481vQhspXfaw==
-X-Received: by 2002:a1c:a181:: with SMTP id k123mr8514433wme.172.1595420961581;
-        Wed, 22 Jul 2020 05:29:21 -0700 (PDT)
-Received: from localhost.localdomain (172.red-80-27-177.dynamicip.rima-tde.net. [80.27.177.172])
-        by smtp.gmail.com with ESMTPSA id k131sm7728855wmb.36.2020.07.22.05.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 05:29:19 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1732250AbgGVNbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 09:31:40 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10906 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbgGVNbk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:31:40 -0400
+IronPort-SDR: u5tNGLtW98Zb4nOFoIqbTkm/odXEIRn6IvaJTUsBEK+zmmSYSadgDa3raIiS03gI30pTwQ2eLZ
+ 5UG8iwYWv/Ew==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="130405734"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="130405734"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 06:31:39 -0700
+IronPort-SDR: W7bJI6XI41L1ye8oMCbs63emEO7IQTJ/WTN1e1w9QkMts1vPLqr/PWnly3YIInnYfecyYsMfZb
+ /xrBEPi3PohA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="432378378"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2020 06:31:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 4337617E; Wed, 22 Jul 2020 16:31:36 +0300 (EEST)
+Date:   Wed, 22 Jul 2020 16:31:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v5] pinctrl: core: print gpio in pins debugfs file
-Date:   Wed, 22 Jul 2020 14:27:52 +0200
-Message-Id: <20200722122751.266440-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 5.9-1
+Message-ID: <20200722133136.GA45594@black.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If there is a gpio range mapping for the pin, then print out the gpio
-chip and line index for the pin in the debugfs 'pins' file with the
-format: "[line-index]:[gpio-label]"
+Hi Linux GPIO  maintainers,
 
-Here is example output on the BeagleBoard.org PocketBeagle (AM3358):
-/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+Bunch of Intel GPIO drivers update (legacy platforms, PMICs) for v5.9. It
+includes for_each_requested_gpio() development as well in a form of immutable
+branch. This is no-op for merging.
 
-pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
-pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
-pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
-pin 28 (PIN28) 0:? 44e10870 00000036 pinctrl-single
-pin 29 (PIN29) 0:? 44e10874 00000006 pinctrl-single
-pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
-pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
-pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
-pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
-pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
-pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
+Thanks,
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Suggested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/core.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+With Best Regards,
+Andy Shevchenko
 
-v4 changes:
-- Andy suggested '0:?' would be better because GPIO library uses '?' in
-  cases of unknown labels 
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-v3 changes:
-- gpio column is now gpiochip label and line index
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-v2 changes:
-- print 'NA' if pin does not have a GPIO number
-- change gpio_num from unsigned to unsigned int per checkpatch
+are available in the Git repository at:
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 821242bb4b16..02a4cc3b60c8 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -27,6 +27,7 @@
- #include <linux/pinctrl/machine.h>
- 
- #ifdef CONFIG_GPIOLIB
-+#include "../gpio/gpiolib.h"
- #include <asm-generic/gpio.h>
- #endif
- 
-@@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 	struct pinctrl_dev *pctldev = s->private;
- 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 	unsigned i, pin;
-+	struct pinctrl_gpio_range *range;
-+	unsigned int gpio_num;
-+	struct gpio_chip *chip;
- 
- 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
- 
-@@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 
- 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
- 
-+#ifdef CONFIG_GPIOLIB
-+		gpio_num = 0;
-+		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-+			if ((pin >= range->pin_base) &&
-+			    (pin < (range->pin_base + range->npins))) {
-+				gpio_num = range->base + (pin - range->pin_base);
-+				break;
-+			}
-+		}
-+		chip = gpio_to_chip(gpio_num);
-+		if (chip && chip->gpiodev && chip->gpiodev->base)
-+			seq_printf(s, "%u:%s ", gpio_num -
-+				chip->gpiodev->base, chip->label);
-+		else
-+			seq_puts(s, "0:? ");
-+#endif
-+
- 		/* Driver-specific info per pin */
- 		if (ops->pin_dbg_show)
- 			ops->pin_dbg_show(pctldev, s, pin);
+  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.9-1
+
+for you to fetch changes up to 4941b8dedb3f33dcca5c6aef919ea518ff8947ce:
+
+  gpio: sch: Add a blank line between declaration and code (2020-07-22 16:00:27 +0300)
+
+----------------------------------------------------------------
+intel-gpio for v5.9-1
+
+* Move GPIO PMIC drivers to use IRQ chip template
+* Introduce for_each_requested_gpio() and convert existing users
+* Replace unsigned by unsigned int in few drivers
+* Fix an issue in kernel doc that validator complains about
+* Move to verbose debug level the IRQ status message in gpio-pch
+
+The following is an automated git shortlog grouped by driver:
+
+ARM/orion/gpio:
+ -  Make use of for_each_requested_gpio()
+
+crystalcove:
+ -  Use irqchip template
+ -  changed every 'unsigned' to 'unsigned int'
+
+gpiolib:
+ -  Introduce for_each_requested_gpio_in_range() macro
+
+gpio-ml-ioh:
+ -  Fix missing ':' in 'struct ioh_gpio_reg_data
+
+ich:
+ -  changed every 'unsigned' to 'unsigned int'
+
+mvebu:
+ -  Make use of for_each_requested_gpio()
+
+pch:
+ -  Add a blank line between declaration and code
+ -  changed every 'unsigned' to 'unsigned int'
+ -  Move IRQ status message to verbose debug level
+
+pinctrl:
+ -  at91: Make use of for_each_requested_gpio()
+
+sch:
+ -  Add a blank line between declaration and code
+ -  changed every 'unsigned' to 'unsigned int'
+
+wcove:
+ -  Use irqchip template
+
+xra1403:
+ -  Make use of for_each_requested_gpio()
+
+----------------------------------------------------------------
+Abanoub Sameh (6):
+      gpio: pch: changed every 'unsigned' to 'unsigned int'
+      gpio: pch: Add a blank line between declaration and code
+      gpio: crystalcove: changed every 'unsigned' to 'unsigned int'
+      gpio: ich: changed every 'unsigned' to 'unsigned int'
+      gpio: sch: changed every 'unsigned' to 'unsigned int'
+      gpio: sch: Add a blank line between declaration and code
+
+Andy Shevchenko (6):
+      gpiolib: Introduce for_each_requested_gpio_in_range() macro
+      ARM/orion/gpio: Make use of for_each_requested_gpio()
+      gpio: mvebu: Make use of for_each_requested_gpio()
+      gpio: xra1403: Make use of for_each_requested_gpio()
+      pinctrl: at91: Make use of for_each_requested_gpio()
+      gpio: pch: Move IRQ status message to verbose debug level
+
+Lee Jones (1):
+      gpio: gpio-ml-ioh: Fix missing ':' in 'struct ioh_gpio_reg_data
+
+Linus Walleij (2):
+      gpio: crystalcove: Use irqchip template
+      gpio: wcove: Use irqchip template
+
+ arch/arm/plat-orion/gpio.c      |  8 ++------
+ drivers/gpio/gpio-crystalcove.c | 34 ++++++++++++++++++++--------------
+ drivers/gpio/gpio-ich.c         | 26 +++++++++++++-------------
+ drivers/gpio/gpio-ml-ioh.c      |  2 +-
+ drivers/gpio/gpio-mvebu.c       |  8 ++------
+ drivers/gpio/gpio-pch.c         | 14 ++++++++------
+ drivers/gpio/gpio-sch.c         | 23 ++++++++++++-----------
+ drivers/gpio/gpio-wcove.c       | 30 ++++++++++++++++--------------
+ drivers/gpio/gpio-xra1403.c     |  8 ++------
+ drivers/pinctrl/pinctrl-at91.c  |  7 ++-----
+ include/linux/gpio/driver.h     | 16 ++++++++++++++++
+ 11 files changed, 94 insertions(+), 82 deletions(-)
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
