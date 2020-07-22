@@ -2,78 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E1CC22973B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 13:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B725229780
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 13:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgGVLQZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 07:16:25 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:51630 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgGVLQZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 07:16:25 -0400
-X-UUID: f9812e6cfc094f8ea830413cadeda40d-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kUGN4eod9+73obp1QXaVgA/WjQAmxsxhBRuAz9P0fHI=;
-        b=U3FXwPQtliIYH3zOvzWBlPYGdl3P2bV8WM2jNW4aMu7zzIg45fjxVe454gZTPUkn1z7/E3ajOrnb6i61QOarGRJdWkcjuy85O4ouXV6ymOBUgqIMsJE/wOqJILLc3Jrju25f6Rl2m4ZTIPIsf0qxp4m7fgji7MHhrFrMZn1wZFE=;
-X-UUID: f9812e6cfc094f8ea830413cadeda40d-20200722
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1690839541; Wed, 22 Jul 2020 19:16:22 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 19:16:19 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 19:16:20 +0800
-Message-ID: <1595416581.5511.6.camel@mtkswgap22>
-Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 22 Jul 2020 19:16:21 +0800
-In-Reply-To: <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
-References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
-         <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1728546AbgGVLds (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 07:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVLdr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 07:33:47 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACABC0619DC
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 04:33:46 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id x9so2106794ljc.5
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 04:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=02kJz3V5Ev1Aa6woh5D3vNRvs2lccGTZkiG4e0/umxQ=;
+        b=xEMmQgyWPZNl0EoPsRkOdieA2kbKGNGkItI5iey0DppynW2UsbfaEHaZn4WeVxdfTN
+         /wn/wipq5nMMrkya8qR7epktIMk2Y1HPY17lnFBVih696t8BTnZr5TdyFWWG8TKi+8uo
+         /kXB4soN11utEy0HNteyd1VwrHnYIVRD0RyyIaYFlYw9B9wefyMRCzW19SRPh7aO4pOF
+         os8A70Y8Avb8+JuYFCPFwULP5xkxExymMwzetUHAk7hg+lyi60o8rn+qMof/2M5Zf9qe
+         GPE2uedYUDK5ZqS4bcsFmLs558J73gL/8OzU3OKI0RXHDHP5jh4Qqb75sr+0ObzA5hOH
+         J/UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=02kJz3V5Ev1Aa6woh5D3vNRvs2lccGTZkiG4e0/umxQ=;
+        b=p2OUDReKMk7WuGkbv8TKtf8ooS9+FjM1R5raH4wazCSWrHc30R2DycM5R8uflrlkXW
+         uRJ6EHsuYRwivsEre3GTmb6kyTGx91OjCelZ1x65JDBXiECxyeYix0EHF2oj/wzo/cQS
+         tLBXJq18h1zHt8szT22cZ9OkOW8LQ+gOSoj2Osl8G5YOEpVxfdff0cowYeZksXQFIjNO
+         3JSSccRjpbGiNDdbIiHSlulQNncrOch9U5WrCeV+Z+/V5YNuyBk+ikROihLFSJem/S+B
+         zuzA8tlh4ZxlPDfvEUUFmFUFRK4pzsdanZnMt0A1oOIAU+8FyH8jfM2qmIrNJL9zxppX
+         CbRA==
+X-Gm-Message-State: AOAM532mQUE56LKyWWHXcx5fuxF8jF1aXOM1auXVCiMMQ2tkzN92Q/sF
+        M5HEUH7GXkjPvHzgH3P4rQOBQukd0wB3/w==
+X-Google-Smtp-Source: ABdhPJxpyta2ymWwBMAHi5Fc74P2O/RD45QUnK3W1Okbim4gm4jP3SgC1j6t3ZRQMMDlkaVP4jgFwg==
+X-Received: by 2002:a2e:8016:: with SMTP id j22mr14871912ljg.405.1595417625084;
+        Wed, 22 Jul 2020 04:33:45 -0700 (PDT)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id d23sm7915868lfm.85.2020.07.22.04.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 04:33:44 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: rcar: Use irqchip template
+Date:   Wed, 22 Jul 2020 13:31:41 +0200
+Message-Id: <20200722113141.243163-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 8678F406109F856D891B379E590361900A402883DC336283B2FDBEFAF9C867542000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTIyIGF0IDEwOjQzICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMjIvMDcvMjAyMCAwNTowOSwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiByZW1v
-dmUgdGhlIHJlZHVuZGFudCBjbGsgaW50ZXJmYWNlIG9mIHVhcnQuDQo+ID4gQ0xLX0lORlJBX1VB
-UlQzIGlzIGEgZHVtbXkgY2xrIGludGVyZmFjZSwNCj4gPiBpdCBoYXMgbm8gZWZmZWN0IG9uIHRo
-ZSBvcGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ID4gDQo+ID4gQ2hh
-bmdlIHNpbmNlIHYyOg0KPiA+IENvbW1pdCAiZHQtYmluZGluZ3M6IGNsb2NrOiByZW1vdmUgVUFS
-VDMgY2xvY2sgc3VwcG9ydCINCj4gDQo+IFNvcnJ5IGp1c3QgYW5vdGhlciBjb21tZW50LiBJIHRo
-aW5rIHdlIGNhbiBtYWtlIHRoaXMgb25lIHBhdGNoIGRlbGV0aW5nIGV2ZXJ5dGhpbmcuDQo+IA0K
-U29ycnksIEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgY29tbWVudC4gRG8gSSBuZWVkIHRvIG1lcmdl
-IHRoZW0gaW50byBvbmUNCmJpZyBwYXRjaD8NCkJ0dywgaWYgSSB1c2Ugb25lIHBhdGNoLCBJIHdv
-dWxkIGdldCBjaGVjayBwYXRjaCBmYWlsLg0KLS0tDQpbMjAyMC0wNy0yMiAxOToxMjo0OSwwNDYg
-RVJST1JdIFJ1biBjaGVjayBwYXRjaCByZXN1bHRzOg0KV0FSTklORzpEVF9TUExJVF9CSU5ESU5H
-X1BBVENIOiBEVCBiaW5kaW5nIGRvY3MgYW5kIGluY2x1ZGVzIHNob3VsZCBiZSBhDQpzZXBhcmF0
-ZSBwYXRjaC4gU2VlOg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N1Ym1pdHRp
-bmctcGF0Y2hlcy5yc3QNCi0tLQ0KDQpIYW5rcw0KDQo+ID4gLS0gcmVtb3ZlIEZpeGVzIHRhZw0K
-PiA+IENvbW1pdCAiY2xrOiBtZWRpYXRlazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQiDQo+
-ID4gLS0gcmVtb3ZlIEZpeGVzIHRhZw0KPiA+IA0KPiA+IEhhbmtzIENoZW4gKDIpOg0KPiA+ICAg
-IGR0LWJpbmRpbmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQNCj4gPiAgICBj
-bGs6IG1lZGlhdGVrOiByZW1vdmUgVUFSVDMgY2xvY2sgc3VwcG9ydA0KPiA+IA0KPiA+ICAgZHJp
-dmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jICAgICAgfCAyIC0tDQo+ID4gICBpbmNsdWRl
-L2R0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaCB8IDEgLQ0KPiA+ICAgMiBmaWxlcyBjaGFu
-Z2VkLCAzIGRlbGV0aW9ucygtKQ0KPiA+IA0KDQo=
+This makes the driver use the irqchip template to assign
+properties to the gpio_irq_chip instead of using the
+explicit call to gpiochip_irqchip_add().
+
+The irqchip is instead added while adding the gpiochip.
+
+Cc: Biju Das <biju.das@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-rcar.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index eac1582c70da..3ef19cef8da9 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -438,6 +438,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	struct resource *irq;
+ 	struct gpio_chip *gpio_chip;
+ 	struct irq_chip *irq_chip;
++	struct gpio_irq_chip *girq;
+ 	struct device *dev = &pdev->dev;
+ 	const char *name = dev_name(dev);
+ 	unsigned int npins;
+@@ -496,19 +497,21 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	irq_chip->irq_set_wake = gpio_rcar_irq_set_wake;
+ 	irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+ 
++	girq = &gpio_chip->irq;
++	girq->chip = irq_chip;
++	/* This will let us handle the parent IRQ in the driver */
++	girq->parent_handler = NULL;
++	girq->num_parents = 0;
++	girq->parents = NULL;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
+ 	ret = gpiochip_add_data(gpio_chip, p);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add GPIO controller\n");
+ 		goto err0;
+ 	}
+ 
+-	ret = gpiochip_irqchip_add(gpio_chip, irq_chip, 0, handle_level_irq,
+-				   IRQ_TYPE_NONE);
+-	if (ret) {
+-		dev_err(dev, "cannot add irqchip\n");
+-		goto err1;
+-	}
+-
+ 	p->irq_parent = irq->start;
+ 	if (devm_request_irq(dev, irq->start, gpio_rcar_irq_handler,
+ 			     IRQF_SHARED, name, p)) {
+-- 
+2.26.2
 
