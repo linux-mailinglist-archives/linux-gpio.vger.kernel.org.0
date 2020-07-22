@@ -2,114 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 470C822933C
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D6F2293D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgGVIPY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 04:15:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:54149 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVIPY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 04:15:24 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M2Nm2-1jyiP614Kk-003uVO; Wed, 22 Jul 2020 10:15:22 +0200
-Received: by mail-qk1-f180.google.com with SMTP id h7so1157563qkk.7;
-        Wed, 22 Jul 2020 01:15:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532wjO64Z+d3CTwKf8R7ZGOqjG8eHICWXf0g07AMFKCAna2sganK
-        H02CCCdf30LscmESqVQcIX8yE6IrLrnAL45a0Gs=
-X-Google-Smtp-Source: ABdhPJxagWHIltsd9Y/Q05+su4bERDSiI05YQqxd93lRzKMZfkhjYuXY9Gz+GQLMwzj41iA+H33WQKqVlNof6awBZO4=
-X-Received: by 2002:a37:9004:: with SMTP id s4mr22189849qkd.286.1595405721056;
- Wed, 22 Jul 2020 01:15:21 -0700 (PDT)
+        id S1728642AbgGVInT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 04:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgGVInS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 04:43:18 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8983CC0619DC;
+        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so1046598wrl.8;
+        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
+        b=ILgCH7OVE1I2wwwPOX+7NQudT+l7/ZlhvlAf2Wxc+ALPOdpvxovZVdBQnKDv4VvSOX
+         WeKNWKbs6o41dVeiDf1bHgAM+FhsHf5ijbZnbipChAvemxTzKPiQf0ThMl/3Zg67x32f
+         YPJF15cSwmSj7JPKUDfnHxj4P0QGdiDgQtRZh3mzOAWBbKcPluLSJXKEl9vlyNRdk0Bp
+         iO77Mv5K5Vst6unlftQXlcONA8EM6WRUvB4+9NMBIuAVZJx5Lm/j7PU1OmNSz7DpGfIi
+         C9FMKzrLXZeEsXq3GDm9z3Hnpv+ZjohX9kD/HP9YLzjasxAgbSWD7X1jyZrp3MQLP4kh
+         QmFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
+        b=shI9NVscmPFDycT2F3OCQB0/S7L+SIamVZTh+HoU5Ybl4cBVqajPpAOOVWn02KEK5Z
+         OF9HojNmUGZHMZSvK1xtv1DLSqT1+kxHd+j1gNbcZZyrq8Db4yOtjHUL7o9npHvBy2s0
+         QzEPGCq7p6oiDhuXAQ+ZVTaIeNxC2fk6KFDkb3JIrufS+iAnNw2KQfpx3mLjSgwzdmZ7
+         uEcGMEK8NCmTm0GwZeUMelMA7mVFnPSx7HL/oXzysB/dQBxkneUoaFpbHvijMW331VZU
+         QilgohaAE9q+Wl+hkwInNfSfbZzry2YoCfDk8pASnwlRVPgrgTQA3ANSi7w+zPskJd4l
+         w1fA==
+X-Gm-Message-State: AOAM530MPHkhHrn6PRUaqq472a3meL/C5A2zUuPXNm8KvKWqgQ5uX2Rf
+        GvOi4vZcidu8oxs7UkWrz0Y=
+X-Google-Smtp-Source: ABdhPJxlWiEov15iy9/riqXA7B2hI67oGx3zp7/BbZOGyfUGYQf4x5XHJFdL6u7mY1E1itglTCxrcw==
+X-Received: by 2002:adf:f18c:: with SMTP id h12mr28847223wro.375.1595407397275;
+        Wed, 22 Jul 2020 01:43:17 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id n16sm6255231wmc.40.2020.07.22.01.43.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 01:43:16 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com
+References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+Date:   Wed, 22 Jul 2020 10:43:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 22 Jul 2020 10:15:04 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
-Message-ID: <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Chen <peter.chen@nxp.com>, oleksandr.suvorov@toradex.com,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Peng Fan <peng.fan@nxp.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>, michael@walle.cc,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2+1HvxydBqMn5yYipjFC8GFVU2TNleW+f/pTxKufbuXKucE3cW0
- RAYn8DTEH2GMVmuVy+nuZKYiW/lNH7aYfZbw1w2pj8W0gZ0+roRixc68t2xHPGPcbfTQmcR
- RaAt/cxvTLACHs+mL5KrteXYssBzctMa2v+T5D+05hBAjMTPNMKasfKn+v42uegYzT/px28
- TgOvxLyjrtiCnf8QVwS1g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9e0Btv5QQVo=:O89GEMuTiq6qPyegwQo49r
- PfC2qntbTFRaF95teHM7opnxT92dUYr76fX5F+xQeGH9IG+rnk1BCCcR7L+lkOMRHOv4b+EuD
- Dm6Cx/qLZvea9H/qbyDwLZ3gIdqRleao+YfHD3cd0cIEWHy1Tx0qHHokC0v1ZZggOqtT3szLI
- AbmWKsVB1CcwbsfUOo8M/IBkZPYEjbhmhJUFb0E/+dAbOhH+Tn/XggD1a5euMGvlClKGr3oX7
- 5KPZLLx4YGvs6GiIKMNLtUrBZqHemP1Q6YZX6NGDQpk943gnr7R7UzVhO2N/uj+JzaEzUSCsq
- XuazUpin6xVkEIGureW428uiU9Fue/bao0DrROyfo3bEXw7J2aGcplA1vxKKMJ/O3W07k154D
- f4xpMPe4iVYWcqnO88Qr9TelNI+f+6ZmVDxBO35g1ZffAQlZMcYZ3JIIKpf0URLW/hqeI/33w
- ufpe2wypWl9Fef8bDRKegO+rjNZY8qpDYa4HYnAvZh/y15WwcMGKgBbe2iF8FDRbtTFOkpLR2
- DcfiqLmqCfoGvmDSbO/OHQU0GWdMuLC/GcU/llV/a9b5Gk/5wsfq0k9F8t9axG2vo6gDEo3oQ
- hlZO8MNXVUxHL5W+9sjWHFs/J3NuLcwmOOay9swQqiWHl8YoQ7dMWBeFw0XBDhC/fGMyDxlhX
- HzZL3ueqmqgnUMHsFWJ7/vFWVJWo67ToK4XLxCYrg9kZH6Z/9F9+iHtrPOsVUE9e/Vk2IQ7Eo
- DfIObAExtux70UWkXGStgyxQdgbuwRW4CkoY4o1jc7GmKtoD5nSMFgbYLRfebWpBg3Z/x6kEk
- rBkPNPOJ5ue9VzrRKxIx/IrBWkRfnICfCNTDgiolkzj04s/Jpc35gDmS8G2rD5HFCiqlJmB2i
- /NJCC3Ui4LxF01Ee9KRTQJEVw187+WOil3E/fR8fe5ywKGuHaWZYXZVGPppDHJ/YvRKeGnBp6
- dfICmmS637URQgionWToq3JKzJ84s4jEQp5nuWcLfED263kLX5BBa
+In-Reply-To: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 3:50 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Change config to tristate, add module device table, module author,
-> description and license to support module build for i.MX GPIO driver.
->
-> As this is a SoC GPIO module, it provides common functions for most
-> of the peripheral devices, such as GPIO pins control, secondary
-> interrupt controller for GPIO pins IRQ etc., without GPIO driver, most
-> of the peripheral devices will NOT work properly, so GPIO module is
-> similar with clock, pinctrl driver that should be loaded ONCE and
-> never unloaded.
->
-> Since MXC GPIO driver needs to have init function to register syscore
-> ops once, here still use subsys_initcall(), NOT module_platform_driver().
 
-I'm not following this explanation.
 
-Why is this driver using syscore_ops rather than
-SIMPLE_DEV_PM_OPS() or similar?
+On 22/07/2020 05:09, Hanks Chen wrote:
+> remove the redundant clk interface of uart.
+> CLK_INFRA_UART3 is a dummy clk interface,
+> it has no effect on the operation of the read/write instruction.
+> 
+> Change since v2:
+> Commit "dt-bindings: clock: remove UART3 clock support"
 
-Why can the driver not unregister the syscore_ops the way it
-registers them when unloading the module?
+Sorry just another comment. I think we can make this one patch deleting everything.
 
-Why do you need subsys_initcall() rather than a device_initcall()?
-
-If the subsys_initcall() is indeed required here instead of
-device_initcall(), how can it work if the driver is a loadable
-module?
-
-       Arnd
+> -- remove Fixes tag
+> Commit "clk: mediatek: remove UART3 clock support"
+> -- remove Fixes tag
+> 
+> Hanks Chen (2):
+>    dt-bindings: clock: remove UART3 clock support
+>    clk: mediatek: remove UART3 clock support
+> 
+>   drivers/clk/mediatek/clk-mt6779.c      | 2 --
+>   include/dt-bindings/clock/mt6779-clk.h | 1 -
+>   2 files changed, 3 deletions(-)
+> 
