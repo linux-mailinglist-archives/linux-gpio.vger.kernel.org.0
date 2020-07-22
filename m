@@ -2,100 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D6F2293D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC1D2293E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgGVInT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 04:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        id S1728930AbgGVItC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 04:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgGVInS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 04:43:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8983CC0619DC;
-        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so1046598wrl.8;
-        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
+        with ESMTP id S1726526AbgGVItC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 04:49:02 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0131FC0619DC;
+        Wed, 22 Jul 2020 01:49:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id n5so833517pgf.7;
+        Wed, 22 Jul 2020 01:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
-        b=ILgCH7OVE1I2wwwPOX+7NQudT+l7/ZlhvlAf2Wxc+ALPOdpvxovZVdBQnKDv4VvSOX
-         WeKNWKbs6o41dVeiDf1bHgAM+FhsHf5ijbZnbipChAvemxTzKPiQf0ThMl/3Zg67x32f
-         YPJF15cSwmSj7JPKUDfnHxj4P0QGdiDgQtRZh3mzOAWBbKcPluLSJXKEl9vlyNRdk0Bp
-         iO77Mv5K5Vst6unlftQXlcONA8EM6WRUvB4+9NMBIuAVZJx5Lm/j7PU1OmNSz7DpGfIi
-         C9FMKzrLXZeEsXq3GDm9z3Hnpv+ZjohX9kD/HP9YLzjasxAgbSWD7X1jyZrp3MQLP4kh
-         QmFQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2KyPHff/Uosyh2rGRRq7zQWY57m8n2yFC/KFH0GE8II=;
+        b=s1lKNaJtq7hqWFXwPC1USXb9595sUUEXquCs6mbVMWavi0papiZVIzk3dAeRUROgeO
+         9IWlKb8qJma8pYNUB3bUQsaxe/9ua3QrDVk5WLM8CavqckkP462cJt+JZfBOrifnP/+k
+         22BZI5+6j309pw3DrYjC331VyK+EmtyM9imDlIuJa9WP1TrDRqnMK3XhiBNSW7UHRVl9
+         8maOa3uoMOSOIHVFWpP7R5EPyb3Rz12bzIrfKWVZWYhWhYlXGQgQF4SawZQbr+SgSNK3
+         kZzmIOAvuy3vxEDWXJmfQG+hzRsSTWUq/jnMQq39TnMdwi0gDBzK//s1Y2By15VXxfrA
+         7qnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
-        b=shI9NVscmPFDycT2F3OCQB0/S7L+SIamVZTh+HoU5Ybl4cBVqajPpAOOVWn02KEK5Z
-         OF9HojNmUGZHMZSvK1xtv1DLSqT1+kxHd+j1gNbcZZyrq8Db4yOtjHUL7o9npHvBy2s0
-         QzEPGCq7p6oiDhuXAQ+ZVTaIeNxC2fk6KFDkb3JIrufS+iAnNw2KQfpx3mLjSgwzdmZ7
-         uEcGMEK8NCmTm0GwZeUMelMA7mVFnPSx7HL/oXzysB/dQBxkneUoaFpbHvijMW331VZU
-         QilgohaAE9q+Wl+hkwInNfSfbZzry2YoCfDk8pASnwlRVPgrgTQA3ANSi7w+zPskJd4l
-         w1fA==
-X-Gm-Message-State: AOAM530MPHkhHrn6PRUaqq472a3meL/C5A2zUuPXNm8KvKWqgQ5uX2Rf
-        GvOi4vZcidu8oxs7UkWrz0Y=
-X-Google-Smtp-Source: ABdhPJxlWiEov15iy9/riqXA7B2hI67oGx3zp7/BbZOGyfUGYQf4x5XHJFdL6u7mY1E1itglTCxrcw==
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr28847223wro.375.1595407397275;
-        Wed, 22 Jul 2020 01:43:17 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id n16sm6255231wmc.40.2020.07.22.01.43.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 01:43:16 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
-Date:   Wed, 22 Jul 2020 10:43:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2KyPHff/Uosyh2rGRRq7zQWY57m8n2yFC/KFH0GE8II=;
+        b=tCRt/CsI6lf4sP1ZcWRJLbvaAwXZlXAxzZlXKDaLRiBiL2+AJqfwRG21WtwwiAUAi0
+         oAjsnwfLnmXGu0KgpwBQVYBaDwTqeyv98OrLTiA00zm+7ORlPC2J/lx80qSxTzupZJ/L
+         I2z3K4DYDoMuCfI4i0UXeks2C1ZyM0YGgfgc/d3dQ3mAgVIApg2L6BEZyaHFyeiuxctc
+         ytli3qwzO+Y9eZUFJ/GC6MkeiD/JBl7Zt0dYhIUi/aJqcvr48Fz5SR32JBykRUTWC351
+         iwKAKFyQDPGQGPB8dk0D8XxCHGUGEOpT2OqZc//QXRTtHCqVEE5NiWilByE1+34NmT07
+         hoog==
+X-Gm-Message-State: AOAM530chTxMFT1VBAHBZbrW1COkWblVYC2IPG+KFNk/gnWrgTNnhO+P
+        zVlP9L1zKj3Fa+AcNbVRwKMZDpkU8MIYe+rjhvz9KP+ew3Y=
+X-Google-Smtp-Source: ABdhPJycJY8Os5gbLzkhFPKkBoH7k04etCMzkKuIR+iuQjyXigdwFEJoM3PDC6WQaA30NM2SX0kd5wL4NZ4DvuoyiXo=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr26560784pgi.203.1595407741419;
+ Wed, 22 Jul 2020 01:49:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200721222851.2075891-1-drew@beagleboard.org>
+In-Reply-To: <20200721222851.2075891-1-drew@beagleboard.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Jul 2020 11:48:46 +0300
+Message-ID: <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
+Subject: Re: [PATCH v4] pinctrl: core: print gpio in pins debugfs file
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 1:29 AM Drew Fustini <drew@beagleboard.org> wrote:
+>
+> If there is a gpio range mapping for the pin, then print out the gpio
+> chip and line index for the pin in the debugfs 'pins' file with the
+> format: "[line-index]:[gpio-label]"
+>
+> Here is an example output on the BeagleBoard.org PocketBeagle (AM3358):
+> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+>
+> pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
+> pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
+> pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
+> pin 28 (PIN28) 0:N/A 44e10870 00000036 pinctrl-single
+> pin 29 (PIN29) 0:N/A 44e10874 00000006 pinctrl-single
+> pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
+> pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
+> pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
+> pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
+> pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
+> pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
+>
+
+This variant looks good enough to me, thanks! FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>  drivers/pinctrl/core.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> v4 change:
+> - can format to be integer first as Andy suggested it will make parsing
+>   easier
+>
+> v3 change:
+> - gpio column is now gpiochip label and line index
+>
+> v2 changes:
+> - print 'NA' if pin does not have a GPIO number
+> - change gpio_num from unsigned to unsigned int per checkpatch
+>
+>
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index 821242bb4b16..39e74cdf5c7d 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/pinctrl/machine.h>
+>
+>  #ifdef CONFIG_GPIOLIB
+> +#include "../gpio/gpiolib.h"
+>  #include <asm-generic/gpio.h>
+>  #endif
+>
+> @@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>         struct pinctrl_dev *pctldev = s->private;
+>         const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+>         unsigned i, pin;
+> +       struct pinctrl_gpio_range *range;
+> +       unsigned int gpio_num;
+> +       struct gpio_chip *chip;
+>
+>         seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+>
+> @@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>
+>                 seq_printf(s, "pin %d (%s) ", pin, desc->name);
+>
+> +#ifdef CONFIG_GPIOLIB
+> +               gpio_num = 0;
+> +               list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+> +                       if ((pin >= range->pin_base) &&
+> +                           (pin < (range->pin_base + range->npins))) {
+> +                               gpio_num = range->base + (pin - range->pin_base);
+> +                               break;
+> +                       }
+> +               }
+> +               chip = gpio_to_chip(gpio_num);
+> +               if (chip && chip->gpiodev && chip->gpiodev->base)
+> +                       seq_printf(s, "%u:%s ", gpio_num -
+> +                               chip->gpiodev->base, chip->label);
+> +               else
+> +                       seq_puts(s, "0:N/A ");
+> +#endif
+> +
+>                 /* Driver-specific info per pin */
+>                 if (ops->pin_dbg_show)
+>                         ops->pin_dbg_show(pctldev, s, pin);
+> --
+> 2.25.1
+>
 
 
-On 22/07/2020 05:09, Hanks Chen wrote:
-> remove the redundant clk interface of uart.
-> CLK_INFRA_UART3 is a dummy clk interface,
-> it has no effect on the operation of the read/write instruction.
-> 
-> Change since v2:
-> Commit "dt-bindings: clock: remove UART3 clock support"
-
-Sorry just another comment. I think we can make this one patch deleting everything.
-
-> -- remove Fixes tag
-> Commit "clk: mediatek: remove UART3 clock support"
-> -- remove Fixes tag
-> 
-> Hanks Chen (2):
->    dt-bindings: clock: remove UART3 clock support
->    clk: mediatek: remove UART3 clock support
-> 
->   drivers/clk/mediatek/clk-mt6779.c      | 2 --
->   include/dt-bindings/clock/mt6779-clk.h | 1 -
->   2 files changed, 3 deletions(-)
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
