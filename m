@@ -2,64 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E2AE2297E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 14:09:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9141229839
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 14:30:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgGVMJN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 08:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
+        id S1729628AbgGVM3X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 08:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731630AbgGVMJN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 08:09:13 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E0FC0619DF
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:09:12 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so1656617wrp.7
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:09:12 -0700 (PDT)
+        with ESMTP id S1726161AbgGVM3X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 08:29:23 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEB4C0619DC
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id p14so1388917wmg.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tqHxcywQyVz1wfQvBGx3vpEtZ8YqD1CPktgmCd8zLdc=;
-        b=gnuS6aH1Z4+o6kdQgqoa7jvwbtLsfXA0ZmIQoHVWFjcQCBaB72XsvvMy+iiGTDr7FR
-         eZWTN6R+9wO8Vzt+lAXECEneA6FaZoBbjMb+5XruTj2zqJ+vUxX8E9A2KBdlDFpriudM
-         TV2OnwnG+XnlNHojz2MN6h49JUtWDs714yEYfBccT9OpZ/3Q0CGegDDWUcdvukrF+rWt
-         9wCHhPBFCCoNzk4u/31jInctoCb5e7vlmaTrSE4XxKeP8+CvMSFcnof+BUGFfZkvjOdZ
-         NGAVlCBCxc14B1kpyLLfdsOIds3mFz2Y4oXpIrpx93QZmrxvI+p4kKnM8diRhr1QXqce
-         p0uA==
+        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
+        b=zC/nKfBrLXsHpRuQ+z39G/DxnJ20Yqs3ARHl1smLLddGrYhyVPM+tVH/F8sCbehehy
+         NeEBI58h3Xfba84vb/G+9dE5iq71Gnujv/m8UQqkMiHLxzBp4MKirflIDr112hSHTETp
+         Vmob1UjeZ7Gkn/OQUVmjW9Y38c4fwJD3STIz2bxxt7N6BxSgBv6HBn68j1VE8DhbUfbG
+         rzWEkTEb0OWVATuL/3E5XiXv/bJ475I0BU4estyhRlYhXTaC5AL2eP7xRDI9wBk8qSK8
+         315/yM5zg96U/mQJ4MbGWTR2IDlM/eSIFXk8zgshjkPRzu1tHCDZNygJboH6VLVQtJU6
+         tFnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tqHxcywQyVz1wfQvBGx3vpEtZ8YqD1CPktgmCd8zLdc=;
-        b=IYOGg+ar5ff/TtwE+CoeA5hUc4mYghvBlltpqxj3sTkEkVveZWwEOQ2juRHSQVzKDL
-         rD/cEIYblnjlsStfkrkgC7riGSXetoav/dagG3mxroUcwSFC/qVoNQBPA+IrDH1nLm2L
-         3nmuMjJkceY+HHlClgc4SFaG0CHh1GL2j653YT5iK/b5WrsZF0txCaTMT3HulmfnqBDZ
-         ch3wvN81ylHRwmDTvqeEs4KKZukaHtCjrChKjBZgHyilM+1uv+S3esg80RSt7stuUgo0
-         1+UJC6zeJD2ytUaBPduoqxx2o3PQNMLGCpOc2nrKnaMcHLwvqUw6fVg3h0v3IwjXPKky
-         2fBQ==
-X-Gm-Message-State: AOAM533wX2kzAJ8JT3DoI0bYPdLnzZ2nwHdx7kwupGzc8EBx1y39eMvZ
-        UKwjbZ7/TwPTwkiT4bpF/8YF+A==
-X-Google-Smtp-Source: ABdhPJyEIrrWfWDnGxTltj2DTpGuaDacNmpFZhftR7gDW78DkgWP3WGw2p75qhnhfmYpYtGiWYlZvg==
-X-Received: by 2002:adf:e48f:: with SMTP id i15mr29109610wrm.327.1595419751422;
-        Wed, 22 Jul 2020 05:09:11 -0700 (PDT)
+        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
+        b=hgz1naq4DLRM3DsyxyXqVx3jlkR3Dzf8DTMSDQQmB25ciRDc/QeMlTlHUDzvIVrCQK
+         IJEgli7ql3bOEKy4xgaGzDJqUSBrASrxf2IwqyH72c7lLDyrtpdYVjkpRgwP9okCGwqH
+         c/Q1yPAHvgWeiI9J6i+YSQcNe0aJkuC3wB8LywUNtq2+MafXBHd+uUVf46qfJ4il8lNc
+         WM2hYRwn9OnpBwHF7SbQxrtf6/PlF7qH/cumuKJdW9bcQQOEl7joJBYnjLWfpgGxvirH
+         o0vNcVobjy7hR46Svb3m4JYF81GhfQFNujoZb8aVxBK0cD3TiJx0tYeLLjqdx/kpBoIH
+         /5/w==
+X-Gm-Message-State: AOAM530Qo2JHAztcbL3mZOg40jzhXTHkqE6/8BQP4FGW22nMScOXpbLb
+        mRAxBFWDPmIJF9tJiOo+/kN8Qg==
+X-Google-Smtp-Source: ABdhPJza2fPEqYYKevpudtxYAEP4TkXuRkD+NMrK9DYbGa9mewMaSnuJMSk2BAeUfX481vQhspXfaw==
+X-Received: by 2002:a1c:a181:: with SMTP id k123mr8514433wme.172.1595420961581;
+        Wed, 22 Jul 2020 05:29:21 -0700 (PDT)
 Received: from localhost.localdomain (172.red-80-27-177.dynamicip.rima-tde.net. [80.27.177.172])
-        by smtp.gmail.com with ESMTPSA id o7sm28003296wrv.50.2020.07.22.05.09.08
+        by smtp.gmail.com with ESMTPSA id k131sm7728855wmb.36.2020.07.22.05.29.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 05:09:09 -0700 (PDT)
+        Wed, 22 Jul 2020 05:29:19 -0700 (PDT)
 From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Lindgren <tony@atomide.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
         Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH] gpio: omap: improve coding style for pin config flags
-Date:   Wed, 22 Jul 2020 14:07:56 +0200
-Message-Id: <20200722120755.230741-1-drew@beagleboard.org>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v5] pinctrl: core: print gpio in pins debugfs file
+Date:   Wed, 22 Jul 2020 14:27:52 +0200
+Message-Id: <20200722122751.266440-1-drew@beagleboard.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,42 +69,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change the handling of pin config flags from if/else to switch
-statement to make the code more readable and cleaner.
+If there is a gpio range mapping for the pin, then print out the gpio
+chip and line index for the pin in the debugfs 'pins' file with the
+format: "[line-index]:[gpio-label]"
 
-Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Here is example output on the BeagleBoard.org PocketBeagle (AM3358):
+/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+
+pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
+pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
+pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
+pin 28 (PIN28) 0:? 44e10870 00000036 pinctrl-single
+pin 29 (PIN29) 0:? 44e10874 00000006 pinctrl-single
+pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
+pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
+pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
+pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
+pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
+pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
+
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
- drivers/gpio/gpio-omap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/pinctrl/core.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index e0eada82178c..7fbe0c9e1fc1 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -899,13 +899,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 	u32 debounce;
- 	int ret = -ENOTSUPP;
+v4 changes:
+- Andy suggested '0:?' would be better because GPIO library uses '?' in
+  cases of unknown labels 
+
+v3 changes:
+- gpio column is now gpiochip label and line index
+
+v2 changes:
+- print 'NA' if pin does not have a GPIO number
+- change gpio_num from unsigned to unsigned int per checkpatch
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 821242bb4b16..02a4cc3b60c8 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -27,6 +27,7 @@
+ #include <linux/pinctrl/machine.h>
  
--	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
--	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
--	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
- 		ret = gpiochip_generic_config(chip, offset, config);
--	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
-+		break;
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
- 		debounce = pinconf_to_config_argument(config);
- 		ret = omap_gpio_debounce(chip, offset, debounce);
-+		break;
-+	default:
-+		break;
- 	}
+ #ifdef CONFIG_GPIOLIB
++#include "../gpio/gpiolib.h"
+ #include <asm-generic/gpio.h>
+ #endif
  
- 	return ret;
+@@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 	struct pinctrl_dev *pctldev = s->private;
+ 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 	unsigned i, pin;
++	struct pinctrl_gpio_range *range;
++	unsigned int gpio_num;
++	struct gpio_chip *chip;
+ 
+ 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+ 
+@@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
++#ifdef CONFIG_GPIOLIB
++		gpio_num = 0;
++		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
++			if ((pin >= range->pin_base) &&
++			    (pin < (range->pin_base + range->npins))) {
++				gpio_num = range->base + (pin - range->pin_base);
++				break;
++			}
++		}
++		chip = gpio_to_chip(gpio_num);
++		if (chip && chip->gpiodev && chip->gpiodev->base)
++			seq_printf(s, "%u:%s ", gpio_num -
++				chip->gpiodev->base, chip->label);
++		else
++			seq_puts(s, "0:? ");
++#endif
++
+ 		/* Driver-specific info per pin */
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
 -- 
 2.25.1
 
