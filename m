@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A4322295E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 12:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5916B22966B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 12:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGVKVo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 06:21:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41496 "EHLO
+        id S1725847AbgGVKlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 06:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVKVn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 06:21:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9DBC0619DC
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 03:21:43 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q4so1921701lji.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 03:21:43 -0700 (PDT)
+        with ESMTP id S1725878AbgGVKlU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 06:41:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24457C0619DC
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 03:41:20 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so1925443ljm.11
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 03:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=42sTIOT/i2NNf6M+l+UtomZ05ouSlPUG8hkgerlvyk4=;
-        b=KI2kR4jVlf08PKFDTHeSzGLfvjknPnPNCgzhcELzxpnX91FrUZXZGt2ubmPacxP69+
-         MKxW4CgHD4EVPhYpkRwZVpJEH4kEg2teCT0BPzqSCrS+t3xFn9A5u3elI/QVnhrx4m2b
-         2R9UliNL0dRrjIT0SZ5YdzokR0q6jMS18iGeWCONok+2MvfjAlEoNf3YA05SPQON1+gy
-         r1QhVXJsUKFrUNnN+sqcNEHf9uuCwvKGS0sWgU/lO6wI0RbalWG5adQdQW2RyiuZDsf9
-         yjzp13/Th6iZEygWBnK+BzVZczQQpzafOGQAI7NUTeFiDVZ+aDw1tPylvuaDotzykc8F
-         +DNg==
+        bh=nISrxVS8UqzGlgf+2A0W88c1tgl6SPPChJofeeLKcDg=;
+        b=YRSv5MVzfrYu8qC98NjV7vtmuQ7JzAe3+F9KRcxGDokf4ePUgqfy6LuTvGUoi5d7TZ
+         1Gb9QunCMzL6KvMY+JFk5Fl8kte2h53+DWFt8VYkywgjYpZIZ6TOdg7R0mppsbpD4CDn
+         YGVno09Sv3CsD2RYw85Vso9BwpjRiaNps5dyUJSzRU/mxt1qWIyse8KO2UthmZGuX9We
+         xFW67mgMhkxG4GxrK92o1YU1K6eVLag3CI7i0zooKl2JejD6LhHjfmBSBAuv5tdJNYDG
+         D/gII2ykmbT3aBQ1gderYoj+3ohRF+xjRUyePKerihE7FtPvvWYQuRid0LWNoYZyCmdF
+         tREw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=42sTIOT/i2NNf6M+l+UtomZ05ouSlPUG8hkgerlvyk4=;
-        b=RKZae7Yj+mc9BcQHjZrJeoXbJfBlgOWRc5Z8ILvRn8XyVKQnd1MLpTeC5vLWzmJ1XO
-         50FTgPry7Q46ve9eMcVG7o8HiMF9/FaolJP4VJfY/4+YMK3r3oDdBLc74uKCd5mzwddj
-         jG2XM2Q+i4fTY1MeRQa2QjyAwAKD7+zXviyrlfd0G+RgC8A5gYdXDkcmVuBXBY1pPpe/
-         L47ABtKosbf3RSjDjPrlEcRs9/bfpeZ8Xg372+lDb7AGRt9JZjro/b1QacKm7uVIvQKQ
-         ku/iCliqi1EOyWYvoFrFAUnQTJYAUaZ0nRIhngzpXg+Ommjdet+xmf3TKwjncQt/jUlZ
-         N3TQ==
-X-Gm-Message-State: AOAM533p+QYuino/evgg3KYZb+1RsHIKZcW/JW7JnidBVqSz8wTW+uzS
-        tiEYG/a6xmyMkN9H0wfUFHxuB/wxcZUmaA==
-X-Google-Smtp-Source: ABdhPJy5sgxCFNYWJMekr5d0VaZHnfwsoV3R/NE/OkSknyuFUKFMGM8yHSOS+u7aM5+ZgfYLRS1/fA==
-X-Received: by 2002:a2e:914a:: with SMTP id q10mr14186465ljg.7.1595413301474;
-        Wed, 22 Jul 2020 03:21:41 -0700 (PDT)
+        bh=nISrxVS8UqzGlgf+2A0W88c1tgl6SPPChJofeeLKcDg=;
+        b=I7ZU8gBK2mhY3luz4fTZf+lcppj6kFrqHf1EyRDfr1EuxlLvRrZytaPJwtxSCxYK1A
+         O1HsxUlhsm6nc4FHRXUMAH9UUryZx5MqpjgpdcaSfsB91CF4RlZFOEKp5Dkg6AYhxOEP
+         JTP1Ff1TOKj6ALBq40yBwPyOkH/jicRTznwQsHlRQoi4BAL01OLpgP4SaRqA6nf6SVXq
+         2tJ+csO1z9mBr9AmKLGYXolvuwFoj0oulLZMzbFme7MmThc3TpBDVp7YP2GSiNUO7y0S
+         KJLRUlarTjxLP1nFg4oHMsqXadGkHVOrloDsACsGzomA7ylgkBL5hQ/jyU7PMTuBEJ7a
+         4q3A==
+X-Gm-Message-State: AOAM530w100GZAqCoZ5omgEI9QzrpHPi+F4nBVt+Soh8DyABz/DZ59hI
+        ER0jhV/fchUFO2vvpbbuq3YWPC2CSjiiww==
+X-Google-Smtp-Source: ABdhPJzHcNpeTwemEIx+wI7YHaCbT1r/SAt3QyEkGVYtExb8OqJxPxi2m50wwem0IUlUZlFUZXS+hQ==
+X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr15561923ljl.167.1595414478441;
+        Wed, 22 Jul 2020 03:41:18 -0700 (PDT)
 Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id m25sm6431791ljj.128.2020.07.22.03.21.40
+        by smtp.gmail.com with ESMTPSA id e18sm3355680ljn.135.2020.07.22.03.41.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:21:40 -0700 (PDT)
+        Wed, 22 Jul 2020 03:41:17 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH] gpio: ws16c48: Use irqchip template
-Date:   Wed, 22 Jul 2020 12:19:38 +0200
-Message-Id: <20200722101938.151265-1-linus.walleij@linaro.org>
+Subject: [PATCH] gpio: 104-dio-48e: Use irqchip template
+Date:   Wed, 22 Jul 2020 12:39:15 +0200
+Message-Id: <20200722103915.162156-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,77 +74,75 @@ callback.
 Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-ws16c48.c | 39 ++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-104-dio-48e.c | 35 ++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ws16c48.c b/drivers/gpio/gpio-ws16c48.c
-index cb510df2b014..2d89d0529135 100644
---- a/drivers/gpio/gpio-ws16c48.c
-+++ b/drivers/gpio/gpio-ws16c48.c
-@@ -365,10 +365,25 @@ static const char *ws16c48_names[WS16C48_NGPIO] = {
- 	"Port 5 Bit 4", "Port 5 Bit 5", "Port 5 Bit 6", "Port 5 Bit 7"
+diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
+index 1f7d9bbec0fc..7a9021c4fa48 100644
+--- a/drivers/gpio/gpio-104-dio-48e.c
++++ b/drivers/gpio/gpio-104-dio-48e.c
+@@ -368,10 +368,21 @@ static const char *dio48e_names[DIO48E_NGPIO] = {
+ 	"PPI Group 1 Port C 5", "PPI Group 1 Port C 6", "PPI Group 1 Port C 7"
  };
  
-+static int ws16c48_irq_init_hw(struct gpio_chip *gc)
++static int dio48e_irq_init_hw(struct gpio_chip *gc)
 +{
-+	struct ws16c48_gpio *const ws16c48gpio = gpiochip_get_data(gc);
++	struct dio48e_gpio *const dio48egpio = gpiochip_get_data(gc);
 +
 +	/* Disable IRQ by default */
-+	outb(0x80, ws16c48gpio->base + 7);
-+	outb(0, ws16c48gpio->base + 8);
-+	outb(0, ws16c48gpio->base + 9);
-+	outb(0, ws16c48gpio->base + 10);
-+	outb(0xC0, ws16c48gpio->base + 7);
++	inb(dio48egpio->base + 0xB);
 +
 +	return 0;
 +}
 +
- static int ws16c48_probe(struct device *dev, unsigned int id)
+ static int dio48e_probe(struct device *dev, unsigned int id)
  {
- 	struct ws16c48_gpio *ws16c48gpio;
+ 	struct dio48e_gpio *dio48egpio;
  	const char *const name = dev_name(dev);
 +	struct gpio_irq_chip *girq;
  	int err;
  
- 	ws16c48gpio = devm_kzalloc(dev, sizeof(*ws16c48gpio), GFP_KERNEL);
-@@ -396,6 +411,16 @@ static int ws16c48_probe(struct device *dev, unsigned int id)
- 	ws16c48gpio->chip.set_multiple = ws16c48_gpio_set_multiple;
- 	ws16c48gpio->base = base[id];
+ 	dio48egpio = devm_kzalloc(dev, sizeof(*dio48egpio), GFP_KERNEL);
+@@ -399,13 +410,17 @@ static int dio48e_probe(struct device *dev, unsigned int id)
+ 	dio48egpio->chip.set_multiple = dio48e_gpio_set_multiple;
+ 	dio48egpio->base = base[id];
  
-+	girq = &ws16c48gpio->chip.irq;
-+	girq->chip = &ws16c48_irqchip;
+-	raw_spin_lock_init(&dio48egpio->lock);
++	girq = &dio48egpio->chip.irq;
++	girq->chip = &dio48e_irqchip;
 +	/* This will let us handle the parent IRQ in the driver */
 +	girq->parent_handler = NULL;
 +	girq->num_parents = 0;
 +	girq->parents = NULL;
 +	girq->default_type = IRQ_TYPE_NONE;
 +	girq->handler = handle_edge_irq;
-+	girq->init_hw = ws16c48_irq_init_hw;
-+
- 	raw_spin_lock_init(&ws16c48gpio->lock);
++	girq->init_hw = dio48e_irq_init_hw;
  
- 	err = devm_gpiochip_add_data(dev, &ws16c48gpio->chip, ws16c48gpio);
-@@ -404,20 +429,6 @@ static int ws16c48_probe(struct device *dev, unsigned int id)
+-	err = devm_gpiochip_add_data(dev, &dio48egpio->chip, dio48egpio);
+-	if (err) {
+-		dev_err(dev, "GPIO registering failed (%d)\n", err);
+-		return err;
+-	}
++	raw_spin_lock_init(&dio48egpio->lock);
+ 
+ 	/* initialize all GPIO as output */
+ 	outb(0x80, base[id] + 3);
+@@ -419,13 +434,9 @@ static int dio48e_probe(struct device *dev, unsigned int id)
+ 	outb(0x00, base[id] + 6);
+ 	outb(0x00, base[id] + 7);
+ 
+-	/* disable IRQ by default */
+-	inb(base[id] + 0xB);
+-
+-	err = gpiochip_irqchip_add(&dio48egpio->chip, &dio48e_irqchip, 0,
+-		handle_edge_irq, IRQ_TYPE_NONE);
++	err = devm_gpiochip_add_data(dev, &dio48egpio->chip, dio48egpio);
+ 	if (err) {
+-		dev_err(dev, "Could not add irqchip (%d)\n", err);
++		dev_err(dev, "GPIO registering failed (%d)\n", err);
  		return err;
  	}
  
--	/* Disable IRQ by default */
--	outb(0x80, base[id] + 7);
--	outb(0, base[id] + 8);
--	outb(0, base[id] + 9);
--	outb(0, base[id] + 10);
--	outb(0xC0, base[id] + 7);
--
--	err = gpiochip_irqchip_add(&ws16c48gpio->chip, &ws16c48_irqchip, 0,
--		handle_edge_irq, IRQ_TYPE_NONE);
--	if (err) {
--		dev_err(dev, "Could not add irqchip (%d)\n", err);
--		return err;
--	}
--
- 	err = devm_request_irq(dev, irq[id], ws16c48_irq_handler, IRQF_SHARED,
- 		name, ws16c48gpio);
- 	if (err) {
 -- 
 2.26.2
 
