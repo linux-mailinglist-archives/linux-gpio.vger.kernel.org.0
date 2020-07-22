@@ -2,103 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 389EE2293FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:51:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D47229420
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jul 2020 10:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbgGVIvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 04:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgGVIvF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 04:51:05 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECC1C0619DC;
-        Wed, 22 Jul 2020 01:51:05 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z3so812407pfn.12;
-        Wed, 22 Jul 2020 01:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e3OT5w6u3rxG/3iZ+MykAHqpmEMoLtEmtYfcFs2OdbA=;
-        b=lcLf9txTrjt7hKVxP5gHCuyjkEz9RmBIC+LvPgKzvRZtnViz4NLCU3lgBmESF6zSjc
-         twIU4avgtOsb4uzfw/cV1b45Ua8JmLeshTj82RnoEUUjxtLgNRG6aMLi3AAfOwptrda4
-         G9mAphyqrGUDorRoYnQYEsm3QHhGkO3u1bnmADdhMeik3sp4FMM5jzojAEjucUmeErg/
-         euMtXXkvYwV7auGAhJ9WPNDR0Wzcv/XFJ+tPA5rXnKgiyd8iv9wR157pAL+f/s7g5u2A
-         p1E+0QX5TAM7MeInLS5d0nuLTtJkOgAyg/jds9ZS/+P6aTfL33oMH6DMytNz6FztY0/2
-         AizA==
+        id S1727000AbgGVI4b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jul 2020 04:56:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34309 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729217AbgGVI4a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595408189;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vkKf5C1Z1oVLTHEanbHWInj2gBncKHeaq5hsgkkKCNw=;
+        b=eNUX1N3Mn8EfDK+8YQKHx3wj0+J4r3lxVB+PUlHPafWSiqpI9kBGQnGELbD24LyfwXeaw0
+        RgoAsnIeArx0GvZJmV6M39/2HvsxF7g7L96xlwEGFxDlNZUn02Dtuam5NUwD4lqeXBQm6g
+        r6BhED5cxAowv8Yy3/TbEJv+dzvdXCA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-q-2cyKd_N_m-Ot_la-O0cw-1; Wed, 22 Jul 2020 04:56:27 -0400
+X-MC-Unique: q-2cyKd_N_m-Ot_la-O0cw-1
+Received: by mail-ed1-f69.google.com with SMTP id m12so517614edv.3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jul 2020 01:56:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3OT5w6u3rxG/3iZ+MykAHqpmEMoLtEmtYfcFs2OdbA=;
-        b=cb5fZJEwW9fnvcPWrn8hHfxwG+MicK1m8zdj225DIvDQKh6r8kNb+ptEgKS6LZnAks
-         GU66ydJAhk+FsnDAsH/eT5aiGg1I/Z+x+dsy86PMHoPj9Uj0V+BvVsWy8doDicWG2YSF
-         cIQxcXNCDKNakd2Eso9YcFDsfEAjh7ay1q5eQNXohVLEfmWh94asHJS2Wd+6jvycqXrR
-         JGrptZE1ee9WX3CTXcv7auqOh/xIYtk91K7+1o9Rz84z+FLWzNJXWCyEVwCdgCjagaOP
-         1ZpbcEm9rHV/1CHN4G/Hvx1QbqDUw0hErCoUUppzYy6ZD/foz+MN8Shr33XBVC/p8QSh
-         vg/w==
-X-Gm-Message-State: AOAM5310DpcC5rThI4W4LDhMw2hRKmBidf6AV8KbUHfZWweuGp6t4zVy
-        Vp9Z61Di6u1edf2437r8u4w6N1fAcc50g7sBGag=
-X-Google-Smtp-Source: ABdhPJwk8TMBoOfP/mmDUdNAvHRR4uQdqWvutrkzEuwfNgqWTzOS/6FZqp9RGt9Ld4mrxIwr7V5Ox0PodZaH1uJk7tI=
-X-Received: by 2002:a62:7657:: with SMTP id r84mr26903497pfc.130.1595407864704;
- Wed, 22 Jul 2020 01:51:04 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vkKf5C1Z1oVLTHEanbHWInj2gBncKHeaq5hsgkkKCNw=;
+        b=RKq7tDTRflUJIbvHKfT0c1FNUB93M3Wsw5HQ52ieFQnHL9PnEPQtnF3GlEf4GemdLD
+         A5Ck2hZ10E9H8kt/+IbqePDwSq1obr1n9WQGoYeQOw7LW6wsESsyYw0sC3S53WyU+EC8
+         XvkXiLzAGYOrJbfZI4OMzmG2vN3X/qsyUWi0G2PbqydSv2ByKNm7r1oNhEcXnVRUxJtF
+         GYaVUI/PUs49QQTfcho+6VE6xpgG09luVtadEErCsna7/AUsmFGIZ/r/U/Ci4Dk+A1en
+         sdaD3gfugamdaMCZtTixPuA/Zev+Dyqs3DdyjPd2JVAdmBr1TW7mDVm5tjlz5xHJ10Kh
+         nRJw==
+X-Gm-Message-State: AOAM531VcgueWtBOvy75QsQtrl04SNE02HqTyd+xy4cjlsID6qmwY2PD
+        Utti/fYwsCFoU4z9DRGXEFXwuZ7mAMto5fbhAl2TAuWgRX0HtDwrs+kmKzlszsMLHHtXLb7q8kM
+        T9/dhif0C3ZOLOlHb7FqoDA==
+X-Received: by 2002:a17:907:1059:: with SMTP id oy25mr30988974ejb.90.1595408186202;
+        Wed, 22 Jul 2020 01:56:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUeDmne1kEsB8K8AfqPWHghglAiXGkX9bO4TcJ0jtvupI8IuIqTuixe3XB8BaW4G1mBR45MA==
+X-Received: by 2002:a17:907:1059:: with SMTP id oy25mr30988963ejb.90.1595408185961;
+        Wed, 22 Jul 2020 01:56:25 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id l6sm18913420edr.39.2020.07.22.01.56.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 01:56:25 -0700 (PDT)
+Subject: Re: [PATCH v2] gpio: crystalcove: Use irqchip template
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20200721140153.369171-1-linus.walleij@linaro.org>
+ <20200721153936.GL3703480@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <f8c609a2-30cf-dd4b-c956-1d90af9cdf02@redhat.com>
+Date:   Wed, 22 Jul 2020 10:56:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200721222851.2075891-1-drew@beagleboard.org> <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Jul 2020 11:50:50 +0300
-Message-ID: <CAHp75VeXiir4BYFTd3YrseExnLPg4MfD69koTkqf4_TKp7dsBQ@mail.gmail.com>
-Subject: Re: [PATCH v4] pinctrl: core: print gpio in pins debugfs file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200721153936.GL3703480@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:48 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jul 22, 2020 at 1:29 AM Drew Fustini <drew@beagleboard.org> wrote:
-> >
-> > If there is a gpio range mapping for the pin, then print out the gpio
-> > chip and line index for the pin in the debugfs 'pins' file with the
-> > format: "[line-index]:[gpio-label]"
-> >
-> > Here is an example output on the BeagleBoard.org PocketBeagle (AM3358):
-> > /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
-> >
-> > pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
-> > pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
-> > pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
-> > pin 28 (PIN28) 0:N/A 44e10870 00000036 pinctrl-single
-> > pin 29 (PIN29) 0:N/A 44e10874 00000006 pinctrl-single
+Hi,
 
-Though one more nit, I have just realized, perhaps '0:?' would be
-better, because GPIO library uses '?' in cases of unknown labels or
-so.
-I guess no need to resend (but if you wish you may do, with my tag
-included) and we may wait for Linus and Bart to comment.
+On 7/21/20 5:39 PM, Andy Shevchenko wrote:
+> On Tue, Jul 21, 2020 at 04:01:53PM +0200, Linus Walleij wrote:
+>> This makes the driver use the irqchip template to assign
+>> properties to the gpio_irq_chip instead of using the
+>> explicit calls to gpiochip_irqchip_add_nested() and
+>> gpiochip_set_nested_irqchip(). The irqchip is instead
+>> added while adding the gpiochip.
+> 
+> Took this version instead.
+> 
+> I dunno if Hans can come with some comments / testing results, I would like to
+> send a PR today or tomorrow.
 
-> > pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
-> > pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
-> > pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
-> > pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
-> > pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
-> > pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
-> >
->
-> This variant looks good enough to me, thanks! FWIW,
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Sorry for being a bit slow with testing this.
 
+I've given this patch a test-run on a machine with the
+PMIC the driver is for and with the caveat that I've not
+actually tested the GPIO IRQ functionality, since that
+does not seem to be used on any machines, I see no adverse
+side effects from this patch, so it is:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
