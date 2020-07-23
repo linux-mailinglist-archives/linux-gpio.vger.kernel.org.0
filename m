@@ -2,77 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04F8122ADC0
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 13:29:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AE7A22AFE8
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 15:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgGWL3g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 07:29:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37899 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727769AbgGWL3g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jul 2020 07:29:36 -0400
-X-UUID: da6ec72dba7f4142b8da6916a5078a04-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=h6iJ9UF693GrpDdmR7RuLUhXwqBFPofdnXMMN+00wK4=;
-        b=cPaLs2PoPr2U6VNyPvRfPCvPyExUKPO2NKDKt5pqZ06nbcQDeJO3nuNHSNyigld7If3UL/E0OyGAKZJOvpVBmXw9q6IPNEi9nTZMQnt70S9Z33/9uwF0YM3B368bIv2DI573jfxZJ73gJJrDhi0w5UBtfoOgvROa8prxjODOL0M=;
-X-UUID: da6ec72dba7f4142b8da6916a5078a04-20200723
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1476753335; Thu, 23 Jul 2020 19:29:29 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 19:29:26 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 19:29:26 +0800
-Message-ID: <1595503768.5511.8.camel@mtkswgap22>
-Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Thu, 23 Jul 2020 19:29:28 +0800
-In-Reply-To: <CACRpkdZNL=mnF0dx63bQPpHVLcAHA=oSEiiHzH8vi3+X58y5Jw@mail.gmail.com>
-References: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
-         <1594717479-8160-3-git-send-email-hanks.chen@mediatek.com>
-         <CACRpkdZNL=mnF0dx63bQPpHVLcAHA=oSEiiHzH8vi3+X58y5Jw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1726521AbgGWNFz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 09:05:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726493AbgGWNFz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jul 2020 09:05:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA354C0619DC
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jul 2020 06:05:54 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j11so6247080ljo.7
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jul 2020 06:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/FpACHDz7a5nGjx+ioBPQb3KC4um/vnAQ0sQ8picRFg=;
+        b=jNJoSElRtW6TRlUUAFLNiJvnE4zx/7OVBF8askmtfvQai1P2CRuqKVL3nnvucgi+5H
+         HFVnsBZ/G6+iTn37mqkSI0eMY6EdEbdMLlapOTRqEIS6Of3vUMx/DDQV8yFX+sdTrRTF
+         pd5MdqyhstCYcD12CgoaEIYQqe4uvK3pdUeJ3SG8SjKiS8mm/Vwip41YPCPzU/VBaQJA
+         IFDNqD4Hidhu1QyWhwZVUXvW3v46OWczFvre3KRVyMM424JwG/kuzXg7BOjwHaG9cANk
+         fFGsKPUjcEiE2w/FBMPE8awwpczCqy2L9obZ7CVgOKEKMA+jBmrJIkwNmgRwyQAQtZYE
+         oCpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FpACHDz7a5nGjx+ioBPQb3KC4um/vnAQ0sQ8picRFg=;
+        b=QN0Gn25SUsgBUN5VVu09FKOo9WphP+o1k4PnRMPrWWo+Z3PfOx3lZ9ynW7OSfdEI65
+         cGEHSZ7QWgJeR3iFM09GFArIHRyVf1uz/VOQP4BPT0vdOSPC+Z77/xg6PEBSJ8IeGcq0
+         EFarZ8XMpDe8AFlxM1iqZ5rIGJaLDR+ETf3bZzl4Mx735+Wszqv734/v7NOplcAPeXjB
+         6Jt0UyIPaDsQdGfbYN6VyBP/i98zVhyp4AZSELUQsDJAUXGSNcedVyfJBGrDdzgSdp/o
+         dwLl3y7Mjg5+0oVzuI6PzYOEDvkrJMf7gs+8x2pyNNc44Iqg9KOd44mAMkfZd39feh8A
+         NRzw==
+X-Gm-Message-State: AOAM530rRI02NXFjIPrGgA5ZKICLci3jFViZRxYUStY7rj8Y8MJiEfJB
+        pmuXtyydsFuNkbLtrA0zGbz8pmH3K7zwz3FGChkpRw==
+X-Google-Smtp-Source: ABdhPJxfHkQizZ37pEG7DjUxGsmLG10G2QP4JxXEoZC9O52R1JG/5dcJH9zenEjR2Bk7BSxv3j8ALDBTNQ4lV7d6Kf0=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr1802676lji.338.1595509553155;
+ Thu, 23 Jul 2020 06:05:53 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200722120755.230741-1-drew@beagleboard.org>
+In-Reply-To: <20200722120755.230741-1-drew@beagleboard.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jul 2020 15:05:42 +0200
+Message-ID: <CACRpkdbqW4FkHx0sBrYEyvpUwrDnyEaMHT7hBbKzSa6URKhA8w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: omap: improve coding style for pin config flags
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTE2IGF0IDE1OjI2ICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBPbiBUdWUsIEp1bCAxNCwgMjAyMCBhdCAxMTowNCBBTSBIYW5rcyBDaGVuIDxoYW5rcy5jaGVu
-QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEZyb206IEFuZHkgVGVuZyA8YW5keS50ZW5n
-QG1lZGlhdGVrLmNvbT4NCj4gPg0KPiA+IEFkZCBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBNZWRp
-YVRlayBNVDY3NzkgcGluY3RybCBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbmR5
-IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ICguLi4pDQo+IA0KPiBQbGVhc2UgbWFr
-ZSBhbiBhdHRlbXB0IHRvIHJldXNlIHRoZSBnZW5lcmljIHNjaGVtYXMgaW4NCj4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY2ZnLW5vZGUueWFtbA0KPiBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5tdXgtbm9kZS55YW1sDQo+
-IA0KPiBTZWUgaG93IG90aGVyIGJpbmRpbmdzIHJldXNlIHRoZW0sIGUuZy46DQo+IHFjb20saXBx
-NjAxOC1waW5jdHJsLnlhbWwNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoNCkdvdCBp
-dCwgSSdsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAy
-MC83LzIzLzM4NQ0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmVwbHkNCg0KDQpIYW5rcyBDaGVuDQo=
+On Wed, Jul 22, 2020 at 2:09 PM Drew Fustini <drew@beagleboard.org> wrote:
 
+> Change the handling of pin config flags from if/else to switch
+> statement to make the code more readable and cleaner.
+>
+> Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+
+Patch applied!
+
+Yours,
+Linus Walleij
