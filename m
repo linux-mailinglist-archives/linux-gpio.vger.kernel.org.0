@@ -2,139 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9059B22A4BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 03:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E75022A6A3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 06:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387538AbgGWBjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jul 2020 21:39:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33012 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387462AbgGWBjL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jul 2020 21:39:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F0A498040A69;
-        Thu, 23 Jul 2020 01:39:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zaFfzz5IrmEE; Thu, 23 Jul 2020 04:39:08 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] gpio: dwapb: Use resource managed GPIO-chip add data method
-Date:   Thu, 23 Jul 2020 04:38:58 +0300
-Message-ID: <20200723013858.10766-8-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+        id S1726115AbgGWEZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 00:25:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39235 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbgGWEZ1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Jul 2020 00:25:27 -0400
+IronPort-SDR: Hwo88U5koVQnZpjeRgHsfPn9vyuh9fkj1KIV54CiYV5RvIBWjCxYROHI4JKkOvLIRHg+eqqJyd
+ FR1kB/HbUuTg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137962693"
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="137962693"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 21:25:26 -0700
+IronPort-SDR: VYva4610TMQWKNrhsau100wjF06LD1mZsF43gvylTLkfjntc1vqlWAdGPuJh6VPcDuTVt5O4DN
+ OySWZ9VVdYoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="302176400"
+Received: from lkp-server01.sh.intel.com (HELO 7a9a14fb1d52) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2020 21:25:24 -0700
+Received: from kbuild by 7a9a14fb1d52 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jySnM-0000By-81; Thu, 23 Jul 2020 04:25:24 +0000
+Date:   Thu, 23 Jul 2020 12:25:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ e8284d4ee8bc7b7f5508d71ce6ddf75278a3f8ed
+Message-ID: <5f19111d.Hy5PKyLZVi71v9J+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since the resource managed version of gpiochip_add_data() will handle the
-GPIO-chip data automated cleanup we can freely remove the DW APB GPIO
-driver code responsible for that. After doing so the DW APB GPIO driver
-removal callback can be also fully discarded since there is nothing left
-to be done for it. All the cleanups are now performed by means of the
-device managed framework.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
+branch HEAD: e8284d4ee8bc7b7f5508d71ce6ddf75278a3f8ed  Merge branch 'devel' into for-next
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+elapsed time: 2265m
+
+configs tested: 95
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+sh                               alldefconfig
+mips                         bigsur_defconfig
+arm                           sama5_defconfig
+arm                           omap1_defconfig
+mips                            e55_defconfig
+c6x                         dsk6455_defconfig
+m68k                         amcore_defconfig
+arm                          simpad_defconfig
+openrisc                         allyesconfig
+mips                   sb1250_swarm_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200721
+i386                 randconfig-a005-20200721
+i386                 randconfig-a004-20200721
+i386                 randconfig-a006-20200721
+i386                 randconfig-a002-20200721
+i386                 randconfig-a001-20200721
+i386                 randconfig-a015-20200719
+i386                 randconfig-a011-20200719
+i386                 randconfig-a016-20200719
+i386                 randconfig-a012-20200719
+i386                 randconfig-a013-20200719
+i386                 randconfig-a014-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
 ---
- drivers/gpio/gpio-dwapb.c | 37 ++-----------------------------------
- 1 file changed, 2 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 8588e45186ad..3d1767e69881 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -84,7 +84,6 @@ struct dwapb_context {
- 
- struct dwapb_gpio_port {
- 	struct gpio_chip	gc;
--	bool			is_registered;
- 	struct dwapb_gpio	*gpio;
- #ifdef CONFIG_PM_SLEEP
- 	struct dwapb_context	*ctx;
-@@ -493,32 +492,16 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	if (pp->idx == 0)
- 		dwapb_configure_irqs(gpio, port, pp);
- 
--	err = gpiochip_add_data(&port->gc, port);
-+	err = devm_gpiochip_add_data(gpio->dev, &port->gc, port);
- 	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
- 		return err;
- 	}
- 
--	port->is_registered = true;
--
- 	return 0;
- }
- 
--static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
--{
--	unsigned int m;
--
--	for (m = 0; m < gpio->nr_ports; ++m) {
--		struct dwapb_gpio_port *port = &gpio->ports[m];
--
--		if (!port->is_registered)
--			continue;
--
--		gpiochip_remove(&port->gc);
--	}
--}
--
- static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
- 			  struct dwapb_port_property *pp)
- {
-@@ -712,23 +695,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	for (i = 0; i < gpio->nr_ports; i++) {
- 		err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
- 		if (err)
--			goto out_unregister;
-+			return err;
- 	}
--	platform_set_drvdata(pdev, gpio);
--
--	return 0;
--
--out_unregister:
--	dwapb_gpio_unregister(gpio);
--
--	return err;
--}
--
--static int dwapb_gpio_remove(struct platform_device *pdev)
--{
--	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
--
--	dwapb_gpio_unregister(gpio);
- 
- 	return 0;
- }
-@@ -832,7 +800,6 @@ static struct platform_driver dwapb_gpio_driver = {
- 		.acpi_match_table = dwapb_acpi_match,
- 	},
- 	.probe		= dwapb_gpio_probe,
--	.remove		= dwapb_gpio_remove,
- };
- 
- module_platform_driver(dwapb_gpio_driver);
--- 
-2.26.2
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
