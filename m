@@ -2,76 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED92F22AD8B
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 13:20:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F9E22ADA1
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 13:25:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgGWLUY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 07:20:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24007 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728602AbgGWLUY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jul 2020 07:20:24 -0400
-X-UUID: 2bf3361baf4f4e6398c017c69039c58c-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=bItawRI4WETjkWbsEIQmhgb5ptmHRsFuKCwxFVOHsUs=;
-        b=Rd+j3lAlkdDkLp20SinOHqVdyIv79jAuZi3tjVWWARyhNmpQnEVR3tZQXqU71YHmnDiYWySL5lEa+DbciPqDQhPnO9aJoY+3en/ZATlx6KlcSz5TF9akdDa1wJXif7tsdSlNauSbO44MlSk8MU+XELAI3Yg7eQ2NW9C5uDhtoCg=;
-X-UUID: 2bf3361baf4f4e6398c017c69039c58c-20200723
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 179125836; Thu, 23 Jul 2020 19:20:08 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 19:19:59 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 19:20:00 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH v9 7/7] clk: mediatek: add UART0 clock support
-Date:   Thu, 23 Jul 2020 19:19:57 +0800
-Message-ID: <1595503197-15246-8-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
-References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
+        id S1727940AbgGWLZQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 07:25:16 -0400
+Received: from mx2.itam.mx ([148.205.229.36]:46880 "EHLO mx2.itam.mx"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgGWLZP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:25:15 -0400
+X-Greylist: delayed 423 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jul 2020 07:25:14 EDT
+Received: from cronos2.itam.mx (cronos2.itam.mx [148.205.148.141])
+        by mx2.itam.mx  with ESMTP id 06NBMee8027040-06NBMeeM027040
+        (version=TLSv1.0 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Thu, 23 Jul 2020 06:22:42 -0500
+Received: from [10.81.183.86] (105.8.4.105) by cronos2.itam.mx
+ (148.205.148.141) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 23 Jul
+ 2020 06:22:39 -0500
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <aflore98@itam.mx>
+From:   ''Tayeb Souami'' <aflore98@itam.mx>
+Date:   Thu, 23 Jul 2020 13:22:22 +0200
+Reply-To: <Tayebsouam.spende@gmail.com>
+Message-ID: <45db92c4-9b90-4776-b0e7-421481e19023@CRONOS2.itam.mx>
+X-Originating-IP: [105.8.4.105]
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=itam.mx; s=2019; c=relaxed/relaxed;
+ h=content-type:mime-version:subject:to:from:date:reply-to:message-id;
+ bh=0e+iY5sBEFO/sjChqI6a0rePLYR3wNA+X31I1uNCUzI=;
+ b=NphhVdRJA2ZoncIB/+K95z3bQw+UTr5Cc0c6KNMHaSm3R5cPtOroV0HHCU2COwB6OYafEgtsvXVW
+        rTePYYHC3S3MOYH21rLb9zbZSCnGdB5gvFkqP9PJm2qeZKFQfeCOds4y8ZE3QINLS0bJagIpQEmT
+        sr2kVgsLwxF47rT7aHj5TtpdIbLVgKL01p2wbBapzEegHn861Fby8eM1Vhi9NPkb2qddWt3hjgDu
+        wa5nh6fGZ3UfcEVRt6kmA5UFkOfwvt1CNqMDG28pMFRGvExIg2ZullNpZVvITP/2jTZD3Pj3okr6
+        6++xwVOZGaJYut9v4q6gwBeZ18euoKg47ep7bg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-QWRkIE1UNjc3OSBVQVJUMCBjbG9jayBzdXBwb3J0Lg0KDQpGaXhlczogNzEwNzc0ZTA0ODYxICgi
-Y2xrOiBtZWRpYXRlazogQWRkIE1UNjc3OSBjbG9jayBzdXBwb3J0IikNClNpZ25lZC1vZmYtYnk6
-IFdlbmRlbGwgTGluIDx3ZW5kZWxsLmxpbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBI
-YW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBNYXR0aGlh
-cyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KLS0tDQogZHJpdmVycy9jbGsvbWVk
-aWF0ZWsvY2xrLW10Njc3OS5jIHwgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyBiL2Ry
-aXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYw0KaW5kZXggOTc2NmNjY2Y1ODQ0Li42ZTBk
-M2ExNjY3MjkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2Nzc5LmMN
-CisrKyBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYw0KQEAgLTkxOSw2ICs5MTks
-OCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19nYXRlIGluZnJhX2Nsa3NbXSA9IHsNCiAJCSAg
-ICAicHdtX3NlbCIsIDE5KSwNCiAJR0FURV9JTkZSQTAoQ0xLX0lORlJBX1BXTSwgImluZnJhX3B3
-bSIsDQogCQkgICAgInB3bV9zZWwiLCAyMSksDQorCUdBVEVfSU5GUkEwKENMS19JTkZSQV9VQVJU
-MCwgImluZnJhX3VhcnQwIiwNCisJCSAgICAidWFydF9zZWwiLCAyMiksDQogCUdBVEVfSU5GUkEw
-KENMS19JTkZSQV9VQVJUMSwgImluZnJhX3VhcnQxIiwNCiAJCSAgICAidWFydF9zZWwiLCAyMyks
-DQogCUdBVEVfSU5GUkEwKENMS19JTkZSQV9VQVJUMiwgImluZnJhX3VhcnQyIiwNCi0tIA0KMi4x
-OC4wDQo=
+Lieber Freund,
 
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
+
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+
+
+
+Das ist dein Spendencode: [TS530342018]
+
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami
+
+________________________________
+
+La informaci=C3=B3n contenida en este mensaje de datos es confidencial, con=
+stituye un secreto industrial y/o profesional en t=C3=A9rminos de la legisl=
+aci=C3=B3n vigente y se encuentra dirigida exclusivamente al destinatario i=
+ndicado en dicho mensaje. Si usted recibe esta informaci=C3=B3n por error o=
+ si usted no es el destinatario del mensaje, favor de notificar al emisor, =
+y destr=C3=BAyalo.
+The information contained in this electronic message is confidential, it co=
+nstitutes a professional and/or industrial secret in terms of the current l=
+egislation, and is intended for its recipient only. If you receive this mes=
+sage by mistake or if you are not the recipient thereof, please notify the =
+sender and destroy it.
