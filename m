@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73C3022A6DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 07:19:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E170222A727
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 08:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgGWFTz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 01:19:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49825 "EHLO mga06.intel.com"
+        id S1725862AbgGWGDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 02:03:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:58310 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbgGWFTy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:19:54 -0400
-IronPort-SDR: uADd6TCB1KfwQ/0q+GjwW4/A87V3PEACQyntcAJpMOMElgowfug0yKc6wXvoxbkMzcIG09HJDg
- CbkKEtRiu0wA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212009573"
+        id S1725536AbgGWGDG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Jul 2020 02:03:06 -0400
+IronPort-SDR: I7IcR9HNM5P/nN11dvikScDHxpLB9TRr5NOm4Cl/WjugsAlvFDTQ6W6Y4oF6ZpmMwDKMmFLjck
+ 4OotZVfy7jhA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149645760"
 X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="212009573"
+   d="scan'208";a="149645760"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 22:19:53 -0700
-IronPort-SDR: 8Fl7VWUVDHL4m43k/x2TyBlvi3/RRoJu81FGsqon+qoxAWKdhnsiUJniTTL2GV7LHRYi+OXy4f
- OAuWHkCdNx4A==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 23:03:05 -0700
+IronPort-SDR: D2OquMUQ1VbKPyLwFX8kCEu/D5Ms89cHPD6ghTySwS/T/sh6Hz+jd6HSFZw+aEexORizdtOuWk
+ z0tA27Ftt6fg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="488240569"
+   d="scan'208";a="302194525"
 Received: from lkp-server01.sh.intel.com (HELO 7a9a14fb1d52) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jul 2020 22:19:52 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2020 23:03:03 -0700
 Received: from kbuild by 7a9a14fb1d52 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jyTe3-0000Ct-Mw; Thu, 23 Jul 2020 05:19:51 +0000
-Date:   Thu, 23 Jul 2020 13:19:37 +0800
+        id 1jyUJq-0000Do-JE; Thu, 23 Jul 2020 06:03:02 +0000
+Date:   Thu, 23 Jul 2020 14:02:16 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:no-irqchip-nested-threading] BUILD SUCCESS
- f810cbdb2bd2552c17368b3bf8bf2acd96c63b30
-Message-ID: <5f191de9.4mrduMMHT5TvL7yG%lkp@intel.com>
+Subject: [pinctrl:devel] BUILD SUCCESS WITH WARNING
+ 66c00f561d94f8b5eae8c0e1aa8e4cfad9cf64f9
+Message-ID: <5f1927e8.R3SaNlwulabYN8H5%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,16 +46,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  no-irqchip-nested-threading
-branch HEAD: f810cbdb2bd2552c17368b3bf8bf2acd96c63b30  gpio: Retire the explicit gpio irqchip code
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: 66c00f561d94f8b5eae8c0e1aa8e4cfad9cf64f9  dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
 
-elapsed time: 1064m
+Warning in current branch:
 
-configs tested: 114
-configs skipped: 4
+drivers/pinctrl/pinctrl-ocelot.c:734:29: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Warning ids grouped by kconfigs:
+
+recent_errors
+|-- i386-allmodconfig
+|   `-- drivers-pinctrl-pinctrl-ocelot.c:warning:Clarify-calculation-precedence-for-and-.-clarifyCalculation
+`-- x86_64-allyesconfig
+    `-- drivers-pinctrl-pinctrl-ocelot.c:warning:Clarify-calculation-precedence-for-and-.-clarifyCalculation
+
+elapsed time: 2362m
+
+configs tested: 101
+configs skipped: 2
 
 arm                                 defconfig
 arm                              allyesconfig
@@ -68,20 +77,6 @@ arm64                             allnoconfig
 sh                          rsk7264_defconfig
 c6x                                 defconfig
 c6x                        evmc6474_defconfig
-sh                               alldefconfig
-mips                         bigsur_defconfig
-arm                           sama5_defconfig
-arm                           omap1_defconfig
-mips                            e55_defconfig
-c6x                         dsk6455_defconfig
-m68k                         amcore_defconfig
-arm                          simpad_defconfig
-mips                   sb1250_swarm_defconfig
-arm                         shannon_defconfig
-powerpc                       ppc64_defconfig
-arm                      footbridge_defconfig
-s390                             alldefconfig
-c6x                               allnoconfig
 i386                             allyesconfig
 i386                                defconfig
 i386                              debian-10.3
@@ -95,11 +90,6 @@ m68k                              allnoconfig
 m68k                           sun3_defconfig
 m68k                                defconfig
 m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-openrisc                         allyesconfig
 nds32                               defconfig
 nds32                             allnoconfig
 csky                             allyesconfig
@@ -115,6 +105,12 @@ arc                              allyesconfig
 sh                               allmodconfig
 sh                                allnoconfig
 microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
 mips                             allyesconfig
 mips                              allnoconfig
 mips                             allmodconfig
@@ -122,23 +118,17 @@ parisc                            allnoconfig
 parisc                              defconfig
 parisc                           allyesconfig
 parisc                           allmodconfig
+powerpc                             defconfig
 powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a005-20200719
-x86_64               randconfig-a002-20200719
-x86_64               randconfig-a006-20200719
-x86_64               randconfig-a001-20200719
-x86_64               randconfig-a003-20200719
-x86_64               randconfig-a004-20200719
-i386                 randconfig-a003-20200721
-i386                 randconfig-a005-20200721
-i386                 randconfig-a004-20200721
-i386                 randconfig-a006-20200721
-i386                 randconfig-a002-20200721
-i386                 randconfig-a001-20200721
+i386                 randconfig-a001-20200719
+i386                 randconfig-a006-20200719
+i386                 randconfig-a002-20200719
+i386                 randconfig-a005-20200719
+i386                 randconfig-a003-20200719
+i386                 randconfig-a004-20200719
 x86_64               randconfig-a014-20200720
 x86_64               randconfig-a015-20200720
 x86_64               randconfig-a016-20200720
@@ -151,6 +141,12 @@ i386                 randconfig-a016-20200719
 i386                 randconfig-a012-20200719
 i386                 randconfig-a013-20200719
 i386                 randconfig-a014-20200719
+x86_64               randconfig-a005-20200719
+x86_64               randconfig-a002-20200719
+x86_64               randconfig-a006-20200719
+x86_64               randconfig-a001-20200719
+x86_64               randconfig-a003-20200719
+x86_64               randconfig-a004-20200719
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
@@ -165,12 +161,12 @@ sparc64                             defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
 x86_64                                   rhel
 x86_64                                    lkp
 x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
