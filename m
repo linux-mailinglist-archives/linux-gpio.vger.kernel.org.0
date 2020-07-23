@@ -2,140 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 493D322B0FA
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 16:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93ADA22B102
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 16:08:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgGWOGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 10:06:32 -0400
-Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:22432
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727111AbgGWOGb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:06:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iwh3BcFlFOKeJhKiXlg8X/vQuWr65i5oNLPQajYn0C0/OgAqQB1o7vc+F6bYAK65Vzpkj1oYxHNManIndFH9HbQJ0lpAWVbZ73vmzsQULNbBiFc6HdIkR+Nr4poGE0pMMY29YW6nU8SF3cqkJ5EXiTviL0LNb+EvqKs6FlvUCms1b0t+K+Bwa1Ho4gB9bm7qYLMlwnh5aMbM6qntD9lluXcRF3O6tdgfcq6UEGn0ojf6bHVaEvMVyAg6qSFll4viGmQPS9AzZom9TmE1oQohuhSf6kJBnk1N9Apv9usCNRIZu4pMAai0SAcuXFdV91qPynFYcauZRO2xSr4+2HG2qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ywkMrig5SSgN6/sqmk4HzYAND1AgcJ2iPorIfTQ34iw=;
- b=Zjn4EnWt/nG8LGM5YLnHSR/ccy2zjTh3FQvPYvPAT1SjHMnBctxb24fvonidkf8KVvS1e9lHs12OH4cmtIiYLNNws1Z5rkVKbmuMDzB0IEZltZ8K7QC6z97IV1P/TbvpMMTIoIHLw/jjM5SNogJ6giol00N/KG3n71pelnLqfuAUh+bg+fah9ovot3UBs0YsR6iPKSw8O75LHMs52WCDd6CFXXE/8rGWMB40EFByJCREGwfYHLuJ/hXPafvmkPiK+DE6CyrBsf5dh5/QnKDgamVJgVpSDHr80NTOy7Ok/ySOXpY/WC3tY7z+aFzBmtq1SFPon2p4crUd3v112AyCag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ywkMrig5SSgN6/sqmk4HzYAND1AgcJ2iPorIfTQ34iw=;
- b=lDfeis9+UZVRtxXibhX32gczqEqCJf9RTN5BYcGbYoiibGRlei3W/kGcVIKJNjSgYvn/hX0DlASA7MJeS3+gmzpDlZU5+Ep6yId06jf6USw+gYWNpgSOsOSnYYKm4x6HuaOboJLdiNs+ORLssxJUiUV1ZtXw8+X6kMiAC5yXHSQ=
-Received: from MN2PR05CA0039.namprd05.prod.outlook.com (2603:10b6:208:236::8)
- by SN4PR0201MB3616.namprd02.prod.outlook.com (2603:10b6:803:4e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Thu, 23 Jul
- 2020 14:06:29 +0000
-Received: from BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:236:cafe::4c) by MN2PR05CA0039.outlook.office365.com
- (2603:10b6:208:236::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
- Transport; Thu, 23 Jul 2020 14:06:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT055.mail.protection.outlook.com (10.152.77.126) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 14:06:29
- +0000
-Received: from [149.199.38.66] (port=56968 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybpr-0004HR-0H; Thu, 23 Jul 2020 07:04:35 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrh-0005To-0Q; Thu, 23 Jul 2020 07:06:29 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06NE6K0B004486;
-        Thu, 23 Jul 2020 07:06:20 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrX-0005Q2-PL; Thu, 23 Jul 2020 07:06:20 -0700
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 3/3] MAINTAINERS: add fragment for xilinx GPIO drivers
-Date:   Thu, 23 Jul 2020 19:36:08 +0530
-Message-Id: <1595513168-11965-4-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        id S1728066AbgGWOIT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 10:08:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8749 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgGWOIT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:08:19 -0400
+IronPort-SDR: M/aslXAApwUpwgdoHKc9vyij7axE+SLa664p5OxOcCMdsdGI5Gk0Wvzxi9Y8tG2sCABZnTpxR5
+ FIVddEo2V/DQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="148461355"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="148461355"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 07:08:18 -0700
+IronPort-SDR: FYrQsWQR3SEQbICT+WzUfTzZAhpWuLC2eRTff33nOFUtBjNFdFYyA4RBWvh8v9Aw7VZ4cnSBMI
+ v7nFmJuF6LCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="302318604"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 07:08:15 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jybtP-003eVU-JI; Thu, 23 Jul 2020 17:08:15 +0300
+Date:   Thu, 23 Jul 2020 17:08:15 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200723140815.GL3703480@smile.fi.intel.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: d5f9b105-95e8-40b3-d227-08d82f11988d
-X-MS-TrafficTypeDiagnostic: SN4PR0201MB3616:
-X-Microsoft-Antispam-PRVS: <SN4PR0201MB3616680E08C50B0483627455AF760@SN4PR0201MB3616.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Jqv9787RC4TI3u7wi3TlNfXgoThYZ/W12FYCsFWDTA9vFYOWoaFlmVNm6QvGzmHKCIZCsLtd79MpXcXXQq8ibN+H80d4zFShF8YUGl0WCFoV7dzRfM95wKp/41Pqqx9zHze7l0U/iqPtCzMPilG/Ls+KW31CPlNBP8HrRre7JbZv5VnBvZx0WpuN2s5t7CPkM1rzcwVsd8oGtvc6fQmTjPMDWqyUBIZyKqkdf0o7eQXEXg8vUr7nnqOE4YS/zA3yNCBjtgocQ5fHC2buMFjkfaLyQT7UorJ9tztDAfPXBbBMyF7Te2ZiUZM/WDq01THgXHQuLb2dKZVrjsZ9KM2aVXX/nP2a/5OuO4Edb19RL35Lwjp2mqHC7ww3TegHBIRSf4rAmGE3rnDgax/44AiiIA==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(396003)(39860400002)(46966005)(107886003)(336012)(81166007)(2616005)(70206006)(82740400003)(47076004)(44832011)(70586007)(186003)(26005)(9786002)(4744005)(6666004)(8936002)(356005)(6636002)(7696005)(478600001)(2906002)(82310400002)(426003)(5660300002)(36756003)(8676002)(4326008)(316002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:06:29.3235
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5f9b105-95e8-40b3-d227-08d82f11988d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3616
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Added entry for xilinx GPIO drivers.
+On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
+> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
+> top of a GPIO chip. It's better from maintainability and readability
+> point of view to use one instead of supporting a hand-written Generic
+> IRQ-chip-based implementation. Moreover the new implementation won't
+> cause much functional overhead but will provide a cleaner driver code.
+> All of that makes the DW APB GPIO driver conversion pretty much justified
+> especially seeing a tendency of the other GPIO drivers getting converted
+> too.
+> 
+> Here is what we do in the framework of this commit to convert the driver
+> to using the GPIO-lib-based IRQ-chip interface:
+> 1) IRQ ack, mask and unmask callbacks are locally defined instead of
+> using the Generic IRQ-chip ones.
+> 2) An irq_chip structure instance is embedded into the dwapb_gpio
+> private data. Note we can't have a static instance of that structure since
+> GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
+> A warning about that would have been printed by the GPIO-lib code if we
+> used a single irq_chip structure instance for multiple DW APB GPIO
+> controllers.
+> 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
+> descriptor. By default there is no IRQ enabled so any event raised will be
+> handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
+> is synthesized to have non-shared reference IRQ-lines, then as before the
+> hierarchical and cascaded cases are distinguished by checking how many
+> parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
+> initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
+> is used on a platform with shared IRQ line, then we simply won't let the
+> GPIO-lib to initialize the parental IRQs, but will handle them locally in
+> the driver.
+> 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
+> GPIO-lib IRQ-chip interface will create a new domain and accept a standard
+> IRQ-chip structure pointer based on the setting we provided in the
+> gpio_irq_chip structure.
+> 5) Manually select a proper IRQ flow handler directly in the
+> irq_set_type() callback by calling irq_set_handler_locked() method, since
+> an ordinary (not Generic) irq_chip descriptor is now utilized.
+> 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
+> the standard method gpiochip_to_irq(), which will be used anyway no matter
+> whether the custom to_irq callback is specified or not.
+> 7) Discard the acpi_gpiochip_{request,free}_interrupts()
+> invocations, since they will be called from
+> gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
+> 8) Alter CONFIG_GPIO_DWAPB kernel config to select
+> CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
 
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea296f213e45..71c40b0ddef6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18900,6 +18900,16 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/net/can/xilinx_can.txt
- F:	drivers/net/can/xilinx_can.c
- 
-+XILINX GPIO DRIVER
-+M:	Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-+R:	Srinivas Neeli <srinivas.neeli@xilinx.com>
-+R:	Michal Simek <michal.simek@xilinx.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-+F:	Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-+F:	drivers/gpio/gpio-xilinx.c
-+F:	drivers/gpio/gpio-zynq.c
-+
- XILINX SD-FEC IP CORES
- M:	Derek Kiernan <derek.kiernan@xilinx.com>
- M:	Dragan Cvetic <dragan.cvetic@xilinx.com>
+...
+
+One more thing...
+
+>  static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
+>  {
+> +	struct gpio_chip *gc = &gpio->ports[0].gc;
+>  	unsigned long irq_status;
+>  	irq_hw_number_t hwirq;
+>  
+>  	irq_status = dwapb_read(gpio, GPIO_INTSTATUS);
+>  	for_each_set_bit(hwirq, &irq_status, 32) {
+> -		int gpio_irq = irq_find_mapping(gpio->domain, hwirq);
+> +		int gpio_irq = gc->to_irq(gc, hwirq);
+
+Very, very few do this.
+Can we stick with the original one?
+(See plenty of other examples in the GPIO / pin control subsystems.
+
+>  		u32 irq_type = irq_get_trigger_type(gpio_irq);
+>  
+>  		generic_handle_irq(gpio_irq);
+
+
+>  }
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
