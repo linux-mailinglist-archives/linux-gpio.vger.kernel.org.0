@@ -2,172 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E170222A727
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 08:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22D7C22AAEA
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jul 2020 10:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgGWGDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 02:03:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:58310 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgGWGDG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:03:06 -0400
-IronPort-SDR: I7IcR9HNM5P/nN11dvikScDHxpLB9TRr5NOm4Cl/WjugsAlvFDTQ6W6Y4oF6ZpmMwDKMmFLjck
- 4OotZVfy7jhA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149645760"
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="149645760"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 23:03:05 -0700
-IronPort-SDR: D2OquMUQ1VbKPyLwFX8kCEu/D5Ms89cHPD6ghTySwS/T/sh6Hz+jd6HSFZw+aEexORizdtOuWk
- z0tA27Ftt6fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="302194525"
-Received: from lkp-server01.sh.intel.com (HELO 7a9a14fb1d52) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2020 23:03:03 -0700
-Received: from kbuild by 7a9a14fb1d52 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jyUJq-0000Do-JE; Thu, 23 Jul 2020 06:03:02 +0000
-Date:   Thu, 23 Jul 2020 14:02:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS WITH WARNING
- 66c00f561d94f8b5eae8c0e1aa8e4cfad9cf64f9
-Message-ID: <5f1927e8.R3SaNlwulabYN8H5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726956AbgGWIoJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 04:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgGWIoI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jul 2020 04:44:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D697C0619DC
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jul 2020 01:44:08 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e8so5500234ljb.0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jul 2020 01:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CkH2cH1tSHkiWUdx4NYvU3H/EJsQDUARMZQ26FKEGq4=;
+        b=kxz381FsxyT6cNf9sYuimdhuIrl8nxWcoY7uM46nPmZffugo6no1qzJr5aIXrKo7h2
+         5/8PKpg8A61z+wAa44SJdBgFVJmKEebebfWSTexkPuGPVtDBC+M8W2EETKfrxS/ajZbu
+         jrLJqSTpXgSXiW+U+t9OKLEoilfVGq/LOzePAnPruqfi0mbPianEerwMGFitwc7Zj1Ix
+         jwx6dUtf//RZoU+1i1gpp60/9sLPr1XTolu2Q1iQAAuEoUllIQ192rjwvvpx08okrahQ
+         YV0s8XPRp2ObxIqNjdJ3SXyRjL2Ip5CA52ocGM7KqHgdPd90tsqQTO0UAmjRMnGvGkwb
+         Q1Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CkH2cH1tSHkiWUdx4NYvU3H/EJsQDUARMZQ26FKEGq4=;
+        b=gFf1snvYKNrlNZDoX5kBAH8Wwk39SaVHyZXkQlJU0VLeS1G3ZVa7O3PBbErZf8AE8A
+         K0N/SVKsM9fqe0u/Vm+qu1DqT5rrDD77VX7NCCz+Jm8llVmeAVUORQQSt66gRnWP8CCN
+         kDG6cfuYwDePFNPTJIrJsCOsP+8xZZl7SqtRvOM5Me2j8o5iR35PIZeXSiVXU1cKWbf/
+         1ebeEt6j6fW2GsgBwnxCSMe8rHZLE6vcNYmCejoyEGB8f8SzO/cnx4vmYYxwQxxq9k0X
+         lNRZK+TNYgEPuoX4FW9EhlFWUiTbIQmZ6mj7//wbm5KtU5o2SEnK32E+HGcl615PWgBH
+         yHkg==
+X-Gm-Message-State: AOAM530l55Rx3iEfLAIyDCY46NRXO/hGOT4/2j7HIFpP5Q6LlbMV0avf
+        fwpe5p1Kblvv2xm5l2BxH+oTjN+5m5tQyqsVaUGkAg==
+X-Google-Smtp-Source: ABdhPJy9FYQzEz5+a+xAYCl+rAh2wms4y8ztY1F8hFb6jAnV1ZJBUBI6y73dlz37/bChnljh88y3BVK9wCTiobiTO6M=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr1628930ljc.286.1595493846705;
+ Thu, 23 Jul 2020 01:44:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-7-lee.jones@linaro.org> <20200720142714.GA6747@kozik-lap>
+ <20200720144955.GD3368211@dell> <20200720145219.GA23990@kozik-lap>
+In-Reply-To: <20200720145219.GA23990@kozik-lap>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jul 2020 10:43:55 +0200
+Message-ID: <CACRpkdaYQ3PEh838Qoxig4n1iNFp8AOj_Wk9jdvB-qMy0PBRKw@mail.gmail.com>
+Subject: Re: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious
+ misuse of kerneldoc to standard comment blocks
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Thomas Abraham <thomas.ab@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 66c00f561d94f8b5eae8c0e1aa8e4cfad9cf64f9  dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+On Mon, Jul 20, 2020 at 4:52 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Mon, Jul 20, 2020 at 03:49:55PM +0100, Lee Jones wrote:
 
-Warning in current branch:
+> > > Thanks, applied.
+> >
+> > Same as the others.  Already in -next.
+>
+> Thanks for letting me know. I dropped all of them.
 
-drivers/pinctrl/pinctrl-ocelot.c:734:29: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+It's a bit tricky at times with clean-up topics, I want submaintainers to pick
+it up if possible so sorry about this, it's just too much to coordinate
+sometimes.
 
-Warning ids grouped by kconfigs:
-
-recent_errors
-|-- i386-allmodconfig
-|   `-- drivers-pinctrl-pinctrl-ocelot.c:warning:Clarify-calculation-precedence-for-and-.-clarifyCalculation
-`-- x86_64-allyesconfig
-    `-- drivers-pinctrl-pinctrl-ocelot.c:warning:Clarify-calculation-precedence-for-and-.-clarifyCalculation
-
-elapsed time: 2362m
-
-configs tested: 101
-configs skipped: 2
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sh                          rsk7264_defconfig
-c6x                                 defconfig
-c6x                        evmc6474_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200719
-i386                 randconfig-a006-20200719
-i386                 randconfig-a002-20200719
-i386                 randconfig-a005-20200719
-i386                 randconfig-a003-20200719
-i386                 randconfig-a004-20200719
-x86_64               randconfig-a014-20200720
-x86_64               randconfig-a015-20200720
-x86_64               randconfig-a016-20200720
-x86_64               randconfig-a012-20200720
-x86_64               randconfig-a013-20200720
-x86_64               randconfig-a011-20200720
-i386                 randconfig-a015-20200719
-i386                 randconfig-a011-20200719
-i386                 randconfig-a016-20200719
-i386                 randconfig-a012-20200719
-i386                 randconfig-a013-20200719
-i386                 randconfig-a014-20200719
-x86_64               randconfig-a005-20200719
-x86_64               randconfig-a002-20200719
-x86_64               randconfig-a006-20200719
-x86_64               randconfig-a001-20200719
-x86_64               randconfig-a003-20200719
-x86_64               randconfig-a004-20200719
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
