@@ -2,86 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA09F22C650
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 15:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B373422C7DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 16:22:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXNZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 09:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
+        id S1726607AbgGXOWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 10:22:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58600 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGXNZL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:25:11 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9AA2065F;
-        Fri, 24 Jul 2020 13:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595597111;
-        bh=pp/ojK1FzfEWYVM4WBKudjbEzP9+0SYYLSoiNjE9YLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w0c8S6XQ+gzkzI5LxJL+XfMrR2B7El+RZsYxvDnwnzjYv73NtN/9hjndd4B8c/C+s
-         uA97p96af+HrUn/IfyHzz6aoHGb20RrTkI6J064UIp5zTTa9KoM3kW1mLISRMsaXIp
-         e32E/jNou3sLIkTCyJ2e/Kfp2Fr3xpZxJ526gUy8=
-Received: by pali.im (Postfix)
-        id 2AA4788C; Fri, 24 Jul 2020 15:25:09 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: armada-37xx: Add comment for pcie1_reset pin group
-Date:   Fri, 24 Jul 2020 15:24:57 +0200
-Message-Id: <20200724132457.7094-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726503AbgGXOWV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:22:21 -0400
+IronPort-SDR: Q4us96GHHGm291vFjuu0/B29jxXp22g4N0r/Ke2ZiZyCIMmsXAsDEq40b1i+jvDsjobIyxFtHC
+ OrwhFAkn26uw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235591113"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="235591113"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 07:21:52 -0700
+IronPort-SDR: zETjWqNpqbFsfmeIEahlBR1B6zH4JEBYi1obfA8UuMtJIZE0n5VQ5bK5T0nWatHhY7+LK/Zl+w
+ TvajENhrKhDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="321033231"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jul 2020 07:21:51 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jyya6-0000Ma-Jl; Fri, 24 Jul 2020 14:21:50 +0000
+Date:   Fri, 24 Jul 2020 22:21:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 44f668ce4d2484f1ab289a603d9bfd4e1d046c10
+Message-ID: <5f1aee67.1JXuZisKI11aOQ9t%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Group name 'pcie1' is misleading as it controls only PCIe reset pin. Like
-other PCIe groups it should have been called 'pcie1_reset'. But due to
-backward compatibility it is not possible to change existing group name.
-So just add comment describing this PCIe reset functionality.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: 44f668ce4d2484f1ab289a603d9bfd4e1d046c10  pinctrl: mediatek: add mt6779 eint support
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
+elapsed time: 1483m
+
+configs tested: 74
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+arc                                 defconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 2bbc69b4dc99..d5b6c0a1c54a 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -316,7 +316,7 @@
- 				};
- 
- 				pcie_reset_pins: pcie-reset-pins {
--					groups = "pcie1";
-+					groups = "pcie1"; /* this actually controls "pcie1_reset" */
- 					function = "gpio";
- 				};
- 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 5f125bd6279d..8fd8b2af9216 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -196,7 +196,7 @@ static struct armada_37xx_pin_group armada_37xx_sb_groups[] = {
- 	PIN_GRP_GPIO("sdio_sb", 24, 6, BIT(2), "sdio"),
- 	PIN_GRP_GPIO("rgmii", 6, 12, BIT(3), "mii"),
- 	PIN_GRP_GPIO("smi", 18, 2, BIT(4), "smi"),
--	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"),
-+	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"), /* this actually controls "pcie1_reset" */
- 	PIN_GRP_GPIO("pcie1_clkreq", 4, 1, BIT(9), "pcie"),
- 	PIN_GRP_GPIO("pcie1_wakeup", 5, 1, BIT(10), "pcie"),
- 	PIN_GRP_GPIO("ptp", 20, 3, BIT(11) | BIT(12) | BIT(13), "ptp"),
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
