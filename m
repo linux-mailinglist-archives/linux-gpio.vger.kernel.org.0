@@ -2,114 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F19C22BD95
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 07:39:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35FDC22BE4E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 08:53:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgGXFjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 01:39:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13199 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFjW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 01:39:22 -0400
-X-UUID: 66bd73bc038147919ce272d953c64023-20200724
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wBDacOncVh0PojdDGdKS/zftjuMPjd4CIaDYeFLXde0=;
-        b=eWpURAT14eo6meR9czwptJ9cwLjrlF/Gx+AbjSeoyNor7s/UCPAt+1AL941wbTKhathGzX+L/LSf3IE8KYiKJOsE0q1Pw+T+fuZZYID6ftCUkcLePuFHqwvqDFaSRUiVEZhSCIW1MYjBhCxjv67W6ZaD+qkp00wIu1gXsTpNQiI=;
-X-UUID: 66bd73bc038147919ce272d953c64023-20200724
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 609872489; Fri, 24 Jul 2020 13:39:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 24 Jul 2020 13:39:16 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Jul 2020 13:39:17 +0800
-Message-ID: <1595569156.29906.6.camel@mtkswgap22>
-Subject: Re: [PATCH v9 2/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Stephen Boyd <sboyd@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Loda Chou <loda.chou@mediatek.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        "Sean Wang" <sean.wang@kernel.org>, <wsd_upstream@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <devicetree@vger.kernel.org>, mtk01761 <wendell.lin@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Fri, 24 Jul 2020 13:39:16 +0800
-In-Reply-To: <20200723155159.GB436360@bogus>
-References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
-         <1595503197-15246-3-git-send-email-hanks.chen@mediatek.com>
-         <20200723155159.GB436360@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1726676AbgGXGxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 02:53:38 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:56329 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725942AbgGXGxh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Jul 2020 02:53:37 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07569175|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0543245-0.000519771-0.945156;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=30;RT=30;SR=0;TI=SMTPD_---.I6pnpzV_1595573604;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I6pnpzV_1595573604)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Fri, 24 Jul 2020 14:53:30 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, icenowy@aosc.io,
+        megous@megous.com, clabbe@baylibre.com, bage@linutronix.de,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH v5 00/16] Allwinner A100 Initial support
+Date:   Fri, 24 Jul 2020 14:52:47 +0800
+Message-Id: <cover.1595572867.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTIzIGF0IDA5OjUxIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCAyMyBKdWwgMjAyMCAxOToxOTo1MiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
-PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
-IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
-Cj4gPiANCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQo+ID4g
-LS0tDQo+ID4gIC4uLi9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgICAgICB8
-IDE5NyArKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5NyBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ID4gDQo+IA0K
-PiANCj4gTXkgYm90IGZvdW5kIGVycm9ycyBydW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2sn
-IG9uIHlvdXIgcGF0Y2g6DQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3
-OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJl
-ZzowOiBbMCwgMjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhl
-cnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-aW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0w
-OiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28g
-bG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1w
-bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5
-Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
-cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVr
-LG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
-MDAwOnJlZzozOiBbMCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
-L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhh
-bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBp
-cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJs
-LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBbMCwg
-MzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
-dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21l
-ZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJs
-QDEwMDA1MDAwOnJlZzo2OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAv
-YnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFt
-bDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAxMTM3OTIwLCAwLCA0
-MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
-aW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4
-OiBbMCwgMjY4NDgwNTEyLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiANCj4gDQo+IFNlZSBodHRw
-czovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRj
-aC8xMzM0NzQzX187ISFDVFJOS0E5d01nMEFSYncheFZxMjFzLVZhdzNJZjEtUThFV0pFREJCSVVw
-MGozMFBJYUdRV0R5aENmdGJjT2dGcmpScVpNTkhvSGdPWGtzRDNnJCANCj4gDQo+IElmIHlvdSBh
-bHJlYWR5IHJhbiAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJyBhbmQgZGlkbid0IHNlZSB0aGUgYWJv
-dmUNCj4gZXJyb3IocyksIHRoZW4gbWFrZSBzdXJlIGR0LXNjaGVtYSBpcyB1cCB0byBkYXRlOg0K
-PiANCj4gcGlwMyBpbnN0YWxsIGdpdCtodHRwczovL2dpdGh1Yi5jb20vZGV2aWNldHJlZS1vcmcv
-ZHQtc2NoZW1hLmdpdEBtYXN0ZXIgLS11cGdyYWRlDQo+IA0KPiBQbGVhc2UgY2hlY2sgYW5kIHJl
-LXN1Ym1pdC4NCj4gDQpIaSBSb2IsDQoNCkl0J3MgbXkgZmF1bHQNCkkgY291bGQgcmVwcm9kdWNl
-IHRoZSBlcnJvciBsb2cgYWZ0ZXIgZHQtc2NoZW1hIHVwZGF0ZXMgdG8gdGhlIGxhdGVzdA0KdmVy
-c2lvbi4NCkknbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzIQ0KDQpIYW5rcyBD
-aGVuDQoNCg==
+This patch set adds initial support for allwinner a100 soc,
+which is a 64-bit tablet chip.
+
+v5:
+-Drop redundant SOB for thermal series patch
+-Trival a100 dtsi fix
+
+v4:
+-Drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
+-Fix dcdc1 regulator name
+-Get rid of underscore in dts node name
+-Some trivial things in yaml files
+
+v3:
+-Add pmu and nmi support
+-Add read data mask for calibration
+-Code style
+-Some trivial things in yaml files
+
+v2:
+-Some naming consistency
+-Repair email address
+-Fix mmc clock
+-Don't export system clock
+-Fix checkpatch warning
+-Drop unneeded pin function, convert to jtag_gpu and i2s_x
+
+Yangtao Li (16):
+  dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
+    R-CCU
+  clk: sunxi-ng: add support for the Allwinner A100 CCU
+  dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+  dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+  pinctrl: sunxi: add support for the Allwinner A100 pin controller
+  dt-bindings: nvmem: SID: add binding for A100's SID controller
+  dt-bindings: thermal: sun8i: Add binding for A100's THS controller
+  thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
+    sun50i_h6_ths_calibrate
+  thermal: sun8i: Add A100's THS controller support
+  mfd: axp20x: Allow the AXP803 to be probed by I2C
+  dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+  dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+  dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+  arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+  dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+  arm64: allwinner: A100: add support for Allwinner Perf1 board
+
+ .../devicetree/bindings/arm/sunxi.yaml        |    5 +
+ .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
+ .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
+ .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
+ .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
+ .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
+ arch/arm64/boot/dts/allwinner/Makefile        |    1 +
+ .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
+ drivers/clk/sunxi-ng/Kconfig                  |   10 +
+ drivers/clk/sunxi-ng/Makefile                 |    2 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
+ drivers/mfd/axp20x-i2c.c                      |    2 +
+ drivers/pinctrl/sunxi/Kconfig                 |   10 +
+ drivers/pinctrl/sunxi/Makefile                |    2 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
+ drivers/thermal/sun8i_thermal.c               |   16 +-
+ include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
+ include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
+ include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+ include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+ 26 files changed, 3308 insertions(+), 68 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+ create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+ create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
+
+-- 
+2.24.0
 
