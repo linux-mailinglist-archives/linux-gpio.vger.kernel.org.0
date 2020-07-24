@@ -2,191 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D4822D026
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 23:02:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB40022D178
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 23:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGXVCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 17:02:46 -0400
-Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:40022 "EHLO
-        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgGXVCq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 17:02:46 -0400
-Received: from barney.sedsystems.ca (barney [198.169.180.121])
-        by sed198n136.sedsystems.ca  with ESMTP id 06OL2RfA017602
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 15:02:27 -0600 (CST)
-Received: from [192.168.234.15] (sed198n237.sedsystems.ca [198.169.180.237])
-        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id 06OL2QDV063279
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 24 Jul 2020 15:02:26 -0600
-Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git@xilinx.com
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
- <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
- <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
-From:   Robert Hancock <hancock@sedsystems.ca>
-Message-ID: <8c4d01b4-ff14-9807-303e-2e2571af12e2@sedsystems.ca>
-Date:   Fri, 24 Jul 2020 15:02:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        id S1726782AbgGXVrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 17:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgGXVrQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 17:47:16 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A107C0619D3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 14:47:16 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id t6so5320281plo.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 14:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=nhn+x/WWfXj4nPX/S5dOm6y6suPQSzqnv7UN/i8N/Bo=;
+        b=nZLX+VBNVXZ8FkpGRlMyXtdPaHzLxAufijZcRIdEV4lqxNgSnHznOWbp6drWwjFBIz
+         wVb/MVOjKbyquz3obEk8C5AgMUppElqvLExeH7y5siaoxhRdc0Df78fTaeD9pSrqXxe4
+         bzzZNsXU/no1Osnrx16ZNhjdJ1DZcGrdLmChHjxshmTKbqvk6l8XzL2l1bRto7L3IkYg
+         B/PPtmX+/+5r9tmI47BxM6lXMM/ZsGvWKM/LSZi79JS5IvRbTbRpcaSLSMgVcrjI6/T8
+         y79zMqd9Ih+htNX81Bioq32Gyb44Jd6IOGPCxxy42tKsgJcro1kEPiQtNVuGpLY3MZXb
+         2E6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=nhn+x/WWfXj4nPX/S5dOm6y6suPQSzqnv7UN/i8N/Bo=;
+        b=RBPvIDAQoT4zy2GKjeaT0pi3oVA57rp/TiOHI8tQfYCogu5iA5vL0UjelSvLg74nOs
+         Ki6i/Hf0EIZeeSOPws/QZHpEafUqXTCqYNZ8ioiCIgSnE33k3egjrVYDIcjFwiv25RWs
+         m2H7gjB4VOsckanTI70jZhX453TeEdB8PxM7MOf1hge9gEIQNXkWR7TGdvWEbL3I8naN
+         +HvsBj35Tc4mpGWCC7UyXxjV+a7k8x2KeIWpr+E9JJ9ky+NF/hFBgwb2ZbPNum3EzzMc
+         rJz9V0OjUl3W1L0XUdikxZQlRXl5jHoC30OuZ6N3kJ8dRf/A/zosGkOdv7b+Rv273JDB
+         BRLQ==
+X-Gm-Message-State: AOAM530qAhxTkh7Qc1d1aS189M84WqEGwDwBvtttTUFxvV/Xk77cUaF2
+        fzF0kwdkZjppSAOl/A3FJ6dEO/jCKCI=
+X-Google-Smtp-Source: ABdhPJwU2resj+Xc8mzHmkGPuE92mdMw74sCyw7KgT061M3N8MY7JHOB/RhQRSgPLNv3SuQhA5LEqg==
+X-Received: by 2002:a17:902:7c8b:: with SMTP id y11mr9516034pll.142.1595627235752;
+        Fri, 24 Jul 2020 14:47:15 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id v22sm7393457pfe.48.2020.07.24.14.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 14:47:14 -0700 (PDT)
+Message-ID: <5f1b56e2.1c69fb81.220c6.cb9c@mx.google.com>
+Date:   Fri, 24 Jul 2020 14:47:14 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc5-96-ge80c35d808ef
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
+ 8 warnings (v5.8-rc5-96-ge80c35d808ef)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-07-23 12:03 p.m., Andy Shevchenko wrote:
->> +/**
->> + * xgpio_xlate - Translate gpio_spec to the GPIO number and flags
->> + * @gc: Pointer to gpio_chip device structure.
->> + * @gpiospec:  gpio specifier as found in the device tree
->> + * @flags: A flags pointer based on binding
->> + *
->> + * Return:
->> + * irq number otherwise -EINVAL
->> + */
->> +static int xgpio_xlate(struct gpio_chip *gc,
->> +                      const struct of_phandle_args *gpiospec, u32 *flags)
->> +{
->> +       if (gc->of_gpio_n_cells < 2) {
->> +               WARN_ON(1);
->> +               return -EINVAL;
->> +       }
->> +
->> +       if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
->> +               return -EINVAL;
->> +
->> +       if (gpiospec->args[0] >= gc->ngpio)
->> +               return -EINVAL;
->> +
->> +       if (flags)
->> +               *flags = gpiospec->args[1];
->> +
->> +       return gpiospec->args[0];
->> +}
-> 
-> This looks like a very standart xlate function for GPIO. Why do you
-> need to open-code it?
+linusw/for-next build: 7 builds: 0 failed, 7 passed, 8 warnings (v5.8-rc5-9=
+6-ge80c35d808ef)
 
-Indeed, this seems the same as the of_gpio_simple_xlate callback which 
-is used if no xlate callback is specified, so I'm not sure why this is 
-necessary?
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.8-rc5-96-ge80c35d808ef/
 
-> 
-> ...
-> 
->> +/**
->> + * xgpio_irq_ack - Acknowledge a child GPIO interrupt.
-> 
->> + * This currently does nothing, but irq_ack is unconditionally called by
->> + * handle_edge_irq and therefore must be defined.
-> 
-> This should go after parameter description(s).
-> 
->> + * @irq_data: per irq and chip data passed down to chip functions
->> + */
-> 
-> ...
-> 
->>   /**
->> + * xgpio_irq_mask - Write the specified signal of the GPIO device.
->> + * @irq_data: per irq and chip data passed down to chip functions
-> 
-> In all comments irq -> IRQ.
-> 
->> + */
->> +static void xgpio_irq_mask(struct irq_data *irq_data)
->> +{
->> +       unsigned long flags;
->> +       struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
->> +       int irq_offset = irqd_to_hwirq(irq_data);
->> +       int index = xgpio_index(chip, irq_offset);
->> +       int offset = xgpio_offset(chip, irq_offset);
->> +
->> +       spin_lock_irqsave(&chip->gpio_lock, flags);
->> +
-> 
->> +       chip->irq_enable[index] &= ~BIT(offset);
-> 
-> If you convert your data structure to use bitmaps (and respective API) like
-> 
-> #define XILINX_NGPIOS  64
-> ...
->    DECLARE_BITMAP(irq_enable, XILINX_NGPIOS);
-> ...
-> 
-> it will make code better to read and understand. For example, here it
-> will be just
-> __clear_bit(offset, chip->irq_enable);
-> 
->> +       dev_dbg(chip->gc.parent, "Disable %d irq, irq_enable_mask 0x%x\n",
->> +               irq_offset, chip->irq_enable[index]);
-> 
-> Under spin lock?! Hmm...
-> 
->> +       if (!chip->irq_enable[index]) {
->> +               /* Disable per channel interrupt */
->> +               u32 temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
->> +
->> +               temp &= ~BIT(index);
->> +               xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
->> +       }
->> +       spin_unlock_irqrestore(&chip->gpio_lock, flags);
->> +}
-> 
-> ...
-> 
->> +       for (index = 0; index < num_channels; index++) {
->> +               if ((status & BIT(index))) {
-> 
-> If gpio_width is the same among banks, you can use for_each_set_bit()
-> here as well.
-> 
-> ...
-> 
->> +                       for_each_set_bit(bit, &all_events, 32) {
->> +                               generic_handle_irq(irq_find_mapping
->> +                                       (chip->gc.irq.domain, offset + bit));
-> 
-> Strange indentation. Maybe a temporary variable helps?
-> 
-> ...
-> 
->> +       chip->irq = platform_get_irq_optional(pdev, 0);
->> +       if (chip->irq <= 0) {
->> +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
-> 
-> Why do you need an optional variant if you print an error anyway?
-> 
->> +       } else {
-> 
-> 
-> ...
-> 
->> +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
->> +               chip->gc.irq.num_parents = 1;
-> 
-> Current pattern is to use devm_kcalloc() for it (Linus has plans to
-> simplify this in the future and this will help him to find what
-> patterns are being used)
-> 
+Tree: linusw
+Branch: for-next
+Git Describe: v5.8-rc5-96-ge80c35d808ef
+Git Commit: e80c35d808efc91427c50b8f4d8ecde8cee5050d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
--- 
-Robert Hancock
-Senior Hardware Designer
-SED Systems, a division of Calian Ltd.
-Email: hancock@sedsystems.ca
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
