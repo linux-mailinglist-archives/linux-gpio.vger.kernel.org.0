@@ -2,213 +2,259 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B49622C23C
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 11:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5116922C251
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 11:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGXJ2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 05:28:24 -0400
-Received: from mail-dm6nam11on2075.outbound.protection.outlook.com ([40.107.223.75]:32470
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbgGXJ2Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:28:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TYgqrfThf8kW5c0HlQ3JP8dfEJ8z56wlZ/p1cc8OMWF2uTdQu5gnGZsLQ7lWjfdyoPKHV+xyTPw0grHePLQZh5LLq+8ROPrajWXbs74J435SiR5VIcuvKwBi+//FJqAZS6EJ0l4QYCUdHEtpr4gLbOUcfelwJpeRTEr9V3kR0fjQkXuI6e76uMBEvdvs+txwMIK4y8jr7WTEl0xzG2Cna7ShVE7F68YkBteTi6NkO1U0GnRe3BGxZ5OR5YJCgvqh/gHzUJ8mHyQEMSPVjtwJPFFZpjzM47D2RrvWRwcen6lg5EqBQ38eBlLuTkOVGWmJiFXxp6JcE/DhgWXxEmLAVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wuuodH9WlwJNYMNMQgyRr4jaJrVVxXIva9uxTY0shVU=;
- b=MAOUzMy/A8qbCi2hrlUXw604owMk7LnlK+X/+5MxepYs/ba7WwTCB9+iNFTckpoOQDvRaQsFvcnaFa408nu++gl3AoaUM9QQtNZuIcBYdEeapGesxPtbgLn5gxZmfrkKKf7O4ug7kcBSE2IkanKY5r5chn+1A8Gwn5mFK7w1i9xvYs4vkxONWIyti9SwCD7VuB7d3XkYujb39PQYCrm1it8LN4bBtBLz9pXkcJBkVqhntXo6Vkz0rUi8ytM8nSggBIS2UKd1q6BY8oNT/lxsoOAEU7VH8Zs2TX04GGc713ILkSKDf8jrowc1lm/AmqVTZrjAWTEWt4Iwj9cFm6HWRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wuuodH9WlwJNYMNMQgyRr4jaJrVVxXIva9uxTY0shVU=;
- b=DYFhLPc5sLdY/wKd+UHfEfMe2cA5VVwEAbcqdzVLhdWjF31oxnCQggPAOYGd2ajD9le3nwCf3xqOvis1tabOvssBF4d3zdeg4OPoQ8nM2WRXJT/oQuZdP/9yvjKn42OmUqzD/LFP22L5VM5Y3FGsPhjnZ+yvi/dVAJsMhY/Xncg=
-Received: from CY4PR22CA0094.namprd22.prod.outlook.com (2603:10b6:903:ad::32)
- by DM6PR02MB6665.namprd02.prod.outlook.com (2603:10b6:5:214::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Fri, 24 Jul
- 2020 09:28:22 +0000
-Received: from CY1NAM02FT013.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:ad:cafe::db) by CY4PR22CA0094.outlook.office365.com
- (2603:10b6:903:ad::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend
- Transport; Fri, 24 Jul 2020 09:28:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT013.mail.protection.outlook.com (10.152.75.162) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Fri, 24 Jul 2020 09:28:21
- +0000
-Received: from [149.199.38.66] (port=44310 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jytyE-0000uc-HP; Fri, 24 Jul 2020 02:26:26 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jyu05-0004CS-KQ; Fri, 24 Jul 2020 02:28:21 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06O9SIM9019766;
-        Fri, 24 Jul 2020 02:28:18 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jyu01-0004BO-Vs; Fri, 24 Jul 2020 02:28:18 -0700
-Subject: Re: [PATCH V2 3/3] MAINTAINERS: add fragment for xilinx GPIO drivers
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
- <1595513168-11965-4-git-send-email-srinivas.neeli@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Autocrypt: addr=michals@xilinx.com; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <5b0688cc-57a5-4b10-4129-1275fe2fff56@xilinx.com>
-Date:   Fri, 24 Jul 2020 11:28:15 +0200
+        id S1726994AbgGXJcV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 05:32:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38330 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgGXJcU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 05:32:20 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 14338538;
+        Fri, 24 Jul 2020 11:32:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595583135;
+        bh=Cips7pSNDfpgtho04Lh5hkgIg9jLAxz9Mcu4eoJKuVk=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BkDiNIBu4JegKCJlagORd38wBDCf/q38XsYr8zuBBtfqozbk6l1G2t8g1CabBy36Y
+         9gkHAUfJATMx/WTnK7/INcawcOn1d558KpBclNGYEbvMtdWQI/2bYC7u+J+Ufsf9zZ
+         oKagvrLZc6f4Lq1NBTd2uwIBtQiRnFVSq5g813hE=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
+ <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+ <20200723222834.GC829@valkosipuli.retiisi.org.uk>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <c4b0e30f-b0b7-1b19-f43e-36d417eb6d28@ideasonboard.com>
+Date:   Fri, 24 Jul 2020 10:32:11 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595513168-11965-4-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <20200723222834.GC829@valkosipuli.retiisi.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cfe5780e-f399-4d15-e9b5-08d82fb3e879
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6665:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB666516C10BE491FA26444FCFC6770@DM6PR02MB6665.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aNdCKs8cM6lPYIegO/+Yr2iD/jQCkapk58lSuwlDIxrcPDF3ikH1DbRvAuZp/z003lmD3uvP755AXxNBseUtKNpxXlcFI2K9JTUj1xto7yKaBOGH9/kTUlF7/3HSEGhyaSSJoP9QBEEe3SkUjkGxlzuLyAW95p3CEVn/c5cufwdVtxZ9eDD5UXZSAP3PDU8PWVEtXaVpji8SpL7tsci3S1raF41PNf0/SgMH5kg2sB+n8H3l7scBmNWad9nGOH4uOBg/T4WnsHZ06ZzymqMXC8R1G+Iq2vRxaT0QV4KpG0MVAO373qZrWnGrMHw46ijvT2X9hSTRhjgEsCqPFg1ii4JJBmr69043UOwk6OlzfMAkhJje1TmJLLNn47kUDx8Utj1gf21MfGkDfwBhkr+xXF9PyEPKoY/ulvgWjFSdFIGP6UsCoD2Hb+J0QbQ3X0Tq/YigPDUBphoSlX9fLoy9LQ==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(39860400002)(396003)(46966005)(316002)(70206006)(70586007)(44832011)(36756003)(6666004)(478600001)(9786002)(31696002)(5660300002)(6636002)(31686004)(2906002)(186003)(2616005)(336012)(26005)(8936002)(47076004)(426003)(4326008)(82740400003)(356005)(107886003)(82310400002)(8676002)(81166007)(42866002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 09:28:21.8810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfe5780e-f399-4d15-e9b5-08d82fb3e879
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT013.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6665
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Sakari,
 
-
-On 23. 07. 20 16:06, Srinivas Neeli wrote:
-> Added entry for xilinx GPIO drivers.
+On 23/07/2020 23:28, Sakari Ailus wrote:
+> Hi Kieran,
 > 
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-> ---
->  MAINTAINERS | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
+>> Hi Sakari,
+>>
+>> This is the output of checkpatch --strict on this driver. Sorry for not
+>> detailing this in the commit or cover letter.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ea296f213e45..71c40b0ddef6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18900,6 +18900,16 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/net/can/xilinx_can.txt
->  F:	drivers/net/can/xilinx_can.c
->  
-> +XILINX GPIO DRIVER
-> +M:	Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> +R:	Srinivas Neeli <srinivas.neeli@xilinx.com>
-> +R:	Michal Simek <michal.simek@xilinx.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-> +F:	Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-> +F:	drivers/gpio/gpio-xilinx.c
-> +F:	drivers/gpio/gpio-zynq.c
-> +
->  XILINX SD-FEC IP CORES
->  M:	Derek Kiernan <derek.kiernan@xilinx.com>
->  M:	Dragan Cvetic <dragan.cvetic@xilinx.com>
+> No worries.
 > 
+>>
+>>> ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
+>>> --------------------------------------------------------------
+>>> ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
+>>> --------------------------------------------------------------
+>>> CHECK: Prefer using the BIT macro
+>>> #246: FILE: drivers/media/i2c/max9286.c:40:
+>>> +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #251: FILE: drivers/media/i2c/max9286.c:45:
+>>> +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #262: FILE: drivers/media/i2c/max9286.c:56:
+>>> +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #268: FILE: drivers/media/i2c/max9286.c:62:
+>>> +#define MAX9286_HVSRC_D14		(1 << 0)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #286: FILE: drivers/media/i2c/max9286.c:80:
+>>> +#define MAX9286_DATATYPE_RGB565		(1 << 0)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #304: FILE: drivers/media/i2c/max9286.c:98:
+>>> +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #312: FILE: drivers/media/i2c/max9286.c:106:
+>>> +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
+>>>
+>>> CHECK: Prefer using the BIT macro
+>>> #316: FILE: drivers/media/i2c/max9286.c:110:
+>>> +#define MAX9286_I2CSLVTO_256US		(1 << 0)
+>>
+>> None of those are appropriate to use the BIT() macro, as they are all
+>> entries of a specific field with a shift, such as:
+>>
+>> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
+>> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
+>> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
+>> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
+>>
+>> Checkpatch is only picking up on the "1 << x" variant of each entry.
+> 
+> Ideally you should use "1U << x" everywhere. If you happen to have a
+> register with 31st bit signifying something, mayhem would follow. So the
+> practice is to make all such definitions unsigned.
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+Just to clarify, because of the location you've put your x, which is not
+the variable in the above case.
 
-Thanks,
-Michal
+These definitions are possible field values with a shift (enum << y),
+not bit values (1 << x)
+
+They can of course be unsigned though.
+
+Is your statement that you would like to see these as:
+
+ #define MAX9286_FSYNCMODE_ECU           (3U << 6)
+ #define MAX9286_FSYNCMODE_EXT           (2U << 6)
+ #define MAX9286_FSYNCMODE_INT_OUT       (1U << 6)
+ #define MAX9286_FSYNCMODE_INT_HIZ       (0U << 6)
+
+
+Or that you would prefer a macro'ised version:
+
+#define FIELD_ENTRY(value, shift) (value U << shift)
+
+
+Or rather, I could just convert them all to use FIELD_PREP:
+
+#define MAX9286_FSYNCMODE GENMASK(7,6)
+
+#define MAX9286_FSYNCMODE_ECU      FIELD_PREP(MAX9286_FSYNCMODE, 3)
+#define MAX9286_FSYNCMODE_EXT      FIELD_PREP(MAX9286_FSYNCMODE, 2)
+#define MAX9286_FSYNCMODE_INT_OUT  FIELD_PREP(MAX9286_FSYNCMODE, 1)
+#define MAX9286_FSYNCMODE_INT_HIZ  FIELD_PREP(MAX9286_FSYNCMODE, 0)
+
+If you want me to change these entries, I suspect moving wholly to use
+FIELD_PREP/FIELD_GET throughout the driver would be the best course of
+action.
+
+A bit of churn, but I can do that if you wish.
+
+--
+Kieran
+
+
+
+>>> CHECK: Macro argument reuse 'source' - possible side-effects?
+>>> #399: FILE: drivers/media/i2c/max9286.c:193:
+>>> +#define for_each_source(priv, source) \
+>>> +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
+>>
+>> This warns against possible side effects, but the 're-use' effects are
+>> desired ;-)
+>>
+>> If you'd prefer this macro to be re-written please let me know.
+> 
+> Works for me. Some warnigns are just not useful. I bet quite a few macros
+> elsewhere in the kernel would trigger this.
+
+
+I think we'll just leave this one ;-)
+
+
+>>> CHECK: Lines should not end with a '('
+>>> #1372: FILE: drivers/media/i2c/max9286.c:1166:
+>>> +			ret = v4l2_fwnode_endpoint_parse(
+>>
+>> Full code block:
+>>
+>>>                         ret = v4l2_fwnode_endpoint_parse(
+>>>                                         of_fwnode_handle(node), &vep);
+>>>                         if (ret) {
+>>>                                 of_node_put(node);
+>>>                                 return ret;
+>>>                         }
+>>
+>> That one is awkward, and I chose to keep it as a lesser evil.
+>> Of course now that we can officially go up to 120 chars, I could move
+>> this line up.
+>>
+>> If you'd like this to be moved to a single line now we can go over 80
+>> chars, please confirm.
+> 
+> I don't mind that. Mauro, any thoughts on this?
+
+
+And I'll let Mauro decide that as it will impact my line-length choices
+in the future ;-)
+
+
+-- 
+Regards
+--
+Kieran
