@@ -2,135 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5D6122CEEF
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 21:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D4822D026
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 23:02:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGXT7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 15:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXT7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 15:59:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A107C0619D3;
-        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z3so5801306pfn.12;
-        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
-        b=mfk3nWLENugUYagFhxmELMHoOTUIn/A7K/vwYma1v2c3qSpl3bbf2wnRqIoRkdwURt
-         tpmZQmiLo+oIhcO+ejFiJvmA6DjMKJ25+tr8RbFJ6dQTqIf+HG3Fv4IbmYcryGHInhN7
-         cb0YAqAgwiuF/DiZ4swgSz1ZO5lukWreuAh25vWLrkDuF5JHyXM5QEFsMb2Vaaf5bB/L
-         5UVRKeyjUfzr3HfUjp76JlxdGriEp1WGz1Er3vRqYTABJ5RIg7X6h/KbRNo2iHA7S1HW
-         yriVXTNhE7uc8T0JrZIDufremMwv1dYJKeagrOkgV6vT0LOLtmkP2FKxid+hAr5FWsaE
-         RCyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
-        b=YYBbV3ox6If19NEGMVQX173VJNadsuwFH2OaVKw4T5M7Q0wePrtzK9S6oWJlUlpsMG
-         az90Bi0iiPw5tYbN0Qwxp7E7PV+igQ2SQumKSnOR8QHoycONXx/sMxHoLfrpKK/A/eSH
-         J7hhkbMXs+iw/pP4fHoYkX8iUJZGvyH1QbWaHoT9oeYxqF9yyPC3mATsQBXD7dL3hj7w
-         1NdLmfK1p5Y6kdf/ENnxhxTBLRmiQ+3WGo2hyw/RDddn/g8IL+JBDrkJPpqf7Befack5
-         8vtuT5c1w9yXKtdD60gcY2NiO0h7ncdOh2iZrPncP+amtTJ3zRNmhJSCY519Bl8Jk5z0
-         Jrgw==
-X-Gm-Message-State: AOAM532oR3pDf3SbQaQfGLzd7AC5keHykAly+N8RyjVjwdU0QAF0IINp
-        gruQSSiQ/ahOWh0A6oA8ZcjxKtQRCZuO+BRm6o0=
-X-Google-Smtp-Source: ABdhPJzW0BnWPjCjo818a0nVFHioJ4MmyYZx5d7bur507VD2Ys2Lwlt2ZZbqUxL0/XPIYyiVpBtNW0u8uFVUMC4+ROM=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr10141215pgi.203.1595620752921;
- Fri, 24 Jul 2020 12:59:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
- <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
- <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com> <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
-In-Reply-To: <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Jul 2020 22:58:56 +0300
-Message-ID: <CAHp75VeFE3b4mpvkQifuC5WPkTk9RUQy4yM8jTQXtrfNWRmDXA@mail.gmail.com>
+        id S1726411AbgGXVCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 17:02:46 -0400
+Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:40022 "EHLO
+        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgGXVCq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 17:02:46 -0400
+Received: from barney.sedsystems.ca (barney [198.169.180.121])
+        by sed198n136.sedsystems.ca  with ESMTP id 06OL2RfA017602
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 15:02:27 -0600 (CST)
+Received: from [192.168.234.15] (sed198n237.sedsystems.ca [198.169.180.237])
+        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id 06OL2QDV063279
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 24 Jul 2020 15:02:26 -0600
 Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
-To:     Srinivas Neeli <sneeli@xilinx.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michals@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        Srinivas Goud <sgoud@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>, Robert Hancock <hancock@sedsystems.ca>
-Content-Type: text/plain; charset="UTF-8"
+        git@xilinx.com
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
+ <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
+From:   Robert Hancock <hancock@sedsystems.ca>
+Message-ID: <8c4d01b4-ff14-9807-303e-2e2571af12e2@sedsystems.ca>
+Date:   Fri, 24 Jul 2020 15:02:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 8:15 PM Srinivas Neeli <sneeli@xilinx.com> wrote:
+On 2020-07-23 12:03 p.m., Andy Shevchenko wrote:
+>> +/**
+>> + * xgpio_xlate - Translate gpio_spec to the GPIO number and flags
+>> + * @gc: Pointer to gpio_chip device structure.
+>> + * @gpiospec:  gpio specifier as found in the device tree
+>> + * @flags: A flags pointer based on binding
+>> + *
+>> + * Return:
+>> + * irq number otherwise -EINVAL
+>> + */
+>> +static int xgpio_xlate(struct gpio_chip *gc,
+>> +                      const struct of_phandle_args *gpiospec, u32 *flags)
+>> +{
+>> +       if (gc->of_gpio_n_cells < 2) {
+>> +               WARN_ON(1);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
+>> +               return -EINVAL;
+>> +
+>> +       if (gpiospec->args[0] >= gc->ngpio)
+>> +               return -EINVAL;
+>> +
+>> +       if (flags)
+>> +               *flags = gpiospec->args[1];
+>> +
+>> +       return gpiospec->args[0];
+>> +}
+> 
+> This looks like a very standart xlate function for GPIO. Why do you
+> need to open-code it?
 
-...
+Indeed, this seems the same as the of_gpio_simple_xlate callback which 
+is used if no xlate callback is specified, so I'm not sure why this is 
+necessary?
 
-> > > +#include <linux/irqchip/chained_irq.h>
-> >
-> > Not sure I see a user of it.
-> >
-> > ...
-> we are using chained_irq_enter() and chained_irq_exit()
-> APIs , so need "chained_irq.h"
-
-I see.  But gpio/driver.h does it for you.
-
-...
-
-> > > +       for (index = 0; index < num_channels; index++) {
-> > > +               if ((status & BIT(index))) {
-> >
-> > If gpio_width is the same among banks, you can use for_each_set_bit()
-> > here as well.
-> >
-> > ...
-> gpio_wdith vary depends on design. We can configure gpio pins for each bank.
-
-I see.
-
-...
-
-> > > +       chip->irq = platform_get_irq_optional(pdev, 0);
-> > > +       if (chip->irq <= 0) {
-> > > +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
-> >
-> > Why do you need an optional variant if you print an error anyway?
->
-> Here intention is just printing a debug message to user.
-
-Debug message should be debug, and not info. But in any case, I would
-rather drop it, or use platform_get_irq() b/c now you have a code
-controversy.
-
-...
-
-> > > +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
-> > > +               chip->gc.irq.num_parents = 1;
-> >
-> > Current pattern is to use devm_kcalloc() for it (Linus has plans to
-> > simplify this in the future and this will help him to find what
-> > patterns are being used)
->
-> I didn't get this , Could you please explain more.
-
-              girq->num_parents = 1;
-              girq->parents = devm_kcalloc(dev, girq->num_parents, ...);
-   if (!girq->parents)
-     return -ENOMEM;
-
-girq->parents[0] = chip->irq;
-
-Also, use temporary variable for IRQ chip structure:
- girq = &chip->gc.irq;
-
+> 
+> ...
+> 
+>> +/**
+>> + * xgpio_irq_ack - Acknowledge a child GPIO interrupt.
+> 
+>> + * This currently does nothing, but irq_ack is unconditionally called by
+>> + * handle_edge_irq and therefore must be defined.
+> 
+> This should go after parameter description(s).
+> 
+>> + * @irq_data: per irq and chip data passed down to chip functions
+>> + */
+> 
+> ...
+> 
+>>   /**
+>> + * xgpio_irq_mask - Write the specified signal of the GPIO device.
+>> + * @irq_data: per irq and chip data passed down to chip functions
+> 
+> In all comments irq -> IRQ.
+> 
+>> + */
+>> +static void xgpio_irq_mask(struct irq_data *irq_data)
+>> +{
+>> +       unsigned long flags;
+>> +       struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
+>> +       int irq_offset = irqd_to_hwirq(irq_data);
+>> +       int index = xgpio_index(chip, irq_offset);
+>> +       int offset = xgpio_offset(chip, irq_offset);
+>> +
+>> +       spin_lock_irqsave(&chip->gpio_lock, flags);
+>> +
+> 
+>> +       chip->irq_enable[index] &= ~BIT(offset);
+> 
+> If you convert your data structure to use bitmaps (and respective API) like
+> 
+> #define XILINX_NGPIOS  64
+> ...
+>    DECLARE_BITMAP(irq_enable, XILINX_NGPIOS);
+> ...
+> 
+> it will make code better to read and understand. For example, here it
+> will be just
+> __clear_bit(offset, chip->irq_enable);
+> 
+>> +       dev_dbg(chip->gc.parent, "Disable %d irq, irq_enable_mask 0x%x\n",
+>> +               irq_offset, chip->irq_enable[index]);
+> 
+> Under spin lock?! Hmm...
+> 
+>> +       if (!chip->irq_enable[index]) {
+>> +               /* Disable per channel interrupt */
+>> +               u32 temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
+>> +
+>> +               temp &= ~BIT(index);
+>> +               xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
+>> +       }
+>> +       spin_unlock_irqrestore(&chip->gpio_lock, flags);
+>> +}
+> 
+> ...
+> 
+>> +       for (index = 0; index < num_channels; index++) {
+>> +               if ((status & BIT(index))) {
+> 
+> If gpio_width is the same among banks, you can use for_each_set_bit()
+> here as well.
+> 
+> ...
+> 
+>> +                       for_each_set_bit(bit, &all_events, 32) {
+>> +                               generic_handle_irq(irq_find_mapping
+>> +                                       (chip->gc.irq.domain, offset + bit));
+> 
+> Strange indentation. Maybe a temporary variable helps?
+> 
+> ...
+> 
+>> +       chip->irq = platform_get_irq_optional(pdev, 0);
+>> +       if (chip->irq <= 0) {
+>> +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
+> 
+> Why do you need an optional variant if you print an error anyway?
+> 
+>> +       } else {
+> 
+> 
+> ...
+> 
+>> +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
+>> +               chip->gc.irq.num_parents = 1;
+> 
+> Current pattern is to use devm_kcalloc() for it (Linus has plans to
+> simplify this in the future and this will help him to find what
+> patterns are being used)
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Robert Hancock
+Senior Hardware Designer
+SED Systems, a division of Calian Ltd.
+Email: hancock@sedsystems.ca
