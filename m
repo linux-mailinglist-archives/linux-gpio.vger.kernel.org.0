@@ -2,94 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97E7422CEDD
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 21:47:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5D6122CEEF
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 21:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgGXTrf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 15:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
+        id S1726411AbgGXT7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jul 2020 15:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXTrf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 15:47:35 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0073FC0619D3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 12:47:34 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id md7so5950267pjb.1
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 12:47:34 -0700 (PDT)
+        with ESMTP id S1726381AbgGXT7N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 15:59:13 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A107C0619D3;
+        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z3so5801306pfn.12;
+        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9C8ZpvEekmA/lR73OQBFnAzJ/Z+bHIfueHbS7kuqXzg=;
-        b=Grg1lp2JHSVK5ErCgBDE+YjtZDWLkej0oSIOE0WyWjJpn7QXiY9TdrsFpCeU8jYUcm
-         3eK/k77Oy3hlBxJssiAzayr4GwN8INutI0Reug790+63+xvXo876NipRSaLS0J1AiDo0
-         gm3b/JA/YB9IzXNztD1cSS4kHHrdRzA8qQiS4vUiaYOD0BdVoBnHSLR1fQV+42C2legc
-         wK2nfbarRcVTkfR34gUwuXtH+IRNdQSvAA5SpX3IZDZ6GrDWWFgrOJdFcr1wPe6o681A
-         yJh7LhE3npCakh6RBiyKEL6dSA2hFhQ6JfTfI2fiGXFEhG38pGWhvvAyP1yN3m6vQ8sc
-         nxwQ==
+        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
+        b=mfk3nWLENugUYagFhxmELMHoOTUIn/A7K/vwYma1v2c3qSpl3bbf2wnRqIoRkdwURt
+         tpmZQmiLo+oIhcO+ejFiJvmA6DjMKJ25+tr8RbFJ6dQTqIf+HG3Fv4IbmYcryGHInhN7
+         cb0YAqAgwiuF/DiZ4swgSz1ZO5lukWreuAh25vWLrkDuF5JHyXM5QEFsMb2Vaaf5bB/L
+         5UVRKeyjUfzr3HfUjp76JlxdGriEp1WGz1Er3vRqYTABJ5RIg7X6h/KbRNo2iHA7S1HW
+         yriVXTNhE7uc8T0JrZIDufremMwv1dYJKeagrOkgV6vT0LOLtmkP2FKxid+hAr5FWsaE
+         RCyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9C8ZpvEekmA/lR73OQBFnAzJ/Z+bHIfueHbS7kuqXzg=;
-        b=C3YYeLrpf3yOy/ztWgQI85zSGlPErLN2IBZqhw71ViqY3YKM+b9qkuLPh9zWsPtsuB
-         P+V7ntMJeSYrEFjFXA8V7sJ3kUpNglrObaKsTLYd5Umc4MG1qr1k5x3r5UgtznEleZYs
-         UFQolSfcmyZR3pwos6MjiHcm0fXUApfWDDIA/s3sISmz56MiBd1co1RlLZT9MlJpzNz1
-         tjo/UOqeVJbx1h/bWfV8diXGc55xND7OHAjMPQnsTL1cVNGnwWdKRz97MZ7T3o93DL55
-         GWW+R7t8CpcgY6B+c1O9cKo7kkdI5lfspj5p2nsVztwbNMQUnTIusq/qqZ+ZqQ7uobsm
-         qONw==
-X-Gm-Message-State: AOAM532tqchdWFah0N2d8ONHCA39l7UsuwObzTGydB4QtuUmLgcodD53
-        Wq5n+PYDAC9CcIdhHwdqJ0ewvURY4ofFOB1Q0q8=
-X-Google-Smtp-Source: ABdhPJwWdunCHlA/BDmkACb563Q2B4yTgShqjt3lq1k5ubLqM5KE1NVIwCp1wR2o3+Yd73yw2T2DOuVSWwbYvpZv1/A=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr4385140pjp.228.1595620054481;
- Fri, 24 Jul 2020 12:47:34 -0700 (PDT)
+        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
+        b=YYBbV3ox6If19NEGMVQX173VJNadsuwFH2OaVKw4T5M7Q0wePrtzK9S6oWJlUlpsMG
+         az90Bi0iiPw5tYbN0Qwxp7E7PV+igQ2SQumKSnOR8QHoycONXx/sMxHoLfrpKK/A/eSH
+         J7hhkbMXs+iw/pP4fHoYkX8iUJZGvyH1QbWaHoT9oeYxqF9yyPC3mATsQBXD7dL3hj7w
+         1NdLmfK1p5Y6kdf/ENnxhxTBLRmiQ+3WGo2hyw/RDddn/g8IL+JBDrkJPpqf7Befack5
+         8vtuT5c1w9yXKtdD60gcY2NiO0h7ncdOh2iZrPncP+amtTJ3zRNmhJSCY519Bl8Jk5z0
+         Jrgw==
+X-Gm-Message-State: AOAM532oR3pDf3SbQaQfGLzd7AC5keHykAly+N8RyjVjwdU0QAF0IINp
+        gruQSSiQ/ahOWh0A6oA8ZcjxKtQRCZuO+BRm6o0=
+X-Google-Smtp-Source: ABdhPJzW0BnWPjCjo818a0nVFHioJ4MmyYZx5d7bur507VD2Ys2Lwlt2ZZbqUxL0/XPIYyiVpBtNW0u8uFVUMC4+ROM=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr10141215pgi.203.1595620752921;
+ Fri, 24 Jul 2020 12:59:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717141924.57887-1-linus.walleij@linaro.org>
- <CAPLW+4kX_1YNDNNeqzQGHZmnr0PYKHsrN++jw9-jOYv6Da3UuQ@mail.gmail.com>
- <CACRpkdYxhOQnXUaW-MdT4NX+NEES91NOoMPR6wEcaCrUR253Cw@mail.gmail.com> <CAPLW+4mWw12ZsyK3-LiwcpQtiNMkbgUnGUHBbjtk-7vVZQQaxA@mail.gmail.com>
-In-Reply-To: <CAPLW+4mWw12ZsyK3-LiwcpQtiNMkbgUnGUHBbjtk-7vVZQQaxA@mail.gmail.com>
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
+ <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com> <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
+In-Reply-To: <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Jul 2020 22:47:17 +0300
-Message-ID: <CAHp75Vcgcom29jOjNjmj8hcC6DjCdw7XqbmPPfe9d+mRjxvQdA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: max732x: Use irqchip template
-To:     Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Fri, 24 Jul 2020 22:58:56 +0300
+Message-ID: <CAHp75VeFE3b4mpvkQifuC5WPkTk9RUQy4yM8jTQXtrfNWRmDXA@mail.gmail.com>
+Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
+To:     Srinivas Neeli <sneeli@xilinx.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michals@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        Srinivas Goud <sgoud@xilinx.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>, Robert Hancock <hancock@sedsystems.ca>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 1:50 PM Sam Protsenko
-<semen.protsenko@linaro.org> wrote:
-> On Tue, 21 Jul 2020 at 12:54, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Sun, Jul 19, 2020 at 6:34 PM Sam Protsenko
-> > <semen.protsenko@linaro.org> wrote:
+On Fri, Jul 24, 2020 at 8:15 PM Srinivas Neeli <sneeli@xilinx.com> wrote:
 
 ...
 
-> > Just that really, that the IRQs happen as before.
+> > > +#include <linux/irqchip/chained_irq.h>
+> >
+> > Not sure I see a user of it.
+> >
+> > ...
+> we are using chained_irq_enter() and chained_irq_exit()
+> APIs , so need "chained_irq.h"
 
-> Just tested it on my MAX7325 board [1], by adding gpio-keys and
-> gpio-leds to BBB dts [2]. Alas, the patch seems to be breaking IRQs.
-> Before the patch, I can see gpio-buttons appear in /proc/interrupts
-> and dmesg is clear of errors. After applying the patch, no gpio-keys
-> appear in /proc/interrupts and dmesg is reporting errors like this:
->
->     irq: no irq domain found for max7325@68 !
->
-> This is probably because the patch is setting gpio_chip structure
-> fields after devm_gpiochip_add_data() was executed.
+I see.  But gpio/driver.h does it for you.
 
 ...
 
-> I didn't check if it's a correct fix, so the diff above is only to
-> check the idea.
+> > > +       for (index = 0; index < num_channels; index++) {
+> > > +               if ((status & BIT(index))) {
+> >
+> > If gpio_width is the same among banks, you can use for_each_set_bit()
+> > here as well.
+> >
+> > ...
+> gpio_wdith vary depends on design. We can configure gpio pins for each bank.
 
-I checked pca953x and there the same trick has been applied. In my
-setup that driver works. I think it's the right way to go.
+I see.
+
+...
+
+> > > +       chip->irq = platform_get_irq_optional(pdev, 0);
+> > > +       if (chip->irq <= 0) {
+> > > +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
+> >
+> > Why do you need an optional variant if you print an error anyway?
+>
+> Here intention is just printing a debug message to user.
+
+Debug message should be debug, and not info. But in any case, I would
+rather drop it, or use platform_get_irq() b/c now you have a code
+controversy.
+
+...
+
+> > > +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
+> > > +               chip->gc.irq.num_parents = 1;
+> >
+> > Current pattern is to use devm_kcalloc() for it (Linus has plans to
+> > simplify this in the future and this will help him to find what
+> > patterns are being used)
+>
+> I didn't get this , Could you please explain more.
+
+              girq->num_parents = 1;
+              girq->parents = devm_kcalloc(dev, girq->num_parents, ...);
+   if (!girq->parents)
+     return -ENOMEM;
+
+girq->parents[0] = chip->irq;
+
+Also, use temporary variable for IRQ chip structure:
+ girq = &chip->gc.irq;
+
 
 -- 
 With Best Regards,
