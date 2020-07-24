@@ -2,161 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDE5022B961
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 00:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF4822BB4C
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jul 2020 03:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgGWW3G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jul 2020 18:29:06 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:36640 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgGWW3F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:29:05 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14EAF634C87;
-        Fri, 24 Jul 2020 01:28:35 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jyjha-0000Tg-Pi; Fri, 24 Jul 2020 01:28:34 +0300
-Date:   Fri, 24 Jul 2020 01:28:34 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200723222834.GC829@valkosipuli.retiisi.org.uk>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
- <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+        id S1726430AbgGXBSI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jul 2020 21:18:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:27655 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgGXBSI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Jul 2020 21:18:08 -0400
+IronPort-SDR: w20/yC7cYZjBDob444+5ST+S1wQsaAn0fwRo1mUNDXXkJgsr5wyUyt5y2HYVFXM5/xQX3R5JNY
+ uLDYL9GDdwXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="215236212"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="215236212"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 18:18:07 -0700
+IronPort-SDR: /1NL330Uk1d+7Dx/oIFQRH95CIq+WPHyI1VRGljkWxV+uOWu20Zd7kAkYfFcEdQIYgb6TxKOGO
+ lefaj3bDVFaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="432927026"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 18:18:06 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jymLd-0000fQ-Ql; Fri, 24 Jul 2020 01:18:05 +0000
+Date:   Fri, 24 Jul 2020 09:17:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-usb] BUILD SUCCESS
+ 01d42eb1dee177f268f991ef51bf732ae18a0def
+Message-ID: <5f1a3690.0KwabcMANu95SCHz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Kieran,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-usb
+branch HEAD: 01d42eb1dee177f268f991ef51bf732ae18a0def  usb: ohci-omap: Convert to use GPIO descriptors
 
-On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
-> Hi Sakari,
-> 
-> This is the output of checkpatch --strict on this driver. Sorry for not
-> detailing this in the commit or cover letter.
+elapsed time: 4905m
 
-No worries.
+configs tested: 101
+configs skipped: 2
 
-> 
-> > ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
-> > --------------------------------------------------------------
-> > ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
-> > --------------------------------------------------------------
-> > CHECK: Prefer using the BIT macro
-> > #246: FILE: drivers/media/i2c/max9286.c:40:
-> > +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #251: FILE: drivers/media/i2c/max9286.c:45:
-> > +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #262: FILE: drivers/media/i2c/max9286.c:56:
-> > +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #268: FILE: drivers/media/i2c/max9286.c:62:
-> > +#define MAX9286_HVSRC_D14		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #286: FILE: drivers/media/i2c/max9286.c:80:
-> > +#define MAX9286_DATATYPE_RGB565		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #304: FILE: drivers/media/i2c/max9286.c:98:
-> > +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #312: FILE: drivers/media/i2c/max9286.c:106:
-> > +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #316: FILE: drivers/media/i2c/max9286.c:110:
-> > +#define MAX9286_I2CSLVTO_256US		(1 << 0)
-> 
-> None of those are appropriate to use the BIT() macro, as they are all
-> entries of a specific field with a shift, such as:
-> 
-> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
-> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
-> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
-> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
-> 
-> Checkpatch is only picking up on the "1 << x" variant of each entry.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Ideally you should use "1U << x" everywhere. If you happen to have a
-register with 31st bit signifying something, mayhem would follow. So the
-practice is to make all such definitions unsigned.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+c6x                         dsk6455_defconfig
+m68k                         amcore_defconfig
+arm                          simpad_defconfig
+mips                   sb1250_swarm_defconfig
+s390                          debug_defconfig
+arm                          pxa3xx_defconfig
+m68k                        m5407c3_defconfig
+sh                          sdk7780_defconfig
+arm                           h5000_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a001-20200719
+i386                 randconfig-a006-20200719
+i386                 randconfig-a002-20200719
+i386                 randconfig-a005-20200719
+i386                 randconfig-a003-20200719
+i386                 randconfig-a004-20200719
+x86_64               randconfig-a005-20200719
+x86_64               randconfig-a002-20200719
+x86_64               randconfig-a006-20200719
+x86_64               randconfig-a001-20200719
+x86_64               randconfig-a003-20200719
+x86_64               randconfig-a004-20200719
+i386                 randconfig-a015-20200719
+i386                 randconfig-a011-20200719
+i386                 randconfig-a016-20200719
+i386                 randconfig-a012-20200719
+i386                 randconfig-a013-20200719
+i386                 randconfig-a014-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
 
-> 
-> 
-> > CHECK: Macro argument reuse 'source' - possible side-effects?
-> > #399: FILE: drivers/media/i2c/max9286.c:193:
-> > +#define for_each_source(priv, source) \
-> > +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
-> 
-> This warns against possible side effects, but the 're-use' effects are
-> desired ;-)
-> 
-> If you'd prefer this macro to be re-written please let me know.
-
-Works for me. Some warnigns are just not useful. I bet quite a few macros
-elsewhere in the kernel would trigger this.
-
-> 
-> 
-> > CHECK: Lines should not end with a '('
-> > #1372: FILE: drivers/media/i2c/max9286.c:1166:
-> > +			ret = v4l2_fwnode_endpoint_parse(
-> 
-> Full code block:
-> 
-> >                         ret = v4l2_fwnode_endpoint_parse(
-> >                                         of_fwnode_handle(node), &vep);
-> >                         if (ret) {
-> >                                 of_node_put(node);
-> >                                 return ret;
-> >                         }
-> 
-> That one is awkward, and I chose to keep it as a lesser evil.
-> Of course now that we can officially go up to 120 chars, I could move
-> this line up.
-> 
-> If you'd like this to be moved to a single line now we can go over 80
-> chars, please confirm.
-
-I don't mind that. Mauro, any thoughts on this?
-
--- 
-Kind regards,
-
-Sakari Ailus
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
