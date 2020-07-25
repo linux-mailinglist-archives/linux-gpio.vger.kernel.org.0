@@ -2,120 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A6922D473
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 05:52:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E0A222D49F
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 06:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgGYDwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jul 2020 23:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59288 "EHLO
+        id S1725766AbgGYEUe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jul 2020 00:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGYDwJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jul 2020 23:52:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E832C0619D3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 20:52:09 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k4so5577427pld.12
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jul 2020 20:52:09 -0700 (PDT)
+        with ESMTP id S1725874AbgGYEUd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 00:20:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BE5C0619D3;
+        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a23so6318571pfk.13;
+        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bQivI2KWuf6QsCtu4WYpm/cqse3jOtGZ9zv6Uhe9MH0=;
-        b=t9nPHl5KUilDZALXtGbibjXnq/hhM1EQ5Aa1D9KwICK/sKS8DUic55FPYMjgJ5a/dy
-         sQLr7DmRdwWOsAYliDkDgimprF/m1QoM8yaIAdiBZzmlSZo+fcfKA/Nnrx5hlU2uojes
-         BWvLGFvNIPAejc3zzaBDwH7RQwZLwDeTaV7eSRpI5sOkSLuoAWTeVbQxShNWBT1Dl92U
-         ufDi73WqvHWN0kJLIlGcJM1NvNFiIfOIezxJBdmSI6EM4MVA8teSzM2aeuTtcWUeF4ef
-         FeLSFyPRnlQo/9aSl8j3lE7wu6adSsn4a+LmxLBtPSp4PPkQGJzZYC4zGVy7l3esWV16
-         FQfQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
+        b=OBdGItRI19BUrUCt2BShHy3fp+gs6X/rr6sgnFBjDTs9pCjg0K/wpvSW356B1UaSDL
+         +BznRfNKDYZdef/t7b3k231OQE8/OdDs8/M0ccEQQ+AdVThZb7oRRr04Z5f3VDl9b99y
+         2c1eDCCDgVe1Qlt78fLIv+LKCaKHkizK4jbOyu9tUZ1RXsYiHAWW14tppEsnaRV3VDv3
+         oE3HwAaxkuUDZ3MSacSHcuAjx7tEEm3A7thTYq3paxwKs1i1uOHqk4PiFkRYsPAUmySS
+         CG4bSIHMBN0nwZ93PZKdsJUAFb8sjph2OM63aCzdbMqUN2YlIYAXs5SCVTlJ/RS12nSZ
+         IehQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bQivI2KWuf6QsCtu4WYpm/cqse3jOtGZ9zv6Uhe9MH0=;
-        b=dLmmn2SbW7rjRrZkJSl//mRSuQ3W39cJC2b5+a0pmCOLcWDWZtjsyPEUYD28RtNFZX
-         OAVF/pIR23DAhDhwxoD/24Vo0rCspn7CqgtXHe2tRss4UpR/4V54pUzhGgoxgq/XA/uZ
-         8yrFhp1Wa0/uzXO0gm2b4luZ5fp3xL5Nm78o1HJQL1GshyNw/COrCoXsvuquwtghpULM
-         UlvynGS5MlwKyqFLoc0LdYiReF/SMakmhVDQkYiJFy9YAedq2XEwzR/K4NDQNRfWPs/y
-         h7dmM14nW9zVS3MEYRu/RhE3fWqaZZQ1tseSW04RwNi/VjkQcOnzFbpxb2sEuv2yZNkO
-         OfYw==
-X-Gm-Message-State: AOAM531NHtMfMT4F5JWwQwpZYr+5KA3mN8SUqqXrTOEZu7n6+xymU0ln
-        UY+P1DROMvIQpSPJCfGQ2AM=
-X-Google-Smtp-Source: ABdhPJz/XGEUgAcXD0EwSmf5StMhgG5deDUBK+8Ks8TR6Y2NfXAhYaLSy/XY2EwH4ABUVv0a9vKtvw==
-X-Received: by 2002:a17:90a:1387:: with SMTP id i7mr8772992pja.3.1595649129095;
-        Fri, 24 Jul 2020 20:52:09 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id y11sm8467570pfp.73.2020.07.24.20.52.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
+        b=M/mbnH9sLDEbIBxsdB9GutBrf6K2YXibCt0zRfZv9PcUDh9dprw12u/oJmYe+TeRC0
+         dw88Lxefi1gi7YhaREBmvpB2gtSDd/TpSKnjvuV03xciVhfCBr7Ei90qgEJNmWpsCc+6
+         R4URdJl7T0qQDtwBg4xRmWUUR7NHERbVjd+hOHM9s9NLq6mNWAU9B/+M9jNYJrSbB/kP
+         EEJ5PdQe/LuM15eX4vjL5NSEEnt9Dcs+mEMna88hxrUNVkYRP26xU7cZ1MuS7lIarW7+
+         Y/GeAcHB4iaR3P5tylAQwvGMWzEPGfiIa2ucevIsG963HXPsSrOaAUxXdKESJUJDWd14
+         isfg==
+X-Gm-Message-State: AOAM533hF8V6AY1J7kaC+zOBDD/GO8q+MOc2ZZFx/aHlq30si6mpEtpS
+        fOsj4icjuf69Dy1SFJhjmvQtVR9z
+X-Google-Smtp-Source: ABdhPJxxkc5LytEVwf4QvQbMfyF+/rM0g3xHrSwbSVNtJRkAFf4JwlgnjkOgRZ+MNImiLG4nGUpShw==
+X-Received: by 2002:a63:8949:: with SMTP id v70mr11073170pgd.256.1595650832575;
+        Fri, 24 Jul 2020 21:20:32 -0700 (PDT)
+Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id p1sm885320pjp.10.2020.07.24.21.20.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 20:52:08 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 11:52:03 +0800
+        Fri, 24 Jul 2020 21:20:31 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>
-Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
-Message-ID: <20200725035203.GA8572@sol>
-References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
- <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
- <190bca20-946f-52f9-64f8-8971da17d38b@inbox.ru>
- <CAHp75VfQdTtbiHjhBuf3czdKAgmiQeALo7CaqW36oEkSGSHUBA@mail.gmail.com>
- <20200718042548.GA43247@sol>
- <7a22761d-c930-3597-6bf1-c799f70a47f8@inbox.ru>
- <CAMRc=MdSMMd5SN2HeicgdHkKsBTHTB_5Cn0cYG5EPggn0Mcukg@mail.gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v2 00/18] gpio: cdev: add uAPI V2
+Date:   Sat, 25 Jul 2020 12:19:37 +0800
+Message-Id: <20200725041955.9985-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdSMMd5SN2HeicgdHkKsBTHTB_5Cn0cYG5EPggn0Mcukg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:36:03PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Jul 20, 2020 at 10:14 AM Maxim Kochetkov <fido_max@inbox.ru> wrote:
-> >
-> > It works fine with this patch. Thank you so much!
-> >
-> > 18.07.2020 07:25, Kent Gibson пишет:
-> > > On Fri, Jul 17, 2020 at 06:07:04PM +0300, Andy Shevchenko wrote:
-> > >> On Fri, Jul 17, 2020 at 5:17 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
-> > >>>
-> > >>> I need a small userspace program to do some GPIO magic to communicate
-> > >>> other hardware like devmem. This program takes about 2,5 seconds just to
-> > >>> find GPIO lines by name.
-> > >>>
-> > >>> replacing synchronize_rcu to synchronize_rcu_expedited in
-> > >>> atomic_notifier_chain_unregister gives the same boost as removing
-> > >>> synchronize_rcu
-> > >>
-> > >> Have you tried to replace an atomic notifier call with a regular one?
-> > >> IIRC it's still not clear why atomic is used there.
-> > >>
-> > >
-> > > Indeed, I recently submitted a patch to switch the
-> > > atomic_notifier_call_chain to blocking_notifier_call_chain, as some of
-> > > the chained calls can sleep.
-> > > Not sure if that is related, or if the change would make this case better
-> > > or worse, but it would be interesting to find out.
-> > > The patch is in the current gpio/devel, btw.
-> > >
-> > > Cheers,
-> > > Kent.
-> > >
-> 
-> Linus,
-> 
-> I think we should consider submitting this patch for stable then
-> because this slow-down was affects previously existing use-cases.
-> 
+This patchset defines and implements adds a new version of the
+GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+support for debounce, event sequence numbers, and allowing for requested
+lines with different configurations.
+It provides some future proofing by adding optional configuration fields
+and padding reserved for future use.
 
-That patch is post the cdev split, so it certainly wont apply to an
-older kernel.  I'm happy to backport it if you need it - just
-nominate the branch you want it for.
+The series can be partitioned into two sets; the first eleven
+contain the V2 uAPI implementation, and the final seven port
+the GPIO tools to the V2 uAPI and extend them to use new uAPI features.
+
+The more complicated patches include their own commentary where
+appropriate.
 
 Cheers,
 Kent.
+
+Changes since v1:
+ - split out cleanup patches into a separate series.
+ - split implementation patch into a patch for each ioctl or major feature.
+ - split tool port patch into a patch per tool.
+ - rework uAPI to allow requested lines with different configurations.
+
+Kent Gibson (18):
+  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+  gpio: uapi: define uAPI v2
+  gpiolib: make cdev a build option
+  gpiolib: add build option for CDEV v1 ABI
+  gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+    GPIOLINE_GET_VALUES_IOCTL
+  gpiolib: cdev: support GPIO_GET_LINEINFO_V2_IOCTL and
+    GPIO_GET_LINEINFO_WATCH_V2_IOCTL
+  gpiolib: cdev: support edge detection for uAPI v2
+  gpiolib: cdev: support GPIOLINE_SET_CONFIG_IOCTL
+  gpiolib: cdev: support GPIOLINE_SET_VALUES_IOCTL
+  gpiolib: cdev: support setting debounce
+  gpio: uapi: document uAPI v1 as deprecated
+  tools: gpio: port lsgpio to v2 uAPI
+  tools: gpio: port gpio-watch to v2 uAPI
+  tools: gpio: rename nlines to num_lines
+  tools: gpio: port gpio-hammer to v2 uAPI
+  tools: gpio: port gpio-event-mon to v2 uAPI
+  tools: gpio: add debounce support to gpio-event-mon
+  tools: gpio: add multi-line monitoring to gpio-event-mon
+
+ drivers/gpio/Kconfig        |   28 +-
+ drivers/gpio/Makefile       |    2 +-
+ drivers/gpio/gpiolib-cdev.c | 1296 ++++++++++++++++++++++++++++++++++-
+ drivers/gpio/gpiolib-cdev.h |   15 +
+ drivers/gpio/gpiolib.c      |    2 +
+ drivers/gpio/gpiolib.h      |    6 +
+ include/uapi/linux/gpio.h   |  327 ++++++++-
+ tools/gpio/gpio-event-mon.c |  137 ++--
+ tools/gpio/gpio-hammer.c    |   27 +-
+ tools/gpio/gpio-utils.c     |  117 ++--
+ tools/gpio/gpio-utils.h     |   48 +-
+ tools/gpio/gpio-watch.c     |   10 +-
+ tools/gpio/lsgpio.c         |  102 ++-
+ 13 files changed, 1882 insertions(+), 235 deletions(-)
+
+
+base-commit: 8fc3ed3a474d76cd76dd0a154ea904373e9a5530
+-- 
+2.27.0
+
