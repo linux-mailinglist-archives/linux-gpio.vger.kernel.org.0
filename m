@@ -2,59 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B5022D649
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 11:01:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53D2F22D772
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 14:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgGYJBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Jul 2020 05:01:06 -0400
-Received: from sonic301-36.consmr.mail.bf2.yahoo.com ([74.6.129.235]:33506
-        "EHLO sonic301-36.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726467AbgGYJBF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 25 Jul 2020 05:01:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595667664; bh=AEu8nK9QzTA2tbqo2l5BVwPShMs+2VsmLoZOZv6b3Lc=; h=Date:From:Reply-To:Subject:References:From:Subject; b=GmYlP+e/bkRVsMOzParmEMEKHUYQB13AFWsICOWqcuWrhsgGKJvdj4ea/+CF6w936Gc3QoDACjgcNPDnK5Iqe6MP+R1MpniS2kxLLqTeVO7Xt8vQIopLeI8sPNgeyDt7msNinrXXptcBTX3tkLzt7PlJO0pAKVr5PWxLyfGXbotOBvtKz8xfBmwft/Xq4TCsdeQb4J+9KK2Z7z12blnlByl7n7sW/Q3uR175BdlbgLR7FbA+HSgyVlLfSWp5BmxrRlIv2+OmrBhnBg+JMyvWOiHrx+2S+vhXvbJYF3rcBZkYh1k4MfrtGwzsdZbqnVrDCbQXoecCxTN80hjOoall+w==
-X-YMail-OSG: z4A7ZcsVM1nsfklBNaPHQfhpZqVxeq7dGLZtSmx9i.xOxDnkUQNeggqqd4Ep_fl
- NLsVd.0dY0d2LW2pDOkXfuJwNIpmtmBffqBYxpvh9a75wogXU_.nmQqdc.8b9ULvHl6WVAq8TNR7
- I_P4YyBJfYa8OCK.C66OiTd9rYOzw.IMLKKh6AF.b5arQbC.bLGklBDlXOp9l25nCt78_TrmJ06u
- xa_rBOf37dQKERSrwiHpBFwLAtZmwRTRA8HjqhM6oadXB7uHLeqv6LlUMfn_9cMIbwl54pA1vznS
- TDFK_7nvt7h5sIDbAvSx6QahOoFecPL4r6xThk67C2SshjV5L4lZA998jxavvizu.6MF4Rb2cJr1
- hkH.5e9rPKkmiSqOnI5h00qpAZvIaUAGUUUDTE8i22Hjw5Vi6MVWgGRmMK1m.ymhaQ9k22CFKsdZ
- .ItABSK2F2vYJLAeJW8escV6QOWpJBQB1xN1bZi6lc3CQn8CGO1E36Zqs33qjwYgFEPuY5FiXqTF
- 4X4u4Cc7psoiIf4vK0EVS0MwHVhGyg9BbqqdFBNSWVLngf3MqBj6R3.jB6X2GHgO.H0OJWFIXr3N
- .ABE1nBvPqi5fERo2OYdVcy2R71ciXPDR_s1hiAZIHfDTrViXSwYkeoE8mp21R7D8sDZnS2Rzsma
- tM_iWJWS28tGP.Ju1nAeHw_mxW40E1DmIdMp.rGGdYIawq4VOfE8VnF0ol1VkvnMe1o4V4ePQGPO
- MHyBHNuPstBF9eQkHt5Rf5DFTrIdQW__Mri_AwGZz9o4k9W7fONQFykBDSqOYP.X0IzCRCuyH6DZ
- Ef0XEOUOn0ECRm8xCgJ9gG9OQnVvC6y9Bl4a5XN0LMa6dBOO4dbxs8KjmLNZm4FHxbDgjvAcS8JV
- jC08m2Ne7RDaBgQ2cR2wn3Nfc.Pp7SXNmE5JehUc6BO7Zt0Q9YVfLkPMW1oaWqF70bi6hHj7KFM8
- nPNE8VljFmdjaJOLMz8MmOV.cixrV9waYYQ3JbSDPRC3SY87s3smAihpDKbY2iWy_g3QJmmuaTg_
- NwONI2waGFjUeQ9kLMGC60J32wMWK3ng2OPeQGz3jvykaJLRufO85XVRifTDnuky94yOlTIRC6_v
- w.tYph_VAKVWcn8taGTvf9onrMEfVtJwOQrBw5ztgELnKAhAssIc8u1NdvTdoZ4ImMgfsW4dEvej
- abA4Lop_hfSKsoI_iJ4tU.ZcKznwGcyoqfrMU8qD4RiZ48YytchdWXthONvLXEncZZ9wEHCB4699
- JczmekBihOSrX5AJ7tpHjQ7hONziuki5yrCSpRo2tlltPB_fGUjBr0H5ODeomGL7f.P1EKoNBbpx
- Ta4HIRMMmQ5hypRnAac_vLiGA9Pfgmw--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sat, 25 Jul 2020 09:01:04 +0000
-Date:   Sat, 25 Jul 2020 08:59:04 +0000 (UTC)
-From:   "Mrs. Maureen Hinckley" <mau22@nuedsend.online>
-Reply-To: maurhinck8@gmail.com
-Message-ID: <1074324192.4899846.1595667544179@mail.yahoo.com>
-Subject: RE
+        id S1727012AbgGYMNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jul 2020 08:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726639AbgGYMNH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 08:13:07 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C75DC0619D3;
+        Sat, 25 Jul 2020 05:13:07 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i92so150541pje.0;
+        Sat, 25 Jul 2020 05:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wKglJ+2TyownWFT7HaOkqv+Bov35ZyDaq5YL9iEnTis=;
+        b=jsQmAZ/duW2oD3KGtdNP0fMYml9rL25F5uwC1KkGHly9HTVeuYmP6IEYLaZ6in4z4A
+         bTNLc4GW8veWQqjdwEyOn7Q6Y/PW8/klLK/EnOQpxFjv0d5TKuvbi/c0z1gWT+bPLHTa
+         KOAuwvxUVVM9BfafN3UOoMjZmMwfhX2QdHdOYLkMuWHsvL8pRoWUMP9xEIl80wnsZCHj
+         lAfT1QotNTvLvu6n67op5eaWTnhPB40TxM114Cw8zhh8kypuqkki2VSUgLMu/lzNfQtl
+         RySoGMqCAx9+tlp+rOJ4mPnyk8GiYgBbbkNxU5DIla1W/k66QGyDwUhIhmTclmMzdmJe
+         5Maw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wKglJ+2TyownWFT7HaOkqv+Bov35ZyDaq5YL9iEnTis=;
+        b=D7aZ/DMHCLqNjNtVke1Qio0VYI5Sj3pID2LWb8iNUdvsLZafGqxlr3GjRs0Kf3+CVn
+         MtroQtPNKRw0T9CzhXbcSQHEWbX4OOuKG4siZ8mEYtLQjDxk5U9sXmWBru6+/Ru9r9ng
+         3dEWmaCzL0pQlDSqCWvH1RJ6fVb/PFh8kZuklpAu8D4r1pzwVMVJmU2r+5ClwlMLtVSV
+         D6vVjbYo5h658My/HDcnZjFzw+RCFo5d+Wl6obaHocK/5Jbjs19nQ2b4FMGYWQEQnUpY
+         AizsfkGTXR/CTKtl6O+xP/2Zi6swqrPXbjE69kJJuzDCUEz679qhrsligBT6kJh6/g+D
+         7FWg==
+X-Gm-Message-State: AOAM533328C07sNgZu/O1a0wip7pSC0tneemF5zsvpZ41+1OKXVakeFz
+        61i7x5nQTQBWPfZLYdL/53BwvD56j/VYpkaQThk=
+X-Google-Smtp-Source: ABdhPJzOyFwDJ5zRO7UIQcCHcVLZzVWXAj1HxOZVvFxu7i/jdBlMIQ6KBeSTBPgfbSbR+ZA+fCydKe0NCjSQRC7bgpA=
+X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr10299786pjh.129.1595679186006;
+ Sat, 25 Jul 2020 05:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <1074324192.4899846.1595667544179.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+In-Reply-To: <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 25 Jul 2020 15:12:49 +0300
+Message-ID: <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, Jul 25, 2020 at 2:03 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
+> > On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
 
+...
 
-I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
- thousand USD) to you. Contact us via my email at (maurhinck8@gmail.com) fo=
-r further details.
+> > > 5) Manually select a proper IRQ flow handler directly in the
+> > > irq_set_type() callback by calling irq_set_handler_locked() method, since
+> > > an ordinary (not Generic) irq_chip descriptor is now utilized.
 
-Best Regards,
-Mrs. Maureen Hinckley,
-Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
+> > Can you also emphasize that this make no regression to the 6a2f4b7dadd5 ("gpio:
+> > dwapb: use a second irq chip")?
+>
+> In fact I don't really see why that commit had been accepted in the first place.
+> Both level and edge triggered IRQ types are implemented by means of the same
+> callbacks and the same registers. The only handy thing in our case is the IRQ
+> flow handler setting in accordance with the requested IRQ type, but that
+> could be done by just calling irq_set_handler_locked() method without two-types
+> complication. The commit log says: "So we can have at runtime two users where
+> one is using edge and the other level." which isn't really correct since if an IRQ
+> line is shared it can only be requested with the same trigger flags (see the
+> inline comments in the __setup_irq() method definition). If an IRQ line isn't
+> shared, then there can't be more than one user.
+>
+> Am I missing something?
+
+I didn't investigate myself, but probably it's a history of changes
+you are missing.
+That said, in time when the above mentioned commit was made there was
+no clear approach like we have nowadays.
+But I might be mistaken.
+In any case, just add a (small) remark that you were aware of that
+change and do not see any problems while doing yours.
+
+> > (And I hope you have means to test that scenario, because in my case I have
+> >  only one IRQ and it's actually as input from other GPIO IRQ chip).
+>
+> Alas I have DW APB GPIO with a single IRQ line attached too, so I can't test the
+> hierarchical case, but only the cascaded one.
+
+Alas.
+
+...
+
+> > I like the idea, but is it possible to split this?
+>
+> Yeah, 6) and 7) could be unpinned to dedicated patches. Thanks for noticing
+> this. I'll do that. But leaving the changes described before and not applying 8)
+> will produce buildable but not working driver. So I'd prefer to leave 8) here.
+
+I see. Yes, we have to have compile time *and* run-time bisectability in place.
+
+...
+
+> > > +           /*
+> > > +            * If more than one IRQ line is specified then try to
+> > > +            * initialize the hierarchical interrupts. Otherwise it's
+> > > +            * a simple cascaded case with a common IRQ signal.
+> > > +            */
+> > > +           girq->num_parents = pp->irq[1] ? pp->ngpio : 1;
+> >
+>
+> > Can it be sparse in the array? (It's actually the main point why I went with
+> > memchr_inv() instead of doing something like above)
+>
+> According to the DW APB GPIO databook it can be configured to provide either a
+> combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> the platform which of those signals are connected to an embedded IRQ
+> controller. So I guess theoretically the array values can be sparse.
+>
+> Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> array case. I just thought it would work out-of-box. Before getting your comment
+> and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> have stopped setting the handler. But turns out it may work only for
+> CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> descriptor will be returned for zero IRQ number. That descriptor will be
+> initialized with the passed parent_handler callback, which isn't what we want.
+>
+> So in order to fix the problem we could follow either of the next paths:
+> 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+>    it to be linear.
+> 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+>    gpiochip_add_irqchip() method.
+>
+> What to you think? Linus?
+
+I am okay with either that Linus will like.
+
+...
+
+> > > +           /* This will let us handle the parent IRQ in the driver */
+> > > +           girq->parents = NULL;
+> > > +           girq->num_parents = 0;
+> > > +           girq->parent_handler = NULL;
+
+> > Shan't we do this before request_irq() call (at least for consistency with the
+> > rest of the drivers)?
+>
+> Technically we shan't. Please elaborate which drivers you are referring to?
+
+All of them? Recent patches for IRQ chip template do something like
+
+girq = &...;
+girq->foo = bar;
+...
+ret = request_irq(...);
+
+...and here no more girq->baz = gaz; lines.
+
+> Even the recent Linus' series "Use irqchip template" mostly does it in the
+> same order.
+
+Funny, that's what I;m referring to.
+
+-- 
+With Best Regards,
+Andy Shevchenko
