@@ -2,225 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6918E22D62C
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 10:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B5022D649
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 11:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGYIsS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Jul 2020 04:48:18 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:49560 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726593AbgGYIsS (ORCPT
+        id S1726938AbgGYJBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jul 2020 05:01:06 -0400
+Received: from sonic301-36.consmr.mail.bf2.yahoo.com ([74.6.129.235]:33506
+        "EHLO sonic301-36.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgGYJBF (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 25 Jul 2020 04:48:18 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8BA2F634C87;
-        Sat, 25 Jul 2020 11:47:40 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jzFqG-0000kc-Bl; Sat, 25 Jul 2020 11:47:40 +0300
-Date:   Sat, 25 Jul 2020 11:47:40 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200725084740.GD829@valkosipuli.retiisi.org.uk>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
- <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
- <20200723222834.GC829@valkosipuli.retiisi.org.uk>
- <c4b0e30f-b0b7-1b19-f43e-36d417eb6d28@ideasonboard.com>
+        Sat, 25 Jul 2020 05:01:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595667664; bh=AEu8nK9QzTA2tbqo2l5BVwPShMs+2VsmLoZOZv6b3Lc=; h=Date:From:Reply-To:Subject:References:From:Subject; b=GmYlP+e/bkRVsMOzParmEMEKHUYQB13AFWsICOWqcuWrhsgGKJvdj4ea/+CF6w936Gc3QoDACjgcNPDnK5Iqe6MP+R1MpniS2kxLLqTeVO7Xt8vQIopLeI8sPNgeyDt7msNinrXXptcBTX3tkLzt7PlJO0pAKVr5PWxLyfGXbotOBvtKz8xfBmwft/Xq4TCsdeQb4J+9KK2Z7z12blnlByl7n7sW/Q3uR175BdlbgLR7FbA+HSgyVlLfSWp5BmxrRlIv2+OmrBhnBg+JMyvWOiHrx+2S+vhXvbJYF3rcBZkYh1k4MfrtGwzsdZbqnVrDCbQXoecCxTN80hjOoall+w==
+X-YMail-OSG: z4A7ZcsVM1nsfklBNaPHQfhpZqVxeq7dGLZtSmx9i.xOxDnkUQNeggqqd4Ep_fl
+ NLsVd.0dY0d2LW2pDOkXfuJwNIpmtmBffqBYxpvh9a75wogXU_.nmQqdc.8b9ULvHl6WVAq8TNR7
+ I_P4YyBJfYa8OCK.C66OiTd9rYOzw.IMLKKh6AF.b5arQbC.bLGklBDlXOp9l25nCt78_TrmJ06u
+ xa_rBOf37dQKERSrwiHpBFwLAtZmwRTRA8HjqhM6oadXB7uHLeqv6LlUMfn_9cMIbwl54pA1vznS
+ TDFK_7nvt7h5sIDbAvSx6QahOoFecPL4r6xThk67C2SshjV5L4lZA998jxavvizu.6MF4Rb2cJr1
+ hkH.5e9rPKkmiSqOnI5h00qpAZvIaUAGUUUDTE8i22Hjw5Vi6MVWgGRmMK1m.ymhaQ9k22CFKsdZ
+ .ItABSK2F2vYJLAeJW8escV6QOWpJBQB1xN1bZi6lc3CQn8CGO1E36Zqs33qjwYgFEPuY5FiXqTF
+ 4X4u4Cc7psoiIf4vK0EVS0MwHVhGyg9BbqqdFBNSWVLngf3MqBj6R3.jB6X2GHgO.H0OJWFIXr3N
+ .ABE1nBvPqi5fERo2OYdVcy2R71ciXPDR_s1hiAZIHfDTrViXSwYkeoE8mp21R7D8sDZnS2Rzsma
+ tM_iWJWS28tGP.Ju1nAeHw_mxW40E1DmIdMp.rGGdYIawq4VOfE8VnF0ol1VkvnMe1o4V4ePQGPO
+ MHyBHNuPstBF9eQkHt5Rf5DFTrIdQW__Mri_AwGZz9o4k9W7fONQFykBDSqOYP.X0IzCRCuyH6DZ
+ Ef0XEOUOn0ECRm8xCgJ9gG9OQnVvC6y9Bl4a5XN0LMa6dBOO4dbxs8KjmLNZm4FHxbDgjvAcS8JV
+ jC08m2Ne7RDaBgQ2cR2wn3Nfc.Pp7SXNmE5JehUc6BO7Zt0Q9YVfLkPMW1oaWqF70bi6hHj7KFM8
+ nPNE8VljFmdjaJOLMz8MmOV.cixrV9waYYQ3JbSDPRC3SY87s3smAihpDKbY2iWy_g3QJmmuaTg_
+ NwONI2waGFjUeQ9kLMGC60J32wMWK3ng2OPeQGz3jvykaJLRufO85XVRifTDnuky94yOlTIRC6_v
+ w.tYph_VAKVWcn8taGTvf9onrMEfVtJwOQrBw5ztgELnKAhAssIc8u1NdvTdoZ4ImMgfsW4dEvej
+ abA4Lop_hfSKsoI_iJ4tU.ZcKznwGcyoqfrMU8qD4RiZ48YytchdWXthONvLXEncZZ9wEHCB4699
+ JczmekBihOSrX5AJ7tpHjQ7hONziuki5yrCSpRo2tlltPB_fGUjBr0H5ODeomGL7f.P1EKoNBbpx
+ Ta4HIRMMmQ5hypRnAac_vLiGA9Pfgmw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Sat, 25 Jul 2020 09:01:04 +0000
+Date:   Sat, 25 Jul 2020 08:59:04 +0000 (UTC)
+From:   "Mrs. Maureen Hinckley" <mau22@nuedsend.online>
+Reply-To: maurhinck8@gmail.com
+Message-ID: <1074324192.4899846.1595667544179@mail.yahoo.com>
+Subject: RE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4b0e30f-b0b7-1b19-f43e-36d417eb6d28@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <1074324192.4899846.1595667544179.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Kieran,
 
-On Fri, Jul 24, 2020 at 10:32:11AM +0100, Kieran Bingham wrote:
-> Hi Sakari,
-> 
-> On 23/07/2020 23:28, Sakari Ailus wrote:
-> > Hi Kieran,
-> > 
-> > On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
-> >> Hi Sakari,
-> >>
-> >> This is the output of checkpatch --strict on this driver. Sorry for not
-> >> detailing this in the commit or cover letter.
-> > 
-> > No worries.
-> > 
-> >>
-> >>> ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
-> >>> --------------------------------------------------------------
-> >>> ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
-> >>> --------------------------------------------------------------
-> >>> CHECK: Prefer using the BIT macro
-> >>> #246: FILE: drivers/media/i2c/max9286.c:40:
-> >>> +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #251: FILE: drivers/media/i2c/max9286.c:45:
-> >>> +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #262: FILE: drivers/media/i2c/max9286.c:56:
-> >>> +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #268: FILE: drivers/media/i2c/max9286.c:62:
-> >>> +#define MAX9286_HVSRC_D14		(1 << 0)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #286: FILE: drivers/media/i2c/max9286.c:80:
-> >>> +#define MAX9286_DATATYPE_RGB565		(1 << 0)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #304: FILE: drivers/media/i2c/max9286.c:98:
-> >>> +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #312: FILE: drivers/media/i2c/max9286.c:106:
-> >>> +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
-> >>>
-> >>> CHECK: Prefer using the BIT macro
-> >>> #316: FILE: drivers/media/i2c/max9286.c:110:
-> >>> +#define MAX9286_I2CSLVTO_256US		(1 << 0)
-> >>
-> >> None of those are appropriate to use the BIT() macro, as they are all
-> >> entries of a specific field with a shift, such as:
-> >>
-> >> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
-> >> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
-> >> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
-> >> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
-> >>
-> >> Checkpatch is only picking up on the "1 << x" variant of each entry.
-> > 
-> > Ideally you should use "1U << x" everywhere. If you happen to have a
-> > register with 31st bit signifying something, mayhem would follow. So the
-> > practice is to make all such definitions unsigned.
-> 
-> Just to clarify, because of the location you've put your x, which is not
-> the variable in the above case.
-> 
-> These definitions are possible field values with a shift (enum << y),
-> not bit values (1 << x)
-> 
-> They can of course be unsigned though.
-> 
-> Is your statement that you would like to see these as:
-> 
->  #define MAX9286_FSYNCMODE_ECU           (3U << 6)
->  #define MAX9286_FSYNCMODE_EXT           (2U << 6)
->  #define MAX9286_FSYNCMODE_INT_OUT       (1U << 6)
->  #define MAX9286_FSYNCMODE_INT_HIZ       (0U << 6)
 
-Yes, please. This avoids shifting a non-zero bit to the 31st position of a
-32-bit register.
+I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
+ thousand USD) to you. Contact us via my email at (maurhinck8@gmail.com) fo=
+r further details.
 
-> 
-> 
-> Or that you would prefer a macro'ised version:
-> 
-> #define FIELD_ENTRY(value, shift) (value U << shift)
-> 
-> 
-> Or rather, I could just convert them all to use FIELD_PREP:
-> 
-> #define MAX9286_FSYNCMODE GENMASK(7,6)
-> 
-> #define MAX9286_FSYNCMODE_ECU      FIELD_PREP(MAX9286_FSYNCMODE, 3)
-> #define MAX9286_FSYNCMODE_EXT      FIELD_PREP(MAX9286_FSYNCMODE, 2)
-> #define MAX9286_FSYNCMODE_INT_OUT  FIELD_PREP(MAX9286_FSYNCMODE, 1)
-> #define MAX9286_FSYNCMODE_INT_HIZ  FIELD_PREP(MAX9286_FSYNCMODE, 0)
-> 
-> If you want me to change these entries, I suspect moving wholly to use
-> FIELD_PREP/FIELD_GET throughout the driver would be the best course of
-> action.
-> 
-> A bit of churn, but I can do that if you wish.
-> 
-> --
-> Kieran
-> 
-> 
-> 
-> >>> CHECK: Macro argument reuse 'source' - possible side-effects?
-> >>> #399: FILE: drivers/media/i2c/max9286.c:193:
-> >>> +#define for_each_source(priv, source) \
-> >>> +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
-> >>
-> >> This warns against possible side effects, but the 're-use' effects are
-> >> desired ;-)
-> >>
-> >> If you'd prefer this macro to be re-written please let me know.
-> > 
-> > Works for me. Some warnigns are just not useful. I bet quite a few macros
-> > elsewhere in the kernel would trigger this.
-> 
-> 
-> I think we'll just leave this one ;-)
-> 
-> 
-> >>> CHECK: Lines should not end with a '('
-> >>> #1372: FILE: drivers/media/i2c/max9286.c:1166:
-> >>> +			ret = v4l2_fwnode_endpoint_parse(
-> >>
-> >> Full code block:
-> >>
-> >>>                         ret = v4l2_fwnode_endpoint_parse(
-> >>>                                         of_fwnode_handle(node), &vep);
-> >>>                         if (ret) {
-> >>>                                 of_node_put(node);
-> >>>                                 return ret;
-> >>>                         }
-> >>
-> >> That one is awkward, and I chose to keep it as a lesser evil.
-> >> Of course now that we can officially go up to 120 chars, I could move
-> >> this line up.
-> >>
-> >> If you'd like this to be moved to a single line now we can go over 80
-> >> chars, please confirm.
-> > 
-> > I don't mind that. Mauro, any thoughts on this?
-> 
-> 
-> And I'll let Mauro decide that as it will impact my line-length choices
-> in the future ;-)
-
-I think it's actually much better to end a line with opening parenthesis
-than have a line longer than 80, but I recognise there are differing
-opinions.
-
-My terminal window width is 80 and having more terminals is more useful
-than being able to see a rare line over 80 completely.
-
--- 
-Regards,
-
-Sakari Ailus
+Best Regards,
+Mrs. Maureen Hinckley,
+Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
