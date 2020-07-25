@@ -2,59 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E0A222D49F
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 06:20:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A305622D4A1
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jul 2020 06:21:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbgGYEUe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Jul 2020 00:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
+        id S1726639AbgGYEUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jul 2020 00:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGYEUd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 00:20:33 -0400
+        with ESMTP id S1725874AbgGYEUr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 00:20:47 -0400
 Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BE5C0619D3;
-        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a23so6318571pfk.13;
-        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06EBC0619D3;
+        Fri, 24 Jul 2020 21:20:47 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f185so1406326pfg.10;
+        Fri, 24 Jul 2020 21:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
-        b=OBdGItRI19BUrUCt2BShHy3fp+gs6X/rr6sgnFBjDTs9pCjg0K/wpvSW356B1UaSDL
-         +BznRfNKDYZdef/t7b3k231OQE8/OdDs8/M0ccEQQ+AdVThZb7oRRr04Z5f3VDl9b99y
-         2c1eDCCDgVe1Qlt78fLIv+LKCaKHkizK4jbOyu9tUZ1RXsYiHAWW14tppEsnaRV3VDv3
-         oE3HwAaxkuUDZ3MSacSHcuAjx7tEEm3A7thTYq3paxwKs1i1uOHqk4PiFkRYsPAUmySS
-         CG4bSIHMBN0nwZ93PZKdsJUAFb8sjph2OM63aCzdbMqUN2YlIYAXs5SCVTlJ/RS12nSZ
-         IehQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vmHhWGx/KVLPJ+Aj0FzEdCBeQVCDlXYeVMZf4UIryU0=;
+        b=FDPQLDX87z+wffNmiV/oOvtjAJbV8XG0+u2YB7fBBmSAF9EnvABzIyHcIUlU8BLl06
+         MSjO7P2h2J3dsFE38r8rY7N7blb88BViFbdmXkkzZLcJWaV2VaNtCXsbczDCYAgxapPR
+         dzR1wFtsTQOUypVmMg3L/0GYkVTussfkrzaiF9yDTBzQPXhN4NWBwz0x3Ihp86YGT6MV
+         2P6EWkYwTVY0YrUJ+xIn1EnHTQ9ubFBAZHzc04HT3B+FzqcaeqQOPriU/MHpafGJ69YX
+         KmtXJSWA9A0HT93Z5hqDDGsQPu1uQWOPjqXIgt3Nhn0vGZGCB+upDAPFqBYZIA/I7/MI
+         0MMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
-        b=M/mbnH9sLDEbIBxsdB9GutBrf6K2YXibCt0zRfZv9PcUDh9dprw12u/oJmYe+TeRC0
-         dw88Lxefi1gi7YhaREBmvpB2gtSDd/TpSKnjvuV03xciVhfCBr7Ei90qgEJNmWpsCc+6
-         R4URdJl7T0qQDtwBg4xRmWUUR7NHERbVjd+hOHM9s9NLq6mNWAU9B/+M9jNYJrSbB/kP
-         EEJ5PdQe/LuM15eX4vjL5NSEEnt9Dcs+mEMna88hxrUNVkYRP26xU7cZ1MuS7lIarW7+
-         Y/GeAcHB4iaR3P5tylAQwvGMWzEPGfiIa2ucevIsG963HXPsSrOaAUxXdKESJUJDWd14
-         isfg==
-X-Gm-Message-State: AOAM533hF8V6AY1J7kaC+zOBDD/GO8q+MOc2ZZFx/aHlq30si6mpEtpS
-        fOsj4icjuf69Dy1SFJhjmvQtVR9z
-X-Google-Smtp-Source: ABdhPJxxkc5LytEVwf4QvQbMfyF+/rM0g3xHrSwbSVNtJRkAFf4JwlgnjkOgRZ+MNImiLG4nGUpShw==
-X-Received: by 2002:a63:8949:: with SMTP id v70mr11073170pgd.256.1595650832575;
-        Fri, 24 Jul 2020 21:20:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vmHhWGx/KVLPJ+Aj0FzEdCBeQVCDlXYeVMZf4UIryU0=;
+        b=dMZFNt5wVREhQFo6INSZQo493AgQDg/Aeku2sSBIDO0gHTBlfIuSfTCVAEmj6KHjPW
+         hnCSm9bXJucAKdLdZZnxYYe8fGEaw1OlL/pfnRsoAgI0agp8RVStfX2HyiYYAowcrO8P
+         hXYYiJKR/Ru6TUabaSX2pgWUL4Hz5L2UPK7rIq0eyOZGcm1zXRjIldEg/LW4FEBNsDyk
+         Rp+7A5XoTf1pdJyVy/HmY188E8Lgmkuo8F3d/EFIXE0ob6NwPPu3fobqkAwMgmjMAndF
+         xdf+6jsFHZDtw8lX+G9YAztudfZaTE/sZ9hOKDRRbWe8pszUhSbOsdQiNRLZ/pIvTiXc
+         xwQQ==
+X-Gm-Message-State: AOAM530VvA3ZZI3teVOi/RzVnhrDz35EwO2llgL+97tqcXfeuWR1knoW
+        AMvC0WI33IRn0ZC9SkSPJ0utO44o
+X-Google-Smtp-Source: ABdhPJy3AAdZWuW44KNtF6OWyqysrlc9OnqXGWgAn0IZ2GlbskKHFRO4ytvMBBT+qek+8eOyGhdmiQ==
+X-Received: by 2002:a62:8688:: with SMTP id x130mr11768529pfd.280.1595650847071;
+        Fri, 24 Jul 2020 21:20:47 -0700 (PDT)
 Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id p1sm885320pjp.10.2020.07.24.21.20.29
+        by smtp.gmail.com with ESMTPSA id p1sm885320pjp.10.2020.07.24.21.20.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 21:20:31 -0700 (PDT)
+        Fri, 24 Jul 2020 21:20:46 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 00/18] gpio: cdev: add uAPI V2
-Date:   Sat, 25 Jul 2020 12:19:37 +0800
-Message-Id: <20200725041955.9985-1-warthog618@gmail.com>
+Subject: [PATCH v2 01/18] gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+Date:   Sat, 25 Jul 2020 12:19:38 +0800
+Message-Id: <20200725041955.9985-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200725041955.9985-1-warthog618@gmail.com>
+References: <20200725041955.9985-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,68 +64,77 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patchset defines and implements adds a new version of the
-GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-support for debounce, event sequence numbers, and allowing for requested
-lines with different configurations.
-It provides some future proofing by adding optional configuration fields
-and padding reserved for future use.
+Replace constant array sizes with a macro constant to clarify the source
+of array sizes, provide a place to document any constraints on the size,
+and to simplify array sizing in userspace if constructing structs
+from their composite fields.
 
-The series can be partitioned into two sets; the first eleven
-contain the V2 uAPI implementation, and the final seven port
-the GPIO tools to the V2 uAPI and extend them to use new uAPI features.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-The more complicated patches include their own commentary where
-appropriate.
+This change is not terribly important for V1, but in adding V2 more
+documentation for the usage of this value is appropriate.
+As it is also used with V1 it warrants a separate patch.
 
-Cheers,
-Kent.
+ include/uapi/linux/gpio.h | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-Changes since v1:
- - split out cleanup patches into a separate series.
- - split implementation patch into a patch for each ioctl or major feature.
- - split tool port patch into a patch per tool.
- - rework uAPI to allow requested lines with different configurations.
-
-Kent Gibson (18):
-  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
-  gpio: uapi: define uAPI v2
-  gpiolib: make cdev a build option
-  gpiolib: add build option for CDEV v1 ABI
-  gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
-    GPIOLINE_GET_VALUES_IOCTL
-  gpiolib: cdev: support GPIO_GET_LINEINFO_V2_IOCTL and
-    GPIO_GET_LINEINFO_WATCH_V2_IOCTL
-  gpiolib: cdev: support edge detection for uAPI v2
-  gpiolib: cdev: support GPIOLINE_SET_CONFIG_IOCTL
-  gpiolib: cdev: support GPIOLINE_SET_VALUES_IOCTL
-  gpiolib: cdev: support setting debounce
-  gpio: uapi: document uAPI v1 as deprecated
-  tools: gpio: port lsgpio to v2 uAPI
-  tools: gpio: port gpio-watch to v2 uAPI
-  tools: gpio: rename nlines to num_lines
-  tools: gpio: port gpio-hammer to v2 uAPI
-  tools: gpio: port gpio-event-mon to v2 uAPI
-  tools: gpio: add debounce support to gpio-event-mon
-  tools: gpio: add multi-line monitoring to gpio-event-mon
-
- drivers/gpio/Kconfig        |   28 +-
- drivers/gpio/Makefile       |    2 +-
- drivers/gpio/gpiolib-cdev.c | 1296 ++++++++++++++++++++++++++++++++++-
- drivers/gpio/gpiolib-cdev.h |   15 +
- drivers/gpio/gpiolib.c      |    2 +
- drivers/gpio/gpiolib.h      |    6 +
- include/uapi/linux/gpio.h   |  327 ++++++++-
- tools/gpio/gpio-event-mon.c |  137 ++--
- tools/gpio/gpio-hammer.c    |   27 +-
- tools/gpio/gpio-utils.c     |  117 ++--
- tools/gpio/gpio-utils.h     |   48 +-
- tools/gpio/gpio-watch.c     |   10 +-
- tools/gpio/lsgpio.c         |  102 ++-
- 13 files changed, 1882 insertions(+), 235 deletions(-)
-
-
-base-commit: 8fc3ed3a474d76cd76dd0a154ea904373e9a5530
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index 9c27cecf406f..285cc10355b2 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -14,6 +14,11 @@
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
+ 
++/*
++ * The maximum size of name and label arrays.
++ */
++#define GPIO_MAX_NAME_SIZE 32
++
+ /**
+  * struct gpiochip_info - Information about a certain GPIO chip
+  * @name: the Linux kernel name of this GPIO chip
+@@ -22,8 +27,8 @@
+  * @lines: number of GPIO lines on this chip
+  */
+ struct gpiochip_info {
+-	char name[32];
+-	char label[32];
++	char name[GPIO_MAX_NAME_SIZE];
++	char label[GPIO_MAX_NAME_SIZE];
+ 	__u32 lines;
+ };
+ 
+@@ -52,8 +57,8 @@ struct gpiochip_info {
+ struct gpioline_info {
+ 	__u32 line_offset;
+ 	__u32 flags;
+-	char name[32];
+-	char consumer[32];
++	char name[GPIO_MAX_NAME_SIZE];
++	char consumer[GPIO_MAX_NAME_SIZE];
+ };
+ 
+ /* Maximum number of requested handles */
+@@ -123,7 +128,7 @@ struct gpiohandle_request {
+ 	__u32 lineoffsets[GPIOHANDLES_MAX];
+ 	__u32 flags;
+ 	__u8 default_values[GPIOHANDLES_MAX];
+-	char consumer_label[32];
++	char consumer_label[GPIO_MAX_NAME_SIZE];
+ 	__u32 lines;
+ 	int fd;
+ };
+@@ -182,7 +187,7 @@ struct gpioevent_request {
+ 	__u32 lineoffset;
+ 	__u32 handleflags;
+ 	__u32 eventflags;
+-	char consumer_label[32];
++	char consumer_label[GPIO_MAX_NAME_SIZE];
+ 	int fd;
+ };
+ 
 -- 
 2.27.0
 
