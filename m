@@ -2,74 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A22B22DA9D
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Jul 2020 01:23:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D99322DB0C
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Jul 2020 03:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgGYXXr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Jul 2020 19:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
+        id S1727013AbgGZBMv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jul 2020 21:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgGYXXq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 19:23:46 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2140C08C5C0;
-        Sat, 25 Jul 2020 16:23:46 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 30DBD23E2C;
-        Sun, 26 Jul 2020 01:23:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595719424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=koZieqMGjt8ICBDJEBEZZ7zoew+ZtLO6K/QV7XfmRiI=;
-        b=bAnO5r7NxnBrS5CaSLmY73T2sSff42mk67hdpza/0zgtVg31TpfIvlq1j3hCpFiXjzfKXR
-        KPNSG2jjfzfkbZcbD2C4YMgEFh3j6fEWrQEUCMX0Wg8JYDQwhm3WIIKGRV1BU8LqDmhPxK
-        TNoohaOHE2jbAoc3NuLFcINFdi0Txe8=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S1726931AbgGZBMv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jul 2020 21:12:51 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF83CC0619D2;
+        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k4so6347335pld.12;
+        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lrqn0h4UeYu/NXBjnfBtgYmgcWJ30UKbihkBx7kwfNc=;
+        b=EX7Mtu74e7NNmFrf8Um9TmfMjFl3im3HX0QNWFjH4WSZbbkHWZ7Z4CzJovTf/WTZpP
+         I8tk3T4iXtbCToiSSlErXq+Lyb63rNf2Ny8XKUg0BDeSHIGn1q5iM3yXqtVG5PHZyi2c
+         N9pBql17T61YRvziAGM6sg5mFFlHK/m++OkU9kaAoOENV4EF7Bk/A2vZrEVKCth36y9a
+         Q9udfkmuYbU4D3Kwb7wu3JQ1BJ+bGNgGNzwiKMAylOEENSHD37bMjTropLA9e5+WvodK
+         OLJ3XZAoJPO5zTfU+iJr/U9WmliMLaTEGEheb89Vqqb1rkHP8PPMt782eRUowgVqzRuG
+         6Fqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lrqn0h4UeYu/NXBjnfBtgYmgcWJ30UKbihkBx7kwfNc=;
+        b=EpO9Un7j74RL4G7FYDgmsruj92kjPnaRCm39OVczIwuhDN8sqIkYymk+aZbomPzJvs
+         iCJzBeC/npg6xeRfOV9Mq6V6bgeWXYZBLYTvzUJDethTVpmmQfu8kVuYnp43npTBg70m
+         Z3LTmdTrjBA0CI4WfLxLnHPcMyjSzHn1ER4FW70nANbuZHUNzFoVr8Qls0x3V/ZDyIv+
+         4cHyP05zyjMMpg4wdCX211p41DvuRtE7IHVxXluX+8nAak9L0u1ZglSdqt6KCQVIj9vt
+         vFMGBoZMV99HrfkrZ35ruHvLpZV6JiwRTO27NAH89qS/jUW+fXRTrf8caz5tVH/97aVs
+         9QCA==
+X-Gm-Message-State: AOAM532dU3H1CP/7ms7343o+NtEO7a9hYfchBu8zxXbof3hjpSOLAYf4
+        5XcAc8X7FxLiUZlK/woi8EA=
+X-Google-Smtp-Source: ABdhPJyXAhZUYNB1q8VtC7UJ44VKX/lsqzrXN7JZv9uTuuB+MM8CRyYuJO/+8IYkv3wDiCx0O1mQUg==
+X-Received: by 2002:a17:90b:1907:: with SMTP id mp7mr11392538pjb.220.1595725970253;
+        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id b4sm10705169pfo.137.2020.07.25.18.12.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2020 18:12:49 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 09:12:44 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] gpio: regmap: fix type clash
-Date:   Sun, 26 Jul 2020 01:23:37 +0200
-Message-Id: <20200725232337.27581-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+ GPIOLINE_GET_VALUES_IOCTL
+Message-ID: <20200726011244.GA6587@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-6-warthog618@gmail.com>
+ <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO_REGMAP_ADDR_ZERO() cast to unsigned long but the actual config
-parameters are unsigned int. We use unsigned int here because that is
-the type which is used by the underlying regmap.
+On Sat, Jul 25, 2020 at 11:51:54PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 25, 2020 at 7:24 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add support for requesting lines using the GPIO_GET_LINE_IOCTL, and
+> > returning their current values using GPIOLINE_GET_VALUES_IOCTL.
+> 
+> ...
+> 
+> > +struct line {
+> > +       struct gpio_device *gdev;
+> > +       const char *label;
+> > +       u32 num_descs;
+> 
+> > +       /* descs must be last so it can be dynamically sized */
+> 
+> I guess [] implies above comment and thus comment can be dropped.
+> 
+> > +       struct gpio_desc *descs[];
+> > +};
+> 
+> ...
+> 
+> > +static bool padding_not_zeroed(__u32 *padding, int pad_size)
+> > +{
+> > +       int i, sum = 0;
+> > +
+> > +       for (i = 0; i < pad_size; i++)
+> > +               sum |= padding[i];
+> > +
+> > +       return sum;
+> > +}
+> 
+> Reimplementation of memchr_inv() ?
+> 
 
-Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- include/linux/gpio/regmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I was hoping to find an existing function, surely checking a region is
+zeroed is a common thing, right?, so this was a place holder as much
+as anything.  Not sure memchr_inv fits the bill, but I'll give it a
+try...
 
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 4c1e6b34e824..ad76f3d0a6ba 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -8,7 +8,7 @@ struct gpio_regmap;
- struct irq_domain;
- struct regmap;
- 
--#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
-+#define GPIO_REGMAP_ADDR_ZERO ((unsigned int)(-1))
- #define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
- 
- /**
--- 
-2.20.1
+> ...
+> 
+> > +static u64 gpioline_config_flags(struct gpioline_config *lc, int line_idx)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = lc->num_attrs - 1; i >= 0; i--) {
+> 
+> Much better to read is
+> 
+> unsigned int i = lc->num_attrs;
+> 
+> while (i--) {
+>  ...
+> }
+> 
 
+Really? I find that the post-decrement in the while makes determining the
+bounds of the loop more confusing.
+
+> > +               if ((lc->attrs[i].attr.id == GPIOLINE_ATTR_ID_FLAGS) &&
+> 
+> > +                   test_bit(line_idx, (unsigned long *)lc->attrs[i].mask))
+> 
+> This casting is not good. What about BE 32-bit architecture?
+> 
+
+I agree the casting is hideous, but I thought the outcome was correct
+as it is manipulating addresses, not data.
+You think the address of a 64-bit differs based on endian??
+Happy to change it - but not sure what to.
+
+> > +                       return lc->attrs[i].attr.flags;
+> > +       }
+> > +       return lc->flags;
+> > +}
+> > +
+> > +static int gpioline_config_output_value(struct gpioline_config *lc,
+> > +                                       int line_idx)
+> > +{
+> 
+> Same comments as per above.
+> 
+> > +}
+> 
+> ...
+> 
+> > +static long line_get_values(struct line *line, void __user *ip)
+> > +{
+> > +       struct gpioline_values lv;
+> 
+> > +       unsigned long *vals = (unsigned long *)lv.bits;
+> 
+> Casting u64 to unsigned long is not good.
+> 
+
+Same comments as per above.
+
+> > +}
+> 
+> ...
+> 
+> > +static void line_free(struct line *line)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < line->num_descs; i++) {
+> 
+> > +               if (line->descs[i])
+> 
+> Redundant?
+> 
+
+Actually, no.  The line_free is also used to clean up construction
+failures, so the line may be partially constructed.  num_descs is set
+first, but the descs themselves may have failed to allocate.
+And gpiod_free throws a warning if you pass a NULL, hence the extra check here.
+
+> > +                       gpiod_free(line->descs[i]);
+> > +       }
+> > +       kfree(line->label);
+> > +       put_device(&line->gdev->dev);
+> > +       kfree(line);
+> > +}
+> 
+> ...
+> 
+> > +       /* Make sure this is terminated */
+> > +       linereq.consumer[sizeof(linereq.consumer)-1] = '\0';
+> > +       if (strlen(linereq.consumer)) {
+> > +               line->label = kstrdup(linereq.consumer, GFP_KERNEL);
+> 
+> kstrndup() ?
+> 
+
+That was a cut-and-paste from V1...
+
+> > +               if (!line->label) {
+> > +                       ret = -ENOMEM;
+> > +                       goto out_free_line;
+> > +               }
+> > +       }
+> 
+
+... and changing it would result in this logic behaving differently.
+You couldn't distinguish between consumer not being set, and
+so label not being set, and kstrndup returning NULL due to no mem.
+
+> ...
+> 
+> > +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
+> 
+> I prefer to see this split, but it's minor.
+> 
+> > +               if (IS_ERR(desc)) {
+> > +                       ret = PTR_ERR(desc);
+> > +                       goto out_free_line;
+> > +               }
+> 
+> ...
+> 
+> > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+> > +                       offset);
+> 
+> Perhaps tracepoint / event?
+> 
+
+Again, a cut-and-paste from V1, and I have no experience with
+tracepoints or events, so I have no opinion on that.
+
+So, yeah - perhaps?
+
+Cheers,
+Kent.
