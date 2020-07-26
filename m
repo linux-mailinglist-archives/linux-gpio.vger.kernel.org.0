@@ -2,78 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2AE722E319
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 00:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB3D22E31D
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 00:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGZW0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jul 2020 18:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
+        id S1727033AbgGZW2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jul 2020 18:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZW0H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jul 2020 18:26:07 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D9A6C0619D2
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:26:06 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id s9so7967170lfs.4
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:26:05 -0700 (PDT)
+        with ESMTP id S1726253AbgGZW2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jul 2020 18:28:37 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6519CC0619D2
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:28:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id r19so15125616ljn.12
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:28:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qMFMrM2UwSVWXy6CzJpp3io1MmpiGTCiXGuEse1Q9zo=;
-        b=BfsIjy2zGgd6JnwqvTKSwHZBBtZ+lhWEsYSPZ4mGodMqU6Ea5iZQnEZsjJkxO7VNsT
-         3Lrqq13lymcjKcT95LEBq14pZymVhPOnNLGOF77kfsAZzqNkeQdcQyxoN16mBCOrIAYB
-         tbfZQIA0d1cy123E9dY00rGnQlGrX61jJsuv7fHa905DBhyqvbQya3xQ7e7N9eANFnwg
-         7dKVxYXoOwlkFRarrC3Zdh37wX/09fsJR7vtRd65kFaBVwzJvA75gLgrnvqaNX4ycldA
-         0Kc9H8WziL7+SQU6GJNApsN3YjKsgREEjIfE1ciLzYTd2s+Q7ZfHk4Wy70vfSjgYjJiG
-         5vQw==
+        bh=FqpPADHoD6/sFwAG6/8ngJdpFR3zvYVirGl0PSjjtnM=;
+        b=UXRpPhP97xX9+CyYF4MJxoc7cM9pLDOOovxeg4qoPWq1Mq9PWWRy/MYtHH66qlAuy1
+         xxPvw4xK4+nHah/la8DBT1qEmDyVxoO5WBOanlrVgKGtMv9B66LRUHIk5WTOAkMNQLkv
+         of7BbM+1jQYlJLK2FeA90UTFIomdO5vr6vcY4Aumw8KsDeVWwI8K5bDeLi7qoE6Ua2Dk
+         1qUeEMuHLg8PpxExiywWCua30nmJCspKO4ckeuMqCAFkOYSClfo18mKEPR8RD0CPGmRn
+         WtGRiJac1PDBzm5xr4mTyG9xOXAQ9lLm/aZR8nasYv6r42lKJw3BHWJHosIdk8u0wG69
+         Pwcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qMFMrM2UwSVWXy6CzJpp3io1MmpiGTCiXGuEse1Q9zo=;
-        b=tlm+4d6J5EF2q9z8OIEsn0vq2kp5dRcaFqQSC6u4SePN46YE8BENu1gs4LHjzxc483
-         3Tfk8jhO3QfhfFq2XI27ggHHyV7NbwFPNSi2aETAZ7QOd3u4hNkOz6NF4YSrsQwJC75i
-         y8Ehfl38bsvjv9J5djPCvPIcLrIUqi1RnjdRkKfFksv12iSQhRqgy0kMR2F9ulJTPipB
-         MPpa9FjzC1/KZpJ/SZ6UkFPyr76gAHPqFnPDx1OBcC4rSV6/XeuQyoCwJeFF6LHZAP+O
-         CzzA7WKJYx2CjUpEtpo/uz6xXQZ7sYzSvfZ78412uxs58DVXaD6+mk+6fGDQCylP7cQa
-         RM6Q==
-X-Gm-Message-State: AOAM533/i/qXkDr8aQZfBXv14F2I3h/1UdfxHSUsXKXfzV9IJRF6hyRK
-        zGH3j64GKo7LlhdwIUetrqRakZv/BtCgBr2LTe/asQ==
-X-Google-Smtp-Source: ABdhPJwW5NbSc6KuKvHaWtPma+94F1kxGGQAtBYJKM8GoaQ7ghPK5SJlPMpC6VPSg2BlMNOZ6SLAqFrNFYtNzsmLZfU=
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr3044416lfg.194.1595802364522;
- Sun, 26 Jul 2020 15:26:04 -0700 (PDT)
+        bh=FqpPADHoD6/sFwAG6/8ngJdpFR3zvYVirGl0PSjjtnM=;
+        b=fZAkb2WjqIWxXR4qkBss7VQSFmp7u3OztF9a/5yrFZihssBnKiAo3g4dkK5I/F2wR5
+         zpuVdkyb/+ZX3WfSzvjd1tbxoX+PLNaZ40tZd/9HYrjrugzLICJurBe8B+xUdyBYQfPG
+         K/edS9foKqdQfz1hNf/vDcHI5vCRoWfA+PoGhmtyreU1T+5b+7QioUULn74bK5RqKhTz
+         2RbuQ5QDRrqEqBmTl198BAPeod55MzfpfPtGbh797uBPe1OPmEBdOk6HsEl/7UEotM2i
+         cj25Qqb37FgTkRkUE0Y+hr4HCdZR3odRSb/X75PKnLRG72KpYo5iVNbr+su9nKsvXp6s
+         6e6g==
+X-Gm-Message-State: AOAM531r2xFiVWNy2qKu4ZxIqmaULxz2QVTo7SJFovqxjsNd3q1lP2wR
+        7oSkrHXw9cbEFzD46YAtPaYJim1+UiGRWRZxjocwehjrOTY=
+X-Google-Smtp-Source: ABdhPJwRZsGa5mQh/euDMWVs6sXQB/+SBOXYPsqutuy+zDm8oazUfD+J8m9j1i1CcecaoorrBWNLRohjADArNpCXym8=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr9463017ljc.286.1595802515951;
+ Sun, 26 Jul 2020 15:28:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-4-warthog618@gmail.com>
-In-Reply-To: <20200725041955.9985-4-warthog618@gmail.com>
+References: <20200725232337.27581-1-michael@walle.cc>
+In-Reply-To: <20200725232337.27581-1-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Jul 2020 00:25:53 +0200
-Message-ID: <CACRpkdZymmO9ku5OmCO74eiX3Y3jq_1g5De9Tx4hg3Lyrdt6bQ@mail.gmail.com>
-Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
-To:     Kent Gibson <warthog618@gmail.com>
+Date:   Mon, 27 Jul 2020 00:28:25 +0200
+Message-ID: <CACRpkdbs2Thch4KiBNvSp+92wDKHrCkXKvhn7FKUH5WgbgS3Qg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: regmap: fix type clash
+To:     Michael Walle <michael@walle.cc>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sun, Jul 26, 2020 at 1:23 AM Michael Walle <michael@walle.cc> wrote:
 
-> +config GPIO_CDEV
-> +       bool "/dev/gpiochipN (character device interface)"
-> +       default y
+> GPIO_REGMAP_ADDR_ZERO() cast to unsigned long but the actual config
+> parameters are unsigned int. We use unsigned int here because that is
+> the type which is used by the underlying regmap.
+>
+> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-I don't want to make it too easy to do this, as I see it as a standard
-kernel feature.
-
-Can we add:
-
-depends on EXPERT
-
-as with other standard kernel features?
+Patch applied, thanks!
 
 Yours,
 Linus Walleij
