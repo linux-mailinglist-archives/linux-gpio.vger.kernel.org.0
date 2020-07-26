@@ -2,141 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F86522E30D
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 00:15:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BDFD22E315
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 00:22:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgGZWPG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jul 2020 18:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
+        id S1726682AbgGZWWn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jul 2020 18:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZWPG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jul 2020 18:15:06 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC75DC0619D2
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:15:05 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id x9so15153242ljc.5
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:15:05 -0700 (PDT)
+        with ESMTP id S1726253AbgGZWWn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jul 2020 18:22:43 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B3AC0619D4
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m15so7287683lfp.7
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gb2mv5Jszk8YroAXxPrHTRBJHRUpYaLrubUEmoZ6oJY=;
-        b=v1Vrtctioyugr2zt9OeRxHRco0cZrzuZaWcUYUev1sdNzq6cfbkyiETILMiaSIKgof
-         1yq31YjeK2oVhS43eZbenI7G0o0IC90b9tiLaz6/WU8XAEjDbTead2w8AMuv/plGeu2Q
-         cQL0hwJpTUXJ2XI7sxZLQ28lr7NP+bJxFIdlaBe3OatzxAug7zOWlDHX6YUnoy4Afgbn
-         0zN201eq0uCKXhRIidghzY1FBpp373wWlPuQajgq192QVASpnJK7kGCvd0kMcJpAF2Tc
-         AfJbk1oo4L9YtXvxLhP9rP3W27k76aXFdsZe84U7NlwZnM63wePY+nI6z75jI2Z2SvXU
-         IVXA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=xgKdjra2/4+RInKaf0aGHk5SxaDW9Tyrest156u/U0OFV+DJgAsYR4dystOdKs+D66
+         4IeXMJLIvhADs010gssRPGW+q6hQ8Ln16U3pPkXi1PrYG2FtHJnQyCOl3/4z0g9dLvqC
+         jP+ipH4/XH6XZZ8JsPUTuq1F2QPsTJrxV2H8PnY0Jfz+IoIjQBXTXN2RxGcS6xQdRcJ5
+         0Yo6IPFgd6rjGcKpElh3zHPDRD+oFv7x0O1qOJxJUFFcKAko6crufHjGJA9yQORcwJE6
+         x2T5dBdzV+KjCTdXpouvhOxpwpeBG9+oHbycLFuC8ZHfzjbUSgARedRYyqGUhzzlU1DG
+         yYpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gb2mv5Jszk8YroAXxPrHTRBJHRUpYaLrubUEmoZ6oJY=;
-        b=pCCkCE6QXGTriYvEyv7OnX8/LNU958LqORbZmbtKmRtzFSXgdK+vL6kJoGwAXA0zko
-         zyih7vh5fHGBR5OlWdYrTjxVSd0Bk/TBUf81V420ejym6NWBTANbZKhq61gOsHT4g9gB
-         aD6lhyVUoPEEAJ76tRHaArFVntu7LSTgacShROUwEfOYO5MPQ4nPX9DoAdua6Gza9nZf
-         30zhTA2i2v3R6XHuZW9cu8gbn98qFkDv4DcmgxE6k+CbKdwLOrfA7ku+EvXsax2oNjXm
-         5pHRdVuBp3DQPHikQPjt9npshlda5QFZqdKApY1nRTqGXZ6gcCEXQSNSsZtfaNJh4N1K
-         782Q==
-X-Gm-Message-State: AOAM532MOje8/2YnifSb7siZINkrAlQ+4Ae8wCye3FuaOlh84/5bu7m2
-        yHQGNUp9jFrpvTEsuzEe/e0AV5JNXDzb9g==
-X-Google-Smtp-Source: ABdhPJzQv7+LtBM+sRan0AQGiRwgfp320u8rhX8zkSpflg1E8zJJSlupr/n2MfwqrN4wGSKO1wrRzg==
-X-Received: by 2002:a05:651c:552:: with SMTP id q18mr1822137ljp.262.1595801703946;
-        Sun, 26 Jul 2020 15:15:03 -0700 (PDT)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id y28sm2607340lfl.15.2020.07.26.15.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 15:15:03 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sam Protsenko <semen.protsenko@linaro.org>
-Subject: [PATCH v2] gpio: max732x: Use irqchip template
-Date:   Mon, 27 Jul 2020 00:12:59 +0200
-Message-Id: <20200726221259.133536-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=Vg5G6M8sh4KJxz2WQd7S0HCq3A/k2AhoLr5xGxUFiQmyCwrB6+s0w70XG4Ib0heRI6
+         Pf+Ldh92VWcmbwluO3k/gd10IHf3OL8HrVqCbeU+qGkzwpc5ZGIPOFnSas4KcGSuo9tI
+         bteCL00QvyWdzsYl15qq08lWRGqFAZ4CeHnjBQM06zmOiaxZscL5FsVdb2gKv+Ils/Vq
+         Cm6x8YG0h4E8H8fLQ9EXxZMC/tGkLsywPEKKqJjS3RFfp5pzDwdaHN8xB4AdZme7ngN+
+         LidUSX9b1iTE0isSf1dfUbp8WjsJt2XVUICaLBO7Y3gJkdFK0IE9Y+92revggphkLvIR
+         Q1yw==
+X-Gm-Message-State: AOAM533yRi1tbdOXYKqjGiRA9LJ4Avd5ORgDWBLL0O0VOk0095a6BmRJ
+        nQQb1ki8al8BW1PFVYLJKCAaljDx/ZXAcZXRAj0Lig==
+X-Google-Smtp-Source: ABdhPJxBOcrrdKBlfifvmb9beDuuI3k1zaBpTO89UwsFWSHiX+VtagPfGhMO2OwGzI0vOxcg+ZKMsrUmtwlzVcChOzk=
+X-Received: by 2002:a05:6512:3139:: with SMTP id p25mr3156807lfd.47.1595802159850;
+ Sun, 26 Jul 2020 15:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+In-Reply-To: <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 27 Jul 2020 00:22:28 +0200
+Message-ID: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes the driver use the irqchip template to assign
-properties to the gpio_irq_chip instead of using the
-explicit calls to gpiochip_irqchip_add_nested() and
-gpiochip_set_nested_irqchip(). The irqchip is instead
-added while adding the gpiochip.
+On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Set up the IRQ template *before* registering the GPIO
-  chip.
----
- drivers/gpio/gpio-max732x.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+> According to the DW APB GPIO databook it can be configured to provide either a
+> combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> the platform which of those signals are connected to an embedded IRQ
+> controller. So I guess theoretically the array values can be sparse.
+>
+> Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> array case. I just thought it would work out-of-box. Before getting your comment
+> and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> have stopped setting the handler. But turns out it may work only for
+> CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> descriptor will be returned for zero IRQ number. That descriptor will be
+> initialized with the passed parent_handler callback, which isn't what we want.
 
-diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-index 63472f308857..238cbe926b9f 100644
---- a/drivers/gpio/gpio-max732x.c
-+++ b/drivers/gpio/gpio-max732x.c
-@@ -503,6 +503,8 @@ static int max732x_irq_setup(struct max732x_chip *chip,
- 
- 	if (((pdata && pdata->irq_base) || client->irq)
- 			&& has_irq != INT_NONE) {
-+		struct gpio_irq_chip *girq;
-+
- 		if (pdata)
- 			irq_base = pdata->irq_base;
- 		chip->irq_features = has_irq;
-@@ -517,19 +519,17 @@ static int max732x_irq_setup(struct max732x_chip *chip,
- 				client->irq);
- 			return ret;
- 		}
--		ret =  gpiochip_irqchip_add_nested(&chip->gpio_chip,
--						   &max732x_irq_chip,
--						   irq_base,
--						   handle_simple_irq,
--						   IRQ_TYPE_NONE);
--		if (ret) {
--			dev_err(&client->dev,
--				"could not connect irqchip to gpiochip\n");
--			return ret;
--		}
--		gpiochip_set_nested_irqchip(&chip->gpio_chip,
--					    &max732x_irq_chip,
--					    client->irq);
-+
-+		girq = &chip->gpio_chip.irq;
-+		girq->chip = &max732x_irq_chip;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler = NULL;
-+		girq->num_parents = 0;
-+		girq->parents = NULL;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_simple_irq;
-+		girq->threaded = true;
-+		girq->first = irq_base; /* FIXME: get rid of this */
- 	}
- 
- 	return 0;
-@@ -695,11 +695,11 @@ static int max732x_probe(struct i2c_client *client,
- 			return ret;
- 	}
- 
--	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
-+	ret = max732x_irq_setup(chip, id);
- 	if (ret)
- 		return ret;
- 
--	ret = max732x_irq_setup(chip, id);
-+	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
- 	if (ret)
- 		return ret;
- 
--- 
-2.26.2
+Ouch but different beahviour on the outside of the irqchip API depending
+on whether IRQs are sparse or not on some particular system seems to
+be a problem with irqchip reallty, if we wanna get to the bottom of things.
+(paging Marc)
 
+> So in order to fix the problem we could follow either of the next paths:
+> 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+>    it to be linear.
+> 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+>    gpiochip_add_irqchip() method.
+>
+> What to you think? Linus?
+
+What about (3) fixing irqchip?
+
+Else (2), making the code inside gpiolib be careful and skip over
+invalid IRQs.
+
+Yours,
+Linus Walleij
