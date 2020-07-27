@@ -2,85 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C00022E6EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 09:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1631F22E739
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 10:02:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgG0Hu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jul 2020 03:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
+        id S1726196AbgG0IC0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jul 2020 04:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0Hu5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 03:50:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421DEC0619D2;
-        Mon, 27 Jul 2020 00:50:57 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id z5so8985473pgb.6;
-        Mon, 27 Jul 2020 00:50:57 -0700 (PDT)
+        with ESMTP id S1726387AbgG0ICZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 04:02:25 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12EA7C0619D4
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jul 2020 01:02:25 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q6so16169429ljp.4
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jul 2020 01:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HvRchyhkxeOLvzDuOrbaCYZ/zyb156MiLRE1ABCH84I=;
-        b=KHuKlq97lOmpgvmfdymhvpN8uf/hANCv3kkGu6QGEqkIdNfGIKZoOZhPHipHkLubxz
-         POPDaIvlCDmqdt9EHt7kMEd2b/8zf6vzgQHOUoqBub+XyOdPIzUhYy/M7DPe1oBeuxHm
-         VT6qGOMZw880nUoP71XlImKhZHXsHRa6k7ISxETfFyQWt4qsYJEqtGdsxmMoiFbRPzW7
-         xIdi8aQIpCR4QQU98/NyNdI8wHvkq5pL1AZmHs3ozQH0nJRU8LdmLjMxR2dn+3BAkL+w
-         wVzyC0kgNbBOgIa6RjciRV692+rSYDnkvWWtH0diAUZ0nlE8RHT718PeeBTdn4lFfUpR
-         IFaw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zHfhTTJo5bxaUvIZiRxdZz/1qnRRWIobqlmrPAOzCd8=;
+        b=zP2RcdXStRhQTYyNAxYvE3ktAjKNcHpvOHDALQsj2XVuJ8VCRZV0kew++KQw5Gw9M9
+         pzCv5qIE8zKNEDwVZYXsjzt2HcCmNlbfdMIHO4Bzj5/Wt2b5qgWKinqNsgrE5TgSn9fE
+         KgNZeIPPC7wVbqY+dBLHquq+yt2klfWaO5qBYVaT0uhVY/RQB7vtiXn46gJDuyDDqbUl
+         eO1W5JAFgE+LR7MzeEjvZh4zjLi4y12mM1z1za663TY7Kdt9I2wS6rXfeSWhe9bCh41f
+         nToEKviy8E2W/gSfWngmCFOuHjQ/ELmMwqZYfzEIM7Zw2Jakn3SxzebDVZ7htQCrgwp8
+         iGlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvRchyhkxeOLvzDuOrbaCYZ/zyb156MiLRE1ABCH84I=;
-        b=HCleAqbcx+s9vj2bLP8jhzp+X46HhVkMUSek6zuN0/EeGaMN3feNdEn8sTvi5WeJ83
-         NA/Zi3197LovCvVwoOx5N3vkj9Aov1IwjFrp4O2HiSemiDfjtvWfApcebwmhQ1T4ySLa
-         gvdKLs1PvMraT6+8nklmPH1wWk5ncLBFbNtoGhE2KDBYdz+0YlAcCqYBx3bQaUz3Qh8+
-         imghdUJ79CZ6rehvlgTAB6QReeH+oRwKeHjHXSWlWWnO3H85GwgWjUM9KxWvgcvROHRL
-         GrWmNusLa7MMPWAH1B9Uts9rlZOKCMa/YAHbaYqdUB0y9rzu9r4Z5vA9dN5KDAs7dqE+
-         sQYQ==
-X-Gm-Message-State: AOAM530tDAsn5x94XOZAUcFIHHriepA3vTfPXMMyJ6aBgOQIAubxDwrl
-        gryum4sAjdSdAl4F+UdiO5alzG64fcGlvdcuoP4=
-X-Google-Smtp-Source: ABdhPJwZN36/0+bYxDq0YBCSQHuH6bnFz+l4e8yWNnes2mWDmufxX0YDvCAitBi7fUC2Q0zTyPsuywd9QxQfHrNA5eQ=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr18169222pgn.74.1595836256878;
- Mon, 27 Jul 2020 00:50:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zHfhTTJo5bxaUvIZiRxdZz/1qnRRWIobqlmrPAOzCd8=;
+        b=JSYq89SP4ceXOlWOzYufIt94Rmz+eZ/Tu84SHQ1j4Ja69HVCt2GbEt+mthVO0zBy6S
+         7LXRc6byZGgW36igy00xeVoxAiXUIL64XLNPHKWKwH3Hwu+PhuTMRYIjGsBoVfa6DTF4
+         ZGPZfPpBPQqBxTuxr3hqeJHY/aFmk+CcSxuMOGZeY9qXwZe3gl8dDathVMNhHs8vNgrQ
+         +Pj1IbXZO72/S3cuy+eljnGKu2JUdJ1/EJ4696ch9S39G1IFI+qcrDImx92xnsSzt+2G
+         RKmNU1fhVbQFnKLrbDInx7iKojLl4tH7VrvgUqHWtqQGYTCmJodLP/Ldw9jLVgkfP6V0
+         +vrw==
+X-Gm-Message-State: AOAM532aO8UQog5gxPJbZr4DAtGkVcp8Lgug1HVQdwinYXJ2ycrUbGj9
+        06e2YBg/1FHV03Ujif/QyVJNG1T5n2wqHA==
+X-Google-Smtp-Source: ABdhPJxCgNz2rhfFlaeVJOkoOn2724VBraY9zIWobawM3mg5DRpKs0EgikymkdEH1/+2m0NBum16MA==
+X-Received: by 2002:a2e:8758:: with SMTP id q24mr8780661ljj.109.1595836943282;
+        Mon, 27 Jul 2020 01:02:23 -0700 (PDT)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id c21sm2851294lfh.38.2020.07.27.01.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 01:02:22 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Andres Salomon <dilinger@queued.net>,
+        linux-geode@lists.infradead.org
+Subject: [PATCH] x86/platform/geode: Convert LED to GPIO machine descriptor
+Date:   Mon, 27 Jul 2020 10:00:19 +0200
+Message-Id: <20200727080019.286172-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200607162350.21297-1-mani@kernel.org> <20200607162350.21297-3-mani@kernel.org>
- <20200701130206.GD3334@localhost> <20200726155223.GB12036@Mani-XPS-13-9360>
- <CAHp75VeP8CMZ-T2Kk24NzOPiWHM62GErxCDUgBbYzNotwiFHhw@mail.gmail.com> <20200727044610.GC12036@Mani-XPS-13-9360>
-In-Reply-To: <20200727044610.GC12036@Mani-XPS-13-9360>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 10:50:39 +0300
-Message-ID: <CAHp75Vddgt=dDxjtd9A7HejVYk+_GMVgvUM3dfzH5giCwhbaKA@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip support
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 7:46 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> On Sun, Jul 26, 2020 at 07:34:54PM +0300, Andy Shevchenko wrote:
-> > On Sun, Jul 26, 2020 at 6:53 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
+This makes the machine look up the LED from a GPIO machine
+descriptor table. The Geode LEDs should be on the CS5535
+companion chip.
 
-...
+Cc: linux-gpio@vger.kernel.org
+Cc: Andres Salomon <dilinger@queued.net>
+Cc: linux-geode@lists.infradead.org
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/x86/platform/geode/net5501.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> > I'm wondering if you may use mctrl_gpio_*() API instead.
->
-> How? mctrl_gpio APIs are a wrapper for accessing modem control gpio pins but
-> here we are not accessing the pins but rather exposing the pins as a gpiochip.
-
-I see. Thanks for the explanation.
-
-> Am I missing something?
-
+diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
+index 163e1b545517..d4e6c57b9c87 100644
+--- a/arch/x86/platform/geode/net5501.c
++++ b/arch/x86/platform/geode/net5501.c
+@@ -20,6 +20,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/input.h>
+ #include <linux/gpio_keys.h>
++#include <linux/gpio/machine.h>
+ 
+ #include <asm/geode.h>
+ 
+@@ -55,9 +56,7 @@ static struct platform_device net5501_buttons_dev = {
+ static struct gpio_led net5501_leds[] = {
+ 	{
+ 		.name = "net5501:1",
+-		.gpio = 6,
+ 		.default_trigger = "default-on",
+-		.active_low = 0,
+ 	},
+ };
+ 
+@@ -66,6 +65,15 @@ static struct gpio_led_platform_data net5501_leds_data = {
+ 	.leds = net5501_leds,
+ };
+ 
++static struct gpiod_lookup_table net5501_leds_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		/* The Geode GPIOs should be on the CS5535 companion chip */
++		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_HIGH),
++		{ },
++	},
++};
++
+ static struct platform_device net5501_leds_dev = {
+ 	.name = "leds-gpio",
+ 	.id = -1,
+@@ -80,6 +88,7 @@ static struct platform_device *net5501_devs[] __initdata = {
+ static void __init register_net5501(void)
+ {
+ 	/* Setup LED control through leds-gpio driver */
++	gpiod_add_lookup_table(&net5501_leds_gpio_table);
+ 	platform_add_devices(net5501_devs, ARRAY_SIZE(net5501_devs));
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
+
