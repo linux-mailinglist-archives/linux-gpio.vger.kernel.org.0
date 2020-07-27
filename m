@@ -2,116 +2,222 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AEE922E5A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 07:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB6A22E5D5
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 08:25:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgG0F5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jul 2020 01:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        id S1726213AbgG0GZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jul 2020 02:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgG0F5g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 01:57:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739A9C0619D2;
-        Sun, 26 Jul 2020 22:57:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s189so8737327pgc.13;
-        Sun, 26 Jul 2020 22:57:36 -0700 (PDT)
+        with ESMTP id S1726124AbgG0GZm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 02:25:42 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A095C0619D2
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 23:25:42 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id w2so8805621pgg.10
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jul 2020 23:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ojCM4rcZA96P0+wYCYATBc6LgEm75+hAFgIqDFOegjg=;
-        b=JvJ1i2zjXJsDib23ea7V6rVZT/kKvgUOybX3UDQMqhzqDcryWgLk9Aj8IUMQR3fYMz
-         W/plEXMdny8Yr9Otjc3GO1Je5BASmH+EA/lzkF+Wv4rQPwsaO3cGK6MZD+DnmWYFnBzX
-         WRxDNbftR8UjMHfQanTc+XNBL1UlI9X5ntNI9raYrdEvv6rxe/7d8TEzNU8kiqZ5ziMz
-         ijxy4s+U90KbwFcRf1NcK5uFqbdWkK7jC8Z6esQQHeaTQS0FxCGhaCEcI1ma93Gf8SDz
-         DhnPneqzENOChiAjvVIFbfE2EO6QrsnQCQB1jobuI3xgP0dHEGCvNWdDhETFdJR+kQ1P
-         o0hQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Wdcgc2gFJgUE6HMPilJBh0jLqx8GQEZ77Mmsl3zonH0=;
+        b=u6zu2GNmd/EsTYpt3AOwOtYHSq1Fgh4uG9uEWMZg7gU0MtYbeVwhAerXxEpfFubNeW
+         KFMJNNnrLcqBN0GKSmT/0Rr/FpCNsif6jTtVvj8p7FA2AQI6R0wE5yRR1MFUzhZ7J8r3
+         qjFILsQqWpVUHgVSG2fPsovdr4IK5Ep7ydMtH09LRV/HFUJAE8OaezQXL9hkepTNztsq
+         poXxl3kJG9e/w099SUaWAggTseVrSSsijuJbpxmjLbS9VLdQpKtgpLFChO3Jf+hUY1RR
+         yhYB7VxuNbnqyNBGC15pUyPM9BeRMs9ACCRjlpnP8cAKns+PLCGKMf5hOlqitGdLzwp3
+         pAFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ojCM4rcZA96P0+wYCYATBc6LgEm75+hAFgIqDFOegjg=;
-        b=khtu48akzucTiu4ULsM4RUgMqmgH99c9vSy/s5JLbvasT5uBh8dJVcNhriGi0S1/Fm
-         PoOtp6Yr26/mTNwIL59986Wzl23JtZ7Jq/3gFA84xbT1Hz1tNir0kZePqBLoXBS13GSS
-         ycZbiw8K81JoLPyD4RW8EKxob8g+UgbMdNJQzu7VsuEJ/9S+OXcNrq35PdcQplyUft82
-         0qyB/VolsiIAVsHfmF6DScpyk8Y6eMUnmp1MtD/eg1Y09zxbQQ5xQiKOfVEm1bE8dyuj
-         OYw4PSTNsO1UYvZ+w5Cf99P3FY+zDSHTSuisMC8AMe0MK8sNCD/yelXOHgdg2vuZtIB3
-         hBVw==
-X-Gm-Message-State: AOAM531B283Y+gyQYyhNeS1vI3xtsbCKO1yVDYafX+BHSNxcYrzKM9AA
-        dvp0elPu0QZy+U72RqxbzQXxpM5A
-X-Google-Smtp-Source: ABdhPJzR4NxrvRgSWdob2lxd/ae6gaoqG9QQ/ksnMfW4dvN/ybo9JIF4mVDcWBGJWczatUjsDVyldA==
-X-Received: by 2002:a63:fc09:: with SMTP id j9mr19120254pgi.308.1595829455924;
-        Sun, 26 Jul 2020 22:57:35 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id f6sm780009pfa.23.2020.07.26.22.57.32
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Wdcgc2gFJgUE6HMPilJBh0jLqx8GQEZ77Mmsl3zonH0=;
+        b=DRSYDuzZ5UmD8Ue+qw0myHfIhKt99AIMd4VYwECj5I/zAUMuv1atKXv8/7eG9Ipzlr
+         pWcY0USzSp6zk/56ZP9yhvTFrN+zvsi6rGmp6v5wK8atokI8SeMu/I9aDIWypNpSzgd5
+         bALlS6wBegfQE2Oxlae1ZFs5GWtnB0Hc2lhF7zg9YYO44DnSnRQuLFj3RTNkkiQEXMt6
+         NHl0HmZ4kUCQmgR5visvWhKrixfPjlmUsL70hH3IsCObSSVvy0CUwURDV7DakHRERubv
+         c9BFL1GZLy8dQEHvro2pNXJ2b62h678bwRiPmBqkGq3dErQBdQG1afk/kVZelumRNgeQ
+         HCfg==
+X-Gm-Message-State: AOAM530k3kDb/+U1W/bdg3sOAU5gWj0JRwYXIlNag7B27AoouxFAWqc0
+        8pfp2kF9aIgiYZFGZTTMUN3h3jJ76SI=
+X-Google-Smtp-Source: ABdhPJxqs+85/oOxUePgf86Q2USAEh0PLgSrItafHSdBZT+piiSu+KAnowoytAUc1sFuJRiFGtq3sg==
+X-Received: by 2002:a63:140f:: with SMTP id u15mr17410846pgl.94.1595831141738;
+        Sun, 26 Jul 2020 23:25:41 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id lk16sm848651pjb.13.2020.07.26.23.25.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 22:57:35 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 13:57:30 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
-Message-ID: <20200727055730.GA29606@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-4-warthog618@gmail.com>
- <CACRpkdZymmO9ku5OmCO74eiX3Y3jq_1g5De9Tx4hg3Lyrdt6bQ@mail.gmail.com>
- <20200727014601.GA10761@sol>
+        Sun, 26 Jul 2020 23:25:40 -0700 (PDT)
+Message-ID: <5f1e7364.1c69fb81.8a2d9.31a9@mx.google.com>
+Date:   Sun, 26 Jul 2020 23:25:40 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727014601.GA10761@sol>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: gpio-v5.8-2-96-ga070bdbbb06d
+X-Kernelci-Report-Type: test
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next baseline: 122 runs,
+ 4 regressions (gpio-v5.8-2-96-ga070bdbbb06d)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:46:01AM +0800, Kent Gibson wrote:
-> On Mon, Jul 27, 2020 at 12:25:53AM +0200, Linus Walleij wrote:
-> > On Sat, Jul 25, 2020 at 6:21 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > 
-> > > +config GPIO_CDEV
-> > > +       bool "/dev/gpiochipN (character device interface)"
-> > > +       default y
-> > 
-> > I don't want to make it too easy to do this, as I see it as a standard
-> > kernel feature.
-> > 
-> > Can we add:
-> > 
-> > depends on EXPERT
-> > 
-> > as with other standard kernel features?
-> > 
-> 
-> Fair enough.
-> 
-> But what of the GPIO_CDEV_V1 option to disable uAPI V1 added in patch 04,
-> and that depends on GPIO_CDEV?
-> That is equivalent to GPIO_SYSFS, which is not dependent on EXPERT,
-> so I'll need to restructure the dependencies so it doesn't
-> inherit the EXPERT dependency.
-> Unless you also want it to be dependent on EXPERT.
-> 
+linusw/for-next baseline: 122 runs, 4 regressions (gpio-v5.8-2-96-ga070bdbb=
+b06d)
 
-I've gone with this:
+Regressions Summary
+-------------------
 
-+config GPIO_CDEV
-+       bool
-+       prompt "Character device (/dev/gpiochipN) support" if EXPERT
-+       default y
+platform              | arch   | lab          | compiler | defconfig       =
+   | results
+----------------------+--------+--------------+----------+-----------------=
+---+--------
+at91-sama5d4_xplained | arm    | lab-baylibre | gcc-8    | multi_v7_defconf=
+ig | 0/1    =
 
-so the entry is always present in menuconfig, and GPIO_CDEV_V1 can still
-depend on it, but GPIO_CDEV can only be disabled if EXPERT is set.
+bcm2837-rpi-3-b       | arm64  | lab-baylibre | gcc-8    | defconfig       =
+   | 4/5    =
 
-> Hmmm, and maybe patch 04 should be later in the series - after V2 is
-> fully implemented and V1 is deprecated - around patch 11.
-> 
+hifive-unleashed-a00  | riscv  | lab-baylibre | gcc-8    | defconfig       =
+   | 0/1    =
 
-Just ignore me - the earlier code patches need the define else the V1
-will be compiled out.
+qemu_x86_64-uefi      | x86_64 | lab-baylibre | gcc-8    | x86_64_defconfig=
+   | 0/1    =
 
-Cheers,
-Kent.
+
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/gpi=
+o-v5.8-2-96-ga070bdbbb06d/plan/baseline/
+
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: gpio-v5.8-2-96-ga070bdbbb06d
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      a070bdbbb06d7787ec7844a4f1e059cf8b55205d =
+
+
+
+Test Regressions
+---------------- =
+
+
+
+platform              | arch   | lab          | compiler | defconfig       =
+   | results
+----------------------+--------+--------------+----------+-----------------=
+---+--------
+at91-sama5d4_xplained | arm    | lab-baylibre | gcc-8    | multi_v7_defconf=
+ig | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f1e6a1d85250f007e85bb2e
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama=
+5d4_xplained.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama=
+5d4_xplained.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/armel/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f1e6a1d85250f007e85b=
+b2f
+      new failure (last pass: v5.8-rc5-96-ge80c35d808ef) =
+
+
+
+platform              | arch   | lab          | compiler | defconfig       =
+   | results
+----------------------+--------+--------------+----------+-----------------=
+---+--------
+bcm2837-rpi-3-b       | arm64  | lab-baylibre | gcc-8    | defconfig       =
+   | 4/5    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f1e5690a09facd39385bb2c
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.=
+txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.=
+html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.dmesg.crit: https://kernelci.org/test/case/id/5f1e5690a09facd3=
+9385bb2f
+      failing since 10 days (last pass: gpio-v5.8-2-58-g1752911c6d10, first=
+ fail: v5.8-rc5-68-geb211a587e18)
+      2 lines =
+
+
+
+platform              | arch   | lab          | compiler | defconfig       =
+   | results
+----------------------+--------+--------------+----------+-----------------=
+---+--------
+hifive-unleashed-a00  | riscv  | lab-baylibre | gcc-8    | defconfig       =
+   | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f1e66325a0c7c943385bb2e
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (riscv64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed=
+-a00.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed=
+-a00.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/riscv/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f1e66325a0c7c943385b=
+b2f
+      new failure (last pass: v5.8-rc5-96-ge80c35d808ef) =
+
+
+
+platform              | arch   | lab          | compiler | defconfig       =
+   | results
+----------------------+--------+--------------+----------+-----------------=
+---+--------
+qemu_x86_64-uefi      | x86_64 | lab-baylibre | gcc-8    | x86_64_defconfig=
+   | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f1e656ba99ade264685bb29
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: x86_64_defconfig
+  Compiler:    gcc-8 (gcc (Debian 8.3.0-6) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/x86_64/x86_64_defconfig/gcc-8/lab-baylibre/baseline-qemu_x86=
+_64-uefi.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-96=
+-ga070bdbbb06d/x86_64/x86_64_defconfig/gcc-8/lab-baylibre/baseline-qemu_x86=
+_64-uefi.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/x86/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f1e656ba99ade264685b=
+b2a
+      new failure (last pass: v5.8-rc5-96-ge80c35d808ef) =20
