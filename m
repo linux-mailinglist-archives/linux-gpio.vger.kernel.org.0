@@ -2,112 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FB822FB34
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 23:18:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A83622FB9F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 23:50:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgG0VS4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jul 2020 17:18:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:27618 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgG0VS4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:18:56 -0400
-IronPort-SDR: VWwVRyiGwECB6wUCLUFdxaOsGPqatB9tdpDSkxmTvvqGW7aZMZGYZQCbElEFNHNX+tAQvaTjFj
- yWRJK0nPIpCg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="215647568"
-X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
-   d="scan'208";a="215647568"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 14:18:55 -0700
-IronPort-SDR: g5tV7HE5se+p0BtQrAZSYLViCLYUbX+RrFuaudAentDlAogovk55oBQSwokkRryhDZ0YjJJzpi
- HUDvlxa2rOZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
-   d="scan'208";a="320162546"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 14:18:54 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k0AWL-00023Q-8A; Mon, 27 Jul 2020 21:18:53 +0000
-Date:   Tue, 28 Jul 2020 05:17:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- ad70108cd93231e8a335bd82ca6c90189f3f7f82
-Message-ID: <5f1f4483.zgZ3m4EMVBpmCpkJ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726139AbgG0VuP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jul 2020 17:50:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45926 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgG0VuP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 17:50:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF3D08030867;
+        Mon, 27 Jul 2020 21:50:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BaDuD-7nSK_l; Tue, 28 Jul 2020 00:50:12 +0300 (MSK)
+Date:   Tue, 28 Jul 2020 00:50:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200727215010.qzhvavmskfoaapi5@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: ad70108cd93231e8a335bd82ca6c90189f3f7f82  pinctrl: samsung: Use bank name as irqchip name
+On Sat, Jul 25, 2020 at 03:12:49PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 25, 2020 at 2:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
 
-elapsed time: 1112m
+...
+ 
+> > > > +           /* This will let us handle the parent IRQ in the driver */
+> > > > +           girq->parents = NULL;
+> > > > +           girq->num_parents = 0;
+> > > > +           girq->parent_handler = NULL;
+> 
+> > > Shan't we do this before request_irq() call (at least for consistency with the
+> > > rest of the drivers)?
+> >
+> > Technically we shan't. Please elaborate which drivers you are referring to?
+> 
+> All of them? Recent patches for IRQ chip template do something like
+> 
+> girq = &...;
+> girq->foo = bar;
+> ...
+> ret = request_irq(...);
+> 
+> ...and here no more girq->baz = gaz; lines.
+> 
+> > Even the recent Linus' series "Use irqchip template" mostly does it in the
+> > same order.
+> 
+> Funny, that's what I;m referring to.
 
-configs tested: 50
-configs skipped: 1
+It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
+which make the initialization in the same order as mine:
+drivers/gpio/gpio-max732x.c
+drivers/gpio/gpio-pca953x.c
+drivers/gpio/gpio-pcf857x.c
+drivers/gpio/gpio-adp5588.c
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+while the rest of them does it in the order suggested by you:
+drivers/gpio/gpio-pci-idio-16.c
+drivers/gpio/gpio-pcie-idio-24.c
+drivers/gpio/gpio-104-idio-16.c
+drivers/gpio/gpio-104-dio-48e.c
+drivers/gpio/gpio-ws16c48.c
+drivers/gpio/gpio-rcar.c
+drivers/gpio/gpio-wcove.c
+drivers/pinctrl/pinctrl-amd.c
+drivers/gpio/gpio-crystalcove.c
+drivers/pinctrl/pinctrl-mcp23s08.c
+drivers/pinctrl/pinctrl-sx150x.c
+drivers/pinctrl/pinctrl-stmfx.c
+drivers/gpio/gpio-tc3589x.c
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                            allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-arc                              allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-nios2                               defconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-sparc64                             defconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                   rhel
+Then, let's use the same order here as the most of the drivers do just for
+consistency.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-Sergey 
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
