@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E211A22E7F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 10:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89EF622E7FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jul 2020 10:42:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgG0ImW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jul 2020 04:42:22 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:48503 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0ImV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 04:42:21 -0400
+        id S1726701AbgG0Im3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jul 2020 04:42:29 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:13812 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0Im2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jul 2020 04:42:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595839340; x=1627375340;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WYr258yzTXpeZq4ZS7iWdQCOwZdWx5s0U0DJNipkAO0=;
-  b=Bc+X9WBpeHmo+CrCXdXuZym1azvlpIUAbqr7ggO5wZdo0J8EXcZIZiwH
-   dsiUaIamy6a2CF0VgM0RfctgXtxnRnkdhJIxX89YaQRkdCTmAfU+yjROF
-   Hk2GEs9cjpf9H4bpk2BMrYn0r7M1mWTmPUcS+KXAAEnkDhcEaFbQLrhec
-   DNkxuscPDPnvBjMw5zjHaxf73sRfj6iFNA36f8bZmd4oPXirfoZ2datjs
-   yxSs34/nT/4zd/telN8V8MBIViDJd4j2/RQg9fthKADs+5eQ9KYQgkx5E
-   jJBgDw1AwuROnvJzg16Ti/SU84cNYAxJfdsfmq//QgkCX1bPEhm1cA4UU
-   g==;
-IronPort-SDR: 7h+9mPFX5+fDfqKRYGq7zEXieHZTt7NsmJTke6/7L715Muuz3SfkdXhHVnM66DkEqccEEj+ukp
- NDKib/nWZE7FFABEM/h32SH09RBkARXxwLVFhHz9VUek5B99VQUJTwzEDPTUcgC63PwQ0/gilH
- nGJWJ62R47lNOW5hWQo/WXLZJeRSYWfXcAqTr0xtpeNO7JlNJMbxnQ2oJFjaw0Gx3x3yxBTjD7
- wYr9FHE612T+jn6UOrH4frPAqAaJ69C/HugGSAfq3cwXjvIA1IVNduSMzLp54NYdOmVvlqB4zc
- sIQ=
+  t=1595839348; x=1627375348;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RyekHf9PTbvp3fuwGs708MmQ2N0YRbLmfccGpS+k+FU=;
+  b=E7aBpp2Gn2THUAXn0LuswSgx66q7E5+IIcM1UCnaapHbUIjMCQoOWPQt
+   2utv6A1G4LmF0aTXHnBkgbX12jq8Z46hAsa++H8Ye2JZ50aIoHRR0MZUZ
+   pTJfO1HvG8KsavnQO7Hm0M7FOa9aP/rc1i5c4JRsWJGqZgVpcEn5q2JhS
+   GQScz3KTlfvO/Fu7W/gok8Ig7f2TG2IwrAgJTY9nbBl2TpxAn12yHEXsd
+   fYAtGR3/WmLz8ID2U8GzPfcJfb8HQSOs2H8a/u1OMgWf6j0/22km4JFgj
+   L/HbP2rpXTn1PifhIzEht4q1s9tqjflMOVIM7SuvY4vf/qe6A62Rr3CZJ
+   w==;
+IronPort-SDR: bV13+eKFCROiP0E00EoFFWkQoiMTZhrFy2cIPmPM+cVHpeXnjlenB86LH9r+Igl/3RHMvQpJHd
+ Fq1ckb5/9i7zpXNg4EyqxHvdKuDYs8v4Bvktq4yaWMBultfJyfdRYWuZuhYariQL60chw411aL
+ dacosSLLhi6333D9zqQsS2ppHoVQMghaiH7ucelo3ONf2SCy/+j/uj2TMe+ZDsv/qDM0Om8ZOI
+ H1lnPsqjJExNOJd+Q6bv1WLap3fpoFTmeP5BdTBNyRRbVnEzO1zhHQMn9af8/pMOmlaipyIP37
+ NLM=
 X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="85470205"
+   d="scan'208";a="20643697"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:19 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:27 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 01:42:18 -0700
+ 15.1.1979.3; Mon, 27 Jul 2020 01:42:26 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:14 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:23 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -53,11 +53,14 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
-Date:   Mon, 27 Jul 2020 10:42:01 +0200
-Message-ID: <20200727084211.6632-1-lars.povlsen@microchip.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 01/10] dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+Date:   Mon, 27 Jul 2020 10:42:02 +0200
+Message-ID: <20200727084211.6632-2-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727084211.6632-1-lars.povlsen@microchip.com>
+References: <20200727084211.6632-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,88 +69,100 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch series adds support for Microchip Sparx5 SoC, the CPU
-system of a advanced, TSN capable gigabit switch. The CPU is an armv8
-x 2 CPU core (A53).
+This adds the main Sparx5 SoC DT documentation file, with information
+abut the supported board types.
 
-Although this is an ARM core, it shares some peripherals with the
-Microsemi Ocelot MIPS SoC.
-
-NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
-
-Changes in v4:
-- Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
- - Remove unused include of of_address.h
- - Remove unused member in s5_hw_clk struct
- - Changed type (to unsigned long) for freq in s5_pll_conf struct
- - Use .parent_data instead of looking up parent name
- - Use devm_of_clk_add_hw_provider
- - Some minor comsmetics
-
-Changes in v3:
-- a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
-- pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
-  ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
-  read value.
-- Rebased on v5.8-rc1
-
-Changes in v2:
-- Misc fixes to bindings/arm/microchip,sparx5.yaml
-- Changed clock driver to platform driver, using bitfields, recalc
-  properly implented, using proper clock parent.
-- arch/arm64/boot/dts/microchip/sparx5.dtsi:
- - Added pmu and psci node, using PSCI
- - Updates to GICv3 register spaces (GICV/GICH)
- - Updated timer interrupt specifiers
-- pinctrl: ocelot: Fixed symbol clashes from powerpc
-
-Lars Povlsen (10):
-  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
-  arm64: sparx5: Add support for Microchip 2xA53 SoC
-  arm64: dts: sparx5: Add basic cpu support
-  arm64: dts: sparx5: Add pinctrl support
-  pinctrl: ocelot: Add Sparx5 SoC support
-  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-  dt-bindings: clock: sparx5: Add bindings include file
-  clk: sparx5: Add Sparx5 SoC DPLL clock driver
-  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
-  arm64: dts: sparx5: Add i2c devices, i2c muxes
-
- .../bindings/arm/microchip,sparx5.yaml        |  65 +++
- .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
- .../devicetree/bindings/mfd/syscon.yaml       |   1 +
- MAINTAINERS                                   |   9 +
- arch/arm64/Kconfig.platforms                  |  14 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/microchip/Makefile        |   4 +
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
- .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
- .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
- .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
- .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
- drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
- include/dt-bindings/clock/microchip,sparx5.h  |  23 +
- 20 files changed, 1559 insertions(+), 1 deletion(-)
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/arm/microchip,sparx5.yaml        | 65 +++++++++++++++++++
+ .../devicetree/bindings/mfd/syscon.yaml       |  1 +
+ 2 files changed, 66 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
- create mode 100644 arch/arm64/boot/dts/microchip/Makefile
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
- create mode 100644 drivers/clk/clk-sparx5.c
- create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
 
---
+diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+new file mode 100644
+index 0000000000000..ecf6fa12e6ad2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Sparx5 Boards Device Tree Bindings
++
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
++
++description: |+
++   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
++   gigabit TSN-capable gigabit switches.
++
++   The SparX-5 Ethernet switch family provides a rich set of switching
++   features such as advanced TCAM-based VLAN and QoS processing
++   enabling delivery of differentiated services, and security through
++   TCAM-based frame processing using versatile content aware processor
++   (VCAP)
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: The Sparx5 pcb125 board is a modular board,
++          which has both spi-nor and eMMC storage. The modular design
++          allows for connection of different network ports.
++        items:
++          - const: microchip,sparx5-pcb125
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb134 is a pizzabox form factor
++          gigabit switch with 20 SFP ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb134
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb135 is a pizzabox form factor
++          gigabit switch with 48+4 Cu ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb135
++          - const: microchip,sparx5
++
++  axi@600000000:
++    type: object
++    description: the root node in the Sparx5 platforms must contain
++      an axi bus child node. They are always at physical address
++      0x600000000 in all the Sparx5 variants.
++    properties:
++      compatible:
++        items:
++          - const: simple-bus
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - axi@600000000
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 19bdaf781853b..f3fba860d3cc5 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -38,6 +38,7 @@ properties:
+               - allwinner,sun8i-h3-system-controller
+               - allwinner,sun8i-v3s-system-controller
+               - allwinner,sun50i-a64-system-controller
++              - microchip,sparx5-cpu-syscon
+ 
+           - const: syscon
+ 
+-- 
 2.27.0
+
