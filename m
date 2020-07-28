@@ -2,68 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE4482304D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 09:59:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E134A2304F4
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 10:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgG1H7Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jul 2020 03:59:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59986 "EHLO
+        id S1726990AbgG1IJq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jul 2020 04:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgG1H7X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 03:59:23 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEEE1C0619D2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 00:59:21 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q6so20100793ljp.4
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 00:59:21 -0700 (PDT)
+        with ESMTP id S1726032AbgG1IJq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 04:09:46 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFA6C0619D2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:09:46 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so20120451ljg.13
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2KLjPmHtt09LPvfgj7g2oSkZYAImQc8MPSPeld1Rcms=;
-        b=KFEJSXKx9mTJGwSqcBgX9mxSd7dWW6zjdmO//1OAFN2wL8ptcszwKLmUWRdauB/drZ
-         P0/Sfht9PFKrQzV+yt0IOwAvFsSCZO/6CwE9XZqbLHjuS6W0vPf0RPj4HsXTICSjIVUX
-         eGoxDZHZPdWaGfUfaumWHDG25uQt2zVkppRVQhtxMSi1HMWBDuKG6YDFzEBwspwjFNUP
-         kJe/NRhAMICeP8BszFzNTfXdbc0k8YjtNIoGr41oyM9EuwK7OswfVcjAUY6UMIrqdg3O
-         FcnQBZxFlfZYml/YnFzpstFQZP+zh1PUY1JhO0dbe2X/tW45FlSnIvWQjwlIo8frh3Fs
-         mT0w==
+        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
+        b=WfCuIF+N2NmU60NsCa/JwDfZ/2Nv3VdLtl+PsjLet0Nzca6wYbZhf3KLfYAcH+yG6N
+         LaR9+097mHxfUn8gn7Be8CFNnGBmtnA/zxEpDJV/ocsagkHix4jVu3EVG6FrI64jWHYI
+         M+PzasI6lq60ee4UopcVSOqHZ2rmhBcou1LSLGPdsYSqBNegBgB1DWqpolUEmgNk0ju4
+         CBCGJrhfdr5TCA4JVBROBndTQtCW+wqbRJegLmMyk5uVj7QvYvbvRVhkOWcs5kLLW5ui
+         HOqodhXVOpi6VXsxgX/17k48jouG1wJLBMVXy14roEsN2uWmc+DdP+Mq7Tr986xY3Y5I
+         qdWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2KLjPmHtt09LPvfgj7g2oSkZYAImQc8MPSPeld1Rcms=;
-        b=LO0FrZKrKarFGtRYlxU9lgxd/LhKvO/sWYl+r2hZo/UoZ8iXYWRAkUFFkDRjXqrdgM
-         5LOy17RXWvfz6xPQfAhdbbwVAK0gan3AhI/zDedyeDhGSlDjtjbXiv7WTi2AHOQnOrUl
-         uEuDbV5VYZW6npgK/YRY9Yrh6+2wXrU8wPri/6S+r5+m2oEk4UNxhmoAf1muoqOnsFlc
-         Y3gTBBFiXoXxFwbs25an1RbKILJJsE9VkDjmJs7JE7Ey0Ssmu2FbPQ++LzDzleb3HsNM
-         ubSHhe90Yp5XpBIk/R7S2cKJW0IlGVFBHhmfQOQM7qmW6n2Bz+8uJWd0ZZ7Jqw/eySyQ
-         Bd/A==
-X-Gm-Message-State: AOAM532P4OKcgWXX8n/ZhDkcgSZdtE7FfuFz4VDycFjqeuJQIhAHbd5x
-        +2N43OF6F+WskdICdBGYv2OJ0R+vEGyvRhL66Da4XA==
-X-Google-Smtp-Source: ABdhPJyeAt95Wz+o2VKFP+7wM5gyrPB+KKI+3eQ8R+Ubel9xs84GsZEg7Nm2MffyMAQJb+trStenCPJYstKDh4JFbuE=
-X-Received: by 2002:a2e:9d4a:: with SMTP id y10mr7016604ljj.104.1595923160378;
- Tue, 28 Jul 2020 00:59:20 -0700 (PDT)
+        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
+        b=iOaOuyHSEFDjnF2p9VUk8H2aLLLMdjvXtPmpheWbdNbbd4VP83POIFIsFcSc33J1Ry
+         Puapv047friuGKbHQTwDsQ2RupfWRmQCT8HTk2Tp8dorLuzsKQltaML3V4eNRNJA83vW
+         Ewa5m8DYYOMk32D5apU9DKviRKskGS5l6HXxwmHoEly2/DqUwovXMsx9dXNRzGKA4TcK
+         6e4alAlx2dksqximPIHYzpeh05WlNE0ePSG+YSaauGDzQ4cq+MJVeGK/emBdVMTHyjoY
+         ZbkUjHoBg+tW19YOcavbOeigsLB5p4Ixmz25BXmqIFfXnszzNQQuHo54hBcG4K7w31Ts
+         XLnQ==
+X-Gm-Message-State: AOAM5326EdISpKhK54KjM3Z+zWZppdsREfkq7dXWxhd9UvF+hPRBRgpM
+        SzPEkJFCs7mpi/iPHg/WtPQQY8yhBK54yxLyJ7qeOQ==
+X-Google-Smtp-Source: ABdhPJztqYIekifUAkogxvmP6cFAfSb8mD1OJ06MuDN7GJEQY/Tvu7YCiuhZGtOCnc4NehwkSNKZYCHWWEIIOHWVZ8w=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr12792312ljc.286.1595923784397;
+ Tue, 28 Jul 2020 01:09:44 -0700 (PDT)
 MIME-Version: 1.0
 References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
  <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
  <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
  <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+ <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jul 2020 09:59:09 +0200
-Message-ID: <CACRpkdb0=9K4-F2xFWN6OvnOi5-jwLXihdphTgMCA1vTejB_Qw@mail.gmail.com>
+Date:   Tue, 28 Jul 2020 10:09:33 +0200
+Message-ID: <CACRpkdb4CCNYtMpPOAB6hF8gSCHa4NtpO8TzH0pVEuh-Spe44w@mail.gmail.com>
 Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Anson Huang <anson.huang@nxp.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
         Andreas Kemnade <andreas@kemnade.info>,
         Peng Fan <peng.fan@nxp.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Patrice Chotard <patrice.chotard@st.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        "michael@walle.cc" <michael@walle.cc>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -74,86 +91,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:44 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, Jul 27, 2020 at 10:18 AM Anson Huang <anson.huang@nxp.com> wrote:
+On Mon, Jul 27, 2020 at 1:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> > > Why is this driver using syscore_ops rather than
-> > > SIMPLE_DEV_PM_OPS() or similar?
-> >
-> > Below is the original patch of using syscore_ops, it has explanation:
-> >
-> > commit 1a5287a3dbc34cd0c02c8f64c9131bd23cdfe2bb
-> > Author: Anson Huang <anson.huang@nxp.com>
-> > Date:   Fri Nov 9 04:56:56 2018 +0000
-> >
-> >     gpio: mxc: move gpio noirq suspend/resume to syscore phase
-> >
-> >     During noirq suspend/resume phase, GPIO irq could arrive
-> >     and its registers like IMR will be changed by irq handle
-> >     process, to make the GPIO registers exactly when it is
-> >     powered ON after resume, move the GPIO noirq suspend/resume
-> >     callback to syscore suspend/resume phase, local irq is
-> >     disabled at this phase so GPIO registers are atomic.
-
-This looks like it would have been easier to use
-SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
-as pointed out later...
-
-> The description makes sense, but this must be a problem that
-> other gpio/pinctrl irqchip drivers have as well.
+> Overall, my feeling is that making sure all drivers that depend on the pinctrl
+> driver can deal with deferred probing is a prerequisite before this can be
+> made a loadable module itself (same for clk, irqchip, etc drivers that others
+> may rely on).
 >
-> Linus, could you have a look? I see these other pinctrl drivers
-> using SIMPLE_DEV_PM_OPS:
->
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:static
-> SIMPLE_DEV_PM_OPS(nmk_pinctrl_pm_ops,
+> I understand that your primary motivation is to fit into Google's GKI framework,
+> but I think that doing the conversion only partially would neither serve to
+> improve the kernel nor actually meet the GKI requirements.
 
-This one does not involve IRQs rather calls
-pinctrl_force_sleep/default which sets up hogged
-pins for energy saving while sleeping.
+This has been my worry as well when it comes to these GKI-initiated
+patches that are flying right now.
 
-> drivers/pinctrl/pinctrl-rockchip.c:static
-> SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops,
-> rockchip_pinctrl_suspend,
+> Most pinctrl drivers are currently always built-in to work around the
+> load order dependencies. This of course is a bit of a hack and we'd be
+> better off if all drivers managed to avoid the dependencies, but this
+> can also require a lot of work.
 
-Pretty much the same as Nomadik, with some extra
-register (also not IRQ-related).
+Several people have argued that it is reasonable to cut corners to
+achieve the "greater good" of GKI.
 
-> drivers/pinctrl/pinctrl-stmfx.c:static
-> SIMPLE_DEV_PM_OPS(stmfx_pinctrl_dev_pm_ops,
+I try to handle it on a "does the kernel look better after than
+before" basis, while pushing gently for at least trying to
+properly modularize the whole thing. It can become pretty hard
+to test I think. If it is things like GPIO expanders on I2C
+that can be used by several SoCs I would be more hard on
+this, on a single SoC not as much.
 
-This one is problematic. However this is on an I2C
-expander meaning the slow bus traffic needs to be
-working and if IRQs are off at syscore suspend/resume
-time, I2C will not work. I think Amelie has tested this thing
-pretty thoroughly, and that expanders are less sensitive
-to this.
-
-> drivers/pinctrl/qcom/pinctrl-msm.c:SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops,
-> msm_pinctrl_suspend,
-
-This one is like the Nomadik: just forcing some hogs to
-go into low power mode.
-
-> drivers/pinctrl/spear/pinctrl-plgpio.c:static
-> SIMPLE_DEV_PM_OPS(plgpio_dev_pm_ops, plgpio_suspend, plgpio_resume);
-
-This one is affected by the same problem, I don't know if anyone
-really has this hardware anymore, but there are some
-SPEAr products deployed so the users should be notified
-that they may need to move this to syscore ops.
-
-Viresh?
-
-> It seems that some drivers use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
-> instead, which looks like it is meant to address the same problem, but
-> as I have not used that myself, I may be misunderstanding the problem
-> or what this one does.
-
-IIUC that callback is for exactly this, and occurs after IRQs
-are disabled and before IRQs are
-re-enabled. Again the same problem if you need slow bus
-traffic in your callback (I2C/SPI devices): it is not going to work.
+One discussion thread got inflamed because of ARM vs x86
+discussions "x86 is better modularized" which is something I want
+to avoid, it is easy to be modularized when your irqs, clocks,
+regulators and pins are handled by the BIOS. This is a SoC
+problem and x86 SoCs with no BIOS, RISCV, ARM and whatever
+doesn't have a fix-it-all-BIOS have this problem. :/
 
 Yours,
 Linus Walleij
