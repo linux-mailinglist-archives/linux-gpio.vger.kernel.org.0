@@ -2,130 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E134A2304F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 10:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1A27230508
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 10:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgG1IJq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jul 2020 04:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
+        id S1727929AbgG1IPM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jul 2020 04:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgG1IJq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 04:09:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFA6C0619D2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:09:46 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so20120451ljg.13
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
+        with ESMTP id S1727856AbgG1IPM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 04:15:12 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4345C0619D2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so17380619wrw.1
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
-        b=WfCuIF+N2NmU60NsCa/JwDfZ/2Nv3VdLtl+PsjLet0Nzca6wYbZhf3KLfYAcH+yG6N
-         LaR9+097mHxfUn8gn7Be8CFNnGBmtnA/zxEpDJV/ocsagkHix4jVu3EVG6FrI64jWHYI
-         M+PzasI6lq60ee4UopcVSOqHZ2rmhBcou1LSLGPdsYSqBNegBgB1DWqpolUEmgNk0ju4
-         CBCGJrhfdr5TCA4JVBROBndTQtCW+wqbRJegLmMyk5uVj7QvYvbvRVhkOWcs5kLLW5ui
-         HOqodhXVOpi6VXsxgX/17k48jouG1wJLBMVXy14roEsN2uWmc+DdP+Mq7Tr986xY3Y5I
-         qdWA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
+        b=xlfx3HvuSB0z5GqSk3Qy6MOhKencPFggfCX8hujwu/RDWI/B7jZFJe06PSK7DC1Ssx
+         dEepVkCzLe6s8V+lH6GirW/mRTJKmhk6c2/3CEefSxa1CHXXvTMtYWGTVsITPhwpBdyC
+         WJNtfWmkqvyaKoi3YA6pcFiJ07zI7lOAij4CpBfYTMN9v0amx/QgmB2ZMmTx7ka9M8Ul
+         XWsw7ELJwLkLs8POxJOA5yZjZHraPZpoR1/5p8Kq+dIS1ikdFR6g4ru3FNnb8WZf9m2m
+         9boRgLly3U5/fL5YqILefz1/moUHuZkSfLiE4f8IvsC3wdMHg1ixjCMqK+NfGRm/FPu4
+         aoLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
-        b=iOaOuyHSEFDjnF2p9VUk8H2aLLLMdjvXtPmpheWbdNbbd4VP83POIFIsFcSc33J1Ry
-         Puapv047friuGKbHQTwDsQ2RupfWRmQCT8HTk2Tp8dorLuzsKQltaML3V4eNRNJA83vW
-         Ewa5m8DYYOMk32D5apU9DKviRKskGS5l6HXxwmHoEly2/DqUwovXMsx9dXNRzGKA4TcK
-         6e4alAlx2dksqximPIHYzpeh05WlNE0ePSG+YSaauGDzQ4cq+MJVeGK/emBdVMTHyjoY
-         ZbkUjHoBg+tW19YOcavbOeigsLB5p4Ixmz25BXmqIFfXnszzNQQuHo54hBcG4K7w31Ts
-         XLnQ==
-X-Gm-Message-State: AOAM5326EdISpKhK54KjM3Z+zWZppdsREfkq7dXWxhd9UvF+hPRBRgpM
-        SzPEkJFCs7mpi/iPHg/WtPQQY8yhBK54yxLyJ7qeOQ==
-X-Google-Smtp-Source: ABdhPJztqYIekifUAkogxvmP6cFAfSb8mD1OJ06MuDN7GJEQY/Tvu7YCiuhZGtOCnc4NehwkSNKZYCHWWEIIOHWVZ8w=
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr12792312ljc.286.1595923784397;
- Tue, 28 Jul 2020 01:09:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
- <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
- <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
-In-Reply-To: <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jul 2020 10:09:33 +0200
-Message-ID: <CACRpkdb4CCNYtMpPOAB6hF8gSCHa4NtpO8TzH0pVEuh-Spe44w@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
+        b=RFdkF6LMb7ioiTd/IOD5xCcTT8ziY+MlSX1lBEW7TjW8iqiF4p0v0cJF5V3Qk1GMFc
+         ADR98J6yHABGaysnVCR3a6d8slslcYr+yej80T82Xsn4OUAeWVsfB3TRmZWMZAFveE41
+         XBq7FqXje7FxrUQedKhlBVngFX1X0RyYxvFEUnpbGTp+HQkmEDMmPC+PfLx75vmHC4Ye
+         LLMCHPdt2VQSBJ5NvFd/HxZBJH9k+PlnCPKFPN+fXtfTWYo++jo1iuoS/P+yHblG9Dh1
+         uuyZ8ATOetvo9g4FddnnyiEIQmozTSh3o3GIZoHZrp4fk0J+IkMl22H6TqEHoD4xwKc8
+         +TxQ==
+X-Gm-Message-State: AOAM530jX6ltpRK0zd1uKiyWBh8NLlbfd0iVD5GsUAS+HmFpWr1HlQUH
+        qYaiK7OkoeXmTIv8KsO1XckMjg==
+X-Google-Smtp-Source: ABdhPJyEBmzjP5p5bqlnkhXS1LyF2jze2TsaWelEULtD2Qvk55SkGf3FY3CVzhFz57n6yU7y/EsR2A==
+X-Received: by 2002:adf:eccc:: with SMTP id s12mr26590888wro.157.1595924108740;
+        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id p6sm2982576wmg.0.2020.07.28.01.15.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:15:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Peng Fan <peng.fan@nxp.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "michael@walle.cc" <michael@walle.cc>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200728081506.GA2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc>
+ <20200728071949.GE1850026@dell>
+ <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-> Overall, my feeling is that making sure all drivers that depend on the pinctrl
-> driver can deal with deferred probing is a prerequisite before this can be
-> made a loadable module itself (same for clk, irqchip, etc drivers that others
-> may rely on).
->
-> I understand that your primary motivation is to fit into Google's GKI framework,
-> but I think that doing the conversion only partially would neither serve to
-> improve the kernel nor actually meet the GKI requirements.
+> Am 2020-07-28 09:19, schrieb Lee Jones:
+> > On Sun, 26 Jul 2020, Michael Walle wrote:
+> > 
+> > > There are I2C devices which contain several different functions but
+> > > doesn't require any special access functions. For these kind of
+> > > drivers
+> > > an I2C regmap should be enough.
+> > > 
+> > > Create an I2C driver which creates an I2C regmap and enumerates its
+> > > children. If a device wants to use this as its MFD core driver, it has
+> > > to add an individual compatible string. It may provide its own regmap
+> > > configuration.
+> > > 
+> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
+> > > instance.
+> > > 
+> > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > ---
+> > > Changes since v5:
+> > >  - removed "select MFD_CORE" in Kconfig
+> > >  - removed help text in Kconfig, we assume that the users of this
+> > 
+> > That's the opposite of what I asked for.
+> 
+> What is the use to describe the symbol, if it is not user selectable?
+> I'm not aware this is done anywhere in the kernel, am I missing
+> something?
 
-This has been my worry as well when it comes to these GKI-initiated
-patches that are flying right now.
+You mean in menuconfig?
 
-> Most pinctrl drivers are currently always built-in to work around the
-> load order dependencies. This of course is a bit of a hack and we'd be
-> better off if all drivers managed to avoid the dependencies, but this
-> can also require a lot of work.
+I find 'help's helpful even outside of menuconfig.
 
-Several people have argued that it is reasonable to cut corners to
-achieve the "greater good" of GKI.
+Surely I'm not the only one who reads them 'raw'?
 
-I try to handle it on a "does the kernel look better after than
-before" basis, while pushing gently for at least trying to
-properly modularize the whole thing. It can become pretty hard
-to test I think. If it is things like GPIO expanders on I2C
-that can be used by several SoCs I would be more hard on
-this, on a single SoC not as much.
+> > >    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+> > >    a small description to the driver itself.
+> > >  - removed "struct simple_mfd_i2c_config" and use regmap_config
+> > >    directly
+> > >  - changed builtin_i2c_driver() to module_i2c_driver(), added
+> > >    MODULE_ boilerplate
+> > >  - cleaned up the included files
+> > > 
+> > > Changes since v4:
+> > >  - new patch. Lee, please bear with me. I didn't want to delay the
+> > >    new version (where a lot of remarks on the other patches were
+> > >    addressed) even more, just because we haven't figured out how
+> > >    to deal with the MFD part. So for now, I've included this one.
+> > > 
+> > >  drivers/mfd/Kconfig          |  5 ++++
+> > >  drivers/mfd/Makefile         |  1 +
+> > >  drivers/mfd/simple-mfd-i2c.c | 55
+> > > ++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 61 insertions(+)
+> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> > > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 33df0837ab41..c08539c7a166 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+> > >  	  To compile this driver as a module, choose M here: the
+> > >  	  module will be called si476x-core.
+> > > 
+> > > +config MFD_SIMPLE_MFD_I2C
+> > > +	tristate
+> > > +	depends on I2C
+> > > +	select REGMAP_I2C
+> > 
+> > Please provide a full help.
+> 
+> See above.
+> 
+> > 
+> > >  config MFD_SM501
+> > >  	tristate "Silicon Motion SM501"
+> > >  	depends on HAS_DMA
+> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > index a60e5f835283..78d24a3e7c9e 100644
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > >  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+> > > 
+> > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> > > +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+> > > diff --git a/drivers/mfd/simple-mfd-i2c.c
+> > > b/drivers/mfd/simple-mfd-i2c.c
+> > > new file mode 100644
+> > > index 000000000000..45090ddad104
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/simple-mfd-i2c.c
+> > > @@ -0,0 +1,55 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * A very simple I2C MFD driver
+> > 
+> > Simple MFD - I2C
+> 
+> ok.
+> 
+> > > + * The driver enumerates its children and registers a common
+> > > regmap. Use
+> > > + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to
+> > > fetch that
+> > > + * regmap instance.
+> > 
+> > This driver creates a single register map with the intention for it to
+> > be shared by all sub-devices.  Children can use their parent's device
+> > structure (dev.parent) in order reference it.
+> 
+> Should this be appended or should it replace my paragraph? If its the
+> latter,
+> the "enumeration of the children" is missing.
 
-One discussion thread got inflamed because of ARM vs x86
-discussions "x86 is better modularized" which is something I want
-to avoid, it is easy to be modularized when your irqs, clocks,
-regulators and pins are handled by the BIOS. This is a SoC
-problem and x86 SoCs with no BIOS, RISCV, ARM and whatever
-doesn't have a fix-it-all-BIOS have this problem. :/
+If you want to keep that part, try:
 
-Yours,
-Linus Walleij
+This driver creates a single register map with the intention for it to
+be shared by all sub-devices.  Children can use their parent's device
+structure (dev.parent) in order reference it.
+
+Once the register map has been successfully initialised, any
+sub-devices represented by child nodes in Device Tree will be
+subsequently registered.
+
+> > > + * In the future this driver might be extended to support also
+> > > other interfaces
+> > > + * like SPI etc.
+> > 
+> > Remove this please.
+> 
+> Why would you remove information about the intention of this driver? If
+> someone
+> looks for a place to implement its SPI/I3C/Slimbus MFD driver this might
+> come
+> in handy.
+
+By all means put something similar in the commit log, but it has no
+place in the driver itself.  Besides, if we were to add support for
+SPI, it is likely to be a completely separate/unrelated driver.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
