@@ -2,135 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90E6023081D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 12:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33746230898
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 13:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgG1Kv0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jul 2020 06:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        id S1729026AbgG1LZF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jul 2020 07:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728900AbgG1KvZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 06:51:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52ED3C0619D4
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r2so12738090wrs.8
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
+        with ESMTP id S1729010AbgG1LZF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 07:25:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EA0C061794
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 04:25:04 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so10779686pfm.4
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 04:25:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
-        b=vDkkyU+5XaTOEmRQYW0CYyR4mlMX1mtnZDopRBrR16WWZAymHLppooL3WbRsemUOlF
-         7JAG9CCFFBkNo1ck8oAFsHnGGCFpddbJZI4FvPPe/5vgXZIxS7pdXreW0pAmXl4fefVk
-         uemgsa2HPMS2pgMJSiY5gsoUuJ22Uc9FFMkDS50upr4Y5t/bruJsOn96uJd/Xej/4+wJ
-         r3z4kV7L9g728y5x+aNOBIj6JRK/2vA+lFuGJCCKMNnmmCY7vsMSYcIdJpOO1Lj/2Nk6
-         unQbNqxObw8nTIlx8MnFNeMtUIVxddRTqJvHuyaU1npKp/UQnousCC6p6CUsu9YCp0JA
-         N8gg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=TUmUMz6UgsCt+CXB7icgRI+l8Tvn7Jgl/4MrS/vbZRg=;
+        b=M8+Svu+YOx7/2gsUroIjDqeqHz0fv6v2+W+hVAiWJjBagMP32QT2IblXw9nSm9xTfn
+         P9JhY1yHNLyhLyPjMbyUZp5HXoSgVK3X7j3rZT7az+bSha5/bNtlA3jF4dvV5m1Cv5V0
+         223oOfoaOSyr31V1z6413MMc2ZmpAIMNyHdDbkbUQO6ZycyI7WawnVNd1mZqI9qJ9e/X
+         MV+nUvUTere0RZopRHkbYmVT2ARjTc3crPxm1ZWlZyq8MKceZjlC2bzX2971Djx1l4Xu
+         RMC4Q/F0wfGJpEViHq5cmHpC/LadlhUnU9KqS/TM/SVFN88SGDS0PJAwWXyhu3pDJxm7
+         sfOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
-        b=cuHOz+Ay0j82NyF/rwx4wGS1e397u5Kp2+GD/jufpybB861kzHPoBWV6llFLn9F8We
-         vcjbTreP0XIe63qvM97Uu9StlU/4fFQ50P7DIRr+abnaqPIN7LK/HlInmMd3JhKFDCgZ
-         TRGQiTpbQ9tUnt28Ul2ZCrCPQV1Y+AHxW7F91PqU5bnO6qlN+stbNyw/P3Ukr5bXihP1
-         W/uyE3jZ0mgdkxLwGGE6MPVfD3oU3sacDxrTAIPOgsyEUY8GR5uvuUB+v0fwRfWdaEQK
-         wia8Z3RjxzenXMr8pzYKUd3b31rU7xjdMb6ZXLypErxel2FGqGCKVj1MRebYxOPlGSMS
-         ihTA==
-X-Gm-Message-State: AOAM531glUnbEABm+zlEbonfupel+6Qlla/mgURvrVX7sPrf661FH9mm
-        mmJmED/g84jO2KbSx1tu56zgFQ==
-X-Google-Smtp-Source: ABdhPJyXBEeI4zvLVf/tRWpqopuL2jSNCu4L9LZnKQaZP1mCTaWKou6fjAB0L+zVU5NonfUp5NxoSw==
-X-Received: by 2002:a5d:4a90:: with SMTP id o16mr23540803wrq.87.1595933483925;
-        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id y189sm4194196wmd.27.2020.07.28.03.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 11:51:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TUmUMz6UgsCt+CXB7icgRI+l8Tvn7Jgl/4MrS/vbZRg=;
+        b=HcR4fxSSO7dXe0KmlOTdaylz+sgQSVbcdUGLMcnbZmtk1t59DiTT+2s1qJA10IwtIr
+         f11X+pVPaCAoBEGWOxV5IlAFyysyDUxOEYuhqYZjPFN6k9rmoz3fJfvLZ7PekfFSvmCU
+         oB7Bi/ErFSRTXBexTzJqNsRmXUa3k0lnXVqH4hHHBX01ZLTRwyF0gxFJAxlQ8aPhluGp
+         DQ6kCduGDF7B3uTsGghMa/ib/WjfmpeGXXxqjJ2OI4a4FWsTUHCExiuO0IAMAd3aFsmI
+         9ShDYJNjXaVnSEXgPSd+hc+EW5ld5jjFkOpfwMc2SMq9znk1pmj0kz0/mNPK1unmziIx
+         Rx7w==
+X-Gm-Message-State: AOAM533B1eIX+TgEUl2MLFdPuqHYXOcWasvLW0/KEtB23ZXH9JlSulNd
+        Kqkrz4qzQg8QAGjbhVDmuJiNDQ==
+X-Google-Smtp-Source: ABdhPJzHsWs+C2CAir0w1/n4qx2AAi7Eo9fWCt8dVNRFp68sei/9QQuAuxDTPc580wHpTPxR+0lNQA==
+X-Received: by 2002:a63:cb03:: with SMTP id p3mr23750881pgg.444.1595935504307;
+        Tue, 28 Jul 2020 04:25:04 -0700 (PDT)
+Received: from localhost ([122.180.34.198])
+        by smtp.gmail.com with ESMTPSA id j26sm17746105pfe.200.2020.07.28.04.25.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 04:25:03 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 16:55:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Anson Huang <anson.huang@nxp.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200728105121.GG2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-7-michael@walle.cc>
- <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
- <58b53cacc5289f17f669159beeeada03@walle.cc>
- <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peng Fan <peng.fan@nxp.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
+Message-ID: <20200728112500.a43jow25yueltyuw@vireshk-mac-ubuntu>
+References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+ <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+ <CACRpkdb0=9K4-F2xFWN6OvnOi5-jwLXihdphTgMCA1vTejB_Qw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
+In-Reply-To: <CACRpkdb0=9K4-F2xFWN6OvnOi5-jwLXihdphTgMCA1vTejB_Qw@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 28 Jul 2020, Uwe Kleine-König wrote:
-> On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
-> > Am 2020-07-28 09:43, schrieb Uwe Kleine-König:
-> > > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
-> > > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct sl28cpld_pwm *priv;
-> > > > +	struct pwm_chip *chip;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!pdev->dev.parent)
-> > > > +		return -ENODEV;
-> > > > +
-> > > > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > > > +	if (!priv)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> > > > +	if (!priv->regmap)
-> > > 
-> > > Error message here?
-> > 
-> > This shouldn't really happen and I put it into the same category
-> > as the two above and report no error. But I can add it.
+On 28-07-20, 09:59, Linus Walleij wrote:
+> On Mon, Jul 27, 2020 at 12:44 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Jul 27, 2020 at 10:18 AM Anson Huang <anson.huang@nxp.com> wrote:
+> > drivers/pinctrl/spear/pinctrl-plgpio.c:static
+> > SIMPLE_DEV_PM_OPS(plgpio_dev_pm_ops, plgpio_suspend, plgpio_resume);
 > 
-> For kzalloc it is right to not emit an error because a failing kzalloc
-> is already loud on its own. I missed the first error path, that should
-> get a message, too.
+> This one is affected by the same problem, I don't know if anyone
+> really has this hardware anymore, but there are some
+> SPEAr products deployed so the users should be notified
+> that they may need to move this to syscore ops.
 > 
-> > Generally, it looked to me that more and more drivers don't
-> > really report errors anymore, but just return with an -EWHATEVER.
-> > So if someone can shed some light here, I'm all ears.
-> 
-> IMHO it's wrong not to add error messages. At one point in time it will
-> fail and then you're happy if you don't have to add printks all over the
-> place first to debug that.
+> Viresh?
 
-Error messages should only be omitted for -ENOMEM and if something is
-already being printed out, ideally by the sub-system API.
+Yeah, I can't test the patches but Ack them if someone can send them to me or if
+someone can tell me exactly what to do here.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+viresh
