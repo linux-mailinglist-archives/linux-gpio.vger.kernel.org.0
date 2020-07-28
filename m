@@ -2,181 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6EFB23066E
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 11:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EDBD23067E
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 11:25:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgG1JUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jul 2020 05:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728403AbgG1JUU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 05:20:20 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74396C0619D5
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so14588108wrx.9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
-        b=AUZBUOCz+C3rUbC09PBQb07wRcuG+Z5atNFGMx6frCJ20iuSZPlI4T6fknCpq3V/8J
-         ojiJjQXoLXIm3nkm0LEBfBv4OXrf6lLG5QUbLRzA1+ixupmRCG4MzcvFiTqizHNPbH0/
-         XzZPxU1YUQ+SgMlRBsA9NL/4k859nPxCoBO9wQkfPvgYBC6dcegsVSQ0fwQnFb4QzrYu
-         42VuVYpxQicy5tc5KWqBaCx7kbfyxq98OarVugo1rGHxL3+GnsB9B7O188y2FlBsK/iu
-         vL/PJFJmQe8WxNKsi7xYRRKw4KqAxMCJXsa9lwAaHXh2uJACBdEFn16gde0U6hWIzf4p
-         1RCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
-        b=B1K4DMVJQPyjfap0np5xfmrT/r3v1LmBde8V6PdZamxt2prlPAL0da4zTFmIPW7IVc
-         lIXzNNHDsUmJgeq7UmcOFcd63QFiFR5QXi+fc2HkeaU74cA2vkKZq2/KbjOru6EOlnUa
-         ZOku9j3EIKEEj6toIViwYfvDKTfBI05sUvU6DnhQrXiiHtPO00gLtNw75Ru9HriiZ62Q
-         bclU1tBsbo841JHmM8FlZMVcItmah/UU8xVndK8/4KF5z9zyTdh88RiAhHhsftYasxez
-         mk5yVRcsxsqppv5KD1CBBZP4Vex0N6Q1GtNwl/fbwUaMuSea/g+5x99d2VvUl59fD0nu
-         eIjA==
-X-Gm-Message-State: AOAM530MgahX1ov2ZwxRAzjpdHGappkCk3qR4BvTZbYclJSerREcwgNr
-        qXSeTbFzBTPbGCGG6GPtJcHfWg==
-X-Google-Smtp-Source: ABdhPJwnXEtbFH1jcD4yCv++hVxdGTxMKRMWQHHEoQcyflVcKHgUz+6JPotbQr2eHetriRLig3jKsA==
-X-Received: by 2002:adf:e94a:: with SMTP id m10mr12079678wrn.249.1595928019115;
-        Tue, 28 Jul 2020 02:20:19 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id t141sm3376553wmt.26.2020.07.28.02.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 02:20:18 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 10:20:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200728092016.GE2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc>
- <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
- <20200728082707.GB2419169@dell>
- <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
- <20200728085616.GD2419169@dell>
- <2fd3b880e36aa65e880b801092b51945@walle.cc>
+        id S1728124AbgG1JY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jul 2020 05:24:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50734 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728101AbgG1JY7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:24:59 -0400
+IronPort-SDR: +Av2tVr/o48HSaSJpU3ww+SRmS68O7EEptaGMb8PWh6PPLaJPNP1Zrq+4KmMwprjQ2eAdgqouZ
+ AlO/32BYZOIw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="139209768"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="139209768"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 02:24:58 -0700
+IronPort-SDR: 9a8NNcGMCrJ0rP8JO1AGdZiSJ7+s/3EM9GWCG0PVymhCfsqjEfvijssH9s4KeECFEd/Ga0cIDD
+ CNTjUPtnjmFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="290108893"
+Received: from lkp-server01.sh.intel.com (HELO d27eb53fc52b) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 28 Jul 2020 02:24:57 -0700
+Received: from kbuild by d27eb53fc52b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k0Lqy-00004c-MJ; Tue, 28 Jul 2020 09:24:56 +0000
+Date:   Tue, 28 Jul 2020 17:23:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ a070bdbbb06d7787ec7844a4f1e059cf8b55205d
+Message-ID: <5f1feead.D/aqZbHxkl5X7GyK%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2fd3b880e36aa65e880b801092b51945@walle.cc>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 28 Jul 2020, Michael Walle wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: a070bdbbb06d7787ec7844a4f1e059cf8b55205d  gpio: regmap: fix type clash
 
-> Am 2020-07-28 10:56, schrieb Lee Jones:
-> > > > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > +
-> > > > > > > +title: Kontron's sl28cpld board management controller
-> > > > > >
-> > > > > > "S128CPLD" ?
-> > > > >
-> > > > > still not, its sl28cpld, think of a project/code name, not the product
-> > > > > appended with CPLD.
-> > > > >
-> > > > > > "Board Management Controller (BMC)" ?
-> > > > >
-> > > > > sounds like IPMI, which I wanted to avoid.
-> > > >
-> > > > Is there a datasheet?
-> > > 
-> > > No there isn't.
-> > 
-> > Then what are you working from?
-> 
-> Ok, there is no public datasheet. If that wasn't clear before, I'm working
-> for that company that also implemented that CPLD.
+elapsed time: 1911m
 
-No, that wasn't clear.  You said there was no datasheet.
+configs tested: 56
+configs skipped: 1
 
-> > > > > > > +maintainers:
-> > > > > > > +  - Michael Walle <michael@walle.cc>
-> > > > > > > +
-> > > > > > > +description: |
-> > > > > > > +  The board management controller may contain different IP blocks
-> > > > > > > like
-> > > > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
-> > > > > > > and a
-> > > > > > > +  GPIO controller.
-> > > > > > > +
-> > > > > > > +properties:
-> > > > > > > +  compatible:
-> > > > > > > +    const: kontron,sl28cpld-r1
-> > > > > >
-> > > > > > We don't usually code revision numbers in compatible strings.
-> > > > > >
-> > > > > > Is there any way to pull this from the H/W?
-> > > > >
-> > > > > No, unfortunately you can't. And I really want to keep that, in case
-> > > > > in the future there are some backwards incompatible changes.
-> > > >
-> > > > Rob,
-> > > >
-> > > > I know you reviewed this already, but you can give your opinion on
-> > > > this specifically please?  I know that we have pushed back on this in
-> > > > the past.
-> > > 
-> > > Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
-> > > implementation of this. A future "sl28cpld-r2" might look completely
-> > > different and might not suite the simple MFD at all. "sl28cpld" is
-> > > a made up name - as "sl28cpld-r1" is, too.
-> > 
-> > Well that sounds bogus for a start.  I guess that's one of the
-> > problems with trying to support programmable H/W in S/W.
-> 
-> What sounds bogus? That we name the implementation sl28cpld?
-> How is that different to like adt7411? Its just a name made up by
-> the vendor. So if there is a new version of the adt7411 the vendor 
-> might name it adt7412.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Using an arbitrary string as a compatible would be bogus.
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+x86_64                           allyesconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+c6x                              allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                               defconfig
+sparc                            allyesconfig
+openrisc                            defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a016-20200727
+i386                 randconfig-a013-20200727
+i386                 randconfig-a012-20200727
+i386                 randconfig-a015-20200727
+i386                 randconfig-a011-20200727
+i386                 randconfig-a014-20200727
+riscv                               defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+sparc64                             defconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                                   rhel
 
-So here 'sl28cpld' is the device name, so it's not actually
-arbitrary.  That's a good start.
-
-> We name it sl28cpld-r2. So what is the problem here?
-
-Do you though?  So 'sl28cpld-r1' is the name of the device?  The name
-that is quoted from the (private) datasheet?  Because looking at the
-implementation and going by the conversation, it sounds as though
-you-re only adding the '-r1' piece to the compatible string for
-revision identification.  Which if true, is not usually allowed and
-warrants intervention by Rob.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
