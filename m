@@ -2,91 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6EE6230B56
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 15:22:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DDCD230BAE
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jul 2020 15:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgG1NW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jul 2020 09:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729433AbgG1NWz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jul 2020 09:22:55 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8916EC061794;
-        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so11579392pjb.2;
-        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
-        b=vV/8Y6WpSwU9HTxSD/WJ/EvnS9XpQW0xb0WmXdXvTjR59DT26u+VWyuBNuaIaAeLjr
-         AaNLCzhBn8d81jnuBLGyc+snvUOJghb/k7EcDcrfQfA2sboAIKDqIrXsFNCuG8OdVfkw
-         WkrOXWDMF4bD6LrTz+zbhPB5ZsyN8kYxqvm4Ar7m5yuTLFczPk27/mlyUAVJiI3HRtSe
-         DolevwAoBLh6X4rFwk0Re7o30X3vbGJICz1stm8S11krtGYvLuoaGIm4VSvoRGKcwtk4
-         hTX0tS2XykR3BGO445hOjNkLz1KymFyQMpurS4RSMqPAhujHSIiYUk69nyMRNpSqVRVT
-         CuTA==
+        id S1730209AbgG1Nmo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jul 2020 09:42:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30661 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730208AbgG1Nmh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:42:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595943755;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=d1H2TqJa+xnwL6Sscbi4oBQam2i37LFg06gHTI5VeII=;
+        b=jJF8wSotsww/28RRwbNhNVRo0b121v+oSKuNWCM8SerkY0rKxEEFxEYltVOHVrm8P6+DWA
+        IHSSKzQJ3fD80sWvp5RSPs19SardP77FsOKq/+nYgiynsA47txTUHaBwpw/7Pl9HOYGRP5
+        c1o5RO2S8V2iAcJHIne7xoV3+Xe69cQ=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-466-hz7kQPeENRu2oSl61ei4pQ-1; Tue, 28 Jul 2020 09:42:33 -0400
+X-MC-Unique: hz7kQPeENRu2oSl61ei4pQ-1
+Received: by mail-qv1-f70.google.com with SMTP id u10so13395465qvj.23
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jul 2020 06:42:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
-        b=gEEGbPFeZz2zlwfx0HKW/oGmY+TCU8IETXpsydHKwfbwz17nhuwxSLPorOikSMNVEu
-         x4pkgpDm45R63w3rXrKM8AkS0LgUaj3iBwyVVJB17ezXJz1T2RGTCyoic1iWTNFFvxtg
-         c3DlERueBhFl3qlS/h90xFST6Bb1SF8XSoeGSSv6HuWYQUc6icNHngM4zqpB26UgMjfW
-         nJjMyRLDkXrMqL+jID9/eszfxH9fx7TQqc/NkFCVICr5bTlju3DfNbaNY1kSURJeURsF
-         PkH+1XVuGInOtgY/3n8Ztcob8b42uJBDWrFj7JJwlAXGp4wURUUUayMYXQeSKDOuLFzW
-         rtyQ==
-X-Gm-Message-State: AOAM533JgRT0U8cjiVyH825bq4YNqdZlgCW5UZU+OTirXZgfmlRG4x0b
-        ztNwSTmff3Ht++tVb523pA+NDRXsQJUxUbbkHQU=
-X-Google-Smtp-Source: ABdhPJz9Jk45e1SqiyDKZYa6RYOm/76TyaeUDRNkM5h0Lo0ybef78akWq7E7BAoASP7zeSOXUIr+/b2GIFPWGnB8Bpo=
-X-Received: by 2002:a17:902:4b:: with SMTP id 69mr7486754pla.18.1595942574825;
- Tue, 28 Jul 2020 06:22:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
- <20200727215010.qzhvavmskfoaapi5@mobilestation> <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
-In-Reply-To: <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 16:22:39 +0300
-Message-ID: <CAHp75VeY0HMKXJCP2Ds=BWdWduevXDqUK1pkF1G1fUTQn7uC3Q@mail.gmail.com>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=d1H2TqJa+xnwL6Sscbi4oBQam2i37LFg06gHTI5VeII=;
+        b=VdikWK6Rsuc74md2XOl0JfVYOECaZs3cblvZnKBY7pIszaoJWSBTZyunL7qojmxmSR
+         rqJ6uGOD13Jt9OISEPQAi29jDuZvlmDb7gRm/ULZe5WTmLN7riYRAW26s2tMpg/XF0KA
+         xNJlUzjvksY83VvynGDREbYXeoZKTp4ocIuNg2idtpf6zgSCzan9KWot/wXix/OMqIY4
+         pXFHRdRg9fM9hh7G10+nH6XoYB9Qqc8Ut8ZlCSxUrCgAg1k7wv0OI3sY2y1r9FguRKd5
+         U87i3E7M1crwre/xp9mKKjeZDXCXdnQWJGQfwizHul3SwyCdlk2i6gqPb2WzSboNjMX8
+         FyzA==
+X-Gm-Message-State: AOAM530vV01bnmQOEQ6ByE02O7zu+RMrBOpqbzSLngPUYJjdzCb6VG3P
+        FP4Is1VMoKYMh33vTu5yt3ZUKGZc0EKOKMt0qGzbMqXvTinWgeQW1mcGKCaFNeh99PbCQ1Vm9Vo
+        EKGGQddM0V4S6pshJmA2Srw==
+X-Received: by 2002:ac8:4cc2:: with SMTP id l2mr19233695qtv.130.1595943752832;
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzjoBZqluR8LTz0WpQlDuqfrVZK7AmZoX8oS/5fepe6D+QCGMesvqo/QSjTRIUOkRc+AysTQg==
+X-Received: by 2002:ac8:4cc2:: with SMTP id l2mr19233674qtv.130.1595943752568;
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 71sm13879623qkk.125.2020.07.28.06.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+From:   trix@redhat.com
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        frank.rowand@sony.com, geert+renesas@glider.be
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] gpiolib: of: reset name variable in of_gpiochip_add_hog
+Date:   Tue, 28 Jul 2020 06:42:26 -0700
+Message-Id: <20200728134226.27592-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:18 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Jul 27, 2020 at 11:50 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
->
-> > It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
-> > which make the initialization in the same order as mine:
->
-> I'll think about fixing them up to all look the same at some point
-> if noone beats me to it. Sorry for the mess, I was just hacking
-> along to get this work item finalized.
+From: Tom Rix <trix@redhat.com>
 
-I have sent three patches (two updates according to above matter and
-one is a fix on top of your template clean up I missed myself).
+Clang static analysis reports this error
 
+gpiolib-of.c:664:9: warning: 2nd function call argument
+  is an uninitialized value [core.CallAndMessage]
+        ret = gpiod_hog(desc, name, lflags, dflags);
+
+name is sometimes set by of_parse_own_gpio
+name is always used by gpiod_hog
+
+So it is necessary to reset name so an old value is
+not mistakenly used by gpiod_hog.
+
+Fixes: bc21077e084b ("gpio: of: Extract of_gpiochip_add_hog()")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/gpio/gpiolib-of.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index bd31dd3b6a75..277ada41d04a 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -657,6 +657,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
+ 	int ret;
+ 
+ 	for (i = 0;; i++) {
++		name = NULL;
+ 		desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
+ 		if (IS_ERR(desc))
+ 			break;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.18.1
+
