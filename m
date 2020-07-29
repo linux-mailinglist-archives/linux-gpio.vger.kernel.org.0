@@ -2,76 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B84231AD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jul 2020 10:06:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D3D8231C29
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jul 2020 11:35:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgG2IGF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jul 2020 04:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
+        id S1727006AbgG2JfD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jul 2020 05:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgG2IGF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jul 2020 04:06:05 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8EFC061794;
-        Wed, 29 Jul 2020 01:06:05 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k4so11450911pld.12;
-        Wed, 29 Jul 2020 01:06:05 -0700 (PDT)
+        with ESMTP id S1726336AbgG2JfC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jul 2020 05:35:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6519C061794;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so2065843plr.7;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=atgSrHfyaIIMUl6mCM9j8rJFm+650O1VFwhX1wLqJE0=;
-        b=TBPc+Z0v6XjWZeyZLo63YPcRkh6CFI+rkus4Pe0DomT73g+LBPrWIfMsSA/xrQ+Xyg
-         oduUg3J0YiJ3eC/hk6h91d13pP3m5kwcxaY4R+CCRMPWito9lZvtLHlOzGJtDJAHALKn
-         3VswITBh4BsEhsHNn0cAmL86eDF9X6k1kipiO9XioSd49O3W+6K4fV9XA3v9+W995oxd
-         OQiMcQp5sDCDlA+eGIPauprXZFPJGZ6WFamA4JJJkE3LQp8c2/h1Prs/VsM/MH1YP3Xb
-         qMAteG8+jva1c/b42HdKRXwlA/ZZO9YI22gEwpXvH9VS5gCi32bXJTzfxZqsc48/dGgd
-         SRhQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
+        b=Fnaj/oNACCtyQMFYLfrPnYYFEhKCzFNvxIB+REhxwQtfO6HNXrjwHVqcjBE4C5qOY5
+         D4cojmVmzOBAOffao2GprTw330iIZXLBP0QE0bB/ncaXGv2wO6V7Q+ZVUjOXbujTnOyH
+         bvSff2vbnQ6/eZZrlrHwohIPCjfsx2U0M+OhMN6A028p9rbp3YGpDGJcKBwCg12tAvvh
+         z/JlB4L9gJpvs+Ok4X3m7tVKWKbNWmFiPXCsXxZjCrTFoiRXOo4T2RnDPZP0CbWIp9pg
+         orntmTtxxaRQde7TOqshbXt6yleDAxbpthaaEZPTcY5bsuqPzbumF7gaZbrKfAm41Fqb
+         tdgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=atgSrHfyaIIMUl6mCM9j8rJFm+650O1VFwhX1wLqJE0=;
-        b=Avrw7sUOR3gA6B3ttrZhpXlFu4fvtfsNXZhHpmJ9c0xPcWLmHxkgyTVFScHVBCMS/i
-         dXbrQrzBPaIZBkrP18izMwPnovekBS/kA2CcdQLdzQTMMo6nHac4nGRNWeGMbLo8l4ap
-         Wa9aHwT4jEc3fqcgZiQv83Vhif/oE+A+YSwZ4D6/zipjsSOLYKN1GigCERM+QrwIqsNW
-         rSxuMFnTXh5QG3A7ChMlQZNnLh8cG8UV7A7EKMQvarlZjhK5Wl8L1SqUspom3roeC1Gs
-         o+QvAGlkg2SVtFlFiX3e7Fa3Q/t7ccS97pEupOeocbE72kjdwDp0F1IQAOoTbQ3mmjm2
-         sZ1w==
-X-Gm-Message-State: AOAM532362ab19pxUiMAfds+IkjDLuiNuqTAptHABpqzUvxteG+iZE/G
-        JsexjtZOFt64FGV8W/FtYVOYzuFu0cj/mwPO1Xzqo68fd9M=
-X-Google-Smtp-Source: ABdhPJyVYjvDLkNLYisyvWJLCaJhKACd6mYUkfnBr05zG9w8Y/DUip4ovaDRb4q4sKL93Je9Got2kY4/V7351sE3WFo=
-X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr8829272pjh.129.1596009964773;
- Wed, 29 Jul 2020 01:06:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
+        b=ZB/Ns2VxY7rDFIa1kGuCxglL1m1bwPHSokAThMmeDJWdYuZ/qgvPU0DAnfVct/Hi7u
+         9rE7koYkTBhgxePEHKSr/KKSt+H45OTocar2bAfMVLSk5h6UHsy+/h+2ON3HcRqRZdk5
+         DYdIPPEjpMgmmscqji9l5cSshfBWD2mpsltwJbkso9E3m1D6ePeVdIf8uvYz6xsjzrn/
+         CP4LtUyrlA70/aHYdZLIH/Xge9ffQ4QahZ3fbeuIBFibHYi0JGti06DiXWRwsvq40hUw
+         X7L12iENuaE+lVpugSM5wEv2ZvfEzw6gDav8QmdY24xa7zL4mkNo9x3ORSsUbdrtf0e3
+         ggAQ==
+X-Gm-Message-State: AOAM533/Y4s+rHi+CKlGnoblaUxV2m7UgktWd+MzoYXwbEXbZwgj5wcx
+        H/GgbrFwpuRRnlK2ycNUyD4=
+X-Google-Smtp-Source: ABdhPJzEexquEKUe9twCBLq1d8kcS0mozlBLo29gmEHYFZHa4AzIjwOg61M04XVBKrqC6uNu+MhaBA==
+X-Received: by 2002:a17:90a:1b42:: with SMTP id q60mr8823265pjq.78.1596015302196;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id b21sm1677814pfp.172.2020.07.29.02.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 02:35:01 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Subject: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
+Date:   Wed, 29 Jul 2020 17:34:50 +0800
+Message-Id: <20200729093450.28585-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol> <20200729022814.GA1750878@sol>
-In-Reply-To: <20200729022814.GA1750878@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 11:05:48 +0300
-Message-ID: <CAHp75VdUZ=N7Gd8NgYY4ifY68Rc5DyEOqrfjdTJvwiZ3ayNCMg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and GPIOLINE_GET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 5:28 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Sun, Jul 26, 2020 at 09:12:44AM +0800, Kent Gibson wrote:
+From: Taiping Lai <taiping.lai@unisoc.com>
 
-...
+The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+which would trigger the interrupt event once enabled it from user side.
+This is the case for edge interrupts only. Adding a clear operation when
+setting interrupt type can avoid that.
 
-> I'll rework that for v3.
+Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ drivers/gpio/gpio-sprd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Please give some more time to review v2. Especially the v2 API approach.
-
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index d7314d39ab65..36ea8a3bd451 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_EDGE_BOTH:
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_HIGH:
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
