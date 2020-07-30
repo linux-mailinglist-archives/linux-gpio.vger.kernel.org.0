@@ -2,96 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AAF9232445
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jul 2020 20:00:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1D5A23296B
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 03:20:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgG2SAa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jul 2020 14:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35950 "EHLO
+        id S1726353AbgG3BUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jul 2020 21:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG2SAa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jul 2020 14:00:30 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED08EC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jul 2020 11:00:29 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so4855823oiv.13
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jul 2020 11:00:29 -0700 (PDT)
+        with ESMTP id S1726342AbgG3BUS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jul 2020 21:20:18 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8926C061794;
+        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a14so1782109edx.7;
+        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
-        b=Od28U8SVxuTbKciEDm+eroHE0nHH1vWn2PQTA5tf9giYiMRPbo7i1FVWeDud/cAMo3
-         OhBtD8a5mwrSuxNYjkFHOxHtryNDJDgzWwrvdGOPaJNgpO8WN5CKL/6phdfg9QqubsO/
-         PR+ybOt9A6Yp2J/0W0Afad79RGpYoIjhgwngcKVelgmpFkqkjlLuoMJkvYzPZEcrvPd/
-         frQL+mIrEND2vNMX8doWSaT5px+rXJ09IqzvdhmvCG2bMz9Q5spQlHjDpImzSwRhFgmh
-         +KRnnX3Wy+9lvRi2cNjxE9cnmLwCGVW54wusoqlZs4NqN9+de1LIYlNwL6xWJg3QGq/K
-         EqOw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
+        b=aywt8rE/ZAqOwGwPJc4gPfNm/d+AoJ2HHscoaKrZ+7qvH3e6ge6QilD5Yvz20qz8kZ
+         tzsK2PITt1tLk1xEi7pV7QFmt6K8eKXRVQZ2XuVhMJZMhUnDIiOa1vEGEbB7d5PW2T3G
+         mu6odELvaLuwv3hVVRdqJ2URLL1mpzNXg8bP3OV/q6Gj2bkled6QzcZI46QqPa3HNoGS
+         LFQJeYy8YUT9dCnnpsIfYM0bMZU5GYPIuK4lFzTNQjI0o0PTKrchMlkI5o5lr8RigXx1
+         i3IS+ptC25L67GII1z4p80m/FFrctGS7C/ASXDgQjOfJC9eMkgKTdQUF2k4i9j5FV/1/
+         Hpag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
-        b=ttObJ10xOMwmaklkw8kHRXQ6MQjHpspgk3ysf7Ehx1B85GX89eR2tzaOrMQehTH6eo
-         DYKRr8HiJueNm6V2TqjkGoj4LVBP2qwZPhYLBz0gz1xe9MfVI89uhdFRZTqPcyDI3SL/
-         F4ym2lSHcUkaTKtTJUBXFrcYvss+l+QNviY+RA+bno19dnldzr1/KYtu326hprCQ8Zjn
-         3GC4i1x/Bd/OuW0m8i3UhmBAyYrdLB1VuhfC62MnzeN5ZFGXo6qxnYzWPLm3SJqy+ih1
-         7zzB4guzOevsoBJkjMAXW0Z3SkMiw8sZEKtr/X1TQOkI1ILfUGJiHSlwMYCVy54UEipI
-         vRGA==
-X-Gm-Message-State: AOAM533mK2LE7ZKsE6uDYm6IAFRk/EeLbS+rDTOHKhflQRuaWR/8+jiK
-        QWIEbgtV8aYLADUVFD5IHjN25IOSys7yAICKEteRhdLZ
-X-Google-Smtp-Source: ABdhPJyuxi+CvF3nfDU7waCYZmMqYx8Xc0KbXP8yVyua6vmu3a0ZvCk3R52g7xS2yonHeQHF6b2uiWZufPdzNn2opOE=
-X-Received: by 2002:aca:f504:: with SMTP id t4mr9011391oih.137.1596045250154;
- Wed, 29 Jul 2020 10:54:10 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
+        b=R+9VAlFyzSOV1uaCZnm7MNGVegMh06fHVOlczbV3ENteetcNFctn6cBBI2H6ztacHU
+         bQWd+bZzjxwcsoJ+Y60POcB/93HtfGr0tBczBILk1v+KKJAbsiWeFkAOSIpm+Q8jxpQJ
+         YWb4gAW46hWBtIYz2JbJbZvTqt7jcBKYTfOS4di4LXqJakkQrZgd0bcWV+O3Ylhf61s+
+         GhLCrWaBaveE1RHCWj7A0q6jo/eO3+vax9I02Psnka132Hw8GjKaerdRlerkua0XP6Ri
+         W/YVQPnl5iqafdc3JMwOGVKDgHx/bhn0/2c3OuBqJjJ958W6TuYAbJXaLozLEOKY7jp6
+         HiHA==
+X-Gm-Message-State: AOAM531vohaCGlOpNm3ZQRA7BO4rcji/lp4M953L74J7hhbZo9kOkQ9V
+        O+uXBv11gZECg6WFWLSu2AalDcBXwQCf2R/W2Rk=
+X-Google-Smtp-Source: ABdhPJxv4UXtB8XlalMXyzX+Y8TaYgSNcz3eswdocM8l2y2uEcmDNuY9lZ6do5sTxRtW9c/xiAt8+ZikHMKfJWNB//g=
+X-Received: by 2002:aa7:d6cc:: with SMTP id x12mr485098edr.354.1596072016482;
+ Wed, 29 Jul 2020 18:20:16 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a4a:ea95:0:0:0:0:0 with HTTP; Wed, 29 Jul 2020 10:54:09
- -0700 (PDT)
-Reply-To: sctnld11170@tlen.pl
-From:   "Mr. Scott Donald" <mdpp608@gmail.com>
-Date:   Wed, 29 Jul 2020 10:54:09 -0700
-Message-ID: <CAD90mdYbmNDLBhV=hVvx8tGRKXLTYZXuo3yja8w8k6AcrnzAhA@mail.gmail.com>
-Subject: Hello, Please
-To:     undisclosed-recipients:;
+References: <cover.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 30 Jul 2020 09:20:05 +0800
+Message-ID: <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-Dear Friend,
+HI Maxime,
 
-I'm Mr. Scott Donald a Successful businessMan dealing with
-Exportation, I got your mail contact through search to let you know my
-intension and my Ugly Situation Am a dying Man here in Los Angeles
-California Hospital Bed in (USA), I Lost my Wife and my only Daughter
-for Covid-19 and I also have a problem in my Health and I can die
-anytime I Know,
+Any comments on thermal and other patches?
+I hope these patches can be integrated into the mainline as soon as possible.
 
-I have a project that I am about to hand over to you. and I already
-instructed the Bankia S.A. Madrid, Spain(BSA) to transfer my fund sum
-of =C2=A33,7M GBP. Equivalent to =E2=82=AC4,077,033.91 EUR, to you as to en=
-able you
-to give 50% of this fund to Charitable Home in your State and take 50%
-don't think otherwise and why would anybody send someone you barely
-know to help you deliver a message, help me do this for the happiness
-of my soul and for God to mercy me and my Family and give Us a good
-place.
-
-please, do as I said there was someone from your State that I deeply
-love so very very much and I miss her so badly I have no means to
-reach any Charitable Home there. that is why I go for a personal
-search of the Country and State and I got your mail contact through
-search to let you know my Bitterness and please, help me is getting
-Dark I ask my Doctor to help me keep you notice failure for me to
-reach you in person Your urgent Response, here is my Doctor Whats-app
-Number for urgent notice +13019692737
-
-Hope To Hear From You. I'm sending this email to you for the second
-time yet no response from you.
-
-My Regards.
-
-Mr. Scott Donald
-CEO
+Thx,
+Yangtao
