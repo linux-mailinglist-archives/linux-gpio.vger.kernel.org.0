@@ -2,106 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A10423345A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 16:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 509F1233495
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 16:38:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgG3O1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jul 2020 10:27:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59224 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgG3O1S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:27:18 -0400
-IronPort-SDR: u0M6kPzd39KINCv6fciPcf7OYktEolj6HMxsdUuAxRtNK+i2wltXNA3nviUencEkXmV9Nm/cwE
- f5D+CTTUJnkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="151581255"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="151581255"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 07:27:18 -0700
-IronPort-SDR: RYZHOM7Xi+pvhaVpsbRv6o5o+REBM8+hnpx23fQ4ZpNZ1vN3i+IApaP6UhgfXs1cN00WBpEQnC
- ng5g7uZevrPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="272937640"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 07:27:15 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1k19Wd-004xyr-3t; Thu, 30 Jul 2020 17:27:15 +0300
-Date:   Thu, 30 Jul 2020 17:27:15 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        id S1729578AbgG3OiZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jul 2020 10:38:25 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:56878 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3OiZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jul 2020 10:38:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DBADF80045E5;
+        Thu, 30 Jul 2020 14:38:21 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KpegvUn9Uau9; Thu, 30 Jul 2020 17:38:21 +0300 (MSK)
+Date:   Thu, 30 Jul 2020 17:38:20 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] gpio: dwapb: Discard ACPI GPIO-chip IRQs request
-Message-ID: <20200730142715.GO3703480@smile.fi.intel.com>
+        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/10] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200730143820.suneapi2ilp34nat@mobilestation>
 References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
- <20200730135536.19747-8-Sergey.Semin@baikalelectronics.ru>
+ <20200730135536.19747-6-Sergey.Semin@baikalelectronics.ru>
+ <20200730142618.GM3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200730135536.19747-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200730142618.GM3703480@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 04:55:33PM +0300, Serge Semin wrote:
-> Since GPIOlib-based IRQ-chip interface is now utilized there is no need
-> in calling the methods acpi_gpiochip_{request,free}_interrupts() here.
-> They will be called from gpiochip_add_irqchip()/gpiochip_irqchip_remove()
-> anyway.
+On Thu, Jul 30, 2020 at 05:26:18PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 30, 2020 at 04:55:31PM +0300, Serge Semin wrote:
+> > GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
+> > top of a GPIO chip. It's better from maintainability and readability
+> > point of view to use one instead of supporting a hand-written Generic
+> > IRQ-chip-based implementation. Moreover the new implementation won't
+> > cause much functional overhead but will provide a cleaner driver code.
+> > All of that makes the DW APB GPIO driver conversion pretty much justified
+> > especially seeing a tendency of the other GPIO drivers getting converted
+> > too.
+> > 
+> > Here is what we do in the framework of this commit to convert the driver
+> > to using the GPIO-lib-based IRQ-chip interface:
+> > 1) IRQ ack, mask and unmask callbacks are locally defined instead of
+> > using the Generic IRQ-chip ones.
+> 
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Easy to read if you put blank lines in between of items.
 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Ok.
+
 > 
-> ---
+> > 2) An irq_chip structure instance is embedded into the dwapb_gpio
+> > private data. Note we can't have a static instance of that structure since
+> > GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
+> > A warning about that would have been printed by the GPIO-lib code if we
+> > used a single irq_chip structure instance for multiple DW APB GPIO
+> > controllers.
+> > 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
+> > descriptor. By default there is no IRQ enabled so any event raised will be
+> > handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
+> > is synthesized to have non-shared reference IRQ-lines, then as before the
+> > hierarchical and cascaded cases are distinguished by checking how many
+> > parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
+> > initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
+> > is used on a platform with shared IRQ line, then we simply won't let the
+> > GPIO-lib to initialize the parental IRQs, but will handle them locally in
+> > the driver.
+> > 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
+> > GPIO-lib IRQ-chip interface will create a new domain and accept a standard
+> > IRQ-chip structure pointer based on the setting we provided in the
+> > gpio_irq_chip structure.
+> > 5) Manually select a proper IRQ flow handler directly in the
+> > irq_set_type() callback by calling irq_set_handler_locked() method, since
+> > an ordinary (not Generic) irq_chip descriptor is now utilized. Note this
+> > shalln't give any regression
+> > 6) Alter CONFIG_GPIO_DWAPB kernel config to select
+> > CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
+> > 
+> > Note neither 4) nor 5) shall cause a regression of commit 6a2f4b7dadd5
+> > ("gpio: dwapb: use a second irq chip"), since the later isn't properly
+> > used here anyway.
 > 
-> Changelog v2:
-> - This is a new patch detached from commit
->   "gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip".
-> ---
->  drivers/gpio/gpio-dwapb.c | 4 ----
->  1 file changed, 4 deletions(-)
+> ...
 > 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index f7acc5abbf5c..226d9c2d9493 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -512,9 +512,6 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->  		return err;
->  	}
->  
-> -	/* Add GPIO-signaled ACPI event support */
-> -	acpi_gpiochip_request_interrupts(&port->gc);
-> -
->  	port->is_registered = true;
->  
->  	return 0;
-> @@ -530,7 +527,6 @@ static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
->  		if (!port->is_registered)
->  			continue;
->  
-> -		acpi_gpiochip_free_interrupts(&port->gc);
->  		gpiochip_remove(&port->gc);
->  	}
->  }
+> >  struct dwapb_gpio_port {
+> >  	struct gpio_chip	gc;
+> > +	unsigned int		nr_irqs;
+> > +	unsigned int		irq[DWAPB_MAX_GPIOS];
+> > +	struct irq_chip		irqchip;
+> >  	bool			is_registered;
+> >  	struct dwapb_gpio	*gpio;
+> 
+
+> Isn't it too much wasted memory (imagine 4 port controller)?
+> 
+> What if we have it in another structure and allocate dynamically?
+> 
+> struct dwapb_gpio_port_irqchip {
+> 	struct irq_chip		irqchip;
+> 	unsigned int		nr_irqs;
+> 	unsigned int		irq[DWAPB_MAX_GPIOS];
+> };
+
+Agree. I have to send a new revision of the series anyway. I'll do that shortly.
+
+-Sergey
+
+> 
+> 	...
+> 	struct dwapb_gpio_port_irqchip *pirq;
+> 	...
+> 
+> (I agree that IRQ chip is rather property of a port than controller)
+> 
 > -- 
-> 2.27.0
+> With Best Regards,
+> Andy Shevchenko
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
