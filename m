@@ -2,37 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A51BF233573
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 17:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF633233556
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 17:28:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgG3P2P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1729800AbgG3P2P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 30 Jul 2020 11:28:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57092 "EHLO
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57060 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3P2P (ORCPT
+        with ESMTP id S1728412AbgG3P2P (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jul 2020 11:28:15 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1950180045E5;
-        Thu, 30 Jul 2020 15:28:13 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A083D8030866;
+        Thu, 30 Jul 2020 15:28:12 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6wK_MbMx2Zd5; Thu, 30 Jul 2020 18:28:11 +0300 (MSK)
+        with ESMTP id xq1zIwFDAxoC; Thu, 30 Jul 2020 18:28:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 00/10] gpio: dwapb: Refactor GPIO resources initialization
-Date:   Thu, 30 Jul 2020 18:27:57 +0300
-Message-ID: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 01/10] dt-bindings: gpio: dwapb: Add ngpios property support
+Date:   Thu, 30 Jul 2020 18:27:58 +0300
+Message-ID: <20200730152808.2955-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -42,77 +45,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This series is about the DW APB GPIO device initialization procedure
-cleaning up. First of all it has been discovered that having a
-vendor-specific "snps,nr-gpios" property isn't only redundant but also
-might be dangerous (see the commit log for details). Instead we suggest to
-use the generic "ngpios" property to define a number of GPIOs each DW APB
-GPIO controller port supports. Secondly seeing a tendency of the other
-GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
-interface this series provides a patch, which replaces the DW APB GPIO
-driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
-Finally the DW APB GPIO device probe procedure is simplified by
-converting the code to be using the device managed resources for the
-reference clocks initialization, reset control assertion/de-assertion
-and GPIO-chip registration.
-
-Some additional cleanups like replacing a number of GPIOs literal with a
-corresponding macro and grouping the IRQ handlers up in a single place of
-the driver are also introduced in this patchset.
-
-Link: https://lore.kernel.org/linux-gpio/20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v2:
-- Replace gc->to_irq() with irq_find_mapping() method.
-- Refactor dwapb_irq_set_type() method to directly set IRQ flow handler
-  instead of using a temporary variable.
-- Initialize GPIOlib IRQ-chip settings before calling request_irq()
-  method.
-- Add a notice regarding regression of commit 6a2f4b7dadd5 ("gpio:
-  dwapb: use a second irq chip").
-- Move the acpi_gpiochip_{request,free}_interrupts() methods invocation
-  removal to a dedicated patch.
-- Move GPIO-chip to_irq callback removal to a dedicated patch.
-- Add a patch which replaces a max number of GPIO literals with a macro.
-- Introduce dwapb_convert_irqs() method to convert the sparse parental
-  IRQs array into an array of linearly distributed IRQs correctly
-  perceived by GPIO-lib.
-
-Link: https://lore.kernel.org/linux-gpio/20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru
-Changelog v3:
-- Fix patches SoB's.
-- Add Andy' Suggested-by to the patch: "gpio: dwapb: Add max GPIOs macro"
-- Add blank lines to the IRQ-chip conversion commit message to make it
-  more readable.
-- Dynamically allocate memory for the IRQ-chip-related data.
+It's redundant to have a vendor-specific property describing a number of
+GPIOS while there is a generic one. Let's mark the former one as
+deprecated and define the "ngpios" property supported with constraints
+of being within [1; 32] range.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Serge Semin (10):
-  dt-bindings: gpio: dwapb: Add ngpios property support
-  gpio: dwapb: Add ngpios DT-property support
-  gpio: dwapb: Move MFD-specific IRQ handler
-  gpio: dwapb: Add max GPIOs macro
-  gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
-  gpio: dwapb: Discard GPIO-to-IRQ mapping function
-  gpio: dwapb: Discard ACPI GPIO-chip IRQs request
-  gpio: dwapb: Get reset control by means of resource managed interface
-  gpio: dwapb: Get clocks by means of resource managed interface
-  gpio: dwapb: Use resource managed GPIO-chip add data method
-
- .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
- drivers/gpio/Kconfig                          |   2 +-
- drivers/gpio/gpio-dwapb.c                     | 352 +++++++++---------
- include/linux/platform_data/gpio-dwapb.h      |   4 +-
- 4 files changed, 191 insertions(+), 173 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+index 1240f6289249..b391cc1b4590 100644
+--- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+@@ -61,8 +61,14 @@ patternProperties:
+       '#gpio-cells':
+         const: 2
+ 
++      ngpios:
++        default: 32
++        minimum: 1
++        maximum: 32
++
+       snps,nr-gpios:
+         description: The number of GPIO pins exported by the port.
++        deprecated: true
+         $ref: /schemas/types.yaml#/definitions/uint32
+         default: 32
+         minimum: 1
 -- 
 2.27.0
 
