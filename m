@@ -2,22 +2,22 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D96233563
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 17:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FA7023355A
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jul 2020 17:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgG3P2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jul 2020 11:28:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57242 "EHLO
+        id S1729854AbgG3P2W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jul 2020 11:28:22 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57256 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729832AbgG3P2U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jul 2020 11:28:20 -0400
+        with ESMTP id S1729836AbgG3P2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jul 2020 11:28:21 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BC18C8040A6C;
-        Thu, 30 Jul 2020 15:28:17 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 696588040A6D;
+        Thu, 30 Jul 2020 15:28:18 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DcZ2WhE0PUis; Thu, 30 Jul 2020 18:28:17 +0300 (MSK)
+        with ESMTP id g363o4P2slKZ; Thu, 30 Jul 2020 18:28:17 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -30,9 +30,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 09/10] gpio: dwapb: Get clocks by means of resource managed interface
-Date:   Thu, 30 Jul 2020 18:28:06 +0300
-Message-ID: <20200730152808.2955-10-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 10/10] gpio: dwapb: Use resource managed GPIO-chip add data method
+Date:   Thu, 30 Jul 2020 18:28:07 +0300
+Message-ID: <20200730152808.2955-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -44,100 +44,98 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The kernel clock framework provides the resource managed version of
-the clk_bulk_get() method. The only thing which needs to be also automated
-is the clocks disable/unprepare procedure executed on the device removal.
-It can be implemented by means of the custom action definition. After that
-the clocks acquisition and release will be purely managed by the device
-resources interface.
+Since the resource managed version of gpiochip_add_data() will handle the
+GPIO-chip data automated cleanup we can freely remove the DW APB GPIO
+driver code responsible for that. After doing so the DW APB GPIO driver
+removal callback can be also fully discarded since there is nothing left
+to be done for it. All the cleanups are now performed by means of the
+device managed framework.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/gpio/gpio-dwapb.c | 48 ++++++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 37 ++-----------------------------------
+ 1 file changed, 2 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index faac594287b3..803e1d1f4b5a 100644
+index 803e1d1f4b5a..a5b326754124 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -647,6 +647,36 @@ static int dwapb_get_reset(struct dwapb_gpio *gpio)
- 	return devm_add_action_or_reset(gpio->dev, dwapb_assert_reset, gpio);
- }
+@@ -91,7 +91,6 @@ struct dwapb_gpio_port_irqchip {
+ struct dwapb_gpio_port {
+ 	struct gpio_chip	gc;
+ 	struct dwapb_gpio_port_irqchip *pirq;
+-	bool			is_registered;
+ 	struct dwapb_gpio	*gpio;
+ #ifdef CONFIG_PM_SLEEP
+ 	struct dwapb_context	*ctx;
+@@ -519,32 +518,16 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 	if (pp->idx == 0)
+ 		dwapb_configure_irqs(gpio, port, pp);
  
-+static void dwapb_disable_clks(void *data)
-+{
-+	struct dwapb_gpio *gpio = data;
-+
-+	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
-+}
-+
-+static int dwapb_get_clks(struct dwapb_gpio *gpio)
-+{
-+	int err;
-+
-+	/* Optional bus and debounce clocks */
-+	gpio->clks[0].id = "bus";
-+	gpio->clks[1].id = "db";
-+	err = devm_clk_bulk_get_optional(gpio->dev, DWAPB_NR_CLOCKS,
-+					 gpio->clks);
-+	if (err) {
-+		dev_err(gpio->dev, "Cannot get APB/Debounce clocks\n");
-+		return err;
-+	}
-+
-+	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
-+	if (err) {
-+		dev_err(gpio->dev, "Cannot enable APB/Debounce clocks\n");
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(gpio->dev, dwapb_disable_clks, gpio);
-+}
-+
- static const struct of_device_id dwapb_of_match[] = {
- 	{ .compatible = "snps,dw-apb-gpio", .data = (void *)0},
- 	{ .compatible = "apm,xgene-gpio-v2", .data = (void *)GPIO_REG_OFFSET_V2},
-@@ -699,21 +729,9 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(gpio->regs))
- 		return PTR_ERR(gpio->regs);
- 
--	/* Optional bus and debounce clocks */
--	gpio->clks[0].id = "bus";
--	gpio->clks[1].id = "db";
--	err = devm_clk_bulk_get_optional(&pdev->dev, DWAPB_NR_CLOCKS,
--					 gpio->clks);
--	if (err) {
--		dev_err(&pdev->dev, "Cannot get APB/Debounce clocks\n");
--		return err;
--	}
--
--	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
--	if (err) {
--		dev_err(&pdev->dev, "Cannot enable APB/Debounce clocks\n");
-+	err = dwapb_get_clks(gpio);
-+	if (err)
+-	err = gpiochip_add_data(&port->gc, port);
++	err = devm_gpiochip_add_data(gpio->dev, &port->gc, port);
+ 	if (err) {
+ 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
+ 			port->idx);
  		return err;
--	}
+ 	}
  
- 	gpio->flags = (uintptr_t)device_get_match_data(dev);
- 
-@@ -728,7 +746,6 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 
- out_unregister:
- 	dwapb_gpio_unregister(gpio);
--	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
- 
- 	return err;
+-	port->is_registered = true;
+-
+ 	return 0;
  }
-@@ -738,7 +755,6 @@ static int dwapb_gpio_remove(struct platform_device *pdev)
- 	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
  
- 	dwapb_gpio_unregister(gpio);
--	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+-static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
+-{
+-	unsigned int m;
+-
+-	for (m = 0; m < gpio->nr_ports; ++m) {
+-		struct dwapb_gpio_port *port = &gpio->ports[m];
+-
+-		if (!port->is_registered)
+-			continue;
+-
+-		gpiochip_remove(&port->gc);
+-	}
+-}
+-
+ static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
+ 			  struct dwapb_port_property *pp)
+ {
+@@ -738,23 +721,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 	for (i = 0; i < gpio->nr_ports; i++) {
+ 		err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
+ 		if (err)
+-			goto out_unregister;
++			return err;
+ 	}
+-	platform_set_drvdata(pdev, gpio);
+-
+-	return 0;
+-
+-out_unregister:
+-	dwapb_gpio_unregister(gpio);
+-
+-	return err;
+-}
+-
+-static int dwapb_gpio_remove(struct platform_device *pdev)
+-{
+-	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+-
+-	dwapb_gpio_unregister(gpio);
  
  	return 0;
  }
+@@ -858,7 +826,6 @@ static struct platform_driver dwapb_gpio_driver = {
+ 		.acpi_match_table = dwapb_acpi_match,
+ 	},
+ 	.probe		= dwapb_gpio_probe,
+-	.remove		= dwapb_gpio_remove,
+ };
+ 
+ module_platform_driver(dwapb_gpio_driver);
 -- 
 2.27.0
 
