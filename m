@@ -2,152 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 750E92345F1
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jul 2020 14:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A559D2346C4
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jul 2020 15:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbgGaMj7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Jul 2020 08:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33786 "EHLO
+        id S2387415AbgGaNV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Jul 2020 09:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733093AbgGaMj7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Jul 2020 08:39:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AA4C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Jul 2020 05:39:59 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k1UKI-0000kD-5f; Fri, 31 Jul 2020 14:39:54 +0200
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k1UKH-0002d3-3w; Fri, 31 Jul 2020 14:39:53 +0200
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: don't use same lockdep class for all devm_gpiochip_add_data users
-Date:   Fri, 31 Jul 2020 14:38:36 +0200
-Message-Id: <20200731123835.8003-1-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
+        with ESMTP id S1732368AbgGaNV4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Jul 2020 09:21:56 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BF2C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Jul 2020 06:21:55 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j9so21909943ilc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Jul 2020 06:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=PVBzqO5V0lczT9KKCKlsJFN0ogUwFA0i7lX6j3d1IjsHKYDH6/jKMvXDIzuPghbdiu
+         6FsW3dPbwm3wa+UWUTV03Y8wE4eeUkxuzab27EdZg/T6CKKuji9Z/h8UinvtuBFm/dif
+         ukK9ctbFeMR8/YMSC71tpjMRKx8c+Iu2/a0waKMb5uHZs/jgFsyKHIpsfeUrHHTS3NeW
+         qsORbvy7E5lkWjG22VO6mm0zTzj2Kn0vGRzKvbzH2pVV2UalaQNodUGlRiHMl0bBHE7P
+         cDn4ZNqs89a+2mqAgpeehd+q0HkReJOqmXYmCuTSbvbDlct/JXo0aQmnhKvlzxCT4NkG
+         oUGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=fbPI8PUq4BHJceVHEgCV5fmuvCP5TRNRh0cG+ornS6YhAh1Bhgl6ifrRz9GJM1P7ac
+         8jKozph8wGaTus8swdx7FwoA+gd6TYZOjIRk/hzpOV7V7rlwELODq0oFeel8fHtf8rHa
+         qmkYj47TKRAY0/+XdwJCBMwu5NO/uI0xz0/2237HqRQj3/e/f7OfsICq8bZguQ7wrbdA
+         YKn4/H5b8OH4VpV7M7gYW5aiB1Sl9uiMowldy8fWaT9ZQ6vUfvyI16T7VY+ybPYBiqyQ
+         VAf/cWwWFRPtKbD+iY6A0HYCOQKrugSwuEmW0fuIl/t7dMzCWAvTcjWxcXghVkilpO1f
+         ZMCQ==
+X-Gm-Message-State: AOAM5336f3N9AKdm90XDYAqdxVtVyocb5H/hkFeZLA+Bb4EhdCyQFxzo
+        Ny8Sgy22jKIjNFbGhcpcKMyjz0fPj9CZ7Xgnnd9dvAco
+X-Google-Smtp-Source: ABdhPJw+Gmzd0kvjH80OwHfW4300Stjz6nIX8gSzEXwZL+m8lTOqegw3MZSE6jxno7hDDowNDehv+wf6ISDF//X0788=
+X-Received: by 2002:a92:8946:: with SMTP id n67mr3886538ild.168.1596201714689;
+ Fri, 31 Jul 2020 06:21:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Received: by 2002:a6b:7508:0:0:0:0:0 with HTTP; Fri, 31 Jul 2020 06:21:54
+ -0700 (PDT)
+Reply-To: ayishagddafio@mail.ru
+From:   AISHA GADDAFI <mahasaliou99999@gmail.com>
+Date:   Fri, 31 Jul 2020 06:21:54 -0700
+Message-ID: <CAMugOs8q3wO3hYFUDuXpGihSrGLKc9rvevgFcbjivRQF7Qmi4A@mail.gmail.com>
+Subject: Lieber Freund (Assalamu Alaikum),?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 959bc7b22bd2 ("gpio: Automatically add lockdep keys") documents
-in its commits message its intention to "create a unique class key for
-each driver".
+--=20
+Lieber Freund (Assalamu Alaikum),
 
-It does so by having gpiochip_add_data add in-place the definition of
-two static lockdep classes for LOCKDEP use. That way, every caller of
-the macro adds their gpiochip with unique lockdep classes.
+Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
+Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
+Mutter und eine Witwe
+mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
+hen
+Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
 
-There are many indirect callers of gpiochip_add_data, however, via
-use of devm_gpiochip_add_data. devm_gpiochip_add_data has external
-linkage and all its users will share the same lockdep classes, which
-probably is not intended.
+Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
+f=C3=BCnfhunderttausend
+United State Dollar ($ 27.500.000.00) und ich brauche eine
+vertrauensw=C3=BCrdige Investition
+Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
+jedoch
+M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
+von
+Investitionsprojekten in Ihrem Land
+Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
+bauen.
 
-Fix this by replicating the gpio_chip_add_data statics-in-macro for
-the devm_ version as well.
+Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
+n und
+Unternehmensgewinn zu verhandeln
+Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
 
-Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
-This doesn't fix any particular problem I ran into, but the code
-looked buggy, at least to my lockdep-user-not-developer eyes.
----
- drivers/gpio/gpiolib-devres.c | 13 ++++++++-----
- include/linux/gpio/driver.h   | 13 +++++++++++--
- 2 files changed, 19 insertions(+), 7 deletions(-)
+Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
+antworten Sie bitte dringend
+Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
+.
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 5c91c4365da1..7dbce4c4ebdf 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -487,10 +487,12 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
- }
- 
- /**
-- * devm_gpiochip_add_data() - Resource managed gpiochip_add_data()
-+ * devm_gpiochip_add_data_with_key() - Resource managed gpiochip_add_data_with_key()
-  * @dev: pointer to the device that gpio_chip belongs to.
-  * @gc: the GPIO chip to register
-  * @data: driver-private data associated with this chip
-+ * @lock_key: lockdep class for IRQ lock
-+ * @request_key: lockdep class for IRQ request
-  *
-  * Context: potentially before irqs will work
-  *
-@@ -501,8 +503,9 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
-  * gc->base is invalid or already associated with a different chip.
-  * Otherwise it returns zero as a success code.
-  */
--int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
--			   void *data)
-+int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
-+				    struct lock_class_key *lock_key,
-+				    struct lock_class_key *request_key)
- {
- 	struct gpio_chip **ptr;
- 	int ret;
-@@ -512,7 +515,7 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
- 	if (!ptr)
- 		return -ENOMEM;
- 
--	ret = gpiochip_add_data(gc, data);
-+	ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
- 	if (ret < 0) {
- 		devres_free(ptr);
- 		return ret;
-@@ -523,4 +526,4 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(devm_gpiochip_add_data);
-+EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index c4f272af7af5..e6217d8e2e9f 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -509,8 +509,16 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		gpiochip_add_data_with_key(gc, data, &lock_key, \
- 					   &request_key);	  \
- 	})
-+#define devm_gpiochip_add_data(dev, gc, data) ({ \
-+		static struct lock_class_key lock_key;	\
-+		static struct lock_class_key request_key;	  \
-+		devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
-+					   &request_key);	  \
-+	})
- #else
- #define gpiochip_add_data(gc, data) gpiochip_add_data_with_key(gc, data, NULL, NULL)
-+#define devm_gpiochip_add_data(dev, gc, data) \
-+	devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
- #endif /* CONFIG_LOCKDEP */
- 
- static inline int gpiochip_add(struct gpio_chip *gc)
-@@ -518,8 +526,9 @@ static inline int gpiochip_add(struct gpio_chip *gc)
- 	return gpiochip_add_data(gc, NULL);
- }
- extern void gpiochip_remove(struct gpio_chip *gc);
--extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
--				  void *data);
-+extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
-+					   struct lock_class_key *lock_key,
-+					   struct lock_class_key *request_key);
- 
- extern struct gpio_chip *gpiochip_find(void *data,
- 			      int (*match)(struct gpio_chip *gc, void *data));
--- 
-2.27.0
+Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
+esse (
+ayishagddafio@mail.ru ) zur weiteren Diskussion.
 
+Freundliche Gr=C3=BC=C3=9Fe
+Frau Aisha Al-Qaddafi
