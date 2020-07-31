@@ -2,80 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61D1B234AE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jul 2020 20:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 864CF234EC8
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Aug 2020 01:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbgGaS0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Jul 2020 14:26:53 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44487 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387652AbgGaS0x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Jul 2020 14:26:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id v6so17324394iow.11;
-        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
+        id S1726215AbgGaX7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Jul 2020 19:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaX7N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Jul 2020 19:59:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6364C06174A;
+        Fri, 31 Jul 2020 16:59:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v12so3768602ljc.10;
+        Fri, 31 Jul 2020 16:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UsimTWbIrqsHqWHrugIeQHRl2pI9arEz0nqny+Jdx80=;
+        b=utYyUXWFBG19iMOaqbTjqZjscEIXbcx7v1vLol18jiKTYRhX+ajiGTEdZkIZbE1xGO
+         ya6Dt/2zN3bJNoJPSrNavs9KiDD63R33H1D/Y29D0J4nO/RFpd+o+QptgGwz4JHjuC50
+         h5QZUpXltw5YzDfyd63hjnCpN/5gYLydc9ly/GEDT0UFBf+o8M6IL1ikTIU7tlO3pzux
+         86SGQeXcqI/vEuxrQEG9h+CbQSNlc4Vv2Fo5SasGBGzyEZ58UOzVv5zJjjGy4GwwKl7k
+         aE6233UfVWhErWQgbSjVOg+GvRej2+8k4SCdTRczeb1rghlxzKkgUDcrG8eFQlfzWDSI
+         J+VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KuRbjLAdk2qF/sclDpIueUjPnM2F0YR1YcWElNzgbpU=;
-        b=t6cwFtKE6N8y6jrpzbOq+VAzwZht9JT2wKANhmal7xL7kl8InN3Nhe6EXTvVPCKdLW
-         /LYXLUWu1rAKhhCeNiU2Vm+4019ELQP8BcAF+ogu3wHqzuMyUzxqIfzksT/+Gl4NWGNg
-         6XGR6k/AxeZMhup8AnT07P9zHxcS1d6+9Oxd2Rss+dxK68eqxmUwTzHCFreqI+SqygqV
-         BniSVwtdXhiHq1SzUKqvwlJL0FfjTXnaCRkenLqjfJLRjb33Gz+mtU1iqXta771EaRDA
-         oI30RWQv0X/VSkXqVSiGM/FSumX/1wkMKnZ6NRvyVumBkh1fO8dx9Yq8us/3HhbZhV0p
-         7LHQ==
-X-Gm-Message-State: AOAM531C8iV0SZiIrs0nqHOO0f0ydCnDhw7m7v/OAQo2fsGVGXetDts7
-        L53CTEcaPgteB7ayzYUO3A==
-X-Google-Smtp-Source: ABdhPJyQ+8uvOFgjmwMbjdzK/nhCeKXR4ECMzLtnQXdzQAe67dqY7s5ndxY9dXDf+RshQZN4g44q9A==
-X-Received: by 2002:a05:6602:150:: with SMTP id v16mr4742498iot.80.1596220012124;
-        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm2378512ilq.69.2020.07.31.11.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:26:51 -0700 (PDT)
-Received: (nullmailer pid 531147 invoked by uid 1000);
-        Fri, 31 Jul 2020 18:26:50 -0000
-Date:   Fri, 31 Jul 2020 12:26:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        Andy Teng <andy.teng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v10 1/3] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200731182650.GA531094@bogus>
-References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
- <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UsimTWbIrqsHqWHrugIeQHRl2pI9arEz0nqny+Jdx80=;
+        b=aEPX+bueXCqd6rtnSu+dmyl+J83MJA74ebTU+oML0JwlNnmKow3jkDOmESBODX2fQ5
+         ISa5YTi039/X+J+czVmw1y+fBpf7CygCfoySQFPApQIVWdVuVv3bTThbJfXC5YuINhyx
+         X6BWpguOHmFZKnHghKg4N+LJ8v+cSSz+us1bxHDzJDCuhN42enDs1Yh1KgGGfo06FKPz
+         bPDIteCGlownQ9P6ZCwv09E1zh3yz7XOBRpM+FDB1n7GS0w0P5vY8jiqnijqn9/gl6F0
+         K+JYYBf3e/9qpD2JoQMZHN+37SY8s3C3FdtaDJuP/xJlYrTJP9nvBZ8ZJfhuRaEijCz1
+         Yviw==
+X-Gm-Message-State: AOAM532LrYWiOwFsSNu/B3fWcceVltTNAqQ3OuUFzcSslABO72sayVEN
+        IMf7tJGzlntt8vBEUvczr/480w23SpZrRx4bqGxoARH4
+X-Google-Smtp-Source: ABdhPJyuFPum9EZ4xPwGLLRNhsfcctEtKyXIrIFwRlk9aXs5vD/fJgPGGo+5lZGA8s4Wgzgm9WPoKYSWNuEjwSxFSr0=
+X-Received: by 2002:a2e:6e0a:: with SMTP id j10mr2736087ljc.389.1596239951119;
+ Fri, 31 Jul 2020 16:59:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+References: <20200729093450.28585-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200729093450.28585-1-zhang.lyra@gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Sat, 1 Aug 2020 07:58:56 +0800
+Message-ID: <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 30 Jul 2020 21:30:14 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
-> 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+On Wed, Jul 29, 2020 at 5:35 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Taiping Lai <taiping.lai@unisoc.com>
+>
+> The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+> which would trigger the interrupt event once enabled it from user side.
+> This is the case for edge interrupts only. Adding a clear operation when
+> setting interrupt type can avoid that.
+>
+> Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+> Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 202 ++++++++++++++++++
->  1 file changed, 202 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> 
+>  drivers/gpio/gpio-sprd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> index d7314d39ab65..36ea8a3bd451 100644
+> --- a/drivers/gpio/gpio-sprd.c
+> +++ b/drivers/gpio/gpio-sprd.c
+> @@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I think you should move this abonormal interrupt clearing operation to
+sprd_gpio_request(), when users request a GPIO.
+
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_FALLING:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_BOTH:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_LEVEL_HIGH:
+> --
+> 2.20.1
+>
+
+
+-- 
+Baolin Wang
