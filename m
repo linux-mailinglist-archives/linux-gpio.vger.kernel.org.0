@@ -2,472 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20E3D235808
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Aug 2020 17:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9042359CE
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Aug 2020 20:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgHBPS0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 2 Aug 2020 11:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        id S1726999AbgHBS1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Aug 2020 14:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgHBPSX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Aug 2020 11:18:23 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98858C06174A
-        for <linux-gpio@vger.kernel.org>; Sun,  2 Aug 2020 08:18:23 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k18so9638569pfp.7
-        for <linux-gpio@vger.kernel.org>; Sun, 02 Aug 2020 08:18:23 -0700 (PDT)
+        with ESMTP id S1726920AbgHBS1f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Aug 2020 14:27:35 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFDFC06174A;
+        Sun,  2 Aug 2020 11:27:35 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id v22so14915937edy.0;
+        Sun, 02 Aug 2020 11:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gvr1e9N8TfoMygsUUhEZBnvTsBTOXxOyWQOt3C1D8+8=;
-        b=SwHJdVdAbBWM2v25IkuEi/2qblJn+klhe3ZATfSto0kD3FB4eWSTX7UoB1dDNso7ZI
-         nr1fNqcc3xz7mu/gOMQazOOZUZFhX6acKAHik89dfO3PJ9G/vceHV56nLV7AaXJnDOqR
-         Nx2h2s7+CyXpYSy78tZcKWKPhTtXbDEaE+3pfxmaCP2O8hJ4Is50hBQG6gIr56RtBGqr
-         KR1qhiDFvNci3mG8ikYlnAjWU88V/u48kdTpJWek0kGHBs4sY+SK3FHhKlyGs1Tm1d/4
-         gDJaxzLWZn9jiyQs1GoXegWQ47H8XuUMUepInIkEKZzVFmnK/NK8Nj0rwzo3KNWwAGJl
-         VzLg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ec+QZPQt4BI+HNScgjvbhAWx5U5Q2eYvCkS354frzh0=;
+        b=YtJLT8D3c903d3hsfGfmpRep4DyZJhzRytGWo/UssPWnsu4TDB7JZAkT1sTJMmJUH+
+         bq5rDlN4QtT+Xdj0JNzjtQ2QqTr2pVyC4JOlcnf9bRRCSyXgovVOl9FdgJQfsiPfkKzY
+         DWsX6GX1lxDOlwpnwJCtIh+GQ6RZkI/pzRvVJxUc5FGTjx+jay8s+7hZFlw796rU78Gc
+         7K1ApoysPqm8FRM+jQOGIRHengeFZ6xNP8mOw9mf8ONnQV8kOLpUVEJO7EpYgXqjQKbR
+         ZXY6Otij2DqA3PujrgbIOxTi9tcd/lHDFFPdppv1+HoL/eGjvY6ERK9eoJvC1OZ061lc
+         FmqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gvr1e9N8TfoMygsUUhEZBnvTsBTOXxOyWQOt3C1D8+8=;
-        b=a7CJbAu1lbWwiFS3GnfmnYYz0cuh2d7sd6FSxlW1cDHyl93/PpdLhCDm07yvgWQTy0
-         Tq/eS8XGYhtOvd/WXQMGpjg/TW7oz1puXx7Y2wPA0gR1oHIe5D4qWazGLCeqh/tZmmnd
-         c7xtV362dMD2HklLa4yjcUq/qCqyEE9pGRhHtfcPwtStYrhVgWSxZUw77cSAQY04dRD2
-         ZzsSCEbxzNQW/fZY8biltsN4cc2CSXu/fVXemb5ZZS8Z0wBX2NeuyPQ8OeA6z+HbdNrj
-         Efl2cGm+W435rbFMs6eHVmzs1q+ge/v/TlIMo0nZh355g/e3d0WlQLpcsSmVO7DcV2KD
-         oyHg==
-X-Gm-Message-State: AOAM533JkNs2gLWqvbE+UrPPMPNknkJq0W1gbPCdxBz01ur+48poWM77
-        1jpE/6YPUkUi/JZ7GvFpr1zM5hNVuC+3
-X-Google-Smtp-Source: ABdhPJycD/iSNJyaA8+LkJS9OBTByULbevY86imkp1s038y9w5JfofoKus7E+JPwRTTlGPJPLzgqyQ==
-X-Received: by 2002:aa7:99cc:: with SMTP id v12mr6408825pfi.255.1596381502795;
-        Sun, 02 Aug 2020 08:18:22 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e07:71af:89e2:30ac:28ac:db17])
-        by smtp.gmail.com with ESMTPSA id q24sm16683855pgg.3.2020.08.02.08.18.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 02 Aug 2020 08:18:21 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 20:48:13 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
-Message-ID: <20200802151813.GA6486@Mani-XPS-13-9360>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
- <20200626142941.GE8333@Mani-XPS-13-9360>
- <20200626171148.GD6611@BV030612LT>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ec+QZPQt4BI+HNScgjvbhAWx5U5Q2eYvCkS354frzh0=;
+        b=K83uV3irkoUMjiaYGxaIKS/7/Xhw9LmAzT7GEm14xlebX6o+ahYRqHbiMaUg91zym0
+         HOCPVuhQFvtyGr5sKMZ3VhY5avZJ3J0dVI3uEXdHfVHfig8ldeOikWvKCM8+E1bnUje6
+         G/2FKjqgmGFDuSn2GyziNsKTy4iraIy9TOXl3SKC+PujmY1oSm/6HcRfncJ6C8YW2FGY
+         Km/qhgofMmzTdBnhcOEh0R4V9pXI8vWWXUC2khNhxez7M0PSfQyiK6llzGQ952ESzuXB
+         ZusXTc+b95kxkHR72i9XG/IoQU3EUle4GttbIa1qAAdfKtjMbvTDrCQrParNiHz1fCFS
+         yGeQ==
+X-Gm-Message-State: AOAM532cCpjZiyS08P3ApXbDPMB2E+dwfN+U5Qy7ScIzWByrjx7/CRnq
+        Tr3hLoPvYHymHVvS49nNY94=
+X-Google-Smtp-Source: ABdhPJzPSVl/d4yXQb9tARqdTsGpw8tzteKDCnrRiPQdt2yWNobLwsKDJ8Loc5jmq7ZA1MaLrCqHCQ==
+X-Received: by 2002:aa7:c9c2:: with SMTP id i2mr12251380edt.326.1596392853909;
+        Sun, 02 Aug 2020 11:27:33 -0700 (PDT)
+Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
+        by smtp.gmail.com with ESMTPSA id b9sm2015326ejz.57.2020.08.02.11.27.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 11:27:33 -0700 (PDT)
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+To:     Borislav Petkov <bp@alien8.de>, trix@redhat.com
+Cc:     helgaas@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+References: <20200801112446.149549-1-refactormyself@gmail.com>
+ <20200801125657.GA25391@nazgul.tnic>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <b720aa44-895a-203b-e220-ecdb3acd9278@gmail.com>
+Date:   Sun, 2 Aug 2020 19:28:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626171148.GD6611@BV030612LT>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200801125657.GA25391@nazgul.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-Sorry for the delay. This has fallen through the cracks...
+On 8/1/20 2:56 PM, Borislav Petkov wrote:
+> On Sat, Aug 01, 2020 at 01:24:29PM +0200, Saheed O. Bolarinwa wrote:
+>> The return value of pci_read_config_*() may not indicate a device error.
+>> However, the value read by these functions is more likely to indicate
+>> this kind of error. This presents two overlapping ways of reporting
+>> errors and complicates error checking.
+> So why isn't the *value check done in the pci_read_config_* functions
+> instead of touching gazillion callers?
+Because the value ~0 has a meaning to some drivers and only
+drivers have this knowledge. For those cases more checks will
+be needed to ensure that it is an error that has actually
+happened.
+> For example, pci_conf{1,2}_read() could check whether the u32 *value it
+> just read depending on the access method, whether that value is ~0 and
+> return proper PCIBIOS_ error in that case.
 
-On Fri, Jun 26, 2020 at 08:11:48PM +0300, Cristian Ciocaltea wrote:
-> On Fri, Jun 26, 2020 at 07:59:41PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
-> > > Add pinctrl and gpio driver for Actions Semi S500 SoC.
-> > > 
-> > > The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
-> > > functions using a set of registers shared between gpio and pinctrl.
-> > > 
-> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > ---
-> > >  drivers/pinctrl/actions/Kconfig        |    6 +
-> > >  drivers/pinctrl/actions/Makefile       |    1 +
-> > >  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
-> > >  3 files changed, 1734 insertions(+)
-> > >  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
-> > > 
-> > > diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> > > index 966f1c2c89d6..a1d16e8280e5 100644
-> > > --- a/drivers/pinctrl/actions/Kconfig
-> > > +++ b/drivers/pinctrl/actions/Kconfig
-> > > @@ -10,6 +10,12 @@ config PINCTRL_OWL
-> > >  	help
-> > >  	  Say Y here to enable Actions Semi OWL pinctrl driver
-> > >  
-> > > +config PINCTRL_S500
-> > > +	bool "Actions Semi S500 pinctrl driver"
-> > > +	depends on PINCTRL_OWL
-> > > +	help
-> > > +	  Say Y here to enable Actions Semi S500 pinctrl driver
-> > > +
-> > >  config PINCTRL_S700
-> > >  	bool "Actions Semi S700 pinctrl driver"
-> > >  	depends on PINCTRL_OWL
-> > > diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
-> > > index 61aa9107a43a..b9e2c527c9d3 100644
-> > > --- a/drivers/pinctrl/actions/Makefile
-> > > +++ b/drivers/pinctrl/actions/Makefile
-> > > @@ -1,4 +1,5 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
-> > > +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
-> > >  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
-> > >  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
-> > > diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
-> > > new file mode 100644
-> > > index 000000000000..38e30914af6e
-> > > --- /dev/null
-> > > +++ b/drivers/pinctrl/actions/pinctrl-s500.c
-> > > @@ -0,0 +1,1727 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Actions Semi S500 SoC Pinctrl driver
-> > > + *
-> > > + * Copyright (c) 2014 Actions Semi Inc.
-> > > + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pinctrl/pinconf-generic.h>
-> > > +#include <linux/pinctrl/pinctrl.h>
-> > > +#include "pinctrl-owl.h"
-> > > +
-> > > +/* Pinctrl registers offset */
-> > > +#define MFCTL0			(0x0040)
-> > > +#define MFCTL1			(0x0044)
-> > > +#define MFCTL2			(0x0048)
-> > > +#define MFCTL3			(0x004C)
-> > > +#define PAD_PULLCTL0		(0x0060)
-> > > +#define PAD_PULLCTL1		(0x0064)
-> > > +#define PAD_PULLCTL2		(0x0068)
-> > > +#define PAD_ST0			(0x006C)
-> > > +#define PAD_ST1			(0x0070)
-> > > +#define PAD_CTL			(0x0074)
-> > > +#define PAD_DRV0		(0x0080)
-> > > +#define PAD_DRV1		(0x0084)
-> > > +#define PAD_DRV2		(0x0088)
-> > > +
-> > > +#define _GPIOA(offset)		(offset)
-> > > +#define _GPIOB(offset)		(32 + (offset))
-> > > +#define _GPIOC(offset)		(64 + (offset))
-> > > +#define _GPIOD(offset)		(96 + (offset))
-> > > +#define _GPIOE(offset)		(128 + (offset))
-> > > +
-> > > +#define NUM_GPIOS		(_GPIOE(3) + 1)
-> > > +#define _PIN(offset)		(NUM_GPIOS + (offset))
-> > > +
-> > > +#define DNAND_DQS		_GPIOA(12)
-> > > +#define DNAND_DQSN		_GPIOA(13)
-> > > +#define ETH_TXD0		_GPIOA(14)
-> > > +#define ETH_TXD1		_GPIOA(15)
-> > > +#define ETH_TXEN		_GPIOA(16)
-> > > +#define ETH_RXER		_GPIOA(17)
-> > > +#define ETH_CRS_DV		_GPIOA(18)
-> > > +#define ETH_RXD1		_GPIOA(19)
-> > > +#define ETH_RXD0		_GPIOA(20)
-> > > +#define ETH_REF_CLK		_GPIOA(21)
-> > > +#define ETH_MDC			_GPIOA(22)
-> > > +#define ETH_MDIO		_GPIOA(23)
-> > > +#define SIRQ0			_GPIOA(24)
-> > > +#define SIRQ1			_GPIOA(25)
-> > > +#define SIRQ2			_GPIOA(26)
-> > > +#define I2S_D0			_GPIOA(27)
-> > > +#define I2S_BCLK0		_GPIOA(28)
-> > > +#define I2S_LRCLK0		_GPIOA(29)
-> > > +#define I2S_MCLK0		_GPIOA(30)
-> > > +#define I2S_D1			_GPIOA(31)
-> > > +
-> > > +#define I2S_BCLK1		_GPIOB(0)
-> > > +#define I2S_LRCLK1		_GPIOB(1)
-> > > +#define I2S_MCLK1		_GPIOB(2)
-> > > +#define KS_IN0			_GPIOB(3)
-> > > +#define KS_IN1			_GPIOB(4)
-> > > +#define KS_IN2			_GPIOB(5)
-> > > +#define KS_IN3			_GPIOB(6)
-> > > +#define KS_OUT0			_GPIOB(7)
-> > > +#define KS_OUT1			_GPIOB(8)
-> > > +#define KS_OUT2			_GPIOB(9)
-> > > +#define LVDS_OEP		_GPIOB(10)
-> > > +#define LVDS_OEN		_GPIOB(11)
-> > > +#define LVDS_ODP		_GPIOB(12)
-> > > +#define LVDS_ODN		_GPIOB(13)
-> > > +#define LVDS_OCP		_GPIOB(14)
-> > > +#define LVDS_OCN		_GPIOB(15)
-> > > +#define LVDS_OBP		_GPIOB(16)
-> > > +#define LVDS_OBN		_GPIOB(17)
-> > > +#define LVDS_OAP		_GPIOB(18)
-> > > +#define LVDS_OAN		_GPIOB(19)
-> > > +#define LVDS_EEP		_GPIOB(20)
-> > > +#define LVDS_EEN		_GPIOB(21)
-> > > +#define LVDS_EDP		_GPIOB(22)
-> > > +#define LVDS_EDN		_GPIOB(23)
-> > > +#define LVDS_ECP		_GPIOB(24)
-> > > +#define LVDS_ECN		_GPIOB(25)
-> > > +#define LVDS_EBP		_GPIOB(26)
-> > > +#define LVDS_EBN		_GPIOB(27)
-> > > +#define LVDS_EAP		_GPIOB(28)
-> > > +#define LVDS_EAN		_GPIOB(29)
-> > > +#define LCD0_D18		_GPIOB(30)
-> > > +#define LCD0_D17		_GPIOB(31)
-> > > +
-> > > +#define DSI_DP3			_GPIOC(0)
-> > > +#define DSI_DN3			_GPIOC(1)
-> > > +#define DSI_DP1			_GPIOC(2)
-> > > +#define DSI_DN1			_GPIOC(3)
-> > > +#define DSI_CP			_GPIOC(4)
-> > > +#define DSI_CN			_GPIOC(5)
-> > > +#define DSI_DP0			_GPIOC(6)
-> > > +#define DSI_DN0			_GPIOC(7)
-> > > +#define DSI_DP2			_GPIOC(8)
-> > > +#define DSI_DN2			_GPIOC(9)
-> > > +#define SD0_D0			_GPIOC(10)
-> > > +#define SD0_D1			_GPIOC(11)
-> > > +#define SD0_D2			_GPIOC(12)
-> > > +#define SD0_D3			_GPIOC(13)
-> > > +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
-> > > +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
-> > > +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
-> > > +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
-> > > +#define SD0_CMD			_GPIOC(18)
-> > > +#define SD0_CLK			_GPIOC(19)
-> > > +#define SD1_CMD			_GPIOC(20)
-> > > +#define SD1_CLK			_GPIOC(21)
-> > > +#define SPI0_SCLK		_GPIOC(22)
-> > > +#define SPI0_SS			_GPIOC(23)
-> > > +#define SPI0_MISO		_GPIOC(24)
-> > > +#define SPI0_MOSI		_GPIOC(25)
-> > > +#define UART0_RX		_GPIOC(26)
-> > > +#define UART0_TX		_GPIOC(27)
-> > > +#define I2C0_SCLK		_GPIOC(28)
-> > > +#define I2C0_SDATA		_GPIOC(29)
-> > > +#define SENSOR0_PCLK		_GPIOC(31)
-> > > +
-> > > +#define SENSOR0_CKOUT		_GPIOD(10)
-> > > +#define DNAND_ALE		_GPIOD(12)
-> > > +#define DNAND_CLE		_GPIOD(13)
-> > > +#define DNAND_CEB0		_GPIOD(14)
-> > > +#define DNAND_CEB1		_GPIOD(15)
-> > > +#define DNAND_CEB2		_GPIOD(16)
-> > > +#define DNAND_CEB3		_GPIOD(17)
-> > > +#define UART2_RX		_GPIOD(18)
-> > > +#define UART2_TX		_GPIOD(19)
-> > > +#define UART2_RTSB		_GPIOD(20)
-> > > +#define UART2_CTSB		_GPIOD(21)
-> > > +#define UART3_RX		_GPIOD(22)
-> > > +#define UART3_TX		_GPIOD(23)
-> > > +#define UART3_RTSB		_GPIOD(24)
-> > > +#define UART3_CTSB		_GPIOD(25)
-> > > +#define PCM1_IN			_GPIOD(28)
-> > > +#define PCM1_CLK		_GPIOD(29)
-> > > +#define PCM1_SYNC		_GPIOD(30)
-> > > +#define PCM1_OUT		_GPIOD(31)
-> > > +
-> > > +#define I2C1_SCLK		_GPIOE(0)
-> > > +#define I2C1_SDATA		_GPIOE(1)
-> > > +#define I2C2_SCLK		_GPIOE(2)
-> > > +#define I2C2_SDATA		_GPIOE(3)
-> > > +
-> > > +#define CSI_DN0			_PIN(0)
-> > > +#define CSI_DP0			_PIN(1)
-> > > +#define CSI_DN1			_PIN(2)
-> > > +#define CSI_DP1			_PIN(3)
-> > > +#define CSI_CN			_PIN(4)
-> > > +#define CSI_CP			_PIN(5)
-> > > +#define CSI_DN2			_PIN(6)
-> > > +#define CSI_DP2			_PIN(7)
-> > > +#define CSI_DN3			_PIN(8)
-> > > +#define CSI_DP3			_PIN(9)
-> > > +
-> > > +#define DNAND_D0		_PIN(10)
-> > > +#define DNAND_D1		_PIN(11)
-> > > +#define DNAND_D2		_PIN(12)
-> > > +#define DNAND_D3		_PIN(13)
-> > > +#define DNAND_D4		_PIN(14)
-> > > +#define DNAND_D5		_PIN(15)
-> > > +#define DNAND_D6		_PIN(16)
-> > > +#define DNAND_D7		_PIN(17)
-> > > +#define DNAND_WRB		_PIN(18)
-> > > +#define DNAND_RDB		_PIN(19)
-> > > +#define DNAND_RDBN		_PIN(20)
-> > > +#define DNAND_RB		_PIN(21)
-> > > +
-> > > +#define PORB			_PIN(22)
-> > > +#define CLKO_25M		_PIN(23)
-> > > +#define BSEL			_PIN(24)
-> > > +#define PKG0			_PIN(25)
-> > > +#define PKG1			_PIN(26)
-> > > +#define PKG2			_PIN(27)
-> > > +#define PKG3			_PIN(28)
-> > > +
-> > > +#define _FIRSTPAD		_GPIOA(0)
-> > > +#define _LASTPAD		PKG3
-> > > +#define NUM_PADS		(_PIN(28) + 1)
-> > > +
-> > 
-> > [...]
-> > 
-> > > +static const struct owl_gpio_port s500_gpio_ports[] = {
-> > > +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
-> > > +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
-> > > +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
-> > > +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
-> > > +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
-> > 
-> > Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
-> > you get these?
-> > 
-> > Thanks,
-> > Mani
-> 
-> I computed the offsets using the S500 Datasheet, v1.6 (2016-03-07).
-> 
-> Below is an excerpt from chapter '30.4 Register List':
-> 
-> -------+--------------
-> Offset | Register Name
-> -------+--------------
-> 0x000C | GPIO_BOUTEN
-> 0x0010 | GPIO_BINEN
-> 0x0014 | GPIO_BDAT
-> ...
-> 0x0204 | INTC_GPIOCTL
-> 0x0210 | INTC_GPIOB_PD
-> 0x0214 | INTC_GPIOB_MSK
-> ...
-> 0x0238 | INTC_GPIOB_TYPE0
-> -------+--------------
-> 
-> Hence, for PORT-B, I got the following values:
-> 
-> OWL_GPIO_PORT(B,
->   0x000C, /* base = GPIO_BOUTEN = 0x000C */
->   32,
->   0x0,    /* GPIO_BOUTEN - base */
->   0x4,    /* GPIO_BINEN - base */
->   0x8,    /* GPIO_BDAT - base */
->   0x1F8,  /* INTC_GPIOCTL - base */
->   0x204,  /* INTC_GPIOB_PD - base */
->   0x208,  /* INTC_GPIOB_MSK - base */
->   0x22C,  /* INTC_GPIOB_TYPE0 - base */
->   1),
-> 
-> Did I miss something?
-> 
+The primary goal is to make pci_config_read*() return void, so
+that there is *only* one way to check for error i.e. through the
+obtained value.
+Again, only the drivers can determine if ~0 is a valid value. This
+information is not available inside pci_config_read*().
 
-No, I missed the fact that the pinctrl-owl.c takes the per port offset into
-account for calculating the offsets... Sorry for the noise, please go ahead!
+- Saheed
 
-Thanks,
-Mani
-
-> Thanks,
-> Cristi
-> 
-> > 
-> > > +};
-> > > +
-> > > +enum s500_pinconf_pull {
-> > > +	OWL_PINCONF_PULL_DOWN,
-> > > +	OWL_PINCONF_PULL_UP,
-> > > +};
-> > > +
-> > > +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
-> > > +				    unsigned int param, u32 *arg)
-> > > +{
-> > > +	switch (param) {
-> > > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > > +		*arg = OWL_PINCONF_PULL_DOWN;
-> > > +		break;
-> > > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > > +		*arg = OWL_PINCONF_PULL_UP;
-> > > +		break;
-> > > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> > > +		*arg = (*arg >= 1 ? 1 : 0);
-> > > +		break;
-> > > +	default:
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
-> > > +				    unsigned int param, u32 *arg)
-> > > +{
-> > > +	switch (param) {
-> > > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > > +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
-> > > +		break;
-> > > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > > +		*arg = *arg == OWL_PINCONF_PULL_UP;
-> > > +		break;
-> > > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> > > +		*arg = *arg == 1;
-> > > +		break;
-> > > +	default:
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
-> > > +	.padinfo = s500_padinfo,
-> > > +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
-> > > +	.npins = ARRAY_SIZE(s500_pads),
-> > > +	.functions = s500_functions,
-> > > +	.nfunctions = ARRAY_SIZE(s500_functions),
-> > > +	.groups = s500_groups,
-> > > +	.ngroups = ARRAY_SIZE(s500_groups),
-> > > +	.ngpios = NUM_GPIOS,
-> > > +	.ports = s500_gpio_ports,
-> > > +	.nports = ARRAY_SIZE(s500_gpio_ports),
-> > > +	.padctl_arg2val = s500_pad_pinconf_arg2val,
-> > > +	.padctl_val2arg = s500_pad_pinconf_val2arg,
-> > > +};
-> > > +
-> > > +static int s500_pinctrl_probe(struct platform_device *pdev)
-> > > +{
-> > > +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
-> > > +}
-> > > +
-> > > +static const struct of_device_id s500_pinctrl_of_match[] = {
-> > > +	{ .compatible = "actions,s500-pinctrl", },
-> > > +	{ }
-> > > +};
-> > > +
-> > > +static struct platform_driver s500_pinctrl_driver = {
-> > > +	.driver = {
-> > > +		.name = "pinctrl-s500",
-> > > +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
-> > > +	},
-> > > +	.probe = s500_pinctrl_probe,
-> > > +};
-> > > +
-> > > +static int __init s500_pinctrl_init(void)
-> > > +{
-> > > +	return platform_driver_register(&s500_pinctrl_driver);
-> > > +}
-> > > +arch_initcall(s500_pinctrl_init);
-> > > +
-> > > +static void __exit s500_pinctrl_exit(void)
-> > > +{
-> > > +	platform_driver_unregister(&s500_pinctrl_driver);
-> > > +}
-> > > +module_exit(s500_pinctrl_exit);
-> > > +
-> > > +MODULE_AUTHOR("Actions Semi Inc.");
-> > > +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-> > > +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
-> > > +MODULE_LICENSE("GPL");
-> > > -- 
-> > > 2.27.0
-> > > 
