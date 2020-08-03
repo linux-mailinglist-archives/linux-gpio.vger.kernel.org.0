@@ -2,122 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 532E123A1F4
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Aug 2020 11:43:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB9723A273
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Aug 2020 12:03:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgHCJmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Aug 2020 05:42:55 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:44577 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgHCJmq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 05:42:46 -0400
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7A60C23E52;
-        Mon,  3 Aug 2020 11:42:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1596447764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FD8R5v259HaQ4ECWV5Hx71Eg8JRggizA9m7r3kudZP4=;
-        b=TPjWWO7r5Q2P+dXWzXXQAkTIpjA5yZN/oRCvpH/AqwSYO3d8VDVCB8IamtAENaVvvXx2jK
-        83Y3il/alxlqIl84wV0N1cgpSA5/kg3ASuFQXZ1Lt5CcAHNr8+bRgQ9f45GOZcLrd0+QbO
-        gllT5Fc4FdNCugBca9Ojv9fYLbUMLHg=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v7 13/13] arm64: defconfig: enable the sl28cpld board management controller
-Date:   Mon,  3 Aug 2020 11:35:59 +0200
-Message-Id: <20200803093559.12289-14-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200803093559.12289-1-michael@walle.cc>
-References: <20200803093559.12289-1-michael@walle.cc>
+        id S1726169AbgHCKDB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Aug 2020 06:03:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5435 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbgHCKDB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:03:01 -0400
+IronPort-SDR: KTceCYw0uTBRhlzIau048VjUrKJwMXsXVNAOSaXm0+eA0vHPUozvx65+kfgW42cBz34mUeb79o
+ j/e94wZQa22g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="149871332"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="149871332"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 03:03:00 -0700
+IronPort-SDR: XRRUF8OdmuHBf1WW6sysIVNwb9fCTCsy9PToqRB7QDAhX2kZEDiY1bwWHRVLSNN38HOYAutnox
+ GsZKIJNALqmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="396004962"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 03 Aug 2020 03:02:59 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 03 Aug 2020 13:02:58 +0300
+Date:   Mon, 3 Aug 2020 13:02:58 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/3] pinctrl: cherryview: Drop stale comment
+Message-ID: <20200803100258.GF1375436@lahna.fi.intel.com>
+References: <20200727161216.67115-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727161216.67115-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enable the kernel modules for the board management controller "sl28cpld"
-which is used on the SMARC-sAL28 board.
+On Mon, Jul 27, 2020 at 07:12:14PM +0300, Andy Shevchenko wrote:
+> There is no more .groups member in struct chv_pinctrl,
+> drop associated comment because it's not applicable anymore.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-Changes since v6:
- - none
+For this and the other patches in this series,
 
-Changes since v5:
- - new patch
-
- arch/arm64/configs/defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 500b782b92df..dd1a8b9856b5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -500,6 +500,7 @@ CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCA953X_IRQ=y
- CONFIG_GPIO_BD9571MWV=m
- CONFIG_GPIO_MAX77620=y
-+CONFIG_GPIO_SL28CPLD=m
- CONFIG_POWER_AVS=y
- CONFIG_QCOM_CPR=y
- CONFIG_ROCKCHIP_IODOMAIN=y
-@@ -513,6 +514,7 @@ CONFIG_SENSORS_ARM_SCPI=y
- CONFIG_SENSORS_LM90=m
- CONFIG_SENSORS_PWM_FAN=m
- CONFIG_SENSORS_RASPBERRYPI_HWMON=m
-+CONFIG_SENSORS_SL28CPLD=m
- CONFIG_SENSORS_INA2XX=m
- CONFIG_SENSORS_INA3221=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
-@@ -535,6 +537,7 @@ CONFIG_QCOM_TSENS=y
- CONFIG_QCOM_SPMI_TEMP_ALARM=m
- CONFIG_UNIPHIER_THERMAL=y
- CONFIG_WATCHDOG=y
-+CONFIG_SL28CPLD_WATCHDOG=m
- CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_ARM_SBSA_WATCHDOG=y
- CONFIG_ARM_SMC_WATCHDOG=y
-@@ -935,8 +938,10 @@ CONFIG_PWM_MESON=m
- CONFIG_PWM_RCAR=m
- CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_SAMSUNG=y
-+CONFIG_PWM_SL28CPLD=m
- CONFIG_PWM_SUN4I=m
- CONFIG_PWM_TEGRA=m
-+CONFIG_SL28CPLD_INTC=y
- CONFIG_QCOM_PDC=y
- CONFIG_RESET_QCOM_AOSS=y
- CONFIG_RESET_QCOM_PDC=m
--- 
-2.20.1
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
