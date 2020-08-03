@@ -2,76 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B817E23A7E6
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Aug 2020 15:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C76E623A83B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Aug 2020 16:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgHCNud (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Aug 2020 09:50:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5063 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgHCNud (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:50:33 -0400
-IronPort-SDR: vxp283VIE2ln1FI3F8n2flyvc6KjyhH94iByTzDzRI1OoDByxn0XmaF9Eimy/wB/0qKSBCcHyK
- j7VCk3BncODw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="152068940"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="152068940"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 06:50:32 -0700
-IronPort-SDR: fbvBRE1t8DcfW/cjd+Jl55BHuUWsdbv6MT7a3tV71DLNJnKE7cG3oZDI0wxKTNMrPQvIJDNer3
- M6TA83SngK/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="324077066"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Aug 2020 06:50:31 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k2arH-005xPq-CY; Mon, 03 Aug 2020 16:50:31 +0300
-Date:   Mon, 3 Aug 2020 16:50:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/3] pinctrl: intel: Extract
- intel_pinctrl_get_soc_data() helper for wider use
-Message-ID: <20200803135031.GI3703480@smile.fi.intel.com>
-References: <20200729115708.38112-1-andriy.shevchenko@linux.intel.com>
- <20200803123318.GR1375436@lahna.fi.intel.com>
+        id S1726358AbgHCOVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Aug 2020 10:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCOVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 10:21:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B05CC06174A;
+        Mon,  3 Aug 2020 07:21:01 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id l4so38728153ejd.13;
+        Mon, 03 Aug 2020 07:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
+        b=Ygz3a3qnAKkYch2/zr6cBwVXYilIRFfVorb1udYyl7PL/X4xF/xeiui2wdLIVv8s5q
+         1DkNQWmFH1BKAyOdoZzVC2389PVP4BS9W2fwDH+E5NXzYkS+Y5zoe6UT6UGqQAZHmt2Z
+         zvipM6bawgFRe9vn4KCtj3YbGcR2MIqyX4JJWyQE0s8YmXZA5kJa8VBdFPR3SSUXXhuq
+         vEeMSJYB92m7NsKh2M5vmc8hYCB7qATy3DeezL6G123YIIjYSETixU1StrKofGmuHnKg
+         CjgexocKUy206wyl7i+vh11OLSEw5YNZubAEP+lC7o/9+RsC2V6ox0vkBTOj7rWLxsd+
+         cxtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
+        b=TACnOql0zcBQYja12hiHIHKJtwz4dR222XcA5Ur+EbsIzqMiBrKCS8Hlf4VzoLJ9pN
+         tQJXqJAVlJHDHV8C4+jZz9lvnopPPm3qufSMeo6hDoav2gGF8GGJCGvTlatRnLl0CdVR
+         Subw33r8JjQIQbFN8ku+4lUMFNwsNS9ISQ7WypgI4PeyBOLh3FaXl+kyLzPt5c8a1Um0
+         9uR4mvrSqlGDJZ8rdPjmW+fXGXZ7FjD809XQ+z/JIF6c0t9FKzbGaFxFT00wKuUO5CB2
+         mGFiPZsJi4wOWjf3spdI50nOAeEEsj3IgPLQsCARzN5mlUPHHz5OeSQ8EcafZ5wH4bxu
+         ZFkg==
+X-Gm-Message-State: AOAM533ggdAFY+IjTEaliB+/HKeZEG5NkTvMBqq2d5CDbPCJ56+HiAPk
+        nACHyoDV1ERF8K+Gf+DDAK8=
+X-Google-Smtp-Source: ABdhPJzI0nkGIfncrdAXqQp6WyKC3qlSJLVSoeH6iy2jkHamZLNShm17dVZ1nl2jvuGpmWwxeuEsQw==
+X-Received: by 2002:a17:906:1392:: with SMTP id f18mr16394990ejc.521.1596464459760;
+        Mon, 03 Aug 2020 07:20:59 -0700 (PDT)
+Received: from localhost.localdomain ([86.121.43.21])
+        by smtp.gmail.com with ESMTPSA id p3sm15608432edx.75.2020.08.03.07.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:20:58 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 0/3] Add Actions Semi S500 pinctrl support
+Date:   Mon,  3 Aug 2020 17:20:53 +0300
+Message-Id: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803123318.GR1375436@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:33:18PM +0300, Mika Westerberg wrote:
-> On Wed, Jul 29, 2020 at 02:57:06PM +0300, Andy Shevchenko wrote:
-> > intel_pinctrl_get_soc_data() helper can be used in few driver instead of
-> > open-coded variants. Thus, extract it as a standalone API.
+This patchset adds pinctrl support for Actions Semi S500 SoC.
 
-...
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-> > +const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_device *pdev)
-> 
-> Can we make this take const parameter as well?
+The pinctrl driver has been verified using RoseapplePi, the SBC for
+which an initial support has been provided via:
+https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
 
-You mean
+The DTS related changes, including the required clock support, will be
+available in the upcoming patch series.
 
-const struct intel_pinctrl_soc_data *
-intel_pinctrl_get_soc_data(const struct platform_device *pdev)
+Thanks,
+Cristi
 
-?
+Changes in v2:
+ - Updated the pinctrl bindings according to Rob's feedback
+ - Set the pinctrl entry in MAINTAINERS according to Mani's suggestion
+ - Rebased patches on v5.8
 
-Sure, I can do it for v2.
+Cristian Ciocaltea (3):
+  dt-bindings: pinctrl: Add bindings for Actions S500 SoC
+  pinctrl: actions: Add Actions S500 pinctrl driver
+  MAINTAINERS: Set pinctrl binding entry for all Actions Semi Owl SoCs
+
+ .../pinctrl/actions,s500-pinctrl.yaml         |  240 +++
+ MAINTAINERS                                   |    2 +-
+ drivers/pinctrl/actions/Kconfig               |    6 +
+ drivers/pinctrl/actions/Makefile              |    1 +
+ drivers/pinctrl/actions/pinctrl-s500.c        | 1727 +++++++++++++++++
+ 5 files changed, 1975 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.28.0
 
