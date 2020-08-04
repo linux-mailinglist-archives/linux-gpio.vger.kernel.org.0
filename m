@@ -2,224 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 075B523B295
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 04:10:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 035E723B4C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 08:04:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbgHDCKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Aug 2020 22:10:33 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:48135 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725840AbgHDCKc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 22:10:32 -0400
-X-UUID: 2b509aa39b3949f98eaf6db84f67a54c-20200804
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3BwGdOQ5D6GNhCsE0C8J7vcVgtFQc9v8dJhTj9hN+g0=;
-        b=ed7L57EmuxZ0LgWJ7Pe8AzmKgMzO81fUvBvCorpLIsxG6/vykA8v4RI1aFAF//63vFiSlSv24yd3lwTQ33PRnmBQvKMf6/lUe/mjfHEEqqwTjXtS1ZjdhNw6swmR1jyT8n2QOlL0ESlKQ0ObE8G5oYlNckiwGyQWJgz9YzHHv18=;
-X-UUID: 2b509aa39b3949f98eaf6db84f67a54c-20200804
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 887468460; Tue, 04 Aug 2020 10:10:20 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 Aug
- 2020 10:10:14 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 4 Aug 2020 10:10:14 +0800
-Message-ID: <1596506979.20778.18.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding
- document
-From:   zhiyong tao <zhiyong.tao@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <linus.walleij@linaro.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <sean.wang@kernel.org>,
-        <srv_heupstream@mediatek.com>, <hui.liu@mediatek.com>,
-        <eddie.huang@mediatek.com>, <chuanjia.liu@mediatek.com>,
-        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
-        <erin.lo@mediatek.com>, <sean.wang@mediatek.com>,
-        <sj.huang@mediatek.com>, <seiya.wang@mediatek.com>,
-        <jg_poxu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-Date:   Tue, 4 Aug 2020 10:09:39 +0800
-In-Reply-To: <20200803214655.GB3184946@bogus>
-References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
-         <20200801043303.32149-3-zhiyong.tao@mediatek.com>
-         <20200803214655.GB3184946@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1728322AbgHDGEY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Aug 2020 02:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgHDGEX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Aug 2020 02:04:23 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCA1C06174A
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Aug 2020 23:04:23 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id mt12so1388652pjb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Aug 2020 23:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=4cEpj/t+yOAdoFcUFYcPdl9T79gAz5RKAydAWzT8Po4=;
+        b=aTVic4BMcMFNwDdsq/8oQ8Wdf7WycDaI6Q7yHhN3JJvibbi9je6NsAMX89HcTJYQFJ
+         qbF/dW9vjVd5NUxnUZwuQNT18KNgQW44L0ImCn0MF0sevYDM9NU924jLg3o5+NjcW6eZ
+         2BEAm7ydfsHEncKvbPyPypJeOKCdOBvtrKOczYz6FfCR1jqIEyTecgVykUCbR7szejhL
+         dQW0uyxXaLMBYmsrlSAW164Fs1ekhPLmCKLw+MDEhIcZLXFt1+gvx07Ndv7ysDbutxPN
+         PsRyABZsfPaOD+ibRjvfyvy7F386hV+0J/3Da9Lpb8/np5nzUc5CAy8oD8Q2PpxPEOaR
+         /tkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=4cEpj/t+yOAdoFcUFYcPdl9T79gAz5RKAydAWzT8Po4=;
+        b=J9wK+QBJ7EMDnG5H/OejQVIFZ6FnuxvXNyw6yRXPt1A53ok60A+K+INxUGd1OblEpe
+         sXHzpZ19DnAwbNVlAd4os3njtVfWx+tQooWoGDCzLmoQ7rrrXFq+2rAGmbe9OVR5ae1R
+         NgscP2MY08Ez/+Gij6bFSspTIYUw+mTP8GA8ttP72VUmMoWB+IKN9s/lkzKvT/xu/9kw
+         Rc+Xr84eQw4XeYFiUq4SZTIb4gH2tXIMuYYBJzxtqd6O2zxSfgNLEGPimtO7yZ9GkC9K
+         yqucyPvM/83aUa+TJCSQjrAwDUwqJNiERn7KVWO/DsFB/9hH9tvFEQwqgWOe8pEfJoO1
+         DgFg==
+X-Gm-Message-State: AOAM530Ckohuot3jkcSeCbK4R+do/kp+O5nXp0er68VrEFJrYdGc41w2
+        l4zcsdxyDL4KT+Ldgt9wlqWSiSfY558=
+X-Google-Smtp-Source: ABdhPJyINXyMeT4QW8jjWGKK6b79s69PGVsSS0ucprzVVMQH00B5n6UbUxMXtbzy9T7bFceWiwOXKg==
+X-Received: by 2002:a17:90a:18c:: with SMTP id 12mr2932129pjc.74.1596521062464;
+        Mon, 03 Aug 2020 23:04:22 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id o2sm21262058pfh.160.2020.08.03.23.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 23:04:21 -0700 (PDT)
+Message-ID: <5f28fa65.1c69fb81.c9177.7564@mx.google.com>
+Date:   Mon, 03 Aug 2020 23:04:21 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: AD2601A2FA4E754C6F8D1F980DA46F02B422FAA54916200C442C0D45F21FFE182000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: gpio-v5.8-2-103-g22cc422070d9
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 21 warnings (gpio-v5.8-2-103-g22cc422070d9)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE1OjQ2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gU2F0LCBBdWcgMDEsIDIwMjAgYXQgMTI6MzM6MDJQTSArMDgwMCwgWmhpeW9uZyBUYW8gd3Jv
-dGU6DQo+ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5MiBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGlu
-ZyBkb2N1bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9u
-Zy50YW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9w
-aW5jdHJsLW10ODE5Mi55YW1sICAgICAgfCAxNzUgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxNzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIu
-eWFtbA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0KPiA+IG5ldyBmaWxlIG1v
-ZGUgMTAwNzU1DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi44OGUxOGUyZTIzYTANCj4gPiAtLS0g
-L2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
-bmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0KPiA+IEBAIC0wLDAgKzEsMTc1IEBADQo+ID4gKyMg
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0K
-PiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3Jn
-L3NjaGVtYXMvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRw
-Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3Rp
-dGxlOiBNZWRpYXRlayBNVDgxOTIgUGluIENvbnRyb2xsZXINCj4gPiArDQo+ID4gK21haW50YWlu
-ZXJzOg0KPiA+ICsgIC0gU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ICsN
-Cj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBUaGUgTWVkaWF0ZWsncyBQaW4gY29udHJvbGxl
-ciBpcyB1c2VkIHRvIGNvbnRyb2wgU29DIHBpbnMuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
-PiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gKyAgICBjb25zdDogbWVkaWF0ZWssbXQ4MTkyLXBpbmN0
-cmwNCj4gPiArDQo+ID4gKyAgZ3Bpby1jb250cm9sbGVyOiB0cnVlDQo+ID4gKw0KPiA+ICsgICcj
-Z3Bpby1jZWxscyc6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBOdW1iZXIg
-b2YgY2VsbHMgaW4gR1BJTyBzcGVjaWZpZXIuIFNpbmNlIHRoZSBnZW5lcmljIEdQSU8gYmluZGlu
-ZyBpcyB1c2VkLA0KPiA+ICsgICAgICB0aGUgYW1vdW50IG9mIGNlbGxzIG11c3QgYmUgc3BlY2lm
-aWVkIGFzIDIuIFNlZSB0aGUgYmVsb3cNCj4gPiArICAgICAgbWVudGlvbmVkIGdwaW8gYmluZGlu
-ZyByZXByZXNlbnRhdGlvbiBmb3IgZGVzY3JpcHRpb24gb2YgcGFydGljdWxhciBjZWxscy4NCj4g
-PiArICAgIGNvbnN0OiAyDQo+ID4gKw0KPiA+ICsgIGdwaW8tcmFuZ2VzOg0KPiA+ICsgICAgZGVz
-Y3JpcHRpb246IGdwaW8gdmFsaWQgbnVtYmVyIHJhbmdlLg0KPiA+ICsgICAgbWF4SXRlbXM6IDEN
-Cj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAg
-UGh5c2ljYWwgYWRkcmVzcyBiYXNlIGZvciBncGlvIGJhc2UgcmVnaXN0ZXJzLiBUaGVyZSBhcmUg
-MTEgR1BJTw0KPiA+ICsgICAgICBwaHlzaWNhbCBhZGRyZXNzIGJhc2UgaW4gbXQ4MTkyLg0KPiA+
-ICsgICAgbWF4SXRlbXM6IDExDQo+ID4gKw0KPiA+ICsgIHJlZy1uYW1lczoNCj4gPiArICAgIGRl
-c2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIEdwaW8gYmFzZSByZWdpc3RlciBuYW1lcy4NCj4gPiAr
-ICAgIG1heEl0ZW1zOiAxMQ0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHQtY29udHJvbGxlcjogdHJ1
-ZQ0KPiA+ICsNCj4gPiArICAnI2ludGVycnVwdC1jZWxscyc6DQo+ID4gKyAgICBjb25zdDogMg0K
-PiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IFRoZSBpbnRl
-cnJ1cHQgb3V0cHV0cyB0byBzeXNpcnEuDQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4g
-PiArI1BJTiBDT05GSUdVUkFUSU9OIE5PREVTDQo+ID4gK3BhdHRlcm5Qcm9wZXJ0aWVzOg0KPiA+
-ICsgICdecGlucyc6DQo+ID4gKyAgICB0eXBlOiBvYmplY3QNCj4gPiArICAgIGRlc2NyaXB0aW9u
-OiB8DQo+ID4gKyAgICAgIEEgcGluY3RybCBub2RlIHNob3VsZCBjb250YWluIGF0IGxlYXN0IG9u
-ZSBzdWJub2RlcyByZXByZXNlbnRpbmcgdGhlDQo+ID4gKyAgICAgIHBpbmN0cmwgZ3JvdXBzIGF2
-YWlsYWJsZSBvbiB0aGUgbWFjaGluZS4gRWFjaCBzdWJub2RlIHdpbGwgbGlzdCB0aGUNCj4gPiAr
-ICAgICAgcGlucyBpdCBuZWVkcywgYW5kIGhvdyB0aGV5IHNob3VsZCBiZSBjb25maWd1cmVkLCB3
-aXRoIHJlZ2FyZCB0byBtdXhlcg0KPiA+ICsgICAgICBjb25maWd1cmF0aW9uLCBwdWxsdXBzLCBk
-cml2ZSBzdHJlbmd0aCwgaW5wdXQgZW5hYmxlL2Rpc2FibGUgYW5kDQo+ID4gKyAgICAgIGlucHV0
-IHNjaG1pdHQuDQo+ID4gKyAgICAgIEFuIGV4YW1wbGUgb2YgdXNpbmcgbWFjcm86DQo+ID4gKyAg
-ICAgIG5vZGUgew0KPiANCj4gJ25vZGUnIGRvZXNuJ3QgbWF0Y2ggJ15waW5zJyByZWdleC4NCj4g
-DQo+IEJldHRlciB0byBwdXQgYW4gZXhhbXBsZSBpbiB0aGUgYWN0dWFsIGV4YW1wbGUgc28gaXQg
-aXMgY2hlY2tlZC4NCg0KPT0+ICANCkRlYXIgUm9iLA0KICB3ZSB3aWxsIGNoYW5nZSBpdCBhcyB0
-aGUgYWN0dWFsIGV4YW1wbGUgaW4gdjM6DQogICAgICAgICAgIHBpbmNvbnRyb2xsZXIgew0KICAg
-ICAgICAgICAgIC8qIEdQSU8wIHNldCBhcyBtdWx0aWZ1bmN0aW9uIEdQSU8wKi8NCiAgICAgICAg
-ICAgICBzdGF0ZV8wX25vZGVfYSB7DQogICAgICAgICAgICAgICBwaW5tdXggPSA8UElOTVVYX0dQ
-SU8wX19GVU5DX0dQSU8wPjsNCiAgICAgICAgICAgICB9Ow0KICAgICAgICAgICAgIC8qIEdQSU8w
-IHNldCBhcyBtdWx0aWZ1bmN0aW9uIFBXTSovDQogICAgICAgICAgICAgc3RhdGVfMF9ub2RlX2Ig
-ew0KICAgICAgICAgICAgICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMV9fRlVOQ19QV01fMT47DQog
-ICAgICAgICAgICAgfTsNCiAgICAgICAgICAgfTsNCg0KICAgICAgSXMgaXQgb2s/DQogDQo+ID4g
-KyAgICAgICAgcGlubXV4ID0gPFBJTl9OVU1CRVJfUElOTVVYPjsNCj4gPiArICAgICAgICBHRU5F
-UklDX1BJTkNPTkZJRzsNCj4gPiArICAgICAgfTsNCj4gPiArICAgIHByb3BlcnRpZXM6DQo+ID4g
-KyAgICAgIHBpbm11eDoNCj4gPiArICAgICAgICAkcmVmOiAiL3NjaGVtYXMvdHlwZXMueWFtbCMv
-ZGVmaW5pdGlvbnMvdWludDMyLWFycmF5Ig0KPiANCj4gQWxyZWFkeSBhIGNvbW1vbiBkZWZpbml0
-aW9uIGluIHBpbm11eC1ub2RlLnlhbWwuIFJlZmVyZW5jZSB0aGF0IGZpbGUgaW4gDQo+ICdecGlu
-cycNCj4gLg0KPT0+DQogIHdlIHdpbGwgY2hhbmdlIHRoZSByZWYgYXMgIiRyZWY6ICJwaW5tdXgt
-bm9kZS55YW1sIiIgaW4gdjMuDQoNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsg
-ICAgICAgICAgSW50ZWdlciBhcnJheSwgcmVwcmVzZW50cyBncGlvIHBpbiBudW1iZXIgYW5kIG11
-eCBzZXR0aW5nLg0KPiA+ICsgICAgICAgICAgU3VwcG9ydGVkIHBpbiBudW1iZXIgYW5kIG11eCB2
-YXJpZXMgZm9yIGRpZmZlcmVudCBTb0NzLCBhbmQgYXJlIGRlZmluZWQNCj4gPiArICAgICAgICAg
-IGFzIG1hY3JvcyBpbiBkdC1iaW5kaW5ncy9waW5jdHJsLzxzb2M+LXBpbmZ1bmMuaCBkaXJlY3Rs
-eS4NCj4gPiArDQo+ID4gKyAgICAgIEdFTkVSSUNfUElOQ09ORklHOg0KPiANCj4gVGhhdCdzIG5v
-dCBhIHByb3BlcnR5IG5hbWUuDQo9PT4gd2Ugd2lsbCByZW1vdmUgaXQgaW4gdjMuIGFuZCBzZXBh
-cmF0ZSBvdXQgdGhlIHByb3BlcnR5IG5hbWUNCiJtZWRpYXRlayxwdWxsLXVwLWFkdiIsICJtZWRp
-YXRlayxwdWxsLWRvd24tYWR2IiwgIm1lZGlhdGVrLHRkc2VsIiwNCiJtZWRpYXRlayxyZHNlbCIs
-ICJkcml2ZS1zdHJlbmd0aCIsICJtZWRpYXRlayxkcml2ZS1zdHJlbmd0aC1hZHYgPQ0KPFhYWD47
-IiBpbiB2My4NCj4gDQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgICAg
-IEl0IGlzIHRoZSBnZW5lcmljIHBpbmNvbmZpZyBvcHRpb25zIHRvIHVzZSwgYmlhcy1kaXNhYmxl
-LA0KPiA+ICsgICAgICAgICAgYmlhcy1wdWxsLWRvd24sIGJpYXMtcHVsbC11cCwgaW5wdXQtZW5h
-YmxlLCBpbnB1dC1kaXNhYmxlLCBvdXRwdXQtbG93LA0KPiA+ICsgICAgICAgICAgb3V0cHV0LWhp
-Z2gsIGlucHV0LXNjaG1pdHQtZW5hYmxlLCBpbnB1dC1zY2htaXR0LWRpc2FibGUNCj4gPiArICAg
-ICAgICAgIGFuZCBkcml2ZS1zdHJlbmd0aCBhcmUgdmFsaWQuDQo+ID4gKw0KPiA+ICsgICAgICAg
-ICAgU29tZSBzcGVjaWFsIHBpbnMgaGF2ZSBleHRyYSBwdWxsIHVwIHN0cmVuZ3RoLCB0aGVyZSBh
-cmUgUjAgYW5kIFIxIHB1bGwtdXANCj4gPiArICAgICAgICAgIHJlc2lzdG9ycyBhdmFpbGFibGUs
-IGJ1dCBmb3IgdXNlciwgaXQncyBvbmx5IG5lZWQgdG8gc2V0IFIxUjAgYXMgMDAsIDAxLA0KPiA+
-ICsgICAgICAgICAgMTAgb3IgMTEuIFNvIEl0IG5lZWRzIGNvbmZpZyAibWVkaWF0ZWsscHVsbC11
-cC1hZHYiIG9yDQo+ID4gKyAgICAgICAgICAibWVkaWF0ZWsscHVsbC1kb3duLWFkdiIgdG8gc3Vw
-cG9ydCBhcmd1bWVudHMgZm9yIHRob3NlIHNwZWNpYWwgcGlucy4NCj4gPiArICAgICAgICAgIFZh
-bGlkIGFyZ3VtZW50cyBhcmUgZnJvbSAwIHRvIDMuDQo+ID4gKw0KPiA+ICsgICAgICAgICAgV2Ug
-Y2FuIHVzZSAibWVkaWF0ZWssdGRzZWwiIHdoaWNoIGlzIGFuIGludGVnZXIgZGVzY3JpYmluZyB0
-aGUgc3RlcHMgZm9yDQo+ID4gKyAgICAgICAgICBvdXRwdXQgbGV2ZWwgc2hpZnRlciBkdXR5IGN5
-Y2xlIHdoZW4gYXNzZXJ0ZWQgKGhpZ2ggcHVsc2Ugd2lkdGggYWRqdXN0bWVudCkuDQo+ID4gKyAg
-ICAgICAgICBWYWxpZCBhcmd1bWVudHMgIGFyZSBmcm9tIDAgdG8gMTUuDQo+ID4gKyAgICAgICAg
-ICBXZSBjYW4gdXNlICJtZWRpYXRlayxyZHNlbCIgd2hpY2ggaXMgYW4gaW50ZWdlciBkZXNjcmli
-aW5nIHRoZSBzdGVwcyBmb3INCj4gPiArICAgICAgICAgIGlucHV0IGxldmVsIHNoaWZ0ZXIgZHV0
-eSBjeWNsZSB3aGVuIGFzc2VydGVkIChoaWdoIHB1bHNlIHdpZHRoIGFkanVzdG1lbnQpLg0KPiA+
-ICsgICAgICAgICAgVmFsaWQgYXJndW1lbnRzIGFyZSBmcm9tIDAgdG8gNjMuDQo+ID4gKw0KPiA+
-ICsgICAgICAgICAgV2hlbiBjb25maWcgZHJpdmUtc3RyZW5ndGgsIGl0IGNhbiBzdXBwb3J0IHNv
-bWUgYXJndW1lbnRzLCBzdWNoIGFzDQo+ID4gKyAgICAgICAgICBNVEtfRFJJVkVfNG1BLCBNVEtf
-RFJJVkVfNm1BLCBldGMuIFNlZSBkdC1iaW5kaW5ncy9waW5jdHJsL210NjV4eC5oLg0KPiA+ICsg
-ICAgICAgICAgSXQgY2FuIG9ubHkgc3VwcG9ydCAyLzQvNi84LzEwLzEyLzE0LzE2bUEgaW4gbXQ4
-MTkyLg0KPiA+ICsgICAgICAgICAgRm9yIEkyQyBwaW5zLCB0aGVyZSBhcmUgZXhpc3RpbmcgZ2Vu
-ZXJpYyBkcml2aW5nIHNldHVwIGFuZCB0aGUgc3BlY2lmaWMNCj4gPiArICAgICAgICAgIGRyaXZp
-bmcgc2V0dXAuIEkyQyBwaW5zIGNhbiBvbmx5IHN1cHBvcnQgMi80LzYvOC8xMC8xMi8xNC8xNm1B
-IGRyaXZpbmcNCj4gPiArICAgICAgICAgIGFkanVzdG1lbnQgaW4gZ2VuZXJpYyBkcml2aW5nIHNl
-dHVwLiBCdXQgaW4gc3BlY2lmaWMgZHJpdmluZyBzZXR1cCwNCj4gPiArICAgICAgICAgIHRoZXkg
-Y2FuIHN1cHBvcnQgMC4xMjUvMC4yNS8wLjUvMW1BIGFkanVzdG1lbnQuIElmIHdlIGVuYWJsZSBz
-cGVjaWZpYw0KPiA+ICsgICAgICAgICAgZHJpdmluZyBzZXR1cCBmb3IgSTJDIHBpbnMsIHRoZSBl
-eGlzdGluZyBnZW5lcmljIGRyaXZpbmcgc2V0dXAgd2lsbCBiZQ0KPiA+ICsgICAgICAgICAgZGlz
-YWJsZWQuIEZvciBzb21lIHNwZWNpYWwgZmVhdHVyZXMsIHdlIG5lZWQgdGhlIEkyQyBwaW5zIHNw
-ZWNpZmljDQo+ID4gKyAgICAgICAgICBkcml2aW5nIHNldHVwLiBUaGUgc3BlY2lmaWMgZHJpdmlu
-ZyBzZXR1cCBpcyBjb250cm9sbGVkIGJ5IEUxRTBFTi4NCj4gPiArICAgICAgICAgIFNvIHdlIG5l
-ZWQgYWRkIGV4dHJhIHZlbmRvciBkcml2aW5nIHByZXBlcnR5IGluc3RlYWQgb2YNCj4gPiArICAg
-ICAgICAgIHRoZSBnZW5lcmljIGRyaXZpbmcgcHJvcGVydHkuDQo+ID4gKyAgICAgICAgICBXZSBj
-YW4gYWRkICJtZWRpYXRlayxkcml2ZS1zdHJlbmd0aC1hZHYgPSA8WFhYPjsiIHRvIGRlc2NyaWJl
-IHRoZSBzcGVjaWZpYw0KPiA+ICsgICAgICAgICAgZHJpdmluZyBzZXR1cCBwcm9wZXJ0eS4gIlhY
-WCIgbWVhbnMgdGhlIHZhbHVlIG9mIEUxRTBFTi4gRU4gaXMgMCBvciAxLg0KPiA+ICsgICAgICAg
-ICAgSXQgaXMgdXNlZCB0byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgc3BlY2lmaWMgZHJpdmluZyBz
-ZXR1cC4NCj4gPiArICAgICAgICAgIEUxRTAgaXMgdXNlZCB0byBkZXNjcmliZSB0aGUgZGV0YWls
-IHN0cmVuZ3RoIHNwZWNpZmljYXRpb24gb2YgdGhlIEkyQyBwaW4uDQo+ID4gKyAgICAgICAgICBX
-aGVuIEUxPTAvRTA9MCwgdGhlIHN0cmVuZ3RoIGlzIDAuMTI1bUEuDQo+ID4gKyAgICAgICAgICBX
-aGVuIEUxPTAvRTA9MSwgdGhlIHN0cmVuZ3RoIGlzIDAuMjVtQS4NCj4gPiArICAgICAgICAgIFdo
-ZW4gRTE9MS9FMD0wLCB0aGUgc3RyZW5ndGggaXMgMC41bUEuDQo+ID4gKyAgICAgICAgICBXaGVu
-IEUxPTEvRTA9MSwgdGhlIHN0cmVuZ3RoIGlzIDFtQS4NCj4gPiArICAgICAgICAgIFNvIHRoZSB2
-YWxpZCBhcmd1bWVudHMgb2YgIm1lZGlhdGVrLGRyaXZlLXN0cmVuZ3RoLWFkdiIgYXJlIGZyb20g
-MCB0byA3Lg0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1wdWxsLWRvd246IHRydWUNCj4gPiArDQo+
-ID4gKyAgICAgIGJpYXMtcHVsbC11cDogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1kaXNh
-YmxlOiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgICBvdXRwdXQtaGlnaDogdHJ1ZQ0KPiA+ICsNCj4g
-PiArICAgICAgb3V0cHV0LWxvdzogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5wdXQtZW5hYmxl
-OiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgICBpbnB1dC1kaXNhYmxlOiB0cnVlDQo+ID4gKw0KPiA+
-ICsgICAgICBpbnB1dC1zY2htaXR0LWVuYWJsZTogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5w
-dXQtc2NobWl0dC1kaXNhYmxlOiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgcmVxdWlyZWQ6DQo+ID4g
-KyAgICAgIC0gcGlubXV4DQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGli
-bGUNCj4gPiArICAtIHJlZw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gaW50ZXJydXB0
-LWNvbnRyb2xsZXINCj4gPiArICAtICcjaW50ZXJydXB0LWNlbGxzJw0KPiA+ICsgIC0gZ3Bpby1j
-b250cm9sbGVyDQo+ID4gKyAgLSAnI2dwaW8tY2VsbHMnDQo+ID4gKyAgLSBncGlvLXJhbmdlcw0K
-PiANCj4gYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+IA0KDQo9PT4gV2Ugd2lsbCBhZGQg
-aXQgaW4gdjMuIFRoYW5rcy4NCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+
-ICsgICAgICAgICAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGluY3RybC9tdDgxOTItcGluZnVu
-Yy5oPg0KPiA+ICsgICAgICAgICAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNv
-bnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsgICAgICAgICAgICBwaW86IHBpbmN0cmxAMTAwMDUw
-MDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
-MTkyLXBpbmN0cmwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4MTAwMDUw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFjMjAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkMTAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkMzAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkNDAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlMjAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlNzAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlYTAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFmMjAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFmMzAw
-MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTAwMGIw
-MDAgMCAweDEwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJpb2Nm
-ZzAiLCAiaW9jZmdfcm0iLCAiaW9jZmdfYm0iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICJpb2NmZ19ibCIsICJpb2NmZ19iciIsICJpb2NmZ19sbSIsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgImlvY2ZnX2xiIiwgImlvY2ZnX3J0IiwgImlvY2ZnX2x0IiwNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAiaW9jZmdfdGwiLCAiZWludCI7DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgZ3Bpby1jb250cm9sbGVyOw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICNncGlvLWNlbGxzID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGdwaW8tcmFuZ2Vz
-ID0gPCZwaW8gMCAwIDIyMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNv
-bnRyb2xsZXI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDIxMiBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICNp
-bnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAgICAgICAgIH07DQo+ID4gLS0gDQo+ID4g
-Mi4xOC4wDQoNCg==
+linusw/devel build: 7 builds: 0 failed, 7 passed, 21 warnings (gpio-v5.8-2-=
+103-g22cc422070d9)
 
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/g=
+pio-v5.8-2-103-g22cc422070d9/
+
+Tree: linusw
+Branch: devel
+Git Describe: gpio-v5.8-2-103-g22cc422070d9
+Git Commit: 22cc422070d9a9a399f8a70b89f1b852945444cb
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
+
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 12 warnings
+
+i386:
+
+mips:
+
+riscv:
+    defconfig (gcc-8): 1 warning
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    /scratch/linux/drivers/net/ethernet/intel/e1000e/netdev.c:137:13: =
+warning: =E2=80=98e1000e_check_me=E2=80=99 defined but not used [-Wunused-f=
+unction]
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:161.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@=
+10:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:159.11-163.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ip=
+mb7@10: I2C bus unit address format error, expected "40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:150.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@=
+10:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:148.11-152.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ip=
+mb5@10: I2C bus unit address format error, expected "40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:139.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@=
+10:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:137.11-141.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ip=
+mb3@10: I2C bus unit address format error, expected "40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:128.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@1=
+0:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dt=
+s:126.11-130.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipm=
+b1@10: I2C bus unit address format error, expected "40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts=
+:523.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@1=
+0:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts=
+:521.11-525.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipm=
+b0@10: I2C bus unit address format error, expected "40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts=
+:437.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@1=
+0:reg: I2C address must be less than 10-bits, got "0x40000010"
+    1    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts=
+:435.11-439.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipm=
+b0@10: I2C bus unit address format error, expected "40000010"
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
+matches
+
+Warnings:
+    /scratch/linux/drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warni=
+ng: =E2=80=98e1000e_check_me=E2=80=99 defined but not used [-Wunused-functi=
+on]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 12 warnings, 0 se=
+ction mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.=
+11-439.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10=
+: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.=
+3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg=
+: I2C address must be less than 10-bits, got "0x40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.=
+11-525.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10=
+: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.=
+3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg=
+: I2C address must be less than 10-bits, got "0x40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126=
+.11-130.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10=
+: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128=
+.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg=
+: I2C address must be less than 10-bits, got "0x40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137=
+.11-141.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@1=
+0: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139=
+.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:re=
+g: I2C address must be less than 10-bits, got "0x40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148=
+.11-152.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@1=
+0: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150=
+.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:re=
+g: I2C address must be less than 10-bits, got "0x40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159=
+.11-163.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@1=
+0: I2C bus unit address format error, expected "40000010"
+    /scratch/linux/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161=
+.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:re=
+g: I2C address must be less than 10-bits, got "0x40000010"
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
