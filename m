@@ -2,90 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0FE623B780
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 11:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4D8A23BA5A
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 14:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgHDJSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Aug 2020 05:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHDJSQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Aug 2020 05:18:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D9FC06174A
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Aug 2020 02:18:16 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k2t5I-0001VS-UG; Tue, 04 Aug 2020 11:18:12 +0200
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k2t5I-00036w-67; Tue, 04 Aug 2020 11:18:12 +0200
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Thorsten Scherer <t.scherer@eckelmann.de>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-Date:   Tue,  4 Aug 2020 11:16:03 +0200
-Message-Id: <20200804091603.541-1-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.28.0
+        id S1726629AbgHDMaL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Aug 2020 08:30:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:37130 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgHDMaB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:30:01 -0400
+IronPort-SDR: vNM/Js01RNAi5ndc5SZgB/b0Q41Qxv30cVYJ5zmJO+M+yk7/Sa/fUooI+xLIQ9Gp/eZypEV7Lq
+ PvTGqxqOYmqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="150094051"
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="150094051"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 05:29:56 -0700
+IronPort-SDR: 5Ij2d0d7rIvQtD2Qwv9ITSSDPW6EUChqMwY6Y7VrBYCnx/QhpPoUzVyZ+1zmC3d6BrNdaWRocU
+ /ptDIpNH6Ynw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="288547262"
+Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 04 Aug 2020 05:29:55 -0700
+Received: from kbuild by 37a337f97289 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k2w4o-00006P-Fi; Tue, 04 Aug 2020 12:29:54 +0000
+Date:   Tue, 04 Aug 2020 20:29:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 7ee193e2dda3f48b692fad46ab9df90e99e7b811
+Message-ID: <5f2954ad.OXQFafUcJ1aVIYXV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Generic GPIO consumers like gpio-keys use request_any_context_irq()
-to request a threaded handler if irq_settings_is_nested_thread() ==
-true or a hardirq handler otherwise.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: 7ee193e2dda3f48b692fad46ab9df90e99e7b811  dt-bindings: pinctrl: add bindings for MediaTek MT6779 SoC
 
-Drivers using handle_nested_irq() must be sure that the nested
-IRQs were requested with threaded handlers, because the IRQ
-is handled by calling action->thread_fn().
+elapsed time: 721m
 
-The gpio-siox driver dispatches IRQs via handle_nested_irq,
-but has irq_settings_is_nested_thread() == false.
+configs tested: 83
+configs skipped: 5
 
-Set gpio_irq_chip::threaded to remedy this.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                    vt8500_v6_v7_defconfig
+arm                            lart_defconfig
+mips                        omega2p_defconfig
+mips                     loongson1c_defconfig
+m68k                       bvme6000_defconfig
+xtensa                           alldefconfig
+parisc                           alldefconfig
+mips                           ip32_defconfig
+arm                       versatile_defconfig
+arm                          exynos_defconfig
+openrisc                 simple_smp_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20200804
+i386                 randconfig-a004-20200804
+i386                 randconfig-a001-20200804
+i386                 randconfig-a003-20200804
+i386                 randconfig-a002-20200804
+i386                 randconfig-a006-20200804
+x86_64               randconfig-a001-20200804
+x86_64               randconfig-a004-20200804
+x86_64               randconfig-a005-20200804
+x86_64               randconfig-a002-20200804
+x86_64               randconfig-a003-20200804
+x86_64               randconfig-a013-20200803
+x86_64               randconfig-a011-20200803
+x86_64               randconfig-a012-20200803
+x86_64               randconfig-a016-20200803
+x86_64               randconfig-a015-20200803
+x86_64               randconfig-a014-20200803
+i386                 randconfig-a011-20200803
+i386                 randconfig-a012-20200803
+i386                 randconfig-a015-20200803
+i386                 randconfig-a014-20200803
+i386                 randconfig-a013-20200803
+i386                 randconfig-a016-20200803
+x86_64               randconfig-a006-20200804
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
-I am writing a driver similar to gpio-siox and I ran into a null pointer
-dereference, because ->threaded wasn't set. I didn't test this on actual
-SIOX hardware.
-
-This patch doesn't fix the case were are driver explicitly calls
-request_irq and is combined with a driver that does handle_nested_irq.
-
-Is there a flag, such drivers should additionally set or should we
-check action->thread_fn before calling it inside handle_nested_irq?
----
- drivers/gpio/gpio-siox.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
-index 26e1fe092304..f8c5e9fc4bac 100644
---- a/drivers/gpio/gpio-siox.c
-+++ b/drivers/gpio/gpio-siox.c
-@@ -245,6 +245,7 @@ static int gpio_siox_probe(struct siox_device *sdevice)
- 	girq->chip = &ddata->ichip;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
-+	girq->threaded = true;
- 
- 	ret = devm_gpiochip_add_data(dev, &ddata->gchip, NULL);
- 	if (ret)
--- 
-2.28.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
