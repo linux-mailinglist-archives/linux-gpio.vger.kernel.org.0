@@ -2,89 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B6C23B0F3
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 01:32:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D692723B19A
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 02:15:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgHCXbW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Aug 2020 19:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgHCXbV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 19:31:21 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5BBC06179E
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Aug 2020 16:31:21 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id i19so21354172lfj.8
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Aug 2020 16:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fV01at6U179YYTkypCe1mjYEuoEGSoyCBx3vei1jsL8=;
-        b=kLZPFNzaiLoIf37Ocp6yoJdmJakN2FAOgin1yWPmvyiqcRGfvkDyLIJwgFnR7SibjW
-         eDY6+V7iRkT7GmQRC7Mtk5KyBDTfuD4CL/PYuTQzAyQQrWqL/YynpbMpKEODLM1f/W4J
-         tTGBCULVUmvrDKbcEgpiT565Jo4ros0QWA0bYpY6RJDKjOiSUgsq1W+8rhBSuZCNVWm5
-         ZvesqRzD3GSrQDRSgUP2N6M9Y3PZtprj4rkT3HM4EbsoGyagbd2z8n5C7uB4Afu2c6nU
-         sWyQBZzktZkb9o84466l36KfybPylh8PrYGMkgKxsqc6rvL/aU1nDW78+MUAsnA8ldTx
-         tOog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fV01at6U179YYTkypCe1mjYEuoEGSoyCBx3vei1jsL8=;
-        b=pHpZg9Ym+T678XJ9ac/pbVbyFJyeurWoS3wcieA+KztRdrOAVosNf6HuByTc4B/Yt6
-         K4vVuC+ZsI29Gik4rueLijiE69Rgh7IsFvTxCuvNjTNU9CbmLWujW4XUqVXRFm9EL5Vk
-         kpJxBgLDpS70d/akTJAD1lCHqhmTAGVXf/ILOuSb2eoaLgOeNBk0bA1FUliCwbNmFWx/
-         8nzB77Bhldtn67QGLyne4/H7Xj525Cb8qlNI0iRAPHjYVgWjMA1r805z03vR8k3rE5Pw
-         C/PL7nrpIlnJjGvVY37r7hoXxzKGinZ8Rt0cZVx3HhGVYCAnVzulQ6iVGhzBsHXFSPAA
-         cxSg==
-X-Gm-Message-State: AOAM530qoc+qHBH3GkaFUWqz9MdV9wGPubIo9GybVIED2Mm1L1EqSzBL
-        0j8EUHmG+OhJ7wgeHwZULNkJyo6f2ULX1waJAFEWUQ==
-X-Google-Smtp-Source: ABdhPJxWx+hfDk0lqptunggKbQMSvFYj4Ku0H41x8vXU6S8/mAV1QIwpU4LOkgKmpf8w7QdtsdTt1LUVSEoJbOHVisk=
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr9486395lfg.194.1596497479493;
- Mon, 03 Aug 2020 16:31:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com> <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Aug 2020 01:31:08 +0200
-Message-ID: <CACRpkdYP1EGemHtqO_vrUf-wUyimAs=tXM5WNBD-NcL-h15ZhQ@mail.gmail.com>
-Subject: Re: [PATCH v10 1/3] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
+        id S1728698AbgHDAPW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Aug 2020 20:15:22 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36653 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728329AbgHDAPW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 20:15:22 -0400
+X-UUID: ef7542779436431f80815dec5f03a96e-20200804
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3spY01kwf4O6wv7cicumcVELIxjbsq4/eTGUCLDHWqw=;
+        b=XinFr6mmrVN0Q5O7bKYQJPJO8TT9FPpJ0Gy02/VbSxVKidrAchUt5dSoPu1FGIp+L7KEZPSSwFSH8kw4yV1J9XQruu8OSwk+OVKYSbF0Fwd4Bt7TkG8xAsKoOjeQ5B3zDpSbrwTOov3CwZRHM2VCZGaW8pS84ofNl4KUdS2VAEg=;
+X-UUID: ef7542779436431f80815dec5f03a96e-20200804
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 50072949; Tue, 04 Aug 2020 08:15:12 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 Aug
+ 2020 08:15:04 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 4 Aug 2020 08:15:05 +0800
+Message-ID: <1596500071.20778.0.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding
+ document
+From:   zhiyong tao <zhiyong.tao@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <seiya.wang@mediatek.com>, <linux-arm-kernel@lists.infradead.org>,
+        <jg_poxu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <chuanjia.liu@mediatek.com>,
+        <sean.wang@kernel.org>, <srv_heupstream@mediatek.com>,
+        <biao.huang@mediatek.com>, <erin.lo@mediatek.com>,
+        <mark.rutland@arm.com>, <hongzhou.yang@mediatek.com>,
+        <matthias.bgg@gmail.com>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <hui.liu@mediatek.com>,
+        <eddie.huang@mediatek.com>, <sean.wang@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <sj.huang@mediatek.com>,
+        <linus.walleij@linaro.org>
+Date:   Tue, 4 Aug 2020 08:14:31 +0800
+In-Reply-To: <20200803214054.GA3184946@bogus>
+References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+         <20200801043303.32149-3-zhiyong.tao@mediatek.com>
+         <20200803214054.GA3184946@bogus>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 7534D64DA8CF1C4E84B2CC352E2ADD1F41974CB8CC880301656CE46078BDEF9C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 3:30 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
+T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE1OjQwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU2F0LCAwMSBBdWcgMjAyMCAxMjozMzowMiArMDgwMCwgWmhpeW9uZyBUYW8gd3JvdGU6DQo+
+ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5MiBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGluZyBkb2N1
+bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9uZy50YW9A
+bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJs
+LW10ODE5Mi55YW1sICAgICAgfCAxNzUgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0K
+PiA+IA0KPiANCj4gDQo+IE15IGJvdCBmb3VuZCBlcnJvcnMgcnVubmluZyAnbWFrZSBkdF9iaW5k
+aW5nX2NoZWNrJyBvbiB5b3VyIHBhdGNoOg0KDQo9PT4gRGVhciBSb2IsDQpJIHdpbGwgZml4IGl0
+IGluIHYzLiBUaGFua3MuDQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTky
+LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzowOiBbMCwg
+MjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
+dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3Bp
+bmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAw
+OnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3Jv
+YmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5j
+dHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0K
+PiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhh
+bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzozOiBbMCwgMjk5MDQwNzY4LCAwLCA0MDk2XSBp
+cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUu
+ZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMjk5MTA2MzA0
+LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2
+aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4
+MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBb
+MCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcv
+bGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
+L3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
+MDAwOnJlZzo2OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
+L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBw
+aW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9u
+Zw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDog
+ZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2
+XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1w
+bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo5OiBbMCwgMzAxMTM3
+OTIwLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
+cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwt
+bXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzox
+MDogWzAsIDI2ODQ4MDUxMiwgMCwgNDA5Nl0gaXMgdG9vIGxvbmcNCj4gDQo+IA0KPiBTZWUgaHR0
+cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMzM5NjYxDQo+IA0KPiBJZiB5b3UgYWxy
+ZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycgYW5kIGRpZG4ndCBzZWUgdGhlIGFib3Zl
+DQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSBkdC1zY2hlbWEgaXMgdXAgdG8gZGF0ZToNCj4g
+DQo+IHBpcDMgaW5zdGFsbCBnaXQraHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRyZWUtb3JnL2R0
+LXNjaGVtYS5naXRAbWFzdGVyIC0tdXBncmFkZQ0KPiANCj4gUGxlYXNlIGNoZWNrIGFuZCByZS1z
+dWJtaXQuDQo+IA0KDQo=
 
-> From: Andy Teng <andy.teng@mediatek.com>
->
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
->
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-
-I pulled out the v9 version of this patch and applied v10 instead.
-
-Yours,
-Linus Walleij
