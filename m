@@ -2,142 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1699823B1D3
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 02:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 075B523B295
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Aug 2020 04:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHDAsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Aug 2020 20:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHDAsu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 20:48:50 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6CBC06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Aug 2020 17:48:49 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id h16so9283315oti.7
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Aug 2020 17:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H2vuZwapNF5SY96ImcvQKBxAdYTUIocJnP2+tFQw1Cs=;
-        b=cO691Y4BMf4ps3AJh/Y/fA337JoELDzwQJZnF1XDKwLjD32hTFOYbYZ9CQBbVItKll
-         EppsWEsMpVQ3lFu5Q41Furs4iceDP1gdbmLNgQDiUgrII72FXLUGGUel1U6Gl8scYeeb
-         p+faUAZS1ku28ZXI2Cmuqo9tOhpJXdYBUH2jlRZYtWmPOnq//e3a2pLtZXL9FYrIMw+H
-         pV4Y93xjjhgRSH7NerHJRHMWgkPJhIkr38ul1j99PyaADQAAUs/NC5LCJo4RbbYfCvri
-         n2Rye4Mzd6ycNPnjC7Jq0+1sHKXow9Q8o+YqxGhD03snC9E4A1l+4/uqo66QQqpBhXB9
-         tDAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H2vuZwapNF5SY96ImcvQKBxAdYTUIocJnP2+tFQw1Cs=;
-        b=BJvETSA/HyB/ty4ZIr3IOCEYmOUMQ2pOpiJTmKCbdU7BBxBjmdGGRQziVekdCpcJF3
-         gfXLlgwrXjL6kvC7xGqd9ZkqLwtkMZTWOsnh95cFj3FjR0GO7xGcarG5EmA7kYB82LZx
-         nFpY6yv9fYvl0gNuJSS2GrnOvdQtYYVhuFPCUCqIVUmudjuvJtaDfYwe5oFYUUPYZUZK
-         HwHeH6EOD1FZh4WdpM02yg8L9u+CDj9TSCg4dhpxAG6XxOP3Xy26bs3KSW/cbH4EBska
-         fnVFXdbr2ZAz33XsrAUVQR9vfpCyCTsQEWwxlb3IaIMUpmTJXE00C89zlsov81fFeDqF
-         QCeg==
-X-Gm-Message-State: AOAM531K+4b6fOesE1MW6i2MHeE1WqDhcjXyKkvqKmbt/+iLlfk98wTq
-        5S6DIgbKMEZa5ni0EqTCUf1oOC6sXNap+3DQNRg6/A==
-X-Google-Smtp-Source: ABdhPJyn7E460ohTdt8DCEf76ua+Wb3lwAXOyx60eoAK03RiF2uxbAJwRo47dnCpYne0nL6Ya4O5Td1e9XaI/t7Xz2M=
-X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr16791603ots.102.1596502129252;
- Mon, 03 Aug 2020 17:48:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
- <CANcMJZC-kAc1kqqNhfd9wvFS4ans8t7cpAfNVZbybA4W6x5-KQ@mail.gmail.com> <CAD=FV=WNY8vR4ip2w47rf7rnBmtenEXtjXstj8PWNaXjCN3ZXQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=WNY8vR4ip2w47rf7rnBmtenEXtjXstj8PWNaXjCN3ZXQ@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 3 Aug 2020 17:48:38 -0700
-Message-ID: <CALAqxLUJDGeQ1+k0Cz4rLujW_A=UAFLEuhMWrE8im1NF6XwjtQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: qcom: Handle broken/missing PDC dual edge
- IRQs on sc7180
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>
+        id S1725877AbgHDCKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Aug 2020 22:10:33 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:48135 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725840AbgHDCKc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Aug 2020 22:10:32 -0400
+X-UUID: 2b509aa39b3949f98eaf6db84f67a54c-20200804
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3BwGdOQ5D6GNhCsE0C8J7vcVgtFQc9v8dJhTj9hN+g0=;
+        b=ed7L57EmuxZ0LgWJ7Pe8AzmKgMzO81fUvBvCorpLIsxG6/vykA8v4RI1aFAF//63vFiSlSv24yd3lwTQ33PRnmBQvKMf6/lUe/mjfHEEqqwTjXtS1ZjdhNw6swmR1jyT8n2QOlL0ESlKQ0ObE8G5oYlNckiwGyQWJgz9YzHHv18=;
+X-UUID: 2b509aa39b3949f98eaf6db84f67a54c-20200804
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 887468460; Tue, 04 Aug 2020 10:10:20 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 Aug
+ 2020 10:10:14 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 4 Aug 2020 10:10:14 +0800
+Message-ID: <1596506979.20778.18.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding
+ document
+From:   zhiyong tao <zhiyong.tao@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <linus.walleij@linaro.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <sean.wang@kernel.org>,
+        <srv_heupstream@mediatek.com>, <hui.liu@mediatek.com>,
+        <eddie.huang@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
+        <erin.lo@mediatek.com>, <sean.wang@mediatek.com>,
+        <sj.huang@mediatek.com>, <seiya.wang@mediatek.com>,
+        <jg_poxu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Date:   Tue, 4 Aug 2020 10:09:39 +0800
+In-Reply-To: <20200803214655.GB3184946@bogus>
+References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+         <20200801043303.32149-3-zhiyong.tao@mediatek.com>
+         <20200803214655.GB3184946@bogus>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: AD2601A2FA4E754C6F8D1F980DA46F02B422FAA54916200C442C0D45F21FFE182000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 2:58 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Mon, Aug 3, 2020 at 2:06 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Tue, Jul 14, 2020 at 8:08 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Depending on how you look at it, you can either say that:
-> > > a) There is a PDC hardware issue (with the specific IP rev that exists
-> > >    on sc7180) that causes the PDC not to work properly when configured
-> > >    to handle dual edges.
-> > > b) The dual edge feature of the PDC hardware was only added in later
-> > >    HW revisions and thus isn't in all hardware.
-> > >
-> > > Regardless of how you look at it, let's work around the lack of dual
-> > > edge support by only ever letting our parent see requests for single
-> > > edge interrupts on affected hardware.
-> > >
-> > > NOTE: it's possible that a driver requesting a dual edge interrupt
-> > > might get several edges coalesced into a single IRQ.  For instance if
-> > > a line starts low and then goes high and low again, the driver that
-> > > requested the IRQ is not guaranteed to be called twice.  However, it
-> > > is guaranteed that once the driver's interrupt handler starts running
-> > > its first instruction that any new edges coming in will cause the
-> > > interrupt to fire again.  This is relatively commonplace for dual-edge
-> > > gpio interrupts (many gpio controllers require software to emulate
-> > > dual edge with single edge) so client drivers should be setup to
-> > > handle it.
-> > >
-> > > Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >
-> > Just as a heads up. I started seeing boot failures (crashes really
-> > early before we get serial output) with db845c when testing with the
-> > android-mainline tree that pulled v5.8 in.
->
-> Even before earlycon?  Ick.  For me earlycon comes up way before
-> pinctrl and I thought that, by design, earlycon came up so dang early
-> that you could debug almost anything with it.
->
-> To confirm, I could even drop into earlycon_kgdb (which starts later
-> than earlycon), then set a breakpoint on msm_pinctrl_probe() and I'd
-> hit my breakpoint.  Enabling earlycon should be super easy these
-> days--just add the "earlycon" command line parameter and the kernel
-> seems to do the rest of the magic based on the "stdout-path".  I guess
-> if your bootloader doesn't cooperate and leave the system in an OK
-> state then you'll be in bad shape, but otherwise it should be nice...
->
-> NOTE: if you have earlycon and this is still causing crashes before
-> earlycon starts, the only things I can think of are side effects of
-> this patch.  Could it have made your kernel just a little too big and
-> now you're overflowing some hard limit of the bootloader?  Maybe
-> you're hitting a ccache bug and using some stale garbage (don't laugh,
-> this happened to me the other year)?  Maybe there's a pointer bug and
-> this moves addresses just enough to make it cause havoc?
->
+T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE1OjQ2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU2F0LCBBdWcgMDEsIDIwMjAgYXQgMTI6MzM6MDJQTSArMDgwMCwgWmhpeW9uZyBUYW8gd3Jv
+dGU6DQo+ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5MiBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGlu
+ZyBkb2N1bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9u
+Zy50YW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9w
+aW5jdHJsLW10ODE5Mi55YW1sICAgICAgfCAxNzUgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
+ZmlsZSBjaGFuZ2VkLCAxNzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIu
+eWFtbA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0KPiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNzU1DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi44OGUxOGUyZTIzYTANCj4gPiAtLS0g
+L2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
+bmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0KPiA+IEBAIC0wLDAgKzEsMTc1IEBADQo+ID4gKyMg
+U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0K
+PiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3Jn
+L3NjaGVtYXMvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRw
+Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3Rp
+dGxlOiBNZWRpYXRlayBNVDgxOTIgUGluIENvbnRyb2xsZXINCj4gPiArDQo+ID4gK21haW50YWlu
+ZXJzOg0KPiA+ICsgIC0gU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ICsN
+Cj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBUaGUgTWVkaWF0ZWsncyBQaW4gY29udHJvbGxl
+ciBpcyB1c2VkIHRvIGNvbnRyb2wgU29DIHBpbnMuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
+PiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gKyAgICBjb25zdDogbWVkaWF0ZWssbXQ4MTkyLXBpbmN0
+cmwNCj4gPiArDQo+ID4gKyAgZ3Bpby1jb250cm9sbGVyOiB0cnVlDQo+ID4gKw0KPiA+ICsgICcj
+Z3Bpby1jZWxscyc6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBOdW1iZXIg
+b2YgY2VsbHMgaW4gR1BJTyBzcGVjaWZpZXIuIFNpbmNlIHRoZSBnZW5lcmljIEdQSU8gYmluZGlu
+ZyBpcyB1c2VkLA0KPiA+ICsgICAgICB0aGUgYW1vdW50IG9mIGNlbGxzIG11c3QgYmUgc3BlY2lm
+aWVkIGFzIDIuIFNlZSB0aGUgYmVsb3cNCj4gPiArICAgICAgbWVudGlvbmVkIGdwaW8gYmluZGlu
+ZyByZXByZXNlbnRhdGlvbiBmb3IgZGVzY3JpcHRpb24gb2YgcGFydGljdWxhciBjZWxscy4NCj4g
+PiArICAgIGNvbnN0OiAyDQo+ID4gKw0KPiA+ICsgIGdwaW8tcmFuZ2VzOg0KPiA+ICsgICAgZGVz
+Y3JpcHRpb246IGdwaW8gdmFsaWQgbnVtYmVyIHJhbmdlLg0KPiA+ICsgICAgbWF4SXRlbXM6IDEN
+Cj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAg
+UGh5c2ljYWwgYWRkcmVzcyBiYXNlIGZvciBncGlvIGJhc2UgcmVnaXN0ZXJzLiBUaGVyZSBhcmUg
+MTEgR1BJTw0KPiA+ICsgICAgICBwaHlzaWNhbCBhZGRyZXNzIGJhc2UgaW4gbXQ4MTkyLg0KPiA+
+ICsgICAgbWF4SXRlbXM6IDExDQo+ID4gKw0KPiA+ICsgIHJlZy1uYW1lczoNCj4gPiArICAgIGRl
+c2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIEdwaW8gYmFzZSByZWdpc3RlciBuYW1lcy4NCj4gPiAr
+ICAgIG1heEl0ZW1zOiAxMQ0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHQtY29udHJvbGxlcjogdHJ1
+ZQ0KPiA+ICsNCj4gPiArICAnI2ludGVycnVwdC1jZWxscyc6DQo+ID4gKyAgICBjb25zdDogMg0K
+PiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IFRoZSBpbnRl
+cnJ1cHQgb3V0cHV0cyB0byBzeXNpcnEuDQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4g
+PiArI1BJTiBDT05GSUdVUkFUSU9OIE5PREVTDQo+ID4gK3BhdHRlcm5Qcm9wZXJ0aWVzOg0KPiA+
+ICsgICdecGlucyc6DQo+ID4gKyAgICB0eXBlOiBvYmplY3QNCj4gPiArICAgIGRlc2NyaXB0aW9u
+OiB8DQo+ID4gKyAgICAgIEEgcGluY3RybCBub2RlIHNob3VsZCBjb250YWluIGF0IGxlYXN0IG9u
+ZSBzdWJub2RlcyByZXByZXNlbnRpbmcgdGhlDQo+ID4gKyAgICAgIHBpbmN0cmwgZ3JvdXBzIGF2
+YWlsYWJsZSBvbiB0aGUgbWFjaGluZS4gRWFjaCBzdWJub2RlIHdpbGwgbGlzdCB0aGUNCj4gPiAr
+ICAgICAgcGlucyBpdCBuZWVkcywgYW5kIGhvdyB0aGV5IHNob3VsZCBiZSBjb25maWd1cmVkLCB3
+aXRoIHJlZ2FyZCB0byBtdXhlcg0KPiA+ICsgICAgICBjb25maWd1cmF0aW9uLCBwdWxsdXBzLCBk
+cml2ZSBzdHJlbmd0aCwgaW5wdXQgZW5hYmxlL2Rpc2FibGUgYW5kDQo+ID4gKyAgICAgIGlucHV0
+IHNjaG1pdHQuDQo+ID4gKyAgICAgIEFuIGV4YW1wbGUgb2YgdXNpbmcgbWFjcm86DQo+ID4gKyAg
+ICAgIG5vZGUgew0KPiANCj4gJ25vZGUnIGRvZXNuJ3QgbWF0Y2ggJ15waW5zJyByZWdleC4NCj4g
+DQo+IEJldHRlciB0byBwdXQgYW4gZXhhbXBsZSBpbiB0aGUgYWN0dWFsIGV4YW1wbGUgc28gaXQg
+aXMgY2hlY2tlZC4NCg0KPT0+ICANCkRlYXIgUm9iLA0KICB3ZSB3aWxsIGNoYW5nZSBpdCBhcyB0
+aGUgYWN0dWFsIGV4YW1wbGUgaW4gdjM6DQogICAgICAgICAgIHBpbmNvbnRyb2xsZXIgew0KICAg
+ICAgICAgICAgIC8qIEdQSU8wIHNldCBhcyBtdWx0aWZ1bmN0aW9uIEdQSU8wKi8NCiAgICAgICAg
+ICAgICBzdGF0ZV8wX25vZGVfYSB7DQogICAgICAgICAgICAgICBwaW5tdXggPSA8UElOTVVYX0dQ
+SU8wX19GVU5DX0dQSU8wPjsNCiAgICAgICAgICAgICB9Ow0KICAgICAgICAgICAgIC8qIEdQSU8w
+IHNldCBhcyBtdWx0aWZ1bmN0aW9uIFBXTSovDQogICAgICAgICAgICAgc3RhdGVfMF9ub2RlX2Ig
+ew0KICAgICAgICAgICAgICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMV9fRlVOQ19QV01fMT47DQog
+ICAgICAgICAgICAgfTsNCiAgICAgICAgICAgfTsNCg0KICAgICAgSXMgaXQgb2s/DQogDQo+ID4g
+KyAgICAgICAgcGlubXV4ID0gPFBJTl9OVU1CRVJfUElOTVVYPjsNCj4gPiArICAgICAgICBHRU5F
+UklDX1BJTkNPTkZJRzsNCj4gPiArICAgICAgfTsNCj4gPiArICAgIHByb3BlcnRpZXM6DQo+ID4g
+KyAgICAgIHBpbm11eDoNCj4gPiArICAgICAgICAkcmVmOiAiL3NjaGVtYXMvdHlwZXMueWFtbCMv
+ZGVmaW5pdGlvbnMvdWludDMyLWFycmF5Ig0KPiANCj4gQWxyZWFkeSBhIGNvbW1vbiBkZWZpbml0
+aW9uIGluIHBpbm11eC1ub2RlLnlhbWwuIFJlZmVyZW5jZSB0aGF0IGZpbGUgaW4gDQo+ICdecGlu
+cycNCj4gLg0KPT0+DQogIHdlIHdpbGwgY2hhbmdlIHRoZSByZWYgYXMgIiRyZWY6ICJwaW5tdXgt
+bm9kZS55YW1sIiIgaW4gdjMuDQoNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsg
+ICAgICAgICAgSW50ZWdlciBhcnJheSwgcmVwcmVzZW50cyBncGlvIHBpbiBudW1iZXIgYW5kIG11
+eCBzZXR0aW5nLg0KPiA+ICsgICAgICAgICAgU3VwcG9ydGVkIHBpbiBudW1iZXIgYW5kIG11eCB2
+YXJpZXMgZm9yIGRpZmZlcmVudCBTb0NzLCBhbmQgYXJlIGRlZmluZWQNCj4gPiArICAgICAgICAg
+IGFzIG1hY3JvcyBpbiBkdC1iaW5kaW5ncy9waW5jdHJsLzxzb2M+LXBpbmZ1bmMuaCBkaXJlY3Rs
+eS4NCj4gPiArDQo+ID4gKyAgICAgIEdFTkVSSUNfUElOQ09ORklHOg0KPiANCj4gVGhhdCdzIG5v
+dCBhIHByb3BlcnR5IG5hbWUuDQo9PT4gd2Ugd2lsbCByZW1vdmUgaXQgaW4gdjMuIGFuZCBzZXBh
+cmF0ZSBvdXQgdGhlIHByb3BlcnR5IG5hbWUNCiJtZWRpYXRlayxwdWxsLXVwLWFkdiIsICJtZWRp
+YXRlayxwdWxsLWRvd24tYWR2IiwgIm1lZGlhdGVrLHRkc2VsIiwNCiJtZWRpYXRlayxyZHNlbCIs
+ICJkcml2ZS1zdHJlbmd0aCIsICJtZWRpYXRlayxkcml2ZS1zdHJlbmd0aC1hZHYgPQ0KPFhYWD47
+IiBpbiB2My4NCj4gDQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgICAg
+IEl0IGlzIHRoZSBnZW5lcmljIHBpbmNvbmZpZyBvcHRpb25zIHRvIHVzZSwgYmlhcy1kaXNhYmxl
+LA0KPiA+ICsgICAgICAgICAgYmlhcy1wdWxsLWRvd24sIGJpYXMtcHVsbC11cCwgaW5wdXQtZW5h
+YmxlLCBpbnB1dC1kaXNhYmxlLCBvdXRwdXQtbG93LA0KPiA+ICsgICAgICAgICAgb3V0cHV0LWhp
+Z2gsIGlucHV0LXNjaG1pdHQtZW5hYmxlLCBpbnB1dC1zY2htaXR0LWRpc2FibGUNCj4gPiArICAg
+ICAgICAgIGFuZCBkcml2ZS1zdHJlbmd0aCBhcmUgdmFsaWQuDQo+ID4gKw0KPiA+ICsgICAgICAg
+ICAgU29tZSBzcGVjaWFsIHBpbnMgaGF2ZSBleHRyYSBwdWxsIHVwIHN0cmVuZ3RoLCB0aGVyZSBh
+cmUgUjAgYW5kIFIxIHB1bGwtdXANCj4gPiArICAgICAgICAgIHJlc2lzdG9ycyBhdmFpbGFibGUs
+IGJ1dCBmb3IgdXNlciwgaXQncyBvbmx5IG5lZWQgdG8gc2V0IFIxUjAgYXMgMDAsIDAxLA0KPiA+
+ICsgICAgICAgICAgMTAgb3IgMTEuIFNvIEl0IG5lZWRzIGNvbmZpZyAibWVkaWF0ZWsscHVsbC11
+cC1hZHYiIG9yDQo+ID4gKyAgICAgICAgICAibWVkaWF0ZWsscHVsbC1kb3duLWFkdiIgdG8gc3Vw
+cG9ydCBhcmd1bWVudHMgZm9yIHRob3NlIHNwZWNpYWwgcGlucy4NCj4gPiArICAgICAgICAgIFZh
+bGlkIGFyZ3VtZW50cyBhcmUgZnJvbSAwIHRvIDMuDQo+ID4gKw0KPiA+ICsgICAgICAgICAgV2Ug
+Y2FuIHVzZSAibWVkaWF0ZWssdGRzZWwiIHdoaWNoIGlzIGFuIGludGVnZXIgZGVzY3JpYmluZyB0
+aGUgc3RlcHMgZm9yDQo+ID4gKyAgICAgICAgICBvdXRwdXQgbGV2ZWwgc2hpZnRlciBkdXR5IGN5
+Y2xlIHdoZW4gYXNzZXJ0ZWQgKGhpZ2ggcHVsc2Ugd2lkdGggYWRqdXN0bWVudCkuDQo+ID4gKyAg
+ICAgICAgICBWYWxpZCBhcmd1bWVudHMgIGFyZSBmcm9tIDAgdG8gMTUuDQo+ID4gKyAgICAgICAg
+ICBXZSBjYW4gdXNlICJtZWRpYXRlayxyZHNlbCIgd2hpY2ggaXMgYW4gaW50ZWdlciBkZXNjcmli
+aW5nIHRoZSBzdGVwcyBmb3INCj4gPiArICAgICAgICAgIGlucHV0IGxldmVsIHNoaWZ0ZXIgZHV0
+eSBjeWNsZSB3aGVuIGFzc2VydGVkIChoaWdoIHB1bHNlIHdpZHRoIGFkanVzdG1lbnQpLg0KPiA+
+ICsgICAgICAgICAgVmFsaWQgYXJndW1lbnRzIGFyZSBmcm9tIDAgdG8gNjMuDQo+ID4gKw0KPiA+
+ICsgICAgICAgICAgV2hlbiBjb25maWcgZHJpdmUtc3RyZW5ndGgsIGl0IGNhbiBzdXBwb3J0IHNv
+bWUgYXJndW1lbnRzLCBzdWNoIGFzDQo+ID4gKyAgICAgICAgICBNVEtfRFJJVkVfNG1BLCBNVEtf
+RFJJVkVfNm1BLCBldGMuIFNlZSBkdC1iaW5kaW5ncy9waW5jdHJsL210NjV4eC5oLg0KPiA+ICsg
+ICAgICAgICAgSXQgY2FuIG9ubHkgc3VwcG9ydCAyLzQvNi84LzEwLzEyLzE0LzE2bUEgaW4gbXQ4
+MTkyLg0KPiA+ICsgICAgICAgICAgRm9yIEkyQyBwaW5zLCB0aGVyZSBhcmUgZXhpc3RpbmcgZ2Vu
+ZXJpYyBkcml2aW5nIHNldHVwIGFuZCB0aGUgc3BlY2lmaWMNCj4gPiArICAgICAgICAgIGRyaXZp
+bmcgc2V0dXAuIEkyQyBwaW5zIGNhbiBvbmx5IHN1cHBvcnQgMi80LzYvOC8xMC8xMi8xNC8xNm1B
+IGRyaXZpbmcNCj4gPiArICAgICAgICAgIGFkanVzdG1lbnQgaW4gZ2VuZXJpYyBkcml2aW5nIHNl
+dHVwLiBCdXQgaW4gc3BlY2lmaWMgZHJpdmluZyBzZXR1cCwNCj4gPiArICAgICAgICAgIHRoZXkg
+Y2FuIHN1cHBvcnQgMC4xMjUvMC4yNS8wLjUvMW1BIGFkanVzdG1lbnQuIElmIHdlIGVuYWJsZSBz
+cGVjaWZpYw0KPiA+ICsgICAgICAgICAgZHJpdmluZyBzZXR1cCBmb3IgSTJDIHBpbnMsIHRoZSBl
+eGlzdGluZyBnZW5lcmljIGRyaXZpbmcgc2V0dXAgd2lsbCBiZQ0KPiA+ICsgICAgICAgICAgZGlz
+YWJsZWQuIEZvciBzb21lIHNwZWNpYWwgZmVhdHVyZXMsIHdlIG5lZWQgdGhlIEkyQyBwaW5zIHNw
+ZWNpZmljDQo+ID4gKyAgICAgICAgICBkcml2aW5nIHNldHVwLiBUaGUgc3BlY2lmaWMgZHJpdmlu
+ZyBzZXR1cCBpcyBjb250cm9sbGVkIGJ5IEUxRTBFTi4NCj4gPiArICAgICAgICAgIFNvIHdlIG5l
+ZWQgYWRkIGV4dHJhIHZlbmRvciBkcml2aW5nIHByZXBlcnR5IGluc3RlYWQgb2YNCj4gPiArICAg
+ICAgICAgIHRoZSBnZW5lcmljIGRyaXZpbmcgcHJvcGVydHkuDQo+ID4gKyAgICAgICAgICBXZSBj
+YW4gYWRkICJtZWRpYXRlayxkcml2ZS1zdHJlbmd0aC1hZHYgPSA8WFhYPjsiIHRvIGRlc2NyaWJl
+IHRoZSBzcGVjaWZpYw0KPiA+ICsgICAgICAgICAgZHJpdmluZyBzZXR1cCBwcm9wZXJ0eS4gIlhY
+WCIgbWVhbnMgdGhlIHZhbHVlIG9mIEUxRTBFTi4gRU4gaXMgMCBvciAxLg0KPiA+ICsgICAgICAg
+ICAgSXQgaXMgdXNlZCB0byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgc3BlY2lmaWMgZHJpdmluZyBz
+ZXR1cC4NCj4gPiArICAgICAgICAgIEUxRTAgaXMgdXNlZCB0byBkZXNjcmliZSB0aGUgZGV0YWls
+IHN0cmVuZ3RoIHNwZWNpZmljYXRpb24gb2YgdGhlIEkyQyBwaW4uDQo+ID4gKyAgICAgICAgICBX
+aGVuIEUxPTAvRTA9MCwgdGhlIHN0cmVuZ3RoIGlzIDAuMTI1bUEuDQo+ID4gKyAgICAgICAgICBX
+aGVuIEUxPTAvRTA9MSwgdGhlIHN0cmVuZ3RoIGlzIDAuMjVtQS4NCj4gPiArICAgICAgICAgIFdo
+ZW4gRTE9MS9FMD0wLCB0aGUgc3RyZW5ndGggaXMgMC41bUEuDQo+ID4gKyAgICAgICAgICBXaGVu
+IEUxPTEvRTA9MSwgdGhlIHN0cmVuZ3RoIGlzIDFtQS4NCj4gPiArICAgICAgICAgIFNvIHRoZSB2
+YWxpZCBhcmd1bWVudHMgb2YgIm1lZGlhdGVrLGRyaXZlLXN0cmVuZ3RoLWFkdiIgYXJlIGZyb20g
+MCB0byA3Lg0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1wdWxsLWRvd246IHRydWUNCj4gPiArDQo+
+ID4gKyAgICAgIGJpYXMtcHVsbC11cDogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1kaXNh
+YmxlOiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgICBvdXRwdXQtaGlnaDogdHJ1ZQ0KPiA+ICsNCj4g
+PiArICAgICAgb3V0cHV0LWxvdzogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5wdXQtZW5hYmxl
+OiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgICBpbnB1dC1kaXNhYmxlOiB0cnVlDQo+ID4gKw0KPiA+
+ICsgICAgICBpbnB1dC1zY2htaXR0LWVuYWJsZTogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5w
+dXQtc2NobWl0dC1kaXNhYmxlOiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgcmVxdWlyZWQ6DQo+ID4g
+KyAgICAgIC0gcGlubXV4DQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGli
+bGUNCj4gPiArICAtIHJlZw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gaW50ZXJydXB0
+LWNvbnRyb2xsZXINCj4gPiArICAtICcjaW50ZXJydXB0LWNlbGxzJw0KPiA+ICsgIC0gZ3Bpby1j
+b250cm9sbGVyDQo+ID4gKyAgLSAnI2dwaW8tY2VsbHMnDQo+ID4gKyAgLSBncGlvLXJhbmdlcw0K
+PiANCj4gYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+IA0KDQo9PT4gV2Ugd2lsbCBhZGQg
+aXQgaW4gdjMuIFRoYW5rcy4NCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+
+ICsgICAgICAgICAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGluY3RybC9tdDgxOTItcGluZnVu
+Yy5oPg0KPiA+ICsgICAgICAgICAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNv
+bnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsgICAgICAgICAgICBwaW86IHBpbmN0cmxAMTAwMDUw
+MDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
+MTkyLXBpbmN0cmwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4MTAwMDUw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFjMjAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkMTAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkMzAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFkNDAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlMjAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlNzAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFlYTAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFmMjAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTFmMzAw
+MDAgMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4MTAwMGIw
+MDAgMCAweDEwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJpb2Nm
+ZzAiLCAiaW9jZmdfcm0iLCAiaW9jZmdfYm0iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICJpb2NmZ19ibCIsICJpb2NmZ19iciIsICJpb2NmZ19sbSIsDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgImlvY2ZnX2xiIiwgImlvY2ZnX3J0IiwgImlvY2ZnX2x0IiwNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAiaW9jZmdfdGwiLCAiZWludCI7DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgZ3Bpby1jb250cm9sbGVyOw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICNncGlvLWNlbGxzID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGdwaW8tcmFuZ2Vz
+ID0gPCZwaW8gMCAwIDIyMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNv
+bnRyb2xsZXI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJ
+IDIxMiBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICNp
+bnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAgICAgICAgIH07DQo+ID4gLS0gDQo+ID4g
+Mi4xOC4wDQoNCg==
 
-Sorry! False positive on this one. The android-mainline tree has
-serial drivers as modules, so earlycon doesn't help right off.
-I reworked the config so I could use earlycon and realized the trouble
-was with the new selected configs in this patch which need to also be
-selected in the GKI kernel.
-
-Apologies for the noise.
-
-thanks
--john
