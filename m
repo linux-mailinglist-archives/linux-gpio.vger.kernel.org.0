@@ -2,283 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C4D23D811
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Aug 2020 10:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E9323D8D8
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Aug 2020 11:43:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgHFIkK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Aug 2020 04:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52482 "EHLO
+        id S1728974AbgHFJmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Aug 2020 05:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgHFIkJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Aug 2020 04:40:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E576BC061574
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Aug 2020 01:40:08 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3bRW-0002CC-GQ; Thu, 06 Aug 2020 10:40:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3bRQ-0007rq-G1; Thu, 06 Aug 2020 10:40:00 +0200
-Date:   Thu, 6 Aug 2020 10:40:00 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
+        with ESMTP id S1729123AbgHFJmA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Aug 2020 05:42:00 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03128C061574
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Aug 2020 02:41:59 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c15so8476588lfi.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Aug 2020 02:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xiBtfv09Rewh33AK2W77Sh/BJrs195/KdV/txM9SnfM=;
+        b=pOD4YJJB9NYsTyVi9YyMgqMX62jv0IKvTH/+546UVtScHjOj3YuqppoyOxGSpZGLZ3
+         ktZJOx941KjDIIlY3sQA7PFxCfPLJTzi6cbZfCiLmVLCdTy0SmkKy09SfUjFQAZzz9ms
+         m1tPoDTkMu3jzV+SPc1rIT4rmQ04eTGKEnU5XlwUCCjGqGBZc2fwwidT85azIsxdrVOS
+         uo32jXEPDrWuvNQW5fmud877MRS3RT1fmMQNZUe2Y2Iev1SJXOU6RLWc0lLbs9f7wp42
+         smKzQigDbG9RqsRVAozGIMFQGw3muz9Q8A9H86StSnr5FFrPNPEei2hzdlTTLBTb7Evz
+         SwrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xiBtfv09Rewh33AK2W77Sh/BJrs195/KdV/txM9SnfM=;
+        b=U/xlZZUU4VwlRzrLL0YYNF0gsm5pBY2jBp/qig9QL3HFdqOuIjlGMXjh6qQhFOYI9S
+         v+8suu7HZY35OX5iMVHzHPhax0CYhRvZ9aAnJBbb8SjaXRJTwE0la6CRV779q9a8QMbF
+         f5Yrwr2viUryTBAFNjzrRyWnLTPW//ZUWgnmfZ9rzwwRM6v1jTFKrDzFPuGqRsVzirtN
+         g3CTiKv4hW7SDMtGfPPzv23HjCp/dC+Fl1378DvyV0omhgDzg2D5QS+OQpyF/UEzAmNy
+         SW6KX13vHtons3msFqrHNWjsPzjw0BAsIA+UaDjge96+O4AC7vFU8WizHAJcpBRy5S8G
+         oS+A==
+X-Gm-Message-State: AOAM533tTeOciJrU5KsLltZPeytKjfvVVzLezDEj/CAh9HvkOJyWh1ui
+        uyFzy0YSL/RufWwDdFuOC4jVUVRqgIKz+Tr59JqllQVyQUo=
+X-Google-Smtp-Source: ABdhPJyiQSuuZkL3S5NCMXaqBrOx5c7oy6V+lNy2kA0O0vzu+FVy9yoWAyu8VznLi9x/g0S6xr6H38ivfdD537KQdgM=
+X-Received: by 2002:a19:cb53:: with SMTP id b80mr3544428lfg.77.1596706918251;
+ Thu, 06 Aug 2020 02:41:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vgnlsgd3pefacvw3"
-Content-Disposition: inline
-In-Reply-To: <20200803093559.12289-7-michael@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
+In-Reply-To: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 6 Aug 2020 11:41:46 +0200
+Message-ID: <CACRpkdaHNuuS-2zMwWf-2--8FFV_4aQuAjYx8pLu66h4adQcwQ@mail.gmail.com>
+Subject: Re: pinctrl: sx150x bug
+To:     Martin DEVERA <devik@eaxlabs.cz>, Peter Rosin <peda@axentia.se>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Martin,
 
---vgnlsgd3pefacvw3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks for your report, let's check with Peter, Neil and Andrey who also
+use this expander if they also see this problem (CC).
 
-Hello Michael,
+On Wed, Aug 5, 2020 at 11:28 AM Martin DEVERA <devik@eaxlabs.cz> wrote:
 
-I'm nearly happy now; see below.
-
-On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 7dbcf6973d33..a0d50d70c3b9 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -428,6 +428,16 @@ config PWM_SIFIVE
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-sifive.
-> =20
-> +config PWM_SL28CPLD
-> +	tristate "Kontron sl28cpld PWM support"
-> +	select MFD_SIMPLE_MFD_I2C
-
-Is it sensible to present this option to everyone? Maybe
-
-	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
-
-=2E
-
-> +	help
-> +	  Generic PWM framework driver for board management controller
-> +	  found on the Kontron sl28 CPLD.
+> I encountered bug in SX1502 expander driver in 5.7.7. Here is relevant
+> DTS part:
+>
+> compatible = "semtech,sx1502q";
+> gpio4_cfg_pins: gpio2-cfg {
+>                          pins = "gpio5";
+>                          output-high;
+>      };
+>
+> And part of OOPS:
+>
+> [    0.673996] [<c023cfa6>] (gpiochip_get_data) from [<c023b235>]
+> (sx150x_gpio_direction_output+0xd)
+> [    0.683259] [<c023b235>] (sx150x_gpio_direction_output) from
+> [<c023b363>] (sx150x_pinconf_set+0x)
+> [    0.692796] [<c023b363>] (sx150x_pinconf_set) from [<c0238fef>]
+> (pinconf_apply_setting+0x39/0x7e)
+> [    0.701635] [<c0238fef>] (pinconf_apply_setting) from [<c0236c77>]
+> (pinctrl_commit_state+0xa5/0x)
+> [    0.710648] [<c0236c77>] (pinctrl_commit_state) from [<c0237e03>]
+> (pinctrl_enable+0xff/0x1d4)
+> [    0.719139] [<c0237e03>] (pinctrl_enable) from [<c023b791>]
+> (sx150x_probe+0x1a3/0x358)
+> [    0.727027] [<c023b791>] (sx150x_probe) from [<c02c38bf>]
+> (i2c_device_probe+0x1bb/0x1dc)
+>
+> The problem is that sx150x_pinconf_set uses sx150x_gpio_direction_output
+> but gpio is not
+> setup yet. Patch below fixes it but I'm not sure whether is it correct:
+>
+> diff --git a/drivers/pinctrl/pinctrl-sx150x.c
+> b/drivers/pinctrl/pinctrl-sx150x.c
+> index 6e74bd87d959..3f5651edd336 100644
+> --- a/drivers/pinctrl/pinctrl-sx150x.c
+> +++ b/drivers/pinctrl/pinctrl-sx150x.c
+> @@ -1154,12 +1154,6 @@ static int sx150x_probe(struct i2c_client *client,
+>                  return ret;
+>          }
+>
+> -       ret = pinctrl_enable(pctl->pctldev);
+> -       if (ret) {
+> -               dev_err(dev, "Failed to enable pinctrl device\n");
+> -               return ret;
+> -       }
+> -
+>          /* Register GPIO controller */
+>          pctl->gpio.base = -1;
+>          pctl->gpio.ngpio = pctl->data->npins;
+> @@ -1191,6 +1185,12 @@ static int sx150x_probe(struct i2c_client *client,
+>          if (ret)
+>                  return ret;
+>
+> +       ret = pinctrl_enable(pctl->pctldev);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to enable pinctrl device\n");
+> +               return ret;
+> +       }
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-sl28cpld.
-> +
->  config PWM_SPEAR
->  	tristate "STMicroelectronics SPEAr PWM support"
->  	depends on PLAT_SPEAR || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 2c2ba0a03557..cbdcd55d69ee 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
->  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
->  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
-> +obj-$(CONFIG_PWM_SL28CPLD)	+=3D pwm-sl28cpld.o
->  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
->  obj-$(CONFIG_PWM_SPRD)		+=3D pwm-sprd.o
->  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
-> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-> new file mode 100644
-> index 000000000000..bb298af36f0b
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sl28cpld.c
-> @@ -0,0 +1,235 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * sl28cpld PWM driver
-> + *
-> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
-> + *
-> + * There is no public datasheet available for this PWM core. But it is e=
-asy
-> + * enough to be briefly explained. It consists of one 8-bit counter. The=
- PWM
-> + * supports four distinct frequencies by selecting when to reset the cou=
-nter.
-> + * With the prescaler setting you can select which bit of the counter is=
- used
-> + * to reset it. This implies that the higher the frequency the less rema=
-ining
-> + * bits are available for the actual counter.
-> + *
-> + * Let cnt[7:0] be the counter, clocked at 32kHz:
-> + * +-----------+--------+--------------+-----------+---------------+
-> + * | prescaler |  reset | counter bits | frequency | period length |
-> + * +-----------+--------+--------------+-----------+---------------+
-> + * |         0 | cnt[7] |     cnt[6:0] |    250 Hz |    4000000 ns |
-> + * |         1 | cnt[6] |     cnt[5:0] |    500 Hz |    2000000 ns |
-> + * |         2 | cnt[5] |     cnt[4:0] |     1 kHz |    1000000 ns |
-> + * |         3 | cnt[4] |     cnt[3:0] |     2 kHz |     500000 ns |
-> + * +-----------+--------+--------------+-----------+---------------+
-> + *
-> + * Limitations:
-> + * - The hardware cannot generate a 100% duty cycle if the prescaler is =
-0.
-> + * - The hardware cannot atomically set the prescaler and the counter va=
-lue,
-> + *   which might lead to glitches and inconsistent states if a write fai=
-ls.
-> + * - The counter is not reset if you switch the prescaler which leads
-> + *   to glitches, too.
-> + * - The duty cycle will switch immediately and not after a complete cyc=
-le.
-> + * - Depending on the actual implementation, disabling the PWM might have
-> + *   side effects. For example, if the output pin is shared with a GPIO =
-pin
-> + *   it will automatically switch back to GPIO mode.
+>          ret = gpiochip_add_pin_range(&pctl->gpio, dev_name(dev),
+>                                       0, 0, pctl->data->npins);
+>          if (ret)
 
-Very nice.
+I don't see any problem with the patch, can you send a proper patch
+with git-send-email so we can test it and apply it if it works for the
+other users? Include the mentioned people on CC.
 
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +/*
-> + * PWM timer block registers.
-> + */
-> +#define SL28CPLD_PWM_CTRL			0x00
-> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
-> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
-> +#define SL28CPLD_PWM_CYCLE			0x01
-> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
-> +
-> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
-> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
-> +#define SL28CPLD_PWM_PERIOD(prescaler) \
-> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescale=
-r))
-> +
-> +/*
-> + * We calculate the duty cycle like this:
-> + *   duty_cycle_ns =3D pwm_cycle_reg * max_period_ns / max_duty_cycle
-> + *
-> + * With
-> + *   max_period_ns =3D 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
-> + *   max_duty_cycle =3D 1 << (7 - prescaler)
-> + * this then simplifies to:
-> + *   duty_cycle_ns =3D pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
-> + *
-> + * NSEC_PER_SEC and SL28CPLD_PWM_CLK is integer here, so we're not losing
-> + * precision by doing the divison first.
-
-Apart from the grammatical issue (s/is/are/) this is not the relevant
-fact. The relevant thing is that NSEC_PER_SEC / SL28CPLD_PWM_CLK is
-integer.
-
-(In case this is not clear, assume SL28CPLD_PWM_CLK to be 30000 and reg
-0x12345.
-
-Then we have:=20
-
-	NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg) -> 0x94255749
-	NSEC_PER_SEC * (reg) / SL28CPLD_PWM_CLK -> 0x9425b860
-
-=2E)
-
-> + */
-> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
-> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
-> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
-> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
-> +
-> +#define sl28cpld_pwm_read(priv, reg, val) \
-> +	regmap_read((priv)->regmap, (priv)->offset + (reg), (val))
-> +#define sl28cpld_pwm_write(priv, reg, val) \
-> +	regmap_write((priv)->regmap, (priv)->offset + (reg), (val))
-> +
-> +struct sl28cpld_pwm {
-> +	struct pwm_chip pwm_chip;
-> +	struct regmap *regmap;
-> +	u32 offset;
-> +};
-> +
-> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> +				   struct pwm_device *pwm,
-> +				   struct pwm_state *state)
-> +{
-> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> +	unsigned int reg;
-> +	int prescaler;
-> +
-> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> +
-> +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
-> +
-> +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
-> +
-> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
-
-Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
-the upper bits are zero?
-
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---vgnlsgd3pefacvw3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8rwd0ACgkQwfwUeK3K
-7AmfeAf9Gjs6d6RYl4cHjGm5WtyaW7dy/H/ZhBTXazWZi9T2vSKNCbP7eDdMWVqK
-mGWH4KuK60xZp0FN7GcX1LLw98U3NVz6SQGyQJKe9YbvFCX8mHsUI3L2R/vPprgb
-xLa89BSlnoaUd/KovXXGa++KHFfEqQ/9jTxBYqiLBnHhKK2TEL9QWVwLnzGo0b9T
-N4xzqBfInTCN10AaDNURikxMx1EmP9DaOp2X2LSLlBIkB47mt9jfsQiUy8SHcoF1
-xAx+Ryx0g3t3iXvbv6y9AbuUxaEteZQ8bn+2hP3PHaAo4NyvnaqPM/BFj/SL6RKj
-7d0IxQE5ptk05VI2zx0zwpDFPjk3ow==
-=OBgf
------END PGP SIGNATURE-----
-
---vgnlsgd3pefacvw3--
+Yours,
+Linus Walleij
