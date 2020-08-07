@@ -2,189 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9416423E82E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Aug 2020 09:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C7D523E84D
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Aug 2020 09:50:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHGHpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Aug 2020 03:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgHGHps (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Aug 2020 03:45:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24F4C061574
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Aug 2020 00:45:48 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3x4V-0001Pr-7L; Fri, 07 Aug 2020 09:45:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3x4R-000615-Vj; Fri, 07 Aug 2020 09:45:44 +0200
-Date:   Fri, 7 Aug 2020 09:45:43 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
+        id S1726382AbgHGHt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Aug 2020 03:49:56 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7672 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726212AbgHGHt4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Aug 2020 03:49:56 -0400
+X-UUID: df0436bc88ff42e28b4051d03d8a78b4-20200807
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yywh14HheHRN5nISdZsajtXKtu3fLmwV6Xvu2YjSk6E=;
+        b=OKQ95xJdohYz9ZaBvKU29/Va33HmHprd7NS0am77anLOgqMnsuV+/oBoeHFvH95B7V74d8QJuV+VsQBKzBTc7HDLkt6DxMU308qbgK0DvL4QP+5AS44ipM0dvFaH3JjejqY6UfyC2A33ytACTfghRPRkGakbTIJan/UotuQedYo=;
+X-UUID: df0436bc88ff42e28b4051d03d8a78b4-20200807
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1530630414; Fri, 07 Aug 2020 15:49:52 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 7 Aug 2020 15:49:49 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 Aug 2020 15:49:48 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <sj.huang@mediatek.com>,
+        <seiya.wang@mediatek.com>, <jg_poxu@mediatek.com>,
+        <sin_jieyang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v3 0/3] Mediatek pinctrl patch on mt8192 
+Date:   Fri, 7 Aug 2020 15:49:02 +0800
+Message-ID: <20200807074905.23468-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6vfvapgawy5623je"
-Content-Disposition: inline
-In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+VGhpcyBzZXJpZXMgaW5jbHVkZXMgMyBwYXRjaGVzOg0KMS5hZGQgcGluY3RybCBmaWxlIG9uIG10
+ODE5Mi4NCjIuYWRkIHBpbmN0cmwgYmluZGluZyBkb2N1bWVudCBvbiBtdDgxOTIuDQozLmFkZCBw
+aW5jdHJsIGRyaXZlciBvbiBNVDgxOTIuDQoNCkNoYW5nZXMgaW4gcGF0Y2ggdjM6DQoxKWZpeCBy
+dW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGVycm9ycy4NCjIpY2hhbmdlICdub2RlJyB0
+byAncGluY29udHJvbGxlcicuDQozKWFkZCBhbiBhY3R1YWwgZXhhbXBsZS4NCjQpY2hhbmdlIHJl
+ZiBhcyAncGlubXV4LW5vZGUueWFtbCcuDQo1KXJlbW92ZSAnR0VORVJJQ19QSU5DT05GSUcnLg0K
+NilhZGQgJ2FkZHRpb25hbFByb3BlcnRpZXM6IGZhbHNlJy4NCg0KQ2hhbmdlcyBpbiBwYXRjaCB2
+MjoNCjEpY2hhbmdlIG1haW50YWluZXJzIG5hbWUgaW4gcGluY3RybC1tdDgxOTIueWFtbC4NCjIp
+cmVtb3ZlIHVudXNlZCBkZXNjcmlwdGlvbiBmb3IgInJlZy1uYW1lcyIuDQozKWNoYW5nZSAnc3Vi
+bm9kZSBmb3JtYXQ6JyB3aGljaCBpcyBub3QgYSBjaGlsZCBuYW1lIHRvICJecGlucyIuDQo0KWFk
+ZCAoJ3wnKSBhZnRlciAiZGVzY3JpcHRpb246Ii4NCjUpcmVtb3ZlICJpMmMwX3BpbnNfYTogaTJj
+MCIgYW5kICJpMmMwX3BpbnNfYTogaTJjMSIuDQo2KWFkZCBwcm9wZXJ0aWVzIGZvciBwaW4gY29u
+ZmlndXJhdGlvbiBub2Rlcy4NCg0KWmhpeW9uZyBUYW8gKDMpOg0KICBkdC1iaW5kaW5nczogcGlu
+Y3RybDogbXQ4MTkyOiBhZGQgcGluY3RybCBmaWxlDQogIGR0LWJpbmRpbmdzOiBwaW5jdHJsOiBt
+dDgxOTI6IGFkZCBiaW5kaW5nIGRvY3VtZW50DQogIHBpbmN0cmw6IGFkZCBwaW5jdHJsIGRyaXZl
+ciBvbiBtdDgxOTINCg0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLnlhbWwg
+ICAgICB8ICAxOTUgKysNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAg
+ICAgICAgfCAgICA3ICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAg
+ICAgICAgfCAgICAxICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDgxOTIu
+YyAgICAgfCAxNDA4ICsrKysrKysrKysNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdGstbXQ4MTkyLmggfCAyMjc1ICsrKysrKysrKysrKysrKysrDQogaW5jbHVkZS9kdC1iaW5k
+aW5ncy9waW5jdHJsL210ODE5Mi1waW5mdW5jLmggIHwgMTM0NCArKysrKysrKysrDQogNiBmaWxl
+cyBjaGFuZ2VkLCA1MjMwIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0K
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDgx
+OTIuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdGstbXQ4MTkyLmgNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9w
+aW5jdHJsL210ODE5Mi1waW5mdW5jLmgNCg0KLS0NCjIuMjUuMQ0KDQo=
 
---6vfvapgawy5623je
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
-> Hi Uwe, Hi Lee,
->=20
-> Am 2020-08-06 10:40, schrieb Uwe Kleine-K=F6nig:
-> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index 7dbcf6973d33..a0d50d70c3b9 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
-> > >  	  To compile this driver as a module, choose M here: the module
-> > >  	  will be called pwm-sifive.
-> > >=20
-> > > +config PWM_SL28CPLD
-> > > +	tristate "Kontron sl28cpld PWM support"
-> > > +	select MFD_SIMPLE_MFD_I2C
-> >=20
-> > Is it sensible to present this option to everyone? Maybe
-> >=20
-> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
->=20
-> Because there is now no real MFD driver anymore, there is also
-> no symbol for that. The closest would be ARCH_ARM64 but I don't
-> think that is a good idea.
->=20
-> Lee, what do you think about adding a symbol to the MFD, which
-> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
->=20
-> I.e.
-> config MFD_SL28CPLD
->     tristate "Kontron sl28cpld"
->     select MFD_SIMPLE_MFD_I2C
->     help
->       Say yes here to add support for the Kontron sl28cpld board
->       management controller.
->=20
-> Then all the other device driver could depend on the MFD_SL28CPLD
-> symbol.
->=20
-> [..]
->=20
-> > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> > > +				   struct pwm_device *pwm,
-> > > +				   struct pwm_state *state)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > +	unsigned int reg;
-> > > +	int prescaler;
-> > > +
-> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> > > +
-> > > +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
-> > > +
-> > > +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> > > +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
-> > > +
-> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> > > +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
-> >=20
-> > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
-> > the upper bits are zero?
->=20
-> Mh, the hardware guarantees that bit7 is zero. So masking with
-> SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
-> could go wrong is this: someone set the prescaler to !=3D 0 and the
-> duty cycle to a value greater than the max value for this particular
-> prescaler mode. For the above calculations this would result in a
-> duty_cycle greater than the period, if I'm not mistaken.
->=20
-> The behavior of the hardware is undefined in that case (at the moment
-> it will be always on, I guess). So this isn't a valid setting.
-> Nevertheless it might happen. So what about the following:
->=20
-> state->duty_cycle =3D min(state->duty_cycle, state->period);
-
-If you care about this: This can also happen (at least shortly) in
-sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
-SL28CPLD_PWM_CYCLE there.
-
-I wonder if we want to sanitize the values returned from driver's
-=2Eget_state in the core; or scream loud (maybe only if PWM_DEBUG is on).
-
-Something like:
-
-	if (state->enabled && state->duty_cycle > state->period) {
-		if (IS_ENABLED(CONFIG_PWM_DEBUG))
-			dev_warn(chip->dev, ".get_state() returned invalid setting.\n");
-
-		state->duty_cycle =3D state->period;
-	}
-
-Do we want to catch state->period =3D 0, too? Do we interpret this as
-disabled?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6vfvapgawy5623je
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8tBqQACgkQwfwUeK3K
-7AkxWAgAoG+PqaPjPFtzNF9JWYONbF6XKaC5Ptr0ArDt6eAhMk/J7dN5fPbk53SY
-BwI2bQI42oVwcpBcRWuwfW3cRIVw+71KyOcPH5JYyX5BGEKqPOVGpWeHWcE2VCpz
-wgvROpNxKRAJSkiUCaqPEEGVUyYrYrfYIBVNapbq9BOafMXoyISCClOWpNqMkm77
-NH8PRsmlkdbZRXV6r+u7bw859VNc32IAFdITfYJa7iAXe+w8GiS8Ow1iFmdE6pXT
-v8/RLQsKka7TsakHZ4FgzI4V9nRjaHBlLuY724cyYlScVKHuX3rQiQ6LoU/vTaPD
-DOycv3Dc1STgW4hmNt9AQcCLCJlL+A==
-=dkcM
------END PGP SIGNATURE-----
-
---6vfvapgawy5623je--
