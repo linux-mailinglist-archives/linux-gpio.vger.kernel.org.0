@@ -2,149 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 216DD23EB6B
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Aug 2020 12:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF7DF23EE50
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Aug 2020 15:37:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgHGKYw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Aug 2020 06:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgHGKYv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Aug 2020 06:24:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B26CAC061575
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Aug 2020 03:24:51 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3zYO-0001jw-TK; Fri, 07 Aug 2020 12:24:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3zYI-0003e8-3P; Fri, 07 Aug 2020 12:24:42 +0200
-Date:   Fri, 7 Aug 2020 12:24:41 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200807102441.qcshhsc36nzj7bpn@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
- <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
- <92116be9aa56250becc4019c6c7a1538@walle.cc>
+        id S1726096AbgHGNhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Aug 2020 09:37:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44167 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgHGNhM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Aug 2020 09:37:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id h22so1574149otq.11;
+        Fri, 07 Aug 2020 06:37:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J44MR7fnREWFikV0B417NzGJrCU1jtFI1zOdoOpVzoU=;
+        b=jc5pMFsPG8CIHkWD+Q0HjtkDM6OoXi/RiIU3J/092hCKE4Nady7oEwUEZfdKJworGJ
+         7hzsiWZXxo8WNh2oCUyNwdM9xG1+x5LkSZXn34Yt5jPnKMDTK/ElNlOkkKwSI8W2y/ZH
+         PtO8P9gx2nSOSdzBSQSjFhvXvnaSUij3hrBNiPFfwd2ISSM0bbzR95hBo4hE2BefyHAJ
+         QRVB2+HIfK0Fvdi5wdlgU6GmAZ2w2zSg2JcwOvhRUmR6hfY0NKnnnNxok/DejHcHFMpn
+         7kprdeYVbcInpQb5eVyTnqJY5rwVwQqHyMn2BW5inSKSCEROX5/rWqIh4o3YbvwnNcsj
+         wLxg==
+X-Gm-Message-State: AOAM532+jmrEXYHKect2/zP4dpFMAcsUTZYpAq6Sw7lcs+1/kMt0D//F
+        K236S0GhbjeEA2zAvRnVFwnlnyWvM8HPwF9zShQ=
+X-Google-Smtp-Source: ABdhPJwafn0EQZaoR3TYnh1FhNdc6aBGm7a0d+hS9M2QCMy4MOn+llZ4cz0+MLff0cZgTShD75DW+6jOu4NPU5if2to=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr11805393otn.250.1596807430961;
+ Fri, 07 Aug 2020 06:37:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ui3bvps5z2hxjh32"
-Content-Disposition: inline
-In-Reply-To: <92116be9aa56250becc4019c6c7a1538@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20200417140920.22596-1-geert+renesas@glider.be> <20200430023237.GA23316@bogus>
+In-Reply-To: <20200430023237.GA23316@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 7 Aug 2020 15:36:59 +0200
+Message-ID: <CAMuHMdWSPDQBABXZVaPecETbSRsP2yyZXLHiL_+_R2n_-09jRg@mail.gmail.com>
+Subject: Re: [PATCH RFC] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Rob,
 
---ui3bvps5z2hxjh32
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 30, 2020 at 4:32 AM Rob Herring <robh@kernel.org> wrote:
+> On Fri, Apr 17, 2020 at 04:09:20PM +0200, Geert Uytterhoeven wrote:
+> > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> > documentation to json-schema.
+> >
+> > Document missing properties.
+> > Drop deprecated and obsolete #gpio-range-cells property.
+> > Update the example to match reality.
+> > Drop consumer examples, as they do not belong here.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > How to describe that pin configuration nodes can have subnodes?
+> > E.g.
+> >
+> >     arch/arm/boot/dts/sh73a0-kzm9g.dt.yaml: pin-controller@e6050000: mmc: Additional properties are not allowed ('cfg', 'mux' were unexpected)
+>
+> I shouldn't tell you so no one does this again...
 
-Hi Michael,
+Note that this is fairly common, as a device may need to configure
+multiple groups or pins, or pinmux and GPIO pins.  Hence the grouping
+under a container node.
 
-On Fri, Aug 07, 2020 at 09:55:19AM +0200, Michael Walle wrote:
-> Am 2020-08-07 09:45, schrieb Uwe Kleine-K=F6nig:
-> > On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
-> > > Am 2020-08-06 10:40, schrieb Uwe Kleine-K=F6nig:
-> > > > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> > > > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> > > > > +				   struct pwm_device *pwm,
-> > > > > +				   struct pwm_state *state)
-> > > > > +{
-> > > > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > > > +	unsigned int reg;
-> > > > > +	int prescaler;
-> > > > > +
-> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> > > > > +
-> > > > > +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
-> > > > > +
-> > > > > +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> > > > > +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
-> > > > > +
-> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> > > > > +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
-> > > >
-> > > > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed=
- that
-> > > > the upper bits are zero?
-> > >=20
-> > > Mh, the hardware guarantees that bit7 is zero. So masking with
-> > > SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
-> > > could go wrong is this: someone set the prescaler to !=3D 0 and the
-> > > duty cycle to a value greater than the max value for this particular
-> > > prescaler mode. For the above calculations this would result in a
-> > > duty_cycle greater than the period, if I'm not mistaken.
-> > >=20
-> > > The behavior of the hardware is undefined in that case (at the moment
-> > > it will be always on, I guess). So this isn't a valid setting.
-> > > Nevertheless it might happen. So what about the following:
-> > >=20
-> > > state->duty_cycle =3D min(state->duty_cycle, state->period);
-> >=20
-> > If you care about this: This can also happen (at least shortly) in
-> > sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
-> > SL28CPLD_PWM_CYCLE there.
->=20
-> It could also happen if it was the other way around, couldn't it?
-> Changing modes might glitch.
+Cfr. Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
 
-If you want to prevent this, you have to order the writes depending on
-prescaler increasing or decreasing.
+> I think you want something like this assuming you have either
+> grandchildren or properties, but not both in the child nodes:
+>
+> patternProperties:
+>   ".*":
 
-Best regards
-Uwe
+[...]
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+I couldn't get it to work with "patternProperties", but using
+"additionalProperties" like ingenic,pinctrl.yaml does work for me.
 
---ui3bvps5z2hxjh32
-Content-Type: application/pgp-signature; name="signature.asc"
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
 
------BEGIN PGP SIGNATURE-----
+> > +  interrupts-extended:
+>
+> Just do 'interrupts'. It's fixed up in the tooling.
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8tK+YACgkQwfwUeK3K
-7Am+ZAf/fEspbQK7oTVzKrTHBQXxu0AjknqY6yLOlTFthBSsQqbzGwekDnDjQG21
-Emw2dyTCQW7YHQaYx8l1HilDsVFiazBpJ6yG49upduH83s15tgAB4Guv2uTbrzim
-uMsqxPDtiCrjGdTw4MNt37OoKh0A2O+IAd1yuSrgDpQqWiDM0uNs+MMNZm8OQAST
-ZkVhwCFr28b9QNzUodg6d2QK5T5DWEgt6BFkPpn5SFUc/mMMQs2/3LcaBOh2Gd9/
-FqKla8k4Akpniv4OcC93n0QfOap22V69gLflWJLN2YB3Gn+BvZLqMvhAgF6cy/Ho
-jEP7yLYqhcfx644/uGqeHpOHNDm8Eg==
-=jSvw
------END PGP SIGNATURE-----
+Apparently not everywhere...
 
---ui3bvps5z2hxjh32--
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      items:
+> > +        enum:
+> > +          - renesas,pfc-r8a73a4
+> > +          - renesas,pfc-r8a7740
+> > +          - renesas,pfc-sh73a0
+> > +then:
+> > +  required:
+> > +    - interrupts-extended
+
+I have to keep it here, or I get:
+
+    Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
+pin-controller@e6050000: 'interrupts' is a required property
+
+So I'll keep it in both places, for consistency.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
