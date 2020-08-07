@@ -2,154 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1D9123E364
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Aug 2020 23:07:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B33B723E59B
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Aug 2020 03:54:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHFVHO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Aug 2020 17:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgHFVHO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Aug 2020 17:07:14 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEE7C061574
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Aug 2020 14:07:14 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3n6U-00023A-Em; Thu, 06 Aug 2020 23:07:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3n6T-0004ZV-BT; Thu, 06 Aug 2020 23:07:09 +0200
-Date:   Thu, 6 Aug 2020 23:07:09 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726055AbgHGByG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Aug 2020 21:54:06 -0400
+Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:64619
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726013AbgHGByG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:54:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=COeQz/KObXZ4zSybl2AAyrlEWggYKJDzEhExf9n5RLbBL1iYa8TJsjUuccZX1BmI80G3mgKkdrx+5QIg7fktfbE+0GX7yENqbMeyO0Ne7bWHYW/RA0zSnkUNCJL7IHKqakjLXdlEHyiobh/BgXW3MtewxTL9ZXDxXeM+P33KCxKqriG594GvLxN06AexStpcRjzCKBkFRyh6aYqY6kG06zmJx2Q3+FnNUv0nU1hoEwIIsnFsWMfSDrVWPlJRGJdX6oLDcMzhIylPlIVvKMeBs6J1NIt9uqm5C+AbMfSXSHwOpLrl+LxtRDOV3HcdPcqa8yOkWVpvw0zoi44yzshM5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
+ b=XrbmlmvsagfKxkMHidGSyKcjL8IcMuxpnlNFr7zTjGs9u/2MYhjbsDRwxND8p3l6Hkf4KsFAtyl4HLeyvF1EGLP+fOp7fCAKiTmvaIAtYRK9cJyE8G187fKk/Y6c4sQoKJSP0OBRbqlRG2Th3Z8V58jRaDlkMpx+jvnB0gMrciQjOB7MXE7AeKUn8+e4NkMNdjQqUcNRHK53fG/x/s/9a3KNjJJaeZUiOlah7GSrmgayhIiVOgfOtzT3ZylVlNfvZd6GyLhK5ub0ZjvqFOktcWWcbXeTGqaFqVKhYODXrm+ke7FFByxxbsTyb7JIXbTWAxaOx2rss1bmuyclRAIcvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
+ b=Q1ihf0KVKFWCqmioH9pp8jvf7wU5Mn6H2DJbO3cK3I/cJ9uVEqAUmxILdcHYOrQsXI1lbIiHl24ScqKx3ajx3HwRNrTo2b+WX3QZH/CucI6h8SqJ2PafClTWwF9qfq91t2BIuK5ixyaFCMrSMDLRaqzLP237jTDwB73p6RPG/mc=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB7PR04MB5994.eurprd04.prod.outlook.com (2603:10a6:10:89::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
+ 2020 01:54:02 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8db5:8715:8570:1406]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8db5:8715:8570:1406%7]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
+ 01:54:02 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-Message-ID: <20200806210709.5etazgtsfgkdnoui@pengutronix.de>
-References: <20200804091603.541-1-a.fatoum@pengutronix.de>
- <20200805061753.5o63zu4ionhgjab4@pengutronix.de>
- <871rkkhy7v.fsf@nanos.tec.linutronix.de>
- <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
- <87r1sjham2.fsf@nanos.tec.linutronix.de>
- <20200806194608.bdhvltvwxi3opykk@pengutronix.de>
- <87eeojh5vh.fsf@nanos.tec.linutronix.de>
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+Thread-Topic: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+Thread-Index: AQHWanDUsv5s6HEs8UmAXMW6+qGJdqkrIOgAgADEmlA=
+Date:   Fri, 7 Aug 2020 01:54:02 +0000
+Message-ID: <DB3PR0402MB39160FB9BEE17C4375308D57F5490@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
+ <20200806140718.GA766974@bogus>
+In-Reply-To: <20200806140718.GA766974@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c8118909-d4c1-48f0-7ed8-08d83a74c263
+x-ms-traffictypediagnostic: DB7PR04MB5994:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB599455B1A71014E70E135B48F5490@DB7PR04MB5994.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f8SUzQPaTIYj9mkB354UShLjRp4dv8Y4zn+x1y4/Y5oqHHzZaQvQeiAY4D270+S5Z+m5TSTfc+8boIgq1JR5N1iNwgHPZBFSbcYzBUVYfUSwu6RJ2Q7SHaqXrfMQZzOnSZ+CaRC45+eR699n3f66hI+ZfkCXDghwkMAYBcaU2EJNjoGGIyA2H1sAYLYVpNhwLURJqtihj+r9a1UkTZHIkYuY3elBnP4kKTDw50t6Xq7yarurDx3YIWFrV3I6k0HPgepWVEO67Pa0QrbrmI2NQRBhe49m8WxMl8mxU05d9AS9NZxOzFqPWgdRsO7Jf7tD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(26005)(33656002)(7696005)(8936002)(6506007)(8676002)(66556008)(5660300002)(4326008)(2906002)(64756008)(186003)(52536014)(66446008)(66476007)(76116006)(66946007)(316002)(83380400001)(55016002)(86362001)(71200400001)(9686003)(44832011)(54906003)(478600001)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hatUAiSV3BcQqaCbZo6yoZMUUZr0gHocLMZCDE4Yi9mh3QnOMHXevua4mAjsf/rQqThG2+KGIWHE1nwcgor/eA5DEI9Sgx2AZPeQqLfFPDqoZJHkD1dtR48TmeI2mW7ITieFAFKy2tq71OElienxOGaqLX/mPiDGmePT6zaVBgbDodomFnYYmLpQr/nZY8YNhCWqfjWRMjpmJqVEVG5hs46KJdOqe/qrudBZRLuk+v0V4aZUuRCTVjl4e+bR3BGcznZdYkP4/Kqrxk9GCEDt1Hj7RgqaXvcEDs4emhS7PnXwRnlr/wGfLISkZLlM6mZfB907Ud9pwCe2LJgmj4p04LgdQmBsFdw2GNmvuoHmPBxgeyRYSJtlqiGVElV2qxOOLR1qfPRxVYE3jI6Ok9fhwEJeCj0jJ2Y2v/3YRxBLfpodjxgN/exlYDfJv56pagESbuRcVHOwFxeXo2LMUSfXdj1qgFK3dWkwm7brIOVNsXbJD/saQBCY1oTicRMBJaIHVKeZpK5knl1QccY+0OtM2beYUggw6vQT3MIVteooN9VFaJFXOm3S0JTG5LkrdWR+jGngKS9krGg4LSKkXpAPoGbe6/3I2Vq8wfehD5qagn49mLCaxH57zmutKjEgAmu0PmXR834Q94I80BBaJQbUCw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="75n4mrucr4xkreqh"
-Content-Disposition: inline
-In-Reply-To: <87eeojh5vh.fsf@nanos.tec.linutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8118909-d4c1-48f0-7ed8-08d83a74c263
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2020 01:54:02.4103
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kbCkXll3KVQcuMhTqVv8yME0xjK+n8ezhlFGvTwA684DciqbZ8W+FDVR5hJJillhOclcnLCqph9O6jORyoWoPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5994
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi, Rob
 
---75n4mrucr4xkreqh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Thomas,
-
-On Thu, Aug 06, 2020 at 10:33:06PM +0200, Thomas Gleixner wrote:
-> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> writes:
-> > On Thu, Aug 06, 2020 at 08:50:45PM +0200, Thomas Gleixner wrote:
-> >> handle_nested_irq() does not care. It cares about thread context,
-> >> external reentrancy protection for the same nested interrupt and that
-> >> the nested interrupt has a thread handler.
-> >>=20
-> >> The latter is what goes belly up because w/o that threaded bit set the
-> >> GPIO core fails to set nested thread. So if a consumer requests an
-> >> interrupt with request_any_context_irq() then that fails to select
-> >> thread mode which means the threaded handler is not set causing
-> >> handle_nested_irq() to fail.
+> Subject: Re: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+>=20
+> On Tue, 04 Aug 2020 23:01:48 +0800, Anson Huang wrote:
+> > Convert the vf610 gpio binding to DT schema format using json-schema.
 > >
-> > For a caller of request_threaded_irq() that passes a relevant hardirq
-> > handler the hardirq handler is never called but request_threaded_irq()
-> > doesn't fail. The handler is just replaced by irq_nested_primary_handler
-> > in __setup_irq(). Is that a bug? (I didn't test, just read the code, so=
- I
-> > might have missed something.)
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 --------------=
+---
+> >  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79
+> ++++++++++++++++++++++
+> >  2 files changed, 79 insertions(+), 63 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> >
 >=20
-> Depends on what the threaded handler expects what the primary handler
-> has done. It might just work or not :)
-
-So we need something like:
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 48c38e09c673..31777a0b79df 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1393,12 +1393,18 @@ __setup_irq(unsigned int irq, struct irq_desc *desc=
-, struct irqaction *new)
- 			ret =3D -EINVAL;
- 			goto out_mput;
- 		}
--		/*
--		 * Replace the primary handler which was provided from
--		 * the driver for non nested interrupt handling by the
--		 * dummy function which warns when called.
--		 */
--		new->handler =3D irq_nested_primary_handler;
-+
-+		if (new->handler =3D=3D NULL) {
-+			/* Scream loud if the primary handler gets called */
-+			new->handler =3D irq_nested_primary_handler;
-+		} else {
-+			/*
-+			 * The handler won't be called as the requestor expects,
-+			 * so refuse to install the handler
-+			 */
-+			ret =3D -EINVAL;
-+			goto out_mput;
-+		}
- 	} else {
- 		if (irq_settings_can_thread(desc)) {
- 			ret =3D irq_setup_forced_threading(new);
-
-? Do we need to care for other allowed values of new->handler? Maybe
-irq_default_primary_handler?
-
-> > Is this bad enough to justify sending this patch to stable?
 >=20
-> Yes, a Cc: stable and a Fixes: tag is justified.
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio=
+/
+> gpio-vf610.example.dt.yaml: example-0: gpio@40049000:reg:0: [1074040832,
+> 4096, 1074786304, 64] is too long
+>=20
 
-That would be
+I updated the dt-schema and the latest commit is as below, and there is no =
+build error
+on my side, do you know why?
 
-Fixes: be8c8facc707 ("gpio: new driver to work with a 8x12 siox")
+commit 8fd8ce7ff6bd47616ceb48f69d1a04116dee7a41
+Author: Rob Herring <robh@kernel.org>
+Date:   Wed Aug 5 10:38:08 2020 -0600
 
-Best regards
-Uwe
+    dt-extract-example: Use the C yaml parser
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+    The 'pure' (Python) loader was needed at one time for YAML 1.2, but rua=
+mel
+    has supported 1.2 with its libyaml since 0.15.63 and we depend on versi=
+on
+    0.15.70 at least.
 
---75n4mrucr4xkreqh
-Content-Type: application/pgp-signature; name="signature.asc"
+    Signed-off-by: Rob Herring <robh@kernel.org>
 
------BEGIN PGP SIGNATURE-----
+tools/dt-extract-example
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8scPoACgkQwfwUeK3K
-7AnQjwf+NVenm0tilv5dLcz2EM4fNz/Drg4QN3+GejSqC91vKU3VrTjbNcb0YxR8
-qHMTARruuR0CTOAo4L21onsw+9svN8b4ykl+yeqQ2NAa0mWMv7FQvJzUl0HscMwv
-imS7eusbaIVSPCDKI4B736GpMlARYzNvvwDT+i7MlqLrRlqvFN/sTvy7o5lvNDZG
-Zo2Hn6DKHwo+xBEm08Lad05BMf5s/1/oAwlNfPg2SMR8sxQ3ptrCDm+BqDuib6jy
-UCXH5/rWqI3V0fRPMc3VOvvyYvi/XwAICQ/Jd0e/BkKj0odeGxqNLgMC+IRwTwk6
-O+UsW9NscENYju1C7cbu2EBeBf5FcQ==
-=qFCN
------END PGP SIGNATURE-----
 
---75n4mrucr4xkreqh--
+anson@anson-OptiPlex-790:~/workspace/stash/linux-next$ make.cross ARCH=3Dar=
+m dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/gpio=
+/gpio-vf610.yaml
+make CROSS_COMPILE=3D/opt/gcc-4.9.0-nolibc/arm-unknown-linux-gnueabi/bin/ar=
+m-unknown-linux-gnueabi- --jobs=3D8 ARCH=3Darm dt_binding_check DT_SCHEMA_F=
+ILES=3DDocumentation/devicetree/bindings/gpio/gpio-vf610.yaml
+  CHKDT   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+/home/anson/workspace/stash/linux-next/Documentation/devicetree/bindings/pi=
+nctrl/ingenic,pinctrl.yaml: ignoring, error in schema: additionalProperties
+warning: no schema found in file: ./Documentation/devicetree/bindings/pinct=
+rl/ingenic,pinctrl.yaml
+  DTC     Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
+anson@anson-OptiPlex-790:~/workspace/stash/linux-next$
+
+Thanks,
+Anson
+
