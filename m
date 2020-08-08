@@ -2,216 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99CDE23F726
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Aug 2020 12:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13AFA23F727
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Aug 2020 12:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgHHKAP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726076AbgHHKAP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sat, 8 Aug 2020 06:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgHHKAM (ORCPT
+        with ESMTP id S1726128AbgHHKAM (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Aug 2020 06:00:12 -0400
 Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5273C061756
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9BAC061A27
         for <linux-gpio@vger.kernel.org>; Sat,  8 Aug 2020 03:00:11 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4BNyQG2whvzQkmD
-        for <linux-gpio@vger.kernel.org>; Sat,  8 Aug 2020 12:00:06 +0200 (CEST)
-Authentication-Results: spamfilter02.heinlein-hosting.de (amavisd-new);
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4BNyQK4VNlzQky8
+        for <linux-gpio@vger.kernel.org>; Sat,  8 Aug 2020 12:00:09 +0200 (CEST)
+Authentication-Results: hefe.heinlein-support.de (amavisd-new);
         dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
         header.d=mailbox.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1596880804;
+        t=1596880806;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PV1Hn/WlD/sJxa47E1hgtDLytmZM5I85FSh903NMmic=;
-        b=yqCpzd8fLntcMVeu4Z3G8SN75crKX5Wgn6RjNm1PruI4nHHUFC6NQ9771Qr0BZEb1fbQKJ
-        5H2MQZ69jXMC+HCYIDm4rIGIZnYjqBR8lxBOj2h5+jtwxLmaFg7sBQZ4PA4/3brYRsA5Wl
-        q/dOc/G00a94+tSWshQLaatd8oJQX/mLxP7wTQ9pJscpIU6Y1XxXJRnuG3clH6ll2X0ena
-        ZuU+4kZwWNRBnxVBk3o+8qmtQnn89wUO8vgHvmPsb/iMjoGNE+PCtxByeC90sfNSqd9Cjw
-        hXdYl+1hhrDvMoH4OWg90NkFiR9fI7Lcfb9BDhQk/g7T7YqeRNODRaaK9J5k/A==
+        bh=Vld3sRAoYgi6sLOlaHm+XUV3hV/NXu3wU0JZvzH6euY=;
+        b=Q5bwh7asu8UhpGjuRnJelYOGjv1pwSRVsdTxOuZvr2eUkRr703UreAH3PZ0TizqYDgblJF
+        o4W4sbCf7c1SyVrQL4p0fsck5ZUXVn15uVH9pTBb4N5FBISmT/tZH3FALQx8P7uNgERdEN
+        gFbsTTKdobqpv22ImsPWUjZOzsQFEcozzH4nQA402eomAcUxj8TqDtpbrwKTIcMkGuYavB
+        vbCHkZJRV4KcLD1ZliyLHibOyPmJbN2F0nF42zTg0mEs7+O6yFjKMH7X7Nn7b2QEoiPSM1
+        9ayf3dzFAB+nmTwtS1WbKrBRITs87im1X4oaLw7zmkvqLguusxoD8D2zBaOl0A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
         content-transfer-encoding:mime-version:references:in-reply-to
         :message-id:date:date:subject:subject:from:from:received; s=
-        mail20150812; t=1596880803; bh=p+tt1BT/xADWhsfNGHUecc2oXHoRSX1w5
-        fDRRK0s5+I=; b=udEaFCxuPoNrZwR2xU039QYGIN8Rz2biIRxrfkiXptUHyKtVC
-        izYGWO01GZYaSUT50+N0AkBpyWoDqCII1toxjzF0DLg9RdpR5nWpZxxkfYVkfkkG
-        mB9KhYP/NDDseQTQ13jy4S+ct9Y5kwgwa0/jKOZAFE0lrl+IxXL47sKVJjLIy7RA
-        VDU+PCipalubCVr9XpSPiysrZeVvPbP9nSfDVWIKLBC32wAmTteaDFNFPrqRYnty
-        0UCJxWDsMN7rwWXpNBSgV4Fvcjn4+ygWi6KmVHco/8KeZYDwSq4eWZVwLcvGTLq5
-        5uUrJCg/BRfXBClWQMziHGYvTm6RjkoRRqzIQ==
+        mail20150812; t=1596880805; bh=mBasGfyea+gR6Q/Z4T3A32lzi7WO9s8Fu
+        Vc96tiW9S8=; b=TW+GYkQIXr9Oa64Tv9yA+XRfHnVmM6KD/pv7xOHBZsjjT596M
+        UtqX9uGEsA9aL2DBFr+zWL+aFtJlO1TmZyc79qm0oJ+cDFFmeKoTBWdM609nAGjv
+        Veh6XFD5NoeBcbFQgylB0P/z1QAQGXMm83LweMl8ij0tYSlqv5SrfZxsZvNziu6A
+        YkAPodr+pChpJQHf+nc9KwxAz1XFI/BpSIkFwtNHHnCzyk/97T5ZXJar1EpsqwfE
+        dPsrcNTNfjVt4RG5vC5KdWinAb/zLDDtpjlLKCvKfUix8XPW06NbBDrCxO04s8VF
+        Ot3NsKva73Ubx2z6qiTPBJdDZVZAJzYggyVfQ==
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id UnMgxq9EBw1b; Sat,  8 Aug 2020 12:00:03 +0200 (CEST)
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id 02YMX0uxevPe; Sat,  8 Aug 2020 12:00:05 +0200 (CEST)
 From:   Alexander Stein <alexander.stein@mailbox.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Alexander Stein <alexander.stein@mailbox.org>
-Subject: [libgpiod] [PATCH 1/5] doc: Fix doxygen warnings
-Date:   Sat,  8 Aug 2020 11:59:40 +0200
-Message-Id: <20200808095944.188479-2-alexander.stein@mailbox.org>
+Subject: [libgpiod] [PATCH 2/5] doc: Use autotoolized Doxyfile
+Date:   Sat,  8 Aug 2020 11:59:41 +0200
+Message-Id: <20200808095944.188479-3-alexander.stein@mailbox.org>
 In-Reply-To: <20200808095944.188479-1-alexander.stein@mailbox.org>
 References: <20200808095944.188479-1-alexander.stein@mailbox.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -5.40 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 7A6EB17BE
-X-Rspamd-UID: d3d1c8
+X-Rspamd-Score: -8.55 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 5AE5617AD
+X-Rspamd-UID: f14da5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Apparently __<name>__ is not supported for @defgroup commands. This results
-in the following warning (printed multiple time):
-gpiod.h:79: warning: group strong: ignoring title ">high_level</strong> High-level
-API" that does not match old title ">common</strong> Common helper macros"
-Also the module list is broken.
-
-Fix this my removing the underscores.
+This has several advantages:
+* More simplified Makefile.am
+* Actually used doxygen config is available as a file
+* Building doc out-of-tree is possible
 
 Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
 ---
- bindings/cxx/gpiod.hpp |  2 +-
- include/gpiod.h        | 26 +++++++++++++-------------
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ .gitignore              | 1 +
+ Doxyfile => Doxyfile.in | 3 ++-
+ Makefile.am             | 4 +---
+ configure.ac            | 1 +
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+ rename Doxyfile => Doxyfile.in (95%)
 
-diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index 5155bdd..59719aa 100644
---- a/bindings/cxx/gpiod.hpp
-+++ b/bindings/cxx/gpiod.hpp
-@@ -24,7 +24,7 @@ class chip_iter;
- struct line_event;
+diff --git a/.gitignore b/.gitignore
+index 488d9d6..a77efde 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -10,6 +10,7 @@ doc
+ # autotools stuff
+ .deps/
+ .libs/
++Doxyfile
+ Makefile
+ Makefile.in
+ aclocal.m4
+diff --git a/Doxyfile b/Doxyfile.in
+similarity index 95%
+rename from Doxyfile
+rename to Doxyfile.in
+index b194095..8c6d591 100644
+--- a/Doxyfile
++++ b/Doxyfile.in
+@@ -10,6 +10,7 @@
  
- /**
-- * @defgroup __gpiod_cxx__ C++ bindings
-+ * @defgroup gpiod_cxx C++ bindings
-  * @{
-  */
+ # General configuration
+ PROJECT_NAME           = libgpiod
++PROJECT_NUMBER         = @VERSION_STR@
+ OUTPUT_DIRECTORY       = doc
+ OUTPUT_LANGUAGE        = English
+ EXTRACT_ALL            = NO
+@@ -48,7 +49,7 @@ WARNINGS               = YES
+ WARN_IF_UNDOCUMENTED   = YES
+ WARN_FORMAT            =
+ WARN_LOGFILE           =
+-INPUT                  = include/gpiod.h
++INPUT                  = @top_srcdir@/include/gpiod.h @top_srcdir@/bindings/cxx/gpiod.hpp
+ SOURCE_BROWSER         = YES
+ INLINE_SOURCES         = NO
+ REFERENCED_BY_RELATION = YES
+diff --git a/Makefile.am b/Makefile.am
+index d3f57b2..72e6a25 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -29,9 +29,7 @@ SUBDIRS += bindings
+ if HAS_DOXYGEN
  
-diff --git a/include/gpiod.h b/include/gpiod.h
-index c83ebf7..58de66f 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -46,7 +46,7 @@ struct gpiod_line_iter;
- struct gpiod_line_bulk;
+ doc:
+-	@(cat Doxyfile; \
+-		echo PROJECT_NUMBER = $(VERSION_STR); \
+-		echo INPUT += bindings/cxx/gpiod.hpp) | doxygen -
++	@doxygen Doxyfile
+ .PHONY: doc
  
- /**
-- * @defgroup __common__ Common helper macros
-+ * @defgroup common Common helper macros
-  * @{
-  *
-  * Commonly used utility macros.
-@@ -77,7 +77,7 @@ struct gpiod_line_bulk;
- /**
-  * @}
-  *
-- * @defgroup __high_level__ High-level API
-+ * @defgroup high_level High-level API
-  * @{
-  *
-  * Simple high-level routines for straightforward GPIO manipulation without
-@@ -548,7 +548,7 @@ int gpiod_ctxless_find_line(const char *name, char *chipname,
- /**
-  * @}
-  *
-- * @defgroup __chips__ GPIO chip operations
-+ * @defgroup chips GPIO chip operations
-  * @{
-  *
-  * Functions and data structures dealing with GPIO chips.
-@@ -691,12 +691,12 @@ int gpiod_chip_find_lines(struct gpiod_chip *chip, const char **names,
- /**
-  * @}
-  *
-- * @defgroup __lines__ GPIO line operations
-+ * @defgroup lines GPIO line operations
-  * @{
-  *
-  * Functions and data structures dealing with GPIO lines.
-  *
-- * @defgroup __line_bulk__ Operating on multiple lines
-+ * @defgroup line_bulk Operating on multiple lines
-  * @{
-  *
-  * Convenience data structures and helper functions for storing and operating
-@@ -807,7 +807,7 @@ gpiod_line_bulk_num_lines(struct gpiod_line_bulk *bulk)
- /**
-  * @}
-  *
-- * @defgroup __line_info__ Line info
-+ * @defgroup line_info Line info
-  * @{
-  *
-  * Definitions and functions for retrieving kernel information about both
-@@ -955,7 +955,7 @@ gpiod_line_needs_update(struct gpiod_line *line) GPIOD_API GPIOD_DEPRECATED;
- /**
-  * @}
-  *
-- * @defgroup __line_request__ Line requests
-+ * @defgroup line_request Line requests
-  * @{
-  *
-  * Interface for requesting GPIO lines from userspace for both values and
-@@ -1283,7 +1283,7 @@ bool gpiod_line_is_free(struct gpiod_line *line) GPIOD_API;
- /**
-  * @}
-  *
-- * @defgroup __line_value__ Reading & setting line values
-+ * @defgroup line_value Reading & setting line values
-  * @{
-  *
-  * Functions allowing to read and set GPIO line values for single lines and
-@@ -1338,7 +1338,7 @@ int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk,
- /**
-  * @}
-  *
-- * @defgroup __line_config__ Setting line configuration
-+ * @defgroup line_config Setting line configuration
-  * @{
-  *
-  * Functions allowing modification of config options of GPIO lines requested
-@@ -1454,7 +1454,7 @@ int gpiod_line_set_direction_output_bulk(struct gpiod_line_bulk *bulk,
- /**
-  * @}
-  *
-- * @defgroup __line_event__ Line events handling
-+ * @defgroup line_event Line events handling
-  * @{
-  *
-  * Structures and functions allowing to poll lines for events and read them,
-@@ -1568,7 +1568,7 @@ int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
- /**
-  * @}
-  *
-- * @defgroup __line_misc__ Misc line functions
-+ * @defgroup line_misc Misc line functions
-  * @{
-  *
-  * Functions that didn't fit anywhere else.
-@@ -1624,7 +1624,7 @@ struct gpiod_chip *gpiod_line_get_chip(struct gpiod_line *line) GPIOD_API;
-  *
-  * @}
-  *
-- * @defgroup __iterators__ Iterators for GPIO chips and lines
-+ * @defgroup iterators Iterators for GPIO chips and lines
-  * @{
-  *
-  * These functions and data structures allow easy iterating over GPIO
-@@ -1748,7 +1748,7 @@ gpiod_line_iter_next(struct gpiod_line_iter *iter) GPIOD_API;
- /**
-  * @}
-  *
-- * @defgroup __misc__ Stuff that didn't fit anywhere else
-+ * @defgroup misc Stuff that didn't fit anywhere else
-  * @{
-  *
-  * Various libgpiod-related functions.
+ clean-local:
+diff --git a/configure.ac b/configure.ac
+index 008499d..c2d9f99 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -207,6 +207,7 @@ if test "x$has_doxygen" = xfalse
+ then
+ 	AC_MSG_NOTICE([doxygen not found - documentation cannot be generated])
+ fi
++AM_COND_IF([HAS_DOXYGEN], [AC_CONFIG_FILES([Doxyfile])])
+ 
+ if test "x$cross_compiling" = xno
+ then
 -- 
 2.28.0
 
