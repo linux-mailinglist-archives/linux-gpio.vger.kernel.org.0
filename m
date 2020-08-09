@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B725D23FE83
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 15:27:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C85AD23FE85
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 15:27:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHIN1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Aug 2020 09:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52280 "EHLO
+        id S1726199AbgHIN1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Aug 2020 09:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgHIN1j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 09:27:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176EDC061756;
-        Sun,  9 Aug 2020 06:27:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so3722960pfh.3;
-        Sun, 09 Aug 2020 06:27:39 -0700 (PDT)
+        with ESMTP id S1726120AbgHIN1o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 09:27:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE06BC061756;
+        Sun,  9 Aug 2020 06:27:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mt12so3347279pjb.4;
+        Sun, 09 Aug 2020 06:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
-        b=SM04bYm1sQ8ti5VUoB0jb/YZ0uJDZUaKNEyJKhNJXiXLWFcMg4kR73958ztLQvggdt
-         OXVFI3hccWJCIYsTBNDSYIvedO8czWPP1PtlcE1GFXoZncgsioP3Qsw9zgeFIzuyRcOf
-         URd6jNpVcpd++lU8aCeMP6WGcykGhUgc3E8dSm2TdkTJBhSaBpTXAFklCTfqLr4yP5xI
-         6jie6BKhjMekoJZXtxojEWs6GM7wuo321gTUVsY4qHpjG2UmM1glUrdm4li/+WE4IEuO
-         9t/LbI55I7EcjG0mb6BAAHlPI2Vw+xqN7qYZrSFfEekEMivvhQ3w2a5CjF0CKxzbtWeh
-         YkoA==
+        bh=b4qnERya2lAXwivmnc6QYVo0ihib6LVkWcetGyot3Rg=;
+        b=HCX9i1yyWJudSYZeFgu+wlC2ur+LqqNA3VJ5QNF45k7QyFpHADmtaon0qyzsUnCQd2
+         CA42cGnal6kTvo7UbVIYK2GCDRKAshDdGUTYlNezNvCFhJDnqwCTFuAxHH4PKr2q9OLm
+         L8OJ7zRrmOYe91m/FGNI4hG0hDqIP+tWKY9YdKVTN4WuEXGv+bILKzveyDteom9fGw+E
+         /+aNhSfYeI0p53Z+oBl+CbBZmszJA6lVUhDsB7kzMSoO7GFT3CyDkQI9pp+bngV4YaIw
+         s503ipelHO9E2Wohdjp/LovepcJ3XNoGqZe6J0wvjmWELkYg2kATS3QNqD9iZjMjVwS3
+         iA4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
-        b=nK2klNnTrbtV729ybUZOeaRvOI7shV7GqNd1hrjqyiiL41nPzL4muYxdKsVqw/ZgMi
-         gUL4LTQQ3bEiDO+9SbKPnYoNMtf5VrwedROW15Uows1ovlxGbQsOFw5O82I126eV4oVr
-         h0Bgri25FMfyVfUF9Em12T7a0GtHgd0cJWV2DebRsGb7I3Z/epmdsa8hNoMmBlBkCN8B
-         Hq/qSzXs1zN1q0sZ5f9NdRYJNC9M4egmzSdh/ejo5slU3yfzWFqaO8y5OvmkVTVcnfzc
-         8D8Mbzaf9BeJ70qTvlU/pH36an64DA+WKl9RilWuhBDaxUGufqIQnrbYrm5cuQSGagxy
-         yALg==
-X-Gm-Message-State: AOAM530cajs9Kf4xGjnUK4euauP7oExb1PJOgVvDN8K9ISXvuWRy0enm
-        eJNDP0afVc03HfOcOsWePI9it2ob
-X-Google-Smtp-Source: ABdhPJzjiOe9/3+0vlNXLhdWESyJwHl7w3fAos9uoMKdy933Gb3ueP/oX0UXVJy5oKmMgxZsWEoFyw==
-X-Received: by 2002:aa7:8e8d:: with SMTP id a13mr21799016pfr.250.1596979658236;
-        Sun, 09 Aug 2020 06:27:38 -0700 (PDT)
+        bh=b4qnERya2lAXwivmnc6QYVo0ihib6LVkWcetGyot3Rg=;
+        b=tyW4B6aTdGvLJvOXaoCXC5P5J7M7cHCutrfORP6zzagdxrO3y9yj9RLDcnMbA81RfC
+         rpS2OfGU5nlZMq6A0Fi9jkKvLnYfBhJ1Y3uXK4mVRavSk21NqsUGHEHqB1D9NsTeovBL
+         uSCOuWOkSmNu581ccPrahJ7nWMCan5i252k//FYi+vL363+UPlOM1RG5qL50jWCwlyid
+         DR9++ILp11veC1Tzd3uLG1HREDX5HKY0mtC5hRWhsyz5fmqzS2rqbyLIwG6LUY694/I6
+         v9bHHsl5IxEZgKR+GMXdQBmFlpVW7HaPF31Op9HzykWzhbSjcyXLfzS+t7uHINSNHASB
+         2nfg==
+X-Gm-Message-State: AOAM533vxCbdjnFwKLLDB8Qx9JqygrNcNwcvpQkvZm4BR2QFU7cKOwhb
+        fCl8wJXmbTpKjOQem7tWuu2oCDqt
+X-Google-Smtp-Source: ABdhPJzNYYGZLqwGT3OWNZVWVurNuLUM0cDC9vnscW7Cs0kf1yVNnnqC9ZwwOzQnkWfzb/AJ3vEe1g==
+X-Received: by 2002:a17:902:cd15:: with SMTP id g21mr19775631ply.337.1596979663791;
+        Sun, 09 Aug 2020 06:27:43 -0700 (PDT)
 Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.27.35
+        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.27.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 06:27:37 -0700 (PDT)
+        Sun, 09 Aug 2020 06:27:43 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 13/18] tools: gpio: port gpio-watch to v2 uAPI
-Date:   Sun,  9 Aug 2020 21:25:24 +0800
-Message-Id: <20200809132529.264312-14-warthog618@gmail.com>
+Subject: [PATCH v3 14/18] tools: gpio: rename nlines to num_lines
+Date:   Sun,  9 Aug 2020 21:25:25 +0800
+Message-Id: <20200809132529.264312-15-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809132529.264312-1-warthog618@gmail.com>
 References: <20200809132529.264312-1-warthog618@gmail.com>
@@ -64,68 +64,213 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Port the gpio-watch tool to the latest GPIO uAPI.
+Rename nlines to num_lines to be consistent with other usage for fields
+describing the number of entries in an array.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tools/gpio/gpio-watch.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/gpio/gpio-hammer.c | 26 +++++++++++++-------------
+ tools/gpio/gpio-utils.c  | 20 ++++++++++----------
+ tools/gpio/gpio-utils.h  |  6 +++---
+ 3 files changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-index 5cea24fddfa7..6f048350a27e 100644
---- a/tools/gpio/gpio-watch.c
-+++ b/tools/gpio/gpio-watch.c
-@@ -21,8 +21,8 @@
+diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
+index 9fd926e8cb52..a2c7577fad5c 100644
+--- a/tools/gpio/gpio-hammer.c
++++ b/tools/gpio/gpio-hammer.c
+@@ -22,7 +22,7 @@
+ #include <linux/gpio.h>
+ #include "gpio-utils.h"
  
- int main(int argc, char **argv)
+-int hammer_device(const char *device_name, unsigned int *lines, int nlines,
++int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+ 		  unsigned int loops)
  {
--	struct gpioline_info_changed chg;
--	struct gpioline_info req;
-+	struct gpio_v2_line_info_changed chg;
-+	struct gpio_v2_line_info req;
- 	struct pollfd pfd;
- 	int fd, i, j, ret;
- 	char *event, *end;
-@@ -40,11 +40,11 @@ int main(int argc, char **argv)
- 	for (i = 0, j = 2; i < argc - 2; i++, j++) {
- 		memset(&req, 0, sizeof(req));
+ 	struct gpiohandle_data data;
+@@ -33,7 +33,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int nlines,
+ 	unsigned int iteration = 0;
  
--		req.line_offset = strtoul(argv[j], &end, 0);
-+		req.offset = strtoul(argv[j], &end, 0);
- 		if (*end != '\0')
- 			goto err_usage;
+ 	memset(&data.values, 0, sizeof(data.values));
+-	ret = gpiotools_request_linehandle(device_name, lines, nlines,
++	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+ 					   GPIOHANDLE_REQUEST_OUTPUT, &data,
+ 					   "gpio-hammer");
+ 	if (ret < 0)
+@@ -46,15 +46,15 @@ int hammer_device(const char *device_name, unsigned int *lines, int nlines,
+ 		goto exit_close_error;
  
--		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-+		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_WATCH_IOCTL, &req);
- 		if (ret) {
- 			perror("unable to set up line watch");
- 			return EXIT_FAILURE;
-@@ -71,13 +71,13 @@ int main(int argc, char **argv)
- 			}
+ 	fprintf(stdout, "Hammer lines [");
+-	for (i = 0; i < nlines; i++) {
++	for (i = 0; i < num_lines; i++) {
+ 		fprintf(stdout, "%d", lines[i]);
+-		if (i != (nlines - 1))
++		if (i != (num_lines - 1))
+ 			fprintf(stdout, ", ");
+ 	}
+ 	fprintf(stdout, "] on %s, initial states: [", device_name);
+-	for (i = 0; i < nlines; i++) {
++	for (i = 0; i < num_lines; i++) {
+ 		fprintf(stdout, "%d", data.values[i]);
+-		if (i != (nlines - 1))
++		if (i != (num_lines - 1))
+ 			fprintf(stdout, ", ");
+ 	}
+ 	fprintf(stdout, "]\n");
+@@ -63,7 +63,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int nlines,
+ 	j = 0;
+ 	while (1) {
+ 		/* Invert all lines so we blink */
+-		for (i = 0; i < nlines; i++)
++		for (i = 0; i < num_lines; i++)
+ 			data.values[i] = !data.values[i];
  
- 			switch (chg.event_type) {
--			case GPIOLINE_CHANGED_REQUESTED:
-+			case GPIO_V2_LINE_CHANGED_REQUESTED:
- 				event = "requested";
- 				break;
--			case GPIOLINE_CHANGED_RELEASED:
-+			case GPIO_V2_LINE_CHANGED_RELEASED:
- 				event = "released";
- 				break;
--			case GPIOLINE_CHANGED_CONFIG:
-+			case GPIO_V2_LINE_CHANGED_CONFIG:
- 				event = "config changed";
- 				break;
- 			default:
-@@ -87,7 +87,7 @@ int main(int argc, char **argv)
- 			}
+ 		ret = gpiotools_set_values(fd, &data);
+@@ -81,9 +81,9 @@ int hammer_device(const char *device_name, unsigned int *lines, int nlines,
+ 			j = 0;
  
- 			printf("line %u: %s at %llu\n",
--			       chg.info.line_offset, event, chg.timestamp);
-+			       chg.info.offset, event, chg.timestamp);
+ 		fprintf(stdout, "[");
+-		for (i = 0; i < nlines; i++) {
++		for (i = 0; i < num_lines; i++) {
+ 			fprintf(stdout, "%d: %d", lines[i], data.values[i]);
+-			if (i != (nlines - 1))
++			if (i != (num_lines - 1))
+ 				fprintf(stdout, ", ");
  		}
+ 		fprintf(stdout, "]\r");
+@@ -121,7 +121,7 @@ int main(int argc, char **argv)
+ 	const char *device_name = NULL;
+ 	unsigned int lines[GPIOHANDLES_MAX];
+ 	unsigned int loops = 0;
+-	int nlines;
++	int num_lines;
+ 	int c;
+ 	int i;
+ 
+@@ -158,11 +158,11 @@ int main(int argc, char **argv)
+ 		return -1;
  	}
  
+-	nlines = i;
++	num_lines = i;
+ 
+-	if (!device_name || !nlines) {
++	if (!device_name || !num_lines) {
+ 		print_usage();
+ 		return -1;
+ 	}
+-	return hammer_device(device_name, lines, nlines, loops);
++	return hammer_device(device_name, lines, num_lines, loops);
+ }
+diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
+index 16a5d9cb9da2..d527980bcb94 100644
+--- a/tools/gpio/gpio-utils.c
++++ b/tools/gpio/gpio-utils.c
+@@ -38,7 +38,7 @@
+  *			such as "gpiochip0"
+  * @lines:		An array desired lines, specified by offset
+  *			index for the associated GPIO device.
+- * @nline:		The number of lines to request.
++ * @num_lines:		The number of lines to request.
+  * @flag:		The new flag for requsted gpio. Reference
+  *			"linux/gpio.h" for the meaning of flag.
+  * @data:		Default value will be set to gpio when flag is
+@@ -56,7 +56,7 @@
+  *			On failure return the errno.
+  */
+ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
+-				 unsigned int nlines, unsigned int flag,
++				 unsigned int num_lines, unsigned int flag,
+ 				 struct gpiohandle_data *data,
+ 				 const char *consumer_label)
+ {
+@@ -78,12 +78,12 @@ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
+ 		goto exit_free_name;
+ 	}
+ 
+-	for (i = 0; i < nlines; i++)
++	for (i = 0; i < num_lines; i++)
+ 		req.lineoffsets[i] = lines[i];
+ 
+ 	req.flags = flag;
+ 	strcpy(req.consumer_label, consumer_label);
+-	req.lines = nlines;
++	req.lines = num_lines;
+ 	if (flag & GPIOHANDLE_REQUEST_OUTPUT)
+ 		memcpy(req.default_values, data, sizeof(req.default_values));
+ 
+@@ -194,20 +194,20 @@ int gpiotools_get(const char *device_name, unsigned int line)
+  *			such as "gpiochip0".
+  * @lines:		An array desired lines, specified by offset
+  *			index for the associated GPIO device.
+- * @nline:		The number of lines to request.
++ * @num_lines:		The number of lines to request.
+  * @data:		The array of values get from gpiochip.
+  *
+  * Return:		On success return 0;
+  *			On failure return the errno.
+  */
+ int gpiotools_gets(const char *device_name, unsigned int *lines,
+-		   unsigned int nlines, struct gpiohandle_data *data)
++		   unsigned int num_lines, struct gpiohandle_data *data)
+ {
+ 	int fd;
+ 	int ret;
+ 	int ret_close;
+ 
+-	ret = gpiotools_request_linehandle(device_name, lines, nlines,
++	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+ 					   GPIOHANDLE_REQUEST_INPUT, data,
+ 					   CONSUMER);
+ 	if (ret < 0)
+@@ -245,7 +245,7 @@ int gpiotools_set(const char *device_name, unsigned int line,
+  *			such as "gpiochip0".
+  * @lines:		An array desired lines, specified by offset
+  *			index for the associated GPIO device.
+- * @nline:		The number of lines to request.
++ * @num_lines:		The number of lines to request.
+  * @data:		The array of values set to gpiochip, must be
+  *			0(low) or 1(high).
+  *
+@@ -253,11 +253,11 @@ int gpiotools_set(const char *device_name, unsigned int line,
+  *			On failure return the errno.
+  */
+ int gpiotools_sets(const char *device_name, unsigned int *lines,
+-		   unsigned int nlines, struct gpiohandle_data *data)
++		   unsigned int num_lines, struct gpiohandle_data *data)
+ {
+ 	int ret;
+ 
+-	ret = gpiotools_request_linehandle(device_name, lines, nlines,
++	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+ 					   GPIOHANDLE_REQUEST_OUTPUT, data,
+ 					   CONSUMER);
+ 	if (ret < 0)
+diff --git a/tools/gpio/gpio-utils.h b/tools/gpio/gpio-utils.h
+index cf37f13f3dcb..324729577865 100644
+--- a/tools/gpio/gpio-utils.h
++++ b/tools/gpio/gpio-utils.h
+@@ -23,7 +23,7 @@ static inline int check_prefix(const char *str, const char *prefix)
+ }
+ 
+ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
+-				 unsigned int nlines, unsigned int flag,
++				 unsigned int num_lines, unsigned int flag,
+ 				 struct gpiohandle_data *data,
+ 				 const char *consumer_label);
+ int gpiotools_set_values(const int fd, struct gpiohandle_data *data);
+@@ -32,10 +32,10 @@ int gpiotools_release_linehandle(const int fd);
+ 
+ int gpiotools_get(const char *device_name, unsigned int line);
+ int gpiotools_gets(const char *device_name, unsigned int *lines,
+-		   unsigned int nlines, struct gpiohandle_data *data);
++		   unsigned int num_lines, struct gpiohandle_data *data);
+ int gpiotools_set(const char *device_name, unsigned int line,
+ 		  unsigned int value);
+ int gpiotools_sets(const char *device_name, unsigned int *lines,
+-		   unsigned int nlines, struct gpiohandle_data *data);
++		   unsigned int num_lines, struct gpiohandle_data *data);
+ 
+ #endif /* _GPIO_UTILS_H_ */
 -- 
 2.28.0
 
