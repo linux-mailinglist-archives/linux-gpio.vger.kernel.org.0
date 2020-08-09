@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2EB023FE6F
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 15:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 421DE23FE71
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 15:26:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgHIN0O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Aug 2020 09:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52050 "EHLO
+        id S1726453AbgHIN0W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Aug 2020 09:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgHIN0N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 09:26:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F045C061756;
-        Sun,  9 Aug 2020 06:26:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u20so3724468pfn.0;
-        Sun, 09 Aug 2020 06:26:13 -0700 (PDT)
+        with ESMTP id S1726323AbgHIN0V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 09:26:21 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF78C061756;
+        Sun,  9 Aug 2020 06:26:21 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so3460824pls.4;
+        Sun, 09 Aug 2020 06:26:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/NSQWGG4Dd/lyfNZqBtWl2adXGHauiXHc+m8VldHKpo=;
-        b=TJtouzsJaUaW1rCbzStfLacAtofj8ykQbA9mFhdSmoeme6A45VPAqmXFZKdOizcVta
-         jPC2WPtL1dvPgHtmfJ2CPjN+S2UWhorLIjjA6KPdRIyAgBYmfN1CxTyLJ9y7JGMl44th
-         qzAxWxQakEzsSsViFjkgia/lZTKOXXivBF+Ba45gTfJj/bo/aXkaenrcW9RwAlX4a3Cy
-         t5fdD4KD/pLTT6jHJtZg9iNaRAqrJ9F6ExloK1nGDrH8NfQvpY8TUdDpv62EnNRQu37V
-         5yPPrtV0jq63PgV+w8aRvKTeYPhCn+1RCXCuUdqu0G0hfyw0g1OUZGiCqbMEKMzG5CHs
-         7YVw==
+        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
+        b=Qvy+4vEjYq9/7duZPVSb/4rxz6vz4RAz4Lbp2mrg5lET4dKfzgO0Ba98BW7oeR2y+M
+         rWFE+JUzn45Ds0kKhd2Rnl1Y7VvU6GYirHBaKw/Fo/E5vRUGOTlZJLjUFOJLDJXeoI7Y
+         NljaXq9kqtlN4QA9GStzVAiaOqJsqutAfH+KqFlXhFvT3L/Znlh444zfaidfqkJRJXZN
+         FyDNsJhtTGifE5nUo6oRJsyCbUXbAZet5i2+yPCOfSJgbV/q5v4OiS5qfSYw+0rSZH8T
+         u2qp+ziBJzJa11K/aZjWQSryfCU5cRP1LgzldB6lJAEVBx2njCEmbVdqhKILfAHy1/IH
+         5v7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/NSQWGG4Dd/lyfNZqBtWl2adXGHauiXHc+m8VldHKpo=;
-        b=qcRRdHibLTHt6vQl1HPNMLK7AwltXXV0vE0o91t7TH1FsfqYmOR1xrhwvbdmVEiuyT
-         zrDnzINl0qGovlyulqOxjJivdHDIbgwUMBQ0ffBtW4g+0j4364zDjpMvoVCcLx7xdrFZ
-         HcV/KT0wOwoDyzNHpP20JlpBSrMH8s0kSyrmSIqRSPGVjvTN0dJD9i3EwpSpex8V7gvK
-         Gc7vAiLQ8lqeaxpbh7NVJf5IyP/CfVZyG+cvViA5e+C0A5+6cO1oH6PUdutO7USOSeKP
-         ITPfOwJI/s8236QoQOCvN6cQ8SDGy6nnHb0XD99UbxwKvoI2PoKpKHYolN98Ul4wvJaO
-         Kcyw==
-X-Gm-Message-State: AOAM533HtLuRjWrjy1pbdSoJ8B7ypY/5ZvweyfMr6CQAId7E8GEkONrr
-        AyFyL33WboriKPHZEPjHMmiPsAXP
-X-Google-Smtp-Source: ABdhPJwVpxlHg0R/DAhnOZgY3HV5Sqqs2q9yyf8rj2mNsZnZZvZIg2gA/Ox/9iIk+DPzA6gGjOUv+Q==
-X-Received: by 2002:a63:a53:: with SMTP id z19mr815372pgk.67.1596979572521;
-        Sun, 09 Aug 2020 06:26:12 -0700 (PDT)
+        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
+        b=NQQJ1g741tV/OAv5WkSMSkrZ3o8pYFN20V3cQIzD/9On+zgkRGvZADFm7fulVaeBf6
+         KqLjMtMFNY1q2BP8h/oMw+tpOgh0cxrxhCT6lkYIcuQnr/XDzw3CjWpGed585Q00HAt2
+         9c8B28USlRJnwRyNaoylGLZ1qA7V1cTR4tuliWwE+staZpr0aM4l1Ac4WMtEYoSptqYR
+         W4PIzQFVa9wteU9awfGw2aOw4pdwSs5+3QDKjZngNADZLAzxdURkzfOzi4GnpvwsvZ7j
+         4S5jYFBWkN0+nL2qwIYYibiAu/S9CCoEzY4BRVN8+XU/wuGnksD9o5uW/+mUM2OUWWnw
+         oZmg==
+X-Gm-Message-State: AOAM531isYWC1o3dHruGh8/QaDv6SImYK40Ix+HWSa15+D/DICjb6mNx
+        Qbe1dK8+ikmnhFVVj4UHuPDf/87S
+X-Google-Smtp-Source: ABdhPJwWUIBLP+QIZj7qr8n6s8ScUCW0tP9DNqez9dUNgsEk4o1//qiOFpXZQUdat/5Sh/eZ8Br55g==
+X-Received: by 2002:a17:90b:358d:: with SMTP id mm13mr20120371pjb.88.1596979580560;
+        Sun, 09 Aug 2020 06:26:20 -0700 (PDT)
 Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.26.09
+        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.26.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 06:26:11 -0700 (PDT)
+        Sun, 09 Aug 2020 06:26:19 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 03/18] gpiolib: make cdev a build option
-Date:   Sun,  9 Aug 2020 21:25:14 +0800
-Message-Id: <20200809132529.264312-4-warthog618@gmail.com>
+Subject: [PATCH v3 04/18] gpiolib: add build option for CDEV v1 ABI
+Date:   Sun,  9 Aug 2020 21:25:15 +0800
+Message-Id: <20200809132529.264312-5-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809132529.264312-1-warthog618@gmail.com>
 References: <20200809132529.264312-1-warthog618@gmail.com>
@@ -64,88 +64,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Make the gpiolib-cdev module a build option.  This allows the CDEV
-interface to be removed from the kernel to reduce kernel size in
-applications where is it not required, and provides the parent for
-other other CDEV interface specific build options to follow.
+Add a build option to allow the removal of the CDEV v1 ABI.
 
 Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/Kconfig        | 17 +++++++++++++++--
- drivers/gpio/Makefile       |  2 +-
- drivers/gpio/gpiolib-cdev.h | 15 +++++++++++++++
- 3 files changed, 31 insertions(+), 3 deletions(-)
+
+This patch is before the v2 implementation, and is non-functional until
+that patch, as some parts of that patch would be written slightly
+differently if removing v1 was not considered.
+Adding this patch after that would necessitate revisiting the v2 changes,
+so this ordering results in two simpler patches.
+
+ drivers/gpio/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8030fd91a3cc..8e409b9c33dc 100644
+index 8e409b9c33dc..0c62e35cf3a6 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -66,8 +66,21 @@ config GPIO_SYSFS
+@@ -82,6 +82,18 @@ config GPIO_CDEV
  
- 	  This ABI is deprecated. If you want to use GPIO from userspace,
- 	  use the character device /dev/gpiochipN with the appropriate
--	  ioctl() operations instead. The character device is always
--	  available.
-+	  ioctl() operations instead.
-+
-+config GPIO_CDEV
-+	bool
-+	prompt "Character device (/dev/gpiochipN) support" if EXPERT
+ 	  If unsure, say Y.
+ 
++config GPIO_CDEV_V1
++	bool "Support GPIO ABI Version 1"
 +	default y
++	depends on GPIO_CDEV
 +	help
-+	  Say Y here to add the character device /dev/gpiochipN interface
-+	  for GPIOs. The character device allows userspace to control GPIOs
-+	  using ioctl() operations.
++	  Say Y here to support version 1 of the GPIO CDEV ABI.
 +
-+	  Only say N if you are sure that the GPIO character device is not
-+	  required.
++	  This ABI version is deprecated and will be removed in the future.
++	  Please use the latest ABI for new developments.
 +
 +	  If unsure, say Y.
- 
++
  config GPIO_GENERIC
  	depends on HAS_IOMEM # Only for IOMEM drivers
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 4f9abff4f2dc..7c24c8d77068 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -7,8 +7,8 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-devres.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
--obj-$(CONFIG_GPIOLIB)		+= gpiolib-cdev.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
-+obj-$(CONFIG_GPIO_CDEV)		+= gpiolib-cdev.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
- 
-diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
-index 973578e7ad10..19a4e3d57120 100644
---- a/drivers/gpio/gpiolib-cdev.h
-+++ b/drivers/gpio/gpiolib-cdev.h
-@@ -5,7 +5,22 @@
- 
- #include <linux/device.h>
- 
-+#ifdef CONFIG_GPIO_CDEV
-+
- int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
- void gpiolib_cdev_unregister(struct gpio_device *gdev);
- 
-+#else
-+
-+static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
-+{
-+	return 0;
-+}
-+
-+static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
-+{
-+}
-+
-+#endif /* CONFIG_GPIO_CDEV */
-+
- #endif /* GPIOLIB_CDEV_H */
+ 	tristate
 -- 
 2.28.0
 
