@@ -2,134 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 364A223FE8D
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 15:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 903BC23FFE4
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Aug 2020 21:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgHIN2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Aug 2020 09:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
+        id S1726338AbgHITzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Aug 2020 15:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgHIN2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 09:28:11 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB25C061756;
-        Sun,  9 Aug 2020 06:28:11 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id x6so3439068pgx.12;
-        Sun, 09 Aug 2020 06:28:11 -0700 (PDT)
+        with ESMTP id S1726307AbgHITzc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Aug 2020 15:55:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67D9C061786
+        for <linux-gpio@vger.kernel.org>; Sun,  9 Aug 2020 12:55:31 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w25so7356469ljo.12
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Aug 2020 12:55:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HaME3Z5uLAfT5ND31CqQyrNIC7MORGaQXez8ygNaWV4=;
-        b=NLzytDvk7e3IFdRRH9He4ucBUq/gJBsZ5qjPWWibdb1MfGRPca7DJwH9ty7kw4aEZf
-         5ZZjc8vnKRKM8fTrJ3SFD1cPd7SZ4W5GIelKI3FxDDVk0Kbk0pz7LaiS8EzkRc5eIokf
-         wkZ9ikNhpN1shIszAo5UOVmya2/V3cbNiWTdh5hgIwernkWWpNUUPyJS1mwQu5tC8Bn1
-         S3FPZn4EKO5lDS3bCb3gNDf5ZYuncSahFN6QEoGn0ww73bwcAPDrYsoARC31Kr2ycGkS
-         oRZ7UfU1pG2FZh10vAX9Rk0YWYUTZdNBPUmdc7G9o71SUA5JMLHRqZHRXAgyzpcw0KmA
-         qM+Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
+        b=h1FboOCE7RlnYs62A2tbSEYOTjOhRbOyxysffdQzD97v64yqUYH+LkI3uaTSf73Ffz
+         F/Wk/pzRKYDgYSUQJrPlZr627hNEwmRCKd7HGP8+n5OpijIXum4wlwitfZWSyD14YYsD
+         OGw9ZyXnBt2185IQ/b/Xc6NtGDoeXKNyqsp6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HaME3Z5uLAfT5ND31CqQyrNIC7MORGaQXez8ygNaWV4=;
-        b=C1/sRleAaBXyxJg6SNgMG4VH3u60wdLZmyfHP5kcthGqL2Iqs0SW7y2VMeD0DCXIRx
-         XJM9vYmVZR5zIC1KdYLqxu2GhvVIJw9aOFv3urm8K8RmYjoKbreQJtGLUL1IQoywHkBH
-         9ySQZFjoQSQRpTWuKciTvImTLvcBznH/r3H7+NOHnMfq3D7QVTZcfb7+3Qs+UPZVURRw
-         gy+1BThQLou1/SAE4Hdi58uTY1HL2IsGe+FEu53miU22adqfb+iB0NXSp9zqdK8BzCmx
-         yhxlc62oT5XSh5CeLCBN7N3WH4NPC29bja0E+3Y1Uwk/weJqafFaN/gv2OsZDZiqJT58
-         mJKA==
-X-Gm-Message-State: AOAM530f1Z7PXbkDgXHfK6OZE7wMVydISjsZ2F27TRrhjv7u7XOiMpJc
-        Tje4eL9ObJ/d2lGGl6K80MSb/hCh
-X-Google-Smtp-Source: ABdhPJwyrw+9WQ33uwO74GP2k5JsZS8rNn13zo1THGlGYBNPbsQCvetv+4xtO+7HxMlHqYG7r8hHyg==
-X-Received: by 2002:aa7:8a4d:: with SMTP id n13mr23175412pfa.143.1596979690802;
-        Sun, 09 Aug 2020 06:28:10 -0700 (PDT)
-Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 06:28:10 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 18/18] tools: gpio: add debounce support to gpio-event-mon
-Date:   Sun,  9 Aug 2020 21:25:29 +0800
-Message-Id: <20200809132529.264312-19-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200809132529.264312-1-warthog618@gmail.com>
-References: <20200809132529.264312-1-warthog618@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
+        b=mywLuWLqX5Au8H2vjv3K9bbpa8LLhe4nC7xUotwXT7s3S9Fj3AI5FuUOErFlNHh1Fj
+         SB9/ehs8PJQS8/yEhwAbWa1MVAjTLJyXOpNZnJgUQrRA+wxBcsQ6vHJs+QUgyM34J0zq
+         ZVAbMQZCqVcGcIGhtLLaaXHXQHU+e1tBKfrWZGsLfwX7UIUeorHafzUjbLiLfIyvwZWg
+         cikUu481oTuOt9w9DyB9Pf8vdRObyXKX5fR2xtqbI3C+Ji+MW756xgRuBbxQHS9w6gF0
+         xq+APnU8i7LTAwX7Q2YQuzW0MWdiudzKdYoqXDBwj26o0+u6Lu1CbBd2i3WmftPDvmr7
+         Y/0Q==
+X-Gm-Message-State: AOAM530k94YNB9RX+dUrvSYYMggeBpqR9NdLBMVwnZu2WzrYxmPaBbrc
+        5HXCS4Zo0qNyKV0DPeQtIF96r7CzkOo=
+X-Google-Smtp-Source: ABdhPJy5jxzl6u2BVAWKVOyPOL8LTgg5Oy6v9Ls9PiN6bkCwAr7wBWfHnZix9C5qphNbX5evi4N2Cw==
+X-Received: by 2002:a2e:9905:: with SMTP id v5mr11214665lji.42.1597002929600;
+        Sun, 09 Aug 2020 12:55:29 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id d13sm9450091lfl.89.2020.08.09.12.55.28
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id i10so7401650ljn.2
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr9469780ljk.421.1597002927878;
+ Sun, 09 Aug 2020 12:55:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+In-Reply-To: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 9 Aug 2020 12:55:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
+Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control changes for the v5.9 kernel cycle
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for debouncing monitored lines to gpio-event-mon.
+On Sun, Aug 9, 2020 at 6:06 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Driver improvements:
+>
+> - Linear improvement and cleanups of the Intel drivers for
+>   Cherryview, Lynxpoint, Baytrail etc. Improved locking among
+>   other things.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+I'm having a hard time parsing that. What does "Linear improvement" mean?
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index e50bb107ea3a..bd5ea3cc6e85 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -148,11 +148,12 @@ void print_usage(void)
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
- 		"  -f         Listen for falling edges\n"
-+		"  -b <n>     Debounce the line with period n microseconds\n"
- 		" [-c <n>]    Do <n> loops (optional, infinite loop if not stated)\n"
- 		"  -?         This helptext\n"
- 		"\n"
- 		"Example:\n"
--		"gpio-event-mon -n gpiochip0 -o 4 -r -f\n"
-+		"gpio-event-mon -n gpiochip0 -o 4 -r -f -b 10000\n"
- 	);
- }
- 
-@@ -167,11 +168,12 @@ int main(int argc, char **argv)
- 	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpio_v2_line_config config;
--	int c;
-+	int c, attr, i;
-+	unsigned long debounce_period = 0;
- 
- 	memset(&config, 0, sizeof(config));
- 	config.flags = GPIO_V2_LINE_FLAG_INPUT;
--	while ((c = getopt(argc, argv, "c:n:o:dsrf?")) != -1) {
-+	while ((c = getopt(argc, argv, "c:n:o:b:dsrf?")) != -1) {
- 		switch (c) {
- 		case 'c':
- 			loops = strtoul(optarg, NULL, 10);
-@@ -187,6 +189,9 @@ int main(int argc, char **argv)
- 			lines[num_lines] = strtoul(optarg, NULL, 10);
- 			num_lines++;
- 			break;
-+		case 'b':
-+			debounce_period = strtoul(optarg, NULL, 10);
-+			break;
- 		case 'd':
- 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
- 			break;
-@@ -205,6 +210,15 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
-+	if (debounce_period) {
-+		attr = config.num_attrs;
-+		config.num_attrs++;
-+		for (i = 0; i < num_lines; i++)
-+			gpiotools_set_bit(&config.attrs[attr].mask, i);
-+		config.attrs[attr].attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-+		config.attrs[attr].attr.debounce_period = debounce_period;
-+	}
-+
- 	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
--- 
-2.28.0
+Anyway, pulled and explanation left as-is.
 
+              Linus
