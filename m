@@ -2,112 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7836E2414B6
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 03:57:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C802241FA5
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 20:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgHKB5G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Aug 2020 21:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
+        id S1725873AbgHKSYk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Aug 2020 14:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbgHKB5F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Aug 2020 21:57:05 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B893C06174A;
-        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so5955075pgq.1;
-        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
-        b=PijYJW8UUZ4ppYLApZYvd5T3IzVvKdIZrU/doMYicvI2K1gt96P+DHyvD0/PT3zT9g
-         7ECqjPg/Y6nAmxapa4QURVDrnERrKz80gO6ghlrjgEAzcqRimMTvnw1XR38ajO0ih8CY
-         BRKQUF6f3ou95MP8jW78OvNhE1rsDVqqcYvkS6Os4afu5Q6+7lH+U2hsniG8VlzXKMbJ
-         ul/wplryuiyNWkDHYss8NOlVGmowDyHCVxtkrS2yKQjVqmxCV6ux53pD/6tvyyFmxVAJ
-         10zsmaV7zObAE4M+MJy0NJfGSJOuIMf8ZD0gl+Ejbc6/o8UfjWhXAQcRWWHqHLPeZmjN
-         LWdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
-        b=ksJTxLDGbfT1ZD63XTnOEeHtZYZywMkqSt/lDri3UQKL3XpZlRTMkaEAxi7EGhWqPo
-         9QeWcZjiNyvEuMLjghZvM39Yz/WW4UWG0SdcvYePGHSBTMjkfbXAoJvm4i70irF5Z7RY
-         LUc4CkQB7XW0pO1gCNH9G6KWBgyssIB8iG2dCN4YsdhX6MHAX1swRgfWPILaPOxZ9TaL
-         CffCdbKdtznboEsd1aWBPC0iSq5h5CCx00EgjNjWNs0UFBUj0cUvHl/8rWc6bKnkcchs
-         MYGx9yF+PLJwx8y+ClC55d0NY6IrkvnBEIZNfJzUmJbh29ds2LczbUGX4p+PTL7+2Pw0
-         yr9w==
-X-Gm-Message-State: AOAM5301G2EaQR2T20f7dTLm/QqQcz2cRuDSANBHKGlpumZ4E8dE946y
-        LFQ+ngNVS4Na21aGEye2XVf0auy0
-X-Google-Smtp-Source: ABdhPJzB+chc/PeTX5RV7BhujvSJA/PNj8ppEtLCvpPemnsswkVm/20b/HN5CTjcL7f/qjFDhzKlyg==
-X-Received: by 2002:a63:5213:: with SMTP id g19mr12981742pgb.44.1597111024494;
-        Mon, 10 Aug 2020 18:57:04 -0700 (PDT)
-Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id b15sm19781452pgk.14.2020.08.10.18.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 18:57:03 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 09:56:59 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 05/18] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200811015659.GB25507@sol>
-References: <20200809132529.264312-1-warthog618@gmail.com>
- <20200809132529.264312-6-warthog618@gmail.com>
+        with ESMTP id S1725862AbgHKSYj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 14:24:39 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D50C06174A
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 11:24:39 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4BR1Sz6mSqzKmtX;
+        Tue, 11 Aug 2020 20:24:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received; s=mail20150812; t=1597170270; bh=hhuuKF2SiU
+        qNsn78Dky+M+yK0G9fuqNyLwVzsXAtmoY=; b=N1YT1d5vFBGqfHt6yuoRGAhcJf
+        hFzAphnoxWVgVeSpVvPupbGEz7BNm4asXUrwmdQPrf1w2cI3SZd2KdOOb8sIe1kD
+        nxN4isRtX2t+A9Tup/olqO2xb7h8gQRzGqQcU+zleLWVTsHBm5goM4nqvlF4ru+c
+        5rhSvQypYQbMquNtHrlF4CJVUPnm8NKhMi+Sz/9FqkMuw42QsthJd0ujwtoE5Sl/
+        hzs4XPOvs83Kmsbpij3qG/Ad9xxEw8knVHPetxUNdyROGA6IBtJjAryl4dIQ0Z2Q
+        5wTRKJ6rvNyMMbk5n5ED2zsXshFkM5rsWngIIPCO8cYLQXDnSH63LsJQNLxQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1597170274;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3NLXcF150qzgKWT9ymc6w+EwvT8AwkVUJzwxnSjmOYk=;
+        b=R5uDHJl2n9xwrFAGu0Nwl8fdmmc97hvs1VRnnNKH/EExec+9bQyk0AtxqzoiUPBuZ7zYBC
+        6TQCU8R6DXCARffvYx0FoKurpJf2ypIzPoeloTr1afkOT8uj0k5PboZalrhcNZ2xNYCb+z
+        Kdq7PKdRnjhL/HUlfGI5Huj6p2QSpnW2nsJS2EAzQovwmc7Nk+DsI8vXQTRx66LwAHiqXm
+        KrBudNE03V4zBDyIYMcmpWSV/wyCRywDEAly4tzi/wPOzkuR1vHSiExwJJuo1ohMt75WV7
+        pK3nbREE4zTQJHGqoRN2nb2w6o5OgBhAXMeas8EANYLVExIs1nNPWsJ7ieLAyg==
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id VqWijXD3eG8i; Tue, 11 Aug 2020 20:24:30 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@mailbox.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] [PATCH 0/5] Documentation improvements
+Date:   Tue, 11 Aug 2020 20:24:29 +0200
+Message-ID: <2066152.rvAzjVaaYW@kongar>
+In-Reply-To: <20200811013950.GA25507@sol>
+References: <20200808095944.188479-1-alexander.stein@mailbox.org> <CAMRc=MeVKBHgU6u5gVjzaysQuwrudo3Zun+AHDb74pGXzkB4dg@mail.gmail.com> <20200811013950.GA25507@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809132529.264312-6-warthog618@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -6.82 / 15.00 / 15.00
+X-Rspamd-Queue-Id: EFEB1180E
+X-Rspamd-UID: bc1f5d
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 09:25:16PM +0800, Kent Gibson wrote:
-> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+Am Dienstag, 11. August 2020, 03:39:50 CEST schrieb Kent Gibson:
+> On Mon, Aug 10, 2020 at 06:49:21PM +0200, Bartosz Golaszewski wrote:
+> > On Sat, Aug 8, 2020 at 12:06 PM Alexander Stein
+> > <alexander.stein@mailbox.org> wrote:
+> > >
+> > > Hey,
+> > > this changeset improves the document generation by reducing warnings
+> > > as well as supporting building doc out of tree now.
+> > >
+> > > Alexander Stein (5):
+> > >   doc: Fix doxygen warnings
+> > >   doc: Use autotoolized Doxyfile
+> > >   doc: Fix doxygen warning
+> > >   doc: Remove obsolete PERL_PATH
+> > >   doc: Add @file to headers
+> > >
+> > >  .gitignore              |  1 +
+> > >  Doxyfile => Doxyfile.in |  8 ++++----
+> > >  Makefile.am             |  4 +---
+> > >  bindings/cxx/gpiod.hpp  |  6 +++++-
+> > >  configure.ac            |  1 +
+> > >  include/gpiod.h         | 30 +++++++++++++++++-------------
+> > >  6 files changed, 29 insertions(+), 21 deletions(-)
+> > >  rename Doxyfile => Doxyfile.in (93%)
+> > >
+> > > --
+> > > 2.28.0
+> > >
+> > 
+> > Thanks for sending those! I guess I don't see any of the warnings you
+> > mention because doxygen on my laptop is too old (1.8.13)?
+> > 
 > 
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
+> For reference, I get some of the warnings addressed with doxygen 1.8.17
+> in my setup.
+> I don't get the a4wide (patch 3) so that might be new in 1.8.18, or
+> otherwise dependent on setup??
 > 
-[snip]
+> Either way, it would be useful for the patch to mention what version
+> of doxygen is being targetted so everyone is on the same page.
 
-> +static long line_get_values(struct line *line, void __user *ip)
-> +{
-> +	struct gpio_v2_line_values lv;
-> +	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +	DECLARE_BITMAP(mask, GPIO_V2_LINES_MAX);
-> +	struct gpio_desc **descs;
-> +	int ret, i, didx, num_get = 0;
-> +
-> +	/* NOTE: It's ok to read values of output lines. */
-> +	if (copy_from_user(&lv, ip, sizeof(lv)))
-> +		return -EFAULT;
-> +
-> +	if (lv.mask == 0)
-> +		return -EINVAL;
-> +
-> +	bitmap_from_u64(mask, lv.mask);
-> +	num_get = bitmap_weight(mask, line->num_descs);
+Yes, I'm on 1.8.18, current release for archlinux. You are right, I should
+have mentioned it in the patch though, sorry aobut that.
 
-Nuts, that doesn't do what I intend, and is part of a failed experiment
-that I thought I had reverted.
+Best regards,
+Alexander
 
-Assume that in the next version the mask handling will be similar to
-line_set_values_locked in patch 09.
 
-i.e. 
-	for (i = 0; i < line->num_descs; i++)
-		if (lv.mask & BIT_ULL(i))
-			num_get++;
 
-and the subsequent mask tests will be against lv.mask instead of the
-mask bitmap declared above (which will be gone).
-
-I won't do a v4 just yet though - there is sure to be other things
-to go in there.
-
-Cheers,
-Kent.
