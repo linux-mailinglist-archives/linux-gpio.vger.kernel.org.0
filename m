@@ -2,139 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14C6E242021
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 21:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1D3A242059
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 21:32:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHKTLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Aug 2020 15:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37954 "EHLO
+        id S1726529AbgHKTcG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Aug 2020 15:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgHKTLx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 15:11:53 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48446C061787
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 12:11:53 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id o2so6514934qvk.6
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 12:11:53 -0700 (PDT)
+        with ESMTP id S1726258AbgHKTcG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 15:32:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B5BC06174A
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 12:32:06 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 17so8158265pfw.9
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 12:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pLatoOn79pYJ/DuOSj6cLvAVzQZnxlbGJi91nLHmWxM=;
-        b=fbMx3780UeiwoaK7tuSdafEpSCzt2QSHEE1/+ByVUmkAE+hSHgf3oW7Kw9luwn/bGk
-         u6kcshS5/siw0+AdKcgPIXz05yzhKR/moxZm+Z53BlEZKybm6wcvZZNOb8yoDcyApwBo
-         XNuNqoGVhcajRdB5mIN1cspaFlnL2h2oBAjCV8LKG+CTr1z8rRWsdTo5Axty2xciXgdL
-         1rJKcrugyV9FCIxqVf9lrT+uHiWbkp32Y4S8zCNHg++NnG5yjflYqd+nOEpysOGYHfbD
-         Xkb7J8MdsmMB8Ccr8Mjm86xw4hmVRa7R7vej56eNeTjX123T6UDvr6lzyhrAhMx1SYdk
-         PFVw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=tA1M4j2w8ikxzsm8TqiavbfeCWghKEktBcvPRuyYdeI=;
+        b=As8qfrI4fsdQlw1YluH7CQP9RPdnbLLarMDBpBfPLtdJM6Zz9+5A7xoQef2NTzfUE/
+         +C1+3eziTtpdJnqzivpXYwXCBLOe3YSljJNFih8WyxQrvWp6asRkc6RZ6Bw0jOsnQh2g
+         pMc19VgG5f7Jp9oK3lDGsOeZmBremTkgYbNvc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pLatoOn79pYJ/DuOSj6cLvAVzQZnxlbGJi91nLHmWxM=;
-        b=IURrJsQQ6DXY5c5LC9siJsg4KM41ZDL/EtnM6WxapDmHRyrgV8O8TKtGX/jTpfepPa
-         rzvxcXeBCERLE35U31v9Eu4zyUqguBQDAP2U6nSJy8HhZS35x8/s7XhLMs8HN4Y8T/5Z
-         sxnPze7koGNa3BEAqGbGfKLsFTLuE6za74bwf+WNbvDTKUHxDDQu7kNgYjxevfxHxixL
-         XZRpmzRY9m4filG3QZoEYZwjOirE3DTISEcSq4cAE/E2HhSNZCjLsfgEKC4cVT1czg6r
-         TloAnxwHQ8EavX1U2x31W4V1NxIoNL7yYt+7laLPZViyRVLtg6lq9NYzelHFY6/cIQYN
-         5iug==
-X-Gm-Message-State: AOAM531UBzqW5MkSeK2QslFlK6fn8B5jUQxyLkGGojQW8FDbsmYTBV7i
-        wvN2xJ+93a4uJUB70vV5HEUUR3FX7eQY4ErKCYRUwA==
-X-Google-Smtp-Source: ABdhPJyXKG5auxbjO/56cTDqtGqYLvRX2FdO9CddQgB4MxuvJmkMvAuxZjB4zO/rAxMf67Lmgq2vQK60FVe0EGnmo8w=
-X-Received: by 2002:a0c:ff06:: with SMTP id w6mr2973554qvt.61.1597173112408;
- Tue, 11 Aug 2020 12:11:52 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=tA1M4j2w8ikxzsm8TqiavbfeCWghKEktBcvPRuyYdeI=;
+        b=T2N0pACAWBnBqIonnbJSWwy0mcGNpp1b7oVjkNeWTu8Uocn4ZiOogy5bKpF2B2nTVc
+         ySuPAP9cazIpYXW7oRQFwBAqn/+RNPt+0Au2e+PsF3RxD4u6FpgtvjEaCD9jYJsD1rJS
+         pvX9IABQ/ABjsX9i8S9oz/q3IZyG9bKXxOoUIwpOD5brzHcTF00jqGGYgolPsvr/2i09
+         YxANZS6xIxrhkJl4HynDl4PRKnJyrs1Y8ZCGgGuXl4BTB8tv8sZPpAsrY7gBkCwB7m/h
+         z2F5H7uouEGlYISASf8M6wYYItxarD02eZgjWEnXFELu/nS4OJUnUJ3qPAFpCJeFZki+
+         o3hw==
+X-Gm-Message-State: AOAM530pWy9HB/dZMQfCPGhw/RjD6K7f5CKdWT0FGHPWobj7k6Hw0Wmp
+        O9PEkbvzYhwkUqbfX578NpIGZAGi7n8=
+X-Google-Smtp-Source: ABdhPJxLgsyPl3Dbi+HYEp5MXKHxD/EOIrbVN3IARmbEfeFc7gN7kF/USAK2IJ9ZzHp+dLVfg9OamA==
+X-Received: by 2002:a63:a50e:: with SMTP id n14mr2037903pgf.234.1597174325609;
+        Tue, 11 Aug 2020 12:32:05 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id j8sm18852860pfh.90.2020.08.11.12.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 12:32:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200809132529.264312-1-warthog618@gmail.com> <20200809132529.264312-3-warthog618@gmail.com>
-In-Reply-To: <20200809132529.264312-3-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 11 Aug 2020 21:11:41 +0200
-Message-ID: <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Tue, 11 Aug 2020 12:32:03 -0700
+Message-ID: <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add a new version of the uAPI to address existing 32/64-bit alignment
-> issues, add support for debounce and event sequence numbers, allow
-> requested lines with different configurations, and provide some future
-> proofing by adding padding reserved for future use.
->
-> The alignment issue relates to the gpioevent_data, which packs to different
-> sizes on 32-bit and 64-bit platforms. That creates problems for 32-bit apps
-> running on 64-bit kernels.  uAPI v2 addresses that particular issue, and
-> the problem more generally, by adding pad fields that explicitly pad
-> structs out to 64-bit boundaries, so they will pack to the same size now,
-> and even if some of the reserved padding is used for __u64 fields in the
-> future.
->
-> The new structs have been analysed with pahole to ensure that they
-> are sized as expected and contain no implicit padding.
->
-> The lack of future proofing in v1 makes it impossible to, for example,
-> add the debounce feature that is included in v2.
-> The future proofing is addressed by providing configurable attributes in
-> line config and reserved padding in all structs for future features.
-> Specifically, the line request, config, info, info_changed and event
-> structs receive updated versions and new ioctls.
->
-> As the majority of the structs and ioctls were being replaced, it is
-> opportune to rework some of the other aspects of the uAPI:
->
-> v1 has three different flags fields, each with their own separate
-> bit definitions.  In v2 that is collapsed to one - gpio_v2_line_flag.
->
-> The handle and event requests are merged into a single request, the line
-> request, as the two requests were mostly the same other than the edge
-> detection provided by event requests.  As a byproduct, the v2 uAPI allows
-> for multiple lines producing edge events on the same line handle.
-> This is a new capability as v1 only supports a single line in an event
-> request.
->
-> As a consequence, there are now only two types of file handle to be
-> concerned with, the chip and the line, and it is clearer which ioctls
-> apply to which type of handle.
->
-> There is also some minor renaming of fields for consistency compared to
-> their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
-> and consumer rather than consumer_label.
->
-> Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
-> clarity, and the gpiohandle_data __u8 array becomes a bitmap in
-> gpio_v2_line_values.
->
-> The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
-> code, particularly libgpiod, should readily port to it.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Can the subject be more specific? "pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASK=
+ED flag"?
+
+Quoting Maulik Shah (2020-08-10 04:20:54)
+> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+> during suspend and mask before setting irq type.
+>=20
+> Masking before changing type should make sure any spurious interrupt
+> is not detected during this operation.
+>=20
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
-
-This now looks good for me. Just a small nit below.
-
-Andy: would you mind taking a look as well?
-
->
-> +/*
-> + * Maximum number of requested lines.
-> + *
-> + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
-> + * multiple of 2 to ensure 32/64-bit alignment of structs.
-> + */
-> +#define GPIO_V2_LINES_MAX 64
-> +
-
-If we refer to bitmaps for which helpers are defined in
-include/linux/bitmap.h then they're not limited to 64-bits. I'd just
-say here that we want to fit into 64-bit integers for simplicity.
-
-[snip]
-
-Bartosz
