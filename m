@@ -2,105 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D576242122
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 22:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E07982421FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 23:31:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgHKULN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Aug 2020 16:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
+        id S1726173AbgHKVbx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Aug 2020 17:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKULM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 16:11:12 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3284C061787
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:12 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id l184so6610vki.10
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:12 -0700 (PDT)
+        with ESMTP id S1726114AbgHKVbw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 17:31:52 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375F5C061787
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f9so81709pju.4
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=81NTZpiDGt+DeUizhccfQdwoJcBOsmeDza4v9LRaS7Q=;
-        b=T2pPGoewiPvpKJXBD5E4PN02jutwvTNLcRqdRrgP2E5cscCIODU8xre0K6Osk2++nZ
-         OPTK0ZCaP13n0PvGhkr6G8u+FQ4RmvpwBowCG815DBoaD2LVFl3kbbOvb5SUosE1b30e
-         t0F5H2mWqYRNhhPVAWztu1uPrp1MZ8ZGHdNpQ=
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
+        b=ic5XdKk6gydxMYgraTNOoIX9Qr9I7gTNGubgAXooXrZz721fDPz4m2EjMsb00Sz127
+         fbvckWvmv30KrMBqS0QhDkKbbJcxA7HlsSi94cHs+zcHYOvkq3S86i84M0rblZRajpOf
+         IcSFe1DZhwHH7CyGIHN64J+Tvo+CwqO7p+XM4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=81NTZpiDGt+DeUizhccfQdwoJcBOsmeDza4v9LRaS7Q=;
-        b=YOvTrcskeAmgLr8WIschtIVDjybtzFoUcPPQMLxbzY10vTTUsbC8CWovzVrZu5Vv9A
-         6N2nuWreQm7twjDMYHPl68mhKxIbzxFCVgoOSXjxeHL7Ho7U7vjpsuq8xJz6tvfgVwEo
-         fBO31UPOdPJS6t3syLf0r3idYI4iYYZaVzBgnZ4COcIBivPwoD7JGdykusNr2qkgtLFY
-         A8K9IzOZpsgC8mNcVgelRxIeLuuRjC+gGlzmvE0w7tBqbow5Zp48A/bBGHrKYnlLT660
-         P5lJC2P/84lb0QArlSPT7oMbxbPHzIzH/nnR67bjiVTNrYmcIUw458quqCLJUKNeiTPu
-         xC2Q==
-X-Gm-Message-State: AOAM531o+3Gi5OABTwRTC8XtW+QEDmiaxA5hbE7cLAcUL5rgk7B6xZKk
-        eQ6oLqOqYg7fCMYVVMqgA3f1gGirvHM=
-X-Google-Smtp-Source: ABdhPJzPy8wrrZsNlY7Y0Pt6QXDPcyajkcI3lA1kZZUIBSBup9g7fo2yL5SLhD1dij+ZCKIYyuWEPQ==
-X-Received: by 2002:a1f:3d15:: with SMTP id k21mr26579634vka.58.1597176671671;
-        Tue, 11 Aug 2020 13:11:11 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id q74sm4416vkq.31.2020.08.11.13.11.10
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:11:10 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id o184so6675746vsc.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:10 -0700 (PDT)
-X-Received: by 2002:a67:d714:: with SMTP id p20mr26453646vsj.119.1597176669782;
- Tue, 11 Aug 2020 13:11:09 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
+        b=HutSHdGi7Q54S7Gjt9GyllXGmycOa6z2MtQ423MWpldqGi3ht8Xw8CHC/JuX1/zKt5
+         yHirwlufsYNLh0bO3pwEwJfzr8pfZxn40QOzP5VsHl6Tn8JSGMW1t5Lu0QCCFqXJePww
+         cpMSRJ1eQaTnb2/vAkbm4pgeQv/9LmNJGO2YdvCr6Z64ITa5sao1gdmasryqeMIxo7tk
+         seAUDrGHLNcUzUOrlvLEJj2sgyXM8WxBiZrq56DhiZ8NVMxpUpKNmK9EAgDEkOmfAGSA
+         IjBTLiryhYJDA5/zn1aZdL5OAP9FqN9vV/7q4NxjmcHsdlYmqS34RnK4k1J9E+BjS76w
+         ITOA==
+X-Gm-Message-State: AOAM53105ZeJY8fA3EGL+YECkTg5NmZ6GqqJ7wE92xsVcl9ZmaV07ilz
+        o43aNnTcOifSzrfuVp5Gl6r92w==
+X-Google-Smtp-Source: ABdhPJyqL4TIDkhnnHdUryy4LGUhSjye4Oo+pBg8Wb1pq/wCqARm+tYcIqMsZ0lHBAcH7HwPz+7cPg==
+X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr2101777plt.21.1597181511570;
+        Tue, 11 Aug 2020 14:31:51 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id w15sm3796047pjk.13.2020.08.11.14.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 14:31:50 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-5-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1597058460-16211-5-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 13:10:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uvsd3YBK0PS5X4ScAtC1q0Xfh8q=JQ1iTRKi=VVSU4Gw@mail.gmail.com>
-Message-ID: <CAD=FV=Uvsd3YBK0PS5X4ScAtC1q0Xfh8q=JQ1iTRKi=VVSU4Gw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] genirq: introduce irq_suspend_parent() and irq_resume_parent()
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Tue, 11 Aug 2020 14:31:49 -0700
+Message-ID: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Quoting Maulik Shah (2020-08-10 04:21:00)
+> Clear previous kernel's configuration during init by resetting
+> interrupts in enable bank to zero.
 
-On Mon, Aug 10, 2020 at 4:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> From: Douglas Anderson <dianders@chromium.org>
->
-> This goes with the new irq_suspend_one() and irq_resume_one()
-> callbacks and allow us to easily pass things up to our parent.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Can you please add some more information here about why we're not
+clearing all the pdc irqs and only the ones that are listed in DT? Is
+that because the pdc is shared between exception levels of the CPU and
+so some irqs shouldn't be used? Does the DT binding need to change to
+only list the hwirqs that are usable by the OS instead of the ones that
+are usable for the entire system? The binding doesn't mention this at
+all so I am just guessing here.
+
+>=20
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  include/linux/irq.h |  2 ++
->  kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
->  2 files changed, 30 insertions(+)
-
-Thanks for posting my patch.  Small nit here is that when I saw the
-patches listed together I realized that I forgot to capitalize
-"introduce" in ${SUBJECT}.  The two patches right next to each other
-that both start with "introduce" where one has a capital and one
-doesn't look weird.  Hopefully you can fix in the next version?
-
-Thanks!
-
--Doug
