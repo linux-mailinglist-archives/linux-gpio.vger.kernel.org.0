@@ -2,62 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E29224211E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 22:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D576242122
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 22:11:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgHKUJQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Aug 2020 16:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46844 "EHLO
+        id S1726274AbgHKULN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Aug 2020 16:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgHKUJQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 16:09:16 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AADCC061787
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:09:16 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id s29so1697950uae.1
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:09:16 -0700 (PDT)
+        with ESMTP id S1726164AbgHKULM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 16:11:12 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3284C061787
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:12 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id l184so6610vki.10
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6qJqVdc/uC0k/47tmN/6OGWwLLeKwWyMRmMGNyMuMes=;
-        b=H3ZdlnlZZbMSAPEofrl6nm6YexFFLFIlxi1eqa1GptjaFwv/xFa49I/fUr0oFBROIv
-         9aU6FfSZBMqZYb8nS74vVLPJYMrj7tE81Xq79ZWbCcCyu4RRn0sOk9D/yKEs59P3iJcR
-         14Kbt+2OH5xfn8oZtuAkZoCLV21W+/GQ320Ms=
+        bh=81NTZpiDGt+DeUizhccfQdwoJcBOsmeDza4v9LRaS7Q=;
+        b=T2pPGoewiPvpKJXBD5E4PN02jutwvTNLcRqdRrgP2E5cscCIODU8xre0K6Osk2++nZ
+         OPTK0ZCaP13n0PvGhkr6G8u+FQ4RmvpwBowCG815DBoaD2LVFl3kbbOvb5SUosE1b30e
+         t0F5H2mWqYRNhhPVAWztu1uPrp1MZ8ZGHdNpQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6qJqVdc/uC0k/47tmN/6OGWwLLeKwWyMRmMGNyMuMes=;
-        b=uBuuQWJE6jDyzGMJGY9aJYnc8IBJi7SrOZTJo/vKbvgxpj1wvlV0A/VojHEjorUvip
-         H7Sr47A1k3oWFdPXylyTu/r+GA16ARfVmA5F8DLo676tMMNRV3E2bpA85H4qyCyrTjkr
-         pFcpakyONbFl3oeXEthVMb8u6Tnph4KZ+r/VapN1irexezGrLBI0e16Qvra1tNKEWlJU
-         5EteJkwDc3SNwwWQPbLe+Vm8vyC8R/Js6WAPfkzEt1b8sixQJ4QLxxULdUDPA4Cl6fTP
-         6EMU+2pbfVV75KEEliNfwm7kSeC2r3t2UITHZf4BToKfGjY8Eabrc8fjMplZC5Hz9UAx
-         u+jg==
-X-Gm-Message-State: AOAM533pqIZTZTt500ggzwFzbh296cjNEMY6Y0obGDL3QSSPc7Z0Drak
-        3B5/enCM+4xLk9rmmgkrsVVmwY+k8z8=
-X-Google-Smtp-Source: ABdhPJxIoaqSTwfA3Z81UhZ/pbwyreUC7FbRLNfjsirJStmKPxymli0XKkRVt3EvzJXw3hZ0WJgp1g==
-X-Received: by 2002:ab0:6950:: with SMTP id c16mr24001358uas.71.1597176554040;
-        Tue, 11 Aug 2020 13:09:14 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id e127sm7337vkg.5.2020.08.11.13.09.12
+        bh=81NTZpiDGt+DeUizhccfQdwoJcBOsmeDza4v9LRaS7Q=;
+        b=YOvTrcskeAmgLr8WIschtIVDjybtzFoUcPPQMLxbzY10vTTUsbC8CWovzVrZu5Vv9A
+         6N2nuWreQm7twjDMYHPl68mhKxIbzxFCVgoOSXjxeHL7Ho7U7vjpsuq8xJz6tvfgVwEo
+         fBO31UPOdPJS6t3syLf0r3idYI4iYYZaVzBgnZ4COcIBivPwoD7JGdykusNr2qkgtLFY
+         A8K9IzOZpsgC8mNcVgelRxIeLuuRjC+gGlzmvE0w7tBqbow5Zp48A/bBGHrKYnlLT660
+         P5lJC2P/84lb0QArlSPT7oMbxbPHzIzH/nnR67bjiVTNrYmcIUw458quqCLJUKNeiTPu
+         xC2Q==
+X-Gm-Message-State: AOAM531o+3Gi5OABTwRTC8XtW+QEDmiaxA5hbE7cLAcUL5rgk7B6xZKk
+        eQ6oLqOqYg7fCMYVVMqgA3f1gGirvHM=
+X-Google-Smtp-Source: ABdhPJzPy8wrrZsNlY7Y0Pt6QXDPcyajkcI3lA1kZZUIBSBup9g7fo2yL5SLhD1dij+ZCKIYyuWEPQ==
+X-Received: by 2002:a1f:3d15:: with SMTP id k21mr26579634vka.58.1597176671671;
+        Tue, 11 Aug 2020 13:11:11 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id q74sm4416vkq.31.2020.08.11.13.11.10
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:09:13 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id p8so6641053vsm.12
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:09:12 -0700 (PDT)
-X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr25614974vsg.6.1597176552506;
- Tue, 11 Aug 2020 13:09:12 -0700 (PDT)
+        Tue, 11 Aug 2020 13:11:10 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id o184so6675746vsc.0
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 13:11:10 -0700 (PDT)
+X-Received: by 2002:a67:d714:: with SMTP id p20mr26453646vsj.119.1597176669782;
+ Tue, 11 Aug 2020 13:11:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-5-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1597058460-16211-5-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 13:09:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
-Message-ID: <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and
- irq_resume_one() callbacks
+Date:   Tue, 11 Aug 2020 13:10:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Uvsd3YBK0PS5X4ScAtC1q0Xfh8q=JQ1iTRKi=VVSU4Gw@mail.gmail.com>
+Message-ID: <CAD=FV=Uvsd3YBK0PS5X4ScAtC1q0Xfh8q=JQ1iTRKi=VVSU4Gw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] genirq: introduce irq_suspend_parent() and irq_resume_parent()
 To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -86,45 +85,22 @@ On Mon, Aug 10, 2020 at 4:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
 > From: Douglas Anderson <dianders@chromium.org>
 >
-> The "struct irq_chip" has two callbacks in it: irq_suspend() and
-> irq_resume().  These two callbacks are interesting because sometimes
-> an irq chip needs to know about suspend/resume, but they are a bit
-> awkward because:
-> 1. They are called once for the whole irq_chip, not once per IRQ.
->    It's passed data for one of the IRQs enabled on that chip.  That
->    means it's up to the irq_chip driver to aggregate.
-> 2. They are only called if you're using "generic-chip", which not
->    everyone is.
-> 3. The implementation uses syscore ops, which apparently have problems
->    with s2idle.
+> This goes with the new irq_suspend_one() and irq_resume_one()
+> callbacks and allow us to easily pass things up to our parent.
 >
-> Probably the old irq_suspend() and irq_resume() callbacks should be
-> deprecated.
->
-> Let's introcuce a nicer API that works for all irq_chip devices.  This
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  include/linux/irq.h |  2 ++
+>  kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
 
-You grabbed my patch (which is great, thanks!) but forgot to address
-Stephen's early feedback from <https://crrev.com/c/2321123>.
-Specifically:
+Thanks for posting my patch.  Small nit here is that when I saw the
+patches listed together I realized that I forgot to capitalize
+"introduce" in ${SUBJECT}.  The two patches right next to each other
+that both start with "introduce" where one has a capital and one
+doesn't look weird.  Hopefully you can fix in the next version?
 
-s/introcuce/introduce
-
-
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -468,10 +468,16 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->   * @irq_bus_sync_unlock:function to sync and unlock slow bus (i2c) chips
->   * @irq_cpu_online:    configure an interrupt source for a secondary CPU
->   * @irq_cpu_offline:   un-configure an interrupt source for a secondary CPU
-> + * @irq_suspend_one:   called on an every irq to suspend it; called even if
-> + *                     this IRQ is configured for wakeup
-
-s/called on an/called on
-
-> + * @irq_resume_one:    called on an every irq to resume it; called even if
-> + *                     this IRQ is configured for wakeup
-
-s/called on an/called on
-
+Thanks!
 
 -Doug
