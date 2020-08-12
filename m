@@ -2,91 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C52A32430E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 00:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06F1B243115
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 00:45:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgHLWic (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Aug 2020 18:38:32 -0400
-Received: from smtprelay0014.hostedemail.com ([216.40.44.14]:41580 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgHLWic (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:38:32 -0400
-X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 18:38:31 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 6409E181CBC1C;
-        Wed, 12 Aug 2020 22:32:39 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id C315D100E7B65;
-        Wed, 12 Aug 2020 22:32:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:1801:2393:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:4321:4605:5007:6742:6743:7875:9010:10004:10400:10848:11232:11233:11657:11658:11914:12043:12109:12297:12555:12740:12760:12895:12986:13069:13311:13357:13439:14096:14097:14181:14581:14659:14721:21080:21121:21627:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:5,LUA_SUMMARY:none
-X-HE-Tag: board29_4d052b526fef
-X-Filterd-Recvd-Size: 2655
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 12 Aug 2020 22:32:33 +0000 (UTC)
-Message-ID: <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Date:   Wed, 12 Aug 2020 15:32:32 -0700
-In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
-References: <20200812203618.2656699-1-robh@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        id S1726518AbgHLWpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Aug 2020 18:45:23 -0400
+Received: from mx1.activ.net ([80.96.1.5]:37848 "EHLO mx1.activ.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgHLWpX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 Aug 2020 18:45:23 -0400
+X-Greylist: delayed 415 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 18:45:22 EDT
+Received: from mx1.activ.net (localhost.localdomain [127.0.0.1])
+        by mx1.activ.net (Proxmox) with ESMTP id 668C73CEF;
+        Thu, 13 Aug 2020 01:38:18 +0300 (EEST)
+Received: from mail.activnet.info (mail.activnet.info [82.208.154.171])
+        by mx1.activ.net (Proxmox) with ESMTP id 5AA833CEB;
+        Thu, 13 Aug 2020 01:38:18 +0300 (EEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.activnet.info (Postfix) with ESMTP id 353A3802FAA;
+        Thu, 13 Aug 2020 01:38:19 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at chance.ro
+Received: from mail.activnet.info ([127.0.0.1])
+        by localhost (mail.activnet.info [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id pxE89JkHpKCG; Thu, 13 Aug 2020 01:38:18 +0300 (EEST)
+Received: from newmail.uav.ro (cp3.activ.net [80.96.1.3])
+        (using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stiinte.exacte@uav.ro)
+        by mail.activnet.info (Postfix) with ESMTP id 196F5802FA2;
+        Thu, 13 Aug 2020 01:38:14 +0300 (EEST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date:   Thu, 13 Aug 2020 00:38:10 +0200
+From:   Mavis <stiinte.exacte@uav.ro>
+To:     undisclosed-recipients:;
+Subject: =?UTF-8?Q?=E8=89=AF=E3=81=84=E3=83=8B=E3=83=A5=E3=83=BC=E3=82=B9?=
+Reply-To: maviswanczykbest@gmail.com
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <1aaaa214553d747e5ba0c6bdcfde89b9@uav.ro>
+X-Sender: stiinte.exacte@uav.ro
+Organization: Mavis
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2020-08-12 at 14:36 -0600, Rob Herring wrote:
-> Clean-up incorrect indentation, extra spaces, long lines, and missing
-> EOF newline in schema files. Most of the clean-ups are for list
-> indentation which should always be 2 spaces more than the preceding
-                                     ^
-> keyword.
-[]
-> diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> index 192ded470e32..f0daf990e077 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> @@ -67,9 +67,9 @@ patternProperties:
->        compatible:
->          items:
->            - enum:
-> -            - arm,integrator-ap-syscon
-> -            - arm,integrator-cp-syscon
-> -            - arm,integrator-sp-syscon
-> +              - arm,integrator-ap-syscon
-> +              - arm,integrator-cp-syscon
-> +              - arm,integrator-sp-syscon
+こんにちは
 
-Confused a bit here.
-          - enum:
-	10 spaces to dash
-old line:
-            - arm,integrator-ap-syscon
-	12 spaces to dash
-new line:
-              - arm,integrator-ap-syscon
-	14 spaces to dash
+758.7ドルの巨額の受賞者であるMavis Wanczykです。メガ·ミリオンズ
+Jackpotと私が直接あなたに200万ドル寄付します。
 
-Is it supposed to be 2 spaces more than the preceding line
-or 4 more?
+フルネームと携帯電話番号で返信する
 
+Mavis Wanczyk
 
