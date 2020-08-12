@@ -2,209 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65C1124266F
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 09:57:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72A11242E12
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 19:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHLH5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Aug 2020 03:57:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33400 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgHLH5Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:57:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 86DC9201753;
-        Wed, 12 Aug 2020 09:57:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 443E0201745;
-        Wed, 12 Aug 2020 09:57:18 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A982402F3;
-        Wed, 12 Aug 2020 09:57:13 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, stefan@agner.ch, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: gpio: Convert vf610 to json-schema
-Date:   Wed, 12 Aug 2020 15:52:21 +0800
-Message-Id: <1597218741-24899-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726531AbgHLRg7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 12 Aug 2020 13:36:59 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57837 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHLRg6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Aug 2020 13:36:58 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 7DD121C0004;
+        Wed, 12 Aug 2020 17:36:55 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 19:36:53 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200812193653.27953c51@xps13>
+In-Reply-To: <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+        <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the vf610 gpio binding to DT schema format using json-schema.
+Hello Uwe,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-changes since V1:
-	- fix reg property to pass build;
-	- add "additionalProperties: false".
----
- .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 -----------------
- .../devicetree/bindings/gpio/gpio-vf610.yaml       | 81 ++++++++++++++++++++++
- 2 files changed, 81 insertions(+), 63 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+Thanks for the review!
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-deleted file mode 100644
-index ae254aa..0000000
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--* Freescale VF610 PORT/GPIO module
--
--The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
--functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
--each, and each PORT module has its own interrupt.
--
--Required properties for GPIO node:
--- compatible : Should be "fsl,<soc>-gpio", below is supported list:
--	       "fsl,vf610-gpio"
--	       "fsl,imx7ulp-gpio"
--- reg : The first reg tuple represents the PORT module, the second tuple
--  the GPIO module.
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two. The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
--  The second cell bits[3:0] is used to specify trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
--
--Optional properties:
---clocks:	Must contain an entry for each entry in clock-names.
--		See common clock-bindings.txt for details.
---clock-names:	A list of clock names. For imx7ulp, it must contain
--		"gpio", "port".
--
--Note: Each GPIO port should have an alias correctly numbered in "aliases"
--node.
--
--Examples:
--
--aliases {
--	gpio0 = &gpio1;
--	gpio1 = &gpio2;
--};
--
--gpio1: gpio@40049000 {
--	compatible = "fsl,vf610-gpio";
--	reg = <0x40049000 0x1000 0x400ff000 0x40>;
--	interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	gpio-ranges = <&iomuxc 0 0 32>;
--};
--
--gpio2: gpio@4004a000 {
--	compatible = "fsl,vf610-gpio";
--	reg = <0x4004a000 0x1000 0x400ff040 0x40>;
--	interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	gpio-ranges = <&iomuxc 0 32 32>;
--};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-new file mode 100644
-index 0000000..6ac5a78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale VF610 PORT/GPIO module
-+
-+maintainers:
-+  - Stefan Agner <stefan@agner.ch>
-+
-+description: |
-+  The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
-+  functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
-+  each, and each PORT module has its own interrupt.
-+
-+  Note: Each GPIO port should have an alias correctly numbered in "aliases"
-+  node.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,vf610-gpio
-+      - fsl,imx7ulp-gpio
-+
-+  reg:
-+    description: The first reg tuple represents the PORT module, the second tuple
-+      represents the GPIO module.
-+    maxItems: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  clocks:
-+    items:
-+      - description: SoC GPIO clock
-+      - description: SoC PORT clock
-+
-+  clock-names:
-+    items:
-+      - const: gpio
-+      - const: port
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpio1: gpio@40049000 {
-+        compatible = "fsl,vf610-gpio";
-+        reg = <0x40049000 0x1000>, <0x400ff000 0x40>;
-+        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        gpio-ranges = <&iomuxc 0 0 32>;
-+    };
--- 
-2.7.4
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Fri, 3 Jul
+2020 16:53:13 +0200:
 
+> Hello Miquel,
+> 
+> On Sun, May 03, 2020 at 12:54:53PM +0200, Miquel Raynal wrote:
+> > +static u8 max7313_pwm_get_intensity(struct pca953x_chip *pca_chip,
+> > +				    unsigned int idx)
+> > +{
+> > +	struct device *dev = &pca_chip->client->dev;
+> > +	unsigned int reg, shift, val, output;
+> > +	u8 intensity;
+> > +	bool phase;
+> > +	int ret;
+> > +
+> > +	/* Retrieve the intensity */
+> > +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> > +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;  
+> 
+> I would find
+> 
+> 	shift = (idx % PWM_PER_REG) * PWM_BITS_PER_REG
+> 
+> more natural here as your formula only works for PWM_PER_REG = 2.
+
+Understood.
+
+> 
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_read(pca_chip->regmap, reg, &val);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Cannot retrieve PWM intensity (%d)\n", ret);  
+> 
+> Please use %pe for error codes.
+
+Fine, fixed at three relevant locations.
+
+> 
+> > +		return 0;
+> > +	}
+> > +
+> > +	val >>= shift;
+> > +	val &= PWM_INTENSITY_MASK;
+> > +
+> > +	/* Retrieve the phase */
+> > +	reg = pca953x_recalc_addr(pca_chip, pca_chip->regs->output, idx, 0, 0);
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_read(pca_chip->regmap, reg, &output);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Cannot retrieve PWM phase (%d)\n", ret);
+> > +		return 0;
+> > +	}
+> > +
+> > +	phase = output & BIT(idx % BANK_SZ);  
+> 
+> Would it make sense to cache the phase value to reduce register access
+> and locking here?
+
+I suppose it could be done and would certainly reduce register access a
+little bit but it means refactoring quite some code and as I'm not near
+the board to actually test these changes right now I fear to do
+something wrong. Instead, I'd prefer not to touch that part, and let
+users that would need this enhancement do it themselves if you don't
+mind.
+
+> 
+> > [...]
+> > +static int max7313_pwm_apply(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	unsigned int intensity, active;
+> > +	int ret = 0;
+> > +
+> > +	if (!state->enabled ||
+> > +	    state->period < PWM_PERIOD_NS ||
+> > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;  
+> 
+> You could simulate state->enabled = false using duty_cycle = 0.
+
+Absolutely!
+
+> 
+> > +	/* Convert the duty-cycle to be in the [0;16] range */
+> > +	intensity = max7313_pwm_duty_to_intensity(state->duty_cycle);  
+> 
+> This might return a value > 16 if state->duty_cycle > PWM_PERIOD_NS.
+> I suggest to do
+> 
+> 	duty_cycle = min(state->duty_cycle, PWM_PERIOD_NS);
+> 
+> and use that value instead of state->duty_cycle.
+
+Done.
+
+> 
+> > +	/*
+> > +	 * The hardware is supposedly glitch-free when changing the intensity,
+> > +	 * unless we need to flip the blink phase to reach an extremity or the
+> > +	 * other of the spectrum (0/16 from phase 1, 16/16 from phase 0).  
+> 
+> s/other of/other end of/. I don't understand the difference between
+> extremity and "other end of the spectrum".
+
+Fixed.
+
+> 
+> > +	 */
+> > +	return max7313_pwm_set_state(pca_chip, pwm, intensity);
+> > +}
+> > +
+> > +static void max7313_pwm_get_state(struct pwm_chip *chip,
+> > +				  struct pwm_device *pwm,
+> > +				  struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	u8 intensity;
+> > +
+> > +	state->enabled = true;
+> > +	state->period = PWM_PERIOD_NS;
+> > +	state->polarity = PWM_POLARITY_NORMAL;
+> > +
+> > +	intensity = max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
+> > +	state->duty_cycle = max7313_pwm_intensity_to_duty(intensity);  
+> 
+> Please round up the division in max7313_pwm_intensity_to_duty().
+
+I understand the use case, done as well.
+
+I will respin a compile tested version rebased on top of current master
+(which includes Linus-W GPIO-5.9-1 merge request).
+
+Thanks,
+Miquèl
