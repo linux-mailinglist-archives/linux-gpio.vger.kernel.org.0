@@ -2,99 +2,209 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF182424FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 07:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C1124266F
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 09:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgHLF3t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Aug 2020 01:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgHLF3t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Aug 2020 01:29:49 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3745C06174A;
-        Tue, 11 Aug 2020 22:29:48 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a79so433785pfa.8;
-        Tue, 11 Aug 2020 22:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=304tL188pyo6y/SOiT/QTty2aReGXLED7+kCMwqLL9g=;
-        b=rlHh5+NzFSHNpWwu7++E++7CQ/qxSYwfQNvETTJaVo9PKBHhVnF70jK5OUyrLVtKUG
-         aovptJnuQUXug6zB5piFdvZaTMuc1A5S7hbXvMKm1KMd+gMw66ppOOPXw6fmWlOheXt1
-         2rXD/6uJKKjaQNlOfcFRUvOC5Hi0XibOmVja2UQP61cc5o0HlQlpwFubgckpN0BYL0B4
-         kRy0R49+9K+u+RxJe+OsOiEFqVNXjAjkRlg4AoMxYWxkNDidp0BOMEY2Jlq5E/88e3SR
-         Y6GAImFPCcM+nKiUZp2SwAuYAaDHGqElHl8Uoz4qQ7VGSvl5OE11uoLZL7PjMJZI8Kv5
-         nuGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=304tL188pyo6y/SOiT/QTty2aReGXLED7+kCMwqLL9g=;
-        b=sSyZyPpLE6pjaT5w5DZQ7sgQt6mb4uiJ2zhDUHOiyHJr1mmRdZJwuuS/lv5XToJy2l
-         I/LxTw7RGMdV/PA2r97hwk26C12WIN4aECJy/p7OdvNRnqq+8KhM5h/Hl2TYEmr8iQca
-         jzXbbop/pi2EN2y5re4falT2WQhve/CHN036PZW8wHsQOpocHp/7vqUjIsN2ndvRbhvi
-         suNo0qrV4SwBPR7P4tlIkbG484RLNVYe8RUvtKxlTon4uk94o4837DFvQx8xUsq46HVE
-         lD5LaN87D3WEYOZ0dgA4VbxeOUIc05po5oOEPJBFcGsx9aAZXThy80awQb3SsY+H6QAd
-         45ug==
-X-Gm-Message-State: AOAM533iRVjSiKgYlWTn5/uwHlxXnmZ1+c+8Am/UKfAE2uVqwy/ZnoSO
-        jnQMPx7mtPR75coaCd20tDBot14g
-X-Google-Smtp-Source: ABdhPJyKvlU7xcrJ/nXe72WmTCtodUwCZLcrgurEnLH8+pEuPqQzxrtYWHnz7QGiEDzMwF1wZHd0Ig==
-X-Received: by 2002:a63:597:: with SMTP id 145mr3712801pgf.119.1597210187059;
-        Tue, 11 Aug 2020 22:29:47 -0700 (PDT)
-Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id z62sm856910pfb.47.2020.08.11.22.29.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 22:29:46 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 13:29:41 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 06/18] gpiolib: cdev: support
- GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL
-Message-ID: <20200812052941.GA116346@sol>
-References: <20200809132529.264312-1-warthog618@gmail.com>
- <20200809132529.264312-7-warthog618@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809132529.264312-7-warthog618@gmail.com>
+        id S1726784AbgHLH5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Aug 2020 03:57:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33400 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgHLH5Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:57:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 86DC9201753;
+        Wed, 12 Aug 2020 09:57:22 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 443E0201745;
+        Wed, 12 Aug 2020 09:57:18 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A982402F3;
+        Wed, 12 Aug 2020 09:57:13 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, stefan@agner.ch, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: gpio: Convert vf610 to json-schema
+Date:   Wed, 12 Aug 2020 15:52:21 +0800
+Message-Id: <1597218741-24899-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 09:25:17PM +0800, Kent Gibson wrote:
-> Add support for GPIO_V2_GET_LINEINFO_IOCTL and
-> GPIO_V2_GET_LINEINFO_WATCH_IOCTL.
-> 
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
-> 
-[snip]
+Convert the vf610 gpio binding to DT schema format using json-schema.
 
->  
->  		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
->  			return -EFAULT;
-> @@ -1251,7 +1353,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  		if (IS_ERR(desc))
->  			return PTR_ERR(desc);
->  
-> -		gpio_desc_to_lineinfo(desc, &lineinfo);
-> +		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
-> +		lineinfo_v2.offset = lineinfo.line_offset;
-> +		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
->  
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V1:
+	- fix reg property to pass build;
+	- add "additionalProperties: false".
+---
+ .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 -----------------
+ .../devicetree/bindings/gpio/gpio-vf610.yaml       | 81 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
 
-This is broken as gpio_desc_to_lineinfo() requires the offset to be
-already set in the info.  I could move the setting of offset before the
-call, but would rather change gpio_desc_to_lineinfo() to treat info
-strictly as output (it can determine the offset from the desc) so as
-not to trap anyone else in the future.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+deleted file mode 100644
+index ae254aa..0000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-* Freescale VF610 PORT/GPIO module
+-
+-The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
+-functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
+-each, and each PORT module has its own interrupt.
+-
+-Required properties for GPIO node:
+-- compatible : Should be "fsl,<soc>-gpio", below is supported list:
+-	       "fsl,vf610-gpio"
+-	       "fsl,imx7ulp-gpio"
+-- reg : The first reg tuple represents the PORT module, the second tuple
+-  the GPIO module.
+-- interrupts : Should be the port interrupt shared by all 32 pins.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells : Should be two. The first cell is the pin number and
+-  the second cell is used to specify the gpio polarity:
+-      0 = active high
+-      1 = active low
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+-  The second cell bits[3:0] is used to specify trigger type and level flags:
+-      1 = low-to-high edge triggered.
+-      2 = high-to-low edge triggered.
+-      4 = active high level-sensitive.
+-      8 = active low level-sensitive.
+-
+-Optional properties:
+--clocks:	Must contain an entry for each entry in clock-names.
+-		See common clock-bindings.txt for details.
+--clock-names:	A list of clock names. For imx7ulp, it must contain
+-		"gpio", "port".
+-
+-Note: Each GPIO port should have an alias correctly numbered in "aliases"
+-node.
+-
+-Examples:
+-
+-aliases {
+-	gpio0 = &gpio1;
+-	gpio1 = &gpio2;
+-};
+-
+-gpio1: gpio@40049000 {
+-	compatible = "fsl,vf610-gpio";
+-	reg = <0x40049000 0x1000 0x400ff000 0x40>;
+-	interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	gpio-ranges = <&iomuxc 0 0 32>;
+-};
+-
+-gpio2: gpio@4004a000 {
+-	compatible = "fsl,vf610-gpio";
+-	reg = <0x4004a000 0x1000 0x400ff040 0x40>;
+-	interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	gpio-ranges = <&iomuxc 0 32 32>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+new file mode 100644
+index 0000000..6ac5a78
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale VF610 PORT/GPIO module
++
++maintainers:
++  - Stefan Agner <stefan@agner.ch>
++
++description: |
++  The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
++  functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
++  each, and each PORT module has its own interrupt.
++
++  Note: Each GPIO port should have an alias correctly numbered in "aliases"
++  node.
++
++properties:
++  compatible:
++    enum:
++      - fsl,vf610-gpio
++      - fsl,imx7ulp-gpio
++
++  reg:
++    description: The first reg tuple represents the PORT module, the second tuple
++      represents the GPIO module.
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  clocks:
++    items:
++      - description: SoC GPIO clock
++      - description: SoC PORT clock
++
++  clock-names:
++    items:
++      - const: gpio
++      - const: port
++
++  gpio-ranges:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#gpio-cells"
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    gpio1: gpio@40049000 {
++        compatible = "fsl,vf610-gpio";
++        reg = <0x40049000 0x1000>, <0x400ff000 0x40>;
++        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-ranges = <&iomuxc 0 0 32>;
++    };
+-- 
+2.7.4
 
-I also intend to replace the use of strncpy, from this patch and
-elsewhere, to placate the build-bot.
-
-Cheers,
-Kent.
