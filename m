@@ -2,99 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D5B2423DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 03:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FF182424FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 07:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgHLBzG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Aug 2020 21:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
+        id S1726510AbgHLF3t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Aug 2020 01:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLBzG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 21:55:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FA6C06174A;
-        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m34so206914pgl.11;
-        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
+        with ESMTP id S1726501AbgHLF3t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Aug 2020 01:29:49 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3745C06174A;
+        Tue, 11 Aug 2020 22:29:48 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a79so433785pfa.8;
+        Tue, 11 Aug 2020 22:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
-        b=hyksJcD8gywt9zSZynx1ythhKvrfose5TqpyfpbtLU9jVYqSxYtHuLahi3Yq+LkQgd
-         /mAAFU50BpwYbDELFoko/1ZeC15ZOKH+AqpQS5ahQKoN3PpLNqcC9XLXa92ImiABubEk
-         rYMuwfZrDhdfu0bt5xjbNsrP6MBQrcpJo4tQaaGoDKTyeFDT5QN8gald0ebXI4Zpyym4
-         1BMyDhRifuJL3bl+7v8C0AXAPWZh4sE2144PwWunbJk0oELHPZTY9W655nm7FIJKa3m/
-         7BJd0ctZ4ETFdI5le+749HEFcbhn5NuoNhjw8leEGyPqrCTxKdQMQ+IDM0+xCV/bUXx5
-         TmQA==
+        bh=304tL188pyo6y/SOiT/QTty2aReGXLED7+kCMwqLL9g=;
+        b=rlHh5+NzFSHNpWwu7++E++7CQ/qxSYwfQNvETTJaVo9PKBHhVnF70jK5OUyrLVtKUG
+         aovptJnuQUXug6zB5piFdvZaTMuc1A5S7hbXvMKm1KMd+gMw66ppOOPXw6fmWlOheXt1
+         2rXD/6uJKKjaQNlOfcFRUvOC5Hi0XibOmVja2UQP61cc5o0HlQlpwFubgckpN0BYL0B4
+         kRy0R49+9K+u+RxJe+OsOiEFqVNXjAjkRlg4AoMxYWxkNDidp0BOMEY2Jlq5E/88e3SR
+         Y6GAImFPCcM+nKiUZp2SwAuYAaDHGqElHl8Uoz4qQ7VGSvl5OE11uoLZL7PjMJZI8Kv5
+         nuGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
-        b=QmDbuk8IMqMGWVCfu7zVhdGMTVTXVMkkRIBzgoKpXWn0ar+usT4qkF9qIfKeRn9Pxi
-         XWcTOJ//ag5XZQA8UmZpqsqp6vpatcS9qNZm4mg/gqla99cG1X2NqxZoC8agrcfWswFf
-         fSEy2bn5GSlC+fCLfPTuZbidDatNuQu9byUcMC2AWafDf6JM5xbp0YRvyTxwPmCKs5sq
-         5OGw0Zl/XOf2CqhW5hcBF+Qs9y4hKPF7e1ceRjiJ4737rZDfV7iZT4MrUCqMiqlubocR
-         2XCeofxJnH7AD45IfWV+dPmyFZOHLRsNn5z1JQvL9xFx0AxEx8xn+sFHUKhNq+zHS8ZT
-         VzTg==
-X-Gm-Message-State: AOAM532Lk6cANh6nz7AG98/uBeTOM54U1qiXFrBGzggCMc4S6yxnOYvy
-        2IjlJ49z+vWRlM7lIcPWjEc=
-X-Google-Smtp-Source: ABdhPJyCf4K/oGLH9l53KJJqPsYdALPiirscn2O3GPD4emqc4cfV1zPc6yyHhdsv3RWqwympyQ36ag==
-X-Received: by 2002:a62:f843:: with SMTP id c3mr8756574pfm.247.1597197305425;
-        Tue, 11 Aug 2020 18:55:05 -0700 (PDT)
+        bh=304tL188pyo6y/SOiT/QTty2aReGXLED7+kCMwqLL9g=;
+        b=sSyZyPpLE6pjaT5w5DZQ7sgQt6mb4uiJ2zhDUHOiyHJr1mmRdZJwuuS/lv5XToJy2l
+         I/LxTw7RGMdV/PA2r97hwk26C12WIN4aECJy/p7OdvNRnqq+8KhM5h/Hl2TYEmr8iQca
+         jzXbbop/pi2EN2y5re4falT2WQhve/CHN036PZW8wHsQOpocHp/7vqUjIsN2ndvRbhvi
+         suNo0qrV4SwBPR7P4tlIkbG484RLNVYe8RUvtKxlTon4uk94o4837DFvQx8xUsq46HVE
+         lD5LaN87D3WEYOZ0dgA4VbxeOUIc05po5oOEPJBFcGsx9aAZXThy80awQb3SsY+H6QAd
+         45ug==
+X-Gm-Message-State: AOAM533iRVjSiKgYlWTn5/uwHlxXnmZ1+c+8Am/UKfAE2uVqwy/ZnoSO
+        jnQMPx7mtPR75coaCd20tDBot14g
+X-Google-Smtp-Source: ABdhPJyKvlU7xcrJ/nXe72WmTCtodUwCZLcrgurEnLH8+pEuPqQzxrtYWHnz7QGiEDzMwF1wZHd0Ig==
+X-Received: by 2002:a63:597:: with SMTP id 145mr3712801pgf.119.1597210187059;
+        Tue, 11 Aug 2020 22:29:47 -0700 (PDT)
 Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id j5sm376129pfg.80.2020.08.11.18.55.01
+        by smtp.gmail.com with ESMTPSA id z62sm856910pfb.47.2020.08.11.22.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 18:55:04 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 09:54:58 +0800
+        Tue, 11 Aug 2020 22:29:46 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 13:29:41 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
-Message-ID: <20200812015458.GA8760@sol>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Subject: Re: [PATCH v3 06/18] gpiolib: cdev: support
+ GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL
+Message-ID: <20200812052941.GA116346@sol>
 References: <20200809132529.264312-1-warthog618@gmail.com>
- <20200809132529.264312-3-warthog618@gmail.com>
- <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
+ <20200809132529.264312-7-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
+In-Reply-To: <20200809132529.264312-7-warthog618@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:11:41PM +0200, Bartosz Golaszewski wrote:
-> On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
+On Sun, Aug 09, 2020 at 09:25:17PM +0800, Kent Gibson wrote:
+> Add support for GPIO_V2_GET_LINEINFO_IOCTL and
+> GPIO_V2_GET_LINEINFO_WATCH_IOCTL.
+> 
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+> 
 [snip]
-> >
-> > +/*
-> > + * Maximum number of requested lines.
-> > + *
-> > + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
-> > + * multiple of 2 to ensure 32/64-bit alignment of structs.
-> > + */
-> > +#define GPIO_V2_LINES_MAX 64
-> > +
-> 
-> If we refer to bitmaps for which helpers are defined in
-> include/linux/bitmap.h then they're not limited to 64-bits. I'd just
-> say here that we want to fit into 64-bit integers for simplicity.
-> 
 
-Strictly speaking, userspace doesn't know about include/linux/bitmap.h,
-but I'm happy to remove any ambiguity.
+>  
+>  		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+>  			return -EFAULT;
+> @@ -1251,7 +1353,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  		if (IS_ERR(desc))
+>  			return PTR_ERR(desc);
+>  
+> -		gpio_desc_to_lineinfo(desc, &lineinfo);
+> +		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
+> +		lineinfo_v2.offset = lineinfo.line_offset;
+> +		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
+>  
 
-Does this work for you?:
+This is broken as gpio_desc_to_lineinfo() requires the offset to be
+already set in the info.  I could move the setting of offset before the
+call, but would rather change gpio_desc_to_lineinfo() to treat info
+strictly as output (it can determine the offset from the desc) so as
+not to trap anyone else in the future.
 
- * Must be no greater than 64, as bitmaps are restricted here to 64-bits
- * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
- * structs.
+I also intend to replace the use of strncpy, from this patch and
+elsewhere, to placate the build-bot.
 
 Cheers,
 Kent.
