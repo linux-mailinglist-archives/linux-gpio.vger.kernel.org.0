@@ -2,99 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4D30242E45
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 19:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C178C242F82
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 21:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHLRtG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Aug 2020 13:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgHLRtF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Aug 2020 13:49:05 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43061C061384
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Aug 2020 10:49:05 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id r19so1405995qvw.11
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Aug 2020 10:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D31gvXwueiTQW0zOx6WQYb+FpRC9rVXNJ4C7VuyhJ1o=;
-        b=1tEVefoD7l/vL0aoMx+sEWhWifIrF4HpNaz+cqo0t8WUEXAQKbrMjqwNPZJ6hZisLN
-         igNElCrRIdGAPDhDjTpzCyjqWf8sxs7sqzgeNCLIFFjaVUkNn4LoaNyAsb22wB3lWCkB
-         Ka9Zp39azUXQA1li48UvI8rKs4kcMLEv4nj/D5HyIrQPDfm11N25yo9BeKtJU0IwlqOf
-         WiL8fBg58jhiEMM/oMGphDuPqlWKHBmBDctAadd/3zcEaoq98zs9tV1Cpojn5CGy5M3q
-         5c9b4+HctAqnE9BreK7flKjW+zN5GaH/usZi+aL1X5Cp5aM1ca/T6EQLayxwaVZp1zil
-         mzsQ==
+        id S1726512AbgHLTo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Aug 2020 15:44:29 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41991 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgHLTo3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Aug 2020 15:44:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id j8so4275396ioe.9;
+        Wed, 12 Aug 2020 12:44:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D31gvXwueiTQW0zOx6WQYb+FpRC9rVXNJ4C7VuyhJ1o=;
-        b=fBJWJHsh+vzJHS3klRUy1JFhvthvViOpG04cW+FQ5Ir0mfN6/AvPdVXkGLJ2vgyCXN
-         3v4I+XGZqUNoKfpGgVSC0RKad+s5imbA00B83SThK7bQvi+mVhyf8bvq0HDMk2OUkQaH
-         Z9MzoxgdiKjYwV5lvqlzNjdf8CoOrwkY6jB2Mwdk075pTeOinGSGWt9976JOjstdk21B
-         22Z+bfVKBJPnVu4O40+8s7WuqzchHpOu8ml7B9ktJOifU6Eh18HDh6VPJM9vY8p0TUjR
-         H5N5I+QhLlt0+4sr7HGTUqtMGBcGffmGXAS/Tho7nvTfouH/87SznGidX4n9eLbaJNCo
-         IoBg==
-X-Gm-Message-State: AOAM533AoV9Lvyyr7Puc9UUgA4qmPUqEherO7YxIwHG+lKNco9pk5Pbt
-        cSE1AbcQ2uE8rk4ReePNbOD/7MXteYOcAlAaH2svsg==
-X-Google-Smtp-Source: ABdhPJzUmKRjdyp7ZnZ6xpunrA6u4/Q6+rQyHfo/Kb5MT2x8R76uUR3KRSRWXOzP+aUMh4P8c7JfqxymnNoxp3/x+BY=
-X-Received: by 2002:ad4:5502:: with SMTP id az2mr763112qvb.148.1597254544478;
- Wed, 12 Aug 2020 10:49:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PI60pBGvyY4YK8WMXJBtlmGtDEkgGzmHg6VvPJsaQpE=;
+        b=VI8TkoCAWHmXRNWnVSOtPSHzOP19XClJNzHauG2MBv4GYmrB7c7Wh9Tlk5QShe0HSa
+         j0WnUHuaa5gP3rMEEhvc1uWlGY7h1VtTLCstorz17CFwZlyZvHNiyzLH6UzDzZjPSbcZ
+         UEOTBRLxPT8bTVjHmCzxsqNL5ObnvaA9+LKNY6rxYhizDGGdyluDQPZzYyZnYo30d4EW
+         AUiYW0qozM1Ov1Et8qRe2L5sL1xAMJMHEUrC6+kFaiFkseB1EF9rIn67nI5IrpJx5VQP
+         zdXIqibDymFpKTayZAIoa18es9BDK3BYkQNyoIn429noWMaIAwUbCID7iaFaRIuVAG4y
+         /sag==
+X-Gm-Message-State: AOAM531AwY8fiLPneBuhxDFPPtq+/anttgmYgwm5I6NKAEva2YvKyGbo
+        DXWNMLVaIHTdQ+rzGqceUA==
+X-Google-Smtp-Source: ABdhPJxtdZ8IsN1XGqyW7GSknz7VmFg9WPtG4jxsvpLrp0sWIqvvPreSCVcRhSyLZtRAjKXTfLscmA==
+X-Received: by 2002:a6b:6c13:: with SMTP id a19mr1392236ioh.31.1597261468379;
+        Wed, 12 Aug 2020 12:44:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id m7sm1540808ilq.45.2020.08.12.12.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 12:44:27 -0700 (PDT)
+Received: (nullmailer pid 2587368 invoked by uid 1000);
+        Wed, 12 Aug 2020 19:44:23 -0000
+Date:   Wed, 12 Aug 2020 13:44:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     sean.wang@mediatek.com, matthias.bgg@gmail.com,
+        linus.walleij@linaro.org, srv_heupstream@mediatek.com,
+        jg_poxu@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, seiya.wang@mediatek.com,
+        eddie.huang@mediatek.com, biao.huang@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        sin_jieyang@mediatek.com, erin.lo@mediatek.com,
+        sj.huang@mediatek.com, chuanjia.liu@mediatek.com,
+        devicetree@vger.kernel.org, sean.wang@kernel.org,
+        linux-arm-kernel@lists.infradead.org, hongzhou.yang@mediatek.com,
+        hui.liu@mediatek.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: mt8192: add pinctrl file
+Message-ID: <20200812194423.GA2587320@bogus>
+References: <20200807074905.23468-1-zhiyong.tao@mediatek.com>
+ <20200807074905.23468-2-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-References: <20200809132529.264312-1-warthog618@gmail.com> <20200809132529.264312-3-warthog618@gmail.com>
- <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com> <20200812015458.GA8760@sol>
-In-Reply-To: <20200812015458.GA8760@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 12 Aug 2020 19:48:53 +0200
-Message-ID: <CAMpxmJVbVWKaY5QuUFn9XxhJQ2-YFRTowk13_Lnt9kyQT=+-WQ@mail.gmail.com>
-Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807074905.23468-2-zhiyong.tao@mediatek.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 3:55 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Tue, Aug 11, 2020 at 09:11:41PM +0200, Bartosz Golaszewski wrote:
-> > On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> [snip]
-> > >
-> > > +/*
-> > > + * Maximum number of requested lines.
-> > > + *
-> > > + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
-> > > + * multiple of 2 to ensure 32/64-bit alignment of structs.
-> > > + */
-> > > +#define GPIO_V2_LINES_MAX 64
-> > > +
-> >
-> > If we refer to bitmaps for which helpers are defined in
-> > include/linux/bitmap.h then they're not limited to 64-bits. I'd just
-> > say here that we want to fit into 64-bit integers for simplicity.
-> >
->
-> Strictly speaking, userspace doesn't know about include/linux/bitmap.h,
-> but I'm happy to remove any ambiguity.
->
-> Does this work for you?:
->
->  * Must be no greater than 64, as bitmaps are restricted here to 64-bits
->  * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
->  * structs.
->
-> Cheers,
-> Kent.
+On Fri, 07 Aug 2020 15:49:03 +0800, Zhiyong Tao wrote:
+> This patch adds pinctrl file for mt8192.
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  include/dt-bindings/pinctrl/mt8192-pinfunc.h | 1344 ++++++++++++++++++
+>  1 file changed, 1344 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/mt8192-pinfunc.h
+> 
 
-Yes, perfect.
-
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
