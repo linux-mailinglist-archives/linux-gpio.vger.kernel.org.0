@@ -2,84 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E07982421FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Aug 2020 23:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D5B2423DF
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Aug 2020 03:55:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgHKVbx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Aug 2020 17:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
+        id S1726173AbgHLBzG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Aug 2020 21:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgHKVbw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 17:31:52 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375F5C061787
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f9so81709pju.4
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
+        with ESMTP id S1726143AbgHLBzG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Aug 2020 21:55:06 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FA6C06174A;
+        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m34so206914pgl.11;
+        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
-        b=ic5XdKk6gydxMYgraTNOoIX9Qr9I7gTNGubgAXooXrZz721fDPz4m2EjMsb00Sz127
-         fbvckWvmv30KrMBqS0QhDkKbbJcxA7HlsSi94cHs+zcHYOvkq3S86i84M0rblZRajpOf
-         IcSFe1DZhwHH7CyGIHN64J+Tvo+CwqO7p+XM4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
+        b=hyksJcD8gywt9zSZynx1ythhKvrfose5TqpyfpbtLU9jVYqSxYtHuLahi3Yq+LkQgd
+         /mAAFU50BpwYbDELFoko/1ZeC15ZOKH+AqpQS5ahQKoN3PpLNqcC9XLXa92ImiABubEk
+         rYMuwfZrDhdfu0bt5xjbNsrP6MBQrcpJo4tQaaGoDKTyeFDT5QN8gald0ebXI4Zpyym4
+         1BMyDhRifuJL3bl+7v8C0AXAPWZh4sE2144PwWunbJk0oELHPZTY9W655nm7FIJKa3m/
+         7BJd0ctZ4ETFdI5le+749HEFcbhn5NuoNhjw8leEGyPqrCTxKdQMQ+IDM0+xCV/bUXx5
+         TmQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
-        b=HutSHdGi7Q54S7Gjt9GyllXGmycOa6z2MtQ423MWpldqGi3ht8Xw8CHC/JuX1/zKt5
-         yHirwlufsYNLh0bO3pwEwJfzr8pfZxn40QOzP5VsHl6Tn8JSGMW1t5Lu0QCCFqXJePww
-         cpMSRJ1eQaTnb2/vAkbm4pgeQv/9LmNJGO2YdvCr6Z64ITa5sao1gdmasryqeMIxo7tk
-         seAUDrGHLNcUzUOrlvLEJj2sgyXM8WxBiZrq56DhiZ8NVMxpUpKNmK9EAgDEkOmfAGSA
-         IjBTLiryhYJDA5/zn1aZdL5OAP9FqN9vV/7q4NxjmcHsdlYmqS34RnK4k1J9E+BjS76w
-         ITOA==
-X-Gm-Message-State: AOAM53105ZeJY8fA3EGL+YECkTg5NmZ6GqqJ7wE92xsVcl9ZmaV07ilz
-        o43aNnTcOifSzrfuVp5Gl6r92w==
-X-Google-Smtp-Source: ABdhPJyqL4TIDkhnnHdUryy4LGUhSjye4Oo+pBg8Wb1pq/wCqARm+tYcIqMsZ0lHBAcH7HwPz+7cPg==
-X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr2101777plt.21.1597181511570;
-        Tue, 11 Aug 2020 14:31:51 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id w15sm3796047pjk.13.2020.08.11.14.31.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
+        b=QmDbuk8IMqMGWVCfu7zVhdGMTVTXVMkkRIBzgoKpXWn0ar+usT4qkF9qIfKeRn9Pxi
+         XWcTOJ//ag5XZQA8UmZpqsqp6vpatcS9qNZm4mg/gqla99cG1X2NqxZoC8agrcfWswFf
+         fSEy2bn5GSlC+fCLfPTuZbidDatNuQu9byUcMC2AWafDf6JM5xbp0YRvyTxwPmCKs5sq
+         5OGw0Zl/XOf2CqhW5hcBF+Qs9y4hKPF7e1ceRjiJ4737rZDfV7iZT4MrUCqMiqlubocR
+         2XCeofxJnH7AD45IfWV+dPmyFZOHLRsNn5z1JQvL9xFx0AxEx8xn+sFHUKhNq+zHS8ZT
+         VzTg==
+X-Gm-Message-State: AOAM532Lk6cANh6nz7AG98/uBeTOM54U1qiXFrBGzggCMc4S6yxnOYvy
+        2IjlJ49z+vWRlM7lIcPWjEc=
+X-Google-Smtp-Source: ABdhPJyCf4K/oGLH9l53KJJqPsYdALPiirscn2O3GPD4emqc4cfV1zPc6yyHhdsv3RWqwympyQ36ag==
+X-Received: by 2002:a62:f843:: with SMTP id c3mr8756574pfm.247.1597197305425;
+        Tue, 11 Aug 2020 18:55:05 -0700 (PDT)
+Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
+        by smtp.gmail.com with ESMTPSA id j5sm376129pfg.80.2020.08.11.18.55.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:31:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Aug 2020 18:55:04 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 09:54:58 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
+Message-ID: <20200812015458.GA8760@sol>
+References: <20200809132529.264312-1-warthog618@gmail.com>
+ <20200809132529.264312-3-warthog618@gmail.com>
+ <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Tue, 11 Aug 2020 14:31:49 -0700
-Message-ID: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Maulik Shah (2020-08-10 04:21:00)
-> Clear previous kernel's configuration during init by resetting
-> interrupts in enable bank to zero.
+On Tue, Aug 11, 2020 at 09:11:41PM +0200, Bartosz Golaszewski wrote:
+> On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+[snip]
+> >
+> > +/*
+> > + * Maximum number of requested lines.
+> > + *
+> > + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
+> > + * multiple of 2 to ensure 32/64-bit alignment of structs.
+> > + */
+> > +#define GPIO_V2_LINES_MAX 64
+> > +
+> 
+> If we refer to bitmaps for which helpers are defined in
+> include/linux/bitmap.h then they're not limited to 64-bits. I'd just
+> say here that we want to fit into 64-bit integers for simplicity.
+> 
 
-Can you please add some more information here about why we're not
-clearing all the pdc irqs and only the ones that are listed in DT? Is
-that because the pdc is shared between exception levels of the CPU and
-so some irqs shouldn't be used? Does the DT binding need to change to
-only list the hwirqs that are usable by the OS instead of the ones that
-are usable for the entire system? The binding doesn't mention this at
-all so I am just guessing here.
+Strictly speaking, userspace doesn't know about include/linux/bitmap.h,
+but I'm happy to remove any ambiguity.
 
->=20
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Does this work for you?:
+
+ * Must be no greater than 64, as bitmaps are restricted here to 64-bits
+ * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
+ * structs.
+
+Cheers,
+Kent.
