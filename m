@@ -2,187 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 460622437A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 11:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C1D4243895
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 12:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHMJ3W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 05:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMJ3W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 05:29:22 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8910BC061757;
-        Thu, 13 Aug 2020 02:29:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597310959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
-        b=Vzk+YeoEP4LH28amktQIViJ8D9qMr/DHRfX/C89rl4+p8WIQ7HxIwKIZi1GnX9ILYvvox7
-        ikl+xVRjiDXBraLXEcZqYAKR+G0Vpg5CBw7Iskmlslxe70tBQ+95nKOHzjvpjGFagzxS4B
-        TFAKUTKl5Yt9PN9e0M7DLx2ak/iQoS6hrCwcMnsPeEhoLAYDEHYOYs19nZJUzAUcd+jVHG
-        4ypxj9WucKRV6r6CFoguKAjXQcZCZVllHyd9ZkIis4O4hUsISUcEYxXvLLW68jFPAsYpcj
-        wjgTJ6Q5/xzow0FdoX9MRoFoxAbfh1hGMftqFhkqCGRgt8evsh/XPFeHx1slgg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597310959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
-        b=b9PXrdqWDzOqx5rZ1FfLBRohEdSAf3TXIS2lBOlq7JURbLGYkOh1eSvgitaTkmQyNf/VvX
-        bnbJBkyqO+25WDCw==
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-In-Reply-To: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-Date:   Thu, 13 Aug 2020 11:29:18 +0200
-Message-ID: <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
+        id S1726253AbgHMKbf convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 13 Aug 2020 06:31:35 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35289 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726048AbgHMKbf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:31:35 -0400
+Received: from [37.161.87.136] (port=46755 helo=[192.168.42.162])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1k6AW9-000FlW-5k; Thu, 13 Aug 2020 12:31:29 +0200
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <20200812203618.2656699-1-robh@kernel.org>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
+Date:   Thu, 13 Aug 2020 12:31:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Maulik Shah <mkshah@codeaurora.org> writes:
-> From: Douglas Anderson <dianders@chromium.org>
->
-> The "struct irq_chip" has two callbacks in it: irq_suspend() and
-> irq_resume().  These two callbacks are interesting because sometimes
-> an irq chip needs to know about suspend/resume, but they are a bit
-> awkward because:
-> 1. They are called once for the whole irq_chip, not once per IRQ.
->    It's passed data for one of the IRQs enabled on that chip.  That
->    means it's up to the irq_chip driver to aggregate.
-> 2. They are only called if you're using "generic-chip", which not
->    everyone is.
-> 3. The implementation uses syscore ops, which apparently have problems
->    with s2idle.
+Hi Rob,
 
-The main point is that these callbacks are specific to generic chip and
-not used anywhere else.
+On 12/08/20 22:36, Rob Herring wrote:
+> Clean-up incorrect indentation, extra spaces, long lines, and missing
+> EOF newline in schema files. Most of the clean-ups are for list
+> indentation which should always be 2 spaces more than the preceding
+> keyword.
+> 
+> Found with yamllint (which I plan to integrate into the checks).
 
-> Probably the old irq_suspend() and irq_resume() callbacks should be
-> deprecated.
+[...]
 
-You need to analyze first what these callbacks actually do. :)
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> index 3d4e1685cc55..28c6461b9a9a 100644
+> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> @@ -95,10 +95,10 @@ allOf:
+>        # Devices without builtin crystal
+>        properties:
+>          clock-names:
+> -            minItems: 1
+> -            maxItems: 2
+> -            items:
+> -              enum: [ xin, clkin ]
+> +          minItems: 1
+> +          maxItems: 2
+> +          items:
+> +            enum: [ xin, clkin ]
+>          clocks:
+>            minItems: 1
+>            maxItems: 2
 
-> Let's introcuce a nicer API that works for all irq_chip devices.
+Thanks for noticing, LGTM.
 
-s/Let's intro/Intro/
+[...]
 
-Let's is pretty useless in a changelog especially if you read it some
-time after the patch got applied.
-
-> This will be called by the core and is called once per IRQ.  The core
-> will call the suspend callback after doing its normal suspend
-> operations and the resume before its normal resume operations.
-
-Will be? You are adding the code which calls that unconditionally even.
-
-> +void suspend_one_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = desc->irq_data.chip;
-> +
-> +	if (chip->irq_suspend_one)
-> +		chip->irq_suspend_one(&desc->irq_data);
-> +}
-> +
-> +void resume_one_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = desc->irq_data.chip;
-> +
-> +	if (chip->irq_resume_one)
-> +		chip->irq_resume_one(&desc->irq_data);
-> +}
-
-There not much of a point to have these in chip.c. The functionality is
-clearly pm.c only.
-
->  static bool suspend_device_irq(struct irq_desc *desc)
->  {
-> +	bool sync = false;
-> +
->  	if (!desc->action || irq_desc_is_chained(desc) ||
->  	    desc->no_suspend_depth)
-> -		return false;
-> +		goto exit;
-
-What?
-
-If no_suspend_depth is > 0 why would you try to tell the irq chip
-that this line needs to be suspended?
-
-If there is no action, then the interrupt line is in shut down
-state. What's the point of suspending it?
-
-Chained interrupts are special and you really have to think hard whether
-calling suspend for them unconditionally is a good idea. What if a
-wakeup irq is connected to this chained thing?
-
->  	if (irqd_is_wakeup_set(&desc->irq_data)) {
->  		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
-> +
->  		/*
->  		 * We return true here to force the caller to issue
->  		 * synchronize_irq(). We need to make sure that the
->  		 * IRQD_WAKEUP_ARMED is visible before we return from
->  		 * suspend_device_irqs().
->  		 */
-> -		return true;
-> +		sync = true;
-> +		goto exit;
-
-So again. This interrupt is a wakeup source. What's the point of
-suspending it unconditionally.
-
->  	}
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> index d7dac16a3960..36dc7b56a453 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> @@ -33,8 +33,8 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
 >  
->  	desc->istate |= IRQS_SUSPENDED;
-> @@ -95,7 +99,10 @@ static bool suspend_device_irq(struct irq_desc *desc)
->  	 */
->  	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
->  		mask_irq(desc);
-> -	return true;
-> +
-> +exit:
-> +	suspend_one_irq(desc);
-> +	return sync;
+>    touchscreen-min-pressure:
+> -    description: minimum pressure on the touchscreen to be achieved in order for the
+> -                 touchscreen driver to report a touch event.
+> +    description: minimum pressure on the touchscreen to be achieved in order
+> +      for the touchscreen driver to report a touch event.
 
-So what happens in this case:
+Out of personal taste, I find the original layout more pleasant and
+readable. This third option is also good, especially for long descriptions:
 
-   CPU0                         CPU1
-   interrupt                    suspend_device_irq()
-     handle()                     chip->suspend_one()
-       action()                 ...              
-       chip->fiddle();
+  description:
+    minimum pressure on the touchscreen to be achieved in order for the
+    touchscreen driver to report a touch event.
 
-????
+At first glance yamllint seems to support exactly these two by default:
 
-What is the logic here and how is this going to work under all
-circumstances without having magic hacks in the irq chip to handle all
-the corner cases?
+> With indentation: {spaces: 4, check-multi-line-strings: true}
+> 
+> the following code snippet would PASS:
+> 
+> Blaise Pascal:
+>     Je vous écris une longue lettre parce que
+>     je n'ai pas le temps d'en écrire une courte.
+> 
+> the following code snippet would PASS:
+> 
+> Blaise Pascal: Je vous écris une longue lettre parce que
+>                je n'ai pas le temps d'en écrire une courte.
+> 
+> the following code snippet would FAIL:
+> 
+> Blaise Pascal: Je vous écris une longue lettre parce que
+>   je n'ai pas le temps d'en écrire une courte.
+> 
+(https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.indentation)
 
-This needs way more thoughts vs. the various states and sync
-requirements. Just adding callbacks, invoking them unconditionally, not
-giving any rationale how the whole thing is supposed to work and then
-let everyone figure out how to deal with the state and corner case
-handling at the irq chip driver level does not cut it, really.
 
-State handling is core functionality and if irq chip drivers have
-special requirements then they want to be communicated with flags and/or
-specialized callbacks.
+-- 
+Luca
 
-Thanks,
-
-        tglx
