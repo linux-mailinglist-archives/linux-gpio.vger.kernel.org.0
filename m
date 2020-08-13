@@ -2,138 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33438243145
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 01:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D4762433B2
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 07:47:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHLXFW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Aug 2020 19:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgHLXFV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Aug 2020 19:05:21 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        id S1725978AbgHMFrg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 01:47:36 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42166 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725954AbgHMFrg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Aug 2020 01:47:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597297655; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=b0DJcUHjzFWq9ObgzTOR68emrB/phIhPyW57gsGau7g=; b=jowLIS51shkTF9sc/BtPZJ5C/CDEwgDSHJspmhHqn8WGtf3L8kZHgFDDtmoDT5vCMh2nBp4Q
+ yCeMtPhhBbs91TIPJUqFPtcsflEBX68Okw1G5yoGLf4oTwj7SLK6+EYbLICSlJbsGGDEkKE5
+ Yz29qxl4RpW2YCKYA4CAQJ7YkjA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f34d3f61e4d3989d458c6ba (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 05:47:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 330DFC433C9; Thu, 13 Aug 2020 05:47:34 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.77.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B05822BF3;
-        Wed, 12 Aug 2020 23:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597273520;
-        bh=6kwxpshrOlbOHxWnmXC6+dWtt2L5X/Drj58h8rpdMCA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pXDZRt76CPWxVlpilBeAf66pO/Ch1+UOaSOgdUpIGMcw2xAS2mFHBEgkKJVucyrd/
-         hFrdQmO7EEU0DOv8a5XHHMAntvFEpH8ijK+mCysryubzOS2R2XGypW54K9swm6SsIs
-         b7zU39V5JMU64Uhe2oipgDLWWHGgSe5VXnIpigps=
-Received: by mail-oi1-f170.google.com with SMTP id u63so3384377oie.5;
-        Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531IZBzkm9SW7u4Ll0dz2BzE1TEIB7GJrdP7SZFkd9Fl6578K6/D
-        TZuN3gv5Y+jYhGEA04MJz9gQHCjYIc3va2d6mQ==
-X-Google-Smtp-Source: ABdhPJx2qQebZiNBPQzgE1fpdypeYG9ycnPVX3JxYluiX5nbkNkxeZlpxpCsMAonDMWnL7JIOVI286FePABwvHucHl8=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr1235268oif.106.1597273520003;
- Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98AE7C433C6;
+        Thu, 13 Aug 2020 05:47:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98AE7C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
+ <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
+ <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <7a0a6fcd-33ed-0427-6b42-b5d467f743f5@codeaurora.org>
+Date:   Thu, 13 Aug 2020 11:17:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200812203618.2656699-1-robh@kernel.org> <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
-In-Reply-To: <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 12 Aug 2020 17:05:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
-Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-To:     Joe Perches <joe@perches.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 4:32 PM Joe Perches <joe@perches.com> wrote:
+Hi,
+
+On 8/12/2020 1:02 AM, Stephen Boyd wrote:
+> Can the subject be more specific? "pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED flag"?
+
+Sure i can update subject in v5.
+
+Thanks,
+Maulik
+
 >
-> On Wed, 2020-08-12 at 14:36 -0600, Rob Herring wrote:
-> > Clean-up incorrect indentation, extra spaces, long lines, and missing
-> > EOF newline in schema files. Most of the clean-ups are for list
-> > indentation which should always be 2 spaces more than the preceding
->                                      ^
-> > keyword.
+> Quoting Maulik Shah (2020-08-10 04:20:54)
+>> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+>> during suspend and mask before setting irq type.
+>>
+>> Masking before changing type should make sure any spurious interrupt
+>> is not detected during this operation.
+>>
+>> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
 
-keyword is the key part...
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-> []
-> > diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > index 192ded470e32..f0daf990e077 100644
-> > --- a/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > @@ -67,9 +67,9 @@ patternProperties:
-> >        compatible:
-> >          items:
-> >            - enum:
-> > -            - arm,integrator-ap-syscon
-> > -            - arm,integrator-cp-syscon
-> > -            - arm,integrator-sp-syscon
-> > +              - arm,integrator-ap-syscon
-> > +              - arm,integrator-cp-syscon
-> > +              - arm,integrator-sp-syscon
->
-> Confused a bit here.
->           - enum:
->         10 spaces to dash
-> old line:
->             - arm,integrator-ap-syscon
->         12 spaces to dash
-> new line:
->               - arm,integrator-ap-syscon
->         14 spaces to dash
->
-> Is it supposed to be 2 spaces more than the preceding line
-> or 4 more?
-
-If the preceding line is a list entry (i.e. starts with '-'), then
-it's 4 more spaces. It's always 2 more spaces than the preceding
-keyword start (aka json-schema vocabulary).
-
-Arguably, this style is a bit inconsistent in that the '-' counts
-toward as indentation of the current line, but not the preceding line.
-However, I think this style is a bit less error prone and easier to
-review. With the other style (always N more spaces) it's harder to
-distinguish lists vs. dicts. For example, you can have something like
-this:
-
-- key:
-  - foo
-  - bar
-
-- key:
-    foo
-    bar
-
-- key:
-  - foo
-    bar
-
-All 3 of these could be valid. Which one was intended? (Can't really
-tell here, but you can with actual DT schema.)
-
-Rob
