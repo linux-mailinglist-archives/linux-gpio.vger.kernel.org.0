@@ -2,95 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D4762433B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 07:47:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AFFC24346D
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgHMFrg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 01:47:36 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:42166 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725954AbgHMFrg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:47:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597297655; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=b0DJcUHjzFWq9ObgzTOR68emrB/phIhPyW57gsGau7g=; b=jowLIS51shkTF9sc/BtPZJ5C/CDEwgDSHJspmhHqn8WGtf3L8kZHgFDDtmoDT5vCMh2nBp4Q
- yCeMtPhhBbs91TIPJUqFPtcsflEBX68Okw1G5yoGLf4oTwj7SLK6+EYbLICSlJbsGGDEkKE5
- Yz29qxl4RpW2YCKYA4CAQJ7YkjA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f34d3f61e4d3989d458c6ba (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 05:47:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 330DFC433C9; Thu, 13 Aug 2020 05:47:34 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
-        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.29.129] (unknown [49.36.77.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98AE7C433C6;
-        Thu, 13 Aug 2020 05:47:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98AE7C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
- <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <7a0a6fcd-33ed-0427-6b42-b5d467f743f5@codeaurora.org>
-Date:   Thu, 13 Aug 2020 11:17:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726529AbgHMHJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 03:09:37 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:35267 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgHMHJh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 03:09:37 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D798Jb8012557, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D798Jb8012557
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 13 Aug 2020 15:09:08 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:09:08 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:09:08 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
+ RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
+ 15.01.1779.005; Thu, 13 Aug 2020 15:09:08 +0800
+From:   =?big5?B?VFlfQ2hhbmdbsWmkbLZoXQ==?= <tychang@realtek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "afaerber@suse.de" <afaerber@suse.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 4/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
+Thread-Topic: [PATCH v2 4/8] dt-bindings: pinctrl: realtek: Add Realtek DHC
+ SoC rtd1195
+Thread-Index: AQHWW6sA2D84X/x43EmLwrf4QwIbEKk1xoaQ
+Date:   Thu, 13 Aug 2020 07:09:07 +0000
+Message-ID: <a85ea28815c74b1282cb762073e43c6e@realtek.com>
+References: <20200716023338.14922-1-tychang@realtek.com>
+ <20200716023338.14922-5-tychang@realtek.com> <20200716195458.GA2739358@bogus>
+In-Reply-To: <20200716195458.GA2739358@bogus>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.181.134]
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 8/12/2020 1:02 AM, Stephen Boyd wrote:
-> Can the subject be more specific? "pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED flag"?
-
-Sure i can update subject in v5.
-
-Thanks,
-Maulik
-
->
-> Quoting Maulik Shah (2020-08-10 04:20:54)
->> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
->> during suspend and mask before setting irq type.
->>
->> Masking before changing type should make sure any spurious interrupt
->> is not detected during this operation.
->>
->> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gU2Vu
+dDogRnJpZGF5LCBKdWx5IDE3LCAyMDIwIDM6NTUgQU0NCj4gVG86IFRZX0NoYW5nW7FppGy2aF0g
+PHR5Y2hhbmdAcmVhbHRlay5jb20+DQo+IENjOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZy
+YWRlYWQub3JnOyBhZmFlcmJlckBzdXNlLmRlOw0KPiBsaW51cy53YWxsZWlqQGxpbmFyby5vcmc7
+IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYy
+IDQvOF0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IHJlYWx0ZWs6IEFkZCBSZWFsdGVrIERIQyBTb0MN
+Cj4gcnRkMTE5NQ0KPiANCj4gT24gVGh1LCBKdWwgMTYsIDIwMjAgYXQgMTA6MzM6MzRBTSArMDgw
+MCwgVFkgQ2hhbmcgd3JvdGU6DQo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmcgRG9jdW1lbnRh
+dGlvbiBmb3IgcnRkMTE5NSBwaW5jdHJsIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IFRZIENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vcGluY3Ry
+bC9yZWFsdGVrLHJ0ZDExOTUtcGluY3RybC55YW1sICAgICAgfCAxMDQgKysrKysrKysrKysrKysr
+KysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDQgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
+bC9yZWFsdGVrLHJ0ZDExOTUtcGluY3RybC55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEx
+OTUtcGluY3RybC55YQ0KPiA+IG1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDExOTUtcGluY3RybC55YQ0KPiA+IG1sDQo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjUwYTk1YmM0NmUyYg0K
+PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDExOTUtcGluY3RyDQo+ID4gKysrIGwueWFtbA0KPiA+
+IEBAIC0wLDAgKzEsMTA0IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwt
+Mi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKSAlWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDoN
+Cj4gPiAraHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGluY3RybC9yZWFsdGVrLHJ0ZDEx
+OTUtcGluY3RybC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0
+YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBSZWFsdGVrIERIQyBSVEQx
+MTk1IHBpbiBjb250cm9sDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIEFuZHJl
+YXMgRmFyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4g
+PiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgZW51bToNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0
+ZDExOTUtaXNvLXBpbmN0cmwNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDExOTUtY3J0LXBpbmN0
+cmwNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArcmVxdWly
+ZWQ6DQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiArDQo+ID4gKyNQSU4g
+Q09ORklHVVJBVElPTiBOT0RFUw0KPiA+ICtwYXR0ZXJuUHJvcGVydGllczoNCj4gPiArICAnLXBp
+bnMkJzoNCj4gPiArICAgIHR5cGU6IG9iamVjdA0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4g
+KyAgICAgIFBpbmN0cmwgbm9kZSdzIGNsaWVudCBkZXZpY2VzIHVzZSBzdWJub2RlcyBmb3IgZGVz
+aXJlZCBwaW4NCj4gY29uZmlndXJhdGlvbi4NCj4gPiArICAgICAgQ2xpZW50IGRldmljZSBzdWJu
+b2RlcyB1c2UgYmVsb3cgc3RhbmRhcmQgcHJvcGVydGllcy4NCj4gPiArICAgIGFsbE9mOg0KPiA+
+ICsgICAgICAtICRyZWY6ICIvc2NoZW1hcy9waW5jdHJsL3BpbmNmZy1ub2RlLnlhbWwiDQo+ID4g
+Kw0KPiA+ICsgICAgcHJvcGVydGllczoNCj4gPiArICAgICAgZ3JvdXBzOg0KPiA+ICsgICAgICAg
+IGl0ZW1zOg0KPiA+ICsgICAgICAgICAgZW51bTogWyBpc29fZ3Bpb18wLCBpc29fZ3Bpb18xLCB1
+c2IwLCB1c2IxLCB2ZmRfY3NfbiwNCj4gPiArICAgICAgICAgIHZmZF9jbGssIHZmZF9kLCBpcl9y
+eCwgaXJfdHgsIHVyMF9yeCwgdXIwX3R4LA0KPiA+ICsgICAgICAgICAgdXIxX3J4LCB1cjFfdHgs
+IHVyMV9jdHNfbiwgdXIxX3J0c19uLCBpMmNfc2NsXzAsDQo+ID4gKyAgICAgICAgICBpMmNfc2Rh
+XzAsIGV0bl9sZWRfbGluaywgZXRuX2xlZF9yeHR4LA0KPiA+ICsgICAgICAgICAgaTJjX3NjbF82
+LCBpMmNfc2RhXzYsIGFpX2xvYywgZWp0YWdfYXZjcHVfbG9jLA0KPiA+ICsgICAgICAgICAgdXIx
+X2xvYywgcHdtXzAxX29wZW5fZHJhaW4sIHB3bV8yM19vcGVuX2RyYWluLA0KPiA+ICsgICAgICAg
+ICAgZ3Bpb18wLCBncGlvXzEsIGdwaW9fMiwgZ3Bpb18zLCBncGlvXzQsIGdwaW9fNSwNCj4gPiAr
+ICAgICAgICAgIGdwaW9fNiwgZ3Bpb183LCBncGlvXzgsIG5mX2RkXzAsIG5mX2RkXzEsDQo+ID4g
+KyAgICAgICAgICBuZl9kZF8yLCBuZl9kZF8zLCBuZl9kZF80LCBuZl9kZF81LCBuZl9kZF82LA0K
+PiA+ICsgICAgICAgICAgbmZfZGRfNywgbmZfcmR5LCBuZl9yZF9uLCBuZl93cl9uLCBuZl9hbGUs
+DQo+ID4gKyAgICAgICAgICBuZl9jbGUsIG5mX2NlX25fMCwgbmZfY2Vfbl8xLCBtbWNfZGF0YV8w
+LA0KPiA+ICsgICAgICAgICAgbW1jX2RhdGFfMSwgbW1jX2RhdGFfMiwgbW1jX2RhdGFfMywgbW1j
+X2NsaywNCj4gPiArICAgICAgICAgIG1tY19jbWQsIG1tY193cCwgbW1jX2NkLCBzZGlvX2Nsaywg
+c2Rpb19kYXRhXzAsDQo+ID4gKyAgICAgICAgICBzZGlvX2RhdGFfMSwgc2Rpb19kYXRhXzIsIHNk
+aW9fZGF0YV8zLCBzZGlvX2NtZCwNCj4gPiArICAgICAgICAgIGkyY19zY2xfNSwgaTJjX3NkYV81
+LCB0cDFfZGF0YSwgdHAxX2NsaywNCj4gPiArICAgICAgICAgIHRwMV92YWxpZCwgdHAxX3N5bmMs
+IHRwMF9kYXRhLCB0cDBfY2xrLA0KPiA+ICsgICAgICAgICAgdHAwX3ZhbGlkLCB0cDBfc3luYywg
+dXNiX2lkLCBoZG1pX2hwZCwgc3BkaWYsDQo+ID4gKyAgICAgICAgICBpMmNfc2NsXzEsIGkyY19z
+ZGFfMSwgaTJjX3NjbF80LCBpMmNfc2RhXzQsDQo+ID4gKyAgICAgICAgICBzZW5zb3JfY2tvXzAs
+IHNlbnNvcl9ja29fMSwgc2Vuc29yX3JzdCwNCj4gPiArICAgICAgICAgIHNlbnNvcl9zdGJfMCwg
+c2Vuc29yX3N0Yl8xLCBlanRhZ19zY3B1X2xvYywNCj4gPiArICAgICAgICAgIGhpZl9sb2MsIGFv
+X2xvYyBdDQo+ID4gKyAgICAgICAgbWluSXRlbXM6IDENCj4gPiArDQo+ID4gKyAgICAgIGZ1bmN0
+aW9uOg0KPiA+ICsgICAgICAgIGVudW06IFsgZ3BpbywgYWlfdXIxLCBhaV92ZmQsIGF2Y3B1X2Vq
+dGFnX2lzbywNCj4gPiArICAgICAgICBhdmNwdV9lanRhZ19taXNjX2xvYywgZXRuX2xlZCwgaTJj
+MCwgaTJjMiwNCj4gPiArICAgICAgICBpMmMzLCBpMmM2LCBpcl9yeCwgaXJfdHgsIHB3bSwgc3Rh
+bmRieV9kYmcsDQo+ID4gKyAgICAgICAgdWFydDAsIHVhcnQxLCB1cjFfbWlzYywgdmZkLCBwd21f
+MDFfbm9ybWFsLA0KPiA+ICsgICAgICAgIHB3bV8yM19ub3JtYWwsIHB3bV8wMV9vcGVuX2RyYWlu
+LCBwd21fMjNfb3Blbl9kcmFpbiwNCj4gPiArICAgICAgICBhb190cDAsIGFvX2dwaW8sIGF2Y3B1
+X2VqdGFnX21pc2MsIGNwdV9sb29wLCBlbW1jLA0KPiA+ICsgICAgICAgIGdzcGksIGhpZl9taXNj
+LCBoaWZfbmYsIGkyYzEsIGkyYzIsIGkyYzMsDQo+ID4gKyAgICAgICAgaTJjNCwgaTJjNSwgbW1j
+LCBuYW5kLCBzY3B1X2VqdGFnX2dwaW8sDQo+ID4gKyAgICAgICAgc2NwdV9lanRhZ19jciwgc2Rp
+bywgc2Vuc29yLCBzcGRpZiwgdHAwLCB0cDEsDQo+ID4gKyAgICAgICAgdWFydDEsIHVzYiBdDQo+
+ID4gKw0KPiA+ICsgICAgICBkcml2ZS1zdHJlbmd0aDoNCj4gPiArICAgICAgICBlbnVtOiBbMiwg
+NCwgOF0NCj4gPiArDQo+ID4gKyAgICAgIGJpYXMtcHVsbC1kb3duOiB0cnVlDQo+ID4gKw0KPiA+
+ICsgICAgICBiaWFzLXB1bGwtdXA6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIGJpYXMtZGlzYWJs
+ZTogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5wdXQtc2NobWl0dC1kaXNhYmxlOiB0cnVlDQo+
+ID4gKw0KPiA+ICsgICAgICBpbnB1dC1zY2htaXR0LWVuYWJsZTogdHJ1ZQ0KPiA+ICsNCj4gPiAr
+ICAgIHJlcXVpcmVkOg0KPiA+ICsgICAgICAtIGdyb3Vwcw0KPiA+ICsgICAgICAtIGZ1bmN0aW9u
+DQo+ID4gKw0KPiA+ICsgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+IA0KPiBBbHNv
+IG5lZWQgYSB0b3AtbGV2ZWwgJ2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZScNCg0KSSB3aWxs
+IGFkZCB0aGlzIGluIHBhdGNoIHYzLg0KDQo+IA0KPiBXaXRoIHRoYXQsDQo+IA0KPiBSZXZpZXdl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQoNCkJlc3QgUmVnYXJkcywN
+ClRZQ2hhbmcNCg0KPiAtLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9y
+ZSBwcmludGluZyB0aGlzIGUtbWFpbC4NCg==
