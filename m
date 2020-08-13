@@ -2,102 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EFCA2434FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48117243539
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:49:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHMHb0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 03:31:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:52879 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgHMHbZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:31:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597303885; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=10zIpoDC5WFOJCsOf60NRljx1E04tbY7lNT51eZXHZw=; b=Adt5guPra0Eu5XTN4qmFuvouaRilW6TEhajG0A+wV2RaDr5F5Ul6ySw+0EYj4kIm4VbzhkKx
- VeTs8JuMzkgFr5vtZ8r8RJNJgGWrI4/Hpu9Bn54mDLoEyZnOhsri6NCaAvIF00kyMCaTUGt0
- 7ifNxL2/5cl6uVgQKTwK+9AtLu4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f34ec30247ccc308ceae74c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 07:30:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DDBD9C433CB; Thu, 13 Aug 2020 07:30:55 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
-        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.29.129] (unknown [49.36.77.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E430BC433C6;
-        Thu, 13 Aug 2020 07:30:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E430BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during
- init
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
- <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
-Date:   Thu, 13 Aug 2020 13:00:44 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726112AbgHMHtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 03:49:23 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:39081 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMHtX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 03:49:23 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D7n8FD1028958, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D7n8FD1028958
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 13 Aug 2020 15:49:08 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:49:08 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:49:08 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
+ 15.1.1779.2 via Frontend Transport; Thu, 13 Aug 2020 15:49:08 +0800
+From:   TY Chang <tychang@realtek.com>
+To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
+CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/9] pinctrl: update realtek DHC pinctrl driver
+Date:   Thu, 13 Aug 2020 15:48:59 +0800
+Message-ID: <20200813074908.889-1-tychang@realtek.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Andreas,
 
-On 8/12/2020 3:01 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-08-10 04:21:00)
->> Clear previous kernel's configuration during init by resetting
->> interrupts in enable bank to zero.
-> Can you please add some more information here about why we're not
-> clearing all the pdc irqs and only the ones that are listed in DT?
-sure.
->   Is
-> that because the pdc is shared between exception levels of the CPU and
-> so some irqs shouldn't be used? Does the DT binding need to change to
-> only list the hwirqs that are usable by the OS instead of the ones that
-> are usable for the entire system? The binding doesn't mention this at
-> all so I am just guessing here.
+This series update Realtek DHC pinctrl driver with the following details:
 
-The IRQs specified in qcom,pdc-ranges property in DT are the only ones 
-that can be used in the current OS for the PDC.
+* add missed pins
+* add pin configuration feature
+* add realtek DHC pinctrl documentation
+* fix the warnings checked by running scripts/checkpatch.pl
+* move realtek DHC pinctrl driver to realtek directory
+* add suspend/resume callback function
 
-So instead of setting entire register to zero (each reg supports 32 
-interrupts enable bit) only clearing the ones that can be used.
+Changelog:
+v3
+-add specific pin configurations for specific pins of rtd1295
+-descibe specific pin configurations in rtd1295 documentation
+-describe pins property in rtd1195 and rtd1295 documentation
+-fix pinmux function name in device tree
 
-Thanks,
-Maulik
+v2
+-remove realtek,rtd-pinctrl.yaml documentation
+-add device tree binding rtd1195 documentation
+-add deivce tree binding rtd1295 documentation
+-fix the errors running 'make dt_binding_check'
+-document the pin settings
 
->
->> Suggested-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Cc: Andreas Färber <afaerber@suse.de>
+
+
+TY Chang (9):
+  pinctrl: realtek: rtd1295: Add missed pins.
+  pinctrl: realtek: rtd1295: Add pin configs.
+  pinctrl: realtek: rtd1195: Add missed pins and pin configs.
+  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
+  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
+  arm64: dts: realtek: rtd129x: fix SDIO pinctrl node
+  pinctrl: realtek: DHC: Fix pinctrl driver coding style according to
+    checkpatch.pl.
+  pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and
+    rename.
+  pinctrl: realtek: DHC: Add suspend/resume callback function.
+
+ .../pinctrl/realtek,rtd1195-pinctrl.yaml      | 133 +++
+ .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 192 ++++
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi      |   2 +-
+ drivers/pinctrl/Kconfig                       |  10 +-
+ drivers/pinctrl/Makefile                      |   2 +-
+ drivers/pinctrl/pinctrl-rtd119x.c             | 383 --------
+ drivers/pinctrl/realtek/Kconfig               |  14 +
+ drivers/pinctrl/realtek/Makefile              |   3 +
+ drivers/pinctrl/realtek/pinctrl-rtd.c         | 694 +++++++++++++++
+ .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   | 490 +++++++---
+ .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   | 840 +++++++++++++++---
+ 11 files changed, 2129 insertions(+), 634 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+ delete mode 100644 drivers/pinctrl/pinctrl-rtd119x.c
+ create mode 100644 drivers/pinctrl/realtek/Kconfig
+ create mode 100644 drivers/pinctrl/realtek/Makefile
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.c
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (64%)
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (61%)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.28.0
 
