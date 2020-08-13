@@ -2,169 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6021243476
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 851042434AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgHMHKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 03:10:41 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:35388 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgHMHKl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 03:10:41 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D7ARmtC012850, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D7ARmtC012850
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 13 Aug 2020 15:10:27 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:10:27 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:10:27 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
- RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
- 15.01.1779.005; Thu, 13 Aug 2020 15:10:27 +0800
-From:   =?big5?B?VFlfQ2hhbmdbsWmkbLZoXQ==?= <tychang@realtek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "afaerber@suse.de" <afaerber@suse.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
-Thread-Topic: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC
- SoC rtd1295
-Thread-Index: AQHWW6s/cocTepA4Q0aQyDC7oLyp9ak1yfuA
-Date:   Thu, 13 Aug 2020 07:10:27 +0000
-Message-ID: <7208fa8fa9b4418589bf8c4aae09ca6d@realtek.com>
-References: <20200716023338.14922-1-tychang@realtek.com>
- <20200716023338.14922-6-tychang@realtek.com> <20200716195645.GA2742256@bogus>
-In-Reply-To: <20200716195645.GA2742256@bogus>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.181.134]
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        id S1726072AbgHMHR3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 03:17:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43895 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgHMHR3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:17:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597303048; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7+SupX1KdeOjMckzG2kriiII+B/Pn9nxUz4H7+p3Lew=; b=EujTo83/whrmlj55viqaIZ+rZkVDvMFJEzuDSRKjKi89SnL5/nNIB03qseQu1wgErkEAcD1A
+ AaliUU6VXU178Bos2YYHkLaCO5tXtHUgGU9Yszzkd+FjhVN/XVq7KSrDRanpKd/2Q47pkXRI
+ fqgskkvLL0V0cK6RKGcod2+EJ3g=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f34e907440a07969a35cb8d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 07:17:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EBD26C43391; Thu, 13 Aug 2020 07:17:26 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.77.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FFB5C433C6;
+        Thu, 13 Aug 2020 07:17:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1FFB5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 2/7] pinctrl: qcom: Use return value from irq_set_wake
+ call
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
+ <1597058460-16211-3-git-send-email-mkshah@codeaurora.org>
+ <159717444178.1360974.6520145243224264090@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <aa506a3d-3e89-08ed-2d66-7098f6e5af91@codeaurora.org>
+Date:   Thu, 13 Aug 2020 12:47:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <159717444178.1360974.6520145243224264090@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gU2VudDog
-RnJpZGF5LCBKdWx5IDE3LCAyMDIwIDM6NTcgQU0NCj4gVG86IFRZX0NoYW5nW7FppGy2aF0gPHR5
-Y2hhbmdAcmVhbHRlay5jb20+DQo+IENjOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZyYWRl
-YWQub3JnOyBhZmFlcmJlckBzdXNlLmRlOw0KPiBsaW51cy53YWxsZWlqQGxpbmFyby5vcmc7IGxp
-bnV4LWdwaW9Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDUv
-OF0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IHJlYWx0ZWs6IEFkZCBSZWFsdGVrIERIQyBTb0MNCj4g
-cnRkMTI5NQ0KPiANCj4gT24gVGh1LCBKdWwgMTYsIDIwMjAgYXQgMTA6MzM6MzVBTSArMDgwMCwg
-VFkgQ2hhbmcgd3JvdGU6DQo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmcgRG9jdW1lbnRhdGlv
-biBmb3IgcnRkMTI5NSBwaW5jdHJsIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRZ
-IENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vcGluY3RybC9y
-ZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YW1sICAgICAgfCAxMjEgKysrKysrKysrKysrKysrKysr
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9y
-ZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUt
-cGluY3RybC55YQ0KPiA+IG1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YQ0KPiA+IG1sDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjhjZDZjZmEyMjgyZQ0KPiA+
-IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUtcGluY3RyDQo+ID4gKysrIGwueWFtbA0KPiA+IEBA
-IC0wLDAgKzEsMTIxIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4w
-LW9ubHkgT1IgQlNELTItQ2xhdXNlKSAlWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDoNCj4g
-PiAraHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUt
-cGluY3RybC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
-Y2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBSZWFsdGVrIERIQyBSVEQxMjk1
-IHBpbiBjb250cm9sDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIEFuZHJlYXMg
-RmFyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiAr
-ICBjb21wYXRpYmxlOg0KPiA+ICsgICAgZW51bToNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEy
-OTUtaXNvLXBpbmN0cmwNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEyOTUtc2IyLXBpbmN0cmwN
-Cj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEyOTUtZGlzcC1waW5jdHJsDQo+ID4gKyAgICAgIC0g
-cmVhbHRlayxydGQxMjk1LWNyLXBpbmN0cmwNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVt
-czogMQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAg
-LSByZWcNCj4gPiArDQo+ID4gKyNQSU4gQ09ORklHVVJBVElPTiBOT0RFUw0KPiA+ICtwYXR0ZXJu
-UHJvcGVydGllczoNCj4gPiArICAnLXBpbnMkJzoNCj4gPiArICAgIHR5cGU6IG9iamVjdA0KPiA+
-ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFBpbmN0cmwgbm9kZSdzIGNsaWVudCBkZXZp
-Y2VzIHVzZSBzdWJub2RlcyBmb3IgZGVzaXJlZCBwaW4NCj4gY29uZmlndXJhdGlvbi4NCj4gPiAr
-ICAgICAgQ2xpZW50IGRldmljZSBzdWJub2RlcyB1c2UgYmVsb3cgc3RhbmRhcmQgcHJvcGVydGll
-cy4NCj4gPiArICAgIGFsbE9mOg0KPiA+ICsgICAgICAtICRyZWY6ICIvc2NoZW1hcy9waW5jdHJs
-L3BpbmNmZy1ub2RlLnlhbWwiDQo+ID4gKw0KPiA+ICsgICAgcHJvcGVydGllczoNCj4gPiArICAg
-ICAgZ3JvdXBzOg0KPiA+ICsgICAgICAgIGl0ZW1zOg0KPiA+ICsgICAgICAgICAgZW51bTogWyBp
-c29fZ3Bpb18wLCBpc29fZ3Bpb18xLCBpc29fZ3Bpb18yLCBpc29fZ3Bpb18zLA0KPiBpc29fZ3Bp
-b180LA0KPiA+ICsgICAgICAgICAgaXNvX2dwaW9fNSwgaGRtaV9ocGQsIGlzb19ncGlvXzcsIGly
-X3J4LCBpcl90eCwgdXIwX3J4LA0KPiA+ICsgICAgICAgICAgdXIwX3R4LCB1cjFfcngsIHVyMV90
-eCwgdXIxX2N0c19uLCB1cjFfcnRzX24sIGkyY19zY2xfMCwNCj4gPiArICAgICAgICAgIGkyY19z
-ZGFfMCwgaTJjX3NjbF8xLCBpMmNfc2RhXzEsIGkyY19zY2xfNiwgaXNvX2dwaW9fMjEsDQo+ID4g
-KyAgICAgICAgICBpc29fZ3Bpb18yMiwgaXNvX2dwaW9fMjMsIGlzb19ncGlvXzI0LCBpc29fZ3Bp
-b18yNSwNCj4gPiArICAgICAgICAgIGkyY19zZGFfNiwgZXRuX2xlZF9saW5rLCBldG5fbGVkX3J4
-dHgsIG5hdF9sZWRfMCwNCj4gPiArICAgICAgICAgIG5hdF9sZWRfMSwgbmF0X2xlZF8yLCBuYXRf
-bGVkXzMsIGlzb19ncGlvXzMzLA0KPiA+ICsgICAgICAgICAgaXNvX2dwaW9fMzQsIHB3bV8yM19s
-b2MwLCBwd21fMDFfbG9jMCwgcHdtXzIzX2xvYzEsDQo+ID4gKyAgICAgICAgICBwd21fMDFfbG9j
-MSwgZWp0YWdfYXZjcHVfbG9jLCB1cjJfbG9jLCBpMmMwLCBpMmMxLA0KPiA+ICsgICAgICAgICAg
-aTJjNiwgdWFydDAsIHVhcnQxLCB1YXJ0Ml8wLCB1YXJ0Ml8xLCBncGlvXzAsIGdwaW9fMSwNCj4g
-PiArICAgICAgICAgIGdwaW9fMiwgZ3Bpb18zLCBncGlvXzQsIGdwaW9fNSwgZ3Bpb182LCBncGlv
-XzcsIGdwaW9fOCwNCj4gPiArICAgICAgICAgIGdwaW9fOSwgdHAxX3N5bmMsIGkyY19zY2xfNCwg
-aTJjX3NkYV80LCBpMmNfc2NsXzUsDQo+ID4gKyAgICAgICAgICBpMmNfc2RhXzUsIHVzYl9pZCwg
-c2Vuc29yX2Nrb18wLCBzZW5zb3JfY2tvXzEsIHNlbnNvcl9yc3QsDQo+ID4gKyAgICAgICAgICBz
-ZW5zb3Jfc3RiXzAsIHNlbnNvcl9zdGJfMSwgdHAwX2RhdGEsIHRwMF9jbGssIHRwMF92YWxpZCwN
-Cj4gPiArICAgICAgICAgIHRwMF9zeW5jLCB0cDFfZGF0YSwgdHAxX2NsaywgdHAxX3ZhbGlkLCBy
-Z21paTBfdHhjLA0KPiA+ICsgICAgICAgICAgcmdtaWkwX3R4X2N0bCxyZ21paTBfdHhkXzAsIHJn
-bWlpMF90eGRfMSwgcmdtaWkwX3R4ZF8yLA0KPiA+ICsgICAgICAgICAgcmdtaWkwX3R4ZF8zLCBy
-Z21paTBfcnhjLCByZ21paTBfcnhfY3RsLCByZ21paTBfcnhkXzAsDQo+ID4gKyAgICAgICAgICBy
-Z21paTBfcnhkXzEsIHJnbWlpMF9yeGRfMiwgcmdtaWkwX3J4ZF8zLCByZ21paTBfbWRpbywNCj4g
-PiArICAgICAgICAgIHJnbWlpMF9tZGMsIHJnbWlpMV90eGMsIHJnbWlpMV90eF9jdGwsIHJnbWlp
-MV90eGRfMCwNCj4gPiArICAgICAgICAgIHJnbWlpMV90eGRfMSwgcmdtaWkxX3R4ZF8yLCByZ21p
-aTFfdHhkXzMsIHJnbWlpMV9yeGMsDQo+ID4gKyAgICAgICAgICByZ21paTFfcnhfY3RsLCByZ21p
-aTFfcnhkXzAsIHJnbWlpMV9yeGRfMSwgcmdtaWkxX3J4ZF8yLA0KPiA+ICsgICAgICAgICAgcmdt
-aWkxX3J4ZF8zLCBoaWZfbG9jLCBlanRhZ19zY3B1X2xvYywgc2ZfZW4sIHRwMF9sb2MsDQo+ID4g
-KyAgICAgICAgICB0cDFfbG9jLCBzcGRpZiwgZG1pY19jbGssIGRtaWNfZGF0YSwgYW9fbHJjaywg
-YW9fYmNrLA0KPiA+ICsgICAgICAgICAgYW9jaywgYW9fc2RfMCwgYW9fc2RfMSwgYW9fc2RfMiwg
-YW9fc2RfMywgbmZfY2xlLA0KPiA+ICsgICAgICAgICAgbmZfYWxlLCBuZl9yZF9uLCBuZl93cl9u
-LCBuZl9yZHksIG5mX2RkXzcsIG5mX2RkXzYsDQo+ID4gKyAgICAgICAgICBuZl9kZF81LCBuZl9k
-ZF80LCBuZl9kZF8zLCBuZl9kZF8yLCBuZl9kZF8xLCBuZl9kZF8wLA0KPiA+ICsgICAgICAgICAg
-bmZfZHFzLCBuZl9jZV9uXzAsIG5mX2NlX25fMSwgZW1tY19kZF9zYiwgbW1jX2NtZCwNCj4gPiAr
-ICAgICAgICAgIG1tY19jbGssIG1tY193cCwgbW1jX2NkLCBtbWNfZGF0YV8wLCBtbWNfZGF0YV8x
-LA0KPiA+ICsgICAgICAgICAgbW1jX2RhdGFfMiwgbW1jX2RhdGFfMywgc2Rpb19jbWQsIHNkaW9f
-Y2xrLCBzZGlvX2RhdGFfMCwNCj4gPiArICAgICAgICAgIHNkaW9fZGF0YV8xLCBzZGlvX2RhdGFf
-Miwgc2Rpb19kYXRhXzMsIHBjaWVfY2xrcmVxXzAsDQo+ID4gKyAgICAgICAgICBwY2llX2Nsa3Jl
-cV8xLCBwcm9iXzAsIHByb2JfMSwgcHJvYl8yLCBwcm9iXzMsIHNkaW9fbG9jIF0NCj4gPiArICAg
-ICAgICBtaW5JdGVtczogMQ0KPiA+ICsNCj4gPiArICAgICAgZnVuY3Rpb246DQo+ID4gKyAgICAg
-ICAgZW51bTogWyBncGlvLCBhY3B1X2VqdGFnX2xvY19pc28sIGVkcF9ocGQsIGV0bl9sZWQsIGky
-YzAsIGkyYzEsDQo+IGkyYzYsDQo+ID4gKyAgICAgICAgaXJfcngsIGlyX3R4LCBuYXRfbGVkLCBw
-d21fMCwgcHdtXzEsIHJ0Yywgc2MsIHN0YW5kYnlfZGJnLA0KPiA+ICsgICAgICAgIHVhcnQwLCB1
-YXJ0MSwgdWFydDJfMCwgdWFydDJfMSwgcHdtXzAxX2xvYzBfbm9ybWFsLA0KPiA+ICsgICAgICAg
-IHB3bV8yM19sb2MwX25vcm1hbCwgcHdtXzAxX2xvYzBfb3Blbl9kcmFpbiwNCj4gcHdtXzIzX2xv
-YzBfb3Blbl9kcmFpbiwNCj4gPiArICAgICAgICBwd21fMDFfbG9jMV9ub3JtYWwsIHB3bV8yM19s
-b2MxX25vcm1hbCwNCj4gcHdtXzAxX2xvYzFfb3Blbl9kcmFpbiwNCj4gPiArICAgICAgICBwd21f
-MjNfbG9jMV9vcGVuX2RyYWluLCBhY3B1X2VqdGFnX2xvY19uZiwgYWksIGRjX2Zhbl9zZW5zb3Is
-DQo+ID4gKyAgICAgICAgZXRoX2dweSwgZ3NwaSwgaTJjMiwgaTJjMywgaTJjNCwgaTJjNSwgbmFu
-ZCwgcmdtaWksDQo+IHNjcHVfZWp0YWdfbG9jX2dwaW8sDQo+ID4gKyAgICAgICAgc2Vuc29yX2Nr
-b19vdXRwdXQsIHNwaSwgdGVzdF9sb29wX2RpcywgdHAwX2xvY19yZ21paTBfdHgsDQo+IHRwMF9s
-b2NfdHAwLA0KPiA+ICsgICAgICAgIHRwMF9sb2NfdHAxLCB0cDFfbG9jX3JnbWlpMF9yeCwgdHAx
-X2xvY190cDAsIHRwMV9sb2NfdHAxLA0KPiA+ICsgICAgICAgIHVzYl9jbG9ja19vdXRwdXQsIGhp
-Zl9sb2NfbWlzYywgaGlmX2xvY19uZiwgc2NwdV9lanRhZ19sb2NfY3IsIGFvLA0KPiA+ICsgICAg
-ICAgIGRtaWMsIHNwZGlmX291dCwgYXZjcHVfZWosIGVtbWMsIGhpZiwgbmFuZCwgcDJzLCBwY2ll
-LCBwbGxfdGVzdCwNCj4gPiArICAgICAgICBzY3B1X2VqdGFnX2xvY19jciwgc2RfY2FyZCwgc2Rp
-b18wLCBzZGlvXzEgXQ0KPiA+ICsNCj4gPiArICAgICAgZHJpdmUtc3RyZW5ndGg6DQo+ID4gKyAg
-ICAgICAgZW51bTogWzIsIDQsIDhdDQo+ID4gKw0KPiA+ICsgICAgICBiaWFzLXB1bGwtZG93bjog
-dHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1wdWxsLXVwOiB0cnVlDQo+ID4gKw0KPiA+ICsg
-ICAgICBiaWFzLWRpc2FibGU6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIGlucHV0LXNjaG1pdHQt
-ZGlzYWJsZTogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5wdXQtc2NobWl0dC1lbmFibGU6IHRy
-dWUNCj4gPiArDQo+ID4gKyAgICByZXF1aXJlZDoNCj4gPiArICAgICAgLSBncm91cHMNCj4gPiAr
-ICAgICAgLSBmdW5jdGlvbg0KPiA+ICsNCj4gPiArICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBm
-YWxzZQ0KPiANCj4gQWxzbyBuZWVkIHRvcC1sZXZlbCAnYWRkaXRpb25hbFByb3BlcnRpZXM6IGZh
-bHNlJy4NCg0KSSB3aWxsIGFkZCB0aGlzIGluIHBhdGNoIHYzLg0KDQo+IA0KPiBXaXRoIHRoYXQs
-DQo+IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQoN
-CkJlc3QgUmVnYXJkcywNClRZQ2hhbmcNCg0KPiAtLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVu
-dmlyb25tZW50IGJlZm9yZSBwcmludGluZyB0aGlzIGUtbWFpbC4NCg==
+Hi,
+
+On 8/12/2020 1:04 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-08-10 04:20:55)
+>> msmgpio irqchip is not using return value of irq_set_wake call.
+>> Start using it.
+> Does this work when the irq parent isn't setup in a hierarchy?
+yes it works fine even when parent isn't setup in hierarchy.
+> I seem to
+> recall that this was written this way because sometimes
+> irq_set_irq_wake() would fail for the summary irq so it was a best
+> effort setting of wake on the summary line.
+Thanks for pointing this.
+
+It was written this way since previously GIC driver neither had 
+IRQCHIP_SKIP_SET_WAKE flag nor it implemented .irq_set_wake callback,
+
+so the call to irq_set_irq_wake() to set_irq_wake_real() used to return 
+error -ENXIO in past.
+
+I see this is already taken care now in GIC drivers by adding 
+IRQCHIP_SKIP_SET_WAKE flag.
+
+>
+>> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-msm.c | 8 +++-----
+>>   1 file changed, 3 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> index 90edf61..c264561 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> @@ -1077,12 +1077,10 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+>>           * when TLMM is powered on. To allow that, enable the GPIO
+>>           * summary line to be wakeup capable at GIC.
+>>           */
+>> -       if (d->parent_data)
+>> -               irq_chip_set_wake_parent(d, on);
+>> -
+>> -       irq_set_irq_wake(pctrl->irq, on);
+>> +       if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
+>> +               return irq_chip_set_wake_parent(d, on);
+> So this bit is probably fine.
+>
+>>   
+>> -       return 0;
+>> +       return irq_set_irq_wake(pctrl->irq, on);
+> But this one is probably not fine.
+
+As per above both of them are fine.
+
+Thanks,
+Maulik
+
+>
+>>   }
+>>   
+>>   static int msm_gpio_irq_reqres(struct irq_data *d)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
