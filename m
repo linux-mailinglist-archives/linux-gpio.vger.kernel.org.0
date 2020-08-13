@@ -2,123 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 757D1243474
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6021243476
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Aug 2020 09:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHMHJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 03:09:44 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:46899 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgHMHJn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 03:09:43 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E483222EDE;
-        Thu, 13 Aug 2020 09:09:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1597302580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ok4pEqRTPwdokbHa/IMlTv6DhwAEzETP5M+d49NSRsM=;
-        b=KMS6BhghAQ9AwIZUVDheuUNtL7OEYIkis7uX8/9dUmN63Qe/n9j00W7sI8bUHvL/pRW1/7
-        wOlmzcsgJNfoPreYCDGd6SiW85qjkd2QMTfXndnjgrXQHNuuWI+BHnE3e91xiw1pZ/N7aV
-        eCxtpctn8ewVaU0Ah6sRQJrKLcV7OaI=
+        id S1726081AbgHMHKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 03:10:41 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:35388 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgHMHKl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 03:10:41 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D7ARmtC012850, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D7ARmtC012850
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 13 Aug 2020 15:10:27 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:10:27 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 13 Aug 2020 15:10:27 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
+ RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
+ 15.01.1779.005; Thu, 13 Aug 2020 15:10:27 +0800
+From:   =?big5?B?VFlfQ2hhbmdbsWmkbLZoXQ==?= <tychang@realtek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "afaerber@suse.de" <afaerber@suse.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
+Thread-Topic: [PATCH v2 5/8] dt-bindings: pinctrl: realtek: Add Realtek DHC
+ SoC rtd1295
+Thread-Index: AQHWW6s/cocTepA4Q0aQyDC7oLyp9ak1yfuA
+Date:   Thu, 13 Aug 2020 07:10:27 +0000
+Message-ID: <7208fa8fa9b4418589bf8c4aae09ca6d@realtek.com>
+References: <20200716023338.14922-1-tychang@realtek.com>
+ <20200716023338.14922-6-tychang@realtek.com> <20200716195645.GA2742256@bogus>
+In-Reply-To: <20200716195645.GA2742256@bogus>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.181.134]
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 13 Aug 2020 09:09:32 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <2ca0a3a3f03a1f5b9b2777738824123b@walle.cc>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc> <20200810071328.GB4411@dell>
- <2ca0a3a3f03a1f5b9b2777738824123b@walle.cc>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <514d83dadc2055abb5e6b5328eff4d97@walle.cc>
-X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-08-10 09:31, schrieb Michael Walle:
-> Am 2020-08-10 09:13, schrieb Lee Jones:
->> On Fri, 07 Aug 2020, Michael Walle wrote:
->> 
->>> Hi Uwe, Hi Lee,
->>> 
->>> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
->>> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
->>> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>> > > index 7dbcf6973d33..a0d50d70c3b9 100644
->>> > > --- a/drivers/pwm/Kconfig
->>> > > +++ b/drivers/pwm/Kconfig
->>> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
->>> > >  	  To compile this driver as a module, choose M here: the module
->>> > >  	  will be called pwm-sifive.
->>> > >
->>> > > +config PWM_SL28CPLD
->>> > > +	tristate "Kontron sl28cpld PWM support"
->>> > > +	select MFD_SIMPLE_MFD_I2C
->>> >
->>> > Is it sensible to present this option to everyone? Maybe
->>> >
->>> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
->>> 
->>> Because there is now no real MFD driver anymore, there is also
->>> no symbol for that. The closest would be ARCH_ARM64 but I don't
->>> think that is a good idea.
->>> 
->>> Lee, what do you think about adding a symbol to the MFD, which
->>> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
->>> 
->>> I.e.
->>> config MFD_SL28CPLD
->>>     tristate "Kontron sl28cpld"
->>>     select MFD_SIMPLE_MFD_I2C
->>>     help
->>>       Say yes here to add support for the Kontron sl28cpld board
->>>       management controller.
->>> 
->>> Then all the other device driver could depend on the MFD_SL28CPLD
->>> symbol.
->> 
->> You want to add a virtual symbol to prevent having to present a real
->> one?  How is that a reasonable solution?
-> 
-> (1) Its a symbol on which all sl28cpld will depend on. Thus they will
->     all be hidden if that is not set.
-> (2) the drivers itself wouldn't need to depend on MFD_SIMPLE_MFD_I2C,
->     which is more correct, because they don't have anything to do with
->     i2c.
-
-Lee, would you accept such a symbol? Otherwise, I'd leave it as is.
-
--michael
+SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gU2VudDog
+RnJpZGF5LCBKdWx5IDE3LCAyMDIwIDM6NTcgQU0NCj4gVG86IFRZX0NoYW5nW7FppGy2aF0gPHR5
+Y2hhbmdAcmVhbHRlay5jb20+DQo+IENjOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZyYWRl
+YWQub3JnOyBhZmFlcmJlckBzdXNlLmRlOw0KPiBsaW51cy53YWxsZWlqQGxpbmFyby5vcmc7IGxp
+bnV4LWdwaW9Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDUv
+OF0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IHJlYWx0ZWs6IEFkZCBSZWFsdGVrIERIQyBTb0MNCj4g
+cnRkMTI5NQ0KPiANCj4gT24gVGh1LCBKdWwgMTYsIDIwMjAgYXQgMTA6MzM6MzVBTSArMDgwMCwg
+VFkgQ2hhbmcgd3JvdGU6DQo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmcgRG9jdW1lbnRhdGlv
+biBmb3IgcnRkMTI5NSBwaW5jdHJsIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRZ
+IENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vcGluY3RybC9y
+ZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YW1sICAgICAgfCAxMjEgKysrKysrKysrKysrKysrKysr
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9y
+ZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUt
+cGluY3RybC55YQ0KPiA+IG1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUtcGluY3RybC55YQ0KPiA+IG1sDQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjhjZDZjZmEyMjgyZQ0KPiA+
+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUtcGluY3RyDQo+ID4gKysrIGwueWFtbA0KPiA+IEBA
+IC0wLDAgKzEsMTIxIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4w
+LW9ubHkgT1IgQlNELTItQ2xhdXNlKSAlWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDoNCj4g
+PiAraHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGluY3RybC9yZWFsdGVrLHJ0ZDEyOTUt
+cGluY3RybC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
+Y2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBSZWFsdGVrIERIQyBSVEQxMjk1
+IHBpbiBjb250cm9sDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIEFuZHJlYXMg
+RmFyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiAr
+ICBjb21wYXRpYmxlOg0KPiA+ICsgICAgZW51bToNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEy
+OTUtaXNvLXBpbmN0cmwNCj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEyOTUtc2IyLXBpbmN0cmwN
+Cj4gPiArICAgICAgLSByZWFsdGVrLHJ0ZDEyOTUtZGlzcC1waW5jdHJsDQo+ID4gKyAgICAgIC0g
+cmVhbHRlayxydGQxMjk1LWNyLXBpbmN0cmwNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVt
+czogMQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAg
+LSByZWcNCj4gPiArDQo+ID4gKyNQSU4gQ09ORklHVVJBVElPTiBOT0RFUw0KPiA+ICtwYXR0ZXJu
+UHJvcGVydGllczoNCj4gPiArICAnLXBpbnMkJzoNCj4gPiArICAgIHR5cGU6IG9iamVjdA0KPiA+
+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFBpbmN0cmwgbm9kZSdzIGNsaWVudCBkZXZp
+Y2VzIHVzZSBzdWJub2RlcyBmb3IgZGVzaXJlZCBwaW4NCj4gY29uZmlndXJhdGlvbi4NCj4gPiAr
+ICAgICAgQ2xpZW50IGRldmljZSBzdWJub2RlcyB1c2UgYmVsb3cgc3RhbmRhcmQgcHJvcGVydGll
+cy4NCj4gPiArICAgIGFsbE9mOg0KPiA+ICsgICAgICAtICRyZWY6ICIvc2NoZW1hcy9waW5jdHJs
+L3BpbmNmZy1ub2RlLnlhbWwiDQo+ID4gKw0KPiA+ICsgICAgcHJvcGVydGllczoNCj4gPiArICAg
+ICAgZ3JvdXBzOg0KPiA+ICsgICAgICAgIGl0ZW1zOg0KPiA+ICsgICAgICAgICAgZW51bTogWyBp
+c29fZ3Bpb18wLCBpc29fZ3Bpb18xLCBpc29fZ3Bpb18yLCBpc29fZ3Bpb18zLA0KPiBpc29fZ3Bp
+b180LA0KPiA+ICsgICAgICAgICAgaXNvX2dwaW9fNSwgaGRtaV9ocGQsIGlzb19ncGlvXzcsIGly
+X3J4LCBpcl90eCwgdXIwX3J4LA0KPiA+ICsgICAgICAgICAgdXIwX3R4LCB1cjFfcngsIHVyMV90
+eCwgdXIxX2N0c19uLCB1cjFfcnRzX24sIGkyY19zY2xfMCwNCj4gPiArICAgICAgICAgIGkyY19z
+ZGFfMCwgaTJjX3NjbF8xLCBpMmNfc2RhXzEsIGkyY19zY2xfNiwgaXNvX2dwaW9fMjEsDQo+ID4g
+KyAgICAgICAgICBpc29fZ3Bpb18yMiwgaXNvX2dwaW9fMjMsIGlzb19ncGlvXzI0LCBpc29fZ3Bp
+b18yNSwNCj4gPiArICAgICAgICAgIGkyY19zZGFfNiwgZXRuX2xlZF9saW5rLCBldG5fbGVkX3J4
+dHgsIG5hdF9sZWRfMCwNCj4gPiArICAgICAgICAgIG5hdF9sZWRfMSwgbmF0X2xlZF8yLCBuYXRf
+bGVkXzMsIGlzb19ncGlvXzMzLA0KPiA+ICsgICAgICAgICAgaXNvX2dwaW9fMzQsIHB3bV8yM19s
+b2MwLCBwd21fMDFfbG9jMCwgcHdtXzIzX2xvYzEsDQo+ID4gKyAgICAgICAgICBwd21fMDFfbG9j
+MSwgZWp0YWdfYXZjcHVfbG9jLCB1cjJfbG9jLCBpMmMwLCBpMmMxLA0KPiA+ICsgICAgICAgICAg
+aTJjNiwgdWFydDAsIHVhcnQxLCB1YXJ0Ml8wLCB1YXJ0Ml8xLCBncGlvXzAsIGdwaW9fMSwNCj4g
+PiArICAgICAgICAgIGdwaW9fMiwgZ3Bpb18zLCBncGlvXzQsIGdwaW9fNSwgZ3Bpb182LCBncGlv
+XzcsIGdwaW9fOCwNCj4gPiArICAgICAgICAgIGdwaW9fOSwgdHAxX3N5bmMsIGkyY19zY2xfNCwg
+aTJjX3NkYV80LCBpMmNfc2NsXzUsDQo+ID4gKyAgICAgICAgICBpMmNfc2RhXzUsIHVzYl9pZCwg
+c2Vuc29yX2Nrb18wLCBzZW5zb3JfY2tvXzEsIHNlbnNvcl9yc3QsDQo+ID4gKyAgICAgICAgICBz
+ZW5zb3Jfc3RiXzAsIHNlbnNvcl9zdGJfMSwgdHAwX2RhdGEsIHRwMF9jbGssIHRwMF92YWxpZCwN
+Cj4gPiArICAgICAgICAgIHRwMF9zeW5jLCB0cDFfZGF0YSwgdHAxX2NsaywgdHAxX3ZhbGlkLCBy
+Z21paTBfdHhjLA0KPiA+ICsgICAgICAgICAgcmdtaWkwX3R4X2N0bCxyZ21paTBfdHhkXzAsIHJn
+bWlpMF90eGRfMSwgcmdtaWkwX3R4ZF8yLA0KPiA+ICsgICAgICAgICAgcmdtaWkwX3R4ZF8zLCBy
+Z21paTBfcnhjLCByZ21paTBfcnhfY3RsLCByZ21paTBfcnhkXzAsDQo+ID4gKyAgICAgICAgICBy
+Z21paTBfcnhkXzEsIHJnbWlpMF9yeGRfMiwgcmdtaWkwX3J4ZF8zLCByZ21paTBfbWRpbywNCj4g
+PiArICAgICAgICAgIHJnbWlpMF9tZGMsIHJnbWlpMV90eGMsIHJnbWlpMV90eF9jdGwsIHJnbWlp
+MV90eGRfMCwNCj4gPiArICAgICAgICAgIHJnbWlpMV90eGRfMSwgcmdtaWkxX3R4ZF8yLCByZ21p
+aTFfdHhkXzMsIHJnbWlpMV9yeGMsDQo+ID4gKyAgICAgICAgICByZ21paTFfcnhfY3RsLCByZ21p
+aTFfcnhkXzAsIHJnbWlpMV9yeGRfMSwgcmdtaWkxX3J4ZF8yLA0KPiA+ICsgICAgICAgICAgcmdt
+aWkxX3J4ZF8zLCBoaWZfbG9jLCBlanRhZ19zY3B1X2xvYywgc2ZfZW4sIHRwMF9sb2MsDQo+ID4g
+KyAgICAgICAgICB0cDFfbG9jLCBzcGRpZiwgZG1pY19jbGssIGRtaWNfZGF0YSwgYW9fbHJjaywg
+YW9fYmNrLA0KPiA+ICsgICAgICAgICAgYW9jaywgYW9fc2RfMCwgYW9fc2RfMSwgYW9fc2RfMiwg
+YW9fc2RfMywgbmZfY2xlLA0KPiA+ICsgICAgICAgICAgbmZfYWxlLCBuZl9yZF9uLCBuZl93cl9u
+LCBuZl9yZHksIG5mX2RkXzcsIG5mX2RkXzYsDQo+ID4gKyAgICAgICAgICBuZl9kZF81LCBuZl9k
+ZF80LCBuZl9kZF8zLCBuZl9kZF8yLCBuZl9kZF8xLCBuZl9kZF8wLA0KPiA+ICsgICAgICAgICAg
+bmZfZHFzLCBuZl9jZV9uXzAsIG5mX2NlX25fMSwgZW1tY19kZF9zYiwgbW1jX2NtZCwNCj4gPiAr
+ICAgICAgICAgIG1tY19jbGssIG1tY193cCwgbW1jX2NkLCBtbWNfZGF0YV8wLCBtbWNfZGF0YV8x
+LA0KPiA+ICsgICAgICAgICAgbW1jX2RhdGFfMiwgbW1jX2RhdGFfMywgc2Rpb19jbWQsIHNkaW9f
+Y2xrLCBzZGlvX2RhdGFfMCwNCj4gPiArICAgICAgICAgIHNkaW9fZGF0YV8xLCBzZGlvX2RhdGFf
+Miwgc2Rpb19kYXRhXzMsIHBjaWVfY2xrcmVxXzAsDQo+ID4gKyAgICAgICAgICBwY2llX2Nsa3Jl
+cV8xLCBwcm9iXzAsIHByb2JfMSwgcHJvYl8yLCBwcm9iXzMsIHNkaW9fbG9jIF0NCj4gPiArICAg
+ICAgICBtaW5JdGVtczogMQ0KPiA+ICsNCj4gPiArICAgICAgZnVuY3Rpb246DQo+ID4gKyAgICAg
+ICAgZW51bTogWyBncGlvLCBhY3B1X2VqdGFnX2xvY19pc28sIGVkcF9ocGQsIGV0bl9sZWQsIGky
+YzAsIGkyYzEsDQo+IGkyYzYsDQo+ID4gKyAgICAgICAgaXJfcngsIGlyX3R4LCBuYXRfbGVkLCBw
+d21fMCwgcHdtXzEsIHJ0Yywgc2MsIHN0YW5kYnlfZGJnLA0KPiA+ICsgICAgICAgIHVhcnQwLCB1
+YXJ0MSwgdWFydDJfMCwgdWFydDJfMSwgcHdtXzAxX2xvYzBfbm9ybWFsLA0KPiA+ICsgICAgICAg
+IHB3bV8yM19sb2MwX25vcm1hbCwgcHdtXzAxX2xvYzBfb3Blbl9kcmFpbiwNCj4gcHdtXzIzX2xv
+YzBfb3Blbl9kcmFpbiwNCj4gPiArICAgICAgICBwd21fMDFfbG9jMV9ub3JtYWwsIHB3bV8yM19s
+b2MxX25vcm1hbCwNCj4gcHdtXzAxX2xvYzFfb3Blbl9kcmFpbiwNCj4gPiArICAgICAgICBwd21f
+MjNfbG9jMV9vcGVuX2RyYWluLCBhY3B1X2VqdGFnX2xvY19uZiwgYWksIGRjX2Zhbl9zZW5zb3Is
+DQo+ID4gKyAgICAgICAgZXRoX2dweSwgZ3NwaSwgaTJjMiwgaTJjMywgaTJjNCwgaTJjNSwgbmFu
+ZCwgcmdtaWksDQo+IHNjcHVfZWp0YWdfbG9jX2dwaW8sDQo+ID4gKyAgICAgICAgc2Vuc29yX2Nr
+b19vdXRwdXQsIHNwaSwgdGVzdF9sb29wX2RpcywgdHAwX2xvY19yZ21paTBfdHgsDQo+IHRwMF9s
+b2NfdHAwLA0KPiA+ICsgICAgICAgIHRwMF9sb2NfdHAxLCB0cDFfbG9jX3JnbWlpMF9yeCwgdHAx
+X2xvY190cDAsIHRwMV9sb2NfdHAxLA0KPiA+ICsgICAgICAgIHVzYl9jbG9ja19vdXRwdXQsIGhp
+Zl9sb2NfbWlzYywgaGlmX2xvY19uZiwgc2NwdV9lanRhZ19sb2NfY3IsIGFvLA0KPiA+ICsgICAg
+ICAgIGRtaWMsIHNwZGlmX291dCwgYXZjcHVfZWosIGVtbWMsIGhpZiwgbmFuZCwgcDJzLCBwY2ll
+LCBwbGxfdGVzdCwNCj4gPiArICAgICAgICBzY3B1X2VqdGFnX2xvY19jciwgc2RfY2FyZCwgc2Rp
+b18wLCBzZGlvXzEgXQ0KPiA+ICsNCj4gPiArICAgICAgZHJpdmUtc3RyZW5ndGg6DQo+ID4gKyAg
+ICAgICAgZW51bTogWzIsIDQsIDhdDQo+ID4gKw0KPiA+ICsgICAgICBiaWFzLXB1bGwtZG93bjog
+dHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1wdWxsLXVwOiB0cnVlDQo+ID4gKw0KPiA+ICsg
+ICAgICBiaWFzLWRpc2FibGU6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIGlucHV0LXNjaG1pdHQt
+ZGlzYWJsZTogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgaW5wdXQtc2NobWl0dC1lbmFibGU6IHRy
+dWUNCj4gPiArDQo+ID4gKyAgICByZXF1aXJlZDoNCj4gPiArICAgICAgLSBncm91cHMNCj4gPiAr
+ICAgICAgLSBmdW5jdGlvbg0KPiA+ICsNCj4gPiArICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBm
+YWxzZQ0KPiANCj4gQWxzbyBuZWVkIHRvcC1sZXZlbCAnYWRkaXRpb25hbFByb3BlcnRpZXM6IGZh
+bHNlJy4NCg0KSSB3aWxsIGFkZCB0aGlzIGluIHBhdGNoIHYzLg0KDQo+IA0KPiBXaXRoIHRoYXQs
+DQo+IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQoN
+CkJlc3QgUmVnYXJkcywNClRZQ2hhbmcNCg0KPiAtLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVu
+dmlyb25tZW50IGJlZm9yZSBwcmludGluZyB0aGlzIGUtbWFpbC4NCg==
