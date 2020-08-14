@@ -2,85 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA4324480E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 12:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A8102449EB
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 14:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgHNKcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Aug 2020 06:32:03 -0400
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:46754 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726012AbgHNKcC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:32:02 -0400
-X-Greylist: delayed 1673 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 06:32:02 EDT
-Received: from [188.210.212.0] (helo=localhost.localdomain)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1k6WZD-000572-AB; Fri, 14 Aug 2020 11:04:07 +0100
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     thomas.preston@codethink.co.uk
-Subject: [PATCH 3/3] devicetree: mcp23s08: Remove interrupt-controller
-Date:   Fri, 14 Aug 2020 11:03:57 +0100
-Message-Id: <20200814100357.209340-4-thomas.preston@codethink.co.uk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+        id S1728012AbgHNMn0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Aug 2020 08:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgHNMn0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Aug 2020 08:43:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9828CC061384;
+        Fri, 14 Aug 2020 05:43:25 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597409003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/i5quBEHOUiEWbSlPICXRpE8LPmHlTEYkvSOImfh/R8=;
+        b=SJrKMe+dhkz8mqYvSm1e3oBcNuMqzj+vKg2nmRvxCMocVOYxiR8hR8W5A5OaMsQ5eaXR+h
+        s7OkQsvCSQIKdFkpRWVJje01s5cMnZyE67XTqnZjDT9+W9drRPQb4Z6C7cJ6De4c2niyOS
+        flq+s8FYRYtir4SvAgp3/bSDrLcUVLsggqIOjgZbmsTbuGRe1fGI5psw0V71kBU9pmTfLr
+        +9kJpggyh/g8HZfVm4PIzrORvKjA0OPCWoy6q+ae7LDNHYMuEZtRd5bKJB5P6PsIrHHMfh
+        fun6UsKWyYtiZfEYCzgiKdAUYazF6mV33S35Z0/D84Ps4+jxA/ieqo0WzAlsZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597409003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/i5quBEHOUiEWbSlPICXRpE8LPmHlTEYkvSOImfh/R8=;
+        b=wCiXtVzl9KyVOqjtdNk4AHVJumpRqaSpCZ9HC97XShRjOmcy9x+d74s433K+ZrFzbItPma
+        WAXqqS9/MwtJgpAw==
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
+Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
+In-Reply-To: <CAD=FV=V1hvWZ0ANX9nsvRX_iXjuzw0X_tL2hgg4zYGgsqRtLTQ@mail.gmail.com>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de> <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com> <878sei42ql.fsf@nanos.tec.linutronix.de> <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com> <87364q3rqb.fsf@nanos.tec.linutronix.de> <CAD=FV=V1hvWZ0ANX9nsvRX_iXjuzw0X_tL2hgg4zYGgsqRtLTQ@mail.gmail.com>
+Date:   Fri, 14 Aug 2020 14:43:23 +0200
+Message-ID: <87bljdl7o4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The mcp23s08 device and friends are interrupt /client/ nodes, and should
-not reference the interrupt controller device tree properties
-"interrupt-controller" and "interrupt-cells" [0].
+Doug,
 
-Remove the confusing "interrupt-controller" and "interrupt-cells"
-properties from the pinctrl-mcp23s08 devicetree bindings documentation.
+On Thu, Aug 13 2020 at 20:04, Doug Anderson wrote:
+> On Thu, Aug 13, 2020 at 7:07 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>    Having a quick and dirty POC for illustration is fine and usually
+>>    useful.
+>
+> OK, I will try to remember that, in the future, I should send
+> questions rather than patches to you.  I'm always learning the
 
-[0] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+The quick and dirty POC patch for illustration along with the questions
+is always good to catch my attention.
 
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
----
- .../devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt      | 8 --------
- 1 file changed, 8 deletions(-)
+> workflows of the different maintainers, so sorry for killing so much
+> time.  :(
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-index 8b94aa8f5971..bb1b53030552 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-@@ -43,10 +43,6 @@ Required device specific properties (only for SPI chips):
- - spi-max-frequency = The maximum frequency this chip is able to handle
- 
- Optional properties:
--- #interrupt-cells : Should be two.
--  - first cell is the pin number
--  - second cell is used to specify flags.
--- interrupt-controller: Marks the device node as a interrupt controller.
- - drive-open-drain: Sets the ODR flag in the IOCON register. This configures
-         the IRQ output as open drain active low.
- 
-@@ -72,8 +68,6 @@ gpiom1: gpio@20 {
- 
-         interrupt-parent = <&gpio1>;
-         interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
--        interrupt-controller;
--        #interrupt-cells=<2>;
-         microchip,irq-mirror;
- };
- 
-@@ -130,8 +124,6 @@ gpio21: gpio@21 {
- 	interrupt-parent = <&socgpio>;
- 	interrupts = <0x17 0x8>;
- 	interrupt-names = "mcp23017@21 irq";
--	interrupt-controller;
--	#interrupt-cells = <0x2>;
- 	microchip,irq-mirror;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2cgpio0irq &gpio21pullups>;
--- 
-2.26.2
+No problem. 
 
+>> If it solves the problem and from what you explained it should do so
+>> then this is definitely the right way to go.
+>
+> Wonderful!  Looking forward to Maulik's post doing it this way.
+
+/me closes the case for now and moves on.
+
+Thanks
+
+        tglx
