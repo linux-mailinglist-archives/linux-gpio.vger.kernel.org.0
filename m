@@ -2,174 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFABC244F00
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 21:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 925CE244F25
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 22:24:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgHNT4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Aug 2020 15:56:33 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:45755 "EHLO mx4.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgHNT4d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:56:33 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 15:56:31 EDT
-Received: (wp-smtpd smtp.wp.pl 27067 invoked from network); 14 Aug 2020 21:49:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1597434590; bh=6hs6TPHFIz1kOVdD6LgU8CRUVT9Umoi+c/8YAc/xC4M=;
-          h=From:To:Cc:Subject;
-          b=eN8v/ZpcBq4H7jMtxIUpXjF98kThu7jSSm54P6uuEch+cVb48QelKmg460BIds1/A
-           09ptcadME72tw3bbC4ztUfVtLh4894huexGOo0favP0554YmvmDTG1OIM83ZXOlqUc
-           YrFZWYGVS6fGIh+lzVQvM1LIiY30f+Dck1J+7KTk=
-Received: from riviera.nat.student.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linux-gpio@vger.kernel.org>; 14 Aug 2020 21:49:50 +0200
-From:   Aleksander Jan Bajkowski <olek2@wp.pl>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, john@phrozen.org
-Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH] gpio: stp-xway: automatically drive GPHY leds on ar10 and grx390
-Date:   Fri, 14 Aug 2020 21:48:47 +0200
-Message-Id: <20200814194847.3171-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.20.1
+        id S1727942AbgHNUYp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Aug 2020 16:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgHNUYo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Aug 2020 16:24:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C34C061385
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g15so779804plj.6
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=rwpaXnT2EeEfwGVu4ev0tx59FKrNBxWx6TusqvWIrO4=;
+        b=Jdo0NGDfaHr6zmtamxEimY/fqPy2jmUHSXfgnVas6TIV83p6Tc/4V+90pUHvallzEc
+         C/iVNYD1ikU9HKFeCoEiaUSjHf2k+OPtnGgDgyt+1oAyoSPy0oZSZZtOYGwuovPd/bPN
+         bh/7iVIqEXktIv/8CZAJqfNXvvD1oqgSa989k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=rwpaXnT2EeEfwGVu4ev0tx59FKrNBxWx6TusqvWIrO4=;
+        b=cnXnc7BzgqkC8pLVbELXV4yq3skBDGK3j1N8vgULQk3M13nHeNwSiSkIYLUZqU7ine
+         8uMkim8gLy9ej57FTRldw+UxX1v7J2nTlDPEL+k61r4sxRQv+aAjs7uqCFhVvLbG4GaJ
+         h+PU2t5+DvgNWwMCTAanolT1EZlER6v+21/bCpzhBL+RJLSmu7vsqbOmRQJ0xmgeNS85
+         dlfpn5li+YLM5eBm4p7l6Z0IWjIjzR/dueWw0Alhx9vRLpPRuwqI8YebNIbbBF7dSX78
+         3u4SYxmnR41f1SVZm+cX6dyRt+ZVQLjWbKfNV3IgreSg6Q4byEvJNkeSSjuWTyT+ZSLN
+         4cqg==
+X-Gm-Message-State: AOAM532urVaTYvpXjx1OQz2lEljqgTTbP3QE9TATzHsmwplVgWbXOS/O
+        4g57j9ntj/oSupMypdZgyp63hA==
+X-Google-Smtp-Source: ABdhPJy/guAnpNvjPltmDRyGFOwK8QXlT4NftOMstfwJ8I5HPq/JZI2YY8fQWzE+0d728rj4fPnFbQ==
+X-Received: by 2002:a17:90a:1fca:: with SMTP id z10mr3536837pjz.209.1597436684024;
+        Fri, 14 Aug 2020 13:24:44 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id r15sm10581689pfq.189.2020.08.14.13.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 13:24:43 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: 51f58ab8618c49ec09034a6d961ab25c
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [MXMQ]                               
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org> <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com> <1272cba3-1a6c-4d2e-0b4b-a19dfb5f3a4d@codeaurora.org>
+Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Fri, 14 Aug 2020 13:24:42 -0700
+Message-ID: <159743668207.33733.6711446681138353287@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Ar10 (xr300) has 3 and grx390 (xrx330) has 4 built-in GPHY. PHY LEDs are
-connected via STP. STP is a peripheral controller used to drive external
-shift register cascades. The hardware is able to allow the GPHY to drive
-some GPIO of the cascade automatically.This patch allows for this on ar10
-and grx390.
+Quoting Maulik Shah (2020-08-13 00:30:44)
+> Hi,
+>=20
+> On 8/12/2020 3:01 AM, Stephen Boyd wrote:
+> > Quoting Maulik Shah (2020-08-10 04:21:00)
+> >> Clear previous kernel's configuration during init by resetting
+> >> interrupts in enable bank to zero.
+> > Can you please add some more information here about why we're not
+> > clearing all the pdc irqs and only the ones that are listed in DT?
+> sure.
+> >   Is
+> > that because the pdc is shared between exception levels of the CPU and
+> > so some irqs shouldn't be used? Does the DT binding need to change to
+> > only list the hwirqs that are usable by the OS instead of the ones that
+> > are usable for the entire system? The binding doesn't mention this at
+> > all so I am just guessing here.
+>=20
+> The IRQs specified in qcom,pdc-ranges property in DT are the only ones=20
+> that can be used in the current OS for the PDC.
+>=20
+> So instead of setting entire register to zero (each reg supports 32=20
+> interrupts enable bit) only clearing the ones that can be used.
+>=20
 
-Tested on D-Link DWR-966 with OpenWRT.
-
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
- drivers/gpio/gpio-stp-xway.c | 54 ++++++++++++++++++++++++++++++++----
- 1 file changed, 48 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
-index 9e23a5ae8108..0ce1543426a4 100644
---- a/drivers/gpio/gpio-stp-xway.c
-+++ b/drivers/gpio/gpio-stp-xway.c
-@@ -41,7 +41,10 @@
- #define XWAY_STP_4HZ		BIT(23)
- #define XWAY_STP_8HZ		BIT(24)
- #define XWAY_STP_10HZ		(BIT(24) | BIT(23))
--#define XWAY_STP_SPEED_MASK	(0xf << 23)
-+#define XWAY_STP_SPEED_MASK	(BIT(23) | BIT(24) | BIT(25) | BIT(26) | BIT(27))
-+
-+#define XWAY_STP_FPIS_VALUE	BIT(21)
-+#define XWAY_STP_FPIS_MASK	(BIT(20) | BIT(21))
- 
- /* clock source for automatic update */
- #define XWAY_STP_UPD_FPI	BIT(31)
-@@ -54,7 +57,9 @@
- /* 2 groups of 3 bits can be driven by the phys */
- #define XWAY_STP_PHY_MASK	0x7
- #define XWAY_STP_PHY1_SHIFT	27
--#define XWAY_STP_PHY2_SHIFT	15
-+#define XWAY_STP_PHY2_SHIFT	3
-+#define XWAY_STP_PHY3_SHIFT	6
-+#define XWAY_STP_PHY4_SHIFT	15
- 
- /* STP has 3 groups of 8 bits */
- #define XWAY_STP_GROUP0		BIT(0)
-@@ -80,6 +85,8 @@ struct xway_stp {
- 	u8 dsl;		/* the 2 LSBs can be driven by the dsl core */
- 	u8 phy1;	/* 3 bits can be driven by phy1 */
- 	u8 phy2;	/* 3 bits can be driven by phy2 */
-+	u8 phy3;	/* 3 bits can be driven by phy3 */
-+	u8 phy4;	/* 3 bits can be driven by phy4 */
- 	u8 reserved;	/* mask out the hw driven bits in gpio_request */
- };
- 
-@@ -114,7 +121,8 @@ static void xway_stp_set(struct gpio_chip *gc, unsigned gpio, int val)
- 	else
- 		chip->shadow &= ~BIT(gpio);
- 	xway_stp_w32(chip->virt, chip->shadow, XWAY_STP_CPU0);
--	xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
-+	if (!chip->reserved)
-+		xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
- }
- 
- /**
-@@ -188,16 +196,37 @@ static void xway_stp_hw_init(struct xway_stp *chip)
- 			chip->phy2 << XWAY_STP_PHY2_SHIFT,
- 			XWAY_STP_CON1);
- 
-+	if (of_machine_is_compatible("lantiq,grx390")
-+	    || of_machine_is_compatible("lantiq,ar10")) {
-+		xway_stp_w32_mask(chip->virt,
-+				XWAY_STP_PHY_MASK << XWAY_STP_PHY3_SHIFT,
-+				chip->phy3 << XWAY_STP_PHY3_SHIFT,
-+				XWAY_STP_CON1);
-+	}
-+
-+	if (of_machine_is_compatible("lantiq,grx390")) {
-+		xway_stp_w32_mask(chip->virt,
-+				XWAY_STP_PHY_MASK << XWAY_STP_PHY4_SHIFT,
-+				chip->phy4 << XWAY_STP_PHY4_SHIFT,
-+				XWAY_STP_CON1);
-+	}
-+
- 	/* mask out the hw driven bits in gpio_request */
--	chip->reserved = (chip->phy2 << 5) | (chip->phy1 << 2) | chip->dsl;
-+	chip->reserved = (chip->phy4 << 11) | (chip->phy3 << 8) | (chip->phy2 << 5)
-+		| (chip->phy1 << 2) | chip->dsl;
- 
- 	/*
- 	 * if we have pins that are driven by hw, we need to tell the stp what
- 	 * clock to use as a timer.
- 	 */
--	if (chip->reserved)
-+	if (chip->reserved) {
- 		xway_stp_w32_mask(chip->virt, XWAY_STP_UPD_MASK,
- 			XWAY_STP_UPD_FPI, XWAY_STP_CON1);
-+		xway_stp_w32_mask(chip->virt, XWAY_STP_SPEED_MASK,
-+			XWAY_STP_10HZ, XWAY_STP_CON1);
-+		xway_stp_w32_mask(chip->virt, XWAY_STP_FPIS_MASK,
-+			XWAY_STP_FPIS_VALUE, XWAY_STP_CON1);
-+	}
- }
- 
- static int xway_stp_probe(struct platform_device *pdev)
-@@ -242,13 +271,26 @@ static int xway_stp_probe(struct platform_device *pdev)
- 	/* find out which gpios are controlled by the phys */
- 	if (of_machine_is_compatible("lantiq,ar9") ||
- 			of_machine_is_compatible("lantiq,gr9") ||
--			of_machine_is_compatible("lantiq,vr9")) {
-+			of_machine_is_compatible("lantiq,vr9") ||
-+			of_machine_is_compatible("lantiq,ar10") ||
-+			of_machine_is_compatible("lantiq,grx390")) {
- 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy1", &phy))
- 			chip->phy1 = phy & XWAY_STP_PHY_MASK;
- 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy2", &phy))
- 			chip->phy2 = phy & XWAY_STP_PHY_MASK;
- 	}
- 
-+	if (of_machine_is_compatible("lantiq,ar10") ||
-+			of_machine_is_compatible("lantiq,grx390")) {
-+		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy3", &phy))
-+			chip->phy3 = phy & XWAY_STP_PHY_MASK;
-+	}
-+
-+	if (of_machine_is_compatible("lantiq,grx390")) {
-+		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy4", &phy))
-+			chip->phy4 = phy & XWAY_STP_PHY_MASK;
-+	}
-+
- 	/* check which edge trigger we should use, default to a falling edge */
- 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
- 		chip->edge = XWAY_STP_FALLING;
--- 
-2.20.1
-
+Ok. Is something wrong with setting all the register bits to 0? Is there
+something else in those registers that shouldn't be touched? Please add
+these details to the commit message.
