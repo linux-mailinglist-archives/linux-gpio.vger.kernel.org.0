@@ -2,581 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99FAD244EDA
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 21:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFABC244F00
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 21:56:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHNTbp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Aug 2020 15:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHNTbo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Aug 2020 15:31:44 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA25FC061385
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Aug 2020 12:31:43 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id x7so4812709qvi.5
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Aug 2020 12:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ROUXD6+Z8J6REH99FQe20cUFj5Wahr1X83jej3A2aFA=;
-        b=xDC077Rtt280diWEQdcshtCqf3d6HqWTY5DSHfI3x0t2/6+31uWe2zf31zX3biBaYQ
-         3+k+7qEGIbQS95M0/kDvf8E3I12kYNBP0UUUzHGL0p/OqmVzhcoa2hAc4vmORls4MeCT
-         37ZkA+3WHYeV2NAVm1J+HOdvWf21g8ocNJgOtnhBe8YdlTUYLTpNqwGd7nDeS0kJ/35G
-         MTF8AsCiTG7HtGAq6YOKdM3HXqCm39l9rFi7vNZLnejy9+85lB7J8vrGE44BSW1ADU+R
-         eJ0uIGchpdxrKYvhk6qnGh1dsEEjg6Qwfw/YJhg65b8EF/ap1XYlbbpEwSNgKO0juSKT
-         TPpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ROUXD6+Z8J6REH99FQe20cUFj5Wahr1X83jej3A2aFA=;
-        b=tHXiSFTrUDQEt6BL8ibOYkiLjkCRINp9dBEIpm4uGmMSeTsd/ftvhZS388irJfBRlV
-         pSdVso6K7E/h+8F/43xurrwXD3EBdYPyj3C/Vi3n6jXYGoZ04bc0vQgiRJ4t1WPMZQe7
-         /4uZm6vVvzfdQv6RlWjHcjWbFs8YTuRzYuc+g2+HXcxU5qZ3Fy//2zumxuvDaNY1q95C
-         AeunA8OV8cKri6neAwcbjMKvDmylm9zPfLxPPtFgUAWDvl69oItrQXpxYGfYDhZJAfjf
-         uSDj+ldKQI41rFa/sHAoz/QcTN+gWREtugrFr6YvZLOOu7H/y1cYH7leQVYbWfKCeuqQ
-         /5/Q==
-X-Gm-Message-State: AOAM532gvCbCIoP5rxSsjdECzSWMWHc2kPmF5Ld/evuNvDW9UrfStqel
-        xieakvPoIfaMIvbG0J/jRDzEPTjY4VYsllTBjeXskg==
-X-Google-Smtp-Source: ABdhPJzTqALUmIjqwmn9fux3oTAZ9ZDTldyoNfOWtzXq6XgEv+EOD3A6mhjouABo0GI3B+bv6YafhQ14RyAuYSljye8=
-X-Received: by 2002:a0c:eed1:: with SMTP id h17mr3968047qvs.96.1597433500442;
- Fri, 14 Aug 2020 12:31:40 -0700 (PDT)
+        id S1727955AbgHNT4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Aug 2020 15:56:33 -0400
+Received: from mx4.wp.pl ([212.77.101.11]:45755 "EHLO mx4.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgHNT4d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Aug 2020 15:56:33 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 15:56:31 EDT
+Received: (wp-smtpd smtp.wp.pl 27067 invoked from network); 14 Aug 2020 21:49:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1597434590; bh=6hs6TPHFIz1kOVdD6LgU8CRUVT9Umoi+c/8YAc/xC4M=;
+          h=From:To:Cc:Subject;
+          b=eN8v/ZpcBq4H7jMtxIUpXjF98kThu7jSSm54P6uuEch+cVb48QelKmg460BIds1/A
+           09ptcadME72tw3bbC4ztUfVtLh4894huexGOo0favP0554YmvmDTG1OIM83ZXOlqUc
+           YrFZWYGVS6fGIh+lzVQvM1LIiY30f+Dck1J+7KTk=
+Received: from riviera.nat.student.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-gpio@vger.kernel.org>; 14 Aug 2020 21:49:50 +0200
+From:   Aleksander Jan Bajkowski <olek2@wp.pl>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, john@phrozen.org
+Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH] gpio: stp-xway: automatically drive GPHY leds on ar10 and grx390
+Date:   Fri, 14 Aug 2020 21:48:47 +0200
+Message-Id: <20200814194847.3171-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200814030257.135463-1-warthog618@gmail.com> <20200814030257.135463-8-warthog618@gmail.com>
-In-Reply-To: <20200814030257.135463-8-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 14 Aug 2020 21:31:29 +0200
-Message-ID: <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
-Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: 51f58ab8618c49ec09034a6d961ab25c
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [MXMQ]                               
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
+Ar10 (xr300) has 3 and grx390 (xrx330) has 4 built-in GPHY. PHY LEDs are
+connected via STP. STP is a peripheral controller used to drive external
+shift register cascades. The hardware is able to allow the GPHY to drive
+some GPIO of the cascade automatically.This patch allows for this on ar10
+and grx390.
 
-Hi Kent,
+Tested on D-Link DWR-966 with OpenWRT.
 
-not many comments here, just a couple minor details below.
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ drivers/gpio/gpio-stp-xway.c | 54 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
->
-> The struct line implementation is based on the v1 struct linehandle
-> implementation.
->
-> The line_ioctl() is a simple wrapper around line_get_values() here, but
-> will be extended with other ioctls in subsequent patches.
->
-> Changes for v4:
->  - fix handling of mask in line_get_values
->
->  drivers/gpio/gpiolib-cdev.c | 413 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 413 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 8b012879fe3f..8671e04ff989 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1,7 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->
->  #include <linux/anon_inodes.h>
-> +#include <linux/atomic.h>
->  #include <linux/bitmap.h>
-> +#include <linux/build_bug.h>
->  #include <linux/cdev.h>
->  #include <linux/compat.h>
->  #include <linux/device.h>
-> @@ -34,6 +36,7 @@
->   * GPIO line handle management
->   */
->
-> +#ifdef CONFIG_GPIO_CDEV_V1
->  /**
->   * struct linehandle_state - contains the state of a userspace handle
->   * @gdev: the GPIO device the handle pertains to
-> @@ -376,6 +379,390 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->         linehandle_free(lh);
->         return ret;
->  }
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
-> +
-> +/**
-> + * struct line - contains the state of a userspace line request
-> + * @gdev: the GPIO device the line request pertains to
-> + * @label: consumer label used to tag descriptors
-> + * @num_descs: the number of descriptors held in the descs array
-> + * @descs: the GPIO descriptors held by this line request, with @num_descs
-> + * elements.
-> + */
-> +struct line {
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index 9e23a5ae8108..0ce1543426a4 100644
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -41,7 +41,10 @@
+ #define XWAY_STP_4HZ		BIT(23)
+ #define XWAY_STP_8HZ		BIT(24)
+ #define XWAY_STP_10HZ		(BIT(24) | BIT(23))
+-#define XWAY_STP_SPEED_MASK	(0xf << 23)
++#define XWAY_STP_SPEED_MASK	(BIT(23) | BIT(24) | BIT(25) | BIT(26) | BIT(27))
++
++#define XWAY_STP_FPIS_VALUE	BIT(21)
++#define XWAY_STP_FPIS_MASK	(BIT(20) | BIT(21))
+ 
+ /* clock source for automatic update */
+ #define XWAY_STP_UPD_FPI	BIT(31)
+@@ -54,7 +57,9 @@
+ /* 2 groups of 3 bits can be driven by the phys */
+ #define XWAY_STP_PHY_MASK	0x7
+ #define XWAY_STP_PHY1_SHIFT	27
+-#define XWAY_STP_PHY2_SHIFT	15
++#define XWAY_STP_PHY2_SHIFT	3
++#define XWAY_STP_PHY3_SHIFT	6
++#define XWAY_STP_PHY4_SHIFT	15
+ 
+ /* STP has 3 groups of 8 bits */
+ #define XWAY_STP_GROUP0		BIT(0)
+@@ -80,6 +85,8 @@ struct xway_stp {
+ 	u8 dsl;		/* the 2 LSBs can be driven by the dsl core */
+ 	u8 phy1;	/* 3 bits can be driven by phy1 */
+ 	u8 phy2;	/* 3 bits can be driven by phy2 */
++	u8 phy3;	/* 3 bits can be driven by phy3 */
++	u8 phy4;	/* 3 bits can be driven by phy4 */
+ 	u8 reserved;	/* mask out the hw driven bits in gpio_request */
+ };
+ 
+@@ -114,7 +121,8 @@ static void xway_stp_set(struct gpio_chip *gc, unsigned gpio, int val)
+ 	else
+ 		chip->shadow &= ~BIT(gpio);
+ 	xway_stp_w32(chip->virt, chip->shadow, XWAY_STP_CPU0);
+-	xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
++	if (!chip->reserved)
++		xway_stp_w32_mask(chip->virt, 0, XWAY_STP_CON_SWU, XWAY_STP_CON0);
+ }
+ 
+ /**
+@@ -188,16 +196,37 @@ static void xway_stp_hw_init(struct xway_stp *chip)
+ 			chip->phy2 << XWAY_STP_PHY2_SHIFT,
+ 			XWAY_STP_CON1);
+ 
++	if (of_machine_is_compatible("lantiq,grx390")
++	    || of_machine_is_compatible("lantiq,ar10")) {
++		xway_stp_w32_mask(chip->virt,
++				XWAY_STP_PHY_MASK << XWAY_STP_PHY3_SHIFT,
++				chip->phy3 << XWAY_STP_PHY3_SHIFT,
++				XWAY_STP_CON1);
++	}
++
++	if (of_machine_is_compatible("lantiq,grx390")) {
++		xway_stp_w32_mask(chip->virt,
++				XWAY_STP_PHY_MASK << XWAY_STP_PHY4_SHIFT,
++				chip->phy4 << XWAY_STP_PHY4_SHIFT,
++				XWAY_STP_CON1);
++	}
++
+ 	/* mask out the hw driven bits in gpio_request */
+-	chip->reserved = (chip->phy2 << 5) | (chip->phy1 << 2) | chip->dsl;
++	chip->reserved = (chip->phy4 << 11) | (chip->phy3 << 8) | (chip->phy2 << 5)
++		| (chip->phy1 << 2) | chip->dsl;
+ 
+ 	/*
+ 	 * if we have pins that are driven by hw, we need to tell the stp what
+ 	 * clock to use as a timer.
+ 	 */
+-	if (chip->reserved)
++	if (chip->reserved) {
+ 		xway_stp_w32_mask(chip->virt, XWAY_STP_UPD_MASK,
+ 			XWAY_STP_UPD_FPI, XWAY_STP_CON1);
++		xway_stp_w32_mask(chip->virt, XWAY_STP_SPEED_MASK,
++			XWAY_STP_10HZ, XWAY_STP_CON1);
++		xway_stp_w32_mask(chip->virt, XWAY_STP_FPIS_MASK,
++			XWAY_STP_FPIS_VALUE, XWAY_STP_CON1);
++	}
+ }
+ 
+ static int xway_stp_probe(struct platform_device *pdev)
+@@ -242,13 +271,26 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	/* find out which gpios are controlled by the phys */
+ 	if (of_machine_is_compatible("lantiq,ar9") ||
+ 			of_machine_is_compatible("lantiq,gr9") ||
+-			of_machine_is_compatible("lantiq,vr9")) {
++			of_machine_is_compatible("lantiq,vr9") ||
++			of_machine_is_compatible("lantiq,ar10") ||
++			of_machine_is_compatible("lantiq,grx390")) {
+ 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy1", &phy))
+ 			chip->phy1 = phy & XWAY_STP_PHY_MASK;
+ 		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy2", &phy))
+ 			chip->phy2 = phy & XWAY_STP_PHY_MASK;
+ 	}
+ 
++	if (of_machine_is_compatible("lantiq,ar10") ||
++			of_machine_is_compatible("lantiq,grx390")) {
++		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy3", &phy))
++			chip->phy3 = phy & XWAY_STP_PHY_MASK;
++	}
++
++	if (of_machine_is_compatible("lantiq,grx390")) {
++		if (!of_property_read_u32(pdev->dev.of_node, "lantiq,phy4", &phy))
++			chip->phy4 = phy & XWAY_STP_PHY_MASK;
++	}
++
+ 	/* check which edge trigger we should use, default to a falling edge */
+ 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
+ 		chip->edge = XWAY_STP_FALLING;
+-- 
+2.20.1
 
-How about line_request, line_request_data or line_req_ctx? Something
-more intuitive than struct line that doesn't even refer to a single
-line. Same for relevant functions below.
-
-> +       struct gpio_device *gdev;
-> +       const char *label;
-> +       u32 num_descs;
-> +       struct gpio_desc *descs[];
-> +};
-> +
-> +#define GPIO_V2_LINE_BIAS_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_BIAS_PULL_UP | \
-> +        GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN | \
-> +        GPIO_V2_LINE_FLAG_BIAS_DISABLED)
-> +
-> +#define GPIO_V2_LINE_DIRECTION_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_INPUT | \
-> +        GPIO_V2_LINE_FLAG_OUTPUT)
-> +
-> +#define GPIO_V2_LINE_DRIVE_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_OPEN_DRAIN | \
-> +        GPIO_V2_LINE_FLAG_OPEN_SOURCE)
-> +
-> +#define GPIO_V2_LINE_VALID_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_ACTIVE_LOW | \
-> +        GPIO_V2_LINE_DIRECTION_FLAGS | \
-> +        GPIO_V2_LINE_DRIVE_FLAGS | \
-> +        GPIO_V2_LINE_BIAS_FLAGS)
-> +
-> +static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
-> +                                    int line_idx)
-> +{
-> +       int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_FLAGS) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return lc->attrs[i].attr.flags;
-> +       }
-> +       return lc->flags;
-> +}
-> +
-> +static int gpio_v2_line_config_output_value(struct gpio_v2_line_config *lc,
-> +                                           int line_idx)
-> +{
-> +       int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return !!(lc->attrs[i].attr.values & mask);
-> +       }
-> +       return 0;
-> +}
-> +
-> +static int gpio_v2_line_flags_validate(u64 flags)
-> +{
-> +       /* Return an error if an unknown flag is set */
-> +       if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
-> +               return -EINVAL;
-> +
-> +       /*
-> +        * Do not allow both INPUT & OUTPUT flags to be set as they are
-> +        * contradictory.
-> +        */
-> +       if ((flags & GPIO_V2_LINE_FLAG_INPUT) &&
-> +           (flags & GPIO_V2_LINE_FLAG_OUTPUT))
-> +               return -EINVAL;
-> +
-> +       /*
-> +        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
-> +        * the hardware actually supports enabling both at the same time the
-> +        * electrical result would be disastrous.
-> +        */
-> +       if ((flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN) &&
-> +           (flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE))
-> +               return -EINVAL;
-> +
-> +       /* Drive requires explicit output direction. */
-> +       if ((flags & GPIO_V2_LINE_DRIVE_FLAGS) &&
-> +           !(flags & GPIO_V2_LINE_FLAG_OUTPUT))
-> +               return -EINVAL;
-> +
-> +       /* Bias requies explicit direction. */
-
-s/requies/requires/
-
-> +       if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
-> +           !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
-> +               return -EINVAL;
-> +
-> +       /* Only one bias flag can be set. */
-> +       if (((flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED) &&
-> +            (flags & (GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN |
-> +                      GPIO_V2_LINE_FLAG_BIAS_PULL_UP))) ||
-> +           ((flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN) &&
-> +            (flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)))
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
-> +                                       int num_lines)
-
-I recall sending some patches for gpiolib that would fix some
-potential problems with casting between signed and unsigned integers.
-I think they were of different size too though. I don't see any
-potential problems here yet but maybe whenever an argument/local
-variable can't take a negative value by design, let's use unsigned
-int?
-
-> +{
-> +       int i, ret;
-
-Same here and elsewhere for arguments and local variables.
-
-> +       u64 flags;
-> +
-> +       if (lc->num_attrs > GPIO_V2_LINE_NUM_ATTRS_MAX)
-> +               return -EINVAL;
-> +
-> +       if (memchr_inv(lc->padding, 0, sizeof(lc->padding)))
-> +               return -EINVAL;
-> +
-> +       for (i = 0; i < num_lines; i++) {
-> +               flags = gpio_v2_line_config_flags(lc, i);
-> +               ret = gpio_v2_line_flags_validate(flags);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
-> +                                                   unsigned long *flagsp)
-> +{
-> +       assign_bit(FLAG_ACTIVE_LOW, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW);
-> +       if (flags & GPIO_V2_LINE_FLAG_OUTPUT)
-> +               set_bit(FLAG_IS_OUT, flagsp);
-> +       else if (flags & GPIO_V2_LINE_FLAG_INPUT)
-> +               clear_bit(FLAG_IS_OUT, flagsp);
-> +       assign_bit(FLAG_OPEN_DRAIN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
-> +       assign_bit(FLAG_OPEN_SOURCE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE);
-> +       assign_bit(FLAG_PULL_UP, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP);
-> +       assign_bit(FLAG_PULL_DOWN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN);
-> +       assign_bit(FLAG_BIAS_DISABLE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED);
-> +}
-> +
-> +static long line_get_values(struct line *line, void __user *ip)
-> +{
-> +       struct gpio_v2_line_values lv;
-> +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +       struct gpio_desc **descs;
-> +       int ret, i, didx, num_get = 0;
-> +
-> +       /* NOTE: It's ok to read values of output lines. */
-> +       if (copy_from_user(&lv, ip, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       if (lv.mask == 0)
-> +               return -EINVAL;
-> +
-> +       for (i = 0; i < line->num_descs; i++)
-> +               if (lv.mask & BIT_ULL(i))
-> +                       num_get++;
-> +       if (num_get == line->num_descs) {
-> +               descs = line->descs;
-> +       } else {
-> +               descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
-> +               for (didx = 0, i = 0; i < line->num_descs; i++) {
-> +                       if (lv.mask & BIT_ULL(i)) {
-> +                               descs[didx] = line->descs[i];
-> +                               didx++;
-> +                       }
-> +               }
-> +       }
-> +       ret = gpiod_get_array_value_complex(false,
-> +                                           true,
-> +                                           num_get,
-> +                                           descs,
-> +                                           NULL,
-> +                                           vals);
-> +
-> +       if (descs != line->descs)
-> +               kfree(descs);
-> +       if (ret)
-> +               return ret;
-> +
-> +       lv.bits = 0;
-> +       for (didx = 0, i = 0; i < line->num_descs; i++) {
-> +               if (lv.mask & BIT_ULL(i)) {
-> +                       if (test_bit(didx, vals))
-> +                               lv.bits |= BIT_ULL(i);
-> +                       didx++;
-> +               }
-> +       }
-> +
-> +       if (copy_to_user(ip, &lv, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       return 0;
-> +}
-> +
-> +static long line_ioctl(struct file *file, unsigned int cmd,
-> +                      unsigned long arg)
-> +{
-> +       struct line *line = file->private_data;
-> +       void __user *ip = (void __user *)arg;
-> +
-> +       if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
-> +               return line_get_values(line, ip);
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +#ifdef CONFIG_COMPAT
-> +static long line_ioctl_compat(struct file *file, unsigned int cmd,
-> +                             unsigned long arg)
-> +{
-> +       return line_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-> +}
-> +#endif
-> +
-> +static void line_free(struct line *line)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < line->num_descs; i++) {
-> +               if (line->descs[i])
-> +                       gpiod_free(line->descs[i]);
-> +       }
-> +       kfree(line->label);
-> +       put_device(&line->gdev->dev);
-> +       kfree(line);
-> +}
-> +
-> +static int line_release(struct inode *inode, struct file *file)
-> +{
-> +       struct line *line = file->private_data;
-> +
-> +       line_free(line);
-> +       return 0;
-> +}
-> +
-> +static const struct file_operations line_fileops = {
-> +       .release = line_release,
-> +       .owner = THIS_MODULE,
-> +       .llseek = noop_llseek,
-> +       .unlocked_ioctl = line_ioctl,
-> +#ifdef CONFIG_COMPAT
-> +       .compat_ioctl = line_ioctl_compat,
-> +#endif
-> +};
-> +
-> +static int line_create(struct gpio_device *gdev, void __user *ip)
-> +{
-> +       struct gpio_v2_line_request lr;
-> +       struct line *line;
-> +       struct file *file;
-> +       int fd, i, ret;
-> +       struct gpio_v2_line_config *lc;
-> +       unsigned long flags;
-> +
-> +       if (copy_from_user(&lr, ip, sizeof(lr)))
-> +               return -EFAULT;
-> +       if ((lr.num_lines == 0) || (lr.num_lines > GPIO_V2_LINES_MAX))
-> +               return -EINVAL;
-> +
-> +       if (memchr_inv(lr.padding, 0, sizeof(lr.padding)))
-> +               return -EINVAL;
-> +
-> +       lc = &lr.config;
-> +       ret = gpio_v2_line_config_validate(lc, lr.num_lines);
-> +       if (ret)
-> +               return ret;
-> +
-> +       line = kzalloc(struct_size(line, descs, lr.num_lines),
-> +                      GFP_KERNEL);
-> +       if (!line)
-> +               return -ENOMEM;
-> +
-> +       line->gdev = gdev;
-> +       get_device(&gdev->dev);
-> +
-> +       /* Make sure this is terminated */
-> +       lr.consumer[sizeof(lr.consumer)-1] = '\0';
-> +       if (strlen(lr.consumer)) {
-> +               line->label = kstrdup(lr.consumer, GFP_KERNEL);
-> +               if (!line->label) {
-> +                       ret = -ENOMEM;
-> +                       goto out_free_line;
-> +               }
-> +       }
-> +
-> +       line->num_descs = lr.num_lines;
-> +
-> +       /* Request each GPIO */
-> +       for (i = 0; i < lr.num_lines; i++) {
-> +               u32 offset = lr.offsets[i];
-> +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
-> +
-> +               if (IS_ERR(desc)) {
-> +                       ret = PTR_ERR(desc);
-> +                       goto out_free_line;
-> +               }
-> +
-> +               ret = gpiod_request(desc, line->label);
-> +               if (ret)
-> +                       goto out_free_line;
-> +
-> +               line->descs[i] = desc;
-> +               flags = gpio_v2_line_config_flags(lc, i);
-> +               gpio_v2_line_config_flags_to_desc_flags(flags, &desc->flags);
-> +
-> +               ret = gpiod_set_transitory(desc, false);
-> +               if (ret < 0)
-> +                       goto out_free_line;
-> +
-> +               /*
-> +                * Lines have to be requested explicitly for input
-> +                * or output, else the line will be treated "as is".
-> +                */
-> +               if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
-> +                       int val = gpio_v2_line_config_output_value(lc, i);
-> +
-> +                       ret = gpiod_direction_output(desc, val);
-> +                       if (ret)
-> +                               goto out_free_line;
-> +               } else if (flags & GPIO_V2_LINE_FLAG_INPUT) {
-> +                       ret = gpiod_direction_input(desc);
-> +                       if (ret)
-> +                               goto out_free_line;
-> +               }
-> +
-> +               blocking_notifier_call_chain(&desc->gdev->notifier,
-> +                                            GPIOLINE_CHANGED_REQUESTED, desc);
-> +
-> +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> +                       offset);
-> +       }
-> +
-> +       fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> +       if (fd < 0) {
-> +               ret = fd;
-> +               goto out_free_line;
-> +       }
-> +
-> +       file = anon_inode_getfile("gpio-line",
-> +                                 &line_fileops,
-> +                                 line,
-> +                                 O_RDONLY | O_CLOEXEC);
-> +       if (IS_ERR(file)) {
-> +               ret = PTR_ERR(file);
-> +               goto out_put_unused_fd;
-> +       }
-> +
-> +       lr.fd = fd;
-> +       if (copy_to_user(ip, &lr, sizeof(lr))) {
-> +               /*
-> +                * fput() will trigger the release() callback, so do not go onto
-> +                * the regular error cleanup path here.
-> +                */
-> +               fput(file);
-> +               put_unused_fd(fd);
-> +               return -EFAULT;
-> +       }
-> +
-> +       fd_install(fd, file);
-> +
-> +       dev_dbg(&gdev->dev, "registered chardev handle for %d lines\n",
-> +               line->num_descs);
-> +
-> +       return 0;
-> +
-> +out_put_unused_fd:
-> +       put_unused_fd(fd);
-> +out_free_line:
-> +       line_free(line);
-> +       return ret;
-> +}
-> +
-> +#ifdef CONFIG_GPIO_CDEV_V1
->
->  /*
->   * GPIO line event management
-> @@ -745,6 +1132,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         return ret;
->  }
->
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
-> +
->  static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->                                   struct gpioline_info *info)
->  {
-> @@ -842,6 +1231,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->                 if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
->                         return -EFAULT;
->                 return 0;
-> +#ifdef CONFIG_GPIO_CDEV_V1
->         } else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
->                 struct gpioline_info lineinfo;
->
-> @@ -884,6 +1274,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->                 }
->
->                 return 0;
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
-> +       } else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
-> +               return line_create(gdev, ip);
->         } else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
->                 if (copy_from_user(&offset, ip, sizeof(offset)))
->                         return -EFAULT;
-> @@ -1109,4 +1502,24 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
->  void gpiolib_cdev_unregister(struct gpio_device *gdev)
->  {
->         cdev_device_del(&gdev->chrdev, &gdev->dev);
-> +
-> +       /*
-> +        * array sizes must ensure 64-bit alignment and not create holes in
-> +        * the struct packing.
-> +        */
-> +       BUILD_BUG_ON(GPIO_V2_LINES_MAX % 2);
-> +       BUILD_BUG_ON(GPIO_MAX_NAME_SIZE % 8);
-> +
-> +       /*
-> +        * check that uAPI structs are 64-bit aligned for 32/64-bit
-> +        * compatibility
-> +        */
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_attribute) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_config_attribute) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_config) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_request) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_info) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_info_changed) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_event) % 8);
-> +       BUILD_BUG_ON(sizeof(struct gpio_v2_line_values) % 8);
-
-You can use IS_ALIGNED() within BUILD_BUG_ON() for these checks and
-I'd also put them somewhere else than the unregister function. Maybe
-move it over to cdev_register() so that they're more visible?
-
->  }
-> --
-> 2.28.0
->
-
-Bart
