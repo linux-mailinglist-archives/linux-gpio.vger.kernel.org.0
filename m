@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74DF42443CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 05:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CDBD2443CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 05:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHNDFV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 23:05:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45798 "EHLO
+        id S1726576AbgHNDFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 23:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbgHNDFV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 23:05:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D222C061757;
-        Thu, 13 Aug 2020 20:05:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mw10so3723931pjb.2;
-        Thu, 13 Aug 2020 20:05:21 -0700 (PDT)
+        with ESMTP id S1726568AbgHNDFa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 23:05:30 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93336C061757;
+        Thu, 13 Aug 2020 20:05:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mw10so3724066pjb.2;
+        Thu, 13 Aug 2020 20:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=mRKdgiqs07vkxxjTqsAjH/48JLLsLSlgnk86cInqgmM2qtR3OFBEIImGHr7cnPmOWo
-         bH98bVfbHz3ZEmpoiSkgX9pCscgED2r5H7SKU6axAQ+5g/1HaYWSaeZDNB7FD5JlgFqw
-         FCyLt6VkzxW+4yHrbJ6OnXWTV9DhrF5cJywLHuToFVjpjDhczNCqGlPBFMb3nF8baeFc
-         ymKJu3V5r/awDaDY8pTojRjd/A1d2xyj2mea54AZcPG8E7TnSxzyThEaZu1Kdc0u4lTU
-         Op3E/C/xuHu4X59/M3bqHHCS90P25Ox3E5j6axdMB7oWbIrBTDmi/TIC6Z5F16NrV7QM
-         ihBg==
+        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
+        b=KMT3hLOnIPHPNEjufFg2tJXaP9TD/ikiCUL+mQs2ID7x30F7h2YGnsXH91+iH2cFpo
+         4PeAZMms5SzYYPgy0CQIcpGMuZcNQo+5TobMBzU2DRfMs5XICHHPzDQwv34gZ6T8+kz+
+         5NiMppfkG3BvNbQglXzNJDfrwNI9HBzRuPkiLzN8aIhRjifix6EkxD+wOlP+nXKK0rk6
+         1h9aYD5H4vlREkGjIRcwsSzkWpOfApYMMoOmkjPbkA/uMf6bllP3x3j0GoMfAkYhvm4y
+         kT0bP5o4pwQgszO8mxO4S5WZzw1egYnNvGuwHzrn7dniJKt+atLJqlPFfB6MManUUj8j
+         fUog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=hPAqdLROZkdyFBRDbO2ITSk6zky1EVPkYQ2938qvjvUjfSMnrEKKCF2KB0/HTuTsp9
-         UTAxz0adzTB1FhFq60VIoZ86QbOd+62QFLaDzWQxN51KRPcpmDR+NpvPxcQZwIAEdbVD
-         KFlbcU05RQqoDwI5ykzPgfzciJBFltKRvi+DC5vpuE1nlgaER2kdhTZCXqsaMEMrm0dr
-         GBLfuaFJV+ypMTTjHDnCkntcyTQyldSlP9vasRy/TAbE3cQvlztNekMGLmboyJA51XPQ
-         puqdGIugILetnuuKm+FkPdUSwbiZ/sRoMOtK2AV1A5dE+y2/pZ0h+wuwpFSuP5Pcu7SJ
-         xzlQ==
-X-Gm-Message-State: AOAM531XGMmWlyOkN+IL6lFhwtfcdDc4ADgzqY1x3PwiilZiJjoPrB5b
-        5Qgu810tx2ER0yaYsjlOI1POPSda
-X-Google-Smtp-Source: ABdhPJyBfyqQYElJZFfdYEuxQXJmg/JEp305/WNS5U1OvbEIKg7mYWMBZW5bpPPuv97c87bvSBAOXw==
-X-Received: by 2002:a17:902:30d:: with SMTP id 13mr563880pld.251.1597374320266;
-        Thu, 13 Aug 2020 20:05:20 -0700 (PDT)
+        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
+        b=kHiz5o1hGqbiOo7y75jyEXddJydBZxmK8ryPCcTw/M5eScRbY36ezmjhb4R7JwWLE8
+         IFqSF14EKlSwxgsYCfbhml4mJ1hzWkK/ou5VWKJXBPtVhiUZbYoimoXf0zmE4/ENEnMg
+         hOXwESLBngVniEEJesd8Dfl1bVMMYljbAYyq685tYgh6rsG2ooOL02QHekk7ZvNKCcma
+         BQiaykMkcruXBCPYXSIYkos9dYcWB4uCTV3hYskkr1unfrfRHBoPf6/A3W77V3/jQc/B
+         KYzACWhAPBAwZ6JeIvrbyaIefpTbtMuQoqJPX4gRyKvZHb3TUqxCvueutVgL3LXr/5sT
+         vugw==
+X-Gm-Message-State: AOAM5328rg6DRFqM95lYWc3+y3K/Lj4o3NPOTueJ6+V9dtz4NF9Tpk3Y
+        AE7H5+QuwPadxoCJ3yLKASHJdWVE
+X-Google-Smtp-Source: ABdhPJx7GdIPAYY61wAq5RgXhu0Tp/ZJIeUr1CljB4P5dzrRTLoEIuwHFY2XGeebaRtWjpQa0hDJXg==
+X-Received: by 2002:a17:902:9a81:: with SMTP id w1mr618349plp.186.1597374329752;
+        Thu, 13 Aug 2020 20:05:29 -0700 (PDT)
 Received: from sol.lan (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id z3sm6522231pgk.49.2020.08.13.20.05.17
+        by smtp.gmail.com with ESMTPSA id z3sm6522231pgk.49.2020.08.13.20.05.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 20:05:19 -0700 (PDT)
+        Thu, 13 Aug 2020 20:05:29 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v4 14/20] tools: gpio: port lsgpio to v2 uAPI
-Date:   Fri, 14 Aug 2020 11:02:51 +0800
-Message-Id: <20200814030257.135463-15-warthog618@gmail.com>
+Subject: [PATCH v4 15/20] tools: gpio: port gpio-watch to v2 uAPI
+Date:   Fri, 14 Aug 2020 11:02:52 +0800
+Message-Id: <20200814030257.135463-16-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200814030257.135463-1-warthog618@gmail.com>
 References: <20200814030257.135463-1-warthog618@gmail.com>
@@ -64,140 +64,68 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Port the lsgpio tool to the latest GPIO uAPI.
+Port the gpio-watch tool to the latest GPIO uAPI.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tools/gpio/lsgpio.c | 60 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 38 insertions(+), 22 deletions(-)
+ tools/gpio/gpio-watch.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index b08d7a5e779b..deda38244026 100644
---- a/tools/gpio/lsgpio.c
-+++ b/tools/gpio/lsgpio.c
-@@ -25,57 +25,73 @@
+diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
+index 5cea24fddfa7..6f048350a27e 100644
+--- a/tools/gpio/gpio-watch.c
++++ b/tools/gpio/gpio-watch.c
+@@ -21,8 +21,8 @@
  
- struct gpio_flag {
- 	char *name;
--	unsigned long mask;
-+	unsigned long long mask;
- };
- 
- struct gpio_flag flagnames[] = {
- 	{
--		.name = "kernel",
--		.mask = GPIOLINE_FLAG_KERNEL,
-+		.name = "used",
-+		.mask = GPIO_V2_LINE_FLAG_USED,
-+	},
-+	{
-+		.name = "input",
-+		.mask = GPIO_V2_LINE_FLAG_INPUT,
- 	},
- 	{
- 		.name = "output",
--		.mask = GPIOLINE_FLAG_IS_OUT,
-+		.mask = GPIO_V2_LINE_FLAG_OUTPUT,
- 	},
- 	{
- 		.name = "active-low",
--		.mask = GPIOLINE_FLAG_ACTIVE_LOW,
-+		.mask = GPIO_V2_LINE_FLAG_ACTIVE_LOW,
- 	},
- 	{
- 		.name = "open-drain",
--		.mask = GPIOLINE_FLAG_OPEN_DRAIN,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_DRAIN,
- 	},
- 	{
- 		.name = "open-source",
--		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_SOURCE,
- 	},
- 	{
- 		.name = "pull-up",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
- 	},
- 	{
- 		.name = "pull-down",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN,
- 	},
- 	{
- 		.name = "bias-disabled",
--		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_DISABLED,
- 	},
- };
- 
--void print_flags(unsigned long flags)
-+static void print_attributes(struct gpio_v2_line_info *info)
+ int main(int argc, char **argv)
  {
- 	int i;
--	int printed = 0;
-+	const char *field_format = "%s";
+-	struct gpioline_info_changed chg;
+-	struct gpioline_info req;
++	struct gpio_v2_line_info_changed chg;
++	struct gpio_v2_line_info req;
+ 	struct pollfd pfd;
+ 	int fd, i, j, ret;
+ 	char *event, *end;
+@@ -40,11 +40,11 @@ int main(int argc, char **argv)
+ 	for (i = 0, j = 2; i < argc - 2; i++, j++) {
+ 		memset(&req, 0, sizeof(req));
  
- 	for (i = 0; i < ARRAY_SIZE(flagnames); i++) {
--		if (flags & flagnames[i].mask) {
--			if (printed)
--				fprintf(stdout, " ");
--			fprintf(stdout, "%s", flagnames[i].name);
--			printed++;
-+		if (info->flags & flagnames[i].mask) {
-+			fprintf(stdout, field_format, flagnames[i].name);
-+			field_format = ", %s";
+-		req.line_offset = strtoul(argv[j], &end, 0);
++		req.offset = strtoul(argv[j], &end, 0);
+ 		if (*end != '\0')
+ 			goto err_usage;
+ 
+-		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
++		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_WATCH_IOCTL, &req);
+ 		if (ret) {
+ 			perror("unable to set up line watch");
+ 			return EXIT_FAILURE;
+@@ -71,13 +71,13 @@ int main(int argc, char **argv)
+ 			}
+ 
+ 			switch (chg.event_type) {
+-			case GPIOLINE_CHANGED_REQUESTED:
++			case GPIO_V2_LINE_CHANGED_REQUESTED:
+ 				event = "requested";
+ 				break;
+-			case GPIOLINE_CHANGED_RELEASED:
++			case GPIO_V2_LINE_CHANGED_RELEASED:
+ 				event = "released";
+ 				break;
+-			case GPIOLINE_CHANGED_CONFIG:
++			case GPIO_V2_LINE_CHANGED_CONFIG:
+ 				event = "config changed";
+ 				break;
+ 			default:
+@@ -87,7 +87,7 @@ int main(int argc, char **argv)
+ 			}
+ 
+ 			printf("line %u: %s at %llu\n",
+-			       chg.info.line_offset, event, chg.timestamp);
++			       chg.info.offset, event, chg.timestamp);
  		}
  	}
-+
-+	if ((info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
-+	    (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
-+		fprintf(stdout, field_format, "both-edges");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
-+		fprintf(stdout, field_format, "rising-edge");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+		fprintf(stdout, field_format, "falling-edge");
-+
-+	for (i = 0; i < info->num_attrs; i++) {
-+		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
-+			fprintf(stdout, ", debounce_period=%dusec",
-+				info->attrs[0].debounce_period);
-+	}
- }
  
- int list_device(const char *device_name)
-@@ -109,18 +125,18 @@ int list_device(const char *device_name)
- 
- 	/* Loop over the lines and print info */
- 	for (i = 0; i < cinfo.lines; i++) {
--		struct gpioline_info linfo;
-+		struct gpio_v2_line_info linfo;
- 
- 		memset(&linfo, 0, sizeof(linfo));
--		linfo.line_offset = i;
-+		linfo.offset = i;
- 
--		ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &linfo);
-+		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_IOCTL, &linfo);
- 		if (ret == -1) {
- 			ret = -errno;
- 			perror("Failed to issue LINEINFO IOCTL\n");
- 			goto exit_close_error;
- 		}
--		fprintf(stdout, "\tline %2d:", linfo.line_offset);
-+		fprintf(stdout, "\tline %2d:", linfo.offset);
- 		if (linfo.name[0])
- 			fprintf(stdout, " \"%s\"", linfo.name);
- 		else
-@@ -131,7 +147,7 @@ int list_device(const char *device_name)
- 			fprintf(stdout, " unused");
- 		if (linfo.flags) {
- 			fprintf(stdout, " [");
--			print_flags(linfo.flags);
-+			print_attributes(&linfo);
- 			fprintf(stdout, "]");
- 		}
- 		fprintf(stdout, "\n");
 -- 
 2.28.0
 
