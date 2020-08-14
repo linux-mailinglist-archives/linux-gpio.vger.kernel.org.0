@@ -2,229 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 403AE2442E9
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 04:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED4C2443AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Aug 2020 05:03:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHNCH2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Aug 2020 22:07:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33804 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgHNCH2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 22:07:28 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597370844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HszWUUJvd7EBksBKgBPNU6CHj9iNJBuG0ewO8MkRWQo=;
-        b=PnfV4lPQzaJJb7IiJlarS8hzjvDJVXqlY+OVzhtgxRcx79krwkGJVBLMfYWlZm3GLrMFoR
-        lshTb/yUYkutjbic0ygOtGFtykF7RsaQLSfOMs8He1AKWY7Ltn0Rz7368uBmYkyYw3rRuZ
-        MIVhUAEZzPpLCPqfLXkjye5xlgz4sDXyonelO5JX4vs5J7KgEDioduJyqI9jwbWD30xIyC
-        ig7LPzzqFD32Oh8ta5JZNV+RKtxAsGHTQJTnya9SALzf9IhbNyPIibUsuJfjUaFYlv+9e7
-        9KfmN3FS0QZahnivJW4TE8/Zx8Fx8+YcBtD19dJ3QJ0n1zcKzZjdrZdnv2npvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597370844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HszWUUJvd7EBksBKgBPNU6CHj9iNJBuG0ewO8MkRWQo=;
-        b=8djcXSCwB2u6hXA0mZQiZdIbTIgZlbVqk7umcsx0bo7yoDutngofTNKJcvogcrTHaiTokb
-        laHR4gkeKsBbB7BQ==
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-In-Reply-To: <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org> <87pn7ulwr5.fsf@nanos.tec.linutronix.de> <CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com> <878sei42ql.fsf@nanos.tec.linutronix.de> <CAD=FV=Wyp8B6183avk4on4Akz6dANkuJ25h_o_ERDuiZ87mwNw@mail.gmail.com>
-Date:   Fri, 14 Aug 2020 04:07:24 +0200
-Message-ID: <87364q3rqb.fsf@nanos.tec.linutronix.de>
+        id S1726663AbgHNDDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Aug 2020 23:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgHNDDP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Aug 2020 23:03:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7EEC061757;
+        Thu, 13 Aug 2020 20:03:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so3869391pfn.0;
+        Thu, 13 Aug 2020 20:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U1Bj9dSIh39mR+cb3mNLwfHnOjyrZiRgjj6ooulNuZA=;
+        b=UtoQ1vpc39WSDbgSqNH3PSccUc40sshdxWH7cpeNgQHguSPoCQSFE0STjpmNipaEHv
+         ucQRc+bnkimZgebOQWrZDCBwSuW7KjwopD68NLJRc+zhHQ9gXejxof4D6hdPJPFHqYbT
+         plkY3MVuPp2kJFHmVN2S10cx9AlpP7gorn27UnhPKab5POgqZ5PTwU2es2BJMc14Pyy3
+         hJtZRfGxSm3Db8PBAcKvnD45LIsgFBp1HpCtu0Mb8SSuPeNhqRE34XL/YnU7On1mR4OW
+         1bvsae+9bh/t/ubD56k+0qanYpJI54WYzQ6Oz/qcIygW1YLsk0FOTNM4bJmdL4nWXLnH
+         XiTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U1Bj9dSIh39mR+cb3mNLwfHnOjyrZiRgjj6ooulNuZA=;
+        b=TnZZFH+GdVXz376kv/kF2oBHPQP4Wq8qGbsbSvKjptGNEDgc/MjNHC57xBUJGt3wbu
+         8WHrUxVikxELKMTwaB+HSvuVAkz9nrep2kL4yfy2uGatSsqyxIb1lFl9Y6q//oZaVN+0
+         pEc3uRZw2gHOTvUSNmUdSd9lvkmbSD9zK4i8fA8TaYiWP1oQZoWxMdv8bwwaIXoVkmGM
+         7PiioomY/gpmc5mzPtChr2aImgyqC75DHKu0S/Xlwss3nqlSkYkHne8aH7sdF50XQ9n2
+         odCjgOKr/pJMAcnejYQkJsBn6DjrHxCYNwK9fM+lvChf62WNMq+ALKXH2LpSzHCT3XsB
+         7EpA==
+X-Gm-Message-State: AOAM531RwtdMr1kMq0O5kufrWazM94ZgP4Elu6iGgw1vScbaZ4PsyyoP
+        LtamAVcKIMNh3+nExl8Mt/tYDWvI
+X-Google-Smtp-Source: ABdhPJxufaFMEkSWsGqJmDqi1u2GRZbCuEl7oDe4NclFDxtAeXTfNStWQ9qh0PmQ/aBtXBe+0McXWQ==
+X-Received: by 2002:a63:4f52:: with SMTP id p18mr414035pgl.408.1597374194343;
+        Thu, 13 Aug 2020 20:03:14 -0700 (PDT)
+Received: from sol.lan (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
+        by smtp.gmail.com with ESMTPSA id z3sm6522231pgk.49.2020.08.13.20.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 20:03:13 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v4 00/20] gpio: cdev: add uAPI v2
+Date:   Fri, 14 Aug 2020 11:02:37 +0800
+Message-Id: <20200814030257.135463-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Doug,
+This patchset defines and implements adds a new version of the
+GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+support for debounce, event sequence numbers, and allowing for requested
+lines with different configurations.
+It provides some future proofing by adding optional configuration fields
+and padding reserved for future use.
 
-On Thu, Aug 13 2020 at 15:58, Doug Anderson wrote:
-> On Thu, Aug 13, 2020 at 3:09 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > * If this interrupt fires while the system is suspended then please
->> > wake the system up.
->>
->> Well, that's kinda contradicting itself. If the interrupt is masked then
->> what is the point? I'm surely missing something subtle here.
->
-> This is how I've always been told that the API works and there are at
-> least a handful of drivers in the kernel whose suspend routines both
-> enable wakeup and call disable_irq().  Isn't this also documented as
-> of commit f9f21cea3113 ("genirq: Clarify that irq wake state is
-> orthogonal to enable/disable")?
+The series can be partitioned into two sets; the first eleven
+contain the v2 uAPI implementation, and the final seven port
+the GPIO tools to the v2 uAPI and extend them to use new uAPI features.
 
-Fair enough. The wording there is unfortunate and I probably should have
-spent more brain cycles before applying it. It suggests that this is a
-pure driver problem. I should have asked some of the questions I asked
-now back then :(
+The more complicated patches include their own commentary where
+appropriate.
 
->> If that's the main problem which is solved in these callbacks, then I
->> really have to ask why this has not been raised years ago. Why can't
->> people talk?
->
-> Not all of us have the big picture that you do to know how things
-> ought to work, I guess.  If nothing else someone looking at this
-> problem would think: "this must be a common problem, let's go see how
-> all the other places do it" and then they find how everyone else is
-> doing it and do it that way.  It requires the grander picture that a
-> maintainer has in order to say: whoa, everyone's copying the same
-> hack--let's come up with a better solution.
+Cheers,
+Kent.
 
-That's not the point. I know how these things happen, but I fail to
-understand why nobody ever looks at this and says: OMG, I need to do yet
-another variant of copy&pasta of the same thing every other driver
-does. Why is there no infrastructure for that? 
+Changes for v4:
+ - bitmap width clarification in gpiod.h (patch 04)
+ - fix info offset initialisation bug (patch 08 and inserting patch 01)
+ - replace strncpy with strscpy to remove compiler warnings
+   (patch 08 and inserting patch 02)
+ - fix mask handling in line_get_values (patch 07)
 
-Asking that question does not require a maintainer who always encouraged
-people to talk about exactly these kind of things instead of going off
-and creating the gazillionst broken copy of the same thing with yet
-another wart working around core code problems and thereby violating
-layering and introducing bugs which wouldn't exist otherwise.
+Changes for v3:
+ - disabling the character device from the build requires EXPERT
+ - uAPI revisions (see patch 02)
+ - replace padding_not_zeroed with calls to memchr_inv
+ - don't use bitops on 64-bit flags as that doesn't work on BE-32
+ - accept first attribute matching a line in gpio_v2_line_config.attrs
+   rather than the last
+ - rework lsgpio port to uAPI v2 as flags reverted to v1 like layout
+   (since patch v2)
+ - swapped patches 17 and 18 to apply debounce to multiple monitored
+   lines
 
-Spare me all the $corp reasons. I've heard all of them and if not then
-the not yet known reason won't be any more convincing. :)
+Changes for v2:
+ - split out cleanup patches into a separate series.
+ - split implementation patch into a patch for each ioctl or major feature.
+ - split tool port patch into a patch per tool.
+ - rework uAPI to allow requested lines with different configurations.
 
-One of the most underutilized strengths of FOSS is that you can go and
-ask someone who has the big picture in his head before you go off and
-waste time on distangling copy&pasta, dealing with the resulting obvious
-bugs and then the latent ones which only surface 3 month after the
-product has shipped. Or like in this case figure out that the copy&pasta
-road is a dead end and then create something new without seeing the big
-picture and having analyzed completely what consequences this might have.
 
-I don't know how much hours you and others spent on this. I surely know
-that after you gave me proper context it took me less than an hour to
-figure out that one problem you were trying to solve was already solved
-and the other one was just a matter of doing the counterpart of it. I
-definitely spent way more time on reviewing and debating.
+Kent Gibson (20):
+  gpiolib: cdev: desc_to_lineinfo should set info offset
+  gpiolib: cdev: replace strncpy with strscpy
+  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+  gpio: uapi: define uAPI v2
+  gpiolib: make cdev a build option
+  gpiolib: add build option for CDEV v1 ABI
+  gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and
+    GPIO_V2_LINE_GET_VALUES_IOCTL
+  gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
+    GPIO_V2_GET_LINEINFO_WATCH_IOCTL
+  gpiolib: cdev: support edge detection for uAPI v2
+  gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
+  gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
+  gpiolib: cdev: support setting debounce
+  gpio: uapi: document uAPI v1 as deprecated
+  tools: gpio: port lsgpio to v2 uAPI
+  tools: gpio: port gpio-watch to v2 uAPI
+  tools: gpio: rename nlines to num_lines
+  tools: gpio: port gpio-hammer to v2 uAPI
+  tools: gpio: port gpio-event-mon to v2 uAPI
+  tools: gpio: add multi-line monitoring to gpio-event-mon
+  tools: gpio: add debounce support to gpio-event-mon
 
-So if you had asked upfront, I probably would have spent quite some time
-on it as well depending on the quality of the question and explanation
-but the total amount on both sides would have been significantly lower,
-which I consider a win-win situation.
+ drivers/gpio/Kconfig        |   29 +-
+ drivers/gpio/Makefile       |    2 +-
+ drivers/gpio/gpiolib-cdev.c | 1354 +++++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib-cdev.h |   15 +
+ drivers/gpio/gpiolib.c      |    2 +
+ drivers/gpio/gpiolib.h      |    6 +
+ include/uapi/linux/gpio.h   |  316 +++++++-
+ tools/gpio/gpio-event-mon.c |  146 ++--
+ tools/gpio/gpio-hammer.c    |   56 +-
+ tools/gpio/gpio-utils.c     |  127 ++--
+ tools/gpio/gpio-utils.h     |   50 +-
+ tools/gpio/gpio-watch.c     |   16 +-
+ tools/gpio/lsgpio.c         |   60 +-
+ 13 files changed, 1949 insertions(+), 230 deletions(-)
 
-Of course I know that my $corp MBA foo is close to zero, so I just can
-be sure that it would have been a win for me :)
 
-Seriously, we need to promote a 'talk to each other' culture very
-actively. The people with the big picture in their head, aka
-maintainers, are happy to answer questions and they also want that
-others come forth and say "this makes no sense" instead of silently
-accepting that the five other drivers do something stupid. This would
-help to solve some of the well known problems:
+base-commit: 22cc422070d9a9a399f8a70b89f1b852945444cb
+-- 
+2.28.0
 
- - Maintainer scalability
-
-   I rather discuss a problem with you at the conceptual level upfront
-   instead of reviewing patches after the fact and having to tell you
-   that it's all wrong. The latter takes way more time.
-
-   Having a quick and dirty POC for illustration is fine and usually
-   useful.
-
- - Maintainer blinders
- 
-   Maintainers need input from the outside as any other people because
-   they become blind to shortcomings in the area they are responsible
-   for as any other person. Especially if they maintain complex and
-   highly active subsystems.
-
- - Submitter frustration
-
-   You spent a huge amount of time to come up with a solution for
-   something and then you get told by the maintainer/reviewer that the
-   time spent was wasted and your solution is crap. It does not matter
-   much what the politeness level of that message is. It sets you back
-   and causes frustration on both ends.
-
- - Turn around times
-
-   A lot of time can be spared by talking to each other early. A half
-   baken POC patch is fine for opening such a discussion, but going down
-   all the way and then having the talk over the final patch review is
-   more than suboptimal and causes grief on both sides.
-
->>   "These two callbacks are interesting because sometimes an irq chip
->>    needs to know about suspend/resume."
->>
->> Really valuable and precise technical information.
->
-> Funny to get yelled at for not providing a detailed enough changelog.
-> Usually people complain that my changelogs are too detailed.  Sigh.
-
-The complaint you might get from me about an overly detailed changelog
-is that it has redundant or pointless information in it, e.g.
-
-  - the 500 lines of debug dump containing about 10 lines of valuable
-    information which you already decoded and condensed in order to
-    figure the problem out.
-
-  - anecdotes around the discovery which carry zero information and
-    often show that that the scope of the problem was not fully
-    understood.
-
-  - pointless examples of how to trigger the fail
-
-  - In depth explanaations of what the patch does instead of a concise
-    explanation at the conceptual level.
-
-You won't hear me complain about a concise and coherent in depth
-technical explanation of a problem.
-
-Writing changelogs is an art and I surely look at some of my own
-changelogs written long ago and yell at myself from time to time.
-
-Reading a patch goes top down obviously:
-
-      1) Subject line
-      2) Changelog
-      3) Patch.
-
-If I have to rumage for my crystal ball before #3 then I already spent
-more time than necessary. If the thing is some random feature then I
-might just say: try again. But if I get the sense that it is about a bug
-or  has some smell of a shorrcoming in the core code then I have to bite
-the bullet and decode it the hard way. Not the most efficient way. And
-from experience I can tell you that if #1 and #2 are already problematic
-then #3 needs some serious scrutiny in most cases.
-
->> Hint: "Sometimes a chip needs to know" does not qualify :)
->
-> Clearly I am not coherent.  ;-)  My only goal was to help enable
-> interrupts that were disabled / marked as wakeup (as per above,
-> documented to be OK) to work on Qualcomm chips.  This specifically
-> affects me because a driver that I need to work (cros_ec) does this.
-
-Mission acoomplished :)
-
-> If IRQCHIP_UNMASK_WAKEUP_ON_SUSPEND is good to add then it sounds like
-> a great plan to me.
-
-If it solves the problem and from what you explained it should do so
-then this is definitely the right way to go.
-
-Thanks,
-
-        tglx
