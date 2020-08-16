@@ -2,153 +2,243 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1814024531C
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Aug 2020 23:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 105522456BF
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Aug 2020 10:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgHOV6B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Aug 2020 17:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbgHOVwA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Aug 2020 17:52:00 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33334C02B8F5;
-        Sat, 15 Aug 2020 06:21:45 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id f9so5572669pju.4;
-        Sat, 15 Aug 2020 06:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1uixVnw4VqVRWBxjLItwqvGPWa+lcvmh4b3cIx3Xb64=;
-        b=meBYpFKfZGJfoM+cLyqrj1fe3d3boOTYypFqELfkisrmrZVlGPAQBtePqMqyFOrQB3
-         Cc/nFs46SwiWFIct3N1kx4mlrEdFTHyrFVkoh31I1UKdBvFVtKX61Zkg7tfbovIFYzj/
-         FFbIUExgZKNdsT+YV+XQZl2wWLbnkJUqV0r1rIqjqJ2ob5rFRN+AcrVzeuOmr6GdJhj4
-         S0vesbPzZsNQ7iwr09KLeXBDlA5xQ2hs05KaoRPypH9iTrwT/a5XcMEhVurj8+TjYqrh
-         wBxd8uxnA+NhOegQ7gE+XWhloVMCs2ZisXrFrGM0hFEu606nHJAbg3RmstTBcedMC4nP
-         T+3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1uixVnw4VqVRWBxjLItwqvGPWa+lcvmh4b3cIx3Xb64=;
-        b=QD9YKjpgw5N4djevR52pV5pdG1ynKFJn6QRmbbN4ih4yHSzsKjepqq+wlELK79MGRc
-         eluh7JLFTMghreHs7qXY3lb60b9fjcrPgyN9HQKawZmcpEa/tE7LFMx8rylrgWauoMhK
-         E6VWVp5i4pbJRVgdO80ACNpbhkoj2GdZ3CNPUNTc0rCdxk4ZnWy1UkXDEv0NYU369fVc
-         tZ/7IUbJxUgU3C2klR01ByFcO2gYGOF2/7BkgzI5WmNmYGdS5mNBFC06KTfTBhGfa7lH
-         S/pYhHER+WSSMb6GKKJYkFN2SzR3DrBbC4HTCZttt6UB9sMuH87G6IYC3MJfDnE5xvTL
-         9XCg==
-X-Gm-Message-State: AOAM532ZDbHhqlk205fDAeonRdEkG1GMIzlSq+upddeCNOxr9t3c17Wp
-        AkujLhMAcM1tbmA9Yfgylsm7CdMmudY=
-X-Google-Smtp-Source: ABdhPJxbk52AnBRSmfVNk8XI6Ty+YU14VH35qkrnjDVKBaPq7aA4B1AcKNSuoTXdfUG4GeC9zJvnZg==
-X-Received: by 2002:a17:902:ff16:: with SMTP id f22mr5330256plj.269.1597497697744;
-        Sat, 15 Aug 2020 06:21:37 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id d29sm11068823pgb.54.2020.08.15.06.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2020 06:21:36 -0700 (PDT)
-Date:   Sat, 15 Aug 2020 21:21:32 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200815132132.GA26885@sol>
-References: <20200814030257.135463-1-warthog618@gmail.com>
- <20200814030257.135463-8-warthog618@gmail.com>
- <CAMpxmJXdGUnnomfWNRmpi979jLPMj17JuA=0K2Nq-oVS_-oQ3A@mail.gmail.com>
- <20200815065309.GA13905@sol>
- <CAMpxmJVMJYJ71z59Mu-mCTQPNqV9N9sXJXNBjYazGo0tmXthfg@mail.gmail.com>
+        id S1728959AbgHPIoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Aug 2020 04:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbgHPIo0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 16 Aug 2020 04:44:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 032672067C;
+        Sun, 16 Aug 2020 08:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597567464;
+        bh=T6UwMy4v18bgR1RYSk8bKZfCqTMnyUP8XZKnI31+u3w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=drEoeXpHv0E0mUqTh6XgOtxm5HjQ3BZXo/2Vyh0E5JgpqmZ5oJHeFCZAHCZB9rAXm
+         AbIb6f0WWGOxG4kSm3h11hWn0MA48MyZ6oiLma2mj2RujKNmxiI3bNdIjGxh0rdsDK
+         bybFa1BfDVi2cbQ+dCfDbBrEzAgdhLg63i6r2Z2c=
+Date:   Sun, 16 Aug 2020 09:44:18 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-pm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+Message-ID: <20200816094418.5bd08f5f@archlinux>
+In-Reply-To: <20200812213453.GA690477@ravnborg.org>
+References: <20200812203618.2656699-1-robh@kernel.org>
+        <20200812213453.GA690477@ravnborg.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJVMJYJ71z59Mu-mCTQPNqV9N9sXJXNBjYazGo0tmXthfg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 09:21:22AM +0200, Bartosz Golaszewski wrote:
-> On Sat, Aug 15, 2020 at 8:53 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, Aug 14, 2020 at 09:31:29PM +0200, Bartosz Golaszewski wrote:
-> > > On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> > > > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
-> > > >
-> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > > ---
-> > >
-> > > Hi Kent,
-> > >
-> > > not many comments here, just a couple minor details below.
-> > >
-> >
-> > [snip]
-> >
-> > > > +
-> > > > +/**
-> > > > + * struct line - contains the state of a userspace line request
-> > > > + * @gdev: the GPIO device the line request pertains to
-> > > > + * @label: consumer label used to tag descriptors
-> > > > + * @num_descs: the number of descriptors held in the descs array
-> > > > + * @descs: the GPIO descriptors held by this line request, with @num_descs
-> > > > + * elements.
-> > > > + */
-> > > > +struct line {
-> > >
-> > > How about line_request, line_request_data or line_req_ctx? Something
-> > > more intuitive than struct line that doesn't even refer to a single
-> > > line. Same for relevant functions below.
-> > >
-> >
-> > As I've mentioned previously, I'm not a fan of names that include _data,
-> > _ctx, _state, or similar that don't really add anything.
-> >
+On Wed, 12 Aug 2020 23:34:53 +0200
+Sam Ravnborg <sam@ravnborg.org> wrote:
+
+> Hi Rob.
 > 
-> I certainly disagree with you on this. I think it's useful to discern
-> the object itself from data associated with it. Let's consider struct
-> irq_data and let's imagine it would be called struct irq instead. The
-> latter would be misleading - as this struct contains a lot additional
-> fields that form the context for the irq but aren't logically part of
-> the "irq object". And then you have irq_common_data which is even more
-> disconnected from the irq. This also would make using the name "irq"
-> for the variables containing the global irq number confusing.
+> On Wed, Aug 12, 2020 at 02:36:18PM -0600, Rob Herring wrote:
+> > Clean-up incorrect indentation, extra spaces, long lines, and missing
+> > EOF newline in schema files. Most of the clean-ups are for list
+> > indentation which should always be 2 spaces more than the preceding
+> > keyword.
+> > 
+> > Found with yamllint (which I plan to integrate into the checks).  
 > 
-> I think the same happens here: we may want to use the name "line" for
-> local variables and then having "struct line_data" (or similar) would
-> make it easier to read.
+> I have browsed through the patch - and there was only a few things
+> that jumped at me.
+> 
+> With these points considered:
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+Replying here as the patch doesn't seem to have made it to linux-iio
+at least. I'm not sure why...
+
+Anyhow, found it in an lkml archive so for the iio changes
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
+> I expect only some (few) of my points to actually results in any updates.
+> 
+> I look forward to have the lint functionality as part of the built-in
+> tools so we catch these things early.
+> 
+> 	Sam
+> 
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > index f63895c8ce2d..88814a2a14a5 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > @@ -273,8 +273,8 @@ properties:
+> >                - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
+> >                - kontron,imx6ull-n6411-som # Kontron N6411 SOM
+> >                - myir,imx6ull-mys-6ulx-eval # MYiR Tech iMX6ULL Evaluation Board
+> > -              - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on Colibri Evaluation Board
+> > -              - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi / Bluetooth Module on Colibri Evaluation Board
+> > +              - toradex,colibri-imx6ull-eval      # Colibri iMX6ULL Module on Colibri Eval Board
+> > +              - toradex,colibri-imx6ull-wifi-eval # Colibri iMX6ULL Wi-Fi / BT Module on Colibri Eval Board
+> >            - const: fsl,imx6ull  
+> 
+> This change looks bad as it drops the alignment with the comments below.
+> See following patch chunck:
+> 
+> >
+> >        - description: Kontron N6411 S Board
+> > @@ -312,9 +312,12 @@ properties:
+> >                - toradex,colibri-imx7d                   # Colibri iMX7 Dual Module
+> >                - toradex,colibri-imx7d-aster             # Colibri iMX7 Dual Module on Aster Carrier Board
+> >                - toradex,colibri-imx7d-emmc              # Colibri iMX7 Dual 1GB (eMMC) Module
+> > -              - toradex,colibri-imx7d-emmc-aster        # Colibri iMX7 Dual 1GB (eMMC) Module on Aster Carrier Board
+> > -              - toradex,colibri-imx7d-emmc-eval-v3      # Colibri iMX7 Dual 1GB (eMMC) Module on Colibri Evaluation Board V3
+> > -              - toradex,colibri-imx7d-eval-v3           # Colibri iMX7 Dual Module on Colibri Evaluation Board V3
+> > +              - toradex,colibri-imx7d-emmc-aster        # Colibri iMX7 Dual 1GB (eMMC) Module on
+> > +                                                        #  Aster Carrier Board  
+> 
+> 
+> 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
+> > index 177d48c5bd97..e89c1ea62ffa 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
+> > @@ -25,8 +25,7 @@ properties:
+> >    compatible:
+> >      items:
+> >        - enum:
+> > -        - dlink,dir-685-panel
+> > -
+> > +          - dlink,dir-685-panel
+> >        - const: ilitek,ili9322
+> >
+> >    reset-gpios: true
+> > diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+> > index a39332276bab..76a9068a85dd 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+> > @@ -13,8 +13,7 @@ properties:
+> >    compatible:
+> >      items:
+> >        - enum:
+> > -        - bananapi,lhr050h41
+> > -
+> > +          - bananapi,lhr050h41
+> >        - const: ilitek,ili9881c
+> >  
+> 
+> The extra lines is a simple way to indicate that here shall be added
+> more in the future. So I like the empty line.
+> 
+> 
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > index 32e0896c6bc1..47938e372987 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > @@ -79,7 +79,8 @@ properties:
+> >      description: |
+> >        kHz; switching frequency.
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> > -    enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200, 4800, 9600 ]
+> > +    enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 1600, 1920,
+> > +            2400, 3200, 4800, 9600 ]
+> >
+> >    qcom,ovp:
+> >      description: |  
+> 
+> In the modern world we are living in now line length of 100 chars are
+> OK. checkpatch and coding_style is updated to reflected this.
+> 
+> > diff --git a/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
+> > index 4ddb42a4ae05..9102feae90a2 100644
+> > --- a/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
+> > +++ b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
+> > @@ -33,4 +33,5 @@ examples:
+> >          reg = <0x1f000000 0x10>;
+> >      };
+> >
+> > -...
+> > \ No newline at end of file
+> > +...
+> > +  
+> 
+> Added one line too much?
+> 
+>  diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> > index 0ae692dc28b5..3d3fed63409b 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> > +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> > @@ -43,47 +43,47 @@ properties:
+> >      maxItems: 1
+> >
+> >  required:
+> > -   - compatible
+> > -   - reg
+> > -   - spi-max-frequency
+> > -   - mux-controls
+> > +  - compatible
+> > +  - reg
+> > +  - spi-max-frequency
+> > +  - mux-controls
+> >
+> >  examples:
+> > -   - |
+> > -     #include <dt-bindings/gpio/gpio.h>
+> > -     mux: mux-controller {
+> > -       compatible = "gpio-mux";
+> > -       #mux-control-cells = <0>;
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    mux: mux-controller {
+> > +        compatible = "gpio-mux";
+> > +        #mux-control-cells = <0>;
+> >
+> > -       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> > -     };
+> > +        mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> > +    };  
+> 
+> Example is updated to use 4-space indent. I like.
+> 
+> But many other examples are left untouched.
+> 
+> So I wonder if updating all examples to the same indent should
+> be left for another mega-patch?
+> 
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > index f3d847832fdc..2baee2c817c1 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -993,7 +993,8 @@ patternProperties:
+> >    "^sst,.*":
+> >      description: Silicon Storage Technology, Inc.
+> >    "^sstar,.*":
+> > -    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd. (formerly part of MStar Semiconductor, Inc.)
+> > +    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd.
+> > +      (formerly part of MStar Semiconductor, Inc.)
+> >    "^st,.*":
+> >      description: STMicroelectronics
+> >    "^starry,.*":  
+> 
+> Did you check that they are all in alphabetical order?
+> I would be suprised if this is the only issue in this file.
+> 
 > 
 
-My counter example to both points is "struct file *file".
-
-> I'll listen to other's suggestions/voices but personally I think that
-> _ctx, _data etc. suffixes actually make sense.
-> 
-> > I did consider line_request, but that was too close to the
-> > gpio_v2_line_request in gpio.d, not just the struct but also the
-> > resulting local variables, particularly in line_create() where they
-> > co-exist.
-> >
-> > Given the ioctl names, GPIO_V2_GET_LINE_IOCTL and
-> > GPIO_V2_LINE_GET/SET_xxx, that all create or operate on this struct, and
-> > that this is within the scope of gpiolib-cdev, the name 'line' seemed the
-> > best fit.
-> >
-> 
-> And that's why line_data or line_request_data do make sense IMO.
-> 
-> > And how does it not refer to a single line - what are the descs??
-> >
-> 
-> I meant the fact that it can refer to multiple lines while being
-> called "struct line". I do find this misleading.
-> 
-
-And struct line_data isn't?
-
-Cheers,
-Kent.
