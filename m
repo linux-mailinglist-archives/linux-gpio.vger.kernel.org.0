@@ -2,64 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD652480BF
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 10:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D609B2482A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 12:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgHRIgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 04:36:22 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:24052 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726145AbgHRIgV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 04:36:21 -0400
-X-UUID: 56fe74ee8da5410e9e41e283d0d89019-20200818
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=yCWYxl8u4fmCuo9QoLsyo+ItSwrT/KvrNuPZDJcZcvE=;
-        b=M+iK1nK5dCfreb7yQg13VIzB5qFYzftSe76jUIJXqdWuCL0Qpp4KkDoa8VigQfnCXpoDp65J+7JBMx1jkvLLIltkCEWqUnY+M4ck7UYJFDCXkBFcMS4G34nrhrerPdZvhTHiWGiAkCyjecw38LK6pgtmuUqFqb2pZrguufmtlmI=;
-X-UUID: 56fe74ee8da5410e9e41e283d0d89019-20200818
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 372831850; Tue, 18 Aug 2020 16:36:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 18 Aug 2020 16:36:16 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 18 Aug 2020 16:36:17 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v1 2/2] pinctrl: mediatek: make MediaTek MT6765 pinctrl driver support race-free register access
-Date:   Tue, 18 Aug 2020 16:36:16 +0800
-Message-ID: <1597739776-15944-2-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
-References: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
+        id S1726420AbgHRKMY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 06:12:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50628 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgHRKMX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:12:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3BD06AF8E;
+        Tue, 18 Aug 2020 10:12:48 +0000 (UTC)
+Subject: Re: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
+ rtd1295
+To:     Rob Herring <robh@kernel.org>, TY Chang <tychang@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org
+References: <20200813074908.889-1-tychang@realtek.com>
+ <20200813074908.889-6-tychang@realtek.com> <20200817203358.GA1508879@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <012eee35-6835-7244-0013-9fc6980107e0@suse.de>
+Date:   Tue, 18 Aug 2020 12:12:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200817203358.GA1508879@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBwYXRj
-aCBtYWtlIE1lZGlhVGVrIE1UNjc2NSBwaW5jdHJsIGRyaXZlciBzdXBwb3J0IHJhY2UtZnJlZSBy
-ZWdpc3RlciBhY2Nlc3MNCg0KU2lnbmVkLW9mZi1ieTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVo
-QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10
-Njc2NS5jIHwgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jIGIvZHJpdmVy
-cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCmluZGV4IDJjNTlkMzkuLmYzM2Mz
-NzEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUu
-Yw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCkBAIC0x
-MDcxLDYgKzEwNzEsOCBAQA0KIAkubmdycHMgPSBBUlJBWV9TSVpFKG10a19waW5zX210Njc2NSks
-DQogCS5laW50X2h3ID0gJm10Njc2NV9laW50X2h3LA0KIAkuZ3Bpb19tID0gMCwNCisJLnJhY2Vf
-ZnJlZV9hY2Nlc3MgPSB0cnVlLA0KKwkubXdyX2ZpZWxkX3dpZHRoID0gNCwNCiAJLmJhc2VfbmFt
-ZXMgPSBtdDY3NjVfcGluY3RybF9yZWdpc3Rlcl9iYXNlX25hbWVzLA0KIAkubmJhc2VfbmFtZXMg
-PSBBUlJBWV9TSVpFKG10Njc2NV9waW5jdHJsX3JlZ2lzdGVyX2Jhc2VfbmFtZXMpLA0KIAkuYmlh
-c19zZXRfY29tYm8gPSBtdGtfcGluY29uZl9iaWFzX3NldF9jb21ibywNCi0tIA0KMS44LjEuMS5k
-aXJ0eQ0K
+Am 17.08.20 um 22:33 schrieb Rob Herring:
+> On Thu, 13 Aug 2020 15:49:04 +0800, TY Chang wrote:
+>> Add device tree binding Documentation for rtd1295
+>> pinctrl driver.
+>>
+>> Signed-off-by: TY Chang <tychang@realtek.com>
+>> ---
+>>  .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 192 ++++++++++++++++++
+>>  1 file changed, 192 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+>>
+> 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
+The thing really missing here is a per-patch change log.
+
+Things were added here that I'm sure you would not give your Reviewed-by
+for, in particular new properties prefixed with unregistered rtk prefix
+instead of the registered realtek prefix.
+
+@TY, hiding such changes in a big previously reviewed patch without any
+mention is problematic - please rather do smaller follow-up patches to
+not invalidate previous reviews with new features.
+
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
