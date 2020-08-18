@@ -2,93 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A960C24865C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 15:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F14248697
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 15:59:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgHRNrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 09:47:42 -0400
-Received: from mga01.intel.com ([192.55.52.88]:56107 "EHLO mga01.intel.com"
+        id S1726809AbgHRN7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 09:59:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6235 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgHRNrl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:47:41 -0400
-IronPort-SDR: CwaWYTw7tw2seSKFSq+CI0qvVCT34BiEhvrKMQacFQeyEESYmB2vpCYK2deC/9mfvbLe1gIGHj
- ecl8HLSZ1wSw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="172949708"
+        id S1726617AbgHRN7P (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:59:15 -0400
+IronPort-SDR: ECTFD+Vy/AiinvVFxYnyWe4OMVlGSGVDu14AoQjef55R9k5RHOvt+R8aghpU6DjeIzQjdcFqWE
+ EeVb8KqZx7HA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142727642"
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="172949708"
+   d="scan'208";a="142727642"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:47:40 -0700
-IronPort-SDR: xjgKVINQ1Cf9ahdwfcpeMJapMLgVmwalusMhT9hDpfxvrfwf9zaNs+nu8hY/S6NZfiwpOCJ6lH
- E10Qse3WcL0A==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:59:14 -0700
+IronPort-SDR: ZzBhsuvjm3xU3UhDw15q+h5fMIAQ25tpgRXhCD0E0mzNYgNdnf9rD+zGRHDuzLRRN2CdyO2wqU
+ wq6JWNqzHKGA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="326732816"
+   d="scan'208";a="326735454"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 06:47:39 -0700
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 06:59:11 -0700
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k81xi-009evJ-FZ; Tue, 18 Aug 2020 16:47:38 +0300
-Date:   Tue, 18 Aug 2020 16:47:38 +0300
+        id 1k828r-009f0z-Mx; Tue, 18 Aug 2020 16:59:09 +0300
+Date:   Tue, 18 Aug 2020 16:59:09 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/3] pinctrl: intel: Extract
- intel_pinctrl_get_soc_data() helper for wider use
-Message-ID: <20200818134738.GR1891694@smile.fi.intel.com>
-References: <20200729115708.38112-1-andriy.shevchenko@linux.intel.com>
- <20200803123318.GR1375436@lahna.fi.intel.com>
- <20200803135031.GI3703480@smile.fi.intel.com>
- <20200818123459.GL1891694@smile.fi.intel.com>
- <20200818123602.GN1375436@lahna.fi.intel.com>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        stanekm@google.com, stable <stable@vger.kernel.org>,
+        Marcin Wojtas <mw@semihalf.com>, levinale@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200818135909.GS1891694@smile.fi.intel.com>
+References: <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com>
+ <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com>
+ <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+ <20200310144913.GY2540@lahna.fi.intel.com>
+ <20200417020641.GA145784@google.com>
+ <20200417090500.GM2586@lahna.fi.intel.com>
+ <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818123602.GN1375436@lahna.fi.intel.com>
+In-Reply-To: <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 03:36:02PM +0300, Mika Westerberg wrote:
-> On Tue, Aug 18, 2020 at 03:34:59PM +0300, Andy Shevchenko wrote:
-> > On Mon, Aug 03, 2020 at 04:50:31PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Aug 03, 2020 at 03:33:18PM +0300, Mika Westerberg wrote:
-> > > > On Wed, Jul 29, 2020 at 02:57:06PM +0300, Andy Shevchenko wrote:
-> > > > > intel_pinctrl_get_soc_data() helper can be used in few driver instead of
-> > > > > open-coded variants. Thus, extract it as a standalone API.
-> > > 
-> > > ...
-> > > 
-> > > > > +const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_device *pdev)
-> > > > 
-> > > > Can we make this take const parameter as well?
-> > > 
-> > > You mean
-> > > 
-> > > const struct intel_pinctrl_soc_data *
-> > > intel_pinctrl_get_soc_data(const struct platform_device *pdev)
-> > > 
-> > > ?
-> > > 
-> > > Sure, I can do it for v2.
-> > 
-> > Actually I can't. device_match_data() requires struct device * pointer and
-> > compiler is unable to compile with const qualifier.
+On Fri, Apr 17, 2020 at 05:55:44PM -0700, Brian Norris wrote:
+> - Michal (bouncing)
 > 
-> OK
+> On Fri, Apr 17, 2020 at 2:05 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > I wonder if we can add back the previous GPIO base like this?
 > 
-> > Are you good with current version then?
-> 
-> Yes :)
+> Thanks for the patch! At first glance, it looks like the right kind of
+> thing. Unfortunately, it doesn't appear to work quite right for me.
+> I'm out of time for today to look any further, but I (or perhaps
+> someone else on this email) will try to follow up next week sometime.
 
-Pushed to my review and testing queue, thanks!
+Just in case you are going to do something about this, take into consideration
+that Cherryview driver got several cleanups in the past, it may require to
+rework this on top of the made changes.
 
-P.S. I have added your Ack as discussed offline.
-
+P.S. Currently they are in my branch, but within couple of days it will be in
+Linux Next if nothing prevents it.
 
 -- 
 With Best Regards,
