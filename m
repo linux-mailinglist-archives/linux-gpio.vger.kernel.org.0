@@ -2,199 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18CC2247F07
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 09:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C093B2480C2
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 10:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgHRHKZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 03:10:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44036 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbgHRHKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 03:10:21 -0400
-Received: by mail-oi1-f196.google.com with SMTP id h3so17067002oie.11;
-        Tue, 18 Aug 2020 00:10:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9pWu2reKsehPk8O8QMwZqkq9HDhUpVFSdtfnM5vROwk=;
-        b=AOAqb6NH5LV67MEzG9T8C37bvwcfBSiwRSMZ1V+UPfTmx9O+qduxNIz61FvOnZ44ZB
-         Aq7q7eds/PWj61uqrkEPlZrs4FPmL9+zV8fe6phiuzuAHRkVAHKGhnhrvM0Y7WWQQMYI
-         mX75pHl1NzSuvVXQOR07bU/mFU+pE33sJaLM6SNT7VhaPGeRu3l/VkBOEwiSHUr1Topu
-         D99Pvpr2JVaAq5LszmhnjNF31OyvGvMyM0iRedLQFbJd58q87xq8rH1gJb/xjbsqoHb9
-         sptDa5FzkOQ3L7+asp5O0AHREOKn39sWnG+wg29IyCEbmVk1KMeHjUSGQQQ1iEncTSOM
-         RiYA==
-X-Gm-Message-State: AOAM5319lfDXOk0b/JHaYMQCoLz/miafD+qaeCzdLAB20Pc6277qF2ie
-        BQXGtSt69RO5uxJI0y7VrrTbht89Kh9caACAHus=
-X-Google-Smtp-Source: ABdhPJxlHpP9CutWWQ1WzZHFEX/kpODzKDecPSPVsGDlyQEZuovKBMm9EgyXUP0kzZUH0FPOVGAX2J+x5TrpOAvPnrs=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr11504104oie.153.1597734619692;
- Tue, 18 Aug 2020 00:10:19 -0700 (PDT)
+        id S1726641AbgHRIg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 04:36:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54794 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726631AbgHRIgZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 04:36:25 -0400
+X-UUID: cda77b9ba2494b929655d8549d9c3e65-20200818
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=aSQA+gxoSQ0QZcwrx3/12pS4dgKqh+H+S6wrzElQA5M=;
+        b=oiWpoxmA2YANbo7haAsYbJSgyylv9S4ht81wS6EyCqIstVn21fk5Ar2jAKtlpST48ofT9Nh/u15hEBSLmIrvau83di5Jjy7RTyv6uc/AvA+UuJzKGIGGfhZqyQVLHz+yEiZ5zQGq/Co59DsLziJlfHVaQLqQ5WGNqufHrOun0Ug=;
+X-UUID: cda77b9ba2494b929655d8549d9c3e65-20200818
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1543251234; Tue, 18 Aug 2020 16:36:19 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 18 Aug 2020 16:36:16 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 18 Aug 2020 16:36:17 +0800
+From:   <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v1 1/2] pinctrl: mediatek: support access registers without race-condition
+Date:   Tue, 18 Aug 2020 16:36:15 +0800
+Message-ID: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <20200807141345.6714-1-geert+renesas@glider.be> <20200817233253.GA1819982@bogus>
-In-Reply-To: <20200817233253.GA1819982@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 18 Aug 2020 09:10:08 +0200
-Message-ID: <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
-Subject: Re: [PATCH/RFC v2] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KU29tZSBNZWRp
+YVRlayBTT0MgcHJvdmlkZSBtb3JlIGNvbnRyb2wgcmVnaXN0ZXJzIG90aGVyIHRoYW4gdmFsdWUg
+cmVnaXN0ZXIuDQpHZW5lcmFubGwsIGEgdmFsdWUgcmVnaXN0ZXIgbmVlZCByZWFkLW1vZGlmeS13
+cml0ZSBpcyBhdCBvZmZzZXQgMHhYWFhYWFhYWDAuDQpBIGNvcnJlc3BvbmRpbmcgU0VUIHJlZ2lz
+dGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg0LiBXcml0ZSAxcycgdG8gc29tZSBiaXRzDQogIG9m
+IFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQpBIGNv
+cnJlc3BvbmRpbmcgQ0xSIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg4LiBXcml0ZSAx
+cycgdG8gc29tZSBiaXRzDQogIG9mIENMUiByZWdpc3RlciB3aWxsIGNsZWFyIHNhbWUgYml0cyBp
+biB2YWx1ZSByZWdpc3Rlci4NCkZvciBHUElPIG1vZGUgc2VsZWN0aW9uLCBNV1IgcmVnaXN0ZXIg
+aXMgcHJvdmlkZWQgYXQgb2Zmc2V0IDB4WFhYWFhYWEMuDQogIFdpdGggTVdSLCB0aGUgTVNCaXQg
+b2YgR1BJTyBtb2RlIHNlbGVjdGlvbiBmaWVsZCBpcyBmb3IgbW9kaWZpY2F0aW9uLWVuYWJsZSwN
+CiAgbm90IGZvciBHUElPIG1vZGUgc2VsZWN0aW9uLCBhbmQgdGhlIHJlbWFpbmluZyBMU0JpdHMg
+YXJlIGZvciBtb2RlDQogIHNlbGVjdGlvbi4NCiAgVGFrZSBtb2RlIHNlbGVjdGlvbiBmaWVsZCB3
+aXRoIDQtYml0cyBhcyBleGFtcGxlLCB0byBzZWxlY3QgbW9kZSAwfjcgdmlhDQogIE1XUiByZWdp
+c3RlciwgOH4xNSAoaW5zdGVhZCBvZiAwfjcpIHNoYWxsIGJlIHdyaXR0ZW4gdG8gY29ycmVzcG9u
+ZGluZyBtb2RlDQogIHNlbGVjdGlvbiBmaWVsZC4NCldoZW4gdXNpbmcgU0VUL0NMUi9NV1IgcmVn
+aXN0ZXJzLCByZWFkLW1vZGlmeS13cml0ZSBvZiB2YWx1ZSByZWdpc3RlciBpcyBub3QNCiAgbmVj
+ZXNzYXJ5LiBUaGlzIGNhbiBwcmV2ZW50IGZyb20gcmFjZSBjb25kaXRpb24gd2hlbiBtdWx0aXBs
+ZSBidXMgbWFzdGVycw0KICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNhbWUg
+dmFsdWUgcmVnaXN0ZXIgZm9yIHNldHRpbmcgZGlmZmVyZW50DQogIGZpZWxkcyBvZiB0aGUgc2Ft
+ZSB2YWx1ZSByZWdpc3Rlci4NCg0KU2lnbmVkLW9mZi1ieTogTGlnaHQgSHNpZWggPGxpZ2h0Lmhz
+aWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
+LW10ay1jb21tb24tdjIuYyB8IDY5ICsrKysrKysrKysrKysrKysrKysrKystLQ0KIGRyaXZlcnMv
+cGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuaCB8ICAyICsNCiAyIGZpbGVz
+IGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2
+ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGI3N2Ix
+OGYuLjUxZjBiNTMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdGstY29tbW9uLXYyLmMNCisrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
+LW10ay1jb21tb24tdjIuYw0KQEAgLTE4LDYgKzE4LDI5IEBADQogI2luY2x1ZGUgIm10ay1laW50
+LmgiDQogI2luY2x1ZGUgInBpbmN0cmwtbXRrLWNvbW1vbi12Mi5oIg0KIA0KKy8qIFNvbWUgTWVk
+aWFUZWsgU09DIHByb3ZpZGUgbW9yZSBjb250cm9sIHJlZ2lzdGVycyBvdGhlciB0aGFuIHZhbHVl
+IHJlZ2lzdGVyLg0KKyAqIEdlbmVyYW5sbCwgYSB2YWx1ZSByZWdpc3RlciBuZWVkIHJlYWQtbW9k
+aWZ5LXdyaXRlIGlzIGF0IG9mZnNldCAweFhYWFhYWFhYMC4NCisgKiBBIGNvcnJlc3BvbmRpbmcg
+U0VUIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg0LiBXcml0ZSAxcycgdG8gc29tZSBi
+aXRzDQorICogIG9mIFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVn
+aXN0ZXIuDQorICogQSBjb3JyZXNwb25kaW5nIENMUiByZWdpc3RlciBpcyBhdCBvZmZzZXQgMHhY
+WFhYWFhYOC4gV3JpdGUgMXMnIHRvIHNvbWUgYml0cw0KKyAqICBvZiBDTFIgcmVnaXN0ZXIgd2ls
+bCBjbGVhciBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQorICogRm9yIEdQSU8gbW9kZSBz
+ZWxlY3Rpb24sIE1XUiByZWdpc3RlciBpcyBwcm92aWRlZCBhdCBvZmZzZXQgMHhYWFhYWFhYQy4N
+CisgKiAgV2l0aCBNV1IsIHRoZSBNU0JpdCBvZiBHUElPIG1vZGUgc2VsZWN0aW9uIGZpZWxkIGlz
+IGZvciBtb2RpZmljYXRpb24tZW5hYmxlLA0KKyAqICBub3QgZm9yIEdQSU8gbW9kZSBzZWxlY3Rp
+b24sIGFuZCB0aGUgcmVtYWluaW5nIExTQml0cyBhcmUgZm9yIG1vZGUNCisgKiAgc2VsZWN0aW9u
+Lg0KKyAqICBUYWtlIG1vZGUgc2VsZWN0aW9uIGZpZWxkIHdpdGggNC1iaXRzIGFzIGV4YW1wbGUs
+IHRvIHNlbGVjdCBtb2RlIDB+NyB2aWENCisgKiAgTVdSIHJlZ2lzdGVyLCA4fjE1IChpbnN0ZWFk
+IG9mIDB+Nykgc2hhbGwgYmUgd3JpdHRlbiB0byBjb3JyZXNwb25kaW5nIG1vZGUNCisgKiAgc2Vs
+ZWN0aW9uIGZpZWxkLg0KKyAqIFdoZW4gdXNpbmcgU0VUL0NMUi9NV1IgcmVnaXN0ZXJzLCByZWFk
+LW1vZGlmeS13cml0ZSBvZiB2YWx1ZSByZWdpc3RlciBpcyBub3QNCisgKiAgbmVjZXNzYXJ5LiBU
+aGlzIGNhbiBwcmV2ZW50IGZyb20gcmFjZSBjb25kaXRpb24gd2hlbiBtdWx0aXBsZSBidXMgbWFz
+dGVycw0KKyAqICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNhbWUgdmFsdWUg
+cmVnaXN0ZXIgZm9yIHNldHRpbmcgZGlmZmVyZW50DQorICogIGZpZWxkcyBvZiB0aGUgc2FtZSB2
+YWx1ZSByZWdpc3Rlci4NCisgKi8NCisNCisjZGVmaW5lIFNFVF9PRkZTRVQgMHg0DQorI2RlZmlu
+ZSBDTFJfT0ZGU0VUIDB4OA0KKyNkZWZpbmUgTVdSX09GRlNFVCAweEMNCisNCiAvKioNCiAgKiBz
+dHJ1Y3QgbXRrX2RyaXZlX2Rlc2MgLSB0aGUgc3RydWN0dXJlIHRoYXQgaG9sZHMgdGhlIGluZm9y
+bWF0aW9uDQogICoJCQkgICAgb2YgdGhlIGRyaXZpbmcgY3VycmVudA0KQEAgLTY0LDYgKzg3LDM4
+IEBAIHZvaWQgbXRrX3JtdyhzdHJ1Y3QgbXRrX3BpbmN0cmwgKnBjdGwsIHU4IGksIHUzMiByZWcs
+IHUzMiBtYXNrLCB1MzIgc2V0KQ0KIAltdGtfdzMyKHBjdGwsIGksIHJlZywgdmFsKTsNCiB9DQog
+DQorDQorc3RhdGljIHZvaWQgbXRrX2h3X3NldF92YWx1ZV9yYWNlX2ZyZWUoc3RydWN0IG10a19w
+aW5jdHJsICpwY3RsLA0KKwkJc3RydWN0IG10a19waW5fZmllbGQgKnBmLCB1MzIgdmFsdWUpDQor
+ew0KKwl1bnNpZ25lZCBpbnQgc2V0LCBjbHI7DQorDQorCXNldCA9IHZhbHVlICYgcGYtPm1hc2s7
+DQorCWNsciA9ICh+c2V0KSAmIHBmLT5tYXNrOw0KKw0KKwlpZiAoc2V0KQ0KKwkJbXRrX3czMihw
+Y3RsLCBwZi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBTRVRfT0ZGU0VULA0KKwkJCXNldCA8PCBwZi0+
+Yml0cG9zKTsNCisJaWYgKGNscikNCisJCW10a193MzIocGN0bCwgcGYtPmluZGV4LCBwZi0+b2Zm
+c2V0ICsgQ0xSX09GRlNFVCwNCisJCQljbHIgPDwgcGYtPmJpdHBvcyk7DQorfQ0KKw0KK3N0YXRp
+YyB2b2lkIG10a19od19zZXRfbW9kZV9yYWNlX2ZyZWUoc3RydWN0IG10a19waW5jdHJsICpwY3Rs
+LA0KKwkJc3RydWN0IG10a19waW5fZmllbGQgKnBmLCB1MzIgdmFsdWUpDQorew0KKwl1bnNpZ25l
+ZCBpbnQgdmFsdWVfbmV3Ow0KKw0KKwkvKiBNU0Igb2YgbWFzayBpcyBtb2RpZmljYXRpb24tZW5h
+YmxlIGJpdCwgc2V0IHRoaXMgYml0ICovDQorCXZhbHVlX25ldyA9ICgxIDw8IChwY3RsLT5zb2Mt
+Pm13cl9maWVsZF93aWR0aCAtIDEpKSB8IHZhbHVlOw0KKwlpZiAodmFsdWVfbmV3ID09IHZhbHVl
+KQ0KKwkJZGV2X25vdGljZShwY3RsLT5kZXYsDQorCQkJImludmFsaWQgbW9kZSAweCV4LCB1c2Ug
+aXQgYnkgaWdub3JpbmcgTVNCaXQhXG4iLA0KKwkJCXZhbHVlKTsNCisJbXRrX3czMihwY3RsLCBw
+Zi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBNV1JfT0ZGU0VULA0KKwkJdmFsdWVfbmV3IDw8IHBmLT5i
+aXRwb3MpOw0KK30NCisNCiBzdGF0aWMgaW50IG10a19od19waW5fZmllbGRfbG9va3VwKHN0cnVj
+dCBtdGtfcGluY3RybCAqaHcsDQogCQkJCSAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRl
+c2MsDQogCQkJCSAgIGludCBmaWVsZCwgc3RydWN0IG10a19waW5fZmllbGQgKnBmZCkNCkBAIC0x
+OTcsMTAgKzI1MiwxNiBAQCBpbnQgbXRrX2h3X3NldF92YWx1ZShzdHJ1Y3QgbXRrX3BpbmN0cmwg
+Kmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KIAlpZiAodmFsdWUgPCAwIHx8
+IHZhbHVlID4gcGYubWFzaykNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KLQlpZiAoIXBmLm5leHQp
+DQotCQltdGtfcm13KGh3LCBwZi5pbmRleCwgcGYub2Zmc2V0LCBwZi5tYXNrIDw8IHBmLmJpdHBv
+cywNCi0JCQkodmFsdWUgJiBwZi5tYXNrKSA8PCBwZi5iaXRwb3MpOw0KLQllbHNlDQorCWlmICgh
+cGYubmV4dCkgew0KKwkJaWYgKGh3LT5zb2MtPnJhY2VfZnJlZV9hY2Nlc3MpIHsNCisJCQlpZiAo
+ZmllbGQgPT0gUElOQ1RSTF9QSU5fUkVHX01PREUpDQorCQkJCW10a19od19zZXRfbW9kZV9yYWNl
+X2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KKwkJCWVsc2UNCisJCQkJbXRrX2h3X3NldF92YWx1ZV9y
+YWNlX2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KKwkJfSBlbHNlDQorCQkJbXRrX3JtdyhodywgcGYu
+aW5kZXgsIHBmLm9mZnNldCwgcGYubWFzayA8PCBwZi5iaXRwb3MsDQorCQkJCSh2YWx1ZSAmIHBm
+Lm1hc2spIDw8IHBmLmJpdHBvcyk7DQorCX0gZWxzZQ0KIAkJbXRrX2h3X3dyaXRlX2Nyb3NzX2Zp
+ZWxkKGh3LCAmcGYsIHZhbHVlKTsNCiANCiAJcmV0dXJuIDA7DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oIGIvZHJpdmVycy9waW5j
+dHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oDQppbmRleCAyN2RmMDg3Li45NWZi
+MzI5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
+bW1vbi12Mi5oDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
+bW9uLXYyLmgNCkBAIC0yMDMsNiArMjAzLDggQEAgc3RydWN0IG10a19waW5fc29jIHsNCiAJLyog
+U3BlY2lmaWMgcGFyYW1ldGVycyBwZXIgU29DICovDQogCXU4CQkJCWdwaW9fbTsNCiAJYm9vbAkJ
+CQlpZXNfcHJlc2VudDsNCisJYm9vbCAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWNlX2Zy
+ZWVfYWNjZXNzOw0KKwl1bnNpZ25lZCBpbnQgICAgICAgICAgICAgICAgICAgIG13cl9maWVsZF93
+aWR0aDsNCiAJY29uc3QgY2hhciAqIGNvbnN0CQkqYmFzZV9uYW1lczsNCiAJdW5zaWduZWQgaW50
+CQkJbmJhc2VfbmFtZXM7DQogDQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
-On Tue, Aug 18, 2020 at 1:32 AM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Aug 07, 2020 at 04:13:45PM +0200, Geert Uytterhoeven wrote:
-> > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
-> > documentation to json-schema.
-> >
-> > Document missing properties.
-> > Drop deprecated and obsolete #gpio-range-cells property.
-> > Update the example to match reality.
-> > Drop consumer examples, as they do not belong here.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Still RFC, due to the FIXMEs near the enum descriptions.
-> > If I enable the enums checks, I get e.g.:
-> >
-> >     [[1800]] is not one of [1800, 3300]
-> >
-> > Note the double square brackets around 1800.
-> > The usual error message doesn't have them, e.g.:
-> >
-> >     2000 is not one of [1800, 3300]
-> >
-> > So this looks like a bug in the tooling?
->
-> Yes, we only recently started supporting schemas under
-> 'additionalProperties', but failed to apply fixups.
->
-> I have a fix I'm testing out. I'm bumping the version requirement in
-> 5.10, so I'll make sure it is there.
-
-Thanks, looking forward to it.
-
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
-
-> > +  interrupts-extended:
->
-> Just use 'interrupts' here. 'interrupt-extended' is always magically
-> supported.
-
-Apparently not everywhere...
-
-    Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
-pin-controller@e6050000: 'interrupts' is a required property
-
-Hence I kept it in both places, for consistency.
-
-Cfr. https://lore.kernel.org/linux-gpio/CAMuHMdWSPDQBABXZVaPecETbSRsP2yyZXLHiL_+_R2n_-09jRg@mail.gmail.com/
-
-> > +additionalProperties:
-> > +  anyOf:
-> > +    - type: object
-> > +      allOf:
-> > +        - $ref: pincfg-node.yaml#
-> > +        - $ref: pinmux-node.yaml#
-> > +
-> > +      description:
-> > +        Pin controller client devices use pin configuration subnodes (children
-> > +        and grandchildren) for desired pin configuration.
-> > +        Client device subnodes use below standard properties.
-> > +
-> > +      properties:
-> > +        phandle: true
->
-> Once fixed, this won't be necessary.
-
-OK.
-
-> > +        function: true
-> > +        groups: true
-> > +        pins: true
-> > +        bias-disable: true
-> > +        bias-pull-down: true
-> > +        bias-pull-up: true
-> > +        drive-strength:
-> > +          true # FIXME enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
-> > +          # avb:pins_mdio:drive-strength: [[24]] is not one of [3, 6, 9, 12, 15, 18, 21, 24]
-> > +        power-source:
-> > +          true # FIXME enum: [ 1800, 3300 ]
-> > +          # sd0_uhs:power-source: [[1800]] is not one of [1800, 3300]
-> > +        gpio-hog: true
-> > +        gpios: true
-> > +        input: true
-> > +        output-high: true
-> > +        output-low: true
-> > +
-> > +      additionalProperties: false
-> > +
-> > +    - type: object
-> > +      properties:
-> > +        phandle: true
->
-> For this one, you can just link it back to the first entry:
->
-> - type: object
->   additionalProperties:
->     $ref: "#/additionalProperties/anyOf/0"
-
-Thanks, cool!
-
-> > +examples:
-> > +  - |
-> > +    pfc: pin-controller@e6050000 {
->
-> Because we're been really consistent ( :( ):
->
-> pinctrl@...
-
-Oh, I had never noticed that was added in devicetree-specification-v0.2.pdf.
-Yes, consistency... everything else is *-controller ;-)
-
-Will fix.
-
->
-> > +            compatible = "renesas,pfc-sh73a0";
-> > +            reg = <0xe6050000 0x8000>, <0xe605801c 0x1c>;
-> > +            gpio-controller;
-> > +            #gpio-cells = <2>;
-> > +            gpio-ranges =
-> > +                <&pfc 0 0 119>, <&pfc 128 128 37>, <&pfc 192 192 91>,
-> > +                <&pfc 288 288 22>;
-> > +            interrupts-extended =
-> > +                <&irqpin0 0 0>, <&irqpin0 1 0>, <&irqpin0 2 0>, <&irqpin0 3 0>,
-> > +                <&irqpin0 4 0>, <&irqpin0 5 0>, <&irqpin0 6 0>, <&irqpin0 7 0>,
-> > +                <&irqpin1 0 0>, <&irqpin1 1 0>, <&irqpin1 2 0>, <&irqpin1 3 0>,
-> > +                <&irqpin1 4 0>, <&irqpin1 5 0>, <&irqpin1 6 0>, <&irqpin1 7 0>,
-> > +                <&irqpin2 0 0>, <&irqpin2 1 0>, <&irqpin2 2 0>, <&irqpin2 3 0>,
-> > +                <&irqpin2 4 0>, <&irqpin2 5 0>, <&irqpin2 6 0>, <&irqpin2 7 0>,
-> > +                <&irqpin3 0 0>, <&irqpin3 1 0>, <&irqpin3 2 0>, <&irqpin3 3 0>,
-> > +                <&irqpin3 4 0>, <&irqpin3 5 0>, <&irqpin3 6 0>, <&irqpin3 7 0>;
-> > +            power-domains = <&pd_c5>;
->
-> child and grandchild nodes exercising the above schema and issues would
-> be good here.
-
-Good idea, will add.  I'll probably have to replace the example completely,
-as SH73A0 doesn't support drive-strength and power-source.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
