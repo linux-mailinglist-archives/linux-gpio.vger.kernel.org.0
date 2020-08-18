@@ -2,82 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC548248ED3
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 21:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6371248F37
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 22:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgHRTkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 15:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
+        id S1726749AbgHRUAD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 16:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRTkU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 15:40:20 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B50C061389
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 12:40:19 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id j10so10119578qvo.13
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 12:40:19 -0700 (PDT)
+        with ESMTP id S1726673AbgHRUAC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 16:00:02 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B6AC061389
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 13:00:02 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j187so19460302qke.11
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gHjO7hnTpGJINthx/ykdD+LuGGw/JAWxBtHydodDWrI=;
-        b=VUUP0dxKZkAor6AZPb0wLSi2bpgaKhw/l0eeVxcMEb+6ukVn6pmEfcDdGDe86YYmUw
-         +gUnqm5QqFBOyM9ggLsM3PR8DDIa6/S4yl3fplXTB9rDY8USzf0Zoy7+B1NHeY2hHWyG
-         2ivvC5xKmxQJw0c3d3zpE81VXM+uH2HsDU8Wn18Pu3ndZRSNwCLXJPuHp9LTYcwDy/j1
-         kcXN58j5dhH7MPXIsIvFBm1O2zTRv+q9IC5Khfqax0HQoNgOpXx49OkeyGVd59yT/uYI
-         aXFaFeWA8hGAUa+cKqMtOwtQV4qxKrSsGqm8cLr28fUJzH30d4T05NG8XH1OJqrWg4UO
-         glMA==
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=mY9/qM2MC8h80QmH/L2o3ebU+oUQNUCW63wm7YBmbeK4YBE5Xe3Rjqtwof4g90Gl5j
+         Nashil2BSJxW/GC+DcTms+MTs3zm8+LkClOf/U2jUP/YJlxAmvLXG+Y1SxzjQuQdOmRe
+         FaeRrNHm7nBp0Ire6IgS6r1s0gdLxjr1afa0E+smJ3xN4nEInrIvlWBT7CW0TEmor1mO
+         FIgviwqTSYceSMveg047w1orQVPvufjnGz94qi/TKhCr8AbTj6GPs3BxF/aFHmnO4n+M
+         XlWMZtYVdzdVxOkWy4H/ual/TZMNFFmE2xwQGOV4ybgkF4mcBltQ5wgUueSnWH61nlUt
+         zm4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gHjO7hnTpGJINthx/ykdD+LuGGw/JAWxBtHydodDWrI=;
-        b=XcI+XUW+dvTV3OPaEQSWPKPhUaCm3kUeJEtYLc3V3aXOHp/63nw72N1laOcaECQiWD
-         SOciKYq+Wl1m+gmuQ296UcvoqSLOiKIRhKqmBpoKVreXZSA7sAzIBAuMfHSAZ8ENFfyo
-         hnUfnpTG5qbf+y1Bdc/B9tNaGKOxyqImAwHDGGgicoTPX6MMj/bMHTeYK3PW+MFjNC00
-         xxQ1A2O/MmrsDRMLIEEW8IRvzEJ3iRmK8vt0Vq/mGtr1QwCFixRhvRT7ajS7ciMzCmgO
-         wIakuslRSoug205JLDKFjP1FBA8Veco1RM/22qMkhabpj2PUu6ArvvA7aZSlCtQI0QMa
-         G+CQ==
-X-Gm-Message-State: AOAM530O5T49vnIxAu9v4RzQylkjgj6gUkHNGRdyC/Acd6WQlKP2fVbJ
-        PrFcJoeL9SXQsebYsa7nOh3N1YgqTx0a5EDmiO7BAg==
-X-Google-Smtp-Source: ABdhPJzDtypA0p8JkQF++zXEGj40njLSXFBMp9IAzG21zNQVZRcPCeH05FSL/L1xc0f2Ac1XYKq47Nyfahjl2ZAfPEs=
-X-Received: by 2002:a0c:eed1:: with SMTP id h17mr19797386qvs.96.1597779618626;
- Tue, 18 Aug 2020 12:40:18 -0700 (PDT)
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=PwNh+kK+tshG/aumBZPJELtspHN6VVteBgRxnRaP7xpILukT0qQwSjrIwMkInlGW1e
+         L0CY0WQyLiqXA4bR4sJUVDbmMB476vcTNIKJ/XzyyoW8jejyAds307AflvUPbxZcMuTR
+         dHfLMKnH/5z/ODTEx5FrPt7PgiIwW6Z2OsAmuNboLAPp9YU3Mfpk4LSJkIq64zwSo51f
+         sXKbCL6id+XD5yETiQ/a9L6HMGAfnQxTZx6OBPa/d54JXqu3O/qhLncSutCCCTDBx5NJ
+         ZDk04TrqpIRWmz/wUOcRFCoWP25a/dg9jKaC9LCTdMcBjlQpkbcvRu0pEbGN57VPBDTh
+         uXhg==
+X-Gm-Message-State: AOAM533oYMOAgLaf0ZUB2kkRxjXLdEHcNQYhAX2O4NIzVMcxsMnargob
+        KV1Mt/Odj9FohiABvZVIY/XHtVKY+oUYD3fGq1mP3g==
+X-Google-Smtp-Source: ABdhPJzURAYX1VluYbg81khU/4BFMEQ5XggeNrYg7amfOd007KJmuQPkzQNHuZnA3kRR7pjm2ZwfV6zrZkG75TYorqc=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr19146148qke.330.1597780801253;
+ Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200810114353.48761-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200810114353.48761-1-andriy.shevchenko@linux.intel.com>
+References: <20200801112446.149549-1-refactormyself@gmail.com> <20200801112446.149549-9-refactormyself@gmail.com>
+In-Reply-To: <20200801112446.149549-9-refactormyself@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Aug 2020 21:40:07 +0200
-Message-ID: <CAMpxmJUeNuSdC8ngBkpq_=JPQ5YszXeEkuEE3iQHUr9zuvNGEw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: aggregator: Refactor ->{get,set}_multiple() to
- make Sparse happy
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Tue, 18 Aug 2020 21:59:50 +0200
+Message-ID: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return value
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 1:43 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
+<refactormyself@gmail.com> wrote:
 >
-> Sparse can't see locking scheme used in ->get_multiple() and
-> ->set_multiple() callbacks.
->   CHECK   .../drivers/gpio/gpio-aggregator.c
->   .../spinlock.h:409:9: warning: context imbalance in 'gpio_fwd_get_multiple' - unexpected unlock
->   .../spinlock.h:409:9: warning: context imbalance in 'gpio_fwd_set_multiple' - unexpected unlock
+> The return value of pci_read_config_*() may not indicate a device error.
+> However, the value read by these functions is more likely to indicate
+> this kind of error. This presents two overlapping ways of reporting
+> errors and complicates error checking.
 >
-> Refactor them to have better readability and make Sparse happy.
+> It is possible to move to one single way of checking for error if the
+> dependency on the return value of these functions is removed, then it
+> can later be made to return void.
 >
-> Code size impact is +52 bytes with arm-linux-gnueabihf-gcc 7.5.0.
+> Remove all uses of the return value of pci_read_config_*().
+> Check the actual value read for ~0. In this case, ~0 is an invalid
+> value thus it indicates some kind of error.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 > ---
+>  drivers/gpio/gpio-amd8111.c |  7 +++++--
+>  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
+>  2 files changed, 17 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> index fdcebe59510d..7b9882380cbc 100644
+> --- a/drivers/gpio/gpio-amd8111.c
+> +++ b/drivers/gpio/gpio-amd8111.c
+> @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
+>         goto out;
+>
+>  found:
+> -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> -       if (err)
+> +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> +       if (gp.pmbase == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto out;
+> +       }
+> +
+>         err = -EIO;
+>         gp.pmbase &= 0x0000FF00;
+>         if (gp.pmbase == 0)
+> diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
+> index 01ed2517e9fd..03f1ff07b844 100644
+> --- a/drivers/gpio/gpio-rdc321x.c
+> +++ b/drivers/gpio/gpio-rdc321x.c
+> @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
+>         gpch = gpiochip_get_data(chip);
+>
+>         spin_lock(&gpch->lock);
+> -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
+> -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
+> -       if (err)
+> +       pci_read_config_dword(gpch->sb_pdev,
+> +                               (gpio < 32) ? gpch->reg1_ctrl_base
+> +                                       : gpch->reg2_ctrl_base, &reg);
+> +       if (reg == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto unlock;
+> +       }
+>
+>         reg |= 1 << (gpio & 0x1f);
+>
+> @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
+>         /* This might not be, what others (BIOS, bootloader, etc.)
+>            wrote to these registers before, but it's a good guess. Still
+>            better than just using 0xffffffff. */
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg1_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[0]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
+> +               return -ENODEV;
+>
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg2_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[1]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
+> +               return -ENODEV;
+>
+>         dev_info(&pdev->dev, "registering %d GPIOs\n",
+>                                         rdc321x_gpio_dev->chip.ngpio);
+> --
+> 2.18.4
+>
 
-Queued for v5.10, thanks!
+Bjorn,
+
+I don't know the pci sub-system at all. Does this look good to you?
 
 Bartosz
