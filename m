@@ -2,132 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 252302482D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 12:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4EF24836E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 12:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHRKU6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 18 Aug 2020 06:20:58 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57266 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726043AbgHRKUx (ORCPT
+        id S1726145AbgHRK7b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 06:59:31 -0400
+Received: from sonic309-13.consmr.mail.bf2.yahoo.com ([74.6.129.123]:44535
+        "EHLO sonic309-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726473AbgHRK73 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:20:53 -0400
-Received: from [78.134.86.56] (port=53170 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1k7yjY-000DIV-Rp; Tue, 18 Aug 2020 12:20:49 +0200
-Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
- on programming failure
-To:     Tom Rix <trix@redhat.com>, linux-fpga@vger.kernel.org
-Cc:     Moritz Fischer <mdf@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200817165911.32589-1-luca@lucaceresoli.net>
- <20200817165911.32589-2-luca@lucaceresoli.net>
- <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
-Date:   Tue, 18 Aug 2020 12:20:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 06:59:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1597748366; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=HCBzfySwJXLbY/S8UoqWqvEjKd5MMwVL80pdq6HG/8sNKkuZ5S3/bQOQndAYkT63KcU/hn3h0wD+c4Iv4XdMS05Y650rG4dHJVTVUlbk4ZJpIJCCIR22v5ku+cRl1+TfS3RXvfy1paugyrqLpyE1976SFGDIABjwgijwoMF+8ld2rV9lBQE0EBPDggZHa5f0FpWSxp+AZIhqv5rdqnC2v5vcm70EXEx4DfCpf/kwr5KYte7ik5gcxaDzOwaRZnBPhHyKgYnGkkTsp50Z3jFJYqAWlieF+oREyZIxHfYzvzpdDOnyh5XIWedXikmNATLWVivzjvrORDIbXjq9WfcbVw==
+X-YMail-OSG: 6Vr5whMVM1lQGLnNl.7Qm8obUi1Fark8WHN_n1KuKZYczmUkfRoQzQ17XTs18H1
+ YLOnqnDRuNonSIcbaoVaQJfb.cGS7MvqFjDKoCWOaluBDBQky.ucuMBO4WAthHh00fCtPAQi9xWU
+ NEhkQj15Cd4alqjA6ahSdJbpX0p.LUawrvjYetNn2MBGf4X6UofrkPcZ3JCb3ADGSV3R37XkKPCp
+ BgSSlr.0CtEtcRdjt3c5oOIzOw7VuRp83yFTTIrZ.zuyLiTg41KSqfpMwXzdGZGbETMy7Z5ILall
+ qbbczPmIrZu826Y2NToaPi4niv70P3NjLntp7xTDU2L9fE9SZoyfWpRahcmsJEycXlQyVc7KJpTk
+ yDzlGKEF3g4JTk03mhSyJa5BJdRwXjTNg.SzXUdrEKV.q_oYULGskxm3p8htXQ9z2DP9Ec3AzgN4
+ YC099Gavl4qU.rlPBr4C0N.l9f6TXLOTNcCi61uPYGH.__3d6sw2CTmcm5dzO31DDAgyo_8ATYPo
+ CShoX5McyGsby704Mly3tNk_T9jidEtdSfVjr1LMyaFugMq21N.ucsBQCUp6Ddc3GjABVfsKcKBC
+ jdlt5YnmdFjZmAYHBPUmbZwn0EDbtsFbBu9wjTlqudyLzJs05X3BwejAcRG2iuV6cHCpeBAKHjeF
+ DKyNETNTSfc3LgulSieglwd0ogUuszYvzBYfq7WdvSQB0xJ4Nyv7xwJszMnqqjOx7lEJ9j_hCw.E
+ 38j6IAgoTcERy_oEin_xxc5.CE9kyQkCVlcPbWK07X6KqS7EhrJMj6ybC9ahrkYY1YoE16UbSdmo
+ _cbG6eayp9OZLDUPjuZFfUMD7BYovTgkcwhvyPaQrmMiE0UbeUAZbqrXGvvmN4dpVU.Fopyki4Wb
+ 0aZc2S.UGRcGONkR6pDVEMFgmlsFafczJMdA1A4q74UDWMvLFTStKJTCCy64lL0riEzLJwXL0Hlg
+ dc1z0D5.z4jCZoYMsm4WKX1LaEiM09zotgewNss0IyymyLY2o5BJDCi7nN29.8bpWn1VXf1b9G37
+ FEeSfw1e.Sr6is4gcvybKMRrAszq4LV8jpg6bdvoB4XiuHpdhnIw4BIs406OpbpCZlE10DTFooaR
+ j3DzH3c8o5lrRsEnf.TNpW560cV2ECr6CZjhfknh_plLlqY6h5y01xOHB2gVawliSuAB84Vgdsp_
+ L0k0tGRHw3RrqK59Yl8oXKEgF1IAy4NO4endkoYj8jOvJW.t4s1eMikMdpK2Wk6zONziKl6yvCM3
+ YfuQY19zg60aZ2ukjuO3HPXePd4kiCRLhM_p8zob15ITcZhSJimOM8GcqAP1LAM6hexEuJTAUo1j
+ 2aj4GQys.ZDycvK4bZPp4NhU3ZdOehPFAtenpfkYhU.sWXLS.VA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.bf2.yahoo.com with HTTP; Tue, 18 Aug 2020 10:59:26 +0000
+Date:   Tue, 18 Aug 2020 10:59:21 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <2066635058.1267083.1597748361304@mail.yahoo.com>
+Subject: BUSINESS FROM (Ms Lisa hugh).
 MIME-Version: 1.0
-In-Reply-To: <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <2066635058.1267083.1597748361304.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16455 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[a question for GPIO maintainers below]
 
-Hi Tom,
 
-thanks for your review!
+Dear Friend,
 
-On 17/08/20 20:15, Tom Rix wrote:
-> The other two patches are fine.
-> 
-> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
->> When the DONE pin does not go high after programming to confirm programming
->> success, the INIT_B pin provides some info on the reason. Use it if
->> available to provide a more explanatory error message.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> ---
->>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
->>  1 file changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
->> index 502fae0d1d85..2aa942bb1114 100644
->> --- a/drivers/fpga/xilinx-spi.c
->> +++ b/drivers/fpga/xilinx-spi.c
->> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
->>  			return xilinx_spi_apply_cclk_cycles(conf);
->>  	}
->>  
->> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
->> +	if (conf->init_b) {
->> +		int init_b_asserted = gpiod_get_value(conf->init_b);
-> 
-> gpiod_get_value can fail. So maybe need split the first statement.
-> 
-> init_b_asserted < 0 ? "invalid device"
-> 
-> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
 
-Thanks for the heads up. However I'm not sure which is the best thing to
-do here.
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
 
-First, I've been reading the libgpiod code after your email and yes, the
-libgpiod code _could_ return runtime errors received from the gpiochip
-driver, even though the docs state:
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
 
-> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
-(https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
 
-On the other hand there are plenty of calls to gpiod_get/set_value in
-the kernel that don't check for error values. I guess this is because
-failures getting/setting a GPIO are very uncommon (perhaps impossible
-with platform GPIO).
+Below information is what i need from you so will can be reaching each other
 
-When still a GPIO get/set operation fails I'm not sure adding thousands
-of error-checking code lines in hundreds of drivers is the best way to
-go. I feel like we should have a unique, noisy dev_err() in the error
-path in libgpio but I was surprised in not finding any [1].
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
 
-Linus, Bartosz, what's your opinion? Should all drivers check for errors
-after every gpiod_[sg]et_value*() call?
 
->> +		dev_err(&mgr->dev,
->> +			init_b_asserted ? "CRC error or invalid device\n"
->> +			: "Missing sync word or incomplete bitstream\n");
->> +	} else {
->> +		dev_err(&mgr->dev, "Timeout after config data transfer.\n");
-> patch 3 removes '.' s , and you just added one back in ?
+Thanks.
 
-Here I'm only changing indentation of this line. But OK, this is
-misleading, so I'll swap patches 2 and 3 in the next patch iteration to
-avoid confusion.
-
-[1]
-https://elixir.bootlin.com/linux/v5.8/source/drivers/gpio/gpiolib.c#L3646
-
--- 
-Luca
-
+Ms Lisa hugh.
