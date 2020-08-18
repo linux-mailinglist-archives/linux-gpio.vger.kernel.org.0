@@ -2,117 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E9D248699
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 16:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4319F248746
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 16:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHROAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 10:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHROAJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 10:00:09 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26825C061389;
-        Tue, 18 Aug 2020 07:00:09 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so9440566pjx.5;
-        Tue, 18 Aug 2020 07:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/oh+BcdsFeBRm7bcoZIVYJ25TsHY2ROrPUeqhFfeYCY=;
-        b=rPsGsqpBlwfOIi1dDqvsJIViRe2mzwhb1+n7f2Ez6TWD9FWEPhZD1teu6GGT/YEKBk
-         xX4n3EmeK6UC0cHa/PILAC66FWHopAqt2WOCYoOr99kUGIgFgd5KwcpAspg5l9jBkhT6
-         B6suQg6iPopeT5V5p06r+MH6K6uWfU+HxcWh+CF+qIQcsPoJW3z7/519xtBzwq/KnjgB
-         1KxnywCbY7qdOpJOrFG/3olaE31TWk/146VsMQCZlHS8BLacEsZkOEQxBSDxDTRlymlX
-         VVboTuvAuIUNTEii9Y85xPOBan44+nD+pwnfRccdua5gFLOs78zSgnmOSsfEL3aNJ9Xm
-         6JjQ==
+        id S1726476AbgHROV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 10:21:27 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20611 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726635AbgHROVZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:21:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597760483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yz2aFioQzK66jmr3N2BmfzM3+e8xJ7f1GvUhfZfDu9o=;
+        b=S/zPVX9xPOlDOm/n4FsWL1agOijcL+u8Pfa9fplShSgsXLTiv1vrVXKKKUmrwfMUCoU2+q
+        y0/Fu2lqkFux6ew5C4yDzk1Imwcas9i/pT9vsmLfSQR16h4JGkGPPQno3vXO6EHDJgnRwm
+        h3BRYvt5r7eoILxKBHF7Ke/J0K4dJI4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-YEeDjAHuPnuM23AJbdYemg-1; Tue, 18 Aug 2020 10:21:14 -0400
+X-MC-Unique: YEeDjAHuPnuM23AJbdYemg-1
+Received: by mail-qt1-f197.google.com with SMTP id h10so14533620qtc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 07:21:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/oh+BcdsFeBRm7bcoZIVYJ25TsHY2ROrPUeqhFfeYCY=;
-        b=EaViUmdHBHTm5PqV0JI1oOVSk0emb6zePqnEBL13cGnIdhy9o/qIUiwlGvpuG+6qVO
-         CfPyd6TbJnYrjRX59c7UmSNGpH4CTo6D1BSBh36SMSLJ9tU9mXnQeZeDwXmir8eMsRvy
-         /DCS9/jZRJmBeHffaYlwudxnWHGW7fGDlkHcl6sTZKfvqe0XZsvHjh26jDlg9KRuPPHj
-         1zH5AM+DtwS7LeIm1iafNuQwnO59XPaQZczVCkqNHkmWHsY7U6ubyOaLNXrZZ3dotHId
-         W15Pqg0VXgm4r90VTGNfJ+5/iqzDQCfyUNCfW1Wrgqeae5nVUOCkDAryRgdrLxCQmIFU
-         5+7w==
-X-Gm-Message-State: AOAM532dm2pM9ZJBmtm85BkP9vhsxhMyMFbw59Lzr42rX5n2YR70BBsk
-        ifcN0SqvgRmpNGgrPSuv3pGt0pMwHsY=
-X-Google-Smtp-Source: ABdhPJxH966E5lH7RAu83+sOGjaAPxkud5eI2kNsZBNzLmIKwHRuvQEJRRAWIJjU6JCS71onbA4i4Q==
-X-Received: by 2002:a17:90a:fe91:: with SMTP id co17mr79426pjb.103.1597759208613;
-        Tue, 18 Aug 2020 07:00:08 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id w82sm25275749pff.7.2020.08.18.07.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 07:00:07 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 22:00:02 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 09/20] gpiolib: cdev: support edge detection for uAPI
- v2
-Message-ID: <20200818140002.GA17809@sol>
-References: <20200814030257.135463-1-warthog618@gmail.com>
- <20200814030257.135463-10-warthog618@gmail.com>
- <CAMpxmJVeAKpNnX0HXSNSLYqX6T+qxun8ppZ7EwzFb3WsS=nanw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Yz2aFioQzK66jmr3N2BmfzM3+e8xJ7f1GvUhfZfDu9o=;
+        b=p/4119Wc+HlUt+Ae+YJSBrUEDoAsROBd7lrKW0O+KFnMSTpr30TiU6oJLdagRS47IK
+         0D0OXg77w0Y6+j/gyEoLpRtDm4pksGpXoSTNQpRY0vELVd3jR7nXWCsBFrl4eR3xLeSS
+         LQYHyv6MalrmnkyBWzuezfSp6eT/sYgxoU5MnnaWISWRfEiJMtC5FKymN8le9Zfq4vM9
+         JgdjJ7YbAZzIuIW9hHtAAslDfyaB2rMQ0/YFtxG6XrSA8zPIn2i7vYC8qhKt8Q7a8WFK
+         v+iz5srjX7xPeedNREJk0rKXJ1U5CaU3KTxe1+ojK3nvJZE3A2Cvu0vjFZ2KYcq1pXzt
+         9GBg==
+X-Gm-Message-State: AOAM533EIvKWmz1z4k1cJj8YPsgi6xCJqkRyle1gcH3xEXY3WETeVWT6
+        PuoPLSKalJ8xvd/M9TzMKiyNBA8lnCk/l9TACSIPTxvBp0Po4Dvn5CPMJAa2KG6+5VlMtmUBDou
+        5QhfcPSo14Z0DtWsjRcoEGg==
+X-Received: by 2002:a0c:aece:: with SMTP id n14mr19686879qvd.68.1597760473502;
+        Tue, 18 Aug 2020 07:21:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwR7cqBHSHZWO71g7kDKxrm2e6bQpvtnq4BHkeoL4lVYkiYaEGKTNKdjAybReLDnZZ+QWqphQ==
+X-Received: by 2002:a0c:aece:: with SMTP id n14mr19686865qvd.68.1597760473260;
+        Tue, 18 Aug 2020 07:21:13 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x5sm22753285qtp.76.2020.08.18.07.21.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 07:21:12 -0700 (PDT)
+Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
+ on programming failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200817165911.32589-1-luca@lucaceresoli.net>
+ <20200817165911.32589-2-luca@lucaceresoli.net>
+ <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
+ <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <397b99e2-9b39-5a67-e1c6-8dcf3482f96b@redhat.com>
+Date:   Tue, 18 Aug 2020 07:21:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJVeAKpNnX0HXSNSLYqX6T+qxun8ppZ7EwzFb3WsS=nanw@mail.gmail.com>
+In-Reply-To: <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 04:32:34PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Aug 14, 2020 at 5:04 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add support for edge detection to lines requested using
-> > GPIO_V2_GET_LINE_IOCTL.
-> >
-[snip]
 
-> >
-> > +       /* event_buffer_size only valid with edge detection */
-> > +       has_edge_detection = gpio_v2_line_config_has_edge_detection(lc);
-> > +       if (lr.event_buffer_size && !has_edge_detection)
-> > +               return -EINVAL;
-> > +
-> >         line = kzalloc(struct_size(line, descs, lr.num_lines),
-> >                        GFP_KERNEL);
-> >         if (!line)
-> > @@ -666,6 +944,16 @@ static int line_create(struct gpio_device *gdev, void __user *ip)
-> >         line->gdev = gdev;
-> >         get_device(&gdev->dev);
-> >
-> > +       line->edets = kcalloc(lr.num_lines, sizeof(*line->edets),
-> > +                             GFP_KERNEL);
-> 
-> You're allocating num_lines of edge detectors even if only certain
-> lines have edge detection (via attributes). I don't like it but it
-> made me think about struct line. How about having struct line which
-> actually only represents a single line (and it contains the relevant
-> gpio_desc pointer as well as the associated edge detector and any
-> other data only relevant for this line) and a set of lines would be
-> aggregated in struct line_request or line_request_data which would
-> additionally contain common fields? Does that even make sense?
-> 
+On 8/18/20 3:20 AM, Luca Ceresoli wrote:
+> [a question for GPIO maintainers below]
+>
+> Hi Tom,
+>
+> thanks for your review!
+>
+> On 17/08/20 20:15, Tom Rix wrote:
+>> The other two patches are fine.
+>>
+>> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
+>>> When the DONE pin does not go high after programming to confirm programming
+>>> success, the INIT_B pin provides some info on the reason. Use it if
+>>> available to provide a more explanatory error message.
+>>>
+>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>> ---
+>>>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
+>>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+>>> index 502fae0d1d85..2aa942bb1114 100644
+>>> --- a/drivers/fpga/xilinx-spi.c
+>>> +++ b/drivers/fpga/xilinx-spi.c
+>>> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>>>  			return xilinx_spi_apply_cclk_cycles(conf);
+>>>  	}
+>>>  
+>>> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+>>> +	if (conf->init_b) {
+>>> +		int init_b_asserted = gpiod_get_value(conf->init_b);
+>> gpiod_get_value can fail. So maybe need split the first statement.
+>>
+>> init_b_asserted < 0 ? "invalid device"
+>>
+>> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
+> Thanks for the heads up. However I'm not sure which is the best thing to
+> do here.
+>
+> First, I've been reading the libgpiod code after your email and yes, the
+> libgpiod code _could_ return runtime errors received from the gpiochip
+> driver, even though the docs state:
+>
+>> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
+> (https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
+>
+> On the other hand there are plenty of calls to gpiod_get/set_value in
+> the kernel that don't check for error values. I guess this is because
+> failures getting/setting a GPIO are very uncommon (perhaps impossible
+> with platform GPIO).
+>
+> When still a GPIO get/set operation fails I'm not sure adding thousands
+> of error-checking code lines in hundreds of drivers is the best way to
+> go. I feel like we should have a unique, noisy dev_err() in the error
+> path in libgpio but I was surprised in not finding any [1].
+>
+> Linus, Bartosz, what's your opinion? Should all drivers check for errors
+> after every gpiod_[sg]et_value*() call?
 
-You are right, and it makes total sense.
+My opinion is that you know the driver / hw is in a bad state and you
 
-I'm not totally thrilled with the block allocation either, but an
-earlier draft with edge detectors/debouncers created and destroyed as
-required resulted in complicated lifecycle management that this approach
-avoids.
+are trying to convey useful information.  So you should
 
-I'll have a look at restructuring it as you suggest.
-The only downside that springs to mind is that the gpiolib API expects
-a desc array, which we'll no longer have handy, so it would have to be
-built on the fly as per the sparse gets/sets.
+be as careful as possible and not assume gpio did not fail.
 
-Cheers,
-Kent.
+>
+>>> +		dev_err(&mgr->dev,
+>>> +			init_b_asserted ? "CRC error or invalid device\n"
+>>> +			: "Missing sync word or incomplete bitstream\n");
+>>> +	} else {
+>>> +		dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+>> patch 3 removes '.' s , and you just added one back in ?
+> Here I'm only changing indentation of this line. But OK, this is
+> misleading, so I'll swap patches 2 and 3 in the next patch iteration to
+> avoid confusion.
+Maybe just remove the '.' at the same time and/or collapse 2&3 into a single patch.
+>
+> [1]
+> https://elixir.bootlin.com/linux/v5.8/source/drivers/gpio/gpiolib.c#L3646
+>
+
