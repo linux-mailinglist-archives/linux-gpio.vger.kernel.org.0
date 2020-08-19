@@ -2,47 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A34B8249479
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 07:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBB1A249482
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 07:36:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgHSFd7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Aug 2020 01:33:59 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:55658 "EHLO
+        id S1726673AbgHSFgB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Aug 2020 01:36:01 -0400
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:60022 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgHSFd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Aug 2020 01:33:59 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 07J5XkPW029400; Wed, 19 Aug 2020 14:33:46 +0900
-X-Iguazu-Qid: 34tKBCMUDE7r2YHZ1g
-X-Iguazu-QSIG: v=2; s=0; t=1597815225; q=34tKBCMUDE7r2YHZ1g; m=sWk/+PIHvzNWuVDyEl2pixdTJdWUwHvAIRabQ8xYeRc=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1513) id 07J5Xjbu013089;
-        Wed, 19 Aug 2020 14:33:45 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 07J5XieP027576;
-        Wed, 19 Aug 2020 14:33:44 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 07J5XisN025506;
-        Wed, 19 Aug 2020 14:33:44 +0900
-Date:   Wed, 19 Aug 2020 14:33:43 +0900
+        with ESMTP id S1726422AbgHSFgB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Aug 2020 01:36:01 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 07J5Zl7f030284; Wed, 19 Aug 2020 14:35:47 +0900
+X-Iguazu-Qid: 34tKNrBeFctMMDPOM8
+X-Iguazu-QSIG: v=2; s=0; t=1597815347; q=34tKNrBeFctMMDPOM8; m=GGabhVICmOPFoyCvmKiIeC+b++fpwKVxbJzdq2PoczA=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1513) id 07J5Zkm8017886;
+        Wed, 19 Aug 2020 14:35:46 +0900
+Received: from enc03.toshiba.co.jp ([106.186.93.13])
+        by imx12.toshiba.co.jp  with ESMTP id 07J5ZkOr019897;
+        Wed, 19 Aug 2020 14:35:46 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc03.toshiba.co.jp  with ESMTP id 07J5Zj8W032020;
+        Wed, 19 Aug 2020 14:35:45 +0900
+Date:   Wed, 19 Aug 2020 14:35:44 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 To:     Rob Herring <robh@kernel.org>
-Cc:     punit1.agrawal@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        yuji2.ishikawa@toshiba.co.jp
+        Will Deacon <will@kernel.org>, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: Add bindings for Toshiba
  Visconti TMPV7700 SoC
 X-TSB-HOP: ON
-Message-ID: <20200819053343.GC1256849@toshiba.co.jp>
+Message-ID: <20200819053544.GD1256849@toshiba.co.jp>
 References: <20200817014632.595898-1-nobuhiro1.iwamatsu@toshiba.co.jp>
  <20200817014632.595898-2-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20200817194627.GA1432385@bogus>
+ <20200817194833.GB1432385@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817194627.GA1432385@bogus>
+In-Reply-To: <20200817194833.GB1432385@bogus>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -52,8 +51,8 @@ Hi,
 
 Thanks for your review.
 
-On Mon, Aug 17, 2020 at 01:46:27PM -0600, Rob Herring wrote:
-> On Mon, 17 Aug 2020 10:46:25 +0900, Nobuhiro Iwamatsu wrote:
+On Mon, Aug 17, 2020 at 01:48:33PM -0600, Rob Herring wrote:
+> On Mon, Aug 17, 2020 at 10:46:25AM +0900, Nobuhiro Iwamatsu wrote:
 > > Add pinctrl bindings for Toshiba Visconti TMPV7700 SoC series.
 > > 
 > > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
@@ -62,24 +61,68 @@ On Mon, Aug 17, 2020 at 01:46:27PM -0600, Rob Herring wrote:
 > >  1 file changed, 82 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
 > > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..4009902cd396
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> > @@ -0,0 +1,82 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/toshiba,visconti-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Toshiba Visconti TMPV770x pin mux/config controller
+> > +
+> > +maintainers:
+> > +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > +
+> > +description:
+> > +  Toshiba's Visconti ARM SoC a pin mux/config controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - toshiba,tmpv7708-pinctrl
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +patternProperties:
+> > +  '^.*$':
 > 
+> For new bindings, please define something like '-pins$' for the pin 
+> nodes.
+
+OK, I will update.
+
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
+> > +    if:
+> > +      type: object
+> > +    then:
 > 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.example.dt.yaml: example-0: pmux@24190000:reg:0: [0, 605618176, 0, 65536] is too long
+> Then we don't have to do this if/then.
 > 
-> 
-> See https://patchwork.ozlabs.org/patch/1345570
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
+> This also needs a $ref to the common pinctrl schemas.
 > 
 
-Thanks, I will fix this.
+
+OK, I will fix this.
+
+> > +      properties:
+> > +        function:
+> > +          description:
+> > +            Function to mux.
+> > +          $ref: "/schemas/types.yaml#/definitions/string"
+> > +          enum: [i2c0, i2c1, i2c2, i2c3, i2c4, i2c5, i2c6, i2c7, i2c8,
+> > +            spi0, spi1, spi2, spi3, spi4, spi5, spi6,
+> > +            uart0, uart1, uart2, uart3, pwm, pcmif_out, pcmif_in]
+> > +
 
 Best regards,
   Nobuhiro
