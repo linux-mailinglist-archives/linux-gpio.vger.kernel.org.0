@@ -2,275 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6F45248F7B
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Aug 2020 22:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C04D62492D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 04:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHRUME (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 16:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHRUMD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 16:12:03 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B284C061389
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b79so19498907qkg.9
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
-        b=is4USddA9HL0bmIjDMo1/up8AxbtbwKHhhxh23jSEjA//iEB2AlWSzij1O9BhVmaBx
-         f0lxWgAsQEOdKuqPld7g6GV3xeoS8Aka9K+OGyi/3Dum8qLSTtTokKXG5smmeS55Tu0z
-         hx7Qa73R2Ho5coZCveDCqdSENEXRPRLhCyUPJD57txa5emv/yOfpuzEnLDHeaJwIqvMT
-         UmQkx+O4eV1WSxSzOk+0I0plyVmHQofc4s33eZ16Ri44ZR8apPc+sdyvhWZvRmFPrIgy
-         P6DpNu6WBsGby80CH/twX/HurYxK8Mi+nQUomWqYZFHVxdxCSqtzvej5gSQ0mUU2WTMh
-         FJyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
-        b=F0R98mGHD//xouX70EcwF6qW729Vm3husQpdyCYbMS8JTwChigGclkqUdyYA7BUgUR
-         U3aRF8Mlv7lJl53by0SN+U+5CGjrdBDE55OAE0V+rmk9ncjOwsS5csKlXp1NGDOMkTZ1
-         ThS86CYzYB29ifzKcz8dELWBYxAqQykv5HLcFq9X39t7p0n4VfryI2vJq22eb3myOX35
-         tV6c/nWN1i4LuI8/GTM0VIsCuNZPZjwGxXQ1B723rbbjTau+zEhv+d8whSn1JJ0s0Tzf
-         EV/Jcl9q8CYOaW3pp3HZ3uqsWDK0ZIBAZ9xMJtrbDH7aARQS1s6qex/RKHn/VMWK9jpU
-         9PFQ==
-X-Gm-Message-State: AOAM532HB7aLIVDMbBijdLDw0IcCAoEFAK1XmQ+M4CwEXTei5TfTbQ44
-        II2phbGnXcN6vDRHT17GFFMC/S04afbesTS62U4Nog==
-X-Google-Smtp-Source: ABdhPJwOKRYS2PwWBBYN4GFKNKJdQYmjkuOx3UDDgltvQa7vQlCXjb3kyJ+bQrzsi9ccw8z8SKrP/CgWTVGQkKsMYRc=
-X-Received: by 2002:a37:a5c1:: with SMTP id o184mr18448700qke.323.1597781522517;
- Tue, 18 Aug 2020 13:12:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com> <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Aug 2020 22:11:51 +0200
-Message-ID: <CAMpxmJXFXGGXebBDKhnk6W3J-KX+GLFUJOiQQY6ERNC7_D+_hw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/3] gpio: xilinx: Add clock adaptation support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+        id S1726531AbgHSCVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 22:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726372AbgHSCVb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:21:31 -0400
+Received: from localhost (unknown [12.195.163.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFFB1205CB;
+        Wed, 19 Aug 2020 02:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597803691;
+        bh=tTd6dZ3NlZC+UPHZ2QtCzG/g0WugnXRx0IlELaokIjI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lIS6eyp32dSzoHIz4UfGjqqP6fNmQEYpSxugsDG+oeVbZEaZqRu3/FTcFEbY0q9IJ
+         nmIUcl4sGaBdlQTmPFiHCFlcYvgJtjcJR9+p24XQI2USYpI0UwPb/v/rKRjwIAAs48
+         qozQmKPP/dJIXgBunOp7RHJ3r42zO8ZNddv7aRDc=
+Date:   Tue, 18 Aug 2020 21:21:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return
+ value
+Message-ID: <20200819022127.GA1496569@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 4:06 PM Srinivas Neeli
-<srinivas.neeli@xilinx.com> wrote:
->
-> Add support of clock adaptation for AXI GPIO driver.
->
+On Tue, Aug 18, 2020 at 09:59:50PM +0200, Bartosz Golaszewski wrote:
+> On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
+> <refactormyself@gmail.com> wrote:
+> >
+> > The return value of pci_read_config_*() may not indicate a device error.
+> > However, the value read by these functions is more likely to indicate
+> > this kind of error. This presents two overlapping ways of reporting
+> > errors and complicates error checking.
+> >
+> > It is possible to move to one single way of checking for error if the
+> > dependency on the return value of these functions is removed, then it
+> > can later be made to return void.
+> >
+> > Remove all uses of the return value of pci_read_config_*().
+> > Check the actual value read for ~0. In this case, ~0 is an invalid
+> > value thus it indicates some kind of error.
+> >
+> > Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> > Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-amd8111.c |  7 +++++--
+> >  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
+> >  2 files changed, 17 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> > index fdcebe59510d..7b9882380cbc 100644
+> > --- a/drivers/gpio/gpio-amd8111.c
+> > +++ b/drivers/gpio/gpio-amd8111.c
+> > @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
+> >         goto out;
+> >
+> >  found:
+> > -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> > -       if (err)
+> > +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> > +       if (gp.pmbase == (u32)~0) {
+> > +               err = -ENODEV;
+> >                 goto out;
+> > +       }
+> > +
+> >         err = -EIO;
+> >         gp.pmbase &= 0x0000FF00;
+> >         if (gp.pmbase == 0)
+> > diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
+> > index 01ed2517e9fd..03f1ff07b844 100644
+> > --- a/drivers/gpio/gpio-rdc321x.c
+> > +++ b/drivers/gpio/gpio-rdc321x.c
+> > @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
+> >         gpch = gpiochip_get_data(chip);
+> >
+> >         spin_lock(&gpch->lock);
+> > -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
+> > -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
+> > -       if (err)
+> > +       pci_read_config_dword(gpch->sb_pdev,
+> > +                               (gpio < 32) ? gpch->reg1_ctrl_base
+> > +                                       : gpch->reg2_ctrl_base, &reg);
+> > +       if (reg == (u32)~0) {
+> > +               err = -ENODEV;
+> >                 goto unlock;
+> > +       }
+> >
+> >         reg |= 1 << (gpio & 0x1f);
+> >
+> > @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
+> >         /* This might not be, what others (BIOS, bootloader, etc.)
+> >            wrote to these registers before, but it's a good guess. Still
+> >            better than just using 0xffffffff. */
+> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> >                                         rdc321x_gpio_dev->reg1_data_base,
+> >                                         &rdc321x_gpio_dev->data_reg[0]);
+> > -       if (err)
+> > -               return err;
+> > +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
+> > +               return -ENODEV;
+> >
+> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> >                                         rdc321x_gpio_dev->reg2_data_base,
+> >                                         &rdc321x_gpio_dev->data_reg[1]);
+> > -       if (err)
+> > -               return err;
+> > +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
+> > +               return -ENODEV;
+> >
+> >         dev_info(&pdev->dev, "registering %d GPIOs\n",
+> >                                         rdc321x_gpio_dev->chip.ngpio);
+> > --
+> > 2.18.4
+> >
+> 
+> Bjorn,
+> 
+> I don't know the pci sub-system at all. Does this look good to you?
 
-Please make the commit message more specific. I can tell from the
-patch that it's about power management but I've never heard anyone
-referring to it as clock adaptation. There's also a lot of runtime pm
-code in here. Be more descriptive.
+I wouldn't apply this at this point.  It's definitely true that when
+pci_read_config_dword() returns an error, it's likely an alignment
+problem or some other programming error, not an actual PCI error.
 
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-> ---
-> Changes in V2:
-> Add check for return value of platform_get_irq() API.
-> ---
->  drivers/gpio/gpio-xilinx.c | 111 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 109 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 67f9f82e0db0..d103613e787a 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -14,6 +14,8 @@
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/clk.h>
+If an actual PCI error occurs (device failed to respond, transaction
+failed because of noise or electrical issue, etc),
+pci_read_config_dword() will *not* return an error; the data it reads,
+e.g., rdc321x_gpio_dev->data_reg[1], will be ~0.
 
-Alphabetical order of includes?
+So with the current pci_read_config_dword() implementation, we really
+need to test *both* the return value and the read data to be
+completely, obsessively correct.  But that's really not practical,
+hence this RFC patch where we're considering getting rid of the return
+value and just making it set the read data to ~0 for all errors.
 
->
->  /* Register Offset Definitions */
->  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
-> @@ -38,6 +40,7 @@
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
-> + * @clk: clock resource for this driver
->   */
->  struct xgpio_instance {
->         struct gpio_chip gc;
-> @@ -45,7 +48,8 @@ struct xgpio_instance {
->         unsigned int gpio_width[2];
->         u32 gpio_state[2];
->         u32 gpio_dir[2];
-> -       spinlock_t gpio_lock[2];
-> +       spinlock_t gpio_lock[2];        /* For serializing operations */
+We might still get there someday, but we don't yet set the read data
+to ~0 on all errors, and if/when we do that, we should have some sort
+of descriptive macro that we can grep for instead of open-coding "~0"
+everywhere.
 
-This looks like it was sneaked into an unrelated patch.
-
-> +       struct clk *clk;
->  };
->
->  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> @@ -256,6 +260,83 @@ static void xgpio_save_regs(struct xgpio_instance *chip)
->                        chip->gpio_dir[1]);
->  }
->
-> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       int ret = pm_runtime_get_sync(chip->parent);
-> +
-> +       /*
-> +        * If the device is already active pm_runtime_get() will return 1 on
-> +        * success, but gpio_request still needs to return 0.
-> +        */
-> +       return ret < 0 ? ret : 0;
-> +}
-> +
-> +static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       pm_runtime_put(chip->parent);
-> +}
-> +
-> +static int __maybe_unused xgpio_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct irq_data *data;
-> +       int irq = platform_get_irq(pdev, 0);
-> +
-> +       if (irq < 0) {
-> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
-> +               return irq;
-> +       }
-> +
-> +       data = irq_get_irq_data(irq);
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_suspend(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct irq_data *data;
-> +       int irq = platform_get_irq(pdev, 0);
-> +
-> +       if (irq < 0) {
-> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
-> +               return irq;
-> +       }
-
-No, don't do this on every suspend/resume - just call
-platform_get_irq() in probe() and store the irq number for later use.
-This way you only check it once. Also why would you log the return
-value?
-
-> +
-> +       data = irq_get_irq_data(irq);
-> +
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_resume(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
-> +
-> +       clk_disable(gpio->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
-> +
-> +       return clk_enable(gpio->clk);
-> +}
-> +
-> +static const struct dev_pm_ops xgpio_dev_pm_ops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
-> +       SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
-> +                          xgpio_runtime_resume, NULL)
-> +};
-> +
->  /**
->   * xgpio_of_probe - Probe method for the GPIO device.
->   * @pdev: pointer to the platform device
-> @@ -324,6 +405,8 @@ static int xgpio_probe(struct platform_device *pdev)
->         chip->gc.direction_output = xgpio_dir_out;
->         chip->gc.get = xgpio_get;
->         chip->gc.set = xgpio_set;
-> +       chip->gc.request = xgpio_request;
-> +       chip->gc.free = xgpio_free;
->         chip->gc.set_multiple = xgpio_set_multiple;
->
->         chip->gc.label = dev_name(&pdev->dev);
-> @@ -334,15 +417,38 @@ static int xgpio_probe(struct platform_device *pdev)
->                 return PTR_ERR(chip->regs);
->         }
->
-> +       chip->clk = devm_clk_get_optional(&pdev->dev, "s_axi_aclk");
-> +       if (IS_ERR(chip->clk)) {
-> +               if (PTR_ERR(chip->clk) != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "Input clock not found\n");
-
-How is this an error if the clock is optional?
-
-> +               return PTR_ERR(chip->clk);
-> +       }
-> +       status = clk_prepare_enable(chip->clk);
-> +       if (status < 0) {
-> +               dev_err(&pdev->dev, "Failed to prepare clk\n");
-> +               return status;
-> +       }
-> +       pm_runtime_enable(&pdev->dev);
-> +       status = pm_runtime_get_sync(&pdev->dev);
-> +       if (status < 0)
-> +               goto err_unprepare_clk;
-> +
->         xgpio_save_regs(chip);
->
->         status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
->         if (status) {
->                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
-> -               return status;
-> +               goto err_pm_put;
->         }
->
-> +       pm_runtime_put(&pdev->dev);
->         return 0;
-> +err_pm_put:
-> +       pm_runtime_put(&pdev->dev);
-> +err_unprepare_clk:
-> +       pm_runtime_disable(&pdev->dev);
-> +       clk_unprepare(chip->clk);
-> +       return status;
->  }
->
->  static const struct of_device_id xgpio_of_match[] = {
-> @@ -357,6 +463,7 @@ static struct platform_driver xgpio_plat_driver = {
->         .driver         = {
->                         .name = "gpio-xilinx",
->                         .of_match_table = xgpio_of_match,
-> +                       .pm = &xgpio_dev_pm_ops,
->         },
->  };
->
-> --
-> 2.7.4
->
-
-Bart
+Bjorn
