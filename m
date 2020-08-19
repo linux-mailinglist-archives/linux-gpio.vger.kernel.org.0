@@ -2,126 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 547A6249B33
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 12:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71F70249BAF
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 13:26:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgHSKwI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Aug 2020 06:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgHSKvd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Aug 2020 06:51:33 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734C8C061345
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Aug 2020 03:51:29 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r15so11119097wrp.13
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Aug 2020 03:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jkwK21g5VFdynOOGr6pwZT15bIrSzS5HHZUTr6u93Bk=;
-        b=o6wcLOra6wVLGD3LShyd1CcBwNTFU7v/kixPKoLuyTZgV+ErdoUhW0QEJzVNCoPXYI
-         GVMuHyu9mGHZ6da1NSE2yas+EN30VVUhq3LL56yw4TGf4+WrjxxNIvw5MFEoTLEWYBST
-         lOg02JNxd3WiubgOJuCDuousdR/dux4jCBQxh/GETWsGhSCiSfO61Dsjg9Tn4LUgbFNR
-         HUcLGlOZkwm6/Y9xaRLkNSK8y5WRshXuQplnM/0wWDHgHpxVDCBHp46VIcQ++pd3yMp8
-         hK1v+LcPjY5IfmK5noOrvsjPWmOf2sfi23qBLJ8IvJBWayY+TAWD6+Mac7nMjW/5AdZT
-         qtFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jkwK21g5VFdynOOGr6pwZT15bIrSzS5HHZUTr6u93Bk=;
-        b=T36KNbv0pBG4SHpVH1EX+wsoposMxfJCzbsLY1gfW3xbYmMljPeSejb5jqrG1gkvNL
-         /sOikIplZP3UTZMoElntQLpklU0rlxja31v2T9CiFnNuFSheNvlwNLIdLQm+Y3UORsj5
-         2UNEHAbIFbcc9vlAWnpeYU3RCeZIsa3SxhVZR90fdV1BtaC2ZglAuwXAR06RS6jordJn
-         U31ohDNF/Hb8pIXeIqtPftruvfA9+2vA06vlAOYhnzepmv5bWyARO4xlHel6U7ZXjfBh
-         z03Vi7VySlYY1pkGb3Hxi5YoHs8ahBssIWVcmIlm2Vxm9i8DgGoGy4aDonJWYx69Hx4b
-         9jXg==
-X-Gm-Message-State: AOAM5333pgH9itDO8uJZF3M9IWXucGtw/ifdBDDdTEt8rSMYCK39mlRr
-        UF+UFEvh24rAY3EwFS8g9NRhLg==
-X-Google-Smtp-Source: ABdhPJyXRU861CmmXhvzyM0K1yAJtYGdADvkQ1ImIfcucwdx9hjZDkswr6TS7g+o481n48uSjh4ZUQ==
-X-Received: by 2002:a5d:4a0b:: with SMTP id m11mr24001808wrq.407.1597834288094;
-        Wed, 19 Aug 2020 03:51:28 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id q7sm40425011wra.56.2020.08.19.03.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 03:51:27 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:51:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S1727818AbgHSLZ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Aug 2020 07:25:58 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48752 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgHSLZz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Aug 2020 07:25:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07JBPeYY087325;
+        Wed, 19 Aug 2020 06:25:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597836340;
+        bh=d8xkBAnSbq3umBZnWpxmsCEjKGQKRE34DIf3IK1myR8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hpaLGLgGICXHASzY7oga7ddBQ3Me9Q62QSpPJUPslECNguzUGATsEZYsCg+KS9l/t
+         L+dL5JOnxkjYiKuwBFI87SZn/jiW+gXZqjQ72PIdPGktsXwSGyIe/LPBWRRiG2PE4v
+         jt6YCTCJcnPYbI/byDrENhPGJVFrRBFMPZweVayA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07JBPewB079926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Aug 2020 06:25:40 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 19
+ Aug 2020 06:23:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 19 Aug 2020 06:23:18 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07JBNGkg045953;
+        Wed, 19 Aug 2020 06:23:17 -0500
+Subject: Re: [PATCH] gpio: omap: Fix warnings if PM is disabled
+To:     Tony Lindgren <tony@atomide.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v8 03/13] mfd: simple-mfd-i2c: add sl28cpld support
-Message-ID: <20200819105124.GA3248864@dell>
-References: <20200813124832.17349-1-michael@walle.cc>
- <20200813124832.17349-4-michael@walle.cc>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200819092445.15702-1-tony@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <55e4be8a-86da-7682-be7e-a969d2d0f4fb@ti.com>
+Date:   Wed, 19 Aug 2020 14:23:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200813124832.17349-4-michael@walle.cc>
+In-Reply-To: <20200819092445.15702-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 13 Aug 2020, Michael Walle wrote:
 
-> Add the core support for the board management controller found on the
-> SMARC-sAL28 board.
+
+On 19/08/2020 12:24, Tony Lindgren wrote:
+> Fix warnings for omap_gpio_resume and omap_gpio_suspend
+> defined but not used when PM is disabled as noticed when
+> doing make randconfig builds.
 > 
-> Also add a virtual symbol which pulls in the simple-mfd-i2c driver and
-> provide a common symbol on which the subdevice drivers can depend on.
-> 
-> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> Fixes: f02a03985d06 ("gpio: omap: Add missing PM ops for suspend")
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
-> Changes since v7:
->  - added MFD_SL28CPLD virtual Kconfig symbol
->  - Please note, that I intentionally removed the Acked-for-MFD-by
->    because of this change.
+>   drivers/gpio/gpio-omap.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes since v6:
->  - renamed "sl28cpld-r1" to "sl28cpld"
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -1516,7 +1516,7 @@ static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -static int omap_gpio_suspend(struct device *dev)
+> +static int __maybe_unused omap_gpio_suspend(struct device *dev)
+>   {
+>   	struct gpio_bank *bank = dev_get_drvdata(dev);
+>   
+> @@ -1528,7 +1528,7 @@ static int omap_gpio_suspend(struct device *dev)
+>   	return omap_gpio_runtime_suspend(dev);
+>   }
+>   
+> -static int omap_gpio_resume(struct device *dev)
+> +static int __maybe_unused omap_gpio_resume(struct device *dev)
+>   {
+>   	struct gpio_bank *bank = dev_get_drvdata(dev);
+>   
 > 
-> Changes since v5:
->  - none
-> 
-> Changes since v4:
->  - new patch
-> 
->  drivers/mfd/Kconfig          | 10 ++++++++++
->  drivers/mfd/simple-mfd-i2c.c |  1 +
->  2 files changed, 11 insertions(+)
 
-For my own reference (apply this as-is to your sign-off block):
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Thank you.
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+grygorii
