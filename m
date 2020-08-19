@@ -2,162 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C04D62492D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 04:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AD7F24934B
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Aug 2020 05:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHSCVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Aug 2020 22:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbgHSCVb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:21:31 -0400
-Received: from localhost (unknown [12.195.163.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFB1205CB;
-        Wed, 19 Aug 2020 02:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597803691;
-        bh=tTd6dZ3NlZC+UPHZ2QtCzG/g0WugnXRx0IlELaokIjI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lIS6eyp32dSzoHIz4UfGjqqP6fNmQEYpSxugsDG+oeVbZEaZqRu3/FTcFEbY0q9IJ
-         nmIUcl4sGaBdlQTmPFiHCFlcYvgJtjcJR9+p24XQI2USYpI0UwPb/v/rKRjwIAAs48
-         qozQmKPP/dJIXgBunOp7RHJ3r42zO8ZNddv7aRDc=
-Date:   Tue, 18 Aug 2020 21:21:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return
- value
-Message-ID: <20200819022127.GA1496569@bjorn-Precision-5520>
+        id S1727831AbgHSDMr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Aug 2020 23:12:47 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:45484 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgHSDMq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Aug 2020 23:12:46 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07J3CN4c8010285, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07J3CN4c8010285
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 19 Aug 2020 11:12:23 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 19 Aug 2020 11:12:23 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 19 Aug 2020 11:12:23 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
+ RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
+ 15.01.1779.005; Wed, 19 Aug 2020 11:12:23 +0800
+From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Rob Herring <robh@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Subject: RE: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
+Thread-Topic: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC
+ SoC rtd1295
+Thread-Index: AQHWcUZJlJ4JLjNahkCHOz3e6aEePqk8Qs4AgADkp4CAAI/acA==
+Date:   Wed, 19 Aug 2020 03:12:22 +0000
+Message-ID: <5f6355d6af724dc6b2e113e567e4ec5f@realtek.com>
+References: <20200813074908.889-1-tychang@realtek.com>
+ <20200813074908.889-6-tychang@realtek.com> <20200817203358.GA1508879@bogus>
+ <012eee35-6835-7244-0013-9fc6980107e0@suse.de>
+In-Reply-To: <012eee35-6835-7244-0013-9fc6980107e0@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.181.134]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:59:50PM +0200, Bartosz Golaszewski wrote:
-> On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
-> <refactormyself@gmail.com> wrote:
-> >
-> > The return value of pci_read_config_*() may not indicate a device error.
-> > However, the value read by these functions is more likely to indicate
-> > this kind of error. This presents two overlapping ways of reporting
-> > errors and complicates error checking.
-> >
-> > It is possible to move to one single way of checking for error if the
-> > dependency on the return value of these functions is removed, then it
-> > can later be made to return void.
-> >
-> > Remove all uses of the return value of pci_read_config_*().
-> > Check the actual value read for ~0. In this case, ~0 is an invalid
-> > value thus it indicates some kind of error.
-> >
-> > Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> > Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-amd8111.c |  7 +++++--
-> >  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
-> >  2 files changed, 17 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
-> > index fdcebe59510d..7b9882380cbc 100644
-> > --- a/drivers/gpio/gpio-amd8111.c
-> > +++ b/drivers/gpio/gpio-amd8111.c
-> > @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
-> >         goto out;
-> >
-> >  found:
-> > -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
-> > -       if (err)
-> > +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
-> > +       if (gp.pmbase == (u32)~0) {
-> > +               err = -ENODEV;
-> >                 goto out;
-> > +       }
-> > +
-> >         err = -EIO;
-> >         gp.pmbase &= 0x0000FF00;
-> >         if (gp.pmbase == 0)
-> > diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
-> > index 01ed2517e9fd..03f1ff07b844 100644
-> > --- a/drivers/gpio/gpio-rdc321x.c
-> > +++ b/drivers/gpio/gpio-rdc321x.c
-> > @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
-> >         gpch = gpiochip_get_data(chip);
-> >
-> >         spin_lock(&gpch->lock);
-> > -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
-> > -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
-> > -       if (err)
-> > +       pci_read_config_dword(gpch->sb_pdev,
-> > +                               (gpio < 32) ? gpch->reg1_ctrl_base
-> > +                                       : gpch->reg2_ctrl_base, &reg);
-> > +       if (reg == (u32)~0) {
-> > +               err = -ENODEV;
-> >                 goto unlock;
-> > +       }
-> >
-> >         reg |= 1 << (gpio & 0x1f);
-> >
-> > @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
-> >         /* This might not be, what others (BIOS, bootloader, etc.)
-> >            wrote to these registers before, but it's a good guess. Still
-> >            better than just using 0xffffffff. */
-> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
-> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
-> >                                         rdc321x_gpio_dev->reg1_data_base,
-> >                                         &rdc321x_gpio_dev->data_reg[0]);
-> > -       if (err)
-> > -               return err;
-> > +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
-> > +               return -ENODEV;
-> >
-> > -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
-> > +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
-> >                                         rdc321x_gpio_dev->reg2_data_base,
-> >                                         &rdc321x_gpio_dev->data_reg[1]);
-> > -       if (err)
-> > -               return err;
-> > +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
-> > +               return -ENODEV;
-> >
-> >         dev_info(&pdev->dev, "registering %d GPIOs\n",
-> >                                         rdc321x_gpio_dev->chip.ngpio);
-> > --
-> > 2.18.4
-> >
-> 
-> Bjorn,
-> 
-> I don't know the pci sub-system at all. Does this look good to you?
-
-I wouldn't apply this at this point.  It's definitely true that when
-pci_read_config_dword() returns an error, it's likely an alignment
-problem or some other programming error, not an actual PCI error.
-
-If an actual PCI error occurs (device failed to respond, transaction
-failed because of noise or electrical issue, etc),
-pci_read_config_dword() will *not* return an error; the data it reads,
-e.g., rdc321x_gpio_dev->data_reg[1], will be ~0.
-
-So with the current pci_read_config_dword() implementation, we really
-need to test *both* the return value and the read data to be
-completely, obsessively correct.  But that's really not practical,
-hence this RFC patch where we're considering getting rid of the return
-value and just making it set the read data to ~0 for all errors.
-
-We might still get there someday, but we don't yet set the read data
-to ~0 on all errors, and if/when we do that, we should have some sort
-of descriptive macro that we can grep for instead of open-coding "~0"
-everywhere.
-
-Bjorn
+SGkgUm9iLCBBbmRyZWFzLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNl
+LmRlPg0KPiBTZW50OiBUdWVzZGF5LCBBdWd1c3QgMTgsIDIwMjAgNjoxMiBQTQ0KPiBUbzogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IFRZX0NoYW5nW+W8teWtkOmAuF0NCj4gPHR5Y2hh
+bmdAcmVhbHRlay5jb20+DQo+IENjOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsN
+Cj4gbGludXMud2FsbGVpakBsaW5hcm8ub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgNS85
+XSBkdC1iaW5kaW5nczogcGluY3RybDogcmVhbHRlazogQWRkIFJlYWx0ZWsgREhDIFNvQw0KPiBy
+dGQxMjk1DQo+IA0KPiBBbSAxNy4wOC4yMCB1bSAyMjozMyBzY2hyaWViIFJvYiBIZXJyaW5nOg0K
+PiA+IE9uIFRodSwgMTMgQXVnIDIwMjAgMTU6NDk6MDQgKzA4MDAsIFRZIENoYW5nIHdyb3RlOg0K
+PiA+PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBEb2N1bWVudGF0aW9uIGZvciBydGQxMjk1IHBp
+bmN0cmwgZHJpdmVyLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBUWSBDaGFuZyA8dHljaGFu
+Z0ByZWFsdGVrLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAuLi4vcGluY3RybC9yZWFsdGVrLHJ0ZDEy
+OTUtcGluY3RybC55YW1sICAgICAgfCAxOTIgKysrKysrKysrKysrKysrKysrDQo+ID4+ICAxIGZp
+bGUgY2hhbmdlZCwgMTkyIGluc2VydGlvbnMoKykNCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0K
+PiA+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0
+ZDEyOTUtcGluY3RybC55YW0NCj4gPj4gbA0KPiA+Pg0KPiA+DQo+ID4NCj4gPiBQbGVhc2UgYWRk
+IEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4NCj4g
+PiBIb3dldmVyLCB0aGVyZSdzIG5vIG5lZWQgdG8gcmVwb3N0IHBhdGNoZXMgKm9ubHkqIHRvIGFk
+ZCB0aGUgdGFncy4gVGhlDQo+ID4gdXBzdHJlYW0gbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9y
+IGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNpb24gdGhleSBhcHBseS4NCj4gPg0KPiA+IElmIGEg
+dGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBj
+aGFuZ2VkLg0KPiANCj4gVGhlIHRoaW5nIHJlYWxseSBtaXNzaW5nIGhlcmUgaXMgYSBwZXItcGF0
+Y2ggY2hhbmdlIGxvZy4NCj4gDQo+IFRoaW5ncyB3ZXJlIGFkZGVkIGhlcmUgdGhhdCBJJ20gc3Vy
+ZSB5b3Ugd291bGQgbm90IGdpdmUgeW91ciBSZXZpZXdlZC1ieSBmb3IsDQo+IGluIHBhcnRpY3Vs
+YXIgbmV3IHByb3BlcnRpZXMgcHJlZml4ZWQgd2l0aCB1bnJlZ2lzdGVyZWQgcnRrIHByZWZpeCBp
+bnN0ZWFkIG9mIHRoZQ0KPiByZWdpc3RlcmVkIHJlYWx0ZWsgcHJlZml4Lg0KDQpJIHdpbGwgbW9k
+aWZ5IHRoZSBwcm9wZXJ0eSBuYW1lIHdpdGggcmVhbHRlayBwcmVmaXggaW4gcGF0Y2ggdjQuDQoN
+Cj4gDQo+IEBUWSwgaGlkaW5nIHN1Y2ggY2hhbmdlcyBpbiBhIGJpZyBwcmV2aW91c2x5IHJldmll
+d2VkIHBhdGNoIHdpdGhvdXQgYW55DQo+IG1lbnRpb24gaXMgcHJvYmxlbWF0aWMgLSBwbGVhc2Ug
+cmF0aGVyIGRvIHNtYWxsZXIgZm9sbG93LXVwIHBhdGNoZXMgdG8gbm90DQo+IGludmFsaWRhdGUg
+cHJldmlvdXMgcmV2aWV3cyB3aXRoIG5ldyBmZWF0dXJlcy4NCj4gDQoNCkknbSBzb3JyeSBhYm91
+dCB0aGF0LiBJIHdpbGwgYWRkIFJldmlld2VkLWJ5IHRhZ3MgaW4gdGhlIHByZXZpb3VzbHkgcmV2
+aWV3ZWQgcGF0Y2ggYW5kIGFkZCBmb2xsb3ctdXAgcGF0Y2hlcyBmb3IgbmV3IGZlYXR1cmVzIGlu
+IHBhdGNoIHY0Lg0KDQpCZXN0IFJlZ2FyZHMsDQpUWUNoYW5nDQoNCiANCj4gLS0tLS0tUGxlYXNl
+IGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
