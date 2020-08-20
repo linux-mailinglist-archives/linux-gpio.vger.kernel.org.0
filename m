@@ -2,192 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6776E24AC89
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Aug 2020 03:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 448B124B8A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Aug 2020 13:25:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHTBPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Aug 2020 21:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHTBPv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Aug 2020 21:15:51 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327CDC061383
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Aug 2020 18:15:51 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a26so684069ejc.2
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Aug 2020 18:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L95gIXwGMvZZq8+ZBbJLFbYWdlFmXYekwntOD8a6oOA=;
-        b=WG3KUIydvAL6lmQrHxm61oJNRNmcU6P3AYdrnvvDk2Y+hKlIojHKEJGegWF4qwv1+Y
-         QTeYxO/dmBMjiGuD8Bcer9Szc6wGqRF7KS54/JvegK794xU8NuZtLrfXge70efh+Srjf
-         j8SOWTy9A9tvc8TrHp9v6b/ZgrKwYzANCvRu97KxycC19b+fIKbadEqG5DQwkPrUYnrD
-         oXvP4WUQANyhz4Iia2vNUjttdG3ES2Q5Q+15Mf8bYJ86ICEPE5SpK2K5syACwh1i+IeQ
-         SzVm4NRN8oEMld6tQ3d+tp0J1Y7Gsx/80wE5GM+Iv8TVgc/ysjZ1fPS6WsvaQVMk41/k
-         HhsQ==
+        id S1730237AbgHTLZe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Aug 2020 07:25:34 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:42045 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgHTKGm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Aug 2020 06:06:42 -0400
+Received: by mail-oo1-f67.google.com with SMTP id a6so283925oog.9;
+        Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L95gIXwGMvZZq8+ZBbJLFbYWdlFmXYekwntOD8a6oOA=;
-        b=gEd/JxJA+DiWVATHVdWFTJfo14/pkFI7Jn2BvzZ2LH9OyJFNOc6mXBv7iBV//0aqp4
-         2McYADA3HjQoG0h3sFHLPjMltoSpIzxbzoQLa7GUSu8RrYeYjQ7zYkGvkiK2MHatrH7H
-         RNXQPkKgcpwfptq5jYaPYJYLhgLwgyfrSgFjfB28pNI5q7J7RPA2bZR80T/DGUPiImD2
-         EkFuLJuEiUY//yJQNddPDEjTIu9sbbt2EY0tIEl978iIZfvnkRiYpV1AiFrrLHGFlhbL
-         az5zRy9znC2D2f6YdW6B3545wvoOMwp8qSYOKTnGTjRGtui9g5zk7FotZC5QKeDtsp4t
-         rjeA==
-X-Gm-Message-State: AOAM533+swcWzHMU65bAQtv880stHSmlQuTUjdZDIdxej7pS6HCYFmLO
-        vQbi8lygpGN1M32CpMXo9UH2ow==
-X-Google-Smtp-Source: ABdhPJyEI0+REUtIA4p2wEAbWZN4TQlHgJzr4Z/vBB40QUXm8ya4oYGDbsGWCuRbDl47Y0QH6guB/Q==
-X-Received: by 2002:a17:906:528d:: with SMTP id c13mr1023638ejm.61.1597886149318;
-        Wed, 19 Aug 2020 18:15:49 -0700 (PDT)
-Received: from x1 ([2001:16b8:5ca7:9f01:a7aa:12ad:e665:579d])
-        by smtp.gmail.com with ESMTPSA id i26sm274194edv.70.2020.08.19.18.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 18:15:48 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 03:15:45 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] gpio: omap: improve coding style for pin config flags
-Message-ID: <20200820011545.GA140179@x1>
-References: <20200722120755.230741-1-drew@beagleboard.org>
- <20200819063127.GU2994@atomide.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7+CSk1ksXzy7e0WIknvr7+ji8pZUrOi3fj0VsGs4weY=;
+        b=EXA02wWQsI5YuePA3VIgOVGGfySn9Nyv6KRdADkev9beQf15igej8ZcJYwdAqafunl
+         0nsIU5GeAzT41tL22DqSVj4gQIu5wBPfuXQ7IETeOb8grj+SsQi+wQhqdPFXqGiAfH6N
+         Ttvqnk082JjN2O+MoPp92mbjJX8IxjFpAsJctnAwLaYKwtJYQjIBXMjtWu3NCsqp30Tr
+         rNWJb41EQnLC/jWn/D5C3yJtaik8lb2S8nKgiSbHxydfmsntX7uJ9fkW8+j03ouQdR3m
+         TecMTKvVw8NY7VAV9NrjaFfjOMPHX5cZ2mwlVZ6JAOtTMerYKbsSMBY2cxiU38z2M8gC
+         UEZQ==
+X-Gm-Message-State: AOAM533/sBcqedcM2+5wXRGK25XzmS3U+kk0LaYQ0ZYIPWH9w5dOwWvS
+        vC4KIEnasnMf+U30xZNwp9OwUBkqpL1iqX7W0RQ=
+X-Google-Smtp-Source: ABdhPJzLpZOD1rs1p3nBtT5EFxS48HiVxoTkLH06KtZW1eQSDDDuEahrzdmBlpsHmdngJPIb1mx3MtQK7PAdAm1yD5w=
+X-Received: by 2002:a4a:4201:: with SMTP id h1mr1818497ooj.1.1597918001038;
+ Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819063127.GU2994@atomide.com>
+References: <20200807141345.6714-1-geert+renesas@glider.be>
+ <20200817233253.GA1819982@bogus> <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
+In-Reply-To: <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Aug 2020 12:06:29 +0200
+Message-ID: <CAMuHMdWGu5+PYiYR9rdt97Hd1ribi0Yc0q68NBU6AFRBDCCg_g@mail.gmail.com>
+Subject: Re: [PATCH/RFC v2] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:31:27AM +0300, Tony Lindgren wrote:
-> Hi,
-> 
-> * Drew Fustini <drew@beagleboard.org> [200722 12:09]:
-> > Change the handling of pin config flags from if/else to switch
-> > statement to make the code more readable and cleaner.
-> > 
-> > Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> This looks OK to me:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
-> I've lost track of the pending pinctrl/gpio/dts patches you've
-> posted :) Care to also summarized the pending ones and repost
-> them now that v5.9-rc1 is out?
+Hi Rob,
 
-Everything appears to be in mainline already:
+On Tue, Aug 18, 2020 at 9:10 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, Aug 18, 2020 at 1:32 AM Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Aug 07, 2020 at 04:13:45PM +0200, Geert Uytterhoeven wrote:
+> > > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> > > documentation to json-schema.
+> > >
+> > > Document missing properties.
+> > > Drop deprecated and obsolete #gpio-range-cells property.
+> > > Update the example to match reality.
+> > > Drop consumer examples, as they do not belong here.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > Still RFC, due to the FIXMEs near the enum descriptions.
+> > > If I enable the enums checks, I get e.g.:
+> > >
+> > >     [[1800]] is not one of [1800, 3300]
+> > >
+> > > Note the double square brackets around 1800.
+> > > The usual error message doesn't have them, e.g.:
+> > >
+> > >     2000 is not one of [1800, 3300]
+> > >
+> > > So this looks like a bug in the tooling?
+> >
+> > Yes, we only recently started supporting schemas under
+> > 'additionalProperties', but failed to apply fixups.
+> >
+> > I have a fix I'm testing out. I'm bumping the version requirement in
+> > 5.10, so I'll make sure it is there.
+>
+> Thanks, looking forward to it.
 
-commit f1b206cf7c57561ea156798f323b0541a783bd2f
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 22 14:27:52 2020 +0200
+I can confirm this is fixed in v2020.08.1.
 
-    pinctrl: core: print gpio in pins debugfs file
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+>
+> > > +  interrupts-extended:
+> >
+> > Just use 'interrupts' here. 'interrupt-extended' is always magically
+> > supported.
+>
+> Apparently not everywhere...
+>
+>     Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
+> pin-controller@e6050000: 'interrupts' is a required property
 
-commit bde8c0e64c78633612aaf283692f72bef0bbc549
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 22 14:07:56 2020 +0200
+The existing fixup doesn't handle "required: interrupts"  if that is inside an
+if/then/else block.
 
-    gpio: omap: improve coding style for pin config flags
-        
-commit 75dec56710dfafd37daa95e756c5d1840932ba90
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Jul 17 21:40:43 2020 +0200
+> > > +additionalProperties:
+> > > +  anyOf:
+> > > +    - type: object
+> > > +      allOf:
+> > > +        - $ref: pincfg-node.yaml#
+> > > +        - $ref: pinmux-node.yaml#
+> > > +
+> > > +      description:
+> > > +        Pin controller client devices use pin configuration subnodes (children
+> > > +        and grandchildren) for desired pin configuration.
+> > > +        Client device subnodes use below standard properties.
+> > > +
+> > > +      properties:
+> > > +        phandle: true
+> >
+> > Once fixed, this won't be necessary.
+>
+> OK.
 
-    gpio: omap: handle pin config bias flags
+Seems to be still an issue in v2020.08.1?
 
-commit 40e30d26d909af89de2dcd0b4abdd27c47ac2235
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 15 23:37:38 2020 +0200
+> > > +        function: true
+> > > +        groups: true
+> > > +        pins: true
+> > > +        bias-disable: true
+> > > +        bias-pull-down: true
+> > > +        bias-pull-up: true
+> > > +        drive-strength:
+> > > +          true # FIXME enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
+> > > +          # avb:pins_mdio:drive-strength: [[24]] is not one of [3, 6, 9, 12, 15, 18, 21, 24]
+> > > +        power-source:
+> > > +          true # FIXME enum: [ 1800, 3300 ]
+> > > +          # sd0_uhs:power-source: [[1800]] is not one of [1800, 3300]
+> > > +        gpio-hog: true
+> > > +        gpios: true
+> > > +        input: true
+> > > +        output-high: true
+> > > +        output-low: true
+> > > +
+> > > +      additionalProperties: false
+> > > +
+> > > +    - type: object
+> > > +      properties:
+> > > +        phandle: true
+> >
+> > For this one, you can just link it back to the first entry:
+> >
+> > - type: object
+> >   additionalProperties:
+> >     $ref: "#/additionalProperties/anyOf/0"
+>
+> Thanks, cool!
 
-    gpio: omap: handle pin config bias flags
+Works great!
 
-commit abe4e4675dfc62b7f2328e2c4bce8b5bdcdff7c0
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Sun Jul 12 12:37:19 2020 +0200
+Gr{oetje,eeting}s,
 
-    ARM: dts: am335x-pocketbeagle: set default mux for gpio pins
-    
-commit bc6d201591344aa21d616179ee9ad406a7336267
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jun 17 20:05:43 2020 +0200
+                        Geert
 
-    pinctrl: single: fix function name in documentation
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-commit 27c90e5e48d008bfda1cf6108eb699697317c67b
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 1 03:33:20 2020 +0200
-
-    ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-    
-commit a133954188887a830b5ce438a287a5e4e234b1be
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 1 03:33:19 2020 +0200
-
-    pinctrl: single: parse #pinctrl-cells = 2
-    
-commit e14d2c766392ff1f226017fd62f0b6283a53bd0c
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Thu Jun 18 20:29:21 2020 +0200
-
-    ARM: dts: am335x-pocketbeagle: add gpio-line-names
-
-commit aafd897a5ac4cb7f9b4f99acc5365a7df1f77aa0
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Thu May 21 22:09:26 2020 +0200
-
-    ARM: dts: am335x-boneblack: add gpio-line-names
-
-commit ff82009fcc6ace774570107750f5af91c9081b0a
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jun 10 13:02:58 2020 +0200
-
-    ARM: dts: am33xx-l4: add gpio-ranges
-
-commit 25fae752156db7253471347df08a2700501eafde
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Jun 12 13:27:58 2020 +0200
-
-    pinctrl: single: fix function name in documentation
-
-commit 80bf72598663496d08b3c0231377db6a99d7fd68
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Mon Jun 15 17:57:01 2020 +0200
-
-    ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
-
-commit d7af722344e6dc52d87649100516515263e15c75
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Tue Jun 9 23:45:21 2020 +0200
-
-    ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
-
-commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Mon Jun 8 14:51:43 2020 +0200
-
-    pinctrl-single: fix pcs_parse_pinconf() return value
-
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Apr 3 21:19:31 2020 +0200
-
-    dt-bindings: Add vendor prefix for BeagleBoard.org
-
-
-The only thing that isn't would be "ARM: dts: am33xx: add ocp label"
-which you applied to omap-for-v5.9/dt.
-
-thanks,
-drew
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
