@@ -2,90 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 090B024D757
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Aug 2020 16:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 196AD24D88A
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Aug 2020 17:28:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHUO0w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Aug 2020 10:26:52 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33995 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgHUO0v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Aug 2020 10:26:51 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z22so1660674oid.1;
-        Fri, 21 Aug 2020 07:26:50 -0700 (PDT)
+        id S1728119AbgHUP14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Aug 2020 11:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgHUP1t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Aug 2020 11:27:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A55CC061573;
+        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x64so162780lff.0;
+        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
+        b=lxcAsT2XFgYSVld2VwU2AUhjthG+GYo9NI7zHYolqatS03sRmCAoVxyTUtWeZhmxwy
+         iWrYkYpQaRwqbk8oTUddDkUo9fpG8tuIgQM1e9yMmd6o8xeBxaEdI1oUxGEiiebeLdJj
+         5GWaWBDAFx9pCFieuSieDLFfxFifn5/GtyqKqWbGzMaGIqMCc0OPf6MmnEjnKunjF6eU
+         tUHbawCnp7w0gkvnnCRTYZftQfdZGlDt1bMip2LSbC7xrov5uhgydtXMxhjgEjNW4Ikk
+         NrcAn09A+7U6OKsjyBKsYKFEhXBPM/m6XqTNWM0BiTi2HD8lZ6b6U4BU6OayIYg4dB2/
+         LKag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TILjLDOFeAler+h2JDe75/V/0ljXFgjHXl0TyPZmqlw=;
-        b=gtnpC0gG1IHWkbOvcHGiohFUG5aL3Q6kSXEwbrIBtwEC0K/5wZBkQXTWMnxc+aX88K
-         ZzZabnVOVwh3mqWunLhxcXSp2eB3Z5ePL3FMOmBJY1p0O7lXFmw9ML0FSa1WQwJdr5ZX
-         nUYYhPKIsYRTcziMssYgLOEVsf25oOVjE8Lsz7kZxXh7bHsXU7xFidDSoObMXJw1W5+1
-         z02dVyOEe7cI0Rawf/moTYecyy32Pl3A4jaioBqoShsvuXyaYqc21AZnnljk3BnAtoxw
-         LrGlr5tjoblMNV28hHo9habaQ1Zp0+bQDRyGUtwITis0s+deiHn1pRMyMRF59mW2HuvO
-         urGA==
-X-Gm-Message-State: AOAM531B+lBoLpr07PDz6R7VnlRN4H5DKmxwL1f7NOc9lF2blQbepVst
-        9ymL5pkUTcmRbg+lpInkv4HDoJFtFtlfKLuDKDY=
-X-Google-Smtp-Source: ABdhPJw1OdJ74/BIAVR1kJHHGz0iDXZ4xs+zxuj9ys+Af+YYTXEh+bb30Dw3y3w5+bI2uXnRe/YiUSCZFUHzrrP088w=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr1908135oia.54.1598020010626;
- Fri, 21 Aug 2020 07:26:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200816190732.6905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdW2RTCi7rAa_tSsY7ukVM2xk6PYD526SRQU1Wd4SSz2Mw@mail.gmail.com> <CA+V-a8u-DrpNPskCwFEfaxtfSHKDGfOhcVf+y4tZ+aw9jFj=eQ@mail.gmail.com>
-In-Reply-To: <CA+V-a8u-DrpNPskCwFEfaxtfSHKDGfOhcVf+y4tZ+aw9jFj=eQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 16:26:39 +0200
-Message-ID: <CAMuHMdU06OFSgLkrdYPY9zaUkr0gq3wNxkaTMY4QFWwnxruB6w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
+        b=Cxtk7BPYWK5SeH9oOb0ZlcJQ2buQ3ds2lc6TJBJkl4I1q1uVqD3pMTzBIAJ+NyrcKS
+         tAUOr/lVSW2a3I101t4wF/hBhdigllE9CliXTCbhzwtUXw2TtivEhWy+LdY2axTj/8qZ
+         eb4npghuVvxh4d9qWXa6u7KBhUN1f5citAz54HCeFw+wMMzvwI6Fl8wA2TXIvwUIpogM
+         xDVqpblWTctUE3Bk5NhWN85oCiOkv0coFSMQMVa6vMWZ3L77X8BI6l6Pj/LADDoK37l9
+         QARbk3GX/W3gtWHVo0Udqa+rUK0Gz0MJr83gwaEQ4/VrzZuGBcQ8jZ/2qD2pNIWAXOEk
+         351A==
+X-Gm-Message-State: AOAM533oXCknEy61fekYAIvd6gJ9913yWzP/Lnw45FDsK7FP3RcTySuV
+        +kX5Py0lhM0kkmbTwhOGvlZMXf5vBhBrcg==
+X-Google-Smtp-Source: ABdhPJx7bwfv/I51vDeUMlofs4XqaObwpAWwRFfmVc+kdZs+m1DbAJB5N+nqIyIpbQkILy0QgVQikw==
+X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1607766lfb.101.1598023667350;
+        Fri, 21 Aug 2020 08:27:47 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:48e7:10e3:3a50:6605:bcd3:dc7e])
+        by smtp.gmail.com with ESMTPSA id 23sm446856lfg.59.2020.08.21.08.27.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 08:27:45 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
+ controller node name
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200821111127.3771-1-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+Date:   Fri, 21 Aug 2020 18:27:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200821111127.3771-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+Hello!
 
-On Fri, Aug 21, 2020 at 4:23 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Fri, Aug 21, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, Aug 16, 2020 at 9:07 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add pins, groups and functions for the CAN0 and CAN1 interface.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Don't you want to add the CAN_CLK pins, too?
-> >
-> Will do. Would you prefer an incremental patch or a v2 ?
+On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
 
-Up to you. Thanks!
+> According to Devicetree Specification v0.2 and later, Section "Generic
+> Names Recommendation", the node name for a pin controller device node
+> should be "pinctrl".
 
-Gr{oetje,eeting}s,
+   Ugh, what a lame name! :-(
+   And they say DT should be OS agnostic...
 
-                        Geert
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+   I think more DTs have "pin-controler".
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[...]
+
+MBR, Sergei
