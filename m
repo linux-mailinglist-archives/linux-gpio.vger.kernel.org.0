@@ -2,299 +2,251 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA8E724D1DD
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Aug 2020 11:59:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE4124D2FE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Aug 2020 12:44:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHUJ7V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Aug 2020 05:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgHUJ7V (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:59:21 -0400
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE3EB207DE;
-        Fri, 21 Aug 2020 09:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598003960;
-        bh=6lh8v9cVemjT3jBDnziS64+IY43tdAd2MM8ArvnEnwM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ev1rZxl06IyNhyRTd512c7nq3kdnBRla8UaI7zrC2WUIRmGGgrMDbwH7srGmRZGH9
-         aKO0NgPfw7FnEVDbq7DFFz7AcQ4dWx8s4LLiI7zxxMhYHKYMf7U5zDN+b1cxahHNgp
-         evmtydnMCZd6oTiMclBS8UdhVcGEfuaqX5AM591E=
-Received: by mail-il1-f171.google.com with SMTP id p18so893087ilm.7;
-        Fri, 21 Aug 2020 02:59:19 -0700 (PDT)
-X-Gm-Message-State: AOAM531UlI5rGo8bExLj5oiBm7RvURW2H8WXrUA02Cgx2b8URYjIXzu/
-        Yz4NQSyBe5v4vmrIKp38pqQhhfYbiESbzlyCDfg=
-X-Google-Smtp-Source: ABdhPJziEDnmhrGq8OhVozQdRjzD6EAFpspHY6IqaLQmfT7wM+TItD6CZ20HooROnMXmdFEF8mxdFEgqxtTlvKeOEFM=
-X-Received: by 2002:a92:db47:: with SMTP id w7mr1978701ilq.264.1598003959218;
- Fri, 21 Aug 2020 02:59:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
- <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com> <1597985231.23380.22.camel@mtkswgap22>
-In-Reply-To: <1597985231.23380.22.camel@mtkswgap22>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Fri, 21 Aug 2020 02:59:07 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzqdc6EK6vF80gQE=dhgT-L_FKovKWwpUJDG=1BKTh=1mg@mail.gmail.com>
-Message-ID: <CAGp9Lzqdc6EK6vF80gQE=dhgT-L_FKovKWwpUJDG=1BKTh=1mg@mail.gmail.com>
+        id S1727791AbgHUKoh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Aug 2020 06:44:37 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53117 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726975AbgHUKog (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Aug 2020 06:44:36 -0400
+X-UUID: 990200d3e0094aec8ce2a603b8fbc0d7-20200821
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/0TIS+AcFpJbFlTL66WwXjaYX2EophXt8//hLxrFzhE=;
+        b=W5JJfbNqdsAdTpTw/7h7D45qw4bi3boxQTLq23LKsMIxKg8qO8i+MV8N75o6ts00e5cqfLQ3fgiUjT+gmpV7bYBBmYAXzPyaeTyLOU4TmdPuZkS2CUGIGYV+gu9C31sKyZUOk6GjaUr9i4dOrVty+JIwltxJ2iQIQPGwyTzSt2U=;
+X-UUID: 990200d3e0094aec8ce2a603b8fbc0d7-20200821
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 670829655; Fri, 21 Aug 2020 18:44:26 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 21 Aug 2020 18:44:22 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 21 Aug 2020 18:44:22 +0800
+Message-ID: <1598006664.334.12.camel@mtkswgap22>
 Subject: Re: [PATCH v1 1/2] pinctrl: mediatek: support access registers
  without race-condition
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     Sean Wang <sean.wang@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+        lkml <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>
+Date:   Fri, 21 Aug 2020 18:44:24 +0800
+In-Reply-To: <CAGp9Lzqdc6EK6vF80gQE=dhgT-L_FKovKWwpUJDG=1BKTh=1mg@mail.gmail.com>
+References: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
+         <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com>
+         <1597985231.23380.22.camel@mtkswgap22>
+         <CAGp9Lzqdc6EK6vF80gQE=dhgT-L_FKovKWwpUJDG=1BKTh=1mg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: FC07466182110B647F372E4BBE7C0B3C2419EB6A02767BAB4C2FD296862943BF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Light,
+T24gRnJpLCAyMDIwLTA4LTIxIGF0IDAyOjU5IC0wNzAwLCBTZWFuIFdhbmcgd3JvdGU6DQo+IEhp
+IExpZ2h0LA0KPiANCj4gT24gVGh1LCBBdWcgMjAsIDIwMjAgYXQgOTo0NyBQTSBMaWdodCBIc2ll
+aCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgMjAy
+MC0wOC0xOSBhdCAxNjoxMSAtMDcwMCwgU2VhbiBXYW5nIHdyb3RlOg0KPiA+ID4gSGkgTGlnaHQs
+DQo+ID4gPg0KPiA+ID4gT24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMTozNiBBTSA8bGlnaHQuaHNp
+ZWhAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4gRnJvbTogTGlnaHQgSHNp
+ZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4NCj4gPiA+ID4gU29tZSBNZWRp
+YVRlayBTT0MgcHJvdmlkZSBtb3JlIGNvbnRyb2wgcmVnaXN0ZXJzIG90aGVyIHRoYW4gdmFsdWUg
+cmVnaXN0ZXIuDQo+ID4gPg0KPiA+ID4gcy9NVDY3NjUvU29tZSBNZWRpYVRlayBTb0MvDQo+ID4g
+Pg0KPiA+ID4gPiBHZW5lcmFubGwsIGEgdmFsdWUgcmVnaXN0ZXIgbmVlZCByZWFkLW1vZGlmeS13
+cml0ZSBpcyBhdCBvZmZzZXQgMHhYWFhYWFhYWDAuDQo+ID4gPg0KPiA+ID4gcy9HZW5lcmFsbHkv
+R2VuZXJhbmxsLw0KPiA+ID4NCj4gPiA+ID4gQSBjb3JyZXNwb25kaW5nIFNFVCByZWdpc3RlciBp
+cyBhdCBvZmZzZXQgMHhYWFhYWFhYNC4gV3JpdGUgMXMnIHRvIHNvbWUgYml0cw0KPiA+ID4gPiAg
+IG9mIFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQo+
+ID4gPiA+IEEgY29ycmVzcG9uZGluZyBDTFIgcmVnaXN0ZXIgaXMgYXQgb2Zmc2V0IDB4WFhYWFhY
+WDguIFdyaXRlIDFzJyB0byBzb21lIGJpdHMNCj4gPiA+ID4gICBvZiBDTFIgcmVnaXN0ZXIgd2ls
+bCBjbGVhciBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQo+ID4gPiA+IEZvciBHUElPIG1v
+ZGUgc2VsZWN0aW9uLCBNV1IgcmVnaXN0ZXIgaXMgcHJvdmlkZWQgYXQgb2Zmc2V0IDB4WFhYWFhY
+WEMuDQo+ID4gPiA+ICAgV2l0aCBNV1IsIHRoZSBNU0JpdCBvZiBHUElPIG1vZGUgc2VsZWN0aW9u
+IGZpZWxkIGlzIGZvciBtb2RpZmljYXRpb24tZW5hYmxlLA0KPiA+ID4gPiAgIG5vdCBmb3IgR1BJ
+TyBtb2RlIHNlbGVjdGlvbiwgYW5kIHRoZSByZW1haW5pbmcgTFNCaXRzIGFyZSBmb3IgbW9kZQ0K
+PiA+ID4gPiAgIHNlbGVjdGlvbi4NCj4gPiA+ID4gICBUYWtlIG1vZGUgc2VsZWN0aW9uIGZpZWxk
+IHdpdGggNC1iaXRzIGFzIGV4YW1wbGUsIHRvIHNlbGVjdCBtb2RlIDB+NyB2aWENCj4gPiA+ID4g
+ICBNV1IgcmVnaXN0ZXIsIDh+MTUgKGluc3RlYWQgb2YgMH43KSBzaGFsbCBiZSB3cml0dGVuIHRv
+IGNvcnJlc3BvbmRpbmcgbW9kZQ0KPiA+ID4gPiAgIHNlbGVjdGlvbiBmaWVsZC4NCj4gPiA+ID4g
+V2hlbiB1c2luZyBTRVQvQ0xSL01XUiByZWdpc3RlcnMsIHJlYWQtbW9kaWZ5LXdyaXRlIG9mIHZh
+bHVlIHJlZ2lzdGVyIGlzIG5vdA0KPiA+ID4gPiAgIG5lY2Vzc2FyeS4gVGhpcyBjYW4gcHJldmVu
+dCBmcm9tIHJhY2UgY29uZGl0aW9uIHdoZW4gbXVsdGlwbGUgYnVzIG1hc3RlcnMNCj4gPiA+ID4g
+ICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNhbWUgdmFsdWUgcmVnaXN0ZXIg
+Zm9yIHNldHRpbmcgZGlmZmVyZW50DQo+ID4gPiA+ICAgZmllbGRzIG9mIHRoZSBzYW1lIHZhbHVl
+IHJlZ2lzdGVyLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMaWdodCBIc2llaCA8
+bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMv
+cGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYyB8IDY5ICsrKysrKysrKysr
+KysrKysrKysrKystLQ0KPiA+ID4gPiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXRrLWNvbW1vbi12Mi5oIHwgIDIgKw0KPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA2NyBpbnNl
+cnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIGIvZHJpdmVy
+cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQo+ID4gPiA+IGluZGV4
+IGI3N2IxOGYuLjUxZjBiNTMgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9t
+ZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3Bp
+bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCj4gPiA+ID4gQEAgLTE4LDYg
+KzE4LDI5IEBADQo+ID4gPiA+ICAjaW5jbHVkZSAibXRrLWVpbnQuaCINCj4gPiA+ID4gICNpbmNs
+dWRlICJwaW5jdHJsLW10ay1jb21tb24tdjIuaCINCj4gPiA+ID4NCj4gPiA+ID4gKy8qIFNvbWUg
+TWVkaWFUZWsgU09DIHByb3ZpZGUgbW9yZSBjb250cm9sIHJlZ2lzdGVycyBvdGhlciB0aGFuIHZh
+bHVlIHJlZ2lzdGVyLg0KPiA+ID4NCj4gPiA+IHMvTVQ2NzY1L1NvbWUgTWVkaWFUZWsgU29DLw0K
+PiA+DQo+ID4gTm90IG9ubHkgTVQ2NzY1IHByb3ZpZGVzIHN1Y2ggY29udHJvbCByZWdpc3RlcnMu
+DQo+ID4gQWN0dWFsbHksIG1hbnkgKGJ1dCBub3QgYWxsKSBNZWRpYVRlayBTb0Mgc3VwcG9ydC4N
+Cj4gPiBPdGhlciBNZWRpYVRlayBTb0MgY2FuIGVuYWJsZSBzdWNoIGNvbnRyb2wgYWNjb3JkaW5n
+IHRvIGl0cyBIVyBzdXBwb3J0Lg0KPiA+DQo+ID4gPg0KPiA+ID4gPiArICogR2VuZXJhbmxsLCBh
+IHZhbHVlIHJlZ2lzdGVyIG5lZWQgcmVhZC1tb2RpZnktd3JpdGUgaXMgYXQgb2Zmc2V0IDB4WFhY
+WFhYWFgwLg0KPiA+ID4NCj4gPiA+IHMvR2VuZXJhbGx5L0dlbmVyYW5sbC8NCj4gPiA+DQo+ID4g
+PiA+ICsgKiBBIGNvcnJlc3BvbmRpbmcgU0VUIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhY
+WFg0LiBXcml0ZSAxcycgdG8gc29tZSBiaXRzDQo+ID4gPiA+ICsgKiAgb2YgU0VUIHJlZ2lzdGVy
+IHdpbGwgc2V0IHNhbWUgYml0cyBpbiB2YWx1ZSByZWdpc3Rlci4NCj4gPiA+ID4gKyAqIEEgY29y
+cmVzcG9uZGluZyBDTFIgcmVnaXN0ZXIgaXMgYXQgb2Zmc2V0IDB4WFhYWFhYWDguIFdyaXRlIDFz
+JyB0byBzb21lIGJpdHMNCj4gPiA+ID4gKyAqICBvZiBDTFIgcmVnaXN0ZXIgd2lsbCBjbGVhciBz
+YW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQo+ID4gPiA+ICsgKiBGb3IgR1BJTyBtb2RlIHNl
+bGVjdGlvbiwgTVdSIHJlZ2lzdGVyIGlzIHByb3ZpZGVkIGF0IG9mZnNldCAweFhYWFhYWFhDLg0K
+PiA+ID4gPiArICogIFdpdGggTVdSLCB0aGUgTVNCaXQgb2YgR1BJTyBtb2RlIHNlbGVjdGlvbiBm
+aWVsZCBpcyBmb3IgbW9kaWZpY2F0aW9uLWVuYWJsZSwNCj4gPiA+ID4gKyAqICBub3QgZm9yIEdQ
+SU8gbW9kZSBzZWxlY3Rpb24sIGFuZCB0aGUgcmVtYWluaW5nIExTQml0cyBhcmUgZm9yIG1vZGUN
+Cj4gPiA+ID4gKyAqICBzZWxlY3Rpb24uDQo+ID4gPiA+ICsgKiAgVGFrZSBtb2RlIHNlbGVjdGlv
+biBmaWVsZCB3aXRoIDQtYml0cyBhcyBleGFtcGxlLCB0byBzZWxlY3QgbW9kZSAwfjcgdmlhDQo+
+ID4gPiA+ICsgKiAgTVdSIHJlZ2lzdGVyLCA4fjE1IChpbnN0ZWFkIG9mIDB+Nykgc2hhbGwgYmUg
+d3JpdHRlbiB0byBjb3JyZXNwb25kaW5nIG1vZGUNCj4gPiA+ID4gKyAqICBzZWxlY3Rpb24gZmll
+bGQuDQo+ID4gPiA+ICsgKiBXaGVuIHVzaW5nIFNFVC9DTFIvTVdSIHJlZ2lzdGVycywgcmVhZC1t
+b2RpZnktd3JpdGUgb2YgdmFsdWUgcmVnaXN0ZXIgaXMgbm90DQo+ID4gPiA+ICsgKiAgbmVjZXNz
+YXJ5LiBUaGlzIGNhbiBwcmV2ZW50IGZyb20gcmFjZSBjb25kaXRpb24gd2hlbiBtdWx0aXBsZSBi
+dXMgbWFzdGVycw0KPiA+ID4gPiArICogIGNvbmN1cnJlbnRseSByZWFkLW1vZGlmeS13cml0ZSB0
+aGUgc2FtZSB2YWx1ZSByZWdpc3RlciBmb3Igc2V0dGluZyBkaWZmZXJlbnQNCj4gPiA+ID4gKyAq
+ICBmaWVsZHMgb2YgdGhlIHNhbWUgdmFsdWUgcmVnaXN0ZXIuDQo+ID4gPiA+ICsgKi8NCj4gPiA+
+ID4gKw0KPiA+ID4gPiArI2RlZmluZSBTRVRfT0ZGU0VUIDB4NA0KPiA+ID4gPiArI2RlZmluZSBD
+TFJfT0ZGU0VUIDB4OA0KPiA+ID4NCj4gPiA+IGNhbiBzZXQvY2xyIG9mZnNldCB3b3JrIGZvciBt
+b2RlIHJlZ2lzdGVyPw0KPiA+DQo+ID4gWWVzLiBIb3dldmVyLCB1c2Ugc2V0L2NsciB0byBjaGFu
+Z2UgbW9kZSByZXF1aXJlIDIgcmVnaXN0ZXIgYWNjZXNzIHdoZW4NCj4gPiB0YXJnZXQgbW9kZSBp
+cyBub3QgYWxsIDAncyBvciBhbGwgMSdzLg0KPiANCj4gRFJWL1REU0VMIGFuZCBSRFNFTCByZWdp
+c3RlciBtaWdodCBoYXZlIHZhbHVlIG5vdCBhbGwgMCdzIG9yIGFsbCAxJ3MuDQo+IFRoYXQgc2Vl
+bXMgdG8gYmUgd2Ugc3RpbGwgcmVxdWlyZSB0d28gc3RlcHMgcmVnaXN0ZXIgYWNjZXNzIGZvciBz
+dWNoDQo+IGZpZWxkcywgcmlnaHQ/DQoNClllcy4NCg0KPiANCj4gPiBUaGUgbXdyIEhXIHN1cHBv
+cnQgaXMgbm90IGF2YWlsYWJsZSBvbiBtb2RlIHJlZ2lzdGVyLg0KPiANCj4gaWYgSSB1bmRlcnN0
+YW5kIGNvcnJlY3RseSwgdGhhdCBzZWVtcyB0byBiZSBhIHR5cG8sIE1XUiBzaG91bGQgYmUgb25s
+eQ0KPiBhdmFpbGFibGUgb24gbW9kZSByZWdpc3Rlcg0KPiANCg0KU29ycnksIGl0J3MgbXkgdHlw
+by4NCg0KPiA+DQo+ID4gPg0KPiA+ID4gPiArI2RlZmluZSBNV1JfT0ZGU0VUIDB4Qw0KPiA+ID4g
+PiArDQo+ID4gPiA+ICAvKioNCj4gPiA+ID4gICAqIHN0cnVjdCBtdGtfZHJpdmVfZGVzYyAtIHRo
+ZSBzdHJ1Y3R1cmUgdGhhdCBob2xkcyB0aGUgaW5mb3JtYXRpb24NCj4gPiA+ID4gICAqICAgICAg
+ICAgICAgICAgICAgICAgICAgIG9mIHRoZSBkcml2aW5nIGN1cnJlbnQNCj4gPiA+ID4gQEAgLTY0
+LDYgKzg3LDM4IEBAIHZvaWQgbXRrX3JtdyhzdHJ1Y3QgbXRrX3BpbmN0cmwgKnBjdGwsIHU4IGks
+IHUzMiByZWcsIHUzMiBtYXNrLCB1MzIgc2V0KQ0KPiA+ID4gPiAgICAgICAgIG10a193MzIocGN0
+bCwgaSwgcmVnLCB2YWwpOw0KPiA+ID4gPiAgfQ0KPiA+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+
+ICtzdGF0aWMgdm9pZCBtdGtfaHdfc2V0X3ZhbHVlX3JhY2VfZnJlZShzdHJ1Y3QgbXRrX3BpbmN0
+cmwgKnBjdGwsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX3Bpbl9maWVsZCAq
+cGYsIHUzMiB2YWx1ZSkNCj4gPiA+DQo+ID4gPiBzL210a19od19zZXRfdmFsdWVfcmFjZV9mcmVl
+L210a19od193MXNjLyB0byBleHBsaWN0bHkgaW5kaWNhdGUNCj4gPiA+IHdyaXRlLW9uZSBldGhp
+ZXIgc2V0IG9yIGNsZWFyIG9wZXJhdGlvbiBzdXBwb3J0ZWQgYnkgaHcNCj4gPiA+DQo+ID4gPiA+
+ICt7DQo+ID4gPiA+ICsgICAgICAgdW5zaWduZWQgaW50IHNldCwgY2xyOw0KPiA+ID4gPiArDQo+
+ID4gPiA+ICsgICAgICAgc2V0ID0gdmFsdWUgJiBwZi0+bWFzazsNCj4gPiA+ID4gKyAgICAgICBj
+bHIgPSAofnNldCkgJiBwZi0+bWFzazsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmIChz
+ZXQpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBtdGtfdzMyKHBjdGwsIHBmLT5pbmRleCwgcGYt
+Pm9mZnNldCArIFNFVF9PRkZTRVQsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHNl
+dCA8PCBwZi0+Yml0cG9zKTsNCj4gPiA+ID4gKyAgICAgICBpZiAoY2xyKQ0KPiA+ID4gPiArICAg
+ICAgICAgICAgICAgbXRrX3czMihwY3RsLCBwZi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBDTFJfT0ZG
+U0VULA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbHIgPDwgcGYtPmJpdHBvcyk7
+DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4gPiA+ID4gK3N0YXRpYyB2b2lkIG10a19od19zZXRf
+bW9kZV9yYWNlX2ZyZWUoc3RydWN0IG10a19waW5jdHJsICpwY3RsLA0KPiA+ID4gPiArICAgICAg
+ICAgICAgICAgc3RydWN0IG10a19waW5fZmllbGQgKnBmLCB1MzIgdmFsdWUpDQo+ID4gPg0KPiA+
+ID4gcy9tdGtfaHdfc2V0X21vZGVfcmFjZV9mcmVlL210a19od19td3IvDQo+ID4gPg0KPiA+ID4g
+PiArew0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCB2YWx1ZV9uZXc7DQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKyAgICAgICAvKiBNU0Igb2YgbWFzayBpcyBtb2RpZmljYXRpb24tZW5hYmxlIGJp
+dCwgc2V0IHRoaXMgYml0ICovDQo+ID4gPiA+ICsgICAgICAgdmFsdWVfbmV3ID0gKDEgPDwgKHBj
+dGwtPnNvYy0+bXdyX2ZpZWxkX3dpZHRoIC0gMSkpIHwgdmFsdWU7DQo+ID4gPg0KPiA+ID4gaXQg
+c2VlbXMgdG8gYmUgd2UgY2FuIHVzZSBmbHMocGYtPm1hc2spIHRvIHJlcGxhY2UgY3RsLT5zb2Mt
+Pm13cl9maWVsZF93aWR0aA0KPiA+ID4NCj4gPg0KPiA+IHBmLT5tYXNrIGNhbm5vdCBiZSB1c2Vk
+IGRpcmVjdC4gSXQgbmVlZHMgY29udmVyc2lvbi5Gb3IgZXhhbXBsZToNCj4gPiBwZi0+bWFzazog
+MHgxZiAtPiB2YWx1ZV9uZXcgPSAoMSA8PCA0KSB8IHZhbHVlOw0KPiA+IHBmLT5tYXNrOiAweGYg
+LT4gdmFsdWVfbmV3ID0gKDEgPDwgMykgfCB2YWx1ZTsNCj4gPiBwZi0+bWFzazogMHg3IC0+IHZh
+bHVlX25ldyA9ICgxIDw8IDIpIHwgdmFsdWU7DQo+ID4NCj4gPiBUaGUgY29kZSBzaXplIG9mIHBl
+cmZvcm0gY29udmVyc2lvbiBpcyBncmVhdGVyIHRoYW4gdXNpbmcgYSBkaXJlY3QNCj4gPiBtd3Jf
+ZmllbGRfd2lkdGggZmllbGQuDQo+ID4NCj4gDQo+IHVzaW5nIHBmLT5tYXNrIGNhbiBhbGxvdyBN
+V1Igc3VwcG9ydHMgYW55IGZpZWxkIHRoYXQgY2FuIHN1cHBvcnQgTVdSDQo+IHRvIGJlIGdlbmVy
+aWMuDQo+IA0KPiB0aGF0IHdvdWxkIGJlIGEgbWVzcyB3aGVuIHRoZXJlIGFyZSBtb3JlIGZpZWxk
+cyByZWx5aW5nIG9uIE1XUiBvbg0KPiBjZXJ0YWluIFNvQyBzb21lZGF5Lg0KPiANClRoZSBtb3N0
+IGltcG9ydGFudCByZWFzb24gZm9yIE1XUiBvbiBtb2RlIHJlZ2lzdGVyIGlzIHRoYXQ6DQoyIGFj
+Y2VzcyB3aWxsIGNyZWF0ZSBhbiB1bi13YW50ZWQgdGVtcCBtb2RlIGluIHRoYXQgR1BJTyBwaW4g
+YW5kDQp1bi1leHBlY3RlZCBzaWduYWwgbWF5IGJlIHByb2R1Y2VkLg0KDQpDdXJyZW50bHksIHdl
+IGRvbid0IHNlZSB0aGUgbmVlZCB0byBzdXBwb3J0IE1XUiBvbiBvdGhlciBmaWVsZCBzaW5jZSBN
+V1INCnN1cHBvcnQgaXMgYWRkZWQgZm9yIG1vZGUgcmVnaXN0ZXIgYXQgMjAxNC4gVGhlcmVmb3Jl
+LCB0aGUgZnV0dXJlIHVzYWdlDQpjb25zaWRlcmF0aW9uIG1heSBiZSBuZXZlciB1c2VkLg0KDQoN
+Cj4gPg0KPiA+ID4gPiArICAgICAgIGlmICh2YWx1ZV9uZXcgPT0gdmFsdWUpDQo+ID4gPiA+ICsg
+ICAgICAgICAgICAgICBkZXZfbm90aWNlKHBjdGwtPmRldiwNCj4gPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgImludmFsaWQgbW9kZSAweCV4LCB1c2UgaXQgYnkgaWdub3JpbmcgTVNCaXQh
+XG4iLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZSk7DQo+ID4gPiA+ICsg
+ICAgICAgbXRrX3czMihwY3RsLCBwZi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBNV1JfT0ZGU0VULA0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgdmFsdWVfbmV3IDw8IHBmLT5iaXRwb3MpOw0KPiA+ID4g
+PiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICBzdGF0aWMgaW50IG10a19od19waW5fZmllbGRfbG9v
+a3VwKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywNCj4gPiA+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQgZmllbGQsIHN0cnVjdCBtdGtf
+cGluX2ZpZWxkICpwZmQpDQo+ID4gPiA+IEBAIC0xOTcsMTAgKzI1MiwxNiBAQCBpbnQgbXRrX2h3
+X3NldF92YWx1ZShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9k
+ZXNjICpkZXNjLA0KPiA+ID4gPiAgICAgICAgIGlmICh2YWx1ZSA8IDAgfHwgdmFsdWUgPiBwZi5t
+YXNrKQ0KPiA+ID4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiA+DQo+
+ID4gPiA+IC0gICAgICAgaWYgKCFwZi5uZXh0KQ0KPiA+ID4gPiAtICAgICAgICAgICAgICAgbXRr
+X3JtdyhodywgcGYuaW5kZXgsIHBmLm9mZnNldCwgcGYubWFzayA8PCBwZi5iaXRwb3MsDQo+ID4g
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICh2YWx1ZSAmIHBmLm1hc2spIDw8IHBmLmJpdHBv
+cyk7DQo+ID4gPiA+IC0gICAgICAgZWxzZQ0KPiA+ID4gPiArICAgICAgIGlmICghcGYubmV4dCkg
+ew0KPiA+ID4gPiArICAgICAgICAgICAgICAgaWYgKGh3LT5zb2MtPnJhY2VfZnJlZV9hY2Nlc3Mp
+IHsNCj4gPiA+DQo+ID4gPiBsZXQncyBjcmVhdGUgYW4gZXh0cmEgZmxhZ3MgY2FwcyB1bmRlciBo
+dy0+c29jIGFuZCB0aGUgU29DIGNhcGFiaWxpdHkNCj4gPiA+IGNoZWNrLCBzb21ldGhpbmcgbGlr
+ZSBody0+c29jLT5jYXBzICYgTVRLX0hXX0NBUFNfUk1XX0FUT01JQyB0byBlYXNpbHkNCj4gPiA+
+IGV4dGVuZCB2YXJpb3VzIHRoaW5ncyBmb3IgZnV0dXJlIFNvQw0KPiA+ID4NCj4gPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgaWYgKGZpZWxkID09IFBJTkNUUkxfUElOX1JFR19NT0RFKQ0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG10a19od19zZXRfbW9kZV9y
+YWNlX2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICBlbHNlDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXRrX2h3X3Nl
+dF92YWx1ZV9yYWNlX2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KPiA+ID4gPiArICAgICAgICAgICAg
+ICAgfQ0KPiA+ID4NCj4gPiA+IGxldCdzIGNyZWF0ZSBhIGZ1bmN0aW9uIGhvbGRpbmcgdGhhdCBz
+cGVjaWZpYyBoYXJkd2FyZSBzdHVmZiAoYXQgbGVhc3QNCj4gPiA+IGN1cnJlbnRseSBpdCBsb29r
+IGxpa2UpLCBzb21ldGhpbmcgbGlrZQ0KPiA+ID4NCj4gPiA+IHN0YXRpYyB2b2lkIG10a19od19y
+bXcoc3RydWN0IG10a19waW5jdHJsICpwY3RsLCAgc3RydWN0IG10a19waW5fZmllbGQgKnBmKQ0K
+PiA+ID4gew0KPiA+ID4gICAgICBpZiAocGYtPmZpZWxkID09IFBJTkNUUkxfUElOX1JFR19NT0RF
+KSAvKiBjcmVhdGUgYSBtZW1iZXIgZmllbGQgZm9yIHBmICovDQo+ID4gPiAgICAgICAgICAgICBt
+dGtfaHdfbXdyKC4uLik7DQo+ID4gPiAgICAgZWxzZQ0KPiA+ID4gICAgICAgICAgICAgbXRrX2h3
+X3cxc2MoLi4uKTsNCj4gPiA+IH0NCj4gPiA+DQo+ID4NCj4gPiBTaW5lIHRoZXJlIGlzIG5vIG1l
+bWJlciAnZmllbGQnIGluIHN0cnVjdCBtdGtfcGluX2ZpZWxkLCBwZi0+ZmllbGQNCj4gPiBjYW5u
+b3QgYmUgdXNlZC4NCj4gPiBUaGVyZWZvcmUgYW4gZXh0cmEgZnVuY3Rpb24gcGFyYW1ldGVyIGlz
+IHJlcXVpcmVkIGlmIHlvdSB3YW50IHRvIHVzZSBhDQo+ID4gc3RhbmRhbG9uZSBmdW5jdGlvbiBt
+dGtfaHdfcm13LiBMaWtlIHRoaXM6DQo+ID4NCj4gPiB2b2lkIG10a19od19ybXcoc3RydWN0IG10
+a19waW5jdHJsICpwY3RsLCBzdHJ1Y3QgbXRrX3Bpbl9maWVsZCAqcGYsDQo+ID4gICAgICAgICAg
+ICAgICAgIGludCBmaWVsZCwgdTMyIHZhbHVlKQ0KPiA+IHsNCj4gPiAgICAgICAgIGlmIChmaWVs
+ZCA9PSBQSU5DVFJMX1BJTl9SRUdfTU9ERSkNCj4gPiAgICAgICAgICAgICAgICAgbXRrX2h3X3Nl
+dF9tb2RlX3JhY2VfZnJlZShodywgJnBmLCB2YWx1ZSk7DQo+ID4gICAgICAgICBlbHNlDQo+ID4g
+ICAgICAgICAgICAgICAgIG10a19od19zZXRfdmFsdWVfcmFjZV9mcmVlKGh3LCAmcGYsIHZhbHVl
+KTsNCj4gPiB9DQo+ID4NCj4gPiBJIHdvbmRlciB0aGUgbmVjZXNzaXR5L2VmZmljaWVuY3kgb2Yg
+c3VjaCBleHRyYSBpbnRlcm1lZGlhdGUgZnVuY3Rpb24NCj4gPiB3aXRoIG1hbnkgZnVuY3Rpb24g
+cGFyYW1ldGVycy4NCj4gDQo+IGhvbGRpbmcgaXQgaW4gYSBzZXBhcmF0ZSBmdW5jdGlvbiBpcyBm
+b3IgdGhhdCBvcGVyYXRpb24gaXMgbm90IGdlbmVyaWMNCj4gZW5vdWdoIGZvciB0aGUgbW9tZW50
+Lg0KPiANCj4gPg0KPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG10a19ybXco
+aHcsIHBmLmluZGV4LCBwZi5vZmZzZXQsIHBmLm1hc2sgPDwgcGYuYml0cG9zLA0KPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICh2YWx1ZSAmIHBmLm1hc2spIDw8IHBmLmJp
+dHBvcyk7DQo+ID4gPiA+ICsgICAgICAgfSBlbHNlDQo+ID4gPiA+ICAgICAgICAgICAgICAgICBt
+dGtfaHdfd3JpdGVfY3Jvc3NfZmllbGQoaHcsICZwZiwgdmFsdWUpOw0KPiA+ID4gPg0KPiA+ID4g
+PiAgICAgICAgIHJldHVybiAwOw0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJs
+L21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oIGIvZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oDQo+ID4gPiA+IGluZGV4IDI3ZGYwODcuLjk1ZmIz
+MjkgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
+LW10ay1jb21tb24tdjIuaA0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
+cGluY3RybC1tdGstY29tbW9uLXYyLmgNCj4gPiA+ID4gQEAgLTIwMyw2ICsyMDMsOCBAQCBzdHJ1
+Y3QgbXRrX3Bpbl9zb2Mgew0KPiA+ID4gPiAgICAgICAgIC8qIFNwZWNpZmljIHBhcmFtZXRlcnMg
+cGVyIFNvQyAqLw0KPiA+ID4gPiAgICAgICAgIHU4ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgZ3Bpb19tOw0KPiA+ID4gPiAgICAgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgaWVzX3ByZXNlbnQ7DQo+ID4gPiA+ICsgICAgICAgYm9vbCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByYWNlX2ZyZWVfYWNjZXNzOw0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCAg
+ICAgICAgICAgICAgICAgICAgbXdyX2ZpZWxkX3dpZHRoOw0KPiA+ID4gPiAgICAgICAgIGNvbnN0
+IGNoYXIgKiBjb25zdCAgICAgICAgICAgICAgKmJhc2VfbmFtZXM7DQo+ID4gPiA+ICAgICAgICAg
+dW5zaWduZWQgaW50ICAgICAgICAgICAgICAgICAgICBuYmFzZV9uYW1lczsNCj4gPiA+ID4NCj4g
+PiA+ID4gLS0NCj4gPiA+ID4gMS44LjEuMS5kaXJ0eQ0KPiA+DQoNCg==
 
-On Thu, Aug 20, 2020 at 9:47 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
->
-> On Wed, 2020-08-19 at 16:11 -0700, Sean Wang wrote:
-> > Hi Light,
-> >
-> > On Tue, Aug 18, 2020 at 1:36 AM <light.hsieh@mediatek.com> wrote:
-> > >
-> > > From: Light Hsieh <light.hsieh@mediatek.com>
-> > >
-> > > Some MediaTek SOC provide more control registers other than value register.
-> >
-> > s/MT6765/Some MediaTek SoC/
-> >
-> > > Generanll, a value register need read-modify-write is at offset 0xXXXXXXXX0.
-> >
-> > s/Generally/Generanll/
-> >
-> > > A corresponding SET register is at offset 0xXXXXXXX4. Write 1s' to some bits
-> > >   of SET register will set same bits in value register.
-> > > A corresponding CLR register is at offset 0xXXXXXXX8. Write 1s' to some bits
-> > >   of CLR register will clear same bits in value register.
-> > > For GPIO mode selection, MWR register is provided at offset 0xXXXXXXXC.
-> > >   With MWR, the MSBit of GPIO mode selection field is for modification-enable,
-> > >   not for GPIO mode selection, and the remaining LSBits are for mode
-> > >   selection.
-> > >   Take mode selection field with 4-bits as example, to select mode 0~7 via
-> > >   MWR register, 8~15 (instead of 0~7) shall be written to corresponding mode
-> > >   selection field.
-> > > When using SET/CLR/MWR registers, read-modify-write of value register is not
-> > >   necessary. This can prevent from race condition when multiple bus masters
-> > >   concurrently read-modify-write the same value register for setting different
-> > >   fields of the same value register.
-> > >
-> > > Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
-> > > ---
-> > >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 69 ++++++++++++++++++++++--
-> > >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  2 +
-> > >  2 files changed, 67 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > index b77b18f..51f0b53 100644
-> > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > @@ -18,6 +18,29 @@
-> > >  #include "mtk-eint.h"
-> > >  #include "pinctrl-mtk-common-v2.h"
-> > >
-> > > +/* Some MediaTek SOC provide more control registers other than value register.
-> >
-> > s/MT6765/Some MediaTek SoC/
->
-> Not only MT6765 provides such control registers.
-> Actually, many (but not all) MediaTek SoC support.
-> Other MediaTek SoC can enable such control according to its HW support.
->
-> >
-> > > + * Generanll, a value register need read-modify-write is at offset 0xXXXXXXXX0.
-> >
-> > s/Generally/Generanll/
-> >
-> > > + * A corresponding SET register is at offset 0xXXXXXXX4. Write 1s' to some bits
-> > > + *  of SET register will set same bits in value register.
-> > > + * A corresponding CLR register is at offset 0xXXXXXXX8. Write 1s' to some bits
-> > > + *  of CLR register will clear same bits in value register.
-> > > + * For GPIO mode selection, MWR register is provided at offset 0xXXXXXXXC.
-> > > + *  With MWR, the MSBit of GPIO mode selection field is for modification-enable,
-> > > + *  not for GPIO mode selection, and the remaining LSBits are for mode
-> > > + *  selection.
-> > > + *  Take mode selection field with 4-bits as example, to select mode 0~7 via
-> > > + *  MWR register, 8~15 (instead of 0~7) shall be written to corresponding mode
-> > > + *  selection field.
-> > > + * When using SET/CLR/MWR registers, read-modify-write of value register is not
-> > > + *  necessary. This can prevent from race condition when multiple bus masters
-> > > + *  concurrently read-modify-write the same value register for setting different
-> > > + *  fields of the same value register.
-> > > + */
-> > > +
-> > > +#define SET_OFFSET 0x4
-> > > +#define CLR_OFFSET 0x8
-> >
-> > can set/clr offset work for mode register?
->
-> Yes. However, use set/clr to change mode require 2 register access when
-> target mode is not all 0's or all 1's.
-
-DRV/TDSEL and RDSEL register might have value not all 0's or all 1's.
-That seems to be we still require two steps register access for such
-fields, right?
-
-> The mwr HW support is not available on mode register.
-
-if I understand correctly, that seems to be a typo, MWR should be only
-available on mode register
-
->
-> >
-> > > +#define MWR_OFFSET 0xC
-> > > +
-> > >  /**
-> > >   * struct mtk_drive_desc - the structure that holds the information
-> > >   *                         of the driving current
-> > > @@ -64,6 +87,38 @@ void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set)
-> > >         mtk_w32(pctl, i, reg, val);
-> > >  }
-> > >
-> > > +
-> > > +static void mtk_hw_set_value_race_free(struct mtk_pinctrl *pctl,
-> > > +               struct mtk_pin_field *pf, u32 value)
-> >
-> > s/mtk_hw_set_value_race_free/mtk_hw_w1sc/ to explictly indicate
-> > write-one ethier set or clear operation supported by hw
-> >
-> > > +{
-> > > +       unsigned int set, clr;
-> > > +
-> > > +       set = value & pf->mask;
-> > > +       clr = (~set) & pf->mask;
-> > > +
-> > > +       if (set)
-> > > +               mtk_w32(pctl, pf->index, pf->offset + SET_OFFSET,
-> > > +                       set << pf->bitpos);
-> > > +       if (clr)
-> > > +               mtk_w32(pctl, pf->index, pf->offset + CLR_OFFSET,
-> > > +                       clr << pf->bitpos);
-> > > +}
-> > > +
-> > > +static void mtk_hw_set_mode_race_free(struct mtk_pinctrl *pctl,
-> > > +               struct mtk_pin_field *pf, u32 value)
-> >
-> > s/mtk_hw_set_mode_race_free/mtk_hw_mwr/
-> >
-> > > +{
-> > > +       unsigned int value_new;
-> > > +
-> > > +       /* MSB of mask is modification-enable bit, set this bit */
-> > > +       value_new = (1 << (pctl->soc->mwr_field_width - 1)) | value;
-> >
-> > it seems to be we can use fls(pf->mask) to replace ctl->soc->mwr_field_width
-> >
->
-> pf->mask cannot be used direct. It needs conversion.For example:
-> pf->mask: 0x1f -> value_new = (1 << 4) | value;
-> pf->mask: 0xf -> value_new = (1 << 3) | value;
-> pf->mask: 0x7 -> value_new = (1 << 2) | value;
->
-> The code size of perform conversion is greater than using a direct
-> mwr_field_width field.
->
-
-using pf->mask can allow MWR supports any field that can support MWR
-to be generic.
-
-that would be a mess when there are more fields relying on MWR on
-certain SoC someday.
-
->
-> > > +       if (value_new == value)
-> > > +               dev_notice(pctl->dev,
-> > > +                       "invalid mode 0x%x, use it by ignoring MSBit!\n",
-> > > +                       value);
-> > > +       mtk_w32(pctl, pf->index, pf->offset + MWR_OFFSET,
-> > > +               value_new << pf->bitpos);
-> > > +}
-> > > +
-> > >  static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
-> > >                                    const struct mtk_pin_desc *desc,
-> > >                                    int field, struct mtk_pin_field *pfd)
-> > > @@ -197,10 +252,16 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
-> > >         if (value < 0 || value > pf.mask)
-> > >                 return -EINVAL;
-> > >
-> > > -       if (!pf.next)
-> > > -               mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
-> > > -                       (value & pf.mask) << pf.bitpos);
-> > > -       else
-> > > +       if (!pf.next) {
-> > > +               if (hw->soc->race_free_access) {
-> >
-> > let's create an extra flags caps under hw->soc and the SoC capability
-> > check, something like hw->soc->caps & MTK_HW_CAPS_RMW_ATOMIC to easily
-> > extend various things for future SoC
-> >
-> > > +                       if (field == PINCTRL_PIN_REG_MODE)
-> > > +                               mtk_hw_set_mode_race_free(hw, &pf, value);
-> > > +                       else
-> > > +                               mtk_hw_set_value_race_free(hw, &pf, value);
-> > > +               }
-> >
-> > let's create a function holding that specific hardware stuff (at least
-> > currently it look like), something like
-> >
-> > static void mtk_hw_rmw(struct mtk_pinctrl *pctl,  struct mtk_pin_field *pf)
-> > {
-> >      if (pf->field == PINCTRL_PIN_REG_MODE) /* create a member field for pf */
-> >             mtk_hw_mwr(...);
-> >     else
-> >             mtk_hw_w1sc(...);
-> > }
-> >
->
-> Sine there is no member 'field' in struct mtk_pin_field, pf->field
-> cannot be used.
-> Therefore an extra function parameter is required if you want to use a
-> standalone function mtk_hw_rmw. Like this:
->
-> void mtk_hw_rmw(struct mtk_pinctrl *pctl, struct mtk_pin_field *pf,
->                 int field, u32 value)
-> {
->         if (field == PINCTRL_PIN_REG_MODE)
->                 mtk_hw_set_mode_race_free(hw, &pf, value);
->         else
->                 mtk_hw_set_value_race_free(hw, &pf, value);
-> }
->
-> I wonder the necessity/efficiency of such extra intermediate function
-> with many function parameters.
-
-holding it in a separate function is for that operation is not generic
-enough for the moment.
-
->
->
-> > > +                       mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
-> > > +                               (value & pf.mask) << pf.bitpos);
-> > > +       } else
-> > >                 mtk_hw_write_cross_field(hw, &pf, value);
-> > >
-> > >         return 0;
-> > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > > index 27df087..95fb329 100644
-> > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > > @@ -203,6 +203,8 @@ struct mtk_pin_soc {
-> > >         /* Specific parameters per SoC */
-> > >         u8                              gpio_m;
-> > >         bool                            ies_present;
-> > > +       bool                            race_free_access;
-> > > +       unsigned int                    mwr_field_width;
-> > >         const char * const              *base_names;
-> > >         unsigned int                    nbase_names;
-> > >
-> > > --
-> > > 1.8.1.1.dirty
->
