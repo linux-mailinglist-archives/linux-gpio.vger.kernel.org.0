@@ -2,61 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF0E24E5E5
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Aug 2020 08:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91F5324E89A
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Aug 2020 18:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgHVGk7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Aug 2020 02:40:59 -0400
-Received: from sonic314-15.consmr.mail.bf2.yahoo.com ([74.6.132.125]:35459
-        "EHLO sonic314-15.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725924AbgHVGk7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 22 Aug 2020 02:40:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598078458; bh=yliUQgiMazWK+ELAzX9DN62s8HYSqEJxpDn4KzQ7Un0=; h=Date:From:Reply-To:Subject:References:From:Subject; b=ZAGYYks+GzaMvKJC3WkRW3gQLWzcFA9wOllPSar8BI526OUA1W4guOGPqMqQE/aubSWe8ubbkHZsMubwf5cmqNR7K/HJVyTrzD60BCOorQTzr0mV5UeX7Tp5ZcINdLqFt9FOp7Yj3HwkaSnErYhySLMjMxYEP22XlNLA+2K8km7AEplC1VYX62pQA4Kb0t6MaH5WvYR+OtCk1vhAxRn3MytjtBvbu8tGuDMPxki6zTiS0BjGIJz/za3+s9vqHUmi0InAVe8mkuw6t/aGIuzU3SmluAYr7DwBKrEp2cZQeY/5VpiQoYbjyG0B9QZc48mpTHsu7LtEqkPxzmK17dfxkw==
-X-YMail-OSG: 3aq.NmwVM1njUkg6Gmb16u5UIVatZ.1bib3NDT6eI9mrUbH2VBweo_TS4JsUaNz
- HhYXEnxZBzzbATw17R9mCpAStDilYirrsolKkdzIIX4j2xGyGl_fNenAoyBCxB_XC6wEU0J9tPRK
- BnLSNuXxzzPu24qWmhjYXziIgld9vAQrQq2MN94Q_cWW70BIsEaZDekddlOE0i_HT16v6FaGz8Qs
- WFNog6Ez_D25Ql3M6zz0gBzQgOALy8T4fYhMpBGSamw_zhRTKktw.JDAC1UVROePa4efajXGzHpp
- FKz18OI03Hn2FCsmlN0aN6nEu7krRo6qeDphMImfNit.ibCzLaNtiNpQVgDoMyXSvy0NszfnsWBT
- Yn8hm4GMaZXVcQJuUH8vi22BmTUC6ELs_HCKZBLVO85WOEMkB0UKRvlaasIYj2DRDuk0vuqcWQ1l
- uhalpKwZfb9MUYMexXMYVDUEWL_Nm0jxpQdPEXVOV.HYOR9WfyBHpeVxhlENXR5SsFPfYxga2BWP
- HQMk4BO_uZRCEm_Rr_WmZLPxTAeEnGjiWGC3.mHzutHKLaIvl.kIDTyZdQT9pItCAn0h1ePfYNzF
- QzFayPjAvspXATqDabHd2i26mYn9cnl.iJE__oOWMTlnZLFqV4NOK_Hso7P9KqB2d_oUc8B3kX48
- T9SMclrvYjWiVAm32R.49IFqm48OYEzBP5._l6TL4CTfY7OAyU4g6o5NPqxMgswY94ndZ7rFZsvn
- 9v3d9sb8pPLKS2ie_C_xWnFceMKIyD.9CQ.xmLS9SjmVh5dlJJZAaw51hBm6C7BMnzozB6Cf28my
- VeLprP0WHmkm1j0EzRY88_fcZozjtSxs4X.6OAdVmexj.LKuYTdrko6bCMPKbpmEneHphsnRX0nL
- X86KjODikmEsdhbopFSQSK0LP5jHTqcF2aGK34kl1tw9rK8aVebXxatI9OZbw7yFFfmj3u1ShEKN
- oV7Fm7dbQIxj4sYD9FxMAbp9JPMXcCnirOeqlkgMUZq0fYM1W3LzgkDxU32YiQTgkOQ45ikwpyHh
- Jotj5Aq6EY58XjaSu0yn_jglq9swdPlY7TUj4EvvfJRUAN58B9AcYrtEXc6CQlms_ktEBqKCPyFD
- sHEEerXGqNP6Neg.4Hjq7fK9Tr.nl5xTnP4Tfyi1hEzAyy1E8YocUZfjd_iFj.PwKH6kemaANH9O
- I5gymbPbfB5LfdFuCNLHd3pO8cUckcrF.BVFR5ZW33bwdJEDExCA.zur2y49iYOln_WaKYWJanvK
- riHi0CXx7sirvIaZmKpzUJOl2ZiB.yIKN5csITDGsKww2qkFhq7ZvTpExgjfv9C5ZC0v20WiKiX6
- _1QLaUXn82BKV_3Xk4IgmxOs_lo_yt1g_qJvcgvqP_nKbPQK_qnp4lR4o3s40uyQTgGhnQQy6WYN
- CGItgrSV4.33uPuIRYY.qDYHueMpuf0lsjiVp2lAe60Jxifsa
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Aug 2020 06:40:58 +0000
-Date:   Sat, 22 Aug 2020 06:40:55 +0000 (UTC)
-From:   Mubarak Diallo <diallomubarak1711@gmail.com>
-Reply-To: diallomubarak171@gmail.com
-Message-ID: <600269326.4388330.1598078455008@mail.yahoo.com>
-Subject: From Village Man
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <600269326.4388330.1598078455008.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16455 YMailNodin Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+        id S1728415AbgHVQRs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Aug 2020 12:17:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54795 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728410AbgHVQR0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 22 Aug 2020 12:17:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598113045; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=9nh8Kq5xt0C1SosMRCK5PzbcKONkHCKjnZEwdSr4G34=; b=IAo1GRKhzDgpgNpVR+hmLHQl+FKJxfP63+Ya3lHOHD6rCgMidOP8ohkaUYLR4idYrQsER37/
+ s0z+lyD55KSPpJ7HEzyY25+nojckDn6PymBeMFCkApuZkW3iDgVo7DnFPewBHs0TdNhHYuJc
+ xCIoDRLn7iq503dY+4+hO2CiVHc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f414510a0b59f2b43551572 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Aug 2020 16:17:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 564F4C43387; Sat, 22 Aug 2020 16:17:20 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE5BEC43395;
+        Sat, 22 Aug 2020 16:17:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE5BEC43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     bjorn.andersson@linaro.org, maz@kernel.org,
+        linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v5 0/6] irqchip: qcom: pdc: Introduce irq_set_wake call
+Date:   Sat, 22 Aug 2020 21:46:55 +0530
+Message-Id: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From Village Man 
+Changes in v5:
+- Update commit subject in v4 patch 1
+- Add more details to commit message in v4 patch 2
+- Add change to enable wake irqs during suspend using new flag in irqchip
+- Use this in PDC and qcom pinctrl driver to enable wakeirqs on suspend
+- Make for loop more readable and add more details in commit in v4 patch 7
 
-My Name is Mr. Mubarak Diallo, I am village spokesman We are local village Gold miners we are looking for real and reliable Gold buyer who can buy our gold, we sale at low price rate direct village mining price. 
+Changes in v4:
+- Drop "Remove irq_disable callback from msmgpio irqchip" patch from v3
+- Introduce irq_suspend_one() and irq_resume_one() callbacks
+- Use the new callbacks to unmask wake interrupts during suspend
+- Reset only pdc interrupts that are mapped in DTSI
 
-My work as a village spokesman is to make sure that you buy at low price and i will get my percentage, Even if you are not prepared to buy our Gold now but can get a buyer for us i will compensate you form my percentage
+Changes in v3:
+- Drop gpiolib change (v2 patch 1) since its already in linux-next
+- Add Acked-by Linus Walleij for v2 patch 2 and v2 patch 3.
+- Address Stephen's comment to on v2 patch 3
+- Address Stephen's comment to change variable to static on v2 patch 4.
+- Add a new change to use return value from .irq_set_wake callback
+- Add a new change to reset PDC irq enable bank during init time
 
-I hope to hear from you soonest 
+Changes in v2:
+- Fix compiler error on gpiolib patch
 
-Mr.Mubarak Diallo
-Village spokesman.
+This series adds support to lazy disable pdc interrupt.
+
+Some drivers using gpio interrupts want to configure gpio for wakeup using
+enable_irq_wake() but during suspend entry disables irq and expects system
+to resume when interrupt occurs. In the driver resume call interrupt is
+re-enabled and removes wakeup capability using disable_irq_wake() one such
+example is cros ec driver.
+
+With [1] in documentation saying "An irq can be disabled with disable_irq()
+and still wake the system as long as the irq has wake enabled".
+
+The PDC IRQs are currently "unlazy disabled" (disable here means that it
+will be masked in PDC & GIC HW GICD_ISENABLER, the moment driver invokes
+disable_irq()) such IRQs can not wakeup from low power modes like suspend
+to RAM since the driver chosen to disable this.
+
+During suspend entry, no one re-enable/unmask in HW, even if its marked for
+wakeup.
+
+One solutions thought to address this problem was...During suspend entry at
+last point, irq chip driver re-enable/unmask IRQs in HW that are marked for
+wakeup. This was attemped in [2].
+
+This series adds alternate solution to [2] by "lazy disable" IRQs in HW.
+The genirq takes care of lazy disable in case if irqchip did not implement
+irq_disable callback. Below is high level steps on how this works out..
+
+a. During driver's disable_irq() call, IRQ will be marked disabled in SW
+b. IRQ will still be enabled(read unmasked in HW)
+c. The device then enters low power mode like suspend to RAM
+d. The HW detects unmasked IRQs and wakesup the CPU
+e. During resume after local_irq_enable() CPU goes to handle the wake IRQ
+f. Generic handler comes to know that IRQ is disabled in SW
+g. Generic handler marks IRQ as pending and now invokes mask callback
+h. IRQ gets disabled/masked in HW now
+i. When driver invokes enable_irq() the SW pending IRQ leads IRQ's handler
+j. enable_irq() will again enable/unmask in HW
+
+[1] https://www.spinics.net/lists/kernel/msg3398294.html
+[2] https://patchwork.kernel.org/patch/11466021/
+
+Maulik Shah (6):
+  pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED and IRQCHIP_MASK_ON_SUSPEND
+    flags
+  pinctrl: qcom: Use return value from irq_set_wake() call
+  genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  pinctrl: qcom: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  irqchip: qcom-pdc: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  irqchip: qcom-pdc: Reset PDC interrupts during init
+
+ drivers/irqchip/qcom-pdc.c         | 14 +++++++++++--
+ drivers/pinctrl/qcom/pinctrl-msm.c | 11 +++++-----
+ include/linux/irq.h                | 41 ++++++++++++++++++++------------------
+ kernel/irq/debugfs.c               |  1 +
+ kernel/irq/pm.c                    |  7 ++++++-
+ 5 files changed, 47 insertions(+), 27 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
