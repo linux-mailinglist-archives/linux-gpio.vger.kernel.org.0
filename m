@@ -2,101 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC35F24E8F3
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Aug 2020 18:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D28C24EC50
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 Aug 2020 11:00:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgHVQ7J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Aug 2020 12:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35196 "EHLO
+        id S1728676AbgHWJAH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Aug 2020 05:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgHVQ7I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Aug 2020 12:59:08 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF09C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Aug 2020 09:59:06 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id z18so4013881otk.6
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Aug 2020 09:59:06 -0700 (PDT)
+        with ESMTP id S1726964AbgHWJAF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Aug 2020 05:00:05 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E94C061573;
+        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id i14so848260lfl.12;
+        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=TH2fKdKWnordX6jygXj5QWLs6lhEqDI7sULHnAXf4nc=;
-        b=PTJHjJg9hN9CGy3UVJW/BTXbRkH8YaFkhkTHgA76HEtZpLbJ/SRxutadq66jO4Nsk8
-         Iv+T5eVFwpiT4LDuSm97JsZ1ikNGua2ygPhFKHV6DpU7f7LD2iHANoj898L6SHwpEetp
-         1Yg0CWSy1x3wJuhiNxSNFwrVRVEc3+eyO02Vy3a2fOXMZao2EGnmjDQ1CNK9VlRkwAHX
-         AFfJrHckIrkfRCnb2Ey/SdJwh3ZoSBA2qsyCTfYxHpshjSbMenjAr53W4PgnkmU2qF8C
-         Uk0f8gUzQCcUdzBGtO5zQNY7tSby/NhsCrEFYj7weMYUrjemJ9TcNmDlk9SdhC6HaGjB
-         Jnag==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
+        b=U7GWEbuIeOO0w0xHHWNMw3+dnz700u7oHf0ht6OuIzKu2f6N1+FNJx1mKR6CjN7QEh
+         K6ec2Gqjf/7eFIoVAdCcVpvzBkxhViv4eHmYoGGv6RwiruWoXl7ixk8cLIZ14Z0D2fTP
+         8ybOgvh+oM3pTdfNzyVA8qmQQUwTlfqqNr4bPb80vX89xRpZPABcMon6RoLW4+qC4suA
+         dpoc4FEW8DhNxzU5AaiMJLu5zde6psMDxeu9mn2/dT5FU9IRMl8L7klE2eocKGAYqgLU
+         C39jNV1Zj63jBl/n1LyKxysBseR8xNgQntbTCsbVpdKR6SI+pC/gqb7XNV+zXY3V/1Ra
+         hIZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=TH2fKdKWnordX6jygXj5QWLs6lhEqDI7sULHnAXf4nc=;
-        b=igKopVNHOfI11ySnAbFWr/QS7dXnSjR8Wq/W3XlG1mi39bTmF1WyN9733QjbaReVe0
-         sWUWnExJjh/W230lBX41c/074AWZl/hqNBJxBoHf8p5JjI+mxMXPWLcwIE7DEHsgLdE3
-         J+CThfd3tLfI/O+gDe+TPXstBP5bjN+4nAVWTly2XLZkjvg9IRtOvII6y/UDb4gEVft4
-         ht/erEzeiqPBsCKznqCDV+C3fEAcTZzdZYgvjqc9KNThI7BTXMrWoLfR9zqPXoNYUNaV
-         JTkJEXUJqGjLsHF1o6+aoTDAkcMFmy7b8ScCRvtZbBWc/yU1bX4XYDeoeYlexg4RCfEY
-         Oecw==
-X-Gm-Message-State: AOAM530i6ieerv97AQN32Gi0YsU7sPabUxrDw75V6N1L448uxEB+RcB/
-        aEQ7LdU/yuYP0hmbrpGNLEB4ripCIY4PAFalvaE=
-X-Google-Smtp-Source: ABdhPJwCq5xjChk0LMlY9iOvPcgEdvneQMzHZhjr3C3WJ3W8ibKs2+6MgGCiYTk7u3yljJ+6YszDWVt06LhxVJwUFD0=
-X-Received: by 2002:a05:6830:1e15:: with SMTP id s21mr5719077otr.204.1598115546160;
- Sat, 22 Aug 2020 09:59:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
+        b=XDnPd6G8Mx0v3E+kTuHlLaXzoFcixENQKdbT1sHMtOFgWSh01X18TDC2Ye4AVW1ywC
+         XFuIpdQ9MLqiRjy7wOGeJqUG0Uboy5O4zsvs975tST7BxE07+6gkswGpiC6+X2qy2VFH
+         p6hx/LabX9wfOEpLyG0RT5qKcz5lY3iV2TUKr4/mOOseNxEssXeGoONUf5sXWlfnAMbd
+         PL4I8an7Qx27y1FbDCxS/G3+J+SX6jmP7lgLRSji1Bh067yQ5UjBF/UHiQ1LlDjsggQK
+         vEcmNxYC3UiWpHF1LJhDgspswWol/Xn4r4Ld3OExJ4YjxW+GWTeDUwuez4VziJlw/JvJ
+         MmfQ==
+X-Gm-Message-State: AOAM530d0q1l/hMt4er+WjjofRvC0pWZpBFFRkJtl34E4Q9huuE5RW6k
+        DU9CO9ZgmmFnae8nlerjchzDcgVFVgkeg10w
+X-Google-Smtp-Source: ABdhPJzMdOPdz1GhTaMiiqCx7dIoBnM1kFz9bqv0bvdaqscSYZt40TyrCvd1FoT2ZsXF9zNrGbX7MA==
+X-Received: by 2002:a19:843:: with SMTP id 64mr305637lfi.156.1598173203065;
+        Sun, 23 Aug 2020 02:00:03 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7? ([2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7])
+        by smtp.gmail.com with ESMTPSA id o24sm1459226ljg.69.2020.08.23.02.00.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 02:00:02 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
+ controller node name
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200821111127.3771-1-geert+renesas@glider.be>
+ <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+ <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <b270e095-441c-bef3-f841-4bb24d31c646@gmail.com>
+Date:   Sun, 23 Aug 2020 12:00:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Received: by 2002:a4a:de52:0:0:0:0:0 with HTTP; Sat, 22 Aug 2020 09:59:05
- -0700 (PDT)
-Reply-To: mrwaleedmazin11@gmail.com
-From:   Mr Waleed Mazin <anissahelou01@gmail.com>
-Date:   Sat, 22 Aug 2020 09:59:05 -0700
-Message-ID: <CALTR6pCUGt8i1vS24KRPHdQ302p5LkLZnAowWVTNGXim-qHy=w@mail.gmail.com>
-Subject: URGENT RESPOND PLEASE
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I NEED YOUR URGENT RESPOND PLEASE
+On 21.08.2020 20:41, Geert Uytterhoeven wrote:
 
-My name is Mr Waleed Mazin . I have decided to seek a confidential
-co-operation with you in the execution of the deal described
-here-under for our both mutual benefit and I hope you will keep it a
-top secret because of the nature of the transaction, During the course
-of our bank year auditing, I discovered an unclaimed/abandoned fund,
-sum total of {US$19.3 Million United State Dollars} in the bank
-account that belongs to a Saudi Arabia businessman Who unfortunately
-lost his life and entire family in a Motor Accident.
+>> On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
+>>> According to Devicetree Specification v0.2 and later, Section "Generic
+>>> Names Recommendation", the node name for a pin controller device node
+>>> should be "pinctrl".
+>>
+>>     Ugh, what a lame name! :-(
+>>     And they say DT should be OS agnostic...
+>>
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>>     I think more DTs have "pin-controler".
+> 
+> I was surprised to discover the opposite, too:
+> 
+> $ git grep "\<pinctrl@" v5.9-rc1 | wc -l
+> 335
+> $ git grep "\<pin-controller@" v5.9-rc1 | wc -l
+> 102
 
-Now our bank has been waiting for any of the relatives to come-up for
-the claim but nobody has done that. I personally has been unsuccessful
-in locating any of the relatives, now, I sincerely seek your consent
-to present you as the next of kin / Will Beneficiary to the deceased
-so that the proceeds of this account valued at {US$19.Million United
-State Dollars} can be paid to you, which we will share in these
-percentages ratio, 60% to me and 40% to you. All I request is your
-utmost sincere co-operation; trust and maximum confidentiality to
-achieve this project successfully. I have carefully mapped out the
-moralities for execution of this transaction under a legitimate
-arrangement to protect you from any breach of the law both in your
-country and here in Burkina Faso when the fund is being transferred to
-your bank account.
+    Sorry, I was probably thinking that I was replying to a DT patch, not the 
+bindings patch, hence this comment (it only meant Renesas DTs). It doesn't 
+really surprise me that more DTs overall have "pinctrl", sigh...
 
-I will have to provide all the relevant document that will be
-requested to indicate that you are the rightful beneficiary of this
-legacy and our bank will release the fund to you without any further
-delay, upon your consideration and acceptance of this offer, please
-send me the following information as stated below so we can proceed
-and get this fund transferred to your designated bank account
-immediately.
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
 
--Your Full Name:
--Your Contact Address:
--Your direct Mobile telephone Number:
--Your Date of Birth:
--Your occupation:
-
-I await your swift response and re-assurance.
-
-Best regards,
-Mr Waleed Mazin
+MBR, Sergei
