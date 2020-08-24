@@ -2,52 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8341B24FD8E
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 14:16:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68EA124FDE0
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 14:32:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgHXMQE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Aug 2020 08:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXMQE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Aug 2020 08:16:04 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D42DC061573
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Aug 2020 05:16:04 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id si26so11584183ejb.12
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Aug 2020 05:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=TIdKHXQfy6SgGn+KEE33EdzympBssmxR9jtnRnXHy74=;
-        b=tzr8yzqRDVNtGah/CrNBv2yD4mG5qvAcpVUen0VbGcIgU98M9YccPsXnzgOh3QKeqZ
-         37ulbEx56JP6vUaR63VZ6Of2pRPk4qZ/PqIVYqNieDq6puWb2LmRUXy8oWd4ISyBK+i/
-         F30AEnh//IEWTCDrosGz0uYtcPV35kxPO2N1p5ZbPwwXBCb401qz7iEW3I1Tr0Qr2zrR
-         8GqPjcp15LiCmSJbsq6pXFoFIIyUTemgop3SOBggqHHl04XqI9thze2ICDNfLJz1bWUc
-         lKv60O0YtrP4iALThl49o4hJalMCQuce5HynTiKJEKm33q/N4qEbyILwTuVu+2OQEJaD
-         npVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=TIdKHXQfy6SgGn+KEE33EdzympBssmxR9jtnRnXHy74=;
-        b=aONsmDpIB7sk4SZnAWw7u5v15XTYvzWlGLf+wRJZr1KItcVwwtNZZOyDnNfZAcevU1
-         +9rN+uDf6X2qsHrUNKVutyEAIar/o3g2lU2FhIGFmdqBbSHve8k+0u2vYqub6JLT+YC8
-         PniZqPCBMT98cnaZ2CNOIkbofMAfRQb307SAZNUnuBuXgSln3sVvgp8NPg9/YfMcDuf8
-         ZdcTki8a9n1fmWpqFEpDGayMnthy94ag9vxjBTrU2HaxYREzLNmmZjnPtRPzQI32HG9f
-         Yn6Z0O24PtgYlw7jnAPCsLYhOROuV8j1BG0rXISP428QyuB5PNHyEv56qEaFQYnRM2uD
-         HNuw==
-X-Gm-Message-State: AOAM531pw94hOl5L1eafcE4cI/eXuUJw3RCt1ALVPf2fjUEhXqQWNaS9
-        CftOCsPdcLsDgfpWrsmbie7qqPBzkg4GH+jjuasJ1cMA
-X-Google-Smtp-Source: ABdhPJzlsfZs1iF3q+Si5/CZKYaTfT7WjY8UtiJiqlESpsQRrjJ7uVLuJgw6o8dsBRZ7ajRmwNuO6pmg40A8Nc7Iivs=
-X-Received: by 2002:a17:906:19d5:: with SMTP id h21mr5181735ejd.505.1598271362738;
- Mon, 24 Aug 2020 05:16:02 -0700 (PDT)
+        id S1726950AbgHXMcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Aug 2020 08:32:12 -0400
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:48302 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgHXMbK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Aug 2020 08:31:10 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 07OCUFCW008407; Mon, 24 Aug 2020 21:30:15 +0900
+X-Iguazu-Qid: 34tKqQuZ1Z6XOyg01R
+X-Iguazu-QSIG: v=2; s=0; t=1598272214; q=34tKqQuZ1Z6XOyg01R; m=0DGIeiVNDYKEpxos3ryeH+4Y90hiRq1zOgB8MCzSYtU=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1511) id 07OCUDTf019981;
+        Mon, 24 Aug 2020 21:30:13 +0900
+Received: from enc03.toshiba.co.jp ([106.186.93.13])
+        by imx2.toshiba.co.jp  with ESMTP id 07OCUCOT027301;
+        Mon, 24 Aug 2020 21:30:12 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc03.toshiba.co.jp  with ESMTP id 07OCUCbA016568;
+        Mon, 24 Aug 2020 21:30:12 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <maz@misterjones.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v2 0/8] Add Toshiba Visconti ARM64 Platform support
+Date:   Mon, 24 Aug 2020 21:29:49 +0900
+X-TSB-HOP: ON
+Message-Id: <20200824122957.1392870-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-From:   Belisko Marek <marek.belisko@gmail.com>
-Date:   Mon, 24 Aug 2020 14:15:52 +0200
-Message-ID: <CAAfyv34GFWhbjwg-jtnYr5XpjfXJnguDZFDd5_jc4cJboUMUEQ@mail.gmail.com>
-Subject: looking for recent headers in different path in configure
-To:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -55,25 +47,104 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-I'm using libgopid in yocto build system. I'm using kernel 5.6 and
-would like to compile 1.5.1 libgpiod release. I have an issue that
-configure phase fails that kernel headers <= 5.5. it's due totthe fact
-that libc in yocto is compiled with 4.19 but I would like to use
-headers from my kernel 5.6. Is there some easy way to tell configure
-phase to search headers in some other directory?
+Visconti is a series of Toshiba's SoCs targeting image processing
+applications[0]. These set of patches adds support for Visconti5 a Arm
+v8 based SoC.
 
-Thanks and regards,
+The series add minimal support for the Visconti5 SoC and the TMPV7708 RM
+main board. Peripherals such as UART, SPI, I2c and timer use Arm's
+IP and work with the existing kernel drivers in the tree. The series
+includes a pinctrl driver to select appropriate functions on the pins.
 
-marek
+NOTE: Because Visconti5 does not have PSCI, it uses spin-table with enable-method.
+      And this patch series does not include a clock framework, so it is a
+      device-tree file that uses clocks with fixed-clock. This will be replaced by
+      the clock driver in the future.
+
+[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
+
+dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
+  v1 -> v2:
+    - Fix warning by make dt_binding_check.
+    - Use '-pins$' instead of ''^.*$':''.
+    - Remove if/then.
+    - Add $ref to the common pinctrl schemas.
+
+pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
+  v1 -> v2:
+    - No update
+
+dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
+  v1 -> v2:
+    - No update
+
+dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
+  v1 -> v2:
+    - No update
+
+arm64: visconti: Add initial support for Toshiba Visconti platform
+  v1 -> v2:
+    - No update
+
+arm64: dts: visconti: Add device tree for TMPV7708 RM main board
+  v1 -> v2:
+    - Remove always-on property from timer.
+    - Add interrputs for GIC.
+    - Remove bootargs from chosen.
+      stdout-path is not deleted because the boot loader cannot handle it.
+      It will be removed in the future.
+    - Update dtsi for using new binding of pinctrl.
+
+MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
+  v1 -> v2:
+    - No update
+
+arm64: defconfig: Enable configs for Toshiba Visconti    
+  v1 -> v2:
+    - No update
+
+--
+
+Nobuhiro Iwamatsu (8):
+  dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
+  pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
+  dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
+  dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
+  arm64: visconti: Add initial support for Toshiba Visconti platform
+  arm64: dts: visconti: Add device tree for TMPV7708 RM main board
+  MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
+  arm64: defconfig: Enable configs for Toshiba Visconti
+
+ .../devicetree/bindings/arm/toshiba.yaml      |  22 +
+ .../pinctrl/toshiba,visconti-pinctrl.yaml     |  92 +++++
+ MAINTAINERS                                   |  11 +
+ arch/arm64/Kconfig.platforms                  |   7 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/toshiba/Makefile          |   2 +
+ .../boot/dts/toshiba/tmpv7708-rm-mbrc.dts     |  43 ++
+ arch/arm64/boot/dts/toshiba/tmpv7708.dtsi     | 390 ++++++++++++++++++
+ .../arm64/boot/dts/toshiba/tmpv7708_pins.dtsi |  93 +++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/pinctrl/Kconfig                       |   1 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/visconti/Kconfig              |  14 +
+ drivers/pinctrl/visconti/Makefile             |   3 +
+ drivers/pinctrl/visconti/pinctrl-common.c     | 320 ++++++++++++++
+ drivers/pinctrl/visconti/pinctrl-common.h     |  96 +++++
+ drivers/pinctrl/visconti/pinctrl-tmpv7700.c   | 355 ++++++++++++++++
+ 17 files changed, 1452 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/toshiba.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/toshiba/Makefile
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708_pins.dtsi
+ create mode 100644 drivers/pinctrl/visconti/Kconfig
+ create mode 100644 drivers/pinctrl/visconti/Makefile
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-common.c
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-common.h
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-tmpv7700.c
 
 -- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
+2.27.0
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
