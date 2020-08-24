@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C187925026A
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 18:31:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D947250260
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 18:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgHXQbp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Aug 2020 12:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
+        id S1728209AbgHXQar (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Aug 2020 12:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbgHXQ2Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:28:16 -0400
+        id S1728050AbgHXQ2n (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:28:43 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3037A2074D;
-        Mon, 24 Aug 2020 16:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D143F2072D;
+        Mon, 24 Aug 2020 16:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286495;
-        bh=D0lGql3068l0qoya1++oR3DiMvBwPOUE4frjDG+x5vE=;
+        s=default; t=1598286522;
+        bh=VqDD3KFuiRD86Z7+w0i17rgKkKCPFxI1DEBp8fL8MEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFNO5DdkEiEzZ/CI+2ciB/9994joymxRDDFV80yw9eyP9da5eItooQLa42+hABTXX
-         rvJ1Z4+jH5dpazhjihHiJN+0JgvVCBxCNPMqi8bYa6CXdeoz741ZrpAkZUnrkAzU+W
-         7jG1Ex7uw8jDCBFUndsBneeOxMmYKI9I9sOMWInE=
+        b=GmBhqPsTaqTMpuCWp3N5a8nZCNSG1bp3MFzm8cE3550C8EWaKLl6jaeLKN7wcT+ZI
+         wwcY6+Sq7GY0eSzM1utr8okE4/6QxbQOnXozS58RESNT6KV0pwwU0YtrF4NTDYeYAP
+         HjvQJJ6Aww5qZxclKiV/B3vKIeAHyQcI/mrNFpTc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -50,9 +50,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 09/19] dt-bindings: mtd: gpmi-nand: Add i.MX 8M compatibles
-Date:   Mon, 24 Aug 2020 18:26:42 +0200
-Message-Id: <20200824162652.21047-9-krzk@kernel.org>
+Subject: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
+Date:   Mon, 24 Aug 2020 18:26:46 +0200
+Message-Id: <20200824162652.21047-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824162652.21047-1-krzk@kernel.org>
 References: <20200824162652.21047-1-krzk@kernel.org>
@@ -61,53 +61,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-to fix dtbs_check warnings like:
+DTSes with new i.MX 8M SoCs use two compatibles so update the binding to
+fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible:0: 'fsl,imx8mm-gpmi-nand' is not one of ['fsl,imx23-gpmi-nand', 'fsl,imx28-gpmi-nand', 'fsl,imx6q-gpmi-nand', 'fsl,imx6sx-gpmi-nand', 'fsl,imx7d-gpmi-nand']
-    From schema: Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000: compatible:1: 'syscon' was expected
+    From schema: Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible: ['fsl,imx8mm-gpmi-nand', 'fsl,imx7d-gpmi-nand'] is too long
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+    compatible: ['fsl,imx8mn-ocotp', 'fsl,imx8mm-ocotp', 'syscon'] is too long
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible: Additional items are not allowed ('fsl,imx7d-gpmi-nand' was unexpected)
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+    compatible: Additional items are not allowed ('syscon' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/mtd/gpmi-nand.yaml     | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 39 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-index 3201372b7f85..28ff8c581837 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-@@ -20,12 +20,18 @@ description: |
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+index 1c9d7f05f173..b5b250185afd 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+@@ -19,21 +19,30 @@ allOf:
  
  properties:
    compatible:
--    enum:
--      - fsl,imx23-gpmi-nand
--      - fsl,imx28-gpmi-nand
--      - fsl,imx6q-gpmi-nand
--      - fsl,imx6sx-gpmi-nand
--      - fsl,imx7d-gpmi-nand
+-    items:
+-      - enum:
+-          - fsl,imx6q-ocotp
+-          - fsl,imx6sl-ocotp
+-          - fsl,imx6sx-ocotp
+-          - fsl,imx6ul-ocotp
+-          - fsl,imx6ull-ocotp
+-          - fsl,imx7d-ocotp
+-          - fsl,imx6sll-ocotp
+-          - fsl,imx7ulp-ocotp
+-          - fsl,imx8mq-ocotp
+-          - fsl,imx8mm-ocotp
+-          - fsl,imx8mn-ocotp
+-          - fsl,imx8mp-ocotp
+-      - const: syscon
 +    oneOf:
-+      - enum:
-+          - fsl,imx23-gpmi-nand
-+          - fsl,imx28-gpmi-nand
-+          - fsl,imx6q-gpmi-nand
-+          - fsl,imx6sx-gpmi-nand
-+          - fsl,imx7d-gpmi-nand
 +      - items:
 +          - enum:
-+              - fsl,imx8mm-gpmi-nand
-+              - fsl,imx8mn-gpmi-nand
-+          - const: fsl,imx7d-gpmi-nand
++              - fsl,imx6q-ocotp
++              - fsl,imx6sl-ocotp
++              - fsl,imx6sx-ocotp
++              - fsl,imx6ul-ocotp
++              - fsl,imx6ull-ocotp
++              - fsl,imx7d-ocotp
++              - fsl,imx6sll-ocotp
++              - fsl,imx7ulp-ocotp
++              - fsl,imx8mq-ocotp
++              - fsl,imx8mm-ocotp
++              - fsl,imx8mn-ocotp
++              - fsl,imx8mp-ocotp
++          - const: syscon
++      - items:
++          # The devices are not really compatible with fsl,imx8mm-ocotp, however
++          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
++          - enum:
++              - fsl,imx8mn-ocotp
++              - fsl,imx8mp-ocotp
++          - const: fsl,imx8mm-ocotp
++          - const: syscon
  
    reg:
-     items:
+     maxItems: 1
 -- 
 2.17.1
 
