@@ -2,142 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2F324F2EC
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 09:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A7FF24F346
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 09:44:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgHXHHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Aug 2020 03:07:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40907 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgHXHHK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Aug 2020 03:07:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k20so7114138wmi.5;
-        Mon, 24 Aug 2020 00:07:07 -0700 (PDT)
+        id S1726086AbgHXHow (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Aug 2020 03:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXHow (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Aug 2020 03:44:52 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EA5C061573;
+        Mon, 24 Aug 2020 00:44:51 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id j25so1436668ejk.9;
+        Mon, 24 Aug 2020 00:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WASiI+LGr+j54QgtHqz/Mb0c0vmWaC6GIOI+FQCQgEU=;
+        b=FmOKuFJxRGkxqHGOeaKpU20R1LskNofQqIBJmR8sT/FOg3eUyRjZLBGxKVhFXmyNtC
+         JMPjru8Om1g07nuLMeqXyPbbyVsQ6y8V79MA586PN6L+QbfAnPZSzrLz9E8H28a4C24j
+         DFYwa+q0+FCYQg30u0hU1Cf6w+0UOidt7K1YRE0Oxkmg6PArZq9phRt0NeSaScdKnz3L
+         Gpv+3Sc/clb3l72Mu+FlOK/Egrp3PWaU73eIfnqSJyF4si9e5Dp31PYS7c6x5I+mlBMG
+         i7mAEdQpCWOrcQ4YNg7o6mj48l+PT3e6Yf0U71prmYmilIRbfyIEqnTCAEc6Z9MkqfKz
+         b/4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jMkESQ6/qDeh8yFOp5ut20DDKvKP8Egt8HrPQWgV3hI=;
-        b=qO1tdIinoFPIXWPm5/19KfBpyFAwq8uKSg7EQU1L8V6ovQx9nJWVqyn3VV5ax8kBxQ
-         pbVqTRVoiDADr0KvqztcBve3TkrN3Fl9lFP1UXt+MjKM+BULUR6gOD7v2Zhusjq4JE6W
-         PzNQzwmCMMpsOIyNMIOA0r7/IZ6GjQyzxV8g4uEdQmkom9Zl5Wc4naHb4zWQicafXGE+
-         ZBZfmBbEr3kyOvrivi2+KJJN9VY4xshpgyieT9qL2aC/lW3Zdm8z3E7U62EPJScgJYHS
-         rZDR3h+FNeOgElnSHLwSH/Qkfq6sJmMvHVFSA1T6JeHKf6x2mv2hDTBPb4P6UFBtA1J4
-         dwpg==
-X-Gm-Message-State: AOAM530XgyTPKsoaliYNEw6PrdoDEeX2dCtCpr8HI1/B5ZGAHNi9rttZ
-        zxzwkG2bBffmUngDYt1gm9g=
-X-Google-Smtp-Source: ABdhPJyU61NszbES0k6p1PAHajV48Erw/hGcjANLVNAFBKqGCzpj1Y19Wb9rD9qlokEO4JMhFKYb8w==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr4297940wmj.137.1598252826663;
-        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m1sm21788437wmc.28.2020.08.24.00.07.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 09:07:03 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: Re: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges
- property
-Message-ID: <20200824070703.GA5382@kozik-lap>
-References: <20200823161550.3981-1-krzk@kernel.org>
- <20200823161550.3981-2-krzk@kernel.org>
- <20200824052446.GE13023@pengutronix.de>
- <20200824063806.GA2497@kozik-lap>
- <20200824065801.GH13023@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WASiI+LGr+j54QgtHqz/Mb0c0vmWaC6GIOI+FQCQgEU=;
+        b=F/lxFFLOIEldgbZ92hwZcGSLAKxVOvmg5Hhu+S2YlcZ53zPWyGn/lahE7YCf22926X
+         cVvxo8wis/eXHX3ifD5r5Hx5y265b0cF9k9pFNepEPc7W41lmjBmEzOJX3Wra0UIyKVx
+         wRgFGgGvPNOpzZh/6dGRpyPIEddrOBqA2HoBs+g+8fI8b9b5H88884W/so+DgLWOCz7e
+         MViMBiFAMbgRaw0xtuaiuvJI5Taijvhye58Kz+Z92It6D9p3Mu8d11Uv/q5CzQ0ltwp+
+         RNqbrYG6cNGLSaNIShJbvTbskoCao+ux0Vvsue9oy6kNPbCfVvwquWPbzVmUAqRz+g+9
+         CknQ==
+X-Gm-Message-State: AOAM530lsqnGdaZkPJjrNrTqq5VicmB7UJC4+MOGiyqvPUjLXO8JsJLK
+        ev8GRF9Fyc2IjDDEnrp0C8xcdYIZOmZr0QA5nFs=
+X-Google-Smtp-Source: ABdhPJz3o/rSw7xjX+X7g4OBQlKl6NUWeb3EBCeMkgDFNZbGW7KExWm+ZDQrLuSd5piSgmhenUlhCdM17RM5RyhEMbg=
+X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr4645772ejw.170.1598255090240;
+ Mon, 24 Aug 2020 00:44:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824065801.GH13023@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1595572867.git.frank@allwinnertech.com> <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+In-Reply-To: <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Mon, 24 Aug 2020 15:44:39 +0800
+Message-ID: <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:58:01AM +0200, Sascha Hauer wrote:
-> On Mon, Aug 24, 2020 at 08:38:06AM +0200, Krzysztof Kozlowski wrote:
-> > On Mon, Aug 24, 2020 at 07:24:46AM +0200, Sascha Hauer wrote:
-> > > On Sun, Aug 23, 2020 at 06:15:30PM +0200, Krzysztof Kozlowski wrote:
-> > > > The GPIO controller node can have gpio-ranges property.  This fixes
-> > > > dtbs_check warnings like:
-> > > > 
-> > > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
-> > > >     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > index 454db20c2d1a..1fac69573bb9 100644
-> > > > --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > @@ -51,6 +51,9 @@ properties:
-> > > >  
-> > > >    gpio-controller: true
-> > > >  
-> > > > +  gpio-ranges:
-> > > > +    maxItems: 1
-> > > > +
-> > > >  required:
-> > > >    - compatible
-> > > >    - reg
-> > > > @@ -62,6 +65,18 @@ required:
-> > > >  
-> > > >  additionalProperties: false
-> > > >  
-> > > > +allOf:
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        compatible:
-> > > > +          contains:
-> > > > +            const: fsl,imx8mp-gpio
-> > > > +    then:
-> > > > +      properties:
-> > > > +        gpio-ranges:
-> > > > +          minItems: 1
-> > > > +          maxItems: 2
-> > > 
-> > > Why do you limit this to fsl,imx8mp-gpio? The i.MX5,6,7 dtsi files use
-> > > gpio-ranges as well and other i.MX dtsi files could also use it.
-> > 
-> > All other cases use maximum one element in gpio-ranges, so they are
-> > covered so I assumed they are continuous. But if it not the case, I can
-> > make all them maximum 2.
-> 
-> I misread this, I thought you allow gpio-ranges only for imx8mp, but
-> it's only the maxItems you set differently for that SoC. Anyway,
-> arch/arm/boot/dts/imx6dl.dtsi has this:
-> 
-> &gpio1 {
->         gpio-ranges = <&iomuxc  0 131 2>, <&iomuxc  2 137 8>, <&iomuxc 10 189 2>,
->                       <&iomuxc 12 194 1>, <&iomuxc 13 193 1>, <&iomuxc 14 192 1>,
->                       <&iomuxc 15 191 1>, <&iomuxc 16 185 2>, <&iomuxc 18 184 1>,
->                       <&iomuxc 19 187 1>, <&iomuxc 20 183 1>, <&iomuxc 21 188 1>,
->                       <&iomuxc 22 123 3>, <&iomuxc 25 121 1>, <&iomuxc 26 127 1>,
->                       <&iomuxc 27 126 1>, <&iomuxc 28 128 1>, <&iomuxc 29 130 1>,
->                       <&iomuxc 30 129 1>, <&iomuxc 31 122 1>;
-> };
-> 
-> I don't think it makes sense to specify maxItems.
-
-Indeed, I will skip the max limit.
-
-Best regards,
-Krzysztof
-
+ping......
