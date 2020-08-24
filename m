@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3852D24F0A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 02:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B25324F0B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 02:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHXAF0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 Aug 2020 20:05:26 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:42143 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726737AbgHXAF0 (ORCPT
+        id S1726847AbgHXA2j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Aug 2020 20:28:39 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:32827 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726737AbgHXA2j (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 23 Aug 2020 20:05:26 -0400
-Date:   24 Aug 2020 09:05:24 +0900
+        Sun, 23 Aug 2020 20:28:39 -0400
+Date:   24 Aug 2020 09:28:37 +0900
 X-IronPort-AV: E=Sophos;i="5.76,346,1592838000"; 
-   d="scan'208";a="55089840"
+   d="scan'208";a="55308762"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 24 Aug 2020 09:05:24 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 24 Aug 2020 09:28:37 +0900
 Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 50DFD411FB94;
-        Mon, 24 Aug 2020 09:05:24 +0900 (JST)
-Message-ID: <87a6ykzz9m.wl-kuninori.morimoto.gx@renesas.com>
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B60B34127DA3;
+        Mon, 24 Aug 2020 09:28:37 +0900 (JST)
+Message-ID: <877dtozy6x.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -43,22 +43,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Geert
 
-> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> >
-> > Now, Renesas Pin Control drivers are under menu,
-> > but current description are not aligned.
-> > This patch align these.
-> >
-> >         - Emma Mobile AV2 pin control support
-> 
-> Oops, that must be an old typo in the PFC subsystem => EV2 ;-)
-
-Oops, OK will adjust in v3
-
 > Note that your patch does not apply to v5.9-rc1 or my sh-pfc branch,
 > due to the addition of support for RZ/G2H.
 
-OK, will adjust in v3
+On "renesas-drivers-2020-08-18-v5.9-rc1" is enough ?
 
 
 Thank you for your help !!
