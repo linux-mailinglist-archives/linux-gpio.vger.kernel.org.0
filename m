@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7901524F11F
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 04:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F94824F121
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Aug 2020 04:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHXCaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 Aug 2020 22:30:03 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:59762 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726737AbgHXCaD (ORCPT
+        id S1727797AbgHXCaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Aug 2020 22:30:52 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:50946 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727090AbgHXCaw (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 23 Aug 2020 22:30:03 -0400
-Date:   24 Aug 2020 11:30:02 +0900
+        Sun, 23 Aug 2020 22:30:52 -0400
+Date:   24 Aug 2020 11:30:51 +0900
 X-IronPort-AV: E=Sophos;i="5.76,347,1592838000"; 
-   d="scan'208";a="55107487"
+   d="scan'208";a="55324298"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 24 Aug 2020 11:30:02 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 24 Aug 2020 11:30:51 +0900
 Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3721B4001DB8;
-        Mon, 24 Aug 2020 11:30:02 +0900 (JST)
-Message-ID: <87tuwsye04.wl-kuninori.morimoto.gx@renesas.com>
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6605440065BC;
+        Mon, 24 Aug 2020 11:30:51 +0900 (JST)
+Message-ID: <87sgccydyr.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v3 1/4] pinctrl: sh-pfc: tidyup Emma Mobile EV2
+Subject: [PATCH v3 2/4] pinctrl: sh-pfc: collect Renesas related CONFIGs in one place
 User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>
@@ -36,31 +36,171 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-It is "Emma Mobile EV2", not "AV2".
-This patch tidyup it.
+Renesas related pinctrl CONFIGs are located many places,
+and it is confusable.
+This patch collects these into same place,
+and group into "Renesas pinctrl drivers" menu.
+This patch also moves pinctrl-rz{a1,a2,n1}.c into sh-pfc folder.
 
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/sh-pfc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/Kconfig                     | 32 ------------------
+ drivers/pinctrl/Makefile                    |  3 --
+ drivers/pinctrl/sh-pfc/Kconfig              | 36 +++++++++++++++++++++
+ drivers/pinctrl/sh-pfc/Makefile             |  4 +++
+ drivers/pinctrl/{ => sh-pfc}/pinctrl-rza1.c |  0
+ drivers/pinctrl/{ => sh-pfc}/pinctrl-rza2.c |  0
+ drivers/pinctrl/{ => sh-pfc}/pinctrl-rzn1.c |  0
+ 7 files changed, 40 insertions(+), 35 deletions(-)
+ rename drivers/pinctrl/{ => sh-pfc}/pinctrl-rza1.c (100%)
+ rename drivers/pinctrl/{ => sh-pfc}/pinctrl-rza2.c (100%)
+ rename drivers/pinctrl/{ => sh-pfc}/pinctrl-rzn1.c (100%)
 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 8828613c4e0e..f63c5a04a3f7 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -213,38 +213,6 @@ config PINCTRL_ROCKCHIP
+ 	select GENERIC_IRQ_CHIP
+ 	select MFD_SYSCON
+ 
+-config PINCTRL_RZA1
+-	bool "Renesas RZ/A1 gpio and pinctrl driver"
+-	depends on OF
+-	depends on ARCH_R7S72100 || COMPILE_TEST
+-	select GPIOLIB
+-	select GENERIC_PINCTRL_GROUPS
+-	select GENERIC_PINMUX_FUNCTIONS
+-	select GENERIC_PINCONF
+-	help
+-	  This selects pinctrl driver for Renesas RZ/A1 platforms.
+-
+-config PINCTRL_RZA2
+-	bool "Renesas RZ/A2 gpio and pinctrl driver"
+-	depends on OF
+-	depends on ARCH_R7S9210 || COMPILE_TEST
+-	select GPIOLIB
+-	select GENERIC_PINCTRL_GROUPS
+-	select GENERIC_PINMUX_FUNCTIONS
+-	select GENERIC_PINCONF
+-	help
+-	  This selects GPIO and pinctrl driver for Renesas RZ/A2 platforms.
+-
+-config PINCTRL_RZN1
+-	bool "Renesas RZ/N1 pinctrl driver"
+-	depends on OF
+-	depends on ARCH_RZN1 || COMPILE_TEST
+-	select GENERIC_PINCTRL_GROUPS
+-	select GENERIC_PINMUX_FUNCTIONS
+-	select GENERIC_PINCONF
+-	help
+-	  This selects pinctrl driver for Renesas RZ/N1 devices.
+-
+ config PINCTRL_SINGLE
+ 	tristate "One-register-per-pin type device tree based pinctrl driver"
+ 	depends on OF
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 1731b2154df9..1da9f28aecbd 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -30,9 +30,6 @@ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
+ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
+ obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+ obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+-obj-$(CONFIG_PINCTRL_RZA1)	+= pinctrl-rza1.o
+-obj-$(CONFIG_PINCTRL_RZA2)	+= pinctrl-rza2.o
+-obj-$(CONFIG_PINCTRL_RZN1)	+= pinctrl-rzn1.o
+ obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
+ obj-$(CONFIG_PINCTRL_SIRF)	+= sirf/
+ obj-$(CONFIG_PINCTRL_SX150X)	+= pinctrl-sx150x.o
 diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
-index 7fdc7ed8bd2e..8b2b1e1a9047 100644
+index 8b2b1e1a9047..ff10bb2ed497 100644
 --- a/drivers/pinctrl/sh-pfc/Kconfig
 +++ b/drivers/pinctrl/sh-pfc/Kconfig
-@@ -66,7 +66,7 @@ config PINCTRL_SH_FUNC_GPIO
- 	  This enables legacy function GPIOs for SH platforms
+@@ -3,6 +3,8 @@
+ # Renesas SH and SH Mobile PINCTRL drivers
+ #
  
- config PINCTRL_PFC_EMEV2
--	bool "Emma Mobile AV2 pin control support" if COMPILE_TEST
-+	bool "Emma Mobile EV2 pin control support" if COMPILE_TEST
++menu "Renesas pinctrl drivers"
++
+ config PINCTRL_SH_PFC
+ 	bool "Renesas SoC pin control support" if COMPILE_TEST && !(ARCH_RENESAS || SUPERH)
+ 	default y if ARCH_RENESAS || SUPERH
+@@ -53,6 +55,38 @@ config PINCTRL_SH_PFC
+ 	help
+ 	  This enables pin control drivers for Renesas SuperH and ARM platforms
  
- config PINCTRL_PFC_R8A73A4
- 	bool "R-Mobile APE6 pin control support" if COMPILE_TEST
++config PINCTRL_RZA1
++	bool "RZ/A1 gpio and pinctrl driver"
++	depends on OF
++	depends on ARCH_R7S72100 || COMPILE_TEST
++	select GPIOLIB
++	select GENERIC_PINCTRL_GROUPS
++	select GENERIC_PINMUX_FUNCTIONS
++	select GENERIC_PINCONF
++	help
++	  This selects pinctrl driver for Renesas RZ/A1 platforms.
++
++config PINCTRL_RZA2
++	bool "RZ/A2 gpio and pinctrl driver"
++	depends on OF
++	depends on ARCH_R7S9210 || COMPILE_TEST
++	select GPIOLIB
++	select GENERIC_PINCTRL_GROUPS
++	select GENERIC_PINMUX_FUNCTIONS
++	select GENERIC_PINCONF
++	help
++	  This selects GPIO and pinctrl driver for Renesas RZ/A2 platforms.
++
++config PINCTRL_RZN1
++	bool "RZ/N1 pinctrl driver"
++	depends on OF
++	depends on ARCH_RZN1 || COMPILE_TEST
++	select GENERIC_PINCTRL_GROUPS
++	select GENERIC_PINMUX_FUNCTIONS
++	select GENERIC_PINCONF
++	help
++	  This selects pinctrl driver for Renesas RZ/N1 devices.
++
+ config PINCTRL_SH_PFC_GPIO
+ 	select GPIOLIB
+ 	bool
+@@ -203,3 +237,5 @@ config PINCTRL_PFC_SH7786
+ config PINCTRL_PFC_SHX3
+ 	bool "SH-X3 pin control support" if COMPILE_TEST
+ 	select PINCTRL_SH_FUNC_GPIO
++
++endmenu
+diff --git a/drivers/pinctrl/sh-pfc/Makefile b/drivers/pinctrl/sh-pfc/Makefile
+index 7bb99187cd8e..0b5640cf457b 100644
+--- a/drivers/pinctrl/sh-pfc/Makefile
++++ b/drivers/pinctrl/sh-pfc/Makefile
+@@ -43,6 +43,10 @@ obj-$(CONFIG_PINCTRL_PFC_SH7785)	+= pfc-sh7785.o
+ obj-$(CONFIG_PINCTRL_PFC_SH7786)	+= pfc-sh7786.o
+ obj-$(CONFIG_PINCTRL_PFC_SHX3)		+= pfc-shx3.o
+ 
++obj-$(CONFIG_PINCTRL_RZA1)	+= pinctrl-rza1.o
++obj-$(CONFIG_PINCTRL_RZA2)	+= pinctrl-rza2.o
++obj-$(CONFIG_PINCTRL_RZN1)	+= pinctrl-rzn1.o
++
+ ifeq ($(CONFIG_COMPILE_TEST),y)
+ CFLAGS_pfc-sh7203.o	+= -I$(srctree)/arch/sh/include/cpu-sh2a
+ CFLAGS_pfc-sh7264.o	+= -I$(srctree)/arch/sh/include/cpu-sh2a
+diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/sh-pfc/pinctrl-rza1.c
+similarity index 100%
+rename from drivers/pinctrl/pinctrl-rza1.c
+rename to drivers/pinctrl/sh-pfc/pinctrl-rza1.c
+diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/sh-pfc/pinctrl-rza2.c
+similarity index 100%
+rename from drivers/pinctrl/pinctrl-rza2.c
+rename to drivers/pinctrl/sh-pfc/pinctrl-rza2.c
+diff --git a/drivers/pinctrl/pinctrl-rzn1.c b/drivers/pinctrl/sh-pfc/pinctrl-rzn1.c
+similarity index 100%
+rename from drivers/pinctrl/pinctrl-rzn1.c
+rename to drivers/pinctrl/sh-pfc/pinctrl-rzn1.c
 -- 
 2.25.1
 
