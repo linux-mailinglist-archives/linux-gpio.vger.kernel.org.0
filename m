@@ -2,124 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B760E251A32
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 15:53:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01B95251ADD
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 16:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgHYNxc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 09:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
+        id S1726186AbgHYOdy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 10:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHYNx0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 09:53:26 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD6BC061757
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Aug 2020 06:53:25 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z9so2186929wmk.1
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Aug 2020 06:53:25 -0700 (PDT)
+        with ESMTP id S1726119AbgHYOdw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 10:33:52 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDEDC061574;
+        Tue, 25 Aug 2020 07:33:52 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w14so10946719eds.0;
+        Tue, 25 Aug 2020 07:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m5K7q4ntfOvCuWo9VcwV3Y8K7PEmWf/RHpOYApWqYOo=;
-        b=p6qMNMd5VglEdqFcIL1iv1XVKPRZ+sI70S8iThAOM+4AcOZuWdjDKeIKcuVwOrv97l
-         mlzPdyztvYgnW6wJDVCB3Zwj5L/YbWx44evE1cefrB4fkVlzOUNZGIK1bwBRlX34j8Vx
-         rop3HtmimD+WJ70KqcQt4D6PQzT1TvsMJ/x9dio43yiqkEcoej/f4of2ZQlmhTfC4p+n
-         WIxtyaIr6IzvFHkq73aPJzB8sua9bocWmlXJIpI7t5WUNXF+apZlgt3q1ncLtpusFoWn
-         NSctCbUnOTq51icB0I75NTaV26VnEpI1kjT4ICWIZXkbN4xEi1Hp16oDmEPe/fetgm3z
-         M2hQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=snlphi07wh4k/ZlUaJslE4TyIoIQObGzwbf9XX6F2gE=;
+        b=Yib2xjtHWS6lTKiBsjvnNXsReEzjfZVtw8/EwFP8xLdicuKIdlC/bBKg51YNgybwiZ
+         syolwh8bHUh28zU7K8ODoZAFomyP3u17/yLPZOwUBlNv6oPyLQky89ooypA/2nDysCDd
+         yxOQxQhut8w/LCblVhcjoCA/vC6NW31bkXhS/x7cQr73x3nUfeGSK1Loh4y8P0wzAQZw
+         +owTO9Gz2EDGvv2yuzvGrned4KI1Q/NMIJNn7XjFykpUMHD6Ed6K/Lj+Jd73e05drfdz
+         k31ptJ0uEbhqzXJZfuxD1iAHd/IbDvqO2TuHy+rrr9/UNFIHXn17p61ukV5ZaqmV69gr
+         P9rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m5K7q4ntfOvCuWo9VcwV3Y8K7PEmWf/RHpOYApWqYOo=;
-        b=STfFRMgzX0Jibvxg7Ll86QIIwhvL6a733dTodRxWlkEtHM9saIqKm8bUqevMN+aHZy
-         +JAEdFxljXY9HcvYQSYj9letJW8jsa3lIm8ImOPhqfDoL2t3mBwDidZHhtxRCrGjbPir
-         qVzWdqWGEnKLyqDpdIjy1lQl6DnV1eCDxmovuswG4aZY7EjNNJ+FbJxgh/DYvLfuMclj
-         PCd2N57zaOzVHm99cbmMawJtGUgulCTcw6qXvFUW8OElkjssLg3YJm/gybccdJdZuu8N
-         SmFuymImtEl/voPPikC9V/owl/LizW/+a4tzc/4lpAok6DDyAPsV7Ml/HlOiuTg83p6/
-         kKOQ==
-X-Gm-Message-State: AOAM533UTWrl/JDavKqttDC/e8nh1bBoQ+zuZnByblL4zwowYM/6SM5S
-        dNyB5iELzp5WoPq9ESvhXv4PrA==
-X-Google-Smtp-Source: ABdhPJy8k9/Nb4tlj+y4Bq+1w/ACN3QGov3SCl+s4GMHcCRvFUwVSFwb3GgE8g5wKq+pB2bBXE/pBA==
-X-Received: by 2002:a1c:c90d:: with SMTP id f13mr2243927wmb.25.1598363603543;
-        Tue, 25 Aug 2020 06:53:23 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id h10sm30075699wro.57.2020.08.25.06.53.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=snlphi07wh4k/ZlUaJslE4TyIoIQObGzwbf9XX6F2gE=;
+        b=kxFJRaNbzb1JKQ5Ind2LeGRJgpfdk+XytoavQn545faIE4qgIAq/Lz5/gkLop0rqx0
+         DfUeUK5/4/mQChSGiQM7HRtjYmQ2L9fg09XP3UW/oJa4Qg9WR5pzQ8IeeuCJ4CpO7TN1
+         OEF1QrZpbO3FGN35QldnU9wUVYFpmBc0WkpyiDau3YKzNARe5e11phZLxqTXgCd38kdJ
+         aDBzxCxGks/eIXV3NKQqL+AIs6R1JOxbxueX6h/OfjldVHkV8gpOpikT9RU8kY2/MbX0
+         pQiofsO5nnBO00fF124bfdzKjUVoY+YUtj1sK10yUF+LpLZqdtUbxRVsmLvNY2eyoUjd
+         cPbQ==
+X-Gm-Message-State: AOAM530bAPlIWojgAc8RxVNm38TndxCdkjsjPPIkW8phw9gjIX5PyNga
+        awF84+xClM1nLF6Eg9LfWxx2XnwF+V32dw==
+X-Google-Smtp-Source: ABdhPJyfghb40Q8ooZbR6quRhSY6a6ZQ//NX+dONJTpgexPkUM/sSNuxGH4myzLN5FSZLK3iTdspSA==
+X-Received: by 2002:a05:6402:54c:: with SMTP id i12mr10337471edx.358.1598366030722;
+        Tue, 25 Aug 2020 07:33:50 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id f22sm12891703edt.91.2020.08.25.07.33.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 06:53:22 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 14:53:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
-        Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
-        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        clabbe@baylibre.com, bage@linutronix.de,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-Message-ID: <20200825135320.GM3248864@dell>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
- <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
- <20200824080327.GH3248864@dell>
- <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
+        Tue, 25 Aug 2020 07:33:49 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] pinctrl: devicetree: Keep deferring even on timeout
+Date:   Tue, 25 Aug 2020 16:33:48 +0200
+Message-Id: <20200825143348.1358679-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 25 Aug 2020, Maxime Ripard wrote:
+From: Thierry Reding <treding@nvidia.com>
 
-> On Mon, Aug 24, 2020 at 09:03:27AM +0100, Lee Jones wrote:
-> > On Mon, 24 Aug 2020, Frank Lee wrote:
-> > 
-> > > ping......
-> > 
-> > "Please don't send content free pings and please allow a reasonable
-> >  time for review.  People get busy, go on holiday, attend conferences
-> >  and so on so unless there is some reason for urgency (like critical
-> >  bug fixes) please allow at least a couple of weeks for review.  If
-> >  there have been review comments then people may be waiting for those
-> >  to be addressed.  Sending content free pings just adds to the mail
-> >  volume (if they are seen at all) and if something has gone wrong
-> >  you'll have to resend the patches anyway so [RESEND]ing with any
-> >  comments addressed is generally a much better approach."
-> 
-> This is true to some extent, but pinging after a month doesn't seem
-> unreasonable either.
+driver_deferred_probe_check_state() may return -ETIMEDOUT instead of
+-EPROBE_DEFER after all built-in drivers have been probed. This can
+cause issues for built-in drivers that depend on resources provided by
+loadable modules.
 
-Pinging is mostly a fruitless exercise.
+One such case happens on Tegra where I2C controllers are used during
+early boot to set up the system PMIC, so the I2C driver needs to be a
+built-in driver. At the same time, some instances of the I2C controller
+depend on the DPAUX hardware for pinmuxing. Since the DPAUX is handled
+by the display driver, which is usually not built-in, the pin control
+states will not become available until after the root filesystem has
+been mounted and the display driver loaded from it.
 
-After a month, many Maintainers would have purged any un-serviced
-mails anyway.  If a patch-set is left hanging, still requiring
-attention before the next version, submitting a [RESEND] is generally
-a better option.
+Fixes: bec6c0ecb243 ("pinctrl: Remove use of driver_deferred_probe_check_state_continue()")
+Suggested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/pinctrl/devicetree.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 5eff8c296552..3fb238714718 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -130,9 +130,8 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 		if (!np_pctldev || of_node_is_root(np_pctldev)) {
+ 			of_node_put(np_pctldev);
+ 			ret = driver_deferred_probe_check_state(p->dev);
+-			/* keep deferring if modules are enabled unless we've timed out */
+-			if (IS_ENABLED(CONFIG_MODULES) && !allow_default &&
+-			    (ret == -ENODEV))
++			/* keep deferring if modules are enabled */
++			if (IS_ENABLED(CONFIG_MODULES) && !allow_default && ret < 0)
+ 				ret = -EPROBE_DEFER;
+ 			return ret;
+ 		}
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.28.0
+
