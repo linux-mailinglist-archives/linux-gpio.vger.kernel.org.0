@@ -2,151 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 279C625129B
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:08:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 848762512A8
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgHYHI4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 03:08:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34705 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbgHYHI4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:08:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f7so11614882wrw.1;
-        Tue, 25 Aug 2020 00:08:53 -0700 (PDT)
+        id S1729351AbgHYHKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 03:10:16 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35150 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729287AbgHYHKP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:10:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id w10so3235231oti.2;
+        Tue, 25 Aug 2020 00:10:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l54b9M6lsfNgFjV5LriaXZxkCjRvfaXuheWXTmhA8H0=;
-        b=IhJpiKm5Vp3VzhjSJT571kVboqOooMmXwHKQfrJe0v5jcYoZJz7rmdoIugP8nLVVY4
-         vg9RUGaJYw2SrljnPJEtWjZRYziyBEPhRJOC4XXnxx4Vk7HTOFB6DZWPhhXekF9un+2B
-         VwXIrn6Pn3M/g7x1U7ktjlhhtnjkMsgQv8cU2dgwK8GNN62uco1YPUNIr0I9JUYVkvwf
-         IjXc6yx0F817c+m/n+bRScmigY9RCumpvnbwtz1Qhtoo9hMU7zX34WLt9PDMo+V/ZACn
-         jyYOghhxSYRIILxzX2UuJUT/h75RhjChvRLVoICg7zISWdeLAMvNOEY4yERqO/zp7DAL
-         1Gbg==
-X-Gm-Message-State: AOAM533YmdK5ORUcDXJ2Bh2wSimS/8BDJLipqZzbFpn/GeEaB/JkbGOA
-        t7459voHH9YXg04qQ5Ec0KE=
-X-Google-Smtp-Source: ABdhPJx6Y8Pp2Xu+VQIJdGvRDGKdAFvlXR7vDcNPN4yTT16XHARtlil/gzCAiQcAzCm0WH80KJ2xHQ==
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr9680913wrs.419.1598339333020;
-        Tue, 25 Aug 2020 00:08:53 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id h11sm29004318wrb.68.2020.08.25.00.08.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 00:08:52 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:08:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
- compatible matching
-Message-ID: <20200825070849.GC3458@kozik-lap>
-References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-12-krzk@kernel.org>
- <20200825023801.GA3835035@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9nDSEan/YQK8xpD3cMjTRl5PnART66gSZqfe7bk+3Dk=;
+        b=o7HSZLMLH9LmTRwPHwrV9QJK3dBPuh+lY6IP3vbvY99skGz+exym6EGHHA1yCgtvuG
+         zSjfpQU6Hr7JC+H9q+VR2hvStmRDe28dN9Q/5iAetMdOfm/Q0+hGLEL/8pmpUkplc6YQ
+         zOpzIB+zIsiFmU5gAuTrf97ed6x9pPHJCTt0tErD03gDE6Hrz+zW/o7Qe80n6TW2o2hr
+         sYzz0niRl+PL6Y8Qn8eXuOASK+J67RJP2YoanEsh4ro9twuuAZkjoFyJXBVUrFQ1F8RD
+         BFi8o/bNNBVszIk9so9KeUvGEvCfDGrlh9gS8PF1thKh8f/M68gnwaDcYE2SExqJyWGI
+         vRDQ==
+X-Gm-Message-State: AOAM531/K46z9r5tK/BFmz65Sz3NVhI+DvGwcf2cIZ4bCARd16X+qJO/
+        AnRtm9NugKbqpdylF4Z/6np2mIEpFEtCbuOqzq+i4JGU
+X-Google-Smtp-Source: ABdhPJzktU2jr2lEJIVOdCGe2RQWv3GyPKEPdccH+4NA5/fJfRoBro6fywfIEEM8c3bRhFK0bkb/aHmDD5Fw9XKE6gQ=
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr5545078otb.107.1598339414496;
+ Tue, 25 Aug 2020 00:10:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825023801.GA3835035@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200821111401.4021-1-geert+renesas@glider.be> <20200824083007.x3l6ujn3mi5xhrsy@uno.localdomain>
+In-Reply-To: <20200824083007.x3l6ujn3mi5xhrsy@uno.localdomain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Aug 2020 09:10:02 +0200
+Message-ID: <CAMuHMdVaaNx2MbUiNKmvy=SnaDFEqpDVUNE7f+ftw4kw7Z=5gw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rza1: Switch to using "output-enable"
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:38:01PM -0600, Rob Herring wrote:
-> On Mon, Aug 24, 2020 at 06:26:45PM +0200, Krzysztof Kozlowski wrote:
-> > The i.MX 8 DTSes use two compatibles so update the binding to fix
-> > dtbs_check warnings like:
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> >     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Changes since v1:
-> > 1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
-> > ---
-> >  .../bindings/mmc/fsl-imx-esdhc.yaml           | 40 +++++++++++--------
-> >  1 file changed, 23 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > index 10b45966f1b8..54f05e2a4246 100644
-> > --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > @@ -21,23 +21,29 @@ description: |
-> >  
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - fsl,imx25-esdhc
-> > -      - fsl,imx35-esdhc
-> > -      - fsl,imx51-esdhc
-> > -      - fsl,imx53-esdhc
-> > -      - fsl,imx6q-usdhc
-> > -      - fsl,imx6sl-usdhc
-> > -      - fsl,imx6sx-usdhc
-> > -      - fsl,imx6ull-usdhc
-> > -      - fsl,imx7d-usdhc
-> > -      - fsl,imx7ulp-usdhc
-> > -      - fsl,imx8mq-usdhc
-> > -      - fsl,imx8mm-usdhc
-> > -      - fsl,imx8mn-usdhc
-> > -      - fsl,imx8mp-usdhc
-> > -      - fsl,imx8qm-usdhc
-> > -      - fsl,imx8qxp-usdhc
-> > +    oneOf:
-> > +      - enum:
-> > +          - fsl,imx25-esdhc
-> > +          - fsl,imx35-esdhc
-> > +          - fsl,imx51-esdhc
-> > +          - fsl,imx53-esdhc
-> > +          - fsl,imx6q-usdhc
-> > +          - fsl,imx6sl-usdhc
-> > +          - fsl,imx6sx-usdhc
-> > +          - fsl,imx6ull-usdhc
-> > +          - fsl,imx7d-usdhc
-> > +          - fsl,imx7ulp-usdhc
-> 
-> > +          - fsl,imx8mq-usdhc
-> > +          - fsl,imx8mm-usdhc
-> > +          - fsl,imx8qxp-usdhc
-> 
-> These should be dropped.
+Hi Jacopo,
 
-You're right, thanks.
+On Mon, Aug 24, 2020 at 10:26 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> On Fri, Aug 21, 2020 at 01:14:01PM +0200, Geert Uytterhoeven wrote:
+> > For pins requiring software driven IO output operations, the RZ/A1 Pin
+> > Controller uses either the "output-high" or "output-low" DT property to
+> > enable the corresponding output buffer.  The actual line value doesn't
+> > matter, as it is ignored.
+> >
+> > Commit 425562429d4f3b13 ("pinctrl: generic: Add output-enable property")
+> > introduced a new DT property for this specific use case.
+> >
+> > Update the RZ/A1 Pin Controller DT bindings and driver to use this new
+> > property instead.  Preserve backwards compatibility with old DTBs in the
+> > driver, as this comes at a very small cost.
+> >
+> > Notes:
+> >   - The DT binding examples already used the new property,
+> >   - There are no upstream users of the old properties.
+> >
+>
+> Did we introduce output-enable after the rza1 pinctrl and forgot to
+> update ? Good catch anyway
 
-Best regards,
-Krzysztof
+"output-enable" was introduced in response to early review comments
+on the rza1 pinctrl driver, and both changes went upstream through
+the same sh-pfc pull request.  Seems like part of the update was just
+forgotten.
 
+> Great! For both parts:
+> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
