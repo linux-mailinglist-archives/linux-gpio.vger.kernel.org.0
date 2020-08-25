@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 306AC2512E8
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:19:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3E42513A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgHYHTO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 03:19:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41704 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHTM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:19:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so5931634wrj.8;
-        Tue, 25 Aug 2020 00:19:09 -0700 (PDT)
+        id S1728859AbgHYHzv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 03:55:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45806 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHYHzv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:55:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so4958434wrt.12;
+        Tue, 25 Aug 2020 00:55:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WzjocZ6AbgdZxSRavuClgS3bWv6X8HTLysz12xiMgeg=;
-        b=qyVhXj9agD5+H3XVK+tGkvhZNeQX6hvhMZSkWy/nLUggaEVvTuapXW7pPIk6cU8A+K
-         nuZwvr16njwOmCPuhbfNSaYUSm/wW2RcplMrJjJGrnfkw0EC9OfZ3Vd/AqaB9ydKN88Z
-         VwCe5YDfCKE+3LptNqpWKyrj/C+Y97JUV5IReEapkIPmPeI16SryBOTUP9l/2IHbEnZk
-         IQtlCVM5/vt00leFHp2O2D1ipL20vQ8Qn91XNyi5YtMc6pzkrcV6IujgEdWvuGn9F5OW
-         NXOspjyjzl2cK8rdda58N2BQOb3WlXwXyKBSBh3svaRl+uMGyCtbXrNwiH4uABvqLG8w
-         rzDA==
-X-Gm-Message-State: AOAM533G7Z/K85Dollgia6nd7o08jhVncziIKOhq/nmJGdYEE5b1nhpt
-        isX4TtDpsynKsLZEK/7wAik=
-X-Google-Smtp-Source: ABdhPJwkhdWQGkLwZ00kAqnPEmqc8N+HVtkEdsjRUBu5ZaCv9oCeqT0wAbIggVlRGDIzjGcy8OFy8Q==
-X-Received: by 2002:a5d:51c3:: with SMTP id n3mr9451383wrv.104.1598339948999;
-        Tue, 25 Aug 2020 00:19:08 -0700 (PDT)
+        bh=aBjVw1JG0tpm4bk51wIknFht9NwTSZ65KB4U3gClblQ=;
+        b=pVQLT+8ijKQCPTJ9nJSzGdtsvR4/qHb2QG9MgKgdIdQ2hG1dj2KpBB8/UQzGdjBnrG
+         YyCru7GkjEW1Z2avQWxiG/fCrKBPJ8QLh7Ak9F4nZ797j6oRUqOhRDx1vcJ0Didy1eh4
+         pterNAMGOBwZ+SC1cypGNjD7gNwVaG1ORbIDM9wyKISr3dMwnhqVxIvWq+/cECtf1ZVT
+         i2nYue89aCsbjA1z3gQLqGHe7hFUPHIhQUW8NA+ARK/3s5DEwLOyri6XUavdKa7MBTJJ
+         yvhAgAaQK4/bMkq+sxNvowGly71mHlHX7xdg0tdijpLF57CchJpgSl+5bPAc9qDr96s5
+         bjIw==
+X-Gm-Message-State: AOAM531VaZJ9MZnL9VRgwXymUo0hQu1KXP7Pt3vjMMEplrw4cCwPLMhE
+        xhxP7RtNtC49OSmDbRJDYO8=
+X-Google-Smtp-Source: ABdhPJy11J0dvtltETiMUmgoqOGY5vwRYKznzFSM+Jn9Jhy70mulHl9VGChcIKqtFo0jH3ClWuVjng==
+X-Received: by 2002:adf:f5c7:: with SMTP id k7mr9247503wrp.230.1598342147767;
+        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id c6sm1611593wrr.15.2020.08.25.00.19.06
+        by smtp.googlemail.com with ESMTPSA id f9sm8049134wrm.5.2020.08.25.00.55.45
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 00:19:08 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:19:05 +0200
+        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:55:43 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -60,84 +60,70 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
- compatibles
-Message-ID: <20200825071905.GE3458@kozik-lap>
+Subject: Re: [PATCH v2 17/19] dt-bindings: serial: fsl-lpuart: Fix compatible
+ matching
+Message-ID: <20200825075543.GA10369@kozik-lap>
 References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-13-krzk@kernel.org>
- <20200825023904.GA3837236@bogus>
+ <20200824162652.21047-17-krzk@kernel.org>
+ <20200825024226.GA3843643@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200825023904.GA3837236@bogus>
+In-Reply-To: <20200825024226.GA3843643@bogus>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:39:04PM -0600, Rob Herring wrote:
-> On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
-> > DTSes with new i.MX 8M SoCs use two compatibles so update the binding to
-> > fix dtbs_check warnings like:
+On Mon, Aug 24, 2020 at 08:42:26PM -0600, Rob Herring wrote:
+> On Mon, Aug 24, 2020 at 06:26:50PM +0200, Krzysztof Kozlowski wrote:
+> > The i.MX 8QXP DTSes use two compatibles so update the binding to fix
+> > dtbs_check warnings like:
 > > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000: compatible:1: 'syscon' was expected
-> >     From schema: Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
+> >     compatible: ['fsl,imx8qxp-lpuart', 'fsl,imx7ulp-lpuart'] is too long
+> >     From schema: Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
 > > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
-> >     compatible: ['fsl,imx8mn-ocotp', 'fsl,imx8mm-ocotp', 'syscon'] is too long
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
-> >     compatible: Additional items are not allowed ('syscon' was unexpected)
+> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
+> >     compatible: Additional items are not allowed ('fsl,imx7ulp-lpuart' was unexpected)
 > > 
 > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 39 ++++++++++++-------
-> >  1 file changed, 24 insertions(+), 15 deletions(-)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-> > index 1c9d7f05f173..b5b250185afd 100644
-> > --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-> > +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-> > @@ -19,21 +19,30 @@ allOf:
+> > ---
+> > 
+> > Changes since v1:
+> > 1. New patch.
+> > ---
+> >  .../devicetree/bindings/serial/fsl-lpuart.yaml | 18 +++++++++++-------
+> >  1 file changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > index e82c2cf9fef7..8ee651f2ef0b 100644
+> > --- a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > @@ -14,13 +14,17 @@ allOf:
 > >  
 > >  properties:
 > >    compatible:
-> > -    items:
-> > -      - enum:
-> > -          - fsl,imx6q-ocotp
-> > -          - fsl,imx6sl-ocotp
-> > -          - fsl,imx6sx-ocotp
-> > -          - fsl,imx6ul-ocotp
-> > -          - fsl,imx6ull-ocotp
-> > -          - fsl,imx7d-ocotp
-> > -          - fsl,imx6sll-ocotp
-> > -          - fsl,imx7ulp-ocotp
-> > -          - fsl,imx8mq-ocotp
-> > -          - fsl,imx8mm-ocotp
-> > -          - fsl,imx8mn-ocotp
-> > -          - fsl,imx8mp-ocotp
-> > -      - const: syscon
+> > -    enum:
+> > -      - fsl,vf610-lpuart
+> > -      - fsl,ls1021a-lpuart
+> > -      - fsl,ls1028a-lpuart
+> > -      - fsl,imx7ulp-lpuart
+> > -      - fsl,imx8qxp-lpuart
+> > -      - fsl,imx8qm-lpuart
 > > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,imx6q-ocotp
-> > +              - fsl,imx6sl-ocotp
-> > +              - fsl,imx6sx-ocotp
-> > +              - fsl,imx6ul-ocotp
-> > +              - fsl,imx6ull-ocotp
-> > +              - fsl,imx7d-ocotp
-> > +              - fsl,imx6sll-ocotp
-> > +              - fsl,imx7ulp-ocotp
-> > +              - fsl,imx8mq-ocotp
-> > +              - fsl,imx8mm-ocotp
+> > +      - enum:
+> > +          - fsl,vf610-lpuart
+> > +          - fsl,ls1021a-lpuart
+> > +          - fsl,ls1028a-lpuart
+> > +          - fsl,imx7ulp-lpuart
+> > +          - fsl,imx8qxp-lpuart
 > 
-> > +              - fsl,imx8mn-ocotp
-> > +              - fsl,imx8mp-ocotp
-> 
-> Should be dropped.
+> This should be dropped.
 
-OK
+Right.
 
 Best regards,
 Krzysztof
