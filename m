@@ -2,101 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2903252196
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 22:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD5A92522F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 23:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHYUI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 16:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        id S1726303AbgHYVih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 17:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYUI0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 16:08:26 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B4CC061574
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Aug 2020 13:08:25 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id kx11so49935pjb.5
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Aug 2020 13:08:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vx1r2CNa1rBAm3wMcMuYtNO0QstZgyCPzPi8kkUlIz4=;
-        b=KZ3pczexEVfIWGV0IPWdQYQBqYBChCLEGtApRH3QfnlBWqlOq7DlgnonpQmEeHUr9Q
-         CcDjp+GBQCLuy08q0QefeFt/oMhUiuz7IYGYn7y53OmbbjhagUOyhSljtDmaGrh+QCYk
-         IBApJr1K/C8AUJcz5Qn0It9c7W46C0PZP4bo0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vx1r2CNa1rBAm3wMcMuYtNO0QstZgyCPzPi8kkUlIz4=;
-        b=SJfOV+04g8oPeuhR0LwGFKQZvib5QN8Jx45gD3wSYnLLYHGiqlWTJt7MHr+D6o1kFp
-         bM5nWXJurNO+nDKTt/1ko4snzqfK1/zpE2kohUxIiRixbgEvynmLfLkVPdkN4fr06Xf7
-         jyaIVhGIfXduzMP1mlLJtMP4mRxJN7UPwLX0xWNG/1qAQRRFg7nky3N0EVgtuuu/o/UI
-         7C/7AcADS8TyWwD9j6eNH2GF0GBMg0svPvoJEMaW+9eEDE+iN5Lh6tyr0CoiK1CA6VNn
-         EZfvan4u0ejetXGyk481ZOtCjJg/XDEGxGV82ezhJS5EF/bUeKDKfGWr8vU+kpOkjI+F
-         txDQ==
-X-Gm-Message-State: AOAM533VGqDYRDkuWwMWuTlvvjkkkB0aWUUSj+fz3n8VjC/VYEYm9CzL
-        k31xrbnfOh/eyJooXE2ad1R2fEFo4cAulA==
-X-Google-Smtp-Source: ABdhPJzPq5ZxYXbXunRmzcQDdroIX+dBTmwSUNvm36ZDqCnC8TElM7L5tn++tpeF5Y11f1p0kjIL3Q==
-X-Received: by 2002:a17:90a:fe82:: with SMTP id co2mr3106584pjb.216.1598386105001;
-        Tue, 25 Aug 2020 13:08:25 -0700 (PDT)
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com. [209.85.210.180])
-        by smtp.gmail.com with ESMTPSA id d10sm65374pjg.0.2020.08.25.13.08.24
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 13:08:24 -0700 (PDT)
-Received: by mail-pf1-f180.google.com with SMTP id 17so8187513pfw.9
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Aug 2020 13:08:24 -0700 (PDT)
-X-Received: by 2002:a1f:9b8f:: with SMTP id d137mr7014781vke.97.1598385615556;
- Tue, 25 Aug 2020 13:00:15 -0700 (PDT)
+        with ESMTP id S1726222AbgHYVig (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 17:38:36 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89125C061574;
+        Tue, 25 Aug 2020 14:38:36 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598391515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bzrluaqlq3krRM30SsNwVNRIRZVbuCOAOPYCtGzqAAI=;
+        b=J9oc+MDLMdReE5k69O6GhTmcW1kbRigczO+p80fP9tL2V05Y6kHJDM8DW04APAucV5gWlC
+        1TwOZNHF1XGdntATDmI7j+t3jZgkiWV5uBL+Iy8BiL9Dt6quUYyqkRT6N0ovhdd3EZAyQO
+        ogIFvMiqCL35QGNFp3uXoaKpl8p95O3plq+1hVInOFw/B7sYC4XkF7K3at0pQN/qMnfVm1
+        WbL7jgL6LrW6nt9NmHl36iC+km/gChilKRZz+LchETQTwOChFLMjt3TIUDqr2nIQxl5nnZ
+        E+yWGXbTD/11EeX/2Y1PmqUM9gBCVxNPeTJM/su45mjJh5k0J2JefY9ojMHrsg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598391515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bzrluaqlq3krRM30SsNwVNRIRZVbuCOAOPYCtGzqAAI=;
+        b=y4jw2WD7k5ZcqN2mnAhVVjasNzleQUESsZxjn10jpa64PgF9Rsh8A38qKu0+8EveS4+jOQ
+        29ANfqxmomGx24Aw==
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        linus.walleij@linaro.org, maz@kernel.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+In-Reply-To: <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
+Date:   Tue, 25 Aug 2020 23:38:34 +0200
+Message-ID: <874koqxv6t.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-7-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1598113021-4149-7-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 25 Aug 2020 13:00:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XBidZvVit+P-HmQpxdi0XwD7uwkawJMCjPAp715Cg=4g@mail.gmail.com>
-Message-ID: <CAD=FV=XBidZvVit+P-HmQpxdi0XwD7uwkawJMCjPAp715Cg=4g@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] irqchip: qcom-pdc: Reset PDC interrupts during init
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Tue, Aug 25 2020 at 03:12, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-08-22 09:16:58)
+>> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+>> index c6c7e18..2cc800b 100644
+>> --- a/kernel/irq/pm.c
+>> +++ b/kernel/irq/pm.c
+>> @@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
+>>  
+>>  static bool suspend_device_irq(struct irq_desc *desc)
+>>  {
+>> +       unsigned long chipflags = irq_desc_get_chip(desc)->flags;
+>> +
+>>         if (!desc->action || irq_desc_is_chained(desc) ||
+>>             desc->no_suspend_depth)
+>>                 return false;
+>>  
+>>         if (irqd_is_wakeup_set(&desc->irq_data)) {
+>>                 irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+>> +
+>> +               if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
+>> +                       irq_enable(desc);
+>
+> Where is the corresponding change to resume_irq()? Don't we need to
+> disable an irq if it was disabled on suspend and forcibly enabled here?
 
-On Sat, Aug 22, 2020 at 9:18 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Kexec can directly boot into a new kernel without going to complete
-> reboot. This can leave the previous kernel's configuration for PDC
-> interrupts as is.
->
-> Clear previous kernel's configuration during init by setting interrupts
-> in enable bank to zero. The IRQs specified in qcom,pdc-ranges property
-> are the only ones that can be used by the new kernel so clear only those
-> IRQs. The remaining ones may be in use by a different kernel and should
-> not be set by new kernel.
->
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/irqchip/qcom-pdc.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+That part was below the POC code I provided in the fine print:
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+ "plus the counterpart in the resume path. This also ensures that state is
+  consistent."
+
+Who reads the fine print? :)
