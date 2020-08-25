@@ -2,85 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3609F2512C8
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:12:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D86F2512D7
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgHYHMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 03:12:25 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38426 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgHYHMZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:12:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i11so2568288otr.5;
-        Tue, 25 Aug 2020 00:12:24 -0700 (PDT)
+        id S1729209AbgHYHRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 03:17:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44519 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHRi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:17:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so11570333wrs.11;
+        Tue, 25 Aug 2020 00:17:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6xLMSskjc/0tfKUR5gcLUrxGo2b6wdLqpwl4vtNWoY4=;
-        b=NNgmXlgNVV4s5sEzgZTLfMkDCpnY6eFm/vKykel4aCLKwMT5RKwanGqfdzOPxwh9Cs
-         pk4qFZoGLKjhk3elDBWZ4i/bagMRm1PJQ5ZZLjj7sJG1Hp3WTFTeFrFKCYY+1msLIRV8
-         Xkq/qapVyjpR1RJFeEiv9BWXlmCQFys/zaHW5zq0HJ3ZBdW4+alLXfyZZRCLuRGTbqTP
-         o06PqbUUDoUjBOcVk4xjTL6iLk56LVd8CM0ES7ci/rorh6doHDy554d5AFeEG16kOsgt
-         cnw4O7nnVwGI6fdggzZ+IBWIQN2e52tzzVLNfq5qGSpdGkTMpRbQsjIv5ixhAi5zyOCF
-         zeFw==
-X-Gm-Message-State: AOAM532wRhRIWeXMdU7q2Ak5+FYAYP07uiVpoWwu71YySYMrs9zg2mLb
-        hx58c7ZCWmmjCC/vb/KHK6n2wfsDTckhFMsFGIwCL+us
-X-Google-Smtp-Source: ABdhPJyr6yeB7gVQM4gDWCrn0iIo3b3uuVybNM80+sq8ZmQ8Hx6s+1h+KOBAJrFbHQUuAF/hLFogUyd3vL6ZDviez0A=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr6150245otn.250.1598339544379;
- Tue, 25 Aug 2020 00:12:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VUO6i/U3AVhRZX9XkX8wTuXOsuDoxa3aV3dAz0woA4o=;
+        b=B5MJrhLrcQOv6vRhgOJDKnTX6i2punZBmlED4d9nHBgO4GDgjRlXucq8UVrIk/Hs0u
+         KxOCtmKrmiukHNUkrco6xa0Idv0062LAodAWPgcLXNOZe6UPcOkG5uA6HpgGzUoTUxRQ
+         bVs0TXd1toasqxcoFwCsbmkCa7D/Cbw4EGa5tDd/khQvV2i3d76+1WfPqE0SNp0+/vRT
+         bZkDdW7lutuovzf1UphK6AYlwhSd/eg9vQ2+kQ0Mk+7JVr9jJD6nQIzenAVnN0Dk8IDc
+         WBni8SPBdi26MqRYWRcPvQ1OlVD0PJtCGaa1aHgUTLNE8/BKuACYwCPuupE4tx9iVYTU
+         kndQ==
+X-Gm-Message-State: AOAM533rXg3WB00+MNa0CB+S+sh2T8LirELK547/L2c3u8/saju7/EbJ
+        hOJ7UCyUkHNZBWvj9rW9PNY=
+X-Google-Smtp-Source: ABdhPJzJYPNbntZuVXqhHtMzbv8B44RjyoelOfsWDije4BgkxJQBl+U8ambvcHbMGJuX5NndB1iaIw==
+X-Received: by 2002:adf:fd84:: with SMTP id d4mr8719602wrr.243.1598339855693;
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y3sm20848575wrs.36.2020.08.25.00.17.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:17:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
+ compatibles
+Message-ID: <20200825071732.GD3458@kozik-lap>
+References: <20200824162652.21047-1-krzk@kernel.org>
+ <20200824162652.21047-13-krzk@kernel.org>
+ <20200825044653.GK13023@pengutronix.de>
 MIME-Version: 1.0
-References: <20200821112059.5133-1-geert+renesas@glider.be> <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 09:12:12 +0200
-Message-ID: <CAMuHMdU2+=aesP5v3iAWp8+-LZ8dpMi+EOm7n5x74q7j8kFNPg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825044653.GK13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Gareth,
+On Tue, Aug 25, 2020 at 06:46:53AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,imx6q-ocotp
+> > +              - fsl,imx6sl-ocotp
+> > +              - fsl,imx6sx-ocotp
+> > +              - fsl,imx6ul-ocotp
+> > +              - fsl,imx6ull-ocotp
+> > +              - fsl,imx7d-ocotp
+> > +              - fsl,imx6sll-ocotp
+> > +              - fsl,imx7ulp-ocotp
+> > +              - fsl,imx8mq-ocotp
+> > +              - fsl,imx8mm-ocotp
+> > +              - fsl,imx8mn-ocotp
+> > +              - fsl,imx8mp-ocotp
+> > +          - const: syscon
+> > +      - items:
+> > +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
+> > +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
+> 
+> Shouldn't this be fixed? It seems strange to justify a binding with
+> existing code.
 
-On Mon, Aug 24, 2020 at 5:10 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> On Fri, Aug 21, 2020 at 12:12 PM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > Convert the Renesas RZ/N1 Pin controller Device Tree binding
-> > documentation to json-schema.
-> >
-> > Use "pinctrl" generic node name.
-> > Drop generic and consumer examples, as they do not belong here.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> This is a clean and suitable conversion to me.
-> For completion I ran this against my dts files for the rzn1 for testing
-> purposes on next-20200824 without issues.
->
-> Reviewed-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> Tested-by: Gareth Williams <gareth.williams.jx@renesas.com>
+The fsl,imx8mn-ocotp is actually compatible with "mm", only the
+fsl,imx8mp-ocotp is not (although someone might argue that subset of
+"mp" falls into "mn").
 
-Thank you!
+The problem is that drivers/soc/imx/soc-imx8m.c checks revision only
+against the fsl,imx8mm-ocotp compatible, not the others. It's the
+pattern used in that driver also for other i.MX 8. Therefore it is a
+binding implemented and actually used, regardless whether it is correct
+from hardware point of view or not.
 
-BTW, do you plan to upstream any of those DTS files? Currently, no
-upstream DTS file for RZ/N1 contains pinctrl properties.
+If that's preferred, I could adjust the drivers/soc/imx/soc-imx8m.c for
+the incompatible "mp". It should not break anything.
 
-Gr{oetje,eeting}s,
+Best regards,
+Krzysztof
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
