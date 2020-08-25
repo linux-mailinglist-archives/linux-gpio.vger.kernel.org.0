@@ -2,114 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E34012512C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3609F2512C8
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 09:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgHYHKj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 03:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbgHYHKh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:10:37 -0400
-Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35662074D;
-        Tue, 25 Aug 2020 07:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598339436;
-        bh=FWfgAaWELOpnq9T2ZqffNJ7A9qnO3QfKuIy+OMg+Nkc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f3Wq0A6wK+XyCx0NdyaVbiOp2OMrI3KPwj1V3RQ/NOii/Sv8XJMYsbLmiBZPZxHLr
-         0oPOxmO4ZW2uxwUXqLpZCKZIApP5fRkbLXbO9bWzKlL5g/hG5Vx0qfVAI9CAKfOqMV
-         tmM358uBo/FCFQE7cpCl+yIXbi94y/ptPbOUqIoI=
-Date:   Tue, 25 Aug 2020 09:10:33 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-Message-ID: <20200825071033.GB1861@ninjato>
-References: <20200812203618.2656699-1-robh@kernel.org>
+        id S1729209AbgHYHMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 03:12:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38426 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbgHYHMZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 03:12:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i11so2568288otr.5;
+        Tue, 25 Aug 2020 00:12:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6xLMSskjc/0tfKUR5gcLUrxGo2b6wdLqpwl4vtNWoY4=;
+        b=NNgmXlgNVV4s5sEzgZTLfMkDCpnY6eFm/vKykel4aCLKwMT5RKwanGqfdzOPxwh9Cs
+         pk4qFZoGLKjhk3elDBWZ4i/bagMRm1PJQ5ZZLjj7sJG1Hp3WTFTeFrFKCYY+1msLIRV8
+         Xkq/qapVyjpR1RJFeEiv9BWXlmCQFys/zaHW5zq0HJ3ZBdW4+alLXfyZZRCLuRGTbqTP
+         o06PqbUUDoUjBOcVk4xjTL6iLk56LVd8CM0ES7ci/rorh6doHDy554d5AFeEG16kOsgt
+         cnw4O7nnVwGI6fdggzZ+IBWIQN2e52tzzVLNfq5qGSpdGkTMpRbQsjIv5ixhAi5zyOCF
+         zeFw==
+X-Gm-Message-State: AOAM532wRhRIWeXMdU7q2Ak5+FYAYP07uiVpoWwu71YySYMrs9zg2mLb
+        hx58c7ZCWmmjCC/vb/KHK6n2wfsDTckhFMsFGIwCL+us
+X-Google-Smtp-Source: ABdhPJyr6yeB7gVQM4gDWCrn0iIo3b3uuVybNM80+sq8ZmQ8Hx6s+1h+KOBAJrFbHQUuAF/hLFogUyd3vL6ZDviez0A=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr6150245otn.250.1598339544379;
+ Tue, 25 Aug 2020 00:12:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
-Content-Disposition: inline
-In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200821112059.5133-1-geert+renesas@glider.be> <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Aug 2020 09:12:12 +0200
+Message-ID: <CAMuHMdU2+=aesP5v3iAWp8+-LZ8dpMi+EOm7n5x74q7j8kFNPg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Gareth,
 
---JYK4vJDZwFMowpUq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 24, 2020 at 5:10 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> On Fri, Aug 21, 2020 at 12:12 PM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> > Convert the Renesas RZ/N1 Pin controller Device Tree binding
+> > documentation to json-schema.
+> >
+> > Use "pinctrl" generic node name.
+> > Drop generic and consumer examples, as they do not belong here.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> This is a clean and suitable conversion to me.
+> For completion I ran this against my dts files for the rzn1 for testing
+> purposes on next-20200824 without issues.
+>
+> Reviewed-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> Tested-by: Gareth Williams <gareth.williams.jx@renesas.com>
 
-On Wed, Aug 12, 2020 at 02:36:18PM -0600, Rob Herring wrote:
-> Clean-up incorrect indentation, extra spaces, long lines, and missing
-> EOF newline in schema files. Most of the clean-ups are for list
-> indentation which should always be 2 spaces more than the preceding
-> keyword.
->=20
-> Found with yamllint (which I plan to integrate into the checks).
->=20
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-mtd@lists.infradead.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Thank you!
 
-I trust you guys in figuring out the details, so for touching I2C:
+BTW, do you plan to upstream any of those DTS files? Currently, no
+upstream DTS file for RZ/N1 contains pinctrl properties.
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+Gr{oetje,eeting}s,
 
+                        Geert
 
---JYK4vJDZwFMowpUq
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9EuWkACgkQFA3kzBSg
-KbZbPA/+MqNMzGTVXT++2afD+v/Qkum1LRbeldro+e0ewQSps4tnW/eHg9RaemYr
-BwxfsOZA+EJp0lGOnRM5/vhPMoInlSEwJSBlxtjratUScfPiR7D4ljKXGaUQv4IV
-l9cXBZuOeLnSerxdYsuGrs8M0uqe4rAc3jt/FGD4rSgawNTN1HieFaQ0vq/0I5Gi
-pyJv09alaosBuqNYc37Gqm9Ddk6xEJb8lvwrVqeS2ZGMFmfJuFlsuLKhwdgen/og
-Wik6VZEjyUHJbyZgkcwMn6rTVTnopK7E0RYmdap35Bh6MAZ3auQ4eQU2tktY3L0G
-+NL/ah9FAvmPH1RAR7KmXzZxVYX2ZoWm3AJVpCIvlc9toZI5NdOwdruT+KlTLHIY
-T0vs7B3wqsrD4pHputHdDtf9iSZDB0FiTi44yJjReI72Yb47gDXXK7tOcewvq33Y
-J9dv/HeT85ER8dZ3fCssLdOsIVSE5ZGaDGjP9M4hPo5ZqM5WlMcqW13gmBsEaY3W
-quFFx4pgOXFmnO+7fCb0OIoySeTtgCMNqSwekaNsrbK8dBsFhMx62IzUwwCwL8ST
-clLrMsK81BA4v5hiU1SXC5zAJJG1W0FEpGvIuQRa5YxW8goqwIJrEuvy8jWLhg1x
-kB4BNFdQdBMg8xw0GSHGDhOZhIxgC5t/fvrbiLmqazzmbfCE1i8=
-=71f2
------END PGP SIGNATURE-----
-
---JYK4vJDZwFMowpUq--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
