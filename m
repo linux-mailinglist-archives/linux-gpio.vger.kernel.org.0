@@ -2,87 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD5A92522F5
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 23:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10284252384
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Aug 2020 00:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYVih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 17:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
+        id S1726541AbgHYWVY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 18:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHYVig (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 17:38:36 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89125C061574;
-        Tue, 25 Aug 2020 14:38:36 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598391515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bzrluaqlq3krRM30SsNwVNRIRZVbuCOAOPYCtGzqAAI=;
-        b=J9oc+MDLMdReE5k69O6GhTmcW1kbRigczO+p80fP9tL2V05Y6kHJDM8DW04APAucV5gWlC
-        1TwOZNHF1XGdntATDmI7j+t3jZgkiWV5uBL+Iy8BiL9Dt6quUYyqkRT6N0ovhdd3EZAyQO
-        ogIFvMiqCL35QGNFp3uXoaKpl8p95O3plq+1hVInOFw/B7sYC4XkF7K3at0pQN/qMnfVm1
-        WbL7jgL6LrW6nt9NmHl36iC+km/gChilKRZz+LchETQTwOChFLMjt3TIUDqr2nIQxl5nnZ
-        E+yWGXbTD/11EeX/2Y1PmqUM9gBCVxNPeTJM/su45mjJh5k0J2JefY9ojMHrsg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598391515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bzrluaqlq3krRM30SsNwVNRIRZVbuCOAOPYCtGzqAAI=;
-        b=y4jw2WD7k5ZcqN2mnAhVVjasNzleQUESsZxjn10jpa64PgF9Rsh8A38qKu0+8EveS4+jOQ
-        29ANfqxmomGx24Aw==
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        linus.walleij@linaro.org, maz@kernel.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
-In-Reply-To: <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
-Date:   Tue, 25 Aug 2020 23:38:34 +0200
-Message-ID: <874koqxv6t.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S1726391AbgHYWVY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 18:21:24 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E934C061574;
+        Tue, 25 Aug 2020 15:21:23 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m71so8453416pfd.1;
+        Tue, 25 Aug 2020 15:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xo3Lh0ar7wK8VvvtzSvlcOKRsOHINzAQAPvkHRS8eCk=;
+        b=K5UGRk30zCXsG7GyY8ibqJTsvhuFGMNYsMqdZaXvDUMwQedYWITYCEidSXBJOsM6xX
+         G5lm7jYUuJjWCyn68p+/Ji763YxWvw113AC6Wr06+QqcibsW/uuPKKguaG10PDggRgaA
+         VaB5WEjxaIvUd9pV3jAtNE7xWq/qwemnzDOPDUtmOuPjKHbMDsBHty7OUhWg33wZLSAm
+         dZbPw5t5ZyNZBjssFp72nGKKgNUNHTbZOrDCmh8xiFcvLcm3v5WdC9ZizdwE9HdXTRux
+         qfexwp2ykIJg+a0OYiJ8JdNv30nsS//N5XihqqZwzkSMUwvYlLN6GL4EK9shYfzVePQq
+         brfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Xo3Lh0ar7wK8VvvtzSvlcOKRsOHINzAQAPvkHRS8eCk=;
+        b=o8ZPvYq1Al82gKZVkbSyC80vcPvmxlCL+E1i2SoJdMyMkYMyxgc1WNHo8oGxA+cpFY
+         cmW8LoynNndVcOa9pmlcAlk0C5kZZS09HugHvsUMUkBCjpypuZ3SUscXpGmqLFtpe2bU
+         +my4T63djd7ssBVYh5hh7IWMqfP+Q85UxN3+gWk6QGfZW7o7YVdBfaJuUffYFrdialon
+         Agv9+JInRgWlh7HKsbao9A84ASLLhtrO/JO7D3pIHJhwByVAns/XZVUG48aaWRpKkIUh
+         jpFn9zVAc/d+8OFGePB5O6OmzopZngo0tTWCOOXsPFWdo5jS0FhOeDqMZvfSrIpNCILS
+         D4zw==
+X-Gm-Message-State: AOAM532KOUKrmagO3m0ZlgMraf9LKmdgtI+EJdot5ZLqjZmavGpldBlL
+        hZ56Uw9VMeVZOHeVuaeYIz6q9n7lXmo=
+X-Google-Smtp-Source: ABdhPJx/W1tKY8ncOnd42CczsmOXPD+BXGz4pzZDJOXSv79W0b26Rxxdd7HgbovfyrFCE6/1S6CseA==
+X-Received: by 2002:a63:1341:: with SMTP id 1mr880005pgt.144.1598394082624;
+        Tue, 25 Aug 2020 15:21:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e3sm258500pfj.78.2020.08.25.15.21.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 15:21:21 -0700 (PDT)
+Subject: Re: [PATCH v3 08/19] dt-bindings: watchdog: fsl-imx-wdt: Add i.MX 8M
+ compatibles
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20200825193536.7332-1-krzk@kernel.org>
+ <20200825193536.7332-9-krzk@kernel.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <88bcb8db-1e19-fdf6-6527-6f3755cd5709@roeck-us.net>
+Date:   Tue, 25 Aug 2020 15:21:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200825193536.7332-9-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 25 2020 at 03:12, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-08-22 09:16:58)
->> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
->> index c6c7e18..2cc800b 100644
->> --- a/kernel/irq/pm.c
->> +++ b/kernel/irq/pm.c
->> @@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
->>  
->>  static bool suspend_device_irq(struct irq_desc *desc)
->>  {
->> +       unsigned long chipflags = irq_desc_get_chip(desc)->flags;
->> +
->>         if (!desc->action || irq_desc_is_chained(desc) ||
->>             desc->no_suspend_depth)
->>                 return false;
->>  
->>         if (irqd_is_wakeup_set(&desc->irq_data)) {
->>                 irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
->> +
->> +               if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
->> +                       irq_enable(desc);
->
-> Where is the corresponding change to resume_irq()? Don't we need to
-> disable an irq if it was disabled on suspend and forcibly enabled here?
+On 8/25/20 12:35 PM, Krzysztof Kozlowski wrote:
+> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+> to fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+>     compatible:0: 'fsl,imx8mm-wdt' is not one of ['fsl,imx21-wdt']
+>     From schema: Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+>     compatible: ['fsl,imx8mm-wdt', 'fsl,imx21-wdt'] is too long
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+>     compatible: Additional items are not allowed ('fsl,imx21-wdt' was unexpected)
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-That part was below the POC code I provided in the fine print:
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
- "plus the counterpart in the resume path. This also ensures that state is
-  consistent."
+> ---
+>  .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml     | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> index d96b93b11fad..991b4e33486e 100644
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> @@ -14,8 +14,15 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - fsl,imx21-wdt
+> +    oneOf:
+> +      - const: fsl,imx21-wdt
+> +      - items:
+> +          - enum:
+> +              - fsl,imx8mm-wdt
+> +              - fsl,imx8mn-wdt
+> +              - fsl,imx8mp-wdt
+> +              - fsl,imx8mq-wdt
+> +          - const: fsl,imx21-wdt
+>  
+>    reg:
+>      maxItems: 1
+> 
 
-Who reads the fine print? :)
