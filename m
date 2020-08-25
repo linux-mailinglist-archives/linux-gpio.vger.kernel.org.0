@@ -2,117 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5BE72510DD
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 06:47:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF0125115E
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Aug 2020 07:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHYErk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Aug 2020 00:47:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52945 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgHYErj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Aug 2020 00:47:39 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kAQrH-0004DB-JG; Tue, 25 Aug 2020 06:46:55 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kAQrF-0004IR-Cn; Tue, 25 Aug 2020 06:46:53 +0200
-Date:   Tue, 25 Aug 2020 06:46:53 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
- compatibles
-Message-ID: <20200825044653.GK13023@pengutronix.de>
-References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-13-krzk@kernel.org>
+        id S1726149AbgHYFOm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Aug 2020 01:14:42 -0400
+Received: from smtp.rcn.com ([69.168.97.78]:24064 "EHLO smtp.rcn.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgHYFOl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 Aug 2020 01:14:41 -0400
+DKIM-Signature: v=1; a=rsa-sha1; d=rcn.com; s=20180516; c=relaxed/simple;
+        q=dns/txt; i=@rcn.com; t=1598332480;
+        h=From:Subject:Date:To:MIME-Version:Content-Type;
+        bh=4md+ssomE4Gwt1ASNPOhq2CzLX4=;
+        b=Tw+Hw2Au6oTPSG5DhuRup9/WAZGt6+OuqQqlKyv4cZNY69MfT9AzNqn1ZAFt61yR
+        pbkr5FffGqFcsth8xlclsznQRvqNbUwVqDytH5hPhoOz6t1nmyR16lcGJ/Xl8Rnw
+        wwpmHwwCVhn9H1Gy3nWUt5CtLRandxf34PhNRfvp9jtNwevK/OAS7EpQIRC+pUE+
+        M5lF3qAdrysRwX4CgqzxUhOwe4DrrDgYw5Llo1rkeKQmq1yuBmJdIyodZ4nqIzk4
+        no4l0ikfeqoD2BNyOHCqH+x0zLErI8xjTggJh8AuwNnNS2aAV+Pl/WlLa2yOQd9w
+        JBBwCAFxPWmwS1ELOhtbSw==;
+X-User-Whitelist: YES
+X-Authed-Username: cGVhcmxob3dlckByY24uY29t
+Authentication-Results: smtp03.rcn.cmh.synacor.com header.from=pearlhower@rcn.com; sender-id=softfail
+Authentication-Results: smtp03.rcn.cmh.synacor.com smtp.mail=pearlhower@rcn.com; spf=softfail; sender-id=softfail
+Received: from [10.33.66.0] ([10.33.66.0:43302] helo=md09.rcn.cmh.synacor.com)
+        by smtp.rcn.com (envelope-from <pearlhower@rcn.com>)
+        (ecelerity 3.6.25.56547 r(Core:3.6.25.0)) with ESMTP
+        id 57/A5-51190-F3E944F5; Tue, 25 Aug 2020 01:14:40 -0400
+Date:   Tue, 25 Aug 2020 01:14:39 -0400 (EDT)
+From:   neetu pal <pearlhower@rcn.com>
+Reply-To: neetu pal <pal820590@gmail.com>
+To:     rcnts@rcn.com
+Message-ID: <290124736.3518005.1598332479639.JavaMail.root@rcn.com>
+In-Reply-To: <1206416174.3498078.1598331772875.JavaMail.root@rcn.com>
+Subject: Re: jii hllo
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824162652.21047-13-krzk@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:38:05 up 187 days, 12:08, 138 users,  load average: 0.13, 0.17,
- 0.18
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [155.94.250.96]
+X-Mailer: Zimbra 7.2.7_GA_2942 (zclient/7.2.7_GA_2942)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx6q-ocotp
-> +              - fsl,imx6sl-ocotp
-> +              - fsl,imx6sx-ocotp
-> +              - fsl,imx6ul-ocotp
-> +              - fsl,imx6ull-ocotp
-> +              - fsl,imx7d-ocotp
-> +              - fsl,imx6sll-ocotp
-> +              - fsl,imx7ulp-ocotp
-> +              - fsl,imx8mq-ocotp
-> +              - fsl,imx8mm-ocotp
-> +              - fsl,imx8mn-ocotp
-> +              - fsl,imx8mp-ocotp
-> +          - const: syscon
-> +      - items:
-> +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
-> +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
-
-Shouldn't this be fixed? It seems strange to justify a binding with
-existing code.
-
-Sascha
-
-> +          - enum:
-> +              - fsl,imx8mn-ocotp
-> +              - fsl,imx8mp-ocotp
-> +          - const: fsl,imx8mm-ocotp
-> +          - const: syscon
->  
->    reg:
->      maxItems: 1
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+i dropped by to say Gm sir
