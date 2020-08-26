@@ -2,114 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FBA25297A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Aug 2020 10:52:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D023252AC4
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Aug 2020 11:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHZIwF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Aug 2020 04:52:05 -0400
-Received: from mail-eopbgr1320127.outbound.protection.outlook.com ([40.107.132.127]:6166
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726817AbgHZIwE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:52:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a9EPndt4n7Pu8aiQhC/1NuZUu7K9sD0JQekdgrBxcxQVBTHskNNUfO/zLvtEK9eNwpwCFOexZt8WBQEGPe6J9gXFOidu7iumBYky4zVM+/mK90BD3mCyTF8B+puJKEUpqYisAjTv6rFWfNiUsqelAyN73ogoM2ax+tbMwXLpsNZeTPUEqazLl59O7+czIB1oWxclD42nyrGTp6QaIpS13Z3W+IRiYcNlPrWY2XXwskoBbO2cbDtMHxhFSJ7H5SCFPmhhaIoTq8y1uWpAX2k07z3IAeOoGGySK4W/86sxC5ErsmIENwirVUeY8MW05fEFWx6lLK6/T3eYTiU01jYxVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8fKj9G1Vv9MrTI//vO/GUkrCK7S6U4tQRYHrB4BPg0=;
- b=G6saWTHyN5t0+2CvcEYdrENSuaXXhgUc29DZB5Dx7CiZeWOOWMW6OFDZSSkUc+/X2qUUgabaAeSidj4VzmGL71xcZGwynEGSCRwoF7zE4uv5mbgEBQGsQDazfykT7ZHShGLG7pV8ZjXnEA8Zci0fvPPxqCcMVRRkuJ/YMVa09jqveGipC9PNph12FA+ERddb8uFaQuUDLaymbKhn4UfzL/yjNwnxjQTkpDiMltHgnIPITM9dkioh31VjEIWHJZ/9XHPHdW3lDq1ueWbZ+ujPffcrrZDsOY3VW0UI53gbf8z30xbJgLhcDWaRpDH7HPsHkmbw0TVkgZwESxttTgRTCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8fKj9G1Vv9MrTI//vO/GUkrCK7S6U4tQRYHrB4BPg0=;
- b=E6dlXiEJ258Fsgt2VvoErY1z+cjDDB+ODIaRVu5bc6n8sUjF83RLmOqN4bDM+qUIq0o11uqA7ApAeq0ryS0ptEoOvZUBmZBo16iV7CbQcb1/kJsjA/TuUrUBAsTSFMYePQn6w0/aQAl5xYugDlBBtXPZLZ6fEMqHkp8J8sImTv4=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (2603:1096:404:73::17)
- by TY2PR01MB5035.jpnprd01.prod.outlook.com (2603:1096:404:111::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
- 2020 08:52:00 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::e1a0:8e97:f2b7:c9d9]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::e1a0:8e97:f2b7:c9d9%2]) with mapi id 15.20.3326.019; Wed, 26 Aug 2020
- 08:52:00 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
-Thread-Topic: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
-Thread-Index: AQHWd60potnxulZi0USUP8M4OLJxHalCfc1wgAXw8wCAAZ7IsA==
-Date:   Wed, 26 Aug 2020 08:52:00 +0000
-Message-ID: <TY2PR01MB29248882CC49ED53F99A5FF7DF540@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <20200821112059.5133-1-geert+renesas@glider.be>
- <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
- <CAMuHMdU2+=aesP5v3iAWp8+-LZ8dpMi+EOm7n5x74q7j8kFNPg@mail.gmail.com>
-In-Reply-To: <CAMuHMdU2+=aesP5v3iAWp8+-LZ8dpMi+EOm7n5x74q7j8kFNPg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2d0a81f2-32aa-4e80-818d-08d8499d4bd4
-x-ms-traffictypediagnostic: TY2PR01MB5035:
-x-microsoft-antispam-prvs: <TY2PR01MB5035CECADE92550BFEC78CD9DF540@TY2PR01MB5035.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tAs/Q8IllTQ+VYAsfyJ4h7tyZ71Y6n4Ran0+tE+QlFp1DwH1vTIr1jls58qAaibxrLEKgux0a4bRL7+0Sg12t7r/Eeb2YLJQFnZqwbWlm2HhHSyInAa0v8zz+HgmDikzaP4vW5gov8l0wnEb13RWh259MDiu7qV2uHVldEGRtFZAivcvkxhEB2+uKrolFK/bLa7snStE0+BTMDMR1K+cKdXB/HPk/eP+6xniJpBCgDV90WwFkTQTFx9Qcxu8KaufDLuDPvwKVZNqIDMQdZOvXSsvB+4yhXo8S5eBqWzqNPMKYw7XPBnjl7yBmVb0e1y+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(396003)(39860400002)(53546011)(55016002)(26005)(33656002)(7696005)(186003)(8936002)(316002)(6506007)(5660300002)(54906003)(4326008)(478600001)(4744005)(66556008)(8676002)(66946007)(6916009)(64756008)(76116006)(66476007)(86362001)(71200400001)(9686003)(52536014)(2906002)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: aUVQBpEKmktHW+HGy2AAK+WvT5+5X6e/UZDnfFVIhJv9I/SA/HluzusPnmGfBwBvFOjDjHQN9rFKTqKbOt3+s1uedfkSHMDyx1FqBHmBbBLM2wWpVKi23vdSAeMpEKCfJdZTRcqac62I6NlO0+sX/kTVl0CfJMvIPI+GKwyrcoSYQGqA9SHxY/s/pi1b+ezLSEpwamKaAYSuVazY41epJ8QKQ0F6yeGJKkGcml0ltwAcEbw0YtMRrFTu8+26ZPaYjlXT8Yr/AtCneyDJMcRDXcM1drVlppfPACZ90366MNINook88MjmyQ2J7cbp0HFtPba2Jj7os/3WTLrfbpOg0ZH+Lih3k5BBMCbs3Toa4ViU1lkcwcmR3ekwthCwLQTQO1yykKKjpZ3BdvREtQhNEm1a9eOiczBJWR+onnE9DH8l2Jna+wMsHIrwVnDdJfS/IEV779IjW1Ulz5wJqB1rX+9qbAF0bdwhGeG+nbMuTZUFRNpkjuz0uKHYlnvDNN5P1buyqWcyXQS0GMFnbVj21lX5rTwaBPJmL+pGy4fsHeKTY1b6XNAZwVjNIC/ZywnEt6E9YiYYtJ0FGPvhF9iPMJlDcoRLr7Ed8Iy1DRWanuoDwP7vfSfLW+THmVPnuT4Wz6v8ka/HTK46B2oxfiT4Ww==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728086AbgHZJxE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Aug 2020 05:53:04 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:54893 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728070AbgHZJxD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:53:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598435582; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Ev2LMeIqc88r/l6TuJddWcgSSo6NoXnUMGqZE8WEPUg=; b=Zk8JZqFxMjw7QLOgH+/DqJAngJ7SuWU4KoULIreyJd3Au08lvmcFNi2FPzKYcRxwgEixKRpA
+ nF87OnRqsyk1GflpBTdgHld8DfYtfo6dvdEfBiOfC7Wq/gOMlaNdSr85ISzChpECKMeS1cIa
+ l1HlKwZF7Hbje2PYnLyCplenRWc=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f4630fdca327a6430dc8268 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 09:53:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BABF2C433A0; Wed, 26 Aug 2020 09:53:00 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.2 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.73.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFE8AC433C6;
+        Wed, 26 Aug 2020 09:52:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BFE8AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce
+ IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+ <1598113021-4149-4-git-send-email-mkshah@codeaurora.org>
+ <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
+ <874koqxv6t.fsf@nanos.tec.linutronix.de>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
+Date:   Wed, 26 Aug 2020 15:22:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB2924.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d0a81f2-32aa-4e80-818d-08d8499d4bd4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2020 08:52:00.2497
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mSXG5MCKvGoh0cBikSuyXv9y2xruQIdvlRQprUMbPMih1oIckpd2H3WSes90ASmcz9UQIFGLdHqUZLo7nYf1WtkaxYlRn4WFM+DweHelLrQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB5035
+In-Reply-To: <874koqxv6t.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFR1ZSwgQXVnIDI1LCAyMDIwIGF0IDA4OjEyIEFNIEdlZXJ0IFV5dHRl
-cmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+IHdyb3RlOg0KPiANCj4gSGkgR2FyZXRo
-LA0KPiANCj4gT24gTW9uLCBBdWcgMjQsIDIwMjAgYXQgNToxMCBQTSBHYXJldGggV2lsbGlhbXMg
-PGdhcmV0aC53aWxsaWFtcy5qeEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gT24gRnJpLCBBdWcg
-MjEsIDIwMjAgYXQgMTI6MTIgUE0gR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGds
-aWRlci5iZT4gd3JvdGU6DQo+ID4gPiBDb252ZXJ0IHRoZSBSZW5lc2FzIFJaL04xIFBpbiBjb250
-cm9sbGVyIERldmljZSBUcmVlIGJpbmRpbmcNCj4gPiA+IGRvY3VtZW50YXRpb24gdG8ganNvbi1z
-Y2hlbWEuDQo+ID4gPg0KPiA+ID4gVXNlICJwaW5jdHJsIiBnZW5lcmljIG5vZGUgbmFtZS4NCj4g
-PiA+IERyb3AgZ2VuZXJpYyBhbmQgY29uc3VtZXIgZXhhbXBsZXMsIGFzIHRoZXkgZG8gbm90IGJl
-bG9uZyBoZXJlLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEdlZXJ0IFV5dHRlcmhvZXZl
-biA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+ID4NCj4gPiBUaGlzIGlzIGEgY2xlYW4gYW5k
-IHN1aXRhYmxlIGNvbnZlcnNpb24gdG8gbWUuDQo+ID4gRm9yIGNvbXBsZXRpb24gSSByYW4gdGhp
-cyBhZ2FpbnN0IG15IGR0cyBmaWxlcyBmb3IgdGhlIHJ6bjEgZm9yDQo+ID4gdGVzdGluZyBwdXJw
-b3NlcyBvbiBuZXh0LTIwMjAwODI0IHdpdGhvdXQgaXNzdWVzLg0KPiA+DQo+ID4gUmV2aWV3ZWQt
-Ynk6IEdhcmV0aCBXaWxsaWFtcyA8Z2FyZXRoLndpbGxpYW1zLmp4QHJlbmVzYXMuY29tPg0KPiA+
-IFRlc3RlZC1ieTogR2FyZXRoIFdpbGxpYW1zIDxnYXJldGgud2lsbGlhbXMuanhAcmVuZXNhcy5j
-b20+DQo+IA0KPiBUaGFuayB5b3UhDQo+IA0KPiBCVFcsIGRvIHlvdSBwbGFuIHRvIHVwc3RyZWFt
-IGFueSBvZiB0aG9zZSBEVFMgZmlsZXM/IEN1cnJlbnRseSwgbm8gdXBzdHJlYW0NCj4gRFRTIGZp
-bGUgZm9yIFJaL04xIGNvbnRhaW5zIHBpbmN0cmwgcHJvcGVydGllcy4NCg0KSSBkbywgYWx0aG91
-Z2ggSSBhaW0gdG8gY29tcGxldGUgcmVtYWluaW5nIGRyaXZlciB3b3JrIGZpcnN0IHNvIHRoYXQg
-SSBjYW4gYmUgY29uZmlkZW50DQp0aGUgRFRTIGlzIGNvcnJlY3QgYW5kIGNvbXBsZXRlLg0KDQpS
-ZWdhcmRzLA0KDQpHYXJldGggDQo=
+Hi,
+
+On 8/26/2020 3:08 AM, Thomas Gleixner wrote:
+> On Tue, Aug 25 2020 at 03:12, Stephen Boyd wrote:
+>> Quoting Maulik Shah (2020-08-22 09:16:58)
+>>> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+>>> index c6c7e18..2cc800b 100644
+>>> --- a/kernel/irq/pm.c
+>>> +++ b/kernel/irq/pm.c
+>>> @@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
+>>>   
+>>>   static bool suspend_device_irq(struct irq_desc *desc)
+>>>   {
+>>> +       unsigned long chipflags = irq_desc_get_chip(desc)->flags;
+>>> +
+>>>          if (!desc->action || irq_desc_is_chained(desc) ||
+>>>              desc->no_suspend_depth)
+>>>                  return false;
+>>>   
+>>>          if (irqd_is_wakeup_set(&desc->irq_data)) {
+>>>                  irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+>>> +
+>>> +               if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
+>>> +                       irq_enable(desc);
+>> Where is the corresponding change to resume_irq()? Don't we need to
+>> disable an irq if it was disabled on suspend and forcibly enabled here?
+I should have added comment explaining why i did not added.
+I thought of having corresponding change to resume_irq() but i did not 
+kept intentionally since i didn't
+observe any issue in my testing.
+
+Actually the drivers which called (disable_irq() + enable_irq_wake()), 
+are invoking enable_irq()
+in the resume path everytime. With the driver's call to enable_irq() 
+things are restoring back already.
+
+If above is not true in some corner case, then the IRQ handler of driver 
+won't get invoked, in such case,
+why even to wake up with such IRQs in the first place, right?
+
+However If we don't want to rely on the drivers doing things correctly, 
+state can be restored in resume_irq()
+I explored this, During suspend,
+
+1. Some IRQs are unmasked/enabled + marked for wakeup
+2. Some IRQs are masked/disabled + marked for wakeup
+
+So have to track and restore only IRQs in category (2).
+With current patch we don't have way to track IRQ is in (1) or (2).
+It may be done with the new IRQD flag saying like 
+IRQD_IRQ_ENABLED_ON_SUSPEND
+
+During suspend,
+First check if the IRQ was in disabled/masked state to invoke 
+irq_enable() only for category (2) and set the new flag.
+
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)) {
+         irq_enable(desc);
+         irq_state_set_enabled_on_suspend(desc); => this will set new 
+IRQD_IRQ_ENABLED_ON_SUSPEND
+     }
+
+During resume,
+Simply calling irq_disable(desc); don't work in resume_irq(), since by 
+default this API tries to lazily disable at HW, which won't quite 
+restore the state,
+So instead of adding below
+
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
+     && (irqd_is_enabled_on_suspend(desc)))
+     {
+         irq_disable(desc);
+         irq_state_clear_enabled_on_suspend(desc); => clear flag
+     }
+
+we can replicate the irq_disable() with removal of lazy part, something 
+like,
+
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND) &&
+     (irqd_is_enabled_on_suspend(desc))) { ==> The new flag used to 
+determine if IRQ was enabled during suspend path, then only restore.
+         irq_state_set_disabled(desc);
+         if (desc->irq_data.chip->irq_disable) {
+desc->irq_data.chip->irq_disable(&desc->irq_data);
+             irq_state_set_masked(desc);
+         } else {
+         mask_irq(desc);
+     }
+     irq_state_clear_enabled_on_suspend(desc);
+}
+
+which is matching exactly reverse of what is done in suspend entry.
+Let me know if above is good i can include this in v6.
+
+Thanks,
+Maulik
+
+> That part was below the POC code I provided in the fine print:
+>
+>   "plus the counterpart in the resume path. This also ensures that state is
+>    consistent."
+>
+> Who reads the fine print? :)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
