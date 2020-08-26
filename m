@@ -2,96 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12FB0252B37
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Aug 2020 12:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D221252C65
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Aug 2020 13:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgHZKPl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Aug 2020 06:15:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56494 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728191AbgHZKPk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Aug 2020 06:15:40 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598436938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rMxf05Zh5rg5fiuN4Y5ZaPXwW3Mlg4s5ZeNNHexJaj4=;
-        b=CHzqWuIQH5JHUjI0kmpjxllDQTFu2MfaeG4HSUFmw6DiNvaZVgeOuzogrvmMdUGpIdZ71X
-        Im4rQxXlBwO7QKb+Vp8thpbPPIvcH5cNPbpCXwf3342/4QjPVvDD5gCPS0CAwHblqVreTA
-        iwBhmBXxtD1MMH10wRAlaAEfXMK1dHD0OrP31zwvGGEFe24P7lJ3Ei5BJCmfOCYZ8vygyi
-        1K8SSsRYbDLIUdlhO2XYuVSsRwYNN6dvzuHuOxP5H8sll527qkTW+WDEujumA+jvpfpLnG
-        eiIHsCPT3tM3cUbU9otpdyTx0Ed1vgkufiRFG95YvpWxMg8Iq/hPkgPMTnV6KQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598436938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rMxf05Zh5rg5fiuN4Y5ZaPXwW3Mlg4s5ZeNNHexJaj4=;
-        b=Klejnk9mTGP+PDaLOLuyNlPzRoehYgLlmsRSMQ7iaxGUpPi8n2jJsgYQ5F98S21EG6IpU7
-        GuYrJMYy6mM+xyDQ==
-To:     Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
-In-Reply-To: <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com> <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
-Date:   Wed, 26 Aug 2020 12:15:37 +0200
-Message-ID: <87y2m1vhkm.fsf@nanos.tec.linutronix.de>
+        id S1728842AbgHZLXy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Aug 2020 07:23:54 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43262 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728925AbgHZLXn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Aug 2020 07:23:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QBNOw4052331;
+        Wed, 26 Aug 2020 06:23:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598441004;
+        bh=DRtBxRFRiFGn6igRLk1g28R+FpZYk/3k74FzagIipkg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=we+R3fg6fdtS4alXj7YpXJQHda6znTRuxSGjCb7jVcHlIARN9MIdso8Ig5dVZfjsP
+         xZcf3qoN7LP/Tt//PK4/2HA+X/iw4rA7M+8HvV4b9nZzGSfxXEt5K6B/2OUx3Htpz2
+         aLZp94XAQtiYRroDeGQttwqao8EJeKxanmRPPBME=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QBNOMJ104622
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 06:23:24 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 06:23:24 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 06:23:24 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QBNMlF030213;
+        Wed, 26 Aug 2020 06:23:23 -0500
+Subject: Re: [PATCH] gpio: omap: Pass __maybe_unused to the suspend()/resume()
+ hooks
+To:     Fabio Estevam <festevam@gmail.com>, <linus.walleij@linaro.org>
+CC:     <khilman@kernel.org>, <tony@atomide.com>,
+        <linux-gpio@vger.kernel.org>
+References: <20200824130327.21113-1-festevam@gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <ef3101cd-6cf1-d571-7ac6-6208373c0155@ti.com>
+Date:   Wed, 26 Aug 2020 14:23:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200824130327.21113-1-festevam@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 26 2020 at 15:22, Maulik Shah wrote:
-> On 8/26/2020 3:08 AM, Thomas Gleixner wrote:
->>> Where is the corresponding change to resume_irq()? Don't we need to
->>> disable an irq if it was disabled on suspend and forcibly enabled here?
->>>
-> I should have added comment explaining why i did not added.
-> I thought of having corresponding change to resume_irq() but i did not 
-> kept intentionally since i didn't
-> observe any issue in my testing.
 
-That makes it correct in which way? Did not explode in my face is hardly
-proof of anything.
 
-> Actually the drivers which called (disable_irq() + enable_irq_wake()), 
-> are invoking enable_irq()
-> in the resume path everytime. With the driver's call to enable_irq() 
-> things are restoring back already.
+On 24/08/2020 16:03, Fabio Estevam wrote:
+> When building a defconfig that does not have CONFIG_PM_SLEEP
+> selected, the following build warnings are seen:
+> 
+> drivers/gpio/gpio-omap.c:1531:12: warning: 'omap_gpio_resume' defined but not used [-Wunused-function]
+> drivers/gpio/gpio-omap.c:1519:12: warning: 'omap_gpio_suspend' defined but not used [-Wunused-function]
+> 
+> Pass __maybe_unused to avoid these warnings.
+> 
+> Fixes: f02a03985d06 ("gpio: omap: Add missing PM ops for suspend")
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>   drivers/gpio/gpio-omap.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 7fbe0c9e1fc1..0ea640fb636c 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -1516,7 +1516,7 @@ static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -static int omap_gpio_suspend(struct device *dev)
+> +static int __maybe_unused omap_gpio_suspend(struct device *dev)
+>   {
+>   	struct gpio_bank *bank = dev_get_drvdata(dev);
+>   
+> @@ -1528,7 +1528,7 @@ static int omap_gpio_suspend(struct device *dev)
+>   	return omap_gpio_runtime_suspend(dev);
+>   }
+>   
+> -static int omap_gpio_resume(struct device *dev)
+> +static int __maybe_unused omap_gpio_resume(struct device *dev)
+>   {
+>   	struct gpio_bank *bank = dev_get_drvdata(dev);
+>   
+> 
 
-No, that's just wrong because you again create inconsistent state.
+Duplicates
+https://www.spinics.net/lists/arm-kernel/msg830596.html
 
-> If above is not true in some corner case, then the IRQ handler of
-> driver won't get invoked, in such case, why even to wake up with such
-> IRQs in the first place, right?
-
-I don't care about the corner case. If the driver misses to do it is
-buggy in the first place. Silently papering over it is just mindless
-hackery.
-
-There are two reasonable choices here:
-
-1) Do the symmetric thing
-
-2) Let the drivers call a new function disable_wakeup_irq_for_suspend()
-   which marks the interrupt to be enabled from the core on suspend and
-   remove the enable call on the resume callback of the driver.
-
-   Then you don't need the resume part in the core and state still is
-   consistent.
-
-I'm leaning towards #2 because that makes a lot of sense.
-
-Thanks,
-
-        tglx
+-- 
+Best regards,
+grygorii
