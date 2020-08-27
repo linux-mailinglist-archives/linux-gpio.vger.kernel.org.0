@@ -2,79 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 700D4254FD2
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 22:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E41D7255147
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgH0UI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 16:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgH0UI4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:08:56 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4B6208FE;
-        Thu, 27 Aug 2020 20:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598558935;
-        bh=jqbCUCwaNDypOtzCNXSWzew6krtWZkO/KHBOcaEh1TI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXqlSAaruLYKES5GfoaCIjkIXBGmvuw8aRlvNYhegqHJbE3jQLVi2gliQbBq9Z3xE
-         6uyX65ypKowMOFwSzVDeI/hstiynecXeTy62V8G5bGMqAReK88sFO4orKu5nLw2MNK
-         FzV7xOQPilZpKvfXFITbH6G2tnGGsah1K5NuoSBg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ray Jui <rjui@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, Keerthy <j-keerthy@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/6] gpio: zynq: Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 22:08:27 +0200
-Message-Id: <20200827200827.26462-6-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827200827.26462-1-krzk@kernel.org>
-References: <20200827200827.26462-1-krzk@kernel.org>
+        id S1726972AbgH0Wqq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 18:46:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgH0Wqp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:46:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3D3C061264
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:46:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w25so8245827ljo.12
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:46:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xLZFWr7UywbWBWsxRfEW6zYKyjxc4efoftXjUUQ/9us=;
+        b=e6eCbNjLldnqILxCRTj94Xc4gRJC98eSJCrfjAZCj2W69Q/nfby8FxpNHub+9YP/Hj
+         LfN3X8MUMgt1ygome6F8J6rhRDHPD92XUM+SCj0d5xfFimZD5m3KspewkyzSVMQsv+iE
+         sAP9ZpUQri3IcGrXq02EFXPPCjf1YWugCv0B6DfsDM7gt8BqRz3PFOmB+HPgViOdrnI9
+         IL5DNEfnfALvtf/xWAjVkiphHwgp/Sz37EXnIBu6MiF5gVDcpHB6df1K1Ic7NZznXKk0
+         cEEsC5/bLC8+HelOtYsyeuB+tXNpOLBCbeah9Wto+5Uq29WpTP/gkA5m7u7kQ2tnwjDt
+         lV3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xLZFWr7UywbWBWsxRfEW6zYKyjxc4efoftXjUUQ/9us=;
+        b=qVLDStbezQn8dEcsSKdn2unvTr5B83cKPy4QtUZHSMmWWk4HtralTiJCZzqnXL6BI2
+         O7BVJPy1AdH0pQPvaPWBSS0uGvuNuXxWAXDbrbxekUc99/FpsoLIVCVdeAm0EIQdNlLJ
+         m1gfoK3B39r3GKucuOk48pLpRqNSqkiA6ZiZsuMC+qerf7l1VIXBj9ZQmjPQZuNMQyI4
+         uJXxmjCvc+5Dux8CVJLmi9qnQRAaQ77KNb4xIc1Ir4ABwSIJ/da/xxrppyXyrmlYteME
+         2ZZ7P56g39EsOpAqhw+UubJR1drF0w8pWSfvGzw+/leVteGOkOLbGhS8n24EjrxewPbu
+         MtrA==
+X-Gm-Message-State: AOAM530iPUCzLiOqh4o6amMEfuzHPEmm7zZOk27I8d0v891doBcNdh1m
+        RHhf5FiTMzNwgRcjrSV5DiYBq4+9Yv93P+QNvGCXjA==
+X-Google-Smtp-Source: ABdhPJxy9FmKec2qELGcZgBtiPM/q05VpfopQpSLFkQKhaSSCuEtGIrHy31iWX3JZONJRvqKrPeVuPvX0II4zmJMblQ=
+X-Received: by 2002:a2e:6a17:: with SMTP id f23mr9769659ljc.338.1598568403182;
+ Thu, 27 Aug 2020 15:46:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-3-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1597058460-16211-3-git-send-email-mkshah@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 00:46:32 +0200
+Message-ID: <CACRpkdaRf0W2Bo6yJZd3WL6XnFRbW--TcpKzT2OGGqk30_epVg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] pinctrl: qcom: Use return value from irq_set_wake call
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
+         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
+         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
+         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
+         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
+        <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
+         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
+         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
+         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
+         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
+        <lsrao@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Mon, Aug 10, 2020 at 1:21 PM Maulik Shah <mkshah@codeaurora.org> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/gpio/gpio-zynq.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> msmgpio irqchip is not using return value of irq_set_wake call.
+> Start using it.
+>
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 53d1387592fd..0b5a17ab996f 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -929,11 +929,9 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(gpio->clk)) {
--		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "input clock not found.\n");
--		return PTR_ERR(gpio->clk);
--	}
-+	if (IS_ERR(gpio->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk), "input clock not found.\n");
-+
- 	ret = clk_prepare_enable(gpio->clk);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to enable clock.\n");
--- 
-2.17.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+I suppose it needs to go in with the rest of the patches.
+
+Yours,
+Linus Walleij
