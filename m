@@ -2,131 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DBF525514A
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43B2D255152
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgH0Wrt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 18:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51274 "EHLO
+        id S1728035AbgH0Wsx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 18:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgH0Wrs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:47:48 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC59C061264;
-        Thu, 27 Aug 2020 15:47:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w186so4393310pgb.8;
-        Thu, 27 Aug 2020 15:47:48 -0700 (PDT)
+        with ESMTP id S1727954AbgH0Wsw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:48:52 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84BCC061264
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:48:51 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f26so8254451ljc.8
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+8SfVn5+0BRnFAIpm4JbMbWGF0XqmhERlJ52Y3/HL/M=;
-        b=JpRLddmhXWk9C3Tx3zCrreCh8q5vK4ek2jGWoqI/2O+hcZ6Yap4MYg2b0F1NpACi1y
-         0qgsomljAQPs8mxsdPeR0OFIl3LlYwd6TIPqu5G+K3/RnnKGjmczC+EmvTD/WDyQo+Pi
-         Nu5iWRVFhheufpsGZGXo0RNUmLrzRpqiycot31epR6SDlGYtF0LG9EviMDcJrBEFcC0U
-         LdvYeJw1ZSWYjgiGydi3CzRbxcu4IwBM0Jq2WDQ1Ctje3C/8MxVGLzEu23aCjJQ3+Y3C
-         Xo1hYH/5RKPsAyQBHpLrSQhwnfQdflXjCaPAM3coZ4rp4k8Xy2rg4X8j2PeOhlpl2J7e
-         lySA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tAhVF/lp+H6tBW93mDrhb4tgJc8T1p36H5TE5ih8Y+E=;
+        b=DyYENwkw29xv/LZxUcN0akYXQX65UMM6NqVrbimJyi5aMHJ34b14rRJZklIXJTP5Q4
+         oyP1kpK5/+/zA6J77DjGvp9zObV8p3p8FxiyBbe6U7KjFEKjUvgOZ93KgJ0r8drBUlnW
+         4MHLSAxIxrjF9UqQmRNGQWk2K1aR8OtOpd4qXQEIRjfoW1c8NZu95YyA479GXPAl/YKG
+         bQFszbMU+875aRGN4BK9h83gLCwT33LpXB/AU6INVK3bYaPM8Thnq5EqlS1jeWAb8jj6
+         hpFjxOJ7d4XYvKeYRm+2epP8Plh4K9C66G7XwwiWfaRdEfW37zL8apWseXFHy9X/wu19
+         PTWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+8SfVn5+0BRnFAIpm4JbMbWGF0XqmhERlJ52Y3/HL/M=;
-        b=QzylWjOZhdnrt6t2Z3mULVnM2DgWNceBUoIvC6pyMDmR/oshqXOy/03ZuPYiC6nlya
-         cdyKIDSrnsE+uTzLA3DIwcTSojZUbloUG9kcpsr2es6fkVVy7RlF6r0PbdlKIhfZMdvq
-         lc0cMpiim8yXKWZHlML0On92XxylNcenPoyC+s+XCnlSjPjYuj6N9QXd6MLrS/mscjdB
-         EMDZXr6/JsCbF/dm/j5uKLMKw2P7c8LuyVRau5ImHi5h3gCHbmQlWC/+Vi/mRYz5FQ8g
-         wTzBd5ZcBttG3UNjO+XesxBhXjsHYgtFJT1imoO1XBXg/QvpXfmUOaE90+jaS+CaELPk
-         kKLA==
-X-Gm-Message-State: AOAM53361xwK87HgMogWwtkYSfn3LBmGOZ/QGb4b2tbbpkKFbVrCZj5y
-        HsiqK3y/LzpaTlrfSNIDtBY=
-X-Google-Smtp-Source: ABdhPJw9y/M/11sN6pq8CixeRatTb/bCQnARPElCDgQqujKCMx2coLOLbKXC+H2LM9OGzXRXUTCUxA==
-X-Received: by 2002:a17:902:44f:: with SMTP id 73mr17747623ple.178.1598568467922;
-        Thu, 27 Aug 2020 15:47:47 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id a69sm3977438pfa.116.2020.08.27.15.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:47:47 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 06:47:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200827224742.GA3714@sol>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tAhVF/lp+H6tBW93mDrhb4tgJc8T1p36H5TE5ih8Y+E=;
+        b=LJn0xZFVOXFDKEn+2WPoD2e0kbZ1kOhqtgb8vrPSprB5yaE6iavtLXyJyS3cObw2v5
+         Oz9aVs2pwSXoS1JABQ5vqaKnCVjiLyz0Xe7pBSNMQKernx+IyE/6wBGelxmc6yLdh4Pz
+         +QQNdL+IgxiXVDg/PpnRCB1hV69+BuVY1ShCXG1OGI3kPR/dGZQQpobqB7SvOiBP4IBs
+         3bZGfjiwutZiltfrCtjPIyf4HvQpvnnX3RLbDkIq/3JtmrNXb+OmDKKy7XXWf12YxtRD
+         iE/8rUl7YmKoh6RIMmXqzb9bkwuhgS1vlcpdegT0iLE2L6+8L33jfibdyMA45U5jM9Ks
+         GY7g==
+X-Gm-Message-State: AOAM532g+xqgdo6lhOz8NGy69CPuP3jzbgJSwf7tFL1pE9J5EQFaPHq7
+        26XTV6f3gxIgo8ST+2/gGU3rZ0wko5DW+V3g5wV8hQ==
+X-Google-Smtp-Source: ABdhPJwXTAWlBfqievxoKW4me/4Ay0cZ1uhkfg/HNUIEXiiNhjWBBOIj9UhAQ7sN5/Cj9PnL+OfbRp2wb+AmgFlDPgI=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr11105712ljb.283.1598568530371;
+ Thu, 27 Aug 2020 15:48:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 00:48:39 +0200
+Message-ID: <CACRpkdYhY8bSkMYPXoXH_-L91cLeinkhOvW07t6Y3_Jz7KoU0Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] irqchip: qcom: pdc: Introduce irq_set_wake call
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
+         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
+         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
+         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
+         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
+        <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
+         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
+         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
+         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
+         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
+        <lsrao@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:02:03PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 27, 2020 at 5:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > On Thu, Aug 27, 2020 at 4:00 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > This patchset defines and implements a new version of the
-> > > GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-> > > support for debounce, event sequence numbers, and allow for requested
-> > > lines with different configurations.
-> > > It provides some future proofing by adding optional configuration fields
-> > > and padding reserved for future use.
-> > >
-> > > The series can be partitioned into three blocks; the first two patches
-> > > are minor fixes that impact later patches, the next eleven contain the
-> > > v2 uAPI definition and implementation, and the final seven port the GPIO
-> > > tools to the v2 uAPI and extend them to use new uAPI features.
-> > >
-> > > The more complicated patches include their own commentary where
-> > > appropriate.
-> >
-> > I'm ready to queue this now. Certainly any remaining snags can be
-> > fixed in-tree.
-> >
-> > It kind of keeps in tradition with proper software projects "plan to
-> > throw one away" which is what we have traditionally done several
-> > times: the first Bluetooh framework was tossed, JFFS was tossed
-> > for JFFS2, Video4Linux was tossed for V4L2. So let's do this.
-> >
-> > Anyone against? I will put it on an immutable branch and then merge
-> > that in for devel.
-> >
-> 
-> Hi Linus,
-> 
-> please hold it maybe for one more week - I'd love to have some more
-> people take a look at the user facing header at least. Andy is usually
-> very thorough in his reviews so I'm Ccing him here.
-> 
-> I'll too skim through the series one more time.
-> 
+On Sat, Aug 22, 2020 at 6:17 PM Maulik Shah <mkshah@codeaurora.org> wrote:
 
-I'd be happier with more eyeballs over it before it goes in as well.
+> Changes in v5:
 
-I'm also wondering if it is worthwhile dropping the restriction on
-changing edge detection configuration, that is present in
-gpio_v2_line_config_change_validate() in patch 10, so long as userspace
-is made aware that changing it may result in lost interrupts as we
-may need to release and re-request the interrupt to effect the change.
+The series:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Similarly changing debounce while edge detection is enabled, that is
-disallowed in patch 12.
+Feel free to merge this through the irqchip tree,
 
-My policy when writing the implementation was to disallow any operation
-that may have unanticiapted side-effects, and forcing userspace to
-release and re-request the line(s), but that may be overly restrictive?
-The particular use case I am considering is one I had been asked about -
-changing a requested line from input with edge detection to output, and
-vice versa. Losing interrupts isn't really an issue for this use case -
-it is expected.  Yet the current implementation requires a re-request.
-
-Cheers,
-Kent.
+Yours,
+Linus Walleij
