@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BC80254DA8
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EABDC254DC6
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:00:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgH0S76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 14:59:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50462 "EHLO mail.kernel.org"
+        id S1728255AbgH0S75 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 14:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgH0S7x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:53 -0400
+        id S1728227AbgH0S74 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:59:56 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E4B42087E;
-        Thu, 27 Aug 2020 18:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12FA422BEA;
+        Thu, 27 Aug 2020 18:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554792;
-        bh=JMGBhCbFmH+9hMDpsQ5Azdm1zxEQ9lgD8y90ydoMsQc=;
+        s=default; t=1598554795;
+        bh=uuRqkmEQUfrTFVyLKREdckixX1+af1YgVze1b7IwB/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOk7ctcGE2MBFeLLMWqu0pat1Qj7C19IKf9gJ4EkY61L5goHm2FHin3TtCBdZPaev
-         BMQ3PvDTossgOGYqKdY/cbW/rZqHd+63DcaF5ZwxpB3Jlhiro2ol3ga/DUfgEoCJk8
-         RW3MROPytreat/iGj6aJAbBzdaeu4CPnwN6HPXNs=
+        b=KKPFcFkSX0ci8UuDDGQh/QU7DazBDmgvPMk2uABsqU1ddu0Ncm1yFZm3PesMQZ8WL
+         BDiv8KVM41hh7UNoGs7CIfc2BXK/aa9d6zGR71rd07NBeLrFtRpU19sFLcS8Jq9urg
+         cN8hXbkjf6yFnwKx84VaaOxGeuAi2FsMU9m7DbFM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -36,9 +36,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 21/27] Input: surface3_spi - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:23 +0200
-Message-Id: <20200827185829.30096-22-krzk@kernel.org>
+Subject: [PATCH v3 22/27] Input: sx8643 - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:24 +0200
+Message-Id: <20200827185829.30096-23-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -54,40 +54,30 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/surface3_spi.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/input/touchscreen/sx8654.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/touchscreen/surface3_spi.c b/drivers/input/touchscreen/surface3_spi.c
-index ce4828b1415a..25bb77ddf2ef 100644
---- a/drivers/input/touchscreen/surface3_spi.c
-+++ b/drivers/input/touchscreen/surface3_spi.c
-@@ -223,7 +223,6 @@ static void surface3_spi_power(struct surface3_ts_data *data, bool on)
-  */
- static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
- {
--	int error;
- 	struct device *dev;
- 	struct gpio_desc *gpiod;
- 	int i;
-@@ -233,15 +232,9 @@ static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
- 	/* Get the reset lines GPIO pin number */
- 	for (i = 0; i < 2; i++) {
- 		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_OUT_LOW);
--		if (IS_ERR(gpiod)) {
--			error = PTR_ERR(gpiod);
--			if (error != -EPROBE_DEFER)
--				dev_err(dev,
--					"Failed to get power GPIO %d: %d\n",
--					i,
--					error);
--			return error;
--		}
-+		if (IS_ERR(gpiod))
-+			return dev_err_probe(dev, PTR_ERR(gpiod),
-+					     "Failed to get power GPIO %d\n", i);
+diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+index de85e57b2486..d2ed9be64c3a 100644
+--- a/drivers/input/touchscreen/sx8654.c
++++ b/drivers/input/touchscreen/sx8654.c
+@@ -323,13 +323,9 @@ static int sx8654_probe(struct i2c_client *client,
  
- 		data->gpiod_rst[i] = gpiod;
- 	}
+ 	sx8654->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset",
+ 						     GPIOD_OUT_HIGH);
+-	if (IS_ERR(sx8654->gpio_reset)) {
+-		error = PTR_ERR(sx8654->gpio_reset);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(&client->dev, "unable to get reset-gpio: %d\n",
+-				error);
+-		return error;
+-	}
++	if (IS_ERR(sx8654->gpio_reset))
++		return dev_err_probe(&client->dev, PTR_ERR(sx8654->gpio_reset),
++				     "unable to get reset-gpio\n");
+ 	dev_dbg(&client->dev, "got GPIO reset pin\n");
+ 
+ 	sx8654->data = device_get_match_data(&client->dev);
 -- 
 2.17.1
 
