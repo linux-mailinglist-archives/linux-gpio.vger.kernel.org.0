@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B213F254ED9
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15CB8254ED5
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgH0TkX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 15:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
+        id S1726871AbgH0TkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 15:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0TkW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 15:40:22 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA48BC061264;
-        Thu, 27 Aug 2020 12:40:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so4283042pfb.10;
-        Thu, 27 Aug 2020 12:40:22 -0700 (PDT)
+        with ESMTP id S1726120AbgH0TkL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 15:40:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9319C061264;
+        Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so4090982pgh.6;
+        Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NNNdt/4IjrgeOPMBhjOnJXYG1tUOBVWjd9cyVGLK4Nk=;
-        b=LbdSMOENXvFM9Vf8hMQa1ALOjAVqgPlRFgCgAzQErHfM/ZWavrBZ0jLg3IfENhqGI6
-         fAxGkQyDyPfFBQoQ/aQS0jCiMsS9kjiseaKHJc1Omx+li9hsqFGQcngFD8nVyweKMW6M
-         7uUdyX3+djuVN3TlXt68eCbNxpa3ZvppO1E7B71QrFBu34zRZoSpt2AVZM9UJdxJFVBr
-         iu2D6pM4Ijhe3nQRHK8JY7J1K4wVPC5gnAgRlEryBtqCv1BIamlzQBFP2/KVjgtf5R11
-         jbfMJ5wCMmHLevsNsE0Rhm6D0BuPk1/9LPAtgv23S8ipSXAvBUoS+BYjAc+w8grWMFTY
-         vK2A==
+        bh=Z5MuJjj2BRfbffbktmUArXq0jWI8OrbgvmEfcOOymls=;
+        b=jD6rxi6RNgMg4A02GWwlrSmHVsI6daGM+MmqCIfnw+vIJT9IGKVs7tbi3VQAQAbCE3
+         CjrQHAJbjT2+9zVMdW0qpamSo7TWDvJg3/cFjdKU6DsI0Ycld94iMACgBtWDSvzEivXr
+         w955vfZwxMUuvtc0StzNJ1jVrXsZVXWzpzyJT7Mm0PqUhEOJ6CDb/2NEUN30WwhgVY8e
+         zOxUvFYX3zCNDEdw2wF5xJJSdYQkqUXtyQ4TI9P9+A+MqI54GrJChGoqHsA8lPIKeE2r
+         kdb7eqLbYLSDUKZquR0uwI6D58REZf9bwpjXV6RzQ481l8xmLPeBM/DGSHj8NYk2n1jb
+         5CyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NNNdt/4IjrgeOPMBhjOnJXYG1tUOBVWjd9cyVGLK4Nk=;
-        b=GAUHazf/r6vLV6A/n6GIiHoqwFWbS1QRDtoNGRZOQQWNiiV636VM4sj1vjhTF8f+4b
-         EyYlRi4QYUCCdHTnPBCtgU29X2OZAhggiybMF/0B1IInA0nJDxPiaYbjj03P/WUuqqZd
-         nYa/sVYoDotJSkLooca6hWVJAuYLsg4MscsxC+kdN9B4DdkT7dyrqYR92zhGrjRK5CQe
-         RmD3kZ+F/kdVb8lHqYE+Tr+j0DY42RlpPzZNxdrKlToZcBgpgZqc1zeGiTm+MGDp1LjV
-         xcmtdEfvVY3ICFi3JugrDWPhseHN3q6Zczath5AwCQnMCL+3wPPBtzSv+1MSTPVKkEo7
-         6jyQ==
-X-Gm-Message-State: AOAM531u0rPbmtM+N2zBRL8WoJDPd9WUsYqIacRCVJ0NaZ3Yz9aAzDe9
-        WRnvUEjpYuESED0kJExJBeTeThJaxUo7Px7au/4=
-X-Google-Smtp-Source: ABdhPJzgixu1vjkCNUr2jBeexjL3Lla0KqgLVgu2GOiUo2aGg+shPIPNzlSqdusuUrrHVo6T8NYqCpbdRKbtzA3DXTE=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr8366423pgd.203.1598557173833;
- Thu, 27 Aug 2020 12:39:33 -0700 (PDT)
+        bh=Z5MuJjj2BRfbffbktmUArXq0jWI8OrbgvmEfcOOymls=;
+        b=ti/ZCIfqZ48VlHFxm54I4xu3ccheYqJDXUrx2KjhJCJmZzGGNUAhA35AQioffS3Azg
+         nsidnCsSta/mlJP/gHabr3s04y/flRvy5Nk8hmbUdOm4ZSLF6PAv+Kvd/pwFWlDUxxTr
+         Er61kTiTir2wgDkOEJrf1lqVOUjjJeFlSJGtWRfX6mIqhAFaNEwJMAiPDzYnqVHM1f42
+         RsjkYMPWQ6yuMEsebHP5tfb1wmWiPfZ1rUTmMRQZU7JdN42i58T3kbnHZg7kFMw0Ckrv
+         Kweck6BUuiJ59duj6sVf5O1xUuF2dW7fjjjx9T9/m9O5DMmm+tbkowf/mB1QgHOOAQn2
+         THxg==
+X-Gm-Message-State: AOAM532HIZNyLf8IhJwSz8Rf4Mxov/xDNklIhTUSwQdirsg4M5r41Brb
+        hLL8z22Veg9MlzEi0YnCclPtqt3Me5zoj5Wveo4=
+X-Google-Smtp-Source: ABdhPJyPfAs6F4scl/LPTaagO1N/0A6aEX5LL2g/s14gO2zqJshHDT5Mu870D8LHna1d3azm8Pri1UOohGi10Tv++TE=
+X-Received: by 2002:a63:ec18:: with SMTP id j24mr15213316pgh.74.1598557211293;
+ Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-5-krzk@kernel.org>
-In-Reply-To: <20200827185829.30096-5-krzk@kernel.org>
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-8-krzk@kernel.org>
+In-Reply-To: <20200827185829.30096-8-krzk@kernel.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 22:39:17 +0300
-Message-ID: <CAHp75VfAn8oCqgXOWhsixZSs4FTkDACP3+3CgDdmQkPKQJg1aw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/27] Input: pwm-vibra - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 22:39:54 +0300
+Message-ID: <CAHp75VcHpPTAJxd9bTbEkEW=4F1FCzTzHS=DCDWnvsjjXvMV=A@mail.gmail.com>
+Subject: Re: [PATCH v3 07/27] Input: bu21013_ts - Simplify with dev_err_probe()
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -69,7 +69,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Aug 27, 2020 at 9:59 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
 > Common pattern of handling deferred probe can be simplified with
 > dev_err_probe().  Less code and also it prints the error value.
@@ -84,42 +84,44 @@ Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Changes since v1:
 > 1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
 > ---
->  drivers/input/misc/pwm-vibra.c | 20 ++++++--------------
->  1 file changed, 6 insertions(+), 14 deletions(-)
+>  drivers/input/touchscreen/bu21013_ts.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
 >
-> diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
-> index 81e777a04b88..45c4f6a02177 100644
-> --- a/drivers/input/misc/pwm-vibra.c
-> +++ b/drivers/input/misc/pwm-vibra.c
-> @@ -134,22 +134,14 @@ static int pwm_vibrator_probe(struct platform_device *pdev)
->                 return -ENOMEM;
+> diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
+> index 2f1f0d7607f8..86bd38243d6c 100644
+> --- a/drivers/input/touchscreen/bu21013_ts.c
+> +++ b/drivers/input/touchscreen/bu21013_ts.c
+> @@ -496,12 +496,10 @@ static int bu21013_probe(struct i2c_client *client,
 >
->         vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> -       err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> -       if (err) {
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "Failed to request regulator: %d",
-> -                               err);
-> -               return err;
+>         /* Named "CS" on the chip, DT binding is "reset" */
+>         ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
+> -       error = PTR_ERR_OR_ZERO(ts->cs_gpiod);
+> -       if (error) {
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "failed to get CS GPIO\n");
+> -               return error;
 > -       }
-> +       if (IS_ERR(vibrator->vcc))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->vcc),
-> +                                    "Failed to request regulator\n");
+> +       if (IS_ERR(ts->cs_gpiod))
+> +               return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
+> +                                    "failed to get CS GPIO\n");
+> +
+>         gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
 >
->         vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
-> -       err = PTR_ERR_OR_ZERO(vibrator->pwm);
-> -       if (err) {
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "Failed to request main pwm: %d",
-> -                               err);
-> -               return err;
+>         error = devm_add_action_or_reset(&client->dev,
+> @@ -516,11 +514,8 @@ static int bu21013_probe(struct i2c_client *client,
+>         ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
+>                                                 "touch", GPIOD_IN);
+>         error = PTR_ERR_OR_ZERO(ts->int_gpiod);
+> -       if (error) {
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "failed to get INT GPIO\n");
+> -               return error;
 > -       }
-> +       if (IS_ERR(vibrator->pwm))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->pwm),
-> +                                    "Failed to request main pwm\n");
+> +       if (error)
+> +               return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
 >
->         INIT_WORK(&vibrator->play_work, pwm_vibrator_play_work);
->
+>         if (ts->int_gpiod)
+>                 gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
 > --
 > 2.17.1
 >
