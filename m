@@ -2,93 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B2D255152
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C076125515F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:55:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgH0Wsx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 18:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
+        id S1728012AbgH0WzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 18:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgH0Wsw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:48:52 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84BCC061264
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:48:51 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f26so8254451ljc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:48:51 -0700 (PDT)
+        with ESMTP id S1728001AbgH0WzW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:55:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737A0C06121B
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e11so224451ljn.6
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tAhVF/lp+H6tBW93mDrhb4tgJc8T1p36H5TE5ih8Y+E=;
-        b=DyYENwkw29xv/LZxUcN0akYXQX65UMM6NqVrbimJyi5aMHJ34b14rRJZklIXJTP5Q4
-         oyP1kpK5/+/zA6J77DjGvp9zObV8p3p8FxiyBbe6U7KjFEKjUvgOZ93KgJ0r8drBUlnW
-         4MHLSAxIxrjF9UqQmRNGQWk2K1aR8OtOpd4qXQEIRjfoW1c8NZu95YyA479GXPAl/YKG
-         bQFszbMU+875aRGN4BK9h83gLCwT33LpXB/AU6INVK3bYaPM8Thnq5EqlS1jeWAb8jj6
-         hpFjxOJ7d4XYvKeYRm+2epP8Plh4K9C66G7XwwiWfaRdEfW37zL8apWseXFHy9X/wu19
-         PTWQ==
+        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
+        b=MeAnpLG4pG2Ikxmbpy6Cs2fX3iTsHcQCQzPEKb4qfBmXfZTbxuDZ6g4JEVaZgTEKKX
+         8FlO10kwzHHTDncetdmSpJi3tOJnfsSngYRqcZfVB9EpeO6DmhzghwCA69NW5MUB7BaS
+         P3VcgSt11sTkF4YuIng6D1f56oMTRF5wN7rYphD/lwg+wF7N/EwZVVt2h6redx6XRvRl
+         zA0raTj6jLEgtK1f+66Rbr1ZudmIpRDXRXweJjjDmmiVEMiSHBmji98Fp1PqW5qoXTur
+         JoqgtkbQMK1+nuke+LwvH7Ah/pH7u6nOh3R1W58mJ20j0n8GsyXP/BEvJ5ZPBsnb/hFW
+         2eQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tAhVF/lp+H6tBW93mDrhb4tgJc8T1p36H5TE5ih8Y+E=;
-        b=LJn0xZFVOXFDKEn+2WPoD2e0kbZ1kOhqtgb8vrPSprB5yaE6iavtLXyJyS3cObw2v5
-         Oz9aVs2pwSXoS1JABQ5vqaKnCVjiLyz0Xe7pBSNMQKernx+IyE/6wBGelxmc6yLdh4Pz
-         +QQNdL+IgxiXVDg/PpnRCB1hV69+BuVY1ShCXG1OGI3kPR/dGZQQpobqB7SvOiBP4IBs
-         3bZGfjiwutZiltfrCtjPIyf4HvQpvnnX3RLbDkIq/3JtmrNXb+OmDKKy7XXWf12YxtRD
-         iE/8rUl7YmKoh6RIMmXqzb9bkwuhgS1vlcpdegT0iLE2L6+8L33jfibdyMA45U5jM9Ks
-         GY7g==
-X-Gm-Message-State: AOAM532g+xqgdo6lhOz8NGy69CPuP3jzbgJSwf7tFL1pE9J5EQFaPHq7
-        26XTV6f3gxIgo8ST+2/gGU3rZ0wko5DW+V3g5wV8hQ==
-X-Google-Smtp-Source: ABdhPJwXTAWlBfqievxoKW4me/4Ay0cZ1uhkfg/HNUIEXiiNhjWBBOIj9UhAQ7sN5/Cj9PnL+OfbRp2wb+AmgFlDPgI=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr11105712ljb.283.1598568530371;
- Thu, 27 Aug 2020 15:48:50 -0700 (PDT)
+        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
+        b=N3ek8sKmAeI29r+fBdUZ+N0C4dl1yE7qjuFSNaiJD9GJQqe7iOYACgOgtxrGXTjDto
+         CTeKcB2951Lb5cEbGJ32a4M/jiu+hcqXOWw+nMUDDd06Wlm8Lqxt3R1bXVwjGL8svHeA
+         fBzpYw0MyRREJu8pMq1Ubo0cE54/wz/+IoANwj+zMdZzFLIvGI+dQovcx/WaCwVq++ny
+         hQBYTETCZOn0qfAuZLJQ1selPix1QbhvjIoXRFDqLYOwFcCBCUWoHqhHavqO1f+A3gXa
+         dil91mgeL0CgAdKYFlVqJ1eeYpBPHHP+DDPWQ3DqlTE1Hjg6+EUFUVzwh65px9lnLPBD
+         rSng==
+X-Gm-Message-State: AOAM531C9h1+vHCUf+fF85wskJa1/mZF3KG/Ef9JXIua8TExZK4nCh79
+        ffXjnyY6c8PQapqvcTwh37VqNP3afvq5wnJtsKum0w==
+X-Google-Smtp-Source: ABdhPJyauiwVNK3F8aHtjkSSue45fsdrC/ZAP+yDT7A1hDKs5ujzLl8YJlHq93WLvkvXZHRQtIN75jL/gr1bSV1yhnE=
+X-Received: by 2002:a2e:81d9:: with SMTP id s25mr10355947ljg.104.1598568920739;
+ Thu, 27 Aug 2020 15:55:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+References: <20200804091603.541-1-a.fatoum@pengutronix.de>
+In-Reply-To: <20200804091603.541-1-a.fatoum@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 00:48:39 +0200
-Message-ID: <CACRpkdYhY8bSkMYPXoXH_-L91cLeinkhOvW07t6Y3_Jz7KoU0Q@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] irqchip: qcom: pdc: Introduce irq_set_wake call
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Fri, 28 Aug 2020 00:55:09 +0200
+Message-ID: <CACRpkdb9NBpS3yvvX+G8NWgVdSqR5vd6DxP2rT7GCuB0ObnvHg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
-         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
-         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
-         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
-         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
-        <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
-         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
-         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
-         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
-         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
-        <lsrao@codeaurora.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 6:17 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+Hi Ahmad,
 
-> Changes in v5:
+On Tue, Aug 4, 2020 at 11:18 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
 
-The series:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Generic GPIO consumers like gpio-keys use request_any_context_irq()
+> to request a threaded handler if irq_settings_is_nested_thread() ==
+> true or a hardirq handler otherwise.
+>
+> Drivers using handle_nested_irq() must be sure that the nested
+> IRQs were requested with threaded handlers, because the IRQ
+> is handled by calling action->thread_fn().
+>
+> The gpio-siox driver dispatches IRQs via handle_nested_irq,
+> but has irq_settings_is_nested_thread() == false.
+>
+> Set gpio_irq_chip::threaded to remedy this.
+>
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-Feel free to merge this through the irqchip tree,
+I think we concluded we want to apply this patch, but with
+a fixed commit text, can you send a V2? (Or ask Uwe if he wants
+to pick it up and write the text.)
 
 Yours,
 Linus Walleij
