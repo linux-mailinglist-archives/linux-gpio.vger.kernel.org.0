@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04321254DC0
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:00:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C58D1254DE4
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 21:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgH0TAR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 15:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
+        id S1727835AbgH0S6v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 14:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgH0TAN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:00:13 -0400
+        id S1726250AbgH0S6t (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:58:49 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDBBB2087E;
-        Thu, 27 Aug 2020 19:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA4922BEA;
+        Thu, 27 Aug 2020 18:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554812;
-        bh=eXMt5GFmPiowNmxRcnRTBlnppZ3l++hl89a9Ed7/K7s=;
+        s=default; t=1598554728;
+        bh=BwfgtYwfZRXQcOsZb1hJsrMr/vfMEucNWSrgiCt3KzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXxgyKUdL7xGuMfB1bfTElJik7VRYtBtwaaL75FuGwNbJr7xwHf9QkQIHunQfTIpE
-         2u09AdH/xnxUGm7ud5J3aqywxiP0ar3VJQJ/17Qw6xC9qQAna9GmTEsYljIpmsyAsB
-         6ZpDJB0QgT3ab8dHoEDocg+PlYh74r7K9gkaV2o8=
+        b=vVr5/MCQlD3GDecFebJAnOHVmPlCdu8HYSjZdSYUNlbbvD2mlXpHmalyLwX+/8MeG
+         mocsbKQXRz+eUYyafKgIQs4wlUIohOO+X2wpQEEgX9pDFlmljRiPnLnPoTf6tsUPqK
+         GJBL2iWYUyz/aY9Q68jfRgHe+FVl2CH7g/suW5hY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -36,9 +36,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 27/27] Input: bu21029_ts - Use local 'client->dev' variable in probe()
-Date:   Thu, 27 Aug 2020 20:58:29 +0200
-Message-Id: <20200827185829.30096-28-krzk@kernel.org>
+Subject: [PATCH v3 02/27] Input: gpio-vibra - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:04 +0200
+Message-Id: <20200827185829.30096-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -47,105 +47,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-'dev' is shorter and simpler than '&client->dev' and in few cases it
-allows to skip line wrapping. Probe function uses '&client->dev' a lot,
-so this improves readability slightly.
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 ---
 
-Changes since v2:
-1. New patch
+Changes since v1:
+1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
 ---
- drivers/input/touchscreen/bu21029_ts.c | 37 +++++++++++---------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+ drivers/input/misc/gpio-vibra.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/input/touchscreen/bu21029_ts.c b/drivers/input/touchscreen/bu21029_ts.c
-index 96c178b606dc..78e256254764 100644
---- a/drivers/input/touchscreen/bu21029_ts.c
-+++ b/drivers/input/touchscreen/bu21029_ts.c
-@@ -334,6 +334,7 @@ static void bu21029_stop_chip(struct input_dev *dev)
- static int bu21029_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-+	struct device *dev = &client->dev;
- 	struct bu21029_ts_data *bu21029;
- 	struct input_dev *in_dev;
- 	int error;
-@@ -342,37 +343,33 @@ static int bu21029_probe(struct i2c_client *client,
- 				     I2C_FUNC_SMBUS_WRITE_BYTE |
- 				     I2C_FUNC_SMBUS_WRITE_BYTE_DATA |
- 				     I2C_FUNC_SMBUS_READ_I2C_BLOCK)) {
--		dev_err(&client->dev,
--			"i2c functionality support is not sufficient\n");
-+		dev_err(dev, "i2c functionality support is not sufficient\n");
- 		return -EIO;
- 	}
- 
--	bu21029 = devm_kzalloc(&client->dev, sizeof(*bu21029), GFP_KERNEL);
-+	bu21029 = devm_kzalloc(dev, sizeof(*bu21029), GFP_KERNEL);
- 	if (!bu21029)
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..13c69f173620 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -113,22 +113,14 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
  		return -ENOMEM;
  
--	error = device_property_read_u32(&client->dev, "rohm,x-plate-ohms",
--					 &bu21029->x_plate_ohms);
-+	error = device_property_read_u32(dev, "rohm,x-plate-ohms", &bu21029->x_plate_ohms);
- 	if (error) {
--		dev_err(&client->dev,
--			"invalid 'x-plate-ohms' supplied: %d\n", error);
-+		dev_err(dev, "invalid 'x-plate-ohms' supplied: %d\n", error);
- 		return error;
- 	}
+ 	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+-	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+-	if (err) {
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+-				err);
+-		return err;
+-	}
++	if (IS_ERR(vibrator->vcc))
++		return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->vcc),
++				     "Failed to request regulator\n");
  
--	bu21029->vdd = devm_regulator_get(&client->dev, "vdd");
-+	bu21029->vdd = devm_regulator_get(dev, "vdd");
- 	if (IS_ERR(bu21029->vdd))
--		return dev_err_probe(&client->dev, PTR_ERR(bu21029->vdd),
-+		return dev_err_probe(dev, PTR_ERR(bu21029->vdd),
- 				     "failed to acquire 'vdd' supply\n");
+ 	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+-	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+-	if (err) {
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
+-				err);
+-		return err;
+-	}
++	if (IS_ERR(vibrator->gpio))
++		return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->gpio),
++				     "Failed to request main gpio\n");
  
--	bu21029->reset_gpios = devm_gpiod_get_optional(&client->dev,
--						       "reset", GPIOD_OUT_HIGH);
-+	bu21029->reset_gpios = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(bu21029->reset_gpios))
--		return dev_err_probe(&client->dev, PTR_ERR(bu21029->reset_gpios),
-+		return dev_err_probe(dev, PTR_ERR(bu21029->reset_gpios),
- 				     "failed to acquire 'reset' gpio\n");
- 
--	in_dev = devm_input_allocate_device(&client->dev);
-+	in_dev = devm_input_allocate_device(dev);
- 	if (!in_dev) {
--		dev_err(&client->dev, "unable to allocate input device\n");
-+		dev_err(dev, "unable to allocate input device\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -394,19 +391,17 @@ static int bu21029_probe(struct i2c_client *client,
- 	input_set_drvdata(in_dev, bu21029);
- 
- 	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
--	error = devm_request_threaded_irq(&client->dev, client->irq,
--					  NULL, bu21029_touch_soft_irq,
--					  IRQF_ONESHOT, DRIVER_NAME, bu21029);
-+	error = devm_request_threaded_irq(dev, client->irq, NULL,
-+					  bu21029_touch_soft_irq, IRQF_ONESHOT,
-+					  DRIVER_NAME, bu21029);
- 	if (error) {
--		dev_err(&client->dev,
--			"unable to request touch irq: %d\n", error);
-+		dev_err(dev, "unable to request touch irq: %d\n", error);
- 		return error;
- 	}
- 
- 	error = input_register_device(in_dev);
- 	if (error) {
--		dev_err(&client->dev,
--			"unable to register input device: %d\n", error);
-+		dev_err(dev, "unable to register input device: %d\n", error);
- 		return error;
- 	}
+ 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
  
 -- 
 2.17.1
