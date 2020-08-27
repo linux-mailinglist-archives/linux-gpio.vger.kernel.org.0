@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12842254FCD
+	by mail.lfdr.de (Postfix) with ESMTP id 88D7B254FCE
 	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 22:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH0UIr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 16:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
+        id S1727783AbgH0UIt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 16:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbgH0UIo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:08:44 -0400
+        id S1727116AbgH0UIs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:08:48 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D601208D5;
-        Thu, 27 Aug 2020 20:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48205208C9;
+        Thu, 27 Aug 2020 20:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598558923;
-        bh=xl8J41Jd34mayLp7JsZohH5l8Z/xyH60BLO5q6GW978=;
+        s=default; t=1598558927;
+        bh=yKbOOPdL7+pZyGE3E1+yfNF4h5jwEHoSCybPJ3uzi8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1jCf85kf9gUWk+cboz4RbMo+kbKymOjBmvK8MSRzQSI0+0079W9y+PJ+YLap35BD
-         ahUJl48XNuIUk5N1VIgJ2BdrDuAGr/y0ePeZgn2V2f8axn94ZrrZUTMgC3H2JrdcSn
-         dhwJOE/tt9B2LszTiVINSYgUMi6PtILVcrkbjYo0=
+        b=V6bLk4HnAq9bJHAHUxEWuDmV6GHGctBbrcdHLb+vrQWQGBE03Vl66RbLLdknLICHQ
+         +UMLr5pmALhNjszvyPq5Ch+KLiEGYqrnKzycspwl7K06ZFaairZDo4Z2PnysttwnG0
+         1Tt5S/Xzw9GLXfesNCRjntPxgNca4AfPReMwD7Eo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Ray Jui <rjui@broadcom.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -37,9 +37,9 @@ To:     Ray Jui <rjui@broadcom.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/6] gpio: omap: Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 22:08:24 +0200
-Message-Id: <20200827200827.26462-3-krzk@kernel.org>
+Subject: [PATCH 4/6] gpio: pca953x: Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 22:08:25 +0200
+Message-Id: <20200827200827.26462-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827200827.26462-1-krzk@kernel.org>
 References: <20200827200827.26462-1-krzk@kernel.org>
@@ -53,25 +53,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 7fbe0c9e1fc1..2dc12f4addbd 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1394,10 +1394,7 @@ static int omap_gpio_probe(struct platform_device *pdev)
- 	if (bank->irq <= 0) {
- 		if (!bank->irq)
- 			bank->irq = -ENXIO;
--		if (bank->irq != -EPROBE_DEFER)
--			dev_err(dev,
--				"can't get irq resource ret=%d\n", bank->irq);
--		return bank->irq;
-+		return dev_err_probe(dev, bank->irq, "can't get irq resource\n");
- 	}
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index bd2e96c34f82..b5c3e56613a7 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1000,12 +1000,9 @@ static int pca953x_probe(struct i2c_client *client,
+ 	chip->client = client;
  
- 	bank->chip.parent = dev;
+ 	reg = devm_regulator_get(&client->dev, "vcc");
+-	if (IS_ERR(reg)) {
+-		ret = PTR_ERR(reg);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&client->dev, "reg get err: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(reg))
++		return dev_err_probe(&client->dev, PTR_ERR(reg), "reg get err\n");
++
+ 	ret = regulator_enable(reg);
+ 	if (ret) {
+ 		dev_err(&client->dev, "reg en err: %d\n", ret);
 -- 
 2.17.1
 
