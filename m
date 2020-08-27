@@ -2,97 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7AFB2540F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 10:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C31882540F2
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 10:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgH0IeO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 04:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
+        id S1727050AbgH0IfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 04:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgH0IeN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 04:34:13 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16425C06121B
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 01:34:13 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f26so5447801ljc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 01:34:12 -0700 (PDT)
+        with ESMTP id S1726395AbgH0IfK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 04:35:10 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F01C061264
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 01:35:09 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so5464772ljj.7
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 01:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IVXJtBnlq4f+oi1C+LRjN7t2FITJvG/QxPzZBfVFMC0=;
-        b=wPhEtjhjJPq4O2MS0GsFTGAFA8KQNoAwS9zSpIQt5Bb0KvihNOrBw8hy5K1kA4k/Xb
-         av26xBzzN30E5OplMzhE0l4pt5G1Yu9EoaMOZQ/X6OHxmf1IjMw1hH/5+UHwpLcSsydK
-         sG4p4Gsj+zGOveSXX6pR1yFsLoTqsxz6UyJ+Yz+pA0WETTh93UenltoQ+rOwuefP8Ijv
-         JNrrwRtFlfR7Dnh5mjTGUFv/RQ6Xue8cBTjh0VZblam3402C3Ex7B5e7s8LhcLbS3/hL
-         1It6f047goH80p/PINGVK5pI6MXiBHioLJIOHCY59/8kU9gyCWnSXysMZBq/raX1ethZ
-         EXBA==
+        bh=oeswVPmekzmrrw6bRiSTb13WJGBSyw0xgU+PLohXfnY=;
+        b=CvNfU05L4UH4U9C8Y7pwFszf3RS+zbqVqpGxDQK6st1Z5FllZUXgW/w5SNOJkn07aI
+         nTixyXOVzKptL9HbxOmPCPJEuCRNKFbdGVVwublPgEyKgNBggESPsSYmf42QuRp1Z4PZ
+         BrdBLn4cU4ZJXShj26WJ0VtpmKNtGeU6erjxAADm83FSEViQqsgvpUp55p/IPbnc3kCp
+         PtwvMSqH49V0mTUOjhkPMrgG+/o0bRypl5VsQYzgG47Rmq19CQNkiNZPlWKDHKq5BQt9
+         /0F+JC7Wa2AKpQqi1+ZtkWP0voViKHVTlaE41aJMz11P2obocHVsEbmytkEnajbj4wDW
+         oEQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IVXJtBnlq4f+oi1C+LRjN7t2FITJvG/QxPzZBfVFMC0=;
-        b=nmdTXIbYD3f3nSPylrNpXOo0fmKbmljRgy2jExuwzZ3oRx27gYjf6CuwD3+7Y7VHDS
-         nRz1NFeP+nqEh2nxLVVmQvW7Ya2lHhC2PFsX0m7U1vOPEmUpb2oGNiX/ZDvgkn3GTN4c
-         Bep67s1qyLObEkUdZb6ar/xKJ+ePrMD3Uhi76wtEREOK/JkcQBwkZVWJTwq/efFgtG/8
-         dp9LDI29G7szoIfugUOCcV8h35q1J9fpWFVOwkvWyXiCgY1tomnueDZ7PhArARC6fv8h
-         Zpi/wl5UOpOYQUvYk6OoZlhDM4rrn3TZc8wp93KQ33sps9WUiypH1gn9I7SkLzXdesoW
-         /+oQ==
-X-Gm-Message-State: AOAM533ZY6+xkDStJIq9sc1ufsJ2u2EgB4z65h00iYd2sV17YEiCHbba
-        lwYzakxu0AAT0c1ehol+nw7uOFGskyyQEULP45uBkV4t0Ok=
-X-Google-Smtp-Source: ABdhPJxiZEt8ym49Kerv5QJe7yLxzNhaO9niJClhqyqXzkuNFIDTBDJMCL1u/6yeXUawHLNQday421PVg4TGsw6c8b0=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr9505001ljb.283.1598517251455;
- Thu, 27 Aug 2020 01:34:11 -0700 (PDT)
+        bh=oeswVPmekzmrrw6bRiSTb13WJGBSyw0xgU+PLohXfnY=;
+        b=aDGbp9Z9mPlqO+a4jN+zc6XBEvqEKZFxqcRBiViWowV3kxGn618j9X/VcRl+Od3kOa
+         PezqoIPVeCp3fwhYZykpSBRCBWbyrTnga11Fk6kaxePYlnW3OwbjEMb03kYNf2rVuI6+
+         4aFffTlyj8Rzhbk39vxjehMzJ2kr+5aOjlXGb+5lqn9TaxDZTeRafC9ep4j8wf46T2Rr
+         eqRab+13G8YtGQEcIea9Ibu845KPUwfcI8Zc6hSGi4QoqDi7qmsPqOLFVCNfoxhePuw5
+         ENKr8Ig/4rFj8P0GnSzFwDx+AfwwICIyfxS/AuFvVvf2ZBzl7Lvkkz2Irt+qKTHmdZ4l
+         E7vA==
+X-Gm-Message-State: AOAM530Xj+pi1+ikMLak8FLGUMuiJqUZ5FMr1SFg/luIGYY13CuRnpIl
+        o0AZeTzrmFcuAtDPC7EuPTmyiySEwGm8Vo7d3sIj2g==
+X-Google-Smtp-Source: ABdhPJzBTV2ftMYdAO96/aOUVuCaLn+hcnBdlrjN9wc36CQ9lpQwV/DwhVtwg4J6WmHxNcwGLJiDOsoXWWjUp8nEo1o=
+X-Received: by 2002:a2e:558:: with SMTP id 85mr1876049ljf.293.1598517308097;
+ Thu, 27 Aug 2020 01:35:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
+ <20200825095726.yvg34q74xy57qhrx@mobilestation> <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
+In-Reply-To: <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Aug 2020 10:34:00 +0200
-Message-ID: <CACRpkdbMLEoeuyBe9h2DPKDzL8YKYbp-8r_NO1fFE5cvZjomHw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] gpio: dwapb: Refactor GPIO resources initialization
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+Date:   Thu, 27 Aug 2020 10:34:57 +0200
+Message-ID: <CACRpkda+AMsAzeFQXatzL-sRnFGW5r2YYyXa3a_VO-N92pEt5Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ding Tianhong <dingtianhong@huawei.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel.openeuler@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 5:28 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-
-> This series is about the DW APB GPIO device initialization procedure
-> cleaning up. First of all it has been discovered that having a
-> vendor-specific "snps,nr-gpios" property isn't only redundant but also
-> might be dangerous (see the commit log for details). Instead we suggest to
-> use the generic "ngpios" property to define a number of GPIOs each DW APB
-> GPIO controller port supports. Secondly seeing a tendency of the other
-> GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
-> interface this series provides a patch, which replaces the DW APB GPIO
-> driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
-> Finally the DW APB GPIO device probe procedure is simplified by
-> converting the code to be using the device managed resources for the
-> reference clocks initialization, reset control assertion/de-assertion
-> and GPIO-chip registration.
+On Thu, Aug 27, 2020 at 10:20 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Aug 25, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
 >
-> Some additional cleanups like replacing a number of GPIOs literal with a
-> corresponding macro and grouping the IRQ handlers up in a single place of
-> the driver are also introduced in this patchset.
+> > BTW Linus, could you take a look at my series? Andy and Rob have finished reviewing
+> > it almost a month ago.
+>
+> I was wondering the same, but in normal cases (not closer to the merge
+> window) Bart is taking care of drivers/gpio (AFAIU).
 
-Sorry for the delay. Merge window and stress.
-
-All 10 patches applied for v5.10!
+I just had too much to do, sorry folks :/
+It is queued now.
 
 Yours,
 Linus Walleij
