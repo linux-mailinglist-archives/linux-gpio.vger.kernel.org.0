@@ -2,202 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51EFF2546FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 16:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1022546DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Aug 2020 16:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgH0Ofa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 10:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgH0OEA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 10:04:00 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D05C0619C6;
-        Thu, 27 Aug 2020 07:03:30 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so3591930pfn.0;
-        Thu, 27 Aug 2020 07:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=pskKla1kOyTKpAXy0EvUaMGChf4lXWttIW4Ki8kiHdDF3GuvOKv5yHvwTVQ/kTwiOG
-         wEHq2OtPfKz1Q5p9IbYEIcJxrS1oH5LpAQ1PPjz+9jHDvXIJbKlPrPEjF+DNtlA6smww
-         hN7j4Vz+ZTK1xG4GhRibUGUXmdFKRrcdh1Idv3YHyzDU3/PBgdo7wCw7dp0gsi0cDVRC
-         ISeiI9BULQfftcuJizPk/96hIBV6YBwSsAAQmDRm37Q7o4kiLnV99/FI2QL1T8FhkVwp
-         K7bufUUGHUiK/18jl3B9UhemG5wQOkzHl95rdCOAjxdfXh7pb/zFL+/6dsVfrM55EqfW
-         jy9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=OXq8Ncme4GdzvixYHAkjV5OEZTUm1dPtnGrd3YpMfpon0YbuDqEHyU8yR9Jm3qU084
-         Gl23G0HC07OpkxKOMhTiB+NVS7bF14hb5WL5duRUAqReCOzQQ4/wMzRCJTWUC/OzMpW1
-         Mm2TS80TjWVxsDY3Sh6OJeyeYcPaItRs2Ky953Lhg8lBftzTkHJvGLGi0HnDMove/6c8
-         729zQJklJ08wmMpOTDrgDMbWKCtNNtcqmaKaz36IcN7f8eq4Enw6U0Fx4zcWYyVbqHWw
-         /keyJtdVT26XR/1RCNR0qOGuuOzbsf3/MJ8SqUZu5e/kGrggSNNS1tlNPmFm+CbulEFh
-         f5Rg==
-X-Gm-Message-State: AOAM530aIPfnXtg1HOuSSEPQsC1qlApxOo3Ng4t2iHBPJVgU5yp+se1S
-        53xnS+hD3cz654lTjcl5ihF2LNZiRJg=
-X-Google-Smtp-Source: ABdhPJyd95QYOnXT2VOz7fgHmCWIqzI9VrAx9XEgx8YJFP8cGJeCWM2UsLlEUUZzCv5IK2/QEWy5KQ==
-X-Received: by 2002:a17:902:b497:: with SMTP id y23mr15864709plr.251.1598537009145;
-        Thu, 27 Aug 2020 07:03:29 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:03:28 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v5 14/20] tools: gpio: port lsgpio to v2 uAPI
-Date:   Thu, 27 Aug 2020 22:00:14 +0800
-Message-Id: <20200827140020.159627-15-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
+        id S1728027AbgH0Oal convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 27 Aug 2020 10:30:41 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:49340 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728094AbgH0OaV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:30:21 -0400
+Received: from [78.134.86.56] (port=42732 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1kBIuw-0005Bk-25; Thu, 27 Aug 2020 16:30:18 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
+ on programming failure
+To:     Tom Rix <trix@redhat.com>, linux-fpga@vger.kernel.org
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200817165911.32589-1-luca@lucaceresoli.net>
+ <20200817165911.32589-2-luca@lucaceresoli.net>
+ <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
+ <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
+ <397b99e2-9b39-5a67-e1c6-8dcf3482f96b@redhat.com>
+ <8c055a1d-e8f5-6d23-18c4-cb87d95bbc5a@lucaceresoli.net>
+Message-ID: <2fbea9e7-1fd0-56d0-97e5-ac0d27c3f928@lucaceresoli.net>
+Date:   Thu, 27 Aug 2020 16:30:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c055a1d-e8f5-6d23-18c4-cb87d95bbc5a@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Port the lsgpio tool to the latest GPIO uAPI.
+Hi Tom,
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/lsgpio.c | 60 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 38 insertions(+), 22 deletions(-)
+On 19/08/20 18:32, Luca Ceresoli wrote:
+> On 18/08/20 16:21, Tom Rix wrote:
+>>
+>> On 8/18/20 3:20 AM, Luca Ceresoli wrote:
+>>> [a question for GPIO maintainers below]
+>>>
+>>> Hi Tom,
+>>>
+>>> thanks for your review!
+>>>
+>>> On 17/08/20 20:15, Tom Rix wrote:
+>>>> The other two patches are fine.
+>>>>
+>>>> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
+>>>>> When the DONE pin does not go high after programming to confirm programming
+>>>>> success, the INIT_B pin provides some info on the reason. Use it if
+>>>>> available to provide a more explanatory error message.
+>>>>>
+>>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>>> ---
+>>>>>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
+>>>>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+>>>>> index 502fae0d1d85..2aa942bb1114 100644
+>>>>> --- a/drivers/fpga/xilinx-spi.c
+>>>>> +++ b/drivers/fpga/xilinx-spi.c
+>>>>> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>>>>>  			return xilinx_spi_apply_cclk_cycles(conf);
+>>>>>  	}
+>>>>>  
+>>>>> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+>>>>> +	if (conf->init_b) {
+>>>>> +		int init_b_asserted = gpiod_get_value(conf->init_b);
+>>>> gpiod_get_value can fail. So maybe need split the first statement.
+>>>>
+>>>> init_b_asserted < 0 ? "invalid device"
+>>>>
+>>>> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
+>>> Thanks for the heads up. However I'm not sure which is the best thing to
+>>> do here.
+>>>
+>>> First, I've been reading the libgpiod code after your email and yes, the
+>>> libgpiod code _could_ return runtime errors received from the gpiochip
+>>> driver, even though the docs state:
+>>>
+>>>> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
+>>> (https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
+>>>
+>>> On the other hand there are plenty of calls to gpiod_get/set_value in
+>>> the kernel that don't check for error values. I guess this is because
+>>> failures getting/setting a GPIO are very uncommon (perhaps impossible
+>>> with platform GPIO).
+>>>
+>>> When still a GPIO get/set operation fails I'm not sure adding thousands
+>>> of error-checking code lines in hundreds of drivers is the best way to
+>>> go. I feel like we should have a unique, noisy dev_err() in the error
+>>> path in libgpio but I was surprised in not finding any [1].
+>>>
+>>> Linus, Bartosz, what's your opinion? Should all drivers check for errors
+>>> after every gpiod_[sg]et_value*() call?
+>>
+>> My opinion is that you know the driver / hw is in a bad state and you
+>>
+>> are trying to convey useful information.  So you should
+>>
+>> be as careful as possible and not assume gpio did not fail.
+> 
+> This patch aims at providing better diagnostics after programming has
+> already gone bad. Neglecting an error might lead to a misleading error
+> message, but this doesn't lead programming to fail -- it has failed already.
+> 
+> On the other hand a gpiod_get/set_value() call might fail earlier, along
+> the normal execution path, and lead to real failures without an error
+> message emitted after the gpiod call that failed.
+> 
+> Which doesn't mean I'm against your proposal of adding error checking
+> code. Rather, if we want error checking, we want it mainly in other
+> places: at the very least at the first usage of each of the GPIOs, maybe
+> at each usage. Have a look at the beginning of
+> xilinx_spi_write_complete() [0] for example: if gpiod_get_value() fails
+> there the driver would think programming has been successfully completed
+> (DONE asserted). To me this is worse than just printing the wrong error
+> message.
+> 
+> [0]
+> https://elixir.bootlin.com/linux/v5.8.2/source/drivers/fpga/xilinx-spi.c#L114
 
-diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index b08d7a5e779b..deda38244026 100644
---- a/tools/gpio/lsgpio.c
-+++ b/tools/gpio/lsgpio.c
-@@ -25,57 +25,73 @@
- 
- struct gpio_flag {
- 	char *name;
--	unsigned long mask;
-+	unsigned long long mask;
- };
- 
- struct gpio_flag flagnames[] = {
- 	{
--		.name = "kernel",
--		.mask = GPIOLINE_FLAG_KERNEL,
-+		.name = "used",
-+		.mask = GPIO_V2_LINE_FLAG_USED,
-+	},
-+	{
-+		.name = "input",
-+		.mask = GPIO_V2_LINE_FLAG_INPUT,
- 	},
- 	{
- 		.name = "output",
--		.mask = GPIOLINE_FLAG_IS_OUT,
-+		.mask = GPIO_V2_LINE_FLAG_OUTPUT,
- 	},
- 	{
- 		.name = "active-low",
--		.mask = GPIOLINE_FLAG_ACTIVE_LOW,
-+		.mask = GPIO_V2_LINE_FLAG_ACTIVE_LOW,
- 	},
- 	{
- 		.name = "open-drain",
--		.mask = GPIOLINE_FLAG_OPEN_DRAIN,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_DRAIN,
- 	},
- 	{
- 		.name = "open-source",
--		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_SOURCE,
- 	},
- 	{
- 		.name = "pull-up",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
- 	},
- 	{
- 		.name = "pull-down",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN,
- 	},
- 	{
- 		.name = "bias-disabled",
--		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_DISABLED,
- 	},
- };
- 
--void print_flags(unsigned long flags)
-+static void print_attributes(struct gpio_v2_line_info *info)
- {
- 	int i;
--	int printed = 0;
-+	const char *field_format = "%s";
- 
- 	for (i = 0; i < ARRAY_SIZE(flagnames); i++) {
--		if (flags & flagnames[i].mask) {
--			if (printed)
--				fprintf(stdout, " ");
--			fprintf(stdout, "%s", flagnames[i].name);
--			printed++;
-+		if (info->flags & flagnames[i].mask) {
-+			fprintf(stdout, field_format, flagnames[i].name);
-+			field_format = ", %s";
- 		}
- 	}
-+
-+	if ((info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
-+	    (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
-+		fprintf(stdout, field_format, "both-edges");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
-+		fprintf(stdout, field_format, "rising-edge");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+		fprintf(stdout, field_format, "falling-edge");
-+
-+	for (i = 0; i < info->num_attrs; i++) {
-+		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
-+			fprintf(stdout, ", debounce_period=%dusec",
-+				info->attrs[0].debounce_period);
-+	}
- }
- 
- int list_device(const char *device_name)
-@@ -109,18 +125,18 @@ int list_device(const char *device_name)
- 
- 	/* Loop over the lines and print info */
- 	for (i = 0; i < cinfo.lines; i++) {
--		struct gpioline_info linfo;
-+		struct gpio_v2_line_info linfo;
- 
- 		memset(&linfo, 0, sizeof(linfo));
--		linfo.line_offset = i;
-+		linfo.offset = i;
- 
--		ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &linfo);
-+		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_IOCTL, &linfo);
- 		if (ret == -1) {
- 			ret = -errno;
- 			perror("Failed to issue LINEINFO IOCTL\n");
- 			goto exit_close_error;
- 		}
--		fprintf(stdout, "\tline %2d:", linfo.line_offset);
-+		fprintf(stdout, "\tline %2d:", linfo.offset);
- 		if (linfo.name[0])
- 			fprintf(stdout, " \"%s\"", linfo.name);
- 		else
-@@ -131,7 +147,7 @@ int list_device(const char *device_name)
- 			fprintf(stdout, " unused");
- 		if (linfo.flags) {
- 			fprintf(stdout, " [");
--			print_flags(linfo.flags);
-+			print_attributes(&linfo);
- 			fprintf(stdout, "]");
- 		}
- 		fprintf(stdout, "\n");
+I added error checking wherever gpiod_get_value() is called to see what
+happens, and I'm sending a v2 series with this change. The code got
+longer, but I've kept it still pretty readable. It still feels like a
+half solution as gpiod_set_value() is void and thus no error checking
+can be done on it, but let's see yours and other's opinion.
+
 -- 
-2.28.0
+Luca
+
 
