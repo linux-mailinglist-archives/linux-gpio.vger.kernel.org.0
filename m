@@ -2,90 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C076125515F
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 00:55:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A48B255301
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 04:24:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgH0WzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Aug 2020 18:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgH0WzW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 18:55:22 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737A0C06121B
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e11so224451ljn.6
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
-        b=MeAnpLG4pG2Ikxmbpy6Cs2fX3iTsHcQCQzPEKb4qfBmXfZTbxuDZ6g4JEVaZgTEKKX
-         8FlO10kwzHHTDncetdmSpJi3tOJnfsSngYRqcZfVB9EpeO6DmhzghwCA69NW5MUB7BaS
-         P3VcgSt11sTkF4YuIng6D1f56oMTRF5wN7rYphD/lwg+wF7N/EwZVVt2h6redx6XRvRl
-         zA0raTj6jLEgtK1f+66Rbr1ZudmIpRDXRXweJjjDmmiVEMiSHBmji98Fp1PqW5qoXTur
-         JoqgtkbQMK1+nuke+LwvH7Ah/pH7u6nOh3R1W58mJ20j0n8GsyXP/BEvJ5ZPBsnb/hFW
-         2eQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
-        b=N3ek8sKmAeI29r+fBdUZ+N0C4dl1yE7qjuFSNaiJD9GJQqe7iOYACgOgtxrGXTjDto
-         CTeKcB2951Lb5cEbGJ32a4M/jiu+hcqXOWw+nMUDDd06Wlm8Lqxt3R1bXVwjGL8svHeA
-         fBzpYw0MyRREJu8pMq1Ubo0cE54/wz/+IoANwj+zMdZzFLIvGI+dQovcx/WaCwVq++ny
-         hQBYTETCZOn0qfAuZLJQ1selPix1QbhvjIoXRFDqLYOwFcCBCUWoHqhHavqO1f+A3gXa
-         dil91mgeL0CgAdKYFlVqJ1eeYpBPHHP+DDPWQ3DqlTE1Hjg6+EUFUVzwh65px9lnLPBD
-         rSng==
-X-Gm-Message-State: AOAM531C9h1+vHCUf+fF85wskJa1/mZF3KG/Ef9JXIua8TExZK4nCh79
-        ffXjnyY6c8PQapqvcTwh37VqNP3afvq5wnJtsKum0w==
-X-Google-Smtp-Source: ABdhPJyauiwVNK3F8aHtjkSSue45fsdrC/ZAP+yDT7A1hDKs5ujzLl8YJlHq93WLvkvXZHRQtIN75jL/gr1bSV1yhnE=
-X-Received: by 2002:a2e:81d9:: with SMTP id s25mr10355947ljg.104.1598568920739;
- Thu, 27 Aug 2020 15:55:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200804091603.541-1-a.fatoum@pengutronix.de>
-In-Reply-To: <20200804091603.541-1-a.fatoum@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 00:55:09 +0200
-Message-ID: <CACRpkdb9NBpS3yvvX+G8NWgVdSqR5vd6DxP2rT7GCuB0ObnvHg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1728409AbgH1CYB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Aug 2020 22:24:01 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:41216 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727124AbgH1CYA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Aug 2020 22:24:00 -0400
+X-UUID: e134271c78e54a76a16e26c7aff23bc8-20200828
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=8zZiHLm4/AXz1qOVzkvhLK1XMcwwYt53KrQz1ufHVMk=;
+        b=CbWgt/q+f1kVXUIZC6RvgPGqnU8wpamfCwq/L4xzmEAq1OZ9H7ZFLZRh9uRsOKHx5/YMumlC0oYI0Pzpbxgch7CKvkaMP3htGDFriw27VoBTpXSSKTc69HLmO0MdsiAxyGtKV4rGYl9NVhVrOVDrj1XY7K2kI4yQNsuJvl63rUE=;
+X-UUID: e134271c78e54a76a16e26c7aff23bc8-20200828
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1482325862; Fri, 28 Aug 2020 10:23:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 28 Aug 2020 10:23:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 28 Aug 2020 10:23:53 +0800
+Message-ID: <1598581434.5835.2.camel@mtksdaap41>
+Subject: Re: [PATCH v4 0/3] Mediatek pinctrl patch on mt8192
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Chuanjia Liu <chuanjia.liu@mediatek.com>,
+        "Biao Huang" <biao.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>, <hui.liu@mediatek.com>,
+        <seiya.wang@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <sin_jieyang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        Sean Wang <sean.wang@mediatek.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        huang eddie <eddie.huang@mediatek.com>, <jg_poxu@mediatek.com>
+Date:   Fri, 28 Aug 2020 10:23:54 +0800
+In-Reply-To: <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com>
+References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
+         <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Ahmad,
+SGksIExpbnVzOg0KDQpPbiBUaHUsIDIwMjAtMDgtMjcgYXQgMTA6NTIgKzAyMDAsIExpbnVzIFdh
+bGxlaWogd3JvdGU6DQo+IE9uIE1vbiwgQXVnIDE3LCAyMDIwIGF0IDI6MTggQU0gWmhpeW9uZyBU
+YW8gPHpoaXlvbmcudGFvQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFRoaXMgc2VyaWVz
+IGluY2x1ZGVzIDMgcGF0Y2hlczoNCj4gPiAxLmFkZCBwaW5jdHJsIGZpbGUgb24gbXQ4MTkyLg0K
+PiA+IDIuYWRkIHBpbmN0cmwgYmluZGluZyBkb2N1bWVudCBvbiBtdDgxOTIuDQo+ID4gMy5hZGQg
+cGluY3RybCBkcml2ZXIgb24gTVQ4MTkyLg0KPiANCj4gUGF0Y2hlcyBhcHBsaWVkIGZvciB2NS4x
+MCENCg0KSSBkb2VzIG5vdCBzZWUgdGhlc2UgcGF0Y2hlcyBpbiB5b3VyIHRyZWUgWzFdLCBoYXZl
+IHlvdSBhcHBsaWVkIHRoZW0/IEkNCndvdWxkIGxpa2UgdG8gcGljayB0aGVzZSBwYXRjaGVzIGZy
+b20geW91ciB0cmVlLg0KDQpbMV0NCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
+eC9rZXJuZWwvZ2l0L2xpbnVzdy9saW51eC1waW5jdHJsLmdpdC8NCg0KUmVnYXJkcywNCkNLDQoN
+Cj4gVGhhbmtzIQ0KPiBMaW51cyBXYWxsZWlqDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QN
+Cj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
 
-On Tue, Aug 4, 2020 at 11:18 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
-
-> Generic GPIO consumers like gpio-keys use request_any_context_irq()
-> to request a threaded handler if irq_settings_is_nested_thread() ==
-> true or a hardirq handler otherwise.
->
-> Drivers using handle_nested_irq() must be sure that the nested
-> IRQs were requested with threaded handlers, because the IRQ
-> is handled by calling action->thread_fn().
->
-> The gpio-siox driver dispatches IRQs via handle_nested_irq,
-> but has irq_settings_is_nested_thread() == false.
->
-> Set gpio_irq_chip::threaded to remedy this.
->
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-
-I think we concluded we want to apply this patch, but with
-a fixed commit text, can you send a V2? (Or ask Uwe if he wants
-to pick it up and write the text.)
-
-Yours,
-Linus Walleij
