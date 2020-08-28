@@ -2,100 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92FDB255CB4
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F0E0255CDF
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgH1OjC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 10:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        id S1726584AbgH1Onv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 10:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgH1Oi5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:38:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47369C061232
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:38:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 185so1564401ljj.7
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:38:57 -0700 (PDT)
+        with ESMTP id S1728135AbgH1OmK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:42:10 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18199C061264
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:42:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y17so841136lfa.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Z+TaixqXEGVGQ2T/QrWllmigc9Bn2yBozBpoORD/TJw=;
-        b=bthwUPubnbhn6YaESsUooZlnlA4AAH2u5bkxHyDnFmhCm7Kh8U+RM/LdfdzTy1rYap
-         u44U0H4icDS300YJtLrAeN/7futTwYEW9VcOBuA4MuLVEaALI8PfhMowA05SL1w4Aht9
-         EJ2c2krhGZEMNpmqLnZCHr6FP5hI4iwU/AKWJelCBMzkKU5f+mZY9UODyo7eprjDDebs
-         O9ZHQCcn+Y4eCdnY+/38i5UVPDt5HBdr12ZRgh8q2eFBE/mFaM9AMXRKlxfxAn0quOPM
-         bjoy/WikU5yTdZRSThu37hA3MaGWPoh5PN6jQeqLm+WZnnKTMUmXjqT3ChLDKmm4LnUk
-         xFAg==
+        bh=f79kdlAh5IcKuWoCYTa657Zb9eU06P2OlaoVxKUCN6w=;
+        b=OFa+5OuC4GuquUUrXVE//sKmY3784S5MHQRai9DlKJFXu5KZHGhLLofSSQvDRUp0Ol
+         XdER7N24f5WAkQ01Ff/6y/VoTzOE7BNSVhe7Y94wyCvZ32N9vm2VztgA09dWx+822TcN
+         OefBijDu+jDteGNHImHP/NemPpcWYQgGhte78wj/UFT//BDKFF8sYj9XUN/H3N7+FQFi
+         XCWOudrL6mjYt9N+2+0gien0jkuvyDYzI8NLHJxw4ZKv+ZBVt09tDI7yQSCtZazdUhNC
+         yM688uoIQIXtWvy1ou7NRmmuiGSZVJPHA8WWd1TtChZc+6Fw773aum1oRrG5/oJOQnjj
+         lotg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z+TaixqXEGVGQ2T/QrWllmigc9Bn2yBozBpoORD/TJw=;
-        b=KNx7EepCyP+BKZDNgCYNIlpwsMD7XpZ5B/dpaspj62H1jMao8xDPNK0T+7nOveV3d5
-         6RKNQK6fUHx6FT843C4i/HiMSez6N9HdB/smkdI7sCUBJi6CHSoj9JBUPup4ezy70+Al
-         IZdDKwdoBylKLXsWUDlTOqZICUhx4uhc4TcupzsFDwzkGUY/q5J4GsHL79kbepY6hFsF
-         mhIoLcvjX35560hRnYm63H215hhEegCIQjtFJ/DozreSxrtd2W9N5ZsbmHkzd++DyK8T
-         2uNBiXpTP8bayunMI6zRuqq/omKoJOnbvL7n3zw3BHpUZAwi+t38bNzhoPKs9hA8faSi
-         8Uvw==
-X-Gm-Message-State: AOAM533SnJ3L9A5cT3Fyc9Td+ICXd3N2mZ2dd3JAOxw9PaOVq7lXlMkY
-        ESXyLpBnEIy2g4j1SseUk+wP/5MQetE76kRW2fNY7w==
-X-Google-Smtp-Source: ABdhPJwaDJ3Gr/qcSUh/+gWWdKq8kAihgP6kukxSpzeXwrAWcBQEZ3gQKkku9u7kwQPG+FNQX7jTEbu12MB2QtmIP4I=
-X-Received: by 2002:a2e:81d9:: with SMTP id s25mr1013703ljg.104.1598625535585;
- Fri, 28 Aug 2020 07:38:55 -0700 (PDT)
+        bh=f79kdlAh5IcKuWoCYTa657Zb9eU06P2OlaoVxKUCN6w=;
+        b=T60KDK676EXcanZsalfn+1a1hQdkypqRTzpvqhr9x/BPJCK90rsnqrz10kAnQAT04F
+         qxouLzU5yDfvLLAwZZGpl/9xgscedC5bnlB81FL7k+NcKRscyzjQTwBc0+7JO3K7L0S5
+         wEPr09mhm2Gbd88xrvK7ZQZ+HK3OTq/EIkx7f1usStZS9tfyJe03qEt+utuJanJq8NS0
+         Y+mpiTLRMKonFIPg9oiokTUTIrW5YMASpxcuD4w97J/udBj+KosTmyaLP1FE8GZFxK0r
+         +V8G1PuFSQWa+SirNjhDFMsB4YdbWxnLqL8lC8qi6zQSxpRzPyHV61uNYZDXyqe5ALae
+         3Gxw==
+X-Gm-Message-State: AOAM531rOLSP3/bwpnktZfhvXBp1vrrAo9EpjVclGKh9gw1Q2j3nku66
+        4ZrGPLVlZouoU7gKpz/3+ZPfiE910a48qHl2wyzv8A==
+X-Google-Smtp-Source: ABdhPJyM4gNjNTbHAWbyqAZMSVOXPU+EVin4QwTAwzomXgZ3pwZiTuElnITq4KRAaOanVVVNOmY1RYaynZhL5i9ndQ0=
+X-Received: by 2002:a05:6512:210d:: with SMTP id q13mr426584lfr.194.1598625728439;
+ Fri, 28 Aug 2020 07:42:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
- <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com> <1598581434.5835.2.camel@mtksdaap41>
-In-Reply-To: <1598581434.5835.2.camel@mtksdaap41>
+References: <20200828103235.78380-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200828103235.78380-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:38:44 +0200
-Message-ID: <CACRpkdY9hbLOTjzQm34xL32PU01tRMkcB4_qTeFqwQM9Yam75A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Mediatek pinctrl patch on mt8192
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream@mediatek.com,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>, hui.liu@mediatek.com,
-        seiya.wang@mediatek.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sin_jieyang@mediatek.com,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        huang eddie <eddie.huang@mediatek.com>, jg_poxu@mediatek.com
+Date:   Fri, 28 Aug 2020 16:41:57 +0200
+Message-ID: <CACRpkdbEgvGkLhREZERDC+eXjmrCyVMhbkJqWEh0ArF9_3yWqA@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: mcp23s08: Improve error messaging in ->probe()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 4:24 AM CK Hu <ck.hu@mediatek.com> wrote:
-> On Thu, 2020-08-27 at 10:52 +0200, Linus Walleij wrote:
-> > On Mon, Aug 17, 2020 at 2:18 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
-> >
-> > > This series includes 3 patches:
-> > > 1.add pinctrl file on mt8192.
-> > > 2.add pinctrl binding document on mt8192.
-> > > 3.add pinctrl driver on MT8192.
-> >
-> > Patches applied for v5.10!
+On Fri, Aug 28, 2020 at 12:32 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> Print particular message in each of error case in the ->probe().
+> While here, use dev_err_probe() for that.
 >
-> I does not see these patches in your tree [1], have you applied them? I
-> would like to pick these patches from your tree.
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-They are on my harddrive while testing, then they do onto the
-server for testing, then they go to linux-next for testing.
-
-Give it some days and some patience.
+Patch applied.
 
 Yours,
 Linus Walleij
