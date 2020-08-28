@@ -2,92 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AEB12557F6
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 11:47:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4B6E255833
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 12:02:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgH1JrX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 05:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40260 "EHLO
+        id S1729045AbgH1KCt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 06:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgH1JrT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 05:47:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20E2C06121B
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 02:47:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w14so613076ljj.4
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 02:47:18 -0700 (PDT)
+        with ESMTP id S1728760AbgH1KCm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 06:02:42 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D390BC061264
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 03:02:41 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w25so624956ljo.12
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 03:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=roGu87yveuQO9la8ys4mBHvnqd7ZGmx1Iwu9jExueuc=;
-        b=zD1tIMGq4tiWZYYoc1HPTKcMuJmm6tgKHB19f+kkku6Adfr7/ji9nlvWhivGf8BqJ9
-         WAFIS5ogQdHOurHhHlFerSyA3CTuUAbLBXrWcE/RcPwDlkKe4u1Xl6wXaTAHeC9UPHri
-         dyGzzbnctdlgXvIpR5cSCII7+6SfjSAOV3sP7go6TuFIdWWr7DwwtXEnp5Txae6oKXqw
-         eR58vDvPDuybDw8XxqADeMLzlLFwYjKLDOEdNVw/kElEY9tTVt8zdve0Bk/zzF2AeQfF
-         Ar/y3tLWshqwQOE8jB76GB0vPZ2CrqNb+uipA34tQbB0fhc2dWDdcZUQD7Vb3wOm1xYY
-         Wmpg==
+        bh=gg8w7FyxS5olNPP0T/p1d8kcV4d3oP7pvIBcK4KxiMA=;
+        b=yfZYGfWIaazhZpa4MiIfi8N1UYAwzELWPkKXWkeWzFH0MlcFmqxKiS+EAg2YC5+qd1
+         r+P2+8DvIOePVKtMKrUFWOydQlKrMISbi6KPh/K1RN1eF79khiLQGP0aJL4yAEsHZIhu
+         mLlsz7S6XqAjgLOoJe2zsL5z8EP92lbJAhoDJ2HAPkQQYf/4PR6erjtyFQvZ69ZDBFo8
+         geVZUT/w4DpGsf2+/cq4vAElPCWJeF8mLbiSZcFNQTPNypLVCx/4XEO+h782UOPyvBvx
+         6n8lsxYQb+0daon+8trpyWVpJN1BQcYSAou3pR+PM04gn6qcXNkxjP0Uruyr6u8BIUvE
+         XuuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=roGu87yveuQO9la8ys4mBHvnqd7ZGmx1Iwu9jExueuc=;
-        b=HmxBYwyf+1CZxqmHuE/65VhF0y+S5L5ZsWTyMOOxQEvvo5h8K/0FqFUDZYjUR5KJ4Y
-         qjOGvQg4EBS8uh+1FfUqNhpQu2xAUaOfyjkU/Ew6s3oV37Uc/oPJNRRuTK5oooFYbOYy
-         DuagLm9VWTOlNFebga5TbFN35IrkSP0Zu+dh1+K8d9eAP2ovhcixNXu3ldurn4DAiB7g
-         AGz9k5tGtozpQW+gkZ8vEASuXMJOWmCEkoTUHgR6a+hKbnoLaW4K7SBQQj+gYchaTN0R
-         eItrmjPpi1tQyHDDhQx6FtmVDYqCidRH0KFpuIh68RB90ch/0O+UCw4N//u9BdOqVy96
-         dlpA==
-X-Gm-Message-State: AOAM532fFU6dMsWHcTwuiKjFvSOTSn9W/nR5a0gn9eEWTEtg3wiyuWUm
-        ENizzFYFkPMs6/66FWHGEl7h5wQfzIN5VAycK0wLAw==
-X-Google-Smtp-Source: ABdhPJy1ohPs1elEqr4zv8xMxHoFxCZlVX51e0eO5VFD1ifUSw7hHiv6hggh/SKBOUIhhjUYhxQGhSUP9/+7sMoT+mI=
-X-Received: by 2002:a2e:6a17:: with SMTP id f23mr453506ljc.338.1598608036936;
- Fri, 28 Aug 2020 02:47:16 -0700 (PDT)
+        bh=gg8w7FyxS5olNPP0T/p1d8kcV4d3oP7pvIBcK4KxiMA=;
+        b=X7BfxXhlfJrCEn1ClT2IK/63mIO3yIjczWSPz+Hd4RohwG5sWBmzEtfDNSgpuCr71a
+         7BK6MinjiAjEMrRjkkFMq3uuMwei5VSuBmIm2ntoLeEublBjyOyvwD2CfEWNkv6JFXmG
+         ao4XQpYq0Jm8PLTQtwbXPNRPCqIGHF7z8aGUfYc0Rmbgc1sIzpW1bP3cQhgrj/WdIxwi
+         LK3eWXtQzETt2DjmRD77w4+P9WjmzosagpTWgkATMv06aG92eSiqD37soXsGGu5pUokk
+         jeUprgSvAiprlz6bfpweRKrX7quRuxSPbN61nKglci/RxpeFoqOPSzzhbhriskArEIbt
+         2P2Q==
+X-Gm-Message-State: AOAM532KnE/Gkz9kyV/wDpsOA4j5XrUuQthUpgwIUTGujMHV7IhQ+L7C
+        BxigI1iZKkz1JLUxUJ2LNkb9Tk325gT49ZDl6iLBcA==
+X-Google-Smtp-Source: ABdhPJxGBDDIUGKlDHb7X+U9ZlUuxz6OTVqUpjGGNG25WaTWbUK0lfjyuNiH2UpzdtAP231LGoGkSdCBPbtNK7t7yF8=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr556502ljo.286.1598608960272;
+ Fri, 28 Aug 2020 03:02:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <87r1s5hoht.wl-kuninori.morimoto.gx@renesas.com>
- <87pn7phofb.wl-kuninori.morimoto.gx@renesas.com> <CAMuHMdWqc1Peo06g_1JrEvEExyaY+k33WJNmbhugE7YrppiRmw@mail.gmail.com>
- <87blj0zzax.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87blj0zzax.wl-kuninori.morimoto.gx@renesas.com>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 11:47:05 +0200
-Message-ID: <CACRpkdZ_ss-GqV0ig2BPpEE+8-F-9qZzpb+-C5h0TpbWCcL6Rg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] pinctrl: sh-pfc: collect Renesas related CONFIGs
- in one place
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+Date:   Fri, 28 Aug 2020 12:02:29 +0200
+Message-ID: <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Ondrej Jirman <megous@megous.com>,
+        Corentin Labbe <clabbe@baylibre.com>, bage@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 2:04 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > >
-> > > Renesas related pinctrl CONFIGs are located many places,
-> > > and it is confusable.
-> > > This patch collects these into same place,
-> > > and group into "Renesas pinctrl drivers" menu.
-> > >
-> > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Still wondering about moving drivers/pinctrl/pinctrl-rz{a1,a2,n1}.c
-> > into drivers/pinctrl/sh-pfc/, too.
->
-> As I mentioned before, I'm waiting Linus's opinion.
-> But will move these in v3 without waiting him.
+On Fri, Jul 24, 2020 at 8:53 AM Frank Lee <frank@allwinnertech.com> wrote:
 
-Sorry for slowness. I agree with this move, let's collect all the Renesas
-stuff in one place.
+> This patch set adds initial support for allwinner a100 soc,
+> which is a 64-bit tablet chip.
 
-Renaming it drivers/pinctrl/renesas may be a good idea too, but I'd let
-Geert decide and execute that, it mainly affects him and his maintenance
-work, not me.
+Shall I commit the pinctrl patches (if Maxime ACKed) separately
+or not? Once Maxime is happy, I am usually happy too.
 
 Yours,
 Linus Walleij
