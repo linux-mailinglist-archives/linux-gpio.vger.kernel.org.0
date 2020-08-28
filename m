@@ -2,94 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 251D3255742
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 11:13:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAF925579A
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 11:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgH1JN3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 05:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1JNQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 05:13:16 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6C5C061264
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 02:13:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so480817ljo.12
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 02:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N7L8i60F9eXa/fO1dPmqcITFGbW2CQuVMKnRYG3BInQ=;
-        b=dH60LbKjFFEyhbG5y4eZJdfG4cUxHykDgQ5LR4pLNxDH5aBrVYI6KOlAk0ltt6Mu6p
-         78ZmCZEsbS+UAVFhdntM6BwqJDiQpTpi6fWBHqrJwtSc1h0Ri8gplUdZhcEFdk5Ecwst
-         RstftHmffI0hLIZqOjubXCnbWEcW5X7jTpbWldVVFWUT/j5HvzZGVqsS+KYo5lULRo42
-         kV6eLi3Mlq0f0w4fyUXHa8y5hTiHncJll9IHEgJGQMiQIC8mVtpWbmfuPzdlw3FD6Esb
-         RJU+WyGCDHQF1Ufes5/iI1Nin0RcyW9Fv828TVzU5tzpbLZsY6NoQr47Re9sd1U30G8T
-         a7jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N7L8i60F9eXa/fO1dPmqcITFGbW2CQuVMKnRYG3BInQ=;
-        b=Hahih8V7a4UYODxpQP4sPux9tustOB4AllFG8Odn7jC44TIaf8XR7dr2k5A0dwSexY
-         AII1dNFb+s9LEJ1Gb2xIsm/SVUupxGCYVrygDAYrDdZg3LWx+irRc35VqltbtAFE80qf
-         9UDM0vE30oNxFYflzZkR4T/WyLCNOKhciRwIAw+oDlLFiRTti3Rx+jQI4jMHoUq9Xy90
-         xvmgWnpbEX70rC21LnKQ4mduKIbecRgZOp20B6Jnh0MstYli/CLRoG+RoVL1FaPshbwb
-         5CmTIXRaXzyaxPMNp78+wtaRhvYFJaCq6jILYRPc+pBFtwrTin8Hj6jBl4SU4LcaVa+p
-         8/2w==
-X-Gm-Message-State: AOAM533Vma8rz/HNq0oCzchVxwJkUXBKrUfzHZOdkFlkjHsmYq3RBna9
-        PDFhJnDDZ3HZug7wzteWNPMPrvDWqx+Eh/CVxAgn+gU6rbw=
-X-Google-Smtp-Source: ABdhPJw9cJHM/dgA5WuWt8DXsMACRAKO75fJ1GThCdcY+CTeCwz+H023UQbAlPsfoDgX0D7pCTVP4BQrmaMIIZwHbls=
-X-Received: by 2002:a2e:81d9:: with SMTP id s25mr430626ljg.104.1598605994230;
- Fri, 28 Aug 2020 02:13:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597218741-24899-1-git-send-email-Anson.Huang@nxp.com> <20200818021251.GA2143309@bogus>
-In-Reply-To: <20200818021251.GA2143309@bogus>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 11:13:03 +0200
-Message-ID: <CACRpkdZ+KXuD8P9_EzUubUf8KFieWXXZL9feoVaDusPDPU-YvA@mail.gmail.com>
-Subject: Re: [PATCH V2] dt-bindings: gpio: Convert vf610 to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1728690AbgH1J2l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 05:28:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27470 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728362AbgH1J2i (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:28:38 -0400
+IronPort-SDR: GbEUEp+0kaNVgq8dP753M1QcX3GQ7j37f80HwuSwOl7nASsQO07f8YpldE3tNSWZBAUVGzmekx
+ KNKXDeXQ0d9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="156641284"
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="156641284"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 02:28:37 -0700
+IronPort-SDR: iVyKu4XviyxQQJXd0QlV9QkFkH31Rj/KiBjOQmy9sYXNob2gBK778SrMAS+c/pNgLXp80rp2Ea
+ 2N4zbx0Y6zOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="329901335"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2020 02:28:35 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kBagT-00C4dH-87; Fri, 28 Aug 2020 12:28:33 +0300
+Date:   Fri, 28 Aug 2020 12:28:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thomas Preston <thomas.preston@codethink.co.uk>,
+        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>,
+        Phil Reid <preid@electromag.com.au>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>,
-        Stefan Agner <stefan@agner.ch>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
+Message-ID: <20200828092833.GP1891694@smile.fi.intel.com>
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+ <20200814100357.209340-2-thomas.preston@codethink.co.uk>
+ <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Aug 18, 2020 at 4:12 AM Rob Herring <robh@kernel.org> wrote:
-> On Wed, 12 Aug 2020 15:52:21 +0800, Anson Huang wrote:
-> > Convert the vf610 gpio binding to DT schema format using json-schema.
+On Fri, Aug 28, 2020 at 11:06:21AM +0200, Linus Walleij wrote:
+> On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
+> <thomas.preston@codethink.co.uk> wrote:
+> 
+> > - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
+> > - Fix precious range to include INTCAP{A,B}, which clear on read.
+> > - Fix precious range to include GPIOB, which clears on read.
+> > - Fix volatile range to include GPIOB, to fix debugfs registers
+> >   reporting different values than `gpioget gpiochip2 {0..15}`.
 > >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > changes since V1:
-> >       - fix reg property to pass build;
-> >       - add "additionalProperties: false".
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 -----------------
-> >  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 81 ++++++++++++++++++++++
-> >  2 files changed, 81 insertions(+), 63 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> >
->
-> Applied, thanks!
+> > Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> 
+> Since the other two patches seem wrong, please resend this one patch,
+> also include the people on TO: here: Andy, Phil and Jan, who all use
+> this chip a lot.
 
-With the increasing number of nice GPIO yaml bindings I'm starting to
-think we should create a Documentation/devicetree/bindings/gpio/common.yaml
-and try to extract out commonalities, but your intuition is gonna be better
-than mine about this, do you think it's worth it?
+And it seems it combines a lot of stuff in one patch. Can we have a split with
+appropriate Fixes: tags?
 
-BR,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
