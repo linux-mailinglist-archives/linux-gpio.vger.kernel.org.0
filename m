@@ -2,73 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0E0255CDF
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBADC255CEC
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgH1Onv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 10:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgH1OmK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:42:10 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18199C061264
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:42:10 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y17so841136lfa.8
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f79kdlAh5IcKuWoCYTa657Zb9eU06P2OlaoVxKUCN6w=;
-        b=OFa+5OuC4GuquUUrXVE//sKmY3784S5MHQRai9DlKJFXu5KZHGhLLofSSQvDRUp0Ol
-         XdER7N24f5WAkQ01Ff/6y/VoTzOE7BNSVhe7Y94wyCvZ32N9vm2VztgA09dWx+822TcN
-         OefBijDu+jDteGNHImHP/NemPpcWYQgGhte78wj/UFT//BDKFF8sYj9XUN/H3N7+FQFi
-         XCWOudrL6mjYt9N+2+0gien0jkuvyDYzI8NLHJxw4ZKv+ZBVt09tDI7yQSCtZazdUhNC
-         yM688uoIQIXtWvy1ou7NRmmuiGSZVJPHA8WWd1TtChZc+6Fw773aum1oRrG5/oJOQnjj
-         lotg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f79kdlAh5IcKuWoCYTa657Zb9eU06P2OlaoVxKUCN6w=;
-        b=T60KDK676EXcanZsalfn+1a1hQdkypqRTzpvqhr9x/BPJCK90rsnqrz10kAnQAT04F
-         qxouLzU5yDfvLLAwZZGpl/9xgscedC5bnlB81FL7k+NcKRscyzjQTwBc0+7JO3K7L0S5
-         wEPr09mhm2Gbd88xrvK7ZQZ+HK3OTq/EIkx7f1usStZS9tfyJe03qEt+utuJanJq8NS0
-         Y+mpiTLRMKonFIPg9oiokTUTIrW5YMASpxcuD4w97J/udBj+KosTmyaLP1FE8GZFxK0r
-         +V8G1PuFSQWa+SirNjhDFMsB4YdbWxnLqL8lC8qi6zQSxpRzPyHV61uNYZDXyqe5ALae
-         3Gxw==
-X-Gm-Message-State: AOAM531rOLSP3/bwpnktZfhvXBp1vrrAo9EpjVclGKh9gw1Q2j3nku66
-        4ZrGPLVlZouoU7gKpz/3+ZPfiE910a48qHl2wyzv8A==
-X-Google-Smtp-Source: ABdhPJyM4gNjNTbHAWbyqAZMSVOXPU+EVin4QwTAwzomXgZ3pwZiTuElnITq4KRAaOanVVVNOmY1RYaynZhL5i9ndQ0=
-X-Received: by 2002:a05:6512:210d:: with SMTP id q13mr426584lfr.194.1598625728439;
- Fri, 28 Aug 2020 07:42:08 -0700 (PDT)
+        id S1727951AbgH1Opj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 10:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbgH1Opi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:45:38 -0400
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB282098B;
+        Fri, 28 Aug 2020 14:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598625937;
+        bh=yowQq2NG4nJh8fvUPdSabbCLjACL84gdik/XV+FQwks=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y0cWCO8ge9hfLF02ZtxEvxosDjutOC87NZ17e7tvvKiu7xWdHLHApsWBZL7yMny06
+         Z0U8NNv6izVo4IiNZpxRhsu7q1m2OwD2+oqig0Drvk4P6psQpZTzTqAXLAQW1F8p8v
+         ahnq83/17+Di0LDUha0RQcU824hIGR3VJe2Sq9RQ=
+Received: by mail-ej1-f44.google.com with SMTP id b17so1836896ejq.8;
+        Fri, 28 Aug 2020 07:45:37 -0700 (PDT)
+X-Gm-Message-State: AOAM533a9xXzjUWUQePDmWt0CXSEGNMECSSnLShxbJF6eXr1g4eDQWp1
+        h/nQAD1mRZq/BJ5IGaFi0hMJ4qLpvWXc9MQt7NM=
+X-Google-Smtp-Source: ABdhPJyT5wwhhF+qi42/UWTQ0IlzMYCJlb70Us/PK8hLjWA6/O+xiz2nwy7hIm9a46c4eumxWu9wAFKPHgG/7RBuIZ0=
+X-Received: by 2002:a17:906:4e03:: with SMTP id z3mr2118388eju.503.1598625936107;
+ Fri, 28 Aug 2020 07:45:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200828103235.78380-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200828103235.78380-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:41:57 +0200
-Message-ID: <CACRpkdbEgvGkLhREZERDC+eXjmrCyVMhbkJqWEh0ArF9_3yWqA@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: mcp23s08: Improve error messaging in ->probe()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-25-krzk@kernel.org>
+ <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
+In-Reply-To: <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 28 Aug 2020 16:45:24 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+Subject: Re: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 12:32 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> Print particular message in each of error case in the ->probe().
-> While here, use dev_err_probe() for that.
+On Fri, 28 Aug 2020 at 16:31, Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > Add devm_fwnode_gpiod_get_optional() and
+> > devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
+> > devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
+> > node might use it to remove some boilerplate code.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> OK then, I suppose this gets merged with the rest?
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Patch applied.
+That's the easiest unless you expect some conflicts. Only one next
+patch depends on this so worst case it could wait one cycle.
 
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
