@@ -2,113 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77F5D255D0E
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:51:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE655255D2D
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgH1Ovj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 10:51:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59282 "EHLO
+        id S1727017AbgH1O5C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 10:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgH1Ovf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:51:35 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58FFEC06121B
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:51:34 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i10so1642901ljn.2
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:51:34 -0700 (PDT)
+        with ESMTP id S1726400AbgH1O5A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:57:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C53B9C061264;
+        Fri, 28 Aug 2020 07:57:00 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t11so580609plr.5;
+        Fri, 28 Aug 2020 07:57:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=m3SH83JhPp5zysOZ8UGaOASaGvHwyBdy+dMZYhDz9IjeZrOUNDL7DGC2IYkYpae6UT
-         FpGAiEisi2hdICi2QBwVlxCRBlQYajQ6kIl3apwv6Zd5zwaMsm+woTJe0VxhXsJCBmVB
-         /Krz+up/rlea+pltJEx57NrY0mSwXBmgaoM8eBGVocnnO/EabniaNW7LYGT8om9EynVv
-         CIC9WHLTJ4TqH3GGF/DLZDlPvjr7OZ+u5Gmua0OvS7bbxfJ/KVP9l6u2f80iB9oWA4S5
-         XcREjqO8mQbwzNglMH6NjTAUpG2SBhzd1ox2KvfQMgaZMf3Rcty3gxm60W7RrjIkgx2T
-         DCMQ==
+        bh=nRvu+qRJqDJhNa3gYpoNc/gx5D78M+eCbN8D4GvM74w=;
+        b=o7kSzWU8Z9uef/5hTVmhxLBrUMmZ95TP0woeDAYb5WDxIuLxIFHhAbQeuPEjRwp5xm
+         3dGtIGGEZ3UQsDbr6eUXebjQ9LFCNPOCLCHtV6kA9FuOq8jaM+GrZOKllRDmngnwDNhm
+         H64VzfWfcAOInnLFQfHIAfwEEo4Ne+KnCnA8nBSErANT/s8bislIijA2I11G/nV9zk10
+         s/Px8/usAsA7bwixahN6gMXHIEE3HpPyVxwPABIi6UFGbLYPMYPerLmFxChaIiwVEhqM
+         FZ2+Y+WtVR3u+zTdP5HJBTnhWQYI637rInWB5gEZORRfFt7O7E2eH5UZZXj1SgaI7pd4
+         xZWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=Y5J9liiEW4fU7O1kAklkQiMNCF8hL0wf5vTT2c2hphDRWC+d+/kkWDtqiE2kv39pqc
-         rLP3fBULGcaCyINTDJxKzcQtR7PPEv3LbSks14bkDfFy8K40HbJzIU564WHjXLclWYYu
-         TeP26HL3HWvW/78i/Mo13BW86MDhwsvNYZBwxxbLRYGLep2tmxLJxG7l+fdV2txftDpQ
-         2xx6LkO6+TMatHopQrELrs88x4BYU+i7igUtKv+Risi8fqqcligeRBUEXdvvvETZT/mv
-         7kYTCJtRGrzoTu8HSxDDE5IYqHEOhD18ey9jMj9Ym4mkB0nuHPSyT9dYwai08TSk24JQ
-         Jthg==
-X-Gm-Message-State: AOAM532TogtHGeixk9y9OuQYZDK6h/vkjFH4AepO/9xRI/qxaQC84bp/
-        Ed6bTDJ3n/SPz0YZ0JyjnXpWvJAYgmQVw7tTmDov+Q==
-X-Google-Smtp-Source: ABdhPJz7nqwPZB2YVbmFth99db1dEuQGwLTN+Hy4/7RmCxHXULzHeBqpJLldBTh4ZZ0VSRoDavwoeUh9uKGkK6yVJPw=
-X-Received: by 2002:a2e:9dd0:: with SMTP id x16mr1026817ljj.144.1598626291535;
- Fri, 28 Aug 2020 07:51:31 -0700 (PDT)
+        bh=nRvu+qRJqDJhNa3gYpoNc/gx5D78M+eCbN8D4GvM74w=;
+        b=sUPUz05oA0d4ng5AmsXtut0G0Eo0WgcLTUYfLuiin/keBU0FOB4TXvQnB5VzdHud2n
+         3iLJPD3uWEWZF8E5dN3e916TR1re5VMn0CSuKE2+cQ184tKxyJcOAG+M83UxAE4qFdqc
+         phUg4ZdvtPg+F0pdJECvFsUosfMsN/BYhQkZzk42hu5Fmg4ox52CA+tgeXGbTP+fH8C1
+         DSEQNM9rZqEnvawgEliUpNr0bQlbMXrE5oShLbAZT7vUK9xnfOeC1yb7T1H2ejrTiL6D
+         ypQ8IOsTAxvUxOHQPgvt9xEf/FO627c6vAxn4RP4lX9T29i7f/YVszXu3lGWACi/h6Xp
+         gTtA==
+X-Gm-Message-State: AOAM5332/MXWwz/ndAiwwe6kEhz1wcSJpu6pKODfAwDKWvCA7dZx4Ldo
+        yIektiXwublb3BLkbCkOzn5hfplNOxJ4fY/4Czk=
+X-Google-Smtp-Source: ABdhPJx0f6thqge+C12HNjJ5r8B71prxz9VZvcsd3hChezg6qVLZ3el+cfR0Db/qvKvqj7o1RZJ/nW0h7z6v6iaT/0E=
+X-Received: by 2002:a17:902:b194:: with SMTP id s20mr1572889plr.321.1598626620299;
+ Fri, 28 Aug 2020 07:57:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825193536.7332-1-krzk@kernel.org> <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
- <20200828130837.GA14163@kozik-lap>
-In-Reply-To: <20200828130837.GA14163@kozik-lap>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:51:20 +0200
-Message-ID: <CACRpkdaWAzJQz_Z1zsRbyVQNPO2wUogH8U_mDNV2fSkW22zmtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-25-krzk@kernel.org>
+ <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com> <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+In-Reply-To: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 28 Aug 2020 17:56:43 +0300
+Message-ID: <CAHp75VfOSqxs5mw7jK0Xp2H2xFFLbb3i=ARxiuViOEniafCp7g@mail.gmail.com>
+Subject: Re: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 3:08 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
-> > On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Aug 28, 2020 at 5:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Fri, 28 Aug 2020 at 16:31, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > >
-> > > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
+> > > Add devm_fwnode_gpiod_get_optional() and
+> > > devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
+> > > devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
+> > > node might use it to remove some boilerplate code.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > >
-> > If you are going to be working a lot on Freescale SoC code going forward
-> > I wouldn't mind if you could add yourself as maintainer for the
-> > Freescale pin controller and GPIO at least, I already have high trust
-> > in you in general so if the Freescale maintainers also have that I think you
-> > should just sign up as maintainer. This makes it easier to do pull requests
-> > and things like that.
+> > OK then, I suppose this gets merged with the rest?
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> Thanks for encouragement.  Indeed I am planning to do more work around
-> i.MX 8M platforms from NXP/Freescale. However there are already four
-> maintainers for Freescale pin controller drivers so I doubt there is
-> need for fifth entry :).
+> That's the easiest unless you expect some conflicts. Only one next
+> patch depends on this so worst case it could wait one cycle.
 
-I beg to differ. As subsystem maintainer it has happened to me more
-than once that the i.MX pin control patches went unreviewed for weeks.
-Everyone listed for this driver is a kitchen sink maintainer that get
-way too much traffic and things fall over the edge.
+I believe Dmitry and Linus are familiar with the concept of immutable
+branches, so it won't be a problem to create one and share.
 
-> Different question is the GPIO driver which apparently lacks entry in
-> Maintainers file.
-
-That's probably just an oversight. Feel free to add it!
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
