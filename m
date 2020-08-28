@@ -2,89 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10D0B255A6E
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 14:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866DB255A9D
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 14:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgH1MnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 08:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
+        id S1729353AbgH1MwI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 08:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbgH1Mmj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 08:42:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7829CC061264
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 05:42:38 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 185so1132141ljj.7
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 05:42:38 -0700 (PDT)
+        with ESMTP id S1729493AbgH1Mvh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 08:51:37 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26954C061237
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 05:51:35 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so1155918ljc.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 05:51:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/5zqwAk7r19VbbapnJvQ3irBLvFfiJZbIrHezMmTPXU=;
-        b=BtJw29RQNERRIfGfc1w5ErhoaKY+Tsu7I6WxNhT3vLOsTDSFDLx89zfGMvxIuLxUJL
-         b5SYvgCTVkgF/w/upA4EtTZXa7cOph2XTjLSV3VL5TQ0qYrScLNEgIjQpubBlz9GECYm
-         M6zBALTIZt9kZ6IT+cTSHmofWoT5mZQnQUDLzrc99HOp3gCbSZKx1E96DC/SiolCEMzF
-         x5v10M1uV7wwhPhfoFUvy2qnD5epm4TLqZQS/ckI60spjubZY7ztBP4jHmr8kABXBwwV
-         g5YGR68fM0NILHEso5Ltw/K6CbviyjKc/6uXFBxaGlbtucr14wWyPdjiHhGyAqZVZaE1
-         DNlQ==
+        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
+        b=Pf4uaxGE3D9QkcwZ3m7v40UpPYGsLMXlPXzxXdofFxgCOrudLrDJjKqDtapXdZT1me
+         U/qpgdyHur4b2ylpfOmLYfGRbbgioYR4DE8hUX9n3OD1PsJjx4bY6DfOPPLZ+nR7uoPR
+         t2fPwIQzvGmoNipg0tib+zvmAuyzH0asX7NHoXYzOS+c1S9GjWZHK3ZfK4tTEAShELZn
+         UQgYkmIIjXX9+QwSVHsgwAXyE2t1Y98bukfmK6CGzaKFvQbixk0LvK3eWs+XS6UxLeZr
+         H6WwkkQfXpaJarmhsieD/FOJieotOGDuhvpWyJnLOHQ5bvJH2PkEoyOghCRX7loqwBdo
+         Wlxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/5zqwAk7r19VbbapnJvQ3irBLvFfiJZbIrHezMmTPXU=;
-        b=WJonpJJnZpwTKhG7vEB1YCsuZqme+7CyAXDbGkaktfWqlB6Tg+zJtAbEuR3Vtb+TVc
-         lrlFQPFdZUeSWFJTGDIyGq5c28XMWa8QPI9DC93ZZFWbVXE/CJxLRcQAF+xumgMd+IL4
-         Lt//AlljgMDwF/Fxo+m8tlvyAIRUE2ZnbGXe3zdiwNAP4aJALIJpTJ8CSdBlvXoVGE/U
-         I+/hZDlRWse/vfjuxogutA7gen46nl/9nDm5JHQgdO4iYK9Bpi2wOHb348mBcaigrkzx
-         EQ/LVXdxPeqciBaYWGQoEhP0KfBbc6nofQ3H42ZR7Rvf3iykPJ5fHR+A62weaQrMhYxf
-         Viug==
-X-Gm-Message-State: AOAM530JaDH7xEv65MBnrRHnv/qeXO8eU1m/wlDF9LpwF6FwEb6KRNwP
-        523VYERDlo9JaQltbhpCUxx+ZK4rnjqt8h/2me2tMpL+LTA=
-X-Google-Smtp-Source: ABdhPJxFJ+sPiCIUWaiBfJG6iVO8KI14e9lM1TexLLLZYSIPaYndoG33IsNrNvGWZQUjYZGGzvFSbia1xjrzAgHOAB4=
-X-Received: by 2002:a2e:558:: with SMTP id 85mr826002ljf.293.1598618556891;
- Fri, 28 Aug 2020 05:42:36 -0700 (PDT)
+        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
+        b=rJr5MNnUToRc8i1HzQcgAPjJ8gSTGn/qaHk7+0yw1fCpsl1S/QZ6EDud+1F436BqTN
+         QaLF+djz6iQN7UgmAPm2XWxjvyH4SjFvtZ0RrKoNN6qIonfMrVJmxDaLLyLhcF/pBCKO
+         Sccss+miELS59cMAiXrwMPsHUI63sS7EN02rtO6OTdV6QaMx+eGx6Hhysz0iaOzIvggk
+         t/YZXNMHIkMioc0zEckS0eWj2rj0xaBU2ngp18z1ccVfl8DQcvQPmcGroB2rzgSe+Lel
+         XG9uoZt9k7kXaQUtJ1m+TeMwBrJY91So5cQlnMLpWMuvl7VmPeLwWwdm0khXI/666+bc
+         ZwOg==
+X-Gm-Message-State: AOAM532cIM8KZkIbF0UNPBbEEbzUGBGbI+y6URkaZaFoRVcLyf9dXD7i
+        QFsP3pTll6vSI7TQIJCIrlgj/y4Rv6LjG6SvrSkucQ==
+X-Google-Smtp-Source: ABdhPJzTyH+jeLvxiBsauaVxTH5hij7/x8BNA+Ly/857QQXdScYFOsf9kjoayIwSsdP0TIKRwlItOzGM4zkgBEGoiX8=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr872506ljo.286.1598619091424;
+ Fri, 28 Aug 2020 05:51:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825143348.1358679-1-thierry.reding@gmail.com>
-In-Reply-To: <20200825143348.1358679-1-thierry.reding@gmail.com>
+References: <20200825193536.7332-1-krzk@kernel.org>
+In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 14:42:26 +0200
-Message-ID: <CACRpkdajUgrcjWPHZ60OxpXmo7FFH8ytspHoFLt-FZoTymKAPw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: devicetree: Keep deferring even on timeout
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Fri, 28 Aug 2020 14:51:20 +0200
+Message-ID: <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:33 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> From: Thierry Reding <treding@nvidia.com>
->
-> driver_deferred_probe_check_state() may return -ETIMEDOUT instead of
-> -EPROBE_DEFER after all built-in drivers have been probed. This can
-> cause issues for built-in drivers that depend on resources provided by
-> loadable modules.
->
-> One such case happens on Tegra where I2C controllers are used during
-> early boot to set up the system PMIC, so the I2C driver needs to be a
-> built-in driver. At the same time, some instances of the I2C controller
-> depend on the DPAUX hardware for pinmuxing. Since the DPAUX is handled
-> by the display driver, which is usually not built-in, the pin control
-> states will not become available until after the root filesystem has
-> been mounted and the display driver loaded from it.
->
-> Fixes: bec6c0ecb243 ("pinctrl: Remove use of driver_deferred_probe_check_state_continue()")
-> Suggested-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> This is a v3 of cleanup of i.XM 8 bindings and DTSes.
 
-Just like with the identical patch from John I got a while back, I'd like
-some nod from the device core maintainers (Greg or Raphael) that this
-is how we want to do things.
+If you are going to be working a lot on Freescale SoC code going forward
+I wouldn't mind if you could add yourself as maintainer for the
+Freescale pin controller and GPIO at least, I already have high trust
+in you in general so if the Freescale maintainers also have that I think you
+should just sign up as maintainer. This makes it easier to do pull requests
+and things like that.
 
 Yours,
 Linus Walleij
