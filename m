@@ -2,80 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBADC255CEC
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F5D255D0E
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 16:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgH1Opj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 10:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbgH1Opi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:45:38 -0400
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EB282098B;
-        Fri, 28 Aug 2020 14:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598625937;
-        bh=yowQq2NG4nJh8fvUPdSabbCLjACL84gdik/XV+FQwks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y0cWCO8ge9hfLF02ZtxEvxosDjutOC87NZ17e7tvvKiu7xWdHLHApsWBZL7yMny06
-         Z0U8NNv6izVo4IiNZpxRhsu7q1m2OwD2+oqig0Drvk4P6psQpZTzTqAXLAQW1F8p8v
-         ahnq83/17+Di0LDUha0RQcU824hIGR3VJe2Sq9RQ=
-Received: by mail-ej1-f44.google.com with SMTP id b17so1836896ejq.8;
-        Fri, 28 Aug 2020 07:45:37 -0700 (PDT)
-X-Gm-Message-State: AOAM533a9xXzjUWUQePDmWt0CXSEGNMECSSnLShxbJF6eXr1g4eDQWp1
-        h/nQAD1mRZq/BJ5IGaFi0hMJ4qLpvWXc9MQt7NM=
-X-Google-Smtp-Source: ABdhPJyT5wwhhF+qi42/UWTQ0IlzMYCJlb70Us/PK8hLjWA6/O+xiz2nwy7hIm9a46c4eumxWu9wAFKPHgG/7RBuIZ0=
-X-Received: by 2002:a17:906:4e03:: with SMTP id z3mr2118388eju.503.1598625936107;
- Fri, 28 Aug 2020 07:45:36 -0700 (PDT)
+        id S1728101AbgH1Ovj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 10:51:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgH1Ovf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 10:51:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58FFEC06121B
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:51:34 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i10so1642901ljn.2
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 07:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
+        b=m3SH83JhPp5zysOZ8UGaOASaGvHwyBdy+dMZYhDz9IjeZrOUNDL7DGC2IYkYpae6UT
+         FpGAiEisi2hdICi2QBwVlxCRBlQYajQ6kIl3apwv6Zd5zwaMsm+woTJe0VxhXsJCBmVB
+         /Krz+up/rlea+pltJEx57NrY0mSwXBmgaoM8eBGVocnnO/EabniaNW7LYGT8om9EynVv
+         CIC9WHLTJ4TqH3GGF/DLZDlPvjr7OZ+u5Gmua0OvS7bbxfJ/KVP9l6u2f80iB9oWA4S5
+         XcREjqO8mQbwzNglMH6NjTAUpG2SBhzd1ox2KvfQMgaZMf3Rcty3gxm60W7RrjIkgx2T
+         DCMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
+        b=Y5J9liiEW4fU7O1kAklkQiMNCF8hL0wf5vTT2c2hphDRWC+d+/kkWDtqiE2kv39pqc
+         rLP3fBULGcaCyINTDJxKzcQtR7PPEv3LbSks14bkDfFy8K40HbJzIU564WHjXLclWYYu
+         TeP26HL3HWvW/78i/Mo13BW86MDhwsvNYZBwxxbLRYGLep2tmxLJxG7l+fdV2txftDpQ
+         2xx6LkO6+TMatHopQrELrs88x4BYU+i7igUtKv+Risi8fqqcligeRBUEXdvvvETZT/mv
+         7kYTCJtRGrzoTu8HSxDDE5IYqHEOhD18ey9jMj9Ym4mkB0nuHPSyT9dYwai08TSk24JQ
+         Jthg==
+X-Gm-Message-State: AOAM532TogtHGeixk9y9OuQYZDK6h/vkjFH4AepO/9xRI/qxaQC84bp/
+        Ed6bTDJ3n/SPz0YZ0JyjnXpWvJAYgmQVw7tTmDov+Q==
+X-Google-Smtp-Source: ABdhPJz7nqwPZB2YVbmFth99db1dEuQGwLTN+Hy4/7RmCxHXULzHeBqpJLldBTh4ZZ0VSRoDavwoeUh9uKGkK6yVJPw=
+X-Received: by 2002:a2e:9dd0:: with SMTP id x16mr1026817ljj.144.1598626291535;
+ Fri, 28 Aug 2020 07:51:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-25-krzk@kernel.org>
- <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
-In-Reply-To: <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 28 Aug 2020 16:45:24 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
-Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
-Subject: Re: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+References: <20200825193536.7332-1-krzk@kernel.org> <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
+ <20200828130837.GA14163@kozik-lap>
+In-Reply-To: <20200828130837.GA14163@kozik-lap>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 16:51:20 +0200
+Message-ID: <CACRpkdaWAzJQz_Z1zsRbyVQNPO2wUogH8U_mDNV2fSkW22zmtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 16:31, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> > Add devm_fwnode_gpiod_get_optional() and
-> > devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
-> > devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
-> > node might use it to remove some boilerplate code.
+On Fri, Aug 28, 2020 at 3:08 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
+> > On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
+> >
+> > If you are going to be working a lot on Freescale SoC code going forward
+> > I wouldn't mind if you could add yourself as maintainer for the
+> > Freescale pin controller and GPIO at least, I already have high trust
+> > in you in general so if the Freescale maintainers also have that I think you
+> > should just sign up as maintainer. This makes it easier to do pull requests
+> > and things like that.
 >
-> OK then, I suppose this gets merged with the rest?
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Thanks for encouragement.  Indeed I am planning to do more work around
+> i.MX 8M platforms from NXP/Freescale. However there are already four
+> maintainers for Freescale pin controller drivers so I doubt there is
+> need for fifth entry :).
 
-That's the easiest unless you expect some conflicts. Only one next
-patch depends on this so worst case it could wait one cycle.
+I beg to differ. As subsystem maintainer it has happened to me more
+than once that the i.MX pin control patches went unreviewed for weeks.
+Everyone listed for this driver is a kitchen sink maintainer that get
+way too much traffic and things fall over the edge.
 
-Best regards,
-Krzysztof
+> Different question is the GPIO driver which apparently lacks entry in
+> Maintainers file.
+
+That's probably just an oversight. Feel free to add it!
+
+Yours,
+Linus Walleij
