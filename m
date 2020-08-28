@@ -2,106 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B15025585F
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 12:09:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA5825589C
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 12:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgH1KJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 06:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgH1KJU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 06:09:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7E1C061264;
-        Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k15so403320pfc.12;
-        Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZHzBTEqiDK4axPBETGabpIdpXz6s1djywLVqOpLrIug=;
-        b=T9enyjmlwfTWxjknmDmppmvnYxe4xHyWpqkIas/0XLDkgVDcR6B+5tCZiMAzy6KRaZ
-         zu+vgGSFu88poO4Av7eyhr27kv71owDOS//MDGrL5Zob8OaRq3iJzjc3p1EiGLEk1Ta1
-         ISnnM/GcLf5v/csuFhteu7s82Mi5WiR6PSd1nDdoKB0vBj32qgvYJad7lTa18+xhNL1Z
-         L1wKIPBmJa+z3i/NyWwmQuWnAUL7rL+WkmrSwBSN/hCXMnnWSl+0sSeBh33M18smlAMb
-         N3sdKpsgOH+8K2GoVawj36iWMRlieqZdNBEYRjDbeee0qYjdXN2wjVvKmzuBJ0weWJlu
-         NoRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZHzBTEqiDK4axPBETGabpIdpXz6s1djywLVqOpLrIug=;
-        b=cbMyB2ME1JtvoN3sgePr46ICgAxOCNfon5PPjB21LSs5smCfGMm50/DyiNlpahMdKC
-         i4lptKuWWMg62wxvwZ/5Z8d16JXGSgcAOTHife5Md1gJ8SQk4y+X5NiHxSt2IucWzlbD
-         WlAB9tFQl0cA6RYjrcpy+viLiQxgGe3sbEuHBtf8awBtX5vwa/lHByxLKaQBqkHNKW0C
-         x7Qy4pywO7/eX8haglRsxv4IxaXac6C5gId+AT6aOtqwVVc5kgHeGP8xEdVXgCCDb1PD
-         BBsOmK6wWzBrXeNDEvw6IIyHdfRvLTFEVKy3Q7d3lcvQU1wDf659qGPjO7TZREq1tD+4
-         tS4g==
-X-Gm-Message-State: AOAM533SFpu0O9f+MHsmdFp4xkZAN6OtpeO+BnsFt9yTBOMOfl/ctb7S
-        noQyQfzuGyGOY/jC/zvBIDmSuIULn40n8jKVAU4=
-X-Google-Smtp-Source: ABdhPJz1hTTI76acslLEASjcBmeKJrOH00nsYVH7K4pa6SeRREesUDiP52LRTdXwDptltpeZW1jpW2MQB+KsMqQd9wg=
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr621160pfk.219.1598609360115;
- Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
+        id S1729088AbgH1Kcj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 06:32:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31840 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728362AbgH1Kcj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:32:39 -0400
+IronPort-SDR: rYuAE3GDMFeIOBYuJhLQM0v27xIhz+U2al6Zj38bZFkiZ/l+WxQmgOmlG8T3olzYHKmEH9v2rL
+ gVoehpB1azEQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154188206"
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="154188206"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 03:32:38 -0700
+IronPort-SDR: DrDzdzQixXmdlM21WDrP5BDP9PrbsEoBXC2Z0iZXCrNNMmq+vanOM1UTvhdYwDoaDrrwg2j6GZ
+ jWtw3RkIzd8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="300189328"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 28 Aug 2020 03:32:36 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CC12D166; Fri, 28 Aug 2020 13:32:35 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v1] pinctrl: mcp23s08: Improve error messaging in ->probe()
+Date:   Fri, 28 Aug 2020 13:32:35 +0300
+Message-Id: <20200828103235.78380-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk> <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 28 Aug 2020 13:09:03 +0300
-Message-ID: <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 1:35 PM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
->
-> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
+Print particular message in each of error case in the ->probe().
+While here, use dev_err_probe() for that.
 
-I'm not sure it's correct. MPC23016 is an existing I=C2=B2C IO expander.
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-mcp23s08.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-> - Fix precious range to include INTCAP{A,B}, which clear on read.
-> - Fix precious range to include GPIOB, which clears on read.
-> - Fix volatile range to include GPIOB, to fix debugfs registers
->   reporting different values than `gpioget gpiochip2 {0..15}`.
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index 42b12ea14d6b..b4606811cf57 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -564,7 +564,7 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 
+ 	ret = mcp_read(mcp, MCP_IOCON, &status);
+ 	if (ret < 0)
+-		goto fail;
++		return dev_err_probe(dev, ret, "can't identify chip %d\n", addr);
+ 
+ 	mcp->irq_controller =
+ 		device_property_read_bool(dev, "interrupt-controller");
+@@ -598,7 +598,7 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 
+ 		ret = mcp_write(mcp, MCP_IOCON, status);
+ 		if (ret < 0)
+-			goto fail;
++			return dev_err_probe(dev, ret, "can't write IOCON %d\n", addr);
+ 	}
+ 
+ 	if (mcp->irq && mcp->irq_controller) {
+@@ -616,7 +616,7 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 
+ 	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
+ 	if (ret < 0)
+-		goto fail;
++		return dev_err_probe(dev, ret, "can't add GPIO chip\n");
+ 
+ 	mcp->pinctrl_desc.pctlops = &mcp_pinctrl_ops;
+ 	mcp->pinctrl_desc.confops = &mcp_pinconf_ops;
+@@ -628,18 +628,17 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	mcp->pinctrl_desc.owner = THIS_MODULE;
+ 
+ 	mcp->pctldev = devm_pinctrl_register(dev, &mcp->pinctrl_desc, mcp);
+-	if (IS_ERR(mcp->pctldev)) {
+-		ret = PTR_ERR(mcp->pctldev);
+-		goto fail;
+-	}
++	if (IS_ERR(mcp->pctldev))
++		return dev_err_probe(dev, PTR_ERR(mcp->pctldev), "can't register controller\n");
+ 
+-	if (mcp->irq)
++	if (mcp->irq) {
+ 		ret = mcp23s08_irq_setup(mcp);
++		if (ret)
++			return dev_err_probe(dev, ret, "can't setup IRQ\n");
++	}
+ 
+-fail:
+-	if (ret < 0)
+-		dev_dbg(dev, "can't setup chip %d, --> %d\n", addr, ret);
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(mcp23s08_probe_one);
++
+ MODULE_LICENSE("GPL");
+-- 
+2.28.0
 
-I'm wondering if you read all the datasheets before doing these changes.
-MPC2308
-MPC23016
-MPC23017
-...
-
-> -static const struct regmap_range mcp23x16_volatile_range =3D {
-> +static const struct regmap_range mcp23x17_volatile_range =3D {
->         .range_min =3D MCP_INTF << 1,
-> -       .range_max =3D MCP_GPIO << 1,
-> +       .range_max =3D (MCP_GPIO << 1) + 1,
-
-This looks weird. Usually we do a mask or a bit based mask, like (1 << x) -=
- 1.
-
->  };
-
-...
-
-> +static const struct regmap_range mcp23x17_precious_range =3D {
-> +       .range_min =3D MCP_INTCAP << 1,
-> +       .range_max =3D (MCP_GPIO << 1) + 1,
-
-Ditto.
-
->  };
-
---=20
-With Best Regards,
-Andy Shevchenko
