@@ -2,85 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD1F25605D
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 20:21:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F10625611B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Aug 2020 21:20:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgH1SV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 14:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgH1SVx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Aug 2020 14:21:53 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACA9C06121B
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 11:21:52 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id oz20so373172ejb.5
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Aug 2020 11:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NitsUGoWpHEi7JACdZqk2bJfVv+nYWQfxXZQZAJftR8=;
-        b=arunfWFIhdXuMWwizjSFeS5fQKjHaDoEcN7Vc2TTlQA+/bZqLiX0sjb7NF38Todkxf
-         WDtoh+BOFrYjgn9k5nrrbYbcWhYHgPwfmEjw6UmYepfk52nRi/CPxN0dV/VALThCz9gr
-         RHwnRMhqX4ARUcABIYCv6R6tU9W7/vQIBkFx1zB+W7KDJQGhv5/q9yWIXCtRpGIzv68D
-         IxBcautBeHTvdOGh3F7OVRPge7IU0AH5Jo9DHy5mKWfOXsXLXrAswzJAhL2UkPf8JBaT
-         gKSOcg8KaVsreqwJQiknwS2Mn6xjL89qfGDAhBKuUOWZ/4v0diJ4ufsgl1FDfZKuNyI9
-         Uz9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NitsUGoWpHEi7JACdZqk2bJfVv+nYWQfxXZQZAJftR8=;
-        b=M5A8DhddEV+MB5H8vI7bRhHuadD6sBJVXtlnUOvk+S3Grg4xuxEz95mlFLKDqMSQqu
-         D0GMGeBKKT+pHuQvIHyhUoINZoBAevM027JI1Va0T4FzAH5FP1qGuvWtPTA6rvmh7Q6z
-         NjWo2grb6WjtKUVpbtFmKvkW2AXi8eJqGDzP9WhI7T+Diy45SmQfyYUisYwg97eM5Gjt
-         LwejiLI+6hYPdBJvTEy+gpINd3JUegNYAZgCEQlGBqn5Gdg4nCuPs1NbKTIMlyjoq/5K
-         zUU1zJo4nOWAJR/5oaTXkEahY6+5T85gusXE2WCuCoKy5vCaat/P6jin/J8QaS8v/xBL
-         QJxA==
-X-Gm-Message-State: AOAM5317vOo+SyyTD9MDe2HOIsC9xxgp5o+AFWteS0KxUQIRdRwBVtSX
-        zOOs6Zsqz2+/sT7crrWWm66zuecwSL6AM+5hQBV1RbzaMZo=
-X-Google-Smtp-Source: ABdhPJx9jq3Dqxs4D2XtzVZrYv4qnQpE7IQTqeRaY34szwPLGLrI1OI2zYvc4zladcGFqXFNLjYnyxvqAckASdsW51E=
-X-Received: by 2002:a17:906:4d10:: with SMTP id r16mr3212844eju.420.1598638911015;
- Fri, 28 Aug 2020 11:21:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
- <20200825095726.yvg34q74xy57qhrx@mobilestation> <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
-In-Reply-To: <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 28 Aug 2020 20:21:40 +0200
-Message-ID: <CAMpxmJUEvaW82V8s8Tw2MVGVb4Tgkg6T9-NfFJye7zF+j2a-ig@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
+        id S1726033AbgH1TT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 15:19:59 -0400
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:59298 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbgH1TT7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Aug 2020 15:19:59 -0400
+Received: from [188.210.212.0] (helo=[192.168.0.104])
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1kBjum-0007Bu-KM; Fri, 28 Aug 2020 20:19:56 +0100
+Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Ding Tianhong <dingtianhong@huawei.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel.openeuler@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+ <20200814100357.209340-2-thomas.preston@codethink.co.uk>
+ <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <f8368c71-33cf-46d7-d361-6c76cfb3b66e@codethink.co.uk>
+Date:   Fri, 28 Aug 2020 20:19:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:20 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Aug 25, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
->
-> > BTW Linus, could you take a look at my series? Andy and Rob have finished reviewing
-> > it almost a month ago.
->
-> I was wondering the same, but in normal cases (not closer to the merge
-> window) Bart is taking care of drivers/gpio (AFAIU).
->
->
+Hey Andy, Linus,
+Thanks for looking at this.
 
-Yeah, normally I'd have queued it by now but I'm only coming back to
-100% activity on Tuesday - I was on a leave since July so I was rather
-inactive lately.
+On 28/08/2020 11:09, Andy Shevchenko wrote:
+> On Fri, Aug 14, 2020 at 1:35 PM Thomas Preston
+> <thomas.preston@codethink.co.uk> wrote:
+>>
+>> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
+> 
+> I'm not sure it's correct. MPC23016 is an existing I²C IO expander.
+> 
 
-Bartosz
+The MCP23016 device is not mentioned anywhere else in this driver. The 
+only place this string is used is in `struct regmap_config 
+mcp23x17_regmap` (another device). It seems to me that this is a typo 
+but I might be wrong.
+
+~/w/linux$ git grep -h compatible drivers/pinctrl/pinctrl-mcp23s08*
+                 .compatible = "microchip,mcp23008",
+                 .compatible = "microchip,mcp23017",
+                 .compatible = "microchip,mcp23018",
+                 .compatible = "mcp,mcp23008",
+                 .compatible = "mcp,mcp23017",
+                 .compatible = "microchip,mcp23s08",
+                 .compatible = "microchip,mcp23s17",
+                 .compatible = "microchip,mcp23s18",
+                 .compatible = "mcp,mcp23s08",
+                 .compatible = "mcp,mcp23s17",
+
+Also I don't have an MC23016, so I can't test configuration for it.
+
+>> - Fix precious range to include INTCAP{A,B}, which clear on read.
+>> - Fix precious range to include GPIOB, which clears on read.
+>> - Fix volatile range to include GPIOB, to fix debugfs registers
+>>    reporting different values than `gpioget gpiochip2 {0..15}`.
+> 
+> I'm wondering if you read all the datasheets before doing these changes.
+> MPC2308
+> MPC23016
+> MPC23017
+> ...
+> 
+
+I did not! I was only changing configuration for MCP23017 devices.
+What have I missed?
+
+For reference, I think you are referring to [0], [1], [2]. I'm familiar 
+with the last one.
+
+>> -static const struct regmap_range mcp23x16_volatile_range = {
+>> +static const struct regmap_range mcp23x17_volatile_range = {
+>>          .range_min = MCP_INTF << 1,
+>> -       .range_max = MCP_GPIO << 1,
+>> +       .range_max = (MCP_GPIO << 1) + 1,
+> 
+> This looks weird. Usually we do a mask or a bit based mask, like (1 << x) - 1.
+> 
+
+I don't think these are masks, they're addresses.
+
+I believe the author has doubled the register indexing using a 1 bit 
+shift, because the MCP23017 device is configured with sequential 
+addresses (IOCON.BANK = 0). On page 12 of the datasheet [2] this looks like:
+
+0x00 IODIRA, MCP_IODIR << 1
+0x01 IODIRB
+0x02 IPOLA,  MCP_IPOL << 1
+0x03 IPOLB
+...
+0x12 GPIOA,  MCP_GPIO << 1
+0x13 GPIOB
+
+This means you can read 16 bits from MCP_GPIO << 1 and get the register 
+values for both banks, or even use this for .range_min.
+
+However, this trick doesn't work for .range_max:
+
+	.range_max = MCP_GPIO << 1; /* 0x12 */
+
+But I think it needs to be 0x13 to include GPIOB. Now that I'm looking 
+into it, how does `mcp23x17_regmap.val_bits = 16` affect this? Perhaps 
+`MCP_GPIO << 1` is fine after all.
+
+I will whip up a v2 and test this. I'll split the changes across patches 
+and fix the typo last patch - in case you don't agree with me.
+
+Many thanks,
+Thomas
+
+[0] MCP23008 https://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
+[1] MCP23016 http://ww1.microchip.com/downloads/en/devicedoc/20090c.pdf
+[2] MCP23017 https://ww1.microchip.com/downloads/en/DeviceDoc/20001952C.pdf
