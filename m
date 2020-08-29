@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55AD2256685
+	by mail.lfdr.de (Postfix) with ESMTP id E59CE256686
 	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 11:40:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgH2Jki (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Aug 2020 05:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
+        id S1726900AbgH2Jkq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Aug 2020 05:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgH2Jkh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 29 Aug 2020 05:40:37 -0400
+        id S1726912AbgH2Jkm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 29 Aug 2020 05:40:42 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C1F020665;
-        Sat, 29 Aug 2020 09:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FDE520E65;
+        Sat, 29 Aug 2020 09:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598694036;
-        bh=waDJsm0Si3Oa7/37FQkNBsUhWFtfFS+Zb15f4FjmQx0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FciHhNBPwSF+10ex0i/shjcZDjwEcEOerjVRGEP/L/H9LgdVhQMKvMIStWN/wYoHB
-         gGdxLwddtaJ5xIjY9zlgq8+uvWbNds8rtE3T0XSuwW9mwlItFfSD78HRk7EBefnoX1
-         6GlLOYZUJHpGKROwMdptWEFzpOFt4a8CFFC6SaE4=
+        s=default; t=1598694041;
+        bh=YkJWndd3eYDCkLFjOutEpPbilWAVMZ5PvWnnfsLUDBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CvFRKLdOf+CQCBYPTfzDQXMjTgCrqLI5nC9t1XhH9w61gTvhzxqDbU9InJ7qp2o2W
+         EiAvwDxEQIanxP5LbeLtM/RklYvP522TENJpNRaPLRt6zS8Kw9fQ8OdmW2QIFWtmTH
+         UEF7MDJwUMvJwGgG25ErNtWsdMWW5+otkr7J/i6g=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -43,282 +43,203 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/6] dt-bindings: gpio: Convert bindings for NXP PCA953x family to dtschema
-Date:   Sat, 29 Aug 2020 11:40:19 +0200
-Message-Id: <20200829094024.31842-1-krzk@kernel.org>
+Subject: [PATCH 2/6] dt-bindings: gpio: Convert bindings for Maxim MAX732x family to dtschema
+Date:   Sat, 29 Aug 2020 11:40:20 +0200
+Message-Id: <20200829094024.31842-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829094024.31842-1-krzk@kernel.org>
+References: <20200829094024.31842-1-krzk@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the NXP PCA953x family of GPIO expanders bindings to device tree
-schema.
+Convert the Maxim MAX732x family of GPIO expanders bindings to device
+tree schema by merging it with existing PCA95xx schema.  These are quite
+similar so merging reduces duplication.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/gpio/gpio-pca953x.txt |  90 ------------
- .../bindings/gpio/gpio-pca95xx.yaml           | 138 ++++++++++++++++++
- .../devicetree/bindings/trivial-devices.yaml  |   4 -
- 3 files changed, 138 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+ .../devicetree/bindings/gpio/gpio-max732x.txt | 58 ---------------
+ .../bindings/gpio/gpio-pca95xx.yaml           | 72 ++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
 deleted file mode 100644
-index 3126c3817e2a..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+index b3a9c0c32823..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
 +++ /dev/null
-@@ -1,90 +0,0 @@
--* NXP PCA953x I2C GPIO multiplexer
+@@ -1,58 +0,0 @@
+-* MAX732x-compatible I/O expanders
 -
 -Required properties:
-- - compatible: Has to contain one of the following:
--	nxp,pca6416
--	nxp,pca9505
--	nxp,pca9534
--	nxp,pca9535
--	nxp,pca9536
--	nxp,pca9537
--	nxp,pca9538
--	nxp,pca9539
--	nxp,pca9554
--	nxp,pca9555
--	nxp,pca9556
--	nxp,pca9557
--	nxp,pca9574
--	nxp,pca9575
--	nxp,pca9698
--	nxp,pcal6416
--	nxp,pcal6524
--	nxp,pcal9535
--	nxp,pcal9555a
--	maxim,max7310
--	maxim,max7312
--	maxim,max7313
--	maxim,max7315
--	ti,pca6107
--	ti,pca9536
--	ti,tca6408
--	ti,tca6416
--	ti,tca6424
--	ti,tca9539
--	ti,tca9554
--	onnn,cat9554
--	onnn,pca9654
--	exar,xra1202
-- - gpio-controller: if used as gpio expander.
-- - #gpio-cells: if used as gpio expander.
-- - interrupt-controller: if to be used as interrupt expander.
-- - #interrupt-cells: if to be used as interrupt expander.
+-  - compatible: Should be one of the following:
+-    - "maxim,max7319": For the Maxim MAX7319
+-    - "maxim,max7320": For the Maxim MAX7320
+-    - "maxim,max7321": For the Maxim MAX7321
+-    - "maxim,max7322": For the Maxim MAX7322
+-    - "maxim,max7323": For the Maxim MAX7323
+-    - "maxim,max7324": For the Maxim MAX7324
+-    - "maxim,max7325": For the Maxim MAX7325
+-    - "maxim,max7326": For the Maxim MAX7326
+-    - "maxim,max7327": For the Maxim MAX7327
+-  - reg: I2C slave address for this device.
+-  - gpio-controller: Marks the device node as a GPIO controller.
+-  - #gpio-cells: Should be 2.
+-    - first cell is the GPIO number
+-    - second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+-      Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
 -
 -Optional properties:
-- - interrupts: interrupt specifier for the device's interrupt output.
-- - reset-gpios: GPIO specification for the RESET input. This is an
--		active low signal to the PCA953x.
-- - vcc-supply:	power supply regulator.
 -
--Example:
+-  The I/O expander can detect input state changes, and thus optionally act as
+-  an interrupt controller. When the expander interrupt line is connected all the
+-  following properties must be set. For more information please see the
+-  interrupt controller device tree bindings documentation available at
+-  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
 -
+-  - interrupt-controller: Identifies the node as an interrupt controller.
+-  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
+-    - first cell is the pin number
+-    - second cell is used to specify flags
+-  - interrupts: Interrupt specifier for the controllers interrupt.
 -
--	gpio@20 {
--		compatible = "nxp,pca9505";
--		reg = <0x20>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_pca9505>;
+-Please refer to gpio.txt in this directory for details of the common GPIO
+-bindings used by client devices.
+-
+-Example 1. MAX7325 with interrupt support enabled (CONFIG_GPIO_MAX732X_IRQ=y):
+-
+-	expander: max7325@6d {
+-		compatible = "maxim,max7325";
+-		reg = <0x6d>;
 -		gpio-controller;
 -		#gpio-cells = <2>;
--		interrupt-parent = <&gpio3>;
--		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
--	};
--
--
--Example with Interrupts:
--
--
--	gpio99: gpio@22 {
--		compatible = "nxp,pcal6524";
--		reg = <0x22>;
--		interrupt-parent = <&gpio6>;
--		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;	/* gpio6_161 */
 -		interrupt-controller;
 -		#interrupt-cells = <2>;
--		vcc-supply = <&vdds_1v8_main>;
+-		interrupt-parent = <&gpio4>;
+-		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+-	};
+-
+-Example 2. MAX7325 with interrupt support disabled (CONFIG_GPIO_MAX732X_IRQ=n):
+-
+-	expander: max7325@6d {
+-		compatible = "maxim,max7325";
+-		reg = <0x6d>;
 -		gpio-controller;
 -		#gpio-cells = <2>;
--		gpio-line-names =
--			"hdmi-ct-hpd", "hdmi.ls-oe", "p02", "p03", "vibra", "fault2", "p06", "p07",
--			"en-usb", "en-host1", "en-host2", "chg-int", "p14", "p15", "mic-int", "en-modem",
--			"shdn-hs-amp", "chg-status+red", "green", "blue", "en-esata", "fault1", "p26", "p27";
 -	};
--
--	ts3a227@3b {
--		compatible = "ti,ts3a227e";
--		reg = <0x3b>;
--		interrupt-parent = <&gpio99>;
--		interrupts = <14 IRQ_TYPE_EDGE_RISING>;
--		ti,micbias = <0>;	/* 2.1V */
--	};
--
 diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-new file mode 100644
-index 000000000000..c5bb24b3b7b5
---- /dev/null
+index c5bb24b3b7b5..e90433b7d52b 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
 +++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -0,0 +1,138 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+@@ -9,6 +9,10 @@ title: NXP PCA95xx I2C GPIO multiplexer
+ maintainers:
+   - Krzysztof Kozlowski <krzk@kernel.org>
+ 
++description: |+
++  Bindings for the family of I2C GPIO multiplexers/expanders: NXP PCA95xx,
++  Maxim MAX73xx
 +
-+title: NXP PCA95xx I2C GPIO multiplexer
+ properties:
+   compatible:
+     enum:
+@@ -17,6 +21,15 @@ properties:
+       - maxim,max7312
+       - maxim,max7313
+       - maxim,max7315
++      - maxim,max7319
++      - maxim,max7320
++      - maxim,max7321
++      - maxim,max7322
++      - maxim,max7323
++      - maxim,max7324
++      - maxim,max7325
++      - maxim,max7326
++      - maxim,max7327
+       - nxp,pca6416
+       - nxp,pca9505
+       - nxp,pca9534
+@@ -69,11 +82,11 @@ properties:
+   reset-gpios:
+     description:
+       GPIO specification for the RESET input. This is an active low signal to
+-      the PCA953x.
++      the PCA953x.  Not valid for Maxim MAX732x devices.
+ 
+   vcc-supply:
+     description:
+-      Optional power supply
++      Optional power supply.  Not valid for Maxim MAX732x devices.
+ 
+ required:
+   - compatible
+@@ -83,6 +96,27 @@ required:
+ 
+ unevaluatedProperties: false
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - maxim,max7320
++              - maxim,max7321
++              - maxim,max7322
++              - maxim,max7323
++              - maxim,max7324
++              - maxim,max7325
++              - maxim,max7326
++              - maxim,max7327
++    then:
++      properties:
++        reset-gpios:
++          maxItems: 0
++        vcc-supply:
++          maxItems: 0
 +
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
+@@ -136,3 +170,37 @@ examples:
+             ti,micbias = <0>;	/* 2.1V */
+         };
+     };
 +
-+properties:
-+  compatible:
-+    enum:
-+      - exar,xra1202
-+      - maxim,max7310
-+      - maxim,max7312
-+      - maxim,max7313
-+      - maxim,max7315
-+      - nxp,pca6416
-+      - nxp,pca9505
-+      - nxp,pca9534
-+      - nxp,pca9535
-+      - nxp,pca9536
-+      - nxp,pca9537
-+      - nxp,pca9538
-+      - nxp,pca9539
-+      - nxp,pca9554
-+      - nxp,pca9555
-+      - nxp,pca9556
-+      - nxp,pca9557
-+      - nxp,pca9574
-+      - nxp,pca9575
-+      - nxp,pca9698
-+      - nxp,pcal6416
-+      - nxp,pcal6524
-+      - nxp,pcal9535
-+      - nxp,pcal9555a
-+      - onnn,cat9554
-+      - onnn,pca9654
-+      - ti,pca6107
-+      - ti,pca9536
-+      - ti,tca6408
-+      - ti,tca6416
-+      - ti,tca6424
-+      - ti,tca9539
-+      - ti,tca9554
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 32
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  reset-gpios:
-+    description:
-+      GPIO specification for the RESET input. This is an active low signal to
-+      the PCA953x.
-+
-+  vcc-supply:
-+    description:
-+      Optional power supply
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
 +  - |
 +    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+    i2c0 {
++    i2c2 {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
-+        gpio@20 {
-+            compatible = "nxp,pca9505";
-+            reg = <0x20>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pinctrl_pca9505>;
++        // MAX7325 with interrupt support enabled
++        gpio@6d {
++            compatible = "maxim,max7325";
++            reg = <0x6d>;
 +            gpio-controller;
 +            #gpio-cells = <2>;
-+            interrupt-parent = <&gpio3>;
-+            interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-+        };
-+    };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        gpio99: gpio@22 {
-+            compatible = "nxp,pcal6524";
-+            reg = <0x22>;
-+            interrupt-parent = <&gpio6>;
-+            interrupts = <1 IRQ_TYPE_EDGE_FALLING>;	/* gpio6_161 */
 +            interrupt-controller;
 +            #interrupt-cells = <2>;
-+            vcc-supply = <&vdds_1v8_main>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-line-names = "hdmi-ct-hpd", "hdmi.ls-oe", "p02", "p03",
-+                              "vibra", "fault2", "p06", "p07", "en-usb",
-+                              "en-host1", "en-host2", "chg-int", "p14", "p15",
-+                              "mic-int", "en-modem", "shdn-hs-amp",
-+                              "chg-status+red", "green", "blue", "en-esata",
-+                              "fault1", "p26", "p27";
-+        };
-+
-+        ts3a227@3b {
-+            compatible = "ti,ts3a227e";
-+            reg = <0x3b>;
-+            interrupt-parent = <&gpio99>;
-+            interrupts = <14 IRQ_TYPE_EDGE_RISING>;
-+            ti,micbias = <0>;	/* 2.1V */
++            interrupt-parent = <&gpio4>;
++            interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
 +        };
 +    };
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 4ace8039840a..d0d00f2ae7f6 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -306,10 +306,6 @@ properties:
-           - nuvoton,npct601
-             # Nuvoton Temperature Sensor
-           - nuvoton,w83773g
--            # Octal SMBus and I2C registered interface
--          - nxp,pca9556
--            # 8-bit I2C-bus and SMBus I/O port with reset
--          - nxp,pca9557
-             # OKI ML86V7667 video decoder
-           - oki,ml86v7667
-             # OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
++
++  - |
++    i2c3 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        // MAX7325 with interrupt support disabled
++        gpio@6e {
++            compatible = "maxim,max7325";
++            reg = <0x6e>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
 -- 
 2.17.1
 
