@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0631F256452
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 05:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B20F4256454
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 05:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgH2DXA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 23:23:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8321 "EHLO mga03.intel.com"
+        id S1726887AbgH2D3G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Aug 2020 23:29:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59255 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgH2DW6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Aug 2020 23:22:58 -0400
-IronPort-SDR: QwW/BQi4ZEiQlHMIZ+ikAJPu5x/QefpJ5+Ue4ffKkuIAZn3Lh463Pg/hBboosMiN3zMYuGU5OG
- Kt0K7et5iX+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="156779503"
+        id S1726791AbgH2D3E (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Aug 2020 23:29:04 -0400
+IronPort-SDR: +BwjscDwdnVqmS1uCJ9A0zP29+XO9Wje4xZMq08ZJiXsZcutwygOkwcWQjaBn8x2FUqh/ISVCo
+ AnwiapkFLw3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="136834122"
 X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="156779503"
+   d="scan'208";a="136834122"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 20:22:57 -0700
-IronPort-SDR: B9zjqfB7Yhu5sZUNiGScjknmypepiSX4BzLo8czFx6bxeCwzjSLR+JHC2Vy3Pf+E0I1ClSu2CO
- zvKw35ZynggA==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 20:29:04 -0700
+IronPort-SDR: 13v4ga74hsTGKu/ZbU4Qt4dU24behhmOdkIS5b1ZYWQEXD5A64lVrOozJyH4W7eJVT8Da9Sg9E
+ nyagngiKiUxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="500711354"
+   d="scan'208";a="282571622"
 Received: from lkp-server02.sh.intel.com (HELO 301dc1beeb51) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2020 20:22:56 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 28 Aug 2020 20:29:02 -0700
 Received: from kbuild by 301dc1beeb51 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kBrSB-0000KC-FZ; Sat, 29 Aug 2020 03:22:55 +0000
-Date:   Sat, 29 Aug 2020 11:22:13 +0800
+        id 1kBrY6-0000Kv-8u; Sat, 29 Aug 2020 03:29:02 +0000
+Date:   Sat, 29 Aug 2020 11:28:24 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- ebc2599144b610a7e6e967ee89a769d908a3eeef
-Message-ID: <5f49c9e5.BYpiWI/fJazS26UK%lkp@intel.com>
+Subject: [gpio:devel] BUILD SUCCESS
+ feeaefd378cae2f6840f879d6123ef265f8aee79
+Message-ID: <5f49cb58.qCWYQnvu//plGLjg%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,13 +46,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: ebc2599144b610a7e6e967ee89a769d908a3eeef  pinctrl: mcp23s08: Improve error messaging in ->probe()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: feeaefd378cae2f6840f879d6123ef265f8aee79  gpio: dwapb: Use resource managed GPIO-chip add data method
 
-elapsed time: 720m
+elapsed time: 726m
 
-configs tested: 118
-configs skipped: 6
+configs tested: 122
+configs skipped: 10
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -74,6 +74,9 @@ sh                   secureedge5410_defconfig
 microblaze                    nommu_defconfig
 mips                     cu1830-neo_defconfig
 arm                              zx_defconfig
+h8300                            alldefconfig
+arm                       spear13xx_defconfig
+arm                          imote2_defconfig
 arm                         s3c6400_defconfig
 arm                        vexpress_defconfig
 mips                   sb1250_swarm_defconfig
@@ -94,11 +97,15 @@ sh                           se7750_defconfig
 mips                         bigsur_defconfig
 arm                          badge4_defconfig
 arm                        spear3xx_defconfig
-arm                          gemini_defconfig
-m68k                       m5208evb_defconfig
-um                             i386_defconfig
-arm                           h5000_defconfig
-sh                            hp6xx_defconfig
+arm                         cm_x300_defconfig
+sh                           se7206_defconfig
+arm                         bcm2835_defconfig
+arm                       netwinder_defconfig
+arm                         palmz72_defconfig
+sh                        dreamcast_defconfig
+xtensa                generic_kc705_defconfig
+arm                        magician_defconfig
+arm                        multi_v7_defconfig
 s390                       zfcpdump_defconfig
 arc                     haps_hs_smp_defconfig
 xtensa                    xip_kc705_defconfig
@@ -107,12 +114,8 @@ arm                             pxa_defconfig
 sh                          sdk7780_defconfig
 arm                          ixp4xx_defconfig
 arm                           sunxi_defconfig
-arm                       mainstone_defconfig
-mips                     decstation_defconfig
-m68k                        stmark2_defconfig
 powerpc                         wii_defconfig
 arm                            dove_defconfig
-m68k                             allyesconfig
 sh                ecovec24-romimage_defconfig
 m68k                          sun3x_defconfig
 ia64                             allmodconfig
@@ -120,6 +123,7 @@ ia64                                defconfig
 ia64                             allyesconfig
 m68k                             allmodconfig
 m68k                                defconfig
+m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
