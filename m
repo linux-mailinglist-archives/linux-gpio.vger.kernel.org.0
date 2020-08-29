@@ -2,110 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60C2A256504
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 08:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DAA32565A8
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 09:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgH2GYe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Aug 2020 02:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgH2GYe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:24:34 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B6220E65;
-        Sat, 29 Aug 2020 06:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598682273;
-        bh=rO56MVIvVtBfpXUiJzwAJauYsn+0k3epFv4DZf0v930=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QlJAZyqSAmECnl4bbQSHcum5VHSkJCTsozVueyferoSttjlBPB/FITNMUinzNR1BP
-         5xEy1WY8WdAAqz+oR5fUnewT/d2Jrxy4VwXsfln3ZXy7B0hLk/iwFmCmwHnYd+3zn6
-         ALHbwBKZkLSF2l/4sgXjHvhaGv2AGyHDtZdZk/UA=
-Received: by mail-ej1-f41.google.com with SMTP id o18so1918888eje.7;
-        Fri, 28 Aug 2020 23:24:33 -0700 (PDT)
-X-Gm-Message-State: AOAM531dv0fxsJg5a958//jsj61rs8FEMmgBm/sEsYn8VDBZAmI7ooJw
-        2K6Z7nScYxwExkLkuDekajpfaWPRfRmgT7QT9LI=
-X-Google-Smtp-Source: ABdhPJxPqtl25Mm9VQlnooxEKiADTie13uCG9BQK2ZeTNWjK59f8umoolhx1AO7I9ld//ckn9tNf3hs4c0nADZ6+a0Y=
-X-Received: by 2002:a17:906:3b4b:: with SMTP id h11mr2194097ejf.381.1598682271779;
- Fri, 28 Aug 2020 23:24:31 -0700 (PDT)
+        id S1726105AbgH2Hj0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Aug 2020 03:39:26 -0400
+Received: from sonic307-56.consmr.mail.ne1.yahoo.com ([66.163.190.31]:34801
+        "EHLO sonic307-56.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726056AbgH2HjZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 29 Aug 2020 03:39:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598686764; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=o84fImt4UcqZdt23dVHNbylMyraZDIFc+S0mrOPT1fPYnRjQ1Vik7nvqE9Gra/Ge1zG7gx88tFtfA9f2+GILcxNzpFeo+CDsDDOSp7t8oongCVat3PMs+vuMvcypVt6zttVhDQ8b3TlszPG/nkHAsyyMHS1UHbgKZj19YkpiKIwGCaTgepyX8FiDmT4g8ZoPQBMCT3o7MXGTnPPUOrG6FDKTzAm9uGcgWL2+EOOabkVZeAXIUi8mtX0BHr67FbnlFak2YyvEhlDYEfYzb+GzisVUJ8CFtBD5jhVHThRyJjwe8KVXFDYirp1j36wRKQh89qaCoJjnoM90QNAVuEnFyA==
+X-YMail-OSG: eouUs1AVM1ldwPzLlgKzxZqh9SXHO0yVjA6fvXlD_c8DLKvlzWsyLaCiy9.z2sX
+ 8qRYg6gVrHRABsBN.0vdW46B0tblGkI3dGcoutk2av.cGHuma2s9n3JHz6VpcyqEADJ1UyAoO_MS
+ xFA9p5envNlwVQM9qAmZOn51bZaQ1VCMlC4YFDRLTz_KmHAAEBqUuU8BAxDv0dY8AExYtUNQmZBV
+ _u8XXH80nY9HoNGri97UGEc5fk_KgEpb4ss48HBqp1ZXwbLZ3aQrKxNHu7Mm.2eTqCtLfg.e1pqD
+ V9gHxUBdBhDVZ_BZUx.CmRTaRsBW9ANagqUNJ9zJJnkFSv.YdZaK5i61A8LIjSXgqUhNOsT0GT6M
+ KSLlnKNmnh4QIqqsiEWxNJ23bCi0Z5rJ0Ycd0FLjFymaFY6JspfswP05EWaYdP8w9_f47I6vLY5J
+ 9JUlTF742a0TtpOZmIxvdfgnNf3Y76NMhfmy_uZloi8CHsNevrTYYzU.Ep4n.gs4WtxY5WZMnsDL
+ VY0_ztTvF6Dax.3X5vXtDildyrkUihAlHOLIMkkatcI0T8y3p7qOzs4_GdRthJrG4CcllXqYeA19
+ dZ58VUTUv2ysP4vIx0ApWk1rDFz9j5wMzDzqFJTz_ZzhFfaWs2_EPM23.MEV4HMx7jskFZasIBUN
+ OedxT1adR4X8z7.mOxePEg2wmtCmxwg4gkJFsN3m7aC8wqySwf1hmBiJNdrR_udHcPCB4LEZkf8S
+ BLQphBtfPmf6KSfp0h7BWpv1pn.JUiEjWQSiOZ7ZGO8alhgyV1NO6rSsR6sGMYHYvg5inS6LknmQ
+ 2hvy7T2iT3DMgUTx_xuUgHZ2meLgD2X3b0S2A0LW8_Ulc..BOS7E_9IEogiVlHIRHC94rtZJgTdf
+ DVRbZyS11RmBrieQ61StX2gAmdYL_679LOFp.n4HGFb8MDxfkbpndIdjHB8wYjDUDuHp3w03wOda
+ 8DikjhSFsA4BRVInTmGHAwBW_9gBr6WDqpdJBrPN6Ef7kHwjfszBCKENoojvFJLVpToMQhQ1ZDGj
+ N_F2DN371ezC6fmpmYpoMSGNkVYj7Cp7WP3roiK9JiuQH82lnIuirRl3CdV3R1jFQyNmHprEcTd4
+ uKRY4nxEPS4_gezx3PdbSTCnAp8ogea9eYcWML6CzbyN.XMQLyTTRIruej.cW5sq1WJlMtJ58UUQ
+ SvmwurK3svg6QtB13cZ3tLipQbbm3R9A.C4FZIX17nTwBnaYf5tTfPmSvaWly1gXIMS_JBf4w_wy
+ O7f9yKq.I14Dv7.hjj9ctoBTriEXHWGoexpR43kq9OsQGlPv5SpP9rjUD3ijK1KM_kkztbtYO2io
+ _Huj4TFsImN_aFz2ZZcfERH8bJlFurhwfX5I.RVaNR9RqF08njmQnMJRkY0mPz4jqZ2poC9h2g7.
+ _m4XtZwYpZzgJp3PzSEO_ppUI9RegN6qROfymfMzevATtLQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Sat, 29 Aug 2020 07:39:24 +0000
+Date:   Sat, 29 Aug 2020 07:39:21 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1084996213.91679.1598686761761@mail.yahoo.com>
+Subject: REPLY TO MY EMAIL FOR BUSINESS(Ms Lisa hugh).
 MIME-Version: 1.0
-References: <20200825193536.7332-1-krzk@kernel.org> <20200825193536.7332-13-krzk@kernel.org>
- <20200828213850.GA3444012@bogus>
-In-Reply-To: <20200828213850.GA3444012@bogus>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sat, 29 Aug 2020 08:24:20 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcMApvGpVAy4HSrNXu+LAdQS83FqHy+cfu3bdMBYE3jnA@mail.gmail.com>
-Message-ID: <CAJKOXPcMApvGpVAy4HSrNXu+LAdQS83FqHy+cfu3bdMBYE3jnA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
- compatible matching
-To:     Rob Herring <robh@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Fugang Duan <fugang.duan@nxp.com>, linux-pm@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>, Han Xu <han.xu@nxp.com>,
-        linux-serial@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Frank Li <frank.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1084996213.91679.1598686761761.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 23:38, Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, 25 Aug 2020 21:35:29 +0200, Krzysztof Kozlowski wrote:
-> > The i.MX 8 DTSes use two compatibles so update the binding to fix
-> > dtbs_check warnings like:
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> >     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Changes since v2:
-> > 1. Remove moved compatibles.
-> >
-> > Changes since v1:
-> > 1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
-> > ---
-> >  .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++++---------
-> >  1 file changed, 20 insertions(+), 17 deletions(-)
-> >
->
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is not valid under any of the given schemas (Possible causes of the failure):
->         /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is too short
 
-I will send a v4 just for this one patch. All others seem to be good.
 
-Best regards,
-Krzysztof
+Dear Friend,
+
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
