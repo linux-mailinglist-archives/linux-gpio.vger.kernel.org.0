@@ -2,78 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB7B2256697
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 11:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6B6256998
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 20:00:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgH2JlE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Aug 2020 05:41:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgH2JlB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 29 Aug 2020 05:41:01 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67C5E2068E;
-        Sat, 29 Aug 2020 09:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598694060;
-        bh=kImBBmuhu/2Fp4wOJCBofByIbokLDzO/4iErCHq10JA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Og97O8+86G+Z64ojsr/NDHzye0kFUDvcNaAPHHrLCe68HBYQO2pBRo5vVHgT38dEk
-         3h5+1yGLUEGIyGZMWH8lv8XDq2RTXIJKGvX5w5YQ+4svk5/0KKOZR2Zvq79o1qehMl
-         gLX/QS9udz8jWjADY+O10zvNCjjbF5W2ReJkJNhA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/6] ARM: dts: vf: Fix PCA95xx GPIO expander properties on ZII CFU1
-Date:   Sat, 29 Aug 2020 11:40:24 +0200
-Message-Id: <20200829094024.31842-6-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829094024.31842-1-krzk@kernel.org>
-References: <20200829094024.31842-1-krzk@kernel.org>
+        id S1728333AbgH2SAx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Aug 2020 14:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbgH2SAv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Aug 2020 14:00:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D8DC061236
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Aug 2020 11:00:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u18so1932053wmc.3
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Aug 2020 11:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=7sHcH5dHB5M/r8aJgv+GiRQ5s8sI9YcH2NRYOFmnXg4=;
+        b=EXkC4bZNwviy+uWuQvJAtnL2PzBed4gX1xUGxXfbHoGD06V9flRyZcfeDeUqMp6KFb
+         JJHgMaF3mpE+MMU+YxiX9xudwr/Mz6EcZ6RfOKw/unRECQ8W2WMZX3J+EJza9guCDq4z
+         khGFnnN7kSLorOZdr+zkPeHk4NFZaW6fXL3kjTcirM/Q7gTuvH61t4m9BXfKm1W3aX/4
+         aNc8BOgbMF2ZQoab2ufSzvERji4epdRd0S2Hez/J9S++1hnDoglzZwhPX60mCpMTUUug
+         wSzhOpojlJt3GxxdDccPYWrJedJDHicl3LbCPZZQE1SsFTAWHfPgXB+knYr5H5UtoCmr
+         YZpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=7sHcH5dHB5M/r8aJgv+GiRQ5s8sI9YcH2NRYOFmnXg4=;
+        b=dRmU8ATAFERtAOrM6HINuic8ZsbjmKklvG7e70NT6c2rWeAUJuHQn9rkgRMlKU8KDl
+         d/tTFx1ENyPfJU3qkgZtH0+9ac4Lhgy9Led+6ppgFIi6TxIV93mPgsy3rUI3fasnapLQ
+         oxBxequBWwZ625PNyFGnswHBIeBF5IweKi0aY4iBC5HmQTGaAVACCPYKaQJwf8qi4dIT
+         4r/QdtalabxsHGnkVyoslg1vPybJoEnbtRpTU1NpWpsr/3vxNGJCiC33JtMGeewijwtC
+         pM1M1iyY8A0/MHTnmiTNzgHxjBtTcPSN5wmYGPBw5TvEpRC119+PBKN3HnddaVuIKK71
+         ggGg==
+X-Gm-Message-State: AOAM530dPbnFF3ExXdP3f9q7QVPio91MKiWbswiZ42Xg3GsZtpAfV812
+        0hWeaAdPNxX8pTFxm2BaCA4Q02Y7o+Zvvx21S7k=
+X-Google-Smtp-Source: ABdhPJy62+Ha1cURX0Qddw15QIEuyAKn3wfhPuT50DSsDGNHjvlX+6UokjFJhqH3tsVn9+/vMy7xgRp9vy3BVMKJsso=
+X-Received: by 2002:a1c:6445:: with SMTP id y66mr4251019wmb.12.1598724049642;
+ Sat, 29 Aug 2020 11:00:49 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a7b:c44f:0:0:0:0:0 with HTTP; Sat, 29 Aug 2020 11:00:49
+ -0700 (PDT)
+From:   Tricia Smith <triciatricia841@gmail.com>
+Date:   Sat, 29 Aug 2020 22:30:49 +0430
+X-Google-Sender-Auth: 4SiiXfP5cUW8aY4o_sgvmdeh1-g
+Message-ID: <CALY6aCSQMKf9zDOwShu+VUyCyYC6R9EEf0NHqpO0Vir70vB9RA@mail.gmail.com>
+Subject: Re: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The PCA95xx GPIO expander requires GPIO controller properties to operate
-properly.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/vf610-zii-cfu1.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-index 64e0e9509226..e76a7ebd5dc9 100644
---- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
-+++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-@@ -226,6 +226,7 @@
- 		compatible = "nxp,pca9554";
- 		reg = <0x22>;
- 		gpio-controller;
-+		#gpio-cells = <2>;
- 	};
- 
- 	lm75@48 {
--- 
-2.17.1
-
+Hi Dear, I am Miss Tricia Smith the only Daughter/Child of late Mr and
+Mrs William Smith. Please i have something very important and
+confidential to discuss with you.
