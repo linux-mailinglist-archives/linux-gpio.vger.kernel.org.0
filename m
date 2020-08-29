@@ -2,182 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4DD256459
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 05:29:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60C2A256504
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 08:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgH2D3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Aug 2020 23:29:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26064 "EHLO mga18.intel.com"
+        id S1726280AbgH2GYe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Aug 2020 02:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbgH2D3F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Aug 2020 23:29:05 -0400
-IronPort-SDR: tw8AC6J5Rkq4gYrSdpTb8R/qc2iJFLUecN62iie0s9Uvdj15qyV4QDyLJI/JKR6fsRDbx2DRQe
- eTUuDgjmimDQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="144450735"
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="144450735"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 20:29:04 -0700
-IronPort-SDR: EiZ4CMaoniI9Fg/Coaa5rJ6yRDOvbv7oQP++McluJZN0bNsst8qYQdUGRICgwlJVLL+Kl2hGRX
- cONptxdL9qzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="374253584"
-Received: from lkp-server02.sh.intel.com (HELO 301dc1beeb51) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 28 Aug 2020 20:29:03 -0700
-Received: from kbuild by 301dc1beeb51 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kBrY6-0000Kf-6o; Sat, 29 Aug 2020 03:29:02 +0000
-Date:   Sat, 29 Aug 2020 11:28:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-charger] BUILD SUCCESS
- e7ceb6f2027d38d948cf8d1eab3cebb33210a328
-Message-ID: <5f49cb68.TGAvm4A1aSi4oQIH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725886AbgH2GYe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:24:34 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23B6220E65;
+        Sat, 29 Aug 2020 06:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598682273;
+        bh=rO56MVIvVtBfpXUiJzwAJauYsn+0k3epFv4DZf0v930=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QlJAZyqSAmECnl4bbQSHcum5VHSkJCTsozVueyferoSttjlBPB/FITNMUinzNR1BP
+         5xEy1WY8WdAAqz+oR5fUnewT/d2Jrxy4VwXsfln3ZXy7B0hLk/iwFmCmwHnYd+3zn6
+         ALHbwBKZkLSF2l/4sgXjHvhaGv2AGyHDtZdZk/UA=
+Received: by mail-ej1-f41.google.com with SMTP id o18so1918888eje.7;
+        Fri, 28 Aug 2020 23:24:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531dv0fxsJg5a958//jsj61rs8FEMmgBm/sEsYn8VDBZAmI7ooJw
+        2K6Z7nScYxwExkLkuDekajpfaWPRfRmgT7QT9LI=
+X-Google-Smtp-Source: ABdhPJxPqtl25Mm9VQlnooxEKiADTie13uCG9BQK2ZeTNWjK59f8umoolhx1AO7I9ld//ckn9tNf3hs4c0nADZ6+a0Y=
+X-Received: by 2002:a17:906:3b4b:: with SMTP id h11mr2194097ejf.381.1598682271779;
+ Fri, 28 Aug 2020 23:24:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200825193536.7332-1-krzk@kernel.org> <20200825193536.7332-13-krzk@kernel.org>
+ <20200828213850.GA3444012@bogus>
+In-Reply-To: <20200828213850.GA3444012@bogus>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Sat, 29 Aug 2020 08:24:20 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcMApvGpVAy4HSrNXu+LAdQS83FqHy+cfu3bdMBYE3jnA@mail.gmail.com>
+Message-ID: <CAJKOXPcMApvGpVAy4HSrNXu+LAdQS83FqHy+cfu3bdMBYE3jnA@mail.gmail.com>
+Subject: Re: [PATCH v3 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
+ compatible matching
+To:     Rob Herring <robh@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Fugang Duan <fugang.duan@nxp.com>, linux-pm@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>, Han Xu <han.xu@nxp.com>,
+        linux-serial@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Frank Li <frank.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-charger
-branch HEAD: e7ceb6f2027d38d948cf8d1eab3cebb33210a328  power: supply: gpio-charger: Convert to GPIO descriptors
+On Fri, 28 Aug 2020 at 23:38, Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, 25 Aug 2020 21:35:29 +0200, Krzysztof Kozlowski wrote:
+> > The i.MX 8 DTSes use two compatibles so update the binding to fix
+> > dtbs_check warnings like:
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+> >     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+> >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
+> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v2:
+> > 1. Remove moved compatibles.
+> >
+> > Changes since v1:
+> > 1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
+> > ---
+> >  .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++++---------
+> >  1 file changed, 20 insertions(+), 17 deletions(-)
+> >
+>
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is not valid under any of the given schemas (Possible causes of the failure):
+>         /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is too short
 
-elapsed time: 726m
+I will send a v4 just for this one patch. All others seem to be good.
 
-configs tested: 120
-configs skipped: 8
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         cm_x300_defconfig
-arc                        nsim_700_defconfig
-mips                           gcw0_defconfig
-nios2                         3c120_defconfig
-sh                          sdk7786_defconfig
-arm                        multi_v5_defconfig
-arm                      integrator_defconfig
-mips                        nlm_xlp_defconfig
-m68k                             alldefconfig
-mips                      malta_kvm_defconfig
-sh                   secureedge5410_defconfig
-microblaze                    nommu_defconfig
-mips                     cu1830-neo_defconfig
-arm                              zx_defconfig
-arm                         s3c6400_defconfig
-arm                        vexpress_defconfig
-mips                   sb1250_swarm_defconfig
-sh                        edosk7760_defconfig
-arm                        realview_defconfig
-mips                          rb532_defconfig
-ia64                         bigsur_defconfig
-arm                           viper_defconfig
-arm                         hackkit_defconfig
-arm                          iop32x_defconfig
-arm                         vf610m4_defconfig
-sh                              ul2_defconfig
-arm                      jornada720_defconfig
-arm64                            alldefconfig
-arm                          tango4_defconfig
-sh                           se7780_defconfig
-arm                           corgi_defconfig
-sh                          rsk7269_defconfig
-m68k                       m5208evb_defconfig
-sh                             shx3_defconfig
-sh                           se7750_defconfig
-mips                         bigsur_defconfig
-arm                          badge4_defconfig
-arm                        spear3xx_defconfig
-xtensa                generic_kc705_defconfig
-arm                        magician_defconfig
-arm                        multi_v7_defconfig
-s390                       zfcpdump_defconfig
-arc                     haps_hs_smp_defconfig
-xtensa                    xip_kc705_defconfig
-m68k                       m5275evb_defconfig
-arm                             pxa_defconfig
-sh                          sdk7780_defconfig
-arm                          ixp4xx_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                           sunxi_defconfig
-powerpc                         wii_defconfig
-arm                            dove_defconfig
-sh                ecovec24-romimage_defconfig
-m68k                          sun3x_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200828
-i386                 randconfig-a005-20200828
-i386                 randconfig-a003-20200828
-i386                 randconfig-a004-20200828
-i386                 randconfig-a001-20200828
-i386                 randconfig-a006-20200828
-x86_64               randconfig-a015-20200828
-x86_64               randconfig-a012-20200828
-x86_64               randconfig-a016-20200828
-x86_64               randconfig-a014-20200828
-x86_64               randconfig-a011-20200828
-x86_64               randconfig-a013-20200828
-i386                 randconfig-a013-20200828
-i386                 randconfig-a012-20200828
-i386                 randconfig-a011-20200828
-i386                 randconfig-a016-20200828
-i386                 randconfig-a014-20200828
-i386                 randconfig-a015-20200828
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Best regards,
+Krzysztof
