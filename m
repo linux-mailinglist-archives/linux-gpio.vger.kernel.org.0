@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6806125668D
+	by mail.lfdr.de (Postfix) with ESMTP id A8D1725668F
 	for <lists+linux-gpio@lfdr.de>; Sat, 29 Aug 2020 11:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgH2Jkw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Aug 2020 05:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
+        id S1727964AbgH2Jk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Aug 2020 05:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgH2Jkv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 29 Aug 2020 05:40:51 -0400
+        id S1727913AbgH2Jk4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 29 Aug 2020 05:40:56 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B10192068E;
-        Sat, 29 Aug 2020 09:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98ABF20665;
+        Sat, 29 Aug 2020 09:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598694051;
-        bh=nYdsEt4eLLJRNSq2tYSCZbVTWwm5iqC5mEub4SpLTXE=;
+        s=default; t=1598694056;
+        bh=4N+AVz1iFewUv22C1sZLRU1oZ3vPM6n5YgLdZX5yJcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+AW6B8kuEnSEreujpXzL/G4Mn0mHf2FuD9pGulvPENZ7reL0mggc/spGKxnw1Ahf
-         CrCcct/M6IUKzHwzf4LzUzIqnrc17098cbh2lQKhh0EPCz1SUUwvqQ+36JUBJEUr5o
-         EKDRSqEjaBO2UaSmL/lgdx39x1LNp2EfW9GzESg8=
+        b=C+2wD2ZhjhIN1gXzv1amScu0pxB18z3tqbRTRtpEupuRJq79iElTKAuAemb7X3jOY
+         nnVIDhQXNJJFbBUDdIrVwuTtsQQxzDXz6G9b0lWbNBdatVX7AoBwj1Q4LlCLBl2pEs
+         tCZFgb+pSXuiToUF3BNuvYynThEnKVqwe5fMoeoo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -43,9 +43,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4/6] ARM: dts: aspeed: Fix PCA95xx GPIO expander properties on Portwell
-Date:   Sat, 29 Aug 2020 11:40:22 +0200
-Message-Id: <20200829094024.31842-4-krzk@kernel.org>
+Subject: [PATCH 5/6] ARM: dts: dove: Fix PCA95xx GPIO expander properties on A510
+Date:   Sat, 29 Aug 2020 11:40:23 +0200
+Message-Id: <20200829094024.31842-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829094024.31842-1-krzk@kernel.org>
 References: <20200829094024.31842-1-krzk@kernel.org>
@@ -59,22 +59,21 @@ properly.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/dove-sbc-a510.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-index 4a1ca8f5b6a7..03c161493ffc 100644
---- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-@@ -121,6 +121,8 @@
- 	pca9555@27 {
+diff --git a/arch/arm/boot/dts/dove-sbc-a510.dts b/arch/arm/boot/dts/dove-sbc-a510.dts
+index 2bb85a9b7614..df021f9b0117 100644
+--- a/arch/arm/boot/dts/dove-sbc-a510.dts
++++ b/arch/arm/boot/dts/dove-sbc-a510.dts
+@@ -143,6 +143,7 @@
+ 	gpio_ext: gpio@20 {
  		compatible = "nxp,pca9555";
- 		reg = <0x27>;
+ 		reg = <0x20>;
 +		gpio-controller;
-+		#gpio-cells = <2>;
+ 		#gpio-cells = <2>;
  	};
  };
- 
 -- 
 2.17.1
 
