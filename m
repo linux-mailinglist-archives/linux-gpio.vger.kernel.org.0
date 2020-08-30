@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF93256F8C
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Aug 2020 19:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3529F256F8E
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Aug 2020 19:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgH3Rny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Aug 2020 13:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
+        id S1726035AbgH3Roc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Aug 2020 13:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgH3Rny (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Aug 2020 13:43:54 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5430BC061573;
-        Sun, 30 Aug 2020 10:43:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so2991471pgl.10;
-        Sun, 30 Aug 2020 10:43:54 -0700 (PDT)
+        with ESMTP id S1725825AbgH3Roa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Aug 2020 13:44:30 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C335C061573;
+        Sun, 30 Aug 2020 10:44:30 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q3so1923412pls.11;
+        Sun, 30 Aug 2020 10:44:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gllTnfpjhA71bQa3AHonqvl1Wti0WUACZxPWejafO/Y=;
-        b=aNTY8VtIuFAE7L7IoX8HyazHeu3tNOCdjOiJq/ylr78l47+28zGNqsn0W8SxZnFA0e
-         839PVyt81IkcegqvlRR+A081oDz4VRaVOi/7/sFsxUahal6JYlW3y6Unux8nGnqNVWdi
-         Sl2Wmk7HG16lXOvcsfrmKNHsE2ZCBmrVMqTf/PJimTKt2vF01qD+ILEkYeEGhuwITIop
-         yZgOfE1qTxnOuWE12d4viV5n9dm0zfUUIAFJPKRvUJ1qA/41uJs9ZUrMsmpbAKEaZBKh
-         UmLvrct6KOiiw6xUzVGLp7US83siB9JBgqBI1DDiZesPjpzD55fUQbSZoCxILhtuTSJ+
-         LGDw==
+        bh=Gp0X+lasJkwXPO0XrD/f84dqr25JqV/6NmDhGG0Yq4I=;
+        b=QZ4fN2fbtp/FCKBoRqj0++i8mmd2KyeId7EwrG/mXMHls2gErru7ttFo1OY8xE3+Jp
+         HKE148ZrESWB6Y6JDHA8A1bIyofj9NzH8J/VbXQffEjKYwWk9wYl6fmweoJB1M469Kix
+         icj1fi8awSRm1hK5R6Z8aD1vPsPZX4EyjVHY70ipVfmPhqxiI6AAR9NLx736djMulTAU
+         oCRD2TroZ9GuvsIPHUyhHylSrb0aVmXRExL4X7oEKGMAmWTW28SzdjO5I3cmqFpLUayn
+         cBZZoR1ZHdMo9hEoYXuFxGiGbp7LF+B9r+LJDIgGBewFB6Z1g1qyGDnI8Dh8VoN9WtgG
+         GdDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gllTnfpjhA71bQa3AHonqvl1Wti0WUACZxPWejafO/Y=;
-        b=RPpM5CmEBx6T3tknI0Rw+syfGf/n3byotVptcFeXp04qivB5OMZfYlfRq4mc5DKPbh
-         1lZ6wU/ALhx5Jjsf61lM/sW07nmewu4dey/zurG7THblOTjnhW3vmBGGXdnMH3X6zWPj
-         2fvB8hPFWj7BiDE/Hm/e92YClP21kC0PfPwUWRjUEloKLZLUIrFALyrKc6jTG5QzO8PU
-         JQtbNFELycNETVAXxFa3JHr11xg+VxCyM9X8o7b0z0ywYLbdtia+pY6PmlwvVHDJaGnh
-         yuet9gySPxyLgBzjUSK0dTq3wCuC3XqWJSVSFQn6KYRiCwNVzeuoSa0fmkxepC7GI4rB
-         161g==
-X-Gm-Message-State: AOAM532onjLe0qVUiYVSWNcoiPvY09YAF2wsTuVe97z3prAM15MNors5
-        hCuK0QqUWDr8A64bI9iYVDKF5QmWcEaJrdaFKCk=
-X-Google-Smtp-Source: ABdhPJwAKDhV+KU3T46+qklPeJTKooPMmp8/QhFMmenoUMc4QVp6rWePqScrCIRkRHiwLUCuhxh7vcxdJ7NabsXU5qQ=
-X-Received: by 2002:a62:7c86:: with SMTP id x128mr1133707pfc.268.1598809431997;
- Sun, 30 Aug 2020 10:43:51 -0700 (PDT)
+        bh=Gp0X+lasJkwXPO0XrD/f84dqr25JqV/6NmDhGG0Yq4I=;
+        b=QHg2/q9Rg+7SzihJUO63Ivedc4zG1peTSC73IeVrURlge9ZJ2o9tMqZ1ZqeSWR4UFu
+         0MwzH6AGD1rMPF3uttxXyhDEkK0wLk4mYpAtz7naUOj7MsEagLuExX9uSi3PdFa5mciE
+         sOiajEYVDKRFs6x9zA5u+wIdDMOYagppiOD0AihoIA6lKQdLgoU5hSTP9hG4bHUgHrjl
+         AIXkf6T/5ELGtG3BRPQ73YoY5c9igykAPWiowxYUtyrhzneYVsnYuAVwubwMBvGA57cz
+         bjkFEtDf5My066vI1zKDT9bxrmjwzdcIQzG1JgvEg5Ir0EdzfeLqM/zvTxl9MJZ6a/xN
+         Yb3w==
+X-Gm-Message-State: AOAM530AlDblk0oWUmiXl83oEtfqhPMecOlaFb21K8M7pnBQ5bOnxQt4
+        K3bHBms/zrldNv1jeuRCQ10cOO29n/HPx0np1y5kvw6jvlmuqQ==
+X-Google-Smtp-Source: ABdhPJy52HlNa2bSu4U8z68naXhSKAVRTNJ6agUQQfZ89TxxAqI6UpeBNqKNDtmvoSMytKOxYJOa+mhCr0TPb/3TeO4=
+X-Received: by 2002:a17:90b:509:: with SMTP id r9mr7536942pjz.228.1598809469820;
+ Sun, 30 Aug 2020 10:44:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200828213226.1734264-1-thomas.preston@codethink.co.uk> <20200828213226.1734264-3-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200828213226.1734264-3-thomas.preston@codethink.co.uk>
+References: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
+In-Reply-To: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Aug 2020 20:43:35 +0300
-Message-ID: <CAHp75VenLVCARSJ9oTZRF4uuq9QHy4zrrVpwjEdXxMAHJNvzsQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: mcp23s08: Fix mcp23x17 precious range
+Date:   Sun, 30 Aug 2020 20:44:13 +0300
+Message-ID: <CAHp75Vd0Qqk3mMyA404a4MYEQbYVLmL1vwSm2UOr4Zm0gwiydQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: mcp23s08: Fixups for mcp23x17
 To:     Thomas Preston <thomas.preston@codethink.co.uk>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sebastian Reichel <sre@kernel.org>,
@@ -67,36 +67,29 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Sat, Aug 29, 2020 at 12:33 AM Thomas Preston
 <thomas.preston@codethink.co.uk> wrote:
 >
-> On page 23 of the datasheet [0] it says "The register remains unchanged
-> until the interrupt is cleared via a read of INTCAP or GPIO." Include
-> INTCAPA and INTCAPB registers in precious range, so that they aren't
-> accidentally cleared when we read via debugfs.
+> Hi again,
+> Second round of these mcp23s03 driver fixups.
+
+v2 makes sense to me, thanks!
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Changes since v1:
+> - Split up the fixups patch.
+> - I'm pretty certain the "mcp23x16" structs are typos, so I put it as
+>   0001, because the second patch doesn't really make sense without it.
+> - I lost the `(MCP_GPIO << 1) + 1` changes because the regmap handles
+>   GPIOB 0x13 with `.val_bits = 16`.
+> - Dropped the interrupt-controller changes.
 >
-
-> [0] https://ww1.microchip.com/downloads/en/DeviceDoc/20001952C.pdf
-
-I would convert it to tag Datasheet: https://...
-
-Maybe Linus can amend this when applying.
-
-> Fixes: 8f38910ba4f6 ("pinctrl: mcp23s08: switch to regmap caching")
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-> ---
->  drivers/pinctrl/pinctrl-mcp23s08.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thanks again,
+> Thomas
 >
-> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-> index 87cde8fb08dd9..7edb067f5e76a 100644
-> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> @@ -109,7 +109,7 @@ static const struct regmap_access_table mcp23x17_volatile_table = {
->  };
+> Thomas Preston (2):
+>   pinctrl: mcp23s08: Fix mcp23x17_regmap initialiser
+>   pinctrl: mcp23s08: Fix mcp23x17 precious range
 >
->  static const struct regmap_range mcp23x17_precious_range = {
-> -       .range_min = MCP_GPIO << 1,
-> +       .range_min = MCP_INTCAP << 1,
->         .range_max = MCP_GPIO << 1,
->  };
+>  drivers/pinctrl/pinctrl-mcp23s08.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 >
 > --
 > 2.26.2
