@@ -2,61 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05595256FB4
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Aug 2020 20:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6458D2570EA
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 00:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgH3SfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Aug 2020 14:35:07 -0400
-Received: from sonic315-53.consmr.mail.ne1.yahoo.com ([66.163.190.179]:37578
-        "EHLO sonic315-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbgH3SfF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:35:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598812505; bh=aQBm+9Bca4ejs9ftzYnk89bfX4ekoPZ6NeQWeQKD++E=; h=Date:From:Reply-To:Subject:References:From:Subject; b=BMb0j55LIHIvp1+uvosuVf0TENrrhYDnskEgdxbee9TlmgXxvStk++XmwRpLQhP7frPXH3N8GwGLz6zNErDshbWYe3++NOYwNrtOCxy0pRFfQVZweGAmKLj1bMh893V+b1X619IDHKLbxiZZs8fx6wy6LXu6hwoR0RiVyWwZaa/36Md3A9ZSOQSkg0JaJlKKR6CmypTlszR76yMqTfMK+PSSGVnXoQFmYiG6oIOY+udbbTCKf46aMuY0nmLZmTJEXHAcnjb/fqRSe9aYL6wxn7cYVHlUf7UkDWyCvualiaHUfJ486uDRQ0qBL0qU8KelI665ZYNG2TxuQ3Hs9Lh4IA==
-X-YMail-OSG: uASsZksVM1kZW9Q5V7j_bho6O5S7h3jiiesHdgX7L9b1O62.J8YJOwa.aQYaCmB
- 1TfOSGO4h3pQCGd3CMlgZUGOONd2A1297oF91_g2XH7Fgi6OcrmW_8e1tQMRH_X4GCCvMZDH1VbX
- ogyW8G3q2VPsActWyoqKhLlsxrE4XVsc1_A2e_WggxJ5CALyUkoTZ9I7LBEEQUihiMVASJxmse_S
- 9mZnpSw1UNgY2wmFwSCHgy5ri_QrYuV66Vd3jIbYnZunUKS81OHI2gCudrUOTWmEg3r8O1gGynbj
- PWcayjeENB_dirfnXj_mfRLtXDACbLhX8Ju2lUB0Kdkw65Q9hISgwsoUxPKdpM3T1C94ejsIQllH
- kh6Ym9ioq1paUJqUoX1R.vppg6kTKFXNiZNxOe4nU7ejLz4UcR3x0C6SYHEklyXp.G_Lnxfu8aDf
- TQfgxsdYz5Spx4vZagW_ksqV6uG1uhBgpWXoMy4d3ihGXCkMrdvnV3joFZ5g2UyPSKiGFIgRTmYk
- tJXwF_iu6Dmp8IwMCzKaxJBqIBh1h62gxvhg5cRzH0oEFGVpdzCn3sI0S.zjXo7EwdI5qEXe2Znt
- tstZCJ6Mt4tbPaWswz3hP6YV3zcRUCsz8wQsoGAO6rNx4uReseFHZYnw7yPUdz.SCBXXlDoBsfW8
- kL2huUg5iwx3mms1nT4PCFO24QCtuLqgW7Mjd4kMkUF9dTgV9w_pll4GL87bRonqRUSKiaJV_7Ku
- prLe9azmMeHd3ohGIFsS1y_4rw4o4EzKqMAQECiUsXd106IuzIzNERNsHxgZXZMJFltP1j2nm8Su
- 8YnsD5dfM.FI8PXtL2oe3Y26umMVrMOBydG27leFDqrLx1mrH6o.5sz7H3b55b.HNXOD91heT8yX
- RHrLt_tXWQZ5Tawagjnz.Ywt6tJ13c6RXfTQsR4byT5KVMe_2zEbvKdaofOZd.hddpNc.cqrGR34
- l6BdieuKpo689ALrFGWC1qtxEc51wnboRU31ZSFlNO_KPm5Sa.5q2yt6YVMPvAyfYelRebqYRUcH
- Zdzz5MzIWbx8jWRRbNFeQP5PmqVMcyWRJSgB46GMnx7j8UZgLCcutirt6f9fk9iO5GYXubGdc0rc
- 8Qa5M68rtJkUAi6SRLBrmY13NtmDOdIAAON4omcKsKOcUYIqyOTtF7JDeFJy19rnVRKotIfIZD0Z
- MioRdVWdfl4AOfadVGKLJn5CkT6eLqAtrMsZScpDXTFGSvpqTwXEa.GqDV6canl1H7apEv1BgiP9
- phQGR.99rxc9ofXU8QWuGm8bEsmILHP2tlIjShSdJVa2GJCce6TWx4RjlEUoCCThgnT_InnnfQtg
- 6KBcDb4CaonGqPR9HmIuawLIRKW_DU6oQs6tSpzJ4tbtBTMc5Ii3iYg5Sl_Sc6QQc.CEA1iVdapZ
- K4kcQ5aaGf7TF17.NwnKh.O2rAd9rNq0OvadYs8iUjrAvF1ZB.fdRaBmcMZafwed1XjCSMGcWG4h
- 1hVdz5Qlm9tU-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Sun, 30 Aug 2020 18:35:05 +0000
-Date:   Sun, 30 Aug 2020 18:33:04 +0000 (UTC)
-From:   "Mrs. Maureen Hinckley" <mau42@gcfta.in>
-Reply-To: maurhinck5@gmail.com
-Message-ID: <1647871249.505332.1598812384477@mail.yahoo.com>
-Subject: RE
+        id S1726409AbgH3Wnw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Aug 2020 18:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgH3Wne (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Aug 2020 18:43:34 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B91C061239;
+        Sun, 30 Aug 2020 15:43:33 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t23so4597634ljc.3;
+        Sun, 30 Aug 2020 15:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n1KgmKzf9ZQjO5d8PcXFoM5eqQdcOF5HadjFNB7yUQw=;
+        b=e5OUNGlDjVPabuTDOWq49DimXDtA3AxZrDVXbQosQ5z7l1BcK29CvGUmxa0m7TFXxa
+         NXNGNlG1QDoAyQvH6mNmCXk38CDlV5Op3Bu30YbU1feIPqu5RjT+hXF9CDc0kXce4zh8
+         aOz+W4zGnx2HzCFRd3avfJXvzbNOJHToiH+TG6ri/izyaKgLYmUuht6cdRZoTBxX+yRR
+         uUN/ViZGUU+ZgaceyOAFbDKQguWTO9n7Rlu54HUUmxA66pKw5+1X+LczunQ6ZfdQrwvF
+         m0b7ecP2pS1ReDeb7p+eiLLX9rbNtuHOwWUBt1gAnzEpvRwhOh40Nba4lP9NUC2ED2ld
+         ZIXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n1KgmKzf9ZQjO5d8PcXFoM5eqQdcOF5HadjFNB7yUQw=;
+        b=NIJxW+wwsuXwJl073c3D+P2emPVsL48QoQIWsjEaT1FIVR+hmc67X5ZLs56Sa1ohDG
+         X00zwn7ISbu9eqY41/yDl0Aw4iKwaq4jHGPkt4yLIC01g3LzZ6J1GJ3bz4bns17wq07n
+         NW/mn26f3TuVuVnv3YIPOYhsHBn6KRH+o1nAxSJE+QrSNx3Vh/F66tULUvqGZV3rMy9l
+         C56u9fRPu7Ts4nx0LvhAGYnwjVCo7v7zyvvHNWg+ejnIVsOfQZljGNU42M+M9zvyp3g/
+         wDTSzksfCFY52HeeXlUOWm1Y2qdF382sHAb/qRIyjIMS51eTJWY3toAk+pwvrsytjNr0
+         ZA0w==
+X-Gm-Message-State: AOAM531vl15X7MvAu2GZ75t3euAh7vXyyVoZqnp6meT6kSihI6ZFPaM+
+        d5LFSlamJ6YBof/S0LnDUt3Csf529HymHA==
+X-Google-Smtp-Source: ABdhPJz/0qGsKjG+lINiuxRXF0yRJvzQCyCDdgrTfwKEoeLf7VD7PfyRp76crHFJI6ta8/JGf2CIqA==
+X-Received: by 2002:a2e:8098:: with SMTP id i24mr4116451ljg.50.1598827408288;
+        Sun, 30 Aug 2020 15:43:28 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
+        by smtp.gmail.com with ESMTPSA id m25sm1190072ljg.79.2020.08.30.15.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 15:43:27 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH 0/3] pinctrl/actions: Constify static variables
+Date:   Mon, 31 Aug 2020 00:43:08 +0200
+Message-Id: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <1647871249.505332.1598812384477.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Constify a couple of static variables which are not modified to allow
+the compiler to put them in read-only memory. Patch 1/3 is probably
+the most important one since those structs contain function pointer.
+The patches are independent, and can be applied in any order. 
+Compile-tested only.
 
+Rikard Falkeborn (3):
+  pinctrl: actions: pinctrl-owl: Constify owl_pinctrl_ops and
+    owl_pinmux_ops
+  pinctrl: actions: pinctrl-s700: Constify s700_padinfo[]
+  pinctrl: actions: pinctrl-s900: Constify s900_padinfo[]
 
-I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
- thousand USD) to you. Contact us via my email at (maurhinck5@gmail.com) fo=
-r further details.
+ drivers/pinctrl/actions/pinctrl-owl.c  | 4 ++--
+ drivers/pinctrl/actions/pinctrl-s700.c | 2 +-
+ drivers/pinctrl/actions/pinctrl-s900.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Best Regards,
-Mrs. Maureen Hinckley,
-Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
+-- 
+2.28.0
+
