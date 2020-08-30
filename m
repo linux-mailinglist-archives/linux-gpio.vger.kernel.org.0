@@ -2,100 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3529F256F8E
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Aug 2020 19:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05595256FB4
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Aug 2020 20:35:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgH3Roc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Aug 2020 13:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgH3Roa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Aug 2020 13:44:30 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C335C061573;
-        Sun, 30 Aug 2020 10:44:30 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q3so1923412pls.11;
-        Sun, 30 Aug 2020 10:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gp0X+lasJkwXPO0XrD/f84dqr25JqV/6NmDhGG0Yq4I=;
-        b=QZ4fN2fbtp/FCKBoRqj0++i8mmd2KyeId7EwrG/mXMHls2gErru7ttFo1OY8xE3+Jp
-         HKE148ZrESWB6Y6JDHA8A1bIyofj9NzH8J/VbXQffEjKYwWk9wYl6fmweoJB1M469Kix
-         icj1fi8awSRm1hK5R6Z8aD1vPsPZX4EyjVHY70ipVfmPhqxiI6AAR9NLx736djMulTAU
-         oCRD2TroZ9GuvsIPHUyhHylSrb0aVmXRExL4X7oEKGMAmWTW28SzdjO5I3cmqFpLUayn
-         cBZZoR1ZHdMo9hEoYXuFxGiGbp7LF+B9r+LJDIgGBewFB6Z1g1qyGDnI8Dh8VoN9WtgG
-         GdDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gp0X+lasJkwXPO0XrD/f84dqr25JqV/6NmDhGG0Yq4I=;
-        b=QHg2/q9Rg+7SzihJUO63Ivedc4zG1peTSC73IeVrURlge9ZJ2o9tMqZ1ZqeSWR4UFu
-         0MwzH6AGD1rMPF3uttxXyhDEkK0wLk4mYpAtz7naUOj7MsEagLuExX9uSi3PdFa5mciE
-         sOiajEYVDKRFs6x9zA5u+wIdDMOYagppiOD0AihoIA6lKQdLgoU5hSTP9hG4bHUgHrjl
-         AIXkf6T/5ELGtG3BRPQ73YoY5c9igykAPWiowxYUtyrhzneYVsnYuAVwubwMBvGA57cz
-         bjkFEtDf5My066vI1zKDT9bxrmjwzdcIQzG1JgvEg5Ir0EdzfeLqM/zvTxl9MJZ6a/xN
-         Yb3w==
-X-Gm-Message-State: AOAM530AlDblk0oWUmiXl83oEtfqhPMecOlaFb21K8M7pnBQ5bOnxQt4
-        K3bHBms/zrldNv1jeuRCQ10cOO29n/HPx0np1y5kvw6jvlmuqQ==
-X-Google-Smtp-Source: ABdhPJy52HlNa2bSu4U8z68naXhSKAVRTNJ6agUQQfZ89TxxAqI6UpeBNqKNDtmvoSMytKOxYJOa+mhCr0TPb/3TeO4=
-X-Received: by 2002:a17:90b:509:: with SMTP id r9mr7536942pjz.228.1598809469820;
- Sun, 30 Aug 2020 10:44:29 -0700 (PDT)
+        id S1726505AbgH3SfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Aug 2020 14:35:07 -0400
+Received: from sonic315-53.consmr.mail.ne1.yahoo.com ([66.163.190.179]:37578
+        "EHLO sonic315-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726150AbgH3SfF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 30 Aug 2020 14:35:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598812505; bh=aQBm+9Bca4ejs9ftzYnk89bfX4ekoPZ6NeQWeQKD++E=; h=Date:From:Reply-To:Subject:References:From:Subject; b=BMb0j55LIHIvp1+uvosuVf0TENrrhYDnskEgdxbee9TlmgXxvStk++XmwRpLQhP7frPXH3N8GwGLz6zNErDshbWYe3++NOYwNrtOCxy0pRFfQVZweGAmKLj1bMh893V+b1X619IDHKLbxiZZs8fx6wy6LXu6hwoR0RiVyWwZaa/36Md3A9ZSOQSkg0JaJlKKR6CmypTlszR76yMqTfMK+PSSGVnXoQFmYiG6oIOY+udbbTCKf46aMuY0nmLZmTJEXHAcnjb/fqRSe9aYL6wxn7cYVHlUf7UkDWyCvualiaHUfJ486uDRQ0qBL0qU8KelI665ZYNG2TxuQ3Hs9Lh4IA==
+X-YMail-OSG: uASsZksVM1kZW9Q5V7j_bho6O5S7h3jiiesHdgX7L9b1O62.J8YJOwa.aQYaCmB
+ 1TfOSGO4h3pQCGd3CMlgZUGOONd2A1297oF91_g2XH7Fgi6OcrmW_8e1tQMRH_X4GCCvMZDH1VbX
+ ogyW8G3q2VPsActWyoqKhLlsxrE4XVsc1_A2e_WggxJ5CALyUkoTZ9I7LBEEQUihiMVASJxmse_S
+ 9mZnpSw1UNgY2wmFwSCHgy5ri_QrYuV66Vd3jIbYnZunUKS81OHI2gCudrUOTWmEg3r8O1gGynbj
+ PWcayjeENB_dirfnXj_mfRLtXDACbLhX8Ju2lUB0Kdkw65Q9hISgwsoUxPKdpM3T1C94ejsIQllH
+ kh6Ym9ioq1paUJqUoX1R.vppg6kTKFXNiZNxOe4nU7ejLz4UcR3x0C6SYHEklyXp.G_Lnxfu8aDf
+ TQfgxsdYz5Spx4vZagW_ksqV6uG1uhBgpWXoMy4d3ihGXCkMrdvnV3joFZ5g2UyPSKiGFIgRTmYk
+ tJXwF_iu6Dmp8IwMCzKaxJBqIBh1h62gxvhg5cRzH0oEFGVpdzCn3sI0S.zjXo7EwdI5qEXe2Znt
+ tstZCJ6Mt4tbPaWswz3hP6YV3zcRUCsz8wQsoGAO6rNx4uReseFHZYnw7yPUdz.SCBXXlDoBsfW8
+ kL2huUg5iwx3mms1nT4PCFO24QCtuLqgW7Mjd4kMkUF9dTgV9w_pll4GL87bRonqRUSKiaJV_7Ku
+ prLe9azmMeHd3ohGIFsS1y_4rw4o4EzKqMAQECiUsXd106IuzIzNERNsHxgZXZMJFltP1j2nm8Su
+ 8YnsD5dfM.FI8PXtL2oe3Y26umMVrMOBydG27leFDqrLx1mrH6o.5sz7H3b55b.HNXOD91heT8yX
+ RHrLt_tXWQZ5Tawagjnz.Ywt6tJ13c6RXfTQsR4byT5KVMe_2zEbvKdaofOZd.hddpNc.cqrGR34
+ l6BdieuKpo689ALrFGWC1qtxEc51wnboRU31ZSFlNO_KPm5Sa.5q2yt6YVMPvAyfYelRebqYRUcH
+ Zdzz5MzIWbx8jWRRbNFeQP5PmqVMcyWRJSgB46GMnx7j8UZgLCcutirt6f9fk9iO5GYXubGdc0rc
+ 8Qa5M68rtJkUAi6SRLBrmY13NtmDOdIAAON4omcKsKOcUYIqyOTtF7JDeFJy19rnVRKotIfIZD0Z
+ MioRdVWdfl4AOfadVGKLJn5CkT6eLqAtrMsZScpDXTFGSvpqTwXEa.GqDV6canl1H7apEv1BgiP9
+ phQGR.99rxc9ofXU8QWuGm8bEsmILHP2tlIjShSdJVa2GJCce6TWx4RjlEUoCCThgnT_InnnfQtg
+ 6KBcDb4CaonGqPR9HmIuawLIRKW_DU6oQs6tSpzJ4tbtBTMc5Ii3iYg5Sl_Sc6QQc.CEA1iVdapZ
+ K4kcQ5aaGf7TF17.NwnKh.O2rAd9rNq0OvadYs8iUjrAvF1ZB.fdRaBmcMZafwed1XjCSMGcWG4h
+ 1hVdz5Qlm9tU-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Sun, 30 Aug 2020 18:35:05 +0000
+Date:   Sun, 30 Aug 2020 18:33:04 +0000 (UTC)
+From:   "Mrs. Maureen Hinckley" <mau42@gcfta.in>
+Reply-To: maurhinck5@gmail.com
+Message-ID: <1647871249.505332.1598812384477@mail.yahoo.com>
+Subject: RE
 MIME-Version: 1.0
-References: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Aug 2020 20:44:13 +0300
-Message-ID: <CAHp75Vd0Qqk3mMyA404a4MYEQbYVLmL1vwSm2UOr4Zm0gwiydQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mcp23s08: Fixups for mcp23x17
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <1647871249.505332.1598812384477.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 12:33 AM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
->
-> Hi again,
-> Second round of these mcp23s03 driver fixups.
-
-v2 makes sense to me, thanks!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Changes since v1:
-> - Split up the fixups patch.
-> - I'm pretty certain the "mcp23x16" structs are typos, so I put it as
->   0001, because the second patch doesn't really make sense without it.
-> - I lost the `(MCP_GPIO << 1) + 1` changes because the regmap handles
->   GPIOB 0x13 with `.val_bits = 16`.
-> - Dropped the interrupt-controller changes.
->
-> Thanks again,
-> Thomas
->
-> Thomas Preston (2):
->   pinctrl: mcp23s08: Fix mcp23x17_regmap initialiser
->   pinctrl: mcp23s08: Fix mcp23x17 precious range
->
->  drivers/pinctrl/pinctrl-mcp23s08.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
->
-> --
-> 2.26.2
->
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
+ thousand USD) to you. Contact us via my email at (maurhinck5@gmail.com) fo=
+r further details.
+
+Best Regards,
+Mrs. Maureen Hinckley,
+Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
