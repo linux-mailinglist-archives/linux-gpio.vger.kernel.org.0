@@ -2,44 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86FD9257AF5
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 15:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207B8257B11
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 16:08:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHaN4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 09:56:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35289 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgHaN41 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 09:56:27 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i4so2365522ota.2;
-        Mon, 31 Aug 2020 06:56:26 -0700 (PDT)
+        id S1726446AbgHaOIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 10:08:50 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45719 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgHaOIu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 10:08:50 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g96so2826728otb.12;
+        Mon, 31 Aug 2020 07:08:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FMV/EoVeJQ+WE/pRMaOPgKoQ3X4PP3hTHyFfNRH16Yc=;
-        b=MEVcGdiqrBZ1LBRiTS2RhrfcbSrAUDFgYw3XwVxu3rbUCQwePMQSo6ac0RQ/TLA3NJ
-         L2ZTUwq3fQbeZh5OQ8R32gVRQUbHR9+nu2jhemupJ6+rqOh00F+8PUxsVeYkk2Lu+6Vb
-         qwbK37YnqKLdP2Vm3kDTLhJHV8jePsN04Tc1WgQKxz+ZoAmNrB6RcO8jwrRxvuXh98yb
-         pRCQsQlEAGYki7DzD3/4I32WtTja3xpYDixLBckuvoenE2U8wwsKOJVNt4eVXXMqZ4sQ
-         1VMYQajj0h7leiWiwI9umydIXvEOyDPgC3NP/S1ni67Jl+bbJgyvrUJchq1vrry8QKuU
-         lBXw==
-X-Gm-Message-State: AOAM533Oy9zqeOEiIV1Luk2OYCqhATTVk4rT12t3HLm57P0P2V9rurPm
-        In4XeDk7D9dVUQpvMxHxZ8GRWnJUlj2yfMGT+Ac=
-X-Google-Smtp-Source: ABdhPJzTXguJdldjIZvbu9ab5h26EOrA6qb4WKvoiX9HF/l81ts75sWE0AvKhL0Px4ZYTU0MOeP7YQlHL2FUuMJQesU=
-X-Received: by 2002:a9d:162:: with SMTP id 89mr1080208otu.250.1598882186075;
- Mon, 31 Aug 2020 06:56:26 -0700 (PDT)
+        bh=1b33Slxg2dQNNbMdOgphme3zHXhN0EltmeYEvvFRy6g=;
+        b=UeMClv742gwq8R24rvH/y+U9Td1LQQw7th8C8eNKIPRllqV3/cxrcvnGLvPkD2CnpM
+         KSVdN1nCWMtuenvyHhIKA2JgRkjFD+VNI78W+wyTGN800AScxL3ccQC2indDIcQ0GNTm
+         Wh5pHZIkFSZKKjGGzxkygXJzNz85HyR7YdfCwG93bS06Xj1xGM+yz00eV2b2Xt70xxWn
+         gGr61hYMBNCP6jknhAw0CtPwI7PGFg/Dh/85rAOYeyO0ttbHjpWT7MI6wkScdfq3T51Y
+         4xwBM4uoz/RjSf2IH9ESjfsGfSqqyByODfXkRKMdk8buJV2ItDhroXRpy92TVWeRtBPe
+         nCkQ==
+X-Gm-Message-State: AOAM533K3yOTvvg91zTIdfCxJJlXO08utKOjirVQLYV90FfDVq4/4GoK
+        7lMT2X13aYDR3UJxK5nm0m2qHGS7r2pU57z67kA=
+X-Google-Smtp-Source: ABdhPJwqnIM8HpDy1Qv0xFkHMfpyW3x6x5GdciLKqgGdKVZ4i9696j0HBXixR3yXG5lBqUyPE+67cgOM9so3z9o/UPo=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr1055436otl.145.1598882929143;
+ Mon, 31 Aug 2020 07:08:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <87r1s5hoht.wl-kuninori.morimoto.gx@renesas.com>
- <87pn7phofb.wl-kuninori.morimoto.gx@renesas.com> <CAMuHMdWqc1Peo06g_1JrEvEExyaY+k33WJNmbhugE7YrppiRmw@mail.gmail.com>
- <87blj0zzax.wl-kuninori.morimoto.gx@renesas.com> <CACRpkdZ_ss-GqV0ig2BPpEE+8-F-9qZzpb+-C5h0TpbWCcL6Rg@mail.gmail.com>
- <87imcz7moy.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87imcz7moy.wl-kuninori.morimoto.gx@renesas.com>
+References: <87mu2ky4rz.wl-kuninori.morimoto.gx@renesas.com> <87imd8y4r2.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87imd8y4r2.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 31 Aug 2020 15:56:14 +0200
-Message-ID: <CAMuHMdV9np6G3+xamFH-cdB0SJ3yXFa2_8D4x-78Rrbqi99tJQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] pinctrl: sh-pfc: collect Renesas related CONFIGs
- in one place
+Date:   Mon, 31 Aug 2020 16:08:38 +0200
+Message-ID: <CAMuHMdWXnnd80E42BVj85sbLDbZU3eJ9F77Ed-njwEoGn+h1GQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: sh-pfc: align driver description title
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -52,38 +48,63 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Morimoto-san,
 
-On Mon, Aug 31, 2020 at 1:14 AM Kuninori Morimoto
+On Mon, Aug 24, 2020 at 7:49 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
-> > > > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > > > >
-> > > > > Renesas related pinctrl CONFIGs are located many places,
-> > > > > and it is confusable.
-> > > > > This patch collects these into same place,
-> > > > > and group into "Renesas pinctrl drivers" menu.
-> > > > >
-> > > > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > > >
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >
-> > > > Still wondering about moving drivers/pinctrl/pinctrl-rz{a1,a2,n1}.c
-> > > > into drivers/pinctrl/sh-pfc/, too.
-> > >
-> > > As I mentioned before, I'm waiting Linus's opinion.
-> > > But will move these in v3 without waiting him.
-> >
-> > Sorry for slowness. I agree with this move, let's collect all the Renesas
-> > stuff in one place.
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> Thanks !
+> Now, Renesas Pin Control drivers are under menu,
+> but current description are not aligned.
+> This patch align these.
 >
-> > Renaming it drivers/pinctrl/renesas may be a good idea too, but I'd let
-> > Geert decide and execute that, it mainly affects him and his maintenance
-> > work, not me.
+>         - Emma Mobile EV2 pin control support
+>         - R-Mobile APE6 pin control support
+>         - R-Mobile A1 pin control support
+>         - RZ/N1 pin control support
+>         - RZ/G1H pin control support
+>         - RZ/G1M pin control support
 >
-> Geert, my patch moves files, but do nothing to folder names.
-> I agree to Linus's opinion, please execute it.
+>         + pin control support for Emma Mobile EV2
+>         + pin control support for R-Mobile APE6
+>         + pin control support for R-Mobile A1
+>         + pin control support for RZ/N1
+>         + pin control support for RZ/G1H
+>         + pin control support for RZ/G1M
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks, I will take care of the rename.
+> --- a/drivers/pinctrl/sh-pfc/Kconfig
+> +++ b/drivers/pinctrl/sh-pfc/Kconfig
+> @@ -56,7 +56,7 @@ config PINCTRL_SH_PFC
+>           This enables pin control drivers for Renesas SuperH and ARM platforms
+>
+>  config PINCTRL_RZA1
+> -       bool "RZ/A1 gpio and pinctrl driver"
+> +       bool "gpio and pinctrl driver for RZ/A1"
+
+Do you mind if I change this to "pinctrl support for RZ/A1" (and fix up
+the sorting in 4/4), or do you insist on keeping the separation between
+"gpio and pinctrl" and "pure" pinctrl drivers?
+
+In reality, all SH, SH-Mobile, and R-Mobile pinctrl drivers are GPIO
+controller drivers, too, but this is currently no reflected by their
+description.
+
+>         depends on OF
+>         depends on ARCH_R7S72100 || COMPILE_TEST
+>         select GPIOLIB
+> @@ -67,7 +67,7 @@ config PINCTRL_RZA1
+>           This selects pinctrl driver for Renesas RZ/A1 platforms.
+>
+>  config PINCTRL_RZA2
+> -       bool "RZ/A2 gpio and pinctrl driver"
+> +       bool "gpio and pinctrl driver for RZ/A2"
+
+Likewise.
+
+>         depends on OF
+>         depends on ARCH_R7S9210 || COMPILE_TEST
+>         select GPIOLIB
 
 Gr{oetje,eeting}s,
 
