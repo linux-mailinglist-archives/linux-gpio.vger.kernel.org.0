@@ -2,125 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 856AB257615
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 11:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF2CA25764D
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 11:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgHaJKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 05:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        id S1728090AbgHaJPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 05:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgHaJKB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 05:10:01 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C89C061573;
-        Mon, 31 Aug 2020 02:10:01 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 5so274377pgl.4;
-        Mon, 31 Aug 2020 02:10:01 -0700 (PDT)
+        with ESMTP id S1725829AbgHaJPe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 05:15:34 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9ADC061573
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 02:15:34 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id np15so1042622pjb.0
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 02:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=72+5KESN1mSFJz5ZizKuMvDlrzop8gzGznvFUJBSrJA=;
-        b=tcZNtvUG59Tbrxe5lh/j+93yv3TdD6TuJV7h49y52B1+TcQvVwEN1X0ZeGMcjO5AHA
-         tjmy22nO+aVGsbNx8L7kDYH+cx8hQgqDXFROAqTfTLPrORZe1oqpZ8ZGwgTbVBlwQbL3
-         5F5NwItSPJA/5Kjy86HDptqEubYjWQZhPEcaXDZC7wKdLEkCXNTEW/FZShg2F32p/j+h
-         BdpwRrA6SQvrSGBIeY7WnA5e0YXZld6CeKNxBN2rHmZrMTXOSyWl5rRY76wEPqZbesWl
-         rrY8N5k5JJzuKKTnqzF+LnvGU4ZHoBDoZPDAjQYFjCzSJ+m65n9MPk7ew4lvt4cWL5k7
-         WrNw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jOsH1xveMhMjoIwok15XcPwN4RVnMVHn8XuBwbA02ow=;
+        b=ldTYVU87XmQJRhEDLkn6zGfy2h2O6NFevgUPbsxyMEIL+Xn26+t76gllLG5LkaWyCJ
+         1KFHoj9F6PDd3DBYJFaMifYFhKSBnW8Dj6pd29bLICluNT5F/h3DA8oANDvY7ONkDUyM
+         uXg8SCzlmXQKhQpClWUf6Kvj2pd0bRyyPm+satR4imv9FG3ZXkW0DGpMZ+VRkRb/8Dmi
+         izuwHOEkwHapb6gkS7qshXUH3uEQup7T8UuGlfDHP3hdQhRkHVIIwzUwUa0DQ8ruY4Qs
+         3XHEzA638XNy7PSrZh9Qhq4ldbjkJZ2DbRS6CrtwbduBZF1y5yWBM8Yep4f9wyoGyAkK
+         zMpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=72+5KESN1mSFJz5ZizKuMvDlrzop8gzGznvFUJBSrJA=;
-        b=WblHpbdH2ZHadpVsKRN27sMQZBQcilgsOYp4hKlp7yQ/3wiYqcQMdoNvmbULFzFEek
-         QJWPOdDECp0tHzIeRSWrmOo0/5zdxd2gOox0AIkSUAIih74uro5NYiFoaivdJmH/zxiF
-         eESmAzPVtXkHmZj4j/L1ATJZRE3EQ4jVagmaIp4BhLFeG9aF370aqWDuUtyXWa+yj/Wu
-         9ItZ0ZQMAGX8JDth/OcGF7QYtIkiSmP0cCO2jIZNm1g2HKZv9HvQn6V5yl+nLSmyETi8
-         ztMJmjORpM1vLYWu/PJn0L2kXFbu6bvNWoQz5GB7d1jwWCeMh693FSdvnIfkzilgBwIO
-         t1qw==
-X-Gm-Message-State: AOAM532ulN/hS8/rt9mmXsasRvb+fpE0MoAgD9sFyOixB2t5c4UrU5hR
-        BA4I2gaT71glkkDPWQY//34=
-X-Google-Smtp-Source: ABdhPJx3D9SiIuFZAcYlKbJ9WHchzowdfP20bmkgGKzywLcD1YFM3XwPvKILwv2aNcHD8I4r68SMmQ==
-X-Received: by 2002:a63:8c0c:: with SMTP id m12mr513287pgd.73.1598865000788;
-        Mon, 31 Aug 2020 02:10:00 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z17sm7231467pfq.38.2020.08.31.02.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 02:10:00 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Taiping Lai <taiping.lai@unisoc.com>
-Subject: [PATCH v2] gpio: sprd: Clear interrupt when setting the type as edge
-Date:   Mon, 31 Aug 2020 17:09:47 +0800
-Message-Id: <20200831090947.18489-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jOsH1xveMhMjoIwok15XcPwN4RVnMVHn8XuBwbA02ow=;
+        b=ZCkMI9HQWpM6NKLyXhl8/hGdOgqmwXDnS3aNEPZuw/4Yrsr/ROui1/ppCvTx83Qe+1
+         YfbEpxcAeF3+Y32vqIdjT3wfv1qUp7q+fBPaZ8Fvfsv0Wl8hroosFzZI6iJ0twY+FRKS
+         bHOyswV+hVatHiOck/S5UUvcGg25R/M3AaTru8ivnFOR2cIE5yLTg9P7zVkbNLokbrWm
+         UZkGR+AYrLz7kQiRt/pjlYz3koDprOz4vdAVAQ4AIgJri+szbeQejcswl6BsLIETNdEU
+         cj0AZqUhFQL491dNgP/cK44GbGm5h5fplmM8NgRnoRvL/tO9p+yY5ykmBqVHjzYbjhyJ
+         jilg==
+X-Gm-Message-State: AOAM53176LEbih9BiTZKlcgJ107wzztD3ElLyJxuWaINrIvAyVk5DGqa
+        QIyHRJTl4ICAUhR2Bh6C9MdY
+X-Google-Smtp-Source: ABdhPJxPn8geeNBDo1sZvZ4GwlWTHSLh8tnqHQfqdF2oJbs9EIbUNTA1H+iVufXeuzR1hCrNqbDeMw==
+X-Received: by 2002:a17:902:16b:: with SMTP id 98mr386051plb.23.1598865333684;
+        Mon, 31 Aug 2020 02:15:33 -0700 (PDT)
+Received: from mani ([2409:4072:70f:fdfa:1d6f:524d:c4d3:917e])
+        by smtp.gmail.com with ESMTPSA id u62sm7196663pfb.4.2020.08.31.02.15.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 31 Aug 2020 02:15:32 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 14:45:26 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] pinctrl/actions: Constify static variables
+Message-ID: <20200831091526.GA4154@mani>
+References: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Taiping Lai <taiping.lai@unisoc.com>
+On 0831, Rikard Falkeborn wrote:
+> Constify a couple of static variables which are not modified to allow
+> the compiler to put them in read-only memory. Patch 1/3 is probably
+> the most important one since those structs contain function pointer.
+> The patches are independent, and can be applied in any order. 
+> Compile-tested only.
+> 
 
-The raw interrupt status of GPIO maybe set before the interrupt is enabled,
-which would trigger the interrupt event once enabled it from user side.
-This is the case for edge interrupts only. Adding a clear operation when
-setting interrupt type can avoid that.
+For the series,
 
-There're a few considerations for the solution:
-1) This issue is for edge interrupt only; The interrupts requested by users
-   are IRQ_TYPE_LEVEL_HIGH as default, so clearing interrupt when request
-   is useless.
-2) The interrupt type can be set to edge when request and following up
-   with clearing it though, but the problem is still there once users set
-   the interrupt type to level trggier.
-3) We can add a clear operation after each time of setting interrupt
-   enable bit, but it is redundant for level trigger interrupt.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Therefore, the solution is this patch seems the best for now.
+Thanks,
+Mani
 
-Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
-Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
-* Changes since v1:
-- Rebased on v5.9-rc1.
----
- drivers/gpio/gpio-sprd.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-index d7314d39ab65..36ea8a3bd451 100644
---- a/drivers/gpio/gpio-sprd.c
-+++ b/drivers/gpio/gpio-sprd.c
-@@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_EDGE_BOTH:
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_LEVEL_HIGH:
--- 
-2.20.1
-
+> Rikard Falkeborn (3):
+>   pinctrl: actions: pinctrl-owl: Constify owl_pinctrl_ops and
+>     owl_pinmux_ops
+>   pinctrl: actions: pinctrl-s700: Constify s700_padinfo[]
+>   pinctrl: actions: pinctrl-s900: Constify s900_padinfo[]
+> 
+>  drivers/pinctrl/actions/pinctrl-owl.c  | 4 ++--
+>  drivers/pinctrl/actions/pinctrl-s700.c | 2 +-
+>  drivers/pinctrl/actions/pinctrl-s900.c | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.28.0
+> 
