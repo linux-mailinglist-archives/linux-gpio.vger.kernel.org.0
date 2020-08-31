@@ -2,191 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0E525743E
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 09:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5131225750F
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 10:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725949AbgHaHY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 03:24:26 -0400
-Received: from mo-csw1115.securemx.jp ([210.130.202.157]:39376 "EHLO
+        id S1728222AbgHaIL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 04:11:28 -0400
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:46122 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgHaHYZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 03:24:25 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 07V7Nik5032133; Mon, 31 Aug 2020 16:23:44 +0900
-X-Iguazu-Qid: 2wGqu78fjRd5hM4Wan
-X-Iguazu-QSIG: v=2; s=0; t=1598858623; q=2wGqu78fjRd5hM4Wan; m=5/i1HO5KCK+RAMPX55FPKqg96uinqqHLZmftlCHQKAA=
+        with ESMTP id S1728083AbgHaILZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 04:11:25 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 07V8AoDS026106; Mon, 31 Aug 2020 17:10:50 +0900
+X-Iguazu-Qid: 34tMJPQphthGLpgayj
+X-Iguazu-QSIG: v=2; s=0; t=1598861449; q=34tMJPQphthGLpgayj; m=aNgpFGsTMxvZ/3qQczZhzrnS39015j1mZ6S0vqecCGA=
 Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1110) id 07V7Nf3K004863;
-        Mon, 31 Aug 2020 16:23:42 +0900
+        by relay.securemx.jp (mx-mr1513) id 07V8AlaV038522;
+        Mon, 31 Aug 2020 17:10:47 +0900
 Received: from enc03.toshiba.co.jp ([106.186.93.13])
-        by imx2.toshiba.co.jp  with ESMTP id 07V7NfT4025310;
-        Mon, 31 Aug 2020 16:23:41 +0900 (JST)
+        by imx2.toshiba.co.jp  with ESMTP id 07V8AknE025504;
+        Mon, 31 Aug 2020 17:10:46 +0900 (JST)
 Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc03.toshiba.co.jp  with ESMTP id 07V7NeAq010613;
-        Mon, 31 Aug 2020 16:23:41 +0900
-Date:   Mon, 31 Aug 2020 16:23:39 +0900
+        by enc03.toshiba.co.jp  with ESMTP id 07V8AkZc026346;
+        Mon, 31 Aug 2020 17:10:46 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Marc Zyngier <maz@misterjones.org>
-Subject: Re: [PATCH v2 2/8] pinctrl: visconti: Add Toshiba Visconti SoCs
- pinctrl support
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <maz@misterjones.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v3 0/8] Add Toshiba Visconti ARM64 Platform support
+Date:   Mon, 31 Aug 2020 17:10:17 +0900
 X-TSB-HOP: ON
-Message-ID: <20200831072339.tkc7v2fyzzq5lhfn@toshiba.co.jp>
-References: <20200824122957.1392870-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20200824122957.1392870-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <CACRpkdarxKSQOvoA4yvjFUkXmZR1OzHYfQRKqLR+8TQoV+oCyw@mail.gmail.com>
+Message-Id: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdarxKSQOvoA4yvjFUkXmZR1OzHYfQRKqLR+8TQoV+oCyw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Visconti is a series of Toshiba's SoCs targeting image processing
+applications[0]. These set of patches adds support for Visconti5 a Arm
+v8 based SoC.
 
-Thanks for your review.
+The series add minimal support for the Visconti5 SoC and the TMPV7708 RM
+main board. Peripherals such as UART, SPI, I2c and timer use Arm's
+IP and work with the existing kernel drivers in the tree. The series
+includes a pinctrl driver to select appropriate functions on the pins.
 
-On Fri, Aug 28, 2020 at 02:41:05PM +0200, Linus Walleij wrote:
-> Hi Nobuhiro!
-> 
-> Thanks for your patch. Some review comments below!
-> 
-> On Mon, Aug 24, 2020 at 2:30 PM Nobuhiro Iwamatsu
-> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
-> >
-> > Add pinctrl support to Toshiba Visconti SoCs.
-> >
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> 
-> > +config PINCTRL_VISCONTI
-> > +       bool
-> > +       select PINMUX
-> > +       select GENERIC_PINCONF
-> > +       select GENERIC_PINCTRL_GROUPS
-> > +       select GENERIC_PINMUX_FUNCTIONS
-> 
-> Thanks for using generic stuff!
-> 
-> > +#define SET_BIT(data, idx)     ((data) |= BIT(idx))
-> > +#define CLR_BIT(data, idx)     ((data) &= ~BIT(idx))
-> 
-> Please do not reinvent things like this. Either open code
-> it, and if you want optimizations (probably not relevant in
-> this case) you would use:
-> 
-> #include <linux/bitmap.h>
-> 
-> set_bit() and clear_bit() if you want atomic bit ops
-> __set_bit() and __clear_bit() for nonatomic
-> 
-> The upside to using these standard calls is that they will
-> unfold into assembly optimizations for the architecture if
-> possible.
-> 
-> If you roll your own locking use the latter primitives.
-> 
+NOTE: Because Visconti5 does not have PSCI, it uses spin-table with enable-method.
+      And this patch series does not include a clock framework, so it is a
+      device-tree file that uses clocks with fixed-clock. This will be replaced by
+      the clock driver in the future.
 
-I understood this.
-Since this is a bit control for variables, clear_bit() and other are not
-used. As you write in the comment below, I fix not using unnecessary macros.
+[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
 
-> > +/* private data */
-> > +struct visconti_pinctrl {
-> > +       void __iomem *base;
-> > +       struct device *dev;
-> > +       struct pinctrl_dev *pctl;
-> > +       struct pinctrl_desc pctl_desc;
-> > +
-> > +       const struct visconti_pinctrl_devdata  *devdata;
-> > +
-> > +       spinlock_t lock;
-> 
-> At least add a comment to this lock to say what it is locking.
-> 
+dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - Fix warning by make dt_binding_check.
+    - Use '-pins$' instead of ''^.*$':''.
+    - Remove if/then.
+    - Add $ref to the common pinctrl schemas.
 
-OK, I will add a commnent.
+pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
+  v2 -> v3:
+    -  Delete SET_BIT and CLR_BIT for easy to read a source.
+    -  Add a comment for spinlock_t.
+    -  Use DIV_ROUND_CLOSEST().
+    -  Use GENMASK with #define.
+    -  Fix spelling.
+    -  Remove visconti_gpio_request_enable().
 
-> > +                       /* update pudsel setting */
-> > +                       val = readl(priv->base + pin->pudsel_offset);
-> > +                       CLR_BIT(val, pin->pud_shift);
-> > +                       val |= set_val << pin->pud_shift;
-> 
-> I would just inline the &= operation but it is up to you.
-> 
+  v1 -> v2:
+    - No update.
 
-OK, I will fix not using this macro.
+dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - No update.
 
-> > +               case PIN_CONFIG_DRIVE_STRENGTH:
-> > +                       arg = pinconf_to_config_argument(configs[i]);
-> > +                       dev_dbg(priv->dev, "DRV_STR arg = %d\n", arg);
-> > +                       switch (arg) {
-> > +                       case 2:
-> > +                       case 4:
-> > +                       case 8:
-> > +                       case 16:
-> > +                       case 24:
-> > +                       case 32:
-> > +                               set_val = (arg / 2) - 1;
-> 
-> This looks like you want to use
-> 
-> set_val = DIV_ROUND_CLOSEST(arg, 2);
-> 
-> Also add a comment on WHY you do this.
-> 
+dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - No update.
 
-OK, I will fix using DIV_ROUND_CLOSEST and comment.
+arm64: visconti: Add initial support for Toshiba Visconti platform
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - No update.
 
-> > +                       /* update drive setting */
-> > +                       val = readl(priv->base + pin->dsel_offset);
-> > +                       val &= ~(GENMASK(3, 0) << pin->dsel_shift);
-> 
-> Could this GENMASK be a #define so we know what it is?
-> 
-> > +/* pinmnux */
-> 
-> Spelling
+arm64: dts: visconti: Add device tree for TMPV7708 RM main board
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - Remove always-on property from timer.
+    - Add interrputs for GIC.
+    - Remove bootargs from chosen.
+      stdout-path is not deleted because the boot loader cannot handle it.
+      It will be removed in the future.
+    - Update dtsi for using new binding of pinctrl.
 
-Thanks, I will this.
+MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - No update.
 
-> 
-> > +       /* update mux */
-> > +       val = readl(priv->base + mux->offset);
-> > +       val &= ~mux->mask;
-> > +       val |= mux->val;
-> 
-> So here you do things explicitly and in the other case with custom
-> macros. I think this is better because it is easy to read.
+arm64: defconfig: Enable configs for Toshiba Visconti    
+  v2 -> v3:
+    - no update.
+  v1 -> v2:
+    - No update.
 
-OK.
+Nobuhiro Iwamatsu (8):
+  dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
+  pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
+  dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
+  dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
+  arm64: visconti: Add initial support for Toshiba Visconti platform
+  arm64: dts: visconti: Add device tree for TMPV7708 RM main board
+  MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
+  arm64: defconfig: Enable configs for Toshiba Visconti
 
-> 
-> > +static int visconti_gpio_request_enable(struct pinctrl_dev *pctldev,
-> > +                                     struct pinctrl_gpio_range *range,
-> > +                                     unsigned int pin)
-> 
-> Since you implement this, what GPIO driver are you using this with?
-> 
+ .../devicetree/bindings/arm/toshiba.yaml      |  22 +
+ .../pinctrl/toshiba,visconti-pinctrl.yaml     |  92 +++++
+ MAINTAINERS                                   |  11 +
+ arch/arm64/Kconfig.platforms                  |   7 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/toshiba/Makefile          |   2 +
+ .../boot/dts/toshiba/tmpv7708-rm-mbrc.dts     |  43 ++
+ arch/arm64/boot/dts/toshiba/tmpv7708.dtsi     | 390 ++++++++++++++++++
+ .../arm64/boot/dts/toshiba/tmpv7708_pins.dtsi |  93 +++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/pinctrl/Kconfig                       |   1 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/visconti/Kconfig              |  14 +
+ drivers/pinctrl/visconti/Makefile             |   3 +
+ drivers/pinctrl/visconti/pinctrl-common.c     | 305 ++++++++++++++
+ drivers/pinctrl/visconti/pinctrl-common.h     |  96 +++++
+ drivers/pinctrl/visconti/pinctrl-tmpv7700.c   | 355 ++++++++++++++++
+ 17 files changed, 1437 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/toshiba.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/toshiba/Makefile
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
+ create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708_pins.dtsi
+ create mode 100644 drivers/pinctrl/visconti/Kconfig
+ create mode 100644 drivers/pinctrl/visconti/Makefile
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-common.c
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-common.h
+ create mode 100644 drivers/pinctrl/visconti/pinctrl-tmpv7700.c
 
-Certainly this feature is not called and is not needed, because there
-is no GPIO driver for this SoC now. I will remove these.
+-- 
+2.27.0
 
-
-> Other than that it looks all right, also the plugin for SoC is nicely designed.
-> 
-> Thanks!
-> Linus Walleij
->
-
-Best regards,
-  Nobuhiro
