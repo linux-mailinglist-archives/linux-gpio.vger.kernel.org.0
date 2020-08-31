@@ -2,143 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3264C257BEE
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 17:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8C55257C3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 17:24:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgHaPNL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 11:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
+        id S1728216AbgHaPYo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 11:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgHaPMa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 11:12:30 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E419CC061755
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 08:12:29 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id o184so3423772vsc.0
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 08:12:29 -0700 (PDT)
+        with ESMTP id S1728156AbgHaPYn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 11:24:43 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D713C061573
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 08:24:43 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id z15so3180178plo.7
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 08:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MkA7kkMZ28SM9aq6Oba8O8kVaNHfOTZlxqtGBVCQhrc=;
-        b=jgOG3A76uagJjEXXUrgjaviRJXDyL5GPp/LE3dmC5pKG/zAdmf4V5gCOhr5ivUElnI
-         X1SMWQyEUxlFSjx7OYK2dYZ5r6QEBc7mdzqWGKJZH4knTpXSGrjvnV9gXhi9GGxwrxn/
-         pONqUFY418QiUIAXCy7S6jhIYDHmM4D0e9+Jg=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Ik20QlEI9CeEDA1VfE3QZkH2ShLWWXD8OErsSe8sT/A=;
+        b=rfYhoCs/uyYGVCF4A9YWF9SY49wmavAkfqGSiZtnQDDmT7HiNjRqhQmw9mPpuYvFuF
+         w23xWoDZq9BRw2gMFC2pOP96qk/w+KmQ7gKviIfIzJcO0/Y3l+u/+d1ZwktMPTqA0Py3
+         5L2/FCbuCxBOcXvnmAN3oIeUH0lp9PllOm/VnvnzuOvhBOLQHphmG6/L8Ec+TPdR2pGA
+         fEVSZ3bWWBe0YxpSBGjJVdlggMGgZJbdAi6IONcdZ6ZO3MvKD59mRyU5UNCXMvxA/Qvs
+         4i0xs7HJU0MoRTUXn+ECOQWd3eyh6vCYOF2ul5SXoXd+198SOUNbTcCF6nuAQnL3XYUj
+         Gyww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MkA7kkMZ28SM9aq6Oba8O8kVaNHfOTZlxqtGBVCQhrc=;
-        b=pLjLBnBHT7Q9rQdCbu02Bw1rSPciMmKqMkCKpM2QR8VUDVI905I6ydUa+Wpt37+pZk
-         qrsJtDh3Y6xXomS/jh66K/9ZbHYu1+z9zDd/iLItZSxA9Z3u9lT1rx3mJv5CSF7WmwBl
-         HrjDS9KSQIQ3dKgVitnwPfOZvqWecqM4y9t8QZ8+L8R7Sm8j4oKzI/WoG8GbyVBiw0z+
-         1pYs2oA7uKLrZga9KUNDqYq7+filQo3n9o1FIH2KM3vD65rS94/OFxcs1KTMHulfQNQa
-         BOHduQUGvlWDByuGXOTp8Fi0rCJu3BfDsk+Hkcxo4GCnlE06QeREQ2Erb32JwWsYBDJq
-         yC8A==
-X-Gm-Message-State: AOAM530IgXg1xiDq400ubOjsNl8lId6qTwOoqg54Km3LI8vDPEucEess
-        S/tOEown+XiJbj1qrUQTctWbiv89z1r7xQ==
-X-Google-Smtp-Source: ABdhPJw5/DflAJ/5PHuwP+ucie591AuL1dCgs3zF0L+6JJdtrdBUNToe0HFJwIr70V+7V3/z+iCMJg==
-X-Received: by 2002:a67:fc49:: with SMTP id p9mr1448005vsq.142.1598886748841;
-        Mon, 31 Aug 2020 08:12:28 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id b206sm1446065vka.41.2020.08.31.08.12.26
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 08:12:27 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id k1so1375280vkb.7
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 08:12:26 -0700 (PDT)
-X-Received: by 2002:a1f:f848:: with SMTP id w69mr1345108vkh.86.1598886745879;
- Mon, 31 Aug 2020 08:12:25 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Ik20QlEI9CeEDA1VfE3QZkH2ShLWWXD8OErsSe8sT/A=;
+        b=jEiL3BJzq75aH3ffMSOipY8UnOeISRtqtfETUW8XifRddjyRLVpkPYOQRTpHD/AeSB
+         p6Dmd5EdztrtZJOPijJVtH04PG3onrBuvPpUmAHq0Xp4k7DQOT9PWDVWKdLOMup/gsE2
+         FBElFf1d9HQSpY0NvDcH29QKU3MtJM2AR8yEae0IGgT3kxOKo2zsGUn7gtRx+dpq1HNX
+         7MycZGDogHttn3xEtmw3P2j/AdnxRiOcqQaqk7UDzWtkbWei/MgRelKad/RGN412x7z0
+         ZP/XGtK67+mNIh6ScFrlFL8NFQxEvtuYxJ3SD58Vv+F/4KTuFU6KHUDhS+37t5jUEtdV
+         lxag==
+X-Gm-Message-State: AOAM533364HiXARWDbB3DpLknS9zthGy3t2kWkIguR40FfA/BqiWx2ei
+        cFUSQAHX0+xfmiAv1+8mYwsSzMHZ77ZDJw==
+X-Google-Smtp-Source: ABdhPJwgMyoJg2dL4p2vbhlJzxJJ04DbVZTYRcpCDRibyTMn0WnsRuE0KSx7qm9wgUexIbS42rhwbA==
+X-Received: by 2002:a17:90a:af84:: with SMTP id w4mr1806558pjq.94.1598887482002;
+        Mon, 31 Aug 2020 08:24:42 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id u123sm8350327pfb.209.2020.08.31.08.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 08:24:41 -0700 (PDT)
+Message-ID: <5f4d1639.1c69fb81.c64c2.b431@mx.google.com>
+Date:   Mon, 31 Aug 2020 08:24:41 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
- <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
- <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
- <87y2m1vhkm.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87y2m1vhkm.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 31 Aug 2020 08:12:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
-Message-ID: <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
- flag
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-11991-gfc80c51fd4b2
+X-Kernelci-Report-Type: test
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+Subject: linusw/for-next baseline: 86 runs,
+ 3 regressions (v5.8-11991-gfc80c51fd4b2)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+linusw/for-next baseline: 86 runs, 3 regressions (v5.8-11991-gfc80c51fd4b2)
+
+Regressions Summary
+-------------------
+
+platform         | arch  | lab           | compiler | defconfig          | =
+results
+-----------------+-------+---------------+----------+--------------------+-=
+-------
+mt8173-elm-hana  | arm64 | lab-collabora | gcc-8    | defconfig          | =
+0/1    =
+
+omap4-panda      | arm   | lab-collabora | gcc-8    | multi_v7_defconfig | =
+4/5    =
+
+rk3399-gru-kevin | arm64 | lab-collabora | gcc-8    | defconfig          | =
+84/88  =
 
 
-On Wed, Aug 26, 2020 at 3:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, Aug 26 2020 at 15:22, Maulik Shah wrote:
-> > On 8/26/2020 3:08 AM, Thomas Gleixner wrote:
-> >>> Where is the corresponding change to resume_irq()? Don't we need to
-> >>> disable an irq if it was disabled on suspend and forcibly enabled here?
-> >>>
-> > I should have added comment explaining why i did not added.
-> > I thought of having corresponding change to resume_irq() but i did not
-> > kept intentionally since i didn't
-> > observe any issue in my testing.
->
-> That makes it correct in which way? Did not explode in my face is hardly
-> proof of anything.
->
-> > Actually the drivers which called (disable_irq() + enable_irq_wake()),
-> > are invoking enable_irq()
-> > in the resume path everytime. With the driver's call to enable_irq()
-> > things are restoring back already.
->
-> No, that's just wrong because you again create inconsistent state.
->
-> > If above is not true in some corner case, then the IRQ handler of
-> > driver won't get invoked, in such case, why even to wake up with such
-> > IRQs in the first place, right?
->
-> I don't care about the corner case. If the driver misses to do it is
-> buggy in the first place. Silently papering over it is just mindless
-> hackery.
->
-> There are two reasonable choices here:
->
-> 1) Do the symmetric thing
->
-> 2) Let the drivers call a new function disable_wakeup_irq_for_suspend()
->    which marks the interrupt to be enabled from the core on suspend and
->    remove the enable call on the resume callback of the driver.
->
->    Then you don't need the resume part in the core and state still is
->    consistent.
->
-> I'm leaning towards #2 because that makes a lot of sense.
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.=
+8-11991-gfc80c51fd4b2/plan/baseline/
 
-IIUC, #2 requires that we change existing drivers that are currently
-using disable_irq() + enable_irq_wake(), right?  Presumably, if we're
-going to do #2, we should declare that what drivers used to do is now
-considered illegal, right?  Perhaps we could detect that and throw a
-warning so that they know that they need to change to use the new
-disable_wakeup_irq_for_suspend() API.  Otherwise these drivers will
-work fine on some systems (like they always have) but will fail in
-weird corner cases for systems that are relying on drivers to call
-disable_wakeup_irq_for_suspend().  That doesn't sound super great to
-me...
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: v5.8-11991-gfc80c51fd4b2
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      fc80c51fd4b23ec007e88d4c688f2cac1b8648e7 =
 
-...or, if doing the symmetric thing isn't too bad, we could do that?
 
--Doug
+
+Test Regressions
+---------------- =
+
+
+
+platform         | arch  | lab           | compiler | defconfig          | =
+results
+-----------------+-------+---------------+----------+--------------------+-=
+-------
+mt8173-elm-hana  | arm64 | lab-collabora | gcc-8    | defconfig          | =
+0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f492a51877f65eb19dfdeac
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f492a51877f65eb19dfd=
+ead
+      new failure (last pass: gpio-v5.8-2-103-g22cc422070d9)  =
+
+
+
+platform         | arch  | lab           | compiler | defconfig          | =
+results
+-----------------+-------+---------------+----------+--------------------+-=
+-------
+omap4-panda      | arm   | lab-collabora | gcc-8    | multi_v7_defconfig | =
+4/5    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f492b0e9ea7783b3ddfde77
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-omap4-panda.=
+txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-omap4-panda.=
+html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/armel/baseline/rootfs.cpio.gz =
+
+
+  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f492b0e9ea7783=
+b3ddfde7b
+      new failure (last pass: gpio-v5.8-2-103-g22cc422070d9)
+      60 lines
+
+    2020-08-28 16:04:24.672000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c802
+    2020-08-28 16:04:24.678000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c803
+    2020-08-28 16:04:24.684000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c804
+    2020-08-28 16:04:24.690000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c805
+    2020-08-28 16:04:24.696000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c806
+    2020-08-28 16:04:24.702000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c807
+    2020-08-28 16:04:24.708000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c808
+    2020-08-28 16:04:24.714000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c809
+    2020-08-28 16:04:24.720000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c80a
+    2020-08-28 16:04:24.726000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c80b
+    ... (49 line(s) more)
+      =
+
+
+
+platform         | arch  | lab           | compiler | defconfig          | =
+results
+-----------------+-------+---------------+----------+--------------------+-=
+-------
+rk3399-gru-kevin | arm64 | lab-collabora | gcc-8    | defconfig          | =
+84/88  =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f492a47176a743fd6dfde67
+
+  Results:     84 PASS, 4 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.8-11991-gfc=
+80c51fd4b2/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.ht=
+ml
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.bootrr.rockchip-pcie-probed: https://kernelci.org/test/case/id=
+/5f492a47176a743fd6dfdea7
+      new failure (last pass: gpio-v5.8-2-103-g22cc422070d9)  =20
