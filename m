@@ -2,97 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF2CA25764D
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 11:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92D2325765F
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 11:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgHaJPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 05:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgHaJPe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 05:15:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9ADC061573
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 02:15:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id np15so1042622pjb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 02:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jOsH1xveMhMjoIwok15XcPwN4RVnMVHn8XuBwbA02ow=;
-        b=ldTYVU87XmQJRhEDLkn6zGfy2h2O6NFevgUPbsxyMEIL+Xn26+t76gllLG5LkaWyCJ
-         1KFHoj9F6PDd3DBYJFaMifYFhKSBnW8Dj6pd29bLICluNT5F/h3DA8oANDvY7ONkDUyM
-         uXg8SCzlmXQKhQpClWUf6Kvj2pd0bRyyPm+satR4imv9FG3ZXkW0DGpMZ+VRkRb/8Dmi
-         izuwHOEkwHapb6gkS7qshXUH3uEQup7T8UuGlfDHP3hdQhRkHVIIwzUwUa0DQ8ruY4Qs
-         3XHEzA638XNy7PSrZh9Qhq4ldbjkJZ2DbRS6CrtwbduBZF1y5yWBM8Yep4f9wyoGyAkK
-         zMpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jOsH1xveMhMjoIwok15XcPwN4RVnMVHn8XuBwbA02ow=;
-        b=ZCkMI9HQWpM6NKLyXhl8/hGdOgqmwXDnS3aNEPZuw/4Yrsr/ROui1/ppCvTx83Qe+1
-         YfbEpxcAeF3+Y32vqIdjT3wfv1qUp7q+fBPaZ8Fvfsv0Wl8hroosFzZI6iJ0twY+FRKS
-         bHOyswV+hVatHiOck/S5UUvcGg25R/M3AaTru8ivnFOR2cIE5yLTg9P7zVkbNLokbrWm
-         UZkGR+AYrLz7kQiRt/pjlYz3koDprOz4vdAVAQ4AIgJri+szbeQejcswl6BsLIETNdEU
-         cj0AZqUhFQL491dNgP/cK44GbGm5h5fplmM8NgRnoRvL/tO9p+yY5ykmBqVHjzYbjhyJ
-         jilg==
-X-Gm-Message-State: AOAM53176LEbih9BiTZKlcgJ107wzztD3ElLyJxuWaINrIvAyVk5DGqa
-        QIyHRJTl4ICAUhR2Bh6C9MdY
-X-Google-Smtp-Source: ABdhPJxPn8geeNBDo1sZvZ4GwlWTHSLh8tnqHQfqdF2oJbs9EIbUNTA1H+iVufXeuzR1hCrNqbDeMw==
-X-Received: by 2002:a17:902:16b:: with SMTP id 98mr386051plb.23.1598865333684;
-        Mon, 31 Aug 2020 02:15:33 -0700 (PDT)
-Received: from mani ([2409:4072:70f:fdfa:1d6f:524d:c4d3:917e])
-        by smtp.gmail.com with ESMTPSA id u62sm7196663pfb.4.2020.08.31.02.15.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 31 Aug 2020 02:15:32 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:45:26 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] pinctrl/actions: Constify static variables
-Message-ID: <20200831091526.GA4154@mani>
-References: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
+        id S1728092AbgHaJTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 05:19:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:46033 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbgHaJTV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 05:19:21 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M7JvQ-1kDo1j3pYi-007jqx; Mon, 31 Aug 2020 11:19:20 +0200
+Received: by mail-qk1-f182.google.com with SMTP id n129so5455814qkd.6;
+        Mon, 31 Aug 2020 02:19:19 -0700 (PDT)
+X-Gm-Message-State: AOAM530/pG3qLrf+BK6vCJqqNBqGO145s4Jmf+tX8jtM2UByaJK1chpO
+        E7SIrSbIxpe7B1M1g7YRSn1IuFmnmrFd9Z/S13o=
+X-Google-Smtp-Source: ABdhPJzUEWtziSnQX2vhGDM0Aytp3ToW16zQTfl1/E5ySSQ5dl1g5VYJPrx27/jo1GIF6bnH2JosWYvEl46jjr9FjGU=
+X-Received: by 2002:a37:a04b:: with SMTP id j72mr57028qke.352.1598865558621;
+ Mon, 31 Aug 2020 02:19:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+In-Reply-To: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 31 Aug 2020 11:19:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2xD-zp3ov=3vobSSAmyfvPCMe0mGgP3F7mZkk8WieUpw@mail.gmail.com>
+Message-ID: <CAK8P3a2xD-zp3ov=3vobSSAmyfvPCMe0mGgP3F7mZkk8WieUpw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add Toshiba Visconti ARM64 Platform support
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <maz@misterjones.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:iTzcXHI504/yX+tGwNCCxZMKDiDhmJyNDRPN+VhayBViHcPFcji
+ heP1QsAi0oiqz4goT1jGpMfnNXS/Fkm1zwMgJ4GTEcIVuh2h0R1m2FInGXq/t/5yaZAMGhE
+ SncUXVfbNzYaRrpmo3gqqXUtFXDtVGgkkHi7CL4YTWCXLjEd69qMeARqwzp9KH7jVGkjR95
+ KewGHRjkgwmq+L79j6xcg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IPV6XAEaOxc=:OJ4iz1RDjo0knFaEJkcnbz
+ p2W8EYm6BmHK5vL30BBVCWwbZGEHlHOIG/xFPmug111BMbFpg9b8VZoFsqM8MwmU79yv0QAPy
+ KwJjtdKEJurundPAxFep3GSdh+i0o62Dsv1KZaqvWJv6qJlsmdeT9ZzkrzGpTRmFPiUdrCNqY
+ 0o35nX/7hG6oGkishWE0f57Sra36CI7dG8TZ7FDGP9Ffy1ME3r1YnDj9pxum4TtS4kV9kqJb1
+ 9R5EXnPtYLjKKfxxAADfaHhOIKlyFDgJKNO83z0NLx8CVBLXAZirjFEKenX/qTGe7pbYMgSlJ
+ xCnDsCwj9TkJqwgS5LQgxnjvDIXwOTTgFgInDTZTOjXEl9YF25y5W2JiYsRljm9h9VkwaLljU
+ ugc5aEN92VYS5zk4vs+oafoSZdka9duW4wJw5ilxOdK1Q57p0tKPu+aw0+fVx53RIq18sO4pe
+ XwyR5z5NBKZDpJfJFD1s4CrMifJVQxn8TYspS74sLUeYYOiHWVUtpLUoVr+fZ+ieocmi326f5
+ RfHfdMGImZHtVi4M7ZVLRRy/zZiD+xTsdf7++XbdiNYHDR9RqnbGOzwuWBHIrwvxaOi+7ew/k
+ DtvWOn/itwhz4ry1qK1bNytFtRRW2UV0Nokt0jguntOGgIN006PdGdQ8Qh7Cnv+/DnvmWOOC5
+ p0KVCLxXownIDl5CP+r6o3V6KRkamuKTb0iXCPKmJTp2m7gubQgCMru5C9JdqW0DGPnyPDSNt
+ ttr24VV3H3ayLU7SqVxP++3YdXfefBX39iO80IDkIYooNy3r700saUc6Snyt0mMO0tvPlIJ/E
+ KSMkzpMsxlewYLQ+u/Yv2xxgLZ2pwPP5A+Ts6mqqfGdxZ1fyeVttB5M3xG/y12Eysa7EKPZYv
+ MJjK8nmLnLHZqToPWn6t6kFo7ZNeSVLvTLA2caf6H4OugKAs5z169ekm408BO9ZpGUIt/7hgO
+ lWmUxzzdTNqMwLQ9dQ8RcF0F2Sz/7KwB7zOSuFI3NdcrU7WW3cbWE
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 0831, Rikard Falkeborn wrote:
-> Constify a couple of static variables which are not modified to allow
-> the compiler to put them in read-only memory. Patch 1/3 is probably
-> the most important one since those structs contain function pointer.
-> The patches are independent, and can be applied in any order. 
-> Compile-tested only.
-> 
+On Mon, Aug 31, 2020 at 10:10 AM Nobuhiro Iwamatsu
+<nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+>
+> Visconti is a series of Toshiba's SoCs targeting image processing
+> applications[0]. These set of patches adds support for Visconti5 a Arm
+> v8 based SoC.
+>
+> The series add minimal support for the Visconti5 SoC and the TMPV7708 RM
+> main board. Peripherals such as UART, SPI, I2c and timer use Arm's
+> IP and work with the existing kernel drivers in the tree. The series
+> includes a pinctrl driver to select appropriate functions on the pins.
 
-For the series,
+The arch/arm64 series looks all reasonable to me, nice work!
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Once the review from the DT and pinctrl maintainers is completed
+and you have received their Acked-by or Reviewed-by tags, please
+send the series with those tags to soc@kernel.org for inclusion, keeping
+everyone else on Cc.
 
-Thanks,
-Mani
+I'd leave it up to Linus Walleij whether he wants to merge the pinctrl driver
+through his subsystem tree, or whether we should pick it up through
+the soc tree, either way works for the initial merge. For any updates to
+the pinctrl driver and additional subsystem support (clk, media, ...)
+in later releases there is no need to Cc the SoC maintainers as those
+should just get merged through the subsystem while we take care
+of the DT files.
 
-> Rikard Falkeborn (3):
->   pinctrl: actions: pinctrl-owl: Constify owl_pinctrl_ops and
->     owl_pinmux_ops
->   pinctrl: actions: pinctrl-s700: Constify s700_padinfo[]
->   pinctrl: actions: pinctrl-s900: Constify s900_padinfo[]
-> 
->  drivers/pinctrl/actions/pinctrl-owl.c  | 4 ++--
->  drivers/pinctrl/actions/pinctrl-s700.c | 2 +-
->  drivers/pinctrl/actions/pinctrl-s900.c | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.28.0
-> 
+> NOTE: Because Visconti5 does not have PSCI, it uses spin-table with enable-method.
+
+This sounds like an odd choice. Is this a permanent defect in the SoC
+or the firmware, or do you expect to change this later once the firmware
+has been fixed?
+
+Note that most systems require PSCI anyway for cpuidle support. If there
+is any EL2 or EL3 mode firmware already, this is where support for
+processor bringup should be implemented. If there is none, you can
+usually implement it using a small EL3 trampoline in the bootloader.
+
+>       And this patch series does not include a clock framework, so it is a
+>       device-tree file that uses clocks with fixed-clock. This will be replaced by
+>       the clock driver in the future.
+
+This is ok for bringup, though we usually recommend to merge the clk driver
+at the same time as the SoC, in order to avoid having an incompatible DT
+change when adding the clk driver.
+
+       Arnd
