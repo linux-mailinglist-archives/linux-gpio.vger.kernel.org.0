@@ -2,269 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EC98257DDA
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 17:44:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BA3257E3E
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 18:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgHaPoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 11:44:46 -0400
-Received: from out28-101.mail.aliyun.com ([115.124.28.101]:48240 "EHLO
-        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgHaPom (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 11:44:42 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.638439-0.000183839-0.361377;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.IQnAArN_1598888641;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IQnAArN_1598888641)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 31 Aug 2020 23:44:16 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linus.walleij@linaro.org, paul@crapouillou.net
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        aric.pzqi@ingenic.com, dongsheng.qiu@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 3/3] pinctrl: Ingenic: Add I2S pins support for Ingenic SoCs.
-Date:   Mon, 31 Aug 2020 23:43:24 +0800
-Message-Id: <20200831154324.64951-4-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
-References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
+        id S1728486AbgHaQJG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 12:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728266AbgHaQJE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 12:09:04 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917DBC061575
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 09:09:04 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id i22so3373675eja.5
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Aug 2020 09:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3gkiXp2WVgUqvT9NZ2v6eDB+0cdEA56aJhzKkAT9IKk=;
+        b=1SNiRdkBK7DFUK2L4sxcHmNHZNY4XY88yBYrLxKjl36hv8ABeSoz0Z6JrNhzLnizg/
+         EntY8zXhCkjOjUl0Ua1m0UsWnnizVwYXhkHaRNxkuC1LOMgNVpqg0JRoMgbiofipNn3q
+         r8XZ5856hxL667wCpu2Ae1vGqSZICQzDCZJ5FJ8zehfSyNnhKiYbu+Ah3WMsFhT8ETar
+         +GRjmB32VJLE/qU++bAM8dIw77iHseinlnVhqmGZAZRKYuCtjRmsxsX2sicejnB2YCZT
+         /hKkvc0r0+Qr7xR1eVe9/NRNAmuQyZP/Np4ikxLJGz4iUeilCoOmBCQOKmMUB8oesFSS
+         qXAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3gkiXp2WVgUqvT9NZ2v6eDB+0cdEA56aJhzKkAT9IKk=;
+        b=d1R7EFizDlGNDbmbTKQO3HP6eh4Wmt8JJV2S2+VqedNpuxZV9x+AgzKOmwrpLc9VKR
+         rI6S31aGzVit9p4yPTGx5VW/OkVU879ki3vfiyeIZIPFXJqasQYRc4QB2n2hN+/yqqTz
+         lnINzvaf4E9PMQQhDkApEN/29Hkd8jqJsiJU41tD9HmgunYtaDKB+vhQZkdkNowoH9dI
+         UFIHt8+lXaT6HEUfzyGxNHLmHK0AaDUyEL05D2iwTbgH9ujKMbxMazN7r7+5pl4kfKp0
+         S/QHDaxgIIlL6WGH7KIZR3g/+NccWGRs9LMmCrkvHiema7yHEtPk5S0f8GnTcUFHsX1k
+         mlRw==
+X-Gm-Message-State: AOAM530JOk8RWDuXof/tRWfZYnvH311URLJvExXAu+YcP44R50CGyK/s
+        7yDiXBOHUmn8wtfrh/Ck9HASfY5fguoA//kFYkB8vQ==
+X-Google-Smtp-Source: ABdhPJz3N3o2PM4LJEHuSD9Rk/l0WVymKDMS79uJcwBtiM/TMTGPL2YBHUHFw7UKGKU9F/bxpVhgmPVafNhLcDIFfQs=
+X-Received: by 2002:a17:906:19db:: with SMTP id h27mr1732665ejd.154.1598890142945;
+ Mon, 31 Aug 2020 09:09:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200831090947.18489-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200831090947.18489-1-zhang.lyra@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 31 Aug 2020 18:08:52 +0200
+Message-ID: <CAMpxmJUwk9b=O4d6PEX_N39Eft1TEc1X2NQpuERQZWyPhz73-g@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: sprd: Clear interrupt when setting the type as edge
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-1.Add I2S pins support for the JZ4780 SoC.
-2.Add I2S pins support for the X1000 SoC.
-3.Add I2S pins support for the X1500 SoC.
-4.Add I2S pins support for the X1830 SoC.
+On Mon, Aug 31, 2020 at 11:10 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Taiping Lai <taiping.lai@unisoc.com>
+>
+> The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+> which would trigger the interrupt event once enabled it from user side.
+> This is the case for edge interrupts only. Adding a clear operation when
+> setting interrupt type can avoid that.
+>
+> There're a few considerations for the solution:
+> 1) This issue is for edge interrupt only; The interrupts requested by users
+>    are IRQ_TYPE_LEVEL_HIGH as default, so clearing interrupt when request
+>    is useless.
+> 2) The interrupt type can be set to edge when request and following up
+>    with clearing it though, but the problem is still there once users set
+>    the interrupt type to level trggier.
+> 3) We can add a clear operation after each time of setting interrupt
+>    enable bit, but it is redundant for level trigger interrupt.
+>
+> Therefore, the solution is this patch seems the best for now.
+>
+> Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+> Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+> * Changes since v1:
+> - Rebased on v5.9-rc1.
+> ---
+>  drivers/gpio/gpio-sprd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> index d7314d39ab65..36ea8a3bd451 100644
+> --- a/drivers/gpio/gpio-sprd.c
+> +++ b/drivers/gpio/gpio-sprd.c
+> @@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_FALLING:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_BOTH:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_LEVEL_HIGH:
+> --
+> 2.20.1
+>
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+Queued for fixes, thanks!
 
-Notes:
-    v2:
-    New patch.
-
- drivers/pinctrl/pinctrl-ingenic.c | 70 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index ae7b8876d3b4..72898c427b83 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1083,6 +1083,11 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
- static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
- static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
- static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
-+static int jz4780_i2s_data_tx_pins[] = { 0x87, };
-+static int jz4780_i2s_data_rx_pins[] = { 0x86, };
-+static int jz4780_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
-+static int jz4780_i2s_clk_rx_pins[] = { 0x88, 0x89, };
-+static int jz4780_i2s_sysclk_pins[] = { 0x85, };
- static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
- 
- static int jz4780_uart2_data_funcs[] = { 1, 1, };
-@@ -1125,6 +1130,11 @@ static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
- static int jz4780_i2c3_funcs[] = { 1, 1, };
- static int jz4780_i2c4_e_funcs[] = { 1, 1, };
- static int jz4780_i2c4_f_funcs[] = { 1, 1, };
-+static int jz4780_i2s_data_tx_funcs[] = { 0, };
-+static int jz4780_i2s_data_rx_funcs[] = { 0, };
-+static int jz4780_i2s_clk_txrx_funcs[] = { 1, 0, };
-+static int jz4780_i2s_clk_rx_funcs[] = { 1, 1, };
-+static int jz4780_i2s_sysclk_funcs[] = { 2, };
- static int jz4780_hdmi_ddc_funcs[] = { 0, 0, };
- 
- static const struct group_desc jz4780_groups[] = {
-@@ -1213,6 +1223,11 @@ static const struct group_desc jz4780_groups[] = {
- 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3),
- 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e),
- 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f),
-+	INGENIC_PIN_GROUP("i2s-data-tx", jz4780_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", jz4780_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", jz4780_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", jz4780_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", jz4780_i2s_sysclk),
- 	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc),
- 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit),
- 	INGENIC_PIN_GROUP("lcd-24bit", jz4770_lcd_24bit),
-@@ -1261,6 +1276,9 @@ static const char *jz4780_nemc_groups[] = {
- };
- static const char *jz4780_i2c3_groups[] = { "i2c3-data", };
- static const char *jz4780_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
-+static const char *jz4780_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *jz4780_cim_groups[] = { "cim-data", };
- static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
- 
-@@ -1287,6 +1305,7 @@ static const struct function_desc jz4780_functions[] = {
- 	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
- 	{ "i2c3", jz4780_i2c3_groups, ARRAY_SIZE(jz4780_i2c3_groups), },
- 	{ "i2c4", jz4780_i2c4_groups, ARRAY_SIZE(jz4780_i2c4_groups), },
-+	{ "i2s", jz4780_i2s_groups, ARRAY_SIZE(jz4780_i2s_groups), },
- 	{ "cim", jz4780_cim_groups, ARRAY_SIZE(jz4780_cim_groups), },
- 	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
- 	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
-@@ -1368,6 +1387,10 @@ static int x1000_i2c0_pins[] = { 0x38, 0x37, };
- static int x1000_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1000_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1000_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1000_i2s_data_tx_pins[] = { 0x24, };
-+static int x1000_i2s_data_rx_pins[] = { 0x23, };
-+static int x1000_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1000_i2s_sysclk_pins[] = { 0x20, };
- static int x1000_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1430,6 +1453,10 @@ static int x1000_i2c0_funcs[] = { 0, 0, };
- static int x1000_i2c1_a_funcs[] = { 2, 2, };
- static int x1000_i2c1_c_funcs[] = { 0, 0, };
- static int x1000_i2c2_funcs[] = { 1, 1, };
-+static int x1000_i2s_data_tx_funcs[] = { 1, };
-+static int x1000_i2s_data_rx_funcs[] = { 1, };
-+static int x1000_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1000_i2s_sysclk_funcs[] = { 1, };
- static int x1000_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1000_lcd_8bit_funcs[] = {
- 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-@@ -1483,6 +1510,10 @@ static const struct group_desc x1000_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1000_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1000_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1000_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1000_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1000_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1000_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1000_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1000_cim),
- 	INGENIC_PIN_GROUP("lcd-8bit", x1000_lcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-16bit", x1000_lcd_16bit),
-@@ -1524,6 +1555,9 @@ static const char *x1000_cs2_groups[] = { "emc-cs2", };
- static const char *x1000_i2c0_groups[] = { "i2c0-data", };
- static const char *x1000_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1000_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1000_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1000_cim_groups[] = { "cim-data", };
- static const char *x1000_lcd_groups[] = {
- 	"lcd-8bit", "lcd-16bit", "lcd-no-pins",
-@@ -1549,6 +1583,7 @@ static const struct function_desc x1000_functions[] = {
- 	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
- 	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
- 	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
-+	{ "i2s", x1000_i2s_groups, ARRAY_SIZE(x1000_i2s_groups), },
- 	{ "cim", x1000_cim_groups, ARRAY_SIZE(x1000_cim_groups), },
- 	{ "lcd", x1000_lcd_groups, ARRAY_SIZE(x1000_lcd_groups), },
- 	{ "pwm0", x1000_pwm0_groups, ARRAY_SIZE(x1000_pwm0_groups), },
-@@ -1584,6 +1619,10 @@ static int x1500_i2c0_pins[] = { 0x38, 0x37, };
- static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1500_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1500_i2s_data_tx_pins[] = { 0x24, };
-+static int x1500_i2s_data_rx_pins[] = { 0x23, };
-+static int x1500_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1500_i2s_sysclk_pins[] = { 0x20, };
- static int x1500_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1607,6 +1646,10 @@ static int x1500_i2c0_funcs[] = { 0, 0, };
- static int x1500_i2c1_a_funcs[] = { 2, 2, };
- static int x1500_i2c1_c_funcs[] = { 0, 0, };
- static int x1500_i2c2_funcs[] = { 1, 1, };
-+static int x1500_i2s_data_tx_funcs[] = { 1, };
-+static int x1500_i2s_data_rx_funcs[] = { 1, };
-+static int x1500_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1500_i2s_sysclk_funcs[] = { 1, };
- static int x1500_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1500_pwm_pwm0_funcs[] = { 0, };
- static int x1500_pwm_pwm1_funcs[] = { 1, };
-@@ -1629,6 +1672,10 @@ static const struct group_desc x1500_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1500_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1500_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1500_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1500_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1500_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1500_cim),
- 	{ "lcd-no-pins", },
- 	INGENIC_PIN_GROUP("pwm0", x1500_pwm_pwm0),
-@@ -1647,6 +1694,9 @@ static const char *x1500_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
- static const char *x1500_i2c0_groups[] = { "i2c0-data", };
- static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1500_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1500_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1500_cim_groups[] = { "cim-data", };
- static const char *x1500_lcd_groups[] = { "lcd-no-pins", };
- static const char *x1500_pwm0_groups[] = { "pwm0", };
-@@ -1664,6 +1714,7 @@ static const struct function_desc x1500_functions[] = {
- 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
- 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
- 	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
-+	{ "i2s", x1500_i2s_groups, ARRAY_SIZE(x1500_i2s_groups), },
- 	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
- 	{ "lcd", x1500_lcd_groups, ARRAY_SIZE(x1500_lcd_groups), },
- 	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
-@@ -1722,6 +1773,11 @@ static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
- static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
- static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
- static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
-+static int x1830_i2s_data_tx_pins[] = { 0x53, };
-+static int x1830_i2s_data_rx_pins[] = { 0x54, };
-+static int x1830_i2s_clk_txrx_pins[] = { 0x58, 0x52, };
-+static int x1830_i2s_clk_rx_pins[] = { 0x56, 0x55, };
-+static int x1830_i2s_sysclk_pins[] = { 0x57, };
- static int x1830_lcd_rgb_18bit_pins[] = {
- 	0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
- 	0x68, 0x69, 0x6c, 0x6d, 0x6e, 0x6f,
-@@ -1784,6 +1840,11 @@ static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
- static int x1830_i2c0_funcs[] = { 1, 1, };
- static int x1830_i2c1_funcs[] = { 0, 0, };
- static int x1830_i2c2_funcs[] = { 1, 1, };
-+static int x1830_i2s_data_tx_funcs[] = { 0, };
-+static int x1830_i2s_data_rx_funcs[] = { 0, };
-+static int x1830_i2s_clk_txrx_funcs[] = { 0, 0, };
-+static int x1830_i2s_clk_rx_funcs[] = { 0, 0, };
-+static int x1830_i2s_sysclk_funcs[] = { 0, };
- static int x1830_lcd_rgb_18bit_funcs[] = {
- 	0, 0, 0, 0, 0, 0,
- 	0, 0, 0, 0, 0, 0,
-@@ -1842,6 +1903,11 @@ static const struct group_desc x1830_groups[] = {
- 	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
- 	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
- 	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1830_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1830_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1830_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", x1830_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1830_i2s_sysclk),
- 	INGENIC_PIN_GROUP("lcd-rgb-18bit", x1830_lcd_rgb_18bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-8bit", x1830_lcd_slcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-16bit", x1830_lcd_slcd_16bit),
-@@ -1884,6 +1950,9 @@ static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
- static const char *x1830_i2c0_groups[] = { "i2c0-data", };
- static const char *x1830_i2c1_groups[] = { "i2c1-data", };
- static const char *x1830_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1830_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *x1830_lcd_groups[] = {
- 	"lcd-rgb-18bit", "lcd-slcd-8bit", "lcd-slcd-16bit", "lcd-no-pins",
- };
-@@ -1908,6 +1977,7 @@ static const struct function_desc x1830_functions[] = {
- 	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
- 	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
- 	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
-+	{ "i2s", x1830_i2s_groups, ARRAY_SIZE(x1830_i2s_groups), },
- 	{ "lcd", x1830_lcd_groups, ARRAY_SIZE(x1830_lcd_groups), },
- 	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
- 	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
--- 
-2.11.0
-
+Bartosz
