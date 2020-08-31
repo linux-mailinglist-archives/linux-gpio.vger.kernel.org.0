@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7613C257507
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 10:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E321825750A
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 10:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHaILY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728043AbgHaILY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 31 Aug 2020 04:11:24 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:45978 "EHLO
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:45894 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgHaILX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 04:11:23 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 07V8Ap1q026190; Mon, 31 Aug 2020 17:10:51 +0900
-X-Iguazu-Qid: 34tKGq3o2vjAEkE9Lb
-X-Iguazu-QSIG: v=2; s=0; t=1598861451; q=34tKGq3o2vjAEkE9Lb; m=ra5H8s8Vm7pgm4V8qXo/JCaHmwR0jH4wuIHwMK1mDtc=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1510) id 07V8Antg023548;
+        with ESMTP id S1728035AbgHaILW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 04:11:22 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 07V8AqTW026219; Mon, 31 Aug 2020 17:10:52 +0900
+X-Iguazu-Qid: 34tKBCMUDYhpk0wN40
+X-Iguazu-QSIG: v=2; s=0; t=1598861451; q=34tKBCMUDYhpk0wN40; m=fwVSzkDYvj5OI+0lwI0eUKMLoS7HY8P+wJzn7TIPcZA=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1511) id 07V8Aoai037753;
+        Mon, 31 Aug 2020 17:10:51 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 07V8AoAF028308;
+        Mon, 31 Aug 2020 17:10:50 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 07V8Aoma004565;
         Mon, 31 Aug 2020 17:10:50 +0900
-Received: from enc03.toshiba.co.jp ([106.186.93.13])
-        by imx2.toshiba.co.jp  with ESMTP id 07V8An45025560;
-        Mon, 31 Aug 2020 17:10:49 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc03.toshiba.co.jp  with ESMTP id 07V8AkoN026358;
-        Mon, 31 Aug 2020 17:10:49 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -34,10 +34,10 @@ Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
         linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
         Marc Zyngier <maz@misterjones.org>,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v3 7/8] MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
-Date:   Mon, 31 Aug 2020 17:10:24 +0900
+Subject: [PATCH v3 8/8] arm64: defconfig: Enable configs for Toshiba Visconti
+Date:   Mon, 31 Aug 2020 17:10:25 +0900
 X-TSB-HOP: ON
-Message-Id: <20200831081025.2721320-8-nobuhiro1.iwamatsu@toshiba.co.jp>
+Message-Id: <20200831081025.2721320-9-nobuhiro1.iwamatsu@toshiba.co.jp>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
 References: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
@@ -48,35 +48,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add information about Toshiba Visconti ARM SoCs to MAINTAINERS.
+Enable support for the Toshiba Visconti SoCs.
 
 Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 ---
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0068bceeb61..cbc445ab2cc4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2651,6 +2651,17 @@ M:	Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
- M:	Dirk Opfer <dirk@opfer-online.de>
- S:	Maintained
- 
-+ARM/TOSHIBA VISCONTI ARCHITECTURE
-+M:	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Supported
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iwamatsu/linux-visconti.git
-+F:	Documentation/devicetree/bindings/arm/toshiba.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/toshiba,tmpv7700-pinctrl.yaml
-+F:	arch/arm64/boot/dts/toshiba/
-+F:	drivers/pinctrl/visconti/
-+N:	visconti
-+
- ARM/UNIPHIER ARCHITECTURE
- M:	Masahiro Yamada <yamada.masahiro@socionext.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e0f33826819f..8faadd68f859 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -57,6 +57,7 @@ CONFIG_ARCH_THUNDER=y
+ CONFIG_ARCH_THUNDER2=y
+ CONFIG_ARCH_UNIPHIER=y
+ CONFIG_ARCH_VEXPRESS=y
++CONFIG_ARCH_VISCONTI=y
+ CONFIG_ARCH_XGENE=y
+ CONFIG_ARCH_ZX=y
+ CONFIG_ARCH_ZYNQMP=y
 -- 
 2.27.0
 
