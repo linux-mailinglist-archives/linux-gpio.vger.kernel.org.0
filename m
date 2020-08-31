@@ -2,125 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB64257425
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 09:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0E525743E
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Aug 2020 09:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHaHOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Aug 2020 03:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbgHaHOn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 03:14:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ECBC061573;
-        Mon, 31 Aug 2020 00:14:42 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t11so2599505plr.5;
-        Mon, 31 Aug 2020 00:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VHh2Btrj1RMrE2bBjPVgrNRFQFpYqnl0GvDbuvKxlhM=;
-        b=S3mcsSWyBk2K7x6lEYbi0LBE2ybIfLvfaX9B7iMhZQwnl4Co+b53YdSainIW4Nq7eq
-         LivAwlzS8y7uyOvy9CCdeS39UDVP+oP4l+8wWjSJc+nQypK3LYAQFluxrIWBGlBksYtS
-         lnXTp51xYpws1G1UsNjVrZ8Xl3YY1mVJOmrzQkE5WpW+8rh9nsxpCYHE8Bu28jml5gMR
-         QBKrDD3jShcfFvYCtsaYEflcF+g28LD3PTLTpleT9T1d/3Tx7v2FrzLtyEyEF6jBUPY+
-         Uenapoy8EECWpjHonyHEaLDA6uDbN0mH5rTy5At5d2oE7v4LT+VxYkvM5ytg0Tyd2UD3
-         kWxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VHh2Btrj1RMrE2bBjPVgrNRFQFpYqnl0GvDbuvKxlhM=;
-        b=a9domBBeNMSyoF/CH/vw6m7QkVjM4/Si3dTX26V9v54EElCi5zY6jrGW8Bf6A3WZFL
-         GogKvQVVqf8BSfCRjBZGZq44HaIQ0aWRp0HSSjPzzoZzfGGlrUxW/o1k5GrK09pMzoZA
-         v64X8UeKfFPLsJMeyEadQ3qy+U82oR5pEhP0Hl91AkkL1hX4hunUXz92Cflm4IGO1i7H
-         BfK1CYdkdtBhIBztwEQhVnKmGytVDVTWajci5moAnLlHmnld0eJCQQ8YEjTJiP3Qr9Jb
-         NsFKTRRTPp3V0C3jH/iLwRa2C3LU7fJSapB8sS72E+H5gz5H34LP4YRYcCWOUYdQrjPi
-         YTFQ==
-X-Gm-Message-State: AOAM530Af1/09RGdvcSrZIBnigUzxmS3ni9wmEE1xdDG8eTHVfKi4Ytb
-        XyTlro/740yXD2Bdzurk+22NurtcAq1enA==
-X-Google-Smtp-Source: ABdhPJy49Sbbd5KsXqCjjYrUmQ0P4bLeuHD9xm+Xx7zfcvXsugr04Cs+z/TJMUSjCrP4mIiQhgxF7Q==
-X-Received: by 2002:a17:90b:374b:: with SMTP id ne11mr162280pjb.21.1598858081680;
-        Mon, 31 Aug 2020 00:14:41 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.6])
-        by smtp.gmail.com with ESMTPSA id s67sm7173587pfs.117.2020.08.31.00.14.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 00:14:41 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     linus.walleij@linaro.org, lee.jones@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH: 2/2] gpio: tc35894: Disable Direct KBD interrupts to enable gpio irq
-Date:   Mon, 31 Aug 2020 15:14:33 +0800
-Message-Id: <1598858073-5285-3-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598858073-5285-1-git-send-email-dillon.minfei@gmail.com>
-References: <1598858073-5285-1-git-send-email-dillon.minfei@gmail.com>
+        id S1725949AbgHaHY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Aug 2020 03:24:26 -0400
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:39376 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgHaHYZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Aug 2020 03:24:25 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 07V7Nik5032133; Mon, 31 Aug 2020 16:23:44 +0900
+X-Iguazu-Qid: 2wGqu78fjRd5hM4Wan
+X-Iguazu-QSIG: v=2; s=0; t=1598858623; q=2wGqu78fjRd5hM4Wan; m=5/i1HO5KCK+RAMPX55FPKqg96uinqqHLZmftlCHQKAA=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1110) id 07V7Nf3K004863;
+        Mon, 31 Aug 2020 16:23:42 +0900
+Received: from enc03.toshiba.co.jp ([106.186.93.13])
+        by imx2.toshiba.co.jp  with ESMTP id 07V7NfT4025310;
+        Mon, 31 Aug 2020 16:23:41 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc03.toshiba.co.jp  with ESMTP id 07V7NeAq010613;
+        Mon, 31 Aug 2020 16:23:41 +0900
+Date:   Mon, 31 Aug 2020 16:23:39 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <maz@misterjones.org>
+Subject: Re: [PATCH v2 2/8] pinctrl: visconti: Add Toshiba Visconti SoCs
+ pinctrl support
+X-TSB-HOP: ON
+Message-ID: <20200831072339.tkc7v2fyzzq5lhfn@toshiba.co.jp>
+References: <20200824122957.1392870-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20200824122957.1392870-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <CACRpkdarxKSQOvoA4yvjFUkXmZR1OzHYfQRKqLR+8TQoV+oCyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdarxKSQOvoA4yvjFUkXmZR1OzHYfQRKqLR+8TQoV+oCyw@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+Hi,
 
-On tc35894, have to disable direct keypad interrupts to make
-it as general purpose interrupts functionality work.
-if not, after chip reset, IRQST(0x91) will always 0x20,
-IRQN always low level, can't be clear.
+Thanks for your review.
 
-verified on tc35894, need more test on other tc3589x.
+On Fri, Aug 28, 2020 at 02:41:05PM +0200, Linus Walleij wrote:
+> Hi Nobuhiro!
+> 
+> Thanks for your patch. Some review comments below!
+> 
+> On Mon, Aug 24, 2020 at 2:30 PM Nobuhiro Iwamatsu
+> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+> >
+> > Add pinctrl support to Toshiba Visconti SoCs.
+> >
+> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> 
+> > +config PINCTRL_VISCONTI
+> > +       bool
+> > +       select PINMUX
+> > +       select GENERIC_PINCONF
+> > +       select GENERIC_PINCTRL_GROUPS
+> > +       select GENERIC_PINMUX_FUNCTIONS
+> 
+> Thanks for using generic stuff!
+> 
+> > +#define SET_BIT(data, idx)     ((data) |= BIT(idx))
+> > +#define CLR_BIT(data, idx)     ((data) &= ~BIT(idx))
+> 
+> Please do not reinvent things like this. Either open code
+> it, and if you want optimizations (probably not relevant in
+> this case) you would use:
+> 
+> #include <linux/bitmap.h>
+> 
+> set_bit() and clear_bit() if you want atomic bit ops
+> __set_bit() and __clear_bit() for nonatomic
+> 
+> The upside to using these standard calls is that they will
+> unfold into assembly optimizations for the architecture if
+> possible.
+> 
+> If you roll your own locking use the latter primitives.
+> 
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- drivers/gpio/gpio-tc3589x.c | 10 ++++++++++
- include/linux/mfd/tc3589x.h |  5 +++++
- 2 files changed, 15 insertions(+)
+I understood this.
+Since this is a bit control for variables, clear_bit() and other are not
+used. As you write in the comment below, I fix not using unnecessary macros.
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index ea3f68a28fea..760e716468dc 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -334,6 +334,16 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	/* For tc35894, have to disable Direct KBD interrupts,
-+	 * else IRQST will always be 0x20, IRQN low level, can't
-+	 * clear the irq status.
-+	 * TODO: need more test on other tc3589x chip.
-+	 */
-+	ret = tc3589x_reg_write(tc3589x, TC3589x_DKBDMSK,
-+				TC3589x_DKBDMSK_ELINT | TC3589x_DKBDMSK_EINT);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = devm_request_threaded_irq(&pdev->dev,
- 					irq, NULL, tc3589x_gpio_irq,
- 					IRQF_ONESHOT, "tc3589x-gpio",
-diff --git a/include/linux/mfd/tc3589x.h b/include/linux/mfd/tc3589x.h
-index bb2b19599761..c18fc7c3c2d6 100644
---- a/include/linux/mfd/tc3589x.h
-+++ b/include/linux/mfd/tc3589x.h
-@@ -19,6 +19,9 @@ enum tx3589x_block {
- #define TC3589x_RSTCTRL_KBDRST	(1 << 1)
- #define TC3589x_RSTCTRL_GPIRST	(1 << 0)
- 
-+#define TC3589x_DKBDMSK_ELINT	(1 << 1)
-+#define TC3589x_DKBDMSK_EINT	(1 << 0)
-+
- /* Keyboard Configuration Registers */
- #define TC3589x_KBDSETTLE_REG   0x01
- #define TC3589x_KBDBOUNCE       0x02
-@@ -101,6 +104,8 @@ enum tx3589x_block {
- #define TC3589x_GPIOODM2	0xE4
- #define TC3589x_GPIOODE2	0xE5
- 
-+#define TC3589x_DKBDMSK		0xF3
-+
- #define TC3589x_INT_GPIIRQ	0
- #define TC3589x_INT_TI0IRQ	1
- #define TC3589x_INT_TI1IRQ	2
--- 
-2.7.4
+> > +/* private data */
+> > +struct visconti_pinctrl {
+> > +       void __iomem *base;
+> > +       struct device *dev;
+> > +       struct pinctrl_dev *pctl;
+> > +       struct pinctrl_desc pctl_desc;
+> > +
+> > +       const struct visconti_pinctrl_devdata  *devdata;
+> > +
+> > +       spinlock_t lock;
+> 
+> At least add a comment to this lock to say what it is locking.
+> 
 
+OK, I will add a commnent.
+
+> > +                       /* update pudsel setting */
+> > +                       val = readl(priv->base + pin->pudsel_offset);
+> > +                       CLR_BIT(val, pin->pud_shift);
+> > +                       val |= set_val << pin->pud_shift;
+> 
+> I would just inline the &= operation but it is up to you.
+> 
+
+OK, I will fix not using this macro.
+
+> > +               case PIN_CONFIG_DRIVE_STRENGTH:
+> > +                       arg = pinconf_to_config_argument(configs[i]);
+> > +                       dev_dbg(priv->dev, "DRV_STR arg = %d\n", arg);
+> > +                       switch (arg) {
+> > +                       case 2:
+> > +                       case 4:
+> > +                       case 8:
+> > +                       case 16:
+> > +                       case 24:
+> > +                       case 32:
+> > +                               set_val = (arg / 2) - 1;
+> 
+> This looks like you want to use
+> 
+> set_val = DIV_ROUND_CLOSEST(arg, 2);
+> 
+> Also add a comment on WHY you do this.
+> 
+
+OK, I will fix using DIV_ROUND_CLOSEST and comment.
+
+> > +                       /* update drive setting */
+> > +                       val = readl(priv->base + pin->dsel_offset);
+> > +                       val &= ~(GENMASK(3, 0) << pin->dsel_shift);
+> 
+> Could this GENMASK be a #define so we know what it is?
+> 
+> > +/* pinmnux */
+> 
+> Spelling
+
+Thanks, I will this.
+
+> 
+> > +       /* update mux */
+> > +       val = readl(priv->base + mux->offset);
+> > +       val &= ~mux->mask;
+> > +       val |= mux->val;
+> 
+> So here you do things explicitly and in the other case with custom
+> macros. I think this is better because it is easy to read.
+
+OK.
+
+> 
+> > +static int visconti_gpio_request_enable(struct pinctrl_dev *pctldev,
+> > +                                     struct pinctrl_gpio_range *range,
+> > +                                     unsigned int pin)
+> 
+> Since you implement this, what GPIO driver are you using this with?
+> 
+
+Certainly this feature is not called and is not needed, because there
+is no GPIO driver for this SoC now. I will remove these.
+
+
+> Other than that it looks all right, also the plugin for SoC is nicely designed.
+> 
+> Thanks!
+> Linus Walleij
+>
+
+Best regards,
+  Nobuhiro
