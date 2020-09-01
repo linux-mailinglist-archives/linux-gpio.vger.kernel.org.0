@@ -2,133 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B458258BBA
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Sep 2020 11:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A132C258C17
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Sep 2020 11:51:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgIAJfv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Sep 2020 05:35:51 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:59981 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbgIAJft (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Sep 2020 05:35:49 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 7045C7ED;
-        Tue,  1 Sep 2020 05:35:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 01 Sep 2020 05:35:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ybNui0l/20dWyLlPF/bim7Hxg13
-        OT0asUU1YsmRFd3M=; b=InbWVd9kzW1+gJl9OPC3vc2zMnyiKfUyJ6KsorIcPZr
-        XQhZBVEpP+X96IylJS61QFcqRNaQtXohz4CKkXAMYOziN4IJo58u1P/sg43CRc3P
-        +ro10z7MnmPUzPnMzoyhnGgpFCwuTsrdGQLEvv9j9UKgUwAEo7egUHpvgq/x51Py
-        tnZom+fH0HUOb26OP+FlS4fFtQqpQNPMRdkivqc0uoPdfiRhHXl019eeS7Eqfbb0
-        rpRvJUvcS8kxqx80bKRcB4wwfttgp21xEkuITxvFrEOSsvrf/xMaSwuxVgjWTm8G
-        UI+KxDpDPfKJtYWqNr6/OVxgj0jPR+7UOr2K4J8ixPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ybNui0
-        l/20dWyLlPF/bim7Hxg13OT0asUU1YsmRFd3M=; b=QztGerPcWYjLyP8Q0Dmnjx
-        sZVtcAsE1lVN8/UlQalJQDSW8BMOL9FJws5mmf8h8rLfGXEqTV70pO2psPD3STo4
-        F03hIh6PRnwqEX+KRISPWbp3ANWU5AC0J+bAJKgB8/h21lj2ViYxqk+5OCqFaih5
-        RTVLjtM8oHQhGgdvZ9cUfL4P03SopEzV4PWxChG+MQDPqRmwPGph8idpDdk/szck
-        /2hSIsB6yriaGctX2rLNBlOcTMJA/jIJXqjtKZ2EcfhJELyxAwhJa4U7Y0tT9NIV
-        P4J4CST6LQyqVDrRnrey5s+pzTEbQibXQ6+SdtlX78jtl1ehMR4tO9KyuhCas+wg
-        ==
-X-ME-Sender: <xms:7hVOX4qWzIiGipLxj_QxYxJj6h3ChTrUgyLIR9VasGLbrp7SaZn8xA>
-    <xme:7hVOX-owiskxps2zscZIsu-_pPU0q8Pn7m33s5EsR2Vz7aFkOp12WIDzU4G-EbNYy
-    D-ojwfszA0Q_zbsDPo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:7hVOX9Nn4fIoFZO5Cb2I4B3Iuv8g77ecZDCjSSn4rMA2vPsyv7CGGA>
-    <xmx:7hVOX_4yqOKb4S8pnNAbYgthEKlQqpkMpF_JckeMP3dAJl0CY9X8Hw>
-    <xmx:7hVOX36u2SHcawjAHAAY2jfHOOuNkM-0yUOV4zJJ0HtM_VzTi4xArA>
-    <xmx:8hVOXzMpaJiXXLn0b7AL-1t_9cYJARjGGNoP_Aq-hgEiG0zuNhhLqWtTF4Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8C76F328005A;
-        Tue,  1 Sep 2020 05:35:42 -0400 (EDT)
-Date:   Tue, 1 Sep 2020 11:35:41 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1726050AbgIAJvo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Sep 2020 05:51:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgIAJvo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Sep 2020 05:51:44 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4765DC061244;
+        Tue,  1 Sep 2020 02:51:44 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598953902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=48rUkxjWix//BTZHIilZmp+tSBPVqvbxLdM3hkLdhdY=;
+        b=iZ0wBdNv2fBTQ5zety+Nmwt5egV8jLK6q64HUIBQJsUxl/Mja/Hxnt1RYSTiI+mkJg3u/m
+        Jc9l62x0u+cLaYb2wJUFuYSqWKfYj5g48rSkiB0zT9Izgxss2S1TaXv7/nS0VIekbYeMC+
+        6oyXei1vPQKAejMf3ne1EIAciKv254OAdyA+142Fd15kAPTzoKf53ffXEwCF9Z/sFpc/HK
+        6rSaPKEH+vekaTwMPtzbOtguI3dDUIC5mVlWdAaCeGWbIHta+qVs51X2/ZaZAa7g1pMv5h
+        EU2TV1APGyL5ymsMj/C26b1o/K/sJsols6tf9ZbV46zKrPeaYSZU+XOHLhCmyw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598953902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=48rUkxjWix//BTZHIilZmp+tSBPVqvbxLdM3hkLdhdY=;
+        b=NPq5yOVrC9fNkeNzJIQTdtD2aY2lceGpwAP5BVzACVnLvouko33WjhXoAlFKuk0/izQH8B
+        D6YHvY81AJU8bGBw==
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Frank Lee <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Ondrej Jirman <megous@megous.com>,
-        Corentin Labbe <clabbe@baylibre.com>, bage@linutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-Message-ID: <20200901093541.d6swquja2zcyiqy7@gilmour.lan>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+In-Reply-To: <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com> <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org> <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
+Date:   Tue, 01 Sep 2020 11:51:41 +0200
+Message-ID: <877dtdj042.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7g3sl2lx6xhwh5sz"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Aug 31 2020 at 08:12, Doug Anderson wrote:
+> On Wed, Aug 26, 2020 at 3:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> There are two reasonable choices here:
+>>
+>> 1) Do the symmetric thing
+>>
+>> 2) Let the drivers call a new function disable_wakeup_irq_for_suspend()
+>>    which marks the interrupt to be enabled from the core on suspend and
+>>    remove the enable call on the resume callback of the driver.
+>>
+>>    Then you don't need the resume part in the core and state still is
+>>    consistent.
+>>
+>> I'm leaning towards #2 because that makes a lot of sense.
+>
+> IIUC, #2 requires that we change existing drivers that are currently
+> using disable_irq() + enable_irq_wake(), right?  Presumably, if we're
+> going to do #2, we should declare that what drivers used to do is now
+> considered illegal, right?  Perhaps we could detect that and throw a
+> warning so that they know that they need to change to use the new
+> disable_wakeup_irq_for_suspend() API.  Otherwise these drivers will
+> work fine on some systems (like they always have) but will fail in
+> weird corner cases for systems that are relying on drivers to call
+> disable_wakeup_irq_for_suspend().  That doesn't sound super great to
+> me...
 
---7g3sl2lx6xhwh5sz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm. With disable_irq() + enable_irq_wake() in the driver suspend path
+the driver already makes an implicit assumption about the underlying irq
+chip functionality, i.e. it expects that even with the interrupt
+disabled the irq chip can wake up the system.
 
-Hi Linus
+Now with the new flag magic and #1 we are just working around the driver
+assumptions at the interrupt chip level.
 
-On Fri, Aug 28, 2020 at 12:02:29PM +0200, Linus Walleij wrote:
-> On Fri, Jul 24, 2020 at 8:53 AM Frank Lee <frank@allwinnertech.com> wrote:
->=20
-> > This patch set adds initial support for allwinner a100 soc,
-> > which is a 64-bit tablet chip.
->=20
-> Shall I commit the pinctrl patches (if Maxime ACKed) separately
-> or not? Once Maxime is happy, I am usually happy too.
+That's inconsistent at best.
 
-Yeah, you can apply it to your tree
+How many drivers are doing that sequence?  And the more important
+question is why are they calling disable_irq() in the first place if
+they want to be woken up by that interrupt.
 
-Thanks!
-Maxime
+The point is that the core suspend code disables all interrupts which
+are not marked as wakeup enabled automatically and reenables them after
+resume. So why would any driver invoke disable_irq() in the suspend
+function at all? Historical raisins?
 
---7g3sl2lx6xhwh5sz
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX04V7QAKCRDj7w1vZxhR
-xah4AQCxUZNxHo6NRo5x9Zj2xDrcVA422l6tyXJJ4rgQSHuZ9AD/co9QajnIDf1z
-KHXkMKfgF9/nNGoBzctcsBYfyMKrSAc=
-=FxAG
------END PGP SIGNATURE-----
-
---7g3sl2lx6xhwh5sz--
+        tglx
