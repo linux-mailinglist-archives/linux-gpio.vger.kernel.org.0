@@ -2,111 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7BA25959F
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Sep 2020 17:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1029A25B158
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Sep 2020 18:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbgIAPyH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Sep 2020 11:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731955AbgIAPqo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Sep 2020 11:46:44 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E35C061244
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Sep 2020 08:46:44 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a12so1904702eds.13
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Sep 2020 08:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M+9aVf+WSnx8CBq0GMCkAfZ1rE+F3TmQ51w7zDfTEpU=;
-        b=bsLkINae79fmFro/p0x4TrU0JPjb70SfWRMj/SD8wyDYjWGqfNFVN3cF82yY9YgE3o
-         OZ8NSRIM1f9IzBldCUDaNmWdyUyWf72VTcIerawmb/ionJGJyExm4vAsAj6TU3Y1UVQJ
-         I4deO4GlLU3Xh7d6RRHWNAa/sCZ0XR5/UDCnHDiiXcf5IBLgQ/GPTm06XO33k+2bNQM8
-         PJOxxlJ5x7aYbCLPHp9ykMJ4txU7sLGT8x3NqLliRcSYdV3ADCkKXfOgMkOfoy3w5eB1
-         nBJbNzr7FoprbxP7G/pNLzIdL3/AqO+NhKi+76PuBzuDHP+yrSMlP2FunNH1zMGNcsts
-         meIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M+9aVf+WSnx8CBq0GMCkAfZ1rE+F3TmQ51w7zDfTEpU=;
-        b=jaBV1M5hpdy3ObdJzT+XXHDXucxQZubzxXwM25BUH0QwzMverPhh2k002gg8Nvs0PO
-         dorPcrofFk3Recat6aFOg7OlDeRbfS67tYPKYaZMyzCh8y8Gs5FGgdbtyWNVVN8UvTTG
-         K+YMZifniAywKeAcNNjTmjSzOG7Ub2LLmr08frLbBvm7xWIzs+ZE9fDZTaGtjL9+e1E8
-         O9JmyydFeteqn8+rdOsPvzRQ7cVdRjMjSvwHJqZlhEUa0G8FjfEpISrSWG/O7exGaX19
-         UBrTe1VPwMiMOsVqJb4HhAQfxhUmHCVZQ03KLpIr7kNMxR15MjrTZ8Fh1+heL1W3tnEg
-         NgWw==
-X-Gm-Message-State: AOAM5301K3mlHRwoldGxHKyr1sic0B13sZLNoytDpuK/9fL445zRvute
-        z2MCE5n+wsaFkJekmWkXC06VQEMxBZpwz8FYVOOXTA==
-X-Google-Smtp-Source: ABdhPJy9BsUfD5Aq/2j2MP/wrG+Xf4MWg6SG1u0JNFyLS/rxN4ufnUmjbfZBOe7rG30qhP3tLqEd6MwFC42qu97zKq8=
-X-Received: by 2002:a05:6402:17ec:: with SMTP id t12mr2167525edy.328.1598975202861;
- Tue, 01 Sep 2020 08:46:42 -0700 (PDT)
+        id S1728906AbgIBQSP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Sep 2020 12:18:15 -0400
+Received: from sonic303-2.consmr.mail.bf2.yahoo.com ([74.6.131.41]:36155 "EHLO
+        sonic303-2.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728908AbgIBQSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Sep 2020 12:18:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1599063491; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=P34v2QnbpdPCBUJDExjyBYoydprpbBCkhY59cR6SCfPVkfCddLg+7XkUGrA1uqnDVDVU4p1DmvSeE6y93ID6/rcX+tSUYEWrZ4k2LTQSUx/15iWBwk5Pj7M6oZI4kFxzV7365vVHiDOfhv+mDsuNr3k0nm6zRQ08QAl2a5/e5KRy05OH/0qWsZLYVj+CNxnaraYsxaV9C2RCKlN5Fqgpy1KC3AwtUTXr5x0eDVHq7qBZt0F3b4UFbJzsNSBPQ3sqBRgHDziYgbBVOVBXyT96sPrjLVhkj+vhlYYj7bbEcyzQFUkomyU0xfT43mu3ZDlomM/t6qNlRe6nXIhvds91qQ==
+X-YMail-OSG: lJsP5_YVM1lF9XQK1.GJLhoVMbxxjOLpTMtkDSZF.bNvieeMXdhEBsfOy1oDGn0
+ jDni9lq4ozXluuJligzmAwkN3SX92ZH0zFm1I5Be0j__s2xm.4peBsl2Q_8UgIzrSU9DoVxmANz_
+ Tgb3TU_LVQiLjiN.AaX8KkZSNNtYQSvzVUjk7.GP3DPHmJIy1CDa8uDU6HNrRL8Yq2STqAT8CQau
+ jjqCaLtxhn3AURZuIINjJfD0xFwh5586JX6rxGSuEzKf6_RbywEmyqMo6mHGDzLPzcavGVXNwLBy
+ bSMRD28KTLJ76Q8CeYmLtRVOlc.hZyAp7WJiBn1STDTe5rchup0XwxinYGOvHU539eZqb8mjQY4d
+ U0..HbrR7ZPfCwrn5YNQv1VksJDwQqADPGJ6aSclPL.qVQUuw24jhV_m0Kuvf_M7u5gDVwkpl4et
+ nk_5uK6.xJXsihHRvzyub79qOYzZ1uJxqfIyTeBCclEwCit1d_s4V8eW8n74iDyoonq7hdMSPqeL
+ OHAvuIdpfpGHPYDb5nxbSeaOkN6Y1Z5aWQSDomB32WAm.RxlZMrmAKLQNunXVzEZZyw4x8E4qy.C
+ 31YHqDdCUg4ZuRu.FkW3ZKFzZzXrj3qLK1_1SN_vlAWWrDN5ZGK1KUDqbbcBg4.eq5LEV9HVVpwl
+ rBaNEyora4pXrqyVppS2rzjJ8W6wWS.zT0XNDYsxiVQRpRXpPEXAiXDk6L8Q_FUXgINWDNu8V18i
+ LbV6B5gL5P0x_WoVjf1CRAtuFt4LTt1U2PkvgpuO0jgD7kru3zbu9YgKMgiLNMKGPYf2aBYW6Niq
+ gj3d5GdwNQyTc.oTv.2ikZyrlz2iy8i9LGeeRufjkokOtbBd8iGAnpJ28HVLRFYEE6yo4HtIq49W
+ XNrikmv_Ii2xzTQShgpfPdr3LvBkMEHk0wwKNeSSL_r3pth479RixTQA5zw4n0Sxjgr4xIUOAv4i
+ zYQuZd7klrfeWc.94qA8QTV9UQu_jxUelH5IdTFzM2c4Lz06TDR3PpLP9txSwTmkFPr1l0VLy.Zh
+ HxTsuByJtzSzgAX.JlFAtAhub08g3_G.W_LNFYXdITHsUQ7h_Pcei17.Ff0oKz3OJ4fdE3MFgXRr
+ J1AmJekJaF4Qcvxb.mZtqNSbqsuLqUVUK1MPvgF_cLY1bxr6oUvhgSg.C838U9SbLqoJuxABn4Nm
+ D4IzwFSLcnBWoWzLF.F_OFFSBTC7WPfy14cVaMtTrseVfEgcwThhcaFLj1tpLfs5IjoX4lF5Mesd
+ EsmlliUU6KJrSpfesKD1fbsBTmRQ6KuPeurEypLTMEXbrbryEdPw_zgggR9copQoad1iXK8j7Xj8
+ ODJoLTc2KCN1CxLqtwM4DIMfV3N0Dnv1Y2PsY2tBY0q7a391SB4ZBdOhbLiyn8Q6oD.ahcSSyf0u
+ f72xTzcjk7J9aJm.NTzojJAfqvNRh9rJi.oFz9yruBqPOAMg-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Wed, 2 Sep 2020 16:18:11 +0000
+Date:   Wed, 2 Sep 2020 16:18:06 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1963845584.1579828.1599063486840@mail.yahoo.com>
+Subject: REPLY TO MY EMAIL FOR BUSINESS(Ms Lisa hugh).
 MIME-Version: 1.0
-References: <1598858073-5285-1-git-send-email-dillon.minfei@gmail.com> <1598858073-5285-2-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1598858073-5285-2-git-send-email-dillon.minfei@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Sep 2020 17:46:31 +0200
-Message-ID: <CAMpxmJW9iMVJgm6czSz5fPpRVHFnnp4=6x_7fTcJxGL1f10RGA@mail.gmail.com>
-Subject: Re: [PATCH: 1/2] gpio: tc35894: fix up tc35894 interrupt configuration
-To:     dillon.minfei@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1963845584.1579828.1599063486840.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 9:14 AM <dillon.minfei@gmail.com> wrote:
->
-> From: dillon min <dillon.minfei@gmail.com>
->
-> The offset of regmap is incorrect, j * 8 is move to the
-> wrong register.
->
-> for example:
->
-> asume i = 0, j = 1. we want to set KPY5 as interrupt
-> falling edge mode, regmap[0][1] should be TC3589x_GPIOIBE1 0xcd
-> but, regmap[i] + j * 8 = TC3589x_GPIOIBE0 + 8 ,point to 0xd4,
-> this is TC3589x_GPIOIE2 not TC3589x_GPIOIBE1.
->
-> Fixes: c103de240439 ("gpio: reorganize drivers")
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->  drivers/gpio/gpio-tc3589x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-> index 58b0da9eb76f..ea3f68a28fea 100644
-> --- a/drivers/gpio/gpio-tc3589x.c
-> +++ b/drivers/gpio/gpio-tc3589x.c
-> @@ -212,7 +212,7 @@ static void tc3589x_gpio_irq_sync_unlock(struct irq_data *d)
->                                 continue;
->
->                         tc3589x_gpio->oldregs[i][j] = new;
-> -                       tc3589x_reg_write(tc3589x, regmap[i] + j * 8, new);
-> +                       tc3589x_reg_write(tc3589x, regmap[i] + j, new);
->                 }
->         }
->
-> --
-> 2.7.4
->
 
-I suppose this patch may be correct but I don't see how commit
-c103de240439 ("gpio: reorganize drivers") could be the culprit. It's
-been like this since the original driver implementation from commit
-d88b25be3584 ("gpio: Add TC35892 GPIO driver").
 
-It's been over a decade since this driver was merged and nobody ever
-reported this. Either nobody ever used the GPIO module with interrupts
-(unless the bug's impact is not significant) for this chip or this is
-a quirk of some specific model you're using. Could you double-check
-this?
+Dear Friend,
 
-Bartosz
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
