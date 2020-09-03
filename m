@@ -2,80 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9960B25BB6C
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Sep 2020 09:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C52125BBB1
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Sep 2020 09:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgICHM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Sep 2020 03:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgICHMY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:12:24 -0400
-Received: from localhost (unknown [122.171.179.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CD0F2071B;
-        Thu,  3 Sep 2020 07:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599117144;
-        bh=rPR2h65NIq58EsscVdBt569FU+eXj+sgSo+2rsPr7Xo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xFCu1WKxCw5FoYN5y1JnlmwiLnwQc+1eNLpBVmxWTe+nJAWAVvjqlGJiLuCDfvy0r
-         vM4t4hrvNyJqR//KT5KQlVH54S1lRrLCdtV1n5QRl1Y+M4u9cDRF7q+AyArIzuCP3Y
-         uMkofjLWZiFPmRB3lL/Z7CPk7Q69SrsotAiJeBho=
-Date:   Thu, 3 Sep 2020 12:42:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document
- r8a7742 support
-Message-ID: <20200903071220.GK2639@vkoul-mobl>
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
+        id S1725943AbgICHa1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Sep 2020 03:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgICHa1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Sep 2020 03:30:27 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D51C061244;
+        Thu,  3 Sep 2020 00:30:26 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id o20so1569852pfp.11;
+        Thu, 03 Sep 2020 00:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=he64QQV9pZVx+ktlAFtqPXDhdBcTaUMF6DeQvxYf9kI=;
+        b=c7JrFXHvV+TonUZE/KSsYYM5lobhhHSzePzX1AiPk1VqhFtHiBASpHvuiYDceLkDoZ
+         1U0vD1rfT3f66NCtd9+Ov4hPhop+2vAjQoOGFcoiNwUGhau9rtiab7cu/Z4THr/WKKds
+         /BICMFdBddmugjFA5RtcR+Td6M7ipCB3gVXdHV6Srxng82AHEUAxdHwAKd3VMoAKKHVC
+         mTjorkm0E6905iX+f+VLKrfRzTd0/pbY/l/WiMnR+ZyCwfrfDvkKgNRktFNTH0ilVc7Z
+         xnTwST+sLi48o/xCLi1/z7VYO/ZEjgmtzyJj9+/UHuf4Dwey22GUi12Q/QNFwGQUF+p2
+         HQ2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=he64QQV9pZVx+ktlAFtqPXDhdBcTaUMF6DeQvxYf9kI=;
+        b=kJs/jfPeiw4GoP36ndcF4CV3Y8OkPr+s3msuKkUMWccTxflyJEJGkYz8X8hT+1eniq
+         kVMFI+0qVn7MSOrRdz1mjnaSOm+CftGNdq+IPuaOzL/RLuR0Mt4Pii092uArsgKDut8/
+         b8+aj+chD7i9dVdrsePJGJ3auodAOnRyHDoe3qTc9DD+laY6ZbXt62JLAsMOg5WhfgWe
+         A51zoV870A/taLwuKzSlLx/VRnCbO0v5Df74xTGvzn/qBh8DwQI6gsecVnIEGlw81gjT
+         c/iPcgo6hBhL2ZUSEt6PbGtmB40ieMwsQ9p+GeH4TxA8E7bzZjyYdKzgt3jhQK2IAhnA
+         TErQ==
+X-Gm-Message-State: AOAM53226wkwMVwjCGUGrQriPXFbFVOWURYq74p8MQw2Nr2ojygvE2A2
+        zwKiMSi1uIbWH9H6caLH0nk=
+X-Google-Smtp-Source: ABdhPJz/ctZePSI6q+SIQSCEVAqLHvKXN3t3nUdGzCr2sWeKL3+goeSZJjhVOea08c4pKoV5mGJsiw==
+X-Received: by 2002:a17:902:850b:: with SMTP id bj11mr2537633plb.81.1599118226410;
+        Thu, 03 Sep 2020 00:30:26 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.6])
+        by smtp.gmail.com with ESMTPSA id u63sm1949105pfu.34.2020.09.03.00.30.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 00:30:26 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     linus.walleij@linaro.org, lee.jones@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH: V2  0/2] Fix TC35894 gpio interrupt bug
+Date:   Thu,  3 Sep 2020 15:30:20 +0800
+Message-Id: <1599118222-18990-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27-08-20, 12:08, Lad, Prabhakar wrote:
-> Hi Vinod,
-> 
-> On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
-> > Document RZ/G1H (also known as R8A7742) SoC bindings.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> This patch is not present in linux-next yet, could you please take care of it.
+From: dillon min <dillon.minfei@gmail.com>
 
-Can you please resend
+This patchset intend to fix two bug on tc35894
 
+V2:
+1 change V1[1] patch's Fixes tag
+2 add DIRECTx register configuration in tc3589x_gpio_irq_sync_unlock()
+  to active general purpose gpio mode, else can't read correct
+  GPIOMISx to identify which interrupt
+
+
+V1:
+
+1 offset counting is wrong in tc3589x_gpio_irq_sync_unlock()
+2 disable Direct KBD interrupts in gpio-tc3589x's probe(),
+  at least have to do this on tc35894, if not, after chip reset,
+  IRQST(0x91) will always be 0x20, IRQN always low level,
+  can't be cleared. need more test on other tc3589x.
+
+
+dillon min (2):
+  gpio: tc35894: fix up tc35894 interrupt configuration
+  gpio: tc35894: Disable Direct KBD interrupts to enable gpio irq
+
+ drivers/gpio/gpio-tc3589x.c | 20 +++++++++++++++++---
+ include/linux/mfd/tc3589x.h |  6 ++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
 -- 
-~Vinod
+
