@@ -2,225 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7B1525B556
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Sep 2020 22:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E378125B850
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Sep 2020 03:32:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIBUez (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Sep 2020 16:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBUez (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Sep 2020 16:34:55 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088E8C061244
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Sep 2020 13:34:55 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id c142so307182pfb.7
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Sep 2020 13:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zWmT3vjuUdEMwfMnHyc0cmixYDNJqjLfuguq9ClY04A=;
-        b=jRf1QYgPssAdK8qvMPyz7cGcLZLm0H52IGhklGJ/oOQX0v8KeriqnhG7iMWKxfQJiI
-         J8D2ybRBqAEE+l7UvtWWTT2v+uW/KX0KgQM4EC2SktkyifkCdR6cwCjnJZMcx79NgIL7
-         2rpLGx7B2Ib+gGjBx6G0Oxy+G2rENauHvqSkk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zWmT3vjuUdEMwfMnHyc0cmixYDNJqjLfuguq9ClY04A=;
-        b=PhmSQcBrlHRuCsJSrHEkeieARCFHoA85UFrdoz5YRSrQMtzLcVkUUrb7I1il+f8ldZ
-         iJAyZQUAEW2TrOdLTgvj0ruTz5adL1HUdj/dmYaZuFPWYZ89OtpIMwloVA0F61QKnIcW
-         qkh/eJ47dZRY6ElfdSZX9ZVzmqhSiMVb4IpFcFw07ssT1CcUb/82no0fZWDid2GmBPel
-         emIecSR5JpEEaHFg9TqxBz0zLd+3xsh39D7R4SCBPx6DmnZZcvmM0dVcoARKrRLDGGXI
-         wD412qUZJ/PaXDnVOED3u164jCyvRtz0SQ9EO41jJuUcI/akz/vvk3thIRYeLtHLov+J
-         B5CQ==
-X-Gm-Message-State: AOAM531LiB2b0ZDUcQvR8EV9PaPie/2edKxaFa/WaD7dTQxU49PXqUDS
-        WmivqPbV2dcwVOJdP+LC3MEliSJTi74lXQ==
-X-Google-Smtp-Source: ABdhPJzP7DXxE0SlRfL1dPWcRim2cM8HsY2mJ5GUEOS9ywAwIfxhZwLLHtVKcVpkBu7AZ22L8OH7/w==
-X-Received: by 2002:a17:902:8f8f:: with SMTP id z15mr175017plo.221.1599078894171;
-        Wed, 02 Sep 2020 13:34:54 -0700 (PDT)
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com. [209.85.210.171])
-        by smtp.gmail.com with ESMTPSA id h130sm366335pfe.179.2020.09.02.13.34.53
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 13:34:54 -0700 (PDT)
-Received: by mail-pf1-f171.google.com with SMTP id w7so317329pfi.4
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Sep 2020 13:34:53 -0700 (PDT)
-X-Received: by 2002:a67:2ec9:: with SMTP id u192mr84624vsu.188.1599078427919;
- Wed, 02 Sep 2020 13:27:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
- <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
- <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
- <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
- <877dtdj042.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <877dtdj042.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 2 Sep 2020 13:26:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
-Message-ID: <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
- flag
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        id S1726942AbgICBb5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Sep 2020 21:31:57 -0400
+Received: from mail-vi1eur05on2055.outbound.protection.outlook.com ([40.107.21.55]:33377
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726526AbgICBby (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:31:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L7duj63JcUbhp+/Ou7PPKywniE+/+kIJXFWkZA4qclMDswbEcWKXx+N7AjHyP8CT9OEV6cQiV3xkUvFLu1jrdLaHAaxShVUnD/l48BMdnG0E/eWYKBRHk97UqI4thHZuAn35jmDcJyKwIjGZpqCWHGFpLf+RAtD7lDjH9gpmXzx1X3ICNbk6UsQt+AC6mVOLuRBPYqqH6xT0Ut5KZUDEVHnnznPllZ2s0Ozs9qU+EHyZs5cQJmiY9+GiWvUypRW7FFUzX6NX0XD1ILGa6APP/Ol+qfLDh+5JfX8izWpi7Bt++uEj+R0qToSEKkkU4Ekcl3Wdq6ouDnWPiwC+Vd6VKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bqWLS3e28OK57n3KwXiZzDPbmklQes2y5MADx05X3pE=;
+ b=BUZr3Jgn6QE+wCx1pMuZoH58EAGvdAN3au3bQu0wZQFxLNWgj3RGNMIJvcg0AZvInyOYIVbUAUYV859yyXzIk9acI4EUMcDCvW9IdJfA0EXy5uvqHQ/ZCsOFXq1BLdShCDRhISzpU5W2hWhO79Fpx7/w9mg1O3YyBn2Rj+MXegvyta+GwbiJQ50wGRD6Qt8QaNTtNnoA4KTfRa+XlmUMu9GGNHzHOgPPKIKwThs0ZkOOdhScun4q6O/qKLYqOJzmRdZ4Q8HpeIiEuJsghwUTJcoBU71O9V5PgoQ1lFi6rvE+6kZ1I9WWZGvt2DsfbK4fSkDAZSN6OMiZWtdlDIZLEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bqWLS3e28OK57n3KwXiZzDPbmklQes2y5MADx05X3pE=;
+ b=qn9aLWitQ4Qo7wtyAM1sdpJvZiaBL4kfKdjVZQnymw7a4bjeA7YVI3G17Ygwxlt0fQQzYBntxqbM8dlJfFW+3W1HqlY4wSD+NZV4+f70dyHO1r3yRFJZ2TzuTsp4YNHqfAk3OYYbZosNwYFOCx1iHW1wUxkomj9+ADPxlXNZ2bY=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3915.eurprd04.prod.outlook.com (2603:10a6:8:e::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 3 Sep
+ 2020 01:31:48 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d%3]) with mapi id 15.20.3326.025; Thu, 3 Sep 2020
+ 01:31:48 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peng Fan <peng.fan@nxp.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "michael@walle.cc" <michael@walle.cc>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/4] gpio: mxc: Support module build
+Thread-Topic: [PATCH V2 1/4] gpio: mxc: Support module build
+Thread-Index: AQHWX8pucFw5LDc3OEu6t4xCVjI40KkTQNIAgAfaWJCAACrxgIAACAjggAAMTQCAAATTIIAAGHmAgDrsWRA=
+Date:   Thu, 3 Sep 2020 01:31:47 +0000
+Message-ID: <DB3PR0402MB391685755C70D85A1E797C0BF52C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+ <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+ <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
+ <DB3PR0402MB3916634EA84687D6C7535BC1F5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a06tu4UgTxT4q9eS4=z5AHiEWQMhk5PfZEz=4t+f26s5Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a06tu4UgTxT4q9eS4=z5AHiEWQMhk5PfZEz=4t+f26s5Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ff4fa16b-3c56-496a-561d-08d84fa92026
+x-ms-traffictypediagnostic: DB3PR0402MB3915:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB391572F2F79392BC11197AEEF52C0@DB3PR0402MB3915.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VWkn50P+Vo53vY7CtLVndw4+KN5uzj+/mVKLRxKhjzBe0Fz2pB17tu667aPkkYk/y/Df9Mu3JjKEPkgqIeVWcg5LMWFsZlV1IGJSOyPKS0k4zPsmRY+LmLVJBNosJXhvxlEcNEEMdw3dduGR3SNqCVsLCiUZTUznvyXaIc2yCPZ7V4EtTUbaggILz3AY8tASQwX0vnIi/TJivkcByya0l0lQoV7pEfYR99f/5c/xies8G0PvTWSpUeHf+SpUa1Dn8AbvzExy3pOLyUsJS5EWJ/xLpyjMUiIcYI1kJDgIhETgznkEgcMI6/HOJw8rV+2Jo7ZAvC6vZf710Agy5r54dQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(66476007)(66556008)(76116006)(66446008)(66946007)(5660300002)(7696005)(54906003)(26005)(4326008)(186003)(110136005)(53546011)(6506007)(2906002)(8676002)(8936002)(478600001)(64756008)(71200400001)(33656002)(7416002)(52536014)(9686003)(86362001)(55016002)(316002)(83380400001)(44832011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 3Recy/H9tLuyPZwBjddAqw8Q8xczfnKkSi6lBJUBe2SLaL7/31mOQYvkkukdViUfd3LBfQc4Vn/hwxZ0usrAFR6Ck11twFzixi+8ocm06lb/hhaL9VF0D6rrLJ8fbckUlFKSyG6A+/5Zu52dXnm262zKpfZ1sNKfG4bgDGbSkbelrgI9PVD/TuaUj80Rv+s18ZOA8K5gOpdhsKpTlyofQfl0+M6Jc64jRDswCCmPkcpOdb4RAQjyb9mhOgyfT1r+EPAZEDcxV0lGz/aLm06eJgMGWQHjtgEo0GWA8MtEGQexHvLM3HJkIKrMAkaBHhk+8DO+45aEieORH99Ud/w21Ug/bo0Pzm34rR7tfJASZHBiuSOEd3WtYG7AO/zAfC0zSI4A42ytS0J17GC64YADyYO0SptjJNERprkwG0N6fhKGBRFr3AcSVk66KvXBEIbp1ewcL74oMsE1BC/4fF5p/wgODCKJ4366+L7azLLb+U1xMVNnDpJQKeOOFxmx3sbVeTvXutOTc/SWdE3gQHw51HaEoDUE9U2hJ/ujw6RClJZILZGxOlXpKlxRX/m4s4U3EaEZriX42vl3xqnGQDA3xUlIhSX+/n56C5Ln04kCKjQ6vjLyBfmrvUSRNxEcWSxnHxcJrIfmk7CKOCX3WKMTMQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff4fa16b-3c56-496a-561d-08d84fa92026
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2020 01:31:47.7707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CeeZjNWuHYYYtaclfLJcxZYeuug+gs4vE7+CdjbzKYuAO92y82WdEs2Mqxtc5HjtadOdEIvTZYqe+uVDL+nWuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3915
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Tue, Sep 1, 2020 at 2:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, Aug 31 2020 at 08:12, Doug Anderson wrote:
-> > On Wed, Aug 26, 2020 at 3:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> There are two reasonable choices here:
-> >>
-> >> 1) Do the symmetric thing
-> >>
-> >> 2) Let the drivers call a new function disable_wakeup_irq_for_suspend()
-> >>    which marks the interrupt to be enabled from the core on suspend and
-> >>    remove the enable call on the resume callback of the driver.
-> >>
-> >>    Then you don't need the resume part in the core and state still is
-> >>    consistent.
-> >>
-> >> I'm leaning towards #2 because that makes a lot of sense.
-> >
-> > IIUC, #2 requires that we change existing drivers that are currently
-> > using disable_irq() + enable_irq_wake(), right?  Presumably, if we're
-> > going to do #2, we should declare that what drivers used to do is now
-> > considered illegal, right?  Perhaps we could detect that and throw a
-> > warning so that they know that they need to change to use the new
-> > disable_wakeup_irq_for_suspend() API.  Otherwise these drivers will
-> > work fine on some systems (like they always have) but will fail in
-> > weird corner cases for systems that are relying on drivers to call
-> > disable_wakeup_irq_for_suspend().  That doesn't sound super great to
-> > me...
->
-> Hmm. With disable_irq() + enable_irq_wake() in the driver suspend path
-> the driver already makes an implicit assumption about the underlying irq
-> chip functionality, i.e. it expects that even with the interrupt
-> disabled the irq chip can wake up the system.
->
-> Now with the new flag magic and #1 we are just working around the driver
-> assumptions at the interrupt chip level.
->
-> That's inconsistent at best.
-
-Sure, though I will say that it works on all Chromebooks we've shipped
-over the last ~9 years since the main cros_ec (EC = embedded
-controller) driver does this.  Of course, it's easy to just change
-that driver.  I just don't want everything else breaking too.
-
-
-> How many drivers are doing that sequence?
-
-I remember looking this up before but can't find it.  It's gonna be
-hard to get an exact count without fancier searching, but we should be
-able to find a few...  I'll just do the simple:
-
-git grep -C10 enable_irq_wake | grep -C10 'disable_irq('
-
-That might miss people but it'll catch quite a few.  Ones that are
-clearly using something like this:
-
-drivers/input/keyboard/adp5588-keys.c
-drivers/input/keyboard/adp5589-keys.c
-drivers/input/mouse/elan_i2c_core.c
-drivers/input/rmi4/rmi_driver.c
-drivers/input/touchscreen/elants_i2c.c
-drivers/input/touchscreen/raydium_i2c_ts.c
-drivers/mfd/as3722.c
-drivers/mfd/max14577.c (*)
-drivers/mfd/max77693.c
-drivers/mfd/max77843.c
-drivers/mfd/sec-core.c (*)
-drivers/mfd/twl6030-irq.c
-drivers/platform/chrome/cros_ec.c
-drivers/power/supply/max17042_battery.c
-drivers/rtc/rtc-st-lpc.c
-
-(*) Even has a comment explaining why!
-
-Input is perhaps over-represented but presumably that's because input
-is often the thing that wakes devices up.  ;-)
-
-
-> And the more important
-> question is why are they calling disable_irq() in the first place if
-> they want to be woken up by that interrupt.
-
-I tried to put my thoughts back in:
-
-https://lore.kernel.org/r/CAD=FV=WN4R1tS47ZzdZa_hsbvLifwnv6rgETVaiea0+QSZmiOw@mail.gmail.com/
-
-...but that was a long thread.  Copied the relevant bits here.
-Basically a driver that calls disablre_irq() together with
-enable_irq_wake() is trying to say:
-
-* Don't call the interrupt handler for this interrupt until I call
-enable_irq() but keep tracking it (either in hardware or in software).
-Specifically it's a requirement that if the interrupt fires one or
-more times while masked the interrupt handler should be called as soon
-as enable_irq() is called.
-
-* If this interrupt fires while the system is suspended then please
-wake the system up.
-
-Specifically I think it gets back to the idea that, from a device
-driver's point of view, there isn't a separate concept of disabling an
-IRQ (turn it off and stop tracking it) and masking an IRQ (keep track
-of it but don't call my handler until I unmask).  As I understand it
-drivers expect that the disable_irq() call is actually a mask and that
-an IRQ is never fully disabled unless released by the driver.  It is a
-little unfortunate (IMO) that the function is called disable_irq() but
-as far as I understand that's historical.
-
-
-> The point is that the core suspend code disables all interrupts which
-> are not marked as wakeup enabled automatically and reenables them after
-> resume. So why would any driver invoke disable_irq() in the suspend
-> function at all? Historical raisins?
-
-One case I can imagine: pretend that there are two power rails
-controlling a device.  One power rail controls the communication
-channel between the CPU and the peripheral and the other power rail
-controls whether the peripheral is on.  At suspend time we want to
-keep the peripheral on but we can shut down the power to the
-communication channel.
-
-One way you could do this is at suspend time:
-  disable_irq()
-  turn_off_comm_power()
-  enable_irq_wake()
-
-You'd do the disable_irq() (AKA mask your interrupt) because you'd
-really want to make sure that your handler isn't called after you
-turned off the communication power.  You want to leave the interrupt
-pending/masked until you are able to turn the communications channel
-back on and then you can query why the wakeup happened.
-
-Now, admittedly, you could redesign the above driver to work any
-number of different ways.  Maybe you could use the "noirq" suspend to
-turn off your comm power or maybe you could come up with another
-solution.  However, since the above has always worked and is quite
-simple I guess that's what drivers use?
-
-
--Doug
+SGksIExpbnVzDQoJRG8geW91IGhhdmUgY2hhbmNlIHRvIHRha2UgYSBsb29rIGF0IHRoaXMgcGF0
+Y2ggc2VyaWVzPw0KDQpUaGFua3MsDQpBbnNvbg0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBW
+MiAxLzRdIGdwaW86IG14YzogU3VwcG9ydCBtb2R1bGUgYnVpbGQNCj4gDQo+IE9uIE1vbiwgSnVs
+IDI3LCAyMDIwIGF0IDI6MjMgUE0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+
+IHdyb3RlOg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCBWMiAxLzRdIGdwaW86IG14YzogU3Vw
+cG9ydCBtb2R1bGUgYnVpbGQNCj4gPiA+DQo+ID4gPiA+IFNvLCBjb3VsZCB5b3UgcGxlYXNlIGhl
+bHAgYWR2aXNlIGhvdyB0byBwcm9jZWVkIGl0IGZvciB0aGlzIEdQSU8NCj4gPiA+ID4gZHJpdmVy
+IHRvICBzdXBwb3J0IGxvYWRhYmxlIG1vZHVsZT8NCj4gPiA+DQo+ID4gPiBJIHdvdWxkIHN0YXJ0
+IGJ5IGdldHRpbmcgYSByZWZlcmVuY2UgYm9hcmQgdG8gd29yayB3aXRoIGEga2VybmVsIGluDQo+
+ID4gPiB3aGljaCBhbGwgZHJpdmVycyBhcmUgYnVpbHQtaW4gZXhjZXB0IGZvciB0aGUgcGluY3Ry
+bCBkcml2ZXIsIHRvIHNlZQ0KPiA+ID4gd2hhdCBleGFjdGx5IGJyZWFrcyB3aGVuIHlvdSBkbyB0
+aGF0LCBhbmQgd2hhdCBvdGhlciBkcml2ZXJzIG1heSBoYXZlDQo+IHRoZSBzYW1lIHByb2JsZW1z
+Lg0KPiA+ID4gTWF5YmUgaXQncyBub3QgdGhhdCBiYWQgYWZ0ZXIgYWxsIGFuZCB5b3Ugb25seSBu
+ZWVkIGEgZmV3IG1vZGlmaWNhdGlvbnMuDQo+ID4gPg0KPiA+DQo+ID4gSSBhZ3JlZWQsIGJ1dCB0
+aGUgc2l0dWF0aW9uIGlzIGkuTVggU29DIGNvbnRhaW5zIG1vcmUgdGhhbiAyMCBtb2R1bGVzLA0K
+PiA+IGFuZCBtb3N0IG9mIHRoZW0gYXJlIE5PVCBvd25lZCBieSBtZSwgc28gSSBhbSBOT1Qgc3Vy
+ZSB3aGVuIHRoZSBtb2R1bGUNCj4gPiBvd25lciB3aWxsIHN0YXJ0IHdvcmtpbmcgb24gdGhlIHN1
+cHBvcnQuIEFuZCBpZiB3aXRoIG1pbmltdW0gZGV2aWNlcw0KPiA+IGVuYWJsZWQsIHN1Y2ggYXMg
+dGlueSBrZXJuZWwgd2l0aCByYW1mcywgaXQgaXMgd29ya2luZyBldmVuIHdpdGggcGluY3RybC9j
+bG9jaw0KPiBldGMuIGJ1aWx0IGFzIGxvYWRhYmxlIG1vZHVsZS4NCj4gDQo+IERvIHlvdSBoYXZl
+IGFuIGV4YW1wbGUgdGhhdCBpcyBhY3R1YWxseSBicm9rZW4/IEkgY2hlY2tlZCBob3cgdGhlIGdw
+aW8gY2hpcA0KPiBpcyBhY3R1YWxseSB1c2VkIGFuZCBmb3VuZCB0aGF0ICJyZWd1bGF0b3ItZml4
+ZWQiLCAidmlydHVhbCxtZGlvLWdwaW8iLA0KPiAicmVndWxhdG9yLWdwaW8iLCAiZ3Bpby1sZWRz
+IiwgIm1hcnZlbGwsbXY4OGU2MDg1IiwgIm1pY3JvY2hpcCx1c2IyNTEzYiIsDQo+ICJmc2wsaW14
+N2QtdXNkaGMiLCAiZnNsLGlteDZzeC1mZWMiLCAibW1jLXB3cnNlcS1zaW1wbGUiLA0KPiAiYnJj
+bSxiY200MzQzOC1idCIsICAicm9obSxiZDcxODM3IiwgIm54cCxwY2E5NTQ2IiwgICJydGMtbTQx
+dDgwIiwNCj4gc2hvdWxkIGFsbCB3b3JrIGZpbmUgaGVyZS4NCj4gDQo+IEknbSBub3Qgc3VyZSBh
+Ym91dCAiZnNsLG1tYTg0NTEiLCBtYXliZSB0ZXN0IHRoYXQgb25lIG1hbnVhbGx5IG9yIGxvb2sg
+YXQNCj4gdGhlIGRyaXZlciBpbiBtb3JlIGRldGFpbC4NCj4gDQo+ICJmc2wsaW14OG1xLXBjaWUi
+IGxvb2tzIGJyb2tlbiBidXQgZWFzaWx5IGZpeGVkLCBhbmQgdGhpcyBpcyBzb21ldGhpbmcgd2Ug
+aGF2ZQ0KPiBhbHJlYWR5IGRpc2N1c3NlZC4NCj4gDQo+IGlteDhtcS1uaXRyb2dlbi5jIGhhcyBh
+ICJ2c2VsLWdwaW9zIiBwcm9wZXJ0eSBpbiBpdHMgImZjcyxmYW41MzU1NSINCj4gZGV2aWNlIG5v
+ZGUgdGhhdCBpcyBuZWl0aGVyIHBhcnQgb2YgdGhlIGJpbmRpbmcgbm9yIGhhbmRsZWQgYnkgdGhl
+IGRyaXZlciwgc28NCj4gdGhpcyBpcyBicm9rZW4gcmVnYXJkbGVzcyBvZiB0aGUgZ3BpbyBkcml2
+ZXIuDQo+IA0KPiA+IE1lYW53aGlsZSwgYXMgeW91IHNhaWQsIG1vc3Qgb2YgdGhlIHVzZXJzIGFy
+ZSBzdGlsbCB1c2luZyBidWlsdC1pbg0KPiA+IG1vZGVsLCBzbyBhZGRpbmcgdGhlIHN1cHBvcnQg
+Zm9yIEdQSU8gY2FuIGJlIGluIHBhcmFsbGVsIHdpdGggb3RoZXINCj4gPiBtb2R1bGVzJyB3b3Jr
+LCBpbiBvdGhlciB3b3Jkcywgd2l0aCB0aGlzIEdQSU8gbG9hZGFibGUgbW9kdWxlIHN1cHBvcnQN
+Cj4gPiBwYXRjaCwgaWYgb3RoZXIgbW9kdWxlcyBjYW4gTk9UIHdvcmsgZHVlIHRvIGxhY2sgb2Yg
+ZGVmZXIgcHJvYmUNCj4gPiBpbXBsZW1lbnRhdGlvbiwgdGhlbiB0aGUgcGF0Y2ggc2hvdWxkIGJl
+IGRvbmUgaW4gb3RoZXIgbW9kdWxlLCBhZGRpbmcNCj4gPiB0aGF0IHRoZSBkZWZhdWx0IGNvbmZp
+Z3VyYXRpb24gb2YgR1BJTyBpcyBzdGlsbCBidWlsdC1pbiwgZG8geW91IHRoaW5rIGl0IGNhbiBi
+ZQ0KPiBhbiBpbmRlcGVuZGVudCBwYXRjaCBhbmQgZ2V0IGludG8gbGludXgtbmV4dCBmaXJzdD8N
+Cj4gDQo+IEkgdGhpbmsgeW91IHNob3VsZCBiZSByZWFzb25hYmx5IHN1cmUgdGhhdCBtYWtpbmcg
+dGhlIGRyaXZlciBhIGxvYWRhYmxlDQo+IG1vZHVsZSBkb2VzIG5vdCBicmVhayBvdGhlciBkcml2
+ZXJzIHRoYXQgbWlnaHQgcmVseSBvbiB0aGUgcHJvYmUgb3JkZXIgYW5kDQo+IHRoYXQgYXJlIGtu
+b3duIHRvIGJlIHVzZWQgd2l0aCBhbiBpLk1YIGNoaXAuIFdpdGggdGhlIGxpc3QgYWJvdmUsIHRo
+YXQgc2VlbXMNCj4gdG8gYWN0dWFsbHkgYmUgdGhlIGNhc2UgZm9yIHRoZSBtb3N0IHBhcnQsIGJ1
+dCB0ZXN0aW5nIGlzIGFsd2F5cyBiZXR0ZXIuDQo+IA0KPiBJZiB0aGVyZSBhcmUgYm9hcmRzIHRo
+YXQgdXNlIG90aGVyIGRyaXZlcnMgd2hpY2ggZG8gbm90IHN1cHBvcnQgZGVmZXJyZWQNCj4gcHJv
+YmluZyBidXQgZG9uJ3QgaGF2ZSB0aG9zZSBsaXN0ZWQgaW4gdGhlIGR0cyBmaWxlcyBpbiB0aGUg
+a2VybmVsLCB0aGVuIHRoYXQgaXMNCj4gbm90IHNvbWV0aGluZyB5b3UgaGF2ZSB0byB3b3JyeSBh
+Ym91dCBJIHRoaW5rLg0KPiANCj4gSSdsbCBsZXQgTGludXMgV2FsbGVpaiBjb21tZW50IG9uIHdo
+ZXRoZXIgaGUgdGhpbmtzIHRoZSBpbml0Y2FsbCBzaG91bGQgc3RheSBhdA0KPiBzdWJzeXNfaW5p
+dGNhbGwoKSB0byBhdm9pZCBicmVha2luZyB1c2VycyB3aXRoIGJ1Z2d5IGRyaXZlcnMsIG9yIHdo
+ZXRoZXIgdGhpcw0KPiBzaG91bGQgYmUgY2hhbmdlZCB0byBtb2R1bGVfaW5pdCgpIG9yIGJ1aWx0
+aW5fcGxhdGZvcm1fZHJpdmVyKCkgdG8gaGF2ZSBhDQo+IGJldHRlciBjaGFuY2Ugb2YgZmluZGlu
+ZyBhbmQgZml4aW5nIHRob3NlIGJyb2tlbiBkcml2ZXJzLg0KPiANCj4gICAgICBBcm5kDQo=
