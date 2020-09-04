@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DB6625DE3D
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5595525DE30
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIDPsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 11:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
+        id S1727792AbgIDPr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 11:47:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgIDPre (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:47:34 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620CDC061237
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o21so6538430wmc.0
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:58 -0700 (PDT)
+        with ESMTP id S1727790AbgIDPrg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:47:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936C4C061246
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w2so6507364wmi.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3aWcm+3JDeJZmE6xtJBDfj0eVLxqNfoBKt8HcdF/1EE=;
-        b=CZAvReeuXtd9ZK1t6qgNO75jV6xJlnEXljI4/mnHXpsbq7PxgUPsIC86O2hC0U6rgr
-         HGHHIc7tvF/BzZmibkMHYfVKfSiGyR7I0RPNsAB1PY0GSy55ZcCS0Z57NQoFapTJ4LSY
-         eafgxUJWblDraafe/Vzru3THELlnIIlm9wJltqiYWF7zS8/ZdjgdqhJ3UI2LPXHNtjQC
-         ReTu3FLqRuYrH1XJk5i5MP4EwGTp9sBq+5edDyShrTWEcPqUJ8ItX+22ARKmIoDZksfD
-         qHa5OwNLhRuLopdaxi4K7dPnWataLNsZBy3/HbfxRTZVHevoU8J84X38CmWddi3Tsz5P
-         eqMQ==
+        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
+        b=iirBcZw4EgxyAFB9yrfqfHzrbIqBRMnGr84pnWLTSHWiDS/j7p4d7c1IpfTuH6U0yE
+         kqQ+3Cup4oeN2ka7rRGBWA1VgzzhuxJJja+zLHmjZw2eXRU3Yosp3+5A4U7XPXJ5vbVj
+         B0EwMLnRv8Z1xZQRMOZVAeXAcgdCFJ6591m6BtMaR7vygL5ntSU++35wP4FwhLKD8mki
+         n4OL3b5QGP86X4QLHPRhSu46PuWJoc+QP4LeR4B2yVVJitaWtbOymwB3MJF/uM5Vx81y
+         RLijD9+Rt/EUhWQrtLvqh/+1KBK6+11K8JaHcwSvMvX79X8NocXKzJGbiecv0fBZjslV
+         A7vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3aWcm+3JDeJZmE6xtJBDfj0eVLxqNfoBKt8HcdF/1EE=;
-        b=MEeOoVEfjR07at8gzYyU99ilW005XXu8ajDVlUbYNq19DL3M9rVFkpprTOM7tZWo26
-         7a9szZV95Slein/wuOyDuDn85OWv4UzyiHB9vCUeLcvvsJijOdPmb7cOnjtibf0E/qhj
-         5nIyCVyUz3UwbpPQf4RAy/odBTZ/LFh/iolb3gYL4X4sKKq/eOiYd0yfc6wjBcrIj7pO
-         BE6oAlT5sHYE1VrPhC84iwMdkjD2xukiNCaW1q+EUiEYIk7/HpsueduLH7cou+7bTe+s
-         USKmn2vKyRhc2NyefFMYQqULmKQF8CrEl11tcOHZWbRjrhODK2O06zN7F+GOuexq/u1I
-         Mfmw==
-X-Gm-Message-State: AOAM533KIrHPzn/Jfg+1daM1WTzx05Rj3HlWoDPEnYk1y39GIIpqG+Im
-        RaC7U9a4PL8+9i95b5cEfrxxG9IfWj3b1w==
-X-Google-Smtp-Source: ABdhPJxw9xJK0XTZm5xxkM2ONzghwfamibziq3gwrnxN4MBR3VhmxObh/FITueCXATZQmz5tZAHJWg==
-X-Received: by 2002:a7b:c00c:: with SMTP id c12mr8800011wmb.54.1599234416977;
-        Fri, 04 Sep 2020 08:46:56 -0700 (PDT)
+        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
+        b=GBSRAaS1i0yGNkRfXQ46ONAF6WSmW/FqLNhN+6CUb4lUFD4YKrUWLl0tE47QTVHHeY
+         PTGKPosRmGAXLIM8Fvt4fJWBfCTcWViY0+bscDtSgbffAI8QaE1B1GrdFbMnOsYjqjzw
+         b7XKvAAsCt8Zaxg+tpjhKAsT1gACq/gNjqApQywumjw5YnoOLQuX0mFEkSe7lAKt4P6y
+         zwyUj5LMokmelN1DanEFncPnL4KN/E//ZJcuqlZmWCbvTIBFudL1xPIwiYfLH/7oh2zX
+         OYYdkV8GQdVxSHPMw3XLEzWR5yhhIJi6369QBdstE8gfwbgE2UI39c8gP8FplVtYSF91
+         zhZw==
+X-Gm-Message-State: AOAM533qXiOD0fTApcZHHGPr0/Va2K+oYaq0Ad2uzrOCWMCatV1xQNLc
+        aA3Vly5V9XQBgnP7I7Hp+5lrpg==
+X-Google-Smtp-Source: ABdhPJyjc2MlVjuY6G3UNUTfVft9wTllA8VYq1OpvEDtNds22hkn1ilbEsjGyby0vTpaSIVU2cgT8Q==
+X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr8555846wmj.144.1599234418241;
+        Fri, 04 Sep 2020 08:46:58 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.55
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:56 -0700 (PDT)
+        Fri, 04 Sep 2020 08:46:57 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -56,9 +56,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 22/23] gpio: mockup: provide a way to create new dummy chips
-Date:   Fri,  4 Sep 2020 17:45:46 +0200
-Message-Id: <20200904154547.3836-23-brgl@bgdev.pl>
+Subject: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+Date:   Fri,  4 Sep 2020 17:45:47 +0200
+Message-Id: <20200904154547.3836-24-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
 References: <20200904154547.3836-1-brgl@bgdev.pl>
@@ -71,312 +71,109 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add a new debugfs attribute 'new_device' that allows to dynamically
-create new dummy chips according to specification.
-
-New chips are created by writing a number of supported parameters to the
-new attribute of which 'label' and 'num_lines' are mandatory. The new
-attribute is designed to be easily exstensible with new parameters. For
-now we simply provide the same functionality that the module params
-expose but with the intention of introducing new options (such as custom
-line name formats).
+There's some documentation for gpio-mockup's debugfs interface in the
+driver's source but it's not much. Add proper documentation for this
+testing module.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-mockup.c | 231 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 220 insertions(+), 11 deletions(-)
+ .../admin-guide/gpio/gpio-mockup.rst          | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 9d2de78a45c2..6577d18671df 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2014  Kamlakant Patel <kamlakant.patel@broadcom.com>
-  * Copyright (C) 2015-2016  Bamvor Jian Zhang <bamv2005@gmail.com>
-  * Copyright (C) 2017 Bartosz Golaszewski <brgl@bgdev.pl>
-+ * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
-  */
- 
- #include <linux/debugfs.h>
-@@ -14,6 +15,7 @@
- #include <linux/irq.h>
- #include <linux/irq_sim.h>
- #include <linux/irqdomain.h>
-+#include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -546,8 +548,8 @@ static void gpio_mockup_unregister_devices(void)
- 	mutex_unlock(&gpio_mockup_devices_lock);
- }
- 
--static __init char **gpio_mockup_make_line_names(const char *label,
--						 unsigned int num_lines)
-+static char **gpio_mockup_make_line_names(const char *label,
-+					  unsigned int num_lines)
- {
- 	unsigned int i;
- 	char **names;
-@@ -567,7 +569,7 @@ static __init char **gpio_mockup_make_line_names(const char *label,
- 	return names;
- }
- 
--static int __init gpio_mockup_register_device(struct property_entry *properties)
-+static int gpio_mockup_register_device(struct property_entry *properties)
- {
- 	struct gpio_mockup_device *mockup_dev;
- 	struct platform_device_info pdevinfo;
-@@ -641,8 +643,7 @@ static int __init gpio_mockup_register_chips_from_params(void)
- {
- 	int num_chips, i, ret;
- 
--	if ((gpio_mockup_num_ranges < 2) ||
--	    (gpio_mockup_num_ranges % 2) ||
-+	if ((gpio_mockup_num_ranges % 2) ||
- 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
- 		return -EINVAL;
- 
-@@ -669,6 +670,205 @@ static int __init gpio_mockup_register_chips_from_params(void)
- 	return 0;
- }
- 
-+/*
-+ * We store all data associated with device properties in this structure. It's
-+ * only needed until we register the platform device at which point the driver
-+ * core makes a deep copy of all property data (even the string arrays).
-+ *
-+ * The reason to keep them bunched up is simple: we can have a single function
-+ * to free all resources which simplifies error handling.
-+ */
-+struct gpio_mockup_prop_data {
-+	char chip_label[GPIO_MOCKUP_LABEL_SIZE];
-+	u16 ngpio;
-+	bool named_lines;
-+	char **line_names;
-+};
+diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
+new file mode 100644
+index 000000000000..1d452ee55f8d
+--- /dev/null
++++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
+@@ -0,0 +1,87 @@
++.. SPDX-License-Identifier: GPL-2.0-only
 +
-+/* We don't free the structure itself - it's expected to live on the stack. */
-+static void
-+gpio_mockup_free_property_data(struct gpio_mockup_prop_data *prop_data)
-+{
-+	kfree_strarray(prop_data->line_names, prop_data->ngpio);
-+}
++GPIO Testing Driver
++===================
 +
-+/*
-+ * Each supported option is parsed by a separate callback - this way the
-+ * 'new_device' attribute is easily exstensible.
-+ */
-+struct gpio_mockup_new_device_opt {
-+	char *name;
-+	int (*func)(const char *val, struct gpio_mockup_prop_data *prop_data,
-+		    struct property_entry *properties, int *prop_idx);
-+	bool has_val;
-+};
++The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
++chips for testing purposes. There are two ways of configuring the chips exposed
++by the module. The lines can be accessed using the standard GPIO character
++device interface as well as manipulated using the dedicated debugfs directory
++structure.
 +
-+static int
-+gpio_mockup_parse_label(const char *val,
-+		struct gpio_mockup_prop_data *prop_data,
-+		struct property_entry *properties, int *prop_idx)
-+{
-+	snprintf(prop_data->chip_label, sizeof(prop_data->chip_label), val);
-+	properties[(*prop_idx)++] =
-+		PROPERTY_ENTRY_STRING("chip-label", prop_data->chip_label);
++Creating simulated chips using debugfs
++--------------------------------------
 +
-+	return 0;
-+}
++When the gpio-mockup module is loaded (or builtin) it creates its own directory
++in debugfs. Assuming debugfs is mounted at /sys/kernel/debug/, the directory
++will be located at /sys/kernel/debug/gpio-mockup/. Inside this directory there
++are two attributes: new_device and delete_device.
 +
-+static int gpio_mockup_parse_num_lines(const char *val,
-+			struct gpio_mockup_prop_data *prop_data,
-+			struct property_entry *properties, int *prop_idx)
-+{
-+	int ret;
++New chips can be created by writing a single line containing a number of
++options to "new_device". For example:
 +
-+	ret = kstrtou16(val, 10, &prop_data->ngpio);
-+	if (ret) {
-+		pr_err("invalid new_lines format: %s\n", val);
-+		return ret;
-+	}
++.. code-block:: sh
 +
-+	properties[(*prop_idx)++] = PROPERTY_ENTRY_U16("nr-gpios",
-+						     prop_data->ngpio);
++    $ echo "label=my-mockup num_lines=4 named_lines" > /sys/kernel/debug/gpio-mockup/new_device
 +
-+	return 0;
-+}
++Supported options:
 +
-+static int gpio_mockup_parse_named_lines(const char *val,
-+			struct gpio_mockup_prop_data *prop_data,
-+			struct property_entry *properties, int *prop_idx)
-+{
-+	prop_data->named_lines = true;
++    num_lines=<num_lines> - number of GPIO lines to expose
 +
-+	return 0;
-+}
++    label=<label> - label of the dummy chip
 +
-+static struct gpio_mockup_new_device_opt gpio_mockup_new_device_opts[] = {
-+	{
-+		.name = "label",
-+		.func = gpio_mockup_parse_label,
-+		.has_val = true,
-+	},
-+	{
-+		.name = "num_lines",
-+		.func = gpio_mockup_parse_num_lines,
-+		.has_val = true,
-+	},
-+	{
-+		.name = "named_lines",
-+		.func = gpio_mockup_parse_named_lines,
-+		.has_val = false,
-+	},
-+};
++    named_lines - defines whether dummy lines should be named, the names are
++                  of the form X-Y where X is the chip's label and Y is the
++                  line's offset
 +
-+static int
-+gpio_mockup_parse_one_opt(const char *key, const char *val,
-+			  struct gpio_mockup_prop_data *prop_data,
-+			  struct property_entry *properties, int *prop_idx)
-+{
-+	struct gpio_mockup_new_device_opt *opt;
-+	int i;
++Note: only num_lines is mandatory.
 +
-+	for (i = 0; i < ARRAY_SIZE(gpio_mockup_new_device_opts); i++) {
-+		opt = &gpio_mockup_new_device_opts[i];
++Chips can be dynamically removed by writing the chip's label to
++"delete_device". For example:
 +
-+		if (strcmp(key, opt->name) == 0) {
-+			if (opt->has_val && !val) {
-+				pr_err("%s option requires an argument\n",
-+				       opt->name);
-+				return -EINVAL;
-+			}
++.. code-block:: sh
 +
-+			if (!opt->has_val && val) {
-+				pr_err("%s option doesn't take any arguments\n",
-+				       opt->name);
-+				return -EINVAL;
-+			}
++    echo "gpio-mockup.0" > /sys/kernel/debug/gpio-mockup/delete_device
 +
-+			return opt->func(val, prop_data, properties, prop_idx);
-+		}
-+	}
++Creating simulated chips using module params
++--------------------------------------------
 +
-+	return -EOPNOTSUPP;
-+}
++Note: this is an older, now deprecated method kept for backward compatibility
++for user-space tools.
 +
-+static int
-+gpio_mockup_new_device_from_opts(char *opts,
-+				 struct gpio_mockup_prop_data *prop_data)
-+{
-+	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
-+	int prop_idx = 0, ret;
-+	char *key, *val;
++When loading the gpio-mockup driver a number of parameters can be passed to the
++module.
 +
-+	memset(properties, 0, sizeof(properties));
++    gpio_mockup_ranges
 +
-+	while (*opts) {
-+		if (prop_idx >= GPIO_MOCKUP_MAX_PROP)
-+			return -EINVAL;
++        This parameter takes an argument in the form of an array of integer
++        pairs. Each pair defines the base GPIO number (if any) and the number
++        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
++        will assign it automatically.
 +
-+		opts = next_arg(opts, &key, &val);
++        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
 +
-+		ret = gpio_mockup_parse_one_opt(key, val, prop_data,
-+						properties, &prop_idx);
-+		if (ret)
-+			return ret;
-+	}
++        The line above creates three chips. The first one will expose 8 lines,
++        the second 16 and the third 4. The base GPIO for the third chip is set
++        to 405 while for two first chips it will be assigned automatically.
 +
-+	/* This is the only mandatory property. */
-+	if (!prop_data->ngpio) {
-+		pr_err("number of lines must be specified\n");
-+		return -EINVAL;
-+	}
++    gpio_named_lines
 +
-+	/*
-+	 * Line names must be created at the end - once we know how
-+	 * many GPIOs there are.
-+	 */
-+	if (prop_data->named_lines) {
-+		prop_data->line_names = gpio_mockup_make_line_names(
-+							prop_data->chip_label,
-+							prop_data->ngpio);
-+		if (!prop_data->line_names)
-+			return -ENOMEM;
++        This parameter doesn't take any arguments. It lets the driver know that
++        GPIO lines exposed by it should be named.
 +
-+		properties[prop_idx++] =
-+			PROPERTY_ENTRY_STRING_ARRAY_LEN("gpio-line-names",
-+							prop_data->line_names,
-+							prop_data->ngpio);
-+	}
++        The name format is: gpio-mockup-X-Y where X is the letter associated
++        with the mockup chip and Y is the line offset.
 +
-+	return gpio_mockup_register_device(properties);
-+}
++Manipulating simulated lines
++----------------------------
 +
-+static ssize_t gpio_mockup_debugfs_new_device_write(struct file *file,
-+						    const char __user *usr_buf,
-+						    size_t size, loff_t *ppos)
-+{
-+	struct gpio_mockup_prop_data prop_data;
-+	char opts[128];
-+	int ret;
++Each mockup chip creates its own subdirectory in /sys/kernel/debug/gpio-mockup/.
++The directory is named after the chip's label. A symlink is also created, named
++after the chip's name, which points to the label directory.
 +
-+	if (*ppos != 0 || size > sizeof(opts))
-+		return -EINVAL;
++Inside each subdirectory, there's a separate attribute for each GPIO line. The
++name of the attribute represents the line's offset in the chip.
 +
-+	ret = getline_from_user(opts, sizeof(opts), usr_buf, size);
-+	if (ret < 0)
-+		return ret;
-+
-+	memset(&prop_data, 0, sizeof(prop_data));
-+
-+	ret = gpio_mockup_new_device_from_opts(opts, &prop_data);
-+	gpio_mockup_free_property_data(&prop_data);
-+	return ret < 0 ? ret : size;
-+}
-+
-+static const struct file_operations gpio_mockup_debugfs_new_device_ops = {
-+	.owner = THIS_MODULE,
-+	.open = gpio_mockup_debugfs_open,
-+	.write = gpio_mockup_debugfs_new_device_write,
-+	.llseek = no_llseek,
-+	.release = single_release,
-+};
-+
- static ssize_t gpio_mockup_debugfs_delete_device_write(struct file *file,
- 						const char __user *usr_buf,
- 						size_t size, loff_t *ppos)
-@@ -726,6 +926,13 @@ static int __init gpio_mockup_debugfs_init(void)
- 	if (IS_ERR(gpio_mockup_dbg_dir))
- 		return PTR_ERR(gpio_mockup_dbg_dir);
- 
-+	entry = debugfs_create_file("new_device", 0200, gpio_mockup_dbg_dir,
-+				NULL, &gpio_mockup_debugfs_new_device_ops);
-+	if (IS_ERR(entry)) {
-+		debugfs_remove_recursive(gpio_mockup_dbg_dir);
-+		return PTR_ERR(entry);
-+	}
-+
- 	entry = debugfs_create_file("delete_device", 0200, gpio_mockup_dbg_dir,
- 				NULL, &gpio_mockup_debugfs_delete_device_ops);
- 	if (IS_ERR(entry)) {
-@@ -751,12 +958,14 @@ static int __init gpio_mockup_init(void)
- 		return ret;
- 	}
- 
--	ret = gpio_mockup_register_chips_from_params();
--	if (ret) {
--		pr_err("error registering device");
--		debugfs_remove_recursive(gpio_mockup_dbg_dir);
--		platform_driver_unregister(&gpio_mockup_driver);
--		return ret;
-+	if (gpio_mockup_ranges > 0) {
-+		ret = gpio_mockup_register_chips_from_params();
-+		if (ret) {
-+			pr_err("error registering device");
-+			debugfs_remove_recursive(gpio_mockup_dbg_dir);
-+			platform_driver_unregister(&gpio_mockup_driver);
-+			return ret;
-+		}
- 	}
- 
- 	return 0;
++Reading from a line attribute returns the current value. Writing to it (0 or 1)
++changes its pull.
 -- 
 2.26.1
 
