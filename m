@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA83125DE2C
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:47:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CDF325DE40
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:48:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgIDPrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 11:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43942 "EHLO
+        id S1727771AbgIDPsY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 11:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgIDPrP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:47:15 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD78C0619CF
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:53 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q9so6498761wmj.2
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:53 -0700 (PDT)
+        with ESMTP id S1727101AbgIDPrT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:47:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5578C0619E4
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w5so7207972wrp.8
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=df1vNsIBtzMz3XaBeJ8Q2j/QYEAOiM6PlNqlmnkxGzE=;
-        b=HCiTFjtPaoDptruE52sxg0PIrYN0fw4LxlnqDp18boSboMkoVyxeNy/lnftW/3B1VN
-         St/clTzUXKDOHSQA056HKj7PuXF/g2RLwdgdIjLG4XG1olSqBHJaH7BtKBIH3CrBfDLT
-         imWJKTRh52/m5EJlYTrb+CO3+4IWSd8rNuEeFqLMp3U8My502joushgdUehq4pMigYFC
-         AOP5Kf5CVb4VXX4Kw1t81IoEzl31OBdvYQYB7fmnrbnAvsvNNTf6HUl/3korYBFLK59T
-         FU4pltRDJrrAPTGx79VWKrY+5RNLNCdo1SqBKIuIwpwB5jdvB/+p+j5Z49o1MfvnBpS9
-         J0Lg==
+        bh=RT9K0p4g9wsam9mtLvU8jWCbdg1QlHE5npCSk6GRJVM=;
+        b=Pph0ChKqHgqs9PaK7532rJDYq8CCuzL49IHbUNNh8wkzPBANz7SFZRVpe8XZ6089Dv
+         w6hesKYtcpQT4Xn0LXDDkAAwnHY8SkZfl97hmrjQg1ejNa/IDYgWLvxD72t0bCCu1ihU
+         Kia91DKj1cbhCQ054PEtqNZgjWU4xEvuzZbzThXH6fhadPW3xJHoOT4GOeXDsdpt4B6Q
+         w8yhwq243s79jSf7dIZgRnGMtn09vLqHQF/2Gw1s+Xxbhg4FS7Q6bC3r5oFPgFrePT8H
+         Rkc0q0bYUHSe+Yf2WE7b+liCRpH0L24hIZ43cjEjsbBKorpi1qb4JDcLyq2SkhHPkXug
+         aKKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=df1vNsIBtzMz3XaBeJ8Q2j/QYEAOiM6PlNqlmnkxGzE=;
-        b=imEMK7kdqiYKOwHJ1kMdszrm/b2eu7dH3t84dn6x9jrnMmBY8v7DE1jlmmLEJIBk6z
-         nHBB9mM7BkMfpnlekZPn9fdcKguOrZEF2k+d8IIrIU9kus5OUiCSKlaps52r9zrIn2fj
-         gOx1lCeSjPoMLFQRRNC8Dlx30LRi8JgNW491aOoXDpcbe+XTlXMQ85MnKw+MkIIePFyp
-         VCUEyY1YKnnT7FoaPkix1P6TSqDnw7TKEjzdz6EPb5N2mYVxULEphdP1jcLcEScYl+G3
-         8EPHwEgAxLdyyAD4Xi3HHsT7o79PmagEedGgz72NTwu8LqLvCmgd6rv1lYV1PtOenN9J
-         9NLw==
-X-Gm-Message-State: AOAM5333HOYGZ9Om4TJEWnCOTGvR3b1eUgoFAdH+OyqtCfZOO/VK1sqN
-        VF89e6B9f4iJ4DHyv1P2QmlcEA==
-X-Google-Smtp-Source: ABdhPJwDF5h6MoCuJSLVRYN6V3SUPCfPtMhU02JacL8LUejcHJkWG2C2FBuxEHO5GQ0TLz1u4jgkzg==
-X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr8004415wml.159.1599234412250;
-        Fri, 04 Sep 2020 08:46:52 -0700 (PDT)
+        bh=RT9K0p4g9wsam9mtLvU8jWCbdg1QlHE5npCSk6GRJVM=;
+        b=DsG1hOCtzA9edsOm1nM3yygt8Q2Up8Q5lO5E7nE8Y/Gj5Z6i1Dga4cARHi/GAjzpOY
+         0Ab+BEAt7f/GpRPhXc9o+UvayF2dsqM7hhjqNqv4sTvWec4cpn0gR2MNPSQm0+Bl/WqI
+         jtQRxEMw+LlBmqb/eCiOMRHSPJK6sXk+lYwyqGxcC8ksvZg7Q0anJPzBSlV607wraIfx
+         +6Ee2mOOXvKKv2UDinkZkIQ0H2rX4MbyRBMwMqxYi5nBWjowBM/zahM5WKDiwCKhyG3w
+         jwGv+lzLyLVVhW/vtQudqPIHDXphwWFgbUtFQL0Cwcq1n57FJOWm/lCqvFnwI9AJEXjn
+         iStw==
+X-Gm-Message-State: AOAM5312uvOiHJMrFRXODCx+Zj60UZPbqz8ZwLNsrpHKFMkwgKQuu/7/
+        Krk8g77rcI2v2A1oOYyn98430A==
+X-Google-Smtp-Source: ABdhPJzwm1LPWjidY+W2eWt031GEhqfqEZ4XCSVhfjqUt9KC+wqwPvwzW1Xvz1lIpyZuwTS8CeLJLw==
+X-Received: by 2002:adf:9d44:: with SMTP id o4mr8315397wre.361.1599234413434;
+        Fri, 04 Sep 2020 08:46:53 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.51
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:51 -0700 (PDT)
+        Fri, 04 Sep 2020 08:46:52 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -56,9 +56,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 18/23] gpio: mockup: require debugfs to build
-Date:   Fri,  4 Sep 2020 17:45:42 +0200
-Message-Id: <20200904154547.3836-19-brgl@bgdev.pl>
+Subject: [PATCH 19/23] gpio: mockup: add a symlink for the per-chip debugfs directory
+Date:   Fri,  4 Sep 2020 17:45:43 +0200
+Message-Id: <20200904154547.3836-20-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
 References: <20200904154547.3836-1-brgl@bgdev.pl>
@@ -71,137 +71,74 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Debugfs has become the standard way of interfacing with gpio-mockup to
-the point where the module is not very useful without it anymore. Let's
-make it a hard requirement to build gpio-mockup.
+We used to have a symlink named after the chip's label linking to the
+per-chip directory named after the chip's name. This was removed by
+commit d51ee07a8de7 ("gpio: mockup: don't create the debugfs link named
+after the label") because there were no users of it.
 
-Let's also add error checks whenever calling debugfs routines as we now
-don't expect them to fail.
-
-The device sub-directories must now be removed when the device is
-detached to correctly support dynamically created chips.
-
-The call to debugfs_remove_recursive() in module exit must be moved to
-the bottom or we'd risk to remove the root directory before devices can
-unregister their own sub-directories.
+This changeset proposes to reintroduce debugfs symlinks but inverted:
+the link named after the device name points to the directory named after
+the label. This way user-space can dynamically create a chip (once that
+functionality is available), detect its creation over uevent and match
+the device name to the label by resolving the link.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/Kconfig       |  1 +
- drivers/gpio/gpio-mockup.c | 41 ++++++++++++++++++++++++++++----------
- 2 files changed, 32 insertions(+), 10 deletions(-)
+ drivers/gpio/gpio-mockup.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8030fd91a3cc..515f345757d8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1567,6 +1567,7 @@ config GPIO_AGGREGATOR
- 
- config GPIO_MOCKUP
- 	tristate "GPIO Testing Driver"
-+	depends on DEBUG_FS
- 	select IRQ_SIM
- 	help
- 	  This enables GPIO Testing driver, which provides a way to test GPIO
 diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 29fbf007ab26..7df990662c17 100644
+index 7df990662c17..bc4609e047ef 100644
 --- a/drivers/gpio/gpio-mockup.c
 +++ b/drivers/gpio/gpio-mockup.c
-@@ -348,38 +348,55 @@ static const struct file_operations gpio_mockup_debugfs_ops = {
- 	.release = single_release,
+@@ -52,6 +52,7 @@ struct gpio_mockup_chip {
+ 	struct gpio_mockup_line_status *lines;
+ 	struct irq_domain *irq_sim_domain;
+ 	struct dentry *dbg_dir;
++	struct dentry *dbg_link;
+ 	struct mutex lock;
  };
  
--static void gpio_mockup_debugfs_setup(struct device *dev,
--				      struct gpio_mockup_chip *chip)
-+static void gpio_mockup_remove_chip_debugfs_entry(void *data)
+@@ -355,6 +356,13 @@ static void gpio_mockup_remove_chip_debugfs_entry(void *data)
+ 	debugfs_remove_recursive(entry);
+ }
+ 
++static void gpio_mockup_remove_chip_debugfs_link(void *data)
 +{
-+	struct dentry *entry = data;
++	struct dentry *link = data;
 +
-+	debugfs_remove_recursive(entry);
++	debugfs_remove(link);
 +}
 +
-+static int gpio_mockup_debugfs_setup(struct device *dev,
-+				     struct gpio_mockup_chip *chip)
+ static int gpio_mockup_debugfs_setup(struct device *dev,
+ 				     struct gpio_mockup_chip *chip)
  {
- 	struct gpio_mockup_dbgfs_private *priv;
- 	struct gpio_chip *gc;
-+	struct dentry *attr;
- 	const char *devname;
- 	char *name;
--	int i;
-+	int i, ret;
- 
+@@ -368,7 +376,7 @@ static int gpio_mockup_debugfs_setup(struct device *dev,
  	gc = &chip->gc;
  	devname = dev_name(&gc->gpiodev->dev);
  
- 	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
-+	if (IS_ERR(chip->dbg_dir))
-+		return PTR_ERR(chip->dbg_dir);
+-	chip->dbg_dir = debugfs_create_dir(devname, gpio_mockup_dbg_dir);
++	chip->dbg_dir = debugfs_create_dir(gc->label, gpio_mockup_dbg_dir);
+ 	if (IS_ERR(chip->dbg_dir))
+ 		return PTR_ERR(chip->dbg_dir);
+ 
+@@ -377,6 +385,16 @@ static int gpio_mockup_debugfs_setup(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
++	chip->dbg_link = debugfs_create_symlink(devname, gpio_mockup_dbg_dir,
++						gc->label);
++	if (IS_ERR(chip->dbg_link))
++		return PTR_ERR(chip->dbg_link);
 +
 +	ret = devm_add_action_or_reset(dev,
-+			gpio_mockup_remove_chip_debugfs_entry, chip->dbg_dir);
++			gpio_mockup_remove_chip_debugfs_link, chip->dbg_link);
 +	if (ret)
 +		return ret;
- 
++
  	for (i = 0; i < gc->ngpio; i++) {
  		name = devm_kasprintf(dev, GFP_KERNEL, "%d", i);
  		if (!name)
--			return;
-+			return -ENOMEM;
- 
- 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 		if (!priv)
--			return;
-+			return -ENOMEM;
- 
- 		priv->chip = chip;
- 		priv->offset = i;
- 		priv->desc = &gc->gpiodev->descs[i];
- 
--		debugfs_create_file(name, 0200, chip->dbg_dir, priv,
--				    &gpio_mockup_debugfs_ops);
-+		attr = debugfs_create_file(name, 0200, chip->dbg_dir, priv,
-+					   &gpio_mockup_debugfs_ops);
-+		if (IS_ERR(attr))
-+			return PTR_ERR(attr);
- 	}
- 
--	return;
-+	return 0;
- }
- 
- static void gpio_mockup_dispose_mappings(void *data)
-@@ -462,7 +479,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	if (rv)
- 		return rv;
- 
--	gpio_mockup_debugfs_setup(dev, chip);
-+	rv = gpio_mockup_debugfs_setup(dev, chip);
-+	if (rv)
-+		return rv;
- 
- 	return 0;
- }
-@@ -629,6 +648,8 @@ static int __init gpio_mockup_init(void)
- 	int ret;
- 
- 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
-+	if (IS_ERR(gpio_mockup_dbg_dir))
-+		return PTR_ERR(gpio_mockup_dbg_dir);
- 
- 	ret = platform_driver_register(&gpio_mockup_driver);
- 	if (ret) {
-@@ -650,9 +671,9 @@ static int __init gpio_mockup_init(void)
- 
- static void __exit gpio_mockup_exit(void)
- {
--	debugfs_remove_recursive(gpio_mockup_dbg_dir);
- 	platform_driver_unregister(&gpio_mockup_driver);
- 	gpio_mockup_unregister_devices();
-+	debugfs_remove_recursive(gpio_mockup_dbg_dir);
- }
- 
- module_init(gpio_mockup_init);
 -- 
 2.26.1
 
