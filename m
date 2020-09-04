@@ -2,167 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6D125D8A7
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 14:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2006125D901
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 14:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgIDMbU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 08:31:20 -0400
-Received: from gofer.mess.org ([88.97.38.141]:34535 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbgIDMbG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:31:06 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 7B286C6429; Fri,  4 Sep 2020 13:30:50 +0100 (BST)
-Date:   Fri, 4 Sep 2020 13:30:50 +0100
-From:   Sean Young <sean@mess.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: SONY IR issue
-Message-ID: <20200904123050.GA11675@gofer.mess.org>
-References: <DB8PR04MB679580C7C8E6888B56C8BDACE62C0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <20200903185513.GA31286@gofer.mess.org>
- <DB8PR04MB67950837E2355EA81FBAADD1E62D0@DB8PR04MB6795.eurprd04.prod.outlook.com>
+        id S1730178AbgIDMw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 08:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730114AbgIDMw5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 08:52:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF1BC061244;
+        Fri,  4 Sep 2020 05:52:57 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q3so1100664pls.11;
+        Fri, 04 Sep 2020 05:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qPY2otdvdYKHrSDH2JSuHl9RwKdbgP3H7sIRbpWvU/0=;
+        b=JxQE5vkwkqpi+phl2JYXrq6ANaMMo4a6mqr9EoLsQSckADwANyv8kJ2rDfb/7zuZq0
+         aX/ZGS5K/rZtelQLMgjXvmi4y2QHNpdqIbRbk/YaObBXzRhTN/3CaseZxjBxYamaw/hd
+         L1FUcjYRpkOrSf+LQ0yJVrxdf84gqOaDfTxIrghVbht699lNShW2/fYVYYRXCTlJlISk
+         mFEMzbtv0S7DgB3NN05laU0gqGT6KW+Zy0g12RGvvdLUTN16xpE3JXCFmMCQFTOiYSxr
+         93dri4OSxLq2IR95MLG8nlMBzwpkU5fz7KZGZszL6yczikJYPP1oGHvlxw6tb3u7CnAa
+         6sHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qPY2otdvdYKHrSDH2JSuHl9RwKdbgP3H7sIRbpWvU/0=;
+        b=przmODVCRE2vChAeNC70ivjuD5xPOrQOyqbm7AnESt3YjjJl5rvWOzhCoTtA00kSoi
+         KO++3lKovH4LKM5LDI3InuZIXLBAcreDHGpwGepgK7H6z+XL9zS+4pqE9EyNSkNGlXlf
+         9Xq2z9qnu2MhQK7NnbBsD5DRonA3Kw/eHivj+sQmMp6wgfmlF8iqLXgeW376xuQRWHfM
+         72F3Jt4W4UkhNzo/OXTACMhQt6OofuWjFGYziwpoWDX0TFE95YYkpD9nV2KTTr7lk7WZ
+         l2BaqxQhqJ3gXz2I+kkFR9hkh1Yl4urD1N78jv1wsMjeLiO93nsgFVC0w2nV1Y2NoN7h
+         Mleg==
+X-Gm-Message-State: AOAM532UMd4MjAcqNcGYkYMfeqd2NjC3A9UzBM/zwYQ/l0hNOe/aIHpu
+        7dkFxZcuomG7CVgvgEXobA8=
+X-Google-Smtp-Source: ABdhPJwX9hyEaxc8P6PcH/rCAhZpOO76zijV2bcot1QOThINl3Dlb1JNItVkPX5nt8P+zfD6tFK0SA==
+X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr8285193plt.137.1599223976385;
+        Fri, 04 Sep 2020 05:52:56 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id 68sm6604790pfd.64.2020.09.04.05.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 05:52:55 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 20:52:50 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 00/20] gpio: cdev: add uAPI v2
+Message-ID: <20200904125250.GA323947@sol>
+References: <20200831032006.1019978-1-warthog618@gmail.com>
+ <CAMpxmJUETJgmxzWzHumOVr+vWFQ27P71MtcdSdf_=jvtrSfRPg@mail.gmail.com>
+ <20200903083750.GA17445@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB67950837E2355EA81FBAADD1E62D0@DB8PR04MB6795.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200903083750.GA17445@sol>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Joakim,
-
-On Fri, Sep 04, 2020 at 10:43:23AM +0000, Joakim Zhang wrote:
-> > On Thu, Sep 03, 2020 at 11:55:30AM +0000, Joakim Zhang wrote:
-> > > Thanks a lot for pointing me to use “ir-ctl -r”, really easy to
-> > > capture the raw data. 😊
+On Thu, Sep 03, 2020 at 04:37:50PM +0800, Kent Gibson wrote:
+> On Thu, Sep 03, 2020 at 10:02:04AM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Aug 31, 2020 at 5:21 AM Kent Gibson <warthog618@gmail.com> wrote:
 > > >
-> > > The scancode from my RC is 0x130002, the scancode decoded by SONY
-> > decoder is 0x110002. So I capture the waveform generated by IR and raw data
-> > sampled by GPIO. All attached, please have a check.
+[snip]
 > > 
-> > So you captured it with a logic analyzer?
-> Yes, with a logic analyzer yesterday. Today, change to use a analog analyzer, the signal is perfect, seems not the issue of signal generated by IR device. IR device I used is IRM-V538/TR1.
-
-Ok, makes sense.
- 
-> > > As you can see, the RC transmit repeatedly 6 times. After checking them
-> > carefully, all of them satisfied SONY 12bit protocols. SONY decoder decode the
-> > 5th signal and report the scancode 0x110002.
-> > > According to raw data, it really should be 0x110002. So I check the waveform
-> > and raw data further, the raw data sampled by GPIO seems not correct.
-> > >
-> > > e.g. for the 5th signal
-> > > [cid:image001.jpg@01D6822C.2AD54480]
-> > > pulse 2408
-> > > space 549
-> > > pulse 579
-> > > space 581
-> > > pulse 1188
-> > > space 579
-> > > pulse 579
-> > > space 579
-> > > pulse 579
-> > > space 581
-> > > pulse 577
-> > > space 579
-> > > pulse 579
-> > > space 549
-> > > pulse 610
-> > > space 548
-> > > pulse 1222
-> > > space 547
-> > > pulse 690 // this should be ~1200
-> > > space 567
-> > > pulse 587
-> > > space 569
-> > > pulse 588
-> > > space 570
-> > > pulse 1192
-> > > timeout 17877
-> > >
-> > > For other signals, they all have an exception value in raw data, as below, so
-> > decoder failed at these values. Strange enough, why only one value is incorrect.
-> > > 1st: space 54
-> > > 2nd: pulse 76
-> > > 3rd: space 61
-> > > 4th: space 51
-> > > 6th: space 53
-> > > But looking into the waveform, they are all normal, could you tell me how to
-> > look into it? Is there any specific configuration for GPIO PAD? I might have to
-> > grab some analog signals.
-> > > One more add is that, it can improve decode correctness if I add milliseconds
-> > delay in ir_sony_decode() function.
+> > To me it looks good, just a couple nits here and there and some questions.
 > > 
-> > Right, so changing the dev_dbg() to dev_info() did work, although that is not
-> > the correct fix.
+> > I think it's worth deciding whether we want to keep the selftests in
+> > tools/testing/selftests/gpio/ and then maybe consider porting
+> > gpio-mockup-chardev.c to V2 or simply outsource it entirely to
+> > libgpiod.
 > > 
-> > It would be interesting to know if the problem is in the gpio device, or if there is
-> > a problem with further processing in the IR layers.
-> > 
-> > What is the device you are using?
-> >
-> > I think it would be interesting to add a debug printk in gpio_ir_recv_irq with the
-> > ktime and the val. We can see then if correct data is being generated here, or if
-> > things go wrong in the IR layers.
-> I did below code change to print raw data generated in gpio interrupt handler. After checking the data, it is consistent to the raw data dump by the ir-ctl.
 > 
-> --- a/drivers/media/rc/rc-ir-raw.c
-> +++ b/drivers/media/rc/rc-ir-raw.c
-> @@ -76,7 +76,7 @@ int ir_raw_event_store(struct rc_dev *dev, struct ir_raw_event *ev)
->         if (!dev->raw)
->                 return -EINVAL;
+> Ooops - I wasn't even aware they existed - though it had crossed my mind
+> that the kernel should have some selftests somewhere - I use the libgpiod
+> tests, from my libgpiod port, and my own Go based test suite for my testing,
+> as well as some smoke tests with the tools/gpio.
 > 
-> -       dev_dbg(&dev->dev, "sample: (%05dus %s)\n",
-> +       trace_printk("sample: (%05dus %s)\n",
->                 TO_US(ev->duration), TO_STR(ev->pulse));
+> The libgpiod tests only cover v1 equivalent functionality, while my Go
+> tests cover the complete uAPI, and both v1 and v2.
 > 
->         if (!kfifo_put(&dev->raw->kfifo, *ev)) {
+> It would be good for the kernel to at least have some smoke tests to
+> confirm basic functionality, even thorough testing is left to a
+> userspace library.  So the existing tests should be ported to v2, though
+> should also retain the v1 tests if v1 is still compiled in.
 > 
-> 
-> > I wouldn't be surprised if the gpio device generates two interrupts for the
-> > broken pulse (one after 690us and another at 1200us), and if decoding happens
-> > before the second then the wrong pulse length is used.
-> I also check the number of interrupt generated by gpio. After I press the key, RC transmits 7 frames, it should contain 182 falling/rising edges.
-> It indeed reports 182 interrupts and go through ir_raw_event_store function 182 times. Since the number of interrupt is accurate, just a few falling/rising interrupt
-> comes much quickly than others, but the analog signal is perfect. It is really out of my understanding. It should not an issue in IR layer.
 
-I think the next step would be to put dev_dbg/printk in gpio-ir-recv.c,
-and see if the results are the same there. I suspect they will be.
+I've got a v7 ready to submit that includes a couple of patches for the
+gpio-mockup selftests (their primary purpose appears to be testing the
+mockup module, rather than the GPIO ABI), but I now notice that the
+selftests/gpio section of the tree has a different maintainer:
 
-> > > I also have a question, if RC transmit repeatedly 6 times, and SONY decodes
-> > decode all raw data successfully, it will report to input subsystem 6 times, does
-> > input subsystem will still report to userspace 6 times?
-> > 
-> > If the sony decodes the same values 6 times, then scancode will reported 6
-> > imes, but there will be only one key down event, and a key up event about
-> > 100ms after the the last decode (plus a few other milliseconds for various
-> > timeouts).
-> Thanks for your details. Does this mean input subsystem will still report scancode 6 times, but only report keycode once if it is matched?
+scripts/get_maintainer.pl 0021-selftests-gpio-port-to-GPIO-uAPI-v2.patch
+Bamvor Jian Zhang <bamv2005@gmail.com> (maintainer:GPIO MOCKUP DRIVER)
+Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
+linux-gpio@vger.kernel.org (open list:GPIO MOCKUP DRIVER)
+linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+linux-kernel@vger.kernel.org (open list)
 
-Exactly. The keycode is only reported once, so that if the user press e.g.
-"1" they will get just get one "1". 
+The v7 patch up to that point restores the functions that the selftests
+are using so that they build and run again.
+So I should hold off on the selftest patches and submit them separately
+after the GPIO changes are in?
 
-> Sean, based on your experience, where else do you suggest me to look into this further? Have you came across such case, a few interrupt responded so quickly so that front pulse/space is much shorten?
-
-To be honest I've never seen this before.
-
-I'm not sure what the cause could be. On the raspberry pi it is known that
-lots usb traffic causes delays in the gpio interrupt handlers due to
-some hardware issue, but this causes some interrupts to arrive late. This
-causes some of the pulse/space timings to be longer, and then later ones
-are shorter again as it catches up.
-
-Similarly if the kernel is running with interrupts off for too long, some
-of the timings will be longer and others shorter.
-
-Is there anything you can tell us about the gpio hardware?
-
-Thanks,
-
-Sean
+Cheers,
+Kent.
