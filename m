@@ -2,60 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF2625DDE7
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:38:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E3A225DE79
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgIDPif (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 11:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
+        id S1726613AbgIDPui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 11:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgIDPid (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:38:33 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEACC061245
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:38:32 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a8so1007476ilk.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:38:32 -0700 (PDT)
+        with ESMTP id S1726559AbgIDPql (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:46:41 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03A6C06125F
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:35 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id q9so6497820wmj.2
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=1MR7w5pXZSiUaRJ6XXYmBVR/BBCArAfXUnOrJ4PHyTw=;
-        b=MayIMlvEIuLQEyBVH2GnUxfbNN+aMNytrSs32aNXjEUi3Yf4ufNw8Fjyo1FQqHNw0X
-         aS/Mbu5OryWG79nlzRZXSNMctYRNVYlyAP8nH3hZl5CUsvIoXbx7gUh5CIagVqvZon3W
-         fOIZQXsNYyjdv3UC8ula3lXyFn/lPJKKxJFdZJEdZUnCe47Y/qZewoEZsTs3m8T7MIk/
-         HKIX1kLeP3CeeAc3YFFRJD1qxynIn4CR7SLEDIOL6mMhLvjev9hKqam/pC8FwR5bFlkP
-         Mufpw1fN4V4H48znPonmV37JLXh0k1rJaEpmmHYEvI01RV3M4zFk0S4/ju8N5qSmklw3
-         6Ghw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fmK93ghUCK4Bfkn87SsfLV7Lx2ToEIVDjZGF81gdV3I=;
+        b=imCUNYkyVYERELDx5z17ROl3W0tPoyG6+NCLtcyQUclp/DLiloNkPtJzWEXXyubLAC
+         h+4HuoA1iGdskeY62BZFfE8AGzR5LltiwgSovvfligA3ru6g1Mmthw69qbjeE8RUaLbr
+         +PYf8q+AFYdKipDE8+Zu2jWHu/amtYYNu75E5ZpsiGP5ZSbomoCQJvvem6mLfv2k5zcE
+         q+85l1xCKNUc1gRTlgOnGV0Pxl+3e3dSGIWChjVkrpEFZEAkzoHawJpmtHzYjQn2NAo+
+         w64MAdJTEpnavglHJzxNT5kWPO4SUSfdi1zyQVm17Ta9V26Z8XWz3AYA+5gYgPFhE50B
+         RpBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=1MR7w5pXZSiUaRJ6XXYmBVR/BBCArAfXUnOrJ4PHyTw=;
-        b=oZFc2vSzXh0ayAGJKqDl05gx+S2bnvVWNxAmlb1AjXPDEG0Tm3yJOFeJ7CU10Miw+d
-         OFX5xjN36yREq//JBZmkMV4CfWHx96eL+HokJ7biLk5i3KLC6OnZQ55n7R15J1Y6Zdz+
-         YFvDmVmOiXJcGOKw/swQ3YY0oO46Lhua6EuTZMoczmXzSfn6rBf/GkEUulDePn0HU+up
-         mEzSsRlaN6J3SQvUJ0ypMBVAKbxvlAh+J8iNhwrni/vWHS+ATTCA3an4iBvgpeOFcyil
-         n6MiKkqg8r5JQpi4g5VJuw3naIJEtoZt0preEocsz0H2wwa2aoNlqFRUudOwqJxjNkyw
-         6shA==
-X-Gm-Message-State: AOAM533lDV9dyWHiXECy90UQqvihP4+gk+3YByIPf+p0TPG4jTDr15IG
-        U3xoVCwxtEpz8x4sJIE/ezfw6gqMdn5OOH9kTPQ=
-X-Google-Smtp-Source: ABdhPJz9mRidX15WlbKNuQtOfhads/5lqByceGDW8EoibbuvwhYSjDBY/D48HUe9jJNDlXZCXHwkntxoaHJUzYloBOU=
-X-Received: by 2002:a92:5e4c:: with SMTP id s73mr8368957ilb.151.1599233909137;
- Fri, 04 Sep 2020 08:38:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fmK93ghUCK4Bfkn87SsfLV7Lx2ToEIVDjZGF81gdV3I=;
+        b=EP2rMU41qpQsaztTmZhUL4/4jaPQ1cGmBEgXr2Rt2MbMyesjK/EaJmLz8V4KYZhOrx
+         zV0QTAESqUgDBuNXclmyzUnKWTHUkfEfRfYe9be0iCN+4nTnCS3ysTcIAtcUSWZCNhEm
+         7F53NlYEdT/FHKaZvsSV4/PShpLpThkmQfKLCMSNvL6X0tlDKST91oaq0znLPv3jLQms
+         9EDB/9MDnEtz/vD0IVI+XJ9CJ5FOA8WLN1WT1gNO02jAKQgNiLdofJH19Vkk3jeMcTGC
+         c2X/MwRbZfYTtNH2BBGkGwR14JjxtLay7iDQFJp1jXXs7VXzAK0zAir2ViEaUPAU+Kfa
+         R5lg==
+X-Gm-Message-State: AOAM531d4pMDNpjy/nrtoBvP9CmteeN7fgtpy5PvRlmvdkwDF2DrYtwX
+        YeYBS1FOkxXV0PVUZTrh6G8Tfg==
+X-Google-Smtp-Source: ABdhPJwT14PBgDJkOeHgwMzyq3LJMTMmetylVFwoCbarhMQNwhP0okhbv0nlb/abXQmSIiMpOSdJqA==
+X-Received: by 2002:a1c:9a48:: with SMTP id c69mr7940657wme.43.1599234390539;
+        Fri, 04 Sep 2020 08:46:30 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:46:29 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 00/23] gpio: mockup: support dynamically created and removed chips
+Date:   Fri,  4 Sep 2020 17:45:24 +0200
+Message-Id: <20200904154547.3836-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Received: by 2002:a6b:5403:0:0:0:0:0 with HTTP; Fri, 4 Sep 2020 08:38:28 -0700 (PDT)
-From:   Tricia Smith <triciatricia841@gmail.com>
-Date:   Fri, 4 Sep 2020 20:08:28 +0430
-X-Google-Sender-Auth: LddEsuLeEBXAg1-A5LIfQT6ilAM
-Message-ID: <CAG3twc0tUGWtp1H1Yoh-p=BpdBNqFb6nWv0Ffh2GROxhyYWiHw@mail.gmail.com>
-Subject: Re: Hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dear, I am Miss Tricia Smith the only Daughter/Child of late Mr and
-Mrs William Smith. I am 18 years old. Please i have something very
-important and confidential to discuss with you.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+We're about to merge w V2 user API for GPIO. In user-space we're using the
+gpio-mockup driver for testing but it's quite cumbersome (needs unloading
+and reloading to change chip configuration) and not very extensible (config
+is passed over module params).
+
+This series proposes to extend the debugfs interface to support dynamic
+creation and removal of dummy chips, with extensible options.
+
+First 3 patches add some lib functionality we'll use later on. Next 3 contain
+general gpiolib refactoring and can be picked up independently.
+
+Next we refactor gpio-mockup and finally add the delete_device and new_device
+attributes. Last patch adds documentation for gpio-mockup so I'm not going into
+detail on how the new interface works - the doc describes it pretty well.
+
+Bartosz Golaszewski (23):
+  lib: cmdline: export next_arg()
+  lib: string_helpers: provide kfree_strarray()
+  lib: uaccess: provide getline_from_user()
+  gpiolib: generalize devprop_gpiochip_set_names() for device properties
+  gpiolib: unexport devprop_gpiochip_set_names()
+  gpiolib: switch to simpler IDA interface
+  gpio: mockup: drop unneeded includes
+  gpio: mockup: use pr_fmt()
+  gpio: mockup: use KBUILD_MODNAME
+  gpio: mockup: fix resource leak in error path
+  gpio: mockup: remove the limit on number of dummy chips
+  gpio: mockup: define a constant for chip label size
+  gpio: mockup: pass the chip label as device property
+  gpio: mockup: use the generic 'gpio-line-names' property
+  gpio: mockup: use dynamic device IDs
+  gpio: mockup: refactor the module init function
+  gpio: mockup: rename and move around debugfs callbacks
+  gpio: mockup: require debugfs to build
+  gpio: mockup: add a symlink for the per-chip debugfs directory
+  gpio: mockup: add a lock for dummy device list
+  gpio: mockup: provide a way to delete dummy chips
+  gpio: mockup: provide a way to create new dummy chips
+  Documentation: gpio: add documentation for gpio-mockup
+
+ .../admin-guide/gpio/gpio-mockup.rst          |  87 +++
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/Makefile                         |   1 -
+ drivers/gpio/gpio-mockup.c                    | 614 ++++++++++++++----
+ drivers/gpio/gpiolib-acpi.c                   |   3 -
+ drivers/gpio/gpiolib-devprop.c                |  63 --
+ drivers/gpio/gpiolib-of.c                     |   5 -
+ drivers/gpio/gpiolib.c                        |  62 +-
+ include/linux/gpio/driver.h                   |   3 -
+ include/linux/string_helpers.h                |   2 +
+ include/linux/uaccess.h                       |   3 +
+ lib/cmdline.c                                 |   1 +
+ lib/string_helpers.c                          |  22 +
+ lib/usercopy.c                                |  37 ++
+ 14 files changed, 705 insertions(+), 199 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
+ delete mode 100644 drivers/gpio/gpiolib-devprop.c
+
+-- 
+2.26.1
+
