@@ -2,99 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD1C825DE8E
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:52:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7CCD25DFFC
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 18:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgIDPwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 11:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgIDPwq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:52:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95989C061244
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:52:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t10so7269499wrv.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tF66yPfX1NKAG53/DHurnvbRXaRAE6KmX50Xc7KSu5I=;
-        b=mLh68MJT1U8IQ6NzF3VoGinjRWq7ktw9W9LKtgXTietebfbmzsTaSHeqzxZZQtTUmf
-         KqO2GZfYxMRWMDXBlUkW7TIfevHNv9hovtNfTDeeqRB8YYXBKjl0k2malgR/zmOrVDeE
-         T7NO7XV5ljqxl2TWnSmBNOQ7q5lLYj29U4K6wcmq7ezkkDOLcTP8JbPvJRBRdk4gVAlo
-         CyTGAbxEsXY7oODVLiOjjISkobPLHE/Zzu57OCY0HxUsMaO8nXcggbIXH5nbitj3SLl4
-         bQYYGeqsQuH+Hc47/XfbNhKxAiRyl/Dvsb+AYUixQlzh5P+rPsS3BDWHydKkUyf8COi2
-         SidQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tF66yPfX1NKAG53/DHurnvbRXaRAE6KmX50Xc7KSu5I=;
-        b=oJqNMjL21fxCRjM+GS3otwaBB1jZY5QLzcaPOJ2HWQU9RlKvGtf0c2cR3WWTiiImrT
-         nBDWhqGpwEbwcQFH7gj1qaHSJmiZ87izMVsKeR+JU0s6nDe8nrsKgEbhYwRkHeszKF7R
-         XedB/NOrwSsI+rGDdmGR2zEkjuUT8Qdbw7YjI8WqWns5vJDfDDr+xXJIAaCMT3MzTwrB
-         CEtRObkJ5zbudp1VgNEOQigP/vRf7CpL8SKOoMwEhO3StR2eU+/Ls0MIhtAkXmTsBVw4
-         E+XhiRdFeFha3JyLxcEFhWjuikufkLzjqrBGOUGXU/0Pth8MUPjFtRHWkurHblhNF5c/
-         Hffw==
-X-Gm-Message-State: AOAM532OYHHlxFke4MdMWgzTLTrvwleQdves1M88ZxLyIBK8WkJLNHHN
-        mj+gZ7aWgAAjCSNZDI+lU2q4gQ==
-X-Google-Smtp-Source: ABdhPJzEUCneAx2hf0OOAGsxURs54T9x7yx+aWKopdRHP7BTNB6P5GyejTFP3NKMMf3ZkoZHzrKA2A==
-X-Received: by 2002:a5d:574e:: with SMTP id q14mr7850513wrw.281.1599234764343;
-        Fri, 04 Sep 2020 08:52:44 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id h6sm11656811wmb.22.2020.09.04.08.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:52:43 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
+        id S1727028AbgIDQmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 12:42:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:31602 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgIDQmz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:42:55 -0400
+IronPort-SDR: vc3iZkitfcnB934+apVa/Rrpg57K149hZbxAnu1RGG8BVPha1VK8uZcRBDdSswgmrdSH0maY5u
+ ZgCDAI2mECYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="219337142"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="219337142"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:42:54 -0700
+IronPort-SDR: tpi1BOHeyc/3bUdy1tLlVqxhknbQM6rWuITrHIw0cYx/ddFawv/kCVr0vngQSnYvIW4DfaPBrx
+ cUNAWhEBhrRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="332217258"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:42:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kEEat-00EKFU-4B; Fri, 04 Sep 2020 19:29:43 +0300
+Date:   Fri, 4 Sep 2020 19:29:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.9-rc4
-Date:   Fri,  4 Sep 2020 17:52:40 +0200
-Message-Id: <20200904155240.4877-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+Subject: Re: [PATCH 08/23] gpio: mockup: use pr_fmt()
+Message-ID: <20200904162943.GT1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-9-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904154547.3836-9-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Sep 04, 2020 at 05:45:32PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> We don't need a custom logging helper. Let's use the standard pr_fmt()
+> macro which allows us to use all pr_*() routines with custom format.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpio-mockup.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index 349782cdb4d7..73cd51459c2a 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -21,6 +21,9 @@
+>  
+>  #include "gpiolib.h"
 
-Hi Linus,
+> +#undef pr_fmt
+> +#define pr_fmt(fmt)		GPIO_MOCKUP_NAME ": " fmt
+> +
 
-please pull the following two fixes for v5.9.
+Just put definition to be first line of code before other inclusions and drop
+unnecessary #undef.
 
-Bartosz
+>  #define GPIO_MOCKUP_NAME	"gpio-mockup"
+>  #define GPIO_MOCKUP_MAX_GC	10
+>  /*
+> @@ -31,8 +34,6 @@
+>  /* Maximum of three properties + the sentinel. */
+>  #define GPIO_MOCKUP_MAX_PROP	4
+>  
+> -#define gpio_mockup_err(...)	pr_err(GPIO_MOCKUP_NAME ": " __VA_ARGS__)
+> -
+>  /*
+>   * struct gpio_pin_status - structure describing a GPIO status
+>   * @dir:       Configures direction of gpio as "in" or "out"
+> @@ -549,7 +550,7 @@ static int __init gpio_mockup_init(void)
+>  
+>  	err = platform_driver_register(&gpio_mockup_driver);
+>  	if (err) {
+> -		gpio_mockup_err("error registering platform driver\n");
+> +		pr_err("error registering platform driver\n");
+>  		return err;
+>  	}
+>  
+> @@ -577,7 +578,7 @@ static int __init gpio_mockup_init(void)
+>  
+>  		pdev = platform_device_register_full(&pdevinfo);
+>  		if (IS_ERR(pdev)) {
+> -			gpio_mockup_err("error registering device");
+> +			pr_err("error registering device");
+>  			platform_driver_unregister(&gpio_mockup_driver);
+>  			gpio_mockup_unregister_pdevs();
+>  			return PTR_ERR(pdev);
+> -- 
+> 2.26.1
+> 
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.9-rc4
-
-for you to fetch changes up to 5fcface659aab7eac4bd65dd116d98b8f7bb88d5:
-
-  gpio: sprd: Clear interrupt when setting the type as edge (2020-08-31 18:06:28 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.9-rc4
-
-- fix warnings if PM is enabled in gpio-omap
-- clear interrupt when setting the type as edge in gpio-sprd
-
-----------------------------------------------------------------
-Taiping Lai (1):
-      gpio: sprd: Clear interrupt when setting the type as edge
-
-Tony Lindgren (1):
-      gpio: omap: Fix warnings if PM is disabled
-
- drivers/gpio/gpio-omap.c | 4 ++--
- drivers/gpio/gpio-sprd.c | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
