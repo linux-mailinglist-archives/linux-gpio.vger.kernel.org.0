@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05E6A25DE66
+	by mail.lfdr.de (Postfix) with ESMTP id 7304525DE67
 	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgIDPty (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726922AbgIDPty (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Fri, 4 Sep 2020 11:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgIDPqx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:46:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE8CC0611E2
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a65so6472775wme.5
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:43 -0700 (PDT)
+        with ESMTP id S1726900AbgIDPqw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:46:52 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E555C061258
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:44 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c19so7778072wmd.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j/oJst/31Ve7sN2p8SCKacvVyyAcOuKLg7HZEv9T1Bg=;
-        b=uPvmch86FehCHUzRin+H5CXUohTvqZcGHApZczW8eq9lu/MJzFf9k2ReFbXCNCKyKp
-         QAnbVmcbSwdGJkgvs9p8KOl0pQFjMwybe/CpY7Hh8XOol4HEQj390odpGv/D8NzqLzMQ
-         AvpKvNqhVW5l5nuN1vqDrYMGBJRpIjjleROe9WsZdIidLQSeFxFz28InaQK6FDuGaHh5
-         abODV06AGHy0/63WGITnhu2uh99JLKd0WdxfAiAeP2mKsEWCMrGiumxY/dt5qdEeKyOV
-         cuO2DAPfpRJIBrUcEDpHpmxvfKAlccqkdA/9Vos4EFtb0JOtN0HxFexJBPe9MvVF5WWw
-         hEzQ==
+        bh=+YZpX0q+mO37+kQBR4DVC/6zJd6Q2vMMFs8yeO9lM6k=;
+        b=DHwiLfdYkiuvwGGyuQJVAWH5TI6urmfg9xYzHsNJZRaq+W2VOEzGuDZHADH8b43f72
+         IdWm7NgZqeHyUMOex7xd1L+sKPbyTQU6bkDGKC+laJrmoA7AkcOWL7irwhKLtGgT8Sqf
+         F8QMnwZ2j3f3Ev1NBQFKglsSE0ukhsx0DeGQmvPfA7s4XdmrdEBZCJLsDuZdy2py60av
+         7ddrLxRGhrc5nQk/J7X0Rd3701tAIqugtMXJWgIrCfExr2MwqBB6KT7fKNh50zVYZgFr
+         KhutLsEsf7K3xZSOrPpo6OUVFbEEAZGhgmuf6GDrIPY3Qah5PrJ+GtBed+JpjV2iCFmm
+         akIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j/oJst/31Ve7sN2p8SCKacvVyyAcOuKLg7HZEv9T1Bg=;
-        b=Ze/SQI2eGXp0NwosiYUd0XnEPt2ly/Gkya1JDxbRcuWRr4jtokt/tY/XTV6Ketmse3
-         dgvZ7IED7aL1cH7QSFy9YuJl+dLhP0+Tfm6qLqTkosWnwmgIYS7QVBxRUWAdcrk2UbK6
-         pqH59V4wGz2ziftEnHHlDnlba3HswHE8wk2LAZD7/nCrRjtxQBO7AeoCvdWH6wqbkuzK
-         vIkQ8st0+Ff3SuId4NFvWdPniWepTvc8aiG6MGJXc/FKZsb86gQiWwPVQVKJeavhirn3
-         FO+VeeNgB1Za5GmgSpBlCbKG3viaiRAf7esYZcshGMo9fsMAllOu2HYumlM26h7ocfs9
-         q7PA==
-X-Gm-Message-State: AOAM531nMLS7Ir8DrswwDiJ++FpDPVOd1Dq49IeQE+Q+wgBG0S/671xQ
-        tY4had+UuVRapUA3IaJvbERkiA==
-X-Google-Smtp-Source: ABdhPJxeZd3+cr0IB9roZ5GLjIlStXJyf7rbMppNX/92diAh72W08u+6KqmM8T0vs4cn4upk6ZXE0Q==
-X-Received: by 2002:a1c:4d14:: with SMTP id o20mr7896110wmh.115.1599234402232;
-        Fri, 04 Sep 2020 08:46:42 -0700 (PDT)
+        bh=+YZpX0q+mO37+kQBR4DVC/6zJd6Q2vMMFs8yeO9lM6k=;
+        b=EQNOgRndyADkoIvtuQcdvtAUy2NqNUR8nLyy2DII1igDzZYusN44pSatdoTJt9EMzA
+         VCN9Di1RNFEKGpOF8E7t/1BRre98GYO+lxFCL+8XR/gngfxfHq6ZNrK2rFDWm3QjB7h5
+         g/Szeh8QQIo2lQ6tCLyVLqk02M0ZEA+2GvNwhCliI734Up0K217mJcERQmN6d2VlwT7t
+         Q5OjssVEXqtu6Yjodo/Ko6w8Eko9YZIx4gVq+WFe4w+7NDM2qvrcX1nM0dqvQahqv3Fm
+         H6FfKRquRsV/KUlVKdsonpeLAt14knsQYtWl7ZtHK+N1HxqBCfcu8mt21LgIt2ulVA8T
+         1FfQ==
+X-Gm-Message-State: AOAM532dF0uIp60aBPXt9uG+/dmoXbyPNsdGgRvwcPyaLoTztKIpLC5t
+        tyuMGBM0hvhNGOV1NwGoIhpxKA==
+X-Google-Smtp-Source: ABdhPJxcZNGnXPvX9i5H6bEC8G5YKnDdSyG1Hc0LLO25M6dxNysSMjIVg6JhStAhJl/uVlArUPCUtg==
+X-Received: by 2002:a1c:f018:: with SMTP id a24mr7818256wmb.7.1599234403325;
+        Fri, 04 Sep 2020 08:46:43 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.41
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:41 -0700 (PDT)
+        Fri, 04 Sep 2020 08:46:42 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -56,9 +56,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 09/23] gpio: mockup: use KBUILD_MODNAME
-Date:   Fri,  4 Sep 2020 17:45:33 +0200
-Message-Id: <20200904154547.3836-10-brgl@bgdev.pl>
+Subject: [PATCH 10/23] gpio: mockup: fix resource leak in error path
+Date:   Fri,  4 Sep 2020 17:45:34 +0200
+Message-Id: <20200904154547.3836-11-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
 References: <20200904154547.3836-1-brgl@bgdev.pl>
@@ -71,47 +71,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Drop the definition for the driver name. Let's use KBUILD_MODNAME for
-the log format and use the "gpio-mockup" value directly in the only
-place where it's relevant: in the name of the device.
+If the module init function fails after creating the debugs directory,
+it's never removed. Add proper cleanup calls to avoid this resource
+leak.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-mockup.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-mockup.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 73cd51459c2a..78c97f7b6893 100644
+index 78c97f7b6893..19c092f814fd 100644
 --- a/drivers/gpio/gpio-mockup.c
 +++ b/drivers/gpio/gpio-mockup.c
-@@ -22,9 +22,8 @@
- #include "gpiolib.h"
+@@ -550,6 +550,7 @@ static int __init gpio_mockup_init(void)
+ 	err = platform_driver_register(&gpio_mockup_driver);
+ 	if (err) {
+ 		pr_err("error registering platform driver\n");
++		debugfs_remove_recursive(gpio_mockup_dbg_dir);
+ 		return err;
+ 	}
  
- #undef pr_fmt
--#define pr_fmt(fmt)		GPIO_MOCKUP_NAME ": " fmt
-+#define pr_fmt(fmt)		KBUILD_MODNAME ": " fmt
- 
--#define GPIO_MOCKUP_NAME	"gpio-mockup"
- #define GPIO_MOCKUP_MAX_GC	10
- /*
-  * We're storing two values per chip: the GPIO base and the number
-@@ -501,7 +500,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 
- static struct platform_driver gpio_mockup_driver = {
- 	.driver = {
--		.name = GPIO_MOCKUP_NAME,
-+		.name = "gpio-mockup",
- 	},
- 	.probe = gpio_mockup_probe,
- };
-@@ -572,7 +571,7 @@ static int __init gpio_mockup_init(void)
- 			properties[prop++] = PROPERTY_ENTRY_BOOL(
- 						"named-gpio-lines");
- 
--		pdevinfo.name = GPIO_MOCKUP_NAME;
-+		pdevinfo.name = "gpio-mockup";
- 		pdevinfo.id = i;
- 		pdevinfo.properties = properties;
+@@ -580,6 +581,7 @@ static int __init gpio_mockup_init(void)
+ 			pr_err("error registering device");
+ 			platform_driver_unregister(&gpio_mockup_driver);
+ 			gpio_mockup_unregister_pdevs();
++			debugfs_remove_recursive(gpio_mockup_dbg_dir);
+ 			return PTR_ERR(pdev);
+ 		}
  
 -- 
 2.26.1
