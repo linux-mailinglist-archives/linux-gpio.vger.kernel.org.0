@@ -2,66 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5595525DE30
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:48:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD1C825DE8E
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 17:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgIDPr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 11:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44006 "EHLO
+        id S1726184AbgIDPwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 11:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgIDPrg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:47:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936C4C061246
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:46:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id w2so6507364wmi.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:46:59 -0700 (PDT)
+        with ESMTP id S1726063AbgIDPwq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 11:52:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95989C061244
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Sep 2020 08:52:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t10so7269499wrv.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 08:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
-        b=iirBcZw4EgxyAFB9yrfqfHzrbIqBRMnGr84pnWLTSHWiDS/j7p4d7c1IpfTuH6U0yE
-         kqQ+3Cup4oeN2ka7rRGBWA1VgzzhuxJJja+zLHmjZw2eXRU3Yosp3+5A4U7XPXJ5vbVj
-         B0EwMLnRv8Z1xZQRMOZVAeXAcgdCFJ6591m6BtMaR7vygL5ntSU++35wP4FwhLKD8mki
-         n4OL3b5QGP86X4QLHPRhSu46PuWJoc+QP4LeR4B2yVVJitaWtbOymwB3MJF/uM5Vx81y
-         RLijD9+Rt/EUhWQrtLvqh/+1KBK6+11K8JaHcwSvMvX79X8NocXKzJGbiecv0fBZjslV
-         A7vA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tF66yPfX1NKAG53/DHurnvbRXaRAE6KmX50Xc7KSu5I=;
+        b=mLh68MJT1U8IQ6NzF3VoGinjRWq7ktw9W9LKtgXTietebfbmzsTaSHeqzxZZQtTUmf
+         KqO2GZfYxMRWMDXBlUkW7TIfevHNv9hovtNfTDeeqRB8YYXBKjl0k2malgR/zmOrVDeE
+         T7NO7XV5ljqxl2TWnSmBNOQ7q5lLYj29U4K6wcmq7ezkkDOLcTP8JbPvJRBRdk4gVAlo
+         CyTGAbxEsXY7oODVLiOjjISkobPLHE/Zzu57OCY0HxUsMaO8nXcggbIXH5nbitj3SLl4
+         bQYYGeqsQuH+Hc47/XfbNhKxAiRyl/Dvsb+AYUixQlzh5P+rPsS3BDWHydKkUyf8COi2
+         SidQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
-        b=GBSRAaS1i0yGNkRfXQ46ONAF6WSmW/FqLNhN+6CUb4lUFD4YKrUWLl0tE47QTVHHeY
-         PTGKPosRmGAXLIM8Fvt4fJWBfCTcWViY0+bscDtSgbffAI8QaE1B1GrdFbMnOsYjqjzw
-         b7XKvAAsCt8Zaxg+tpjhKAsT1gACq/gNjqApQywumjw5YnoOLQuX0mFEkSe7lAKt4P6y
-         zwyUj5LMokmelN1DanEFncPnL4KN/E//ZJcuqlZmWCbvTIBFudL1xPIwiYfLH/7oh2zX
-         OYYdkV8GQdVxSHPMw3XLEzWR5yhhIJi6369QBdstE8gfwbgE2UI39c8gP8FplVtYSF91
-         zhZw==
-X-Gm-Message-State: AOAM533qXiOD0fTApcZHHGPr0/Va2K+oYaq0Ad2uzrOCWMCatV1xQNLc
-        aA3Vly5V9XQBgnP7I7Hp+5lrpg==
-X-Google-Smtp-Source: ABdhPJyjc2MlVjuY6G3UNUTfVft9wTllA8VYq1OpvEDtNds22hkn1ilbEsjGyby0vTpaSIVU2cgT8Q==
-X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr8555846wmj.144.1599234418241;
-        Fri, 04 Sep 2020 08:46:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tF66yPfX1NKAG53/DHurnvbRXaRAE6KmX50Xc7KSu5I=;
+        b=oJqNMjL21fxCRjM+GS3otwaBB1jZY5QLzcaPOJ2HWQU9RlKvGtf0c2cR3WWTiiImrT
+         nBDWhqGpwEbwcQFH7gj1qaHSJmiZ87izMVsKeR+JU0s6nDe8nrsKgEbhYwRkHeszKF7R
+         XedB/NOrwSsI+rGDdmGR2zEkjuUT8Qdbw7YjI8WqWns5vJDfDDr+xXJIAaCMT3MzTwrB
+         CEtRObkJ5zbudp1VgNEOQigP/vRf7CpL8SKOoMwEhO3StR2eU+/Ls0MIhtAkXmTsBVw4
+         E+XhiRdFeFha3JyLxcEFhWjuikufkLzjqrBGOUGXU/0Pth8MUPjFtRHWkurHblhNF5c/
+         Hffw==
+X-Gm-Message-State: AOAM532OYHHlxFke4MdMWgzTLTrvwleQdves1M88ZxLyIBK8WkJLNHHN
+        mj+gZ7aWgAAjCSNZDI+lU2q4gQ==
+X-Google-Smtp-Source: ABdhPJzEUCneAx2hf0OOAGsxURs54T9x7yx+aWKopdRHP7BTNB6P5GyejTFP3NKMMf3ZkoZHzrKA2A==
+X-Received: by 2002:a5d:574e:: with SMTP id q14mr7850513wrw.281.1599234764343;
+        Fri, 04 Sep 2020 08:52:44 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.57
+        by smtp.gmail.com with ESMTPSA id h6sm11656811wmb.22.2020.09.04.08.52.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:57 -0700 (PDT)
+        Fri, 04 Sep 2020 08:52:43 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-Date:   Fri,  4 Sep 2020 17:45:47 +0200
-Message-Id: <20200904154547.3836-24-brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.9-rc4
+Date:   Fri,  4 Sep 2020 17:52:40 +0200
+Message-Id: <20200904155240.4877-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -71,109 +64,37 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-There's some documentation for gpio-mockup's debugfs interface in the
-driver's source but it's not much. Add proper documentation for this
-testing module.
+Hi Linus,
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../admin-guide/gpio/gpio-mockup.rst          | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
+please pull the following two fixes for v5.9.
 
-diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
-new file mode 100644
-index 000000000000..1d452ee55f8d
---- /dev/null
-+++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
-@@ -0,0 +1,87 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+GPIO Testing Driver
-+===================
-+
-+The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-+chips for testing purposes. There are two ways of configuring the chips exposed
-+by the module. The lines can be accessed using the standard GPIO character
-+device interface as well as manipulated using the dedicated debugfs directory
-+structure.
-+
-+Creating simulated chips using debugfs
-+--------------------------------------
-+
-+When the gpio-mockup module is loaded (or builtin) it creates its own directory
-+in debugfs. Assuming debugfs is mounted at /sys/kernel/debug/, the directory
-+will be located at /sys/kernel/debug/gpio-mockup/. Inside this directory there
-+are two attributes: new_device and delete_device.
-+
-+New chips can be created by writing a single line containing a number of
-+options to "new_device". For example:
-+
-+.. code-block:: sh
-+
-+    $ echo "label=my-mockup num_lines=4 named_lines" > /sys/kernel/debug/gpio-mockup/new_device
-+
-+Supported options:
-+
-+    num_lines=<num_lines> - number of GPIO lines to expose
-+
-+    label=<label> - label of the dummy chip
-+
-+    named_lines - defines whether dummy lines should be named, the names are
-+                  of the form X-Y where X is the chip's label and Y is the
-+                  line's offset
-+
-+Note: only num_lines is mandatory.
-+
-+Chips can be dynamically removed by writing the chip's label to
-+"delete_device". For example:
-+
-+.. code-block:: sh
-+
-+    echo "gpio-mockup.0" > /sys/kernel/debug/gpio-mockup/delete_device
-+
-+Creating simulated chips using module params
-+--------------------------------------------
-+
-+Note: this is an older, now deprecated method kept for backward compatibility
-+for user-space tools.
-+
-+When loading the gpio-mockup driver a number of parameters can be passed to the
-+module.
-+
-+    gpio_mockup_ranges
-+
-+        This parameter takes an argument in the form of an array of integer
-+        pairs. Each pair defines the base GPIO number (if any) and the number
-+        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
-+        will assign it automatically.
-+
-+        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
-+
-+        The line above creates three chips. The first one will expose 8 lines,
-+        the second 16 and the third 4. The base GPIO for the third chip is set
-+        to 405 while for two first chips it will be assigned automatically.
-+
-+    gpio_named_lines
-+
-+        This parameter doesn't take any arguments. It lets the driver know that
-+        GPIO lines exposed by it should be named.
-+
-+        The name format is: gpio-mockup-X-Y where X is the letter associated
-+        with the mockup chip and Y is the line offset.
-+
-+Manipulating simulated lines
-+----------------------------
-+
-+Each mockup chip creates its own subdirectory in /sys/kernel/debug/gpio-mockup/.
-+The directory is named after the chip's label. A symlink is also created, named
-+after the chip's name, which points to the label directory.
-+
-+Inside each subdirectory, there's a separate attribute for each GPIO line. The
-+name of the attribute represents the line's offset in the chip.
-+
-+Reading from a line attribute returns the current value. Writing to it (0 or 1)
-+changes its pull.
--- 
-2.26.1
+Bartosz
 
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.9-rc4
+
+for you to fetch changes up to 5fcface659aab7eac4bd65dd116d98b8f7bb88d5:
+
+  gpio: sprd: Clear interrupt when setting the type as edge (2020-08-31 18:06:28 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.9-rc4
+
+- fix warnings if PM is enabled in gpio-omap
+- clear interrupt when setting the type as edge in gpio-sprd
+
+----------------------------------------------------------------
+Taiping Lai (1):
+      gpio: sprd: Clear interrupt when setting the type as edge
+
+Tony Lindgren (1):
+      gpio: omap: Fix warnings if PM is disabled
+
+ drivers/gpio/gpio-omap.c | 4 ++--
+ drivers/gpio/gpio-sprd.c | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
