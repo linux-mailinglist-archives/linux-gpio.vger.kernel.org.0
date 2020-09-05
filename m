@@ -2,71 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3185125E254
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Sep 2020 22:04:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6FA225E53B
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Sep 2020 05:16:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgIDUEQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Sep 2020 16:04:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36465 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726618AbgIDUEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 16:04:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599249853;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CgznJs0Qby8+sI5KnI0eV1DtqEdlLbN41LSpCpHs+ec=;
-        b=Q/xc2Z+zuBjpvVDWWjWcjOSZoxYe05+dXR9WGna4z4sz9epP+V3g1GGwzA5gaDQpjnS8kd
-        KxohbRqZ4KwXllN8ccCpOEX3roQdNKDEDqtlIMqX9qHNOUEekbn2H435zxMUTmYv+gaja5
-        cWEV1/qoOVU+DuSlK2tvtopOH09WHAs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-u5b5LbBrO4OeOZdc8vptUA-1; Fri, 04 Sep 2020 16:04:09 -0400
-X-MC-Unique: u5b5LbBrO4OeOZdc8vptUA-1
-Received: by mail-ed1-f70.google.com with SMTP id c3so3108224edm.7
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Sep 2020 13:04:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CgznJs0Qby8+sI5KnI0eV1DtqEdlLbN41LSpCpHs+ec=;
-        b=t1mFyDNQqld31jtMnZtXUrtfGASRtA8loKEU3BRTf6Rg5GHlcmn8dqZ4IUhWdmqEI0
-         xD7adldU5LhKw04V4JNQUPDle2TgVyYAjMh6GWe/ChcrRF0tb7Nh2m2mIdCwXPTwO7mG
-         9hRV3rsCrb7dj6B9mj3bzY8gdzK1UYqX2QICjxxz9sYOjekMlADKcfZ5nR4cM0yFTHCl
-         nwbeBI2iAlSkAbLc8pthzJxaHzbZaQ/AHOCPCzpO8MmbQPU1cxbR+/l+sxbzlTxSGXw4
-         qcQQcRtw6V3Pp7AzwI5dFwy41uL837bHQWdHBloc/HBzTkaqwpmXIR7XoXqUZcv0OOJT
-         iVKA==
-X-Gm-Message-State: AOAM5321EEOcdE5wH1/w6f9kGVq3EqgY8GjXBnM4qAQZIZWcL5rIaYtk
-        NleN9lynr2bn2LVszpBl/V/Ay1QaIv1n/ZEMIsGZRGtZqp/LkciwKFFGI7DvKNnGNa6ssq8BEMT
-        DcLEUFyPwcVQyxfqKxgBA5A==
-X-Received: by 2002:a50:d2d1:: with SMTP id q17mr10495101edg.167.1599249847301;
-        Fri, 04 Sep 2020 13:04:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxUIJr9j6hz+PES3hiBLIFfKppiV4/oNxwLPhrQKb09FUTb0+87gsGihtfj2p06lD/AgAfHFw==
-X-Received: by 2002:a50:d2d1:: with SMTP id q17mr10495081edg.167.1599249847034;
-        Fri, 04 Sep 2020 13:04:07 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id v5sm7020051ejv.114.2020.09.04.13.04.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 13:04:06 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: cherryview: Preserve CHV_PADCTRL1_INVRXTX_TXDATA
- flag on GPIOs
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        id S1726441AbgIEDQO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Sep 2020 23:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgIEDQO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Sep 2020 23:16:14 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57646C061244;
+        Fri,  4 Sep 2020 20:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=hzcswmMwNT559dhICIggfDQsKXgz2tnBEKWAXq1CvMk=; b=EbPjQKy5mHuEsRvHD0LtSju15w
+        e/POC6OtiTd1jGuxH1WfatomtddnS4izVIfMw4H7ouCTmd8YCzYovYM/hDgKKtLpmGK1aQUzEMfqB
+        ubipMtPQPfHcknIORAAyBQWzbiZnBOmQ1L9ujgYEmrcjuLii5bb1uHyGMPshwQANL3vk1eDVMiBBL
+        N1bwF2asqr7X7j9AJst6mllFwwCySdPeKyNKjLL1OLt6vpsQTe1suGXGgFv/RqBoGLSi5DwqiyIBj
+        sjD/8VNv61TTlqDto46NALwdTuTz0glQPDLcZXZNRntCUjHjwvGJhMOlT04F0gay9iBeF29i0awXB
+        fX5Mrh0g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEOgQ-0001Ei-9v; Sat, 05 Sep 2020 03:16:07 +0000
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
+ gpio-mockup
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20200904172141.180363-1-hdegoede@redhat.com>
- <20200904180947.GL1891694@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <993251db-acac-65f3-56fb-c35044ab8080@redhat.com>
-Date:   Fri, 4 Sep 2020 22:04:05 +0200
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-24-brgl@bgdev.pl>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
+Date:   Fri, 4 Sep 2020 20:15:59 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200904180947.GL1891694@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200904154547.3836-24-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -76,39 +58,125 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 9/4/20 8:09 PM, Andy Shevchenko wrote:
-> On Fri, Sep 04, 2020 at 07:21:41PM +0200, Hans de Goede wrote:
->> One some devices the GPIO should output the inverted value from what
+On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
->> Fixes: a7d4b171660c ("Input: goodix - add support for getting IRQ + reset GPIOs on Cherry Trail devices")
+> There's some documentation for gpio-mockup's debugfs interface in the
+> driver's source but it's not much. Add proper documentation for this
+> testing module.
 > 
-> Hans, a side note. Can you clean up that driver using ACPI GPIO quirks and the
-> idea that IRQ line will be retrieved in client->irq?
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../admin-guide/gpio/gpio-mockup.rst          | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
+> 
+> diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
+> new file mode 100644
+> index 000000000000..1d452ee55f8d
+> --- /dev/null
+> +++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
+> @@ -0,0 +1,87 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +GPIO Testing Driver
+> +===================
+> +
+> +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> +chips for testing purposes. There are two ways of configuring the chips exposed
+> +by the module. The lines can be accessed using the standard GPIO character
+> +device interface as well as manipulated using the dedicated debugfs directory
+> +structure.
 
-Nope, the chip uses the IRQ line in a bi-directional manner,
-when the chip is reset (by us) the IRQ line is a bootstrap pin
-and we need to drive it either high or low to make sure the chip
-re-appears on the same i2c-address as it had before. So we need
-the get gpiod and then call gpiod_to_irq abstraction so that
-we also have the gpiod to call allow calling
-gpiod_direction_input() and gpiod_direction_output() on the
-irq pin.
+Could configfs be used for this instead of debugfs?
+debugfs is ad hoc.
 
-And to make things more interesting on some generations x86 hw
-(apollo lake) the IRQ is actually listed as an Interrupt resource
-in the ACPI device resources (_CRS) and there are GDIX specific
-ACPI methods on the ACPI device which directly poke the GPIO
-chip to allow setting it high/low (for during reset) or config
-it as input. So the goodix.c has its own internal abstraction
-around gpiod_direction_input(() and gpiod_direction_output() for
-controlling the IRQ pin which does different things on different
-x86 hw generations (while also maintaining device-tree compat).
+> +
+> +Creating simulated chips using debugfs
+> +--------------------------------------
+> +
+> +When the gpio-mockup module is loaded (or builtin) it creates its own directory
+> +in debugfs. Assuming debugfs is mounted at /sys/kernel/debug/, the directory
+> +will be located at /sys/kernel/debug/gpio-mockup/. Inside this directory there
+> +are two attributes: new_device and delete_device.
+> +
+> +New chips can be created by writing a single line containing a number of
+> +options to "new_device". For example:
+> +
+> +.. code-block:: sh
+> +
+> +    $ echo "label=my-mockup num_lines=4 named_lines" > /sys/kernel/debug/gpio-mockup/new_device
+> +
+> +Supported options:
+> +
+> +    num_lines=<num_lines> - number of GPIO lines to expose
+> +
+> +    label=<label> - label of the dummy chip
+> +
+> +    named_lines - defines whether dummy lines should be named, the names are
+> +                  of the form X-Y where X is the chip's label and Y is the
+> +                  line's offset
+> +
+> +Note: only num_lines is mandatory.
+> +
+> +Chips can be dynamically removed by writing the chip's label to
+> +"delete_device". For example:
+> +
+> +.. code-block:: sh
+> +
+> +    echo "gpio-mockup.0" > /sys/kernel/debug/gpio-mockup/delete_device
+> +
+> +Creating simulated chips using module params
+> +--------------------------------------------
+> +
+> +Note: this is an older, now deprecated method kept for backward compatibility
+> +for user-space tools.
+> +
+> +When loading the gpio-mockup driver a number of parameters can be passed to the
+> +module.
+> +
+> +    gpio_mockup_ranges
+> +
+> +        This parameter takes an argument in the form of an array of integer
+> +        pairs. Each pair defines the base GPIO number (if any) and the number
+> +        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
+> +        will assign it automatically.
+> +
+> +        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
+> +
+> +        The line above creates three chips. The first one will expose 8 lines,
+> +        the second 16 and the third 4. The base GPIO for the third chip is set
+> +        to 405 while for two first chips it will be assigned automatically.
+> +
+> +    gpio_named_lines
+> +
+> +        This parameter doesn't take any arguments. It lets the driver know that
+> +        GPIO lines exposed by it should be named.
+> +
+> +        The name format is: gpio-mockup-X-Y where X is the letter associated
+> +        with the mockup chip and Y is the line offset.
 
-So all in all I'm happy that we have this all working atm
-(and it also is reasonably clean already IMHO) and I would
-rather not muck with this.
+Where does this 'X' letter associated with the mockup chip come from?
 
-Regards,
+> +
+> +Manipulating simulated lines
+> +----------------------------
+> +
+> +Each mockup chip creates its own subdirectory in /sys/kernel/debug/gpio-mockup/.
+> +The directory is named after the chip's label. A symlink is also created, named
+> +after the chip's name, which points to the label directory.
+> +
+> +Inside each subdirectory, there's a separate attribute for each GPIO line. The
+> +name of the attribute represents the line's offset in the chip.
+> +
+> +Reading from a line attribute returns the current value. Writing to it (0 or 1)
+> +changes its pull.
 
-Hans
+What does "pull" mean here?
+
+
+thanks.
+
+-- 
+~Randy
 
