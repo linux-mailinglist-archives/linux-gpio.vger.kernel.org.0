@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51BAB25EB1F
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Sep 2020 23:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEEDA25EB2D
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Sep 2020 00:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgIEVym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Sep 2020 17:54:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33710 "EHLO gloria.sntech.de"
+        id S1728662AbgIEWB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Sep 2020 18:01:57 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:33744 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEVyl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 5 Sep 2020 17:54:41 -0400
+        id S1728423AbgIEWB5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:01:57 -0400
 Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <heiko@sntech.de>)
-        id 1kEg8t-0005am-Mf; Sat, 05 Sep 2020 23:54:39 +0200
+        id 1kEgFv-0005hM-LW; Sun, 06 Sep 2020 00:01:55 +0200
 From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rockchip@lists.infradead.org,
         Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 2/6] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
-Date:   Sat, 05 Sep 2020 23:54:39 +0200
-Message-ID: <5350783.eb3pjRP6yQ@diego>
-In-Reply-To: <20200831084753.7115-3-jay.xu@rock-chips.com>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831084753.7115-3-jay.xu@rock-chips.com>
+Subject: Re: [PATCH 1/6] pinctrl: rockchip: make driver be tristate module
+Date:   Sun, 06 Sep 2020 00:01:55 +0200
+Message-ID: <2671833.MsR7uBhjTv@diego>
+In-Reply-To: <20200831084753.7115-2-jay.xu@rock-chips.com>
+References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831084753.7115-2-jay.xu@rock-chips.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -34,32 +34,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 31. August 2020, 10:47:49 CEST schrieb Jianqun Xu:
-> There need to enable pclk_gpio when do irq_create_mapping, since it will
-> do access to gpio controller.
+Am Montag, 31. August 2020, 10:47:48 CEST schrieb Jianqun Xu:
+> Make pinctrl-rockchip driver to be tristate module, support to build as
+> a module, this is useful for GKI.
 > 
 > Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
 Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
 > ---
->  drivers/pinctrl/pinctrl-rockchip.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pinctrl/Kconfig            | 2 +-
+>  drivers/pinctrl/pinctrl-rockchip.c | 7 +++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 8828613c4e0e..dd4874e2ac67 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -207,7 +207,7 @@ config PINCTRL_OXNAS
+>  	select MFD_SYSCON
+>  
+>  config PINCTRL_ROCKCHIP
+> -	bool
+> +	tristate "Rockchip gpio and pinctrl driver"
+>  	select PINMUX
+>  	select GENERIC_PINCONF
+>  	select GENERIC_IRQ_CHIP
 > diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 24dfc814dee1..54abda7b7be8 100644
+> index c07324d1f265..24dfc814dee1 100644
 > --- a/drivers/pinctrl/pinctrl-rockchip.c
 > +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3155,7 +3155,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->  	if (!bank->domain)
->  		return -ENXIO;
+> @@ -16,10 +16,12 @@
+>   */
 >  
-> +	clk_enable(bank->clk);
->  	virq = irq_create_mapping(bank->domain, offset);
-> +	clk_disable(bank->clk);
->  
->  	return (virq) ? : -ENXIO;
+>  #include <linux/init.h>
+> +#include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/bitops.h>
+>  #include <linux/gpio/driver.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pinctrl/machine.h>
+> @@ -4256,3 +4258,8 @@ static int __init rockchip_pinctrl_drv_register(void)
+>  	return platform_driver_register(&rockchip_pinctrl_driver);
 >  }
+>  postcore_initcall(rockchip_pinctrl_drv_register);
+> +
+> +MODULE_DESCRIPTION("ROCKCHIP Pin Controller Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:pinctrl-rockchip");
+> +MODULE_DEVICE_TABLE(of, rockchip_pinctrl_dt_match);
 > 
 
 
