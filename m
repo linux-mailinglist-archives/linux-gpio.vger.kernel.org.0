@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B8CC25E807
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Sep 2020 15:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5090425E7F8
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Sep 2020 15:40:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgIENpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Sep 2020 09:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47102 "EHLO
+        id S1728670AbgIENjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Sep 2020 09:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbgIENi4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Sep 2020 09:38:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EBDC061261;
-        Sat,  5 Sep 2020 06:38:32 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q3so556009plr.13;
-        Sat, 05 Sep 2020 06:38:32 -0700 (PDT)
+        with ESMTP id S1728656AbgIENjA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Sep 2020 09:39:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A331EC061262;
+        Sat,  5 Sep 2020 06:38:38 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b124so6131581pfg.13;
+        Sat, 05 Sep 2020 06:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iCG3DHPkrfCdnS0ROdlbfM8O23WmFPNngL08pxdvjqU=;
-        b=U3YbgltD6ucXyR/AlP+G5doqsuxtYnDRlkPyEQkQlEvfEHxDf+zvDIsuYoRj3+OboD
-         V4inm8G7P73ZigDmm0YiQwJEJ3KzuPGlj3HDVd4IRRO+Y0DBnhuDfUgZ52s0ylpKx5b0
-         hkq70F1SQvyseHOjzqltB13ThgjCQfR/k9/lwgVauceID/toCZ1MICogcmkcYxByzmb4
-         PSF5HOOvVtwtgt1BTjF2OXA3HES3gIHiGv4VYWaIzHApxydVnsUn2eA8JtRifDTMs8tL
-         7rBuoT9DS8ItSM52A46YGa2AJcrFItjA2Gkklf+eb+1XYjxksU9OEyBmcVimCq7/v3Nc
-         hTWg==
+        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
+        b=hY7tTZsBhAnl165QqDpOW4VEdKFOiLXljb3PB6sticNIxIgjoaUbCtsGQbbY49Lgg1
+         pB4Pn1boRdImia+Q6sTfY3ZBPASo5cu5742rJ8IAMcBQStHPm76Jm3jzJbvE6qoa4fP7
+         3wIabude3pkTfO1hHs7gO5G/gdxIGPkHWByFDZiPOyTS2W6gFPl8AVYz/YuE+bq1q/dD
+         cA1nxMECBhOVi0EuAg2dFuwNVixDCYG5Zr2eZ+O4FqFjPQsBd+KrjA9u5FiGKpgkH7AM
+         HOewuzkGhk5P1AEOlr+frkooWBY8qJYX/MeCzfE4tiCj2rep1Z0HIqwAYQzF34WFEK6E
+         YZXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iCG3DHPkrfCdnS0ROdlbfM8O23WmFPNngL08pxdvjqU=;
-        b=toiHZyhtPYt+E8PuDzqJYsB5VC0FhktJS/aHFvckadQb1WBFaiiNwHZ1RS9Nki3Ox5
-         pI0dPtI9dxqsiOm1LrouL+RXGy5EyVXvxr/9cNBQAXDinfFLkOoTPLybdu413MSMDrVF
-         YCZrhpEe/vpmGweP/ovaAqiKgFRQQFZqqtqtgwWaEMTDdXLLVahUkARnhCur9DgCfS/G
-         BJzbwvxxSZYM2rN/IfVJl1zpGt6NDOVYdcZP0M8hzplHMPcKDA1OUCsO4IJkwjRZ2a9f
-         j0sm3oGDzJUA1/o76XpT5cAww+ey56eLjdKaEeU9siPNtxH4r4GLBJ6f/WuDl0kd3HDg
-         tPrA==
-X-Gm-Message-State: AOAM532ukchngx6Kxu3s07FNGoAxQsJ86Znsd58s3RiSCN6o1WDYYs34
-        M5G/J7ApzlLgfUw5eS2+/g3JuJtI6vk=
-X-Google-Smtp-Source: ABdhPJy+xFjM2GdswNpiy5yeYwW72AaMJsuPUx2HS3Ses3Ba46uQvWCM0taJv4VuDA5afT2ZbmsfAA==
-X-Received: by 2002:a17:902:7c01:: with SMTP id x1mr12742905pll.34.1599313111445;
-        Sat, 05 Sep 2020 06:38:31 -0700 (PDT)
+        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
+        b=UJ5K+11iV3x6DkS5/y3gXlPSaJBgiqnT7qB7fEgjenvXt42SwbvdSQcooivLRXMeVH
+         JZs6RFZsKFcTwjMvpnLbDbTKofCBtJoUUSyOlETYSUmxxBdOJAcS2bcu1eTeNJLK5cMt
+         ZhtVGBqnjQMZm4SaNb8ooRAq0jBBULadcXOfwQbfXBhBg/RPl40R1E8Ho/QqyvId2aPT
+         g4n2TV92CQ/C2CrzE0SMWZQpFNsTv6loq5PQ0CK363cobAxAw6fE6iIUF5Ph7YNrhDBR
+         SttbxpeLvLues/fLXSA5V5GouKHMEeqgNsPHNRXhiRFKCYKFPJq5qPTL7kIGtvFLncj6
+         HwDA==
+X-Gm-Message-State: AOAM532yy7wiy4kciG/RKjuhA1YvL8XaKTN2yU1meOVsfU16cd999AXq
+        NbZd2/labBvUG4R1UnCbBIdZDIr3jto=
+X-Google-Smtp-Source: ABdhPJww7kjrlruid/F2wxvAfu/FxhpqViNeCo0bzDTXtnLX5QcISTvJXSFu5pbEatE+m9MojWC9XQ==
+X-Received: by 2002:a65:6707:: with SMTP id u7mr10633274pgf.449.1599313117420;
+        Sat, 05 Sep 2020 06:38:37 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.38.28
+        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 06:38:30 -0700 (PDT)
+        Sat, 05 Sep 2020 06:38:36 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v7 13/20] gpio: uapi: document uAPI v1 as deprecated
-Date:   Sat,  5 Sep 2020 21:35:42 +0800
-Message-Id: <20200905133549.24606-14-warthog618@gmail.com>
+Subject: [PATCH v7 14/20] tools: gpio: port lsgpio to v2 uAPI
+Date:   Sat,  5 Sep 2020 21:35:43 +0800
+Message-Id: <20200905133549.24606-15-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200905133549.24606-1-warthog618@gmail.com>
 References: <20200905133549.24606-1-warthog618@gmail.com>
@@ -64,106 +64,140 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update uAPI documentation to deprecate v1 structs and ioctls.
+Port the lsgpio tool to the latest GPIO uAPI.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- include/uapi/linux/gpio.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/gpio/lsgpio.c | 60 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 38 insertions(+), 22 deletions(-)
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 87074886e73d..8f768c66fa96 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -275,6 +275,9 @@ struct gpio_v2_line_event {
+diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
+index b08d7a5e779b..deda38244026 100644
+--- a/tools/gpio/lsgpio.c
++++ b/tools/gpio/lsgpio.c
+@@ -25,57 +25,73 @@
  
- /*
-  *  ABI v1
-+ *
-+ * This version of the ABI is deprecated and will be removed in the future.
-+ * Use the latest version of the ABI, defined above, instead.
-  */
+ struct gpio_flag {
+ 	char *name;
+-	unsigned long mask;
++	unsigned long long mask;
+ };
  
- /* Informational flags */
-@@ -298,6 +301,9 @@ struct gpio_v2_line_event {
-  * @consumer: a functional name for the consumer of this GPIO line as set by
-  * whatever is using it, will be empty if there is no current user but may
-  * also be empty if the consumer doesn't set this up
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_info instead.
-  */
- struct gpioline_info {
- 	__u32 line_offset;
-@@ -329,6 +335,9 @@ enum {
-  * guarantee there are no implicit holes between it and subsequent members.
-  * The 20-byte padding at the end makes sure we don't add any implicit padding
-  * at the end of the structure on 64-bit architectures.
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_info_changed instead.
-  */
- struct gpioline_info_changed {
- 	struct gpioline_info info;
-@@ -368,6 +377,9 @@ struct gpioline_info_changed {
-  * @fd: if successful this field will contain a valid anonymous file handle
-  * after a GPIO_GET_LINEHANDLE_IOCTL operation, zero or negative value
-  * means error
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_request instead.
-  */
- struct gpiohandle_request {
- 	__u32 lineoffsets[GPIOHANDLES_MAX];
-@@ -387,6 +399,9 @@ struct gpiohandle_request {
-  * this specifies the default output value, should be 0 (low) or
-  * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
-  * @padding: reserved for future use and should be zero filled
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_config instead.
-  */
- struct gpiohandle_config {
- 	__u32 flags;
-@@ -399,6 +414,9 @@ struct gpiohandle_config {
-  * @values: when getting the state of lines this contains the current
-  * state of a line, when setting the state of lines these should contain
-  * the desired target state
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_values instead.
-  */
- struct gpiohandle_data {
- 	__u8 values[GPIOHANDLES_MAX];
-@@ -422,6 +440,9 @@ struct gpiohandle_data {
-  * @fd: if successful this field will contain a valid anonymous file handle
-  * after a GPIO_GET_LINEEVENT_IOCTL operation, zero or negative value
-  * means error
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_request instead.
-  */
- struct gpioevent_request {
- 	__u32 lineoffset;
-@@ -441,6 +462,9 @@ struct gpioevent_request {
-  * struct gpioevent_data - The actual event being pushed to userspace
-  * @timestamp: best estimate of time of event occurrence, in nanoseconds
-  * @id: event identifier
-+ *
-+ * This struct is part of ABI v1 and is deprecated.
-+ * Use struct gpio_v2_line_event instead.
-  */
- struct gpioevent_data {
- 	__u64 timestamp;
-@@ -465,6 +489,8 @@ struct gpioevent_data {
+ struct gpio_flag flagnames[] = {
+ 	{
+-		.name = "kernel",
+-		.mask = GPIOLINE_FLAG_KERNEL,
++		.name = "used",
++		.mask = GPIO_V2_LINE_FLAG_USED,
++	},
++	{
++		.name = "input",
++		.mask = GPIO_V2_LINE_FLAG_INPUT,
+ 	},
+ 	{
+ 		.name = "output",
+-		.mask = GPIOLINE_FLAG_IS_OUT,
++		.mask = GPIO_V2_LINE_FLAG_OUTPUT,
+ 	},
+ 	{
+ 		.name = "active-low",
+-		.mask = GPIOLINE_FLAG_ACTIVE_LOW,
++		.mask = GPIO_V2_LINE_FLAG_ACTIVE_LOW,
+ 	},
+ 	{
+ 		.name = "open-drain",
+-		.mask = GPIOLINE_FLAG_OPEN_DRAIN,
++		.mask = GPIO_V2_LINE_FLAG_OPEN_DRAIN,
+ 	},
+ 	{
+ 		.name = "open-source",
+-		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
++		.mask = GPIO_V2_LINE_FLAG_OPEN_SOURCE,
+ 	},
+ 	{
+ 		.name = "pull-up",
+-		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
+ 	},
+ 	{
+ 		.name = "pull-down",
+-		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN,
+ 	},
+ 	{
+ 		.name = "bias-disabled",
+-		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_DISABLED,
+ 	},
+ };
  
- /*
-  * v1 ioctl()s
-+ *
-+ * These ioctl()s are deprecated.  Use the v2 equivalent instead.
-  */
- #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
- #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+-void print_flags(unsigned long flags)
++static void print_attributes(struct gpio_v2_line_info *info)
+ {
+ 	int i;
+-	int printed = 0;
++	const char *field_format = "%s";
+ 
+ 	for (i = 0; i < ARRAY_SIZE(flagnames); i++) {
+-		if (flags & flagnames[i].mask) {
+-			if (printed)
+-				fprintf(stdout, " ");
+-			fprintf(stdout, "%s", flagnames[i].name);
+-			printed++;
++		if (info->flags & flagnames[i].mask) {
++			fprintf(stdout, field_format, flagnames[i].name);
++			field_format = ", %s";
+ 		}
+ 	}
++
++	if ((info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
++	    (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
++		fprintf(stdout, field_format, "both-edges");
++	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
++		fprintf(stdout, field_format, "rising-edge");
++	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
++		fprintf(stdout, field_format, "falling-edge");
++
++	for (i = 0; i < info->num_attrs; i++) {
++		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
++			fprintf(stdout, ", debounce_period=%dusec",
++				info->attrs[0].debounce_period);
++	}
+ }
+ 
+ int list_device(const char *device_name)
+@@ -109,18 +125,18 @@ int list_device(const char *device_name)
+ 
+ 	/* Loop over the lines and print info */
+ 	for (i = 0; i < cinfo.lines; i++) {
+-		struct gpioline_info linfo;
++		struct gpio_v2_line_info linfo;
+ 
+ 		memset(&linfo, 0, sizeof(linfo));
+-		linfo.line_offset = i;
++		linfo.offset = i;
+ 
+-		ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &linfo);
++		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_IOCTL, &linfo);
+ 		if (ret == -1) {
+ 			ret = -errno;
+ 			perror("Failed to issue LINEINFO IOCTL\n");
+ 			goto exit_close_error;
+ 		}
+-		fprintf(stdout, "\tline %2d:", linfo.line_offset);
++		fprintf(stdout, "\tline %2d:", linfo.offset);
+ 		if (linfo.name[0])
+ 			fprintf(stdout, " \"%s\"", linfo.name);
+ 		else
+@@ -131,7 +147,7 @@ int list_device(const char *device_name)
+ 			fprintf(stdout, " unused");
+ 		if (linfo.flags) {
+ 			fprintf(stdout, " [");
+-			print_flags(linfo.flags);
++			print_attributes(&linfo);
+ 			fprintf(stdout, "]");
+ 		}
+ 		fprintf(stdout, "\n");
 -- 
 2.28.0
 
