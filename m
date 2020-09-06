@@ -2,111 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85B225EE2F
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Sep 2020 16:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB7825EF2F
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Sep 2020 18:52:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgIFOaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Sep 2020 10:30:16 -0400
-Received: from crapouillou.net ([89.234.176.41]:49254 "EHLO crapouillou.net"
+        id S1725841AbgIFQwc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Sep 2020 12:52:32 -0400
+Received: from mout.gmx.net ([212.227.17.20]:60277 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728910AbgIFO1Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599402405; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KMIg6gSjoUBBkt1vAul5NwvJlELxUbfxEDSLNOU8Bco=;
-        b=I3kztgB55Yjx2lb2vme0LIw94rJJmvRipu9FG+441WmmD/Awg+Rs/Ynyv0MDsvP5DuwIS1
-        TxYrsN9sM0A9Ytpf5bUa9VrA5yPlAnFm+g6dN6KGBDG/RnFzjrbZl3NOLW2u4Y0xkMm1zA
-        5+JRvk5g9r3z6g1k+0aSJJCP7R/QZ6Y=
-Date:   Sun, 06 Sep 2020 16:26:34 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 2/3] pinctrl: Ingenic: Correct the pullup and pulldown
- parameters of JZ4780
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, aric.pzqi@ingenic.com,
-        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Message-Id: <ASQ8GQ.DEHG1O3SW93A3@crapouillou.net>
-In-Reply-To: <20200831154324.64951-3-zhouyanjie@wanyeetech.com>
-References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
-        <20200831154324.64951-3-zhouyanjie@wanyeetech.com>
+        id S1725816AbgIFQwa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 6 Sep 2020 12:52:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599411149;
+        bh=kZQLLbYsq767EIjLTBiEDMzOcs47sXVYxgWtNQrlijo=;
+        h=X-UI-Sender-Class:From:To:Subject:Date;
+        b=BcRPdT/Bby0f74cpKsXZIhlOreSB6vRjC2kJM7OaPNtco7AwOZua30AR44XrSBR0G
+         wMukHbhkThLOF4pIo7q7FEckiRIKwBKW6EXiyVsnpAw9LZELXbXtyqoZ5UFRy4Y88i
+         T+voZy4I1VBb2pDan0zmPJFmH++e9JNW65HzX79I=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from waterstation.localnet ([91.45.211.182]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MhU9j-1kk9ex3KYV-00eblX for <linux-gpio@vger.kernel.org>; Sun, 06 Sep 2020
+ 18:52:28 +0200
+From:   Florian Evers <florian-evers@gmx.de>
+To:     linux-gpio@vger.kernel.org
+Subject: [libgpiod] Integer overflow in C++ binding on 32bit systems causes wrong event timestamps
+Date:   Sun, 06 Sep 2020 18:52:21 +0200
+Message-ID: <2572959.mvXUDI8C0e@waterstation>
+Organization: http://www.florian-evers.de
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="nextPart11620110.O9o76ZdvQC"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-Provags-ID: V03:K1:B4JAs+j+e+MSr/CW/LZD50aMCrpSzZF86pY2Hv4Ti+KSu3PJ02M
+ 3rbZVTsiPEUki1kf4pSw0gkuM4oojMcm2TJwrEQ3ajQm6IA8hxOvjwhs2xHX7QkpEXWGdg5
+ jkEDh8OsaslJmXxQsXqN6F+XdxRgE3O3GR2jUDGeSzMWDzVwQs66JQiY8HFXThdZX4JxIeC
+ G10jV4OYtx2FfKPfkH0RA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:O+af9l1VkpU=:KsY8EuTMfuLnx4qfNdkzZS
+ v8TmIkNcRdo9/nejk4bjtOTUOGkPAwk8HL6J7vA/HRy0C+bIQhgdFZVhrtLNpXDyLesufxYMu
+ OYsoCyaGxuSNjLg6j1a5OPOY5M4tGmWAEQQqvtw0IO9TbB4bUu+YzT+P6tfgFwaa2AUcBeh0L
+ HA7IoH7sPfEotk9PHmy4oi9XjOw5aa229lRTCtBsuae4S4SPV2Wx0OvLRKJR6EheHaBZ/HlkX
+ xsDJGdLJSQYlPyPapDq4rTSPXD/URD5X23lvWsBoH6vrj/PVLlq2bU6tXDf8Q6YCIrEXJPjYd
+ iZiAHt9UECn6Nefx0JXUyot6YOQqhxUUMFkiHTBqnrseYnO/M1wLS9SSzgolW3oc/q5Z/sfSu
+ e6mijcNJkT1ful0qp3Nb8hVG2NgbN3t906F8ehZ2Q7m0VGkZH3lIPnFhHstYT/mo/IC7Okvcy
+ z1TAyRpDL6qMEvJCIkl59geHiRbRnijgWXC7XisQsLWPMlxJb55CGZL2+YVyZSFe8K6CdKfte
+ CSl8DaQtkFIRuR3sMZ4CV1plTkklJQ6/Oy+wd2lDRb0ql88uIOvckDTWHlJ57xj89SukULEro
+ X5cmGrNuhEFKn1glc4Z64YeH1csZWgMEocY04S3egJ4Mzf48s88cWley/VQnGb7/lnwlF1kj+
+ fxOmc375ckWKJC/w7CldqIQF556I4XM409i/UUxiZvZRkwcp2TbmlLyo2j2IlliXhVx0NTx/A
+ N2E6II5Nb7g8148mvOF8+GGikPEyMAkcV1TP6pkfw0WRktIjIwopsz7OPln5UNNLLdqznmucm
+ VZ4Zh0Y4bK+ENKzLyXBupyPF9iqwBU6Rnaw2Q3nXm84XBGocscBe1+FiBHWNI5wLrSv3ly+Qg
+ wbgSUEg82QDiCBRDQyhRN5EZUpVwtSVev5aPUv6ODYECFd5qy6m91HaaEnlyVtyP/m3AxscwF
+ RnGSeOL0IfJxpJVfWc6nIdo7EYf4W7rlRGMzAeMTTe1siQRflx4ifWrTfKlIjMVUKPVHmGkhp
+ ncu3/8zMzPXZ7tD8YlfJWsJ6qAZpo7RP23gsugdYuW2ziohF28mE+MIR5E5w3IuFabi0Vf5q9
+ +bfe4NtJIU6+dAmSqhFM47kDcxzBoo5UUTD8mQ7xz4y4BOkrmh3MzTcbwhzlaCYa+iJGZTIg6
+ ercTFecQoJlfAwPdPjL6w2xz82QWbMKLIsD5adChVqXlsS8wjJt+vq+8xr0DOhg2xt5Da0wiw
+ vwsjakM5RTPqSn02AIcUAcPx2L9PMK9HZef1iyw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Zhou,
+--nextPart11620110.O9o76ZdvQC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Florian Evers <florian-evers@gmx.de>
+To: linux-gpio@vger.kernel.org
+Subject: [libgpiod] Integer overflow in C++ binding on 32bit systems causes wrong event timestamps
+Date: Sun, 06 Sep 2020 18:52:21 +0200
+Message-ID: <2572959.mvXUDI8C0e@waterstation>
+Organization: http://www.florian-evers.de
 
-Le lun. 31 ao=C3=BBt 2020 =C3=A0 23:43, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Y=
-anjie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Correct the pullup and pulldown parameters of JZ4780 to make them
-> consistent with the parameters on the datasheet.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v2:
->     New patch.
->=20
->  drivers/pinctrl/pinctrl-ingenic.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 00f29fd684fa..ae7b8876d3b4 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -1035,6 +1035,14 @@ static const struct ingenic_chip_info=20
-> jz4770_chip_info =3D {
->  	.pull_downs =3D jz4770_pull_downs,
->  };
->=20
-> +static const u32 jz4780_pull_ups[6] =3D {
-> +	0x3fffffff, 0xfff0f3fc, 0x0fffffff, 0xffff4fff, 0xffff7b7c,=20
-> 0x7fa7f00f,
-> +};
+Hello,
 
-PE15 has a pull-up in my datasheet.
+I found a bug in the c++ bindings of libgpiod that affects 32bit systems.
 
-The rest looks good.
+Observation:
 
-Cheers,
--Paul
+Only the c++ bindings lib is affected. For input events, the time stamp
+delivered in the event object is wrong. Instead of providing a complete
+"system time", it delivers time stamps of of a range "-2.1"...+2.1 seconds
+(which relates to the time stamp range of a signed 32bit value, in
+nanoseconds).
 
-> +
-> +static const u32 jz4780_pull_downs[6] =3D {
-> +	0x00000000, 0x000f0c03, 0x00000000, 0x0000b000, 0x00000483,=20
-> 0x00580ff0,
-> +};
-> +
->  static int jz4780_uart2_data_pins[] =3D { 0x66, 0x67, };
->  static int jz4780_uart2_hwflow_pins[] =3D { 0x65, 0x64, };
->  static int jz4780_uart4_data_pins[] =3D { 0x54, 0x4a, };
-> @@ -1301,8 +1309,8 @@ static const struct ingenic_chip_info=20
-> jz4780_chip_info =3D {
->  	.num_groups =3D ARRAY_SIZE(jz4780_groups),
->  	.functions =3D jz4780_functions,
->  	.num_functions =3D ARRAY_SIZE(jz4780_functions),
-> -	.pull_ups =3D jz4770_pull_ups,
-> -	.pull_downs =3D jz4770_pull_downs,
-> +	.pull_ups =3D jz4780_pull_ups,
-> +	.pull_downs =3D jz4780_pull_downs,
->  };
->=20
->  static const u32 x1000_pull_ups[4] =3D {
-> --
-> 2.11.0
->=20
+Cause:
+
+The bug is in line 219 of file "/tree/bindings/cxx/line.cpp":
+
+event.ts.tv_nsec + (event.ts.tv_sec * 1000000000));
+
+"event.ts.tv_sec" is of type signed long, which is 32 bit on my device. Th=
+us,
+that multiplication to convert total seconds of a system time to nanosecon=
+ds
+causes an overflow.
+
+Fix:
+
+There should be a cast to uint64_t before the multiplication.
+
+Thank you for fixing this!
+
+Regards,
+Florian
+
+--nextPart11620110.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEhKFNjXl3cTz1YyjaJLtLMH/ftD8FAl9VE8UACgkQJLtLMH/f
+tD8RlRAAlp3jkwxw6RkWBPqzMOyj/IeBSZj8PERsD2s4XF+ALdJBTtTBp6X2fJFY
+EEEVlONxgXq1zy6GpNgnVGWfq//Oo2Xe3fXaMGOwmVWbdjcheaXkC/Vl4PsUorvj
+ZdeZAY2RVgy7O3JLZt2IWcGlY6+4zCN7LD9UTe6vD1TpQn3xJZLMWHpBzE9jA5X0
+enABTFUmhd1AtGA0NOOCeV9t6eWRLyK9IFnvHUZWUa8c3U6Mw3tJoPKjKngzZ0wm
+c46PlSUNbo29nD1QWuJl8+/DCbRhg2DKfYgzQxNcI/ZZfJ9QimMc2wzIp6Y+rH0g
+OS+rbKmOmNrDTV/dv3SCceejgYZRgqZliRN++3JAVRDqSKVV61LuY+k0wE7bCLmF
+D9ZwjgycjFUvhlzT8ml3FCEBvtjTd8HLseUgEzMhHAUGejP97n6tAs0jzOOvyZ3U
+/ddSpuH83gZF/Z8wMqPdXbRW58StRG7vzQVLx2IDuw4YkWQrUE4kSCXAwKDeJV6Y
+0vuq/vRHSEo8DQWUDqKCIQrKqSSVckEHh1ZLegqAhXqb613+8wrdV91IjGeaTYfc
+Jq7TbuKXgV94DL6V8sY1FHDFpASbG5VahsdtPTWrQ0qm/OkE4yQBeVIGxQyP/Gqq
+/kvRltKeoXdLczoP5XX7kSdfMZrvJBoVdaHHnQGCXE3UdAYdyVM=
+=IlnP
+-----END PGP SIGNATURE-----
+
+--nextPart11620110.O9o76ZdvQC--
+
 
 
