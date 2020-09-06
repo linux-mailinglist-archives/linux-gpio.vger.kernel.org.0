@@ -2,176 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93F4925ED91
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Sep 2020 12:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0381A25EDBF
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Sep 2020 14:20:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgIFKUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Sep 2020 06:20:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:35688 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgIFKUj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 6 Sep 2020 06:20:39 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1kErmi-0004EO-0Z; Sun, 06 Sep 2020 12:20:32 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 6/6] pinctrl: rockchip: populate platform device for rockchip gpio
-Date:   Sun, 06 Sep 2020 12:20:31 +0200
-Message-ID: <76163126.riIkUvEO9g@diego>
-In-Reply-To: <20200831085021.7288-1-jay.xu@rock-chips.com>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831085021.7288-1-jay.xu@rock-chips.com>
+        id S1728865AbgIFMUr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Sep 2020 08:20:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38575 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728828AbgIFMUl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Sep 2020 08:20:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599394822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CxJ/LRM65OR3AnlvatdcLfZCthNJRAPFXPEjZKd0JvU=;
+        b=N2ahQ7Pmhj4p92rIUxWOhlY4gNYkurVc4suJdVELl+enUuxqI2mf53Dt3xx8tN7iM72b6U
+        hfmU88pnUDwOTrOy//3XHHWg+4czHgZTELAMscx2Wwo5he9OvbdHo4YjqNLdbEhdUhxW2D
+        YqIIa45NCR4Anj3pfrZbC2Q/Sxr+E5M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-qk1YH0sbOSuRfbWY_oxCYg-1; Sun, 06 Sep 2020 08:20:20 -0400
+X-MC-Unique: qk1YH0sbOSuRfbWY_oxCYg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CA481005E67;
+        Sun,  6 Sep 2020 12:20:19 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-17.ams2.redhat.com [10.36.112.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DA945D9CC;
+        Sun,  6 Sep 2020 12:20:17 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH 0/1] Input: soc_button_array - Work around DSDTs which modify the irqflags
+Date:   Sun,  6 Sep 2020 14:20:15 +0200
+Message-Id: <20200906122016.4628-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
+Hi Dmitry,
 
-Am Montag, 31. August 2020, 10:50:21 CEST schrieb Jianqun Xu:
-> Register both gpio driver and device as part of driver model, so that
-> the '-gpio'/'-gpios' dependency in dts can be correctly handled by
-> of_devlink/of_fwlink.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+This patch is a bit of a kludge, but the problem it fixes has been
+encountered on 2 different models now, so it seems that we really
+need a workaround for this.
 
-[...]
+This patch applies on top of these 2 patches:
 
-> -static int rockchip_gpiolib_unregister(struct platform_device *pdev,
-> -						struct rockchip_pinctrl *info)
-> -{
-> -	struct rockchip_pin_ctrl *ctrl = info->ctrl;
-> -	struct rockchip_pin_bank *bank = ctrl->pin_banks;
-> -	int i;
-> +		pctldev = info->pctl_dev;
-> +		if (!pctldev)
-> +			return -ENODEV;
->  
-> -	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
-> -		if (!bank->valid)
-> -			continue;
-> -		gpiochip_remove(&bank->gpio_chip);
-> +		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0, gc->base, gc->ngpio);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to add pin range\n");
-> +			gpiochip_remove(&bank->gpio_chip);
-> +			return ret;
-> +		}
->  	}
->  
->  	return 0;
-> @@ -3752,6 +3734,46 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
->  			 rockchip_pinctrl_resume);
->  
-> +static int rockchip_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device *parent = pdev->dev.parent;
-> +	struct rockchip_pinctrl *info = dev_get_drvdata(parent);
-> +	struct rockchip_pin_ctrl *ctrl = info ? (info->ctrl) : NULL;
-> +	struct rockchip_pin_bank *bank;
-> +	int ret, i;
-> +
-> +	if (!info || !ctrl)
-> +		return -EINVAL;
-> +
-> +	if (!of_find_property(np, "gpio-controller", NULL))
-> +		return -ENODEV;
-> +
-> +	bank = ctrl->pin_banks;
-> +	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
-> +		if (!strcmp(bank->name, np->name)) {
-> +			bank->of_node = np;
-> +
-> +			if (!rockchip_get_bank_data(bank, info))
-> +				bank->valid = true;
-> +
-> +			break;
-> +		}
-> +	}
-> +
-> +	bank->of_node = pdev->dev.of_node;
-> +
-> +	ret = rockchip_gpiolib_register(pdev, bank);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = rockchip_interrupts_register(pdev, bank);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static int rockchip_pinctrl_probe(struct platform_device *pdev)
->  {
->  	struct rockchip_pinctrl *info;
-> @@ -3823,18 +3845,20 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
->  			return PTR_ERR(info->regmap_pmu);
->  	}
->  
-> -	ret = rockchip_gpiolib_register(pdev, info);
-> -	if (ret)
-> -		return ret;
-> -
->  	ret = rockchip_pinctrl_register(pdev, info);
->  	if (ret) {
-> -		rockchip_gpiolib_unregister(pdev, info);
-> +		dev_err(&pdev->dev, "failed to register pinctrl device\n");
->  		return ret;
->  	}
->  
->  	platform_set_drvdata(pdev, info);
->  
-> +	ret = of_platform_populate(np, rockchip_bank_match, NULL, dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register gpio device\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -4254,6 +4278,14 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
->  	{},
->  };
->  
-> +static struct platform_driver rockchip_gpio_driver = {
-> +	.probe		= rockchip_gpio_probe,
-> +	.driver = {
-> +		.name	= "rockchip-gpio",
-> +		.of_match_table = rockchip_bank_match,
-> +	},
-> +};
-> +
->  static struct platform_driver rockchip_pinctrl_driver = {
->  	.probe		= rockchip_pinctrl_probe,
->  	.driver = {
-> @@ -4265,7 +4297,9 @@ static struct platform_driver rockchip_pinctrl_driver = {
->  
->  static int __init rockchip_pinctrl_drv_register(void)
->  {
-> -	return platform_driver_register(&rockchip_pinctrl_driver);
-> +	platform_driver_register(&rockchip_pinctrl_driver);
-> +
-> +	return platform_driver_register(&rockchip_gpio_driver);
->  }
->  postcore_initcall(rockchip_pinctrl_drv_register);
+"Input: soc_button_array - Add active_low setting to soc_button_info"
+"Input: soc_button_array - Add support for INT33D3 tablet-mode switch devices"
 
-This also seems to miss the whole unloading of module paths?
-I'd expect a gpiochip_remove etc in some _remove function and
-of course a platform_driver_unregister.
+Which I have posted multiple times upstream already (they are from May!),
+but these have not been getting any attention.
 
+The soc_button_array code really is x86 specific glue code to translate
+various incarnations of gpio-keys in ACPI tables to gpio_keys_platform_data.
+As such I wonder if it would not be better to move this driver to
+drivers/platform/x86?
 
-Heiko
+I seem to be doing most if not all of the recent work on soc_button_array,
+and soon I will be a co-maintainer of drivers/platform/x86. So having it
+there and adding me in MAINTAINERS as maintaining it seems to be best?
 
+If you want I can do a patch moving soc_button_array to drivers/platform/x86
+and then add the other 3 patches on top and then we can merge all of this
+through drivers/platform/x86?
+
+Regards,
+
+Hans
 
