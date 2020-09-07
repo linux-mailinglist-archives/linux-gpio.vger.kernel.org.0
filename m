@@ -2,150 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C6026022E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 19:20:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F2252603C5
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 19:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIGRT5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Sep 2020 13:19:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40312 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgIGNxU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:53:20 -0400
-IronPort-SDR: FRYaLof1Stayp3r3/A32d5+SC8+T5VqW7lqR0RbEAO/jzyH5EFlBK9vI/KoWBMSiCe7k3u8MIU
- 3BNpHFBBnQWQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="145714274"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="145714274"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 06:53:04 -0700
-IronPort-SDR: ZpD+nR3zD5cFp9j3Cc3dwR1QwVccLWIgbyDzO5RuQx1ta5A3XEWYaZZ2XACE5B4yL8bRHhiDEr
- hX9xYuaV/5pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="333169481"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 06:53:01 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFHZq-00ExvU-05; Mon, 07 Sep 2020 16:52:58 +0300
-Date:   Mon, 7 Sep 2020 16:52:57 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
- gpio-mockup
-Message-ID: <20200907135257.GJ1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
- <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com>
- <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907123837.GG1891694@smile.fi.intel.com>
- <CAMpxmJXNYZb66SPuzR_3CEVwD=PQ6z6Ew3ia7ZL=wSU0QGhjEA@mail.gmail.com>
+        id S1728886AbgIGRy0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Sep 2020 13:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbgIGLWb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Sep 2020 07:22:31 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A15C061786
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Sep 2020 04:02:27 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m6so15385788wrn.0
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Sep 2020 04:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=njSxaAkrShaev6nBmwWk4gz2+gzrgoVD7cG8Ur2KLZY=;
+        b=FSI2tvGbCDcFLdRpiiybbNb4UiGRnVNftq8LrfnfRDbZB0bgyf9asszI7O09fQtHf4
+         9KfwujbHAzz7fG/ok96HkfFth+HZM/ApW1FO6/B9kQbkQkV36nEJusYnj617lJqxXJ7J
+         nuC3hhNe1MSis/mQWPeplAsiol7hpWBbi/PtTWjHqgzMSP5C/ZQLXxBoJDcSAgahQqI7
+         sUb5+pokelyqRhxVA7pNdJ3zigIsU0tv8VOwKEKykD4t0X/cbP19ikXXORFNMyv1QdaZ
+         6tDxptY4GLT04g1szxXUxU+VVoDoh9alnas+CpU1K8xynXhimcfV2PwMiyZPW1QoAve+
+         lgqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=njSxaAkrShaev6nBmwWk4gz2+gzrgoVD7cG8Ur2KLZY=;
+        b=FpNab0kk23poPN8LuRbzEZzApveqSjxmDSTWfUnP5kixgfOt0XponCsC1B6Slw/4Wj
+         3TPo/YCgEcNLqatOit1tLsyHyMobP8hCSR+YQkh6G+/5pbt4BOphZ9Yl+pYgRYGoCx94
+         7mCUjYp9/n2O3HOeTrvi4VuhS6DPdRNrwqrBj+exdSf4LHwcgtASNI6ESaPH0TrNSexi
+         gBaiqoY1MsK1zdAeVYB7hoJwkLM95nRPU9CI36xb64VC5b8O+vEcvasYJ7/Bi8g4wFyd
+         4mXlqAnpzdGuTo64MQnS+tBFXhUlkoEeyYBwZM89pN9m9SPnWwPVssZ/K61JIyeoVaQs
+         pvPg==
+X-Gm-Message-State: AOAM532iJ77u82BUCNJ5/KPg9scfkLVEJ4Wksu3C4HWnqrJqh4p53uIi
+        wCvIcJyZFuWr+cOXUyEvBV0r5Q==
+X-Google-Smtp-Source: ABdhPJzOyuMiOAWKozCxyMN8m5sL4WTHm2Ix5ZGgYp4lsJ5S1lIv8ykGUEEGNH299l5r2VPmDA+mgA==
+X-Received: by 2002:a5d:6912:: with SMTP id t18mr22168295wru.326.1599476546279;
+        Mon, 07 Sep 2020 04:02:26 -0700 (PDT)
+Received: from localhost.localdomain (122.105.23.93.rev.sfr.net. [93.23.105.122])
+        by smtp.gmail.com with ESMTPSA id 2sm28909545wrs.64.2020.09.07.04.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 04:02:25 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Cc:     matthias.bgg@gmail.com, robh+dt@kernel.org,
+        linus.walleij@linaro.org, sean.wang@kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 1/2] pinctrl: mt65xx: add OF bindings for MT8167
+Date:   Mon,  7 Sep 2020 13:02:20 +0200
+Message-Id: <20200907110221.1691168-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXNYZb66SPuzR_3CEVwD=PQ6z6Ew3ia7ZL=wSU0QGhjEA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 02:57:29PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 7, 2020 at 2:38 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-> >
-> > ...
-> >
-> > > > > > > > +GPIO Testing Driver
-> > > > > > > > +===================
-> > > > > > > > +
-> > > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > > > +structure.
-> > > > > > >
-> > > > > > > Could configfs be used for this instead of debugfs?
-> > > > > > > debugfs is ad hoc.
-> > > > > >
-> > > > > > Actually sounds like a good idea.
-> > > > > >
-> > > > >
-> > > > > Well, then we can go on and write an entirely new mockup driver
-> > > > > (ditching module params and dropping any backwards compatibility)
-> > > > > because we're already using debugfs for line values.
-> > > > >
-> > > > > How would we pass the device properties to configfs created GPIO chips
-> > > > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > > > something?
-> > > >
-> > > > Same way how USB composite works, no?
-> > > >
-> > >
-> > > OK, so create a new chip directory in configfs, configure it using
-> > > some defined configfs attributes and then finally instantiate it from
-> > > sysfs?
-> > >
-> > > Makes sense and is probably the right way to go. Now the question is:
-> > > is it fine to just entirely remove the previous gpio-mockup?
-> >
-> > Since, for example, I never saw device property bindings for that driver I
-> > assume that it was never considered as an ABI, so feel free to hack it in
-> > either direction.
-> >
-> > > Should we
-> > > keep some backwards compatibility?
-> >
-> > I wouldn't probably spend time on this.
-> >
-> > > Should we introduce an entirely new
-> > > module and have a transition period before removing previous
-> > > gpio-mockup?
-> >
-> > Neither transition period.
-> >
-> 
-> I wouldn't rush this actually. gpio-mockup is used a lot by libgpiod
-> and probably by Kent's Go library. My main goal with this series is to
-> extend it to allow for more advanced testing like simulating spurious
-> irqs to test the software debouncer or custom line name formats to
-> test name lookups.
+Add binding documentation of pinctrl-mt65xx for MT8167 SoC.
 
-When I wrote above I didn't mean this should be done in a hurry. Just during
-one release to make all parties ready for the change.
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> I need to think about it some more. An entirely new configfs interface
-> would take time too.
-
-Sure!
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+index 205be98ae078..931a18cd1e23 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 	"mediatek,mt7623-pinctrl", compatible with mt7623 pinctrl.
+ 	"mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+ 	"mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
++	"mediatek,mt8167-pinctrl", compatible with mt8167 pinctrl.
+ 	"mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
+ 	"mediatek,mt8516-pinctrl", compatible with mt8516 pinctrl.
+ - pins-are-numbered: Specify the subnodes are using numbered pinmux to
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.28.0
 
