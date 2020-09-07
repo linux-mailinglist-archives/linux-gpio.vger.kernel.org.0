@@ -2,195 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4EC260366
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 19:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E458260368
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 19:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgIGRsx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Sep 2020 13:48:53 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51786 "EHLO inva021.nxp.com"
+        id S1729238AbgIGRtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Sep 2020 13:49:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42086 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbgIGMke (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:40:34 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D903201558;
-        Mon,  7 Sep 2020 14:40:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9129B2000D4;
-        Mon,  7 Sep 2020 14:40:22 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1E443402F0;
-        Mon,  7 Sep 2020 14:40:17 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/3] pinctrl: imx: Use function callbacks for SCU related functions
-Date:   Mon,  7 Sep 2020 20:32:31 +0800
-Message-Id: <1599481953-32704-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1729109AbgIGMj1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:39:27 -0400
+IronPort-SDR: WBEeyuFP8hGcnGsYKszVJMrEVm9/hhP4MDtGgH+RcJ3+i9c6cGVDKB5VispU5Masx/ZkLI2FqZ
+ iizPQrDHofpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="242811803"
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="242811803"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 05:38:43 -0700
+IronPort-SDR: b9BfZlr40QZ2qISx/JXwCtkBAzS5PgLGV5xflcnOM8vMWXear5QSlnH4ccfPIOpexgx7jr18OP
+ bYmVrfDS4+yA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="333151425"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 05:38:40 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kFGPt-00Ewye-H3; Mon, 07 Sep 2020 15:38:37 +0300
+Date:   Mon, 7 Sep 2020 15:38:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
+ gpio-mockup
+Message-ID: <20200907123837.GG1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
+ <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+ <20200907115310.GA1891694@smile.fi.intel.com>
+ <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use function callbacks for SCU related functions in pinctrl-imx.c
-in order to support the scenario of PINCTRL_IMX is built in while
-PINCTRL_IMX_SCU is built as module, all drivers using SCU pinctrl
-driver need to initialize the SCU related function callback.
+On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- split V1 [1/2] patch to 2 patches, this patch does the change of using function
-	  callbacks for SCU related functions.
----
- drivers/pinctrl/freescale/pinctrl-imx.c     |  8 +++----
- drivers/pinctrl/freescale/pinctrl-imx.h     | 37 +++++++++++++++++------------
- drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  3 +++
- drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  3 +++
- drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  3 +++
- 5 files changed, 35 insertions(+), 19 deletions(-)
+...
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 507e4af..b80c450 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -373,7 +373,7 @@ static int imx_pinconf_get(struct pinctrl_dev *pctldev,
- 	const struct imx_pinctrl_soc_info *info = ipctl->info;
- 
- 	if (info->flags & IMX_USE_SCU)
--		return imx_pinconf_get_scu(pctldev, pin_id, config);
-+		return info->imx_pinconf_get(pctldev, pin_id, config);
- 	else
- 		return imx_pinconf_get_mmio(pctldev, pin_id, config);
- }
-@@ -423,7 +423,7 @@ static int imx_pinconf_set(struct pinctrl_dev *pctldev,
- 	const struct imx_pinctrl_soc_info *info = ipctl->info;
- 
- 	if (info->flags & IMX_USE_SCU)
--		return imx_pinconf_set_scu(pctldev, pin_id,
-+		return info->imx_pinconf_set(pctldev, pin_id,
- 					   configs, num_configs);
- 	else
- 		return imx_pinconf_set_mmio(pctldev, pin_id,
-@@ -440,7 +440,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
- 	int ret;
- 
- 	if (info->flags & IMX_USE_SCU) {
--		ret = imx_pinconf_get_scu(pctldev, pin_id, &config);
-+		ret = info->imx_pinconf_get(pctldev, pin_id, &config);
- 		if (ret) {
- 			dev_err(ipctl->dev, "failed to get %s pinconf\n",
- 				pin_get_name(pctldev, pin_id));
-@@ -629,7 +629,7 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
- 	for (i = 0; i < grp->num_pins; i++) {
- 		pin = &((struct imx_pin *)(grp->data))[i];
- 		if (info->flags & IMX_USE_SCU)
--			imx_pinctrl_parse_pin_scu(ipctl, &grp->pins[i],
-+			info->imx_pinctrl_parse_pin(ipctl, &grp->pins[i],
- 						  pin, &list);
- 		else
- 			imx_pinctrl_parse_pin_mmio(ipctl, &grp->pins[i],
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-index 333d32b..40927ca 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.h
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-@@ -75,6 +75,21 @@ struct imx_cfg_params_decode {
- 	bool invert;
- };
- 
-+/**
-+ * @dev: a pointer back to containing device
-+ * @base: the offset to the controller in virtual memory
-+ */
-+struct imx_pinctrl {
-+	struct device *dev;
-+	struct pinctrl_dev *pctl;
-+	void __iomem *base;
-+	void __iomem *input_sel_base;
-+	const struct imx_pinctrl_soc_info *info;
-+	struct imx_pin_reg *pin_regs;
-+	unsigned int group_index;
-+	struct mutex mutex;
-+};
-+
- struct imx_pinctrl_soc_info {
- 	const struct pinctrl_pin_desc *pins;
- 	unsigned int npins;
-@@ -98,21 +113,13 @@ struct imx_pinctrl_soc_info {
- 				  struct pinctrl_gpio_range *range,
- 				  unsigned offset,
- 				  bool input);
--};
--
--/**
-- * @dev: a pointer back to containing device
-- * @base: the offset to the controller in virtual memory
-- */
--struct imx_pinctrl {
--	struct device *dev;
--	struct pinctrl_dev *pctl;
--	void __iomem *base;
--	void __iomem *input_sel_base;
--	const struct imx_pinctrl_soc_info *info;
--	struct imx_pin_reg *pin_regs;
--	unsigned int group_index;
--	struct mutex mutex;
-+	int (*imx_pinconf_get)(struct pinctrl_dev *pctldev, unsigned int pin_id,
-+			       unsigned long *config);
-+	int (*imx_pinconf_set)(struct pinctrl_dev *pctldev, unsigned int pin_id,
-+			       unsigned long *configs, unsigned int num_configs);
-+	void (*imx_pinctrl_parse_pin)(struct imx_pinctrl *ipctl,
-+				      unsigned int *pin_id, struct imx_pin *pin,
-+				      const __be32 **list_p);
- };
- 
- #define IMX_CFG_PARAMS_DECODE(p, m, o) \
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-index 12b97da..d3020c0 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-@@ -159,6 +159,9 @@ static struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
- 	.pins = imx8dxl_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx8dxl_pinctrl_pads),
- 	.flags = IMX_USE_SCU,
-+	.imx_pinconf_get = imx_pinconf_get_scu,
-+	.imx_pinconf_set = imx_pinconf_set_scu,
-+	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
- };
- 
- static const struct of_device_id imx8dxl_pinctrl_of_match[] = {
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qm.c b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
-index 095acf4..8f46b940 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8qm.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
-@@ -292,6 +292,9 @@ static const struct imx_pinctrl_soc_info imx8qm_pinctrl_info = {
- 	.pins = imx8qm_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx8qm_pinctrl_pads),
- 	.flags = IMX_USE_SCU,
-+	.imx_pinconf_get = imx_pinconf_get_scu,
-+	.imx_pinconf_set = imx_pinconf_set_scu,
-+	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
- };
- 
- static const struct of_device_id imx8qm_pinctrl_of_match[] = {
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-index 81ebd4c..6776ad6 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-@@ -198,6 +198,9 @@ static struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
- 	.pins = imx8qxp_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx8qxp_pinctrl_pads),
- 	.flags = IMX_USE_SCU,
-+	.imx_pinconf_get = imx_pinconf_get_scu,
-+	.imx_pinconf_set = imx_pinconf_set_scu,
-+	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
- };
- 
- static const struct of_device_id imx8qxp_pinctrl_of_match[] = {
+> > > > > > +GPIO Testing Driver
+> > > > > > +===================
+> > > > > > +
+> > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > > > > +by the module. The lines can be accessed using the standard GPIO character
+> > > > > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > > > > +structure.
+> > > > >
+> > > > > Could configfs be used for this instead of debugfs?
+> > > > > debugfs is ad hoc.
+> > > >
+> > > > Actually sounds like a good idea.
+> > > >
+> > >
+> > > Well, then we can go on and write an entirely new mockup driver
+> > > (ditching module params and dropping any backwards compatibility)
+> > > because we're already using debugfs for line values.
+> > >
+> > > How would we pass the device properties to configfs created GPIO chips
+> > > anyway? Devices seem to only be created using mkdir. Am I missing
+> > > something?
+> >
+> > Same way how USB composite works, no?
+> >
+> 
+> OK, so create a new chip directory in configfs, configure it using
+> some defined configfs attributes and then finally instantiate it from
+> sysfs?
+> 
+> Makes sense and is probably the right way to go. Now the question is:
+> is it fine to just entirely remove the previous gpio-mockup?
+
+Since, for example, I never saw device property bindings for that driver I
+assume that it was never considered as an ABI, so feel free to hack it in
+either direction.
+
+> Should we
+> keep some backwards compatibility?
+
+I wouldn't probably spend time on this.
+
+> Should we introduce an entirely new
+> module and have a transition period before removing previous
+> gpio-mockup?
+
+Neither transition period.
+
+> Also: this is a testing module so to me debugfs is just fine. Is
+> configfs considered stable ABI like sysfs?
+
+But this one is a good question. I think ConfigFS is stricter than DebugFS,
+up to being an ABI. But never did myself such a thing, so would like to hear
+experienced developers.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
