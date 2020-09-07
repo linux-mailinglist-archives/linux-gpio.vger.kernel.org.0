@@ -2,136 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E458260368
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 19:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0D2B260608
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 23:05:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgIGRtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Sep 2020 13:49:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42086 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbgIGMj1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:39:27 -0400
-IronPort-SDR: WBEeyuFP8hGcnGsYKszVJMrEVm9/hhP4MDtGgH+RcJ3+i9c6cGVDKB5VispU5Masx/ZkLI2FqZ
- iizPQrDHofpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="242811803"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="242811803"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 05:38:43 -0700
-IronPort-SDR: b9BfZlr40QZ2qISx/JXwCtkBAzS5PgLGV5xflcnOM8vMWXear5QSlnH4ccfPIOpexgx7jr18OP
- bYmVrfDS4+yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="333151425"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 05:38:40 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFGPt-00Ewye-H3; Mon, 07 Sep 2020 15:38:37 +0300
-Date:   Mon, 7 Sep 2020 15:38:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
- gpio-mockup
-Message-ID: <20200907123837.GG1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
- <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com>
- <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+        id S1727119AbgIGVFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Sep 2020 17:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgIGVFI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Sep 2020 17:05:08 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0A3C061573
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Sep 2020 14:05:07 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 23DA980719;
+        Tue,  8 Sep 2020 09:04:54 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599512694;
+        bh=2o4BAsLs2duPVFnx5tJT1CeBpaPWP7Bjhar4MZ290gA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=NuWMxZEvMeKbI7JByXFxGpsz3+IKUnvAhdrcLBzikbaYvCcP+pe+goClIbjqDbTQ+
+         BcvVZN+j3yhASqjlFJrITRMpsrTTpts6bT3WYfL5LRsPmAdVNvoyq0i620L6KRT593
+         17k7Q/VlciTV669N89eA4LUXOPUZhEVFxCMTQjez+gFodz8SOaEoVqYGdMyq9wPtcE
+         4DKT2WAQyOeh0oVyJ7Hm52X2wE2QQwEbhuN5ZDpTf8Hh1BVyP7cCI/rXfg1nXOErNz
+         puC1W2lExiDNd/lJOmOKrD7DBuwfqWQSqjMy2nyh4qI/UpAOl6akjFZHDF9d1StCC1
+         mA3d9mrQWwEJQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f56a0760000>; Tue, 08 Sep 2020 09:04:54 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 8 Sep 2020 09:04:48 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Tue, 8 Sep 2020 09:04:48 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
+Thread-Topic: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
+Thread-Index: AQHWhMBx9UPh5FBBykunMtOiHpEnW6lciSsAgABZMwA=
+Date:   Mon, 7 Sep 2020 21:04:48 +0000
+Message-ID: <36712d90-6bfe-8965-22b1-6b6dd460116d@alliedtelesis.co.nz>
+References: <20200907024149.20001-1-chris.packham@alliedtelesis.co.nz>
+ <20200907024149.20001-3-chris.packham@alliedtelesis.co.nz>
+ <20200907154532.GY3112546@lunn.ch>
+In-Reply-To: <20200907154532.GY3112546@lunn.ch>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7792CDCDA1D5F04087248E37E719BDB9@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-
-...
-
-> > > > > > +GPIO Testing Driver
-> > > > > > +===================
-> > > > > > +
-> > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > +structure.
-> > > > >
-> > > > > Could configfs be used for this instead of debugfs?
-> > > > > debugfs is ad hoc.
-> > > >
-> > > > Actually sounds like a good idea.
-> > > >
-> > >
-> > > Well, then we can go on and write an entirely new mockup driver
-> > > (ditching module params and dropping any backwards compatibility)
-> > > because we're already using debugfs for line values.
-> > >
-> > > How would we pass the device properties to configfs created GPIO chips
-> > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > something?
-> >
-> > Same way how USB composite works, no?
-> >
-> 
-> OK, so create a new chip directory in configfs, configure it using
-> some defined configfs attributes and then finally instantiate it from
-> sysfs?
-> 
-> Makes sense and is probably the right way to go. Now the question is:
-> is it fine to just entirely remove the previous gpio-mockup?
-
-Since, for example, I never saw device property bindings for that driver I
-assume that it was never considered as an ABI, so feel free to hack it in
-either direction.
-
-> Should we
-> keep some backwards compatibility?
-
-I wouldn't probably spend time on this.
-
-> Should we introduce an entirely new
-> module and have a transition period before removing previous
-> gpio-mockup?
-
-Neither transition period.
-
-> Also: this is a testing module so to me debugfs is just fine. Is
-> configfs considered stable ABI like sysfs?
-
-But this one is a good question. I think ConfigFS is stricter than DebugFS,
-up to being an ABI. But never did myself such a thing, so would like to hear
-experienced developers.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+DQpPbiA4LzA5LzIwIDM6NDUgYW0sIEFuZHJldyBMdW5uIHdyb3RlOg0KPiBPbiBNb24sIFNlcCAw
+NywgMjAyMCBhdCAwMjo0MTo0OFBNICsxMjAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4gVGhl
+IHN3aXRjaGVzIHdpdGggaW50ZWdyYXRlZCBDUFVzIGhhdmUgb25seSBnb3QgYSBzaW5nbGUgaTJj
+IGNvbnRyb2xsZXIuDQo+PiBUaGUgaW5jb3JyZWN0bHkgZ2FpbmVkIG9uZSB3aGVuIHRoZXkgd2Vy
+ZSBzcGxpdCBmcm9tIHRoZSBBcm1hZGEtWFAuDQpTb21lb25lIHBvaW50ZWQgb3V0IGEgc21hbGwg
+Z3JhbW1vIGluc3RlYWQgb2YgIlRoZSBpbmNvcnJlY3RseSIgaXQgDQpzaG91bGQgYmUgIlRoZXkg
+aW5jb3JyZWN0bHkiLiBJcyBpdCB3b3J0aCBtZSBzZW5kaW5nIGEgdjIganVzdCB0byBmaXggdGhh
+dD8NCj4+DQo+PiBGaXhlczogNDNlMjhiYTg3NzA4ICgiQVJNOiBkdHM6IFVzZSBhcm1hZGEtMzcw
+LXhwIGFzIGEgYmFzZSBmb3IgYXJtYWRhLXhwLTk4ZHgzMjM2IikNCj4+IFNpZ25lZC1vZmYtYnk6
+IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4NCj4gUmV2
+aWV3ZWQtYnk6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4NCj4gICAgICBBbmRyZXc=
