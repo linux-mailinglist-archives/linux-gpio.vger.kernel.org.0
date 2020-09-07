@@ -2,132 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C150C25F105
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 01:09:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D9C725F1B7
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Sep 2020 04:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgIFXJA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Sep 2020 19:09:00 -0400
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:56272 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgIFXI7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Sep 2020 19:08:59 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 086N8JEo008509; Mon, 7 Sep 2020 08:08:19 +0900
-X-Iguazu-Qid: 34tKSwRU9BYuHzn0in
-X-Iguazu-QSIG: v=2; s=0; t=1599433699; q=34tKSwRU9BYuHzn0in; m=bg21Vh1RzUmSRhTK3yMtiq8vAOBYj5w0yNVeDAf2yio=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1513) id 086N8GRS018624;
-        Mon, 7 Sep 2020 08:08:17 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 086N8GUn005737;
-        Mon, 7 Sep 2020 08:08:16 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 086N8Gcd003321;
-        Mon, 7 Sep 2020 08:08:16 +0900
-Date:   Mon, 7 Sep 2020 08:08:06 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
-        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Marc Zyngier <maz@misterjones.org>
-Subject: Re: [PATCH v3 0/8] Add Toshiba Visconti ARM64 Platform support
-X-TSB-HOP: ON
-Message-ID: <20200906230806.GA3003239@toshiba.co.jp>
-References: <20200831081025.2721320-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <CAK8P3a2xD-zp3ov=3vobSSAmyfvPCMe0mGgP3F7mZkk8WieUpw@mail.gmail.com>
- <20200831224122.i5tau3atlty4ikeu@toshiba.co.jp>
- <CAK8P3a2O_-jiiRe41Dci3yAsN7s==u5b_fHGsXh6m6y-Ki7WAQ@mail.gmail.com>
+        id S1726362AbgIGCl7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Sep 2020 22:41:59 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44534 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgIGCl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Sep 2020 22:41:56 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1058C80719;
+        Mon,  7 Sep 2020 14:41:52 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599446512;
+        bh=Hf7VVuMu9cFRktO7FXy7LMQ9Jztv9177X3UOd6CQzZw=;
+        h=From:To:Cc:Subject:Date;
+        b=Om8O6usK2nM5bUfaAOv4CKKh/Wcwol1+907/PJv+TT4Q8NC/V4t4oyOQ4rRmrtqR6
+         9jDcGBzjXZ2aSuI5lKXJjslg6savSSTCxOg6OPN07JuS5A0CerXMx8wkdwkQjcI1XZ
+         OWi0seMzaw/k+ZzwZfxu/p7fIjB6jEU6yPqCL/2eX9t8lKVPzAZP+uYBBdp51jSvxa
+         LbjcSLxnLVGwsOKXZ4UrkJ06V4y/7+MhVofAHfLOlaP+kCcKAZ6uT7xASPkkso+yjc
+         g0gEX3l0at/3fynbSR8C37XDlNmaBsI3sjlmZYsU0OURPxhH9YCkWg3sVjqja3Toav
+         7F881PLYoUYjw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f559def0000>; Mon, 07 Sep 2020 14:41:51 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 8582313EEB7;
+        Mon,  7 Sep 2020 14:41:51 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id C36DD280060; Mon,  7 Sep 2020 14:41:51 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 0/3] 98dx3236 i2c related fixes
+Date:   Mon,  7 Sep 2020 14:41:46 +1200
+Message-Id: <20200907024149.20001-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2O_-jiiRe41Dci3yAsN7s==u5b_fHGsXh6m6y-Ki7WAQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+I noticed these while adding support for i2c recovery for a couple of our
+boards. They date back to when I initially added support for the 98dx3236=
+. They
+probably haven't been causing a problem because the HW defaults are corre=
+ct and
+unless you attempt to use the specific pinctrl functions there won't be a
+problem.
 
-Thanks for your comment.
+Chris Packham (3):
+  pinctrl: mvebu: Fix i2c sda definition for 98DX3236
+  ARM: dts: Remove non-existent i2c1 from 98dx3236
+  ARM: dts: Add i2c0 pinctrl information for 98dx3236
 
-On Tue, Sep 01, 2020 at 09:50:56AM +0200, Arnd Bergmann wrote:
-> On Tue, Sep 1, 2020 at 12:41 AM Nobuhiro Iwamatsu
-> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
-> > On Mon, Aug 31, 2020 at 11:19:02AM +0200, Arnd Bergmann wrote:
-> > > On Mon, Aug 31, 2020 at 10:10 AM Nobuhiro Iwamatsu
-> > > <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
-> > > >
-> > > > Visconti is a series of Toshiba's SoCs targeting image processing
-> > > > applications[0]. These set of patches adds support for Visconti5 a Arm
-> > > > v8 based SoC.
-> > > >
-> > > > The series add minimal support for the Visconti5 SoC and the TMPV7708 RM
-> > > > main board. Peripherals such as UART, SPI, I2c and timer use Arm's
-> > > > IP and work with the existing kernel drivers in the tree. The series
-> > > > includes a pinctrl driver to select appropriate functions on the pins.
-> > >
-> > > The arch/arm64 series looks all reasonable to me, nice work!
-> > >
-> > > Once the review from the DT and pinctrl maintainers is completed
-> > > and you have received their Acked-by or Reviewed-by tags, please
-> > > send the series with those tags to soc@kernel.org for inclusion, keeping
-> > > everyone else on Cc.
-> > >
-> > > I'd leave it up to Linus Walleij whether he wants to merge the pinctrl driver
-> > > through his subsystem tree, or whether we should pick it up through
-> > > the soc tree, either way works for the initial merge. For any updates to
-> > > the pinctrl driver and additional subsystem support (clk, media, ...)
-> > > in later releases there is no need to Cc the SoC maintainers as those
-> > > should just get merged through the subsystem while we take care
-> > > of the DT files.
-> >
-> > Thank you for the explanation. I will do that.
-> > BTW, I searched the process for this but I couldn't find any detailed
-> > documentation. Could you tell me if you know?
-> 
-> We never documented this well, sorry about that.
-> 
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 12 +++++++-----
+ drivers/pinctrl/mvebu/pinctrl-armada-xp.c |  2 +-
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-No problem.
+--=20
+2.28.0
 
-> Generally speaking, if you only have small updates (a few patches
-> at a time), feel free to send those patches to soc@kernel.org once
-> you consider them ready for inclusion.
-> 
-> On 32-bit architectures as well as the more widely used 64-bit
-> platforms with many .dts files, please send pull requests that group
-> the patches into logical topics. Once you are listed in the
-> MAINTAINERS file and you want to host a git tree on git.kernel.org
-> for that purpose, you can apply for a kernel.org account and
-> send pull request from there as well as have the tree integrated
-> into linux-next for earlier testing. On the more specialized platforms
-> without third-party machine support in the kernel, that is usually not
-> necessary.
-> 
-> In either case, patches and pull requests should be based on
-> an early -rc tag from mainline Linux (normally -rc1) and get sent
-> between -rc1 and roughly -rc5 for new features. Bug fixes can
-> be sent at any time regardless of the current -rc, with a balance
-> between sending them quickly and collecting multiple of them
-> into a pull request to reduce the number of merges. Please let
-> us know whether bug fixes should be applied only at the next
-> merge window, on current kernels, or backported to previous
-> releases, using the "Fixes:"  and "Cc: stable@vger.kernel.org"
-> tags as appropriate. The default is to backport bug fixes as far
-> back as they apply, unless there is a reason not to.
-> 
-
-Thank you for the detailed explanation.
-The above explanation was very useful.
-
->      Arnd
-> 
-
-Best regards,
-  Nobuhiro
