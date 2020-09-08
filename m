@@ -2,114 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 232EE260C49
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 09:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1992260C56
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 09:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgIHHmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Sep 2020 03:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgIHHm1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 03:42:27 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20C3C061756
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Sep 2020 00:42:26 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w5so17989423wrp.8
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Sep 2020 00:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
-        b=wfT5YyvYowSvPxHb+0/UENzgICebO//M3d0DIDWTaHQEJ5O8uHUUoMmrKzjeIMQqhp
-         NitiIv7XdDmxggV4H52sZ8GTfO2gx/qw5l/KSDtQ5k7j01HmFi8cILzZZTc1QulK7jLs
-         FJR7s1cQa4ABR9jisaKM+w4K4OH7nPjdA5yySjFdvPdEhKp9Pdb2E5jOhpoKyKzqADtF
-         9rvVG8SDZqY9Gexgx+Opxsg3NCd1mxoMtmv0mYlisOhyCFfTItVkvffAfsv2qI5glIoD
-         p6y8pTSLFo/DJ8Z8ql+PhihvnyiwtfryLTFJeF/3iqnz5513istkaHH5GvpZtlkejkLV
-         tDYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
-        b=Undkjk1yCsMMk/XYCI2hYozFjUXutSuiQewJWHWKXDfaZMjDjMP0P2xfJZ61kdiBj+
-         1fCvG8Zluh38kbG0sMNZybGEZFj96yKLdYv/3OkFs+M976AIRn41ogGwa33te0d43PtK
-         4qZMJtBIHpYkbdLSchscpDbpvntZ7E1qgoflejbdrXrTUtlSF+G6xElNJFWKLXad42/F
-         Nvk6143xerm3hLgx0fSKoeb6wONkoebsDj18pRDqcEVPfj3p9WIO95ngxL0kG6thGx1j
-         hvEkZAtjXBnTpGc4Dr1CKiC3df1lN671W4Bt3MZUSRu0cWoiuomhVd+87+BMZbTJpNun
-         YL4Q==
-X-Gm-Message-State: AOAM531itCaQKBCH2T+d/vNTb9RJ4MhNGRv6kK617adYavQyu0MPU3gg
-        ueiB58d9c6jTUqaoYSvo1cNq0A==
-X-Google-Smtp-Source: ABdhPJwKj9M+NROzity0wbbtarhMYD1iO1A/RCqJwJa4QnCTCrNVQ7+USV3LfuKpabL5+WM8PcwegQ==
-X-Received: by 2002:adf:e6c2:: with SMTP id y2mr27381258wrm.117.1599550944553;
-        Tue, 08 Sep 2020 00:42:24 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id i6sm36336964wra.1.2020.09.08.00.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 00:42:23 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 08:42:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 00/13] Add support for Kontron sl28cpld
-Message-ID: <20200908074221.GA4400@dell>
-References: <20200907213802.26745-1-michael@walle.cc>
+        id S1729554AbgIHHqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Sep 2020 03:46:19 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:57477 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbgIHHqL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 03:46:11 -0400
+Received: from mail-qv1-f48.google.com ([209.85.219.48]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N2VKr-1kgOtC1sfn-013tco; Tue, 08 Sep 2020 09:46:09 +0200
+Received: by mail-qv1-f48.google.com with SMTP id b13so7351788qvl.2;
+        Tue, 08 Sep 2020 00:46:09 -0700 (PDT)
+X-Gm-Message-State: AOAM531Vo6g73i+acpKioDGzJC5g35J2aNLAvhFJu986Bw6CqiZAuoaC
+        sxrcIDflgnbeWKQoXStyVdjG2urKwHqygQGbwMk=
+X-Google-Smtp-Source: ABdhPJxeUMqCctMEC+AYLorkfFHD1jWsFRFQrdZMhrt86JuWl8Xqf8uBNpnbi7bbgNurumDqIM25KE49sLc58JGfTUM=
+X-Received: by 2002:ad4:56a6:: with SMTP id bd6mr7351qvb.29.1599551168089;
+ Tue, 08 Sep 2020 00:46:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200907213802.26745-1-michael@walle.cc>
+References: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com>
+ <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com> <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
+ <DB3PR0402MB3916716E9FC26ADF9161B4A4F5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916716E9FC26ADF9161B4A4F5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 8 Sep 2020 09:45:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2v9i+iT5_TKSjDwVpw_dQrhfRiVNm3YOL7W7YTAEdagg@mail.gmail.com>
+Message-ID: <CAK8P3a2v9i+iT5_TKSjDwVpw_dQrhfRiVNm3YOL7W7YTAEdagg@mail.gmail.com>
+Subject: Re: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
+ driver as module
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Yrf1UZZQeTAvI7jGEhdaZIv3A8GxRYnu6rIQvrSYFvNRthKa+Uk
+ d/JaMjDVNK6TWgTnQSDVEgFL4w1ciiykW6XGVEe29XF6NGh9f42QtNQP6J7g6CXGIwtfV2d
+ 8cdVHawFoivkdZ4zf7AmKQYXMWC/tkXX67D0bKOYML/yHzDB9oq13msQ1tpnVbvsoPO+iMW
+ qR/GKYdXf0HQ9v8ys1NtA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8MBZiWdFlXg=:LAg01fFra0IpI7KjdlTsmJ
+ SWpGDiJrz/z25vMBfMAB7ifxdlqB3YzhtwJcWX3DYYmaUo8ty7Kkb484PU5iS9SrHOOjK4if1
+ SwRycQ8rQaD6rge62d+KYBDY4CRr0TIOg27kS71QsQ9LnnsVTx6Kvw7vUPN/PQ8nqhZaxmg9A
+ rdhily6qOcrC41wRo2uvnk//ED8hkr+DscaD5r4KCCyzHNxdVSQ/vJ81loiNz8ZtgIF0xEaYW
+ lRgvqrD0CIHhvq7i/+2gVSa1vBWgycIqCdPlD8L3YTQNBW/tcHcisv4lnhY9n27AULjmDs3+N
+ gWqHyYEGgWtw2ovknt1XQ8uwj8LC6ArcGEUo+U+Ghk+NoCTqSVw4k1U2ukkxC/bohphWsC+b3
+ PbZ93PENHgi9YaNnbYpoG7mr0WXA+aNfg1C/VkKi/fp54teVZhl+7wJQ/Q89zNqN2+RYVaYJv
+ q6fF4J+p0epgVm8gx3d4BSQfE9HlbcAXP52EigV7JSGnsvFiGVBWHfZ29ecRljWWcUFkVkyQf
+ SH9cSJBv08pSS40D24mAFpAjWqIl2yozDlnJg/UfOe9Z0k0v8Vt58bvjj95BsVz1q63sZFbWs
+ 9I58D61l0mAta2PzWpiNygt++xJxiENBapVsaxEHPnbxmfHoh/2avSlIcNnK6GQnjrP4x3X6n
+ 3Z5+ZYhEVPSWCh0jI6VdSV0fa+ikeBuRD1dOfdssWI7aU5hhqZzcNFAUk8ORVnBL4YuVuB0CL
+ oh87Ec705hgPcsachqO1T2na/ji6f0t59ROXmh00C7jFvqmI79//idZ5AbDtDB3xHrhYpl1WX
+ dQDwyjILIycN7ks/OMe6nHTkrXsnZGE4Dql4KcrmhEX8WJHr5Udx8x3VU/59Mv5y4H8ggnNUj
+ b3lzzcKjejdam4FxLbS1PjbWHMexB4Jlp3ll86plKXqP6BJr03qldNlXzZ1MZ0Jrxmp58Ut1b
+ jNugHWDPUxFkBwW7vj8hxB3+zqXwV7vyRKiaZYyhwowSjSktUrgXs
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 07 Sep 2020, Michael Walle wrote:
+On Tue, Sep 8, 2020 at 9:34 AM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
+> > driver as module
+> >
+> > On Tue, Sep 8, 2020 at 9:20 AM Anson Huang <Anson.Huang@nxp.com>
+> > wrote:
+> >
+> > >  # SPDX-License-Identifier: GPL-2.0-only  config PINCTRL_IMX
+> > > -       bool
+> > > +       tristate "IMX pinctrl core driver"
+> > > +       depends on OF
+> > >         select GENERIC_PINCTRL_GROUPS
+> > >         select GENERIC_PINMUX_FUNCTIONS
+> > >         select GENERIC_PINCONF
+> >
+> > I don't see why you need to make this option user-visible when it is already
+> > selected by the drivers that need it. Wouldn't it be enough to change the 'bool'
+> > to 'tristate' without adding a prompt?
+>
+> Make sense, so it is same for PINCTRL_IMX_SCU, right?
 
-> The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
-> monitoring and an interrupt controller. For now this controller is used on
-> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
-> might also be used on other boards in the future. The individual blocks
-> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
-> then instantiates different (or multiple of the same) blocks. It also
-> provides the register layout so it might be updated in the future without a
-> device tree change; and support other boards with a different layout or
-> functionalities.
-> 
-> See also [1] for more information.
-> 
-> This is my first take of a MFD driver. I don't know whether the subsystem
-> maintainers should only be CCed on the patches which affect the subsystem
-> or on all patches for this series. I've chosen the latter so you can get a
-> more complete picture.
-> 
-> [1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+Yes, correct.
 
-I'll take all of the non-ARM patches later this week.
+I wasn't on Cc on the other two patches, so I missed that.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+     Arnd
