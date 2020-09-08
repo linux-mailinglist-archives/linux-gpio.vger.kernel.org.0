@@ -2,152 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8F8261621
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 19:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A2FB26185A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 19:53:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbgIHREI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Sep 2020 13:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36568 "EHLO
+        id S1731547AbgIHRwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Sep 2020 13:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732082AbgIHRDs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 13:03:48 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA450C061756
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Sep 2020 10:03:41 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t13so16066685ile.9
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Sep 2020 10:03:41 -0700 (PDT)
+        with ESMTP id S1731629AbgIHQNo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 12:13:44 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECA9C061263
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Sep 2020 06:23:17 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id q13so8942350vsj.13
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Sep 2020 06:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZNS3GRvMOTeZUyA2sVYVT7axCdo6ttiBNGmu42dBjv0=;
-        b=npjYldHdaKN5sNer+//ioO2vd9ZSVt9HRwo/GOz64WLrI1EApu0/oVVpSTuxBpaETH
-         zdGBQ1cmVWfRfzBpvEygk0e/Fp1/SJWo0V3MDfwI7uOYbujcbc+EgdlnCvoMMGyWdorN
-         Ch0dMop8qmboQmcQ3HM+FjgNWOndFL2BTCgUoiKdJehhEJdoap2e078A90wr5gAxeCsQ
-         /RrrJPONIApVqG45o9UVb+oIhU+db+SXQ4Ek6X1+ay0n5jrwUq9T80W+l/s3tK6L0DpE
-         H3abAhf3ldad3rCQYdZdGwfEWAvIKImuxO/EYXyb1SfmLSaNac6ePbX1OyihycfpogaN
-         3C+A==
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=1MR7w5pXZSiUaRJ6XXYmBVR/BBCArAfXUnOrJ4PHyTw=;
+        b=mgAZSxFRB6BkzeFfXWAVf67WG1sSVVrNSwqP7T54RTVnWEosrE3qyLqtuRS9YQLBIm
+         Ur85qFi011r4UUIyqxefW4UffpVKpkNZsRPsHg4fZLgQsKj6HPkm6QWywgoGHRutOXwe
+         Xwf7iLov/sKt8PhyWu4MzeT6611NLRCM9+j2lwoGd2i6N4GPT9FCrudma250Qps3CueV
+         wj/IZUs8RDqigxiJ4sj/TmlApUy27jeZfVYonXM47TbyxfxBs5j2uqPXrP9TYOFdUSE0
+         /0hNYkK/C43wMLHt60MI74tbWJEL8KuxBcIYl6Kri4f7gLcB49OC8DiBHzEyXyuwGCla
+         s45g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZNS3GRvMOTeZUyA2sVYVT7axCdo6ttiBNGmu42dBjv0=;
-        b=JwJPGOoBB1AuJJPj8vwtk6/lfqILra7AvNfUgClJc7LdfgYzGsYRvWz1RgfoN9N42O
-         9nzibXydhip4STt9SiIQZfMCUr27eWFdze3NVaNIqZyC8kAPTZaJFbOZjQAXZRn8yQVN
-         5c1vLAry7JoC3RbrPkDinPpERCkx0HnchtQRyx0ZPqfbM7GLyQcv4BUgZyWgU2nrhrSg
-         NkCL8R2YworySi4HnL8QUmX8gfobWf0zxubJMI5Qeb8cP2cSw/YOhxH0eo0+oTF55Edj
-         JCnZUO+yIXEUA3MnK1UiTbncfAN57zuV3TfKnLfCMXp/eExXZtcTcVJSempzszEU+YIh
-         jCwQ==
-X-Gm-Message-State: AOAM533Sj/9npUGNvHd812nif6MZGdQJ3yzxZovtgM5QvTRvk/C0OHwh
-        IFBG9dTTAbwiYz8KPdDbfX5/NjOwGOzd8kbwzZqntA==
-X-Google-Smtp-Source: ABdhPJwOhRRAeSvUfM7aXnDLV+8iSGJDTYZ7p05b46NMWtlXoPSG1kGZXtFg8PzijNzZ5d2ig2phLPuE10vzV0zX6Ps=
-X-Received: by 2002:a92:1b0b:: with SMTP id b11mr24464248ilb.287.1599584621007;
- Tue, 08 Sep 2020 10:03:41 -0700 (PDT)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=1MR7w5pXZSiUaRJ6XXYmBVR/BBCArAfXUnOrJ4PHyTw=;
+        b=KgtHromNNeBxMAdWPRcdPWtuLQe/KAyt0YI3y//xmkfPgqeyj9RfWWEhoqa2aTDfkN
+         UkClE1tiNcxhnGm4Ji2Tu6MLpOgEAC9AKb1FZ1mn3u1HjLEPhqUxCxxSwwYrouPGRg2I
+         QKFiFMLYODFdh4W3+4uJctG9DxkF7YqElLstaEwLMIl25dmP2WtBToH8zwvJSEnjHJLQ
+         W5KWyRlul8IsoYdnWHJeiFO5DmMn77R+xo504jsk56X08dzwEiBBkhG7qzNui1w9CfEa
+         hPSYoaQ7s3Zo3LOyq3F79xpNFkf1FqD3smajOLAe/6rX9Ytlh0IbUIkSwv1WXde8qM+u
+         PsYQ==
+X-Gm-Message-State: AOAM5324REJVJbcnD8O7hgQwqE9oQPHMn25GXLXN2qpPLsRcQ89jbGKm
+        WXy+d/8/KyFQcdqehuPu7+/TYUWcEmJHbdnvKNc=
+X-Google-Smtp-Source: ABdhPJx5gngpPJbIbc1y7ccOVTiB3LDlK+uKLp6qs6NRG0cg/3D33GFaNiM9+b99TmNBVpWn2w0hMcpnhBEThfpDFnM=
+X-Received: by 2002:a67:3054:: with SMTP id w81mr13802953vsw.112.1599571395729;
+ Tue, 08 Sep 2020 06:23:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907122238.GA1849893@kroah.com>
-In-Reply-To: <20200907122238.GA1849893@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Sep 2020 19:03:30 +0200
-Message-ID: <CAMRc=MexhEbnxCN3aN57k4V-mO-vQL=+8z9QFEzOCPkmn16-XQ@mail.gmail.com>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Received: by 2002:a67:f115:0:0:0:0:0 with HTTP; Tue, 8 Sep 2020 06:23:15 -0700 (PDT)
+From:   Tricia Smith <triciatricia841@gmail.com>
+Date:   Tue, 8 Sep 2020 17:53:15 +0430
+X-Google-Sender-Auth: WHATm0eWs7qBthU4VMP9mfJu_hY
+Message-ID: <CAJ1YMZ61VsKs4y0MfagfPGk_KdOGJuBf+bS64i+ic_sGyv47eQ@mail.gmail.com>
+Subject: Re: Hello
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > > +GPIO Testing Driver
-> > > > > > > +===================
-> > > > > > > +
-> > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > > +structure.
-> > > > > >
-> > > > > > Could configfs be used for this instead of debugfs?
-> > > > > > debugfs is ad hoc.
-> > > > >
-> > > > > Actually sounds like a good idea.
-> > > > >
-> > > >
-> > > > Well, then we can go on and write an entirely new mockup driver
-> > > > (ditching module params and dropping any backwards compatibility)
-> > > > because we're already using debugfs for line values.
-> > > >
-> > > > How would we pass the device properties to configfs created GPIO chips
-> > > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > > something?
-> > >
-> > > Same way how USB composite works, no?
-> > >
-> >
-> > OK, so create a new chip directory in configfs, configure it using
-> > some defined configfs attributes and then finally instantiate it from
-> > sysfs?
-> >
-> > Makes sense and is probably the right way to go. Now the question is:
-> > is it fine to just entirely remove the previous gpio-mockup? Should we
-> > keep some backwards compatibility? Should we introduce an entirely new
-> > module and have a transition period before removing previous
-> > gpio-mockup?
-> >
-> > Also: this is a testing module so to me debugfs is just fine. Is
-> > configfs considered stable ABI like sysfs?
->
-> Yes it is.  Or at least until you fix all existing users so that if you
-> do change it, no one notices it happening :)
->
-
-Got it. One more question: the current debugfs interface we're using
-in gpio-mockup exists to allow to read current values of GPIO lines in
-output mode (check how the user drives dummy lines) and to set their
-simulated pull-up/pull-down resistors (what values the user reads in
-input mode).
-
-This works like this: in /sys/kernel/debug/gpio-mockup every dummy
-chip creates its own directory (e.g.
-/sys/kernel/debug/gpio-mockup/gpiochip0) and inside this directory
-there's an attribute per line named after the line's offset (e.g.
-/sys/kernel/debug/gpio-mockup/gpiochip0/4). Writing 0 or 1 to this
-attribute sets the pull resistor. Reading from it yields the current
-value (0 or 1 as well).
-
-This is pretty non-standard so I proposed to put it in debugfs. If we
-were to use configfs - is this where something like this should go? Or
-rather sysfs? Is it even suitable/acceptable for sysfs?
-
-Thanks,
-Bartosz
+Hi Dear, I am Miss Tricia Smith the only Daughter/Child of late Mr and
+Mrs William Smith. I am 18 years old. Please i have something very
+important and confidential to discuss with you.
