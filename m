@@ -2,460 +2,215 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 086352608A0
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 04:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA40E2608B1
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 04:38:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgIHCTi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Sep 2020 22:19:38 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:59356 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgIHCTh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Sep 2020 22:19:37 -0400
-Received: from localhost (unknown [192.168.167.223])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 40586EF2E7;
-        Tue,  8 Sep 2020 10:19:27 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P15471T140655955252992S1599531565014377_;
-        Tue, 08 Sep 2020 10:19:26 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <3cd5f7e96d627ee7b6aeb9cba0db83cc>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, heiko@sntech.de
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] pinctrl: rockchip: populate platform device for rockchip gpio
-Date:   Tue,  8 Sep 2020 10:19:13 +0800
-Message-Id: <20200908021913.21556-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907033808.10211-1-jay.xu@rock-chips.com>
-References: <20200907033808.10211-1-jay.xu@rock-chips.com>
+        id S1728188AbgIHCij (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Sep 2020 22:38:39 -0400
+Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:5635
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728185AbgIHCih (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 7 Sep 2020 22:38:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C6n5EeQ8u+4OdABZgk6MiUIbt8KV/CLM+iOnYOdnKo4F8pDbN2kG+Dkh9xvgBp/iNj7mkf2eJc+kbkppI4GI/rCn9sZKNeChyOW5brTm6/kdjuLmsgq8zX0XRB4S34nO2wJ2Mxt4KQBhk6nm12mUj6cOiocfGxVxVteBByZ4KKbmf2u6nJwbQnshsrFl7CtgNA0Vdbiu1y+AsPtvom+Etyv2TV4Q4qbpTnwipao7PaxEc56le1Lk9cfPnG3PtWQLzosZc20CRElZbWxcTYFliNNruwG1JpgTANT+UjpbmJC4Lf1fEgzHB5eozeAfNv24307/xOexHWx1OQzvD+XHWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SjCA2J1Li2ZH5dGL6HAXjmtz0GrOdeQKYlygFmdTGmI=;
+ b=i0zYE/tipoR15R7yV8ZBz6PhZB6xPIeSiF3d1dkn+tUdbUbN3RE96lYNuomgDv2fRDReFGD66y93R7s3Wy3g5+IODr/1FEFw5hKnZtEHQ1tlF4MrUY77ul5Otbi/Dv4oh6Wap6BQMh/72QESJuljvQvyVZ2BLfrbb7xegdkDnjms2Q66dXYkvgUgTDvrabbpznDao9Bz7XIH1GzpKJR/qvooChxPsmMsMlYZ2pDe7u/COKu4MxwlxJ+fdmrpqgXE86qLR37VW+Fvs8l7GWlQ8GoQ6pWIu1bS3wqPab+wT+sgyVA2mNOamZKOeopdX5gE/FQfjWdToK8QM48Mi3WK0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SjCA2J1Li2ZH5dGL6HAXjmtz0GrOdeQKYlygFmdTGmI=;
+ b=ago9e5nS/3f47eFIRpuHkeZ3b6edoGekiJmKTsUthzY7P+wZd+nE1f8miLiVtI9aE9NOFpAVPfexYBGhEUbstce3vAhu79gxOlUVeehUzVov2uwnl+ypRPzzVKmBSEHsjHqAZ1j9x08nvyVsRM1s7yh51HN49WvlzmZgNF55xh4=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM7PR04MB7079.eurprd04.prod.outlook.com (2603:10a6:20b:11d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Tue, 8 Sep
+ 2020 02:38:32 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 02:38:32 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/3] pinctrl: imx: Use function callbacks for SCU
+ related functions
+Thread-Topic: [PATCH V2 1/3] pinctrl: imx: Use function callbacks for SCU
+ related functions
+Thread-Index: AQHWhRQQB+l+qoUnQES3BJ4l0VQ0ealeB3iA
+Date:   Tue, 8 Sep 2020 02:38:32 +0000
+Message-ID: <AM6PR04MB496698D5B7A98B24D381252D80290@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1599481953-32704-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1599481953-32704-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d31d2787-427b-4c97-d3f0-08d853a046dd
+x-ms-traffictypediagnostic: AM7PR04MB7079:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB707912314D8AF6DD71EA218C80290@AM7PR04MB7079.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z4RYSGxhK2xh0bMtp0xjDOitYcm/h8Vk8MHXhLwipmZh1obWcmh8haerw0NLKo+KOjOlBw22KPgCMLkUEKZ5cJ3fo4yZ+0h26kHNmv6OqZRL3ivcn/NeFYGFhzaOqOmye+dsrbgZFFRcy3OQ5SY+731FisdKPwD8lXJjMPEoZN1detRRpLLX9SAHNnDw1yyl3Gq6e4pvORwexhmQhXP36Gfrt+1gVcaeHkpLl93eAsp8eLCvaG2lvOyjueDfBcJZjUqcamh+bXvyGHUYOauJ0WHnpsGG+04MKILKpQNpkAjIxaYCMf0mcO3dADrQeQxm+oJ5nM6R+XkraOYqM6G+7KQ5VkljHOKBSIcztzJA/x8JRbMIK0i4k/YyEtjIvdCj
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(8676002)(8936002)(110136005)(44832011)(7696005)(26005)(4326008)(6506007)(71200400001)(76116006)(66946007)(9686003)(66556008)(66476007)(52536014)(478600001)(2906002)(64756008)(55016002)(86362001)(186003)(66446008)(316002)(5660300002)(33656002)(83380400001)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: thbQ88IfZE4qSpytKI/lZdeMW/iMckNAfRhRQdTcYX0E19Ynu+TGcIR1+xIRKMmNRUyYyAMDSe0aI9sEctJ0LmuM+DFzlz1fVYWd9KLKbgT4UXEhGOAzUD35OEPgDAYt9tjW9xdfD3YQUPZALyrldAUdth0o2oUVU1lDr/Z3sUcYZmYcW+IYr/3hsdBGNBNWXU9VYPyLtc9WYRcnr8z/Z2vvtUoVZXkbjNnCn1J5UG2P98GDEs6fUkdxlxlmTJPeDg6t5SP2HWRz4fXGgynAYYDPFibMSYr4Ge67Kdb1P6nADP9rQNvZNEisd8bCEADTV1RoIdXJ6hf4nZwNU3pEl+XIsWRasGeTKQyeTveqZMEihbJjvysfQqQXLIa9WLwx8lcV2DJuj2aIzZnSYHptCOz3UyQJhKLonn6hWxlrbb1lD68cqCGOIX8HFavo2mJl+I6HJjpWVtrBfQEbQ4IqDgDhaGchlAziVknUk/dIlHYyg9pZSJTL8/gkeeWrtTs5kM7IZ4OkqVhMW+Tlhh3V9EValTXQQXuT9aPuRg73as0YWDPvXtOqezMf3CtQGEStmnVB6tmjB/tKZCZqCXcl0dgIYUoITiKEsLTJNU8abwTp3DRwtU0vxaLZ5VZ09M+BKe0bR3XgWoDzczAjWXlreA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d31d2787-427b-4c97-d3f0-08d853a046dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 02:38:32.0721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wkfKDsst+bMmf9Y15qkLjhYuBpoh7YrN+e5Y0qHfhKmfODyaY9emkkImUHLy+6ohqyYcunl7AzwJr2RJZwXncA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7079
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Register both gpio driver and device as part of driver model, so that
-the '-gpio'/'-gpios' dependency in dts can be correctly handled by
-of_devlink/of_fwlink.
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 305 +++++++++++++++++------------
- 1 file changed, 175 insertions(+), 130 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c98bd352f831..2e4fc711d0d1 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3370,139 +3370,121 @@ static void rockchip_irq_disable(struct irq_data *d)
- }
- 
- static int rockchip_interrupts_register(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
-+						struct rockchip_pin_bank *bank)
- {
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
- 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
- 	struct irq_chip_generic *gc;
- 	int ret;
--	int i;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid) {
--			dev_warn(&pdev->dev, "bank %s is not valid\n",
--				 bank->name);
--			continue;
--		}
-+	if (!bank->valid) {
-+		dev_warn(&pdev->dev, "bank %s is not valid\n",
-+			 bank->name);
-+		return -EINVAL;
-+	}
- 
--		ret = clk_enable(bank->clk);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
--				bank->name);
--			continue;
--		}
-+	ret = clk_enable(bank->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
-+			bank->name);
-+		return ret;
-+	}
- 
--		bank->domain = irq_domain_add_linear(bank->of_node, 32,
--						&irq_generic_chip_ops, NULL);
--		if (!bank->domain) {
--			dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
--				 bank->name);
--			clk_disable(bank->clk);
--			continue;
--		}
-+	bank->domain = irq_domain_add_linear(bank->of_node, 32,
-+					&irq_generic_chip_ops, NULL);
-+	if (!bank->domain) {
-+		dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
-+			 bank->name);
-+		clk_disable(bank->clk);
-+		return -EINVAL;
-+	}
- 
--		ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
--					 "rockchip_gpio_irq", handle_level_irq,
--					 clr, 0, 0);
--		if (ret) {
--			dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
--				bank->name);
--			irq_domain_remove(bank->domain);
--			clk_disable(bank->clk);
--			continue;
--		}
-+	ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
-+				 "rockchip_gpio_irq", handle_level_irq,
-+				 clr, 0, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
-+			bank->name);
-+		irq_domain_remove(bank->domain);
-+		clk_disable(bank->clk);
-+		return ret;
-+	}
- 
--		gc = irq_get_domain_generic_chip(bank->domain, 0);
--		gc->reg_base = bank->reg_base;
--		gc->private = bank;
--		gc->chip_types[0].regs.mask = GPIO_INTMASK;
--		gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
--		gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
--		gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
--		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
--		gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
--		gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
--		gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
--		gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
--		gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
--		gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
--		gc->wake_enabled = IRQ_MSK(bank->nr_pins);
-+	gc = irq_get_domain_generic_chip(bank->domain, 0);
-+	gc->reg_base = bank->reg_base;
-+	gc->private = bank;
-+	gc->chip_types[0].regs.mask = GPIO_INTMASK;
-+	gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
-+	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
-+	gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
-+	gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
-+	gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
-+	gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
-+	gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
-+	gc->wake_enabled = IRQ_MSK(bank->nr_pins);
- 
--		/*
--		 * Linux assumes that all interrupts start out disabled/masked.
--		 * Our driver only uses the concept of masked and always keeps
--		 * things enabled, so for us that's all masked and all enabled.
--		 */
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
--		gc->mask_cache = 0xffffffff;
-+	/*
-+	 * Linux assumes that all interrupts start out disabled/masked.
-+	 * Our driver only uses the concept of masked and always keeps
-+	 * things enabled, so for us that's all masked and all enabled.
-+	 */
-+	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
-+	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-+	gc->mask_cache = 0xffffffff;
- 
--		irq_set_chained_handler_and_data(bank->irq,
--						 rockchip_irq_demux, bank);
--		clk_disable(bank->clk);
--	}
-+	irq_set_chained_handler_and_data(bank->irq,
-+					 rockchip_irq_demux, bank);
-+	clk_disable(bank->clk);
- 
- 	return 0;
- }
- 
- static int rockchip_gpiolib_register(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
-+						struct rockchip_pin_bank *bank)
- {
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
- 	struct gpio_chip *gc;
- 	int ret;
--	int i;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid) {
--			dev_warn(&pdev->dev, "bank %s is not valid\n",
--				 bank->name);
--			continue;
--		}
-+	if (!bank->valid) {
-+		dev_err(&pdev->dev, "bank %s is not valid\n", bank->name);
-+		return -EINVAL;
-+	}
- 
--		bank->gpio_chip = rockchip_gpiolib_chip;
-+	bank->gpio_chip = rockchip_gpiolib_chip;
- 
--		gc = &bank->gpio_chip;
--		gc->base = bank->pin_base;
--		gc->ngpio = bank->nr_pins;
--		gc->parent = &pdev->dev;
--		gc->of_node = bank->of_node;
--		gc->label = bank->name;
-+	gc = &bank->gpio_chip;
-+	gc->base = bank->pin_base;
-+	gc->ngpio = bank->nr_pins;
-+	gc->parent = &pdev->dev;
-+	gc->of_node = bank->of_node;
-+	gc->label = bank->name;
- 
--		ret = gpiochip_add_data(gc, bank);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to register gpio_chip %s, error code: %d\n",
--							gc->label, ret);
--			goto fail;
--		}
-+	ret = gpiochip_add_data(gc, bank);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register %s (%d)\n", gc->label, ret);
-+		return ret;
- 	}
- 
--	rockchip_interrupts_register(pdev, info);
-+	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
-+		struct device *parent = pdev->dev.parent;
-+		struct rockchip_pinctrl *info = dev_get_drvdata(parent);
-+		struct pinctrl_dev *pctldev;
- 
--	return 0;
-+		if (!info)
-+			return -ENODATA;
- 
--fail:
--	for (--i, --bank; i >= 0; --i, --bank) {
--		if (!bank->valid)
--			continue;
--		gpiochip_remove(&bank->gpio_chip);
--	}
--	return ret;
--}
--
--static int rockchip_gpiolib_unregister(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
--{
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
--	int i;
-+		pctldev = info->pctl_dev;
-+		if (!pctldev)
-+			return -ENODEV;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid)
--			continue;
--		gpiochip_remove(&bank->gpio_chip);
-+		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0, gc->base, gc->ngpio);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to add pin range\n");
-+			gpiochip_remove(&bank->gpio_chip);
-+			return ret;
-+		}
- 	}
- 
- 	return 0;
-@@ -3571,7 +3553,6 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- {
- 	const struct of_device_id *match;
- 	struct device_node *node = pdev->dev.of_node;
--	struct device_node *np;
- 	struct rockchip_pin_ctrl *ctrl;
- 	struct rockchip_pin_bank *bank;
- 	int grf_offs, pmu_offs, drv_grf_offs, drv_pmu_offs, i, j;
-@@ -3579,23 +3560,6 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 	match = of_match_node(rockchip_pinctrl_dt_match, node);
- 	ctrl = (struct rockchip_pin_ctrl *)match->data;
- 
--	for_each_child_of_node(node, np) {
--		if (!of_find_property(np, "gpio-controller", NULL))
--			continue;
--
--		bank = ctrl->pin_banks;
--		for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--			if (!strcmp(bank->name, np->name)) {
--				bank->of_node = np;
--
--				if (!rockchip_get_bank_data(bank, d))
--					bank->valid = true;
--
--				break;
--			}
--		}
--	}
--
- 	grf_offs = ctrl->grf_mux_offset;
- 	pmu_offs = ctrl->pmu_mux_offset;
- 	drv_pmu_offs = ctrl->pmu_drv_offset;
-@@ -3742,6 +3706,68 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
- 			 rockchip_pinctrl_resume);
- 
-+static int rockchip_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *parent = pdev->dev.parent;
-+	struct rockchip_pinctrl *info = dev_get_drvdata(parent);
-+	struct rockchip_pin_ctrl *ctrl = info ? (info->ctrl) : NULL;
-+	struct rockchip_pin_bank *bank;
-+	int ret, i;
-+
-+	if (!info || !ctrl)
-+		return -EINVAL;
-+
-+	if (!of_find_property(np, "gpio-controller", NULL))
-+		return -ENODEV;
-+
-+	bank = ctrl->pin_banks;
-+	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
-+		if (!strcmp(bank->name, np->name)) {
-+			bank->of_node = np;
-+
-+			if (!rockchip_get_bank_data(bank, info))
-+				bank->valid = true;
-+
-+			break;
-+		}
-+	}
-+
-+	if (!bank->valid) {
-+		dev_info(parent, "gpio%d probed\n", bank->bank_num);
-+		return -EINVAL;
-+	}
-+
-+	bank->of_node = pdev->dev.of_node;
-+
-+	ret = rockchip_gpiolib_register(pdev, bank);
-+	if (ret)
-+		return ret;
-+
-+	ret = rockchip_interrupts_register(pdev, bank);
-+	if (ret) {
-+		gpiochip_remove(&bank->gpio_chip);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, bank);
-+	dev_info(parent, "gpio%d probed\n", bank->bank_num);
-+
-+	return 0;
-+}
-+
-+static int rockchip_gpio_remove(struct platform_device *pdev)
-+{
-+	struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
-+
-+	if (!bank)
-+		return -EINVAL;
-+
-+	gpiochip_remove(&bank->gpio_chip);
-+
-+	return 0;
-+}
-+
- static int rockchip_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct rockchip_pinctrl *info;
-@@ -3813,17 +3839,20 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 			return PTR_ERR(info->regmap_pmu);
- 	}
- 
--	ret = rockchip_gpiolib_register(pdev, info);
--	if (ret)
--		return ret;
--
- 	ret = rockchip_pinctrl_register(pdev, info);
- 	if (ret) {
--		rockchip_gpiolib_unregister(pdev, info);
-+		dev_err(&pdev->dev, "failed to register pinctrl device\n");
- 		return ret;
- 	}
- 
- 	platform_set_drvdata(pdev, info);
-+	dev_info(&pdev->dev, "pinctrl probed\n");
-+
-+	ret = of_platform_populate(np, rockchip_bank_match, NULL, dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register gpio device\n");
-+		return ret;
-+	}
- 
- 	return 0;
- }
-@@ -4244,8 +4273,17 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 	{},
- };
- 
-+static struct platform_driver rockchip_gpio_driver = {
-+	.probe	= rockchip_gpio_probe,
-+	.remove = rockchip_gpio_remove,
-+	.driver = {
-+		.name	= "rockchip-gpio",
-+		.of_match_table = rockchip_bank_match,
-+	},
-+};
-+
- static struct platform_driver rockchip_pinctrl_driver = {
--	.probe		= rockchip_pinctrl_probe,
-+	.probe	= rockchip_pinctrl_probe,
- 	.driver = {
- 		.name	= "rockchip-pinctrl",
- 		.pm = &rockchip_pinctrl_dev_pm_ops,
-@@ -4255,11 +4293,18 @@ static struct platform_driver rockchip_pinctrl_driver = {
- 
- static int __init rockchip_pinctrl_drv_register(void)
- {
--	return platform_driver_register(&rockchip_pinctrl_driver);
-+	int ret;
-+
-+	ret = platform_driver_register(&rockchip_pinctrl_driver);
-+	if (ret)
-+		return ret;
-+
-+	return platform_driver_register(&rockchip_gpio_driver);
- }
- 
- static void __exit rockchip_pinctrl_drv_unregister(void)
- {
-+	platform_driver_unregister(&rockchip_gpio_driver);
- 	platform_driver_unregister(&rockchip_pinctrl_driver);
- }
- 
--- 
-2.17.1
-
-
-
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
+LCBTZXB0ZW1iZXIgNywgMjAyMCA4OjMzIFBNDQo+IA0KPiBVc2UgZnVuY3Rpb24gY2FsbGJhY2tz
+IGZvciBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMgaW4gcGluY3RybC1pbXguYyBpbiBvcmRlciB0bw0K
+PiBzdXBwb3J0IHRoZSBzY2VuYXJpbyBvZiBQSU5DVFJMX0lNWCBpcyBidWlsdCBpbiB3aGlsZSBQ
+SU5DVFJMX0lNWF9TQ1UgaXMgYnVpbHQNCj4gYXMgbW9kdWxlLCBhbGwgZHJpdmVycyB1c2luZyBT
+Q1UgcGluY3RybCBkcml2ZXIgbmVlZCB0byBpbml0aWFsaXplIHRoZSBTQ1UgcmVsYXRlZA0KPiBm
+dW5jdGlvbiBjYWxsYmFjay4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gQ2hhbmdlcyBzaW5jZSBWMToNCj4gCS0gc3BsaXQg
+VjEgWzEvMl0gcGF0Y2ggdG8gMiBwYXRjaGVzLCB0aGlzIHBhdGNoIGRvZXMgdGhlIGNoYW5nZSBv
+ZiB1c2luZw0KPiBmdW5jdGlvbg0KPiAJICBjYWxsYmFja3MgZm9yIFNDVSByZWxhdGVkIGZ1bmN0
+aW9ucy4NCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMg
+ICAgIHwgIDggKysrLS0tLQ0KPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlt
+eC5oICAgICB8IDM3DQo+ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJz
+L3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OGR4bC5jIHwgIDMgKysrDQo+IGRyaXZlcnMv
+cGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0uYyAgfCAgMyArKysNCj4gZHJpdmVycy9w
+aW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYyB8ICAzICsrKw0KPiAgNSBmaWxlcyBj
+aGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMNCj4gYi9kcml2ZXJz
+L3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMNCj4gaW5kZXggNTA3ZTRhZi4uYjgwYzQ1
+MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5j
+DQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguYw0KPiBAQCAt
+MzczLDcgKzM3Myw3IEBAIHN0YXRpYyBpbnQgaW14X3BpbmNvbmZfZ2V0KHN0cnVjdCBwaW5jdHJs
+X2RldiAqcGN0bGRldiwNCj4gIAljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmlu
+Zm8gPSBpcGN0bC0+aW5mbzsNCj4gDQo+ICAJaWYgKGluZm8tPmZsYWdzICYgSU1YX1VTRV9TQ1Up
+DQo+IC0JCXJldHVybiBpbXhfcGluY29uZl9nZXRfc2N1KHBjdGxkZXYsIHBpbl9pZCwgY29uZmln
+KTsNCj4gKwkJcmV0dXJuIGluZm8tPmlteF9waW5jb25mX2dldChwY3RsZGV2LCBwaW5faWQsIGNv
+bmZpZyk7DQo+ICAJZWxzZQ0KPiAgCQlyZXR1cm4gaW14X3BpbmNvbmZfZ2V0X21taW8ocGN0bGRl
+diwgcGluX2lkLCBjb25maWcpOyAgfSBAQCAtNDIzLDcNCj4gKzQyMyw3IEBAIHN0YXRpYyBpbnQg
+aW14X3BpbmNvbmZfc2V0KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCj4gIAljb25zdCBz
+dHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmluZm8gPSBpcGN0bC0+aW5mbzsNCj4gDQo+ICAJ
+aWYgKGluZm8tPmZsYWdzICYgSU1YX1VTRV9TQ1UpDQo+IC0JCXJldHVybiBpbXhfcGluY29uZl9z
+ZXRfc2N1KHBjdGxkZXYsIHBpbl9pZCwNCj4gKwkJcmV0dXJuIGluZm8tPmlteF9waW5jb25mX3Nl
+dChwY3RsZGV2LCBwaW5faWQsDQo+ICAJCQkJCSAgIGNvbmZpZ3MsIG51bV9jb25maWdzKTsNCj4g
+IAllbHNlDQo+ICAJCXJldHVybiBpbXhfcGluY29uZl9zZXRfbW1pbyhwY3RsZGV2LCBwaW5faWQs
+IEBAIC00NDAsNyArNDQwLDcNCj4gQEAgc3RhdGljIHZvaWQgaW14X3BpbmNvbmZfZGJnX3Nob3co
+c3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiAgCWludCByZXQ7DQo+IA0KPiAgCWlmIChp
+bmZvLT5mbGFncyAmIElNWF9VU0VfU0NVKSB7DQo+IC0JCXJldCA9IGlteF9waW5jb25mX2dldF9z
+Y3UocGN0bGRldiwgcGluX2lkLCAmY29uZmlnKTsNCj4gKwkJcmV0ID0gaW5mby0+aW14X3BpbmNv
+bmZfZ2V0KHBjdGxkZXYsIHBpbl9pZCwgJmNvbmZpZyk7DQo+ICAJCWlmIChyZXQpIHsNCj4gIAkJ
+CWRldl9lcnIoaXBjdGwtPmRldiwgImZhaWxlZCB0byBnZXQgJXMgcGluY29uZlxuIiwNCj4gIAkJ
+CQlwaW5fZ2V0X25hbWUocGN0bGRldiwgcGluX2lkKSk7DQo+IEBAIC02MjksNyArNjI5LDcgQEAg
+c3RhdGljIGludCBpbXhfcGluY3RybF9wYXJzZV9ncm91cHMoc3RydWN0IGRldmljZV9ub2RlDQo+
+ICpucCwNCj4gIAlmb3IgKGkgPSAwOyBpIDwgZ3JwLT5udW1fcGluczsgaSsrKSB7DQo+ICAJCXBp
+biA9ICYoKHN0cnVjdCBpbXhfcGluICopKGdycC0+ZGF0YSkpW2ldOw0KPiAgCQlpZiAoaW5mby0+
+ZmxhZ3MgJiBJTVhfVVNFX1NDVSkNCj4gLQkJCWlteF9waW5jdHJsX3BhcnNlX3Bpbl9zY3UoaXBj
+dGwsICZncnAtPnBpbnNbaV0sDQo+ICsJCQlpbmZvLT5pbXhfcGluY3RybF9wYXJzZV9waW4oaXBj
+dGwsICZncnAtPnBpbnNbaV0sDQo+ICAJCQkJCQkgIHBpbiwgJmxpc3QpOw0KPiAgCQllbHNlDQo+
+ICAJCQlpbXhfcGluY3RybF9wYXJzZV9waW5fbW1pbyhpcGN0bCwgJmdycC0+cGluc1tpXSwgZGlm
+ZiAtLWdpdA0KPiBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaCBiL2Ry
+aXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiBpbmRleCAzMzNkMzJiLi40
+MDkyN2NhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwt
+aW14LmgNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5oDQo+
+IEBAIC03NSw2ICs3NSwyMSBAQCBzdHJ1Y3QgaW14X2NmZ19wYXJhbXNfZGVjb2RlIHsNCj4gIAli
+b29sIGludmVydDsNCj4gIH07DQo+IA0KPiArLyoqDQo+ICsgKiBAZGV2OiBhIHBvaW50ZXIgYmFj
+ayB0byBjb250YWluaW5nIGRldmljZQ0KPiArICogQGJhc2U6IHRoZSBvZmZzZXQgdG8gdGhlIGNv
+bnRyb2xsZXIgaW4gdmlydHVhbCBtZW1vcnkgICovIHN0cnVjdA0KPiAraW14X3BpbmN0cmwgew0K
+PiArCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gKwlzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGw7DQo+
+ICsJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiArCXZvaWQgX19pb21lbSAqaW5wdXRfc2VsX2Jhc2U7
+DQo+ICsJY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZvOw0KPiArCXN0cnVj
+dCBpbXhfcGluX3JlZyAqcGluX3JlZ3M7DQo+ICsJdW5zaWduZWQgaW50IGdyb3VwX2luZGV4Ow0K
+PiArCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gK307DQo+ICsNCg0KWW91IHNlZW1zIG1pc3NlZCBt
+eSBxdWVzdGlvbiBpbiB0aGUgZm9ybWVyIHBhdGNoIHJldmlldy4NCkNvdWxkIHlvdSBjbGFyaWZ5
+IGEgYml0IHdoeSBuZWVkIG1vdmUgdGhpcyBwYXJ0IGNvZGU/DQoNClJlZ2FyZHMNCkFpc2hlbmcN
+Cg0KPiAgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvIHsNCj4gIAljb25zdCBzdHJ1Y3QgcGlu
+Y3RybF9waW5fZGVzYyAqcGluczsNCj4gIAl1bnNpZ25lZCBpbnQgbnBpbnM7DQo+IEBAIC05OCwy
+MSArMTEzLDEzIEBAIHN0cnVjdCBpbXhfcGluY3RybF9zb2NfaW5mbyB7DQo+ICAJCQkJICBzdHJ1
+Y3QgcGluY3RybF9ncGlvX3JhbmdlICpyYW5nZSwNCj4gIAkJCQkgIHVuc2lnbmVkIG9mZnNldCwN
+Cj4gIAkJCQkgIGJvb2wgaW5wdXQpOw0KPiAtfTsNCj4gLQ0KPiAtLyoqDQo+IC0gKiBAZGV2OiBh
+IHBvaW50ZXIgYmFjayB0byBjb250YWluaW5nIGRldmljZQ0KPiAtICogQGJhc2U6IHRoZSBvZmZz
+ZXQgdG8gdGhlIGNvbnRyb2xsZXIgaW4gdmlydHVhbCBtZW1vcnkNCj4gLSAqLw0KPiAtc3RydWN0
+IGlteF9waW5jdHJsIHsNCj4gLQlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+IC0Jc3RydWN0IHBpbmN0
+cmxfZGV2ICpwY3RsOw0KPiAtCXZvaWQgX19pb21lbSAqYmFzZTsNCj4gLQl2b2lkIF9faW9tZW0g
+KmlucHV0X3NlbF9iYXNlOw0KPiAtCWNvbnN0IHN0cnVjdCBpbXhfcGluY3RybF9zb2NfaW5mbyAq
+aW5mbzsNCj4gLQlzdHJ1Y3QgaW14X3Bpbl9yZWcgKnBpbl9yZWdzOw0KPiAtCXVuc2lnbmVkIGlu
+dCBncm91cF9pbmRleDsNCj4gLQlzdHJ1Y3QgbXV0ZXggbXV0ZXg7DQo+ICsJaW50ICgqaW14X3Bp
+bmNvbmZfZ2V0KShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHVuc2lnbmVkIGludCBwaW5f
+aWQsDQo+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyAqY29uZmlnKTsNCj4gKwlpbnQgKCppbXhf
+cGluY29uZl9zZXQpKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQgaW50IHBp
+bl9pZCwNCj4gKwkJCSAgICAgICB1bnNpZ25lZCBsb25nICpjb25maWdzLCB1bnNpZ25lZCBpbnQg
+bnVtX2NvbmZpZ3MpOw0KPiArCXZvaWQgKCppbXhfcGluY3RybF9wYXJzZV9waW4pKHN0cnVjdCBp
+bXhfcGluY3RybCAqaXBjdGwsDQo+ICsJCQkJICAgICAgdW5zaWduZWQgaW50ICpwaW5faWQsIHN0
+cnVjdCBpbXhfcGluICpwaW4sDQo+ICsJCQkJICAgICAgY29uc3QgX19iZTMyICoqbGlzdF9wKTsN
+Cj4gIH07DQo+IA0KPiAgI2RlZmluZSBJTVhfQ0ZHX1BBUkFNU19ERUNPREUocCwgbSwgbykgXCBk
+aWZmIC0tZ2l0DQo+IGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhkeGwu
+Yw0KPiBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4ZHhsLmMNCj4gaW5k
+ZXggMTJiOTdkYS4uZDMwMjBjMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVz
+Y2FsZS9waW5jdHJsLWlteDhkeGwuYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
+L3BpbmN0cmwtaW14OGR4bC5jDQo+IEBAIC0xNTksNiArMTU5LDkgQEAgc3RhdGljIHN0cnVjdCBp
+bXhfcGluY3RybF9zb2NfaW5mbyBpbXg4ZHhsX3BpbmN0cmxfaW5mbw0KPiA9IHsNCj4gIAkucGlu
+cyA9IGlteDhkeGxfcGluY3RybF9wYWRzLA0KPiAgCS5ucGlucyA9IEFSUkFZX1NJWkUoaW14OGR4
+bF9waW5jdHJsX3BhZHMpLA0KPiAgCS5mbGFncyA9IElNWF9VU0VfU0NVLA0KPiArCS5pbXhfcGlu
+Y29uZl9nZXQgPSBpbXhfcGluY29uZl9nZXRfc2N1LA0KPiArCS5pbXhfcGluY29uZl9zZXQgPSBp
+bXhfcGluY29uZl9zZXRfc2N1LA0KPiArCS5pbXhfcGluY3RybF9wYXJzZV9waW4gPSBpbXhfcGlu
+Y3RybF9wYXJzZV9waW5fc2N1LA0KPiAgfTsNCj4gDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9m
+X2RldmljZV9pZCBpbXg4ZHhsX3BpbmN0cmxfb2ZfbWF0Y2hbXSA9IHsgZGlmZiAtLWdpdA0KPiBh
+L2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0uYw0KPiBiL2RyaXZlcnMv
+cGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0uYw0KPiBpbmRleCAwOTVhY2Y0Li44ZjQ2
+Yjk0MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlt
+eDhxbS5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0u
+Yw0KPiBAQCAtMjkyLDYgKzI5Miw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxf
+c29jX2luZm8NCj4gaW14OHFtX3BpbmN0cmxfaW5mbyA9IHsNCj4gIAkucGlucyA9IGlteDhxbV9w
+aW5jdHJsX3BhZHMsDQo+ICAJLm5waW5zID0gQVJSQVlfU0laRShpbXg4cW1fcGluY3RybF9wYWRz
+KSwNCj4gIAkuZmxhZ3MgPSBJTVhfVVNFX1NDVSwNCj4gKwkuaW14X3BpbmNvbmZfZ2V0ID0gaW14
+X3BpbmNvbmZfZ2V0X3NjdSwNCj4gKwkuaW14X3BpbmNvbmZfc2V0ID0gaW14X3BpbmNvbmZfc2V0
+X3NjdSwNCj4gKwkuaW14X3BpbmN0cmxfcGFyc2VfcGluID0gaW14X3BpbmN0cmxfcGFyc2VfcGlu
+X3NjdSwNCj4gIH07DQo+IA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14
+OHFtX3BpbmN0cmxfb2ZfbWF0Y2hbXSA9IHsgZGlmZiAtLWdpdA0KPiBhL2RyaXZlcnMvcGluY3Ry
+bC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cXhwLmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNj
+YWxlL3BpbmN0cmwtaW14OHF4cC5jDQo+IGluZGV4IDgxZWJkNGMuLjY3NzZhZDYgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cXhwLmMNCj4gKysr
+IGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYw0KPiBAQCAtMTk4
+LDYgKzE5OCw5IEBAIHN0YXRpYyBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gaW14OHF4cF9w
+aW5jdHJsX2luZm8NCj4gPSB7DQo+ICAJLnBpbnMgPSBpbXg4cXhwX3BpbmN0cmxfcGFkcywNCj4g
+IAkubnBpbnMgPSBBUlJBWV9TSVpFKGlteDhxeHBfcGluY3RybF9wYWRzKSwNCj4gIAkuZmxhZ3Mg
+PSBJTVhfVVNFX1NDVSwNCj4gKwkuaW14X3BpbmNvbmZfZ2V0ID0gaW14X3BpbmNvbmZfZ2V0X3Nj
+dSwNCj4gKwkuaW14X3BpbmNvbmZfc2V0ID0gaW14X3BpbmNvbmZfc2V0X3NjdSwNCj4gKwkuaW14
+X3BpbmN0cmxfcGFyc2VfcGluID0gaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdSwNCj4gIH07DQo+
+IA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14OHF4cF9waW5jdHJsX29m
+X21hdGNoW10gPSB7DQo+IC0tDQo+IDIuNy40DQoNCg==
