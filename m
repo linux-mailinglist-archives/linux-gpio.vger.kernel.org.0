@@ -2,94 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E120260D5A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 10:18:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64263260D24
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 10:12:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgIHISa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Sep 2020 04:18:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:32886 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgIHIS3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:18:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 79E061A0FBA;
-        Tue,  8 Sep 2020 10:18:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E0211A0252;
-        Tue,  8 Sep 2020 10:18:22 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5A286402CA;
-        Tue,  8 Sep 2020 10:18:16 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 3/3] pinctrl: imx: Support building i.MX pinctrl core driver as module
-Date:   Tue,  8 Sep 2020 16:12:01 +0800
-Message-Id: <1599552721-24872-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
-References: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1729466AbgIHIMt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Sep 2020 04:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729453AbgIHIMo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 04:12:44 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C41C061573
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Sep 2020 01:12:43 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kFYk3-0007xo-6w; Tue, 08 Sep 2020 10:12:39 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kFYjr-0007B6-Ee; Tue, 08 Sep 2020 10:12:27 +0200
+Date:   Tue, 8 Sep 2020 10:12:27 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200908081227.mxumgqipyod6iltr@pengutronix.de>
+References: <20200907213802.26745-1-michael@walle.cc>
+ <20200907213802.26745-7-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mw42m5g6wzbjjufm"
+Content-Disposition: inline
+In-Reply-To: <20200907213802.26745-7-michael@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change PINCTRL_IMX to tristate to support loadable module build.
 
-And i.MX common pinctrl driver should depend on CONFIG_OF to make sure
-no build error when i.MX common pinctrl driver is enabled for different
-architectures without CONFIG_OF.
+--mw42m5g6wzbjjufm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also add module author, description and license.
+Hello,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-changes since V3:
-	- remove the prompt for PINCTRL_IMX.
----
- drivers/pinctrl/freescale/Kconfig       | 3 ++-
- drivers/pinctrl/freescale/pinctrl-imx.c | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+just a bit of nitpicking left. If Lee is going to apply, I can care for
+a followup patch if need be.
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 7198916..a1fbb3b 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config PINCTRL_IMX
--	bool
-+	tristate
-+	depends on OF
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index b80c450..daf28bc 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-@@ -898,3 +899,7 @@ const struct dev_pm_ops imx_pinctrl_pm_ops = {
- 					imx_pinctrl_resume)
- };
- EXPORT_SYMBOL_GPL(imx_pinctrl_pm_ops);
-+
-+MODULE_AUTHOR("Dong Aisheng <aisheng.dong@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX common pinctrl driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+On Mon, Sep 07, 2020 at 11:37:55PM +0200, Michael Walle wrote:
+> [..]
+> +config PWM_SL28CPLD
+> +	tristate "Kontron sl28cpld PWM support"
+> +	depends on MFD_SL28CPLD ||  COMPILE_TEST
 
+s/  / / (@Lee, maybe fixup during application?)
+
+> +	help
+> +	  Generic PWM framework driver for board management controller
+> +	  found on the Kontron sl28 CPLD.
+> [...]
+> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
+> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
+> +#define SL28CPLD_PWM_PERIOD(prescaler) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescale=
+r))
+> +
+> +/*
+> + * We calculate the duty cycle like this:
+> + *   duty_cycle_ns =3D pwm_cycle_reg * max_period_ns / max_duty_cycle
+> + *
+> + * With
+> + *   max_period_ns =3D 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
+> + *   max_duty_cycle =3D 1 << (7 - prescaler)
+> + * this then simplifies to:
+> + *   duty_cycle_ns =3D pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
+> + *
+> + * NSEC_PER_SEC is a multiple of SL28CPLD_PWM_CLK, therefore we're not l=
+osing
+> + * precision by doing the divison first.
+
+The division you're talking about is NSEC_PER_SEC / pwm_clk which isn't
+obvious in the formula in the line above. Maybe:
+
+	...
+	this then simplifies to:
+
+	  duty_cycle_ns =3D NSEC_PER_SEC / SL28CPLD_PWM_CLK * pwm_cycle_reg
+
+	NSEC_PER_SEC is a multiple of SL28CPLD_PWM_CLK, therefor ...
+
+to make it easier to understand the comment.
+
+> + */
+> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
+> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
+> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
+> [...]
+> +	/*
+> +	 * To avoid glitches when we switch the prescaler, we have to make sure
+> +	 * we have a valid duty cycle for the new mode.
+> +	 *
+> +	 * Take the current prescaler (or the current period length) into
+> +	 * account to decide whether we have to write the duty cycle or the new
+> +	 * prescaler first. If the period length is decreasing we have to
+> +	 * write the duty cycle first.
+> +	 */
+> +	write_duty_cycle_first =3D pwm->state.period > state->period;
+> +
+> +	if (write_duty_cycle_first) {
+> +		ret =3D sl28cpld_pwm_write(priv, SL28CPLD_PWM_CYCLE, cycle);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret =3D sl28cpld_pwm_write(priv, SL28CPLD_PWM_CTRL, ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!write_duty_cycle_first) {
+> +		ret =3D sl28cpld_pwm_write(priv, SL28CPLD_PWM_CYCLE, cycle);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+Nice! I didn't spend the necessary brain cycles to confirm this
+algorithm, but it seems you did :-)
+
+> +
+> +	return 0;
+> +}
+> [...]
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mw42m5g6wzbjjufm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9XPOgACgkQwfwUeK3K
+7AkWZgf9FfNy+2V7VDKBMqCV2TdrX3JZQCu1jkarn2ieFnlW6nZVplR+63wxFR6p
+D7E4amJzibzIwMgPt79NI+1LtwNNMI4qEbPOG1zdXo4I6ug4EABv32ih3WMkkdb+
+fypHJxYyneVC9nIbRAKHkudi2QfoeikSgtmmAYMw4PG8xc/lqWS3JwNeG4YotvSz
+aGgVJqFA/2KW0YywCw1ZFv3m4SVU32nFccbo9EJOztwgKKYpN2eEqqxa7baO3jVW
+JgVzGkkGr9dmi5YYl4jZNcs+IhaPE2mFED7AopB+Hw4CD2FLzssJUFYfZiXtv3+4
+RuG7iydfC3hp+a3JWDfv66XeBzvaJQ==
+=i6C4
+-----END PGP SIGNATURE-----
+
+--mw42m5g6wzbjjufm--
