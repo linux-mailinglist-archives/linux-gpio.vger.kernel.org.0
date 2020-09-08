@@ -2,123 +2,228 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 586C7260C87
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 09:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 741C8260D59
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 10:18:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbgIHHyC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Sep 2020 03:54:02 -0400
-Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:21225
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729714AbgIHHyB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:54:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oc/Kx252pw82s77dnTMYFN0FEZpMDG0Rifn/oV4NpGTxehAjpsVN/cFDUxCDhkxYhGaBa2N65v7kWaCvyjyTVDkDhjr09HZnVXmbPvqSC0lMst3dyz2cNVSh52+eS7IUtXMwksamuYIlheWW6z29nl9eAQ23x3nhxKRBuYLyhxhsWMDEzl2RGGrDgAfpVTu0VWaA6wo+gMKPVz77qYJQ/aRcfTg/cNgfTVWarfqVk0eHy1xmmd1mSisJNvtnkdnKZRUStX0nMwFFlzK0EH/xqTw5Yu0rLNpR3sKVq1ti3NswSL0gL806WjzzSDdLOs0X8E1jGUfWYXLuyqBEuOSCLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SAKSicD1UbleOJolXPD1wa1ndAEYmWcM6oCjb4I73nU=;
- b=bkZiwhA+f01HE+QqOig4unF4LMnzgVPnMITFCXhYJKuST4LfedzCVE/pyYNEg/He1lo9qvbUbZKUHkbvqIXT/gt1rlVdJe0mueZcr4IxtR4ZLHeLvpaj7t4mhbSy2UbWtcmGzx2kSAsm6/erGGJobJbLg90H2KdUltJCkx0SDSrBYt6HN9EeWo+yIOMG/5oBWnjrdfsY49+cs4C7uP4phHQo6A0W06XUtlbIyavTmrGi4EFuct3dZgR1hnDg4s0VQ130OWhlipe8Z6MT3qkiErxwDZ46qhqFb2jYVXPxlDOD4Kr+MyBjGJ/b5yTrwMzHLgzsRChlGqGIszI8iExMbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SAKSicD1UbleOJolXPD1wa1ndAEYmWcM6oCjb4I73nU=;
- b=OGPi759hNhC4FyhBVt+soJzZhu/YxcK4k17T4xD3iWpX72b9IFmOEVh6AuddnzwiUxMOaibR18aDsZdfAO5YZG7quVkLogheiaAVspskG4XH0coMHZjdV8hl8nFgyHX2ezSPUUXxPJ5Fiez6h57cyupXitEDW2qEGNEFb7F6Ozc=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB7PR04MB5466.eurprd04.prod.outlook.com (2603:10a6:10:8a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Tue, 8 Sep
- 2020 07:53:55 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::9c75:8bb2:aff6:450d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::9c75:8bb2:aff6:450d%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 07:53:55 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
- driver as module
-Thread-Topic: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
- driver as module
-Thread-Index: AQHWhbBDjiUh5DFSJEaP/TwCOvRVnqleWKmAgAAAdkCAAAOnAIAAAarg
-Date:   Tue, 8 Sep 2020 07:53:55 +0000
-Message-ID: <DB3PR0402MB39168981C3DB1BE25C7EA09FF5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com>
- <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
- <DB3PR0402MB3916716E9FC26ADF9161B4A4F5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a2v9i+iT5_TKSjDwVpw_dQrhfRiVNm3YOL7W7YTAEdagg@mail.gmail.com>
-In-Reply-To: <CAK8P3a2v9i+iT5_TKSjDwVpw_dQrhfRiVNm3YOL7W7YTAEdagg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eb190fa1-3075-4fef-f4d4-08d853cc5637
-x-ms-traffictypediagnostic: DB7PR04MB5466:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB546626B9EC154CABD2568D80F5290@DB7PR04MB5466.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ekI26rna8iDmxQFPlLmbcTkzIL8CpjfneS3930nWKQrIoC8ZmmfEcpJyFelis1rCO0sm0ijKURC1j1Ei+0HnyyUJ1bMW6wygJcF1hY6cYnEOusPeITfPm2DoY0hwKi59DWESCjY9LhdgQYLiPH7p1P2oPgOOW9jxDxxGqphX55dF4aq3THv2twU9rqbRfQ6aK5OOcU5h3UCHxqXZPjVEirnzhWwG8fv1NW/pQlm2RGeRugao6gMlJGA2aIQH6WQWdfMR1DXRAXK6lMg+A6kNQ1DJbQVrPJh1YblFgPG1RyQQ1gKgXRndSB/RkbBfgHlo
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(136003)(346002)(376002)(396003)(4326008)(33656002)(86362001)(2906002)(6916009)(55016002)(9686003)(7696005)(66556008)(66476007)(66446008)(64756008)(53546011)(6506007)(7416002)(66946007)(44832011)(54906003)(8936002)(8676002)(186003)(478600001)(76116006)(5660300002)(26005)(316002)(71200400001)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: WJq/MxsDH3U20TWOho8SxxqNrMF68TJIxCfyTsIk0y1RPTfpqtoPrDcEJRe9ius4SN0sA10s0PqygrYYIBWmd7xGYAIQl5si7dFkVXgqWXEPn8MuUE+ecvwvzCtpMT3g6KUcMWV8KEQUAUCmxVa9b9lFgxw+oBa9rpJwVAe7/3EBnZMvhUUjaFQLeeql3JihLAWKCbzJK3HeyfUAQjv0C3KK52U1UHOguthhC4s+EcsSgIW1vRekqoippUdRkF+DbsJARq4ZseN1AJ2IkfKmU6kEzQcmA2DO29FBT3501Y//Bb1ZiSGfeV/AFRW4kA1bIRFSvo37Un5FY3WwX03sIGB7o0G7cJy43Al6hupkF4FeNlpf1l5Ak910wiSIjneTw5sewm5UF5SJk/PClcVmdxH+GELT8DPvwAV06Mrdw8zdcQkr8yOfmSiNbq4/x//0zXF/YRnMomj51gN22elKJQP1bqmyAmKG0g20f7pY0uKN5kPnBZkT7tI/7GdHrEmeNp0HC+mWVT5b0ut+tg5Ry8uVyztltak8PKQdfCpfkliWm+FMXIC2FbR+dpHER0buoSYKCs9vMEeAcy7yupNihAq/beNgzUS2OvPL0PY5cKYfkI3mU2XEGq12+VtVPwzQdr71EOiBuWNLNvXsSkDEGA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb190fa1-3075-4fef-f4d4-08d853cc5637
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 07:53:55.6287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9YehcViCKLv9sgvPsADTCAYhgj00RLK1iCKpSHL2SMu+vTttF9xjy43KOX8a0hg1vmt5HVCqrCI3Dbxww7Jv7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5466
+        id S1729627AbgIHIS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Sep 2020 04:18:29 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:32796 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729432AbgIHIS1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:18:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5B2B51A0226;
+        Tue,  8 Sep 2020 10:18:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 513D91A0134;
+        Tue,  8 Sep 2020 10:18:20 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0E5E74024E;
+        Tue,  8 Sep 2020 10:18:13 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arnd@arndb.de
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V4 1/3] pinctrl: imx: Use function callbacks for SCU related functions
+Date:   Tue,  8 Sep 2020 16:11:59 +0800
+Message-Id: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGksIEFybmQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDMvM10gcGluY3RybDogaW14OiBT
-dXBwb3J0IGJ1aWxkaW5nIGkuTVggcGluY3RybCBjb3JlDQo+IGRyaXZlciBhcyBtb2R1bGUNCj4g
-DQo+IE9uIFR1ZSwgU2VwIDgsIDIwMjAgYXQgOTozNCBBTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVh
-bmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDMvM10g
-cGluY3RybDogaW14OiBTdXBwb3J0IGJ1aWxkaW5nIGkuTVgNCj4gPiA+IHBpbmN0cmwgY29yZSBk
-cml2ZXIgYXMgbW9kdWxlDQo+ID4gPg0KPiA+ID4gT24gVHVlLCBTZXAgOCwgMjAyMCBhdCA5OjIw
-IEFNIEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4gd3JvdGU6DQo+ID4g
-Pg0KPiA+ID4gPiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICBjb25m
-aWcgUElOQ1RSTF9JTVgNCj4gPiA+ID4gLSAgICAgICBib29sDQo+ID4gPiA+ICsgICAgICAgdHJp
-c3RhdGUgIklNWCBwaW5jdHJsIGNvcmUgZHJpdmVyIg0KPiA+ID4gPiArICAgICAgIGRlcGVuZHMg
-b24gT0YNCj4gPiA+ID4gICAgICAgICBzZWxlY3QgR0VORVJJQ19QSU5DVFJMX0dST1VQUw0KPiA+
-ID4gPiAgICAgICAgIHNlbGVjdCBHRU5FUklDX1BJTk1VWF9GVU5DVElPTlMNCj4gPiA+ID4gICAg
-ICAgICBzZWxlY3QgR0VORVJJQ19QSU5DT05GDQo+ID4gPg0KPiA+ID4gSSBkb24ndCBzZWUgd2h5
-IHlvdSBuZWVkIHRvIG1ha2UgdGhpcyBvcHRpb24gdXNlci12aXNpYmxlIHdoZW4gaXQgaXMNCj4g
-PiA+IGFscmVhZHkgc2VsZWN0ZWQgYnkgdGhlIGRyaXZlcnMgdGhhdCBuZWVkIGl0LiBXb3VsZG4n
-dCBpdCBiZSBlbm91Z2ggdG8NCj4gY2hhbmdlIHRoZSAnYm9vbCcNCj4gPiA+IHRvICd0cmlzdGF0
-ZScgd2l0aG91dCBhZGRpbmcgYSBwcm9tcHQ/DQo+ID4NCj4gPiBNYWtlIHNlbnNlLCBzbyBpdCBp
-cyBzYW1lIGZvciBQSU5DVFJMX0lNWF9TQ1UsIHJpZ2h0Pw0KPiANCj4gWWVzLCBjb3JyZWN0Lg0K
-PiANCj4gSSB3YXNuJ3Qgb24gQ2Mgb24gdGhlIG90aGVyIHR3byBwYXRjaGVzLCBzbyBJIG1pc3Nl
-ZCB0aGF0Lg0KDQpTb3JyeSwgSSBtaXNzZWQgdG8gYWRkIHlvdSB0byB0aGUgbGlzdCBhcyBJIGp1
-c3QgdXNlIHRoZSBsaXN0IGZyb20gZ2V0X21haW50YWluZXIgc2NyaXB0LCB3aWxsDQphZGQgeW91
-IGluIFY0LiBTaW5jZSBtb3N0IG9mIHRoZSBtYWpvciBjb21tZW50cyBhcmUgYWRkcmVzc2VkLCBJ
-IHdpbGwgc2VuZCBWNCBzb29uLg0KDQpUaGFua3MsDQpBbnNvbg0KDQoNCg==
+Use function callbacks for SCU related functions in pinctrl-imx.c
+in order to support the scenario of PINCTRL_IMX is built in while
+PINCTRL_IMX_SCU is built as module, all drivers using SCU pinctrl
+driver need to initialize the SCU related function callback, and
+no need to check CONFIG_PINCTRL_IMX_SCU anymore, hence stub functions
+also can be removed.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  8 ++--
+ drivers/pinctrl/freescale/pinctrl-imx.h     | 57 +++++++++++------------------
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  3 ++
+ 5 files changed, 35 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 507e4af..b80c450 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -373,7 +373,7 @@ static int imx_pinconf_get(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
+ 
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_get_scu(pctldev, pin_id, config);
++		return info->imx_pinconf_get(pctldev, pin_id, config);
+ 	else
+ 		return imx_pinconf_get_mmio(pctldev, pin_id, config);
+ }
+@@ -423,7 +423,7 @@ static int imx_pinconf_set(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
+ 
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_set_scu(pctldev, pin_id,
++		return info->imx_pinconf_set(pctldev, pin_id,
+ 					   configs, num_configs);
+ 	else
+ 		return imx_pinconf_set_mmio(pctldev, pin_id,
+@@ -440,7 +440,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+ 	int ret;
+ 
+ 	if (info->flags & IMX_USE_SCU) {
+-		ret = imx_pinconf_get_scu(pctldev, pin_id, &config);
++		ret = info->imx_pinconf_get(pctldev, pin_id, &config);
+ 		if (ret) {
+ 			dev_err(ipctl->dev, "failed to get %s pinconf\n",
+ 				pin_get_name(pctldev, pin_id));
+@@ -629,7 +629,7 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
+ 	for (i = 0; i < grp->num_pins; i++) {
+ 		pin = &((struct imx_pin *)(grp->data))[i];
+ 		if (info->flags & IMX_USE_SCU)
+-			imx_pinctrl_parse_pin_scu(ipctl, &grp->pins[i],
++			info->imx_pinctrl_parse_pin(ipctl, &grp->pins[i],
+ 						  pin, &list);
+ 		else
+ 			imx_pinctrl_parse_pin_mmio(ipctl, &grp->pins[i],
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 333d32b..fd8c4b6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -75,6 +75,21 @@ struct imx_cfg_params_decode {
+ 	bool invert;
+ };
+ 
++/**
++ * @dev: a pointer back to containing device
++ * @base: the offset to the controller in virtual memory
++ */
++struct imx_pinctrl {
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++	void __iomem *base;
++	void __iomem *input_sel_base;
++	const struct imx_pinctrl_soc_info *info;
++	struct imx_pin_reg *pin_regs;
++	unsigned int group_index;
++	struct mutex mutex;
++};
++
+ struct imx_pinctrl_soc_info {
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int npins;
+@@ -98,21 +113,13 @@ struct imx_pinctrl_soc_info {
+ 				  struct pinctrl_gpio_range *range,
+ 				  unsigned offset,
+ 				  bool input);
+-};
+-
+-/**
+- * @dev: a pointer back to containing device
+- * @base: the offset to the controller in virtual memory
+- */
+-struct imx_pinctrl {
+-	struct device *dev;
+-	struct pinctrl_dev *pctl;
+-	void __iomem *base;
+-	void __iomem *input_sel_base;
+-	const struct imx_pinctrl_soc_info *info;
+-	struct imx_pin_reg *pin_regs;
+-	unsigned int group_index;
+-	struct mutex mutex;
++	int (*imx_pinconf_get)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *config);
++	int (*imx_pinconf_set)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *configs, unsigned int num_configs);
++	void (*imx_pinctrl_parse_pin)(struct imx_pinctrl *ipctl,
++				      unsigned int *pin_id, struct imx_pin *pin,
++				      const __be32 **list_p);
+ };
+ 
+ #define IMX_CFG_PARAMS_DECODE(p, m, o) \
+@@ -137,7 +144,6 @@ struct imx_pinctrl {
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 			const struct imx_pinctrl_soc_info *info);
+ 
+-#ifdef CONFIG_PINCTRL_IMX_SCU
+ #define BM_PAD_CTL_GP_ENABLE		BIT(30)
+ #define BM_PAD_CTL_IFMUX_ENABLE		BIT(31)
+ #define BP_PAD_CTL_IFMUX		27
+@@ -150,23 +156,4 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+ 			       unsigned int *pin_id, struct imx_pin *pin,
+ 			       const __be32 **list_p);
+-#else
+-static inline int imx_pinconf_get_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *config)
+-{
+-	return -EINVAL;
+-}
+-static inline int imx_pinconf_set_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *configs,
+-				      unsigned num_configs)
+-{
+-	return -EINVAL;
+-}
+-static inline void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+-					    unsigned int *pin_id,
+-					    struct imx_pin *pin,
+-					    const __be32 **list_p)
+-{
+-}
+-#endif
+ #endif /* __DRIVERS_PINCTRL_IMX_H */
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+index 12b97da..d3020c0 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+@@ -159,6 +159,9 @@ static struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
+ 	.pins = imx8dxl_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8dxl_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8dxl_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qm.c b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+index 095acf4..8f46b940 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qm.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+@@ -292,6 +292,9 @@ static const struct imx_pinctrl_soc_info imx8qm_pinctrl_info = {
+ 	.pins = imx8qm_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qm_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qm_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+index 81ebd4c..6776ad6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+@@ -198,6 +198,9 @@ static struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
+ 	.pins = imx8qxp_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qxp_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qxp_pinctrl_of_match[] = {
+-- 
+2.7.4
+
