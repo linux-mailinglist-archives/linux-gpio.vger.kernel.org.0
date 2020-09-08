@@ -2,112 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C6DF260C1D
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 09:34:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 232EE260C49
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Sep 2020 09:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgIHHeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Sep 2020 03:34:06 -0400
-Received: from mail-db8eur05on2052.outbound.protection.outlook.com ([40.107.20.52]:26113
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728786AbgIHHeF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:34:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YfgB/y5LTQV08UIhbpEXznP0RebQfZ0Vh+s2EOXJEdvODIkUxAXQ/VjzhLGqXTgxcF0dWBUty7HsElmtWhIZduhCKfmExNq/uDnaVxi6Xc3mCBf0DpvFvTqV19eblcqCquoJBlq2Zfn7kq22ORx7iJYHfYK1ctH1UKUtEHWh4QqmmSkh8hAMi2S9w8n24BaXk+O0JFCesNp5Bn5bqACV3iTOHa8DzW5lNb73zo5VAu4Y4B2KVfzXTaI66AZVriBLGvo+PaJrRczlg/D0kCoymcmV3BhZGXynOuMfsSQXu0sPnG1EaroHE8Qzam8SHzFfN+ZTLenqvUJENmnQB2PIUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3hoc8VoCXauKqwpqcqKTbknuM3ZlEZm4R967f5KIPIk=;
- b=gElysDy64H+kZQORnKK+2zkNG/3F1AhhZmZwrBeqOYSwaTFJttajRWHA5rAuHdpeJIJUT6A8wdKHfFtmAHleyggIL9M7TW7Ml8RAkjzDaBq6tUcexfAOaG+O7ul9Bkrv0HPlyKnheX/5aaNBdvlc02zdAC4XZz6omYK2Gp7FgLTg2zdEsl2D8IIpBKCQDiuLmdl693n5rlNz9IyjiqUm9sHz47RppKIBNBWAnwdt3rYS0dUv/EVtKXYGKIicY0RP93Uml9+0w8ltDmQdFba44SqAvroWWFPqyRtnbobV/d8IGyMmiNYSo58ApsHdD7wVrbGQsaGDLdwc2KAWYzSjGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3hoc8VoCXauKqwpqcqKTbknuM3ZlEZm4R967f5KIPIk=;
- b=KVuqoG65g0wEiX+lRXUSCGGYNUvPhf7j8nOy3+ZsP5mDaqXlAkOLOoDpr81t1k4dROFO9CBWKWy78fxrkM118p6fxm6+k/VK7MN79YRxnHwEpy00KmrNwBGoXBupLKoJWOTLe2nHed9jU6XGkH09FS/dzVBI9IAnVm17gOpW64g=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB7PR04MB4761.eurprd04.prod.outlook.com (2603:10a6:10:23::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 07:34:01 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::9c75:8bb2:aff6:450d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::9c75:8bb2:aff6:450d%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 07:34:01 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
+        id S1729564AbgIHHmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Sep 2020 03:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbgIHHm1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Sep 2020 03:42:27 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20C3C061756
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Sep 2020 00:42:26 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id w5so17989423wrp.8
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Sep 2020 00:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
+        b=wfT5YyvYowSvPxHb+0/UENzgICebO//M3d0DIDWTaHQEJ5O8uHUUoMmrKzjeIMQqhp
+         NitiIv7XdDmxggV4H52sZ8GTfO2gx/qw5l/KSDtQ5k7j01HmFi8cILzZZTc1QulK7jLs
+         FJR7s1cQa4ABR9jisaKM+w4K4OH7nPjdA5yySjFdvPdEhKp9Pdb2E5jOhpoKyKzqADtF
+         9rvVG8SDZqY9Gexgx+Opxsg3NCd1mxoMtmv0mYlisOhyCFfTItVkvffAfsv2qI5glIoD
+         p6y8pTSLFo/DJ8Z8ql+PhihvnyiwtfryLTFJeF/3iqnz5513istkaHH5GvpZtlkejkLV
+         tDYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
+        b=Undkjk1yCsMMk/XYCI2hYozFjUXutSuiQewJWHWKXDfaZMjDjMP0P2xfJZ61kdiBj+
+         1fCvG8Zluh38kbG0sMNZybGEZFj96yKLdYv/3OkFs+M976AIRn41ogGwa33te0d43PtK
+         4qZMJtBIHpYkbdLSchscpDbpvntZ7E1qgoflejbdrXrTUtlSF+G6xElNJFWKLXad42/F
+         Nvk6143xerm3hLgx0fSKoeb6wONkoebsDj18pRDqcEVPfj3p9WIO95ngxL0kG6thGx1j
+         hvEkZAtjXBnTpGc4Dr1CKiC3df1lN671W4Bt3MZUSRu0cWoiuomhVd+87+BMZbTJpNun
+         YL4Q==
+X-Gm-Message-State: AOAM531itCaQKBCH2T+d/vNTb9RJ4MhNGRv6kK617adYavQyu0MPU3gg
+        ueiB58d9c6jTUqaoYSvo1cNq0A==
+X-Google-Smtp-Source: ABdhPJwKj9M+NROzity0wbbtarhMYD1iO1A/RCqJwJa4QnCTCrNVQ7+USV3LfuKpabL5+WM8PcwegQ==
+X-Received: by 2002:adf:e6c2:: with SMTP id y2mr27381258wrm.117.1599550944553;
+        Tue, 08 Sep 2020 00:42:24 -0700 (PDT)
+Received: from dell ([91.110.221.204])
+        by smtp.gmail.com with ESMTPSA id i6sm36336964wra.1.2020.09.08.00.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 00:42:23 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 08:42:21 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
- driver as module
-Thread-Topic: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
- driver as module
-Thread-Index: AQHWhbBDjiUh5DFSJEaP/TwCOvRVnqleWKmAgAAAdkA=
-Date:   Tue, 8 Sep 2020 07:34:01 +0000
-Message-ID: <DB3PR0402MB3916716E9FC26ADF9161B4A4F5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com>
- <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
-In-Reply-To: <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 32a87816-8d74-418d-45ba-08d853c98e85
-x-ms-traffictypediagnostic: DB7PR04MB4761:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB4761FD2E7DCAF10D66DAF227F5290@DB7PR04MB4761.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8Sud2kjoulGRg7amCh7H2x5ZEvo0IGrlzwjiTzR0PQ+01lX+dFWbAQu9qklpmOqmYv+k9dOiLmer0X381jeiTrRETiAsaHsYi+H8ezsd3BqQRuzJ5kObSjDIx6BQZy7cQjIKmUTFfJNNW1F+QRorjrpnofgbmLPobvMEfRFghcoFZYpB45QV47sfBHXm4QIWTT+FVnxxHJPPwHAbdwj8hPqgnqHO60APkUYmV2VFmYx8nDvSD+FlU/Ma28g0sNHr8xY2ICGtr7M/5tI2HBh0gWj3cpxuBtT37joedKGK8L5q2SD7MPbZJq/LIxvbFxVo
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(8936002)(44832011)(7416002)(5660300002)(4326008)(71200400001)(86362001)(52536014)(55016002)(6916009)(9686003)(4744005)(186003)(76116006)(8676002)(26005)(2906002)(66946007)(7696005)(316002)(478600001)(33656002)(64756008)(66476007)(6506007)(54906003)(66556008)(53546011)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 4PvMD2zw4n6EDyeY2RCt2it86Vz85INeyQkAR5giC8NVOf3sxt6boVY246IjCFpIjXuWR3wEb78RYR474OyxHSyrfQRhk9Q3t9rO2CTidPsqJmFbDffAleBiKWywPOHPP6z6USaP7HVUoAAj9DODnwDmhRSdEe0Oa1B/BMT0w43Nz/4HcLmIOopsc3Tn90H5Su+r5psBt1VyM2DPJZLArkR9of2U2gSd721pRd4nl9S6uErPuKHcIm6xDwiamRbQ0hDPGMe0f8D2tojK26LSGEhO3DAN2jaMm0eb4YbVNIobrpd1Cmxbw4+blU1EPbDhoYqZ5BhMcW8EHay/JH4bzKw9gW1+qicuMeb8CkuS7FioTNBiRNMiL+X2v7HIFRMPSGtwQJQvkQLYPrc8bmNnY8HyWNFv1mUMm03AiUGIYdlxxcQCuupmTCluAuK1di2gR3ua+fM+Wmnj7ls+FhxiTwkITfkOcUMNdTQ0ZNZx3dAww/FUBnGD+pTs/W9zr5p4vLhoHdTLKeu+gjgNmm6TIN0nUW0gQRED3W0b2sZnqUdEuXaAt44DX5Zet/RgtfoYHvQnEGhl4uV5wk1LoE0tJRnShw+wPMrwinPHLvlPoabQnLqo+OE1v1o+oM7uLNADvoeIVgPQF38aaNEmDrW0Tg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 00/13] Add support for Kontron sl28cpld
+Message-ID: <20200908074221.GA4400@dell>
+References: <20200907213802.26745-1-michael@walle.cc>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32a87816-8d74-418d-45ba-08d853c98e85
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 07:34:01.6156
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PW1c6bfu1Czq4RdYNvRFidcEVrAuLqus77jbjTciqOt/zIM4TUIfwkys8ndTKQMQmjsPLb7gT/nO5OOs1ftGXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4761
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907213802.26745-1-michael@walle.cc>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAzLzNdIHBpbmN0cmw6IGlteDogU3VwcG9ydCBi
-dWlsZGluZyBpLk1YIHBpbmN0cmwgY29yZQ0KPiBkcml2ZXIgYXMgbW9kdWxlDQo+IA0KPiBPbiBU
-dWUsIFNlcCA4LCAyMDIwIGF0IDk6MjAgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
-b20+DQo+IHdyb3RlOg0KPiANCj4gPiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MC1vbmx5ICBjb25maWcgUElOQ1RSTF9JTVgNCj4gPiAtICAgICAgIGJvb2wNCj4gPiArICAgICAg
-IHRyaXN0YXRlICJJTVggcGluY3RybCBjb3JlIGRyaXZlciINCj4gPiArICAgICAgIGRlcGVuZHMg
-b24gT0YNCj4gPiAgICAgICAgIHNlbGVjdCBHRU5FUklDX1BJTkNUUkxfR1JPVVBTDQo+ID4gICAg
-ICAgICBzZWxlY3QgR0VORVJJQ19QSU5NVVhfRlVOQ1RJT05TDQo+ID4gICAgICAgICBzZWxlY3Qg
-R0VORVJJQ19QSU5DT05GDQo+IA0KPiBJIGRvbid0IHNlZSB3aHkgeW91IG5lZWQgdG8gbWFrZSB0
-aGlzIG9wdGlvbiB1c2VyLXZpc2libGUgd2hlbiBpdCBpcyBhbHJlYWR5DQo+IHNlbGVjdGVkIGJ5
-IHRoZSBkcml2ZXJzIHRoYXQgbmVlZCBpdC4gV291bGRuJ3QgaXQgYmUgZW5vdWdoIHRvIGNoYW5n
-ZSB0aGUgJ2Jvb2wnDQo+IHRvICd0cmlzdGF0ZScgd2l0aG91dCBhZGRpbmcgYSBwcm9tcHQ/DQoN
-Ck1ha2Ugc2Vuc2UsIHNvIGl0IGlzIHNhbWUgZm9yIFBJTkNUUkxfSU1YX1NDVSwgcmlnaHQ/DQoN
-CkFuc29uDQoNCg==
+On Mon, 07 Sep 2020, Michael Walle wrote:
+
+> The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+> monitoring and an interrupt controller. For now this controller is used on
+> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+> might also be used on other boards in the future. The individual blocks
+> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+> then instantiates different (or multiple of the same) blocks. It also
+> provides the register layout so it might be updated in the future without a
+> device tree change; and support other boards with a different layout or
+> functionalities.
+> 
+> See also [1] for more information.
+> 
+> This is my first take of a MFD driver. I don't know whether the subsystem
+> maintainers should only be CCed on the patches which affect the subsystem
+> or on all patches for this series. I've chosen the latter so you can get a
+> more complete picture.
+> 
+> [1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+
+I'll take all of the non-ARM patches later this week.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
