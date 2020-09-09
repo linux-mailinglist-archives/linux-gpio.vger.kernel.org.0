@@ -2,72 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70646262B41
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 11:03:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87BFE262B5D
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 11:10:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgIIJDh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Sep 2020 05:03:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39217 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgIIJDh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:03:37 -0400
-IronPort-SDR: 4H6APNKFa5jSPQ0m6EGOFNjIB2xuyYKsRi2hVbg1h3OXu4MxSOyY13c3f5lOkWicXdDw1wGgOg
- Gok4UPyPOljQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155772991"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="155772991"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:03:37 -0700
-IronPort-SDR: AOfyUaHLr1O2qBJmTNelHYciWWPTM5B1h9YceWqrhR6+GLQMpVoQtduygzljnKaONgwIfXqeTD
- Bdts65VciNzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="407393247"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Sep 2020 02:03:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 09 Sep 2020 12:03:33 +0300
-Date:   Wed, 9 Sep 2020 12:03:33 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 0/3] gpiolib: generalize GPIO line names property
-Message-ID: <20200909090333.GK2495@lahna.fi.intel.com>
-References: <20200909085426.19862-1-brgl@bgdev.pl>
+        id S1730111AbgIIJKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Sep 2020 05:10:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43787 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbgIIJKO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 05:10:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n61so1663476ota.10;
+        Wed, 09 Sep 2020 02:10:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pb1HZ5RJoeUYiz4tk2uhQAXcCJ3Ei/QOgrU0Cul6qKU=;
+        b=JhT2iPWPH5sdVONawIGq9z6GsleYDZTpnlniuzNdqh4C/eIGuNHTePAunWMhKlquRf
+         VazCZ/DOEHvgvbqQOM/if2xeBpfUIwii95foAI6tn7+mKOIlTnNRKwH7kzlWkuUdp9XO
+         +kCXLjwpDxe3mLR/L+QJHYe46Ps+XQ4tEyK2FIdFzoJ3MzC+oNdHtXogk5sIEWHIHq7V
+         6XtjnJo/tUgrxWDr3HNFBsaIyICXUo2y4rNghvEvRMhYQ9spTqCPxeYyCWPjfUAWYEYc
+         b7+Myscm6x15RyDzuHSzP3qzteD7Joap97iwtBM55d0tP+ogk5xatNhlFAJnUFvWLSza
+         u2Qw==
+X-Gm-Message-State: AOAM533XhrTPjHC51+BH6siNrd1IfBIJNQF1P9+X2FFpbUCbcTbhJRw+
+        /Hg8ZiNeedw8smZg42yz5ZomHzhwOm2NMT6uouTiWd9D
+X-Google-Smtp-Source: ABdhPJwxlsSWuII7HixN72Z0MrF7mnU6wJolhyzRHgrKbigFEdcW2X5OW3JBHQoVLrX5EbtgYNYKNGXFVx4kpk20cg4=
+X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr30284otp.107.1599642612947;
+ Wed, 09 Sep 2020 02:10:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909085426.19862-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200904114849.30413-1-geert+renesas@glider.be>
+In-Reply-To: <20200904114849.30413-1-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 9 Sep 2020 11:10:01 +0200
+Message-ID: <CAMuHMdWcCNJa2Czq=bCF-ZG7h4rQQdV4XGOhJPKYd4o2zNJC6A@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.10
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 10:54:23AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> I initially sent this as part of the gpio-mockup overhaul but since
-> these patches are indepentent and the work on gpio-mockup may become
-> more complicated - I'm sending these separately.
-> 
-> The only change is adding additional property helpers to count strings
-> in array.
-> 
-> v1 -> v2:
-> - actually remove the previous devprop source file in patch 3
-> - rename the string counting functions to something more explicit
-> 
-> Bartosz Golaszewski (3):
->   device: property: add helpers to count items in string arrays
->   gpiolib: generalize devprop_gpiochip_set_names() for device properties
->   gpiolib: unexport devprop_gpiochip_set_names()
+Hi Linus,
 
-The series looks good to me,
+On Fri, Sep 4, 2020 at 1:48 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+>
+>   Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.10-tag1
+>
+> for you to fetch changes up to b9d7f1448846a98d49a5567536febbef297b20b2:
+>
+>   pinctrl: rza1: Switch to using "output-enable" (2020-09-04 09:45:32 +0200)
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Please drop this, as I've already asked on IRC.
+
+> Kuninori Morimoto (4):
+>       pinctrl: sh-pfc: Tidy up Emma Mobile EV2
+>       pinctrl: sh-pfc: Collect Renesas related CONFIGs in one place
+>       pinctrl: sh-pfc: Align driver description title
+>       pinctrl: sh-pfc: Tidy up driver description title
+
+Following discussions, I had updated the third commit above, but
+forgot to update the fourth. Will fix, and send a new one later.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
