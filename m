@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1DFC262D10
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 12:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF40262D0F
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 12:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgIIK2J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Sep 2020 06:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56956 "EHLO
+        id S1728015AbgIIK2H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Sep 2020 06:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgIIK1j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 06:27:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F07C061573;
-        Wed,  9 Sep 2020 03:27:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md22so1135737pjb.0;
-        Wed, 09 Sep 2020 03:27:38 -0700 (PDT)
+        with ESMTP id S1728663AbgIIK1n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 06:27:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20EDEC061573;
+        Wed,  9 Sep 2020 03:27:43 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id k15so1741493pfc.12;
+        Wed, 09 Sep 2020 03:27:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1rVwlHjHNekh14PBFJ9edGeazCsM5cgIewowY8Usnac=;
-        b=P9VhCey8QpA58BXKEORRd0qL2T/ojU55qa3ODjWaLAgrvgJ8ySmQZEktoksOPAxFG1
-         C2U0FpCaQNHXJI7nRGHDSzrEVY99iAVfXW9SpdfUOlhzzFqolV5T896Viob9EZQKB6Me
-         DWloMGakXX7mVpi0JiPzJxA/eZWrwIVZcRBXQSEGurv/MOq1KqHU75zfpLezXjtT+C14
-         mv/yH+qBH5V8Wx/W5R1MHH5WaCNko9Ua5SzCyJ67K3L4I0gMTnZx+r+olSY1Qwc5nS8j
-         yLt2vMU9nwdxdrHWrW22CyzFf8fXeBqpJUxEGfHRwF36vYPQLVECQpxBuqKANK6CGZpJ
-         5cwQ==
+        bh=mahJTp06HPHqdZLO7HoqnJn70jmcNWgtVnqEZw5yr3s=;
+        b=aj1kqdSKGW9RlMCn/4c4Bx9FhFI9VyCQPIOIccTgs4V73dlFT0Yg8hioxJe7mQhkz6
+         MHQKK7wTcumJo2OYjlsxYuSwwwyy5rkfr4UAJUGW2Ha5DJtAmASjg+hTxKmzDR1lgEjr
+         u7cE87TZZoRs6/8eijAGURONjkWpKg0oJA0RwjVIBF//b0finRtB2/BteIEFJTpLtRCC
+         H1Ybfq/loPHBicefMiuIcLT/UJSfvThbfRRcnvrjmE9+rWHHIplAcC/36p8ezhWLSvKR
+         sfp0tHVBhi2To/ySWV4prFD/ig3nEKNyf9k/75Ts6WFzyie4uQR7rRs+J/AGeC99mgQH
+         n4kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1rVwlHjHNekh14PBFJ9edGeazCsM5cgIewowY8Usnac=;
-        b=RsledpG51bF9NoQnZvVNbh5BXIMwS23vO76nSnLDZPm6hD9JYfaYfnfaTVcHvJZ1Np
-         uH800doCnCESV9npnfgMqsmG8geSxh8Kk2fceyPMJs0IZ2HeA6lY9gHQG6kCGWC6l8Bv
-         Dy6Plx4qQ1ALG8TlPRv7F+53S2viL9LkwxgqyJ4RD48XxB/QVEKhAAzw/W3rj/9qy3uj
-         6mB4LuO4SFSCQolLoGurv9bJX3yZmjuEiBtF+mjIuhxjXil0aIFXeZ6FoQ5lkDHrFbiv
-         7m//SU+3bAZTovm5DDsbieK8uNtHuduNYlk9uU5m4A9zNful3gJcFrmBAdEWlpp6tD2c
-         i8mw==
-X-Gm-Message-State: AOAM530jq93yK06BXXGj0WfWpbpcgiYEv80KVQyVvWOwtCm/GsFH7RbI
-        RUIgrQlqLaw/UE+aLL0KEAjFIQ45Qqo=
-X-Google-Smtp-Source: ABdhPJz1S+XeHS2GvzYSu+Gn/0pPlxKWfyUsC2xb3u2DvC7HYW64geAmrF4oIW1sGPObulE5aB4Lsw==
-X-Received: by 2002:a17:90a:81:: with SMTP id a1mr246286pja.136.1599647257211;
-        Wed, 09 Sep 2020 03:27:37 -0700 (PDT)
+        bh=mahJTp06HPHqdZLO7HoqnJn70jmcNWgtVnqEZw5yr3s=;
+        b=h9AmDlGc7VQa+3SbsvPb4TMO0g/2gQ4Qr4yMNgyqdnJijTFISOK/6/vYvbm6is5Uu6
+         j6ZT6HqW3yC/uWIjSolyXdAnDZQDnUyM0UtXVMti05lDFnWaUnxtVXjvMbjmqR994D7f
+         9pGoMHVVLH4wwpyIoRUz61G5sVNM598dFy0pKUFHSfHtrD/xS041FxnbnFptA2aRbZcL
+         mKSd8SmLZugPPCmLhDhsiL20p6+OS2nA9v/baG7xL+1AajBPTTVT+hfGH/N7qJ0mAWMx
+         wdYDjonPZrHbhf6Z4utCdzzPtZTxInCxkHe7LDgDcGoCSYhoJ7gDPLIjDVDCEsUr6p3V
+         L3gQ==
+X-Gm-Message-State: AOAM5307zwaMrNUsOU4v3X+Folb+95KgfwRqmk3bTdqhJojS3KtYQXxi
+        k0WHSrvXibXH72RBlfunSjT/eh2ZJhs=
+X-Google-Smtp-Source: ABdhPJwySw5BH0U28/Je6qhezNG/YBm53DcgSFKIZjxYiDH3p08ztv8SKckz1v+MwGiK78kFtSHAsw==
+X-Received: by 2002:a05:6a00:1356:b029:13e:5203:fba3 with SMTP id k22-20020a056a001356b029013e5203fba3mr299643pfu.3.1599647262251;
+        Wed, 09 Sep 2020 03:27:42 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.27.34
+        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:27:36 -0700 (PDT)
+        Wed, 09 Sep 2020 03:27:41 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v8 04/20] gpio: uapi: define uAPI v2
-Date:   Wed,  9 Sep 2020 18:26:24 +0800
-Message-Id: <20200909102640.1657622-5-warthog618@gmail.com>
+Subject: [PATCH v8 05/20] gpiolib: make cdev a build option
+Date:   Wed,  9 Sep 2020 18:26:25 +0800
+Message-Id: <20200909102640.1657622-6-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200909102640.1657622-1-warthog618@gmail.com>
 References: <20200909102640.1657622-1-warthog618@gmail.com>
@@ -64,426 +64,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a new version of the uAPI to address existing 32/64-bit alignment
-issues, add support for debounce and event sequence numbers, allow
-requested lines with different configurations, and provide some future
-proofing by adding padding reserved for future use.
+Make the gpiolib-cdev module a build option.  This allows the CDEV
+interface to be removed from the kernel to reduce kernel size in
+applications where is it not required, and provides the parent for
+other other CDEV interface specific build options to follow.
 
-The alignment issue relates to the gpioevent_data, which packs to different
-sizes on 32-bit and 64-bit platforms. That creates problems for 32-bit apps
-running on 64-bit kernels.  uAPI v2 addresses that particular issue, and
-the problem more generally, by adding pad fields that explicitly pad
-structs out to 64-bit boundaries, so they will pack to the same size now,
-and even if some of the reserved padding is used for __u64 fields in the
-future.
-
-The new structs have been analysed with pahole to ensure that they
-are sized as expected and contain no implicit padding.
-
-The lack of future proofing in v1 makes it impossible to, for example,
-add the debounce feature that is included in v2.
-The future proofing is addressed by providing configurable attributes in
-line config and reserved padding in all structs for future features.
-Specifically, the line request, config, info, info_changed and event
-structs receive updated versions and new ioctls.
-
-As the majority of the structs and ioctls were being replaced, it is
-opportune to rework some of the other aspects of the uAPI:
-
-v1 has three different flags fields, each with their own separate
-bit definitions.  In v2 that is collapsed to one - gpio_v2_line_flag.
-
-The handle and event requests are merged into a single request, the line
-request, as the two requests were mostly the same other than the edge
-detection provided by event requests.  As a byproduct, the v2 uAPI allows
-for multiple lines producing edge events on the same line handle.
-This is a new capability as v1 only supports a single line in an event
-request.
-
-As a consequence, there are now only two types of file handle to be
-concerned with, the chip and the line, and it is clearer which ioctls
-apply to which type of handle.
-
-There is also some minor renaming of fields for consistency compared to
-their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
-and consumer rather than consumer_label.
-
-Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
-clarity, and the gpiohandle_data __u8 array becomes a bitmap in
-gpio_v2_line_values.
-
-The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
-code, particularly libgpiod, should readily port to it.
-
+Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
+ drivers/gpio/Kconfig        | 17 +++++++++++++++--
+ drivers/gpio/Makefile       |  2 +-
+ drivers/gpio/gpiolib-cdev.h | 15 +++++++++++++++
+ 3 files changed, 31 insertions(+), 3 deletions(-)
 
-Changes for v7:
- - use _BITULL for flag constants
-
-Changes for v4:
- - clarify bitmap width in GPIO_V2_LINES_MAX description
-
-Changes for v3:
- - relocated commentary into commit description
- - hard limit max requested lines to 64 so bitmaps always fit in a single
-   u64.
- - prefix all v2 symbols with GPIO_V2
- - 64-bit flag values to ULL
- - use __aligned_u64 to ensure 64-bit fields are 64-bit aligned
- - support masked get values, as per set values.
-
-Changes for v2:
- - lower case V1 and V2, except in capitalized names
- - hyphenate 32/64-bit
- - rename bitmap field to bits
- - drop PAD_SIZE consts in favour of hard coded numbers
- - sort includes
- - change config flags to __u64
- - increase padding of gpioline_event
- - relocate GPIOLINE_CHANGED enum into v2 section (is common with v1)
- - rework config to collapse direction, drive, bias and edge enums back
-   into flags and add optional attributes that can be associated with a
-   subset of the requested lines.
-
-Changes for v1 (since the RFC):
- - document the constraints on array sizes to maintain 32/64 alignment
- - add sequence numbers to gpioline_event
- - use bitmap for values instead of array of __u8
- - gpioline_info_v2 contains gpioline_config instead of its composite fields
- - provide constants for all array sizes, especially padding
- - renamed "GPIOLINE_FLAG_V2_KERNEL" to "GPIOLINE_FLAG_V2_USED"
- - renamed "default_values" to "values"
- - made gpioline_direction zero based
- - document clock used in gpioline_event timestamp
- - add event_buffer_size to gpioline_request
- - rename debounce to debounce_period
- - rename lines to num_lines
-
- include/uapi/linux/gpio.h | 274 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 267 insertions(+), 7 deletions(-)
-
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 285cc10355b2..87074886e73d 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -11,11 +11,14 @@
- #ifndef _UAPI_GPIO_H_
- #define _UAPI_GPIO_H_
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5cfdaf3b004d..e4debd66d71f 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -66,8 +66,21 @@ config GPIO_SYSFS
  
-+#include <linux/const.h>
- #include <linux/ioctl.h>
- #include <linux/types.h>
+ 	  This ABI is deprecated. If you want to use GPIO from userspace,
+ 	  use the character device /dev/gpiochipN with the appropriate
+-	  ioctl() operations instead. The character device is always
+-	  available.
++	  ioctl() operations instead.
++
++config GPIO_CDEV
++	bool
++	prompt "Character device (/dev/gpiochipN) support" if EXPERT
++	default y
++	help
++	  Say Y here to add the character device /dev/gpiochipN interface
++	  for GPIOs. The character device allows userspace to control GPIOs
++	  using ioctl() operations.
++
++	  Only say N if you are sure that the GPIO character device is not
++	  required.
++
++	  If unsure, say Y.
  
- /*
-  * The maximum size of name and label arrays.
-+ *
-+ * Must be a multiple of 8 to ensure 32/64-bit alignment of structs.
-  */
- #define GPIO_MAX_NAME_SIZE 32
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 4f9abff4f2dc..7c24c8d77068 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -7,8 +7,8 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devres.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
+-obj-$(CONFIG_GPIOLIB)		+= gpiolib-cdev.o
+ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
++obj-$(CONFIG_GPIO_CDEV)		+= gpiolib-cdev.o
+ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
  
-@@ -32,6 +35,248 @@ struct gpiochip_info {
- 	__u32 lines;
- };
+diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
+index 973578e7ad10..19a4e3d57120 100644
+--- a/drivers/gpio/gpiolib-cdev.h
++++ b/drivers/gpio/gpiolib-cdev.h
+@@ -5,7 +5,22 @@
  
-+/*
-+ * Maximum number of requested lines.
-+ *
-+ * Must be no greater than 64, as bitmaps are restricted here to 64-bits
-+ * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
-+ * structs.
-+ */
-+#define GPIO_V2_LINES_MAX 64
-+
-+/*
-+ * The maximum number of configuration attributes associated with a line
-+ * request.
-+ */
-+#define GPIO_V2_LINE_NUM_ATTRS_MAX 10
-+
-+/**
-+ * enum gpio_v2_line_flag - &struct gpio_v2_line_attribute.flags values
-+ */
-+enum gpio_v2_line_flag {
-+	GPIO_V2_LINE_FLAG_USED			= _BITULL(0), /* line not available for request */
-+	GPIO_V2_LINE_FLAG_ACTIVE_LOW		= _BITULL(1),
-+	GPIO_V2_LINE_FLAG_INPUT			= _BITULL(2),
-+	GPIO_V2_LINE_FLAG_OUTPUT		= _BITULL(3),
-+	GPIO_V2_LINE_FLAG_EDGE_RISING		= _BITULL(4),
-+	GPIO_V2_LINE_FLAG_EDGE_FALLING		= _BITULL(5),
-+	GPIO_V2_LINE_FLAG_OPEN_DRAIN		= _BITULL(6),
-+	GPIO_V2_LINE_FLAG_OPEN_SOURCE		= _BITULL(7),
-+	GPIO_V2_LINE_FLAG_BIAS_PULL_UP		= _BITULL(8),
-+	GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN	= _BITULL(9),
-+	GPIO_V2_LINE_FLAG_BIAS_DISABLED		= _BITULL(10),
-+};
-+
-+/**
-+ * struct gpio_v2_line_values - Values of GPIO lines
-+ * @mask: a bitmap identifying the lines to get or set, with each bit
-+ * number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @bits: a bitmap containing the value of the lines, set to 1 for active
-+ * and 0 for inactive.  Note that this is the logical value, which will be
-+ * the opposite of the physical value if the line is configured as active
-+ * low.
-+ */
-+struct gpio_v2_line_values {
-+	__aligned_u64 mask;
-+	__aligned_u64 bits;
-+};
-+
-+/**
-+ * enum gpio_v2_line_attr_id - &struct gpio_v2_line_attribute.id values
-+ */
-+enum gpio_v2_line_attr_id {
-+	GPIO_V2_LINE_ATTR_ID_FLAGS		= 1,
-+	GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES	= 2,
-+	GPIO_V2_LINE_ATTR_ID_DEBOUNCE		= 3,
-+};
-+
-+/**
-+ * struct gpio_v2_line_attribute - a configurable attribute of a line
-+ * @id: attribute identifier with value from &enum gpio_v2_line_attr_id
-+ * @padding: reserved for future use and must be zero filled
-+ * @flags: if id is GPIO_V2_LINE_ATTR_ID_FLAGS, the flags for the GPIO
-+ * line, with values from enum gpio_v2_line_flag, such as
-+ * GPIO_V2_LINE_FLAG_ACTIVE_LOW, GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed
-+ * together.  This overrides the default flags contained in the &struct
-+ * gpio_v2_line_config for the associated line.
-+ * @values: if id is GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES, a bitmap
-+ * containing the values to which the lines will be set, with each bit
-+ * number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @debounce_period: if id is GPIO_V2_LINE_ATTR_ID_DEBOUNCE, the desired
-+ * debounce period, in microseconds
-+ */
-+struct gpio_v2_line_attribute {
-+	__u32 id;
-+	__u32 padding;
-+	union {
-+		__aligned_u64 flags;
-+		__aligned_u64 values;
-+		__u32 debounce_period;
-+	};
-+};
-+
-+/**
-+ * struct gpio_v2_line_config_attribute - a configuration attribute
-+ * associated with one or more of the requested lines.
-+ * @mask: a bitmap identifying the lines to which the attribute applies,
-+ * with each bit number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @attr: the configurable attribute
-+ */
-+struct gpio_v2_line_config_attribute {
-+	__aligned_u64 mask;
-+	struct gpio_v2_line_attribute attr;
-+};
-+
-+/**
-+ * struct gpio_v2_line_config - Configuration for GPIO lines
-+ * @flags: flags for the GPIO lines, with values from enum
-+ * gpio_v2_line_flag, such as GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-+ * GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed together.  This is the default for
-+ * all requested lines but may be overridden for particular lines using
-+ * attrs.
-+ * @num_attrs: the number of attributes in attrs
-+ * @padding: reserved for future use and must be zero filled
-+ * @attrs: the configuration attributes associated with the requested
-+ * lines.  Any attribute should only be associated with a particular line
-+ * once.  If an attribute is associated with a line multiple times then the
-+ * first occurrence (i.e. lowest index) has precedence.
-+ */
-+struct gpio_v2_line_config {
-+	__aligned_u64 flags;
-+	__u32 num_attrs;
-+	/*
-+	 * Pad to fill implicit padding and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+	struct gpio_v2_line_config_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-+};
-+
-+/**
-+ * struct gpio_v2_line_request - Information about a request for GPIO lines
-+ * @offsets: an array of desired lines, specified by offset index for the
-+ * associated GPIO device
-+ * @consumer: a desired consumer label for the selected GPIO lines such as
-+ * "my-bitbanged-relay"
-+ * @config: requested configuration for the lines.
-+ * @num_lines: number of lines requested in this request, i.e. the number
-+ * of valid fields in the GPIO_V2_LINES_MAX sized arrays, set to 1 to
-+ * request a single line
-+ * @event_buffer_size: a suggested minimum number of line events that the
-+ * kernel should buffer.  This is only relevant if edge detection is
-+ * enabled in the configuration. Note that this is only a suggested value
-+ * and the kernel may allocate a larger buffer or cap the size of the
-+ * buffer. If this field is zero then the buffer size defaults to a minimum
-+ * of num_lines*16.
-+ * @padding: reserved for future use and must be zero filled
-+ * @fd: if successful this field will contain a valid anonymous file handle
-+ * after a GPIO_GET_LINE_IOCTL operation, zero or negative value means
-+ * error
-+ */
-+struct gpio_v2_line_request {
-+	__u32 offsets[GPIO_V2_LINES_MAX];
-+	char consumer[GPIO_MAX_NAME_SIZE];
-+	struct gpio_v2_line_config config;
-+	__u32 num_lines;
-+	__u32 event_buffer_size;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+	__s32 fd;
-+};
-+
-+/**
-+ * struct gpio_v2_line_info - Information about a certain GPIO line
-+ * @name: the name of this GPIO line, such as the output pin of the line on
-+ * the chip, a rail or a pin header name on a board, as specified by the
-+ * gpio chip, may be empty
-+ * @consumer: a functional name for the consumer of this GPIO line as set
-+ * by whatever is using it, will be empty if there is no current user but
-+ * may also be empty if the consumer doesn't set this up
-+ * @flags: flags for the GPIO line, such as GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-+ * GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed together
-+ * @offset: the local offset on this GPIO device, fill this in when
-+ * requesting the line information from the kernel
-+ * @num_attrs: the number of attributes in attrs
-+ * @attrs: the configuration attributes associated with the line.
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_info {
-+	char name[GPIO_MAX_NAME_SIZE];
-+	char consumer[GPIO_MAX_NAME_SIZE];
-+	__u32 offset;
-+	__u32 num_attrs;
-+	__aligned_u64 flags;
-+	struct gpio_v2_line_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[4];
-+};
-+
-+enum gpio_v2_line_changed_type {
-+	GPIO_V2_LINE_CHANGED_REQUESTED	= 1,
-+	GPIO_V2_LINE_CHANGED_RELEASED	= 2,
-+	GPIO_V2_LINE_CHANGED_CONFIG	= 3,
-+};
-+
-+/**
-+ * struct gpio_v2_line_info_changed - Information about a change in status
-+ * of a GPIO line
-+ * @info: updated line information
-+ * @timestamp: estimate of time of status change occurrence, in nanoseconds
-+ * @event_type: the type of change with a value from enum
-+ * gpio_v2_line_changed_type
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_info_changed {
-+	struct gpio_v2_line_info info;
-+	__aligned_u64 timestamp;
-+	__u32 event_type;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+};
-+
-+enum gpio_v2_line_event_id {
-+	GPIO_V2_LINE_EVENT_RISING_EDGE	= 1,
-+	GPIO_V2_LINE_EVENT_FALLING_EDGE	= 2,
-+};
-+
-+/**
-+ * struct gpio_v2_line_event - The actual event being pushed to userspace
-+ * @timestamp: best estimate of time of event occurrence, in nanoseconds.
-+ * The timestamp is read from CLOCK_MONOTONIC and is intended to allow the
-+ * accurate measurement of the time between events.  It does not provide
-+ * the wall-clock time.
-+ * @id: event identifier with value from enum gpio_v2_line_event_id
-+ * @offset: the offset of the line that triggered the event
-+ * @seqno: the sequence number for this event in the sequence of events for
-+ * all the lines in this line request
-+ * @line_seqno: the sequence number for this event in the sequence of
-+ * events on this particular line
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_event {
-+	__aligned_u64 timestamp;
-+	__u32 id;
-+	__u32 offset;
-+	__u32 seqno;
-+	__u32 line_seqno;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[6];
-+};
-+
-+/*
-+ *  ABI v1
-+ */
-+
- /* Informational flags */
- #define GPIOLINE_FLAG_KERNEL		(1UL << 0) /* Line used by the kernel */
- #define GPIOLINE_FLAG_IS_OUT		(1UL << 1)
-@@ -149,8 +394,6 @@ struct gpiohandle_config {
- 	__u32 padding[4]; /* padding for future use */
- };
+ #include <linux/device.h>
  
--#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
--
- /**
-  * struct gpiohandle_data - Information of values on a GPIO handle
-  * @values: when getting the state of lines this contains the current
-@@ -161,9 +404,6 @@ struct gpiohandle_data {
- 	__u8 values[GPIOHANDLES_MAX];
- };
- 
--#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
--#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
--
- /* Eventrequest flags */
- #define GPIOEVENT_REQUEST_RISING_EDGE	(1UL << 0)
- #define GPIOEVENT_REQUEST_FALLING_EDGE	(1UL << 1)
-@@ -207,11 +447,31 @@ struct gpioevent_data {
- 	__u32 id;
- };
- 
-+/*
-+ * v1 and v2 ioctl()s
-+ */
- #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
-+#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0C, __u32)
++#ifdef CONFIG_GPIO_CDEV
 +
-+/*
-+ * v2 ioctl()s
-+ */
-+#define GPIO_V2_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x05, struct gpio_v2_line_info)
-+#define GPIO_V2_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x06, struct gpio_v2_line_info)
-+#define GPIO_V2_GET_LINE_IOCTL _IOWR(0xB4, 0x07, struct gpio_v2_line_request)
-+#define GPIO_V2_LINE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0D, struct gpio_v2_line_config)
-+#define GPIO_V2_LINE_GET_VALUES_IOCTL _IOWR(0xB4, 0x0E, struct gpio_v2_line_values)
-+#define GPIO_V2_LINE_SET_VALUES_IOCTL _IOWR(0xB4, 0x0F, struct gpio_v2_line_values)
-+
-+/*
-+ * v1 ioctl()s
-+ */
- #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
--#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
--#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
- #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
- #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
-+#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
-+#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
-+#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0A, struct gpiohandle_config)
-+#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0B, struct gpioline_info)
+ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
+ void gpiolib_cdev_unregister(struct gpio_device *gdev);
  
- #endif /* _UAPI_GPIO_H_ */
++#else
++
++static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
++{
++	return 0;
++}
++
++static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
++{
++}
++
++#endif /* CONFIG_GPIO_CDEV */
++
+ #endif /* GPIOLIB_CDEV_H */
 -- 
 2.28.0
 
