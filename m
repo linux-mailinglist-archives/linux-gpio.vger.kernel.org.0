@@ -2,103 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35AC8262D2D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 12:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B75E262D50
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Sep 2020 12:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgIIKbU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Sep 2020 06:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbgIIKbP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 06:31:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8553C061756
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Sep 2020 03:30:56 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kFxNO-0004Cf-PD; Wed, 09 Sep 2020 12:30:54 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kFxNN-0005Xg-Pc; Wed, 09 Sep 2020 12:30:53 +0200
-Date:   Wed, 9 Sep 2020 12:30:53 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] gpio: siox: explicitly support only threaded irqs
-Message-ID: <20200909103053.bhzh3533km7ky3jh@pengutronix.de>
-References: <20200907153135.3307-1-a.fatoum@pengutronix.de>
- <CAMpxmJWJo=wZmBdAxS2JWVMmg+g2dZG9Do7z+ROy0s37rWTw+w@mail.gmail.com>
+        id S1726535AbgIIKfI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Sep 2020 06:35:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45989 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729129AbgIIKew (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:34:52 -0400
+IronPort-SDR: g/o0rrupzx140CJS7pDJtR1/Mh1pjHVrMxzBbBMR4E/jaI6Izbe79+Hi1IxGLiGkEy3uAzHWTw
+ fC+KEjiaRp+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155781444"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="155781444"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 03:34:45 -0700
+IronPort-SDR: 0tve1CYzhTsytisDy1TclHePtLyVjyq3/rDx/tErL8bdbcltl3BLKazn/LxTYXfTz+kvvbMY13
+ 9vpMtXBxBTpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="333775053"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 09 Sep 2020 03:34:43 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kFxR2-00FPx9-BJ; Wed, 09 Sep 2020 13:34:40 +0300
+Date:   Wed, 9 Sep 2020 13:34:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 0/3] gpiolib: generalize GPIO line names property
+Message-ID: <20200909103440.GM1891694@smile.fi.intel.com>
+References: <20200909085426.19862-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kpyu2cpc3fs7tqrq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJWJo=wZmBdAxS2JWVMmg+g2dZG9Do7z+ROy0s37rWTw+w@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <20200909085426.19862-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Sep 09, 2020 at 10:54:23AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> I initially sent this as part of the gpio-mockup overhaul but since
+> these patches are indepentent and the work on gpio-mockup may become
+> more complicated - I'm sending these separately.
+> 
+> The only change is adding additional property helpers to count strings
+> in array.
 
---kpyu2cpc3fs7tqrq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Seems it lost my tag for patch 1/3, but in any case now I'm good with it
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Wed, Sep 09, 2020 at 11:43:24AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 7, 2020 at 5:32 PM Ahmad Fatoum <a.fatoum@pengutronix.de> wro=
-te:
-> >
-> > The gpio-siox driver uses handle_nested_irq() to implement its
-> > interrupt support. This is only capable of handling threaded irq
-> > actions. For a hardirq action it triggers a NULL pointer oops.
-> > (It calls action->thread_fn which is NULL then.)
-> >
-> > Prevent registration of a hardirq action by setting
-> > gpio_irq_chip::threaded to true.
-> >
-> > Cc: u.kleine-koenig@pengutronix.de
-> > Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> > ---
->=20
-> Could you add a Fixes tag? This looks like stable material.
+> v1 -> v2:
+> - actually remove the previous devprop source file in patch 3
+> - rename the string counting functions to something more explicit
+> 
+> Bartosz Golaszewski (3):
+>   device: property: add helpers to count items in string arrays
+>   gpiolib: generalize devprop_gpiochip_set_names() for device properties
+>   gpiolib: unexport devprop_gpiochip_set_names()
+> 
+>  drivers/gpio/Makefile          |  1 -
+>  drivers/gpio/gpiolib-acpi.c    |  3 --
+>  drivers/gpio/gpiolib-devprop.c | 63 ----------------------------------
+>  drivers/gpio/gpiolib-of.c      |  5 ---
+>  drivers/gpio/gpiolib.c         | 55 ++++++++++++++++++++++++++---
+>  include/linux/gpio/driver.h    |  3 --
+>  include/linux/property.h       | 13 +++++++
+>  7 files changed, 64 insertions(+), 79 deletions(-)
+>  delete mode 100644 drivers/gpio/gpiolib-devprop.c
+> 
+> -- 
+> 2.26.1
+> 
 
-Ah, we talked about this in the v1 thread---tglx and I agreed we want
-it. That's:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Fixes: be8c8facc707 ("gpio: new driver to work with a 8x12 siox")
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kpyu2cpc3fs7tqrq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9YrtoACgkQwfwUeK3K
-7AkU7wf8CMI7+dWprPIUEOc6fay4MBwSA7GnYskIGYpSdVvYTOZA2lODBej3A6Ms
-29y3p8JxfNLZss2nKOIZ2XJZt2o9e7KwTmGQurqq3zisoOueAxc+1qt4VTKFzNwb
-xROu6MXSDpoC+j6z8kc8J5BTiy2XT9RAgRkHeDH+jynsfJ4oN67fWh+uz7/xO8Fk
-N+ItAeBPYrxELu8+dBfykzIAuryY+ZDoZYdoTHBOrd2X2zKqC0yDkod8/aHKhiW5
-yELwH8d2iG46qoxSmnDhjnuGlivtD+1W+cVoVktZguaiUCl3GikCADJzUjeeZkvB
-yghYsnfnUYEauBa1WB9Z+M6ujo6DJQ==
-=cEXz
------END PGP SIGNATURE-----
-
---kpyu2cpc3fs7tqrq--
