@@ -2,145 +2,211 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3E59263BBB
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 06:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDAE263F59
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 10:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbgIJEK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Sep 2020 00:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgIJEKS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Sep 2020 00:10:18 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ACC8C061573;
-        Wed,  9 Sep 2020 21:10:18 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e23so6665999eja.3;
-        Wed, 09 Sep 2020 21:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YGErWqzdCXUZ8GEfs8VwODgLH3bAUZ+0e535T36z444=;
-        b=MrXS4SRuYdMUw6uafhVbvyAIYTv8AlL+Z+TnwQZyduJLIkfYW4D8TXDPOlI7SUm7nN
-         fJmWR7aK/fZk4xmeMya3O2TSn+uN0CHBUKbTTfGbGD9ajBq8+wFU0ZRJGzEasjfULvV1
-         S2M/NVRthwLSJUy5Adch0OTHRU9+eEXxlJLs0=
+        id S1729529AbgIJIIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Sep 2020 04:08:45 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40183 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgIJIIi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Sep 2020 04:08:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e23so4625101otk.7;
+        Thu, 10 Sep 2020 01:08:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YGErWqzdCXUZ8GEfs8VwODgLH3bAUZ+0e535T36z444=;
-        b=az20f0OE0bT7ZunvwkeKp2ijgCFiDs2MER4sTgZ58myQhiqLtXDzMYA7tM6UA+BpCD
-         63ShoxBs4QdF/kF8qcnWXPUHhrm5amT6H9V1OGBdEoi3hNkUfy99akDVmDktjBAIA4kS
-         hCzjjo4QXev61ysJ+eXiAJaJj8ZoBUQDXDZActcoUtfr5fpzDaDVLBx5zMaNyNpvIjgt
-         7pgIck1tJA8/12pHIy7gV54mgPdEUxHp0CcVS8d25FsxffFyfeRaPODp404FzC8TIGHR
-         uQrgM07KZP90CyuthA0c977zrw89n4x6o9/AAZnx9O1gNVP572VeB0EaJhtHYtvguUDA
-         i5Fw==
-X-Gm-Message-State: AOAM532KCQ+rZGAvivpflfwS6bBmEsj/v6RyowOouVWvHlxw+DbTTCTd
-        FjXM9CuZ/6MShxHf/NcG+88XeEX7SS8GvkD83CzIlBVYhPQ=
-X-Google-Smtp-Source: ABdhPJz4dWpkLm01ZcAHO4YymAk5+CGB8BtAUfcYjnJcZYzn6Tx7X1lqIF00zYCcs542WIWNqCpkqfnaZlZ0xnNqKCY=
-X-Received: by 2002:a17:906:fcc7:: with SMTP id qx7mr7292901ejb.254.1599711016851;
- Wed, 09 Sep 2020 21:10:16 -0700 (PDT)
+        bh=Bt5LO1EogaCcdNjbtyzVvLp7HFZ0ciiAb2j+FbURuDQ=;
+        b=QDmoo+0+Wi6zYSZZXQu2211/gLn0zY/9n4e+eaMK3RENJhRq+/o2mgQWr70ba+yFtL
+         PcpTcUxGbb5T37bVFMwF4bC5CHR4BL+nt3+YsTU4GERIsEpuatKYe6ZZEYDZYSNOQgXz
+         kGFJLhQiHkHxFHC1EFYdJxEXD8R8PjGPb0UwHeoFeVGXetLvrvQrL9kYnoYwZSsoNxR4
+         AMMVG0+JU3U56EemL8i6kjUm4lCujBxvoftkLs26PQWGUB7v9lbj6Csrtl/BouzSRZTR
+         usA2rThxlK5XPzOtsKDUqfs9vGA9pLR2jR8Hz+WCjSOz/t0Q0kt9Qtx1Vgpmqxx6AVfj
+         9X6A==
+X-Gm-Message-State: AOAM5331BcViNK1t6Xc8z7P+I1XYuc2ZcozQPEJ4vI6cq38Ynt93L/My
+        Y8yCUTDMpYlIAaug4SKRgy9eOjAsfXG4bOREnwrjB2vA1nQ=
+X-Google-Smtp-Source: ABdhPJyw1Ib9bF9PwZcGwHsZ517qb+BqDY53tDy9UiJEF+bO37XZTlWipkneILVplI+n2h+fHEZT4R+CNijEse9UsDE=
+X-Received: by 2002:a9d:3b76:: with SMTP id z109mr3261016otb.250.1599725317190;
+ Thu, 10 Sep 2020 01:08:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715135418.3194860-1-jk@codeconstruct.com.au>
-In-Reply-To: <20200715135418.3194860-1-jk@codeconstruct.com.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 10 Sep 2020 04:10:05 +0000
-Message-ID: <CACPK8XcT02qv+1H=DDv8BRAdUmrBoweZ+Qb3aG34bQ9-UC08Xg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio/aspeed-sgpio: enable access to all 80 input &
- output sgpios
-To:     Jeremy Kerr <jk@codeconstruct.com.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
+References: <20200907145516.12803-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200907145516.12803-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Sep 2020 10:08:26 +0200
+Message-ID: <CAMuHMdXehR_wBgYtzyuqLUQuydRaFS9_4cUtJ2eDay7m4dy7FA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sh-pfc: r8a7790: Add VIN pins used by
+ iwg21d-q7-dbcm-ca board
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 15 Jul 2020 at 14:06, Jeremy Kerr <jk@codeconstruct.com.au> wrote:
+Hi Prabhakar,
+
+On Mon, Sep 7, 2020 at 4:55 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add vin[1,2] data8 and vin1_clk_b pins used by iwg21d-q7-dbcm-ca board
+> which is based on R8A7742 SoC.
 >
-> Currently, the aspeed-sgpio driver exposes up to 80 GPIO lines,
-> corresponding to the 80 status bits available in hardware. Each of these
-> lines can be configured as either an input or an output.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> @@ -3866,6 +3866,18 @@ static const unsigned int vin1_data18_mux[] = {
+>         VI1_R4_MARK, VI1_R5_MARK,
+>         VI1_R6_MARK, VI1_R7_MARK,
+>  };
+> +static const unsigned int vin1_data8_b_pins[] = {
+> +       RCAR_GP_PIN(3, 0), RCAR_GP_PIN(3, 1),
+> +       RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
+> +       RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
+> +       RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
+> +};
+> +static const unsigned int vin1_data8_b_mux[] = {
+> +       VI1_DATA0_VI1_B0_B_MARK, VI1_DATA1_VI1_B1_B_MARK,
+> +       VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
+> +       VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
+> +       VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
+> +};
+
+I don't think "vin1_data8_b" is a good name for this subset, as it would
+conflict with the name for the first 8 pins of the full 24-bit VIN1 "B"
+pin set, to be declared with
+
+    static const union vin_data vin1_data_b_pins[] = { ... };
+
+and VIN_DATA_PIN_GROUP(vin1_data, 8, _b) macro.
+
+This would be easier to see if you would add the complete VIN1 "B" pin
+set (which I prefer), and not just the parts you need for your camera
+board.
+
+>  static const unsigned int vin1_sync_pins[] = {
+>         RCAR_GP_PIN(1, 24), /* HSYNC */
+>         RCAR_GP_PIN(1, 25), /* VSYNC */
+> @@ -3886,6 +3898,12 @@ static const unsigned int vin1_clkenb_pins[] = {
+>  static const unsigned int vin1_clkenb_mux[] = {
+>         VI1_CLKENB_MARK,
+>  };
+
+Please add vin1_sync_b and vin1_field_b while at it.
+
+> +static const unsigned int vin1_clk_b_pins[] = {
+> +       RCAR_GP_PIN(3, 15),
+> +};
+> +static const unsigned int vin1_clk_b_mux[] = {
+> +       VI1_CLK_B_MARK,
+> +};
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>  static const unsigned int vin1_clk_pins[] = {
+>         RCAR_GP_PIN(2, 9),
+>  };
+> @@ -3959,6 +3977,18 @@ static const unsigned int vin2_data18_mux[] = {
+>         VI2_R4_MARK, VI2_R5_MARK,
+>         VI2_R6_MARK, VI2_R7_MARK,
+>  };
+> +static const unsigned int vin2_data8_g_pins[] = {
+> +       RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
+> +       RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
+> +       RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
+> +       RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
+> +};
+> +static const unsigned int vin2_data8_g_mux[] = {
+> +       VI2_G0_MARK, VI2_G1_MARK,
+> +       VI2_G2_MARK, VI2_G3_MARK,
+> +       VI2_G4_MARK, VI2_G5_MARK,
+> +       VI2_G6_MARK, VI2_G7_MARK,
+> +};
+
+I think "vin2_data8_g" is also a bad name, as the "g" suffix means the
+green subchannel of the "vin2_data" pin group, while the "b" suffix in
+"vin1_data8_b" means the "b" alternative pin group.
+
+Perhaps "vin2_data8g"?
+
+Niklas, Laurent: do you have any comments?
+
+>  static const unsigned int vin2_sync_pins[] = {
+>         RCAR_GP_PIN(1, 16), /* HSYNC */
+>         RCAR_GP_PIN(1, 21), /* VSYNC */
+> @@ -4026,7 +4056,7 @@ static const unsigned int vin3_clk_mux[] = {
+>  };
 >
-> However, each of these GPIOs is actually an input *and* an output; we
-> actually have 80 inputs plus 80 outputs.
+>  static const struct {
+> -       struct sh_pfc_pin_group common[298];
+> +       struct sh_pfc_pin_group common[301];
+>         struct sh_pfc_pin_group automotive[1];
+>  } pinmux_groups = {
+>         .common = {
+> @@ -4310,15 +4340,18 @@ static const struct {
+>                 VIN_DATA_PIN_GROUP(vin1_data, 10),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 4),
+> +               SH_PFC_PIN_GROUP(vin1_data8_b),
+>                 SH_PFC_PIN_GROUP(vin1_sync),
+>                 SH_PFC_PIN_GROUP(vin1_field),
+>                 SH_PFC_PIN_GROUP(vin1_clkenb),
+> +               SH_PFC_PIN_GROUP(vin1_clk_b),
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>                 SH_PFC_PIN_GROUP(vin1_clk),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 24),
+>                 SH_PFC_PIN_GROUP(vin2_data18),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 16),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 4),
+> +               SH_PFC_PIN_GROUP(vin2_data8_g),
+>                 SH_PFC_PIN_GROUP(vin2_sync),
+>                 SH_PFC_PIN_GROUP(vin2_field),
+>                 SH_PFC_PIN_GROUP(vin2_clkenb),
+> @@ -4784,9 +4817,11 @@ static const char * const vin1_groups[] = {
+>         "vin1_data10",
+>         "vin1_data8",
+>         "vin1_data4",
+> +       "vin1_data8_b",
+>         "vin1_sync",
+>         "vin1_field",
+>         "vin1_clkenb",
+> +       "vin1_clk_b",
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>         "vin1_clk",
+>  };
 >
-> This change expands the maximum number of GPIOs to 160; the lower half
-> of this range are the input-only GPIOs, the upper half are the outputs.
-> We fix the GPIO directions to correspond to this mapping.
->
-> This also fixes a bug when setting GPIOs - we were reading from the
-> input register, making it impossible to set more than one output GPIO.
->
-> Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
+> @@ -4796,6 +4831,7 @@ static const char * const vin2_groups[] = {
+>         "vin2_data16",
+>         "vin2_data8",
+>         "vin2_data4",
+> +       "vin2_data8_g",
+>         "vin2_sync",
+>         "vin2_field",
+>         "vin2_clkenb",
 
-A Fixes: might be a good idea.
+Gr{oetje,eeting}s,
 
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt |   5 +-
->  drivers/gpio/gpio-aspeed-sgpio.c              | 115 +++++++++++-------
->  2 files changed, 77 insertions(+), 43 deletions(-)
+                        Geert
 
-> diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-> index 8319812593e3..927d46f159b8 100644
-> --- a/drivers/gpio/gpio-aspeed-sgpio.c
-> +++ b/drivers/gpio/gpio-aspeed-sgpio.c
-> @@ -17,7 +17,8 @@
->  #include <linux/spinlock.h>
->  #include <linux/string.h>
->
-> -#define MAX_NR_SGPIO                   80
-> +#define MAX_NR_HW_SGPIO                        80
-> +#define SGPIO_OUTPUT_OFFSET            MAX_NR_HW_SGPIO
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-A short comment explaining what's going on with these defines (as you
-did in your commit message) will help future reviewers.
-
-> +static void aspeed_sgpio_irq_init_valid_mask(struct gpio_chip *gc,
-> +               unsigned long *valid_mask, unsigned int ngpios)
-> +{
-> +       struct aspeed_sgpio *sgpio = gpiochip_get_data(gc);
-> +       int n = sgpio->n_sgpio;
-> +
-> +       WARN_ON(ngpios < MAX_NR_HW_SGPIO * 2);
-> +
-> +       /* input GPIOs in the lower range */
-> +       bitmap_set(valid_mask, 0, n);
-> +       bitmap_clear(valid_mask, n, ngpios - n);
-> +}
-> +
-> +static const bool aspeed_sgpio_is_input(unsigned int offset)
-
-The 0day bot complained about the 'const' here.
-
-> +{
-> +       return offset < SGPIO_OUTPUT_OFFSET;
-> +}
-
->  static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
->  {
->         struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
->         unsigned long flags;
-> +       int rc;
->
-> -       spin_lock_irqsave(&gpio->lock, flags);
-> -
-> -       gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-> -       sgpio_set_value(gc, offset, val);
-> +       /* No special action is required for setting the direction; we'll
-> +        * error-out in sgpio_set_value if this isn't an output GPIO */
->
-> +       spin_lock_irqsave(&gpio->lock, flags);
-> +       rc = sgpio_set_value(gc, offset, val);
->         spin_unlock_irqrestore(&gpio->lock, flags);
->
->         return 0;
-
-I think this should be 'return rc'
-
-Cheers,
-
-Joel
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
