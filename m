@@ -2,122 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5280E263B14
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 04:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 573D8263B34
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 05:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgIJC5q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Sep 2020 22:57:46 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38095 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729802AbgIJC5k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 22:57:40 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8C0815C0159;
-        Wed,  9 Sep 2020 22:57:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 09 Sep 2020 22:57:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=OB2lHrQebYwpv
-        9JP10shRNTHkMJDTLAT3gH5XItbtFo=; b=Jv1Q6VTDD8ezKAVCoJABssoNjOgUi
-        IhRaZB2lc7CC2zoc2DjgTvg8HSlO2TbuF5hR65TbamBfyOan1enmEDGvVwz3vR0o
-        oHcOIMq9+QZH+Y1YgVycDg926opT6iuxAx2LLtXub5aOOu2eq8p/8/rJKKkIlMdV
-        ZEBFv+G9Bj3JW1bPOIntw0b5fxi9zPxJ5qzpF9VUH97d7ryE0xrnsFvYBL2NZsKv
-        Xu0igyOBiGOTQFELhuPNEurBDC1hVQJV161TuC3sjluoOoTxgwUiQN0ItPk/XQJh
-        1dio4OzNbiEDlTqz87e4TiiqQDPQFZz2klHePE4FuzG7KjPUa5ovqQOwA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=OB2lHrQebYwpv9JP10shRNTHkMJDTLAT3gH5XItbtFo=; b=MTMmKDWd
-        MQOwOIMAoVWGSce5ynfucSeKX9nAvTLcd7fobBlX/RriAnHmAycxsd8B4p1RBESg
-        TZDaeP/8fE2HLad3oyZoS022D+Sr7LnzXyry5NMXgvTcaKY28A5Un2yc/9ist9B5
-        1bdtFoccRvNeCYHk8FKuoxDkxZvJmjEkm1Irass+Z0/RUDGG1isHdQEKh5NWndjZ
-        JBM+GqVOzAzfqxLaXqqJjoHhaMgIz7SZjb4TkI87uwd/k5pWygOlNhbl0q6DaBz5
-        NsZY+fc7G+A42QHYQp5+eCCqWjcM+UdYf8uJa8i4MDxNnzsqYw9IFOX0ks5FuL1+
-        cIBCgp+zKV2Tfg==
-X-ME-Sender: <xms:HZZZX9UEatQ_AzFbDY63hxA5QtxML1Sz5a1mQWpu9luQxO_9yh-lXA>
-    <xme:HZZZX9mIzSOB5I6ev5NvLz0McA8koUkAxIWz-DvyH4Qd73Jz3xNYSH5ssoteG-kg8
-    2K0rLc-YEI-qtekHA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedgieegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepjefgvdevheetkeevgeegleelgfelte
-    etjeffleffvdduudevieffgeetleevhfetnecukfhppedugedrvddruddtledrkeehnecu
-    vehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvg
-    ifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:HZZZX5aS4jRV27s4KdRgmc-xX1ArEfiBIjE_KuiOJVBN87XWOuFUuQ>
-    <xmx:HZZZXwWaVo-Ue7i6VK1SMOKVnk0e9ta3E2o6tcMrbd84wVVBM4Kzsw>
-    <xmx:HZZZX3nWH2UQfewZnIGAJE2tE_-KQoKUt8pQ1rCGPLp4ALzGPpGvIw>
-    <xmx:HZZZXyv8Zo_trE-mSzSlpC-Dgh1WP9JtpYKnW1J8nZKfbLTItL9Axg>
-Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4C5713068C6A;
-        Wed,  9 Sep 2020 22:57:30 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
-Date:   Thu, 10 Sep 2020 12:26:31 +0930
-Message-Id: <20200910025631.2996342-4-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200910025631.2996342-1-andrew@aj.id.au>
-References: <20200910025631.2996342-1-andrew@aj.id.au>
+        id S1726534AbgIJDL5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Sep 2020 23:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgIJDLt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 23:11:49 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8395C061573;
+        Wed,  9 Sep 2020 20:11:47 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id e23so6539535eja.3;
+        Wed, 09 Sep 2020 20:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vnsPAvTYp81efO0ntlVmzSB6WJb7O61LqafGweeme7c=;
+        b=R1iAcVR7DzqA6thGbq8lrg8QhJQZk01IfgZdHfto5SE22j435PzdXda9RLco7nODgP
+         B2hIkdQ4WolOIB+1xpV7N4N1C6wA7Tks7tapKRLzjhL6xHp0LClELtq3VD3DE3ruqZFE
+         u/mEDu9uIdeTJsIPyJk843xZMgDUb0VhaiFOo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vnsPAvTYp81efO0ntlVmzSB6WJb7O61LqafGweeme7c=;
+        b=oiwftoEakX39IbyryRWm0mHnYGtfYciCBHyiK1QODcEJ3AFxM4+KlEV60gqIGzIqEC
+         d94e2XyKqg9RV67++/EU1ZYDL7l5lgO7OlB/8ZvU/Pxt2CEYYWJ8VS0LweTjOgI/c/zB
+         D5jiFnwQTFZcIyrtaQvl3mt1A/N7h6RkBpd9FUEIK+JwKhEutufSphKDjQOSlyv7aq/M
+         dLOvM+r8OIYhI0Ot6/U21+fYGeOwC02IJLeGoGvI02UeCxRiAVmJuAFdjylOjp+SVOTg
+         hegb/vEFevi/yScEgvO2P5woBchDTtkmi9VMGPYn4q/jUbhT5Cyte2TT9d4zrCzx9RSP
+         qcMQ==
+X-Gm-Message-State: AOAM533W8ZmjCra3W1VkxI9frf1RXBDd0PcBuHVwBgojBuHB0OAt/+yV
+        iM/9I2K3PravPtJEwddPJM8LvGCOP2yRywr2naOlMfenfTE=
+X-Google-Smtp-Source: ABdhPJyq/aCVocOva4+j0Z7QPbG7fpv24ElCqKXoy5FUY6VcQC3Hi3z9mllEA0TO3Xo1UEcHXilq4gpvr5jSZJbOqNc=
+X-Received: by 2002:a17:906:b6d5:: with SMTP id ec21mr6412453ejb.396.1599707506614;
+ Wed, 09 Sep 2020 20:11:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200910025631.2996342-1-andrew@aj.id.au> <20200910025631.2996342-2-andrew@aj.id.au>
+In-Reply-To: <20200910025631.2996342-2-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 10 Sep 2020 03:11:33 +0000
+Message-ID: <CACPK8XePJtLq7pJ3-dYL+Ac1Q2Z5sQQ=qc5gYNsGM2zkXPyFmA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] pinctrl: aspeed: Format pinconf debug consistent
+ with pinmux
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        johnny_huang@aspeedtech.com,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These were skipped in the original patches adding pinconf support for
-the AST2600.
+On Thu, 10 Sep 2020 at 02:57, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> When displaying which pinconf register and field is being touched,
+> format the field mask so that it's consistent with the way the pinmux
+> portion formats the mask.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+> In v2: Format val with %X as suggested by Joel
 
-Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 Reviewed-by: Joel Stanley <joel@jms.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 7efe6dbe4398..34803a6c7664 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -19,6 +19,7 @@
- 
- #define SCU400		0x400 /* Multi-function Pin Control #1  */
- #define SCU404		0x404 /* Multi-function Pin Control #2  */
-+#define SCU40C		0x40C /* Multi-function Pin Control #3  */
- #define SCU410		0x410 /* Multi-function Pin Control #4  */
- #define SCU414		0x414 /* Multi-function Pin Control #5  */
- #define SCU418		0x418 /* Multi-function Pin Control #6  */
-@@ -2591,6 +2592,22 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
- 	/* MAC4 */
- 	{ PIN_CONFIG_POWER_SOURCE,   { F24, B24 }, SCU458, BIT_MASK(5)},
- 	{ PIN_CONFIG_DRIVE_STRENGTH, { F24, B24 }, SCU458, GENMASK(3, 2)},
-+
-+	/* GPIO18E */
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y1, Y4, SCU40C, 4),
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y1, Y4, SCU40C, 4),
-+	/* GPIO18D */
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, AB4, AC5, SCU40C, 3),
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   AB4, AC5, SCU40C, 3),
-+	/* GPIO18C */
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E4, E1, SCU40C, 2),
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E4, E1, SCU40C, 2),
-+	/* GPIO18B */
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B2, D3, SCU40C, 1),
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B2, D3, SCU40C, 1),
-+	/* GPIO18A */
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C6, A2, SCU40C, 0),
-+	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C6, A2, SCU40C, 0),
- };
- 
- /**
--- 
-2.25.1
-
+> ---
+>  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> index 53f3f8aec695..2e0260c1a57c 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> @@ -539,9 +539,9 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
+>                 if (rc < 0)
+>                         return rc;
+>
+> -               pr_debug("%s: Set SCU%02X[%lu]=%d for param %d(=%d) on pin %d\n",
+> -                               __func__, pconf->reg, __ffs(pconf->mask),
+> -                               pmap->val, param, arg, offset);
+> +               pr_debug("%s: Set SCU%02X[0x%08X]=0x%X for param %d(=%d) on pin %d\n",
+> +                               __func__, pconf->reg, pconf->mask,
+> +                               val, param, arg, offset);
+>         }
+>
+>         return 0;
+> --
+> 2.25.1
+>
