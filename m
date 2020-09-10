@@ -2,103 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7A41263B04
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 04:52:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A024E263B16
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Sep 2020 04:58:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgIJB60 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Sep 2020 21:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgIJB4T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 21:56:19 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC7EC061343;
-        Wed,  9 Sep 2020 18:52:49 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w1so4663510edr.3;
-        Wed, 09 Sep 2020 18:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O4wihOtUGmKvM6OV1xz49d7GF6s8tThElPC8COTjJhw=;
-        b=NoNawaGqtXD5PPRDwAAu3FydxWGnfWzWyB7YxDfsBTacqM0bBAm9iioberpOzHVRkX
-         jTlVeOAZYbWO6LryijXb9r+fRSkQpWcD5qHVHJD7o9UWxOmYSRlJo6jojXpp9A/vDsDl
-         qqxsimwLjGd0pfnV++gPK5PtI/JIFAWP9CaBk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O4wihOtUGmKvM6OV1xz49d7GF6s8tThElPC8COTjJhw=;
-        b=RQOF40Duc2a8CJ1AR3jA91Pmd0qbwpUNpqZRsZARJtwgXUePqHi4QgXPTV7+FjTXlF
-         OBlXT/yzZrRNMYpFPpeiAEbIudy8GNqLS/z2eHi6Jh9QXJ25/0pyV7jfzSPwF76U0YDN
-         j1XRIBiKBVmQRNF7nE6zdLA13vbL6wGwpKxDaeOLP92pqxwyAQv/cCPYrJ/RndAsilZA
-         3nmoodhkFoKXBSe5/PbHn2c/WILzx28GiHNWZO9p5xNxxG9vlq4nnt5qcLsOO3c4kFXf
-         f4l/QKMXRlK0BJM/0CupqPqt4Wnjtg6ph0DqkC8/P80veH2oSL4ej7l1ff2I9kdU6QTd
-         kIeQ==
-X-Gm-Message-State: AOAM530LKEn3XAD+6z2aTCwj1gayNb8u7rENrABFiJy9f60FdJbpeEB8
-        HvzA/eAWjp6l1hzTSHjZVbQ0CLDWSEgGzWTcihg=
-X-Google-Smtp-Source: ABdhPJx3tc6th2NQ3W5yI0UnQXkvVnc2gSxYPh/skJvLZlUli2agzUUaOAOxKvX4m89LXd0PAOcDIyBSHEkZWdpqMVo=
-X-Received: by 2002:aa7:de03:: with SMTP id h3mr7213014edv.232.1599702768129;
- Wed, 09 Sep 2020 18:52:48 -0700 (PDT)
+        id S1729717AbgIJC54 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Sep 2020 22:57:56 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:33753 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727087AbgIJC5l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Sep 2020 22:57:41 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id DA2F65C00F7;
+        Wed,  9 Sep 2020 22:57:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 09 Sep 2020 22:57:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=Dv9G8vf2BZy5Sw/wGzgCeqKxjd
+        oYeYoETlbjpaAz4t0=; b=g/Vjh1JGv9G2xjnS0TYgirRufyIhD8cVoO/M0R67WR
+        /kUfrmIpP5b+oSocsiY8Wb6ylsJDdMQ15DNgILlO6yN32/mkx8vJMaRVVt5u+tDS
+        CMNK70raEYj2ZmFO0UqGMXIrVvKHd0hI1FIYAoynNEbI2usJN5RgNyd1xlGWbdfm
+        IthYzYxuO9jLB48j0a7GEe43ikghJbJVOIYu+ecMklp88lvJWZRi7EYL8+IVEAhz
+        ReHCmmdn1YmWff+sPSxq4JQyvVTfAkOjTtUgso+JLe+kmQRilactXGpIOPr5QsPm
+        l4lqyaIirFQ9xjjdkzjoRsu9GCz8C5QGU5ZqOYJCYSdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Dv9G8vf2BZy5Sw/wG
+        zgCeqKxjdoYeYoETlbjpaAz4t0=; b=ZO7kwr/pv7spUtjEZR8RXP9gTa/e13opl
+        6tneKYDQjYjiDD259URqHM+lrurYaP412m4l7kohn1xRLTgGhkfKNRnK+Q5jdPzA
+        sOLRFDpj5oxuLryKgXnzKeTEx1QFQ7XqpqIGIVPER3ZcWV5p8JOFlAagaHKsgMcc
+        O9V1XjXaNLffctPy8Y0TLcj/2jH1vRnUOFb4UxexSKo1r//Q/Kg/UaKXBk7xTbuo
+        GWTkTCLndwBRv1A93qkbbxMKQRTIa0tuhvZ5qzUkEMVnbKIPWmYRvegFsIXhbz2a
+        pgB3/q8wyKaYNl8224BDVQ+aC1CXO6VBr8dAbDYI7KSCOQnB+SeDw==
+X-ME-Sender: <xms:EpZZXz9VCDXJbSMFWlPtroqK0VUMCMqtWTtfUjKToW-Sj_gaFoe8gw>
+    <xme:EpZZX_sBLZFsuypAmlhRwYLGExqR85v7UJX7LCQwF-5hEHSnRqg-GnysB2-V_nK9U
+    IRcFnseGhYVQ0FT0A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedgieegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepieetheduveelhfdvvdejleeuhfelteevhe
+    ffgfeitdefgeekjeefieevgfehhefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghen
+    ucfkphepudegrddvrddutdelrdekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:EpZZXxCytbShkaI9ajG7sGZRoZJGRmal7WpEdAotqZxnm6pYUVKkaQ>
+    <xmx:EpZZX_ec-nqmL9D12PRSNALELMUvv836OsO58gFsV9hAQYQI381JmQ>
+    <xmx:EpZZX4ODsqeaY2Bpz3pcMO_QEgmacCFZHFAZdHw5Qc3YYg3oqTjfqw>
+    <xmx:E5ZZX30sIIECRi4JW222zE0zo4Kl46Zthadgv2ke72i33X7BvFbldw>
+Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AA345306902A;
+        Wed,  9 Sep 2020 22:57:19 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, joel@jms.id.au,
+        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] pinctrl: aspeed: AST2600 pinconf fixes
+Date:   Thu, 10 Sep 2020 12:26:28 +0930
+Message-Id: <20200910025631.2996342-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200909114312.2863675-1-andrew@aj.id.au> <20200909114312.2863675-3-andrew@aj.id.au>
-In-Reply-To: <20200909114312.2863675-3-andrew@aj.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 10 Sep 2020 01:52:36 +0000
-Message-ID: <CACPK8Xe0WqmyXOHdxw=OWbFEzHew7F2aBQ9B5EPRJfDhj=vhmw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: aspeed: Use the right pinconf mask
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        johnny_huang@aspeedtech.com,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 9 Sep 2020 at 11:43, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The Aspeed pinconf data structures are split into 'conf' and 'map'
-> types, where the 'conf' struct defines which register and bitfield to
-> manipulate, while the 'map' struct defines what value to write to
-> the register and bitfield.
->
-> Both structs have a mask member, and the wrong mask was being used to
-> tell the regmap which bits to update.
->
-> A todo is to look at whether we can remove the mask from the 'map'
-> struct.
->
-> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-> Fixes: 5f52c853847f ("pinctrl: aspeed: Use masks to describe pinconf bitfields")
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Hello,
 
-Owch.
+The AST2600 pinctrl driver was missing support for bias control on the 1.8V
+GPIO pins, and in the process of resolving that I discovered a couple of other
+bugs that are fixed in the first two patches of the series.
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+v2 Tweaks some of the debug output and adds Joel's Reviewed-by tags.
 
-> ---
->  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> index d8972911d505..e03ee78b2434 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> @@ -534,7 +534,7 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
->                 val = pmap->val << __ffs(pconf->mask);
->
->                 rc = regmap_update_bits(pdata->scu, pconf->reg,
-> -                                       pmap->mask, val);
-> +                                       pconf->mask, val);
->
->                 if (rc < 0)
->                         return rc;
-> --
-> 2.25.1
->
+v1 can be found here:
+
+https://lore.kernel.org/linux-gpio/20200909114312.2863675-1-andrew@aj.id.au/
+
+Please review!
+
+Andrew
+
+Andrew Jeffery (3):
+  pinctrl: aspeed: Format pinconf debug consistent with pinmux
+  pinctrl: aspeed: Use the right pinconf mask
+  pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
+
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c    |  8 ++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
+
+-- 
+2.25.1
+
