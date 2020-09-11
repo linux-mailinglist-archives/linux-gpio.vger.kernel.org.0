@@ -2,101 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC5DB2663A0
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 18:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8D4F267638
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 00:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgIKQVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Sep 2020 12:21:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:40769 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgIKQVH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Sep 2020 12:21:07 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MVNF1-1k8HS921h9-00SPWM for <linux-gpio@vger.kernel.org>; Fri, 11 Sep
- 2020 18:21:06 +0200
-Received: by mail-qk1-f177.google.com with SMTP id p4so10437924qkf.0
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Sep 2020 09:21:06 -0700 (PDT)
-X-Gm-Message-State: AOAM531TZVwKbJiHh7YMlVCYZLkgQS/k/LKjVvP8IPksR+xuT7SWF/64
-        X2wgVr5aigVwPYQeFD80Q/cYIS0q10Q7HeNrEns=
-X-Google-Smtp-Source: ABdhPJzFEgC9dURwjyMtJYlD7nYRAS9cBjCMiezqXSVOnDQuin3nN5egW4b3fQ2NMXEVr/gzB8WcMuEvGCQ7wK+V7nc=
-X-Received: by 2002:a37:a483:: with SMTP id n125mr2216550qke.286.1599841265258;
- Fri, 11 Sep 2020 09:21:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 11 Sep 2020 18:20:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a30D-mU5eLV1xAdvAordvcBavPN6sfEBghLQrQXQ2wVfw@mail.gmail.com>
-Message-ID: <CAK8P3a30D-mU5eLV1xAdvAordvcBavPN6sfEBghLQrQXQ2wVfw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in syscall
- compatible mode
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1725873AbgIKWzC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Sep 2020 18:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgIKWzA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Sep 2020 18:55:00 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56373C061573;
+        Fri, 11 Sep 2020 15:54:58 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id v123so11488176qkd.9;
+        Fri, 11 Sep 2020 15:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NWMxrIUTpLgjVNXNaQ7pp9gIhnKeSDmE1V55I6cdtAM=;
+        b=crLyzdC/9dwAbWZ3Ic5ykP4m2BId6gf3W293bIfkO1ebX7A5arPZnrIb7qZdw87imQ
+         HbW0a1+VNmRG1RMU9wevX+5e1rL0bJK3AEhriOw3lp+lp6ApzB7vy0uL6ijUDKv8++cC
+         jP4O3IC1TiJVdK4gIcRCRT/ACnOI+psFUf8/HZ2l8PIWCJEdZ1IutRwZ62sIZnhEwhWw
+         sOtT6YxHVN4KLPGnkFJcTc0ezr9wz+GFcjndS1dp72Wju31OFBJSthlDhkl0z7YLsavJ
+         qj2ALdnmGz4ggh1Bxdwme/6PHjPwDiGJ2b6ABSKAoe2/M5rvTsfOA5Z514Dv1GKenEDU
+         ozQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NWMxrIUTpLgjVNXNaQ7pp9gIhnKeSDmE1V55I6cdtAM=;
+        b=j4JYAuqfAL28ZAka3jHzPGz3oz0ytszNSJiJ7UvOWR88bVtzJgFUxguGiewoZhwAQm
+         vXHCNUCURSKcurQDm4vRQxh6oFv+3ALzd1F9+QWw/nJtzJJOcEqiXVvBuhMqOPmemOsr
+         tM2aLuJj5J/RHYG5XmAjrTg3nj0PBRooUtY5PbZkaooXuBWsxZDcDBrWJosZpUDxUNJg
+         nWRs3P4P0SJQ3NQJzkz388sQSUpLS5r500b6vVAu9S37Ta1dzldAV/JyI6K6pxDBffo+
+         BLgFhMHbtksX9UMg5ikhzwkf+TKAh28rGEx27nIG3WHRZfOdhZRCNwNARK+aRIdjoJnJ
+         jKnw==
+X-Gm-Message-State: AOAM5324XpbwAA+4hk1NlPI5SztA+MV3RjtDYF7rvpgmrBhbeMlf/6Ib
+        PrfliH4w+H1s6+4L3sI3qtI=
+X-Google-Smtp-Source: ABdhPJwzg6HPiHcP9mMdu0JIsPsjeyUmQIHyjp01tLStVmTK7xeyl9LYMu/1ZB72u0hesaAniiU9QQ==
+X-Received: by 2002:a37:ef05:: with SMTP id j5mr3570706qkk.456.1599864896536;
+        Fri, 11 Sep 2020 15:54:56 -0700 (PDT)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id w6sm4257339qti.63.2020.09.11.15.54.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 15:54:55 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 18:54:39 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        akpm@linux-foundation.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-arch@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:SGp7oUHodQSG8gmkALvB8sri+xbse7L2VXa+lPGZcmdPNrsXyfT
- fnbjy8m4O/8Y7iYzeq0IUdiA/9CmosN2kUEC7S2CZOTwxRQ8HtRzm+KUrsB/axTHcYcJEfB
- 2gTrZX4hE6EmMErOTrCuJSINBrbCU6QqMVJNrgLhTtu9M6UmbmWGAbBdszTHFjs+7FSAi+E
- GnoSzIJrTOgU+QKT0r9UQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K4qKnlIJWAI=:pFzOmBa9CLVEf/YY5c6xO9
- iEwE2G9bmje9NVQLrKlVvuf4NR++JTUazKKwqLGiXJ9+aUS1XYi39958qiYwvmbvXhAMCMa+O
- m3WxdJmkGD4iqAAeRhLrwA8r+K/jerl0Zbg7pWARj+PqSDq3LI3+5uzn8BXKu2oB5AGjeQICc
- ChT/VbWi7iyAtmIzq+dnMoK6KkaZSSL85vWvi3fNNZaB2Oyc4PdmPPR4tw13PsrOd9yUQ2QqX
- z469vSyEuv6Fn2RbYLiwwvs2GA3OxvRsIXyBA6n7J4wK9l3zIaMBZ1cb88qjRf7tOud/X21f4
- zzeCTwFzDuzhtt0b8ChvQDjMz1JOEp6ue2gakqwK1xDB0vCt3rLMB4p3HKxWkzLToRP+9e92T
- sCsr5V6cq97/et0QSGDL3Rdl3AIs8krRh5jaM+JZCAFyeAm2dk0AViQWcWYV1gJoooI7SI+iv
- ffRuoMnAaAIGUalzYxWQ8IuYUt3+fq19DXYBOdCBE/RuDK1x2XX5ZfSIWV61l+Eyalq6UGVKD
- ko0LrVPx1YG1MzQcTdJtDV9s0tZEHb4cRd1G7Aeh9fDRQU1aRE59v5wKrEhhhrzSO3dKE+Of1
- EtjJrBg2ljyjXCP7KbxQVAvfXHNDq2uyaadkQtBchVnWAqmc7prdBGs5Qu5AoVQQC8Kzpke5k
- Mfn+VsJsazk1xrPCtGpVmcvdEhct6xdpFwz+MkOpyCv74ekmNDolzMCXZtFUGRLmcv8rioaTQ
- krCVNBZPyUDa51uCBx/qufR52FDON1PnTMZvwR+XlX448DMMlxVu3LhbPIF6RRLIU3a9FwQfr
- 7oQ4VsQOz8qOUI79x4sm526rX0y5cRDim6HATTIkXTmr4vBIEUwW8NINHaYNNA3pLAcS0cW
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
+Message-ID: <20200911225417.GA5286@shinobu>
+References: <cover.1593243079.git.syednwaris@gmail.com>
+ <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> +static ssize_t lineevent_to_user(char __user *buf, struct gpioevent_data *ge)
-> +{
-> +#ifdef __x86_64__
 
-I would make this "#ifdef CONFIG_IA32_COMPAT" to clarify what this
-is actually checking for. In theory we could add support for
-CONFIG_OABI_COMPAT here as well, not sure if there is a point.
-I recently came across a couple of things that all need the same
-hacks for arm-oabi and x86-32 in principle.
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +       /* i386 has no padding after 'id' */
-> +       if (in_ia32_syscall()) {
-> +               struct compat_ge {
-> +                       compat_u64      timestamp __packed;
+On Thu, Jul 16, 2020 at 02:49:35PM +0200, Linus Walleij wrote:
+> Hi Syed,
+>=20
+> sorry for taking so long. I was on vacation and a bit snowed
+> under by work.
+>=20
+> On Sat, Jun 27, 2020 at 10:10 AM Syed Nayyar Waris <syednwaris@gmail.com>=
+ wrote:
+>=20
+> > Since this patchset primarily affects GPIO drivers, would you like
+> > to pick it up through your GPIO tree?
+>=20
+> I have applied the patches to an immutable branch and pushed
+> to kernelorg for testing (autobuilders will play with it I hope).
+>=20
+> If all works fine I will merge this into my devel branch for v5.9.
+>=20
+> It would be desirable if Andrew gave his explicit ACK on it too.
+>=20
+> Yours,
+> Linus Walleij
 
-No need for marking this __packed, it already is.
+Hi Linus,
 
-> +                       u32             id;
-> +               } cge;
-> +
-> +               if (buf && ge) {
+What's the name of the branch with these patches on kernelorg; I'm
+having trouble finding it?
 
-I think I'd leave out the 'if()' checks here, and require the function
-to be called with valid pointers. It seems odd otherwise to return
-sizeof(cge) from the read() function without having written data.
+Btw, I'm CCing Andrew as well here because I notice him missing from the
+CC list earlier for this patchset.
 
-Note also that user space may pass a NULL pointer and should
-get back -EFAULT instead of 12 or 16.
+Thanks,
 
-> -       if (count < sizeof(ge))
-> +       /* When argument is NULL it returns size of the structure in user space */
-> +       ge_size = lineevent_to_user(NULL, NULL);
-> +       if (count < ge_size)
->                 return -EINVAL;
+William Breathitt Gray
 
-Right, I see this is how it's being used, and I'd tend to agree with Kent:
-if you just determine the size dynamically and add a good comment,
-then the rest of the code gets simpler and more logical.
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
 
-      Arnd
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl9cAC8ACgkQhvpINdm7
+VJJypRAAxs2Ws4cBWHSC+xWIB7YolKoiCZO9NMeBRMncPL8n3mt80XKtlm9XWG1i
+8wYgMDcK5GiKsYy/hGtzLJA5OYoEvOGP3no0nTdYQylGdHlZxFGg2eUTijdnTsDH
+NJ1+RDdr7rp6i/ZSmTBYQ/59dQxvxHwsxx41snBD1EUqhx9RL+z2iWDmwJnMZn95
+yyqbxxAsEGWQmkLA8ATa1kT4iOAY07xA1aggKjxCmOAWtRIopStLbaLgFhzhiwxz
+CLEirmVbm5rBt5ZJ8L/48VZL2kqSzuAs2yClCTgLv6rXVNFxhERXUNcjARWxVghx
+EYp3E1+62z7XX8mevdDV/JNzZBRQvoWexAVgIeogK94wyoNlB1+tGvpTmwBRxSOD
+++hBdEnnPu7y2O9KghN32xDYtB0JyY4UTm0z9o/hZcmVJetJEYbIPXkGVdhYrvWd
+H3eQ2ON9tbTaPI2rQU3c9hnCm/lTPDBDRVSN8X6rb3PdSzhZHEp4R1aTm9QiZrdU
+jn5NNi+69aR2rDkTZMogvXE1bnaI3jFag8XtBb5x8HIVtPg0r8SHGlw/f2P6Ea3C
+SkAW5npBZv8HigRfGHPhOk8JHwJ4/PcX66gi/+tHeTlmrwRqTBViR6/qjv1MYXYR
+2Rcvoza6pKv45K/74PheOwz1W8mRrAlZ0t3ZbGBqE2zSOlMw6vk=
+=I8Cv
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
