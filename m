@@ -2,72 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3C2126576C
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 05:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CB63265771
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 05:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725385AbgIKD2c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Sep 2020 23:28:32 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45307 "EHLO
+        id S1725385AbgIKD3o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Sep 2020 23:29:44 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58559 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725440AbgIKD2b (ORCPT
+        by vger.kernel.org with ESMTP id S1725300AbgIKD3n (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:28:31 -0400
+        Thu, 10 Sep 2020 23:29:43 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 275C85C00CC;
-        Thu, 10 Sep 2020 23:28:28 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 819705C0125;
+        Thu, 10 Sep 2020 23:29:42 -0400 (EDT)
 Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 10 Sep 2020 23:28:28 -0400
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 23:29:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
         mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=EVETyDU0+TunxzM8iIXQfH+yO5yOMs0
-        Ejqe2TsN2/GM=; b=rMc4t/n8q2Ho0d073wtAlUsgrvkScNcPx7Z3bqWu+jSirUR
-        wEvyDNm+bJeNtJfFIu1hHjFOgU8X7BechH4rsaodFDxbeuuihl81L+6MSFie/2c4
-        haRghbVupge2uljAFjwXK+Sz2sEnqgEB3qyobCMVdDb4OryoFQ66XR+U/WzhOe5a
-        094N+fAE9nrSVPbELSta8bZHNnaYVnx/32VrnfvAKxBE4b2UePGvaKXwZlzO+aFD
-        pVmbqAO5cO86ZnN/fKsuKNPoizzKvh8lqcbB9Zw70uOG/sf/N0qmIa0oXmP8Py5Q
-        6FV5IIr41lYDC4tCP9bIGUDF22VkHKEfqyZZstw==
+        :subject:content-type; s=fm3; bh=kNAUBvcbfaGyYTt319ur9c4R9nQZeo9
+        ec/Y43AeLQy0=; b=Iq8T1BKphuHCvhiBsLjKpRo59Y++7QWWkoDa6uzpgyvI4HE
+        yBuYMmcuIzG+unGYl3JQOEw22HTkKAoo7m0Iq8pVrsTNBq8DkUAvhLK04MJ9NNqe
+        u+raIKRnjpHcAONQr8zr8c4zSqthTE2dRZqEMpSfKDaMtKQn6UIXx8BD5i2Z4V5u
+        RlLiZHf+6/pClo++XbkVcp8Er0cGHd7jZ57/uGrzmS8MP4QjDcDbS1aZ3ur2/21H
+        eWrxjt86atNc6Q/TKxebKWrkfCVAJ282YxPW/vj9VeSJIMMCRVt8QMgFgn2OkSpZ
+        40JpadvU+Ruuh3lV2hPrf/yCqtEQwHaPBTyVoFA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=EVETyD
-        U0+TunxzM8iIXQfH+yO5yOMs0Ejqe2TsN2/GM=; b=tg/kAYMABvtXUnEdnXLuoi
-        ogaotOhu1pz3UOsXmNvVUDXFC/i6LguhwIuLxGJp8VjTTHZN4XRDmMcV8KVpj9/J
-        XLliSbErFsAKJ2qo+xg9ZoLjoPW1U8sZOGOSZbMaQDQf7prZrYrglyK4vM7HUNiW
-        wQg31GJtkF43zdlvsJB6wAwZyIpNp+UGarI3SMPENPZFrw/qHQrYUCcjBvKbGnBH
-        FkUN1i0L3DJM5rLtExjOuIcb7DXkNuRmUnWJ5/xXA0JHm/Vg4ZM28Nr0SbTct1j8
-        97akkgkhBfhsJLyvOi5uwHEBR9n2aBmXeplq52lEC4mocwuQC16F5s3pLjSnCy6A
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=kNAUBv
+        cbfaGyYTt319ur9c4R9nQZeo9ec/Y43AeLQy0=; b=F3s2U3s9dn4yQ0Y6rU3Gah
+        aBht6Q7Oy7xqmbPxj3ldCtlQNzSvOnEz2VnkKoWyT5kOnyC6JaB8aRHMbTKZlcjo
+        Rr5ko4bcpoawGWCrr/l5f80ZHt7Rj4p5xZlX9yiYEKq8A4bYJBHRLCtOvRRv3ei2
+        VGanhkMb0mZc7t346ipxyFxzFF9TFCSnsgPlZmdle5+EicTGi0t1Vp40GbKiRc79
+        M/XzREJfAitmFZ+49S/I0VYTc/FLfSsFVbs/0moZToKGtFNT/1aklwSIHxa/a6f2
+        j3NPGzpydJJMdLg08q4rhxe5e25L0vXS2dopfellhHMpWzYiy2eqN8GJAJgpyIKg
         ==
-X-ME-Sender: <xms:2u5aX7vibGSoR8nssklBCw8uW-ugoYmFGjOHQUzRSbxcW7oakEai0Q>
-    <xme:2u5aX8enagy6XoBklN-flbip4_PBiYtjRgYkh6AkPGLB9iP81rYniRVy6E9zvMqIC
-    wGUhbzW7DpMhM7XqA>
+X-ME-Sender: <xms:Ju9aX86ogT-iVeH8rLWXxcmeYfifhEDsGRZFEDfzU1HD9RUvc4bnIg>
+    <xme:Ju9aX94PvBEMItMETcdcYI_SeBOSYmffUGyiqgtmvjLVTONFYby5T-o-MnoEpn8Lo
+    lhihJ6irDFCP2Bknw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedgjedvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
     rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
     grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
-    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    vddthfeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomh
     eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:2u5aX-yR-lC8KT7H8dFshkCGx66XSYoMDv-v2-L0HoyFunWIEvoH3Q>
-    <xmx:2u5aX6OVPQwtWNmxkSN7uHkiqdTX6WXbVX5DFFquz7WRD-2qojYwrg>
-    <xmx:2u5aX7_sMBMzQkR9Du5gzoQcdFFDZqjtGcYcfDmnltFw8iHMYJ8uTg>
-    <xmx:3O5aX9Iyv3G6rgwIW7fcBcnMHqSKvJWAUpgNM_yXBpmbI5GOIPB7mQ>
+X-ME-Proxy: <xmx:Ju9aX7eNXJ88LPeRhfM6YUWgiLK22SjZ2wbYXZqOyLSfNrixmdG-tQ>
+    <xmx:Ju9aXxItUp2h471RK5TOZbmAP6qavWToaa5UhB-Jns6WhR8y_ywhSA>
+    <xmx:Ju9aXwIhVzVSGuqT4Th4KchcjOjrQaiY_v_ad-6HcjiR6WxtxQnZEg>
+    <xmx:Ju9aX3WM0L2sBb3rg9ySKl-6n9qjnM7cdXsuJa2HeqC8JUfyk_rYtg>
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6A82BE00A6; Thu, 10 Sep 2020 23:28:26 -0400 (EDT)
+        id E547AE00A6; Thu, 10 Sep 2020 23:29:41 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
 Mime-Version: 1.0
-Message-Id: <5beba404-14f0-4bb1-9110-c110797d5a04@www.fastmail.com>
-In-Reply-To: <20200911015105.48581-1-jk@codeconstruct.com.au>
+Message-Id: <a0270b2f-039c-45df-84da-48f850d512fa@www.fastmail.com>
+In-Reply-To: <20200911015105.48581-2-jk@codeconstruct.com.au>
 References: <20200911015105.48581-1-jk@codeconstruct.com.au>
-Date:   Fri, 11 Sep 2020 12:58:06 +0930
+ <20200911015105.48581-2-jk@codeconstruct.com.au>
+Date:   Fri, 11 Sep 2020 12:59:21 +0930
 From:   "Andrew Jeffery" <andrew@aj.id.au>
 To:     "Jeremy Kerr" <jk@codeconstruct.com.au>,
         "Joel Stanley" <joel@jms.id.au>
 Cc:     linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
         devicetree@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_1/2]_gpio/aspeed-sgpio:_enable_access_to_all_80_?=
- =?UTF-8?Q?input_&_output_sgpios?=
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_2/2]_gpio/aspeed-sgpio:_don't_enable_all_interru?=
+ =?UTF-8?Q?pts_by_default?=
 Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -77,24 +78,14 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 On Fri, 11 Sep 2020, at 11:21, Jeremy Kerr wrote:
-> Currently, the aspeed-sgpio driver exposes up to 80 GPIO lines,
-> corresponding to the 80 status bits available in hardware. Each of these
-> lines can be configured as either an input or an output.
+> Currently, the IRQ setup for the SGPIO driver enables all interrupts in
+> dual-edge trigger mode. Since the default handler is handle_bad_irq, any
+> state change on input GPIOs will trigger bad IRQ warnings.
 > 
-> However, each of these GPIOs is actually an input *and* an output; we
-> actually have 80 inputs plus 80 outputs.
-> 
-> This change expands the maximum number of GPIOs to 160; the lower half
-> of this range are the input-only GPIOs, the upper half are the outputs.
-> We fix the GPIO directions to correspond to this mapping.
-> 
-> This also fixes a bug when setting GPIOs - we were reading from the
-> input register, making it impossible to set more than one output GPIO.
+> This change applies sensible IRQ defaults: single-edge trigger, and all
+> IRQs disabled.
 > 
 > Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
 > Fixes: 7db47faae79b ("gpio: aspeed: Add SGPIO driver")
 
-This was something I was leaning on the implementer to sort out when I
-reviewed the driver way back. Oh well.
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
