@@ -2,79 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6A6A265AE4
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 09:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A55E265C12
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 10:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725771AbgIKHyw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 11 Sep 2020 03:54:52 -0400
-Received: from mail.flex.co.jp ([211.8.82.123]:33830 "EHLO www.flex.co.jp"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725765AbgIKHyo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:54:44 -0400
-Received: from live.com.mx ([103.89.89.225])
-        (authenticated bits=0)
-        by www.flex.co.jp (MTA) with ESMTP id 0898nadr009309
-        for <linux-gpio@vger.kernel.org>; Wed, 9 Sep 2020 17:49:51 +0900
-Reply-To: powerinthewords@yahoo.co.jp
-From:   piyin.crhe@live.com.mx
-To:     linux-gpio@vger.kernel.org
-Subject: =?utf-8?Q?=5BSpam=5D?=
- We are still waiting for your email...
-Date:   09 Sep 2020 01:49:49 -0700
-Message-ID: <20200909014948.56F0EA2B76143349@live.com.mx>
+        id S1725613AbgIKI5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Sep 2020 04:57:34 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6078 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgIKI51 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:57:27 -0400
+IronPort-SDR: 03vgo1ud2kOf+HTtbV5CtEhCoLi5RubfyfL64dnhczHNA5P0ehqcn4TCJhBtp000bXXFSGBQhJ
+ xUNR0Fkfiq1w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="138237407"
+X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
+   d="scan'208";a="138237407"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 01:57:26 -0700
+IronPort-SDR: STzB4Z1f5k2Y17Kt6dqGvJ1/8TEUcasYpfdzYzf78CBHv0EzFQOGXNqFSOLaS/nQPn7BbHUO0I
+ r35mZQkMgRHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
+   d="scan'208";a="334451946"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 11 Sep 2020 01:57:24 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kGeSc-00Fu75-04; Fri, 11 Sep 2020 11:31:10 +0300
+Date:   Fri, 11 Sep 2020 11:31:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in syscall
+ compatible mode
+Message-ID: <20200911083109.GF1891694@smile.fi.intel.com>
+References: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
+ <20200911030539.GA574097@sol>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-SpamInfo: FortiGuard-AntiSpam ip, connection black ip 103.89.89.225
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911030539.GA574097@sol>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Beneficiary,
+On Fri, Sep 11, 2020 at 11:05:39AM +0800, Kent Gibson wrote:
+> On Thu, Sep 10, 2020 at 01:19:34PM +0300, Andy Shevchenko wrote:
+> > The introduced line even handling ABI in the commit
+> > 
+> 
+> s/even/event/
+> 
+> >   61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> > 
+> > missed the fact that 64-bit kernel may serve for 32-bit applications.
+> > In such case the very first check in the lineevent_read() will fail
+> > due to alignment differences.
+> > 
+> > To workaround this introduce lineeven_to_user() helper which returns actual
+> > size of the structure and copies its content to user if asked.
+> > 
+> 
+> And again here.
 
-We wish to inform you that a power of attorney was forwarded to 
-our office  by two gentlemen regarding your unclaimed fund of $56 
-Million Dollar. One of them is an American citizen named Mr. 
-Robert Porter and the other is Mr. Wilhelm Berg a Swedish 
-citizen.We have be waiting for you to contact us since last year.
+Thanks!
 
-The document claims these gentlemen to be your authorized 
-representatives, and the power of attorney states that you are 
-already deceased.  It further states that your death was due to 
-lung cancer, with your date of death being January 27th, 2020.
+...
 
-They have now submitted a new account to replace the receiving 
-account that was in the original claim of funds. These funds have 
-remained unclaimed for quite some time and the need for 
-resolution is pressing. Below is the new account they have 
-submitted.
+> > +#ifdef __x86_64__
+> > +	/* i386 has no padding after 'id' */
+> > +	if (in_ia32_syscall()) {
+> > +		struct compat_ge {
+> > +			compat_u64	timestamp __packed;
+> > +			u32		id;
+> > +		} cge;
+> > +
+> > +		if (buf && ge) {
+> > +			cge = (struct compat_ge){ ge->timestamp, ge->id };
+> > +			if (copy_to_user(buf, &cge, sizeof(cge)))
+> > +				return -EFAULT;
+> > +		}
+> > +
+> > +		return sizeof(cge);
+> > +	}
+> > +#endif
+> > +
+> > +	if (buf && ge) {
+> > +		if (copy_to_user(buf, ge, sizeof(*ge)))
+> > +			return -EFAULT;
+> > +	}
+> > +
+> > +	return sizeof(*ge);
+> > +}
+> >  
+> 
+> The dual-purpose nature of this function makes it more complicated than
+> it needs to be.
+> I was going to suggest splitting it into separate functions, but...
+> 
+> Given that struct compat_ge is a strict truncation of struct
+> gpioevent_data, how about reducing this function to just determining the
+> size of the event for user space, say lineevent_user_size(), and
+> replacing sizeof(ge) with that calculcated size throughout
+> lineevent_read()?
 
-Account Name's :  Robert Porter /Wilhelm Berg
-Account: 5007-29 438 66
-IBAN-nr: SE4150000000050072943866
-Bic-kod: ESSESESS
-Skandinaviska Enskilda Banken. (SEB :)
-SWEDEN .
+So you mean something like
 
-In the event that you are in fact still alive, we ask that you 
-confirm your existence by responding to this email. You are to 
-view this as a matter requiring immediate attention and response. 
-We have 48 hr monitoring of all activities within Federal Reserve 
-Bank.On this regard,you will be directed to any of our office 
-center that you will go in person to sign the final papers,
-because we have our payment center in Europe,Asia,America and 
-Canada.You will go to any of the office that you will be directed 
-to with the copy of the documents of your fund.
+	struct compat_gpioeevent_data {
+		compat_u64	timestamp;
+		u32		id;
+	} __packed;
 
-We have contacted the bank in the Sweden asking them to wait for 
-further directives from Federal Reserve Bank, prior to 
-authorizing any withdrawals in any form.  Our request is based 
-entirely on our attempt to verify that you are in fact deceased, 
-before money is wrongly disbursed.
+#ifdef __x86_64__
+	/* i386 has no padding after 'id' */
+	size_t ge_size = in_ia32_syscall() ? sizeof(struct compat_gpioevent_data) : sizeof(struct gpioevent_data);
+#else
+	size_t ge_size = sizeof(struct gpioevent_data) ;
+#endif
 
-Your in Service,
+?
 
-Robert Steven Kaplan
-2200 N Pearl St, Dallas, TX 75201, United States
+...
+
+> Is patch 2 in any way related to this patch?
+
+No. It can be applied separately.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
