@@ -2,165 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D9DF265E73
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 13:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 935A7266019
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Sep 2020 15:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgIKLBv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Sep 2020 07:01:51 -0400
-Received: from gofer.mess.org ([88.97.38.141]:45861 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgIKLBq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:01:46 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id A4AC0C63D6; Fri, 11 Sep 2020 12:01:29 +0100 (BST)
-Date:   Fri, 11 Sep 2020 12:01:29 +0100
-From:   Sean Young <sean@mess.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: SONY IR issue
-Message-ID: <20200911110129.GA6241@gofer.mess.org>
-References: <DB8PR04MB679580C7C8E6888B56C8BDACE62C0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <20200903185513.GA31286@gofer.mess.org>
- <DB8PR04MB67950837E2355EA81FBAADD1E62D0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <20200904123050.GA11675@gofer.mess.org>
- <DB8PR04MB6795F1EA8A865A3CDCC79439E6280@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <20200907084053.GA32304@gofer.mess.org>
- <DB8PR04MB679515C3490C5087B29A6DA8E6280@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <DB8PR04MB6795A60FBD4FBB3409C103E4E6290@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <DB8PR04MB67959176915216CD8B87C005E6270@DB8PR04MB6795.eurprd04.prod.outlook.com>
+        id S1726182AbgIKNSo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Sep 2020 09:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgIKNSA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Sep 2020 09:18:00 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09D3C061786
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Sep 2020 06:07:14 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n22so9888587edt.4
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Sep 2020 06:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
+        b=EarytBvwoQep7qd57VxmLST9JhvldbG08X3Nhqjheaj8MGEJpUXQbQdXO9VsM17+03
+         b1qLL2NsHvu9J9xBXIZvZarcrQoDu0q+HllUQxkpUyTsxMId3oXHB1Tn07+fRJ1jFTf8
+         +5jh35x6TyiSpnx7oUljGT0afOX2lXuVBSl4XpEijxq/NGNs1cimpkYYG6C3EEeqHK2G
+         y6OQEZE4nTNaqwyc45DYEJUC/gCELLHgmGL9F+MQmMIvSuaK/TtZRT6Z5yGjJyxMUBTu
+         2w+2PLGV+qbr3yjE73O+TjHkWTlvHPSQrDWJ0TiBY9Z+RJc/v+2HUd2d/hD2asyZCEaS
+         6mpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
+        b=PVfitnfk6dAjEb8jTuTt9d2xibKmyFQIdRtUCkVEqMTOxPEbvdDxqY3mVGW0Bw6Fiv
+         i93TqQo+2EDaOnNa80NyaDAGXm0HjAoOXxEBljXx0efimj8RzDf1FCVJpVhyB5mhKpKs
+         XIKj09AKDPyNgVXmeAfeBDuxAq5Twu6kpcOHMFNcdzzJN8V25SAkhIIt6lceX469smOJ
+         u+IBzQoJy3uHVyhEiHoRk6XxSrzP/X1NDok2jcEsHHoD+measYV+cIPk07rB4eJAoppd
+         jfY98V6CFdDRbYWAdNt/Fz6IOfLFUXsphZHhzttLOvWHg2A4ZvZ8h7z1NQD8/XvnEhXi
+         1/tQ==
+X-Gm-Message-State: AOAM532r/8i/9oRTEiW/oPydyTW7Yw4pqVoxrobdO2yW9SGRtUfTxwoP
+        n3BU7DhwakymhE0OLtoYCvCyRNRd94dzNaRTGJQZhg==
+X-Google-Smtp-Source: ABdhPJy+rDUfCaOK6p6Va0hZoFOBHdUKP5x0jZI7yOtovb7mUCA9QlmaUYaRaxfvgu4qMN52cQ6UDcW0sSJC9puhE3Q=
+X-Received: by 2002:a50:f687:: with SMTP id d7mr1944285edn.353.1599829633051;
+ Fri, 11 Sep 2020 06:07:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB67959176915216CD8B87C005E6270@DB8PR04MB6795.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+ <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+ <20200907122238.GA1849893@kroah.com> <CAMRc=MexhEbnxCN3aN57k4V-mO-vQL=+8z9QFEzOCPkmn16-XQ@mail.gmail.com>
+ <20200911125625.GF3758477@kroah.com>
+In-Reply-To: <20200911125625.GF3758477@kroah.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 11 Sep 2020 15:07:02 +0200
+Message-ID: <CAMpxmJUd-ALoBi4aC1nsJ7JmEsANe_gZfBegCiZtP6BwPpC52g@mail.gmail.com>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Joakhim,
+On Fri, Sep 11, 2020 at 3:01 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Sep 08, 2020 at 07:03:30PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+> > > > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
+> > > > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > > > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > > +GPIO Testing Driver
+> > > > > > > > > +===================
+> > > > > > > > > +
+> > > > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > > > > > > > +by the module. The lines can be accessed using the standard GPIO character
+> > > > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > > > > > > > +structure.
+> > > > > > > >
+> > > > > > > > Could configfs be used for this instead of debugfs?
+> > > > > > > > debugfs is ad hoc.
+> > > > > > >
+> > > > > > > Actually sounds like a good idea.
+> > > > > > >
+> > > > > >
+> > > > > > Well, then we can go on and write an entirely new mockup driver
+> > > > > > (ditching module params and dropping any backwards compatibility)
+> > > > > > because we're already using debugfs for line values.
+> > > > > >
+> > > > > > How would we pass the device properties to configfs created GPIO chips
+> > > > > > anyway? Devices seem to only be created using mkdir. Am I missing
+> > > > > > something?
+> > > > >
+> > > > > Same way how USB composite works, no?
+> > > > >
+> > > >
+> > > > OK, so create a new chip directory in configfs, configure it using
+> > > > some defined configfs attributes and then finally instantiate it from
+> > > > sysfs?
+> > > >
+> > > > Makes sense and is probably the right way to go. Now the question is:
+> > > > is it fine to just entirely remove the previous gpio-mockup? Should we
+> > > > keep some backwards compatibility? Should we introduce an entirely new
+> > > > module and have a transition period before removing previous
+> > > > gpio-mockup?
+> > > >
+> > > > Also: this is a testing module so to me debugfs is just fine. Is
+> > > > configfs considered stable ABI like sysfs?
+> > >
+> > > Yes it is.  Or at least until you fix all existing users so that if you
+> > > do change it, no one notices it happening :)
+> > >
+> >
+> > Got it. One more question: the current debugfs interface we're using
+> > in gpio-mockup exists to allow to read current values of GPIO lines in
+> > output mode (check how the user drives dummy lines) and to set their
+> > simulated pull-up/pull-down resistors (what values the user reads in
+> > input mode).
+> >
+> > This works like this: in /sys/kernel/debug/gpio-mockup every dummy
+> > chip creates its own directory (e.g.
+> > /sys/kernel/debug/gpio-mockup/gpiochip0) and inside this directory
+> > there's an attribute per line named after the line's offset (e.g.
+> > /sys/kernel/debug/gpio-mockup/gpiochip0/4). Writing 0 or 1 to this
+> > attribute sets the pull resistor. Reading from it yields the current
+> > value (0 or 1 as well).
+> >
+> > This is pretty non-standard so I proposed to put it in debugfs. If we
+> > were to use configfs - is this where something like this should go? Or
+> > rather sysfs? Is it even suitable/acceptable for sysfs?
+>
+> That sounds like it would work in sysfs just fine as-is, why don't you
+> all want to use that?  configfs is good for "set a bunch of attributes
+> to different values and then do a 'create/go/work'" type action.
+>
 
+I've started looking into it. I need to first implement committable
+items for configfs because mockup GPIO chips need to be configured
+before they're instantiated. It'll be configfs to configure and
+instantiate each chip and a set of sysfs attributes to manipulate
+existing chips.
 
-On Thu, Sep 10, 2020 at 11:52:18AM +0000, Joakim Zhang wrote:
-> 
-> Hi Sean,
-> 
-> We have already found the root cause, unbalanced interrupt response cause timing incorrect when cpuidle active. After disable cpuidle, GPIO IR works fine.
-> However, that's a barbaric practice. It's impossible for us to disable cpuidle in a real system. 
-
-Yes, that's a non-starter ofcourse.
-
-> Now two issues in front of me:
-> One is high cpu loading, after testing, GPIO IR can always decode, it seems not a severe problem. Another is cpuidle, it leads to a high probability of decoding failed.
-> 
-> I have a half-baked idea, can you help evaluate it? Is it possible to dynamically disable and enable cpuidle from gpio_ir_recv_irq? Or do this somewhere else in IR framework?
-> 
-> When first entering gpio_ir_recv_irq, invokes cpu_latency_qos_add_request to disable cpuidle, concurrently start a timer. Then entering gpio_ir_recv_irq again and again,
-> check the timer. If timer value smaller than VALUE_TIMEOUT, just reset the timer. If timer value large than VALUE_TIMEOUT, means one loop finish, invokes 
-> cpu_latency_qos_remove_request to enable the cpuidle. The VALUE_TIMEOUT is the gap between continuous signals. The difficult is how to tune VALUE_TIMEOUT to satisfy all IR protocols.
-
-So my problem with this solution is that I get the impression that it papers
-over cracks in another area. With cpuidle enabled, interrupts are delayed by
-over by 500 microseconds, or half a millisecond. Those sorts of latencies
-are not very good. 
-
-For example in realtime, latencies should not exceed anything in the order
-of 50 microseconds, a tenth of what you're seeing here. If it takes 
-up to half a millisecond to service e.g. ssd or network interrupts, does
-that not take a toll?
-
-As for your implementation, the timeout could be based on the IR timeout
-itself. When IR timeout occurs we are not expecting any more IR for the
-current message, so this would be a perfect place to restore cpuidle. The
-gpio-ir-recv driver could implement its own timeout, rather than using
-rc-core for this. The driver used to do this, so it should be in git
-history.
-
-Thanks,
-
-Sean
-
-> 
-> I wrote a draft, and it can work fine at my side:
-> --- a/drivers/media/rc/gpio-ir-recv.c
-> +++ b/drivers/media/rc/gpio-ir-recv.c
-> @@ -11,6 +11,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_qos.h>
->  #include <linux/irq.h>
->  #include <media/rc-core.h>
-> 
-> @@ -20,13 +21,32 @@ struct gpio_rc_dev {
->         struct rc_dev *rcdev;
->         struct gpio_desc *gpiod;
->         int irq;
-> +       struct timer_list cpuidle_change;
-> +       bool cpuidle_active;
-> +       struct pm_qos_request qos;
->  };
-> 
-> +static void gpio_ir_cpuidle_change(struct timer_list *t)
-> +{
-> +       struct gpio_rc_dev *gpio_dev = from_timer(gpio_dev, t, cpuidle_change);
-> +
-> +       if (!(gpio_dev->cpuidle_active)) {
-> +               pm_qos_remove_request(&gpio_dev->qos);
-> +               gpio_dev->cpuidle_active = true;
-> +       }
-> +}
-> +
->  static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
->  {
->         int val;
->         struct gpio_rc_dev *gpio_dev = dev_id;
-> 
-> +       if (gpio_dev->cpuidle_active) {
-> +               pm_qos_add_request(&gpio_dev->qos, 1, 0);
-> +               gpio_dev->cpuidle_active = false;
-> +       }
-> +       mod_timer(&gpio_dev->cpuidle_change, jiffies + msecs_to_jiffies(125));
-> +
->         val = gpiod_get_value(gpio_dev->gpiod);
->         if (val >= 0)
->                 ir_raw_event_store_edge(gpio_dev->rcdev, val == 1);
-> @@ -61,6 +81,9 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
->         if (gpio_dev->irq < 0)
->                 return gpio_dev->irq;
-> 
-> +       gpio_dev->cpuidle_active = true;
-> +       timer_setup(&gpio_dev->cpuidle_change, gpio_ir_cpuidle_change, 0);
-> +
->         rcdev = devm_rc_allocate_device(dev, RC_DRIVER_IR_RAW);
->         if (!rcdev)
->                 return -ENOMEM;
-> 
-> Indeed, to a certain degree, it cannot ensure the first signal to be decoded, since at that point cpuidle is active, interrupt may be delayed, so the header may not satisfy the protocol.
-> Actually, I have not meet such case under my test. Luckily, it would transmit multiple signals at once press.
-> 
-> Best Regards,
-> Joakim Zhang
-> 
-> > -----Original Message-----
-> > From: Joakim Zhang
-> > Sent: 2020年9月8日 16:41
-> > To: Sean Young <sean@mess.org>
-> > Cc: linux-media@vger.kernel.org; Andy Duan <fugang.duan@nxp.com>;
-> > linux-gpio@vger.kernel.org; Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Subject: RE: SONY IR issue
-> > 
-> > 
-> > Hi Sean,
-> > 
-> > GPIO IR Recv extremely rely on the real-time performance of the interrupt
-> > response, after turn off cpuidle, IR can work steadily now.
-> > 
-> > Much thanks for your kindly help. 😊
-> > 
-> > Best Regards,
-> > Joakim Zhang
+Bartosz
