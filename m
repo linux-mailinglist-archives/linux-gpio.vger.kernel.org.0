@@ -2,82 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9893F26792A
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 11:32:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A1D3267930
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 11:34:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgILJcJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 05:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60278 "EHLO
+        id S1725839AbgILJd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 05:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgILJcI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 05:32:08 -0400
+        with ESMTP id S1725825AbgILJd5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 05:33:57 -0400
 Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7A3C061757
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:32:04 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m5so8304204lfp.7
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:32:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16648C0613ED
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:33:55 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d15so8284994lfq.11
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H2+1+lFS9e2x2hBzwkej0Ucg9+b0mRnWv3h+Nk0VEhc=;
-        b=F/LmfzKwVmJGkJp8JUKJpYXw7183G9gmer0hMVh67ZTsQ3b2QfirEOW54AH3eG2BH2
-         Khz7k36m/ev0ExNW1uA24WxPUZMDwc21qZm1Feg0Dlg/TfuudGRjyyi7isasXA9Z+frM
-         Iu/H0Q/kd5+ijGvHn4tL7TFHZE9oL2IEENJY53ZMhkO95nsnaI0ggb5ZonK7Ccf0kA5A
-         f8CCvMxbcRkmwzhw3gwABj9zu8fRVG7v148Coc3ZFEuViHOxT9wBctYMe1CLT8JmIp3j
-         PMeOSC+WQfeRlmktm3WdzgWvhQ4xpa4TancIkG1+YyetUplCXw/y4ousBXiLniACsGY+
-         Nknw==
+        bh=6p01EYnEk7mg7q2BWRLUYur9aS07ulpNpOQ68P6UEdU=;
+        b=T4/DEMnlpnSCV7WTW2xouwOanuflt6Xo/jGK146kbB40c05KWhiHE0chM7d/QQ+SDj
+         irF3FaiezunfKJiJ2xgTQx2qb5yv6FMsYhcG+HkabaliX6npKDryguFJo5ukTTbyK57y
+         AisgrqPJkQZ4btrIc2XvKIpaKMg/qgl6WDnCeYz5Act8wxOBkYs4tk9Q1vm+s7cRAg14
+         /V5o3l7sz5mfMCh6aXbkx9ZxwVQrf72DQiCmXi4uP2GlDKe6W2SochnsR+YFZRbmtki7
+         nILXDwycW7wqiy/koVktjvbYpUiwvFAPgRSLu/j59QsIV+c1T90w6HEAtxm/3Re4XiHx
+         hZpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H2+1+lFS9e2x2hBzwkej0Ucg9+b0mRnWv3h+Nk0VEhc=;
-        b=pOVzkdXYqg6Y4tMgTodYAAuleMfGWZbZIowlDpNkL5FLfAe6kTU4WaMD0orXpyHJmH
-         jhugpmEyUu6423XuuUHdXbygd/98A2lAA3r+1Q1zIKTT9vRV6LI4Po7BKR7Xu37W2H9R
-         +xnhqMHPT9pFcJYhBdUYXJABY2dv6p/PTxSLARhhkk1YsbXmnZbXCTITWiAaNlXKUOy/
-         A6LWtZBfC/yuSEogSBVx3IYtKO15+onu3sCoR1d67Bsy2vQuk277Aj2bSRuxa9TANk6B
-         DILvxcpFKW6RqAq8k/uJaowuzy1ImQ2SSseIKWNV40nq04fRhur+i/pFAHv/08sBrKY4
-         1yOw==
-X-Gm-Message-State: AOAM530sktWLgurBW0OiNzgMsfrMl9NM3qJ+v1Gcvc8d470FdaHnOh5y
-        Uf/y4kBfMsOuPPGpuWHeV67Dt7Pn9/VwUFQQSW0pP65VZJI=
-X-Google-Smtp-Source: ABdhPJwA7lxb97H7/GSEpzY7AhqxbEl9kOazDzHAzC46vevwdTRefjbg4JQOpNxmfn2dwH+RbV+Ka8hs2iFnFEUNQ9g=
-X-Received: by 2002:a19:1c8:: with SMTP id 191mr1380440lfb.585.1599903121665;
- Sat, 12 Sep 2020 02:32:01 -0700 (PDT)
+        bh=6p01EYnEk7mg7q2BWRLUYur9aS07ulpNpOQ68P6UEdU=;
+        b=opH7pNoFSn809EkjeIvMa0u+N6e7oEFKqQxQLGqjNPRFUoLSw2Fb7pkDNOeQSTN7qD
+         bnhpZHHLsL3iXZ6cB9bbEQvDRdE+bz5enMu/arGweOR/GbUufjof1+dZlBCdDNj05tYA
+         Vh8jkIKL+sVIkfiw8EeyHsyF2tZjtKjiHX4N3KNRpfbClRorwkH1ukOTSpBK/51P0HOp
+         v0oY4z6ETAV4bNbxrMDXGKPQkSZzQjhXTkC0gWAIAQSJtAzYcNxvB7vNSF3B7bFVcHax
+         v2KuhhVrF0ZOPyR/yUdOXAIA2dWT74TfoX3LXLgG6eTT4ltF5D3UnAbegJ810BUkMhXc
+         HWFg==
+X-Gm-Message-State: AOAM533I6H9Kb51vwyGJ3fmNXi2xW0Cco2Ct3DP2pBUKEiXwKSW5a55M
+        LqQjxd6f9gQ4oxt8ZnbzyJn3cmmKFfYa0zznwVnpwQ==
+X-Google-Smtp-Source: ABdhPJxAcLCKcwWcBH5jCc3n7aA0z0TjdMgW1G14Oic5M3BEJe1es9jWRV/hhZhegEIkFOIYX0OOgztT8qtC+kf6ZU4=
+X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1620153lfq.260.1599903233892;
+ Sat, 12 Sep 2020 02:33:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200828213226.1734264-1-thomas.preston@codethink.co.uk>
+References: <20200821112208.5295-1-geert+renesas@glider.be>
+In-Reply-To: <20200821112208.5295-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Sep 2020 11:31:50 +0200
-Message-ID: <CACRpkda3fz8mnROr1Rx3o7k8=90yRjDV3wS2qqutv-5YxKdWjw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mcp23s08: Fixups for mcp23x17
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Sebastian Reichel <sre@kernel.org>,
+Date:   Sat, 12 Sep 2020 11:33:43 +0200
+Message-ID: <CACRpkdby9c+_Hww9RJosMrsBCw+GUVfuSjn06OB0jXJWcWyXCg@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:32 PM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
+On Fri, Aug 21, 2020 at 1:22 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Hi again,
-> Second round of these mcp23s03 driver fixups.
+> Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> documentation to json-schema.
 >
-> Changes since v1:
-> - Split up the fixups patch.
-> - I'm pretty certain the "mcp23x16" structs are typos, so I put it as
->   0001, because the second patch doesn't really make sense without it.
-> - I lost the `(MCP_GPIO << 1) + 1` changes because the regmap handles
->   GPIOB 0x13 with `.val_bits = 16`.
-> - Dropped the interrupt-controller changes.
+> Document missing properties.
+> Drop deprecated and obsolete #gpio-range-cells property.
+> Update the example to match reality.
+> Drop consumer examples, as they do not belong here.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Patches applied!
+Nice work on this!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Expect to get it from you as a pull request.
 
 Yours,
 Linus Walleij
