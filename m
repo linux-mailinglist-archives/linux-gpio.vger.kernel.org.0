@@ -2,142 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8D4F267638
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 00:55:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52810267738
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 04:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725873AbgIKWzC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Sep 2020 18:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
+        id S1725765AbgILCV5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Sep 2020 22:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgIKWzA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Sep 2020 18:55:00 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56373C061573;
-        Fri, 11 Sep 2020 15:54:58 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id v123so11488176qkd.9;
-        Fri, 11 Sep 2020 15:54:58 -0700 (PDT)
+        with ESMTP id S1725763AbgILCV4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Sep 2020 22:21:56 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E597FC061573
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Sep 2020 19:21:54 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so8618130pfi.4
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Sep 2020 19:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=NWMxrIUTpLgjVNXNaQ7pp9gIhnKeSDmE1V55I6cdtAM=;
-        b=crLyzdC/9dwAbWZ3Ic5ykP4m2BId6gf3W293bIfkO1ebX7A5arPZnrIb7qZdw87imQ
-         HbW0a1+VNmRG1RMU9wevX+5e1rL0bJK3AEhriOw3lp+lp6ApzB7vy0uL6ijUDKv8++cC
-         jP4O3IC1TiJVdK4gIcRCRT/ACnOI+psFUf8/HZ2l8PIWCJEdZ1IutRwZ62sIZnhEwhWw
-         sOtT6YxHVN4KLPGnkFJcTc0ezr9wz+GFcjndS1dp72Wju31OFBJSthlDhkl0z7YLsavJ
-         qj2ALdnmGz4ggh1Bxdwme/6PHjPwDiGJ2b6ABSKAoe2/M5rvTsfOA5Z514Dv1GKenEDU
-         ozQA==
+        bh=TYiCoYPb34JrZDJnFKU5BmiPqq0VK0NzMZqsLMBvjKI=;
+        b=TlhhALky1Zagx9zcQH/MXWiGmRSdJGllCFKv6/mlaq6d/XWl6XMyjL/4x2+SsZgNrj
+         bdxF1oM6sQxrYbuY1pwyXesYGjDoGb3l6+SOF9bpeqSNFNKClwgPtSltniKg36o+ZPwW
+         4rgNAghUWNIWg9tnthvXAsL/D/5nC71JzOqFlkvm0Xb/kthCy0/fyAjuLQLWXLBmQ5nm
+         kV+ranxxGC8rTN8lrbrtB+UEe7kQ2HrLTuopEFbAKh3QdQx6lZEvC8O33fBnPparIpBK
+         ePLcolDWRXbbsnp3YlC8zS9JD8uS2JCED9fe2ZsFtZejTgeIm9jbKgewDRpmF3JNRNdb
+         lh9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NWMxrIUTpLgjVNXNaQ7pp9gIhnKeSDmE1V55I6cdtAM=;
-        b=j4JYAuqfAL28ZAka3jHzPGz3oz0ytszNSJiJ7UvOWR88bVtzJgFUxguGiewoZhwAQm
-         vXHCNUCURSKcurQDm4vRQxh6oFv+3ALzd1F9+QWw/nJtzJJOcEqiXVvBuhMqOPmemOsr
-         tM2aLuJj5J/RHYG5XmAjrTg3nj0PBRooUtY5PbZkaooXuBWsxZDcDBrWJosZpUDxUNJg
-         nWRs3P4P0SJQ3NQJzkz388sQSUpLS5r500b6vVAu9S37Ta1dzldAV/JyI6K6pxDBffo+
-         BLgFhMHbtksX9UMg5ikhzwkf+TKAh28rGEx27nIG3WHRZfOdhZRCNwNARK+aRIdjoJnJ
-         jKnw==
-X-Gm-Message-State: AOAM5324XpbwAA+4hk1NlPI5SztA+MV3RjtDYF7rvpgmrBhbeMlf/6Ib
-        PrfliH4w+H1s6+4L3sI3qtI=
-X-Google-Smtp-Source: ABdhPJwzg6HPiHcP9mMdu0JIsPsjeyUmQIHyjp01tLStVmTK7xeyl9LYMu/1ZB72u0hesaAniiU9QQ==
-X-Received: by 2002:a37:ef05:: with SMTP id j5mr3570706qkk.456.1599864896536;
-        Fri, 11 Sep 2020 15:54:56 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id w6sm4257339qti.63.2020.09.11.15.54.54
+        bh=TYiCoYPb34JrZDJnFKU5BmiPqq0VK0NzMZqsLMBvjKI=;
+        b=sMlnpMxCJa6zx9LKeGNj31kWu6xLNF+ACmidwaNwpVGXyDrvNTYBQnoePTPKf7r3yQ
+         drDarVIggJJwiQLE8H6KJVei0CKp3t3V1biQqfudMRo8YLzSS6xGjlKAGWGtIr6n0M8V
+         4iqsu1FdYG3Me1fJbhdI8oS7N4NoSuUUs3IciK9ctK43FQno7lOONs/QUL0Y2FQEZiri
+         l2N94s+AIiytXT4U4kgn44sGGLa2RRVHMBbr+cFJB1K2z0nUZd5aNkrQhfmLkhnyC5vn
+         iF0OodGBWoeUtRExzENdZ5z5Ls8HBwt4NullYVLyzWFvobmjhozb9NP+E3JIYxbwG1d/
+         WTcw==
+X-Gm-Message-State: AOAM530Eu5yLsTBq29WpETKvmJvqL0gKGNFv2dQNi8SMSbGBIACZsIhp
+        ze3ZalQDtZlodn8VyovOF4jz6W4E8ds=
+X-Google-Smtp-Source: ABdhPJyAVTV7UBHFATvis5Yt+kFMLGb5xycJTMHG5e208UHE5GsP4qZTJNFCXZK9kH+yk31kQt+1Uw==
+X-Received: by 2002:a63:fa45:: with SMTP id g5mr3572393pgk.448.1599877314166;
+        Fri, 11 Sep 2020 19:21:54 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id m17sm1373096pjn.54.2020.09.11.19.21.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 15:54:55 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 18:54:39 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        akpm@linux-foundation.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
+        Fri, 11 Sep 2020 19:21:53 -0700 (PDT)
+Date:   Sat, 12 Sep 2020 10:21:48 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
-Message-ID: <20200911225417.GA5286@shinobu>
-References: <cover.1593243079.git.syednwaris@gmail.com>
- <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
+        linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in syscall
+ compatible mode
+Message-ID: <20200912022148.GA3880502@sol>
+References: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
+ <20200911030539.GA574097@sol>
+ <20200911083109.GF1891694@smile.fi.intel.com>
+ <20200911091249.GA1874731@sol>
+ <20200911095355.GG1891694@smile.fi.intel.com>
+ <20200911101714.GA2132928@sol>
+ <20200911142846.GM1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
+In-Reply-To: <20200911142846.GM1891694@smile.fi.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Sep 11, 2020 at 05:28:46PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 11, 2020 at 06:17:14PM +0800, Kent Gibson wrote:
+> > On Fri, Sep 11, 2020 at 12:53:55PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Sep 11, 2020 at 05:12:49PM +0800, Kent Gibson wrote:
+> > > > On Fri, Sep 11, 2020 at 11:31:09AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Sep 11, 2020 at 11:05:39AM +0800, Kent Gibson wrote:
+> > > > > > On Thu, Sep 10, 2020 at 01:19:34PM +0300, Andy Shevchenko wrote:
+> > > 
 
---f2QGlHpHGjS2mn6Y
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[snip]
+> > 
+> > typedef u64 __attribute__((aligned(4))) compat_u64;
+> > 
+> > which is bitwise identical - only allowed to 32-bit align.
+> 
+> Yes. That's what I meant under "not the same".
+> 
+> As far as I understand the alignment makes sense if this type is a part of
+> the uAPI definition. But here we have it completely local. copy_to_user() takes
+> a pointer to a memory without any specific alignment implied.
+> 
+> So, what you proposing is basically something like
+> 
+> ret = copy_to_user(buf, &ge, compat ?  sizeof(compat) : sizeof(ge));
+> 
+> Correct?
+> 
 
-On Thu, Jul 16, 2020 at 02:49:35PM +0200, Linus Walleij wrote:
-> Hi Syed,
->=20
-> sorry for taking so long. I was on vacation and a bit snowed
-> under by work.
->=20
-> On Sat, Jun 27, 2020 at 10:10 AM Syed Nayyar Waris <syednwaris@gmail.com>=
- wrote:
->=20
-> > Since this patchset primarily affects GPIO drivers, would you like
-> > to pick it up through your GPIO tree?
->=20
-> I have applied the patches to an immutable branch and pushed
-> to kernelorg for testing (autobuilders will play with it I hope).
->=20
-> If all works fine I will merge this into my devel branch for v5.9.
->=20
-> It would be desirable if Andrew gave his explicit ACK on it too.
->=20
-> Yours,
-> Linus Walleij
+That isn't how I would write the copy_to_user(). The size would be
+calculated once, using the linevent_user_size() helper, with
+appropriate documentation as to why this is necessary, and then
+used throughout lineevent_read().
 
-Hi Linus,
+The documentation would mainly be on the lineevent_user_size() function
+itself.
 
-What's the name of the branch with these patches on kernelorg; I'm
-having trouble finding it?
+> I don't like the difference between 2nd and 3rd argument. This what looks to me
+> hackish. Variant with explicit compat structure I like more.
+> 
 
-Btw, I'm CCing Andrew as well here because I notice him missing from the
-CC list earlier for this patchset.
+Agreed - writing it that way does look pretty nasty.
 
-Thanks,
+But my suggestion is actually this:
 
-William Breathitt Gray
+ret = copy_to_user(buf, &ge, event_size);
 
---f2QGlHpHGjS2mn6Y
-Content-Type: application/pgp-signature; name="signature.asc"
+I suggested ge_size previously, but event_size might help highlight that
+it isn't always sizeof(ge).
 
------BEGIN PGP SIGNATURE-----
+> But if you think it's okay, I will update your way.
+> 
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl9cAC8ACgkQhvpINdm7
-VJJypRAAxs2Ws4cBWHSC+xWIB7YolKoiCZO9NMeBRMncPL8n3mt80XKtlm9XWG1i
-8wYgMDcK5GiKsYy/hGtzLJA5OYoEvOGP3no0nTdYQylGdHlZxFGg2eUTijdnTsDH
-NJ1+RDdr7rp6i/ZSmTBYQ/59dQxvxHwsxx41snBD1EUqhx9RL+z2iWDmwJnMZn95
-yyqbxxAsEGWQmkLA8ATa1kT4iOAY07xA1aggKjxCmOAWtRIopStLbaLgFhzhiwxz
-CLEirmVbm5rBt5ZJ8L/48VZL2kqSzuAs2yClCTgLv6rXVNFxhERXUNcjARWxVghx
-EYp3E1+62z7XX8mevdDV/JNzZBRQvoWexAVgIeogK94wyoNlB1+tGvpTmwBRxSOD
-++hBdEnnPu7y2O9KghN32xDYtB0JyY4UTm0z9o/hZcmVJetJEYbIPXkGVdhYrvWd
-H3eQ2ON9tbTaPI2rQU3c9hnCm/lTPDBDRVSN8X6rb3PdSzhZHEp4R1aTm9QiZrdU
-jn5NNi+69aR2rDkTZMogvXE1bnaI3jFag8XtBb5x8HIVtPg0r8SHGlw/f2P6Ea3C
-SkAW5npBZv8HigRfGHPhOk8JHwJ4/PcX66gi/+tHeTlmrwRqTBViR6/qjv1MYXYR
-2Rcvoza6pKv45K/74PheOwz1W8mRrAlZ0t3ZbGBqE2zSOlMw6vk=
-=I8Cv
------END PGP SIGNATURE-----
+I would defer to Bart or Linus, but I think just calculating the
+appropriate size is preferable for this case.
 
---f2QGlHpHGjS2mn6Y--
+Cheers,
+Kent.
