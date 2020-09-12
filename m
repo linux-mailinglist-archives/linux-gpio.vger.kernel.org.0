@@ -2,107 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5740C26794F
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 11:56:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B0CF267967
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 12:16:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgILJ4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 05:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35782 "EHLO
+        id S1725847AbgILKQC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 06:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgILJ4b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 05:56:31 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D277C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:56:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id q8so8362799lfb.6
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 02:56:28 -0700 (PDT)
+        with ESMTP id S1725825AbgILKP5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 06:15:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0731AC061757
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 03:15:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u21so14537956ljl.6
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 03:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aXnQCOIDAF26igRuvqn750+4zYYh14IpEdhmofjxQak=;
-        b=xXRX+sXQl2Yor9/vyjzNVwZpQAHrNs++yHDa5IZtmtzpkCY16gRtp2GI3dxU5ePpd8
-         59gYmkXwH5sZkb50EaqC/XNyiZVtFCMasDKCaYRUARYl1wIa81aGdOuLpzE2QFioX1Up
-         pdcGHCwfB1fZ+Uw6KdRt+orQ040DUUeIue0jQLgkvn6nqm3tFMjWsk1KiajGGeaCYBpB
-         cdtpldn1apNnsqvIaRys6s5EkU5X2xZkSwfuTU2jSbCho634oLn93vCsPg6FReb6WNc+
-         aTcGdIc9VsWIz+ShYCgBM5dRg6XI5U/9obGY1TnF3uAHXxh8CTcL2BjGLtLZgJMEASWs
-         pwtA==
+        bh=AjpiL8urXAnTFAVO+8GiICWg+iw3QUy3tHni9BkRczo=;
+        b=MBHfoAjUqf4woWSnRdAcuxjYv33XADoFtAFkOO3qJ5xVIxmnb1T3Pyg253yCD+NpgP
+         mEk2h9Lb2095Wv7HJaicIPbAzNAItE6vaH1XnyvUjjlHBnX7xe0C6FhpExhRZx1+P/nx
+         PSjPMLBjorq8ZDEWXmTLzu0ris0OkzZZDeai+bSpvExDrdUPRQ4uEX6CkiwYztB6snOu
+         sN1HXRow6j8jDCUIR7b3cuc7jAbpQwibVodevBe12WvrVX4YLRYGUrF7yzsy79DK9j05
+         fBgxc+eZmC8OBx7jkPGXWJ7Owibo8+mq4e4+CA5WG7CWMEw8L3Bl2KPOSensBREmew5Y
+         eCHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aXnQCOIDAF26igRuvqn750+4zYYh14IpEdhmofjxQak=;
-        b=NiGctgrSvK8DGfNIu8ocKlbUGTGWBzj3kMZtnfUoqAQHUCca/UOpWgD+d9nJirKkp9
-         iweioReRBuJeLuqDfnvypOCR54vf8efuC4xncC/T1i00nXJ6FqIhhlqfDLc0+2G46hK4
-         VQc6iSAJJHNrTVInzxhHLXN/SByPGNqg9Y7QpKB4xr/FlVwiHHbpOGmuO5DJsKncWqg4
-         VCmnqto6fETwe5WsMN0NrcmMvrh00nFn2IsVT9xlN6qcZjxzF3ltRV21m2vCnvUMnf+Z
-         UKrjnWoXlodK72y+OFNytbfs+S6eLG3xp7H0g4h38abC9KHXzTrAy9YH4Zd3cYInJhW0
-         3mLw==
-X-Gm-Message-State: AOAM531nUsmcTtShpVMX1ZZcG5ztBy0ROg9jsfZSWZX2mHfR7kpiy9Hv
-        HS6laSssXgSp74DuAHhMIgUJ0NGclbhzXVUmxjnQKg==
-X-Google-Smtp-Source: ABdhPJzsJw+me4s6PcSBWtViiL7mpCuWNhF8Uv7+9d1J2YQfVg+ItSNv+pEIEGjGpXGcSCM2228OCGoWH5J06YkwNbs=
-X-Received: by 2002:a05:6512:370b:: with SMTP id z11mr1418607lfr.571.1599904586862;
- Sat, 12 Sep 2020 02:56:26 -0700 (PDT)
+        bh=AjpiL8urXAnTFAVO+8GiICWg+iw3QUy3tHni9BkRczo=;
+        b=N1RGBDJjNztUqpbnoqodPhSvnwst0lpAs1cRAX8uDtUG0tcIAleaGdgGFXqx2aezJW
+         IqXpuybdd+BBeO5ZlI/0I22okfw+klL7xLMXhx1oJA6imbrjBD3ojjISx6nYY7StEnoZ
+         jXlIldRXHNfeULkuAJbVnCeK5390N6m1KZaMqZw6NUePyi4ZtOLTl8/HMQXlI1//09Qz
+         lkioh9P3rYlES9oyFrKW5CQcYpgJjbtRr5+4oXY6N5mNCYcKw3nwU72C5cjpziim2qrs
+         e78rT1CeeT2GyHRoF8N5mss3Lq28Yn6enlMakLsSIjtQcXgN4xejxPOQ8+6flf85kdxl
+         K2CQ==
+X-Gm-Message-State: AOAM532vrbBzVhlPHIQa2C2YXcqGYXO1csMNvZR6XRgqSQ4K2ezNZgWL
+        IY1nb488qaiicfCnuFocBaSArea/u/UJFTvG1uskrQ==
+X-Google-Smtp-Source: ABdhPJwssAD5MX8soX/Gyh8wLeblUTI/YESMVu+/NN0tgiA4ZMs+m5cRPX3MEADA9aOXlOa2ltm+n+lSiAnt6ahfLuk=
+X-Received: by 2002:a2e:810e:: with SMTP id d14mr2388725ljg.100.1599905755340;
+ Sat, 12 Sep 2020 03:15:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
- <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
- <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
- <DB3PR0402MB3916634EA84687D6C7535BC1F5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a06tu4UgTxT4q9eS4=z5AHiEWQMhk5PfZEz=4t+f26s5Q@mail.gmail.com> <DB3PR0402MB391685755C70D85A1E797C0BF52C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB391685755C70D85A1E797C0BF52C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200830224311.36994-1-rikard.falkeborn@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Sep 2020 11:56:16 +0200
-Message-ID: <CACRpkdYN4VdNZOC5f5eAxp=6cXq25owiNW0KVKRupbEFRSANKQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Peng Fan <peng.fan@nxp.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "michael@walle.cc" <michael@walle.cc>,
+Date:   Sat, 12 Sep 2020 12:15:44 +0200
+Message-ID: <CACRpkdbwVLNbabGjwdcKvcKrTWup1PQhoHPivQE2S3ZiPfNV2A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl/actions: Constify static variables
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:31 AM Anson Huang <anson.huang@nxp.com> wrote:
+On Mon, Aug 31, 2020 at 12:43 AM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
 
-> Hi, Linus
->         Do you have chance to take a look at this patch series?
+> Constify a couple of static variables which are not modified to allow
+> the compiler to put them in read-only memory. Patch 1/3 is probably
+> the most important one since those structs contain function pointer.
+> The patches are independent, and can be applied in any order.
+> Compile-tested only.
+>
+> Rikard Falkeborn (3):
+>   pinctrl: actions: pinctrl-owl: Constify owl_pinctrl_ops and
+>     owl_pinmux_ops
+>   pinctrl: actions: pinctrl-s700: Constify s700_padinfo[]
+>   pinctrl: actions: pinctrl-s900: Constify s900_padinfo[]
 
-I've seen there was plenty discussion about them, like this one,
-so I expected a repost (didn't anything change at all?) also a rebase
-on v5.9-rc1 so I do not have to deal with any merge conflicts.
-
-Could you rebase and resend?
+Patch series applied,
+thanks!
 
 Yours,
 Linus Walleij
