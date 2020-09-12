@@ -2,75 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 253E826789D
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 09:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EFD62678C6
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 10:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgILHpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 03:45:20 -0400
-Received: from sonic305-1.consmr.mail.bf2.yahoo.com ([74.6.133.40]:37078 "EHLO
-        sonic305-1.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbgILHpT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 12 Sep 2020 03:45:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1599896718; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=dXRrSOzWlkHuuuGRGJ+0PwZJMJdM4rfWmlbvmX5UxhqqLk0UXSNC82V9B9iWfUjTd0oEHpx00fRU3aaH1MntekSx6X7BVxm4RZmtp+wed715TsYEFemUOff6P97DlPdv5fXcVHVrFywvSueB9n9t7YI2ZBJjk2t/lvIZwwSQFujm45HuM0dD6rWo833WSqtJwpzcRC5D+xtEldUPleHNTPHjSMpp8gplVXGcLmNZmrfSrZG9WeYa1WQQa/d9D7bfEf4YXsaJrKJpu1Q+6JDrjhqDVO31/KLbHPthY82bK78vz8BjjnbffSVpUcaDbuvCTN+/fLOTT7Q9uy1vZy3KNQ==
-X-YMail-OSG: LLqBhJsVM1kZksikuGjxcP4eHwzfmsmq_ziipfJD6lkbLy0BqM0E0eXOXXkd.M2
- J0f_ImNIjMx71r7Gr3Dg18.v5WfsvT2QldapBVVcGcdiXhEUP7a.ZEgE7ncud5i5dmOMLlAoxOtW
- vkhxFtd3TLAODz8jOOWXAncS2nSqDJ63avdo9jDSE56NVstOsZ2aBmLhhMfftWP6LxZ9EanJYrJa
- eLPQaT6MMV7aP6U09F47VIayFNhvWTEfcAcBWr0vJFGpsAK_poFHCyNsbhBEnR.cOBqlPjHWRr2Z
- T.9QQ2nHNDE5xcyMARL6PQVj7h4phbDb.RsRcj.0ZMt9LUw4nd0DHA40K67eAE8VHhdFrjQvT7WN
- lHFfOCz_Kg.jKHq7iQsqmQhuN2BGDxHxWPAgGw6XbOXGkIyLxPRVefiNKiWBxQYjdmJFy9iqBFFp
- 8gikfcyTg0bL4VpnS84TC3KSMj_fH2sQcGWed7aBy2Yy5C7KCyr6JT01c.vbJ_dGJ16r0a5JanSv
- tLPGZhuv..SqvpwMbiQfLz4QZMBBpH2sibq_mv7ip4BG7DgxKtmRmypOVbFlvd5_A0xKQy5eVnVu
- QT2JM7r5EK7G301pC6wDySb9560C6rdBiZ2OSOJF1CdUNq221.k4EmcS_3XGAfCL6A0CwkceNHvL
- _TVOSrrBsZc8GUI0zHSo9xbxXkiixY0tEcdEnGs7ZMBzTIaRNTKqKBsBWyy2xiaC72EAwpkrHoNQ
- WtWBAGaEEXnqGbh5mdDcG0yZZL6tEYsDDOBgC69Txk9no.Z4TcXhG5rxLabS68WQ_8mw_qIQNM5x
- vOSdj_hnpALVLo2JcroF6auJCJULWI3po5B7YZ995h6BVER.7flw6NVIcnNg36hYtUrG6E7CHukA
- 8cvRGl7BlQ1hRLtgzZ7mV9HxBxRpPT_XNVQmVyADweLoZ9Zo1Ta001yFkjM0rSQ1OmP.DokJmhFt
- ciH47dKimoIxWM3CInHS424pWNu7BKncWXZgFOfS0uLdfm3gd8w8kPYTwOP9_SymE_cgELIvP1Sj
- Q0qyLNq0xErPhfkBOhB.hztN2UCbT32DdwoZR_VndF2o.9xoHKlt2K3r.AoA.TsXcBPCo173uIkl
- 42KraxGzugoaK74EBpFnGoyIOYGBh4T5rm69Z9p6B5xFst0SrIy1lGm3pEJmkxKBB52d75wnjaJf
- Kc5VpYsWd4KpDZnkcG1QcAjkMydpT86A493th0M7WDnx5WM.7CUWxjXQ_oQJEnf0_q5vmh9i5q8F
- sXjv447CDgOEP4Kxm.Uiqm5WO15E7UWVu5K7SUq2CJ6Y75lQYmdNp4XFnIYw4hDiJPnXMZ7NxJT.
- D8YopthXldf4l.AYJwekf1k5Cge9zx.lI3UHgJJqQwpwONwpRqDe74dsyk_ukpE5EcnPw3uQioK_
- mkRulIQco0PnyjUR1Td.i78rCAziKOBcicuM.bslkcssY9.3LqVwGXVM-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Sat, 12 Sep 2020 07:45:18 +0000
-Date:   Sat, 12 Sep 2020 07:45:13 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <307770951.1372798.1599896713776@mail.yahoo.com>
-Subject: BUSINESS ACHIEVEMENT FROM (Ms Lisa hugh).
+        id S1725809AbgILILY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 04:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgILILX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 04:11:23 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F257AC061573
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 01:11:22 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id e4so2008779pln.10
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 01:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=04wDqmaZccj9KFUOYymFspinKcticrouVTrfniOEN/o=;
+        b=mA5Ix6AZooTpQQSL77Ropm5LAS7wyjvJT6VYH8IX9uZDgjGjt00XuqkizkV++KHlcW
+         o9WXwuhIzSp0I5zAtSHggrd6wP7Ebe/WANhrvhtR9/vc3mMqOBgTXq27YQcAr6eIHaQq
+         D0k8LO3j87SOqeWLzem49TQ0+6emQ7Eyvsj1kygE7IZYQuzKfpNVFSHcYuDl0328jKc+
+         hm5WjsVeeOP7KKU3yljHf2rjn0dNsdIPFPzNrtShRM4VBfVlPn8AdStbkwgl9GId1MWs
+         WZnf+fAbNIY9fvmeS/m6zLg2ZfkxHSHm9I7yT6HbAnGJdv2h//+CTSCx01mPJfevx8UO
+         7SQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=04wDqmaZccj9KFUOYymFspinKcticrouVTrfniOEN/o=;
+        b=dbYOgNShYVmXkTj5Q4dBwB4nF+P2LSx20jbEP496jVrrIDx6tRy5WYOeawC11HTCBP
+         +6TVyMoTdoPt17INGYNh3l4O8Q+eir1SmrlTw5Ie8T6IcC2N9pS/h5jRFH+UDFPhVm01
+         SRND9TJsYqoNOot/W2m9+qFkXNgmIVKiuJ1WIsDfv4T0EE90a/FA6YHkUyqjwtL5NngP
+         ULwbfX409ZD+MS8sDkoF4LZL/IinGgtKELQ96vqRllUv4R7b0tY3pCIa76+E90Lnz5pT
+         ye45/SoMAW9x8zDeVUG3QtP02MWlYyjUW6XnU0rY+KcvLLqOYlfZSy4SfuiGBWvARC/6
+         opLQ==
+X-Gm-Message-State: AOAM5336NnMNsLGdwdZMScamL3gwUQRApvQGOulRWPyShm6L4AIXMHy+
+        Cn+9YahsEHvQE5MVI+LJqC8Z5OnRORE=
+X-Google-Smtp-Source: ABdhPJxzOQho1fuhJKnN3fmb0XI7nHha1O1k4yxN/tYgIMxTQMv+z9E5UuPkrpT6YeVbBlrKirXLxw==
+X-Received: by 2002:a17:902:ab88:b029:d1:9be2:c683 with SMTP id f8-20020a170902ab88b02900d19be2c683mr5646280plr.24.1599898282021;
+        Sat, 12 Sep 2020 01:11:22 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id y6sm4002811pjl.9.2020.09.12.01.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Sep 2020 01:11:20 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH v2 0/2] fix potential discarding of events by read events
+Date:   Sat, 12 Sep 2020 16:11:03 +0800
+Message-Id: <20200912081105.1615496-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <307770951.1372798.1599896713776.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16583 YMailNodin Mozilla/5.0 (Windows NT 6.2; rv:80.0) Gecko/20100101 Firefox/80.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This patch set addresses a bug where reading events can quietly discard
+events.  The problem occurs any time a request made is for a number of
+events that differs from the number available at the time - a number
+that userspace is unaware of.
+
+The problem is due to the read multiple always reading up to 16 events
+from the kernel - independent of how many events have been requested.
+
+The problem applies to reading both single and multiple events, as the
+single event read implementation wraps the multiple.
+
+The first patch extends test coverage to highlight the problem.
+The second fixes the bug.
+
+Changes for v2:
+ - restored usleep() when creating multiple events in patch 1.
+
+Kent Gibson (2):
+  tests: event: reading test coverage extended to cover reading a subset
+    of available events
+  core: fix reading subset of available events
+
+ lib/core.c          |   5 +-
+ tests/tests-event.c | 157 ++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 141 insertions(+), 21 deletions(-)
 
 
-Dear Friend,
+base-commit: fc61e740fcbe3c6594295766759888c96c45bd29
+-- 
+2.28.0
 
-I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
-
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
-
-Below information is what i need from you so will can be reaching each other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa hugh.
