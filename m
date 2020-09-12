@@ -2,119 +2,202 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC9B267A9D
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 15:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8C7A267B31
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 17:15:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgILNbZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 09:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        id S1725848AbgILPPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 11:15:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgILNbW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 09:31:22 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF935C061573;
-        Sat, 12 Sep 2020 06:31:19 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u8so8711701lff.1;
-        Sat, 12 Sep 2020 06:31:19 -0700 (PDT)
+        with ESMTP id S1725846AbgILPPp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 11:15:45 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3DBC061573
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 08:15:45 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id x123so9307735pfc.7
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 08:15:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8nLk3sekrjFnDz3iYznJbS7ByYpbHuy0+9+SFQMlFto=;
-        b=mxsW4AoOMo6Jx7q+zDI0Zalpzf4bsb4hnqIz2OqN/MnXa34Gx7Mtfj0tKAANekxrkA
-         yUdupvGSO358WWcvaITyE6Ew8QhZvrtHDIyx1Y1dcotrOknCCyRZvUYSbSS+Un9sa9Gj
-         i8qXTpxSIr9oOXYmVyA3Pho+SBgL/y/pdXcD519Miu0lexeo3QT4uY4BFSKm69yMLg2T
-         DmOpH3rJv09XQD2rLyTEbhIR0KkHTP6rncVOYicjf37IxNK9GAKIipsh1RuEfSZa+z7A
-         yPlto9m3zcwbitHo9x0yMXy3RISFBGX8HwXrj8VAYdw5sVYxhSDBBz3vNOONSGcboB/r
-         YxcQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=x0vyDk/qYhVmWh7pPUz/SvSyj29CK17uhZWEfC8TmZg=;
+        b=04PtklaPf4rGovLXO8aftUQWsUTk/NdxecQEoXp/f/zaXnihlbEjm6aQZ2rBoB3Gnc
+         Hki+pRv4OV8adKKs1nEsZscc8RdIVk8aYaDOnw772sZO3tf6HJW5pa9xygUNXvEDsxOx
+         aPqI+XQuuzCxJ5P303Ih/H2c/s1E2V4nsUQn1qdjFdZsHbCe6oMWXOT/1nez7S3tZciu
+         n3i3X7CGZx517L0gFJyCQ3HvByIwLk7FdKP6dWYBdxPetnQL3vfrXTdOpSLsIqy41sai
+         JXh6bmlvt8Va6VZ+6H5WpzqOvHhWDic7Fx0aBjMCm3WkhVVmY2cvp5+V8Di2tyKKWkeZ
+         NwZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8nLk3sekrjFnDz3iYznJbS7ByYpbHuy0+9+SFQMlFto=;
-        b=re80auLotB6eVW8/InM+hPbbjhY1lEpkTDFsTHj8PFiHk4NnPLvJM6pMnZDqfco6AY
-         EUNSafGH4T1I8GIRXJfu7huCJ8a8d+ve25MjYt+q6SiKTk0hA+xZ6phB+0i98eP+1H3K
-         1NUc0GvtBxlA9OL2BUO8DOUfZpKrFb+ivRWhyIv9CkfG3uKLa/DDjVirCDZQVHnCHu+1
-         0WeyloRf1W4HWEktVWEHe5fp7uo+aJx/ULX30QhpaTj3owR13SL/6TgfL24PyhN2N1RB
-         RMB7APlTfKN7mUbdYP1KS8KV5svxvKFv1moEnui5Sl4t6Y7WJujLN/mwUjioSiazYgmK
-         0JTw==
-X-Gm-Message-State: AOAM5316kyy8hPHTY29pduPYle/hMXEGvBSA1HFHJ6GFiLIfupxn9MLz
-        YNHl3LmFYbbU4XqW4Chv1kY=
-X-Google-Smtp-Source: ABdhPJyboeaBbTV2x7HtPLl76uVzaYiBa0W3ArFu+F9dT5KtbdEq1P/OFPWnJcsm0tZV3vJkrP8PeA==
-X-Received: by 2002:a19:9cf:: with SMTP id 198mr2329692lfj.214.1599917478217;
-        Sat, 12 Sep 2020 06:31:18 -0700 (PDT)
-Received: from mobilestation ([95.79.127.85])
-        by smtp.gmail.com with ESMTPSA id n62sm1330226lfa.82.2020.09.12.06.31.16
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=x0vyDk/qYhVmWh7pPUz/SvSyj29CK17uhZWEfC8TmZg=;
+        b=lqKFhbo61xp4NWWK2FlTnP/Urr0+allwV6eFiHp0uf/67bSzMlAMNWuoaaTwGXLi4m
+         iEmMgzWYPydMhZJlgWf96q5cPm36B25AC28jidQOHohTPRaIVJrX3v55SyIhgJqSaNMt
+         MeNiZ5cmT2c4ncdbFgzTeSRK1w9nTxamqH58YPlDejA9ctV1jzLGKel1mCowNDvP18z0
+         S53nDWNcxmID54Nin9Q37WRIMk9vPVtXRX4EG9d4RYKJB+TCUnDTMQLskCbY8SL4ezQl
+         VJBkXxvYAv5JZlgUYT/TlKHoTcz4iHQW4yk5K7FBT1z3a0PSXCu2iVVLCQADg1a/eTYD
+         wO1w==
+X-Gm-Message-State: AOAM533HQ31G4L2JliGRFRKmdC+YGAjdZBko1bgEBtRK6+L/kyM4Sthf
+        Rc9VyvGiXcW63QPk/6NPKwRP7K3SdnhR2w==
+X-Google-Smtp-Source: ABdhPJwzjjl8HJifnrovivmFf8Evm0AWbyeyctC3VGDtuYBkgYp1t8ZuU9kGSsRuiAsVp7/81DCrrw==
+X-Received: by 2002:a65:5689:: with SMTP id v9mr5353604pgs.271.1599923743000;
+        Sat, 12 Sep 2020 08:15:43 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id x5sm4399749pgf.65.2020.09.12.08.15.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Sep 2020 06:31:17 -0700 (PDT)
-Date:   Sat, 12 Sep 2020 16:31:14 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Dingtianhong <dingtianhong@huawei.com>
-Cc:     "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel.openeuler" <kernel.openeuler@huawei.com>
-Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
-Message-ID: <20200912133114.uqhqgd7etfdt77zt@mobilestation>
-References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
- <20200825095726.yvg34q74xy57qhrx@mobilestation>
- <856a6200-2bbb-9ffa-9233-53168bd7c49b@huawei.com>
+        Sat, 12 Sep 2020 08:15:42 -0700 (PDT)
+Message-ID: <5f5ce61e.1c69fb81.1d40b.ab02@mx.google.com>
+Date:   Sat, 12 Sep 2020 08:15:42 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <856a6200-2bbb-9ffa-9233-53168bd7c49b@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.9-rc1-15-g0a2d411b56b7
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.9-rc1-15-g0a2d411b56b7)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 06:18:07AM +0000, Dingtianhong wrote:
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.9-rc1-15-=
+g0a2d411b56b7)
 
-[...]
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.9-rc1-15-g0a2d411b56b7/
 
-> > On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
-> >> The hisilicon ascend soc's gpio is based on the synopsys DW gpio,
-> >> and expand the register to support for INTCOMB_MASK, the new
-> >> register is used to enable/disable the interrupt combine features.
-> > 
-> > I am wondering what does the "Interrupt Combine" feature do? Is it the same as
-> > the GPIO_INTR_IO pre-synthesize parameter of the DW_apb_gpio IP-core? Is it
-> > possible to tune the DW APB GPIO controller at runtime sending up to the IRQ
-> > controller either combined or individual interrupts?
-> > 
-> 
-> looks like the same.
-> 
-> > If the later is true, then probably having the "Interrupt Combine" feature
-> > enabled must depend on whether an individual or combined interrupts are supplied
-> > in dts, etc...
-> > 
-> 
-> needed.
-> 
-> > Could you explain the way the feature works and the corresponding layout
-> > register in more details?
-> > 
-> 
-> Ok
-> The hisilicon chip use the register called GPIO_INTCOMB_MASK (offset is 0xffc) to enable the combien interrupt.
-> it is very simple, if GPIO_INTCOMB_MASK.bit0 is 0, then all combine interrupte could not be used (default
-> setting), otherwise if 1, then the 32 ports could use the same irq line, that is all.
+Tree: linusw
+Branch: devel
+Git Describe: v5.9-rc1-15-g0a2d411b56b7
+Git Commit: 0a2d411b56b7c661e753bbea568f6b04c4a961c5
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-The main question is whether your hardware is capable of working with both
-combined and individual interrupts. Is your version of the DW APB GPIO
-controller able to generate both types of them? How is it connected to the
-parental interrupt controller?
+Warnings Detected:
 
-So If the GPIO and IRQ controllers are attached to each other with a single lane
-gpio_intr_flag, then indeed it's pure combined IRQ design and we'll have to make
-sure that GPIO_INTCOMB_MASK.bit0 is set to one before using the DW GPIO block.
-If they are also connected with each other by 32 individual GPIO-IRQ
-gpio_intr{_n}N lanes, then setting or clearing of the GPIO_INTCOMB_MASK.bit0
-flag will for example depend on the number IRQ lanes specified in a dts file. In
-the later case the patch needs to be altered, but it would provide a better
-support of the hisilicon ascend soc's GPIO capabilities.
+arc:
 
--Sergey
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
