@@ -2,96 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45B5A267B53
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 18:10:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E515267B57
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 18:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgILQJ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 12:09:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        id S1725850AbgILQPq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 12:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgILQJ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 12:09:58 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF860C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 09:09:57 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id k25so14982805ljg.9
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 09:09:57 -0700 (PDT)
+        with ESMTP id S1725385AbgILQPn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 12:15:43 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09952C061573
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 09:15:42 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y2so8954155lfy.10
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 09:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GfTGBer8RATBfD/BSJV0RKCtt8U1lAtJViRDynBOF3Y=;
-        b=ycL9Gnq0/OzDgoOKpHTuxmOkkI6Wqxi6nmetrLaT1oRp9EIFNJUGyMQBljjJc0nG0v
-         8DnLbLZVq+iAsyYymh3bjnH7D7YlKJv8aBvY55T6z30DyAP7rYZXn/ZxAuZylk/+jf5g
-         IGeMcMBnmhV6ts6k29Dta0ZpiTk+7JBWJzKVFhcgknuTFGPlSiDKeskyD8S4lX3ShfVP
-         4UUIKVJcosIBOpTICwljI997syj93RrvH8j8+T5ZdCHUych916vW5KU2Qycwa5WQ4FYp
-         aVI7ZBtqN9vlqQpSzPmZ+o1RdGeQ7Zg9Jxz7Jp8Pk+YefbujkTtz3WC8lwE3hNu1jIIr
-         avrQ==
+        bh=1mfFSLJ2aT99PDQEJLg63CY2EfFTeT2UQOOCsNtG5XQ=;
+        b=ik2OaDdzUHuVOMNMLsgvQOnL4fvUvEqien4NjpuI5VfIclMzHKWaow1odpvd5sDPJU
+         +LXHDLiPBxR8ThB4sl5aU07BCGyBsQ0CUT5VU6uQyRjR0z/eVMBKV/EafigpOJM2w6fx
+         tUF49I4gg9jJzUNcM/EjXzreHBPpIlb/n4r5NT5TvcdPcNldy6x3TCHdfhOof7EJKQ/u
+         kLZH5q/yNZIk9TzYMtUHe6cNExS56wCEroXgH0iLeRteyVneoKhJ3FbCUEVL5W4iG82t
+         Hyl6zxvpxVVMdWTF4rS9E+pNohfmkBfFjwohofeLq61gNe4dH/KzLBRCSgspSF7nutvm
+         ByUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GfTGBer8RATBfD/BSJV0RKCtt8U1lAtJViRDynBOF3Y=;
-        b=SugrU7V1hRyi6X70eVT0yR7R5mz1x+kQSvJR9mnt3RpPaL0O8MxE18qPwMFqwMqmBD
-         Xfe8JAgZJJg4JBqjAPWLv1ZPcI6awmd3B9CA/kipzkPkiN5lQzZODvJUBH8i9Kp4EBLs
-         10m28wWfa7/gVkSACypNGtLgkBmjmcoq0asCABk9ejnSi9tMcNQBnC9IbMnwd/DlGhUC
-         4GT1nS+q6y4N/9PXcCMJKaLzClaOMJh6ULijowiu52DDru+ERUqJdmiSiU0gMt6D6QSL
-         9/UblkuIRlsURbKkarrHdYzEmwUdKkE6FMVmcYb/J9N3u2eiQ+anNyPi6EZg126s2Nxo
-         Zcwg==
-X-Gm-Message-State: AOAM532AoFq+EioDxv6Uxb2P8+aBrWpFX6Yi8mKpBHgKjB0Q0fgsQl/y
-        2hc9cXkp7GBOQi5Vizu03MuBQxaaB4QwTkSJEJ8v3vcZmmE=
-X-Google-Smtp-Source: ABdhPJy6ZAMEu7rVKygsqJ8Y9WlGqdtya7BDyOamAGm5sKv1JX++wYpkxrw3S1w7pibhY9m++Hz/VmzIUzLA6GfJrgc=
-X-Received: by 2002:a2e:a177:: with SMTP id u23mr2426839ljl.104.1599926995989;
- Sat, 12 Sep 2020 09:09:55 -0700 (PDT)
+        bh=1mfFSLJ2aT99PDQEJLg63CY2EfFTeT2UQOOCsNtG5XQ=;
+        b=LB/gtVlh1OAj0TGeGbYHwT/YRKnMXPffapLtZzIOv294IZedfkoSiqH8Ofl2FKcdj1
+         zUA5XU65kE0JDgKReeqkRilIbF7aLK6OmqFKHsRhqXXTZlI08N3lgYBU7+KC6AcooaH5
+         ZGltNF6Ea8OiJFi0cQdP7AWOrJ3b558FNPuVkdIj8HJ+K9+mynW6hvgcKBsm854DHihr
+         9eDWf5zOIWsemLxZ8SB8xuCu8qoz3SgcUwF0+5uYklIz8V4PX2QaLNl2EhIQCV5ZjS0a
+         cLjwLH+bxIL1scHVkxkEzcwsZfOjuBgeJWREdTrRUYiJ/ImEj6fatxNtDZxlbottJ0m8
+         5apQ==
+X-Gm-Message-State: AOAM532qbQD96L8mS03HUjDEsSizF5Y4LnrRiprvoi3/XrXT/leWQcWL
+        UTdSDrFFR+t9EAYISiGPOt7czP+9tWf6IV/UgLgzDg==
+X-Google-Smtp-Source: ABdhPJwzk5Ff3ZAWzHOFqk2anJO10WsYhRwbjNzmrZfdwXqXvmayMoWnkftiDhcCyLXCuPFXWkcBZk4GHcnDyvYoRF0=
+X-Received: by 2002:a05:6512:370b:: with SMTP id z11mr1756518lfr.571.1599927340316;
+ Sat, 12 Sep 2020 09:15:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
-In-Reply-To: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
+References: <20200907211712.9697-1-chris.packham@alliedtelesis.co.nz> <20200907211712.9697-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200907211712.9697-2-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Sep 2020 18:09:45 +0200
-Message-ID: <CACRpkdZ5YU=ix9Qd8KBfqK9i9e3q-2THt06BJiTTEMUkGap_NQ@mail.gmail.com>
-Subject: Re: pinctrl: sx150x bug
-To:     Martin DEVERA <devik@eaxlabs.cz>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sat, 12 Sep 2020 18:15:29 +0200
+Message-ID: <CACRpkdZbo6zN+F0K6oHyWRTWN3raRGVNzps4VCB+QuSzsyq9Ow@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] pinctrl: mvebu: Fix i2c sda definition for 98DX3236
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 11:28 AM Martin DEVERA <devik@eaxlabs.cz> wrote:
+On Mon, Sep 7, 2020 at 11:17 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-> I encountered bug in SX1502 expander driver in 5.7.7. Here is relevant
-> DTS part:
+> Per the datasheet the i2c functions use MPP_Sel=0x1. They are documented
+> as using MPP_Sel=0x4 as well but mixing 0x1 and 0x4 is clearly wrong. On
+> the board tested 0x4 resulted in a non-functioning i2c bus so stick with
+> 0x1 which works.
 >
-> compatible = "semtech,sx1502q";
-> gpio4_cfg_pins: gpio2-cfg {
->                          pins = "gpio5";
->                          output-high;
->      };
->
-> And part of OOPS:
->
-> [    0.673996] [<c023cfa6>] (gpiochip_get_data) from [<c023b235>]
-> (sx150x_gpio_direction_output+0xd)
-> [    0.683259] [<c023b235>] (sx150x_gpio_direction_output) from
-> [<c023b363>] (sx150x_pinconf_set+0x)
-> [    0.692796] [<c023b363>] (sx150x_pinconf_set) from [<c0238fef>]
-> (pinconf_apply_setting+0x39/0x7e)
-> [    0.701635] [<c0238fef>] (pinconf_apply_setting) from [<c0236c77>]
-> (pinctrl_commit_state+0xa5/0x)
-> [    0.710648] [<c0236c77>] (pinctrl_commit_state) from [<c0237e03>]
-> (pinctrl_enable+0xff/0x1d4)
-> [    0.719139] [<c0237e03>] (pinctrl_enable) from [<c023b791>]
-> (sx150x_probe+0x1a3/0x358)
-> [    0.727027] [<c023b791>] (sx150x_probe) from [<c02c38bf>]
-> (i2c_device_probe+0x1bb/0x1dc)
->
-> The problem is that sx150x_pinconf_set uses sx150x_gpio_direction_output
-> but gpio is not
-> setup yet. Patch below fixes it but I'm not sure whether is it correct:
+> Fixes: d7ae8f8dee7f ("pinctrl: mvebu: pinctrl driver for 98DX3236 SoC")
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I simply rebased and applied this patch now.
+This patch 1/3 applied for pin control fixes.
+
+Patches 2 & 3 should go via the SoC tree.
 
 Yours,
 Linus Walleij
