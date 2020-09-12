@@ -2,272 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA76D267816
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 08:05:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 253E826789D
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 09:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbgILGFa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 02:05:30 -0400
-Received: from out28-196.mail.aliyun.com ([115.124.28.196]:49178 "EHLO
-        out28-196.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgILGF2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 02:05:28 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.638439-0.000183839-0.361377;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03275;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.IW5skju_1599890708;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IW5skju_1599890708)
-          by smtp.aliyun-inc.com(10.147.43.95);
-          Sat, 12 Sep 2020 14:05:23 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linus.walleij@linaro.org, paul@crapouillou.net
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v3 3/3] pinctrl: Ingenic: Add I2S pins support for Ingenic SoCs.
-Date:   Sat, 12 Sep 2020 14:04:25 +0800
-Message-Id: <20200912060425.30423-4-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200912060425.30423-1-zhouyanjie@wanyeetech.com>
-References: <20200912060425.30423-1-zhouyanjie@wanyeetech.com>
+        id S1725850AbgILHpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 03:45:20 -0400
+Received: from sonic305-1.consmr.mail.bf2.yahoo.com ([74.6.133.40]:37078 "EHLO
+        sonic305-1.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725846AbgILHpT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 12 Sep 2020 03:45:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1599896718; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=dXRrSOzWlkHuuuGRGJ+0PwZJMJdM4rfWmlbvmX5UxhqqLk0UXSNC82V9B9iWfUjTd0oEHpx00fRU3aaH1MntekSx6X7BVxm4RZmtp+wed715TsYEFemUOff6P97DlPdv5fXcVHVrFywvSueB9n9t7YI2ZBJjk2t/lvIZwwSQFujm45HuM0dD6rWo833WSqtJwpzcRC5D+xtEldUPleHNTPHjSMpp8gplVXGcLmNZmrfSrZG9WeYa1WQQa/d9D7bfEf4YXsaJrKJpu1Q+6JDrjhqDVO31/KLbHPthY82bK78vz8BjjnbffSVpUcaDbuvCTN+/fLOTT7Q9uy1vZy3KNQ==
+X-YMail-OSG: LLqBhJsVM1kZksikuGjxcP4eHwzfmsmq_ziipfJD6lkbLy0BqM0E0eXOXXkd.M2
+ J0f_ImNIjMx71r7Gr3Dg18.v5WfsvT2QldapBVVcGcdiXhEUP7a.ZEgE7ncud5i5dmOMLlAoxOtW
+ vkhxFtd3TLAODz8jOOWXAncS2nSqDJ63avdo9jDSE56NVstOsZ2aBmLhhMfftWP6LxZ9EanJYrJa
+ eLPQaT6MMV7aP6U09F47VIayFNhvWTEfcAcBWr0vJFGpsAK_poFHCyNsbhBEnR.cOBqlPjHWRr2Z
+ T.9QQ2nHNDE5xcyMARL6PQVj7h4phbDb.RsRcj.0ZMt9LUw4nd0DHA40K67eAE8VHhdFrjQvT7WN
+ lHFfOCz_Kg.jKHq7iQsqmQhuN2BGDxHxWPAgGw6XbOXGkIyLxPRVefiNKiWBxQYjdmJFy9iqBFFp
+ 8gikfcyTg0bL4VpnS84TC3KSMj_fH2sQcGWed7aBy2Yy5C7KCyr6JT01c.vbJ_dGJ16r0a5JanSv
+ tLPGZhuv..SqvpwMbiQfLz4QZMBBpH2sibq_mv7ip4BG7DgxKtmRmypOVbFlvd5_A0xKQy5eVnVu
+ QT2JM7r5EK7G301pC6wDySb9560C6rdBiZ2OSOJF1CdUNq221.k4EmcS_3XGAfCL6A0CwkceNHvL
+ _TVOSrrBsZc8GUI0zHSo9xbxXkiixY0tEcdEnGs7ZMBzTIaRNTKqKBsBWyy2xiaC72EAwpkrHoNQ
+ WtWBAGaEEXnqGbh5mdDcG0yZZL6tEYsDDOBgC69Txk9no.Z4TcXhG5rxLabS68WQ_8mw_qIQNM5x
+ vOSdj_hnpALVLo2JcroF6auJCJULWI3po5B7YZ995h6BVER.7flw6NVIcnNg36hYtUrG6E7CHukA
+ 8cvRGl7BlQ1hRLtgzZ7mV9HxBxRpPT_XNVQmVyADweLoZ9Zo1Ta001yFkjM0rSQ1OmP.DokJmhFt
+ ciH47dKimoIxWM3CInHS424pWNu7BKncWXZgFOfS0uLdfm3gd8w8kPYTwOP9_SymE_cgELIvP1Sj
+ Q0qyLNq0xErPhfkBOhB.hztN2UCbT32DdwoZR_VndF2o.9xoHKlt2K3r.AoA.TsXcBPCo173uIkl
+ 42KraxGzugoaK74EBpFnGoyIOYGBh4T5rm69Z9p6B5xFst0SrIy1lGm3pEJmkxKBB52d75wnjaJf
+ Kc5VpYsWd4KpDZnkcG1QcAjkMydpT86A493th0M7WDnx5WM.7CUWxjXQ_oQJEnf0_q5vmh9i5q8F
+ sXjv447CDgOEP4Kxm.Uiqm5WO15E7UWVu5K7SUq2CJ6Y75lQYmdNp4XFnIYw4hDiJPnXMZ7NxJT.
+ D8YopthXldf4l.AYJwekf1k5Cge9zx.lI3UHgJJqQwpwONwpRqDe74dsyk_ukpE5EcnPw3uQioK_
+ mkRulIQco0PnyjUR1Td.i78rCAziKOBcicuM.bslkcssY9.3LqVwGXVM-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Sat, 12 Sep 2020 07:45:18 +0000
+Date:   Sat, 12 Sep 2020 07:45:13 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <307770951.1372798.1599896713776@mail.yahoo.com>
+Subject: BUSINESS ACHIEVEMENT FROM (Ms Lisa hugh).
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+References: <307770951.1372798.1599896713776.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16583 YMailNodin Mozilla/5.0 (Windows NT 6.2; rv:80.0) Gecko/20100101 Firefox/80.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-1.Add I2S pins support for the JZ4780 SoC.
-2.Add I2S pins support for the X1000 SoC.
-3.Add I2S pins support for the X1500 SoC.
-4.Add I2S pins support for the X1830 SoC.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
 
-Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    No change.
+Dear Friend,
 
- drivers/pinctrl/pinctrl-ingenic.c | 70 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index d5ac8489ba3d..c8e50a58a5e5 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1083,6 +1083,11 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
- static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
- static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
- static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
-+static int jz4780_i2s_data_tx_pins[] = { 0x87, };
-+static int jz4780_i2s_data_rx_pins[] = { 0x86, };
-+static int jz4780_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
-+static int jz4780_i2s_clk_rx_pins[] = { 0x88, 0x89, };
-+static int jz4780_i2s_sysclk_pins[] = { 0x85, };
- static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
- 
- static int jz4780_uart2_data_funcs[] = { 1, 1, };
-@@ -1125,6 +1130,11 @@ static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
- static int jz4780_i2c3_funcs[] = { 1, 1, };
- static int jz4780_i2c4_e_funcs[] = { 1, 1, };
- static int jz4780_i2c4_f_funcs[] = { 1, 1, };
-+static int jz4780_i2s_data_tx_funcs[] = { 0, };
-+static int jz4780_i2s_data_rx_funcs[] = { 0, };
-+static int jz4780_i2s_clk_txrx_funcs[] = { 1, 0, };
-+static int jz4780_i2s_clk_rx_funcs[] = { 1, 1, };
-+static int jz4780_i2s_sysclk_funcs[] = { 2, };
- static int jz4780_hdmi_ddc_funcs[] = { 0, 0, };
- 
- static const struct group_desc jz4780_groups[] = {
-@@ -1213,6 +1223,11 @@ static const struct group_desc jz4780_groups[] = {
- 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3),
- 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e),
- 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f),
-+	INGENIC_PIN_GROUP("i2s-data-tx", jz4780_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", jz4780_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", jz4780_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", jz4780_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", jz4780_i2s_sysclk),
- 	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc),
- 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit),
- 	INGENIC_PIN_GROUP("lcd-24bit", jz4770_lcd_24bit),
-@@ -1261,6 +1276,9 @@ static const char *jz4780_nemc_groups[] = {
- };
- static const char *jz4780_i2c3_groups[] = { "i2c3-data", };
- static const char *jz4780_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
-+static const char *jz4780_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *jz4780_cim_groups[] = { "cim-data", };
- static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
- 
-@@ -1287,6 +1305,7 @@ static const struct function_desc jz4780_functions[] = {
- 	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
- 	{ "i2c3", jz4780_i2c3_groups, ARRAY_SIZE(jz4780_i2c3_groups), },
- 	{ "i2c4", jz4780_i2c4_groups, ARRAY_SIZE(jz4780_i2c4_groups), },
-+	{ "i2s", jz4780_i2s_groups, ARRAY_SIZE(jz4780_i2s_groups), },
- 	{ "cim", jz4780_cim_groups, ARRAY_SIZE(jz4780_cim_groups), },
- 	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
- 	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
-@@ -1368,6 +1387,10 @@ static int x1000_i2c0_pins[] = { 0x38, 0x37, };
- static int x1000_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1000_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1000_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1000_i2s_data_tx_pins[] = { 0x24, };
-+static int x1000_i2s_data_rx_pins[] = { 0x23, };
-+static int x1000_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1000_i2s_sysclk_pins[] = { 0x20, };
- static int x1000_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1430,6 +1453,10 @@ static int x1000_i2c0_funcs[] = { 0, 0, };
- static int x1000_i2c1_a_funcs[] = { 2, 2, };
- static int x1000_i2c1_c_funcs[] = { 0, 0, };
- static int x1000_i2c2_funcs[] = { 1, 1, };
-+static int x1000_i2s_data_tx_funcs[] = { 1, };
-+static int x1000_i2s_data_rx_funcs[] = { 1, };
-+static int x1000_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1000_i2s_sysclk_funcs[] = { 1, };
- static int x1000_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1000_lcd_8bit_funcs[] = {
- 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-@@ -1483,6 +1510,10 @@ static const struct group_desc x1000_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1000_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1000_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1000_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1000_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1000_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1000_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1000_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1000_cim),
- 	INGENIC_PIN_GROUP("lcd-8bit", x1000_lcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-16bit", x1000_lcd_16bit),
-@@ -1524,6 +1555,9 @@ static const char *x1000_cs2_groups[] = { "emc-cs2", };
- static const char *x1000_i2c0_groups[] = { "i2c0-data", };
- static const char *x1000_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1000_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1000_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1000_cim_groups[] = { "cim-data", };
- static const char *x1000_lcd_groups[] = {
- 	"lcd-8bit", "lcd-16bit", "lcd-no-pins",
-@@ -1549,6 +1583,7 @@ static const struct function_desc x1000_functions[] = {
- 	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
- 	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
- 	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
-+	{ "i2s", x1000_i2s_groups, ARRAY_SIZE(x1000_i2s_groups), },
- 	{ "cim", x1000_cim_groups, ARRAY_SIZE(x1000_cim_groups), },
- 	{ "lcd", x1000_lcd_groups, ARRAY_SIZE(x1000_lcd_groups), },
- 	{ "pwm0", x1000_pwm0_groups, ARRAY_SIZE(x1000_pwm0_groups), },
-@@ -1584,6 +1619,10 @@ static int x1500_i2c0_pins[] = { 0x38, 0x37, };
- static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1500_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1500_i2s_data_tx_pins[] = { 0x24, };
-+static int x1500_i2s_data_rx_pins[] = { 0x23, };
-+static int x1500_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1500_i2s_sysclk_pins[] = { 0x20, };
- static int x1500_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1607,6 +1646,10 @@ static int x1500_i2c0_funcs[] = { 0, 0, };
- static int x1500_i2c1_a_funcs[] = { 2, 2, };
- static int x1500_i2c1_c_funcs[] = { 0, 0, };
- static int x1500_i2c2_funcs[] = { 1, 1, };
-+static int x1500_i2s_data_tx_funcs[] = { 1, };
-+static int x1500_i2s_data_rx_funcs[] = { 1, };
-+static int x1500_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1500_i2s_sysclk_funcs[] = { 1, };
- static int x1500_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1500_pwm_pwm0_funcs[] = { 0, };
- static int x1500_pwm_pwm1_funcs[] = { 1, };
-@@ -1629,6 +1672,10 @@ static const struct group_desc x1500_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1500_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1500_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1500_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1500_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1500_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1500_cim),
- 	{ "lcd-no-pins", },
- 	INGENIC_PIN_GROUP("pwm0", x1500_pwm_pwm0),
-@@ -1647,6 +1694,9 @@ static const char *x1500_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
- static const char *x1500_i2c0_groups[] = { "i2c0-data", };
- static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1500_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1500_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1500_cim_groups[] = { "cim-data", };
- static const char *x1500_lcd_groups[] = { "lcd-no-pins", };
- static const char *x1500_pwm0_groups[] = { "pwm0", };
-@@ -1664,6 +1714,7 @@ static const struct function_desc x1500_functions[] = {
- 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
- 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
- 	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
-+	{ "i2s", x1500_i2s_groups, ARRAY_SIZE(x1500_i2s_groups), },
- 	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
- 	{ "lcd", x1500_lcd_groups, ARRAY_SIZE(x1500_lcd_groups), },
- 	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
-@@ -1722,6 +1773,11 @@ static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
- static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
- static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
- static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
-+static int x1830_i2s_data_tx_pins[] = { 0x53, };
-+static int x1830_i2s_data_rx_pins[] = { 0x54, };
-+static int x1830_i2s_clk_txrx_pins[] = { 0x58, 0x52, };
-+static int x1830_i2s_clk_rx_pins[] = { 0x56, 0x55, };
-+static int x1830_i2s_sysclk_pins[] = { 0x57, };
- static int x1830_lcd_rgb_18bit_pins[] = {
- 	0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
- 	0x68, 0x69, 0x6c, 0x6d, 0x6e, 0x6f,
-@@ -1784,6 +1840,11 @@ static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
- static int x1830_i2c0_funcs[] = { 1, 1, };
- static int x1830_i2c1_funcs[] = { 0, 0, };
- static int x1830_i2c2_funcs[] = { 1, 1, };
-+static int x1830_i2s_data_tx_funcs[] = { 0, };
-+static int x1830_i2s_data_rx_funcs[] = { 0, };
-+static int x1830_i2s_clk_txrx_funcs[] = { 0, 0, };
-+static int x1830_i2s_clk_rx_funcs[] = { 0, 0, };
-+static int x1830_i2s_sysclk_funcs[] = { 0, };
- static int x1830_lcd_rgb_18bit_funcs[] = {
- 	0, 0, 0, 0, 0, 0,
- 	0, 0, 0, 0, 0, 0,
-@@ -1842,6 +1903,11 @@ static const struct group_desc x1830_groups[] = {
- 	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
- 	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
- 	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1830_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1830_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1830_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", x1830_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1830_i2s_sysclk),
- 	INGENIC_PIN_GROUP("lcd-rgb-18bit", x1830_lcd_rgb_18bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-8bit", x1830_lcd_slcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-16bit", x1830_lcd_slcd_16bit),
-@@ -1884,6 +1950,9 @@ static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
- static const char *x1830_i2c0_groups[] = { "i2c0-data", };
- static const char *x1830_i2c1_groups[] = { "i2c1-data", };
- static const char *x1830_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1830_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *x1830_lcd_groups[] = {
- 	"lcd-rgb-18bit", "lcd-slcd-8bit", "lcd-slcd-16bit", "lcd-no-pins",
- };
-@@ -1908,6 +1977,7 @@ static const struct function_desc x1830_functions[] = {
- 	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
- 	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
- 	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
-+	{ "i2s", x1830_i2s_groups, ARRAY_SIZE(x1830_i2s_groups), },
- 	{ "lcd", x1830_lcd_groups, ARRAY_SIZE(x1830_lcd_groups), },
- 	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
- 	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
--- 
-2.11.0
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
 
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
