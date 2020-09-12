@@ -2,73 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 636332679E4
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 13:14:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 664942679EB
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 13:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgILLOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 07:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
+        id S1725838AbgILLWS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 07:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgILLOt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 07:14:49 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D308C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:14:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x69so8482034lff.3
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:14:49 -0700 (PDT)
+        with ESMTP id S1725833AbgILLWG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 07:22:06 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E33C061573
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:22:00 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k25so14584286ljg.9
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:22:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6he4OS7k5pGAIC3h9rh8AvAP2KOK50OeKGEjAijQDM4=;
-        b=u3H/BPqcd3QdmssyOdY/iVQWIj5r0CXrCJXQx1ahBt8oaD32GvBFR9V/bV3UpEoHEY
-         rdSv/q2sEyG2KilRVRqOzYBNXsGEgd33rsl1l8wmLMA7YKPr7FTzPXCcr0lzlGJUuTYy
-         9YCMhdSGzsw8WxVHor0/ESnyYzzdmGPWzKQ61/4bVoia9uWG6CLJ7tiVcnialJueQ49h
-         yKlmzd4GmAqjiduDt8mkAdipv8CVfeQCl7KZiCEy4x21GX4Xin/mpyeNz73dX7R8DbKp
-         ekOSkj1FDp+yE14ly+uiq9n2IvH58JPkXxD29cQZqCsTUkwj+p8VWnMOioj7GtRHIDsI
-         FYZA==
+        bh=N4XM0NGOBVrvxRIjbN8hNHboDvUOhNwTM2cQ78WbgOQ=;
+        b=BOxO26eY7fdi3kjFx2/i8247sbgu3bLtqaDUJF2O5Dz8oJoUMUR3QjPNgSAImAtwU5
+         wOeXIbkB3/lk8JV6ye7hme5qnGqvwbxD6cK2rNa3SngdTrtTF0Ee13Wqpb/7F0BdHoml
+         pRUgDROJjMEyLBVwZ16TI65DfZSvg0OTXWuc9Rv8IdGs8477jh2wNaltvNG3DUb2dtRW
+         7bXfdGx4UZlto77f+N7vwiCdxFlornVTH6BtCq/B9oDW3QfnARH6KCqdIH/PbaSEZT/G
+         hwTtc9PJkRvm7RvUYIo1tENNisa+4c9pczPp3KPoAtGGQ/l5AXaTMrQ5E08V0rscyiu5
+         oknA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6he4OS7k5pGAIC3h9rh8AvAP2KOK50OeKGEjAijQDM4=;
-        b=r91IPilX/dAvPPWNDrpwYnAFSEMwWcF02IUOcMZoIPQvnT6MzycWkO0ExCY2aY9qFd
-         vR607v2s72zdailUsdPuRTQrKnII+NjRMpSI+Fact5FBKtaIz6VwvfBbpHExf6U2HAGC
-         lOH/Li9OkuxrTWqSTH0Kd5P24NgduRptozuWRunvl33df5CdIYBn8omEJKKlDSlU4YfR
-         0lMMv0K3WlJ6dteOoDkeXTyv/nyDQtYbm/ZUkHh3j6YCyklWUXrqPWhkYWIaHg//3BVC
-         pLDr1suOrsZ2739Wt8Xpi8G547Fm0NHe6uULKEHU0MFkZv4nWivel/5qULGWB7ZVO1Oz
-         jlbg==
-X-Gm-Message-State: AOAM533lS8bT4WSC7CAh7xU+jwRMFIAOeIyC70VLWXfNRea+PGfC59Lk
-        I7NDZkqnltiHsq8jsOrMMfgFvCoUzLshKELORjUkcgWciUc=
-X-Google-Smtp-Source: ABdhPJz7rMsHAXxOz0LNuey3gF4iy+FsOI8nU4v32/mMPq50gFeHddRQuT6gL6swhgvellesJD4Wkw4uw8+aWohVrRg=
-X-Received: by 2002:a19:6419:: with SMTP id y25mr1583932lfb.333.1599909287851;
- Sat, 12 Sep 2020 04:14:47 -0700 (PDT)
+        bh=N4XM0NGOBVrvxRIjbN8hNHboDvUOhNwTM2cQ78WbgOQ=;
+        b=uVKkROHuyecLLko3ou67tysJMg2Fgu66z99w314mgyr67yzy+WHdmzzBLriI9eiKkd
+         u/Ww0ejJXg51nTBfz1TLeJI/+OATMhdXOStos2lQc30wJAoZ9fGd/eBLPEuSKBAWKdiv
+         dBEZq04QNKcHnzLg5cPVjXttDJqc3kjTvlJzgiBX9tUjabjboFDrUICrkgF27j7HuQkH
+         JTInhPDOyBfho4a00/0TGJ4DFpiKxG/D7d3+oBp8HDySuLHXgP690swFOijzcoJuZ22K
+         pY2tEkMxHqth2YWNUHP1g24tdL+RJgnn4ITHaMZ/AKELGhCL1ulJgqiK7m7yKVa/84gF
+         4Bzg==
+X-Gm-Message-State: AOAM532pPaflqO6YrXwjVxOb1iio9MVYjq0nMfEbBRK4F8yomcL87euw
+        5p9kAMZYBYiwhnF7dooNGh2MwoajsMdxTqK8Zi5UclK5yws=
+X-Google-Smtp-Source: ABdhPJwqN4Z3roEFA97X0gaDxoSq8NUqYoBglU/t/H2RePc2u5FV7yd43ijLS+EEbthcRDhQwcGKpT+GQ2CbiTALet8=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr2338153ljb.283.1599909718644;
+ Sat, 12 Sep 2020 04:21:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904155240.4877-1-brgl@bgdev.pl>
-In-Reply-To: <20200904155240.4877-1-brgl@bgdev.pl>
+References: <20200905214955.907950-1-heiko@sntech.de>
+In-Reply-To: <20200905214955.907950-1-heiko@sntech.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Sep 2020 13:14:37 +0200
-Message-ID: <CACRpkdYM0_Z+spLdsC5yD5qxoJJjQ7aT4ZzrDFVSS+qHcWsOkg@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.9-rc4
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 12 Sep 2020 13:21:47 +0200
+Message-ID: <CACRpkdYYtZRuuBpYpPCw1Dkpqr-53MgayebT-D2aZkbDUX1d-Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rockchip: depend on OF
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        kbuild test robot <lkp@intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 5:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Sat, Sep 5, 2020 at 11:50 PM Heiko Stuebner <heiko@sntech.de> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 >
-> Hi Linus,
+> The Rockchip pinctrl driver needs to handle information from Devicetree
+> so only makes sense getting compiled on systems with CONFIG_OF enabled.
 >
-> please pull the following two fixes for v5.9.
+> This also fixes a problem found by the "kernel-test-robot" when compiling
+> the driver on test-builds that do not have CONFIG_OF enabled:
+>
+>   drivers/pinctrl/pinctrl-rockchip.c: In function 'rockchip_pinctrl_parse_groups':
+> >> drivers/pinctrl/pinctrl-rockchip.c:2881:9: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
+>     2881 |   ret = pinconf_generic_parse_dt_config(np_config, NULL,
+>          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          |         pinconf_generic_dump_config
+>    drivers/pinctrl/pinctrl-rockchip.c: In function 'rockchip_gpiolib_register':
+> >> drivers/pinctrl/pinctrl-rockchip.c:3473:5: error: 'struct gpio_chip' has no member named 'of_node'
+>     3473 |   gc->of_node = bank->of_node;
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Pulled in, sorry for my slowness while I stuck my head into the ARM
-kernel last week.
+Patch applied.
 
 Yours,
 Linus Walleij
