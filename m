@@ -2,91 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 915972679FE
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 13:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D52267A05
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Sep 2020 13:41:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725837AbgILLgC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Sep 2020 07:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgILLgB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Sep 2020 07:36:01 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D138C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:36:00 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so14609309ljk.8
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Sep 2020 04:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SBAW04TFeupQnNnmk4S53sUPFeF4xMX2LlDKsbafVOs=;
-        b=BCnXsDJMLcQc9CcuNaCCCIMmCJzyhnZSkh/mGM80pc5h7kjwLzFc02Gl5HNLZRB+uM
-         PhQGymJZiQ+jpALDJfuWlqAcaUwgkjMIX6UGZgFgWwSKkOJ1UlDm0n6Ko4W8dIQz2NU8
-         oA2f6N/6Xx/2HvykpwRb1EJqSyjZfeyVEPur48xDgHpt0HJF/KLThDrB96CjHLky2LRE
-         +sTE4ZLjtQFHxlT7eG/xfW9odl5rSWFDpU08+YxmXa4nKZhdCspl+x1rFTKDuLhP7Xen
-         tYElwWFquIBqudVzwXLg7VxPMiGR3XYtgE0Hc/KH9x98xVtT2T+4nVd9S9kYO9qY7M9e
-         H6IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SBAW04TFeupQnNnmk4S53sUPFeF4xMX2LlDKsbafVOs=;
-        b=Up137Ytz/QUvi/LbWvoEcP50qQ0iF9C76kuw5eGUWSZtHayvU5bXEiN3xtgXksswem
-         ZyjW8yGis3L9sCPpjbQG+0Lt0V01QfqjDaK0aWl3HjQXL7p8ECgLQ4OAyjhFQyiFDYNl
-         HWiOerWM7IXEwH3hw+vwXxkOJSMfPkUk6fF7+72JzeaAjSQRRhdp8SAcageyXkjZuFNp
-         7afuXEzS+1pWffNfW8+2ZOUottZCGIHZKPbkEonOyCBX6eW7VkTQuSipP5Cti9y+Yyjp
-         nDUluuKUbthDwW+k3l26k7VUnHLCprVW75ctqMOovZ6uXuVUgl2nbT/v+yDIcPzNa8Fx
-         FhXw==
-X-Gm-Message-State: AOAM530UM/wYw7PC8QbFCXojeYhqLFM4j9rJ5dEqSfXJqoW9ZYUympWY
-        GrjIaX9N4KPExW1LmSFVdJHrAUzKE7YOwqovFLfENQ==
-X-Google-Smtp-Source: ABdhPJw7hWpd8Ek3ujyUQxMfSlqeXcNu01/Q9l69PHtaPxgqJnbDpy0a6/0EAy6dkAGat1naP1BU8/wkwujt6f+oDdE=
-X-Received: by 2002:a2e:810e:: with SMTP id d14mr2477614ljg.100.1599910557737;
- Sat, 12 Sep 2020 04:35:57 -0700 (PDT)
+        id S1725837AbgILLlZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Sep 2020 07:41:25 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:41706 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgILLlY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 12 Sep 2020 07:41:24 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kH3uA-00005p-Db; Sat, 12 Sep 2020 13:41:18 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH 2/5] pinctrl: rockchip: make driver be tristate module
+Date:   Sat, 12 Sep 2020 13:41:17 +0200
+Message-ID: <1714777.5MuWvkDkrY@diego>
+In-Reply-To: <20200907025927.9713-3-jay.xu@rock-chips.com>
+References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200907025927.9713-1-jay.xu@rock-chips.com> <20200907025927.9713-3-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200907025927.9713-1-jay.xu@rock-chips.com>
-In-Reply-To: <20200907025927.9713-1-jay.xu@rock-chips.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Sep 2020 13:35:46 +0200
-Message-ID: <CACRpkdYHTWBU5hkAZ-E-ECMEjJTcPReQqGQ-yTVQq4hXS5Da7g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] rockchip-pinctrl fixes for GKI
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 4:59 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+Hi,
 
-> These patches will fix some issues and modify for GKI.
+Am Montag, 7. September 2020, 04:59:24 CEST schrieb Jianqun Xu:
+> Make pinctrl-rockchip driver to be tristate module, support to build as
+> a module, this is useful for GKI.
+> 
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+>  drivers/pinctrl/Kconfig            |  2 +-
+>  drivers/pinctrl/pinctrl-rockchip.c | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 4284f39a5c61..743eb2bb8709 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -207,7 +207,7 @@ config PINCTRL_OXNAS
+>  	select MFD_SYSCON
+>  
+>  config PINCTRL_ROCKCHIP
+> -	bool
+> +	tristate "Rockchip gpio and pinctrl driver"
+>  	depends on OF
+>  	select PINMUX
+>  	select GENERIC_PINCONF
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 0401c1da79dd..cc7512acfc5f 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -16,10 +16,12 @@
+>   */
+>  
+>  #include <linux/init.h>
+> +#include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/bitops.h>
+>  #include <linux/gpio/driver.h>
+> +#include <linux/of_device.h>
 
-I am sorry that responses and review is slow. The GKI thing is a bit
-controversial leading to slowdowns in the community because it is
-unclear how this should be dealt with in some cases.
+of_device.h below of_address.h please
 
-> Heiko Stuebner (1):
->   pinctrl: rockchip: depend on OF
 
-I already applied this patch separately.
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pinctrl/machine.h>
+> @@ -4257,4 +4259,20 @@ static int __init rockchip_pinctrl_drv_register(void)
+>  {
+>  	return platform_driver_register(&rockchip_pinctrl_driver);
+>  }
+> +
+> +static void __exit rockchip_pinctrl_drv_unregister(void)
+> +{
+> +	platform_driver_unregister(&rockchip_pinctrl_driver);
+> +}
+> +
+> +#ifdef CONFIG_PINCTRL_ROCKCHIP_MODULE
+> +module_init(rockchip_pinctrl_drv_register);
+> +#else
+>  postcore_initcall(rockchip_pinctrl_drv_register);
+> +#endif
 
-> Jianqun Xu (4):
->   pinctrl: rockchip: make driver be tristate module
->   pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
->   pinctrl: rockchip: create irq mapping in gpio_to_irq
->   pinctrl: rockchip: populate platform device for rockchip gpio
+You definitly don't need this hack. For modules postcore_initcall
+already points to module_init ... see
 
-Why have the big series of 13 patches from july been cut down to this?
+https://elixir.bootlin.com/linux/latest/source/include/linux/module.h#L114
 
-I would prefer the "big" fix I even tried applying the old (13 patches)
-series but it didn't work :(
 
-We can apply this once they are reviewed, but I'd like the rest of the
-13 patches as well I think.
+Heiko
 
-Yours,
-Linus Walleij
+
