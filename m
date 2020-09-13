@@ -2,161 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B141C2681DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 01:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B08F02681E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 01:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgIMX1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Sep 2020 19:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
+        id S1725942AbgIMXo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Sep 2020 19:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgIMX1X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Sep 2020 19:27:23 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96121C06178A
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 16:27:20 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id r7so20574344ejs.11
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 16:27:20 -0700 (PDT)
+        with ESMTP id S1725943AbgIMXo6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Sep 2020 19:44:58 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125A6C061787
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 16:44:58 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id o6so13328155ota.2
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 16:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=7v1NPAzkydR89JgSgtMekj7yJTyNSI10q1eiI/1zrxo=;
-        b=LbtnCqygM/AuEhSdhgY7FRI2gjpUMcxbHXdfb0uHIYeZA9t2vwKhMboyANhMt+5f67
-         qvP9iZ5nFKResiZfOg14T1PJKOFCcBkJeb8i5gSc/PUsuz13KLo38haND0jXqkp/Kj0d
-         5EEIUQFMlCLklphxKJd3PNUc+J4+66ohkvBfI99e+gc1lMr6ORQj4FIclvYNdUrbCop5
-         5OIayk+vT1zzsgy0UtOTUKxkO7YDVNuZ5Wr7r/uRY60Fp+9CTZz5Kum22fzHgASJk4U4
-         Kws1Gz4Y06JJzEouM/B/ntLM7vGqqU73D085Uw+j+V7ThIfmhlec9Y6j21mNBB7hnUzG
-         I6wQ==
+        bh=u+16orXS6eKgZdRPjtycA2QsQkZ9PgwDktyZbsANKf8=;
+        b=rTLdml14/5EiD6qdDfI6t7Zk+ezQFMhmHq1xi6EA2zYZMZR7bQy4j5XRMoW9LvDQec
+         s9NtdQquciVM95f+Hlx8xDMoE6NjT3mwkOHisWe+WiblVWTEtwNkJb8sJnm21eiMrS5p
+         OskV8EFS2hSU6cspiwkyvj76+1m+grMWXiRidSGe2S0T6TYZ924ubxo0XidWRfKpxvmh
+         i1/odYt3MUPp6ZkxQtiV94bJxavQkubdOzwrYiTar3zMkxe7X5Y43v0yIVj3J5roBhQM
+         HyH2ro2qvPtg8y1bOwPUjX6EKnzaxYkPqKRtv0XyuLV54dZ04etw9+X/+7LB0fPHB8BL
+         6PGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7v1NPAzkydR89JgSgtMekj7yJTyNSI10q1eiI/1zrxo=;
-        b=SwNTpS/5ZHVTBgIdsc8p4lS7uJVVy4wDg4BkaBZggCC4Wl+G05yn34kfM6loSX7O2y
-         Pxd3WybbWP5B63ha/larxu7q0ZwS1lNBVueIJFg87OGGHO/tZNegZ4OsGjqYKQioOdRY
-         zNIzEuMWGw/8BuAAGg4piTz/rcbb11BdIDQT17YK5jhgtntibGM4SDPEcmf28V5E0omI
-         JLLdNeTW1ZpalNVNIF0IeeZ5jeynxjNLVtdowJXjJtPzAN3Uv8oNiixQPCbY1RDm/8lp
-         r93BXfvMV1QUQZ71ierD+wvrWw7xNs+Z0yD+cGCjj5pyPipQKCNiZEQjg82uydY0Av/2
-         2BHQ==
-X-Gm-Message-State: AOAM532KTyqhfPcs2SDTkTo/5NZxH0DxaraxJQsCpSkhoG58yOPC+ZYQ
-        eKCw3wMOOCcpackYVOFOAWibgg==
-X-Google-Smtp-Source: ABdhPJwUHzdDh00QRhRrdeDG6VXAgb0lLJ45sQRWLXSg9W49GeB8WQ7hHXcKFEid7iQQR9GZYllpnA==
-X-Received: by 2002:a17:906:4cd6:: with SMTP id q22mr11753793ejt.139.1600039639010;
-        Sun, 13 Sep 2020 16:27:19 -0700 (PDT)
-Received: from x1 ([2604:a880:400:d0::26:8001])
-        by smtp.gmail.com with ESMTPSA id br7sm6356560ejb.76.2020.09.13.16.27.14
+        bh=u+16orXS6eKgZdRPjtycA2QsQkZ9PgwDktyZbsANKf8=;
+        b=axm43m8jAYKMfBa0DSxJWvy1qvNd2AwmlQ1N/8d9aNDY2E2QIxTwq/MicHTlIAtsGs
+         cvjpKAJjjGQtU68fvDlWdvnh9lx+uXQdUho31hXk/7rdpnC0RtfuW6YlFzcmUAR3mdWu
+         vDPQxbZmR+49IEnDXGa1PxFTECAraCuQ/Juoy2r2bz4gSGho8YHp9LyCS6zkncFk206s
+         C7+tkZV3vmZcxusmYAnB9+PCjZQXOjYuMROnUqe17ww5moug6rayT5t4KDPTCy0zZ8tU
+         7Tx0r+PtYcSsulnfikfcD1KKXZ7V1HugYenBuHfCQUTqQu6ahIfFSZ89DgshbzpkK6C9
+         jipA==
+X-Gm-Message-State: AOAM530tJLY5uBbz//eb6W4rljZ6H9e5Ux4GkqMTtpK9Wd8Ie9j/Bw0R
+        U4LCsNmwWErAMyjIO2PqfMIYmg==
+X-Google-Smtp-Source: ABdhPJxnOzAZekRVFxe4phKoGP3V3PhSYhIk4HBLNETlKFtMomrm65HV5IiTy6UKk2xyqle5C9rs9g==
+X-Received: by 2002:a9d:71ca:: with SMTP id z10mr7583811otj.307.1600040695927;
+        Sun, 13 Sep 2020 16:44:55 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id h24sm2159215otj.33.2020.09.13.16.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Sep 2020 16:27:18 -0700 (PDT)
-Date:   Mon, 14 Sep 2020 01:27:11 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Trent Piepho <tpiepho@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sun, 13 Sep 2020 16:44:55 -0700 (PDT)
+Date:   Sun, 13 Sep 2020 18:44:52 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v4 1/2] pinctrl: single: parse #pinctrl-cells = 2
-Message-ID: <20200913232711.GA2065644@x1>
-References: <20200701013320.130441-1-drew@beagleboard.org>
- <20200701013320.130441-2-drew@beagleboard.org>
- <3139716.CMS8C0sQ7x@zen.local>
- <20200913194233.GA1955808@x1>
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: sm8250: correct sdc2_clk and ngpios
+Message-ID: <20200913234452.GX3715@yoga>
+References: <20200913225005.30218-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200913194233.GA1955808@x1>
+In-Reply-To: <20200913225005.30218-1-dmitry.baryshkov@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 13, 2020 at 09:42:33PM +0200, Drew Fustini wrote:
-> On Tue, Sep 08, 2020 at 04:52:58PM -0700, Trent Piepho wrote:
-> > On Tuesday, June 30, 2020 6:33:19 PM PDT Drew Fustini wrote:
-> > > If "pinctrl-single,pins" has 3 arguments (offset, conf, mux), then
-> > > pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
-> > > get the value to store in the register.
-> > 
-> > 
-> > > -		vals[found].val = pinctrl_spec.args[1];
-> > > +
-> > > +		switch (pinctrl_spec.args_count) {
-> > > +		case 2:
-> > > +			vals[found].val = pinctrl_spec.args[1];
-> > > +			break;
-> > > +		case 3:
-> > > +			vals[found].val = (pinctrl_spec.args[1] | 
-> > pinctrl_spec.args[2]);
-> > > +			break;
-> > > +		}
-> > > 
-> > >  		dev_dbg(pcs->dev, "%pOFn index: 0x%x value: 0x%x\n",
-> > >  			pinctrl_spec.np, offset, 
-> > pinctrl_spec.args[1]);
-> > 
-> > If #pinctrl-cells value is greater than 2, nothing will set vals[found].val to 
-> > anything other than zero (from when it's calloc'ed) and the pinctrl will 
-> > silently be programmed to zero.
-> 
-> If #pinctrl-cells is 3, then it will be:
-> 
-> 	vals[found].val = (pinctrl_spec.args[1] | pinctrl_spec.args[2]);
-> 
-> Do you mean if #pinctrl-cells is great than 3 then it will just have a
-> default value of zero?
-> 
-> That does appear to be the case and is probably not the behavior we
-> want.  Thank you for pointing this out.  Earlier, there is a check to
-> make sure there are at least 2 arguments:
-> 
-> 	if (pinctrl_spec.args_count < 2) {
-> 		dev_err(pcs->dev, "invalid args_count for spec: %i\n",
-> 			pinctrl_spec.args_count); 
-> 		break;
-> 	}
-> 
-> I'll submit a patch where the upper bound is also checked:
-> 
-> 	if (pinctrl_spec.args_count < 2 || pinctrl_spec.args_count > 3) {
-> 		dev_err(pcs->dev, "invalid args_count for spec: %i\n",
-> 			pinctrl_spec.args_count); 
-> 		break;
-> 	}
-> 
+On Sun 13 Sep 17:50 CDT 2020, Dmitry Baryshkov wrote:
 
-I was mistaken when I wrote the above.  I was using the term
-#pinctrl-cells when I should have been writing pinctrl_spec.args_count.
-
-pinctrl_spec.args_count is 2 when #pictrl-cells is 1.
-pinctrl_spec.args_count is 3 when #pictrl-cells is 2.
-
-I have submitted patches [1][2] with fixes for the bounds check and the
-dev_dbg().
-
-
-> > The debug printout was not change to print vals[found].val, so it will 
-> > continue to print the value of the 2nd cell.
+> Correct sdc2_clk pin definition (register offset) and ngpios (SM8250 has
+> 180 GPIO pins).
 > 
-> Thank you for pointing this out.  Yes, this is an oversight and I will
-> submit a patch.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Fixes: 4e3ec9e407ad5058003309072b37111f7b8c900a
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sm8250.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> > The result is that a #pinctrl-cells of 3 will produce no warning or error, 
-> > program the pinctrl to zero, whilst at the same time emit debug log messages 
-> > that it is programming the expected values.
-> >
-> > The device tree documentation still states that #pinctrl-cells must be 1 when 
-> > using pinctrl-single,pins.  This new special case of ORing two values is not 
-> > documented.
-> 
-> This is a good point, too.  I will make a patch to update the
-> documentation.
-> 
-> 
-> -Drew
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> index a660f1274b66..4f7dae61b089 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> @@ -1308,7 +1308,7 @@ static const struct msm_pingroup sm8250_groups[] = {
+>  	[178] = PINGROUP(178, WEST, _, _, _, _, _, _, _, _, _),
+>  	[179] = PINGROUP(179, WEST, _, _, _, _, _, _, _, _, _),
+>  	[180] = UFS_RESET(ufs_reset, 0xb8000),
+> -	[181] = SDC_PINGROUP(sdc2_clk, 0x7000, 14, 6),
+> +	[181] = SDC_PINGROUP(sdc2_clk, 0xb7000, 14, 6),
 
-[1] https://lore.kernel.org/linux-omap/20200913231557.2063071-1-drew@beagleboard.org/
-[2] https://lore.kernel.org/linux-omap/20200913230306.2061645-1-drew@beagleboard.org/
+You're right.
+
+>  	[182] = SDC_PINGROUP(sdc2_cmd, 0xb7000, 11, 3),
+>  	[183] = SDC_PINGROUP(sdc2_data, 0xb7000, 9, 0),
+>  };
+> @@ -1320,7 +1320,7 @@ static const struct msm_pinctrl_soc_data sm8250_pinctrl = {
+>  	.nfunctions = ARRAY_SIZE(sm8250_functions),
+>  	.groups = sm8250_groups,
+>  	.ngroups = ARRAY_SIZE(sm8250_groups),
+> -	.ngpios = 181,
+> +	.ngpios = 180,
+
+But, while it is correct that SM8250 only has 180 GPIOs, we're exposing
+UFS_RESET as a gpio as well, so this should therefor be 181. Sorry for
+the obfuscation here...
+
+Regards,
+Bjorn
+
+>  	.tiles = sm8250_tiles,
+>  	.ntiles = ARRAY_SIZE(sm8250_tiles),
+>  };
+> -- 
+> 2.28.0
+> 
