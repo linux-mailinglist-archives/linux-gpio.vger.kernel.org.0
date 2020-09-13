@@ -2,242 +2,226 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64ED42680BF
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Sep 2020 20:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6E732680ED
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Sep 2020 21:11:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgIMS3G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Sep 2020 14:29:06 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:25074 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgIMS3E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 13 Sep 2020 14:29:04 -0400
-X-IronPort-AV: E=Sophos;i="5.76,423,1592838000"; 
-   d="scan'208";a="57142153"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Sep 2020 03:29:02 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A8CC440065D2;
-        Mon, 14 Sep 2020 03:29:00 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v2] pinctrl: sh-pfc: r8a7790: Add VIN1-B and VIN2-G pins, groups and functions
-Date:   Sun, 13 Sep 2020 19:28:50 +0100
-Message-Id: <20200913182850.32660-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725938AbgIMTLy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Sep 2020 15:11:54 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:48942 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgIMTLx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Sep 2020 15:11:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1600024312; x=1631560312;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=+VgAIgh+Py6mj3na0ijrCwl0Z/NjJ7JtWl8Awedh1FA=;
+  b=MUJf0WxysCxuB7+IlnMt+OjzfenZ2XbASqcIya6BGGbhdtBwdtI8fbQy
+   KOSCDRIbiTXZfSnmc3pRY3/ZyhmGS/+oXjbhmCoIMQIAD2+0Qseytz6T8
+   sov882jWnulzK+8/ZeDcy6RZx67Qq7jOm31BUji581HiJ8IPp7MBOfFy7
+   zUm9xzOxxnIcy9B0QPJXjvv7g5zsZ8DPR5Q9w3RLVFFHSCWIjj+5cB1Mq
+   h+f5TRWME/1oUsAzgqldAcp156QJ/zJGKUZZcl7KFO2EwOkDLkEBUOn+9
+   kmd+r1Rk9QoEN/6+Cn3kTLpE9oqY+Mx+bPIBJN9SGUUiez2P0/fASkIxE
+   g==;
+IronPort-SDR: WhudMxrX8gTYscexf1bBtUECJhaQfGrVZURQ5Z2R7JfYTIOwHxsjpQCYuDhfytqh/f9LMIDB3i
+ N0pCPkevfMA7Idm3l8J7Y6ZtKS/Al0/vF59HJmr5aUfLZlZhkkkLkmvxDloUC//WZkwtbEvRqn
+ KIHVHsz3Z1JCek9S+JDkSm0BF1Og1dQ6DvvBsZgQ9+052zvPc6nAnLMJHmjP8WQR9mwyXvTuzY
+ pSiugo+sD2jKWf2hWdWPZZ87U6BTeXINUOUQBL9bmLkNwRyNhCiZ8H15JSsuN9ciY5HjXhlI67
+ 9M0=
+X-IronPort-AV: E=Sophos;i="5.76,423,1592895600"; 
+   d="scan'208";a="95548931"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Sep 2020 12:11:51 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 13 Sep 2020 12:11:47 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Sun, 13 Sep 2020 12:11:45 -0700
+References: <20200903133528.8595-1-lars.povlsen@microchip.com> <20200903133528.8595-2-lars.povlsen@microchip.com> <CACRpkdZUQG1T_Bx5G275tSjDez0skDKGSc370B57FZ35NA6iEA@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add bindings for pinctrl-mchp-sgpio driver
+In-Reply-To: <CACRpkdZUQG1T_Bx5G275tSjDez0skDKGSc370B57FZ35NA6iEA@mail.gmail.com>
+Date:   Sun, 13 Sep 2020 21:11:48 +0200
+Message-ID: <87r1r5wky3.fsf@soft-dev15.microsemi.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pins, groups and functions for the VIN1-B [data/clk/sync] and VIN2-G [data].
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-Changes for v2:
-* Added complete list of VIN1-B pins
-* Renamed vin2_data8_g to vin2_data8g
-* Sorted vin1_sync_b pins
+Linus Walleij writes:
 
-v1 - https://patchwork.kernel.org/patch/11761191/
----
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 114 ++++++++++++++++++++++++++-
- 1 file changed, 113 insertions(+), 1 deletion(-)
+> Hi Lars,
+>
+> thanks for your patch!
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-index 60f973c5dffe..40c99942925c 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-@@ -3866,6 +3866,72 @@ static const unsigned int vin1_data18_mux[] = {
- 	VI1_R4_MARK, VI1_R5_MARK,
- 	VI1_R6_MARK, VI1_R7_MARK,
- };
-+static const union vin_data vin1_data_b_pins = {
-+	.data24 = {
-+		/* B */
-+		RCAR_GP_PIN(3, 0), RCAR_GP_PIN(3, 1),
-+		RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
-+		RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
-+		RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
-+		/* G */
-+		RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 15),
-+		RCAR_GP_PIN(1, 17), RCAR_GP_PIN(1, 20),
-+		RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 12),
-+		RCAR_GP_PIN(1, 9), RCAR_GP_PIN(1, 7),
-+		/* R */
-+		RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
-+		RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 4),
-+		RCAR_GP_PIN(1, 5), RCAR_GP_PIN(1, 6),
-+		RCAR_GP_PIN(1, 10), RCAR_GP_PIN(1, 8),
-+	},
-+};
-+static const union vin_data vin1_data_b_mux = {
-+	.data24 = {
-+		/* B */
-+		VI1_DATA0_VI1_B0_B_MARK, VI1_DATA1_VI1_B1_B_MARK,
-+		VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
-+		VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
-+		VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
-+		/* G */
-+		VI1_G0_B_MARK, VI1_G1_B_MARK,
-+		VI1_G2_B_MARK, VI1_G3_B_MARK,
-+		VI1_G4_B_MARK, VI1_G5_B_MARK,
-+		VI1_G6_B_MARK, VI1_G7_B_MARK,
-+		/* R */
-+		VI1_R0_B_MARK, VI1_R1_B_MARK,
-+		VI1_R2_B_MARK, VI1_R3_B_MARK,
-+		VI1_R4_B_MARK, VI1_R5_B_MARK,
-+		VI1_R6_B_MARK, VI1_R7_B_MARK,
-+	},
-+};
-+static const unsigned int vin1_data18_b_pins[] = {
-+	/* B */
-+	RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
-+	RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
-+	RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
-+	/* G */
-+	RCAR_GP_PIN(1, 17), RCAR_GP_PIN(1, 20),
-+	RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 12),
-+	RCAR_GP_PIN(1, 9), RCAR_GP_PIN(1, 7),
-+	/* R */
-+	RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 4),
-+	RCAR_GP_PIN(1, 5), RCAR_GP_PIN(1, 6),
-+	RCAR_GP_PIN(1, 10), RCAR_GP_PIN(1, 8),
-+};
-+static const unsigned int vin1_data18_b_mux[] = {
-+	/* B */
-+	VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
-+	VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
-+	VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
-+	/* G */
-+	VI1_G2_B_MARK, VI1_G3_B_MARK,
-+	VI1_G4_B_MARK, VI1_G5_B_MARK,
-+	VI1_G6_B_MARK, VI1_G7_B_MARK,
-+	/* R */
-+	VI1_R2_B_MARK, VI1_R3_B_MARK,
-+	VI1_R4_B_MARK, VI1_R5_B_MARK,
-+	VI1_R6_B_MARK, VI1_R7_B_MARK,
-+};
- static const unsigned int vin1_sync_pins[] = {
- 	RCAR_GP_PIN(1, 24), /* HSYNC */
- 	RCAR_GP_PIN(1, 25), /* VSYNC */
-@@ -3874,6 +3940,14 @@ static const unsigned int vin1_sync_mux[] = {
- 	VI1_HSYNC_N_MARK,
- 	VI1_VSYNC_N_MARK,
- };
-+static const unsigned int vin1_sync_b_pins[] = {
-+	RCAR_GP_PIN(1, 24), /* HSYNC */
-+	RCAR_GP_PIN(1, 25), /* VSYNC */
-+};
-+static const unsigned int vin1_sync_b_mux[] = {
-+	VI1_HSYNC_N_B_MARK,
-+	VI1_VSYNC_N_B_MARK,
-+};
- static const unsigned int vin1_field_pins[] = {
- 	RCAR_GP_PIN(1, 13),
- };
-@@ -3892,6 +3966,12 @@ static const unsigned int vin1_clk_pins[] = {
- static const unsigned int vin1_clk_mux[] = {
- 	VI1_CLK_MARK,
- };
-+static const unsigned int vin1_clk_b_pins[] = {
-+	RCAR_GP_PIN(3, 15),
-+};
-+static const unsigned int vin1_clk_b_mux[] = {
-+	VI1_CLK_B_MARK,
-+};
- /* - VIN2 ----------------------------------------------------------------- */
- static const union vin_data vin2_data_pins = {
- 	.data24 = {
-@@ -3959,6 +4039,18 @@ static const unsigned int vin2_data18_mux[] = {
- 	VI2_R4_MARK, VI2_R5_MARK,
- 	VI2_R6_MARK, VI2_R7_MARK,
- };
-+static const unsigned int vin2_data8g_pins[] = {
-+	RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
-+	RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+};
-+static const unsigned int vin2_data8g_mux[] = {
-+	VI2_G0_MARK, VI2_G1_MARK,
-+	VI2_G2_MARK, VI2_G3_MARK,
-+	VI2_G4_MARK, VI2_G5_MARK,
-+	VI2_G6_MARK, VI2_G7_MARK,
-+};
- static const unsigned int vin2_sync_pins[] = {
- 	RCAR_GP_PIN(1, 16), /* HSYNC */
- 	RCAR_GP_PIN(1, 21), /* VSYNC */
-@@ -4026,7 +4118,7 @@ static const unsigned int vin3_clk_mux[] = {
- };
- 
- static const struct {
--	struct sh_pfc_pin_group common[298];
-+	struct sh_pfc_pin_group common[308];
- 	struct sh_pfc_pin_group automotive[1];
- } pinmux_groups = {
- 	.common = {
-@@ -4310,15 +4402,25 @@ static const struct {
- 		VIN_DATA_PIN_GROUP(vin1_data, 10),
- 		VIN_DATA_PIN_GROUP(vin1_data, 8),
- 		VIN_DATA_PIN_GROUP(vin1_data, 4),
-+		VIN_DATA_PIN_GROUP(vin1_data, 24, _b),
-+		VIN_DATA_PIN_GROUP(vin1_data, 20, _b),
-+		SH_PFC_PIN_GROUP(vin1_data18_b),
-+		VIN_DATA_PIN_GROUP(vin1_data, 16, _b),
-+		VIN_DATA_PIN_GROUP(vin1_data, 12, _b),
-+		VIN_DATA_PIN_GROUP(vin1_data, 10, _b),
-+		VIN_DATA_PIN_GROUP(vin1_data, 8, _b),
- 		SH_PFC_PIN_GROUP(vin1_sync),
-+		SH_PFC_PIN_GROUP(vin1_sync_b),
- 		SH_PFC_PIN_GROUP(vin1_field),
- 		SH_PFC_PIN_GROUP(vin1_clkenb),
- 		SH_PFC_PIN_GROUP(vin1_clk),
-+		SH_PFC_PIN_GROUP(vin1_clk_b),
- 		VIN_DATA_PIN_GROUP(vin2_data, 24),
- 		SH_PFC_PIN_GROUP(vin2_data18),
- 		VIN_DATA_PIN_GROUP(vin2_data, 16),
- 		VIN_DATA_PIN_GROUP(vin2_data, 8),
- 		VIN_DATA_PIN_GROUP(vin2_data, 4),
-+		SH_PFC_PIN_GROUP(vin2_data8g),
- 		SH_PFC_PIN_GROUP(vin2_sync),
- 		SH_PFC_PIN_GROUP(vin2_field),
- 		SH_PFC_PIN_GROUP(vin2_clkenb),
-@@ -4784,10 +4886,19 @@ static const char * const vin1_groups[] = {
- 	"vin1_data10",
- 	"vin1_data8",
- 	"vin1_data4",
-+	"vin1_data24_b",
-+	"vin1_data20_b",
-+	"vin1_data18_b",
-+	"vin1_data16_b",
-+	"vin1_data12_b",
-+	"vin1_data10_b",
-+	"vin1_data8_b",
- 	"vin1_sync",
-+	"vin1_sync_b",
- 	"vin1_field",
- 	"vin1_clkenb",
- 	"vin1_clk",
-+	"vin1_clk_b",
- };
- 
- static const char * const vin2_groups[] = {
-@@ -4796,6 +4907,7 @@ static const char * const vin2_groups[] = {
- 	"vin2_data16",
- 	"vin2_data8",
- 	"vin2_data4",
-+	"vin2_data8g",
- 	"vin2_sync",
- 	"vin2_field",
- 	"vin2_clkenb",
+You're welcome - thank you for you taking time to review it!
+
+>
+> On Thu, Sep 3, 2020 at 3:35 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This adds DT bindings for the Microsemi/Microchip SGPIO controller,
+>
+> What I do not understand is why this GPIO controller is placed in the
+> bindings of the pin controllers? Do you plan to add pin control
+> properties to the bindings in the future?
+
+I have made provisions for some of the generic pinconf parameters, and
+since the controller also has support for some alternate modes like
+(syncronized) blink at various rates, I thought I better add it as
+pinctrl straight away.
+
+>
+>> +description: |
+>> +  By using a serial interface, the SIO controller significantly extend
+>> +  the number of available GPIOs with a minimum number of additional
+>> +  pins on the device. The primary purpose of the SIO controllers is to
+>> +  connect control signals from SFP modules and to act as an LED
+>> +  controller.
+>
+> This doesn't sound like it will ever be pin control?
+
+above.
+
+>
+>> +  gpio-controller: true
+>> +
+>> +  '#gpio-cells':
+>> +    description: GPIO consumers must specify four arguments, first the
+>> +      port number, then the bit number, then a input/output flag and
+>> +      finally the GPIO flags (from include/dt-bindings/gpio/gpio.h).
+>> +      The dt-bindings/gpio/mchp-sgpio.h file define manifest constants
+>> +      PIN_INPUT and PIN_OUTPUT.
+>> +    const: 4
+>
+> I do not follow this new third input/output flag at all.
+>
+
+Its actually a sort of bank address, since the individual "pins" are
+unidirectional.
+
+The PIN_INPUT/PIN_OUTPUT is defined in similar fashion in other pinctrl
+binding header files... I can drop the define and use, but as it will be
+used to address individual pins, I think it adds to readability.
+
+Like this (excerpts from a DT with a switchdev driver using SFP's and
+LED's on sgpio):
+
+/{
+	leds {
+		compatible = "gpio-leds";
+		led@0 {
+			label = "eth60:yellow";
+			gpios = <&sgpio1 28 0 PIN_OUTPUT GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
+		...
+	};
+};
+
+&axi {
+	sfp_eth60: sfp-eth60 {
+		compatible	   = "sff,sfp";
+		i2c-bus            = <&i2c152>;
+		tx-disable-gpios   = <&sgpio2 28 0 PIN_OUTPUT GPIO_ACTIVE_LOW>;
+		rate-select0-gpios = <&sgpio2 28 1 PIN_OUTPUT GPIO_ACTIVE_HIGH>;
+		los-gpios          = <&sgpio2 28 0 PIN_INPUT GPIO_ACTIVE_HIGH>;
+		mod-def0-gpios     = <&sgpio2 28 1 PIN_INPUT GPIO_ACTIVE_LOW>;
+		tx-fault-gpios     = <&sgpio2 28 2 PIN_INPUT GPIO_ACTIVE_HIGH>;
+	};
+	...
+};
+                
+> - If it is a property of the hardware, it is something the driver should
+>   handle by determining which hardware it is from the compatible
+>   string.
+>
+> - If it is a configuration it should be turned into something that is generic
+>   and useful for *all* GPIO controllers. If it is pin config it should use
+>   the pinconf bindings rather than shortcuts like this, but I think it is
+>   something the driver can do as an effect of the pin being requested
+>   as input or output in the operating system, depending on who the
+>   consumer is. Linux for example has GPIOD_OUT_LOW,
+>   GPIOD_OUT_HIGH, GPIOD_IN, GPIOD_ASIS...
+>
+> - Is it not just a hog? We have bindings for those.
+
+I hope the above shed some light on this.
+
+>
+>> +  microchip,sgpio-port-ranges:
+>> +    description: This is a sequence of tuples, defining intervals of
+>> +      enabled ports in the serial input stream. The enabled ports must
+>> +      match the hardware configuration in order for signals to be
+>> +      properly written/read to/from the controller holding
+>> +      registers. Being tuples, then number of arguments must be
+>> +      even. The tuples mast be ordered (low, high) and are
+>> +      inclusive. Arguments must be between 0 and 31.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    minItems: 2
+>> +    maxItems: 64
+>
+> And you are *absolutely sure* that you can't just figure this out
+> from the compatible string? Or add a few compatible strings for
+> the existing variants?
+>
+
+Yes, this really needs to be configured for each board individually -
+and cant be probed. It defines how the bitstream to/from the shift
+registers is constructed/demuxed.
+
+>> +  microchip,sgpio-frequency:
+>> +    description: The sgpio controller frequency (Hz). This dictates
+>> +      the serial bitstream speed, which again affects the latency in
+>> +      getting control signals back and forth between external shift
+>> +      registers. The speed must be no larger than half the system
+>> +      clock, and larger than zero.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 1
+>> +    default: 12500000
+>
+> I understand why you need this binding now, OK.
+>
+>> +/* mchp-sgpio specific pin type defines */
+>> +#undef PIN_OUTPUT
+>> +#undef PIN_INPUT
+>> +#define PIN_OUTPUT     0
+>> +#define PIN_INPUT      1
+>
+> I'm not a fan of this. It seems like something that should be set in
+> response to the gpiochip callbacks .direction_input and
+> .direction_output callbacks.
+>
+
+As I tried to explain above, its a part of the pin address - aka bank
+selector - whether your are accessing the input or the output side. And
+since the directions have totally different - and concurrent - use, they
+need to be individually addressed, not "configured".
+
+In the example presented, sgpio2-p28b0 IN is loss-of-signal, and the
+OUT is the sfp tx-disable control.
+
+> Yours,
+> Linus Walleij
+
+---Lars
+
 -- 
-2.17.1
-
+Lars Povlsen,
+Microchip
