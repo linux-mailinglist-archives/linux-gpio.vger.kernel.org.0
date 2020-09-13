@@ -2,252 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC992680F7
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Sep 2020 21:28:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1119268101
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Sep 2020 21:42:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgIMT2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Sep 2020 15:28:12 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:41709 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgIMT2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Sep 2020 15:28:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1600025290; x=1631561290;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=KfSuhuBWdbKfZmkY1vicW1hLi4TcaPsoMTVGkC57pPs=;
-  b=jMLJkK9EGXWttQRdt4nDv3N29RjaaKICmr19pqwxGgwtqkBTT4e3cQsr
-   1maBVlN3Aa2J+57LMqkqcYhCoO//IlKNSPgHFhsOfW0DStg78aZT3eVLk
-   a7cVT0uc/4Qjzns7muO3dx1Tf9BdnNm1V9zkm5PSD2Mw8EOES7xFKTxy/
-   Jg1dRveysQkHottOo2ywb0Vxz1Vq64lIYFItWfk1KOXS89oT0GS7tZsa/
-   GxPdM03H0Koo462ZbipD1jKHqoM6kaQ0+KyCvJ1TmK7cTXhAS2EP/mnnm
-   mDnNpquuNz2ptBUos8DvEV2mv2OXBdKvvh/DJuo2jOthF4JDx9H1BST/b
-   Q==;
-IronPort-SDR: L82gV9CfNkoIkGKRwnqtrKBDp7LdIqqC/CrEwCU+ixN+HcX7AAxQWpFR61EAETH9NANuK2IYjS
- OeiKzxOc9vA1Qid8peOriEYe1B7kyFDSMRcvrlSYTolv7SrpXgryg4wHiQNBuH6zlvKKt9KjyC
- /UFlO27ChtoyHjBPRwyTsg4uEfAnQc1U4NcaWXv2W0SNxAZxb8WUk1Ba2EjxyATz9ludGMcgZG
- UQNeDTjg6Shfinn6pPDGNUzJXBB4FKpM6GxpgTG0bhkyYNSTlrGC74GYXYGPLWUCFnJyPCKAcG
- j4U=
-X-IronPort-AV: E=Sophos;i="5.76,423,1592895600"; 
-   d="scan'208";a="86711584"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Sep 2020 12:28:09 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 13 Sep 2020 12:28:08 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Sun, 13 Sep 2020 12:28:02 -0700
-References: <20200903133528.8595-1-lars.povlsen@microchip.com> <20200903133528.8595-3-lars.povlsen@microchip.com> <CACRpkdbUv4r+Cghs1e4OEFCW4Yd1bGGQcWZ5TEb2uDWnVXhPSw@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: pinctrl-mchp-sgpio: Add pinctrl driver for Microsemi Serial GPIO
-In-Reply-To: <CACRpkdbUv4r+Cghs1e4OEFCW4Yd1bGGQcWZ5TEb2uDWnVXhPSw@mail.gmail.com>
-Date:   Sun, 13 Sep 2020 21:28:05 +0200
-Message-ID: <87pn6pwk6y.fsf@soft-dev15.microsemi.net>
+        id S1725968AbgIMTmn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Sep 2020 15:42:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgIMTmj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Sep 2020 15:42:39 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D638DC06174A
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 12:42:37 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id t16so15550634edw.7
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Sep 2020 12:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=k2cvB0HQArtJknBkltHAoCpwXnIH5D4KwvQqQMifHm4=;
+        b=WWoza80lwFN2cSIWNPpF9RO03s6vxAsB42qYdTC+2typ17TgiQsuQj2R+PaBHA24Mc
+         X0NsWurndtM13ubMmMe7uzPhq1Opu5a170YrnmE2bVIwNwwaVBw83JkdWh7bQPu8fZ2H
+         cqWL+xe6KzHNVp66cZeZTtUrk46ajDsyf3bfaiUDApWx9r90psJVxlx9rPM4vYP5413U
+         cdL5I8USziB8vGrhrakS2Xj1zIJCfCVHB+ScOFXRKYfXvhpePasFd6ficE58V5tXEWFZ
+         oydEoP3ObwzEN7oxrp5I6V0/czFh2JACXJJMwIyObuR1D8K99HglGuojcpq5UnVU4wXN
+         +ccw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=k2cvB0HQArtJknBkltHAoCpwXnIH5D4KwvQqQMifHm4=;
+        b=tg1mSvIEI7AIvtIf6pMJHn1EVquXp2LNvpKz+zRdXHrwfETiWtumtwfIpZwhcRmGVn
+         og2XrjA2ZMmjRgSL3wYjh81kv7TjIfWY/nsTfa8IBqZlCU9HB1Hps3jI/L6VNqy9Ld3h
+         jQcvhPE/SGHqQc7Pq8/Xe79srA59LVD5WP1q7wADTlnV4OmItbD4mxeEDu3Xa5WXLqpu
+         qveBS3weZWjTH+Uis7CPapPQqvcrYUXXs5NSE4PJm+AYXjlntcsqSJJGgjO7K46Tp+19
+         4SPVsWF+gOpH8tAWTTcN2nvbjuz5E+TJWeyD1HLCHm6iecmem6m+aW0lQW3+Q+81C7lB
+         ZoZw==
+X-Gm-Message-State: AOAM532bQ9QHPKz9tAbPvxxrta32hI5p47qlTSO7ozV6ZHhVBBCVYL6c
+        WPbNvmLisn18/PX/7+NihCKCdg==
+X-Google-Smtp-Source: ABdhPJz7OvHoMkyN0c1qJ1xvIg2tXwvkdR2sb0uzsGhQB0HjoTTy1q871OAMdzLfTfJEW5qDmRtJCQ==
+X-Received: by 2002:a05:6402:326:: with SMTP id q6mr14107023edw.216.1600026156541;
+        Sun, 13 Sep 2020 12:42:36 -0700 (PDT)
+Received: from x1 ([2001:16b8:5cf8:e601:5f2:8f03:4748:2bc6])
+        by smtp.gmail.com with ESMTPSA id bf25sm7685811edb.95.2020.09.13.12.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Sep 2020 12:42:35 -0700 (PDT)
+Date:   Sun, 13 Sep 2020 21:42:33 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Trent Piepho <tpiepho@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: single: parse #pinctrl-cells = 2
+Message-ID: <20200913194233.GA1955808@x1>
+References: <20200701013320.130441-1-drew@beagleboard.org>
+ <20200701013320.130441-2-drew@beagleboard.org>
+ <3139716.CMS8C0sQ7x@zen.local>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3139716.CMS8C0sQ7x@zen.local>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Sep 08, 2020 at 04:52:58PM -0700, Trent Piepho wrote:
+> On Tuesday, June 30, 2020 6:33:19 PM PDT Drew Fustini wrote:
+> > If "pinctrl-single,pins" has 3 arguments (offset, conf, mux), then
+> > pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
+> > get the value to store in the register.
+> 
+> 
+> > -		vals[found].val = pinctrl_spec.args[1];
+> > +
+> > +		switch (pinctrl_spec.args_count) {
+> > +		case 2:
+> > +			vals[found].val = pinctrl_spec.args[1];
+> > +			break;
+> > +		case 3:
+> > +			vals[found].val = (pinctrl_spec.args[1] | 
+> pinctrl_spec.args[2]);
+> > +			break;
+> > +		}
+> > 
+> >  		dev_dbg(pcs->dev, "%pOFn index: 0x%x value: 0x%x\n",
+> >  			pinctrl_spec.np, offset, 
+> pinctrl_spec.args[1]);
+> 
+> If #pinctrl-cells value is greater than 2, nothing will set vals[found].val to 
+> anything other than zero (from when it's calloc'ed) and the pinctrl will 
+> silently be programmed to zero.
 
-Linus Walleij writes:
+If #pinctrl-cells is 3, then it will be:
 
-> On Thu, Sep 3, 2020 at 3:35 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
->> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
->> (SGPIO) device used in various SoC's.
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> (...)
->
->> diff --git a/drivers/pinctrl/pinctrl-mchp-sgpio.c b/drivers/pinctrl/pinctrl-mchp-sgpio.c
->
-> Can we just spell it out
-> pinctrl-microchip-sgpio.c ?
->
-> The abbreviation seems arbitrary and unnecessary.
+	vals[found].val = (pinctrl_spec.args[1] | pinctrl_spec.args[2]);
 
-Well, not completely arbitrary, but maybe unnecessary... I'll change
-that. I'll also change that for any symbols/defines off course.
+Do you mean if #pinctrl-cells is great than 3 then it will just have a
+default value of zero?
 
->
-> I do see that this chip is using the pinctrl abstractions (very nicely)
-> and should be under drivers/pinctrl/*.
->
-> Sadly it doesn't mean the bindings need to be in pinctrl ... unless you
-> plan to add pinctrl bindings later.
->
->> +config PINCTRL_MCHP_SGPIO
->> +       bool "Pinctrl driver for Microsemi/Microchip Serial GPIO"
->> +       depends on OF
->> +       depends on HAS_IOMEM
->> +       select GPIOLIB
->> +       select GENERIC_PINCONF
->> +       select GENERIC_PINCTRL_GROUPS
->> +       select GENERIC_PINMUX_FUNCTIONS
->
-> Nice use of these abstractions!
+That does appear to be the case and is probably not the behavior we
+want.  Thank you for pointing this out.  Earlier, there is a check to
+make sure there are at least 2 arguments:
 
-Thanks!
+	if (pinctrl_spec.args_count < 2) {
+		dev_err(pcs->dev, "invalid args_count for spec: %i\n",
+			pinctrl_spec.args_count); 
+		break;
+	}
 
->
->> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
->
-> What's up with this OR MIT? I'd like Kate to OK this.
->
->> +#define MCHP_SGPIOS_PER_BANK   32
->> +#define MCHP_SGPIO_BANK_DEPTH  4
->> +
->> +#define PIN_NAM_SZ     (sizeof("SGPIO_D_pXXbY")+1)
->> +
->> +enum {
->> +       REG_INPUT_DATA,
->> +       REG_PORT_CONFIG,
->> +       REG_PORT_ENABLE,
->> +       REG_SIO_CONFIG,
->> +       REG_SIO_CLOCK,
->> +       MAXREG
->> +};
->> +
->> +struct mchp_sgpio_props {
->
-> Just call it struct microchip_gpio_variant it is easier to read and
-> does not abbreviate randomly, also it is a per-variant set of properties
-> so calling it variant is more to the point.
->
+I'll submit a patch where the upper bound is also checked:
 
-Fine.
+	if (pinctrl_spec.args_count < 2 || pinctrl_spec.args_count > 3) {
+		dev_err(pcs->dev, "invalid args_count for spec: %i\n",
+			pinctrl_spec.args_count); 
+		break;
+	}
 
->> +struct mchp_sgpio_priv {
->
-> I would just spell it out struct microchip_sgpio, it is implicit that
-> the struct is private since it is defined in a c file.
->
+> The debug printout was not change to print vals[found].val, so it will 
+> continue to print the value of the 2nd cell.
 
-Fine.
+Thank you for pointing this out.  Yes, this is an oversight and I will
+submit a patch.
 
->> +struct mchp_sgpio_port_addr {
+> The result is that a #pinctrl-cells of 3 will produce no warning or error, 
+> program the pinctrl to zero, whilst at the same time emit debug log messages 
+> that it is programming the expected values.
 >
-> struct microchip_sgpio_port_addr
->
-> (Admittedly this is a bit about taste.)
->
->> +static inline void sgpio_writel(struct mchp_sgpio_priv *priv,
->> +                               u32 val, u32 rno, u32 off)
->> +{
->> +       u32 __iomem *reg = &priv->regs[priv->props->regoff[rno] + off];
->> +
->> +       writel(val, reg);
->> +}
->> +
->> +static inline void sgpio_clrsetbits(struct mchp_sgpio_priv *priv,
->> +                                   u32 rno, u32 off, u32 clear, u32 set)
->> +{
->> +       u32 __iomem *reg = &priv->regs[priv->props->regoff[rno] + off];
->> +       u32 val = readl(reg);
->> +
->> +       val &= ~clear;
->> +       val |= set;
->> +
->> +       writel(val, reg);
->> +}
->
-> This looks like a reimplementation of regmap_update_bits for a bit,
-> have you considered just using regmap? It's pretty simple.
->
+> The device tree documentation still states that #pinctrl-cells must be 1 when 
+> using pinctrl-single,pins.  This new special case of ORing two values is not 
+> documented.
 
-Well, the registers are not in a regmap, so I did not consider that. The
-utility function also serves to abstract the variant register address.
+This is a good point, too.  I will make a patch to update the
+documentation.
 
->> +static int mchp_sgpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
->> +{
->> +       struct mchp_sgpio_priv *priv = gpiochip_get_data(gc);
->> +
->> +       /* Fixed-position function */
->> +       return sgpio_is_input(priv, gpio) ? 0 : -EINVAL;
->> +}
->> +
->> +static int mchp_sgpio_direction_output(struct gpio_chip *gc,
->> +                                      unsigned int gpio, int value)
->> +{
->> +       struct mchp_sgpio_priv *priv = gpiochip_get_data(gc);
->> +       struct mchp_sgpio_port_addr addr;
->> +
->> +       sgpio_pin_to_addr(priv, gpio, &addr);
->> +
->> +       /* Fixed-position function */
->> +       if (addr.input)
->> +               return -EINVAL;
->> +
->> +       sgpio_output_set(priv, &addr, value);
->> +
->> +       return 0;
->> +}
->
-> This looks like the right way to handle this!
 
-I'm glad you think so...
-
->
->> +static int mchp_sgpio_of_xlate(struct gpio_chip *gc,
->> +                              const struct of_phandle_args *gpiospec,
->> +                              u32 *flags)
->> +{
->> +       struct mchp_sgpio_priv *priv = gpiochip_get_data(gc);
->> +       int pin, base;
->> +
->> +       if (gpiospec->args[0] > MCHP_SGPIOS_PER_BANK ||
->> +           gpiospec->args[1] > priv->bitcount)
->> +               return -EINVAL;
->> +       base = priv->bitcount * gpiospec->args[0];
->> +       pin = base + gpiospec->args[1];
->> +       /* Add to 2nd half of output range if output */
->> +       if (gpiospec->args[2] == PIN_OUTPUT)
->> +               pin += (priv->ngpios / 2);
->> +
->> +       if (pin > gc->ngpio)
->> +               return -EINVAL;
->> +
->> +       if (flags)
->> +               *flags = gpiospec->args[3];
->> +
->> +       return pin;
->> +}
->
-> I don't like this. I would certainly prefer the driver to just use standard
-> GPIO bindings. I do not understand why this is necessary.
->
-> If for nothing else, there should be a big comment explaining this.
->
-> The only real problem I have with the driver is this extra flag tagged onto
-> all the GPIOs, this seems unnecessary, and something the hardware
-> driver should already know from the compatible string.
-
-I hope my previous comments have cleared this up.
-
->
-> Yours,
-> Linus Walleij
-
-Thank you for your time and comments!
-
----Lars
-
--- 
-Lars Povlsen,
-Microchip
+-Drew
