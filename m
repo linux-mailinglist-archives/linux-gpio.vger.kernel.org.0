@@ -2,81 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0738B268828
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 11:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4458F26894B
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 12:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgINJTm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 05:19:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
+        id S1726438AbgINKaI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 06:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgINJTh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 05:19:37 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21111C061788
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:19:35 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id n2so17163814oij.1
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:19:35 -0700 (PDT)
+        with ESMTP id S1726275AbgINKaD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 06:30:03 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FCA1C061788
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 03:30:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id y1so4873685pgk.8
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 03:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PntEDM7LF9YFHS/fGomhwipLRARKe4IjmrD2LSF9a3U=;
-        b=VyxKPcjWnBBwHP+A6iZKryD4xkDXQ5KFR9iVkwHUK3DCvLDl6GJALmKd62cETe/T/h
-         5cp95uIBwLWal7kiXal3YRWAWWTawzHD1oFcfae9so+04qVSxMUbVdaa96q1WC3laz+F
-         QVCZq5SB0Y5EGEhdI4T2qGTi2V0WrRHuHjYSYPHJocsPBCSf8u21NkRJEcg83cThOK78
-         xllBmvMh3A0743AueKeJTlGLfIzRCzAhzSet5wwcih0rG6mQffVmVkxaOippCE9Bk7cQ
-         0CmqCIM8zdJbRD3UwUu4kMbY2ijPykTio/c9MVtmP3GyHGXKohsTA5qdc6Uo56/dEF3G
-         8M0w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aV1NwayJ9g5Ich31O6EePYi9dUvdkGUF1VlXhnHhYCw=;
+        b=Tulk7gRDG0oL9MYWLhfdDz/c8MRLXQLarTfG4raYD8kfPn9BFXl7C9E6YsaCSytyto
+         f0QC6E79XoMggJNKTvbEk9l6I2zGozMPqBy4jHLVLHo89HqIPDX1cD82gG6Y7FZ9H4Lv
+         EQL6JF9hGy8eYadiy8vpjX1zJ3/GlhHKZ/1zXmIc9rokfxACMBWH0Dpe3eos3S5cOgzB
+         6VQcLzUtqyDRsqBBGRbyN85MlTC5Ja4aUcwNdvqbFVT+HJ6stynm4+R8Ha87zsL5QMRs
+         hcIvdnCdOWUbNFg8BqCpYYYSgsj17Rt1LOOsW/hovAPGYbUGqTGIWYS/uaxAD7T4YfA8
+         Wqeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PntEDM7LF9YFHS/fGomhwipLRARKe4IjmrD2LSF9a3U=;
-        b=E84TX/O61iNxWSZcNRHqspn0NK23PbgUVPkHxCMXURCxLRbt3JfoCoi+b/t6dh6yqA
-         0cWf9fTlybfsSPMqiXajpPIEpi2CLdmmao8r1fjgZ7xB75S8uDkRFDMDtv3kJt76a7KU
-         fZCZJJRTnKe1v5ykZn7/xfwy2OER3lzczKyv58d8WJ8bwgNt3sujTKf6WSWOEEfNuUz0
-         snzHPrQntBo4Y1VProhpkb6oALV4kMVK6qGzUwY9lCPUplNr5wTZWKvqkrc5mgXlGVUx
-         eJBZ1s3qJ+Kj4a2WuCvIv6LoJqEl1Otuh5WHdFaONaFTu7aEgF3j7kzoe6+m9R1/0MtD
-         XHxg==
-X-Gm-Message-State: AOAM531ND5fvxCahkpyuI91MkGzTfRNxlKZysAaFg4MPbpToFWqlMG/e
-        +6cfyzCTr+KX9aMl6gvZZDy6BlgIKcDp5c+ar+KMLQ==
-X-Google-Smtp-Source: ABdhPJzlVYpLLKBqckSp7cRsb8j0H8g/8KzM210y/SP/BYJaFBsL0tM+uwdKjUZ9Xls9z1uoNnukdCcEAIT/PhlQ8dc=
-X-Received: by 2002:aca:2301:: with SMTP id e1mr8577962oie.177.1600075174577;
- Mon, 14 Sep 2020 02:19:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200914001229.47290-1-dmitry.baryshkov@linaro.org> <20200914002314.GZ3715@yoga>
-In-Reply-To: <20200914002314.GZ3715@yoga>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Mon, 14 Sep 2020 12:19:23 +0300
-Message-ID: <CAA8EJpoti+s6nh59UFYkNR9+xeb8_zgxUdcbzRnrdwi7qvV2rw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: sm8250: correct sdc2_clk and ngpios
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aV1NwayJ9g5Ich31O6EePYi9dUvdkGUF1VlXhnHhYCw=;
+        b=FENf6LBMNtZNqpuZIWBL//+HOAxOIn5CSuXKvTQRO6/bEumd5AT8xPCKqdLRaEPb3h
+         6aFl1j+j59hiuYr8S482HTqOOvWdXcUd/BpmSTIZwSbN2Rl+USWiu0mf/gC61SjEysly
+         yzO++blYcXs2SdNjZk69UhE5HKPylQhprj5ULqzz4yPg8cvCMAdqOuPLPSg83/wbiRIF
+         A05PhyiicczjPxDGGQeWL5w+uqA1fNxjA+4DogavPWoxT3rTH6f3gx7R3nmniKoMLrWP
+         uz3Hbf1AJmaw5uP9S4G4t1UoytyLYrgVXY+sT/kM6eJUbWWuFr1QBs5GnNYZTbB2kxK5
+         IsnQ==
+X-Gm-Message-State: AOAM531A7UECor4Kdu3GACcJ8vVU8kZz42NTKJh4DCjOyHhmu+637i46
+        u4akKJLfw8BP/NWHyngj2Duj
+X-Google-Smtp-Source: ABdhPJzo1JgcREdbm0ZO59wVSR1fnUpuwnfNT1SOJf28S+H1jG7IlQsfi96MVWCKY7RREmLOWfGu6w==
+X-Received: by 2002:a62:8349:: with SMTP id h70mr13313397pfe.47.1600079401814;
+        Mon, 14 Sep 2020 03:30:01 -0700 (PDT)
+Received: from mani-NUC7i5DNKE ([2409:4072:6d84:8e8a:d537:f870:596d:5afa])
+        by smtp.gmail.com with ESMTPSA id f4sm9276526pfj.147.2020.09.14.03.29.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Sep 2020 03:30:01 -0700 (PDT)
+Date:   Mon, 14 Sep 2020 15:59:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3] pinctrl: qcom: sm8250: correct sdc2_clk
+Message-ID: <20200914102956.GA19867@mani-NUC7i5DNKE>
+References: <20200914091846.55204-1-dmitry.baryshkov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200914091846.55204-1-dmitry.baryshkov@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 14 Sep 2020 at 03:23, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Sun 13 Sep 19:12 CDT 2020, Dmitry Baryshkov wrote:
->
-> > Correct sdc2_clk pin definition (register offset) and ngpios (SM8250 has
-> > 180 GPIO pins).
->
-> The second half of the message is no longer relevant, and you only need
-> one of your s-o-b below.
+On Mon, Sep 14, 2020 at 12:18:46PM +0300, Dmitry Baryshkov wrote:
+> Correct sdc2_clk pin definition (register offset is wrong, verified by
+> the msm-4.19 driver).
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I should stop sending patches at 3 a.m.
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+Thanks,
+Mani
 
-
-
--- 
-With best wishes
-Dmitry
+> Fixes: 4e3ec9e407ad5058003309072b37111f7b8c900a
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> index a660f1274b66..826df0d637ea 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> @@ -1308,7 +1308,7 @@ static const struct msm_pingroup sm8250_groups[] = {
+>  	[178] = PINGROUP(178, WEST, _, _, _, _, _, _, _, _, _),
+>  	[179] = PINGROUP(179, WEST, _, _, _, _, _, _, _, _, _),
+>  	[180] = UFS_RESET(ufs_reset, 0xb8000),
+> -	[181] = SDC_PINGROUP(sdc2_clk, 0x7000, 14, 6),
+> +	[181] = SDC_PINGROUP(sdc2_clk, 0xb7000, 14, 6),
+>  	[182] = SDC_PINGROUP(sdc2_cmd, 0xb7000, 11, 3),
+>  	[183] = SDC_PINGROUP(sdc2_data, 0xb7000, 9, 0),
+>  };
+> -- 
+> 2.28.0
+> 
