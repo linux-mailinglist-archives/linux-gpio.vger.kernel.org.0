@@ -2,108 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C36D9268496
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 08:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C80332684E5
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 08:32:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgINGMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 02:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgINGMu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 02:12:50 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C047C06174A;
-        Sun, 13 Sep 2020 23:12:50 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n14so11709851pff.6;
-        Sun, 13 Sep 2020 23:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qMA4+bCENmKIAaTqxulZuH+89CCPDE5hYbEDjMHkXKs=;
-        b=ImN7bFA4m+p5DOY/7dzMqVt4AhCSlCS8AvdGccNUVwUTamyKxLSHWkY458gsmDtech
-         7SCCHR3iK1Gcoq1G51VrQTUu4O2gNh5+urgYaF8kNC/0KWZqBxDGMh0SsdbfN8B5HxfH
-         O1nPdzOFabzFv5bxIZN+NEmR32fCvHZqHqLcwofGfFnqRMhNfMyuERItnTLDx/2qfgdN
-         DzGtnoLZtIxQGe0LVfCayOipd1G+ODZAYxZtRUSdEp4nkBbA7XNQfJSce2Vlj3oTHq/d
-         403h8mPgDPixm7QRfru2Qw01dVTk5nyeyDGh96hyYJztcqueKLitHTUGiqRZjFTGe1QU
-         PMvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qMA4+bCENmKIAaTqxulZuH+89CCPDE5hYbEDjMHkXKs=;
-        b=kap24xN/23i/B4LdGdgloRx8YRj6cE8R7O8X9AVwJeUU0MuREbwyLMjgYZRrk/tUwC
-         nr0rzeZ2q2ugg37IglcU6/qnbd9hZN6LkREBcf0Vbj/EHzhh+/BCZnVm2T/aA7hY6slv
-         i+Wl4JwaAPOcBnVcsWx/YsffNSZw7ua14oKRODI4sKl1+SjEEgX0vNwRnpOfAoy8lKX8
-         1haQBC+nfaSbp43Fnjm9K5p9slswPgaf1P5Br/+m9G8D4WMMkzXf27/rz/mymC+6THpo
-         /M736vqlSPZE3fcDy7tNrXba9IH39hRLbRRFtobepmnlJYHoskkGjrmmDLIX3ExTQmvx
-         RhwA==
-X-Gm-Message-State: AOAM531EIT9//TS363X2LsseNo18mBN8OzdlK82GTdwJ+JFfWAf/Uked
-        gCSb8axey0JtqvG56kqNYFU=
-X-Google-Smtp-Source: ABdhPJxs9cVIGboCh7RXMAQIEb2NwGImTJlraPod7XpYSttMor38d9NhB8UZsugu9/+aPeKJFjX0Og==
-X-Received: by 2002:a17:902:8ecc:b029:d1:7cd1:8d5b with SMTP id x12-20020a1709028eccb02900d17cd18d5bmr13148934plo.42.1600063969764;
-        Sun, 13 Sep 2020 23:12:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id d128sm2817677pfc.8.2020.09.13.23.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Sep 2020 23:12:48 -0700 (PDT)
-Date:   Sun, 13 Sep 2020 23:12:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 0/1] Input: soc_button_array - Work around DSDTs which
- modify the irqflags
-Message-ID: <20200914061246.GO1665100@dtor-ws>
-References: <20200906122016.4628-1-hdegoede@redhat.com>
+        id S1726067AbgINGbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 02:31:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11830 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726098AbgINGbh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Sep 2020 02:31:37 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E34E6C0B2D3D50EC1778;
+        Mon, 14 Sep 2020 14:31:33 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 14 Sep 2020
+ 14:31:22 +0800
+From:   Liu Shixin <liushixin2@huawei.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Liu Shixin <liushixin2@huawei.com>
+Subject: [PATCH -next] pinctrl: sprd: use module_platform_driver to simplify the code
+Date:   Mon, 14 Sep 2020 14:54:02 +0800
+Message-ID: <20200914065402.3726408-1-liushixin2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200906122016.4628-1-hdegoede@redhat.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.32]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Hans,
+module_platform_driver() makes the code simpler by eliminating
+boilerplate code.
 
-On Sun, Sep 06, 2020 at 02:20:15PM +0200, Hans de Goede wrote:
-> Hi Dmitry,
-> 
-> This patch is a bit of a kludge, but the problem it fixes has been
-> encountered on 2 different models now, so it seems that we really
-> need a workaround for this.
-> 
-> This patch applies on top of these 2 patches:
-> 
-> "Input: soc_button_array - Add active_low setting to soc_button_info"
-> "Input: soc_button_array - Add support for INT33D3 tablet-mode switch devices"
-> 
-> Which I have posted multiple times upstream already (they are from May!),
-> but these have not been getting any attention.
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+---
+ drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-Sorry about that, I merged them just now.
-> 
-> The soc_button_array code really is x86 specific glue code to translate
-> various incarnations of gpio-keys in ACPI tables to gpio_keys_platform_data.
-> As such I wonder if it would not be better to move this driver to
-> drivers/platform/x86?
-> 
-> I seem to be doing most if not all of the recent work on soc_button_array,
-> and soon I will be a co-maintainer of drivers/platform/x86. So having it
-> there and adding me in MAINTAINERS as maintaining it seems to be best?
-> 
-> If you want I can do a patch moving soc_button_array to drivers/platform/x86
-> and then add the other 3 patches on top and then we can merge all of this
-> through drivers/platform/x86?
-
-Sorry, misread this first time through, so already merged the 3 patches,
-but I to not mind at all moving the driver to platform tree. If you send
-me such a patch I will apply it.
-
-Thanks.
-
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+index 06c8671b40e7..d14f382f2392 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+@@ -946,18 +946,7 @@ static struct platform_driver sprd_pinctrl_driver = {
+ 	.remove = sprd_pinctrl_remove,
+ 	.shutdown = sprd_pinctrl_shutdown,
+ };
+-
+-static int sprd_pinctrl_init(void)
+-{
+-	return platform_driver_register(&sprd_pinctrl_driver);
+-}
+-module_init(sprd_pinctrl_init);
+-
+-static void sprd_pinctrl_exit(void)
+-{
+-	platform_driver_unregister(&sprd_pinctrl_driver);
+-}
+-module_exit(sprd_pinctrl_exit);
++module_platform_driver(sprd_pinctrl_driver);
+ 
+ MODULE_DESCRIPTION("SPREADTRUM Pin Controller Driver");
+ MODULE_AUTHOR("Baolin Wang <baolin.wang@spreadtrum.com>");
 -- 
-Dmitry
+2.25.1
+
