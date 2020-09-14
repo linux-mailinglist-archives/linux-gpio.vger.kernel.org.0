@@ -2,111 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 957B5268BB3
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 15:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B464268C99
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 15:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgINNEy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 09:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgINNEn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 09:04:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0390C06174A
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 06:04:41 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s65so10434689pgb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 06:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mdh90nAsg8FPAwf7YhkmI3ryVDLqZ68ajjR6rhm5qec=;
-        b=hQ+jUW67DwnfezjJV5ljuIyhP8P5600BhEprjCxPC1g9vY8POsllHj3KAzIHBanbmf
-         uG/DVaoho3fGlI9PhQVl3SGLJzHF53qwbd0rL8FewdATNHX9lZ8XcQTyt4HWXzSjtzxo
-         osMKYblHTjZtrfYk02YHnleWNw3qb0Va6rEbDZ+WQuNWvDnlEea1A1eMxcgknXKp+Lbo
-         awA6Y4wsGOmIFs0bwVt/GPj96SI0JxalRrqGqfMGUa3fMXEaOi5IphZ5iUflxtMuQqKS
-         8WD9N4I6OVszwRwO+bsYL1rZwYGMrR8GyJcSbbik0fHQUSAFoadJU6jYVM+XME5Bv0hA
-         Uigw==
+        id S1726785AbgINNxo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 09:53:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28260 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726792AbgINNwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 09:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600091529;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7Um8tCX9YwmvI/46vYWXlvrLavmk2Mm7vU3FQ5RmK4k=;
+        b=S+2ej9R+emKFoGC+wfBcdU7LcfOsfk9m3E7ri6tGl+zocyB7o6aOGE4nzy1MGqLllwk8Xt
+        D/Awaii3ovwosI5dVcMP+moSLkTSyXwGcaMi9Zhf/sPLGt9+8kLFc6j76hU9rnxSi9icj/
+        ow+CH+4pLORvUhPqCNTk5RuHeqUIkHo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-7rCSQDpwOZOsaYqE-NWIWg-1; Mon, 14 Sep 2020 09:52:07 -0400
+X-MC-Unique: 7rCSQDpwOZOsaYqE-NWIWg-1
+Received: by mail-wm1-f72.google.com with SMTP id c200so22893wmd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 06:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mdh90nAsg8FPAwf7YhkmI3ryVDLqZ68ajjR6rhm5qec=;
-        b=ldUVjj6BG8lZlMkJKidWfZHjVAWgPzVmkgNQLR8CDIv6pnLhTtl87Vivu31Cm7Smud
-         0VmbMDXNUuBFvRG75Lda+eHb5nZ+Yz2Uj+ZBLCx9J/N0XHqqSNqhYARFRNX0cWHwHcGX
-         jl0Vspkq99fNuhjjB9G3PPu70hsjbpg+yxCv2mvk5bFbiWBNLflN7KlCt0ztw4BoB4di
-         Plj+/1Jr36OPlVCmGKMdYekmZrjJbWxp6XjYo5ywtX66HWFHePgD1XyzqIwE53KcFE01
-         CmmM8I7AfyW4QebbxjGIG1uuvBU9BlQkhPo3HuJlBVWDKFkAGMlgcZGn4tSe+d2RMTRC
-         CsaA==
-X-Gm-Message-State: AOAM532I+AidcqONq5IrWR21c6wzXFJdIyLGFKE7kbHlkUksA4kH9Flo
-        O4Q5IL6hA03+huHzrbNmse55/UO2/ncPbSr2Si4=
-X-Google-Smtp-Source: ABdhPJw3H+GPTOiFms1K5UEM7TlBhnVVXZFLrNN4gcHnhjf6qvCOdUahM7ev9j6gBYpfjo1VQRdBFsPNC/alYqBVFDc=
-X-Received: by 2002:a17:902:6bc1:b029:d0:cbe1:e76e with SMTP id
- m1-20020a1709026bc1b02900d0cbe1e76emr14893020plt.21.1600088681344; Mon, 14
- Sep 2020 06:04:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
- <20200911030539.GA574097@sol> <20200911083109.GF1891694@smile.fi.intel.com>
- <20200911091249.GA1874731@sol> <20200911095355.GG1891694@smile.fi.intel.com>
- <20200911101714.GA2132928@sol> <20200911142846.GM1891694@smile.fi.intel.com>
- <20200912022148.GA3880502@sol> <CAMpxmJU9=aFrQP9t+rOn4xvCdB9kHHvWzMkPnMcjG8G7pDzj4g@mail.gmail.com>
-In-Reply-To: <CAMpxmJU9=aFrQP9t+rOn4xvCdB9kHHvWzMkPnMcjG8G7pDzj4g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Sep 2020 16:04:23 +0300
-Message-ID: <CAHp75VeFfNmKWNSxQXOVHuksFzxCbxyv=3LmAesSYTSoZ5u1yw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in syscall
- compatible mode
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7Um8tCX9YwmvI/46vYWXlvrLavmk2Mm7vU3FQ5RmK4k=;
+        b=kNU73w5bmdV3Nq3ueFcjBuxIJ8yjFWlGb1182LHTBPNvAbL6NIsJ6GwPc7PAFT9apR
+         nqiB6nxdJbZEmDBi65jrJaoqWKi3ve+siVeHPlsvTnjW9Tdiq9wpEuSG+myoVwK8OYiU
+         n+tFm4ybsNvbA1G1Df1yrxn+pGCQbfhZWEe57d98hlrKb2EuhzwO1wPbReNmS1tJwS7Y
+         lS4kMGRRLj27ckXwQ/11Bt9zzWo9bPRUKrcNh1PyNQVdQdPBmD51OudTDvJ3SypcIL2D
+         lRVuBnPetU88aa4K/fk92DgJgiEms49UGlSjxG2VHISU7gI4jxO1DNmw2si051Mfu33U
+         i7Mw==
+X-Gm-Message-State: AOAM532z98ZtyAhI0ifhUeHv4sXNzK1HahbmPKmt+s6mXW8kktM8ywzf
+        TyGKoxqs+wdG+nT1RtIAtWUaUcaOBjj+Ju5U4cPN8QGwAc1Pm4D03mYv5/rCoMgHnA1jI3jS6FX
+        CkQTS+d+j9yq74RdQmxZbfw==
+X-Received: by 2002:a1c:2543:: with SMTP id l64mr14427397wml.96.1600091526413;
+        Mon, 14 Sep 2020 06:52:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzt2FETo366O9EcczySLGiVdopF7Gk02mT+yreGZEBLgG14oYmnYiTX/HRz15WrDVmKYPNwWg==
+X-Received: by 2002:a1c:2543:: with SMTP id l64mr14427382wml.96.1600091526173;
+        Mon, 14 Sep 2020 06:52:06 -0700 (PDT)
+Received: from x1.localdomain ([78.108.130.193])
+        by smtp.gmail.com with ESMTPSA id m10sm18956882wmi.9.2020.09.14.06.52.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Sep 2020 06:52:05 -0700 (PDT)
+Subject: Re: [PATCH 0/1] Input: soc_button_array - Work around DSDTs which
+ modify the irqflags
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20200906122016.4628-1-hdegoede@redhat.com>
+ <20200914061246.GO1665100@dtor-ws>
+ <61dfb476-2d55-116c-21d6-bf5972929cd3@redhat.com>
+ <CAHp75VemDbswE9+yXMut1vbYvWwcTAd+b_Ry05_0QWbfnCSv9g@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <897df830-4806-0118-6a27-0025268da1f5@redhat.com>
+Date:   Mon, 14 Sep 2020 15:52:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VemDbswE9+yXMut1vbYvWwcTAd+b_Ry05_0QWbfnCSv9g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 4:00 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> On Sat, Sep 12, 2020 at 4:21 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Fri, Sep 11, 2020 at 05:28:46PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Sep 11, 2020 at 06:17:14PM +0800, Kent Gibson wrote:
+Hi,
 
-...
+On 9/14/20 10:00 AM, Andy Shevchenko wrote:
+> On Mon, Sep 14, 2020 at 10:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 9/14/20 8:12 AM, Dmitry Torokhov wrote:
+>>> On Sun, Sep 06, 2020 at 02:20:15PM +0200, Hans de Goede wrote:
+> 
+> ...
+> 
+>>>> The soc_button_array code really is x86 specific glue code to translate
+>>>> various incarnations of gpio-keys in ACPI tables to gpio_keys_platform_data.
+>>>> As such I wonder if it would not be better to move this driver to
+>>>> drivers/platform/x86?
+> 
+> AFAIU the above is a justification why PDx86 suits better to host it.
 
-> > > I don't like the difference between 2nd and 3rd argument. This what looks to me
-> > > hackish. Variant with explicit compat structure I like more.
-> > >
-> >
-> > Agreed - writing it that way does look pretty nasty.
-> >
-> > But my suggestion is actually this:
-> >
-> > ret = copy_to_user(buf, &ge, event_size);
-> >
-> > I suggested ge_size previously, but event_size might help highlight that
-> > it isn't always sizeof(ge).
-> >
-> > > But if you think it's okay, I will update your way.
-> > >
-> >
-> > I would defer to Bart or Linus, but I think just calculating the
-> > appropriate size is preferable for this case.
-> >
-> > Cheers,
-> > Kent.
->
-> Kent has been producing clean and elegant code so far so I trust him
-> on code quality issues TBH. Personally in this case however I'd go
-> with an explicit compat structure as Andy prefers.
->
-> I don't have a strong opinion on this so I really am fine either way.
+Correct.
 
-Since the initial idea was Arnd's and he agreed on Kent's approach, I
-will re-do that way.
+>>>> I seem to be doing most if not all of the recent work on soc_button_array,
+>>>> and soon I will be a co-maintainer of drivers/platform/x86. So having it
+>>>> there and adding me in MAINTAINERS as maintaining it seems to be best?
+>>>>
+>>>> If you want I can do a patch moving soc_button_array to drivers/platform/x86
+>>>> and then add the other 3 patches on top and then we can merge all of this
+>>>> through drivers/platform/x86?
+>>>
+>>> Sorry, misread this first time through, so already merged the 3 patches,
+>>> but I to not mind at all moving the driver to platform tree. If you send
+>>> me such a patch I will apply it.
+>>
+>> Ok.
+>>
+>> Andy are you ok with moving the driver to the pdx86 tree too?
+> 
+> Taking into consideration the above, if I read it correctly, I agree.
+> Feel free to add my Ack.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Ok, since Dmitry's tree currently has some changes to soc_button_array.c,
+the plan is to merge the patch through Dmitry's tree.
+
+I will prepare a patch with your Acked-by and submit it.
+
+Regards,
+
+Hans
+
