@@ -2,114 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22F30268AE0
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 14:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06EF268B8D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 14:57:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgINM1T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 08:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46680 "EHLO
+        id S1726510AbgINM4n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 08:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgINMZo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 08:25:44 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15979C0698E6
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 05:22:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 67so11394183pgd.12
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 05:22:14 -0700 (PDT)
+        with ESMTP id S1726498AbgINMob (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 08:44:31 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CFBC06174A
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 05:44:30 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id w1so17465907edr.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 05:44:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=SCVNXkOmibRRFjngC0F7Eobu+h7Toa35YdceOgJFszjwMhgE8sRK29ZJDt/FAdNOgp
-         elwnkGFmPaN+beLnM61TrC/MgliLJC9ZzzopJnX+8sFtTdZ0eplAAmpRa8pLIQwYPalq
-         RsWap5ujMYIqAf+vrWL6oAMPJ9jYgn9h6CrSvli5JXe5LeTRjMBHRwaKoEda4AGn4FCL
-         UqXXA6VVXUF6WJ0uJ9ioeTEVoVTNZF4+igr0J50tmAzqp2FNc6jk9ZBRBZPcW2lDyb+E
-         mP/qF3MFHracZFjdwlyzH8ZKe0bCApRglOEP8fm9xy3qpQbWnR3YoSEa9g8Ilan1/6C2
-         wtyQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8nA6A+BjrmpzZxfjlH2oNUbSYc7zOty1uM0peUugN0k=;
+        b=hemvP25IijktQjYYVRHes/7E1IXHyuUnqpmpq9MAVJRLK6G9EfpCvLvdXTTXo3ah8z
+         BURQ+Fg/S2svnB4z6uD/8zR1LclGVLm6PWMxKy39McbWa3v4GFwQzVvw0ltOYj9X5dJW
+         mKLrsXkheQziy0dG2hVHpcRa8vfNBMYMedvvwRDRb3FJk1lOGHgqeBivzhl/WyBMRnrp
+         TbLv6rcKz8FXy06ze8Ya6eh0B9LWTvXKTloKzkkvuElLd0bpPbnzYXMHiYWZPlpj64Qd
+         6+xr7YRb5uu3jk+ubid00S+rOSKotItICnUfFYnF68Th/6Cvk70O60D2QHY/4/AkeXWJ
+         7Pxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=LRguRlrX8E/cz6+P4CQrp9blEQojoNSMK9+NWYdNhrou5XLY6/jfesIdgE42rGM3X+
-         t6mOEcYvFSf2NY1OcFdBXUmkw5rLCm7O/76ymJiHtWYdLZwCToSo9mHpVVnYDhaqYThG
-         4YvI/0YKz2qqsuRIu97xGpM7MdJolHvlaNVIUxSDoBgBdBEWYLcSpjpq3RnQhFGnHZIJ
-         s1mpX1izo4tTNYvrFXd9jiKOvfd7kbWKEVrYRBG4tKAzbFEYCNSeHZ7PnBLUaXzrkYjq
-         m9NCcb+8ROOPeNap6QOe+9iKxH8kMO/KEa317qxZPml6jX3VbRvP7Swbt547hi9/msWC
-         Cqng==
-X-Gm-Message-State: AOAM532rXsfPGLwrh/dI6/oEd0nkHjnQBYxOEUrSHl+y3e0ytdJC/QVR
-        BDZI8dR3pD6MtouD3wmdz7SzbnTs9ab2ZTkoHvg=
-X-Google-Smtp-Source: ABdhPJwlEK1x3W215XNYgXIYNI6Qzpscz0H551WXj1IZgzgq2DfrN4PDbxOMeAFLUMiNouzC8JvXVAaBvL4wnMBWzxc=
-X-Received: by 2002:a17:902:c151:: with SMTP id 17mr13942646plj.49.1600086133234;
- Mon, 14 Sep 2020 05:22:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8nA6A+BjrmpzZxfjlH2oNUbSYc7zOty1uM0peUugN0k=;
+        b=mG1E13za8IJXMtYJlB8ZF3RVJabRwUh/xwmhyaJLWvoxRS5sEc26pRXR5JByrqczSy
+         gU95yjNK4LHrQb4ROr12+QkGViZBtFbqmOBcm9yudyY8SWjQOYQXs2Rum3OsE9aDnTNI
+         CMWPo7mkoVzq37DeSNoUCur2s9bMJ9Vcbo+VBZQrdOdVAClwcWVZcGO5r5nbivYE6A8q
+         QnQz84WVKptXiUB+JqRN5ISCFq7+0Q8ym7J5T0/zt2+hT7yC9GoQ+Ddsteqb7chj4NU7
+         IOzofXNfNXPG5IU2gFlK3VBA93LLn7FBO7pNUr7hd7OrL8EJAJD+/VMsTJUy6+qZNzmQ
+         CXug==
+X-Gm-Message-State: AOAM5302WKc+gnUuI33YDvmo2ld8k4KpRG6sVzpgxdPHhVVwqIR6FkEx
+        7aRF/sZ3uf+boyk3kFRhhRY3OFKgvHTgO/qTH84d6g==
+X-Google-Smtp-Source: ABdhPJzLoLDsz+ht769/msh7O0ftWnxdm6bHyYAEwFHt0kRkwExHWWw0Xd6C7AT7IToCjiAwvYd1qxWjH4LOr/63ldw=
+X-Received: by 2002:a05:6402:b0f:: with SMTP id bm15mr16663399edb.388.1600087469422;
+ Mon, 14 Sep 2020 05:44:29 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:60d1:0:0:0:0 with HTTP; Mon, 14 Sep 2020 05:22:12
- -0700 (PDT)
-Reply-To: mrsmegwilliam6@gmail.com
-From:   Ms Mary Mcniff <diplomaticstoragecourier@gmail.com>
-Date:   Mon, 14 Sep 2020 05:22:12 -0700
-Message-ID: <CAD72A3OnM5UkEyx5+TmVZo5JKyyXnina5eDs7ktk=zCWMkbT3A@mail.gmail.com>
-Subject: Your Respond ASAP
-To:     undisclosed-recipients:;
+References: <20200910101935.47140-1-andriy.shevchenko@linux.intel.com>
+ <20200911030539.GA574097@sol> <20200911083109.GF1891694@smile.fi.intel.com>
+ <20200911091249.GA1874731@sol> <20200911095355.GG1891694@smile.fi.intel.com>
+ <20200911101714.GA2132928@sol> <20200911142846.GM1891694@smile.fi.intel.com> <20200912022148.GA3880502@sol>
+In-Reply-To: <20200912022148.GA3880502@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 14 Sep 2020 14:44:18 +0200
+Message-ID: <CAMpxmJU9=aFrQP9t+rOn4xvCdB9kHHvWzMkPnMcjG8G7pDzj4g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in syscall
+ compatible mode
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-From Chief Compliance Officer, Citigroup Inc CITIBANK
-388 Greenwich St, New York, 10013, United States United.
-PAYMENT CODE: FRB010
-Swift: PTBLBXXX
-==============================================
+On Sat, Sep 12, 2020 at 4:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Fri, Sep 11, 2020 at 05:28:46PM +0300, Andy Shevchenko wrote:
+> > On Fri, Sep 11, 2020 at 06:17:14PM +0800, Kent Gibson wrote:
+> > > On Fri, Sep 11, 2020 at 12:53:55PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 11, 2020 at 05:12:49PM +0800, Kent Gibson wrote:
+> > > > > On Fri, Sep 11, 2020 at 11:31:09AM +0300, Andy Shevchenko wrote:
+> > > > > > On Fri, Sep 11, 2020 at 11:05:39AM +0800, Kent Gibson wrote:
+> > > > > > > On Thu, Sep 10, 2020 at 01:19:34PM +0300, Andy Shevchenko wrote:
+> > > >
+>
+> [snip]
+> > >
+> > > typedef u64 __attribute__((aligned(4))) compat_u64;
+> > >
+> > > which is bitwise identical - only allowed to 32-bit align.
+> >
+> > Yes. That's what I meant under "not the same".
+> >
+> > As far as I understand the alignment makes sense if this type is a part of
+> > the uAPI definition. But here we have it completely local. copy_to_user() takes
+> > a pointer to a memory without any specific alignment implied.
+> >
+> > So, what you proposing is basically something like
+> >
+> > ret = copy_to_user(buf, &ge, compat ?  sizeof(compat) : sizeof(ge));
+> >
+> > Correct?
+> >
+>
+> That isn't how I would write the copy_to_user(). The size would be
+> calculated once, using the linevent_user_size() helper, with
+> appropriate documentation as to why this is necessary, and then
+> used throughout lineevent_read().
+>
+> The documentation would mainly be on the lineevent_user_size() function
+> itself.
+>
+> > I don't like the difference between 2nd and 3rd argument. This what looks to me
+> > hackish. Variant with explicit compat structure I like more.
+> >
+>
+> Agreed - writing it that way does look pretty nasty.
+>
+> But my suggestion is actually this:
+>
+> ret = copy_to_user(buf, &ge, event_size);
+>
+> I suggested ge_size previously, but event_size might help highlight that
+> it isn't always sizeof(ge).
+>
+> > But if you think it's okay, I will update your way.
+> >
+>
+> I would defer to Bart or Linus, but I think just calculating the
+> appropriate size is preferable for this case.
+>
+> Cheers,
+> Kent.
 
-Attention: Beneficiary,
+Kent has been producing clean and elegant code so far so I trust him
+on code quality issues TBH. Personally in this case however I'd go
+with an explicit compat structure as Andy prefers.
 
-We write to inform you that Series of meetings have been held over the
-past 2 weeks with the Secretary General of United Nations,U.S
-Department of State and Dubai Union Organization this ended last
-week.And parcel is under our custody right now, It will deliver to you
-within 24 hours once you clear the charges which will cost you
-according to the BANKERS COURIER SERVICES that wish to deliver your
-ATM CARD card to
-you immediately.
+I don't have a strong opinion on this so I really am fine either way.
 
-However, it is the pleasure of this office to inform you that your ATM
-CARD number; is 29741733 and it has been approved and upgraded in your
-favor .you call me for the pin code numbers. The ATM CARD value is us
-$10.5 Million only.
-
-Kindly contact the paying bank for the claim of your ATM visa card
-payment fund $10,500,000.00 through the below contact information;
-
-Contact Person:Mr Williams S Young
-Director of Financial Controller
-Bank Name: CITIBANK
-Bank address; 388 Greenwich St,
-New York City,10013, United States
-Email:mrsmegwilliam6@gmail.com
-
-Reconfirm the following information?
-
-(1)Your Full Name=============
-(2)Mobile Phone Number======
-(3)Current Home Address==== ====
-(4)Fax Number================
-(5)Passport/Drivers license ======
-
-Endeavor to keep me posted once you contacted the officer in charge
-through the above mentioned information.
-
-Your timely response is highly appreciated.To this end, you are
-required to forward your payment information as follows to enable us
-load your fund into the card with your information and deliver it to
-your door step. as the BANKERS COURIER SERVICES are in charge of the
-delivery services to your destination.
-
-Yours truly;
-
-Ms Mary Mcniff.
-Chief Compliance Officer, Citigroup Inc
-FEDERAL RESERVE SYSTEM.
-Email: marymcniff7@gmail.com.
+Bartosz
