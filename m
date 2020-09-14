@@ -2,99 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E22268E09
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C33F5268E33
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgINOlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 10:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgINOlq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 10:41:46 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A26C06174A;
-        Mon, 14 Sep 2020 07:41:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id b79so307729wmb.4;
-        Mon, 14 Sep 2020 07:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gzOaZ+9doo3e9MINvriYLJ9c1FIG4zynst8IxgcsqLk=;
-        b=DZRmIViiCZ7QQ2zUCEkCO6A+Z8C/eQt5ChkUIcvGdpfHx2ZBvUrQVJYqVEy3q51kz5
-         TFjGe/XLCvjKAVfXsEWklgJifUm7U2fZd8GGh5HIrkEI99SnlZu9W5EwKNlfbQh+BC09
-         yFRn5BWABqTgO5JlMIPjVZHSefwvy74dKAFlNtvoMpMJ4qimbdybBqXZb8HjPHKdrxX5
-         GASM6TYlww19XOCuX/Hw3sNgsTbVvCs6WCQVDwDIWpUsVKeET46idgGEKjFgqeZBSsx3
-         oM7WUXix9EckT6kHc+VfN8cD3MAqk19MPaZ05zZREXdZgsYIRphqax1yS600WzNzEs76
-         uYtQ==
+        id S1726851AbgINOry (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 10:47:54 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38821 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgINOrj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 10:47:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y6so143698oie.5;
+        Mon, 14 Sep 2020 07:47:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gzOaZ+9doo3e9MINvriYLJ9c1FIG4zynst8IxgcsqLk=;
-        b=Z/TRvRLQ+xZHGkbWKKnI2BHk1sq61TzYZPZQyTCEg+Jj0T4hrjEU8zDaX98p6kBYWt
-         uTqREvmx4jcgV7AEyb/iFhmlb9PaxonDmy7zWsxkCK43YU7gVYFKm2R0ERk1NM4RSF12
-         9WEckUKurKiCX6zn5OyDj43KyHAnzsTwkaMHbz3NNqmN1nghmSuj3ZAxrKRsdRJBACLn
-         i2+AjFyOkmBOToEo05/QEBHRTWXu8q0Qnw7h9NEwZ2cxHFkgYFgw9cw0J22SejSNydrs
-         oy8WMeekOGl8PVCPrExFyfWeA9tCPZN95AMGK7ql9N4qWP2fxECy4YxB4w53zuaA6eZ3
-         WUKg==
-X-Gm-Message-State: AOAM532sW/b16+zDplZAzavdqwC3FlMxoMlX6XcvjAZ7+8Q5hlKhsiZm
-        Pjlg8+WDpax1TwTi4APZsKw=
-X-Google-Smtp-Source: ABdhPJzXcOhHK7by7NsLZ4cIfrt/nXVH6TUtlu6R6APi9nfMpl32uOzvpNNw0ngxZ245uA+1Kjin0g==
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr15168395wml.176.1600094504093;
-        Mon, 14 Sep 2020 07:41:44 -0700 (PDT)
-Received: from localhost.localdomain ([85.153.229.188])
-        by smtp.gmail.com with ESMTPSA id g12sm21329806wro.89.2020.09.14.07.41.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 07:41:43 -0700 (PDT)
-From:   Necip Fazil Yildiran <fazilyildiran@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paul@pgazz.com, jeho@cs.utexas.edu,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>
-Subject: [PATCH] pinctrl: bcm: fix kconfig dependency warning when !GPIOLIB
-Date:   Mon, 14 Sep 2020 17:40:26 +0300
-Message-Id: <20200914144025.371370-1-fazilyildiran@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xXmiKOGJxLdtOythJHwnbZ/9MTtxjprRDh5NW6fGqZE=;
+        b=T+508UsMQ3KDmiYwa0NHhNNGrmdmx9GkkSKk4rTRE3eMrAhfSjq83N3eGR8cUgk68z
+         6z/LDpIm9X5XqKBhHYhUhcRkS5uzoWEKCJR5KtC2/31oulaOef2INTi8bRdrZqCpWQV8
+         bw57uZMtduRbmd+tb92/sua6pW6bqAvtG5x61KgCn7zVhku8Nfs97UsuOsY6h7mtnVIH
+         Bz2wTXv6KNUKSNb/+7xMnGRIT8y4sWnyxUju5pKo8jX6EbTOzt1iV4vqdYO9Iao+mbV7
+         YWHvEqrpxVAbWgPhluEUE7sg8lFOzscJg+4RgsCav+YkabZiBBJh7V5LSAjj3jLnlIZ7
+         63Cg==
+X-Gm-Message-State: AOAM532M1hGbnb8P9sSkaRsbTI/s6e7gt+sav0bRYWQRMIGJUa/WyQeS
+        KC81nD3N/qHSLCLzWJTvWe66AlPdmDn+EFq35ns=
+X-Google-Smtp-Source: ABdhPJy9ncGnp1eMb+q/xwc/WTE6IYf82utcaATWzgDC0b2bF3UWJbUmhvMYmlsX4IqNoMjBPOSTfnBa5f4QkSxGI1k=
+X-Received: by 2002:aca:3bc3:: with SMTP id i186mr8078289oia.148.1600094858794;
+ Mon, 14 Sep 2020 07:47:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200913182850.32660-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200913182850.32660-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 14 Sep 2020 16:47:27 +0200
+Message-ID: <CAMuHMdWjnQGKt12_=Z1Lc4fE2hecC6V7ELYpGW6FP2zm8mBp=w@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7790: Add VIN1-B and VIN2-G pins,
+ groups and functions
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When PINCTRL_BCM2835 is enabled and GPIOLIB is disabled, it results in the
-following Kbuild warning:
+Hi Prabhakar,
 
-WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
-  Depends on [n]: GPIOLIB [=n]
-  Selected by [y]:
-  - PINCTRL_BCM2835 [=y] && PINCTRL [=y] && OF [=y] && (ARCH_BCM2835 [=n] || ARCH_BRCMSTB [=n] || COMPILE_TEST [=y])
+CC Laurent, Niklas
 
-The reason is that PINCTRL_BCM2835 selects GPIOLIB_IRQCHIP without
-depending on or selecting GPIOLIB while GPIOLIB_IRQCHIP is subordinate to
-GPIOLIB.
+On Sun, Sep 13, 2020 at 8:29 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add pins, groups and functions for the VIN1-B [data/clk/sync] and VIN2-G [data].
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+> Changes for v2:
+> * Added complete list of VIN1-B pins
+> * Renamed vin2_data8_g to vin2_data8g
+> * Sorted vin1_sync_b pins
+>
+> v1 - https://patchwork.kernel.org/patch/11761191/
 
-Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
+Thanks for the update!
 
-Fixes: 85ae9e512f43 ("pinctrl: bcm2835: switch to GPIOLIB_IRQCHIP")
-Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
----
- drivers/pinctrl/bcm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
 
-diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-index dcf7df797af7..0ed14de0134c 100644
---- a/drivers/pinctrl/bcm/Kconfig
-+++ b/drivers/pinctrl/bcm/Kconfig
-@@ -23,6 +23,7 @@ config PINCTRL_BCM2835
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
-+	select GPIOLIB
- 	select GPIOLIB_IRQCHIP
- 	default ARCH_BCM2835 || ARCH_BRCMSTB
- 	help
--- 
-2.25.1
+> @@ -3874,6 +3940,14 @@ static const unsigned int vin1_sync_mux[] = {
+>         VI1_HSYNC_N_MARK,
+>         VI1_VSYNC_N_MARK,
+>  };
+> +static const unsigned int vin1_sync_b_pins[] = {
+> +       RCAR_GP_PIN(1, 24), /* HSYNC */
+> +       RCAR_GP_PIN(1, 25), /* VSYNC */
+> +};
+> +static const unsigned int vin1_sync_b_mux[] = {
+> +       VI1_HSYNC_N_B_MARK,
+> +       VI1_VSYNC_N_B_MARK,
+> +};
+>  static const unsigned int vin1_field_pins[] = {
+>         RCAR_GP_PIN(1, 13),
+>  };
 
+Missing field_b and clkenb_b.
+
+> @@ -3959,6 +4039,18 @@ static const unsigned int vin2_data18_mux[] = {
+>         VI2_R4_MARK, VI2_R5_MARK,
+>         VI2_R6_MARK, VI2_R7_MARK,
+>  };
+> +static const unsigned int vin2_data8g_pins[] = {
+> +       RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
+> +       RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
+> +       RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
+> +       RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
+> +};
+> +static const unsigned int vin2_data8g_mux[] = {
+> +       VI2_G0_MARK, VI2_G1_MARK,
+> +       VI2_G2_MARK, VI2_G3_MARK,
+> +       VI2_G4_MARK, VI2_G5_MARK,
+> +       VI2_G6_MARK, VI2_G7_MARK,
+> +};
+
+Laurent, Niklas: are you happy with the name "vin2_data8g", or do
+you have a better suggestion?
+
+>  static const unsigned int vin2_sync_pins[] = {
+>         RCAR_GP_PIN(1, 16), /* HSYNC */
+>         RCAR_GP_PIN(1, 21), /* VSYNC */
+
+> @@ -4310,15 +4402,25 @@ static const struct {
+>                 VIN_DATA_PIN_GROUP(vin1_data, 10),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 4),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 24, _b),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 20, _b),
+> +               SH_PFC_PIN_GROUP(vin1_data18_b),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 16, _b),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 12, _b),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 10, _b),
+> +               VIN_DATA_PIN_GROUP(vin1_data, 8, _b),
+
+Missing vin1_data4_b.
+
+>                 SH_PFC_PIN_GROUP(vin1_sync),
+> +               SH_PFC_PIN_GROUP(vin1_sync_b),
+>                 SH_PFC_PIN_GROUP(vin1_field),
+>                 SH_PFC_PIN_GROUP(vin1_clkenb),
+>                 SH_PFC_PIN_GROUP(vin1_clk),
+> +               SH_PFC_PIN_GROUP(vin1_clk_b),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 24),
+>                 SH_PFC_PIN_GROUP(vin2_data18),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 16),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 4),
+> +               SH_PFC_PIN_GROUP(vin2_data8g),
+>                 SH_PFC_PIN_GROUP(vin2_sync),
+>                 SH_PFC_PIN_GROUP(vin2_field),
+>                 SH_PFC_PIN_GROUP(vin2_clkenb),
+> @@ -4784,10 +4886,19 @@ static const char * const vin1_groups[] = {
+>         "vin1_data10",
+>         "vin1_data8",
+>         "vin1_data4",
+> +       "vin1_data24_b",
+> +       "vin1_data20_b",
+> +       "vin1_data18_b",
+> +       "vin1_data16_b",
+> +       "vin1_data12_b",
+> +       "vin1_data10_b",
+> +       "vin1_data8_b",
+
+Missing vin1_data4_b.
+
+>         "vin1_sync",
+> +       "vin1_sync_b",
+>         "vin1_field",
+>         "vin1_clkenb",
+>         "vin1_clk",
+> +       "vin1_clk_b",
+>  };
+>
+>  static const char * const vin2_groups[] = {
+
+The rest looks good to me.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
