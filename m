@@ -2,43 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13713268DEB
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:38:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46E22268E09
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgINOie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 10:38:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:14452 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgINOh7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 14 Sep 2020 10:37:59 -0400
-IronPort-SDR: jgkrzFs/tjOHkBNwd4fpSsvkEwU7voZU/CIOsIU4wkr8SSPSP6wE6BFYb1+/OXifmdn3YqEBVk
- T630ByKfMiIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9744"; a="223269738"
-X-IronPort-AV: E=Sophos;i="5.76,426,1592895600"; 
-   d="scan'208";a="223269738"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2020 07:37:47 -0700
-IronPort-SDR: VZZc6BFEfbHen+jJ0J6mx0UWMtQvcOP2uAWQ23RaRo9T9eaqDL539ck3ZsVnnY+xZN+rgPioiB
- s7JXUpe0QG2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,426,1592895600"; 
-   d="scan'208";a="338300657"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Sep 2020 07:37:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 44F87165; Mon, 14 Sep 2020 17:37:43 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2] gpiolib: Fix line event handling in syscall compatible mode
-Date:   Mon, 14 Sep 2020 17:37:43 +0300
-Message-Id: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1726525AbgINOlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 10:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgINOlq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 10:41:46 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A26C06174A;
+        Mon, 14 Sep 2020 07:41:45 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id b79so307729wmb.4;
+        Mon, 14 Sep 2020 07:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gzOaZ+9doo3e9MINvriYLJ9c1FIG4zynst8IxgcsqLk=;
+        b=DZRmIViiCZ7QQ2zUCEkCO6A+Z8C/eQt5ChkUIcvGdpfHx2ZBvUrQVJYqVEy3q51kz5
+         TFjGe/XLCvjKAVfXsEWklgJifUm7U2fZd8GGh5HIrkEI99SnlZu9W5EwKNlfbQh+BC09
+         yFRn5BWABqTgO5JlMIPjVZHSefwvy74dKAFlNtvoMpMJ4qimbdybBqXZb8HjPHKdrxX5
+         GASM6TYlww19XOCuX/Hw3sNgsTbVvCs6WCQVDwDIWpUsVKeET46idgGEKjFgqeZBSsx3
+         oM7WUXix9EckT6kHc+VfN8cD3MAqk19MPaZ05zZREXdZgsYIRphqax1yS600WzNzEs76
+         uYtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gzOaZ+9doo3e9MINvriYLJ9c1FIG4zynst8IxgcsqLk=;
+        b=Z/TRvRLQ+xZHGkbWKKnI2BHk1sq61TzYZPZQyTCEg+Jj0T4hrjEU8zDaX98p6kBYWt
+         uTqREvmx4jcgV7AEyb/iFhmlb9PaxonDmy7zWsxkCK43YU7gVYFKm2R0ERk1NM4RSF12
+         9WEckUKurKiCX6zn5OyDj43KyHAnzsTwkaMHbz3NNqmN1nghmSuj3ZAxrKRsdRJBACLn
+         i2+AjFyOkmBOToEo05/QEBHRTWXu8q0Qnw7h9NEwZ2cxHFkgYFgw9cw0J22SejSNydrs
+         oy8WMeekOGl8PVCPrExFyfWeA9tCPZN95AMGK7ql9N4qWP2fxECy4YxB4w53zuaA6eZ3
+         WUKg==
+X-Gm-Message-State: AOAM532sW/b16+zDplZAzavdqwC3FlMxoMlX6XcvjAZ7+8Q5hlKhsiZm
+        Pjlg8+WDpax1TwTi4APZsKw=
+X-Google-Smtp-Source: ABdhPJzXcOhHK7by7NsLZ4cIfrt/nXVH6TUtlu6R6APi9nfMpl32uOzvpNNw0ngxZ245uA+1Kjin0g==
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr15168395wml.176.1600094504093;
+        Mon, 14 Sep 2020 07:41:44 -0700 (PDT)
+Received: from localhost.localdomain ([85.153.229.188])
+        by smtp.gmail.com with ESMTPSA id g12sm21329806wro.89.2020.09.14.07.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2020 07:41:43 -0700 (PDT)
+From:   Necip Fazil Yildiran <fazilyildiran@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paul@pgazz.com, jeho@cs.utexas.edu,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>
+Subject: [PATCH] pinctrl: bcm: fix kconfig dependency warning when !GPIOLIB
+Date:   Mon, 14 Sep 2020 17:40:26 +0300
+Message-Id: <20200914144025.371370-1-fazilyildiran@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -46,87 +63,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The introduced line even handling ABI in the commit
+When PINCTRL_BCM2835 is enabled and GPIOLIB is disabled, it results in the
+following Kbuild warning:
 
-  61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
+  Depends on [n]: GPIOLIB [=n]
+  Selected by [y]:
+  - PINCTRL_BCM2835 [=y] && PINCTRL [=y] && OF [=y] && (ARCH_BCM2835 [=n] || ARCH_BRCMSTB [=n] || COMPILE_TEST [=y])
 
-missed the fact that 64-bit kernel may serve for 32-bit applications.
-In such case the very first check in the lineevent_read() will fail
-due to alignment differences.
+The reason is that PINCTRL_BCM2835 selects GPIOLIB_IRQCHIP without
+depending on or selecting GPIOLIB while GPIOLIB_IRQCHIP is subordinate to
+GPIOLIB.
 
-To workaround this introduce lineeven_to_user() helper which returns actual
-size of the structure and copies its content to user if asked.
+Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
 
-Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 85ae9e512f43 ("pinctrl: bcm2835: switch to GPIOLIB_IRQCHIP")
+Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
 ---
-v2: moved to just calculate size (Arnd, Kent), added good comment (Arnd)
- drivers/gpio/gpiolib-cdev.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
+ drivers/pinctrl/bcm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e6c9b78adfc2..95af4a470f1e 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -423,6 +423,21 @@ static __poll_t lineevent_poll(struct file *file,
- 	return events;
- }
- 
-+static ssize_t lineevent_get_size(void)
-+{
-+#ifdef __x86_64__
-+	/* i386 has no padding after 'id' */
-+	if (in_ia32_syscall()) {
-+		struct compat_gpioeevent_data {
-+			compat_u64	timestamp;
-+			u32		id;
-+		};
-+
-+		return sizeof(struct compat_gpioeevent_data);
-+	}
-+#endif
-+	return sizeof(struct gpioevent_data);
-+}
- 
- static ssize_t lineevent_read(struct file *file,
- 			      char __user *buf,
-@@ -432,9 +447,20 @@ static ssize_t lineevent_read(struct file *file,
- 	struct lineevent_state *le = file->private_data;
- 	struct gpioevent_data ge;
- 	ssize_t bytes_read = 0;
-+	ssize_t ge_size;
- 	int ret;
- 
--	if (count < sizeof(ge))
-+	/*
-+	 * When compatible system call is being used the struct gpioevent_data,
-+	 * in case of at least ia32, has different size due to the alignment
-+	 * differences. Because we have first member 64 bits followed by one of
-+	 * 32 bits there is no gap between them. The only problematic is the
-+	 * padding at the end of the data structure. Hence, we calculate the
-+	 * actual sizeof() and pass this as an argument to copy_to_user() to
-+	 * drop unneeded bytes from the output.
-+	 */
-+	ge_size = lineevent_get_size();
-+	if (count < ge_size)
- 		return -EINVAL;
- 
- 	do {
-@@ -470,10 +496,10 @@ static ssize_t lineevent_read(struct file *file,
- 			break;
- 		}
- 
--		if (copy_to_user(buf + bytes_read, &ge, sizeof(ge)))
-+		if (copy_to_user(buf + bytes_read, &ge, ge_size))
- 			return -EFAULT;
--		bytes_read += sizeof(ge);
--	} while (count >= bytes_read + sizeof(ge));
-+		bytes_read += ge_size;
-+	} while (count >= bytes_read + ge_size);
- 
- 	return bytes_read;
- }
+diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+index dcf7df797af7..0ed14de0134c 100644
+--- a/drivers/pinctrl/bcm/Kconfig
++++ b/drivers/pinctrl/bcm/Kconfig
+@@ -23,6 +23,7 @@ config PINCTRL_BCM2835
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
++	select GPIOLIB
+ 	select GPIOLIB_IRQCHIP
+ 	default ARCH_BCM2835 || ARCH_BRCMSTB
+ 	help
 -- 
-2.28.0
+2.25.1
 
