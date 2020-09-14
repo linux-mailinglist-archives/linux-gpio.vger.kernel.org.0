@@ -2,90 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 940EC26881F
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 11:19:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0738B268828
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 11:19:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgINJS4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 05:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46084 "EHLO
+        id S1726305AbgINJTm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 05:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgINJSy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 05:18:54 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C8CC06174A
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:18:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k25so17937976ljg.9
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:18:53 -0700 (PDT)
+        with ESMTP id S1726289AbgINJTh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 05:19:37 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21111C061788
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:19:35 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id n2so17163814oij.1
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 02:19:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gnEpJzbyGxYVJC+WE9SlhHIeVnSfB41fHSb+EFmzq5I=;
-        b=zqjb5lwtMePnKZPt6EWPRArVIa/aHqCY/jZ9wBc0z4i5LaIefGJakujGhp4SSsQZ9E
-         /kR29oWljmdvVz+/l/iLXn/L00M2wL6Nw2Sa2xHFJgXfDY0MBzYlYtBnfdsJ985VQPUF
-         3eKmlP/f3jt1/RuYDgMOpcY2cscoNIByY9nQvp8NlM9FARWh2NGHTVq3YgmhzBYmYuc+
-         zDN9DriOCx388ztJuyVcemJVBQ4ADjGrlvGiWaHyxP237elQoSk7qAZ6jIwPNpAVnCv3
-         hGngjgZ6K94oaDIBsLaLNKh8B8HilQPwqlSQz5jh5/fW2pshBhvXw+P3dYukDMKtndh/
-         s9Lw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PntEDM7LF9YFHS/fGomhwipLRARKe4IjmrD2LSF9a3U=;
+        b=VyxKPcjWnBBwHP+A6iZKryD4xkDXQ5KFR9iVkwHUK3DCvLDl6GJALmKd62cETe/T/h
+         5cp95uIBwLWal7kiXal3YRWAWWTawzHD1oFcfae9so+04qVSxMUbVdaa96q1WC3laz+F
+         QVCZq5SB0Y5EGEhdI4T2qGTi2V0WrRHuHjYSYPHJocsPBCSf8u21NkRJEcg83cThOK78
+         xllBmvMh3A0743AueKeJTlGLfIzRCzAhzSet5wwcih0rG6mQffVmVkxaOippCE9Bk7cQ
+         0CmqCIM8zdJbRD3UwUu4kMbY2ijPykTio/c9MVtmP3GyHGXKohsTA5qdc6Uo56/dEF3G
+         8M0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gnEpJzbyGxYVJC+WE9SlhHIeVnSfB41fHSb+EFmzq5I=;
-        b=cGVHq/mSsSGKLWnAFnOi3KomkGm/pfHVCXzAFG3KKf+IBMQKXjzD0zz8XfQOMiBabD
-         ymClLMiE59oDpjnFLKEUZX+KShiWyv7Z6Yg84F5WU8YfFIODllhUjOdWCbPwl1LZXzrd
-         yI2CH6f1OHfwp9g8Xt4EDtvNOGUMm4LaV2xrbVCpS6eVkxfhxPpBteDhU70D/E4pDOw8
-         ZvpFHfKruUhU4LRpcqw4Pm0gBQ++ARTCH7X4gdA+HJQWpNwfEhC5QfcOuxI4KKkgVD4c
-         k5uABg3Co8CWRGEZ0MPoPq6ZwH1rGaOfzOBwr9a6dQPA3gpDgwLu7BeV+DU8o1IitB8C
-         n+ug==
-X-Gm-Message-State: AOAM5307AVfCCXYa1Nx7dfEx1i87bQQELTnzIWXdgpvNAAdxiTBjxN0F
-        3WG9nLp0gw55Kw6gxHvc5iQm6g==
-X-Google-Smtp-Source: ABdhPJxf+QlWGVT+Im3JbTN8tb88VuUQ2D/GH2xr/fxP9MQYl0pnCS33Vk0FT6BS+EHZtS6AEohmFw==
-X-Received: by 2002:a05:651c:22e:: with SMTP id z14mr4576273ljn.260.1600075128793;
-        Mon, 14 Sep 2020 02:18:48 -0700 (PDT)
-Received: from eriador.lan ([188.162.64.187])
-        by smtp.gmail.com with ESMTPSA id 191sm3214606lfa.131.2020.09.14.02.18.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 02:18:48 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3] pinctrl: qcom: sm8250: correct sdc2_clk
-Date:   Mon, 14 Sep 2020 12:18:46 +0300
-Message-Id: <20200914091846.55204-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PntEDM7LF9YFHS/fGomhwipLRARKe4IjmrD2LSF9a3U=;
+        b=E84TX/O61iNxWSZcNRHqspn0NK23PbgUVPkHxCMXURCxLRbt3JfoCoi+b/t6dh6yqA
+         0cWf9fTlybfsSPMqiXajpPIEpi2CLdmmao8r1fjgZ7xB75S8uDkRFDMDtv3kJt76a7KU
+         fZCZJJRTnKe1v5ykZn7/xfwy2OER3lzczKyv58d8WJ8bwgNt3sujTKf6WSWOEEfNuUz0
+         snzHPrQntBo4Y1VProhpkb6oALV4kMVK6qGzUwY9lCPUplNr5wTZWKvqkrc5mgXlGVUx
+         eJBZ1s3qJ+Kj4a2WuCvIv6LoJqEl1Otuh5WHdFaONaFTu7aEgF3j7kzoe6+m9R1/0MtD
+         XHxg==
+X-Gm-Message-State: AOAM531ND5fvxCahkpyuI91MkGzTfRNxlKZysAaFg4MPbpToFWqlMG/e
+        +6cfyzCTr+KX9aMl6gvZZDy6BlgIKcDp5c+ar+KMLQ==
+X-Google-Smtp-Source: ABdhPJzlVYpLLKBqckSp7cRsb8j0H8g/8KzM210y/SP/BYJaFBsL0tM+uwdKjUZ9Xls9z1uoNnukdCcEAIT/PhlQ8dc=
+X-Received: by 2002:aca:2301:: with SMTP id e1mr8577962oie.177.1600075174577;
+ Mon, 14 Sep 2020 02:19:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200914001229.47290-1-dmitry.baryshkov@linaro.org> <20200914002314.GZ3715@yoga>
+In-Reply-To: <20200914002314.GZ3715@yoga>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Mon, 14 Sep 2020 12:19:23 +0300
+Message-ID: <CAA8EJpoti+s6nh59UFYkNR9+xeb8_zgxUdcbzRnrdwi7qvV2rw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: sm8250: correct sdc2_clk and ngpios
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Correct sdc2_clk pin definition (register offset is wrong, verified by
-the msm-4.19 driver).
+On Mon, 14 Sep 2020 at 03:23, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sun 13 Sep 19:12 CDT 2020, Dmitry Baryshkov wrote:
+>
+> > Correct sdc2_clk pin definition (register offset) and ngpios (SM8250 has
+> > 180 GPIO pins).
+>
+> The second half of the message is no longer relevant, and you only need
+> one of your s-o-b below.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Fixes: 4e3ec9e407ad5058003309072b37111f7b8c900a
----
- drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I should stop sending patches at 3 a.m.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index a660f1274b66..826df0d637ea 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -1308,7 +1308,7 @@ static const struct msm_pingroup sm8250_groups[] = {
- 	[178] = PINGROUP(178, WEST, _, _, _, _, _, _, _, _, _),
- 	[179] = PINGROUP(179, WEST, _, _, _, _, _, _, _, _, _),
- 	[180] = UFS_RESET(ufs_reset, 0xb8000),
--	[181] = SDC_PINGROUP(sdc2_clk, 0x7000, 14, 6),
-+	[181] = SDC_PINGROUP(sdc2_clk, 0xb7000, 14, 6),
- 	[182] = SDC_PINGROUP(sdc2_cmd, 0xb7000, 11, 3),
- 	[183] = SDC_PINGROUP(sdc2_data, 0xb7000, 9, 0),
- };
+
+
+
 -- 
-2.28.0
-
+With best wishes
+Dmitry
