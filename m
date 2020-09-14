@@ -2,97 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D297268DE2
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13713268DEB
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 16:38:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgINOgs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 10:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbgINOgE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 10:36:04 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23794C06178B
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 07:36:04 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id c10so69413otm.13
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 07:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GZakKr1Rl2vFnmP4zslf73bcIAuRFq5109wt4H/RawU=;
-        b=eM2xldlHlD0dq6OMi+hkipFuD2hYnK7WVRT7XFYfqVWdK9w7K5iqqI/jHrMrJuBBFi
-         U4bwmU4N8Y75S/ADDAoSWH17b4T0Q7Tt9ghAij4ofmLX+vAWCv68Sd+nHq3FpWsIj5Bf
-         7RVmxqMBvM7NmhVVncTtqWlJjrTRauQkJaJXGt18Op9v2s1TiQz/q9L8KjKQdwNt7tPz
-         Gdj+ohSnVooyod05Hggq0Y1UdBxvJ5/ObsoHKpy4mejRXcOavNoNXTdyJelMTPDCwgRL
-         nssZlpDLfNmzYdZpdu2AZ+/F/vOkltj0NCj5of6qO5H2rBUDdp0awljKgccg0Urc4gku
-         IlPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GZakKr1Rl2vFnmP4zslf73bcIAuRFq5109wt4H/RawU=;
-        b=BZ4Qk/+qbrmlP6kNZVDFmyTJj6z0SLMaBNXid74Snx3TnH0aTJMc5l0Y3Ykx1hH4dI
-         lqEEyDBq2THms0AGKbkb66b38Wb7i95DJYYVG3TMMKXiAkX8pysYrk9xjsZ01VA9v2jr
-         WqVuh4rF7guXZ3Unm1zrjHzDSwBQ+dREvPFcxPRj75NQVgTBGYtjmk2n77GpTq7NuSp4
-         ggFNxEssLyNRQ3c+x1Wqn01DCI0vKypXiuoO/Id71snmLd2lhM4pzrsA67cj58xmZxdp
-         oVYEcvq0hZkh3Ot/D/PFNZGEw5PzdjGpES4bIYRHyDPWzlhrYa2EyTxknJ1L4H3FU/w1
-         RLrw==
-X-Gm-Message-State: AOAM530BuWK+MrxlEC7iv3BpYIcxksr5LqN31eB2ohWhTKf3A3m+yHoa
-        fYKEgqyWt8YVPvi0NVMPTbGV0w==
-X-Google-Smtp-Source: ABdhPJzGf1W2dUVogxHjpOwZahgSMDw0aveW6JgV1ZREzek9U1672WaoWfnK7cPNqt1fh5O4xW2/ag==
-X-Received: by 2002:a9d:3d43:: with SMTP id a61mr8943625otc.240.1600094163383;
-        Mon, 14 Sep 2020 07:36:03 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id m12sm3369056otq.8.2020.09.14.07.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 07:36:02 -0700 (PDT)
-Date:   Mon, 14 Sep 2020 09:35:59 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3] pinctrl: qcom: sm8250: correct sdc2_clk
-Message-ID: <20200914143559.GA3715@yoga>
-References: <20200914091846.55204-1-dmitry.baryshkov@linaro.org>
+        id S1726482AbgINOie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 10:38:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:14452 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbgINOh7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Sep 2020 10:37:59 -0400
+IronPort-SDR: jgkrzFs/tjOHkBNwd4fpSsvkEwU7voZU/CIOsIU4wkr8SSPSP6wE6BFYb1+/OXifmdn3YqEBVk
+ T630ByKfMiIg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9744"; a="223269738"
+X-IronPort-AV: E=Sophos;i="5.76,426,1592895600"; 
+   d="scan'208";a="223269738"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2020 07:37:47 -0700
+IronPort-SDR: VZZc6BFEfbHen+jJ0J6mx0UWMtQvcOP2uAWQ23RaRo9T9eaqDL539ck3ZsVnnY+xZN+rgPioiB
+ s7JXUpe0QG2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,426,1592895600"; 
+   d="scan'208";a="338300657"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Sep 2020 07:37:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 44F87165; Mon, 14 Sep 2020 17:37:43 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2] gpiolib: Fix line event handling in syscall compatible mode
+Date:   Mon, 14 Sep 2020 17:37:43 +0300
+Message-Id: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200914091846.55204-1-dmitry.baryshkov@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 14 Sep 04:18 CDT 2020, Dmitry Baryshkov wrote:
+The introduced line even handling ABI in the commit
 
-> Correct sdc2_clk pin definition (register offset is wrong, verified by
-> the msm-4.19 driver).
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Fixes: 4e3ec9e407ad5058003309072b37111f7b8c900a
+  61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+missed the fact that 64-bit kernel may serve for 32-bit applications.
+In such case the very first check in the lineevent_read() will fail
+due to alignment differences.
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> index a660f1274b66..826df0d637ea 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> @@ -1308,7 +1308,7 @@ static const struct msm_pingroup sm8250_groups[] = {
->  	[178] = PINGROUP(178, WEST, _, _, _, _, _, _, _, _, _),
->  	[179] = PINGROUP(179, WEST, _, _, _, _, _, _, _, _, _),
->  	[180] = UFS_RESET(ufs_reset, 0xb8000),
-> -	[181] = SDC_PINGROUP(sdc2_clk, 0x7000, 14, 6),
-> +	[181] = SDC_PINGROUP(sdc2_clk, 0xb7000, 14, 6),
->  	[182] = SDC_PINGROUP(sdc2_cmd, 0xb7000, 11, 3),
->  	[183] = SDC_PINGROUP(sdc2_data, 0xb7000, 9, 0),
->  };
-> -- 
-> 2.28.0
-> 
+To workaround this introduce lineeven_to_user() helper which returns actual
+size of the structure and copies its content to user if asked.
+
+Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: moved to just calculate size (Arnd, Kent), added good comment (Arnd)
+ drivers/gpio/gpiolib-cdev.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index e6c9b78adfc2..95af4a470f1e 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -423,6 +423,21 @@ static __poll_t lineevent_poll(struct file *file,
+ 	return events;
+ }
+ 
++static ssize_t lineevent_get_size(void)
++{
++#ifdef __x86_64__
++	/* i386 has no padding after 'id' */
++	if (in_ia32_syscall()) {
++		struct compat_gpioeevent_data {
++			compat_u64	timestamp;
++			u32		id;
++		};
++
++		return sizeof(struct compat_gpioeevent_data);
++	}
++#endif
++	return sizeof(struct gpioevent_data);
++}
+ 
+ static ssize_t lineevent_read(struct file *file,
+ 			      char __user *buf,
+@@ -432,9 +447,20 @@ static ssize_t lineevent_read(struct file *file,
+ 	struct lineevent_state *le = file->private_data;
+ 	struct gpioevent_data ge;
+ 	ssize_t bytes_read = 0;
++	ssize_t ge_size;
+ 	int ret;
+ 
+-	if (count < sizeof(ge))
++	/*
++	 * When compatible system call is being used the struct gpioevent_data,
++	 * in case of at least ia32, has different size due to the alignment
++	 * differences. Because we have first member 64 bits followed by one of
++	 * 32 bits there is no gap between them. The only problematic is the
++	 * padding at the end of the data structure. Hence, we calculate the
++	 * actual sizeof() and pass this as an argument to copy_to_user() to
++	 * drop unneeded bytes from the output.
++	 */
++	ge_size = lineevent_get_size();
++	if (count < ge_size)
+ 		return -EINVAL;
+ 
+ 	do {
+@@ -470,10 +496,10 @@ static ssize_t lineevent_read(struct file *file,
+ 			break;
+ 		}
+ 
+-		if (copy_to_user(buf + bytes_read, &ge, sizeof(ge)))
++		if (copy_to_user(buf + bytes_read, &ge, ge_size))
+ 			return -EFAULT;
+-		bytes_read += sizeof(ge);
+-	} while (count >= bytes_read + sizeof(ge));
++		bytes_read += ge_size;
++	} while (count >= bytes_read + ge_size);
+ 
+ 	return bytes_read;
+ }
+-- 
+2.28.0
+
