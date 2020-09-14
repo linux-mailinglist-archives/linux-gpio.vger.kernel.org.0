@@ -2,96 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5D0F269850
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Sep 2020 23:51:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60C8526996F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 01:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgINVvC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 17:51:02 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:54093 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgINVu6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 17:50:58 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D1C2222708;
-        Mon, 14 Sep 2020 23:50:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1600120256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WEZa4tMQ4cVvyWubxXAttSAni9x1Ad4LL/hdsYs9YIY=;
-        b=cDs8xrI9zE2wtJ2jpwESYmihri49VCiZX/oeN+Irn5SNubSaItGRdVZVurT88O3m0jXMNd
-        oCuQYBjeRIH7It/XhJvqhvMVBr2XIqMWiMnihUjd7Oxg/Cz0EuQSU5WGGgcb9uy+bK/1LP
-        IlutsJIUgbVkvo//mzQNp3WBP9tRs4k=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 14 Sep 2020 23:50:55 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+        id S1725961AbgINXFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 19:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgINXFd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 19:05:33 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199BFC06174A
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:05:33 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u3so723882pjr.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=koUM6TLL4gOHg6wzp/rripQvyzanoQbJbQAJdMuHN1w=;
+        b=O7SbNGYBuBSAbjmkpkkRSP6P25VtzF5ZgvKJjEOjzUc8OBdmDa9qhBU/zGvGSzZiB3
+         VyN41XTi61F4KlF59rbH60gDg86dhyfTl1RaSSoD5Nz/v3hwblwXoTqHkM+WZwyCd+WI
+         WC5iDYnoUyCskt4NCDObOZ5NAGVJg2L/TCzaja/nazxkp7BLMjCGSLgW9suSzhAOORF/
+         IgxNk+CzMvXLJ8DSpV/rW7FcKEuKe6ecO3stObf2O/NM0b7vR7oTulsAqCAcHfctJY1h
+         S02LIvxi3UleCbaP10iEIwgmT+EA96X1JcBPWNF6SRd8bazrp9S8kFwffMxNUnYb5sf1
+         umaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=koUM6TLL4gOHg6wzp/rripQvyzanoQbJbQAJdMuHN1w=;
+        b=sCFtXxpkYW+lMs6WvfNwAfcclYTkQSLEyqdKH6m9res4g4vT35HAI7SCaaQbUh6x56
+         QflA0GEIwLvAQgpbx8D9PI0m5u9jwSwld+GlKxfFuB7d7uAPibvNpS1/4mBK6PFg4eE2
+         1GHT2lfzvORgSTskELcVTH5V0PeAyTteb9IDCv/0i22MtmPVbGaZlANCGY9kvd1osk3U
+         9p3OZLzkhs+6NrpSGR2tT1VFpd9WhfpV255pKypt5PU223geCXZ5d4v5FoAH31d+xhSX
+         QwTggxHCbKZei4p45lb4LRVv+4cRAqjNeeU3hsYLqUB51zLHbQlPefjavzJqv9gJWchY
+         i5VA==
+X-Gm-Message-State: AOAM530le6LRC5OurH3iqVO7UqhH9w6E+6cULll8iNIk9qHxBURjm7hP
+        NuvA8pCG6Ua/Y419lguBzE8=
+X-Google-Smtp-Source: ABdhPJzglnb+mYqdXlDjtBG39EanfjAH+SJftTRg5hfgUISSBuidrtYG+8ST1I9vSl0yhKDD94c2qw==
+X-Received: by 2002:a17:902:7b82:b029:d0:89f3:28d3 with SMTP id w2-20020a1709027b82b02900d089f328d3mr16910543pll.15.1600124732341;
+        Mon, 14 Sep 2020 16:05:32 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id q4sm11125287pfs.193.2020.09.14.16.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2020 16:05:31 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 07:05:26 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 00/13] Add support for Kontron sl28cpld
-In-Reply-To: <20200914214341.14268-1-michael@walle.cc>
-References: <20200914214341.14268-1-michael@walle.cc>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <9146339946ff041df991cae8e155413b@walle.cc>
-X-Sender: michael@walle.cc
+        linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] gpiolib: Fix line event handling in syscall
+ compatible mode
+Message-ID: <20200914230526.GA4138@sol>
+References: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lee, Hi Shawn,
+On Mon, Sep 14, 2020 at 05:37:43PM +0300, Andy Shevchenko wrote:
+> The introduced line even handling ABI in the commit
+> 
 
-Am 2020-09-14 23:43, schrieb Michael Walle:
-> The Kontron sl28cpld is a board management chip providing gpio, pwm, 
-> fan
-> monitoring and an interrupt controller. For now this controller is used 
-> on
-> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
-> might also be used on other boards in the future. The individual blocks
-> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
-> then instantiates different (or multiple of the same) blocks. It also
-> provides the register layout so it might be updated in the future 
-> without a
-> device tree change; and support other boards with a different layout or
-> functionalities.
-[..]
+s/even/event/
 
-Lee, because my last v9 wasn't merged for now, I though I can do a new 
-v10
-with the requested fixes.
+>   61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> 
+> missed the fact that 64-bit kernel may serve for 32-bit applications.
+> In such case the very first check in the lineevent_read() will fail
+> due to alignment differences.
+> 
+> To workaround this introduce lineeven_to_user() helper which returns actual
+> size of the structure and copies its content to user if asked.
+> 
 
-Shawn, do you have any remarks on the "arm64:" patches? Will you merge 
-them
-through your tree. If there are any remarks, I'd wait and repost them in 
-an
-own series once the actual drivers are merged. I guess there is no need 
-to
-have all the maintainters on CC for these patches anymore.
+s/lineeven_to_user/lineevent_get_size/
 
--- 
--michael
+and
+
+s/structure and copies its content to user if asked/structure in userspace/
+
+> Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: moved to just calculate size (Arnd, Kent), added good comment (Arnd)
+>  drivers/gpio/gpiolib-cdev.c | 34 ++++++++++++++++++++++++++++++----
+>  1 file changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index e6c9b78adfc2..95af4a470f1e 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -423,6 +423,21 @@ static __poll_t lineevent_poll(struct file *file,
+>  	return events;
+>  }
+>  
+> +static ssize_t lineevent_get_size(void)
+> +{
+> +#ifdef __x86_64__
+> +	/* i386 has no padding after 'id' */
+> +	if (in_ia32_syscall()) {
+> +		struct compat_gpioeevent_data {
+> +			compat_u64	timestamp;
+> +			u32		id;
+> +		};
+> +
+> +		return sizeof(struct compat_gpioeevent_data);
+> +	}
+> +#endif
+> +	return sizeof(struct gpioevent_data);
+> +}
+>  
+
+It can return size_t now.
+
+>  static ssize_t lineevent_read(struct file *file,
+>  			      char __user *buf,
+> @@ -432,9 +447,20 @@ static ssize_t lineevent_read(struct file *file,
+>  	struct lineevent_state *le = file->private_data;
+>  	struct gpioevent_data ge;
+>  	ssize_t bytes_read = 0;
+> +	ssize_t ge_size;
+
+Similarly here.
+
+>  	int ret;
+>  
+> -	if (count < sizeof(ge))
+> +	/*
+> +	 * When compatible system call is being used the struct gpioevent_data,
+> +	 * in case of at least ia32, has different size due to the alignment
+> +	 * differences. Because we have first member 64 bits followed by one of
+> +	 * 32 bits there is no gap between them. The only problematic is the
+> +	 * padding at the end of the data structure. Hence, we calculate the
+> +	 * actual sizeof() and pass this as an argument to copy_to_user() to
+> +	 * drop unneeded bytes from the output.
+> +	 */
+
+s/problematic/difference/
+
+> +	ge_size = lineevent_get_size();
+> +	if (count < ge_size)
+>  		return -EINVAL;
+>  
+>  	do {
+> @@ -470,10 +496,10 @@ static ssize_t lineevent_read(struct file *file,
+>  			break;
+>  		}
+>  
+> -		if (copy_to_user(buf + bytes_read, &ge, sizeof(ge)))
+> +		if (copy_to_user(buf + bytes_read, &ge, ge_size))
+>  			return -EFAULT;
+> -		bytes_read += sizeof(ge);
+> -	} while (count >= bytes_read + sizeof(ge));
+> +		bytes_read += ge_size;
+> +	} while (count >= bytes_read + ge_size);
+>  
+>  	return bytes_read;
+>  }
+> -- 
+> 2.28.0
+> 
+
+Cheers,
+Kent.
