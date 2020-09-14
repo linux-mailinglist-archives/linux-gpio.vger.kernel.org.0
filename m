@@ -2,174 +2,219 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60C8526996F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 01:05:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1656B2699AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 01:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgINXFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Sep 2020 19:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
+        id S1726035AbgINX2B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Sep 2020 19:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgINXFd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 19:05:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199BFC06174A
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:05:33 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id u3so723882pjr.3
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:05:32 -0700 (PDT)
+        with ESMTP id S1725994AbgINX2A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Sep 2020 19:28:00 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35BCC061788
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:27:59 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id d15so1057508lfq.11
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Sep 2020 16:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=koUM6TLL4gOHg6wzp/rripQvyzanoQbJbQAJdMuHN1w=;
-        b=O7SbNGYBuBSAbjmkpkkRSP6P25VtzF5ZgvKJjEOjzUc8OBdmDa9qhBU/zGvGSzZiB3
-         VyN41XTi61F4KlF59rbH60gDg86dhyfTl1RaSSoD5Nz/v3hwblwXoTqHkM+WZwyCd+WI
-         WC5iDYnoUyCskt4NCDObOZ5NAGVJg2L/TCzaja/nazxkp7BLMjCGSLgW9suSzhAOORF/
-         IgxNk+CzMvXLJ8DSpV/rW7FcKEuKe6ecO3stObf2O/NM0b7vR7oTulsAqCAcHfctJY1h
-         S02LIvxi3UleCbaP10iEIwgmT+EA96X1JcBPWNF6SRd8bazrp9S8kFwffMxNUnYb5sf1
-         umaA==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=r2GMisdxFuJIz8Oi1Fu4M0eVpKlXoiL45pGV8V5Zu24=;
+        b=a+K4RbaJnscL4621Dq0mKkwgar6f4XoIA9LGaSxpiPd9HHQ4Rlx13fofQWWRRKhqVT
+         /yo3kkPAjCp27Tl7r/JI/O8rJBvORth8susMft10B0mYTYxNb7EmUfAIsh7cApWHuup1
+         9ZFW4MkQSaae7sYhOdOTFQIYXporG+j9nEaLVSgxa0kvEuG/eNu5slzBlu3DgwxeUNFR
+         vPTs+O/zHYXwbtzZDSWEEBA6usaMey3eUexXGnmjTGX5DyxMQQwfLuGSTb0mcl4SNFiC
+         7LJ3gqJUrFoKT3AuyOP0yI3kKMuc17boaTwI07hsPnq80lMDA/Nba4hOilwhsLEM+i9T
+         UZGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=koUM6TLL4gOHg6wzp/rripQvyzanoQbJbQAJdMuHN1w=;
-        b=sCFtXxpkYW+lMs6WvfNwAfcclYTkQSLEyqdKH6m9res4g4vT35HAI7SCaaQbUh6x56
-         QflA0GEIwLvAQgpbx8D9PI0m5u9jwSwld+GlKxfFuB7d7uAPibvNpS1/4mBK6PFg4eE2
-         1GHT2lfzvORgSTskELcVTH5V0PeAyTteb9IDCv/0i22MtmPVbGaZlANCGY9kvd1osk3U
-         9p3OZLzkhs+6NrpSGR2tT1VFpd9WhfpV255pKypt5PU223geCXZ5d4v5FoAH31d+xhSX
-         QwTggxHCbKZei4p45lb4LRVv+4cRAqjNeeU3hsYLqUB51zLHbQlPefjavzJqv9gJWchY
-         i5VA==
-X-Gm-Message-State: AOAM530le6LRC5OurH3iqVO7UqhH9w6E+6cULll8iNIk9qHxBURjm7hP
-        NuvA8pCG6Ua/Y419lguBzE8=
-X-Google-Smtp-Source: ABdhPJzglnb+mYqdXlDjtBG39EanfjAH+SJftTRg5hfgUISSBuidrtYG+8ST1I9vSl0yhKDD94c2qw==
-X-Received: by 2002:a17:902:7b82:b029:d0:89f3:28d3 with SMTP id w2-20020a1709027b82b02900d089f328d3mr16910543pll.15.1600124732341;
-        Mon, 14 Sep 2020 16:05:32 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id q4sm11125287pfs.193.2020.09.14.16.05.28
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=r2GMisdxFuJIz8Oi1Fu4M0eVpKlXoiL45pGV8V5Zu24=;
+        b=keWox0qC0bQtTsVfwVsEQy5wQdwndSzc8pfn6GHyV+/iA4BzQed0eEbXBKE4RYVKzv
+         d30Bmo3DqsU7fujA8ntb2HNQ48xGmUwYzZQhCW2hyCM/lztcMiUoNVwvE4wL7AQEIyL8
+         Rje2fwV94ACdNwpslUpWDnW8hc6ZyI0vnZdWfLRfVevYQVhHDD79N66iYOeaImkDeFpH
+         GbE6WlVD4iAS99h+5jw3vlrUPyg9suQOOy3qPgYWbdO1I+36i1MUu4CnaNWq7IF9Jhf3
+         KD7aPqGVB/3zb1K9JFTVKAINkCkRqra+WdT0OhR1PuGFFUINSABJXGczpAGIqsWvnra7
+         r6Og==
+X-Gm-Message-State: AOAM530wYb8eSNx+drvzbw0YAHJiUG9MG4vVt2hfHJrXYGJQIiMAmkqk
+        9UkjRengL/X/tnytVuJ+WaUJFg==
+X-Google-Smtp-Source: ABdhPJyp0bWKCn/K5zSlid5A0seiTiqxw7kxU6VrW0Tdi/BaM3+tE9I+UcsDSHxIzo0mrwBeSpXhYg==
+X-Received: by 2002:a05:6512:3f3:: with SMTP id n19mr4607751lfq.531.1600126077920;
+        Mon, 14 Sep 2020 16:27:57 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id 80sm3955438lff.61.2020.09.14.16.27.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 16:05:31 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 07:05:26 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] gpiolib: Fix line event handling in syscall
- compatible mode
-Message-ID: <20200914230526.GA4138@sol>
-References: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
+        Mon, 14 Sep 2020 16:27:57 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 01:27:56 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7790: Add VIN1-B and VIN2-G pins,
+ groups and functions
+Message-ID: <20200914232756.GA1669406@oden.dyn.berto.se>
+References: <20200913182850.32660-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWjnQGKt12_=Z1Lc4fE2hecC6V7ELYpGW6FP2zm8mBp=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200914143743.39871-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWjnQGKt12_=Z1Lc4fE2hecC6V7ELYpGW6FP2zm8mBp=w@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 05:37:43PM +0300, Andy Shevchenko wrote:
-> The introduced line even handling ABI in the commit
+Hi Geert, Lad,
+
+On 2020-09-14 16:47:27 +0200, Geert Uytterhoeven wrote:
+> Hi Prabhakar,
 > 
-
-s/even/event/
-
->   61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> CC Laurent, Niklas
 > 
-> missed the fact that 64-bit kernel may serve for 32-bit applications.
-> In such case the very first check in the lineevent_read() will fail
-> due to alignment differences.
+> On Sun, Sep 13, 2020 at 8:29 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add pins, groups and functions for the VIN1-B [data/clk/sync] and VIN2-G [data].
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > Changes for v2:
+> > * Added complete list of VIN1-B pins
+> > * Renamed vin2_data8_g to vin2_data8g
+> > * Sorted vin1_sync_b pins
+> >
+> > v1 - https://patchwork.kernel.org/patch/11761191/
 > 
-> To workaround this introduce lineeven_to_user() helper which returns actual
-> size of the structure and copies its content to user if asked.
+> Thanks for the update!
 > 
-
-s/lineeven_to_user/lineevent_get_size/
-
-and
-
-s/structure and copies its content to user if asked/structure in userspace/
-
-> Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: moved to just calculate size (Arnd, Kent), added good comment (Arnd)
->  drivers/gpio/gpiolib-cdev.c | 34 ++++++++++++++++++++++++++++++----
->  1 file changed, 30 insertions(+), 4 deletions(-)
+> > --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> > +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
 > 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index e6c9b78adfc2..95af4a470f1e 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -423,6 +423,21 @@ static __poll_t lineevent_poll(struct file *file,
->  	return events;
->  }
->  
-> +static ssize_t lineevent_get_size(void)
-> +{
-> +#ifdef __x86_64__
-> +	/* i386 has no padding after 'id' */
-> +	if (in_ia32_syscall()) {
-> +		struct compat_gpioeevent_data {
-> +			compat_u64	timestamp;
-> +			u32		id;
-> +		};
-> +
-> +		return sizeof(struct compat_gpioeevent_data);
-> +	}
-> +#endif
-> +	return sizeof(struct gpioevent_data);
-> +}
->  
-
-It can return size_t now.
-
->  static ssize_t lineevent_read(struct file *file,
->  			      char __user *buf,
-> @@ -432,9 +447,20 @@ static ssize_t lineevent_read(struct file *file,
->  	struct lineevent_state *le = file->private_data;
->  	struct gpioevent_data ge;
->  	ssize_t bytes_read = 0;
-> +	ssize_t ge_size;
-
-Similarly here.
-
->  	int ret;
->  
-> -	if (count < sizeof(ge))
-> +	/*
-> +	 * When compatible system call is being used the struct gpioevent_data,
-> +	 * in case of at least ia32, has different size due to the alignment
-> +	 * differences. Because we have first member 64 bits followed by one of
-> +	 * 32 bits there is no gap between them. The only problematic is the
-> +	 * padding at the end of the data structure. Hence, we calculate the
-> +	 * actual sizeof() and pass this as an argument to copy_to_user() to
-> +	 * drop unneeded bytes from the output.
-> +	 */
-
-s/problematic/difference/
-
-> +	ge_size = lineevent_get_size();
-> +	if (count < ge_size)
->  		return -EINVAL;
->  
->  	do {
-> @@ -470,10 +496,10 @@ static ssize_t lineevent_read(struct file *file,
->  			break;
->  		}
->  
-> -		if (copy_to_user(buf + bytes_read, &ge, sizeof(ge)))
-> +		if (copy_to_user(buf + bytes_read, &ge, ge_size))
->  			return -EFAULT;
-> -		bytes_read += sizeof(ge);
-> -	} while (count >= bytes_read + sizeof(ge));
-> +		bytes_read += ge_size;
-> +	} while (count >= bytes_read + ge_size);
->  
->  	return bytes_read;
->  }
-> -- 
-> 2.28.0
+> > @@ -3874,6 +3940,14 @@ static const unsigned int vin1_sync_mux[] = {
+> >         VI1_HSYNC_N_MARK,
+> >         VI1_VSYNC_N_MARK,
+> >  };
+> > +static const unsigned int vin1_sync_b_pins[] = {
+> > +       RCAR_GP_PIN(1, 24), /* HSYNC */
+> > +       RCAR_GP_PIN(1, 25), /* VSYNC */
+> > +};
+> > +static const unsigned int vin1_sync_b_mux[] = {
+> > +       VI1_HSYNC_N_B_MARK,
+> > +       VI1_VSYNC_N_B_MARK,
+> > +};
+> >  static const unsigned int vin1_field_pins[] = {
+> >         RCAR_GP_PIN(1, 13),
+> >  };
 > 
+> Missing field_b and clkenb_b.
+> 
+> > @@ -3959,6 +4039,18 @@ static const unsigned int vin2_data18_mux[] = {
+> >         VI2_R4_MARK, VI2_R5_MARK,
+> >         VI2_R6_MARK, VI2_R7_MARK,
+> >  };
+> > +static const unsigned int vin2_data8g_pins[] = {
+> > +       RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
+> > +       RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
+> > +       RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
+> > +       RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
+> > +};
+> > +static const unsigned int vin2_data8g_mux[] = {
+> > +       VI2_G0_MARK, VI2_G1_MARK,
+> > +       VI2_G2_MARK, VI2_G3_MARK,
+> > +       VI2_G4_MARK, VI2_G5_MARK,
+> > +       VI2_G6_MARK, VI2_G7_MARK,
+> > +};
+> 
+> Laurent, Niklas: are you happy with the name "vin2_data8g", or do
+> you have a better suggestion?
 
-Cheers,
-Kent.
+I learnt recently that traditionally for single 8-bit RAW inputs are 
+named R8 (fist in RGB). But as this really is the G pins and they are 
+labeled as such I'm OK with the name, but I would like to hear Laurent's 
+view as well.
+
+> 
+> >  static const unsigned int vin2_sync_pins[] = {
+> >         RCAR_GP_PIN(1, 16), /* HSYNC */
+> >         RCAR_GP_PIN(1, 21), /* VSYNC */
+> 
+> > @@ -4310,15 +4402,25 @@ static const struct {
+> >                 VIN_DATA_PIN_GROUP(vin1_data, 10),
+> >                 VIN_DATA_PIN_GROUP(vin1_data, 8),
+> >                 VIN_DATA_PIN_GROUP(vin1_data, 4),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 24, _b),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 20, _b),
+> > +               SH_PFC_PIN_GROUP(vin1_data18_b),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 16, _b),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 12, _b),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 10, _b),
+> > +               VIN_DATA_PIN_GROUP(vin1_data, 8, _b),
+> 
+> Missing vin1_data4_b.
+> 
+> >                 SH_PFC_PIN_GROUP(vin1_sync),
+> > +               SH_PFC_PIN_GROUP(vin1_sync_b),
+> >                 SH_PFC_PIN_GROUP(vin1_field),
+> >                 SH_PFC_PIN_GROUP(vin1_clkenb),
+> >                 SH_PFC_PIN_GROUP(vin1_clk),
+> > +               SH_PFC_PIN_GROUP(vin1_clk_b),
+> >                 VIN_DATA_PIN_GROUP(vin2_data, 24),
+> >                 SH_PFC_PIN_GROUP(vin2_data18),
+> >                 VIN_DATA_PIN_GROUP(vin2_data, 16),
+> >                 VIN_DATA_PIN_GROUP(vin2_data, 8),
+> >                 VIN_DATA_PIN_GROUP(vin2_data, 4),
+> > +               SH_PFC_PIN_GROUP(vin2_data8g),
+> >                 SH_PFC_PIN_GROUP(vin2_sync),
+> >                 SH_PFC_PIN_GROUP(vin2_field),
+> >                 SH_PFC_PIN_GROUP(vin2_clkenb),
+> > @@ -4784,10 +4886,19 @@ static const char * const vin1_groups[] = {
+> >         "vin1_data10",
+> >         "vin1_data8",
+> >         "vin1_data4",
+> > +       "vin1_data24_b",
+> > +       "vin1_data20_b",
+> > +       "vin1_data18_b",
+> > +       "vin1_data16_b",
+> > +       "vin1_data12_b",
+> > +       "vin1_data10_b",
+> > +       "vin1_data8_b",
+> 
+> Missing vin1_data4_b.
+> 
+> >         "vin1_sync",
+> > +       "vin1_sync_b",
+> >         "vin1_field",
+> >         "vin1_clkenb",
+> >         "vin1_clk",
+> > +       "vin1_clk_b",
+> >  };
+> >
+> >  static const char * const vin2_groups[] = {
+> 
+> The rest looks good to me.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Regards,
+Niklas Söderlund
