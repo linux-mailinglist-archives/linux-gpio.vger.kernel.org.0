@@ -2,121 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EDE926A633
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 15:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538CE26A89E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 17:19:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgIONV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 09:21:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3969 "EHLO mga14.intel.com"
+        id S1727402AbgIOPTj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 11:19:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55866 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgIONUi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 15 Sep 2020 09:20:38 -0400
-IronPort-SDR: kWaTX6pva6MODCDdzDkCiikrMnt/5VH3mdti3JqxNzAoKTnYzkQo3DSBavNUM1Y7HHFU5VThbJ
- 8L8DqkvWzRqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9744"; a="158537922"
+        id S1727254AbgIOPTB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 15 Sep 2020 11:19:01 -0400
+IronPort-SDR: 2chJRFLSFNuT/Kkuae5HXmkw/8FMkvRN8lDL1YeFnashK5waWb8Ii4YsB3pveE+O61ObSnsXll
+ Wjokkuxs/Wbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="138780933"
 X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="158537922"
+   d="scan'208";a="138780933"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 06:16:55 -0700
-IronPort-SDR: Kf691X6We2njLLlvFwQ3Km+IAdktaTZ+646hQ2Xv1GzgdhxfI5mD870cVwnIT6XQ54bFOV9QKC
- 81DAbY0lJQJg==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 08:18:49 -0700
+IronPort-SDR: +u98r1VJ5hfuSzKW7eq119tHZTmZ6xSzduMV9nVTCfBCdlZPXBYMmDhz7V26qbX8CW/Jm0vgo1
+ GX7CnnWld/kA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="335650948"
+   d="scan'208";a="335699967"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 15 Sep 2020 06:16:52 -0700
+  by orsmga008.jf.intel.com with ESMTP; 15 Sep 2020 08:18:45 -0700
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kIApE-00GqTB-SS; Tue, 15 Sep 2020 16:16:48 +0300
-Date:   Tue, 15 Sep 2020 16:16:48 +0300
+        id 1kICh5-00Grgs-SW; Tue, 15 Sep 2020 18:16:31 +0300
+Date:   Tue, 15 Sep 2020 18:16:31 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kent Gibson <warthog618@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         lkft-triage@lists.linaro.org,
         Linux-Next Mailing List <linux-next@vger.kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>
 Subject: Re: [PATCH 0/3] gpiolib: generalize GPIO line names property
-Message-ID: <20200915131648.GY3956970@smile.fi.intel.com>
+Message-ID: <20200915151631.GD3956970@smile.fi.intel.com>
 References: <20200908125813.8809-1-brgl@bgdev.pl>
  <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
  <20200915131228.GX3956970@smile.fi.intel.com>
+ <CAMRc=MdGwkEp4sL=oBuk-x4cd7BWga76X0Rvq8PN-P+vjvp=Fg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200915131228.GX3956970@smile.fi.intel.com>
+In-Reply-To: <CAMRc=MdGwkEp4sL=oBuk-x4cd7BWga76X0Rvq8PN-P+vjvp=Fg@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 04:12:28PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 15, 2020 at 02:01:56PM +0200, Anders Roxell wrote:
-> > On Tue, 8 Sep 2020 at 18:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > I initially sent this as part of the gpio-mockup overhaul but since
-> > > these patches are indepentent and the work on gpio-mockup may become
-> > > more complicated - I'm sending these separately.
-> > >
-> > > The only change is adding additional property helpers to count strings
-> > > in array.
-> > >
-> > > Bartosz Golaszewski (3):
-> > >   device: property: add helpers to count items in string arrays
-> > >   gpiolib: generalize devprop_gpiochip_set_names() for device properties
-> > >   gpiolib: unexport devprop_gpiochip_set_names()
+On Tue, Sep 15, 2020 at 03:16:42PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Sep 15, 2020 at 3:12 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Tue, Sep 15, 2020 at 02:01:56PM +0200, Anders Roxell wrote:
+> > > On Tue, 8 Sep 2020 at 18:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > I initially sent this as part of the gpio-mockup overhaul but since
+> > > > these patches are indepentent and the work on gpio-mockup may become
+> > > > more complicated - I'm sending these separately.
+> > > >
+> > > > The only change is adding additional property helpers to count strings
+> > > > in array.
+> > > >
+> > > > Bartosz Golaszewski (3):
+> > > >   device: property: add helpers to count items in string arrays
+> > > >   gpiolib: generalize devprop_gpiochip_set_names() for device properties
+> > > >   gpiolib: unexport devprop_gpiochip_set_names()
+> >
+> > Ha-ha, OF unittest is of_node centric. definitely there is no backed device.
+> >
+> > Bart, it seems we are stuck with fwnode interface.
+> >
 > 
-> Ha-ha, OF unittest is of_node centric. definitely there is no backed device.
+> Wait what?! This means the implementation is wrong - the whole concept
+> of device properties is to be generic and to hide the underlying
+> fwnode or OF properties. If anything we should fix
+> device/base/property.c to fall back to OF.
 > 
-> Bart, it seems we are stuck with fwnode interface.
+> What is happening exactly? If all fwnode code compiled out?
+> 
+> I'll try to give it a spin and see what can be done but I don't like
+> that device_property_* functions fail if you have OF but not fwnode.
 
-Hmm... There is a platform device. So, it means that it fails along these
-lines:
-  return IS_ENABLED(CONFIG_OF) && dev->of_node ? &dev->of_node->fwnode : dev->fwnode;
-so, who should set fwnode for of_node?
+Read my next reply. It seems only OF unittest issue
 
-> > [ 6186.379069][    T1]  device_property_read_string_array+0x40/0xa0
-> > [ 6186.381741][    T1]  devprop_gpiochip_set_names.isra.0+0x4c/0x200
-> > [ 6186.384394][    T1]  gpiochip_add_data_with_key+0x75c/0xf80
-> > [ 6186.386876][    T1]  unittest_gpio_probe+0xf4/0x1e0
-> 
-> > [ 6186.433241][    T1] Unable to handle kernel read from unreadable
-> > memory at virtual address 0000000000000570
-> > [ 6186.437207][    T1] Mem abort info:
-> > [ 6186.438639][    T1]   ESR = 0x96000004
-> > [ 6186.440536][    T1]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [ 6186.442791][    T1]   SET = 0, FnV = 0
-> > [ 6186.444660][    T1]   EA = 0, S1PTW = 0
-> > [ 6186.446233][    T1] Data abort info:
-> > [ 6186.447938][    T1]   ISV = 0, ISS = 0x00000004
-> > [ 6186.449749][    T1]   CM = 0, WnR = 0
-> > [ 6186.451222][    T1] [0000000000000570] user address but active_mm is swapper
-> > [ 6186.454000][    T1] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> > [ 6186.456422][    T1] Modules linked in:
-> > [ 6186.458232][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
-> > W         5.9.0-rc5-next-20200915-00006-g104c8fe4916b #1
-> > [ 6186.462833][    T1] Hardware name: linux,dummy-virt (DT)
-> > [ 6186.465170][    T1] pstate: 60400005 (nZCv daif +PAN -UAO BTYPE=--)
-> > [ 6186.467910][    T1] pc : device_property_read_string_array+0x40/0xa0
-> > [ 6186.470653][    T1] lr : device_property_read_string_array+0x40/0xa0
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+% git grep -n -w fwnode -- drivers/of/unittest* | wc -l
+0
+% git grep -n -w fwnode -- drivers/of/ | wc -l
+50
 
 -- 
 With Best Regards,
