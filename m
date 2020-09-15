@@ -2,43 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2070F26B209
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 00:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E86EE26B203
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 00:39:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgIOWjc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 18:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        id S1727409AbgIOWjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 18:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbgIOQKm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1727478AbgIOQKm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Tue, 15 Sep 2020 12:10:42 -0400
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AF0921D80;
-        Tue, 15 Sep 2020 15:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960C221D24;
+        Tue, 15 Sep 2020 15:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600185552;
-        bh=2jQ4s4F4QEiwRjM0mbpCYbO2wY6wQM3kiZYdWmUZGgs=;
+        s=default; t=1600185581;
+        bh=XMkMtk/gI2HuHmv1cq2xXt9eQOED93TjXkjDWF8nQGE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NrvzdtqNKrd7h2kvQlM7juzGJY60IM/7ocqtDKVIAjFhGe9MTEue3ijSRtOKnHvW8
-         EkYBPe2VQNjsXJtw9NX9WvZgkLHYnDOWUCmLHi8/8v/RrDtgtyCYsS9OAYs5QK46r5
-         DWo7hUliLNxPAP1ybuhvYNr+1RUPUFp6Jg2h4GIc=
-Received: by mail-ej1-f51.google.com with SMTP id lo4so5809806ejb.8;
-        Tue, 15 Sep 2020 08:59:12 -0700 (PDT)
-X-Gm-Message-State: AOAM530k+LakJhEFeMA0Y3dx5T7c5dMTfIF9h3RoH74/7VUrEnRIBnJx
-        3uawPzaTCAles44tFKC80gnDdgY6Mmw+KK6FhxE=
-X-Google-Smtp-Source: ABdhPJxUsTJbszqS0w20H7C5PBz2xD+CG8Bh7JeVyG0et+HyPpNHT7YwNIkugyJ9mpI9IZKxd+adCG38XUIu9fJB+r4=
-X-Received: by 2002:a17:906:4046:: with SMTP id y6mr21768003ejj.148.1600185550958;
- Tue, 15 Sep 2020 08:59:10 -0700 (PDT)
+        b=DDgFKprJDshmoolsY9k8iSp+epYJOJfxdUBnQKt14knLRveGNCNQhwA0zdxNeHGvU
+         3Js9zOsm/ZNzTc14ckVE+pVN4u/URgxtjIoz4fyLbng+qMH/7KbKfP0JVxlxCoGXzZ
+         4tXVnHJGIYTGx6c5ngIPBg/uRrICpQjgKcJG98YQ=
+Received: by mail-ej1-f49.google.com with SMTP id z22so5818826ejl.7;
+        Tue, 15 Sep 2020 08:59:41 -0700 (PDT)
+X-Gm-Message-State: AOAM532uZmMLtgaUBDheKOuH2yTc4cBBXOjr2IUlyvWKmzA8UQIyCBvJ
+        EfU2TDKZByhCJ+EKPgPXXD/fbSnwHX/beaDcFq0=
+X-Google-Smtp-Source: ABdhPJwAuDpp+EHX45RgbdNu7uzZmhVTI4s30E6927Vq0pQ/LgKg1zmNpv30kRLFOr25UoY3E6mkjiYpSvqoLHmgkVY=
+X-Received: by 2002:a17:906:af53:: with SMTP id ly19mr20213441ejb.503.1600185580123;
+ Tue, 15 Sep 2020 08:59:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <1600054147-29997-1-git-send-email-Anson.Huang@nxp.com> <1600054147-29997-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1600054147-29997-2-git-send-email-Anson.Huang@nxp.com>
+References: <1600054147-29997-1-git-send-email-Anson.Huang@nxp.com> <1600054147-29997-4-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1600054147-29997-4-git-send-email-Anson.Huang@nxp.com>
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 15 Sep 2020 17:58:59 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfuz=vf9tCn8ZJ9dz2iAG_p61VvPWc9P=kp7nMy7tb6xw@mail.gmail.com>
-Message-ID: <CAJKOXPfuz=vf9tCn8ZJ9dz2iAG_p61VvPWc9P=kp7nMy7tb6xw@mail.gmail.com>
-Subject: Re: [PATCH V2 RESEND 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC
- by default
+Date:   Tue, 15 Sep 2020 17:59:28 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdrFUXabpduVEqwSFv63_ZFJ4D1ecb4YhCe=ESSd438CA@mail.gmail.com>
+Message-ID: <CAJKOXPdrFUXabpduVEqwSFv63_ZFJ4D1ecb4YhCe=ESSd438CA@mail.gmail.com>
+Subject: Re: [PATCH V2 RESEND 4/4] ARM: multi_v7_defconfig: Build in
+ CONFIG_GPIO_MXC by default
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
@@ -62,8 +62,11 @@ On Mon, 14 Sep 2020 at 05:36, Anson Huang <Anson.Huang@nxp.com> wrote:
 >
 > i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC
 > as built-in manually.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Maybe it should stay not enabled? Please explain in commit msg why it
+
+The same as on arm64 defconfig - please explain in commit msg why it
 should be enabled.
 
 Best regards,
