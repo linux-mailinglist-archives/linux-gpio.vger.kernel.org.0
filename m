@@ -2,90 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0BB826A029
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 09:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1736F26A05C
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 10:04:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgIOHqz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 03:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgIOHqg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 03:46:36 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553B0C06174A
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 00:46:25 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id y9so2121498ilq.2
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 00:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yJa8a110qBSZGFFTvT2OcJE7Q6IhvXcCYSDf8Gu+M9E=;
-        b=mjFhwD6Hq/XhDbc/9k6C8RBVfjAokK5LaH5pgMF06keMuS2Zg7a7gbhtIwjxOfhFz+
-         g4T9jJmOviIb8D9i5r2HUq90R8Qg5nEIMspL2VQGJbIGmcrC1k8mw4UdyDpV8C1aAcIe
-         IyDKE8hXHoVwv4OJ+0jAdZ7WXrr+Ef3+ZFyu1H3cR4XBmk92vIFPDZo5DRmMakErlBRT
-         L1AgNDqniERI+uTl+nA0V5J3SeygFcliBIxgWgN/OAwMxxFUEM5lIxexg2dNgdiq1t87
-         mNPrskAdRU8MuEsqKXViY1mfIqv76oFEI2LjLMF86ZrIN3JEJuJUjo302iHe8vbKtAL3
-         FDSQ==
+        id S1726142AbgIOIEU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 04:04:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36944 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgIOIEJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 04:04:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o8so2411176otl.4;
+        Tue, 15 Sep 2020 01:04:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yJa8a110qBSZGFFTvT2OcJE7Q6IhvXcCYSDf8Gu+M9E=;
-        b=Gd+rk6TPp8jT0eQ2g7uQlMvPhLwzh0qoX22VyUBU8P+QTOjSe6Out+yhKTV7984Z19
-         HR5WNpDEL/K5h/LjKLF6Suj+5h9rkl/xumyuUpzU79mCfB7uK5Xs2L0Iiq4EhgEEXkPq
-         7UJpQohoisytohG8VqlAGb6BH2vhHV/YblMa2QOMCwc6C/O68Rji7ne6Ud5jADETwCU0
-         JEeKpqh2OkdxMIWPHXTtaPiEDhuQru64cb740AbfzbsRqnKop86SZCg3j2pskUvJkoZL
-         xGoIVsyL38NxyDv2puV6lrjYkE/NrXUQ1d1w8pIEHhmJuJ3APhM6MqejCnCrUXRkrJWu
-         W/4Q==
-X-Gm-Message-State: AOAM531MdwyZ6YjqB3YzFftNAmllBM9fYQGEhlqOsT7PLO3VFaDg+jR9
-        A2QgUFPXar9Pf7b4CQJWqhddtWcCudLzA0tmrXEhrw==
-X-Google-Smtp-Source: ABdhPJxMpGkzwXUWJdM+iJGT+DZyx47pwUBlhBjMlvQgOxQRRt3AlH0rgfjQmqxJItG8Uy3riZ8/8wfigkJmj83r5rI=
-X-Received: by 2002:a92:cb4d:: with SMTP id f13mr14713052ilq.189.1600155983902;
- Tue, 15 Sep 2020 00:46:23 -0700 (PDT)
+        bh=7Xp1L0SFcEIIAt9V0AQtwR6FE6wWS8lQCf9JPr31tGg=;
+        b=hp4e7ivQsWTTrGkvUSLOl00UjJEAA6LaNqCVIiYtuoF8MhNkdmMFr7HnFwQgqdP/BR
+         QcMo7O4l7XU+XIRDDB3VdehTJ8edBIQ6LJIoYZG7AzwdJ4ydK8IgNlWL9A46T+67XPFW
+         HGflv/NHRaS2aWqyqgWyL1x0vQJKYWaYUsuR6DW+wkQyyx9nrfuEVhBLsrbkzUigYsOI
+         xWidNDPjL7riMmTdpHjkXH7OAzLvWrlalKWsqupOQQESerY5aDNQl9XmLOnBczveuQbj
+         Jyt8b3UrzrGHb79XuKfEZ1q6iNDnAi7P65PAYLkahxlGljfwj/8hbMhsB7PrPQURC1dr
+         CENQ==
+X-Gm-Message-State: AOAM5309PBH3XRCUd8ypwYqwF3MF7c/ZSPq8QTmBzD4LkupCscwWxqhm
+        u3/2IafHscx5QZwQfNA/LAiM71YXE7bSco/YKXTbatHcEIU=
+X-Google-Smtp-Source: ABdhPJzZUD+IQtfhUdn/7HGR5HG0yD995AlvDX5V0bhWwcklTAD0MC/uLcr+2e9wL4OehJ1zi4mitIh4Jyc70cxgDdo=
+X-Received: by 2002:a9d:3b76:: with SMTP id z109mr12324636otb.250.1600157047713;
+ Tue, 15 Sep 2020 01:04:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
- <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
- <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
- <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
- <20200915004541.GC4138@sol> <20200915033428.GA14286@sol> <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
-In-Reply-To: <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 15 Sep 2020 09:46:13 +0200
-Message-ID: <CAMRc=MeXeMDPh6j-9heZMR5JcniYEcFH8zQyChEuep6wny1jSw@mail.gmail.com>
-Subject: Re: [libgpiod] gpiomon loses events
-To:     Maxim Devaev <mdevaev@gmail.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200909131534.12897-1-geert+renesas@glider.be> <20200909131534.12897-3-geert+renesas@glider.be>
+In-Reply-To: <20200909131534.12897-3-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Sep 2020 10:03:56 +0200
+Message-ID: <CAMuHMdV1EUuc=bE3bJaXXqNOq-YBmAVKGTuqxKP5gQYav9NaeQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: Rename sh-pfc to renesas
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 9:34 AM Maxim Devaev <mdevaev@gmail.com> wrote:
+On Wed, Sep 9, 2020 at 6:26 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> The drivers/pinctrl/sh-pfc subdirectory was originally created to group
+> pin control drivers for various Renesas SuperH and SH-Mobile platforms.
+> However, the name "sh-pfc" no longer reflects its contents, as the
+> directory now contains pin control drivers for Renesas SuperH, ARM32,
+> and ARM64 SoCs.
 >
-> > The bug was introduced in libgpiod v1.5 so, depending on your
-> > circumstances, I would revert to an earlier libgpiod or apply my patch.
-> > ...
-> > For the python binding that would be event_read_multiple() - as you have
-> > discovered.
+> Hence rename the subdirectory from drivers/pinctrl/sh-pfc to
+> drivers/pinctrl/renesas, and the related Kconfig symbol from
+> PINCTRL_SH_PFC to PINCTRL_RENESAS.
 >
-> Hello and thanks for the info. In my case, using workaround is an
-> acceptable solution, although I think I will also patch libgpiod. I
-> would appreciate it if you send it to me.
+> Rename the git branch in MAINTAINERS, too, for consistency.
 >
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hi Maxim!
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13688,9 +13688,10 @@ PIN CONTROLLER - RENESAS
+>  M:     Geert Uytterhoeven <geert+renesas@glider.be>
+>  L:     linux-renesas-soc@vger.kernel.org
+>  S:     Supported
+> -T:     git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git sh-pfc
+> +T:     git
 
-I already applied the patch to the master branch and backported it to
-v1.5.x[1]. Please give it a try. I will make a bugfix release soon
-too.
+Obviously this line must not be split here.
 
-Bartosz
+> +git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git pinctrl-renesas
 
-[snip]
+While applying, I'm renaming this to "renesas-pinctrl", for consistency
+with my branches for arm-soc, and with what other people are doing.
 
-[1] https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/commit/?h=v1.5.x&id=23df3feb6a1b05f2bafa0b4bde58423daa0cb03b
+>  F:     Documentation/devicetree/bindings/pinctrl/renesas,*
+> -F:     drivers/pinctrl/sh-pfc/
+> +F:     drivers/pinctrl/renesas/
+>
+>  PIN CONTROLLER - SAMSUNG
+>  M:     Tomasz Figa <tomasz.figa@gmail.com>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
