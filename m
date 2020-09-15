@@ -2,100 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1736F26A05C
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 10:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 266AE26A1A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 11:07:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgIOIEU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 04:04:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36944 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgIOIEJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 04:04:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o8so2411176otl.4;
-        Tue, 15 Sep 2020 01:04:08 -0700 (PDT)
+        id S1726155AbgIOJH1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 05:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgIOJHB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 05:07:01 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09C35C06178C
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 02:07:00 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j2so2440213wrx.7
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 02:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=iopdDFEV2kcDalmETaYONWkweONCMxEbTqjAdtlggGQ=;
+        b=Ex9+iyZF0nSnE98P6XxFSFn2Qr6RKGJT9NJVVFLYJISLvYD24STWt1cwuyIrEv7AGy
+         sP0WuC46a03FvkRZLXVx5xE6pcQFtFgoC3LiwIcVRycJy8bbR5X+rHYiSdyxwtHYpl7s
+         eyT/zR0w0k1wv8sgIiLzta/7OwIjVAAZslhmceTEKnBoiZ7/YIAXK+vuOIIW8EffumyS
+         jOttUI28vi4VZtxK6ul2JlMEDBKk7/iGBCui1RTxCYJKIyCAuI2iL/asT66Fv1iX5Smc
+         pU4PfNElcNEVScpeZTP4Jih92ddhoBRA9DOtk50geGMJi31Te0vCFCiEX9aizLxR1EWE
+         6WfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Xp1L0SFcEIIAt9V0AQtwR6FE6wWS8lQCf9JPr31tGg=;
-        b=hp4e7ivQsWTTrGkvUSLOl00UjJEAA6LaNqCVIiYtuoF8MhNkdmMFr7HnFwQgqdP/BR
-         QcMo7O4l7XU+XIRDDB3VdehTJ8edBIQ6LJIoYZG7AzwdJ4ydK8IgNlWL9A46T+67XPFW
-         HGflv/NHRaS2aWqyqgWyL1x0vQJKYWaYUsuR6DW+wkQyyx9nrfuEVhBLsrbkzUigYsOI
-         xWidNDPjL7riMmTdpHjkXH7OAzLvWrlalKWsqupOQQESerY5aDNQl9XmLOnBczveuQbj
-         Jyt8b3UrzrGHb79XuKfEZ1q6iNDnAi7P65PAYLkahxlGljfwj/8hbMhsB7PrPQURC1dr
-         CENQ==
-X-Gm-Message-State: AOAM5309PBH3XRCUd8ypwYqwF3MF7c/ZSPq8QTmBzD4LkupCscwWxqhm
-        u3/2IafHscx5QZwQfNA/LAiM71YXE7bSco/YKXTbatHcEIU=
-X-Google-Smtp-Source: ABdhPJzZUD+IQtfhUdn/7HGR5HG0yD995AlvDX5V0bhWwcklTAD0MC/uLcr+2e9wL4OehJ1zi4mitIh4Jyc70cxgDdo=
-X-Received: by 2002:a9d:3b76:: with SMTP id z109mr12324636otb.250.1600157047713;
- Tue, 15 Sep 2020 01:04:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=iopdDFEV2kcDalmETaYONWkweONCMxEbTqjAdtlggGQ=;
+        b=X0awMHiIaVyfydiyIFejqV3l00OTKWSSzL9oHIE6bEW/f+j9r/PAt7ekCN78WS0i/Z
+         1+xhCdKeX8x7kMhMbjMt4ZI5xRIKmYUfLnyw0UQRZr5CtfSXCW0NJ+ZjSE3NzPPtFvnR
+         DAXIFy5DskJO2x24VReLAbWqPCDG0MM+OcmLk6jEaMkfrC32kcfDB//v1h7bwmqvOEug
+         WOdUvy8jn9Y7lNR46Dc1OhJnDL9Vd7HMevhQQw6Qsaq0udDzTT3CjnyExkklxv6htAf8
+         SIErRFW3kpaB5XrH9biN2e20Ool3MEkiI+Il0PS1AQiJWluq+VUNE53Ox2P2jfFOaKom
+         nb3w==
+X-Gm-Message-State: AOAM533Cbr6L9lAKeUIot2XIg4VP3r7T0HtxchfptPnVLUJ5W6KkKZuW
+        mlTdHUNKCjhFFRX9INZaxDvIvQ==
+X-Google-Smtp-Source: ABdhPJx2bfrpPqM9pdtBgNL8nxLLX0feu+7+qjnCb6gt9yRhwnwDkDEVna9PRLFtFA/C5I0AO+N9Uw==
+X-Received: by 2002:adf:dd44:: with SMTP id u4mr19467349wrm.22.1600160818971;
+        Tue, 15 Sep 2020 02:06:58 -0700 (PDT)
+Received: from dell ([91.110.221.204])
+        by smtp.gmail.com with ESMTPSA id y6sm25430501wrt.80.2020.09.15.02.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2020 02:06:58 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 10:06:55 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v10 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200915090655.GA4678@dell>
+References: <20200914214341.14268-1-michael@walle.cc>
+ <20200914214341.14268-7-michael@walle.cc>
 MIME-Version: 1.0
-References: <20200909131534.12897-1-geert+renesas@glider.be> <20200909131534.12897-3-geert+renesas@glider.be>
-In-Reply-To: <20200909131534.12897-3-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Sep 2020 10:03:56 +0200
-Message-ID: <CAMuHMdV1EUuc=bE3bJaXXqNOq-YBmAVKGTuqxKP5gQYav9NaeQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: Rename sh-pfc to renesas
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200914214341.14268-7-michael@walle.cc>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 6:26 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> The drivers/pinctrl/sh-pfc subdirectory was originally created to group
-> pin control drivers for various Renesas SuperH and SH-Mobile platforms.
-> However, the name "sh-pfc" no longer reflects its contents, as the
-> directory now contains pin control drivers for Renesas SuperH, ARM32,
-> and ARM64 SoCs.
->
-> Hence rename the subdirectory from drivers/pinctrl/sh-pfc to
-> drivers/pinctrl/renesas, and the related Kconfig symbol from
-> PINCTRL_SH_PFC to PINCTRL_RENESAS.
->
-> Rename the git branch in MAINTAINERS, too, for consistency.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, 14 Sep 2020, Michael Walle wrote:
 
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13688,9 +13688,10 @@ PIN CONTROLLER - RENESAS
->  M:     Geert Uytterhoeven <geert+renesas@glider.be>
->  L:     linux-renesas-soc@vger.kernel.org
->  S:     Supported
-> -T:     git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git sh-pfc
-> +T:     git
+> Add support for the PWM controller of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
+> 
+> The controller has one PWM channel and can just generate four distinct
+> frequencies.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+> Changes since v9:
+>  - fixed double whitespace in Kconfig
+>  - improved comment about division
 
-Obviously this line must not be split here.
-
-> +git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git pinctrl-renesas
-
-While applying, I'm renaming this to "renesas-pinctrl", for consistency
-with my branches for arm-soc, and with what other people are doing.
-
->  F:     Documentation/devicetree/bindings/pinctrl/renesas,*
-> -F:     drivers/pinctrl/sh-pfc/
-> +F:     drivers/pinctrl/renesas/
->
->  PIN CONTROLLER - SAMSUNG
->  M:     Tomasz Figa <tomasz.figa@gmail.com>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Uwe, are you happy with this now?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
