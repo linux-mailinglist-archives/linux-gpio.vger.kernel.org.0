@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B37AE26A329
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 12:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D839D26A34D
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 12:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgIOKbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 06:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53784 "EHLO
+        id S1726305AbgIOKkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 06:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgIOKbq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 06:31:46 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A66C06174A;
-        Tue, 15 Sep 2020 03:31:46 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s14so2538181pju.1;
-        Tue, 15 Sep 2020 03:31:46 -0700 (PDT)
+        with ESMTP id S1726171AbgIOKkA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 06:40:00 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08203C06178A;
+        Tue, 15 Sep 2020 03:40:00 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so1123683plb.12;
+        Tue, 15 Sep 2020 03:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Cxpm2WN3/fIOXua6DiNy6SsfMqh9DHmw+I8l9zP6euQ=;
-        b=RLeCfmZvoS3g2RhR9qYGcbuki8o/jyZGAWdumFn8ku0s9IICdE1p2PkGwIg2Uyv51T
-         04RbMM3hcQ33GScGPibBir8GzBPmudutKHMjIPOltBCqWc463jFi7KX935H8Qu0k+ywo
-         5x7QYKU84K3P2lecJC716xxEp7XmanR3619NXGtYcdEnh13CMfVvrfUeJfkvGmXayF5f
-         6Q6OzgVqoRQG1N6zeBEiV2qUufP+Ixh7JBGr1a8ihwK3KD6YJk9NxamsGMcx9qLxVi6h
-         uWOuSkv/fhcdAR/ZnxqHfyy6nuM7YUewekGXnptRO5OrsIK+dRA1w1Cj1Zholfb7pHzE
-         +wbQ==
+        bh=bSYXIOg/CSSIjVdtWGcFQNIUaN9KWHw0HXTCYjhpUr8=;
+        b=Moui+I7bCWOknQfNmSarkSwXoX6LQxFft/VXNOpWT3NkQmptbS7OdHLF5JW1VPMV2j
+         pnXaLEiZsVFF6hsM/oVRhbpfp0vWGrNSqwMT31LOdB3mKo/Al+3u3uogwcJF902s9OIa
+         JnZIuO1WgATsABJmQEwzBjD7exUW5DcOVy8CWKcUL3sV6NQXE4Mt3RkFk8XTJvfw1LCI
+         U7He5eAfy0oCK26TyGDW6p9brQEiPpQm+qDMPnZkJeQuoeKKnvdf9Y8ScF/HI+mknciq
+         EomaFzEDXgU74c45L28lxZ2dPpPUCewIWvNyOOkb15zkDZBoePNUFKRlmXsGm15wSJee
+         eLQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Cxpm2WN3/fIOXua6DiNy6SsfMqh9DHmw+I8l9zP6euQ=;
-        b=BpcWeEXnbojNjlu3yUSneiYvPEHN9k5+WXrnmb2UG0xMGbS6qyti6oPeXZ5Nbjer5n
-         C2WQYKSkeFg/osGJ3Hlnsj2K8NS49SDFvn5RNvHy9ufK6/LayhiTHjhzv4VFTlmvHJcZ
-         gHuiEhc1977e36RqrtbdDhLPXq6MCFRt1TLfV4dnQFwidPSynepDRJvDLbvlNlfdzO34
-         QYvSJvyqEcYKQyuc5HEBbewVPyR+k712skoWR7kr9lUgbqnwG8BeIGrXbzcvPidPor0h
-         FAsvtkIqO0xZGrQyf9oT4tf20GicaQ+fqnMIn7GoefZDUAJ8ns9CSTVMRsNwqcWxvFX6
-         mVDg==
-X-Gm-Message-State: AOAM530s2rQAR8I4GNi38Nb97SQ4Y07UjsN0/MWkQfgTYzm79Yel8X1P
-        9rnunO5xzkFzu7qaLa7P+HDIUB5/ZCP/MtBYsfA=
-X-Google-Smtp-Source: ABdhPJzr45yq0Iot4eSudYsB7TJgcp1cwtDSvSrX24hRVauThLqXDuVC/DeD32sQwqTyVVXQ/2eDljGFzDqjCh4XHeI=
-X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr3617870pjr.228.1600165905204;
- Tue, 15 Sep 2020 03:31:45 -0700 (PDT)
+        bh=bSYXIOg/CSSIjVdtWGcFQNIUaN9KWHw0HXTCYjhpUr8=;
+        b=OSobPYrWBxd8wrf7cxTNOaaBLPWYZVyF5jf60rjSu6PgzK5BwH87SfD0dMi0dAi9/0
+         LLTcdyiB7sHUEHxicDd59cFLxYTsmAENKuufFiLD7/LD+30L9fvpWL9MuJ7i7PW8fBCx
+         9o2YNrNVj5r7YQJTYYX5Nwd27hcwEWk2csQjsJEfPXB2SY7vr7yMS1dK7nNe/IyHxJ++
+         FRJ1aDC+ANQG8/+3VyiVRbSXZpcMWUldH9Dz6zt5SjfkhXGCQHArY332p9kH3nmEUCFo
+         CbvEeQqbwEQeLNTOkDCICBRW4jNj8NkibMMSl4d+oMRyWYcNoy6R1na/ad2lvNwgCD3q
+         LHqw==
+X-Gm-Message-State: AOAM531mJPtrOBXTD6/VqAYm2NoHKkEiqKMZ1rBsimhnLILanjZ4whVx
+        ZL8BTAleurBIdJu0HmhfUCvHWC9hC+RsRzMzY6k=
+X-Google-Smtp-Source: ABdhPJzD7aqmMosPgKUsBPw9O1lQylDF6v5rni2W069anQUIJTtrfffmVUuoBeeVxgPKBBY8VgBmnoEfpLDaXAESjww=
+X-Received: by 2002:a17:902:9e08:b029:d0:8a6a:d5e8 with SMTP id
+ d8-20020a1709029e08b02900d08a6ad5e8mr18437305plq.0.1600166399376; Tue, 15 Sep
+ 2020 03:39:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200905133549.24606-1-warthog618@gmail.com> <20200905133549.24606-8-warthog618@gmail.com>
-In-Reply-To: <20200905133549.24606-8-warthog618@gmail.com>
+References: <20200909102640.1657622-1-warthog618@gmail.com> <20200909102640.1657622-10-warthog618@gmail.com>
+In-Reply-To: <20200909102640.1657622-10-warthog618@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Sep 2020 13:31:27 +0300
-Message-ID: <CAHp75Vdm=61wibz70ScvayXk_D77rZw_pG7wPkLXkbkzagRPNA@mail.gmail.com>
-Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
+Date:   Tue, 15 Sep 2020 13:39:41 +0300
+Message-ID: <CAHp75VcyuPYqXTk7-yBd1dR3BitXQnz1YVkD+PuJRWVOu+1ueQ@mail.gmail.com>
+Subject: Re: [PATCH v8 09/20] gpiolib: cdev: support edge detection for uAPI v2
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -62,545 +62,429 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 4:49 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Sep 9, 2020 at 1:33 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> Add support for edge detection to lines requested using
+> GPIO_V2_GET_LINE_IOCTL.
 >
-> The struct linereq implementation is based on the v1 struct linehandle
+> The edge_detector implementation is based on the v1 lineevent
 > implementation.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> The linereq_ioctl() is a simple wrapper around linereq_get_values() here,
-> but will be extended with other ioctls in subsequent patches.
->
-> Similarly, the struct line only contains the desc here, but will receive
-> the edge detector and debouncer fields in subsequent patches.
->
-> Changes for v7:
->  - add check on kmalloc_array return value
->
-> Changes for v5:
->  - as per cover letter
->
-> Changes for v4:
->  - fix handling of mask in line_get_values
->
->  drivers/gpio/gpiolib-cdev.c | 420 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 420 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 8b012879fe3f..843fd681393e 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1,7 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->
->  #include <linux/anon_inodes.h>
-> +#include <linux/atomic.h>
->  #include <linux/bitmap.h>
-> +#include <linux/build_bug.h>
->  #include <linux/cdev.h>
->  #include <linux/compat.h>
->  #include <linux/device.h>
-> @@ -34,6 +36,7 @@
->   * GPIO line handle management
+
+...
+
+> + * @timestamp: cache for the timestamp storing it between hardirq and IRQ
+> + * thread, used to bring the timestamp close to the actual event
+
+_ns ?
+
+> + * @req_seqno: the seqno for the current edge event in the sequence of
+> + * events for the corresponding line request. This is drawn from the @req.
+> + * @line_seqno: the seqno for the current edge event in the sequence of
+> + * events for this line.
 >   */
+>  struct line {
+>         struct gpio_desc *desc;
+> +       /*
+> +        * -- edge detector specific fields --
+> +        */
+> +       struct linereq *req;
+> +       unsigned int irq;
+> +       u64 eflags;
+
+> +       /*
+> +        * timestamp and req_seqno are shared by edge_irq_handler() and
+> +        * edge_irq_thread() which are themselves mutually exclusive.
+> +        */
+
+I didn't quite get this comment. Does it mean we should define them as
+union here? Or is it about how functions consider this data and no
+lock is needed? Or what?
+
+> +       u64 timestamp;
+> +       u32 req_seqno;
+> +       u32 line_seqno;
+>  };
 >
-> +#ifdef CONFIG_GPIO_CDEV_V1
 >  /**
->   * struct linehandle_state - contains the state of a userspace handle
->   * @gdev: the GPIO device the handle pertains to
-> @@ -376,6 +379,398 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->         linehandle_free(lh);
->         return ret;
->  }
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
+> @@ -395,12 +418,22 @@ struct line {
+>   * @gdev: the GPIO device the line request pertains to
+>   * @label: consumer label used to tag GPIO descriptors
+>   * @num_lines: the number of lines in the lines array
+> + * @wait: wait queue that handles blocking reads of events
+> + * @event_buffer_size: the number of elements allocated in @events
+> + * @events: KFIFO for the GPIO events
+> + * @seqno: the sequence number for edge events generated on all lines in
+> + * this line request.  Note that this is not used when @num_lines is 1, as
+> + * the line_seqno is then the same and is cheaper to calculate.
+>   * @lines: the lines held by this line request, with @num_lines elements.
+>   */
+>  struct linereq {
+>         struct gpio_device *gdev;
+>         const char *label;
+>         u32 num_lines;
+> +       wait_queue_head_t wait;
+> +       u32 event_buffer_size;
+> +       DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
+> +       atomic_t seqno;
+>         struct line lines[];
+>  };
+>
+> @@ -417,12 +450,138 @@ struct linereq {
+>         (GPIO_V2_LINE_FLAG_OPEN_DRAIN | \
+>          GPIO_V2_LINE_FLAG_OPEN_SOURCE)
+>
+> +#define GPIO_V2_LINE_EDGE_FLAGS \
+> +       (GPIO_V2_LINE_FLAG_EDGE_RISING | \
+> +        GPIO_V2_LINE_FLAG_EDGE_FALLING)
 > +
-> +/**
-> + * struct line - contains the state of a requested line
-> + * @desc: the GPIO descriptor for this line.
-> + */
-> +struct line {
-> +       struct gpio_desc *desc;
-> +};
-> +
-> +/**
-> + * struct linereq - contains the state of a userspace line request
-> + * @gdev: the GPIO device the line request pertains to
-> + * @label: consumer label used to tag GPIO descriptors
-> + * @num_lines: the number of lines in the lines array
-> + * @lines: the lines held by this line request, with @num_lines elements.
-> + */
-> +struct linereq {
-> +       struct gpio_device *gdev;
-> +       const char *label;
-> +       u32 num_lines;
-> +       struct line lines[];
-> +};
-> +
-> +#define GPIO_V2_LINE_BIAS_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_BIAS_PULL_UP | \
-> +        GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN | \
-> +        GPIO_V2_LINE_FLAG_BIAS_DISABLED)
-> +
-> +#define GPIO_V2_LINE_DIRECTION_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_INPUT | \
-> +        GPIO_V2_LINE_FLAG_OUTPUT)
-> +
-> +#define GPIO_V2_LINE_DRIVE_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_OPEN_DRAIN | \
-> +        GPIO_V2_LINE_FLAG_OPEN_SOURCE)
-> +
-> +#define GPIO_V2_LINE_VALID_FLAGS \
-> +       (GPIO_V2_LINE_FLAG_ACTIVE_LOW | \
-> +        GPIO_V2_LINE_DIRECTION_FLAGS | \
-> +        GPIO_V2_LINE_DRIVE_FLAGS | \
-> +        GPIO_V2_LINE_BIAS_FLAGS)
-> +
-> +static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
-> +                                    unsigned int line_idx)
+>  #define GPIO_V2_LINE_VALID_FLAGS \
+>         (GPIO_V2_LINE_FLAG_ACTIVE_LOW | \
+>          GPIO_V2_LINE_DIRECTION_FLAGS | \
+>          GPIO_V2_LINE_DRIVE_FLAGS | \
+> +        GPIO_V2_LINE_EDGE_FLAGS | \
+>          GPIO_V2_LINE_BIAS_FLAGS)
+>
+> +static irqreturn_t edge_irq_thread(int irq, void *p)
 > +{
-> +       unsigned int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_FLAGS) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return lc->attrs[i].attr.flags;
-> +       }
-> +       return lc->flags;
-> +}
-> +
-> +static int gpio_v2_line_config_output_value(struct gpio_v2_line_config *lc,
-> +                                           unsigned int line_idx)
-> +{
-> +       unsigned int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return !!(lc->attrs[i].attr.values & mask);
-> +       }
-> +       return 0;
-> +}
-> +
-> +static int gpio_v2_line_flags_validate(u64 flags)
-> +{
-> +       /* Return an error if an unknown flag is set */
-> +       if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
-> +               return -EINVAL;
-> +
-> +       /*
-> +        * Do not allow both INPUT & OUTPUT flags to be set as they are
-> +        * contradictory.
-> +        */
-> +       if ((flags & GPIO_V2_LINE_FLAG_INPUT) &&
-> +           (flags & GPIO_V2_LINE_FLAG_OUTPUT))
-> +               return -EINVAL;
-> +
-> +       /*
-> +        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
-> +        * the hardware actually supports enabling both at the same time the
-> +        * electrical result would be disastrous.
-> +        */
-> +       if ((flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN) &&
-> +           (flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE))
-> +               return -EINVAL;
-> +
-> +       /* Drive requires explicit output direction. */
-> +       if ((flags & GPIO_V2_LINE_DRIVE_FLAGS) &&
-> +           !(flags & GPIO_V2_LINE_FLAG_OUTPUT))
-> +               return -EINVAL;
-
-> +       /* Bias requires explicit direction. */
-> +       if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
-> +           !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
-> +               return -EINVAL;
-
-Why is this? If I request a line as is and after set a bias, should I
-really care about direction?
-
-> +       /* Only one bias flag can be set. */
-> +       if (((flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED) &&
-> +            (flags & (GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN |
-> +                      GPIO_V2_LINE_FLAG_BIAS_PULL_UP))) ||
-> +           ((flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN) &&
-> +            (flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)))
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
-> +                                       unsigned int num_lines)
-> +{
-> +       unsigned int i;
-> +       u64 flags;
+> +       struct line *line = p;
+> +       struct linereq *lr = line->req;
+> +       struct gpio_v2_line_event le;
 > +       int ret;
 > +
-> +       if (lc->num_attrs > GPIO_V2_LINE_NUM_ATTRS_MAX)
-> +               return -EINVAL;
+> +       /* Do not leak kernel stack to userspace */
+> +       memset(&le, 0, sizeof(le));
 > +
-> +       if (memchr_inv(lc->padding, 0, sizeof(lc->padding)))
-> +               return -EINVAL;
+> +       /*
+> +        * We may be running from a nested threaded interrupt in which case
+> +        * we didn't get the timestamp from edge_irq_handler().
+> +        */
+
+> +       if (!line->timestamp) {
+
+Can it be positive conditional?
+
+> +               le.timestamp = ktime_get_ns();
+> +               if (lr->num_lines != 1)
+> +                       line->req_seqno = atomic_inc_return(&lr->seqno);
+> +       } else {
+> +               le.timestamp = line->timestamp;
+> +       }
+> +       line->timestamp = 0;
 > +
-> +       for (i = 0; i < num_lines; i++) {
-> +               flags = gpio_v2_line_config_flags(lc, i);
-> +               ret = gpio_v2_line_flags_validate(flags);
+> +       if (line->eflags == (GPIO_V2_LINE_FLAG_EDGE_RISING |
+> +                            GPIO_V2_LINE_FLAG_EDGE_FALLING)) {
+> +               int level = gpiod_get_value_cansleep(line->desc);
+> +
+> +               if (level)
+> +                       /* Emit low-to-high event */
+> +                       le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
+> +               else
+> +                       /* Emit high-to-low event */
+> +                       le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
+> +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_RISING) {
+> +               /* Emit low-to-high event */
+> +               le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
+> +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_FALLING) {
+> +               /* Emit high-to-low event */
+> +               le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
+> +       } else {
+> +               return IRQ_NONE;
+> +       }
+> +       line->line_seqno++;
+> +       le.line_seqno = line->line_seqno;
+> +       le.seqno = (lr->num_lines == 1) ? le.line_seqno : line->req_seqno;
+> +       le.offset = gpio_chip_hwgpio(line->desc);
+> +
+> +       ret = kfifo_in_spinlocked_noirqsave(&lr->events, &le,
+> +                                           1, &lr->wait.lock);
+> +       if (ret)
+> +               wake_up_poll(&lr->wait, EPOLLIN);
+> +       else
+
+> +               pr_debug_ratelimited("event FIFO is full - event dropped\n");
+
+Oh, can we really avoid printf() in IRQ context?
+
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t edge_irq_handler(int irq, void *p)
+> +{
+> +       struct line *line = p;
+> +       struct linereq *lr = line->req;
+> +
+> +       /*
+> +        * Just store the timestamp in hardirq context so we get it as
+> +        * close in time as possible to the actual event.
+> +        */
+> +       line->timestamp = ktime_get_ns();
+> +
+> +       if (lr->num_lines != 1)
+> +               line->req_seqno = atomic_inc_return(&lr->seqno);
+> +
+> +       return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static void edge_detector_stop(struct line *line)
+> +{
+
+> +       if (line->irq) {
+> +               free_irq(line->irq, line);
+> +               line->irq = 0;
+> +       }
+
+Perhaps
+
+if (!line->irq)
+  return;
+
+?
+
+> +}
+> +
+> +static int edge_detector_setup(struct line *line,
+> +                              u64 eflags)
+> +{
+> +       unsigned long irqflags = 0;
+> +       int irq, ret;
+> +
+> +       if (eflags && !kfifo_initialized(&line->req->events)) {
+> +               ret = kfifo_alloc(&line->req->events,
+> +                                 line->req->event_buffer_size, GFP_KERNEL);
 > +               if (ret)
 > +                       return ret;
 > +       }
+> +       line->eflags = eflags;
+> +
+> +       if (!eflags)
+> +               return 0;
+> +
+> +       irq = gpiod_to_irq(line->desc);
+> +       if (irq <= 0)
+
+> +               return -ENODEV;
+
+Why shadowing actual error code?
+
+> +       if (eflags & GPIO_V2_LINE_FLAG_EDGE_RISING)
+> +               irqflags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
+> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+> +       if (eflags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
+> +               irqflags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
+> +                       IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+> +       irqflags |= IRQF_ONESHOT;
+> +
+> +       /* Request a thread to read the events */
+> +       ret = request_threaded_irq(irq, edge_irq_handler, edge_irq_thread,
+> +                                  irqflags, line->req->label, line);
+> +       if (ret)
+> +               return ret;
+> +
+> +       line->irq = irq;
 > +       return 0;
 > +}
 > +
-> +static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
-> +                                                   unsigned long *flagsp)
+>  static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
+>                                      unsigned int line_idx)
+>  {
+> @@ -465,6 +624,11 @@ static int gpio_v2_line_flags_validate(u64 flags)
+>             (flags & GPIO_V2_LINE_FLAG_OUTPUT))
+>                 return -EINVAL;
+>
+> +       /* Edge detection requires explicit input. */
+> +       if ((flags & GPIO_V2_LINE_EDGE_FLAGS) &&
+> +           !(flags & GPIO_V2_LINE_FLAG_INPUT))
+> +               return -EINVAL;
+> +
+>         /*
+>          * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+>          * the hardware actually supports enabling both at the same time the
+> @@ -526,6 +690,10 @@ static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
+>                 set_bit(FLAG_IS_OUT, flagsp);
+>         else if (flags & GPIO_V2_LINE_FLAG_INPUT)
+>                 clear_bit(FLAG_IS_OUT, flagsp);
+> +       assign_bit(FLAG_EDGE_RISING, flagsp,
+> +                  flags & GPIO_V2_LINE_FLAG_EDGE_RISING);
+> +       assign_bit(FLAG_EDGE_FALLING, flagsp,
+> +                  flags & GPIO_V2_LINE_FLAG_EDGE_FALLING);
+>         assign_bit(FLAG_OPEN_DRAIN, flagsp,
+>                    flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
+>         assign_bit(FLAG_OPEN_SOURCE, flagsp,
+> @@ -614,14 +782,85 @@ static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
+>  }
+>  #endif
+>
+> +static __poll_t linereq_poll(struct file *file,
+> +                           struct poll_table_struct *wait)
 > +{
-> +       assign_bit(FLAG_ACTIVE_LOW, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW);
-
-> +       if (flags & GPIO_V2_LINE_FLAG_OUTPUT)
-> +               set_bit(FLAG_IS_OUT, flagsp);
-> +       else if (flags & GPIO_V2_LINE_FLAG_INPUT)
-> +               clear_bit(FLAG_IS_OUT, flagsp);
-
-Perhaps surrounded by blank lines? Or move it to the beginning /
-ending (like grouping assign_bit() calls together)?
-
-> +       assign_bit(FLAG_OPEN_DRAIN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
-> +       assign_bit(FLAG_OPEN_SOURCE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE);
-> +       assign_bit(FLAG_PULL_UP, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP);
-> +       assign_bit(FLAG_PULL_DOWN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN);
-> +       assign_bit(FLAG_BIAS_DISABLE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED);
+> +       struct linereq *lr = file->private_data;
+> +       __poll_t events = 0;
+> +
+> +       poll_wait(file, &lr->wait, wait);
+> +
+> +       if (!kfifo_is_empty_spinlocked_noirqsave(&lr->events,
+> +                                                &lr->wait.lock))
+> +               events = EPOLLIN | EPOLLRDNORM;
+> +
+> +       return events;
 > +}
 > +
-> +static long linereq_get_values(struct linereq *lr, void __user *ip)
+> +static ssize_t linereq_read(struct file *file,
+> +                           char __user *buf,
+> +                           size_t count,
+> +                           loff_t *f_ps)
 > +{
-> +       struct gpio_v2_line_values lv;
-> +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +       struct gpio_desc **descs;
-> +       unsigned int i, didx, num_get;
+> +       struct linereq *lr = file->private_data;
+> +       struct gpio_v2_line_event le;
+> +       ssize_t bytes_read = 0;
 > +       int ret;
 > +
-> +       /* NOTE: It's ok to read values of output lines. */
-
-ok -> okay
-
-> +       if (copy_from_user(&lv, ip, sizeof(lv)))
-> +               return -EFAULT;
-> +
-
-> +       for (num_get = 0, i = 0; i < lr->num_lines; i++) {
-> +               if (lv.mask & BIT_ULL(i)) {
-
-for_each_set_bit() ?
-
-> +                       num_get++;
-> +                       descs = &lr->lines[i].desc;
-> +               }
-> +       }
-> +
-> +       if (num_get == 0)
+> +       if (count < sizeof(le))
 > +               return -EINVAL;
 > +
-> +       if (num_get != 1) {
-> +               descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
-> +               if (!descs)
-> +                       return -ENOMEM;
-
-> +               for (didx = 0, i = 0; i < lr->num_lines; i++) {
-> +                       if (lv.mask & BIT_ULL(i)) {
-
-Ditto.
-
-> +                               descs[didx] = lr->lines[i].desc;
-> +                               didx++;
+> +       do {
+> +               spin_lock(&lr->wait.lock);
+> +               if (kfifo_is_empty(&lr->events)) {
+> +                       if (bytes_read) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return bytes_read;
+> +                       }
+> +
+> +                       if (file->f_flags & O_NONBLOCK) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return -EAGAIN;
+> +                       }
+> +
+> +                       ret = wait_event_interruptible_locked(lr->wait,
+> +                                       !kfifo_is_empty(&lr->events));
+> +                       if (ret) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return ret;
 > +                       }
 > +               }
-> +       }
-> +       ret = gpiod_get_array_value_complex(false, true, num_get,
-> +                                           descs, NULL, vals);
 > +
-> +       if (num_get != 1)
-> +               kfree(descs);
-> +       if (ret)
-> +               return ret;
-> +
-> +       lv.bits = 0;
-
-> +       for (didx = 0, i = 0; i < lr->num_lines; i++) {
-> +               if (lv.mask & BIT_ULL(i)) {
-
-Ditto.
-
-> +                       if (test_bit(didx, vals))
-> +                               lv.bits |= BIT_ULL(i);
-> +                       didx++;
-> +               }
-> +       }
-> +
-> +       if (copy_to_user(ip, &lv, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       return 0;
-> +}
-> +
-> +static long linereq_ioctl(struct file *file, unsigned int cmd,
-> +                         unsigned long arg)
-> +{
-> +       struct linereq *lr = file->private_data;
-> +       void __user *ip = (void __user *)arg;
-> +
-> +       if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
-> +               return linereq_get_values(lr, ip);
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +#ifdef CONFIG_COMPAT
-> +static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
-> +                                unsigned long arg)
-> +{
-> +       return linereq_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-> +}
-> +#endif
-> +
-> +static void linereq_free(struct linereq *lr)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < lr->num_lines; i++) {
-> +               if (lr->lines[i].desc)
-> +                       gpiod_free(lr->lines[i].desc);
-> +       }
-> +       kfree(lr->label);
-> +       put_device(&lr->gdev->dev);
-> +       kfree(lr);
-> +}
-> +
-> +static int linereq_release(struct inode *inode, struct file *file)
-> +{
-> +       struct linereq *lr = file->private_data;
-> +
-> +       linereq_free(lr);
-> +       return 0;
-> +}
-> +
-> +static const struct file_operations line_fileops = {
-> +       .release = linereq_release,
-> +       .owner = THIS_MODULE,
-> +       .llseek = noop_llseek,
-> +       .unlocked_ioctl = linereq_ioctl,
-> +#ifdef CONFIG_COMPAT
-> +       .compat_ioctl = linereq_ioctl_compat,
-> +#endif
-> +};
-> +
-> +static int linereq_create(struct gpio_device *gdev, void __user *ip)
-> +{
-> +       struct gpio_v2_line_request ulr;
-> +       struct gpio_v2_line_config *lc;
-> +       struct linereq *lr;
-> +       struct file *file;
-> +       u64 flags;
-> +       unsigned int i;
-> +       int fd, ret;
-> +
-> +       if (copy_from_user(&ulr, ip, sizeof(ulr)))
-> +               return -EFAULT;
-> +
-> +       if ((ulr.num_lines == 0) || (ulr.num_lines > GPIO_V2_LINES_MAX))
-> +               return -EINVAL;
-> +
-> +       if (memchr_inv(ulr.padding, 0, sizeof(ulr.padding)))
-> +               return -EINVAL;
-> +
-> +       lc = &ulr.config;
-> +       ret = gpio_v2_line_config_validate(lc, ulr.num_lines);
-> +       if (ret)
-> +               return ret;
-> +
-> +       lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
-> +       if (!lr)
-> +               return -ENOMEM;
-> +
-> +       lr->gdev = gdev;
-> +       get_device(&gdev->dev);
-> +
-> +       /* Make sure this is terminated */
-
-> +       ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
-> +       if (strlen(ulr.consumer)) {
-> +               lr->label = kstrdup(ulr.consumer, GFP_KERNEL);
-
-Sounds like kstrndup()
-
-> +               if (!lr->label) {
-> +                       ret = -ENOMEM;
-> +                       goto out_free_linereq;
-> +               }
-> +       }
-> +
-> +       lr->num_lines = ulr.num_lines;
-> +
-> +       /* Request each GPIO */
-> +       for (i = 0; i < ulr.num_lines; i++) {
-> +               u32 offset = ulr.offsets[i];
-> +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
-> +
-> +               if (IS_ERR(desc)) {
-> +                       ret = PTR_ERR(desc);
-> +                       goto out_free_linereq;
+> +               ret = kfifo_out(&lr->events, &le, 1);
+> +               spin_unlock(&lr->wait.lock);
+> +               if (ret != 1) {
+> +                       /*
+> +                        * This should never happen - we were holding the
+> +                        * lock from the moment we learned the fifo is no
+> +                        * longer empty until now.
+> +                        */
+> +                       ret = -EIO;
+> +                       break;
 > +               }
 > +
-> +               ret = gpiod_request(desc, lr->label);
-> +               if (ret)
-> +                       goto out_free_linereq;
+> +               if (copy_to_user(buf + bytes_read, &le, sizeof(le)))
+> +                       return -EFAULT;
+> +               bytes_read += sizeof(le);
+> +       } while (count >= bytes_read + sizeof(le));
 > +
-> +               lr->lines[i].desc = desc;
-> +               flags = gpio_v2_line_config_flags(lc, i);
-> +               gpio_v2_line_config_flags_to_desc_flags(flags, &desc->flags);
-> +
-> +               ret = gpiod_set_transitory(desc, false);
-> +               if (ret < 0)
-> +                       goto out_free_linereq;
-> +
-> +               /*
-> +                * Lines have to be requested explicitly for input
-> +                * or output, else the line will be treated "as is".
-> +                */
-> +               if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
-> +                       int val = gpio_v2_line_config_output_value(lc, i);
-> +
-> +                       ret = gpiod_direction_output(desc, val);
-> +                       if (ret)
-> +                               goto out_free_linereq;
-> +               } else if (flags & GPIO_V2_LINE_FLAG_INPUT) {
-> +                       ret = gpiod_direction_input(desc);
-> +                       if (ret)
-> +                               goto out_free_linereq;
-> +               }
-> +
-> +               blocking_notifier_call_chain(&desc->gdev->notifier,
-> +                                            GPIOLINE_CHANGED_REQUESTED, desc);
-> +
-
-> +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> +                       offset);
-
-Hmm... I would rather see trace events / points than new dev_dbg() /
-pr_debug() calls.
-
-> +       }
-> +
-> +       fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> +       if (fd < 0) {
-> +               ret = fd;
-> +               goto out_free_linereq;
-> +       }
-> +
-> +       file = anon_inode_getfile("gpio-line", &line_fileops, lr,
-> +                                 O_RDONLY | O_CLOEXEC);
-> +       if (IS_ERR(file)) {
-> +               ret = PTR_ERR(file);
-> +               goto out_put_unused_fd;
-> +       }
-> +
-> +       ulr.fd = fd;
-> +       if (copy_to_user(ip, &ulr, sizeof(ulr))) {
-> +               /*
-> +                * fput() will trigger the release() callback, so do not go onto
-> +                * the regular error cleanup path here.
-> +                */
-> +               fput(file);
-> +               put_unused_fd(fd);
-> +               return -EFAULT;
-> +       }
-> +
-> +       fd_install(fd, file);
-> +
-> +       dev_dbg(&gdev->dev, "registered chardev handle for %d lines\n",
-> +               lr->num_lines);
-> +
-> +       return 0;
-> +
-> +out_put_unused_fd:
-> +       put_unused_fd(fd);
-> +out_free_linereq:
-> +       linereq_free(lr);
-> +       return ret;
+> +       return bytes_read;
 > +}
 > +
-> +#ifdef CONFIG_GPIO_CDEV_V1
->
->  /*
->   * GPIO line event management
-> @@ -745,6 +1140,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         return ret;
->  }
->
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
-> +
->  static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->                                   struct gpioline_info *info)
+>  static void linereq_free(struct linereq *lr)
 >  {
-> @@ -842,6 +1239,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->                 if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
->                         return -EFAULT;
->                 return 0;
-> +#ifdef CONFIG_GPIO_CDEV_V1
->         } else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
->                 struct gpioline_info lineinfo;
+>         unsigned int i;
 >
-> @@ -884,6 +1282,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>         for (i = 0; i < lr->num_lines; i++) {
+> +               edge_detector_stop(&lr->lines[i]);
+>                 if (lr->lines[i].desc)
+>                         gpiod_free(lr->lines[i].desc);
+>         }
+> +       kfifo_free(&lr->events);
+>         kfree(lr->label);
+>         put_device(&lr->gdev->dev);
+>         kfree(lr);
+> @@ -637,6 +876,8 @@ static int linereq_release(struct inode *inode, struct file *file)
+>
+>  static const struct file_operations line_fileops = {
+>         .release = linereq_release,
+> +       .read = linereq_read,
+> +       .poll = linereq_poll,
+>         .owner = THIS_MODULE,
+>         .llseek = noop_llseek,
+>         .unlocked_ioctl = linereq_ioctl,
+> @@ -676,6 +917,9 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>         lr->gdev = gdev;
+>         get_device(&gdev->dev);
+>
+
+> +       for (i = 0; i < ulr.num_lines; i++)
+> +               lr->lines[i].req = lr;
+
+>         /* Make sure this is terminated */
+>         ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
+>         if (strlen(ulr.consumer)) {
+> @@ -686,6 +930,14 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>                 }
+>         }
+>
+> +       init_waitqueue_head(&lr->wait);
+> +       lr->event_buffer_size = ulr.event_buffer_size;
+> +       if (lr->event_buffer_size == 0)
+
+> +               lr->event_buffer_size = ulr.num_lines*16;
+> +       else if (lr->event_buffer_size > GPIO_V2_LINES_MAX*16)
+> +               lr->event_buffer_size = GPIO_V2_LINES_MAX*16;
+
+*16 -> ' * 16'
+
+> +
+> +       atomic_set(&lr->seqno, 0);
+>         lr->num_lines = ulr.num_lines;
+>
+>         /* Request each GPIO */
+> @@ -724,6 +976,11 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>                         ret = gpiod_direction_input(desc);
+>                         if (ret)
+>                                 goto out_free_linereq;
+> +
+> +                       ret = edge_detector_setup(&lr->lines[i],
+> +                                       flags & GPIO_V2_LINE_EDGE_FLAGS);
+> +                       if (ret)
+> +                               goto out_free_linereq;
 >                 }
 >
->                 return 0;
-> +#endif /* CONFIG_GPIO_CDEV_V1 */
-> +       } else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
-> +               return linereq_create(gdev, ip);
->         } else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
->                 if (copy_from_user(&offset, ip, sizeof(offset)))
->                         return -EFAULT;
-> @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
->                  MAJOR(devt), gdev->id);
+>                 blocking_notifier_call_chain(&desc->gdev->notifier,
+> @@ -1245,6 +1502,11 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>         if (test_bit(FLAG_PULL_UP, &desc->flags))
+>                 info->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
 >
->         return 0;
-> +       /*
-> +        * array sizes must ensure 64-bit alignment and not create holes in
-> +        * the struct packing.
-> +        */
-> +       BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
-> +       BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
+> +       if (test_bit(FLAG_EDGE_RISING, &desc->flags))
+> +               info->flags |= GPIO_V2_LINE_FLAG_EDGE_RISING;
+> +       if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
+> +               info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
 > +
-> +       /*
-> +        * check that uAPI structs are 64-bit aligned for 32/64-bit
-> +        * compatibility
-> +        */
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
-> +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
-
-Can we use static_assert() at the top of the file? Presumably after
-inclusion block.
-
+>         spin_unlock_irqrestore(&gpio_lock, flags);
 >  }
 >
->  void gpiolib_cdev_unregister(struct gpio_device *gdev)
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 80137c1b3cdc..e4c81dca7f8b 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2041,6 +2041,8 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+>                 clear_bit(FLAG_PULL_UP, &desc->flags);
+>                 clear_bit(FLAG_PULL_DOWN, &desc->flags);
+>                 clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
+> +               clear_bit(FLAG_EDGE_RISING, &desc->flags);
+> +               clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+>                 clear_bit(FLAG_IS_HOGGED, &desc->flags);
+>  #ifdef CONFIG_OF_DYNAMIC
+>                 desc->hog = NULL;
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 6709f79c02dd..39b356160937 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -114,6 +114,8 @@ struct gpio_desc {
+>  #define FLAG_PULL_UP    13     /* GPIO has pull up enabled */
+>  #define FLAG_PULL_DOWN  14     /* GPIO has pull down enabled */
+>  #define FLAG_BIAS_DISABLE    15        /* GPIO has pull disabled */
+> +#define FLAG_EDGE_RISING     16        /* GPIO CDEV detects rising edge events */
+> +#define FLAG_EDGE_FALLING    17        /* GPIO CDEV detects falling edge events */
+>
+>         /* Connection label */
+>         const char              *label;
 > --
 > 2.28.0
 >
