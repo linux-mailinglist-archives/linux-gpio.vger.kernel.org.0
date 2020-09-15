@@ -2,110 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 538CE26A89E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 17:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D46C326AF1E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Sep 2020 23:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgIOPTj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 11:19:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55866 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbgIOPTB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 15 Sep 2020 11:19:01 -0400
-IronPort-SDR: 2chJRFLSFNuT/Kkuae5HXmkw/8FMkvRN8lDL1YeFnashK5waWb8Ii4YsB3pveE+O61ObSnsXll
- Wjokkuxs/Wbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="138780933"
-X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="138780933"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 08:18:49 -0700
-IronPort-SDR: +u98r1VJ5hfuSzKW7eq119tHZTmZ6xSzduMV9nVTCfBCdlZPXBYMmDhz7V26qbX8CW/Jm0vgo1
- GX7CnnWld/kA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="335699967"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 15 Sep 2020 08:18:45 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kICh5-00Grgs-SW; Tue, 15 Sep 2020 18:16:31 +0300
-Date:   Tue, 15 Sep 2020 18:16:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        id S1728053AbgIOVEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 17:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbgIOVDw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 17:03:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD78EC06174A
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 14:03:50 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kII79-00006G-Jl; Tue, 15 Sep 2020 23:03:47 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kII73-00019G-6I; Tue, 15 Sep 2020 23:03:41 +0200
+Date:   Tue, 15 Sep 2020 23:03:40 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH 0/3] gpiolib: generalize GPIO line names property
-Message-ID: <20200915151631.GD3956970@smile.fi.intel.com>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
- <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
- <20200915131228.GX3956970@smile.fi.intel.com>
- <CAMRc=MdGwkEp4sL=oBuk-x4cd7BWga76X0Rvq8PN-P+vjvp=Fg@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v10 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200915210340.xg5xwmajufedyltr@pengutronix.de>
+References: <20200914214341.14268-1-michael@walle.cc>
+ <20200914214341.14268-7-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cyiwyjcsxpn452wt"
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdGwkEp4sL=oBuk-x4cd7BWga76X0Rvq8PN-P+vjvp=Fg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200914214341.14268-7-michael@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 03:16:42PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Sep 15, 2020 at 3:12 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Sep 15, 2020 at 02:01:56PM +0200, Anders Roxell wrote:
-> > > On Tue, 8 Sep 2020 at 18:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > >
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > I initially sent this as part of the gpio-mockup overhaul but since
-> > > > these patches are indepentent and the work on gpio-mockup may become
-> > > > more complicated - I'm sending these separately.
-> > > >
-> > > > The only change is adding additional property helpers to count strings
-> > > > in array.
-> > > >
-> > > > Bartosz Golaszewski (3):
-> > > >   device: property: add helpers to count items in string arrays
-> > > >   gpiolib: generalize devprop_gpiochip_set_names() for device properties
-> > > >   gpiolib: unexport devprop_gpiochip_set_names()
-> >
-> > Ha-ha, OF unittest is of_node centric. definitely there is no backed device.
-> >
-> > Bart, it seems we are stuck with fwnode interface.
-> >
-> 
-> Wait what?! This means the implementation is wrong - the whole concept
-> of device properties is to be generic and to hide the underlying
-> fwnode or OF properties. If anything we should fix
-> device/base/property.c to fall back to OF.
-> 
-> What is happening exactly? If all fwnode code compiled out?
-> 
-> I'll try to give it a spin and see what can be done but I don't like
-> that device_property_* functions fail if you have OF but not fwnode.
 
-Read my next reply. It seems only OF unittest issue
+--cyiwyjcsxpn452wt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-% git grep -n -w fwnode -- drivers/of/unittest* | wc -l
-0
-% git grep -n -w fwnode -- drivers/of/ | wc -l
-50
+On Mon, Sep 14, 2020 at 11:43:34PM +0200, Michael Walle wrote:
+> Add support for the PWM controller of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
+>=20
+> The controller has one PWM channel and can just generate four distinct
+> frequencies.
+>=20
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+@Lee: From my side taking the patch via your mfd tree is fine.
 
+Thanks for your effort to align your patch to my reviews
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--cyiwyjcsxpn452wt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9hLCkACgkQwfwUeK3K
+7AmJogf/X2AMslmJpJk0/t52+83yxuLmP8HEPZ/fZLyaE9/xTy0N/O2LeLsp13pK
+Jy7h+pQXkSORq2B/y38E5O+HAYSHquEkhnJKCG6sQk6gFxBH4F4eU14Y3LB7etqM
+8mNonE4LjJoNew2Mv2hBdO+9fTMum16bEe7rcQwBY3B6BYFkmad7ZK9XoDYm4cfB
+V5aLHywUaFB9/CZ2fqXDvtN/47Rf+ejnkrijTYwwu+BGf8i6bxIOUzSTHrrm5KnF
+fZ+GAFFikBriPAKpJvrVA0w3/tOhHpaOhNu405ghN4+aNwieSq0f6OZVP8IgJP3T
+c/G/lstWFGVi0MbWlbzQfVxcrCnBpg==
+=I40k
+-----END PGP SIGNATURE-----
+
+--cyiwyjcsxpn452wt--
