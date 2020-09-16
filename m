@@ -2,114 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DDBA26CBEF
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC24626CBE4
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgIPUgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 16:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
+        id S1726889AbgIPUgJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 16:36:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgIPRKa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Sep 2020 13:10:30 -0400
+        id S1726854AbgIPRKb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:10:31 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7EF22473;
-        Wed, 16 Sep 2020 15:58:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9600A22A84;
+        Wed, 16 Sep 2020 16:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600271933;
-        bh=euoNrh4CREhCtBrTlTDs/D23cyiar9mHO2VGZrvJGGw=;
+        s=default; t=1600273422;
+        bh=fNcuVWkN1TjhyVwmEX+PcPTSMs1C1wjtAwGI/ZRYd+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7ZBSAWp7ngag0GivIYwEMRvi2kI5TJyoUxd2xusn24/6ovXSjFvdFXYscQlIvUlL
-         gqpGyfwBEw0kKQGlha2BEP6GReJ4HpHYs1ZIL5ck1dgiJaZmcAsukmLwMClRxnlD9/
-         4owCOsi3+7MgIuO0CrXIPLYDZ/BRpPcnZzBOBK/A=
+        b=2eFT/IHdk8kMc/sJr3aSUS93e7LsG7FvG1/lyhD03N9x4hHEjJcen2uN41Pr0BUUJ
+         cIoCliYuD46rWdiSiZ/MsWqo9yW/KgSCOUEdnQXn6GrR3/XLHts9Anzhk3/2cZ5gie
+         G8SYT29d6WLaOA2cDY0mZLuXoIdliyUA6me1lePs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Sungbo Eo <mans0n@gorani.run>, Stefan Agner <stefan@agner.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Magnus Damm <magnus.damm@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yash Shah <yash.shah@sifive.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-unisoc@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 10/15] ARM: dts: am3874: iceboard: fix GPIO expander reset GPIOs
-Date:   Wed, 16 Sep 2020 17:57:10 +0200
-Message-Id: <20200916155715.21009-11-krzk@kernel.org>
+Subject: [PATCH 4/8] dt-bindings: gpio: fsl-imx-gpio: add i.MX ARMv6 and ARMv7 compatibles
+Date:   Wed, 16 Sep 2020 18:22:46 +0200
+Message-Id: <20200916162250.16098-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200916155715.21009-1-krzk@kernel.org>
-References: <20200916155715.21009-1-krzk@kernel.org>
+In-Reply-To: <20200916162250.16098-1-krzk@kernel.org>
+References: <20200916162250.16098-1-krzk@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Correct the property for reset GPIOs of the GPIO expander.
+Several DTSes with ARMv6 and ARMv7 i.MX SoCs introduce their own
+compatibles so add them to fix dtbs_check warnings like:
+
+  arch/arm/boot/dts/imx35-pdk.dt.yaml: gpio@53fa4000:
+    compatible: ['fsl,imx35-gpio', 'fsl,imx31-gpio'] is not valid under any of the given schemas
+
+  arch/arm/boot/dts/imx51-babbage.dt.yaml: gpio@73f90000:
+    compatible: ['fsl,imx51-gpio', 'fsl,imx35-gpio'] is not valid under any of the given schemas
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/am3874-iceboard.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/gpio/fsl-imx-gpio.yaml       | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
-index 1bb57019d082..9423e9feaa10 100644
---- a/arch/arm/boot/dts/am3874-iceboard.dts
-+++ b/arch/arm/boot/dts/am3874-iceboard.dts
-@@ -195,7 +195,7 @@
- 					"FMCA_PG_C2M", "FMCA_PRSNT_M2C_L", "FMCA_CLK_DIR", "SFP_LOS",
- 					"FMCB_EN_12V0", "FMCB_EN_3V3", "FMCB_EN_VADJ", "FMCB_PG_M2C",
- 					"FMCB_PG_C2M", "FMCB_PRSNT_M2C_L", "FMCB_CLK_DIR", "SFP_ModPrsL";
--				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
-+				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
- 			};
- 
- 			u42: pca9575@21 {
-@@ -208,7 +208,7 @@
- 					"QSFPA_LPMode", "QSFPB_ModPrsL", "QSFPB_IntL", "QSFPB_ResetL",
- 					"SFP_TxFault", "SFP_TxDisable", "SFP_RS0", "SFP_RS1",
- 					"QSFPB_ModSelL", "QSFPB_LPMode", "SEL_SFP", "ARM_MR";
--				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
-+				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
- 			};
- 
- 			u48: pca9575@22 {
-@@ -227,7 +227,7 @@
- 					"GP_SW5", "GP_SW6", "GP_SW7", "GP_SW8",
- 					"GP_LED8", "GP_LED7", "GP_LED6", "GP_LED5",
- 					"GP_LED4", "GP_LED3", "GP_LED2", "GP_LED1";
--				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
-+				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
- 			};
- 
- 			u59: pca9575@23 {
-@@ -240,7 +240,7 @@
- 					"GTX1V8PowerFault", "PHYAPowerFault", "PHYBPowerFault", "ArmPowerFault",
- 					"BP_SLOW_GPIO0", "BP_SLOW_GPIO1", "BP_SLOW_GPIO2", "BP_SLOW_GPIO3",
- 					"BP_SLOW_GPIO4", "BP_SLOW_GPIO5", "__unused_u59_p16", "__unused_u59_p17";
--				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
-+				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
- 			};
- 
- 			tmp100@48 { compatible = "ti,tmp100"; reg = <0x48>; };
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+index 737756e081fb..ad761e2f380a 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+@@ -21,8 +21,20 @@ properties:
+           - fsl,imx31-gpio
+           - fsl,imx35-gpio
+           - fsl,imx7d-gpio
++      - items:
++          - const: fsl,imx35-gpio
++          - const: fsl,imx31-gpio
+       - items:
+           - enum:
++              - fsl,imx50-gpio
++              - fsl,imx51-gpio
++              - fsl,imx53-gpio
++              - fsl,imx6q-gpio
++              - fsl,imx6sl-gpio
++              - fsl,imx6sll-gpio
++              - fsl,imx6sx-gpio
++              - fsl,imx6ul-gpio
++              - fsl,imx7d-gpio
+               - fsl,imx8mm-gpio
+               - fsl,imx8mn-gpio
+               - fsl,imx8mp-gpio
 -- 
 2.17.1
 
