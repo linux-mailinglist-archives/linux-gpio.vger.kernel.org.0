@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1221726C731
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 20:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47E4426C717
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 20:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgIPSM1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 14:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52642 "EHLO mail.kernel.org"
+        id S1727880AbgIPSR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 14:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgIPSKo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Sep 2020 14:10:44 -0400
+        id S1727837AbgIPSPa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 14:15:30 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FC822A83;
-        Wed, 16 Sep 2020 16:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C7F229F0;
+        Wed, 16 Sep 2020 16:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600273412;
-        bh=4AabZbuK+N6lbfohVlt0qp5YZ6D+w3XFtXgytzSRvZg=;
+        s=default; t=1600273429;
+        bh=HczLzPQr6OtHbam5qOdkdD+vA7dPuNPd8y9fq4tyixw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ry5eMM1sk6xj8SaN1XwXiOiVGXXo7SiTroZv+tK+y9Y1ZtK4Mx4N1hWFJkgf0Nqnw
-         dWqQKjD4sMsuXz5SoDhAbTVmA4PY95mqyBhOfaDZFQZjLclYs3V1e7nGR42gLsaOsF
-         Z0q/1pmCK4WkeMNVV6RLSXBVA1MBoe5ZofX0Tr5o=
+        b=udRBoC741hVrAMNNNgaMrrgAMaa2x0h0rLyJ19wsz9BTWuGAY+fz1GaGf8wzU4N+p
+         vE8WwSvPC/DYFmmrpVqqePxWIRzeRk1iEre7HFHqbFFbvdTWc963Xh+nPzsDkRyO/V
+         meT4S4yafrXyYms7rq+eoCCb9/Iw5Vrn5p4fi35s=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -53,9 +53,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-unisoc@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/8] dt-bindings: gpio: pl061: add missing properties and include common schema
-Date:   Wed, 16 Sep 2020 18:22:45 +0200
-Message-Id: <20200916162250.16098-4-krzk@kernel.org>
+Subject: [PATCH 5/8] dt-bindings: gpio: fsl-imx-gpio: add gpio-line-names
+Date:   Wed, 16 Sep 2020 18:22:47 +0200
+Message-Id: <20200916162250.16098-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200916162250.16098-1-krzk@kernel.org>
 References: <20200916162250.16098-1-krzk@kernel.org>
@@ -64,39 +64,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Describe all GPIO controller properties and include the common GPIO
-schema to be sure all common properties are properly validated.
+Describe common "gpio-line-names" property to fix dtbs_check warnings
+like:
+
+  arch/arm/boot/dts/imx53-m53menlo.dt.yaml: gpio@53f84000:
+    'gpio-line-names' does not match any of the regexes: '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/devicetree/bindings/gpio/pl061-gpio.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-index 313b17229247..6cbf10d8e120 100644
---- a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-@@ -19,6 +19,9 @@ select:
-   required:
-     - compatible
- 
-+allOf:
-+  - $ref: gpio-common.yaml#
-+
- properties:
-   $nodename:
-     pattern: "^gpio@[0-9a-f]+$"
-@@ -51,7 +54,10 @@ properties:
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+index ad761e2f380a..347f059d347a 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+@@ -65,7 +65,7 @@ properties:
+     const: 2
  
    gpio-controller: true
- 
+-
 +  gpio-line-names: true
-+
-   gpio-ranges:
-+    minItems: 1
-     maxItems: 8
+   gpio-ranges: true
  
- required:
+   power-domains:
 -- 
 2.17.1
 
