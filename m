@@ -2,88 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2C5826C737
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 20:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DBD826C8E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 20:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgIPSMY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 14:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        id S1728268AbgIPS71 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 14:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgIPSKp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Sep 2020 14:10:45 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
+        id S1727520AbgIPRvQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:51:16 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B7AE22AAD;
-        Wed, 16 Sep 2020 16:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740AC2220A;
+        Wed, 16 Sep 2020 11:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600273445;
-        bh=Jyj1xhY3bfoHP8MamoDVB6jYumTCPOuxehh3CoJHYe8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5tyTJTJejhb/FIGR9kdHGFYDxnRuqn1kL953jieGY7lUS9QvXS/58u7ZzvIzBaY/
-         dZKdf0zyJGDFlj2eRmx3c49c4cU3rxA4bMc97/o6RLhKJb3B5DMCK33+dcVE8UbInQ
-         kgtpJHVuJjWhxUtg4bJlieN4RdKjAzpp0U0xdir8=
+        s=default; t=1600257375;
+        bh=eoaV9szsjFgk7Uijv0L7H5VhZbtE8Hl/Zr7ID+M87nY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S41QI6QNEwoTFUhPFQbHwcgGYxGkiNeZjlx89US+9eB0ouV5jXDQVbtws8fAeszyA
+         TWRVI4D+K+DO/dgAew8K1QnwoRJeTj50wecYRg73J365TMWFBcia/zuujHwFodwzD5
+         KMrWVjsw7IXSR27cjO9eEqGuHJvOZG/V81fMmavs=
+Received: by mail-ej1-f54.google.com with SMTP id i26so9889834ejb.12;
+        Wed, 16 Sep 2020 04:56:15 -0700 (PDT)
+X-Gm-Message-State: AOAM533T5gAR4yTs5Gl3wGOvLbiwjUxuAR+L38xQO6EpKxLOV9v8mqit
+        JZZaoVGCMJ16MBsHumn9mfzqySS8nVm68D+jsH8=
+X-Google-Smtp-Source: ABdhPJxVC4NLF4LipwZPQbtgcVYYzgMLywjdrV+ZxmsIZAFCCtHHjAh+3P/NtChDS4r5OJpcCax05AMA1bTlcwSk55Y=
+X-Received: by 2002:a17:906:4a51:: with SMTP id a17mr24651233ejv.381.1600257374080;
+ Wed, 16 Sep 2020 04:56:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200904151139.18715-1-krzk@kernel.org> <CACRpkdbGTQTFAWoQtxrODYdADyUJ0JohL-63oCv9aWj53H_0Xw@mail.gmail.com>
+In-Reply-To: <CACRpkdbGTQTFAWoQtxrODYdADyUJ0JohL-63oCv9aWj53H_0Xw@mail.gmail.com>
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Sungbo Eo <mans0n@gorani.run>, Stefan Agner <stefan@agner.ch>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yash Shah <yash.shah@sifive.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-unisoc@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 7/8] arm64: dts: imx8mq-librem5: align GPIO hog names with dtschema
-Date:   Wed, 16 Sep 2020 18:22:49 +0200
-Message-Id: <20200916162250.16098-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200916162250.16098-1-krzk@kernel.org>
-References: <20200916162250.16098-1-krzk@kernel.org>
+Date:   Wed, 16 Sep 2020 13:56:02 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeSVEU-O_vgkJpCq-zt_DzP5b-1+GvqshvGyK2ChBuyTA@mail.gmail.com>
+Message-ID: <CAJKOXPeSVEU-O_vgkJpCq-zt_DzP5b-1+GvqshvGyK2ChBuyTA@mail.gmail.com>
+Subject: Re: [GIT PULL] dt-bindings: gpio: fsl-imx-gpio: Cleanup for v5.10
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-dtschema expects GPIO hogs to end with 'hog' prefix.
+On Sat, 12 Sep 2020 at 11:40, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Sep 4, 2020 at 5:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > These were on the list for some time. They got review from Rob so I guess they
+> > are good to go via subsystem tree.
+>
+> Pulled in to my devel branch, thanks!
+>
+> Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> looks very, very good.
+>
+> One thing I was thinking of was to abstract out
+> gpio-common.yaml from these bindings as a start, since
+> you made the effort to even parse hogs properly.
+> That way others could benefit from the work.
+>
+> Do you want to do it or should I take a stab?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Linus,
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-index e4dedcb58f76..6cbcee2fb938 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-@@ -249,7 +249,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pmic_5v>;
- 
--	pmic-5v {
-+	pmic-5v-hog {
- 		gpio-hog;
- 		gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
- 		input;
--- 
-2.17.1
+I can prepare common bindings.
 
+Best regards,
+Krzysztof
