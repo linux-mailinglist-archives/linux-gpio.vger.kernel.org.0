@@ -2,137 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F12AA26B7A3
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 02:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D79CB26B992
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 03:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgIPA0v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Sep 2020 20:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgIOOH6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Sep 2020 10:07:58 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE804C0611BD
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 06:57:38 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d9so1994696pfd.3
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Sep 2020 06:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LfluhA8n5mrFmhkPdla64U4md3gVA1qS/Hh8gYPUDX0=;
-        b=ApdwLhZSa5nAvv6QP98OGAKTHjqjx/y0+YDwXA40mZcHDwkB1y/MhMKzAA+wcK/uN7
-         JaVSRXKQ+CGvAPCn57Hea7p+iPfx9rvZbvvyY0qv1izh9B2YtkK02cN+kzQlI3xygeLr
-         eVobC+qFRw8D7f3Ju09Gq+nphOVn0/w8U0Uds8r6J0ZHhzIE50q9LNjuFOIcy7GIGvyT
-         Iax6WLH1uYOYnzMhZoQF2sAp6bKjYIAO1NhBIwp960q+M8nVpBPIz2lQPix225PVHHF6
-         NQdpQZam2tc3gNRtzfouS9FnSZiAevVFAmWjTG4Bl6Mm6I46B18E5ndPvJBVpUO/kkfB
-         tLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LfluhA8n5mrFmhkPdla64U4md3gVA1qS/Hh8gYPUDX0=;
-        b=AdHooMvDrJNgTHxcHuVh56q5Cfn95rOP35swwRmAy7/W6uJlZu3whJKy4CViQddJE4
-         K+Tp1pRblPQuvrNljlz6e6HFtkWX/muuNll1aQV35R89JBcBbOy6Bu7jk+AlrAoGOHel
-         I5DAiSjCLlXzLIBPX54czFH1l31ml4Yo79B6MpEPlVjVXEGF70fgyNda9+FL5YVY1Sdd
-         zre7e7pUsAroMS90mxOYA2fvITYOMQCoKxxFhj31k7edTwTQxttb8MGrlD1E2D1E0mfH
-         bYnU98w7h7BGlRZXrOOnNsSO5ELP8qcjh5OuVG+zGLeXiLirfQfEREBrR+gCZMvNOL69
-         rqKg==
-X-Gm-Message-State: AOAM531+d0UGijxzBToHeRAyDq6YUpf7nwQaikMy7QP1At3bOOdB6lIR
-        +eY2F4UOCjCutWh+4egYrqE=
-X-Google-Smtp-Source: ABdhPJw2bkMhutKFnSzhtbqCkBNZbjH7MPE0OqPHZHWt9+ErPUNs7p0PMOj1wfm6EMUhN/C+PpmbLg==
-X-Received: by 2002:a63:36cc:: with SMTP id d195mr15219588pga.426.1600178258206;
-        Tue, 15 Sep 2020 06:57:38 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id ga3sm12625651pjb.18.2020.09.15.06.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 06:57:37 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 21:57:32 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Maxim Devaev <mdevaev@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] gpiomon loses events
-Message-ID: <20200915135732.GA100294@sol>
-References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
- <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
- <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
- <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
- <20200915004541.GC4138@sol>
- <20200915033428.GA14286@sol>
- <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
+        id S1726068AbgIPB7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Sep 2020 21:59:49 -0400
+Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:60673
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726039AbgIPB7r (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 15 Sep 2020 21:59:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QMiKC1/4COAkpDDu8UZjO1bS0IRVwDrJBaX/B6Ft2wofTLRSmrq3WnedcscBlohQz/Uq6cPkhR/pQVr8bJmXasMcmHoB5hBOKH7p/O2KKmrw17MKXp5A4ouEVVIXctRX4eZYtrFn7FYsg0pe5gIxgekO4cpYdVjSj6Fh++qP0QWuqtsi6rOduv05iHRsWTTDIhkL30kkZoloZ00J6+XVbwupLKadAVoCMnlGvzPbq+4rPlhXyfNk3u3x2QZj5la9JecbwjuMVt8Kicmk+rDMCzDysqWIi99ey5LwNqyOrH1wo3xShyB0PCVQKgyF/vNGlMMTk1evoNlbVMYgiVBhmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lYd3Nfm0xvH8cLfKe8vLFVLN/VjIja2JNJ2vmc1tuMg=;
+ b=ZfesPRNJVFaBAMUrgxA1fEdZe4ZY8S8ne9kscTEBkXDcrcAyZaqLQKsEzCtlxGb81S52Rf+cdNOpW2Idub5/8n2hUYrxHmkBihSv5udwcRv+sxu4SYePZSqreHOBfFgDQ8CLKFx6NgGeuJEN7gRBLWuU4G6Oo2NwbWiSGN4kIJbpZ/1Hpnq2Y54g1MAy3V9ZU0bSlK6Kv0MgsaLwKgfTeAG5VZ2B/LGSfz0Y//bA7u05VC6SGIphtFiSk6mUSxPI2fA78F983ngm/YxxNGIo15Q2HnyUiBTwnI0Ac7oJmMqJ+7YlkRZRQzX4R01FI9CIVpxvMBRe4knp+rNeIBEqZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lYd3Nfm0xvH8cLfKe8vLFVLN/VjIja2JNJ2vmc1tuMg=;
+ b=ELKiPFavKmD+VlTbGeXNiOyzGaa3lzBi369tnhF8oFMPmfm+x0oS2w6QCu8ml88neetASvAWDgwX5lUlygqLk50htjT/Nrzj9z6QYQw8Ft/KBemLnWPuLQF59e2hJYqPLd40nufdvXqnEBLjFamdlTUw8BDOsi3uE8z63CB9+C4=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DBAPR04MB7285.eurprd04.prod.outlook.com (2603:10a6:10:1ac::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 16 Sep
+ 2020 01:59:43 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d%3]) with mapi id 15.20.3370.019; Wed, 16 Sep 2020
+ 01:59:43 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "andreas@kemnade.info" <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "prabhakar.mahadev-lad.rj@bp.renesas.com" 
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "lkundrak@v3.sk" <lkundrak@v3.sk>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "michael@walle.cc" <michael@walle.cc>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 RESEND 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC
+ by default
+Thread-Topic: [PATCH V2 RESEND 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC
+ by default
+Thread-Index: AQHWikguwWoA8sP7f0aWUhuot9pwYalp3a6AgACmh7A=
+Date:   Wed, 16 Sep 2020 01:59:43 +0000
+Message-ID: <DB3PR0402MB39168692AC262B7BFA21D0C0F5210@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1600054147-29997-1-git-send-email-Anson.Huang@nxp.com>
+ <1600054147-29997-2-git-send-email-Anson.Huang@nxp.com>
+ <CAJKOXPfuz=vf9tCn8ZJ9dz2iAG_p61VvPWc9P=kp7nMy7tb6xw@mail.gmail.com>
+In-Reply-To: <CAJKOXPfuz=vf9tCn8ZJ9dz2iAG_p61VvPWc9P=kp7nMy7tb6xw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5bf267eb-15e9-480f-0e34-08d859e42e4e
+x-ms-traffictypediagnostic: DBAPR04MB7285:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBAPR04MB72850CA307B27B13288F7FB3F5210@DBAPR04MB7285.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n+XAGDNNwnvkV5DTrUKDo6jvBDktMTNxaCseff9L01abJDYJTlW7RZM/pXHvbw2pu0P2V/JJWbMQ7fE86Ne2RKIE1UPO/COY8d46USIjDfsgWBWw5o0vy4rFgDREbIvD0uYcW/a3DtjtNRA61Lhow0WD2ljsRwxX/avphDCM8714hI7dwvMQWZLU0b4kGf1XeLulLAlm/i61wR+z2T3N9AVvetluJNZnOlyWqN1EhRhZgNizSmPNhsMZ7X7SM0DcVVY5HTc6tFyxgHa1wTkKJcBunquCYzeHi2mojNMyZ/dH2qEMnmL/xa8gTNMawuYDw7sSk8I5BYUtC0SVbpCITxNoIDa/eMl17xchY4BeXKhIHuvcCPHbfkyqbdZi+AXZ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(186003)(26005)(4326008)(71200400001)(55016002)(52536014)(316002)(86362001)(8676002)(9686003)(8936002)(44832011)(6506007)(2906002)(54906003)(6916009)(4744005)(33656002)(5660300002)(478600001)(7696005)(7416002)(76116006)(66476007)(66556008)(66446008)(66946007)(64756008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: H3Yry0veduSoKFTnwwp4HND7ozafGMHSyP56tw+rf0BCNMYVg2bZbjLgPJM1F/+rQLEMeMIbD0CiaXkZd5CfVPnr7Fz8e8wmcdiZ2RCdY28TqNtteQ1FA37y4+PMLVNMMPK91nBuzMfnacf/285noY1EI+Dvv2IIQx5gReA+PRKC/w/WRgEBrN5d6AjtPWgWqspVVInf7yi/DlmBX839Y7a9+PwlaB4HwfThkVIbVtLzX41yNEhitmOmUbclyGepuybCz3YITevXc1kU7Grhh0HVoia9d7Geib3Z94r/sE6PJRDQvGWRgE5CE19SThCAmmlL1w33DvKdWCMQ4o8K08vIAS7d7ViZgfLVyyNQTXq5wAA4fe5CSefc/A3JgJl5ySXJxX9wjYfXNYN6zH5jDDfFjfI+8iUCQ37vj7qY8JlXy0p6X4swzHx+Avzp3RSTaCywF1tfCfDg4GYpPyh3JAr3KDe0FjIbUOYvr7vskCjPxG2YWiEfklRCQD7xugTYljqNGHUovJsGSR3yVomGtP+c3BKaH91xD/CgkhoiCMWTuqv3t8VHBgNQ85ADqONxWb1bSRxWYnJgkH7r0Xbh3UeWVdlx1rBsqfjF/xSKvF4rxQLW/LVsVH8qgzVkumhLsq2hBJUHjXeWjifb+81jkA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bf267eb-15e9-480f-0e34-08d859e42e4e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2020 01:59:43.5659
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PYU3hCUVfTBxeV6UH+13vWOeRm4a5Rd2oB8FoLZ1RtrmD4v2Jyt5VtJGQ49xhNmVwb6Riw2tksVieYLHLFiECQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7285
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 10:34:31AM +0300, Maxim Devaev wrote:
-> > The bug was introduced in libgpiod v1.5 so, depending on your
-> > circumstances, I would revert to an earlier libgpiod or apply my patch.
-> > ...
-> 
-> Is this behavior documented somewhere? It's a complete surprise to me
-> that this is how it works. I expected to lose the old events. It seems
-> to me that for software that catches edge, the loss of new events is a
-> serious problem, since it can lead to a desynchronization of the
-> physical state of the pin and the user's information about it. For
-> example, if event 16 was falling and event 17 was rising, and the
-> signal stopped changing and remains at 1, the kernel will tell us that
-> it was only falling (i.e. 0), while the real state will be 1.
-> 
-> If we lose events in any case, then in my opinion it is much more
-> important to keep the current state, not the past. I can't think of a
-> case where the loss of old events can lead to problems, but the
-> desynchronization of the current state actually means that the
-> software can make the wrong decision in its logic based on the
-> driver's lies. Yes, this would be a breaking change, but it seems to
-> me that it is the current behavior that is incorrect. Don't get me
-> wrong, I don't insist on it. If this decision was made for certain
-> reasons, I would like to understand where I am wrong.
-> 
-
-I agree - it makes more sense to discard the older events.
-The existing behaviour pre-dates me, so I'm not sure if it is
-intentional and if so what the rationale for it is.
-
-And I'm still trying to think of a case where it would be harmful to
-change this behaviour - what could it break?
-
-> I see a specific workaround and for this behavior, when the read
-> timeout occurs, I can re-read the batch of all lines to check if the
-> state has changed. But it partially makes it meaningless to wait for
-> events. I still have to manually check if anything is lost or if the
-> driver has started lying to me. Here the example:
-> https://github.com/pikvm/kvmd/blob/7cdf597/kvmd/aiogp.py#L102
-> 
-> The fact is that after reading the presentation from Bartosz
-> Golaszewski and seeing the line "Events never get lost!", I was
-> impressed and satisfied, but the situation was not so happy:
-> https://ostconf.com/system/attachments/files/000/001/532/original/Linux_Piter_2018_-_New_GPIO_interface_for_linux_userspace.pdf?1541021776
-> 
-
-To be fair, the slide in question is comparing SYSFS with CDEV.
-With the SYSFS API it is impossible to queue events in the kernel.
-CDEV can provide a queue, it is even in the slide, but all queues
-are finite and so can only help iron out bursts - they aren't magic.
-On average you need to be able to service the events at the rate
-they are arriving or the queue will eventually overflow.
-
-> BTW what about unpaired falling-rising events? Is this how it should be?
-> 
-
-If you are losing events then this is what you will get.
-No attempt is made in the kernel or libgpiod to keep rising and falling
-events paired (until debounce support in GPIO CDEV uAPI v2 arrives).
-
-What is your use case?  Are you seeing these problems in practice or
-only because you are generating events faster than you service them
-for testing?
-
-Cheers,
-Kent.
+SGksIEtyenlzenRvZg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjIgUkVTRU5EIDIvNF0gYXJt
+NjQ6IGRlZmNvbmZpZzogQnVpbGQgaW4NCj4gQ09ORklHX0dQSU9fTVhDIGJ5IGRlZmF1bHQNCj4g
+DQo+IE9uIE1vbiwgMTQgU2VwIDIwMjAgYXQgMDU6MzYsIEFuc29uIEh1YW5nIDxBbnNvbi5IdWFu
+Z0BueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IGkuTVggR1BJTyBpcyBOT1QgZGVmYXVsdCBl
+bmFibGVkIG5vdywgc28gc2VsZWN0IENPTkZJR19HUElPX01YQyBhcw0KPiA+IGJ1aWx0LWluIG1h
+bnVhbGx5Lg0KPiANCj4gTWF5YmUgaXQgc2hvdWxkIHN0YXkgbm90IGVuYWJsZWQ/IFBsZWFzZSBl
+eHBsYWluIGluIGNvbW1pdCBtc2cgd2h5IGl0IHNob3VsZA0KPiBiZSBlbmFibGVkLg0KDQpUaGUg
+Q09ORklHX0dQSU9fTVhDIGlzIG5lY2Vzc2FyeSBmb3IgYWxsIHRoZSBpLk1YIFNvQ3MsIGFzIGl0
+IHByb3ZpZGVzIHRoZSBiYXNpYw0KZnVuY3Rpb24gb2YgR1BJTyBwaW4gb3BlcmF0aW9ucyBhbmQg
+SVJRIG9wZXJhdGlvbnMsIGl0IGlzIGVuYWJsZWQgYnkgZGVmYXVsdCBwcmV2aW91c2x5DQp3aXRo
+ICIgZGVmX2Jvb2wgeSAiIGluIEtjb25maWcsIG5vdyBpdCBpcyBjaGFuZ2VkIHRvIHRyaXN0YXRl
+LCBzbyBpdCBzaG91bGQgYmUgZXhwbGljaXRseQ0KZW5hYmxlZCBpbiBkZWZjb25maWcgdG8gbWFr
+ZSBzdXJlIGl0IGRvZXMgTk9UIGJyZWFrIGFueSBleGlzdGluZyBmdW5jdGlvbnMsIHRoYXQgaXMN
+CndoeSBJIGxpc3QgIiBpLk1YIEdQSU8gaXMgTk9UIGRlZmF1bHQgZW5hYmxlZCBub3csIHNvIHNl
+bGVjdCBDT05GSUdfR1BJT19NWEMgYXMgDQpidWlsdC1pbiBtYW51YWxseSAiIGluIGNvbW1pdCBt
+c2csIGl0IGFpbXMgdG8gTk9UIGNoYW5nZSBhbnkgcHJldmlvdXMgYmVoYXZpb3JzLg0KDQp0aGFu
+a3MsDQpBbnNvbg0K
