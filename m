@@ -2,110 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8125726CCB3
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:48:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5572026CC8A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:46:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgIPUs0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 16:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgIPRBO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 13:01:14 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF971C0A889C;
-        Wed, 16 Sep 2020 05:59:39 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id q13so10168371ejo.9;
-        Wed, 16 Sep 2020 05:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LykIIjwDcAPlXpe116USPIGPMiw/gn67hYo/dfyuguc=;
-        b=EPYT+N9pg6qQsR2GbJfFotejWklLP0rj8JOmihomV/mb/ET2IEoPdf9F4gI260Q6pj
-         iW2YjRFunmacaut439pkVKHTb+K+Bsfgb2WE2cjgiPCtLqcMDAXtvxiDRJpPmxJuaRNl
-         5RtTN7wxPptFnpPRrBOa9emhchndttrJkFwoo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LykIIjwDcAPlXpe116USPIGPMiw/gn67hYo/dfyuguc=;
-        b=iWTUj6Af7xMVhg4CvCSJcN+MkfYtsQCWa8bx5QcJ+aJ3u5aXSUyMH7CQ+INn2jFAy5
-         0HgVeeJHtWL11L0MqWBfaV6LtH5o0n9uZCRKxc5Pdm9zA0n8MYZtQ9cZTXMBjo1grP1X
-         raHfUCJKi1fHJNgAVU7VHhFSM37h1i/MtVmRWLruRyb0+SuM0kSI01WqbUZ8IQyt5tKS
-         519nNr+DufBtcxSgckg7I/FgYaDt9y2rJ6/kcCU5+N/LFSa3a/p2ywiP6wDrWIqw1wap
-         hqtI4reV7Z0RkunA4AqXlgD5/WNOJIH/AV9jsCL2d5ZkrOfhVrekHU8nqC/PkHPI72y8
-         iWoA==
-X-Gm-Message-State: AOAM530mQbi0sekm+4WqvuadKrQAYWIDo/Adtgl4Cq9tCgeZdvruIRCJ
-        GeWIDrvTSg5rGh5rIxnEd4a+7ilNq2lEoeBGGQg=
-X-Google-Smtp-Source: ABdhPJwrELSEtB2NvnOU4b9otvda3Yi7Dh3dlIzm9DOmSAaqun5cjYIE1611v65fJhzN7mxe3uxa4apYV9musqXRShk=
-X-Received: by 2002:a17:906:fcc7:: with SMTP id qx7mr26579286ejb.254.1600261178452;
- Wed, 16 Sep 2020 05:59:38 -0700 (PDT)
+        id S1726501AbgIPUpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 16:45:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21603 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbgIPRDY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:03:24 -0400
+IronPort-SDR: 0S+lRSoIFN1hNt1uyl4BizDuBXwzBRsTUFIYFjCPa6ZXIJ0Dbka/0/aZ+Bcf6hFu5QN4F5Xbd4
+ sl440QxVMHAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="159522952"
+X-IronPort-AV: E=Sophos;i="5.76,433,1592895600"; 
+   d="scan'208";a="159522952"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2020 07:29:37 -0700
+IronPort-SDR: JLxWPzmpU6s9li6Ml4Q2lqYdMMIDVcaFdVWu1zenXIZs0Q9diPfrJ+nt76t3ZcgyCOsIBZl8YS
+ vfwsGEKSfZpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,433,1592895600"; 
+   d="scan'208";a="336040902"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 16 Sep 2020 07:29:33 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kIYR8-00H6Ky-0Q; Wed, 16 Sep 2020 17:29:30 +0300
+Date:   Wed, 16 Sep 2020 17:29:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH next] gpiolib: check for parent device in
+ devprop_gpiochip_set_names()
+Message-ID: <20200916142930.GK3956970@smile.fi.intel.com>
+References: <20200916134327.3435-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20200911015105.48581-1-jk@codeconstruct.com.au>
- <CACPK8XdCkw7ix2J9WyOXDcwsMThXwQ62=E6cDLX+-9WJMsqrnA@mail.gmail.com>
- <CACPK8XeQWNTyS53M9PLwkud9RnGNp3j87X8_UXtg4ZHJrQqQSQ@mail.gmail.com> <CAMpxmJW+PMV1+q66ywEAiZhrOu+kiSPXQCK0mTGLLwW-yfisSg@mail.gmail.com>
-In-Reply-To: <CAMpxmJW+PMV1+q66ywEAiZhrOu+kiSPXQCK0mTGLLwW-yfisSg@mail.gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 16 Sep 2020 12:59:26 +0000
-Message-ID: <CACPK8Xcqu3UN3o=9pZ269O6pxLOra98jYxZqVL7sfjkUZ4Wang@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio/aspeed-sgpio: enable access to all 80 input &
- output sgpios
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Jeremy Kerr <jk@codeconstruct.com.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200916134327.3435-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 16 Sep 2020 at 11:09, Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> On Wed, Sep 16, 2020 at 6:51 AM Joel Stanley <joel@jms.id.au> wrote:
-> >
-> > Hi GPIO maintainers,
-> >
-> > On Fri, 11 Sep 2020 at 02:20, Joel Stanley <joel@jms.id.au> wrote:
-> > >
-> > > On Fri, 11 Sep 2020 at 02:11, Jeremy Kerr <jk@codeconstruct.com.au> wrote:
-> > > >
-> > > > Currently, the aspeed-sgpio driver exposes up to 80 GPIO lines,
-> > > > corresponding to the 80 status bits available in hardware. Each of these
-> > > > lines can be configured as either an input or an output.
-> > > >
-> > > > However, each of these GPIOs is actually an input *and* an output; we
-> > > > actually have 80 inputs plus 80 outputs.
-> > > >
-> > > > This change expands the maximum number of GPIOs to 160; the lower half
-> > > > of this range are the input-only GPIOs, the upper half are the outputs.
-> > > > We fix the GPIO directions to correspond to this mapping.
-> > > >
-> > > > This also fixes a bug when setting GPIOs - we were reading from the
-> > > > input register, making it impossible to set more than one output GPIO.
-> > > >
-> > > > Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
-> > > > Fixes: 7db47faae79b ("gpio: aspeed: Add SGPIO driver")
-> > >
-> > > Reviewed-by: Joel Stanley <joel@jms.id.au>
-> >
-> > This series is good to go in for 5.10:
-> >
->
-> Hi Joel,
->
-> I don't have this in my inbox. Did you copy me on this series?
+On Wed, Sep 16, 2020 at 03:43:27PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> It's possible for a GPIO chip to not have a parent device (whose
+> properties we inspect for 'gpio-line-names'). In this case we should
+> simply return from devprop_gpiochip_set_names(). Add an appropriate
+> check for this use-case.
 
-I did not; I am not the author of the patches as you can see.
+Ah, nice!
+Can we also add a small comment in the code, b/c w/o it I would stumble over
+and eager to remove looks-as-unneeded check?
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I notice that Jeremy sent them to the linux-gpio list, but you were
-not copied. Are you able to grab them from lore, or do you need him to
-resend them?
+> Fixes: 7cba1a4d5e16 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index b7b608ef9..ac2c77edc 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -375,6 +375,9 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  	int ret, i;
+>  	int count;
+>  
+> +	if (!dev)
+> +		return 0;
+> +
+>  	count = device_property_string_array_count(dev, "gpio-line-names");
+>  	if (count < 0)
+>  		return 0;
+> -- 
+> 2.26.1
+> 
 
-Cheers,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Joel
+
