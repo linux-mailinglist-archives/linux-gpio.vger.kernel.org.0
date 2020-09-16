@@ -2,106 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8CA026BC1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 08:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 195F126C085
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 11:29:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgIPGEE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 02:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgIPGEE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Sep 2020 02:04:04 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257AB2220E;
-        Wed, 16 Sep 2020 06:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600236243;
-        bh=MGLUFXU7bgEiOq2QwCLtokuXU6KQpofMXm9tQrG1+AA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xu9fAoLMxR+Sbne3nolGsptpoYBDPw5I5CfHKOMDdMWT0Fz/JyJVq6/ylx7FJzdOf
-         x4/Kf10phhEzTQnup4DRMwW21ZWts2uITWbwa7Gj4pcZZB3kCEofefRTFqVTvzCZgB
-         L02kMFOYEVDi3qDPM8ksi9I9Ys65VVf7t7YZO/r4=
-Received: by mail-ed1-f46.google.com with SMTP id n22so5050347edt.4;
-        Tue, 15 Sep 2020 23:04:03 -0700 (PDT)
-X-Gm-Message-State: AOAM531B78Ia81StDogJYBq46fGvzRYnpYrPLmsX+50GHNX/zSGjj7B+
-        wr+pSELRIO6KagrAHVA9NlNUC7EjbXLCuF8D80Q=
-X-Google-Smtp-Source: ABdhPJzf7bf8D+dhy3zqQalV6k7pR+DsnqPe6uDFJBoNyVs7vkIF4YE5WM1N/PIcrsuSHlEipJiegQiLr568kZELN94=
-X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr25423402edb.143.1600236241549;
- Tue, 15 Sep 2020 23:04:01 -0700 (PDT)
+        id S1726149AbgIPJ3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 05:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgIPJ3M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 05:29:12 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4ABC06174A
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 02:29:11 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id r9so7524422ioa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 02:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ssWXm/aAzV/mWSDAwgcxBk2bNFE2yr8MdoFQtlOyi4=;
+        b=n3drZwnKQRG5RCudBJtkgTc0pqjeCdXlpcMzdPQhFdWVbJyt20MULtbbvNm84rrdz2
+         LcGRyuSls5+sSz5kUot+QRL31IQlBjTTQPNfqv/YXIQIOG71SHa4AghALgmLuOt2x26/
+         xQ6T6sw3R2Gwgz2lnwRsScibQJB3qFQxWbc49JyWfU2gZ3WJ00yxyO5KB6jTaFgotK6j
+         uS4yQ2w0sjlY/MI0n97nJ0x7njosDmcVfAE2UBxMNIJBLkzqTHdXe52GUh/oSkjVbGDR
+         BY2LbWPb+Z+gHc9zUgdaVvcNF4+UttJtaPktlrxTMLPQ0giRZqql7xsuhb0g4C+aNrWZ
+         0lyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4ssWXm/aAzV/mWSDAwgcxBk2bNFE2yr8MdoFQtlOyi4=;
+        b=MBEowxNX5xrGpQjqOBQ5TDTTfsjKWNPQSwlQ7dmLTdnU4jHiPZAujkbKn3TZRF3DZI
+         X4BvcITS6mrcqdq437qfB5aj378F2YMgWc+NaKcmRQ28wyteapa6YPlUyTxLsM0jOsfj
+         E++daVAscoYYAzl0xfbKQUwucPyt0zXUeqhcElRB2Czt1RBysKSeBoyfSpuLVDvTkt7a
+         DH9E17MmoS+owHwRP8zGiKVF/b01DuSt89StzfRSFV9xAcnf2e2iskQ9ypqUWXF2Me2s
+         xWPliKclyCJE8+aAPbmiNP6K5ShpAAsur+iEcMhgfon024R92iPxeNkC4RzXEL5yt2kc
+         9H8A==
+X-Gm-Message-State: AOAM533GUd2B0X0ztKNajfgevXSpepR/01HDp6rY6ZdwaqFZGxXx/MLE
+        LEAe6YoBoSStYAOBTtLcKPPiDCANh2jStlZtko1++g==
+X-Google-Smtp-Source: ABdhPJyIfBgL7SXFrkw72pt16Jrvmlo3b1fEehyUBORfOfvMXEzQ7rqwJ48TSOLhDf7jFIXA3KmHgNOC3GDBM6Gr99g=
+X-Received: by 2002:a5e:dc08:: with SMTP id b8mr18370429iok.13.1600248550690;
+ Wed, 16 Sep 2020 02:29:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1600054147-29997-1-git-send-email-Anson.Huang@nxp.com>
- <1600054147-29997-2-git-send-email-Anson.Huang@nxp.com> <CAJKOXPfuz=vf9tCn8ZJ9dz2iAG_p61VvPWc9P=kp7nMy7tb6xw@mail.gmail.com>
- <DB3PR0402MB39168692AC262B7BFA21D0C0F5210@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39168692AC262B7BFA21D0C0F5210@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 16 Sep 2020 08:03:49 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd-VZAOcezOS5-18te6OQZ53BU24su3WmAf+=Gtt8aBtw@mail.gmail.com>
-Message-ID: <CAJKOXPd-VZAOcezOS5-18te6OQZ53BU24su3WmAf+=Gtt8aBtw@mail.gmail.com>
-Subject: Re: [PATCH V2 RESEND 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC
- by default
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "andreas@kemnade.info" <andreas@kemnade.info>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "prabhakar.mahadev-lad.rj@bp.renesas.com" 
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "lkundrak@v3.sk" <lkundrak@v3.sk>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "michael@walle.cc" <michael@walle.cc>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
+ <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
+ <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
+ <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
+ <20200915004541.GC4138@sol> <20200915033428.GA14286@sol> <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
+ <20200915135732.GA100294@sol>
+In-Reply-To: <20200915135732.GA100294@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 16 Sep 2020 11:29:00 +0200
+Message-ID: <CAMRc=MdbZh2CE3BXg0gg6CJxMGonvUN=yFc4kjXjUnkduwJgpA@mail.gmail.com>
+Subject: Re: [libgpiod] gpiomon loses events
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Maxim Devaev <mdevaev@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 16 Sep 2020 at 03:59, Anson Huang <anson.huang@nxp.com> wrote:
+On Wed, Sep 16, 2020 at 2:27 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Hi, Krzysztof
->
-> > Subject: Re: [PATCH V2 RESEND 2/4] arm64: defconfig: Build in
-> > CONFIG_GPIO_MXC by default
+> On Tue, Sep 15, 2020 at 10:34:31AM +0300, Maxim Devaev wrote:
+> > > The bug was introduced in libgpiod v1.5 so, depending on your
+> > > circumstances, I would revert to an earlier libgpiod or apply my patch.
+> > > ...
 > >
-> > On Mon, 14 Sep 2020 at 05:36, Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> > >
-> > > i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC as
-> > > built-in manually.
+> > Is this behavior documented somewhere? It's a complete surprise to me
+> > that this is how it works. I expected to lose the old events. It seems
+> > to me that for software that catches edge, the loss of new events is a
+> > serious problem, since it can lead to a desynchronization of the
+> > physical state of the pin and the user's information about it. For
+> > example, if event 16 was falling and event 17 was rising, and the
+> > signal stopped changing and remains at 1, the kernel will tell us that
+> > it was only falling (i.e. 0), while the real state will be 1.
 > >
-> > Maybe it should stay not enabled? Please explain in commit msg why it should
-> > be enabled.
+> > If we lose events in any case, then in my opinion it is much more
+> > important to keep the current state, not the past. I can't think of a
+> > case where the loss of old events can lead to problems, but the
+> > desynchronization of the current state actually means that the
+> > software can make the wrong decision in its logic based on the
+> > driver's lies. Yes, this would be a breaking change, but it seems to
+> > me that it is the current behavior that is incorrect. Don't get me
+> > wrong, I don't insist on it. If this decision was made for certain
+> > reasons, I would like to understand where I am wrong.
+> >
 >
-> The CONFIG_GPIO_MXC is necessary for all the i.MX SoCs, as it provides the basic
-> function of GPIO pin operations and IRQ operations, it is enabled by default previously
-> with " def_bool y " in Kconfig, now it is changed to tristate, so it should be explicitly
-> enabled in defconfig to make sure it does NOT break any existing functions, that is
-> why I list " i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC as
-> built-in manually " in commit msg, it aims to NOT change any previous behaviors.
+> I agree - it makes more sense to discard the older events.
+> The existing behaviour pre-dates me, so I'm not sure if it is
+> intentional and if so what the rationale for it is.
+>
 
-Sure, I was just saying that all this should be in commit msg. The
-commit should explain why it is there in the Linux kernel.
+While it predates me too (Linus: any particular reason to do it like
+this?) I think that requesting events from user-space is a contract
+where the user-space program commits to reading the events fast enough
+to avoid this kind of overflow. In V2 we can adjust the size of the
+queue to make it bigger if the process isn't capable of consuming all
+the data as they come.
 
-Best regards,
-Krzysztof
+> And I'm still trying to think of a case where it would be harmful to
+> change this behaviour - what could it break?
+>
+
+Well, I wouldn't change it in V1 but since V2 is a new thing - I think
+it should be relatively straightforward right? If we see the kfifo is
+full, we should simply consume the oldest event on the kernel side,
+drop it and add in the new one. Maybe worth considering for v9? I
+don't see any cons of this and this behavior is quite reasonable.
+
+[snip]
+
+Bartosz
