@@ -2,99 +2,259 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B09EB26CB36
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7356E26CB63
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:26:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgIPUYS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 16:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgIPR2V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 13:28:21 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89351C014AB4
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 06:30:10 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id e2so4008900vsr.7
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 06:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2ZiMEy//1kayA505gPczbbN35iqby1CxZE5VK4t65mE=;
-        b=P+7V4bFUf/RvjRpWfeP0Q4K/T92HZyPjcVMWkmfGy57XXUfRJKnm1EGaEcP5cRrl7p
-         Vhi4lQHLZ1gtEfPyzRIkaQr7wrvN0paQCK7DUr4relNqRTPL0FBHzXIuSuVK7O7hhfjs
-         dAb9yJZAU+pLPFk5XCPwa0SeyGaNYVIb7hD2ism9V/CEklXP+joCcO4HTKedEr+eazu4
-         SgXo3wOlXCgn/qlBQVaMnCCgle7zOtPkF4/9FZWQRza3iwMHSPGXcd8N693DeGnFcVz0
-         CimWVVGuBiRlsBsUnlKtmIu/gj0nxYxqH4ZGwjnYvK9oBKmzHKrVFJQWKaFYY16dESS7
-         I1Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2ZiMEy//1kayA505gPczbbN35iqby1CxZE5VK4t65mE=;
-        b=r2AzPsTWLi4lhGH4c6xDeRDGbdlX3dEhLerXB4FWIn8AT8heDcAAYuTciQpQLKlKNs
-         /XgNcMODfWIBluwnHruKzCepJEkeR8O+6MwbUVrWcIgidFCH7ZZj88YtxTubp2lEh67D
-         5eLd1/JQNHS5biENi0ppHyqjq5cpUmI7bXlqceyuUAW2rySvkA5+JTUrz+Nb1A+Hpm2y
-         MFp3k3zMmcwVs7PB1Log85B+JA32duvG0FB2brISdK9TCyIIF84wLT+qdJea/B7GjoQQ
-         TbmSNdwQBMfyeG09WPYWTfYabB0F30GvBj1CB/VgOwqqOwIwSw29YGRI5DgBs9yP4OBo
-         Yo5Q==
-X-Gm-Message-State: AOAM530hAsjDPlHtCdiva8AHGeLeB5nKM1Na3yidjqT05mb00nV9wyG5
-        5uwAd8H5wi8wvFaOBCtpQ7CBDB39WLs6gk+ZCNaiBw==
-X-Google-Smtp-Source: ABdhPJwGKLu0z/dTDqySAlqgfg7vIw00CAxMAF/n/hdDKH4w89Jgg8+PYleCXBvx1Bvv7Pek2lkAhCyQonJy7yX90Kg=
-X-Received: by 2002:a67:e290:: with SMTP id g16mr4591851vsf.56.1600263009036;
- Wed, 16 Sep 2020 06:30:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200908125813.8809-1-brgl@bgdev.pl> <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
-In-Reply-To: <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 16 Sep 2020 15:29:58 +0200
-Message-ID: <CAMRc=MdNxxAHQK5i4rZo3d4iy5JNco-f0V-UzVNTTJQyH6AZpA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpiolib: generalize GPIO line names property
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        id S1727030AbgIPRZo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 13:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgIPRZj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:25:39 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5BFB22460;
+        Wed, 16 Sep 2020 15:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600271868;
+        bh=IpUA1YpWh0wI7RetTzNFsnK0XI+RNJOmSBKVyk8TOyk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dnjarl1Mkj44TfaBpH+SbO0/ZBka4oqzYlABRKXYK9QwKLlXitkLzN/kNScYQADa0
+         apoFByFfMbG45blXE6lsQSK4wVLTnCZIshKu0+FBiLJ+QUxVm6T6YknUyzMMjvv/H6
+         +pXt3lzsHjj0WYmmx2l34T8wzleiUSvPuHxVImXY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 02/15] dt-bindings: gpio: convert bindings for Maxim MAX732x family to dtschema
+Date:   Wed, 16 Sep 2020 17:57:02 +0200
+Message-Id: <20200916155715.21009-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200916155715.21009-1-krzk@kernel.org>
+References: <20200916155715.21009-1-krzk@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 2:02 PM Anders Roxell <anders.roxell@linaro.org> wrote:
->
-> On Tue, 8 Sep 2020 at 18:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > I initially sent this as part of the gpio-mockup overhaul but since
-> > these patches are indepentent and the work on gpio-mockup may become
-> > more complicated - I'm sending these separately.
-> >
-> > The only change is adding additional property helpers to count strings
-> > in array.
-> >
-> > Bartosz Golaszewski (3):
-> >   device: property: add helpers to count items in string arrays
-> >   gpiolib: generalize devprop_gpiochip_set_names() for device properties
-> >   gpiolib: unexport devprop_gpiochip_set_names()
->
-> I do an arm64 allmodconfig build fron linux-next (tag: next-20200915) and
-> run that in qemu. When I run I see the following output (see full log [1]):
-> "BUG: KASAN: null-ptr-deref in device_property_read_string_array".
->
->
+Convert the Maxim MAX732x family of GPIO expanders bindings to device
+tree schema by merging it with existing PCA95xx schema.  These are quite
+similar so merging reduces duplication.
 
-FYI: this fails because someone passes a NULL struct device * to
-dev_fwnode() - this is probably caused by some ordering issues in this
-patch. I'm working on it.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Bartosz
+---
+
+Changes since v2:
+1. Add Rob's review tag
+2. Use reset-gpios/vcc-supply: false instead of maxItems 0
+3. Use /* for comments in example DTS
+---
+ .../devicetree/bindings/gpio/gpio-max732x.txt | 58 ---------------
+ .../bindings/gpio/gpio-pca95xx.yaml           | 70 ++++++++++++++++++-
+ 2 files changed, 68 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+deleted file mode 100644
+index b3a9c0c32823..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
++++ /dev/null
+@@ -1,58 +0,0 @@
+-* MAX732x-compatible I/O expanders
+-
+-Required properties:
+-  - compatible: Should be one of the following:
+-    - "maxim,max7319": For the Maxim MAX7319
+-    - "maxim,max7320": For the Maxim MAX7320
+-    - "maxim,max7321": For the Maxim MAX7321
+-    - "maxim,max7322": For the Maxim MAX7322
+-    - "maxim,max7323": For the Maxim MAX7323
+-    - "maxim,max7324": For the Maxim MAX7324
+-    - "maxim,max7325": For the Maxim MAX7325
+-    - "maxim,max7326": For the Maxim MAX7326
+-    - "maxim,max7327": For the Maxim MAX7327
+-  - reg: I2C slave address for this device.
+-  - gpio-controller: Marks the device node as a GPIO controller.
+-  - #gpio-cells: Should be 2.
+-    - first cell is the GPIO number
+-    - second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+-      Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+-
+-Optional properties:
+-
+-  The I/O expander can detect input state changes, and thus optionally act as
+-  an interrupt controller. When the expander interrupt line is connected all the
+-  following properties must be set. For more information please see the
+-  interrupt controller device tree bindings documentation available at
+-  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
+-
+-  - interrupt-controller: Identifies the node as an interrupt controller.
+-  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
+-    - first cell is the pin number
+-    - second cell is used to specify flags
+-  - interrupts: Interrupt specifier for the controllers interrupt.
+-
+-Please refer to gpio.txt in this directory for details of the common GPIO
+-bindings used by client devices.
+-
+-Example 1. MAX7325 with interrupt support enabled (CONFIG_GPIO_MAX732X_IRQ=y):
+-
+-	expander: max7325@6d {
+-		compatible = "maxim,max7325";
+-		reg = <0x6d>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupt-parent = <&gpio4>;
+-		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+-	};
+-
+-Example 2. MAX7325 with interrupt support disabled (CONFIG_GPIO_MAX732X_IRQ=n):
+-
+-	expander: max7325@6d {
+-		compatible = "maxim,max7325";
+-		reg = <0x6d>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+index 7ff6efadf797..183ec23eda39 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+@@ -9,6 +9,10 @@ title: NXP PCA95xx I2C GPIO multiplexer
+ maintainers:
+   - Krzysztof Kozlowski <krzk@kernel.org>
+ 
++description: |+
++  Bindings for the family of I2C GPIO multiplexers/expanders: NXP PCA95xx,
++  Maxim MAX73xx
++
+ properties:
+   compatible:
+     enum:
+@@ -17,6 +21,15 @@ properties:
+       - maxim,max7312
+       - maxim,max7313
+       - maxim,max7315
++      - maxim,max7319
++      - maxim,max7320
++      - maxim,max7321
++      - maxim,max7322
++      - maxim,max7323
++      - maxim,max7324
++      - maxim,max7325
++      - maxim,max7326
++      - maxim,max7327
+       - nxp,pca6416
+       - nxp,pca9505
+       - nxp,pca9534
+@@ -69,11 +82,11 @@ properties:
+   reset-gpios:
+     description:
+       GPIO specification for the RESET input. This is an active low signal to
+-      the PCA953x.
++      the PCA953x.  Not valid for Maxim MAX732x devices.
+ 
+   vcc-supply:
+     description:
+-      Optional power supply
++      Optional power supply.  Not valid for Maxim MAX732x devices.
+ 
+   wakeup-source:
+     $ref: /schemas/types.yaml#/definitions/flag
+@@ -103,6 +116,25 @@ required:
+ 
+ additionalProperties: false
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - maxim,max7320
++              - maxim,max7321
++              - maxim,max7322
++              - maxim,max7323
++              - maxim,max7324
++              - maxim,max7325
++              - maxim,max7326
++              - maxim,max7327
++    then:
++      properties:
++        reset-gpios: false
++        vcc-supply: false
++
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
+@@ -164,3 +196,37 @@ examples:
+             ti,micbias = <0>; /* 2.1V */
+         };
+     };
++
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c2 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        /* MAX7325 with interrupt support enabled */
++        gpio@6d {
++            compatible = "maxim,max7325";
++            reg = <0x6d>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            interrupt-controller;
++            #interrupt-cells = <2>;
++            interrupt-parent = <&gpio4>;
++            interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
++        };
++    };
++
++  - |
++    i2c3 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        /* MAX7325 with interrupt support disabled */
++        gpio@6e {
++            compatible = "maxim,max7325";
++            reg = <0x6e>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
+-- 
+2.17.1
+
