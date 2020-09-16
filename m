@@ -2,85 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 154DF26C8CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 20:58:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B09EB26CB36
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbgIPS6F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 14:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
+        id S1727191AbgIPUYS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 16:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727629AbgIPRxA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 13:53:00 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99157C0005BE
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 07:47:36 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id r25so8605649ioj.0
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 07:47:36 -0700 (PDT)
+        with ESMTP id S1726961AbgIPR2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 13:28:21 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89351C014AB4
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 06:30:10 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id e2so4008900vsr.7
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 06:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E5pF9lMmeVoSBJb8mSB6mFtIhSuvd8nIA3BqMoC/eWU=;
-        b=SFRo8QQjxsU7yKkA+RZc0YVot3GIsc/FRsrK3XDE3VFi72Otyyfa37isT95eY/1wtq
-         MFTg0QpHqZRFvTRFDlrFiSP3PwPeoA+vQWykjFHhcOa6Pt45+MOdLiZIGiWfr/0bBR55
-         x6zoBu/4a/uCc2h1Qtdet7tGyDJj6X4suctDKC1q2H1gyhukKXJsDMdlzeuOkJTB1cz5
-         NgQ9SfBmbOhIO95vCjqaG5gyoMA2Y5IDj/Ozp7HLnsrr9GeFkW84RSVFeycVMOw3jqL1
-         QzlgXVHjwg6JEJ3b7wBa/bDvc3fOnW4NMEdYxIAk4e9E5IXvJM2BaUO/KoEw/9ZXqGVM
-         dxvA==
+        bh=2ZiMEy//1kayA505gPczbbN35iqby1CxZE5VK4t65mE=;
+        b=P+7V4bFUf/RvjRpWfeP0Q4K/T92HZyPjcVMWkmfGy57XXUfRJKnm1EGaEcP5cRrl7p
+         Vhi4lQHLZ1gtEfPyzRIkaQr7wrvN0paQCK7DUr4relNqRTPL0FBHzXIuSuVK7O7hhfjs
+         dAb9yJZAU+pLPFk5XCPwa0SeyGaNYVIb7hD2ism9V/CEklXP+joCcO4HTKedEr+eazu4
+         SgXo3wOlXCgn/qlBQVaMnCCgle7zOtPkF4/9FZWQRza3iwMHSPGXcd8N693DeGnFcVz0
+         CimWVVGuBiRlsBsUnlKtmIu/gj0nxYxqH4ZGwjnYvK9oBKmzHKrVFJQWKaFYY16dESS7
+         I1Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E5pF9lMmeVoSBJb8mSB6mFtIhSuvd8nIA3BqMoC/eWU=;
-        b=qTl4vwr1sR1XnvlzBYVQ/wySidsKOmCvRV7ttfcEjwP853AMjz5RQIktMYToosDddX
-         A2Ak+rnoqQJpP8FfV8nzTmbH82uw0YZPnynToWNI7HZM8MABs09961XZxC/2vRalMBDo
-         soMy8jEv11dO0gtj5kfPnZmYIvJoWFVVJmHg+RYKrJUnyMffqpWb6aPGacz8i/2TaDm9
-         htUP0qt/H+5TSVv51gzJ3sh5ZvG+Guv8Hs6QFWvvP7bvlt85Z5VCahO1MHnUqPX8JPjf
-         53KPppNMP6HifUiFWdMaufEhCrFybkJV5uafJNzdl7MGre1tBq/2E5YVyoa7gnpvT2+E
-         cBtw==
-X-Gm-Message-State: AOAM532Iy29174anEVbv3YKkOOc09MKDntDcVoRLTLdG0UnNAro3x8xM
-        sTj+rNbhm80tHms39wsnbqeopkIWjy2aY79Tz398Xw==
-X-Google-Smtp-Source: ABdhPJwCfgvVwRMe8qj05bW8NCAyHSJaBHEQTb4Zp/DlvR6q1kq3Dtj8xtOG1GNzb97HgQ8aIB/XjoMexxrp3seDKmM=
-X-Received: by 2002:a5e:dc08:: with SMTP id b8mr19358681iok.13.1600267655428;
- Wed, 16 Sep 2020 07:47:35 -0700 (PDT)
+        bh=2ZiMEy//1kayA505gPczbbN35iqby1CxZE5VK4t65mE=;
+        b=r2AzPsTWLi4lhGH4c6xDeRDGbdlX3dEhLerXB4FWIn8AT8heDcAAYuTciQpQLKlKNs
+         /XgNcMODfWIBluwnHruKzCepJEkeR8O+6MwbUVrWcIgidFCH7ZZj88YtxTubp2lEh67D
+         5eLd1/JQNHS5biENi0ppHyqjq5cpUmI7bXlqceyuUAW2rySvkA5+JTUrz+Nb1A+Hpm2y
+         MFp3k3zMmcwVs7PB1Log85B+JA32duvG0FB2brISdK9TCyIIF84wLT+qdJea/B7GjoQQ
+         TbmSNdwQBMfyeG09WPYWTfYabB0F30GvBj1CB/VgOwqqOwIwSw29YGRI5DgBs9yP4OBo
+         Yo5Q==
+X-Gm-Message-State: AOAM530hAsjDPlHtCdiva8AHGeLeB5nKM1Na3yidjqT05mb00nV9wyG5
+        5uwAd8H5wi8wvFaOBCtpQ7CBDB39WLs6gk+ZCNaiBw==
+X-Google-Smtp-Source: ABdhPJwGKLu0z/dTDqySAlqgfg7vIw00CAxMAF/n/hdDKH4w89Jgg8+PYleCXBvx1Bvv7Pek2lkAhCyQonJy7yX90Kg=
+X-Received: by 2002:a67:e290:: with SMTP id g16mr4591851vsf.56.1600263009036;
+ Wed, 16 Sep 2020 06:30:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200916134327.3435-1-brgl@bgdev.pl> <20200916142930.GK3956970@smile.fi.intel.com>
-In-Reply-To: <20200916142930.GK3956970@smile.fi.intel.com>
+References: <20200908125813.8809-1-brgl@bgdev.pl> <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
+In-Reply-To: <CADYN=9+3kHG0CexzZiMQoXdF2piN2ZhOTObhY=7VCKrnFVN0Kw@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 16 Sep 2020 16:47:24 +0200
-Message-ID: <CAMRc=Md5diJd+C2j_sHcZN5tM+r_W0Tz-naK1s=qd1bx-_g0Ng@mail.gmail.com>
-Subject: Re: [PATCH next] gpiolib: check for parent device in devprop_gpiochip_set_names()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed, 16 Sep 2020 15:29:58 +0200
+Message-ID: <CAMRc=MdNxxAHQK5i4rZo3d4iy5JNco-f0V-UzVNTTJQyH6AZpA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpiolib: generalize GPIO line names property
+To:     Anders Roxell <anders.roxell@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Kent Gibson <warthog618@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 4:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Sep 15, 2020 at 2:02 PM Anders Roxell <anders.roxell@linaro.org> wrote:
 >
-> On Wed, Sep 16, 2020 at 03:43:27PM +0200, Bartosz Golaszewski wrote:
+> On Tue, 8 Sep 2020 at 18:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
 > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> > It's possible for a GPIO chip to not have a parent device (whose
-> > properties we inspect for 'gpio-line-names'). In this case we should
-> > simply return from devprop_gpiochip_set_names(). Add an appropriate
-> > check for this use-case.
+> > I initially sent this as part of the gpio-mockup overhaul but since
+> > these patches are indepentent and the work on gpio-mockup may become
+> > more complicated - I'm sending these separately.
+> >
+> > The only change is adding additional property helpers to count strings
+> > in array.
+> >
+> > Bartosz Golaszewski (3):
+> >   device: property: add helpers to count items in string arrays
+> >   gpiolib: generalize devprop_gpiochip_set_names() for device properties
+> >   gpiolib: unexport devprop_gpiochip_set_names()
 >
-> Ah, nice!
-> Can we also add a small comment in the code, b/c w/o it I would stumble over
-> and eager to remove looks-as-unneeded check?
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> I do an arm64 allmodconfig build fron linux-next (tag: next-20200915) and
+> run that in qemu. When I run I see the following output (see full log [1]):
+> "BUG: KASAN: null-ptr-deref in device_property_read_string_array".
+>
+>
 
-Sure, I'll make a v2 then.
+FYI: this fails because someone passes a NULL struct device * to
+dev_fwnode() - this is probably caused by some ordering issues in this
+patch. I'm working on it.
 
-Bart
+Bartosz
