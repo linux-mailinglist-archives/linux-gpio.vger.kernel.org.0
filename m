@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7356E26CB63
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F78F26CB05
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 22:21:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgIPRZo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 13:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        id S1727170AbgIPUV0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 16:21:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgIPRZj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Sep 2020 13:25:39 -0400
+        id S1727160AbgIPRau (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 13:30:50 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5BFB22460;
-        Wed, 16 Sep 2020 15:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3B922464;
+        Wed, 16 Sep 2020 15:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600271868;
-        bh=IpUA1YpWh0wI7RetTzNFsnK0XI+RNJOmSBKVyk8TOyk=;
+        s=default; t=1600271894;
+        bh=wdAkw2TjM1udxEqqVOzxHnXaiuAOFMCD3JyJ0x6GXJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dnjarl1Mkj44TfaBpH+SbO0/ZBka4oqzYlABRKXYK9QwKLlXitkLzN/kNScYQADa0
-         apoFByFfMbG45blXE6lsQSK4wVLTnCZIshKu0+FBiLJ+QUxVm6T6YknUyzMMjvv/H6
-         +pXt3lzsHjj0WYmmx2l34T8wzleiUSvPuHxVImXY=
+        b=CEkiTIX+Fl0xgU9GaFowB3IBFoj0LdQvWJp6D/j5lf4NecsiG9e7rpukGJOxIsOGX
+         OiHfB2CHjp8UzjXsoU4dCoauEfCjSPEEzbwnAko1gQFeuf/NUQwGG6LcEcvfRUlBi8
+         pOcI/Xun6ff/784JHIbliYALEOTgbG6oNJuCy1EA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
         linux-renesas-soc@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 02/15] dt-bindings: gpio: convert bindings for Maxim MAX732x family to dtschema
-Date:   Wed, 16 Sep 2020 17:57:02 +0200
-Message-Id: <20200916155715.21009-3-krzk@kernel.org>
+Subject: [PATCH v3 05/15] arm64: dts: renesas: align GPIO hog names with dtschema
+Date:   Wed, 16 Sep 2020 17:57:05 +0200
+Message-Id: <20200916155715.21009-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200916155715.21009-1-krzk@kernel.org>
 References: <20200916155715.21009-1-krzk@kernel.org>
@@ -63,198 +63,103 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the Maxim MAX732x family of GPIO expanders bindings to device
-tree schema by merging it with existing PCA95xx schema.  These are quite
-similar so merging reduces duplication.
+The convention for node names is to use hyphens, not underscores.
+dtschema for pca95xx expects GPIO hogs to end with 'hog' prefix.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
 ---
+ .../boot/dts/renesas/r8a77951-salvator-xs.dts      |  2 +-
+ .../boot/dts/renesas/r8a77965-salvator-xs.dts      |  2 +-
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi           | 14 +++++++-------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-Changes since v2:
-1. Add Rob's review tag
-2. Use reset-gpios/vcc-supply: false instead of maxItems 0
-3. Use /* for comments in example DTS
----
- .../devicetree/bindings/gpio/gpio-max732x.txt | 58 ---------------
- .../bindings/gpio/gpio-pca95xx.yaml           | 70 ++++++++++++++++++-
- 2 files changed, 68 insertions(+), 60 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
-deleted file mode 100644
-index b3a9c0c32823..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--* MAX732x-compatible I/O expanders
--
--Required properties:
--  - compatible: Should be one of the following:
--    - "maxim,max7319": For the Maxim MAX7319
--    - "maxim,max7320": For the Maxim MAX7320
--    - "maxim,max7321": For the Maxim MAX7321
--    - "maxim,max7322": For the Maxim MAX7322
--    - "maxim,max7323": For the Maxim MAX7323
--    - "maxim,max7324": For the Maxim MAX7324
--    - "maxim,max7325": For the Maxim MAX7325
--    - "maxim,max7326": For the Maxim MAX7326
--    - "maxim,max7327": For the Maxim MAX7327
--  - reg: I2C slave address for this device.
--  - gpio-controller: Marks the device node as a GPIO controller.
--  - #gpio-cells: Should be 2.
--    - first cell is the GPIO number
--    - second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
--      Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
--
--Optional properties:
--
--  The I/O expander can detect input state changes, and thus optionally act as
--  an interrupt controller. When the expander interrupt line is connected all the
--  following properties must be set. For more information please see the
--  interrupt controller device tree bindings documentation available at
--  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
--
--  - interrupt-controller: Identifies the node as an interrupt controller.
--  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
--    - first cell is the pin number
--    - second cell is used to specify flags
--  - interrupts: Interrupt specifier for the controllers interrupt.
--
--Please refer to gpio.txt in this directory for details of the common GPIO
--bindings used by client devices.
--
--Example 1. MAX7325 with interrupt support enabled (CONFIG_GPIO_MAX732X_IRQ=y):
--
--	expander: max7325@6d {
--		compatible = "maxim,max7325";
--		reg = <0x6d>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		interrupt-parent = <&gpio4>;
--		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
--	};
--
--Example 2. MAX7325 with interrupt support disabled (CONFIG_GPIO_MAX732X_IRQ=n):
--
--	expander: max7325@6d {
--		compatible = "maxim,max7325";
--		reg = <0x6d>;
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-index 7ff6efadf797..183ec23eda39 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -9,6 +9,10 @@ title: NXP PCA95xx I2C GPIO multiplexer
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
+diff --git a/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
+index cef9da4376a3..e5922329a4b8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
+@@ -118,7 +118,7 @@
+ };
  
-+description: |+
-+  Bindings for the family of I2C GPIO multiplexers/expanders: NXP PCA95xx,
-+  Maxim MAX73xx
-+
- properties:
-   compatible:
-     enum:
-@@ -17,6 +21,15 @@ properties:
-       - maxim,max7312
-       - maxim,max7313
-       - maxim,max7315
-+      - maxim,max7319
-+      - maxim,max7320
-+      - maxim,max7321
-+      - maxim,max7322
-+      - maxim,max7323
-+      - maxim,max7324
-+      - maxim,max7325
-+      - maxim,max7326
-+      - maxim,max7327
-       - nxp,pca6416
-       - nxp,pca9505
-       - nxp,pca9534
-@@ -69,11 +82,11 @@ properties:
-   reset-gpios:
-     description:
-       GPIO specification for the RESET input. This is an active low signal to
--      the PCA953x.
-+      the PCA953x.  Not valid for Maxim MAX732x devices.
+ &pca9654 {
+-	pcie_sata_switch {
++	pcie-sata-switch-hog {
+ 		gpio-hog;
+ 		gpios = <7 GPIO_ACTIVE_HIGH>;
+ 		output-low; /* enable SATA by default */
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+index 5cef64605464..d7e621101af7 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+@@ -55,7 +55,7 @@
+ };
  
-   vcc-supply:
-     description:
--      Optional power supply
-+      Optional power supply.  Not valid for Maxim MAX732x devices.
+ &pca9654 {
+-	pcie_sata_switch {
++	pcie-sata-switch-hog {
+ 		gpio-hog;
+ 		gpios = <7 GPIO_ACTIVE_HIGH>;
+ 		output-low; /* enable SATA by default */
+diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+index 202177706cde..e9ed2597f1c2 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+@@ -143,49 +143,49 @@
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
  
-   wakeup-source:
-     $ref: /schemas/types.yaml#/definitions/flag
-@@ -103,6 +116,25 @@ required:
+-		audio_out_off {
++		audio-out-off-hog {
+ 			gpio-hog;
+ 			gpios = <0 GPIO_ACTIVE_HIGH>; /* P00 */
+ 			output-high;
+ 			line-name = "Audio_Out_OFF";
+ 		};
  
- additionalProperties: false
+-		hub_pwen {
++		hub-pwen-hog {
+ 			gpio-hog;
+ 			gpios = <6 GPIO_ACTIVE_HIGH>;
+ 			output-high;
+ 			line-name = "HUB pwen";
+ 		};
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - maxim,max7320
-+              - maxim,max7321
-+              - maxim,max7322
-+              - maxim,max7323
-+              - maxim,max7324
-+              - maxim,max7325
-+              - maxim,max7326
-+              - maxim,max7327
-+    then:
-+      properties:
-+        reset-gpios: false
-+        vcc-supply: false
-+
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
-@@ -164,3 +196,37 @@ examples:
-             ti,micbias = <0>; /* 2.1V */
-         };
-     };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c2 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* MAX7325 with interrupt support enabled */
-+        gpio@6d {
-+            compatible = "maxim,max7325";
-+            reg = <0x6d>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+            interrupt-parent = <&gpio4>;
-+            interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
-+        };
-+    };
-+
-+  - |
-+    i2c3 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* MAX7325 with interrupt support disabled */
-+        gpio@6e {
-+            compatible = "maxim,max7325";
-+            reg = <0x6e>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+        };
-+    };
+-		hub_rst {
++		hub-rst-hog {
+ 			gpio-hog;
+ 			gpios = <7 GPIO_ACTIVE_HIGH>;
+ 			output-high;
+ 			line-name = "HUB rst";
+ 		};
+ 
+-		otg_extlpn {
++		otg-extlpn-hog {
+ 			gpio-hog;
+ 			gpios = <9 GPIO_ACTIVE_HIGH>;
+ 			output-high;
+ 			line-name = "OTG EXTLPn";
+ 		};
+ 
+-		otg_offvbusn {
++		otg-offvbusn-hog {
+ 			gpio-hog;
+ 			gpios = <8 GPIO_ACTIVE_HIGH>;
+ 			output-low;
+ 			line-name = "OTG OFFVBUSn";
+ 		};
+ 
+-		sd-wifi-mux {
++		sd-wifi-mux-hog {
+ 			gpio-hog;
+ 			gpios = <5 GPIO_ACTIVE_HIGH>;
+ 			output-low;	/* Connect WL1837 */
+ 			line-name = "SD WiFi mux";
+ 		};
+ 
+-		snd_rst {
++		snd-rst-hog {
+ 			gpio-hog;
+ 			gpios = <15 GPIO_ACTIVE_HIGH>; /* P17 */
+ 			output-high;
 -- 
 2.17.1
 
