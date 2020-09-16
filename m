@@ -2,157 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 622BD26C13B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 11:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47FFA26C4D2
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Sep 2020 18:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgIPJ5m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Sep 2020 05:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgIPJ5l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Sep 2020 05:57:41 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA55C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 02:57:40 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s65so3630625pgb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Sep 2020 02:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rcQzIw0Af1rlmMPGYsI/JDKEYe8+BnnwfKVSWPdFcS4=;
-        b=DyM0knxCsqGNKnpLyVOk2oMdUTVBV28U8Az7p3+uRjKX/3uEAzPcAKaQonbdnAigf4
-         uKZ8hlDYI/QHmmkrd5QMbGQi5zYEZHGNWfqIAwoRZ9zKNY/kAPPEo/lt9tAoNGUIKBxR
-         REl6+FGGzo/EObyusHZXpwoawwNtL4LCgezF8sr363MOhhOB/BrJ0U5qblMsPnmA0s6J
-         lKQlSzDCCJyvVdepuGyVTnYZIjiebKcwR0tlCj8sXSAw9jdsRJrAsgwzse3gXSpgxEEu
-         OdInvVIS8bL0xsr8CMMT5KIL0XVgDqtLK0JspvSOVbRznJ6Adu+Jugr+JKrlnXgbXiTL
-         tdCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rcQzIw0Af1rlmMPGYsI/JDKEYe8+BnnwfKVSWPdFcS4=;
-        b=XwJMkOio7bMi1Ez1HFNOAEH0ov4v2neb0u4saWCmV2D9IgLrjBFAkRNz4ZSLLS58JS
-         rz3Q5uM2mHA4sDBkLW8Vp54m2eHlr17tvpvusehLxf/n3QiFRRVCrrKqFBGDQMfmdfRe
-         ydVwJNXDBMyPGTvmhBuGv9D9RRIXDMG67hmYWJjKqYmEpZAJc+kbSAxi94NmG28NO9k/
-         pq34EvX52L9GQJoYoLHfJx1ad3YNo+RwIAUM+nkGuoR8FVaipFt7KI+82n9rH4h4plqH
-         bUqlKvJ2HVH/hLIGHqrKts4VvZsIWsZPtNsALP4rQvGWUr/fFMLgH0eTKjYCajGg7f8W
-         40tw==
-X-Gm-Message-State: AOAM533fVp6byjlYS5CnnU8e8t77eCIk05hDBV+uei49otSqakvJWEAR
-        yKxqB8gZ/pB5PwOyaoLpj0BxXeKebYI=
-X-Google-Smtp-Source: ABdhPJw7e1e4MEbhEyVoRtmXcboNghDi0Q9/ciesSdCFKdu7tASluJtsqIRtSthWFQ50BNFUkG46/w==
-X-Received: by 2002:a63:5043:: with SMTP id q3mr17519213pgl.293.1600250260008;
-        Wed, 16 Sep 2020 02:57:40 -0700 (PDT)
-Received: from sol (106-69-164-34.dyn.iinet.net.au. [106.69.164.34])
-        by smtp.gmail.com with ESMTPSA id b29sm14223971pgb.71.2020.09.16.02.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 02:57:39 -0700 (PDT)
-Date:   Wed, 16 Sep 2020 17:57:34 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxim Devaev <mdevaev@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        id S1726377AbgIPQCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Sep 2020 12:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgIPQCZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Sep 2020 12:02:25 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720CD22211;
+        Wed, 16 Sep 2020 15:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600271853;
+        bh=yWzQ6WPjC8rItrDgfGhWQlUAtGLsaZ/R1keRvnf9UxY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i3SqamwnKOkrcTX1RAKNjivJMdEvwdYD85f3vO+d19vaDDdbvRewgc78OLqj/HMO6
+         tMP6KzAaZgPvEpuNQPo8El740umS7geCOGv8WLOwEXpGnKajjyF/ZfpMxJq5PK8/t0
+         oFPYzFa4hY2ewOq9WDIqWOVBRkg8/oRiQhpVN+oE=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] gpiomon loses events
-Message-ID: <20200916095734.GA32888@sol>
-References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
- <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
- <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
- <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
- <20200915004541.GC4138@sol>
- <20200915033428.GA14286@sol>
- <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
- <20200915135732.GA100294@sol>
- <CAMRc=MdbZh2CE3BXg0gg6CJxMGonvUN=yFc4kjXjUnkduwJgpA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdbZh2CE3BXg0gg6CJxMGonvUN=yFc4kjXjUnkduwJgpA@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 00/15] ARM: dts: / gpio: Add dtschema for NXP PCA953x and correct dts
+Date:   Wed, 16 Sep 2020 17:57:00 +0200
+Message-Id: <20200916155715.21009-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 11:29:00AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Sep 16, 2020 at 2:27 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Sep 15, 2020 at 10:34:31AM +0300, Maxim Devaev wrote:
-> > > > The bug was introduced in libgpiod v1.5 so, depending on your
-> > > > circumstances, I would revert to an earlier libgpiod or apply my patch.
-> > > > ...
-> > >
-> > > Is this behavior documented somewhere? It's a complete surprise to me
-> > > that this is how it works. I expected to lose the old events. It seems
-> > > to me that for software that catches edge, the loss of new events is a
-> > > serious problem, since it can lead to a desynchronization of the
-> > > physical state of the pin and the user's information about it. For
-> > > example, if event 16 was falling and event 17 was rising, and the
-> > > signal stopped changing and remains at 1, the kernel will tell us that
-> > > it was only falling (i.e. 0), while the real state will be 1.
-> > >
-> > > If we lose events in any case, then in my opinion it is much more
-> > > important to keep the current state, not the past. I can't think of a
-> > > case where the loss of old events can lead to problems, but the
-> > > desynchronization of the current state actually means that the
-> > > software can make the wrong decision in its logic based on the
-> > > driver's lies. Yes, this would be a breaking change, but it seems to
-> > > me that it is the current behavior that is incorrect. Don't get me
-> > > wrong, I don't insist on it. If this decision was made for certain
-> > > reasons, I would like to understand where I am wrong.
-> > >
-> >
-> > I agree - it makes more sense to discard the older events.
-> > The existing behaviour pre-dates me, so I'm not sure if it is
-> > intentional and if so what the rationale for it is.
-> >
-> 
-> While it predates me too (Linus: any particular reason to do it like
-> this?) I think that requesting events from user-space is a contract
-> where the user-space program commits to reading the events fast enough
-> to avoid this kind of overflow. In V2 we can adjust the size of the
-> queue to make it bigger if the process isn't capable of consuming all
-> the data as they come.
-> 
 
-For sure, but if there is an overflow for whatever reason - maybe they
-need to debounce ;-) - then it would be preferable for the final event
-to correspond to the current state.
+Hi,
 
-> > And I'm still trying to think of a case where it would be harmful to
-> > change this behaviour - what could it break?
-> >
-> 
-> Well, I wouldn't change it in V1 but since V2 is a new thing - I think
-> it should be relatively straightforward right? If we see the kfifo is
-> full, we should simply consume the oldest event on the kernel side,
-> drop it and add in the new one. Maybe worth considering for v9? I
-> don't see any cons of this and this behavior is quite reasonable.
-> 
+Changes since v2:
+1. Add Rob's review,
+2. Minor fixup in patch #1,
+3. Add acks to 11 and 13.
 
-It is pretty straight forward - my current patch for this looks like:
+Changes since v1:
+1. Patch 1: Use additionalProperties, Add wakeup-source, Add hogs, Extend example with hogs.
+2. New patches: 3, 4, 5, 6, 7, 9, 10, 12, 14 and 15.
 
-@@ -537,9 +537,15 @@ static irqreturn_t edge_irq_thread(int irq, void *p)
-        le.seqno = (lr->num_lines == 1) ? le.line_seqno : line->req_seqno;
-        le.offset = gpio_chip_hwgpio(line->desc);
+The patches could be picked up independently if dtschema makes sense.
+The fixes for pins make sense anyway, regardless of dtschema.
 
--       ret = kfifo_in_spinlocked_noirqsave(&lr->events, &le,
--                                           1, &lr->wait.lock);
--       if (ret)
-+       overflow = false;
-+       spin_lock(&lr->wait.lock);
-+       if (kfifo_is_full(&lr->events)) {
-+               overflow = true;
-+               kfifo_skip(&lr->events);
-+       }
-+       kfifo_in(&lr->events, &le, 1);
-+       spin_unlock(&lr->wait.lock);
-+       if (!overflow)
-                wake_up_poll(&lr->wait, EPOLLIN)
+Best regards,
+Krzysztof
 
-I'll incorporate that into v9.
 
-Cheers,
-Kent.
+Krzysztof Kozlowski (15):
+  dt-bindings: gpio: convert bindings for NXP PCA953x family to dtschema
+  dt-bindings: gpio: convert bindings for Maxim MAX732x family to
+    dtschema
+  arm64: dts: mediatek: fix tca6416 reset GPIOs in pumpkin
+  arm64: dts: mediatek: align GPIO hog names with dtschema
+  arm64: dts: renesas: align GPIO hog names with dtschema
+  arm64: dts: ti: align GPIO hog names with dtschema
+  arm64: dts: xilinx: align GPIO hog names with dtschema
+  ARM: dts: am335x: lxm: fix PCA9539 GPIO expander properties
+  ARM: dts: am335x: t335: align GPIO hog names with dtschema
+  ARM: dts: am3874: iceboard: fix GPIO expander reset GPIOs
+  ARM: dts: aspeed: fix PCA95xx GPIO expander properties on Portwell
+  ARM: dts: aspeed: align GPIO hog names with dtschema
+  ARM: dts: dove: fix PCA95xx GPIO expander properties on A510
+  ARM: dts: armada: align GPIO hog names with dtschema
+  ARM: dts: imx6q: align GPIO hog names with dtschema
+
+ .../devicetree/bindings/gpio/gpio-max732x.txt |  58 -----
+ .../devicetree/bindings/gpio/gpio-pca953x.txt |  90 -------
+ .../bindings/gpio/gpio-pca95xx.yaml           | 232 ++++++++++++++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ arch/arm/boot/dts/am335x-lxm.dts              |   4 +
+ arch/arm/boot/dts/am335x-sbc-t335.dts         |   4 +-
+ arch/arm/boot/dts/am3874-iceboard.dts         |   8 +-
+ arch/arm/boot/dts/armada-388-clearfog.dts     |   4 +-
+ arch/arm/boot/dts/armada-388-clearfog.dtsi    |  10 +-
+ arch/arm/boot/dts/armada-388-helios4.dts      |   6 +-
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts  |   2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts   |  16 +-
+ .../boot/dts/aspeed-bmc-portwell-neptune.dts  |   2 +
+ arch/arm/boot/dts/dove-sbc-a510.dts           |   1 +
+ arch/arm/boot/dts/imx6q-b450v3.dts            |  14 +-
+ arch/arm/boot/dts/imx6q-b650v3.dts            |  12 +-
+ arch/arm/boot/dts/imx6q-b850v3.dts            |   4 +-
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi           |  12 +-
+ .../boot/dts/mediatek/pumpkin-common.dtsi     |  28 +--
+ .../boot/dts/renesas/r8a77951-salvator-xs.dts |   2 +-
+ .../boot/dts/renesas/r8a77965-salvator-xs.dts |   2 +-
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi      |  14 +-
+ .../dts/ti/k3-j721e-common-proc-board.dts     |   4 +-
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   8 +-
+ 24 files changed, 314 insertions(+), 227 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+
+-- 
+2.17.1
 
