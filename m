@@ -2,187 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31B5B26D937
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 12:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5881126D941
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 12:40:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgIQKhl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 06:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
+        id S1726340AbgIQKkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 06:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgIQKhO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 06:37:14 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12CC7C06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:37:09 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id h206so1311893ybc.11
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:37:08 -0700 (PDT)
+        with ESMTP id S1726285AbgIQKjs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 06:39:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48507C061756
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:39:47 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j2so1505035wrx.7
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sv9mZuXXv+waigilYd/Yq/LJxWbjiWuYw2Z+C7OiwOQ=;
-        b=ay6Hl8F19y6fd7u22ixyaqZwRaSIRpN/oZQtkNImeke0nMNg6E8FGV+U9ngN9flDgy
-         eD4v6exkOhqICkCx3PPKANoIC3X9GE0CVjC2Wyq29to0B38ojrtgcAAiAEpvY7CD6ayd
-         9V1H/JXQqmYb628ZnKkQUku0dN8C3DMvwpZmuuwN55WIBfWhsL/p/7Gqww8EuA/gZCIG
-         RdhQxzuBEbgQ///QMemGEMFCnYrrV5X8a0CbHY/+nzyBvcRMuzz2VgBB0e2hHdT8LSVx
-         DD7D/jsyKC7cB3S/9dJSKBTe11O13Dg6hJI1fsL7TsB/Fh/kFG5qt2Ob1mjgDQt7cC4o
-         Hlew==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=i61APjl9FpHUWCD5kz7OHKcLpHTXAoxGDIDfWxkIIKA=;
+        b=TzPoWKJpf/wfLnHIxcrXxgZWuK60ap9//CbBd+TZNU2y8pdavUxikjEt2gi5POaKmE
+         sqkFdSnMaVS1uKBMNwFz2LD2WOzuwU1zj8wyFkyUcYMrba7+P5J1c2Fv+B2pA0YKvxEq
+         PITadgTrH/zkaB/+nsMN0He+jN7epa8nGmBTppCHFZArS1XrWopPHaOZ+a73fw3w9qPn
+         3XYS+1a630QJtEokkLq6ui9qWO+5TNMwL2/5JCPrGShBHnRRp8yqSVLE+jWSTS3LU4CV
+         qBTpOaf7Qkp9W9WrfV8ijmWDL8lGRzqW6IiHDacIJmABTVU1gQ89/bti1zIaAMhXKSaT
+         im5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sv9mZuXXv+waigilYd/Yq/LJxWbjiWuYw2Z+C7OiwOQ=;
-        b=P7gsuQDrgBL3ICUOdP00ZtG8LIp1dGkGuH/kqli/bU9W9FBrJVenCsC12VzX3KuIRn
-         NbcdxP/oGXx4eO+DjqpTl8cAtjCiXjX9rqdperBi+Gs+KSyD8ePPegMpB3pfSsD6DeLC
-         TjqCORZ01JtxbbuQ89Had037zftaawRdFTVxZ3NMPrwsnev8nGUjONBKimeK3ULlTJIt
-         JcD/hzkpetKsRCTciHL15+6InRQOIC+2CyntGXUt+ndGgTGftIzdY9DVsHfl8jPUaSRI
-         nR9mP0tLgMSaNVfppGm2nzTPY6clb+C2la0/gAS7XVDtGgnvb3E1LZ1RLU5fOFD3Uv3X
-         xKuw==
-X-Gm-Message-State: AOAM531I4Ji/PSxkc5AyQ7RRlc2dT67jMQY3xKmdttcXuDNP0//dfRdA
-        TFlMfLt4PUkPmn4g4a3ETKiR3QJqO9/Hv9vPAbk=
-X-Google-Smtp-Source: ABdhPJyY3/lGK0eJ0PMd+3kpAGLAKQgmAW33iA6nd5CseOYRNUqvJ83UI8gPR5lxAWYfBflKcalbNrLp0ey8dgsDrpE=
-X-Received: by 2002:a25:5882:: with SMTP id m124mr408173ybb.209.1600339028027;
- Thu, 17 Sep 2020 03:37:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
- <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
- <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
- <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
- <20200915004541.GC4138@sol> <20200915033428.GA14286@sol> <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
- <20200915135732.GA100294@sol> <CAMRc=MdbZh2CE3BXg0gg6CJxMGonvUN=yFc4kjXjUnkduwJgpA@mail.gmail.com>
- <20200916095734.GA32888@sol>
-In-Reply-To: <20200916095734.GA32888@sol>
-From:   Maxim Devaev <mdevaev@gmail.com>
-Date:   Thu, 17 Sep 2020 13:36:56 +0300
-Message-ID: <CAM4ZDbCvTsQ9QyW9bF2n-noF1+kArZpCb216W9tf7X=tqSHhwg@mail.gmail.com>
-Subject: Re: [libgpiod] gpiomon loses events
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i61APjl9FpHUWCD5kz7OHKcLpHTXAoxGDIDfWxkIIKA=;
+        b=CQ5bVlRvG2QaIREjRh0/e6kQk9l/MwjlWrAgf9D3je2trx283Cba6IZShItb0eZY7/
+         ASqp2AxiqSFovQdetSE3y4nzmUwhUEdnPkeLHnxm31vF51M2levM2QURqmysPGMDfaPs
+         mCibprXqPoQk9ierpjWMQLCMglIvPMLrm3vgb69OG0b7nge0UmXwB1Wed0K1oP5UG8HN
+         KZ90tOBfru+gZKEpz0K6H2+lhbvgmJL9uUGs9sRjRriCGZpVk9OmDDWEKtScHuSL2r2v
+         9ecPZLNjUxPXnc5iSTdo/jMw5f/JW4bq9oXS1pKMjMduYEXWK7iYWKewJBStggzaWQv4
+         69sA==
+X-Gm-Message-State: AOAM5305BT7iP3sN5kvUxABseI1Jpa2c7TVFkRmNXd+q9e6mUBPnF+Mq
+        UWB9z96RS/61M0S4OLrGvQzKKA==
+X-Google-Smtp-Source: ABdhPJxDq+/9WZYcvn4wKFY6MtwgqeKWNaxXznfDHBKkyGKGAQpnGiuIZ/ycslis6B1djEELBpVQXA==
+X-Received: by 2002:a5d:51c5:: with SMTP id n5mr7428723wrv.265.1600339185727;
+        Thu, 17 Sep 2020 03:39:45 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c22:e701:5f2:8f03:4748:2bc6])
+        by smtp.gmail.com with ESMTPSA id r14sm38384764wrn.56.2020.09.17.03.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 03:39:45 -0700 (PDT)
+Date:   Thu, 17 Sep 2020 12:39:42 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Trent Piepho <tpiepho@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Christina Quast <cquast@hanoverdisplays.com>
+Subject: Re: [PATCH] ARM: dts: document pinctrl-single,pins when
+ #pinctrl-cells = 2
+Message-ID: <20200917103942.GA2477958@x1>
+References: <20200914104352.2165818-1-drew@beagleboard.org>
+ <CA+7tXii8rwBexgAHeqYsvBywhWLmk-Hf5_VWUU5bQkBREeFcSA@mail.gmail.com>
+ <20200917092004.GA2468349@x1>
+ <CA+7tXihwHbcuxZ10jGZrQkET9+Dbs31SfsYDt_6XB+-JM99gqA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+7tXihwHbcuxZ10jGZrQkET9+Dbs31SfsYDt_6XB+-JM99gqA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi again and sorry for delay.
-
-> I already applied the patch to the master branch and backported it to
-> v1.5.x[1]. Please give it a try. I will make a bugfix release soon
-> too.
-
-Everything seems to be working fine now. In any case, I plan to use
-event_read_multiple (), just for reasons of paranoia (and for older
-versions) :)
-
-> If you are losing events then this is what you will get.
-> No attempt is made in the kernel or libgpiod to keep rising and falling
-> events paired (until debounce support in GPIO CDEV uAPI v2 arrives).
-
-Okay, thanks. I will take this into account.
-
-> What is your use case?  Are you seeing these problems in practice or
-> only because you are generating events faster than you service them
-> for testing?
-
-I make an IP-KVM and use GPIO to read the status of the HDD led on the
-managed server's motherboard. This led operates in PWM mode, and if
-the frequency is high enough and then the activity is stopped, then
-there is a chance that the actual state of the led will be 0, while
-the last state received from the library will be 1.
-
-=D1=81=D1=80, 16 =D1=81=D0=B5=D0=BD=D1=82. 2020 =D0=B3. =D0=B2 12:57, Kent =
-Gibson <warthog618@gmail.com>:
->
-> On Wed, Sep 16, 2020 at 11:29:00AM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Sep 16, 2020 at 2:27 AM Kent Gibson <warthog618@gmail.com> wrot=
-e:
-> > >
-> > > On Tue, Sep 15, 2020 at 10:34:31AM +0300, Maxim Devaev wrote:
-> > > > > The bug was introduced in libgpiod v1.5 so, depending on your
-> > > > > circumstances, I would revert to an earlier libgpiod or apply my =
-patch.
-> > > > > ...
+On Thu, Sep 17, 2020 at 03:00:36AM -0700, Trent Piepho wrote:
+> On Thu, Sep 17, 2020 at 2:20 AM Drew Fustini <drew@beagleboard.org> wrote:
+> >
+> > On Thu, Sep 17, 2020 at 02:03:46AM -0700, Trent Piepho wrote:
+> > > On Mon, Sep 14, 2020 at 3:44 AM Drew Fustini <drew@beagleboard.org> wrote:
 > > > >
-> > > > Is this behavior documented somewhere? It's a complete surprise to =
-me
-> > > > that this is how it works. I expected to lose the old events. It se=
-ems
-> > > > to me that for software that catches edge, the loss of new events i=
-s a
-> > > > serious problem, since it can lead to a desynchronization of the
-> > > > physical state of the pin and the user's information about it. For
-> > > > example, if event 16 was falling and event 17 was rising, and the
-> > > > signal stopped changing and remains at 1, the kernel will tell us t=
-hat
-> > > > it was only falling (i.e. 0), while the real state will be 1.
-> > > >
-> > > > If we lose events in any case, then in my opinion it is much more
-> > > > important to keep the current state, not the past. I can't think of=
- a
-> > > > case where the loss of old events can lead to problems, but the
-> > > > desynchronization of the current state actually means that the
-> > > > software can make the wrong decision in its logic based on the
-> > > > driver's lies. Yes, this would be a breaking change, but it seems t=
-o
-> > > > me that it is the current behavior that is incorrect. Don't get me
-> > > > wrong, I don't insist on it. If this decision was made for certain
-> > > > reasons, I would like to understand where I am wrong.
-> > > >
+> > > > +
+> > > > +When #pinctrl-cells = 2, then setting a pin for a device could be done with:
+> > > > +
+> > > > +       pinctrl-single,pins = <0xdc 0x30 0x07>;
+> > > > +
+> > > > +Where 0x30 is the pin configuration value and 0x07 is the pin mux mode value.
+> > > > +See the device example and static board pins example below for more information.
 > > >
-> > > I agree - it makes more sense to discard the older events.
-> > > The existing behaviour pre-dates me, so I'm not sure if it is
-> > > intentional and if so what the rationale for it is.
+> > > Pin configuration and mux mode don't mean anything in pinctrl-single.
+> > > On another machine, mux mode might not be programmed this way or even
+> > > exist.  Or the location of bits would probably be different, and this
+> > > would seem to imply the 0x07 would get shifted to the correct location
+> > > for where the pin mux setting was on that machine's pinctrl registers.
 > > >
+> > > It seems like it would be better to explain the values are ORed together.
 > >
-> > While it predates me too (Linus: any particular reason to do it like
-> > this?) I think that requesting events from user-space is a contract
-> > where the user-space program commits to reading the events fast enough
-> > to avoid this kind of overflow. In V2 we can adjust the size of the
-> > queue to make it bigger if the process isn't capable of consuming all
-> > the data as they come.
+> > I descirbed it as seoerate values as I did not want to prescribe what
+> > the pcs driver would do with those values.  But, yes, it is a just an OR
+> > operation, so I could change the language to reflect tat.
+> 
+> If you don't say what the pinctrl-single driver does with the values,
+> how would anyone know how to use it?
+> 
+> > > What is the purpose of this change anyway?  It seems like in the end
+> > > it just does what it did before.  The data is now split into two cells
+> > > in the device tree, but why?
 > >
->
-> For sure, but if there is an overflow for whatever reason - maybe they
-> need to debounce ;-) - then it would be preferable for the final event
-> to correspond to the current state.
->
-> > > And I'm still trying to think of a case where it would be harmful to
-> > > change this behaviour - what could it break?
-> > >
+> > These changes were a result of desire to seperate pinconf and pinmux.
+> > Tony raised the idea in a thread at the end of May [1].
 > >
-> > Well, I wouldn't change it in V1 but since V2 is a new thing - I think
-> > it should be relatively straightforward right? If we see the kfifo is
-> > full, we should simply consume the oldest event on the kernel side,
-> > drop it and add in the new one. Maybe worth considering for v9? I
-> > don't see any cons of this and this behavior is quite reasonable.
-> >
->
-> It is pretty straight forward - my current patch for this looks like:
->
-> @@ -537,9 +537,15 @@ static irqreturn_t edge_irq_thread(int irq, void *p)
->         le.seqno =3D (lr->num_lines =3D=3D 1) ? le.line_seqno : line->req=
-_seqno;
->         le.offset =3D gpio_chip_hwgpio(line->desc);
->
-> -       ret =3D kfifo_in_spinlocked_noirqsave(&lr->events, &le,
-> -                                           1, &lr->wait.lock);
-> -       if (ret)
-> +       overflow =3D false;
-> +       spin_lock(&lr->wait.lock);
-> +       if (kfifo_is_full(&lr->events)) {
-> +               overflow =3D true;
-> +               kfifo_skip(&lr->events);
-> +       }
-> +       kfifo_in(&lr->events, &le, 1);
-> +       spin_unlock(&lr->wait.lock);
-> +       if (!overflow)
->                 wake_up_poll(&lr->wait, EPOLLIN)
->
-> I'll incorporate that into v9.
->
-> Cheers,
-> Kent.
->
+> > Tony wrote:
+> > > Only slightly related, but we should really eventually move omaps to use
+> > > #pinctrl-cells = <2> (or 3) instead of 1, and pass the pinconf seprately
+> > > from the mux mode. We already treat them separately with the new
+> > > AM33XX_PADCONF macro, so we'd only have to change one SoC at a time to
+> > > use updated #pinctrl-cells. But I think pinctrl-single might need some
+> > > changes before we can do that.
+> 
+> I still don't see what the goal is here.  Support generic pinconf?
+
+My interest is came out of my desire to turn on generic pinconf for AM3358
+and I had to fix a bug that was breaking compatible "pinconf,single":
+f46fe79ff1b6 ("pinctrl-single: fix pcs_parse_pinconf() return value")
+
+> Also note that while AM33XX_PADCONF() is changed, there is an in tree
+> board that doesn't use it, so it's broken now.  I found this change
+> when it broke my out of tree board, due to the dtsi change not being
+> reflected in my board's pinctrl values.
+
+Thanks, that is a good point that arch/arm/boot/dts/am335x-guardian.dts
+needs to be converted from AM33XX_IOPAD to AM33XX_PADCONF.  I'll submit
+a patch for that.
+
+Regarding AM33XX_PADCONF() restructuring, the change to have seperate
+arguments for direction and mux in AM33XX_PADCONF() predates my
+invovlement, so I've CC'd Christina Quast.
+
+    commit f1ff9be7652b716c7eea67c9ca795027d911f148
+    Author: Christina Quast <cquast@hanoverdisplays.com>
+    Date:   Mon Apr 8 10:01:51 2019 -0700
+
+    ARM: dts: am33xx: Added AM33XX_PADCONF macro
+    
+    AM33XX_PADCONF takes three instead of two parameters, to make
+    future changes to #pinctrl-cells easier.
+    
+    For old boards which are not mainlined, we left the AM33XX_IOPAD
+    macro.
+    
+    Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+    Reviewed-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Hopefully, Tony can also chime in.
+
+-Drew
