@@ -2,145 +2,242 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2751026DA76
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 13:39:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 688EE26DA86
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 13:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgIQLjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 07:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60660 "EHLO
+        id S1726869AbgIQLlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 07:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgIQLj3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 07:39:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEB9C06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:39:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e11so4259426wme.0
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:39:27 -0700 (PDT)
+        with ESMTP id S1726928AbgIQLlZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 07:41:25 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52CEC06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:41:22 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id k14so1201493pgi.9
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fke3ilklxVnPHqdZq/AEGfLI8ekrEnWB0AEI14mgjdc=;
-        b=Xqfwg+imho7taCl9/G4F+yyCDfU+YXn60+ri7kuQVx37UJDeje3u/v8fXbtYFmV3AV
-         UxOy7ROjbzj3umuhbZgeEgCRLTamsnEx7YydDf51UmxvCKb0O43Oy+oFfrU4oe8/dFd6
-         z0KIdFg6GshlBS/XXVZWLuNd57AfrqRwyoPQMSg7sDNAXfx9qA8wN8KQOfa7s1WS1k/c
-         4XpECpkjVaK3BMlFzaYGg0jIHkFTeJ4IXg3Pwq5pYxROWd8BPn9DalU3WjjYeSAWZs8G
-         mBr95McLMOiSJSeyYIdUJ3SLT+D/1Yzhx5rOlnw+MJqK0DmMqhTYMxr0LW+NWd/yg5MS
-         Ccug==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=U3Dk2z1QIkQ9PcUlRp4++SZHUWHFbT2QTj68t6E19KM=;
+        b=fMaoqrKcdQs/JD4REC9tjS2uDJ/EYXgB0iuThUednRHi//PvBuzxrQGPFom/mqkLUS
+         65o8yf4CyalwZRoAQWG8g33d2+KhK2f3iepsCZgI0H+Xg/1ThXjauLiFQDvskJ8X4zut
+         Sz1KI53AqKQPP+LHuKRxj75wDMl4OEZuSAObM6bOI1fiyZUwCI64VPo5ZRmqsTPkfYsQ
+         dcvMbDQdk015EFv11UTmJJe4zBgfT/KYu4RZKhrluxhfEBNhXF2vZgphKBeCVRTt+Fh4
+         e9nAJVR1BcXpnPcrkEd/AxcPPvLzVOXBHExrTnjRwnNBG5sgenAcbc5NyS/hG+LmnoSH
+         85lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fke3ilklxVnPHqdZq/AEGfLI8ekrEnWB0AEI14mgjdc=;
-        b=oi2t5Im4MuYPr76XZ6uK07o469eDFt71D8jWQsHTEshjBG9DT+kGZb7CGIWEta8Jvz
-         PV0s3llq2UJBlFdsMmeojyGXxpizLUd2wAGvi44Wi/qqGnBCixxdHrGwHT76CKbWcK99
-         se5lWANxXvVNJgsYHyXj1fHlJTphjlHkO4/3lb4jw9X4dy03r52vmiscIf6JuLmJRwLr
-         2n32+CZhW9JSfER3TCAL9/aiyCK39L6MUze6MMTtwWU4/PcYPifaQ08uOJN/+Gbv88vm
-         t3Mdm5AVx58ueMEWfxcMigu1lpXUQ3NFcQUvEcAJQiJ16PixqOwTG/2MmCW/fVX8MUrX
-         Hqzg==
-X-Gm-Message-State: AOAM531RNWCgKVyN9id13fEHzw47C4L+TprwWz/NJalA6zcAFF5a82X2
-        0avVcVc2izDgG3vCfDAKIzHU8w3atXAmqA==
-X-Google-Smtp-Source: ABdhPJwUP5C4gl1PxOI4Dtq06J19+rvgPw8b8crHonoFyblHZSAeL9LSHWYJaBBuP6fsiLBwgFYsWA==
-X-Received: by 2002:a7b:c208:: with SMTP id x8mr9481802wmi.30.1600342766551;
-        Thu, 17 Sep 2020 04:39:26 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id g12sm37121762wro.89.2020.09.17.04.39.25
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=U3Dk2z1QIkQ9PcUlRp4++SZHUWHFbT2QTj68t6E19KM=;
+        b=m0KYi8IB4cz1DE+3kCjMaw1tu9FlF3iMzOAZRjxCcBnYHqALVM1ppn0102Ri3+QJWs
+         RGZ6rNOyK/vevfsoRjaLTQpwjtlttsDCzKQKlUopoCQMSn9QOB5SWPwMa3iy9RMhhMUg
+         MCBwtCzxRthCPDsRfraldPCdnqQi5+SPD7WkR8W/7wSJ3HBNsJ8oEr2KqMXYb56w6Twn
+         DI7tpopCZkV0WtZEmGJ+b66V9j2YHiy+a2GYxoWfwX8ZOE3kEYNk/COj+OyYvVs/oLLU
+         kp5NOMmyCYAPZsHnmmv3eG6ppRE1eSw+YCNDp8XRXb1yRWpzrM/X4cFndyOOOB9sE+NC
+         AMZQ==
+X-Gm-Message-State: AOAM533uLjsD7N15uegqMUkFFbLpvGKmiAm7WsX3EjRtCIlTjI08JHY+
+        LMsUPsjknQytlZX28ebpTBDwZE6Xd6fufA==
+X-Google-Smtp-Source: ABdhPJzw80pVCfEE0v5ttnnv5O1pmZqn5Bfj2k86Y4ZW8REEIXJLzvJxA7yIJ0F22V0R8ffeZx2B6g==
+X-Received: by 2002:aa7:8d4c:0:b029:13f:e666:8f05 with SMTP id s12-20020aa78d4c0000b029013fe6668f05mr18650716pfe.0.1600342881917;
+        Thu, 17 Sep 2020 04:41:21 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id g7sm20794693pfr.150.2020.09.17.04.41.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 04:39:26 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.10
-Date:   Thu, 17 Sep 2020 13:39:24 +0200
-Message-Id: <20200917113924.13677-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Thu, 17 Sep 2020 04:41:21 -0700 (PDT)
+Message-ID: <5f634b61.1c69fb81.87d8f.3701@mx.google.com>
+Date:   Thu, 17 Sep 2020 04:41:21 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: test
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+X-Kernelci-Kernel: v5.9-rc2-19-ga5d0fe9ff2af
+Subject: linusw/for-next baseline: 123 runs,
+ 4 regressions (v5.9-rc2-19-ga5d0fe9ff2af)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+linusw/for-next baseline: 123 runs, 4 regressions (v5.9-rc2-19-ga5d0fe9ff2a=
+f)
 
-Linus,
+Regressions Summary
+-------------------
 
-Please pull the following batch of updates for the v5.10 release cycle. Details
-are in the signed tag.
+platform              | arch  | lab           | compiler | defconfig       =
+   | results
+----------------------+-------+---------------+----------+-----------------=
+---+--------
+mt8173-elm-hana       | arm64 | lab-collabora | gcc-8    | defconfig       =
+   | 0/1    =
 
-Bartosz
+panda                 | arm   | lab-collabora | gcc-8    | multi_v7_defconf=
+ig | 4/5    =
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+rk3399-gru-kevin      | arm64 | lab-collabora | gcc-8    | defconfig       =
+   | 0/1    =
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+sun7i-a20-cubieboard2 | arm   | lab-baylibre  | gcc-8    | multi_v7_defconf=
+ig | 0/1    =
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.10-part1
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.=
+9-rc2-19-ga5d0fe9ff2af/plan/baseline/
 
-for you to fetch changes up to 587823d39f85ff9777a862019eca720b97a16a52:
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: v5.9-rc2-19-ga5d0fe9ff2af
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      a5d0fe9ff2af9feb82d37782be5beb2976a4afdd =
 
-  gpiolib: check for parent device in devprop_gpiochip_set_names() (2020-09-17 12:07:02 +0200)
 
-----------------------------------------------------------------
-gpio updates for v5.10 - part 1
 
-- automatically drive GPHY leds in gpio-stp-xway
-- refactor ->{get, set}_multiple() in gpio-aggregator
-- add support for a new model in rcar-gpio DT bindings
-- simplify several GPIO drivers with dev_err_probe()
-- disable Direct KBD interrupts in gpio-tc35894
-- use DEFINE_SEQ_ATTRIBUTE() in GPIO chardev to shrink code
-- switch to using a simpler IDA API in gpiolib
-- make devprop_gpiochip_set_names() more generic by using device properties
-  instead of using fwnode helpers
+Test Regressions
+---------------- =
 
-----------------------------------------------------------------
-Aleksander Jan Bajkowski (1):
-      gpio: stp-xway: automatically drive GPHY leds on ar10 and grx390
 
-Andy Shevchenko (2):
-      gpio: aggregator: Refactor ->{get, set}_multiple() to make Sparse happy
-      gpiolib: convert to use DEFINE_SEQ_ATTRIBUTE macro
 
-Bartosz Golaszewski (5):
-      gpiolib: switch to simpler IDA interface
-      device: property: add helpers to count items in string arrays
-      gpiolib: generalize devprop_gpiochip_set_names() for device properties
-      gpiolib: unexport devprop_gpiochip_set_names()
-      gpiolib: check for parent device in devprop_gpiochip_set_names()
+platform              | arch  | lab           | compiler | defconfig       =
+   | results
+----------------------+-------+---------------+----------+-----------------=
+---+--------
+mt8173-elm-hana       | arm64 | lab-collabora | gcc-8    | defconfig       =
+   | 0/1    =
 
-Krzysztof Kozlowski (6):
-      gpio: bcm-kona: Simplify with dev_err_probe()
-      gpio: davinci: Simplify with dev_err_probe()
-      gpio: omap: Simplify with dev_err_probe()
-      gpio: pca953x: Simplify with dev_err_probe()
-      gpio: pisosr: Simplify with dev_err_probe()
-      gpio: zynq: Simplify with dev_err_probe()
 
-Lad Prabhakar (1):
-      dt-bindings: gpio: renesas, rcar-gpio: Add r8a774e1 support
+  Details:     https://kernelci.org/test/plan/id/5f6341af2edb0885bfbf9dd7
 
-dillon min (1):
-      gpio: tc35894: Disable Direct KBD interrupts to enable gpio irq
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.ht=
+ml
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/arm64/baseline/rootfs.cpio.gz =
 
- .../bindings/gpio/renesas,rcar-gpio.yaml           |  1 +
- drivers/gpio/Makefile                              |  1 -
- drivers/gpio/gpio-aggregator.c                     | 70 +++++++++++-------
- drivers/gpio/gpio-bcm-kona.c                       |  5 +-
- drivers/gpio/gpio-davinci.c                        |  8 +--
- drivers/gpio/gpio-omap.c                           |  5 +-
- drivers/gpio/gpio-pca953x.c                        |  9 +--
- drivers/gpio/gpio-pisosr.c                         |  9 +--
- drivers/gpio/gpio-stp-xway.c                       | 54 ++++++++++++--
- drivers/gpio/gpio-tc3589x.c                        | 18 ++++-
- drivers/gpio/gpio-zynq.c                           |  8 +--
- drivers/gpio/gpiolib-acpi.c                        |  3 -
- drivers/gpio/gpiolib-devprop.c                     | 63 ----------------
- drivers/gpio/gpiolib-of.c                          |  5 --
- drivers/gpio/gpiolib.c                             | 84 ++++++++++++++++------
- include/linux/gpio/driver.h                        |  3 -
- include/linux/mfd/tc3589x.h                        |  6 ++
- include/linux/property.h                           | 13 ++++
- 18 files changed, 201 insertions(+), 164 deletions(-)
- delete mode 100644 drivers/gpio/gpiolib-devprop.c
+
+  * baseline.login: https://kernelci.org/test/case/id/5f6341af2edb0885bfbf9=
+dd8
+      failing since 19 days (last pass: gpio-v5.8-2-103-g22cc422070d9, firs=
+t fail: v5.8-11991-gfc80c51fd4b2)  =
+
+
+
+platform              | arch  | lab           | compiler | defconfig       =
+   | results
+----------------------+-------+---------------+----------+-----------------=
+---+--------
+panda                 | arm   | lab-collabora | gcc-8    | multi_v7_defconf=
+ig | 4/5    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f634154596a3bf80ebf9dd6
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/armel/baseline/rootfs.cpio.gz =
+
+
+  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f634154596a3bf=
+80ebf9ddc
+      failing since 19 days (last pass: gpio-v5.8-2-103-g22cc422070d9, firs=
+t fail: v5.8-11991-gfc80c51fd4b2)
+      60 lines
+
+    2020-09-17 10:58:22.896000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c802
+    2020-09-17 10:58:22.901000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c803
+    2020-09-17 10:58:22.907000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c804
+    2020-09-17 10:58:22.913000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c805
+    2020-09-17 10:58:22.919000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c806
+    2020-09-17 10:58:22.925000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c807
+    2020-09-17 10:58:22.931000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c808
+    2020-09-17 10:58:22.937000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c809
+    2020-09-17 10:58:22.943000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c80a
+    2020-09-17 10:58:22.949000  kern  :alert : BUG: Bad page state in proce=
+ss swapper/0  pfn:9c80b
+    ... (49 line(s) more)
+      =
+
+
+
+platform              | arch  | lab           | compiler | defconfig       =
+   | results
+----------------------+-------+---------------+----------+-----------------=
+---+--------
+rk3399-gru-kevin      | arm64 | lab-collabora | gcc-8    | defconfig       =
+   | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f6341a5d3dd57bfc7bf9dc8
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.t=
+xt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.h=
+tml
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f6341a5d3dd57bfc7bf9=
+dc9
+      new failure (last pass: v5.9-rc1-10-gfeeaefd378ca)  =
+
+
+
+platform              | arch  | lab           | compiler | defconfig       =
+   | results
+----------------------+-------+---------------+----------+-----------------=
+---+--------
+sun7i-a20-cubieboard2 | arm   | lab-baylibre  | gcc-8    | multi_v7_defconf=
+ig | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f63414176f8cb8389bf9df0
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cu=
+bieboard2.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.9-rc2-19-ga=
+5d0fe9ff2af/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cu=
+bieboard2.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/armel/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f63414176f8cb8389bf9=
+df1
+      new failure (last pass: gpio-v5.8-2-103-g22cc422070d9)  =20
