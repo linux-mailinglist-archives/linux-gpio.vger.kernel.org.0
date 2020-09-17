@@ -2,42 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD82A26E907
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 00:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 921B226E867
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 00:30:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgIQWiF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 18:38:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53246 "EHLO mga05.intel.com"
+        id S1726002AbgIQWaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 18:30:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48059 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgIQWiE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Sep 2020 18:38:04 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 18:38:04 EDT
-IronPort-SDR: wf1kCoTGWV08qWp2XPwsX5CMHTiFAEjFsTk8wSJ7QrGVdc9nt2ogcUP5h3beNgs43mjqtYscuC
- 9s4pu0EoNEUw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="244640172"
+        id S1725858AbgIQWaz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 18:30:55 -0400
+IronPort-SDR: YggTcaniWqNYCoJMFwPaxldmvh2cUbEwGpPGcLAmHOrbqjSW1IoJZ6zckWUfg/2b/S2o42wdjy
+ 6qxY2s2FBRHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="221362592"
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="244640172"
+   d="scan'208";a="221362592"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 15:30:51 -0700
-IronPort-SDR: PCVg+T1il1UHCDQ+ZhMpjqre+jq1R13RrU4p9rjpx9MxHNCjcLi782SrmJwe7sVFi4/M9FKGgM
- x7ZH2I6qUS5w==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 15:30:51 -0700
+IronPort-SDR: 4LrVOxQiX1CHRZVDR2TLAwQp/YD2PoU/iRDvX9N3CZUJgGl8NjKLhP7KAejGJAD3gmkVEHeSgH
+ aHvIGFcxHw0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="452504587"
+   d="scan'208";a="339589773"
 Received: from lkp-server01.sh.intel.com (HELO a05db971c861) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 17 Sep 2020 15:30:49 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 17 Sep 2020 15:30:50 -0700
 Received: from kbuild by a05db971c861 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kJ2QS-0000AQ-Ue; Thu, 17 Sep 2020 22:30:48 +0000
-Date:   Fri, 18 Sep 2020 06:30:21 +0800
+        id 1kJ2QT-0000AV-Cz; Thu, 17 Sep 2020 22:30:49 +0000
+Date:   Fri, 18 Sep 2020 06:30:22 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:for-next] BUILD SUCCESS
- a5d0fe9ff2af9feb82d37782be5beb2976a4afdd
-Message-ID: <5f63e37d.tbsUy/6BjLU4iIfG%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 63c3212e7a37d68c89a13bdaebce869f4e064e67
+Message-ID: <5f63e37e.SNwcILeRRjxsAkMQ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,12 +45,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
-branch HEAD: a5d0fe9ff2af9feb82d37782be5beb2976a4afdd  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
+branch HEAD: 63c3212e7a37d68c89a13bdaebce869f4e064e67  pinctrl: mvebu: Fix i2c sda definition for 98DX3236
 
 elapsed time: 725m
 
-configs tested: 155
+configs tested: 167
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -74,6 +73,11 @@ powerpc                    mvme5100_defconfig
 powerpc                     sbc8548_defconfig
 sparc                       sparc64_defconfig
 arm                   milbeaut_m10v_defconfig
+powerpc                     akebono_defconfig
+arc                 nsimosci_hs_smp_defconfig
+powerpc                     rainier_defconfig
+mips                       capcella_defconfig
+powerpc                     kilauea_defconfig
 s390                          debug_defconfig
 sh                          polaris_defconfig
 powerpc                     asp8347_defconfig
@@ -109,15 +113,19 @@ um                           x86_64_defconfig
 c6x                        evmc6678_defconfig
 sh                             sh03_defconfig
 mips                      malta_kvm_defconfig
+powerpc                      ep88xc_defconfig
+sparc                            alldefconfig
+ia64                          tiger_defconfig
+arc                           tb10x_defconfig
 sh                          landisk_defconfig
 powerpc                  storcenter_defconfig
 parisc                generic-32bit_defconfig
+arc                            hsdk_defconfig
 arm                       omap2plus_defconfig
 sh                           se7712_defconfig
 powerpc                      katmai_defconfig
 mips                  cavium_octeon_defconfig
 nios2                         10m50_defconfig
-arc                 nsimosci_hs_smp_defconfig
 powerpc                        fsp2_defconfig
 mips                       lemote2f_defconfig
 arm                         lpc18xx_defconfig
@@ -132,9 +140,12 @@ parisc                           allyesconfig
 mips                         rt305x_defconfig
 powerpc                   motionpro_defconfig
 powerpc                      obs600_defconfig
-powerpc                     rainier_defconfig
 arm                         assabet_defconfig
 powerpc                 mpc85xx_cds_defconfig
+sh                      rts7751r2d1_defconfig
+powerpc                     pq2fads_defconfig
+sh                              ul2_defconfig
+ia64                      gensparse_defconfig
 arc                        vdk_hs38_defconfig
 sh                     sh7710voipgw_defconfig
 arc                                 defconfig
