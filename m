@@ -2,156 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5881126D941
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 12:40:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C8B26D9B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 12:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgIQKkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 06:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
+        id S1726543AbgIQK45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 06:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgIQKjs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 06:39:48 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48507C061756
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:39:47 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j2so1505035wrx.7
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:39:47 -0700 (PDT)
+        with ESMTP id S1726241AbgIQK4n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 06:56:43 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D63C06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:56:43 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id u13so1160001pgh.1
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i61APjl9FpHUWCD5kz7OHKcLpHTXAoxGDIDfWxkIIKA=;
-        b=TzPoWKJpf/wfLnHIxcrXxgZWuK60ap9//CbBd+TZNU2y8pdavUxikjEt2gi5POaKmE
-         sqkFdSnMaVS1uKBMNwFz2LD2WOzuwU1zj8wyFkyUcYMrba7+P5J1c2Fv+B2pA0YKvxEq
-         PITadgTrH/zkaB/+nsMN0He+jN7epa8nGmBTppCHFZArS1XrWopPHaOZ+a73fw3w9qPn
-         3XYS+1a630QJtEokkLq6ui9qWO+5TNMwL2/5JCPrGShBHnRRp8yqSVLE+jWSTS3LU4CV
-         qBTpOaf7Qkp9W9WrfV8ijmWDL8lGRzqW6IiHDacIJmABTVU1gQ89/bti1zIaAMhXKSaT
-         im5g==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=T9lNcKq60OFkyCh6/6qJlh6i3GcBk/ga/wgKezraXNw=;
+        b=x1NaY0ndN32UPLbGKWVbi7/r4/h21yUY7ENA4IbNG3RX9hculQerxzHQ97dZw66gc/
+         IHQh0FBmjRyAMRVz7JR5YCbr4ywNwo9vWZVGIsYUCEBZzIn1jkSjfmLn2jWMn01l5CDH
+         EjTavw6n8ODAz5/mV9D1zd017xoMYrFNpWK4vModvwHmYSlojabXKdt6pmwVkB9HiK3I
+         ItIqtAAKCaK0ZFrzzM9hGA8gIg885iwTNBPt1+bgAVerl2YibjTyzIlaTzwcctvKH6J3
+         TbwTzyLKH1Sr5+MgWm0++esl06IVZEXFBJzvy1/dTWs9zIOVELdA6874J8c6N4adROH8
+         gCEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i61APjl9FpHUWCD5kz7OHKcLpHTXAoxGDIDfWxkIIKA=;
-        b=CQ5bVlRvG2QaIREjRh0/e6kQk9l/MwjlWrAgf9D3je2trx283Cba6IZShItb0eZY7/
-         ASqp2AxiqSFovQdetSE3y4nzmUwhUEdnPkeLHnxm31vF51M2levM2QURqmysPGMDfaPs
-         mCibprXqPoQk9ierpjWMQLCMglIvPMLrm3vgb69OG0b7nge0UmXwB1Wed0K1oP5UG8HN
-         KZ90tOBfru+gZKEpz0K6H2+lhbvgmJL9uUGs9sRjRriCGZpVk9OmDDWEKtScHuSL2r2v
-         9ecPZLNjUxPXnc5iSTdo/jMw5f/JW4bq9oXS1pKMjMduYEXWK7iYWKewJBStggzaWQv4
-         69sA==
-X-Gm-Message-State: AOAM5305BT7iP3sN5kvUxABseI1Jpa2c7TVFkRmNXd+q9e6mUBPnF+Mq
-        UWB9z96RS/61M0S4OLrGvQzKKA==
-X-Google-Smtp-Source: ABdhPJxDq+/9WZYcvn4wKFY6MtwgqeKWNaxXznfDHBKkyGKGAQpnGiuIZ/ycslis6B1djEELBpVQXA==
-X-Received: by 2002:a5d:51c5:: with SMTP id n5mr7428723wrv.265.1600339185727;
-        Thu, 17 Sep 2020 03:39:45 -0700 (PDT)
-Received: from x1 ([2001:16b8:5c22:e701:5f2:8f03:4748:2bc6])
-        by smtp.gmail.com with ESMTPSA id r14sm38384764wrn.56.2020.09.17.03.39.44
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=T9lNcKq60OFkyCh6/6qJlh6i3GcBk/ga/wgKezraXNw=;
+        b=OYwPNgirJRZtenNwevws4OacOwABQzbOoCbJwdSdkX3SsRwhBzahQ5IdjZVSznhHfn
+         atMd7m8ZFWtp3aoCcOAxvzqLpMHilKCSTvD1aGLGE40eW5aGOAoKxzLkMrXTXQHDUfSt
+         5+JjbnsiO14r8nFMt3vi63oDQSPVJESuyiTx2d1I/wLFO2etg3VWL9RWI60h5mngKm+y
+         60jRKaQmKCWIomgyZXtZoSK7jGM1vdkjx/YkGD0kLDfJZK660zoEcGhI9kZt29G9da36
+         NFKEMPPYBWhkC527nLhD3fQH65/s1LyvFeK8iEf80752vnB2F/kz/SCSU7eIny0PFu3k
+         joog==
+X-Gm-Message-State: AOAM530XpYL+Rzw7O/EpgynWN/upP+npfj4AJQ4UdIoZHlP6OtnVTey+
+        h/r/7hloRoamA4Y33ueVM6Nyf+N38uY5SQ==
+X-Google-Smtp-Source: ABdhPJyQPqQH/HOMArAAYimsSTh5n9TATMuKl4wcCBPqJEvYnatN/iYhbgd0kdd3fcfbo9SUPtlWIQ==
+X-Received: by 2002:a63:63c7:: with SMTP id x190mr21807262pgb.90.1600340202584;
+        Thu, 17 Sep 2020 03:56:42 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id 141sm20250959pfb.50.2020.09.17.03.56.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 03:39:45 -0700 (PDT)
-Date:   Thu, 17 Sep 2020 12:39:42 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Trent Piepho <tpiepho@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Christina Quast <cquast@hanoverdisplays.com>
-Subject: Re: [PATCH] ARM: dts: document pinctrl-single,pins when
- #pinctrl-cells = 2
-Message-ID: <20200917103942.GA2477958@x1>
-References: <20200914104352.2165818-1-drew@beagleboard.org>
- <CA+7tXii8rwBexgAHeqYsvBywhWLmk-Hf5_VWUU5bQkBREeFcSA@mail.gmail.com>
- <20200917092004.GA2468349@x1>
- <CA+7tXihwHbcuxZ10jGZrQkET9+Dbs31SfsYDt_6XB+-JM99gqA@mail.gmail.com>
+        Thu, 17 Sep 2020 03:56:41 -0700 (PDT)
+Message-ID: <5f6340e9.1c69fb81.ba976.2324@mx.google.com>
+Date:   Thu, 17 Sep 2020 03:56:41 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+7tXihwHbcuxZ10jGZrQkET9+Dbs31SfsYDt_6XB+-JM99gqA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+X-Kernelci-Kernel: v5.9-rc2-19-ga5d0fe9ff2af
+Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.9-rc2-19-ga5d0fe9ff2af)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 03:00:36AM -0700, Trent Piepho wrote:
-> On Thu, Sep 17, 2020 at 2:20 AM Drew Fustini <drew@beagleboard.org> wrote:
-> >
-> > On Thu, Sep 17, 2020 at 02:03:46AM -0700, Trent Piepho wrote:
-> > > On Mon, Sep 14, 2020 at 3:44 AM Drew Fustini <drew@beagleboard.org> wrote:
-> > > >
-> > > > +
-> > > > +When #pinctrl-cells = 2, then setting a pin for a device could be done with:
-> > > > +
-> > > > +       pinctrl-single,pins = <0xdc 0x30 0x07>;
-> > > > +
-> > > > +Where 0x30 is the pin configuration value and 0x07 is the pin mux mode value.
-> > > > +See the device example and static board pins example below for more information.
-> > >
-> > > Pin configuration and mux mode don't mean anything in pinctrl-single.
-> > > On another machine, mux mode might not be programmed this way or even
-> > > exist.  Or the location of bits would probably be different, and this
-> > > would seem to imply the 0x07 would get shifted to the correct location
-> > > for where the pin mux setting was on that machine's pinctrl registers.
-> > >
-> > > It seems like it would be better to explain the values are ORed together.
-> >
-> > I descirbed it as seoerate values as I did not want to prescribe what
-> > the pcs driver would do with those values.  But, yes, it is a just an OR
-> > operation, so I could change the language to reflect tat.
-> 
-> If you don't say what the pinctrl-single driver does with the values,
-> how would anyone know how to use it?
-> 
-> > > What is the purpose of this change anyway?  It seems like in the end
-> > > it just does what it did before.  The data is now split into two cells
-> > > in the device tree, but why?
-> >
-> > These changes were a result of desire to seperate pinconf and pinmux.
-> > Tony raised the idea in a thread at the end of May [1].
-> >
-> > Tony wrote:
-> > > Only slightly related, but we should really eventually move omaps to use
-> > > #pinctrl-cells = <2> (or 3) instead of 1, and pass the pinconf seprately
-> > > from the mux mode. We already treat them separately with the new
-> > > AM33XX_PADCONF macro, so we'd only have to change one SoC at a time to
-> > > use updated #pinctrl-cells. But I think pinctrl-single might need some
-> > > changes before we can do that.
-> 
-> I still don't see what the goal is here.  Support generic pinconf?
+linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.9-rc2-=
+19-ga5d0fe9ff2af)
 
-My interest is came out of my desire to turn on generic pinconf for AM3358
-and I had to fix a bug that was breaking compatible "pinconf,single":
-f46fe79ff1b6 ("pinctrl-single: fix pcs_parse_pinconf() return value")
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.9-rc2-19-ga5d0fe9ff2af/
 
-> Also note that while AM33XX_PADCONF() is changed, there is an in tree
-> board that doesn't use it, so it's broken now.  I found this change
-> when it broke my out of tree board, due to the dtsi change not being
-> reflected in my board's pinctrl values.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.9-rc2-19-ga5d0fe9ff2af
+Git Commit: a5d0fe9ff2af9feb82d37782be5beb2976a4afdd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-Thanks, that is a good point that arch/arm/boot/dts/am335x-guardian.dts
-needs to be converted from AM33XX_IOPAD to AM33XX_PADCONF.  I'll submit
-a patch for that.
+Warnings Detected:
 
-Regarding AM33XX_PADCONF() restructuring, the change to have seperate
-arguments for direction and mux in AM33XX_PADCONF() predates my
-invovlement, so I've CC'd Christina Quast.
+arc:
 
-    commit f1ff9be7652b716c7eea67c9ca795027d911f148
-    Author: Christina Quast <cquast@hanoverdisplays.com>
-    Date:   Mon Apr 8 10:01:51 2019 -0700
+arm64:
+    defconfig (gcc-8): 8 warnings
 
-    ARM: dts: am33xx: Added AM33XX_PADCONF macro
-    
-    AM33XX_PADCONF takes three instead of two parameters, to make
-    future changes to #pinctrl-cells easier.
-    
-    For old boards which are not mainlined, we left the AM33XX_IOPAD
-    macro.
-    
-    Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
-    Reviewed-by: Rob Herring <robh@kernel.org>
-    Signed-off-by: Tony Lindgren <tony@atomide.com>
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
 
-Hopefully, Tony can also chime in.
+i386:
 
--Drew
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
