@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68BF526E178
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 18:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0343B26E16D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 18:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgIQQ7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 12:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36526 "EHLO mail.kernel.org"
+        id S1728655AbgIQQ5k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 12:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbgIQQ4m (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Sep 2020 12:56:42 -0400
+        id S1727667AbgIQQ5M (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 12:57:12 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4092064B;
-        Thu, 17 Sep 2020 16:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E0292220E;
+        Thu, 17 Sep 2020 16:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600361802;
-        bh=4dW5n48JqvNP10b6scxas3MFTEWsL4Xf/7dxjZPBmik=;
+        s=default; t=1600361815;
+        bh=3CcSAgmJymqX4erpPOGNuiR94tStAH1tIhGienjiYwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=voWH5Mj8BlY0YQbektVPJVIihTg4JqOT0bdGzRFdwEuQJQYXAZe22zdzn6SIFqo+L
-         WYVQYHdMqQ9HBxLjIUTDxVs7XjFArq2WAuDZpxQHcbFzeZs98yKrot5dAlXsjPI6pH
-         sALQqtb7ax8x+xX+P3HSx9zP5MxhbwecFqbmuxQE=
+        b=ehh/IOcVlyp+UzApCJd2uZjTnmaJ85CG1bFw5Xp5VD6lgKUEw8ObK1OdLXYqAxsAI
+         /FQXYjYHs/evznTntqzPiI+ybw3MYVG6jh3P53c2dKcURoHyEflt5A0qgMIexJ4Coz
+         hWB1F8aIxFFehtu2IMK2+HseBdDD+lc6ZKAlu6is=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -86,9 +86,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-mediatek@lists.infradead.org,
         linux-renesas-soc@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 11/13] arm64: dts: imx8mq-librem5: correct GPIO hog property
-Date:   Thu, 17 Sep 2020 18:52:59 +0200
-Message-Id: <20200917165301.23100-12-krzk@kernel.org>
+Subject: [PATCH v2 12/13] arm64: dts: imx8mq-librem5: align GPIO hog names with dtschema
+Date:   Thu, 17 Sep 2020 18:53:00 +0200
+Message-Id: <20200917165301.23100-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200917165301.23100-1-krzk@kernel.org>
 References: <20200917165301.23100-1-krzk@kernel.org>
@@ -96,7 +96,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Correct the name of property for GPIO specifier in GPIO hog.
+dtschema expects GPIO hogs to end with 'hog' suffix.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
@@ -104,18 +104,18 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-index 56295dd2fa8f..e4dedcb58f76 100644
+index e4dedcb58f76..6cbcee2fb938 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-@@ -251,7 +251,7 @@
+@@ -249,7 +249,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pmic_5v>;
  
- 	pmic-5v {
+-	pmic-5v {
++	pmic-5v-hog {
  		gpio-hog;
--		gpio = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+		gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+ 		gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
  		input;
- 	};
- };
 -- 
 2.17.1
 
