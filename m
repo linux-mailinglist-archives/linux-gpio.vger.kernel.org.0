@@ -2,40 +2,31 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EAA226D463
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 09:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1392E26D4A1
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 09:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgIQHPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 03:15:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37198 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgIQHO7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 03:14:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a9so924115wmm.2;
-        Thu, 17 Sep 2020 00:14:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uaz9kepgEXq9uBdXqyYSIYC/gVUhci+I1g61k9mFWnQ=;
-        b=mZBMk5UeweX0q+du3MNn+k65e1Tlsy+++1i7IVGQya9+avXR872473DvD2MWmN92BW
-         xuu4EuYruFXemP5zk127LMCqqEaeGUiVVm9jK34ZJTTlCn4mYs/VOCZQb0KC/JNnB36J
-         iprUD3fXBkDy6laua1+UyJsTBoMfZ4tPxwbX8wcLpYpW49IsGS2dbF38t8WwzVz17860
-         Y3T5E2K0yZAS7I7QfORVqOFmkdQ728/2MmAj2wqM/1V25drBehSDZxzTJueB7zfrHC4h
-         grttuFGv2+aXpCOgo4dBDtUDDIhAUpd46a2EtFdiRVp5J7G9R8+3BIKRXloSkuAFXnE9
-         ZZog==
-X-Gm-Message-State: AOAM5317lmn84Dzsbv4n0pXcatZ6EM3vvAih7q+aGnaXxuD8WT86QyIx
-        pJcksSkpP0lUMiRgFcXnWbI=
-X-Google-Smtp-Source: ABdhPJwJoXbRCDZ7Y0+x+9aKWBixTbcBqY473DlXztmst9+kEcc+7QCYPQ3dhqjJGZomFsfeIuz1bg==
-X-Received: by 2002:a7b:cb17:: with SMTP id u23mr8250390wmj.166.1600326896325;
-        Thu, 17 Sep 2020 00:14:56 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.191])
-        by smtp.googlemail.com with ESMTPSA id x16sm36483228wrq.62.2020.09.17.00.14.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Sep 2020 00:14:55 -0700 (PDT)
-Date:   Thu, 17 Sep 2020 09:14:51 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726185AbgIQHZ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 03:25:57 -0400
+Received: from mout.gmx.net ([212.227.15.19]:48429 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgIQHZ4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 03:25:56 -0400
+X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 03:25:54 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1600327547;
+        bh=zXWtad0JIIFPcwVYIpkWAbxd5f/Xglqob2hHG1bVTJw=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=QMccrluTswFKdC4vzqLbTwsDnY5Fi6s62lnyubzZXYqReT/meO2gx6E4FPmy/yJJA
+         JvhMt23jQ0tJuXIBGeA/ouC5sBW8yelnG6747VoyShStPAOoXlY3eCfyC0nTb2bIg/
+         I4EiphjIC3JuzEc4SVKXdCR1osbhauOQJ0nCIYnQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTiU3-1jvWjJ31tl-00Tylu; Thu, 17
+ Sep 2020 09:19:40 +0200
+Date:   Thu, 17 Sep 2020 09:19:32 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
@@ -63,83 +54,77 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-unisoc@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/8] dt-bindings: gpio: include common schema in GPIO
- controllers
-Message-ID: <20200917071451.GA30367@kozik-lap>
+Subject: Re: [PATCH 8/8] ARM: dts: imx: align GPIO hog names with dtschema
+Message-ID: <20200917071932.GF3306@latitude>
 References: <20200916162250.16098-1-krzk@kernel.org>
- <20200916162250.16098-3-krzk@kernel.org>
+ <20200916162250.16098-9-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w3uUfsyyY1Pqa/ej"
 Content-Disposition: inline
-In-Reply-To: <20200916162250.16098-3-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200916162250.16098-9-krzk@kernel.org>
+X-Provags-ID: V03:K1:YorKu7pZDQvPgwcW74yxwuNVFEWXjpKmR+QQ6aCm2kjASQe781T
+ gyUNKzv6xZx4M4wwltaekmcBFF56mIMGiApidvEyvD91soIu76ecvOnAWz9Y7Rovj2sShwX
+ 32LYp5Gxiqo7cY8aSzhwh/VfYZsBtibMCT8gNTUvzpGI4VLobehqvbg7P5fMmCM8MgIzAmo
+ 8uIUIEgW8UoeyErWXINdQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y7I6dMnRb2k=:ExMK8jy0Hy6akrnQXgge2U
+ 2lZyxPYOqgYe5iMPk/CVzt3Ndhq6ZwIhd5v/x1Jr3O2qXg3MIUPNO1Ux9omlkeRI1dDs0cpwq
+ uiVy/j2hysoMJbPbx+seuo0vNWrqHwihtPYSwdW8Pm+RHzjZgew3osZUkoPbdd2PXiWaTHG7Z
+ z73UNyIK8rdZzvJ7tw7VdlRA0lTwnbili5irQ4EY2bYVh66MzguQH/YhNIAZmqMZwq1599vtM
+ qzDTSy0aMYYisS6Yb77Zk8z5mY2HWxStdwx7qm6YN1u6HjrEM20QlAdlVcTRWyIPTLhj7amtZ
+ G/QQvb7liwYx497e8Dl6YV04JaTX2St51RBNbp5QgAgz0USJTg2yc7RRbVvm3wAAZGlmABbld
+ eevwaBm/wBHFTdoni63EoMwiEr1o7qDnnhwrIp1ltq/1P7r1hmLmzlPmKRjSiRNgyaAo1CuvP
+ DsXANagkKzz2eXRCFvlVVwc0bR14YGUzB4/0cwwFrMb/YzD9gC7AH8+hL+i7XkBPC8QFVM8xa
+ l5NHNjlf/7dLuG84gzBXx3N4vMVaF+9DH4wTLrM5iUBcox1pWV47StAZ8IgMFtKVt9hwV3AOc
+ YI/IspB3MBCDnu2duH7cSxPL2lRnvbtY8gtSGVH2qNozvrHQCG9T3iR8IO+Ukf/5lvD0LuGVi
+ a3DA5+fEUD5fSeR0uzBdkhLO+IecK0A+v21ufsB0jNcFsqAYYGiFJf0Pt1frHoxULS71/RWvX
+ dwQ8ryYbMvbfOiat/yp7KN/ddydSMumW+qAIA89pGfjZP/euCbkaS49uhFckQYIi38Ykyg9Nq
+ mzY0RXepOxy+lLjZoAfrQMEebCpWZOsZMXBEnb3/984bh18hLHS/aOH+VW3e0NC+aba4F7HIb
+ fuW0MtRh6Km8jmVh1gll0nh3eN7G7pJUZsIq/rl5KST0+PDfDHv7TyCrWuUX1VuwrASHrhpqL
+ xeWxJjUUkXSLyCob548sr4MPFJH8VFV5P0ye7D4FRpwTh8CQsbetIOu99DsFY6I8xLkiP9Ie+
+ s47fcWGAYUhImFnN5f/D6xpfdfbO4YF5i5vLpxIzl/VWFDQZUS9gNv4m1tou3MbksBoi/xrRO
+ eQi7VpsbXG4decRCv7DSQ2undAKXwqL8ENnUW4s9ZNseawwg6plMRV0wd1N4nIE7yIq9JSDUG
+ sUL5jnSLpLLLSL/oXobvW43U+HUZ8D0NHAHcpMl2DzaT+NRyv0IznCuGwtcKncpH3NyYeIJP+
+ BhhZa6dk5iei0R3QeDJoJfhaW7owR7rZs5ai3rg==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 06:22:44PM +0200, Krzysztof Kozlowski wrote:
-> Include the common GPIO schema in GPIO controllers to be sure all common
-> properties are properly validated.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  .../devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml          | 3 +++
->  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml       | 3 +++
->  Documentation/devicetree/bindings/gpio/gpio-mxs.yaml           | 3 +++
->  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml       | 3 +++
->  Documentation/devicetree/bindings/gpio/gpio-rda.yaml           | 3 +++
->  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml         | 3 +++
->  Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml          | 1 +
->  Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml  | 3 +++
->  Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml     | 3 +++
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml  | 3 +++
->  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml        | 3 +++
->  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 3 +++
->  Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml | 3 +++
->  13 files changed, 37 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
-> index c213cb9ddb9f..1ac69b9c03f9 100644
-> --- a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
-> @@ -13,6 +13,9 @@ description: |
->    This controller is the Chip Common A GPIO present on a number of Broadcom
->    switch ASICs with integrated SoCs.
->  
-> +allOf:
-> +  - $ref: gpio-common.yaml#
-> +
->  properties:
->    compatible:
->      const: brcm,iproc-gpio-cca
-> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> index de0b9b5f6a70..737756e081fb 100644
-> --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> @@ -9,6 +9,9 @@ title: Freescale i.MX/MXC GPIO controller
->  maintainers:
->    - Anson Huang <Anson.Huang@nxp.com>
->  
-> +allOf:
-> +  - $ref: gpio-common.yaml#
-> +
->  properties:
->    compatible:
->      oneOf:
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-> index dfa1133f8c5e..7fc04ab35044 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-> @@ -17,6 +17,9 @@ description: |
->    GPIO ports share the same IO space with PIN controller, the GPIO node
->    will be represented as sub-nodes of MXS pinctrl node.
->  
-> +allOf:
-> +  - $ref: gpio-common.yaml#
-> +
 
-I found something to fix - this one should go under patternProperties,
-not here.
+--w3uUfsyyY1Pqa/ej
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Wed, Sep 16, 2020 at 06:22:50PM +0200, Krzysztof Kozlowski wrote:
+> dtschema for GPIO controllers expects GPIO hogs to end with 'hog'
+> prefix.
+
+Nit: It's a suffix if it's at the end.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--w3uUfsyyY1Pqa/ej
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9jDfwACgkQCDBEmo7z
+X9tyrRAAil2Ws9RX5xEhOM4JTYZZs2cN+39EFsN/UxgAFfH6d5DSDAvTwsAKLVYu
+fN2VXncB+EnJuFS1poUbhIHVv8UKAhd51hVXveutQjhCXRCqTRxhsTbE2NamacUZ
+TMUzWwXkZbmeH3GFQ07pgxKh8SSvrqeVn95IupKHWtSIHNomGY4ZccO4iuaRlD1e
+Ginacpkf107eon+YEJgoAX6CMumZbzCFM9LVyaWiT9psJQvdS9aDp26ER785IaYH
+UT+9LtBrXytog7EzrJHJEMbDboewPKtJ+yMWfmP33FnqR+9MvUkt+N+d7g5H0Mkb
+fUPqL0NFd01jkVWAmUOGem1baRHQlupf4hcm609RGakdHyZUB0g8MBhL6O5inUZO
+/m/HkeO4Gx2Y7FR3aVfIC2sDwUzglI4fHqRdoHC+4lexbvhsBfoVZw5XHe2LmSX1
+lvVW3jYfGQaiJiBhFR2nWZU2CkRm7Ur4bGBa0z6Rthv0BUYNdZ9JvOuVJRKzKl0D
+deUbMLt1YdCVvELm1SbG6y0ItP9EkVJVK5cTtPr1H5PIP8zl7JdAnxkR3YOEbpxt
+Hkthrhjh48Cvb5id6Xqf5O6g17rAtKqKxZGjjSLDvwxDu5tQCfSad7M3gxNIb/KV
+a4eXNUuwJYhawOtgrFyjvg0jJ2PXZbfZLZqIfvhepUz5Xv9gQ94=
+=n42d
+-----END PGP SIGNATURE-----
+
+--w3uUfsyyY1Pqa/ej--
