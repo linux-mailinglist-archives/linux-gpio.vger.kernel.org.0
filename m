@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3ACA26D33A
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 07:48:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7031A26D33D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 07:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgIQFsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 01:48:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44204 "EHLO inva020.nxp.com"
+        id S1726186AbgIQFtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 01:49:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39130 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgIQFsw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Sep 2020 01:48:52 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0BD6F1A0F09;
-        Thu, 17 Sep 2020 07:40:54 +0200 (CEST)
+        id S1726109AbgIQFs7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 01:48:59 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 296F3200C75;
+        Thu, 17 Sep 2020 07:40:58 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 280351A0F17;
-        Thu, 17 Sep 2020 07:40:43 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A1B42200BFD;
+        Thu, 17 Sep 2020 07:40:47 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 157D8402AE;
-        Thu, 17 Sep 2020 07:40:30 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 684FA40310;
+        Thu, 17 Sep 2020 07:40:32 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
@@ -33,77 +33,41 @@ To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 1/4] gpio: mxc: Support module build
-Date:   Thu, 17 Sep 2020 13:33:46 +0800
-Message-Id: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V3 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC by default
+Date:   Thu, 17 Sep 2020 13:33:47 +0800
+Message-Id: <1600320829-1453-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
+References: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change config to tristate, add module device table, module author,
-description and license to support module build for i.MX GPIO driver.
-
-As this is a SoC GPIO module, it provides common functions for most
-of the peripheral devices, such as GPIO pins control, secondary
-interrupt controller for GPIO pins IRQ etc., without GPIO driver, most
-of the peripheral devices will NOT work properly, so GPIO module is
-similar with clock, pinctrl driver that should be loaded ONCE and
-never unloaded.
-
-Since MXC GPIO driver needs to have init function to register syscore
-ops once, here still use subsys_initcall(), NOT module_platform_driver().
+i.MX SoC GPIO driver provides the basic functions of GPIO pin operations
+and IRQ operations, it is now changed from "def_bool y" to "tristate", so
+it should be explicitly enabled to make sure all consumers work normally.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-no change.
+changes since V2:
+	- improve commit message to explain why CONFIG_GPIO_MXC needs to be enabled.
 ---
- drivers/gpio/Kconfig    | 2 +-
- drivers/gpio/gpio-mxc.c | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 5cfdaf3..c7292a5 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -397,7 +397,7 @@ config GPIO_MVEBU
- 	select REGMAP_MMIO
- 
- config GPIO_MXC
--	def_bool y
-+	tristate "i.MX GPIO support"
- 	depends on ARCH_MXC || COMPILE_TEST
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 64278a4..643f4c55 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -15,6 +15,7 @@
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/syscore_ops.h>
-@@ -158,6 +159,7 @@ static const struct of_device_id mxc_gpio_dt_ids[] = {
- 	{ .compatible = "fsl,imx7d-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, mxc_gpio_dt_ids);
- 
- /*
-  * MX2 has one interrupt *for all* gpio ports. The list is used
-@@ -604,3 +606,7 @@ static int __init gpio_mxc_init(void)
- 	return platform_driver_register(&mxc_gpio_driver);
- }
- subsys_initcall(gpio_mxc_init);
-+
-+MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
-+MODULE_DESCRIPTION("i.MX GPIO Driver");
-+MODULE_LICENSE("GPL");
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 63003ec..c8fca1a 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -510,6 +510,7 @@ CONFIG_GPIO_PCA953X=y
+ CONFIG_GPIO_PCA953X_IRQ=y
+ CONFIG_GPIO_BD9571MWV=m
+ CONFIG_GPIO_MAX77620=y
++CONFIG_GPIO_MXC=y
+ CONFIG_POWER_AVS=y
+ CONFIG_QCOM_CPR=y
+ CONFIG_ROCKCHIP_IODOMAIN=y
 -- 
 2.7.4
 
