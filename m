@@ -2,159 +2,277 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D4426E6AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 22:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A521C26E618
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 22:04:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgIQUXR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 16:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgIQUXA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 16:23:00 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EB0C06178B
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 12:25:19 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so3247478wrx.7
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 12:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fnNtIiw2rIjrsGeETGQ4HVhLgof6IApfDCKNZB0rtx4=;
-        b=FnbmoKzn7ml3hNVC5JMySDeca53lTjtdCXoL4cxAwzsEJrHzyEDKiOIljY35+rHymp
-         jt5GwmgM0shyZllOsgSZwY1CN+167LFzIGjPBmfNcdzVLaAOviH2qCxmpdLIINnBYKdr
-         Nenh/eU1pcNo7H7CYh7JbOgBzXixsAvVANZjgbmMpOdpEOqoSWQOaJdn0OEkqXMoKEDM
-         Q0SNuv4Q5KZUIK5oUfQtO9Gcy3oo5OvaZ3rbJ7eOSHvaN8c1rIBr1TUyzLh0jx/opgMg
-         Syx8dKN4xhP81GhQDlmyDEUOhNv4IH6zDXnd2mrLTjbJp/76i8olBPS0b7cja4sPq5o/
-         fzcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fnNtIiw2rIjrsGeETGQ4HVhLgof6IApfDCKNZB0rtx4=;
-        b=dAN8xLUtWtEsFEBS5w3l8fk5zll82PjRDm7iq5EQrZdX7nFRqKQ/WwhhkvqhGDrWu1
-         p91iFBp7bIvnMbfXoT5ggaZKf9/ZcpY43WZ1wkIdhsD8CLY2yoHsyDO/RxfXkKCdpuqH
-         tgZzioY+PZA68rxadb7/8TMo1ERmLZiQRvBobW46wteRzkpLL6WmexG9Rgz73ZuZr6mv
-         SLx9GA23FR8dnygvvkUJlpMAkspNph0nj0gH3o42klt3PaQbr0QtP/8GGw5b0TtfVWGP
-         qoUgGMJNkhVpXjIH4oWPCJSYxpDed0RwYlRbFfrioprLKb82GKf5hho5pIr8zgYnlZV9
-         Phuw==
-X-Gm-Message-State: AOAM532/BGguIEt6ZVGxKpxwvT5CHQdkeqK7vK7PznJet/dd6BLmijXm
-        EAr+F1qHPDIa1xQFe/e78DT7rw==
-X-Google-Smtp-Source: ABdhPJwHQNEGKQiK5VaKpdrHxxRlNDliXhK+3vSwtgJ/Fr7no0AtL6d27HAF4oliOiP95GvT8d67qQ==
-X-Received: by 2002:a05:6000:100c:: with SMTP id a12mr36101704wrx.115.1600370717856;
-        Thu, 17 Sep 2020 12:25:17 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id i6sm970270wra.1.2020.09.17.12.25.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 12:25:16 -0700 (PDT)
-Date:   Thu, 17 Sep 2020 20:25:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S1726328AbgIQUEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 16:04:34 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:33823 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726361AbgIQUEd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 16:04:33 -0400
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 16:04:33 EDT
+X-IronPort-AV: E=Sophos;i="5.77,271,1596466800"; 
+   d="scan'208";a="57339497"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 18 Sep 2020 04:59:29 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6FBFD4005E24;
+        Fri, 18 Sep 2020 04:59:27 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [GIT PULL] Immutable branch between MFD, HWMON, GPIO, IRQChip, PWM
- and Watchdog due for the v5.10 merge window
-Message-ID: <20200917192514.GF4678@dell>
-References: <20200914214341.14268-1-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200914214341.14268-1-michael@walle.cc>
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: [PATCH v3] pinctrl: renesas: r8a7790: Add VIN1-B and VIN2-G pins, groups and functions
+Date:   Thu, 17 Sep 2020 20:59:24 +0100
+Message-Id: <20200917195924.20384-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enjoy!
+Add pins, groups and functions for the VIN1-B [data/sync/field/clkenb/clk]
+and VIN2-G8.
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+v2->v3:
+* Included vin1_data4_b, field_b  and clkenb_b
+* Renamed vin2_data8g to vin2_g8
+* Rebased patch on latest changes
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+v1->v2:
+* Added complete list of VIN1-B pins
+* Renamed vin2_data8_g to vin2_data8g
+* Sorted vin1_sync_b pins
 
-are available in the Git repository at:
+v1 - https://patchwork.kernel.org/patch/11761191/
+---
+ drivers/pinctrl/renesas/pfc-r8a7790.c | 132 +++++++++++++++++++++++++-
+ 1 file changed, 131 insertions(+), 1 deletion(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-hwmon-irqchip-pwm-watchdog-v5.10
-
-for you to fetch changes up to 3f697027bcb0959d7c24d59550ab1da07c2dd609:
-
-  hwmon: Add support for the sl28cpld hardware monitoring controller (2020-09-17 16:02:42 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, HWMON, GPIO, IRQChip, PWM and Watchdog due for the v5.10 merge window
-
-----------------------------------------------------------------
-Michael Walle (8):
-      mfd: Add simple regmap based I2C driver
-      dt-bindings: mfd: Add bindings for sl28cpld
-      mfd: simple-mfd-i2c: Add sl28cpld support
-      irqchip: Add sl28cpld interrupt controller support
-      watchdog: add support for sl28cpld watchdog
-      pwm: Add support for sl28cpld PWM controller
-      gpio: Add support for the sl28cpld GPIO controller
-      hwmon: Add support for the sl28cpld hardware monitoring controller
-
- .../bindings/gpio/kontron,sl28cpld-gpio.yaml       |  54 +++++
- .../bindings/hwmon/kontron,sl28cpld-hwmon.yaml     |  27 +++
- .../kontron,sl28cpld-intc.yaml                     |  54 +++++
- .../devicetree/bindings/mfd/kontron,sl28cpld.yaml  | 153 ++++++++++++
- .../bindings/pwm/kontron,sl28cpld-pwm.yaml         |  35 +++
- .../bindings/watchdog/kontron,sl28cpld-wdt.yaml    |  35 +++
- Documentation/hwmon/index.rst                      |   1 +
- Documentation/hwmon/sl28cpld.rst                   |  36 +++
- drivers/gpio/Kconfig                               |  12 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-sl28cpld.c                       | 161 ++++++++++++
- drivers/hwmon/Kconfig                              |  10 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/sl28cpld-hwmon.c                     | 142 +++++++++++
- drivers/irqchip/Kconfig                            |   8 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-sl28cpld.c                     |  96 ++++++++
- drivers/mfd/Kconfig                                |  22 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/simple-mfd-i2c.c                       |  57 +++++
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-sl28cpld.c                         | 270 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  11 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/sl28cpld_wdt.c                    | 229 +++++++++++++++++
- 26 files changed, 1429 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
- create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
- create mode 100644 Documentation/hwmon/sl28cpld.rst
- create mode 100644 drivers/gpio/gpio-sl28cpld.c
- create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
- create mode 100644 drivers/irqchip/irq-sl28cpld.c
- create mode 100644 drivers/mfd/simple-mfd-i2c.c
- create mode 100644 drivers/pwm/pwm-sl28cpld.c
-
+diff --git a/drivers/pinctrl/renesas/pfc-r8a7790.c b/drivers/pinctrl/renesas/pfc-r8a7790.c
+index 60f973c5dffe..3f48d3d879f7 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a7790.c
++++ b/drivers/pinctrl/renesas/pfc-r8a7790.c
+@@ -3866,6 +3866,72 @@ static const unsigned int vin1_data18_mux[] = {
+ 	VI1_R4_MARK, VI1_R5_MARK,
+ 	VI1_R6_MARK, VI1_R7_MARK,
+ };
++static const union vin_data vin1_data_b_pins = {
++	.data24 = {
++		/* B */
++		RCAR_GP_PIN(3, 0), RCAR_GP_PIN(3, 1),
++		RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
++		RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
++		RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
++		/* G */
++		RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 15),
++		RCAR_GP_PIN(1, 17), RCAR_GP_PIN(1, 20),
++		RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 12),
++		RCAR_GP_PIN(1, 9), RCAR_GP_PIN(1, 7),
++		/* R */
++		RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
++		RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 4),
++		RCAR_GP_PIN(1, 5), RCAR_GP_PIN(1, 6),
++		RCAR_GP_PIN(1, 10), RCAR_GP_PIN(1, 8),
++	},
++};
++static const union vin_data vin1_data_b_mux = {
++	.data24 = {
++		/* B */
++		VI1_DATA0_VI1_B0_B_MARK, VI1_DATA1_VI1_B1_B_MARK,
++		VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
++		VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
++		VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
++		/* G */
++		VI1_G0_B_MARK, VI1_G1_B_MARK,
++		VI1_G2_B_MARK, VI1_G3_B_MARK,
++		VI1_G4_B_MARK, VI1_G5_B_MARK,
++		VI1_G6_B_MARK, VI1_G7_B_MARK,
++		/* R */
++		VI1_R0_B_MARK, VI1_R1_B_MARK,
++		VI1_R2_B_MARK, VI1_R3_B_MARK,
++		VI1_R4_B_MARK, VI1_R5_B_MARK,
++		VI1_R6_B_MARK, VI1_R7_B_MARK,
++	},
++};
++static const unsigned int vin1_data18_b_pins[] = {
++	/* B */
++	RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
++	RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
++	RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
++	/* G */
++	RCAR_GP_PIN(1, 17), RCAR_GP_PIN(1, 20),
++	RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 12),
++	RCAR_GP_PIN(1, 9), RCAR_GP_PIN(1, 7),
++	/* R */
++	RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 4),
++	RCAR_GP_PIN(1, 5), RCAR_GP_PIN(1, 6),
++	RCAR_GP_PIN(1, 10), RCAR_GP_PIN(1, 8),
++};
++static const unsigned int vin1_data18_b_mux[] = {
++	/* B */
++	VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
++	VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
++	VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
++	/* G */
++	VI1_G2_B_MARK, VI1_G3_B_MARK,
++	VI1_G4_B_MARK, VI1_G5_B_MARK,
++	VI1_G6_B_MARK, VI1_G7_B_MARK,
++	/* R */
++	VI1_R2_B_MARK, VI1_R3_B_MARK,
++	VI1_R4_B_MARK, VI1_R5_B_MARK,
++	VI1_R6_B_MARK, VI1_R7_B_MARK,
++};
+ static const unsigned int vin1_sync_pins[] = {
+ 	RCAR_GP_PIN(1, 24), /* HSYNC */
+ 	RCAR_GP_PIN(1, 25), /* VSYNC */
+@@ -3874,24 +3940,50 @@ static const unsigned int vin1_sync_mux[] = {
+ 	VI1_HSYNC_N_MARK,
+ 	VI1_VSYNC_N_MARK,
+ };
++static const unsigned int vin1_sync_b_pins[] = {
++	RCAR_GP_PIN(1, 24), /* HSYNC */
++	RCAR_GP_PIN(1, 25), /* VSYNC */
++};
++static const unsigned int vin1_sync_b_mux[] = {
++	VI1_HSYNC_N_B_MARK,
++	VI1_VSYNC_N_B_MARK,
++};
+ static const unsigned int vin1_field_pins[] = {
+ 	RCAR_GP_PIN(1, 13),
+ };
+ static const unsigned int vin1_field_mux[] = {
+ 	VI1_FIELD_MARK,
+ };
++static const unsigned int vin1_field_b_pins[] = {
++	RCAR_GP_PIN(1, 13),
++};
++static const unsigned int vin1_field_b_mux[] = {
++	VI1_FIELD_B_MARK,
++};
+ static const unsigned int vin1_clkenb_pins[] = {
+ 	RCAR_GP_PIN(1, 26),
+ };
+ static const unsigned int vin1_clkenb_mux[] = {
+ 	VI1_CLKENB_MARK,
+ };
++static const unsigned int vin1_clkenb_b_pins[] = {
++	RCAR_GP_PIN(1, 26),
++};
++static const unsigned int vin1_clkenb_b_mux[] = {
++	VI1_CLKENB_B_MARK,
++};
+ static const unsigned int vin1_clk_pins[] = {
+ 	RCAR_GP_PIN(2, 9),
+ };
+ static const unsigned int vin1_clk_mux[] = {
+ 	VI1_CLK_MARK,
+ };
++static const unsigned int vin1_clk_b_pins[] = {
++	RCAR_GP_PIN(3, 15),
++};
++static const unsigned int vin1_clk_b_mux[] = {
++	VI1_CLK_B_MARK,
++};
+ /* - VIN2 ----------------------------------------------------------------- */
+ static const union vin_data vin2_data_pins = {
+ 	.data24 = {
+@@ -3959,6 +4051,18 @@ static const unsigned int vin2_data18_mux[] = {
+ 	VI2_R4_MARK, VI2_R5_MARK,
+ 	VI2_R6_MARK, VI2_R7_MARK,
+ };
++static const unsigned int vin2_g8_pins[] = {
++	RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
++	RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
++	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
++	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
++};
++static const unsigned int vin2_g8_mux[] = {
++	VI2_G0_MARK, VI2_G1_MARK,
++	VI2_G2_MARK, VI2_G3_MARK,
++	VI2_G4_MARK, VI2_G5_MARK,
++	VI2_G6_MARK, VI2_G7_MARK,
++};
+ static const unsigned int vin2_sync_pins[] = {
+ 	RCAR_GP_PIN(1, 16), /* HSYNC */
+ 	RCAR_GP_PIN(1, 21), /* VSYNC */
+@@ -4026,7 +4130,7 @@ static const unsigned int vin3_clk_mux[] = {
+ };
+ 
+ static const struct {
+-	struct sh_pfc_pin_group common[298];
++	struct sh_pfc_pin_group common[311];
+ 	struct sh_pfc_pin_group automotive[1];
+ } pinmux_groups = {
+ 	.common = {
+@@ -4310,15 +4414,28 @@ static const struct {
+ 		VIN_DATA_PIN_GROUP(vin1_data, 10),
+ 		VIN_DATA_PIN_GROUP(vin1_data, 8),
+ 		VIN_DATA_PIN_GROUP(vin1_data, 4),
++		VIN_DATA_PIN_GROUP(vin1_data, 24, _b),
++		VIN_DATA_PIN_GROUP(vin1_data, 20, _b),
++		SH_PFC_PIN_GROUP(vin1_data18_b),
++		VIN_DATA_PIN_GROUP(vin1_data, 16, _b),
++		VIN_DATA_PIN_GROUP(vin1_data, 12, _b),
++		VIN_DATA_PIN_GROUP(vin1_data, 10, _b),
++		VIN_DATA_PIN_GROUP(vin1_data, 8, _b),
++		VIN_DATA_PIN_GROUP(vin1_data, 4, _b),
+ 		SH_PFC_PIN_GROUP(vin1_sync),
++		SH_PFC_PIN_GROUP(vin1_sync_b),
+ 		SH_PFC_PIN_GROUP(vin1_field),
++		SH_PFC_PIN_GROUP(vin1_field_b),
+ 		SH_PFC_PIN_GROUP(vin1_clkenb),
++		SH_PFC_PIN_GROUP(vin1_clkenb_b),
+ 		SH_PFC_PIN_GROUP(vin1_clk),
++		SH_PFC_PIN_GROUP(vin1_clk_b),
+ 		VIN_DATA_PIN_GROUP(vin2_data, 24),
+ 		SH_PFC_PIN_GROUP(vin2_data18),
+ 		VIN_DATA_PIN_GROUP(vin2_data, 16),
+ 		VIN_DATA_PIN_GROUP(vin2_data, 8),
+ 		VIN_DATA_PIN_GROUP(vin2_data, 4),
++		SH_PFC_PIN_GROUP(vin2_g8),
+ 		SH_PFC_PIN_GROUP(vin2_sync),
+ 		SH_PFC_PIN_GROUP(vin2_field),
+ 		SH_PFC_PIN_GROUP(vin2_clkenb),
+@@ -4784,10 +4901,22 @@ static const char * const vin1_groups[] = {
+ 	"vin1_data10",
+ 	"vin1_data8",
+ 	"vin1_data4",
++	"vin1_data24_b",
++	"vin1_data20_b",
++	"vin1_data18_b",
++	"vin1_data16_b",
++	"vin1_data12_b",
++	"vin1_data10_b",
++	"vin1_data8_b",
++	"vin1_data4_b",
+ 	"vin1_sync",
++	"vin1_sync_b",
+ 	"vin1_field",
++	"vin1_field_b",
+ 	"vin1_clkenb",
++	"vin1_clkenb_b",
+ 	"vin1_clk",
++	"vin1_clk_b",
+ };
+ 
+ static const char * const vin2_groups[] = {
+@@ -4796,6 +4925,7 @@ static const char * const vin2_groups[] = {
+ 	"vin2_data16",
+ 	"vin2_data8",
+ 	"vin2_data4",
++	"vin2_g8",
+ 	"vin2_sync",
+ 	"vin2_field",
+ 	"vin2_clkenb",
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
