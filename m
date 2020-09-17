@@ -2,49 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B977926D409
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 08:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EAA226D463
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 09:15:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgIQG6d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 02:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgIQG62 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Sep 2020 02:58:28 -0400
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA8C21D41;
-        Thu, 17 Sep 2020 06:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600325906;
-        bh=nPSrDuBIqK++Cs2Yf8watCT9FKUAvE8l/UEvBK+iyoI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R8+Zxy8DVnHIGDtj/rxH1HYE7+ZI7x6ClAOFZg+v/22EvmPQmS0iR+V1m6PRFpW3X
-         X873efb8X9+8WoporP624GJXUCGLxqPWvml5scUjhzOAEvZNxJr7BjL3kGMyKIHRIa
-         H25+QiYH6WFTG3Sh7e7uJRiq2cQfj0Qetv1YjJ4k=
-Received: by mail-ed1-f43.google.com with SMTP id n22so1324522edt.4;
-        Wed, 16 Sep 2020 23:58:26 -0700 (PDT)
-X-Gm-Message-State: AOAM533xf7kos8Rcs+nf+MxotAttzjoFfbIq9U+TD7aKPz2l89rq5mbZ
-        qhys+waoSlxfQM72s1cF7a4C95/G/ii+VuZdo4c=
-X-Google-Smtp-Source: ABdhPJw6oBjGfpKJpPCFXBca1WTyVw1bjowRIiOkT6Iq1M84hhnCUG0jSC0ArmHu21bBl/Bc3OMUftiIy2mZoqPT59s=
-X-Received: by 2002:a50:e78f:: with SMTP id b15mr31833332edn.104.1600325905101;
- Wed, 16 Sep 2020 23:58:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200916162250.16098-1-krzk@kernel.org> <20200916162250.16098-3-krzk@kernel.org>
- <CAMuHMdUS134fokz9Xus_pnL6tVYvgQE_uAS4Q-+B4r77VeY=xg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUS134fokz9Xus_pnL6tVYvgQE_uAS4Q-+B4r77VeY=xg@mail.gmail.com>
+        id S1726185AbgIQHPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 03:15:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37198 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgIQHO7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 03:14:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a9so924115wmm.2;
+        Thu, 17 Sep 2020 00:14:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uaz9kepgEXq9uBdXqyYSIYC/gVUhci+I1g61k9mFWnQ=;
+        b=mZBMk5UeweX0q+du3MNn+k65e1Tlsy+++1i7IVGQya9+avXR872473DvD2MWmN92BW
+         xuu4EuYruFXemP5zk127LMCqqEaeGUiVVm9jK34ZJTTlCn4mYs/VOCZQb0KC/JNnB36J
+         iprUD3fXBkDy6laua1+UyJsTBoMfZ4tPxwbX8wcLpYpW49IsGS2dbF38t8WwzVz17860
+         Y3T5E2K0yZAS7I7QfORVqOFmkdQ728/2MmAj2wqM/1V25drBehSDZxzTJueB7zfrHC4h
+         grttuFGv2+aXpCOgo4dBDtUDDIhAUpd46a2EtFdiRVp5J7G9R8+3BIKRXloSkuAFXnE9
+         ZZog==
+X-Gm-Message-State: AOAM5317lmn84Dzsbv4n0pXcatZ6EM3vvAih7q+aGnaXxuD8WT86QyIx
+        pJcksSkpP0lUMiRgFcXnWbI=
+X-Google-Smtp-Source: ABdhPJwJoXbRCDZ7Y0+x+9aKWBixTbcBqY473DlXztmst9+kEcc+7QCYPQ3dhqjJGZomFsfeIuz1bg==
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr8250390wmj.166.1600326896325;
+        Thu, 17 Sep 2020 00:14:56 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.191])
+        by smtp.googlemail.com with ESMTPSA id x16sm36483228wrq.62.2020.09.17.00.14.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Sep 2020 00:14:55 -0700 (PDT)
+Date:   Thu, 17 Sep 2020 09:14:51 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 17 Sep 2020 08:58:13 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeTTbrz5Ja8Y=qeCx_vbUub9sBzQqQY1yNa8dWN0nafGg@mail.gmail.com>
-Message-ID: <CAJKOXPeTTbrz5Ja8Y=qeCx_vbUub9sBzQqQY1yNa8dWN0nafGg@mail.gmail.com>
-Subject: Re: [PATCH 2/8] dt-bindings: gpio: include common schema in GPIO controllers
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -64,52 +59,87 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Yash Shah <yash.shah@sifive.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-unisoc@lists.infradead.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-unisoc@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 2/8] dt-bindings: gpio: include common schema in GPIO
+ controllers
+Message-ID: <20200917071451.GA30367@kozik-lap>
+References: <20200916162250.16098-1-krzk@kernel.org>
+ <20200916162250.16098-3-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200916162250.16098-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 17 Sep 2020 at 08:40, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Krzysztof,
->
-> On Wed, Sep 16, 2020 at 6:23 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > Include the common GPIO schema in GPIO controllers to be sure all common
-> > properties are properly validated.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Thanks for your patch!
->
-> > ---
-> >  .../devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml          | 3 +++
-> >  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml       | 3 +++
-> >  Documentation/devicetree/bindings/gpio/gpio-mxs.yaml           | 3 +++
-> >  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml       | 3 +++
-> >  Documentation/devicetree/bindings/gpio/gpio-rda.yaml           | 3 +++
-> >  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml         | 3 +++
-> >  Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml          | 1 +
-> >  Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml  | 3 +++
-> >  Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml     | 3 +++
-> >  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml  | 3 +++
-> >  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml        | 3 +++
-> >  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 3 +++
-> >  Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml | 3 +++
-> >  13 files changed, 37 insertions(+)
->
-> There are more binding files describing GPIO controllers outside the
-> Documentation/devicetree/bindings/gpio/ subdirectory, cfr.
-> 'git grep gpio-controller:.true -- "Doc*yaml"'
+On Wed, Sep 16, 2020 at 06:22:44PM +0200, Krzysztof Kozlowski wrote:
+> Include the common GPIO schema in GPIO controllers to be sure all common
+> properties are properly validated.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml          | 3 +++
+>  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml       | 3 +++
+>  Documentation/devicetree/bindings/gpio/gpio-mxs.yaml           | 3 +++
+>  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml       | 3 +++
+>  Documentation/devicetree/bindings/gpio/gpio-rda.yaml           | 3 +++
+>  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml         | 3 +++
+>  Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml          | 1 +
+>  Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml  | 3 +++
+>  Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml     | 3 +++
+>  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml  | 3 +++
+>  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml        | 3 +++
+>  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 3 +++
+>  Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml | 3 +++
+>  13 files changed, 37 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> index c213cb9ddb9f..1ac69b9c03f9 100644
+> --- a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> @@ -13,6 +13,9 @@ description: |
+>    This controller is the Chip Common A GPIO present on a number of Broadcom
+>    switch ASICs with integrated SoCs.
+>  
+> +allOf:
+> +  - $ref: gpio-common.yaml#
+> +
+>  properties:
+>    compatible:
+>      const: brcm,iproc-gpio-cca
+> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> index de0b9b5f6a70..737756e081fb 100644
+> --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> @@ -9,6 +9,9 @@ title: Freescale i.MX/MXC GPIO controller
+>  maintainers:
+>    - Anson Huang <Anson.Huang@nxp.com>
+>  
+> +allOf:
+> +  - $ref: gpio-common.yaml#
+> +
+>  properties:
+>    compatible:
+>      oneOf:
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> index dfa1133f8c5e..7fc04ab35044 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> @@ -17,6 +17,9 @@ description: |
+>    GPIO ports share the same IO space with PIN controller, the GPIO node
+>    will be represented as sub-nodes of MXS pinctrl node.
+>  
+> +allOf:
+> +  - $ref: gpio-common.yaml#
+> +
 
-Oh, indeed. Thanks for spotting these. I will check them and send a follow up.
+I found something to fix - this one should go under patternProperties,
+not here.
 
 Best regards,
 Krzysztof
