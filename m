@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B01026E152
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 18:55:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33A2426E158
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 18:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgIQQzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 12:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
+        id S1728761AbgIQQzr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 12:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbgIQQzP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Sep 2020 12:55:15 -0400
+        id S1728672AbgIQQzp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Sep 2020 12:55:45 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE174221E7;
-        Thu, 17 Sep 2020 16:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58EBE2064B;
+        Thu, 17 Sep 2020 16:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600361713;
-        bh=HczLzPQr6OtHbam5qOdkdD+vA7dPuNPd8y9fq4tyixw=;
+        s=default; t=1600361744;
+        bh=dFPbOAJ+oeV4JL1+FvEz/lM51pVEtTgDCeXjIbkcrXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuy5p0+Ez3XMnKjk08wzzH6pMKBcMSmcBzBBWZcw06qb8eATzdQsyeG9aZ85bT4hW
-         pzU2ynkwfqqkI3EYoJgoOZJzpq2CFcQ0Gp/XY+1Gpqr1vebfRY/wroBvMS2AHGEVvi
-         YCKCmQK5gyP55HfTJ9BhRkNS8uT2a5HUIDR0Sudo=
+        b=Upx+hOpc9J/lcbE9OKI5mOafpckAkFpvyhiPVxHgkbSz/QxP6k6EPmqz7szVNd/39
+         6eOasWlgoMnY4DHRsjiBftWmNe9v14c9O6l5BB0m6Ua3DO2E5DUk2JBB65TQTF4fN+
+         Sxhxa+BRxFcOEfuTjStNi0ooVufbYHRCNy1c+vnE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -86,9 +86,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-mediatek@lists.infradead.org,
         linux-renesas-soc@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 05/13] dt-bindings: gpio: fsl-imx-gpio: add gpio-line-names
-Date:   Thu, 17 Sep 2020 18:52:53 +0200
-Message-Id: <20200917165301.23100-6-krzk@kernel.org>
+Subject: [PATCH v2 07/13] dt-bindings: media: include common schema in GPIO controllers
+Date:   Thu, 17 Sep 2020 18:52:55 +0200
+Message-Id: <20200917165301.23100-8-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200917165301.23100-1-krzk@kernel.org>
 References: <20200917165301.23100-1-krzk@kernel.org>
@@ -96,30 +96,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Describe common "gpio-line-names" property to fix dtbs_check warnings
-like:
-
-  arch/arm/boot/dts/imx53-m53menlo.dt.yaml: gpio@53f84000:
-    'gpio-line-names' does not match any of the regexes: '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+'
+Include the common GPIO schema in GPIO controllers to be sure all common
+properties are properly validated.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index ad761e2f380a..347f059d347a 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -65,7 +65,7 @@ properties:
-     const: 2
+---
+
+Changes since v1:
+1. New patch
+---
+ Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+index 9ea827092fdd..3f72c37b99f7 100644
+--- a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+@@ -24,6 +24,9 @@ description: |
+   serializer will output it on a local I2C bus. In the other direction all I2C
+   traffic received over GMSL by the MAX9286 is output on the local I2C bus.
  
-   gpio-controller: true
--
-+  gpio-line-names: true
-   gpio-ranges: true
- 
-   power-domains:
++allOf:
++  - $ref: /schemas/gpio/gpio-common.yaml#
++
+ properties:
+   '#address-cells':
+     const: 1
 -- 
 2.17.1
 
