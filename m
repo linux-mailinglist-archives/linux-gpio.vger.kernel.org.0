@@ -2,201 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C8B26D9B7
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 12:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DD8226DA45
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 13:32:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgIQK45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 06:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
+        id S1726236AbgIQLco (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 07:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbgIQK4n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 06:56:43 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D63C06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:56:43 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id u13so1160001pgh.1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 03:56:43 -0700 (PDT)
+        with ESMTP id S1726480AbgIQLce (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 07:32:34 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E92C06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:32:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q9so1626256wmj.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 04:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=T9lNcKq60OFkyCh6/6qJlh6i3GcBk/ga/wgKezraXNw=;
-        b=x1NaY0ndN32UPLbGKWVbi7/r4/h21yUY7ENA4IbNG3RX9hculQerxzHQ97dZw66gc/
-         IHQh0FBmjRyAMRVz7JR5YCbr4ywNwo9vWZVGIsYUCEBZzIn1jkSjfmLn2jWMn01l5CDH
-         EjTavw6n8ODAz5/mV9D1zd017xoMYrFNpWK4vModvwHmYSlojabXKdt6pmwVkB9HiK3I
-         ItIqtAAKCaK0ZFrzzM9hGA8gIg885iwTNBPt1+bgAVerl2YibjTyzIlaTzwcctvKH6J3
-         TbwTzyLKH1Sr5+MgWm0++esl06IVZEXFBJzvy1/dTWs9zIOVELdA6874J8c6N4adROH8
-         gCEw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OyjgDHFd6GeqkM02shT+PuujeVklIoYwB8IoJwNfdvI=;
+        b=glIcVDbJf7tN51x+R+c8XyEWe7FdSfYYkfwFDSYJvrJiDwJ1SNfI7XWhHKwlDKwSu/
+         ppnuwDzoePZYieV0LrIVubvP7hehXgiQJjmmRVbw8sBv2vifW/qKHYqvr9wPor1RSoFb
+         5BH0RhAZLaBilX0iC51jqvygwe6PGWTtZpwdL7DmHpGvvNyTIf1etoScdlM7bK19V62t
+         FTb2Vweg7NU8HD0wnSCYTMi87+qC4oxf3NCV4y3FtQVd4if0pQE4mS7IMbeyf/6PELCN
+         T26T8KXcTw2F8uj1ZWZ30Ow0crJrljlyoWh3JC7yEndtZAPkauoMfmWrsvkKkeU77P0/
+         nWKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=T9lNcKq60OFkyCh6/6qJlh6i3GcBk/ga/wgKezraXNw=;
-        b=OYwPNgirJRZtenNwevws4OacOwABQzbOoCbJwdSdkX3SsRwhBzahQ5IdjZVSznhHfn
-         atMd7m8ZFWtp3aoCcOAxvzqLpMHilKCSTvD1aGLGE40eW5aGOAoKxzLkMrXTXQHDUfSt
-         5+JjbnsiO14r8nFMt3vi63oDQSPVJESuyiTx2d1I/wLFO2etg3VWL9RWI60h5mngKm+y
-         60jRKaQmKCWIomgyZXtZoSK7jGM1vdkjx/YkGD0kLDfJZK660zoEcGhI9kZt29G9da36
-         NFKEMPPYBWhkC527nLhD3fQH65/s1LyvFeK8iEf80752vnB2F/kz/SCSU7eIny0PFu3k
-         joog==
-X-Gm-Message-State: AOAM530XpYL+Rzw7O/EpgynWN/upP+npfj4AJQ4UdIoZHlP6OtnVTey+
-        h/r/7hloRoamA4Y33ueVM6Nyf+N38uY5SQ==
-X-Google-Smtp-Source: ABdhPJyQPqQH/HOMArAAYimsSTh5n9TATMuKl4wcCBPqJEvYnatN/iYhbgd0kdd3fcfbo9SUPtlWIQ==
-X-Received: by 2002:a63:63c7:: with SMTP id x190mr21807262pgb.90.1600340202584;
-        Thu, 17 Sep 2020 03:56:42 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id 141sm20250959pfb.50.2020.09.17.03.56.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OyjgDHFd6GeqkM02shT+PuujeVklIoYwB8IoJwNfdvI=;
+        b=aYQJpTb2twhiKqAjCpNpPyDPFzpsuAzjMoG20APfEjnMnHGL3PJpNcGiSy7LGuWxyA
+         U8pwQ3UjoPyoem8AvyAlC82Zg+1gUkVViUloZ6vuItW+5e5iS4C4lcHNW2OHCWlAmo6n
+         dF4/VuFjkIekOaeNxDqUbWSd6esUSMUnMVNwjrgukESX9ADmzdSxoYvYINTB1coHalkk
+         8C+7zep4vzVC0vCXK7ZrNWn0wFrMBlAuqgxovdCAx3P6gcMB7YlYX2zNqOJAcuRfFitA
+         aLVbh0uAHyn123nPMkQgXkGmRPLWAGKOUSaZrUYM+xPpFBDdxYuUi/lQIrnDhnx25p1L
+         XBlA==
+X-Gm-Message-State: AOAM531Z8b+1g3BlPrARAfbd2KHjXUPflUPy3Tc4eNqacT+auDdkklwc
+        IR837ZzOK77acZlVGcFSI8Rieg==
+X-Google-Smtp-Source: ABdhPJzU/gJ+R3Pr/XQFj0V18De4bPv+Qfv7M6nO5wJfBwfYTaN/BCt1u9JXK9KR7gZUThVB2eOlYQ==
+X-Received: by 2002:a1c:b703:: with SMTP id h3mr9205853wmf.131.1600342352360;
+        Thu, 17 Sep 2020 04:32:32 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id o4sm38386570wrv.86.2020.09.17.04.32.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 03:56:41 -0700 (PDT)
-Message-ID: <5f6340e9.1c69fb81.ba976.2324@mx.google.com>
-Date:   Thu, 17 Sep 2020 03:56:41 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 17 Sep 2020 04:32:31 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.9-rc6
+Date:   Thu, 17 Sep 2020 13:32:27 +0200
+Message-Id: <20200917113227.20704-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-X-Kernelci-Kernel: v5.9-rc2-19-ga5d0fe9ff2af
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.9-rc2-19-ga5d0fe9ff2af)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.9-rc2-=
-19-ga5d0fe9ff2af)
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.9-rc2-19-ga5d0fe9ff2af/
+Hi Linus,
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.9-rc2-19-ga5d0fe9ff2af
-Git Commit: a5d0fe9ff2af9feb82d37782be5beb2976a4afdd
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+please pull the following batch of fixes for the v5.9 release cycle.
 
-Warnings Detected:
+Bartosz
 
-arc:
+The following changes since commit 5fcface659aab7eac4bd65dd116d98b8f7bb88d5:
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+  gpio: sprd: Clear interrupt when setting the type as edge (2020-08-31 18:06:28 +0200)
 
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
+are available in the Git repository at:
 
-i386:
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.9-rc6
 
-mips:
+for you to fetch changes up to 5ad284ab3a01e2d6a89be2a8663ae76f4e617549:
 
-riscv:
+  gpiolib: Fix line event handling in syscall compatible mode (2020-09-17 12:03:37 +0200)
 
-x86_64:
+----------------------------------------------------------------
+gpio fixes for v5.9-rc6
 
+- fix the interrupt configuration in gpio-tc35894
+- explicitly support only threaded irqs in gpio-siox
+- fix a resource leak in error path in gpio-mockup
+- fix line event handling in syscall compatible mode in GPIO chardev
 
-Warnings summary:
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      gpio: siox: explicitly support only threaded irqs
 
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
-SPI bus
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
-or SPI bus
+Andy Shevchenko (1):
+      gpiolib: Fix line event handling in syscall compatible mode
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+Bartosz Golaszewski (1):
+      gpio: mockup: fix resource leak in error path
 
-Detailed per-defconfig build reports:
+dillon min (1):
+      gpio: tc35894: fix up tc35894 interrupt configuration
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
-I bus
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
-us
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+ drivers/gpio/gpio-mockup.c  |  2 ++
+ drivers/gpio/gpio-siox.c    |  1 +
+ drivers/gpio/gpio-tc3589x.c |  2 +-
+ drivers/gpio/gpiolib-cdev.c | 34 ++++++++++++++++++++++++++++++----
+ 4 files changed, 34 insertions(+), 5 deletions(-)
