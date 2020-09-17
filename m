@@ -2,103 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95F6C26DE3D
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 16:29:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63CF926DE7E
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Sep 2020 16:43:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgIQO26 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Sep 2020 10:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbgIQO2V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 10:28:21 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172BAC061352
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 06:41:41 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 34so1368671pgo.13
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Sep 2020 06:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/UgoXunF59Etu299iPWRKX6p+qugDieHE9zTPoUZ7U8=;
-        b=ar5TrYoQFCKcFV/nNqdobCB5vBHkPsSa5p4FS85RW5ty6R9mxKaF8Ima1IcUEOn2Ir
-         /dhazKxbf8JMe8gRocsR+4RLWcnFsxQ8BOwcqSELqVReRycWzaafN7qK2OE4km3iZ3pw
-         mSdepv8XRkiivOW7RQeCVdafyPtlwbEgiyf8YQqUzu6PcKQe+J/TwECoSTMVzpF58W6o
-         A+Pf0TUHxQshICq7zLbG7SWknDNyJR5uNLj639wyzKJx8PAJYZHPmc+ApUOZvPrEZS9A
-         wsZmftEcPwg5+m0V2ufvyc0tSvjKalzTsBJ/UR00RmmAbVehBT2gpymUhb+wGkp8ucKk
-         +GqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/UgoXunF59Etu299iPWRKX6p+qugDieHE9zTPoUZ7U8=;
-        b=Zbr4Vb+eHDOhDTGqDq2VwPBwbTg9ZZomvScNYLpuCwC6SDgO1aEG+3qSiOBHiTHJJG
-         qXuWFHtbsPZD/tCu1nrDdxyj2hEYYcbSWcRx+QHbXv/JJrroo1nHOiGDQJfQ4y125T9h
-         fhI7Hz4KnIzHeo4Lmw+C5M5c/SpfBw17U+hKhA3fV2VwwS9m0xuZG1jWtddW0of5qqWd
-         1eCcA1A88uYarMBDcXNMnPGewgo9jmrio/6V1BbXJ2Y5wI2WYOMp5Xs2DpZiKWMecYvM
-         Qm50PK/CSP75gjX9C+QJA6Rs5O4DknqL0WGjnsu2cfUUsNKiJDvh0NvO6l4srg+zbX/8
-         sIpA==
-X-Gm-Message-State: AOAM533/1iWDBNXV7ofLaL+MoloBk7+4IUTz28BuNdNCyJHYifgL3o9v
-        6sTIrO5P/S5R7i6S9bK2k6uhdJ1xWaM7B1Wo0KI=
-X-Google-Smtp-Source: ABdhPJyMQRxI5Kp6IkaOrtlS0LF9uKoz27fdM/CmBDz3G5PwjxlXox/ro+Xr3NWr47aZvb25VbkGYbzQnPaYDw6EWwU=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr23012931pgd.203.1600350097444;
- Thu, 17 Sep 2020 06:41:37 -0700 (PDT)
+        id S1727670AbgIQOeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Sep 2020 10:34:11 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:12045 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727555AbgIQObx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Sep 2020 10:31:53 -0400
+X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 10:31:52 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1600353112; x=1631889112;
+  h=subject:to:references:cc:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=pcB7Vqix5jNYAUHlOiUVOFo7qoy2vxGRDHeSPTeeH9w=;
+  b=zWOSIUEN26Lf/2d1soetR0oazqAwnGZfIt8LShUd0pcQp7OhIp21guQ6
+   Yl186ZFSI7ui9rFpdCsdBeRaNX9HlS9IrNnLVI5ep1WcN8Tu/ZoZFII0n
+   mxnw1KiCxq6Kf2bScnvATes/+j8ES6uP+Es+umCrAW7PDTOLXE4iLaYKP
+   zwjywlV3DRIAYXkIdy69PqLyS0Ad/caFdt6Iyn3DapZL/ltRFgZ0NJPI2
+   zDVQtTBQ9jYSKE9hykZloni7t2Kfyb3IrxYHIXlebgdlHvTM/A/FwZrt7
+   oVhSyvZbvscWnEIDVrobG9EA8spFurfHU05C1nq3nhkGT6uP6Cw6Szh5B
+   g==;
+IronPort-SDR: fnEBkDi3nNWSo7sFldDrtvZoNT7WUldhku6KwZ/uSXL1SHE9kgEe0FANpXWuDcIDx1OzWwO6Pi
+ dvG+6d+IDnXkBuaa4OYz8pFiYMDb/hxjcKqO/6VVWUR4FirKqay2tszXZn+Yk+RHp1JRL+fbwG
+ aMRez9IrX1yYGTgEQxijGivd+pgGRiDNhYcvqqgLAzVuMRk018RFo3PRL2JTZnu+MM8ickfjj7
+ ypNkUWABncH+LdRzTwyBoYDsyKsg8Ncv4Xus+Jhkc3fayWshFP5V2uJGoxgu/GvQrixo9mNkZJ
+ prA=
+X-IronPort-AV: E=Sophos;i="5.76,437,1592895600"; 
+   d="scan'208";a="92186358"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Sep 2020 07:28:06 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 17 Sep 2020 07:27:40 -0700
+Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 17 Sep 2020 07:27:39 -0700
+Subject: Re: [PATCH 2/2] pinctrl: at91-pio4: add support for sama7g5 SoC
+To:     Eugen Hristev <eugen.hristev@microchip.com>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200917131257.273882-1-eugen.hristev@microchip.com>
+ <20200917131257.273882-2-eugen.hristev@microchip.com>
+CC:     Ludovic Desroches <ludovic.desroches@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <d8eef101-1014-4ed1-509c-c16062b4f25c@microchip.com>
+Date:   Thu, 17 Sep 2020 16:28:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CAM4ZDbA_F+8O28YFwWgtT8Yoej0EeXCCboW6yfHT5T7ryg87WA@mail.gmail.com>
- <CAHp75Vft6zJDNr8FUQq7o9Cri78NQwYS13Y23+UUvhnt-sTjiQ@mail.gmail.com>
- <CAHp75VfexcxhAi1QHoWkFF-DMUbMF1zMmNFWnTyb-NniF22t=g@mail.gmail.com>
- <CAHp75VcbZ8zaseAD1FRQhY_pj_3_t43ssvqsw6NL6+4d3YfwXw@mail.gmail.com>
- <20200915004541.GC4138@sol> <20200915033428.GA14286@sol> <CAM4ZDbAeLcZt3TaWQ7AH-VapR6fx9WrcHFT+v_MnXiL17Hu-9Q@mail.gmail.com>
- <20200915135732.GA100294@sol> <CAMRc=MdbZh2CE3BXg0gg6CJxMGonvUN=yFc4kjXjUnkduwJgpA@mail.gmail.com>
- <20200916095734.GA32888@sol> <CAM4ZDbCvTsQ9QyW9bF2n-noF1+kArZpCb216W9tf7X=tqSHhwg@mail.gmail.com>
-In-Reply-To: <CAM4ZDbCvTsQ9QyW9bF2n-noF1+kArZpCb216W9tf7X=tqSHhwg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 17 Sep 2020 16:41:19 +0300
-Message-ID: <CAHp75Vf0vwgxC9=3n+GjW+26cMjUHO-9JnrMYg_i8Tn8MMZK7Q@mail.gmail.com>
-Subject: Re: [libgpiod] gpiomon loses events
-To:     Maxim Devaev <mdevaev@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200917131257.273882-2-eugen.hristev@microchip.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 1:37 PM Maxim Devaev <mdevaev@gmail.com> wrote:
+On 17/09/2020 at 15:12, Eugen Hristev wrote:
+> Add support for sama7g5 pinctrl block, which has 5 PIO banks.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 
-> > I already applied the patch to the master branch and backported it to
-> > v1.5.x[1]. Please give it a try. I will make a bugfix release soon
-> > too.
->
-> Everything seems to be working fine now. In any case, I plan to use
-> event_read_multiple (), just for reasons of paranoia (and for older
-> versions) :)
->
-> > If you are losing events then this is what you will get.
-> > No attempt is made in the kernel or libgpiod to keep rising and falling
-> > events paired (until debounce support in GPIO CDEV uAPI v2 arrives).
->
-> Okay, thanks. I will take this into account.
->
-> > What is your use case?  Are you seeing these problems in practice or
-> > only because you are generating events faster than you service them
-> > for testing?
->
-> I make an IP-KVM and use GPIO to read the status of the HDD led on the
-> managed server's motherboard. This led operates in PWM mode, and if
-> the frequency is high enough and then the activity is stopped, then
-> there is a chance that the actual state of the led will be 0, while
-> the last state received from the library will be 1.
+Reviewed-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-As a workaround can you simply read the state separately (yes, I
-understand that is not ideal but may help a bit to mitigate the
-current situation)?
-I.o.w. if you haven't got a new event during certain period of time,
-read the pin state to actualise it.
+> ---
+>   drivers/pinctrl/pinctrl-at91-pio4.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+> index 1c852293cb96..9f62152d0a62 100644
+> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
+> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+> @@ -999,10 +999,17 @@ static const struct atmel_pioctrl_data atmel_sama5d2_pioctrl_data = {
+>   	.nbanks		= 4,
+>   };
+>   
+> +static const struct atmel_pioctrl_data microchip_sama7g5_pioctrl_data = {
+> +	.nbanks		= 5,
+> +};
+> +
+>   static const struct of_device_id atmel_pctrl_of_match[] = {
+>   	{
+>   		.compatible = "atmel,sama5d2-pinctrl",
+>   		.data = &atmel_sama5d2_pioctrl_data,
+> +	}, {
+> +		.compatible = "microchip,sama7g5-pinctrl",
+> +		.data = &microchip_sama7g5_pioctrl_data,
+>   	}, {
+>   		/* sentinel */
+>   	}
+> 
 
-
+Thanks Eugen, regards,
 -- 
-With Best Regards,
-Andy Shevchenko
+Nicolas Ferre
