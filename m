@@ -2,36 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B38DE26FFB1
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 16:21:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEDAE26FFE0
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 16:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgIROVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Sep 2020 10:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIROVA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Sep 2020 10:21:00 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F40C0613CE;
-        Fri, 18 Sep 2020 07:21:00 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D1A3E2D7;
-        Fri, 18 Sep 2020 16:20:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1600438859;
-        bh=EGDu4Odiz5OdsLwDuo0oZsSTjmIcIMcqE8wMTFRd8K8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hT7P6Ohdsf2An3DF/F3mZiSV3C+TCy8NXWrEaVoEsjbDrR3M88AYxBRYpgjpQnHob
-         b/rT4uMhgUbX7qTPXUKw+0WsEg+XYzHNOS5GoVcjJbonW2jNQIy1ychdPIaAXC3trE
-         D+4IzAypgQjQkdiMwVnZoZdxv0+f4ePUE13YsHic=
-Date:   Fri, 18 Sep 2020 17:20:26 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        id S1726406AbgIROaR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Sep 2020 10:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgIROaR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Sep 2020 10:30:17 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7449A2396D;
+        Fri, 18 Sep 2020 14:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600439415;
+        bh=BzRCCHrMyRtEbFXS+WPF2C06UQOXtwZQ6+AR7KwiNeY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M78Nd8HJqpaE3j9eXFP+0zTJkt2DJ3JP2vG2rY2s+E2Ucjhb1yZtupM/PYNzuUdOV
+         7j9z8YCTnNoaiuky8aGripKJaCqvG3MNujOgGJ57GaOrjyaHNHJWRRh2mRAdM4mzf/
+         0+TNIX/OYTI78EOul2yVt4CZmk8rrF0HMp4lqS3s=
+Received: by mail-ot1-f49.google.com with SMTP id a2so5528319otr.11;
+        Fri, 18 Sep 2020 07:30:15 -0700 (PDT)
+X-Gm-Message-State: AOAM532yQ4ObGx0RRqNObm0vMioebQcY79P4fcFTvc63A6dO6JrV2Nvh
+        VFP4l8AqTF2AMbkI4se2Zg2iLnqxZ12qVBdp0g==
+X-Google-Smtp-Source: ABdhPJwB1Ma/MKweZxwzRdC4MQG3s3W4wg0oVoNXdP8sSb8gUQ626v5DX61EKMyUVGmHFAKJsNKSrOjgarNcaCyLkpU=
+X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr21429982otp.107.1600439413814;
+ Fri, 18 Sep 2020 07:30:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200917165301.23100-1-krzk@kernel.org> <20200917165301.23100-2-krzk@kernel.org>
+In-Reply-To: <20200917165301.23100-2-krzk@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 18 Sep 2020 08:30:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJCLgf6syqV=jNPHPyu02ygwWCDDV+U9VCm0qRpLkirSQ@mail.gmail.com>
+Message-ID: <CAL_JsqJCLgf6syqV=jNPHPyu02ygwWCDDV+U9VCm0qRpLkirSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/13] dt-bindings: gpio: add common schema for GPIO controllers
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -44,11 +57,19 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Hoan Tran <hoan@os.amperecomputing.com>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Richard Fitzgerald <rf@opensource.cirrus.com>,
         Lee Jones <lee.jones@linaro.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -71,45 +92,131 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sean Wang <sean.wang@mediatek.com>,
         Sricharan R <sricharan@codeaurora.org>,
         Chris Brandt <chris.brandt@renesas.com>,
-        Jaroslav Kysela <perex@perex.cz>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 09/13] dt-bindings: pinctrl: include common schema in
- GPIO controllers
-Message-ID: <20200918142026.GF28436@pendragon.ideasonboard.com>
-References: <20200917165301.23100-1-krzk@kernel.org>
- <20200917165301.23100-10-krzk@kernel.org>
- <20200917201204.GG3969@pendragon.ideasonboard.com>
- <CAJKOXPdB0mxQ8+UhCGU6B2DS_9DCDc=i9cFmdr8avKqQcLi3GQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPdB0mxQ8+UhCGU6B2DS_9DCDc=i9cFmdr8avKqQcLi3GQ@mail.gmail.com>
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
+On Thu, Sep 17, 2020 at 10:53 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Convert parts of gpio.txt bindings into common dtschema file for GPIO
+> controllers.  The schema enforces proper naming of GPIO controller nodes
+> and GPIO hogs.
 
-On Fri, Sep 18, 2020 at 10:19:25AM +0200, Krzysztof Kozlowski wrote:
-> On Thu, 17 Sep 2020 at 22:12, Laurent Pinchart wrote:
-> > On Thu, Sep 17, 2020 at 06:52:57PM +0200, Krzysztof Kozlowski wrote:
-> > > Include the common GPIO schema in GPIO controllers to be sure all common
-> > > properties are properly validated.
-> >
-> > Shouldn't we delete the properties that are now redundant from these
-> > schemas ?
-> 
-> Good point. However not with "additionalPropeties: false". Schema
-> requires all properties to be mentioned. I would need to use
-> "unevaluatedProperties: false" in each file.
-> 
-> What is preferred?
+Did you not see my previous reply about a common schema? We already
+have a common GPIO and hog schema in dtschema. Please add to it
+whatever is missing.
 
-I've seen Rob advocating for unevaluatedProperties multiple times, but
-I'll let him comment on this, I don't want to speak for him.
+My goal is all common schema end up in dtschema, but I haven't pushed
+folks to do that yet. Ones I've done are there though. One issue is
+what's in dtschema should be GPL/BSD and the existing text bindings
+are default GPL, so there's a relicensing exercise. In some cases, the
+schema is there but I haven't copied over the descriptions.
 
--- 
-Regards,
+Rob
 
-Laurent Pinchart
+
+> +    description:
+> +      Indicates the start and size of the GPIOs that can't be used.
+> +
+> +  ngpios:
+> +    description: |
+> +      Optionally, a GPIO controller may have a "ngpios" property. This property
+> +      indicates the number of in-use slots of available slots for GPIOs. The
+> +      typical example is something like this: the hardware register is 32 bits
+> +      wide, but only 18 of the bits have a physical counterpart. The driver is
+> +      generally written so that all 32 bits can be used, but the IP block is
+> +      reused in a lot of designs, some using all 32 bits, some using 18 and
+> +      some using 12. In this case, setting "ngpios = <18>;" informs the driver
+> +      that only the first 18 GPIOs, at local offset 0 .. 17, are in use.
+> +
+> +      If these GPIOs do not happen to be the first N GPIOs at offset 0...N-1,
+> +      an additional set of tuples is needed to specify which GPIOs are
+> +      unusable, with the gpio-reserved-ranges binding.
+> +
+> +patternProperties:
+> +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+> +    type: object
+> +    description:
+> +      The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> +      providing automatic GPIO request and configuration as part of the
+> +      gpio-controller's driver probe function.
+> +      Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +
+> +    properties:
+> +      gpio-hog: true
+> +      gpios: true
+> +      input: true
+> +      output-high: true
+> +      output-low: true
+> +      line-name:
+> +        description:
+> +          The GPIO label name. If not present the node name is used.
+> +
+> +    required:
+> +      - gpio-hog
+> +      - gpios
+> +
+> +    oneOf:
+> +      - required:
+> +          - input
+> +      - required:
+> +          - output-high
+> +      - required:
+> +          - output-low
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +examples:
+> +  - |
+> +    gpio-controller@15000000 {
+> +        compatible = "foo";
+> +        reg = <0x15000000 0x1000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        ngpios = <18>;
+> +        gpio-reserved-ranges = <0 4>, <12 2>;
+> +        gpio-line-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
+> +                          "LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
+> +                          "Row A", "Row B", "Row C", "Row D", "NMI button",
+> +                          "poweroff", "reset";
+> +    };
+> +
+> +  - |
+> +    gpio-controller@1400 {
+> +        compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
+> +        reg = <0x1400 0x18>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +
+> +        line-b-hog {
+> +            gpio-hog;
+> +            gpios = <6 0>;
+> +            input;
+> +            line-name = "foo-bar-gpio";
+> +        };
+> +    };
+> --
+> 2.17.1
+>
