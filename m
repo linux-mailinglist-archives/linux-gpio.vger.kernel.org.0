@@ -2,116 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D24426F7F7
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 10:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DE6226FCC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Sep 2020 14:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgIRITn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Sep 2020 04:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgIRITm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 18 Sep 2020 04:19:42 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7788121D20;
-        Fri, 18 Sep 2020 08:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600417181;
-        bh=BJGVXo9LuBYkG/UJ83GT4URHLbNRNG+Zxm/NJ71KpQM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EJFz3tnFnXVUibC3YjJ/aDnX9vkiw9iq4EOtKW9AY1UzHJjf1IKzyYfw1N2p1QO8m
-         P6M8ES8lJXTghi6n/cG7hjYZ3GeO1N7Fc/cTU7jR211u/HsFoqwjlmyBMdPFS3JgdU
-         2ERcli34bBFhjIO+FPo08NLHVYa3E8zGl3lcg3RA=
-Received: by mail-wr1-f45.google.com with SMTP id t10so4702422wrv.1;
-        Fri, 18 Sep 2020 01:19:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5316qZap81LiF3C5fHOFDBXKQVafkq/HmSAVfuaWsTE/G+89jpzb
-        FZPaQv6FmMXI3dfhJ+u80SFuLBZHIZ+LyMMUNbE=
-X-Google-Smtp-Source: ABdhPJxjVFR3dSbIHpxy/vgZ/bWImIgEGLUaIDHRxTPfiF/dL+umHl5OoO3hY+yZN6dZjAPUxX/KLimMiPWxT50m8Xg=
-X-Received: by 2002:a17:907:724f:: with SMTP id ds15mr33866016ejc.119.1600417177168;
- Fri, 18 Sep 2020 01:19:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200917165301.23100-1-krzk@kernel.org> <20200917165301.23100-10-krzk@kernel.org>
- <20200917201204.GG3969@pendragon.ideasonboard.com>
-In-Reply-To: <20200917201204.GG3969@pendragon.ideasonboard.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 18 Sep 2020 10:19:25 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdB0mxQ8+UhCGU6B2DS_9DCDc=i9cFmdr8avKqQcLi3GQ@mail.gmail.com>
-Message-ID: <CAJKOXPdB0mxQ8+UhCGU6B2DS_9DCDc=i9cFmdr8avKqQcLi3GQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/13] dt-bindings: pinctrl: include common schema in
- GPIO controllers
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726129AbgIRMoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Sep 2020 08:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgIRMoP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Sep 2020 08:44:15 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F188C06174A;
+        Fri, 18 Sep 2020 05:44:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id c3so2932536plz.5;
+        Fri, 18 Sep 2020 05:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CV8lbT4hNvISevl0YDPpkGjO0PydmbsCz1V4dqdiUGA=;
+        b=W/TfL5RwGfoOnqu19aAF8kIG1aWOAWIXfPnbkRNZlJTyvL102BxgWU9A3ANFOaA1Kf
+         sXv5CvDMZCw1Wzl+O1MpaV0ZBMRSWcM2dqyELVVEQsjn1TBrJdReyEHriqEmOpft1RIc
+         74ICzqa7bi0g3KYn7r1l+k4hYj0VuFRtxyI7T4iM6s/lqdkBLf/L8+/6TTagsBH5tIG5
+         3FO2wUDJqPE9UO8ZtmZz479AtObEhIhDDGI5oM51yYQXKLQl5GAWwT0OelbfVy+EJOfv
+         wee3bNuXJvSTvhYyibeGNi2TfCcUmPIVmjJWYnzPADRUPHxDKc18qr4T2ZrfZCbCdCCO
+         niIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CV8lbT4hNvISevl0YDPpkGjO0PydmbsCz1V4dqdiUGA=;
+        b=TSXM+vNylGq/pTAktfknxoy3mnWForU02SURsqx1ErBYOhV0Lf30oWnlQx5Nhh+dud
+         4/lEJ5HNZy6sdWVhaKIxQCfxT6KidUCN3FzkhqRT6RvVb8bQo1DosjFo28uH6Yzolzcl
+         gPgYhr/5Zm4Y18YqufHFQyp5b1+Dc8OExWehI5AjzZb7G+xLaKqBk5z4ddLw5Qazcm2R
+         CZ3P5UGAX6UMR4HbcKRhZ/0fcXd0wERT4jGNjAUtIeGA+k/n5LomxZs/yfLPX0TRKjw0
+         7/pjiPKlPHEsOOFv9MfWHEwtKD6sRV3NYvuMV+AKHjpcTACK6hN2XKkUXA0+dvB7DByN
+         x6sg==
+X-Gm-Message-State: AOAM5315O9bf8sZGajevxwqfzaUYGSFEBY3J2fr4Y77WnmrF299ArWGc
+        XwSk0nDshHXCxLyvUmfyMwM=
+X-Google-Smtp-Source: ABdhPJwc01PjkF3QQADTtUnMrlPTRMGKfbMkhAYq8TdSNfZg3114EXYTDNvY+0aaGDfTiEL3KtLTYw==
+X-Received: by 2002:a17:90b:2345:: with SMTP id ms5mr12442494pjb.202.1600433054677;
+        Fri, 18 Sep 2020 05:44:14 -0700 (PDT)
+Received: from sol (106-69-189-59.dyn.iinet.net.au. [106.69.189.59])
+        by smtp.gmail.com with ESMTPSA id w6sm2945630pjj.33.2020.09.18.05.44.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2020 05:44:13 -0700 (PDT)
+Date:   Fri, 18 Sep 2020 20:44:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Sungbo Eo <mans0n@gorani.run>, Stefan Agner <stefan@agner.ch>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        - <patches@opensource.cirrus.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sricharan R <sricharan@codeaurora.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Jaroslav Kysela <perex@perex.cz>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 09/20] gpiolib: cdev: support edge detection for uAPI
+ v2
+Message-ID: <20200918124408.GB24657@sol>
+References: <20200909102640.1657622-1-warthog618@gmail.com>
+ <20200909102640.1657622-10-warthog618@gmail.com>
+ <CAHp75VcyuPYqXTk7-yBd1dR3BitXQnz1YVkD+PuJRWVOu+1ueQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcyuPYqXTk7-yBd1dR3BitXQnz1YVkD+PuJRWVOu+1ueQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 17 Sep 2020 at 22:12, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Krzysztof,
->
-> Thank you for the patch.
->
-> On Thu, Sep 17, 2020 at 06:52:57PM +0200, Krzysztof Kozlowski wrote:
-> > Include the common GPIO schema in GPIO controllers to be sure all common
-> > properties are properly validated.
->
-> Shouldn't we delete the properties that are now redundant from these
-> schemas ?
+On Tue, Sep 15, 2020 at 01:39:41PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 9, 2020 at 1:33 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add support for edge detection to lines requested using
+> > GPIO_V2_GET_LINE_IOCTL.
+> >
+> > The edge_detector implementation is based on the v1 lineevent
+> > implementation.
+> 
+> 
 
-Good point. However not with "additionalPropeties: false". Schema
-requires all properties to be mentioned. I would need to use
-"unevaluatedProperties: false" in each file.
+Hi Andy,
 
-What is preferred?
+Thanks for all the review comments.  I'm hoping to address them and get
+a v9 out in the next few days.  Do you have any comments for the
+remaining patches - particularly 10-12 that complete the kernel
+implementation?
 
-Best regards,
-Krzysztof
+Thanks,
+Kent.
