@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0801D2717B3
+	by mail.lfdr.de (Postfix) with ESMTP id 76A072717B4
 	for <lists+linux-gpio@lfdr.de>; Sun, 20 Sep 2020 21:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgITT7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Sep 2020 15:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        id S1726457AbgITT7F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Sep 2020 15:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbgITT67 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 20 Sep 2020 15:58:59 -0400
+        id S1726126AbgITT7F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 20 Sep 2020 15:59:05 -0400
 Received: from localhost.localdomain (unknown [194.230.155.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80312085B;
-        Sun, 20 Sep 2020 19:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC76F20866;
+        Sun, 20 Sep 2020 19:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600631939;
-        bh=qE/XNWOxN2w9q5YVj7knCuVoes9uF5n3abGxzM2Z+W4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ha8P/imBl3wD1AWwjK3A7QC8+fabyc9+n2hkGToE0oI4/70U+xYAHRInRgDNNntwd
-         KoUZrm+DbHQxl6meWzKWsrDk3rhpYORqNi4UDAUj277nFMatb8Y9TnfmWwVTg7CIqE
-         FLgjjokJ1hHgQwP+bUWXaz0bGE5hTnn51x77HDEY=
+        s=default; t=1600631944;
+        bh=3E9DPplRRsaj39SnwfkgVCLSZ0+GxS9TwohsVudFF30=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g7CVOk1loQwhiK7h7yJQ6mMtSqFGLVIdCptU+YpPAOudkyiPyKkk0GIp5kYKVDSRe
+         0pvYNzprS6E5oLQdFp9Ujpnp9u4fiBvYVWjgxvOY/fMINHMbXQTVBd7CS2BrA+hawg
+         +BAXLHyyD3SHOl90NGgfbENmV6wAXw9dngWbFD9U=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -37,45 +37,60 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 1/4] dt-bindings: gpio: pl061: add gpio-line-names
-Date:   Sun, 20 Sep 2020 21:58:45 +0200
-Message-Id: <20200920195848.27075-1-krzk@kernel.org>
+Subject: [PATCH v3 2/4] dt-bindings: gpio: fsl-imx-gpio: add i.MX ARMv6 and ARMv7 compatibles
+Date:   Sun, 20 Sep 2020 21:58:46 +0200
+Message-Id: <20200920195848.27075-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200920195848.27075-1-krzk@kernel.org>
+References: <20200920195848.27075-1-krzk@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Describe common "gpio-line-names" property to fix dtbs_check warnings
-like:
+Several DTSes with ARMv6 and ARMv7 i.MX SoCs introduce their own
+compatibles so add them to fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dt.yaml: gpio@e8a0b000:
-    'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+  arch/arm/boot/dts/imx35-pdk.dt.yaml: gpio@53fa4000:
+    compatible: ['fsl,imx35-gpio', 'fsl,imx31-gpio'] is not valid under any of the given schemas
+
+  arch/arm/boot/dts/imx51-babbage.dt.yaml: gpio@73f90000:
+    compatible: ['fsl,imx51-gpio', 'fsl,imx35-gpio'] is not valid under any of the given schemas
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 ---
 
 Changes since v2:
-1. Common GPIO goes to dt-schema
+1. None, split from previous patchset using common GPIO schema
 ---
- Documentation/devicetree/bindings/gpio/pl061-gpio.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/gpio/fsl-imx-gpio.yaml       | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-index 313b17229247..bd35cbf7fa09 100644
---- a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-@@ -51,7 +51,10 @@ properties:
- 
-   gpio-controller: true
- 
-+  gpio-line-names: true
-+
-   gpio-ranges:
-+    minItems: 1
-     maxItems: 8
- 
- required:
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+index de0b9b5f6a70..281cdd34a829 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+@@ -18,8 +18,20 @@ properties:
+           - fsl,imx31-gpio
+           - fsl,imx35-gpio
+           - fsl,imx7d-gpio
++      - items:
++          - const: fsl,imx35-gpio
++          - const: fsl,imx31-gpio
+       - items:
+           - enum:
++              - fsl,imx50-gpio
++              - fsl,imx51-gpio
++              - fsl,imx53-gpio
++              - fsl,imx6q-gpio
++              - fsl,imx6sl-gpio
++              - fsl,imx6sll-gpio
++              - fsl,imx6sx-gpio
++              - fsl,imx6ul-gpio
++              - fsl,imx7d-gpio
+               - fsl,imx8mm-gpio
+               - fsl,imx8mn-gpio
+               - fsl,imx8mp-gpio
 -- 
 2.17.1
 
