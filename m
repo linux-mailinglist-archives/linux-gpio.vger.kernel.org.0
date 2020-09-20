@@ -2,167 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D018271354
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Sep 2020 12:48:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A72527136F
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Sep 2020 13:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgITKsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Sep 2020 06:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41082 "EHLO
+        id S1726290AbgITLMK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Sep 2020 07:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgITKsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 06:48:32 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F04FC061755;
-        Sun, 20 Sep 2020 03:48:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b124so6487404pfg.13;
-        Sun, 20 Sep 2020 03:48:32 -0700 (PDT)
+        with ESMTP id S1726262AbgITLMK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 07:12:10 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A16C061755;
+        Sun, 20 Sep 2020 04:12:10 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t7so5695094pjd.3;
+        Sun, 20 Sep 2020 04:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ckywbst0H6+Lz6mtGf7VZ8LvRCLnr8rkKra487dI2jg=;
-        b=h2NOR/VXE3wlXPmVyZpsSZVZQFAjPUlr6FGWRBmRlwfRuEnn6JCF5lu/Fg2ar1F6s+
-         WcgrYNerKtVXzLMa5ImiwQypoxjm+1yNFXBQtMLEDX1N5DRlAwECwAueRnJzwTovKXN0
-         vph5DZ9A9fucVsNBiuZTbWTuIAOlwVqXqqqJWqyRd42p/OS0XCLLtt+eI5pkDbY6Wld5
-         Hql6IPs9Qz34UKbVW4XiNUTpxyFarF/PQhjpuRCblUI60HoGa94ZC82BKTLSWwiip7fQ
-         DdhnTKxNAG+MwHfzMoATHSM6RuoF8G5DpJ6XZk8OciE8fWYnJrgY8piC/gMJqbdzVdAH
-         eczw==
+        bh=SK3azXNEl6yyJpFq5d1iG5zYYrlyno7Q8Ly4/yE9BOw=;
+        b=n6+rQwSl1SrCYFdOOctb8jo002SA1KxyLmOokDezLuQi+zK4b9DqigFXhppot6OT6U
+         FzkYUI8U4gUr2QCMDpKZxrbtU67rOmxWoWN4bkk7hiR5h9mhB4xDeLkqkOlXLHwd7SUv
+         37z3mreIRiM2OGDTAcZ5Vmdur61iTwrpCnpJnIIsxXajBGH1m1Ts4FLbpPXipaz/sVvk
+         3nUOwfx2aOYTksA1tzaNhY7phJnfuKL3xIE2K6Wgp+Eibe3qUKljivBSxdedUIYb2CtL
+         UeYMWF3ibd1Iv2pULnKqMqrK/zuLOo72imdf5kXZSuaeXZStxRV37yHMZtqFjKv4lVAN
+         i5Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ckywbst0H6+Lz6mtGf7VZ8LvRCLnr8rkKra487dI2jg=;
-        b=TYsZ5wTns1PZMWFHPP+lZRTQtiaUUqy6gL5adpkeWvvqYv7prWQtL4Q1qPE4qcLT0W
-         zr19KBFy3U368mpB7ekNrdDlRQs9BTGF0yeVPW5OVImvgDan8nVvEbz5euz43WY8bdvS
-         SJwxwFCiy47Q5UUXHOJuytYRu1bpiIJX/LxkNtw74bmepoPZOM65SLKSKZcfjy8ZEbyh
-         eDLl6GQ5gouI1eNdBM4TJobw34Z/t/w0UdfzC77RFguF5DzilV++dScHcjvTpN61W5wu
-         6VDsanQk6hhgwNLBMyY/b5LaMoJPIVpuPhK4/p9KcoTVNqmAN8FrQe5cYiOE7a7EgiTv
-         o3Cg==
-X-Gm-Message-State: AOAM533GIhyObudEkNrHg/GVhvoDZUrqh+DGkwCZUNAAJn1NS8TVWwbD
-        4RBNYl+ntOfTV1SFCcoHRpk=
-X-Google-Smtp-Source: ABdhPJwDLSg9MlG1DNXBi7rMgKnwhW19wzuVlHCdL8y+Vl+/JPCGS7Jaq/Xp0P6aXlq8zhQMovjoQQ==
-X-Received: by 2002:a63:e141:: with SMTP id h1mr102058pgk.289.1600598912100;
-        Sun, 20 Sep 2020 03:48:32 -0700 (PDT)
+        bh=SK3azXNEl6yyJpFq5d1iG5zYYrlyno7Q8Ly4/yE9BOw=;
+        b=t5EwD+A8vY546ObXZJzAgN+gKQLmakY3RKYG+PJfEivF0DT0Ibtsf49fr0I9gSB4Io
+         DY/aWMKSNES+R1yq09t6fvB3CsQCsuecox7q381zQvNfMFee3g0rDXzL7anSGzgEUsGT
+         YKCaOGeKQfR08kVnetMYawZuy55yqfqDsj2K35tBDEjug9cNvGBAh+lO+EFgufuuyqAW
+         fc+B6fPoegf06ooLwjHyBrSof0BKDkh0dwgOlN46DR/p1T/uEeNOgNNHeJpwXieQ2rUL
+         5Y0d5Nhp7nId8YY8nAnYRNUpJIhVuhO2GfP30CLUsb9GlIkV6t0COAjOKhe/vpLYykNW
+         OXRA==
+X-Gm-Message-State: AOAM531YSayh8/mWe1Lv6tG1RuxkBriGZ2lvMd5BYFKJ0dUiK5lug0LI
+        dU7eK/kQI++HMPIL35V5lZCm7yWdtDA=
+X-Google-Smtp-Source: ABdhPJyFAoID7PRDy1inYmvnuEgVJulyUyCgaasKVkQI/AEnllQRjdzPTg+beyPuTWM5cLVTgrOk6w==
+X-Received: by 2002:a17:90a:c83:: with SMTP id v3mr20130659pja.229.1600600329910;
+        Sun, 20 Sep 2020 04:12:09 -0700 (PDT)
 Received: from sol (106-69-189-59.dyn.iinet.net.au. [106.69.189.59])
-        by smtp.gmail.com with ESMTPSA id y13sm9121837pfr.141.2020.09.20.03.48.28
+        by smtp.gmail.com with ESMTPSA id j13sm5469374pjn.14.2020.09.20.04.12.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2020 03:48:31 -0700 (PDT)
-Date:   Sun, 20 Sep 2020 18:48:26 +0800
+        Sun, 20 Sep 2020 04:12:09 -0700 (PDT)
+Date:   Sun, 20 Sep 2020 19:12:04 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 04/20] gpio: uapi: define uAPI v2
-Message-ID: <20200920104826.GA793608@sol>
-References: <20200909102640.1657622-1-warthog618@gmail.com>
- <20200909102640.1657622-5-warthog618@gmail.com>
- <CAHp75VdF1be-W3iV2JfWYZzEhrj13+5A+1Y4J8XgpBrkvg8cZQ@mail.gmail.com>
+Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200920111204.GB793608@sol>
+References: <20200905133549.24606-1-warthog618@gmail.com>
+ <20200905133549.24606-8-warthog618@gmail.com>
+ <CAHp75Vdm=61wibz70ScvayXk_D77rZw_pG7wPkLXkbkzagRPNA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdF1be-W3iV2JfWYZzEhrj13+5A+1Y4J8XgpBrkvg8cZQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vdm=61wibz70ScvayXk_D77rZw_pG7wPkLXkbkzagRPNA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 01:06:36PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 9, 2020 at 1:29 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Sep 15, 2020 at 01:31:27PM +0300, Andy Shevchenko wrote:
+> On Sat, Sep 5, 2020 at 4:49 PM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> 
-> Thanks again for doing this and sorry for quite a delay from my side.
-> Below my comments regarding uAPI v2 (mostly nit-picks as I agree with
-> it in general).
-> 
+> > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> >
+> > The struct linereq implementation is based on the v1 struct linehandle
+> > implementation.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >
 
-No problems with most of your points - so I'll chop those bits out.
-Responses to the remainder below...
-
-> > +/**
-> > + * enum gpio_v2_line_attr_id - &struct gpio_v2_line_attribute.id values
+[snip]
 > 
-> Perhaps per-item description (couple of words per each)?
+> > +       /* Bias requires explicit direction. */
+> > +       if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
+> > +           !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
+> > +               return -EINVAL;
 > 
-
-I'll add kernel doc for all the enum values - see if that works.
-
-> > + * GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed together.  This is the default for
-> 
-> I think "OR:ed together" is understandable for programmers but a bit
-> special for normal phrases. I would rephrase it somehow, but I'm not a
-> native speaker.
-> Something like "or any of their combinations".
+> Why is this? If I request a line as is and after set a bias, should I
+> really care about direction?
 > 
 
-My bad - I was assuming the primary audience was programmers ;-).
+Yeah, you probably should be aware of the direction if they are setting
+the bias, so this makes sure they are.
 
-Actually that description is drawn from the v1 uAPI, as is the case for
-all of the fields that were carried over.
+The practical reason is that gpiod_direction_output() or
+gpiod_direction_input() have to be called to set the bias, and they are
+only called if the corresponding flag is set.
 
-And "or any of their combinations" is misleading - some combinations are
-invalid.
-
-I'll take another look at it, but I'm ok with it as is. (and I' ok with
-'ok' over 'OK' or 'okay' as well, btw ;-)
-
-> > + * @attrs: the configuration attributes associated with the requested
-> > + * lines.  Any attribute should only be associated with a particular line
-> > + * once.  If an attribute is associated with a line multiple times then the
-> > + * first occurrence (i.e. lowest index) has precedence.
 > 
-> This is a bit unexpected. I anticipated last come last served as in a
-> shell script argument list.
+> > +       for (num_get = 0, i = 0; i < lr->num_lines; i++) {
+> > +               if (lv.mask & BIT_ULL(i)) {
+> 
+> for_each_set_bit() ?
 > 
 
-I don't want to encourage userspace to just add another entry to attrs
-to encode a change.
-The behaviour was originally as you describe, but was changed in v3 to
-encourage userspace to keep the configuration attributes as simplified as
-possible, and to make clearer that the fields, particularly the flags bits,
-are not overlayed.
+No - lv.mask is u64, not unsigned long.
+You could do a cast, but it would break on BE-32.
+Sound familar? - you caught me doing just that in your review of an earlier
+version.
 
+> > +       ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
+> > +       if (strlen(ulr.consumer)) {
+> > +               lr->label = kstrdup(ulr.consumer, GFP_KERNEL);
+> 
+> Sounds like kstrndup()
+> 
+
+Been here before too - they differ slightly in that here lr->label is
+left null if consumer is empty,  whereas kstrndup() would alloc one byte
+just for the null terminator.
+
+> > +               }
+> > +
+> > +               blocking_notifier_call_chain(&desc->gdev->notifier,
+> > +                                            GPIOLINE_CHANGED_REQUESTED, desc);
+> > +
+> 
+> > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+> > +                       offset);
+> 
+> Hmm... I would rather see trace events / points than new dev_dbg() /
+> pr_debug() calls.
+> 
+
+Agreed - it is on the TODO list.
+I have looked at it and doing it properly would mean adding tracepoints
+to gpiolib.c, and modifying the v1 code as well, so it is best done in a
+separate patch later...
+
+> > @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> >                  MAJOR(devt), gdev->id);
+> >
+> >         return 0;
 > > +       /*
-> > +        * Pad to fill implicit padding and provide space for future use.
+> > +        * array sizes must ensure 64-bit alignment and not create holes in
+> > +        * the struct packing.
 > > +        */
+> > +       BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
+> > +       BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
+> > +
+> > +       /*
+> > +        * check that uAPI structs are 64-bit aligned for 32/64-bit
+> > +        * compatibility
+> > +        */
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
+> > +       BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
 > 
-> > +       __u32 padding[5];
-> 
-> This is still questionable. First of all why to waste so many bytes (I
-> propose 5 -> 1) and how will you do when the structure changes (we
-> still need some type of versioning or flags for which one u32 is more
-> than enough).
-> 
-
-Ack - we disagree on how to manage future changes and the impact of
-reserving space.
-
-> > + * @num_lines: number of lines requested in this request, i.e. the number
-> > + * of valid fields in the GPIO_V2_LINES_MAX sized arrays, set to 1 to
-> > + * request a single line
-> 
-> I would rather call it "amount" or something which is one word, but
-> you may have a reason for the current, so I don't insist.
-> Also, I would describe what will be the expected behaviour outside of
-> the range (and what is the range?).
-> For example, would it mean that we consider all lines if num_lines >=
-> _LINES_MAX?
+> Can we use static_assert() at the top of the file? Presumably after
+> inclusion block.
 > 
 
-Using num_X to describe the number of active entries in array X is a
-common pattern, so I'll stick with that.
-
-And num_lines > _LINES_MAX is interpreted as invalid - since they wont
-fit.  The EINVAL the user will get if they try should make that clear.
-
-> > + * @consumer: a functional name for the consumer of this GPIO line as set
-> > + * by whatever is using it, will be empty if there is no current user but
-> > + * may also be empty if the consumer doesn't set this up
-> 
-> In both cases "empty" means what? All \0:s, only first \0, white spaces?
-> 
-
-Another one inherited from v1 - empty => consumer[0] == '\0'.
+Good idea - will do.
 
 Cheers,
 Kent.
+
