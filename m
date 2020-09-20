@@ -2,178 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E782271380
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Sep 2020 13:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A2A27179F
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Sep 2020 21:39:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgITLXc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Sep 2020 07:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgITLXa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 07:23:30 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C949C061755;
-        Sun, 20 Sep 2020 04:23:30 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d9so6545489pfd.3;
-        Sun, 20 Sep 2020 04:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rBsdTiTbpyOmMgOvP3FrhuqYxd42+28jQIlyRSG6IGE=;
-        b=G8gfezd48gHhUM6uExvGjTLu4NYtMNICyiZyQB912p7OvgEiRAYJJraKTb4TWVcjke
-         ze6r205KKkLSuTYcSEEeumS0dWCdE7B7MozQI2+U8NxyzdlEbLp+GO2D0VpkQ6IJC6B3
-         3/CLNI1qWtfxB4oLvKvJlo2CenAW1xulrICI5Fds4um79Y4OESNk7qQtKOIxslLEZiuU
-         0tA/h1TiglhoQIv1wZyDPBYuYG2eT9N+VZ41s9gKdZ9DtdRjFLxY1IyMEJVRWBCUrQXy
-         VyDl5+B6d2Y/OYO5zNWbHtqZkGmukpH7lFG96rDErYDtnERbq8YBK2iBUtFm8eewLnD4
-         cvxQ==
+        id S1726365AbgITTjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Sep 2020 15:39:22 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45048 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgITTjW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 15:39:22 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b12so10762518edz.11;
+        Sun, 20 Sep 2020 12:39:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rBsdTiTbpyOmMgOvP3FrhuqYxd42+28jQIlyRSG6IGE=;
-        b=aS/aig/9oooGDYhjroaU5Rt65Oc+G6n1QpgZp2AeiNdCRhjhmcBu2fjphI6NxH+8qX
-         SIsPVFaDX5MKBsIZnoxtqKyuVqIAIBrkJ168e9DWfbf80+Kd0fQ/8T3PpwQTyjXSIGCC
-         6krqBIG0EpsNDT9RWQDd0cUo+klvG/nf7PDAOt/sF6ToUcXaqXVYIVgXyjLe18Tjdexq
-         4fKX86mfnWQFgiqZ6Ep6DjkidhFxvjVl2bOrcwnsS2kFdmZztgMTNtfFFASm9qnoWRdi
-         ijB0VNketplLuVOF4pUABHJ3+D0Lf7FzFD+7jShicpPGcn5p/6cw4+w7HAMc8k1QDHbe
-         Gchg==
-X-Gm-Message-State: AOAM533dWTkU6KT9w1sjXXrFln9VsCF4OxVH146WmgWTccUq+4ffg8Lc
-        CrKsQP2XXQDXqzlnXRp8Yq4=
-X-Google-Smtp-Source: ABdhPJx/ER2okEZj50CJMSZGcIEn5Ov9bEkYk0Lenn7RpxfvdFlMr0jxQrJhgoOguXy4mdoLgWlg6A==
-X-Received: by 2002:aa7:9850:0:b029:142:2501:34f0 with SMTP id n16-20020aa798500000b0290142250134f0mr23189951pfq.73.1600601009662;
-        Sun, 20 Sep 2020 04:23:29 -0700 (PDT)
-Received: from sol (106-69-189-59.dyn.iinet.net.au. [106.69.189.59])
-        by smtp.gmail.com with ESMTPSA id q190sm9362323pfc.176.2020.09.20.04.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2020 04:23:28 -0700 (PDT)
-Date:   Sun, 20 Sep 2020 19:23:23 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EjOn6uRQVdPuymFl16y3sShxeseL+O0M4hlLdZpwFpM=;
+        b=fzV3N2JP7Qn2Un3gsyBkgM9KrmD3SLAd7ErjwLLrv7C0svmYJIw/Su3cN5jzL1n75r
+         zrVBbRp0adJmTob9fvSDvQTeINq0Fe9rGHzxfRP0yd1oHGM5CSes4h1H9lsNN2Af6+NR
+         d0ulDLOpr/hTyADZvhy/M2cTvFeR3SoGBczBJ92jLgWJWYP4aoeh/bgd5MS1ieIJoYVg
+         6ksqwh1EH+VLlfV5bSMH+63fjGtU1MA8xMNeQOL1kPDGpsLiE949brMg2FIGNi48s+UJ
+         hRtgtzzp0Oyof5RPfv/PXU0EB+6wtwI2PdzADE7pvJ1dNlnFiXqjYGjwyU5Dq6cYL3ef
+         fBbw==
+X-Gm-Message-State: AOAM531mhHln8/YoTRQVgbf2mjMhbyiq8/5NMP0j+70D/dQvnqboSPB4
+        aA6R66kZyihQ8588LXmKHUA=
+X-Google-Smtp-Source: ABdhPJxm64DrxO2BCAhB/Z2FKAFGkrjja3e7GI7Mop9Y1YiJS/Mzx02Jc3rgIeVCd0fm8AibxTyTyA==
+X-Received: by 2002:a05:6402:326:: with SMTP id q6mr48977643edw.216.1600630759279;
+        Sun, 20 Sep 2020 12:39:19 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.191])
+        by smtp.googlemail.com with ESMTPSA id bf25sm6956900edb.95.2020.09.20.12.39.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 20 Sep 2020 12:39:18 -0700 (PDT)
+Date:   Sun, 20 Sep 2020 21:39:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 09/20] gpiolib: cdev: support edge detection for uAPI
- v2
-Message-ID: <20200920112323.GC793608@sol>
-References: <20200909102640.1657622-1-warthog618@gmail.com>
- <20200909102640.1657622-10-warthog618@gmail.com>
- <CAHp75VcyuPYqXTk7-yBd1dR3BitXQnz1YVkD+PuJRWVOu+1ueQ@mail.gmail.com>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 01/13] dt-bindings: gpio: add common schema for GPIO
+ controllers
+Message-ID: <20200920193915.GA31074@kozik-lap>
+References: <20200917165301.23100-1-krzk@kernel.org>
+ <20200917165301.23100-2-krzk@kernel.org>
+ <CAL_JsqJCLgf6syqV=jNPHPyu02ygwWCDDV+U9VCm0qRpLkirSQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcyuPYqXTk7-yBd1dR3BitXQnz1YVkD+PuJRWVOu+1ueQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJCLgf6syqV=jNPHPyu02ygwWCDDV+U9VCm0qRpLkirSQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 01:39:41PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 9, 2020 at 1:33 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Fri, Sep 18, 2020 at 08:30:02AM -0600, Rob Herring wrote:
+> On Thu, Sep 17, 2020 at 10:53 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > >
-> > Add support for edge detection to lines requested using
-> > GPIO_V2_GET_LINE_IOCTL.
-> >
-> > The edge_detector implementation is based on the v1 lineevent
-> > implementation.
+> > Convert parts of gpio.txt bindings into common dtschema file for GPIO
+> > controllers.  The schema enforces proper naming of GPIO controller nodes
+> > and GPIO hogs.
 > 
-> ...
-> 
-[snip]
-> > +
-> > +       /*
-> > +        * We may be running from a nested threaded interrupt in which case
-> > +        * we didn't get the timestamp from edge_irq_handler().
-> > +        */
-> 
-> > +       if (!line->timestamp) {
-> 
-> Can it be positive conditional?
-> 
+> Did you not see my previous reply about a common schema? We already
+> have a common GPIO and hog schema in dtschema. Please add to it
+> whatever is missing.
 
-Not sure what you mean - switch the order of the if/else?
+Indeed, I'll enhance the dt-schema.
 
-> > +               le.timestamp = ktime_get_ns();
-> > +               if (lr->num_lines != 1)
-> > +                       line->req_seqno = atomic_inc_return(&lr->seqno);
-> > +       } else {
-> > +               le.timestamp = line->timestamp;
-> > +       }
-> > +       line->timestamp = 0;
-> > +
-> > +       if (line->eflags == (GPIO_V2_LINE_FLAG_EDGE_RISING |
-> > +                            GPIO_V2_LINE_FLAG_EDGE_FALLING)) {
-> > +               int level = gpiod_get_value_cansleep(line->desc);
-> > +
-> > +               if (level)
-> > +                       /* Emit low-to-high event */
-> > +                       le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
-> > +               else
-> > +                       /* Emit high-to-low event */
-> > +                       le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
-> > +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_RISING) {
-> > +               /* Emit low-to-high event */
-> > +               le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
-> > +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_FALLING) {
-> > +               /* Emit high-to-low event */
-> > +               le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
-> > +       } else {
-> > +               return IRQ_NONE;
-> > +       }
-> > +       line->line_seqno++;
-> > +       le.line_seqno = line->line_seqno;
-> > +       le.seqno = (lr->num_lines == 1) ? le.line_seqno : line->req_seqno;
-> > +       le.offset = gpio_chip_hwgpio(line->desc);
-> > +
-> > +       ret = kfifo_in_spinlocked_noirqsave(&lr->events, &le,
-> > +                                           1, &lr->wait.lock);
-> > +       if (ret)
-> > +               wake_up_poll(&lr->wait, EPOLLIN);
-> > +       else
-> 
-> > +               pr_debug_ratelimited("event FIFO is full - event dropped\n");
-> 
-> Oh, can we really avoid printf() in IRQ context?
-> 
+The trouble is that each in-kernel YAML file still has to mention
+possible gpio-hogs nodes. Is the proper solution to put them in common
+YAML inside kernel sources?
 
-Even in the IRQ thread?  Would a tracepoint be preferable?
+> 
+> My goal is all common schema end up in dtschema, but I haven't pushed
+> folks to do that yet. Ones I've done are there though. One issue is
+> what's in dtschema should be GPL/BSD and the existing text bindings
+> are default GPL, so there's a relicensing exercise. In some cases, the
+> schema is there but I haven't copied over the descriptions.
 
-Btw, this is drawn from the v1 implmentation.
+Right, I'll skip the descriptions when posting to dt-schema.
 
-> > +
-> > +static void edge_detector_stop(struct line *line)
-> > +{
-> 
-> > +       if (line->irq) {
-> > +               free_irq(line->irq, line);
-> > +               line->irq = 0;
-> > +       }
-> 
-> Perhaps
-> 
-> if (!line->irq)
->   return;
-> 
-> ?
-> 
+Best regards,
+Krzysztof
 
-No - the function is extended in subsequent patches.  I usually make a
-note of cases like this in the commentary, but missed this one.
-
-> > +       if (!eflags)
-> > +               return 0;
-> > +
-> > +       irq = gpiod_to_irq(line->desc);
-> > +       if (irq <= 0)
-> 
-> > +               return -ENODEV;
-> 
-> Why shadowing actual error code?
-> 
-
-Another one drawn from the v1 implementation, so not sure.
-gpiod_to_irq() can potentially return EINVAL, which is definitely not
-appropriate to return, or ENXIO, which is actually more appropriate??
-
-Cheers,
-Kent.
