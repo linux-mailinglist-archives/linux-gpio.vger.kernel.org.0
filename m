@@ -2,101 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54E1E271F81
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 11:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC834271F9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 12:04:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgIUJ7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Sep 2020 05:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgIUJ7Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Sep 2020 05:59:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF39C0613D1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 02:59:16 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id q13so16799138ejo.9
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 02:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sl8uGkOUAXH9GoQjx9V+JkGylxwKYdt19btYfKxLbmw=;
-        b=mnoq6BMhUMKYHNjZLAhOQC5sz2iGfzQxNEvmCunoDgFntNgGc7N1PxAKKBdqnAaFyk
-         cfdOwPpq8pXxnJh/d+BGplVMxlXtQg5cRRr4R97rHYN0w/g7M8k9q/ndCWF5bsntgw5r
-         cgI2vgLNKHnGWQyBjNFkIKZXcFEra3O0awGEIvA/sTpxFWQrKzanm1JwQmDw/u74vRA8
-         ZNINbJTxS8atLiTnmFpxj+eI6lBUPe7TYseFLMNN8le+1ENVRig0jmgvojBIZUqt4Z1Z
-         ZmUyg/k2STu11/eNalBHkwiXgkeAJQJPdw4hufpBjKXNU5REWPdFkIBhF0LJPoen+M7V
-         VqXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sl8uGkOUAXH9GoQjx9V+JkGylxwKYdt19btYfKxLbmw=;
-        b=J5AwqTi+r+NX8c4KDl3eLjJej/y7/dIXT0Ksos8RHjIQkb9pLV8DHC2ZZ3fg4gir7l
-         BKH3GR9ngCFlgIx0/CBh7aKnDdTzucO83cPtlDAQ2vIadl9qE/gSi4uvNiGZ1jaqFwFs
-         N+qzxYg26sS/fzlAJIw2Tpc/I6oFdj+M2/zzhiCcFNRR3yaJlpBWO3cjmNZC4TTcYERT
-         KPywikWoJfwVqmZHrUwT9WbCIgcYR+Pe6nxnumGsZLKqShFKKcn8cZBNRn7vJlOhwq4l
-         aSvrbFvC1xYGkil+34h9lFd5yZUcQMzAOllljA+qL7toF01+P5/Q9O/h7itbQf1M4/3E
-         rbYQ==
-X-Gm-Message-State: AOAM532uW+4jZTu/mTQ9QED3jXLpqqPZtnUwNY9bdAVtX8gLGQ+s7Q7f
-        JWTrgut8h858+lZlGVOiYf1ZkQ==
-X-Google-Smtp-Source: ABdhPJwV2XZWvXBk31Ggd3Mw92swsNCTa+hfyEth2y1cYI1jCOhFVLvWbHjmNeuzBB83LG6KVU/cDw==
-X-Received: by 2002:a17:906:2e14:: with SMTP id n20mr50204929eji.214.1600682355019;
-        Mon, 21 Sep 2020 02:59:15 -0700 (PDT)
-Received: from x1 ([2001:16b8:5c50:7f01:652a:68b1:4040:26de])
-        by smtp.gmail.com with ESMTPSA id i26sm8303203edq.47.2020.09.21.02.59.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2020 02:59:14 -0700 (PDT)
-Date:   Mon, 21 Sep 2020 11:59:12 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Trent Piepho <tpiepho@gmail.com>,
-        Christina Quast <cquast@hanoverdisplays.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: am335x: guardian: switch to AM33XX_PADCONF
-Message-ID: <20200921095912.GA3752675@x1>
-References: <20200919195159.3126193-1-drew@beagleboard.org>
- <20200921064707.GN7101@atomide.com>
+        id S1726461AbgIUKEG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Sep 2020 06:04:06 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:36690 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726406AbgIUKEG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 21 Sep 2020 06:04:06 -0400
+X-Greylist: delayed 547 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 06:04:04 EDT
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 08L9qUoj015053;
+        Mon, 21 Sep 2020 04:54:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=GjWrxUGigUXopaPLhY4SiGmUNZT9wlcWnfHb+PSgNrc=;
+ b=cQQzdoN8o8SRQr8ipdF6z+1mmGEoN7NuYtxxPNvLbstLwMZCLYlqz3etvqI7pi0cctqo
+ gVGQgo21Y0pirllnqxTMDhMWPS3i9pvbRE61wd6PEZbQQZsse2TCLFWwiotT4k+oCs+6
+ UPZxzVU0QdKQYfRQUcEx2HxpwwH6Gtz5Jdkm4j8miomiElVTHowG0shhJJUvmI7iNziH
+ v7xNNsVRm91TDEqJR7Heu1WnLIOrzThFa5jaoyGi5Thv8HSxq79Hyf/UyK6p1TwlRLMF
+ 9OeRT7vJZ/fSku5iQfwoaw57f77fsqFfNgavz6+aw8CLj9arI6C8Zj9SBHRe2CguHbKT jg== 
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 33nedn1x79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 21 Sep 2020 04:54:40 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 21 Sep
+ 2020 10:54:39 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Mon, 21 Sep 2020 10:54:39 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id BACD52C3;
+        Mon, 21 Sep 2020 09:54:38 +0000 (UTC)
+Date:   Mon, 21 Sep 2020 09:54:38 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Sungbo Eo <mans0n@gorani.run>, Stefan Agner <stefan@agner.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        - <patches@opensource.cirrus.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sricharan R <sricharan@codeaurora.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-unisoc@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-media@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 08/13] dt-bindings: mfd: include common schema in GPIO
+ controllers
+Message-ID: <20200921095438.GP10899@ediswmail.ad.cirrus.com>
+References: <20200917165301.23100-1-krzk@kernel.org>
+ <20200917165301.23100-9-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200921064707.GN7101@atomide.com>
+In-Reply-To: <20200917165301.23100-9-krzk@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0 spamscore=0
+ adultscore=0 mlxlogscore=807 suspectscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009210071
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 09:47:07AM +0300, Tony Lindgren wrote:
-> * Drew Fustini <drew@beagleboard.org> [200919 19:53]:
-> > Change the pin defintions from AM33XX_IOPAD to AM33XX_PADCONF macro so
-> > that it correctly handles changes to #pinctrl-cells.
+On Thu, Sep 17, 2020 at 06:52:56PM +0200, Krzysztof Kozlowski wrote:
+> Include the common GPIO schema in GPIO controllers to be sure all common
+> properties are properly validated.
 > 
-> Thanks for fixing this. I wonder if we should now also change the define
-> for the old AM33XX_IOPAD macro?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> Or just remove it completely and mention that we've changed nr-pinctrl-cells
-> to use 3 now?
-> 
-> Otherwise the unknown number of out-of-tree boards will be hitting this
-> too.
-> 
+> ---
 
-Christina Quast commented in f1ff9be7652b ("ARM: dts: am33xx: Added 
-AM33XX_PADCONF macro") that AM33XX_IOPAD() was left in place to avoid
-breaking boards not in mainline.
+For the Cirrus/Wolfson bits:
 
-If we follow that logic, then I think that fixing AM33XX_IOPAD() for
-#pinctrl-cells = <2> would be the correct solution.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Would this be acceptable?
-
-#define AM33XX_IOPAD(pa, val)          OMAP_IOPAD_OFFSET((pa), 0x0800) (val) (0)
-
-
-thanks,
-drew
-
+Thanks,
+Charles
