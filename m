@@ -2,101 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C46E8271E2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 10:40:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E1E271F81
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 11:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgIUIkc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Sep 2020 04:40:32 -0400
-Received: from mail1.nippynetworks.com ([91.220.24.129]:43210 "EHLO
-        mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgIUIkc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Sep 2020 04:40:32 -0400
-Received: from macbookpro-ed.wildgooses.lan (unknown [212.69.38.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: ed@wildgooses.com)
-        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4BvyZ30kVwzTh4s;
-        Mon, 21 Sep 2020 09:40:26 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1600677628;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LVd16FYLAMdC77Pdt6rdb96AvyWmEeiXLvGQqj9O3xg=;
-        b=oSP21rLmM+DskM36Tkxc2MyX5WdkQ1Upwv2ISYIyM+5PgHbwmJchPF1fqVHqV+vZH8xk/t
-        U5xtvLfG2GaeSJXIltvBDbpq0W+nC1toZQeKUgcx3hrq8PTAY6C0JWdxrxioEEQpICPd5Q
-        pzU0Ezhp0bfAuESig/gpPcJ+o6I8ca4=
-Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of
- AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Eckert <fe@dev.tdt.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200920203207.25696-1-lists@wildgooses.com>
- <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
-From:   Ed W <lists@wildgooses.com>
-X-Tagtoolbar-Keys: D20200921094026454
-Message-ID: <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com>
-Date:   Mon, 21 Sep 2020 09:40:26 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        id S1726508AbgIUJ7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Sep 2020 05:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgIUJ7Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Sep 2020 05:59:16 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF39C0613D1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 02:59:16 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q13so16799138ejo.9
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 02:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sl8uGkOUAXH9GoQjx9V+JkGylxwKYdt19btYfKxLbmw=;
+        b=mnoq6BMhUMKYHNjZLAhOQC5sz2iGfzQxNEvmCunoDgFntNgGc7N1PxAKKBdqnAaFyk
+         cfdOwPpq8pXxnJh/d+BGplVMxlXtQg5cRRr4R97rHYN0w/g7M8k9q/ndCWF5bsntgw5r
+         cgI2vgLNKHnGWQyBjNFkIKZXcFEra3O0awGEIvA/sTpxFWQrKzanm1JwQmDw/u74vRA8
+         ZNINbJTxS8atLiTnmFpxj+eI6lBUPe7TYseFLMNN8le+1ENVRig0jmgvojBIZUqt4Z1Z
+         ZmUyg/k2STu11/eNalBHkwiXgkeAJQJPdw4hufpBjKXNU5REWPdFkIBhF0LJPoen+M7V
+         VqXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sl8uGkOUAXH9GoQjx9V+JkGylxwKYdt19btYfKxLbmw=;
+        b=J5AwqTi+r+NX8c4KDl3eLjJej/y7/dIXT0Ksos8RHjIQkb9pLV8DHC2ZZ3fg4gir7l
+         BKH3GR9ngCFlgIx0/CBh7aKnDdTzucO83cPtlDAQ2vIadl9qE/gSi4uvNiGZ1jaqFwFs
+         N+qzxYg26sS/fzlAJIw2Tpc/I6oFdj+M2/zzhiCcFNRR3yaJlpBWO3cjmNZC4TTcYERT
+         KPywikWoJfwVqmZHrUwT9WbCIgcYR+Pe6nxnumGsZLKqShFKKcn8cZBNRn7vJlOhwq4l
+         aSvrbFvC1xYGkil+34h9lFd5yZUcQMzAOllljA+qL7toF01+P5/Q9O/h7itbQf1M4/3E
+         rbYQ==
+X-Gm-Message-State: AOAM532uW+4jZTu/mTQ9QED3jXLpqqPZtnUwNY9bdAVtX8gLGQ+s7Q7f
+        JWTrgut8h858+lZlGVOiYf1ZkQ==
+X-Google-Smtp-Source: ABdhPJwV2XZWvXBk31Ggd3Mw92swsNCTa+hfyEth2y1cYI1jCOhFVLvWbHjmNeuzBB83LG6KVU/cDw==
+X-Received: by 2002:a17:906:2e14:: with SMTP id n20mr50204929eji.214.1600682355019;
+        Mon, 21 Sep 2020 02:59:15 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c50:7f01:652a:68b1:4040:26de])
+        by smtp.gmail.com with ESMTPSA id i26sm8303203edq.47.2020.09.21.02.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 02:59:14 -0700 (PDT)
+Date:   Mon, 21 Sep 2020 11:59:12 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Trent Piepho <tpiepho@gmail.com>,
+        Christina Quast <cquast@hanoverdisplays.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: am335x: guardian: switch to AM33XX_PADCONF
+Message-ID: <20200921095912.GA3752675@x1>
+References: <20200919195159.3126193-1-drew@beagleboard.org>
+ <20200921064707.GN7101@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200921064707.GN7101@atomide.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/09/2020 08:55, Andy Shevchenko wrote:
-> On Sun, Sep 20, 2020 at 11:33 PM Ed Wildgoose <lists@wildgooses.com> wrote:
->> Schematics show that the GPIO number is 55 (not 59). Trivial typo.
-> Does it still DEVSLP0? Perhaps you need to drop that part as well.
->
-> ...
+On Mon, Sep 21, 2020 at 09:47:07AM +0300, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200919 19:53]:
+> > Change the pin defintions from AM33XX_IOPAD to AM33XX_PADCONF macro so
+> > that it correctly handles changes to #pinctrl-cells.
+> 
+> Thanks for fixing this. I wonder if we should now also change the define
+> for the old AM33XX_IOPAD macro?
+> 
+> Or just remove it completely and mention that we've changed nr-pinctrl-cells
+> to use 3 now?
+> 
+> Otherwise the unknown number of out-of-tree boards will be hitting this
+> too.
+> 
+
+Christina Quast commented in f1ff9be7652b ("ARM: dts: am33xx: Added 
+AM33XX_PADCONF macro") that AM33XX_IOPAD() was left in place to avoid
+breaking boards not in mainline.
+
+If we follow that logic, then I think that fixing AM33XX_IOPAD() for
+#pinctrl-cells = <2> would be the correct solution.
+
+Would this be acceptable?
+
+#define AM33XX_IOPAD(pa, val)          OMAP_IOPAD_OFFSET((pa), 0x0800) (val) (0)
 
 
-In the PCEngines schematic it's labelled as "G55/DEVSLP" (no 0)
-
-(In contrast G59 is labelled "G59/DEVSLP1")
-
-What is the quorum opinion on name?
-
-Thanks
-
-Ed W
-
-
->
->>   #define APU2_GPIO_REG_LED3             AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
->>   #define APU2_GPIO_REG_MODESW           AMD_FCH_GPIO_REG_GPIO32_GE1
->>   #define APU2_GPIO_REG_SIMSWAP          AMD_FCH_GPIO_REG_GPIO33_GE2
->> -#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
->> +#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
->>   #define APU2_GPIO_REG_MPCIE3           AMD_FCH_GPIO_REG_GPIO51
->>
->>   /* Order in which the GPIO lines are defined in the register list */
->> diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
->> index 9e46678ed..255d51c9d 100644
->> --- a/include/linux/platform_data/gpio/gpio-amd-fch.h
->> +++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
->> @@ -19,7 +19,7 @@
->>   #define AMD_FCH_GPIO_REG_GPIO49                0x40
->>   #define AMD_FCH_GPIO_REG_GPIO50                0x41
->>   #define AMD_FCH_GPIO_REG_GPIO51                0x42
->> -#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0        0x43
->> +#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0        0x43
->>   #define AMD_FCH_GPIO_REG_GPIO57                0x44
->>   #define AMD_FCH_GPIO_REG_GPIO58                0x45
->>   #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1        0x46
->
+thanks,
+drew
 
