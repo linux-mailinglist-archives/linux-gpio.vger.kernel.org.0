@@ -2,29 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4488B2718E1
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 03:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E99B27190C
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 03:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgIUBAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Sep 2020 21:00:54 -0400
-Received: from slot0.argoshiq.com ([45.95.169.66]:47307 "EHLO
+        id S1726221AbgIUB4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Sep 2020 21:56:18 -0400
+Received: from slot0.argoshiq.com ([45.95.169.66]:44601 "EHLO
         slot0.argoshiq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgIUBAy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 21:00:54 -0400
-X-Greylist: delayed 605 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Sep 2020 21:00:00 EDT
+        with ESMTP id S1726184AbgIUB4S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Sep 2020 21:56:18 -0400
 From:   Sophia <sophia@miwell-hk.com>
-Date:   Sun, 20 Sep 2020 17:49:54 -0700
-Subject: Inquires
-Message-Id: <9OGGE3P1QBU4.39N3SEM2ZFQK1@miwell-hk.com>
+Date:   Sun, 20 Sep 2020 18:55:24 -0700
+Subject: Product Inquires
+Message-Id: <6XAVG572QBU4.GIP0SZTMVTQR@miwell-hk.com>
 To:     linux-gpio@vger.kernel.org
 Sender: Sophia <sophia@miwell-hk.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-sM6zkG/8fv91KtS15zH2MA=="
+Content-Type: multipart/mixed; boundary="=-nkUG+lptggVpGQcD2tPK/A=="
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-sM6zkG/8fv91KtS15zH2MA==
+--=-nkUG+lptggVpGQcD2tPK/A==
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
@@ -45,7 +44,7 @@ M.p.:18002752016
 Tel:0769-22996820
 Email:sophia@miwell-hk.com
 
---=-sM6zkG/8fv91KtS15zH2MA==
+--=-nkUG+lptggVpGQcD2tPK/A==
 Content-Type: application/x-7z-compressed; name=img001.7z
 Content-Disposition: attachment; filename=img001.7z
 Content-Transfer-Encoding: base64
@@ -4341,4 +4340,4 @@ Ztt7vUc+F90vscxapMSobtrmq+7eJgAAAAABBAYAAQnDRIgABwsBAAIhIQEPBAMDAQMBAAzJ
 ACrJACoACAoB7UdnjQAABQERFwBpAG0AZwAwADAAMQAuAGUAeABlAAAAGQQAAAAAFAoBABE9
 CRSoj9YBFQYBACAAAAAAAA==
 
---=-sM6zkG/8fv91KtS15zH2MA==--
+--=-nkUG+lptggVpGQcD2tPK/A==--
