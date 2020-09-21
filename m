@@ -2,68 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A969127350B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 23:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DAA8273517
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Sep 2020 23:43:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgIUVkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Sep 2020 17:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51612 "EHLO
+        id S1727448AbgIUVn2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Sep 2020 17:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgIUVkm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Sep 2020 17:40:42 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD96BC061755
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 14:40:41 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id b22so15677938lfs.13
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 14:40:41 -0700 (PDT)
+        with ESMTP id S1726452AbgIUVn2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Sep 2020 17:43:28 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CE1C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 14:43:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x22so5643901pfo.12
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Sep 2020 14:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bzI1Aq3hWbeglPVYuuldhchbupgrtN/i3DElgTJLyt0=;
-        b=VlItBwTcS4Pvkd3BS8Mjl34txyI86UvmQduG8TrYiNlbzCh+hnrYEuo8ykmdfAaCXZ
-         XKke1iif2Uv2huWowudQ5UjnvWsK1PWBpeQUIp96NqvHSpDPo9db2gHdWkNJA5alxJdn
-         qocWuMwD4y7RrwmLvu88bvKj9G53Vd6YAo5B0h25zM41Ly8/PHrXs7GMNsI7fQqRJzPv
-         RJrYX/iAMkVoZgQHHE9KTvOdrPEJ52EUUJx5LdYIIq21l2taEf0P9QBnlEnR7GadLpfe
-         myXbwDrn4eKoqzOVqmrfWKeRGQn2+J4tGITPjP/E2HNO8FNceTziqiqbTkMoF9GZIAL4
-         K9mQ==
+        bh=asYRm/SFumXdDArao+C6BYDYKMWP66N60oziE6h/3rk=;
+        b=DTaqnJ8pnVOjpRmJDXJ51ltd3npFeq7YrLqPJhJPqgqYYbOPFE/zh+HyqpVAgrzojw
+         tjBJgcztvNcoBlmQdsj/k19iT3EqZEqqGzjO3xdXGLQawggSPPL9WYPLorz6DQEPTKx+
+         ne2FdgCGpRn18RqFk0w+3+yHcpVRrvW7LKAG52gKChqDK3llUhac6B0angJUFDaCEJm4
+         9F7pRELqebD1Pdv7KYvZyRwjgtiCxotaVtk01sfWtb58U19emrPzqgioudgOOcCDVL+q
+         uJjM5iUHJC2OURMwAe8K3NY+xR6spP7xNGyEA/Ohfzg8qs06MNPpeQE6jwBDvtwWUFXk
+         Mh5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bzI1Aq3hWbeglPVYuuldhchbupgrtN/i3DElgTJLyt0=;
-        b=S3zWI547ibJOUHbcp77HPOZVh+vD98/YvQ1MUajcXnF8Ad4CUv9L00qy70/gk5ddgA
-         4rIsoBIuI2BFouTLbUizs3L43/rOByYwrvPlh/XlRxA5F/UdhxNQCTC/l3qodUnTeQoZ
-         UO6oHQmuq8WPETzNjigQazwf7s5A8Ss56tVOTTiIw7ZBtOoBSp1+yXuQeSDX1IgqZVet
-         3C5L1UsCKwegcychiL/Vzy5p9Mm85nxTyUrQjn2bFRJQcwp9qpXBazZNogEdeflD6hAw
-         tgHFil6N+Pslt3KJexYRKUvS5yfq5q3qlRmf5QvTrNXIQaJJfn0tPGRRlsgXqAKbO8j5
-         riXA==
-X-Gm-Message-State: AOAM531idHVBMkEGzYLTzFjI8ctIz6lu6hf5lIBkpd6C7ZeImfe1LArN
-        +LFbtrjsASy/VAp5XrByqB32+BP3zbv7q3TyY352GY9kCZMmaw==
-X-Google-Smtp-Source: ABdhPJzKhAB4PhVAIDDHSLdfAXJBVh+PvWuORBNYZvtwJaWFQEo1nUDMIMjJH9ibkczJC9IDJx+NJt4k457MgNWXS1c=
-X-Received: by 2002:ac2:4c11:: with SMTP id t17mr651708lfq.260.1600724440257;
- Mon, 21 Sep 2020 14:40:40 -0700 (PDT)
+        bh=asYRm/SFumXdDArao+C6BYDYKMWP66N60oziE6h/3rk=;
+        b=YMyaNB7fs2ehgRIZ5KwXOoKAucdn1oPE3seQ7HiF6qJRORKrnu3ENi7sWYQWgmi49I
+         8JHOqDUr3+bsxcEvU5ZW1fBUFFa3zV9VNBPPnyvp1kA0w5aloBkOL7aaogLtEi4+E8Nd
+         2bI+2PzX7MkWPW/zpGTSnehn+ewRnmPyoXtfCk6Gai1UwdLoVrO5e+eDDLA3hGBCvQAJ
+         AsLypup232vsVT2aEV7GAgG9BSqjEX656b/PYFNOm7n/Je4fmpQtLmPpfI0bNzPzb1yX
+         og9bVbDiG4sRGeS3tzYRRfuWEs8Uv6fMfx6sqql5uejI/z/VebLsY8vDwvUHHcBFQCgM
+         HPoA==
+X-Gm-Message-State: AOAM531xhgAG8IIQZl0dNBnYOLCKur/fAOBebC5G4hNAvNDZ5nLmFliF
+        Qg92ZaQYjY1amZf80+P5ZCUfPT+5oaQhbnvzJpeNGS8Xql1SNg==
+X-Google-Smtp-Source: ABdhPJxhpRAEbJ46dnXAC1D44dN8XfterSOwldM+uqWiLfc/yJSkHS29way+/S4rUMQp8pkHTA79btXj/i184+Vv7v4=
+X-Received: by 2002:aa7:81d5:0:b029:142:2501:39fa with SMTP id
+ c21-20020aa781d50000b0290142250139famr1511956pfn.73.1600724607375; Mon, 21
+ Sep 2020 14:43:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200917113924.13677-1-brgl@bgdev.pl>
-In-Reply-To: <20200917113924.13677-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Sep 2020 23:40:29 +0200
-Message-ID: <CACRpkdZNO57h=QZtom-XLPkQ0-vkd1By4dJyyJg1wkNrWC+ynw@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.10
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200914155714.GA43910@black.fi.intel.com> <CACRpkdb7tP-Zz0ycpss885nWOx-LoT6iPmRT5b-FrBM+x8aLpA@mail.gmail.com>
+In-Reply-To: <CACRpkdb7tP-Zz0ycpss885nWOx-LoT6iPmRT5b-FrBM+x8aLpA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 22 Sep 2020 00:43:11 +0300
+Message-ID: <CAHp75Vd0L7AZnWfZQBycztS_OEORb4J=DQpS_cjdOf5cSOQRkQ@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 5.9-2
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 1:39 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, Sep 22, 2020 at 12:08 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Sep 14, 2020 at 5:57 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>
+> > One fix for v5.9 cycle from Hans.
+>
+> Hm the pinctrl fixes are based on v5.9-rc2 and I got a ton of changes with this
+> so I suppose it is based on some other -rc.
+>
+> I will attempt to just cherry-pick it to fixes.
 
-> Please pull the following batch of updates for the v5.10 release cycle. Details
-> are in the signed tag.
+It will break fast forward. Is it a problem to have v5.9-rc4 there?
 
-Pulled into my "devel" branch for v5.10, sorry for taking so long.
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
