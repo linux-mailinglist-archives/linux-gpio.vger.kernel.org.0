@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3329827430D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 15:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE4A27430E
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 15:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgIVNap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Sep 2020 09:30:45 -0400
+        id S1726603AbgIVNar (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Sep 2020 09:30:47 -0400
 Received: from mga18.intel.com ([134.134.136.126]:35158 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIVNap (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 22 Sep 2020 09:30:45 -0400
-IronPort-SDR: ZqV0At3S1KF+qAhaZeVbrSgiBtZ913LHb0UJ/1Iao0zB4Nd5TXl/4xqaRF/F4TZlfiN6Sj6c8i
- INk3S0q/cM9w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9751"; a="148349916"
+        id S1726489AbgIVNar (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 22 Sep 2020 09:30:47 -0400
+IronPort-SDR: ElVB+xeGIrMUPwSCrbCdrRaI9VEjq1JLNr4hUbAQyyEQcw4LMPeePFQ5sCuKc6lxDZi9rzLXw5
+ 6KBtCi1nPqxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9751"; a="148349924"
 X-IronPort-AV: E=Sophos;i="5.77,290,1596524400"; 
-   d="scan'208";a="148349916"
+   d="scan'208";a="148349924"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 06:30:34 -0700
-IronPort-SDR: jcFlnEP+ghPrKaCVGuh68gPAM5ibX8gS4Iduk3r4NnrTuFuOtRI4InA8ZKacWU/2OQWUI/5NYN
- eQboVq4UBYNw==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 06:30:36 -0700
+IronPort-SDR: b3ChYLX1LZqRZn1PNXN/ji1wC7eHMck92zA+hJuMIPNO+HddBF97Ixu2ycP/Ne/EGNpUFEF0K8
+ f7vsSh0Kbd2g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,290,1596524400"; 
-   d="scan'208";a="412653277"
+   d="scan'208";a="342017228"
 Received: from lkp-server01.sh.intel.com (HELO 928d8e596b58) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Sep 2020 06:30:32 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 22 Sep 2020 06:30:32 -0700
 Received: from kbuild by 928d8e596b58 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kKiNL-0000Xl-Km; Tue, 22 Sep 2020 13:30:31 +0000
-Date:   Tue, 22 Sep 2020 21:29:48 +0800
+        id 1kKiNL-0000Xg-Jc; Tue, 22 Sep 2020 13:30:31 +0000
+Date:   Tue, 22 Sep 2020 21:29:50 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:fixes] BUILD SUCCESS
- 53c14e237b0128aed9e2f1ab3700c46fdad36ebc
-Message-ID: <5f69fc4c.LLcL9g97uHZH4yYr%lkp@intel.com>
+Subject: [gpio:for-next] BUILD SUCCESS
+ 764e64fcda547847a3a4c981bd3665e96f14ca08
+Message-ID: <5f69fc4e.CrXQzhrAc+pbwNxo%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,8 +45,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
-branch HEAD: 53c14e237b0128aed9e2f1ab3700c46fdad36ebc  Merge tag 'gpio-fixes-for-v5.9-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: 764e64fcda547847a3a4c981bd3665e96f14ca08  Merge branch 'devel' into for-next
 
 elapsed time: 722m
 
@@ -59,9 +59,9 @@ More configs may be tested in the coming days.
 gcc tested configs:
 arm                                 defconfig
 arm64                            allyesconfig
+arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
-arm64                               defconfig
 sh                           se7712_defconfig
 arm                        mvebu_v5_defconfig
 arm                        mvebu_v7_defconfig
