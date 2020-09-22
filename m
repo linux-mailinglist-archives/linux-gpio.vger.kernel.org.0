@@ -2,83 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC5E7274C3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 00:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B185C274C7A
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 00:52:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgIVWjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Sep 2020 18:39:45 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:32965 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgIVWjo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 18:39:44 -0400
-Received: by mail-il1-f194.google.com with SMTP id y2so8237866ila.0;
-        Tue, 22 Sep 2020 15:39:43 -0700 (PDT)
+        id S1726643AbgIVWwO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Sep 2020 18:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgIVWwO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 18:52:14 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AD3C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 15:52:14 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id fa1so2202492pjb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 15:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=0MYdcSde1ynzMMLdEZ+l00aEl/3UBT/5NAPikOtab0U=;
+        b=iNIFs8pnOeiuoCLAifTOVHzX2SFe6kXQNu6HNIs36afR2htOshKBe22RFTkHrx8s+8
+         Ae/t4Mnhxf7wcuKLdeSu7TNNNsYcciQzIGcEvyXwpamD6jhg+sus9rm8rqbLG0L3Rc7I
+         waezaJGjBR4x51bu48kuX9se2OcQWRTO+bCxrKSNUJSoY9lICb276kzaH09zuKNhGTst
+         WTcFGvqZJcis5It2XZWsGcG4q+HQJReCWyK7qVylPTWRRrsztxip3kDPLrDEpd3H0GlQ
+         qVDDvNEgBrybq1wqaksNko/dV/p+Vm0Awh+b1clh6fspDpNYhfhr/Y4NtAhtFLJ2Y42P
+         TaqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KP/bIax8AYxevHceHULkcS4me70aHkKP7ZGYXm7vv54=;
-        b=We4l8B50JSD6qCXq1gxI1hHalQ5e3Ag2eN/FsUjRj3slyl5Ml9SS2heaSYoSbzAdkA
-         BhX1HfWm0dygw7wYZVgZ0swUTurLVWmAEkQfRynSFsjSSJrwebOpgD2WupItcNIK100i
-         rDNJQp3Apfcm/RRR3Rzp3i9RKdncmGkZL4gerPFX87LzTGF2r8Yhm7REzSBl8a92juLQ
-         5sOJsklnvlyuP0TmUmAoT1X0rJmk7HSyVX4xPOEI3LotOWf4ntMQ1/H0td7EKe/8TEBO
-         zYrH/bNpNxETQsLdhdeDcAZQY4J1bUD880/NsIXioxGg2kos6Fqz9j7fbmetilc4CP9n
-         pAWw==
-X-Gm-Message-State: AOAM530gMZBTGWdLj2PfeBjyFcwRgIKSBKSAKEEhHKNsVuhxZTzL4vUa
-        JJaq91AxES6ecbhJck+mmJ/SI53WhNlB
-X-Google-Smtp-Source: ABdhPJy/D45MSIrtIxNDveJ1FlhelEkEb4ukAbZHwXhyxMtJXSjWg4yZn0PGGjL0bwqExLSA7b0r3Q==
-X-Received: by 2002:a92:dd8a:: with SMTP id g10mr4497927iln.125.1600814383453;
-        Tue, 22 Sep 2020 15:39:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id g1sm9786940ilh.12.2020.09.22.15.39.41
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=0MYdcSde1ynzMMLdEZ+l00aEl/3UBT/5NAPikOtab0U=;
+        b=LUymMq51czZp/OVWXg5OUiXbCEezKY8TeDT7D2l0Fvbpt97EKKYgkwcFNZW6ePWhdo
+         h/6ZFF25fa9w0Z90QRI0OMT6GWC/aJ+Z8Oszkvde6tzP6VsTn7v/1wtLdoX1c0z9+4Z8
+         rXDLGUbkjMAPxA6ZooTXg+W8u/5fDjTUUevQuQttRLu1IlpRuTvZbJEdvWWlmIj1/9Xt
+         6PMM8juYGLalCJ7VRmZMaYYj9vvMvjZ85XPMLPkWHRR8Y3mr2xrTwAS1NBT1W5ngYpVB
+         yFG0Q0L7dbcVoikIMAYLzlBD5OQQ3p0K3F1cIpVLHXSf2wkMzhLkftzJTqBy/6UKYX5T
+         rOEw==
+X-Gm-Message-State: AOAM530tuIfCCMU4pvLv9k/1uGlXorXlKAyLnpRS6eyLmbg95kPhZg6A
+        E/DuTetbhshWCyN+M/A+sRSCxzdOJiM1Ag==
+X-Google-Smtp-Source: ABdhPJwgGSj3AqzZwS1apDFalQMBQD54vbVXIyWob+F5d3+evy4xm7S/TAmry+KiJKb8w9Jn8w0NcA==
+X-Received: by 2002:a17:902:8215:b029:d2:425e:cce2 with SMTP id x21-20020a1709028215b02900d2425ecce2mr4791810pln.70.1600815133556;
+        Tue, 22 Sep 2020 15:52:13 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id r206sm16128339pfr.91.2020.09.22.15.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2020 15:39:42 -0700 (PDT)
-Received: (nullmailer pid 3391337 invoked by uid 1000);
-        Tue, 22 Sep 2020 22:39:40 -0000
-Date:   Tue, 22 Sep 2020 16:39:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jeremy Kerr <jk@codeconstruct.com.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] gpio/aspeed-sgpio: enable access to all 80 input
- & output sgpios
-Message-ID: <20200922223940.GA3391274@bogus>
-References: <20200911015105.48581-1-jk@codeconstruct.com.au>
+        Tue, 22 Sep 2020 15:52:12 -0700 (PDT)
+Message-ID: <5f6a801c.1c69fb81.44c1f.74e5@mx.google.com>
+Date:   Tue, 22 Sep 2020 15:52:12 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911015105.48581-1-jk@codeconstruct.com.au>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+X-Kernelci-Kernel: v5.9-rc1-32-g36eccdb58fb5
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.9-rc1-32-g36eccdb58fb5)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 11 Sep 2020 09:51:04 +0800, Jeremy Kerr wrote:
-> Currently, the aspeed-sgpio driver exposes up to 80 GPIO lines,
-> corresponding to the 80 status bits available in hardware. Each of these
-> lines can be configured as either an input or an output.
-> 
-> However, each of these GPIOs is actually an input *and* an output; we
-> actually have 80 inputs plus 80 outputs.
-> 
-> This change expands the maximum number of GPIOs to 160; the lower half
-> of this range are the input-only GPIOs, the upper half are the outputs.
-> We fix the GPIO directions to correspond to this mapping.
-> 
-> This also fixes a bug when setting GPIOs - we were reading from the
-> input register, making it impossible to set more than one output GPIO.
-> 
-> Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
-> Fixes: 7db47faae79b ("gpio: aspeed: Add SGPIO driver")
-> 
-> ---
-> v2:
->  - Fix warnings from kbuild test robot
->  - Add comment for input/output GPIO numbering
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt |   5 +-
->  drivers/gpio/gpio-aspeed-sgpio.c              | 126 ++++++++++++------
->  2 files changed, 87 insertions(+), 44 deletions(-)
-> 
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.9-rc1-32-=
+g36eccdb58fb5)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.9-rc1-32-g36eccdb58fb5/
+
+Tree: linusw
+Branch: devel
+Git Describe: v5.9-rc1-32-g36eccdb58fb5
+Git Commit: 36eccdb58fb55d2bea6a0e62932e4d7e5192d409
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
+
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
