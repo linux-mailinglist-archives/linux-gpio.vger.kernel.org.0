@@ -2,90 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17B0F273CEC
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 10:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A09E273CFF
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 10:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgIVIEj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Sep 2020 04:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
+        id S1726489AbgIVILT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Sep 2020 04:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgIVIEj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 04:04:39 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64425C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 01:04:39 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t7so1099685pjd.3
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 01:04:39 -0700 (PDT)
+        with ESMTP id S1726436AbgIVILT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 04:11:19 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412F0C061755;
+        Tue, 22 Sep 2020 01:11:19 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id f2so11326063pgd.3;
+        Tue, 22 Sep 2020 01:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zWqMa5Tshn6/Q/+0NbjHssCgmjlzoGeaz2OwCpGnxIc=;
-        b=o/yM6JQvsi6DjItC3CRu/Tv1fTiYPo/8iKDgTUJ1RHV8lDJ1nlt+gitLPQnF+AKtEc
-         ZMlYzTxJwOkHv6ovFjjXX4bdwV3masNtzO529eknwWfJZYQiBfVmq2XwSzSYs10AHeZh
-         WNZIxdFIz8zpz9iYqIYun5QicxneCbfIQNb33VCKrKuKcXGaCoKQ9xRLTUBQPgsuxiFb
-         3SmySMO8IjFXWVO+ZJ/eFH2+Xm90MrJN/6AqWUVJgAER+yoILR4rnCK3dGOhnhOYY6sb
-         1HLdSga0x/08zVoize5nkVMd6mlwX93Jzmo/JqXfSm24vHUIVp+CV2MFlNCcy0S4o/Dr
-         hSTg==
+        bh=Kjqu8oiQnpukngndV4Aa0Ssw8pga7Wr4GCqPnaHdW3s=;
+        b=Mre6u2EH7OYjPAiCgPg6+fmLT8kIuFDLJREv4dIau4eqCOoQcu89o7n/TC4B4U041W
+         ev8R11UyS28+pccci62N8TcY6kw995XrJLppjvZwBn54pn15d6OV17l3bsi/J3WwQgrq
+         vUb1cUAuGYs0/WrgutX+GYaxYnX/Yd3l6na8oMZ3QN6DVOXxy0AlR6kfEk62JIl33lCn
+         rOUuxcYv1p+3nWn5hX/vLOAzp5BJydRqH5uEMn1ELQZJnkLbZNLWvQR0F/K2ll+vGPPT
+         k4ACKaPY3q2UWmlBA5mxRuv5OycO+JvBDO5uZhU5Zwm/GIJhVPndPyga2U2a1nhY+jft
+         S6rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zWqMa5Tshn6/Q/+0NbjHssCgmjlzoGeaz2OwCpGnxIc=;
-        b=YsxBEKeCmo8g+letA3qLQl7zh20aELaz1pH8Uac9ukx6JMd03+J81cA7E/EvwXDD8E
-         k2zDoRWxbitF70LEb0ANa62CsA4dLkqe7OvZz4N1nYdwZfc6DvZWIbGE+TIuoL3SIWL+
-         Ry9OFZzxfMh5wn1Pn6ZpZhSCRUGBRDYQe2rbBDYba6BQCpfvd3yDnUctF7rqs3kucSRH
-         dUjIPXP7fC1q8mpXxFS5hSJQPj03C5ZMDWgzXMvO4/nG2jUcWpX2Tg2grSGAZT2h4C/i
-         lRz6koOkSud/0v0xwxTGyVTEiyBTrrTSfcW68qNu2n9q7S0XxxzcJa728+gftWyLbRYE
-         QX0g==
-X-Gm-Message-State: AOAM533oHSA6iuJQLBN3Ylg3zJwipSzTA95wXohn+ZBKfAT+LwRGBuBG
-        8Pc7iUCmDFhdjI33oxsU4Yu22az/b50xhgdXItbxioDFKKCAHA==
-X-Google-Smtp-Source: ABdhPJxJ1oLq+Mbwmj0c6MQZ8BFvHR+O89bL3XPms7m56ubQ34qi9IVxDe6hKJR9Oni88QrI2yHrTbO5owLjHaldt9c=
-X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr2636975pjb.181.1600761878937;
- Tue, 22 Sep 2020 01:04:38 -0700 (PDT)
+        bh=Kjqu8oiQnpukngndV4Aa0Ssw8pga7Wr4GCqPnaHdW3s=;
+        b=f0Ppwej04rV/E5bzlDlMMma9ptIvWOsqeHefQN6KxgzUJ4ImW+CBrfcPle050a5nE6
+         RZ7jumGHGApk0Z/Dh5XcwPmSL0YrOlLYmnWv5asUzVPxr6DyV7+vq/GbZvlizdbtF9rk
+         ++cSvQ0/gr8vNrSIqkTNRaaOIMiAYGguVwN6Hv1YIsBLQyczZIM4185aoaboXEewguqo
+         OtbabWiptDlCJ1zEUg2pl+zpFvgFG9L8qYvmUKlBhPzU06vybvmeneiAL851UlFeHZVA
+         1+dePBE4jUwugIP4ullIjUcjpZsgYa5UqzIzTNVGX11kH2Vs+xuOs1x1233BUUW6hk6P
+         Y9HA==
+X-Gm-Message-State: AOAM531ksOT4h2M2gVU7LKV7USVpYTu5VF3v4D4xs6Y48pA6mXxdgzk1
+        CyvwH7iJ1nQPlrEgKLEYz6Djb8fkGd5ZikKAPhI=
+X-Google-Smtp-Source: ABdhPJwRmCYBQAbxTO7gpz1iMN4UReCiBmVNQt2bIghMvb9gJSivHKXDkQqPTV4bjV9h9I/AaO6jcFjW6qeNii2FxDo=
+X-Received: by 2002:a17:902:778b:b029:d1:bb21:513d with SMTP id
+ o11-20020a170902778bb02900d1bb21513dmr3493734pll.17.1600762278657; Tue, 22
+ Sep 2020 01:11:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200914155714.GA43910@black.fi.intel.com> <CACRpkdb7tP-Zz0ycpss885nWOx-LoT6iPmRT5b-FrBM+x8aLpA@mail.gmail.com>
- <CAHp75Vd0L7AZnWfZQBycztS_OEORb4J=DQpS_cjdOf5cSOQRkQ@mail.gmail.com> <CACRpkdaufgS_LKfRvGCm0BXgrHyXfaVkMrqLh2ypf-bjDhJ93Q@mail.gmail.com>
-In-Reply-To: <CACRpkdaufgS_LKfRvGCm0BXgrHyXfaVkMrqLh2ypf-bjDhJ93Q@mail.gmail.com>
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-14-warthog618@gmail.com>
+ <CAK8P3a2S3YLgy001xB-xWib9kYkkQKgFmEEP1MGYFhvd2HZAXQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2S3YLgy001xB-xWib9kYkkQKgFmEEP1MGYFhvd2HZAXQ@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 22 Sep 2020 11:04:22 +0300
-Message-ID: <CAHp75VcdXp_7rXtJdbJqpevsRHtBvZJK_ZW_N57-F++rtSiGYA@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.9-2
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Tue, 22 Sep 2020 11:11:02 +0300
+Message-ID: <CAHp75VfBddSLz47YQkNUOX0PEYzujC2ghFYrhzh+Js5cEoJ_MQ@mail.gmail.com>
+Subject: Re: [PATCH v9 13/20] gpio: uapi: document uAPI v1 as deprecated
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 12:48 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Tue, Sep 22, 2020 at 10:49 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Sep 22, 2020 at 4:36 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >  /*
+> >   *  ABI v1
+> > + *
+> > + * This version of the ABI is deprecated and will be removed in the future.
+> > + * Use the latest version of the ABI, defined above, instead.
+> >   */
 >
-> On Mon, Sep 21, 2020 at 11:43 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Sep 22, 2020 at 12:08 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >
-> > > On Mon, Sep 14, 2020 at 5:57 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > > One fix for v5.9 cycle from Hans.
-> > >
-> > > Hm the pinctrl fixes are based on v5.9-rc2 and I got a ton of changes with this
-> > > so I suppose it is based on some other -rc.
-> > >
-> > > I will attempt to just cherry-pick it to fixes.
-> >
-> > It will break fast forward. Is it a problem to have v5.9-rc4 there?
->
-> Not really other than it is kludgy to merge it in, but is it a problem
-> that I just cherry-picked it and signed it off instead? Is something
-> built on top of it since you're concerned about fast-forwarding?
+> How intentional is the wording here? It seems unrealistic that the v1 ABI
+> would be removed any time soon if there are existing users and applications
+> cannot yet rely on v2 to be present in all kernels, so it sounds like a hollow
+> threat.
 
-I rethought the scenario and I guess it should be fine.
-Please, go ahead with cherry picking (it's only one commit anyway).
+I have similar thoughts when commenting on previous versions of this piece.
 
-Thanks!
+> At the same time I can see that telling users it will be removed can lead to
+> them moving on to the new version more quickly, so maybe a hollow threat
+> is in fact appropriate here ;-)
+
+Users all know that if something will be broken, they may escalate to
+Linus T. and get things reverted. So, above depends on the user's
+knowledge about the process.
 
 -- 
 With Best Regards,
