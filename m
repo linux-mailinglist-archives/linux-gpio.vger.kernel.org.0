@@ -2,98 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 710E7273E07
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 11:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B593B273EDD
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Sep 2020 11:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgIVJF0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Sep 2020 05:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
+        id S1726509AbgIVJvE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Sep 2020 05:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgIVJF0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 05:05:26 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AEDC061755;
-        Tue, 22 Sep 2020 02:05:26 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z18so11856882pfg.0;
-        Tue, 22 Sep 2020 02:05:26 -0700 (PDT)
+        with ESMTP id S1726470AbgIVJvD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 05:51:03 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAC7C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 02:51:03 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id j11so22004053ejk.0
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 02:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mPsvEGWz9X5eyL4+lVDR6ZPM4UaqFBAtKVbt5mUKCOU=;
-        b=rm0AuDs9bkPE2pca7xXKwIw4LAdqI0HURlLBlRiAPXpAlNg+NTxa1n1wwwoVvDVGJG
-         L1huU+wuhXZXppfAax+PJOj51f+3PAnX23tG0Q5//4DUOatRDIiMvQwWPJ+C+LlsrgJh
-         aelDCLZqLHpbuAZHsWfN5u1F/15PQV67pl1dI+DlF/aU1qgFdHct+rTCQYgqhpJSzfA8
-         gMpRK22qV4/ETl0F+fZCFzT8HtHCpnHy4MHfccjCSIhqTVLKcIRTgvesYDDf8nkSEOCy
-         a9bOvLhCD5xPklepyxvDZ0xf9CkdoDMT2YQ1EKJq1L4PvIXPEarM9HBLkPHX8LgrNBb2
-         1WGA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bQvtQGp/KLFnOLWRiqixFEpZAYTNPr5oScyrlQ2lzEE=;
+        b=gITCHOxwcSAAjU4PnfdGZe3rwfIVDR1qijRZJNtrZIA1InVYlvJYzUqxNBSnK1X6hQ
+         M/RwWjL2dyy4WUKoNQKxAmkluClAPweuDuIAz5RGRNpyOqShf009zsMqwXn8Rgdj/Rux
+         q41yQdLuEoSTVTqFdHLboC9HgOuHw7zoGGQYGEtjwizZHBygu60Ta0k5GLK+iH5Sbhmz
+         ZHs1kdtRPBOKWnOAw+2GgEwfDPlgCtMD+1Fr/V2+PBlGX/br98FPwMp4zZHn1PvpOYFl
+         iQSqyIq+wpbC7mgsH8ZTGW/ClWv7OUKv5P2pMQYlAgqd/PuCPLzwfGr1zJDi1yYdj+Jc
+         6ZyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mPsvEGWz9X5eyL4+lVDR6ZPM4UaqFBAtKVbt5mUKCOU=;
-        b=hQIjvsxc1fSJXycy78ElDGJjRQzqyJ9PyeOJre2K4qKnnfM5TUIUmIxyYrpkiUit1e
-         iUMbRW2fdLU81Ht11SG7iVR0eZQMR1COZqL3jxs79vyuikr8As5SN8Gnsqu9uuRQkaM1
-         vRTp6jRIo7eCQn57kRZamNuFlzizmKnhZvWJ2GawAHYLLzP43fecu3U0hOogOqfBP4sN
-         0HTeKm3KMATdBM0e9v3qSaKStD6EWegl4Czqk17boU0y8aFTYTED40GG0FG26wxUqc+e
-         Ujd1daekYmY9tMpjoIf0dc97nGTNul0ktEiFmiVK4lxn37s1LPU6ahdZTG1kaf7koKrB
-         PYzA==
-X-Gm-Message-State: AOAM5317amW+yczepbZnZmgmWC7zfHWCRi9xjxSAvKv+JrvTRBmqqn5b
-        Hc3h5wOVZsPsMXbSFEEcDHc=
-X-Google-Smtp-Source: ABdhPJxiZbCLf5v4hNKdJuQ425SV+nu3/VQhf1o4I6t4H4Of57LVPP4MzCMhFtH83Y9AjgqIGvBy/w==
-X-Received: by 2002:a05:6a00:1506:b029:142:2501:3971 with SMTP id q6-20020a056a001506b029014225013971mr3340207pfu.54.1600765525518;
-        Tue, 22 Sep 2020 02:05:25 -0700 (PDT)
-Received: from sol (106-69-189-59.dyn.iinet.net.au. [106.69.189.59])
-        by smtp.gmail.com with ESMTPSA id c1sm14375118pfi.136.2020.09.22.02.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2020 02:05:24 -0700 (PDT)
-Date:   Tue, 22 Sep 2020 17:05:18 +0800
-From:   Kent Gibson <warthog618@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bQvtQGp/KLFnOLWRiqixFEpZAYTNPr5oScyrlQ2lzEE=;
+        b=Phr94cFDAUE4LdWyPPSSkgdmrP8/D1AttXN5ca2AIOdaoXGnslck07AWdEuR6LnfvA
+         angO0XHKuFnFMwa8Z60y8D6s3gfiOhnaoVuE9HG8PDgm1Qq8oVQ4NJ2OPlZ+ZDe3AglJ
+         /iDoK7tVF+slOURlvCdM9IMhhLcCa5fO0zUiGSNmJIUVM9BfJoUO31Da54+pqbo4neR+
+         m3gAylvVrWEHYS/D1y1DFkq/rh2gDwN71mzxaxYqzdYT/DsLSkiyWH7Spxt7UAxuToQd
+         1tGEriI7ZVq7K2Fh1HghN4WMewfml211MMerl0gIUZrgLUPBvtDGEcs8sX9fUF5g78Es
+         zmzQ==
+X-Gm-Message-State: AOAM532lrCXnhWkrv1vmhOhqeSZmBmDMmSWFoH3723ReVW31OTSrT+hJ
+        3Jx44U7SBgepz18QEvBGzHulOIjSm4GwcU9U/Zbblg==
+X-Google-Smtp-Source: ABdhPJzaBEcyCGW7WNUhuR8Tr7ShGD6abB/Jtu00c5ucwh99NpYGEHAN/AgbDOEWtR0GofHwARgZG2Hzcya5vK/+3SE=
+X-Received: by 2002:a17:906:11d2:: with SMTP id o18mr3838714eja.420.1600768262126;
+ Tue, 22 Sep 2020 02:51:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-5-warthog618@gmail.com>
+ <CAK8P3a1o4fp=-gU=SpwR540Xw+oySJ_ESkG+YXZJsDV-N6UF5w@mail.gmail.com>
+In-Reply-To: <CAK8P3a1o4fp=-gU=SpwR540Xw+oySJ_ESkG+YXZJsDV-N6UF5w@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 22 Sep 2020 11:50:51 +0200
+Message-ID: <CAMpxmJVsBYY0w5BCyYaRDGR-cQD7o4VkJRatc0Ww5wXRA+3bhA@mail.gmail.com>
+Subject: Re: [PATCH v9 04/20] gpio: uapi: define uAPI v2
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 13/20] gpio: uapi: document uAPI v1 as deprecated
-Message-ID: <20200922090518.GA493023@sol>
-References: <20200922023151.387447-1-warthog618@gmail.com>
- <20200922023151.387447-14-warthog618@gmail.com>
- <CAK8P3a2S3YLgy001xB-xWib9kYkkQKgFmEEP1MGYFhvd2HZAXQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2S3YLgy001xB-xWib9kYkkQKgFmEEP1MGYFhvd2HZAXQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 09:49:11AM +0200, Arnd Bergmann wrote:
-> On Tue, Sep 22, 2020 at 4:36 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >  /*
-> >   *  ABI v1
-> > + *
-> > + * This version of the ABI is deprecated and will be removed in the future.
-> > + * Use the latest version of the ABI, defined above, instead.
-> >   */
-> 
-> How intentional is the wording here? It seems unrealistic that the v1 ABI
-> would be removed any time soon if there are existing users and applications
-> cannot yet rely on v2 to be present in all kernels, so it sounds like a hollow
-> threat.
-> 
+On Tue, Sep 22, 2020 at 9:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Sep 22, 2020 at 4:34 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > +/**
+> > + * struct gpio_v2_line_attribute - a configurable attribute of a line
+> > + * @id: attribute identifier with value from &enum gpio_v2_line_attr_id
+> > + * @padding: reserved for future use and must be zero filled
+> > + * @flags: if id is GPIO_V2_LINE_ATTR_ID_FLAGS, the flags for the GPIO
+> > + * line, with values from enum gpio_v2_line_flag, such as
+> > + * GPIO_V2_LINE_FLAG_ACTIVE_LOW, GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed
+> > + * together.  This overrides the default flags contained in the &struct
+> > + * gpio_v2_line_config for the associated line.
+> > + * @values: if id is GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES, a bitmap
+> > + * containing the values to which the lines will be set, with each bit
+> > + * number corresponding to the index into &struct
+> > + * gpio_v2_line_request.offsets.
+> > + * @debounce_period_us: if id is GPIO_V2_LINE_ATTR_ID_DEBOUNCE, the desired
+> > + * debounce period, in microseconds
+> > + */
+> > +struct gpio_v2_line_attribute {
+> > +       __u32 id;
+> > +       __u32 padding;
+> > +       union {
+> > +               __aligned_u64 flags;
+> > +               __aligned_u64 values;
+> > +               __u32 debounce_period_us;
+> > +       };
+> > +};
+>
+> Having different-sized members in the union makes it hard for
+> something like strace to print the contents. How about just making
+> them all __aligned_u64 even when 32 bits are sufficient?
+>
 
-Andy had a similar comment regarding the build option, which I updated,
-but missed updating it here.  The updated sentence ends at deprecated.
-I will update these to match in the next rev.
+Ah yes, adding support for GPIO ioctl()'s to strace has been on my
+TODO list for 3 years now. :(
 
-> At the same time I can see that telling users it will be removed can lead to
-> them moving on to the new version more quickly, so maybe a hollow threat
-> is in fact appropriate here ;-)
-> 
+> > +struct gpio_v2_line_request {
+> > +       __u32 offsets[GPIO_V2_LINES_MAX];
+> > +       char consumer[GPIO_MAX_NAME_SIZE];
+> > +       struct gpio_v2_line_config config;
+> > +       __u32 num_lines;
+> > +       __u32 event_buffer_size;
+> > +       /* Pad to fill implicit padding and reserve space for future use. */
+> > +       __u32 padding[5];
+> > +       __s32 fd;
+> > +};
+>
+> > +struct gpio_v2_line_info {
+> > +       char name[GPIO_MAX_NAME_SIZE];
+> > +       char consumer[GPIO_MAX_NAME_SIZE];
+> > +       __u32 offset;
+> > +       __u32 num_attrs;
+> > +       __aligned_u64 flags;
+> > +       struct gpio_v2_line_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
+> > +       /* Space reserved for future use. */
+> > +       __u32 padding[4];
+> > +};
+>
+> These are both several hundred bytes long, requiring a lot of data
+> to be copied to the stack and take up space there. I see this is not
+> actually much different for the v1 API, but I wonder if there has been
+> any analysis of whether this has a noticeable effect on application
+> runtime.
+>
 
-That was the idea - though even the sysfs interface is still there
-and doesn't seem to be going anywhere in a hurry.
+The main difference between this and V1 is that we can now pass
+arguments for flags as defined in struct gpio_v2_line_attribute. I
+haven't measured the impact but first: this is not a hot path
+(retrieving line info is not done a lot like reading line events or
+setting/getting values), and second: this structure is 280 bytes long
+which is still less than a page so we should not face more context
+switches than with a smaller structure, right?
 
-Cheers,
-Kent.
+Bartosz
