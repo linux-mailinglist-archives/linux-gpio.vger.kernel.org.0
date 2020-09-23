@@ -2,123 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2FF274DF6
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 02:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE4C5274F69
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 05:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgIWApB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Sep 2020 20:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47736 "EHLO
+        id S1726686AbgIWDI2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Sep 2020 23:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgIWApB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 20:45:01 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B05C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 17:45:01 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id j7so5911908plk.11
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 17:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=nEQm6K+HoneeS1z0yJoy4VuDoTz9QqoxKqtD089eMLI=;
-        b=gJzJ0m0p6i9sKBKTKnlpfCqfpFKJZWOpryTS/sSXCvvv0AUQ8Y5vNpxxi6sGmn+2s+
-         l4BScdF+M326oqoxDUUkBIdMAyTDB4Cbg5mxz5t0WQNh2DZ9zMQZJMAYYhVhDBsNfRQJ
-         k8XEL7xnQti7WUmcKJ48yz8Dgapeu+Fz60edur14bLDp46zm3YMmngXXuyh0/A+xaMhn
-         spnAyuTgon5u1A6knXhdPiHBVey+iCM2qUVB+SRjFlOWFgNg0TyhmGoDZ4dyNY0JMH3J
-         2n5KXlpzkViTNLqYcAGq2m7sW786nGPBjn97WlS5YN2Xw+Gj5P9dGColdufs4nIuaZQf
-         oWEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=nEQm6K+HoneeS1z0yJoy4VuDoTz9QqoxKqtD089eMLI=;
-        b=CCCKX6xEU80fZ21YaNCjU1/ugz2dP/Fz16P5bxO8umn270pA7EcSVHG3aeLr7No5o5
-         pkuGA37GzKYYZ1MQBuNeuLqA3JNaEYxeP9RdjSlAlON32xc731UpTjRK+2Q1AFQFvYUv
-         Nt5JLDvwZSJ3dugwZGuSDX7fuEfacRKHAVUwUQfy469vzYXXUpb17acN6j7EoAKbvrJ2
-         LMJreBstDt1TLbAzCv7LEWNp69x5EWTAD/wzH0euQ+jJNexMXt8Xbe0KSIO8XneWcRKZ
-         kScM4blWtflME9zfH4iGf/6OqnacauXGs8KPZcYPZhKPQDAB/2ReXc1YTo9SvBSsn3sS
-         FqLw==
-X-Gm-Message-State: AOAM533widN/DjALgnozQFezihWg2anhoF5hsE1HSjoSynZQ+DpV2DIC
-        +Z8E2IrP1PIDPJFinNw0ziS8sr9k4o0NOg==
-X-Google-Smtp-Source: ABdhPJwxZ0L5QB79e5ALp58u5SK85i5WUNWplguV14UDRnucj/OhWoGdblPG38IoOZ4FkB2eV9UTsw==
-X-Received: by 2002:a17:902:ec02:b029:d1:fc2b:fe95 with SMTP id l2-20020a170902ec02b02900d1fc2bfe95mr7449214pld.79.1600821899949;
-        Tue, 22 Sep 2020 17:44:59 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id y203sm16210244pfb.58.2020.09.22.17.44.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2020 17:44:59 -0700 (PDT)
-Message-ID: <5f6a9a8b.1c69fb81.f0579.82c5@mx.google.com>
-Date:   Tue, 22 Sep 2020 17:44:59 -0700 (PDT)
+        with ESMTP id S1726589AbgIWDI2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Sep 2020 23:08:28 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048DBC0613D1
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Sep 2020 20:08:27 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 88C8A80719;
+        Wed, 23 Sep 2020 15:08:23 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1600830503;
+        bh=4UUUhCCPLuOo9EStTf3vEeWwEhU+NiF7M4oRHTxF2Uk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=ZgjM9O75MDDrw1EUGFStQN6BkZTg17z8PqREyRJkIANjhaXh+OZ55ogdXd46MFSjz
+         4WkGFKN8rXKWSU7EKI/g1GEt3ttIa5/wQ/7HCWB3uHxvD8KB8i7Povy1W/fekz1F2D
+         g8fQvdbXbcIFSHcuHcSFhpH8clF/YY9XYFLvPu+whJude/QHpyQ7f1NJNhW62yl5Um
+         mYPErV1s/nr0qPaJ1zagvIuWjsc2gXzdNIbtBQayTm5m+nYJT337/jigttO9JOXOab
+         Ow85abuMeIBLp6JOdXLXRUps9SzJ0KblMpslBHG4zAck2MFVKSbRyzK2IawR3MsP0O
+         x6+wEfqG4uVBg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f6abc270002>; Wed, 23 Sep 2020 15:08:23 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 23 Sep 2020 15:08:22 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 23 Sep 2020 15:08:22 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>
+CC:     Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: Add i2c0 pinctrl information for
+ 98dx3236
+Thread-Topic: [PATCH v2 3/3] ARM: dts: Add i2c0 pinctrl information for
+ 98dx3236
+Thread-Index: AQHWhVxD6lFX2c6hV0ONw/U375PQvalkbE2AgBBtZgA=
+Date:   Wed, 23 Sep 2020 03:08:22 +0000
+Message-ID: <bb9b129a-7cbf-d303-95e6-da2b53a62df3@alliedtelesis.co.nz>
+References: <20200907211712.9697-1-chris.packham@alliedtelesis.co.nz>
+ <20200907211712.9697-4-chris.packham@alliedtelesis.co.nz>
+ <CACRpkdZ13B==RROumpfB1sjO_uPG0Jx-LRwjm-w_6wr_wb1v8A@mail.gmail.com>
+In-Reply-To: <CACRpkdZ13B==RROumpfB1sjO_uPG0Jx-LRwjm-w_6wr_wb1v8A@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <58C2E4D0B549BC4A8DAC6BDCC57162CD@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: test
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-X-Kernelci-Kernel: v5.9-rc2-41-g764e64fcda54
-Subject: linusw/for-next baseline: 78 runs,
- 1 regressions (v5.9-rc2-41-g764e64fcda54)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next baseline: 78 runs, 1 regressions (v5.9-rc2-41-g764e64fcda54)
-
-Regressions Summary
--------------------
-
-platform              | arch | lab          | compiler | defconfig         =
- | results
-----------------------+------+--------------+----------+-------------------=
--+--------
-sun7i-a20-cubieboard2 | arm  | lab-baylibre | gcc-8    | multi_v7_defconfig=
- | 0/1    =
-
-
-  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.=
-9-rc2-41-g764e64fcda54/plan/baseline/
-
-  Test:     baseline
-  Tree:     linusw
-  Branch:   for-next
-  Describe: v5.9-rc2-41-g764e64fcda54
-  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
-io.git/
-  SHA:      764e64fcda547847a3a4c981bd3665e96f14ca08 =
-
-
-
-Test Regressions
----------------- =
-
-
-
-platform              | arch | lab          | compiler | defconfig         =
- | results
-----------------------+------+--------------+----------+-------------------=
--+--------
-sun7i-a20-cubieboard2 | arm  | lab-baylibre | gcc-8    | multi_v7_defconfig=
- | 0/1    =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f6a906f64dfec2562bf9dcf
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: multi_v7_defconfig
-  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.9-rc2-41-g7=
-64e64fcda54/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cu=
-bieboard2.txt
-  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.9-rc2-41-g7=
-64e64fcda54/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cu=
-bieboard2.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05/armel/baseline/rootfs.cpio.gz =
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5f6a906f64dfec2562bf9=
-dd0
-      failing since 5 days (last pass: gpio-v5.8-2-103-g22cc422070d9, first=
- fail: v5.9-rc2-19-ga5d0fe9ff2af)  =20
+SGkgSmFzb24sIEFuZHJldywgR3JlZ29yeSwNCg0KT24gMTMvMDkvMjAgNDoxNiBhbSwgTGludXMg
+V2FsbGVpaiB3cm90ZToNCj4gT24gTW9uLCBTZXAgNywgMjAyMCBhdCAxMToxNyBQTSBDaHJpcyBQ
+YWNraGFtDQo+IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPg0K
+Pj4gQWRkIHBpbmN0cmwgaW5mb3JtYXRpb24gZm9yIHRoZSA5OGR4MzIzNiAoYW5kIHZhcmlhbnRz
+KS4gVGhlcmUgaXMgb25seQ0KPj4gb25lIGNob2ljZSBmb3IgaTJjMCBNUFAxNCBhbmQgTVBQMTUu
+DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxp
+ZWR0ZWxlc2lzLmNvLm56Pg0KPj4gUmV2aWV3ZWQtYnk6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVu
+bi5jaD4NCj4gUmV2aWV3ZWQtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJv
+Lm9yZz4NCj4NCj4gUGxlYXNlIG1lcmdlIHRoaXMgdGhyb3VnaCB0aGUgQVJNIFNvQyBtYWludGVu
+YW5jZSBwYXRoLg0KDQpBcmUgeW91IGFibGUgdG8gcGljayB0aGlzIHVwIHZpYSB0aGUgbXZlYnUg
+dHJlZSBvciBzaG91bGQgSSBzZW5kIGl0IHZpYSANCnRoZSBSTUtzIHBhdGNoIHRyYWNraW5nIHN5
+c3RlbT8NCg0KSW5jaWRlbnRhbGx5IEkgbm90aWNlIHRoZXJlIGlzIG5vIGxvbmdlciBhIGxpbnV4
+LW12ZWJ1LmdpdCBvbiANCmdpdC5pbmZyYWRlYWQub3JnIGlzIHRoZXJlIGEgcGVuZGluZyB1cGRh
+dGUgdG8gTUFJTlRBSU5FUlMuDQo=
