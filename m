@@ -2,138 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CCAC27577F
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 13:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9CD2757D0
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 14:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgIWLwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Sep 2020 07:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgIWLwG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 07:52:06 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F21C0613CE;
-        Wed, 23 Sep 2020 04:52:06 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id d4so6844356wmd.5;
-        Wed, 23 Sep 2020 04:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=62leXxkn6lfQBk0pj9IGOMm88gpEkBUQrcCqhx44WHI=;
-        b=ODmaWdLBKOeSP1ZafWzo21vjJrHlk3UG4jvO8+g6WMM1BFtTLmzx1IjbGjRouQUa+7
-         nAMc2SENwtPelG8pH3qifpRoFvyXIyHkkSpyttxOBSllpGFUWNDTbc7RWWZwDXiubVzz
-         DId3At1uwFhl8QdtjFs9TEb9pLJUGmoMWNZljWBiFG6YHY/D5eEaVWfYRHdsGOT1LmMl
-         WPXOjkI7LdOyCKmm8KnbDvvqWylTGVG9rccvd2qnBAegNKT8R9zR8wUu35rVANaWTR32
-         pzLd85pgC4hOTjPoqQYRZACHbmH3e+lrH/elvTuoGpBsCqkzId/E+uobn2wcVgIWij43
-         kdgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=62leXxkn6lfQBk0pj9IGOMm88gpEkBUQrcCqhx44WHI=;
-        b=aEDvazGiZZMyoy6AXGp62tjWh21f7xsDLSFNdZpCd4GNFK8Ui99xX7YzlaCjok6CxM
-         mWqCq+t/2xBhrkhjME5QISNdot7YR5oj18rgsBv/ikDhFdVhxiDujUTLqETd6D6qylDj
-         5ovcorP+p8Mub/S2ip0eVH5X5/fjAkZyzhYwND+xIszCLBGWqBIycGP0pK4XkT+LAHkR
-         vUoHxjRnv4PWlOFJkPs3KF2tzPQDLZqyr+NqFX6DBQyw2Y4rPI1X3xSfxB4nbcmxAleK
-         yRIs6VCmXnjicd1swB8bcRww2a4DnRlGR8xQOKbwGs8/W8xt8MRyHrIyXMvp4PoA2lhQ
-         KErg==
-X-Gm-Message-State: AOAM531H4PvE36xZxr0r95w3y5DeIAdA14Ta3yxLzxhaNttHrVTVUUrz
-        QQ0fkiVGTv3Hf3zPwCRfcIY=
-X-Google-Smtp-Source: ABdhPJwuky5Ub23hg9gD1yy7ZPW4fTKq0bW7//cbGIq+DmdbAGJe7JBSRBqC41QuYp6pi5kgGRRJBA==
-X-Received: by 2002:a05:600c:2159:: with SMTP id v25mr5266287wml.180.1600861924874;
-        Wed, 23 Sep 2020 04:52:04 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id a20sm7785703wmm.40.2020.09.23.04.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 04:52:03 -0700 (PDT)
-Date:   Wed, 23 Sep 2020 13:52:01 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v3 06/19] dt-bindings: pwm: imx-pwm: Add i.MX 8M
- compatibles
-Message-ID: <20200923115201.GD1846003@ulmo>
-References: <20200825193536.7332-1-krzk@kernel.org>
- <20200825193536.7332-7-krzk@kernel.org>
+        id S1726332AbgIWMYQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Sep 2020 08:24:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:47485 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIWMYQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 08:24:16 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Sep 2020 08:24:15 EDT
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42Ss-1kL3jp38CG-00073t; Wed, 23 Sep 2020 14:19:09 +0200
+Received: by mail-qk1-f171.google.com with SMTP id 16so22527011qkf.4;
+        Wed, 23 Sep 2020 05:19:09 -0700 (PDT)
+X-Gm-Message-State: AOAM532lY0TkymKkkfGsxfS4qTG1PdcKRfkG5QkUgpBHUq8ChOlGlXLc
+        B6vjfPxlRSuU7XoOGfGR3qS6XK4xTdmFQNL4MEA=
+X-Google-Smtp-Source: ABdhPJxAoU+ktGhM6X5vHeBOmKMgXa8sAPdc3WEzRaTgogu5Y9l3wvDS7VbOFyv86fbAo5qaLdxZXiIMkcmj6HDMSaY=
+X-Received: by 2002:a37:a483:: with SMTP id n125mr9513561qke.286.1600863548470;
+ Wed, 23 Sep 2020 05:19:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
-Content-Disposition: inline
-In-Reply-To: <20200825193536.7332-7-krzk@kernel.org>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-5-warthog618@gmail.com>
+ <CAHp75VewJYDQ1Moi4jw=wbBMLNpaUGPgz+AsPjNdZqtHCgkjwA@mail.gmail.com>
+ <20200923103031.GA579645@sol> <CAHp75VdQ4qWe-870QyH-E42=518vkbLSueQWQOs44M-qKudRsw@mail.gmail.com>
+In-Reply-To: <CAHp75VdQ4qWe-870QyH-E42=518vkbLSueQWQOs44M-qKudRsw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Sep 2020 14:18:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3AzqLfnT_SLXQMbzXAnGXtDnYFFxFry-_vRiYQyXjMXQ@mail.gmail.com>
+Message-ID: <CAK8P3a3AzqLfnT_SLXQMbzXAnGXtDnYFFxFry-_vRiYQyXjMXQ@mail.gmail.com>
+Subject: Re: [PATCH v9 04/20] gpio: uapi: define uAPI v2
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:KbD3LuXs/BYv76mIwRu51/92ImObZCetcHiM9pdlE77vH2rIxR6
+ WqISgVkbB+YrZkdaXmVy04xPfz9w1LiUSwKRD+T7kCsa451KvM2gwqwYbfBArHkANwRD+BG
+ Ea3QzX7o575LtWkIqDEEmXyv/INesS5WMV1UbKEJw4Fejo2SddChiV2ioOgwJkbvk2RPpbP
+ 89+9j945JabixBucHgOmA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IZkeX9ch8WE=:Peyqy77kKsHCPlAiKC46MI
+ tTCw2kHGwtgZNr01dU9UoMCK91pB4Fl9W9tGmlDXvved2CLRgdvas+JIP3RtXCXfCJ84OxRyu
+ tmz9dIrr5Km+/nSFE8xN22uUFS2Wr9fTjJjA6gHCzRUAZLElPvC0ApmGdSUnSV4/AigCPo+cM
+ mB7xegFEe0h9fywG3drIj5WZV9fZyf3+WeHJA88cm0GrMqK/db04S2FiQInWU+L/Ke5LW5g/o
+ 9VPXEPAkzcGElOjZMukjZjGWG1q/fnTK1hROHNLuN030+vekU/e6TDTLx00hY/taSIpeCkp+n
+ ItpeiqH5w+C1M3HXtCmPPWQnZajcza2WOL1nB8943XObm5cqoe3XZYRhR9CL/2ffNiccsAH64
+ myxZeOe7qV/PZAWcVyaKau2ekS3bTBxe6yY43FvcwKfJGmRydMZ46DdXAD+jpqLktU+McPL+v
+ wCr11NHSUesNcs6NDp8myKN2mpOV6VpaiGRQ/+EDw2LOjO+Ztjom4SFa4B3GNpwU3USpvgG10
+ SZxs7zjKZL7424wIAYOOjoMpw1D9riOcTyb/+bD0jWJAB0AG932NG5cun5+RQ7mk6E0uH24kl
+ kea/ioD7Th2VYHAU3jZT7Gmd6alxMZVBJUpQgv2qhWMia6jSgpImbAQtNaJcDcUSY5JWaCfbW
+ dbs1MszKtZxawGT9M7lc2CSHqzYOo3b+Ezwbos5U6Gqcim6Xrbz5ajt8BkpD8/k2WRBzhJcsy
+ 0oP9wRH/r8Kihiqcxvkn+NKlin5O0t/j3RroRp4QzI4Hu83B6FwLx/acTI/HFRnb0kyiZalhF
+ /UYTDQyLXPIxYI7a8N/kXX7oWN6xAcAI77WkmJkZ/Oal8Ie2IwI/P6aj2OxD4hrhRNKZU/T
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Sep 23, 2020 at 1:16 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Sep 23, 2020 at 1:30 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Wed, Sep 23, 2020 at 01:04:05PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Sep 22, 2020 at 5:34 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > There is also some minor renaming of fields for consistency compared to
+> > > > their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
+> > > > and consumer rather than consumer_label.
+> > > >
+> > > > Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
+> > > > clarity, and the gpiohandle_data __u8 array becomes a bitmap in
+> > > > gpio_v2_line_values.
+> > > >
+> > > > The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
+> > > > code, particularly libgpiod, should readily port to it.
+> > >
+> > > ...
+> > >
+> > > > +struct gpio_v2_line_config {
+> > > > +       __aligned_u64 flags;
+> > > > +       __u32 num_attrs;
+> > >
+> > > > +       /* Pad to fill implicit padding and reserve space for future use. */
+> > > > +       __u32 padding[5];
+> > >
+> > > Probably I somehow missed the answer, but why do we need 5 here and not 1?
+> > >
+> >
+> > Sorry, I got tired of repeating myself, and just acked that we disagree
+> > on the approach here.
+> >
+> > Your suggestion to use the size for version would result in an
+> > explosion of ioctl signatures - every time we add a field we have to add
+> > a new ioctl and handle it separately in gpio_ioctl() or linereq_ioctl().
+>
+> No, you just add
+> __u32 version; // implies sizeof() check as well.
+>
+> Look for examples of existing ABIs (e.g. perf ABI).
 
---/unnNtmY43mpUSKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please don't ever add a version field to an ioctl structure, this
+has been shown to cause more problems than it solves many
+times in the past...
 
-On Tue, Aug 25, 2020 at 09:35:23PM +0200, Krzysztof Kozlowski wrote:
-> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-> to fix dtbs_check warnings like:
->=20
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,im=
-x27-pwm']
->     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
->=20
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
->=20
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: Additional items are not allowed ('fsl,imx27-pwm' was une=
-xpected)
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+Having some reserved fields can be helpful, as long as the kernel
+returns an error in case any of the unknown fields are nonzero.
 
-Applied, thanks.
+I'd also prefer fewer than five reserved fields, but that is not as
+important, just use as many as are likely to be used in the future,
+but not more: It's easy to add one more ioctl command in case
+the expectations are wrong, but I agree you wouldn't want a
+new command every time another field gets added if the past
+has shown that this happens a lot.
 
-Thierry
-
---/unnNtmY43mpUSKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9rNuEACgkQ3SOs138+
-s6GvDg/+Nro4jTSFhaaEb45wLg7Wg5AT70Vw7JpMwqEfIe5L3+HCzsAZX08eoriW
-TwsrzDYwi1mA2E8LXgnab5e3AAgrQJO5HprXoQ0736DAqPzLovczCCUfBnS72FTM
-gtWR/H60vrI/6jPUT+YqqvgtH1SQZIDSC0Sr936omELFXZ7N7kgTW1gTMR9jeMGj
-eoEUbgMKztiNGZpCm/kRLffCONoKpyz/3luja+KXkB07rPVluMjwhaFBNYxr6oB2
-K48rLlPN3B/3u+qD03bB4fBdycLNO0IjVepdM21pBsGyKAT4uYfl0wG86/ww99EB
-1v9/vWoSmwnxVBuPDDj4ecj7iD3VExSDZ7x2vvID5NmhK3ndjisf8C979I48hvMo
-maBVSISDlvaIs2KbzJt9JoqHYaBNJ4LUdTwnFfcVo0vT9EY0H9KvLbfw93I/0VjU
-r9WMPCRYtEOiS5riua25jp9pSxcnQE92v5NyNEMg+sdJ9uyLPYo0NBFbhTskEjnC
-7evLkq5xpYJywh6bQvhVOhnbCoVGAOdqOIJ25xSC2wF5vaCWWRhjDtsS7d/EbXql
-tRX3gA2RlNUKlF1MlGp7TUtnWkl/EWtaWI26qm0/zuvyAnxGKBY5Eo4HUMGNtVWH
-BgQsfOviGCcDALYVPWC6foLtzrsz8BMYVVi+7u2hD0FMOa29oas=
-=09l4
------END PGP SIGNATURE-----
-
---/unnNtmY43mpUSKx--
+       Arnd
