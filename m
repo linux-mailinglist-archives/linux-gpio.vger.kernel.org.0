@@ -2,56 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB65D2756E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 13:12:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2293B2756F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 13:16:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgIWLMO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Sep 2020 07:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59516 "EHLO
+        id S1726422AbgIWLQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Sep 2020 07:16:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgIWLMN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 07:12:13 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E91C0613CE;
-        Wed, 23 Sep 2020 04:12:13 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p16so54775pgi.9;
-        Wed, 23 Sep 2020 04:12:13 -0700 (PDT)
+        with ESMTP id S1726332AbgIWLQt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 07:16:49 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFEDC0613CE;
+        Wed, 23 Sep 2020 04:16:49 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f1so6646216plo.13;
+        Wed, 23 Sep 2020 04:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YbTLMhc/PFHCK+c6yLpmglBDEktYs2KKCRMTusR0Uuo=;
-        b=qjsl47zWuZ8A9LusIvWB2t5aq8UuJYUZ/4nQ5MWVvTBHX5U3JhkfTBO9ndLdQTaVoI
-         L0OyvW0qXCUhNNhv6MgAJsGijQV/N66pe4h20Ap6TdD7Xt5GqYqJaZeOqDtKYDWjhEuf
-         WZ/hr8kXvbA57mNKadi6gkHqHyeG95QRkoU2whCiNP3ckd/reOPJEbXNsKXdsYfgr9P5
-         32Eie5fLVg61s+X1g0dfLd3Ey65cm/E8y78WS5XpmXWKqzaSnI7ZOQM7/dm82h1L2+Eb
-         wQqegTxqEN8dDK1QTzJkFel2YMcgcXQnOQp05JnC0rpWw8QaXy1agGcaQ2GjqgpElXm4
-         jYtg==
+        bh=tLO1gXcp24NnHWckCB0vslQ5D/APM/oMUyXd2dfPxDI=;
+        b=NX1M7LUTkuLCcgx/52QCft35kUoaLSsqtkg93wAdk6TuZeDBphMNQdlw0Mn8bsk3Tw
+         3SLVWGieSI+0pOSsUqGQOFflNCAiqCNhlJY0L8V0BGOWiXj875b+vr5LNbTK7y0ZQdFf
+         Ion424xrz68jiv6lgjMCuUF7aV3VGI4tDxTfBl0VoXuQwfGRtYTvUNjc87qTIIvrCo28
+         tAFnYxLwdI2f2Sq6eIafuH9++XFl/zUKfh3RbxrnW7xZ1X8EwR+6odDF5/lCh+InpwJm
+         VYoqYNnIaZcdkCzGUX7rVl0dPTQbcg8Ve0pZqbis7LPvPVCLwUk+6bCQd+/3iiFk/mmR
+         WOJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YbTLMhc/PFHCK+c6yLpmglBDEktYs2KKCRMTusR0Uuo=;
-        b=ZcU8C+dE5hsvt6RlwSXnWt48D8nLebWAgPSud1nShLPBX3WEzgri94+s4w8EJj2WsJ
-         RTlCP40WqQ/hIXFwu/krh2r7hA0OTY59js4h6S3BYjJo0s95PEcRNN+6j0FyxEzDIHN4
-         5MytHQ6QLKKXSi5qD7id87jOKADJEgMRdZPHv+b5rHnqEFD5nPCgkcPwZ2XGg4i9avRk
-         hBhQzhdk01brjXl5usSklwRWjhP5F/LdLkapfV7Sxk+oDNAKusbXctIgN6ELTxPD4EOV
-         7vu7eoea5HplxCNl2E/OjBe5pMY2J7RDjsSKlkkC6ZaCS83sIRVD78hmsO1qKvMFKQDQ
-         iZHQ==
-X-Gm-Message-State: AOAM533grOUQQ15YMcKFX5TmNDFdc99mJTtEyVycdXC2QGT/0YC+yq0c
-        tf3m/b/ofDPr1AqkoUgQNed02GcAggXSqz3EW0ERgE2TlWtzcp+o
-X-Google-Smtp-Source: ABdhPJxz+vdpMeti/A6nwnMsCbDcNvbBGq6ovPO6ZcefaPgQt0USEHoCVgflk07sfhlEiSisswAluvFwnBx/EfMEcxU=
-X-Received: by 2002:a62:7b55:0:b029:13e:7367:2b2e with SMTP id
- w82-20020a627b550000b029013e73672b2emr1270724pfc.7.1600859533117; Wed, 23 Sep
- 2020 04:12:13 -0700 (PDT)
+        bh=tLO1gXcp24NnHWckCB0vslQ5D/APM/oMUyXd2dfPxDI=;
+        b=IPHPYJkHdOrjFJOFOh9ONQdCw9hWzSv2UR4MZaMN/QELmySCqSO9+sKufEqNompPWE
+         Oh8/s3RbOVuiiPNtCNosLBDlDOUqd6QXuiwGZ7zeBubsPMaDjfTWViCorNtC3V4w55UL
+         xcZnpIOoxV0X2GPCitxrRUefsJygpubcLzVbZJnaVoeP7mp12VvZZkaEYJMelO1tVmbq
+         R+Y7Fvym1aZsiA+Hhc4Jd7u8lTcsJS+A0YGIILIFK2jMFBeEr1UIfnFdr3/aqj1+N2U3
+         oYL1nvAm4Ifz5EshpIz6X3btjUvnv/Z98AE6hD0WHyHZCmVdDiPOgbeYmTipxZL0138/
+         uNUw==
+X-Gm-Message-State: AOAM533WZ7bDXgk37SZzV0iHcG6n70Rf83hBkpaQ3hK9ndE4lLNXORuR
+        9MY6TTGkgNRRJt3XLCB94VcLf48JyAA+eCXp+1OWju+IY6Uwwg==
+X-Google-Smtp-Source: ABdhPJzd0148U220RCCM7OVrXg6BA1Lrtcj38FDVJtWkJqSlZ48YtZpUHW5g0A21LxovnM7Jy4aJi01m7MBVe/6gYGo=
+X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr7541233pjb.181.1600859808625;
+ Wed, 23 Sep 2020 04:16:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-8-warthog618@gmail.com>
-In-Reply-To: <20200922023151.387447-8-warthog618@gmail.com>
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-5-warthog618@gmail.com>
+ <CAHp75VewJYDQ1Moi4jw=wbBMLNpaUGPgz+AsPjNdZqtHCgkjwA@mail.gmail.com> <20200923103031.GA579645@sol>
+In-Reply-To: <20200923103031.GA579645@sol>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Sep 2020 14:11:54 +0300
-Message-ID: <CAHp75VdQUbDnjQEr5X5q6WdU6rD=uBNznNn5=Vy=pvdwVj_hEA@mail.gmail.com>
-Subject: Re: [PATCH v9 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
+Date:   Wed, 23 Sep 2020 14:16:30 +0300
+Message-ID: <CAHp75VdQ4qWe-870QyH-E42=518vkbLSueQWQOs44M-qKudRsw@mail.gmail.com>
+Subject: Re: [PATCH v9 04/20] gpio: uapi: define uAPI v2
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -63,184 +62,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 5:35 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Sep 23, 2020 at 1:30 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> On Wed, Sep 23, 2020 at 01:04:05PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 22, 2020 at 5:34 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
 >
-> The struct linereq implementation is based on the v1 struct linehandle
-> implementation.
+> [snip]
+>
+> > > There is also some minor renaming of fields for consistency compared to
+> > > their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
+> > > and consumer rather than consumer_label.
+> > >
+> > > Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
+> > > clarity, and the gpiohandle_data __u8 array becomes a bitmap in
+> > > gpio_v2_line_values.
+> > >
+> > > The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
+> > > code, particularly libgpiod, should readily port to it.
+> >
+> > ...
+> >
+> > > +struct gpio_v2_line_config {
+> > > +       __aligned_u64 flags;
+> > > +       __u32 num_attrs;
+> >
+> > > +       /* Pad to fill implicit padding and reserve space for future use. */
+> > > +       __u32 padding[5];
+> >
+> > Probably I somehow missed the answer, but why do we need 5 here and not 1?
+> >
+>
+> Sorry, I got tired of repeating myself, and just acked that we disagree
+> on the approach here.
+>
+> Your suggestion to use the size for version would result in an
+> explosion of ioctl signatures - every time we add a field we have to add
+> a new ioctl and handle it separately in gpio_ioctl() or linereq_ioctl().
 
-...
+No, you just add
+__u32 version; // implies sizeof() check as well.
 
-> +       /*
-> +        * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+Look for examples of existing ABIs (e.g. perf ABI).
 
-You see, in some cases you are using "OR:ed" as understandable for
-programmers, and here & which should be and in plain English and
-really confusing from a programmer's perspective. That's why I prefer
-to see plain English rather than something which is full of encoded
-meanings.
+> Instead what we do here is reserve some space for future use - that we
+> can replace with fields without changing the signature.
+> The padding is required to be zeroed now, and any future use will take
+> a 0 to mean "leave alone".
+>
+> The sizes are a guestimate as to what may be needed in the future, and
+> as such are almost certainly wrong - but hopefully on the high side.
+> If that fails we can always fall back to your approach.
 
-> +        * the hardware actually supports enabling both at the same time the
-> +        * electrical result would be disastrous.
-> +        */
+I see. So, we have no agreement on these pieces.
+Linus and Bart can decide what to do, but I think either way has pros and cons.
 
-...
-
-> +       /* Bias requires explicit direction. */
-> +       if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
-> +           !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
-> +               return -EINVAL;
-
-Okay, since this is strict we probably may relax it in the future if
-it will be a use case.
-...
-
-> +       /* Only one bias flag can be set. */
-
-Ditto. (Some controllers allow to set both simultaneously, though I
-can't imagine good use case for that)
-
-> +       if (((flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED) &&
-> +            (flags & (GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN |
-> +                      GPIO_V2_LINE_FLAG_BIAS_PULL_UP))) ||
-> +           ((flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN) &&
-> +            (flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)))
-> +               return -EINVAL;
-
-...
-
-> +static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
-> +                                                   unsigned long *flagsp)
-> +{
-
-> +       assign_bit(FLAG_ACTIVE_LOW, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW);
-
-What I meant is to attach also this to the other assign_bit():s below.
-And just in case a question: why not __asign_bit() do we really need atomicity?
-
-> +       if (flags & GPIO_V2_LINE_FLAG_OUTPUT)
-> +               set_bit(FLAG_IS_OUT, flagsp);
-> +       else if (flags & GPIO_V2_LINE_FLAG_INPUT)
-> +               clear_bit(FLAG_IS_OUT, flagsp);
-> +
-> +       assign_bit(FLAG_OPEN_DRAIN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
-> +       assign_bit(FLAG_OPEN_SOURCE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE);
-> +       assign_bit(FLAG_PULL_UP, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP);
-> +       assign_bit(FLAG_PULL_DOWN, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN);
-> +       assign_bit(FLAG_BIAS_DISABLE, flagsp,
-> +                  flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED);
-> +}
-
-...
-
-> +static long linereq_get_values(struct linereq *lr, void __user *ip)
-> +{
-> +       struct gpio_v2_line_values lv;
-> +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +       struct gpio_desc **descs;
-> +       unsigned int i, didx, num_get;
-> +       int ret;
-
-> +       /* NOTE: It's ok to read values of output lines. */
-> +       if (copy_from_user(&lv, ip, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       for (num_get = 0, i = 0; i < lr->num_lines; i++) {
-> +               if (lv.mask & BIT_ULL(i)) {
-> +                       num_get++;
-> +                       descs = &lr->lines[i].desc;
-> +               }
-> +       }
-
-So what you can do here is something like
-
-DECLARE_BITMAP(mask, u64);
-
-...
-
-bitmap_from_u64(mask, lv.mask);
-num_get = bitmap_weight(mask, lr->num_lines);
-if (num_get == 0)
-  return -EINVAL;
-
-for_each_set_bit(i, mask, lr->num_lines)
-      descs = &lr->lines[i].desc;
-// I'm not sure I understood a purpose of the above
-// ah, looks like malloc() avoidance, but you may move it below...
-
-> +       if (num_get == 0)
-> +               return -EINVAL;
-> +
-
-> +       if (num_get != 1) {
-
-...something like
-
-if (num_get == 1)
-  descs = ...[find_first_bit(mask, lr->num_lines)];
-else {
- ...
- for_each_set_bit() {
-  ...
- }
-}
-
-> +               descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
-> +               if (!descs)
-> +                       return -ENOMEM;
-> +               for (didx = 0, i = 0; i < lr->num_lines; i++) {
-> +                       if (lv.mask & BIT_ULL(i)) {
-> +                               descs[didx] = lr->lines[i].desc;
-> +                               didx++;
-> +                       }
-> +               }
-> +       }
-> +       ret = gpiod_get_array_value_complex(false, true, num_get,
-> +                                           descs, NULL, vals);
-> +
-> +       if (num_get != 1)
-> +               kfree(descs);
-> +       if (ret)
-> +               return ret;
-> +
-
-> +       lv.bits = 0;
-> +       for (didx = 0, i = 0; i < lr->num_lines; i++) {
-> +               if (lv.mask & BIT_ULL(i)) {
-> +                       if (test_bit(didx, vals))
-> +                               lv.bits |= BIT_ULL(i);
-> +                       didx++;
-> +               }
-> +       }
-
-So here...
-
-> +       if (copy_to_user(ip, &lv, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       /* Make sure this is terminated */
-> +       ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
-> +       if (strlen(ulr.consumer)) {
-> +               lr->label = kstrdup(ulr.consumer, GFP_KERNEL);
-> +               if (!lr->label) {
-> +                       ret = -ENOMEM;
-> +                       goto out_free_linereq;
-> +               }
-> +       }
-
-Still don't get why we can\t use kstrndup() here...
+So, guys, I am fine with everything else here, except this versioning
+issue and waste of resources.
 
 -- 
 With Best Regards,
