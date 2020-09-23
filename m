@@ -2,124 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2293B2756F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 13:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCAC27577F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 13:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgIWLQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Sep 2020 07:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
+        id S1726540AbgIWLwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Sep 2020 07:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgIWLQt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 07:16:49 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFEDC0613CE;
-        Wed, 23 Sep 2020 04:16:49 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f1so6646216plo.13;
-        Wed, 23 Sep 2020 04:16:49 -0700 (PDT)
+        with ESMTP id S1726610AbgIWLwG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 07:52:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F21C0613CE;
+        Wed, 23 Sep 2020 04:52:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d4so6844356wmd.5;
+        Wed, 23 Sep 2020 04:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tLO1gXcp24NnHWckCB0vslQ5D/APM/oMUyXd2dfPxDI=;
-        b=NX1M7LUTkuLCcgx/52QCft35kUoaLSsqtkg93wAdk6TuZeDBphMNQdlw0Mn8bsk3Tw
-         3SLVWGieSI+0pOSsUqGQOFflNCAiqCNhlJY0L8V0BGOWiXj875b+vr5LNbTK7y0ZQdFf
-         Ion424xrz68jiv6lgjMCuUF7aV3VGI4tDxTfBl0VoXuQwfGRtYTvUNjc87qTIIvrCo28
-         tAFnYxLwdI2f2Sq6eIafuH9++XFl/zUKfh3RbxrnW7xZ1X8EwR+6odDF5/lCh+InpwJm
-         VYoqYNnIaZcdkCzGUX7rVl0dPTQbcg8Ve0pZqbis7LPvPVCLwUk+6bCQd+/3iiFk/mmR
-         WOJA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=62leXxkn6lfQBk0pj9IGOMm88gpEkBUQrcCqhx44WHI=;
+        b=ODmaWdLBKOeSP1ZafWzo21vjJrHlk3UG4jvO8+g6WMM1BFtTLmzx1IjbGjRouQUa+7
+         nAMc2SENwtPelG8pH3qifpRoFvyXIyHkkSpyttxOBSllpGFUWNDTbc7RWWZwDXiubVzz
+         DId3At1uwFhl8QdtjFs9TEb9pLJUGmoMWNZljWBiFG6YHY/D5eEaVWfYRHdsGOT1LmMl
+         WPXOjkI7LdOyCKmm8KnbDvvqWylTGVG9rccvd2qnBAegNKT8R9zR8wUu35rVANaWTR32
+         pzLd85pgC4hOTjPoqQYRZACHbmH3e+lrH/elvTuoGpBsCqkzId/E+uobn2wcVgIWij43
+         kdgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tLO1gXcp24NnHWckCB0vslQ5D/APM/oMUyXd2dfPxDI=;
-        b=IPHPYJkHdOrjFJOFOh9ONQdCw9hWzSv2UR4MZaMN/QELmySCqSO9+sKufEqNompPWE
-         Oh8/s3RbOVuiiPNtCNosLBDlDOUqd6QXuiwGZ7zeBubsPMaDjfTWViCorNtC3V4w55UL
-         xcZnpIOoxV0X2GPCitxrRUefsJygpubcLzVbZJnaVoeP7mp12VvZZkaEYJMelO1tVmbq
-         R+Y7Fvym1aZsiA+Hhc4Jd7u8lTcsJS+A0YGIILIFK2jMFBeEr1UIfnFdr3/aqj1+N2U3
-         oYL1nvAm4Ifz5EshpIz6X3btjUvnv/Z98AE6hD0WHyHZCmVdDiPOgbeYmTipxZL0138/
-         uNUw==
-X-Gm-Message-State: AOAM533WZ7bDXgk37SZzV0iHcG6n70Rf83hBkpaQ3hK9ndE4lLNXORuR
-        9MY6TTGkgNRRJt3XLCB94VcLf48JyAA+eCXp+1OWju+IY6Uwwg==
-X-Google-Smtp-Source: ABdhPJzd0148U220RCCM7OVrXg6BA1Lrtcj38FDVJtWkJqSlZ48YtZpUHW5g0A21LxovnM7Jy4aJi01m7MBVe/6gYGo=
-X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr7541233pjb.181.1600859808625;
- Wed, 23 Sep 2020 04:16:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-5-warthog618@gmail.com>
- <CAHp75VewJYDQ1Moi4jw=wbBMLNpaUGPgz+AsPjNdZqtHCgkjwA@mail.gmail.com> <20200923103031.GA579645@sol>
-In-Reply-To: <20200923103031.GA579645@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Sep 2020 14:16:30 +0300
-Message-ID: <CAHp75VdQ4qWe-870QyH-E42=518vkbLSueQWQOs44M-qKudRsw@mail.gmail.com>
-Subject: Re: [PATCH v9 04/20] gpio: uapi: define uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=62leXxkn6lfQBk0pj9IGOMm88gpEkBUQrcCqhx44WHI=;
+        b=aEDvazGiZZMyoy6AXGp62tjWh21f7xsDLSFNdZpCd4GNFK8Ui99xX7YzlaCjok6CxM
+         mWqCq+t/2xBhrkhjME5QISNdot7YR5oj18rgsBv/ikDhFdVhxiDujUTLqETd6D6qylDj
+         5ovcorP+p8Mub/S2ip0eVH5X5/fjAkZyzhYwND+xIszCLBGWqBIycGP0pK4XkT+LAHkR
+         vUoHxjRnv4PWlOFJkPs3KF2tzPQDLZqyr+NqFX6DBQyw2Y4rPI1X3xSfxB4nbcmxAleK
+         yRIs6VCmXnjicd1swB8bcRww2a4DnRlGR8xQOKbwGs8/W8xt8MRyHrIyXMvp4PoA2lhQ
+         KErg==
+X-Gm-Message-State: AOAM531H4PvE36xZxr0r95w3y5DeIAdA14Ta3yxLzxhaNttHrVTVUUrz
+        QQ0fkiVGTv3Hf3zPwCRfcIY=
+X-Google-Smtp-Source: ABdhPJwuky5Ub23hg9gD1yy7ZPW4fTKq0bW7//cbGIq+DmdbAGJe7JBSRBqC41QuYp6pi5kgGRRJBA==
+X-Received: by 2002:a05:600c:2159:: with SMTP id v25mr5266287wml.180.1600861924874;
+        Wed, 23 Sep 2020 04:52:04 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id a20sm7785703wmm.40.2020.09.23.04.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2020 04:52:03 -0700 (PDT)
+Date:   Wed, 23 Sep 2020 13:52:01 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v3 06/19] dt-bindings: pwm: imx-pwm: Add i.MX 8M
+ compatibles
+Message-ID: <20200923115201.GD1846003@ulmo>
+References: <20200825193536.7332-1-krzk@kernel.org>
+ <20200825193536.7332-7-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
+Content-Disposition: inline
+In-Reply-To: <20200825193536.7332-7-krzk@kernel.org>
+User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 23, 2020 at 1:30 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Wed, Sep 23, 2020 at 01:04:05PM +0300, Andy Shevchenko wrote:
-> > On Tue, Sep 22, 2020 at 5:34 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
->
-> [snip]
->
-> > > There is also some minor renaming of fields for consistency compared to
-> > > their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
-> > > and consumer rather than consumer_label.
-> > >
-> > > Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
-> > > clarity, and the gpiohandle_data __u8 array becomes a bitmap in
-> > > gpio_v2_line_values.
-> > >
-> > > The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
-> > > code, particularly libgpiod, should readily port to it.
-> >
-> > ...
-> >
-> > > +struct gpio_v2_line_config {
-> > > +       __aligned_u64 flags;
-> > > +       __u32 num_attrs;
-> >
-> > > +       /* Pad to fill implicit padding and reserve space for future use. */
-> > > +       __u32 padding[5];
-> >
-> > Probably I somehow missed the answer, but why do we need 5 here and not 1?
-> >
->
-> Sorry, I got tired of repeating myself, and just acked that we disagree
-> on the approach here.
->
-> Your suggestion to use the size for version would result in an
-> explosion of ioctl signatures - every time we add a field we have to add
-> a new ioctl and handle it separately in gpio_ioctl() or linereq_ioctl().
 
-No, you just add
-__u32 version; // implies sizeof() check as well.
+--/unnNtmY43mpUSKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Look for examples of existing ABIs (e.g. perf ABI).
+On Tue, Aug 25, 2020 at 09:35:23PM +0200, Krzysztof Kozlowski wrote:
+> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+> to fix dtbs_check warnings like:
+>=20
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,im=
+x27-pwm']
+>     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+>=20
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
+>=20
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible: Additional items are not allowed ('fsl,imx27-pwm' was une=
+xpected)
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 
-> Instead what we do here is reserve some space for future use - that we
-> can replace with fields without changing the signature.
-> The padding is required to be zeroed now, and any future use will take
-> a 0 to mean "leave alone".
->
-> The sizes are a guestimate as to what may be needed in the future, and
-> as such are almost certainly wrong - but hopefully on the high side.
-> If that fails we can always fall back to your approach.
+Applied, thanks.
 
-I see. So, we have no agreement on these pieces.
-Linus and Bart can decide what to do, but I think either way has pros and cons.
+Thierry
 
-So, guys, I am fine with everything else here, except this versioning
-issue and waste of resources.
+--/unnNtmY43mpUSKx
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9rNuEACgkQ3SOs138+
+s6GvDg/+Nro4jTSFhaaEb45wLg7Wg5AT70Vw7JpMwqEfIe5L3+HCzsAZX08eoriW
+TwsrzDYwi1mA2E8LXgnab5e3AAgrQJO5HprXoQ0736DAqPzLovczCCUfBnS72FTM
+gtWR/H60vrI/6jPUT+YqqvgtH1SQZIDSC0Sr936omELFXZ7N7kgTW1gTMR9jeMGj
+eoEUbgMKztiNGZpCm/kRLffCONoKpyz/3luja+KXkB07rPVluMjwhaFBNYxr6oB2
+K48rLlPN3B/3u+qD03bB4fBdycLNO0IjVepdM21pBsGyKAT4uYfl0wG86/ww99EB
+1v9/vWoSmwnxVBuPDDj4ecj7iD3VExSDZ7x2vvID5NmhK3ndjisf8C979I48hvMo
+maBVSISDlvaIs2KbzJt9JoqHYaBNJ4LUdTwnFfcVo0vT9EY0H9KvLbfw93I/0VjU
+r9WMPCRYtEOiS5riua25jp9pSxcnQE92v5NyNEMg+sdJ9uyLPYo0NBFbhTskEjnC
+7evLkq5xpYJywh6bQvhVOhnbCoVGAOdqOIJ25xSC2wF5vaCWWRhjDtsS7d/EbXql
+tRX3gA2RlNUKlF1MlGp7TUtnWkl/EWtaWI26qm0/zuvyAnxGKBY5Eo4HUMGNtVWH
+BgQsfOviGCcDALYVPWC6foLtzrsz8BMYVVi+7u2hD0FMOa29oas=
+=09l4
+-----END PGP SIGNATURE-----
+
+--/unnNtmY43mpUSKx--
