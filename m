@@ -2,64 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2CA2761EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 22:22:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2832762D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 23:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgIWUW2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Sep 2020 16:22:28 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44475 "EHLO
+        id S1726562AbgIWVIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Sep 2020 17:08:14 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33507 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgIWUW2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 16:22:28 -0400
-Received: by mail-io1-f65.google.com with SMTP id g128so850524iof.11;
-        Wed, 23 Sep 2020 13:22:27 -0700 (PDT)
+        with ESMTP id S1726134AbgIWVIN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 17:08:13 -0400
+Received: by mail-io1-f65.google.com with SMTP id r25so1083604ioj.0;
+        Wed, 23 Sep 2020 14:08:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Cz+zFoKWLDaE+9iIi+TVpdzgCdv9jCrJPLC86d2DUb8=;
-        b=gjwnN4fqhMigXypznLk1VJDFUJpEmvP1eQoNnq1In0BZ4sLOFBVlMDwYCd8FCbsoF6
-         d2MoSgG/Se65nWoFhV/87IyV8VaQKX7O0rB1tl9M1lxSBsJm+e609epacsdzQrJYRYJ8
-         Ee9vHhRer4qGnODszbf9/LC6snsAodGqOd5FBs38IdFL78sxVS5F8YK2zZVbZDYGTtvx
-         g2jEN1QlDbQwTXLBcKDvjSlpBDQaJZ7TmSwNETjBiNGAtrfGEAvBKL2NtF4fwd25oRUB
-         gDNLxfmOX6ajK1HNEL1mcf+1ZIQAHNJdYyZ/wus3fULiLYjw3qaoPVyGMPcrOVa3JiAG
-         5m2A==
-X-Gm-Message-State: AOAM530DN5QK4jdGR9GzNffTV/32CCmLe/4yry3LeqdU+4Uj9h8ZCaJA
-        mMAs/3M/U2zlQlqXPJ1egQ==
-X-Google-Smtp-Source: ABdhPJyvVcr7IHf5wgJNYptsN9XO77Bkci1w2/cpZWcjIgF7JLbsFD0t0XMaijYN7BJL5Y6jTKPASQ==
-X-Received: by 2002:a05:6638:25d0:: with SMTP id u16mr1013274jat.0.1600892547474;
-        Wed, 23 Sep 2020 13:22:27 -0700 (PDT)
+        bh=sQJeQYvWYGwIhufeJuNNKhJrxUdl0QJIybJsORlJntk=;
+        b=jnaOQAWtIis1hxhVofJm2acL6jzTNzGgCpOMeBcvukdVoUzD++ysVEbKU8Lo7dPSLr
+         3W/55Cabisj/rMqf3psr/xfX1Yxq9OR3OJz03HK7CfTua+JL1sc2aZ7Hjx+rO24f1lDd
+         ob6VDBKeqcZtacS5nKwCerS/sthh1MU2zeCTjQVkC0uLSDYRL4BGO1sgWHTq2WxkMklK
+         wphiKG2ZMGPr4u6mqNQd16VWTQqbgzQIwwIojlUD7l9rDhGZFzxCCuRISKJMnJfAF7cv
+         SV5Be0grLw2RA3hgbZP5BJxW9jN85ZIv9r1hIVYQAO3fQ+RO/6JM5njdgjZ+29Cm/3nc
+         UP8A==
+X-Gm-Message-State: AOAM532PIqBmuobmwI+Bm1d3nxzTasc6+LSJ+JTlNth8JGsSf0FmZ4e4
+        hFuNuX7yOnaQfBrXaVR90A==
+X-Google-Smtp-Source: ABdhPJwLhvvK8p71WvE5gl6juqm6D2PKwt6Q8pOoQtI3cVp6zSaC1wByyCGWVa1RRp3euYNcaE3cjw==
+X-Received: by 2002:a6b:720d:: with SMTP id n13mr1112117ioc.210.1600895292808;
+        Wed, 23 Sep 2020 14:08:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id f4sm350567ils.51.2020.09.23.13.22.26
+        by smtp.gmail.com with ESMTPSA id l9sm402826ilq.29.2020.09.23.14.08.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 13:22:26 -0700 (PDT)
-Received: (nullmailer pid 1238341 invoked by uid 1000);
-        Wed, 23 Sep 2020 20:22:25 -0000
-Date:   Wed, 23 Sep 2020 14:22:25 -0600
+        Wed, 23 Sep 2020 14:08:12 -0700 (PDT)
+Received: (nullmailer pid 1312302 invoked by uid 1000);
+        Wed, 23 Sep 2020 21:08:10 -0000
+Date:   Wed, 23 Sep 2020 15:08:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eugen Hristev <eugen.hristev@microchip.com>
-Cc:     devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: at91-pio4: add
- microchip,sama7g5
-Message-ID: <20200923202225.GA1238284@bogus>
-References: <20200917131257.273882-1-eugen.hristev@microchip.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: gpio: pl061: add gpio-line-names
+Message-ID: <20200923210810.GA1312254@bogus>
+References: <20200920195848.27075-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200917131257.273882-1-eugen.hristev@microchip.com>
+In-Reply-To: <20200920195848.27075-1-krzk@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 17 Sep 2020 16:12:56 +0300, Eugen Hristev wrote:
-> Add compatible string for microchip sama7g5 SoC.
+On Sun, 20 Sep 2020 21:58:45 +0200, Krzysztof Kozlowski wrote:
+> Describe common "gpio-line-names" property to fix dtbs_check warnings
+> like:
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+>   arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dt.yaml: gpio@e8a0b000:
+>     'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
->  .../devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> Changes since v2:
+> 1. Common GPIO goes to dt-schema
+> ---
+>  Documentation/devicetree/bindings/gpio/pl061-gpio.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
