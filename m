@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D80C275D65
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 18:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E46DE275D6F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Sep 2020 18:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgIWQ14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Sep 2020 12:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        id S1726178AbgIWQbL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Sep 2020 12:31:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIWQ14 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 12:27:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFA2C0613CE;
-        Wed, 23 Sep 2020 09:27:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so7123950plt.9;
-        Wed, 23 Sep 2020 09:27:55 -0700 (PDT)
+        with ESMTP id S1726130AbgIWQbK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Sep 2020 12:31:10 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB747C0613CE;
+        Wed, 23 Sep 2020 09:31:10 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id k13so11395pfg.1;
+        Wed, 23 Sep 2020 09:31:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nC+x4Uq1t9dUrNUozhMC55aUGxmHKwhvoonxjgbKkQI=;
-        b=mIcfprYbV0+il/0DY852qHf/ix9HsLmmnde5R7OvuAg/npgsFbBk3LW2jJtJf4wd5/
-         ymcbOWFD8iEo53hUa2UOWUmNN+DPHdrgC14koPnESx++eweAawlwTWG3ErsZdM6Ay/kL
-         66B96VH+x8MRKHsN+HhYmnNKXsHFttQY69vA4rnUTFN2PHWyaOYCY6uZa4xF4hSQYsRP
-         pV7B9nm7b7GSulbqPTrBuyIz8zMvSVLEQt1FjgC7SEOK700l2ZgohbAg8h09qWq7aFo0
-         9D1mPcd26WRrUJ6mtvcHEbrO2ddaMbVzgPyUppo5n4O2IXYnJsyjLBZoEYFohaWbzy9H
-         yVFA==
+        bh=uYGfvb7oikipmiF1o1F+/ULJcPVaGZapsxff3ofiehQ=;
+        b=nNGD4D860VN3ivfgAaryeXlQXL9BCCmor083h3ZlvdlSt3vjwvlsPBj2rRYFA4d/jz
+         lHiGQLwwDOlJQHZp817sPe71TeoabxJaN5dmTyyTA/gPLKvTt5gyoXpBWD+hIrgid4g/
+         6ouqSF6PhheYc2FtI9Sgcl8/JDQuQN0tlf5eL/lSb+PiGBFJ8KhPqBTO7kJtcTNU7x4K
+         lJ3U6zLxV9Vf8BvjQIykNwUx4dK52nX+hBqVDPAEAYlSpjC2ozoBOD20gPnGEQcyAWpx
+         fQOuG8kDRefm6/kc5fB854n9erGCwHRKvRWehkfnbIw6dmD2IPN9R8L8McnoEX88EZvb
+         g1ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nC+x4Uq1t9dUrNUozhMC55aUGxmHKwhvoonxjgbKkQI=;
-        b=gjAdO+BDX1SvzHvkg3aVLNnu6j9ynsDOA0bX2X84v2jejhGwHXeHxBe8f6xqIL74hW
-         66QOYkE2bdO+0GGjfypWNcpBzQvbu+r6dpIJdaORJsY2ehjMICffYfcw5uMkOzNNuS4k
-         kvFTgG1RaffuXIRMN6VFaP2PWstJNysmWCt6iBpJtIIZTuB8njsy9zqsLJ2SpMM9Kxrb
-         QxlOlQeesrCdE4ppUBYS1PteTB62H8zHCzZSF1/6DC+iBW76pAFeMwDTe2LhuB0zk0ya
-         HielcDc0BhHtE4C4qFL82cPUHM/85adYNsJf4MWi/Yc7pcJrY7+x9J7WrYXFC5loMI14
-         qVMQ==
-X-Gm-Message-State: AOAM530GhG8T+Qu7axfME76+gbkasaOBwxnHaP5VFCeGkRwA0Y5rs0S5
-        OGzihHqPAgBLp1VhcwAmU6OMab8nhMyk6HY56Ao=
-X-Google-Smtp-Source: ABdhPJz6+qQ8UP2S7CDehxadbxAI6wmIJLNcBx5SBJl4xMzPLASyHVZtRWAPzq4cCvZ2KfqncwArQ8YK+a6prfNaOAs=
-X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr182500pjb.129.1600878475235;
- Wed, 23 Sep 2020 09:27:55 -0700 (PDT)
+        bh=uYGfvb7oikipmiF1o1F+/ULJcPVaGZapsxff3ofiehQ=;
+        b=Dh7cLq1NMHBIbqM5tiEA4C+L7rmUOejslfKQSKqQSyurSA3ck3fiFr+8SeG6No7cJr
+         dpi8/vfMb1t0fY3lsVG/3dm9k57vGt49J2iwhzglsIHbIz2dVtg8aDqrDi3AN5UfwBi/
+         +NEmLjpbXdtxNHYQ1dbA85cwppfot8EQSAG1ulKKd6/qxdnhD2vE9vdZ7zYZrm8P6gFn
+         4i1p9TZMMxeWOJNU3FkI/MPe7UtLHfE4erTvmt3Cvhn9VKvhDYaU3hSW0Ah+PAfVo2J5
+         5E+Msvxo0AjeHmYE5jqiotFJsCmGCMp12r5Hho12XLn5sW25ozrNEPiTBC0O1ye4wGqT
+         fMyw==
+X-Gm-Message-State: AOAM532PW+OmOmy8ip+hm0twSiQs5BrD/dFAlemK+48dvFmIGToqCsCo
+        g77jWS9n2lAJwaXqaO97ssnauRSx9GWxEDx9ZuU=
+X-Google-Smtp-Source: ABdhPJySpdI6G6zhGAuwCS+enFhbifIMouFCeCuIBOxhqOc3st4h1RSs89+A9NULZr77vFNUbFW4pQmoTsYxvsprpTk=
+X-Received: by 2002:a63:c543:: with SMTP id g3mr474520pgd.203.1600878670122;
+ Wed, 23 Sep 2020 09:31:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-13-warthog618@gmail.com>
-In-Reply-To: <20200922023151.387447-13-warthog618@gmail.com>
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-18-warthog618@gmail.com>
+In-Reply-To: <20200922023151.387447-18-warthog618@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Sep 2020 19:27:37 +0300
-Message-ID: <CAHp75VchWpH0tH_RoewFwqk0vGfasArYTnf1dbeCiOdyqT-9MA@mail.gmail.com>
-Subject: Re: [PATCH v9 12/20] gpiolib: cdev: support setting debounce
+Date:   Wed, 23 Sep 2020 19:30:52 +0300
+Message-ID: <CAHp75VenmSn0MV+FOfX=y9h3ob=Hsg741MjUJ-DEHcvxRT6wYA@mail.gmail.com>
+Subject: Re: [PATCH v9 17/20] tools: gpio: port gpio-hammer to v2 uAPI
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -63,400 +63,440 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Sep 22, 2020 at 5:36 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Add support for setting debounce on a line via the GPIO uAPI.
-> Where debounce is not supported by hardware, a software debounce is
-> provided.
+> Port the gpio-hammer tool to the latest GPIO uAPI.
+
+_BITUL() and _BITULL() are part of Linux uAPI. Why not to use them?
+const.h
+
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  tools/gpio/gpio-hammer.c |  32 +++++---
+>  tools/gpio/gpio-utils.c  | 164 ++++++++++++++++++++++++++++++++-------
+>  tools/gpio/gpio-utils.h  |  46 ++++++++++-
+>  3 files changed, 197 insertions(+), 45 deletions(-)
 >
-> The implementation of the software debouncer waits for the line to be
-> stable for the debounce period before determining if a level change,
-> and a corresponding edge event, has occurred.  This provides maximum
-> protection against glitches, but also introduces a debounce_period
-> latency to edge events.
->
-> The software debouncer is integrated with the edge detection as it
-> utilises the line interrupt, and integration is simpler than getting
-> the two to interwork.  Where software debounce AND edge detection is
-> required, the debouncer provides both.
-
-
-> +static unsigned int debounced_value(struct line *line)
-> +{
-> +       unsigned int value;
-> +
-> +       /*
-> +        * minor race - debouncer may be stopped here, so edge_detector_stop
-
-() ?
-
-> +        * must leave the value unchanged so the following will read the level
-> +        * from when the debouncer was last running.
-> +        */
-> +       value = READ_ONCE(line->level);
-> +
-
-> +       if (test_bit(FLAG_ACTIVE_LOW, &line->desc->flags))
-> +               value = !value;
-
-I'm not sure what this means in terms of unsingned int to be returned.
-
-> +       return value;
-
-Shouldn't we rather return 0/1 guaranteed?
-
-Perhaps
-
- if (active_low)
-  return !value;
-
-return !!value;
-
-?
-
-> +}
-> +
-> +static irqreturn_t debounce_irq_handler(int irq, void *p)
-> +{
-> +       struct line *line = p;
-> +
-> +       mod_delayed_work(system_wq, &line->work,
-> +               usecs_to_jiffies(READ_ONCE(line->desc->debounce_period_us)));
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static void debounce_work_func(struct work_struct *work)
-> +{
-> +       struct gpio_v2_line_event le;
-> +       struct line *line = container_of(work, struct line, work.work);
-> +       struct linereq *lr;
-> +       int level;
-> +
-> +       level = gpiod_get_raw_value_cansleep(line->desc);
-> +       if (level < 0) {
-> +               pr_debug_ratelimited("debouncer failed to read line value\n");
-> +               return;
-> +       }
-> +
-> +       if (READ_ONCE(line->level) == level)
-> +               return;
-> +
-> +       WRITE_ONCE(line->level, level);
-> +
-> +       /* -- edge detection -- */
-> +       if (!line->eflags)
-> +               return;
-
-> +       /* switch from physical level to logical - if they differ */
-> +       if (test_bit(FLAG_ACTIVE_LOW, &line->desc->flags))
-> +               level = !level;
-
-Seems to me a good candidate to have
-
-static inline bool convert_with_active_low_respected(desc, value)
-{
-  if (active_low)
-   return !value;
- return !!value;
-}
-
-> +       /* ignore edges that are not being monitored */
-> +       if (((line->eflags == GPIO_V2_LINE_FLAG_EDGE_RISING) && !level) ||
-> +           ((line->eflags == GPIO_V2_LINE_FLAG_EDGE_FALLING) && level))
-> +               return;
-> +
-> +       /* Do not leak kernel stack to userspace */
-> +       memset(&le, 0, sizeof(le));
-> +
-> +       lr = line->req;
-> +       le.timestamp_ns = ktime_get_ns();
-> +       le.offset = gpio_chip_hwgpio(line->desc);
-> +       line->line_seqno++;
-> +       le.line_seqno = line->line_seqno;
-> +       le.seqno = (lr->num_lines == 1) ?
-> +               le.line_seqno : atomic_inc_return(&lr->seqno);
-> +
-> +       if (level)
-> +               /* Emit low-to-high event */
-> +               le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
-> +       else
-> +               /* Emit high-to-low event */
-> +               le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
-> +
-> +       linereq_put_event(lr, &le);
-> +}
-> +
-> +static int debounce_setup(struct line *line,
-> +                         unsigned int debounce_period_us)
-> +{
-> +       unsigned long irqflags;
-> +       int ret, level, irq;
-> +
-> +       /* try hardware */
-> +       ret = gpiod_set_debounce(line->desc, debounce_period_us);
-> +       if (!ret) {
-> +               WRITE_ONCE(line->desc->debounce_period_us, debounce_period_us);
-> +               return ret;
-> +       }
-> +       if (ret != -ENOTSUPP)
-> +               return ret;
-> +
-> +       if (debounce_period_us) {
-> +               /* setup software debounce */
-> +               level = gpiod_get_raw_value_cansleep(line->desc);
-> +               if (level < 0)
-> +                       return level;
-> +
-> +               irq = gpiod_to_irq(line->desc);
-> +               if (irq <= 0)
-
-Same question about return code...
-
-> +                       return -ENODEV;
-> +
-> +               WRITE_ONCE(line->level, level);
-> +               irqflags = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
-> +               ret = request_irq(irq, debounce_irq_handler, irqflags,
-> +                                 line->req->label, line);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               WRITE_ONCE(line->sw_debounced, 1);
-> +               line->irq = irq;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static bool gpio_v2_line_config_debounced(struct gpio_v2_line_config *lc,
-> +                                         unsigned int line_idx)
-> +{
-> +       unsigned int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return true;
-> +       }
-> +       return false;
-> +}
-> +
-> +static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
-> +                                              unsigned int line_idx)
-> +{
-> +       unsigned int i;
-> +       u64 mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return lc->attrs[i].attr.debounce_period_us;
-> +       }
-> +       return 0;
-> +}
-> +
->  static void edge_detector_stop(struct line *line)
+> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
+> index a2c7577fad5c..54fdf59dd320 100644
+> --- a/tools/gpio/gpio-hammer.c
+> +++ b/tools/gpio/gpio-hammer.c
+> @@ -25,23 +25,30 @@
+>  int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+>                   unsigned int loops)
 >  {
->         if (line->irq) {
-> @@ -578,12 +752,18 @@ static void edge_detector_stop(struct line *line)
->                 line->irq = 0;
->         }
+> -       struct gpiohandle_data data;
+> +       struct gpio_v2_line_values values;
+> +       struct gpio_v2_line_config config;
+>         char swirr[] = "-\\|/";
+>         int fd;
+>         int ret;
+>         int i, j;
+>         unsigned int iteration = 0;
 >
-> +       cancel_delayed_work_sync(&line->work);
-> +       WRITE_ONCE(line->sw_debounced, 0);
->         line->eflags = 0;
-> +       /* do not change line->level - see comment in debounced_value */
+> -       memset(&data.values, 0, sizeof(data.values));
+> -       ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+> -                                          GPIOHANDLE_REQUEST_OUTPUT, &data,
+> -                                          "gpio-hammer");
+> +       memset(&config, 0, sizeof(config));
+> +       config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
+> +
+> +       ret = gpiotools_request_line(device_name, lines, num_lines,
+> +                                    &config, "gpio-hammer");
+>         if (ret < 0)
+>                 goto exit_error;
+>         else
+>                 fd = ret;
+>
+> -       ret = gpiotools_get_values(fd, &data);
+> +       values.mask = 0;
+> +       values.bits = 0;
+> +       for (i = 0; i < num_lines; i++)
+> +               gpiotools_set_bit(&values.mask, i);
+> +
+> +       ret = gpiotools_get_values(fd, &values);
+>         if (ret < 0)
+>                 goto exit_close_error;
+>
+> @@ -53,7 +60,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+>         }
+>         fprintf(stdout, "] on %s, initial states: [", device_name);
+>         for (i = 0; i < num_lines; i++) {
+> -               fprintf(stdout, "%d", data.values[i]);
+> +               fprintf(stdout, "%d", gpiotools_test_bit(values.bits, i));
+>                 if (i != (num_lines - 1))
+>                         fprintf(stdout, ", ");
+>         }
+> @@ -64,14 +71,14 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+>         while (1) {
+>                 /* Invert all lines so we blink */
+>                 for (i = 0; i < num_lines; i++)
+> -                       data.values[i] = !data.values[i];
+> +                       gpiotools_change_bit(&values.bits, i);
+>
+> -               ret = gpiotools_set_values(fd, &data);
+> +               ret = gpiotools_set_values(fd, &values);
+>                 if (ret < 0)
+>                         goto exit_close_error;
+>
+>                 /* Re-read values to get status */
+> -               ret = gpiotools_get_values(fd, &data);
+> +               ret = gpiotools_get_values(fd, &values);
+>                 if (ret < 0)
+>                         goto exit_close_error;
+>
+> @@ -82,7 +89,8 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+>
+>                 fprintf(stdout, "[");
+>                 for (i = 0; i < num_lines; i++) {
+> -                       fprintf(stdout, "%d: %d", lines[i], data.values[i]);
+> +                       fprintf(stdout, "%d: %d", lines[i],
+> +                               gpiotools_test_bit(values.bits, i));
+>                         if (i != (num_lines - 1))
+>                                 fprintf(stdout, ", ");
+>                 }
+> @@ -97,7 +105,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+>         ret = 0;
+>
+>  exit_close_error:
+> -       gpiotools_release_linehandle(fd);
+> +       gpiotools_release_line(fd);
+>  exit_error:
+>         return ret;
 >  }
->
->  static int edge_detector_setup(struct line *line,
-> +                              struct gpio_v2_line_config *lc,
-> +                              unsigned int line_idx,
->                                u64 eflags)
->  {
-> +       u32 debounce_period_us;
->         unsigned long irqflags = 0;
->         int irq, ret;
->
-> @@ -594,8 +774,16 @@ static int edge_detector_setup(struct line *line,
->                         return ret;
->         }
->         line->eflags = eflags;
-> +       if (gpio_v2_line_config_debounced(lc, line_idx)) {
-> +               debounce_period_us = gpio_v2_line_config_debounce_period(lc, line_idx);
-> +               ret = debounce_setup(line, debounce_period_us);
-> +               if (ret)
-> +                       return ret;
-> +               WRITE_ONCE(line->desc->debounce_period_us, debounce_period_us);
+> diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
+> index d527980bcb94..37187e056c8b 100644
+> --- a/tools/gpio/gpio-utils.c
+> +++ b/tools/gpio/gpio-utils.c
+> @@ -100,20 +100,87 @@ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
+>         free(chrdev_name);
+>         return ret < 0 ? ret : req.fd;
+>  }
+> +
+> +/**
+> + * gpiotools_request_line() - request gpio lines in a gpiochip
+> + * @device_name:       The name of gpiochip without prefix "/dev/",
+> + *                     such as "gpiochip0"
+> + * @lines:             An array desired lines, specified by offset
+> + *                     index for the associated GPIO device.
+> + * @num_lines:         The number of lines to request.
+> + * @config:            The new config for requested gpio. Reference
+> + *                     "linux/gpio.h" for config details.
+> + * @consumer:          The name of consumer, such as "sysfs",
+> + *                     "powerkey". This is useful for other users to
+> + *                     know who is using.
+> + *
+> + * Request gpio lines through the ioctl provided by chardev. User
+> + * could call gpiotools_set_values() and gpiotools_get_values() to
+> + * read and write respectively through the returned fd. Call
+> + * gpiotools_release_line() to release these lines after that.
+> + *
+> + * Return:             On success return the fd;
+> + *                     On failure return the errno.
+> + */
+> +int gpiotools_request_line(const char *device_name, unsigned int *lines,
+> +                          unsigned int num_lines,
+> +                          struct gpio_v2_line_config *config,
+> +                          const char *consumer)
+> +{
+> +       struct gpio_v2_line_request req;
+> +       char *chrdev_name;
+> +       int fd;
+> +       int i;
+> +       int ret;
+> +
+> +       ret = asprintf(&chrdev_name, "/dev/%s", device_name);
+> +       if (ret < 0)
+> +               return -ENOMEM;
+> +
+> +       fd = open(chrdev_name, 0);
+> +       if (fd == -1) {
+> +               ret = -errno;
+> +               fprintf(stderr, "Failed to open %s, %s\n",
+> +                       chrdev_name, strerror(errno));
+> +               goto exit_free_name;
 > +       }
->
-> -       if (!eflags)
-> +       /* detection disabled or sw debouncer will provide edge detection */
-> +       if (!eflags || READ_ONCE(line->sw_debounced))
->                 return 0;
->
->         irq = gpiod_to_irq(line->desc);
-> @@ -620,15 +808,31 @@ static int edge_detector_setup(struct line *line,
->         return 0;
->  }
->
-> -static int edge_detector_update(struct line *line, u64 eflags,
-> -                               bool polarity_change)
-> +static int edge_detector_update(struct line *line,
-> +                               struct gpio_v2_line_config *lc,
-> +                               unsigned int line_idx,
-> +                               u64 eflags, bool polarity_change)
->  {
-> -       if ((line->eflags == eflags) && !polarity_change)
-> +       unsigned int debounce_period_us =
-> +               gpio_v2_line_config_debounce_period(lc, line_idx);
 > +
-> +       if ((line->eflags == eflags) && !polarity_change &&
-> +           (READ_ONCE(line->desc->debounce_period_us) == debounce_period_us))
->                 return 0;
->
-> -       edge_detector_stop(line);
-> +       /* sw debounced and still will be...*/
-
-> +       if ((debounce_period_us != 0) && READ_ONCE(line->sw_debounced)) {
-
-'(  != 0)' are redundant. But I think you want to show that it's not
-boolean and we compare to 0...
-
-> +               line->eflags = eflags;
-> +               WRITE_ONCE(line->desc->debounce_period_us, debounce_period_us);
-> +               return 0;
+> +       memset(&req, 0, sizeof(req));
+> +       for (i = 0; i < num_lines; i++)
+> +               req.offsets[i] = lines[i];
+> +
+> +       req.config = *config;
+> +       strcpy(req.consumer, consumer);
+> +       req.num_lines = num_lines;
+> +
+> +       ret = ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
+> +       if (ret == -1) {
+> +               ret = -errno;
+> +               fprintf(stderr, "Failed to issue %s (%d), %s\n",
+> +                       "GPIO_GET_LINE_IOCTL", ret, strerror(errno));
 > +       }
 > +
-> +       /* reconfiguring edge detection or sw debounce being disabled */
-> +       if ((line->irq && !READ_ONCE(line->sw_debounced)) ||
-> +           (!debounce_period_us && READ_ONCE(line->sw_debounced)))
-> +               edge_detector_stop(line);
->
-> -       return edge_detector_setup(line, eflags);
-> +       return edge_detector_setup(line, lc, line_idx, eflags);
->  }
->
->  static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
-> @@ -726,6 +930,11 @@ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
->                 ret = gpio_v2_line_flags_validate(flags);
->                 if (ret)
->                         return ret;
+> +       if (close(fd) == -1)
+> +               perror("Failed to close GPIO character device file");
+> +exit_free_name:
+> +       free(chrdev_name);
+> +       return ret < 0 ? ret : req.fd;
+> +}
 > +
-> +               /* debounce requires explicit input */
-> +               if (gpio_v2_line_config_debounced(lc, i) &&
-> +                   !(flags & GPIO_V2_LINE_FLAG_INPUT))
-> +                       return -EINVAL;
->         }
->         return 0;
->  }
-> @@ -762,7 +971,7 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
->         struct gpio_v2_line_values lv;
->         DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
->         struct gpio_desc **descs;
-> -       unsigned int i, didx, num_get;
-> +       unsigned int i, val, didx, num_get;
+>  /**
+>   * gpiotools_set_values(): Set the value of gpio(s)
+>   * @fd:                        The fd returned by
+> - *                     gpiotools_request_linehandle().
+> - * @data:              The array of values want to set.
+> + *                     gpiotools_request_line().
+> + * @values:            The array of values want to set.
+>   *
+>   * Return:             On success return 0;
+>   *                     On failure return the errno.
+>   */
+> -int gpiotools_set_values(const int fd, struct gpiohandle_data *data)
+> +int gpiotools_set_values(const int fd, struct gpio_v2_line_values *values)
+>  {
 >         int ret;
 >
->         /* NOTE: It's ok to read values of output lines. */
-> @@ -801,7 +1010,11 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
->         lv.bits = 0;
->         for (didx = 0, i = 0; i < lr->num_lines; i++) {
->                 if (lv.mask & BIT_ULL(i)) {
-> -                       if (test_bit(didx, vals))
-> +                       if (lr->lines[i].sw_debounced)
-> +                               val = debounced_value(&lr->lines[i]);
-> +                       else
-> +                               val = test_bit(didx, vals);
-> +                       if (val)
->                                 lv.bits |= BIT_ULL(i);
->                         didx++;
->                 }
-> @@ -905,7 +1118,7 @@ static long linereq_set_config_unlocked(struct linereq *lr,
->                         if (ret)
->                                 return ret;
+> -       ret = ioctl(fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, data);
+> +       ret = ioctl(fd, GPIO_V2_LINE_SET_VALUES_IOCTL, values);
+>         if (ret == -1) {
+>                 ret = -errno;
+>                 fprintf(stderr, "Failed to issue %s (%d), %s\n",
+> @@ -127,17 +194,17 @@ int gpiotools_set_values(const int fd, struct gpiohandle_data *data)
+>  /**
+>   * gpiotools_get_values(): Get the value of gpio(s)
+>   * @fd:                        The fd returned by
+> - *                     gpiotools_request_linehandle().
+> - * @data:              The array of values get from hardware.
+> + *                     gpiotools_request_line().
+> + * @values:            The array of values get from hardware.
+>   *
+>   * Return:             On success return 0;
+>   *                     On failure return the errno.
+>   */
+> -int gpiotools_get_values(const int fd, struct gpiohandle_data *data)
+> +int gpiotools_get_values(const int fd, struct gpio_v2_line_values *values)
+>  {
+>         int ret;
 >
-> -                       ret = edge_detector_update(&lr->lines[i],
-> +                       ret = edge_detector_update(&lr->lines[i], lc, i,
->                                         flags & GPIO_V2_LINE_EDGE_FLAGS,
->                                         polarity_change);
->                         if (ret)
-> @@ -1099,8 +1312,11 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
->         lr->gdev = gdev;
->         get_device(&gdev->dev);
->
-> -       for (i = 0; i < ulr.num_lines; i++)
-> +       for (i = 0; i < ulr.num_lines; i++) {
->                 lr->lines[i].req = lr;
-> +               WRITE_ONCE(lr->lines[i].sw_debounced, 0);
-> +               INIT_DELAYED_WORK(&lr->lines[i].work, debounce_work_func);
-> +       }
->
->         /* Make sure this is terminated */
->         ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
-> @@ -1160,7 +1376,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
->                         if (ret)
->                                 goto out_free_linereq;
->
-> -                       ret = edge_detector_setup(&lr->lines[i],
-> +                       ret = edge_detector_setup(&lr->lines[i], lc, i,
->                                         flags & GPIO_V2_LINE_EDGE_FLAGS);
->                         if (ret)
->                                 goto out_free_linereq;
-> @@ -1631,6 +1847,8 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->         struct gpio_chip *gc = desc->gdev->chip;
->         bool ok_for_pinctrl;
->         unsigned long flags;
-> +       u32 debounce_period_us;
-> +       unsigned int num_attrs = 0;
->
->         memset(info, 0, sizeof(*info));
->         info->offset = gpio_chip_hwgpio(desc);
-> @@ -1691,6 +1909,14 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->         if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
->                 info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
->
-> +       debounce_period_us = READ_ONCE(desc->debounce_period_us);
-> +       if (debounce_period_us) {
-> +               info->attrs[num_attrs].id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-> +               info->attrs[num_attrs].debounce_period_us = debounce_period_us;
-> +               num_attrs++;
-> +       }
-> +       info->num_attrs = num_attrs;
-> +
->         spin_unlock_irqrestore(&gpio_lock, flags);
+> -       ret = ioctl(fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, data);
+> +       ret = ioctl(fd, GPIO_V2_LINE_GET_VALUES_IOCTL, values);
+>         if (ret == -1) {
+>                 ret = -errno;
+>                 fprintf(stderr, "Failed to issue %s (%d), %s\n",
+> @@ -169,6 +236,27 @@ int gpiotools_release_linehandle(const int fd)
+>         return ret;
 >  }
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index aa20481e9452..3cdf9effc13a 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2097,6 +2097,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
->                 clear_bit(FLAG_IS_HOGGED, &desc->flags);
->  #ifdef CONFIG_OF_DYNAMIC
->                 desc->hog = NULL;
-> +#endif
-> +#ifdef CONFIG_GPIO_CDEV
-> +               WRITE_ONCE(desc->de> --
+> +/**
+> + * gpiotools_release_line(): Release the line(s) of gpiochip
+> + * @fd:                        The fd returned by
+> + *                     gpiotools_request_line().
+> + *
+> + * Return:             On success return 0;
+> + *                     On failure return the errno.
+> + */
+> +int gpiotools_release_line(const int fd)
+> +{
+> +       int ret;
+> +
+> +       ret = close(fd);
+> +       if (ret == -1) {
+> +               perror("Failed to close GPIO LINE device file");
+> +               ret = -errno;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  /**
+>   * gpiotools_get(): Get value from specific line
+>   * @device_name:       The name of gpiochip without prefix "/dev/",
+> @@ -180,11 +268,14 @@ int gpiotools_release_linehandle(const int fd)
+>   */
+>  int gpiotools_get(const char *device_name, unsigned int line)
+>  {
+> -       struct gpiohandle_data data;
+> +       int ret;
+> +       unsigned int value;
+>         unsigned int lines[] = {line};
+>
+> -       gpiotools_gets(device_name, lines, 1, &data);
+> -       return data.values[0];
+> +       ret = gpiotools_gets(device_name, lines, 1, &value);
+> +       if (ret)
+> +               return ret;
+> +       return value;
+>  }
+>
+>
+> @@ -195,27 +286,35 @@ int gpiotools_get(const char *device_name, unsigned int line)
+>   * @lines:             An array desired lines, specified by offset
+>   *                     index for the associated GPIO device.
+>   * @num_lines:         The number of lines to request.
+> - * @data:              The array of values get from gpiochip.
+> + * @values:            The array of values get from gpiochip.
+>   *
+>   * Return:             On success return 0;
+>   *                     On failure return the errno.
+>   */
+>  int gpiotools_gets(const char *device_name, unsigned int *lines,
+> -                  unsigned int num_lines, struct gpiohandle_data *data)
+> +                  unsigned int num_lines, unsigned int *values)
+>  {
+> -       int fd;
+> +       int fd, i;
+>         int ret;
+>         int ret_close;
+> +       struct gpio_v2_line_config config;
+> +       struct gpio_v2_line_values lv;
+>
+> -       ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+> -                                          GPIOHANDLE_REQUEST_INPUT, data,
+> -                                          CONSUMER);
+> +       memset(&config, 0, sizeof(config));
+> +       config.flags = GPIO_V2_LINE_FLAG_INPUT;
+> +       ret = gpiotools_request_line(device_name, lines, num_lines,
+> +                                    &config, CONSUMER);
+>         if (ret < 0)
+>                 return ret;
+>
+>         fd = ret;
+> -       ret = gpiotools_get_values(fd, data);
+> -       ret_close = gpiotools_release_linehandle(fd);
+> +       for (i = 0; i < num_lines; i++)
+> +               gpiotools_set_bit(&lv.mask, i);
+> +       ret = gpiotools_get_values(fd, &lv);
+> +       if (!ret)
+> +               for (i = 0; i < num_lines; i++)
+> +                       values[i] = gpiotools_test_bit(lv.bits, i);
+> +       ret_close = gpiotools_release_line(fd);
+>         return ret < 0 ? ret : ret_close;
+>  }
+>
+> @@ -232,11 +331,9 @@ int gpiotools_gets(const char *device_name, unsigned int *lines,
+>  int gpiotools_set(const char *device_name, unsigned int line,
+>                   unsigned int value)
+>  {
+> -       struct gpiohandle_data data;
+>         unsigned int lines[] = {line};
+>
+> -       data.values[0] = value;
+> -       return gpiotools_sets(device_name, lines, 1, &data);
+> +       return gpiotools_sets(device_name, lines, 1, &value);
+>  }
+>
+>  /**
+> @@ -246,22 +343,31 @@ int gpiotools_set(const char *device_name, unsigned int line,
+>   * @lines:             An array desired lines, specified by offset
+>   *                     index for the associated GPIO device.
+>   * @num_lines:         The number of lines to request.
+> - * @data:              The array of values set to gpiochip, must be
+> + * @value:             The array of values set to gpiochip, must be
+>   *                     0(low) or 1(high).
+>   *
+>   * Return:             On success return 0;
+>   *                     On failure return the errno.
+>   */
+>  int gpiotools_sets(const char *device_name, unsigned int *lines,
+> -                  unsigned int num_lines, struct gpiohandle_data *data)
+> +                  unsigned int num_lines, unsigned int *values)
+>  {
+> -       int ret;
+> +       int ret, i;
+> +       struct gpio_v2_line_config config;
+>
+> -       ret = gpiotools_request_linehandle(device_name, lines, num_lines,
+> -                                          GPIOHANDLE_REQUEST_OUTPUT, data,
+> -                                          CONSUMER);
+> +       memset(&config, 0, sizeof(config));
+> +       config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
+> +       config.num_attrs = 1;
+> +       config.attrs[0].attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
+> +       for (i = 0; i < num_lines; i++) {
+> +               gpiotools_set_bit(&config.attrs[0].mask, i);
+> +               gpiotools_assign_bit(&config.attrs[0].attr.values,
+> +                                    i, values[i]);
+> +       }
+> +       ret = gpiotools_request_line(device_name, lines, num_lines,
+> +                                    &config, CONSUMER);
+>         if (ret < 0)
+>                 return ret;
+>
+> -       return gpiotools_release_linehandle(ret);
+> +       return gpiotools_release_line(ret);
+>  }
+> diff --git a/tools/gpio/gpio-utils.h b/tools/gpio/gpio-utils.h
+> index 324729577865..f8ea4fac14d5 100644
+> --- a/tools/gpio/gpio-utils.h
+> +++ b/tools/gpio/gpio-utils.h
+> @@ -12,7 +12,9 @@
+>  #ifndef _GPIO_UTILS_H_
+>  #define _GPIO_UTILS_H_
+>
+> +#include <stdbool.h>
+>  #include <string.h>
+> +#include <linux/types.h>
+>
+>  #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+>
+> @@ -26,16 +28,52 @@ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
+>                                  unsigned int num_lines, unsigned int flag,
+>                                  struct gpiohandle_data *data,
+>                                  const char *consumer_label);
+> -int gpiotools_set_values(const int fd, struct gpiohandle_data *data);
+> -int gpiotools_get_values(const int fd, struct gpiohandle_data *data);
+>  int gpiotools_release_linehandle(const int fd);
+>
+> +int gpiotools_request_line(const char *device_name,
+> +                          unsigned int *lines,
+> +                          unsigned int num_lines,
+> +                          struct gpio_v2_line_config *config,
+> +                          const char *consumer);
+> +int gpiotools_set_values(const int fd, struct gpio_v2_line_values *values);
+> +int gpiotools_get_values(const int fd, struct gpio_v2_line_values *values);
+> +int gpiotools_release_line(const int fd);
+> +
+>  int gpiotools_get(const char *device_name, unsigned int line);
+>  int gpiotools_gets(const char *device_name, unsigned int *lines,
+> -                  unsigned int num_lines, struct gpiohandle_data *data);
+> +                  unsigned int num_lines, unsigned int *values);
+>  int gpiotools_set(const char *device_name, unsigned int line,
+>                   unsigned int value);
+>  int gpiotools_sets(const char *device_name, unsigned int *lines,
+> -                  unsigned int num_lines, struct gpiohandle_data *data);
+> +                  unsigned int num_lines, unsigned int *values);
+> +
+> +/* helper functions for gpio_v2_line_values bits */
+> +static inline void gpiotools_set_bit(__u64 *b, int n)
+> +{
+> +       *b |= 1ULL << n;
+> +}
+> +
+> +static inline void gpiotools_change_bit(__u64 *b, int n)
+> +{
+> +       *b ^= 1ULL << n;
+> +}
+> +
+> +static inline void gpiotools_clear_bit(__u64 *b, int n)
+> +{
+> +       *b &= ~(1ULL << n);
+> +}
+> +
+> +static inline int gpiotools_test_bit(__u64 b, int n)
+> +{
+> +       return !!(b & 1ULL << n);
+> +}
+> +
+> +static inline void gpiotools_assign_bit(__u64 *b, int n, bool value)
+> +{
+> +       if (value)
+> +               gpiotools_set_bit(b, n);
+> +       else
+> +               gpiotools_clear_bit(b, n);
+> +}
+>
+>  #endif /* _GPIO_UTILS_H_ */
+> --
 > 2.28.0
 >
-bounce_period_us, 0);
->  #endif
->                 ret = true;
->         }
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 39b356160937..b674b5bb980e 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -124,6 +124,10 @@ struct gpio_desc {
->  #ifdef CONFIG_OF_DYNAMIC
->         struct device_node      *hog;
->  #endif
-> +#ifdef CONFIG_GPIO_CDEV
-> +       /* debounce period in microseconds */
-> +       unsigned int            debounce_period_us;
-> +#endif
->  };
->
->  int gpiod_request(struct gpio_desc *desc, const char *label);
+
 
 -- 
 With Best Regards,
