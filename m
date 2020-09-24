@@ -2,90 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70CA82772B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Sep 2020 15:40:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F3A42773EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Sep 2020 16:29:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgIXNkb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Sep 2020 09:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50354 "EHLO
+        id S1728111AbgIXO3S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Sep 2020 10:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgIXNka (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Sep 2020 09:40:30 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E4BC0613CE;
-        Thu, 24 Sep 2020 06:40:30 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so1684200plt.9;
-        Thu, 24 Sep 2020 06:40:30 -0700 (PDT)
+        with ESMTP id S1727974AbgIXO3S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Sep 2020 10:29:18 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EADEC0613CE
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 07:29:18 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g128so3461359iof.11
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 07:29:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cGJ/OdtZht+9heWoI2epD1dIdA+gcxLBdCbKRQuv3zI=;
-        b=d5Sgm2ZR1hnM76gGIOud2fuXPBUPd68NCmYXPCjIrec51wvWiCTYtuxSawzakRYRI6
-         yxtPKuh/79mhucoh5rcviIifiCNBK/TGT8/0DVv3Dkv+c31sq65SY8ZuYgmuEVNLWD1y
-         6453nNl32aQ1GY8PJtwdfr/xuRpY5POSO88zVTEUjKGN7/uczSIsLmTdPVyoh8YNmbsL
-         C7wK5CNsVD4XOkQycag1rT2KFugOz2LHQopMT40bcwGPuypybsVDTBtL0wpXGeG2rqKI
-         zRmuLRfj0HtIM1RS6i/X2SaH2is4BmjdtM2jKsku9Cu2OxRINCkOuvCs31nJlmVdNoDD
-         mGkQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wyenqVgWWi4hktsJwzPOHau41VJA6ADzsTIaBtagdwg=;
+        b=oGg+bfbV8u4czH/xcGWFrzD+5g+KopuhOxjfyLeiZw8qjVXfh1Kwq1IaAeS12RdXOD
+         ulf9INUO+pqdf0SA8o2iNjo7d3TRsEqAseOjvAt0RRURntqGkEkP5SxTy6setnBoP0m8
+         rlPjYioEGWS15IuamLyhe5+3YvrWYyH01/F9KzhdBDA+emLdTvgDQkZMTb0g+z3SGSPB
+         hzKcJAUse6H86OUeRe2CPbhH+owjg3Uyh82JiAd4q+qjaHXo7kCU0eWwIKJGBHNrvz05
+         5vTyOV6dG+zxUAEolmH6czPcmkVL16E6BDfdEBmGuumIaQ5HQNX971xEl/XSLk/zSHIy
+         9n4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cGJ/OdtZht+9heWoI2epD1dIdA+gcxLBdCbKRQuv3zI=;
-        b=rIQwnn6J/92rYcuBuGjQnA+1n9HMCJtDYMaZdi/3m0WE9rs3PayB6vVbAMO7b4f9GE
-         YIG8JqGboegoT3TWNmGqzC1RyphlkB4hRTAfneTOXi8rhkd1BUU0O4YDREeoDZPce0Tm
-         zEtiHYPwx1xwaHDiA4tapl5YXgH8tgF4mTNKOie6eptpu2jXNvtkE8F/F1Beao3Nshd/
-         vGM1UyDyptImKMdkdAP623PrQnIGU7z9ADYu8KL3vIpMVGmBBrLWm9qnr562WuXVDW+d
-         tDEt2VAurPdUmVEXRYQA/olavrPZg7CPHJBbkCdr8IxwRPuH/F5wJBdYAy7m1CEsKbwA
-         z40Q==
-X-Gm-Message-State: AOAM530qCnUupNhTArKYxF1JG3Z8JamiC9OFXBpdX97fDX46SB7jm4tb
-        4IBekmdUrj1gcbD7hqghnSnIPlJl3ZFyWA==
-X-Google-Smtp-Source: ABdhPJzCAhxrDicWNkVJXJeqpArxbDBDnaDbYHSOe++t5wawxWIMmm7Z/o5M3Kt8tbdxDFOUHpzx/A==
-X-Received: by 2002:a17:902:aa95:b029:d2:19f4:ff56 with SMTP id d21-20020a170902aa95b02900d219f4ff56mr4694395plr.78.1600954830270;
-        Thu, 24 Sep 2020 06:40:30 -0700 (PDT)
-Received: from sol (106-69-189-59.dyn.iinet.net.au. [106.69.189.59])
-        by smtp.gmail.com with ESMTPSA id u71sm3046759pfc.43.2020.09.24.06.40.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2020 06:40:29 -0700 (PDT)
-Date:   Thu, 24 Sep 2020 21:40:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wyenqVgWWi4hktsJwzPOHau41VJA6ADzsTIaBtagdwg=;
+        b=GgZo0MnnKH/4vTI8xPtRKgIT8ArGvkntqx7o5IJTXj/Lalim1nO1g7PDnWGEsXINTT
+         vSNIygvWWo4Q7yXeDlzQBiDit1ABWXbJaqE5E8UHB/NmI/6xdIbpz4QK1ytE4Rj1SWT8
+         /XJYFL0BrQLVR1WeMsfTpkeD89DYP9mpl+kKT2hqChJBZHN9qIkL6isgDjwGmGD92Lza
+         lmIln3qDQsQ3ZxIrEYKKGEP81fju+A6xIQeEOAVD1tPB7gSX/+n94ovjLpa7ZL3jePLx
+         cqPz+INLlr0JXq1nqCyTVRTmJ4LSqVEeQCk89kMnrjHR6a6xC4S5FFBFE3+o6nhQoB20
+         c3xg==
+X-Gm-Message-State: AOAM53214qjBFAjgSDZUK1Q6pFMCaos/XSbu+RguZaOoQt2ByK12EVqD
+        LVxft4hloHCmZ9kAKR/FJRoX66Q+411I+DRsOW4FOw==
+X-Google-Smtp-Source: ABdhPJzYNUqUV8xyQOKrL4HXS0V0PPSLAPlzGnB4IK2KXvxpsmapbyAG6PHdjXWYNecoB4DIrDoX5BxT7IZbG/Bh02o=
+X-Received: by 2002:a5d:8352:: with SMTP id q18mr3623282ior.31.1600957757687;
+ Thu, 24 Sep 2020 07:29:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-8-warthog618@gmail.com>
+ <CAHp75VdQUbDnjQEr5X5q6WdU6rD=uBNznNn5=Vy=pvdwVj_hEA@mail.gmail.com>
+In-Reply-To: <CAHp75VdQUbDnjQEr5X5q6WdU6rD=uBNznNn5=Vy=pvdwVj_hEA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 24 Sep 2020 16:29:06 +0200
+Message-ID: <CAMRc=Mc7O2FGT3ZHLbNozQpK6bTei=Y0DLrvDSViqG49xUY4Ew@mail.gmail.com>
+Subject: Re: [PATCH v9 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200924134024.GA239773@sol>
-References: <20200905133549.24606-1-warthog618@gmail.com>
- <20200905133549.24606-8-warthog618@gmail.com>
- <CAHp75Vdm=61wibz70ScvayXk_D77rZw_pG7wPkLXkbkzagRPNA@mail.gmail.com>
- <20200920111204.GB793608@sol>
- <CAMpxmJW1g-Z4XR1BvOvxjweqMYA6dvS9A=ooLKyjdxU1n9-3HA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJW1g-Z4XR1BvOvxjweqMYA6dvS9A=ooLKyjdxU1n9-3HA@mail.gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 03:36:24PM +0200, Bartosz Golaszewski wrote:
-> On Sun, Sep 20, 2020 at 1:12 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > >
-> > > Can we use static_assert() at the top of the file? Presumably after
-> > > inclusion block.
-> > >
-> >
-> > Good idea - will do.
-> 
-> Thanks Andy for bringing this to my attention, the amount of kernel
-> interfaces I still don't know after all these years still amazes me.
-> 
+On Wed, Sep 23, 2020 at 1:12 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
 
-And don't forget it was originally Andy's idea to use the BUILD_BUG_ON()
-as well ;-).
+[snip!]
 
-Cheers,
-Kent.
+>
+> > +       /* Bias requires explicit direction. */
+> > +       if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
+> > +           !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
+> > +               return -EINVAL;
+>
+> Okay, since this is strict we probably may relax it in the future if
+> it will be a use case.
+> ...
+>
+> > +       /* Only one bias flag can be set. */
+>
+> Ditto. (Some controllers allow to set both simultaneously, though I
+> can't imagine good use case for that)
+>
+
+This is an abstraction layer. Only because some controllers allow
+this, doesn't mean we should reflect this in our abstraction layer -
+especially if we know well that this has no purpose.
+
+Bartosz
