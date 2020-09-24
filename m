@@ -2,92 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4841227723F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Sep 2020 15:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F48427727E
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Sep 2020 15:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgIXN3q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Sep 2020 09:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
+        id S1727888AbgIXNgg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Sep 2020 09:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgIXN3j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Sep 2020 09:29:39 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D0DEC0613CE
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 06:29:39 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id e22so3378586edq.6
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 06:29:38 -0700 (PDT)
+        with ESMTP id S1727749AbgIXNgg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Sep 2020 09:36:36 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E58C0613CE
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 06:36:35 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id r7so4475876ejs.11
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Sep 2020 06:36:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4ack5usJY82qok0CVPeYa04s1D7+5FOkh6o+EcGBMn0=;
-        b=q+QmDSiB7buv9pXsU0KcGmBJ+0uS1iapTnt6Y4txLn3HRLB2SE14tTNaEgswDoYW8u
-         +GRzeOoKS9+1s/KeNJ4g2Fl304MJTQaGv1SCbFa3Rw1If3IiKeguEmfljIroH7g0Y0Qn
-         RXVUPbF3IVxgOCG0QAhuy9Xo7u6xJdhX79yaYrkssjEz660zA851RlJHtwDUlHBBn7+v
-         4tSbFUX65NR8N9J3LPKL0SfUJAtFroJzN1YA5co2w4zwsBDT15w3H2vC5W1skoylZgMT
-         GcX22g7xNjZ36zfnW7gtLZ+CiWVocq6YcIPm24XkqYEVuEG/beCbAMT54xKhp/HPvej6
-         bb5A==
+        bh=ooaRReL2c6jKQ+vGGFRTPGKn0/Fj0W20wCnHuBSeuZo=;
+        b=TaG2yVd4h5AqdMpjmVPoldgfNLdtU4GgM8Vyz8+aPaL7nTNdBAHR74lX98EucvUEh/
+         fCL/N83YHlg5gLabqs8HOqhJFH3A4W2sw9273PqFeL05AwbEv/w4nGB6A+90BTn+CL+M
+         +u/L9M1ZxJSvgM3zQPqtM3oMpW/xVmUkzouEv01+OyCP/cpaVGfXeCsEQSrR6/AobHiB
+         vg1Gxmh2wbAFyfnn9LC/wS44NXXW4UfHNywywrb9OWtQZyJ7NPv5qE4d0CN6jlser+y/
+         Dz86FEsUtmcsCv4/MJVA0GJnt1yn8RosKz7XPQq3N6apWq+5KECE+J+5MEBYHQn0Gh9p
+         MkBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4ack5usJY82qok0CVPeYa04s1D7+5FOkh6o+EcGBMn0=;
-        b=ZzJ1e/VIwLBqAEovHJtPtcR4veTCoPlHpRC/M4jhNnWhVQCW7xxg0TCY2h2VPTTSvs
-         MuqMRHchKcTWmtwhmduDc/GuLTjy9nCGFIQQ3j7RX8npw6+GFCszQtFtF4aL0qEQfJad
-         qG0n2awXNdyee7JQpl+s/F8HMOPiPcd4ieIDtKzMzam7VXIz8i+8Bxus2sbk86k4by94
-         +2w+PuKsP0BjYj8lqsbYHYNMYD90YbaBv5/dQ1kCv9hgWEWfnfhOZtavLDHeft2ARnaQ
-         4L5A5iUToWUfBLkEx2izDcuMn7ONuLbekIBLPTHR1c5Pbhd7F71Wp3/C7OtMGekFC20P
-         ziKw==
-X-Gm-Message-State: AOAM533oXR3JklKu3YDMIHafbCPw7CQZWkol7t+892pNdq4qNPoOB5nm
-        6lW/4gG/YjvOMEB91UxZ8+owsLVGeWOBvvEzxR9F8AfBGpY=
-X-Google-Smtp-Source: ABdhPJwl/j0ltBpCUcdDqAq6XNpida1G1b0/+2v2aXVXKTkMpJpPXN9ff9Q1ksZA43nB6zKjZTHie+7Koa73lbqo75g=
-X-Received: by 2002:a05:6402:b0f:: with SMTP id bm15mr1046180edb.388.1600954177782;
- Thu, 24 Sep 2020 06:29:37 -0700 (PDT)
+        bh=ooaRReL2c6jKQ+vGGFRTPGKn0/Fj0W20wCnHuBSeuZo=;
+        b=iuog34h0AdeUwa2MgekQa313E7/fgKpLG6bBLBrbNf35BHOGda/KXAVmtR0VuS1Zye
+         xBfRI1nbr6PR+Q179QH2SPe/WtyEb8QIB1frhgWF8CAGtosBOpuS8urj3BOfgHeboe+M
+         0uPXxDYa7l6bR6jJggaO9UOybPlc8jVxannYDS8SErHduZdffbmDib5c3vOveI53HGjP
+         zG4qOMLdHfQYhB4lGK+vxa0INvEnu8TzHsVf0ymh+fdFfYYpmy/1/+AcF8zRRObmB/qb
+         SPlJjJhm8pf1QDdCCvsPrYkdSil08aW4Ecc9tUmMVFF1NGNPN8SEskFZMKXbd+/OKzT8
+         JYJA==
+X-Gm-Message-State: AOAM5300PfDHLDuxT76W78ePoXUgEgkqXn7td4vgN954yAo/JwqzvafR
+        8XCtlvTWE4oxNOg50BOJeyt2+9gNeHRoY/S51+1lHQ==
+X-Google-Smtp-Source: ABdhPJx2Xg0bTE6pcTgSHF6cRwl2iJFV9udaOoibso/nwzLkWSGVsMqSvZmy1qnIna9CRrtx0DG73k6UxXjtvV4Ob6Y=
+X-Received: by 2002:a17:906:f11:: with SMTP id z17mr1153495eji.88.1600954594733;
+ Thu, 24 Sep 2020 06:36:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200920203430.25829-1-lists@wildgooses.com>
-In-Reply-To: <20200920203430.25829-1-lists@wildgooses.com>
+References: <20200905133549.24606-1-warthog618@gmail.com> <20200905133549.24606-8-warthog618@gmail.com>
+ <CAHp75Vdm=61wibz70ScvayXk_D77rZw_pG7wPkLXkbkzagRPNA@mail.gmail.com> <20200920111204.GB793608@sol>
+In-Reply-To: <20200920111204.GB793608@sol>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 24 Sep 2020 15:29:27 +0200
-Message-ID: <CAMpxmJV0jwLAn3Xee_3zDiF_DQF-8uy52qxU1WAbr9xiVb0WLQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-amd-fch: Correct logic of GPIO_LINE_DIRECTION
-To:     Ed Wildgoose <lists@wildgooses.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, fe@dev.tdt.de,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+Date:   Thu, 24 Sep 2020 15:36:24 +0200
+Message-ID: <CAMpxmJW1g-Z4XR1BvOvxjweqMYA6dvS9A=ooLKyjdxU1n9-3HA@mail.gmail.com>
+Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+        Kent Gibson <warthog618@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 20, 2020 at 10:34 PM Ed Wildgoose <lists@wildgooses.com> wrote:
+On Sun, Sep 20, 2020 at 1:12 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> The original commit appears to have the logic reversed in
-> amd_fch_gpio_get_direction. Also confirmed by observing the value of
-> "direction" in the sys tree.
+> >
+> > Can we use static_assert() at the top of the file? Presumably after
+> > inclusion block.
+> >
 >
-> Signed-off-by: Ed Wildgoose <lists@wildgooses.com>
-> ---
->  drivers/gpio/gpio-amd-fch.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
-> index 4e44ba4d7..2a21354ed 100644
-> --- a/drivers/gpio/gpio-amd-fch.c
-> +++ b/drivers/gpio/gpio-amd-fch.c
-> @@ -92,7 +92,7 @@ static int amd_fch_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
->         ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_DIRECTION);
->         spin_unlock_irqrestore(&priv->lock, flags);
->
-> -       return ret ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-> +       return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
->  }
->
->  static void amd_fch_gpio_set(struct gpio_chip *gc,
-> --
-> 2.26.2
->
+> Good idea - will do.
 
-Can you add a Fixes tag with the original commit?
+Thanks Andy for bringing this to my attention, the amount of kernel
+interfaces I still don't know after all these years still amazes me.
 
 Bartosz
