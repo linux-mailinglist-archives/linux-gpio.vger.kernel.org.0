@@ -2,80 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 922B42788B5
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 14:58:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79CB42789EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 15:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbgIYMvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 08:51:05 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40893 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729140AbgIYMvF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 08:51:05 -0400
-X-UUID: a07de3bf1ad3412e90aebe65da80587d-20200925
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KDuRXITI29rGTc4me2UihJK6MXBboba2ogqxBZTeDyM=;
-        b=LZbanRdgaV82/7Bm21yNV4GUuvSVDezPoBuqTKvak+GfrPzd5UCTqI3Iy2rOEaW7Bas1omTEmpDW0O+B2fM8iSf4edvA1OU02/QONOhwdyONorrelxdMYbe/cemOtaOVEIZGTJXq/Gbgb1lAK1TUxsiSas6hU+zgLwkEUWgKOkw=;
-X-UUID: a07de3bf1ad3412e90aebe65da80587d-20200925
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 231553404; Fri, 25 Sep 2020 20:51:00 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 25 Sep 2020 20:50:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 25 Sep 2020 20:50:57 +0800
-Message-ID: <1601038258.15065.4.camel@mtkswgap22>
-Subject: Re: [PATCH v2] pinctrl: mediatek: check mtk_is_virt_gpio input
- parameter
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
-        sin_jieyang <sin_jieyang@mediatek.com>
-Date:   Fri, 25 Sep 2020 20:50:58 +0800
-In-Reply-To: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
-References: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1728551AbgIYNts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 09:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgIYNts (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 09:49:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB33AC0613CE
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 06:49:47 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w5so3670656wrp.8
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 06:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kfb+3x7/ayy3+ZXIqoIrlZ8UH+ptKhwWB7+u4YM2giE=;
+        b=BOTMI2WRbfnHw5JUMJDRCevVZMeU2321PhlP8XDYRJrBldJXcYs8syWtwcIIb2e5gi
+         XCCFhQO0Zqgjhk0yFVScmAz42pUQ6aVQ2Q65TqISgS0lm5i4BF6fo09S47ScOdwmiqZz
+         uJmQv4t3rMV2wQR9fLlW33hsBv4klV7kwKU2CbyJZiueJp6ZCvooXzFDSIh0qeKTByx9
+         1X0Nz0SYOvr/NoBB8GCYGHU1CILsOvhpR0Z9iIDLG35eRNLntWHsCJtORvBiN+9iEott
+         HkOOGIFohCKUJPoI8OQeRhvEqnXvfTfKn4eULJg2Rff0QdaNUPZr7RwCd1f+jaN7HWxP
+         b0Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kfb+3x7/ayy3+ZXIqoIrlZ8UH+ptKhwWB7+u4YM2giE=;
+        b=n3JpQ3ysd5RLORH+cFb6iwI1n05/VCIEkqCf+DQmpyhI0e+v3rfuNozXJjl0Kx6hgp
+         nIxcmReZgIwG48mf5pjzZWICiqc3pY9PqTrjvphrLpOPitaqlQUCwLN6ZUq6ExeO+aOs
+         4IwRz1I/0V+x/0RKcd60wMyIMdWWnPq7pcmGxso3Krop5B6v6Nsm70e7zWt6XaZ72Bdk
+         Y5HqdqXntPn3daSLOTACBxw2wcqBiXcJHxLT+g5Dsau1LkbjB6BA15+eis7Sv1XL7eCz
+         C5Bih4nyxG4xS1FU94+tLofLf91Y95pDnqch7Gel1sTykkdSoezywAbDHoeRdcUFmblu
+         cXiA==
+X-Gm-Message-State: AOAM533b1RBRz6GU5nZX/+IfFOFZpL0aCcWA2YusFVrxrciHfpUQP8II
+        dfFp8mtD86OPN3J7FwHnf9mEIQ==
+X-Google-Smtp-Source: ABdhPJxXyftqO5H0DvRjjCdjQ1ysYQOwIKKnUG97/HtML0wH5+uVKUqQFy4inhPVoeTuyeXJfG/Qhw==
+X-Received: by 2002:a5d:668b:: with SMTP id l11mr4506831wru.89.1601041786616;
+        Fri, 25 Sep 2020 06:49:46 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id c14sm2952825wrm.64.2020.09.25.06.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2020 06:49:45 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.9-rc7
+Date:   Fri, 25 Sep 2020 15:49:43 +0200
+Message-Id: <20200925134943.12169-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgU2VhbiAmIExpbnV4ICYgTWF0dGhpYXMsDQoNClBsZWFzZSBraW5kbHkgbGV0IG1lIGtub3cg
-eW91ciBjb21tZW50cyBhYm91dCB0aGlzIGZpeGVzIHBhdGNoLg0KVGhhbmtzDQoNClJlZ2FyZHMs
-DQpIYW5rcw0KDQoNCk9uIFRodSwgMjAyMC0wOC0yMCBhdCAxOToyMiArMDgwMCwgSGFua3MgQ2hl
-biB3cm90ZToNCj4gY2hlY2sgbXRrX2lzX3ZpcnRfZ3BpbyBpbnB1dCBwYXJhbWV0ZXIsDQo+IHZp
-cnR1YWwgZ3BpbyBuZWVkIHRvIHN1cHBvcnQgZWludCBtb2RlLg0KPiANCj4gYWRkIGVycm9yIGhh
-bmRsZXIgZm9yIHRoZSBrbyBjYXNlDQo+IHRvIGZpeCB0aGlzIGJvb3QgZmFpbDoNCj4gcGMgOiBt
-dGtfaXNfdmlydF9ncGlvKzB4MjAvMHgzOCBbcGluY3RybF9tdGtfY29tbW9uX3YyXQ0KPiBsciA6
-IG10a19ncGlvX2dldF9kaXJlY3Rpb24rMHg0NC8weGIwIFtwaW5jdHJsX3BhcmlzXQ0KPiANCj4g
-Rml4ZXM6IGVkZDU0NjQ2NTAwMiAoInBpbmN0cmw6IG1lZGlhdGVrOiBhdm9pZCB2aXJ0dWFsIGdw
-aW8gdHJ5aW5nIHRvIHNldCByZWciKQ0KPiBTaW5nZWQtb2ZmLWJ5OiBKaWUgWWFuZyA8c2luX2pp
-ZXlhbmdAbWVkaWF0ZWsuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBIYW5rcyBDaGVuIDxoYW5rcy5j
-aGVuQG1lZGlhdGVrLmNvbT4NCj4gDQo+IC0tLQ0KPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiAtIHVw
-ZGF0ZSBTaW5nZWQtb2ZmLWJ5DQo+IC0gYWxpZ24gd2l0aCBwaW5jdHJsL21lZGlhdGVrL3BpbmN0
-cmwtbXRrLW10Ki5oIA0KPiANCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
-Y3RybC1tdGstY29tbW9uLXYyLmMgfCA0ICsrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2Vy
-dGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
-Y3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1t
-dGstY29tbW9uLXYyLmMNCj4gaW5kZXggYzUzZTJjMzkxZTMyLi5hNDg1ZDc5ZjUxYTEgMTAwNjQ0
-DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIu
-Yw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYy
-LmMNCj4gQEAgLTI1OSw2ICsyNTksMTAgQEAgYm9vbCBtdGtfaXNfdmlydF9ncGlvKHN0cnVjdCBt
-dGtfcGluY3RybCAqaHcsIHVuc2lnbmVkIGludCBncGlvX24pDQo+ICANCj4gIAlkZXNjID0gKGNv
-bnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvX25dOw0KPiAgDQo+
-ICsJLyogaWYgdGhlIEdQSU8gaXMgbm90IHN1cHBvcnRlZCBmb3IgZWludCBtb2RlICovDQo+ICsJ
-aWYgKGRlc2MtPmVpbnQuZWludF9tID09IE5PX0VJTlRfU1VQUE9SVCkNCj4gKwkJcmV0dXJuIHZp
-cnRfZ3BpbzsNCj4gKw0KPiAgCWlmIChkZXNjLT5mdW5jcyAmJiAhZGVzYy0+ZnVuY3NbZGVzYy0+
-ZWludC5laW50X21dLm5hbWUpDQo+ICAJCXZpcnRfZ3BpbyA9IHRydWU7DQo+ICANCg0K
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+Linus,
+
+Here's another batch of fixes for this release cycle. Please pull.
+
+The following changes since commit 5ad284ab3a01e2d6a89be2a8663ae76f4e617549:
+
+  gpiolib: Fix line event handling in syscall compatible mode (2020-09-17 12:03:37 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.9-rc7
+
+for you to fetch changes up to 3e640b1eec38e4c8eba160f26cba4f592e657f3d:
+
+  gpio: aspeed: fix ast2600 bank properties (2020-09-24 15:37:18 +0200)
+
+----------------------------------------------------------------
+gpio: fixes for v5.9-rc7
+
+- fix uninitialized variable in gpio-pca953x
+- enable all 160 lines and fix interrupt configuration in gpio-aspeed-gpio
+- fix ast2600 bank properties in gpio-aspeed
+
+----------------------------------------------------------------
+Jeremy Kerr (2):
+      gpio/aspeed-sgpio: enable access to all 80 input & output sgpios
+      gpio/aspeed-sgpio: don't enable all interrupts by default
+
+Tao Ren (1):
+      gpio: aspeed: fix ast2600 bank properties
+
+Ye Li (1):
+      gpio: pca953x: Fix uninitialized pending variable
+
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |   5 +-
+ drivers/gpio/gpio-aspeed-sgpio.c                   | 134 +++++++++++++--------
+ drivers/gpio/gpio-aspeed.c                         |   4 +-
+ drivers/gpio/gpio-pca953x.c                        |   2 +-
+ 4 files changed, 93 insertions(+), 52 deletions(-)
