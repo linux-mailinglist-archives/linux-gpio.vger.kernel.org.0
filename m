@@ -2,73 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B0A278C4D
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 17:14:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE0B4278D1E
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 17:48:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgIYPOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 11:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgIYPOH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 11:14:07 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38C6C0613CE
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 08:14:07 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id y14so2825118pgf.12
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 08:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=3ESMbYgkZehDtre/X3JHJVKowL5dmR4t1Rv1A2qb8aU=;
-        b=dPh8xY8MHR0yvAOx0ry1NlksgkVje8DTaZ0XlZoSkT2DTKIKpd2BqZ+NS1LMRP1D86
-         rG99CoQNOXhVA2IKWUYgwZaSPJ0CEjISK0zCb0PaLkMx92YwzuAigLMMn3MkBb9T/atU
-         amCg/v4ULhPEWVbTzJ8lszBvwcE7//bYkN0eEpCYKL5nA8aWHetA9en7HpEcsIUAhhLF
-         Kqh2zH1TSlKWxsyDtGCt9riZfcm0NhzOtf/NvugE8NWHlx0RtuiEO2wMuGLQzSPx2yDn
-         vc+jF1LfC25vvx928wCRwEjFs3VkZv9uPigBthbPWsn95mrqkLI4i11UktyFce8C6Ghv
-         c27w==
+        id S1729374AbgIYPsM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 11:48:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42534 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728333AbgIYPsM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 11:48:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c18so4087588wrm.9;
+        Fri, 25 Sep 2020 08:48:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=3ESMbYgkZehDtre/X3JHJVKowL5dmR4t1Rv1A2qb8aU=;
-        b=ZosIWBYPIVLJ/DB9RIRL6amRXJIz2QjjBRl5QlEiUqerNP6oPpf1sRFw8rAYc/OPrr
-         D7x5t6+NFiqXsbN3ud3uz5sG/XinQS7Z+aG4y5NDNOAR6OreVHuiEZuYv84Y4WwLKHwP
-         maDQg/OqeL7xLCKI/8w/ugnFapexvbwRrLB0EhlIsXM1r//t7dwDf9+XIOqFWnfz5cHT
-         IAskcJHdl99A/bZ2PwPzRpYWhAsRAvTrutpvVVKbTq/u+YafVbp7Oh95eJZ9VAzKw7oF
-         8KJ6zNaN9E/+BK6nAijcZi1Alv+NfHPo40MKMuFJZuBbGGXOit6UfbfqYdUfktsVpvLn
-         NQgw==
-X-Gm-Message-State: AOAM530B06eQW06rTu6bYa0ZD9bCTdbpzlIr6tVOCyqu+v4dwgXl74M7
-        DILK9TuIOW/0xO3lGY5YNhfqcmH1ihLuSJFeC/s=
-X-Google-Smtp-Source: ABdhPJze5v7B1gBfvzanB6Xku1xNH71WwHjBdxmprc74cnBEqPeuhId5m9xD7u+KwISqwh3/yONfeTuJ6sJPLRLHeLE=
-X-Received: by 2002:a62:e20a:0:b029:13c:1611:6535 with SMTP id
- a10-20020a62e20a0000b029013c16116535mr4447325pfi.7.1601046847409; Fri, 25 Sep
- 2020 08:14:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7Qh5+ZRjYoXTfTyMdsphNx4+wbs2iln0Dg7bJktrLac=;
+        b=TVeaCTXCpTsuVU0OtUUElmJo/fpDul1xq0BoKSat8xsthvyVRg3tvKSo9BDvXekHGs
+         nVMqvWqW2vDFwcKum10rq+V2w4RGf0Cbu4GkgPDlQ70SCIrY75oW3A8tvEVZ72/uj+BR
+         4EbsAekEwNtwoAc1kWoEQOvx8Y6MK0luteQWvJdUqrb31OnLBXKf4kSf6ewiSu4+Ht9/
+         WRh3LafUlWtpbwAaotcanO4mWtDq5aA5KJbY/3zBTbP98+v8CpwfiTqnpkwdUuH9XqNZ
+         IYgvZ5oXua9CSn4kvt2ZeDcdMZ9AORrztspYXytjv/MZiKPE6Q6dhPOQRLB/HCw3fCTb
+         QYOA==
+X-Gm-Message-State: AOAM530jZ7cH+UMdZuiOzssXlOROiVnnPDzz/OVL+TIcaLz6izOfYlGs
+        F+7Qk5sFmybwRzI9dgKATms=
+X-Google-Smtp-Source: ABdhPJw0NxnpCAb54EdTsCUv1oA2JhAAx01jYuFmqouNOz5V/9GWfo7kcmF2Z8f+IMYVxGIHsAi2tA==
+X-Received: by 2002:adf:f082:: with SMTP id n2mr5158088wro.35.1601048889557;
+        Fri, 25 Sep 2020 08:48:09 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.132])
+        by smtp.googlemail.com with ESMTPSA id k8sm3477035wma.16.2020.09.25.08.48.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 25 Sep 2020 08:48:08 -0700 (PDT)
+Date:   Fri, 25 Sep 2020 17:48:04 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 01/15] dt-bindings: gpio: convert bindings for NXP
+ PCA953x family to dtschema
+Message-ID: <20200925154804.GB16392@kozik-lap>
+References: <20200916155715.21009-1-krzk@kernel.org>
+ <20200916155715.21009-2-krzk@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:95b1:0:0:0:0 with HTTP; Fri, 25 Sep 2020 08:14:06
- -0700 (PDT)
-Reply-To: julianmarshalls@yahoo.com
-From:   Barr Julian Marshall <baranthony50@gmail.com>
-Date:   Fri, 25 Sep 2020 08:14:06 -0700
-Message-ID: <CABfKVN8TRRKi27nh1Frsrkxm=Xs2YAOHgBPRhLBb510UMYGX1w@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200916155715.21009-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rozhodl jsem se v=C3=A1s kontaktovat z d=C5=AFvodu nal=C3=A9havosti spojen=
-=C3=A9 s touto
-ot=C3=A1zkou, jsem Julian Marshall, advok=C3=A1t. Osobn=C4=9B jsem zmocn=C4=
-=9Bncem Dr.
-Edwin, kter=C3=BD byl =C5=A1iroce zn=C3=A1m=C3=BDm nez=C3=A1visl=C3=BDm dod=
-avatelem zde v Lome Togo,
-kter=C3=BD zem=C5=99el se svou =C5=BEenou a jedinou dcerou p=C5=99i autoneh=
-od=C4=9B.
-Kontaktoval jsem v=C3=A1s, abych v=C3=A1m pomohl s repatriac=C3=AD majetku =
-fondu Dva
-miliony p=C4=9Bt set tis=C3=ADc dolar=C5=AF na v=C3=A1=C5=A1 =C3=BA=C4=8Det=
-. Pro v=C3=ADce informac=C3=AD ohledn=C4=9B
-t=C3=A9to z=C3=A1le=C5=BEitosti m=C4=9B pros=C3=ADm kontaktujte.
+On Wed, Sep 16, 2020 at 05:57:01PM +0200, Krzysztof Kozlowski wrote:
+> Convert the NXP PCA953x family of GPIO expanders bindings to device tree
+> schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Add Rob's review tag
+> 
+> Changes since v1:
+> 1. Use additionalProperties.
+> 2. Add wakeup-source.
+> 3. Add hogs.
+> 4. Extend example with hogs.
+> ---
+>  .../devicetree/bindings/gpio/gpio-pca953x.txt |  90 ----------
+>  .../bindings/gpio/gpio-pca95xx.yaml           | 166 ++++++++++++++++++
+>  .../devicetree/bindings/trivial-devices.yaml  |   4 -
+>  3 files changed, 166 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+
+Hi Linus,
+
+The first two patches (bindings) have Rob's ack/review. Could you pick
+them via GPIO tree?
+
+Best regards,
+Krzysztof
+
