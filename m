@@ -2,99 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A2E278696
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 14:02:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DBE2786AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 14:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgIYMCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 08:02:41 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58448 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727248AbgIYMCk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 08:02:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08PC1sEh091014;
-        Fri, 25 Sep 2020 07:01:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601035314;
-        bh=hRluHT8MEUBdje+dfLWcezPxtUriv4zuwVUpPSAXAbM=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=WVZUjNsSj7DdGsHdtFkiR6WobLdIx8XVugawvpE65QTk9vwsAt/Qz4j3zskHR1QEc
-         NCGmjRc/t6AZZD8KX4ahsaG96Llcrq7w57Kx9tMx8Cl1IhCBZZJVi7cZUB394uAFl4
-         NQDbIRGGPr0tGdpwU7iXQ456lMatKte55cMYBvlo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08PC1sZM055785;
-        Fri, 25 Sep 2020 07:01:54 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 25
- Sep 2020 07:01:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 25 Sep 2020 07:01:54 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08PC1sMi029536;
-        Fri, 25 Sep 2020 07:01:54 -0500
-Date:   Fri, 25 Sep 2020 07:01:54 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v3 06/15] arm64: dts: ti: align GPIO hog names with
- dtschema
-Message-ID: <20200925120154.utjxncf4qs2usuo4@akan>
-References: <20200916155715.21009-1-krzk@kernel.org>
- <20200916155715.21009-7-krzk@kernel.org>
+        id S1728336AbgIYMIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 08:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgIYMIO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 08:08:14 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC13CC0613CE
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 05:08:13 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id t16so2229443edw.7
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 05:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=5lD39euqnLLWALUOK+cga3/qrcq4Set5HCzS7aBLz9o=;
+        b=C0PzK8jMjcMZpXUAejR+HRH3Zdbeu9lG8ckmMukJXZxSfjErJ2UX4BXKjkuoGRt87w
+         LuIdTmfJBd1zs3EUc2Frz+WX17xRZ0Mv0W6CimHbRMRLLW0OQKZ/vDcF4NDJtDYI3vhj
+         trSnf90YU63WyAKRwTmQx750Ak0BkS+k4cN17LWXTV2II8r4kY7sYHBO3LTmVQ26FIIr
+         b3VOXXV35k1khxUNZeA5FME4nNBiWBEeDfhBO+fcmxHD1nNrHRljrCjBZ7/38c3lQWAK
+         NHTPtrVgcByFSHyZfqhgJSQgmrh/3t1DJ8IDy1CxU7wyUBZ3WxBQYrSaQDpFLBhGFvHd
+         OvVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=5lD39euqnLLWALUOK+cga3/qrcq4Set5HCzS7aBLz9o=;
+        b=Yl+e7whiWMS1j55Gyr0BvMwpwsEMpMi3QsBP9r2gm+Kd2Pi1TbS7xNrmPt4TIm1AWT
+         CwyyJpLIXu91gtsYLqmJ7bYKjlc8ChQKO6y3IBJQEPz6kLQwZhIUynUWu6AuSuRJEfnF
+         OS8L6NjoFvVttTUxv6rVeUpnjYiuQpR/eL7aZ3OZfNnjEe3vd0P1SWptGUWD/+hK1Lk4
+         /BcIeNOJoxQuGoEywOveczAZNrAiMWz3j/jKhvu+tAQusLr9fBRp9pP/1U9XghVWiqo7
+         loyKoZh55QlELCKQadIyE9o8O8Gv1CIN57pZdn382gmpFOXYA2Q0vN9unpnIq5R8m6/S
+         oRwg==
+X-Gm-Message-State: AOAM531o7RM1ka6FEeoHK/oGKqtS1DA6fjJlgU5KCw8XlDmFv4aGXROF
+        gXLQ4898HO2Xhux8jm5+0ljZ2eYiTq/DjtxVhTg=
+X-Google-Smtp-Source: ABdhPJx4YDWNIyl6cI5l/hEEFtCDaTGj9u8vi585aDjdMrJbClmUTZLpEAgEWKhpVhx0Gor3W0C9pd4uBs+vS0lpcgw=
+X-Received: by 2002:a50:fb99:: with SMTP id e25mr896270edq.281.1601035692637;
+ Fri, 25 Sep 2020 05:08:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200916155715.21009-7-krzk@kernel.org>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:a17:906:bc4b:0:0:0:0 with HTTP; Fri, 25 Sep 2020 05:08:12
+ -0700 (PDT)
+Reply-To: nascointt@hotmail.com
+From:   Nayef Abu Sakran <larryamaechi558@gmail.com>
+Date:   Fri, 25 Sep 2020 13:08:12 +0100
+Message-ID: <CALHLwjVoacgugNcNC8kjobnhrei2STLnmi2r8YCVqt8n_TKUtA@mail.gmail.com>
+Subject: gd day
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17:57-20200916, Krzysztof Kozlowski wrote:
-> The convention for node names is to use hyphens, not underscores.
-> dtschema for pca95xx expects GPIO hogs to end with 'hog' prefix.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-
-Applied to ti-k3-dts-next with minor update to $subject (added
-'k3-j721e-common-proc-board:')
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Did you received the mail i send to you?
