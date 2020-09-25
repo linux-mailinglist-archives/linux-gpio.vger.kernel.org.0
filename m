@@ -2,59 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78FDD27845D
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 11:50:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FF65278494
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 11:58:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgIYJuI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 05:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
+        id S1727402AbgIYJ6S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 05:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgIYJuI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 05:50:08 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58835C0613CE;
-        Fri, 25 Sep 2020 02:50:08 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d6so2641210pfn.9;
-        Fri, 25 Sep 2020 02:50:08 -0700 (PDT)
+        with ESMTP id S1727346AbgIYJ6S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 05:58:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AB8C0613CE;
+        Fri, 25 Sep 2020 02:58:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g29so2136125pgl.2;
+        Fri, 25 Sep 2020 02:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LZZgw+N+0uZC3jHwut6sPtyPqViOL0NE3WEuYPgaX/8=;
-        b=pawLkd/lBuMBWO3j1Yl5tYxIkULtDrTFQkC07XwKu9z8vQPVF8b8XteMJjhkSeuFc6
-         PM4YCufiyZgrztbY4IUWt/3wpqwPNlZicqsz8cZh7VdFd75dHccBombrygrmC7PbLCyH
-         VKsh892nzf0JTfwX4yC+IT4GOn2v9QrIM9hajuNpvKRjzAfv2wUEfXlWrD/J7SYGcWf2
-         a3a/vF4WUNmJxCTsraBZHVjO+U+A71aL8FyCzbjz5Yd1diZ8dRshpgPQ1PtTG0gfmm6f
-         3+B69A99/Kh2wV+n4k6XfIVkkhpefTUgGWXAorX9LOAuM53QA4DvzWkbSI3HjNI5eKvh
-         jQJQ==
+        bh=/CnWh3FwsAoEkubFx1bglt/kjlK0HOFm0JwcblP3I1w=;
+        b=TAsnTn7XljNpTIVdJ2+Q1bXhS1O7GMp9O2VeDCur2dxPCfgMRr0DX/qYMQgU5r8ZSB
+         LjNwcOAHmXERcsjm41vlYVxyBiKnsZxJKLovSq7eDcxvXJ4//l4178dlRqdN7u+15RqA
+         wvf6QBR6ofqbo2aELGFXJ8r/5kOi5KyspIWH7wqT9d8KgHnMHNhFMTFC9YxvbOo/dqme
+         7OibwMyO0mS7rMGjkg20Mo0MxwybUwRuIbw5Flnw5b3zY95rKEVGL+mES2L9Yj7dpmC3
+         Vt5vZHxMyPdA7BVJUBgvAW27uqKyfno4YTAH0IG5Um8XTaYXhwO0WCfir7TSUsbHrJJK
+         iXvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LZZgw+N+0uZC3jHwut6sPtyPqViOL0NE3WEuYPgaX/8=;
-        b=LxkSEEwQXMyyTesIkM3nBiRXEeD02cWCMwHLYbGeXf0B1qpFzfNpzbawneEkvmSqQt
-         53+avwSbF6DfWtxud2Fby+4EsQNN6jnnhs2iCXvVwbhvZGMgTGgEqhyvRsY3Fc7PLW3o
-         OZSaB87HMJ1e9W5CEXJJGaDdWbD3ZlZlRoq8HuPO5WJHuD9xzuKqVFNYnTLNYcG6SoVk
-         rqEkLdJ760UThtVCmgnVmaSLLi9m8wLU6mTu9yoDHa1TbsjxH/N6cWdqmVpEe4Dmukvu
-         LF1mocloHT7iebGtwXaSsWfctT8dWw2IHqEXIQWPCxG4P4/i/WVZ9/+y0gPI4RDB0/i8
-         9PCA==
-X-Gm-Message-State: AOAM531G+UWfVoHa0zyhNou8WFdAjtXmyFCSPSa06mlokbDDWW9n4BRJ
-        8pBYb59zTS2TB6wG5ME7DMwJwG8YtgCP2Oi2Wdw=
-X-Google-Smtp-Source: ABdhPJya6yifLcctrFVoCT1VRlSUaWfGGb4t9hw7J/ZoL/zdhKGAgFnHt+W/eNXttgV38F0QwHTCVs/+tAwJ2tIejiI=
-X-Received: by 2002:a17:902:d708:b029:d2:635f:6692 with SMTP id
- w8-20020a170902d708b02900d2635f6692mr2900886ply.17.1601027407841; Fri, 25 Sep
- 2020 02:50:07 -0700 (PDT)
+        bh=/CnWh3FwsAoEkubFx1bglt/kjlK0HOFm0JwcblP3I1w=;
+        b=CpFSCTpHC7QZJ2oHY+61a1PrL6uu2O7zM/86eJqUm+LtCL0Gurmp+6XxPh29XZrbxt
+         pfElemMoJTE42rZ3jqKpIiBsWFlOmMPm0CuOnperYYF8OfmLgCQJI/rEYsyR7nUz7UPi
+         p3fQt6gCMhL4F+D9+TEGsUW/nccTfyCgsiOpaPZRgBEeUe6+1ke9pdxKl5kVQ868PTcX
+         N9MjapRX+QLdxN4BpsaBr/sQFYaZoGWnmWwd5/vXOQMM6z1xamuEseJs5w/JTQLcc+3g
+         RrFpMIOfojLu2dabxc+SZCXU6F2emrZM2KSJrcPb4rVvP1K85+Eu9EluL7RKI2MleeGx
+         Epwg==
+X-Gm-Message-State: AOAM532/edNJKm97HF79M39cVvZjJcl3kvXt4bzt4zcjYc+/T3ZyuJ56
+        FLempFBVCuspQEZTI6DiqM4Qr7mH4t/7UKcUksMhBWZ2b0illg==
+X-Google-Smtp-Source: ABdhPJyUzRY+ytLFAXWcikEJVYgWjBj0Q5FXstS4ogWOK31HjUjny8PIQBbAbga9ElJEoOibTY9u05QYsEgCPYhaSLk=
+X-Received: by 2002:aa7:81d5:0:b029:142:2501:39fa with SMTP id
+ c21-20020aa781d50000b0290142250139famr3401125pfn.73.1601027897891; Fri, 25
+ Sep 2020 02:58:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-11-warthog618@gmail.com>
- <CAHp75VdaPR+iihenPYos1mAGLbDhJPvCfDTtURpk_MBa=3wYEg@mail.gmail.com>
- <CAHp75Vcktxp1C6NTOrW-WEnfueOu0UvtquFLpsL5+vv6Fdaajw@mail.gmail.com>
- <20200924032414.GC11575@sol> <CAHp75Vd1=CpsMecw=dua66i-P992e71uQcOzWR7tvd6ZGyKWoA@mail.gmail.com>
- <20200924092622.GB20188@sol>
-In-Reply-To: <20200924092622.GB20188@sol>
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-12-warthog618@gmail.com>
+ <CAHp75Vd6tb09n+okJmoPse992DeoPkJQHReNBo20FQNz1V2c5w@mail.gmail.com>
+ <20200924073248.GA17562@sol> <20200924124604.GA227073@sol>
+In-Reply-To: <20200924124604.GA227073@sol>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 25 Sep 2020 12:49:49 +0300
-Message-ID: <CAHp75Vd8PjODZkAjDrpqdeGT8-j7zbnBB_HALAWvQ2xoH24nzQ@mail.gmail.com>
-Subject: Re: [PATCH v9 10/20] gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
+Date:   Fri, 25 Sep 2020 12:57:59 +0300
+Message-ID: <CAHp75VegFMMmVx42gWk3cWa4jc3zuBzD_01Kqes1gq-68y3XgQ@mail.gmail.com>
+Subject: Re: [PATCH v9 11/20] gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -66,82 +64,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 12:26 PM Kent Gibson <warthog618@gmail.com> wrote:
-> On Thu, Sep 24, 2020 at 11:26:49AM +0300, Andy Shevchenko wrote:
-> > On Thu, Sep 24, 2020 at 6:24 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > On Wed, Sep 23, 2020 at 07:15:46PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Sep 23, 2020 at 7:14 PM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Tue, Sep 22, 2020 at 5:35 AM Kent Gibson <warthog618@gmail.com> wrote:
-
-...
-
-> > > > > > +               polarity_change =
-> > > > > > +                       (test_bit(FLAG_ACTIVE_LOW, &desc->flags) !=
-> > > > > > +                        ((flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW) != 0));
-> > > > >
-> > > > > Comparison
+On Thu, Sep 24, 2020 at 3:46 PM Kent Gibson <warthog618@gmail.com> wrote:
+> On Thu, Sep 24, 2020 at 03:32:48PM +0800, Kent Gibson wrote:
+> > On Wed, Sep 23, 2020 at 07:18:08PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Sep 22, 2020 at 5:36 AM Kent Gibson <warthog618@gmail.com> wrote:
 > > > >
-> > > > Comparison between int / long (not all archs are agreed on this) and
-> > > > boolean is not the best we can do.
-> > > >
+> > > > Add support for the GPIO_V2_LINE_SET_VALUES_IOCTL.
 > > >
-> > > There is no bool to int comparision here.
+> > > > +static long linereq_set_values_unlocked(struct linereq *lr,
+> > > > +                                       struct gpio_v2_line_values *lv)
+> > > > +{
+> > > > +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
+> > > > +       struct gpio_desc **descs;
+> > > > +       unsigned int i, didx, num_set;
+> > > > +       int ret;
+> > > > +
+> > > > +       bitmap_zero(vals, GPIO_V2_LINES_MAX);
+> > > > +       for (num_set = 0, i = 0; i < lr->num_lines; i++) {
+> > > > +               if (lv->mask & BIT_ULL(i)) {
+> > >
+> > > Similar idea
+> > >
+> > > DECLARE_BITMAP(mask, 64) = BITMAP_FROM_U64(lv->mask);
+> > >
+> > > num_set = bitmap_weight();
+> > >
 > >
-> > test_bit() returns int or long depending on arch... Then you compare
-> > it to bool (which is a product of != 0).
-
-> Really - I thought it returned bool.
-> It is a test - why would it return int or long?
-
-I assume due to arch relation. Some archs may convert test_bit() to a
-single assembly instruction that returns a register which definitely
-fits long or int depending on case.
-
-> Surely it is guaranteed to return 0 or 1?
-
-Not sure about this, it's all in arch/* and needs to be investigated.
-Would be nice to have it cleaned up if there is any inconsistency (and
-document if not yet). But It's out of scope of this series I believe.
-
-> > > There are two comparisons - the inner int vs int => bool and the
-> > > outer bool vs bool.  The "!= 0" is effectively an implicit cast to
-> > > bool, as is your new_polarity initialisation below.
-> > >
-> > > > What about
-> > > >
-> > > >   bool old_polarity = test_bit(FLAG_ACTIVE_LOW, &desc->flags);
-> > > >   bool new_polarity = flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW;
-> > > >
-> > > >   old_polarity ^ new_polarity
-> > >
-> > > So using bitwise operators on bools is ok??
+> > I had played with this option, but bitmap_weight() counts all
+> > the bits set in the mask - which considers bits >= lr->num_lines.
+> > So you would need to mask lv->mask before converting it to a bitmap.
+> > (I'm ok with ignoring those bits in case userspace wants to be lazy and
+> > use an all 1s mask.)
 > >
-> > XOR is special. There were never bitwise/boolean XORs.
+> > But since we're looping over the bitmap anyway we may as well just
+> > count as we go.
+> >
+> > > for_each_set_bit(i, mask, lr->num_lines)
+> > >
+> >
+> > Yeah, that should work.  I vaguely recall trying this and finding it
+> > generated larger object code, but I'll give it another try and if it
+> > works out then include it in v10.
 > >
 >
-> We must live in different universes, cos there has been a bitwise XOR in
-> mine since K&R.  The logical XOR is '!='.
-
-Oops, you are right, It was never boolean XOR because it's the same as
-a simple comparison.
-
-...
-
-> > > > and move this under INPUT conditional?
-> > >
-> > > It has to be before the gpio_v2_line_config_flags_to_desc_flags() call,
-> > > as that modifies the desc flags, including the new polarity, so
-> > > polarity_change would then always be false :-).
-> >
-> > I really don't see in the code how polarity_change value is used in
-> > FLAG_OUTPUT branch below.
+> Tried it again and, while it works, it does increase the size of
+> gpiolib-cdev.o as follows:
 >
-> It isn't.  But desc->flags is modified before both - and so the
-> polarity_change initialization has to go before both SINCE IT TESTS
-> THE FLAGS.
+>           u64   ->   bitmap
+> x86_64   28360       28616
+> i386     22056       22100
+> aarch64  37392       37600
+> mips32   28008       28016
 
-I see now. Sorry for being too blind.
+Yes, that's pity... See below.
+
+> So for 64-bit platforms changing to bitmap generates larger code,
+> probably as we are forcing them to use 32-bit array semantics where
+> before they could use the native u64.  For 32-bit there is a much
+> smaller difference as they were already using 32-bit array semantics
+> to realise the u64.
+>
+> Those are for some of my test builds, so obviously YMMV.
+>
+> It is also only for changing linereq_get_values(), which has three
+> instances of the loop.  linereq_set_values_unlocked() has another two,
+> so you could expect another increase of ~2/3 of that seen here if we
+> change that as well.
+>
+> The sizeable increase in x86_64 was what made me revert this last time,
+> and I'm still satisfied with that choice.  Are you still eager to switch
+> to for_each_set_bit()?
+
+I already asked once about short cut for for_each_set_bit in case of
+constant nbits parameter when it's <= BITS_PER_LONG, but here it seems
+we have variadic amount of lines, dunno if compiler can prove that
+it's smaller than long. In any case my point is that code readability
+has a preference vs. memory footprint (except hot paths) and if we are
+going to fix this it should be done in general. That said, if
+maintainers are okay with that I would prefer bitmap API over
+open-coded pieces.
+
+Also note, that it will be easier to extend in the future if needed
+(if we want to have more than BITS_PER_LONG [64] lines to handle).
 
 -- 
 With Best Regards,
