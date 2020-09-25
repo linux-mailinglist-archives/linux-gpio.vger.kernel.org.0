@@ -2,57 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3498E2784B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 12:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 638522784CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 12:12:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgIYKGV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 06:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41428 "EHLO
+        id S1727997AbgIYKMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 06:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgIYKGV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 06:06:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B27C0613CE;
-        Fri, 25 Sep 2020 03:06:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id y14so2117135pgf.12;
-        Fri, 25 Sep 2020 03:06:21 -0700 (PDT)
+        with ESMTP id S1727819AbgIYKMc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 06:12:32 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1D0C0613CE;
+        Fri, 25 Sep 2020 03:12:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id k13so2731609pfg.1;
+        Fri, 25 Sep 2020 03:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lj9oeRjf3zqHOI1lrAhS50c7ExJjW+ZIVM2Q3CpvRlc=;
-        b=iL13dvMMELfX/+oazQ9ItLSLB5TFGSR4kWK+CASxfk9BH9kj4f3GA1+7/lLGdW1zQH
-         6Zv/AjUGCHZALk6DgQ8cr4p3q2bOed1x0/P6kyR0sQdX7VROkDeiyT0FUosGRJ0RkRrf
-         W906uBqoX2VeY3UKo+MsSSEnXAGHlL3o1xKJsI+kJre4wqa/mW6YmuFUIW+bUIrrEPyo
-         6Tqv32Sx5oyqaIFGxutkBEgtSKHnLPc5p7zAzKMonWNdgpEdtQ4HzXRXH4DswvvpRbme
-         XLQbAmWis0yWJbOVl05C1dmajpqvQ10oCx+GV09luFKin+FSEdA5/TBgfTJSjMIYrxYF
-         kOhA==
+        bh=ul4FWsiiwY8Jo4Eq8juNVSqvOl3DuvcCHfuOSOchXXY=;
+        b=GhIDGWa+iwIgA3l9KGa+mgFl1Oz+IHjEWTANtQMqpmt96UP66EV51q5qwBglajoGwZ
+         7oxFiyMf4SA49jfxMSS3vJtk+yHcN7FT0Fv+UIpMwgB4+9bG4k6FW1TlmWY8eLuQ/In8
+         TxT13hjIUbV67qSVgKW1emZIzbjnSfpTYp30OK/5IXG+k1vM8Ph5Udaq4LJu3s3ZenOC
+         ELb1kfjHDHi+kpxTpB2vikTJ2GUqgGW13+rbxThsFWdf9Qe/OWFGrSgmj/+QfwmICxS4
+         4vnZiFIr+3ZcXowpXoD/R89zn/zzsOT4wiVanVR7I5qOoaxMXqpjoeAaRihrxGroiw7h
+         voww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lj9oeRjf3zqHOI1lrAhS50c7ExJjW+ZIVM2Q3CpvRlc=;
-        b=QNAgT1vZIChqbiQwjKkosDC+4URhSbcqMuD/rCO5ZsyY5QGkbywU+30vgA8mZjjNXD
-         S9qP7bkefTQRi2XELRmhfikUspFVycHvHFbNzRbmqkZZj7Cg00XtwwYfVjh/uiZn9sUK
-         l52b1wRapEj90priimiGK9HThWnJLtX9Z+pzWd1+ZWhsWabnLgrHKR2TFfuPz0GaCrVh
-         gjW7GBEZtCMZfHVBL20hTp+wtDasbV8n9PWTaJAh4nu5nIFWnKe+UlNf+XdXtPlvTpsv
-         VjAgNmNuueV5TYlSO6tUEw9rCdBpI9BTfG0ltO8O9S6ErSGeLW2Uuu9OhLR4WlB6KJA+
-         +GEA==
-X-Gm-Message-State: AOAM531xivCyN/mMJethhOdp/0Z+PeGLiRZFx4nChpJ3eWRaZzTXx+Jt
-        pXcv/c+dPG3v/hC6lMQRZn3LLYsuXVYRCIxUUIs=
-X-Google-Smtp-Source: ABdhPJz3WqficnkMwXiecJ6ACoMQlFnCKY/THVTm9XTVmNFABc4oi3g7POUSuWzHOlgAg/4P4NTnJ0OGBq0pHwnb4uo=
-X-Received: by 2002:aa7:81d5:0:b029:142:2501:39fa with SMTP id
- c21-20020aa781d50000b0290142250139famr3435059pfn.73.1601028380525; Fri, 25
- Sep 2020 03:06:20 -0700 (PDT)
+        bh=ul4FWsiiwY8Jo4Eq8juNVSqvOl3DuvcCHfuOSOchXXY=;
+        b=A368QPsSUAJu8QaYb/PrvdbWbKXDDEB4ZUuSe+0nOkfozGnPJ+P+Mtox0CaLrTkj3/
+         nYRlGEI2XFfBeezJeBLPTbGjc4HdHxZCwiwwGTlBR6+rttvfcO4Ar5Ha6CxHNB9nlUt8
+         Hwv1g6kimfxmxtmfM/ym5YxIG6blWfZZ5fJZKlkWPXd9uYKt71yHoYbDPFiAEONbE/eH
+         3jqkkbPNcszmn+FzDz1KnkMsXKTvYGu+Dsln9ubYrVtwm59b09tpm7IWpfJrUnFgOjzB
+         oZUaEJVZDCjQvK3hSVVjbNFnyTwnMtxCrvCdKcr2Tt27s5/yReyt3XvQ5dJb9RjT60Z1
+         fDwg==
+X-Gm-Message-State: AOAM530W+fgiFBfyYd8lv7UVQfSUihdzUrmJoFkqIvdGpc5MkW6sHuU5
+        GrbgVBMYLUM0SYWD2zFsgv+o5QcLGKypM0gC0UY=
+X-Google-Smtp-Source: ABdhPJzQ5GrWtzE+JZxiH04u2PFEx58tfLNqY1MiAlIXjH4oX/s+YC7jERywZWOXfAi14X4Gjzb9xJi4/gX6DxSi73E=
+X-Received: by 2002:a17:902:d708:b029:d2:635f:6692 with SMTP id
+ w8-20020a170902d708b02900d2635f6692mr2992572ply.17.1601028752161; Fri, 25 Sep
+ 2020 03:12:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-8-warthog618@gmail.com>
- <CAHp75VdQUbDnjQEr5X5q6WdU6rD=uBNznNn5=Vy=pvdwVj_hEA@mail.gmail.com> <20200924080921.GE17562@sol>
-In-Reply-To: <20200924080921.GE17562@sol>
+References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-9-warthog618@gmail.com>
+ <CAHp75Vc05P4-X_ZC6k-EWdDCAXOgPgAJhm4RxF3izvk=vW+X+g@mail.gmail.com>
+ <20200924023914.GA11575@sol> <CAHp75VfoOCJDmpDJ6wTEKTDUO1zFRZ6MRSN7dy3cAdepv0s2rQ@mail.gmail.com>
+ <20200924094813.GC20188@sol>
+In-Reply-To: <20200924094813.GC20188@sol>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 25 Sep 2020 13:06:02 +0300
-Message-ID: <CAHp75VehvUTt19sBxgPTZszUmxDGZwqGAV7bgW5jVM8Mf63UJA@mail.gmail.com>
-Subject: Re: [PATCH v9 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
+Date:   Fri, 25 Sep 2020 13:12:14 +0300
+Message-ID: <CAHp75VcmJyNdK8hOKneT3T=t8QyRcU+X+UwfmKCL5SJsniev9g@mail.gmail.com>
+Subject: Re: [PATCH v9 08/20] gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL
+ and GPIO_V2_GET_LINEINFO_WATCH_IOCTL
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -64,72 +66,125 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 11:09 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Wed, Sep 23, 2020 at 02:11:54PM +0300, Andy Shevchenko wrote:
-> > On Tue, Sep 22, 2020 at 5:35 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu, Sep 24, 2020 at 12:48 PM Kent Gibson <warthog618@gmail.com> wrote:
+> On Thu, Sep 24, 2020 at 11:39:03AM +0300, Andy Shevchenko wrote:
+> > On Thu, Sep 24, 2020 at 5:39 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > On Wed, Sep 23, 2020 at 06:41:45PM +0300, Andy Shevchenko wrote:
+> > > > On Tue, Sep 22, 2020 at 5:35 AM Kent Gibson <warthog618@gmail.com> wrote:
 
 ...
 
-> > > +       assign_bit(FLAG_ACTIVE_LOW, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW);
+> > > > > +static int lineinfo_ensure_abi_version(struct gpio_chardev_data *cdata,
+> > > > > +                                      unsigned int version)
+> > > > > +{
+> > > >
+> > > > > +       int abiv = atomic_read(&cdata->watch_abi_version);
+> > > > > +
+> > > > > +       if (abiv == 0) {
+> > > >
+> > > > > +               atomic_cmpxchg(&cdata->watch_abi_version, 0, version);
+> > > > > +               abiv = atomic_read(&cdata->watch_abi_version);
+> > > >
+> > > > atomic_cmpxchng() returns a value.
+> > >
+> > > Yep, it returns the old value - which we don't care about - see below.
 > >
-> > What I meant is to attach also this to the other assign_bit():s below.
-> > And just in case a question: why not __asign_bit() do we really need atomicity?
+> > Then what's the point to read back?..
 > >
->
-> These are initialized as per their order in the flags so it is easier to
-> tell if any are missing.
->
-> The atomicity is not required here, but it is elsewhere so you are
-> oblidged to use it for all accesses, no?
-
-I'm not sure. I think if you are using non-atomic in one place, it
-means that all automatically drop the atomicity guarantee. So, it's
-all or none for atomicity, for non-atomicity it's rather none or at
-least one. That said, code should be carefully checked before doing
-such.
-
-> > > +       if (flags & GPIO_V2_LINE_FLAG_OUTPUT)
-> > > +               set_bit(FLAG_IS_OUT, flagsp);
-> > > +       else if (flags & GPIO_V2_LINE_FLAG_INPUT)
-> > > +               clear_bit(FLAG_IS_OUT, flagsp);
-> > > +
-> > > +       assign_bit(FLAG_OPEN_DRAIN, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
-> > > +       assign_bit(FLAG_OPEN_SOURCE, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE);
-> > > +       assign_bit(FLAG_PULL_UP, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP);
-> > > +       assign_bit(FLAG_PULL_DOWN, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN);
-> > > +       assign_bit(FLAG_BIAS_DISABLE, flagsp,
-> > > +                  flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED);
-
-...
-
-> > > +       /* Make sure this is terminated */
-> > > +       ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
-> > > +       if (strlen(ulr.consumer)) {
-> > > +               lr->label = kstrdup(ulr.consumer, GFP_KERNEL);
-> > > +               if (!lr->label) {
-> > > +                       ret = -ENOMEM;
-> > > +                       goto out_free_linereq;
-> > > +               }
-> > > +       }
+> > > > Also there are no barriers here...
+> > > >
+> > >
+> > > No barriers required - the atomic_cmpxchg() is sufficient.
+> > >
+> > > > > +       }
+> > > > > +       if (abiv != version)
+> > > > > +               return -EPERM;
+> > > >
+> > > > I'm not sure I understand why this is atomic.
+> > > >
+> > >
+> > > The algorithm requires some level of protection and atomic is
+> > > sufficient.
+> > >
+> > > > Also this seems to be racy if cdata changed in background.
+> > > >
+> > >
+> > > Can you provide a case?
 > >
-> > Still don't get why we can\t use kstrndup() here...
+> > CPU0:                CPU1:
+> >  xchg()               ...
+> >  ...                      xchg()
+> >  ...                      read() -> OK
+> > read() ->NOK
 > >
 >
-> I know ;-).
+> Lets say CPU0 is setting 1 and CPU1 setting 2, and assuming the xchg()
+> completes...
+> Your case is not possible - CPU1 would see the value 1 set by CPU0 in the
+> read() and so NOK.  Its xchg() would fail as it compares against 0
+> and that also sees the 1 and so fails.
 >
-> Another one directly from v1, and the behaviour there is to leave
-> lr->label nulled if consumer is empty.
-> It just avoids a pointless malloc for the null terminator.
+> What am I missing?
 
-Again, similar as for bitmap API usage, if it makes code cleaner and
-increases readability, I will go for it.
-Also don't forget the army of janitors that won't understand the case
-and simply convert everything that can be converted.
+Barriers? That's what documentation says about xchg().
+https://stackoverflow.com/q/20950603/2511795
+
+> > > The atomic_cmpxchg() ensures cdata->watch_abi_version is only set
+> > > once - first in wins.  The atomic_read() is so we can check that
+> > > the set version matches what the caller wants.
+> > > Note that multiple callers may request the same version - and all
+> > > should succeed.
+> >
+> > So, that's basically what you need when using _old_ value.
+> >
+> > 0 means you were first, right?
+> > Anything else you simply compare and bail out if it's not the same as
+> > what has been asked.
+> >
+>
+> Could you provide a complete implementation that behaves as I expect,
+> rather than snippets and verbage?
+
+if (atomic_cmpxchg(&cdata..., version) == 0)
+ return 0; // we were first!
+return -EPERM; // somebody has changed the version before us!
+
+> > > > Shouldn't be rather
+> > > >
+> > > > if (atomic_cmpxchg() == 0) {
+> > > >   if (atomic_read() != version)
+> > > >     return ...;
+> > > > }
+> > > >
+> > >
+> > > My algorithm allows for multiple callers requesting the same version
+> > > to all succeed.  Yours would fail the first conditional for all but
+> > > the first, and you haven't provided an else for that case...
+> > >
+> > > ... but it would probably look the same so the conditional is pointless,
+> > > or it would reject the request - which would be wrong.
+> > >
+> > > > But here is still the question: why do you expect the version to be
+> > > > changed on background? And what about barriers?
+> > > >
+> > >
+> > > While it is unlikely that userspace will be attempting to use both ABI
+> > > versions simultaneously on the same chip request, it is a possiblity and
+> > > so needs to be protected against. And better to have the watch request
+> > > fail than the read fail or worse - return the wrong struct version.
+> > >
+> > > The atomic_cmpxchg() is sufficient for this algorithm - no barriers
+> > > required.  It could also be written with a spinlock but I was trying to
+> > > avoid locks unless they were absolutely necessary.  A spinlock version
+> > > may arguably be more readable, but it would certainly be more verbose,
+> > > larger and slower.
+> > >
+> > > I'm happy to add some documentation to the function if that would help.
+> >
+> > Yes, I guess documentation is what is eagerly needed here.
+> >
+>
+> No problem.
 
 -- 
 With Best Regards,
