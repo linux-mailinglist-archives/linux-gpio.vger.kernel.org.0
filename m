@@ -2,125 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0D1D278B35
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 16:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B0A278C4D
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Sep 2020 17:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgIYOso (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Sep 2020 10:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
+        id S1728843AbgIYPOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Sep 2020 11:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729097AbgIYOso (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 10:48:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83306C0613CE;
-        Fri, 25 Sep 2020 07:48:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t7so1964038pjd.3;
-        Fri, 25 Sep 2020 07:48:44 -0700 (PDT)
+        with ESMTP id S1728801AbgIYPOH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Sep 2020 11:14:07 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38C6C0613CE
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 08:14:07 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id y14so2825118pgf.12
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Sep 2020 08:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KVqS3zBnRdVRz+9mXTOOAoznlEAtOOoAuXzzPbgOnlM=;
-        b=fjdEyy0lm0lfbMd8quwV5EcORq/59e7GsjxrSeIHl4IpI7gmZHLKr4xHvmJQRxU6js
-         5MwCGBxPkkHeo+4L2LG4d8kP29PmmBQEnVjq8LeHavzI3UEeGGDkvkRnMl99xKOCwuc2
-         +igt7GJkFanZLWu/nER20z3IFcqCIXW/5zBRg4iWKIjfloATCP4+3NPBgKILqvAjlwvX
-         SfmlXREqP5Vx5SFEXJptfG51HKDJqB0zJul52Pc4uRWORF4k+A8TYgzVz9d/Kca/9PcZ
-         dfSWTSDNg9SfWXmth7/xLpv14bIqh6YWY3Dce3ZTbe6uhTsSQNOxtZRN72LBMXOzJIA4
-         JhPw==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=3ESMbYgkZehDtre/X3JHJVKowL5dmR4t1Rv1A2qb8aU=;
+        b=dPh8xY8MHR0yvAOx0ry1NlksgkVje8DTaZ0XlZoSkT2DTKIKpd2BqZ+NS1LMRP1D86
+         rG99CoQNOXhVA2IKWUYgwZaSPJ0CEjISK0zCb0PaLkMx92YwzuAigLMMn3MkBb9T/atU
+         amCg/v4ULhPEWVbTzJ8lszBvwcE7//bYkN0eEpCYKL5nA8aWHetA9en7HpEcsIUAhhLF
+         Kqh2zH1TSlKWxsyDtGCt9riZfcm0NhzOtf/NvugE8NWHlx0RtuiEO2wMuGLQzSPx2yDn
+         vc+jF1LfC25vvx928wCRwEjFs3VkZv9uPigBthbPWsn95mrqkLI4i11UktyFce8C6Ghv
+         c27w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KVqS3zBnRdVRz+9mXTOOAoznlEAtOOoAuXzzPbgOnlM=;
-        b=X9kk94CKIQDh9JicE57kNR9hnyA/lM+G5Jxr6iVWBrCHLzIb3Srhhtq2bLjJQ+7gj+
-         dBBy9Y7Hr9YzqIPBZ0AGsyAlmlJlb5K1v8Ip3C++HH3R+/yKPSMNPvZ9dy89Wd0XCF83
-         mAoOnqE4O3eui9g4uqO1ORbVGTEEb4APs5H+MuMxuQseIi+lV5yWsCQ1sCU85krSrCoI
-         j/HO6MhdlagRIUowKaFLJQ97HwmzjrciuDNRCNyIQDNxHwvJVhcjxFEqjLsELV0ATaqh
-         Wk3axPzIKiPyZ5JzlAjzOAb5rYbd9hxoW/8KhUkisdyIWehFAiPXtHmWzJN7/T54d6g4
-         fNnw==
-X-Gm-Message-State: AOAM531r9E6i8Qr17uu/bCvO42lj1QG1ITU99LxY+OQrbCegXP9wLF4v
-        EefRbvADREja+1+6KnSF3WoQ17rbsK8HLsA07xIQysMcqFqTww==
-X-Google-Smtp-Source: ABdhPJw/FYjtv9/SHu5oIIcyPHQ0fiPTzLLucdLj+N+59Gh4EwvhWxz43CJuCYGhgUp4wTDpUKXiRJPg2PF/XmktFec=
-X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr639852pjb.129.1601045324033;
- Fri, 25 Sep 2020 07:48:44 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=3ESMbYgkZehDtre/X3JHJVKowL5dmR4t1Rv1A2qb8aU=;
+        b=ZosIWBYPIVLJ/DB9RIRL6amRXJIz2QjjBRl5QlEiUqerNP6oPpf1sRFw8rAYc/OPrr
+         D7x5t6+NFiqXsbN3ud3uz5sG/XinQS7Z+aG4y5NDNOAR6OreVHuiEZuYv84Y4WwLKHwP
+         maDQg/OqeL7xLCKI/8w/ugnFapexvbwRrLB0EhlIsXM1r//t7dwDf9+XIOqFWnfz5cHT
+         IAskcJHdl99A/bZ2PwPzRpYWhAsRAvTrutpvVVKbTq/u+YafVbp7Oh95eJZ9VAzKw7oF
+         8KJ6zNaN9E/+BK6nAijcZi1Alv+NfHPo40MKMuFJZuBbGGXOit6UfbfqYdUfktsVpvLn
+         NQgw==
+X-Gm-Message-State: AOAM530B06eQW06rTu6bYa0ZD9bCTdbpzlIr6tVOCyqu+v4dwgXl74M7
+        DILK9TuIOW/0xO3lGY5YNhfqcmH1ihLuSJFeC/s=
+X-Google-Smtp-Source: ABdhPJze5v7B1gBfvzanB6Xku1xNH71WwHjBdxmprc74cnBEqPeuhId5m9xD7u+KwISqwh3/yONfeTuJ6sJPLRLHeLE=
+X-Received: by 2002:a62:e20a:0:b029:13c:1611:6535 with SMTP id
+ a10-20020a62e20a0000b029013c16116535mr4447325pfi.7.1601046847409; Fri, 25 Sep
+ 2020 08:14:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-10-warthog618@gmail.com>
- <CAHp75VdyOodxqkJCgmrdmcppyjVkDTyHDB-fqjoKS1g-88-umQ@mail.gmail.com>
- <20200924030732.GB11575@sol> <CAHp75Vd7Bmy5FWSputDCAAwSheH6ugszMyCcu1HOgC7BPVEX-w@mail.gmail.com>
- <20200925122651.GA218809@sol>
-In-Reply-To: <20200925122651.GA218809@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 25 Sep 2020 17:48:25 +0300
-Message-ID: <CAHp75Vcw0HBwkdCFWpcGLs5MunGmDJBNrCeqmzz-mGDUWGNpog@mail.gmail.com>
-Subject: Re: [PATCH v9 09/20] gpiolib: cdev: support edge detection for uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
+Received: by 2002:a05:6a10:95b1:0:0:0:0 with HTTP; Fri, 25 Sep 2020 08:14:06
+ -0700 (PDT)
+Reply-To: julianmarshalls@yahoo.com
+From:   Barr Julian Marshall <baranthony50@gmail.com>
+Date:   Fri, 25 Sep 2020 08:14:06 -0700
+Message-ID: <CABfKVN8TRRKi27nh1Frsrkxm=Xs2YAOHgBPRhLBb510UMYGX1w@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 25, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
-> On Fri, Sep 25, 2020 at 12:35:49PM +0300, Andy Shevchenko wrote:
-> > On Thu, Sep 24, 2020 at 6:07 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > On Wed, Sep 23, 2020 at 06:47:28PM +0300, Andy Shevchenko wrote:
-> > > > On Tue, Sep 22, 2020 at 5:35 AM Kent Gibson <warthog618@gmail.com> wrote:
-
-...
-
-> > > > > +       if (!line->timestamp_ns) {
-> > > > > +               le.timestamp_ns = ktime_get_ns();
-> > > > > +               if (lr->num_lines != 1)
-> > > > > +                       line->req_seqno = atomic_inc_return(&lr->seqno);
-> > > > > +       } else {
-> > > > > +               le.timestamp_ns = line->timestamp_ns;
-> > > > > > +       }
-> > > >
-> > > > Ditto.
-> > >
-> > > Firstly, drawn from lineevent_irq_thread() which is structured this way.
-> > >
-> > > In this case the comment relates to the condition being true, so
-> > > re-ordering the if/else would be confusing - unless the comment were
-> > > moved into the corresponding body??
-> >
-> > Yes.
-> >
->
-> Does that mean I should re-order and move the comment into the body?
-> That would work for me - the normal case is line->timestamp_ns being
-> set.
-
-Yes, that's what I meant.
-
-...
-
-> > > From gpiod_to_irq():
-> > >
-> > >                 /* Zero means NO_IRQ */
-> > >                 if (!retirq)
-> > >                         return -ENXIO;
-> > >
-> > > so it can't even return a 0 :-| - we're just being cautious.
-> >
-> > I would drop = part then.
-> >
->
-> ok, but you'd better not come after me in a subsequent review for not
-> checking the 0 case!
-
-For IRQ?! Maybe if I'll be drunk (quite unlikely).
-
-I really don't like to check IRQ against 0. To me it should be
-transparent to the caller. If IRQ == 0 in certain API or entirely in
-Linux is considered NO_IRQ, then it should be either correctly handled
-(means all following actions on it shouldn't fail, or it shouldn't be
-returned in the first place).
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rozhodl jsem se v=C3=A1s kontaktovat z d=C5=AFvodu nal=C3=A9havosti spojen=
+=C3=A9 s touto
+ot=C3=A1zkou, jsem Julian Marshall, advok=C3=A1t. Osobn=C4=9B jsem zmocn=C4=
+=9Bncem Dr.
+Edwin, kter=C3=BD byl =C5=A1iroce zn=C3=A1m=C3=BDm nez=C3=A1visl=C3=BDm dod=
+avatelem zde v Lome Togo,
+kter=C3=BD zem=C5=99el se svou =C5=BEenou a jedinou dcerou p=C5=99i autoneh=
+od=C4=9B.
+Kontaktoval jsem v=C3=A1s, abych v=C3=A1m pomohl s repatriac=C3=AD majetku =
+fondu Dva
+miliony p=C4=9Bt set tis=C3=ADc dolar=C5=AF na v=C3=A1=C5=A1 =C3=BA=C4=8Det=
+. Pro v=C3=ADce informac=C3=AD ohledn=C4=9B
+t=C3=A9to z=C3=A1le=C5=BEitosti m=C4=9B pros=C3=ADm kontaktujte.
