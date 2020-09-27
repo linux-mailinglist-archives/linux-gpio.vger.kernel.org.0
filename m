@@ -2,77 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DE7427A012
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Sep 2020 11:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C50827A101
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Sep 2020 14:39:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgI0JVm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Sep 2020 05:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53798 "EHLO
+        id S1726280AbgI0Mjj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Sep 2020 08:39:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgI0JVm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 05:21:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9276DC0613D3
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Sep 2020 02:21:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a22so5854902ljp.13
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Sep 2020 02:21:41 -0700 (PDT)
+        with ESMTP id S1726149AbgI0Mjj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 08:39:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4782CC0613CE;
+        Sun, 27 Sep 2020 05:39:39 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k8so6926736pfk.2;
+        Sun, 27 Sep 2020 05:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PGGQySYw8x5K8mtOeM1SZ1tR4LeJUkuWrFy4NhZyY/w=;
-        b=vzil5VrFY34NJoONQtPL/nYELXxhPOtPYRZqIQS6TjdYqGIBl+564t4RHy322T73df
-         xb+Hm2TrtAGryotAam/5POHXsd3Wp2r6xmMTGo2YNVFpNAGObylnM6k7KBKKnrIgJqdw
-         3L39CaUnFY7fADktI+0fGUD3gYlQg8yN4+p1m1MkgeqFJ0Q9DEzK6PBN/5QZnCxnsok4
-         Dy5w5nDPkqoeYuOLE00dJ9UDBzFRyUA4sEeD4vUroneXPajV8vMg3X767XPQV+YHzi+P
-         ZO/YHmUzvZs/5O7fwebLYz/wMJiWKT6dWTgKj/Q2hFJzlMqVk8KHtGD24y/NmgL3RtmY
-         gwZA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GoPE+dl9c5Fq29Wkwbgxhh5vmykedvXRF9PCNISmQks=;
+        b=cpr4WkQaigV76mMOBocsE5QdcMt//RMvbiyoG8yiiUOKkxx+zQoU3JtldsryJGFdRm
+         Wik8ViVS4hkC21yXF9FLJeVhhfyqgKMOkckeShili2ptHHTYYA/O/cJAnF/t5tabVpAC
+         TLQQB7xwgC0AjvJx+7sbNHhVo1a51CYTZndLJEPnwgqcUMFrHIlELS2UzhZjjjgzHn8H
+         vv0YVoP6Up9PwRdSQCsr0UCM+J0Fs7q6i1UwfRz7CJS+XCdRjf4v79+CC067q7xrXnDp
+         FC6FgKNKRqSi5WNw5H8Ubmsi6TdBuMFil6O/Pfw5vedZn/jOYE0/VZQZna5GHPpKDsxL
+         nTSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PGGQySYw8x5K8mtOeM1SZ1tR4LeJUkuWrFy4NhZyY/w=;
-        b=o1mX24k9GDDrnAETnO1aro4f/XljO1695BCGVw59LP+dCFVmwTP/AN1pIGUyFJaUtq
-         TXDnLzx3g/OKHUcB/ozrEXIwCXf7TJVuqWwuZcvmf6QYlw9Z5/HC7iXjt3WhlWtGcQXJ
-         MXvcoPAxCLd5rFemgcVWHtGqQlM4B3qEU1iNyNWELkrkmYWAuWNuW35bmE4WIgYd1+ai
-         uxS21vq5hwWFFMqvgF8loeUH67rDZ9mRrLrMd4SLPgrJZg7cEg3aKFS9/peKq/d5pa8g
-         Jmcs/Z1JmRGfED/oY9aX/oFWTH7ZLnyNMC891Xx0sARcjvLWm/Q7blWE5LmNc2vvgemK
-         ZzAA==
-X-Gm-Message-State: AOAM533P4rdnt/vkqCRzv1D6g1RO4PBQtBTTGIPDYd2kOKZ1b6ENfOS7
-        YtIg0yK0ksWq346l+qLfrMZoyb+TSV3OS73ijsrAiw==
-X-Google-Smtp-Source: ABdhPJzmJTMesMo36KW0yIQlJE605hbQVVOGBYNhbkPK1+4Pe0bOs0mJvDBCOCh5tMojSqrcInaLr7oEFgooll9kBPQ=
-X-Received: by 2002:a05:651c:107b:: with SMTP id y27mr3197494ljm.338.1601198500091;
- Sun, 27 Sep 2020 02:21:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200907110221.1691168-1-fparent@baylibre.com> <20200907110221.1691168-2-fparent@baylibre.com>
-In-Reply-To: <20200907110221.1691168-2-fparent@baylibre.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 27 Sep 2020 11:21:29 +0200
-Message-ID: <CACRpkdYXHzrp0-4nhQnJHdhEpzkdSEn8+8AJnmFJhrvu8=Sbuw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: Add MT8167 Pinctrl driver
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GoPE+dl9c5Fq29Wkwbgxhh5vmykedvXRF9PCNISmQks=;
+        b=S8M2izjrPsljtayqaEZ/jrTwTRku+jGQVkAqrxNIIJQpSZ+EwHowVwUDc2B95I+Ot6
+         gytywnd4FxF9qMlSt2q07wwslUumvEvgGr9cQk7bveXAMV4r4E0C3IriujsvNxykUvLq
+         E9oD3kD85WQdRvn4XzQB6FSm8IAX6vUn5prTCVG0/qn7aNALaSXa/Qc0UrULNW3PhI1/
+         u4FrAdjCFlT2fJ7Rw3wF/qviYVlEltA6WsNCuS4eWXjUiYWpND99VQ1WIfUvtaXUOtgI
+         IE9kvjDlRXqQK3PkDh5brumWv4yzOeyhFST1j+KMGmUj3h8XgWc3mV6BJF38jgs7ahKQ
+         jYrQ==
+X-Gm-Message-State: AOAM530euQlLtKYm1n2+W2y0vcwEEJY9DLr4BYnanhERkiMY2TnTPUF/
+        o83Q0K+hG9Fmb6urD8lxnF0=
+X-Google-Smtp-Source: ABdhPJxGcbhbfQ4iLomJnE9WYWW8f8AfPa0MZcfg45esZ0D0D1LQscEzUJcF50RMZe31/KMIfXIoJA==
+X-Received: by 2002:a62:5a04:0:b029:142:2501:397f with SMTP id o4-20020a625a040000b02901422501397fmr7012170pfb.68.1601210378639;
+        Sun, 27 Sep 2020 05:39:38 -0700 (PDT)
+Received: from sol (106-69-171-132.dyn.iinet.net.au. [106.69.171.132])
+        by smtp.gmail.com with ESMTPSA id r4sm3968706pjf.4.2020.09.27.05.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Sep 2020 05:39:37 -0700 (PDT)
+Date:   Sun, 27 Sep 2020 20:39:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200927123932.GA20442@sol>
+References: <20200922023151.387447-1-warthog618@gmail.com>
+ <20200922023151.387447-8-warthog618@gmail.com>
+ <CAHp75VdQUbDnjQEr5X5q6WdU6rD=uBNznNn5=Vy=pvdwVj_hEA@mail.gmail.com>
+ <20200924080921.GE17562@sol>
+ <CAHp75VehvUTt19sBxgPTZszUmxDGZwqGAV7bgW5jVM8Mf63UJA@mail.gmail.com>
+ <20200926091631.GA89482@sol>
+ <CAHp75VdFG1DBSjD9DwBXvsmDCN5eN_unKiZkVBob3dSTyZzSiw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdFG1DBSjD9DwBXvsmDCN5eN_unKiZkVBob3dSTyZzSiw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 1:02 PM Fabien Parent <fparent@baylibre.com> wrote:
+On Sun, Sep 27, 2020 at 12:00:04PM +0300, Andy Shevchenko wrote:
+> On Sat, Sep 26, 2020 at 12:16 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Fri, Sep 25, 2020 at 01:06:02PM +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > Hmmm, there is more to it than I thought - gpiod_request_commit(),
+> > which this code eventually calls, interprets a null label (not an
+> > empty string) as indicating that the user has not set the label, in
+> > which case it will set the desc label to "?". So userspace cannot
+> > force the desc label to be empty.
+> >
+> > We need to keep that label as null in that case to maintain that
+> > behaviour.
+> >
+> > I will add a comment there though.
+> >
+> > Hmmm, having said that, does this form work for you:
+> >
+> >         if (ulr.consumer[0] != '\0') {
+> >                 /* label is only initialized if consumer is set */
+> >                 lr->label = kstrndup(ulr.consumer, sizeof(ulr.consumer) - 1, GFP_KERNEL);
+> >         ...
+> >
+> > It actually compiles slightly larger, I guess due to the extra parameter
+> > in the kstrndup() call, but may be slightly more readable??
+> 
+> I really don't want to delay this series, choose what you think is
+> better and we may amend it later.
+> 
 
-> This commit adds the pinctrl driver for the MediaTek's MT8167 SoC.
->
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+OK, as this code is common with v1 I'll leave it as is - we can always
+change it for all cases in a later patch.
 
-No reaction from maintainers for 20 days so patch applied.
+I think that is everything outstanding for v9, so should have a v10 out
+shortly.
 
-Yours,
-Linus Walleij
+Cheers,
+Kent.
