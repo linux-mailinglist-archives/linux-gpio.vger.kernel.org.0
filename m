@@ -2,70 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E01C27AB0F
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 11:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3483527AB11
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 11:46:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgI1Jpa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Sep 2020 05:45:30 -0400
-Received: from mail1.nippynetworks.com ([91.220.24.129]:57722 "EHLO
-        mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgI1Jpa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Sep 2020 05:45:30 -0400
-Received: from twocubed.nippynetworks.com (office.nippynetworks.com [46.17.61.232])
-        by mail1.nippynetworks.com (Postfix) with SMTP id 4C0Hgp2WZjzTgQY;
-        Mon, 28 Sep 2020 10:45:26 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1601286327;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=McOrVPeJ4f/uCV58GsELC0gGRotV+PIxn5H9snSEBGU=;
-        b=RU8+Ksrd4FO8zypm2cxER+IsYo7fzwBxr7Vn8EyZxBlUgOnnTI+b9xxr/prtNqRFA9zPOp
-        0bh3mQkQg1TFZitD/j/hlaDtUl3LtX7iD6po2sf0WealTftvQx4+Bj+rmG0JAQuPqfcAzv
-        VzaRAzQ/Zg751gTUgavgjLHlm4eFvPM=
-Received: by twocubed.nippynetworks.com (sSMTP sendmail emulation); Mon, 28 Sep 2020 10:45:24 +0100
-From:   Ed Wildgoose <lists@wildgooses.com>
-To:     bgolaszewski@baylibre.com
-Cc:     fe@dev.tdt.de, Ed Wildgoose <lists@wildgooses.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: gpio-amd-fch: Correct logic of GPIO_LINE_DIRECTION
-Date:   Mon, 28 Sep 2020 10:44:52 +0100
-Message-Id: <20200928094452.7005-1-lists@wildgooses.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAMpxmJV0jwLAn3Xee_3zDiF_DQF-8uy52qxU1WAbr9xiVb0WLQ@mail.gmail.com>
-References: <CAMpxmJV0jwLAn3Xee_3zDiF_DQF-8uy52qxU1WAbr9xiVb0WLQ@mail.gmail.com>
+        id S1726632AbgI1JqM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Sep 2020 05:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgI1JqM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Sep 2020 05:46:12 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC36C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 02:46:12 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id c13so642818oiy.6
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 02:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=WhMLzcQiRYr6gohgr1Y+WgU7n7TSvYgFGzisn/1Kvwg=;
+        b=Y5Y0rPUER+lUIDaac3/YlQv801DGT1Cj0fcaxcg4thOTM8UJI+Jgq5Pa3nV0pUmBpG
+         d1DK5q3aCI4kwNBZhFH9ekZquEiRZ+V/X2WlMzgWtFxBQg8kfDjWkFXXzQG3anCCf0Xs
+         VoGWuWWXLfJZfGpnoaRPvquflMHCo8eVqklkAZMlK0U1Aa9g8t66BJ7emlg0xMtDjZq3
+         +jt5AhfSQXH5XgGhgTdrQnp48lSImYfeuZjbzDyaeNhxQCL61MVCIR2VJIcBbEQ3ZsWb
+         zcR6TnVLhkXfmYyQBCYxI9dAZ2zfYUyQ0vJcUfid0/+vfT1uy+Uwe/Ffd/BT5nymTskh
+         Ds3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=WhMLzcQiRYr6gohgr1Y+WgU7n7TSvYgFGzisn/1Kvwg=;
+        b=lfs76yzsOgh5UGoY7y0Skc9pQlq4fDJvC2S6rVO4fPhPSfAZucC/Fs8BEh0Uq8oOHL
+         GL1Hpy5+dRV4u+wy42D1zkpax+utWHXZd5INtkbHfuwadslBzGOU6KhxLm6oyw2b9l4B
+         DAqWUU5Y39R2j0SHGAOg9YU8iGPRhAsu+UbLRwOiRfLJwpU0oouwNi94zgTGADq24ktI
+         4KvwD8NFRtR5XB9EAeGEKiHHU8czdlk5HFz+fsPR7md7uoiZa/29ubdMh7ebOhtAiYAz
+         zBnM52seZxXdntReCv0xjlrgtKtla6yvxR8ZYi/XySqzW94kXmFuk5gNsTZyDwPjkdSq
+         G0fw==
+X-Gm-Message-State: AOAM530OBAykHNsSvHJfFGdUl2vLET4z8+bEZCnx5ZT7AVdFrSkjTqjp
+        olGZmacQ0i5VGo0Ta8LLC2rIq7wgf5AzMYIOgMA=
+X-Google-Smtp-Source: ABdhPJyGAzMWmtQS9kCS6Ka17iEKcAVc1nsqdlJaZuUvEXNT+H+IaBZOqFLTjpmQ4Y1bq8HvdQqtLn35E3VJaPy+mBs=
+X-Received: by 2002:aca:ad0e:: with SMTP id w14mr344509oie.64.1601286371613;
+ Mon, 28 Sep 2020 02:46:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a9d:7343:0:0:0:0:0 with HTTP; Mon, 28 Sep 2020 02:46:11
+ -0700 (PDT)
+Reply-To: andrewclement069@gmail.com
+From:   Andrew Clement <joemarvic3@gmail.com>
+Date:   Mon, 28 Sep 2020 10:46:11 +0100
+Message-ID: <CAJy9wfKrRO5A10wHeJ2u1yAqu6SEuP237vONs8dwr-KMYkKo0A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The original commit appears to have the logic reversed in
-amd_fch_gpio_get_direction. Also confirmed by observing the value of
-"direction" in the sys tree.
-
-Signed-off-by: Ed Wildgoose <lists@wildgooses.com>
-Fixes: e09d168f13f0 ("gpio: AMD G-Series PCH gpio driver")
----
- drivers/gpio/gpio-amd-fch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
-index 4e44ba4d7..2a21354ed 100644
---- a/drivers/gpio/gpio-amd-fch.c
-+++ b/drivers/gpio/gpio-amd-fch.c
-@@ -92,7 +92,7 @@ static int amd_fch_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
- 	ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_DIRECTION);
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
--	return ret ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+	return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
- }
- 
- static void amd_fch_gpio_set(struct gpio_chip *gc,
--- 
-2.26.2
-
+Hello, how are you? Hope you are alright, I sent you message earlier
+but no response from you, Confirm the receipt of my previous message
+and contact me for more explanation on time.
