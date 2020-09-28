@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92CE727A4E1
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 02:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 535F827A4E3
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 02:32:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgI1AcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Sep 2020 20:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
+        id S1726600AbgI1AcX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Sep 2020 20:32:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgI1AcN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 20:32:13 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0FCC0613CE;
-        Sun, 27 Sep 2020 17:32:13 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id v14so2566124pjd.4;
-        Sun, 27 Sep 2020 17:32:13 -0700 (PDT)
+        with ESMTP id S1726328AbgI1AcX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 20:32:23 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3123DC0613CE;
+        Sun, 27 Sep 2020 17:32:23 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id v14so2566255pjd.4;
+        Sun, 27 Sep 2020 17:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/D6x+D3oSJHjRsNieXXDsh9in/3vu2HgqJk6KbWYET0=;
-        b=vYVt7WrL8ugS0hXQzoRptnGiLc6GUI1hCnyMRvmZbq+ynzRPw16kwD9Rd7C6uY9TCA
-         7DVr9TyzWiK9FnchETicqBCxB17cAlwVatv9VSAXfPYNZj3ckc34QOL3s/UbIOf0Ze2G
-         /MVWIwpNunuKQ4JHgQjAJSLxyUXN/KLtPhDCivwg6qEhff1A+Z0/q7hlVRxtCGlPX5Fl
-         jQIGUibN9Bp61S+b5QxjEfcXYyImCsMNhB4p3fNinerV8iN+KMjm6mWRWp/mNmHs9H4s
-         1aRMqy6QjN0j09VYVmsFoRCUurmQdZnhuEAKo++h6CpeU0YGuM5hyZ6fvygDQ4WqWItf
-         iSKA==
+        bh=orI2XdPNMcc9fk0dBNQocsoJ4tDxFbu6pi0+98Ky68Y=;
+        b=aB+u4b0IizAbMXWGxnjGw9NoznuYjPDynjcZQl0ZJHjEL7lAag84A06BYgIcc0wNIW
+         ThGb97ZyS1I7iQXhO3IY82dT+R3+N+lAabZWELHasKPtFlJRPB9tNePCHcTBQ3WAQduX
+         f+V31uqJ87oufgIGDB0FAr8rSSWnWdgiq4uGDqCwQW+k9YlKSusPlED2CogQFhCypShv
+         sxNtXS8k7m6Y0zIdTuNSmPPFdHMFX0Ri3+/CCIlMi5OPsqTmm528MgXbfeMXYLqd2Em6
+         Nd+MYo0X2GzeQA9WOziWhp6z97BrdvryCDg4JjOWfywjVdYvjc9200sCaa36AVLM1y7Z
+         u8dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/D6x+D3oSJHjRsNieXXDsh9in/3vu2HgqJk6KbWYET0=;
-        b=rqRHHt0AeY5YBdGHChOR4uNCyJwHe6MmmCAD+3SjDVravKZujoELBrHL4ospjSn4nK
-         p9lEnudLYMZyVA0HCabuB26PY7KWQ10jXvSBVUMHzzibP1mAkN6PBCF8ZY2b80K5Czl0
-         Gg3y8ugLdcIWToHgEhJmHaUznXGxzf03hMzXoue9NurB6lRtueFOo41BIdnFmjIcBica
-         P30Yn28X0rU5+6KDvqque8TPbgE/bdMok8P+jjo86AqaUOr1EOV75vyGOBw0MVXy7Jbh
-         JPrrEACD4QzcvXqAjkUbMnpT9iR5ibcEhFAZ7jtptSfJL1XvTgsZhP+ka10BxRO5eZMm
-         6Plw==
-X-Gm-Message-State: AOAM5317fLshIlXc6ROLb2mxv8U9JmehnfTTMxpnXyR1568hz3/WdXve
-        9inry6dMD61WcDY0fe0Dzm4oUKmGgWxcRg==
-X-Google-Smtp-Source: ABdhPJzQxqGYrTiTfpjpvQAgrbGXF9NN/kXPv3TIzR4jkJuGwHLNsHBYln+vLSNBMKZ2JXigYiw62g==
-X-Received: by 2002:a17:90b:693:: with SMTP id m19mr6932328pjz.111.1601253132396;
-        Sun, 27 Sep 2020 17:32:12 -0700 (PDT)
+        bh=orI2XdPNMcc9fk0dBNQocsoJ4tDxFbu6pi0+98Ky68Y=;
+        b=OXWjbqhkhMilNZHxOCrYkbiFdpkvic1XMDd8TxOC60rwPSQRLEYPoDhyCaEIhq8y1I
+         Nhj2l6v4Acx/jPgdeE3bsQG8S3jIVlnz3GO7Ki+f4JnHPuwOx4c6x8cu4xpAUL+BAJ71
+         ymbFSEZBHwdy9xa++mgq9MVVH4GHsMRN+3Rt6LLfn4+vdJuGIFppL5VaojCmK139A5mL
+         PMGCg8acxbCrAOCKGpSqXkFHhJghPFxxUbZYit8lE8g/x1kms2QZku9YM6Gh1G4XvIjQ
+         VQm58dGSuUpV1ZuLfGY31yFoC6QGAtfCEM/SMM7YKO/1j8KDYrjRycgMVIdP33iuUn5d
+         DKaw==
+X-Gm-Message-State: AOAM530UKtHCZETYdXVTnKSpqV/veXWKidjkOQGYUwxCzEaM8Zz341Oj
+        95JZeTcNZFpDE8kgbxM+fjKGWB7F4xVorg==
+X-Google-Smtp-Source: ABdhPJzo94Q6KL67/oOAwVreZ2P/nxuMceGKv0M5Amc3y3deBIrdJJDlZHMPfsAYh1ak/G2SPz9Cgg==
+X-Received: by 2002:a17:90b:889:: with SMTP id bj9mr7215964pjb.101.1601253142317;
+        Sun, 27 Sep 2020 17:32:22 -0700 (PDT)
 Received: from sol.lan (106-69-171-132.dyn.iinet.net.au. [106.69.171.132])
-        by smtp.gmail.com with ESMTPSA id o20sm8443783pgh.63.2020.09.27.17.32.08
+        by smtp.gmail.com with ESMTPSA id o20sm8443783pgh.63.2020.09.27.17.32.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 17:32:11 -0700 (PDT)
+        Sun, 27 Sep 2020 17:32:21 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org,
         andy.shevchenko@gmail.com, arnd@arndb.de
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v10 19/20] tools: gpio: add multi-line monitoring to gpio-event-mon
-Date:   Mon, 28 Sep 2020 08:28:06 +0800
-Message-Id: <20200928002807.12146-20-warthog618@gmail.com>
+Subject: [PATCH v10 20/20] tools: gpio: add debounce support to gpio-event-mon
+Date:   Mon, 28 Sep 2020 08:28:07 +0800
+Message-Id: <20200928002807.12146-21-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200928002807.12146-1-warthog618@gmail.com>
 References: <20200928002807.12146-1-warthog618@gmail.com>
@@ -64,127 +64,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Extend gpio-event-mon to support monitoring multiple lines.
-This would require multiple lineevent requests to implement using uAPI v1,
-but can be performed with a single line request using uAPI v2.
+Add support for debouncing monitored lines to gpio-event-mon.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- tools/gpio/gpio-event-mon.c | 45 ++++++++++++++++++++++++++++---------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+ tools/gpio/gpio-event-mon.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index b230af889f26..0c34f18f511c 100644
+index 0c34f18f511c..90c3155f05b1 100644
 --- a/tools/gpio/gpio-event-mon.c
 +++ b/tools/gpio/gpio-event-mon.c
-@@ -26,7 +26,8 @@
- #include "gpio-utils.h"
- 
- int monitor_device(const char *device_name,
--		   unsigned int line,
-+		   unsigned int *lines,
-+		   unsigned int num_lines,
- 		   struct gpio_v2_line_config *config,
- 		   unsigned int loops)
- {
-@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
- 		goto exit_free_name;
- 	}
- 
--	ret = gpiotools_request_line(device_name, &line, 1, config,
-+	ret = gpiotools_request_line(device_name, lines, num_lines, config,
- 				     "gpio-event-mon");
- 	if (ret < 0)
- 		goto exit_device_close;
-@@ -55,8 +56,10 @@ int monitor_device(const char *device_name,
- 		lfd = ret;
- 
- 	/* Read initial states */
--	values.mask = 1;
-+	values.mask = 0;
- 	values.bits = 0;
-+	for (i = 0; i < num_lines; i++)
-+		gpiotools_set_bit(&values.mask, i);
- 	ret = gpiotools_get_values(lfd, &values);
- 	if (ret < 0) {
- 		fprintf(stderr,
-@@ -65,9 +68,23 @@ int monitor_device(const char *device_name,
- 		goto exit_line_close;
- 	}
- 
--	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
--	fprintf(stdout, "Initial line value: %d\n",
--		gpiotools_test_bit(values.bits, 0));
-+	if (num_lines == 1) {
-+		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
-+		fprintf(stdout, "Initial line value: %d\n",
-+			gpiotools_test_bit(values.bits, 0));
-+	} else {
-+		fprintf(stdout, "Monitoring lines %d", lines[0]);
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d", lines[i]);
-+		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
-+		fprintf(stdout, "Initial line values: %d",
-+			gpiotools_test_bit(values.bits, 0));
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d",
-+				gpiotools_test_bit(values.bits, i));
-+		fprintf(stdout, " and %d\n",
-+			gpiotools_test_bit(values.bits, i));
-+	}
- 
- 	while (1) {
- 		struct gpio_v2_line_event event;
-@@ -126,7 +143,7 @@ void print_usage(void)
- 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
- 		"Listen to events on GPIO lines, 0->1 1->0\n"
- 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
--		"  -o <n>     Offset to monitor\n"
-+		"  -o <n>     Offset of line to monitor (may be repeated)\n"
- 		"  -d         Set line as open drain\n"
+@@ -148,11 +148,12 @@ void print_usage(void)
  		"  -s         Set line as open source\n"
  		"  -r         Listen for rising edges\n"
-@@ -146,7 +163,8 @@ void print_usage(void)
- int main(int argc, char **argv)
- {
- 	const char *device_name = NULL;
--	unsigned int line = -1;
-+	unsigned int lines[GPIO_V2_LINES_MAX];
-+	unsigned int num_lines = 0;
+ 		"  -f         Listen for falling edges\n"
++		"  -b <n>     Debounce the line with period n microseconds\n"
+ 		" [-c <n>]    Do <n> loops (optional, infinite loop if not stated)\n"
+ 		"  -?         This helptext\n"
+ 		"\n"
+ 		"Example:\n"
+-		"gpio-event-mon -n gpiochip0 -o 4 -r -f\n"
++		"gpio-event-mon -n gpiochip0 -o 4 -r -f -b 10000\n"
+ 	);
+ }
+ 
+@@ -167,11 +168,12 @@ int main(int argc, char **argv)
+ 	unsigned int num_lines = 0;
  	unsigned int loops = 0;
  	struct gpio_v2_line_config config;
- 	int c;
-@@ -162,7 +180,12 @@ int main(int argc, char **argv)
- 			device_name = optarg;
+-	int c;
++	int c, attr, i;
++	unsigned long debounce_period_us = 0;
+ 
+ 	memset(&config, 0, sizeof(config));
+ 	config.flags = GPIO_V2_LINE_FLAG_INPUT;
+-	while ((c = getopt(argc, argv, "c:n:o:dsrf?")) != -1) {
++	while ((c = getopt(argc, argv, "c:n:o:b:dsrf?")) != -1) {
+ 		switch (c) {
+ 		case 'c':
+ 			loops = strtoul(optarg, NULL, 10);
+@@ -187,6 +189,9 @@ int main(int argc, char **argv)
+ 			lines[num_lines] = strtoul(optarg, NULL, 10);
+ 			num_lines++;
  			break;
- 		case 'o':
--			line = strtoul(optarg, NULL, 10);
-+			if (num_lines >= GPIO_V2_LINES_MAX) {
-+				print_usage();
-+				return -1;
-+			}
-+			lines[num_lines] = strtoul(optarg, NULL, 10);
-+			num_lines++;
- 			break;
++		case 'b':
++			debounce_period_us = strtoul(optarg, NULL, 10);
++			break;
  		case 'd':
  			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
-@@ -182,7 +205,7 @@ int main(int argc, char **argv)
+ 			break;
+@@ -205,6 +210,15 @@ int main(int argc, char **argv)
  		}
  	}
  
--	if (!device_name || line == -1) {
-+	if (!device_name || num_lines == 0) {
++	if (debounce_period_us) {
++		attr = config.num_attrs;
++		config.num_attrs++;
++		for (i = 0; i < num_lines; i++)
++			gpiotools_set_bit(&config.attrs[attr].mask, i);
++		config.attrs[attr].attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
++		config.attrs[attr].attr.debounce_period_us = debounce_period_us;
++	}
++
+ 	if (!device_name || num_lines == 0) {
  		print_usage();
  		return -1;
- 	}
-@@ -191,5 +214,5 @@ int main(int argc, char **argv)
- 		       "falling edges\n");
- 		config.flags |= EDGE_FLAGS;
- 	}
--	return monitor_device(device_name, line, &config, loops);
-+	return monitor_device(device_name, lines, num_lines, &config, loops);
- }
 -- 
 2.28.0
 
