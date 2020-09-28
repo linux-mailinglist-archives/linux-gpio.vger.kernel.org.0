@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59F9627A4CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 02:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB90227A4D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 02:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgI1Aao (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Sep 2020 20:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52048 "EHLO
+        id S1726469AbgI1Aaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Sep 2020 20:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgI1Aao (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 20:30:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FADC0613CE;
-        Sun, 27 Sep 2020 17:30:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s14so1442901pju.1;
-        Sun, 27 Sep 2020 17:30:44 -0700 (PDT)
+        with ESMTP id S1726387AbgI1Aaz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 20:30:55 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B49C0613CE;
+        Sun, 27 Sep 2020 17:30:55 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 5so6798224pgf.5;
+        Sun, 27 Sep 2020 17:30:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=imYtZiSX5AvWbH/xY/JjjqLmyT8ivLM44f4A3aeUozs=;
-        b=i7Rn2dvb++mzLSNbsHPhMTk0eBbBOGSUr0Q+b6IYgqimkBeGNaRyOppX51BfEGx9CY
-         Ozg69Pj25EBuQe3YNF6DoDYycPcJicoQXaetr7a8X3NAMG4wMIk4j7zRZSALZQE3kylo
-         uE19QjsbzPY2rizHxATxNU5RLDupVOoxiYDglO3NyD+MHr0JLWfxozfZe6p9gRiZoohs
-         iUcnByVPXBZidLvaR74TTxe6W4LuCjx+M+2i15G/5dFOWqs556GEabQ2iPwlZxSgPMQ8
-         WzHl51h7eHkGst0PfJF4Nk+BFBOw+2UvburU9ZTLAM0SWlcLF3f19jKO22uekHRbzKgQ
-         7d6Q==
+        bh=AW1sSBKCVsXpYEbajwLasF/VVriD8AxM28/q4ZLpQUI=;
+        b=eTfUZzLvj52P8rwZvTiMTdHAz0V/blgrPBwyen7HBkE1rTNaVTg03UGx/h68efQ7DV
+         4gTlB588wGjRREj89AJnGy5aPs0fYmeTg9OpVTz8bk5AKqt+L1kyuM27/X1ArDSDrAXr
+         rtmyL8xwHX1Ea7e+VZtyRiM9KsXoOz+TLXZ7y2BsvQBVaWuPy4q3U+uuiJqbLQyQ1as9
+         5jNCZlIltC2zzeWP3mzpdNhF1lcMVxrriM/dhSpeoUJfRargDAc22dyXJIzyqxwdL0OT
+         PeHOwje0a3cpe5JxGmXadt8FWstC8JZlQ/stNGrKpHNBQKdULk7M3hs//tey6Ocm5ShM
+         i3IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=imYtZiSX5AvWbH/xY/JjjqLmyT8ivLM44f4A3aeUozs=;
-        b=iLwGvSBBtzaufVbzp5O8ry7WbJhGWCZql47TvPZUpJ0Vtg7eKwfJ44KJSD/Z1Ij7Cj
-         e3UKD6l0hUbceAFpW/jkRFMgLV3z50t/Hq6N8ZMkLTjtVhhyyrDnZ69BR7k88VDB18OI
-         MPQx4YzT6jGjCnZlqi1X4TfKgbY57JTapXZZ1kohE2oxNjZuauMOoQKhWS5MTG3XGQPf
-         RqxLYjzx0aq4EYYFX2d99Hx4n7j7NN30aBVBRtJtnHOn7zIgKCe4pRHv5nSj8NI0GubO
-         hCgy7j5IS8rJ1/0jTHHOP3J7at/FTxryShRd+Ltw9joU4yPdRwMK7az27+SmAiJe9Xph
-         EMUw==
-X-Gm-Message-State: AOAM533n8dC3ZSnLHgWpyz0LyW3ip9EztARV2vV2wJw53rwgJw0fCUq2
-        3wL3vWU2iyEoChXv1I3XGQZKhOGwVlDyPA==
-X-Google-Smtp-Source: ABdhPJwGk7XnXmlNvvpF9HREUQ2lVj76/fT/cR33UqDFbII82c4MckDAR3+xffUDGG3OQiq88oSXVQ==
-X-Received: by 2002:a17:90a:156:: with SMTP id z22mr7188799pje.140.1601253043313;
-        Sun, 27 Sep 2020 17:30:43 -0700 (PDT)
+        bh=AW1sSBKCVsXpYEbajwLasF/VVriD8AxM28/q4ZLpQUI=;
+        b=nI6JbvKF4jq17uNVmTkU4gyoITo3U3korQk+o2bXgKkLlZRYY5hWUnBQlkcFtERjS9
+         JohSVQqJ5okgXXqqCYDPrTENWW3ojFFk0ZBzIZmvTgz6jHLAg53z6LDugn2xUC9gz6oP
+         rua7j+WEP0EMudEZ7jNGxAnexTqke3y9Sm3VJ3PO6XiCeI+T9Luxf9a5egvp2sH1QZxT
+         c+RfhZYRUnusl9Vn7dos/8+UEwYulBwiRsHS9eUJl2k1ztSZxJ2X9HpY5F2oXGsaLwGb
+         oxRuIBY4bGgSmMvkJcNPttmUbE4U7hiRPHzXve1xjRDT7U4TfTe5CbdoGtsyEb7U+5Y7
+         SmGg==
+X-Gm-Message-State: AOAM531PNbvHMhm15vlPIddTu9vhrPNnqq+5NULQRJSrq5fQGxhOeKpy
+        vqXjGgdm0GRFdZAP8DnOdLv0rTRwpIMoaQ==
+X-Google-Smtp-Source: ABdhPJyuqI4mhQC3TJaLtO8Wag4fTcIPoj3L/2nrfB0fii178MWZwmzl0TwGHkq3hMfwr3HQqGe20g==
+X-Received: by 2002:a62:1e07:0:b029:14e:d96c:9e04 with SMTP id e7-20020a621e070000b029014ed96c9e04mr7911448pfe.58.1601253054756;
+        Sun, 27 Sep 2020 17:30:54 -0700 (PDT)
 Received: from sol.lan (106-69-171-132.dyn.iinet.net.au. [106.69.171.132])
-        by smtp.gmail.com with ESMTPSA id o20sm8443783pgh.63.2020.09.27.17.30.39
+        by smtp.gmail.com with ESMTPSA id o20sm8443783pgh.63.2020.09.27.17.30.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 17:30:42 -0700 (PDT)
+        Sun, 27 Sep 2020 17:30:54 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org,
         andy.shevchenko@gmail.com, arnd@arndb.de
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v10 10/20] gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
-Date:   Mon, 28 Sep 2020 08:27:57 +0800
-Message-Id: <20200928002807.12146-11-warthog618@gmail.com>
+Subject: [PATCH v10 11/20] gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
+Date:   Mon, 28 Sep 2020 08:27:58 +0800
+Message-Id: <20200928002807.12146-12-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200928002807.12146-1-warthog618@gmail.com>
 References: <20200928002807.12146-1-warthog618@gmail.com>
@@ -64,162 +64,92 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for GPIO_V2_LINE_SET_CONFIG_IOCTL, the uAPI v2
-line set config ioctl.
+Add support for the GPIO_V2_LINE_SET_VALUES_IOCTL.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/gpiolib-cdev.c | 88 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ drivers/gpio/gpiolib-cdev.c | 61 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 868fcf89478c..608cdbd1d579 100644
+index 608cdbd1d579..25536aae3e18 100644
 --- a/drivers/gpio/gpiolib-cdev.c
 +++ b/drivers/gpio/gpiolib-cdev.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/kfifo.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/poll.h>
- #include <linux/spinlock.h>
-@@ -444,6 +445,8 @@ struct line {
-  * @seqno: the sequence number for edge events generated on all lines in
-  * this line request.  Note that this is not used when @num_lines is 1, as
-  * the line_seqno is then the same and is cheaper to calculate.
-+ * @config_mutex: mutex for serializing ioctl() calls to ensure consistency
-+ * of configuration, particularly multi-step accesses to desc flags.
-  * @lines: the lines held by this line request, with @num_lines elements.
-  */
- struct linereq {
-@@ -454,6 +457,7 @@ struct linereq {
- 	u32 event_buffer_size;
- 	DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
- 	atomic_t seqno;
-+	struct mutex config_mutex;
- 	struct line lines[];
- };
- 
-@@ -574,6 +578,8 @@ static void edge_detector_stop(struct line *line)
- 		free_irq(line->irq, line);
- 		line->irq = 0;
- 	}
-+
-+	line->eflags = 0;
- }
- 
- static int edge_detector_setup(struct line *line,
-@@ -615,6 +621,17 @@ static int edge_detector_setup(struct line *line,
+@@ -816,6 +816,65 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
  	return 0;
  }
  
-+static int edge_detector_update(struct line *line, u64 eflags,
-+				bool polarity_change)
++static long linereq_set_values_unlocked(struct linereq *lr,
++					struct gpio_v2_line_values *lv)
 +{
-+	if ((line->eflags == eflags) && !polarity_change)
-+		return 0;
-+
-+	edge_detector_stop(line);
-+
-+	return edge_detector_setup(line, eflags);
-+}
-+
- static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
- 				     unsigned int line_idx)
- {
-@@ -799,6 +816,74 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- 	return 0;
- }
- 
-+static long linereq_set_config_unlocked(struct linereq *lr,
-+					struct gpio_v2_line_config *lc)
-+{
-+	struct gpio_desc *desc;
-+	unsigned int i;
-+	u64 flags;
-+	bool polarity_change;
++	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
++	struct gpio_desc **descs;
++	unsigned int i, didx, num_set;
 +	int ret;
 +
-+	for (i = 0; i < lr->num_lines; i++) {
-+		desc = lr->lines[i].desc;
-+		flags = gpio_v2_line_config_flags(lc, i);
-+		polarity_change =
-+			(!!test_bit(FLAG_ACTIVE_LOW, &desc->flags) !=
-+			 ((flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW) != 0));
-+
-+		gpio_v2_line_config_flags_to_desc_flags(flags, &desc->flags);
-+		/*
-+		 * Lines have to be requested explicitly for input
-+		 * or output, else the line will be treated "as is".
-+		 */
-+		if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
-+			int val = gpio_v2_line_config_output_value(lc, i);
-+
-+			edge_detector_stop(&lr->lines[i]);
-+			ret = gpiod_direction_output(desc, val);
-+			if (ret)
-+				return ret;
-+		} else if (flags & GPIO_V2_LINE_FLAG_INPUT) {
-+			ret = gpiod_direction_input(desc);
-+			if (ret)
-+				return ret;
-+
-+			ret = edge_detector_update(&lr->lines[i],
-+					flags & GPIO_V2_LINE_EDGE_FLAGS,
-+					polarity_change);
-+			if (ret)
-+				return ret;
++	bitmap_zero(vals, GPIO_V2_LINES_MAX);
++	for (num_set = 0, i = 0; i < lr->num_lines; i++) {
++		if (lv->mask & BIT_ULL(i)) {
++			if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
++				return -EPERM;
++			if (lv->bits & BIT_ULL(i))
++				__set_bit(num_set, vals);
++			num_set++;
++			descs = &lr->lines[i].desc;
 +		}
-+
-+		blocking_notifier_call_chain(&desc->gdev->notifier,
-+					     GPIO_V2_LINE_CHANGED_CONFIG,
-+					     desc);
 +	}
-+	return 0;
++	if (num_set == 0)
++		return -EINVAL;
++
++	if (num_set != 1) {
++		/* build compacted desc array and values */
++		descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
++		if (!descs)
++			return -ENOMEM;
++		for (didx = 0, i = 0; i < lr->num_lines; i++) {
++			if (lv->mask & BIT_ULL(i)) {
++				descs[didx] = lr->lines[i].desc;
++				didx++;
++			}
++		}
++	}
++	ret = gpiod_set_array_value_complex(false, true, num_set,
++					    descs, NULL, vals);
++
++	if (num_set != 1)
++		kfree(descs);
++	return ret;
 +}
 +
-+static long linereq_set_config(struct linereq *lr, void __user *ip)
++static long linereq_set_values(struct linereq *lr, void __user *ip)
 +{
-+	struct gpio_v2_line_config lc;
++	struct gpio_v2_line_values lv;
 +	int ret;
 +
-+	if (copy_from_user(&lc, ip, sizeof(lc)))
++	if (copy_from_user(&lv, ip, sizeof(lv)))
 +		return -EFAULT;
-+
-+	ret = gpio_v2_line_config_validate(&lc, lr->num_lines);
-+	if (ret)
-+		return ret;
 +
 +	mutex_lock(&lr->config_mutex);
 +
-+	ret = linereq_set_config_unlocked(lr, &lc);
++	ret = linereq_set_values_unlocked(lr, &lv);
 +
 +	mutex_unlock(&lr->config_mutex);
 +
 +	return ret;
 +}
 +
- static long linereq_ioctl(struct file *file, unsigned int cmd,
- 			  unsigned long arg)
+ static long linereq_set_config_unlocked(struct linereq *lr,
+ 					struct gpio_v2_line_config *lc)
  {
-@@ -807,6 +892,8 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
+@@ -892,6 +951,8 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
  
  	if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
  		return linereq_get_values(lr, ip);
-+	else if (cmd == GPIO_V2_LINE_SET_CONFIG_IOCTL)
-+		return linereq_set_config(lr, ip);
++	else if (cmd == GPIO_V2_LINE_SET_VALUES_IOCTL)
++		return linereq_set_values(lr, ip);
+ 	else if (cmd == GPIO_V2_LINE_SET_CONFIG_IOCTL)
+ 		return linereq_set_config(lr, ip);
  
- 	return -EINVAL;
- }
-@@ -968,6 +1055,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 		}
- 	}
- 
-+	mutex_init(&lr->config_mutex);
- 	init_waitqueue_head(&lr->wait);
- 	lr->event_buffer_size = ulr.event_buffer_size;
- 	if (lr->event_buffer_size == 0)
 -- 
 2.28.0
 
