@@ -2,72 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F173727B161
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 18:06:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BEF527B1C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 18:24:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgI1QGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Sep 2020 12:06:40 -0400
-Received: from smtprelay0062.hostedemail.com ([216.40.44.62]:41254 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726551AbgI1QGk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 28 Sep 2020 12:06:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id EA4BF8383102;
-        Mon, 28 Sep 2020 16:06:38 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:965:966:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2196:2199:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:3873:4321:4385:4390:4395:5007:6119:7576:8660:10004:10400:10848:11232:11658:11914:12297:12740:12760:12895:13018:13019:13069:13148:13230:13311:13357:13439:14181:14659:14721:21080:21220:21451:21611:21627:21939:30054:30060:30070:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: coast39_3a00add27182
-X-Filterd-Recvd-Size: 2060
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 28 Sep 2020 16:06:37 +0000 (UTC)
-Message-ID: <12317bbc7712d96be8f52a3bf574e47628830191.camel@perches.com>
-Subject: Re: [PATCH v2 1/9] lib: string_helpers: provide kfree_strarray()
-From:   Joe Perches <joe@perches.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726466AbgI1QYO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Sep 2020 12:24:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26427 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgI1QYO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 28 Sep 2020 12:24:14 -0400
+IronPort-SDR: /b3EE+MJB2UD3+d2b0O0V4p0F1iuMN/+fsSfhW6I77tJVJXVusuj5t45FB8HzLCBSnc+IS754t
+ Wsbh99yzlQjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="226169915"
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="226169915"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 09:24:12 -0700
+IronPort-SDR: UWC5swLRYcwvyNE1x5Xtq9sjY7ApeNZwKb/hsWRS8RjEuhcJnIwGJ+g+46QPLJwaKD6NGt5N03
+ +ENZvI0CzxYQ==
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="513499506"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 09:24:09 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kMvwa-002c2q-H4; Mon, 28 Sep 2020 19:24:04 +0300
+Date:   Mon, 28 Sep 2020 19:24:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
         linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 28 Sep 2020 09:06:34 -0700
-In-Reply-To: <CAMRc=Mds0ccYBhRJnCQ0NEPkUpWRGtyX4FKj4+4rxN27_gfobA@mail.gmail.com>
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/9] gpio: mockup: pass the chip label as device
+ property
+Message-ID: <20200928162404.GW3956970@smile.fi.intel.com>
 References: <20200928104155.7385-1-brgl@bgdev.pl>
-         <20200928104155.7385-2-brgl@bgdev.pl>
-         <2fcfd81f62ec87d9b75cca32468d8b9583faec47.camel@perches.com>
-         <CAMRc=Mds0ccYBhRJnCQ0NEPkUpWRGtyX4FKj4+4rxN27_gfobA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+ <20200928104155.7385-8-brgl@bgdev.pl>
+ <20200928130023.GJ3956970@smile.fi.intel.com>
+ <CAMpxmJVGAe224JaXL4EmeEFV4Qv7ohjgn_W_CwPjC4MHgP4gTA@mail.gmail.com>
+ <20200928140028.GO3956970@smile.fi.intel.com>
+ <CAMpxmJUMMia+b6DQ1KoZ70XPUzhutg1tnWF5PCvfaRF5-XQnVg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJUMMia+b6DQ1KoZ70XPUzhutg1tnWF5PCvfaRF5-XQnVg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2020-09-28 at 18:02 +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 28, 2020 at 5:59 PM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2020-09-28 at 12:41 +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > 
-> > > There's a common pattern of dynamically allocating an array of char
-> > > pointers and then also dynamically allocating each string in this
-> > > array. Provide a helper for freeing such a string array with one call.
-> > 
-> > Isn't this also common for things like ring buffers?
-> > Why limit this to char *[]?
-> > 
+On Mon, Sep 28, 2020 at 04:52:25PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Sep 28, 2020 at 4:00 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Sep 28, 2020 at 03:13:53PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 28, 2020 at 3:00 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Sep 28, 2020 at 12:41:53PM +0200, Bartosz Golaszewski wrote:
+
+...
+
+> > > > how do you avoid overflow?
+> > >
+> > > I renamed the property, the previous "chip-name" is no longer used. In
+> > > fact it was never used but was accounted for in GPIO_MOCKUP_MAX_PROP.
+> >
+> > Either I'm missing something or...
+> >
+> > Current code in linux-next has 3 properties to be possible
+> >
+> > PROPERTY_ENTRY_U32("gpio-base", base);
+> > PROPERTY_ENTRY_U16("nr-gpios", ngpio);
+> > PROPERTY_ENTRY_BOOL("named-gpio-lines");
+> >
+> > You adding here
+> > PROPERTY_ENTRY_STRING("chip-label", chip_label);
+> >
+> > Altogether after this patch is 4 which is maximum, but since array is passed by
+> > a solely pointer, the terminator is a must.
+> >
 > 
-> I don't want to add APIs nobody is using. What do you suggest?
+> Thanks for explaining my code to me. Yes you're right and I'm not sure
+> why I missed this. :)
+> 
+> I'll fix this in v3.
+> 
+> Actually this means the code is wrong even before this series - it's
+> just that we don't use the "chip-name" property.
 
-Change the argument to void** and call it
+Right, you patch just exposed it.
 
-void kfree_array(void **array, int count);
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
