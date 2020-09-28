@@ -2,135 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 535F827A4E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 02:32:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5577F27A67B
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 06:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgI1AcX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Sep 2020 20:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgI1AcX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Sep 2020 20:32:23 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3123DC0613CE;
-        Sun, 27 Sep 2020 17:32:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id v14so2566255pjd.4;
-        Sun, 27 Sep 2020 17:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=orI2XdPNMcc9fk0dBNQocsoJ4tDxFbu6pi0+98Ky68Y=;
-        b=aB+u4b0IizAbMXWGxnjGw9NoznuYjPDynjcZQl0ZJHjEL7lAag84A06BYgIcc0wNIW
-         ThGb97ZyS1I7iQXhO3IY82dT+R3+N+lAabZWELHasKPtFlJRPB9tNePCHcTBQ3WAQduX
-         f+V31uqJ87oufgIGDB0FAr8rSSWnWdgiq4uGDqCwQW+k9YlKSusPlED2CogQFhCypShv
-         sxNtXS8k7m6Y0zIdTuNSmPPFdHMFX0Ri3+/CCIlMi5OPsqTmm528MgXbfeMXYLqd2Em6
-         Nd+MYo0X2GzeQA9WOziWhp6z97BrdvryCDg4JjOWfywjVdYvjc9200sCaa36AVLM1y7Z
-         u8dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=orI2XdPNMcc9fk0dBNQocsoJ4tDxFbu6pi0+98Ky68Y=;
-        b=OXWjbqhkhMilNZHxOCrYkbiFdpkvic1XMDd8TxOC60rwPSQRLEYPoDhyCaEIhq8y1I
-         Nhj2l6v4Acx/jPgdeE3bsQG8S3jIVlnz3GO7Ki+f4JnHPuwOx4c6x8cu4xpAUL+BAJ71
-         ymbFSEZBHwdy9xa++mgq9MVVH4GHsMRN+3Rt6LLfn4+vdJuGIFppL5VaojCmK139A5mL
-         PMGCg8acxbCrAOCKGpSqXkFHhJghPFxxUbZYit8lE8g/x1kms2QZku9YM6Gh1G4XvIjQ
-         VQm58dGSuUpV1ZuLfGY31yFoC6QGAtfCEM/SMM7YKO/1j8KDYrjRycgMVIdP33iuUn5d
-         DKaw==
-X-Gm-Message-State: AOAM530UKtHCZETYdXVTnKSpqV/veXWKidjkOQGYUwxCzEaM8Zz341Oj
-        95JZeTcNZFpDE8kgbxM+fjKGWB7F4xVorg==
-X-Google-Smtp-Source: ABdhPJzo94Q6KL67/oOAwVreZ2P/nxuMceGKv0M5Amc3y3deBIrdJJDlZHMPfsAYh1ak/G2SPz9Cgg==
-X-Received: by 2002:a17:90b:889:: with SMTP id bj9mr7215964pjb.101.1601253142317;
-        Sun, 27 Sep 2020 17:32:22 -0700 (PDT)
-Received: from sol.lan (106-69-171-132.dyn.iinet.net.au. [106.69.171.132])
-        by smtp.gmail.com with ESMTPSA id o20sm8443783pgh.63.2020.09.27.17.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 17:32:21 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, arnd@arndb.de
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v10 20/20] tools: gpio: add debounce support to gpio-event-mon
-Date:   Mon, 28 Sep 2020 08:28:07 +0800
-Message-Id: <20200928002807.12146-21-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200928002807.12146-1-warthog618@gmail.com>
-References: <20200928002807.12146-1-warthog618@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726421AbgI1EcX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Sep 2020 00:32:23 -0400
+Received: from m42-4.mailgun.net ([69.72.42.4]:35978 "EHLO m42-4.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgI1EcX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 28 Sep 2020 00:32:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1601267542; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=iUP+9KAtVUdbqvkexYHbHi5BMbdndfT+RF8uBYA3JJY=; b=oJjjKtKelxF8ha+oD1KAwIGLbHEp7WL+g7gzzt9wx1ML5XCXufjyiz0NqvNC88FYvxmrU9g4
+ ykOr/AVGh7LRiqzNN/uXhNmtZ6kBfGQyafdDebbZysKuwpdKW5eY1m6GCSROlSW0zARemosw
+ BwcCfevEZG75Hlz8r/dxWoSvsN4=
+X-Mailgun-Sending-Ip: 69.72.42.4
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f716756e064df29c678f619 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 28 Sep 2020 04:32:22
+ GMT
+Sender: mkshah=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 08E2EC433F1; Mon, 28 Sep 2020 04:32:22 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B2897C433CA;
+        Mon, 28 Sep 2020 04:32:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B2897C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     bjorn.andersson@linaro.org, maz@kernel.org,
+        linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v6 0/6] irqchip: qcom: pdc: Introduce irq_set_wake call
+Date:   Mon, 28 Sep 2020 10:01:58 +0530
+Message-Id: <1601267524-20199-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for debouncing monitored lines to gpio-event-mon.
+Changes in v6:
+- Update commit message more descriptive in v5 patch 1
+- Symmetrically enable/disable wakeirqs during suspend/resume in v5 patch 3
+- Include Acked-by and Reviewed-by tags from v5 series
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Changes in v5:
+- Update commit subject in v4 patch 1
+- Add more details to commit message in v4 patch 2
+- Add change to enable wake irqs during suspend using new flag in irqchip
+- Use this in PDC and qcom pinctrl driver to enable wakeirqs on suspend
+- Make for loop more readable and add more details in commit in v4 patch 7
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index 0c34f18f511c..90c3155f05b1 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -148,11 +148,12 @@ void print_usage(void)
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
- 		"  -f         Listen for falling edges\n"
-+		"  -b <n>     Debounce the line with period n microseconds\n"
- 		" [-c <n>]    Do <n> loops (optional, infinite loop if not stated)\n"
- 		"  -?         This helptext\n"
- 		"\n"
- 		"Example:\n"
--		"gpio-event-mon -n gpiochip0 -o 4 -r -f\n"
-+		"gpio-event-mon -n gpiochip0 -o 4 -r -f -b 10000\n"
- 	);
- }
- 
-@@ -167,11 +168,12 @@ int main(int argc, char **argv)
- 	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpio_v2_line_config config;
--	int c;
-+	int c, attr, i;
-+	unsigned long debounce_period_us = 0;
- 
- 	memset(&config, 0, sizeof(config));
- 	config.flags = GPIO_V2_LINE_FLAG_INPUT;
--	while ((c = getopt(argc, argv, "c:n:o:dsrf?")) != -1) {
-+	while ((c = getopt(argc, argv, "c:n:o:b:dsrf?")) != -1) {
- 		switch (c) {
- 		case 'c':
- 			loops = strtoul(optarg, NULL, 10);
-@@ -187,6 +189,9 @@ int main(int argc, char **argv)
- 			lines[num_lines] = strtoul(optarg, NULL, 10);
- 			num_lines++;
- 			break;
-+		case 'b':
-+			debounce_period_us = strtoul(optarg, NULL, 10);
-+			break;
- 		case 'd':
- 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
- 			break;
-@@ -205,6 +210,15 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
-+	if (debounce_period_us) {
-+		attr = config.num_attrs;
-+		config.num_attrs++;
-+		for (i = 0; i < num_lines; i++)
-+			gpiotools_set_bit(&config.attrs[attr].mask, i);
-+		config.attrs[attr].attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-+		config.attrs[attr].attr.debounce_period_us = debounce_period_us;
-+	}
-+
- 	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
+Changes in v4:
+- Drop "Remove irq_disable callback from msmgpio irqchip" patch from v3
+- Introduce irq_suspend_one() and irq_resume_one() callbacks
+- Use the new callbacks to unmask wake interrupts during suspend
+- Reset only pdc interrupts that are mapped in DTSI
+
+Changes in v3:
+- Drop gpiolib change (v2 patch 1) since its already in linux-next
+- Add Acked-by Linus Walleij for v2 patch 2 and v2 patch 3.
+- Address Stephen's comment to on v2 patch 3
+- Address Stephen's comment to change variable to static on v2 patch 4.
+- Add a new change to use return value from .irq_set_wake callback
+- Add a new change to reset PDC irq enable bank during init time
+
+Changes in v2:
+- Fix compiler error on gpiolib patch
+
+This series adds support to lazy disable pdc interrupt.
+
+Some drivers using gpio interrupts want to configure gpio for wakeup using
+enable_irq_wake() but during suspend entry disables irq and expects system
+to resume when interrupt occurs. In the driver resume call interrupt is
+re-enabled and removes wakeup capability using disable_irq_wake() one such
+example is cros ec driver.
+
+With [1] in documentation saying "An irq can be disabled with disable_irq()
+and still wake the system as long as the irq has wake enabled".
+
+The PDC IRQs are currently "unlazy disabled" (disable here means that it
+will be masked in PDC & GIC HW GICD_ISENABLER, the moment driver invokes
+disable_irq()) such IRQs can not wakeup from low power modes like suspend
+to RAM since the driver chosen to disable this.
+
+During suspend entry, no one re-enable/unmask in HW, even if its marked for
+wakeup.
+
+One solutions thought to address this problem was...During suspend entry at
+last point, irq chip driver re-enable/unmask IRQs in HW that are marked for
+wakeup. This was attemped in [2].
+
+This series adds alternate solution to [2] by "lazy disable" IRQs in HW.
+The genirq takes care of lazy disable in case if irqchip did not implement
+irq_disable callback. Below is high level steps on how this works out..
+
+a. During driver's disable_irq() call, IRQ will be marked disabled in SW
+b. IRQ will still be enabled(read unmasked in HW)
+c. The device then enters low power mode like suspend to RAM
+d. The HW detects unmasked IRQs and wakesup the CPU
+e. During resume after local_irq_enable() CPU goes to handle the wake IRQ
+f. Generic handler comes to know that IRQ is disabled in SW
+g. Generic handler marks IRQ as pending and now invokes mask callback
+h. IRQ gets disabled/masked in HW now
+i. When driver invokes enable_irq() the SW pending IRQ leads IRQ's handler
+j. enable_irq() will again enable/unmask in HW
+
+[1] https://www.spinics.net/lists/kernel/msg3398294.html
+[2] https://patchwork.kernel.org/patch/11466021/
+
+Maulik Shah (6):
+  pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED and IRQCHIP_MASK_ON_SUSPEND
+    flags
+  pinctrl: qcom: Use return value from irq_set_wake() call
+  genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  pinctrl: qcom: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  irqchip: qcom-pdc: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+  irqchip: qcom-pdc: Reset PDC interrupts during init
+
+ drivers/irqchip/qcom-pdc.c         | 14 +++++++++--
+ drivers/pinctrl/qcom/pinctrl-msm.c | 11 +++++----
+ include/linux/irq.h                | 49 +++++++++++++++++++++++---------------
+ kernel/irq/debugfs.c               |  3 +++
+ kernel/irq/pm.c                    | 34 ++++++++++++++++++++++----
+ 5 files changed, 81 insertions(+), 30 deletions(-)
+
 -- 
-2.28.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
