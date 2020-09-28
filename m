@@ -2,144 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03DDF27ABB5
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 12:19:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0074D27ABBD
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 12:24:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgI1KTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Sep 2020 06:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57802 "EHLO
+        id S1726615AbgI1KYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Sep 2020 06:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgI1KTf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Sep 2020 06:19:35 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE4FC0613CE
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 03:19:33 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e22so685985edq.6
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 03:19:33 -0700 (PDT)
+        with ESMTP id S1726328AbgI1KX7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Sep 2020 06:23:59 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C51C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 03:23:57 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id i26so7691120ejb.12
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 03:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HHY2LitkeyuKE1ueF79fzsqA8gZGVBNl2y26Vi+0G7w=;
-        b=MuZN73SUJay7gOjonPYwPI9p88HhEJpd6OklwrVJ1WYR7Pwg3gZE9S2iLwX2jUn0Yl
-         Ga2nhyy5CwTRuHevkTvvHwNuyZi7wBsh40p2iGbl0DfXPqVCAYev2seVzzj8i2Tqo0FJ
-         PB6kNQTqSXaZ9/GNQaYIRVmskHf3QQMm10kq36d6zAQuj8sHQwABeC75MDxRU7DxBCL1
-         PzbUYgSsIIwwTxmUp53/gz9dv7IAueiHR3deSivi95hhVzOO8KCEwKM+Sh+ObJWT0v5c
-         nfujMuHzcNTbNlTq4My3xZlXs3Y/HovWFpB8JCZoqk3S3Fagu5Fd+z1gj0omwF5q5oKD
-         0blg==
+         :cc;
+        bh=kcQ3Q5G7b1iYSZV9wYb2LjY+OnGWWHVqpPN2pZmnPAM=;
+        b=xdjR0uBbD8V3PgvOy2pnav7PYFNuSjlZqObOj0QX/LlRX8GwcdXfGkYoYsT77+BLC2
+         viXOj9LPAa84LbZxoO+SzNTAiNAQY3Ui4fA/HdzdXqt1VLf08uPL9OkxUuhWpkJi5hNA
+         xNdLvZVbsvdfZdWhUtjBT4ZJYgl9Fgh/bplxAWmdWsn4XEBe46y9E3V9VQd6J2PcBNl+
+         WvHYDXlJUwVmYsPnc2zOwdHOISaLcjEtAkJyU1UjWi+rGpiMINEEup5vCh1efUIufWFZ
+         mPVoddcOm/AOmN4LwMLN3a4l2rhWoW52fU/5xV8jMITcEJAJyzukiuiJ9FywlUUK2dCQ
+         1W8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HHY2LitkeyuKE1ueF79fzsqA8gZGVBNl2y26Vi+0G7w=;
-        b=Vzo+VHlAEI4whaBKN4UpTIhY5Iz9lVy/udBcjh0PDCJVx/WoDV/p4ZPZWOVOCdTckv
-         x5Nh2BarNfuMQT5gfQyooL8xDV3FBeCdLNKkG1Q1WSMNvIl1BiX4kzMaL2qvaNJ6uXVv
-         TArsxKbSKwqoglVUI0wuIGX0Y/AMhwvylsO+u1EmLEc6kKuSMxyF3MX9o3QEemdEXk9E
-         QExGaeAfOazQpvl2E0VZQINTZaHvmV3h1yYG2h8mEk793Dasgst0akm7Qalf7cyckucP
-         YpagvDD8v9xIQ5N+DvCjWdI+rNr3lFzhNMtuvenuXrfEasY4Vz89Wwg47FgL+rZu0vf+
-         8OHw==
-X-Gm-Message-State: AOAM532XY/JCk/8jbWODlsP+t78yQF4MnvblLhBfevgG5RqCsswLxHC1
-        bIQaJx+G+wmgzoJLyxH6oGp6i36J7l+dnvHW90cUgA==
-X-Google-Smtp-Source: ABdhPJz0fRfokckEsdMIHPWlQ+ZJ7Z2nVZUNqonyr5ezT7aGO4E5eOLmu124oJDJaz4YmyI3V+UIpB2m5eBGqhyy0lU=
-X-Received: by 2002:a05:6402:78b:: with SMTP id d11mr882112edy.341.1601288372214;
- Mon, 28 Sep 2020 03:19:32 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=kcQ3Q5G7b1iYSZV9wYb2LjY+OnGWWHVqpPN2pZmnPAM=;
+        b=GCNyfp1MdFKi6jORsvIN8X3tKxhltFdUaSaRiav1lBXogtlClLvknntzGgH4vqcO/S
+         L9vGrhNbkcBoEzR+mqxV7y1ntBCMyhMkYf5keru8gEigPqHnxGZxFVEbXAd0HuQiCe4G
+         91rviyqMZ563oFdqP4g+cslTImfB12pcdM83nC/ASrnzrdBIe7Fj9QRHU/9PaGCm9/1+
+         FldN719soxS2QIkq6uhUGZJGuj1u2WdWnR15PbXP+MQO01lIaeKnrIQgVo0/bWscOHY9
+         gddYZVDFdBijfn42WqkCVh4LvLsfCP5KtIfDdEuxnY6KuGKgND/5vlrpRnuyRZYiq+xi
+         Hw4Q==
+X-Gm-Message-State: AOAM5302zJguAHea26ZDESWe9QIVCaSv1sT9x4fIzv+PEFL6OpJuZuKN
+        IsgKkYgBnKuOoohWirGRmyTKXj/SxomRPolbNmJfXxikcFA=
+X-Google-Smtp-Source: ABdhPJz+qlAAw4d5faIhEVhDwipCEy9QfC5hjH+z40kZktFm1EUNksrZRJG/94w6YS06dIpL8UQ6go/Z6/AiyOk6Zs0=
+X-Received: by 2002:a17:906:850e:: with SMTP id i14mr917595ejx.168.1601288636377;
+ Mon, 28 Sep 2020 03:23:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1601164493.git.mirq-linux@rere.qmqm.pl> <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
+References: <CAMpxmJV0jwLAn3Xee_3zDiF_DQF-8uy52qxU1WAbr9xiVb0WLQ@mail.gmail.com>
+ <20200928094452.7005-1-lists@wildgooses.com>
+In-Reply-To: <20200928094452.7005-1-lists@wildgooses.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 28 Sep 2020 12:19:21 +0200
-Message-ID: <CAMpxmJV5A3OkNNmVcc0AZ+gHo_G2h2D7QrNjc=vKH-6O4mOYhw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: tps65910: use regmap accessors
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
+Date:   Mon, 28 Sep 2020 12:23:45 +0200
+Message-ID: <CAMpxmJXv5+hegJX_m5Pw72O9Fiez++ELN6EqSP0MiPyrcm79Kw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-amd-fch: Correct logic of GPIO_LINE_DIRECTION
+To:     Ed Wildgoose <lists@wildgooses.com>
+Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 27, 2020 at 1:59 AM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
-qmqm.pl> wrote:
+On Mon, Sep 28, 2020 at 11:45 AM Ed Wildgoose <lists@wildgooses.com> wrote:
 >
-> Use regmap accessors directly for register manipulation - removing one
-> layer of abstraction.
+> The original commit appears to have the logic reversed in
+> amd_fch_gpio_get_direction. Also confirmed by observing the value of
+> "direction" in the sys tree.
 >
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Ed Wildgoose <lists@wildgooses.com>
+> Fixes: e09d168f13f0 ("gpio: AMD G-Series PCH gpio driver")
 > ---
->  drivers/gpio/gpio-tps65910.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/gpio/gpio-amd-fch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-tps65910.c b/drivers/gpio/gpio-tps65910.c
-> index 0c785b0fd161..0c0b445c75c0 100644
-> --- a/drivers/gpio/gpio-tps65910.c
-> +++ b/drivers/gpio/gpio-tps65910.c
-> @@ -28,7 +28,7 @@ static int tps65910_gpio_get(struct gpio_chip *gc, unsi=
-gned offset)
->         struct tps65910 *tps65910 =3D tps65910_gpio->tps65910;
->         unsigned int val;
+> diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
+> index 4e44ba4d7..2a21354ed 100644
+> --- a/drivers/gpio/gpio-amd-fch.c
+> +++ b/drivers/gpio/gpio-amd-fch.c
+> @@ -92,7 +92,7 @@ static int amd_fch_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
+>         ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_DIRECTION);
+>         spin_unlock_irqrestore(&priv->lock, flags);
 >
-> -       tps65910_reg_read(tps65910, TPS65910_GPIO0 + offset, &val);
-> +       regmap_read(tps65910->regmap, TPS65910_GPIO0 + offset, &val);
->
->         if (val & GPIO_STS_MASK)
->                 return 1;
-> @@ -43,10 +43,10 @@ static void tps65910_gpio_set(struct gpio_chip *gc, u=
-nsigned offset,
->         struct tps65910 *tps65910 =3D tps65910_gpio->tps65910;
->
->         if (value)
-> -               tps65910_reg_set_bits(tps65910, TPS65910_GPIO0 + offset,
-> +               regmap_set_bits(tps65910->regmap, TPS65910_GPIO0 + offset=
-,
->                                                 GPIO_SET_MASK);
->         else
-> -               tps65910_reg_clear_bits(tps65910, TPS65910_GPIO0 + offset=
-,
-> +               regmap_clear_bits(tps65910->regmap, TPS65910_GPIO0 + offs=
-et,
->                                                 GPIO_SET_MASK);
+> -       return ret ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+> +       return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
 >  }
 >
-> @@ -59,7 +59,7 @@ static int tps65910_gpio_output(struct gpio_chip *gc, u=
-nsigned offset,
->         /* Set the initial value */
->         tps65910_gpio_set(gc, offset, value);
->
-> -       return tps65910_reg_set_bits(tps65910, TPS65910_GPIO0 + offset,
-> +       return regmap_set_bits(tps65910->regmap, TPS65910_GPIO0 + offset,
->                                                 GPIO_CFG_MASK);
->  }
->
-> @@ -68,7 +68,7 @@ static int tps65910_gpio_input(struct gpio_chip *gc, un=
-signed offset)
->         struct tps65910_gpio *tps65910_gpio =3D gpiochip_get_data(gc);
->         struct tps65910 *tps65910 =3D tps65910_gpio->tps65910;
->
-> -       return tps65910_reg_clear_bits(tps65910, TPS65910_GPIO0 + offset,
-> +       return regmap_clear_bits(tps65910->regmap, TPS65910_GPIO0 + offse=
-t,
->                                                 GPIO_CFG_MASK);
->  }
->
-> @@ -157,7 +157,7 @@ static int tps65910_gpio_probe(struct platform_device=
- *pdev)
->                 if (!pdata->en_gpio_sleep[i])
->                         continue;
->
-> -               ret =3D tps65910_reg_set_bits(tps65910,
-> +               ret =3D regmap_set_bits(tps65910->regmap,
->                         TPS65910_GPIO0 + i, GPIO_SLEEP_MASK);
->                 if (ret < 0)
->                         dev_warn(tps65910->dev,
+>  static void amd_fch_gpio_set(struct gpio_chip *gc,
 > --
-> 2.20.1
+> 2.26.2
 >
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Queued for fixes, thanks!
+
+Bartosz
