@@ -2,87 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D15E427D242
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 17:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D041D27D2F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 17:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgI2PNy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 11:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgI2PNy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 11:13:54 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E050CC0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 08:13:53 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id lo4so15541725ejb.8
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 08:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/xLPzAomu6d8D04kvDBrtRQzHyWgQisYCMsYSahXBt0=;
-        b=RfGxzvPa9jCfuxV2cMVQaoyEKnnWrbtl/1rWexSnmjmNpneYivCbMHg7oz+1AMmKDV
-         VqmBMVyQOvYLLFZYm2bN1i0auC7pQIO1/BXbW83aPOBwleQhSyEO/IGJ1pK1v41tnUuG
-         aI6FGNuUO0tO/Wx1n05/uhPGyB7dXp5kDaiaBpV7/9Ky3WRPtGqX9YjjxWHSxJNqMbXd
-         3GwEjYOwDfEqt1+zwC40Hc4JFEFQ7uygD/faUsTV4DKJ+3FnCj1Fs7HRFOK2FLXWZVhS
-         AxbRyYwj0HgcAEse+jmaHLrAs/LWQRyb8JCyq/sgGxc3qbeRJYuoGe9ZRu0kfKx1Ak4S
-         +Nag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/xLPzAomu6d8D04kvDBrtRQzHyWgQisYCMsYSahXBt0=;
-        b=uW8quHkA9ZSf1ewaLmWl6Po+BjiLxTDFuUCUdWI7a+cXJS5ARdPRHbtRT3RbCEhMTj
-         w78kWoksvoqUUeDAoV9TSZqIOSOsZBi5yKwziL1A1CyjHVa56TJ1lRpgOXzauIHz7t4k
-         TOpknv1jt8ZKqFgzU+Dl52qUlR+PhjKwhymQJl6cnISJ1GiuebN/siyAHPn7ZXsJD5iG
-         9+r7YtbARyQgoIkJpMOg7HjxfTNcE32iOpaxk7+CEu315B2VlIlVZKmvvFEhfacug0X+
-         DizvJEsjCTlu0jm67e134j5cn8BvVGeVtxmYArv2oRgFxlh9cS/bXNkLbi4sPWi7V4Mj
-         K7cQ==
-X-Gm-Message-State: AOAM532/llji+nO9A9JaH3CwrtWuUanmISyXwIUJxU2uNOPgekqbOlo8
-        rRS407YTnwG0VH4/3bnOaFAR0mVf2BCHtUFxAuFl1w==
-X-Google-Smtp-Source: ABdhPJwjTE/Z9dJqWNhprP87IkK1vkSW7TrtzWliVOx0vgTwGiPAqNxOn+Wf46e6bnCbqgFwyw9GtSr4dbIiBPGRkxQ=
-X-Received: by 2002:a17:906:49c6:: with SMTP id w6mr4224530ejv.445.1601392432582;
- Tue, 29 Sep 2020 08:13:52 -0700 (PDT)
+        id S1728594AbgI2Pm5 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 29 Sep 2020 11:42:57 -0400
+Received: from smtp.asem.it ([151.1.184.197]:53979 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728241AbgI2Pm4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 29 Sep 2020 11:42:56 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Sep 2020 11:42:55 EDT
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000512543.MSG 
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 17:37:47 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 29
+ Sep 2020 17:37:46 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Tue, 29 Sep 2020 17:37:46 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: How to use an ACPI declared GPIO in a userspace ...
+Thread-Topic: How to use an ACPI declared GPIO in a userspace ...
+Thread-Index: AdaWdniTedAZ6+9wQdyYYgE5sQ27yA==
+Date:   Tue, 29 Sep 2020 15:37:46 +0000
+Message-ID: <9152bb8be33e4192a7766eb53c6ca9af@asem.it>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200928002807.12146-1-warthog618@gmail.com>
-In-Reply-To: <20200928002807.12146-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 29 Sep 2020 17:13:42 +0200
-Message-ID: <CAMpxmJVV5bCVAbC9WPsZwXqvYvnPLHAqEqky8w-iuPO4pDgeAQ@mail.gmail.com>
-Subject: Re: [PATCH v10 00/20] gpio: cdev: add uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020D.5F7354CB.0052,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 2:28 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> This patchset defines and implements a new version of the
-> GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-> support for debounce, event sequence numbers, and allow for requested
-> lines with different configurations.
-> It provides some future proofing by adding optional configuration fields
-> and padding reserved for future use.
->
-> The series can be partitioned into three blocks; the first two patches
-> are minor fixes that impact later patches, the next eleven contain the
-> v2 uAPI definition and implementation, and the final seven port the GPIO
-> tools to the v2 uAPI and extend them to use new uAPI features.
->
-> The more complicated patches include their own commentary where
-> appropriate.
->
-> Cheers,
-> Kent.
->
+Hi all,
 
-This series looks great now. Unless there are new objections I intend
-on picking it up tomorrow.
+I need to expose to the userspace a GPIO, physically connected to a board
+push-button. This GPIO must expose a pre-defined name, such as
+"user-push-button", so that the userspace applications can use it without
+know any physical GPIO details.
 
-Bartosz
+I can customize the board BIOS and so my goal is to add an ACPI table with
+a content like this:
+
+...
+Scope (\_SB.GPO1)
+	{
+		Device (BTNS)
+		{
+			Name (_HID, "PRP0001")
+			Name (_DDN, "GPIO buttons device")
+
+			Name (_CRS, ResourceTemplate ()
+			{
+				GpioIo (
+				Exclusive,               // Not shared
+				PullNone,                // No need for pulls
+				0,                       // Debounce timeout
+				0,                       // Drive strength
+				IoRestrictionInputOnly,  // Only used as input
+				"\\_SB.GPO1",            // GPIO controller
+				0, ResourceConsumer, , ) // Must be 0
+				{
+					25,              // GPIO number
+				}
+...
+
+I know that this GPIO can be used from other drivers.
+For example I successfully tested it using the "gpio-keys" device driver,
+giving to my GPIO a key-code and emulating in this way a keyboard key.
+This could be a possible solution.
+
+But I prefer to expose my GPIO as a classic GPIO, not as a keyboard key.
+
+I was wondering if there is a generic GPIO driver that I can use to expose
+this GPIO with its pre-defined name (caming from the ACPI table declaration),
+to the userspace...
+
+Best regards,
+
+Flavio
