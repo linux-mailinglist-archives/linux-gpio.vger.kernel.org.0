@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7795C27C741
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 13:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83BC027C759
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 13:53:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgI2Lwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 07:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        id S1730476AbgI2LxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 07:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731378AbgI2Lwf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 07:52:35 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F939C0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 04:52:34 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id m5so5149992lfp.7
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 04:52:34 -0700 (PDT)
+        with ESMTP id S1730837AbgI2LxM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 07:53:12 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F319C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 04:53:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b19so3750514lji.11
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 04:53:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+tsxcTYlmIt7fvSKcCyMiXfnmpMUlkCmokvJqIWw/AQ=;
-        b=jjOWrjZ7uwCllS0OYNttixtOrGeXrQxJugCu2v3GwGaMU88Cbu9bKFfcGk4YgS8kA6
-         CsxTSPEhUEB3QIobkbv54/t2k1Apsnjom+7y/88PmGKC6hXYb23/zfW9e2NG9HFaTWH3
-         giuTVdl61v/yhftsQIkuKaAtvCQDNCkOPMMCmqk4P1QjWB1kaBJQopeN3vzmME+jkiMF
-         StGTEqKwiChGFx+SW7eOlWuhtGOUsgUvkCAYA8z9mGM0jiR9LJkVXCR2ev4BtHpPTdpD
-         4tg6P7tqtBhWeLx7A/5BU61hYP1khSLAlsN0wd4MfmqHTfV2chMeeo+BbvoDURpxfFpK
-         R8NQ==
+        bh=Kx4a5n3dqvCrWEJOLHbORqwKT2evqfk9ebyuySfjOtg=;
+        b=OU7vwQdKxZ0/LaLBIdqXX1+fIXXyIvw8rgTl5QRSBJhESRYdc+j2h3iupiQg5463Ye
+         KpfwCQcP+xtHykzaTmJ9hEtNQrN6jBPCtgtWGSznjpNY43P11jxRguU/ZwMmO4/5LU+s
+         /B86olt2GnMoT4tgsoiZvB6K8+GUIe0XKu14UZ9uoHpd2BwqL6fbPHzvNYWgCjD2j5fJ
+         T1ao/LSG4lXpoeuTLGxjwwNnBCuc4B/3d/ATesyG1VUkEFnyfPT1JHT5MyxU9X9KqTMc
+         AkIr2rqMMJV8WtiZXs5bgM2acO0IM+QnbjKL5+AIJ0eDAnqnQGqIpSPgfScOloVYzq4b
+         ebSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+tsxcTYlmIt7fvSKcCyMiXfnmpMUlkCmokvJqIWw/AQ=;
-        b=s/3eDxb2g5rJVHZcFCpLyxBxR98l4hsAPcFK3vr548cJe5IP6iXCd+IAUSEnGCIIZa
-         ubSW4moAz/3W9rdBvtWOGTE7XPd2UHQ9DaMWMnqYTuXg9oM6MjxXlA9+DjkgWciFCOln
-         3cBOQdKntVzhFKY/VUF/5zl+NfoT22Rq3s5iNXYQzeR5YPJfU2IqlhMMWhUtDDaSrVY/
-         u/i1EIHhKA9i5nx6arlSCFyn9EYXY2Iru8NIRMA2nFQCb4Ri63fuETaWVnZin01gw1eb
-         yuDlt+RZREd+bAsfoQTITbfUB4AzZbr3ZtdICda5AOMjDqJKqQRW6EAsORsBqGm+qoxp
-         agug==
-X-Gm-Message-State: AOAM530Q2M6zLt/1qgx/LKo2JWgdIXHzr5aairF1fgU9j9/P84MWHQyv
-        A04Y1OwrSeX0SUgpnR3nofJlNHWNX/bXiaC9Cm7/tA==
-X-Google-Smtp-Source: ABdhPJyz74jPaVUkdmhbwYZ2S+u3dSjvZvKxeT3Peh7LpsNsRgF1dUdYrIIkppHQ6YlpE4/57iHv2mOxCZjyaQ7fBcM=
-X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1163049lfq.260.1601380352826;
- Tue, 29 Sep 2020 04:52:32 -0700 (PDT)
+        bh=Kx4a5n3dqvCrWEJOLHbORqwKT2evqfk9ebyuySfjOtg=;
+        b=L7khpaLCgY6rcKT9LyYxa81MtC15YfLt9mDDzWCTxvZwpkA9mnjWO8NqWHCV9dM4lu
+         IkiS+jMln0RsW56QXSnvdXQ+rJtmlP+ogUdhi9M2dzFT97CUSbXbgwugEl03mv8caTLz
+         rX+RPU5zaSKqNYIuamSV3ejANDMngia/MuTIWNqSjHv6T6JZ5BEMhyEqM9aHU3L4e+Pr
+         +E+BfqvSAKptEgnPP5y1xKYoB793FU6GBObDE6+verDIcfKjqK2zkdM3PYqv0lrjQ0ly
+         0pkXbcYn0sTNeWEz2gx5yqWhq9sLJiUlVgabQjdiPeeHwSAKCt88PaHR5lw70K9k3y/u
+         trig==
+X-Gm-Message-State: AOAM5301NZRfqHg0TcFtk+bHEwBfC7hNXxxJWMey/rPSko7BrN5oJR9F
+        RKGxnZ7Qz1I893puavmlvKlskfgtUHoVYhA7q/aHWA==
+X-Google-Smtp-Source: ABdhPJyxfzQT2BAD2WMXJzi6V2K0dviJaIo85pSr+uDq2VHCHbTzqO83RgDyn4bkGg9eSg6Wd70UX8hhNgt6tNi9V6E=
+X-Received: by 2002:a2e:4e01:: with SMTP id c1mr1004508ljb.144.1601380390453;
+ Tue, 29 Sep 2020 04:53:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200920195848.27075-1-krzk@kernel.org>
-In-Reply-To: <20200920195848.27075-1-krzk@kernel.org>
+References: <20200920195848.27075-1-krzk@kernel.org> <20200920195848.27075-2-krzk@kernel.org>
+In-Reply-To: <20200920195848.27075-2-krzk@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Sep 2020 13:52:22 +0200
-Message-ID: <CACRpkdb+7jX7LV0U9J74sQefgxzkwOMv5E+8uvjrmb2Vexv+SQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: gpio: pl061: add gpio-line-names
+Date:   Tue, 29 Sep 2020 13:52:59 +0200
+Message-ID: <CACRpkda=R+=GBGGXrvjA9PUtq_t5772=Qd-9X9unhx=QTusnSw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gpio: fsl-imx-gpio: add i.MX ARMv6
+ and ARMv7 compatibles
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,13 +71,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 20, 2020 at 9:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Sun, Sep 20, 2020 at 9:59 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> Describe common "gpio-line-names" property to fix dtbs_check warnings
-> like:
+> Several DTSes with ARMv6 and ARMv7 i.MX SoCs introduce their own
+> compatibles so add them to fix dtbs_check warnings like:
 >
->   arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dt.yaml: gpio@e8a0b000:
->     'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+>   arch/arm/boot/dts/imx35-pdk.dt.yaml: gpio@53fa4000:
+>     compatible: ['fsl,imx35-gpio', 'fsl,imx31-gpio'] is not valid under any of the given schemas
+>
+>   arch/arm/boot/dts/imx51-babbage.dt.yaml: gpio@73f90000:
+>     compatible: ['fsl,imx51-gpio', 'fsl,imx35-gpio'] is not valid under any of the given schemas
 >
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
