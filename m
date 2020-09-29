@@ -2,72 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E25727CF1E
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 15:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D25327CF2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 15:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgI2N2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 09:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
+        id S1729822AbgI2NaM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 09:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728753AbgI2N2h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 09:28:37 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD3BC0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:28:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s205so4018247lja.7
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:28:37 -0700 (PDT)
+        with ESMTP id S1728695AbgI2NaL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 09:30:11 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA87C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:30:11 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id w11so5540360lfn.2
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sMFcSFF9cTOWS1K+7BbYrvtV2Z+dL4/OOGad18uZwXY=;
-        b=IXsBOy5RIAAn+M61rD2LUyZWAdu2fqQq563ccILvUTCOU2qTSQv9u9Cs9zSV23lIyD
-         oUlvaHFh7+tfj2FHZzn7CvoxKuKzGeBtB8N4zYTdHFls0MP4Rh/bgodJ5UGB/s36TevF
-         ZP/y/sM2uqRZgL16P+tej9QgKATo5I3fkIuNn2O+Ug2t6i5oQXUDRgCjrpgZONSUDQwR
-         49K2mFfan3TDh9Bd2wSNYvlmWmOQXHUJCSP+cMLOfqqhmXxytQV35HF9rSCBVXolsQHL
-         16L43uI5UFHKnYmdhQbdpTKCvFq+mlIOz1bf60tsI1IhTiRB39XS81+0/ilzrm5Qmg4P
-         StZA==
+        bh=B3ONy2UEfURniD/LDED8tr1xeJcvKDrV1FhcEDlZN1c=;
+        b=DboFVTgh1Vv4/th8goHVm+l+ZI1CAqWmQVQJvrAvlBKZLAf2LuPQA13+FuSil6SHPo
+         zDEiMXkESJR6U4icHIUWiGERxFEx3vRv77rmhstzV4pEdJ/P0uYjgo1H6gh3Ut4SXpZF
+         a+E/G8YlfO7tFA7IutFv/D6zxXnHnaSXn0ae9mt6teXXuFUi8CGfaz0veISib02iByMt
+         nMgo6K+vNpZNyg+oW676x0FTmwgZU00lBL3WaRBK4mljnn/wWxKGaPLx1dZp1UZv8Hye
+         7VeAgD0O/XYZ1SCFmw+/hwcagEQnMKNY9HMTReL9rvCmUEm6BXX3rHeK+9e4y1VrYuD9
+         Qchg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sMFcSFF9cTOWS1K+7BbYrvtV2Z+dL4/OOGad18uZwXY=;
-        b=Qm189pJmouKRRQssFHdju9/HYyD1sxv1of12slubBDi1Ck8ivJYz3VKGZ/tdpQTXDW
-         n9rHiM6MJK1pa/Ld8hysmOOYHcEMEilETT6M/XdTCSkClj8XozBTpU3M1AyMDG33P0MK
-         AaoPcA5FCq2PJMH9Ve+7z6CoJtprtCfAS6QGsaMFgbyjItP/wejeBa0qdCAP/kmA1LVS
-         jAcF9leCJlMSTwmFe1B+TwyY4JYnsMrAcUf/ceapk14Wmvvai6wMarIBm5W2WPlCChDt
-         HTuJTfaoyOiT3MXB+erWYFXQFrnV1mRWN4HZJcF48BTB02FFvyjrb7g+XxrChCFS7UKg
-         UT8A==
-X-Gm-Message-State: AOAM531B5ZKY+6/NLOFsG2vM5qNXTXIdspyxDyZonpsOHx07al0lXonc
-        M5NsDYdKqAzRDuL1mYP1Tc92e4Yl76SpMnZ9+BLw1A==
-X-Google-Smtp-Source: ABdhPJxeozH4n4En0aMUuCBCiTQAB5drzO20922BSsbJ0U7yzb99Rs0vcC6PWRTSNng3hq4FSm4UPdAQagf8ipEPmfY=
-X-Received: by 2002:a2e:4e01:: with SMTP id c1mr1137898ljb.144.1601386115524;
- Tue, 29 Sep 2020 06:28:35 -0700 (PDT)
+        bh=B3ONy2UEfURniD/LDED8tr1xeJcvKDrV1FhcEDlZN1c=;
+        b=g1KyE+1UyJFnLdYhoX/QY2lptgU/0aSgwZPX5r0ApWO6+kWAblfqStDw4iOWb6nSSr
+         vyDDdpS3tqvpjdcMl0kD/XGCrS1OT3xmQiIw/nmOgK4TUXJr4euyZ96UW/3EDU7kZyA2
+         iLp+0uxJe/vt4OYzUI5uxbqSrNOy6Tsib6bnBIZSIpT240S9GQlsCYgiSOHBYINyNtwn
+         hEZJb/sdUx/oJk6WXSSR2dJWEuoC7E69ZJ3Jpix7jsxKZqkV77Wen8rMIvfeiAAUges4
+         h7lUkHcKiS8yv6TVCTgtqLV0o0NoyxB1lfxDuIPP5uMIaKh/sS2kNKfO0uOGSy9NftUm
+         eRwg==
+X-Gm-Message-State: AOAM532FYa60As8T0niFFxYMMseQcE5IelUEkpCqy/iSy3FghoXt6Ebk
+        6+b0kNjRtfjyECEGI0LvRLUQOixDiDRotPtRrmX7rg==
+X-Google-Smtp-Source: ABdhPJyzlua0o08I4JVfAjPGkfZqJYDJ4sDtSEjU2PS5clrzOCyQejVxSNo1L881M6bwkyGp0lENoYgckNIh9Ii/D/Y=
+X-Received: by 2002:a05:6512:370b:: with SMTP id z11mr1137498lfr.571.1601386209889;
+ Tue, 29 Sep 2020 06:30:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200917131257.273882-1-eugen.hristev@microchip.com> <20200917131257.273882-2-eugen.hristev@microchip.com>
-In-Reply-To: <20200917131257.273882-2-eugen.hristev@microchip.com>
+References: <20200921131057.92895-1-miaoqinglang@huawei.com>
+In-Reply-To: <20200921131057.92895-1-miaoqinglang@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Sep 2020 15:28:23 +0200
-Message-ID: <CACRpkdZfNTRxJsBwNQt14MrvK6WK+VLFU2ot06hjGqy79gXKgw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: at91-pio4: add support for sama7g5 SoC
-To:     Eugen Hristev <eugen.hristev@microchip.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Tue, 29 Sep 2020 15:29:58 +0200
+Message-ID: <CACRpkdan6xt9AOy8bQdb44V1ciK36gM_fd+ELT6cPWKXe+oVrA@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: ocelot: simplify the return expression of ocelot_gpiochip_register()
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 3:13 PM Eugen Hristev
-<eugen.hristev@microchip.com> wrote:
+On Mon, Sep 21, 2020 at 3:10 PM Qinglang Miao <miaoqinglang@huawei.com> wrote:
 
-> Add support for sama7g5 pinctrl block, which has 5 PIO banks.
+> Simplify the return expression.
 >
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 
 Patch applied.
 
