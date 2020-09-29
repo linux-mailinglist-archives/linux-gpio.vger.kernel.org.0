@@ -2,105 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C974127B6DC
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Sep 2020 23:13:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E9CB27BECE
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 10:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgI1VNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Sep 2020 17:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgI1VNC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Sep 2020 17:13:02 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0BCC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 14:13:02 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id z193so1656464vsz.10
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 14:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Atw6tlilgo9PIrWGO9ZwsIYlXI3Umohxy7sKhaDAMxM=;
-        b=TV9amf1jSDj/q0zk2+YZ06YRaT4r/ztQksbRXH4VE2Ei0ZNblIhDRJdW5oI66xgqbK
-         HZ9HR42RKge6Jr2OIBuQIzgx3dLw6RJuVKBUvHDBNW4o4Cxr69cZ9yjDLFPcuMqKKw3H
-         cO3UUNlSeBTrZCMRZ+GhIb0oXVHPKu3IlK5gI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Atw6tlilgo9PIrWGO9ZwsIYlXI3Umohxy7sKhaDAMxM=;
-        b=ZYA8DzvST1mDVcP/v0LD347jzlzA1+e0MprNJs5o4GK1XF+94NKU+fdiCsVGI+fZ7E
-         u8xlfajMAVoyMUVvU7l7sJbJ1/4R4Px6llYhoA27TSefH/bPuP8COzn4CAgf3UZLMbXa
-         3dCGqMIP1pJfQCKobttnM/z+3gSZ0lR14dclhRIB/OPJOnMG7QYN8mVCmhcxXf7Ab51A
-         f/njxZzxIsZS+0U0eNqRERp0UQsfq3jBo2djrt7bkHwh/nBDYjc9knWn52CGBR9hkSWc
-         QJCWkmgU1l5X1cHTyqLT39oeKcg/0GvqXA96Bp2avLCUCRvenuaobQivmiNQwDv8MYTZ
-         IrYg==
-X-Gm-Message-State: AOAM530arWMM0oj5vD1hSiqgMIAYfSZjD7zYDQgr2M6wNI5+7dM+QKEu
-        zpICLm/OqpGh6iNNYpzaBXQkMSwZrUMRag==
-X-Google-Smtp-Source: ABdhPJxgtq6t+Tj1DeZhkP4mNKMwrNkrVCf12GcT8HsUsvzUopUoNZIYu2WkknXXAAqsefvuZR5CCg==
-X-Received: by 2002:a67:8e08:: with SMTP id q8mr1075935vsd.56.1601327580249;
-        Mon, 28 Sep 2020 14:13:00 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id l65sm1197118vkh.33.2020.09.28.14.12.58
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Sep 2020 14:12:58 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id z193so1656386vsz.10
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Sep 2020 14:12:58 -0700 (PDT)
-X-Received: by 2002:a67:8bc2:: with SMTP id n185mr1119720vsd.49.1601327577585;
- Mon, 28 Sep 2020 14:12:57 -0700 (PDT)
+        id S1725765AbgI2IFM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 04:05:12 -0400
+Received: from z5.mailgun.us ([104.130.96.5]:54182 "EHLO z5.mailgun.us"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727708AbgI2IFM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 29 Sep 2020 04:05:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1601366711; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=r+8Y1/iTY5V2CVTSF4MuhfKKHmbWKG8EGomgri5/hVc=; b=NnkQj28dFJSNd6IHEHYPeZwA/VAayI8+eKEcrxyRcL+JZrSyZ0azTBzCphBBpjdGNoeb0jhI
+ ErQ7bSVFm99lwCW3e7fSSokv88JDrB2ChFkrsYushPBheQEV8vPaIJXy2qd524m/29uY4Lhx
+ ONxXojYXIQNsYfqPWmGLPZp+ie8=
+X-Mailgun-Sending-Ip: 104.130.96.5
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f72ea9559892db41f51d014 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 29 Sep 2020 08:04:37
+ GMT
+Sender: varada=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9616AC4339C; Tue, 29 Sep 2020 08:04:36 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+        autolearn=no autolearn_force=no version=3.4.0
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: varada)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D953C433CA;
+        Tue, 29 Sep 2020 08:04:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D953C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=varada@codeaurora.org
+Date:   Tue, 29 Sep 2020 13:34:26 +0530
+From:   Varadarajan Narayanan <varada@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        nsekar@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, sricharan@codeaurora.org
+Subject: Re: [PATCH 5/7] pinctrl: qcom: Add IPQ5018 pinctrl driver
+Message-ID: <20200929080425.GA21805@codeaurora.org>
+References: <1601270140-4306-1-git-send-email-varada@codeaurora.org>
+ <1601270140-4306-6-git-send-email-varada@codeaurora.org>
+ <20200928184322.GB71055@builder.lan>
 MIME-Version: 1.0
-References: <1601267524-20199-1-git-send-email-mkshah@codeaurora.org> <1601267524-20199-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1601267524-20199-4-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 28 Sep 2020 14:12:46 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VqkgWTrGLrUMdBWGD8_wd4yMr+e6U-xCxFg4B2LfhTRw@mail.gmail.com>
-Message-ID: <CAD=FV=VqkgWTrGLrUMdBWGD8_wd4yMr+e6U-xCxFg4B2LfhTRw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
- flag
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200928184322.GB71055@builder.lan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, Sep 28, 2020 at 01:43:22PM -0500, Bjorn Andersson wrote:
+> On Mon 28 Sep 00:15 CDT 2020, Varadarajan Narayanan wrote:
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5018.c b/drivers/pinctrl/qcom/pinctrl-ipq5018.c
+> [..]
+> > +static const struct msm_function ipq5018_functions[] = {
+> [..]
+> > +	FUNCTION(qspi_clk),
+> > +	FUNCTION(qspi_cs),
+> > +	FUNCTION(qspi0),
+> > +	FUNCTION(qspi1),
+> > +	FUNCTION(qspi2),
+> > +	FUNCTION(qspi3),
+>
+> Instead of having one function name per pin it typically leads to
+> cleaner DT if you group these under the same name (i.e. "qspi")
 
-On Sun, Sep 27, 2020 at 9:32 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> An interrupt that is disabled/masked but set for wakeup still needs to
-> be able to wake up the system from sleep states like "suspend to RAM".
->
-> This change introduces IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag. If irqchip
-> have this flag set then irq PM will enable/unmask irqs that are marked
-> for wakeup but are in disabled state.
->
-> On resume such irqs will be restored back to disabled state.
->
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  include/linux/irq.h  | 49 ++++++++++++++++++++++++++++++-------------------
->  kernel/irq/debugfs.c |  3 +++
->  kernel/irq/pm.c      | 34 ++++++++++++++++++++++++++++++----
->  3 files changed, 63 insertions(+), 23 deletions(-)
+Ok.
 
-I will freely admit not being an expert on this code / knowing all the
-subtle edge conditions, but this seems reasonable to me.
+> Same seems to apply to sdc, wci, xfem at least.
+>
+> > +	FUNCTION(reset_out),
+> > +	FUNCTION(sdc1_clk),
+> > +	FUNCTION(sdc1_cmd),
+> > +	FUNCTION(sdc10),
+> > +	FUNCTION(sdc11),
+> > +	FUNCTION(sdc12),
+> > +	FUNCTION(sdc13),
+> > +	FUNCTION(wci0),
+> > +	FUNCTION(wci1),
+> > +	FUNCTION(wci2),
+> > +	FUNCTION(wci3),
+> > +	FUNCTION(wci4),
+> > +	FUNCTION(wci5),
+> > +	FUNCTION(wci6),
+> > +	FUNCTION(wci7),
+> > +	FUNCTION(wsa_swrm),
+> > +	FUNCTION(wsi_clk3),
+> > +	FUNCTION(wsi_data3),
+> > +	FUNCTION(wsis_reset),
+> > +	FUNCTION(xfem0),
+> > +	FUNCTION(xfem1),
+> > +	FUNCTION(xfem2),
+> > +	FUNCTION(xfem3),
+> > +	FUNCTION(xfem4),
+> > +	FUNCTION(xfem5),
+> > +	FUNCTION(xfem6),
+> > +	FUNCTION(xfem7),
+> > +};
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Ok.
+
+> > +static const struct msm_pingroup ipq5018_groups[] = {
+> > +	PINGROUP(0, atest_char0, _, qdss_cti_trig_out_a0, wci0, wci0, xfem0,
+>
+> What's up with wci0 being both function 4 and 5?
+
+Will check this.
+
+> > +		 _, _, _),
+> > +	PINGROUP(1, atest_char1, _, qdss_cti_trig_in_a0, wci1, wci1, xfem1,
+> > +		 _, _, _),
+>
+> Please don't like break these, better blow the line length limit in
+> favor or readability.
+>
+> > +	PINGROUP(2, atest_char2, _, qdss_cti_trig_out_a1, wci2, wci2, xfem2,
+> > +		 _, _, _),
+> > +	PINGROUP(3, atest_char3, _, qdss_cti_trig_in_a1, wci3, wci3, xfem3,
+> > +		 _, _, _),
+
+Ok.
+
+> Regards,
+> Bjorn
+
+Will post updated patches soon.
+
+Thanks
+Varada
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
