@@ -2,208 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E24FF27C1F0
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 12:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FF8C27C2C6
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 12:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726064AbgI2KKg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 06:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgI2KK3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 06:10:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD70C0613D4
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 03:10:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x23so4026218wmi.3
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 03:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5IXYJy1aFbKAfJ2j0jd6nrzx4/J96MOWdHGgnxvVt6s=;
-        b=Bqytaag0rKTC4QQ+qWveXzavNNaEqHxevK8DaMXu1cdj3IcaYIwILRVECn0LlsZlDc
-         bnhyR/r3/XoHuludwRQr28qFAPFKWr0AZEF7QZz9+TtNfGvZqbgZrKdsegz+wQXj4wv5
-         xmkq4qQYA3gJ8FDNAK8gQx8auHkllj9drpMYNFboiODpmVJSJUIjJ5Jyyf8XxhWf3K/e
-         CmjKXbMUB6mEdq72CITa+YZBDRsqM7ibnLRv80UkzpbbwNp+/puwaEJBuakwp9NlkrYY
-         l0oTkharOXBwsHyFFJF+XhQW0a7JUSu2q9W8iRFs7Lf2jhDCzCkcmCMxvNqJYj7U31R4
-         E4eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5IXYJy1aFbKAfJ2j0jd6nrzx4/J96MOWdHGgnxvVt6s=;
-        b=CKyw1xttEzf1zcySFlgoqYkeKMHKnhGwtWweXHP0BmEaAaGZxo0xX/8awuWXF/BGlc
-         UMoHcY/VpM8KfJsNasla6KhDSO1nfis8uTB3L/xpRP9oO9GIdynbBOe0DtYoTatEs3xL
-         BEud5HdKRc9AVZI6Rqr1HhEUNVqe3unjX9Ft3MZr+yb7zip6RkT7s8qb9aoqCwdLt8LH
-         hazz3KwdauhWxt8ncyRwqN0ZYikR7nAvsgBz51kXd9srRNn1LJBmvvdytM/08U8LzjlR
-         uZqsTvdm/+SJVIVMYGc15IZqPtksC4UBnPk1D7XahDmCrlU5maj/fXdyluLRB7kIwL60
-         YFPA==
-X-Gm-Message-State: AOAM533dLzySovdH3sa+AfsJwrT7B2tfiLRtWae320B6qTtigCUCj888
-        UZvoYfYz9rbgkwu29qxm3JIUKA==
-X-Google-Smtp-Source: ABdhPJx/gvhzd/FKB6LjGn/+S/FIU5fpZIb48PI+CI+pS5wtR75htsMkj9kuqlUircqtHdieIIOSPQ==
-X-Received: by 2002:a7b:c111:: with SMTP id w17mr3533161wmi.109.1601374226929;
-        Tue, 29 Sep 2020 03:10:26 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-68-189.w109-210.abo.wanadoo.fr. [109.210.51.189])
-        by smtp.gmail.com with ESMTPSA id x19sm3380680wmj.48.2020.09.29.03.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2020 03:10:26 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1728189AbgI2KvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 06:51:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2315 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727805AbgI2KvU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 29 Sep 2020 06:51:20 -0400
+IronPort-SDR: Aovzsf9EfG5I1Y+5bv4Q8K/vkloJXOWoFNgB8yC08O/LYhcQUff7pp07HT6HtGF16B9IprB35/
+ 0e3fn+Bdhyew==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="223751836"
+X-IronPort-AV: E=Sophos;i="5.77,318,1596524400"; 
+   d="scan'208";a="223751836"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 03:51:18 -0700
+IronPort-SDR: m7YTCmM6M/QGObEMbEHU6QfWwNVc8JeUX0ChNt8Sqt1suczlWWqNkpjKd36p3ztns3mZcm64mE
+ 1uruo9GX0arA==
+X-IronPort-AV: E=Sophos;i="5.77,318,1596524400"; 
+   d="scan'208";a="514632702"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 03:51:16 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kNDDx-002lyH-CE; Tue, 29 Sep 2020 13:51:09 +0300
+Date:   Tue, 29 Sep 2020 13:51:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 10/10] gpio: mockup: refactor the module init function
-Date:   Tue, 29 Sep 2020 12:10:04 +0200
-Message-Id: <20200929101004.20288-11-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200929101004.20288-1-brgl@bgdev.pl>
+Subject: Re: [PATCH v3 01/10] lib: string_helpers: provide kfree_strarray()
+Message-ID: <20200929105109.GE3956970@smile.fi.intel.com>
 References: <20200929101004.20288-1-brgl@bgdev.pl>
+ <20200929101004.20288-2-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200929101004.20288-2-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Sep 29, 2020 at 12:09:55PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> There's a common pattern of dynamically allocating an array of char
+> pointers and then also dynamically allocating each string in this
+> array. Provide a helper for freeing such a string array with one call.
 
-Let's move the code preparing the device properties into a separate
-routine. This has the advantage of simplifying the error handling and
-makes the indentation less deep.
+Thanks! Below couple of nits you may address during applying phase.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-mockup.c | 96 +++++++++++++++++++-------------------
- 1 file changed, 49 insertions(+), 47 deletions(-)
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/string_helpers.h |  2 ++
+>  lib/string_helpers.c           | 24 ++++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+> index 86f150c2a6b6..fa06dcdc481e 100644
+> --- a/include/linux/string_helpers.h
+> +++ b/include/linux/string_helpers.h
+> @@ -94,4 +94,6 @@ char *kstrdup_quotable(const char *src, gfp_t gfp);
+>  char *kstrdup_quotable_cmdline(struct task_struct *task, gfp_t gfp);
+>  char *kstrdup_quotable_file(struct file *file, gfp_t gfp);
+>  
+> +void kfree_strarray(char **array, size_t n);
+> +
+>  #endif
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 963050c0283e..efeee2353613 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -649,3 +649,27 @@ char *kstrdup_quotable_file(struct file *file, gfp_t gfp)
+>  	return pathname;
+>  }
+>  EXPORT_SYMBOL_GPL(kstrdup_quotable_file);
+> +
+> +/**
+> + * kfree_strarray - free a number of dynamically allocated strings contained
+> + *                  in an array and the array itself
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 2d865b530fe9..67ed4f238d43 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -503,16 +503,59 @@ static __init char **gpio_mockup_make_line_names(const char *label,
- 	return names;
- }
- 
--static int __init gpio_mockup_init(void)
-+static int __init gpio_mockup_register_chip(int idx)
- {
- 	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
--	int i, prop, num_chips, err = 0, base;
- 	struct platform_device_info pdevinfo;
- 	struct platform_device *pdev;
-+	char **line_names = NULL;
- 	char chip_label[32];
--	char **line_names;
-+	int prop = 0, base;
- 	u16 ngpio;
- 
-+	memset(properties, 0, sizeof(properties));
-+	memset(&pdevinfo, 0, sizeof(pdevinfo));
-+
-+	snprintf(chip_label, sizeof(chip_label), "gpio-mockup-%c", idx + 'A');
-+	properties[prop++] = PROPERTY_ENTRY_STRING("chip-label", chip_label);
-+
-+	base = gpio_mockup_range_base(idx);
-+	if (base >= 0)
-+		properties[prop++] = PROPERTY_ENTRY_U32("gpio-base", base);
-+
-+	ngpio = base < 0 ? gpio_mockup_range_ngpio(idx)
-+			 : gpio_mockup_range_ngpio(idx) - base;
-+	properties[prop++] = PROPERTY_ENTRY_U16("nr-gpios", ngpio);
-+
-+	if (gpio_mockup_named_lines) {
-+		line_names = gpio_mockup_make_line_names(chip_label, ngpio);
-+		if (!line_names)
-+			return -ENOMEM;
-+
-+		properties[prop++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
-+					"gpio-line-names", line_names, ngpio);
-+	}
-+
-+	pdevinfo.name = "gpio-mockup";
-+	pdevinfo.id = idx;
-+	pdevinfo.properties = properties;
-+
-+	pdev = platform_device_register_full(&pdevinfo);
-+	kfree_strarray(line_names, ngpio);
-+	if (IS_ERR(pdev)) {
-+		pr_err("error registering device");
-+		return PTR_ERR(pdev);
-+	}
-+
-+	gpio_mockup_pdevs[idx] = pdev;
-+
-+	return 0;
-+}
-+
-+static int __init gpio_mockup_init(void)
-+{
-+	int i, num_chips, err;
-+
- 	if ((gpio_mockup_num_ranges < 2) ||
- 	    (gpio_mockup_num_ranges % 2) ||
- 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
-@@ -540,54 +583,13 @@ static int __init gpio_mockup_init(void)
- 	}
- 
- 	for (i = 0; i < num_chips; i++) {
--		memset(properties, 0, sizeof(properties));
--		memset(&pdevinfo, 0, sizeof(pdevinfo));
--		prop = 0;
--		line_names = NULL;
--
--		snprintf(chip_label, sizeof(chip_label),
--			 "gpio-mockup-%c", i + 'A');
--		properties[prop++] = PROPERTY_ENTRY_STRING("chip-label",
--							   chip_label);
--
--		base = gpio_mockup_range_base(i);
--		if (base >= 0)
--			properties[prop++] = PROPERTY_ENTRY_U32("gpio-base",
--								base);
--
--		ngpio = base < 0 ? gpio_mockup_range_ngpio(i)
--				 : gpio_mockup_range_ngpio(i) - base;
--		properties[prop++] = PROPERTY_ENTRY_U16("nr-gpios", ngpio);
--
--		if (gpio_mockup_named_lines) {
--			line_names = gpio_mockup_make_line_names(chip_label,
--								 ngpio);
--			if (!line_names) {
--				platform_driver_unregister(&gpio_mockup_driver);
--				gpio_mockup_unregister_pdevs();
--				return -ENOMEM;
--			}
--
--			properties[prop++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
--						"gpio-line-names",
--						line_names, ngpio);
--		}
--
--		pdevinfo.name = "gpio-mockup";
--		pdevinfo.id = i;
--		pdevinfo.properties = properties;
--
--		pdev = platform_device_register_full(&pdevinfo);
--		kfree_strarray(line_names, ngpio);
--		if (IS_ERR(pdev)) {
--			pr_err("error registering device");
-+		err = gpio_mockup_register_chip(i);
-+		if (err) {
- 			platform_driver_unregister(&gpio_mockup_driver);
- 			gpio_mockup_unregister_pdevs();
- 			debugfs_remove_recursive(gpio_mockup_dbg_dir);
--			return PTR_ERR(pdev);
-+			return err;
- 		}
--
--		gpio_mockup_pdevs[i] = pdev;
- 	}
- 
- 	return 0;
+> + * @array: Dynamically allocated array of strings to free. If NULL - the
+> + *         function does nothing.
+
+I would rather move second sentence to the description below.
+
+> + * @n: Number of strings (starting from the beginning of the array) to free.
+> + *
+
+> + * Passing a non-null @array and @n == 0 as well as NULL @array  are valid
+
+non-null -> non-NULL, and extra space before 'are'.
+
+> + * use-cases.
+> + */
+> +void kfree_strarray(char **array, size_t n)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!array)
+> +		return;
+> +
+> +	for (i = 0; i < n; i++)
+> +		kfree(array[i]);
+> +	kfree(array);
+> +}
+> +EXPORT_SYMBOL_GPL(kfree_strarray);
+> -- 
+> 2.26.1
+> 
+
 -- 
-2.26.1
+With Best Regards,
+Andy Shevchenko
+
 
