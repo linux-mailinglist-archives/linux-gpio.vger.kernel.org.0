@@ -2,74 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBEF227CB47
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 14:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4893627CE06
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 14:48:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732440AbgI2M0Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 08:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732485AbgI2M0H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 08:26:07 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CC1C0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:26:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id z23so14647879ejr.13
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ilnc9lRErTLGwRUB4HFPyYF6CW3YVVZPYLQOJap/2CY=;
-        b=PBObQnKCeYlQmX+ppCXiidvlj5kZaNyn66HJEGKsSItxAJbS3f4GRWcCAoD/fkRc/s
-         TCyYZiJLpvbCFtAmAQp56BNedoYF5SviUf6TDZOtFmEB5iFyseDoU2k91pwdPNLBwMUM
-         cNWTZk/4coV1MHacUBz4iCe7YdfwSqWJDqB+fYEaWqAga/IvbqUfKXSIujqp4UaN+WjT
-         I0FqzAqAph41GOCzuGS1/iqee7tzcDYPZHtGhUqmRvBBjiiVkyYvkPg+nbetpkpe1IRu
-         Q1ByFC6ny7RLlg8hPDxQYEMMKGUIoh1uuIxaL8s/bBaqUngdWWBwNripByFqy5ha0xSV
-         kJlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ilnc9lRErTLGwRUB4HFPyYF6CW3YVVZPYLQOJap/2CY=;
-        b=p4d4IwDgIhNFZzfGD3n0nRF1FivwMs6sPv3Q+KYxJ53L4dMCk0nKCOxYQ0jLnfVijq
-         W6tNxyxfyB6+VSkM9ru+1IhzZjmHmRBctgF2P27zsLYacPHs5ofe7a96OXdSkIv4Qjqm
-         658QgNrellbp1N9Lr7AnGxfGEQowacT96co6DlD4qXtonPP+YTs8RLvEvdFeqd3Ewt5x
-         /ytZV7r8RUvRNZI5KtNEVumh1CNe2s0VyEgMRBBDWjDJ2J+ZK45BF/6RfFn83x5ONI+s
-         85GYhvVk51+g3TL/A82hV8AbGjjorKk1aGb2694aYC5vrupMgzycM17xxJqGehcLkOtD
-         GIFg==
-X-Gm-Message-State: AOAM533BuUaoGJGh63QAKS5/WHpmqiTHn2cUnZ47x4ZNzJqVyFBVSlvb
-        7kpiYvnJvU4+mJcnIe2jTSF/plOxeGm2xrJvRgmuJQ==
-X-Google-Smtp-Source: ABdhPJyLuBCaI/z76rq/ffz504IdUDE9QfTuJtstdyt9uN0hf5yxvpSQvQ54/CYy2BsZ9vpzh9BTavQ+/5oaPPvIETw=
-X-Received: by 2002:a17:906:c007:: with SMTP id e7mr894474ejz.55.1601382365730;
- Tue, 29 Sep 2020 05:26:05 -0700 (PDT)
+        id S1729540AbgI2Ms2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 08:48:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25725 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728362AbgI2LDJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 29 Sep 2020 07:03:09 -0400
+IronPort-SDR: y4NEzYY97+m81d4S7bCm26dcvm0RemIzzcoUp8N5qP6d94NQfOtmaVaECDlnTZUklGBtZ+gbyo
+ jlpCiJ5nOoyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="180320186"
+X-IronPort-AV: E=Sophos;i="5.77,318,1596524400"; 
+   d="scan'208";a="180320186"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 04:03:08 -0700
+IronPort-SDR: n/9ZVEBO0YUddstVqGD+o/TdiKBQB6oF5oRjtprCZJPDwyw7aeC3rtTjm+py6AJ0f66gFc15fm
+ B6BFSa6v1L3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,318,1596524400"; 
+   d="scan'208";a="415344018"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Sep 2020 04:03:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6B224320; Tue, 29 Sep 2020 14:03:06 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v1 1/3] pinctrl: tigerlake: Fix register offsets for TGL-H variant
+Date:   Tue, 29 Sep 2020 14:03:04 +0300
+Message-Id: <20200929110306.40852-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200909114312.2863675-1-andrew@aj.id.au>
-In-Reply-To: <20200909114312.2863675-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Sep 2020 14:25:54 +0200
-Message-ID: <CACRpkdaF7LaU_+4FrKGFYnKwLLe-iYkEzh4u3anv+16m6XUi4A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] pinctrl: aspeed: AST2600 pinconf fixes
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Johnny Huang <johnny_huang@aspeedtech.com>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 1:43 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+It appears that almost traditionally the H variants have some deviations
+in the register offsets in comparison to LP ones. This is the case for
+Intel Tiger Lake as well. Fix register offsets for TGL-H variant.
 
-> The AST2600 pinctrl driver was missing support for bias control on the 1.8V
-> GPIO pins, and in the process of resolving that I discovered a couple of other
-> bugs that are fixed in the first two patches of the series.
+Fixes: 653d96455e1e ("pinctrl: tigerlake: Add support for Tiger Lake-H")
+Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-tigerlake.c | 42 ++++++++++++++---------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
-All 3 patches applied.
+diff --git a/drivers/pinctrl/intel/pinctrl-tigerlake.c b/drivers/pinctrl/intel/pinctrl-tigerlake.c
+index 8c162dd5f5a1..3e354e02f408 100644
+--- a/drivers/pinctrl/intel/pinctrl-tigerlake.c
++++ b/drivers/pinctrl/intel/pinctrl-tigerlake.c
+@@ -15,11 +15,13 @@
+ 
+ #include "pinctrl-intel.h"
+ 
+-#define TGL_PAD_OWN	0x020
+-#define TGL_PADCFGLOCK	0x080
+-#define TGL_HOSTSW_OWN	0x0b0
+-#define TGL_GPI_IS	0x100
+-#define TGL_GPI_IE	0x120
++#define TGL_PAD_OWN		0x020
++#define TGL_LP_PADCFGLOCK	0x080
++#define TGL_H_PADCFGLOCK	0x090
++#define TGL_LP_HOSTSW_OWN	0x0b0
++#define TGL_H_HOSTSW_OWN	0x0c0
++#define TGL_GPI_IS		0x100
++#define TGL_GPI_IE		0x120
+ 
+ #define TGL_GPP(r, s, e, g)				\
+ 	{						\
+@@ -29,12 +31,12 @@
+ 		.gpio_base = (g),			\
+ 	}
+ 
+-#define TGL_COMMUNITY(b, s, e, g)			\
++#define TGL_COMMUNITY(b, s, e, pl, ho, g)		\
+ 	{						\
+ 		.barno = (b),				\
+ 		.padown_offset = TGL_PAD_OWN,		\
+-		.padcfglock_offset = TGL_PADCFGLOCK,	\
+-		.hostown_offset = TGL_HOSTSW_OWN,	\
++		.padcfglock_offset = (pl),		\
++		.hostown_offset = (ho),			\
+ 		.is_offset = TGL_GPI_IS,		\
+ 		.ie_offset = TGL_GPI_IE,		\
+ 		.pin_base = (s),			\
+@@ -43,6 +45,12 @@
+ 		.ngpps = ARRAY_SIZE(g),			\
+ 	}
+ 
++#define TGL_LP_COMMUNITY(b, s, e, g)			\
++	TGL_COMMUNITY(b, s, e, TGL_LP_PADCFGLOCK, TGL_LP_HOSTSW_OWN, g)
++
++#define TGL_H_COMMUNITY(b, s, e, g)			\
++	TGL_COMMUNITY(b, s, e, TGL_H_PADCFGLOCK, TGL_H_HOSTSW_OWN, g)
++
+ /* Tiger Lake-LP */
+ static const struct pinctrl_pin_desc tgllp_pins[] = {
+ 	/* GPP_B */
+@@ -367,10 +375,10 @@ static const struct intel_padgroup tgllp_community5_gpps[] = {
+ };
+ 
+ static const struct intel_community tgllp_communities[] = {
+-	TGL_COMMUNITY(0, 0, 66, tgllp_community0_gpps),
+-	TGL_COMMUNITY(1, 67, 170, tgllp_community1_gpps),
+-	TGL_COMMUNITY(2, 171, 259, tgllp_community4_gpps),
+-	TGL_COMMUNITY(3, 260, 276, tgllp_community5_gpps),
++	TGL_LP_COMMUNITY(0, 0, 66, tgllp_community0_gpps),
++	TGL_LP_COMMUNITY(1, 67, 170, tgllp_community1_gpps),
++	TGL_LP_COMMUNITY(2, 171, 259, tgllp_community4_gpps),
++	TGL_LP_COMMUNITY(3, 260, 276, tgllp_community5_gpps),
+ };
+ 
+ static const struct intel_pinctrl_soc_data tgllp_soc_data = {
+@@ -723,11 +731,11 @@ static const struct intel_padgroup tglh_community5_gpps[] = {
+ };
+ 
+ static const struct intel_community tglh_communities[] = {
+-	TGL_COMMUNITY(0, 0, 78, tglh_community0_gpps),
+-	TGL_COMMUNITY(1, 79, 180, tglh_community1_gpps),
+-	TGL_COMMUNITY(2, 181, 217, tglh_community3_gpps),
+-	TGL_COMMUNITY(3, 218, 266, tglh_community4_gpps),
+-	TGL_COMMUNITY(4, 267, 290, tglh_community5_gpps),
++	TGL_H_COMMUNITY(0, 0, 78, tglh_community0_gpps),
++	TGL_H_COMMUNITY(1, 79, 180, tglh_community1_gpps),
++	TGL_H_COMMUNITY(2, 181, 217, tglh_community3_gpps),
++	TGL_H_COMMUNITY(3, 218, 266, tglh_community4_gpps),
++	TGL_H_COMMUNITY(4, 267, 290, tglh_community5_gpps),
+ };
+ 
+ static const struct intel_pinctrl_soc_data tglh_soc_data = {
+-- 
+2.28.0
 
-Yours,
-Linus Walleij
