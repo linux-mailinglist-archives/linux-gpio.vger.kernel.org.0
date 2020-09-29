@@ -2,84 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B375827D37B
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 18:20:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F6C27D381
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 18:21:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgI2QUC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 12:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgI2QUC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 12:20:02 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B13C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 09:20:02 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 34so4234963pgo.13
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 09:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u6cgikAqmZNI0gBBduSWvtLBI0RTNeq5uBlZnPwDoE4=;
-        b=glyMdJbi4ANDyNnY/IL7pNz8jo09DneB7x55TIKKcM91L5dsp3o2JNJ2vtFelQH4fG
-         ns/4Dc5Rzvs+BaNgUtG5VpxmzScmLDfZft8tGRDRLiljSI2dL8wtEEEDZl2b6Iw+xFX4
-         3Lh30/4P9EpOrfTEL0ObhItVAVuYLA9heXDn6DewBJAYSVSLbuILhKDvSNhBfiy7fV+M
-         6JwZucdzvR90q1AK7twlDk8a/vxUWwZUMsQQyaSg4Xw/B+s1l3cDLUH7b8d5//ZJCqr6
-         OheLPNBRE6DhwRzhTHH9LtSr5QIcoC+C6RaF64ZyUWmZFoh0E16qb8UdrYyd25PiypFm
-         t5WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u6cgikAqmZNI0gBBduSWvtLBI0RTNeq5uBlZnPwDoE4=;
-        b=iJUjd9bxa5g3SiQaqjea40WWbFe4HrBpPRkc5cF0tNvONfanNMxDl9UtOszCbNOr8E
-         gzzv6kee81X642K4KaehNi5WEFgPm+nXXMlDkhJTBoXI7grOPa+fEPzX3DN7ElvB7icP
-         TL7dkhAQ0gLN+z3vCNWRhx0oE46n2KdbGBJ3ezSReySb+l/98Ez7SJ4aOAIeJWpdBRIP
-         X41Ydc5jJx6fE0M6Rk64s6OxvMrIVmdlmOSYeHP48I3m2HCHdR1tvTsLBFCTjdSsNPuT
-         mPimkRV9ip5uQAtk/FjmQ9ZX64r3TaI2jLZ2wO9TbiksC8fk1tiIWuTiDE1O+qH+F3io
-         tAEw==
-X-Gm-Message-State: AOAM532uuZHCBH4B4eF/ar5SKy7KkMUh0CjGhBTbZqS5Tfd54ghTsCL5
-        rmSe6xCmGph27xYAHewPWmiVa9Xynx89Q4CVsjFlTY5fz4p3kA==
-X-Google-Smtp-Source: ABdhPJxcJUZGZjQ+HZwTAyA4WnC3GSdX+JEJAXHFs1WWYUPAklzAKZW7m1bXG/UaDYQuDRdvIirWhID1o5qCXpFExTo=
-X-Received: by 2002:a62:7b55:0:b029:13e:7367:2b2e with SMTP id
- w82-20020a627b550000b029013e73672b2emr4699379pfc.7.1601396402283; Tue, 29 Sep
- 2020 09:20:02 -0700 (PDT)
+        id S1728430AbgI2QVo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 12:21:44 -0400
+Received: from smtp.asem.it ([151.1.184.197]:57393 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728364AbgI2QVo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 29 Sep 2020 12:21:44 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000512618.MSG 
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 18:21:39 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 29
+ Sep 2020 18:21:38 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Tue, 29 Sep 2020 18:21:38 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: How to use an ACPI declared GPIO in a userspace ...
+Thread-Topic: How to use an ACPI declared GPIO in a userspace ...
+Thread-Index: AdaWdniTedAZ6+9wQdyYYgE5sQ27yP//4UoAgAAGTYD//91o0A==
+Date:   Tue, 29 Sep 2020 16:21:38 +0000
+Message-ID: <feb8567c830748c483c8c66dd4717003@asem.it>
+References: <9152bb8be33e4192a7766eb53c6ca9af@asem.it>
+ <CAMRc=McnsSkg-7UMp7pKaGX2wSqsZC2jQZV2zRepxm9UxGg=YA@mail.gmail.com>
+ <CAHp75VfgEGydXN1A+Y=wn3iX1MbLhN8F9kYyfQwTZBJydr+0+Q@mail.gmail.com>
+In-Reply-To: <CAHp75VfgEGydXN1A+Y=wn3iX1MbLhN8F9kYyfQwTZBJydr+0+Q@mail.gmail.com>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200922023151.387447-1-warthog618@gmail.com> <20200922023151.387447-5-warthog618@gmail.com>
- <CAK8P3a1o4fp=-gU=SpwR540Xw+oySJ_ESkG+YXZJsDV-N6UF5w@mail.gmail.com>
- <CAMpxmJVsBYY0w5BCyYaRDGR-cQD7o4VkJRatc0Ww5wXRA+3bhA@mail.gmail.com>
- <20200928134217.GA1247496@sol> <CAMRc=MeUOOq9Zw+fvab1+rwKf066j9GqEMJ4mCHqVjMfwdo-Gw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeUOOq9Zw+fvab1+rwKf066j9GqEMJ4mCHqVjMfwdo-Gw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 29 Sep 2020 19:19:43 +0300
-Message-ID: <CAHp75VdtZ5cqhoepj_8wJABXmsXgtsFUGfRZ-HS-e12_PSp6kA@mail.gmail.com>
-Subject: Re: strace decoding for GPIO uAPI
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020C.5F735F12.008F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 4:21 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Mon, Sep 28, 2020 at 3:42 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Tue, Sep 22, 2020 at 11:50:51AM +0200, Bartosz Golaszewski wrote:
-
-...
-
-> > I'm looking at doing this as it would be useful to have.
-
-> > Does that work for you?
-
-> This is perfect! Thanks for doing this! For the error cases: I'm not
-> sure how strace handles this for other ioctls() - maybe we could print
-> something like 'flags=N/A'? Unless what you did is the standard way,
-> then leave it.
-
-+1 here. Thanks for doing this, it's helpful!
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgQW5keSBhbmQgQmFydG9zeiwNCg0KPiA+ID4NCj4gPiA+IEkgbmVlZCB0byBleHBvc2UgdG8g
+dGhlIHVzZXJzcGFjZSBhIEdQSU8sIHBoeXNpY2FsbHkgY29ubmVjdGVkIHRvIGENCj4gYm9hcmQN
+Cj4gPiA+IHB1c2gtYnV0dG9uLiBUaGlzIEdQSU8gbXVzdCBleHBvc2UgYSBwcmUtZGVmaW5lZCBu
+YW1lLCBzdWNoIGFzDQo+ID4gPiAidXNlci1wdXNoLWJ1dHRvbiIsIHNvIHRoYXQgdGhlIHVzZXJz
+cGFjZSBhcHBsaWNhdGlvbnMgY2FuIHVzZSBpdA0KPiB3aXRob3V0DQo+ID4gPiBrbm93IGFueSBw
+aHlzaWNhbCBHUElPIGRldGFpbHMuDQo+ID4gPg0KPiA+ID4gSSBjYW4gY3VzdG9taXplIHRoZSBi
+b2FyZCBCSU9TIGFuZCBzbyBteSBnb2FsIGlzIHRvIGFkZCBhbiBBQ1BJIHRhYmxlDQo+IHdpdGgN
+Cj4gPiA+IGEgY29udGVudCBsaWtlIHRoaXM6DQo+ID4gPg0KPiA+ID4gLi4uDQo+ID4gPiBTY29w
+ZSAoXF9TQi5HUE8xKQ0KPiA+ID4gICAgICAgICB7DQo+ID4gPiAgICAgICAgICAgICAgICAgRGV2
+aWNlIChCVE5TKQ0KPiA+ID4gICAgICAgICAgICAgICAgIHsNCj4gPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIE5hbWUgKF9ISUQsICJQUlAwMDAxIikNCj4gPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIE5hbWUgKF9ERE4sICJHUElPIGJ1dHRvbnMgZGV2aWNlIikNCj4gPiA+DQo+ID4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBOYW1lIChfQ1JTLCBSZXNvdXJjZVRlbXBsYXRlICgpDQo+
+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICB7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIEdwaW9JbyAoDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIEV4Y2x1c2l2ZSwgICAgICAgICAgICAgICAvLyBOb3Qgc2hhcmVkDQo+ID4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIFB1bGxOb25lLCAgICAgICAgICAgICAgICAvLyBObyBu
+ZWVkDQo+IGZvciBwdWxscw0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAw
+LCAgICAgICAgICAgICAgICAgICAgICAgLy8gRGVib3VuY2UNCj4gdGltZW91dA0KPiA+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLCAgICAgICAgICAgICAgICAgICAgICAgLy8g
+RHJpdmUNCj4gc3RyZW5ndGgNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+SW9SZXN0cmljdGlvbklucHV0T25seSwgIC8vIE9ubHkgdXNlZA0KPiBhcyBpbnB1dA0KPiA+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiXFxfU0IuR1BPMSIsICAgICAgICAgICAg
+Ly8gR1BJTw0KPiBjb250cm9sbGVyDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDAsIFJlc291cmNlQ29uc3VtZXIsICwgKSAvLyBNdXN0IGJlIDANCj4gPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgew0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDI1LCAgICAgICAgICAgICAgLy8gR1BJTw0KPiBudW1iZXINCj4gPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ID4gLi4uDQo+ID4gPg0KPiA+
+ID4gSSBrbm93IHRoYXQgdGhpcyBHUElPIGNhbiBiZSB1c2VkIGZyb20gb3RoZXIgZHJpdmVycy4N
+Cj4gPiA+IEZvciBleGFtcGxlIEkgc3VjY2Vzc2Z1bGx5IHRlc3RlZCBpdCB1c2luZyB0aGUgImdw
+aW8ta2V5cyIgZGV2aWNlDQo+IGRyaXZlciwNCj4gPiA+IGdpdmluZyB0byBteSBHUElPIGEga2V5
+LWNvZGUgYW5kIGVtdWxhdGluZyBpbiB0aGlzIHdheSBhIGtleWJvYXJkIGtleS4NCj4gPiA+IFRo
+aXMgY291bGQgYmUgYSBwb3NzaWJsZSBzb2x1dGlvbi4NCj4gPiA+DQo+ID4gPiBCdXQgSSBwcmVm
+ZXIgdG8gZXhwb3NlIG15IEdQSU8gYXMgYSBjbGFzc2ljIEdQSU8sIG5vdCBhcyBhIGtleWJvYXJk
+DQo+IGtleS4NCj4gPiA+DQo+ID4gPiBJIHdhcyB3b25kZXJpbmcgaWYgdGhlcmUgaXMgYSBnZW5l
+cmljIEdQSU8gZHJpdmVyIHRoYXQgSSBjYW4gdXNlIHRvDQo+IGV4cG9zZQ0KPiA+ID4gdGhpcyBH
+UElPIHdpdGggaXRzIHByZS1kZWZpbmVkIG5hbWUgKGNhbWluZyBmcm9tIHRoZSBBQ1BJIHRhYmxl
+DQo+IGRlY2xhcmF0aW9uKSwNCj4gPiA+IHRvIHRoZSB1c2Vyc3BhY2UuLi4NCj4gDQo+IFVuZm9y
+dHVuYXRlbHkgd2hhdCB5b3UgYXJlIGRlc2NyaWJpbmcgaW4gdGhlIHNlY29uZCBwYXJ0IGlzIHJh
+dGhlcg0KPiBwcm9wZXJ0eSBvZiB0aGUgY29udHJvbGxlciB3aGljaCBjYW4gaG9nIHRoZSBsaW5l
+LCBidXQgdGhpcyBpcyBub3QNCj4gd2hhdCB5b3Ugd2FudCBpbiB0aGUgZmlyc3QgcGFydC4NCj4g
+VGhlIExpbnV4IGtlcm5lbCwgaW4gbWFueSB3YXlzLCBpcyBkZXNpZ25lZCB0aGF0IHlvdSBuZWVk
+IGEgZHJpdmVyDQo+IChJwrJDIHVzZXIgc3BhY2UgZGV2aWNlIG5vZGUgaXMgcmF0aGVyIGEgbWlz
+dGFrZSwgYnV0IGNvbXByb21pc2UgZm9yDQo+IHRoYXQgdGltZSB3aGVuIG1vc3Qgb2YgdGhlIGRl
+dmljZXMgaGF2ZSBhY2Nlc3MgZnJvbSB1c2VyIHNwYWNlDQo+IGRyaXZlcnMpLiBTbywgdGhlIHBy
+b3BlciB3YXkgaXMgdG8gZGVmaW5lIHRoaXMgYXMgZ3Bpby1rZXlzIChlaXRoZXINCj4gaW50ZXJy
+dXB0IHZlcnNpb24gb3IgcG9sbGluZyBvbmUpIGFuZCBjb25uZWN0IGEgbGlzdGVuZXIgdG8gdGhl
+IGV2ZW50Lg0KPiANCj4gU3VtbWFyaXplOiB5b3UgbmVlZCB0byBkZXNjcmliZSBwaW4ocykgdmlh
+ICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5DQo+IG9mIHRoZSBjb250cm9sbGVyIChpdCdzIG5v
+dCBzbyBlYXN5IHRhc2sgaWYgQUNQSSB0YWJsZXMgYWxyZWFkeSBoYXZlDQo+IHBhcnRzIG9mIGl0
+LCBidXQgSSB0aGluayB5b3VyIGNhc2Ugc2hvdWxkIGJlIGZlYXNpYmxlKS4gQW5kIGVpdGhlcg0K
+PiBwcm92aWRlIGEgZ3Bpby1rZXlzIGRldmljZSwgb3IgdXNlIGxpbmUgZGlyZWN0bHkgYnkgbmFt
+ZSBhcyAobGliZ3Bpb2QNCj4gZXhhbXBsZSk6DQo+ICBncGlvZGV0ZWN0DQo+ICBncGlvaW5mbyBn
+cGlvY2hpcFgNCj4gIGdwaW9maW5kICRHUElPX0xJTkVfTkFNRQ0KPiAgZ3Bpb21vbiBncGlvY2hp
+cFggJChncGlvZmluZCAkR1BJT19MSU5FX05BTUUpICYNCj4gDQo+IEV4YW1wbGVzIG9mIEFDUEkg
+YXJlIGhlcmUgWzFdIGZvciBjb250cm9sbGVyIHBhcnQgKGxvb2sgYXQgdGhlIG5hbWUNCj4gbGlz
+dCkgYW5kIGZvciBkZXZpY2UgcGFydCBbMl0uIFlvdSBtYXkgbG9vayBpbnRvIG90aGVyIGZvbGRl
+cnMgYXMNCj4gd2VsbCwgdGhvdWdoIHRoZXkgYXJlIG5vdCBzbyByZWFjaCBvZiBleGFtcGxlcy4N
+Cj4gDQo+IFsxXTogaHR0cHM6Ly9naXRodWIuY29tL3dlc3RlcmkvbWV0YS1hY3BpL2Jsb2IvbWFz
+dGVyL3JlY2lwZXMtYnNwL2FjcGktDQo+IHRhYmxlcy9zYW1wbGVzL2VkaXNvbi9hcmR1aW5vLmFz
+bGkNCj4gWzJdOiBodHRwczovL2dpdGh1Yi5jb20vd2VzdGVyaS9tZXRhLWFjcGkvYmxvYi9tYXN0
+ZXIvcmVjaXBlcy1ic3AvYWNwaS0NCj4gdGFibGVzL3NhbXBsZXMvZWRpc29uL2J1dHRvbnMuYXNs
+aQ0KPiANCg0KDQpJIGhhdmUgYWxyZWFkeSB3cml0dGVuIGFuZCBBQ1BJIHRhYmxlLCBub3QgaW4g
+dGhlIEJJT1MgYnV0IGFzIHNlcGFyYXRlDQpTU0RULCBsb2FkZWQgbWFudWFsbHkgYXQgcnVudGlt
+ZSwgdXNpbmcgdGhlIGdwaW8ta2V5cyAod2l0aCBpbnRlcnJ1cHQpDQphbmQgaW4gdGhpcyB3YXkg
+YWxsIHdvcmtzIGdvb2QuIFNvIEkgaGF2ZSBhbHJlYWR5IHRlc3RlZCB0aGlzIHNvbHV0aW9uLg0K
+DQpCdXQgSSBwcmVmZXIgb2J0YWluIHRoaXMgcmVzdWx0IGluIHRoZSBjbGFzc2ljIHdheSwgd2l0
+aCBHUElPLi4uDQoNClNvIEkgdGhpbmsgSSdsbCB3cml0ZSBhIGRldmljZSBkcml2ZXIgZm9yIGl0
+LiBBIGRldmljZSBkcml2ZXIgd2hpY2gNCnJlYWRzIHRoZSBBQ1BJIHRhYmxlIGFuZCBwdWJsaXNo
+ZXMgdGhlIEdQSU8sIHdpdGggaXRzIG5hbWUsIGluIHN5c2ZzLi4uDQoNCg0KPiA+IEFkZGluZyBB
+bmR5IHdobyBrbm93cyBBQ1BJIEdQSU8gd2VsbC4NCj4gDQo+IFRoYW5rcy4NCj4gDQo+ID4gSW4g
+Z2VuZXJhbCwgdGhlICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5IGlzIHVzZWQgZm9yIHRoYXQg
+YW5kIGl0J3MNCj4gPiBzdXBwb3J0ZWQgYm90aCBmb3IgZGV2aWNlIHRyZWUgYXMgd2VsbCBhcyBB
+Q1BJLCBhbHRob3VnaCBJIGhhdmUgb25seQ0KPiA+IGV2ZXIgdXNlZCB0aGUgZm9ybWVyLg0KPiAN
+Cj4gUmlnaHQuIEFDUEkgc3VwcG9ydHMgcHJvcGVydGllcyB2aWEgX0RTRCgpIG1ldGhvZC4NCj4g
+DQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg0KVGhhbmtz
+IGFuZCBiZXN0IHJlZ2FyZHMsDQpGbGF2aW8NCg0K
