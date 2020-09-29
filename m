@@ -2,78 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E71227D3EB
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 18:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D410827D6CD
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 21:24:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgI2QvM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 12:51:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40696 "EHLO
+        id S1727740AbgI2TYS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 15:24:18 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34529 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgI2QvL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 12:51:11 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c2so5104886otp.7;
-        Tue, 29 Sep 2020 09:51:10 -0700 (PDT)
+        with ESMTP id S1727700AbgI2TYS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 15:24:18 -0400
+Received: by mail-ot1-f68.google.com with SMTP id h17so5622749otr.1;
+        Tue, 29 Sep 2020 12:24:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Az1h4KFWScdNodLS6LZ5ux2Q7QM84gnoEPToYbUwaU0=;
-        b=ckBYBFLzkAjk4lWir9IwtasPySMteQ+ZIyb2hZSEhaUMFbaoOICDPA0UjqXEwjs4aV
-         DOCa8Mq8LaGVfZx7gTkSYSdDnArp5wM/8jUrE03+FB8GUql9+i7EpfAez5YUsrbiIt2v
-         zMIbM+ESkM63zpW/Q0nBOZVc+z6sTXQ2tonF6E36wPg/opzW98S3VbseAQwy8W2Altir
-         kEMZRskh9vmUf5Wk+h3ImuvljQqDprKBywY8yeSKVySyoTJJVfL5csrMo+pRaqZON4HT
-         /vphD5PFjSzIaXHoUm0TYeA4ESu8Xn58F+kyx4slS74o3JyPADcrZ4P4nezOnt2tOonP
-         +MPQ==
-X-Gm-Message-State: AOAM531XExR9HxDywWc2YGC/f6QpURHoHZJ+uBYm4k5+7+xeH9gQgWOV
-        fxLSH+6jwicDFyUn8ttrnw==
-X-Google-Smtp-Source: ABdhPJyfIGDzPhgnVPEpNLWF10x8U1bsWTaRgcvgQg/aYnIH0da1omYuzsvOstTm3Huprm4+/dV4Pg==
-X-Received: by 2002:a9d:6a0e:: with SMTP id g14mr3330133otn.126.1601398269996;
-        Tue, 29 Sep 2020 09:51:09 -0700 (PDT)
+        bh=a0+40Jxvg/Op2A57V+2jGqRGB7XXMO2z6egIsw8beuM=;
+        b=CeR4A4TgFY4pPDoYLz8HJgeXY0bhXLMWSy6d26KAjle0dvgy+2sl3q6LYPUZX1zaWz
+         IYoM/5U2pOIMOB5sxv5WiNbDRsTT0llKQhHZcE1K1P0ZxcCdP6X8d3KSnPTKcsLqNum9
+         z36HPjSVOOJzu5JN+MIPZqD1s7NYgtP8UNgd+p+mf8e28Y1tpJcEAo1wBbehyLwfYhwp
+         vkSxMMjuYg+Ws+WXlY+irxwm2w5AHPMX7I6wlo5gpd8zHOleXV3avO2TEy0RJFadSYRr
+         tU7CEBb7XYqsAoqn+74SRAne2mzroBdyCEUtpQSufBu4243Bbp5xhZJIqDhTrjIDPLt/
+         iB2g==
+X-Gm-Message-State: AOAM530qktzWsqLsqLQW2y2yZJGWmZJH8QDu2H6pD0WestfQJjx7cfR4
+        GyEH/MzsyXHlsYASdsxNiQ==
+X-Google-Smtp-Source: ABdhPJxaOeJE50B4sFS6YIDZqlKoQ1hYpkgfDJx0OsxUxBOz7cE/j4mvVhUi5dl8x1vZLyOVovRFig==
+X-Received: by 2002:a05:6830:1d96:: with SMTP id y22mr3783015oti.243.1601407457125;
+        Tue, 29 Sep 2020 12:24:17 -0700 (PDT)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b14sm1099679oii.52.2020.09.29.09.51.08
+        by smtp.gmail.com with ESMTPSA id q14sm1209970ota.41.2020.09.29.12.24.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2020 09:51:09 -0700 (PDT)
-Received: (nullmailer pid 760427 invoked by uid 1000);
-        Tue, 29 Sep 2020 16:51:08 -0000
-Date:   Tue, 29 Sep 2020 11:51:08 -0500
+        Tue, 29 Sep 2020 12:24:16 -0700 (PDT)
+Received: (nullmailer pid 1007629 invoked by uid 1000);
+        Tue, 29 Sep 2020 19:24:15 -0000
+Date:   Tue, 29 Sep 2020 14:24:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Jason Kridner <jkridner@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Christina Quast <cquast@hanoverdisplays.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Trent Piepho <tpiepho@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: document pinctrl-single,pins when
- #pinctrl-cells = 2
-Message-ID: <20200929165108.GA760369@bogus>
-References: <20200919200836.3218536-1-drew@beagleboard.org>
+To:     Varadarajan Narayanan <varada@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, nsekar@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        sricharan@codeaurora.org
+Subject: Re: [PATCH 2/7] dt-bindings: arm64: ipq5018: Add binding
+ descriptions for clock and reset
+Message-ID: <20200929192415.GA1003457@bogus>
+References: <1601270140-4306-1-git-send-email-varada@codeaurora.org>
+ <1601270140-4306-3-git-send-email-varada@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200919200836.3218536-1-drew@beagleboard.org>
+In-Reply-To: <1601270140-4306-3-git-send-email-varada@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 19 Sep 2020 22:08:37 +0200, Drew Fustini wrote:
-> Document the values in pinctrl-single,pins when #pinctrl-cells = <2>
+On Mon, Sep 28, 2020 at 10:45:35AM +0530, Varadarajan Narayanan wrote:
+> This patch adds support for the global clock controller found on
+> the IPQ5018 based devices.
 > 
-> Fixes: 27c90e5e48d0 ("ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2")
-> Reported-by: Trent Piepho <tpiepho@gmail.com>
-> Link: https://lore.kernel.org/linux-omap/3139716.CMS8C0sQ7x@zen.local/
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 > ---
-> v2 change:
-> - rephrase to make it clear that the pin conf value and pin mux value
->   are OR'd together with #pinctrl-cells = <2>
+>  .../devicetree/bindings/clock/qcom,gcc.yaml        |   3 +
+>  include/dt-bindings/clock/qcom,gcc-ipq5018.h       | 183 +++++++++++++++++++++
+>  include/dt-bindings/reset/qcom,gcc-ipq5018.h       | 119 ++++++++++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq5018.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq5018.h
 > 
-> 
->  .../bindings/pinctrl/pinctrl-single.txt       | 21 ++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> index ee0467f..74d67fc 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -18,6 +18,8 @@ description: |
+>    - dt-bindings/clock/qcom,gcc-apq8084.h
+>    - dt-bindings/reset/qcom,gcc-apq8084.h
+>    - dt-bindings/clock/qcom,gcc-ipq4019.h
+> +  - dt-bindings/clock/qcom,gcc-ipq5018.h
+> +  - dt-bindings/reset/qcom,gcc-ipq5018.h
+>    - dt-bindings/clock/qcom,gcc-ipq6018.h
+>    - dt-bindings/reset/qcom,gcc-ipq6018.h
+>    - dt-bindings/clock/qcom,gcc-ipq806x.h (qcom,gcc-ipq8064)
+> @@ -39,6 +41,7 @@ properties:
+>      enum:
+>        - qcom,gcc-apq8084
+>        - qcom,gcc-ipq4019
+> +      - qcom,gcc-ipq5018
+>        - qcom,gcc-ipq6018
+>        - qcom,gcc-ipq8064
+>        - qcom,gcc-msm8660
+> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq5018.h b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
+> new file mode 100644
+> index 00000000..069165f
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
+> @@ -0,0 +1,183 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Only care about Linux and GPL OSs? And your employer is okay with GPL3 
+(and GPL4, ...)?
+
+IOW, dual license please.
