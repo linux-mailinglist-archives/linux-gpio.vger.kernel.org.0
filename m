@@ -2,84 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B1127CE4C
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 15:00:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8610727CE5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 15:05:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgI2M7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 08:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
+        id S1728411AbgI2NF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 09:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbgI2M7z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 08:59:55 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A92DC0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:55 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id q8so5378302lfb.6
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:54 -0700 (PDT)
+        with ESMTP id S1728229AbgI2NF1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 09:05:27 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC788C0613D0
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:05:26 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y4so3947489ljk.8
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 06:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eh3KJG2w7Yys6UJFQHww2Hj3zhNUGcK2PJZaSQvoL8k=;
-        b=pkDwbqFFvv0yf46aTOLZYdoje82yh84sOxJ0zOD1Mo1S9fCTDrdvooZRmXIFWfAyLe
-         LuO25Ff8ySbEejdwpHOAQ3GlirPeC4A+dtwBna0OrrDDipAhUh+3M1apNY87dRrbt3am
-         XPr/8CfFIPw5rFVMz5r9FNSAlFDXa+EC0/YNidBiRs99dwe0AqHUocXDbXTYbvkKbxMk
-         tvDf2UyEucYevFfsHeDNNCQuFoBU2DtvCBu2oTzKTeaI+7YuVBEhyh6lHJSg/b72TBFI
-         gYNNjQ6yT0dO2hT6ge1cVWpeO5WCNrCoH/s4Z2JUpFwlwBjE/pnPFB/jczKY5i1WHlFZ
-         eOVw==
+        bh=x7PoE7dEYIPuVwlkZqO1LLEHQQKtt25v2DVlOMP6AHo=;
+        b=fUrzP0OYv9HgWhQEMMveAgcsP7oGj/RW2J167Cs+TZnEA0MmgxSrelrsBCojKwOaa6
+         C7IaETPGB5R7hH9hQNXgG2HLmDPyF1O++WCdUdkUGtbGYOUD5d0KCW0yIDcHJcfBtEat
+         MN/soPKcLbN4alynV/3Oq+K/7mWC0qHK4SI11ExFZsTAFvCK4Rr5iEnJKQmICmPDJeO7
+         o8qQ2wEJduVhtV1ohJ1kkxbunGkigCjg6s1Nvw4CBjNLc5DToEuXlxXRhEH1JBrJGQp8
+         tbpuiHeV9873EhxbWuAY+kf+fDFSBk81xTK2W77hnbMtlTAq48VilmGB7saaXhZG/eXm
+         TXfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eh3KJG2w7Yys6UJFQHww2Hj3zhNUGcK2PJZaSQvoL8k=;
-        b=ekJlvKrMC0HDC1MMBqmNaID+zujlEMDCe4ka7MjgxAQOd/CE+bomRlsDjfE5KetiEt
-         MlzQZUOaCgxeAFkU4EE8RileeBLCxsqd5TWmlBtTI2/aLveAlruiROPNjzFn8uniaAv7
-         iAUgqE9KSJMWM91GWqWDE/sqZB2dRkAHgVqDEHJBjraCpkwH4O3tIfJJovSrKgcU0Esu
-         35skeXq/G11OYwyYpv1Z9cX0Y/xDitWaIlYYzjUGbw+SrltNDfc+L/jJEoGuRN/nXR0E
-         K5TEYH58p7A/o9fHDcaIUD/tJ9RrsHW/ETzWdkf73CKneiJ2KJ15glxZPwswr+diTtzI
-         mGbA==
-X-Gm-Message-State: AOAM530QvDKb3h6soIsMG1tpGTHbGR/WTPQRolo5Na+pFdBL+yibzgg0
-        oJdjTKuYgzGjRattbOGBieQZ9qv8r3pDQ7CgZ+kd4VhqYuCD0g==
-X-Google-Smtp-Source: ABdhPJzxjXuvos1X0Emgi+gEyH5ri9cRPCfiatSQQnmAqePCzDD9Gdohy4+kv4rNIHNVz9ZGehnkKSiaz0VvcT/H6h8=
-X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1269691lfq.260.1601384393349;
- Tue, 29 Sep 2020 05:59:53 -0700 (PDT)
+        bh=x7PoE7dEYIPuVwlkZqO1LLEHQQKtt25v2DVlOMP6AHo=;
+        b=bl2Sps4KPMyDTKSqwatVVEYmPTc5LTQFWf1gvXRoqKDdMsHEXEpkf6Fsl+MSJhO0tH
+         lN0NjtcJJmIHFTLfbFFJkz83ZO9QxEQbNwRxQiK6aallxI8L6w/EA2TVmnvEvs7SwNgO
+         Kxyek0jPS3RuEuBNvBWfA98S1MgWVCF6LXKBYoEyeYrkVf0tRsoTj72JHAUEZR7QPQ0v
+         hG6gTcjgmY8Ff/3xTKPcT0RO0jiQPExasVgyC+F+4Zl3icLf43Nkl9CKcOwZL4dQxsWK
+         Q8lj+CJe6bgRCSP4FwhWBrztStabVdXJJkfBXOzRpONwYy0TAufyn72YuPBAa2AjjHN6
+         XcvQ==
+X-Gm-Message-State: AOAM533h1W9wBnJva+yc32PcUF59eIFbKKsUPTEl1jJZmIxQzFAh3yAY
+        oOVSlYoauikbLiPrrUl4yLhnbDfmDiGlfEU+ANYwzg==
+X-Google-Smtp-Source: ABdhPJy/X+0WMwLJnnaZKPuQshR6BsIoPrQETBygBLitZ3v7V9F2iF7XKoEqTKr05CyXJA2Nt3Dv7vr56hcwRJbw9jg=
+X-Received: by 2002:a2e:a177:: with SMTP id u23mr1110925ljl.104.1601384725264;
+ Tue, 29 Sep 2020 06:05:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200914144025.371370-1-fazilyildiran@gmail.com>
-In-Reply-To: <20200914144025.371370-1-fazilyildiran@gmail.com>
+References: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Sep 2020 14:59:42 +0200
-Message-ID: <CACRpkdZK1XsrCcmc7yvgff9meRVBtoVmc9R6tirxYeRXgDQWFQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: bcm: fix kconfig dependency warning when !GPIOLIB
-To:     Necip Fazil Yildiran <fazilyildiran@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Tue, 29 Sep 2020 15:05:14 +0200
+Message-ID: <CACRpkdY-A6i+2SRVn9TJC8C3+rYa1qMcSHSwOaR_jKfxjOK2VQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] gpio: mxc: Support module build
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        oleksandr.suvorov@toradex.com, Peng Fan <peng.fan@nxp.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Lubomir Rintel <lkundrak@v3.sk>, Joel Stanley <joel@jms.id.au>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        paul@pgazz.com, jeho@cs.utexas.edu
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 4:41 PM Necip Fazil Yildiran
-<fazilyildiran@gmail.com> wrote:
+On Thu, Sep 17, 2020 at 7:40 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-> When PINCTRL_BCM2835 is enabled and GPIOLIB is disabled, it results in the
-> following Kbuild warning:
+> Change config to tristate, add module device table, module author,
+> description and license to support module build for i.MX GPIO driver.
 >
-> WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
->   Depends on [n]: GPIOLIB [=n]
->   Selected by [y]:
->   - PINCTRL_BCM2835 [=y] && PINCTRL [=y] && OF [=y] && (ARCH_BCM2835 [=n] || ARCH_BRCMSTB [=n] || COMPILE_TEST [=y])
+> As this is a SoC GPIO module, it provides common functions for most
+> of the peripheral devices, such as GPIO pins control, secondary
+> interrupt controller for GPIO pins IRQ etc., without GPIO driver, most
+> of the peripheral devices will NOT work properly, so GPIO module is
+> similar with clock, pinctrl driver that should be loaded ONCE and
+> never unloaded.
 >
-> The reason is that PINCTRL_BCM2835 selects GPIOLIB_IRQCHIP without
-> depending on or selecting GPIOLIB while GPIOLIB_IRQCHIP is subordinate to
-> GPIOLIB.
+> Since MXC GPIO driver needs to have init function to register syscore
+> ops once, here still use subsys_initcall(), NOT module_platform_driver().
 >
-> Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
->
-> Fixes: 85ae9e512f43 ("pinctrl: bcm2835: switch to GPIOLIB_IRQCHIP")
-> Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Patch applied to non-critical fixes, thanks!
+This patch (1) applied to the GPIO tree.
+Please apply the rest through the ARM SoC tree!
 
 Yours,
 Linus Walleij
