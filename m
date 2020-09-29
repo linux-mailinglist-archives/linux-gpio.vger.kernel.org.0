@@ -2,79 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D39827CE4A
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 14:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B1127CE4C
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Sep 2020 15:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgI2M7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Sep 2020 08:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
+        id S1728399AbgI2M7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Sep 2020 08:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbgI2M7a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 08:59:30 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07ED9C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k13so4465196pfg.1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:30 -0700 (PDT)
+        with ESMTP id S1726431AbgI2M7z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Sep 2020 08:59:55 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A92DC0613D0
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:55 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id q8so5378302lfb.6
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Sep 2020 05:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IXm+jAcwnov5k7aB5S4eSQ/k2WcVm16Wq4L3U81to9Y=;
-        b=W0uonST0G2kF65OctiCBvt4oMviKl+AjgSc/UnIb7ZQ5WebW5NxcG2xVIQxzWv1Tgr
-         0w83HIA9d9yX1XylAe3yIVeg0ZNKoxW5hpYa+qx3c5IeIABjmhSrY77lEPOvjU8Adr9W
-         ysuM62pcgDFGCFQfh1hV84ORhlH0gUO8bUZ15Jyc223+jfNGYm2OPj9cey4RtH+YSDlt
-         HZrmWWCLzzvvYguyp6J0cyB4mC5M82X48IyDQ5UGTBeDXqafKYeqzn4sDseg8vzqzCo+
-         tXJcwkrJGirLUxZHhV3XsL45QjR3WctCJqKo2cHR7mxcweUIccSBOXv3mrsS8aHm6kGa
-         6Mqw==
+        bh=eh3KJG2w7Yys6UJFQHww2Hj3zhNUGcK2PJZaSQvoL8k=;
+        b=pkDwbqFFvv0yf46aTOLZYdoje82yh84sOxJ0zOD1Mo1S9fCTDrdvooZRmXIFWfAyLe
+         LuO25Ff8ySbEejdwpHOAQ3GlirPeC4A+dtwBna0OrrDDipAhUh+3M1apNY87dRrbt3am
+         XPr/8CfFIPw5rFVMz5r9FNSAlFDXa+EC0/YNidBiRs99dwe0AqHUocXDbXTYbvkKbxMk
+         tvDf2UyEucYevFfsHeDNNCQuFoBU2DtvCBu2oTzKTeaI+7YuVBEhyh6lHJSg/b72TBFI
+         gYNNjQ6yT0dO2hT6ge1cVWpeO5WCNrCoH/s4Z2JUpFwlwBjE/pnPFB/jczKY5i1WHlFZ
+         eOVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IXm+jAcwnov5k7aB5S4eSQ/k2WcVm16Wq4L3U81to9Y=;
-        b=QASmWl8hJin3blK9ahDLM/RCnvUcPSEOH7sHs/YDQoq85+ph0rqwR3ZVVECfUbV5Yd
-         nZHP0ITPIS5ExV3s3/TZXoSW7dwKPdurdFkrfY/eol72VOdWjHMxhJlr6S73kGI6zVRU
-         OZZSqNByzBm35MzHelQaPct9SL8bQNE25AgojcaAdfVvzuX/EeSj7ZlhPehafMY7qfI4
-         kK837FjRpUUlr3QFnVMalreV1fcQ/Qn5MFAudabCFS9Zl/a3HgvCMzv1EzaAh+KiSS8f
-         1rF9MMs686xDg9SxRE0Ap3tQEs6EagL1b8dWkotZi0/LCfFA7+Z6GGLJ6DJrWb0jl8Vf
-         5yAg==
-X-Gm-Message-State: AOAM530AkKlDl42kWGnuh1tdioVcQHLSHxdzli/3ayfllpbJG6uoQynq
-        /XAN64RpyD1cJKkHOf3+bblm9Diuk2hlwW8s5FI=
-X-Google-Smtp-Source: ABdhPJzhbozh1sqaCOSxKvQzhL4/i8HPHfbbnMD3Kq/NX3UpafbWXxESFKVCczBRU5XKsJZ8QEScURxP1lk5X59rDJw=
-X-Received: by 2002:aa7:81d5:0:b029:142:2501:39fa with SMTP id
- c21-20020aa781d50000b0290142250139famr4113538pfn.73.1601384369548; Tue, 29
- Sep 2020 05:59:29 -0700 (PDT)
+        bh=eh3KJG2w7Yys6UJFQHww2Hj3zhNUGcK2PJZaSQvoL8k=;
+        b=ekJlvKrMC0HDC1MMBqmNaID+zujlEMDCe4ka7MjgxAQOd/CE+bomRlsDjfE5KetiEt
+         MlzQZUOaCgxeAFkU4EE8RileeBLCxsqd5TWmlBtTI2/aLveAlruiROPNjzFn8uniaAv7
+         iAUgqE9KSJMWM91GWqWDE/sqZB2dRkAHgVqDEHJBjraCpkwH4O3tIfJJovSrKgcU0Esu
+         35skeXq/G11OYwyYpv1Z9cX0Y/xDitWaIlYYzjUGbw+SrltNDfc+L/jJEoGuRN/nXR0E
+         K5TEYH58p7A/o9fHDcaIUD/tJ9RrsHW/ETzWdkf73CKneiJ2KJ15glxZPwswr+diTtzI
+         mGbA==
+X-Gm-Message-State: AOAM530QvDKb3h6soIsMG1tpGTHbGR/WTPQRolo5Na+pFdBL+yibzgg0
+        oJdjTKuYgzGjRattbOGBieQZ9qv8r3pDQ7CgZ+kd4VhqYuCD0g==
+X-Google-Smtp-Source: ABdhPJzxjXuvos1X0Emgi+gEyH5ri9cRPCfiatSQQnmAqePCzDD9Gdohy4+kv4rNIHNVz9ZGehnkKSiaz0VvcT/H6h8=
+X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1269691lfq.260.1601384393349;
+ Tue, 29 Sep 2020 05:59:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200925134943.12169-1-brgl@bgdev.pl> <CACRpkdYkk4Yt983NttG7kFZMkuwz=D4EjP_K8+t8qX5B-OSigA@mail.gmail.com>
-In-Reply-To: <CACRpkdYkk4Yt983NttG7kFZMkuwz=D4EjP_K8+t8qX5B-OSigA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 29 Sep 2020 15:59:11 +0300
-Message-ID: <CAHp75VcNtbRB2WkGz=MwYZub5EV=sdB3pG8xG7p1WHGs1ez0sg@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.9-rc7
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200914144025.371370-1-fazilyildiran@gmail.com>
+In-Reply-To: <20200914144025.371370-1-fazilyildiran@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 29 Sep 2020 14:59:42 +0200
+Message-ID: <CACRpkdZK1XsrCcmc7yvgff9meRVBtoVmc9R6tirxYeRXgDQWFQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm: fix kconfig dependency warning when !GPIOLIB
+To:     Necip Fazil Yildiran <fazilyildiran@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        paul@pgazz.com, jeho@cs.utexas.edu
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 3:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Sep 25, 2020 at 3:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> > Here's another batch of fixes for this release cycle. Please pull.
->
-> Pulled in, sorry for not being quicker and not even getting the first
-> batch of fixes to Torvalds.
+On Mon, Sep 14, 2020 at 4:41 PM Necip Fazil Yildiran
+<fazilyildiran@gmail.com> wrote:
 
-Maybe it's good, since you may add one more patch against pin control
-Intel Tiger Lake. :-)
+> When PINCTRL_BCM2835 is enabled and GPIOLIB is disabled, it results in the
+> following Kbuild warning:
+>
+> WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
+>   Depends on [n]: GPIOLIB [=n]
+>   Selected by [y]:
+>   - PINCTRL_BCM2835 [=y] && PINCTRL [=y] && OF [=y] && (ARCH_BCM2835 [=n] || ARCH_BRCMSTB [=n] || COMPILE_TEST [=y])
+>
+> The reason is that PINCTRL_BCM2835 selects GPIOLIB_IRQCHIP without
+> depending on or selecting GPIOLIB while GPIOLIB_IRQCHIP is subordinate to
+> GPIOLIB.
+>
+> Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
+>
+> Fixes: 85ae9e512f43 ("pinctrl: bcm2835: switch to GPIOLIB_IRQCHIP")
+> Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
 
-I have sent it as a part of the series. first for v5.9, while the rest
-can survive even for v5.11. Up to you what to do with them :-)
+Patch applied to non-critical fixes, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
