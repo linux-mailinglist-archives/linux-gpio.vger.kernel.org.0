@@ -2,81 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AE4227E58E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8204627E5A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:50:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgI3Jrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46102 "EHLO
+        id S1725823AbgI3Juv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728169AbgI3Jrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:47:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4353C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:47:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id k25so1007832ljg.9
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:47:41 -0700 (PDT)
+        with ESMTP id S1728126AbgI3Juv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:50:51 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65E0C0613D0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:50:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 77so1388368lfj.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3ol/xccxtcNaUn5n/W3xWoKSpLgUl5lz2xY3r3AugO8=;
-        b=HOHADYLC0y2IrheXLaEGwD9rtt8CSvpYrABU0NMoOff2N7i5xWDIyolYguSu/rxYG3
-         crVmEoxBJVMBAjHcC8sIBYlBN5zDpvWwoW8L3inLjcHO9aEqAJOiELTZ5Al5P2eEcpoa
-         tWW9cv/StO52LiuDDrh1Pog8NexiLuZoElT7sVs2igD9k4DwcHxfYAXC5tHZAyUzasfN
-         pcjptIkuodjmPCMmwfAbnLMTi8edmmWa48q3NI70UOUEMgGPXpAvhwbql3FIOw7aVaAJ
-         4NsPXSf7r2zV05WOOtFJDSuq0TFDexprTnRypfnVESDmJecMcVQ4uPljeAZnAw+9Pj+4
-         LE+A==
+        bh=4kDE8wrBm+qziaG4g1g/VJGmcusF/BRkFisBqvCmFDc=;
+        b=iB9qiHLogQUzM7o9zQ0HZSYyL+GiBm7AI8MvcXqzE0jGilJA0KZYljsZ8m9uKTTCQc
+         R1njFwaJF0vK63FD5OBjwsuSnFdkTGxq798Au1eMT7JiYmwoqa0pwiHjvkaiSwV0ikqN
+         RtmufQ+1PQox26UJ7CET8s54aSa4d1keVad5xLbcKEAKG+6H33cNjCWBYqwgxnLbyBq8
+         XABwbLDKig7zrWK55uisXFhtb6jUAbChmHI6iQKy/MB+qAvXuIePzXWoGh9+DC1FGvFJ
+         3S8LXpJdpL9q5RR+PEkKs4oeML1VVrza/35HZGGZwS5SnkZkSoNFX8lJJhpDxwnnuDQa
+         QY3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3ol/xccxtcNaUn5n/W3xWoKSpLgUl5lz2xY3r3AugO8=;
-        b=arYOido+UrXYU4tuv/0Nq6/fzADv4t/QrRqujjQeZRP2oRSxl4b0lDeAE+oXUAaOfk
-         /ti+aJVdMzVl1cLTguJ6G6f3+AJWlfJCrlAAmrkx/RVfOQcaGKE/tJ/OLij+CDSi3BLr
-         Zn7s2ixJ3/XHtYgvVStoVl4pZ3dzWu2OpR+wg4kfMTvyXHKtvuXgun+V3LgT4FSW4NOc
-         6kFfr5vKYsLjbqYW/WKivJpT1hnLE8dRAx4FEC48P8GP7r/QDNWXL+wFcBpNUqh7D2Y9
-         RESpkeqKZt0Uny8Zy5OuoSnsbLJLLYbpKjYudJjfIUr1EZ3BBX60Q2zLV9Ydr7ZAvsaI
-         pfyw==
-X-Gm-Message-State: AOAM530upcE0nuA7Qg0Z5quWpFe6mpksrF0hoPrVFiD3VsrZL4q7bRUz
-        KHqxB/r6bBJEq6byKvhRrVijL/tSOPY2IKbHZpZ30g==
-X-Google-Smtp-Source: ABdhPJwoa/bnOD0ty8V2zJfl3gmzesmmlaUbFQLnWtsNhyfTCGEoZLeYcdQ5iyRgF0PDA+MSID1zGAuyWxM0WaI/dG4=
-X-Received: by 2002:a2e:4e01:: with SMTP id c1mr590961ljb.144.1601459260374;
- Wed, 30 Sep 2020 02:47:40 -0700 (PDT)
+        bh=4kDE8wrBm+qziaG4g1g/VJGmcusF/BRkFisBqvCmFDc=;
+        b=ZxDWgevvA4kTRqTehZXqadXwkedwhXiMFcVT3IQH15E6BZU3t1cI71k518UXBkaUlF
+         QcOyvL8m8PJ4un9cqiZLLf65zxTMLlOfcacXEZKLxWqQhfUI7PeaQTjgypGgQfd/t8Ym
+         CTUmspof1ZR8iiGHfL+4nHMDPU83OjbEY6lydeuAYCwpX/bydh6zfK3qXSl3pYVOkAAn
+         jbS1f0P3Bhv03Kc9WuMpKFomphJqAZLbxtnmX7ZVnuTMo9smDqMso+OD8xAIFJK2IqcT
+         Wf2vgYLDa85aIk+l/52yWvJ4CujO9pL1ZO4XLMDuDKq0qk0proj9LQbofBQuD+s4qD5r
+         vSOA==
+X-Gm-Message-State: AOAM5333p5wp3+XSM0jfJWVyQEzExdO7YUS1Ls/K3qovAG1gePHnRaXs
+        eP5p6tzexWjDC87ftgL0L5ELKhPHcVR55o9gL0IQXQ==
+X-Google-Smtp-Source: ABdhPJxm7dZ5605/6k4XUptX9QM1RtmPezAq+DEnqYIEsde95WBlbJgEIx/rubuQiw8SILz7iUX4fADZC23QYKW2izE=
+X-Received: by 2002:ac2:4c11:: with SMTP id t17mr641852lfq.260.1601459449318;
+ Wed, 30 Sep 2020 02:50:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200921131056.92848-1-miaoqinglang@huawei.com>
- <CACRpkdZxgw7zmmWyVpxQ5N60Yxzj+u_LPAkRGN0qS3A4DqKNgw@mail.gmail.com> <5a88741a-15b8-e81a-0161-89442a7a1d82@huawei.com>
-In-Reply-To: <5a88741a-15b8-e81a-0161-89442a7a1d82@huawei.com>
+References: <20200930092053.2114-1-mike.looijmans@topic.nl>
+In-Reply-To: <20200930092053.2114-1-mike.looijmans@topic.nl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 11:47:29 +0200
-Message-ID: <CACRpkdZFAjL5k9MdQWQoktHiFuHKacgPd4p49+dUqUYXNsH2=w@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: mediatek: simplify the return expression
- of mtk_pinconf_bias_disable_set_rev1()
-To:     miaoqinglang <miaoqinglang@huawei.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
+Date:   Wed, 30 Sep 2020 11:50:38 +0200
+Message-ID: <CACRpkdbsYcmv9m2EiQNgPDZ0MdjPnWTxXvnqATVPvWpB=8Oqkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: pca953x: Add support for the
+ NXP PCAL9554B/C
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 11:39 AM miaoqinglang <miaoqinglang@huawei.com> wrote:
+On Wed, Sep 30, 2020 at 11:21 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
 
-> I tried to rebase this patch to the pinctrl "devel" branch but there's
-> no conflict. Could you please try again or show me some details?
+> The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
+> with 8 GPIOs, latched interrupts and some advanced configuration
+> options. The "C" version only differs in I2C address.
+>
+> This adds the entry to the devicetree bindings.
+>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+> v2: Split devicetree and code into separate patches
 
-If you used "git rebase" this might work for you because the git tree
-can do a more intelligent rebase than me. I only have the patches
-and they do not contain context.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-However I actually want to apply it on a clean v5.9-rc1 (that's what
-I actually tried, sorry for the confusion) but maybe it has some
-dependencies so that does not work?
+This patch 1/2 does not apply to my tree, I suppose Rob has
+to apply it?
+
+I will try to apply 2/2.
 
 Yours,
 Linus Walleij
