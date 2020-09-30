@@ -2,67 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFBB927E550
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:38:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE04427E557
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:39:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgI3Jip (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgI3Jip (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:38:45 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B01C0613D0
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:38:44 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id x69so1334768lff.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ep9z0ZZ+f7tQIzGMJ7yrHFUOye3w1O3ldVwgOl4L0AU=;
-        b=q+wVFBAQ+DJ86rabJ6hidB5LHLOVJ/FpPbFRrmPEA6Ghv2/tJ3txRvJUgIRPgqQMqA
-         XYyg2kV2FRp/+/c5xNjeENhej8MWmZ9FpG/Sgf/PZfl/U3q6wLUatt5aX8DnjkmWRDqo
-         q36pJ3jRmKrm8Hi3Uokxg1JMwxhGcBEfB5xVseNHpq0WON3tcAwHDB9WTNAWWhiRivH+
-         MoiVMSBdK6+2csK9RBWVE/TntSrrGPB+BgbIQ7zdMcNqC9YENKPNGnt5v1C2LMYd/zJT
-         yMB1NdyIBA6iEWwfwARQd5sRToVdKeE4UiVuHFHYeYSpsrpnNeXrCCl00k2X4PZplMM2
-         YnbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ep9z0ZZ+f7tQIzGMJ7yrHFUOye3w1O3ldVwgOl4L0AU=;
-        b=prJIuBS0AcH4g6t/beN4TZTK8aqqbxZA3dtak4VyIljZzFLpvVf7aCXRKJ7ZxorKEm
-         Pmy2/Qr8kTrgYHJKm0jfWIU38PimedyoKIGmzT4TdEJItZ11LvQhsv8sNVpXElsrfQJv
-         dOcWH+wXs0aDhNfM3IewgnQFCLnZYzr0mgFeTkWkbpaX42ME00Y516t+1CSLmCVfO7O3
-         4g3yKTJ3t4DHboYUp/dxoYQngFff1tror+viG6tKXbzlT+xLClve8p1akaXP1dE1FwtT
-         h97x14+DHAmvFuUe8FxSRryX2cB0LyLHmwk4PuPlKsQeSdbkI8S9yUgIK++V8FlKIHbp
-         huKw==
-X-Gm-Message-State: AOAM531kDCzlg9apUSL8f8KpdlIFZfDHFpXzkthwBwyKT0tInUTr7NmZ
-        2aqr3MW4RqdROciVo3RLRoHvKmtbWeYtbKFbVnY/ow==
-X-Google-Smtp-Source: ABdhPJznurOWOD+F9cHQcbYDkYOLhWYNUjf0OBW3ctQQAUoKhKXiH80CBcd0UKXsezJVXoG8eqI6pA5xjJ5Bmar4wak=
-X-Received: by 2002:a19:1c8:: with SMTP id 191mr538082lfb.585.1601458723300;
- Wed, 30 Sep 2020 02:38:43 -0700 (PDT)
+        id S1728797AbgI3Jjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:39:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:14789 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725779AbgI3Jjz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Sep 2020 05:39:55 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 54EA5A4AE3B61CDE5BB6;
+        Wed, 30 Sep 2020 17:39:52 +0800 (CST)
+Received: from [10.174.179.91] (10.174.179.91) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 30 Sep 2020 17:39:47 +0800
+Subject: Re: [PATCH -next] pinctrl: mediatek: simplify the return expression
+ of mtk_pinconf_bias_disable_set_rev1()
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200921131056.92848-1-miaoqinglang@huawei.com>
+ <CACRpkdZxgw7zmmWyVpxQ5N60Yxzj+u_LPAkRGN0qS3A4DqKNgw@mail.gmail.com>
+From:   miaoqinglang <miaoqinglang@huawei.com>
+Message-ID: <5a88741a-15b8-e81a-0161-89442a7a1d82@huawei.com>
+Date:   Wed, 30 Sep 2020 17:39:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200930092426.9559-1-brgl@bgdev.pl>
-In-Reply-To: <20200930092426.9559-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 11:38:32 +0200
-Message-ID: <CACRpkda6KttZYm1d55XpZizDAHgZm_2dCt403_j_K0FgE9qB9w@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.9 - last batch
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdZxgw7zmmWyVpxQ5N60Yxzj+u_LPAkRGN0qS3A4DqKNgw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.91]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 11:24 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Please pull one more fix for v5.9 release.
 
-Pulled in to my "fixes" branch.
+在 2020/9/30 16:53, Linus Walleij 写道:
+> On Mon, Sep 21, 2020 at 3:10 PM Qinglang Miao <miaoqinglang@huawei.com> wrote:
+> 
+>> Simplify the return expression.
+>>
+>> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> 
+> This patch does not apply to the pinctrl "devel" branch, please
+> rebase and resend, include Sean's ACK.
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+> 
+> Yours,
+> Linus Walleij
+> .
+> 
+Hi Linus,
 
-Yours,
-Linus Walleij
+I tried to rebase this patch to the pinctrl "devel" branch but there's 
+no conflict. Could you please try again or show me some details?
+
+Thanks.
