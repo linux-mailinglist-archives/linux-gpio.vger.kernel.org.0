@@ -2,77 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D228F27E431
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 10:53:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7C827E4DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgI3Ixw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 04:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbgI3Ixv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 04:53:51 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A818C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:53:51 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 197so566646lfo.11
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3z2xOif8bgrl4CXIfjrJIpR+vLzOyA+RktpULqT3bh0=;
-        b=qrofEe4M1Xd/el20IewAIFLEt4T8hUHh/n3Q1WXwOuKu3e2R4xpOQBO2TBhln5msHM
-         FGsckaPK88lI2NhWKga5UDDsfC0pUTzx2a/f+Prnt/aaNJuZhYtsdIaGQtqHrWZLbDve
-         +SXI2jRCFzFnFEgXOxElCgSfXePsUiP/9DJxdTyLdYPqRXZ/DzM6CeqifPWCDfe+1nfV
-         3zZEYx2dgqahuhN6vaOgy9YU/cMWLAiMuTerlD6//ZqEUnP/pbg7Wwym+nxkYDjtDWlj
-         RF+j/fCbtpvYLw5HK6i9V2IrpXiOlnQkmTKFRQfGNylSRab3xzsPqiypuduF8wvSsb7G
-         L44w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3z2xOif8bgrl4CXIfjrJIpR+vLzOyA+RktpULqT3bh0=;
-        b=izjqdD6MMxaSnWfWFfiwkOPYmEStkEJ+P5719QAYCgj7YpzZH8ZmfVXWRRdMBi+LZ4
-         ftaKqaWzx3/nfwHbqxC8Yyw5hC9lCesORxySc/wr5J6+QKmNa4rIYaIJhcHFeqCoSquI
-         Me85nSFCEx4Ci3G2WY099PgH5JDdawzImg0lxrwrr7aIc7xokWBaR0ZmNmpICQ37X0xY
-         zm7iP2bHRRjjVmUcDb1jqFzjfHWS5nn4nY43n//khMUhPtmF+6TMMPqgs+gul3Nn3kIZ
-         3esSC/GuGw9wTVhAIiYl3MZkCZsmZhlsXtbBkZ51Zk+8GM8I3trlwzBr8S8U6E4pK7sk
-         hhbQ==
-X-Gm-Message-State: AOAM533Nzxn30fzjF6HRKCQehO4NYaxwEtL9zOKJOO2lQRjBIdplBYxP
-        DBbATjURLdmUcJasHuVfmfer3teP1Famv33Of3ZkNA==
-X-Google-Smtp-Source: ABdhPJzi4flBuB3wmmmt9LtKMpa6PA1KfwRmboYTD0A5gCDHKZ3c33ZbcjL3MiGZbitzxdQhZsN3HZRaN/nxffefeQo=
-X-Received: by 2002:a19:1c8:: with SMTP id 191mr484379lfb.585.1601456029840;
- Wed, 30 Sep 2020 01:53:49 -0700 (PDT)
+        id S1728957AbgI3JPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:15:36 -0400
+Received: from muru.com ([72.249.23.125]:45746 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729470AbgI3JPe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Sep 2020 05:15:34 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 59D8C810D;
+        Wed, 30 Sep 2020 09:15:33 +0000 (UTC)
+Date:   Wed, 30 Sep 2020 12:15:26 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Trent Piepho <tpiepho@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Christina Quast <cquast@hanoverdisplays.com>
+Subject: Re: [PATCH] ARM: dts: document pinctrl-single,pins when
+ #pinctrl-cells = 2
+Message-ID: <20200930091526.GQ9471@atomide.com>
+References: <20200923065755.GR7101@atomide.com>
+ <CA+7tXigeNhQQVuAu0toZrvBKvMYkDU-8EWTpJR29HLTAMgoOBA@mail.gmail.com>
+ <20200924054324.GB9471@atomide.com>
+ <CA+7tXigg+h3v61AVMaYRKa_ZwznehOUPEESMqXKsNDNCrFph3w@mail.gmail.com>
+ <20200924060645.GD9471@atomide.com>
+ <CA+7tXijkS8UMFk4t=DuKjZZNnThbRarPQvxwxjg-uJFTKJRsXA@mail.gmail.com>
+ <20200924070443.GF9471@atomide.com>
+ <CA+7tXihBdw9AOGL7Hp2cH9+ii8fUXaaZZDUP3icyeOkMuGm4qA@mail.gmail.com>
+ <20200930051521.GN9471@atomide.com>
+ <CA+7tXig=3hbFXfmYMC5Hd1Zc2n-6uGXbMePPw_Cr4bOsyt7QQA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200921131056.92848-1-miaoqinglang@huawei.com>
-In-Reply-To: <20200921131056.92848-1-miaoqinglang@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 10:53:39 +0200
-Message-ID: <CACRpkdZxgw7zmmWyVpxQ5N60Yxzj+u_LPAkRGN0qS3A4DqKNgw@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: mediatek: simplify the return expression
- of mtk_pinconf_bias_disable_set_rev1()
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+7tXig=3hbFXfmYMC5Hd1Zc2n-6uGXbMePPw_Cr4bOsyt7QQA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 3:10 PM Qinglang Miao <miaoqinglang@huawei.com> wrote:
+* Trent Piepho <tpiepho@gmail.com> [200930 08:35]:
+> The closest thing would be the generic pin config type bindings, which
+> go in the pinctrl driver's nodes, and look like this:
+> &am335x_pinmux {
+>     pinctrl_yoyo_reset: yoyogrp {
+>         pins = "foo";
+>         function = "gpio";
+>         bias-pull-up;
+>     };
+> };
 
-> Simplify the return expression.
->
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+There's a bit of a dtb size and boot time issue for adding properties
+for each pin where that needs to be done for several hundred pins :)
 
-This patch does not apply to the pinctrl "devel" branch, please
-rebase and resend, include Sean's ACK.
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+> Is "some additional property for specifying generic conf flags"
+> different from the existing pinctrl-single,bias-pullup, etc.
+> properties?  Because splitting the data cell into two parts doesn't
+> make any difference to those.
 
-Yours,
-Linus Walleij
+So with an interrupt style binding with generic pinconf flags we can
+leave out the parsing of multiple properties for each pin. Sure the
+pin is only referenced by the controller like you pointed out but the
+pinconf flags could be generic.
+
+Regards,
+
+Tony
