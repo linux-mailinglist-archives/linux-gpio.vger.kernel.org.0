@@ -2,296 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCEE327E7C3
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 13:42:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B2BF27E82E
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 14:04:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgI3Lmu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 07:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgI3Lmu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 07:42:50 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F09EC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 04:42:48 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id s19so870698plp.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 04:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=22NCbkOxWlOp1qgfFePcjEYEXFLB98+R7naWov0Q91w=;
-        b=QQr0W0JaZ4CvdUYlMrmJHTSLnVYMPw7xO4JNjJY7sdZeGNdvnfzIgVt3AnIKEqUC13
-         3EIeK7CubrP9KrKspyYM4uRYZjG/oWrRLumiGjcfKnGPyuqlzSFNIr8qoPG7KPDQBBHx
-         hhBf3A4j8EVz/hc/Uapg6MdSYYhOZNXBkr49eQsTdC2wpphJFKs6DBtxEZJimYYjLAnM
-         T5rNC3e+H1G+xiIKvAKRVRBh+gNC6RHG7Ae3QdXt2LTlq4pMdf/g5c+iIp0kURHvgprx
-         2ZnzVxSbxN0UrPg2MbyijUKse2ecX1WSqBg2meMlFCYahQpryrPsHsgSi9pFVTTBrdxZ
-         rhkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=22NCbkOxWlOp1qgfFePcjEYEXFLB98+R7naWov0Q91w=;
-        b=NEnH3KEaJvr8RZrFhZAQED18NyLPqg6cGQY6RoLR6kGTDeby3ICQ7N1lOeD10YhXRt
-         IUl01lxizH1kVvB/FNWx9kAhwKPqIzFv0ysI4+Bqetn6RfSk1xyI9G9fgXRcGzmKpW+F
-         Em/LG5np5VlBYNoq0h+6c5If7zqVa14tBQ/ErF4BWCvTyO3Y8EuK8+zNBZAmZAikEo3g
-         jd3XpK/Y6qKQ5xLx1O26+MqQTrfp2wDElS/ln5EHP+F5exZhgieKlDPzV3ZmUd60jvWt
-         mmZQl4rhODITTET2bIYEc6MbXX8t8g9TqVx0IvFKwKcAY+98z8B2XPwIkDZ0xDSA89NW
-         PLmA==
-X-Gm-Message-State: AOAM531K37wZcYBunMb47eC1S7OxLAEU2M6eHU1V04gku6CIHVooQUUu
-        VQ6gpL5aIF2JH7jA1NuOWrE+GawOi1l9nA==
-X-Google-Smtp-Source: ABdhPJx/KWfch+1zfQxciOY65TllfKpP3wrCPSp4T+zrGUOmqkICi1lFnqV6hx7QNpnte/54cMGhqw==
-X-Received: by 2002:a17:90a:c907:: with SMTP id v7mr2194842pjt.204.1601466167691;
-        Wed, 30 Sep 2020 04:42:47 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id 203sm2341621pfz.131.2020.09.30.04.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2020 04:42:46 -0700 (PDT)
-Message-ID: <5f746f36.1c69fb81.815c6.4361@mx.google.com>
-Date:   Wed, 30 Sep 2020 04:42:46 -0700 (PDT)
+        id S1728270AbgI3MEu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 08:04:50 -0400
+Received: from smtp.asem.it ([151.1.184.197]:63339 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729561AbgI3MEt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Sep 2020 08:04:49 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000514340.MSG 
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 14:04:45 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
+ Sep 2020 14:04:43 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Wed, 30 Sep 2020 14:04:43 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: How to use an ACPI declared GPIO in a userspace ...
+Thread-Topic: How to use an ACPI declared GPIO in a userspace ...
+Thread-Index: AdaWdniTedAZ6+9wQdyYYgE5sQ27yP//4UoAgAAGTYD//91o0IAAJ14A//6Yg1A=
+Date:   Wed, 30 Sep 2020 12:04:43 +0000
+Message-ID: <22753b53cd7d4dfba4ef3610f71cc462@asem.it>
+References: <9152bb8be33e4192a7766eb53c6ca9af@asem.it>
+ <CAMRc=McnsSkg-7UMp7pKaGX2wSqsZC2jQZV2zRepxm9UxGg=YA@mail.gmail.com>
+ <CAHp75VfgEGydXN1A+Y=wn3iX1MbLhN8F9kYyfQwTZBJydr+0+Q@mail.gmail.com>
+ <feb8567c830748c483c8c66dd4717003@asem.it>
+ <CAHp75Vdd2QjvJvLGHa1x=RaSknEG+O+YB4eJA6+2htnZ=Gf52g@mail.gmail.com>
+In-Reply-To: <CAHp75Vdd2QjvJvLGHa1x=RaSknEG+O+YB4eJA6+2htnZ=Gf52g@mail.gmail.com>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: test
-X-Kernelci-Kernel: v5.9-rc2-15-g17479aa39fbf
-X-Kernelci-Branch: fixes
-X-Kernelci-Tree: linusw
-Subject: linusw/fixes baseline: 95 runs,
- 6 regressions (v5.9-rc2-15-g17479aa39fbf)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020E.5F74745C.0040,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes baseline: 95 runs, 6 regressions (v5.9-rc2-15-g17479aa39fbf)
-
-Regressions Summary
--------------------
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-mt8173-elm-hana        | arm64 | lab-collabora | gcc-8    | defconfig      =
-    | 0/1    =
-
-panda                  | arm   | lab-collabora | gcc-8    | multi_v7_defcon=
-fig | 4/5    =
-
-rk3399-gru-kevin       | arm64 | lab-collabora | gcc-8    | defconfig      =
-    | 88/90  =
-
-sun50i-a64-pine64-plus | arm64 | lab-baylibre  | gcc-8    | defconfig      =
-    | 0/1    =
-
-sun7i-a20-cubieboard2  | arm   | lab-baylibre  | gcc-8    | multi_v7_defcon=
-fig | 0/1    =
-
-
-  Details:  https://kernelci.org/test/job/linusw/branch/fixes/kernel/v5.9-r=
-c2-15-g17479aa39fbf/plan/baseline/
-
-  Test:     baseline
-  Tree:     linusw
-  Branch:   fixes
-  Describe: v5.9-rc2-15-g17479aa39fbf
-  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
-io.git/
-  SHA:      17479aa39fbf65ad1502368437875e537c2f8139 =
-
-
-
-Test Regressions
----------------- =
-
-
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-mt8173-elm-hana        | arm64 | lab-collabora | gcc-8    | defconfig      =
-    | 0/1    =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f74668cf54f3ad428877172
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-2-g61393d279614/arm64/baseline/rootfs.cpio.gz =
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5f74668cf54f3ad428877=
-173
-      failing since 32 days (last pass: v5.8-rc5, first fail: v5.9-rc2)  =
-
-
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-panda                  | arm   | lab-collabora | gcc-8    | multi_v7_defcon=
-fig | 4/5    =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f746567bf7258b09a877177
-
-  Results:     4 PASS, 1 FAIL, 0 SKIP
-  Full config: multi_v7_defconfig
-  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-2-g61393d279614/armel/baseline/rootfs.cpio.gz =
-
-
-  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f746567bf7258b=
-09a87717d
-      failing since 17 days (last pass: v5.8-rc5, first fail: v5.9-rc2-3-g3=
-c68e90fdb65)
-      60 lines
-
-    2020-09-30 11:00:49.881000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c802
-    2020-09-30 11:00:49.887000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c803
-    2020-09-30 11:00:49.892000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c804
-    2020-09-30 11:00:49.898000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c805
-    2020-09-30 11:00:49.904000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c806
-    2020-09-30 11:00:49.910000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c807
-    2020-09-30 11:00:49.916000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c808
-    2020-09-30 11:00:49.922000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c809
-    2020-09-30 11:00:49.928000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c80a
-    2020-09-30 11:00:49.934000  kern  :alert : BUG: Bad page state in proce=
-ss swapper/0  pfn:9c80b
-    ... (49 line(s) more)
-      =
-
-
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-rk3399-gru-kevin       | arm64 | lab-collabora | gcc-8    | defconfig      =
-    | 88/90  =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f7467cbd88e31ad87877183
-
-  Results:     88 PASS, 2 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-2-g61393d279614/arm64/baseline/rootfs.cpio.gz =
-
-
-  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f7467ccd88e31a=
-d878771de
-      failing since 32 days (last pass: v5.8-rc5, first fail: v5.9-rc2)
-      11 lines
-
-    2020-09-30 11:11:01.076000  kern  :alert : Mem abort info:
-    2020-09-30 11:11:01.080000  kern  :alert :   ESR =3D 0x96000006
-    2020-09-30 11:11:01.086000  kern  :alert :   EC =3D 0x25: DABT (current=
- EL), IL =3D 32 bits
-    2020-09-30 11:11:01.089000  kern  :alert :   SET =3D 0, FnV =3D 0
-    2020-09-30 11:11:01.092000  kern  :alert :   EA =3D 0, S1PTW =3D 0
-    2020-09-30 11:11:01.096000  kern  :alert : Data abort info:
-    2020-09-30 11:11:01.100000  kern  :alert :   ISV =3D 0, ISS =3D 0x00000=
-006
-    2020-09-30 11:11:01.103000  kern  :alert :   CM =3D 0, WnR =3D 0
-    2020-09-30 11:11:01.110000  kern  :alert : user pgtable: 4k pages, 48-b=
-it VAs, pgdp=3D00000000eb16b000
-    2020-09-30 11:11:01.122000  kern  :alert : [0000000000000010] pgd=3D000=
-00000eb16c003, p4d=3D00000000eb16c003, pud=3D00000000eb16d003, pmd=3D000000=
-0000000000
-     * baseline.dmesg.emerg: https://kernelci.org/test/case/id/5f7467ccd88e=
-31ad878771df
-      failing since 32 days (last pass: v5.8-rc5, first fail: v5.9-rc2)
-      2 lines
-
-    2020-09-30 11:11:01.143000  kern  :emerg : Code: 1a9f07e7 f10000df 7a40=
-08e4 54000521 (f94008c8) =
-
-      =
-
-
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-sun50i-a64-pine64-plus | arm64 | lab-baylibre  | gcc-8    | defconfig      =
-    | 0/1    =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f7469c5455d309c458771f2
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-baylibre/baseline-sun50i-a64-pine64-plus=
-.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm64/defconfig/gcc-8/lab-baylibre/baseline-sun50i-a64-pine64-plus=
-.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-2-g61393d279614/arm64/baseline/rootfs.cpio.gz =
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5f7469c5455d309c45877=
-1f3
-      failing since 29 days (last pass: v5.8-rc5, first fail: v5.9-rc2)  =
-
-
-
-platform               | arch  | lab           | compiler | defconfig      =
-    | results
------------------------+-------+---------------+----------+----------------=
-----+--------
-sun7i-a20-cubieboard2  | arm   | lab-baylibre  | gcc-8    | multi_v7_defcon=
-fig | 0/1    =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f74659bdea9a721ae877169
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: multi_v7_defconfig
-  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cubie=
-board2.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.9-rc2-15-g1747=
-9aa39fbf/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cubie=
-board2.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-2-g61393d279614/armel/baseline/rootfs.cpio.gz =
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5f74659bdea9a721ae877=
-16a
-      failing since 17 days (last pass: v5.8-rc5, first fail: v5.9-rc2-3-g3=
-c68e90fdb65)  =20
+SGkgQW5keSwNCg0KPiA+ID4gPiA+IEkgd2FzIHdvbmRlcmluZyBpZiB0aGVyZSBpcyBhIGdlbmVy
+aWMgR1BJTyBkcml2ZXIgdGhhdCBJIGNhbiB1c2UNCj4gTWF5YmUgSSB3YXMgbm90IHNvIGNsZWFy
+LCBidXQgYXMgQmFydCBtZW50aW9uZWQgdGhlIGxlYXN0IHlvdSBjYW4gZG8NCj4gaXMgc2ltcGx5
+IGRlZmluZSBsaW5lIG5hbWUgdmlhICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5LiBUaGUgcHJv
+YmxlbQ0KPiBoZXJlIGlzIHdoZW4gYW5kIGhvdyB5b3Ugd291bGQgbGlrZSB0byBoYXZlIHRoZW0g
+aW5jb3Jwb3JhdGVkLg0KDQpJIGFscmVhZHkgdHJpZWQgYWRkaW5nIHRoZSAiZ3Bpby1saW5lLW5h
+bWVzIiBwcm9wZXJ0eSwgYnV0IHRoZSBwcm9ibGVtDQppcyB0aGUgc2FtZTogbm8gZHJpdmVyIGFz
+a3MgZm9yIHRoaXMgR1BJTywgYXMgc2hvd24gYnkgdGhlIGZvbGxvd2luZw0Ka2VybmVsIG1lc3Nh
+Z2VzOg0KDQpBQ1BJOiBIb3N0LWRpcmVjdGVkIER5bmFtaWMgQUNQSSBUYWJsZSBMb2FkOg0KQUNQ
+STogU1NEVCAweEZGRkY5OTQwMzRENDJBMDAgMDAwMEU4ICh2MDUgQVNFTXNwIEdQSU9fQlROIDAw
+MDAwMDAxIElOVEwgMjAyMDA3MTcpDQpBQ1BJOiBcX1NCXy5HUE8xLkJUTlM6IFBSUDAwMDEgcmVx
+dWlyZXMgJ2NvbXBhdGlibGUnIHByb3BlcnR5DQoNClNvIEknbGwgc3RhcnQgdG8gd3JpdGUgYSBz
+aW1wbGUgZGV2aWNlIGRyaXZlciB0byB1c2UgdGhpcyBHUElPLg0KSSdsbCBrZWVwIHlvdSBpbmZv
+cm1lZCENCiANCj4gV2hlbjogaWYgQUNQSSB0YWJsZXMgYXJlIGJlaW5nIHByb3ZpZGVkIGJ5IGZp
+cm13YXJlIHdoaWNoIHlvdSBtYXkgbm90DQo+IGFsdGVyLCB0aGVuIHlvdSBtdXN0IHVzZSBpbml0
+cmFtZnMgdHlwZSBvZiBzb2x1dGlvbiAobm8gY29uZmlnZnMsDQo+IGRvbid0IGtub3cgYWJvdXQg
+RUZJIHZhciB0aG91Z2gpLiBIb3c6IEluIHRoYXQgY2FzZSB5b3UgbWlnaHQgaGF2ZSBhDQo+IGNo
+YW5jZSB0byBpbmNvcnBvcmF0ZSBfRFNEKCkgbWV0aG9kIGludG8gKmV4aXN0aW5nKiBfQ1JTKCkg
+b25lLg0KPiBQb3NzaWJsZSBpbXBlZGltZW50czogaWYgQUNQSSB0YWJsZSBmcm9tIGZpcm13YXJl
+IGFscmVhZHkgaGFzIGEgX0RTRCgpDQo+IGRlZmluZWQgb3IgYWJvdmUgaXMgbm90IHdvcmtpbmcg
+Zm9yIHNvbWUgcmVhc29uLiBJbiBzdWNoIGEgY2FzZSB5b3UNCj4gbXVzdCB1cGdyYWRlIGVudGly
+ZSBEU0RUIHZpYSBpbml0cmFtZnMuDQo+IA0KPiA+ID4gPiBBZGRpbmcgQW5keSB3aG8ga25vd3Mg
+QUNQSSBHUElPIHdlbGwuDQo+ID4gPg0KPiA+ID4gVGhhbmtzLg0KPiA+ID4NCj4gPiA+ID4gSW4g
+Z2VuZXJhbCwgdGhlICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5IGlzIHVzZWQgZm9yIHRoYXQg
+YW5kIGl0J3MNCj4gPiA+ID4gc3VwcG9ydGVkIGJvdGggZm9yIGRldmljZSB0cmVlIGFzIHdlbGwg
+YXMgQUNQSSwgYWx0aG91Z2ggSSBoYXZlIG9ubHkNCj4gPiA+ID4gZXZlciB1c2VkIHRoZSBmb3Jt
+ZXIuDQo+ID4gPg0KPiA+ID4gUmlnaHQuIEFDUEkgc3VwcG9ydHMgcHJvcGVydGllcyB2aWEgX0RT
+RCgpIG1ldGhvZC4NCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZj
+aGVua28NCg0KVGhhbmtzIEFuZHkgYW5kIEJhcnRvc3ogZm9yIHlvdXIgc3VwcG9ydCENCkJlc3Qg
+cmVnYXJkcywNCg0KRmxhdmlvDQo=
