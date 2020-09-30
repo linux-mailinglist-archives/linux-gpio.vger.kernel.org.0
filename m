@@ -2,85 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5563F27EF46
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 18:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DA3627F0BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 19:51:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725799AbgI3Qdy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 12:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725355AbgI3Qdy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 30 Sep 2020 12:33:54 -0400
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE232087D;
-        Wed, 30 Sep 2020 16:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601483633;
-        bh=1O4lOqfyVB4oTb4crlwIc0lAP0SUUw2QidU8mzgA6Xw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TO8SqM/ZFmVTJLnCSlBppXbSIh9FIrsJ9XgLZstk7U9AvTy3zxi4LgiUe2rxc6gxT
-         7QMpdjpMM6inMlenW85XE3Xdo0uJaVLwuPoo54Nv053Pc+2qdo7dqUEU96q6ND3V1A
-         kinSJ4UzVFWvs6B6a+RrbPokLvdIHNwmefMYHqEw=
-Received: by mail-il1-f177.google.com with SMTP id f15so2339709ilj.2;
-        Wed, 30 Sep 2020 09:33:53 -0700 (PDT)
-X-Gm-Message-State: AOAM532YW5LXa9/nkbgJUfk3x8k1qezK5J+Uiu7qw6/frFDCtxGw1Y7z
-        RL4MScu50XGWIV2gv1H2jp+kGO/UddQlMGnPeGU=
-X-Google-Smtp-Source: ABdhPJxXM2Kr0C/YtBqYVYU1FPUtTxS5zLOfFi5/zR5/xuZTLomxJNlDGyhFBdcKLMwwtM+l7Fs8uZnNR9LuUdTsFF0=
-X-Received: by 2002:a92:d842:: with SMTP id h2mr3008966ilq.176.1601483632564;
- Wed, 30 Sep 2020 09:33:52 -0700 (PDT)
+        id S1726540AbgI3Rva (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 13:51:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgI3Rva (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 13:51:30 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF0CC061755
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 10:51:30 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id y25so723511oog.4
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 10:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x+f7BiFjDcEDxXFaCSJ99BZco4Ifg1L6EBbZcOFvnW0=;
+        b=Tjo5bueIAl+YDaXQLfjHBsvP2PoT4OLmNlcC8xwkoQH/VR1hvMl7i49v/9KgdlGYAn
+         K+EPBZKlnqCsEWjW9J0VQYCpcb1MkZiJX5YM8I/dgwwFG1OlzdkTdzMmPlhxMR6bKtOm
+         glqau5EHXF0wVVACBnxT/XX5X+nIsn50LfD0Wp42IlCXali/Ys55JD6CXmSnUvbpkV9u
+         kblc+yKAA781zQqkLnNIP6BfrM78D1/LF0+h9fEhrkWcQ5kEHqDD0gT2odKSrVWsOCf3
+         4y3Pwa6P8b0/r2hahzmw00WFbLNFZcx2pBwEUNshnFnGqEz7CJRbQv/AccBDHTKFauoy
+         +lGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x+f7BiFjDcEDxXFaCSJ99BZco4Ifg1L6EBbZcOFvnW0=;
+        b=kiw6CTsS3GtFuQroaJpnoegoN9RtSwlcuNf5AgWY1sxBSkV9h8BfIsUJQFMD4WsDaX
+         ORoTQNzBxGNQydigQHAvqNfRYKQLGBY698iQ+MB7V/j/1XZp9TM3zcJYhWLtz3KhHLXo
+         7vIlhy/Ab4gRxXuzqyDlqnF4EUUnZndUf9TYgOoPtreC3/bsJqjLwRnzuh8NbBqjXQz0
+         fBxLYKAPifoQ/TF2MavFXtlj91FlqAf/10tsFyVmlPRo6gneh65IVaIaU2+rN1GOdvTt
+         1eUKik2KnFH9oDA5DU4hwEix4n8NB4pXsCQrtxDNXrCZ0zpgRKMLL1FCqk9XQKuYMXT3
+         62nA==
+X-Gm-Message-State: AOAM531qLI8tGYb8dlYbljzzcXoHsDV4O41uVDZv8NLcL5+DVlypgVBG
+        ELYtKaxayUscB99fcSe7PlNOCA==
+X-Google-Smtp-Source: ABdhPJx6+FOJ8Sbrdh3dEoSm+MMGjJn5gdkjEoss8V0I6jvvphZMyBw9mR4SxW7UOFzuQbn1x5gTUQ==
+X-Received: by 2002:a4a:95f1:: with SMTP id p46mr2629057ooi.93.1601488289996;
+        Wed, 30 Sep 2020 10:51:29 -0700 (PDT)
+Received: from x1.attlocal.net ([2600:1702:da0:ff40:985b:42bd:cfe:59b7])
+        by smtp.gmail.com with ESMTPSA id f194sm469873oib.44.2020.09.30.10.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 10:51:29 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Trent Piepho <tpiepho@gmail.com>,
+        Christina Quast <cquast@hanoverdisplays.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v2] pinctrl: single: fix pinctrl_spec.args_count bounds check
+Date:   Wed, 30 Sep 2020 12:48:40 -0500
+Message-Id: <20200930174839.1308344-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200821075452.1543610-1-enric.balletbo@collabora.com>
- <99821f85-9a38-7591-f982-872603b6ce8a@collabora.com> <CAGp9Lzq-15xjvSVaEJ=2o18o-8ESGWsHf-LNAXXwKfxu4V-0NQ@mail.gmail.com>
- <CACRpkdYPoZX1+rfJb925_+H6YXiwO26cKLpZae=_j=RQKGA0Wg@mail.gmail.com>
-In-Reply-To: <CACRpkdYPoZX1+rfJb925_+H6YXiwO26cKLpZae=_j=RQKGA0Wg@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 30 Sep 2020 09:33:41 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzqGwvxGF_bhuyGXu1R2516x=twv1j5e0Wx0EQ7GZ4b-yQ@mail.gmail.com>
-Message-ID: <CAGp9LzqGwvxGF_bhuyGXu1R2516x=twv1j5e0Wx0EQ7GZ4b-yQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mediatek: Free eint data on failure
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>, hsinyi@chromium.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 1:47 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Sep 27, 2020 at 7:57 PM Sean Wang <sean.wang@kernel.org> wrote:
->
-> > v2 seems the same with v1 or I was missing something.
-> >
-> > I just thought we call devm_ioremap_release to explicitly to free
-> > resource when a certain failure occurs after
-> > devm_ioremap_resource?
->
-> What is the semantics around mtk_build_eint()?
->
+The property #pinctrl-cells can either be 1 or 2:
 
-mtk_build_eint is to add external interrupt function to the
-corresponding bound pins.
-mtk pinctrl driver still can work (than means probe() successfully) to
-keep pinctrl functional even with there is an error in mtk_build_eint.
-So the patch is used to explicitly free those data on failure in
-mtk_build_eint to let unused data is being free:ed immediately.
+- if #pinctrl-cells = <1>, then pinctrl_spec.args_count = 2
+- if #pinctrl-cells = <2>, then pinctrl_spec.args_count = 3
 
-thanks,
-Sean
+All other values of pinctrl_spec.args_count are incorrect.  This fix
+checks the upper bound instead of just the lower bound.
 
-> If it is called on the probe path no explicit free:ing is
-> necessary: anytime probe() exits with an error code,
-> any devm* resources will be free:ed.
->
-> Yours,
-> Linus Walleij
+Fixes: a13395418888 ("pinctrl: single: parse #pinctrl-cells = 2")
+Reported-by: Trent Piepho <tpiepho@gmail.com>
+Link: https://lore.kernel.org/linux-omap/3139716.CMS8C0sQ7x@zen.local/
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+v2 change:
+- correct the description as I had previously been mistakenly using the
+  term #pinctrl-cells instead of pinctrl_spec.args_count
+
+ drivers/pinctrl/pinctrl-single.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index efe41abc5d47..5cbf0e55087c 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1014,7 +1014,7 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 		if (res)
+ 			return res;
+ 
+-		if (pinctrl_spec.args_count < 2) {
++		if (pinctrl_spec.args_count < 2 || pinctrl_spec.args_count > 3) {
+ 			dev_err(pcs->dev, "invalid args_count for spec: %i\n",
+ 				pinctrl_spec.args_count);
+ 			break;
+-- 
+2.25.1
+
