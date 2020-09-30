@@ -2,91 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B51DB27E512
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4DF227E523
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgI3JYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42512 "EHLO
+        id S1728660AbgI3J3v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:29:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgI3JYf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:24:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EC7C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:24:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t10so966835wrv.1
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:24:32 -0700 (PDT)
+        with ESMTP id S1725776AbgI3J3v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:29:51 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B768EC0613D0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:29:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y17so1288473lfa.8
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/5tJi2CaN+R8Ew5UuKHn320UUq0Q2ZX4DouxpTOvyvY=;
-        b=qQQaes4939iiUJsuX6LVOLtngrlZGmFl7YDa1boZxNvycpaW2gyQWPbqMhwhVrz2Pv
-         sH7JGH4I6kOZDaqJPFh/CiLUmV2MBP27gADTv/hEisGcy2tX1LoeafAVeHwh3/ry6xjh
-         PmqX/DveVdy1Zg4D0cnsVT/mxQmzNj3gL4dhWeuGzNB+YahxxSH490BmzCJXbjprhulf
-         qUsJuS2Rpl6aJ0DnHKQq5bjeqLPhz9jiM038nryGGuvZ6RYQWo07aIV4TEethR3hzXlI
-         QM5glRg+QbmCmalJIWUfgt1A0t4o461apCUFFAvXzvfdaX04pOYbTSYO4bUxq2zlBeNS
-         j3VQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nt40XuawGIMRcY63tlPUjuXidTwwmmBOZZvJmZ1LX2Q=;
+        b=bf4NU12b3N473SZmKQIxU3GCoKztiyNSsQTMp3TbU6A+9NE02UH1rF77dBv0GlTs+j
+         jbHMPUiOejGLeb6g8VD+ocqbYBVZb8KTJPKrrw2Fl5Vdasd1ZJbyf/8+FdygYeyer4ax
+         nb5B0mEW/r4vofeX+G34TPMcyPGidSeKnYJTc41tqN72X5oV728x1+OnDHcYlrkdk2lg
+         elZNTxoVe9pYcELTSe4AKkwz9eFhsVIw4IwY48Tts1vKnTIsrcBjotFynilITBxrpBwx
+         6AKzGibQKjiZu95XaKz4seSqN/MAbwADdRuLxWSyoZk7JRrlQdiG1JREz+0aFDEWtRdQ
+         alFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/5tJi2CaN+R8Ew5UuKHn320UUq0Q2ZX4DouxpTOvyvY=;
-        b=Ko4zemlCgehEZXEpBVr1O4QwGgCD6znVNAsKTna+jTsU9IxLMRr1tOoohv1VuZ+Z9k
-         8OvPUgT5QtV3qNOMFSIUPxM2LSoNjtxq5v0f357HqaqXGLCLtdFfr8Gu7EHs8lEUnvch
-         wW9zv+dTEWLylkpnYEJhUCJqJg5NH1pa027AjZioJB6rark6qZC/3CbUqfINHT6UYRZb
-         rncsJBM2wv2TabDzXzzIRL8T+ojLnDXTttGiGAk9Nqu7Barc8qiRrkwGFMzdaCrscz5h
-         SNwWWzf4+/wrujMBho22qSESa2oJZkxivord4zAY1WSTJ3n0eUJxlxV/deHiVqVT6dM8
-         ByFA==
-X-Gm-Message-State: AOAM533EolRtpzejIDOfD6TWjfx1bnCt4w6HJNNB/xs1BJj7b8SaeJna
-        rR02XNSIktMPZfFrR2i+2C9SUA==
-X-Google-Smtp-Source: ABdhPJyMjP62Z01pXgjQpJNxUz+GaGvio9JYrWLbFcI+w+w15i75TpKuXZj13rXmU+Krtg2YX0AQng==
-X-Received: by 2002:adf:e8c3:: with SMTP id k3mr2102512wrn.228.1601457871074;
-        Wed, 30 Sep 2020 02:24:31 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-68-189.w109-210.abo.wanadoo.fr. [109.210.51.189])
-        by smtp.gmail.com with ESMTPSA id t202sm1768697wmt.14.2020.09.30.02.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2020 02:24:30 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.9 - last batch
-Date:   Wed, 30 Sep 2020 11:24:26 +0200
-Message-Id: <20200930092426.9559-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nt40XuawGIMRcY63tlPUjuXidTwwmmBOZZvJmZ1LX2Q=;
+        b=BWFx0XdnN0/Kjwyd/fNi0FL3EBd1M5W7EEv//q59On0BPOJvvVp29YTeXN/LTj9J/f
+         F4JAuH7NolhPoXU2Ab0MbZ2oUOnbVZltfqjwvNcLTyilj2XiRY6xV+xk5HZy2hRc/tj1
+         8QvavA/Mt7i65W+qKX+xrAHD0m6m8LSb0BtcHi34d3rcQ0gYGjFyw45R84SFWrPMESZM
+         GwNCI0CPcUuC/YrW7dhW5TbT0jeUJBDtpLHx9AGS8ZAxCAGHx41gdttLHXhxXdDzfdqW
+         iHTlcYJ2RyjWqNbjQI11hcEYwsmreQz+L8180A88Vq9EOLqPc7cHBr/LFEEOvCQ4Gytj
+         ZTOw==
+X-Gm-Message-State: AOAM533CtNDs1IDDX0Iv0O3vemfB9/2j4TtThNQESY/Dpo1UMaUX7CX3
+        xuaIOcUoRs60eh/Ac/4kyJVwfJU2Eoh+B2dwXX1CEA==
+X-Google-Smtp-Source: ABdhPJydiZObahpdH7vb9u5yuvddV6XbKHWHV7bX5NbThwH/zdH7E/sNA6cVQIaf6JMJfyGvwxbSlE0D/R0ap9XDQhE=
+X-Received: by 2002:a19:6419:: with SMTP id y25mr526157lfb.333.1601458189195;
+ Wed, 30 Sep 2020 02:29:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1593243079.git.syednwaris@gmail.com> <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
+ <20200911225417.GA5286@shinobu> <CACRpkdah+k-EyhF8bNRkvw4bFDiai9dYo3ph9wsumo_v3U-U0g@mail.gmail.com>
+ <20200929130743.GB4458@shinobu> <CAHp75VdtUr1KHD5bng4sHZqsR888gN_TJ-bN8oLsX8GpsM8wYw@mail.gmail.com>
+In-Reply-To: <CAHp75VdtUr1KHD5bng4sHZqsR888gN_TJ-bN8oLsX8GpsM8wYw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 30 Sep 2020 11:29:38 +0200
+Message-ID: <CACRpkdY-SwOx9tGyvrZy_VZJgHyG4ipo27bPnTe==o8_b_CTfg@mail.gmail.com>
+Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Sep 29, 2020 at 3:14 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-Linus,
+> Linus, are you referencing to [3]? It was fixed in GENMASK()
+> implementation some time ago.
+> [3]: https://lore.kernel.org/lkml/202006171559.JSbGJXNw%25lkp@intel.com/
 
-Please pull one more fix for v5.9 release.
+Yup.
 
-The following changes since commit 3e640b1eec38e4c8eba160f26cba4f592e657f3d:
+I tried to apply the patches again now to test it but now patch 2
+needs to be rebased.
 
-  gpio: aspeed: fix ast2600 bank properties (2020-09-24 15:37:18 +0200)
+Sorry for all the trouble!
 
-are available in the Git repository at:
+Syed can you rebase the patch set on v5.9-rc1 and resend as v10?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.9
-
-for you to fetch changes up to d25e8fdebdad84219b498873300b7f11dd915b88:
-
-  gpio: amd-fch: correct logic of GPIO_LINE_DIRECTION (2020-09-28 12:22:04 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.9
-
-- correct logic of GPIO_LINE_DIRECTION in gpio-amd-fch
-
-----------------------------------------------------------------
-Ed Wildgoose (1):
-      gpio: amd-fch: correct logic of GPIO_LINE_DIRECTION
-
- drivers/gpio/gpio-amd-fch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yours,
+Linus Walleij
