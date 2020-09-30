@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADB0E27E54B
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:37:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFBB927E550
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:38:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgI3Jh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44564 "EHLO
+        id S1728126AbgI3Jip (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:38:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbgI3Jh4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:37:56 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954CAC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:37:55 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id q8so1321423lfb.6
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:37:55 -0700 (PDT)
+        with ESMTP id S1725779AbgI3Jip (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:38:45 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B01C0613D0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:38:44 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id x69so1334768lff.3
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w0Z5IZe45kS11Zh2eo8ETv6iymlzpohKQf7navdOdEE=;
-        b=Y9GE9JkOdYGmLgM6pZmzvIlSStWw4CGSNLwKzM9SvZd0Kmz83SYSrefDbXfs2U+TSc
-         Liv4S8yFfjxT6pD/TCAbvYZUnSFxK/jRDLUoxB82cNKhdgZ2m1OlRYL/DAWMht/aepyn
-         Vznx6CNuAIFDlrPTkT4QuEiAhLrQUQpYC0zLTiFxHfJhpMXTETh18qhekWI2VKCgv1/0
-         gEORxiuofCW5BRQjjtd4g4KlRmJxrT8+0kTkTEx9a4Nbca1RQo1LcPKIwkI5jlHYMT54
-         84shR7etsYW0SvwLh8B4/21WDZQFTT1H5M3tTWswe2WHT0yy5F6LAg2PrsZ+w8wDba44
-         ff5A==
+        bh=Ep9z0ZZ+f7tQIzGMJ7yrHFUOye3w1O3ldVwgOl4L0AU=;
+        b=q+wVFBAQ+DJ86rabJ6hidB5LHLOVJ/FpPbFRrmPEA6Ghv2/tJ3txRvJUgIRPgqQMqA
+         XYyg2kV2FRp/+/c5xNjeENhej8MWmZ9FpG/Sgf/PZfl/U3q6wLUatt5aX8DnjkmWRDqo
+         q36pJ3jRmKrm8Hi3Uokxg1JMwxhGcBEfB5xVseNHpq0WON3tcAwHDB9WTNAWWhiRivH+
+         MoiVMSBdK6+2csK9RBWVE/TntSrrGPB+BgbIQ7zdMcNqC9YENKPNGnt5v1C2LMYd/zJT
+         yMB1NdyIBA6iEWwfwARQd5sRToVdKeE4UiVuHFHYeYSpsrpnNeXrCCl00k2X4PZplMM2
+         YnbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w0Z5IZe45kS11Zh2eo8ETv6iymlzpohKQf7navdOdEE=;
-        b=BIVwawb1zFnfg/59h/SHIBFGuZJsZs41fvTqKoIKzMrvWy7HK5jWDW8/BcUIOmzCTM
-         tA9maombgXAlXEux/WtkJWI/5bF1fRD/13tGFS5ma8u4GqXCwqWi69wYkDS3+9S3Dqqj
-         EH6fqFz7XIsQJjoP2m8bAUZ5UvvYXH8sL1h4hoIfTIBmyeycgkU0C1jvbecIlj0n6Vi5
-         qHO4gaCl9CfoM1to0FMYmGuW29Wwx1wMuY2q+tFQMc2l8ZVrxfIoqHUe1ckO0caWt/Eu
-         08tDTXj1RVhq9hQnsApxceq7dYoSutPnb/F5LGCfbn26vjP4ZCl5V0qwbh4xuNN0I29d
-         pGsA==
-X-Gm-Message-State: AOAM532iMU9pTWE3eD/g3H4mA4j2xhudrRbXrlOMqBrYcOVpdGyUHI3V
-        V0LTLEnBi6HqH68rpPt48Z1jDOxxr0MSbMXIQaQ0+s3aBOaLeA==
-X-Google-Smtp-Source: ABdhPJx26GAPXFBHS2aofeh+66Lxha/0T6CHLwbSJsYqqVEbURIr1CPw387RervJQHlD5LVuVcZ/R4dHvif4q1V/7zA=
-X-Received: by 2002:a19:6419:: with SMTP id y25mr535616lfb.333.1601458674061;
- Wed, 30 Sep 2020 02:37:54 -0700 (PDT)
+        bh=Ep9z0ZZ+f7tQIzGMJ7yrHFUOye3w1O3ldVwgOl4L0AU=;
+        b=prJIuBS0AcH4g6t/beN4TZTK8aqqbxZA3dtak4VyIljZzFLpvVf7aCXRKJ7ZxorKEm
+         Pmy2/Qr8kTrgYHJKm0jfWIU38PimedyoKIGmzT4TdEJItZ11LvQhsv8sNVpXElsrfQJv
+         dOcWH+wXs0aDhNfM3IewgnQFCLnZYzr0mgFeTkWkbpaX42ME00Y516t+1CSLmCVfO7O3
+         4g3yKTJ3t4DHboYUp/dxoYQngFff1tror+viG6tKXbzlT+xLClve8p1akaXP1dE1FwtT
+         h97x14+DHAmvFuUe8FxSRryX2cB0LyLHmwk4PuPlKsQeSdbkI8S9yUgIK++V8FlKIHbp
+         huKw==
+X-Gm-Message-State: AOAM531kDCzlg9apUSL8f8KpdlIFZfDHFpXzkthwBwyKT0tInUTr7NmZ
+        2aqr3MW4RqdROciVo3RLRoHvKmtbWeYtbKFbVnY/ow==
+X-Google-Smtp-Source: ABdhPJznurOWOD+F9cHQcbYDkYOLhWYNUjf0OBW3ctQQAUoKhKXiH80CBcd0UKXsezJVXoG8eqI6pA5xjJ5Bmar4wak=
+X-Received: by 2002:a19:1c8:: with SMTP id 191mr538082lfb.585.1601458723300;
+ Wed, 30 Sep 2020 02:38:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200930091703.8778-1-brgl@bgdev.pl>
-In-Reply-To: <20200930091703.8778-1-brgl@bgdev.pl>
+References: <20200930092426.9559-1-brgl@bgdev.pl>
+In-Reply-To: <20200930092426.9559-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 11:37:43 +0200
-Message-ID: <CACRpkdbMyAavReWG0taSWWGmGa8dJsb7L5sV9YDH7Wqz2tCnWQ@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.10 - part 2
+Date:   Wed, 30 Sep 2020 11:38:32 +0200
+Message-ID: <CACRpkda6KttZYm1d55XpZizDAHgZm_2dCt403_j_K0FgE9qB9w@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v5.9 - last batch
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
@@ -58,25 +58,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 11:17 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, Sep 30, 2020 at 11:24 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Here is the last batch of updates for v5.10 from my side. The biggest part of
-> this PR is the new uAPI by Kent Gibson - it's time to finally get them
-> upstream!
+> Please pull one more fix for v5.9 release.
 
-Awesome. Pulled into my "devel" branch. I will test this on the build servers
-and then submit to linux-next.
-
-> Other than that we have some refactoring of the gpio-mockup module and a code
-> shrink for gpio-mpc8xxx.
-
-This is nice stuff too.
-
-> There's one commit here that's in your fixes branch but not in devel - the fix
-> of a resource leak in gpio-mockup. This is because the refactoring patches
-> depend on it.
-
-OK let's see if I figure it out.
+Pulled in to my "fixes" branch.
 
 Yours,
 Linus Walleij
