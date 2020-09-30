@@ -2,87 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EC7E27E575
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:44:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9B127E584
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgI3Jos (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgI3Jos (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:44:48 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E85C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:44:47 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z17so1322964lfi.12
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WL11sBXLZ19AyMPBgN4fqg2oLH3/T9YBMeitWtVqQ/k=;
-        b=oy1kHdxJzpUDXc2wgXHmamh88c/bMhDuQMrop7rT2HVN0ZsgOgg3EEUbSmNFm4RVo4
-         BWgiMnwg6H+UgV8WtiAyE4T7PSWUOo3E8hMSD06ARwjzT9OCKISx3BlKnI8R/g2pCm40
-         lP0AdPq5nFd7esYWC1SmBIx4dOMh8cnBUhHjntqPg9n9yExro26+maHK0FgJuPxlRe0S
-         /84Rzy9ldnlMyu4/JAs7kb320x+yDGA31pprdHFu9+QOB9rj+e8u8LZ2DbqtiJT1zwRl
-         4BUmy95B0bjsBYmmZCc6QZl90eX7/ZKhYXqIX9Z1JI6WAD2AcVwFmrs+CnuOgfoD0a99
-         FnLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WL11sBXLZ19AyMPBgN4fqg2oLH3/T9YBMeitWtVqQ/k=;
-        b=dRkrnN2pNocLZJJrpDs4sixTdmc/cbyObKwKZkSP4DjKf36nLbU0jDopbq/Ev27kq2
-         PpUZWklPoqQeTHkL+i2m6yETpN8OgZM32+/R+IZw3pt6PkHWSQ168U0DCC/8MG362ZBe
-         bJ2V3Y9r+foPLrHtfy2VTSwsX9RCI7R/3x0p1gUCFSNhTbiZDBAC4e26p40gD7JEfDVE
-         i/dWIbC9hmM9FoCukWQ8871BbkJByjq+EB5ErGmi1EUPrCUI++tlLin+9NmiGcuVcAXH
-         qP+JQMW7NU8XIWX/GxpvIg31GiE251rUrjHS+LcDpRhfKyVSoQgoK3C3MJZop6IMypeO
-         GvIQ==
-X-Gm-Message-State: AOAM530crFpF+LTaTNQ9gxo72alJ+b8GfoYSk4er0rAEACe76X96xiMC
-        YaZWfi7aolORWi8s9Avy367e+5zkZ173odiNyPyUoQ==
-X-Google-Smtp-Source: ABdhPJwfvMzERH1pqD+3C43rbf+TvTmP7uVIAxU6xyVV2NL+yPxtsPJuV3sBw0UuO9ineASJZM+NQ+jMthA0ESuIUrU=
-X-Received: by 2002:a05:6512:370b:: with SMTP id z11mr542708lfr.571.1601459086051;
- Wed, 30 Sep 2020 02:44:46 -0700 (PDT)
+        id S1729062AbgI3JrV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:47:21 -0400
+Received: from muru.com ([72.249.23.125]:45762 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728999AbgI3JrU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Sep 2020 05:47:20 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7435E810D;
+        Wed, 30 Sep 2020 09:47:20 +0000 (UTC)
+Date:   Wed, 30 Sep 2020 12:47:14 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Trent Piepho <tpiepho@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Christina Quast <cquast@hanoverdisplays.com>
+Subject: Re: [PATCH] ARM: dts: document pinctrl-single,pins when
+ #pinctrl-cells = 2
+Message-ID: <20200930094714.GR9471@atomide.com>
+References: <20200924054324.GB9471@atomide.com>
+ <CA+7tXigg+h3v61AVMaYRKa_ZwznehOUPEESMqXKsNDNCrFph3w@mail.gmail.com>
+ <20200924060645.GD9471@atomide.com>
+ <CA+7tXijkS8UMFk4t=DuKjZZNnThbRarPQvxwxjg-uJFTKJRsXA@mail.gmail.com>
+ <20200924070443.GF9471@atomide.com>
+ <CA+7tXihBdw9AOGL7Hp2cH9+ii8fUXaaZZDUP3icyeOkMuGm4qA@mail.gmail.com>
+ <20200930051521.GN9471@atomide.com>
+ <CA+7tXig=3hbFXfmYMC5Hd1Zc2n-6uGXbMePPw_Cr4bOsyt7QQA@mail.gmail.com>
+ <20200930091526.GQ9471@atomide.com>
+ <CA+7tXihYb6AHrQLpO9UDHV7YFbzo_Pm8EdXNJXX+tJXX-L6UYA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200929110306.40852-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYgHt6ajbLPfajQ8ZJn9=SHfRiDZV6gDbwAPB8XSQBpGA@mail.gmail.com> <CAHp75Vf2Ztqxfth31cysC3JWpcr813OxG8W3FUBQ4HhCbrd=Qg@mail.gmail.com>
-In-Reply-To: <CAHp75Vf2Ztqxfth31cysC3JWpcr813OxG8W3FUBQ4HhCbrd=Qg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 11:44:34 +0200
-Message-ID: <CACRpkdY2cQZioG3hY5cyf9WQLMuf_LW0R5B=ArvQ4wvc0cm_Ww@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] pinctrl: tigerlake: Fix register offsets for TGL-H variant
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+7tXihYb6AHrQLpO9UDHV7YFbzo_Pm8EdXNJXX+tJXX-L6UYA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 3:30 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Sep 29, 2020 at 4:25 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Tue, Sep 29, 2020 at 1:03 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
+* Trent Piepho <tpiepho@gmail.com> [200930 09:34]:
+> On Wed, Sep 30, 2020 at 2:15 AM Tony Lindgren <tony@atomide.com> wrote:
 > >
-> > > It appears that almost traditionally the H variants have some deviations
-> > > in the register offsets in comparison to LP ones. This is the case for
-> > > Intel Tiger Lake as well. Fix register offsets for TGL-H variant.
-> > >
-> > > Fixes: 653d96455e1e ("pinctrl: tigerlake: Add support for Tiger Lake-H")
-> > > Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > * Trent Piepho <tpiepho@gmail.com> [200930 08:35]:
+> > > The closest thing would be the generic pin config type bindings, which
+> > > go in the pinctrl driver's nodes, and look like this:
+> > > &am335x_pinmux {
+> > >     pinctrl_yoyo_reset: yoyogrp {
+> > >         pins = "foo";
+> > >         function = "gpio";
+> > >         bias-pull-up;
+> > >     };
+> > > };
 > >
-> > I could apply this one for fixes as you indicated in another thread,
-> > does the other two patches depend on it?
->
-> Logically -- yes, functionally -- no. They may be applied for v5.10
-> or, as I said, v5.11 (but in the latter case I will do it the usual
-> way, via our branch).
+> > There's a bit of a dtb size and boot time issue for adding properties
+> > for each pin where that needs to be done for several hundred pins :)
+> 
+> pins is list, multiple pins can be specified at once.  Otherwise the
+> property name would be "pin" and not "pins"  There's also a groups
+> property to refer to multiple pins at once, e.g.
+> 
+> arch/mips/boot/dts/ingenic/ci20.dts-    pins_mmc1: mmc1 {
+> arch/mips/boot/dts/ingenic/ci20.dts-            function = "mmc1";
+> arch/mips/boot/dts/ingenic/ci20.dts:            groups =
+> "mmc1-1bit-d", "mmc1-4bit-d";
+> arch/mips/boot/dts/ingenic/ci20.dts-            bias-disable;
+> arch/mips/boot/dts/ingenic/ci20.dts-    };
+> 
+> arch/mips/boot/dts/pic32/pic32mzda_sk.dts-      user_leds_s0: user_leds_s0 {
+> arch/mips/boot/dts/pic32/pic32mzda_sk.dts:              pins = "H0", "H1", "H2";
+> arch/mips/boot/dts/pic32/pic32mzda_sk.dts-              output-low;
+> arch/mips/boot/dts/pic32/pic32mzda_sk.dts-              microchip,digital;
+> arch/mips/boot/dts/pic32/pic32mzda_sk.dts-      };
 
-OK since they are all ACKed I just applied all three for v5.10.
+Right.
 
-Thanks!
-Linus Walleij
+> > > Is "some additional property for specifying generic conf flags"
+> > > different from the existing pinctrl-single,bias-pullup, etc.
+> > > properties?  Because splitting the data cell into two parts doesn't
+> > > make any difference to those.
+> >
+> > So with an interrupt style binding with generic pinconf flags we can
+> > leave out the parsing of multiple properties for each pin. Sure the
+> > pin is only referenced by the controller like you pointed out but the
+> > pinconf flags could be generic.
+> 
+> Where do these flags go?  In pinctrl-single,pins?  Like:
+> 
+> pinctrl-single,pins = <AM335X_PIN_MDC MUX_MODE7 PIN_INPUT_PULLUP>;
+> 
+> But PIN_INPUT_PULLUP is a generic flag?  Which is translated into the
+> proper value by??
+
+Yes that's what I was thinking, something like this with generic flags:
+
+pinctrl-single,pins = <AM335X_PIN_MDC (PIN_INPUT | PIN_PULLUP) MUX_MODE7>;
+
+> Or are you talking about replacing the existing pinctrl-0,
+> pinctrl-names properties with a totally different system that looks
+> more like gpio and interrupt handles?
+
+That would be even better :) Might be just too much to deal with..
+
+In any case the parser code could already be generic if we had generic
+flags based on #pinctrl-cells.
+
+Regards,
+
+Tony
