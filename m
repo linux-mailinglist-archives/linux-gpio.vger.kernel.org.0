@@ -2,148 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79FC827E6F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 12:47:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D435527E746
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 12:57:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgI3Krk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 06:47:40 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43846 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgI3Krj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 06:47:39 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08UAlVaH099494;
-        Wed, 30 Sep 2020 05:47:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601462851;
-        bh=nwXBsOO9FdkbC8o8ZEzJTsMzypejnwytkAVkevCkuQw=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=BYlSrXOZ6o3y7kHQRUhAkG0z8isO3NLjQPAtkgq//iKGSDnw+SyaAErZhz8yy7foa
-         KFI+0KSywno/ytzEi+DOqBW5659+OaAFf6aGHaJnbDoChjwX7YxsIfpNynp+ZKkKr9
-         EWzWa21X7yx4oAol1yK0LWjOvC05HeeOf6KQFbZI=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08UAlVEg108217
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Sep 2020 05:47:31 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
- Sep 2020 05:47:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 30 Sep 2020 05:47:31 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08UAlTOr022401;
-        Wed, 30 Sep 2020 05:47:30 -0500
-Date:   Wed, 30 Sep 2020 16:17:29 +0530
-From:   Nikhil Devshatwar <nikhil.nd@ti.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Adam Ford <aford173@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] gpio: pca953x: Use irqchip template
-Message-ID: <20200930104729.ajufkrklfhf25d55@NiksLab>
-References: <20200717144040.63253-1-linus.walleij@linaro.org>
+        id S1727426AbgI3K5C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 06:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgI3K5C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 06:57:02 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6742C061755
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 03:57:00 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id x16so900031pgj.3
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 03:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=bvf65RcNlhYZ4KxktXfBFQWDlszo0ocauofqTyJPSYc=;
+        b=zF9prPd8W2hYIfcMU/LAdWjyGTK/uDfb1chrTloKXWL4uKUqwaMoO115mj6q8jLimV
+         CixBdmLj6LWHPeNITRgdwpzoUECa5JqvN1EPqtKv1X1K6UYBLtngGzb4Kuq/fHMkmvHa
+         owu5wf10HGNExNfiB0PTo/T1xBSlpL7OyMQAvVgL+S7jpaCiaOWnDVY/oCL0LBhy8fAm
+         ZH67RDiWlbpIW5+GDVY6RLddZ2+nLsn54e/WR9CbrbQrQxJ48+TVBoSFm2/o0AfCym6K
+         knTItNDyF7a+Cij60UlbUqVZQCrTh5r5li2mzGtLQtzaNlSyhY2fbiUQ4HEToiAuInOg
+         rtxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=bvf65RcNlhYZ4KxktXfBFQWDlszo0ocauofqTyJPSYc=;
+        b=OHfSmqjnuvGSi8nthVsVfS56QcoX+zzc05bDIWMn4eexd6/gS7RsEZ08PBthFliFHu
+         jEw9yjAhuXcZ1TFSU2wq5xCQUjCEwsvGexaT/m4ZEEuSvvCJohEne7Cj4cOTwzw5lUJ5
+         94KYiD1wtw6h3I73CtE+V4kGV6kDK/oIkJYGlFH1NVkjNxzwRLCY+xF3uQlev/RsnQwJ
+         ie9Icwi11NfptlIlAIGrKS4562LS+AzlrYwvf6+kAORFlo6LxpQoO9KNf5nCYzqe/Qti
+         s53qzNWK8UoFCcgTgxQurDGvwOGnU8A2mEoUHYwuPA2PRYR69mKb6EWxTlufQafsKqzF
+         EP+A==
+X-Gm-Message-State: AOAM530s1PXdE+gdTl5Ql6sc7oELyiM/JKtHyPJC6wjjX8GU/6TD1ZG0
+        Mt2++TXne2DjqeXP++0RNzSa9oEC8EVkcg==
+X-Google-Smtp-Source: ABdhPJz8D9UPL7jmhrcTBNC344sNT75EnUtkltWH0uXCGT7yxG8ybs1jrFJ1nAQvBQmWNsEDLJtoEA==
+X-Received: by 2002:a63:c30a:: with SMTP id c10mr1647783pgd.377.1601463419744;
+        Wed, 30 Sep 2020 03:56:59 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id l13sm2001367pgq.33.2020.09.30.03.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2020 03:56:59 -0700 (PDT)
+Message-ID: <5f74647b.1c69fb81.e714b.3a68@mx.google.com>
+Date:   Wed, 30 Sep 2020 03:56:59 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200717144040.63253-1-linus.walleij@linaro.org>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.9-rc1-73-g237d96164f2c
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.9-rc1-73-g237d96164f2c)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16:40-20200717, Linus Walleij wrote:
-> This makes the driver use the irqchip template to assign
-> properties to the gpio_irq_chip instead of using the
-> explicit calls to gpiochip_irqchip_add_nested() and
-> gpiochip_set_nested_irqchip(). The irqchip is instead
-> added while adding the gpiochip.
-> 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.9-rc1-73-=
+g237d96164f2c)
 
-Hi,
-I am getting a kernel crash on K3 j721e common processor board
-when HDMI is plugged in. Following is the full log with crash
-for NULL pointer derefence
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.9-rc1-73-g237d96164f2c/
 
-https://pastebin.ubuntu.com/p/wBPS2ymmqR/
+Tree: linusw
+Branch: devel
+Git Describe: v5.9-rc1-73-g237d96164f2c
+Git Commit: 237d96164f2c2b33d0d5094192eb743e9e1b04ad
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-Upon inspection, I found that the "irq_find_mapping" call
-in the "pca953x_irq_handler" returns 0 and the same is passed
-to "handle_nested_irq"
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
 
 
-> ---
->  drivers/gpio/gpio-pca953x.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 9c90cf3aac5a..ab22152bf3e8 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -834,6 +834,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
->  	struct irq_chip *irq_chip = &chip->irq_chip;
->  	DECLARE_BITMAP(reg_direction, MAX_LINE);
->  	DECLARE_BITMAP(irq_stat, MAX_LINE);
-> +	struct gpio_irq_chip *girq;
->  	int ret;
->  
->  	if (dmi_first_match(pca953x_dmi_acpi_irq_info)) {
-> @@ -883,16 +884,16 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
->  	irq_chip->irq_set_type = pca953x_irq_set_type;
->  	irq_chip->irq_shutdown = pca953x_irq_shutdown;
->  
-> -	ret = gpiochip_irqchip_add_nested(&chip->gpio_chip, irq_chip,
-> -					  irq_base, handle_simple_irq,
-> -					  IRQ_TYPE_NONE);
-> -	if (ret) {
-> -		dev_err(&client->dev,
-> -			"could not connect irqchip to gpiochip\n");
-> -		return ret;
-> -	}
-> -
-> -	gpiochip_set_nested_irqchip(&chip->gpio_chip, irq_chip, client->irq);
-> +	girq = &chip->gpio_chip.irq;
-> +	girq->chip = irq_chip;
-> +	/* This will let us handle the parent IRQ in the driver */
-> +	girq->parent_handler = NULL;
-> +	girq->num_parents = 0;
-> +	girq->parents = NULL;
-> +	girq->default_type = IRQ_TYPE_NONE;
-> +	girq->handler = handle_simple_irq;
-> +	girq->threaded = true;
-> +	girq->first = irq_base; /* FIXME: get rid of this */
->  
->  	return 0;
->  }
-> @@ -1080,11 +1081,11 @@ static int pca953x_probe(struct i2c_client *client,
->  	if (ret)
->  		goto err_exit;
->  
-> -	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
-> +	ret = pca953x_irq_setup(chip, irq_base);
->  	if (ret)
->  		goto err_exit;
->  
-> -	ret = pca953x_irq_setup(chip, irq_base);
-> +	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
->  	if (ret)
->  		goto err_exit;
->  
-> -- 
-> 2.26.2
-> 
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
