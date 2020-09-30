@@ -2,95 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AE2E27E55F
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0268E27E566
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 11:42:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgI3Jke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 05:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44994 "EHLO
+        id S1728844AbgI3JmO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 05:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgI3Jke (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:40:34 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18419C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:40:34 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so1089540edq.6
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:40:33 -0700 (PDT)
+        with ESMTP id S1728677AbgI3JmN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 05:42:13 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9A7C0613D2
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:42:13 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id y11so1336500lfl.5
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 02:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pxwl6vJ7NlP3+dTWpMovM7e1DudeEOjt0JB5STP1e8w=;
-        b=ZitIgb1o3RtIlUrhpJ50PCc/UK8UVLIRyv79th9TeWsA8csJknxt1K/sb9Ht6tYoTx
-         BLtAWOb+pSfZDkg+9pRWdog0HwUnFm+uL/WMhoxcOffuEKjIbluG4WHAJ3qXvKiKzYIh
-         3TJvXpz0sSfCNGC0TkdOtY5jd0duQ+r0RlVqXXG6P8EqcaezSN3KIIM9c8YfDK1MBaht
-         do4yJAVcsApOJYZ5TBHdmoJJ3BXniQcBifxCWLVrb53mwJVQ5t67v0T6xkjsLw6FiBix
-         xwHg9y1q51Hc41LthumOPD2TbOVFjIvYk+kgItPFb4RwJzD49bMDP83q1xfWheTB49EK
-         aCOQ==
+        bh=cNSx/XGWGsZi8+BpkDocBySvQFjLD1m5m8MaE/Ga7Zo=;
+        b=cNEqP8uB66rMFsMmvN5GLINNhxGb01ntU6bg1O1RPiHcbjPrzUnV5CPLlvR4SB82AZ
+         HVJCYmW/KKS75oMq7xYpAlyYgsglQyiwk6KVrlgqRp58eRqTNCP/T2CG4iRpUu/QcR/q
+         bC5xA3JqyHaWe2imvP9S5FfWpwGAsX0zZejbU3/P8i1dPHfEUg+zhv68mGFHvnZIKv2C
+         /64CR53om1R8U2DK2Rel+X5fj0WN4xwH1B2p8kPTQ1JTOAMj1u2sHe8x0UvyFRifL6/Z
+         ZHtS+7+L7e+m4tFiTggU9pU5TsIxCNgLnLdxCHBReX/VgJvIleANP1dUy5WBDtcz/SH8
+         saEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pxwl6vJ7NlP3+dTWpMovM7e1DudeEOjt0JB5STP1e8w=;
-        b=FP6TR2O0IJgpSN/ny3j73myItHnGgN/X/qQxqhsHBiarnloZKoztl8ZxY3vv9yiXOr
-         e9EBQyT9awRsa5e8jpb1MHT2vtM4lae4AhvZlrdGnmHakCn72AkQ93CTL5avJ0LCl/dH
-         NXx9m/LL5DUz3RkhkFqf1d9wTcMM1HeIuBhg4EmJEgWOHW0gwxSTQgce3aUIVoOLG1pa
-         ewf3v1njebcoYdBjkwtjGnfdNsQzX4G32CKljQIUDiU23pOkRClxdoOSOs+k7Qfq8nO6
-         8h7s5hYc5QI91f7tL3lj5S3WSNJ8jQNnOzh5IiFVcx9wm1S7ybtvVlLvv+SDVZcnXvMK
-         9zsg==
-X-Gm-Message-State: AOAM533pluN+QpAK5RoWPQKsMCHyVCbVlgdpNBgDo3Dm5350NWjlpB8j
-        YZqBz1PPkTLpGzYvU2+YMK7kveNnoDTrxN+9ERVz8g==
-X-Google-Smtp-Source: ABdhPJzwbGBzKP6VvMUQcxMG01XenJjUKeVs2qSsw3fsj4YoYAy9TZVtvNOrKyJwfTgT8Op4iITpLqXD7NLusQrUxfc=
-X-Received: by 2002:a50:e442:: with SMTP id e2mr1802575edm.186.1601458832682;
- Wed, 30 Sep 2020 02:40:32 -0700 (PDT)
+        bh=cNSx/XGWGsZi8+BpkDocBySvQFjLD1m5m8MaE/Ga7Zo=;
+        b=kZJ6rbjbmW4xSXgWEMIeH6vYACFUA4rKtM8gY2/ZlHQ4PjLterGoke+TRlnrPsYHK/
+         A3V+m39874L19Si2JlYFXBuTZyMMZ1woJZSeYS+8pe2/yCAso7hGl6dZ/VHyscoqgy2E
+         flzBI3x0s5hW97LimFRLX6tnhdi5Rx2+pfrRPYAH24wvjoUNbZMvWCWUMxmMSy+fNhrn
+         LcjzfAXyJbJL2/wMDvD8JyvmttvIGzS4Z7VlhU9I4Io5eeE4CqSZ4Em3Xg/CO9ilSwbT
+         4dfPcjTV6G2GZguhVA3idJc7hhFPbRFmM04PjIqBKERMX2qhsr/ciVIUVcmWKRC66nUU
+         N/DA==
+X-Gm-Message-State: AOAM532x1jreNvT8sSWxpa77kvRPs9j0HbhoCGsnm9AxMYfaYzw6YV7g
+        yNasRBQF2lVhJu/89xyhOtWTri+xVb2TOxlOEiKZug==
+X-Google-Smtp-Source: ABdhPJxxtR0OPGYVEO1/7vb7kbnBXMD+I/paJu6HkGuuGtYNqVTKZ9EOf7zEQWvfDhiN8YGLPygK/y8wp8RbQmBti50=
+X-Received: by 2002:a19:7e92:: with SMTP id z140mr606891lfc.299.1601458931956;
+ Wed, 30 Sep 2020 02:42:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200930092053.2114-1-mike.looijmans@topic.nl>
-In-Reply-To: <20200930092053.2114-1-mike.looijmans@topic.nl>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 30 Sep 2020 11:40:22 +0200
-Message-ID: <CAMpxmJVdRfJJ_Wvf-fVdpvbnEWvpOtiYhRwkoASZnvFAjTDmGw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: pca953x: Add support for the
- NXP PCAL9554B/C
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200919200836.3218536-1-drew@beagleboard.org>
+In-Reply-To: <20200919200836.3218536-1-drew@beagleboard.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 30 Sep 2020 11:42:00 +0200
+Message-ID: <CACRpkdaA7uz+6307BAK91nLWF2qRVSQSkYs2MKjHCqDpDsXHPg@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: document pinctrl-single,pins when
+ #pinctrl-cells = 2
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Trent Piepho <tpiepho@gmail.com>,
+        Christina Quast <cquast@hanoverdisplays.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 11:21 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
->
-> The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
-> with 8 GPIOs, latched interrupts and some advanced configuration
-> options. The "C" version only differs in I2C address.
->
-> This adds the entry to the devicetree bindings.
->
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
-> v2: Split devicetree and code into separate patches
->
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> index 3126c3817e2a..99dc1936f633 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> @@ -20,6 +20,7 @@ Required properties:
->         nxp,pcal6416
->         nxp,pcal6524
->         nxp,pcal9535
-> +       nxp,pcal9554b
->         nxp,pcal9555a
->         maxim,max7310
->         maxim,max7312
-> --
-> 2.17.1
->
+On Sat, Sep 19, 2020 at 10:10 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Document the values in pinctrl-single,pins when #pinctrl-cells = <2>
+>
+> Fixes: 27c90e5e48d0 ("ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2")
+> Reported-by: Trent Piepho <tpiepho@gmail.com>
+> Link: https://lore.kernel.org/linux-omap/3139716.CMS8C0sQ7x@zen.local/
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+> v2 change:
+> - rephrase to make it clear that the pin conf value and pin mux value
+>   are OR'd together with #pinctrl-cells = <2>
+
+Patch applied with the ACKs.
+
+Thanks for fixing this!
+
+Yours,
+Linus Walleij
