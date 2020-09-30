@@ -2,83 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42C2B27E40E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 10:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D731727E420
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 10:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgI3Irb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 04:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
+        id S1728819AbgI3Isx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 04:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgI3Irb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 04:47:31 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B4BC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:47:30 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 77so1182666lfj.0
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:47:30 -0700 (PDT)
+        with ESMTP id S1728662AbgI3Isw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 04:48:52 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A9BC0613D0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:48:52 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m5so1161012lfp.7
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cr4F0zeDS/obqT3hxezbEXoAuNHnHKvlXLl42w4NaIs=;
-        b=uvnIFiV7FZ+zzxcN3L+fCOcCWuTR9m5Qa6z3OabpBiheRDK7oh62P0AGiTJ6XmPIb/
-         LbyEdCxFU83nObD/1diqJRWJlStu0Z5jC8YKKXrNm/btn67XGWCMhOkviYDGeFTih0lr
-         tPMt6Whw+O1h3ZbA2rZ5mimAi8PWwVpQy4ek4HBScVoprn0iLZoVa0t7Netjtmmiil/V
-         REimQjACKl1DgKtpQ4Yt7dPbJTE0au96lQDi/QUkdIMgVoR80ZwpE1cTIF8nKW0ss8ix
-         AOKNfOOB7C9QqYFsUjoqnadPe2jn4unxwRkIBRv3NkTXHBsNHuJzF4m8hRO5E7+PmYO0
-         svaw==
+        bh=LwsH4RNzM7M1YZuptel9pzVtCDIa+ZWwO2h5LWJGBOE=;
+        b=WiP+6TbsCK2Y5YTT5RJHL4rQtHQ9Atapoj/vpKrfxYU4qy9/48B0y0IwPfJT2Spbfb
+         4vpLswz7BfIvYDnM2tl4py33Wbu45yki8K6u2dmQi3IYnCoWBxxJh8Vi+cROnJW9bwuD
+         TSezmy3VfFlrI25skDsudj2l71nrUDtQTWOTw3gmcXNqyHwjfziUK6sGQQR8HNZINSLA
+         UAlo9M6y1StSHvcqHEC0IJ+NHNNOJSRN620b48DZxmSJeRxmK0vLD8KTCgJIOCoqLvaN
+         wLzOJRvsENpsPuBe3E6aoXbrmUp/riajJly+8g6+CZv1xK5L6GP0idVMa6US7ZnjDvnh
+         etaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cr4F0zeDS/obqT3hxezbEXoAuNHnHKvlXLl42w4NaIs=;
-        b=fIpCmtDVvNgW/Ng6biGpfrptASycUmCU17f5t18qWp8WxnnTFuQa+vu1yP/huSV2KB
-         yupfZwvAjOn2xUgTGevV2ikCefbb8jNh77mwwLn+Gpym7ClQf/wTgnzEf2jGn7fTprxB
-         /kz6NE6gGtZ6QgDjA3WMrob2IaFn00bWYepIPrYZ8jGixjMXIFqskhYWo0PpCkgswyNt
-         N612g4HSY/UybwNB5lVVA+6fYAHdOQ5uQcp8STfiV7+/sblnAJdsB+Mcc+A/yt9fEkBm
-         gOe14E5iriTzez31cqpvj7kFYhTFCgww4pFyjOK+JayAQii0JZS7yVwi3nehuB1JXYt1
-         TOig==
-X-Gm-Message-State: AOAM5322Pz4nW+excatUDdNovUDef+cKvB9fCyesFaGQ+++OUMRsTPzM
-        gYl4Otw/5LKtpZPQJX8arG+xI+gYBzxvGv5KvKsFiw==
-X-Google-Smtp-Source: ABdhPJxOpTPzyw1+Tet95je7SIFAGeXemd7JxYndbFKN8UuWccBXA0YLrbqMLAAR6lN3f0fEFaZho/Y4cHjNa8sCDj0=
-X-Received: by 2002:a05:6512:20c3:: with SMTP id u3mr473893lfr.572.1601455649061;
- Wed, 30 Sep 2020 01:47:29 -0700 (PDT)
+        bh=LwsH4RNzM7M1YZuptel9pzVtCDIa+ZWwO2h5LWJGBOE=;
+        b=CoHXdiP3/oqofduRcUO3SiW/TMUW/ycc+zbrrs3VPKRaieJ4sL7OLJ10nys6Hw45pq
+         m1drCd2axrDCiqZyuwlaui4ajS2XcRwUiAEY670D98EuyuwonVd79SDIKR0DkGpG8ExE
+         2FVqzxokHA2OAi031tSb1drL9yBUV+hmgeTYh3HPBr2+k2xmpJ/PCpLsnuY7yf2ii5l2
+         eKEWRI/rM5cGKcymC8B25D+ZBi7OeqblWnoJXo2Ydl6GIMkn7BDdSq9igLNzLc9y+jFm
+         2ZrwCFfaBnPjcuyUoELV/Jdl6KZE92+SmocF91Dx+3C7BDSZspmpbUJEZnC58Q3Yl1pm
+         /toA==
+X-Gm-Message-State: AOAM5336rqFs5YOzDE2SOANdsWEdDRHlVgy/JHwzT2ofrkG1hHjBvCvl
+        K9Pekj4A5VRp0uhd5Ka1tXA3eiip5NeI2bEPN8EjQIsgR60/5w==
+X-Google-Smtp-Source: ABdhPJzwTQaHeKwf02xAiuAF5IJuYvnnkzJxA7qbMaCsOnrpapueh2yOo2TkZHTZ/fvDlwd2pS2bqGeQl2q/DBwNqkc=
+X-Received: by 2002:a19:1c8:: with SMTP id 191mr478715lfb.585.1601455730766;
+ Wed, 30 Sep 2020 01:48:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821075452.1543610-1-enric.balletbo@collabora.com>
- <99821f85-9a38-7591-f982-872603b6ce8a@collabora.com> <CAGp9Lzq-15xjvSVaEJ=2o18o-8ESGWsHf-LNAXXwKfxu4V-0NQ@mail.gmail.com>
-In-Reply-To: <CAGp9Lzq-15xjvSVaEJ=2o18o-8ESGWsHf-LNAXXwKfxu4V-0NQ@mail.gmail.com>
+References: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 10:47:17 +0200
-Message-ID: <CACRpkdYPoZX1+rfJb925_+H6YXiwO26cKLpZae=_j=RQKGA0Wg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mediatek: Free eint data on failure
-To:     Sean Wang <sean.wang@kernel.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
+Date:   Wed, 30 Sep 2020 10:48:39 +0200
+Message-ID: <CACRpkdZiaSQdtW8QmoxvVyA+RvZoTh7h6CjsTidZrm+YddcADQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: check mtk_is_virt_gpio input parameter
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Sean Wang <sean.wang@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>, hsinyi@chromium.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        sin_jieyang <sin_jieyang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 27, 2020 at 7:57 PM Sean Wang <sean.wang@kernel.org> wrote:
+On Thu, Aug 20, 2020 at 1:22 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-> v2 seems the same with v1 or I was missing something.
+> check mtk_is_virt_gpio input parameter,
+> virtual gpio need to support eint mode.
 >
-> I just thought we call devm_ioremap_release to explicitly to free
-> resource when a certain failure occurs after
-> devm_ioremap_resource?
+> add error handler for the ko case
+> to fix this boot fail:
+> pc : mtk_is_virt_gpio+0x20/0x38 [pinctrl_mtk_common_v2]
+> lr : mtk_gpio_get_direction+0x44/0xb0 [pinctrl_paris]
+>
+> Fixes: edd546465002 ("pinctrl: mediatek: avoid virtual gpio trying to set reg")
+> Singed-off-by: Jie Yang <sin_jieyang@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+>
+> ---
+> Changes since v1:
+> - update Singed-off-by
+> - align with pinctrl/mediatek/pinctrl-mtk-mt*.h
 
-What is the semantics around mtk_build_eint()?
-
-If it is called on the probe path no explicit free:ing is
-necessary: anytime probe() exits with an error code,
-any devm* resources will be free:ed.
+Patch applied.
 
 Yours,
 Linus Walleij
