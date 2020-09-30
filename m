@@ -2,110 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E0D27F0E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 19:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7028627F19B
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 20:50:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgI3Rxf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 13:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
+        id S1728368AbgI3SuW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 14:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgI3Rxe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 13:53:34 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8644BC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 10:53:34 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 60so2693454otw.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 10:53:34 -0700 (PDT)
+        with ESMTP id S1725771AbgI3SuW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 14:50:22 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5844BC061755;
+        Wed, 30 Sep 2020 11:50:22 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id t16so2996676edw.7;
+        Wed, 30 Sep 2020 11:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nmx3GK+BJ0d4VG1MnUd724aknrThpuCxNaLSY0XJ58c=;
-        b=xS8WcxEVpDZKYDvgXPcKeyIkiQzftLTmFl1axoEXs0Fs32CiYI0KH+BPVPgCu6eiKV
-         42m2Uh5QfSYCU0vvxw0usyqGn8nqfxXeCy3g2usLicSNcT3LdNDZfvdwf2eAoq7kTuUn
-         9URHPG0/NHIcclklxub5afY/bGPhuRywQDtbKL7okklvJqXiNrbmgeAh+yJ+QxgUEhP6
-         hk7YmdzwYb0o2+fEnedyN4Tsc2cDh2t4jFOssNAd5XW6hSFR06iTvsNyKW9recaLnIvs
-         frv4wfZLcvUgM3BDXaCuxAd4Wmdo5FgaXCj0KLCCh2DcHUXmGuk2btBzop8MkZn+T8E/
-         O/UQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Sg3JdskTv/baC1RIHHUI9THUReq0qsRlNzLxJycYwpY=;
+        b=iAx2GEEtJ4eZu+wgiOzIuHUkDDjjYQtWB9JgMtllCOLUZM+wluabzrKEe/ivOUx6yY
+         kgsCdXTtEWLEivK0FGWvR4KXAgbP1bL6imaFIsLRm7RAoJIpVG0tK83kUAj02duPE5+C
+         FUvSKv8SSLHKQ+rJ7EKpAAZMXxWTMcrh0JPWXskB6xF8v1Unq8iJEgrjuUB8Md5twErC
+         1k9NCBsjb/Sge1F+3mva4jSWHVgPAm0edgdwfmjGmTPwoA6GsMSwdS8wMHzjZmBJER+Y
+         Ix0x1Be1RXa6Gn9P4pjnt9xPo046R6dYJ6U8gYafZ6gU4UqAD9Kw5KFZDxd7eNRuszJR
+         wESw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nmx3GK+BJ0d4VG1MnUd724aknrThpuCxNaLSY0XJ58c=;
-        b=dSu6W5vAMwt8OPiZyUD01SIvN0j3Jx5RX2G6p7DgPhaxVhjmaAOyHLW49rHXzfOfH/
-         ELgRCTjTFVZ2SaI8+Jw95AMblw6AggN0Up3OH9TNChd9wUIqphcKyW3ejDhtuxeZPnbr
-         lYstGumKu9UdJslxTzn4EwOArKv3IWuuC8JiP6PcyHOcDs/OOTZUYpe/FAxLHy9CvKeT
-         PAJxOYV6gEWLO7RtDOIlK69IYDZ0My1yCd7oJUdX48g4CpT90iNO2dPU/wJE1DQliT+o
-         I2uOLgO0X4XvBQLhb6IX/kPcvQzNMakVKr8JzuDWclGD4xrFE2fsEtEzKuq4ZLqAUkUN
-         bdpw==
-X-Gm-Message-State: AOAM532QtLwzIlU390EF5IjVgyCsrifX7KQA+NK99OOTZTa5qndUyi4r
-        vzP0bHRJHRp8hB84OEK/P6LHig==
-X-Google-Smtp-Source: ABdhPJzpc1y+G2Mh4hI2b6mUBCT6UIG0Wm+AK1cTWmMfvdiwkQpSWSp64VdS6GC+wwAIzRfTI4QyCA==
-X-Received: by 2002:a9d:2925:: with SMTP id d34mr2284108otb.140.1601488413886;
-        Wed, 30 Sep 2020 10:53:33 -0700 (PDT)
-Received: from x1 ([2600:1702:da0:ff40:985b:42bd:cfe:59b7])
-        by smtp.gmail.com with ESMTPSA id c19sm555297ooq.35.2020.09.30.10.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2020 10:53:33 -0700 (PDT)
-Date:   Wed, 30 Sep 2020 12:53:30 -0500
-From:   Drew Fustini <drew@beagleboard.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Sg3JdskTv/baC1RIHHUI9THUReq0qsRlNzLxJycYwpY=;
+        b=XPl0gp7ZS8taOauBLsjVyJTExh1cma8hbgs02Fjpsf8UoHUfyXfaueGz4BfqeRuuBi
+         j7KmueRN+Yj47KR1icf/GV8/ED0+AS3H7gd5yGBdS+On78aV2VmiTHYHlHTAxGKRf25z
+         ekQi/myK3w+Z2hcbFCns/w0wJvaz5KD1Za676/XcpE0kqhkIzlmgc6rNUhEZf9kn5axR
+         6L8jWaxJ7NZXVlc6BtY9vuPv3YT24OSwbEB3yZbxuMCCOeHjLDeEDW+imsiJLVXDFRQN
+         o1ueR6tSUNoAyKEE5CI/S5y7lFu8oM3OHDdBH8ZPxvr4wqERuSINQCpsH2kPmT04EMe7
+         NOIA==
+X-Gm-Message-State: AOAM533B76s4JZ6VltGuRsWiWek1EuNvYdTrpd64R8EFj0IG4ewdaUK/
+        7+Mg1ZDuzKo1+R3RgwsYed6vn2jEKtoEGLsGDofxNjPc89rTujGB
+X-Google-Smtp-Source: ABdhPJwHY8Mt2cRi5DRYkuaDFjWn86zSncMMNn3sSdiwsWjgOGvvgfbLuzwcM4ocTjmoS32nnkGdtCx6MDoxuzB/NYc=
+X-Received: by 2002:aa7:c1d0:: with SMTP id d16mr4106617edp.209.1601491820999;
+ Wed, 30 Sep 2020 11:50:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200924054324.GB9471@atomide.com> <CA+7tXigg+h3v61AVMaYRKa_ZwznehOUPEESMqXKsNDNCrFph3w@mail.gmail.com>
+ <20200924060645.GD9471@atomide.com> <CA+7tXijkS8UMFk4t=DuKjZZNnThbRarPQvxwxjg-uJFTKJRsXA@mail.gmail.com>
+ <20200924070443.GF9471@atomide.com> <CA+7tXihBdw9AOGL7Hp2cH9+ii8fUXaaZZDUP3icyeOkMuGm4qA@mail.gmail.com>
+ <20200930051521.GN9471@atomide.com> <CA+7tXig=3hbFXfmYMC5Hd1Zc2n-6uGXbMePPw_Cr4bOsyt7QQA@mail.gmail.com>
+ <20200930091526.GQ9471@atomide.com> <CA+7tXihYb6AHrQLpO9UDHV7YFbzo_Pm8EdXNJXX+tJXX-L6UYA@mail.gmail.com>
+ <20200930094714.GR9471@atomide.com>
+In-Reply-To: <20200930094714.GR9471@atomide.com>
+From:   Trent Piepho <tpiepho@gmail.com>
+Date:   Wed, 30 Sep 2020 11:50:10 -0700
+Message-ID: <CA+7tXijZJnJ-=erFq+XQCrwwV7tv+6PsmO5T8XSR3p1Jb6qjkg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: document pinctrl-single,pins when
+ #pinctrl-cells = 2
 To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Cc:     Drew Fustini <drew@beagleboard.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Jason Kridner <jkridner@beagleboard.org>,
         Robert Nelson <robertcnelson@gmail.com>,
-        Trent Piepho <tpiepho@gmail.com>
-Subject: Re: [PATCH] pinctrl: single: check if #pinctrl-cells exceeds 3
-Message-ID: <20200930175330.GA1295202@x1>
-References: <20200913210825.2022552-1-drew@beagleboard.org>
- <CACRpkdZXu9g_Rq7707-6hXqPVfbxPBcrnR8KwLm+zOgS_EabAQ@mail.gmail.com>
- <20200930051659.GO9471@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200930051659.GO9471@atomide.com>
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Christina Quast <cquast@hanoverdisplays.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 08:16:59AM +0300, Tony Lindgren wrote:
-> * Linus Walleij <linus.walleij@linaro.org> [200929 12:51]:
-> > On Sun, Sep 13, 2020 at 11:17 PM Drew Fustini <drew@beagleboard.org> wrote:
-> > 
-> > > The property #pinctrl-cells can either be 2 or 3.  There is currently
-> > > only a check to make sure that #pinctrl-cells is 2 or greater.  This
-> > > patch adds a check to make sure it is not greater than 3.
-> > >
-> > > Fixes: a13395418888 ("pinctrl: single: parse #pinctrl-cells = 2")
-> > > Reported-by: Trent Piepho <tpiepho@gmail.com>
-> > > Link: https://lore.kernel.org/linux-omap/3139716.CMS8C0sQ7x@zen.local/
-> > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > 
-> > Tony, does this and the other patch look good to you?
-> 
-> Hmm well the description looks a bit confusing, #pinctrl-cells can
-> also be 1 that's the default. Might be worth clarifying that part.
-> 
-> Regards,
-> 
-> Tony
+On Wed, Sep 30, 2020 at 2:47 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Trent Piepho <tpiepho@gmail.com> [200930 09:34]:
 
-Yes, that was my fault for confusing #pinctrl-cells with
-pinctrl_spec.args_count.
+> >
+> > Where do these flags go?  In pinctrl-single,pins?  Like:
+> >
+> > pinctrl-single,pins =3D <AM335X_PIN_MDC MUX_MODE7 PIN_INPUT_PULLUP>;
+> >
+> > But PIN_INPUT_PULLUP is a generic flag?  Which is translated into the
+> > proper value by??
+>
+> Yes that's what I was thinking, something like this with generic flags:
+>
+> pinctrl-single,pins =3D <AM335X_PIN_MDC (PIN_INPUT | PIN_PULLUP) MUX_MODE=
+7>;
 
-- if #pinctrl-cells = <1>, then pinctrl_spec.args_count = 2
-- if #pinctrl-cells = <2>, then pinctrl_spec.args_count = 3
-- all other values are not valid
+It doesn't seem like these patches help achieve that, since they
+create device tree binaries with a property that has the same name and
+number of cells, but the cells have a different meaning than above,
+and must be handled differently by the driver.  So you either drop
+compatibility or need to forever deal with supporting an interim
+format that is being created by these patches.
 
-I will post a v2.
+The conf and max are already split in (all but one) of the device tree
+SOURCE files via the macro with multiple fields.  That does seem like
+a good step if you wanted to transition into something like the above.
+But splitting it in the binary too doesn't help.  Is there a way the
+dtb now being created can turn into the above via a driver change?
+Absolutely not.  So what's the point of an interim binary format?  All
+that matters is what the source looks like, and since that doesn't
+change, nothing is accomplished.
 
-Thanks,
-Drew
+I'll also point out that the current generic pinconf, done not via
+flags but with multiple properties for each configurable parameter,
+has a drive strength properties with strength in mA or =C2=B5A as a
+parameter.  How would you do that with generic bit flags?  I don't
+think you can fit everything in pinconf-generic.h into one 32 bit
+cell.
+
+> > Or are you talking about replacing the existing pinctrl-0,
+> > pinctrl-names properties with a totally different system that looks
+> > more like gpio and interrupt handles?
+>
+> That would be even better :) Might be just too much to deal with..
+>
+> In any case the parser code could already be generic if we had generic
+> flags based on #pinctrl-cells.
+
+But the pinctrl-single,pins isn't parsed.  It just uses the values as
+they are.  You'd have to write something to parse the cells and add
+more data to the dts that told the parser how to turn them into device
+specific values.  It seems like that could eventually achieve
+basically what is happening already with the dts preprocessor
+converting symbolic constants into device specific values.
