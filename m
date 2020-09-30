@@ -2,86 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B2BF27E82E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 14:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41A2827E919
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 15:01:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgI3MEu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 08:04:50 -0400
-Received: from smtp.asem.it ([151.1.184.197]:63339 "EHLO smtp.asem.it"
+        id S1729890AbgI3NBa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 09:01:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6862 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729561AbgI3MEt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 30 Sep 2020 08:04:49 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000514340.MSG 
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 14:04:45 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
- Sep 2020 14:04:43 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1979.003; Wed, 30 Sep 2020 14:04:43 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1725771AbgI3NBa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Sep 2020 09:01:30 -0400
+IronPort-SDR: g1fEK2L7fPvdIKWRO9hc22/syh4K3q1/GYPCHvqY5m7WMg0xzuSCVfpzBi5n4iEVlS8RBk7YJW
+ IB4RbEFdUd4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9759"; a="141844306"
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="141844306"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 06:01:20 -0700
+IronPort-SDR: mqPTbeEKaXW2vX4VANFW/wqP+yBcskH+dqKVF2dBS6+Ye5CRlFNSmmLYc6F3M4JkvCQ7sElUMo
+ cQuEXX2Ow2Kw==
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="339079199"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 06:01:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1kNbjN-00311K-Vz; Wed, 30 Sep 2020 16:01:13 +0300
+Date:   Wed, 30 Sep 2020 16:01:13 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: How to use an ACPI declared GPIO in a userspace ...
-Thread-Topic: How to use an ACPI declared GPIO in a userspace ...
-Thread-Index: AdaWdniTedAZ6+9wQdyYYgE5sQ27yP//4UoAgAAGTYD//91o0IAAJ14A//6Yg1A=
-Date:   Wed, 30 Sep 2020 12:04:43 +0000
-Message-ID: <22753b53cd7d4dfba4ef3610f71cc462@asem.it>
+Subject: Re: How to use an ACPI declared GPIO in a userspace ...
+Message-ID: <20200930130113.GQ3956970@smile.fi.intel.com>
 References: <9152bb8be33e4192a7766eb53c6ca9af@asem.it>
  <CAMRc=McnsSkg-7UMp7pKaGX2wSqsZC2jQZV2zRepxm9UxGg=YA@mail.gmail.com>
  <CAHp75VfgEGydXN1A+Y=wn3iX1MbLhN8F9kYyfQwTZBJydr+0+Q@mail.gmail.com>
  <feb8567c830748c483c8c66dd4717003@asem.it>
  <CAHp75Vdd2QjvJvLGHa1x=RaSknEG+O+YB4eJA6+2htnZ=Gf52g@mail.gmail.com>
-In-Reply-To: <CAHp75Vdd2QjvJvLGHa1x=RaSknEG+O+YB4eJA6+2htnZ=Gf52g@mail.gmail.com>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <22753b53cd7d4dfba4ef3610f71cc462@asem.it>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020E.5F74745C.0040,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22753b53cd7d4dfba4ef3610f71cc462@asem.it>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQW5keSwNCg0KPiA+ID4gPiA+IEkgd2FzIHdvbmRlcmluZyBpZiB0aGVyZSBpcyBhIGdlbmVy
-aWMgR1BJTyBkcml2ZXIgdGhhdCBJIGNhbiB1c2UNCj4gTWF5YmUgSSB3YXMgbm90IHNvIGNsZWFy
-LCBidXQgYXMgQmFydCBtZW50aW9uZWQgdGhlIGxlYXN0IHlvdSBjYW4gZG8NCj4gaXMgc2ltcGx5
-IGRlZmluZSBsaW5lIG5hbWUgdmlhICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5LiBUaGUgcHJv
-YmxlbQ0KPiBoZXJlIGlzIHdoZW4gYW5kIGhvdyB5b3Ugd291bGQgbGlrZSB0byBoYXZlIHRoZW0g
-aW5jb3Jwb3JhdGVkLg0KDQpJIGFscmVhZHkgdHJpZWQgYWRkaW5nIHRoZSAiZ3Bpby1saW5lLW5h
-bWVzIiBwcm9wZXJ0eSwgYnV0IHRoZSBwcm9ibGVtDQppcyB0aGUgc2FtZTogbm8gZHJpdmVyIGFz
-a3MgZm9yIHRoaXMgR1BJTywgYXMgc2hvd24gYnkgdGhlIGZvbGxvd2luZw0Ka2VybmVsIG1lc3Nh
-Z2VzOg0KDQpBQ1BJOiBIb3N0LWRpcmVjdGVkIER5bmFtaWMgQUNQSSBUYWJsZSBMb2FkOg0KQUNQ
-STogU1NEVCAweEZGRkY5OTQwMzRENDJBMDAgMDAwMEU4ICh2MDUgQVNFTXNwIEdQSU9fQlROIDAw
-MDAwMDAxIElOVEwgMjAyMDA3MTcpDQpBQ1BJOiBcX1NCXy5HUE8xLkJUTlM6IFBSUDAwMDEgcmVx
-dWlyZXMgJ2NvbXBhdGlibGUnIHByb3BlcnR5DQoNClNvIEknbGwgc3RhcnQgdG8gd3JpdGUgYSBz
-aW1wbGUgZGV2aWNlIGRyaXZlciB0byB1c2UgdGhpcyBHUElPLg0KSSdsbCBrZWVwIHlvdSBpbmZv
-cm1lZCENCiANCj4gV2hlbjogaWYgQUNQSSB0YWJsZXMgYXJlIGJlaW5nIHByb3ZpZGVkIGJ5IGZp
-cm13YXJlIHdoaWNoIHlvdSBtYXkgbm90DQo+IGFsdGVyLCB0aGVuIHlvdSBtdXN0IHVzZSBpbml0
-cmFtZnMgdHlwZSBvZiBzb2x1dGlvbiAobm8gY29uZmlnZnMsDQo+IGRvbid0IGtub3cgYWJvdXQg
-RUZJIHZhciB0aG91Z2gpLiBIb3c6IEluIHRoYXQgY2FzZSB5b3UgbWlnaHQgaGF2ZSBhDQo+IGNo
-YW5jZSB0byBpbmNvcnBvcmF0ZSBfRFNEKCkgbWV0aG9kIGludG8gKmV4aXN0aW5nKiBfQ1JTKCkg
-b25lLg0KPiBQb3NzaWJsZSBpbXBlZGltZW50czogaWYgQUNQSSB0YWJsZSBmcm9tIGZpcm13YXJl
-IGFscmVhZHkgaGFzIGEgX0RTRCgpDQo+IGRlZmluZWQgb3IgYWJvdmUgaXMgbm90IHdvcmtpbmcg
-Zm9yIHNvbWUgcmVhc29uLiBJbiBzdWNoIGEgY2FzZSB5b3UNCj4gbXVzdCB1cGdyYWRlIGVudGly
-ZSBEU0RUIHZpYSBpbml0cmFtZnMuDQo+IA0KPiA+ID4gPiBBZGRpbmcgQW5keSB3aG8ga25vd3Mg
-QUNQSSBHUElPIHdlbGwuDQo+ID4gPg0KPiA+ID4gVGhhbmtzLg0KPiA+ID4NCj4gPiA+ID4gSW4g
-Z2VuZXJhbCwgdGhlICJncGlvLWxpbmUtbmFtZXMiIHByb3BlcnR5IGlzIHVzZWQgZm9yIHRoYXQg
-YW5kIGl0J3MNCj4gPiA+ID4gc3VwcG9ydGVkIGJvdGggZm9yIGRldmljZSB0cmVlIGFzIHdlbGwg
-YXMgQUNQSSwgYWx0aG91Z2ggSSBoYXZlIG9ubHkNCj4gPiA+ID4gZXZlciB1c2VkIHRoZSBmb3Jt
-ZXIuDQo+ID4gPg0KPiA+ID4gUmlnaHQuIEFDUEkgc3VwcG9ydHMgcHJvcGVydGllcyB2aWEgX0RT
-RCgpIG1ldGhvZC4NCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZj
-aGVua28NCg0KVGhhbmtzIEFuZHkgYW5kIEJhcnRvc3ogZm9yIHlvdXIgc3VwcG9ydCENCkJlc3Qg
-cmVnYXJkcywNCg0KRmxhdmlvDQo=
+On Wed, Sep 30, 2020 at 12:04:43PM +0000, Flavio Suligoi wrote:
+> > > > > > I was wondering if there is a generic GPIO driver that I can use
+> > Maybe I was not so clear, but as Bart mentioned the least you can do
+> > is simply define line name via "gpio-line-names" property. The problem
+> > here is when and how you would like to have them incorporated.
+> 
+> I already tried adding the "gpio-line-names" property, but the problem
+> is the same: no driver asks for this GPIO, as shown by the following
+> kernel messages:
+> 
+> ACPI: Host-directed Dynamic ACPI Table Load:
+> ACPI: SSDT 0xFFFF994034D42A00 0000E8 (v05 ASEMsp GPIO_BTN 00000001 INTL 20200717)
+> ACPI: \_SB_.GPO1.BTNS: PRP0001 requires 'compatible' property
+
+> So I'll start to write a simple device driver to use this GPIO.
+> I'll keep you informed!
+>  
+> > When: if ACPI tables are being provided by firmware which you may not
+> > alter, then you must use initramfs type of solution (no configfs,
+> > don't know about EFI var though). How: In that case you might have a
+> > chance to incorporate _DSD() method into *existing* _CRS() one.
+> > Possible impediments: if ACPI table from firmware already has a _DSD()
+> > defined or above is not working for some reason. In such a case you
+> > must upgrade entire DSDT via initramfs.
+> > 
+> > > > > Adding Andy who knows ACPI GPIO well.
+> > > >
+> > > > Thanks.
+> > > >
+> > > > > In general, the "gpio-line-names" property is used for that and it's
+> > > > > supported both for device tree as well as ACPI, although I have only
+> > > > > ever used the former.
+> > > >
+> > > > Right. ACPI supports properties via _DSD() method.
+
+I guess you simply didn't get. The "gpio-line-names" property of GPIO
+*controller* (provider!) and you are trying to do something with the *consumer*
+if I got it right.
+
+And of course GPIO line, which has name, has no difference in use from another
+w/o name assigned. You will need to request it by *consumer* either in kernel
+or in user space.
+
+To be more precise we have to look at your DSDT.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
