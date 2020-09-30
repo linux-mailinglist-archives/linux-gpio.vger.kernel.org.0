@@ -2,80 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B5327E408
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 10:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42C2B27E40E
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Sep 2020 10:47:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgI3Iou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Sep 2020 04:44:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36338 "EHLO
+        id S1725823AbgI3Irb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Sep 2020 04:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgI3Iou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 04:44:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64673C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:44:48 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a22so849104ljp.13
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:44:48 -0700 (PDT)
+        with ESMTP id S1725776AbgI3Irb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Sep 2020 04:47:31 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B4BC061755
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:47:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 77so1182666lfj.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Sep 2020 01:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=e0o0cITbLOXW4+eb4zMVz/hDGXwXK4Yd1WHZKdH8XV8=;
-        b=XQLsJ9sGnzpb2NBy2+CPEZ0bkgFSnVRiz4E2UQfJtSkQSaOFVyDtnJOG2dkjQYDmkE
-         W//dHiLk0xV3Zp23dTeJyBfArI6iw0J4uTHlUCVjk4gDhPd6XU5Kq29dIPFyEGAsOyWG
-         Hx3WYjYpbKvpn+0Nwz1G3RLbiMJOm66hTeXSNXF/SjGXhEJilsfBy4hIJN63EW5zVON8
-         rpTgETkXc6ZqJ4Qs3BDy07LvNjVxbl/F6qEexSWdrRyD5qI47eZVvkqy/Wc7e15Mn6Ls
-         giDpwRrjyoQIQ4GBKyjCcuusS4pBv4jdiVIOSFhJ/gqnkwPf5uVcupRq6uwUJS6XgdkY
-         D56g==
+         :cc;
+        bh=cr4F0zeDS/obqT3hxezbEXoAuNHnHKvlXLl42w4NaIs=;
+        b=uvnIFiV7FZ+zzxcN3L+fCOcCWuTR9m5Qa6z3OabpBiheRDK7oh62P0AGiTJ6XmPIb/
+         LbyEdCxFU83nObD/1diqJRWJlStu0Z5jC8YKKXrNm/btn67XGWCMhOkviYDGeFTih0lr
+         tPMt6Whw+O1h3ZbA2rZ5mimAi8PWwVpQy4ek4HBScVoprn0iLZoVa0t7Netjtmmiil/V
+         REimQjACKl1DgKtpQ4Yt7dPbJTE0au96lQDi/QUkdIMgVoR80ZwpE1cTIF8nKW0ss8ix
+         AOKNfOOB7C9QqYFsUjoqnadPe2jn4unxwRkIBRv3NkTXHBsNHuJzF4m8hRO5E7+PmYO0
+         svaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e0o0cITbLOXW4+eb4zMVz/hDGXwXK4Yd1WHZKdH8XV8=;
-        b=AUIWVJbMF9SEgBPjTZ9SCDdil0jP8dFrA+l39gFS6aUSY7HUrWtYY6IUk/tKUXQN1Q
-         v0XmkOqIjuAGQRV+Ha2YeehVxFCjPDZiZNZr/vQfbID3uvyFNbUrESAQw+XaZoMnDGmm
-         2xPvMtNzxr4tBLvj3LQxfGRfjg+Xkaqtmbx0u0bDq40Ig2v+rpAARa08wx5ZFlUqZCHw
-         /V8fLGSRJoVDEuRKMPZaKM1HqBJWGCoVgS/BUdxlGAk+3RGSrrt0YqT+JIvsbzenGZNY
-         /WB38xiCVn5C2VF86ZHdqSwMbMEo+XK5OlUNTKLjw/hR8IIYT9NruyjgD+AHAjSYv/HP
-         2XAw==
-X-Gm-Message-State: AOAM530ZQ4Z5muQGfAiXEx0Y3UsYRQAeILGo6KN9spUiv87iI/aI/v94
-        Mm7dAfNcK9MrzkS0YJiUdPkzaf5MII6OryZe5eNyoFk8hvrvFA==
-X-Google-Smtp-Source: ABdhPJxUMbdtUKth9ohwnhlzbPBIm4QoTd73PXwmY9CkkhyjzIiz7pcNYsPBKeLoiodHA/gG+0Fb9rfHe577eGY30bE=
-X-Received: by 2002:a2e:a177:: with SMTP id u23mr523885ljl.104.1601455486858;
- Wed, 30 Sep 2020 01:44:46 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=cr4F0zeDS/obqT3hxezbEXoAuNHnHKvlXLl42w4NaIs=;
+        b=fIpCmtDVvNgW/Ng6biGpfrptASycUmCU17f5t18qWp8WxnnTFuQa+vu1yP/huSV2KB
+         yupfZwvAjOn2xUgTGevV2ikCefbb8jNh77mwwLn+Gpym7ClQf/wTgnzEf2jGn7fTprxB
+         /kz6NE6gGtZ6QgDjA3WMrob2IaFn00bWYepIPrYZ8jGixjMXIFqskhYWo0PpCkgswyNt
+         N612g4HSY/UybwNB5lVVA+6fYAHdOQ5uQcp8STfiV7+/sblnAJdsB+Mcc+A/yt9fEkBm
+         gOe14E5iriTzez31cqpvj7kFYhTFCgww4pFyjOK+JayAQii0JZS7yVwi3nehuB1JXYt1
+         TOig==
+X-Gm-Message-State: AOAM5322Pz4nW+excatUDdNovUDef+cKvB9fCyesFaGQ+++OUMRsTPzM
+        gYl4Otw/5LKtpZPQJX8arG+xI+gYBzxvGv5KvKsFiw==
+X-Google-Smtp-Source: ABdhPJxOpTPzyw1+Tet95je7SIFAGeXemd7JxYndbFKN8UuWccBXA0YLrbqMLAAR6lN3f0fEFaZho/Y4cHjNa8sCDj0=
+X-Received: by 2002:a05:6512:20c3:: with SMTP id u3mr473893lfr.572.1601455649061;
+ Wed, 30 Sep 2020 01:47:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1601164493.git.mirq-linux@rere.qmqm.pl> <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
+References: <20200821075452.1543610-1-enric.balletbo@collabora.com>
+ <99821f85-9a38-7591-f982-872603b6ce8a@collabora.com> <CAGp9Lzq-15xjvSVaEJ=2o18o-8ESGWsHf-LNAXXwKfxu4V-0NQ@mail.gmail.com>
+In-Reply-To: <CAGp9Lzq-15xjvSVaEJ=2o18o-8ESGWsHf-LNAXXwKfxu4V-0NQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Sep 2020 10:44:36 +0200
-Message-ID: <CACRpkdaMHH35C1LqUROFBte3T00Lz0zApHy3hdZ83Z8EZR04hw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: tps65910: use regmap accessors
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
+Date:   Wed, 30 Sep 2020 10:47:17 +0200
+Message-ID: <CACRpkdYPoZX1+rfJb925_+H6YXiwO26cKLpZae=_j=RQKGA0Wg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: Free eint data on failure
+To:     Sean Wang <sean.wang@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>, hsinyi@chromium.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 27, 2020 at 1:59 AM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
-qmqm.pl> wrote:
+On Sun, Sep 27, 2020 at 7:57 PM Sean Wang <sean.wang@kernel.org> wrote:
 
-> Use regmap accessors directly for register manipulation - removing one
-> layer of abstraction.
+> v2 seems the same with v1 or I was missing something.
 >
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> I just thought we call devm_ioremap_release to explicitly to free
+> resource when a certain failure occurs after
+> devm_ioremap_resource?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+What is the semantics around mtk_build_eint()?
 
-I suppose it is easiest that Lee apply all patches to the MFD tree?
+If it is called on the probe path no explicit free:ing is
+necessary: anytime probe() exits with an error code,
+any devm* resources will be free:ed.
 
 Yours,
 Linus Walleij
