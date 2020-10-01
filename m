@@ -2,69 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A753E27FB1E
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 10:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE7C227FB25
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 10:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgJAIMo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Oct 2020 04:12:44 -0400
-Received: from muru.com ([72.249.23.125]:45862 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbgJAIMo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Oct 2020 04:12:44 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 284258057;
-        Thu,  1 Oct 2020 08:12:44 +0000 (UTC)
-Date:   Thu, 1 Oct 2020 11:12:38 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Trent Piepho <tpiepho@gmail.com>,
-        Christina Quast <cquast@hanoverdisplays.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am33xx: modify AM33XX_IOPAD for #pinctrl-cells
- = 2
-Message-ID: <20201001081238.GV9471@atomide.com>
-References: <20200921225053.4126745-1-drew@beagleboard.org>
- <CACRpkdb3J8y8jy9RVgY5J1ypEs15dDU7pcaEGdk5okrydTvmKg@mail.gmail.com>
+        id S1731584AbgJAIN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Oct 2020 04:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730785AbgJAINZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 04:13:25 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CC7C0613E2
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Oct 2020 01:13:24 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id kk9so1476090pjb.2
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Oct 2020 01:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=yWHXn++kRcQbG/MLWQSRUgDAxUjFBToMj9A1ZOoKk8w=;
+        b=KyTas28cFWO3JLCzr/Cl68PZnOKbquWDs/ISwZmjeNElBi0qIqAxuWIavAhRLhXvOx
+         VSoJIkeeyXn+mBZy6dSkBk/jknKuXRAB2E5Z1LX5meG+qGSjWsCfLLJO3tDUMATrTwkE
+         sG/0eJOxRtdcTIWAb6kkq7Iofp50BWjVM72PQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=yWHXn++kRcQbG/MLWQSRUgDAxUjFBToMj9A1ZOoKk8w=;
+        b=qP/1NHfeCkXBK1aHMDENAttMBqJuHMzQA7+0XUTIdcDYG/c2WEd0gSYN+OuwT5wV2L
+         7PG3tDTaNnQfzLK4ZeiVOKNtKAEG4dRBdWbzAVOY4jSdFFXgOrZkaZHaBYoPknZjuerC
+         hy300fvEWkIwBmhphg0ryjlhuZHXZ4432WpVYKGoN8C5RlyNnI5w6OlG+SL4nDVZEJuX
+         ToWstgt1vNpeILXL4LykEn+KDPbGM3k8429j+X3/kHqajPiCX0QgkFfh9wRbLW0kv+sy
+         lvfmSZqVPm5XINPQQN7VckAOU5r7mfzWDnqPrX9CBFuT5FZ41ECcNE7oDZ3VSzUbUF+R
+         QCjA==
+X-Gm-Message-State: AOAM532u8Du39q+Vy7acpl7V72SxDR/rDwi63XKJuqCcTFrZKSCj0QFd
+        ACaqXY7TavWA6nm3Kwn2RX5hpg==
+X-Google-Smtp-Source: ABdhPJwsxlPhxSu0rIBUZbzwNksYMd+sMigsbyAPGmeVkX1Vxi2ToHev2rt0ZPnuKfWBwejxEcLjuQ==
+X-Received: by 2002:a17:90a:b302:: with SMTP id d2mr5841672pjr.150.1601540003379;
+        Thu, 01 Oct 2020 01:13:23 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id q190sm5763338pfc.176.2020.10.01.01.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 01:13:22 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb3J8y8jy9RVgY5J1ypEs15dDU7pcaEGdk5okrydTvmKg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1601267524-20199-1-git-send-email-mkshah@codeaurora.org>
+References: <1601267524-20199-1-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v6 0/6] irqchip: qcom: pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Thu, 01 Oct 2020 01:13:21 -0700
+Message-ID: <160154000142.310579.14473886526667450677@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Linus Walleij <linus.walleij@linaro.org> [201001 08:08]:
-> On Tue, Sep 22, 2020 at 12:57 AM Drew Fustini <drew@beagleboard.org> wrote:
-> 
-> > Modify the AM33XX_IOPAD macro so that it works now that #pinctrl-cells =
-> > <2>. The third parameter is just a zero and the pinctrl-single driver
-> > will just OR this with the second parameter so it has no actual effect.
-> >
-> > There are no longer any dts files using this macro (following my patch
-> > to am335x-guardian.dts), but this will keep dts files not in mainline
-> > from breaking.
-> >
-> > Fixes: 27c90e5e48d0 ("ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2")
-> > Suggested-by: Tony Lindgren <tony@atomide.com>
-> > Reported-by: Trent Piepho <tpiepho@gmail.com>
-> > Link: https://lore.kernel.org/linux-devicetree/20200921064707.GN7101@atomide.com/
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> I didn't get a review tag on this one, Tony is this something I
-> should be applying?
+Quoting Maulik Shah (2020-09-27 21:31:58)
+> Changes in v6:
+> - Update commit message more descriptive in v5 patch 1
+> - Symmetrically enable/disable wakeirqs during suspend/resume in v5 patch=
+ 3
+> - Include Acked-by and Reviewed-by tags from v5 series
+>=20
 
-Thanks for checking, looks like I already applied into my fixes branch:
+Thanks. I tested this series and it is working for me.
 
-b753e41d9999 ("ARM: dts: am33xx: modify AM33XX_IOPAD for #pinctrl-cells = 2")
-
-Regards,
-
-Tony
+Tested-by: Stephen Boyd <swboyd@chromium.org>
