@@ -2,140 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6CA280001
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 15:23:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE005280139
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 16:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbgJANXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Oct 2020 09:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
+        id S1732507AbgJAOZZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Oct 2020 10:25:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732169AbgJANXP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 09:23:15 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558DCC0613D0
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Oct 2020 06:23:15 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d13so4028186pgl.6
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Oct 2020 06:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=QMvUWwpCbcRQWQ/67lZpDcdES3Tgoo1hAu0TKVA+3CU=;
-        b=JcvmfdFU26r00kIq3l8tb+NbqO9R1ZBiVqfDQRV1DUXwOUnLXISFCCwGwYekcaYFeE
-         Ampei1bHnEoGp4ESwceDSp9hUzwT1OyGtecn39CfrSvHxteavnq0GVhxh9VWmR47txY9
-         AGlGrtTf287uB1Zk+8MbmO+CHko+d3AzEKz3I7OjkVC6M1qRoCqfBoA5YE0JdptBes5a
-         GXljDHpPLJc4gQlW1NC+jO1Z/M+Yp3EkjOWOtGhsUWvqT/pQdjZ7ThEE5UTh6tpBec8X
-         5NmV/9FBdwOnko5QEpsm3xUXscYQsXHlSgT0Yrm2qD4nV25XqftScXxJ43xZcrrFHHm0
-         fE6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=QMvUWwpCbcRQWQ/67lZpDcdES3Tgoo1hAu0TKVA+3CU=;
-        b=fZjGLEbDuHihhzCOv8gjg0fjqsbC3MrA3Bdpw4f+YjoTIgiLJT5rGgOFUfcS1+3UMh
-         Ek7zXIV9eq45oG4jCjZ6Vpq00rXGQYTD2eVYkCHXhFX/w60LUtqUrTjx0InlINvU3kOO
-         aUgxAWKQuEq/eYr2CYZFnbHzhDmsPlchnysgVMPtNQRuOeKHECeaYiwRRLC8ZZ617ZCB
-         dN/NZazKFIgiwgyPFs+reaRmLwrYHdL7Mpbt3zUqPc4dV0SNA/zBdIePNh3QVc3StJAn
-         rI/nxS+Pk6nzf5Yqu1I/wkLbX84aErzMzgHlfHEz4xw+gDB4aOOflvLPjpERXpTTIo2i
-         4v3g==
-X-Gm-Message-State: AOAM533HYMUkoxw/+hwrmJrVDnZn1bUM1LbeGE+XYAu5pdHZr/0DRyv6
-        iBERtuG34YPvH3i6d/4sARYE4yhDO0S0dQ==
-X-Google-Smtp-Source: ABdhPJyErk+l+mmIOPOASjYGAmYk5IF/PxLoEMqf52PS+fba8x+lCgnMI1Ygz6OXRdGG20eh8oDwtQ==
-X-Received: by 2002:a62:7f0e:0:b029:152:197b:e2bd with SMTP id a14-20020a627f0e0000b0290152197be2bdmr1175738pfd.7.1601558594102;
-        Thu, 01 Oct 2020 06:23:14 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id y4sm6824494pfr.46.2020.10.01.06.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2020 06:23:12 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Thu, 1 Oct 2020 21:22:58 +0800
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Any other ways to debug GPIO interrupt controller (pinctrl-amd) for
- broken touchpads of a new laptop model?
-Message-ID: <20201001132258.6yzosj2w7k4eod42@Rk>
+        with ESMTP id S1732478AbgJAOZT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 10:25:19 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1ED2C0613D0;
+        Thu,  1 Oct 2020 07:25:18 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2F6D429CDB8
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v3] pinctrl: mediatek: Free eint data on failure
+Date:   Thu,  1 Oct 2020 16:25:11 +0200
+Message-Id: <20201001142511.3560143-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The pinctrl driver can work without the EINT resource, but, if it is
+expected to have this resource but the mtk_build_eint() function fails
+after allocating their data (because can't get the resource or can't map
+the irq), the data is not freed and you end with a NULL pointer
+dereference. Fix this by freeing the data if mtk_build_eint() fails, so
+pinctrl still works and doesn't hang.
 
-I'm trying to fix broken touchpads [1] for a new laptop model Legion-5
-15ARH05 which is shipped with two different touchpads, i.e., ElAN and
-Synaptics. For the ELAN touchpad, the kernel receives no interrupts to
-be informed of new data from the touchpad. For the Synaptics touchpad,
-only 7 interrupts are received per second which makes the touchpad
-completely unusable. Based on current observations, pinctrl-amd seems to
-be the most suspicious cause.
+This is noticeable after commit f97dbf48ca43 ("irqchip/mtk-sysirq: Convert
+to a platform driver") on MT8183 because, due this commit, the pinctrl driver
+fails to map the irq and spots the following bug:
 
+[    1.947597] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000004
+[    1.956404] Mem abort info:
+[    1.959203]   ESR = 0x96000004
+[    1.962259]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.967565]   SET = 0, FnV = 0
+[    1.970613]   EA = 0, S1PTW = 0
+[    1.973747] Data abort info:
+[    1.976619]   ISV = 0, ISS = 0x00000004
+[    1.980447]   CM = 0, WnR = 0
+[    1.983410] [0000000000000004] user address but active_mm is swapper
+[    1.989759] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    1.995322] Modules linked in:
+[    1.998371] CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc1+ #44
+[    2.004715] Hardware name: MediaTek krane sku176 board (DT)
+[    2.010280] pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
+[    2.015850] pc : mtk_eint_set_debounce+0x48/0x1b8
+[    2.020546] lr : mtk_eint_set_debounce+0x34/0x1b8
+[    2.025239] sp : ffff80001008baa0
+[    2.028544] x29: ffff80001008baa0 x28: ffff0000ff7ff790
+[    2.033847] x27: ffff0000f9ec34b0 x26: ffff0000f9ec3480
+[    2.039150] x25: ffff0000fa576410 x24: ffff0000fa502800
+[    2.044453] x23: 0000000000001388 x22: ffff0000fa635f80
+[    2.049755] x21: 0000000000000008 x20: 0000000000000000
+[    2.055058] x19: 0000000000000071 x18: 0000000000000001
+[    2.060360] x17: 0000000000000000 x16: 0000000000000000
+[    2.065662] x15: ffff0000facc8470 x14: ffffffffffffffff
+[    2.070965] x13: 0000000000000001 x12: 00000000000000c0
+[    2.076267] x11: 0000000000000040 x10: 0000000000000070
+[    2.081569] x9 : ffffaec0063d24d8 x8 : ffff0000fa800270
+[    2.086872] x7 : 0000000000000000 x6 : 0000000000000011
+[    2.092174] x5 : ffff0000fa800248 x4 : ffff0000fa800270
+[    2.097476] x3 : ffff8000100c5000 x2 : 0000000000000000
+[    2.102778] x1 : 0000000000000000 x0 : 0000000000000000
+[    2.108081] Call trace:
+[    2.110520]  mtk_eint_set_debounce+0x48/0x1b8
+[    2.114870]  mtk_gpio_set_config+0x5c/0x78
+[    2.118958]  gpiod_set_config+0x5c/0x78
+[    2.122786]  gpiod_set_debounce+0x18/0x28
+[    2.126789]  gpio_keys_probe+0x50c/0x910
+[    2.130705]  platform_drv_probe+0x54/0xa8
+[    2.134705]  really_probe+0xe4/0x3b0
+[    2.138271]  driver_probe_device+0x58/0xb8
+[    2.142358]  device_driver_attach+0x74/0x80
+[    2.146532]  __driver_attach+0x58/0xe0
+[    2.150274]  bus_for_each_dev+0x70/0xc0
+[    2.154100]  driver_attach+0x24/0x30
+[    2.157666]  bus_add_driver+0x14c/0x1f0
+[    2.161493]  driver_register+0x64/0x120
+[    2.165319]  __platform_driver_register+0x48/0x58
+[    2.170017]  gpio_keys_init+0x1c/0x28
+[    2.173672]  do_one_initcall+0x54/0x1b4
+[    2.177499]  kernel_init_freeable+0x1d0/0x238
+[    2.181848]  kernel_init+0x14/0x118
+[    2.185328]  ret_from_fork+0x10/0x34
+[    2.188899] Code: a9438ac1 12001266 f94006c3 121e766a (b9400421)
+[    2.194991] ---[ end trace 168cf7b3324b6570 ]---
+[    2.199611] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    2.207260] SMP: stopping secondary CPUs
+[    2.211294] Kernel Offset: 0x2ebff4800000 from 0xffff800010000000
+[    2.217377] PHYS_OFFSET: 0xffffb50500000000
+[    2.221551] CPU features: 0x0240002,2188200c
+[    2.225811] Memory Limit: none
+[    2.228860] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
 
-Why do I think pinctrl-amd smells the most suspicious?
-======================================================
+Fixes: 89132dd8ffd2 ("pinctrl: mediatek: extend eint build to pinctrl-mtk-common-v2.c")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-This laptop model has the following hardware configurations specified
-via ACPI,
-  - The touchpad's data interrupt line is connected to pin#130 of a GPIO
-    chip
+Changes in v3:
+- Really release the resource when needed. For some reason the change
+  was not reflected in patch v2.
 
-         GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
-                         "\\_SB.GPIO", 0x00, ResourceConsumer, ,
-                         )
-                         {   // Pin list
-                             0x0082
-                         }
+Changes in v2:
+- Free the resource when needed (Sean Wang)
 
-  - This GPIO chip (HID: AMDI0030) which is assigned with IRQ#7 has its
-    common interrupt output line connected to one IO-APIC's pin#7
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 29 ++++++++++++++-----
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-         Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
-         {
-             0x00000007,
-         }
-
-I add some code to kernel to poll the status of the GPIO chip's pin#130
-and IO-APIc's pin#7 every 1ms when I move my finger on the surface of
-the Synaptics touchpad continuously for about 1s. During the process of I
-move my finger, most of the time,
-  - GPIO chip's pin#130: low input, interrupt unmasked
-  - IO-APIC's pin#7: IRR=0, interrupt unmasked (in fact mask/unmask_ioapic_irq
-    have never been called by the IRQ follow controller handle_fasteoi_irq)
-
-So the touchpad has been generating interrupts most of the time while
-IO-APIC controller hasn't been masking the interrupt from the GPIO chip.
-But somehow the kernel could only get ~7 interrupts each second while
-the touchpad could generate 140 interrupts (time resolution of 7.2ms)
-per second. Assuming IO-APIC (arch/x86/kernel/apic/io_apic.c) is fine,
-then there's something wrong with the GPIO interrupt controller which
-works fine for the touchpad under Windows. Besides if I poll the touchpad
-data based on pin#130's status, the touchpad could also work under
-Windows.
-
-Ways to debug pinctrl-amd
-=========================
-
-I can't find any documentation about the AMDI0030 GPIO chip except for
-the commit logs of drivers/pinctrl/pinctrl-amd. One commit
-ba714a9c1dea85e0bf2899d02dfeb9c70040427c ("pinctrl/amd: Use regular interrupt instead of chained")
-inspired me to bring back chained interrupt to see if "an interrupt storm"
-would happen. The only change I noticed is that the interrupts arrive in
-pairs. The time internal between two interrupts in a pair is ~0.0016s
-but the time internal between interrupt pairs is still ~0.12s (~8Hz).
-Unfortunately, I don't get any insight about the GPIO interrupt
-controller from this tweaking. I wonder if there are any other ways
-to debug drivers/pinctrl/pinctrl-amd?
-
-Thank you!
-
-
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1887190
-
---
-Best regards,
-Coiby
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 2f3dfb56c3fa..31724b80f133 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -355,6 +355,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct resource *res;
++	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_EINT_MTK))
+ 		return 0;
+@@ -369,19 +370,26 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "eint");
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "Unable to get eint resource\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_free_eint;
+ 	}
+ 
+ 	hw->eint->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(hw->eint->base))
+-		return PTR_ERR(hw->eint->base);
++	if (IS_ERR(hw->eint->base)) {
++		ret = PTR_ERR(hw->eint->base);
++		goto err_free_eint;
++	}
+ 
+ 	hw->eint->irq = irq_of_parse_and_map(np, 0);
+-	if (!hw->eint->irq)
+-		return -EINVAL;
++	if (!hw->eint->irq) {
++		ret = -EINVAL;
++		goto err_release_resource;
++	}
+ 
+-	if (!hw->soc->eint_hw)
+-		return -ENODEV;
++	if (!hw->soc->eint_hw) {
++		ret = -ENODEV;
++		goto err_release_resource;
++	}
+ 
+ 	hw->eint->dev = &pdev->dev;
+ 	hw->eint->hw = hw->soc->eint_hw;
+@@ -389,6 +397,13 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ 	hw->eint->gpio_xlate = &mtk_eint_xt;
+ 
+ 	return mtk_eint_do_init(hw->eint);
++
++err_release_resource:
++	devm_ioremap_release(&pdev->dev, res);
++err_free_eint:
++	devm_kfree(hw->dev, hw->eint);
++	hw->eint = NULL;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mtk_build_eint);
+ 
+-- 
+2.28.0
 
