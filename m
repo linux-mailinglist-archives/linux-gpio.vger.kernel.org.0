@@ -2,150 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBF2828092F
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 23:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CE652809D8
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 00:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgJAVIH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Oct 2020 17:08:07 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58508 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733038AbgJAVIG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 17:08:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 091L7tiQ047257;
-        Thu, 1 Oct 2020 16:07:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601586475;
-        bh=2oZBWNZqaZrC4yJS+AwFKzI95TqZ2hXyB25JHxfNJ0c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tRHUwCXhcpj8JHtOfpeqiGToyrg3VHbJP7dZ0lHQ8kFFkeNbxeqTbwTUrFuvK9k2p
-         FHzZFgL1MAUCZ+57ieWcosHIIk98LS/BbEu6V+3SXXcH/1O/PHe/h1to9Eqn3wrxze
-         tdPs0JeDTuq/e7e4OYMGaeKz/Pgbo/G7zxvoAq5M=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 091L7tBR024863
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 1 Oct 2020 16:07:55 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 1 Oct
- 2020 16:07:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 1 Oct 2020 16:07:55 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 091L7p1k078375;
-        Thu, 1 Oct 2020 16:07:52 -0500
-Subject: Re: [PATCH] gpio: pca953x: Use irqchip template
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Nikhil Devshatwar <nikhil.nd@ti.com>
-CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Adam Ford <aford173@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-References: <20200717144040.63253-1-linus.walleij@linaro.org>
- <20200930104729.ajufkrklfhf25d55@NiksLab>
- <CACRpkdaOAdcO4P-3MphdV7bq1-CfMr0KR96+iPvJrsEX1nZeNQ@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <2ced9bd9-9446-5060-18a4-d743238277fc@ti.com>
-Date:   Fri, 2 Oct 2020 00:07:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727124AbgJAWDc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Oct 2020 18:03:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6318 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbgJAWDc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Oct 2020 18:03:32 -0400
+IronPort-SDR: Sn4G1nCsZ/y4yVMfQojz9q8Fd6a7tMGRF9W+xCKwQcRCAWSPDMfbzXyb+kx4St7D5tP3pTMsA0
+ fIchi2Qo9qDw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="160258060"
+X-IronPort-AV: E=Sophos;i="5.77,325,1596524400"; 
+   d="scan'208";a="160258060"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 15:03:30 -0700
+IronPort-SDR: bcCUwYrl8ElboxUI1wLj/EJUmFRfQaTvB93mcbroL0vOh6E6/SFQdvXMqKftGEz34OlksP3rvK
+ l2LkXdJAv3Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,325,1596524400"; 
+   d="scan'208";a="351322980"
+Received: from lkp-server02.sh.intel.com (HELO de448af6ea1b) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Oct 2020 15:03:29 -0700
+Received: from kbuild by de448af6ea1b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kO6fg-0000lY-Vu; Thu, 01 Oct 2020 22:03:28 +0000
+Date:   Fri, 02 Oct 2020 06:03:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:fixes] BUILD SUCCESS
+ 8c1f1c34777bddb633d4a068a9c812d29974c6bd
+Message-ID: <5f765222.BGMSNokClcBQwBml%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaOAdcO4P-3MphdV7bq1-CfMr0KR96+iPvJrsEX1nZeNQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
+branch HEAD: 8c1f1c34777bddb633d4a068a9c812d29974c6bd  gpio: pca953x: Correctly initialize registers 6 and 7 for PCA957x
 
-On 30/09/2020 16:51, Linus Walleij wrote:
-> On Wed, Sep 30, 2020 at 12:47 PM Nikhil Devshatwar <nikhil.nd@ti.com> wrote:
-> 
->> I am getting a kernel crash on K3 j721e common processor board
->> when HDMI is plugged in. Following is the full log with crash
->> for NULL pointer derefence
->>
->> https://pastebin.ubuntu.com/p/wBPS2ymmqR/
->>
->> Upon inspection, I found that the "irq_find_mapping" call
->> in the "pca953x_irq_handler" returns 0 and the same is passed
->> to "handle_nested_irq"
-> 
-> This would typically happen if the driver using an IRQ
-> from the PCA953x does not properly request it.
-> 
-> Is this caused by this IRQ 504 from your /proc/interrupts:
-> 
-> 504:          0          0    4-0021  10 Edge      HPD
-> 
-> This seems to be requested directly by the HDMI bridge
-> and not by the TI display controller.
-> 
-> I look in the k3-am654-base-board.dts in the upstream
-> kernel and I find this:
-> 
-> &main_i2c0 {
->          pinctrl-names = "default";
->          pinctrl-0 = <&main_i2c0_pins_default>;
->          clock-frequency = <400000>;
-> 
->          pca9555: gpio@21 {
->                  compatible = "nxp,pca9555";
->                  reg = <0x21>;
->                  gpio-controller;
->                  #gpio-cells = <2>;
->          };
-> };
-> 
-> This is the GPIO controller used here, right?
-> 
-> I notice the following:
-> - There are no HDMI bridges using this GPIO controller in
->    the upstream kernel.
-> - The PCA9555 here lacks necessary attributes such as
->    parent IRQ (another GPIO) and the "interrupt-controller"
->    and "#interrupt-cells".
-> 
-> So this can not be the device tree you are using.
-> 
-> Can you point us to:
-> - The actual device tree you are booting from?
-> - The actual bridge that is requesting the HPD IRQ?
-> - The upstream code for this bridge?
+elapsed time: 725m
 
-We've just got another similar report, don't know the root cause, but it's not HDMI
+configs tested: 170
+configs skipped: 3
 
-There is one i see with this patch
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--       ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         shannon_defconfig
+arm                  colibri_pxa300_defconfig
+mips                          ath25_defconfig
+sh                        edosk7705_defconfig
+sh                          landisk_defconfig
+sh                             sh03_defconfig
+arm64                            alldefconfig
+powerpc                 mpc832x_mds_defconfig
+m68k                        mvme147_defconfig
+powerpc                 mpc8540_ads_defconfig
+powerpc                 linkstation_defconfig
+c6x                         dsk6455_defconfig
+powerpc64                        alldefconfig
+arm                          gemini_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                          malta_defconfig
+riscv                             allnoconfig
+arm                              alldefconfig
+mips                         tb0287_defconfig
+arm                       cns3420vb_defconfig
+arm                        realview_defconfig
+csky                                defconfig
+arm                         assabet_defconfig
+mips                       rbtx49xx_defconfig
+m68k                          hp300_defconfig
+arc                      axs103_smp_defconfig
+csky                             alldefconfig
+sh                            shmin_defconfig
+powerpc                        cell_defconfig
+c6x                        evmc6457_defconfig
+powerpc                     asp8347_defconfig
+arm                         mv78xx0_defconfig
+arm                           tegra_defconfig
+sh                           se7619_defconfig
+mips                        bcm63xx_defconfig
+nds32                            alldefconfig
+nios2                         10m50_defconfig
+powerpc                     rainier_defconfig
+xtensa                       common_defconfig
+sh                           sh2007_defconfig
+powerpc                  iss476-smp_defconfig
+mips                     cu1830-neo_defconfig
+arm                            mmp2_defconfig
+powerpc                    gamecube_defconfig
+mips                          ath79_defconfig
+arm                          simpad_defconfig
+mips                  cavium_octeon_defconfig
+arm                             mxs_defconfig
+mips                             allyesconfig
+microblaze                          defconfig
+arm                         bcm2835_defconfig
+powerpc                      mgcoge_defconfig
+powerpc                  storcenter_defconfig
+microblaze                      mmu_defconfig
+m68k                             allyesconfig
+s390                       zfcpdump_defconfig
+powerpc                       ppc64_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                     taishan_defconfig
+arm                           spitz_defconfig
+h8300                               defconfig
+sh                           se7750_defconfig
+m68k                            q40_defconfig
+arm                        multi_v5_defconfig
+arm                          lpd270_defconfig
+arm                        trizeps4_defconfig
+arm                           efm32_defconfig
+arm                   milbeaut_m10v_defconfig
+h8300                            alldefconfig
+arm                           viper_defconfig
+powerpc                      chrp32_defconfig
+arm                           stm32_defconfig
+x86_64                              defconfig
+mips                      loongson3_defconfig
+powerpc                      makalu_defconfig
+m68k                         apollo_defconfig
+sh                         apsh4a3a_defconfig
+sh                             shx3_defconfig
+m68k                          multi_defconfig
+arm                       imx_v6_v7_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                        bcm47xx_defconfig
+arm                             pxa_defconfig
+mips                           ip28_defconfig
+arm                         hackkit_defconfig
+sh                          rsk7269_defconfig
+sh                     magicpanelr2_defconfig
+arm                         axm55xx_defconfig
+m68k                        m5307c3_defconfig
+xtensa                  audio_kc705_defconfig
+mips                        jmr3927_defconfig
+powerpc                      katmai_defconfig
+powerpc                           allnoconfig
+nios2                               defconfig
+riscv                            alldefconfig
+arm                         palmz72_defconfig
+powerpc                     ksi8560_defconfig
+sh                        sh7785lcr_defconfig
+sh                          rsk7203_defconfig
+sh                   sh7724_generic_defconfig
+sh                             espt_defconfig
+arm                          iop32x_defconfig
+powerpc                 mpc837x_rdb_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+i386                 randconfig-a003-20200930
+i386                 randconfig-a002-20200930
+i386                 randconfig-a006-20200930
+i386                 randconfig-a005-20200930
+i386                 randconfig-a004-20200930
+i386                 randconfig-a001-20200930
+x86_64               randconfig-a015-20200930
+x86_64               randconfig-a013-20200930
+x86_64               randconfig-a012-20200930
+x86_64               randconfig-a016-20200930
+x86_64               randconfig-a014-20200930
+x86_64               randconfig-a011-20200930
+i386                 randconfig-a011-20200930
+i386                 randconfig-a015-20200930
+i386                 randconfig-a012-20200930
+i386                 randconfig-a014-20200930
+i386                 randconfig-a016-20200930
+i386                 randconfig-a013-20200930
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-[GS] before: GPIO chip fully initialized
+clang tested configs:
+x86_64               randconfig-a001-20200930
+x86_64               randconfig-a005-20200930
+x86_64               randconfig-a003-20200930
+x86_64               randconfig-a004-20200930
+x86_64               randconfig-a002-20200930
+x86_64               randconfig-a006-20200930
 
-+       ret = pca953x_irq_setup(chip, irq_base);
-
-[GS] after: IRQ chip related data initialized and Parent IRQ requested
-
-         if (ret)
-                 goto err_exit;
-  
--       ret = pca953x_irq_setup(chip, irq_base);
-+       ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
-
-[GS] after: But GPIO chip and IRQ chip are fully initialized only here, so any IRQ before devm_gpiochip_add_data may crash.
-
-         if (ret)
-                 goto err_exit;
-
-
--- 
-Best regards,
-grygorii
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
