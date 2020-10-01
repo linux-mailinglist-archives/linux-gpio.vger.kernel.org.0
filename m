@@ -2,83 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C56A27FED8
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 14:17:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC6CA280001
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Oct 2020 15:23:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbgJAMRT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Oct 2020 08:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
+        id S1732235AbgJANXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Oct 2020 09:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731846AbgJAMRS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 08:17:18 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F38C0613D0
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Oct 2020 05:17:18 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id z13so6336915iom.8
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Oct 2020 05:17:18 -0700 (PDT)
+        with ESMTP id S1732169AbgJANXP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Oct 2020 09:23:15 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558DCC0613D0
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Oct 2020 06:23:15 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d13so4028186pgl.6
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Oct 2020 06:23:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yp243D/EURq6WivlL9rgvK/d4JRG/kWVF8nhUycFXq4=;
-        b=cjSMcKSH6rmZnqpWf4VGKuT6CQd4WxoYuTYwCKMEm+qwmc+Yo3GetnyGQ6M/BF7W/G
-         BeL9WNiWvoprnIuJL4aLjSoerrf6WWgJekpPcQk98jEHiNNTHWGOf9ixW7gzLWZzfyUH
-         TeWb08HzCha20x6YFgIpDCv6/FLMY3LWrZ6HUwFptSK+VjLzRbpmt6MbT22WLS/Avi4s
-         RSjXNuP2yONmnshOXs5zcg7nRIMFGqKuGHKA1kQydztcGR8VrTraZTcZ0V9sM97BcNVY
-         /FNBFEDPjY6MlY13BLHwz5e6RqoSG6eWeNvee63N0W3RvfGC4cHVLPToa9fA+R1afYWv
-         ttvA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=QMvUWwpCbcRQWQ/67lZpDcdES3Tgoo1hAu0TKVA+3CU=;
+        b=JcvmfdFU26r00kIq3l8tb+NbqO9R1ZBiVqfDQRV1DUXwOUnLXISFCCwGwYekcaYFeE
+         Ampei1bHnEoGp4ESwceDSp9hUzwT1OyGtecn39CfrSvHxteavnq0GVhxh9VWmR47txY9
+         AGlGrtTf287uB1Zk+8MbmO+CHko+d3AzEKz3I7OjkVC6M1qRoCqfBoA5YE0JdptBes5a
+         GXljDHpPLJc4gQlW1NC+jO1Z/M+Yp3EkjOWOtGhsUWvqT/pQdjZ7ThEE5UTh6tpBec8X
+         5NmV/9FBdwOnko5QEpsm3xUXscYQsXHlSgT0Yrm2qD4nV25XqftScXxJ43xZcrrFHHm0
+         fE6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yp243D/EURq6WivlL9rgvK/d4JRG/kWVF8nhUycFXq4=;
-        b=sXKPScBMA5UT3yM912/kkjtK1cJ26x52uwUMqQ4hLMI0xFB2ldZ0Wc8wuIxbNPAkQQ
-         WbF7tMSzl22Wdhk2CuN+Jle9sbU/tMiSn2+zn3fO50cJws5wX994Z5Caz0q3LtzKbGe9
-         cep6bi13cVmEb/ygXWjcKx+MwuxJdf12dtajkAlU+lnU6Ql6sbHc2V1I+jpFUY92H1T8
-         8y80ufhHwrBnoTekdnrJ9O2tu/V+R/3jYy8sBKZYK6wrhIOlXmWcO4XMw4xgrqvs99d6
-         eoksvyCtatEC8/xCKffH89QskJeeL2Bamc4DrtfANwmdnjchyzLk5Ely/ZfcoqUNXsh6
-         8HWQ==
-X-Gm-Message-State: AOAM533tyJgoo0AttIEry/z32/kmPCfHbZOrPZLCgmMc6Dl2/vCqAZKq
-        DSRyQ3qmAuY9bZf6CmKR0NcJ2X1fx89Td2HcGiETUTByL8gUwA==
-X-Google-Smtp-Source: ABdhPJzAUV/8Bd1dsdH3gppq8UItaRhr9Ct53LZw87iH8Znc5YSYWduU2bgUEYn4qR2qSPeCATth9yAmIRUzvBKhMfQ=
-X-Received: by 2002:a5d:8352:: with SMTP id q18mr5243169ior.31.1601554637391;
- Thu, 01 Oct 2020 05:17:17 -0700 (PDT)
-MIME-Version: 1.0
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 1 Oct 2020 14:17:06 +0200
-Message-ID: <CAMRc=MdCj8ZohsKiJjqynXPeg81q8_WZvb5VxoPGUDusFUY7Kw@mail.gmail.com>
-Subject: [ANNOUNCE] libgpiod v1.6 released
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=QMvUWwpCbcRQWQ/67lZpDcdES3Tgoo1hAu0TKVA+3CU=;
+        b=fZjGLEbDuHihhzCOv8gjg0fjqsbC3MrA3Bdpw4f+YjoTIgiLJT5rGgOFUfcS1+3UMh
+         Ek7zXIV9eq45oG4jCjZ6Vpq00rXGQYTD2eVYkCHXhFX/w60LUtqUrTjx0InlINvU3kOO
+         aUgxAWKQuEq/eYr2CYZFnbHzhDmsPlchnysgVMPtNQRuOeKHECeaYiwRRLC8ZZ617ZCB
+         dN/NZazKFIgiwgyPFs+reaRmLwrYHdL7Mpbt3zUqPc4dV0SNA/zBdIePNh3QVc3StJAn
+         rI/nxS+Pk6nzf5Yqu1I/wkLbX84aErzMzgHlfHEz4xw+gDB4aOOflvLPjpERXpTTIo2i
+         4v3g==
+X-Gm-Message-State: AOAM533HYMUkoxw/+hwrmJrVDnZn1bUM1LbeGE+XYAu5pdHZr/0DRyv6
+        iBERtuG34YPvH3i6d/4sARYE4yhDO0S0dQ==
+X-Google-Smtp-Source: ABdhPJyErk+l+mmIOPOASjYGAmYk5IF/PxLoEMqf52PS+fba8x+lCgnMI1Ygz6OXRdGG20eh8oDwtQ==
+X-Received: by 2002:a62:7f0e:0:b029:152:197b:e2bd with SMTP id a14-20020a627f0e0000b0290152197be2bdmr1175738pfd.7.1601558594102;
+        Thu, 01 Oct 2020 06:23:14 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id y4sm6824494pfr.46.2020.10.01.06.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 06:23:12 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Thu, 1 Oct 2020 21:22:58 +0800
+To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Drew Fustini <drew@pdp7.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Any other ways to debug GPIO interrupt controller (pinctrl-amd) for
+ broken touchpads of a new laptop model?
+Message-ID: <20201001132258.6yzosj2w7k4eod42@Rk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I'm announcing the release of libgpiod v1.6. This is the last release
-in the v1.x series. New, improved version of the GPIO uAPI is now in
-linux-next queued for v5.10. It introduces many new features which we
-won't be able to support with the current library API (and we also
-have several reworks defined in TODO that'll also require breaking
-compatibility) so my plans going forward are as follows:
+Hi,
 
-1. Switch the major version of libgpiod API to 2 and start working on
-the new API (preferably starting out by simply porting the current
-library to v2 uAPI).
-2. Indefinitely support v1.6.x branch with bug fixes.
-3. Consider v1.4.x as an LTS supported for as long as yocto uses v5.4
-kernel as their LTS (this is because v1.4 is the last version to not
-require v5.5 kernel headers to build).
-4. (maybe) Create a compatibility layer between v1.x and v2.x once
-v2.0 is out that will ease the switch to the new release.
+I'm trying to fix broken touchpads [1] for a new laptop model Legion-5
+15ARH05 which is shipped with two different touchpads, i.e., ElAN and
+Synaptics. For the ELAN touchpad, the kernel receives no interrupts to
+be informed of new data from the touchpad. For the Synaptics touchpad,
+only 7 interrupts are received per second which makes the touchpad
+completely unusable. Based on current observations, pinctrl-amd seems to
+be the most suspicious cause.
 
-There are no big new features in this release, mostly improvements and
-bug-fixes. The details are in NEWS.
 
-Grab tarballs from:
-    https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+Why do I think pinctrl-amd smells the most suspicious?
+======================================================
 
-Grab source from:
-    git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+This laptop model has the following hardware configurations specified
+via ACPI,
+  - The touchpad's data interrupt line is connected to pin#130 of a GPIO
+    chip
+
+         GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                         "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+                         )
+                         {   // Pin list
+                             0x0082
+                         }
+
+  - This GPIO chip (HID: AMDI0030) which is assigned with IRQ#7 has its
+    common interrupt output line connected to one IO-APIC's pin#7
+
+         Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+         {
+             0x00000007,
+         }
+
+I add some code to kernel to poll the status of the GPIO chip's pin#130
+and IO-APIc's pin#7 every 1ms when I move my finger on the surface of
+the Synaptics touchpad continuously for about 1s. During the process of I
+move my finger, most of the time,
+  - GPIO chip's pin#130: low input, interrupt unmasked
+  - IO-APIC's pin#7: IRR=0, interrupt unmasked (in fact mask/unmask_ioapic_irq
+    have never been called by the IRQ follow controller handle_fasteoi_irq)
+
+So the touchpad has been generating interrupts most of the time while
+IO-APIC controller hasn't been masking the interrupt from the GPIO chip.
+But somehow the kernel could only get ~7 interrupts each second while
+the touchpad could generate 140 interrupts (time resolution of 7.2ms)
+per second. Assuming IO-APIC (arch/x86/kernel/apic/io_apic.c) is fine,
+then there's something wrong with the GPIO interrupt controller which
+works fine for the touchpad under Windows. Besides if I poll the touchpad
+data based on pin#130's status, the touchpad could also work under
+Windows.
+
+Ways to debug pinctrl-amd
+=========================
+
+I can't find any documentation about the AMDI0030 GPIO chip except for
+the commit logs of drivers/pinctrl/pinctrl-amd. One commit
+ba714a9c1dea85e0bf2899d02dfeb9c70040427c ("pinctrl/amd: Use regular interrupt instead of chained")
+inspired me to bring back chained interrupt to see if "an interrupt storm"
+would happen. The only change I noticed is that the interrupts arrive in
+pairs. The time internal between two interrupts in a pair is ~0.0016s
+but the time internal between interrupt pairs is still ~0.12s (~8Hz).
+Unfortunately, I don't get any insight about the GPIO interrupt
+controller from this tweaking. I wonder if there are any other ways
+to debug drivers/pinctrl/pinctrl-amd?
+
+Thank you!
+
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1887190
+
+--
+Best regards,
+Coiby
+
