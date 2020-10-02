@@ -2,169 +2,219 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F44A280FE9
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 11:32:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90969281000
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 11:40:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgJBJcJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Oct 2020 05:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgJBJcJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 05:32:09 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FA2C0613D0
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Oct 2020 02:32:08 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id q8so1052114lfb.6
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 02:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=cHvxUpBX/Ex7gaAWP6DAAZok4HqUt/n+52o4OhqQm34=;
-        b=dqhNZrsyoGQXeJcvKSrKaAmifPO60OKvjK3mWaZwK8ieVzST+7oiPWCS46NFLzoOP4
-         kvP7IUMOwrPAVhvHjOiIo53CWGsn3kk+D5/o2xV3BXML53OTQxLeX39jIRX0MOAlbhg1
-         wyC6RFt/w/hVf5qHOzLfR/q2l3QGDlldh3Z714JM+XQUgcX537u4v2l0dOmPoKtTtQ7v
-         IxGC0hKvBjCJV7z3lx2u5LC3h8ckWLcCOTGQ2gmsqyrW+WuwyMOkyHpBSqCwWAcphDM1
-         c9tzQDLyqew3MHiRxidpXL9H09E91wvfFw3Bd55v1gYUZC/+Ao4+Uf/cm3LtrDkYMQhu
-         bboQ==
+        id S1726029AbgJBJkU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Oct 2020 05:40:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53698 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725993AbgJBJkU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 05:40:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601631617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/dMiVsDER1zFmyVOBhbycyPqnOlZvAcxdZDo0uKI5lw=;
+        b=CaDO0xfDdlrzJpLz3wO1Vw5QtiNFjhG+dt2Ud9Fqo12glWWtH9cKjgjbRs8wwNULFaMsJ5
+        gRdtI2aJoTU/9C9mb4vL6Yl66sNyqGamQpy8acczzJt3lBiayuFPqeFEzxVAVDJKDrAkV6
+        0srQ0ChfpSkyNVHD/+8nQbnr1ciJrQM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-YSKTaA3pNNCAKE4zb5tWfg-1; Fri, 02 Oct 2020 05:40:16 -0400
+X-MC-Unique: YSKTaA3pNNCAKE4zb5tWfg-1
+Received: by mail-ed1-f71.google.com with SMTP id c3so398506eds.6
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 02:40:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=cHvxUpBX/Ex7gaAWP6DAAZok4HqUt/n+52o4OhqQm34=;
-        b=nG7BWNOeQdlzWz0w6ieQBWTif3Uu7lMOIZPtz3vSyyiZ3e7vdi/A34JNDkaVK2OpH+
-         Xq0g0ID8swR5gEArg+3GQEPIXiIhvDQ/3y1rnwjcylrhAnPjM6wc5aPL90nX0vG/0bKk
-         346RLn9dgUqzmqd66j+38FUuaUSleJ/Cdwigp99EyHhncOpdERm5vf6WbBB7cl87eKZB
-         VCDQ/RK5sfAtEh7kSOVsaAMvfdBWI6YaIjwFYMPDhLJ+a7wOakzYmDOoqBO59B2/ea43
-         YvhKdjyzcbLD0OBkD+slC6oGx2fYDr/Kl0SppzqRQKJwYg/C+fUOoFffA1uTHJrRJ0+V
-         NdPQ==
-X-Gm-Message-State: AOAM530AjectixO8ti0nxnXN0Do/n8JXGPDVoe1ibZtg5Q0YRF9+SCfs
-        UU4Csl+VJ6DL9fYhL4GpF8RKXZgW/KYvhsBJYTYexQ==
-X-Google-Smtp-Source: ABdhPJxyDNjru0fi8Ui0H16Zchkrjal9WGvcn+nOms6PSaZuEFh66mvkAhvRO0WJb9oc8j3+zZ1FVuvok5A5Y3nzMgM=
-X-Received: by 2002:a19:1c8:: with SMTP id 191mr510225lfb.585.1601631126486;
- Fri, 02 Oct 2020 02:32:06 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 2 Oct 2020 11:31:55 +0200
-Message-ID: <CACRpkdbpo65JS6fQjrnb21RSiSG6wbGGYs0R60_vPaa=6WVbag@mail.gmail.com>
-Subject: [GIT PULL] late GPIO fixes for v5.9
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/dMiVsDER1zFmyVOBhbycyPqnOlZvAcxdZDo0uKI5lw=;
+        b=HPXNV83qyK4cYesz8mtcWtZK9TEsj4AzfjIVqTyDfLHIQRvbavmEltBOZJ1JPo5qbc
+         y1eXxQHfaVWN3eQKq6k+kwOp6FVdGdA8Ffq0xiejgnPHR7CiosT/UjQ9c4rlVBeTWWWW
+         pmY9s6z5ttviLW8vsICXIGu/hURkduB+1rssBp+CR3yVyRTYLq8BhIqMQktGm7ojVGyD
+         j9l6joaEI8b2zyau4/X4gJyORDLNeK1wtwqUUsZqtZaHsEPP3sxET6WPAwnfivZ1yJKy
+         Rvbpw9tjwMRcWrrFVGVbnJcITsFvgad6zT2JWDIW8S3qpbDlE3FSf2aVFmyEvWp2J7iH
+         39eg==
+X-Gm-Message-State: AOAM531xLmBGRhq7OePef3ZLAZ/ijMUP6bmKFnHf2AyRhtTvQL7hg6I/
+        gAeb51/x4CckD4JE/N6AJHH4iXJeNYQCzlZp/QrLX81Xf6wXdc+G4U9cp6t5KY7m3DaK4Z3gI+j
+        f/HZRBjoajmGCcDMtonJMhA==
+X-Received: by 2002:aa7:dcd9:: with SMTP id w25mr1323966edu.280.1601631614790;
+        Fri, 02 Oct 2020 02:40:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyV1FgWnKSmtTYuizsKzR/37y37MuO4Jw9gPZJDBdVBKlbKJSjhJe46W1GSO05onZNKRe+A0Q==
+X-Received: by 2002:aa7:dcd9:: with SMTP id w25mr1323955edu.280.1601631614504;
+        Fri, 02 Oct 2020 02:40:14 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id s7sm767263edu.71.2020.10.02.02.40.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Oct 2020 02:40:13 -0700 (PDT)
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Coiby Xu <coiby.xu@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20201001132258.6yzosj2w7k4eod42@Rk>
+ <CACRpkdYvaC_DUJW+nvmofhhHieDYAiREBog6rn5iS=J4moAtZg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3ded544f-be1b-8dc4-16b7-42172b1e1b08@redhat.com>
+Date:   Fri, 2 Oct 2020 11:40:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdYvaC_DUJW+nvmofhhHieDYAiREBog6rn5iS=J4moAtZg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-here is a batch of GPIO fixes for the v5.9 series.
+On 10/1/20 10:57 PM, Linus Walleij wrote:
+> Sorry for top posting, but I want to page some people.
+> 
+> I do not know anything about ACPI, but Hans de Goede is really
+> good with this kind of things and could possibly provide some
+> insight.
 
-I'm not entirely happy with myself over this, it is too much
-and too late. New bugs kept popping up, in hindsight I
-should have sent smaller installments, earlier of course.
+Thanks, although I'm honored to be considered the go to person
+for these kinda things my specialty really lies with these
+kinda issues with intel Bay Trail and Cherry Trail SoCs
+never the less let me take a look.
 
-I blame stuff like stress and weltschmertz and trying to
-grok KASan and a few more things on my plate.
+> On Thu, Oct 1, 2020 at 3:23 PM Coiby Xu <coiby.xu@gmail.com> wrote:
+>>
+>> Hi,
+>>
+>> I'm trying to fix broken touchpads [1] for a new laptop model Legion-5
+>> 15ARH05 which is shipped with two different touchpads, i.e., ElAN and
+>> Synaptics. For the ELAN touchpad, the kernel receives no interrupts to
+>> be informed of new data from the touchpad. For the Synaptics touchpad,
+>> only 7 interrupts are received per second which makes the touchpad
+>> completely unusable. Based on current observations, pinctrl-amd seems to
+>> be the most suspicious cause.
+>>
+>>
+>> Why do I think pinctrl-amd smells the most suspicious?
+>> ======================================================
+>>
+>> This laptop model has the following hardware configurations specified
+>> via ACPI,
+>>    - The touchpad's data interrupt line is connected to pin#130 of a GPIO
+>>      chip
+>>
+>>           GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+>>                           "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+>>                           )
+>>                           {   // Pin list
+>>                               0x0082
+>>                           }
+>>
+>>    - This GPIO chip (HID: AMDI0030) which is assigned with IRQ#7 has its
+>>      common interrupt output line connected to one IO-APIC's pin#7
+>>
+>>           Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+>>           {
+>>               0x00000007,
+>>           }
 
-Please pull it in.
+So these both look fine.
 
-Yours,
-Linus Walleij
+>> I add some code to kernel to poll the status of the GPIO chip's pin#130
+>> and IO-APIc's pin#7 every 1ms when I move my finger on the surface of
+>> the Synaptics touchpad continuously for about 1s. During the process of I
+>> move my finger, most of the time,
+>>    - GPIO chip's pin#130: low input, interrupt unmasked
+>>    - IO-APIC's pin#7: IRR=0, interrupt unmasked (in fact mask/unmask_ioapic_irq
+>>      have never been called by the IRQ follow controller handle_fasteoi_irq)
+>>
+>> So the touchpad has been generating interrupts most of the time while
+>> IO-APIC controller hasn't been masking the interrupt from the GPIO chip.
+>> But somehow the kernel could only get ~7 interrupts each second
 
+So are you seeing these 7 interrupts / second for the touchpad irq or for
+the GPIO controllers parent irq ?
 
-The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
+Also to these 7 interrupts/sec stop happening when you do not touch the
+touchpad ?
 
-  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+To me this sounds like the interrupt is configured as being triggered on
+a negative edge so that it only fires once when the line from the touchpad
+goes low, and for some reason 7 times a second the touchpad controller
+briefly releases the line (sorta gives up to signal the irq and then
+tries again?).
 
-are available in the Git repository at:
+>> while
+>> the touchpad could generate 140 interrupts (time resolution of 7.2ms)
+>> per second. Assuming IO-APIC (arch/x86/kernel/apic/io_apic.c) is fine,
+>> then there's something wrong with the GPIO interrupt controller which
+>> works fine for the touchpad under Windows. Besides if I poll the touchpad
+>> data based on pin#130's status, the touchpad could also work under
+>> Windows.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.9-2
+I agree that this sounds like a problem with the GpioInt handling.
 
-for you to fetch changes up to 8c1f1c34777bddb633d4a068a9c812d29974c6bd:
+>> Ways to debug pinctrl-amd
+>> =========================
+>>
+>> I can't find any documentation about the AMDI0030 GPIO chip except for
+>> the commit logs of drivers/pinctrl/pinctrl-amd. One commit
+>> ba714a9c1dea85e0bf2899d02dfeb9c70040427c ("pinctrl/amd: Use regular interrupt instead of chained")
+>> inspired me to bring back chained interrupt to see if "an interrupt storm"
+>> would happen. The only change I noticed is that the interrupts arrive in
+>> pairs. The time internal between two interrupts in a pair is ~0.0016s
+>> but the time internal between interrupt pairs is still ~0.12s (~8Hz).
+>> Unfortunately, I don't get any insight about the GPIO interrupt
+>> controller from this tweaking. I wonder if there are any other ways
+>> to debug drivers/pinctrl/pinctrl-amd?
 
-  gpio: pca953x: Correctly initialize registers 6 and 7 for PCA957x
-(2020-10-01 10:00:18 +0200)
+The way I would try to debug this (with access to the hardware) is
+to try an verify the interrupt trigger (level vs edge) settings inside
+pinctrl/amd by adding a bunch of printks printing them whenever the
+relevant register bits are touched.
 
-----------------------------------------------------------------
-Some late GPIO fixes for the v5.9 series:
+So I'm going to guess here that these touchpads use i2c-hid, so I
+took a quick peak at the i2c-hid irq request code from
+drivers/hid/i2c-hid/i2c-hid-core.c:
 
-- Fix compiler warnings on the OMAP when PM is disabled
+         unsigned long irqflags = 0;
+         int ret;
 
-- Clear the interrupt when setting edge sensitivity on the
-  Spreadtrum driver.
+         dev_dbg(&client->dev, "Requesting IRQ: %d\n", client->irq);
 
-- Fix up spurious interrupts on the TC35894.
+         if (!irq_get_trigger_type(client->irq))
+                 irqflags = IRQF_TRIGGER_LOW;
 
-- Support threaded interrupts on the Siox controller.
+         ret = request_threaded_irq(client->irq, NULL, i2c_hid_irq,
+                                    irqflags | IRQF_ONESHOT, client->name, ihid);
 
-- Fix resource leaks on the mockup driver.
+So this tries to preserve the pre-configured irq-type on the irq
+line and if no irq-type is set then it overrides the trigger-type
+to IRQF_TRIGGER_LOW, which means level-low.
 
-- Fix line event handling in syscall compatible mode
-  for the character device.
+One quick hack you can try is ommenting out the "if (!irq_get_trigger_type(client->irq))"
+type, I guess maybe the pinctrl-amd code is defaulting all IRQs to some
+edge trigger type? This should override it and recontrol it to
+a level trigger type.
 
-- Fix an unitialized variable in the PCA953A driver.
+###
 
-- Fix access to all GPIO IRQs on the Aspeed AST2600.
+As you said hopefully the IOApic code is fine. Notice that the ioapic
+irqchip driver does not allow configuring the trigger type. I guess
+this is not part of the ioapic spec and that the BIOS/firmware is setting
+the triggerlevel in a io-apic implementation specific way, so we better hope
+it is right. I have had the unfortunate experience to try and debug a wrong
+io-apic irq-pin trigger-type issue with TPMs in some Lenovo thinkpads and
+in the end only the Lenovo BIOS team could fix this.
 
-- Fix line direction on the AMD FCH driver.
+Regards,
 
-- Use the bitmap API instead of compiler intrinsics for
-  bit manipulation in the PCA953x driver.
+Hans
 
-----------------------------------------------------------------
-Ahmad Fatoum (1):
-      gpio: siox: explicitly support only threaded irqs
-
-Andy Shevchenko (3):
-      gpiolib: Fix line event handling in syscall compatible mode
-      gpio: pca953x: Use bitmap API over implicit GCC extension
-      gpio: pca953x: Correctly initialize registers 6 and 7 for PCA957x
-
-Bartosz Golaszewski (1):
-      gpio: mockup: fix resource leak in error path
-
-Ed Wildgoose (1):
-      gpio: amd-fch: correct logic of GPIO_LINE_DIRECTION
-
-Jeremy Kerr (2):
-      gpio/aspeed-sgpio: enable access to all 80 input & output sgpios
-      gpio/aspeed-sgpio: don't enable all interrupts by default
-
-Linus Walleij (4):
-      Merge tag 'gpio-fixes-for-v5.9-rc4' of
-git://git.kernel.org/.../brgl/linux into fixes
-      Merge tag 'gpio-fixes-for-v5.9-rc6' of
-git://git.kernel.org/.../brgl/linux into fixes
-      Merge tag 'gpio-fixes-for-v5.9-rc7' of
-git://git.kernel.org/.../brgl/linux into fixes
-      Merge tag 'gpio-fixes-for-v5.9' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Taiping Lai (1):
-      gpio: sprd: Clear interrupt when setting the type as edge
-
-Tao Ren (1):
-      gpio: aspeed: fix ast2600 bank properties
-
-Tony Lindgren (1):
-      gpio: omap: Fix warnings if PM is disabled
-
-Ye Li (1):
-      gpio: pca953x: Fix uninitialized pending variable
-
-dillon min (1):
-      gpio: tc35894: fix up tc35894 interrupt configuration
-
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      |   5 +-
- drivers/gpio/gpio-amd-fch.c                        |   2 +-
- drivers/gpio/gpio-aspeed-sgpio.c                   | 134 +++++++++++++--------
- drivers/gpio/gpio-aspeed.c                         |   4 +-
- drivers/gpio/gpio-mockup.c                         |   2 +
- drivers/gpio/gpio-omap.c                           |   4 +-
- drivers/gpio/gpio-pca953x.c                        |   7 +-
- drivers/gpio/gpio-siox.c                           |   1 +
- drivers/gpio/gpio-sprd.c                           |   3 +
- drivers/gpio/gpio-tc3589x.c                        |   2 +-
- drivers/gpio/gpiolib-cdev.c                        |  34 +++++-
- 11 files changed, 138 insertions(+), 60 deletions(-)
