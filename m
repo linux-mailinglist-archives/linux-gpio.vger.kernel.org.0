@@ -2,84 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5D528155A
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 16:36:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B740E2815A5
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 16:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387974AbgJBOgn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Oct 2020 10:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
+        id S2387984AbgJBOsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Oct 2020 10:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgJBOgn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 10:36:43 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7511CC0613D0
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Oct 2020 07:36:41 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id l8so1742315ioh.11
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 07:36:41 -0700 (PDT)
+        with ESMTP id S2387919AbgJBOsy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 10:48:54 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7CEC0613D0
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Oct 2020 07:48:54 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id 144so1392894pfb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 07:48:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SUEPbM4pAxhqtYTAEUI1i9+ljmdEQNehnq4bj+PDTD8=;
-        b=uT/XxNHqWYw3H085ixRG/sfR0zc/Y/EY2Mopw+7r1QTq3eW3JHpvh6mZrsc2xAer1y
-         1pLDW7E2p+bAl2zTHXnHcVQrbbkLSB0oMuuCTTWNui9kL+t0zzEGA5kdm4YcZ5hIinNI
-         +QnJzpRjrZv19vV4o+ZkK+YT+iv2ZIFvqP3dTSZyNTPQ4psqtX1AE9O44sakdwK04ZNM
-         Klz8og/IxUpRScBm6oOCmlW5zxoJB7xIzWKOfpjmCejChIfxcHRgFbcNfR5Jus2dbHQT
-         NcO4DKBF5pBc5h413h0fGSHtnaGBovgHqztgRbrSrg5uNloQMxDEjHL0uK1bWKqTahW7
-         /05g==
+        bh=7ZsFy7t5Yg86WgWsW1D9/ljDa+7QOV/XOpbNOneDDlI=;
+        b=dLqMc0LI6BsdaJTITzS7vNJGAhVt0PuMb3G7PqoT/5x9y0MSPZhDmB3Brtm8WJeVxC
+         D6fo0MLMOQBqWCvxPvkZTvkPxYoo4NcEdtfTwZoAUMdW3/pqkljPb2SKmZd3NsXwQmMC
+         7FCcqFsS8NbShFQ/keF5uDJ+QBzmCP8kl801Ixho9sWINbOvjRCcia7yyblN8efbttaw
+         AwoKDGQD+OB8CU8tflTx9fbBjvuus53fvgLMAOiur0+tvbAbWq2aQlVVUj48FWiSQNgH
+         cjKyvPHYW7Dg60352nNxqBm8RK2SqK8LcNVWkrZ0sAHKygTZDfWa+EliTZRSp7mRk8u5
+         gQkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SUEPbM4pAxhqtYTAEUI1i9+ljmdEQNehnq4bj+PDTD8=;
-        b=OM9TihKYpX4xn2KCzpEGdeePPM6wpLDLcsfRlArdQ7SjHESDpXvB+NPupx7CBxQYeD
-         G8C28RbJ4QeuqKxrTMLYd1rRCCpvGSqdN+G+MWsvigJLITsXCGye3afrMwWy+BVUVBLU
-         MopUKtq6wC3XqDE2WyZtCENFUQe0BjT1hmkEpgF6EfdEviQSyets1XsywiPvLCB8t2nM
-         oiJigUh9i6cb7jrERy3kpYGc9wIobDjUzbYP4v8nek4U6b6qiu64PaTIFxVRMLBkG7OT
-         5aVPpdiCJwy7a40Eh423NNEADxNmG3o98xPWkrmq6Kb/ATjA1kecUrfZu8VLkCTyClST
-         5CMQ==
-X-Gm-Message-State: AOAM533hgu7w26Fv0mLdw7bauvSGcu4h1pxQtgoxw8F7y2DIYVmefTmW
-        3sUDP31tpnzn1EKYNX9IE0hOa458/8EMygWttkGA9Q==
-X-Google-Smtp-Source: ABdhPJxDScp9IlZ44e9VfnSLJAn7MiyweM+/jBtiEZxwMmDfWeO70E82Tx+nQDJZhpMh3ODPBU8WR10t0HPK3wRyG3k=
-X-Received: by 2002:a02:6952:: with SMTP id e79mr2544510jac.24.1601649400845;
- Fri, 02 Oct 2020 07:36:40 -0700 (PDT)
+        bh=7ZsFy7t5Yg86WgWsW1D9/ljDa+7QOV/XOpbNOneDDlI=;
+        b=EazzRaQaOyvY2j8/rVqfx1T1dud3mDVrnA+DgmZXZUeYbqeCF+jLzuMrCrRm5Db6CK
+         cSilq3R5vN4frEtSBsoPwtYPpDGe9sR0cFwKIxe1NKQIvMVf550mZ7nhfWQOm8OivO/V
+         xxnLT6K6Vh813e4fCFkZSBGLjmtOzunSbPq5KP8fOXcVIiAugunkl4jWHQbj6tTDp3ff
+         yxNN0o4vYzDakpqIsHWKOYbWiIyBv/j8sCM29er/Kmy0vMacDBlN6JHi3s2YPoTy7GqZ
+         Wy1yr9LKVyKbsd0IpaO7npobgobFKbSbXGQvCy/SX/L8BfIMBjQAe61fHJrVUl9Evm/1
+         2jqg==
+X-Gm-Message-State: AOAM533y2fB5XN3pQxTIekbzkL4Mng/X2ypAYewuJHDxq5/hKLZTKJA3
+        M8tiphhyx7pEaXNG/iQX3UG2FjfPPieItJuJVcs=
+X-Google-Smtp-Source: ABdhPJzPYR5BMc7kXdPTzDXY/1SpY2sDpG1lpMx0FfyX6Yu7UPKFTUSQhUBTAvc1+9bw4snx+MBeU0KRmNmo85BAY68=
+X-Received: by 2002:a63:4c1d:: with SMTP id z29mr2571399pga.203.1601650132477;
+ Fri, 02 Oct 2020 07:48:52 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAMRc=MdCj8ZohsKiJjqynXPeg81q8_WZvb5VxoPGUDusFUY7Kw@mail.gmail.com>
- <CAMuHMdWysc7u7px6n6CJ9q1Pht5QRAL0UvDgoH=A4SGUNj9zgg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWysc7u7px6n6CJ9q1Pht5QRAL0UvDgoH=A4SGUNj9zgg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 2 Oct 2020 16:36:30 +0200
-Message-ID: <CAMRc=Mf2P7YjFFFmSgrc54H91v9TMrOzPCt1tUUcEpWn3DaKtg@mail.gmail.com>
+ <CAHp75Vfy8un3APcYqWyO9b8aFMAyKVSkAbn=6kxpbSthgq4jxA@mail.gmail.com> <CAMRc=MfP9EBqUCvcKUmwF4Zd+yFO-yfC6718ZXeM1PbtEqYWNQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MfP9EBqUCvcKUmwF4Zd+yFO-yfC6718ZXeM1PbtEqYWNQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 2 Oct 2020 17:48:33 +0300
+Message-ID: <CAHp75VdCfLrTcM5BeEgxyoRR5ptYDqQQQthrUmNoc7Fy9SwTXA@mail.gmail.com>
 Subject: Re: [ANNOUNCE] libgpiod v1.6 released
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>,
         Drew Fustini <drew@pdp7.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 2, 2020 at 11:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Fri, Oct 2, 2020 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Thu, Oct 1, 2020 at 4:56 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+
+> > > 1. Switch the major version of libgpiod API to 2 and start working on
+> > > the new API (preferably starting out by simply porting the current
+> > > library to v2 uAPI).
+> > > 2. Indefinitely support v1.6.x branch with bug fixes.
+> > > 3. Consider v1.4.x as an LTS supported for as long as yocto uses v5.4
+> > > kernel as their LTS (this is because v1.4 is the last version to not
+> > > require v5.5 kernel headers to build).
+> > > 4. (maybe) Create a compatibility layer between v1.x and v2.x once
+> > > v2.0 is out that will ease the switch to the new release.
+> >
+> > I'm wondering if you are planning to develop v2.x with possibility to
+> > coexist with v1 on the same machine (like gtk2 / gtk3 and other
+> > examples).
+> >
 >
-
-[snip]
-
+> Personally I would prefer to avoid doing this. This isn't a very big
+> library so unlike gstreamer or gtk I think it won't take much to
+> switch to v2.0. If anything - I prefer a compatibility layer included
+> in the package where - if an option is passed to configure - the old
+> header would be installed alongside the v2.0 .so file + another .so
+> for translating the calls.
 >
-> > Grab source from:
-> >     git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
->
-> Note that the first Google hit for "libgpiod v1.6" is your github mirror, which
-> has the latest code, but not the latest tags?
->
+> If you see a very good reason to make them both live together - let me know.
 
-Ugh github has better SEO than kernel.org. Yeah I don't push tags
-there - I'm using this repo for backup mostly and for my development
-branches. I think I'll just make it private - or maybe make this one
-read-only and then create a new private one for my dev stuff.
+Aspects that come to my mind, that needs to be taken into account are
+the following:
+ - would ABI be kept on a library level (will binary built against v1
+be capable to run on v2)?
+ - would API be kept compatible (seems so according to Kent's patch)?
 
-Thanks for the heads up.
+Main point that users that have compiled something for older kernel to
+work should be able to run this on newer distribution environments
+(like one, that would have only v2 of the library).
 
-Bartosz
+-- 
+With Best Regards,
+Andy Shevchenko
