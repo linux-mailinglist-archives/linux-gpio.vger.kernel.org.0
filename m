@@ -2,154 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B315628176F
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 18:06:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C23CE2817D1
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 18:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgJBQGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Oct 2020 12:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733260AbgJBQGo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 12:06:44 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD7CFC0613D0
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Oct 2020 09:06:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q4so1118404pjh.5
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 09:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=32RFD9pEyzL4DqsKBqZOezitkmLyCLEOvgj6CQTt99s=;
-        b=i/6LXD9ZBcHE5Ia7IOIJdnmkB0xTC/mRBQV4XYlc/Xy6X1QKtmPdO/e5tHEEMiYeTl
-         ldZTVweYXvWaqPhJz6fy2VaWPbenS2Z/KPGDsH5pOdF/lwixXsnXAz4XQ1+WzsYbRa29
-         uuL6SeJrsIHQxjd0sulLlZvGsjN/8kRz8960sw+xFUPXZadb9W8Kk6PcJZ7R1cCEDXtW
-         Kd4974O3arYTOfXjZNCG+o0u1zM3uS+AM9bee8O82m8LkmidQnPajqdEhSfXKW9RKpkA
-         rZJaNI8NrocAbIQo7TPnremC8b1ZsqoWz3+lcFkfTNnoYw/Frrp95OYYv33gjLVg14MU
-         121w==
+        id S1726386AbgJBQYA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Oct 2020 12:24:00 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43485 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgJBQYA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 12:24:00 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dn5so2244793edb.10;
+        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=32RFD9pEyzL4DqsKBqZOezitkmLyCLEOvgj6CQTt99s=;
-        b=BEeJNd8+lychHcfQxpVIaF7kLciPD62IMT1OWH42iN6/7qg3ZLoZV9Ng7LoxhM0ywf
-         rbletB+I0XET+Hi0LZtYa/rxy3y2Y6rbYdU41xtyalE+ETnBHokQswavl100YY2+AAFY
-         2wetC5vwJQeqVUMU1hgioOCIZKXflMa7S+7955bL4UIMXGufhEP2J6H1s5S9rx5hPXwC
-         fsg09e3MDa29PFma7G8OTSxbtVU64pr41BMjiZxkFZbdGgVrx7xege0oU8QRXkGREpnn
-         P5o6UItvWhMsEeMMi6QOeTXB4H3cZ8zfm7UZzne7MhvvGmewJotjI5CB6ddlwxoVSkb5
-         zE2A==
-X-Gm-Message-State: AOAM533U8pWrj+Z2mimNmJ78Wllp/eHSTqmQ6Id3tq5Z4hpBW2kFCoS7
-        ahbjLnBTFjIc6c7NFXCsjlY=
-X-Google-Smtp-Source: ABdhPJy2M6GJNJgQ2gO6CqTGoXrJnmsyQNDvQKmzxJfzsMkW+R3gtIz1RzPwRJhLDGrqMktuVmGVuA==
-X-Received: by 2002:a17:90b:3581:: with SMTP id mm1mr3599435pjb.180.1601654802213;
-        Fri, 02 Oct 2020 09:06:42 -0700 (PDT)
-Received: from sol (106-69-171-132.dyn.iinet.net.au. [106.69.171.132])
-        by smtp.gmail.com with ESMTPSA id 141sm2523046pfb.50.2020.10.02.09.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2020 09:06:40 -0700 (PDT)
-Date:   Sat, 3 Oct 2020 00:06:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [libgpiod][PATCH] core: Basic port to uAPI v2
-Message-ID: <20201002160636.GA117143@sol>
-References: <20201002063148.32667-1-warthog618@gmail.com>
- <CAHp75VfVDsxHDcnwdO5TL=wx-rB6=cuCWOxj0oP7+kpZvKuH6A@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+MzJdC7AJYBNKP850flRQBqAg39526c7mEcoDXa1vc8=;
+        b=W6AYcQXSj6ucI27Iry7nUl8m0KcdwMhvYJ3h3OtGNItARH9rlTLv2szvaLrDzvQISu
+         O10V0pJNX5pcLteJqlLURROHmMrLQQbiXoLvaXKBRfeNr2RXdo6rT/hFNarMEjrgIXlD
+         dGUHGkeulcE+y698KGQsa9ZsTtgB/YiHUAicDbPqv0kMm+xSofeE+iF/VLJ/LHOtg22y
+         Ys/FkIj0RXlnV+/Ikwa3dkbt4vVNPhsOQMSBSUfnAjW2Dflj8cXxsKmJi7cKGVtOz/Jp
+         34HoRDbzmQrTHGVPH76D4T7qsx84zhyqpmD1BybxzRK2HmA3xZb1znsAjq87hmii9oe0
+         /oCg==
+X-Gm-Message-State: AOAM532Aqnd+tKaCxWlsyVLIQb613WpO6ANOhksefNlMAng6fmyYJLTv
+        2QOYhdtv95N4owtmVQyJp8w=
+X-Google-Smtp-Source: ABdhPJwX7D85xx3iEoq/pMeJv9+pxrsyzjqmdtd89l7+FvbLqYa2SJikvg/hGqBR4vKxrCoYrmqIbg==
+X-Received: by 2002:aa7:d15a:: with SMTP id r26mr3222326edo.181.1601655837011;
+        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.194])
+        by smtp.googlemail.com with ESMTPSA id i7sm1604495ejo.22.2020.10.02.09.23.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 02 Oct 2020 09:23:56 -0700 (PDT)
+Date:   Fri, 2 Oct 2020 18:23:53 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
+Message-ID: <20201002162353.GA5870@kozik-lap>
+References: <20200827185829.30096-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfVDsxHDcnwdO5TL=wx-rB6=cuCWOxj0oP7+kpZvKuH6A@mail.gmail.com>
+In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 04:48:02PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 2, 2020 at 9:32 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Port existing implementation from GPIO uAPI v1 to v2.
-> > The libgpiod external interface remains unchanged, only the internal
-> > implementation switches from uAPI v1 to v2.
+On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
 > 
-> Cool!
+> Changes since v2:
+> 1. Add review tags,
+> 2. Fixes after review (see individual patches).
+> 3. Two new patches - 26 and 27.
 > 
-
-Not terribly - I needed a libgpiod-based testbed for my kernel
-changes, and this was the easiest way to do it.
-By happy coincidence that aligns with the path Bart wants to take for
-libgpiod 2.0, so here we are.
-
-> > This is a minimal port - uAPI v2 features are only used where it
-> > simplifies the implementation, specifically multiple events on a bulk can
-> > now be handled directly by the kernel in a single v2 line request rather
-> > than being emulated by multiple v1 event requests.
-> 
-> ...
-> 
-> > +       if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE)
-> > +               bias_flags++;
-> > +       if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP)
-> > +               bias_flags++;
-> > +       if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN)
-> > +               bias_flags++;
-> > +       if (bias_flags > 1)
-> > +               return false;
-> 
-> Seems to me like an emulation of hweight(), although I don't know if
-> we have in standard libraries such.
 > 
 
-Yup, same here, and it was quicker at the time to just write this than go
-looking...
+Hi Dmitry,
 
+Any comments here? Some of these nicely simplify the code or remove some
+lines.
 
-> ...
-> 
-> > -       if (values) {
-> > -               for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
-> > -                       data.values[i] = (uint8_t)!!values[i];
-> > +       for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++) {
-> > +               lines_bitmap_set_bit(&lv.mask, i);
-> > +               lines_bitmap_assign_bit(&lv.bits, i, values && values[i]);
-> >         }
-> 
-> Hmm... What about
->        for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
->                lines_bitmap_set_bit(&lv.mask, i);
-> 
->   if (values) {
->        for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
->                lines_bitmap_assign_bit(&lv.bits, i, values[i]);
->   }
-> 
-> ?
-> 
+Best regards,
+Krzysztof
 
-I find mine easier to read.
-Yours may be slightly faster though.  And maybe larger?
-
-> ...
+> Best regards,
+> Krzysztof
 > 
-> >         /*
-> >          * 16 is the maximum number of events the kernel can store in the FIFO
-> >          * so we can allocate the buffer on the stack.
-> > +        *
-> > +        * NOTE: This is no longer strictly true for uAPI v2.  While 16 is
-> > +        * the default for single line, a request with multiple lines will
 > 
-> for a single
 > 
-> > +        * have a larger buffer.  So need to rethink the allocation here,
+> Krzysztof Kozlowski (27):
+>   Input: gpio_keys_polled - Simplify with dev_err_probe()
+>   Input: gpio-vibra - Simplify with dev_err_probe()
+>   Input: pwm-beeper - Simplify with dev_err_probe()
+>   Input: pwm-vibra - Simplify with dev_err_probe()
+>   Input: rotary_encoder - Simplify with dev_err_probe()
+>   Input: elan_i2c - Simplify with dev_err_probe()
+>   Input: bu21013_ts - Simplify with dev_err_probe()
+>   Input: bu21029_ts - Simplify with dev_err_probe()
+>   Input: chipone_icn8318 - Simplify with dev_err_probe()
+>   Input: cy8ctma140 - Simplify with dev_err_probe()
+>   Input: edf-ft5x06 - Simplify with dev_err_probe()
+>   Input: ektf2127 - Simplify with dev_err_probe()
+>   Input: elants_i2c - Simplify with dev_err_probe()
+>   Input: goodix - Simplify with dev_err_probe()
+>   Input: melfas_mip4 - Simplify with dev_err_probe()
+>   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+>   Input: raydium_i2c_ts - Simplify with dev_err_probe()
+>   Input: resistive-adc-touch - Simplify with dev_err_probe()
+>   Input: silead - Simplify with dev_err_probe()
+>   Input: sis_i2c - Simplify with dev_err_probe()
+>   Input: surface3_spi - Simplify with dev_err_probe()
+>   Input: sx8643 - Simplify with dev_err_probe()
+>   Input: bcm-keypad - Simplify with dev_err_probe()
+>   gpio: Add devm_fwnode_gpiod_get_optional() helpers
+>   Input: gpio_keys - Simplify with dev_err_probe()
+>   Input: bu21013_ts - Use local 'client->dev' variable in probe()
+>   Input: bu21029_ts - Use local 'client->dev' variable in probe()
 > 
-> So we (I, ...?) need
+>  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
+>  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
+>  drivers/input/keyboard/gpio_keys.c            | 25 +++----
+>  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
+>  drivers/input/misc/gpio-vibra.c               | 20 ++----
+>  drivers/input/misc/pwm-beeper.c               | 19 ++---
+>  drivers/input/misc/pwm-vibra.c                | 20 ++----
+>  drivers/input/misc/rotary_encoder.c           |  8 +--
+>  drivers/input/mouse/elan_i2c_core.c           |  9 +--
+>  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
+>  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
+>  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
+>  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
+>  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
+>  drivers/input/touchscreen/ektf2127.c          |  8 +--
+>  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
+>  drivers/input/touchscreen/goodix.c            | 40 +++--------
+>  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
+>  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
+>  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
+>  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
+>  drivers/input/touchscreen/silead.c            |  8 +--
+>  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
+>  drivers/input/touchscreen/surface3_spi.c      | 13 +---
+>  drivers/input/touchscreen/sx8654.c            | 10 +--
+>  include/linux/gpio/consumer.h                 | 30 ++++++++
+>  26 files changed, 253 insertions(+), 328 deletions(-)
 > 
-
-The purpose of this patch is to move what work I'd already done on
-libgpiod in my tree, in order to test the kernel changes, into Bart's
-libgpiod tree, where it can be used as the basis of 2.0 development.
-
-So that note is a reminder for Bart, or whoever gets there first...
-But leaving it vague is still grammatically correct.
-
-Cheers,
-Kent.
+> -- 
+> 2.17.1
+> 
