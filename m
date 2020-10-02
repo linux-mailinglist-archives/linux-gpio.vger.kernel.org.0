@@ -2,100 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F7C028108F
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 12:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 097652810AC
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 12:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgJBK0T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Oct 2020 06:26:19 -0400
-Received: from smtp.asem.it ([151.1.184.197]:58127 "EHLO smtp.asem.it"
+        id S2387677AbgJBKlA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Oct 2020 06:41:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56817 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387669AbgJBK0R (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 2 Oct 2020 06:26:17 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000519847.MSG 
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 12:26:14 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 2 Oct
- 2020 12:26:12 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1979.003; Fri, 2 Oct 2020 12:26:12 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: How to use an ACPI declared GPIO in a userspace ...
-Thread-Topic: How to use an ACPI declared GPIO in a userspace ...
-Thread-Index: AdaWdniTedAZ6+9wQdyYYgE5sQ27yP//4UoAgAAGTYD//91o0IAAJ14A//6Yg1CAAsA0gP//s0vAAA+m6wAAAI1qgP/9IHKw
-Date:   Fri, 2 Oct 2020 10:26:11 +0000
-Message-ID: <8b6adbc45d134da7b0fd1f9044a37cf6@asem.it>
-References: <9152bb8be33e4192a7766eb53c6ca9af@asem.it>
- <CAMRc=McnsSkg-7UMp7pKaGX2wSqsZC2jQZV2zRepxm9UxGg=YA@mail.gmail.com>
- <CAHp75VfgEGydXN1A+Y=wn3iX1MbLhN8F9kYyfQwTZBJydr+0+Q@mail.gmail.com>
- <feb8567c830748c483c8c66dd4717003@asem.it>
- <CAHp75Vdd2QjvJvLGHa1x=RaSknEG+O+YB4eJA6+2htnZ=Gf52g@mail.gmail.com>
- <22753b53cd7d4dfba4ef3610f71cc462@asem.it>
- <20200930130113.GQ3956970@smile.fi.intel.com>
- <2c26adae711145639d0b982a354aff3c@asem.it>
- <CAHp75Vcq1WOcMNoKpOSpCD1mFSyvYsaX-h7KHTaAOPe=6S4e0A@mail.gmail.com>
- <CAHp75Vdm9K7nGxsk8P_iGy4m=vi=95zpH1S4NuJbb7bekwZoXg@mail.gmail.com>
-In-Reply-To: <CAHp75Vdm9K7nGxsk8P_iGy4m=vi=95zpH1S4NuJbb7bekwZoXg@mail.gmail.com>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S2387661AbgJBKk7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Oct 2020 06:40:59 -0400
+IronPort-SDR: lZt/o7RBAEyTiVrD/gN1BKFJ9rS8VAc7jJ5bnEhdplJ2AexX9JV5Muel25jckPjTFpML0oEmC2
+ 1HxQRr+hKZUw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="247703078"
+X-IronPort-AV: E=Sophos;i="5.77,327,1596524400"; 
+   d="scan'208";a="247703078"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2020 03:40:55 -0700
+IronPort-SDR: cX8mX9Vbw4e2sgS1cHCiPGTzJHfZzSc4hTGlz6VG1+uUjlgV0STW+IR5y2bSWqw48mRE7ev+jt
+ QItINWAqsCEw==
+X-IronPort-AV: E=Sophos;i="5.77,327,1596524400"; 
+   d="scan'208";a="313468950"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2020 03:40:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kOIUY-003PvH-Uq; Fri, 02 Oct 2020 13:40:46 +0300
+Date:   Fri, 2 Oct 2020 13:40:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Nikhil Devshatwar <nikhil.nd@ti.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Adam Ford <aford173@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] gpio: pca953x: Use irqchip template
+Message-ID: <20201002104046.GA3956970@smile.fi.intel.com>
+References: <20200717144040.63253-1-linus.walleij@linaro.org>
+ <20200930104729.ajufkrklfhf25d55@NiksLab>
+ <CACRpkdaOAdcO4P-3MphdV7bq1-CfMr0KR96+iPvJrsEX1nZeNQ@mail.gmail.com>
+ <2ced9bd9-9446-5060-18a4-d743238277fc@ti.com>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020E.5F770044.0078,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ced9bd9-9446-5060-18a4-d743238277fc@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQW5keSwNCg0Kd2l0aCBteSBjdXN0b20gU1NEVCB0YWJsZToNCg0KRGVmaW5pdGlvbkJsb2Nr
-ICgiZ3Bpb19idXR0b24uYW1sIiwgIlNTRFQiLCA1LCAiQVNFTXNwIiwgIkdQSU9fQlROIiwgMSkN
-CnsNCglFeHRlcm5hbCAoX1NCXy5HUE8xLCBEZXZpY2VPYmopDQoJU2NvcGUgKFxfU0IuR1BPMSkN
-Cgl7DQoJCURldmljZSAoQlROUykNCgkJew0KCQkJTmFtZSAoX0hJRCwgIkFTRU0wMDA1IikJCS8v
-IF9ISUQ6IEhhcmR3YXJlIElEIFBSUDAwMDENCgkJCU5hbWUgKF9VSUQsIFplcm8pICAgICAgICAg
-ICAgIC8vIF9VSUQ6IFVuaXF1ZSBJRA0KCQkJTmFtZSAoX0RETiwgIkRETiAtIFNXIFJlYWRhYmxl
-IEJ1dHRvbiIpICAvLyBfREROOiBET1MgRGV2aWNlIE5hbWUNCgkJCU5hbWUgKF9TVFIsIFVuaWNv
-ZGUgKCJTVFIgLSBTVyBSZWFkYWJsZSBCdXR0b24iKSkgIC8vIF9TVFI6IERlc2NyaXB0aW9uIFN0
-cmluZw0KDQoJCQlOYW1lIChfQ1JTLCBSZXNvdXJjZVRlbXBsYXRlICgpCSAvLyBfQ1JTOiBDdXJy
-ZW50IFJlc291cmNlIFNldHRpbmdzDQoJCQl7DQoJCQkJR3Bpb0lvICgNCgkJCQkJU2hhcmVkLCAg
-ICAgICAgICAgICAgICAgIC8vIE5vdCBzaGFyZWQNCgkJCQkJUHVsbE5vbmUsICAgICAgICAgICAg
-ICAgIC8vIE5vIG5lZWQgZm9yIHB1bGxzDQoJCQkJCTAsICAgICAgICAgICAgICAgICAgICAgICAv
-LyBEZWJvdW5jZSB0aW1lb3V0DQoJCQkJCTAsICAgICAgICAgICAgICAgICAgICAgICAvLyBEcml2
-ZSBzdHJlbmd0aA0KCQkJCQlJb1Jlc3RyaWN0aW9uSW5wdXRPbmx5LCAgLy8gT25seSB1c2VkIGFz
-IGlucHV0DQoJCQkJCSJcXF9TQi5HUE8xIiwgICAgICAgICAgICAvLyBHUElPIGNvbnRyb2xsZXIN
-CgkJCQkJMCwgUmVzb3VyY2VDb25zdW1lciwgLCApIC8vIE11c3QgYmUgMA0KCQkJCQl7DQoJCQkJ
-CQkyNSwgICAgICAgICAgICAgICAgLy8gR1BJTyBudW1iZXIgMjUNCgkJCQkJfQ0KCQkJfSkNCgkJ
-fQ0KCX0NCn0NCg0KSSdtIGFibGUgdG8gc2VlIHRoZSBHUElPIGluOg0KDQovc3lzL2J1cy9wbGF0
-Zm9ybS9kZXZpY2VzL0FTRU0wMDA1OjAwL2Zpcm13YXJlX25vZGU6DQoNCi1yLS1yLS1yLS0gICAg
-MSByb290ICAgICByb290ICAgICAgICAgIDQwOTYgT2N0ICAyIDEyOjEwIGRlc2NyaXB0aW9uDQot
-ci0tci0tci0tICAgIDEgcm9vdCAgICAgcm9vdCAgICAgICAgICA0MDk2IE9jdCAgMiAxMjoxMCBo
-aWQNCi1yLS1yLS1yLS0gICAgMSByb290ICAgICByb290ICAgICAgICAgIDQwOTYgT2N0ICAyIDEy
-OjEwIG1vZGFsaWFzDQotci0tci0tci0tICAgIDEgcm9vdCAgICAgcm9vdCAgICAgICAgICA0MDk2
-IE9jdCAgMiAxMjoxMCBwYXRoDQpscnd4cnd4cnd4ICAgIDEgcm9vdCAgICAgcm9vdCAgICAgICAg
-ICAgICAwIE9jdCAgMiAxMjoxMCBwaHlzaWNhbF9ub2RlIC0+IC4uLy4uLy4uLy4uL3BsYXRmb3Jt
-L0lOVDM0NTI6MDEvQVNFTTAwMDU6MDANCmRyd3hyLXhyLXggICAgMiByb290ICAgICByb290ICAg
-ICAgICAgICAgIDAgT2N0ICAyIDEyOjEwIHBvd2VyDQpscnd4cnd4cnd4ICAgIDEgcm9vdCAgICAg
-cm9vdCAgICAgICAgICAgICAwIE9jdCAgMiAxMjoxMCBzdWJzeXN0ZW0gLT4gLi4vLi4vLi4vLi4v
-Li4vYnVzL2FjcGkNCi1ydy1yLS1yLS0gICAgMSByb290ICAgICByb290ICAgICAgICAgIDQwOTYg
-T2N0ICAyIDEyOjEwIHVldmVudA0KLXItLXItLXItLSAgICAxIHJvb3QgICAgIHJvb3QgICAgICAg
-ICAgNDA5NiBPY3QgIDIgMTI6MTAgdWlkDQoNCmFuZCBzbyBJIGNhbiBzZWUgc29tZSB1c2VmdWwg
-aW5mbzoNCg0KIyBjYXQgZGVzY3JpcHRpb24NClNUUiAtIFNXIFJlYWRhYmxlIEJ1dHRvbg0KIyBj
-YXQgaGlkDQpBU0VNMDAwNQ0KIyBjYXQgbW9kYWxpYXMNCmFjcGk6QVNFTTAwMDU6DQpibXh4eHgt
-eDg2LTY0Oi9zeXMvYnVzL3BsYXRmb3JtL2RldmljZXMvQVNFTTAwMDU6MDAvZmlybXdhcmVfbm9k
-ZSMgY2F0IHBhdGgNClxfU0JfLkdQTzEuQlROUw0KDQpTbywgZnJvbSB1c2Vyc3BhY2UsIEkgY2Fu
-IGRpc2NvdmVyIHRoZSBHUElPIGNvbnRyb2xsZXIgL2Rldi9ncGlvY2hpcDEsDQpidXQgSSBkb24n
-dCBrbm93IGhvdyB0byBkaXNjb3ZlciB0aGUgR1BJTyBudW1iZXIgKDI1IGluIHRoaXMgY2FzZSku
-DQpEbyB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbiBhYm91dCBob3cgdG8gZGlzY292ZXIgdGhpcyBH
-UElPIG51bWJlcj8NCg0KVGhhbmtzIQ0KDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBB
-bmR5IFNoZXZjaGVua28NCg0KQmVzdCByZWdhcmRzLA0KRmxhdmlvDQo=
+On Fri, Oct 02, 2020 at 12:07:50AM +0300, Grygorii Strashko wrote:
+> On 30/09/2020 16:51, Linus Walleij wrote:
+> > On Wed, Sep 30, 2020 at 12:47 PM Nikhil Devshatwar <nikhil.nd@ti.com> wrote:
+> > 
+> > > I am getting a kernel crash on K3 j721e common processor board
+> > > when HDMI is plugged in. Following is the full log with crash
+> > > for NULL pointer derefence
+> > > 
+> > > https://pastebin.ubuntu.com/p/wBPS2ymmqR/
+> > > 
+> > > Upon inspection, I found that the "irq_find_mapping" call
+> > > in the "pca953x_irq_handler" returns 0 and the same is passed
+> > > to "handle_nested_irq"
+> > 
+> > This would typically happen if the driver using an IRQ
+> > from the PCA953x does not properly request it.
+
+...
+
+> We've just got another similar report, don't know the root cause, but it's not HDMI
+
+Does
+ e43c26e12dd4 ("gpio: pca953x: Fix uninitialized pending variable")
+help?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
