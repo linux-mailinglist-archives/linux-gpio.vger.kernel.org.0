@@ -2,113 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77292281DC8
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 23:45:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A02D281DE9
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Oct 2020 23:54:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgJBVpw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Oct 2020 17:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgJBVpw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Oct 2020 17:45:52 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE275C0613D0
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Oct 2020 14:45:51 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id b12so3600574lfp.9
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Oct 2020 14:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=4Iwk1spLlQzJLSFU0+CFB+SWnSpdaAD1kxSUV+hB2RM=;
-        b=wNTaW4YGEvOnQENoYrnzXECxajAysR9g+ZMxkqyZuSbDPs6yOUOjkLltIwicvNWA6w
-         njTjwQI3leBE+DvZXMypV+EUaJDFhsuAevjsUmETuZ6N7rIZ/2fCadB/EcD3usQkaoTS
-         VLumJ5YBAx0VVnp7WAFsuAdZ9Bj+6vSzJjQ1AQpVQpJ4fESWKiquH+zHeAl92SBetJ7Y
-         LD9tuXN8p9BoeBewM2O6UvT9gkdtVmi0EEtNvLZNGMloWSmsL+NAnpDyKg+1MdszVoSj
-         VqGSy5SIaf2LEMrE7EfkC0FX+hk120azo+kMfNBSIUrBgG5hgLVG3eXHmg0O9pCx1ZA6
-         QETA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=4Iwk1spLlQzJLSFU0+CFB+SWnSpdaAD1kxSUV+hB2RM=;
-        b=jP/szqT/OhxrIOe6Wy1e7h/YP536o4G6rkmKsaIsaQ7HJwywrM7dhJ1IrHh8MfzCv7
-         cnwlTaj8wTOEY7flCepid+37x5VZG+elyLBj9O+DSEgoTiZKL3GvWBJRWwUyGd9mIszz
-         KiCZ3mIx27CHUCLZQFnpXZgvK6SaEOYdenZ3syLr2tVAhbwgW4IbsNT/LE6nANGoLhdp
-         c+Hst6T0s0Ikv1aPxcPZDtIspT6AzGhJLrOLZ5SJtepRO4QB28+e6Co+An7pEoqFGz2R
-         kBRfFf60PvqsJN0SGJb5yv1874yw4R668dVZaZCTMBRcjCYB3f1EZwK/+CcDW0uwJZte
-         NdCg==
-X-Gm-Message-State: AOAM530wgfIgVK10oisAlcBYPGwdVTDK3pVP0nKcwsYtg46qKtkYJkWK
-        uPtR3IJ5l3+FZZfgez8UKlYHA/4Nk+ftq71Mmlh80A==
-X-Google-Smtp-Source: ABdhPJxzaTAPZTEN1haGk8yGz4U6RsvZystmZRR5iIBi2e33+5ztO8f4uWENKmn9dvanWcJplCEeLgx/PobNv/n/jxU=
-X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1660588lfq.260.1601675150213;
- Fri, 02 Oct 2020 14:45:50 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 2 Oct 2020 23:45:39 +0200
-Message-ID: <CACRpkdZ=EC589q1WpdkzCcswfLRUcVe25Uuht-vqywEn16R7Tg@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.9
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        id S1725788AbgJBVyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Oct 2020 17:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbgJBVyQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Oct 2020 17:54:16 -0400
+Subject: Re: [GIT PULL] pin control fixes for v5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601675656;
+        bh=/Vw9E0a50ZIjvEkAjRiinAnML2NW/Z/qzob/ILpG3Ls=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=GYAFTgbVsrtCOP6NIQZjd0UqcWj/ZHCOluJCFzOOgxS+lIUcvfZayw2QPZNLdMN3x
+         CF9g+11EvafiO7vTmD5XKyCPUqRH/12k8FSNFxzdU2dBiofOpS27spOmhu1GjHidCB
+         Tv40/FZKPF2jwr/AM70jnkzD4QOWMt8J26nFA5a8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdZ=EC589q1WpdkzCcswfLRUcVe25Uuht-vqywEn16R7Tg@mail.gmail.com>
+References: <CACRpkdZ=EC589q1WpdkzCcswfLRUcVe25Uuht-vqywEn16R7Tg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdZ=EC589q1WpdkzCcswfLRUcVe25Uuht-vqywEn16R7Tg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.9-2
+X-PR-Tracked-Commit-Id: 39c4dbe4cc363accd676162c24b264f44c581490
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d3d45f8220d60a0b2aaaacf8fb2be4e6ffd9008e
+Message-Id: <160167565612.8763.6452165041366614261.pr-tracker-bot@kernel.org>
+Date:   Fri, 02 Oct 2020 21:54:16 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Fri, 2 Oct 2020 23:45:39 +0200:
 
-some pin control fixes here, some four of them since -rc2.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.9-2
 
-All of them are driver fixes, the Intel Cherryview being the
-most interesting one.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d3d45f8220d60a0b2aaaacf8fb2be4e6ffd9008e
 
-Please pull them in!
+Thank you!
 
-Yours,
-Linus Walleij
-
-
-The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
-
-  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.9-2
-
-for you to fetch changes up to 39c4dbe4cc363accd676162c24b264f44c581490:
-
-  pinctrl: mediatek: check mtk_is_virt_gpio input parameter
-(2020-10-01 09:51:36 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.9 kernel:
-
-- Fix a mux problem for I2C in the MVEBU driver.
-
-- Fix a really hairy inversion problem in the Intel Cherryview
-  driver.
-
-- Fix the register for the sdc2_clk in the Qualcomm SM8250
-  driver.
-
-- Check the virtual GPIO boot failur in the Mediatek driver.
-
-----------------------------------------------------------------
-Chris Packham (1):
-      pinctrl: mvebu: Fix i2c sda definition for 98DX3236
-
-Dmitry Baryshkov (1):
-      pinctrl: qcom: sm8250: correct sdc2_clk
-
-Hanks Chen (1):
-      pinctrl: mediatek: check mtk_is_virt_gpio input parameter
-
-Hans de Goede (1):
-      pinctrl: cherryview: Preserve CHV_PADCTRL1_INVRXTX_TXDATA flag on GPIOs
-
- drivers/pinctrl/intel/pinctrl-cherryview.c       | 14 +++++++++++++-
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  4 ++++
- drivers/pinctrl/mvebu/pinctrl-armada-xp.c        |  2 +-
- drivers/pinctrl/qcom/pinctrl-sm8250.c            |  2 +-
- 4 files changed, 19 insertions(+), 3 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
