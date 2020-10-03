@@ -2,105 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7357728226D
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Oct 2020 10:24:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98869282387
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Oct 2020 12:07:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725648AbgJCIYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Oct 2020 04:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgJCIYD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Oct 2020 04:24:03 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA21AC0613D0
-        for <linux-gpio@vger.kernel.org>; Sat,  3 Oct 2020 01:24:02 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id qp15so4915081ejb.3
-        for <linux-gpio@vger.kernel.org>; Sat, 03 Oct 2020 01:24:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=BYhYUhRJ3iwbx5RvkgDxhY0ZIfAUwuAVrsbzhkyOflE=;
-        b=mOYBEL1BzwQ9bCiqXGaeWYnx7jPD3c/LIWQZEWryene9RxXiyxqzwC7T0shy+GnQoB
-         bbporJ43vejemi6VjGdDlFlYohkbUqW63tc0GBvJYYCE9aUmGSDxRTXxLJb9dBwCyCo+
-         Sp9g62NyoDrqlGwYHy25CH1NU5tYUzw+T6quGKv+lI1srvFaT48GNT7wF9TcLNT44xt+
-         iwL5cVR2Otz0A7qwXw3OtxeyV5ljXQKFgl2qhb8os7HkafSIM7hC0Re8N+lB1rqzJ+lL
-         G6cb8XNa3tJ2006qK4/mDpq/pSnzicz85wGy22iy3gMh69lIJR2sSIaUVQs5A4hlDRkx
-         uMFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=BYhYUhRJ3iwbx5RvkgDxhY0ZIfAUwuAVrsbzhkyOflE=;
-        b=g+8Q3lqia5FoE9JFc3LJ3WNrwU8kVJGB+xZwB/WTeXfyy4an0kgAF3LaupB9Zri+qw
-         DJNHFP6AGiXr5anlNkoEbT8RiTWE0n29Td6KQde+3z/8Mf96W0ms1ZCgzN/TD9nWnaQ8
-         QMdxzRijKgqw0M3FxTnKntR5tIG0Utnm1P8dzt7uYYEklrCMWKAe4Vj4nBfur54Y2T6y
-         utCBijZHrf23Kf8EPKHE+6ZdOy4uoTaEN0PtAUqKk/nmWzY9XC75y2IIWre9P+zOfVp5
-         G89vlgbYwhWTYa8cP2rNnGT9XsOE4Z/U19rgtGCw4vBgXA+tMs9eK5Rjm+wS/BGyHlEy
-         uk/g==
-X-Gm-Message-State: AOAM533R/sRpnlNtsmTysUeVzpf+mF7v9jVmlm0z7yJ0pz0cMWps+d9v
-        4k+5sLellG7C/2u1sdy39iMrmLh59Vcbj90+El8=
-X-Google-Smtp-Source: ABdhPJyH4HqjKZXX99vENx//er1XhpHRmhOq5sGDCKg5K2eZNVmO4nLiW8k0iLQArLRsjEXJHWKlDjiTu8zBORskDTU=
-X-Received: by 2002:a17:906:f298:: with SMTP id gu24mr4704634ejb.53.1601713441428;
- Sat, 03 Oct 2020 01:24:01 -0700 (PDT)
-MIME-Version: 1.0
-Reply-To: mrsmayaoliver686@gmail.com
-Sender: yus.fatau7@gmail.com
-Received: by 2002:a17:906:c58:0:0:0:0 with HTTP; Sat, 3 Oct 2020 01:24:00
- -0700 (PDT)
-From:   "Mrs. Maya Oliver" <mrsmayaoliver686@gmail.com>
-Date:   Sat, 3 Oct 2020 01:24:00 -0700
-X-Google-Sender-Auth: Gtpj-lk8q2T-nx1vsojwmzk9agE
-Message-ID: <CAMrr=JixtEs_9NHDojoYGfwvC_QMt7JuYRedmmLCMSva27EWQg@mail.gmail.com>
-Subject: My Greetings
-To:     undisclosed-recipients:;
+        id S1725730AbgJCKG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Oct 2020 06:06:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48876 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725681AbgJCKG5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Oct 2020 06:06:57 -0400
+X-UUID: 1a6aa90af3f34b229d4135d70def2dc4-20201003
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=XNRzXuFMSlzxxGZrXmTzf78PDDjCanucLXGX3tXCMVc=;
+        b=t0Tw5DJ7Z3pjppfPTnYfGF9fTrRsw6yRcOwXRJNTnJymGVujSqGUSxSmYbKevSuWdrFAF4i1IiEkenEUxuThmix/hlOreIFW1sKbw3+Qsbuy8DyO49E+N5seS/pVu+WiUcvTHdnmBV+JxaA78Iu2A20Um+mm+ssMqQTa3qVxu80=;
+X-UUID: 1a6aa90af3f34b229d4135d70def2dc4-20201003
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1898778443; Sat, 03 Oct 2020 18:06:50 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 3 Oct 2020 18:06:42 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 3 Oct 2020 18:06:42 +0800
+Message-ID: <1601719607.774.1.camel@mtkswgap22>
+Subject: Re: [PATCH v10 3/3] clk: mediatek: add UART0 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Loda Chou <loda.chou@mediatek.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Sat, 3 Oct 2020 18:06:47 +0800
+In-Reply-To: <1599546314.24690.3.camel@mtkswgap22>
+References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
+         <1596115816-11758-4-git-send-email-hanks.chen@mediatek.com>
+         <1599546314.24690.3.camel@mtkswgap22>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 6297D8A22D190C79E560529B8B9A1614A3F0EDC1D7AD1F9E0539D6629E5EC1AA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-My Dear
+SGkgTWljaGFlbCAmIFN0ZXBoZW4sDQoNClBsZWFzZSBraW5kbHkgbGV0IG1lIGtub3cgeW91ciBj
+b21tZW50cyBhYm91dCB0aGlzIHBhdGNoLg0KVGhhbmtzDQoNClJlZ2FyZHMsDQpIYW5rcw0KDQoN
+Ck9uIFR1ZSwgMjAyMC0wOS0wOCBhdCAxNDoyNSArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
+SGkgYWxsLA0KPiANCj4gR2VudGxlIHBpbmcgb24gdGhpcyBwYXRjaC4NCj4gDQo+IFRoYW5rcw0K
+PiANCj4gDQo+IEhhbmtzIENoZW4NCj4gDQo+IA0KPiBPbiBUaHUsIDIwMjAtMDctMzAgYXQgMjE6
+MzAgKzA4MDAsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4gQWRkIE1UNjc3OSBVQVJUMCBjbG9jayBz
+dXBwb3J0Lg0KPiA+IA0KPiA+IEZpeGVzOiA3MTA3NzRlMDQ4NjEgKCJjbGs6IG1lZGlhdGVrOiBB
+ZGQgTVQ2Nzc5IGNsb2NrIHN1cHBvcnQiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbmRlbGwgTGlu
+IDx3ZW5kZWxsLmxpbkBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hl
+biA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IE1hdHRoaWFzIEJy
+dWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY2xr
+L21lZGlhdGVrL2Nsay1tdDY3NzkuYyB8IDIgKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
+ZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9j
+bGstbXQ2Nzc5LmMgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2Nzc5LmMNCj4gPiBpbmRl
+eCA5NzY2Y2NjZjU4NDQuLjZlMGQzYTE2NjcyOSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Ns
+ay9tZWRpYXRlay9jbGstbXQ2Nzc5LmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9j
+bGstbXQ2Nzc5LmMNCj4gPiBAQCAtOTE5LDYgKzkxOSw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+bXRrX2dhdGUgaW5mcmFfY2xrc1tdID0gew0KPiA+ICAJCSAgICAicHdtX3NlbCIsIDE5KSwNCj4g
+PiAgCUdBVEVfSU5GUkEwKENMS19JTkZSQV9QV00sICJpbmZyYV9wd20iLA0KPiA+ICAJCSAgICAi
+cHdtX3NlbCIsIDIxKSwNCj4gPiArCUdBVEVfSU5GUkEwKENMS19JTkZSQV9VQVJUMCwgImluZnJh
+X3VhcnQwIiwNCj4gPiArCQkgICAgInVhcnRfc2VsIiwgMjIpLA0KPiA+ICAJR0FURV9JTkZSQTAo
+Q0xLX0lORlJBX1VBUlQxLCAiaW5mcmFfdWFydDEiLA0KPiA+ICAJCSAgICAidWFydF9zZWwiLCAy
+MyksDQo+ID4gIAlHQVRFX0lORlJBMChDTEtfSU5GUkFfVUFSVDIsICJpbmZyYV91YXJ0MiIsDQo+
+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBM
+aW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFk
+ZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LW1lZGlhdGVrDQoNCg==
 
-My Name is Mrs. Maya Oliver, from Norway. I know that this message
-will be a surprise to you. Firstly, I am married to Mr. Patrick
-Oliver, A gold merchant who owns a small gold Mine in Burkina Faso; He
-died of Cardiovascular Disease in mid-March 2011. During his life time
-he deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five
-hundred thousand Euros in a bank in Ouagadougou the capital city of
-Burkina Faso. The deposited money was from the sale of the shares,
-death benefits payment and entitlements of my deceased husband by his
-company.
-
-I am sending this message to you praying that it will reach you in
-good health, since I am not in good health condition in which I sleep
-every night without knowing if I may be alive to see the next day. I
-am suffering from long time cancer and presently i am partially
-suffering from a stroke illness which has become almost impossible for
-me to move around. I am married to my late husband for over 4 years
-before he died and is unfortunately that we don't have a child, my
-doctor confided in me that i have less chance to live. Having known my
-health condition, I decided to contact you to claim the fund since I
-don't have any relation I grew up from the orphanage home,
-
-I have decided to donate what I have to you for the support of helping
-Motherless babies/Less privileged/Widows' because I am dying and
-diagnosed of cancer for about 2 years ago. I have been touched by God
-Almighty to donate from what I have inherited from my late husband to
-you for good work of God Almighty. I have asked Almighty God to
-forgive me and believe he has, because He is a Merciful God I will be
-going in for an operation surgery soon
-
-This is the reason i need your services to stand as my next of kin or
-an executor to claim the funds for charity purposes. If this money
-remains unclaimed after my death, the bank executives or the
-government will take the money as unclaimed fund and maybe use it for
-selfish and worthless ventures, I need a very honest person who can
-claim this money and use it for Charity works, for orphanages, widows
-and also build schools for less privilege that will be named after my
-late husband and my name; I need your urgent answer to know if you
-will be able to execute this project, and I will give you more
-Information on how the fund will be transferred to your bank account.
-
-Thanks
-Mrs. Maya
