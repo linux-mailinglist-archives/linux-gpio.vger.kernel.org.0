@@ -2,158 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36BAF28316D
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 10:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 673F528317F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 10:07:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725896AbgJEIFC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 04:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36242 "EHLO
+        id S1725891AbgJEIHE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 04:07:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgJEIEy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 04:04:54 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3616C0613AC
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Oct 2020 01:04:53 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w5so8406111wrp.8
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Oct 2020 01:04:53 -0700 (PDT)
+        with ESMTP id S1725885AbgJEIHE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 04:07:04 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508D1C0613CE
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Oct 2020 01:07:04 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id 67so4827607iob.8
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Oct 2020 01:07:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=IeiNTBeAySgxF765tOCATEDwXLrm3RiAjoTBQHN6wK0=;
-        b=QT2sz2z2T2ObbOF9cBuqPj/xMs2V2JkpGaC1yQPewHnLjCK6KfpJxnFBd52Yg4AGmP
-         VJxRGRPxaRQLhLWf/cJj+4TFWIvc5S6rpMyihLW8guAo+UvNRqZKoELqvBpOePuA/Etp
-         z293SdQf8ZGebrwCEz1gY7IlvwFjzz13UZb9UEwJiawxT5K21aKdmv/U8ZWx8aU8cdsz
-         g1EJ2lezQTBEJzLkUS6vaHwbRc5HEANA2MQBDDgPE/harsOdRDrcIYwSmq3urQxn7+oQ
-         VI6XlJwzca0RWlRBNRLXanZ5iKvZaicHTe2BxzY/5qO5xvvbJ/G2d1fmd5VfFwE503zT
-         3Stw==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=BYhYUhRJ3iwbx5RvkgDxhY0ZIfAUwuAVrsbzhkyOflE=;
+        b=ZHBtpWuCvxtIzVuDScVL229dE8xGFzPg+E+ImRo4GMh3WygHXJl4u4Pl2SOnvKqJb5
+         IGRHnwWKM4jRy/H109RHkjprvvq6K6vJI8VUmvUMFsJqxYjU5HUq37wD6XEQQecwWtJn
+         rK3feFw367hrLrXJP6FH7YKxBdNY2Ef86lg4S1l4Cdsxz1PqCXxHJJkFqxnPfxu/uvmj
+         hp3CljVcQs259REnwJn4OgSz5Vns3ZAB7YHk8iMm2MZDPizVDCkCHF4Zu11BOZgVaTbc
+         SjgTVpVoZI4aYtVrGqqxLcJZCR6ESiB5g/RLkGA51ZaSxr1SbQ8beUKh7RnZn0xCqzRR
+         UHjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IeiNTBeAySgxF765tOCATEDwXLrm3RiAjoTBQHN6wK0=;
-        b=d1KLc9qf2XyqD0qbUZ2yy/wuY7mL6EcgzVSHsvNa2SYPX+MO8KO+nvspkS/UuVGt8d
-         ovbhTIZJGlWGQAVu5vX5/axGklGlpfhU1tcGp48YK8d6jxYOTaea5cN3upRKDSPXqlbj
-         hJIu+Qzhl8CGP1ceMaKjxjty6AzKjHwR0NJYf+yv+ouvVdUjpb7T5JsbGHAWIABOQeDl
-         XnIsHVQDsBKl5ywjupEvZ8RoSJrNbs3tcKQcqi0yIodSj+rMkT6wtJJrffrojo/8osJc
-         2XdTxDVzfWSb/vsxfBwgnBZNPMsKKlnWTMdpsPW0Yd3CykCTMBLIGUXj0qhxwA2nzgQs
-         X3Ww==
-X-Gm-Message-State: AOAM531z+emaCzfueCYZCHgFgs9hlJJHmsIkkJ3QMoN9BIPW0UfOCX9l
-        lscdqlpHtUfgDO0qICkcBmW0jg==
-X-Google-Smtp-Source: ABdhPJxB5n46P+iT3QRjzewwc6VgfO5oWkwQMA51B+oAEZSgUCF8P3GFXLcjkKteouHQRqUkrIZvVQ==
-X-Received: by 2002:adf:f10e:: with SMTP id r14mr9419051wro.337.1601885092289;
-        Mon, 05 Oct 2020 01:04:52 -0700 (PDT)
-Received: from dell ([91.110.221.236])
-        by smtp.gmail.com with ESMTPSA id x2sm11899009wrl.13.2020.10.05.01.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2020 01:04:51 -0700 (PDT)
-Date:   Mon, 5 Oct 2020 09:04:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Another round of adding missing
- 'additionalProperties'
-Message-ID: <20201005080448.GT6148@dell>
-References: <20201002234143.3570746-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=BYhYUhRJ3iwbx5RvkgDxhY0ZIfAUwuAVrsbzhkyOflE=;
+        b=SJXQ0ScjKeCUhIkD484g9bj5V9P9nnNzXyMbTmMH8BKnRJi1j7aHwhhPKo8CJylkiI
+         OBea3sCLE1OeD2KCiwaQXnFeC3EkdjJruc1EoeQ1sYRf7yrMuID/bpXzc7x/8BxCLpbW
+         8JsO+GglPdc80PhhfmF6AxGuwfo2im8Fg4tudUdrblhHsf2e3Nvw5Y6q+MbQxEQM5oLt
+         Zd64Uix1YgqKkmxMjh9WKpEypn3dXqkkLGkTt0Zzfpnw66ls7Hmm2g6MzfZzFRXSEhqW
+         rlaWyP4c7gOcyUr6i+8J82F0rrujoL18j2qFAZR+nwY96stSwayXigMbFnRzQ2AlNr+b
+         Sv8w==
+X-Gm-Message-State: AOAM530Qvx78xcuHv/lbKu3QOeFV04J3I9574XUgPhW412ij5/R+AUbH
+        Gd7RTiakJgK0iWl1XU5X/zuzDdjpVXsW8t2xW0w=
+X-Google-Smtp-Source: ABdhPJzS8vr8+9RFrTud6md/KCdzhLl4n18C28fr19lhvFDaAmAvG/u7KPZ60tBCvC5oZgfMU5/98gkXYqMwFm/nGfk=
+X-Received: by 2002:a05:6638:13cd:: with SMTP id i13mr3101275jaj.55.1601885223579;
+ Mon, 05 Oct 2020 01:07:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+Reply-To: mrsmayaoliver686@gmail.com
+Sender: peterfuller301@gmail.com
+Received: by 2002:a6b:9183:0:0:0:0:0 with HTTP; Mon, 5 Oct 2020 01:07:03 -0700 (PDT)
+From:   "Mrs. Maya Oliver" <mrsmayaoliver686@gmail.com>
+Date:   Mon, 5 Oct 2020 01:07:03 -0700
+X-Google-Sender-Auth: fNOuo_MKVWiMVALpHdSEHb-7Eu8
+Message-ID: <CACzHKneO8=+KCkAry0kKkKL_Nxk65DQEEfM-a31Q85-Q9oF=mg@mail.gmail.com>
+Subject: My Greetings
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 02 Oct 2020, Rob Herring wrote:
+My Dear
 
-> Another round of wack-a-mole. The json-schema default is additional
-> unknown properties are allowed, but for DT all properties should be
-> defined.
-> 
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: openipmi-developer@lists.sourceforge.net
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> I'll take this thru the DT tree.
+My Name is Mrs. Maya Oliver, from Norway. I know that this message
+will be a surprise to you. Firstly, I am married to Mr. Patrick
+Oliver, A gold merchant who owns a small gold Mine in Burkina Faso; He
+died of Cardiovascular Disease in mid-March 2011. During his life time
+he deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five
+hundred thousand Euros in a bank in Ouagadougou the capital city of
+Burkina Faso. The deposited money was from the sale of the shares,
+death benefits payment and entitlements of my deceased husband by his
+company.
 
-[...]
+I am sending this message to you praying that it will reach you in
+good health, since I am not in good health condition in which I sleep
+every night without knowing if I may be alive to see the next day. I
+am suffering from long time cancer and presently i am partially
+suffering from a stroke illness which has become almost impossible for
+me to move around. I am married to my late husband for over 4 years
+before he died and is unfortunately that we don't have a child, my
+doctor confided in me that i have less chance to live. Having known my
+health condition, I decided to contact you to claim the fund since I
+don't have any relation I grew up from the orphanage home,
 
->  .../bindings/mfd/gateworks-gsc.yaml           |  2 ++
->  .../bindings/mfd/xylon,logicvc.yaml           | 14 +++++++++++--
+I have decided to donate what I have to you for the support of helping
+Motherless babies/Less privileged/Widows' because I am dying and
+diagnosed of cancer for about 2 years ago. I have been touched by God
+Almighty to donate from what I have inherited from my late husband to
+you for good work of God Almighty. I have asked Almighty God to
+forgive me and believe he has, because He is a Merciful God I will be
+going in for an operation surgery soon
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+This is the reason i need your services to stand as my next of kin or
+an executor to claim the funds for charity purposes. If this money
+remains unclaimed after my death, the bank executives or the
+government will take the money as unclaimed fund and maybe use it for
+selfish and worthless ventures, I need a very honest person who can
+claim this money and use it for Charity works, for orphanages, widows
+and also build schools for less privilege that will be named after my
+late husband and my name; I need your urgent answer to know if you
+will be able to execute this project, and I will give you more
+Information on how the fund will be transferred to your bank account.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks
+Mrs. Maya
