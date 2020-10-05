@@ -2,147 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F48D2841C3
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 22:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B3B0284236
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 23:39:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgJEUzy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 16:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgJEUzt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 5 Oct 2020 16:55:49 -0400
-Received: from earth.universe (dyndsl-095-033-158-146.ewe-ip-backbone.de [95.33.158.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DB5207EA;
-        Mon,  5 Oct 2020 20:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601931347;
-        bh=RauhoP+lY6PB4M6PjyFmPFjt0my1MIgv0r1A7kpjI2k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HkOPmEqswDfagOwa/8h6eYeJ28nUpx4kzUzMEiO5C2WpZ/JyxwPsMpOCvfalXuv/N
-         SHdwGJl0wavO+zZoAFWHwvQtMiirhu1+TeuQnuYzBjE+S+5qOuOKtkPXd2EjrwLySS
-         ddJlXztUaG/j988mXtEhLvSqV8GY7zi9RJGnOy4s=
-Received: by earth.universe (Postfix, from userid 1000)
-        id B9D193C0C87; Mon,  5 Oct 2020 22:55:45 +0200 (CEST)
-Date:   Mon, 5 Oct 2020 22:55:45 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
- in common schemas
-Message-ID: <20201005205545.sqvohrh7jpt7w63w@earth.universe>
-References: <20201005183830.486085-1-robh@kernel.org>
- <20201005183830.486085-5-robh@kernel.org>
+        id S1726729AbgJEVje (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 17:39:34 -0400
+Received: from mo-csw1116.securemx.jp ([210.130.202.158]:49318 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbgJEVje (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 17:39:34 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 095LdNsH001905; Tue, 6 Oct 2020 06:39:24 +0900
+X-Iguazu-Qid: 2wHHD8Mc11nAaW7xS4
+X-Iguazu-QSIG: v=2; s=0; t=1601933963; q=2wHHD8Mc11nAaW7xS4; m=7f25MoKqdZ3HZEJCZTZtQKDhX5Pv9dJwOq2cngcRJ2k=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1112) id 095LdM2Y008188;
+        Tue, 6 Oct 2020 06:39:23 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 095LdMX3026631;
+        Tue, 6 Oct 2020 06:39:22 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 095LdMfn031406;
+        Tue, 6 Oct 2020 06:39:22 +0900
+Date:   Tue, 6 Oct 2020 06:39:21 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: visconti: PINCTRL_TMPV7700 should depend on
+ ARCH_VISCONTI
+X-TSB-HOP: ON
+Message-ID: <20201005213921.xjjhmyr7c25mul64@toshiba.co.jp>
+References: <20201005125049.26926-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7db5qni5yh4rtlce"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
+In-Reply-To: <20201005125049.26926-1-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Geert,
 
---7db5qni5yh4rtlce
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 05, 2020 at 02:50:49PM +0200, Geert Uytterhoeven wrote:
+> The Toshiba Visconti TMPV7700 series pin controller is only present on
+> Visconti SoCs.  Hence add a dependency on ARCH_VISCONTI, to prevent
+> asking the user about this driver when configuring a kernel without
+> Visconti platform support.
+> 
+> Fixes: a68a7844264e4fb9 ("pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hi,
+Thanks for your fixing.
 
-On Mon, Oct 05, 2020 at 01:38:30PM -0500, Rob Herring wrote:
-> In order to add meta-schema checks for additional/unevaluatedProperties
-> being present, all schema need to make this explicit. As common/shared
-> schema are included by other schemas, they should always allow for
-> additionalProperties.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+
+Best regards,
+  Nobuhiro
+
 > ---
->  [...]
->  .../devicetree/bindings/power/supply/power-supply.yaml       | 2 ++
->  [...]
-
-Acked-by: Sebastian Reichel <sre@kernel.org>
-
--- Sebastian
-
---7db5qni5yh4rtlce
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl97iEsACgkQ2O7X88g7
-+pr9vg//fpVYpKsaZc4pw203Kmzwve+W4z3OPaQS7g1Y93QHWykKxFYpCgOrbmA7
-Ikwy3xwBLfMhPIUs8KZDsiaLVkKTi9XJifhEKiG4Uz772vFOZqAPgskcT6Sx4+iN
-4lqd7WmgV3hGelDss8qw6dQ1FY0/MHuMXvoDeNHTvqi0ZhttRrQmOEO6spkWL1io
-39Au/Pxbh2dK06Y7Y0qoKlqCKxnL4fWlUjFqJkJI+d4LjK/XYvukOTPmAhEYfP2H
-tZ38WZd/3SxwQD+Nh6ZJCfKC54D00G54g+fkxhaiypSSgI1IPWfIsrqPfPnVMowq
-wI2fo/C10LMZ1kqUi/LCW+OET8aePRkYjUMWZ2GBNRY9MJCJH/WkOPy7PaKHrOfU
-EdJx9OH7guvFWaEJGhClazwYS6QkM8CEKy7Nd5nJTeQOBEg/p2Lb2etNPNq34nju
-o9euArIjrnqbHK5X9Ijyvhaqw3bxsVPmPkOGUayDMB44UtwHNFqIosmboJnkJ6bt
-BGS1zVnJs2sdLMqMZcCwfHGoX00rThZgvCACDas7fVEdsZgtaEnCW8aySbWCKPdY
-1gtR+xdosJheKba+kMxfhmR0nm62rAmJvS9XOZaBY+cveye5NtC3kvk+Al5ixucd
-jYmH3Iudn+0hC44ZPGUl49YUa5cwsX8NZlyh8ItyWm/x+WiVyb8=
-=9y9P
------END PGP SIGNATURE-----
-
---7db5qni5yh4rtlce--
+>  drivers/pinctrl/visconti/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/visconti/Kconfig b/drivers/pinctrl/visconti/Kconfig
+> index 198ec33189cc4706..42653fc60413d203 100644
+> --- a/drivers/pinctrl/visconti/Kconfig
+> +++ b/drivers/pinctrl/visconti/Kconfig
+> @@ -9,6 +9,6 @@ config PINCTRL_VISCONTI
+>  config PINCTRL_TMPV7700
+>  	bool "Toshiba Visconti TMPV7700 series pinctrl driver"
+>  	depends on OF
+> -	depends on ARM64 || COMPILE_TEST
+> +	depends on ARCH_VISCONTI || COMPILE_TEST
+>  	select PINCTRL_VISCONTI
+> -	default ARM64 && ARCH_VISCONTI
+> +	default ARCH_VISCONTI
+> -- 
+> 2.17.1
+> 
+> 
