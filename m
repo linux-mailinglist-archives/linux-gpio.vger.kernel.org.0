@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80C1F28348C
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 13:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44326283495
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 13:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgJELBp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 07:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
+        id S1725905AbgJELCo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 07:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgJELBl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 07:01:41 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75342C0613CE;
-        Mon,  5 Oct 2020 04:01:41 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q123so6638859pfb.0;
-        Mon, 05 Oct 2020 04:01:41 -0700 (PDT)
+        with ESMTP id S1725843AbgJELCo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 07:02:44 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0939CC0613CE;
+        Mon,  5 Oct 2020 04:02:44 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u24so5782033pgi.1;
+        Mon, 05 Oct 2020 04:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Osp4/+N3+YZvrvl/ejBqgXdbKyrkqPFZQidK9cO7Oxk=;
-        b=WRoSNdtTfzjD/kqjh2kjdQRbaWr1jP83/UEn/n7nSlnuTQXql8dU7ugZLB8t6zIxnJ
-         u1rJdAkbDi5c9UmyqH3I28xE2fIzPrGV7SAanUo+fuTacJ8zpOw0AQ+i3J6ID6OFkr1c
-         SF8FUJEz7hoNsKRgmrzDDLUzTi25wcl3ySCI60uxabclopNKT4IyfccJQmYnV0vvM13u
-         loQ2ToM1skwI51AGxPdp7tW6JWbr6DtrEwUU5Quvfi+mBCtdwa7H0jgSilLrmN17/arP
-         CyFSU1vYICnLdzByooF/qScorreRu+3S/6CD4LAlBEZpxdZhCgAuhtP3qMNz58tvt1w9
-         hhYQ==
+        bh=XnKOT8lAtvoMmf2DZLmwJPy7BfQRPbNOPZaTV7Nokbs=;
+        b=LgiWQ6WsTWHge0MQFvDxD5ngk7kRfbQ2v9Dds0pd2W4YJFjMVDXFPzgcZYAM1HRvOp
+         1uFmGoBPpInl5lT2XHMKZL2+vtw+3Kf9ISdD3zmbWoHayNUSaOXQ/MWxtYMbQZVxd8f0
+         V4KZSkM2BqAYnpG0xER0iYJx0rOIXEdhg2XMv9vBdWtif4MqR/1yeSCTMd20bBCCxPre
+         jY3ArCzxVPAAphZISzRP0XtLnZ62ov5ERCAx/ZCqMc3kXUYY1u7UEd/TsUryO/xLI+nv
+         QrxR2GNzFfqG3yAJBw02ZorQXA5ZRlGiPXPOrpMIA0dyjtFkD0/8YJGkWiRrXwIQmNtT
+         CseQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Osp4/+N3+YZvrvl/ejBqgXdbKyrkqPFZQidK9cO7Oxk=;
-        b=juv+pX1pfPN6HyUnxOneKvkFjakd8IWEqbzy9TtmlSKtFI/zgJ8UWhvxqO9rM6LWiq
-         6+zJ/PF8Oz3sWv/kjxcQtMA1lRHHGnjbQz/STEtO2l0/YEDbnFXF/XFROlN9Q/OtYDG9
-         L1OTFTJJ697GNdW1TpQllecKLqpGVOBjBuWHXyYGD7uawLFurYkDLe2EvFxGopYRTBXL
-         FsluxvILN+6NzWnZ+YhLdRrnB1KXK05StCZeCgMhC15tIcxezkv1o1tfM+rSH2jQQnRx
-         T5lZsnj1bxG+4k0Y6go08fZbP8EpzfToIqI1P7cB8M5T/YUtJShdAMXiFlrwtPwRh8I9
-         U+ng==
-X-Gm-Message-State: AOAM533SbdDTA4qhyZWQDOKW7mZCTNot3GmOqPsD6pZT9mIJlIKzlGyd
-        4qoERxQuuDub8K9A7T5HQIrQb6h8VvjfzY61RkQ=
-X-Google-Smtp-Source: ABdhPJz2Lk4AX/H7xWbbASg5PnJoWtyb/7CQTWRwMIHfK3DIxev5eh7y7nPHHLMH5fbem6VCDX8J8IvbE/n3tjGKEak=
-X-Received: by 2002:aa7:9201:0:b029:13e:d13d:a10c with SMTP id
- 1-20020aa792010000b029013ed13da10cmr7228230pfo.40.1601895700982; Mon, 05 Oct
- 2020 04:01:40 -0700 (PDT)
+        bh=XnKOT8lAtvoMmf2DZLmwJPy7BfQRPbNOPZaTV7Nokbs=;
+        b=fw+f+r9NmTmZNMbrNQGtQ2YZDBQwGwjb+74M2ucfBAFkZe8MiczrsmDul0/U3GqSPE
+         FAqhoKx08zY14S4zOOB1yuQl7Z9BvXtFtyNpexxRH53mD63+NwgXdbgaOnaFqStG7nP5
+         sz5vCEt3ReZTWVIDxitSdoFwfy2mlvBy25ES4MaYCKl6uvX8sotSgt58KA74XvO9jyQz
+         tNQ8hayGvBUnmS35v40tYR34fqNlJBzpCQdcoqnR0IfG/fVrwOOAe40pb2N1UcmsneYb
+         lSNP8zPlmodJIWOTiab1igNRqkqfxXRX3thGRgq9bPXLfKmlpe53OzSqkzGaiBAspVsy
+         2hOQ==
+X-Gm-Message-State: AOAM531Cwjw/K6XrG7SLjmx0G7E0bdRJF1VsDGPF0eaxpLrUFcShkWPk
+        Z8uRH9Byl20mFIQfmLy4xgSnRKzxws+AsdhTg+8=
+X-Google-Smtp-Source: ABdhPJwRnvY5hDI53ltkz3o+IMY5jxbErfESzahapOBuRVz5/hHDHajYDWR0XC7iYEPv/9NJYxXsTZ+d6OgNK9+EoRo=
+X-Received: by 2002:a65:47c2:: with SMTP id f2mr953633pgs.4.1601895763587;
+ Mon, 05 Oct 2020 04:02:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201005070329.21055-1-warthog618@gmail.com> <20201005070329.21055-6-warthog618@gmail.com>
-In-Reply-To: <20201005070329.21055-6-warthog618@gmail.com>
+References: <20201005070329.21055-1-warthog618@gmail.com>
+In-Reply-To: <20201005070329.21055-1-warthog618@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Oct 2020 14:01:22 +0300
-Message-ID: <CAHp75VdJ7zqPtWXKp3cUqPw3ZT7K0Dxzf7NYK+Zk9ZBhAPqG4g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] gpio: uapi: clarify the meaning of 'empty' char arrays
+Date:   Mon, 5 Oct 2020 14:02:25 +0300
+Message-ID: <CAHp75VcJYwysrb00TGSpu_cFf7_-mAhu871VM8Of3y8FB_+m3A@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -61,20 +60,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 5, 2020 at 10:07 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Mon, Oct 5, 2020 at 10:04 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Clarify that a char array containing a string is considered 'empty' if
-> the first character is the null terminator. The remaining characters
-> are not relevant to this determination.
+> I'm intending to add some GPIO chardev documentation to
+> Documentation/admin-guide/gpio/chardev.rst (or perhaps
+> Documentation/userspace-api/??), but that is taking longer than I'd like,
+> so in the meantime here is a collection of minor documentation tidy-ups
+> and improvements to the kernel-doc that I've made along the way.
+> Hopefully nothing controversial - mainly formatting improvements,
+> and a couple of minor wording changes.
 
->   * @label: a functional name for this GPIO chip, such as a product
-> - * number, may be empty
-> + * number, may be empty (i.e. label[0] == '\0')
+Thanks.
+For patches 1-4
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-I would rather put it like
-"...may be empty string (i.e. label == "")"
+Patch 5 as well in case you agree with my comments and goind
 
-And so on for the rest.
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (5):
+>   gpio: uapi: fix kernel-doc warnings
+>   gpio: uapi: comment consistency
+>   gpio: uapi: kernel-doc formatting improvements
+>   gpio: uapi: remove whitespace
+>   gpio: uapi: clarify the meaning of 'empty' char arrays
+>
+>  include/uapi/linux/gpio.h | 106 +++++++++++++++++++-------------------
+>  1 file changed, 54 insertions(+), 52 deletions(-)
+>
+>
+> base-commit: 237d96164f2c2b33d0d5094192eb743e9e1b04ad
+> --
+> 2.28.0
+>
+
 
 -- 
 With Best Regards,
