@@ -2,170 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 277C0283371
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 11:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8527A28337D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 11:39:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgJEJg2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 05:36:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2954 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbgJEJg1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 5 Oct 2020 05:36:27 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 094B3ABD20918B3B41D5;
-        Mon,  5 Oct 2020 10:36:23 +0100 (IST)
-Received: from localhost (10.52.124.175) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 5 Oct 2020
- 10:36:21 +0100
-Date:   Mon, 5 Oct 2020 10:34:36 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Baolin Wang" <baolin.wang7@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        <linux-clk@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-spi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-hwmon@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        <linux-leds@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-mips@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: Another round of adding missing
- 'additionalProperties'
-Message-ID: <20201005093436.00004913@Huawei.com>
-In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
-References: <20201002234143.3570746-1-robh@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1725905AbgJEJjo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 05:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgJEJjo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 05:39:44 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083D5C0613CE
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Oct 2020 02:39:43 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id y20so8343156iod.5
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Oct 2020 02:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fbtjCQo7LmXrooUrvQJDN/XI84FhAM0orlp9l5bsJ44=;
+        b=TrsF76/5/69ebISeCnIhkpWeLoAZIB/IDUuYMKU4GPtvur2h9OxGh7IMAm5if+7lq6
+         52WGYkoN0M9VDgcgIGohpsq9HXTr1f5A7ZnrW7f31esESa5SIrk9pDCYrXcL+qu8KZqa
+         BqtgD4y4tfm3dZnuOHXHE1uhBdcKOy16DGBr8EJHe/WpNfxG/6nZuKf/8qqeeOLYo2H2
+         xHMBoxqp6YHv4BZqqdIdl6uzULDF2UdcELplkgEPhuxmT1osy7KFCbMYzNRHuiYLHlIB
+         H6QNqewfJJxWisN6Z6f8doOdIKOp+g+UpocCWa1Q/zRFbIqfKVOcPrIrj2vlAqxlRe2e
+         ZdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fbtjCQo7LmXrooUrvQJDN/XI84FhAM0orlp9l5bsJ44=;
+        b=UeM8wTGasEDc4Nyh4BtFnDceLYQv251/Q3gMM5NNTlh6ubiXnu4Kenf4ZjE8MtDdzN
+         YE9nXC2V65/FwuRVY2Q6JS4CoCqscXmwzWGlCsWLDHTrmiqF30cHLhEkNrhMvX/Qhkim
+         xbVPg8EQzTrmnnEMDgs+qdoXZ+LclFNYdWz5IGUXJadV4Fw+2/XGY7yL+1K44K+arEmf
+         Iqy3ZWwv/j1+qzVPlqb+YfSw7KKt3jFMC2I3pMVYQpgH1FMHO24ZQHJdA/e+r9xpBiP6
+         HKwpQmQDJhNzqE9MeYtsaexedJvunm6u1wfAUCdFS4IyozXkaU8+h/uZmdXrqzBrQae4
+         t85A==
+X-Gm-Message-State: AOAM532vNduzzgEybPbxadmCHDWJ+W1D3iLVRuQQqMH2F0JpX568qA+R
+        I6e/fkcRjpqcUS4FhoHD2gsee1Q+9u2JYqvvPO10UqB8+LA=
+X-Google-Smtp-Source: ABdhPJzpwBtT5z0kSsZApMZZmy6J/D64PG2evQJ9n7cPB0MkO4e9PVQKqLwxZk3rNv5Y4j6qh2CZAdp8RI7GdXp5UBI=
+X-Received: by 2002:a05:6638:14c8:: with SMTP id l8mr12421453jak.136.1601890782010;
+ Mon, 05 Oct 2020 02:39:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.175]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <CAMRc=MdCj8ZohsKiJjqynXPeg81q8_WZvb5VxoPGUDusFUY7Kw@mail.gmail.com>
+ <CAHp75Vfy8un3APcYqWyO9b8aFMAyKVSkAbn=6kxpbSthgq4jxA@mail.gmail.com>
+ <CAMRc=MfP9EBqUCvcKUmwF4Zd+yFO-yfC6718ZXeM1PbtEqYWNQ@mail.gmail.com> <CAHp75VdCfLrTcM5BeEgxyoRR5ptYDqQQQthrUmNoc7Fy9SwTXA@mail.gmail.com>
+In-Reply-To: <CAHp75VdCfLrTcM5BeEgxyoRR5ptYDqQQQthrUmNoc7Fy9SwTXA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Oct 2020 11:39:31 +0200
+Message-ID: <CAMRc=MdavJ6w3S=5F+00oD7AxtUtC6KgvQm7GvJqX04CVrPjcw@mail.gmail.com>
+Subject: Re: [ANNOUNCE] libgpiod v1.6 released
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        SZ Lin <sz.lin@moxa.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Drew Fustini <drew@pdp7.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2 Oct 2020 18:41:43 -0500
-Rob Herring <robh@kernel.org> wrote:
+On Fri, Oct 2, 2020 at 4:48 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Oct 2, 2020 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Thu, Oct 1, 2020 at 4:56 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+>
+> > > > 1. Switch the major version of libgpiod API to 2 and start working on
+> > > > the new API (preferably starting out by simply porting the current
+> > > > library to v2 uAPI).
+> > > > 2. Indefinitely support v1.6.x branch with bug fixes.
+> > > > 3. Consider v1.4.x as an LTS supported for as long as yocto uses v5.4
+> > > > kernel as their LTS (this is because v1.4 is the last version to not
+> > > > require v5.5 kernel headers to build).
+> > > > 4. (maybe) Create a compatibility layer between v1.x and v2.x once
+> > > > v2.0 is out that will ease the switch to the new release.
+> > >
+> > > I'm wondering if you are planning to develop v2.x with possibility to
+> > > coexist with v1 on the same machine (like gtk2 / gtk3 and other
+> > > examples).
+> > >
+> >
+> > Personally I would prefer to avoid doing this. This isn't a very big
+> > library so unlike gstreamer or gtk I think it won't take much to
+> > switch to v2.0. If anything - I prefer a compatibility layer included
+> > in the package where - if an option is passed to configure - the old
+> > header would be installed alongside the v2.0 .so file + another .so
+> > for translating the calls.
+> >
+> > If you see a very good reason to make them both live together - let me know.
+>
+> Aspects that come to my mind, that needs to be taken into account are
+> the following:
+>  - would ABI be kept on a library level (will binary built against v1
+> be capable to run on v2)?
 
-> Another round of wack-a-mole. The json-schema default is additional
-> unknown properties are allowed, but for DT all properties should be
-> defined.
-> 
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: openipmi-developer@lists.sourceforge.net
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+No, of course it won't be kept. This is the whole point of a new major release.
 
-Hi Rob,
+>  - would API be kept compatible (seems so according to Kent's patch)?
+>
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for iio
+Same as above. The new major release will need a new API to support
+new functionalities introduced by Kent.
 
+> Main point that users that have compiled something for older kernel to
+> work should be able to run this on newer distribution environments
+> (like one, that would have only v2 of the library).
+>
 
-However, one of these made me wonder if the binding was simply wrong...
-(definitely highlights why we should have additionalProperties: false
-where ever possible).
+This has nothing to do with the kernel - nobody is changing the kernel
+API v1 and it'll be supported by libgpiod v1.6.
 
-...
+In user-space, libraries only guarantee binary compatibility in
+respect to the major ABI version. We've already changed the ABI in
+libgpiod twice (it's at 2.x.y currently).
 
+I personally don't care much about how desktop distros handle this -
+I'm mostly interested in bespoke embedded distros built with yocto or
+buildroot. I'm Cc'ing SZ Lin who maintains the libgpiod debian
+package.
 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> index abd8d25e1136..4c1c083d0e92 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> @@ -47,11 +47,17 @@ properties:
->    vddio-supply:
->      description: Regulator that provides power to the bus
->  
-> +  spi-max-frequency: true
-> +  spi-cpha: true
-> +  spi-cpol: true
+SZ Lin: libgpiod will get a new major release in the following months
+- the API will become v2.x and ABI v3.x - do you think it's important
+to make it possible for two major versions of libgpiod to live
+together in a single system? I would like to avoid having to rename
+everything and use libgpiod2.0 everywhere - this information is
+already stored in the API version. Does debian support something like
+yocto's virtual providers maybe? How do you see this for a desktop
+distro.
 
-It isn't completely unheard of for a device to operate in multiple SPI modes, but
-it does seem to be fairly unusual.  I took a look at the datasheet and at least
-from the provided timing diagrams, these are both required in SPI mode.
-
-http://invensense.tdk.com/wp-content/uploads/2020/09/DS-000292-ICM-42605-v1.5.pdf
-
-That doesn't make the binding wrong as such, but we could be tighter in checking this!
-
-I'll add this to my list to take a closer look at sometime soonish.
-
-Thanks.
-
-Jonathan
-
-> +
->  required:
->    - compatible
->    - reg
->    - interrupts
->  
-> +additionalProperties: false
-> +
->  examples:
->    - |
-
+Best regards,
+Bartosz Golaszewski
