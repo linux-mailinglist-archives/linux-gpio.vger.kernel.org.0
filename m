@@ -2,204 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 972B0283285
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 10:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 277C0283371
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 11:36:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbgJEIuI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 04:50:08 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:46835 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgJEIuI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 04:50:08 -0400
-Received: from twspam01.aspeedtech.com (localhost [127.0.0.2] (may be forged))
-        by twspam01.aspeedtech.com with ESMTP id 09588xgO047591
-        for <linux-gpio@vger.kernel.org>; Mon, 5 Oct 2020 16:08:59 +0800 (GMT-8)
-        (envelope-from chiawei_wang@aspeedtech.com)
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 09588T6L047498;
-        Mon, 5 Oct 2020 16:08:32 +0800 (GMT-8)
-        (envelope-from chiawei_wang@aspeedtech.com)
-Received: from ChiaWeiWang-PC.aspeed.com (192.168.2.66) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 5 Oct
- 2020 16:28:11 +0800
-From:   "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
-To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <minyard@acm.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <haiyue.wang@linux.intel.com>, <cyrilbur@gmail.com>,
-        <rlippert@google.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>
-CC:     <ryan_chen@aspeedtech.com>
-Subject: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
-Date:   Mon, 5 Oct 2020 16:28:06 +0800
-Message-ID: <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
-References: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
+        id S1726000AbgJEJg2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 05:36:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2954 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725919AbgJEJg1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Oct 2020 05:36:27 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 094B3ABD20918B3B41D5;
+        Mon,  5 Oct 2020 10:36:23 +0100 (IST)
+Received: from localhost (10.52.124.175) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 5 Oct 2020
+ 10:36:21 +0100
+Date:   Mon, 5 Oct 2020 10:34:36 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Baolin Wang" <baolin.wang7@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        <linux-clk@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-spi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        <linux-leds@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-mips@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: Another round of adding missing
+ 'additionalProperties'
+Message-ID: <20201005093436.00004913@Huawei.com>
+In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+References: <20201002234143.3570746-1-robh@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.2.66]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 09588T6L047498
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.175]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The LPC controller has no concept of the BMC and the Host partitions.
-This patch fixes the documentation by removing the description on LPC
-partitions. The register offsets illustrated in the DTS node examples
-are also fixed to adapt to the LPC DTS change.
+On Fri, 2 Oct 2020 18:41:43 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Signed-off-by: Chia-Wei, Wang <chiawei_wang@aspeedtech.com>
----
- .../devicetree/bindings/mfd/aspeed-lpc.txt    | 85 +++----------------
- 1 file changed, 14 insertions(+), 71 deletions(-)
+> Another round of wack-a-mole. The json-schema default is additional
+> unknown properties are allowed, but for DT all properties should be
+> defined.
+> 
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: openipmi-developer@lists.sourceforge.net
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-index a92acf1dd491..866f54a09e09 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -9,13 +9,7 @@ primary use case of the Aspeed LPC controller is as a slave on the bus
- conditions it can also take the role of bus master.
- 
- The LPC controller is represented as a multi-function device to account for the
--mix of functionality it provides. The principle split is between the register
--layout at the start of the I/O space which is, to quote the Aspeed datasheet,
--"basically compatible with the [LPC registers from the] popular BMC controller
--H8S/2168[1]", and everything else, where everything else is an eclectic
--collection of functions with a esoteric register layout. "Everything else",
--here labeled the "host" portion of the controller, includes, but is not limited
--to:
-+mix of functionality, which includes, but is not limited to:
- 
- * An IPMI Block Transfer[2] Controller
- 
-@@ -44,8 +38,8 @@ Required properties
- ===================
- 
- - compatible:	One of:
--		"aspeed,ast2400-lpc", "simple-mfd"
--		"aspeed,ast2500-lpc", "simple-mfd"
-+		"aspeed,ast2400-lpc", "simple-mfd", "syscon"
-+		"aspeed,ast2500-lpc", "simple-mfd", "syscon"
- 
- - reg:		contains the physical address and length values of the Aspeed
-                 LPC memory region.
-@@ -55,66 +49,17 @@ Required properties
- - ranges: 	Maps 0 to the physical address and length of the LPC memory
-                 region
- 
--Required LPC Child nodes
--========================
--
--BMC Node
----------
--
--- compatible:	One of:
--		"aspeed,ast2400-lpc-bmc"
--		"aspeed,ast2500-lpc-bmc"
--
--- reg:		contains the physical address and length values of the
--                H8S/2168-compatible LPC controller memory region
--
--Host Node
-----------
--
--- compatible:   One of:
--		"aspeed,ast2400-lpc-host", "simple-mfd", "syscon"
--		"aspeed,ast2500-lpc-host", "simple-mfd", "syscon"
--
--- reg:		contains the address and length values of the host-related
--                register space for the Aspeed LPC controller
--
--- #address-cells: <1>
--- #size-cells:	<1>
--- ranges: 	Maps 0 to the address and length of the host-related LPC memory
--                region
--
- Example:
- 
- lpc: lpc@1e789000 {
--	compatible = "aspeed,ast2500-lpc", "simple-mfd";
-+	compatible = "aspeed,ast2500-lpc", "simple-mfd", "syscon";
- 	reg = <0x1e789000 0x1000>;
- 
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	ranges = <0x0 0x1e789000 0x1000>;
--
--	lpc_bmc: lpc-bmc@0 {
--		compatible = "aspeed,ast2500-lpc-bmc";
--		reg = <0x0 0x80>;
--	};
--
--	lpc_host: lpc-host@80 {
--		compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
--		reg = <0x80 0x1e0>;
--		reg-io-width = <4>;
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0x0 0x80 0x1e0>;
--	};
- };
- 
--BMC Node Children
--==================
--
--
--Host Node Children
--==================
- 
- LPC Host Interface Controller
- -------------------
-@@ -145,14 +90,12 @@ Optional properties:
- 
- Example:
- 
--lpc-host@80 {
--	lpc_ctrl: lpc-ctrl@0 {
--		compatible = "aspeed,ast2500-lpc-ctrl";
--		reg = <0x0 0x80>;
--		clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
--		memory-region = <&flash_memory>;
--		flash = <&spi>;
--	};
-+lpc_ctrl: lpc-ctrl@80 {
-+	compatible = "aspeed,ast2500-lpc-ctrl";
-+	reg = <0x80 0x80>;
-+	clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
-+	memory-region = <&flash_memory>;
-+	flash = <&spi>;
- };
- 
- LPC Host Controller
-@@ -174,9 +117,9 @@ Required properties:
- 
- Example:
- 
--lhc: lhc@20 {
-+lhc: lhc@a0 {
- 	compatible = "aspeed,ast2500-lhc";
--	reg = <0x20 0x24 0x48 0x8>;
-+	reg = <0xa0 0x24 0xc8 0x8>;
- };
- 
- LPC reset control
-@@ -194,8 +137,8 @@ Required properties:
- 
- Example:
- 
--lpc_reset: reset-controller@18 {
-+lpc_reset: reset-controller@98 {
-         compatible = "aspeed,ast2500-lpc-reset";
--        reg = <0x18 0x4>;
-+        reg = <0x98 0x4>;
-         #reset-cells = <1>;
- };
--- 
-2.17.1
+Hi Rob,
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for iio
+
+
+However, one of these made me wonder if the binding was simply wrong...
+(definitely highlights why we should have additionalProperties: false
+where ever possible).
+
+...
+
+
+> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> index abd8d25e1136..4c1c083d0e92 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> @@ -47,11 +47,17 @@ properties:
+>    vddio-supply:
+>      description: Regulator that provides power to the bus
+>  
+> +  spi-max-frequency: true
+> +  spi-cpha: true
+> +  spi-cpol: true
+
+It isn't completely unheard of for a device to operate in multiple SPI modes, but
+it does seem to be fairly unusual.  I took a look at the datasheet and at least
+from the provided timing diagrams, these are both required in SPI mode.
+
+http://invensense.tdk.com/wp-content/uploads/2020/09/DS-000292-ICM-42605-v1.5.pdf
+
+That doesn't make the binding wrong as such, but we could be tighter in checking this!
+
+I'll add this to my list to take a closer look at sometime soonish.
+
+Thanks.
+
+Jonathan
+
+> +
+>  required:
+>    - compatible
+>    - reg
+>    - interrupts
+>  
+> +additionalProperties: false
+> +
+>  examples:
+>    - |
 
