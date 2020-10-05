@@ -2,156 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1706D2831F8
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 10:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E32283281
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 10:50:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgJEI0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 04:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgJEI0i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 04:26:38 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E05C0613AE
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Oct 2020 01:26:38 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id u74so1210254vsc.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Oct 2020 01:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=41Y6sjMmjcMlV2JauZyN/TxOh6umZ/keewCU2mb8LIc=;
-        b=AXAmvxEcZgWulidtPjWzcdr2Qm2OYOtZA0wDa8FmovT91MPeLRIwIVCT8lx9v5UNlG
-         SctQfxm1GmrUHlaNPX+RFUQtBHXdidJ0/CU1C9clQS0l30cTxEkteaWVnvPQuLuFSdee
-         4MV2Fpon9L5TsVQGS1K3gSKttvhofJOiwA9P0bVAeb/tNn5WAcwRk5Be/IAOdU2QkdYn
-         VFrey16k5OCZxA1L7Q1xqspPxsd/+WYGgx9scKUGZYuyhxSBuKF1PhH1KfSOoQx2J5OY
-         401UuKSNx0/BKxG4Vky36hMzFvsFJwDUWIuAQewHgLK5qqZWGGWEkqztdK9+VC+FKpcj
-         S9OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=41Y6sjMmjcMlV2JauZyN/TxOh6umZ/keewCU2mb8LIc=;
-        b=D4eOsGNRcX6MxjDbfSthej/mP2UgwRxSlFmuhDEXDc03u/XhQdSWTWmyYkn8LkJ1dL
-         nya1O95TFM1e2JuPR9iOTUIN4NExh5F3gjpXyAMLCHRvTBbyJiNAcwPgYX7i9NtchXP9
-         9fw8I+L/J7d2t1bRm23JPjmQHr0+qADfuyOYmezXnSZrLpNTaef6/UOpQCY0jOrt214y
-         sl/jdM9Dms2LkP5UYNXtJYtArO3C4owe3otzhdPUi43rDdhwpmHu88gBIsJRd1bFd01z
-         8pX7OGyhp9BbzotX8gYildM9FIecvmeneSpuHkq+xyb7f0EDwyE3ZZ30dTYOD3n8MaV8
-         qnOA==
-X-Gm-Message-State: AOAM533DkThDDzW/UFv++olyZ1Hg9Tfuv6fg9wXfAOa4l9gMsQsGvIIm
-        mrODXYCMFK7z4322SP+PbAy66ckr7MYfe46BJriyPw==
-X-Google-Smtp-Source: ABdhPJxlPMGygHVTcnGIf5MQvmk2y9YM/OMFZ7y/LPtKUwwQZxTgA80YvlEMQPDfoWIYZailBQzIdWarus99WB2IvNI=
-X-Received: by 2002:a67:ec9a:: with SMTP id h26mr6751269vsp.34.1601886397228;
- Mon, 05 Oct 2020 01:26:37 -0700 (PDT)
+        id S1725984AbgJEIt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 04:49:56 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:46826 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgJEIt4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 04:49:56 -0400
+Received: from twspam01.aspeedtech.com (localhost [127.0.0.2] (may be forged))
+        by twspam01.aspeedtech.com with ESMTP id 09588de5047530
+        for <linux-gpio@vger.kernel.org>; Mon, 5 Oct 2020 16:08:39 +0800 (GMT-8)
+        (envelope-from chiawei_wang@aspeedtech.com)
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 09588T7v047497;
+        Mon, 5 Oct 2020 16:08:29 +0800 (GMT-8)
+        (envelope-from chiawei_wang@aspeedtech.com)
+Received: from ChiaWeiWang-PC.aspeed.com (192.168.2.66) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 5 Oct
+ 2020 16:28:09 +0800
+From:   "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
+To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <minyard@acm.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <haiyue.wang@linux.intel.com>, <cyrilbur@gmail.com>,
+        <rlippert@google.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>
+CC:     <ryan_chen@aspeedtech.com>
+Subject: [PATCH v2 0/5] Remove LPC register partitioning
+Date:   Mon, 5 Oct 2020 16:28:01 +0800
+Message-ID: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20201002234143.3570746-1-robh@kernel.org>
-In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 5 Oct 2020 10:26:01 +0200
-Message-ID: <CAPDyKFq=ZUiYhm0-K5ZVYS1FH2O5e-+Gt6Dftf=LmL9ABa7CaA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Another round of adding missing 'additionalProperties'
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-leds@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mips@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [192.168.2.66]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 09588T7v047497
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 3 Oct 2020 at 01:41, Rob Herring <robh@kernel.org> wrote:
->
-> Another round of wack-a-mole. The json-schema default is additional
-> unknown properties are allowed, but for DT all properties should be
-> defined.
->
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: openipmi-developer@lists.sourceforge.net
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->
-> I'll take this thru the DT tree.
->
+The LPC controller has no concept of the BMC and the Host partitions.
+The incorrect partitioning can impose unnecessary range restrictions
+on register access through the syscon regmap interface.
 
-[...]
+For instance, HICRB contains the I/O port address configuration
+of KCS channel 1/2. However, the KCS#1/#2 drivers cannot access
+HICRB as it is located at the other LPC partition.
 
->  .../bindings/mmc/mmc-pwrseq-emmc.yaml         |  2 ++
->  .../bindings/mmc/mmc-pwrseq-sd8787.yaml       |  2 ++
->  .../bindings/mmc/mmc-pwrseq-simple.yaml       |  2 ++
+In addition, to be backward compatible, the newly added HW control
+bits could be located at any reserved bits over the LPC addressing
+space.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Thereby, this patch series aims to remove the LPC partitioning for
+better driver development and maintenance.
 
-Kind regards
-Uffe
+
+Changes since v1:
+	- Add the fix to the aspeed-lpc binding documentation.
+
+Chia-Wei, Wang (5):
+  ARM: dts: Remove LPC BMC and Host partitions
+  soc: aspeed: Fix LPC register offsets
+  ipmi: kcs: aspeed: Fix LPC register offsets
+  pinctrl: aspeed-g5: Fix LPC register offsets
+  dt-bindings: aspeed-lpc: Remove LPC partitioning
+
+ .../devicetree/bindings/mfd/aspeed-lpc.txt    |  85 ++---------
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  74 ++++------
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 135 ++++++++----------
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 135 ++++++++----------
+ drivers/char/ipmi/kcs_bmc_aspeed.c            |  13 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    |   2 +-
+ drivers/soc/aspeed/aspeed-lpc-ctrl.c          |   6 +-
+ drivers/soc/aspeed/aspeed-lpc-snoop.c         |  11 +-
+ 8 files changed, 176 insertions(+), 285 deletions(-)
+
+-- 
+2.17.1
+
