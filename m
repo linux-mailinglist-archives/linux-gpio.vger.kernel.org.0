@@ -2,76 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3827283652
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 15:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 081CD283739
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Oct 2020 16:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgJENNA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 09:13:00 -0400
-Received: from mga07.intel.com ([134.134.136.100]:10137 "EHLO mga07.intel.com"
+        id S1726018AbgJEOCY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Oct 2020 10:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgJENNA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 5 Oct 2020 09:13:00 -0400
-IronPort-SDR: h6VG0Ji25ddIO+roW5MDsDH6O/T7F24iqcTgTGT/V1R/uxTBx1f9LbgrxbkNrQu0IihCGqQO/s
- 0l6ZZfg/q3Lg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9764"; a="227618524"
-X-IronPort-AV: E=Sophos;i="5.77,338,1596524400"; 
-   d="scan'208";a="227618524"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2020 06:10:47 -0700
-IronPort-SDR: 3K4IOF18f21GA4Rcaq8kkMchhGELsGPwPy8yLTLOTCpWM9EP3pu0Ac13GvjYjRHua/+sb0COv8
- qKAHG4Gs/JJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,338,1596524400"; 
-   d="scan'208";a="352430590"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Oct 2020 06:10:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DB67A1EF; Mon,  5 Oct 2020 16:10:44 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1725954AbgJEOCY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Oct 2020 10:02:24 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4492085B;
+        Mon,  5 Oct 2020 14:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601906543;
+        bh=rxc3XhX1nx8QuYTrJNvWee/HrGELRzW/U/KzDS85YDg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ju6CVsNsFA93xbg1UKUxKjShRajQ/HLrcgiXnddy29nUbWxNnJRf7+J6mTVH6W+Rt
+         w4m2JALHdxvEcrxSQKRqm0+Afzu7qww67afRDxpJwdAOzuIqI/6V4LISaXISHX3sUy
+         nXGOo5NPECZ74QJ4T0P95XWd+tlbOdW3vLe18lWE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kPR4H-00HOH4-7u; Mon, 05 Oct 2020 15:02:21 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v1] gpiolib: Disable compat ->read() code in UML case
-Date:   Mon,  5 Oct 2020 16:10:44 +0300
-Message-Id: <20201005131044.87276-1-andriy.shevchenko@linux.intel.com>
+        kernel-team@android.com
+Subject: [PATCH] gpio: pca953x: Survive spurious interrupts
+Date:   Mon,  5 Oct 2020 15:02:17 +0100
+Message-Id: <20201005140217.1390851-1-maz@kernel.org>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It appears that UML (arch/um) has no compat.h header defined and hence
-can't compile a recently provided piece of code in GPIO library.
+The pca953x driver never checks the result of irq_find_mapping(),
+which returns 0 when no mapping is found. When a spurious interrupt
+is delivered (which can happen under obscure circumstances), the
+kernel explodes as it still tries to handle the error code as
+a real interrupt.
 
-Disable compat ->read() code in UML case to avoid compilation errors.
+Handle this particular case and warn on spurious interrupts.
 
-While at it, use pattern which is already being used in the kernel elsewhere.
-
-Fixes: 5ad284ab3a01 ("gpiolib: Fix line event handling in syscall compatible mode")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/gpio/gpiolib-cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-pca953x.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 76c36b05aef6..fed5a3b2172f 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -425,7 +425,7 @@ static __poll_t lineevent_poll(struct file *file,
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index fb61f2fc6ed7..c2d6121c48c9 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -824,8 +824,21 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ 	ret = pca953x_irq_pending(chip, pending);
+ 	mutex_unlock(&chip->i2c_lock);
  
- static ssize_t lineevent_get_size(void)
- {
--#ifdef __x86_64__
-+#if defined(CONFIG_X86_64) && !defined(CONFIG_UML)
- 	/* i386 has no padding after 'id' */
- 	if (in_ia32_syscall()) {
- 		struct compat_gpioeevent_data {
+-	for_each_set_bit(level, pending, gc->ngpio)
+-		handle_nested_irq(irq_find_mapping(gc->irq.domain, level));
++	if (ret) {
++		ret = 0;
++
++		for_each_set_bit(level, pending, gc->ngpio) {
++			int nested_irq = irq_find_mapping(gc->irq.domain, level);
++
++			if (unlikely(nested_irq <= 0)) {
++				dev_warn_ratelimited(gc->parent, "unmapped interrupt %d\n", level);
++				continue;
++			}
++
++			handle_nested_irq(nested_irq);
++			ret = 1;
++		}
++	}
+ 
+ 	return IRQ_RETVAL(ret);
+ }
 -- 
 2.28.0
 
