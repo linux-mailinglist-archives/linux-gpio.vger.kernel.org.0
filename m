@@ -2,200 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D882843A4
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 03:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A81D284513
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 06:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725898AbgJFBKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Oct 2020 21:10:24 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:41393 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgJFBKX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Oct 2020 21:10:23 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20201006011017epoutp0296e01a9602596620fa94cb505b1f2ccc~7QfYIgmPy1813818138epoutp02j;
-        Tue,  6 Oct 2020 01:10:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20201006011017epoutp0296e01a9602596620fa94cb505b1f2ccc~7QfYIgmPy1813818138epoutp02j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1601946617;
-        bh=B4PawtUJM2t4wzU2pvIySnG7we9Bhgj1khiFTd9d9CE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Rx8RJtC6Yj3KjGbngnY3QrOD1xUh97k2CcjP1L4bTfTZIPheVmtqSJrA4EZdpPPOg
-         trAwp0No0N/0erQYIZqHeGT1O8Y1jJ5bsPfmRbRjm0h8DI5JF5XlW5/vhGg3S/8m9/
-         spUfOkBMrCNoisTG2YOcZI8q4vf8cCSD1/9SF9L8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20201006011016epcas1p459c312e10a907b7832b22cd23eb9d8a4~7QfXew6HM1279312793epcas1p4Q;
-        Tue,  6 Oct 2020 01:10:16 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4C4zsY6sg8zMqYks; Tue,  6 Oct
-        2020 01:10:09 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        20.E2.09577.1F3CB7F5; Tue,  6 Oct 2020 10:10:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20201006011008epcas1p300f9dc6918a008b4b0acf5870f438a2e~7QfP7yysc1939819398epcas1p3e;
-        Tue,  6 Oct 2020 01:10:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20201006011008epsmtrp151af87c3414c2b6b37057fcba7d215f2~7QfP5fMXI0584005840epsmtrp1N;
-        Tue,  6 Oct 2020 01:10:08 +0000 (GMT)
-X-AuditID: b6c32a39-bfdff70000002569-24-5f7bc3f11c68
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C1.AB.08604.0F3CB7F5; Tue,  6 Oct 2020 10:10:08 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20201006011007epsmtip14dca797b06e6c0e4525f28d6ead67ad0~7QfO-JeoX3017730177epsmtip1d;
-        Tue,  6 Oct 2020 01:10:07 +0000 (GMT)
-Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
- in common schemas
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <0e155728-89b3-5f31-f008-dfd57b6c4f6b@samsung.com>
-Date:   Tue, 6 Oct 2020 10:23:28 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        id S1726171AbgJFEts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 00:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgJFEts (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 00:49:48 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87514C0613A7
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Oct 2020 21:49:48 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id b19so614999pld.0
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Oct 2020 21:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=v8UV7zXODIWoAuTyZlujcVrxAU2nyBbK4m1+uEqrtMw=;
+        b=E5JDjnNDlahl1gTVApUMkMzZJNeugRdnnMduuieNRYHNZe+3xLWtpNjj21hrAA9UNP
+         CTBv4RWjq3Xak31qvdPTMenNGOeM7Bh/oS7IMMRdZ7h+LGCEMuZ3avIN01+9bhQ56TkZ
+         KIozjwqMeel/Y67M5/eBPjTwqd90m066P7l3nMMD2sbodrA45G6Pm9Gl8DOi00ZNbDlm
+         cZSJKW98932i/OuCE4wh98eeUjTMqcLbxXdQCvLgvosMG1eGYRWaOTCJqNpWxlAfpBmd
+         V/4fAo2W0AXMUHFdVJupUdQytyqs4yOp5J9IDWdmMM2260iCGoQo3rAUuNpfgZV/2lgu
+         vmHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=v8UV7zXODIWoAuTyZlujcVrxAU2nyBbK4m1+uEqrtMw=;
+        b=evZQPaw0eJQL7ZbyR9KGewuklt1+D622+thIXz4bypSO/mWPCoD3Ijhb4BPH1RwWjc
+         GlrI5qFG+gxR8xivPxAdkE7wq1m8h3EV+ixotgfUyLU0XbxitDUkGaTo+aTa9tvaRfbo
+         CWeYaxuyfBckMSdjzbAbLWDHYfgvlyF5CoqKBynScxVoajF22iZwhq7XJz8jSkcxktR7
+         /+eQnL9GNjJpz0nnUxwC+yOHNH/hEkf7K51lCVjEGWClQ3HcFntbwbjZ+SRpdMa5ruTe
+         jeMln8nMyaJxgUZ9habNKdpqKrz4dpbHhliXpqkN3NF+9i2PBZ04mR0vk72PM5IboKbs
+         Ey8Q==
+X-Gm-Message-State: AOAM5331uLx9UTL8lQqu08ZzX6G1jAsBtM8+8loj23hgB0+VbQMeHO69
+        cc+R/LLY76ymzEvaTmuPhyo=
+X-Google-Smtp-Source: ABdhPJxm0yyrcc/S/c2Sx0vFr6pBgsfcr7v0e/sJA4/zblou4y6DwgXkn0mhQtM/OXLyY7LtO2Jqhg==
+X-Received: by 2002:a17:902:eacc:b029:d3:b362:72c0 with SMTP id p12-20020a170902eaccb02900d3b36272c0mr1626520pld.23.1601959787947;
+        Mon, 05 Oct 2020 21:49:47 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id q5sm1716702pfb.184.2020.10.05.21.49.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2020 21:49:47 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Tue, 6 Oct 2020 12:49:41 +0800
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+Message-ID: <20201006044941.fdjsp346kc5thyzy@Rk>
+References: <CACRpkdYvaC_DUJW+nvmofhhHieDYAiREBog6rn5iS=J4moAtZg@mail.gmail.com>
+ <3ded544f-be1b-8dc4-16b7-42172b1e1b08@redhat.com>
+ <20201002124235.nhjzq7i4gpkzwgbs@Rk>
+ <39f03cfe-0e7f-2ab6-7821-048cfcde8baa@redhat.com>
+ <20201002145133.a43ypm2z7ofgtt7u@Rk>
+ <eed704f5-4210-788c-37b7-06d65b58d3de@redhat.com>
+ <20201002224502.vn3ooodrxrblwauu@Rk>
+ <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
+ <20201003230340.42mtl35n4ka4d5qw@Rk>
+ <20201004051644.f3fg2oavbobrwhf6@Rk>
 MIME-Version: 1.0
-In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01UaVBTVxSe+/KWoFKfiOXCVIHYOtUqEhF66KB1lNpXdapVy1hnbIzwBhhD
-        kknAqnQYQMCouFBcSkRgCC5sChGQTVBWaQtBUEQxrmhAFgUEXKA2EJzy7zvnfOd8850z9woF
-        NiahgzBQHsyr5FKZiJ5CFlTOd13UVxkqcU0cXQxpN28zYDBWCCD/vZaBTONRGtIiA+DE43Ya
-        kgZmQ6IhioTkqgYKMk+MUlCZ2oHg1uBLGvbpLtGQ+vJPCiLSmkl4FJlBgMGQw0BjwREK0uKT
-        KTgQl8bAw8FqBEO3NAQcHzlPgP5pCwUZwycE0Bf7gILLySMI9nflI9CMvkZQU/iEgKSqXhLu
-        9g9R0FycSEN+90UEsTn55nl6M6/qw1EEJZHnGKhPqqVh4HAVAqMxA0HBQBQNNZm3aPhHd5iB
-        iL67DKSeixZA68UyBvJLrxFQlFhHwTn9CAGV+8souJR6nIS2iAs0dDbHCiBGOx2Mf1XT8L64
-        hoH4om4EH0oLGWh/fISGC2/N2v+25JLwd0kwxNTUUCvWcNFN50kuKSuU6+7sJLm89LsEV6l5
-        zXBFWiPDpehDuL6mNsSd1iRQnK60k+Ca60M4fcYBmgu/ZiC5+y2lNNfb0MBw6VlZ1AbHrTu9
-        AnipH69y4uW+Cr9Auf8y0dpNklUSdw9X8SKxJ3wtcpJLg/hlIu91GxatDpSZjypy2iWVhZhT
-        G6RqtWjxci+VIiSYdwpQqIOXiXiln0zpqXRRS4PUIXJ/F19F0DdiV9cl7mbi9p0ByRffEUo9
-        uTun+yYVjuoFB5GVELNLcVfXfXQQTRHasIUIv0h5QlqCfoTr4zIoSzCEcElkA/mx5VR1FmMp
-        XEW4sT9lgvUS4aL2B+Osmex2bBpqGxexZbfh2nsvxucK2DRbXN0WO16g2QW4vKOVHsPTWWd8
-        +81TNIat2eX48tk3xBgm2c+x4W3r+NBZrA+uK4ia4MzAdQnt5rxQaMV64Lz0eWNpAWuH77Un
-        ExbsiK/0JArGdDHbPBV3HHuGLBa8cd/pjokNzMQvavMYC3bAnUdjJnAoTq+roi3NGoTzyhsp
-        S8ENl5+NJ8aEBex8fKl4sSXtjIven0EW4U9w72AsNUbBrDXWxNhYKHNx8yMjYcH2WLf/AH0M
-        ibST3GgnWdBOsqD9XywFkRnoU16pDvLn1WKl++Rz69H4i1/gWYhO9bxyqUCEEFUgLBSIbK1d
-        fHZLbKz9pHv28iqFRBUi49UVyN283ziBwyxfhfnLkAdLxO5L3NzcYKnYw10sFtlZP77nJLFh
-        /aXB/E6eV/Kqj32E0MohnHC0Cr9uN/qLx0oUL2mqWLHQ3SDbfHL1g0SvGblX91k3eLY8jFtZ
-        aveqKbs/bsuhz5yPcyafMvsuU3h7j1PY2sK2nxqmrTuUlOzhoBs2Zuderc5N7bmxRRs2tzg1
-        TNMTuGezH/fFwqJ5I4p5Pnsdt//2+/36gNqN+iub1iR8f2rY7dcdmWr7Q93DP288Mnvrm/gz
-        LlFLTaFZTL1uTuY227gn30WXZWWv831rMgavcpL/WCZ7fmdtxNMv7da3vtt1Q/dtzvU5lVKP
-        P2a8HqgxmbxadPLn630Hs4fnS21brSN/uFBSVb4jgV7p/FXjM+81u+0ls+x8o1dPvbk3qCTs
-        pKDj8p3erdPsMsNHRaQ6QCpeIFCppf8BncC7Z3oFAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxiA851rgRCOBcIB41SGmBHBsTD2uhlisjkO0yWbm2RbdNiMBlBA
-        RmFDWTJA5CaXOQWh0pZLASlYoFCkgIC0sMCklYsExDoRzEDuooCCshayhH9P3u95vvfPy8P5
-        BsqJFxIeJYwMF4Q6U5ZEvdb5Hfd5bWzA+2MaR5D33qfBYGzHQb0qpqHCmEWBPCEYskfHKZAu
-        7oB8QyIBMp2ehIrsNyRoiyYQDLyco+BCcRUFRXO5JMTL+wl4nKDAwGCopuFefSYJ8isyElIv
-        y2n452UHgqWBFAyurpVhoBobJEGxnI3DQvojEmplawiSp9QIUt68QNDZ8AQDqW6WgOHnSyT0
-        N+ZToJ5WIkivVpv+U5k83XoWgqaEUhp6pH9RsJihQ2A0KhDULyZS0FkxQMHd4gwa4heGaSgq
-        vYjDkLKFBnVzGwaa/C4SSlVrGGiTW0ioKrpKwEj8DQom+9NxSBLbgLG7g4LVxk4armimEaw3
-        N9AwPppJwY1Xpt1vB2sI+LspCpI6O8lDX3AX+8oITloZy01PThJcXfkwxmlTXtCcRmykuQJV
-        NLfQN4K46yl5JFfcPIlx/T3RnEqRSnFxbQaCezjYTHGzej3NlVdWkl/t/MHyYKAwNOQXYeR+
-        n1OWwTLlayxCRcRUT/eScagHT0MWPJbxYq91VNJm5jNNiJXmO2/OHdmc3g6TwzOxLavVitKQ
-        pUmZQezsQvJGa8ucYv9dGtlw7JiTbMZzS7ODM0o7dqxRT24GasSup0k2FlCMG9s6MUSZ2YbZ
-        zd5fGUNmtmZ82NqSFczMBOPCGl4NEWa2Z/xZjXwM23S2sV1544R5mQXjzdaVu5rHOLOXXZP2
-        4ZvswD4Yl2GbvJO9NZOP/4FsxVtq8ZZEvCURb0kKEKFAjsIIUVhQmMgzwjNc+KuHSBAmig4P
-        8vjpbJgKbdy823sN6JZi3qMdYTzUjlge7mxn7eEfE8C3DhScOy+MPBsQGR0qFLWj7TzC2cF6
-        6OfCH/lMkCBKeEYojBBG/v+K8Syc4jCL2x+7enjndd+V7Tp/WP9g38D3kuNtCwUdvMRrOcQ9
-        7yn+apJ0wD1G6dLm0i3ZI7F4NhZ3wr/s8Sxhm9r95aef+HgNn9Me8AtE/GFdpo9VwtShE3d6
-        JaV43TbdrmLXiQ+qVlMnjX57vEvOnFzLfrKvde/DY+OF64Xhjwb+DP399NGYcu60+Gn3bnuh
-        Plrqq3E1hF5qIattpkZHu5JKahwor5zrTPqz166tB46VyY+UH92vr/1opWbHN1a+ys7j2tIs
-        q7J5z88Lb4a4bf+u6UO/b8uXvUSWt2fm7hysh9y3n03nGn0dpxoEgQFPL1WnXoiVHL7p9C64
-        X7a30fymDsxaFjW2fO1MiIIFnm54pEjwH6+El7RiBAAA
-X-CMS-MailID: 20201006011008epcas1p300f9dc6918a008b4b0acf5870f438a2e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20201005183933epcas1p36d2c9cc1f3ad9180421269ca74330d65
-References: <20201005183830.486085-1-robh@kernel.org>
-        <CGME20201005183933epcas1p36d2c9cc1f3ad9180421269ca74330d65@epcas1p3.samsung.com>
-        <20201005183830.486085-5-robh@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201004051644.f3fg2oavbobrwhf6@Rk>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/6/20 3:38 AM, Rob Herring wrote:
-> In order to add meta-schema checks for additional/unevaluatedProperties
-> being present, all schema need to make this explicit. As common/shared
-> schema are included by other schemas, they should always allow for
-> additionalProperties.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-(snip)
+Hi Hans and Linus,
 
->  Documentation/devicetree/bindings/extcon/wlf,arizona.yaml    | 2 ++
-(snip)
+I've found the direct evidence proving the GPIO interrupt controller is
+malfunctioning.
 
-For the extcon part,
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+I've found a way to let the GPIO chip trigger an interrupt by accident
+when playing with the GPIO sysfs interface,
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+  - export pin130 which is used by the touchad
+  - set the direction to be "out"
+  - `echo 0 > value` will trigger the GPIO controller's parent irq and
+    "echo 1 > value" will make it stop firing
+
+(I'm not sure if this is yet another bug of the GPIO chip. Anyway I can
+manually trigger an interrupt now.)
+
+I wrote a C program is to let GPIO controller quickly generate some
+interrupts then disable the firing of interrupts by toggling pin#130's
+value with an specified time interval, i.e., set the value to 0 first
+and then after some time, re-set the value to 1. There is no interrupt
+firing unless time internal > 120ms (~7Hz). This explains why we can
+only see 7 interrupts for the GPIO controller's parent irq.
+
+My hypothesis is the GPIO doesn't have proper power setting so it stays
+in an idle state or its clock frequency is too low by default thus not
+quick enough to read interrupt input. Then pinctrl-amd must miss some
+code to configure the chip and I need a hardware reference manual of this
+GPIO chip (HID: AMDI0030) or reverse-engineer the driver for Windows
+since I couldn't find a copy of reference manual online? What would you
+suggest?
+
+Thank you!
+
+On Sun, Oct 04, 2020 at 01:16:44PM +0800, Coiby Xu wrote:
+>On Sun, Oct 04, 2020 at 07:03:40AM +0800, Coiby Xu wrote:
+>>On Sat, Oct 03, 2020 at 03:22:46PM +0200, Hans de Goede wrote:
+>>>Hi,
+>>>
+>>>On 10/3/20 12:45 AM, Coiby Xu wrote:
+>>>>On Fri, Oct 02, 2020 at 09:44:54PM +0200, Hans de Goede wrote:
+>>>>>Hi,
+>>>>>
+>>>>>On 10/2/20 4:51 PM, Coiby Xu wrote:
+>>>>>>On Fri, Oct 02, 2020 at 03:36:29PM +0200, Hans de Goede wrote:
+>>>>>
+>>>>><snip>
+>>>>>
+>>>>>>>>>So are you seeing these 7 interrupts / second for the touchpad irq or for
+>>>>>>>>>the GPIO controllers parent irq ?
+>>>>>>>>>
+>>>>>>>>>Also to these 7 interrupts/sec stop happening when you do not touch the
+>>>>>>>>>touchpad ?
+>>>>>>>>>
+>>>>>>>>I see these 7 interrupts / second for the GPIO controller's parent irq.
+>>>>>>>>And they stop happening when I don't touch the touchpad.
+>>>>>>>
+>>>>>>>Only from the parent irq, or also on the touchpad irq itself ?
+>>>>>>>
+>>>>>>>If this only happens on the parent irq, then I would start looking at the
+>>>>>>>amd-pinctrl code which determines which of its "child" irqs to fire.
+>>>>>>
+>>>>>>This only happens on the parent irq. The input's pin#130 of the GIPO
+>>>>>>chip is low most of the time and pin#130.
+>>>>>
+>>>>>Right, but it is a low-level triggered IRQ, so when it is low it should
+>>>>>be executing the i2c-hid interrupt-handler. If it is not executing that
+>>>>>then it is time to look at amd-pinctrl's irq-handler and figure out why
+>>>>>that is not triggering the child irq handler for the touchpad.
+>>>>>
+>>>>I'm not sure if I have some incorrect understandings about GPIO
+>>>>interrupt controller because I don't quite follow your reasoning.
+>>>>What I actually suspect is there's something wrong with amd-pinctrl
+>>>>which makes the GPIO chip fail to assert its common interrupt output
+>>>>line connected to one IO-APIC's pin#7 thus IRQ#7 fails to fire. What
+>>>>I learn about this low-level triggered IRQ is that the i2c-hid
+>>>>interrupt-handler will be woken up by amd-pinctrl's irq-handler which
+>>>>is executed when the parent IRQ#7 fires. The code path is as follows,
+>>>>
+>>>>    <IRQ>
+>>>>    dump_stack+0x64/0x88
+>>>>    __irq_wake_thread.cold+0x9/0x12
+>>>>    __handle_irq_event_percpu+0x80/0x1c0
+>>>>    handle_irq_event+0x58/0xb0
+>>>>    handle_level_irq+0xb7/0x1a0
+>>>>    generic_handle_irq+0x4a/0x60
+>>>>    amd_gpio_irq_handler+0x15f/0x1b0 [pinctrl_amd]
+>>>>    __handle_irq_event_percpu+0x45/0x1c0
+>>>>    handle_irq_event+0x58/0xb0
+>>>>    handle_fasteoi_irq+0xa2/0x210
+>>>>    do_IRQ+0x70/0x120
+>>>>    common_interrupt+0xf/0xf
+>>>>    </IRQ>
+>>>>
+>>>>But the problem is somehow IRQ#7 doesn't even fire when the input's
+>>>>pin#130 of the GIPO is low. Without IRQ#7 firing, amd-pinctrl's
+>>>>irq-handler wouldn't be executed in the first place, let alonet
+>>>>triggering the child irq handler. Btw, amd-pinctrl's irq-handler
+>>>>simply iterate over all pins. If there is mapped irq found for this
+>>>>hwirq (yes, it won't even check if this pin triggers the interrupt),
+>>>>then it will call generic_handle_irq. So there's nothing wrong about
+>>>>this part of code.
+>>>
+>>>Ok, so the i2c-hid irq does fire, but only 7 times a second just
+>>>like the GPIO controller's parent irq.
+>>>
+>>I'm not sure if it's correct to say if hi2c-hid irq fires or not and how
+>>frequently it fires since the i2c-hid irq is mapped to pin#130 of the
+>>GPIO interrupt controller and the touchpad has another interrupt line
+>>connected to pin#130 which fires to indicate new data. All we know is
+>>pin#130 of the GPIO chip has low input most of the time when the finger
+>>is on the touchpad so we can infer the touchpad has been trying to
+>>notify the kernel of new data but somehow GPIO's parent irq only fires 7
+>>times / second.
+>>
+>>>The only thing I can think of then is to add printk-s to check how
+>>>long the i2c-hid interrupt handler takes to complete. It could be
+>>>there is a subtle bug somewhere causing the i2c transfers to take
+>>>longer when run from a (threaded) irq handler. That would be weird
+>>>though, so I don't expect this to result in any useful findings.
+>>>
+>>
+>>I also doubted if it takes too much time for the i2c-hid handler to
+>>finish reading i2c transfer, processing data and delivering to the input
+>>system. After measuring the time internal between the starting of the
+>>GPIO irq's parent handler and when pin#130 is unmasked, we can exclude
+>>this possibility.
+>>
+>>I have been wondering if we let make pin#130 have low input thus to
+>>trigger a interrupt firing or assert the GPIO's common interrupt output
+>>line manually thus we can measure how long does it take for the kernel
+>>to receive the signal. But once GPIO's pin is programmed to be a
+>>interrupt line we can't write anything to it and it seems other
+>>interrupts can only be generated by the hardware. So this idea is not
+>>plausible
+>>
+>
+>Btw, there are other users who have the same laptop model but with a
+>different touchpad (ELAN). Their touchpads would show in
+>/proc/bus/input/devices but are completely dead. hid-recorder which
+>will read HID reports from /dev/hidraw gets nothing if they put there
+>fingers on the touchpad but the polling mode could also save their
+>touchpads. It seems GPIO controller's parent irq for the ELAN touchpad
+>doesn't even fire once. And unlike GPIO, IO-APIC has also be used by
+>other devices like the keyboard. So maybe it's safe to assert the root
+>cause is from the GPIO controller.
+>
+>>>Other then that I'm all out of ideas I'm afraid.
+>>>
+>>Thank you for taking time to investigate this issue anyway! Have a nice
+>>weekend:)
+>>>Regards,
+>>>
+>>>Hans
+>>>
+>>
+>>--
+>>Best regards,
+>>Coiby
+>
+>--
+>Best regards,
+>Coiby
+
+--
+Best regards,
+Coiby
