@@ -2,76 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0E1D2850C5
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 19:26:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0CAB285116
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 19:44:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgJFR0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 13:26:48 -0400
-Received: from 241-168-195-217.cust.centrio.cz ([217.195.168.241]:52282 "EHLO
-        patejl.cela.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbgJFR0s (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 6 Oct 2020 13:26:48 -0400
-Received: from griffin.upir.cz (mem-185.47.222.164.jmnet.cz [185.47.222.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by patejl.cela.cz (Postfix) with ESMTPSA id 915CEA494
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 19:17:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=upir.cz; s=mail;
-        t=1602004639; bh=7C7A4oBNsbEMnPiDzH83fn8o5VJcaboO6lTOMH0Vdbc=;
-        h=From:To:Subject:Date;
-        b=jZvO5uAabi+1aSt0ry6L4NnePr1qy7SQGVx5mANls7C0A+FHLZ5/7cBg0tezXhElH
-         ToeqiRu6jw2hETmxwI6UDz1O7wVqsNuSyVf2JArd/3TXPRcHuY3g5E4rFcWf10XwP2
-         nMVuINE4O6nSEKTYZNL2GI296tN45B1N28CXpyFM=
-From:   Jiri Benc <jbenc@upir.cz>
-To:     linux-gpio@vger.kernel.org
-Subject: [PATCH libgpiod] bindings: python: fix Line.request() crashing
-Date:   Tue,  6 Oct 2020 19:17:08 +0200
-Message-Id: <38eff7ebd01efd34df3037ba485d61ff7291fb5e.1602004585.git.jbenc@upir.cz>
-X-Mailer: git-send-email 2.18.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,UNPARSEABLE_RELAY autolearn=no
-        autolearn_force=no version=3.4.2
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on patejl.cela.cz
-X-Virus-Scanned: clamav-milter 0.102.2 at patejl
-X-Virus-Status: Clean
+        id S1726590AbgJFRoH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 13:44:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37486 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgJFRoG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 13:44:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t77so9972631oie.4;
+        Tue, 06 Oct 2020 10:44:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3qBY/l7SF+xhkZcFU4RRfNWWr30Jq3atxwWLx22F+9c=;
+        b=hBmLgh0GtGHTyEvwSVL1pvCjtle9+XOGBVs8ZPggzRGF1JSYoWvyZxymXtb0W8peew
+         VdEOKxvNxCMJuqv36y7eiDhCbRBpSfTqcadfTWvbAV1SOGDTV8y2/BqheM7jAcTwDbot
+         g7A2wI/yL6U53cpV1DUUf+7Sz9CO04wFJlaGCNTF6Ulb4MKUhbVSLsTRZe2SLW4uylU/
+         PQvxu5eo+Ipt8OMwh+rrloxJ1XJKgAveRsV9FDRILyjNJd8Sldvph1gr7KRXmyhAWogy
+         KT2gwTFQnDnduQBpnHQFq26kWw88FT9dEIXjijbHDZHomputzzH5Wr02samY9TGieWtb
+         7zBQ==
+X-Gm-Message-State: AOAM532FqX7Qmxz22sgWzWj94BzgvfssBOhY5bdJ7YDr2cWZDxvD1dW0
+        HA8/UNbmG9CYLdFwaKZiGsk4XxrNj7dY
+X-Google-Smtp-Source: ABdhPJyqU4G8ncampr1FXlDqvnEh1N64eA81gz+H8WNGpLZ2QNStQOL/yOPJnhIDRvaF10ilnZg4Rg==
+X-Received: by 2002:aca:ef03:: with SMTP id n3mr3410908oih.67.1602006246025;
+        Tue, 06 Oct 2020 10:44:06 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k13sm1277449ood.31.2020.10.06.10.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Oct 2020 10:44:05 -0700 (PDT)
+Received: (nullmailer pid 2515696 invoked by uid 1000);
+        Tue, 06 Oct 2020 17:44:04 -0000
+Date:   Tue, 6 Oct 2020 12:44:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, Krzysztof Halasa <khalasa@piap.pl>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: vendor-prefixes: favor "gateworks" over "gw"
+Message-ID: <20201006174404.GA2515615@bogus>
+References: <20201003103335.23404-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201003103335.23404-1-krzk@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On an attempt to call the 'request' method of a Line object, the program
-crashes with this exception:
+On Sat, 03 Oct 2020 12:33:35 +0200, Krzysztof Kozlowski wrote:
+> There are two vendor prefixes for Gateworks: "gw" and "gateworks".
+> Favor the longer one (more descriptive) and mark "gw" as deprecated so
+> it will not be used in new bindings.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> "gw" is still used in multiple DTS and bindings. I could fix them up as
+> well, although maybe this is unnecessary churn and compatibility
+> breakage.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-> SystemError: ../Objects/dictobject.c:2606: bad argument to internal function
->
-> The above exception was the direct cause of the following exception:
->
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> SystemError: <class 'gpiod.LineBulk'> returned a result with an error set
-
-The problem is that keyword args are NULL (rather than an empty dict) if
-they are not present. However, PyDict_Size sets an exception if it gets
-NULL.
-
-Fixes: 02a3d0a2ab5e ("bindings: python: fix segfault when calling Line.request()")
-Signed-off-by: Jiri Benc <jbenc@upir.cz>
----
- bindings/python/gpiodmodule.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index b3ae2bfebb8a..fee4c32406fa 100644
---- a/bindings/python/gpiodmodule.c
-+++ b/bindings/python/gpiodmodule.c
-@@ -472,7 +472,7 @@ static PyObject *gpiod_Line_request(gpiod_LineObject *self,
- 	gpiod_LineBulkObject *bulk_obj;
- 	int rv;
- 
--	if (PyDict_Size(kwds) > 0) {
-+	if (kwds && PyDict_Size(kwds) > 0) {
- 		def_val = PyDict_GetItemString(kwds, "default_val");
- 		def_vals = PyDict_GetItemString(kwds, "default_vals");
- 	} else {
--- 
-2.18.1
-
+Applied, thanks!
