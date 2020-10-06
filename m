@@ -2,179 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA56A2848D6
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 10:55:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81380284905
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 11:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgJFIzx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 04:55:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35986 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725891AbgJFIzx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 04:55:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601974551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZXi5R524UoxXZBnPFt8e05UKMzH4aET8AjGaKqKHXGI=;
-        b=UUWuvcAAtdk1INO5n1FhsXf4r7wwli2hnA6Z4fg7gGRAxYJSS5OWvz9PdCmeFz2um/sFJY
-        ny1fjj+T0z0+kY5fUIY16UGMD7TmoFnyO3iVKp23TyCXNdDNoLqyr3xuAAyhje9zg6naaH
-        OxFhLvqCkstFLlQHN1vbbkT7YvQzkLU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-126-KEbnhfS7MQqsSRChjlnwww-1; Tue, 06 Oct 2020 04:55:50 -0400
-X-MC-Unique: KEbnhfS7MQqsSRChjlnwww-1
-Received: by mail-ed1-f70.google.com with SMTP id ay19so5785520edb.23
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 01:55:49 -0700 (PDT)
+        id S1726000AbgJFJNS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 05:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgJFJNS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 05:13:18 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B497CC0613DA
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 02:13:17 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id 91so2872848uas.7
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 02:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8dDgYnCSpFzq6wD68V8dBs1dGtEohkus4tfFLo0MV6k=;
+        b=mMV78gRfUiTX0Fhq7sbtPeAZE51FANqXe2ffb+yEjr5QoeawgMMwQ8XSrhilmLvHtx
+         sEQF9fUq5Cmu8qOzxjbqa7RQXLkqpoqkoe++HcWkcaLYHbckkwjq/ue7xT3XAD7Uwx43
+         V06RGxgjHInxMdw3DBkk+/9rjGYrV+FnbFAksujQ3/k0njBC0ztFm62WAFNts1zyT9yx
+         oCohLIW+tNgNLvhP4H4CyiMr4WGBCs1Zex5WjzDVN9v47A0drQeaNuCYVRG5QCA6OMto
+         TQSAPGix4TPbAEDvrfDxLrnk+h7EjMNps8LmL2KLypfVwnIUdvEC6slFmF9jTy6w85lq
+         wAsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZXi5R524UoxXZBnPFt8e05UKMzH4aET8AjGaKqKHXGI=;
-        b=kkey1DpmI1+jx35DYe22Z6XYflBXnoiqKhmaeuXJtXDi1dIsaRT8UOuL+xIrNZ+Wco
-         sv8X/uEvSQtCs4l+jJAniGyrlwwwboAZCjFsePU6lh5bcNkIn8EQEDFJ15MsNYEpD891
-         rKhw3pbugXGM0Ouv4tykx0gWB45vB4JYfWLbEu/mL/JQJN/wqhsyQjOUWoLjNPpf333X
-         8T2lrsmIk4hf32dzoCfUjEU2ZXYq/sgelTdf2lds9dTsRFHPfZMPSICKd0AVsPsBsEmo
-         m6skzya4h5/LSqH2mbh6NSRDgVi0IWayvK7iEA0WOMiKJ/7/penA4girvsgue7XLJnUl
-         3RFA==
-X-Gm-Message-State: AOAM533EaqttAop0HQlYKxZyq62TKmn95c0VLBO8LZ4FeLfha8Yp0u13
-        nD1yM1zMNnMPrW9HlKJqBYOXjb5jHgUS3K0ltTw9jSLTEM/SdwAZVGl8UjBX++U7QRL/ESgeS6z
-        FOGTCGX0di1Mvnn//45krhw==
-X-Received: by 2002:a17:906:1b15:: with SMTP id o21mr4146356ejg.19.1601974548686;
-        Tue, 06 Oct 2020 01:55:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxcRCXLb2sxU3dTwL4y+XXfs9Kd1nPtCw4KdO5HQqlAMyBZIU558UtAI/JzCTCWws0jgIjJhg==
-X-Received: by 2002:a17:906:1b15:: with SMTP id o21mr4146340ejg.19.1601974548425;
-        Tue, 06 Oct 2020 01:55:48 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id e1sm1879323edm.11.2020.10.06.01.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Oct 2020 01:55:47 -0700 (PDT)
-Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
- for broken touchpads of a new laptop model?
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        wang jun <availa@outlook.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20201002124235.nhjzq7i4gpkzwgbs@Rk>
- <39f03cfe-0e7f-2ab6-7821-048cfcde8baa@redhat.com>
- <20201002145133.a43ypm2z7ofgtt7u@Rk>
- <eed704f5-4210-788c-37b7-06d65b58d3de@redhat.com>
- <20201002224502.vn3ooodrxrblwauu@Rk>
- <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
- <20201003230340.42mtl35n4ka4d5qw@Rk> <20201004051644.f3fg2oavbobrwhf6@Rk>
- <20201006044941.fdjsp346kc5thyzy@Rk>
- <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
- <20201006083157.3pg6zvju5buxspns@Rk>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
-Date:   Tue, 6 Oct 2020 10:55:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8dDgYnCSpFzq6wD68V8dBs1dGtEohkus4tfFLo0MV6k=;
+        b=WonoPY4LOpnMuxqG48KjcUfscabvKmACGa1NeqG8/lnvsN9kA1tpt7JYlTkj5OfZR2
+         eVBAtSKLIe/zizQIEO6ptud83gGyga6hbWhsFSqX3c1FLDJHYtk3O0DjBoQDSWk2w9zS
+         QhtIuxEOVEbQwc1y5WBsSi+kE2AuglyccsHIJmmK+JhgwVA9L5oSqWZgZ7B3U3NAQZVn
+         MVTN5Y/2CT8tOX71XgpuKMhAWGKXzuyZBzH3AbSsFfJUiyLjrDhTFUubeEolrshJ1nwC
+         jCCKFbuVbd6TxfmjDzgOBF7dmlYA3QvsYK2id17/WjQpxkRzarG9O30f8w6nSMg4SCmH
+         4NaA==
+X-Gm-Message-State: AOAM530EyCbZj6hSR757QPfdZc+3JxfzEEm0rFfsOnMZMPkCDVYFQRaL
+        YO+6S/tQsXywc3Kv//JHtPEp4MJ1Pf2T5Nynibs4Ug==
+X-Google-Smtp-Source: ABdhPJyShwqC7yW6UgNo8q98koC+vDiOR29TMFNqADEMu067y863m4dqGu1r37N7vNMGC6BIcV2u4BNvWr4WQc/Y4R4=
+X-Received: by 2002:ab0:130a:: with SMTP id g10mr2309765uae.100.1601975596602;
+ Tue, 06 Oct 2020 02:13:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20201006083157.3pg6zvju5buxspns@Rk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201005183830.486085-1-robh@kernel.org> <20201005183830.486085-2-robh@kernel.org>
+In-Reply-To: <20201005183830.486085-2-robh@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 6 Oct 2020 11:12:39 +0200
+Message-ID: <CAPDyKFqMic9_3OBvSWrdrXonDjeC+8kjDobTunijxvL6gYDPjQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Add missing 'unevaluatedProperties'
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Weinberger <richard@nod.at>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-can@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, 5 Oct 2020 at 20:38, Rob Herring <robh@kernel.org> wrote:
+>
+> This doesn't yet do anything in the tools, but make it explicit so we can
+> check either 'unevaluatedProperties' or 'additionalProperties' is present
+> in schemas.
+>
+> 'unevaluatedProperties' is appropriate when including another schema (via
+> '$ref') and all possible properties and/or child nodes are not
+> explicitly listed in the schema with the '$ref'.
+>
+> This is in preparation to add a meta-schema to check for missing
+> 'unevaluatedProperties' or 'additionalProperties'. This has been a
+> constant source of review issues.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-On 10/6/20 10:31 AM, Coiby Xu wrote:
-> On Tue, Oct 06, 2020 at 08:28:40AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 10/6/20 6:49 AM, Coiby Xu wrote:
->>> Hi Hans and Linus,
->>>
->>> I've found the direct evidence proving the GPIO interrupt controller is
->>> malfunctioning.
->>>
->>> I've found a way to let the GPIO chip trigger an interrupt by accident
->>> when playing with the GPIO sysfs interface,
->>>
->>>  - export pin130 which is used by the touchad
->>>  - set the direction to be "out"
->>>  - `echo 0 > value` will trigger the GPIO controller's parent irq and
->>>    "echo 1 > value" will make it stop firing
->>>
->>> (I'm not sure if this is yet another bug of the GPIO chip. Anyway I can
->>> manually trigger an interrupt now.)
->>>
->>> I wrote a C program is to let GPIO controller quickly generate some
->>> interrupts then disable the firing of interrupts by toggling pin#130's
->>> value with an specified time interval, i.e., set the value to 0 first
->>> and then after some time, re-set the value to 1. There is no interrupt
->>> firing unless time internal > 120ms (~7Hz). This explains why we can
->>> only see 7 interrupts for the GPIO controller's parent irq.
->>
->> That is a great find, well done.
->>
->>> My hypothesis is the GPIO doesn't have proper power setting so it stays
->>> in an idle state or its clock frequency is too low by default thus not
->>> quick enough to read interrupt input. Then pinctrl-amd must miss some
->>> code to configure the chip and I need a hardware reference manual of this
->>> GPIO chip (HID: AMDI0030) or reverse-engineer the driver for Windows
->>> since I couldn't find a copy of reference manual online? What would you
->>> suggest?
->>
->> This sounds like it might have something to do with the glitch filter.
->> The code in pinctrl-amd.c to setup the trigger-type also configures
->> the glitch filter, you could try changing that code to disable the
->> glitch-filter. The defines for setting the glitch-filter bits to
->> disabled are already there.
->>
-> 
-> Disabling the glitch filter works like a charm! Other enthusiastic
-> Linux users who have been troubled by this issue for months would
-> also feel great to know this small tweaking could bring their
-> touchpad back to life:) Thank you!
+[...]
 
-That is good to hear, I'm glad that we have finally found a solution.
+>  .../devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml       | 2 ++
+>  Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml        | 2 ++
+>  Documentation/devicetree/bindings/mmc/ingenic,mmc.yaml       | 2 ++
+>  Documentation/devicetree/bindings/mmc/owl-mmc.yaml           | 2 ++
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml  | 2 ++
+>  Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml         | 2 ++
+>  .../devicetree/bindings/mmc/socionext,uniphier-sd.yaml       | 2 ++
+>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml  | 2 ++
 
-> $ git diff
-> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index 9a760f5cd7ed..e786d779d6c8 100644
-> --- a/drivers/pinctrl/pinctrl-amd.c
-> +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                  pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                  pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
->                  pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
-> -               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
-> +               /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
->                  irq_set_handler_locked(d, handle_level_irq);
->                  break;
-> 
-> I will learn more about the glitch filter and the implementation of
-> pinctrl and see if I can disable glitch filter only for this touchpad.
+For mmc:
 
-The glitch filter likely also has settings for how long a glitch
-lasts, which apparently goes all the way up to 120ms. If it would
-only delay reporting by say 0.1ms and consider any pulse longer
-then 0.1s not a glitch, then having it enabled would be fine.
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-I don't think we want some sort of quirk here to only disable the
-glitch filter for some touchpads. One approach might be to simply
-disable it completely for level type irqs.
+[...]
 
-What we really need here is some input from AMD engineers with how
-this is all supposed to work.
-
-E.g. maybe the glitch-filter is setup by the BIOS and we should not
-touch it all ?
-
-Or maybe instead of DB_TYPE_PRESERVE_HIGH_GLITCH low level interrupts
-should use DB_TYPE_PRESERVE_LOW_GLITCH ?   Some docs for the hw
-would really help here ...
-
-Regards,
-
-Hans
-
+Kind regards
+Uffe
