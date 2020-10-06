@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 271C9284D67
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 16:14:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C905284D94
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 16:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgJFOOG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 10:14:06 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:48191 "EHLO
+        id S1725906AbgJFOZo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 10:25:44 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:61308 "EHLO
         esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgJFOOF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 10:14:05 -0400
+        with ESMTP id S1725902AbgJFOZo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 10:25:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1601993644; x=1633529644;
+  t=1601994343; x=1633530343;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=piCMffCqgDvqxBLu6OvrQGya1ZdRTDuoxFoRit67Um4=;
-  b=lGj15A0iNHeOi6gls9frvwi5gHXei3hCxxY0Qs/q4Af/Tjy9hq86sc9L
-   y5Yh389DfDOihiybPXLXXSCNUpLEH/CLSKItWTIuxVwiMDoYDl1DVAgWj
-   B7kWWv34E9PtwCVpDCk40BfB8H1tgmTlKCy2bGS6hDHKgqWYB+LsEinPW
-   VODwvEYV2UlqTOEbxjqMzlB3Wfh/WXlzE/lO2ejGCBEWi2JNqvaAkWZyK
-   UZRg0iMwJthnWmEgDFX4ninWT/BxiYJZJzDgA0v2zy4mopgRb38HUF5dW
-   rGG7L2V6HDdVRuW5ifI9ho0mr3L054HRTu5uxQTjSM9goKYxlK4BtHisv
-   w==;
-IronPort-SDR: djP9zQqXvMQrZjJMd8IYXtDNiX1eG3U3qJaQeXob0d9tHdrRnVlEK6UGtDi3OeaZYv4SKLSrsY
- 6HsyMkDuv2UomlwN3OCj9Mw3nYBrgZUgyfX0dQnVlBrToo1Q2fKNdOPmuy29CTSf4P7FQDWm3W
- 1R8e5lJhPyW2SNoxwKlry/xnXzrur9YgbE9AdEqkx72u8JKbwpUibohChXhRKQCyMTEEioM7jh
- fw1Mnwl+V+yML8LAXpZTHho8N0XuNAshHA2TfFxCWCPnVOVQRTyyhQZkgFVPlseZoH8G41az4M
- UUU=
+  b=Ke6i5n6u/W0DCdpEDlaD7pgvGAA0+Gzprl1+Y6tqnSWIqdXWGsfoulpA
+   6cd6RDNsI1LF68vM8cHewzTjRDx88l/SrAwjzQ5xXQIkp1mMnNI5B27dT
+   Ss0VXXci+hnIWDFI5Qxjr5ka6SVnNGq8ppVyhVLgSqVSeGeyvjdsfQOQZ
+   qLAHEfFMm7dzL7opJFV3iCpDOOc6kb+yya37G5GWkcDco9JsUPndG0xh0
+   /9EBHlYnGk9Y4HUF6mkt5jVOGcWRqmpw0UvBGKPiCShHuIb9vsoBBZtmU
+   P2DZESSafQ1d+VBEjnZdK6gYAU2Az//Q984N1qe52rzLTbwKmTx3QzrE5
+   g==;
+IronPort-SDR: JJpepf66G2coFgPizfHi1RJZM7sy5/50YwlQwFnsejh7kIFiyFN5T+XvTD7nHB5uye8AHRDItx
+ GpNIPzGW7lgIIvbBu8xv2xkgHSLFaM69JBTJLAOEo+MdWwKOLp9C1W5x4hLoWeIdLOf+u7tWSr
+ 1myEps6/zrexaQIXl5GCTPA6/qIjfRW9zK6/15SYrzaMFmtEfNBfjM12ojm+wZ5XxSTA3XpR0r
+ vBMyko/086x0tKxcbiIFezshickDmk3PG5PX7iBctIv2wlL/XDxiBf45mMIjqIoatjtrUuZUT0
+ 0MQ=
 X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="89276222"
+   d="scan'208";a="89278213"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Oct 2020 07:14:03 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Oct 2020 07:25:43 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 6 Oct 2020 07:13:53 -0700
+ 15.1.1979.3; Tue, 6 Oct 2020 07:25:31 -0700
 Received: from soft-dev10.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 6 Oct 2020 07:14:01 -0700
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 6 Oct 2020 07:25:30 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
@@ -48,9 +48,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 0/3] pinctrl: Adding support for Microchip/Microsemi serial GPIO controller
-Date:   Tue, 6 Oct 2020 16:13:48 +0200
-Message-ID: <20201006141351.2247240-1-lars.povlsen@microchip.com>
+Subject: [RESEND PATCH v3 0/3] pinctrl: Adding support for Microchip/Microsemi serial GPIO controller
+Date:   Tue, 6 Oct 2020 16:25:29 +0200
+Message-ID: <20201006142532.2247515-1-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
