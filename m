@@ -2,109 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7202846A5
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 09:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4365E28476E
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 09:37:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgJFHAY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 03:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
+        id S1726991AbgJFHhX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 03:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgJFHAX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 03:00:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339AAC0613D1
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 00:00:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e17so3435110wru.12
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 00:00:23 -0700 (PDT)
+        with ESMTP id S1725912AbgJFHhX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 03:37:23 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4699BC061755;
+        Tue,  6 Oct 2020 00:37:23 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id h9so8336246ybm.4;
+        Tue, 06 Oct 2020 00:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Oe7zU6gzISKBUmakEze1jPjt4AoCrxJWUb32hirWtf4=;
-        b=duVae73qGXrIWn0dA9Y2ba0eTvLVJldQbfNGMJhbCGq9paoehFS47xcK9OLpCkH4WF
-         NqBrFaENJwbrU/th8XmIkh1VS1vd2oH1s1pXzDf2b99Cb/bAZ5mIsHV6ptmyF1OBtQBy
-         GT9rg4w2n4Isj8jXnTNnLi+Aw/L7SFWFx72v0bNTNomBvhPxjgr+pR8su7g3MDB9LEtn
-         /vLB/qwXlI19SAUsjJySvCczuoNdnCBTeLhRqUeV/ScZadUIhYWFwLaiDoYkjoSe+gXj
-         C3HqfoAXjTKslZ5dKtYyztKJYZ9eX7NM47nSfo4FbYcgGC7bh2R2dMJAzlKCSNaNoWRF
-         iUUA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/rpeFQkYljEUQNuTkq/Bj2u7+/dyH0xezKDk13QHrgs=;
+        b=I67uwF8vGMVRz59yBBMrVkpGNZTXp4IgrRIJat4txQOiEint3X7+0frmO1+OP2xuWW
+         dy6A3KrEdkNdLr/DfTotYvumHXgSwK2/woqDxNF68WeIgGxhplRIW7dew+npYnCSKKh0
+         q3h7uIwal8cfV5ESVkmi9ioZPp34tGb++/15qwdH8wSL5PIYv3eWqjVEEIdkW15TR4+e
+         1U5wra92LcbHDEDcFSqRNeknx0uqzrkKYZC2dsKQeP9tkUZSFZrr4OC75giOsALjchSM
+         cS1xhflpWwksi5AvYe59QvVVKayZ4e9K64wtDa9w8upG1hm6/gVNje+O16L/6Vvf8ydl
+         c8PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Oe7zU6gzISKBUmakEze1jPjt4AoCrxJWUb32hirWtf4=;
-        b=J2JVlqHlavRqUhR3qthAZkIfS5nx7f8/8airqun7ME08PACAiw+MnL4bBisKuQOMEw
-         EXUYsb9Iqqdbt7bOw6h3dqkft762zrExR1zOvvSgeO46AIIxHzt03z9IKEBBFUs8WYw2
-         S52W4ZVia78+11Xne3AVCvb1/pi5zvnni+ZRsm8c75/atn5dn+wKYBu7xP6SSDkj6u7z
-         vJ9+MutUmn2IwRPq/CuxRtlW2oQawgC29Tsc7jwfrArMlwxPc7bJzng9Tiq5/BY8xxvg
-         /zzElM6IvUoThDNPW66ibAW61I8vp/BXFkyR+eoRrrGMNs/ndzUrJp55Vn+aiSxTLwhY
-         pVAg==
-X-Gm-Message-State: AOAM5328Ur19ya8zUiluYLCxA6/mY+ZmskyhUbRd0pZvrqUROU162tS1
-        E0Ed5NLJhWlSn0D3Z+8q4s1nGQ==
-X-Google-Smtp-Source: ABdhPJzRpE6n88xNVq3Fk+xQSff8QQNC8n1c0b7ajSoy19OwpevLFHK5HQwgX5M07UqJkIIa/Io0cQ==
-X-Received: by 2002:adf:bb43:: with SMTP id x3mr3174885wrg.250.1601967621811;
-        Tue, 06 Oct 2020 00:00:21 -0700 (PDT)
-Received: from dell ([91.110.221.236])
-        by smtp.gmail.com with ESMTPSA id o186sm2537036wmb.12.2020.10.06.00.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 00:00:21 -0700 (PDT)
-Date:   Tue, 6 Oct 2020 08:00:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Another round of adding missing
- 'additionalProperties'
-Message-ID: <20201006070013.GA6148@dell>
-References: <20201002234143.3570746-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/rpeFQkYljEUQNuTkq/Bj2u7+/dyH0xezKDk13QHrgs=;
+        b=GkC5i21vj8C6qOSZX2Bym2ax6pVJusoUzSICxndhbgPV5Qfb2c397d1SUvGoZKxEtf
+         cWXS0BAbN+V59zK7M6Lws7VoGWCJLamIRBwvxnpHPVaGDllVrHymnpI/aiF9LcSdZfSI
+         lZGtQ7AovUsY/DCIW0TUgsvx60QS7xU3ju57QSV7xVNp+GwvPo7MRtw4eTEpAbZ32vIc
+         vaXYr6xdyaGjRud+IwTOq5oDaCbehA5WUmtCmQIvzYo7pj5bw3eSHtsfJWeNL+GEOgLy
+         r+DLGHNyjrYzKqe2bcA+Dfw9Nu2tF3aP2s5WSWxzWpK+gxnfKK/IjC1zhfkQuysboRxs
+         nwww==
+X-Gm-Message-State: AOAM533iXAX4KON8G8isB2jE4LljMnI3928oM10ldWQDLlFMaONpo4JU
+        QzruJAyk5ZeDBEhphP0FMb6JW0Lct3jCbaFwOqg=
+X-Google-Smtp-Source: ABdhPJwfLgnSYcRLFdadsRTIRNtTVSAEW78ZUxbTkRbnbV/agJqAH9pErSId1/aBoVObNOb6KwW1Tf2hFeBRMZcyA9w=
+X-Received: by 2002:a25:e811:: with SMTP id k17mr4717314ybd.401.1601969842337;
+ Tue, 06 Oct 2020 00:37:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201002234143.3570746-1-robh@kernel.org>
+References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200816190732.6905-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825022102.GA3808062@bogus>
+In-Reply-To: <20200825022102.GA3808062@bogus>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 6 Oct 2020 08:36:56 +0100
+Message-ID: <CA+V-a8tFqsWE+vhF4R3-Ce0MjamPkWdwYSm8pAVN9AXSUq4d=g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: can: rcar_can: Add r8a7742 support
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Rob Herring <robh@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 02 Oct 2020, Rob Herring wrote:
+Hi Marc,
 
-> Another round of wack-a-mole. The json-schema default is additional
-> unknown properties are allowed, but for DT all properties should be
-> defined.
+On Tue, Aug 25, 2020 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, 16 Aug 2020 20:07:31 +0100, Lad Prabhakar wrote:
+> > Document RZ/G1H (r8a7742) SoC specific bindings. The R8A7742 CAN module
+> > is identical to R-Car Gen2 family.
+> >
+> > No driver change is needed due to the fallback compatible value
+> > "renesas,rcar-gen2-can".
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+Could you please pick up this patch. It has been acked by the
+maintainers. Let me know if you want me to RESEND this patch.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Cheers,
+Prabhakar
