@@ -2,101 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F32284933
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 11:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69B23284939
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 11:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgJFJRE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 05:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44010 "EHLO
+        id S1725970AbgJFJU6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 05:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgJFJRE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 05:17:04 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF42C061755
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 02:17:02 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 184so5552114lfd.6
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 02:17:02 -0700 (PDT)
+        with ESMTP id S1725912AbgJFJU5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 05:20:57 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB41EC061755;
+        Tue,  6 Oct 2020 02:20:57 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ds1so1256344pjb.5;
+        Tue, 06 Oct 2020 02:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IJLzHv0wuJacnG9Sh9U1ShbjHWOtGBELHGoUNl8bafc=;
-        b=SXuncFqHvfgYJL5MPFXDjZGh2aszphyV47iMX5OPrSaNAL8OQ62EOJXuvceEzdBhLt
-         btFWreu3ieO2j+Bhr6E9zbFfvt4KvwLd87RzabWZ4HqMiJcY/WAs1urPXpwlHXrJr1K3
-         MgQUy/n99ixget6V1d5zTNPxFOqeTmN37X3hO9TfxVt2IX2xNqpaCPOcX+9w6fEWUrK6
-         plUxx/xUeAnz1df3zALqDqvEGXhQFe9dvTmKneCyBjfEk0rJUPpe/Bwez7cQbKqXDaP5
-         ds5RFMSHVH+Gp4n3lk0p49QQKiEQnrP0sY852SpdvNE/WVcc2lzH2dQISMaKWhlRiQ/D
-         +b3Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=d3jdb/5lz1KiMUpxKMIKdfOKuYYaMLuxcEbpzM+Zj2E=;
+        b=KNOO1op0I6GTujszc0nTBZFzEzbdmck/hDFL68Pmp8Qkil+KhY+6O5QmcDcoBO6IQd
+         4MAjgfuWwpdN1Y4/9CyBU7Nw0YcSRl3vPiSkeUKQwGbV7mEqOrL6pcqX2guKRTboyvWk
+         doun9WRQcOAn9u3hHMsaqXAWW5399deLJQX8PBe9G/JIjVlqH3NMaaJEqmEmeA6ZUSBC
+         WpVMTtZfH6Vq8DvbA4AELIG7k9D7ZoQiIFlXoEFCJ+9fSnnuZC13mqfIeYLnTZHcuiA+
+         I2FgylEe+PJABVf+9XSrn4tEOR/LO3Y+gXKEHLkSd3zmUlSV1ZTb4JL9pE5SbyPu0Dzy
+         TNYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IJLzHv0wuJacnG9Sh9U1ShbjHWOtGBELHGoUNl8bafc=;
-        b=hwsTszRntAi1p2esX3B77gI5IwgqgGdeuJ/VzJi1AwkLMidywmv2PPblgUr1eAoDh5
-         VqVfvMf7rdotfkPvwsRPMz4n0YvhMcaQsD6cfTTUcRoksOnF3n5tA7V4LWHsQyQKgTEs
-         yuJzcVO0uEuh4JzE351ARPb/VhOLfHRfsL5hxxAXULKPJkzvH+7zQ2r6dBc97Z6LBz5g
-         vf+OnHJTVamIupwGMWPr1BTMtMc1U66ZCOkN9vYuuzawpiaYH8m4xpITZQoYwqOiGLnQ
-         SeD0YyKvJtj8/gIqV3fxhUGPonkjNUEoK+8+PfKurEJZUCNhSOmOfJh7H3NYBgwd1b2x
-         qMEA==
-X-Gm-Message-State: AOAM533gSDLoWJoAmqkGNGjL+2xb8kG/uzQnj4AIz2NyCVBfut47udl2
-        acWu40qht0Zeb4gNebC98VcZUiYhhTEyk917AV51Mw==
-X-Google-Smtp-Source: ABdhPJyB9PujX1YNzhC20h5uPujSf/VGlXD0DfrFxVzgse9nwilSQf+1ZsevcPteK3A5FbeBS8g7saVIshrrTtC1/Oo=
-X-Received: by 2002:a19:e55:: with SMTP id 82mr148521lfo.571.1601975821003;
- Tue, 06 Oct 2020 02:17:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=d3jdb/5lz1KiMUpxKMIKdfOKuYYaMLuxcEbpzM+Zj2E=;
+        b=qpwk6k2ru1YozhfLbT+R40inbEUR8vzEl/27z03iIfTibYRwI6PhK9ksX7yp0IuvKG
+         5WWgKLcad5Kvt8ZsBCC1dzy8xTWIVelwszuDtgDOq2kIMzA/LOz4GRBQ3e/6XiINvLKT
+         C5dM0eWlRpJGcNgeuz4vivKsWlj6OeuGEr2nsCGCBgUPJ9lNsKbw8X6PPRR6J8Sxku5I
+         r21um4qH5QtrxhnTefo2IqGq6hdHxtnDLuy9tJguMtXQaQ70V/LN7jfZJUQRE8SlE6qc
+         GikU8SBEu1T0t7YdKFgYGbrh6fQicwFoC0I0WT5a75pprCiCEaOdgdL+a0jRAK/+6Axh
+         TbJQ==
+X-Gm-Message-State: AOAM532d+vWMSPT6sabBooHNk+RycfZ1n4Bmap6tcrNsqpxdG7VLfN2O
+        MDToyteNIQcjlHIKi4PRKww=
+X-Google-Smtp-Source: ABdhPJzBzXmQ74kfuH9fSC1P115/I/Hq+ad4Re6y1cJ6FSnkZfO67obYwhX8I+xGjT5apVJYMDb6xw==
+X-Received: by 2002:a17:902:b113:b029:d2:abce:b689 with SMTP id q19-20020a170902b113b02900d2abceb689mr2324927plr.51.1601976057364;
+        Tue, 06 Oct 2020 02:20:57 -0700 (PDT)
+Received: from syed ([117.97.226.113])
+        by smtp.gmail.com with ESMTPSA id s20sm2743067pfu.112.2020.10.06.02.20.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Oct 2020 02:20:56 -0700 (PDT)
+Date:   Tue, 6 Oct 2020 14:50:38 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     linus.walleij@linaro.org, akpm@linux-foundation.org
+Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v11 0/4] Introduce the for_each_set_clump macro
+Message-ID: <cover.1601974764.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-References: <20201002124235.nhjzq7i4gpkzwgbs@Rk> <39f03cfe-0e7f-2ab6-7821-048cfcde8baa@redhat.com>
- <20201002145133.a43ypm2z7ofgtt7u@Rk> <eed704f5-4210-788c-37b7-06d65b58d3de@redhat.com>
- <20201002224502.vn3ooodrxrblwauu@Rk> <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
- <20201003230340.42mtl35n4ka4d5qw@Rk> <20201004051644.f3fg2oavbobrwhf6@Rk>
- <20201006044941.fdjsp346kc5thyzy@Rk> <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
- <20201006083157.3pg6zvju5buxspns@Rk>
-In-Reply-To: <20201006083157.3pg6zvju5buxspns@Rk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 6 Oct 2020 11:16:50 +0200
-Message-ID: <CACRpkdaK-WpQdKu-tBOyvB1HLZ10ivjEPrVFqGjPSvLJuPXG8Q@mail.gmail.com>
-Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
- for broken touchpads of a new laptop model?
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        wang jun <availa@outlook.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 6, 2020 at 10:32 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+Hello Linus,
 
-> Disabling the glitch filter works like a charm! Other enthusiastic
-> Linux users who have been troubled by this issue for months would
-> also feel great to know this small tweaking could bring their
-> touchpad back to life:) Thank you!
+Since this patchset primarily affects GPIO drivers, would you like
+to pick it up through your GPIO tree?
 
-Oh you found the bug :D
+This patchset introduces a new generic version of for_each_set_clump. 
+The previous version of for_each_set_clump8 used a fixed size 8-bit
+clump, but the new generic version can work with clump of any size but
+less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+in several GPIO drivers.
 
-> $ git diff
-> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index 9a760f5cd7ed..e786d779d6c8 100644
-> --- a/drivers/pinctrl/pinctrl-amd.c
-> +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                  pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                  pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
->                  pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
-> -               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
-> +               /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
->                  irq_set_handler_locked(d, handle_level_irq);
->                  break;
->
-> I will learn more about the glitch filter and the implementation of
-> pinctrl and see if I can disable glitch filter only for this touchpad.
+The earlier 8-bit for_each_set_clump8 facilitated a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-Yes we certainly need a quirk for this of some kind, examine the ACPI
-quirk infrastructure in drivers/gpio/gpiolib-acpi.c to see if you can use
-that to handle this.
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-Yours,
-Linus Walleij
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
+
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
+
+But with the new for_each_set_clump the clump size can be different from 8 bits.
+Moreover, the clump can be split at word boundary in situations where word 
+size is not multiple of clump size. Following are examples showing the working 
+of new macro for clump sizes of 24 bits and 6 bits.
+
+Example 1:
+clump size: 24 bits, Number of clumps (or ports): 10
+bitmap stores the bit information from where successive clumps are retrieved.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x000000aa000000aa;
+        0xbbbbabcdeffedcba;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:-
+'offset' is the bit position and 'clump' is the 24 bit clump from the
+above bitmap.
+Iteration first:        offset: 0 clump: 0xfedcba
+Iteration second:       offset: 24 clump: 0xabcdef
+Iteration third:        offset: 48 clump: 0xaabbbb
+Iteration fourth:       offset: 96 clump: 0xaa
+Iteration fifth:        offset: 144 clump: 0xff
+Iteration sixth:        offset: 168 clump: 0xaaaaaa
+Iteration seventh:      offset: 216 clump: 0xff
+Loop breaks because in the end the remaining bits (0x00aa) size was less
+than clump size of 24 bits.
+
+In above example it can be seen that in iteration third, the 24 bit clump
+that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+also shows that 24 bit zeroes if present in between, were skipped (preserving
+the previous for_each_set_macro8 behaviour). 
+
+Example 2:
+clump size = 6 bits, Number of clumps (or ports) = 3.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x0f00000000000000;
+        0x0000000000000ac0;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:
+'offset' is the bit position and 'clump' is the 6 bit clump from the
+above bitmap.
+Iteration first:        offset: 6 clump: 0x2b
+Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+Here 6 * 3 is clump size * no. of clumps.
+
+Changes in v11:
+ - [Patch 1/4]: Document range of values 'nbits' can take.
+ - [Patch 4/4]: Change variable name 'flag' to 'flags'.
+
+Changes in v10:
+ - Patchset based on v5.9-rc1.
+
+Changes in v9:
+ - [Patch 4/4]: Remove looping of 'for_each_set_clump' and instead process two 
+   halves of a 64-bit bitmap separately or individually. Use normal spin_lock 
+   call for second inner lock. And take the spin_lock_init call outside the 'if'
+   condition in the probe function of driver.
+
+Changes in v8:
+ - [Patch 2/4]: Minor change: Use '__initdata' for correct section mismatch
+   in 'clump_test_data' array.
+
+Changes in v7:
+ - [Patch 2/4]: Minor changes: Use macro 'DECLARE_BITMAP()' and split 'struct'
+   definition and test data.
+
+Changes in v6:
+ - [Patch 2/4]: Make 'for loop' inside test_for_each_set_clump more
+   succinct.
+
+Changes in v5:
+ - [Patch 4/4]: Minor change: Hardcode value for better code readability.
+
+Changes in v4:
+ - [Patch 2/4]: Use 'for' loop in test function of for_each_set_clump.
+ - [Patch 3/4]: Minor change: Inline value for better code readability.
+ - [Patch 4/4]: Minor change: Inline value for better code readability.
+
+Changes in v3:
+ - [Patch 3/4]: Change datatype of some variables from u64 to unsigned long
+   in function thunderx_gpio_set_multiple.
+
+CHanges in v2:
+ - [Patch 2/4]: Unify different tests for 'for_each_set_clump'. Pass test data as
+   function parameters.
+ - [Patch 2/4]: Remove unnecessary bitmap_zero calls.
+
+Syed Nayyar Waris (4):
+  bitops: Introduce the for_each_set_clump macro
+  lib/test_bitmap.c: Add for_each_set_clump test cases
+  gpio: thunderx: Utilize for_each_set_clump macro
+  gpio: xilinx: Utilize generic bitmap_get_value and _set_value
+
+ drivers/gpio/gpio-thunderx.c      |  11 ++-
+ drivers/gpio/gpio-xilinx.c        |  64 ++++++-------
+ include/asm-generic/bitops/find.h |  19 ++++
+ include/linux/bitmap.h            |  63 +++++++++++++
+ include/linux/bitops.h            |  13 +++
+ lib/find_bit.c                    |  14 +++
+ lib/test_bitmap.c                 | 144 ++++++++++++++++++++++++++++++
+ 7 files changed, 292 insertions(+), 36 deletions(-)
+
+
+base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+-- 
+2.26.2
+
