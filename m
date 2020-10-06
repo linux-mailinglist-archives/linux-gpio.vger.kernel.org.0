@@ -2,150 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D13C0284917
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 11:13:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23F32284933
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Oct 2020 11:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgJFJNe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Oct 2020 05:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
+        id S1725960AbgJFJRE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Oct 2020 05:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgJFJNd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 05:13:33 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28596C061755
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 02:13:33 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id s15so3435433vsm.0
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 02:13:33 -0700 (PDT)
+        with ESMTP id S1725912AbgJFJRE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Oct 2020 05:17:04 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF42C061755
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Oct 2020 02:17:02 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 184so5552114lfd.6
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Oct 2020 02:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9zZ3JqKuAucMkJsBK3uQ6oqn08Q8o246NeeOkBUzIpE=;
-        b=sl5DvJTU8XoKckrDy72v6SE14TnVpy4Bt91zBzW0shyY1MAQ6mAh44/03XDifpnVyT
-         4w+72PUsHJIIJhKHPRrCT8pTCi2CZ3lYrznO931Zy9GGzbJgV3AbLMDW/WTkvZw1ySi0
-         xZ8mKac9WB616FWJmzh+4pR4DO2W+qMrWvhETvIhmdmS6svN/TirR+Lk59vHi5nED0Fw
-         UNsL0wfC4tJEer6UJgLfY8iJyldfPPnH6zruIDXY8NS9LaxnxiZNZZ15iF6VLc8jtGT7
-         kw77Swrlk5F0D0JlHVpGszmJH8RyljctW41ctPimXYx2UDZ6rbS2tZM9fINpQJUVuEtk
-         CGiA==
+        bh=IJLzHv0wuJacnG9Sh9U1ShbjHWOtGBELHGoUNl8bafc=;
+        b=SXuncFqHvfgYJL5MPFXDjZGh2aszphyV47iMX5OPrSaNAL8OQ62EOJXuvceEzdBhLt
+         btFWreu3ieO2j+Bhr6E9zbFfvt4KvwLd87RzabWZ4HqMiJcY/WAs1urPXpwlHXrJr1K3
+         MgQUy/n99ixget6V1d5zTNPxFOqeTmN37X3hO9TfxVt2IX2xNqpaCPOcX+9w6fEWUrK6
+         plUxx/xUeAnz1df3zALqDqvEGXhQFe9dvTmKneCyBjfEk0rJUPpe/Bwez7cQbKqXDaP5
+         ds5RFMSHVH+Gp4n3lk0p49QQKiEQnrP0sY852SpdvNE/WVcc2lzH2dQISMaKWhlRiQ/D
+         +b3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9zZ3JqKuAucMkJsBK3uQ6oqn08Q8o246NeeOkBUzIpE=;
-        b=noyA0YehKUK/+tijmavY2dI22iUlEU2sn3g9Ys5gDk1s+pMfJXK8KaliPCWhhSGu/V
-         QYWfvmdIMHyyGkKzQiD+aijhHC1OpaGuP6ZmMNnNZZjlojNhS3+gI6bqcK4w0I5Kwz6H
-         h//W6834idQQPbT17J3HwYBfQyt4aVNv189Z8rBihAJUKsGEtGYwNErEjS5+XuhIzBM9
-         j4NHf72yoC4YGsUUgzSgEgvmeY7EY80iennlbqdLZIf0HFbsb+fqjpcs1TYJ2Aui8F9H
-         xQyebZe09nl3gQ0wwhgw/JMeZlweE3I7A2tHpKu6bfDFZMwxKBsoKEJUnpnLe4FLSOpV
-         1D6w==
-X-Gm-Message-State: AOAM530bAAUd+ihewCxmo8J7HPUQqnL6I8UfBdIxdRj2RL+H58DEsET2
-        w292Jj53Y7ZxaZqTOAbxErX4/Lbm4vuM2FwzyMrBlQ==
-X-Google-Smtp-Source: ABdhPJw+U5yOHue/Ytd8RPqMjT92IYE0mZoO7yO1YIY/4s+p2JNLru501tVYMlY3tURTLHPZrBHXQO8va9HmuomgCis=
-X-Received: by 2002:a67:6b07:: with SMTP id g7mr2713184vsc.48.1601975612161;
- Tue, 06 Oct 2020 02:13:32 -0700 (PDT)
+        bh=IJLzHv0wuJacnG9Sh9U1ShbjHWOtGBELHGoUNl8bafc=;
+        b=hwsTszRntAi1p2esX3B77gI5IwgqgGdeuJ/VzJi1AwkLMidywmv2PPblgUr1eAoDh5
+         VqVfvMf7rdotfkPvwsRPMz4n0YvhMcaQsD6cfTTUcRoksOnF3n5tA7V4LWHsQyQKgTEs
+         yuJzcVO0uEuh4JzE351ARPb/VhOLfHRfsL5hxxAXULKPJkzvH+7zQ2r6dBc97Z6LBz5g
+         vf+OnHJTVamIupwGMWPr1BTMtMc1U66ZCOkN9vYuuzawpiaYH8m4xpITZQoYwqOiGLnQ
+         SeD0YyKvJtj8/gIqV3fxhUGPonkjNUEoK+8+PfKurEJZUCNhSOmOfJh7H3NYBgwd1b2x
+         qMEA==
+X-Gm-Message-State: AOAM533gSDLoWJoAmqkGNGjL+2xb8kG/uzQnj4AIz2NyCVBfut47udl2
+        acWu40qht0Zeb4gNebC98VcZUiYhhTEyk917AV51Mw==
+X-Google-Smtp-Source: ABdhPJyB9PujX1YNzhC20h5uPujSf/VGlXD0DfrFxVzgse9nwilSQf+1ZsevcPteK3A5FbeBS8g7saVIshrrTtC1/Oo=
+X-Received: by 2002:a19:e55:: with SMTP id 82mr148521lfo.571.1601975821003;
+ Tue, 06 Oct 2020 02:17:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201005183830.486085-1-robh@kernel.org> <20201005183830.486085-5-robh@kernel.org>
-In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 6 Oct 2020 11:12:55 +0200
-Message-ID: <CAPDyKFoxg_i8tcRjV_htv9s1Z=gxYzJtxPAnCqRR9gzR2hkG0w@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
- in common schemas
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-can@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+References: <20201002124235.nhjzq7i4gpkzwgbs@Rk> <39f03cfe-0e7f-2ab6-7821-048cfcde8baa@redhat.com>
+ <20201002145133.a43ypm2z7ofgtt7u@Rk> <eed704f5-4210-788c-37b7-06d65b58d3de@redhat.com>
+ <20201002224502.vn3ooodrxrblwauu@Rk> <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
+ <20201003230340.42mtl35n4ka4d5qw@Rk> <20201004051644.f3fg2oavbobrwhf6@Rk>
+ <20201006044941.fdjsp346kc5thyzy@Rk> <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
+ <20201006083157.3pg6zvju5buxspns@Rk>
+In-Reply-To: <20201006083157.3pg6zvju5buxspns@Rk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 6 Oct 2020 11:16:50 +0200
+Message-ID: <CACRpkdaK-WpQdKu-tBOyvB1HLZ10ivjEPrVFqGjPSvLJuPXG8Q@mail.gmail.com>
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 5 Oct 2020 at 20:38, Rob Herring <robh@kernel.org> wrote:
+On Tue, Oct 6, 2020 at 10:32 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+
+> Disabling the glitch filter works like a charm! Other enthusiastic
+> Linux users who have been troubled by this issue for months would
+> also feel great to know this small tweaking could bring their
+> touchpad back to life:) Thank you!
+
+Oh you found the bug :D
+
+> $ git diff
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+> index 9a760f5cd7ed..e786d779d6c8 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>                  pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
+>                  pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
+>                  pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+> -               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
+> +               /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
+>                  irq_set_handler_locked(d, handle_level_irq);
+>                  break;
 >
-> In order to add meta-schema checks for additional/unevaluatedProperties
-> being present, all schema need to make this explicit. As common/shared
-> schema are included by other schemas, they should always allow for
-> additionalProperties.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+> I will learn more about the glitch filter and the implementation of
+> pinctrl and see if I can disable glitch filter only for this touchpad.
 
-[...]
+Yes we certainly need a quirk for this of some kind, examine the ACPI
+quirk infrastructure in drivers/gpio/gpiolib-acpi.c to see if you can use
+that to handle this.
 
->  Documentation/devicetree/bindings/mmc/mmc-controller.yaml    | 2 ++
->  .../devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml     | 2 ++
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml   | 2 ++
-
-[...]
-
->  Documentation/devicetree/bindings/power/power-domain.yaml    | 2 ++
-
-For mmc and power-domain:
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-[...]
-
-Kind regards
-Uffe
+Yours,
+Linus Walleij
