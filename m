@@ -2,75 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19F36285BFA
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52243285C0A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgJGJne (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 05:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        id S1727512AbgJGJsW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 05:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgJGJne (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:43:34 -0400
+        with ESMTP id S1726411AbgJGJsU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:48:20 -0400
 Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5775C061755
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:43:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y11so1537854lfl.5
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:43:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D871BC0613D2
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:48:18 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z8so1524370lfd.11
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JDiLcwMpwkayN4Rc4w6Y6pIyUXsKEXgJhxnw/U7Lqac=;
-        b=T6qgLUCgHh4ukgQdiXyxirVSV8WH3AlyLwLNBgKvIuGsMeDyH0N+8bemAvoY7IH76S
-         mUXHBxit19xeyiC2EfcGpXZTi09+4/eIE9nrxmb+WQHwPeSNbG26RLeAm7qlmG/8VINq
-         dJrHAzgy5fBhIOsmhb2CNk+VQ9U+Rv6ms/XHrKRDmxwkFPGtsVIb6lobh8scg2EGarBD
-         9Z+9/5OayJI/v7/SWilAp580Y5hx8SEnX8mSSImybHRY/gfSZ8yRvU1NppG3K3tUW/YY
-         BWgkybkimfzxag5P+NwjkxmRbzl8zpZzfBD76pj2VKlvU8F0nt/p/dxF9VQGGM0tfdpt
-         zlNg==
+        bh=20GH/MytvGYbKKPijdXnWxAJl9+uE7J4D+YmHkLcQ5A=;
+        b=S17RO4U0amB2x6k2kTZ9a18WHLzjOusfpWIWq3gOC5WbJcLVOQQ2mXbUadcpfjSLuN
+         iq9HbMPS7bsUvfdMQRN0OEww/kG2tmlBZpVnZGfgw64AZbZNiPMLY8MTBbTZXtADdlSY
+         JpNA4LV9CHidiERNGKQWk3gLfntluuMxih6wstN+Gt8NwcomqfSG3hX4r/J4kAg+CZ8V
+         WmqK4BGMP8vrRcVI9ZeNJt2Iq/BOmP7rGeEtzsVfVJ5hmAHhIdeR1EFJgzi+2p37A2+3
+         KRSqRDcp3IAn7uKXTdzSeXnJk35WLrteOP6tZI80rkAGLKBZyNQHZB8Yo4tuTGZu2ISg
+         8WFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JDiLcwMpwkayN4Rc4w6Y6pIyUXsKEXgJhxnw/U7Lqac=;
-        b=dhroveSlaZSSswwb1kRax4CKL9w7rjp2vCkDGLY5xIenqYSyHnvUGZf3JceoD3urV4
-         2CK8VNV4yUTvLzUqQLu59XLAapCvc39BkcFuEpUSNCs+Q+aW8rvgeSU9J4f4HXLiMWny
-         nGZ5SNOmAQPyRmrlLsZcuvZ6YGzTM/D9Eu8Kevk8uBIsdfAmDX15CWMqCRleLv/pxDw2
-         6sy2iOEFbCQC8v0DDzsmz2ljZcw0U4r6lTOQVhik/UNonTzhqeZAtmUc+Ucc3TeeZpLI
-         ci+Oat3b/uN+Op6eWBnH/6AuRoN4BIHyHl7foZf3Mz9W9hJGMcWy8U3aU5hGNqtRgBce
-         IxDg==
-X-Gm-Message-State: AOAM530d4WpJZZdpXUgaWUSk9g2r0n2yEl1DqBcWbo7th4AbDYhV9G1P
-        0cbQuRrrnNM0IEVigBkApIYt/UAnbvbO3aJSK0/3ug==
-X-Google-Smtp-Source: ABdhPJyqQtJ1QbgnjTU+1b7NCq3Ge3BrMF3pB+gI0+wV15+Ohj3t94o/oXMPKVsYeEmjsNDAHvKAQw1Pz4L4XZIjf9I=
-X-Received: by 2002:ac2:42d8:: with SMTP id n24mr620406lfl.502.1602063812197;
- Wed, 07 Oct 2020 02:43:32 -0700 (PDT)
+        bh=20GH/MytvGYbKKPijdXnWxAJl9+uE7J4D+YmHkLcQ5A=;
+        b=eqoHAYo2ayBKAVm5AkUBeZuFJgM0q6DZBKgADr/d+H83HPsD4x0NT0RRjKPFqfMnr5
+         qnXp+OPsL+5NFoJi/yAS3A5YvV5cKH+l422FZLS+qfKNGpIwfxL4NMz9DrL/G6R4WD3J
+         kL2wkm5VyjrZg+zFHS1Ddfbw8qpe/TkKrb4ZOhcoiK4QhygpNJC/oGXhFC+McuFWleGR
+         9QxqDkWYkqhzyyaLyjFPGhiQvR9PwOqrFXp9+408hCs5uJmBO0MC7npbe105xNB4vtcO
+         Uu/3EgAtHMvzEEv7V9XpFUd1ZS88QzycLPsOWMMf87X4F5Y2D4dR7PAMxILx+JyxwIXl
+         PzUQ==
+X-Gm-Message-State: AOAM531P7qXgfRnRqMiSW4mdHYKARcwEH6xiRRs51ytbK9Nxc4mbIQIy
+        JQC8D76Dp/AUgCZpTLuZHTDpfbp+wpEX84+hyHRjTw==
+X-Google-Smtp-Source: ABdhPJzPH5Uv1yv+cQeuLvKQdejQZpjVdeaTjLNvb2JO6s6Fuweb5qiZpIdL9lRhrTSe2A1ziwDNSyID033hvbeRNlc=
+X-Received: by 2002:ac2:42d8:: with SMTP id n24mr625051lfl.502.1602064097182;
+ Wed, 07 Oct 2020 02:48:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201005095622.73616-1-andriy.shevchenko@linux.intel.com> <CACRpkdbtZVRk6TeHLgtPvix2AmrR+auwfqs8gFyW5P3eLGCy0w@mail.gmail.com>
-In-Reply-To: <CACRpkdbtZVRk6TeHLgtPvix2AmrR+auwfqs8gFyW5P3eLGCy0w@mail.gmail.com>
+References: <20201005140217.1390851-1-maz@kernel.org>
+In-Reply-To: <20201005140217.1390851-1-maz@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 11:43:21 +0200
-Message-ID: <CACRpkdbRPjkwQW1ScksMtOJS6=4Wy-eNEMujhDD6Usy7889y-g@mail.gmail.com>
-Subject: Re: [PATCH v1] gpiolib: Update header block in gpiolib-cdev.h
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>
+Date:   Wed, 7 Oct 2020 11:48:06 +0200
+Message-ID: <CACRpkdbctO9cWZZhVQHWkA1DN7YRTsLRo4Ub9g2x7q6BBSD=Ug@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Survive spurious interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 11:39 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Oct 5, 2020 at 11:56 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->
-> > The dev_t is defined in types.h while struct gpio_device forward declaration
-> > is missed. Take into account above and update header block in gpiolib-cdev.h.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Patch applied with some fuzzing, thanks Andy!
+On Mon, Oct 5, 2020 at 4:02 PM Marc Zyngier <maz@kernel.org> wrote:
 
-I noticed I do not need to fuzz it if I simply apply it to fixes....
+> The pca953x driver never checks the result of irq_find_mapping(),
+> which returns 0 when no mapping is found. When a spurious interrupt
+> is delivered (which can happen under obscure circumstances), the
+> kernel explodes as it still tries to handle the error code as
+> a real interrupt.
+>
+> Handle this particular case and warn on spurious interrupts.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
