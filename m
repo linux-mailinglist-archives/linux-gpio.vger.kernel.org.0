@@ -2,156 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4292C285BDE
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6567285BE9
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgJGJ3X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 05:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41718 "EHLO
+        id S1727401AbgJGJbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 05:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbgJGJ3X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:29:23 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966A4C0613D5
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:29:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h20so1252274lji.9
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:29:22 -0700 (PDT)
+        with ESMTP id S1726989AbgJGJbq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:31:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA152C061755
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:31:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a23so485049ljp.5
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SceNR/oD7tQAm04CP/j4aCTT/R0rZhZ+UNIW4isI3tY=;
-        b=HxjsgaPs/YW7Kb1vjNYC3Tv/LiJo53znWxtLkXB7gYYA2GnjLM/F3+1ylTvx1FCbpn
-         geQdbezZxe75ZA7zyN/wUYDb+uhgVAFz7O5yCmW5RWh6cqHw//S+OzFaS6OoUAS1wtwJ
-         02LUW0BWd+ANlv1yb9KM1WcO9I8LOzlEjhbzsU3dUzmom+4HfqZSr/oMNCCvoj2+fkqI
-         nyx2k9DPKpjglWrROYh9wr5HW9l6KMCvCaqMpawQGlQqMJ74qu3aXfIWzVkBo2XcDlmr
-         Kk0rY5Xc5Y3XiumzzYBNVYNO5vFD7T6fjhDd/c230vfaEhrbYX6HXEM2KSpVJcqTw8vZ
-         suiA==
+        bh=ZZrWrKujoAFMmf1DLSRO6/FD/g7L/54gCsjEBcTuK18=;
+        b=krkBnti1eUSzArr/953tleST+HT8nwl8VH4rh/jOoqe3xUgUmb303Om8wmnr5jyhod
+         Pbed0oHGRcduxLy7Eu9tu8mnshRa5mqUHaxlYBAd036agUTf0wnkghi2x6DLrclNpcgw
+         HNb62yYWMGCYrTwENP1vtvJ0//3UogzYrgOaqPgOzlAMeP+nFzJl8jq5D18gzWvwSTbv
+         bnnmjJJlia1D256kTZHn6eW6fYnofRp5/LmToJW0OMo6pLOMXBkJAIHPwFgcIuFQ6yP1
+         5aUFvRqgkf+lTvLtXYK3EN5HVBk/On0huH/2VamqUKxSWqf6FlraSgTYAR4shIqYOAwR
+         bQWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SceNR/oD7tQAm04CP/j4aCTT/R0rZhZ+UNIW4isI3tY=;
-        b=FuRg1Rv6KcY23IFTAtn4YLsur1AQcfath7aIG43CakUKKGNE1ZHZUTlBFi2HXN97L9
-         U26W2nJrLO9zaTOypxfuFzxXDr/UZveUhQZJ3A0nsuBLCANofQ391JJ3R0o/ReSZ6tAD
-         JXhGJY8sr5S9Quqy7MxlM6lY0d3iqpFtlAFuFvhxS173HtEwLb7st+vMefh7X1q04kgG
-         su0oqO1vlJjz/HhWf/eKllGje/cojzwoitqyHpZGni2wwEqZVTJERr0l+xV1e++Enek3
-         /4FWcNYFFmAAtZ48S027rbE1EKDwQSPqnAOoSQydHWd4xGo/nIuWvAVvQW9+ednMm4kV
-         G6Uw==
-X-Gm-Message-State: AOAM533dkkCZzMUNSxkIQGeTYVIVP4Gs+0DQErO6sTsUfVPGZqMd22oE
-        QJ2tyEMsZEMebTM5Fu7NzopHzxE3zKqUPdW/6if2OQ==
-X-Google-Smtp-Source: ABdhPJxEYSsSuRDWwIFH21xkK1z8YuIysSAPgqRwcgIzF62aIUR6ckFZLkJy4pS50xJ0uLTavSR+G3JTA2JzzbqsX9I=
-X-Received: by 2002:a2e:9b0c:: with SMTP id u12mr782404lji.338.1602062960819;
- Wed, 07 Oct 2020 02:29:20 -0700 (PDT)
+        bh=ZZrWrKujoAFMmf1DLSRO6/FD/g7L/54gCsjEBcTuK18=;
+        b=Zwq+kCybE+0bcgD7vRkqDRMpTh0GSuhSdpQY1mHXNfcj0HbjyU+dito+NAQThHOrwR
+         BuDPoYNuSEZWAh2PxqwP1SbXVlngrywjhRkedgVsO/d4SF7HwHQJaDTsKr6a4+BmO+ya
+         ILnlea8Hk/46T8oQceHd97mxVsmac6lFjjGHrracv9WYfjdEp99eqtiy01MTTzUFaPZ3
+         kHXq5BYKQaGJk3cEUssw9UOWsUD/8xyhcvIqmCmKoQ9UK4pd6iYMynT2d3INcu2m1yDV
+         UBFYS7JfW6Je22VI9bDQlZEZfn3WklC579D93+hu2IReqVfPyFWs2btsjHwcGl+ycK00
+         r1NQ==
+X-Gm-Message-State: AOAM532G2r+6f5iMBep533TaVInxQLUCemzZG2i6F5NGcerIRqISPt4S
+        wRmJ90d94CZ07fhh9pZ0COBIVUYwSHmz4g+aI4sS2A==
+X-Google-Smtp-Source: ABdhPJzc2qVg8X3RXvzOUBa6ZN/mUY341RdBZuxbDiVTHvWj8BywXrvBpV/ifJfQXMBdT/DSj8gwZMWbAm9jWr8J05g=
+X-Received: by 2002:a2e:9b15:: with SMTP id u21mr903017lji.283.1602063104338;
+ Wed, 07 Oct 2020 02:31:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com> <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
+References: <20201005070246.20927-1-warthog618@gmail.com>
+In-Reply-To: <20201005070246.20927-1-warthog618@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 11:29:10 +0200
-Message-ID: <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-usb <linux-usb@vger.kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+Date:   Wed, 7 Oct 2020 11:31:33 +0200
+Message-ID: <CACRpkdbCF-qFJiPcZ_YpA-YOXVdVGocG-7CavorNm=9tB3+d7A@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: cdev: switch from kstrdup() to kstrndup()
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Martin,
+On Mon, Oct 5, 2020 at 9:03 AM Kent Gibson <warthog618@gmail.com> wrote:
 
-thanks for your patch!
-
-As noted on the earlier patches I think this should be folded into the
-existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
-gets messy, as a separate bolt-on, something like
-xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
-You can use a Kconfig symbol for the GPIO portions or not.
-
-On Sun, Oct 4, 2020 at 8:00 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-
-> EJ168/EJ188/EJ198 are USB xHCI controllers. They also contain four GPIO
-> lines which are used on some systems to toggle an LED based on whether a
-> USB device is connected.
+> Use kstrndup() to copy line labels from the userspace provided char
+> array, rather than ensuring the char array contains a null terminator
+> and using kstrdup().
 >
-> There is no public datasheet available for this hardware. All
-> information in this driver is taken from the
-> "F9K1115v2.03.97-GPL-10.2.85-20140313" GPL code dump of the Belkin
-> F9K1115v2. This board comes with an EJ168 USB xHCI controller and the
-> USB 3.0 LED is connected to one of the GPIOs. Inside the GPL source
-> archive the related code can be found in:
->   linux/kernels/mips-linux-2.6.31/drivers/usb/host/etxhci-pci.c
+> Note that the length provided to kstrndup() still assumes that the char
+> array does contain a null terminator, so the maximum string length is one
+> less than the array.  This is consistent with the previous behaviour.
 >
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-(...)
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-> +config GPIO_EJ1X8
-> +       tristate "Etron Tech Inc. EJ168/EJ188/EJ198 GPIO driver"
-> +       depends on OF_GPIO && PCI
-
-It is fine to just select GPIOLIB if you want this to always be
-compiled-in (if the USB maintainers agree).
-
-> +       help
-> +         Selecting this option will enable the GPIO pins present on
-> +         the Etron Tech Inc. EJ168/EJ188/EJ198 USB xHCI controllers.
-> +
-> +         If unsure, say N.
-
-(...)
-> +#define EJ1X8_GPIO_INIT                                        0x44
-> +#define EJ1X8_GPIO_WRITE                               0x68
-> +#define EJ1X8_GPIO_READ                                        0x6c
-> +
-> +#define EJ1X8_GPIO_CTRL                                        0x18005020
-> +#define EJ1X8_GPIO_CTRL_READ_ALL_MASK                  GENMASK(7, 0)
-> +#define EJ1X8_GPIO_CTRL_WRITE_ALL_MASK                 GENMASK(23, 16)
-> +#define EJ1X8_GPIO_CTRL_OUT_LOW                                0x0
-> +#define EJ1X8_GPIO_CTRL_OUT_HIGH                       0x1
-> +#define EJ1X8_GPIO_CTRL_IN                             0x2
-> +#define EJ1X8_GPIO_CTRL_MASK                           0x3
-> +
-> +#define EJ1X8_GPIO_MODE                                        0x18005022
-> +#define EJ1X8_GPIO_MODE_READ_WRITE_ALL_MASK            GENMASK(23, 16)
-> +#define EJ1X8_GPIO_MODE_DISABLE                                0x0
-> +#define EJ1X8_GPIO_MODE_ENABLE                         0x1
-> +#define EJ1X8_GPIO_MODE_MASK                           0x3
-
-Nice that you got all of this out of reverse-engineering!
-
-> +static LIST_HEAD(ej1x8_gpios);
-
-This should not be necessary. Tie the GPIO state into the PCI device
-driver state, possibly using some #ifdefs.
-
-> +static u8 ej1x8_gpio_shift(unsigned int gpio, u8 mask)
-> +{
-> +       return (gpio * fls(mask));
-> +}
-> +
-> +static u8 ej1x8_gpio_mask(unsigned int gpio, u8 mask)
-> +{
-> +       return mask << ej1x8_gpio_shift(gpio, mask);
-> +}
-
-This looks a bit like regmap but trying to use regmap for this
-would probably be overengineering.
-
-Looking at the code I get annoyed that it uses the config space to
-manipulate the GPIOs, else you could have used GPIO_GENERIC
-but now you can't, how typical.
-
-Other than that the code looks nice, but fold it into the USB
-host driver somehow unless there is a compelling argument
-as to why not.
+General good practice! Patch applied.
 
 Yours,
 Linus Walleij
