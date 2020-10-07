@@ -2,78 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DCC3285C11
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:49:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1100C285C27
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:59:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727712AbgJGJt0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 05:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
+        id S1727103AbgJGJ7H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 05:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbgJGJt0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:49:26 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74490C0613D2
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:49:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id z8so1527518lfd.11
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:49:24 -0700 (PDT)
+        with ESMTP id S1726131AbgJGJ7H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:59:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6E3C061755
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:59:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a5so1326208ljj.11
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NNobPfLlnLb6C9CYll17SgTtSvvCXgB1jvX69XN+MLo=;
-        b=wOctlD7llVVGY0VfOM8yY8Ae2vegfGWt/bdNMOy8Hv3WSZpce23A9IAum9HyzGomL7
-         s3o8PVw6Cktm17QJpdVWzlTliXM974vXZW854gHN/XHF8Y0pDJilzGGD/VnYCJmM9puH
-         t9dorri3soFh223bBWXTsTQgO4fxmT5LGV8InRHeo8gJI0ZO9mgf6WO4oB+FgsFzClaU
-         mwTogN+sCkftJOku1sP612xpBVD/G5WjCvz8fE/5xmwFGoYVNaSdxBVYIRS4tbEW8H5I
-         QFRk3TbS+EfNzjjc1LCmb9XQ7rnrrNoFcTOcK2RJNMLZ7U4PnVhskyBarFMiMlFGE6Ov
-         Qsxw==
+        bh=KKQOOjn04T7GkwMmz5OrXlYtJd2KqxiO96+i+bYKJvE=;
+        b=VZDIwNyOkJpF6oCHFqUyy1PFN8hIoad17B4mRzF40dnUyOyh/65o05khD7hfPfjwPy
+         vdTdj4asiEHztzr+oJLoYAaHYAigHjMGGpuX1YEZBlz3oO9Knz0JQX/MbNS7ELjwvrPt
+         vsQlMRGB/FDCGgPwEhv3hrbjTOn8CNGwZ+tX8wqVbGrIF4chfNvoZM0pnJBdBWz7gD+d
+         oB1Xp3diWpwahPWJ95b8XErjloJSapjIa/Otlq4j+hFTtJiAFmi8wYTheYA6nx801BG1
+         0zWhph7triv/+Lb5AeA7pXEEBv+VVWmhnDMlWdQI8k420GC9MU3PEJr36y7DELNVFu1P
+         SLIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NNobPfLlnLb6C9CYll17SgTtSvvCXgB1jvX69XN+MLo=;
-        b=AbzLUHC9dO4c0vCBe6KGqm2oRKeTxi2dC9wEI9lRDAMHQcNvef3ErcXTwiy+oPDLFr
-         R0CYbKQcUwAYf8Gbs0NcNC2hGJ6GPCjrzXMwUiie4WqeKJk2OZml5PgfYrjmdQcC4L80
-         Lhsm2M/sN7e+dOcCvFplTS6vEWMgq3jxL6PIrn1RzMCzcQLZVfY7w4VMwHAy7WO1AOZq
-         BuUfkmgMH+VSgKJGKojNotJpLZI32Cw8R5djc6Vslgb+Dy7TZFp6qV4e7Y12lhwPd3/Z
-         zwbhKpAfVIS64+7lz+eRHspdEcG0Y/JLYHXii4CAN1SJ7ZDIq6HY8WnbRQJBMUqFjQYy
-         qD+w==
-X-Gm-Message-State: AOAM531+Kfiel6lMTBqVJM7+3K0jTFZwvhP5CFyVzS5TEEelNYhACFF2
-        A/vgGIBk6z0MCc9UgCIVHelvy2rjpBg0Sm4OCBcOzS8/6BwtBA==
-X-Google-Smtp-Source: ABdhPJzYkixnKYR0rwS+fBqx12OBPbTtBoiz/I1f7YwNYyLV5xcPAggG0oIIHtbmLjsFyNpJKOe00FU/so8VIgvSsuY=
-X-Received: by 2002:a19:e55:: with SMTP id 82mr630293lfo.571.1602064162911;
- Wed, 07 Oct 2020 02:49:22 -0700 (PDT)
+        bh=KKQOOjn04T7GkwMmz5OrXlYtJd2KqxiO96+i+bYKJvE=;
+        b=ib8+AZJB2MwT1ShJBw6XXiohvdc2zBRiSHQrxIE87478QZfGe6wtjGtoxCtvHYcBsB
+         Yy8U+ssj+9ipW8HBQJUutyFV2wxX6N6ro5nEhD+/hXqrKWsYeHnbXDWzbuAEHSEp+JAX
+         y5svuOhKbZC+vkoEbS372Dq1bzdG6eJslNmNgCKYr+GR+3OIm22GiW+Fj3GfVP0Knu29
+         QILi8jyoZjm7v2lGIKYz+X2Kqa8YZc3ih3wLWtrOCPYV7MDTUeqgmI4sgrvyRfbpaEOS
+         YMn4NbbDFafvZvbEs6+zVkJX/sjjwiD5E8lFjq2aukWCPxBLGZB0v60xmMKNCKNHCYAp
+         qclA==
+X-Gm-Message-State: AOAM531AssyC/tOZOr5JyRcdK9V+s4dSzKNQrkeQ4X892MSpryDWY4gB
+        /RHlhPjFPyHnChSLLvaZqmvf1vhLQ2omtPw/rsYZyA==
+X-Google-Smtp-Source: ABdhPJwiyu1tG4DSWuw2KhjV8R5X5Q+afnfcyPo8Lmx0Fz3nRf7XTIMmNWlPlPzGJIZWVbxcnF2OS3YP3wPrxQzNVtk=
+X-Received: by 2002:a2e:810e:: with SMTP id d14mr1008642ljg.100.1602064745198;
+ Wed, 07 Oct 2020 02:59:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201005125049.26926-1-geert+renesas@glider.be>
-In-Reply-To: <20201005125049.26926-1-geert+renesas@glider.be>
+References: <20200930092053.2114-1-mike.looijmans@topic.nl>
+ <CACRpkdbsYcmv9m2EiQNgPDZ0MdjPnWTxXvnqATVPvWpB=8Oqkw@mail.gmail.com> <20201006193235.GA2689027@bogus>
+In-Reply-To: <20201006193235.GA2689027@bogus>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 11:49:11 +0200
-Message-ID: <CACRpkdYtVc9G8tG9N51170f6_8+DXP7AXsPOh0ZEQ1v94ussCA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: visconti: PINCTRL_TMPV7700 should depend on ARCH_VISCONTI
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+Date:   Wed, 7 Oct 2020 11:58:54 +0200
+Message-ID: <CACRpkdZmYKn1JU8PeA+GAJDuVEtWQrH-3KijH4+df88Bt=iZtA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: pca953x: Add support for the
+ NXP PCAL9554B/C
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mike Looijmans <mike.looijmans@topic.nl>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 5, 2020 at 2:50 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> The Toshiba Visconti TMPV7700 series pin controller is only present on
-> Visconti SoCs.  Hence add a dependency on ARCH_VISCONTI, to prevent
-> asking the user about this driver when configuring a kernel without
-> Visconti platform support.
+On Tue, Oct 6, 2020 at 9:32 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Sep 30, 2020 at 11:50:38AM +0200, Linus Walleij wrote:
+> > On Wed, Sep 30, 2020 at 11:21 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> >
+> > > The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
+> > > with 8 GPIOs, latched interrupts and some advanced configuration
+> > > options. The "C" version only differs in I2C address.
+> > >
+> > > This adds the entry to the devicetree bindings.
+> > >
+> > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> > > ---
+> > > v2: Split devicetree and code into separate patches
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > This patch 1/2 does not apply to my tree, I suppose Rob has
+> > to apply it?
 >
-> Fixes: a68a7844264e4fb9 ("pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Nope, no changes in my tree.
 
-Patch applied!
-
-Thanks for fixing this Geert.
+Weird, OK Mike apply this wherever it should be applied or rebase
+on my GPIO tree and resend if you want me to apply it.
 
 Yours,
 Linus Walleij
