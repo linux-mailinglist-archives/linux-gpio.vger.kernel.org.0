@@ -2,109 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D467285FCB
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 15:09:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 109B0285FF1
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 15:20:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgJGNJX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 09:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgJGNJX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 09:09:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF6BC061755;
-        Wed,  7 Oct 2020 06:09:22 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o8so981295pll.4;
-        Wed, 07 Oct 2020 06:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KVqiXdKPy//yBLnrbUYNPIFbKzpfm4hlm2oJcG3MPKM=;
-        b=IcVmgf6DyKax8SL+CnODpfOy+HGD60ry2A6dznQV4HFKxlEZlWI7gHntlE7KHv8oLc
-         1+WemA7at7Q9Pq8ysSiPtfWdMU/6mKX2mM1L1FBedW+1dk+3Ivyma4ewpba1+e/BR037
-         u6zNRbytqB+YK6LWyAVmdbStn0o8adCPJ8/9HxHgRKsRrpz0HOGYniLFAODou/dwd5GK
-         szRyxVs5GKAuAR1j+Nu088VoyNZ+absaejCfre3l26i7d7kUB3BT8shJSRTS43Yp3IF0
-         7j7HwHAl1eeL2Ln27N3L315ZoxtQNuJmNYw3gOouy5iootYcF5owyUSa5wC3uGgPd8Kj
-         9UEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KVqiXdKPy//yBLnrbUYNPIFbKzpfm4hlm2oJcG3MPKM=;
-        b=REFE9xLC58yMzI4MrmYgyZG7kmxZByOSKZd7ga9h3WrXg7hVyxBxVYXSdPEekm/8wW
-         BiTI4E3uvHMz280jp7H5AIDG53gsdwd+80sQ67ncNyxDjAPFuEYc2xEXl/td9alnAO+t
-         wGYtTyNzWj4zVU/Vfd7OVzk+qW6nQtcH2dmWG0+rTTEVT/j1sIORqbBz3OtaKA7qfUPv
-         niOFlMGco5cyjNl66j3OdhyARicclCN8uwLStWlj7YgimzD8k4Ak/q/oOenmxOi9XWlA
-         Fb7BHqhZp7mmMiGh3fBNzOXJftFQcyy2k0FVR1nAjtR+u5+W7PaJgu2+htVVwwqqO4ym
-         79Rw==
-X-Gm-Message-State: AOAM532rbi336ynti+RFLMfMzG+k0XlzU+rs8BImD42/MMlRRbP9g30d
-        UQIxa5f5vk8eBzz+/w0SCieI7qV5yIxuahuksbqxA9ZO39N17Qwa
-X-Google-Smtp-Source: ABdhPJwqdhtZWdJhdm1csMPCmdSHYsP8gSl9tj/OFOQ/7yh5JkqqX3pFf60Mv+M5QC5MrJSkUbsoWRdq2i6Nsy4Mwfo=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr2708722pjs.181.1602076161810;
- Wed, 07 Oct 2020 06:09:21 -0700 (PDT)
+        id S1728435AbgJGNUe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 09:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728425AbgJGNUd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 7 Oct 2020 09:20:33 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB75D20782;
+        Wed,  7 Oct 2020 13:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602076833;
+        bh=ks/rDWNV7h790DHS1rMw1lwdmqAsAoW9/m5JR1hMSPc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t4Moglev7KhYP6FxBxZCVSw4OSwm7bU/QW9II1tEMoFXPDVOJqQzygjK1sop6B648
+         lUG1E3NzoVl6PNJMtXTrZqFsrtqU933ilQMt8xOgNkfJI/rAE5DtVhDc5WA9X5Gxq/
+         zPrj0Y9tNgj70czs0p8mvuPsL0mLjrhB7msRR12c=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kQ9Ms-000NLl-Ns; Wed, 07 Oct 2020 14:20:30 +0100
 MIME-Version: 1.0
-References: <20201005140217.1390851-1-maz@kernel.org> <CACRpkdbctO9cWZZhVQHWkA1DN7YRTsLRo4Ub9g2x7q6BBSD=Ug@mail.gmail.com>
- <CAHp75Vdb3y_r_+Mq8K=Jog21wiFH54F18ED8eBwT4rM_zxcCUA@mail.gmail.com> <0175d3ce84ea0aa938a3ce9b3731762e@kernel.org>
-In-Reply-To: <0175d3ce84ea0aa938a3ce9b3731762e@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 7 Oct 2020 16:10:11 +0300
-Message-ID: <CAHp75VdQixJStuVj_aMZ9PhkWXk4RoUa13wAMDj4KGwm2t9nFQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Survive spurious interrupts
-To:     Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 07 Oct 2020 14:20:30 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] gpio: pca953x: Survive spurious interrupts
+In-Reply-To: <CAHp75VdQixJStuVj_aMZ9PhkWXk4RoUa13wAMDj4KGwm2t9nFQ@mail.gmail.com>
+References: <20201005140217.1390851-1-maz@kernel.org>
+ <CACRpkdbctO9cWZZhVQHWkA1DN7YRTsLRo4Ub9g2x7q6BBSD=Ug@mail.gmail.com>
+ <CAHp75Vdb3y_r_+Mq8K=Jog21wiFH54F18ED8eBwT4rM_zxcCUA@mail.gmail.com>
+ <0175d3ce84ea0aa938a3ce9b3731762e@kernel.org>
+ <CAHp75VdQixJStuVj_aMZ9PhkWXk4RoUa13wAMDj4KGwm2t9nFQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <bab5b8d99b57710030955c3924c9fca5@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: andy.shevchenko@gmail.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 3:09 PM Marc Zyngier <maz@kernel.org> wrote:
-> On 2020-10-07 13:02, Andy Shevchenko wrote:
-> > On Wed, Oct 7, 2020 at 12:49 PM Linus Walleij
-> > <linus.walleij@linaro.org> wrote:
-> >> On Mon, Oct 5, 2020 at 4:02 PM Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> > The pca953x driver never checks the result of irq_find_mapping(),
-> >> > which returns 0 when no mapping is found. When a spurious interrupt
-> >> > is delivered (which can happen under obscure circumstances), the
-> >> > kernel explodes as it still tries to handle the error code as
-> >> > a real interrupt.
-> >> >
-> >> > Handle this particular case and warn on spurious interrupts.
-> >> >
-> >> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >
-> > Wait, doesn't actually [1]  fix the reported issue?
->
-> Not at all.
->
-> > Marc, can you confirm this?
-> >
-> > [1]: e43c26e12dd4 ("gpio: pca953x: Fix uninitialized pending variable")
->
-> Different bug, really. If an interrupt is *really* pending, and no
-> mapping established yet, feeding the result of irq_find_mapping() to
-> handle_nested_irq() will lead to a panic.
+On 2020-10-07 14:10, Andy Shevchenko wrote:
+> On Wed, Oct 7, 2020 at 3:09 PM Marc Zyngier <maz@kernel.org> wrote:
+>> On 2020-10-07 13:02, Andy Shevchenko wrote:
+>> > On Wed, Oct 7, 2020 at 12:49 PM Linus Walleij
+>> > <linus.walleij@linaro.org> wrote:
+>> >> On Mon, Oct 5, 2020 at 4:02 PM Marc Zyngier <maz@kernel.org> wrote:
+>> >>
+>> >> > The pca953x driver never checks the result of irq_find_mapping(),
+>> >> > which returns 0 when no mapping is found. When a spurious interrupt
+>> >> > is delivered (which can happen under obscure circumstances), the
+>> >> > kernel explodes as it still tries to handle the error code as
+>> >> > a real interrupt.
+>> >> >
+>> >> > Handle this particular case and warn on spurious interrupts.
+>> >> >
+>> >> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> >
+>> > Wait, doesn't actually [1]  fix the reported issue?
+>> 
+>> Not at all.
+>> 
+>> > Marc, can you confirm this?
+>> >
+>> > [1]: e43c26e12dd4 ("gpio: pca953x: Fix uninitialized pending variable")
+>> 
+>> Different bug, really. If an interrupt is *really* pending, and no
+>> mapping established yet, feeding the result of irq_find_mapping() to
+>> handle_nested_irq() will lead to a panic.
+> 
+> I don't understand. We have plenty of drivers doing exactly the way
+> without checking this returned code.
 
-I don't understand. We have plenty of drivers doing exactly the way
-without checking this returned code. What circumstances makes the
-mapping be absent?
+I'm sure we do. Most driver code is buggy as hell, but I don't see that
+as a reason to cargo-cult the crap. The API is crystal clear that it can
+return 0 for no mapping, and 0 isn't a valid interrupt.
 
-Shouldn't we rather change this:
+> What circumstances makes the mapping be absent?
 
-        girq->handler = handle_simple_irq;
-to this:
-        girq->handler = handle_bad_irq;
-?
+Other bugs in the system ([1]), spurious interrupts (which can *always*
+happen).
 
-> Recently seen on a Tegra system suffering from even more pathological
-> bugs.
+> Shouldn't we rather change this:
+> 
+>         girq->handler = handle_simple_irq;
+> to this:
+>         girq->handler = handle_bad_irq;
+> ?
 
+I don't understand what you are trying to achieve with that, apart from
+maybe breaking the driver. The right way to handle spurious interrupts
+is by telling the core code that the interrupt wasn't handled, and to 
+let
+the spurious interrupt code do its magic.
 
+         M.
+
+[1] https://lore.kernel.org/r/20201005111443.1390096-1-maz@kernel.org
 -- 
-With Best Regards,
-Andy Shevchenko
+Jazz is not dead. It just smells funny...
