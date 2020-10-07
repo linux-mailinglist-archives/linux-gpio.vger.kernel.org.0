@@ -2,96 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0300286041
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 15:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76491286053
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 15:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgJGNfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 09:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        id S1728458AbgJGNjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 09:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgJGNfl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 09:35:41 -0400
+        with ESMTP id S1728177AbgJGNjH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 09:39:07 -0400
 Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C893CC0613D2
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 06:35:40 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y11so2309403lfl.5
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 06:35:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62453C061755
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 06:39:07 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id h6so2340531lfj.3
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 06:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+w1W+CUXGGFXbZ34Qh5CjZMXrIFvrZ3lWXBN60hppFc=;
-        b=eH1+4bAxQ4Xw2n/zbFWwccR3SePzT0zlwNq4GU+LGKhCNA43MoCZwQdQMjjUAcMuGh
-         dsluM8ozYSNELiEQJFLaR3eiEn5++Dq8al3D8Khr1tTZPks7r68Wpt3sMEXduHALpgAH
-         cUuaTKI0v+ut5Jl+ezPoJNv9Az1p9q+Mqv5kV+gUHpQCMkPsrcmwYwyDD9bEp49cOiYr
-         u9O50ktsJyTOWWV11DouAXXAxK67iKi9Rk4kjR/SMSFQZnBr0YjP7aqLRc/FE+sVl1Ic
-         zIrd44diWdrcacEuYGR8KZyA8OSaK5fqklnFqa4WgbHRkmOYgq2U4pp3PbNa8Q/GyEAb
-         x6eA==
+        bh=K6q9aYjSyTuS6dVvXSKNCFBRSmK/W1vI2grPzL0Jy+c=;
+        b=lL68wbUGdoFGOtkZ4uo0nIVUKjQVDAqf/wVRSTOKctQXT3PYmetA/ZjpRR08vVQUTP
+         HmJEPH00xx44oQWQ00rxHJAcTl6Iv7TkFwi/5zChDBOHFJx8lfpr1o45KFg425gxcu1L
+         bT8Yq7bwwUIiw6NTEAdCd4rRyWEhcZshUS/nkrW7oo8kQnQeGvD3w4JnyTi/CFt0Qzq5
+         H9UAmVJtWv7TmKdK/woH1oVH6ZWUBBBSHSRJtDIhsQzgOJAp9O1QF3C0qIiW4+XtaZR0
+         Vy+ZuwkDax6vISAdadFxgRwgUQz0nXS8atnHeafMBeyf4N0/s0c+yR3v6rfTDXlE/62G
+         Xibg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+w1W+CUXGGFXbZ34Qh5CjZMXrIFvrZ3lWXBN60hppFc=;
-        b=hFSUNXB0BrJeE3hiSfCBJ6oL5XOAE2iWanL3nmia32Yf2fjfXTtsFaiTScbjA4jxL5
-         n4qhyFsADVWj6rF7aFfwA5S6Qdteg92zEbKHpwURByEaAWD9ygQqzldCokIqUyLO3an8
-         rYDuV9/18wZikNiD5EYYv5YztYgW+CfMJy0mFpF60V21N/M4173iwUfxBWf2DTWRsqNw
-         b5VVaILACf9+m51FHgVv4/vj/RRlZpF3HZO6zm4iGoOmvT9tqAjcOlF0jmPsj6hnptsg
-         IjVBwxLaGUEQbNSAR6vH/3+3h1GEvV6y69KkBdpug+Spw9tsvUbOLnb3QeG/CcyHLXfW
-         HlYQ==
-X-Gm-Message-State: AOAM533VVG3XLawUJixiM8P7kmq71mR7VAId6zZHYpOe6f7vEp62KQ7Y
-        ogg3JZbXYyb8Q5fJZwPvwHtl0+9lZwIXE63K6N0HXQ==
-X-Google-Smtp-Source: ABdhPJxFSWzDMt1RxkzVv4jvQRcoDe70+B0vvDwTNRVoglFOA+9S9Jcc6j31TSUtwhUg0sN0ZV0nqIu6f4fbXjVmpGE=
-X-Received: by 2002:ac2:4c11:: with SMTP id t17mr1043456lfq.260.1602077737755;
- Wed, 07 Oct 2020 06:35:37 -0700 (PDT)
+        bh=K6q9aYjSyTuS6dVvXSKNCFBRSmK/W1vI2grPzL0Jy+c=;
+        b=YlBblrwLfxumXfgLLLot1O2doM0404iOOUJ6E01Ez4x9TSVtTvZyrPGh/oTSn1wt0c
+         Q1TQrCRhcFMUjshw5VXlZVgtyx3g4bcHU7wnAH7GHlstJh9KYOJdIOQdL63vclHwOQ4u
+         FeDzry88tMCr9s+aRPsy2EYl9d7YQTNVP8mJ9V6rq5iYS46h0L1Oss85QOnl+YoXlg8G
+         pR5QFb41jLDfRoWSj0C4R1B5TYVGCIBDzq63kGGn5Y4DU4tJ5JTnCKscZOLBEe8hzXEU
+         HSArpPHcfVKFckMtNKQsNsJXvAiWgfnhdrYJ9ciMrysXCFJkMUwI5lh62KCwRiylUxMD
+         HFnQ==
+X-Gm-Message-State: AOAM530Uwt4NXjHD9NNYL7ZyotAQcGs3UN0V90Gv6kIwZOkfwxILAK11
+        5O0aVs3ZZ8Ie6G1j47AAotoTP3TZz0cbYy+De7Wj4A==
+X-Google-Smtp-Source: ABdhPJz0PQCgiTiJKmsFBfz2nlcLvW+qKpaLH58qY2CgMcCuDWaSD8etmtyuqHAkyqbUEdJN3nLgnRdo/e5RMJx/ZnQ=
+X-Received: by 2002:a19:1c8:: with SMTP id 191mr894998lfb.585.1602077945846;
+ Wed, 07 Oct 2020 06:39:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201007111145.2306213-1-lars.povlsen@microchip.com> <20201007111145.2306213-2-lars.povlsen@microchip.com>
-In-Reply-To: <20201007111145.2306213-2-lars.povlsen@microchip.com>
+References: <20201007111220.744348-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20201007111220.744348-1-Shyam-sundar.S-k@amd.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 15:35:26 +0200
-Message-ID: <CACRpkda0RAK2gp-ZB6LDxAnQP3=VGrsfqkfV0=3FiSFfNhOmjA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: Add bindings for
- pinctrl-mchp-sgpio driver
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date:   Wed, 7 Oct 2020 15:38:54 +0200
+Message-ID: <CACRpkdZHbmKUx4=FYZSiCNHsUV-JE7aCWuG-ZFYqabRkTujLBg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: amd: Add missing pins to the pin group list
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Akshu.Agrawal@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lars,
+On Wed, Oct 7, 2020 at 1:12 PM Shyam Sundar S K
+<Shyam-sundar.S-k@amd.com> wrote:
 
-a new version of the patch set arrives while I'm reviewing, haha :D
-
-On Wed, Oct 7, 2020 at 1:12 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
-
-> This adds DT bindings for the Microsemi/Microchip SGPIO controller,
-> bindings microchip,sparx5-sgpio, mscc,ocelot-sgpio and
-> mscc,luton-sgpio.
+> Some of the pins were not exposed in the initial driver or kept as
+> reserved. Exposing all of them now.
 >
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-(...)
-> +      reg:
-> +        description: |
-> +          The GPIO bank number. "0" is designates the input pin bank,
-> +          "1" the output bank.
-> +        maxItems: 1
+Patch applied! Thanks for improving the AMD driver.
 
-Excellent.
-
-> +      '#gpio-cells':
-> +        const: 3
-
-So I thought you needed three cells exactly because the
-middle cell would get you the bank. That you now have in
-reg. So what about using the standard twocell?
+Would you consider assigning yourself as maintainer of this driver
+in the MAINTAINERS file if your job at AMD entails maintaining
+this? Would be much appreciated, thanks.
 
 Yours,
 Linus Walleij
