@@ -2,72 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EB8B285BF5
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC787285BF8
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 11:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbgJGJjr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 05:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43310 "EHLO
+        id S1726411AbgJGJm7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 05:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgJGJjr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:39:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB994C061755
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:39:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f21so1287651ljh.7
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:39:45 -0700 (PDT)
+        with ESMTP id S1726218AbgJGJm6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 05:42:58 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70032C061755
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Oct 2020 02:42:58 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id a7so458554lfk.9
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Oct 2020 02:42:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4IgT5KtGu5dip50wkhPI6u3Yi97OLnIXQ1ISUG7M+wc=;
-        b=NhPmxdo/3Oyye5vIcthjlPxCRJv2w8dX5uUoSIzBFmVRcjNReWxAYDLzF6v2uAwJvJ
-         CsNnO928yknyCwRu95tpeNHIXmH6l5WEqpxBaNGelK8oYsWCi+1p8ehN9qSCWG1KVJxx
-         w0leUzlfiiE4qgS7ctDnOL03A3zKOmeCfM0X7IcGfywaKsLklczjYoDz+RI6MHqiCwjG
-         Y6YFpq0q9WMlyezKBnEFY1FcmGFfjospdZwQnKb+9EUXBmsWuaIkEX+PRYk4iVqmlxE3
-         F7ymYsr5xyYglqdLLvO239NESdeAIyCSS1jBRl+X6dDir/5UOqCZVLV30Wed7oG/SQwU
-         YqWQ==
+        bh=vrGYakr7L9oOr7WPMW9+1Ce9GLRFUwBOVfahjcfLOwg=;
+        b=sO2p50KyRxmZfIitVF/wSwrj0sL+ah6gEa/bMhBMmYY2EgwCvAXhNYeqYFsHtuqeNG
+         txVhx6Iix6d8+mJzhf1H3PNKdk5DqIqbiR1uqFL7QOFQfvueeO6UH/uQj5IW4uoeP/0V
+         Ik1OIuahTjMVuScNxMRV0nS7m3NKkX0CRXHzJpNbR12/S7jmHsxBfZhtEmkWsVsFie0r
+         mKF46zMM3YKbIn6cvDTFwI2WhmJr5/ungGCTwoq5E1W9DvFN0UHX17Yh8LBeJsFWSDkK
+         RGPLWu0AD0o8bzuyZonvnnMEMMXdccrezm1f6QDbB3E6juaFXWAUNaVJyRkwkZbBOJFy
+         h3OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4IgT5KtGu5dip50wkhPI6u3Yi97OLnIXQ1ISUG7M+wc=;
-        b=s5CkI2tguTr3DpWN+heaqhyW4V208LKoSpUMnjpxSg2fCZfkX9a9dPWRW/DweMWKoT
-         2f74YNlGUXoxUnQgRElmlJUmaCLk5fYaR66hg5ZUCtdok8JxPjpON80/D5OYM+rvFFuu
-         ISiBXrPSbEPycR8Rz2BBEnoGE2GQ0aBrgY3zM8XP2+XOkNlK+J62zxGoRK7d4XBq3bsU
-         uMtn0GEjKRmrokj1MekHcEucvpgUgM6kblbpsNDy/Co848t4Vd6Th0FXmcphemAVklhi
-         JmXzcPiMK2ygPzTiueNplh8Bzy7QggJeRkapSoDNKfHSlQgIU+7IWQDA6XfXORoRPQSG
-         ob4g==
-X-Gm-Message-State: AOAM531oDU7HGggSSWJFOONY2Sm2LVvKF1CN1v2kfWH9EtRh7jnt/pH4
-        SaoNeLTdjXOqctszIkbCBp/Pa99I014F2SGuIVj5DA==
-X-Google-Smtp-Source: ABdhPJya641dhYKw144lSEaPhfxgpquEEVobwkOb93GmXgJBOK9vRJsfy5R4tVndJrSAtU63Mh/K+tYArwZmzP8ZJVU=
-X-Received: by 2002:a2e:a177:: with SMTP id u23mr836748ljl.104.1602063584162;
- Wed, 07 Oct 2020 02:39:44 -0700 (PDT)
+        bh=vrGYakr7L9oOr7WPMW9+1Ce9GLRFUwBOVfahjcfLOwg=;
+        b=h9BS2379YFAeBFHKl2ksqw3ryLtoOSxIlZ/2+7MD4mXUKiYu9ucsM3NxRZ2Iqi5A0Z
+         ZNNFFJlqJPudcbJThptdJg/5y0uSBredQkzjIc2E/nYM7I4GMeOWjvRuWQlKUoRfjvln
+         riXSHZKTDnxljMh1/vbxU1wMkJ6y8+DNZLl7DLK8HrHgDB5XEUZhQCprbu1Xv3G683Dw
+         Yb6inzHogRIBV6Hcd1S6SHdZkhHe31q9/JnJuy1yBzjwzIs0yhOEOikzwkkQZ+fON8K4
+         +uZVG1Sez5qiX2sWtsd3A3PWhu0XmRLEQi/C5R3HGppyL88VPTETA+obmMwg72rEm2ce
+         DLGQ==
+X-Gm-Message-State: AOAM533YZAa9JKwkHUlzupQfY7mAlW6Tbp+gW/mo5wGT5weqUJ6SpD0z
+        1wgh6sg9XIWso2BJj16SwYCfCyCecrMYtbTYXBk++Q==
+X-Google-Smtp-Source: ABdhPJzjmL9X3l4LIt9HX9Ek0e41ijnPh135/HoB98ZXjGOIF5lJ6iCk5EdKqqSLaql/IiETcd8pqlE76uskFENzfmk=
+X-Received: by 2002:ac2:483b:: with SMTP id 27mr627531lft.441.1602063776906;
+ Wed, 07 Oct 2020 02:42:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201005095622.73616-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201005095622.73616-1-andriy.shevchenko@linux.intel.com>
+References: <20201005131044.87276-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201005131044.87276-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Oct 2020 11:39:33 +0200
-Message-ID: <CACRpkdbtZVRk6TeHLgtPvix2AmrR+auwfqs8gFyW5P3eLGCy0w@mail.gmail.com>
-Subject: Re: [PATCH v1] gpiolib: Update header block in gpiolib-cdev.h
+Date:   Wed, 7 Oct 2020 11:42:46 +0200
+Message-ID: <CACRpkdbvxdjxfNFzvPD+h_KqH=QVt3R4xSNGpJpb2nUrBKX5Hg@mail.gmail.com>
+Subject: Re: [PATCH v1] gpiolib: Disable compat ->read() code in UML case
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>
+        Kent Gibson <warthog618@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 5, 2020 at 11:56 AM Andy Shevchenko
+On Mon, Oct 5, 2020 at 3:11 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> The dev_t is defined in types.h while struct gpio_device forward declaration
-> is missed. Take into account above and update header block in gpiolib-cdev.h.
+> It appears that UML (arch/um) has no compat.h header defined and hence
+> can't compile a recently provided piece of code in GPIO library.
 >
+> Disable compat ->read() code in UML case to avoid compilation errors.
+>
+> While at it, use pattern which is already being used in the kernel elsewhere.
+>
+> Fixes: 5ad284ab3a01 ("gpiolib: Fix line event handling in syscall compatible mode")
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Patch applied with some fuzzing, thanks Andy!
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
