@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4B6286ABA
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 00:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45000286ABC
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 00:12:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgJGWMA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728339AbgJGWMA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 7 Oct 2020 18:12:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56509 "EHLO mga04.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:38974 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgJGWMA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1728742AbgJGWMA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Wed, 7 Oct 2020 18:12:00 -0400
-IronPort-SDR: nQMugQmhDdSl8HzlgUOtooE1mWUhRSd0u/m6kVXWAvYpV/6GgrDVJrqvgUK5qe1fGMqY/t8ENn
- RfY2WxKyHamw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="162526373"
+IronPort-SDR: RhzQpbp/XsFjWpeNJ3o3IrlxRdfLe03F+S1ntwgGEemEOFvaT2eShjMCi/ZQULPYWsMiJzqX6r
+ xcyD5kS1EXSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9767"; a="165277674"
 X-IronPort-AV: E=Sophos;i="5.77,348,1596524400"; 
-   d="scan'208";a="162526373"
+   d="scan'208";a="165277674"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 15:11:58 -0700
-IronPort-SDR: UcIPo9Byq1y/SKdW7R5UlREqzBWPAvCqFGXrspbOrCD7D1+l7SfR3YCxv2QAmRVyzZYzRVUSr8
- FPRmKunwXu1w==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2020 15:11:58 -0700
+IronPort-SDR: 8+vOlom0StWoemRGpBMn9z3ODM3C9AiHeFFrY54k009O8pPad60ANf384oEDjsYs9HL/e3rQdS
+ KvagieaZDTPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,348,1596524400"; 
-   d="scan'208";a="316430727"
+   d="scan'208";a="343109032"
 Received: from lkp-server02.sh.intel.com (HELO b5ae2f167493) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 07 Oct 2020 15:11:57 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 07 Oct 2020 15:11:57 -0700
 Received: from kbuild by b5ae2f167493 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kQHfA-0001qE-Bq; Wed, 07 Oct 2020 22:11:56 +0000
-Date:   Thu, 08 Oct 2020 06:11:19 +0800
+        id 1kQHfA-0001qC-BP; Wed, 07 Oct 2020 22:11:56 +0000
+Date:   Thu, 08 Oct 2020 06:11:21 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:fixes] BUILD SUCCESS
- 47e538d86d5776ac8152146c3ed3d22326243190
-Message-ID: <5f7e3d07.fBdEKD4vAe8Ljl3t%lkp@intel.com>
+Subject: [gpio:for-next] BUILD SUCCESS
+ 24160a8f7f1380ed064aba8d3d7740d5141ce0ad
+Message-ID: <5f7e3d09.QgQ0J90lGy9HlQM9%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,13 +45,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
-branch HEAD: 47e538d86d5776ac8152146c3ed3d22326243190  gpiolib: Disable compat ->read() code in UML case
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: 24160a8f7f1380ed064aba8d3d7740d5141ce0ad  Merge branch 'devel' into for-next
 
 elapsed time: 721m
 
-configs tested: 216
-configs skipped: 3
+configs tested: 220
+configs skipped: 2
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -66,6 +66,10 @@ arm                  colibri_pxa300_defconfig
 powerpc                    mvme5100_defconfig
 sh                             espt_defconfig
 powerpc                     mpc512x_defconfig
+powerpc                     rainier_defconfig
+sh                        apsh4ad0a_defconfig
+arm                          ixp4xx_defconfig
+mips                        bcm63xx_defconfig
 mips                           ip28_defconfig
 mips                        omega2p_defconfig
 arc                             nps_defconfig
@@ -127,6 +131,10 @@ sh                               alldefconfig
 arm                      footbridge_defconfig
 c6x                        evmc6472_defconfig
 sh                         ecovec24_defconfig
+s390                          debug_defconfig
+s390                             alldefconfig
+arm                      integrator_defconfig
+c6x                        evmc6474_defconfig
 nios2                            alldefconfig
 m68k                       m5208evb_defconfig
 powerpc                       eiger_defconfig
@@ -136,7 +144,6 @@ powerpc                  mpc885_ads_defconfig
 arm                            qcom_defconfig
 arm                             rpc_defconfig
 c6x                              alldefconfig
-arm                      integrator_defconfig
 sh                        sh7757lcr_defconfig
 powerpc                     redwood_defconfig
 sh                          rsk7269_defconfig
@@ -162,13 +169,16 @@ arm                       aspeed_g5_defconfig
 mips                     cu1000-neo_defconfig
 sh                           se7619_defconfig
 arm                         nhk8815_defconfig
+arm                        clps711x_defconfig
+arm                          ep93xx_defconfig
+h8300                               defconfig
+sh                              ul2_defconfig
 nds32                             allnoconfig
 powerpc                      cm5200_defconfig
 sh                   sh7770_generic_defconfig
 arm                           spitz_defconfig
 arm                          iop32x_defconfig
 sh                          r7780mp_defconfig
-sh                              ul2_defconfig
 microblaze                          defconfig
 mips                           ip22_defconfig
 ia64                             allmodconfig
@@ -243,12 +253,6 @@ i386                 randconfig-a013-20201005
 i386                 randconfig-a016-20201005
 i386                 randconfig-a011-20201005
 i386                 randconfig-a012-20201005
-i386                 randconfig-a014-20201007
-i386                 randconfig-a013-20201007
-i386                 randconfig-a015-20201007
-i386                 randconfig-a016-20201007
-i386                 randconfig-a011-20201007
-i386                 randconfig-a012-20201007
 riscv                    nommu_k210_defconfig
 riscv                    nommu_virt_defconfig
 riscv                               defconfig
