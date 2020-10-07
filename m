@@ -2,243 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AFC7285DD5
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 13:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A0D285DDE
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Oct 2020 13:12:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgJGLHy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 07:07:54 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:2331 "EHLO
+        id S1726129AbgJGLMB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 07:12:01 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:2747 "EHLO
         esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgJGLHu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 07:07:50 -0400
+        with ESMTP id S1726096AbgJGLMA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 07:12:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1602068870; x=1633604870;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=OHJkMunRX9yuGQkkQINgytJNNoat78VMgh5LSqd5Fas=;
-  b=PoBxjvnNMEIEMNunwQEeHDL5zzwdm1pcubmcZSzE9s7SIn7rAltWn/gm
-   0MCsnaJwaUr8MSjxTOAn6nvZQpVrss+HSn5Sev+bx1VC90+hmwDaa7HhY
-   1LVi1Nx/3mHqWo5M6eRjgYGIV83bcu3Xh0NAETFZSQf2i+bAF58zqfAsQ
-   2IfxoKYX+1aIMR6WevUj537vzAuwjnJeOMIEPRA3Hs7BXUL6tj+FFWL+0
-   nNKSy22jA7s+TuW0IsOwxSvE4h8yNf+xYfi6/N/R+w/oEReABHfYNqV8M
-   rpXxqHGsjCkTrrIoLbz14qpACi1ikAmR1Tm1oMic3FhfgvPV+0WXS8SxB
-   g==;
-IronPort-SDR: /OtwhM7MxUzWHjBjkHcKq762qLsJPwtoJyjWUO5p5ghFZAijyBiGfJrpWA/eoKUtY1CyYaodlG
- B1347MS9duBSSS5C+VRB6WMAJp7jSpHiU58OeWfFPty8MmuwGNEqBSR9SKBETY/GDUfUJbSCzK
- zCnJxR+bYbsr33MA5fMeCHbnyhwggHBsgfJhezdiTKpgELaj1aRq4RFWyTDHfmwZ1boBgnayqq
- DSAg5xNA66uN1y4CQuyoBYQ+cNWAbbFIBcsUEvu0XBL7zodf6Yd77jH4rHEwGR4icgF2QonBH2
- E3o=
+  t=1602069120; x=1633605120;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jTkGXO9V/G30ymkdWTzloF+IoAl5IuZdTB0pP3RMpuQ=;
+  b=UnTo5od/BRIVMZgabLe2l2CWMj9pw8Z0/icvEeS+oormHofrUvcoKkAC
+   hwnZuSq30V6s8WG6UGwF90Yf7v1IYBBxtBT9dxeSDLmYNI99rqC47SN+O
+   imtFpfCFs3fCeuajJB0kpBIDRCtCry2Yw06RBjmAtoQTrYzKa0Qz/rGK6
+   Vx8RxybVOi09WRHRGcPCqKTupenUub7WOnWJD+eR5cjvSwbKk9Yzzmom6
+   b1JUW4T91/8/3mpGpvRc6IvtsEkBYCgWYREJQ9f84S3BFFOKB6EHFp0Pj
+   VPCBCcxuI2SXssL4j/2o51KeuGRJkCr+qn6+Aqld99mvJYOZHCG8y9cQs
+   Q==;
+IronPort-SDR: UGUDLJpMF5V9CASCPKIQBnN2cBZS8kNuKPxFol3aYwddJK8UiCfi/lH4x7D55UCEyyX2GRY8xK
+ TVWgBVZtvqB/u0k6a3Kj/SbJnTpb58/Q6RX1M3W5lpABVyoPdq1/kPYbhvZd6AWdIDu2b/yBQL
+ HTOizve7aI89/6JIzYUI6OwiOA7eKfyehlJAkAcHEbU6gCHD06vbxKcw72HhwcGVyfMbXTnIQi
+ +3m0wLjt/DGhQ+CX9x9jDrUY30r2UUYocC8KZu9KXvxeGUBDvvehQFf8Ya5O6GldSbjLRkF0Nj
+ uMk=
 X-IronPort-AV: E=Sophos;i="5.77,346,1596524400"; 
-   d="scan'208";a="89404498"
+   d="scan'208";a="89405090"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Oct 2020 04:07:49 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Oct 2020 04:12:00 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 7 Oct 2020 04:07:48 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 7 Oct 2020 04:07:47 -0700
-References: <20201006142532.2247515-1-lars.povlsen@microchip.com> <20201006142532.2247515-2-lars.povlsen@microchip.com> <20201006223756.GA2976904@bogus>
+ 15.1.1979.3; Wed, 7 Oct 2020 04:11:42 -0700
+Received: from soft-dev10.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 7 Oct 2020 04:11:40 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: pinctrl: Add bindings for pinctrl-mchp-sgpio driver
-In-Reply-To: <20201006223756.GA2976904@bogus>
-Date:   Wed, 7 Oct 2020 13:07:45 +0200
-Message-ID: <87k0w2xpj2.fsf@soft-dev15.microsemi.net>
+Subject: [PATCH v4 0/3] pinctrl: Adding support for Microchip/Microsemi serial GPIO controller
+Date:   Wed, 7 Oct 2020 13:11:42 +0200
+Message-ID: <20201007111145.2306213-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The series add support for the serial GPIO controller used by
+Microchip Sparx5, as well as (MSCC) ocelot/jaguar2 SoCs.
 
-Hi Rob!
+The driver now register two separate banks (per instance), one for
+input pins (the first) and one for output direction. This eliminates
+the need for specifying the direction as part of the gpio
+arguments. The (fixed) direction is thus inherent from the gpio
+handle.
 
-Rob Herring writes:
+v4 changes (binding comments from Rob):
+- microchip,sgpio-port-ranges changed to uint32-matrix so tuples can
+  be represented properly.
+- gpio controller node name changed to "gpio@[0-1]"
+- whitespace fixes
+- DT files updated as per schema changes
 
-> On Tue, Oct 06, 2020 at 04:25:30PM +0200, Lars Povlsen wrote:
->> This adds DT bindings for the Microsemi/Microchip SGPIO controller,
->> bindings microchip,sparx5-sgpio, mscc,ocelot-sgpio and
->> mscc,luton-sgpio.
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../pinctrl/microchip,sparx5-sgpio.yaml       | 127 ++++++++++++++++++
->>  1 file changed, 127 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
->> new file mode 100644
->> index 000000000000..e3618ed28165
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
->> @@ -0,0 +1,127 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/microchip,sparx5-sgpio.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Microsemi/Microchip Serial GPIO controller
->> +
->> +maintainers:
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +description: |
->> +  By using a serial interface, the SIO controller significantly extend
->> +  the number of available GPIOs with a minimum number of additional
->> +  pins on the device. The primary purpose of the SIO controllers is to
->> +  connect control signals from SFP modules and to act as an LED
->> +  controller.
->> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^gpio@[0-9a-f]+$"
->> +
->> +  compatible:
->> +    enum:
->> +      - microchip,sparx5-sgpio
->> +      - mscc,ocelot-sgpio
->> +      - mscc,luton-sgpio
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  microchip,sgpio-port-ranges:
->> +    description: This is a sequence of tuples, defining intervals of
->> +      enabled ports in the serial input stream. The enabled ports must
->> +      match the hardware configuration in order for signals to be
->> +      properly written/read to/from the controller holding
->> +      registers. Being tuples, then number of arguments must be
->> +      even. The tuples mast be ordered (low, high) and are
->> +      inclusive. Arguments must be between 0 and 31.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 2
->> +    maxItems: 64
->> +
->> +  microchip,sgpio-frequency:
->> +    description: The sgpio controller frequency (Hz). This dictates
->> +      the serial bitstream speed, which again affects the latency in
->> +      getting control signals back and forth between external shift
->> +      registers. The speed must be no larger than half the system
->> +      clock, and larger than zero.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    minimum: 1
->> +    default: 12500000
->> +
->> +patternProperties:
->> +  "^gpio-(port|controller)@[01]$":
->
-> gpio@... is correct here as the node is a gpio-controller (no, we're
-> not consistent).
+v3 changes:
+- Renamed all usage of "mchp" abbrevation with "microchip".
+- Split the in/output directions into (two) separate banks.
+- Eliminated the bindings include file (from above)
+- Changed SPDX license to "GPL-2.0-or-later"
+- Change -ENOTSUPP to -EOPNOTSUPP
+- Minor type/symbol naming changes
 
-OK, fine by me.
+v2 changes:
+- Adds both in and output modes.
+- Use direct adressing of the individual banks (#gpio-cells = <4>),
+  also osoleting need for addressing macros in bindings include file.
+- Property 'microchip,sgpio-ports' (uint32, bitmask) replaced by
+  proper range set (array of [start,end]) 'microchip,sgpio-port-ranges'.
+- Fixes whitespace issues in Kconfig file
 
->
->> +    type: object
->> +    properties:
->> +      compatible:
->> +        const: microchip,sparx5-sgpio-bank
->> +
->> +      reg:
->> +        maxItems: 1
->> +
->> +      gpio-controller: true
->> +
->> +      '#gpio-cells':
->> +        const: 3
->> +
->> +      ngpios:
->> +        minimum: 1
->> +        maximum: 128
->> +
->> +    required:
->> +      - compatible
->> +      - reg
->> +      - gpio-controller
->> +      - '#gpio-cells'
->> +      - ngpios
->> +
->> +    additionalProperties: false
->> +
->> +additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - microchip,sgpio-port-ranges
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +
->> +examples:
->> +  - |
->> +    sgpio2: gpio@1101059c {
->> +     #address-cells = <1>;
->> +     #size-cells = <0>;
->> +     compatible = "microchip,sparx5-sgpio";
->> +     clocks = <&sys_clk>;
->> +     pinctrl-0 = <&sgpio2_pins>;
->> +     pinctrl-names = "default";
->> +     reg = <0x1101059c 0x100>;
->> +        microchip,sgpio-port-ranges = <0 0 16 18 28 31>;
->
-> Since it's tuples, do:
->
-> <0 0>, <16 18>, <28 31>
+Lars Povlsen (3):
+  dt-bindings: pinctrl: Add bindings for pinctrl-mchp-sgpio driver
+  pinctrl: pinctrl-mchp-sgpio: Add pinctrl driver for Microsemi Serial
+    GPIO
+  arm64: dts: sparx5: Add SGPIO devices
 
-Yes, that will add clarity.
+ .../pinctrl/microchip,sparx5-sgpio.yaml       | 140 ++++
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  91 +++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |   5 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 258 +++++++
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  55 ++
+ drivers/pinctrl/Kconfig                       |  18 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-microchip-sgpio.c     | 676 ++++++++++++++++++
+ 9 files changed, 1245 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-microchip-sgpio.c
 
->
->> +        microchip,sgpio-frequency = <25000000>;
->
-> Some whitespace issues here.
->
-
-Will fix that.
-
->
->> +     sgpio_in2: gpio-controller@0 {
->> +            reg = <0>;
->> +            compatible = "microchip,sparx5-sgpio-bank";
->> +            gpio-controller;
->> +            #gpio-cells = <3>;
->> +            ngpios = <96>;
->> +     };
->> +     sgpio_out2: gpio-controller@1 {
->> +            compatible = "microchip,sparx5-sgpio-bank";
->> +            reg = <1>;
->> +            gpio-controller;
->> +            #gpio-cells = <3>;
->> +            ngpios = <96>;
->> +     };
->> +    };
->> --
->> 2.25.1
-
-Thank you for your comments, I will refresh the series shortly.
-
----Lars
-
--- 
-Lars Povlsen,
-Microchip
+--
+2.25.1
