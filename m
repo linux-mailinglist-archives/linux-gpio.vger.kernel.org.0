@@ -2,113 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B475287386
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 13:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A419287490
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 14:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgJHLnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Oct 2020 07:43:53 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:11340 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgJHLnx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 07:43:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1602157432; x=1633693432;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=xxGz3Rp09AvXdk/PW1qyQ+e7HIOC7dLKFFv6KdZ9KTI=;
-  b=ToQe6RPRT1PMOAQ+MYzcX3QMrljWItSdabPk9j7meq/IEtP69BQJV8pj
-   rp4j1yLULK7hxp33EQ66CVkmrEmaGx4gPDGNbCWWiUpseYldUikKmZ7L8
-   mVJ51iGM2fCB0UKE+Uz9FKt3gn4FRkG7Z9mzerVmjSr9lU9DV5xq/UmKI
-   TE4bb4gZcB5SAV7hPmHSPwKvpJC7xv5JKscaFJ0H7fmgQYySwIY6+Z/1E
-   YnKty2wqWB6f8s/yyGNXl+VuP+iua26Lo11O7ymsjXNQIGZh3CZM1lgTw
-   Qyyj0UxmajuWW07+7/VXzTCd57yAfpNdoiQvJUB7qjNIEJbWjLQPWpfbB
-   Q==;
-IronPort-SDR: 0Z9uZnzg3TOLv8yuUtQ33msyBJBj/9R28t1lHSilAqBe6Td4mWniU5ClWLVr4E08uzhRULTdyU
- iEePbQ37LnwcBhBy7jTubiBJ2XV6DGIGbmXFMSeuSENAAmnEIBbUpkihBQ1m+FTp1UYFsdtkIl
- y0hn6TNRK2+sXxxn5rxkw/aNNCaplpn6iztY4MC/Xwr+jqTr5SIVUSr4hmkh2N1Mf++Zd6KRmh
- KQY2Et0rRZBYpJGsCctDyO8TtN4C+JayEirTba/TnHH+zab8MfCeuFjF+YctW1OpyaGzwzSFmD
- oLw=
-X-IronPort-AV: E=Sophos;i="5.77,350,1596524400"; 
-   d="scan'208";a="89540451"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2020 04:43:52 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 8 Oct 2020 04:43:51 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Thu, 8 Oct 2020 04:43:49 -0700
-References: <20201007111145.2306213-1-lars.povlsen@microchip.com> <20201007111145.2306213-2-lars.povlsen@microchip.com> <CACRpkda0RAK2gp-ZB6LDxAnQP3=VGrsfqkfV0=3FiSFfNhOmjA@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        id S1730136AbgJHMxF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Oct 2020 08:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730113AbgJHMxF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 08:53:05 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13737C061755
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Oct 2020 05:53:03 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a7so5247739lfk.9
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Oct 2020 05:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FxfUEUi6zktpxu/mlP33p6/3OJKcxiReX3Cme3ajLG0=;
+        b=YeojNDCsQODyiJZ/R38+vxn5EJw4k/ERri6Mi8QyXr5m4Me+jTQIAhUUzsaAahWU+X
+         LszzF8mWkioTVYMHddjpOouqAwORZjKguhbls8m0LPvph5zE8AIg86ggT8Ty1xAA8li/
+         18acI8/qw2KPO2xPrPxxe6+D3UdNi4tGtr/kMWBJ0c2mrBwNSoaU1i8hYT6Sz0b1/QbV
+         ZJpD+T/dy4jbFyXOEUtwtcVkw9iXORXjSzA9UqBpf2aIySgyKpvSL7EgImAtb9Kzf50M
+         eE0FGwFohyGIC55kjvSnsDVuNAFxtcRaSrHtjaEfHfSQEziNufD6N8jd28C1D9Oarvlv
+         On4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FxfUEUi6zktpxu/mlP33p6/3OJKcxiReX3Cme3ajLG0=;
+        b=rgcPneS+3lztLek4djq5xn/X8QltE7shjD5XECw4uoYu48vy0qLoXp68Ly+XxJjg3A
+         kb2n5iS9ORuaGq3Hi6jtKB6Fek9LudzU+tojtM441D7QfuKKTYeP3hnmXWVsfTOdojPj
+         E+pwEt8rOK9chJ08qlsS64oQe7DzPpQc6t6nsspbHzZJbyPMvrSEEMZJww8h2MJ9mp1G
+         WmfGG7k5sRaAMfF4SIzof+bOtb2Wa9n3Tc+6wWL1ZsEQdjmHgUMp1Y/ONlath6ExgPyL
+         dzG3I0YzSXTnLXZW+sfg47M0NqExIUAHbxnryA8c0H8HJRj/pKZG8lEBRW6nNQLie2hh
+         uQew==
+X-Gm-Message-State: AOAM5317/VTPpZr2xO2czIA42364bWyiOKi/HvsJAk9jv4sFEoE4g+dj
+        GN5Vd03x3Qwgus0Nw5HHavg9to2W1rdWOALCdMhlQQ==
+X-Google-Smtp-Source: ABdhPJxWSJs3kvo45P2YLqWbDVciugobKkAjYEoD9pfLA4jMPAe/NHoL9+PN3M50sfXIsT8DxeHkPtRiH5Tv6Jpo8p4=
+X-Received: by 2002:ac2:483b:: with SMTP id 27mr2398747lft.441.1602161579900;
+ Thu, 08 Oct 2020 05:52:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200930092053.2114-1-mike.looijmans@topic.nl>
+ <CACRpkdbsYcmv9m2EiQNgPDZ0MdjPnWTxXvnqATVPvWpB=8Oqkw@mail.gmail.com>
+ <20201006193235.GA2689027@bogus> <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.e0bfef86-33da-4b33-b856-e32dbc3f2992@emailsignatures365.codetwo.com>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.6462df9b-cbe0-4101-9ae9-b09faa895eb1@emailsignatures365.codetwo.com>
+ <CACRpkdZmYKn1JU8PeA+GAJDuVEtWQrH-3KijH4+df88Bt=iZtA@mail.gmail.com> <bbc77660-40b3-72b2-4829-4f1d53cbfd2b@topic.nl>
+In-Reply-To: <bbc77660-40b3-72b2-4829-4f1d53cbfd2b@topic.nl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 8 Oct 2020 14:52:48 +0200
+Message-ID: <CACRpkdZ6W4=MHmsAzoyzDhKu4Btgg73PZjOrOb7UV64OSHWn=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: pca953x: Add support for the
+ NXP PCAL9554B/C
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: Add bindings for pinctrl-mchp-sgpio driver
-In-Reply-To: <CACRpkda0RAK2gp-ZB6LDxAnQP3=VGrsfqkfV0=3FiSFfNhOmjA@mail.gmail.com>
-Date:   Thu, 8 Oct 2020 13:43:48 +0200
-Message-ID: <87eem9x7rf.fsf@soft-dev15.microsemi.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Linus Walleij writes:
-
-> Hi Lars,
+On Thu, Oct 8, 2020 at 9:36 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> On 07-10-2020 11:58, Linus Walleij wrote:
+> > On Tue, Oct 6, 2020 at 9:32 PM Rob Herring <robh@kernel.org> wrote:
+> >> On Wed, Sep 30, 2020 at 11:50:38AM +0200, Linus Walleij wrote:
+> >>> On Wed, Sep 30, 2020 at 11:21 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> >>>
+> >>>> The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
+> >>>> with 8 GPIOs, latched interrupts and some advanced configuration
+> >>>> options. The "C" version only differs in I2C address.
+> >>>>
+> >>>> This adds the entry to the devicetree bindings.
+> >>>>
+> >>>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> >>>> ---
+> >>>> v2: Split devicetree and code into separate patches
+> >>>
+> >>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>>
+> >>> This patch 1/2 does not apply to my tree, I suppose Rob has
+> >>> to apply it?
+> >>
+> >> Nope, no changes in my tree.
+> >
+> > Weird, OK Mike apply this wherever it should be applied or rebase
+> > on my GPIO tree and resend if you want me to apply it.
+> >
 >
-> a new version of the patch set arrives while I'm reviewing, haha :D
+> Could you provide me a git URL + branch to rebase it on, i'll send you a new
+> patch then.
 
-Well, luckily not too much changed per Rob's input.
+It's this:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=devel
 
->
-> On Wed, Oct 7, 2020 at 1:12 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
->> This adds DT bindings for the Microsemi/Microchip SGPIO controller,
->> bindings microchip,sparx5-sgpio, mscc,ocelot-sgpio and
->> mscc,luton-sgpio.
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->
-> (...)
->> +      reg:
->> +        description: |
->> +          The GPIO bank number. "0" is designates the input pin bank,
->> +          "1" the output bank.
->> +        maxItems: 1
->
-> Excellent.
->
->> +      '#gpio-cells':
->> +        const: 3
->
-> So I thought you needed three cells exactly because the
-> middle cell would get you the bank. That you now have in
-> reg. So what about using the standard twocell?
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git devel
 
-I think I answered that in the 'v3 2/3' reply.
-
-Basically the pins are addressed with two indices, and there are good
-reasons to expose these to the GPIO cells, f.ex. hardware documentation
-cross reference.
-
----Lars
-
->
-> Yours,
-> Linus Walleij
-
--- 
-Lars Povlsen,
-Microchip
+Yours,
+Linus Walleij
