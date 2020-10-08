@@ -2,362 +2,311 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AACBD287190
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 11:32:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7556D2872E7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 12:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgJHJb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Oct 2020 05:31:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20632 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgJHJb7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 05:31:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602149515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iuEuaaaqpVwlqOsJrPgjQ2utMxUzJtKZfAzvt/ouAzY=;
-        b=GcwGvcCf7MiA/isuEHvCwDHdWy2DO6cQdrzZNC6cs0itlMdDtUhDybWc5X5SlzOb+GkjPF
-        TIqh8CpBYWKHCZnGsxXuwaYGWqDV6ASIEf2lb1xjpsleR1TjVd5NwWRUmYvawbgBc2U6P+
-        q9knkpsZW8W1QxvBvyghYG402g/Vp8Y=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-BrLnIvq5NzuNVM2lsWMaRQ-1; Thu, 08 Oct 2020 05:31:53 -0400
-X-MC-Unique: BrLnIvq5NzuNVM2lsWMaRQ-1
-Received: by mail-ed1-f71.google.com with SMTP id e14so1988418edk.2
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Oct 2020 02:31:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=iuEuaaaqpVwlqOsJrPgjQ2utMxUzJtKZfAzvt/ouAzY=;
-        b=N9gZJAGta9leQz3w8/y9BmJXFV207d+F+Z4PoYDsEpqLFfpLrwG15uFL60ohfgA8to
-         Y7KzIrOxX9s932gQp4ti2vJsPc7448CyHfrFl4AkeIExYDwspjraRDtYsj+MfJVlQM51
-         dPuZIdICAzWY/lqkYgK2DkxF++9laxxu/MppBx7X7JCABOFCbwvsr/1GBJLhnC/kFgLT
-         1sq9s8f/0QvgnFU3Y0f602OqnB95JuJ8tnDGqo9EEEBr3af23cV8t4zVuhfe1vx6TeAC
-         YYO4hp0vVEsIvhnSky9zZE4AqBn76iYSDZ3vsSUlpIaitASsBA+hrsw6hIaC7n8lB22a
-         77IQ==
-X-Gm-Message-State: AOAM5304nFzsNVEBCVr0GCEMHnbpL1lobYuMhogp+I70qDZxtzdtcZFl
-        e3Bq2YhWSWo04NpT4YjOO1AzLfKs39Aee3pbe3E657+nR+6xkELpjih4HpFGGo2SSuujJ7MVmts
-        j25PByt1IWLOl+79rTl7jIA==
-X-Received: by 2002:a17:906:5008:: with SMTP id s8mr8077521ejj.408.1602149512117;
-        Thu, 08 Oct 2020 02:31:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynZ1ZFUvRW5ijerVhv6HluCBrdVk9Frq36pzzYMEjnBtJQuXASBiIsOHScf4o0EPTGkt2mvQ==
-X-Received: by 2002:a17:906:5008:: with SMTP id s8mr8077505ejj.408.1602149511816;
-        Thu, 08 Oct 2020 02:31:51 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id u16sm212766ejz.43.2020.10.08.02.31.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Oct 2020 02:31:51 -0700 (PDT)
-Subject: Re: [PATCH v2] pinctrl: cherryview: Ensure _REG(ACPI_ADR_SPACE_GPIO,
- 1) gets called
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-References: <20200504145957.480418-1-hdegoede@redhat.com>
- <20200506064057.GU487496@lahna.fi.intel.com>
- <f7ebb693-94ec-fd9f-c0a8-cfe8f9d4e9bf@redhat.com>
- <20200507123025.GR487496@lahna.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3d7ce79f-6157-8ae0-dae9-ebc940120487@redhat.com>
-Date:   Thu, 8 Oct 2020 11:31:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727407AbgJHK5p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Oct 2020 06:57:45 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52512 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbgJHK5p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 06:57:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1602154663; x=1633690663;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=sbsYblhM7HBECp1Iw7gGZrJTSXmYJPEc0TVl2NmfuLg=;
+  b=MqfoNOH+ENnqGb4DK3xPwdc8JeEBqbtmtxOsZCcFbgqMvFwNehgW1ZbV
+   Wg5IMMMByesJNMkl2Qijzc0Ih98eA9fJyn8//5CQDBhkv7JmErFEhzEPX
+   eefcnE104LjwRimEQHbuQLLoRA53kR/JGr1SSSAQnv3sZ+RYarluaZlMi
+   fZetf+rl9n5rGwqbZZsIL6w1fnh1IYwwtq4/sAlfCsIrSODNrAn+cJZgq
+   O8prJTqQoMLJ+4ocGws88NzG/uEAkA6EpZxCXWXNV7ISvQF4vPjopKxmv
+   yOJu/gbkMgLLqsFDfaIDpSwvc8j+UE8YIaQ3xjV25TLStdX4vG0GJ3fpS
+   A==;
+IronPort-SDR: W1L25IG2YRzeJ5cgA1BK2uWtRzxQrvEmH+oYQPDzJnJ/1O1H5EFRAOenV5rsudJBysL0AIYeBE
+ gS3mDqkS0LjTZ31CANbCIAiHVaeY3p2O+RLJB0wp8ab2heD3isdSnIzIIG/mFag1xll++laeIr
+ hMeW2fiW2Y7CRltm0XgQYo/jM3whPNoT9KN3ukc+jPOL22CBvt2ZyRmAW5nGct9VBDH6ZD2MW1
+ lZ2CKm7r/6CPAoZ8TJcNNftGE4lS7JAh+PGtuWIaE8HdEhyd1hKkBpPfYhJ9xapry388n3bgVU
+ /Bk=
+X-IronPort-AV: E=Sophos;i="5.77,350,1596524400"; 
+   d="scan'208";a="29188573"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2020 03:57:43 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 8 Oct 2020 03:57:18 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Thu, 8 Oct 2020 03:57:41 -0700
+References: <20201006142532.2247515-1-lars.povlsen@microchip.com> <20201006142532.2247515-3-lars.povlsen@microchip.com> <CACRpkda+OSgma3E0XxXUk8a2yrn5Hpu3a47cBN50rOkoSMkiwQ@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [RESEND PATCH v3 2/3] pinctrl: pinctrl-mchp-sgpio: Add pinctrl driver for Microsemi Serial GPIO
+In-Reply-To: <CACRpkda+OSgma3E0XxXUk8a2yrn5Hpu3a47cBN50rOkoSMkiwQ@mail.gmail.com>
+Date:   Thu, 8 Oct 2020 12:57:39 +0200
+Message-ID: <87ft6px9wc.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-In-Reply-To: <20200507123025.GR487496@lahna.fi.intel.com>
-Content-Type: multipart/mixed;
- boundary="------------635C29E1705C3F6BE86D86DF"
-Content-Language: en-US
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------635C29E1705C3F6BE86D86DF
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Linus Walleij writes:
 
-On 5/7/20 2:30 PM, Mika Westerberg wrote:
-> On Thu, May 07, 2020 at 12:15:09PM +0200, Hans de Goede wrote:
->> Hi,
+> Hi Lars!
+>
+> Thanks for the update, this looks much improved!
+
+Glad you like it! It's been a difficult birth...
+
+>
+> Some further hints at things I saw here:
+>
+> On Tue, Oct 6, 2020 at 4:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
+>> (SGPIO) device used in various SoC's.
 >>
->> On 5/6/20 8:40 AM, Mika Westerberg wrote:
->>> +Rafael and ACPICA folks.
->>>
->>> On Mon, May 04, 2020 at 04:59:57PM +0200, Hans de Goede wrote:
->>>> On Cherry Trail devices there are 2 possible ACPI OpRegions for
->>>> accessing GPIOs. The standard GeneralPurposeIo OpRegion and the Cherry
->>>> Trail specific UserDefined 0x9X OpRegions.
->>>>
->>>> Having 2 different types of OpRegions leads to potential issues with
->>>> checks for OpRegion availability, or in other words checks if _REG has
->>>> been called for the OpRegion which the ACPI code wants to use.
->>>>
->>>> The ACPICA core does not call _REG on an ACPI node which does not
->>>> define an OpRegion matching the type being registered; and the reference
->>>> design DSDT, from which most Cherry Trail DSDTs are derived, does not
->>>> define GeneralPurposeIo, nor UserDefined(0x93) OpRegions for the GPO2
->>>> (UID 3) device, because no pins were assigned ACPI controlled functions
->>>> in the reference design.
->>>>
->>>> Together this leads to the perfect storm, at least on the Cherry Trail
->>>> based Medion Akayo E1239T. This design does use a GPO2 pin from its ACPI
->>>> code and has added the Cherry Trail specific UserDefined(0x93) opregion
->>>> to its GPO2 ACPI node to access this pin.
->>>>
->>>> But it uses a has _REG been called availability check for the standard
->>>> GeneralPurposeIo OpRegion. This clearly is a bug in the DSDT, but this
->>>> does work under Windows.
->>>
->>> Do we know why this works under Windows? I mean if possible we should do
->>> the same and I kind of suspect that they forcibly call _REG in their
->>> GPIO driver.
->>
->> Windows has its own ACPI implementation, so it could also be that their
->> equivalent of the:
->>
->>          status = acpi_install_address_space_handler(handle, ACPI_ADR_SPACE_GPIO,
->>                                                      acpi_gpio_adr_space_handler,
->>                                                      NULL, achip);
->>
->> Call from drivers/gpio/gpiolib-acpi.c indeed always calls _REG on the handle
->> without checking that there is an actual OpRegion with a space-id
->> of ACPI_ADR_SPACE_GPIO defined, as the ACPICA code does.  Note that the
->> current ACPICA code would require significant rework to allow this, or
->> it would need to add a _REG call at the end of acpi_install_address_space_handler(),
->> potentially calling _REG twice in many cases.
-> 
-> I actually think this is the correct solution. Reading ACPI spec it say
-> this:
-> 
->    Once _REG has been executed for a particular operation region,
->    indicating that the operation region handler is ready, a control
->    method can access fields in the operation region
-> 
-> You can interpret it so that _REG gets called when operation region
-> handler is ready. It does not say that there needs to be an actual
-> operation region even though the examples following all have operation
-> region.
-> 
-> I wonder what our ACPICA gurus think about this? Rafael, Bob, Erik?
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>
+>> +       /* 2 banks: IN/OUT */
+>> +       struct {
+>> +               struct gpio_chip gpio;
+>> +               struct pinctrl_desc pctl_desc;
+>> +               struct pinctrl_dev *pctl_dev;
+>> +       } bank[2];
+>
+> Is it really good to use index [0,1] to refer to these?
+> Isnt it easier to do something like:
+>
+> struct sgpio_bank {
+>          struct gpio_chip gpio;
+>          struct pinctrl_desc pctl_desc;
+>          struct pinctrl_dev *pctl_dev;
+> };
+>
+> struct sgpio_priv {
+>         (...)
+>         struct sgpio_bank in;
+>         struct sgpio_bank out;
+>         (...)
+> };
+>
+> This way you I think the code becomes clearer.
+>
 
-I realize that this thread has gone a bit stale (sorry about that)
-but I have been working on an ACPICA solution on that, and this works
-nicely. It turns out that ACPICA already had code to run the _REG method
-unconditionally in some cases, so I've simply extended that to also
-apply to GpioOpRegions.
+I have done the change as suggested, and I think your right - looks
+better. Also helped loose the "is_input" helper functions.
 
-One thing which is open for discussion is if we want to extend this
-to more then just GpioOpRegions. For now I've chosen to just extend
-the current special handling for EC OpRegions to also apply to
-GpioOpRegions which fixes the issue at hand.
+>> +static inline bool sgpio_pctl_is_input(struct sgpio_priv *priv,
+>> +                                      struct pinctrl_dev *pctl)
+>> +{
+>> +       /* 1st index is input */
+>> +       return pctl == priv->bank[0].pctl_dev;
+>> +}
+>> +
+>> +static inline bool sgpio_gpio_is_input(struct sgpio_priv *priv,
+>> +                                      struct gpio_chip *gc)
+>> +{
+>> +       /* 1st index is input */
+>> +       return gc == &priv->bank[0].gpio;
+>> +}
+>
+> Isn't it easier to just add a
+>
+> bool is_input;
+>
+> to the struct gpio_bank?
 
-I've attached a patch directly against the Linux kernel acpica
-copy which fixes this.
+Yes, did that.
 
-Mika (or anyone else reading along who wants to help), I know that
-ACPICA patches go upstream through the ACPICA repo, but I'm not
-really familiar with there workflow and I'm a bit swamped with
-work atm. So I was wondering if you could perhaps convert
-this patch to an upstream ACPICA patch and submit it there for me ?
+>
+>> +static inline u32 sgpio_readl(struct sgpio_priv *priv, u32 rno, u32 off)
+>> +{
+>> +       u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
+>> +
+>> +       return readl(reg);
+>> +}
+>> +
+>> +static inline void sgpio_writel(struct sgpio_priv *priv,
+>> +                               u32 val, u32 rno, u32 off)
+>> +{
+>> +       u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
+>> +
+>> +       writel(val, reg);
+>> +}
+>> +
+>> +static inline void sgpio_clrsetbits(struct sgpio_priv *priv,
+>> +                                   u32 rno, u32 off, u32 clear, u32 set)
+>> +{
+>> +       u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
+>> +       u32 val = readl(reg);
+>> +
+>> +       val &= ~clear;
+>> +       val |= set;
+>> +
+>> +       writel(val, reg);
+>> +}
+>
+> These accessors are somewhat re-implementing regmap-mmio, especially
+> the clrsetbits. I would consider just creating a regmap for each
+> struct sgpio_bank and manipulate the register through that.
+> (Not any requirement just a suggestion.)
+>
 
-Regards,
+Humm, not sure if these few functions warrants using regmap. I'll have a
+closer look.
 
-Hans
+>> +static void sgpio_output_set(struct sgpio_priv *priv,
+>> +                            struct sgpio_port_addr *addr,
+>> +                            int value)
+>> +{
+>> +       u32 mask = 3 << (3 * addr->bit);
+>> +       value = (value & 3) << (3 * addr->bit);
+>
+> I would spell it out a bit so it becomes clear what is going in
+> and use the bits helpers.
+>
+> value & 3 doesn't make much sense since value here is always
+> 0 or 1. Thus if value is 1 it in effect becomes value = 1 << (3 * addr->bit)
+> so with the above helper bit:
+>
+> unsigned int bit = 3 * addr->bit;
+> u32 mask = GENMASK(bit+1, bit);
+> u32 val = BIT(bit);
+>
+> This way it becomes clear that you set the output usin the lower
+> of the two bits.
+>
+> Also note that I use val rather than value to avoid overwriting
+> the parameter: it is legal but confusing. Let the compiler optimize
+> register use.
+>
 
+I will change as suggested.
 
+>> +static int sgpio_output_get(struct sgpio_priv *priv,
+>> +                           struct sgpio_port_addr *addr)
+>> +{
+>> +       u32 portval = sgpio_readl(priv, REG_PORT_CONFIG, addr->port);
+>> +       int ret;
+>> +
+>> +       ret = SGPIO_X_PORT_CFG_BIT_SOURCE(priv, portval);
+>> +       ret = !!(ret & (3 << (3 * addr->bit)));
+>
+> Is the output direction really controlled by both bits?
+>
+> ret = !!(ret & (BIT(3 * addr->bit))); ?
+>
 
+The 3 bits are actually "mode" not direction. The direction is fixed as
+described earlier.
 
---------------635C29E1705C3F6BE86D86DF
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ACPICA-Also-handle-orphan-_REG-methods-for-GPIO-OpRe.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-ACPICA-Also-handle-orphan-_REG-methods-for-GPIO-OpRe.pa";
- filename*1="tch"
+0: Forced 0
+1: Forced 1
+2: Blink mode 0
+3: Blink mode 1
+4: Link activity blink mode 0
+5: Link activity blink mode 1
 
-From a2729247cb69707c0244e84cfa4316cffc63b35f Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Wed, 22 Jul 2020 22:22:13 +0200
-Subject: [PATCH] ACPICA: Also handle "orphan" _REG methods for GPIO OpRegions
+But you are still right the (forced) _value_ can still be read using
+just the first bit. I will change to using just the first bit.
 
-Before this commit acpi_ev_execute_reg_methods() had special handling
-to handle "orphan" (no matching OpRegion declared) _REG methods for EC
-nodes.
+>> +static int microchip_sgpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
+>> +{
+>> +       struct sgpio_priv *priv = gpiochip_get_data(gc);
+>> +
+>> +       return sgpio_gpio_is_input(priv, gc); /* 0=out, 1=in */
+>
+> You can use the #defines from <linux/gpio/driver.h> if you want to be explicit:
+>
+> return sgpio_gpio_is_input(priv, gc) ? GPIO_LINE_DIRECTION_IN :
+> GPIO_LINE_DIRECTION_OUT;
+>
 
-On Intel Cherry Trail devices there are 2 possible ACPI OpRegions for
-accessing GPIOs. The standard GeneralPurposeIo OpRegion and the Cherry
-Trail specific UserDefined 0x9X OpRegions.
+Yes, good suggestion. Also using bank->is_input now.
 
-Having 2 different types of OpRegions leads to potential issues with
-checks for OpRegion availability, or in other words checks if _REG has
-been called for the OpRegion which the ACPI code wants to use.
+>> +static int microchip_sgpio_of_xlate(struct gpio_chip *gc,
+>> +                              const struct of_phandle_args *gpiospec,
+>> +                              u32 *flags)
+>> +{
+>> +       struct sgpio_priv *priv = gpiochip_get_data(gc);
+>> +       int pin;
+>> +
+>> +       if (gpiospec->args[0] > SGPIO_BITS_PER_WORD ||
+>> +           gpiospec->args[1] > priv->bitcount)
+>> +               return -EINVAL;
+>> +
+>> +       pin = gpiospec->args[1] + (gpiospec->args[0] * priv->bitcount);
+>> +
+>> +       if (pin > gc->ngpio)
+>> +               return -EINVAL;
+>> +
+>> +       if (flags)
+>> +               *flags = gpiospec->args[2];
+>> +
+>> +       return pin;
+>> +}
+>
+> I'm still not convinced that you need the flags in args[2].
+>
+> Just using the default of_gpio_simple_xlate() with one flag
+> should be fine. But I will go and review the bindings to figure
+> this out.
+>
 
-Except for the "orphan" EC handling, ACPICA core does not call _REG on
-an ACPI node which does not define an OpRegion matching the type being
-registered; and the reference design DSDT, from which most Cherry Trail
-DSDTs are derived, does not define GeneralPurposeIo, nor UserDefined(0x93)
-OpRegions for the GPO2 (UID 3) device, because no pins were assigned ACPI
-controlled functions in the reference design.
+Ok, I just assumed the std GPIO flags in args[2] were kind of mandatory,
+I mean polarity would be needed?
 
-Together this leads to the perfect storm, at least on the Cherry Trail
-based Medion Akayo E1239T. This design does use a GPO2 pin from its ACPI
-code and has added the Cherry Trail specific UserDefined(0x93) opregion
-to its GPO2 ACPI node to access this pin.
+F.ex. a GPIO (led) looks like this now:
 
-But it uses a has _REG been called availability check for the standard
-GeneralPurposeIo OpRegion. This clearly is a bug in the DSDT, but this
-does work under Windows. This issue leads to the intel_vbtn driver
-reporting the device always being in tablet-mode at boot, even if it
-is in laptop mode. Which in turn causes userspace to ignore touchpad
-events. So iow this issues causes the touchpad to not work at boot.
+    led@0 {
+            label = "eth60:yellow";
+            gpios = <&sgpio_out1 28 1 GPIO_ACTIVE_LOW>;
+            default-state = "off";
+    };
 
-This commit fixes this by extending the "orphan" _REG method handling
-to also apply to GPIO address-space handlers.
+>> +       gc->of_xlate            = microchip_sgpio_of_xlate;
+>> +       gc->of_gpio_n_cells     = 3;
+>
+> So I'm sceptical to this.
+>
+> Why can't you just use the pin index in cell 0 directly
+> and avoid cell 1?
+>
 
-Note it seems that Windows always calls "orphan" _REG methods so me
-may want to consider dropping the space-id check and always do
-"orphan" _REG method handling.
+You scepticism has surfaced before :-). The (now) 2 indices relates to
+how the hardware address signals.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/acpica/evregion.c | 54 +++++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+Each signal/pin is addressed by port, bit number and direction. We now
+have the direction encoded in the bank/phandle.
 
-diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
-index 738d4b231f34..21ff341e34a4 100644
---- a/drivers/acpi/acpica/evregion.c
-+++ b/drivers/acpi/acpica/evregion.c
-@@ -21,7 +21,8 @@ extern u8 acpi_gbl_default_address_spaces[];
- /* Local prototypes */
- 
- static void
--acpi_ev_orphan_ec_reg_method(struct acpi_namespace_node *ec_device_node);
-+acpi_ev_execute_orphan_reg_method(struct acpi_namespace_node *device_node,
-+				  acpi_adr_space_type space_id);
- 
- static acpi_status
- acpi_ev_reg_run(acpi_handle obj_handle,
-@@ -684,10 +685,12 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
- 				     ACPI_NS_WALK_UNLOCK, acpi_ev_reg_run, NULL,
- 				     &info, NULL);
- 
--	/* Special case for EC: handle "orphan" _REG methods with no region */
--
--	if (space_id == ACPI_ADR_SPACE_EC) {
--		acpi_ev_orphan_ec_reg_method(node);
-+	/*
-+	 * Special case for EC and GPIO: handle "orphan" _REG methods with
-+	 * no region.
-+	 */
-+	if (space_id == ACPI_ADR_SPACE_EC || space_id == ACPI_ADR_SPACE_GPIO) {
-+		acpi_ev_execute_orphan_reg_method(node, space_id);
- 	}
- 
- 	ACPI_DEBUG_PRINT_RAW((ACPI_DB_NAMES,
-@@ -760,31 +763,28 @@ acpi_ev_reg_run(acpi_handle obj_handle,
- 
- /*******************************************************************************
-  *
-- * FUNCTION:    acpi_ev_orphan_ec_reg_method
-+ * FUNCTION:    acpi_ev_execute_orphan_reg_method
-  *
-- * PARAMETERS:  ec_device_node      - Namespace node for an EC device
-+ * PARAMETERS:  device_node     - Namespace node for an ACPI device
-+ *              space_id        - The address space ID
-  *
-  * RETURN:      None
-  *
-- * DESCRIPTION: Execute an "orphan" _REG method that appears under the EC
-+ * DESCRIPTION: Execute an "orphan" _REG method that appears under an ACPI
-  *              device. This is a _REG method that has no corresponding region
-- *              within the EC device scope. The orphan _REG method appears to
-- *              have been enabled by the description of the ECDT in the ACPI
-- *              specification: "The availability of the region space can be
-- *              detected by providing a _REG method object underneath the
-- *              Embedded Controller device."
-- *
-- *              To quickly access the EC device, we use the ec_device_node used
-- *              during EC handler installation. Otherwise, we would need to
-- *              perform a time consuming namespace walk, executing _HID
-- *              methods to find the EC device.
-+ *              within the device's scope. ACPI tables depending on these
-+ *              "orphan" _REG methods have been seen for both EC and GPIO
-+ *              Operation Regions. Presumably the Windows ACPI implementation
-+ *              always calls the _REG method independent of the presence of
-+ *              an actual Operation Region with the correct address space ID.
-  *
-  *  MUTEX:      Assumes the namespace is locked
-  *
-  ******************************************************************************/
- 
- static void
--acpi_ev_orphan_ec_reg_method(struct acpi_namespace_node *ec_device_node)
-+acpi_ev_execute_orphan_reg_method(struct acpi_namespace_node *device_node,
-+				  acpi_adr_space_type space_id)
- {
- 	acpi_handle reg_method;
- 	struct acpi_namespace_node *next_node;
-@@ -792,9 +792,9 @@ acpi_ev_orphan_ec_reg_method(struct acpi_namespace_node *ec_device_node)
- 	struct acpi_object_list args;
- 	union acpi_object objects[2];
- 
--	ACPI_FUNCTION_TRACE(ev_orphan_ec_reg_method);
-+	ACPI_FUNCTION_TRACE(ev_execute_orphan_reg_method);
- 
--	if (!ec_device_node) {
-+	if (!device_node) {
- 		return_VOID;
- 	}
- 
-@@ -804,7 +804,7 @@ acpi_ev_orphan_ec_reg_method(struct acpi_namespace_node *ec_device_node)
- 
- 	/* Get a handle to a _REG method immediately under the EC device */
- 
--	status = acpi_get_handle(ec_device_node, METHOD_NAME__REG, &reg_method);
-+	status = acpi_get_handle(device_node, METHOD_NAME__REG, &reg_method);
- 	if (ACPI_FAILURE(status)) {
- 		goto exit;	/* There is no _REG method present */
- 	}
-@@ -816,23 +816,23 @@ acpi_ev_orphan_ec_reg_method(struct acpi_namespace_node *ec_device_node)
- 	 * with other space IDs to be present; but the code below will then
- 	 * execute the _REG method with the embedded_control space_ID argument.
- 	 */
--	next_node = acpi_ns_get_next_node(ec_device_node, NULL);
-+	next_node = acpi_ns_get_next_node(device_node, NULL);
- 	while (next_node) {
- 		if ((next_node->type == ACPI_TYPE_REGION) &&
- 		    (next_node->object) &&
--		    (next_node->object->region.space_id == ACPI_ADR_SPACE_EC)) {
-+		    (next_node->object->region.space_id == space_id)) {
- 			goto exit;	/* Do not execute the _REG */
- 		}
- 
--		next_node = acpi_ns_get_next_node(ec_device_node, next_node);
-+		next_node = acpi_ns_get_next_node(device_node, next_node);
- 	}
- 
--	/* Evaluate the _REG(embedded_control,Connect) method */
-+	/* Evaluate the _REG(space_id, Connect) method */
- 
- 	args.count = 2;
- 	args.pointer = objects;
- 	objects[0].type = ACPI_TYPE_INTEGER;
--	objects[0].integer.value = ACPI_ADR_SPACE_EC;
-+	objects[0].integer.value = space_id;
- 	objects[1].type = ACPI_TYPE_INTEGER;
- 	objects[1].integer.value = ACPI_REG_CONNECT;
- 
+While it would be possible to just produce a linear range of (32 *
+width), hardware designs and documentation use pXXbY (as "p28b1" above),
+making the cross reference much better using the 2 indices when
+specifying a pin (as opposed to using f.ex. value "60" in the example).
+
+Hope this helps.
+
+Thank you for your comments, I will refresh later today.
+
+---Lars
+
+> Yours,
+> Linus Walleij
+
 -- 
-2.28.0
-
-
---------------635C29E1705C3F6BE86D86DF--
-
+Lars Povlsen,
+Microchip
