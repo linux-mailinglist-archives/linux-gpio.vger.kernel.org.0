@@ -2,63 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D649287817
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 17:52:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD1328786E
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 17:54:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgJHPwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Oct 2020 11:52:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33883 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgJHPw3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 8 Oct 2020 11:52:29 -0400
-IronPort-SDR: a4wtjXxrxbj1GpCoB336C2yNA0ZKc0mi8o6jbE0IEPDBNI867VSMEbHYey6wFQ+G/VDPm87mZE
- Ax0cP2BjNvDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9768"; a="161898962"
-X-IronPort-AV: E=Sophos;i="5.77,351,1596524400"; 
-   d="scan'208";a="161898962"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 08:52:28 -0700
-IronPort-SDR: y0QEnMHtriMeI1ZXkk7Frx1RjJBYLCw4cRrfTs9QnYaZ7vD7PQJmgJQpP6O/SWd5vCg8Me2Spi
- HfTPSen0a5Hw==
-X-IronPort-AV: E=Sophos;i="5.77,351,1596524400"; 
-   d="scan'208";a="528544409"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 08:52:24 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 08 Oct 2020 18:52:22 +0300
-Date:   Thu, 8 Oct 2020 18:52:22 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+        id S1729519AbgJHPyM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Oct 2020 11:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731595AbgJHPyI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 11:54:08 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EEEC0613D2;
+        Thu,  8 Oct 2020 08:54:08 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x22so4310421pfo.12;
+        Thu, 08 Oct 2020 08:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wP+udRW03ScOonDwfr2+rE7x2nDIe+62cJ5Bmdntu7k=;
+        b=VJGEk64oBgb776ZwVsxjmdpAp6ohTbkaSqAPjtQPJ56197gqTmEytREl0thcRiS1ST
+         BU2dGqlzCeHf+bLIvL+FSThoOHExUnYeGSJlnaIEW0nP9GUscP9YAWs2SpEjHmOztq06
+         5j8v3kWSWvW3HhmB/qc9Ko2fBXpFKVVNyFVRDTvCa9b5/WxD31jD6BEgv6o+fvaWVG/u
+         c7HZmpvFpvM8qIzEpc0KVIAT3po3qOMUq5CiMs1BEGy4Pfo5wYz/juYPrisYUctD1e/v
+         ZVhfOsIZJGp4NOUGwlZzmvOA0K1VzF50QWE3+qIW0NRzPFvCMI8E28lDGqHFreISTKxx
+         jLcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wP+udRW03ScOonDwfr2+rE7x2nDIe+62cJ5Bmdntu7k=;
+        b=DR/egR5Ne9tmq6I9ZR+c2Jyf3lHu6lZj6c35DeFk5UqJNhI15cQDpRH5rZI5J1X34R
+         ssQQlq46b/0upYL7cUq8ugJ98q7QQHNA0SXG066MQQbMFxuun4VcrEHsm2Nh0Sa/d9Fi
+         MSSAnlCWszEo7rFx/xc3C9g953pQVNFuDjCB2AbL+B6Zyh6HL+NYpfIxpoIl/X0b+LK0
+         Cedpvp8HaNMNaeUZVizcq8LoiMgzpmFvOD09cv26cyENJGb3To1SJk49xGfj+4igEis4
+         Te90EJq+TUGWzyhgQ365el2/jnRb0dQvDikZReKSUt4Z0ft8XKag7NdFOB9IRXFm6gId
+         DFJw==
+X-Gm-Message-State: AOAM533HyywlnKh6JmVjx/NDmyq8+ryeEGrnYhtgD41HHp+rwrOGbQJp
+        i4ve6ecix7Uv+58rO6Pwi7X9+MH/DcYGiQvRZ9+FJlOpUN7SJg==
+X-Google-Smtp-Source: ABdhPJzy6VdWnsJszD4ndz7auG7E75pSR6XcAx+7WS2KGUiXvEsKaAUQjprG66NcuJfPy9Izq6N8n4uIJWH1L2dmo6Y=
+X-Received: by 2002:a63:4c1d:: with SMTP id z29mr8089999pga.203.1602172447925;
+ Thu, 08 Oct 2020 08:54:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201007143817.76335-1-andriy.shevchenko@linux.intel.com> <20201008090851.3041aa1d@lwn.net>
+In-Reply-To: <20201008090851.3041aa1d@lwn.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 8 Oct 2020 18:54:57 +0300
+Message-ID: <CAHp75VfYn1SRXXhpC=YXzDzUYuc3LVwj4WY1e9k6qH7ZmEWwtQ@mail.gmail.com>
+Subject: Re: [PATCH v1] gpiolib: Update indentation in driver.rst for code excerpts
+To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Subject: Re: [PATCH v2] pinctrl: cherryview: Ensure _REG(ACPI_ADR_SPACE_GPIO,
- 1) gets called
-Message-ID: <20201008155222.GW2495@lahna.fi.intel.com>
-References: <20200504145957.480418-1-hdegoede@redhat.com>
- <20200506064057.GU487496@lahna.fi.intel.com>
- <f7ebb693-94ec-fd9f-c0a8-cfe8f9d4e9bf@redhat.com>
- <20200507123025.GR487496@lahna.fi.intel.com>
- <3d7ce79f-6157-8ae0-dae9-ebc940120487@redhat.com>
- <20201008144450.GU2495@lahna.fi.intel.com>
- <1925077c-dc47-bc93-6f7b-b8fdbd6efcd8@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1925077c-dc47-bc93-6f7b-b8fdbd6efcd8@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 08, 2020 at 05:37:10PM +0200, Hans de Goede wrote:
-> Mika, do you have input wrt always calling _REG for just the
-> GpioIoOpRegion type (on top of the existing EC exception) vs
-> just simply always calling it for all all/more OpRegion types ?
+On Thu, Oct 8, 2020 at 6:10 PM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> On Wed,  7 Oct 2020 17:38:17 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>
+> > When TABs are being used to indent the code excerpts inside
+> > the bullet lists some of the tools fail to recognize it and
+> > continue interpreting the special characters inside
+> > the quoted excerpt.
+>
+> Which tools are those?  The docs build itself seems to work fine...?
 
-IMO it is safer to call it only for GPIO (GpioIoOpRegion) now.
+vim
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
