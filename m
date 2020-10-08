@@ -2,130 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 514D0286B37
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 00:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7680A286C6D
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 03:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgJGWsi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Oct 2020 18:48:38 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38265 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727353AbgJGWsi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 18:48:38 -0400
-X-Greylist: delayed 500 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Oct 2020 18:48:33 EDT
-X-Originating-IP: 90.65.88.165
-Received: from localhost (lfbn-lyo-1-1908-165.w90-65.abo.wanadoo.fr [90.65.88.165])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D577D1BF203;
-        Wed,  7 Oct 2020 22:48:27 +0000 (UTC)
-Date:   Thu, 8 Oct 2020 00:48:27 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: Add missing 'unevaluatedProperties'
-Message-ID: <20201007224827.GK2804081@piout.net>
-References: <20201005183830.486085-1-robh@kernel.org>
- <20201005183830.486085-2-robh@kernel.org>
+        id S1728008AbgJHBmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Oct 2020 21:42:31 -0400
+Received: from sonic305-37.consmr.mail.bf2.yahoo.com ([74.6.133.236]:35637
+        "EHLO sonic305-37.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbgJHBma (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Oct 2020 21:42:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602121349; bh=KhejUjG+aIFEdaJtUCWO7uMjCXcLLdLXH7PJ9JLxOyc=; h=Date:From:Reply-To:Subject:References:From:Subject; b=mxTCY5u8dojIAoEK7dRRm3e8tg6fQX6p/BSFuCqeFD97orLo/FdEqaUL+Vgv68beRODtWE6heUs3t3B+iCrdkPZy28wUTgEdThl6fQfvPy7Cmjj45R2nqHRz4orr0o5lzILlm7SxT8t/JnS3FFGcXXVml/PsbkAU/grwW0DsmgF/+JX4CKAX/MHjB1Z/Fc6+tETC7+C3bkApWT3CWMvzwZzcrEkjnmCXfDaKgyz2MmhjzZJcAmLTLRucb8uOv6LA5ilSkiI59v8EyKxo9ikH1ok/VFF+PwsHy5ZM/ZrKelzlpDNaHUHtAbnAx10XQk94QLBWkHx84PZc/UAfQz4kYg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602121349; bh=uqDj2VPrKPT25U9T/+fYHyMjjjh3wcJG6jaJ8gvI7Ws=; h=Date:From:Subject; b=JtBSkhoMJzEvWPM48YC1y17q1Cw6lQAEqD4glqgpMbIQ4lSWeupmtDnE9H7mo3uK2gA9VbTzpNk/F51uZ8j4QC0Y92g4a8xzM261RpFFZIsCRnIkWqNWR+HXXV5uHffTmbSDD1SczHuyG5LuHu8M4uCR6Ot+4k36nK/iQjFKKTdPzvpZNkRjSf9z1izmXmdO9UJbmGsv+vUMSiBjXR2R1k5IDm4pF0cC/f5dU45qJ21lJqE3nnbXftaPdT7xR2/CoMv4tD9mcvFpuHD6hIh6+ifDkEurvBudyLEn29nRThkIYO9Hzc+hEI/GB0EjNZb3WlZpNB3WwXWmoEbzOK7wyw==
+X-YMail-OSG: UTHzd1gVM1kUOprq2E7c7l7h8ZbDBFFCByblZ4goQS9jWtmdXfMcT6U_Ox7H4Ds
+ X52X6Hqp.i0BTg0dcEHbfnVwE7EPDJT0shydaqCdNkKCKLcop0J5BEe8W7R1hNrjO6IZBic.Ty0e
+ Vi2utWyLe8OW3rwC2BixdqwpybZ0pOGqkfpnO7feQDYlZ.MuzlxL0xKB92uI7d5sI1pcKFanYbJH
+ _v_tOo51CKqUQvJkYfdxsJNNSTWN6dfyBkWIVXKLQZN4rxhgVMtUeJMXl2LeWZ2a78uaXLmXL776
+ UPo72i7127qvJDkDo5hPtUPPJt_TbspsHmuHddiJwmEqpip1TMfAah2ZfFakY0_rgcW9AFFKrTMl
+ QHKytwHq632bmejes29GXqabaTUWEQ99V_K79z3zeBrWXnvGeV3u9KQevsBuL3Ci3g9AwLYvLz7s
+ jH1j59q8Y6y5CjsHo2.ylfnaQRqh4E2mJLH4A8EoDMHXlcB8.2RTUj3LnqeYkVGxkHftR2gcMIwk
+ mm51HDr4h9z6z8zqSTLK0FwuYhWVU1BVHsOeFTfVR9S.gIW8G..C49x35u6WgBNV6WMYzHKvZqzQ
+ 7Supxu4WVexoenT9Es5ae3wMuBwSZchSyWX9TxOlWaooazNNkWTiJnZ4pQGcXpl.ZSEDJ8AwejMv
+ g14ZUbqVkHdxAiGBOdFdC51JgqgzwfoodHwWF53UkoBTG_XxedDarMuTfx2b5r3vzlJIPxFx5iMQ
+ b7zwi6iRKgNOblRDKdttHGlpZAcayXXC.E55z8Wf0oplY_acn4IgN_oYaYkenNx_iD8e5BlO5FI_
+ FHn1KoSfR24.y1JswUl_X8KXzqMKBJ1nQ.HiTli75cqpRbNIbUtCNfTdvbJES4iwVPrLPAyupyFw
+ KJGPy00fIyKDyxj_ALsuei1cy7PhEkLOBwK2a5emJw7flzrRqV54WKWX3HaZOJzoerLjVPKLNVuV
+ CEwCe86d4FF.pgZI0jPMmOh6v0cK1fD8MoMNdiyDI7rs9W8DFl1yerEi9kDJpuEw1mqIZozZfWfp
+ 4BGAfmt29jYZ2bKSpc2gRiZjBQ_3DmvVDRRa1FvM8GKWv4uubkIZpPr9UFnkpJqi3vr0X2E5F7W5
+ EFgWkGbuuNNz2REdFabs3IDmlf9f7udTWB0PNgSls8sKxapX01i0HKI3C9vPZbmRT8lYrUToPm9T
+ Zzip2GLrebwroSMpXkLZJFtkISpZwgqKa1_nUuP2uxx0Pma_ZNYUnKCBIrxHPgajlakK_m71Cunt
+ 2X8xe4ORYjEzj0rJXU2YDyW2jay5hpCwpXGHMoVCR8bwzEcqtVIZ7tmqgnMJG9y1sHSClGF5G1AT
+ 8eE.ScH4cCKAKKiTxvJE2RQsGvAm9zpEZTrOOyHtKhni7mWP3AdgANxal6OvRvxL87wVgsstADZ0
+ Q6D3TndATmhtW.vJ7nRkjDtyTloWdIW2LGR68ORCtLbk0Ff_N6cWlqPswla8YWDgfP2X3YwfUzGq
+ y
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Thu, 8 Oct 2020 01:42:29 +0000
+Date:   Thu, 8 Oct 2020 01:40:25 +0000 (UTC)
+From:   "Mrs. Maureen Hinckley" <mau9@fdco.in>
+Reply-To: maurhinck4@gmail.com
+Message-ID: <2103559524.308380.1602121225814@mail.yahoo.com>
+Subject: RE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201005183830.486085-2-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <2103559524.308380.1602121225814.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 05/10/2020 13:38:27-0500, Rob Herring wrote:
-> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> index bc2c7e53a28e..60e93e86ad9d 100644
-> --- a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> @@ -68,6 +68,8 @@ required:
->    - clocks
->    - clock-names
->  
-> +unevaluatedProperties: false
-
-This one could be additionalProperties: false after adding start-year to
-the properties
-
-> +
->  examples:
->    - |
->      #include <dt-bindings/clock/jz4740-cgu.h>
-> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> index 76bbf8b7555b..d51b236939bf 100644
-> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> @@ -74,6 +74,8 @@ allOf:
->            items:
->              - const: rtc
->  
-> +unevaluatedProperties: false
-
-This one can be simply additionalProperties: false
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
+ thousand USD) to you. Contact us via my email at (maurhinck4@gmail.com) fo=
+r further details.
+
+Best Regards,
+Mrs. Maureen Hinckley,
+Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
