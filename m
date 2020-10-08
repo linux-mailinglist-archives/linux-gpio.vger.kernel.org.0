@@ -2,65 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB8C8287BDD
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 20:44:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67837287DCA
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 23:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgJHSoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Oct 2020 14:44:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37468 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbgJHSoT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 14:44:19 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t77so7407804oie.4;
-        Thu, 08 Oct 2020 11:44:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nhaf7VstnY9U3VG5uxKi48X4aznhV2MNfNHXbJ6mppE=;
-        b=cOsX1+Ribdoa/F+wkyfMkUIQ2THXgCEbmsOp+oA0V8XyxhHbAItmFQQ/MDyH7cfSQZ
-         WGnJHysG/RJfwshmlb5OspFwUf9ZcIEI19wD9XlIYe16XFqnu1Xwoxg9uzkP6dtN7AuS
-         VGKECsdEKrxja4Jcrs2V6e5/5TEcqp6bx7M+C9F4tD/ireF0taAf3JYA+dhxscPpr1dV
-         L+aEFtSr/MkBjbpSG+hkI9LyTgiOHBG+m2WBMbuh6tN/aj8lV80LRgubS9I33dfxIkPR
-         yVagwr83zn1re/dv+ijzzIlvFNTJCKsJGLfNFGl8Bpxh/TgAeSFlZoHcAgzotIXmi/3h
-         VdqQ==
-X-Gm-Message-State: AOAM532+ekTaO2HZ15O2nDGNLJkcHAn10nVwlVY2Xeo2JEkXguBVUz3Z
-        4TkwcuuxvXlhJNSLfqOc2H8ogS2119/V
-X-Google-Smtp-Source: ABdhPJzZgSafOved2t30rvjMdGvMLMYEG3EKmM30Dj0ir1oV15GOGx3lVl4CTO2MTirABiTeUKRQ8g==
-X-Received: by 2002:aca:b554:: with SMTP id e81mr116572oif.105.1602182659228;
-        Thu, 08 Oct 2020 11:44:19 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 68sm4623112otu.33.2020.10.08.11.44.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2020 11:44:18 -0700 (PDT)
-Received: (nullmailer pid 2425486 invoked by uid 1000);
-        Thu, 08 Oct 2020 18:44:17 -0000
-Date:   Thu, 8 Oct 2020 13:44:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Naoki Hayama <naoki.hayama@lineo.co.jp>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] dt-bindings: pinctrl: sirf: Fix typo abitrary
-Message-ID: <20201008184417.GA2425438@bogus>
-References: <614fe604-ab8e-21cb-0c3a-db6ddeff2a4e@lineo.co.jp>
+        id S1730014AbgJHVS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Oct 2020 17:18:29 -0400
+Received: from [58.87.100.240] ([58.87.100.240]:45364 "EHLO
+        mail.hebei-kuixing.com" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726766AbgJHVS1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 17:18:27 -0400
+X-Greylist: delayed 668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Oct 2020 17:18:22 EDT
+Received: from localhost (unknown [127.0.0.1])
+        by mail.hebei-kuixing.com (Postfix) with ESMTP id AC1A460E64;
+        Thu,  8 Oct 2020 21:07:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at hebei-kuixing.com
+Received: from mail.hebei-kuixing.com ([127.0.0.1])
+        by localhost (mail.hebei-kuixing.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2baZvT9QzwCy; Fri,  9 Oct 2020 05:07:06 +0800 (CST)
+Received: from User (unknown [185.248.12.71])
+        by mail.hebei-kuixing.com (Postfix) with ESMTPA id 0E9CB60E6A;
+        Fri,  9 Oct 2020 05:06:50 +0800 (CST)
+Reply-To: <kim.leang2011@yahoo.com>
+From:   " Kim Leang" <sales@hebei-kuixing.com>
+Subject: Greeting!
+Date:   Fri, 9 Oct 2020 00:07:05 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <614fe604-ab8e-21cb-0c3a-db6ddeff2a4e@lineo.co.jp>
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-Id: <20201008210707.AC1A460E64@mail.hebei-kuixing.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 08 Oct 2020 17:47:42 +0900, Naoki Hayama wrote:
-> Fix comment typo.
-> s/abitrary/arbitrary/
-> 
-> Signed-off-by: Naoki Hayama <naoki.hayama@lineo.co.jp>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-atlas7.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Greeting!
 
-Applied, thanks!
+I am contacting you to receive and share with me an abandoned fund ( $21,537.000.00 ) left in our bank by a deceased customer. I was going through the Internet search when I found your email address. My name is Mr. Kim Leang.
+
+I want to utilize this opportunity and make use of this fund if I should present your name to the bank to stand as his business associate/ trustee for the fund to be released to you via Visa card for easy withdrawals in any VISA ATM machine anywhere in the World.
+
+The bank will also give you international online transfer options. With these you can transfer the funds without any risk.
+
+Should you be interested in working with me in this project? Please reply back and let's benefit from this golden opportunity.You are my first contact. I shall wait a few days and if I do not hear from you, I shall look for another person.
+
+Thanks and have a nice day,
+Mr. Kim Leang.
