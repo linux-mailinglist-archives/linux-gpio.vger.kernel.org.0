@@ -2,125 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A01C287A2B
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 18:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67CFD287B19
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Oct 2020 19:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbgJHQkz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Oct 2020 12:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731278AbgJHQku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 12:40:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93A1C061755
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Oct 2020 09:40:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r21so1418988pgj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Oct 2020 09:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V9TRh62h9HdQNNSNYLmhb1iwaCtZPdrpFvSLIPnpgFw=;
-        b=IoddpZF+Q0v3oM/wI9Y5nlRoM3cRCP4LzVs8LMws6td7xCM/bmGl6HW0vQoTuPYVUV
-         5pS4cbjlfLDHMsiXG1AjB1/z8J1P6UNoPtoSJjHYtJXAi/4ict91aNhethEJoOGvELYw
-         IJX5+ESbuPDMl978xqLF85TQh/n7WS2s3dmeL+ruHVnCFxEN6tfIYgY//SZJjUaHBpBM
-         ZG25HB8cvVk0iQZCbEkmO0UCmZI7Fut06LC69JYedpetx6SWqBw72zoIv1zRMMokOzoY
-         WeoKd/0SpB8iPibcsP6PUrObMDWc7d16+XXrpevfAIW5FcYzO1R7EYZkbkK0hNpyjSth
-         K+mw==
+        id S1725908AbgJHRjS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Oct 2020 13:39:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38433 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728623AbgJHRjR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Oct 2020 13:39:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602178756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=57pF96nMveuIgLAIF741tVuUvsmgggpGyKeIRqwrjbM=;
+        b=d4kOEReyf0kejwg5TU+vWmNselzAajqM5zDpYRBtqiHRNnPJP2MnyXdWGRAaaxvajHkNky
+        7hZgTBrpCN2BBvfwt0KUkAiGVZuJcZemDzOlTtjF6epPGioFntlHcafWzPCB1ol+tBSj5g
+        IlDNqMFVgeZHNoPHqc2N9pEXeJnlpPc=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304--H0HHH_YMKqy-vRLJHyrhA-1; Thu, 08 Oct 2020 13:39:13 -0400
+X-MC-Unique: -H0HHH_YMKqy-vRLJHyrhA-1
+Received: by mail-ed1-f69.google.com with SMTP id p3so2485040edu.20
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Oct 2020 10:39:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V9TRh62h9HdQNNSNYLmhb1iwaCtZPdrpFvSLIPnpgFw=;
-        b=KTC6VFoQnwZyLjRH6ha2R8yCnB5n2XcDmaAOH5ggyfMHZrhW5FJtBKsU7BVT+EURFt
-         WCO40rG1K88YKRNiPRMAi0wEx5gWOuBveZDSBR97H3CiE4hTOA4L+ADeHILMxtD12/+5
-         ENBqHMx5rw/IK9BfRnv3mHShv+RUl8k/QUvyiXjQriruWT4aXcNmeexK+aCTBGLjHSGp
-         VkmBbSTyRMcl6bIgsaDtt0fnn/jbnx3eTMUa4GhgQmZUNVEf7iI4S2v5eMkAg69Q6kqB
-         R+bF8+hJbJX36Ovaaa/t4y8YlWOBl1yGcO19KmCjc3Ttuaq4FfIrbIsPVWibg7WY0nTg
-         IQAg==
-X-Gm-Message-State: AOAM530DUdm86dxbjRsy8ypwR/VpiFIChuIPSXcmF5M7ZKOCIxzVHp+E
-        Y4MCsucIhz4FOZzITaMVrIY=
-X-Google-Smtp-Source: ABdhPJw9/0x/HeWz/GXCP3piILInsg/8yRIxMsaiiwccSlixm+/51iy0TeVixCWYUGJv953oLfFC8w==
-X-Received: by 2002:a17:90b:490:: with SMTP id bh16mr8898736pjb.214.1602175249409;
-        Thu, 08 Oct 2020 09:40:49 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id g129sm7952703pfb.9.2020.10.08.09.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2020 09:40:48 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Fri, 9 Oct 2020 00:40:41 +0800
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        wang jun <availa@outlook.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
- for broken touchpads of a new laptop model?
-Message-ID: <20201008164041.7nidwia2jzfgrcon@Rk>
-References: <20201002145133.a43ypm2z7ofgtt7u@Rk>
- <eed704f5-4210-788c-37b7-06d65b58d3de@redhat.com>
- <20201002224502.vn3ooodrxrblwauu@Rk>
- <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
- <20201003230340.42mtl35n4ka4d5qw@Rk>
- <20201004051644.f3fg2oavbobrwhf6@Rk>
- <20201006044941.fdjsp346kc5thyzy@Rk>
- <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
- <20201006083157.3pg6zvju5buxspns@Rk>
- <CACRpkdaK-WpQdKu-tBOyvB1HLZ10ivjEPrVFqGjPSvLJuPXG8Q@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=57pF96nMveuIgLAIF741tVuUvsmgggpGyKeIRqwrjbM=;
+        b=l5BS6RzRdzmfPxfbyVWXmtruMfg0JDl2abfvYEsueX1pK4tLfp68sZVpKpB2F9IEWz
+         SIvdC1uYyY0K9PWGWfQqs50ZyM9OZ0xXVyQFjjP00lwoOqVbQMzwEr32vW8lzgan4HsR
+         YWqa0I4O+oOUtvr/XDmCTDCHSmfCBXcLUKLGBIQPOe7aSaB+2sicLsRnt2g7ynf57Iyo
+         tFrlDlijdqkIavX6sbiwVc2n4iLJrebhV39g3iat55p6gZVsKeUHnkCnqtK3TDOtzErk
+         DPJX3rBR0qMaRo4cDNYFurNyS5g8pOcl5T9LdTrOARYDE08LYDcl3VBhP2OksIJVy/8M
+         agBg==
+X-Gm-Message-State: AOAM5303gBEr3j/CfXhe2KN3Mk8WQGNlw1VWIErBYCD/LlNSL+ICkrv4
+        342cwejJ+1bbI5ckrbdi6zoTkJA+63pkZU/o2s/vBM4EauWZx+lIL3b2EhU2tV6kx63AE40h8cz
+        ZRSHeRaom+WF764bRytbfpw==
+X-Received: by 2002:a50:ef0a:: with SMTP id m10mr10343235eds.116.1602178752509;
+        Thu, 08 Oct 2020 10:39:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzEtunoREN2MGffbkQijQPSdkbi+W/TWv89PFtLjh/Rito+m4UtcOPtGzgjd8aLEVRc71hxQg==
+X-Received: by 2002:a50:ef0a:: with SMTP id m10mr10343216eds.116.1602178752280;
+        Thu, 08 Oct 2020 10:39:12 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id k1sm4549656edl.0.2020.10.08.10.39.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Oct 2020 10:39:11 -0700 (PDT)
+Subject: Re: [PATCH v2] pinctrl: cherryview: Ensure _REG(ACPI_ADR_SPACE_GPIO,
+ 1) gets called
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+References: <20200504145957.480418-1-hdegoede@redhat.com>
+ <20200506064057.GU487496@lahna.fi.intel.com>
+ <f7ebb693-94ec-fd9f-c0a8-cfe8f9d4e9bf@redhat.com>
+ <20200507123025.GR487496@lahna.fi.intel.com>
+ <3d7ce79f-6157-8ae0-dae9-ebc940120487@redhat.com>
+ <20201008144450.GU2495@lahna.fi.intel.com>
+ <1925077c-dc47-bc93-6f7b-b8fdbd6efcd8@redhat.com>
+ <20201008155222.GW2495@lahna.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <efcd512b-9072-5807-b7e6-79a2aa413273@redhat.com>
+Date:   Thu, 8 Oct 2020 19:39:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaK-WpQdKu-tBOyvB1HLZ10ivjEPrVFqGjPSvLJuPXG8Q@mail.gmail.com>
+In-Reply-To: <20201008155222.GW2495@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 06, 2020 at 11:16:50AM +0200, Linus Walleij wrote:
->On Tue, Oct 6, 2020 at 10:32 AM Coiby Xu <coiby.xu@gmail.com> wrote:
->
->> Disabling the glitch filter works like a charm! Other enthusiastic
->> Linux users who have been troubled by this issue for months would
->> also feel great to know this small tweaking could bring their
->> touchpad back to life:) Thank you!
->
->Oh you found the bug :D
->
+Hi,
 
-The credit should goes to Hans. Thanks to his expertise, only
-one shot (disabling glitch filter) is needed. Thank you for
-introducing him to me:)
+On 10/8/20 5:52 PM, Mika Westerberg wrote:
+> On Thu, Oct 08, 2020 at 05:37:10PM +0200, Hans de Goede wrote:
+>> Mika, do you have input wrt always calling _REG for just the
+>> GpioIoOpRegion type (on top of the existing EC exception) vs
+>> just simply always calling it for all all/more OpRegion types ?
+> 
+> IMO it is safer to call it only for GPIO (GpioIoOpRegion) now.
 
->> $ git diff
->> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
->> index 9a760f5cd7ed..e786d779d6c8 100644
->> --- a/drivers/pinctrl/pinctrl-amd.c
->> +++ b/drivers/pinctrl/pinctrl-amd.c
->> @@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->>                  pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->>                  pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
->>                  pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
->> -               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
->> +               /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
->>                  irq_set_handler_locked(d, handle_level_irq);
->>                  break;
->>
->> I will learn more about the glitch filter and the implementation of
->> pinctrl and see if I can disable glitch filter only for this touchpad.
->
->Yes we certainly need a quirk for this of some kind, examine the ACPI
->quirk infrastructure in drivers/gpio/gpiolib-acpi.c to see if you can use
->that to handle this.
->
+That was my thought too, and is what my current patch does.
+Thank you for your input on this.
 
-Thank you for pointing out where I should look at! A quirk is the only
-foolproof way before we confirm the other two suggestions given by Hans.
+Regards,
 
->Yours,
->Linus Walleij
+Hans
 
---
-Best regards,
-Coiby
