@@ -2,73 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BCA4288F9E
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 19:11:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42682289009
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 19:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbgJIRLp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 13:11:45 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43541 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389944AbgJIRLp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Oct 2020 13:11:45 -0400
-IronPort-SDR: yXbsZyK6S1RlUbWq8tVQe2WwHu+PnHxZ40gg3lHqPEl0ArMZ2Cmg09+xpSaGXGifFdgb3mHUbh
- 1xd2C9nr62qw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9769"; a="250208296"
-X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
-   d="scan'208";a="250208296"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 10:11:43 -0700
-IronPort-SDR: L7xm9M3WltSz6qsmfv2APTxFwShUW2HWIzpqaifZFMh1Ck4dlf6iTF1eFQJKTOZt18s3GhC0mt
- WZ0pLRidLXdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
-   d="scan'208";a="518731878"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Oct 2020 10:11:41 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6879E15C; Fri,  9 Oct 2020 20:11:40 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
-Subject: [PATCH v1 2/2] pinctrl: mcp23s08: Print error message when regmap init fails
-Date:   Fri,  9 Oct 2020 20:11:37 +0300
-Message-Id: <20201009171137.81663-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201009171137.81663-1-andriy.shevchenko@linux.intel.com>
-References: <20201009171137.81663-1-andriy.shevchenko@linux.intel.com>
+        id S1732937AbgJIRcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 13:32:04 -0400
+Received: from sonic312-21.consmr.mail.bf2.yahoo.com ([74.6.128.83]:33816 "EHLO
+        sonic312-21.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732153AbgJIRcD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 13:32:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602264722; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=i4yeVMf1WmzzZ2gNvIXKaGXddbat6nzn+ZsvKRd8ZJfHnUksDGlOOtNXW7RxYs+O2aetC1K9JojQy8eayXuZwtfsAiDX51e1kblPPWDW/1c2ZHYERqKc0eyhOY5p1BorHyx5/U7ekEOnKs0L3FHelY3KgJJgrDA0iqjH82Urne0vQml3XBEyQSn+1Lw4YCqrMyvlrGKZCQt/4CesS0hQu+EstL2rg0LsaE3Wy4nYz9XX5E7uLoAxvhUOEWuIFs+O4ikuXYJso807XWtS81AW9pNGNPEvIQbOdrmsny/gXVd+W4L2+AH4keCBvhyz636G+azc+97+Hj9PCHWqihoqvA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602264722; bh=RYhzEYt6qJdZ7zGcneJUohepkSKimQxPkalnlCDY/ci=; h=Date:From:Subject; b=lwLZ11brptxByuXUNSgg0U8FccqLztm2gaIeu/WWUEbzHpWYP45h/Z0Jg4lGNYbfAjkSuLkDvhPvg3N/iWhlVBAfuNaQeO+AFWZ6H62ZLQzxUpCEPuez8aWuc78tAQ8AbqqBqx5TlZwN+0pTNUZPJeilUKl99w76hRsEGjpIX0Aj8RIjb6z4KHkGQkUPudkmTRROFgUapnAKRmbSlR4n52+4bDxkvEwEg+VPAke+QJoVbzsxYuMzuie7reK/8bgXc7fA63Odu5tPMho1Gj8CxkOo4WnweUpF6iBinH83hLbIP7Xq98R+e7X/Dj/stZwTABKa7LPMdZ0dIpCcXeMFRA==
+X-YMail-OSG: QXkto0IVM1ksLG3UQ9KQPAfw3n9W0qoZNAGtiXfYg5lvdmWUY_vV5aTvOFc8OMy
+ ejyIt2PoAfxSHpazWNO5nRO40J1vp8HmGAfehAEO0nBkem0aJ.a.GhhA4gHvW1oXNkdUMKigVsaa
+ YfE1xYIasd39pmw4MQ7BmUcrtHH02j9oRTXj7q87Hv0XTH2vg_chjbOTk42fHPkOjQmcYaj5GXJK
+ mY2.RI55WH4H29BALUInGlp6QCbdWpoDc4JlOnvyp6d9z9fDnny2JtX9rO0NpTJY72.PGYicVBMy
+ 6EuRjFMrMCEml9HKSo8QBDh548EtkaNjBYWxEDxt_4YWn6567fxVvIvN6.l1TihiOhCRJBZe64hi
+ zewXIaJqwaw0RxpQkUSCfjPnluHixpJ8S.s_2kDi0muJJmiVjY_Mjd.pkJXjjHFngRmPS6aNR02G
+ hr2UAIg1.jzsokjfdOjFZ9Yy21SkrxwsfNQAu5bZDy7DzyAPhoe94PV5VrduJdvrMgrbwuCa_d4e
+ qu2MVwJRey5UUcPTWp8EPfeGR.0dhFAZoXVlCj_FV.mfiWDdnkkdluekA1010s5ocS.uo.4VN4Q2
+ OKJp76lUQGFka7lwtAkYh1Ff5gWabgU5AtYcQ72gDFk1VUysTrqXJtwu_NzzabJV.DYzfLGmIH.L
+ 8x_.mERlyZu7qeezcbQ3LUGlfihdNUfXctWx6KqrkiOF.nPJZzonrdUAKWCv7XhuIjA2PLET3dss
+ w4NqAm9Wf7oB3PX8UHQIOBrqb5zjv3WNDc_0e06GHVOTTdF1wp7nXq2.siS60jsvTC0wDGBI.vpv
+ UE_w2qgAMUJ3smCYfwub3qblns7p3KNvglfh4UQgjYUKa8XVdughXSIyMY3mCW86k9k4.MUPOPdW
+ Brci5etghJNnQAde3ywRA8N0IwYLpF_PfjVPMWi90Fsb8IISYwMQpv4xPR_aXEzqPTIeY4qgZ.2_
+ 62KwcfSQ5fRCBMTwRmJcGmVr9JysknJjf3CHnyL.VeHdrnVuZLQPYEiaeS_sEj_mm_VEbbAWZWE1
+ wN9GGsnEMuTrLgONZ0ijRDb240Oo4B.bWGcXBqN4Um_qAKv5700iQxkp0Q1NekobD6bIDBRneU27
+ 4RPfR6_rJGyFePxc8lkpYX4_4keULcFaO9EYENGr7RieKhu61olI3qDe8HTSFoD7NEY__EoNPDqJ
+ Xyd2k5x3.Qrr1_dOS4ozUu1mU9TOongnD0Xsf5Z8s5fbXSdgyLcx0WGmsdwHAtXyPBm.TLH94KcT
+ wWSwh7dcRTtsdTaF3MElT0rE1d5MVtbD8TbWeQEz14hti3nL8A_n9bhgEuT1tb8yfaorO0vscM5B
+ Awc.YvDWKllstzj9lIhEYHCWmA9nMHoYjD4Lo6DNivzL_sBScyAmHcrcVIxrqT_7oNx4N3YJpWdA
+ uymTMNlmf18Cd5mwzvjVSBO_mEPj1_N8zXemTERO1J3KXqcKc
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Fri, 9 Oct 2020 17:32:02 +0000
+Date:   Fri, 9 Oct 2020 17:32:00 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <70189328.794834.1602264720676@mail.yahoo.com>
+Subject: BUSINESS CO-OPERATION FROM (Ms Lisa Hugh).
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+References: <70189328.794834.1602264720676.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It is useful for debugging to have the error message printed
-when regmap initialisation fails. Add it to the driver.
 
-Cc: Martin Hundebøll <martin@geanix.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-mcp23s08_spi.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-index 7c72cffe1412..9ae10318f6f3 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-@@ -126,6 +126,8 @@ static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
- 	copy->name = name;
- 
- 	mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp, copy);
-+	if (IS_ERR(mcp->regmap))
-+		dev_err(dev, "regmap init failed for %s\n", mcp->chip.label);
- 	return PTR_ERR_OR_ZERO(mcp->regmap);
- }
- 
--- 
-2.28.0
+Dear Friend,
 
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
