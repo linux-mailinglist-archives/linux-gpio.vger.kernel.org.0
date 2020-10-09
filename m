@@ -2,95 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC4A228851A
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 10:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D90A2885E5
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbgJIIVC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 04:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732547AbgJIIVB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 04:21:01 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303B2C0613D2
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Oct 2020 01:21:01 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b1so6407798lfp.11
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Oct 2020 01:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=F1p8lcOc9v2xuW4LU+iaVDSBE7WFr+KfWRzRc7BHXDY=;
-        b=rpDXXyrrfosFnOf9GTHHzweLt53ZXhelBHex63dDvXuyFC6LtW66pMvLqsySf0OiyO
-         E5cy/Lj+6gmXH9WO977BftnM6y7dhe1vKqjMzA5y4pBVhTIHlPFDO13FqPitr0azQLIH
-         Lt/Q0kh79IFMwPkL5mzpPO8WeUFNwQtlKP7gNYX3MVI8lgl5tOWDxYP6SMzKQW/HPQuH
-         venyEaLYu8uNd//s38EEhyEmgpEFWcjnuHSaDHtRIFNbdzwzEbPHTIHYAv9ZF3bk7mJ7
-         pqXqiwfM6kJF1eCZygDVmIFThuGTzXzpP8UDF91gaAPeELK92fKxKcUZab/+qLF88HhC
-         FzhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=F1p8lcOc9v2xuW4LU+iaVDSBE7WFr+KfWRzRc7BHXDY=;
-        b=qBRyRNHqiTHNIRexXSqXp0Dp2PA2HsPX8oF3BMpXFCC9ILdosuQk0iOZoQbDdGGwQc
-         lNdXxZtuVWY5w01FAIg8JSbN1IvD1S5d8L8g48GP9bYYRHYOBQtjSIemvg9fUe9+LBpg
-         YO2Cbq+dvMD6EMG/uAH2slsj/MqxxlDr6NJKQYld0ut9tvhrosazY3kcludfH7MONM3T
-         xVgAIboD2U+s6w/VDP0rq+2oJngO6wkiFBNhyHX9m5tQ3Dxu2pimnwPs8/0nqcgplQRA
-         mUroVrJqwByr16/PTN1M5aF4xJMakvjeoc6rqVbNKOOmUEEJU3/Odb/gA/st/zgHSHQq
-         R6tA==
-X-Gm-Message-State: AOAM531hb1B5r2he8klO2TuwNdwLerUdD0yTlq0TSruZDzqSyfF8oc3Q
-        lEC3522wKzLYOXm8UI++pCWg6KniH8ncOclyfHQXIw==
-X-Google-Smtp-Source: ABdhPJyumXXapH+JIFNDv3e4VC/Q+k+gafCJclzodbwPI9k7n4hYPERxQB8VpDRb3NOqvCj1uvycDHT2MOa8bwTF5gY=
-X-Received: by 2002:a19:824f:: with SMTP id e76mr2494555lfd.572.1602231659591;
- Fri, 09 Oct 2020 01:20:59 -0700 (PDT)
+        id S1733078AbgJIJYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 05:24:17 -0400
+Received: from first.geanix.com ([116.203.34.67]:56156 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731262AbgJIJYQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Oct 2020 05:24:16 -0400
+X-Greylist: delayed 496 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Oct 2020 05:24:15 EDT
+Received: from [192.168.8.20] (unknown [85.184.138.169])
+        by first.geanix.com (Postfix) with ESMTPSA id 84094F25C16;
+        Fri,  9 Oct 2020 09:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1602234957; bh=P+1tW+LNK0Aleerf9xLn1TMIWjW2HPslR3vBsUjKGgQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=gJopEN5+xGiVZq/h4xMBr9fcSmIbxYaYs9F66npzla8dWtlRo2oDRBDVNariA9Ey4
+         Zv8aI7giGvmoXb6l8sPIYIV9eQYXnSNC70koUfl1vTLueItgOMravszwvRvutasweN
+         Oo9DV4PdereicisO28eVry0N70B1U1widQ7d1YMpllgtktQCldKxdHE4tnSdnpQVIv
+         +YLfpgF4mQIvRijf0MCQCIRSh+55AqK1L893KCLahAc8u6fMmkJpjI/y78JrjgQ0ou
+         nwkLpOyr3SKj4Vb0Kv0BcVhPXMsrXORVNt3vg+CRiQP11d5PU/0ECDfMYkKif98ktV
+         CGy/E5bdGhevA==
+Subject: Re: Re: [PATCH v1 1/9] pinctrl: mcp23s08: Get rid of legacy platform
+ data
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdY6_EChELrKGtcvsBvDqEQ9QD1=+PWWZuyBZV_CpLvUyA@mail.gmail.com>
+From:   =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>
+Message-ID: <c82ef50e-8f5c-39cd-6032-b4797a49e0e1@geanix.com>
+Date:   Fri, 9 Oct 2020 11:15:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 9 Oct 2020 10:20:48 +0200
-Message-ID: <CACRpkdYLfx9qRb1hHi=u+hLxzYE=0aku+_8-KwYocHmPowMZbQ@mail.gmail.com>
-Subject: [GIT PULL] late GPIO fixes for v5.9
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdY6_EChELrKGtcvsBvDqEQ9QD1=+PWWZuyBZV_CpLvUyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.3 required=4.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        URIBL_BLOCKED autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on ff3d05386fc5
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Andy,
 
-some two late GPIO fixes: one IRQ issue and one compilation
-issue for UML.
+On 16/04/2020 12.35, Linus Walleij wrote:
+> On Tue, Apr 7, 2020 at 7:38 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+>> Platform data is a legacy interface to supply device properties
+>> to the driver. In this case we even don't have in-kernel users
+>> for it. Just remove it for good.
+>>
+>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> All 9 patches applied.
 
-Please pull them in!
+This series caused probing of my PiFace2 to fail:
 
-Yours,
-Linus Walleij
+ > [    1.019604] mcp23s08: probe of spi0.0 failed with error -22
 
-The following changes since commit 549738f15da0e5a00275977623be199fbbf7df50:
+I tried to bisect, but some of the commits failed to compile:
 
-  Linux 5.9-rc8 (2020-10-04 16:04:34 -0700)
+ > drivers/pinctrl/pinctrl-mcp23s08.c:959:39: error: 
+'mcp23s08_spi_of_match' undeclared (first use in this function); did you 
+mean 'mcp23s08_i2c_of_match'?
 
-are available in the Git repository at:
+ >  959 |  match = of_match_device(of_match_ptr(mcp23s08_spi_of_match), 
+&spi->dev);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.9-3
 
-for you to fetch changes up to 8b81edd80baf12d64420daff1759380aa9a14998:
+However, bisecting did narrow it down to a few commits:
 
-  gpio: pca953x: Survive spurious interrupts (2020-10-07 11:47:41 +0200)
+ > * 1ac30db20be2 - (refs/bisect/bad) pinctrl: mcp23s08: Make use of 
+device properties (6 months ago) <Andy Shevchenko>
 
-----------------------------------------------------------------
-Some late fixes for the v5.9 kernel:
+ > * 88af89b52a1b - 
+(refs/bisect/skip-88af89b52a1b7493f1e5ec165856b4c6767cf654) pinctrl: 
+mcp23s08: Propagate error code from device_property_read_u32() (6 months 
+ago) <Andy Shevchenko>
 
-- Fix a compilation issue with User Mode Linux.
+ > * 0874758ecb2b - 
+(refs/bisect/skip-0874758ecb2b3faa200a86dda45dbc29335f883e) pinctrl: 
+mcp23s08: Refactor mcp23s08_spi_regmap_init() (6 months ago) <Andy 
+Shevchenko>
 
-- Handle spurious interrupts properly in the PCA953x driver.
+ > * 0521701c8d10 - 
+(refs/bisect/skip-0521701c8d10f832a401cc7ebfa92bb73782d792) pinctrl: 
+mcp23s08: Drop unused parameter in mcp23s08_probe_one() (6 months ago) 
+<Andy Shevchenko>
 
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpiolib: Disable compat ->read() code in UML case
+ > * d3da29b628a8 - 
+(refs/bisect/skip-d3da29b628a86777d25c741c44b8af35f10020a0) pinctrl: 
+mcp23s08: Consolidate SPI and I²C code (6 months ago) <Andy Shevchenko>
 
-Marc Zyngier (1):
-      gpio: pca953x: Survive spurious interrupts
+ > * 84d02e785d34 - 
+(refs/bisect/good-84d02e785d34be9363a825d696cca1f07fac2634) pinctrl: 
+mcp23s08: Deduplicate IRQ chip filling (6 months ago) <Andy Shevchenko>
 
- drivers/gpio/gpio-pca953x.c | 17 +++++++++++++++--
- drivers/gpio/gpiolib-cdev.c |  2 +-
- 2 files changed, 16 insertions(+), 3 deletions(-)
+
+I'm using the rpi3 device tree (broadcom/bcm2837-rpi-3-b.dtb) overlayed 
+with a configuration for the mcp23s08:
+
+/dts-v1/;
+
+/plugin/;
+
+
+
+/ {
+
+         fragment@0 {
+
+                 target-path = "/soc/spi@7e204000";
+
+
+
+                 __overlay__ {
+
+                         pinctrl-names = "default";
+
+                         pinctrl-0 = <&spi0_gpio7>;
+
+                         #address-cells = <1>;
+
+                         #size-cells = <0>;
+
+                         status = "okay";
+
+
+
+                         gpio@0 {
+
+                                 compatible = "microchip,mcp23s17";
+
+                                 reg = <0>;
+
+                                 gpio-controller;
+
+                                 #gpio-cells = <2>;
+
+                                 microchip,spi-present-mask = <0x01>;
+
+                                 spi-max-frequency = <1000000>;
+
+                         };
+
+                 };
+
+         };
+
+};
+
+I looked around the code a bit, and tried to compare it with v5.7, but 
+didn't see any obvious candidates.
+
+// Martin
