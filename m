@@ -2,164 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D90A2885E5
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B40A42885DA
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgJIJYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 05:24:17 -0400
-Received: from first.geanix.com ([116.203.34.67]:56156 "EHLO first.geanix.com"
+        id S1733069AbgJIJRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 05:17:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38333 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731262AbgJIJYQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Oct 2020 05:24:16 -0400
-X-Greylist: delayed 496 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Oct 2020 05:24:15 EDT
-Received: from [192.168.8.20] (unknown [85.184.138.169])
-        by first.geanix.com (Postfix) with ESMTPSA id 84094F25C16;
-        Fri,  9 Oct 2020 09:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1602234957; bh=P+1tW+LNK0Aleerf9xLn1TMIWjW2HPslR3vBsUjKGgQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=gJopEN5+xGiVZq/h4xMBr9fcSmIbxYaYs9F66npzla8dWtlRo2oDRBDVNariA9Ey4
-         Zv8aI7giGvmoXb6l8sPIYIV9eQYXnSNC70koUfl1vTLueItgOMravszwvRvutasweN
-         Oo9DV4PdereicisO28eVry0N70B1U1widQ7d1YMpllgtktQCldKxdHE4tnSdnpQVIv
-         +YLfpgF4mQIvRijf0MCQCIRSh+55AqK1L893KCLahAc8u6fMmkJpjI/y78JrjgQ0ou
-         nwkLpOyr3SKj4Vb0Kv0BcVhPXMsrXORVNt3vg+CRiQP11d5PU/0ECDfMYkKif98ktV
-         CGy/E5bdGhevA==
-Subject: Re: Re: [PATCH v1 1/9] pinctrl: mcp23s08: Get rid of legacy platform
- data
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdY6_EChELrKGtcvsBvDqEQ9QD1=+PWWZuyBZV_CpLvUyA@mail.gmail.com>
-From:   =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>
-Message-ID: <c82ef50e-8f5c-39cd-6032-b4797a49e0e1@geanix.com>
-Date:   Fri, 9 Oct 2020 11:15:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1732712AbgJIJRe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Oct 2020 05:17:34 -0400
+IronPort-SDR: bbg9uZvuxBxbqkCkBnIVbd7OaiCqL/n7xUVBcLnvOjLmDseGShsRPuANSfKsma5BmYGz+tD/cB
+ J5ps4GRgZ2zg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9768"; a="165524412"
+X-IronPort-AV: E=Sophos;i="5.77,354,1596524400"; 
+   d="scan'208";a="165524412"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 02:17:33 -0700
+IronPort-SDR: G8BEXkpNuneUT8/FZv5BvylDbY83a8Dpqhlx9wEe7kXgXXxJM2GoMnCnmanCFTxpoi1njCOVmr
+ iVJNbEEm9agg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,354,1596524400"; 
+   d="scan'208";a="528853438"
+Received: from lkp-server02.sh.intel.com (HELO 80eb06af76cf) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 09 Oct 2020 02:17:31 -0700
+Received: from kbuild by 80eb06af76cf with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kQoWp-0000MW-5N; Fri, 09 Oct 2020 09:17:31 +0000
+Date:   Fri, 09 Oct 2020 17:16:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ fc709df553a34fd18010f52e6b47652268d83e7d
+Message-ID: <5f802a80.3085lvqkU2bRQJ3g%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY6_EChELrKGtcvsBvDqEQ9QD1=+PWWZuyBZV_CpLvUyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=4.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        URIBL_BLOCKED autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on ff3d05386fc5
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: fc709df553a34fd18010f52e6b47652268d83e7d  gpiolib: Update header block in gpiolib-cdev.h
 
-On 16/04/2020 12.35, Linus Walleij wrote:
-> On Tue, Apr 7, 2020 at 7:38 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
->> Platform data is a legacy interface to supply device properties
->> to the driver. In this case we even don't have in-kernel users
->> for it. Just remove it for good.
->>
->> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> All 9 patches applied.
+elapsed time: 720m
 
-This series caused probing of my PiFace2 to fail:
+configs tested: 126
+configs skipped: 2
 
- > [    1.019604] mcp23s08: probe of spi0.0 failed with error -22
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I tried to bisect, but some of the commits failed to compile:
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                  colibri_pxa300_defconfig
+m68k                       m5475evb_defconfig
+mips                      fuloong2e_defconfig
+arm                          exynos_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                        mvebu_v5_defconfig
+arm                           omap1_defconfig
+s390                                defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                  mpc885_ads_defconfig
+sh                          rsk7203_defconfig
+sh                 kfr2r09-romimage_defconfig
+c6x                        evmc6678_defconfig
+powerpc                      ppc64e_defconfig
+powerpc                        warp_defconfig
+arm                       mainstone_defconfig
+mips                             allyesconfig
+powerpc                     ep8248e_defconfig
+powerpc                        fsp2_defconfig
+sh                           se7343_defconfig
+arm                        clps711x_defconfig
+arm                       aspeed_g5_defconfig
+arm                              zx_defconfig
+sh                          r7785rp_defconfig
+powerpc                     kilauea_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                 mpc832x_rdb_defconfig
+m68k                             allmodconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                        icon_defconfig
+m68k                        m5307c3_defconfig
+m68k                       m5275evb_defconfig
+powerpc                     ppa8548_defconfig
+openrisc                    or1ksim_defconfig
+sh                          rsk7201_defconfig
+riscv                             allnoconfig
+sh                   secureedge5410_defconfig
+arm                         mv78xx0_defconfig
+arm                         assabet_defconfig
+mips                          ath25_defconfig
+mips                           rs90_defconfig
+powerpc                       holly_defconfig
+arm                      pxa255-idp_defconfig
+sh                        edosk7705_defconfig
+openrisc                            defconfig
+powerpc                      cm5200_defconfig
+powerpc                       eiger_defconfig
+sh                        sh7757lcr_defconfig
+arm                          imote2_defconfig
+arm                       aspeed_g4_defconfig
+sh                             shx3_defconfig
+sh                           se7721_defconfig
+arm                        spear3xx_defconfig
+ia64                             alldefconfig
+arm                        oxnas_v6_defconfig
+arm                        trizeps4_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201009
+i386                 randconfig-a005-20201009
+i386                 randconfig-a001-20201009
+i386                 randconfig-a004-20201009
+i386                 randconfig-a002-20201009
+i386                 randconfig-a003-20201009
+x86_64               randconfig-a012-20201009
+x86_64               randconfig-a015-20201009
+x86_64               randconfig-a013-20201009
+x86_64               randconfig-a014-20201009
+x86_64               randconfig-a011-20201009
+x86_64               randconfig-a016-20201009
+i386                 randconfig-a015-20201009
+i386                 randconfig-a013-20201009
+i386                 randconfig-a014-20201009
+i386                 randconfig-a016-20201009
+i386                 randconfig-a011-20201009
+i386                 randconfig-a012-20201009
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
- > drivers/pinctrl/pinctrl-mcp23s08.c:959:39: error: 
-'mcp23s08_spi_of_match' undeclared (first use in this function); did you 
-mean 'mcp23s08_i2c_of_match'?
+clang tested configs:
+x86_64               randconfig-a004-20201009
+x86_64               randconfig-a003-20201009
+x86_64               randconfig-a005-20201009
+x86_64               randconfig-a001-20201009
+x86_64               randconfig-a002-20201009
+x86_64               randconfig-a006-20201009
 
- >  959 |  match = of_match_device(of_match_ptr(mcp23s08_spi_of_match), 
-&spi->dev);
-
-
-However, bisecting did narrow it down to a few commits:
-
- > * 1ac30db20be2 - (refs/bisect/bad) pinctrl: mcp23s08: Make use of 
-device properties (6 months ago) <Andy Shevchenko>
-
- > * 88af89b52a1b - 
-(refs/bisect/skip-88af89b52a1b7493f1e5ec165856b4c6767cf654) pinctrl: 
-mcp23s08: Propagate error code from device_property_read_u32() (6 months 
-ago) <Andy Shevchenko>
-
- > * 0874758ecb2b - 
-(refs/bisect/skip-0874758ecb2b3faa200a86dda45dbc29335f883e) pinctrl: 
-mcp23s08: Refactor mcp23s08_spi_regmap_init() (6 months ago) <Andy 
-Shevchenko>
-
- > * 0521701c8d10 - 
-(refs/bisect/skip-0521701c8d10f832a401cc7ebfa92bb73782d792) pinctrl: 
-mcp23s08: Drop unused parameter in mcp23s08_probe_one() (6 months ago) 
-<Andy Shevchenko>
-
- > * d3da29b628a8 - 
-(refs/bisect/skip-d3da29b628a86777d25c741c44b8af35f10020a0) pinctrl: 
-mcp23s08: Consolidate SPI and I²C code (6 months ago) <Andy Shevchenko>
-
- > * 84d02e785d34 - 
-(refs/bisect/good-84d02e785d34be9363a825d696cca1f07fac2634) pinctrl: 
-mcp23s08: Deduplicate IRQ chip filling (6 months ago) <Andy Shevchenko>
-
-
-I'm using the rpi3 device tree (broadcom/bcm2837-rpi-3-b.dtb) overlayed 
-with a configuration for the mcp23s08:
-
-/dts-v1/;
-
-/plugin/;
-
-
-
-/ {
-
-         fragment@0 {
-
-                 target-path = "/soc/spi@7e204000";
-
-
-
-                 __overlay__ {
-
-                         pinctrl-names = "default";
-
-                         pinctrl-0 = <&spi0_gpio7>;
-
-                         #address-cells = <1>;
-
-                         #size-cells = <0>;
-
-                         status = "okay";
-
-
-
-                         gpio@0 {
-
-                                 compatible = "microchip,mcp23s17";
-
-                                 reg = <0>;
-
-                                 gpio-controller;
-
-                                 #gpio-cells = <2>;
-
-                                 microchip,spi-present-mask = <0x01>;
-
-                                 spi-max-frequency = <1000000>;
-
-                         };
-
-                 };
-
-         };
-
-};
-
-I looked around the code a bit, and tried to compare it with v5.7, but 
-didn't see any obvious candidates.
-
-// Martin
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
