@@ -2,57 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 252AD288644
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5014288679
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 12:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733194AbgJIJou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 05:44:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733190AbgJIJor (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 05:44:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6937AC0613D2
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Oct 2020 02:44:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a5so8953708ljj.11
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Oct 2020 02:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/LrU4HDUwe5Ja8OmdzeBEJH8weSMyd+EM1T0OFoAefs=;
-        b=K1ofWV6X5uMHY8OlF9e5/o0nQkR8+DSLkBFjXYTr5dbtbtAL6Pwq/xpz74m1YLvsfq
-         B0uYEQ2BDzzyahvpLbB3TO0QATgKcubo7mG5CNqgQsS5O5ORXzSQR7QKesLjHW4VqUPS
-         ymxtb+7+6vtpjJ+QhvJ+710zUkZUBmNF7yU2J/MgiuAdPORUFQKKN5c3CN6kmnUt/nix
-         dex1au+ZjBtzvLBadu1wSgKPMuwqXzZ/oAwhENu1lOdDsrpPr/1SyexZ8RPBlF+6B7nU
-         ZuZukMJfqcTyN5xbLG0BlPkyFGB7k3R02uQ/25pIxZbfRGBrHE4zgnaVoYfbCnYSdm7p
-         L5OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/LrU4HDUwe5Ja8OmdzeBEJH8weSMyd+EM1T0OFoAefs=;
-        b=S4MJFeLxRJ2CDbcXFfLXvw8o9xMD8Xnh/QjP0nyNkgHyqq1zSHwEo/keeELlJYcdPv
-         y/sBiYlkiTu74F/pz71x56JmDF+Pc136TuRbwiYvrErdQWXQxnaBN7wFRv/wj+E0vieB
-         TZ3nHY9P/FTc4+O/LzxumifPPj1Z2DOEAoMfaSwX5CTuUfHqCcSwzQVKEWmhh8KU4Xcl
-         V0IhDAs8D5HS/prMf9E7anlRtbIBUh5BLtx8zf2rC5P8oSSt9mjUxe9z95Gl0Z4yOGXH
-         +LmhKONkEpATLrALtTlz75Ff+dojttZXl+UfDaClHsqd0p/LHb9H5bCiePT/VZXA8WY2
-         wStA==
-X-Gm-Message-State: AOAM531WjJ+V4g7b6AF9uhJbs/bVnBBKLY4F8h7AFT7+pl8eVXKjjnA0
-        qVagVicWOLT+ReSTzk+uR+/fCduIrtR3Utofqip2/w==
-X-Google-Smtp-Source: ABdhPJwtkHFBkATYIWMQv0CcvoFYf5KDv3EuMjA78eZclQ8SGUhRMetPMbZkX8dtJwt5mRbxYVIoAzQz0eSEVJCUgoE=
-X-Received: by 2002:a2e:a549:: with SMTP id e9mr2502953ljn.293.1602236685801;
- Fri, 09 Oct 2020 02:44:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201008130515.2385825-1-lars.povlsen@microchip.com> <20201008130515.2385825-2-lars.povlsen@microchip.com>
-In-Reply-To: <20201008130515.2385825-2-lars.povlsen@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 9 Oct 2020 11:44:35 +0200
-Message-ID: <CACRpkdaFYoXFUuWow5s9TitrRDhMW=wiaxgfMcY6sQkYYgC-Lw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: Add bindings for
- pinctrl-microchip-sgpio driver
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        id S2387428AbgJIKAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 06:00:47 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:22548 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgJIKAr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 06:00:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1602237647; x=1633773647;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=r2koRF/+FoeVCXIcl1Bvk7ziipf1D2XLPT0qU0KHzDg=;
+  b=2DwIlA0r8iUFKi4mLfbIi6QaGcQU1l3ouWSbnan0dWqEZgoGgJtpRJCJ
+   4fzmt4fl2Y2z6BNz8/MYpu1eBzV7+U/trPXUWT2izMt03hqUD6JO2qUQA
+   gR0+wI+b0P1KnaMMjMEFBx1kLX5pO4hijeie4zI8qtNkmlz3BjHXPjA10
+   hZyd8WbjzhT0OSDoG0+OkwAGDMqUlN0m1eM+CGrwrQeu8GSzRiU93sCSN
+   jJ4q7c0FoRsHWdePPmxiCg67rAf6500qXpVDnHmXejeOFwnGP9x2KT14+
+   Qu+fyEw2fZJaa8zHuCAMHwJocpWPJKMR9RFI2A36hvJDWeq5DEQVFdxD0
+   w==;
+IronPort-SDR: ghWz0aIj1uzQaobiv50hrQZfGc7IJ/f3PL3i5LQhDEys5XsFRlnrIi+7kZiLbnd5AXjfDmE9rd
+ YP6MzHCBmQmwy34XgxJyQ3Cp7nVWPiWIq+UFYwMLkuS6PF+XxEeoQa55iAMKRibOlYdeEXoj+E
+ 0LbBvOhIqnHAGP424wZyndTw4SIFxAEUnZQZ/LdIBnHu7RuwL048bURNrCP+xXNmq+LGGgiWf0
+ ssgBmBPG2Sb1rTegMzMayw69szmZd2+W70iXF7OSDVlYpOy/h13L11Y1bM/Meq0PLl1xB09gj5
+ FSY=
+X-IronPort-AV: E=Sophos;i="5.77,354,1596524400"; 
+   d="scan'208";a="94773622"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Oct 2020 03:00:46 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 9 Oct 2020 03:00:46 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Fri, 9 Oct 2020 03:00:12 -0700
+References: <20201008130515.2385825-1-lars.povlsen@microchip.com> <20201008130515.2385825-2-lars.povlsen@microchip.com> <CACRpkdaFYoXFUuWow5s9TitrRDhMW=wiaxgfMcY6sQkYYgC-Lw@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
@@ -60,44 +53,100 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: Add bindings for pinctrl-microchip-sgpio driver
+In-Reply-To: <CACRpkdaFYoXFUuWow5s9TitrRDhMW=wiaxgfMcY6sQkYYgC-Lw@mail.gmail.com>
+Date:   Fri, 9 Oct 2020 12:00:43 +0200
+Message-ID: <87d01ryb04.fsf@soft-dev15.microsemi.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lars!
 
-This is overall looking fine. Except for the 3 cell business. I just can't
-wrap my head around why that is needed.
+Linus Walleij writes:
 
-On Thu, Oct 8, 2020 at 3:05 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+> Hi Lars!
+>
+> This is overall looking fine. Except for the 3 cell business. I just can't
+> wrap my head around why that is needed.
+>
+> On Thu, Oct 8, 2020 at 3:05 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> +      '#gpio-cells':
+>> +        const: 3
+>
+> So at the very least needs a description making it crystal clear why each
+> cell is needed, and used for since the standard bindings are not used.
+>
+> +      sgpio_in2: gpio@0 {
+> +        reg = <0>;
+> +        compatible = "microchip,sparx5-sgpio-bank";
+> +        gpio-controller;
+> +        #gpio-cells = <3>;
+> +        ngpios = <96>;
+> +      };
+>
+> So here reg = 0 and the out port has reg 1. Isn't that what you also put
+> in the second cell of the GPIO phandle? Then why? The driver
+> can very well just parse its own reg property and fill that in.
 
-> +      '#gpio-cells':
-> +        const: 3
+Linus,
 
-So at the very least needs a description making it crystal clear why each
-cell is needed, and used for since the standard bindings are not used.
+NO! The second cell is the second dimension - NOT the direction. As I
+wrote previously, the direction is now inherent from the handle, ie. the
+"reg" value of the handle.
 
-+      sgpio_in2: gpio@0 {
-+        reg = <0>;
-+        compatible = "microchip,sparx5-sgpio-bank";
-+        gpio-controller;
-+        #gpio-cells = <3>;
-+        ngpios = <96>;
-+      };
+The hardware describe a "port" and a "bit index" addressing, where the
+second cell in
 
-So here reg = 0 and the out port has reg 1. Isn't that what you also put
-in the second cell of the GPIO phandle? Then why? The driver
-can very well just parse its own reg property and fill that in.
+  gpios = <&sgpio_in2 11 0 GPIO_OUT_LOW>;
 
-When you obtain a phandle like that:
+is the "bit index" - not the "reg" from the phandle.
 
-gpios = <&sgpio_in2 11 0 GPIO_OUT_LOW>;
+In the example above, note
 
-Isn't that 0 just duplicating the "reg"? Just parse reg when you set up
-your driver state and put it as variable in the state container for your
-driver state for this particular gpio_chip. No need to get it from
-the phandle.
+  ngpios = <96>;
 
-Yours,
-Linus Walleij
+As the "port" is [0; 31], this defines "bit index" to be [0; 2], so the
+(input) GPIO cells will be:
+
+p0b0, p0b1, p0b2
+...
+p31b0, p31b1, p31b2 
+
+being identical to 
+
+<&sgpio_inX 0 0 GPIO_OUT_LOW>
+<&sgpio_inX 0 1 GPIO_OUT_LOW>
+<&sgpio_inX 0 2 GPIO_OUT_LOW>
+...
+<&sgpio_inX 31 0 GPIO_OUT_LOW>
+<&sgpio_inX 31 1 GPIO_OUT_LOW>
+<&sgpio_inX 31 2 GPIO_OUT_LOW>
+
+('X' being the SGPIO controller instance).
+
+So no, there *really* is a need for a 3-cell GPIO specifier (or whatever
+its called).
+
+Hope this is clearer now...
+
+---Lars
+
+>
+> When you obtain a phandle like that:
+>
+> gpios = <&sgpio_in2 11 0 GPIO_OUT_LOW>;
+>
+> Isn't that 0 just duplicating the "reg"? Just parse reg when you set up
+> your driver state and put it as variable in the state container for your
+> driver state for this particular gpio_chip. No need to get it from
+> the phandle.
+>
+> Yours,
+> Linus Walleij
+
+-- 
+Lars Povlsen,
+Microchip
