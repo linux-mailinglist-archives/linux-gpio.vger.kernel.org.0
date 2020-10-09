@@ -2,74 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 019BF289001
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 19:32:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0BB3289094
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 20:09:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387542AbgJIRcg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 13:32:36 -0400
-Received: from sonic308-2.consmr.mail.bf2.yahoo.com ([74.6.130.41]:39199 "EHLO
-        sonic308-2.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387537AbgJIRcU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 13:32:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602264738; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=SOtT2VgeHfft266ugwCihXEtz4N4We2yXqjNq1w6PiXM/dyIr3L4ddrP9R8/EfLh3kaJhUuRPaECz3JgSatzWsbBb1XgkFc1Zhq+tuVTQPuokANhpf3PvRYaiu0KZQch1Keds+vmhITY07gTRsrZLEEu7lIoh5FeWwiou9oDOKFpv+XaqAFByH7lQArutGYOdiuUyzQcU5VrKxSyVyhXQfG0O4eiBwn9Cac3hOf7STEu2l1TVAEM7MisZCePRx3nFPQC9QaB+h7P8yv+QHQ1bnRIS5GrAGfBkWjWi8TodueylRd5ShFpN9cKmX5jnvf5yWXl428XTymMbwyZ6mRlwA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602264738; bh=oweOsO+InI43hbFRLRBgRoVInuaToCahnYHWVDihvYz=; h=Date:From:Subject; b=Ud/Pn8nER++HsWwYThWr42M8s8VLv+MjEdDip6fb0SEuzvsr7zuHEouzGCKZ+TdznrXPBE14flfJdOp60LSsqGOPX6OUsQBneIY7ceRaC2uRiHoKfxasVHlZL0oKfi35RzujKfHn+2L5OT1q+sGU8wgCyMg6EdcqdbnDIEmZYMbq04Vo6/grFca1mYUtq5gJgJy5sitquRZAiIujsiXSNJ90alImV7rFovhmpOf/kNmrlkbowUi7HSpjTMjuTpCoDdllFZXokJk6kKzZsI0k95wkfmeXcisTNyyiUWKiEYvTTWCNS4rZrf2kGwfFadE0g1XwjrOCo/xzduuwRVmlWQ==
-X-YMail-OSG: 5v9hkRwVM1lz8abwSsgESaGyahNwILSbkFwtLM7oGCnHCY7DgceUY5bBQW8ZtjA
- Gd3HTL2t2qAAIsGFPZbAZyn0JH3FZsMMMlJgDaCDDHn9ptWs_ZPO_cU9IEva6NxUEnSioUk9P_hi
- MDcnF04k010QJRqUH0K9RKZnMc7stui8J1WO2xEmO4p01M0wkb6QQxLYwhQemGIkUCeH.BD4BQWS
- oi0qiuufWT59XtCIlm._yy65l9x2iVuQyyyj7sKMSF1rffUNW5fyD.KXiihGQtMTaT4sEdckst6K
- djU.zsAv.eC4nUhX2xF9K2VCt_uBc70fTB2EaHhChVYeSiebFN_FzCnlqLrKYRzkCLiuKYNsZ7.S
- QBxH8JYfvkqT2NjNjhtbIQJs8GnFjblimaU1HQsn0Y8qOxRkx1arxjHlhLeNUOqbdr7MCVAywJtc
- hINIDXhr6SJnL8RypnjjG5xrDlRX6Ke.DeW5vRjm59VhqGGclwbfga9yTRT6YD2LnW0qemTco4ZY
- a7jn.2qkFGP1w5Ai5JornvwAwSkbxjF4Bg9d3E3ilMdmjwL0mOHhrm32_Bptbt5jJBf7NWq.GRYd
- xmSGbyRpP2oEfBdgRhdpvGXvOFHWetss9pKpcrPrQj7gYnB7LRn671uivYqVz.EUTu4kAPxxJckn
- wNvKt7smcWwvgC90mQAJZMzLe6bhY4qk7TpH.e3rcz1dExTEVLVCyi7bw0U8Zk6IpxoWy3pndzXz
- k42KkBMOGvVrqENIzTDE7yJEFRnJN.35by2WOZsA05IT0B6dNhJap7cpDlY56XuhkH45WJNkYwfC
- 1k9BwCBhCbTMt6tKq4AFCvCOOskSomPgcR8JTmYFy_wq2U413Ak_Qg_e_h4DMUXkamjdef5SnB5J
- q.BRk2ZZCUbZ7OF8b1JsA0zthlW3RFYyYtir.LW6uhHHJnFvEP.vQ37O0NJQ2tSfoUap6D0MUvjg
- gDFQ1LWd1HkGcmmm4dYTwIAOxyMed14ukPRJ1LQKrWfPNqBOBfVJChgn0_zbOzCMm4T7KuV8dm4j
- 0eA6RR8AaPb3Z7YOgLLW7aKw6ZrnKywh1wdf5PzcAWDY8ghpMvjZnKWJWOJtRHdMM3SPdJ.Nra_H
- Y6koh23aFm32J_vdxYVcGoTv8z9vJfzG37vluaxJ5Pj6HfylpHEsjGLwCR6CL2LFay6kwtME836F
- Bf78c6S1Wt6DZI0dQkHdlWZepHj769tL5ggmaFaSA_7xhssiBliZl.t3j.a980nxeEDpNDF7D73e
- NnhQwOx9F2KYTFRF9yy8QuZFhWF3Xh_8hjqwcCuoKB3hkKZh3yr8UEzDx..FL8wWr0DrRI5PycxE
- bGe_oH1USQlZTR7jvTmcilQZBSLG.vDlRSCo2Omii3u3u0djpbL7INSpKr1xAQnilZmn1ixqqs.2
- u6H9wEuoRJhVbncUCkXbm4ip1owWBmNwQKmV8yQ_DcM_DcVYT
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.bf2.yahoo.com with HTTP; Fri, 9 Oct 2020 17:32:18 +0000
-Date:   Fri, 9 Oct 2020 17:32:16 +0000 (UTC)
-From:   Ms lisa Hugh <lisahugh531@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <648437096.795318.1602264736931@mail.yahoo.com>
-Subject: BUSINESS CO-OPERATION FROM (Ms Lisa Hugh).
+        id S1730110AbgJISJe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 14:09:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48619 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725979AbgJISJe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Oct 2020 14:09:34 -0400
+IronPort-SDR: Gni5wQgsS6hO4ROH2YUOmXkeQXWBWK9gkUh5SHNGkfd0Gm3gZM+kxFPt1vPVqHbLDy8jTBJppV
+ mYmtLCyjEb9w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9769"; a="229705582"
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
+   d="scan'208";a="229705582"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 11:08:59 -0700
+IronPort-SDR: WJ0aFvTPrMeeESpGWmiodUx08WkxHS7Or6QhvJbMBy9vUvC3XShze//iblpa/RCj55Znt2K17/
+ GyEYZAgBJARQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
+   d="scan'208";a="345120597"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 09 Oct 2020 11:08:57 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 0A93415C; Fri,  9 Oct 2020 21:08:56 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
+Subject: [PATCH v2 1/2] pinctrl: mcp23s08: Use full chunk of memory for regmap configuration
+Date:   Fri,  9 Oct 2020 21:08:55 +0300
+Message-Id: <20201009180856.4738-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <648437096.795318.1602264736931.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+It appears that simplification of mcp23s08_spi_regmap_init() made
+a regression due to wrong size calculation for dev_kmemdup() call.
+It mises the fact that config variable is already a pointer, thus
+the sizeof() calculation is wrong and only 4 or 8 bytes were copied.
 
+Fix the parameters to devm_kmemdup() to copy full chunk of memory.
 
-Dear Friend,
+Fixes: 0874758ecb2b ("pinctrl: mcp23s08: Refactor mcp23s08_spi_regmap_init()")
+Reported-by: Martin Hundebøll <martin@geanix.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: fixed few typos in the commit message
+ drivers/pinctrl/pinctrl-mcp23s08_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
+index 1f47a661b0a7..7c72cffe1412 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
+@@ -119,7 +119,7 @@ static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	copy = devm_kmemdup(dev, &config, sizeof(config), GFP_KERNEL);
++	copy = devm_kmemdup(dev, config, sizeof(*config), GFP_KERNEL);
+ 	if (!copy)
+ 		return -ENOMEM;
+ 
+-- 
+2.28.0
 
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
-
-Below information is what i need from you so will can be reaching each other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa hugh.
