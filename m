@@ -2,149 +2,429 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E0A2887A4
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 13:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9582888B8
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 14:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbgJILOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 07:14:20 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:38309 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgJILOU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 07:14:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1602242059; x=1633778059;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=vjKYfbc9s5PmZNG8hn4fzkf70oXwnDet2wCdajG+jWc=;
-  b=XNpqmPvRIkioT5HxPELU9cHjNN10TDXPgYpUvkvSb0avdXn/unpOmNIl
-   FULIIl+t84D4BZbgYF0aJt52teLzAjKbRm1IBLzXpJOPzsSSo96NcSgFj
-   jLy0Qta8FQRi/1Yln+biBHNJ3b+3t1cFGQ1aRBRWlMpESI3fR/t+2tEsd
-   nIeUMMilaERh5uip+R8Slcb3mHSTNGqSa6StGSjqf/3bUkNKiEXED7iOz
-   FJ4VtYng39GbZFK0C8haDHGUFuwQaIWFtHo0D329eVmB1Rsq/mEqosYqS
-   moDNagGjtpIM7fOA83bDO6QkMn4xNoMgV9F46uholvL/9CnwEZN6xP7n9
-   Q==;
-IronPort-SDR: Ifxxhy0xAWh2KaxW2iYDKqG+/gC0f0xqoVn69/hoK+fBjpiQabnargewF3GPamd7kMyunjKO5f
- 2xnkVWrljLfzh4O31eJOKRJw7rsGQ6hqrOWpofV1Q/Eb4EbTrfGrt5s8cLPT060E7HssZN836u
- 74nLMRrqzrnQxyEKdoVH7YSi0rIUKgITbXwUuvf+w3uwpnV1N3EvclXw6GuQwnBwIvKrd7eLnP
- jReMy6MXx0hVeFBnqQd5fOqjpBO9LNHc5QwjSxwdH6PfbUTPva8AKOgBzk+vjZpYsL0e5ZcbdT
- 7tU=
-X-IronPort-AV: E=Sophos;i="5.77,354,1596524400"; 
-   d="scan'208";a="29330444"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Oct 2020 04:14:18 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 9 Oct 2020 04:13:45 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Fri, 9 Oct 2020 04:14:16 -0700
-References: <20201006142532.2247515-1-lars.povlsen@microchip.com> <20201006142532.2247515-3-lars.povlsen@microchip.com> <CACRpkda+OSgma3E0XxXUk8a2yrn5Hpu3a47cBN50rOkoSMkiwQ@mail.gmail.com> <87ft6px9wc.fsf@soft-dev15.microsemi.net> <CACRpkdYqKqqM8D0vrBWbo0=7OFthU2kcK2tjd45dD7DxEkaYWg@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [RESEND PATCH v3 2/3] pinctrl: pinctrl-mchp-sgpio: Add pinctrl driver for Microsemi Serial GPIO
-In-Reply-To: <CACRpkdYqKqqM8D0vrBWbo0=7OFthU2kcK2tjd45dD7DxEkaYWg@mail.gmail.com>
-Date:   Fri, 9 Oct 2020 13:14:15 +0200
-Message-ID: <87a6wvy7lk.fsf@soft-dev15.microsemi.net>
+        id S1733117AbgJIMaj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 08:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgJIMaj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 08:30:39 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05684C0613D2;
+        Fri,  9 Oct 2020 05:30:39 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f21so9644362wml.3;
+        Fri, 09 Oct 2020 05:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AjmLoetTBObgHXL/i47jeS5ZhvM7sMIdDP4emaMus2g=;
+        b=asqqtzCCpWEdFlVVTjiylkeSMp0o1bvIQI1aTOejkiv0XRQUikw9PJN/MKjI6asZC4
+         hyDbAFwnS6XAJQ3fc6MoHgDFbSvoAj+NcMiv5Fe4ouKyQlqIBrSwYJGfN9Ul1lFjtXf5
+         hdgDBdtiNoR7+IPO7RZprzb+AJjnUNVmzomWZxxs+P/xd5trJwWgez1D1n1tUry9rWpy
+         cGcrPblqZzSIcDgG1WIC22eOQndILpt41GaWZGVB9NKz9Wi7Ye8+zFFb48a/pTV38eb8
+         Yf5+zkNxaNa2dF7rDlLNTamuoBL7Z/oY9vzJWillNUZHzbglT98WHy3qhWab7KRXPsI3
+         Ti/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AjmLoetTBObgHXL/i47jeS5ZhvM7sMIdDP4emaMus2g=;
+        b=Wx/5jDJGDavmDDXvYYQ109sQJqpnM5zLtgiERq/xa7rPSnmvM0gq4uGl46ZZ0YCdmC
+         h5+aJcQKDCTjUeNLwqvz+w/tsi5rz83hj72t7q7Cl5zCm9yZmYTsa60vZXHIzMOXC3g9
+         iHoNEL5NyQ0VQFYpQYW41HX4TKE9Zf8ZIbiCU/j9LWPzNITWBSuVPb2wyG0i1LCu2U6w
+         j9hhpPOSgEv3IQBkWpQjarPWAhX5ImSEutd0Tg50XL0Ad6JWI6JeJuw6thI7Ibm7TatB
+         tJmKh39oKlc5iqfWWVtfuV/k6Cu46Z5smdpM9WiRjBN5C9V2KrQqFoBff8toc9EJpcNT
+         jCfA==
+X-Gm-Message-State: AOAM531MOmnCh8dDOeeOpp0MIcX61FMHSUHHfjKcfq7Dmz3Uaow8uApu
+        wKyPj69UgBnnoQkQtvuqjek=
+X-Google-Smtp-Source: ABdhPJw2Lo8s/yFUlcr8c49/Uewddu9hg079ybrqHjIVWx/YC2AQC7mQhXGMF07QF5gYM3+VLdtnQw==
+X-Received: by 2002:a1c:9949:: with SMTP id b70mr1120408wme.116.1602246637515;
+        Fri, 09 Oct 2020 05:30:37 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.119.110])
+        by smtp.gmail.com with ESMTPSA id t124sm12301997wmg.31.2020.10.09.05.30.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Oct 2020 05:30:36 -0700 (PDT)
+Subject: Re: [PATCH v10 2/3] arm64: dts: add dts nodes for MT6779
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     mtk01761 <wendell.lin@mediatek.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
+ <1596115816-11758-3-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <847f64e2-8ed6-2e09-5343-2aa70d5937fa@gmail.com>
+Date:   Fri, 9 Oct 2020 14:30:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1596115816-11758-3-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Linus Walleij writes:
 
-> Hi Lars,
->
-> I'm overall mostly happy with the latest posting (not the one I respond to here)
+On 30/07/2020 15:30, Hanks Chen wrote:
+> this adds initial MT6779 dts settings for board support,
+> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
+> 
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |  31 +++
+>   arch/arm64/boot/dts/mediatek/mt6779.dtsi    | 271 ++++++++++++++++++++
+>   3 files changed, 303 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index a57af9da9f5c..4d1b0f9d8d1c 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -1,6 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dts b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+> new file mode 100644
+> index 000000000000..164f5cbb3821
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+> @@ -0,0 +1,31 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt6779.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT6779 EVB";
+> +	compatible = "mediatek,mt6779-evb", "mediatek,mt6779";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x1e800000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:921600n8";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
+> new file mode 100644
+> index 000000000000..370f309d32de
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
+> @@ -0,0 +1,271 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + */
+> +
+> +#include <dt-bindings/clock/mt6779-clk.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/pinctrl/mt6779-pinfunc.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt6779";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x000>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x100>;
+> +		};
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x200>;
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x300>;
+> +		};
+> +
+> +		cpu4: cpu@4 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x400>;
+> +		};
+> +
+> +		cpu5: cpu@5 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x500>;
+> +		};
+> +
+> +		cpu6: cpu@6 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a75";
+> +			enable-method = "psci";
+> +			reg = <0x600>;
+> +		};
+> +
+> +		cpu7: cpu@7 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a75";
+> +			enable-method = "psci";
+> +			reg = <0x700>;
+> +		};
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW 0>;
+> +	};
+> +
+> +	clk26m: oscillator@0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <26000000>;
+> +		clock-output-names = "clk26m";
+> +	};
+> +
+> +	clk32k: oscillator@1 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "clk32k";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		gic: interrupt-controller@0c000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <4>;
+> +			interrupt-parent = <&gic>;
+> +			interrupt-controller;
+> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
+> +			      <0 0x0c040000 0 0x200000>; /* GICR */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
+> +
+> +			ppi-partitions {
+> +				ppi_cluster0: interrupt-partition-0 {
+> +					affinity = <&cpu0 &cpu1 \
+> +						&cpu2 &cpu3 &cpu4 &cpu5>;
+> +				};
+> +				ppi_cluster1: interrupt-partition-1 {
+> +					affinity = <&cpu6 &cpu7>;
+> +				};
+> +			};
+> +
+> +		};
+> +
+> +		sysirq: intpol-controller@0c53a650 {
+> +			compatible = "mediatek,mt6779-sysirq",
+> +				     "mediatek,mt6577-sysirq";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			reg = <0 0x0c53a650 0 0x50>;
 
-I'm glad we're getting there :-)
+This looks a bit suspicious to me. Unfortunately I'm not able to find any 
+reference in the datasheets.
 
->
-> On Thu, Oct 8, 2020 at 12:57 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->> > On Tue, Oct 6, 2020 at 4:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
->> >> +       gc->of_xlate            = microchip_sgpio_of_xlate;
->> >> +       gc->of_gpio_n_cells     = 3;
->> >
->> > So I'm sceptical to this.
->> >
->> > Why can't you just use the pin index in cell 0 directly
->> > and avoid cell 1?
->> >
->>
->> You scepticism has surfaced before :-). The (now) 2 indices relates to
->> how the hardware address signals.
->>
->> Each signal/pin is addressed by port, bit number and direction. We now
->> have the direction encoded in the bank/phandle.
->
-> I'm sorry but I just don't get it, I suppose. To me it is pretty
-> straight-forward
-> that the cells indicate the pin and then the flags. I do understand you
-> need the port at all, since this is implicit from the reg property
-> of the DT node. Are these two different things?
+Anyway, patch now applied to v5.10-tmp/dts64
 
-I responded to this in your comments to the DT bindings.
+Thanks!
+Matthias
 
-I just for got to offer to add a description for "#gpio-cells", I see
-that's missing. That should make it "crystal clear" - I hope!
-
-Something like:
-
---- a/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
-@@ -86,10 +86,17 @@ patternProperties:
-       gpio-controller: true
-
-       '#gpio-cells':
-+        description: |
-+         Specifies the pin (port and bit) and flags. Note that the
-+         SGIO pin is defined by *2* numbers, a port number between 0
-+         and 31, and a bit index, 0 to 3. The maximum bit number is
-+         controlled indirectly by the "ngpios" property: (ngpios/32).
-         const: 3
-
-       ngpios:
--        minimum: 1
-+        description: The numbers of GPIO's exposed. This must be a
-+          multiple of 32.
-+        minimum: 32
-         maximum: 128
-
-     required:
-
-Would that be adequate, or should this also be added as a comment in
-microchip_sgpio_of_xlate()?
-
-Like:
-
-    +       /* Note that the SGIO pin is defined by *2* numbers, a port
-    +        * number between 0 and 31, and a bit index, 0 to 3.
-    +        */
-            if (gpiospec->args[0] > SGPIO_BITS_PER_WORD ||
-                        gpiospec->args[1] > priv->bitcount)
-                                        return -EINVAL;
-
-I hope we can put this one to bed...
-
----Lars
-
->
-> Yours,
-> Linus Walleij
-
--- 
-Lars Povlsen,
-Microchip
+> +		};
+> +
+> +		topckgen: clock-controller@10000000 {
+> +			compatible = "mediatek,mt6779-topckgen", "syscon";
+> +			reg = <0 0x10000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		infracfg_ao: clock-controller@10001000 {
+> +			compatible = "mediatek,mt6779-infracfg_ao", "syscon";
+> +			reg = <0 0x10001000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		pio: pinctrl@10005000 {
+> +			compatible = "mediatek,mt6779-pinctrl", "syscon";
+> +			reg = <0 0x10005000 0 0x1000>,
+> +			      <0 0x11c20000 0 0x1000>,
+> +			      <0 0x11d10000 0 0x1000>,
+> +			      <0 0x11e20000 0 0x1000>,
+> +			      <0 0x11e70000 0 0x1000>,
+> +			      <0 0x11ea0000 0 0x1000>,
+> +			      <0 0x11f20000 0 0x1000>,
+> +			      <0 0x11f30000 0 0x1000>,
+> +			      <0 0x1000b000 0 0x1000>;
+> +			reg-names = "gpio", "iocfg_rm",
+> +				    "iocfg_br", "iocfg_lm",
+> +				    "iocfg_lb", "iocfg_rt",
+> +				    "iocfg_lt", "iocfg_tl",
+> +				    "eint";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pio 0 0 210>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		apmixed: clock-controller@1000c000 {
+> +			compatible = "mediatek,mt6779-apmixed", "syscon";
+> +			reg = <0 0x1000c000 0 0xe00>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x400>;
+> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x400>;
+> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@11004000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11004000 0 0x400>;
+> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		audio: clock-controller@11210000 {
+> +			compatible = "mediatek,mt6779-audio", "syscon";
+> +			reg = <0 0x11210000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		mfgcfg: clock-controller@13fbf000 {
+> +			compatible = "mediatek,mt6779-mfgcfg", "syscon";
+> +			reg = <0 0x13fbf000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		mmsys: syscon@14000000 {
+> +			compatible = "mediatek,mt6779-mmsys", "syscon";
+> +			reg = <0 0x14000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		imgsys: clock-controller@15020000 {
+> +			compatible = "mediatek,mt6779-imgsys", "syscon";
+> +			reg = <0 0x15020000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		vdecsys: clock-controller@16000000 {
+> +			compatible = "mediatek,mt6779-vdecsys", "syscon";
+> +			reg = <0 0x16000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		vencsys: clock-controller@17000000 {
+> +			compatible = "mediatek,mt6779-vencsys", "syscon";
+> +			reg = <0 0x17000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		camsys: clock-controller@1a000000 {
+> +			compatible = "mediatek,mt6779-camsys", "syscon";
+> +			reg = <0 0x1a000000 0 0x10000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		ipesys: clock-controller@1b000000 {
+> +			compatible = "mediatek,mt6779-ipesys", "syscon";
+> +			reg = <0 0x1b000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +	};
+> +};
+> 
