@@ -2,76 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5F0D2885DF
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:20:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C192F28860E
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Oct 2020 11:38:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbgJIJUB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 05:20:01 -0400
-Received: from 241-168-195-217.cust.centrio.cz ([217.195.168.241]:49150 "EHLO
-        patejl.cela.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731262AbgJIJUB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Oct 2020 05:20:01 -0400
-Received: from localhost (mem-185.47.222.164.jmnet.cz [185.47.222.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by patejl.cela.cz (Postfix) with ESMTPSA id E9376A490;
-        Fri,  9 Oct 2020 11:19:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=upir.cz; s=mail;
-        t=1602235198; bh=UNdGdeqYzeADJGlHvh7iFRqUgqp6qdhK+Uqiv4YTau8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=o0SY6iHEsK8QJ987wn5oaOlCmOOXTR1AAek6zfpmh2MzbJAnoymVuosfJBq6lqFkN
-         8kNnMRbmto7vlPg7P3MrivvXRIsii0/u1qicPZfRB9LRruYHnq9FUJTw6xYOO3O4X1
-         N9FT0nY6hLYkCsS9gnLAZ3oJmERE8Vndp9dloAH8=
-Date:   Fri, 9 Oct 2020 11:19:57 +0200
-From:   Jiri Benc <jbenc@upir.cz>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH libgpiod] bindings: python: fix Line.request() crashing
-Message-ID: <20201009111957.7f6cff10@upir.cz>
-In-Reply-To: <CAMRc=McNs+cPmqkcGCAJgfQ_Ozy4Dc4b9GUDc2wthmj2WYaRwg@mail.gmail.com>
-References: <38eff7ebd01efd34df3037ba485d61ff7291fb5e.1602004585.git.jbenc@upir.cz>
-        <CAMRc=McNs+cPmqkcGCAJgfQ_Ozy4Dc4b9GUDc2wthmj2WYaRwg@mail.gmail.com>
-X-Mailer: Claws Mail 3.15.0git164 (GTK+ 2.24.31; x86_64-unknown-linux-gnu)
+        id S1733113AbgJIJiq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Oct 2020 05:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733136AbgJIJip (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 05:38:45 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D22C0613D4
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Oct 2020 02:38:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u8so10025804lff.1
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Oct 2020 02:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wQZ85dJNsIyQtNjnJDTR2ihKmDYZl4o1wc+cD1p5Uys=;
+        b=EyBXWCuKn5Qfulspno0TqkUKWkmtsntf2WZ6aTm0tZypLd4Ah6UVqvyBZrfYrw6GC3
+         WIp1BqHp+4ACn92mT/zB7PHor5fdbk56BcW0Wj5dS6nelhlcD9LhtS9/8wSPEA7TQ0Za
+         23lJuLKWC6liqUXNRsqMQPBbZJ60Fd7YQW+SmmzHV1U93+juESSYcLseBKjKvTAMdMDa
+         owpSj+DJNBIOKN6aCuSWx4yPgN5rn7npeYJ6htvg9+kZTIy9j4gQG4DCOi4q/PLRGx7b
+         9ofFF7x+4XNaJK5r7q+Zi29ZhFqRf36GnKv6VWrvmwUH5oIRRhjFIIqIMTlLahRYR/cO
+         fWbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wQZ85dJNsIyQtNjnJDTR2ihKmDYZl4o1wc+cD1p5Uys=;
+        b=cZ5jtWuPnIvaB5jBUhM/CMBNoJ0yxYpM0ZGSp9kHXU85S69VFskhY0ql6i8c4H6WvJ
+         IhNJZBkTss62RgVlHH7iTFCZtjIz4nqfp++LImS/7OIQG1lu+vcBghAkl4oj0KsGYL9p
+         haOd91VOn4rkjGwzchwPHNIZ3ePVIgsDGVGp8nqz6eK1szgBlfBx3MdyqZAeK9qtkm3e
+         rVhfobKtmL4KOP9pw/YQsoreqToZ8E5v6i3EwUZzN0+ruZoJ8iozFFMBR/gvYxFkjzHi
+         2WkkQp/bkabHPxvaluO4F6/9RXsy5x6rOfJZGNs2gLzFf5pZTu/es6HMaYbdK55jF4Qo
+         YrUQ==
+X-Gm-Message-State: AOAM532HPhXZ3Fin6TruwGHtMdcQyb+ehu7MHdH18rCK0l2hr6CeKyjz
+        4rdQWN/YpILpWfz+JWI9o/qaufig7gKSCTm/bcLy0A==
+X-Google-Smtp-Source: ABdhPJw1Hr+9bP5FQEtUOU0p0RHYUw+Mo6ABI9TPDkRcxw0lXEEjdHuU++zVBajvD6EFYP2r4SQStnlEK25XtpZ3UuI=
+X-Received: by 2002:ac2:42d8:: with SMTP id n24mr3660836lfl.502.1602236323336;
+ Fri, 09 Oct 2020 02:38:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.2
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on patejl.cela.cz
-X-Virus-Scanned: clamav-milter 0.102.2 at patejl
-X-Virus-Status: Clean
+References: <20201006142532.2247515-1-lars.povlsen@microchip.com>
+ <20201006142532.2247515-3-lars.povlsen@microchip.com> <CACRpkda+OSgma3E0XxXUk8a2yrn5Hpu3a47cBN50rOkoSMkiwQ@mail.gmail.com>
+ <87ft6px9wc.fsf@soft-dev15.microsemi.net>
+In-Reply-To: <87ft6px9wc.fsf@soft-dev15.microsemi.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 9 Oct 2020 11:38:32 +0200
+Message-ID: <CACRpkdYqKqqM8D0vrBWbo0=7OFthU2kcK2tjd45dD7DxEkaYWg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 2/3] pinctrl: pinctrl-mchp-sgpio: Add pinctrl
+ driver for Microsemi Serial GPIO
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 9 Oct 2020 09:40:29 +0200, Bartosz Golaszewski wrote:
-> Thanks for the fixes. Could you send me a chunk of code that triggers
-> this error so I can make a test-case for it?
+Hi Lars,
 
-It was as simple as this:
+I'm overall mostly happy with the latest posting (not the one I respond to here)
 
-import gpiod
-c = gpiod.Chip('0')
-l = c.get_line(17)
-l.request('my')
+On Thu, Oct 8, 2020 at 12:57 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+> > On Tue, Oct 6, 2020 at 4:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-Latest stable Raspbian (Debian 10.6), Python 3.7.3. It's so basic that
-it's puzzling me that nobody has hit it before me. But my patch is
-right, see https://docs.python.org/3/c-api/structures.html:
+> >> +       gc->of_xlate            = microchip_sgpio_of_xlate;
+> >> +       gc->of_gpio_n_cells     = 3;
+> >
+> > So I'm sceptical to this.
+> >
+> > Why can't you just use the pin index in cell 0 directly
+> > and avoid cell 1?
+> >
+>
+> You scepticism has surfaced before :-). The (now) 2 indices relates to
+> how the hardware address signals.
+>
+> Each signal/pin is addressed by port, bit number and direction. We now
+> have the direction encoded in the bank/phandle.
 
-------
-METH_VARARGS | METH_KEYWORDS
+I'm sorry but I just don't get it, I suppose. To me it is pretty
+straight-forward
+that the cells indicate the pin and then the flags. I do understand you
+need the port at all, since this is implicit from the reg property
+of the DT node. Are these two different things?
 
-Methods with these flags must be of type PyCFunctionWithKeywords. The
-function expects three parameters: self, args, kwargs where kwargs is a
-dictionary of all the keyword arguments or possibly NULL if there are
-no keyword arguments.
-------
-
-Yet, commit 02a3d0a2ab5e that attempted to fix this states that the
-kwds dictionary was an empty dict. Maybe a change in Python C API in
-3.7? The Python 3.6 and earlier documentation did not mention the NULL.
-I can't find anything in Python release notes, though.
-
- Jiri
+Yours,
+Linus Walleij
