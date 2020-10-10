@@ -2,97 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98BF5289EBD
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Oct 2020 08:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD33289F7F
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Oct 2020 11:15:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgJJGvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Oct 2020 02:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbgJJGvT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Oct 2020 02:51:19 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7972FC0613CF
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Oct 2020 23:51:19 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id s81so262373oie.13
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Oct 2020 23:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=gQT8IlD7oQ6tQxlVdDbgVXFfWicJYkR7FYSawurArJpOEaSeDdsmAB/P+Pz7F03KDL
-         mO/sX2PzzwWaE5017Ef9ceVFUoEJlT9C+1ip18+HBd8eYrbC8466+NU0dMlYzhvOWwJm
-         fECfPE0Uu0PWmiAtbL1CRiA8eXMaREBVnrq41UqWQSuuvQEjJY5ktGSIMrOaILI6O7ne
-         MuONfVQnyb7HRiMZ8LCtcigtSK1czcpzQ/4ADkUih3DaVKo2AIx5qN7FyG/zQy78h9tL
-         3yHsMV6o6oVPrxCgBk74zhJKKFR2De8GWWvVN7n2LCBMducKYGc2ANcRFjJxncmYcp3+
-         14eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=R4dSEo1DUkBCd6PjQ6hkoFnCD+pEVYN+phtwW83e05grlzb2/pUofDUHc9bWkw/Mcq
-         kLaZxQlkO/wxdTRef7yI6YdyHYoZVsusk7dr6YBMor4Il/R9kQROoZ7KA5RZ1Go1U73m
-         PguHKqR17JgWzqjo2nlvSpxoh3TpcQZK2csH4us6JAvlIk8XThDUm+f0eDe/g8/cdcXK
-         8sMND2pyoPYj+yOTCCIe2WD76lP4UzTk7Slr/RStHeXtzMvNGlTNkLLvM66gmc0COT8Y
-         6j+zWLv3rVD88/hvRgpFnuAQEInlx6UzB5ZQjWf+GaSCcBx9SEeZw5dSGKnvU6WAGlIq
-         Imuw==
-X-Gm-Message-State: AOAM533FDzqt+tEaP6qynIonXlFMr5JBpZZ/ttzl6WdGAjBBPBFuITYL
-        Oll18ir+zZvnQkdUjxiUf2BXXVs4W5XOYfr+l+Q=
-X-Google-Smtp-Source: ABdhPJyOIDIsVgrawtME5q27UU3Dyr427ZVGEPnHgHSKZHrOzjbHpxS/txeH7LamvmeXJmISgMMRzGmyCRzNIC3Gw+M=
-X-Received: by 2002:aca:4e05:: with SMTP id c5mr5040761oib.99.1602312678653;
- Fri, 09 Oct 2020 23:51:18 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a05:6838:fb13:0:0:0:0 with HTTP; Fri, 9 Oct 2020 23:51:18
- -0700 (PDT)
-Reply-To: ayishagddafio@mail.ru
-From:   Aisha Gaddafi <aishagadafi0030@gmail.com>
-Date:   Fri, 9 Oct 2020 23:51:18 -0700
-Message-ID: <CAL3MLxt4g===yw9Qm7QZakN20eDH=9tCtYSLWr7ZgdsS7w+YeA@mail.gmail.com>
-Subject: Lieber Freund (Assalamu Alaikum),
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1728621AbgJJJN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Oct 2020 05:13:58 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34201 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729774AbgJJJGx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 10 Oct 2020 05:06:53 -0400
+X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Sat, 10 Oct 2020 05:06:52 EDT
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id F35089EA;
+        Sat, 10 Oct 2020 04:57:59 -0400 (EDT)
+Received: from imap22 ([10.202.2.72])
+  by compute4.internal (MEProxy); Sat, 10 Oct 2020 04:58:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiius.com; h=
+        mime-version:message-id:date:from:to:cc:subject:content-type; s=
+        fm3; bh=h4L4xcSjTMsLYI/deQYifefhu3uu+ddn2HqbrenwFuw=; b=M+nGXN+w
+        oklIyElgLSMdr1BXKjWyxl0eaRQYjU+EtCI9Fs1NLDbiiUA7Kmolr2VlNpPpddkZ
+        vuFIqCHGZ8Lpv8PcxxGw43SzPAGPdoRAvj72JBYsMBHPQN4Fcn48GNJ/LVsK5o48
+        ZHaATHFOPzz9qF62sx6A8q7Q5h2RjG/7DEeqvy2mjWgRkdUsH+/w5Vj/fw8+l9dF
+        3YfQXSx3jAVXXHJ88D18ASNBK/3siWFMxcdQHTYYZK/VH3L/qknhA2kot8T2/XwO
+        5wbZvEwqF+JBfIlwKEW86UuEiSKVT7dVp9fv22eOgKBYig59k5ASmiwkPj6/3iJJ
+        v/DkoElNkSxgiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm1; bh=h4L4xcSjTMsLYI/deQYifefhu3uu+
+        ddn2HqbrenwFuw=; b=nWKNsIaS6hxzq956oD62iDvQ6xvuQq2PSSjdGCTd6vGRO
+        Rvej75bBVzrbgmMGJbrPf72JWh4NYhpReVH+CLqckBGJ1rmQlnsXYQhsbbTBETJN
+        zfTnt1y9fer9jUPzq684Jx6OekczNu2IUhu69hakQpIziUjBBkH72hdcDkVCz4y3
+        TpCEsu9iQ3TTaYcoof52m5NJKNaSJPx2ToE+huzVQB4udPPFu+60Z7Dql8LeBMx9
+        jcGI7rZKV1x17qO/bB7iQj0a5u+dMXdJuInA1PblUylPAxbWchP2lVed+tRwOVYS
+        yt7s7s7PeVQ5bRNjsAbkhjdAfl0CKv40fTgLI6c0g==
+X-ME-Sender: <xms:l3eBX3rES_kblsPxmPGIZ-ggZ0z2gFocovZSIWE8A5GH-REEFVVc-g>
+    <xme:l3eBXxpgNmzcHLllLRGUN8qAhllPesetlpShPcW7ZtKbrqsTvV6Z0nsawpMPzexFt
+    itXEZ9O_3AwSAT5iA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrheefgddtjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfffhffvufgtsehttdertderredtnecuhfhrohhmpedflfgrmhhivgcu
+    ofgtvehlhihmohhnthdfuceojhgrmhhivgeskhifihhiuhhsrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeekhedvvdeltdejvefhjeeljeejleekveduieelheektefhueevjeejudfh
+    jedvvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hjrghmihgvsehkfihiihhushdrtghomh
+X-ME-Proxy: <xmx:l3eBX0Of1ggERW7RYaPgQFuKxckJSAlgmYwC1sny0B3HU5m9NNNdng>
+    <xmx:l3eBX65tH8ex-Bu-m1dEHObni-4INj4IBrras7YK95zg41TpRYbfIg>
+    <xmx:l3eBX27Ll0Hc0CfuL0j6Rkl1hFMt3f08wATiF1M_hD2NePTTgnC1sQ>
+    <xmx:l3eBXzW8ODIlBB8o9qgxWtJP82KNet0hc6pU_koBEYeeDcio_C6bww>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 178D86680078; Sat, 10 Oct 2020 04:57:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-407-g461656c-fm-20201004.001-g461656c6
+Mime-Version: 1.0
+Message-Id: <778e96d4-1695-43ee-90d6-86cc34b20418@www.fastmail.com>
+Date:   Sat, 10 Oct 2020 21:57:37 +1300
+From:   "Jamie McClymont" <jamie@kwiius.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Subject: Configuring bias on an APCI GpioInt
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-Lieber Freund (Assalamu Alaikum),
+Hi again,
 
-Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
-Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
-Mutter und eine Witwe
-mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
-hen
-Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
+I have run into a second GPIO issue while writing a driver for the fingerprint sensor in my laptop*, configured in the ACPI table like so:
 
-Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
-f=C3=BCnfhunderttausend
-United State Dollar ($ 27.500.000.00) und ich brauche eine
-vertrauensw=C3=BCrdige Investition
-Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
-jedoch
-M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
-von
-Investitionsprojekten in Ihrem Land
-Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
-bauen.
+   Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
+   {
+       Name (RBUF, ResourceTemplate ()
+       {
+           // SPI
+           SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, 0x08,
+               ControllerInitiated, 0x00989680, ClockPolarityLow,
+               ClockPhaseFirst, "\\_SB.PCI0.SPI1",
+               0x00, ResourceConsumer, , Exclusive,
+               )
 
-Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
-n und
-Unternehmensgewinn zu verhandeln
-Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+           // Interrupt
+           GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+               "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+               )
+               {   // Pin list
+                   0x0000
+               }
 
-Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
-antworten Sie bitte dringend
-Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
-.
+           // Reset
+           GpioIo (Exclusive, PullUp, 0x0000, 0x0000, IoRestrictionOutputOnly,
+               "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+               )
+               {   // Pin list
+                   0x0008
+               }
+       })
+       CreateWordField (RBUF, 0x3B, GPIN)
+       CreateWordField (RBUF, 0x63, SPIN)
+       GPIN = GNUM (0x02000017)
+       SPIN = GNUM (0x0202000A)
+       Return (RBUF) /* \_SB_.SPBA._CRS.RBUF */
+   }
 
-Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
-esse (
-ayishagddafio@mail.ru ) zur weiteren Diskussion.
+I call devm_request_threaded_irq with the number provided in the irq field of the `struct spi_device` during the spi_probe.
 
-Freundliche Gr=C3=BC=C3=9Fe
-Frau Aisha Al-Qaddafi
+This configures the right IRQ number, and it triggers when it should, but it stays asserted for 140ms-600ms after it should have been cleared.
+
+Given it's an active-low level-triggered interrupt with a pull-up requested by the acpi table, my theory is:
+
+* The interrupt line is driven open-drain by the peripheral
+* The pullup is not being correctly configured
+* It is slooooowly pulled up by leakage current of the GPIO input, hence the interrupt being cleared after 140-600ms
+
+Looking at traces and confirming by source code**, it seems that no code ever attempts to configure the pin's bias during the irq setup.
+
+Is this a bug, or should I be manually setting up the GPIO some other way before requesting the IRQ?
+
+Thanks
+- Jamie McClymont
+
+
+*Hardware details
+==============
+
+Laptop is a Huawei Matebook X Pro
+CPU is an Intel i5-8250U (the specific pinctrl is pinctrl_sunrisepoint)
+Fingerprint Sensor is a Goodix GXFP5187 (not well-documented anywhere, I'm working through reverse-engineering)
+
+** Tested on 5.9-rc8, but I've been reading the source of linux-next and haven't picked up on any relevant differences
