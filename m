@@ -2,85 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71584289BF7
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Oct 2020 00:57:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98BF5289EBD
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Oct 2020 08:51:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731960AbgJIW5b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Oct 2020 18:57:31 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:35977 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731374AbgJIW5b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Oct 2020 18:57:31 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 3E9BB9CD;
-        Fri,  9 Oct 2020 18:57:30 -0400 (EDT)
-Received: from imap22 ([10.202.2.72])
-  by compute4.internal (MEProxy); Fri, 09 Oct 2020 18:57:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiius.com; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=bp2eYG4YLUHguZwoiHmDTCq262GXQd0
-        ebFR7tf4ZmUc=; b=SIPs8478UfgvmdJXUysI40ckygpmJEEvRUIUxzpBTPw75uu
-        vNA1iHp0IFGEhaYqFEaTdsRCwz4biAiLhd/bokQ+PCK29sEDWlgAvGY1G1pQCOmG
-        kKrBUqdcODTgakcSH9SNuJU5ozz1AVQh3JOK0QCsRx++42fi1TOm/F5bdDB40cFK
-        KfqB3ZQATgl/TUtbXdkxvZqgQKvvQEIflX5G9ZDrCGGer7KD6axeYeu25pmh12EF
-        PJGbrEunxwx5MiqykZrNTiRNCG4+oP/VUXR3uZJK3YyQiE6fFcBaHUN8x2i7H/AC
-        X3LJI24SF2BjRBAw33ggLdKNPniZ0MUS2ccLj+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=bp2eYG
-        4YLUHguZwoiHmDTCq262GXQd0ebFR7tf4ZmUc=; b=Qa8Smgd20sVqu6hgiTxETG
-        bR/Tr63SDLPjHUTraMNIrX8ifZvx/PlMk2HPXPZ+pRndfAOTxAL9GFqar/4FJ+70
-        SO0oAHYDaO1LCwrK1cEOoGuaUwSVZN0YYzKVKKsirkWBeVsIEU83fMONK42+tceI
-        Glgpaq5ihHNyLWX224zsWHzQjAznp+jYyz9DjsD6KyNAZXxdT6yweWeSzyPlyeS6
-        PQ+jNRh4Pt4WadBTYdKCoykv3avT13wKPy7KLSvvxMxhwxyL1UO1PaCPniOsgOKL
-        1RHn3piX8/7/nkvP3+KJ1rXiP5Z5ukGe4VxHcH8BaR9RJ+9MvgY1Dz7ZrkAkwvCg
-        ==
-X-ME-Sender: <xms:2eqAX9DrvriM6yjnq3PhiH50OXDS24z_Qbw6YIplIRRFV4nq8jRIlQ>
-    <xme:2eqAX7hj3TxCDFV_mWJjPiyP9haiFuRk849Q3JJ5Vcv27DTGlGNtMhLRFcGsndlM4
-    6uRv56Trnt0qTc42Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrhedvgddujecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedflfgrmhhi
-    vgcuofgtvehlhihmohhnthdfuceojhgrmhhivgeskhifihhiuhhsrdgtohhmqeenucggtf
-    frrghtthgvrhhnpefgveevveduveelieeufefhvdffuefhvddutedthffhiefggedutdff
-    veefiefhhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehjrghmihgvsehkfihiihhushdrtghomh
-X-ME-Proxy: <xmx:2eqAX4kd20Zjy0q9z8dCmxYazMTKeiUWhqnThi-oZabCViUV4-tQxg>
-    <xmx:2eqAX3wVBFWBboVH6MhTpSUgwDvI5sKBkBk4_R8dwhGpn16RpgQbWQ>
-    <xmx:2eqAXyRSnnBGk_i4LNmkbyFinfV3x359KVhgK0a5v3NPf7Ny-FSaZw>
-    <xmx:2eqAX1LUIbmFiPvK4_8Ka0jRIWvanqIgtLa3A3lqyPjN5xZTJWn9dQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 5120A6680078; Fri,  9 Oct 2020 18:57:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-407-g461656c-fm-20201004.001-g461656c6
-Mime-Version: 1.0
-Message-Id: <0a6036c6-9e8a-4ec3-be3d-aaed6d2bc8f8@www.fastmail.com>
-In-Reply-To: <CAHp75Vd-P56=4PibajRcdnniy2pN6ZXoUP=FiJ1enrFzxKkojg@mail.gmail.com>
-References: <7102c0df-8d8b-4ef8-babf-a920ff11bcf8@www.fastmail.com>
- <CAHp75Vd-P56=4PibajRcdnniy2pN6ZXoUP=FiJ1enrFzxKkojg@mail.gmail.com>
-Date:   Sat, 10 Oct 2020 11:57:08 +1300
-From:   "Jamie McClymont" <jamie@kwiius.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Hans de Goede" <hdegoede@redhat.com>
-Subject: =?UTF-8?Q?Re:_Specifying_a_valid_pullup_value_for_pinctrl=5Fintel_from_a?=
- =?UTF-8?Q?n_ACPI_table?=
-Content-Type: text/plain
+        id S1727814AbgJJGvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Oct 2020 02:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbgJJGvT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Oct 2020 02:51:19 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7972FC0613CF
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Oct 2020 23:51:19 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id s81so262373oie.13
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Oct 2020 23:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=gQT8IlD7oQ6tQxlVdDbgVXFfWicJYkR7FYSawurArJpOEaSeDdsmAB/P+Pz7F03KDL
+         mO/sX2PzzwWaE5017Ef9ceVFUoEJlT9C+1ip18+HBd8eYrbC8466+NU0dMlYzhvOWwJm
+         fECfPE0Uu0PWmiAtbL1CRiA8eXMaREBVnrq41UqWQSuuvQEjJY5ktGSIMrOaILI6O7ne
+         MuONfVQnyb7HRiMZ8LCtcigtSK1czcpzQ/4ADkUih3DaVKo2AIx5qN7FyG/zQy78h9tL
+         3yHsMV6o6oVPrxCgBk74zhJKKFR2De8GWWvVN7n2LCBMducKYGc2ANcRFjJxncmYcp3+
+         14eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=R4dSEo1DUkBCd6PjQ6hkoFnCD+pEVYN+phtwW83e05grlzb2/pUofDUHc9bWkw/Mcq
+         kLaZxQlkO/wxdTRef7yI6YdyHYoZVsusk7dr6YBMor4Il/R9kQROoZ7KA5RZ1Go1U73m
+         PguHKqR17JgWzqjo2nlvSpxoh3TpcQZK2csH4us6JAvlIk8XThDUm+f0eDe/g8/cdcXK
+         8sMND2pyoPYj+yOTCCIe2WD76lP4UzTk7Slr/RStHeXtzMvNGlTNkLLvM66gmc0COT8Y
+         6j+zWLv3rVD88/hvRgpFnuAQEInlx6UzB5ZQjWf+GaSCcBx9SEeZw5dSGKnvU6WAGlIq
+         Imuw==
+X-Gm-Message-State: AOAM533FDzqt+tEaP6qynIonXlFMr5JBpZZ/ttzl6WdGAjBBPBFuITYL
+        Oll18ir+zZvnQkdUjxiUf2BXXVs4W5XOYfr+l+Q=
+X-Google-Smtp-Source: ABdhPJyOIDIsVgrawtME5q27UU3Dyr427ZVGEPnHgHSKZHrOzjbHpxS/txeH7LamvmeXJmISgMMRzGmyCRzNIC3Gw+M=
+X-Received: by 2002:aca:4e05:: with SMTP id c5mr5040761oib.99.1602312678653;
+ Fri, 09 Oct 2020 23:51:18 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:6838:fb13:0:0:0:0 with HTTP; Fri, 9 Oct 2020 23:51:18
+ -0700 (PDT)
+Reply-To: ayishagddafio@mail.ru
+From:   Aisha Gaddafi <aishagadafi0030@gmail.com>
+Date:   Fri, 9 Oct 2020 23:51:18 -0700
+Message-ID: <CAL3MLxt4g===yw9Qm7QZakN20eDH=9tCtYSLWr7ZgdsS7w+YeA@mail.gmail.com>
+Subject: Lieber Freund (Assalamu Alaikum),
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Hmm... Should be 0x105, otherwise 2 is an argument.
-> Can you confirm it's for real 0x205?
+--=20
+Lieber Freund (Assalamu Alaikum),
 
-Ah yes, you're right (I had the 2 in my head having converted it from the decimal 261)
+Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
+Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
+Mutter und eine Witwe
+mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
+hen
+Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
 
-> Fixing the driver would be the best.
-> Thanks for the report, I'm on it!
+Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
+f=C3=BCnfhunderttausend
+United State Dollar ($ 27.500.000.00) und ich brauche eine
+vertrauensw=C3=BCrdige Investition
+Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
+jedoch
+M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
+von
+Investitionsprojekten in Ihrem Land
+Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
+bauen.
 
-Fantastic, thank you!
+Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
+n und
+Unternehmensgewinn zu verhandeln
+Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
 
-- Jamie
+Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
+antworten Sie bitte dringend
+Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
+.
+
+Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
+esse (
+ayishagddafio@mail.ru ) zur weiteren Diskussion.
+
+Freundliche Gr=C3=BC=C3=9Fe
+Frau Aisha Al-Qaddafi
