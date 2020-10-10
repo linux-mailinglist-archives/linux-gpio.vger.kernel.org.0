@@ -2,162 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EACF28A381
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Oct 2020 01:09:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6CA28A257
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Oct 2020 00:57:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbgJJW47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Oct 2020 18:56:59 -0400
-Received: from aposti.net ([89.234.176.197]:48068 "EHLO aposti.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbgJJTZa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 10 Oct 2020 15:25:30 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH] pinctrl: ingenic: Fix invalid SSI pins
-Date:   Sat, 10 Oct 2020 21:25:09 +0200
-Message-Id: <20201010192509.9098-1-paul@crapouillou.net>
-In-Reply-To: <CACRpkda1B3LcGWc1PhXNgi-6JxapiKY4F_94c6dk4eBLgVGBJg@mail.gmail.com>
-References: <CACRpkda1B3LcGWc1PhXNgi-6JxapiKY4F_94c6dk4eBLgVGBJg@mail.gmail.com>
+        id S1731310AbgJJW5A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Oct 2020 18:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388035AbgJJUqm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Oct 2020 16:46:42 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E15FC0613D0
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Oct 2020 13:46:35 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r21so6946227pgj.5
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Oct 2020 13:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rE0dIynQwG6q4BairXo2itoxLJxN0IanlzP9BJTruT8=;
+        b=oHetx7Mqeqp7LEnWbTGOhD0LpJYZdj90r/hOX+JlxGataPliWkrUL0mCmN+BYL5wzV
+         wWlnr6G+IC6zj2N/w68VLBRFruYhIqt28+xciZGNIlJe3/6FlXVSxGcLTsJjg0EwljXw
+         eIkrDpZJ/DwgBOrJmY6yJVzN/BHD2/9kW93c2Cg3zrgjvfP675WwSJjLuWjUyUYAiMyN
+         r7s8tje0QbZTRoE1Vnc3isFFl8b06pDfNclE7Cu0eimHelLXKr1JqFL+xOO6B0OCfW5Y
+         Ul+7WelE7LPrq+IVeoyz8DKu9mgIR7U1mhcdTno4cMihRKlVPgAXQLuReUTGXWE9OS5O
+         8mHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rE0dIynQwG6q4BairXo2itoxLJxN0IanlzP9BJTruT8=;
+        b=WsOoKAmRDdXsk9SRK1TEyqWnNz5RHak0beGRbGY4sZNaun36Sm3nd5b3i3sy54iOfM
+         /onVRjTqkwLmXDdQ1IqYcX4myOEZyzW+ZLAlR4qbq/GJxEu+gz3Dq4rWJwB2C3rZVaYZ
+         D29TwVz74F7HiSvs/p0NY8IlDE7oFLTEiN7oLnGzujr5EZdK1EJ4Rpwvk3mwSHEMjiCK
+         NdlbIC3R+egzvIujjeCyZvYh+KR6jsYS/Oyl1x/xLpjmpukNPPTApggu+ntMtJOWKKFW
+         4Txm8y5vD9b14fgZ77ahxPld9tmgFjcel3VDZ5KjixzoEd7hBpUdTvDUdhw7oHf3vWM5
+         6w4w==
+X-Gm-Message-State: AOAM532hQPeH6IQw2CLL0clX71vKQ7+wh5/SRviQZ1b5qCJCOfbSZvaf
+        TQ4smtBMYZQTJjNpEPs8XmuUD9vYAy/Y+x9dzttKxv8vunz56A==
+X-Google-Smtp-Source: ABdhPJxcUtXxZb/uSx4VpzQqgiClJD+14t4ReNuOwhGQGNZWveGlYoVqlP9kcaZm/jlGtZHoiB4HuzrlgC/JITfHzFk=
+X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr12053061pjb.228.1602362794509;
+ Sat, 10 Oct 2020 13:46:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <778e96d4-1695-43ee-90d6-86cc34b20418@www.fastmail.com>
+In-Reply-To: <778e96d4-1695-43ee-90d6-86cc34b20418@www.fastmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 10 Oct 2020 23:46:18 +0300
+Message-ID: <CAHp75Vf2-4zX0rh5VtBze=so8nYDav3yOMuYTwodBNhvGmvQ4A@mail.gmail.com>
+Subject: Re: Configuring bias on an APCI GpioInt
+To:     Jamie McClymont <jamie@kwiius.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The values for the SSI pins on GPIO chips D and E were off by 0x20.
+On Sat, Oct 10, 2020 at 11:58 AM Jamie McClymont <jamie@kwiius.com> wrote:
+>
+> Hi again,
+>
+> I have run into a second GPIO issue while writing a driver for the fingerprint sensor in my laptop*, configured in the ACPI table like so:
+>
+>    Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
+>    {
+>        Name (RBUF, ResourceTemplate ()
+>        {
+>            // SPI
+>            SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, 0x08,
+>                ControllerInitiated, 0x00989680, ClockPolarityLow,
+>                ClockPhaseFirst, "\\_SB.PCI0.SPI1",
+>                0x00, ResourceConsumer, , Exclusive,
+>                )
+>
+>            // Interrupt
+>            GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+>                "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+>                )
+>                {   // Pin list
+>                    0x0000
+>                }
+>
+>            // Reset
+>            GpioIo (Exclusive, PullUp, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>                "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+>                )
+>                {   // Pin list
+>                    0x0008
+>                }
+>        })
+>        CreateWordField (RBUF, 0x3B, GPIN)
+>        CreateWordField (RBUF, 0x63, SPIN)
+>        GPIN = GNUM (0x02000017)
+>        SPIN = GNUM (0x0202000A)
+>        Return (RBUF) /* \_SB_.SPBA._CRS.RBUF */
+>    }
+>
+> I call devm_request_threaded_irq with the number provided in the irq field of the `struct spi_device` during the spi_probe.
+>
+> This configures the right IRQ number, and it triggers when it should, but it stays asserted for 140ms-600ms after it should have been cleared.
 
-Fixes: d3ef8c6b2286 ("pinctrl: Ingenic: Add SSI pins support for JZ4770 and JZ4780.")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reported-by: Artur Rojek <contact@artur-rojek.eu>
----
- drivers/pinctrl/pinctrl-ingenic.c | 72 +++++++++++++++----------------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+I was wondering how it works since it should have the same issue as
+with a regular GPIO. Now I understand that we simply ignore bias for
+GpioInt() resources. If you enable it, we come to the same issue. So,
+first we have to fix set bias followed by enabling it for GpioInt()
+resources.
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index c8e50a58a5e5..621909b01deb 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -635,44 +635,44 @@ static int jz4770_uart3_data_pins[] = { 0x6c, 0x85, };
- static int jz4770_uart3_hwflow_pins[] = { 0x88, 0x89, };
- static int jz4770_ssi0_dt_a_pins[] = { 0x15, };
- static int jz4770_ssi0_dt_b_pins[] = { 0x35, };
--static int jz4770_ssi0_dt_d_pins[] = { 0x55, };
--static int jz4770_ssi0_dt_e_pins[] = { 0x71, };
-+static int jz4770_ssi0_dt_d_pins[] = { 0x75, };
-+static int jz4770_ssi0_dt_e_pins[] = { 0x91, };
- static int jz4770_ssi0_dr_a_pins[] = { 0x14, };
- static int jz4770_ssi0_dr_b_pins[] = { 0x34, };
--static int jz4770_ssi0_dr_d_pins[] = { 0x54, };
--static int jz4770_ssi0_dr_e_pins[] = { 0x6e, };
-+static int jz4770_ssi0_dr_d_pins[] = { 0x74, };
-+static int jz4770_ssi0_dr_e_pins[] = { 0x8e, };
- static int jz4770_ssi0_clk_a_pins[] = { 0x12, };
- static int jz4770_ssi0_clk_b_pins[] = { 0x3c, };
--static int jz4770_ssi0_clk_d_pins[] = { 0x58, };
--static int jz4770_ssi0_clk_e_pins[] = { 0x6f, };
-+static int jz4770_ssi0_clk_d_pins[] = { 0x78, };
-+static int jz4770_ssi0_clk_e_pins[] = { 0x8f, };
- static int jz4770_ssi0_gpc_b_pins[] = { 0x3e, };
--static int jz4770_ssi0_gpc_d_pins[] = { 0x56, };
--static int jz4770_ssi0_gpc_e_pins[] = { 0x73, };
-+static int jz4770_ssi0_gpc_d_pins[] = { 0x76, };
-+static int jz4770_ssi0_gpc_e_pins[] = { 0x93, };
- static int jz4770_ssi0_ce0_a_pins[] = { 0x13, };
- static int jz4770_ssi0_ce0_b_pins[] = { 0x3d, };
--static int jz4770_ssi0_ce0_d_pins[] = { 0x59, };
--static int jz4770_ssi0_ce0_e_pins[] = { 0x70, };
-+static int jz4770_ssi0_ce0_d_pins[] = { 0x79, };
-+static int jz4770_ssi0_ce0_e_pins[] = { 0x90, };
- static int jz4770_ssi0_ce1_b_pins[] = { 0x3f, };
--static int jz4770_ssi0_ce1_d_pins[] = { 0x57, };
--static int jz4770_ssi0_ce1_e_pins[] = { 0x72, };
-+static int jz4770_ssi0_ce1_d_pins[] = { 0x77, };
-+static int jz4770_ssi0_ce1_e_pins[] = { 0x92, };
- static int jz4770_ssi1_dt_b_pins[] = { 0x35, };
--static int jz4770_ssi1_dt_d_pins[] = { 0x55, };
--static int jz4770_ssi1_dt_e_pins[] = { 0x71, };
-+static int jz4770_ssi1_dt_d_pins[] = { 0x75, };
-+static int jz4770_ssi1_dt_e_pins[] = { 0x91, };
- static int jz4770_ssi1_dr_b_pins[] = { 0x34, };
--static int jz4770_ssi1_dr_d_pins[] = { 0x54, };
--static int jz4770_ssi1_dr_e_pins[] = { 0x6e, };
-+static int jz4770_ssi1_dr_d_pins[] = { 0x74, };
-+static int jz4770_ssi1_dr_e_pins[] = { 0x8e, };
- static int jz4770_ssi1_clk_b_pins[] = { 0x3c, };
--static int jz4770_ssi1_clk_d_pins[] = { 0x58, };
--static int jz4770_ssi1_clk_e_pins[] = { 0x6f, };
-+static int jz4770_ssi1_clk_d_pins[] = { 0x78, };
-+static int jz4770_ssi1_clk_e_pins[] = { 0x8f, };
- static int jz4770_ssi1_gpc_b_pins[] = { 0x3e, };
--static int jz4770_ssi1_gpc_d_pins[] = { 0x56, };
--static int jz4770_ssi1_gpc_e_pins[] = { 0x73, };
-+static int jz4770_ssi1_gpc_d_pins[] = { 0x76, };
-+static int jz4770_ssi1_gpc_e_pins[] = { 0x93, };
- static int jz4770_ssi1_ce0_b_pins[] = { 0x3d, };
--static int jz4770_ssi1_ce0_d_pins[] = { 0x59, };
--static int jz4770_ssi1_ce0_e_pins[] = { 0x70, };
-+static int jz4770_ssi1_ce0_d_pins[] = { 0x79, };
-+static int jz4770_ssi1_ce0_e_pins[] = { 0x90, };
- static int jz4770_ssi1_ce1_b_pins[] = { 0x3f, };
--static int jz4770_ssi1_ce1_d_pins[] = { 0x57, };
--static int jz4770_ssi1_ce1_e_pins[] = { 0x72, };
-+static int jz4770_ssi1_ce1_d_pins[] = { 0x77, };
-+static int jz4770_ssi1_ce1_e_pins[] = { 0x92, };
- static int jz4770_mmc0_1bit_a_pins[] = { 0x12, 0x13, 0x14, };
- static int jz4770_mmc0_4bit_a_pins[] = { 0x15, 0x16, 0x17, };
- static int jz4770_mmc0_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
-@@ -1050,35 +1050,35 @@ static int jz4780_ssi0_dt_a_19_pins[] = { 0x13, };
- static int jz4780_ssi0_dt_a_21_pins[] = { 0x15, };
- static int jz4780_ssi0_dt_a_28_pins[] = { 0x1c, };
- static int jz4780_ssi0_dt_b_pins[] = { 0x3d, };
--static int jz4780_ssi0_dt_d_pins[] = { 0x59, };
-+static int jz4780_ssi0_dt_d_pins[] = { 0x79, };
- static int jz4780_ssi0_dr_a_20_pins[] = { 0x14, };
- static int jz4780_ssi0_dr_a_27_pins[] = { 0x1b, };
- static int jz4780_ssi0_dr_b_pins[] = { 0x34, };
--static int jz4780_ssi0_dr_d_pins[] = { 0x54, };
-+static int jz4780_ssi0_dr_d_pins[] = { 0x74, };
- static int jz4780_ssi0_clk_a_pins[] = { 0x12, };
- static int jz4780_ssi0_clk_b_5_pins[] = { 0x25, };
- static int jz4780_ssi0_clk_b_28_pins[] = { 0x3c, };
--static int jz4780_ssi0_clk_d_pins[] = { 0x58, };
-+static int jz4780_ssi0_clk_d_pins[] = { 0x78, };
- static int jz4780_ssi0_gpc_b_pins[] = { 0x3e, };
--static int jz4780_ssi0_gpc_d_pins[] = { 0x56, };
-+static int jz4780_ssi0_gpc_d_pins[] = { 0x76, };
- static int jz4780_ssi0_ce0_a_23_pins[] = { 0x17, };
- static int jz4780_ssi0_ce0_a_25_pins[] = { 0x19, };
- static int jz4780_ssi0_ce0_b_pins[] = { 0x3f, };
--static int jz4780_ssi0_ce0_d_pins[] = { 0x57, };
-+static int jz4780_ssi0_ce0_d_pins[] = { 0x77, };
- static int jz4780_ssi0_ce1_b_pins[] = { 0x35, };
--static int jz4780_ssi0_ce1_d_pins[] = { 0x55, };
-+static int jz4780_ssi0_ce1_d_pins[] = { 0x75, };
- static int jz4780_ssi1_dt_b_pins[] = { 0x3d, };
--static int jz4780_ssi1_dt_d_pins[] = { 0x59, };
-+static int jz4780_ssi1_dt_d_pins[] = { 0x79, };
- static int jz4780_ssi1_dr_b_pins[] = { 0x34, };
--static int jz4780_ssi1_dr_d_pins[] = { 0x54, };
-+static int jz4780_ssi1_dr_d_pins[] = { 0x74, };
- static int jz4780_ssi1_clk_b_pins[] = { 0x3c, };
--static int jz4780_ssi1_clk_d_pins[] = { 0x58, };
-+static int jz4780_ssi1_clk_d_pins[] = { 0x78, };
- static int jz4780_ssi1_gpc_b_pins[] = { 0x3e, };
--static int jz4780_ssi1_gpc_d_pins[] = { 0x56, };
-+static int jz4780_ssi1_gpc_d_pins[] = { 0x76, };
- static int jz4780_ssi1_ce0_b_pins[] = { 0x3f, };
--static int jz4780_ssi1_ce0_d_pins[] = { 0x57, };
-+static int jz4780_ssi1_ce0_d_pins[] = { 0x77, };
- static int jz4780_ssi1_ce1_b_pins[] = { 0x35, };
--static int jz4780_ssi1_ce1_d_pins[] = { 0x55, };
-+static int jz4780_ssi1_ce1_d_pins[] = { 0x75, };
- static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
- static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
- static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
+I will look closer at this next week.
+
+
+> Given it's an active-low level-triggered interrupt with a pull-up requested by the acpi table, my theory is:
+>
+> * The interrupt line is driven open-drain by the peripheral
+> * The pullup is not being correctly configured
+> * It is slooooowly pulled up by leakage current of the GPIO input, hence the interrupt being cleared after 140-600ms
+>
+> Looking at traces and confirming by source code**, it seems that no code ever attempts to configure the pin's bias during the irq setup.
+>
+> Is this a bug, or should I be manually setting up the GPIO some other way before requesting the IRQ?
+>
+> Thanks
+> - Jamie McClymont
+>
+>
+> *Hardware details
+> ==============
+>
+> Laptop is a Huawei Matebook X Pro
+> CPU is an Intel i5-8250U (the specific pinctrl is pinctrl_sunrisepoint)
+> Fingerprint Sensor is a Goodix GXFP5187 (not well-documented anywhere, I'm working through reverse-engineering)
+>
+> ** Tested on 5.9-rc8, but I've been reading the source of linux-next and haven't picked up on any relevant differences
+
+
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
