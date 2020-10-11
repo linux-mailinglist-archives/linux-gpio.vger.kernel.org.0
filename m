@@ -2,122 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFF6128A7EB
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Oct 2020 17:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27DA028A83F
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Oct 2020 18:30:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgJKPLm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Oct 2020 11:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730174AbgJKPLm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Oct 2020 11:11:42 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2FFC0613CE
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 08:11:42 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id e17so16009563wru.12
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 08:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=IQiAOpIicdDl63N9K5GYRrgI1FHgXBQgIn9VJVUpIkk=;
-        b=q4HQ3N2acdhdGPU+aQyLyHGmmoK7FK70S1U8990iVPDKJPmygj44ADj3vsUH5J/GY3
-         jLbH1RQAP0GVB0hiUaa5OTQK5D8UoLAINeAah5tgyvlfexIXt+2EYNeq+Cb1puZ3A+Rg
-         fUaSGGAh/5B7gBvDqYqgJQu/wW/Xn9UUu5FHA2FZNSvmCZY+xO3eCCAIw3FECW7Jd9yQ
-         utp9GqWEjZ+uvTxt6Mg1wzdMwejljksvtOknV7q8Hs/WUL/XWM0sNhXoF0j8Zg4o0KpT
-         +eqYKzX2a8HEBUeej9SO8ZZ5gDgEOK2LZYhPG7vNASpv37EXuv+1UbJKy0JFa56jm6g/
-         aCWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=IQiAOpIicdDl63N9K5GYRrgI1FHgXBQgIn9VJVUpIkk=;
-        b=Tt9MQzOuW8bB/D78g59kPrqsHhBwvQcvV+MMw0d8pp84XkCiu8Xzu0Sbwag/9dOf/j
-         t5G21sahl+5SFsdJIZYMzaAK5BvmPO9bITp8gD6JlQJDVuXXhqpdSRPoAU8F1CcJcwaz
-         9N9lv0VbmHLxc8zbOSOcCFF1SbVzmcOfisgLXIljGyYWlvSfVFwW8HXRO3SxkY7h1ec2
-         gunB1hUokMBUqssEJ5418xkfAiK9xY2gxSe/rjwYzjwcj7tMeU9ndu+PkRhbhwqKviyQ
-         AVM2XjuRV8O5Sl3IvH8u/sAf+73sBZjOgXbuSsRHIfr432q+tgMaay+T4R2GJkIb2Rbk
-         n/MA==
-X-Gm-Message-State: AOAM532X735Ig8V4mkb4qj/lMSjxlB3zNE4pO5zcaRbFazk/UYSRAieL
-        4SqyFFczI74vqkawfG+RHCEMDmtOhaEwL4izlwEIzONaMV8=
-X-Google-Smtp-Source: ABdhPJwEmy5oHcm4r7spya7uZydkNNsnFfD98gk/wmrZh+z3W0T7wfkfDpqc0RZ3tt/5uwGtJ0jeZfJ7rb90sqFHLPE=
-X-Received: by 2002:adf:e7c8:: with SMTP id e8mr26529860wrn.358.1602429099224;
- Sun, 11 Oct 2020 08:11:39 -0700 (PDT)
+        id S2388107AbgJKQaU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Oct 2020 12:30:20 -0400
+Received: from out28-148.mail.aliyun.com ([115.124.28.148]:59082 "EHLO
+        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388091AbgJKQaU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Oct 2020 12:30:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.613643-0.000133524-0.386224;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047212;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.Ihpxocg_1602433813;
+Received: from 192.168.1.6(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Ihpxocg_1602433813)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Mon, 12 Oct 2020 00:30:14 +0800
+Subject: Re: [PATCH] pinctrl: ingenic: Fix invalid SSI pins
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+References: <CACRpkda1B3LcGWc1PhXNgi-6JxapiKY4F_94c6dk4eBLgVGBJg@mail.gmail.com>
+ <20201010192509.9098-1-paul@crapouillou.net>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <f9834433-8905-c9a3-ac97-fc13ecc44a54@wanyeetech.com>
+Date:   Mon, 12 Oct 2020 00:30:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   Jack Winch <sunt.un.morcov@gmail.com>
-Date:   Sun, 11 Oct 2020 15:15:01 +0100
-Message-ID: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
-Subject: Suggestion - Configurable Source Clock Type for Line Event Timestamping
-To:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201010192509.9098-1-paul@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Folks,
+Hi Paul,
 
-I recently noticed that in Linux 5.7, gpiolib was changed such that
-line events are now timestamped using the system 'monotonic' clock
-rather than the system realtime clock.  The rationale for this change
-appears to be due to the major use-case of the line event timestamp
-data in relation to the nature of the system realtime clock (which can
-jump backwards or forwards in time due to adjustments by third-parties
-- e.g., NTP or PTP clients, etc).
+On 2020/10/11 上午3:25, Paul Cercueil wrote:
+> The values for the SSI pins on GPIO chips D and E were off by 0x20.
 
-For most users of the line event timestamp value, the use of the
-realtime clock could be problematic due to the potential for
-chronological line events to receive timestamp values with a
-non-chronological progression (resulting from adjustments being made
-to the clock).  This could be the source of a number of bugs,
-functional limitations and frustrations which was solved easily enough
-by transitioning to the use of the system monotonic clock.  That being
-said, I know there are users of the line event timestamp who actively
-rely on that value being obtained from the system realtime clock.
 
-My suggestion (which I would be happy to implement myself) is to allow
-users to select the clock to be used for line event timestamping on a
-per line handle basis.  The merit of this approach is that the
-appropriate clock type may be selected on a per line handle basis
-according to the needs of the user.  This of course has some
-implications which are not desirable without merit, but may be deemed
-acceptable in balance with the resultant functionality.  In summary,
-these are:
+My bad, I missed a group when calculating the offset. Thanks for fix that.
 
-1. Increase in processing overhead and latency of timestamp
-acquisition on line event interrupts.  Implementing the proposed
-change requires a function call to be made to the appropriate ktime
-accessor function, based on what the user has configured as the
-timestamp clock source.  In kernel versions from 5.7 to current, a
-call is made to the ktime_get_ns() function which is most likely
-inlined by the compiler.  This change will result in an actual jump
-having to be made, which will have processor and memory access
-overhead (potential I$ and D$ misses).  Then there is of course the
-overhead of resolving which function to call - either a switch
-statement or call by function pointer (probably the latter option).
+Reviewed-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
-2. Additions required to the userspace ABI.  Additional IOCTLs will be
-required for line handles, allowing the source clock type for line
-event timestamping to be get or set.
 
-3. Additions required to libgpiod.  The existing API will have to be
-added to in order to provide an abstraction for this new
-functionality.  This requires changes to the core C library, as well
-as the provided C++ and Python bindings (and their test cases).
-Changes will also be required to the WiP libgpiod service and its
-d-bus interface.  This change will also affect the proposed future
-lightweight libgpiod service.
-
-4. Documentation for both the GPIO subsystem and libgpiod will require
-updating.  This should be done as part of the effort to implement this
-functionality (if agreed upon) for the target version of the kernel
-and libgpiod.
-
-Such that applications now relying on the use of the 'monotonic'
-system clock for timestamping line events do not require modification
-after the implementation of this functionality (most applications), I
-propose the 'monotonic' system clock be the default source clock.  If
-the user wants to change this to another clock type, then they may do
-so via the proposed additional IOCTLs and / or the proposed changes to
-libgpiod.
-
-I would be interested in hearing your thoughts on this suggestion / proposal.
-
-~ Jack
+> Fixes: d3ef8c6b2286 ("pinctrl: Ingenic: Add SSI pins support for JZ4770 and JZ4780.")
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Reported-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>   drivers/pinctrl/pinctrl-ingenic.c | 72 +++++++++++++++----------------
+>   1 file changed, 36 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+> index c8e50a58a5e5..621909b01deb 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -635,44 +635,44 @@ static int jz4770_uart3_data_pins[] = { 0x6c, 0x85, };
+>   static int jz4770_uart3_hwflow_pins[] = { 0x88, 0x89, };
+>   static int jz4770_ssi0_dt_a_pins[] = { 0x15, };
+>   static int jz4770_ssi0_dt_b_pins[] = { 0x35, };
+> -static int jz4770_ssi0_dt_d_pins[] = { 0x55, };
+> -static int jz4770_ssi0_dt_e_pins[] = { 0x71, };
+> +static int jz4770_ssi0_dt_d_pins[] = { 0x75, };
+> +static int jz4770_ssi0_dt_e_pins[] = { 0x91, };
+>   static int jz4770_ssi0_dr_a_pins[] = { 0x14, };
+>   static int jz4770_ssi0_dr_b_pins[] = { 0x34, };
+> -static int jz4770_ssi0_dr_d_pins[] = { 0x54, };
+> -static int jz4770_ssi0_dr_e_pins[] = { 0x6e, };
+> +static int jz4770_ssi0_dr_d_pins[] = { 0x74, };
+> +static int jz4770_ssi0_dr_e_pins[] = { 0x8e, };
+>   static int jz4770_ssi0_clk_a_pins[] = { 0x12, };
+>   static int jz4770_ssi0_clk_b_pins[] = { 0x3c, };
+> -static int jz4770_ssi0_clk_d_pins[] = { 0x58, };
+> -static int jz4770_ssi0_clk_e_pins[] = { 0x6f, };
+> +static int jz4770_ssi0_clk_d_pins[] = { 0x78, };
+> +static int jz4770_ssi0_clk_e_pins[] = { 0x8f, };
+>   static int jz4770_ssi0_gpc_b_pins[] = { 0x3e, };
+> -static int jz4770_ssi0_gpc_d_pins[] = { 0x56, };
+> -static int jz4770_ssi0_gpc_e_pins[] = { 0x73, };
+> +static int jz4770_ssi0_gpc_d_pins[] = { 0x76, };
+> +static int jz4770_ssi0_gpc_e_pins[] = { 0x93, };
+>   static int jz4770_ssi0_ce0_a_pins[] = { 0x13, };
+>   static int jz4770_ssi0_ce0_b_pins[] = { 0x3d, };
+> -static int jz4770_ssi0_ce0_d_pins[] = { 0x59, };
+> -static int jz4770_ssi0_ce0_e_pins[] = { 0x70, };
+> +static int jz4770_ssi0_ce0_d_pins[] = { 0x79, };
+> +static int jz4770_ssi0_ce0_e_pins[] = { 0x90, };
+>   static int jz4770_ssi0_ce1_b_pins[] = { 0x3f, };
+> -static int jz4770_ssi0_ce1_d_pins[] = { 0x57, };
+> -static int jz4770_ssi0_ce1_e_pins[] = { 0x72, };
+> +static int jz4770_ssi0_ce1_d_pins[] = { 0x77, };
+> +static int jz4770_ssi0_ce1_e_pins[] = { 0x92, };
+>   static int jz4770_ssi1_dt_b_pins[] = { 0x35, };
+> -static int jz4770_ssi1_dt_d_pins[] = { 0x55, };
+> -static int jz4770_ssi1_dt_e_pins[] = { 0x71, };
+> +static int jz4770_ssi1_dt_d_pins[] = { 0x75, };
+> +static int jz4770_ssi1_dt_e_pins[] = { 0x91, };
+>   static int jz4770_ssi1_dr_b_pins[] = { 0x34, };
+> -static int jz4770_ssi1_dr_d_pins[] = { 0x54, };
+> -static int jz4770_ssi1_dr_e_pins[] = { 0x6e, };
+> +static int jz4770_ssi1_dr_d_pins[] = { 0x74, };
+> +static int jz4770_ssi1_dr_e_pins[] = { 0x8e, };
+>   static int jz4770_ssi1_clk_b_pins[] = { 0x3c, };
+> -static int jz4770_ssi1_clk_d_pins[] = { 0x58, };
+> -static int jz4770_ssi1_clk_e_pins[] = { 0x6f, };
+> +static int jz4770_ssi1_clk_d_pins[] = { 0x78, };
+> +static int jz4770_ssi1_clk_e_pins[] = { 0x8f, };
+>   static int jz4770_ssi1_gpc_b_pins[] = { 0x3e, };
+> -static int jz4770_ssi1_gpc_d_pins[] = { 0x56, };
+> -static int jz4770_ssi1_gpc_e_pins[] = { 0x73, };
+> +static int jz4770_ssi1_gpc_d_pins[] = { 0x76, };
+> +static int jz4770_ssi1_gpc_e_pins[] = { 0x93, };
+>   static int jz4770_ssi1_ce0_b_pins[] = { 0x3d, };
+> -static int jz4770_ssi1_ce0_d_pins[] = { 0x59, };
+> -static int jz4770_ssi1_ce0_e_pins[] = { 0x70, };
+> +static int jz4770_ssi1_ce0_d_pins[] = { 0x79, };
+> +static int jz4770_ssi1_ce0_e_pins[] = { 0x90, };
+>   static int jz4770_ssi1_ce1_b_pins[] = { 0x3f, };
+> -static int jz4770_ssi1_ce1_d_pins[] = { 0x57, };
+> -static int jz4770_ssi1_ce1_e_pins[] = { 0x72, };
+> +static int jz4770_ssi1_ce1_d_pins[] = { 0x77, };
+> +static int jz4770_ssi1_ce1_e_pins[] = { 0x92, };
+>   static int jz4770_mmc0_1bit_a_pins[] = { 0x12, 0x13, 0x14, };
+>   static int jz4770_mmc0_4bit_a_pins[] = { 0x15, 0x16, 0x17, };
+>   static int jz4770_mmc0_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
+> @@ -1050,35 +1050,35 @@ static int jz4780_ssi0_dt_a_19_pins[] = { 0x13, };
+>   static int jz4780_ssi0_dt_a_21_pins[] = { 0x15, };
+>   static int jz4780_ssi0_dt_a_28_pins[] = { 0x1c, };
+>   static int jz4780_ssi0_dt_b_pins[] = { 0x3d, };
+> -static int jz4780_ssi0_dt_d_pins[] = { 0x59, };
+> +static int jz4780_ssi0_dt_d_pins[] = { 0x79, };
+>   static int jz4780_ssi0_dr_a_20_pins[] = { 0x14, };
+>   static int jz4780_ssi0_dr_a_27_pins[] = { 0x1b, };
+>   static int jz4780_ssi0_dr_b_pins[] = { 0x34, };
+> -static int jz4780_ssi0_dr_d_pins[] = { 0x54, };
+> +static int jz4780_ssi0_dr_d_pins[] = { 0x74, };
+>   static int jz4780_ssi0_clk_a_pins[] = { 0x12, };
+>   static int jz4780_ssi0_clk_b_5_pins[] = { 0x25, };
+>   static int jz4780_ssi0_clk_b_28_pins[] = { 0x3c, };
+> -static int jz4780_ssi0_clk_d_pins[] = { 0x58, };
+> +static int jz4780_ssi0_clk_d_pins[] = { 0x78, };
+>   static int jz4780_ssi0_gpc_b_pins[] = { 0x3e, };
+> -static int jz4780_ssi0_gpc_d_pins[] = { 0x56, };
+> +static int jz4780_ssi0_gpc_d_pins[] = { 0x76, };
+>   static int jz4780_ssi0_ce0_a_23_pins[] = { 0x17, };
+>   static int jz4780_ssi0_ce0_a_25_pins[] = { 0x19, };
+>   static int jz4780_ssi0_ce0_b_pins[] = { 0x3f, };
+> -static int jz4780_ssi0_ce0_d_pins[] = { 0x57, };
+> +static int jz4780_ssi0_ce0_d_pins[] = { 0x77, };
+>   static int jz4780_ssi0_ce1_b_pins[] = { 0x35, };
+> -static int jz4780_ssi0_ce1_d_pins[] = { 0x55, };
+> +static int jz4780_ssi0_ce1_d_pins[] = { 0x75, };
+>   static int jz4780_ssi1_dt_b_pins[] = { 0x3d, };
+> -static int jz4780_ssi1_dt_d_pins[] = { 0x59, };
+> +static int jz4780_ssi1_dt_d_pins[] = { 0x79, };
+>   static int jz4780_ssi1_dr_b_pins[] = { 0x34, };
+> -static int jz4780_ssi1_dr_d_pins[] = { 0x54, };
+> +static int jz4780_ssi1_dr_d_pins[] = { 0x74, };
+>   static int jz4780_ssi1_clk_b_pins[] = { 0x3c, };
+> -static int jz4780_ssi1_clk_d_pins[] = { 0x58, };
+> +static int jz4780_ssi1_clk_d_pins[] = { 0x78, };
+>   static int jz4780_ssi1_gpc_b_pins[] = { 0x3e, };
+> -static int jz4780_ssi1_gpc_d_pins[] = { 0x56, };
+> +static int jz4780_ssi1_gpc_d_pins[] = { 0x76, };
+>   static int jz4780_ssi1_ce0_b_pins[] = { 0x3f, };
+> -static int jz4780_ssi1_ce0_d_pins[] = { 0x57, };
+> +static int jz4780_ssi1_ce0_d_pins[] = { 0x77, };
+>   static int jz4780_ssi1_ce1_b_pins[] = { 0x35, };
+> -static int jz4780_ssi1_ce1_d_pins[] = { 0x55, };
+> +static int jz4780_ssi1_ce1_d_pins[] = { 0x75, };
+>   static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
+>   static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
+>   static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
