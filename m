@@ -2,125 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 633B028B615
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 15:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A98C428B980
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 16:01:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgJLNWu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Oct 2020 09:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56538 "EHLO
+        id S2390407AbgJLOA6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Oct 2020 10:00:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgJLNWu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 09:22:50 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB4DC0613D0
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 06:22:50 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o9so8565536plx.10
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 06:22:50 -0700 (PDT)
+        with ESMTP id S1731400AbgJLNjd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 09:39:33 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4141DC0613D0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 06:39:33 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id t7so14740060ilf.10
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 06:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fUeVLC9cYxOn9RahTZ6DfnJMAyMvslD7/O6X0pGp96w=;
-        b=B/TqMCBFsnTFUj280pqZexsR9dg1wdh3gDQ1ZIk4lkwjnrFNVkawmmvqqDUzmVDlFz
-         s/PfgIMIn1hML1Mkx/bhr5nMLI404J9fbGIkdvAWfnOJF8lcI4ySZ2JUgM1HWuhTwKR9
-         jQ3fZHTIaA6bNq6qkjSGxZFUu3CUBpk70tJhE4klQytM0GDTJP0/QNTZyVsmGb75qxrE
-         2yfIsVMrEhth7jUgq+euG2Nij1gvJMyoLg+Kctl0eTB3kDcSY332AZkBSHrRuparo3Ow
-         /yGH9cGJTk+qTHL1eYE16kSNfSyeaBfXqoHTmT20DXAtZ4+yQ4ZYBQiIUL9W1ttf5iv2
-         T9FA==
+         :cc;
+        bh=hNRDWGiKYqMQidlnoAE3BOP7fP2lQ+QUMyU4eaVA5RY=;
+        b=bv+dfPkKeeIPGcSOUTnd0nTH94tF4kM+6s7N3PiGDsBxEEDQYN+Gded5BdIWtVgQ48
+         tqzYgUKqPLzkk67m+uzUEMxqYnLAnGFYcRHGbDqztWeulwuMArqXfvXq5mGObBaKIFSK
+         TnDHU/cGKpXXMSaemBAEFxrLWXOXF590ASrl5TQpO2LS2/O/zNDYgE2RJGj2PhI9N0Z2
+         BQhAwB7ESpykOxVEZd7EJwcczbeWi+ke5p39B8ru23G3xz7E9rf5ghxjilYwb0SpvucX
+         Qi+YogSdLE+jEAkvRi0Bi7stpLYmX3nEA9xveKB1iOUyaq/Y6U1I1cfNWyyY/xfd5Yyx
+         xqaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fUeVLC9cYxOn9RahTZ6DfnJMAyMvslD7/O6X0pGp96w=;
-        b=oxEowyamRGMB6WnSekoaiZR8PbyEvVV0jwU7jfYH9SMxHkfZ9xPltOEKDXD9n66cw0
-         3foMEhoWmilJCthNlFVCxi0UJ5XOVJ1Q+En0t++1mkeHRml/yOLVcbKsfhWgYDF9xaoF
-         uYkJJczii93aNBROy4Ztw7zqKdYU83vjVN5ZPuYtj3ZjjSz+fWUCEgTvnr1orgdIktD4
-         07EdwgDHrLgrUoYIZvpXg8ZvXoiDLC+qWW5Qss17YnHY7TGspI/Xmvxq0tvnnpx3kFMO
-         o3wtODdVgVYMICR64ePV/cNeuZYEFzGKDEuWBWOA5GvY78hMPNKpenN1X6M0KgBrQbFN
-         x3Ww==
-X-Gm-Message-State: AOAM530CdBlrBsnRVWGmI+UeB6GTz9mZjeDFdOT1XHFd79mssutlDEhc
-        heVgRPQu0rMwIi6Ao367KIyVsSeJIJ7z7sKJSorNsQpjf0nw9A==
-X-Google-Smtp-Source: ABdhPJz3F1wDDaVCefg89pC+syP70tkTSngT6eeeX7roqE5efHkONz2n4iKBW1a16tMI2c6hxwp01l6RVZ6lKFXuKGY=
-X-Received: by 2002:a17:902:ea8c:b029:d2:8abd:c8de with SMTP id
- x12-20020a170902ea8cb02900d28abdc8demr24275857plb.21.1602508969747; Mon, 12
- Oct 2020 06:22:49 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=hNRDWGiKYqMQidlnoAE3BOP7fP2lQ+QUMyU4eaVA5RY=;
+        b=bg3M20tVbgBdxq1wcmNSKTyBctCO5SQWP1tuFk6cfA/zL4sWC2rUGjJuLFXRvc0k3l
+         EHRjBW5StntcVpHYPPYC7JQMEEX+JGXDDQLeETSsfxXC8OrccZ0CJCVPGBryIVkclm9h
+         1upGGzpoNIVxMcmtP0IsAM1wFrsVz4rPTkQ1SVPuweZsGTdShMXC5a4hLpR5CLE4bmba
+         arGbtLz/iKOYnXYO8tJLsSR0n0vETd2HggB72hdx3IB9f9lU5G7OIEF4PiOgL51IzuMX
+         W/kxvX6t4PU6g2oSfChg8GgYMtOQT2UZog53SSE+w7VhP8FbHfPuyofSJhx5N6jf5h1r
+         kylA==
+X-Gm-Message-State: AOAM530eslIsTvLk5eN3t59VneHydnGQqk09EM0MKfjtMyy9S9XKLkxb
+        gO6a7SAZHSTs+lOPgzFLtywgdaEPjqRueVJ5ZROqaQ==
+X-Google-Smtp-Source: ABdhPJwv4mGRpN/8KAQzTc7MJ5azcz9HvylR+F/kPU+9a1Tt4Ia1gG1nPOXrAC468y9R/gZtaO7coccM+XouxdJb4ag=
+X-Received: by 2002:a92:ca92:: with SMTP id t18mr19306698ilo.287.1602509972447;
+ Mon, 12 Oct 2020 06:39:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009180856.4738-1-andriy.shevchenko@linux.intel.com> <dadaf399-03cc-1512-8208-76565ab257a7@geanix.com>
-In-Reply-To: <dadaf399-03cc-1512-8208-76565ab257a7@geanix.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 12 Oct 2020 16:23:39 +0300
-Message-ID: <CAHp75Vd-Hw8Ewa+F-tOuxdadL7BhfC5HDSvMFuwuZzq2MwVcnA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: mcp23s08: Use full chunk of memory for
- regmap configuration
-To:     =?UTF-8?Q?Martin_Hundeb=C3=B8ll?= <martin@geanix.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
+ <CAMRc=Mch42qdf8Z6FSOutGkcB79ScBi-bidwA5P2s9WhiyRaHg@mail.gmail.com> <CAFhCfDbtK=d6PJHSfYFnt17vqC=TzbWD3reFYgM8WBXgS9gUYA@mail.gmail.com>
+In-Reply-To: <CAFhCfDbtK=d6PJHSfYFnt17vqC=TzbWD3reFYgM8WBXgS9gUYA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 12 Oct 2020 15:39:21 +0200
+Message-ID: <CAMRc=MdCWsdRm5eiti6ZHHxZ1UJ3+0+acTdcrE_pq5hmhV7xNg@mail.gmail.com>
+Subject: Re: Suggestion - Configurable Source Clock Type for Line Event Timestamping
+To:     Jack Winch <sunt.un.morcov@gmail.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 12, 2020 at 2:56 PM Martin Hundeb=C3=B8ll <martin@geanix.com> w=
-rote:
+On Mon, Oct 12, 2020 at 1:01 PM Jack Winch <sunt.un.morcov@gmail.com> wrote:
 >
-> Hi Linus,
+
+[snip]
+
 >
-> You can add my
-> Tested-by: Martin Hundeb=C3=B8ll <martin@geanix.com>
-
-Thank you!
-Linus, below more typo fixes, but I'm not going to send a new version
-(until you explicitly require), so please take them into consideration
-when applying.
-
-> Thanks,
-> Martin
+> > We still haven't released uAPI v2 so I'm open to some last-minute
+> > changes if they make sense (as you explained in the other email about
+> > in-kernel timestamping) and are posted soon (before rc3-rc4). I'd like
+> > to hear Arnd's opinion on this first though.
 >
-> On 09/10/2020 20.08, Andy Shevchenko wrote:
-> > It appears that simplification of mcp23s08_spi_regmap_init() made
-> > a regression due to wrong size calculation for dev_kmemdup() call.
+>
+> What's the timescales for this?  As I would be doing this in a
+> personal capacity, I will likely have to look at this over a couple of
+> weeks.  I would also be limited to testing on an ARMv8 platform, as I
+> currently have limited access to hardware.
+>
 
-> > It mises the fact that config variable is already a pointer, thus
+It would be 3-4 weeks from now.
 
-mises -> misses
+In terms of effort: it doesn't look too complicated. It looks like we
+need to add a new flag to the uAPI:
+GPIO_V2_LINE_FLAG_EDGE_CLOCK_REALTIME which would make the edge
+detector use the real-time clock. I wouldn't stress too much about the
+performance of obtaining the timestamp - it's probably negligible
+compared to passing the event struct over to user-space.
 
-> > the sizeof() calculation is wrong and only 4 or 8 bytes were copied.
-> >
-> > Fix the parameters to devm_kmemdup() to copy full chunk of memory.
+Kent does the above look right?
 
-copy full -> copy a full
+Bart
 
-> >
-> > Fixes: 0874758ecb2b ("pinctrl: mcp23s08: Refactor mcp23s08_spi_regmap_i=
-nit()")
-> > Reported-by: Martin Hundeb=C3=B8ll <martin@geanix.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > v2: fixed few typos in the commit message
-> >   drivers/pinctrl/pinctrl-mcp23s08_spi.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/p=
-inctrl-mcp23s08_spi.c
-> > index 1f47a661b0a7..7c72cffe1412 100644
-> > --- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-> > +++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-> > @@ -119,7 +119,7 @@ static int mcp23s08_spi_regmap_init(struct mcp23s08=
- *mcp, struct device *dev,
-> >               return -EINVAL;
-> >       }
-> >
-> > -     copy =3D devm_kmemdup(dev, &config, sizeof(config), GFP_KERNEL);
-> > +     copy =3D devm_kmemdup(dev, config, sizeof(*config), GFP_KERNEL);
-> >       if (!copy)
-> >               return -ENOMEM;
-> >
-> >
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+[snip]
