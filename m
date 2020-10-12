@@ -2,213 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB4228AD5F
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 06:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 182D428AD7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 07:06:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725917AbgJLExU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Oct 2020 00:53:20 -0400
-Received: from mail-eopbgr1300124.outbound.protection.outlook.com ([40.107.130.124]:48148
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725967AbgJLExT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Oct 2020 00:53:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sfa0sAin+BBiKud1F+iBhP1Kn1YRqkWVE5AmHwuvJF9FWB8w37pUoEL9nEuzW+8qp/piMwxoXICTaHhzTULX+5OFTme88Z/qPExzeavCT53J8H12Wp0Q9KEqcr9oTv092zJwiTLYtz4dPmxQ1l/Q3GNTJSSmc5RyGwvQmSdVnEBVTYLrflBetbHlpeUbbJA4QyIVRSog7cyLisigPHRdE48nXz1fnk17wVuWDXVw6tvt2/u95oiFKd44DLaRsbYa+w988nMx/q7NDHTKMaTAaX2GgmyhPR0Tg/p+eOMDpsxPyRzTKzUcVdWg3KjQLSTsT3ZA1MtoD4QMPU3VCJgBRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n4P1Nex+nyUobxhIhKQ1pBa/+2FHLi5LfVa/01nJx7g=;
- b=QEE7l/Y25Lxf0q2jpusHjCCbhJMGScL5HJ+zwpWankRIA7bIJMYrQJnWlBk3GTCtI4ZQX3PJU8EaUD5QdFWo4C2HX0PYSqsPzbJlC5cBRg3ZYVGpDmhbZVqbw3mIikkbD/yoRrf0DkaQS8HVZsEpMK1r4mpEDoe+tm67ZU5sUSGUD6l0JFoDJBI9eXJpdrx+Qzzmc103/NBHIpAtR/FKc4Rjzhy0bTC4t5l1gvKo55vukT6wR4NIXZY/RXUZBXlcjaD22+YMDDlup+2JMozbSIcvbUw+y4iV190GhANxcnYNWRWYlKAbajq70KI5e26KnhJJirUuz2q4MhDNU9LTSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-Received: from PU1PR06MB2167.apcprd06.prod.outlook.com (2603:1096:803:39::19)
- by PS1PR06MB2728.apcprd06.prod.outlook.com (2603:1096:803:4c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.23; Mon, 12 Oct
- 2020 04:53:12 +0000
-Received: from PU1PR06MB2167.apcprd06.prod.outlook.com
- ([fe80::3023:8294:4f07:1b52]) by PU1PR06MB2167.apcprd06.prod.outlook.com
- ([fe80::3023:8294:4f07:1b52%4]) with mapi id 15.20.3455.029; Mon, 12 Oct 2020
- 04:53:12 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     Joel Stanley <joel@jms.id.au>
-CC:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH 2/3] Arm: dts: aspeed-g6: Add sgpio node
-Thread-Topic: [PATCH 2/3] Arm: dts: aspeed-g6: Add sgpio node
-Thread-Index: AQHWoEhBwSiLEm6tVE+FL1KRatzAYKmTYZGAgACLJoA=
-Date:   Mon, 12 Oct 2020 04:53:12 +0000
-Message-ID: <E0B8BD13-86F6-486E-95DF-1038D7F59A8B@aspeedtech.com>
-References: <20201012033150.21056-1-billy_tsai@aspeedtech.com>
- <20201012033150.21056-3-billy_tsai@aspeedtech.com>
- <CACPK8XdYvSmwdAkBzAO3kC8_PYa3CtPkNb0VxcOhmb2UYz5zDA@mail.gmail.com>
-In-Reply-To: <CACPK8XdYvSmwdAkBzAO3kC8_PYa3CtPkNb0VxcOhmb2UYz5zDA@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: jms.id.au; dkim=none (message not signed)
- header.d=none;jms.id.au; dmarc=none action=none header.from=aspeedtech.com;
-x-originating-ip: [211.20.114.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b408234-96b7-4667-14a4-08d86e6ab93b
-x-ms-traffictypediagnostic: PS1PR06MB2728:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PS1PR06MB27282B7F088B0A6CC2EB8C438B070@PS1PR06MB2728.apcprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NFnyRfTh1tTeTaXHVcUvegy6K2cu2oMzTCJYmcZ0CLjhE6iEpuiKNezhLTJHIlUTL/gcRfu7VKaLYhFbRnYkWBCR9GwOWCMDgZHDK8igbybhQHu6K/67uez7ppgnH+y1fBZE99cyMo2e3ckhuizgzNSNhJOPh4WqcDA2Z8/zUqPVu2IW4BW+Lgq4d8FAKMBYtYWZzsORSc7Ht91tOuJv5LRHhQT/EEorxupiR27haFGHKU1qHcxVUw+FRJ4gL1PcTCuR4gBZv4Zzk75S1qfHAuwQe0ZCQbh5zk8OsbKpYtE1O0cdKUi6zvobBTpGxeJj
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PU1PR06MB2167.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(346002)(136003)(396003)(376002)(366004)(83380400001)(4326008)(186003)(2906002)(71200400001)(66476007)(66946007)(66446008)(8676002)(5660300002)(6506007)(91956017)(64756008)(66556008)(55236004)(86362001)(33656002)(53546011)(76116006)(478600001)(316002)(2616005)(8936002)(6486002)(54906003)(36756003)(26005)(6916009)(6512007)(7416002)(107886003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ZfPF8MUjqZ/wl2AW+INoE08b3zzPLWKAyg7J5hsXuo6m+gpqARE347vkGvQbGO1PUCwHQBor9/w6XP4a41opJPa/hE2chkYuX6CNpg730N53+zPElbYxaJtejvDIZuQF1HoP9sCDRTwbQqpKqO8fL2xNkfdHNBJ8uDE9xmupIqx3CNUtczHQS0Pbgt4XPDAdh1FOF3uBpkbGiiTYZTGUT9M1OKsIEBrRGOgBbzp3oIHETahW197M9GQ3S/lPgUbmiIDlTydKf9UG7lwykeEbRt6wPng0xZHffxSqBrk+24R4/qdQjzyHSDy7ScUqmdmzpwrtncNAiy3BkDpODbE56yxDxkXfSEt0Z6fS0oV/cfgBdBHLrDyKDlXhEaWfjTiUj0pWtk+VUMtouSqHPgWqcqn76fRP2kRPjKhNsXbZ/phURTi7WCSmjgAkapfvTRC4YKA6eOXcw7mf3U9am25HL2XmUaFWMJt3Ox+7V/bdh8aZScaV2zWlvyH7TTrUYBE5M36/u7nLpn3Te2lLynu0F2MSSszsK5t51JCbKk7IfYYCdCGFfAVd2ZjCb4LzX5LTE/eKJnvFcx8Zlxw7VoXPf9FE+0vwED0ZNxxFxWkomzemWO2y7ae7PM2BQE953Gg91wHchtjGhrr+2Ml5sNc6rA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23CDC9277CBEF1438C63C4199B840BE9@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726130AbgJLFGh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Oct 2020 01:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbgJLFGg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 01:06:36 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0073C0613CE
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 22:06:36 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 144so12437819pfb.4
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 22:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JfnZseE44/VJaHDaIDHb7iTXzL4MBFhUtmodyI9eISk=;
+        b=d09Cf2x+5VmfMhzLkcjIQ6N3xe/Khf8xHtrrd/UGENSGrgE+Ori8BNK2rhRdher+1P
+         +14n8JYJzAtg8TtU7mxEOMe4Z3QyGsWevRz9Je8V0cbSHA6AHLkRtiw++kB04m8Xxczp
+         DyTvDDZqpjrN9wQxqq1Ltl+oTSDBCQRlYhAmYE0lOShp8oSCtLlDxc8kxp9+/v5JEFke
+         U3gj0Bcz4lMsYuxAcddg7tMXG/X1lUmbEuGf9hzMy4h6Y4ulh8kMonZDuMFRxZTa+pJj
+         aP03YjmNzCggOCAyar2Shtvn/LuI/NZT5w0tz4fWIkD3oRD5eoYUWL00WWePvh9I9Lin
+         HzMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JfnZseE44/VJaHDaIDHb7iTXzL4MBFhUtmodyI9eISk=;
+        b=M9aZSqMIJcNU9MXu5s5cV3CpPyhd4veAGoaLGt2wUfkrgfkCTM49+4S1xcx4Rw7VQp
+         C04VjHLEnu3XQ4a51ee8zAV75DFjUsXxrvazjuAvZ+dUTqSAnsGZ4Cw7hRQkOuTf9hqK
+         TZ67vxm+CvZcD6pkZiftidZoU+M3iI5abU2hOq9qeUgTnVhQhANIq9Jr8+prL2MewHul
+         q7r3SQqHw6f9jQJYL45dYrCbELHelaoqHMbttuAoBqytRXOv/pKFoLj3XqEqSMt09hi4
+         o+Z+GD/iGN7Ub8sKmw7Ee9Ty5tCkoHbkUwd88Fv6B+rFzkRXL4Jy4Kq2q6OdOTpZdUaG
+         bNCw==
+X-Gm-Message-State: AOAM5325jvuDnAVOJqu+bNAJYTDNZOuYn7l+FI8E8lPy95j9bhPEdO19
+        BektW66dUZo/QPlCtaA6ya4xo9fDo/ZjLQ==
+X-Google-Smtp-Source: ABdhPJy+B8Tqow/OmcK3F1/g44BryYk8Jk7WwHnLYDJLfjUokWA6XtFwq+c8XR4R/5QMg5PU/63M3g==
+X-Received: by 2002:a17:90a:ab86:: with SMTP id n6mr4544846pjq.82.1602479196190;
+        Sun, 11 Oct 2020 22:06:36 -0700 (PDT)
+Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
+        by smtp.gmail.com with ESMTPSA id k9sm17375552pfc.96.2020.10.11.22.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Oct 2020 22:06:35 -0700 (PDT)
+Date:   Mon, 12 Oct 2020 13:06:31 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Jack Winch <sunt.un.morcov@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Subject: Re: Suggestion - Configurable Source Clock Type for Line Event
+ Timestamping
+Message-ID: <20201012050631.GA14076@sol>
+References: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PU1PR06MB2167.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b408234-96b7-4667-14a4-08d86e6ab93b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2020 04:53:12.4481
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w9kmmEMXh7HdBPaemKvOHacSFxOoX3CD8NkCQSyrKZCTkl8kxPZiKfcBDq5wsu+d6RXkY+N7ctuH3x+ijwssZX6GNBPktStEUZv9qyH00dY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PS1PR06MB2728
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgSm9lbCwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQpPbiAyMDIwLzEwLzEyLCAxMjoz
-NSBQTSwgSm9lbCBTdGFubGV5IHdyb3RlOg0KDQogICAgPiBPbiBNb24sIDEyIE9jdCAyMDIwIGF0
-IDAzOjMyLCBCaWxseSBUc2FpIDxiaWxseV90c2FpQGFzcGVlZHRlY2guY29tPiB3cm90ZToNCiAg
-ICA+ID4NCiAgICA+ID4gVGhpcyBwYXRjaCBpcyB1c2VkIHRvIGFkZCBzZ3Bpb20gYW5kIHNncGlv
-cyBub2RlcyBhbmQgYWRkIGNvbXBhdGlibGUNCiAgICA+ID4gc3RyaW5nIGZvciBzZ3Bpb20uDQog
-ICAgPiANCiAgICA+IFlvdSBhbHNvIG5lZWQgdG8gYWRkIHNncGlvcyBkb2N1bWVudGF0aW9uIHRv
-IHRoZSBiaW5kaW5ncyBkb2NzLg0KICAgID4gDQogICAgPiBXaGVuZXZlciB5b3UgYWRkIG5ldyBk
-ZXZpY2UgdHJlZSBiaW5kaW5ncyB0byB0aGUga2VybmVsIHRyZWUgeW91DQogICAgPiBzaG91bGQg
-YWRkIGRvY3VtZW50YXRpb24gZm9yIHRoZW0uDQogICAgPiANCiAgICA+IFdoZW4gcHJlcGFyaW5n
-IHBhdGNoZXMgZm9yIHN1Ym1pc3Npb24sIHVzZSBzY3JpcHRzL2NoZWNrcGF0Y2gucGwgdG8NCiAg
-ICA+IGNoZWNrIGZvciBjb21tb24gaXNzdWVzLiBJdCB3aWxsIHdhcm4geW91IGlmIHlvdSBhcmUg
-YWRkaW5nIHN0cmluZ3MNCiAgICA+IHRoYXQgYXJlIG5vdCBkb2N1bWVudGVkLg0KICAgID4gDQog
-ICAgPiBDaGVlcnMsDQogICAgPiANCiAgICA+IEpvZWwNCiAgICA+IA0KICAgQmVjYXVzZSB0aGUg
-ZHJpdmVyIG9mIHNncGlvcyBkb2Vzbid0IGJlIGltcGxlbWVudGVkLCBzbyBJIGRvbid0IGtub3cg
-aG93IHRvIGRlc2NyaWJlIGl0IGF0IHNncGlvLWFzcGVlZC50eHQuIA0KICAgQ2FuIEkganVzdCBh
-ZGQgIGNvbXBhdGlibGUgc3RyaW5nICIgYXNwZWVkLGFzdDI2MDAtc2dwaW9zICIgdG8gdGhlIGRv
-Y3VtZW50IGZvciBieXBhc3NpbmcgdGhlIHdhcm5pbmcgb2YgY2hlY2twYXRjaD8NCiAgICA+ID4N
-CiAgICA+ID4gU2lnbmVkLW9mZi1ieTogQmlsbHkgVHNhaSA8YmlsbHlfdHNhaUBhc3BlZWR0ZWNo
-LmNvbT4NCiAgICA+ID4gLS0tDQogICAgPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlv
-L3NncGlvLWFzcGVlZC50eHQgfCAgOCArLS0NCiAgICA+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2Fz
-cGVlZC1nNi5kdHNpICAgICAgICAgICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysNCiAgICA+
-ID4gIDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCiAg
-ICA+ID4NCiAgICA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ncGlvL3NncGlvLWFzcGVlZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZ3Bpby9zZ3Bpby1hc3BlZWQudHh0DQogICAgPiA+IGluZGV4IGQ0ZDgzOTE2YzA5ZC4u
-ODE1ZDliNTE2N2E1IDEwMDY0NA0KICAgID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3Bpby9zZ3Bpby1hc3BlZWQudHh0DQogICAgPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL3NncGlvLWFzcGVlZC50eHQNCiAgICA+ID4g
-QEAgLTEsOCArMSwxMCBAQA0KICAgID4gPiAgQXNwZWVkIFNHUElPIGNvbnRyb2xsZXIgRGV2aWNl
-IFRyZWUgQmluZGluZ3MNCiAgICA+ID4gIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQogICAgPiA+DQogICAgPiA+IC1UaGlzIFNHUElPIGNvbnRyb2xsZXIgaXMg
-Zm9yIEFTUEVFRCBBU1QyNTAwIFNvQywgaXQgc3VwcG9ydHMgdXAgdG8gODAgZnVsbA0KICAgID4g
-PiAtZmVhdHVyZWQgU2VyaWFsIEdQSU9zLiBFYWNoIG9mIHRoZSBTZXJpYWwgR1BJTyBwaW5zIGNh
-biBiZSBwcm9ncmFtbWVkIHRvDQogICAgPiA+ICtUaGlzIFNHUElPIGNvbnRyb2xsZXIgaXMgZm9y
-IEFTUEVFRCBBU1QyNTAwL0FTVDI2MDAgU29DLCBpdCBzdXBwb3J0cyAyIG1hc3Rlci4NCiAgICA+
-ID4gK09uZSBpcyB1cCB0byAxMjggU0dQSU8gaW5wdXQgcG9ydHMgYW5kIDEyOCBvdXRwdXQgcG9y
-dHMgY29uY3VycmVudGx5KGFmdGVyIEFTVDI2MDBBMSkNCiAgICA+ID4gK2FuZCBTZWNvbmQgb25l
-IGlzIHVwIHRvIDgwLg0KICAgID4gPiArRWFjaCBvZiB0aGUgU2VyaWFsIEdQSU8gcGlucyBjYW4g
-YmUgcHJvZ3JhbW1lZCB0bw0KICAgID4gPiAgc3VwcG9ydCB0aGUgZm9sbG93aW5nIG9wdGlvbnM6
-DQogICAgPiA+ICAtIFN1cHBvcnQgaW50ZXJydXB0IG9wdGlvbiBmb3IgZWFjaCBpbnB1dCBwb3J0
-IGFuZCB2YXJpb3VzIGludGVycnVwdA0KICAgID4gPiAgICBzZW5zaXRpdml0eSBvcHRpb24gKGxl
-dmVsLWhpZ2gsIGxldmVsLWxvdywgZWRnZS1oaWdoLCBlZGdlLWxvdykNCiAgICA+ID4gQEAgLTE0
-LDcgKzE2LDcgQEAgc3VwcG9ydCB0aGUgZm9sbG93aW5nIG9wdGlvbnM6DQogICAgPiA+ICBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOg0KICAgID4gPg0KICAgID4gPiAgLSBjb21wYXRpYmxlIDogU2hvdWxk
-IGJlIG9uZSBvZg0KICAgID4gPiAtICAiYXNwZWVkLGFzdDI0MDAtc2dwaW8iLCAiYXNwZWVkLGFz
-dDI1MDAtc2dwaW8iDQogICAgPiA+ICsgICJhc3BlZWQsYXN0MjQwMC1zZ3BpbyIsICJhc3BlZWQs
-YXN0MjUwMC1zZ3BpbyIsICJhc3BlZWQsYXN0MjYwMC1zZ3Bpb20iDQogICAgPiANCiAgICA+IEkg
-dGhpbmsgd2Ugc2hvdWxkIGFkZCBzZ3Bpb20gc3RyaW5ncyBmb3IgdGhlIGFzdDI1MDAgKGFuZCBh
-c3QyNDAwPykNCiAgICA+IHRvbywgYXMgdGhpcyBpcyBob3cgdGhleSBzaG91bGQgaGF2ZSBiZWVu
-IG5hbWVkIGluIHRoZSBmaXJzdCBwbGFjZToNCiAgICA+IA0KICAgSWYgSSBjaGFuZ2UgdGhlIGRv
-Y3VtZW50IHdoZXRoZXIgSSBhbHNvIG5lZWQgdG8gc2VuZCB0aGUgcGF0Y2ggZm9yIHNncGlvIGRy
-aXZlciBhbmQgZzUvZzQuZHRzaT8NCiAgICA+ID4gIC0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSBv
-bmUgb2YNCiAgICA+ID4gICAgImFzcGVlZCxhc3QyNDAwLXNncGlvIiwgImFzcGVlZCxhc3QyNTAw
-LXNncGlvIg0KICAgID4gPiAgICJhc3BlZWQsYXN0MjQwMC1zZ3Bpb20iLCAiYXNwZWVkLGFzdDI1
-MDAtc2dwaW9tIiwgImFzcGVlZCxhc3QyNjAwLXNncGlvbSINCiAgICA+IA0KICAgID4gDQogICAg
-PiA+ICAtICNncGlvLWNlbGxzIDogU2hvdWxkIGJlIDIsIHNlZSBncGlvLnR4dA0KICAgID4gPiAg
-LSByZWcgOiBBZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIGRl
-dmljZQ0KICAgID4gPiAgLSBncGlvLWNvbnRyb2xsZXIgOiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUg
-YXMgYSBHUElPIGNvbnRyb2xsZXINCiAgICA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2FzcGVlZC1nNi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc2LmR0c2kNCiAg
-ICA+ID4gaW5kZXggYWQxOWRjZTAzOGVhLi5jYjA1M2E5OTZlODcgMTAwNjQ0DQogICAgPiA+IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNi5kdHNpDQogICAgPiA+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2FzcGVlZC1nNi5kdHNpDQogICAgPiA+IEBAIC0zNjYsNiArMzY2LDU4IEBA
-DQogICAgPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxs
-cyA9IDwyPjsNCiAgICA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsNCiAgICA+ID4NCiAg
-ICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc2dwaW9tMDogc2dwaW9tQDFlNzgwNTAwIHsN
-CiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjZ3Bpby1jZWxscyA9IDwy
-PjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBncGlvLWNvbnRyb2xs
-ZXI7DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
-ICJhc3BlZWQsYXN0MjYwMC1zZ3Bpb20iOw0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwweDFlNzgwNTAwIDB4MTAwPjsNCiAgICA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNTEgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmdwaW9z
-ID0gPDEyOD47DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tz
-ID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEIyPjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCiAgICA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBidXMtZnJlcXVlbmN5ID0gPDEyMDAwMDAwPjsNCiAgICA+ID4g
-Kw0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGlu
-Y3RybC0wID0gPCZwaW5jdHJsX3NncG0xX2RlZmF1bHQ+Ow0KICAgID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIH07DQogICAgPiA+ICsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgc2dwaW9tMTogc2dwaW9tQDFlNzgwNjAwIHsNCiAgICA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAjZ3Bpby1jZWxscyA9IDwyPjsNCiAgICA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBncGlvLWNvbnRyb2xsZXI7DQogICAgPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjYwMC1zZ3Bpb20i
-Ow0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDFlNzgw
-NjAwIDB4MTAwPjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgNzAgSVJRX1RZUEVfTEVWRUxfSElHSD47DQogICAgPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgbmdwaW9zID0gPDgwPjsNCiAgICA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0FQ
-QjI+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1j
-b250cm9sbGVyOw0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJ1cy1m
-cmVxdWVuY3kgPSA8MTIwMDAwMDA+Ow0KICAgID4gPiArDQogICAgPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAgICA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc2dwbTJf
-ZGVmYXVsdD47DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVz
-ID0gImRpc2FibGVkIjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCiAgICA+
-ID4gKw0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICBzZ3Bpb3MwOiBzZ3Bpb3NAMWU3
-ODA3MDAgew0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNncGlvLWNl
-bGxzID0gPDI+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdwaW8t
-Y29udHJvbGxlcjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gImFzcGVlZCxhc3QyNjAwLXNncGlvcyI7DQogICAgPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MWU3ODA3MDAgMHg0MD47DQogICAgPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDUyIElSUV9U
-WVBFX0xFVkVMX0hJR0g+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCMj47DQogICAgPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgfTsNCiAgICA+ID4gKw0KICAgID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBzZ3Bpb3MxOiBzZ3Bpb3NAMWU3ODA3NDAgew0KICAgID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICNncGlvLWNlbGxzID0gPDI+Ow0KICAgID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGdwaW8tY29udHJvbGxlcjsNCiAgICA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNjAwLXNncGlv
-cyI7DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MWU3
-ODA3NDAgMHg0MD47DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDcxIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KICAgID4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtf
-QVBCMj47DQogICAgPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0g
-ImRpc2FibGVkIjsNCiAgICA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCiAgICA+ID4g
-Kw0KICAgID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBncGlvMTogZ3Bpb0AxZTc4MDgwMCB7
-DQogICAgPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8
-Mj47DQogICAgPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpby1jb250cm9s
-bGVyOw0KICAgID4gPiAtLQ0KICAgID4gPiAyLjE3LjENCiAgICA+ID4NCg0K
+On Sun, Oct 11, 2020 at 03:15:01PM +0100, Jack Winch wrote:
+> Hi Folks,
+> 
+> I recently noticed that in Linux 5.7, gpiolib was changed such that
+> line events are now timestamped using the system 'monotonic' clock
+> rather than the system realtime clock.  The rationale for this change
+> appears to be due to the major use-case of the line event timestamp
+> data in relation to the nature of the system realtime clock (which can
+> jump backwards or forwards in time due to adjustments by third-parties
+> - e.g., NTP or PTP clients, etc).
+> 
+> For most users of the line event timestamp value, the use of the
+> realtime clock could be problematic due to the potential for
+> chronological line events to receive timestamp values with a
+> non-chronological progression (resulting from adjustments being made
+> to the clock).  This could be the source of a number of bugs,
+> functional limitations and frustrations which was solved easily enough
+> by transitioning to the use of the system monotonic clock.  That being
+> said, I know there are users of the line event timestamp who actively
+> rely on that value being obtained from the system realtime clock.
+> 
+> My suggestion (which I would be happy to implement myself) is to allow
+> users to select the clock to be used for line event timestamping on a
+> per line handle basis.  The merit of this approach is that the
+> appropriate clock type may be selected on a per line handle basis
+> according to the needs of the user.  This of course has some
+> implications which are not desirable without merit, but may be deemed
+> acceptable in balance with the resultant functionality.  In summary,
+> these are:
+> 
+> 1. Increase in processing overhead and latency of timestamp
+> acquisition on line event interrupts.  Implementing the proposed
+> change requires a function call to be made to the appropriate ktime
+> accessor function, based on what the user has configured as the
+> timestamp clock source.  In kernel versions from 5.7 to current, a
+> call is made to the ktime_get_ns() function which is most likely
+> inlined by the compiler.  This change will result in an actual jump
+> having to be made, which will have processor and memory access
+> overhead (potential I$ and D$ misses).  Then there is of course the
+> overhead of resolving which function to call - either a switch
+> statement or call by function pointer (probably the latter option).
+> 
+> 2. Additions required to the userspace ABI.  Additional IOCTLs will be
+> required for line handles, allowing the source clock type for line
+> event timestamping to be get or set.
+> 
+> 3. Additions required to libgpiod.  The existing API will have to be
+> added to in order to provide an abstraction for this new
+> functionality.  This requires changes to the core C library, as well
+> as the provided C++ and Python bindings (and their test cases).
+> Changes will also be required to the WiP libgpiod service and its
+> d-bus interface.  This change will also affect the proposed future
+> lightweight libgpiod service.
+> 
+> 4. Documentation for both the GPIO subsystem and libgpiod will require
+> updating.  This should be done as part of the effort to implement this
+> functionality (if agreed upon) for the target version of the kernel
+> and libgpiod.
+> 
+> Such that applications now relying on the use of the 'monotonic'
+> system clock for timestamping line events do not require modification
+> after the implementation of this functionality (most applications), I
+> propose the 'monotonic' system clock be the default source clock.  If
+> the user wants to change this to another clock type, then they may do
+> so via the proposed additional IOCTLs and / or the proposed changes to
+> libgpiod.
+> 
+> I would be interested in hearing your thoughts on this suggestion / proposal.
+> 
+
+Hi Jack,
+
+Adding Bart in - in case he hasn't noticed this one, as he is the
+maintainer for the chardev and libgpiod.
+
+Firstly, mapping from MONOTONIC to REALTIME is quite doable in
+userspace, so I'd be more inclined to add a helper to libgpiod to do
+that for you.
+
+Secondly, an updated version of the uAPI, v2, is in line to be included
+in Linux 5.10, so you should look at that.  Most of your points are
+still valid as the MONOTONIC event timestamp is inherited from v1, but
+there are more options available should we want to address this in kernel.
+e.g. we could return BOTH timestamps in the event.
+
+Also, assuming you were to implement this in kernel, it doesn't need a new
+ioctl. It could be implemented by extending the flags field.
+
+But I would want to rule out a userspace solution before entertaining a
+kernel change.
+
+Cheers,
+Kent.
