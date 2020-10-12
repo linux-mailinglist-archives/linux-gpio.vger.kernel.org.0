@@ -2,78 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B61E528ACC0
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 06:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C43228AD00
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 06:30:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgJLEUQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Oct 2020 00:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57728 "EHLO
+        id S1725967AbgJLEaN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Oct 2020 00:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgJLEUQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 00:20:16 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D722C0613CE
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 21:20:16 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id 1so2051295ple.2
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Oct 2020 21:20:16 -0700 (PDT)
+        with ESMTP id S1725882AbgJLEaN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 00:30:13 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A57C0613CE;
+        Sun, 11 Oct 2020 21:30:12 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 188so16643144qkk.12;
+        Sun, 11 Oct 2020 21:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rQGNEfXrpPUCBuLRUMQY74vDZyCBVzFwJG26smzlRuU=;
-        b=L5v+ViQR9Ym8DfmUui+SPEHRtr5noAgnh3wnjQVOG7i0nszy9TpXsddp1RXWBQOSfk
-         apYPYrqMWUNd4GgosL4wwJlJhpg65/M7MDGTLs+5gKEZiHVB/Qhd0hqrMNVCMoZJYOdf
-         ub9mjws9T1FrbV9ZKZkIcrbU/PkFDZgltRm1LzrfOiGssIefKMA62/9g/VJDesfWh1P7
-         77x8XhlLlrmcwQYjewXVLBdv2jhHilpqZ+ubb2WXAaJ0LlJBEf6XDIfRedwNHUI67WuB
-         aTjKt3ge+5R8uGnjKzOXbecyDCuZW5FQ3xieH7MDzld1D/bBeiAYm8tWjxbXofmFlBBC
-         6SIQ==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ix53B+4PxpD3FvNrquTS4wrFrQE1rmLNYwUdzsQBz70=;
+        b=Vi0Okto4r2twCBe/iUIb9WvlHH1xO2X3Pgp/nljP/qcnaXwYhnCYzuh1+uReRXwRdx
+         TPoGM9Rlp+ghbeEWUbk+eDkR+uz9q51GERSJbC0puwH+q4lKe8vhqMSjFp+Sge2IR07V
+         Yz5TD89m4VosCu5dlVKyhk/N9QRS5LXdMkwaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rQGNEfXrpPUCBuLRUMQY74vDZyCBVzFwJG26smzlRuU=;
-        b=czOw5FW3plP2eNGVzYyAzJt0bkSjSMAIy2fdsHNGKY/VtYn7yDbIq8Lqr5p945v/gU
-         fdfzb2bwx8Mm+nSr5D1ipbycbYv3ydSCCpV3jekOOB3epMlOLO81Zzf85zY3U5DPfCpr
-         KsVrggD5/mgq4rHhO0Hex767/guprAPLOBDz/kASQVv4OsNgZP2D0hwOJnjRr2z5UrJg
-         +d4b6VZylMfuqHD10+T4KCs/MHZR8bBjgrMSkBv+31/d0Vs8Ia1ju0eaoHn6nsj0GAL7
-         sGrDRpqf1grLfl+zqFwGVWSY3t5LOKmGBkMtVqmlOL8262VpvrpiIGkXhm8Leth1qi4P
-         t/rg==
-X-Gm-Message-State: AOAM533e5Xl53m1D9fqfvaKBn2BK1eLRl77bIrFPhRnFygfXjjn9OUo/
-        GuMeLhwKnTgcdKPa3J32sfY=
-X-Google-Smtp-Source: ABdhPJw3rVb/QSdOaHlY76Ce3juYppzW7dcPucmAFzixwSW/2M37O+8vYIrhHiGRzlhE8dPSCbkNlQ==
-X-Received: by 2002:a17:902:7e0b:b029:d3:8afd:5392 with SMTP id b11-20020a1709027e0bb02900d38afd5392mr21798018plm.5.1602476415763;
-        Sun, 11 Oct 2020 21:20:15 -0700 (PDT)
-Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
-        by smtp.gmail.com with ESMTPSA id d8sm22618555pjr.46.2020.10.11.21.20.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Oct 2020 21:20:14 -0700 (PDT)
-Date:   Mon, 12 Oct 2020 12:20:10 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] gpiolib: Switch to use
- compat_need_64bit_alignment_fixup() helper
-Message-ID: <20201012042010.GA13984@sol>
-References: <20201008134105.51387-1-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ix53B+4PxpD3FvNrquTS4wrFrQE1rmLNYwUdzsQBz70=;
+        b=eIQ0eICtr791UJxgyG5Dj8yCwjrPSblsnR0/dvIx4v9rcYwWVTB+sywWaOz86YndSr
+         ZaFuF625hZHa5RIFkDf84Mrh5zsObfmZot/JQ6qkkFTst5h9bFUnS4LIvAhiCzTCxkb9
+         MXfsE6CLihSbeJ3Q0OFRAUpN4S7oKGxYdwp8C8pOFk3h4hYM/Z4wnstrVixtJC8tccC6
+         smjln3TJQEn6FhUJIPOKtaHZCsUu1n2hsUKNrQhjfwOSMOasUWbxUMMtQIQQzl1LfNzV
+         xcSTvTkwDzqaNHjfhzEWk0CRs0tcS62LhkiYvJFwae7LKCWJNjuEv+qzTaWo9zankj9F
+         /vWg==
+X-Gm-Message-State: AOAM5327c/VDGzi8UB0A+cV8iXkjHwU03fcTSFrulfSn4A+yryjRUu43
+        PQX90bHUlxfqQGSLqpZ102C1aTDxS+Sso2Bu2mw=
+X-Google-Smtp-Source: ABdhPJyNBsj3Xl5S6RY3Rvn00/GtfkhS8Ore3QHLa1prcwNZOO4RsI2temxvhrolGiYtx4NchxSTU3LmSRQ/3KhH1ts=
+X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr7987574qkj.273.1602477012120;
+ Sun, 11 Oct 2020 21:30:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201008134105.51387-1-andriy.shevchenko@linux.intel.com>
+References: <20201012033150.21056-1-billy_tsai@aspeedtech.com> <20201012033150.21056-2-billy_tsai@aspeedtech.com>
+In-Reply-To: <20201012033150.21056-2-billy_tsai@aspeedtech.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 12 Oct 2020 04:30:00 +0000
+Message-ID: <CACPK8XcQ+uodvYCyL7_RO9W2QF+AA2LidHhXi2tR3_uriQFccQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] Arm: dts: aspeed-g6: Fix the register range of gpio
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 08, 2020 at 04:41:05PM +0300, Andy Shevchenko wrote:
-> The new compat_need_64bit_alignment_fixup() helper allows to avoid
-> ugly ifdeffery in IOCTL compatible code. Use it in GPIO cdev code.
-> 
-> Depends-on: 527c412519eb ("compat: add a compat_need_64bit_alignment_fixup() helper")
-> Depends-on: cc7886d25bca ("compat: lift compat_s64 and compat_u64 to <asm-generic/compat.h>")
+On Mon, 12 Oct 2020 at 03:32, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>
+> This patch is used to fix the memory range of gpio0
+>
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 
-Where can I find these?
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-Cheers,
-Kent.
-
+> ---
+>  arch/arm/boot/dts/aspeed-g6.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
+> index 97ca743363d7..ad19dce038ea 100644
+> --- a/arch/arm/boot/dts/aspeed-g6.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g6.dtsi
+> @@ -357,7 +357,7 @@
+>                                 #gpio-cells = <2>;
+>                                 gpio-controller;
+>                                 compatible = "aspeed,ast2600-gpio";
+> -                               reg = <0x1e780000 0x800>;
+> +                               reg = <0x1e780000 0x400>;
+>                                 interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>                                 gpio-ranges = <&pinctrl 0 0 208>;
+>                                 ngpios = <208>;
+> --
+> 2.17.1
+>
