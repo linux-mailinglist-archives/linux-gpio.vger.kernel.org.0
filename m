@@ -2,197 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 168BF28BD54
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 18:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A601A28C015
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 20:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390575AbgJLQL6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Oct 2020 12:11:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41446 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390543AbgJLQL6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 12:11:58 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q21so16275495ota.8;
-        Mon, 12 Oct 2020 09:11:57 -0700 (PDT)
+        id S1726863AbgJLSzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Oct 2020 14:55:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45822 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgJLSzk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 14:55:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f37so16707920otf.12;
+        Mon, 12 Oct 2020 11:55:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FBN0i7koeveN6LV2jTrTmRFBh0GWC3oxf9cjLV0OmvE=;
-        b=fO+OGasTjp2D2UTewOwfFHGMRNj2sXdceIu9ZAS9ftTyAuTJsbCVbkOck78tpQlMhX
-         Zsbf7hqwjknqMjGXSwqWgDHtDMeLQu4iTnfuol48wPqWvsff1IboQKwkFWYHTLx3V5VZ
-         LYWuojqO4pWvsabbaIaer/3IOwFFdgqM+7cneK169F903aOXAbxxuovWGiPFRkgflziX
-         aabbT4pUBab9QFZ5meAmflqoNzEwm+QIzs1/pEhiQkdbJyWULUBWZ57Sn4Biyrco1Se4
-         DOv2LEzC5jznV1lnlUctv8UalNAcjsjcuNFN6LzFvZjGmzIewXRSFUxTn+tTTscCacrE
-         XTRA==
-X-Gm-Message-State: AOAM530tNiAGiEU6MqxIbW9jAVIvqvIYnhCUmbSgADz+bRsBiL9VPg0x
-        GWGcRUAanzi+WqCHsIi7Fg==
-X-Google-Smtp-Source: ABdhPJxd+irepjSAW9fP8Aa4hfahEirk3nmWjcRyyszeGcM8hryXomN6TH6qhmZCrZNvsRa4b9k9aw==
-X-Received: by 2002:a9d:1406:: with SMTP id h6mr18026315oth.59.1602519117323;
-        Mon, 12 Oct 2020 09:11:57 -0700 (PDT)
+        bh=5fVAIseMnsnT90XiyJbBgJRxx/Jq3jfkvLK/AZmt1dA=;
+        b=KHyMCiFYwBeALZdmJtVGrOwR5U3I8xhmLFSUQ9ghA+qoZHiKqocz6YMj5ktUKly4Wa
+         o4bMm+EsNkzRUg5k1oc4PWyARqdA3+0QuY4uEnRKnXmfppmjRQl2u5VfqRH3KI+JUeo8
+         kUvs/GzofI8ikDnJZl6rQPhTcdni0ORN1xMRDp0Cv26wNwUD6I755O44GGjYdL2Azddd
+         JJCrRTQoPkL0/ORg+1yvUztphTk4zlkn0Ox19zydt+A3w2cz6DpXv2IsImOVCWqlF6jq
+         ylBN6Th7QJu8bIA6XcXiz3KulOSMK2x+VJLxT89Wj5EgektYrUZlo8wfgx2J9jdapAWK
+         4QAA==
+X-Gm-Message-State: AOAM532I9J4gitktkrWh6xiM2+ZSekYt3hy0ZfJiaynaUINCflYbbG46
+        I258ENHO5QiYHNQQL0oTgw==
+X-Google-Smtp-Source: ABdhPJzXa+bi5zHTxRpC5b5rVaVCpYGUmlSihkflVQ6s/QzKOgruDIXUaHqEfwygdXx8vVrJr2nTdA==
+X-Received: by 2002:a05:6830:2092:: with SMTP id y18mr18910537otq.19.1602528939283;
+        Mon, 12 Oct 2020 11:55:39 -0700 (PDT)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l184sm6711195ooc.10.2020.10.12.09.11.56
+        by smtp.gmail.com with ESMTPSA id y194sm9979533oie.22.2020.10.12.11.55.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 09:11:56 -0700 (PDT)
-Received: (nullmailer pid 1636788 invoked by uid 1000);
-        Mon, 12 Oct 2020 16:11:56 -0000
-Date:   Mon, 12 Oct 2020 11:11:56 -0500
+        Mon, 12 Oct 2020 11:55:38 -0700 (PDT)
+Received: (nullmailer pid 1905660 invoked by uid 1000);
+        Mon, 12 Oct 2020 18:55:37 -0000
+Date:   Mon, 12 Oct 2020 13:55:37 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] dt-bindings: gpio: Add a binding header for the
- MSC313 GPIO driver
-Message-ID: <20201012161156.GA1635284@bogus>
-References: <20201011024831.3868571-1-daniel@0x0f.com>
- <20201011024831.3868571-3-daniel@0x0f.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: Add bindings for
+ pinctrl-microchip-sgpio driver
+Message-ID: <20201012185537.GA1898766@bogus>
+References: <20201008130515.2385825-1-lars.povlsen@microchip.com>
+ <20201008130515.2385825-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201011024831.3868571-3-daniel@0x0f.com>
+In-Reply-To: <20201008130515.2385825-2-lars.povlsen@microchip.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 11, 2020 at 11:48:28AM +0900, Daniel Palmer wrote:
-> The driver uses the pin names to find the right interrupt for
-> a pin from the device tree so this header reduces the need to
-> have multiple copies of the same string all over the place.
+On Thu, Oct 08, 2020 at 03:05:13PM +0200, Lars Povlsen wrote:
+> This adds DT bindings for the Microsemi/Microchip SGPIO controller,
+> bindings microchip,sparx5-sgpio, mscc,ocelot-sgpio and
+> mscc,luton-sgpio.
 > 
-> This header also adds defines for the gpio number of each pin
-> from the driver view. The gpio block seems to support 128 lines
-> but what line is mapped to a physical pin depends on the chip.
-> The driver itself uses the index of a pin's offset in an array
-> of the possible offsets for a chip as the gpio number.
-> 
-> The defines remove the need to work out that index to consume
-> a pin in the device tree.
-> 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  MAINTAINERS                            |  1 +
->  include/dt-bindings/gpio/msc313-gpio.h | 95 ++++++++++++++++++++++++++
->  2 files changed, 96 insertions(+)
->  create mode 100644 include/dt-bindings/gpio/msc313-gpio.h
-
-This should be part of the previous patch to avoid the error.
-
+>  .../pinctrl/microchip,sparx5-sgpio.yaml       | 140 ++++++++++++++++++
+>  1 file changed, 140 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4594b70f2e3a..ec5b49b9955f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2158,6 +2158,7 @@ F:	Documentation/devicetree/bindings/arm/mstar/*
->  F:	Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
->  F:	arch/arm/boot/dts/mstar-*
->  F:	arch/arm/mach-mstar/
-> +F:	include/dt-bindings/gpio/msc313-gpio.h
->  
->  ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
->  M:	Michael Petchkovsky <mkpetch@internode.on.net>
-> diff --git a/include/dt-bindings/gpio/msc313-gpio.h b/include/dt-bindings/gpio/msc313-gpio.h
+> diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
 > new file mode 100644
-> index 000000000000..655fe03de519
+> index 000000000000..fc41495800ed
 > --- /dev/null
-> +++ b/include/dt-bindings/gpio/msc313-gpio.h
-> @@ -0,0 +1,95 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +++ b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/microchip,sparx5-sgpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microsemi/Microchip Serial GPIO controller
+> +
+> +maintainers:
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +description: |
+> +  By using a serial interface, the SIO controller significantly extend
+> +  the number of available GPIOs with a minimum number of additional
+> +  pins on the device. The primary purpose of the SIO controllers is to
+> +  connect control signals from SFP modules and to act as an LED
+> +  controller.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^gpio@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    enum:
+> +      - microchip,sparx5-sgpio
+> +      - mscc,ocelot-sgpio
+> +      - mscc,luton-sgpio
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  microchip,sgpio-port-ranges:
+> +    description: This is a sequence of tuples, defining intervals of
+> +      enabled ports in the serial input stream. The enabled ports must
+> +      match the hardware configuration in order for signals to be
+> +      properly written/read to/from the controller holding
+> +      registers. Being tuples, then number of arguments must be
+> +      even. The tuples mast be ordered (low, high) and are
+> +      inclusive.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        - description: |
+> +            "low" indicates start bit number of range
+> +          minimum: 0
+> +          maximum: 31
+> +        - description: |
+> +            "high" indicates end bit number of range
+> +          minimum: 0
+> +          maximum: 31
+> +    minItems: 1
+> +    maxItems: 32
+> +
+> +  microchip,sgpio-frequency:
+> +    description: The sgpio controller frequency (Hz). This dictates
+> +      the serial bitstream speed, which again affects the latency in
+> +      getting control signals back and forth between external shift
+> +      registers. The speed must be no larger than half the system
+> +      clock, and larger than zero.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Don't use DT on non-GPL systems?
+Perhaps use 'bus-frequency' here. If not, needs unit suffix. Either way, 
+you can drop the type in those cases. 
 
-> +/*
-> + * GPIO definitions for MStar/SigmaStar MSC313 and later SoCs
-> + *
-> + * Copyright (C) 2020 Daniel Palmer <daniel@thingy.jp>
-> + */
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +    minimum: 1
+> +    default: 12500000
 > +
-> +#ifndef _DT_BINDINGS_MSC313_GPIO_H
-> +#define _DT_BINDINGS_MSC313_GPIO_H
+> +patternProperties:
+> +  "^gpio@[0-1]$":
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        const: microchip,sparx5-sgpio-bank
 > +
-> +/* pin names for fuart, same for all SoCs so far */
-> +#define MSC313_PINNAME_FUART_RX		"fuart_rx"
-> +#define MSC313_PINNAME_FUART_TX		"fuart_tx"
-> +#define MSC313_PINNAME_FUART_CTS	"fuart_cts"
-> +#define MSC313_PINNAME_FUART_RTS	"fuart_rts"
+> +      reg:
+> +        description: |
+> +          The GPIO bank number. "0" is designates the input pin bank,
+> +          "1" the output bank.
+> +        maxItems: 1
 > +
-> +/* pin names for sr, mercury5 is different */
-> +#define MSC313_PINNAME_SR_IO2		"sr_io2"
-> +#define MSC313_PINNAME_SR_IO3		"sr_io3"
-> +#define MSC313_PINNAME_SR_IO4		"sr_io4"
-> +#define MSC313_PINNAME_SR_IO5		"sr_io5"
-> +#define MSC313_PINNAME_SR_IO6		"sr_io6"
-> +#define MSC313_PINNAME_SR_IO7		"sr_io7"
-> +#define MSC313_PINNAME_SR_IO8		"sr_io8"
-> +#define MSC313_PINNAME_SR_IO9		"sr_io9"
-> +#define MSC313_PINNAME_SR_IO10		"sr_io10"
-> +#define MSC313_PINNAME_SR_IO11		"sr_io11"
-> +#define MSC313_PINNAME_SR_IO12		"sr_io12"
-> +#define MSC313_PINNAME_SR_IO13		"sr_io13"
-> +#define MSC313_PINNAME_SR_IO14		"sr_io14"
-> +#define MSC313_PINNAME_SR_IO15		"sr_io15"
-> +#define MSC313_PINNAME_SR_IO16		"sr_io16"
-> +#define MSC313_PINNAME_SR_IO17		"sr_io17"
+> +      gpio-controller: true
 > +
-> +/* pin names for sd, same for all SoCs so far */
-> +#define MSC313_PINNAME_SD_CLK		"sd_clk"
-> +#define MSC313_PINNAME_SD_CMD		"sd_cmd"
-> +#define MSC313_PINNAME_SD_D0		"sd_d0"
-> +#define MSC313_PINNAME_SD_D1		"sd_d1"
-> +#define MSC313_PINNAME_SD_D2		"sd_d2"
-> +#define MSC313_PINNAME_SD_D3		"sd_d3"
+> +      '#gpio-cells':
+> +        const: 3
 > +
-> +/* pin names for i2c1, same for all SoCs so for */
-> +#define MSC313_PINNAME_I2C1_SCL		"i2c1_scl"
-> +#define MSC313_PINNAME_I2C1_SCA		"i2c1_sda"
+> +      ngpios:
+> +        minimum: 1
+> +        maximum: 128
 > +
-> +/* pin names for spi0, same for all SoCs so far */
-> +#define MSC313_PINNAME_SPI0_CZ		"spi0_cz"
-> +#define MSC313_PINNAME_SPI0_CK		"spi0_ck"
-> +#define MSC313_PINNAME_SPI0_DI		"spi0_di"
-> +#define MSC313_PINNAME_SPI0_DO		"spi0_do"
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - gpio-controller
+> +      - '#gpio-cells'
+> +      - ngpios
 > +
-> +#define MSC313_GPIO_FUART	0
-> +#define MSC313_GPIO_FUART_RX	(MSC313_GPIO_FUART + 0)
-> +#define MSC313_GPIO_FUART_TX	(MSC313_GPIO_FUART + 1)
-> +#define MSC313_GPIO_FUART_CTS	(MSC313_GPIO_FUART + 2)
-> +#define MSC313_GPIO_FUART_RTS	(MSC313_GPIO_FUART + 3)
+> +    additionalProperties: false
 > +
-> +#define MSC313_GPIO_SR		(MSC313_GPIO_FUART_RTS + 1)
-> +#define MSC313_GPIO_SR_IO2	(MSC313_GPIO_SR + 0)
-> +#define MSC313_GPIO_SR_IO3	(MSC313_GPIO_SR + 1)
-> +#define MSC313_GPIO_SR_IO4	(MSC313_GPIO_SR + 2)
-> +#define MSC313_GPIO_SR_IO5	(MSC313_GPIO_SR + 3)
-> +#define MSC313_GPIO_SR_IO6	(MSC313_GPIO_SR + 4)
-> +#define MSC313_GPIO_SR_IO7	(MSC313_GPIO_SR + 5)
-> +#define MSC313_GPIO_SR_IO8	(MSC313_GPIO_SR + 6)
-> +#define MSC313_GPIO_SR_IO9	(MSC313_GPIO_SR + 7)
-> +#define MSC313_GPIO_SR_IO10	(MSC313_GPIO_SR + 8)
-> +#define MSC313_GPIO_SR_IO11	(MSC313_GPIO_SR + 9)
-> +#define MSC313_GPIO_SR_IO12	(MSC313_GPIO_SR + 10)
-> +#define MSC313_GPIO_SR_IO13	(MSC313_GPIO_SR + 11)
-> +#define MSC313_GPIO_SR_IO14	(MSC313_GPIO_SR + 12)
-> +#define MSC313_GPIO_SR_IO15	(MSC313_GPIO_SR + 13)
-> +#define MSC313_GPIO_SR_IO16	(MSC313_GPIO_SR + 14)
-> +#define MSC313_GPIO_SR_IO17	(MSC313_GPIO_SR + 15)
+> +additionalProperties: false
 > +
-> +#define MSC313_GPIO_SD		(MSC313_GPIO_SR_IO17 + 1)
-> +#define MSC313_GPIO_SD_CLK	(MSC313_GPIO_SD + 0)
-> +#define MSC313_GPIO_SD_CMD	(MSC313_GPIO_SD + 1)
-> +#define MSC313_GPIO_SD_D0	(MSC313_GPIO_SD + 2)
-> +#define MSC313_GPIO_SD_D1	(MSC313_GPIO_SD + 3)
-> +#define MSC313_GPIO_SD_D2	(MSC313_GPIO_SD + 4)
-> +#define MSC313_GPIO_SD_D3	(MSC313_GPIO_SD + 5)
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - microchip,sgpio-port-ranges
+> +  - "#address-cells"
+> +  - "#size-cells"
 > +
-> +#define MSC313_GPIO_I2C1	(MSC313_GPIO_SD_D3 + 1)
-> +#define MSC313_GPIO_I2C1_SCL	(MSC313_GPIO_I2C1 + 0)
-> +#define MSC313_GPIO_I2C1_SDA	(MSC313_GPIO_I2C1 + 1)
-> +
-> +#define MSC313_GPIO_SPI0	(MSC313_GPIO_I2C1_SDA + 1)
-> +#define MSC313_GPIO_SPI0_CZ	(MSC313_GPIO_SPI0 + 0)
-> +#define MSC313_GPIO_SPI0_CK	(MSC313_GPIO_SPI0 + 1)
-> +#define MSC313_GPIO_SPI0_DI	(MSC313_GPIO_SPI0 + 2)
-> +#define MSC313_GPIO_SPI0_DO	(MSC313_GPIO_SPI0 + 3)
-> +
-> +#endif /* _DT_BINDINGS_MSC313_GPIO_H */
-> -- 
-> 2.27.0
-> 
+> +examples:
+> +  - |
+> +    sgpio2: gpio@1101059c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      compatible = "microchip,sparx5-sgpio";
+> +      clocks = <&sys_clk>;
+> +      pinctrl-0 = <&sgpio2_pins>;
+> +      pinctrl-names = "default";
+> +      reg = <0x1101059c 0x100>;
+> +      microchip,sgpio-port-ranges = <0 0>, <16 18>, <28 31>;
+> +      microchip,sgpio-frequency = <25000000>;
+> +      sgpio_in2: gpio@0 {
+> +        reg = <0>;
+> +        compatible = "microchip,sparx5-sgpio-bank";
+> +        gpio-controller;
+> +        #gpio-cells = <3>;
+> +        ngpios = <96>;
+> +      };
+> +      sgpio_out2: gpio@1 {
+> +        compatible = "microchip,sparx5-sgpio-bank";
+> +        reg = <1>;
+> +        gpio-controller;
+> +        #gpio-cells = <3>;
+> +        ngpios = <96>;
+> +      };
+> +    };
+> --
+> 2.25.1
