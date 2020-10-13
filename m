@@ -2,160 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F091E28C1CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Oct 2020 21:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4E9728C680
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 02:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgJLT7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Oct 2020 15:59:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52841 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgJLT7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 15:59:13 -0400
-Received: from [192.168.1.155] ([77.2.5.48]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MOQyE-1kplnT1Rb4-00PuLl; Mon, 12 Oct 2020 21:58:57 +0200
-Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of
- AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ed W <lists@wildgooses.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Eckert <fe@dev.tdt.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200920203207.25696-1-lists@wildgooses.com>
- <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
- <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com>
- <815ff3a6-8941-573d-36c0-36639f47dc04@wildgooses.com>
- <CAHp75Ve3APYLKzH9KvmTueEcTP-CZJS9MmLC+ZsHRT9brOxsEQ@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <8e28d798-c429-fb1c-8b6f-f271f694cfd3@metux.net>
-Date:   Mon, 12 Oct 2020 21:58:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1727917AbgJMAw6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Oct 2020 20:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbgJMAw6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Oct 2020 20:52:58 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA6FC0613D0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 17:52:58 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f19so15406897pfj.11
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Oct 2020 17:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EnbzNYV7aiHjt5pWIe7mYcJTguar7FeQa5+3LZl8xkE=;
+        b=T2d+eMMj4vPtBHCVu49ErrYmoQADCUQI8sBFaIKUOyuvpoPVUW4nnISog+u4OEcW1v
+         kIef2w5gTj7f+Gl4C2pBFxFeMjucHnlbnZJMmbCsMSURF2FALdpi4B5lJrzHVSCOqFIh
+         H41YulWnB/HS0KzZv6/nMtG3x9id2vMaT7+xs1RHMmw5AJdc79hB8TfDTJhceLbymT5J
+         0x2ybk+umTkzNaagb/av4hQKE7z5w3LJqKOypu7yi3e9NXFKJeWYqRakxwoxUi59GUAH
+         +gVe/IXg0BQlx4iwHqOka2tffCyOLg3OGpRlJqi8kpzB3TytrRndEKTbJI7sZ4oFaXVR
+         WOAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EnbzNYV7aiHjt5pWIe7mYcJTguar7FeQa5+3LZl8xkE=;
+        b=CL3ddtzJxDQrn1IeJYwTYKAVoa+hpVvQZxXeIFESnywdS5b/8/8lyX9QSAVk+Lb/3f
+         scbQRPv/5pT7/FhzaCiAGHZEgKGraJlZutRI47vYzXLizo868L/xOeOgqJhRrpV6UsTl
+         kFFkoRA+GvBbi17UwT7nEGLdwHFAxlHuJW9tV82+aB9w7ICCGO49dpeE6KOuVMUg2nwc
+         Mj3g8ddeLLRsK1UWQ9AdgNFUu9BO12+YWjlHj3eYzYQouJMoi+1AHfN1TDIuLvI1pT/B
+         b+y6p/Z16P34swuh7jMRQ8BwFgqw4FZ2fBXECwn09LlQztRwE53yk6U1rk/zo7sQnPB9
+         iF3g==
+X-Gm-Message-State: AOAM531+7N0u5iW6504yKWIx/L/CdMtFIK9xS31HtolpZPfBcdg2Pgee
+        jNkX/jvTBEaSkeoNjXJTpb8=
+X-Google-Smtp-Source: ABdhPJzOFqUcoAgD1EXArBJ3xeOvIJqMtfLRcr1iS/OVsfKdR8dJIOxPB9W1ZCTlMXDqLo8KvqY0Ug==
+X-Received: by 2002:a62:78d5:0:b029:154:ebc0:c92c with SMTP id t204-20020a6278d50000b0290154ebc0c92cmr26590686pfc.24.1602550377767;
+        Mon, 12 Oct 2020 17:52:57 -0700 (PDT)
+Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
+        by smtp.gmail.com with ESMTPSA id 70sm22281366pfu.203.2020.10.12.17.52.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2020 17:52:57 -0700 (PDT)
+Date:   Tue, 13 Oct 2020 08:52:52 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [libgpiod] Rethinking struct gpiod_line_bulk
+Message-ID: <20201013005252.GA9387@sol>
+References: <CAMpxmJVWr-M3R-PfsrDvtpZTtSTBLHL95sAorO5EHVwg1eX67A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve3APYLKzH9KvmTueEcTP-CZJS9MmLC+ZsHRT9brOxsEQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:1OCHnEmxT6HKaEDcG9/t/pkL4s0iEx2M7MzJ6h97VAOPM4VLsGv
- nc2Fsb2Ub+37My/omxUVmCbR70skZpbnRNOz1IuZKaf1Zwws4xx1XwlACISvC5PD+Xkgx5M
- RrMIfaGkfICDMKYno37ekMSMIFR0856HJzq8bSeUZPyESNag52KUsH8htGqLl/pAXUTL13f
- QZrODSor/RmgbbXGIgEhw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Lc9Xpg21jmM=:6w8wQGrHdkVxzAaoQj+Ufz
- bhfCSKSdYY5kexwZpoVd/V5vxMJxI7yVx3BIjQrxGVYrZQho/Sw+321jOHMst2n0Vy7TOnebR
- bHtwVpb9yiU9yHHZ+3bfik9OkORGoyL1Xy+lD/i7wDPpqt87weu6hQHokNjKIPcL0aBtQohDH
- wadpY9wpKV2cfMcSvLqXgeOkCSPYC3VyQnY8JPgbrx+/BpVv9wYq1d+Ox+QJlY2Y0H7Vya9Lq
- R+1zXwh8DZkFsgQ+1T97fkH+V8w8ZD+EA8XvBdjhpewlaZzs52uHHyLKP6WihNZjZxmtacuMd
- Nb5T/gUbiDwbRjG1BSzo7/YJcWlMR8yrpgPBMEFyLVzLGn0VBkvhuj0vGTvGWHiheJpFL7ov/
- Lu0eHo3nUvnUzFfil7oHpa1m4tHUwDJ7GVapxKvi43nT5J9pzbXVID6R6Sw4FR/eoHxrUk5TX
- W5M9IHj94SfrEJr13MpBTtafZdE46xXedsys1YAt2fdxkWiyGELLWqjia6eSUqTX3YPi9VmdD
- I0cLF98orMukhgX7aqPJr+EWZ7QVfGXeKYJpnmZk91m4NaSNzylbOPimSa31W47te/RsVXxiy
- SZQv8D/26O0yY/hjcNS4wwLz/vWAFROUD6iQ0izHBc/lp7xJQMjc5xhgt9jJmYcWSGA1mDbwI
- y4HJTrxlunkGXzFZuK+y+2FKRl9rwWq4GT3LI+SZo9G57EBDrtl6ucHB1iTPaSQwculBjZ1o7
- JSBFicKdsVw2d2WZ5BHdM/T7HJ80uWUibN1aWW9GdhtE75AkJ7wTmFjdjizIYoFujOIioH0Kr
- SW9kcjb43CthbxbZkSB0XC9wJ8MIa5Qde28e4P4TWKodpMhj0V/TgTxrZUG+cGKh83mihWW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJVWr-M3R-PfsrDvtpZTtSTBLHL95sAorO5EHVwg1eX67A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Acked-by: Enrico Weigelt <info@metux.net>
-
-
---mtx
-
-On 28.09.20 13:45, Andy Shevchenko wrote:
-> On Mon, Sep 28, 2020 at 1:33 PM Ed W <lists@wildgooses.com> wrote:
->>
->> Hi
->>
->> Could I get a final opinion (or signoff) on this patch please?
->>
->> The significant typo is the reference to "59", when the GPIO is actually 55
->>
->> According to the PCEngines schematic the names of two similar GPIOs are
->>     G59/DEVSLP1
->>     G55/DEVSLP
->>
->> The original developer named the second GPIO with a trailing 0, which doesn't seem unreasonable,
->> hence I just corrected the name to:
->>     AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
->> However another acceptable name could be:
->>     AMD_FCH_GPIO_REG_GPIO55_DEVSLP
->>
->> If I could ask for some guidance and if necessary I will resubmit this patch? Enrico, do you have an
->> opinion?
->>
->> However, perhaps it's already acceptable as is?
+On Mon, Oct 12, 2020 at 05:15:25PM +0200, Bartosz Golaszewski wrote:
+> Hi!
 > 
-> It's being accepted, and will be sent later to Linus.
+> One of the things I'd like to address in libgpiod v2.0 is excessive
+> stack usage with struct gpiod_line_bulk. This structure is pretty big
+> right now: it's an array 64 pointers + 4 bytes size. That amounts to
+> 260 bytes on 32-bit and 516 bytes on 64-bit architectures
+> respectively. It's also used everywhere as all functions dealing with
+> single lines eventually end up calling bulk counterparts.
 > 
->>
->> Kind regards
->>
->> Ed W
->>
->>
->> On 21/09/2020 09:40, Ed W wrote:
->>> On 21/09/2020 08:55, Andy Shevchenko wrote:
->>>> On Sun, Sep 20, 2020 at 11:33 PM Ed Wildgoose <lists@wildgooses.com> wrote:
->>>>> Schematics show that the GPIO number is 55 (not 59). Trivial typo.
->>>> Does it still DEVSLP0? Perhaps you need to drop that part as well.
->>>>
->>>> ...
->>>
->>>
->>> In the PCEngines schematic it's labelled as "G55/DEVSLP" (no 0)
->>>
->>> (In contrast G59 is labelled "G59/DEVSLP1")
->>>
->>> What is the quorum opinion on name?
->>>
->>> Thanks
->>>
->>> Ed W
->>>
->>>
->>>>
->>>>>   #define APU2_GPIO_REG_LED3             AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
->>>>>   #define APU2_GPIO_REG_MODESW           AMD_FCH_GPIO_REG_GPIO32_GE1
->>>>>   #define APU2_GPIO_REG_SIMSWAP          AMD_FCH_GPIO_REG_GPIO33_GE2
->>>>> -#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
->>>>> +#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
->>>>>   #define APU2_GPIO_REG_MPCIE3           AMD_FCH_GPIO_REG_GPIO51
->>>>>
->>>>>   /* Order in which the GPIO lines are defined in the register list */
->>>>> diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h
->>>>> b/include/linux/platform_data/gpio/gpio-amd-fch.h
->>>>> index 9e46678ed..255d51c9d 100644
->>>>> --- a/include/linux/platform_data/gpio/gpio-amd-fch.h
->>>>> +++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
->>>>> @@ -19,7 +19,7 @@
->>>>>   #define AMD_FCH_GPIO_REG_GPIO49                0x40
->>>>>   #define AMD_FCH_GPIO_REG_GPIO50                0x41
->>>>>   #define AMD_FCH_GPIO_REG_GPIO51                0x42
->>>>> -#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0        0x43
->>>>> +#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0        0x43
->>>>>   #define AMD_FCH_GPIO_REG_GPIO57                0x44
->>>>>   #define AMD_FCH_GPIO_REG_GPIO58                0x45
->>>>>   #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1        0x46
->>>>
->>>
->>
+> I have some ideas for making this structure smaller and I thought I'd
+> run them by you.
 > 
+> The most obvious approach would be to make struct gpiod_line_bulk
+> opaque and dynamically allocated. I don't like this idea due to the
+> amount of error checking this would involve and also calling malloc()
+> on virtually every value read, event poll etc.
+> 
+> Another idea is to use embedded list node structs (see include/list.h
+> in the kernel) in struct gpiod_line and chain the lines together with
+> struct gpiod_line_bulk containing the list head. That would mean only
+> being able to store each line in a single bulk object. This is
+> obviously too limiting.
 > 
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+I don't think I've ever gotten my head fully around the libgpiod API,
+or all its use cases, and I'm not clear on why this is too limiting.
+
+What is the purpose of the gpiod_line_bulk, and how does that differ from the
+gpio_v2_line_request?
+
+> An idea I think it relatively straightforward without completely
+> changing the current interface is making struct gpiod_line_bulk look
+> something like this:
+> 
+> struct gpiod_line_bulk {
+>     unsigned int num_lines;
+>     uint64_t lines;
+> };
+> 
+> Where lines would be a bitmap with set bits corresponding to offsets
+> of lines that are part of this bulk. We'd then provide a function that
+> would allow the user to get the line without it being updated (so
+> there's no ioctl() call that could fail). The only limit that we'd
+> need to introduce here is making it impossible to store lines from
+> different chips in a single line bulk object. This doesn't make sense
+> anyway so I'm fine with this.
+> 
+> What do you think? Do you have any other ideas?
+> 
+
+Doesn't that place a strict range limit on offset values, 0-63?
+The uAPI limits the number of offsets requested to 64, not their value.
+Otherwise I'd've used a bitmap there as well.
+
+Or is there some other mapping happening in the background that I'm
+missing?
+
+Cheers,
+Kent.
