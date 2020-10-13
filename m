@@ -2,139 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1357B28CA68
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 627E628CA71
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403933AbgJMInM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 04:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
+        id S2403912AbgJMIqL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 04:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403918AbgJMInM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 04:43:12 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19C8C0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:43:11 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a5so19513175ljj.11
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:43:11 -0700 (PDT)
+        with ESMTP id S2403884AbgJMIqL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 04:46:11 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4650C0613D0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id o18so19669392ill.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zv0iqh7SWHu3tmYR6PPtiAS9fETlgJuE+f7z3R7HPHU=;
-        b=EwAbM2RGaTTuHpEkbGhm9sEdo6ZaY1TDYVnNbPEciTUKY5LXOe0P2wYAXP5v/SowoL
-         86dum30mbAp8NxA+hyJocDFnJTvNH5346ODzZMBALx6xHhSNhjndMlg+iEehysMBYAbO
-         bQ8nDdA4VlVUGyaKNXqcoNMF9IuFXrX0AXc6kZm/hHL0nuY1PuxWGGySz7QP75tqtoDq
-         ok2UQKK2UA1XHCegwFxUt2pcQOaiidFVN0LsGO/g8YT96iT1Vsq8oId2xl5sO5FicKRx
-         usmijipvABCV9T5UAc+Rbhnm8L53N0k/GNhpdVBAmiSuNgA9f1okkrrN8JxuA5Pyr6+C
-         fmww==
+         :cc:content-transfer-encoding;
+        bh=c7TbymQaVbjWqMuiptoI/59p2mdYjjbzdD1erzg5t2g=;
+        b=HdB3ROCh1JhhyoRepBbaKYixEsMI7usqyuQ4RaMgt4vJo5bOUluepocWSs9ZnElR2K
+         frfTFBMbVHxBbTXRxi3RDs2gGEbzviPsuo7O4a3TGeaqDCShu8RAzhidgZBY8FOxY+qU
+         p8bKupo5U0BtRJBBm/oM93HK6hDzF4Y3wZsb5V62F7SuTZESkaHZ6iuBUgV3mCswmAgR
+         MSEcV6xuxkVFSl8hhir6WDfxz9V/Wq+uX5JAE17Q9W/C8GD6W7iI9OvCkoB05zpS0XZi
+         6ZhBZyJBdwJsfCB+kMLGIkwZ6QWQJ9qw+XSOes+diFeNZc1o5ZdAypdzO68l0l/LBfqk
+         OjCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zv0iqh7SWHu3tmYR6PPtiAS9fETlgJuE+f7z3R7HPHU=;
-        b=OVCkKfRLoLmss61BB8IxLaPjEDl8gztwBjNAGmdYZiIKoCQswvKB8ZVGfs3WRiqoC1
-         dWmnk2iUC++sKI0+Ihb49jPu6KgqG+PQrD4yWSVpSFJ4bnex897uj/oNGw+64PelVt3O
-         yc5kWL7DZlNZHPW1d6nPL4P7nazvfZ1+qqKNMK1VMaD1lduc8AeO7MdNOdGym494p4SZ
-         4IH8OPkmzEnUMcQ6UTjVtB+kwFYYE3taYD2Ju8Y3KIStW9Uv3XG1bV8MC+djCzVKOJY6
-         T8A4SEFVHqd0HQeJDhQ09a17UwoZi5wauRulEa8G6fhCHZHYPm7r5jx0b4cGlQ6IXJfa
-         ov1Q==
-X-Gm-Message-State: AOAM530asbKlNJ8h1NsVVzJIOcIa8XZ37VWkfTDd2yrsHKHevhHra4F4
-        yZOudzk8cfOZjIveRCnloBvZc07tFj2fKn0PMFynhg==
-X-Google-Smtp-Source: ABdhPJzsKhyfvPzaAOYep/hAF1ukHTPHBrnu2KWHHlcEr3Cb/P4PZE7iYG3R4ZksfnP7xT8erzcOt3oYB3CvvXMdCmE=
-X-Received: by 2002:a2e:4e01:: with SMTP id c1mr11351232ljb.144.1602578590353;
- Tue, 13 Oct 2020 01:43:10 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=c7TbymQaVbjWqMuiptoI/59p2mdYjjbzdD1erzg5t2g=;
+        b=J2XekDoggMVn1ikQGtBzlGdNX0TkzOFHAdsVo7PU5o3mQKTCsaqygyUqJScQiYq7ke
+         nK07evs6in79kxduFVSbxPU5JJTbMja0j3GH2JolkAR2nNr7d3VtnV97k9qs2tYD/8+p
+         Yv8r0Ge8q/RfrH6qT1irng8mUq4Q2xalxX/6QWt8TD0JDDIov3mwYrLtrVOw4nkmTMME
+         xfy2c4rfRMW652VXTnwjzZIK0S18Zfv2zA00e4p8MmiVBoGNenaqyHdZQq7WglRXtNM4
+         f61k2RYUK5eZH5L6FYZ7Fv8/2t4V6S5kuumUGZOl26B7nNFbbCy5OQJgUy2TYEPdbq24
+         9Aig==
+X-Gm-Message-State: AOAM5329O0yBlf4HEnMmoiIW/o/VTlAQyz9wvl9r062/TPYEQzpyHG3r
+        mN/9QaIN5c8zyJDFDWeCWKL6CFypXSS4kXMOywY9hg==
+X-Google-Smtp-Source: ABdhPJyLo8Vknhn6fT7NUEETE9bOci7H68GuhJ59RLfv82OTHk9St3+7i3PL42S0KAKbD2jxx1nRWgZ7k4GSpkpb1cM=
+X-Received: by 2002:a05:6e02:df0:: with SMTP id m16mr2179991ilj.220.1602578768081;
+ Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
-In-Reply-To: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 13 Oct 2020 10:42:59 +0200
-Message-ID: <CACRpkda4DF-XAi5XpJNLU_vjD9Zrjs6PkGpz5BW1E44W67SWvg@mail.gmail.com>
-Subject: Re: Suggestion - Configurable Source Clock Type for Line Event Timestamping
-To:     Jack Winch <sunt.un.morcov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <CAMRc=MdCj8ZohsKiJjqynXPeg81q8_WZvb5VxoPGUDusFUY7Kw@mail.gmail.com>
+ <CAHp75Vfy8un3APcYqWyO9b8aFMAyKVSkAbn=6kxpbSthgq4jxA@mail.gmail.com>
+ <CAMRc=MfP9EBqUCvcKUmwF4Zd+yFO-yfC6718ZXeM1PbtEqYWNQ@mail.gmail.com>
+ <CAHp75VdCfLrTcM5BeEgxyoRR5ptYDqQQQthrUmNoc7Fy9SwTXA@mail.gmail.com>
+ <CAMRc=MdavJ6w3S=5F+00oD7AxtUtC6KgvQm7GvJqX04CVrPjcw@mail.gmail.com> <HK0PR01MB24504356D7FA20A34AECAABAE2070@HK0PR01MB2450.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <HK0PR01MB24504356D7FA20A34AECAABAE2070@HK0PR01MB2450.apcprd01.prod.exchangelabs.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 13 Oct 2020 10:45:57 +0200
+Message-ID: <CAMRc=Mdu=ptWC2-trOsE5npne+coCsHxf6xpz99EhVbSif140g@mail.gmail.com>
+Subject: Re: [ANNOUNCE] libgpiod v1.6 released
+To:     =?UTF-8?B?U1ogTGluICjmnpfkuIrmmbop?= <SZ.Lin@moxa.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Drew Fustini <drew@pdp7.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 11, 2020 at 5:11 PM Jack Winch <sunt.un.morcov@gmail.com> wrote:
+On Mon, Oct 12, 2020 at 5:18 PM SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <SZ.Li=
+n@moxa.com> wrote:
+>
+> Hi,
+>
+> <snip>
+>
+> > I personally don't care much about how desktop distros handle this - I'=
+m mostly
+> > interested in bespoke embedded distros built with yocto or buildroot. I=
+'m Cc'ing
+> > SZ Lin who maintains the libgpiod debian package.
+>
+> Nowadays, many embedded distros are derived from Debian, such as Raspberr=
+y Pi OS
+> (previously called Raspbian). Moreover, the meta-debian [1] provides the =
+recipes for the
+> Poky build system to build images using Debian source packages within the=
+ Yocto project [2].
+>
+> [1] https://github.com/meta-debian/meta-debian
+> [2] https://www.yoctoproject.org/learn-items/deby-reproducible-and-mainta=
+inable-embedded-linux-environment-with-poky/
+>
+> >
+> > SZ Lin: libgpiod will get a new major release in the following months
+> > - the API will become v2.x and ABI v3.x - do you think it's important t=
+o make it
+> > possible for two major versions of libgpiod to live together in a singl=
+e system? I
+>
+> It's possible, but I think it's *no strongly needed* and there are no oth=
+er Debian
+> packages depend on libgpiod, as shown below.
+>
+> =3D=3D=3D
+> apt rdepends libgpiod2
+> libgpiod2
+> Reverse Depends:
+>   Depends: libgpiod-dev (=3D 1.5.2-1)
+>   Depends: python3-libgpiod (=3D 1.5.2-1)
+>   Depends: gpiod (>=3D 1.5.1)
+> =3D=3D=3D
+>
+> All of the above binary packages are built from the same (libgpiod) sourc=
+e package.
+>
+> > would like to avoid having to rename everything and use libgpiod2.0
+> > everywhere - this information is already stored in the API version. Doe=
+s debian
+> > support something like yocto's virtual providers maybe? How do you see =
+this for
+> > a desktop distro.
+>
+> I'm not familiar with Yocto's mechanism, but in this case, the ABI change=
+s seem that
+> are not backward-compatible; we normally require changing the SONAME of t=
+he library
+> and the shared library package name.
+>
 
-> I recently noticed that in Linux 5.7, gpiolib was changed such that
-> line events are now timestamped using the system 'monotonic' clock
-> rather than the system realtime clock.  The rationale for this change
-> appears to be due to the major use-case of the line event timestamp
-> data in relation to the nature of the system realtime clock (which can
-> jump backwards or forwards in time due to adjustments by third-parties
-> - e.g., NTP or PTP clients, etc).
+For the SONAME it's clear: current libgpiod.so.2 will become
+libgpiod.so.3. For the library package name: this is already handled
+by distros - for instance the package in debian is called libgpiod2. I
+guess it will become libgpiod3 then. I think we're good in that regard
+then.
 
-The background is in the commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpiolib.c?id=f8850206e160bfe35de9ca2e726ab6d6b8cb77dd
-
-Also study the solution in IIO that started the discussion about
-all this:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=bc2b7dab629a51e8beb5fda4222c62a23b729f26
-
-> I know there are users of the line event timestamp who actively
-> rely on that value being obtained from the system realtime clock.
-
-(then in follow-up mail)
-> For context, these wall clock time sensitive users are running on
-> systems which are PTPv2 clients, with their system realtime clock
-> synchronised to that of a local PTP Grand Master clock.  In the past,
-> I have used the TTL Pulse Per Second (PPS) output of the Grand Master
-> to evaluate methods of timestamping line events with wall clock time
-> and it was the kernel timestamping which was most suitable for our
-> application.
-
-As Arnd stated in the thread from 2018:
-"most of these clocks make no sense at all for a random user
-space interface, mainly because I wouldn't trust user space
-programmers to make an informed decision which of those
-seven to use."
-
-So I suspect you actually managed to make a good argument
-for using the realtime clock, we didn't see that coming. :)
-
-But why can't userspace (whether your application or libgpiod)
-just call the system clock_gettime() function at the arrival of a
-lineevent in that case, and this will be quick due to using vDSO
-on most arch:es so no user-to-kernelspace switch will be
-required?
-
-clock_gettime() can get you any of the things IIO can get
-you.
-
-If you really need the timestamp to be as close as possible
-to the actual event then I see why you want the kernel to
-make the timestamp in the hard IRQ handler already, but
-I just want to confirm that you really really need this.
-
-> My suggestion (which I would be happy to implement myself) is to allow
-> users to select the clock to be used for line event timestamping on a
-> per line handle basis.
-
-I suppose that makes more sense than the "global switch" in sysfs
-for the whole device that IIO uses. At least it is a clear sign that the
-user wants this specific type of timestamp.
-
-> 1. Increase in processing overhead and latency of timestamp
-> acquisition on line event interrupts.  Implementing the proposed
-> change requires a function call to be made to the appropriate ktime
-> accessor function, based on what the user has configured as the
-> timestamp clock source.  In kernel versions from 5.7 to current, a
-> call is made to the ktime_get_ns() function which is most likely
-> inlined by the compiler.  This change will result in an actual jump
-> having to be made, which will have processor and memory access
-> overhead (potential I$ and D$ misses).  Then there is of course the
-> overhead of resolving which function to call - either a switch
-> statement or call by function pointer (probably the latter option).
-
-Given the overall latency of the kernelspace to userspace
-switch and the whole kernel executing around us this is not of
-any big concern I'd say, though I will stand corrected in the
-face of real-world usecase.
-
-Yours,
-Linus Walleij
+Bartosz
