@@ -2,82 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C39FF28C8FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 09:08:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBCC628C984
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 09:45:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389450AbgJMHI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 03:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
+        id S2390362AbgJMHpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 03:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730003AbgJMHI5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 03:08:57 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4194C0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 00:08:55 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id r4so13457321ioh.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 00:08:55 -0700 (PDT)
+        with ESMTP id S2390040AbgJMHpR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 03:45:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E7EC0613D0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 00:45:16 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g7so21137281iov.13
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 00:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zBzBGMm2WZCq4BIF81gt7ByYqWbU6zSuzpQltCXzCdU=;
-        b=YMOzUs7HPk7wcOuYqWJbTLoSiZhbxru2Mw0vkzn5zdTc4tC0iIIlw0RKyrbY3hcAgD
-         OKZwzJ3dJcrhQQRkDigkcHOcizwMemsCjTJCd9cIv0Ak6IYe0gKL48GfCbhYsc9tzIkQ
-         7jP3+8ogq4T4pmYtJPDyVwGXNJZ/Ci0m6aB/BW9dqaRkH0rNhxvvbXKs5rN0wAJ/BSTH
-         RGLC0QXTKQacH/yMTqLORLmddvZovUkcy47NCll3qrXfChdaj/ze1Ron1NpNUjTndVJy
-         32Y9Jagq/Sq2oiV0CX6Deel9luYuYHhKxvEVM1D8fLa29bysgoliiAtyCnrjz6GhQWHS
-         jchg==
+        bh=4Fl43eLbLShHIyZB1+nIinTgdqWH74v1phHZzIAK9j8=;
+        b=DHF5eSIZIJ7xjdJW1UgW/g7HKZDANjOxis9I8aCirE/vl6KPt79poGwg2XinBmDRwX
+         HnHGauDOuvHWcEtUDuSsH0i4/hn+g0u4igQsVBmhZZpxXwpvba6eVtmDL2runQL+Ni+y
+         k+3JmsInHcgvk5GA1KUQmdQxDatZAui/Kuj2uWfCqJ3EHMAhGYIT9gjRC81skEgDN1vO
+         wBznplnZyIF0kb4ou055SXa7UiPa+SzZATvSPjvCi81n2dCJ2XTtpMru8X2vGUDQlZdl
+         VxikVbfLwWPxk+HxGqxYqMHI8vZUfXdPeoz2z0pxV34u9nUM2AsSnXRPQg5uCRaAdXyi
+         kZEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zBzBGMm2WZCq4BIF81gt7ByYqWbU6zSuzpQltCXzCdU=;
-        b=HFsTZuxNE5ZCQdVPEfK52Abj+L41Q18oszEje2oCqy9W9Cl/8Iph/7vDRxzEXkWPlz
-         P3XyeB6IdViX3vjtvn8OzeYXzHsIK4eKQUJUgZOammd3FSlecfHusJr/qoRawqsXU3m8
-         JoCOGoQxQhLweYk+uzXcsLrizYCqhHbsex2sFGf+m+RkeZ75xjG005XRYrSMRPWTdN+S
-         qpgLn6CJ6gpUqlgPk5lospDUvqe1OGTZE249J4W0MuMU4ubHR6QFXMHisSXIFr0aEkIY
-         8gN7Frt9S7I5gMjzN2w7IhCn3d9v7YacO/5NcxHqz0fYFeBEhs2yyrGCAcst1zyGLYva
-         mz4w==
-X-Gm-Message-State: AOAM530LCNJlep503pHczXSiizXJAKqWgXNugNS/sIA7FcX3kSBZsRVN
-        GVmiZektnXLfPbyQkNnv2vuLv3vDEQ2LtN4ktQK1tQ==
-X-Google-Smtp-Source: ABdhPJzf6ZBpzoKoD4SI1nHPPWuYdt3I+D+N5pfrHqlyysQyeVps94AUBy5ozoy+slqePPLoJRVVpK9O3z4bfCMH2vk=
-X-Received: by 2002:a02:c80a:: with SMTP id p10mr13829446jao.114.1602572934763;
- Tue, 13 Oct 2020 00:08:54 -0700 (PDT)
+        bh=4Fl43eLbLShHIyZB1+nIinTgdqWH74v1phHZzIAK9j8=;
+        b=CaSu9C4Jxp2qMRWR8MfVeqTC8An82gJFWZthsxXK0IlVPhO9F7wpbxBbcSCU/YhWBy
+         tHbOD/RqdtdnpnC2o9D8xYmxuc955G90VtjeDQ0rUjI9SNJ+T0PaGyjdw0rHBc/XaPWD
+         +FAGF7uGSBj237e77LIJC0YNYj1zRcoYpjB2WTxJYyBhfbkweK23Lr/WlHjWcaYtte2l
+         2cGYa1Mtjofk4obEVU9sjF8SFWrHdK+tXVMgv34GJjsSOU3BtNdIFuLhGgxevUPy8FRd
+         KFqEw31smIfBPVCFdWNOA6n9YqgSpgvNJtiBqN8dNCnoJomKxPqWCi6ylq9DBAgTncdR
+         4KBg==
+X-Gm-Message-State: AOAM5329mOrBcf3dcr8A41dnITXFYN0uxp2NGuenHocy3JlppaYOtrUG
+        rH10kTDjrBt5VN1ZuBsJIWJn+fN3SFzNjv1wftReYQ==
+X-Google-Smtp-Source: ABdhPJz1mrnZFFH8VA8/Wx+kqxESXrufp4ASHC0s1t1etN3SnApdyno5g+3XU3TQJu3Y8ZPFcPFteyE7TKkGacTILuU=
+X-Received: by 2002:a02:3f68:: with SMTP id c40mr13265983jaf.136.1602575115414;
+ Tue, 13 Oct 2020 00:45:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201002063148.32667-1-warthog618@gmail.com>
-In-Reply-To: <20201002063148.32667-1-warthog618@gmail.com>
+References: <CAMpxmJVWr-M3R-PfsrDvtpZTtSTBLHL95sAorO5EHVwg1eX67A@mail.gmail.com>
+ <20201013005252.GA9387@sol>
+In-Reply-To: <20201013005252.GA9387@sol>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Oct 2020 09:08:44 +0200
-Message-ID: <CAMRc=Md51g2-3PvQV_BA-qFJ=iDHqQELyMLx18yLR2LDQOCNHw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] core: Basic port to uAPI v2
+Date:   Tue, 13 Oct 2020 09:45:04 +0200
+Message-ID: <CAMRc=Mf_ZG5FqEAd0CSCqx_GeEG_4ghEXf8S3Sdws4+XOFV2Ag@mail.gmail.com>
+Subject: Re: [libgpiod] Rethinking struct gpiod_line_bulk
 To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 2, 2020 at 8:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Oct 13, 2020 at 2:53 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Port existing implementation from GPIO uAPI v1 to v2.
-> The libgpiod external interface remains unchanged, only the internal
-> implementation switches from uAPI v1 to v2.
+> On Mon, Oct 12, 2020 at 05:15:25PM +0200, Bartosz Golaszewski wrote:
+> > Hi!
+> >
+> > One of the things I'd like to address in libgpiod v2.0 is excessive
+> > stack usage with struct gpiod_line_bulk. This structure is pretty big
+> > right now: it's an array 64 pointers + 4 bytes size. That amounts to
+> > 260 bytes on 32-bit and 516 bytes on 64-bit architectures
+> > respectively. It's also used everywhere as all functions dealing with
+> > single lines eventually end up calling bulk counterparts.
+> >
+> > I have some ideas for making this structure smaller and I thought I'd
+> > run them by you.
+> >
+> > The most obvious approach would be to make struct gpiod_line_bulk
+> > opaque and dynamically allocated. I don't like this idea due to the
+> > amount of error checking this would involve and also calling malloc()
+> > on virtually every value read, event poll etc.
+> >
+> > Another idea is to use embedded list node structs (see include/list.h
+> > in the kernel) in struct gpiod_line and chain the lines together with
+> > struct gpiod_line_bulk containing the list head. That would mean only
+> > being able to store each line in a single bulk object. This is
+> > obviously too limiting.
+> >
 >
-> This is a minimal port - uAPI v2 features are only used where it
-> simplifies the implementation, specifically multiple events on a bulk can
-> now be handled directly by the kernel in a single v2 line request rather
-> than being emulated by multiple v1 event requests.
+> I don't think I've ever gotten my head fully around the libgpiod API,
+> or all its use cases, and I'm not clear on why this is too limiting.
 >
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
 
-Hi Kent!
+For instance: we pass one bulk object to gpiod_line_event_wait_bulk()
+containing the lines to poll and use another to store the lines for
+which events were detected. Lines would need to live in two bulks.
 
-I just noticed that this broke the tests in Python and C++ bindings.
-Something to do with the RISING and FALLING edge values and how
-they're translated in the bindings, it seems. Let me know if you'd
-have time to take a look at it and see if it's something obvious.
-Otherwise I'll investigate that tomorrow.
+> What is the purpose of the gpiod_line_bulk, and how does that differ from the
+> gpio_v2_line_request?
+>
+
+struct gpiod_line_bulk simply aggregates lines so that we can easily
+operate on multiple lines at once. Just a convenience helper
+basically.
+
+> > An idea I think it relatively straightforward without completely
+> > changing the current interface is making struct gpiod_line_bulk look
+> > something like this:
+> >
+> > struct gpiod_line_bulk {
+> >     unsigned int num_lines;
+> >     uint64_t lines;
+> > };
+> >
+> > Where lines would be a bitmap with set bits corresponding to offsets
+> > of lines that are part of this bulk. We'd then provide a function that
+> > would allow the user to get the line without it being updated (so
+> > there's no ioctl() call that could fail). The only limit that we'd
+> > need to introduce here is making it impossible to store lines from
+> > different chips in a single line bulk object. This doesn't make sense
+> > anyway so I'm fine with this.
+> >
+> > What do you think? Do you have any other ideas?
+> >
+>
+> Doesn't that place a strict range limit on offset values, 0-63?
+> The uAPI limits the number of offsets requested to 64, not their value.
+> Otherwise I'd've used a bitmap there as well.
+>
+> Or is there some other mapping happening in the background that I'm
+> missing?
+>
+
+Nah, you're right of course. The structure should actually look more like:
+
+struct gpiod_line_bulk {
+    struct gpiod_chip *owner;
+    unsigned int num_lines;
+    uint64_t lines;
+};
+
+And the 'lines' bitmap should actually refer to offsets at which the
+owning chip stores the line pointers in its own 'lines' array - up to
+64 lines.
+
+But we'd still have to sanitize the values when adding lines to a bulk
+object and probably check the return value. I'm wondering if there's a
+better way to store group references to lines on the stack but I'm out
+of ideas.
 
 Bartosz
