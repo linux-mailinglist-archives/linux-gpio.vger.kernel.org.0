@@ -2,138 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB9D228CEDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 15:04:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A84CC28CF10
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 15:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgJMNEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 09:04:53 -0400
-Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:40833
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727151AbgJMNEx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 13 Oct 2020 09:04:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iDM8uPqjwE+do0bsQxq/eByJj+eBR1UFjp+AGHednPtpv1mC1Ej7Lui89ecZgsgdXKqA5/kABHQF8CP6xL9t9J4XvACbVbqW83jl67K+G7N0AHhXaZM4e2jH+jQFLfiRrnqmw8M+DqQYX6lnO4BK3dqXWN1V1XNdiGfAnKNg5BLKHy6xXXcLdrwUWuvKUvSt6pLemzQSXZNG8OqbHDksx2H4ImwLMFvP9XwuIz4sDrcpmKg/YtrlbGgbSJcIsCMOpor/cRKdddqvcoqGxne9MIG790+LJsOHSygd7ChTEjjqCpo0YJtTVbHn+/66SOKqqkS0kFagLJ0THHAE4YcgPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oyt/ZLLf/v7pWrDUKSqxSd6Pd/hCJ9wtnG0YMUCyx+Q=;
- b=LaKy1oAvr9D6FDeBM/HDThJ2mK2PRcfoOEH+Xf+JOkzAg5FzPMw6aFGiJNZuvA7pWdC+mt82tU7PkOXcESglPhNkzwvgq+8nSNFjSFe+MpXly5GGoQl9VqzpoD0kpchqCWtpoAILBvDTzvyNNvzG3We5c1ePfHOuAsrpznRgsqYKNiT8nuq9NAWj1UCigS6e8/RCY3K2obK2V5BK1reLxxuVKEsHjLQ3gbe8MnItlqQLSMSpOS7JIOHIl/jmeicTMTyi4mzaQRO28qflN/y0x4A9Zia5N0NpRqIPjSQttvvMAXqGDmPC3CkE+x1iE7AHQpgL8kSt1wvNed/xOohDjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oyt/ZLLf/v7pWrDUKSqxSd6Pd/hCJ9wtnG0YMUCyx+Q=;
- b=A5VAa6+Fbs6buCWWrjK+ns4XQBgffapkiTFObkGds84maKpKDzMd4Qgk9tvM/f/EYeHDpeFrJ3MmTpohASMQetlPX1HagSF03tOeTdGI8+CeGdAKeQcrN/mW3GLrMJOa3W6asHLYInraDGkCHKCzLUN1yn7W2yMKyJUJh+pOMcA=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB3975.eurprd04.prod.outlook.com (2603:10a6:209:40::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.23; Tue, 13 Oct
- 2020 13:04:49 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::546f:92f0:f3c5:a148]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::546f:92f0:f3c5:a148%7]) with mapi id 15.20.3455.029; Tue, 13 Oct 2020
- 13:04:49 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "prabhakar.mahadev-lad.rj@bp.renesas.com" 
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Lubomir Rintel <lkundrak@v3.sk>, Joel Stanley <joel@jms.id.au>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/4] gpio: mxc: Support module build
-Thread-Topic: [PATCH V3 1/4] gpio: mxc: Support module build
-Thread-Index: AQHWjLUcSolWzL5GLkyvsHmD9a65ial/qOwAgBRVT4CAAarGsA==
-Date:   Tue, 13 Oct 2020 13:04:49 +0000
-Message-ID: <AM6PR04MB49664C2695E5C428F04CE92180040@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdY-A6i+2SRVn9TJC8C3+rYa1qMcSHSwOaR_jKfxjOK2VQ@mail.gmail.com>
- <DB3PR0402MB3916B06402B0C4D07325F61FF5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916B06402B0C4D07325F61FF5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f5c73cac-e61e-4e00-b08c-08d86f78915c
-x-ms-traffictypediagnostic: AM6PR04MB3975:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB39759DC5508C37DAA116AED480040@AM6PR04MB3975.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p/DAliPY31UEwJMNtD2oD9uA6ZQeqihReJZEEe64SnOOmS7tqjdRM/sJd6AecD8NIZ/ZATlSPxgBh6RSQJvPV6sO7Y9muiG6MJwQiHqY+YuLusO6aD2q+GEzBVoE5EoSFZLymGHhqQyfhfuHWhHVl9NNXfSb/BJ7A079I6UbiPZ51wxK3jr+wnX77xhpFrn7oXdY1cL9Rrv1J9whbfgJNG8KZGIrVsAguxvRg8FAEV6NuzaVUWlK0mujBmk//mgBs9MEw0pR0t2xjP/5yqakjo+AJSWH14JtkWqFBJY8n9puTj22qhmBHg14fROmRWXMfcj6vkgeBcEskOTOQu06sw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(366004)(39850400004)(396003)(5660300002)(186003)(6506007)(53546011)(478600001)(76116006)(2906002)(7416002)(66446008)(64756008)(66556008)(66946007)(66476007)(26005)(4326008)(55016002)(7696005)(8936002)(8676002)(316002)(71200400001)(86362001)(83380400001)(110136005)(54906003)(9686003)(44832011)(52536014)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: voA9L6i6PjDtHLGA+7NwK1iYxllxHFi7Po8cOi8jVPY3ZoJ4aBSeDLWN1ngDGdj7bm4DZA1hGiyroEusLgzaCBP7X9hvvyfDsQxg2SdjfrXu9ek2u0euBRhRC75eHPeIpmoIYIywwTpJT83k7NVLlJ9U+22Z4IFdKy6O+Fx/OrmWamDm0A4iE2oT32uYw49tMrx1XGKcxuUixUTbVHlAKdoUlKnGyEf52MziO6jJ/Fj1v033RWd73dEvRsFbI9VYzz72G9PSnjqIvblTWJYZwSgYpPv3qIq6x5e5Y3f3NIYz/hMhmrqdB2ajD+MTNPHBCNhE29smOqFR1lfaIR/38Z1B36CVtL9QBl5hojWFJ4PrG3iRe+NkOpzeZo0J/yoL5CCxkpz1gF3+MsG8wtWVUcgD4cjyuQ8fW5mm7pZEx1jbTRhe43E1h5JGrjMpVoiL4OsWIQPWsUwxw7/mSnd1csqOd1kAef1QDWQvP/sfAb+6Ypf0gmrhGguJiXHnkI6hMmnf0kAjqi36amzq490QEMMQJ1M8LyCpVbpBKJJSoSiussc3nNKWVFzLQMC2OSCRT46exGfNDiIsHL02WgX5zX71J8CeitLjtYvDnDGnnwAUkjzj+PoARSb9rgdWq1cycswM/NX/fpcK6IL+8XWPaA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728586AbgJMNWA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 09:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgJMNWA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 09:22:00 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA084C0613D2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 06:21:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a4so20379907lji.12
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 06:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ACveS3MnDWEz76tc05B9yNTeKoU1SrKlur/INU6I8SQ=;
+        b=fRcwWfj4xvsx3uJBVGKYyGUPdAf08QiBQ8DH27c+wOV9DsEKVBf0h3DzcNMzSC5RIi
+         lr3OZJWBQFBLIHvc+5IM4jdnhy5Aoq2E0sc7gCCo/W8vFvubOixYhQGcrCUBsIsTOhp2
+         tjvu3D7wFV78gFfZAvGXSmSEdWV4rD/D8XvuPWG4P4m7Jlksq2naSAQWqjBtBVh01/5d
+         /bOdZGL4NcTt6h6TsLyh0j/CNxqZENrSmLgrUaB/JY6dyHCAd596EE33Vf19zGPd6PJC
+         wXdRgz1B6tzwND8puQeAcdo5qjWL9VIBHfkx/RIQiiVhnZ3R1VwKFFfTCaLX6XSaUVIh
+         YWnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ACveS3MnDWEz76tc05B9yNTeKoU1SrKlur/INU6I8SQ=;
+        b=gLlrmwnVB2A6tVNrnUW0O4V9DplX3MKtmNjWxyt7zxYMrw/fQ9aUrhlBzA0It4XYe3
+         ov98+ugpaQMg8Qvqu/rkzjwaFzIE28Z8B9p0zWvnojY5p1jdM5TDn0V9WgZ8ExVaHcf0
+         OtXZ882M6zLUrdItCE6vQE22NXdERnqOpIzvDnw+D7qlaPZ384KfGOuEXc6XVGGif7FA
+         A0jo+NWOfdWG60GGz9fuh6L2uJMxgP4U8Bfkt11XgsNyOlL1IQ+7GU7IRwHYGe4PFPxp
+         zAq+AJpp9tFZzXO1cyOZpPyrBAxjpWn04UBPxKjre7hlW8Yykrtu8xexqEA9S5apcx7x
+         Bw0w==
+X-Gm-Message-State: AOAM531DwFdQhL5IGTyn3EqbGUVbhf4fwYkLapN4sUABztPCIrVTL6kD
+        NSD5EZXlvBR/6i5l9Y8PaiaS6GWoRaz2Sywby0DqLA==
+X-Google-Smtp-Source: ABdhPJzDHYR/9h8G6d7Rsd3jkAp3Sn2PQxrdZWXTAzZqH7q46HJwJYT+M4TyeoHepiD6MgNw+q8RzuudRY3rJHawaes=
+X-Received: by 2002:a2e:4e01:: with SMTP id c1mr11816992ljb.144.1602595318063;
+ Tue, 13 Oct 2020 06:21:58 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5c73cac-e61e-4e00-b08c-08d86f78915c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Oct 2020 13:04:49.5806
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ewfpoKeRVJSiqk3icVVYq8LcT0r6HX9CPW0dOPA+WOEFu09jYviHf5D0Z+PelTbWVKKkClOy4b3KKeFkqUjs0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3975
+References: <20201005070329.21055-1-warthog618@gmail.com> <CAMpxmJUbxuAHmcf_1vP27qb1gSXTfE1OBb8X3MSoESpa=pycgQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJUbxuAHmcf_1vP27qb1gSXTfE1OBb8X3MSoESpa=pycgQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 13 Oct 2020 15:21:47 +0200
+Message-ID: <CACRpkdZ+9-bFg1zYXE=ppGUa0OY0f9-+QRefd1q1OMsLEdh1dg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgU2hhd24sDQoNCj4gRnJvbTogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+
-IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAxMiwgMjAyMCA3OjM2IFBNDQo+IA0KPiBIaSwgU2hhd24N
-Cj4gDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAxLzRdIGdwaW86IG14YzogU3VwcG9ydCBt
-b2R1bGUgYnVpbGQNCj4gPg0KPiA+IE9uIFRodSwgU2VwIDE3LCAyMDIwIGF0IDc6NDAgQU0gQW5z
-b24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gd3JvdGU6DQo+ID4NCj4gPiA+IENo
-YW5nZSBjb25maWcgdG8gdHJpc3RhdGUsIGFkZCBtb2R1bGUgZGV2aWNlIHRhYmxlLCBtb2R1bGUg
-YXV0aG9yLA0KPiA+ID4gZGVzY3JpcHRpb24gYW5kIGxpY2Vuc2UgdG8gc3VwcG9ydCBtb2R1bGUg
-YnVpbGQgZm9yIGkuTVggR1BJTyBkcml2ZXIuDQo+ID4gPg0KPiA+ID4gQXMgdGhpcyBpcyBhIFNv
-QyBHUElPIG1vZHVsZSwgaXQgcHJvdmlkZXMgY29tbW9uIGZ1bmN0aW9ucyBmb3IgbW9zdA0KPiA+
-ID4gb2YgdGhlIHBlcmlwaGVyYWwgZGV2aWNlcywgc3VjaCBhcyBHUElPIHBpbnMgY29udHJvbCwg
-c2Vjb25kYXJ5DQo+ID4gPiBpbnRlcnJ1cHQgY29udHJvbGxlciBmb3IgR1BJTyBwaW5zIElSUSBl
-dGMuLCB3aXRob3V0IEdQSU8gZHJpdmVyLA0KPiA+ID4gbW9zdCBvZiB0aGUgcGVyaXBoZXJhbCBk
-ZXZpY2VzIHdpbGwgTk9UIHdvcmsgcHJvcGVybHksIHNvIEdQSU8NCj4gPiA+IG1vZHVsZSBpcyBz
-aW1pbGFyIHdpdGggY2xvY2ssIHBpbmN0cmwgZHJpdmVyIHRoYXQgc2hvdWxkIGJlIGxvYWRlZA0K
-PiA+ID4gT05DRSBhbmQgbmV2ZXIgdW5sb2FkZWQuDQo+ID4gPg0KPiA+ID4gU2luY2UgTVhDIEdQ
-SU8gZHJpdmVyIG5lZWRzIHRvIGhhdmUgaW5pdCBmdW5jdGlvbiB0byByZWdpc3Rlcg0KPiA+ID4g
-c3lzY29yZSBvcHMgb25jZSwgaGVyZSBzdGlsbCB1c2Ugc3Vic3lzX2luaXRjYWxsKCksIE5PVA0K
-PiBtb2R1bGVfcGxhdGZvcm1fZHJpdmVyKCkuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
-QW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4NCj4gPiBUaGlzIHBhdGNoICgx
-KSBhcHBsaWVkIHRvIHRoZSBHUElPIHRyZWUuDQo+ID4gUGxlYXNlIGFwcGx5IHRoZSByZXN0IHRo
-cm91Z2ggdGhlIEFSTSBTb0MgdHJlZSENCj4gPg0KPiANCj4gQ291bGQgeW91IHBsZWFzZSBoZWxw
-IHBpY2sgdGhlIHJlc3QgcGF0Y2ggb2YgdGhpcyBzZXJpZXM/IE90aGVyd2lzZSwgdGhlIGkuTVgN
-Cj4gR1BJTyBkcml2ZXIgd2lsbCBOT1QgYmUgZW5hYmxlZCBieSBkZWZhdWx0IGFuZCBpdCB3aWxs
-IGJsb2NrIGtlcm5lbCBib290Lg0KDQpUaGlzIGJsb2NrZWQgYSBodWdlIG51bWJlciBvZiBpLk1Y
-IGJvYXJkcyBib290aW5nIHdpdGggbGF0ZXN0IGxpbnV4LW5leHQga2VybmVsLg0KV291bGQgeW91
-IGhlbHAgcGljayBpdCBBU0FQPw0KDQpSZWdhcmRzDQpBaXNoZW5nDQoNCj4gDQo+IFRoYW5rcywN
-Cj4gQW5zb24NCg0K
+On Thu, Oct 8, 2020 at 5:46 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> On Mon, Oct 5, 2020 at 9:03 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > I'm intending to add some GPIO chardev documentation to
+> > Documentation/admin-guide/gpio/chardev.rst (or perhaps
+> > Documentation/userspace-api/??), but that is taking longer than I'd like,
+> > so in the meantime here is a collection of minor documentation tidy-ups
+> > and improvements to the kernel-doc that I've made along the way.
+> > Hopefully nothing controversial - mainly formatting improvements,
+> > and a couple of minor wording changes.
+
+> For the entire series:
+>
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Linus: can you take them for v5.10 through your tree directly?
+
+I am waiting for Kent to respin them addressing Andy's comments
+on patch 5/5 then they can go in as fixes I think.
+
+Yours,
+Linus Walleij
