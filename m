@@ -2,62 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A5928CA12
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9044828CA2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:23:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391064AbgJMIUf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 04:20:35 -0400
-Received: from mail.fastestway24.com ([5.249.159.217]:34522 "EHLO
-        mail.fastestway24.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390282AbgJMIUe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 04:20:34 -0400
-X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Oct 2020 04:20:33 EDT
-Received: by mail.fastestway24.com (Postfix, from userid 1001)
-        id D2F1AA2F0F; Tue, 13 Oct 2020 09:11:40 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fastestway24.com;
-        s=mail; t=1602576707;
-        bh=YGOlxoddnI3PXnh41XMWUfU0z9xsorZLZcAPNbcZr/c=;
-        h=Date:From:To:Subject:From;
-        b=q5bvMGPFC01dbHBjdPVfjvkfY1ytUL+yuAbwP7Ep7es8UAD8xTqgV24v3h7Gwuu5D
-         PaFJppfOFQVJRs7ArKjWOaIPLgujFGtTN7Hm6LU+CF7I7sGVMYd5LDjrO1GPvu5H+r
-         +Lz2m70wQJjAhkpqCAqyYClzKsmLz17COuG6X/5kjO3QBH4YascePvoz1Rp7a2ErXU
-         gkis8VgvX21xg2jWRpJn22wSzxRjRAUMVUnrIifc4GoAvUf0TerZmr6vO4wTtyST8r
-         WgLajbUwf89ik84VxIPhLP+vVaMSNS+d3cFujfAF6P6na0zt7T5W280tg/LG+bNbJz
-         uC/BvVxvCKx9g==
-Received: by mail.fastestway24.com for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 08:11:18 GMT
-Message-ID: <20201013074502-0.1.4d.9kzj.0.aznjmmqhv9@fastestway24.com>
-Date:   Tue, 13 Oct 2020 08:11:18 GMT
-From:   "William Jones" <william.jones@fastestway24.com>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Disinfectant
-X-Mailer: mail.fastestway24.com
+        id S2403833AbgJMIWd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 04:22:33 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:60068 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391409AbgJMIWd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 13 Oct 2020 04:22:33 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kSFZj-0005Q6-Bl; Tue, 13 Oct 2020 10:22:27 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH v3 0/3] rockchip-pinctrl fixes
+Date:   Tue, 13 Oct 2020 10:22:26 +0200
+Message-ID: <34840448.7XeAIBGaoL@diego>
+In-Reply-To: <20201013063731.3618-1-jay.xu@rock-chips.com>
+References: <20201013063731.3618-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Good morning,
+Hi Jianqun,
 
-looking for companies interested in raising additional capital by diversi=
-fying their offer in soaps, liquids and gels for hand disinfection and co=
-smetics for body and hair care.
+Am Dienstag, 13. Oktober 2020, 08:37:28 CEST schrieb Jianqun Xu:
+> These patches are required by GKI.
+> 
+> Jianqun Xu (3):
+>   pinctrl: rockchip: make driver be tristate module
+>   pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
+>   pinctrl: rockchip: create irq mapping in gpio_to_irq
 
-The distribution of innovative products corresponding to the current pref=
-erences of customers in the field of hygiene and preventive healthcare al=
-lows our partners to gain new markets and achieve better economic results=
-=2E
+looks good to go as fixes.
 
-In addition to products with bactericidal action, our range includes show=
-er gels, shampoos and hair conditioners, as well as efficient, concentrat=
-ed detergents.
+What happenend to the "populate platform device for rockchip gpio"
+patch though - more out of cursiosity.
 
-The versatility (suitable for all skin types) combined with an affordable=
- price means that customers make an informed choice of a product among ot=
-hers available on the market.
-
-Are you interested in cooperation?
+Heiko
 
 
-William Jones
