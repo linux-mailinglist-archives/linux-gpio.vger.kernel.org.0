@@ -2,137 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 627E628CA71
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DBE28CAA6
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Oct 2020 10:54:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403912AbgJMIqL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 04:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
+        id S2404062AbgJMIxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 04:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403884AbgJMIqL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 04:46:11 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4650C0613D0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id o18so19669392ill.2
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
+        with ESMTP id S2404127AbgJMIxQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Oct 2020 04:53:16 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BF7C0613D0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:53:16 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a200so16292013pfa.10
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 01:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=c7TbymQaVbjWqMuiptoI/59p2mdYjjbzdD1erzg5t2g=;
-        b=HdB3ROCh1JhhyoRepBbaKYixEsMI7usqyuQ4RaMgt4vJo5bOUluepocWSs9ZnElR2K
-         frfTFBMbVHxBbTXRxi3RDs2gGEbzviPsuo7O4a3TGeaqDCShu8RAzhidgZBY8FOxY+qU
-         p8bKupo5U0BtRJBBm/oM93HK6hDzF4Y3wZsb5V62F7SuTZESkaHZ6iuBUgV3mCswmAgR
-         MSEcV6xuxkVFSl8hhir6WDfxz9V/Wq+uX5JAE17Q9W/C8GD6W7iI9OvCkoB05zpS0XZi
-         6ZhBZyJBdwJsfCB+kMLGIkwZ6QWQJ9qw+XSOes+diFeNZc1o5ZdAypdzO68l0l/LBfqk
-         OjCw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ibtxH0d6mCxSVXvODZ6Rq5N+NBWS2ujaEK7AVUMADsc=;
+        b=TvgALXG1lQMbAblF8jBtBw7gtISKAKZxyqXuMIx4TLYiZcWD3xZfQc/lOYZEqmSOKp
+         YMy0eJgD3KVOmbXk5TPF9G8V0A1E55K7mBsehMDMXLtMQkwnYvFJIJU1tOfnsS2PF1qT
+         AK0n+9Dw0sZGLYrsX9GcfrQA6eorlIUxzMXf2L4BrbCKX3cApDqlmpUfhaPBflMIIyre
+         uZ3qYhhJOSqR112ipEwRxBPReyfQW6nWADutJFgqeZMjptk/BIgNvzhfp/ZYznlcWEoW
+         1WZlqoJ9bXLBVOBTc/R8TSKngG9yQGDLnoeT10jn6b2YKOuVXl7z1DrPekGrpdowlgsD
+         N8dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c7TbymQaVbjWqMuiptoI/59p2mdYjjbzdD1erzg5t2g=;
-        b=J2XekDoggMVn1ikQGtBzlGdNX0TkzOFHAdsVo7PU5o3mQKTCsaqygyUqJScQiYq7ke
-         nK07evs6in79kxduFVSbxPU5JJTbMja0j3GH2JolkAR2nNr7d3VtnV97k9qs2tYD/8+p
-         Yv8r0Ge8q/RfrH6qT1irng8mUq4Q2xalxX/6QWt8TD0JDDIov3mwYrLtrVOw4nkmTMME
-         xfy2c4rfRMW652VXTnwjzZIK0S18Zfv2zA00e4p8MmiVBoGNenaqyHdZQq7WglRXtNM4
-         f61k2RYUK5eZH5L6FYZ7Fv8/2t4V6S5kuumUGZOl26B7nNFbbCy5OQJgUy2TYEPdbq24
-         9Aig==
-X-Gm-Message-State: AOAM5329O0yBlf4HEnMmoiIW/o/VTlAQyz9wvl9r062/TPYEQzpyHG3r
-        mN/9QaIN5c8zyJDFDWeCWKL6CFypXSS4kXMOywY9hg==
-X-Google-Smtp-Source: ABdhPJyLo8Vknhn6fT7NUEETE9bOci7H68GuhJ59RLfv82OTHk9St3+7i3PL42S0KAKbD2jxx1nRWgZ7k4GSpkpb1cM=
-X-Received: by 2002:a05:6e02:df0:: with SMTP id m16mr2179991ilj.220.1602578768081;
- Tue, 13 Oct 2020 01:46:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMRc=MdCj8ZohsKiJjqynXPeg81q8_WZvb5VxoPGUDusFUY7Kw@mail.gmail.com>
- <CAHp75Vfy8un3APcYqWyO9b8aFMAyKVSkAbn=6kxpbSthgq4jxA@mail.gmail.com>
- <CAMRc=MfP9EBqUCvcKUmwF4Zd+yFO-yfC6718ZXeM1PbtEqYWNQ@mail.gmail.com>
- <CAHp75VdCfLrTcM5BeEgxyoRR5ptYDqQQQthrUmNoc7Fy9SwTXA@mail.gmail.com>
- <CAMRc=MdavJ6w3S=5F+00oD7AxtUtC6KgvQm7GvJqX04CVrPjcw@mail.gmail.com> <HK0PR01MB24504356D7FA20A34AECAABAE2070@HK0PR01MB2450.apcprd01.prod.exchangelabs.com>
-In-Reply-To: <HK0PR01MB24504356D7FA20A34AECAABAE2070@HK0PR01MB2450.apcprd01.prod.exchangelabs.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Oct 2020 10:45:57 +0200
-Message-ID: <CAMRc=Mdu=ptWC2-trOsE5npne+coCsHxf6xpz99EhVbSif140g@mail.gmail.com>
-Subject: Re: [ANNOUNCE] libgpiod v1.6 released
-To:     =?UTF-8?B?U1ogTGluICjmnpfkuIrmmbop?= <SZ.Lin@moxa.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Drew Fustini <drew@pdp7.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ibtxH0d6mCxSVXvODZ6Rq5N+NBWS2ujaEK7AVUMADsc=;
+        b=dA7QHagKKG9o3xmGFqWZ6oQntmlX3NrWsyxYKZ0/cj/ho5zz3a9G6u7UVjkmMFLLbr
+         I/GfO5P4BPAwt51V53OJbZ7maGIix34VFl0gNw01oKy3joy5Zj+1ngiondw1w7B5oJb1
+         aQIQmUkcU4Po7PWuQwiL1uTiWFxVLFvH+4DYCY4e/IduZEOJerpQo3RD59butqB1K9WC
+         tFjL0AyviWI3hfWToUDsHJQBTaQJoFPPeX2n8aVDNEmfrKyiYkI1I04cl2XGP3/AcG5F
+         78bnq5Y3uuXGqILKvcOfTbw6q9DsfC/by0HF+Xz1jSa/RUKkIwV7OVPr30Gyt7pZNox1
+         k6Rg==
+X-Gm-Message-State: AOAM530KmfaQSt5Y0pwNCiWZXFgQh4ZNTNakAXMD7kMCRSFFOhPB/v9w
+        K7uf50rlqdA3OU7B42yV1Ac=
+X-Google-Smtp-Source: ABdhPJyV6qP/H08wAHsopqIRw4lSRLaCE/3X0ybderUrzvW7Kr2uuxjLrdiqccjm6fGqi7uPp1Utcg==
+X-Received: by 2002:a65:528b:: with SMTP id y11mr15988916pgp.17.1602579195754;
+        Tue, 13 Oct 2020 01:53:15 -0700 (PDT)
+Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
+        by smtp.gmail.com with ESMTPSA id b1sm21809365pft.127.2020.10.13.01.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2020 01:53:14 -0700 (PDT)
+Date:   Tue, 13 Oct 2020 16:53:10 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [libgpiod] Rethinking struct gpiod_line_bulk
+Message-ID: <20201013085310.GB3119809@sol>
+References: <CAMpxmJVWr-M3R-PfsrDvtpZTtSTBLHL95sAorO5EHVwg1eX67A@mail.gmail.com>
+ <20201013005252.GA9387@sol>
+ <CAMRc=Mf_ZG5FqEAd0CSCqx_GeEG_4ghEXf8S3Sdws4+XOFV2Ag@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mf_ZG5FqEAd0CSCqx_GeEG_4ghEXf8S3Sdws4+XOFV2Ag@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 12, 2020 at 5:18 PM SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <SZ.Li=
-n@moxa.com> wrote:
->
-> Hi,
->
-> <snip>
->
-> > I personally don't care much about how desktop distros handle this - I'=
-m mostly
-> > interested in bespoke embedded distros built with yocto or buildroot. I=
-'m Cc'ing
-> > SZ Lin who maintains the libgpiod debian package.
->
-> Nowadays, many embedded distros are derived from Debian, such as Raspberr=
-y Pi OS
-> (previously called Raspbian). Moreover, the meta-debian [1] provides the =
-recipes for the
-> Poky build system to build images using Debian source packages within the=
- Yocto project [2].
->
-> [1] https://github.com/meta-debian/meta-debian
-> [2] https://www.yoctoproject.org/learn-items/deby-reproducible-and-mainta=
-inable-embedded-linux-environment-with-poky/
->
+On Tue, Oct 13, 2020 at 09:45:04AM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 13, 2020 at 2:53 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > SZ Lin: libgpiod will get a new major release in the following months
-> > - the API will become v2.x and ABI v3.x - do you think it's important t=
-o make it
-> > possible for two major versions of libgpiod to live together in a singl=
-e system? I
->
-> It's possible, but I think it's *no strongly needed* and there are no oth=
-er Debian
-> packages depend on libgpiod, as shown below.
->
-> =3D=3D=3D
-> apt rdepends libgpiod2
-> libgpiod2
-> Reverse Depends:
->   Depends: libgpiod-dev (=3D 1.5.2-1)
->   Depends: python3-libgpiod (=3D 1.5.2-1)
->   Depends: gpiod (>=3D 1.5.1)
-> =3D=3D=3D
->
-> All of the above binary packages are built from the same (libgpiod) sourc=
-e package.
->
-> > would like to avoid having to rename everything and use libgpiod2.0
-> > everywhere - this information is already stored in the API version. Doe=
-s debian
-> > support something like yocto's virtual providers maybe? How do you see =
-this for
-> > a desktop distro.
->
-> I'm not familiar with Yocto's mechanism, but in this case, the ABI change=
-s seem that
-> are not backward-compatible; we normally require changing the SONAME of t=
-he library
-> and the shared library package name.
->
+> > On Mon, Oct 12, 2020 at 05:15:25PM +0200, Bartosz Golaszewski wrote:
+> > > Hi!
+> > >
+> > > One of the things I'd like to address in libgpiod v2.0 is excessive
+> > > stack usage with struct gpiod_line_bulk. This structure is pretty big
+> > > right now: it's an array 64 pointers + 4 bytes size. That amounts to
+> > > 260 bytes on 32-bit and 516 bytes on 64-bit architectures
+> > > respectively. It's also used everywhere as all functions dealing with
+> > > single lines eventually end up calling bulk counterparts.
+> > >
+> > > I have some ideas for making this structure smaller and I thought I'd
+> > > run them by you.
+> > >
+> > > The most obvious approach would be to make struct gpiod_line_bulk
+> > > opaque and dynamically allocated. I don't like this idea due to the
+> > > amount of error checking this would involve and also calling malloc()
+> > > on virtually every value read, event poll etc.
+> > >
+> > > Another idea is to use embedded list node structs (see include/list.h
+> > > in the kernel) in struct gpiod_line and chain the lines together with
+> > > struct gpiod_line_bulk containing the list head. That would mean only
+> > > being able to store each line in a single bulk object. This is
+> > > obviously too limiting.
+> > >
+> >
+> > I don't think I've ever gotten my head fully around the libgpiod API,
+> > or all its use cases, and I'm not clear on why this is too limiting.
+> >
+> 
+> For instance: we pass one bulk object to gpiod_line_event_wait_bulk()
+> containing the lines to poll and use another to store the lines for
+> which events were detected. Lines would need to live in two bulks.
+> 
 
-For the SONAME it's clear: current libgpiod.so.2 will become
-libgpiod.so.3. For the library package name: this is already handled
-by distros - for instance the package in debian is called libgpiod2. I
-guess it will become libgpiod3 then. I think we're good in that regard
-then.
+Ahh, ok.  So you want to keep that?  I prefer a streaming interface, but
+I guess some prefer the select/poll style?
 
-Bartosz
+> > What is the purpose of the gpiod_line_bulk, and how does that differ from the
+> > gpio_v2_line_request?
+> >
+> 
+> struct gpiod_line_bulk simply aggregates lines so that we can easily
+> operate on multiple lines at once. Just a convenience helper
+> basically.
+> 
+> > > An idea I think it relatively straightforward without completely
+> > > changing the current interface is making struct gpiod_line_bulk look
+> > > something like this:
+> > >
+> > > struct gpiod_line_bulk {
+> > >     unsigned int num_lines;
+> > >     uint64_t lines;
+> > > };
+> > >
+> > > Where lines would be a bitmap with set bits corresponding to offsets
+> > > of lines that are part of this bulk. We'd then provide a function that
+> > > would allow the user to get the line without it being updated (so
+> > > there's no ioctl() call that could fail). The only limit that we'd
+> > > need to introduce here is making it impossible to store lines from
+> > > different chips in a single line bulk object. This doesn't make sense
+> > > anyway so I'm fine with this.
+> > >
+> > > What do you think? Do you have any other ideas?
+> > >
+> >
+> > Doesn't that place a strict range limit on offset values, 0-63?
+> > The uAPI limits the number of offsets requested to 64, not their value.
+> > Otherwise I'd've used a bitmap there as well.
+> >
+> > Or is there some other mapping happening in the background that I'm
+> > missing?
+> >
+> 
+> Nah, you're right of course. The structure should actually look more like:
+> 
+> struct gpiod_line_bulk {
+>     struct gpiod_chip *owner;
+>     unsigned int num_lines;
+>     uint64_t lines;
+> };
+> 
+> And the 'lines' bitmap should actually refer to offsets at which the
+> owning chip stores the line pointers in its own 'lines' array - up to
+> 64 lines.
+> 
+> But we'd still have to sanitize the values when adding lines to a bulk
+> object and probably check the return value. I'm wondering if there's a
+> better way to store group references to lines on the stack but I'm out
+> of ideas.
+> 
+
+So you are proposing keeping the bulk of the bulk in the background and
+passing around a flyweight in its place.  Makes sense.
+
+Cheers,
+Kent.
