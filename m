@@ -2,340 +2,295 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14FB928D877
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 04:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C955B28D888
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 04:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbgJNC2E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Oct 2020 22:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33554 "EHLO mail.kernel.org"
+        id S1728328AbgJNCgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Oct 2020 22:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgJNC2E (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 13 Oct 2020 22:28:04 -0400
+        id S1727198AbgJNCgD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 13 Oct 2020 22:36:03 -0400
 Received: from kernel.org (unknown [104.132.1.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D46721775;
-        Wed, 14 Oct 2020 02:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C11F21775;
+        Wed, 14 Oct 2020 02:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602642482;
-        bh=1DNgPEOQi50qtjP7yIrzdu1Z005RzZK+lWK5u9mPWMc=;
-        h=In-Reply-To:References:Subject:From:To:Date:From;
-        b=Qegr2NcWTNrkJE35Hd24y+cH+6QoFYiJJf/xTflHjCeEEg2ocnI/0uMAlCyjKHBF7
-         2su1zcpJOOvAGff5pFmuqPbZKTLXBbBHK0LiHf1Ce7sV/tCjE+3T1EywQ3kP6BfHAb
-         0b043EvPISIh5Fs5zy8QO2xnwjH1biDd6/8OhHLA=
+        s=default; t=1602642962;
+        bh=g2j9ux/pAHJnNbc2Nu0mN1BILQ00CFDJo7UyKWD5yZI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=xj6jhPED+WcoTPbVVLgWKjOjJ5wjpUI164pzTQChTUT1qHewE6g6O57Tn9d6KIEUo
+         Tt9q4N8A8h2i+mx/ihqtpQIIcDc15d+DF0I3a2nOf14jMZULB4/tG30t/XP9Oocc+Z
+         TVn4jcVoUUNEhZ2VPQa7JgALH5CCRQGn/SfFyVIs=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1601270140-4306-4-git-send-email-varada@codeaurora.org>
-References: <1601270140-4306-1-git-send-email-varada@codeaurora.org> <1601270140-4306-4-git-send-email-varada@codeaurora.org>
-Subject: Re: [PATCH 3/7] clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018
+In-Reply-To: <1601270140-4306-2-git-send-email-varada@codeaurora.org>
+References: <1601270140-4306-1-git-send-email-varada@codeaurora.org> <1601270140-4306-2-git-send-email-varada@codeaurora.org>
+Subject: Re: [PATCH 1/7] clk: qcom: clk-alpha-pll: Add support for Stromer PLLs
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
         catalin.marinas@arm.com, devicetree@vger.kernel.org,
         linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         mturquette@baylibre.com, nsekar@codeaurora.org,
         p.zabel@pengutronix.de, robh+dt@kernel.org,
-        sricharan@codeaurora.org, varada@codeaurora.org, will@kernel.org
-Date:   Tue, 13 Oct 2020 19:28:00 -0700
-Message-ID: <160264248077.310579.3081678774406286664@swboyd.mtv.corp.google.com>
+        sricharan@codeaurora.org, will@kernel.org, tdas@codeaurora.org
+To:     varada@codeaurora.org
+Date:   Tue, 13 Oct 2020 19:36:01 -0700
+Message-ID: <160264296113.310579.11748798538413456771@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Varadarajan Narayanan (2020-09-27 22:15:36)
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 0583273..d1a2504 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -155,6 +155,14 @@ config IPQ_GCC_8074
->           i2c, USB, SD/eMMC, etc. Select this for the root clock
->           of ipq8074.
+Can you check your get_maintainers script invocation? Not sure why arm64
+maintainers are Cced on a clk patch.
+
+Quoting Varadarajan Narayanan (2020-09-27 22:15:34)
+> Add programming sequence support for managing the Stromer
+> PLLs.
+>=20
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> ---
+>  drivers/clk/qcom/clk-alpha-pll.c | 156 +++++++++++++++++++++++++++++++++=
++++++-
+>  drivers/clk/qcom/clk-alpha-pll.h |   5 ++
+>  2 files changed, 160 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alph=
+a-pll.c
+> index 26139ef..ce3257f 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.c
+> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> @@ -116,6 +116,19 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] =3D {
+>                 [PLL_OFF_OPMODE] =3D 0x38,
+>                 [PLL_OFF_ALPHA_VAL] =3D 0x40,
+>         },
+> +
+
+Nitpick: Drop this newline.
+
+> +       [CLK_ALPHA_PLL_TYPE_STROMER] =3D {
+> +               [PLL_OFF_L_VAL] =3D 0x08,
+> +               [PLL_OFF_ALPHA_VAL] =3D 0x10,
+> +               [PLL_OFF_ALPHA_VAL_U] =3D 0x14,
+> +               [PLL_OFF_USER_CTL] =3D 0x18,
+> +               [PLL_OFF_USER_CTL_U] =3D 0x1c,
+> +               [PLL_OFF_CONFIG_CTL] =3D 0x20,
+> +               [PLL_OFF_CONFIG_CTL_U] =3D 0xff,
+> +               [PLL_OFF_TEST_CTL] =3D 0x30,
+> +               [PLL_OFF_TEST_CTL_U] =3D 0x34,
+> +               [PLL_OFF_STATUS] =3D 0x28,
+> +       },
+>  };
+>  EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
 > =20
-> +config IPQ_GCC_5018
-> +       tristate "IPQ5018 Global Clock Controller"
-> +       help
-> +        Support for global clock controller on ipq5018 devices.
-> +        Say Y if you want to use peripheral devices such as UART, SPI,
-> +        i2c, USB, SD/eMMC, etc. Select this for the root clock
-> +        of ipq5018.
+> @@ -127,6 +140,8 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
+>  #define ALPHA_BITWIDTH         32U
+>  #define ALPHA_SHIFT(w)         min(w, ALPHA_BITWIDTH)
+> =20
+> +#define        PLL_STATUS_REG_SHIFT    8
 
-What is the root clock of ipq5018? Please drop that last sentence.
+This should have an ALPHA_ prefix.
 
 > +
->  config MSM_GCC_8660
->         tristate "MSM8660 Global Clock Controller"
->         help
-> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq501=
-8.c
-> new file mode 100644
-> index 00000000..9056386
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-ipq5018.c
-> @@ -0,0 +1,3833 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+>  #define PLL_HUAYRA_M_WIDTH             8
+>  #define PLL_HUAYRA_M_SHIFT             8
+>  #define PLL_HUAYRA_M_MASK              0xff
+> @@ -240,14 +255,143 @@ void clk_alpha_pll_configure(struct clk_alpha_pll =
+*pll, struct regmap *regmap,
+>         mask |=3D config->pre_div_mask;
+>         mask |=3D config->post_div_mask;
+>         mask |=3D config->vco_mask;
+> +       mask |=3D config->alpha_en_mask;
+> +       mask |=3D config->alpha_mode_mask;
+> =20
+>         regmap_update_bits(regmap, PLL_USER_CTL(pll), mask, val);
+> =20
+> +       /* Stromer APSS PLL does not enable LOCK_DET by default, so enabl=
+e it */
+> +       val_u =3D config->status_reg_val << PLL_STATUS_REG_SHIFT;
+> +       val_u |=3D config->lock_det;
 > +
-> +#include <linux/kernel.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
+> +       mask_u =3D config->status_reg_mask;
+> +       mask_u |=3D config->lock_det;
 > +
-> +#include <linux/reset-controller.h>
+> +       if (val_u !=3D 0)
 
-Why is this attached to dt-bindings? Please remove that newline above
-and move this away from dt-bindings below.
+if (val_u) is more canonical.
 
-> +#include <dt-bindings/clock/qcom,gcc-ipq5018.h>
-> +#include <dt-bindings/reset/qcom,gcc-ipq5018.h>
+> +               regmap_update_bits(regmap, PLL_USER_CTL_U(pll), mask_u, v=
+al_u);
 > +
-> +#include "common.h"
-> +#include "clk-regmap.h"
-> +#include "clk-pll.h"
-> +#include "clk-rcg.h"
-> +#include "clk-branch.h"
-> +#include "clk-alpha-pll.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-regmap-mux.h"
-> +#include "reset.h"
+> +       if (config->test_ctl_val !=3D 0)
+
+Same comment
+
+> +               regmap_write(regmap, PLL_TEST_CTL(pll), config->test_ctl_=
+val);
 > +
-> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
+> +       if (config->test_ctl_hi_val !=3D 0)
 
-This is in clk-rcg.h already.
+Same comment
 
+> +               regmap_write(regmap, PLL_TEST_CTL_U(pll), config->test_ct=
+l_hi_val);
 > +
-> +static const char * const gcc_usb3phy_0_cc_pipe_clk_xo[] =3D {
-> +       "usb3phy_0_cc_pipe_clk",
-> +       "xo",
-> +};
-
-All these names structures need to change, see next comment.
-
-> +
-> +static struct clk_rcg2 apss_ahb_clk_src =3D {
-> +       .cmd_rcgr =3D 0x46000,
-> +       .mnd_width =3D 0,
-> +       .hid_width =3D 5,
-> +       .freq_tbl =3D ftbl_apss_ahb_clk_src,
-> +       .parent_map =3D gcc_xo_gpll0_gpll0_out_main_div2_map,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "apss_ahb_clk_src",
-> +               .parent_names =3D gcc_xo_gpll0_gpll0_out_main_div2,
-> +               .num_parents =3D 3,
-
-Please migrate to the new way of specifying clks with clk_init_data::clk_pa=
-rent_data
-
-> +               .ops =3D &clk_rcg2_ops,
-> +               .flags =3D CLK_IS_CRITICAL | CLK_IGNORE_UNUSED,
-
-Why is it critical and ignore unused? Do you need this clk to be here at
-all? Can we just enable it when this driver probes with a register write
-and then ignore it from there on out?
-
-> +       },
-> +};
-> +
-> +static struct clk_regmap_div apss_ahb_postdiv_clk_src =3D {
-> +       .reg =3D 0x46018,
-> +       .shift =3D 4,
-> +       .width =3D 4,
-> +       .clkr =3D {
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "apss_ahb_postdiv_clk_src",
-> +                       .parent_names =3D (const char *[]){
-> +                               "apss_ahb_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_regmap_div_ops,
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +
-> +static struct clk_branch gcc_qdss_dap_clk =3D {
-> +       .halt_reg =3D 0x29084,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29084,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qdss_dap_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "qdss_tsctr_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-
-Whenever CLK_IS_CRITICAL is there please document why it is needed. And
-if possible remove the clk structure and hit the clk on in driver probe
-so we don't waste memory modeling something that never matters.
-Typically that can only be done if nothing references this clk as a
-parent or if we're willing to break the clk tree and ignore describing
-parents. In this case it's a branch so probably nothing else is under it
-so we can just turn it on during probe and stop caring.
-
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_qdss_cfg_ahb_clk =3D {
-> +       .halt_reg =3D 0x29008,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29008,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qdss_cfg_ahb_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "pcnoc_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-[...]
-> +
-> +static struct clk_branch gcc_qdss_stm_clk =3D {
-> +       .halt_reg =3D 0x29044,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29044,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_qdss_stm_clk",
-> +                       .parent_names =3D (const char *[]){
-> +                               "qdss_stm_clk_src"
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSE=
-D,
-
-Why ignore unused? Probably should just be turned on somewhere else?
-
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_qdss_traceclkin_clk =3D {
-> +       .halt_reg =3D 0x29060,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x29060,
-[...]
-> +
-> +static int gcc_ipq5018_probe(struct platform_device *pdev)
+>         if (pll->flags & SUPPORTS_FSM_MODE)
+>                 qcom_pll_set_fsm_mode(regmap, PLL_MODE(pll), 6, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(clk_alpha_pll_configure);
+> =20
+> +static unsigned long
+> +alpha_pll_stromer_calc_rate(u64 prate, u32 l, u64 a)
 > +{
-> +       int i, ret;
-> +       struct regmap *regmap;
-> +       struct clk *clk;
-> +       struct qcom_cc_desc ipq5018_desc =3D gcc_ipq5018_desc;
-> +
-> +       regmap =3D qcom_cc_map(pdev, &ipq5018_desc);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(gcc_ipq5018_hws); i++) {
-> +               clk =3D devm_clk_register(&pdev->dev, gcc_ipq5018_hws[i]);
-> +               if (IS_ERR(clk))
-> +                       return PTR_ERR(clk);
-> +       }
+> +       return (prate * l) + ((prate * a) >> ALPHA_REG_BITWIDTH);
 
-We really need to move this into the qcom_cc_desc so it is part of
-qcom_cc_really_probe()
+Is this not already in this file? Why can't we use
+alpha_pll_calc_rate()?
 
-> +       /*Gen2 PHY*/
-> +       clk_register_fixed_rate(&pdev->dev, "pcie20_phy0_pipe_clk", NULL,
-> +                                       CLK_IS_ROOT, 125000000);
-> +       clk_register_fixed_rate(&pdev->dev, "pcie20_phy1_pipe_clk", NULL,
-> +                                       CLK_IS_ROOT, 125000000);
-
-These should be coming from some pcie phy and part of the DT binding as
-a 'clocks' element that this device consumes.
-
-> +
-> +       clk_alpha_pll_configure(&ubi32_pll_main, regmap, &ubi32_pll_confi=
-g);
-> +
-> +       ret =3D qcom_cc_really_probe(pdev, &ipq5018_desc, regmap);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to register ipq5018 GCC clock=
-s\n");
-> +               return ret;
-> +       }
-> +
-> +       dev_info(&pdev->dev, "Registered ipq5018 GCC clocks provider");
-
-Please drop this noise.
-
-> +
-> +       return ret;
 > +}
 > +
-> +static int gcc_ipq5018_remove(struct platform_device *pdev)
+> +static unsigned long
+> +alpha_pll_stromer_round_rate(unsigned long rate, unsigned long prate, u3=
+2 *l, u64 *a)
 > +{
+> +       u64 remainder;
+> +       u64 quotient;
+> +
+> +       quotient =3D rate;
+> +       remainder =3D do_div(quotient, prate);
+> +       *l =3D quotient;
+> +
+> +       if (!remainder) {
+> +               *a =3D 0;
+> +               return rate;
+> +       }
+> +
+> +       quotient =3D remainder << ALPHA_REG_BITWIDTH;
+> +
+> +       remainder =3D do_div(quotient, prate);
+> +
+> +       if (remainder)
+> +               quotient++;
+> +
+> +       *a =3D quotient;
+> +       return alpha_pll_stromer_calc_rate(prate, *l, *a);
+> +}
+> +
+> +static unsigned long
+> +clk_alpha_pll_stromer_recalc_rate(struct clk_hw *hw, unsigned long paren=
+t_rate)
+> +{
+> +       u32 l, low, high, ctl;
+> +       u64 a =3D 0, prate =3D parent_rate;
+> +       struct clk_alpha_pll *pll =3D to_clk_alpha_pll(hw);
+> +
+> +       regmap_read(pll->clkr.regmap, PLL_L_VAL(pll), &l);
+> +
+> +       regmap_read(pll->clkr.regmap, PLL_USER_CTL(pll), &ctl);
+> +       if (ctl & PLL_ALPHA_EN) {
+> +               regmap_read(pll->clkr.regmap, PLL_ALPHA_VAL(pll), &low);
+> +               regmap_read(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll),
+> +                           &high);
+> +               a =3D (u64)high << ALPHA_BITWIDTH | low;
+> +       }
+> +
+> +       return alpha_pll_stromer_calc_rate(prate, l, a);
+> +}
+> +
+> +static int clk_alpha_pll_stromer_determine_rate(struct clk_hw *hw,
+> +                                        struct clk_rate_request *req)
+> +{
+> +       unsigned long rate =3D req->rate;
+> +       u32 l;
+> +       u64 a;
+> +
+> +       rate =3D alpha_pll_stromer_round_rate(rate, req->best_parent_rate=
+, &l, &a);
+
+Why assign to rate if nobody is going to look at it? Should probably be
+set to req->rate instead?
+
+> +
 > +       return 0;
 > +}
 > +
-
-If there isn't anything in the remove function it can be omitted.
-
-> +static struct platform_driver gcc_ipq5018_driver =3D {
-> +       .probe =3D gcc_ipq5018_probe,
-> +       .remove =3D gcc_ipq5018_remove,
-> +       .driver =3D {
-> +               .name   =3D "qcom,gcc-ipq5018",
-> +               .owner  =3D THIS_MODULE,
-> +               .of_match_table =3D gcc_ipq5018_match_table,
-> +       },
-> +};
-> +
-> +static int __init gcc_ipq5018_init(void)
+> +static int clk_alpha_pll_stromer_set_rate(struct clk_hw *hw, unsigned lo=
+ng rate,
+> +                                        unsigned long prate)
 > +{
-> +       return platform_driver_register(&gcc_ipq5018_driver);
-> +}
-> +core_initcall(gcc_ipq5018_init);
+> +       struct clk_alpha_pll *pll =3D to_clk_alpha_pll(hw);
+> +       u32 l;
+> +       int ret;
+> +       u64 a;
 > +
-> +static void __exit gcc_ipq5018_exit(void)
-> +{
-> +       platform_driver_unregister(&gcc_ipq5018_driver);
-> +}
-> +module_exit(gcc_ipq5018_exit);
+> +       rate =3D alpha_pll_stromer_round_rate(rate, prate, &l, &a);
 > +
-> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. GCC IPQ5018 Driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:gcc-ipq5018");
+> +       /* Write desired values to registers */
 
-I think alias isn't needed anymore.
+Please drop this useless comment.
 
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 03a5de5..31fde45 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -20,8 +20,8 @@
->  #define CLK_SET_PARENT_GATE    BIT(1) /* must be gated across re-parent =
+> +       regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
+> +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+> +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll),
+> +                                       a >> ALPHA_BITWIDTH);
+> +
+> +       regmap_update_bits(pll->clkr.regmap, PLL_USER_CTL(pll),
+> +                          PLL_ALPHA_EN, PLL_ALPHA_EN);
+> +
+> +       if (!clk_hw_is_enabled(hw))
+> +               return 0;
+> +
+> +       /* Stromer PLL supports Dynamic programming.
+
+The /* goes on a line by itself.
+
+> +        * It allows the PLL frequency to be changed on-the-fly without f=
+irst
+> +        * execution of a shutdown procedure followed by a bring up proce=
+dure.
+> +        */
+
+Cool feature. Maybe that can go into the header file though?
+
+> +
+> +       regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll), PLL_UPDATE,
+> +                          PLL_UPDATE);
+> +       /* Make sure PLL_UPDATE request goes through */
+> +       mb();
+
+regmap APIs already have memory barriers so this isn't needed?
+
+> +
+> +       /* Wait for PLL_UPDATE to be cleared */
+
+I think the code already says this so we can just drop this comment.
+
+> +       ret =3D wait_for_pll_update(pll);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Wait 11or more PLL clk_ref ticks[to be explored more on wait] =
 */
->  #define CLK_SET_RATE_PARENT    BIT(2) /* propagate rate change up one le=
-vel */
->  #define CLK_IGNORE_UNUSED      BIT(3) /* do not gate even if unused */
-> -                               /* unused */
-> -                               /* unused */
-> +#define CLK_IS_ROOT            BIT(4) /* root clk, has no parent */
-> +#define CLK_IS_BASIC           BIT(5) /* Basic clk, can't do a to_clk_fo=
-o() */
+> +
 
-Please no. Drop this hunk.
+Is this a TODO?
 
->  #define CLK_GET_RATE_NOCACHE   BIT(6) /* do not use the cached clk rate =
-*/
->  #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate chang=
-e */
->  #define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk acc=
-uracy */
+> +       /* Poll LOCK_DET for one */
+
+I think the code already says this so we can just drop this comment.
+
+> +       ret =3D wait_for_pll_enable_lock(pll);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return 0;
+> +}
+> +
+>  static int clk_alpha_pll_hwfsm_enable(struct clk_hw *hw)
+>  {
+>         int ret;
