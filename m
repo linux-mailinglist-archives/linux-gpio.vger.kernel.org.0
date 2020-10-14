@@ -2,138 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E57028DD2A
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 11:25:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F00128DC72
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 11:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgJNJWu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 05:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39926 "EHLO
+        id S1728671AbgJNJJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 05:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731164AbgJNJV4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 05:21:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79AC1C041E4F
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 20:17:27 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p11so1036879pld.5
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 20:17:27 -0700 (PDT)
+        with ESMTP id S1727993AbgJNJJh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 05:09:37 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03795C041E57
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 20:46:02 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id g29so1132050pgl.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Oct 2020 20:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AFiAWzeQwYCBxWJn+p7sl1CpJQNcHmYqdittu295f+A=;
-        b=Y7FcHDL2v1FYoiIAfFEfRWYDZyShzAM+YAQZbAQG9qsX8/l81WkUxwuw1ghAHoS2qG
-         Rhxlgfy5mPO3hCo4U3P0zpU59h1f8FfHVHCr2eaQFU2OykDDG57RDAfCZz6zGQETeeqb
-         vyGB0pbDk6pM51P6WJWQi4In3HUuPUn7bVrNJfcUtNRP1bAvy8EbOMgjbBRVxAr3RhlJ
-         mi9qclDLNqDoOffx5qJuO3Qh6j/hKYSq9WkMc6HyKzNUfLYqOe5+Rx1A8y3kkcb4Fz8y
-         6BFqGWteFO0CiNhYeW5pdyESFz/Jl8fjt8njD+i+H1kUt/ymxYvdQvoq6T+CLg4COvqo
-         cIEQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n01pleTg7SFuysPBXACr81SWaUOxZ0H1TEx2dK23HNE=;
+        b=vX5h+m0p4Jr1obD9r+GP9tDW5zNoabhrl9wchNE1zIGS9atTl+CFWxwXDB9KFMRZmj
+         uJVYJ+OG5KHJ6dmiVWeGTWH6AP8eMmUo/GeebrnRoH5f1er5N1bZSBPpHposGUSkFGus
+         FfWVEz9NbXV6CIxsrj6xoEjcEDoFKFMQzaNpEUbDT3d1aQSYHb+2B6jzXY/d/ntdVIu/
+         RqaGGxulwQ/PZN2WtaD5iiE4qlA0BSNU00EAhwA5NlYC3oP0y7PO9jhclbkC9DHGeUFu
+         FT/V5ZczjHITeIOJDICJldKVj7OJWqOuWBsM2Fvzho7xbg4cxVHGuXYg9lQ1eh++jJol
+         iiDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AFiAWzeQwYCBxWJn+p7sl1CpJQNcHmYqdittu295f+A=;
-        b=otOfp5L+NOAMFylLLcK2Ztz4oOrbSlY9SDn2btCOnpKmQ0k6HoZvAMCdSTo7f6qOkD
-         CukSKxP+yZH+ccnrz70ef9urDjlPHnKp/EvSNbMmYNOdomaj8/u5rUtnfTu51ryuHmjz
-         HtWEkN5soX9RFZOume5Hr15nVLvG/c5EvkBAMaiIJ0vlqOlJDSPuat6gCafKK2uFMJHC
-         JY1CfxEhGi6xFKkBDBdlRjgw613TdTTZm3+poe/FYNCVuyplJVYH3Mypwfk6jL9nPIPM
-         DVCYLg87om7QDqQK9XFoh4hXLihvdKGlBKt8o1cgD+wg8uayT23R0Lb7efwAjfRQiKZR
-         MVlQ==
-X-Gm-Message-State: AOAM531g+63oiyIOhReCIOZCTULciUBUojB2QczisajC6rFJfik2W6fy
-        ONwsRWbvb4+6ETKSNhZ9qxY=
-X-Google-Smtp-Source: ABdhPJxgTEs2xi12VD/ONUYLGYvuRoVn9Rz0KuZ6xS30GS1H+9kou7gwmqujQtLCsIxVYSOb/7Qvqg==
-X-Received: by 2002:a17:90a:e2d8:: with SMTP id fr24mr1405029pjb.219.1602645446938;
-        Tue, 13 Oct 2020 20:17:26 -0700 (PDT)
-Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
-        by smtp.gmail.com with ESMTPSA id ch21sm754801pjb.24.2020.10.13.20.17.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n01pleTg7SFuysPBXACr81SWaUOxZ0H1TEx2dK23HNE=;
+        b=gOuHhzOTHPQqx3f4EE11hUN8HOn/pN+xvE5Hkqmr7mDBrU75Wq5lpuFCroZLSff1Cs
+         V26TX2gizKI7B+toy9EsQOljU3LvqHVjsLaMrCfHOIGZqq1jsJPe65Zpmr3KBiuzKRhj
+         GO5Jg2Eib7XkdhP7UufVct8yXEYdnCQzWfgkNg4na5ZKLjhsoUK49XVIzKzm/DIXxXaP
+         HrnYuLze/suHU5VG0dFdmG+dywU4ujCb8ADW6qt8untrwhgbA5d9uOL8T4wTlO/yVpeV
+         cotoJ/2ngKVAsStn0FZ4GXjkVgER3wCvfHuc0XwZ88a3p4F/751IfQ6/AkNGezBFnJmQ
+         Dxxw==
+X-Gm-Message-State: AOAM530wIvlI082Odh4Z43jkVe5FTvB6hVOcyfZQ4iUUJWytpA8/TwL7
+        +maRTq4KE+bn1R+JtPVSGVXtUiedvhuTxg==
+X-Google-Smtp-Source: ABdhPJwzeGRKTMYWCVJWFUTgYNzpw3DGa68bXzLORjt/C3hxjGZhjSKbNsvavmJa3Ip4pgIABl/jvg==
+X-Received: by 2002:a63:2406:: with SMTP id k6mr2216552pgk.366.1602647160406;
+        Tue, 13 Oct 2020 20:46:00 -0700 (PDT)
+Received: from sol.lan (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
+        by smtp.gmail.com with ESMTPSA id g17sm1231655pfu.130.2020.10.13.20.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Oct 2020 20:17:26 -0700 (PDT)
-Date:   Wed, 14 Oct 2020 11:17:21 +0800
+        Tue, 13 Oct 2020 20:45:59 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [libgpiod][PATCH] core: Basic port to uAPI v2
-Message-ID: <20201014031721.GA12685@sol>
-References: <20201002063148.32667-1-warthog618@gmail.com>
- <CAMRc=Md51g2-3PvQV_BA-qFJ=iDHqQELyMLx18yLR2LDQOCNHw@mail.gmail.com>
+To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] tests: rename freq parameter to period_ms
+Date:   Wed, 14 Oct 2020 11:45:50 +0800
+Message-Id: <20201014034550.19290-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md51g2-3PvQV_BA-qFJ=iDHqQELyMLx18yLR2LDQOCNHw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 13, 2020 at 09:08:44AM +0200, Bartosz Golaszewski wrote:
-> On Fri, Oct 2, 2020 at 8:32 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Port existing implementation from GPIO uAPI v1 to v2.
-> > The libgpiod external interface remains unchanged, only the internal
-> > implementation switches from uAPI v1 to v2.
-> >
-> > This is a minimal port - uAPI v2 features are only used where it
-> > simplifies the implementation, specifically multiple events on a bulk can
-> > now be handled directly by the kernel in a single v2 line request rather
-> > than being emulated by multiple v1 event requests.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> 
-> Hi Kent!
-> 
-> I just noticed that this broke the tests in Python and C++ bindings.
-> Something to do with the RISING and FALLING edge values and how
-> they're translated in the bindings, it seems. Let me know if you'd
-> have time to take a look at it and see if it's something obvious.
-> Otherwise I'll investigate that tomorrow.
-> 
+The freq field of struct gpiod_test_event_thread is actually used as a
+period measured in milliseconds, so rename it to period_ms in the struct
+and wherever it is used as a function parameter.
 
-Lots of problems here, so where to start...
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ bindings/cxx/tests/gpio-mockup.cpp     | 6 +++---
+ bindings/cxx/tests/gpio-mockup.hpp     | 4 ++--
+ bindings/python/tests/gpiod_py_test.py | 6 +++---
+ tests/gpiod-test.c                     | 8 ++++----
+ tests/gpiod-test.h                     | 2 +-
+ 5 files changed, 13 insertions(+), 13 deletions(-)
 
-Firstly, I foolishly assumed that the coverage of the CXX and Python
-tests was aimed at testing the binding, and that wouldn't provide
-additional coverage to the core API to that tested by the C tests.
-Not the case :(.
+diff --git a/bindings/cxx/tests/gpio-mockup.cpp b/bindings/cxx/tests/gpio-mockup.cpp
+index 0005d3f..e8db962 100644
+--- a/bindings/cxx/tests/gpio-mockup.cpp
++++ b/bindings/cxx/tests/gpio-mockup.cpp
+@@ -116,10 +116,10 @@ mockup::probe_guard::~probe_guard(void)
+ }
+ 
+ mockup::event_thread::event_thread(unsigned int chip_index,
+-				   unsigned int line_offset, unsigned int freq)
++				   unsigned int line_offset, unsigned int period_ms)
+ 	: _m_chip_index(chip_index),
+ 	  _m_line_offset(line_offset),
+-	  _m_freq(freq),
++	  _m_period_ms(period_ms),
+ 	  _m_stop(false),
+ 	  _m_mutex(),
+ 	  _m_cond(),
+@@ -146,7 +146,7 @@ void mockup::event_thread::event_worker(void)
+ 			break;
+ 
+ 		::std::cv_status status = this->_m_cond.wait_for(lock,
+-						std::chrono::milliseconds(this->_m_freq));
++						std::chrono::milliseconds(this->_m_period_ms));
+ 		if (status == ::std::cv_status::timeout)
+ 			mockup::instance().chip_set_pull(this->_m_chip_index,
+ 							 this->_m_line_offset, i % 2);
+diff --git a/bindings/cxx/tests/gpio-mockup.hpp b/bindings/cxx/tests/gpio-mockup.hpp
+index 1859010..f7ef985 100644
+--- a/bindings/cxx/tests/gpio-mockup.hpp
++++ b/bindings/cxx/tests/gpio-mockup.hpp
+@@ -61,7 +61,7 @@ public:
+ 	{
+ 	public:
+ 
+-		event_thread(unsigned int chip_index, unsigned int line_offset, unsigned int freq);
++		event_thread(unsigned int chip_index, unsigned int line_offset, unsigned int period_ms);
+ 		~event_thread(void);
+ 
+ 		event_thread(const event_thread& other) = delete;
+@@ -75,7 +75,7 @@ public:
+ 
+ 		unsigned int _m_chip_index;
+ 		unsigned int _m_line_offset;
+-		unsigned int _m_freq;
++		unsigned int _m_period_ms;
+ 
+ 		bool _m_stop;
+ 
+diff --git a/bindings/python/tests/gpiod_py_test.py b/bindings/python/tests/gpiod_py_test.py
+index 572aad8..e835ef3 100755
+--- a/bindings/python/tests/gpiod_py_test.py
++++ b/bindings/python/tests/gpiod_py_test.py
+@@ -34,11 +34,11 @@ class MockupTestCase(unittest.TestCase):
+ 
+ class EventThread(threading.Thread):
+ 
+-    def __init__(self, chip_idx, line_offset, freq):
++    def __init__(self, chip_idx, line_offset, period_ms):
+         threading.Thread.__init__(self)
+         self.chip_idx = chip_idx
+         self.line_offset = line_offset
+-        self.freq = freq
++        self.period_ms = period_ms
+         self.lock = threading.Lock()
+         self.cond = threading.Condition(self.lock)
+         self.should_stop = False
+@@ -50,7 +50,7 @@ class EventThread(threading.Thread):
+                 if self.should_stop:
+                     break;
+ 
+-                if not self.cond.wait(float(self.freq) / 1000):
++                if not self.cond.wait(float(self.period_ms) / 1000):
+                     mockup.chip_set_pull(self.chip_idx,
+                                          self.line_offset, i % 2)
+                     i += 1
+diff --git a/tests/gpiod-test.c b/tests/gpiod-test.c
+index 72b228f..0411623 100644
+--- a/tests/gpiod-test.c
++++ b/tests/gpiod-test.c
+@@ -29,7 +29,7 @@ struct gpiod_test_event_thread {
+ 	gboolean should_stop;
+ 	guint chip_index;
+ 	guint line_offset;
+-	guint freq;
++	guint period_ms;
+ };
+ 
+ static struct {
+@@ -202,7 +202,7 @@ static gpointer event_worker_func(gpointer data)
+ 			break;
+ 		}
+ 
+-		end_time = g_get_monotonic_time() + thread->freq * 1000;
++		end_time = g_get_monotonic_time() + thread->period_ms * 1000;
+ 
+ 		signalled = g_cond_wait_until(&thread->cond,
+ 					      &thread->lock, end_time);
+@@ -217,7 +217,7 @@ static gpointer event_worker_func(gpointer data)
+ }
+ 
+ GpiodTestEventThread *
+-gpiod_test_start_event_thread(guint chip_index, guint line_offset, guint freq)
++gpiod_test_start_event_thread(guint chip_index, guint line_offset, guint period_ms)
+ {
+ 	GpiodTestEventThread *thread = g_malloc0(sizeof(*thread));
+ 
+@@ -226,7 +226,7 @@ gpiod_test_start_event_thread(guint chip_index, guint line_offset, guint freq)
+ 
+ 	thread->chip_index = chip_index;
+ 	thread->line_offset = line_offset;
+-	thread->freq = freq;
++	thread->period_ms = period_ms;
+ 
+ 	thread->id = g_thread_new("event-worker", event_worker_func, thread);
+ 
+diff --git a/tests/gpiod-test.h b/tests/gpiod-test.h
+index d4a8c5f..8308547 100644
+--- a/tests/gpiod-test.h
++++ b/tests/gpiod-test.h
+@@ -96,7 +96,7 @@ typedef struct gpiod_test_event_thread GpiodTestEventThread;
+ 
+ GpiodTestEventThread *
+ gpiod_test_start_event_thread(guint chip_index,
+-			      guint line_offset, guint freq);
++			      guint line_offset, guint period_ms);
+ void gpiod_test_stop_event_thread(GpiodTestEventThread *thread);
+ 
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(GpiodTestEventThread,
+-- 
+2.28.0
 
-Most of the problems are due to the switch from an event request per
-line to a single line request.  This breaks tests that assume an fd per
-line and test the fds using poll.  As they are now the same, all line fds
-in the bulk become ready to read at once, where previously it was only one.
-These are only present in CXX and Python test cases :(.
-
-I also misunderstood the use case for gpiod_line_event_wait_bulk(),
-and used the event from the fd to determine the line (incorrectly as it
-turns out).  As a consequence tests that then read the event from the
-line fd find the subsequent event, or the wrong number of events.
-Again, these are only present in CXX and Python tests :(.
-
-And I misunderstood the offset passed in gpiod_line_bulk_get_line(),
-using the chip offset not the bulk offset (there are too many damn
-offsets here), so that only happened to work in the C tests as ALL lines
-on the test chip were requested so the chip and bulk offsets match.
-Changing the test to mismatch those offsets makes the C tests fail as
-well :).
-To fix that we'd need to peek into the file to get the event
-offset without actually removing the event from the file, and be able to
-find the line in a bulk based on chip offset.
-
-Oh, and gpiod_line_bulk_get_line() doesn't do range checking, so will
-happily return garbage if offset >= bulk.num_lines.  It happened to
-return NULL in my testing, resulting an exception when trying to add the
-line to the bulk.  But if it had returned something else...
-
-So, in short, the switch to using one line request for all events in the
-bulk is problematic with the exposing of the line fd, and the
-current implementation of gpiod_line_event_wait_bulk() is broken.
-
-Where to go from here depends on where you want to go with the API.
-As mentioned yesterday, my preference would be for
-gpiod_line_event_wait_bulk() to return the next event that occured on the
-bulk rather than a bulk of lines with events.
-
-And it needs to be made clear that the fd returned by
-line.event_get_fd() applies to the bulk - assuming we switch to the one
-request per bulk.
-
-Cheers,
-Kent.
