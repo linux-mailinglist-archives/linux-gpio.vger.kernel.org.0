@@ -2,173 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F5028DF8B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 13:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B40D28DF98
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 13:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgJNLCp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 07:02:45 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:18022 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730467AbgJNLCo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 14 Oct 2020 07:02:44 -0400
-X-IronPort-AV: E=Sophos;i="5.77,374,1596466800"; 
-   d="scan'208";a="59768253"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Oct 2020 20:02:42 +0900
-Received: from localhost.localdomain (unknown [172.29.51.165])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B344540078A0;
-        Wed, 14 Oct 2020 20:02:40 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH RFC] pinctrl: sh-pfc: pfc-r8a77965: Optimize pinctrl image size for RZ/G2N
-Date:   Wed, 14 Oct 2020 12:02:38 +0100
-Message-Id: <20201014110238.9600-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        id S1730467AbgJNLHh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 07:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgJNLHh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 07:07:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8394C061755
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 04:07:36 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so3290698wrv.7
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 04:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W41UNrBJnO3F6mUKp/j7Y9vD+yd0rDMDpHinBp003dk=;
+        b=qeUk4tUuhRBm8mvfQwBgJ3AlkwSh2u7x7COpoXi7F5YQVw+WoCt02V2mO2rb8kmZ/R
+         qtoW3kLHrz5ycjt9wD42cdN2vb1NFd3DaSYRo0Dl7E5yLWot8AIIowHvEn5fKgl827lL
+         cazqJ83WZUE4afbBmjN3UIY8DCOFdxpXz6ftKtqbL2XyCWk1UIkkKxMQ2OkK39sQqJpf
+         /XZytVGmvektl1GNaYfpoSwcU9NHDisAoTEiaUBhnTZ/2/BCDRxriI2f9Iipuguytqes
+         UzfpdalOfDpoHRQ6cfr9tLquK0x95XUAPbTHDqdA3nyfqcjUjJbwveXOc3RcQTHyM6CX
+         irug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W41UNrBJnO3F6mUKp/j7Y9vD+yd0rDMDpHinBp003dk=;
+        b=d2v/HsTixAoqABy3lGZ0sP7NtS9k9FuVkvRZSyPxW6PJESQ9NGqEZtQlRogwJW3X50
+         47i3pzjps0TK2ZiOgTheMKv2wyM885w85/qpaThKAN4c1Ys2w1VVI5DfdU//sofcz8J1
+         yvNpOE4BHU69p2/egt2QW+xjZtVQhPCgs3VqL2hjICFa7N48wYNrUMv4d170BDgLeSdI
+         9bECq/e3SLejbAoSXd7naaPXO0Qo3R1iMvFljk5QL1FQrFWLnAI7ye9n/fhZbf05O8x0
+         ffYvEpwX+AT9X668DSZerwfzH/TkXeCizH4F8poGzpPgidJBXukbWfSZIRTZvv9NxtBK
+         diuQ==
+X-Gm-Message-State: AOAM5332uoxHcxAqihCJNpuJf+NQXdlx9jaNAGadiO4peF624dbuWKLA
+        icv2nPMBpNf00O8d1XuyUr+DRKCXRK+IytmwSLo=
+X-Google-Smtp-Source: ABdhPJyvsaSITdzoBM/fQz+IeGzfPZ3qqoFP698vkoMtL7TAuBScTeNqMZDlJjl7LKX1VB81P8PPe5SxGWgQ8Bnk6do=
+X-Received: by 2002:a5d:4a06:: with SMTP id m6mr4753485wrq.209.1602673655352;
+ Wed, 14 Oct 2020 04:07:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAFhCfDa_FNNC7ushPApRguj3Omik27wRjb3Eh1-_4a1js63FVw@mail.gmail.com>
+ <CACRpkda4DF-XAi5XpJNLU_vjD9Zrjs6PkGpz5BW1E44W67SWvg@mail.gmail.com>
+In-Reply-To: <CACRpkda4DF-XAi5XpJNLU_vjD9Zrjs6PkGpz5BW1E44W67SWvg@mail.gmail.com>
+From:   Jack Winch <sunt.un.morcov@gmail.com>
+Date:   Wed, 14 Oct 2020 14:07:24 +0300
+Message-ID: <CAFhCfDaUcYhNNkoR_op=4p0PQ5iGjFz9P1cnvd=axryXNDR31w@mail.gmail.com>
+Subject: Re: Suggestion - Configurable Source Clock Type for Line Event Timestamping
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Optimize pinctrl image size, when only RZ/G2N is enabled in the defconfig.
-(ie, disabling CONFIG_ARCH_R8A77965 from the defconfig)
+> The background is in the commit:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpiolib.c?id=f8850206e160bfe35de9ca2e726ab6d6b8cb77dd
+> Also study the solution in IIO that started the discussion about
+> all this:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=bc2b7dab629a51e8beb5fda4222c62a23b729f26
 
-with this patch and disabling CONFIG_ARCH_R8A77965:
-$ size drivers/pinctrl/sh-pfc/pfc-r8a77965.o
-   text	   data	    bss	    dec	    hex	filename
-  49384	      0	      0	  49384	   c0e8	drivers/pinctrl/sh-pfc/pfc-r8a77965.o
 
-without patch:
-$ size drivers/pinctrl/sh-pfc/pfc-r8a77965.o
-   text	   data	    bss	    dec	    hex	filename
-  51848	      0	      0	  51848	   ca88	drivers/pinctrl/sh-pfc/pfc-r8a77965.o
+Thanks for the additional background information.  Funnily enough, I
+had my sights on this part of the IIO functionality next.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-This patch will save ~ 6KB=(3x 2KB/SoC) of memory on RZ/G2[HMN] u-boot[1] with
-multi dtb support. As per discussion [1], u-boot imports PFC and Clock tables from Linux.
+> As Arnd stated in the thread from 2018:
+> "most of these clocks make no sense at all for a random user
+> space interface, mainly because I wouldn't trust user space
+> programmers to make an informed decision which of those
+> seven to use."
+>
+> So I suspect you actually managed to make a good argument
+> for using the realtime clock, we didn't see that coming. :)
 
-[1] https://patchwork.ozlabs.org/project/uboot/patch/20201013085205.6075-4-biju.das.jz@bp.renesas.com/
 
-1) By compiling out Automative parts
-$ size drivers/pinctrl/renesas/pfc-r8a77965.o
-   text	   data	    bss	    dec	    hex	filename
-  46141	      0	      0	  46141	   b43d	drivers/pinctrl/renesas/pfc-r8a77965.o
+Well that's reassuring.  Considering doing this work is how I spent my
+mid-teens, it looks like that time was well spent. :)
 
-2) without patch
-$ size drivers/pinctrl/renesas/pfc-r8a77965.o
-   text	   data	    bss	    dec	    hex	filename
-  48191	      0	      0	  48191	   bc3f	drivers/pinctrl/renesas/pfc-r8a77965.o
+> If you really need the timestamp to be as close as possible
+> to the actual event then I see why you want the kernel to
+> make the timestamp in the hard IRQ handler already, but
+> I just want to confirm that you really really need this.
 
-Please share your comments.
----
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-index 6616f5210b9d..8e80b96aa4e5 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -18,6 +18,14 @@
- #include "core.h"
- #include "sh_pfc.h"
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
-+#define PFC_R8A77965_GROUP	(30)
-+#define PFC_R8A77965_FUNCTION	(4)
-+#else
-+#define PFC_R8A77965_GROUP	(0)
-+#define PFC_R8A77965_FUNCTION	(0)
-+#endif
-+
- #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
- 
- #define CPU_ALL_GP(fn, sfx)						\
-@@ -1847,6 +1855,7 @@ static const unsigned int canfd1_data_mux[] = {
- 	CANFD1_TX_MARK,         CANFD1_RX_MARK,
- };
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
- /* - DRIF0 --------------------------------------------------------------- */
- static const unsigned int drif0_ctrl_a_pins[] = {
- 	/* CLK, SYNC */
-@@ -2120,6 +2129,7 @@ static const unsigned int drif3_data1_b_pins[] = {
- static const unsigned int drif3_data1_b_mux[] = {
- 	RIF3_D1_B_MARK,
- };
-+#endif
- 
- /* - DU --------------------------------------------------------------------- */
- static const unsigned int du_rgb666_pins[] = {
-@@ -4380,7 +4390,7 @@ static const unsigned int vin5_clk_mux[] = {
- 
- static const struct {
- 	struct sh_pfc_pin_group common[318];
--	struct sh_pfc_pin_group automotive[30];
-+	struct sh_pfc_pin_group automotive[PFC_R8A77965_GROUP];
- } pinmux_groups = {
- 	.common = {
- 		SH_PFC_PIN_GROUP(audio_clk_a_a),
-@@ -4703,6 +4713,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(vin5_clk),
- 	},
- 	.automotive = {
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
- 		SH_PFC_PIN_GROUP(drif0_ctrl_a),
- 		SH_PFC_PIN_GROUP(drif0_data0_a),
- 		SH_PFC_PIN_GROUP(drif0_data1_a),
-@@ -4733,6 +4744,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(drif3_ctrl_b),
- 		SH_PFC_PIN_GROUP(drif3_data0_b),
- 		SH_PFC_PIN_GROUP(drif3_data1_b),
-+#endif
- 	}
- };
- 
-@@ -4792,6 +4804,7 @@ static const char * const canfd1_groups[] = {
- 	"canfd1_data",
- };
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
- static const char * const drif0_groups[] = {
- 	"drif0_ctrl_a",
- 	"drif0_data0_a",
-@@ -4833,6 +4846,7 @@ static const char * const drif3_groups[] = {
- 	"drif3_data0_b",
- 	"drif3_data1_b",
- };
-+#endif
- 
- static const char * const du_groups[] = {
- 	"du_rgb666",
-@@ -5250,7 +5264,7 @@ static const char * const vin5_groups[] = {
- 
- static const struct {
- 	struct sh_pfc_function common[51];
--	struct sh_pfc_function automotive[4];
-+	struct sh_pfc_function automotive[PFC_R8A77965_FUNCTION];
- } pinmux_functions = {
- 	.common = {
- 		SH_PFC_FUNCTION(audio_clk),
-@@ -5306,10 +5320,12 @@ static const struct {
- 		SH_PFC_FUNCTION(vin5),
- 	},
- 	.automotive = {
-+#ifdef CONFIG_PINCTRL_PFC_R8A77965
- 		SH_PFC_FUNCTION(drif0),
- 		SH_PFC_FUNCTION(drif1),
- 		SH_PFC_FUNCTION(drif2),
- 		SH_PFC_FUNCTION(drif3),
-+#endif
- 	}
- };
- 
--- 
-2.17.1
+Confirmed.  I see Kent has submitted a patch series for the chardev
+and the v2 uAPI.  So I'll follow the patch threads from now on.  Thank
+you all for this addition.
 
+Cheers,
+Jack
