@@ -2,153 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83E5C28E169
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 15:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B767328E1C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 15:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgJNNgA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 09:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51448 "EHLO
+        id S1731181AbgJNN4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 09:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgJNNgA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 09:36:00 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A09C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:35:59 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gm14so1587403pjb.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:35:59 -0700 (PDT)
+        with ESMTP id S1726119AbgJNN4x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 09:56:53 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C8CC061755
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:56:52 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l24so3218479edj.8
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:56:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=leLlB44vh2cXiqlW7Jq+Crt2QdWS7DydbSDNkWazfsc=;
-        b=eK2zQsTnpa1tx3I72VyfxeSoe/XIwECyXqVEOeiAZ9G/DBNZJCvYbZcH9dKTwHHBsT
-         L8K67OKUH8uuNihmoEInQ3j/AMaPsdmG3bWFk+WkrX8pgDlk1WBE9BrxEAV9aA4vsezr
-         0DTBziM2UQEtjuHVvimz/Qbz+bwbKN9i70ciehG9WWi4BdXwg2SQM7hYE7bSAE/XGLON
-         QFnuvDZY0Ca9VkxxAbWOhYYM9cP1BBrqLr6nsd6h6PQaI3dlDUqi1pfT6BAwnxlq2R87
-         zKIoBtDFxjXLmGNTKcaCDKM6ywvln3AK8I4jytUHgC10NOrGsf9cF9z4L69KtxOF9e/v
-         Kfwg==
+        bh=paqPYiERRMgvhnV66Rq5flhcdTclwlXWom5bceHq4f0=;
+        b=xwoLP3hqNnOLphGE391Ki1PydFz6cRSDrvFGxEnLG3rlpL3AbZatV++ruGhSrG1No/
+         nYx1J+qfLnx8lRBEXlacSGprck+QNRcyMq85uIaAW2iUUaXMnnj+cE1z0M4g0mvpemcx
+         SC7OCe+9EkM3HHe5nIZZVW5NUH66EUaSgaFAivoAwksPfE1WyR7fu7bkNJ0bppaXjEld
+         apTfPYdsXr+k0b+h0G+hTOB3wu/wwlloDJSNgMnzc3F8zLOgCbAAWwS4NIXIvRHPc7lY
+         io/5XyNY2nzjahvHbqiA8nbAo/dZRGk3vnsCn7Jm8urFt28Lj2btmZYiQLBoAQbQYjdz
+         BhpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=leLlB44vh2cXiqlW7Jq+Crt2QdWS7DydbSDNkWazfsc=;
-        b=GvmA4lehKzbxjGeQs5Zrf/cgAN6WGNOkLtqHo6yiYE5wzV4uJf+qycfyzfoueUvyFY
-         3npLBJOw5QRT+cqZdvl0vEghYJ0OuUJ1EKjyg4FEcl1OFwWhuw2iZ26V6MTfqth0SGAZ
-         t/k+QczKdtqZpnpJW9TBukoPiG+RfGr4x9wN44P2/BTvf2j3BsmfWKgy4iyOOMZpedS0
-         0ZggqMWRcCGnF/iR4Pl5Xo3LbWAEFJVx32cukOWRwZcNollQVV0k9VJkykiLppnUWbbY
-         95UMycuPjE53+HhPkO5as0/44heWpIksnZyut55WXF1Eu2mpxRXBpeCxo6tl54GZWVlc
-         QtfA==
-X-Gm-Message-State: AOAM530MDDcotCn6Dgs6xjsIa6Rrum7WWXibkHZWIgx+xZ5eXMSzG+jK
-        we1z8oRbE7wPg3X7vLHe285L1PFQKpRsve8UfRCE9bE0b/jojRDp
-X-Google-Smtp-Source: ABdhPJz7fc30dtKKXWSfXWhoqD2F0DrsmCHZD5KvMZzZohXR5N0lpvULA8Wq+L8AB1cH3nCX3jGoGYOTo73cStsGk2g=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr3464898pjs.181.1602682558478;
- Wed, 14 Oct 2020 06:35:58 -0700 (PDT)
+        bh=paqPYiERRMgvhnV66Rq5flhcdTclwlXWom5bceHq4f0=;
+        b=VUgL/cb3Z+dt9AV/bHkmY3E2aMHTjKifIfZv9zsJHXA7Ba+3hedEC30uW70YPymw78
+         d4512Fm8BPGicUrluicPVYhtnaKtwABoDymqnDw0UhCGDIbfxD2MsVtf6WKG4xphzF66
+         A1WQcBofj5pnUt8WapCgUg9Xd1pAvZLqF4hdpCEf6nRcF1k2K6kCyus0NEYbAFHDWrxe
+         dm7ZOYpa6QnFgpPC9yiVPpT/CmGGCgU6nqNqeyLX0me3DWfL//WG+fcyRB6WFTtr5ItE
+         ZX32Y/+X64dNHUkhrjrFFaxBsscvOjF1nmg92nmZi9ELa6wwiuHZ7qQqLh9KSSNFf2l+
+         uYxg==
+X-Gm-Message-State: AOAM532qNhhu8IBJ2qSlCRqVGHSRAv9+yEj9tG+Q+sPaqqgoEtpbeeE/
+        2ro6cqlKdCl/OcgdncqGhc/p/dn460eSRU8KjL6AFQ==
+X-Google-Smtp-Source: ABdhPJzw147U1SMAAC0SPsvQ0ETzZh9G5KPIG1WAdfPP2vg1krOf0IOiWKZywW5eABV4VsNmo3U0sCjpYkx219VYbjg=
+X-Received: by 2002:a05:6402:943:: with SMTP id h3mr5379140edz.88.1602683811393;
+ Wed, 14 Oct 2020 06:56:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <778e96d4-1695-43ee-90d6-86cc34b20418@www.fastmail.com>
- <CAHp75Vf2-4zX0rh5VtBze=so8nYDav3yOMuYTwodBNhvGmvQ4A@mail.gmail.com> <CAHp75VcBs-dYDCxch6zdFrdeiqO3U+hFhx4YRwriRFOyOsiCYw@mail.gmail.com>
-In-Reply-To: <CAHp75VcBs-dYDCxch6zdFrdeiqO3U+hFhx4YRwriRFOyOsiCYw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 14 Oct 2020 16:36:46 +0300
-Message-ID: <CAHp75Vdqq-8VAyeUjfh6B9vjk7zbFvMwOmk3hRoq68dwP8KX4A@mail.gmail.com>
-Subject: Re: Configuring bias on an APCI GpioInt
-To:     Jamie McClymont <jamie@kwiius.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20201014034758.19427-1-warthog618@gmail.com> <20201014034758.19427-3-warthog618@gmail.com>
+In-Reply-To: <20201014034758.19427-3-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 14 Oct 2020 15:56:40 +0200
+Message-ID: <CAMpxmJU2_Hx5x0zMkCeRCEOnJCOZpXiCi1mQtmoy_S_vDzJjYw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/2] tests: add check of event offset to wait_multiple
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 3:58 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Oct 14, 2020 at 5:48 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> On Sat, Oct 10, 2020 at 11:46 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sat, Oct 10, 2020 at 11:58 AM Jamie McClymont <jamie@kwiius.com> wrote:
+> The offset field is added for uAPI v2, so extend the test to check that
+> the value returned is correct.
 >
-> > > I have run into a second GPIO issue while writing a driver for the fingerprint sensor in my laptop*, configured in the ACPI table like so:
-> > >
-> > >    Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
-> > >    {
-> > >        Name (RBUF, ResourceTemplate ()
-> > >        {
-> > >            // SPI
-> > >            SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, 0x08,
-> > >                ControllerInitiated, 0x00989680, ClockPolarityLow,
-> > >                ClockPhaseFirst, "\\_SB.PCI0.SPI1",
-> > >                0x00, ResourceConsumer, , Exclusive,
-> > >                )
-> > >
-> > >            // Interrupt
-> > >            GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
-> > >                "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
-> > >                )
-> > >                {   // Pin list
-> > >                    0x0000
-> > >                }
-> > >
-> > >            // Reset
-> > >            GpioIo (Exclusive, PullUp, 0x0000, 0x0000, IoRestrictionOutputOnly,
-> > >                "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
-> > >                )
-> > >                {   // Pin list
-> > >                    0x0008
-> > >                }
-> > >        })
-> > >        CreateWordField (RBUF, 0x3B, GPIN)
-> > >        CreateWordField (RBUF, 0x63, SPIN)
-> > >        GPIN = GNUM (0x02000017)
-> > >        SPIN = GNUM (0x0202000A)
-> > >        Return (RBUF) /* \_SB_.SPBA._CRS.RBUF */
-> > >    }
-> > >
-> > > I call devm_request_threaded_irq with the number provided in the irq field of the `struct spi_device` during the spi_probe.
-> > >
-> > > This configures the right IRQ number, and it triggers when it should, but it stays asserted for 140ms-600ms after it should have been cleared.
-> >
-> > I was wondering how it works since it should have the same issue as
-> > with a regular GPIO. Now I understand that we simply ignore bias for
-> > GpioInt() resources. If you enable it, we come to the same issue. So,
-> > first we have to fix set bias followed by enabling it for GpioInt()
-> > resources.
-> >
-> > I will look closer at this next week.
-> >
-> >
-> > > Given it's an active-low level-triggered interrupt with a pull-up requested by the acpi table, my theory is:
-> > >
-> > > * The interrupt line is driven open-drain by the peripheral
-> > > * The pullup is not being correctly configured
-> > > * It is slooooowly pulled up by leakage current of the GPIO input, hence the interrupt being cleared after 140-600ms
-> > >
-> > > Looking at traces and confirming by source code**, it seems that no code ever attempts to configure the pin's bias during the irq setup.
-> > >
-> > > Is this a bug, or should I be manually setting up the GPIO some other way before requesting the IRQ?
-> > >
-> > > Thanks
-> > > - Jamie McClymont
-> > >
-> > >
-> > > *Hardware details
-> > > ==============
-> > >
-> > > Laptop is a Huawei Matebook X Pro
-> > > CPU is an Intel i5-8250U (the specific pinctrl is pinctrl_sunrisepoint)
-> > > Fingerprint Sensor is a Goodix GXFP5187 (not well-documented anywhere, I'm working through reverse-engineering)
-> > >
-> > > ** Tested on 5.9-rc8, but I've been reading the source of linux-next and haven't picked up on any relevant differences
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  tests/tests-event.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> I'm about to send the possible fix which has to be applied on top of
-> the [1]. As per previous thread it would be nice to have [2] applied
-> as well. Please, test it all together.
+> diff --git a/tests/tests-event.c b/tests/tests-event.c
+> index a43f865..0e5effe 100644
+> --- a/tests/tests-event.c
+> +++ b/tests/tests-event.c
+> @@ -570,6 +570,7 @@ GPIOD_TEST_CASE(wait_multiple, 0, { 8 })
+>         ret = gpiod_line_event_read(line, &ev);
+>         g_assert_cmpint(ret, ==, 0);
+>         g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
+> +       g_assert_cmpint(ev.offset, ==, 4);
+>  }
 >
-> [1]: https://lore.kernel.org/linux-gpio/20201014104638.84043-1-andriy.shevchenko@linux.intel.com/T/#u
-> [2]: https://lore.kernel.org/linux-gpio/20201009184359.16427-1-andriy.shevchenko@linux.intel.com/
+>  GPIOD_TEST_CASE(get_fd_when_values_requested, 0, { 8 })
+> --
+> 2.28.0
+>
 
-Done. See [3] (first patch in the series).
+Now applied to branch for-linux-v5.10-rc1. Thanks!
 
-[3]: https://lore.kernel.org/linux-gpio/20201014133154.30610-2-andriy.shevchenko@linux.intel.com/T/#u
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz
