@@ -2,87 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B767328E1C0
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 15:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 169B828E203
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 16:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbgJNN4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 09:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgJNN4x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 09:56:53 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C8CC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:56:52 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l24so3218479edj.8
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 06:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=paqPYiERRMgvhnV66Rq5flhcdTclwlXWom5bceHq4f0=;
-        b=xwoLP3hqNnOLphGE391Ki1PydFz6cRSDrvFGxEnLG3rlpL3AbZatV++ruGhSrG1No/
-         nYx1J+qfLnx8lRBEXlacSGprck+QNRcyMq85uIaAW2iUUaXMnnj+cE1z0M4g0mvpemcx
-         SC7OCe+9EkM3HHe5nIZZVW5NUH66EUaSgaFAivoAwksPfE1WyR7fu7bkNJ0bppaXjEld
-         apTfPYdsXr+k0b+h0G+hTOB3wu/wwlloDJSNgMnzc3F8zLOgCbAAWwS4NIXIvRHPc7lY
-         io/5XyNY2nzjahvHbqiA8nbAo/dZRGk3vnsCn7Jm8urFt28Lj2btmZYiQLBoAQbQYjdz
-         BhpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=paqPYiERRMgvhnV66Rq5flhcdTclwlXWom5bceHq4f0=;
-        b=VUgL/cb3Z+dt9AV/bHkmY3E2aMHTjKifIfZv9zsJHXA7Ba+3hedEC30uW70YPymw78
-         d4512Fm8BPGicUrluicPVYhtnaKtwABoDymqnDw0UhCGDIbfxD2MsVtf6WKG4xphzF66
-         A1WQcBofj5pnUt8WapCgUg9Xd1pAvZLqF4hdpCEf6nRcF1k2K6kCyus0NEYbAFHDWrxe
-         dm7ZOYpa6QnFgpPC9yiVPpT/CmGGCgU6nqNqeyLX0me3DWfL//WG+fcyRB6WFTtr5ItE
-         ZX32Y/+X64dNHUkhrjrFFaxBsscvOjF1nmg92nmZi9ELa6wwiuHZ7qQqLh9KSSNFf2l+
-         uYxg==
-X-Gm-Message-State: AOAM532qNhhu8IBJ2qSlCRqVGHSRAv9+yEj9tG+Q+sPaqqgoEtpbeeE/
-        2ro6cqlKdCl/OcgdncqGhc/p/dn460eSRU8KjL6AFQ==
-X-Google-Smtp-Source: ABdhPJzw147U1SMAAC0SPsvQ0ETzZh9G5KPIG1WAdfPP2vg1krOf0IOiWKZywW5eABV4VsNmo3U0sCjpYkx219VYbjg=
-X-Received: by 2002:a05:6402:943:: with SMTP id h3mr5379140edz.88.1602683811393;
- Wed, 14 Oct 2020 06:56:51 -0700 (PDT)
+        id S1731458AbgJNOPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 10:15:52 -0400
+Received: from sonic308-17.consmr.mail.ir2.yahoo.com ([77.238.178.145]:38114
+        "EHLO sonic308-17.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731383AbgJNOPv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 14 Oct 2020 10:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602684948; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=AYGEWP8ZEshCoh9Lnm56Q1CQgTNBbWcYGf5KoTUw+JjeUDlSAYMfEBjrW/8VfmT4gLH1xIzlNmZKCATFE2mmgm5N4RvCHuHegbFsjR3/B5N0JhksquoCt8pN6LjUfzv/yTrWx8wJKFJfLIfdBN6KGw3/vYRjtqkgzvAxZPzdwr6kdB3vgafkeBQ9WHNPznahj9VtgsLIMgqMmyBZpWzy4TmPon1XK1yCAevWxoo97oAYJnQVbGq5xvNM962gOJ8psNh3Q5EHzbK2FP+v5sW4yrTGgo/BO07OKvR0W7vCiS1L8QvRZxO0RpVqBPH2/zpvYWerutci0F53vNKuNch83g==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602684948; bh=6QVxLyro6iX6MaLpGmLh41/nUXM83lTOX9+TiqqDl7W=; h=Date:From:Subject; b=jda9Np1RwHKjSzaIEpJkLqTJY/xgSaqaoaJ3XYNi8NjWvyrxY10nNzFx00IxbWY4aUnv/NCVRHCCM4qdi4Ukxr6PpHMBkNuSg97dI2fcCiw1z5xkqpZ5HR/fqPFnvUPBXYRBRI0h9D58qt16oGe5CDoO9fQvbbmcMfuy3lkRryDNCw3pf2Q3xvYC0bRhXquBwa9caG6Forn48386EU+zOnUpUw0e1S74l3zXpvOgt1A9TPPOkZGhVqUKLkLJouNSeeXvk9zXhdjNn7sNXygD4wzniq1DLmtYovdXsvk3DzsDI/28LvZP2dAGLD8Gmckl2/68C/JE5qV1twiaimzyig==
+X-YMail-OSG: byaRk6IVM1lqWOvDrdr35ld1s59NEPzR5qldKV0KjIHo_pEP89BsXSNSyWvouJd
+ bk2MBO1DTkFIgCGpraG0hsoxk9mXO3.Gm5NQEZhmRGckQyS6g4zcqwIXS8Va_JqI.LryFFtlNvJ2
+ LVc0BLCoIdqiOomOdECttHDj_JR3LBgRZ7bwgf95QKDQ902c2oLvJ4aABQuUWMGMXgOnkQ1SGK6l
+ y0fx6SrHzMbeDUdqRBRrIuqjJzOf6L.8okCEPbs9kXHobo_pkvzFSTv5lJ2wxND5OYWn_q6JelPh
+ NB4rWADh9KCqQPN_vWg.W3E54UDTXJ9t9Gd9RLi2zEAaH.Yi9uqVnt6qM2ZmyeQmD.jDCmMeBqZc
+ a3mxdgnoDhjLEkhMG_dDxp38kOzrTY3boir_HnK5qiz5.OVGcT9cRPUSsVclOSg38QeEAU.mSAiY
+ es3oQLA8Qv52Xi1BM_qaKdvGozgjPEdA0rK6jjvqmweAPgDkIBwnUIcZnshi5B9ZRJKDI73TWN5X
+ 1AS.jleVS4XJIOAR_NuMgFEG696Iijktfy0KjIffrQQQNaD5pLTybIdU9uSOl6mlBfnaq41GsJHP
+ .v2FDzftgGmbmx9CU2UUfPcCtowKGoQ5KOU1A4XeIVCbUEM4_qMxs5alsdDSG2p76RBZXezcAoBl
+ sibqfvtoJZ_S__7v_SwLjPNA3IiVDrvwONbbKzE6D.Yw0vbZZbHDw5UNGD5J7eHuhmaGkBtgsUn6
+ .M2mCYwjZ9jjlrvDLaHmPgFo8kTaLoE7xbzzl2aOxKw5RRi5VSNTx6gZoeMzqUZjaja3uvYw8D9n
+ L2ZJ7QkFAxhjbnHgcgGf63DNz7S3pQH4zHfmdZI_diK0fP7D2IYZ6OOw4.dcjPNrsTd4dePHWvv5
+ aWCuGZpTdeggN5mBCqRI1.Sjp2QyPG3TrswOOGXC_K8gk1StUVfKGv8vYRRvZupGfNHnziJz5Wtu
+ ThOlXU1yfMH4tx1qyDPTsmz6FVDp9NbvUc5zU_em9Wqjx5vXlleIdsQGsErKGBm6jt6Opl0kJSZR
+ uhUg.SwqL3wMK5TU8sOVXGcrueeE9TZ_LLxBzC6OR5FaBcYgSsujapfzcqtBLFx1GvXk9PLX.U4y
+ EHeytiMamgj4Z2X3zf9Gudju5rrsFjobXOB.jFq1dFnhz0UkgaBIx3snHhwq0DtOt_JUot5aYU6G
+ cxsUDqjDrPj6.RdOeQF9f8W38XtGDt_AgmHcE5AGmELnxXU7rQRRf0utBpZXYvRaYEvteimyFZJ0
+ E5_RbmjbdYhcno.Bw45bcTfkxt56_2h90Z3vOEHU73qV6gV3j.N00ojxIk5ozqhS96ej8Ueo_.v_
+ 5EBzgYspdB3fEv_CeCB0jbXw_arMdM.DUYHDP.PA1YPH_GhbBzMW4IcuhDr4q17zgoiU_mUSpfnB
+ UbozjqfiD6UIhMLkRZ59X6lcMXcsQhNxEEyw5CQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ir2.yahoo.com with HTTP; Wed, 14 Oct 2020 14:15:48 +0000
+Date:   Wed, 14 Oct 2020 14:15:48 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh0000@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <212207276.1086095.1602684948275@mail.yahoo.com>
+Subject: YOUR CO-OPERATION FROM (Ms Lisa Hugh).
 MIME-Version: 1.0
-References: <20201014034758.19427-1-warthog618@gmail.com> <20201014034758.19427-3-warthog618@gmail.com>
-In-Reply-To: <20201014034758.19427-3-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 14 Oct 2020 15:56:40 +0200
-Message-ID: <CAMpxmJU2_Hx5x0zMkCeRCEOnJCOZpXiCi1mQtmoy_S_vDzJjYw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 2/2] tests: add check of event offset to wait_multiple
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <212207276.1086095.1602684948275.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16845 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 5:48 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> The offset field is added for uAPI v2, so extend the test to check that
-> the value returned is correct.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  tests/tests-event.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tests/tests-event.c b/tests/tests-event.c
-> index a43f865..0e5effe 100644
-> --- a/tests/tests-event.c
-> +++ b/tests/tests-event.c
-> @@ -570,6 +570,7 @@ GPIOD_TEST_CASE(wait_multiple, 0, { 8 })
->         ret = gpiod_line_event_read(line, &ev);
->         g_assert_cmpint(ret, ==, 0);
->         g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
-> +       g_assert_cmpint(ev.offset, ==, 4);
->  }
->
->  GPIOD_TEST_CASE(get_fd_when_values_requested, 0, { 8 })
-> --
-> 2.28.0
->
 
-Now applied to branch for-linux-v5.10-rc1. Thanks!
 
-Bartosz
+Dear Friend,
+
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
