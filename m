@@ -2,580 +2,292 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C754B28DFD4
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 13:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398D528EA79
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Oct 2020 03:49:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgJNLbC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 07:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60306 "EHLO
+        id S1732388AbgJOBtj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 21:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbgJNLbC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 07:31:02 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAA6C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 04:31:01 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h2so1584357pll.11
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 04:31:01 -0700 (PDT)
+        with ESMTP id S1732371AbgJOBtj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 21:49:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F71C0F26E7
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 17:33:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t18so618477plo.1
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Oct 2020 17:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/cB5oNnPdNgW9TvmbgwA6nfSJNgoC8s36hD+RZZ+7qU=;
-        b=XA2fgUGqQ4TvNi5YbhIZohs/CJaNSJzmfT1IG9xsqFbBOeIU/roaU+bMfQD6QVFXCK
-         arhV1dIY9RaAAGkHkJqM8hGQ1uW9N2YwpzXxKgBTEZXeY+bjrvFPWd5o4mOTEHhH1Cb6
-         60xRt4d7jY1QsjUeSivExgZI7Qc2exYE2MXEynmAXc9Q9+dS7Tjp2ifwb+uEGtkwK/BD
-         pXWZ4pJwjLEz+kl3o+ZnZYO6eUlPNSvREPHy2VAZOxNrGAYsxcBVFPuUezHXWlu5jzgI
-         pEThWPduDo2Ru9peYj4tanjmdbhbYvGAtNlldfrJZzdPPAiOe8im4iD7M4ZV3ylrMP1R
-         T50w==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=V+57kIQx2TMhq6+PNn6jgrjV2fzqCqWSgc6+XxqPnms=;
+        b=X6iAq/Dtn/iZT2zsD3uf7IHaWHuz3O4vThSJAhFW3SE8dk60sRD2pUmr3M0LuLcfjH
+         2rVOt73/vkQW93dZPcLjy+mmvm8H+3N120PMRtHLL5Dp6+w6p27m0m19hlywvuknAOqw
+         M6AFc4LFO56J2zqC6N2HU3JwpX0WeDntP+yVq6pZc9micy8Z/DkkKiNgCEA02ysXZIaG
+         uWiOGFYrXjXx5KmubheJu6/g6bygbCusLqofhJ+cbEAKn8Rk+6xHW5VqrdaiuFOp0f8W
+         8npRrQL8yt6/TRYAiUccZHjIHX1w6ZqumhU/kmOTPwM1aKR4S755nOAgfCdSyJtMH2+f
+         CKug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/cB5oNnPdNgW9TvmbgwA6nfSJNgoC8s36hD+RZZ+7qU=;
-        b=ak2tzIfQDogG4+PTxrKSvRAMopo+ty7yV0J0IormhbdUZ0QhtUkTpPaxTlP0gMuzOo
-         73CEaeYck3/CcjdVBF0tR/711EpgFUDP+eLYP9sjlOs7D9yXZuBtyVuJ6+2/ylBoijho
-         aEpUjX8XOP/wuzLV4h3VkxG02IQTfWsfMIiJC9R8LYfm6yeG/1L/4GW1mRQAAtgDWgBq
-         rgr8X88yHlQwQUxAr4toZtvmezosd7hJEWTO1jmtk1tsJymBFN6D2a9beP+2Myjwa8et
-         eE0onYdT6TwPF2PihSu2pdH+2YpHarZjAN9TBb9ncC79uV8KsZ7Jq3UyNSNSmT4p/pGv
-         aXjw==
-X-Gm-Message-State: AOAM533Nc2SsRYYK8Ey08tm2a+Q3dM3Ofpf+xImxbV+LhIJF/pbhYYhu
-        TkOy/rJW6J9qbCvSdVo7GH1uz9Cfde51hQ==
-X-Google-Smtp-Source: ABdhPJwNAzmjPfnACKsHdIaHDVWgqsp951rBxQf7+jNqWUWt07rAFpnHpw/cERns5bBIG5wqRpfzrg==
-X-Received: by 2002:a17:902:c14a:b029:d3:f494:e709 with SMTP id 10-20020a170902c14ab02900d3f494e709mr4196640plj.3.1602675060409;
-        Wed, 14 Oct 2020 04:31:00 -0700 (PDT)
-Received: from sol.lan (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
-        by smtp.gmail.com with ESMTPSA id x23sm3116915pfc.47.2020.10.14.04.30.57
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=V+57kIQx2TMhq6+PNn6jgrjV2fzqCqWSgc6+XxqPnms=;
+        b=NW7gx4rkIZz2Con0RWaHOfdCxKDl8Z4+VGuJquGOmkN8xadgEMZ1vvi08j3NSqqXNB
+         Sg0QxMTPnVy5o+CqzxExbE3x4cy0cs2qYUcHzWMcEYNU1zVPg4k8YX1JzDdv6BSgLzPD
+         BajpdHjdZbtV95wrsPE+ZgYL6/MOW3bMfU8wYCMJwPFjWSC8Gq+mZbDWjls9zPMu6NwT
+         HgxH2KX8A8gpdy6v0bZMZAYXuOGVKH6IQEmVQ3jL5yQBGqvbj+Ai93eDyMBKyZKm+0oa
+         6BvDcRYi2h508D439segWbkpoySdpfTzqcoQs5wVq8ePl0YIJUd/fIWu2CUu7JDDPvhi
+         POaQ==
+X-Gm-Message-State: AOAM532GDpZWgn4vim23d3841CHzjdEoRj8eFgyzh6pgHoDoqu1mXQ+O
+        dQOM5lUpRqLcFjHsV7b4bfAJWlXAO4RhBIlI
+X-Google-Smtp-Source: ABdhPJwJQVbG4NL+Jg9qpgmYkjOu2OQYT3umrBbKHOOtczScHPrgOd3/TMviSKd+zQ9Wp/R5jKIdZg==
+X-Received: by 2002:a17:902:8c87:b029:d4:c265:1c3e with SMTP id t7-20020a1709028c87b02900d4c2651c3emr1484808plo.72.1602721996904;
+        Wed, 14 Oct 2020 17:33:16 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id d2sm767590pjx.4.2020.10.14.17.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2020 04:30:59 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH v2] core: Basic port to uAPI v2
-Date:   Wed, 14 Oct 2020 19:30:52 +0800
-Message-Id: <20201014113052.234932-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 14 Oct 2020 17:33:15 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Wed, 14 Oct 2020 19:34:05 +0800
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+Message-ID: <20201014113405.pclwwsvsqfp2hdtj@Rk>
+References: <34cecd8e-ffa7-c2bc-8ce3-575db47ff455@redhat.com>
+ <20201003230340.42mtl35n4ka4d5qw@Rk>
+ <20201004051644.f3fg2oavbobrwhf6@Rk>
+ <20201006044941.fdjsp346kc5thyzy@Rk>
+ <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
+ <20201006083157.3pg6zvju5buxspns@Rk>
+ <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
+ <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com>
+ <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
+ <20201014042420.fkkyabmrkiekpmfw@Rk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201014042420.fkkyabmrkiekpmfw@Rk>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Port existing implementation from GPIO uAPI v1 to v2.
-The libgpiod external interface remains unchanged, only the internal
-implementation switches from uAPI v1 to v2.
+On Wed, Oct 14, 2020 at 12:24:20PM +0800, Coiby Xu wrote:
+>On Tue, Oct 06, 2020 at 11:29:40AM +0200, Hans de Goede wrote:
+>>
+>>
+>>On 10/6/20 11:28 AM, Hans de Goede wrote:
+>>>Hi,
+>>>
+>>>On 10/6/20 10:55 AM, Hans de Goede wrote:
+>>>>Hi,
+>>>>
+>>>>On 10/6/20 10:31 AM, Coiby Xu wrote:
+>>>>>On Tue, Oct 06, 2020 at 08:28:40AM +0200, Hans de Goede wrote:
+>>>>>>Hi,
+>>>>>>
+>>>>>>On 10/6/20 6:49 AM, Coiby Xu wrote:
+>>>>>>>Hi Hans and Linus,
+>>>>>>>
+>>>>>>>I've found the direct evidence proving the GPIO interrupt controller is
+>>>>>>>malfunctioning.
+>>>>>>>
+>>>>>>>I've found a way to let the GPIO chip trigger an interrupt by accident
+>>>>>>>when playing with the GPIO sysfs interface,
+>>>>>>>
+>>>>>>> - export pin130 which is used by the touchad
+>>>>>>> - set the direction to be "out"
+>>>>>>> - `echo 0 > value` will trigger the GPIO controller's parent irq and
+>>>>>>>   "echo 1 > value" will make it stop firing
+>>>>>>>
+>>>>>>>(I'm not sure if this is yet another bug of the GPIO chip. Anyway I can
+>>>>>>>manually trigger an interrupt now.)
+>>>>>>>
+>>>>>>>I wrote a C program is to let GPIO controller quickly generate some
+>>>>>>>interrupts then disable the firing of interrupts by toggling pin#130's
+>>>>>>>value with an specified time interval, i.e., set the value to 0 first
+>>>>>>>and then after some time, re-set the value to 1. There is no interrupt
+>>>>>>>firing unless time internal > 120ms (~7Hz). This explains why we can
+>>>>>>>only see 7 interrupts for the GPIO controller's parent irq.
+>>>>>>
+>>>>>>That is a great find, well done.
+>>>>>>
+>>>>>>>My hypothesis is the GPIO doesn't have proper power setting so it stays
+>>>>>>>in an idle state or its clock frequency is too low by default thus not
+>>>>>>>quick enough to read interrupt input. Then pinctrl-amd must miss some
+>>>>>>>code to configure the chip and I need a hardware reference manual of this
+>>>>>>>GPIO chip (HID: AMDI0030) or reverse-engineer the driver for Windows
+>>>>>>>since I couldn't find a copy of reference manual online? What would you
+>>>>>>>suggest?
+>>>>>>
+>>>>>>This sounds like it might have something to do with the glitch filter.
+>>>>>>The code in pinctrl-amd.c to setup the trigger-type also configures
+>>>>>>the glitch filter, you could try changing that code to disable the
+>>>>>>glitch-filter. The defines for setting the glitch-filter bits to
+>>>>>>disabled are already there.
+>>>>>>
+>>>>>
+>>>>>Disabling the glitch filter works like a charm! Other enthusiastic
+>>>>>Linux users who have been troubled by this issue for months would
+>>>>>also feel great to know this small tweaking could bring their
+>>>>>touchpad back to life:) Thank you!
+>>>>
+>>>>That is good to hear, I'm glad that we have finally found a solution.
+>>>>
+>>>>>$ git diff
+>>>>>diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+>>>>>index 9a760f5cd7ed..e786d779d6c8 100644
+>>>>>--- a/drivers/pinctrl/pinctrl-amd.c
+>>>>>+++ b/drivers/pinctrl/pinctrl-amd.c
+>>>>>@@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>>>>                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
+>>>>>                 pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
+>>>>>                 pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>>>>>-               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
+>>>>>+               /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
+>>>>>                 irq_set_handler_locked(d, handle_level_irq);
+>>>>>                 break;
+>>>>>
+>>>>>I will learn more about the glitch filter and the implementation of
+>>>>>pinctrl and see if I can disable glitch filter only for this touchpad.
+>>>>
+>>>>The glitch filter likely also has settings for how long a glitch
+>>>>lasts, which apparently goes all the way up to 120ms. If it would
+>>>>only delay reporting by say 0.1ms and consider any pulse longer
+>>>>then 0.1s not a glitch, then having it enabled would be fine.
+>>>>
+>>>>I don't think we want some sort of quirk here to only disable the
+>>>>glitch filter for some touchpads. One approach might be to simply
+>>>>disable it completely for level type irqs.
+>>>>
+>>>>What we really need here is some input from AMD engineers with how
+>>>>this is all supposed to work.
+>>>>
+>>>>E.g. maybe the glitch-filter is setup by the BIOS and we should not
+>>>>touch it all ?
+>>>>
+>>>>Or maybe instead of DB_TYPE_PRESERVE_HIGH_GLITCH low level interrupts
+>>>>should use DB_TYPE_PRESERVE_LOW_GLITCH ?   Some docs for the hw
+>>>>would really help here ...
+>>>
+>>>So I've been digging through the history of the pinctrl-amd.c driver
+>>>and once upon a time it used to set a default debounce time of
+>>>2.75 ms.
+>>>
+>>>See the patch generated by doing:
+>>>
+>>>git format-patch 8cf4345575a416e6856a6856ac6eaa31ad883126~..8cf4345575a416e6856a6856ac6eaa31ad883126
+>>>
+>>>In a linux kernel checkout.
+>>>
+>>>So it would be interesting to add a debugging printk to see
+>>>what the value of pin_reg & DB_TMR_OUT_MASK is for the troublesome
+>>>GPIO.
+>>>
+>>>I guess that it might be all 1s (0xfffffffff) or some such which
+>>>might be a way to check that we should disable the glitch-filter
+>>>for this pin?
+>>
+>>p.s.
+>>
+>>Or maybe we should simply stop touching all the glitch-filter
+>>related bits, in the same way as that old commit has already
+>>removed the code setting the timing of the filter ?
+>>
+>>At least is seems that forcing the filter to be on without
+>>sanitizing the de-bounce time is not a good idea.
+>>
+>Today I find an inconsistency in drivers/pinctrl/pinctrl-amd.c
+>so there must be a bug. As far as I can understand pinctrl-amd,
+>"pin_reg & ~DB_CNTRl_MASK" is used to mask out the debouncing
+>feature,
+>
+>static int amd_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
+>		unsigned debounce)
+>{
+>    ...
+>	if (debounce) {
+>        ...
+>		if (debounce < 61) {
+>			pin_reg |= 1;
+>			pin_reg &= ~BIT(DB_TMR_OUT_UNIT_OFF);
+>			pin_reg &= ~BIT(DB_TMR_LARGE_OFF);
+>		...
+>		} else if (debounce < 1000000) {
+>			time = debounce / 62500;
+>			pin_reg |= time & DB_TMR_OUT_MASK;
+>			pin_reg |= BIT(DB_TMR_OUT_UNIT_OFF);
+>			pin_reg |= BIT(DB_TMR_LARGE_OFF);
+>		} else {
+>			pin_reg &= ~DB_CNTRl_MASK;
+>			ret = -EINVAL;
+>		}
+>
+>	} else {
+>        ...
+>		pin_reg &= ~DB_CNTRl_MASK;
+>	}
+>    ...
+>}
+>
+>However in amd_gpio_irq_set_type, "ping_reg & ~(DB_CNTRl_MASK << DB_CNTRL_OFF)"
+>is used,
+>
+>static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>{
+>
+>    ...
+>	case IRQ_TYPE_LEVEL_LOW:
+>		pin_reg |= LEVEL_TRIGGER << LEVEL_TRIG_OFF;
+>		pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
+>		pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
+>		pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>		pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
+>		irq_set_handler_locked(d, handle_level_irq);
+>		break;
+>    ...
+>}
+>
+>If "pin_reg & ~DB_CNTRl_MASK" is used instead, the touchpad will work
+>flawlessly. So I believe "pin_reg & ~DB_CNTRl_MASK" is the correct way
+>to mask out the debouncing filter and the bug lies in amd_gpio_set_type.
+>
+Sorry, I notice the touchpad is not as sensitive as before when using
+"pin_reg & ~DB_CNTRl_MASK". When I use hid-recorder to read the HID
+reports of the touchpad, several duplicates would be read. I interpret
+it as spurious interrupts are fired because the debouncing filter is
+disabled. So it seems there are two mistakes in pinctrl-amd. One mistake
+is it shouldn't disable the debouncing filter here and the other mistake
+is the way to disable the debouncing filer is incorrect.
+>Btw, can you explain what's the difference between glitch filter and
+>debouncing filter? Or can you point to some references? I've gain some
+>experience about how to configure the GPIO controller by studying the
+>code of pinctrl-amd and pinctrl-baytrail (I can't find the hardware
+>reference manual for baytrail either). I also tweaked the configuration
+>in pinctrl-amd, for example, setting the debounce timeout to 976 usec
+>and 3.9 msec without disabling the glitch filter could also save the
+>touchpad. But I need some knowledge to understand why this touchpad [1]
+>which also uses the buggy pinctrl-amd isn't affected.
+>
+>[1] https://github.com/Syniurge/i2c-amd-mp2/issues/11#issuecomment-707427095
+>
+>>Regards,
+>>
+>>Hans
+>>
+>
+>--
+>Best regards,
+>Coiby
 
-This is a minimal port - uAPI v2 features are not used, only the
-uAPI v1 calls are switched to the v2 equivalent.
-
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-
-Changes for v2:
- - reverted to using a line request for each line in an event request to
-   retain complete compatiblity with the existing libgpiod API.
-
-All tests now pass, including CXX and Python, and also tested on a kernel
-with uAPI v1 removed to double check it is only using uAPI v2.
-
- include/gpiod.h |   2 +
- lib/core.c      | 287 ++++++++++++++++++++++++++++++++----------------
- 2 files changed, 193 insertions(+), 96 deletions(-)
-
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 3477f9d..a6e34ae 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -1485,6 +1485,8 @@ struct gpiod_line_event {
- 	/**< Best estimate of time of event occurrence. */
- 	int event_type;
- 	/**< Type of the event that occurred. */
-+	int offset;
-+	/**< Offset of line on which the event occurred. */
- };
- 
- /**
-diff --git a/lib/core.c b/lib/core.c
-index b964272..1abe3a4 100644
---- a/lib/core.c
-+++ b/lib/core.c
-@@ -403,26 +403,49 @@ bool gpiod_line_needs_update(struct gpiod_line *line GPIOD_UNUSED)
- 	return false;
- }
- 
-+static int line_info_v2_to_info_flags(struct gpio_v2_line_info *info)
-+{
-+	int iflags = 0;
-+
-+	if (info->flags & GPIO_V2_LINE_FLAG_USED)
-+		iflags |= GPIOLINE_FLAG_KERNEL;
-+
-+	if (info->flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN)
-+		iflags |= GPIOLINE_FLAG_OPEN_DRAIN;
-+	if (info->flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE)
-+		iflags |= GPIOLINE_FLAG_OPEN_SOURCE;
-+
-+	if (info->flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED)
-+		iflags |= GPIOLINE_FLAG_BIAS_DISABLE;
-+	if (info->flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)
-+		iflags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+	if (info->flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN)
-+		iflags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
-+
-+	return iflags;
-+}
-+
- int gpiod_line_update(struct gpiod_line *line)
- {
--	struct gpioline_info info;
-+	struct gpio_v2_line_info info;
- 	int rv;
- 
- 	memset(&info, 0, sizeof(info));
--	info.line_offset = line->offset;
-+	info.offset = line->offset;
- 
--	rv = ioctl(line->chip->fd, GPIO_GET_LINEINFO_IOCTL, &info);
-+	rv = ioctl(line->chip->fd, GPIO_V2_GET_LINEINFO_IOCTL, &info);
- 	if (rv < 0)
- 		return -1;
- 
--	line->direction = info.flags & GPIOLINE_FLAG_IS_OUT
-+	line->direction = info.flags & GPIO_V2_LINE_FLAG_OUTPUT
- 						? GPIOD_LINE_DIRECTION_OUTPUT
- 						: GPIOD_LINE_DIRECTION_INPUT;
--	line->active_state = info.flags & GPIOLINE_FLAG_ACTIVE_LOW
-+
-+	line->active_state = info.flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW
- 						? GPIOD_LINE_ACTIVE_STATE_LOW
- 						: GPIOD_LINE_ACTIVE_STATE_HIGH;
- 
--	line->info_flags = info.flags;
-+	line->info_flags = line_info_v2_to_info_flags(&info);
- 
- 	strncpy(line->name, info.name, sizeof(line->name));
- 	strncpy(line->consumer, info.consumer, sizeof(line->consumer));
-@@ -508,86 +531,149 @@ static bool line_request_direction_is_valid(int direction)
- 	return false;
- }
- 
--static __u32 line_request_direction_to_gpio_handleflag(int direction)
-+static void line_request_type_to_gpio_v2_line_config(int reqtype,
-+		struct gpio_v2_line_config *config)
- {
--	if (direction == GPIOD_LINE_REQUEST_DIRECTION_INPUT)
--		return GPIOHANDLE_REQUEST_INPUT;
--	if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
--		return GPIOHANDLE_REQUEST_OUTPUT;
-+	if (reqtype == GPIOD_LINE_REQUEST_DIRECTION_AS_IS)
-+		return;
- 
--	return 0;
-+	if (reqtype == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) {
-+		config->flags |= GPIO_V2_LINE_FLAG_OUTPUT;
-+		return;
-+	}
-+	config->flags |= GPIO_V2_LINE_FLAG_INPUT;
-+
-+	if (reqtype == GPIOD_LINE_REQUEST_EVENT_RISING_EDGE)
-+		config->flags |= GPIO_V2_LINE_FLAG_EDGE_RISING;
-+	else if (reqtype == GPIOD_LINE_REQUEST_EVENT_FALLING_EDGE)
-+		config->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
-+	else if (reqtype == GPIOD_LINE_REQUEST_EVENT_BOTH_EDGES)
-+		config->flags |= (GPIO_V2_LINE_FLAG_EDGE_RISING |
-+				  GPIO_V2_LINE_FLAG_EDGE_FALLING);
- }
- 
--static __u32 line_request_flag_to_gpio_handleflag(int flags)
-+static void line_request_flag_to_gpio_v2_line_config(int flags,
-+		struct gpio_v2_line_config *config)
- {
--	int hflags = 0;
-+	if (flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
-+		config->flags |= GPIO_V2_LINE_FLAG_ACTIVE_LOW;
- 
- 	if (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN)
--		hflags |= GPIOHANDLE_REQUEST_OPEN_DRAIN;
--	if (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
--		hflags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
--	if (flags & GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW)
--		hflags |= GPIOHANDLE_REQUEST_ACTIVE_LOW;
-+		config->flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
-+	else if (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
-+		config->flags |= GPIO_V2_LINE_FLAG_OPEN_SOURCE;
-+
- 	if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE)
--		hflags |= GPIOHANDLE_REQUEST_BIAS_DISABLE;
--	if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN)
--		hflags |= GPIOHANDLE_REQUEST_BIAS_PULL_DOWN;
--	if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP)
--		hflags |= GPIOHANDLE_REQUEST_BIAS_PULL_UP;
-+		config->flags |= GPIO_V2_LINE_FLAG_BIAS_DISABLED;
-+	else if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN)
-+		config->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN;
-+	else if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP)
-+		config->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
-+}
-+
-+static void line_request_config_to_gpio_v2_line_config(
-+		const struct gpiod_line_request_config *reqcfg,
-+		struct gpio_v2_line_config *lc)
-+{
-+	line_request_type_to_gpio_v2_line_config(reqcfg->request_type, lc);
-+	line_request_flag_to_gpio_v2_line_config(reqcfg->flags, lc);
-+}
-+
-+static bool line_request_config_validate(
-+		const struct gpiod_line_request_config *config)
-+{
-+	int bias_flags = 0;
-+
-+	if ((config->request_type != GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) &&
-+	    (config->flags & (GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN |
-+			      GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)))
-+		return false;
-+
-+
-+	if ((config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN) &&
-+	    (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)) {
-+		return false;
-+	}
-+
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLE)
-+		bias_flags++;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP)
-+		bias_flags++;
-+	if (config->flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN)
-+		bias_flags++;
-+	if (bias_flags > 1)
-+		return false;
-+
-+	return true;
-+}
- 
--	return hflags;
-+static void lines_bitmap_set_bit(__u64 *bits, int nr)
-+{
-+	*bits |= _BITULL(nr);
-+}
-+
-+static void lines_bitmap_clear_bit(__u64 *bits, int nr)
-+{
-+	*bits &= ~_BITULL(nr);
-+}
-+
-+static int lines_bitmap_test_bit(__u64 bits, int nr)
-+{
-+	return !!(bits & _BITULL(nr));
-+}
-+
-+static void lines_bitmap_assign_bit(__u64 *bits, int nr, bool value)
-+{
-+	if (value)
-+		lines_bitmap_set_bit(bits, nr);
-+	else
-+		lines_bitmap_clear_bit(bits, nr);
- }
- 
- static int line_request_values(struct gpiod_line_bulk *bulk,
- 			       const struct gpiod_line_request_config *config,
--			       const int *default_vals)
-+			       const int *vals)
- {
- 	struct gpiod_line *line;
- 	struct line_fd_handle *line_fd;
--	struct gpiohandle_request req;
-+	struct gpio_v2_line_request req;
- 	unsigned int i;
- 	int rv, fd;
- 
--	if ((config->request_type != GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) &&
--	    (config->flags & (GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN |
--			      GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE))) {
--		errno = EINVAL;
--		return -1;
--	}
--
--	if ((config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN) &&
--	    (config->flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)) {
-+	if (!line_request_config_validate(config)) {
- 		errno = EINVAL;
- 		return -1;
- 	}
- 
- 	memset(&req, 0, sizeof(req));
- 
--	req.lines = gpiod_line_bulk_num_lines(bulk);
--	req.flags = line_request_flag_to_gpio_handleflag(config->flags);
--
--	if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_INPUT)
--		req.flags |= GPIOHANDLE_REQUEST_INPUT;
--	else if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
--		req.flags |= GPIOHANDLE_REQUEST_OUTPUT;
-+	req.num_lines = gpiod_line_bulk_num_lines(bulk);
-+	line_request_config_to_gpio_v2_line_config(config, &req.config);
- 
--
--	gpiod_line_bulk_foreach_line_off(bulk, line, i) {
--		req.lineoffsets[i] = gpiod_line_offset(line);
--		if (config->request_type ==
--				GPIOD_LINE_REQUEST_DIRECTION_OUTPUT &&
--		    default_vals)
--			req.default_values[i] = !!default_vals[i];
-+	gpiod_line_bulk_foreach_line_off(bulk, line, i)
-+		req.offsets[i] = gpiod_line_offset(line);
-+
-+	if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT &&
-+	    vals) {
-+		req.config.num_attrs = 1;
-+		req.config.attrs[0].attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
-+		gpiod_line_bulk_foreach_line_off(bulk, line, i) {
-+			lines_bitmap_assign_bit(
-+				&req.config.attrs[0].mask, i, 1);
-+			lines_bitmap_assign_bit(
-+				&req.config.attrs[0].attr.values,
-+				i, vals[i]);
-+		}
- 	}
- 
- 	if (config->consumer)
--		strncpy(req.consumer_label, config->consumer,
--			sizeof(req.consumer_label) - 1);
-+		strncpy(req.consumer, config->consumer,
-+			sizeof(req.consumer) - 1);
- 
- 	line = gpiod_line_bulk_get_line(bulk, 0);
- 	fd = line->chip->fd;
- 
--	rv = ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
-+	rv = ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
- 	if (rv < 0)
- 		return -1;
- 
-@@ -598,9 +684,9 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
- 	gpiod_line_bulk_foreach_line_off(bulk, line, i) {
- 		line->state = LINE_REQUESTED_VALUES;
- 		line->req_flags = config->flags;
--		if (config->request_type ==
--				GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
--			line->output_value = req.default_values[i];
-+		if (config->request_type == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
-+			line->output_value = lines_bitmap_test_bit(
-+				req.config.attrs[0].attr.values, i);
- 		line_set_fd(line, line_fd);
- 
- 		rv = gpiod_line_update(line);
-@@ -617,27 +703,20 @@ static int line_request_event_single(struct gpiod_line *line,
- 			const struct gpiod_line_request_config *config)
- {
- 	struct line_fd_handle *line_fd;
--	struct gpioevent_request req;
-+	struct gpio_v2_line_request req;
- 	int rv;
- 
- 	memset(&req, 0, sizeof(req));
- 
- 	if (config->consumer)
--		strncpy(req.consumer_label, config->consumer,
--			sizeof(req.consumer_label) - 1);
-+		strncpy(req.consumer, config->consumer,
-+			sizeof(req.consumer) - 1);
- 
--	req.lineoffset = gpiod_line_offset(line);
--	req.handleflags = line_request_flag_to_gpio_handleflag(config->flags);
--	req.handleflags |= GPIOHANDLE_REQUEST_INPUT;
-+	req.offsets[0] = gpiod_line_offset(line);
-+	req.num_lines = 1;
-+	line_request_config_to_gpio_v2_line_config(config, &req.config);
- 
--	if (config->request_type == GPIOD_LINE_REQUEST_EVENT_RISING_EDGE)
--		req.eventflags |= GPIOEVENT_REQUEST_RISING_EDGE;
--	else if (config->request_type == GPIOD_LINE_REQUEST_EVENT_FALLING_EDGE)
--		req.eventflags |= GPIOEVENT_REQUEST_FALLING_EDGE;
--	else if (config->request_type == GPIOD_LINE_REQUEST_EVENT_BOTH_EDGES)
--		req.eventflags |= GPIOEVENT_REQUEST_BOTH_EDGES;
--
--	rv = ioctl(line->chip->fd, GPIO_GET_LINEEVENT_IOCTL, &req);
-+	rv = ioctl(line->chip->fd, GPIO_V2_GET_LINE_IOCTL, &req);
- 	if (rv < 0)
- 		return -1;
- 
-@@ -708,13 +787,13 @@ static bool line_request_is_events(int request)
- 
- int gpiod_line_request_bulk(struct gpiod_line_bulk *bulk,
- 			    const struct gpiod_line_request_config *config,
--			    const int *default_vals)
-+			    const int *vals)
- {
- 	if (!line_bulk_same_chip(bulk) || !line_bulk_all_free(bulk))
- 		return -1;
- 
- 	if (line_request_is_direction(config->request_type))
--		return line_request_values(bulk, config, default_vals);
-+		return line_request_values(bulk, config, vals);
- 	else if (line_request_is_events(config->request_type))
- 		return line_request_events(bulk, config);
- 
-@@ -772,7 +851,7 @@ int gpiod_line_get_value(struct gpiod_line *line)
- 
- int gpiod_line_get_value_bulk(struct gpiod_line_bulk *bulk, int *values)
- {
--	struct gpiohandle_data data;
-+	struct gpio_v2_line_values lv;
- 	struct gpiod_line *line;
- 	unsigned int i;
- 	int rv, fd;
-@@ -782,27 +861,31 @@ int gpiod_line_get_value_bulk(struct gpiod_line_bulk *bulk, int *values)
- 
- 	line = gpiod_line_bulk_get_line(bulk, 0);
- 
-+	memset(&lv, 0, sizeof(lv));
-+
- 	if (line->state == LINE_REQUESTED_VALUES) {
--		memset(&data, 0, sizeof(data));
-+		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
-+			lines_bitmap_set_bit(&lv.mask, i);
- 
- 		fd = line_get_fd(line);
- 
--		rv = ioctl(fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
-+		rv = ioctl(fd, GPIO_V2_LINE_GET_VALUES_IOCTL, &lv);
- 		if (rv < 0)
- 			return -1;
- 
- 		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
--			values[i] = data.values[i];
-+			values[i] = lines_bitmap_test_bit(lv.bits, i);
- 
- 	} else if (line->state == LINE_REQUESTED_EVENTS) {
-+		lines_bitmap_set_bit(&lv.mask, 0);
- 		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++) {
- 			line = gpiod_line_bulk_get_line(bulk, i);
- 
- 			fd = line_get_fd(line);
--			rv = ioctl(fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
-+			rv = ioctl(fd, GPIO_V2_LINE_GET_VALUES_IOCTL, &lv);
- 			if (rv < 0)
- 				return -1;
--			values[i] = data.values[0];
-+			values[i] = lines_bitmap_test_bit(lv.bits, 0);
- 		}
- 	} else {
- 		errno = EINVAL;
-@@ -823,7 +906,7 @@ int gpiod_line_set_value(struct gpiod_line *line, int value)
- 
- int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk, const int *values)
- {
--	struct gpiohandle_data data;
-+	struct gpio_v2_line_values lv;
- 	struct gpiod_line *line;
- 	unsigned int i;
- 	int rv, fd;
-@@ -831,22 +914,22 @@ int gpiod_line_set_value_bulk(struct gpiod_line_bulk *bulk, const int *values)
- 	if (!line_bulk_same_chip(bulk) || !line_bulk_all_requested(bulk))
- 		return -1;
- 
--	memset(&data, 0, sizeof(data));
-+	memset(&lv, 0, sizeof(lv));
- 
--	if (values) {
--		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
--			data.values[i] = (uint8_t)!!values[i];
-+	for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++) {
-+		lines_bitmap_set_bit(&lv.mask, i);
-+		lines_bitmap_assign_bit(&lv.bits, i, values && values[i]);
- 	}
- 
- 	line = gpiod_line_bulk_get_line(bulk, 0);
- 	fd = line_get_fd(line);
- 
--	rv = ioctl(fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
-+	rv = ioctl(fd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lv);
- 	if (rv < 0)
- 		return -1;
- 
- 	gpiod_line_bulk_foreach_line_off(bulk, line, i)
--		line->output_value = data.values[i];
-+		line->output_value = lines_bitmap_test_bit(lv.bits, i);
- 
- 	return 0;
- }
-@@ -866,7 +949,7 @@ int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
- 			       int direction, int flags,
- 			       const int *values)
- {
--	struct gpiohandle_config hcfg;
-+	struct gpio_v2_line_config hcfg;
- 	struct gpiod_line *line;
- 	unsigned int i;
- 	int rv, fd;
-@@ -880,24 +963,30 @@ int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
- 
- 	memset(&hcfg, 0, sizeof(hcfg));
- 
--	hcfg.flags = line_request_flag_to_gpio_handleflag(flags);
--	hcfg.flags |= line_request_direction_to_gpio_handleflag(direction);
-+	line_request_flag_to_gpio_v2_line_config(flags, &hcfg);
-+	line_request_type_to_gpio_v2_line_config(direction, &hcfg);
- 	if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT && values) {
--		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++)
--			hcfg.default_values[i] = (uint8_t)!!values[i];
-+		hcfg.num_attrs = 1;
-+		hcfg.attrs[0].attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
-+		for (i = 0; i < gpiod_line_bulk_num_lines(bulk); i++) {
-+			lines_bitmap_assign_bit(&hcfg.attrs[0].mask, i, 1);
-+			lines_bitmap_assign_bit(
-+				&hcfg.attrs[0].attr.values, i, values[i]);
-+		}
- 	}
- 
- 	line = gpiod_line_bulk_get_line(bulk, 0);
- 	fd = line_get_fd(line);
- 
--	rv = ioctl(fd, GPIOHANDLE_SET_CONFIG_IOCTL, &hcfg);
-+	rv = ioctl(fd, GPIO_V2_LINE_SET_CONFIG_IOCTL, &hcfg);
- 	if (rv < 0)
- 		return -1;
- 
- 	gpiod_line_bulk_foreach_line_off(bulk, line, i) {
- 		line->req_flags = flags;
- 		if (direction == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT)
--			line->output_value = hcfg.default_values[i];
-+			line->output_value = lines_bitmap_test_bit(
-+				hcfg.attrs[0].attr.values, i);
- 
- 		rv = gpiod_line_update(line);
- 		if (rv < 0)
-@@ -1082,8 +1171,13 @@ int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
- 	/*
- 	 * 16 is the maximum number of events the kernel can store in the FIFO
- 	 * so we can allocate the buffer on the stack.
-+	 *
-+	 * NOTE: This is no longer strictly true for uAPI v2.  While 16 is
-+	 * the default for single line, a request with multiple lines will
-+	 * have a larger buffer.  So need to rethink the allocation here,
-+	 * or at least the comment above...
- 	 */
--	struct gpioevent_data evdata[16], *curr;
-+	struct gpio_v2_line_event evdata[16], *curr;
- 	struct gpiod_line_event *event;
- 	unsigned int events_read, i;
- 	ssize_t rd;
-@@ -1109,11 +1203,12 @@ int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
- 		curr = &evdata[i];
- 		event = &events[i];
- 
--		event->event_type = curr->id == GPIOEVENT_EVENT_RISING_EDGE
-+		event->offset = curr->offset;
-+		event->event_type = curr->id == GPIO_V2_LINE_EVENT_RISING_EDGE
- 					? GPIOD_LINE_EVENT_RISING_EDGE
- 					: GPIOD_LINE_EVENT_FALLING_EDGE;
--		event->ts.tv_sec = curr->timestamp / 1000000000ULL;
--		event->ts.tv_nsec = curr->timestamp % 1000000000ULL;
-+		event->ts.tv_sec = curr->timestamp_ns / 1000000000ULL;
-+		event->ts.tv_nsec = curr->timestamp_ns % 1000000000ULL;
- 	}
- 
- 	return i;
--- 
-2.28.0
-
+--
+Best regards,
+Coiby
