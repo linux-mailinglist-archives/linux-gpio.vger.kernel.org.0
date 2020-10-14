@@ -2,75 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 169B828E203
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 16:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0619228E430
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Oct 2020 18:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgJNOPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Oct 2020 10:15:52 -0400
-Received: from sonic308-17.consmr.mail.ir2.yahoo.com ([77.238.178.145]:38114
-        "EHLO sonic308-17.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731383AbgJNOPv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 14 Oct 2020 10:15:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602684948; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=AYGEWP8ZEshCoh9Lnm56Q1CQgTNBbWcYGf5KoTUw+JjeUDlSAYMfEBjrW/8VfmT4gLH1xIzlNmZKCATFE2mmgm5N4RvCHuHegbFsjR3/B5N0JhksquoCt8pN6LjUfzv/yTrWx8wJKFJfLIfdBN6KGw3/vYRjtqkgzvAxZPzdwr6kdB3vgafkeBQ9WHNPznahj9VtgsLIMgqMmyBZpWzy4TmPon1XK1yCAevWxoo97oAYJnQVbGq5xvNM962gOJ8psNh3Q5EHzbK2FP+v5sW4yrTGgo/BO07OKvR0W7vCiS1L8QvRZxO0RpVqBPH2/zpvYWerutci0F53vNKuNch83g==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602684948; bh=6QVxLyro6iX6MaLpGmLh41/nUXM83lTOX9+TiqqDl7W=; h=Date:From:Subject; b=jda9Np1RwHKjSzaIEpJkLqTJY/xgSaqaoaJ3XYNi8NjWvyrxY10nNzFx00IxbWY4aUnv/NCVRHCCM4qdi4Ukxr6PpHMBkNuSg97dI2fcCiw1z5xkqpZ5HR/fqPFnvUPBXYRBRI0h9D58qt16oGe5CDoO9fQvbbmcMfuy3lkRryDNCw3pf2Q3xvYC0bRhXquBwa9caG6Forn48386EU+zOnUpUw0e1S74l3zXpvOgt1A9TPPOkZGhVqUKLkLJouNSeeXvk9zXhdjNn7sNXygD4wzniq1DLmtYovdXsvk3DzsDI/28LvZP2dAGLD8Gmckl2/68C/JE5qV1twiaimzyig==
-X-YMail-OSG: byaRk6IVM1lqWOvDrdr35ld1s59NEPzR5qldKV0KjIHo_pEP89BsXSNSyWvouJd
- bk2MBO1DTkFIgCGpraG0hsoxk9mXO3.Gm5NQEZhmRGckQyS6g4zcqwIXS8Va_JqI.LryFFtlNvJ2
- LVc0BLCoIdqiOomOdECttHDj_JR3LBgRZ7bwgf95QKDQ902c2oLvJ4aABQuUWMGMXgOnkQ1SGK6l
- y0fx6SrHzMbeDUdqRBRrIuqjJzOf6L.8okCEPbs9kXHobo_pkvzFSTv5lJ2wxND5OYWn_q6JelPh
- NB4rWADh9KCqQPN_vWg.W3E54UDTXJ9t9Gd9RLi2zEAaH.Yi9uqVnt6qM2ZmyeQmD.jDCmMeBqZc
- a3mxdgnoDhjLEkhMG_dDxp38kOzrTY3boir_HnK5qiz5.OVGcT9cRPUSsVclOSg38QeEAU.mSAiY
- es3oQLA8Qv52Xi1BM_qaKdvGozgjPEdA0rK6jjvqmweAPgDkIBwnUIcZnshi5B9ZRJKDI73TWN5X
- 1AS.jleVS4XJIOAR_NuMgFEG696Iijktfy0KjIffrQQQNaD5pLTybIdU9uSOl6mlBfnaq41GsJHP
- .v2FDzftgGmbmx9CU2UUfPcCtowKGoQ5KOU1A4XeIVCbUEM4_qMxs5alsdDSG2p76RBZXezcAoBl
- sibqfvtoJZ_S__7v_SwLjPNA3IiVDrvwONbbKzE6D.Yw0vbZZbHDw5UNGD5J7eHuhmaGkBtgsUn6
- .M2mCYwjZ9jjlrvDLaHmPgFo8kTaLoE7xbzzl2aOxKw5RRi5VSNTx6gZoeMzqUZjaja3uvYw8D9n
- L2ZJ7QkFAxhjbnHgcgGf63DNz7S3pQH4zHfmdZI_diK0fP7D2IYZ6OOw4.dcjPNrsTd4dePHWvv5
- aWCuGZpTdeggN5mBCqRI1.Sjp2QyPG3TrswOOGXC_K8gk1StUVfKGv8vYRRvZupGfNHnziJz5Wtu
- ThOlXU1yfMH4tx1qyDPTsmz6FVDp9NbvUc5zU_em9Wqjx5vXlleIdsQGsErKGBm6jt6Opl0kJSZR
- uhUg.SwqL3wMK5TU8sOVXGcrueeE9TZ_LLxBzC6OR5FaBcYgSsujapfzcqtBLFx1GvXk9PLX.U4y
- EHeytiMamgj4Z2X3zf9Gudju5rrsFjobXOB.jFq1dFnhz0UkgaBIx3snHhwq0DtOt_JUot5aYU6G
- cxsUDqjDrPj6.RdOeQF9f8W38XtGDt_AgmHcE5AGmELnxXU7rQRRf0utBpZXYvRaYEvteimyFZJ0
- E5_RbmjbdYhcno.Bw45bcTfkxt56_2h90Z3vOEHU73qV6gV3j.N00ojxIk5ozqhS96ej8Ueo_.v_
- 5EBzgYspdB3fEv_CeCB0jbXw_arMdM.DUYHDP.PA1YPH_GhbBzMW4IcuhDr4q17zgoiU_mUSpfnB
- UbozjqfiD6UIhMLkRZ59X6lcMXcsQhNxEEyw5CQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ir2.yahoo.com with HTTP; Wed, 14 Oct 2020 14:15:48 +0000
-Date:   Wed, 14 Oct 2020 14:15:48 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh0000@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <212207276.1086095.1602684948275@mail.yahoo.com>
-Subject: YOUR CO-OPERATION FROM (Ms Lisa Hugh).
+        id S1729064AbgJNQRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Oct 2020 12:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgJNQRd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Oct 2020 12:17:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5EFC061755;
+        Wed, 14 Oct 2020 09:17:33 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b19so2052806pld.0;
+        Wed, 14 Oct 2020 09:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vEOij1W5YzKHI9vk48WeDQVrXJh9T0sK+XbA6XZMKSY=;
+        b=V8FEUSywm+8lN/iBx6wzgrSVeDnO22RAo8NMA/LIk9ckj2VqxilRpFWD0ZWZoqW0Q4
+         Fh4+/Npo/GV8ah3JfWrvJhufLS/B4VATgFs+01LtSiY1BXEfWcEOBOR5W5jT+npooZ1Y
+         hOB3VmRYmR+u2C7DEUrFIl/kPSx81C7yKeGlTw3xpU3/cw9VVDsZkYuaxwP5ORGqp0bs
+         DBq4YisUym3L0GsKvExKr67r9fPbWK68QXATAhZRGIRvOe2gOWrFdGBBCE5ZFsHwYtDh
+         mmJTFWMt5Dru016UacBffHAd5C/ZGC2VAK8/Ckfx6Anzb+bmd7OKhJfdCosBfcIjXrx3
+         RXNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vEOij1W5YzKHI9vk48WeDQVrXJh9T0sK+XbA6XZMKSY=;
+        b=fZGUtsovihw6qQmfP4SEyJaYthCmpgyj/tjPoe5dad3vEhpAUAq8qmbaopfG2Aej2G
+         5SDLpW/FDlFg8ZZOlq2CJJZuufLfAVPmgx2STe/brh2G/PD70Tb9MyygnXxiLel1X3b1
+         Z80kvM6F3RImOEGsmj9IUQhttPrHJXYn5fW6htJNwqKqWtT4hthS9wCq464Ho3JKomxn
+         zd6R/Cd9I+S9pK3IWhnjopKabBqLaccCPl8GS8RT8AcyZEr7/RTJnVNYEIoh6jpjp/ak
+         1zuN2D73m6Ort8V+8LqWFXEx7vYICZ+QG4gClVsAXlcfBo8vuhCd51XdvxEM8Fnp79PD
+         Stnw==
+X-Gm-Message-State: AOAM530WpTdnwH8UhWQAp5vGxGY6Pmp+/z78DeuEQyucBLRo7Rbg8Dg3
+        zSxhfLSeyqSP7RgW8J1SuBQN+k4Pm4Qegg==
+X-Google-Smtp-Source: ABdhPJxEXco0p9UWpFVwL3CS/WMdRWMjfNJI/y28E0rZMiRhZQeVlW0/oBaRUpPT9fvndjUlCurDNg==
+X-Received: by 2002:a17:90a:ff12:: with SMTP id ce18mr141996pjb.223.1602692252826;
+        Wed, 14 Oct 2020 09:17:32 -0700 (PDT)
+Received: from sol (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
+        by smtp.gmail.com with ESMTPSA id f9sm101164pjq.26.2020.10.14.09.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2020 09:17:31 -0700 (PDT)
+Date:   Thu, 15 Oct 2020 00:17:27 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Jack Winch <sunt.un.morcov@gmail.com>
+Subject: Re: [PATCH 1/3] gpiolib: cdev: allow edge event timestamps to be
+ configured as REALTIME
+Message-ID: <20201014161727.GA663047@sol>
+References: <20201014062740.78977-1-warthog618@gmail.com>
+ <20201014062740.78977-2-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <212207276.1086095.1602684948275.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16845 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201014062740.78977-2-warthog618@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Oct 14, 2020 at 02:27:38PM +0800, Kent Gibson wrote:
+> Using CLOCK_REALTIME as the source for event timestamps is crucial for
+> some specific applications, particularly those requiring timetamps
+> relative to a PTP clock, so provide an option to switch the event
+> timestamp source from the default CLOCK_MONOTONIC to CLOCK_REALTIME.
+> 
+[snip]
+>  
+>  static void linereq_put_event(struct linereq *lr,
+> @@ -535,6 +536,14 @@ static void linereq_put_event(struct linereq *lr,
+>  		pr_debug_ratelimited("event FIFO is full - event dropped\n");
+>  }
+>  
+> +static unsigned long line_event_timestamp(struct line *line)
+> +{
+> +	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
+> +		return ktime_get_real_ns();
+> +
+> +	return ktime_get_ns();
+> +
+> +}
 
+One minor hitch - that should be returning u64, not unsigned long,
+or the time gets reduced to 32bit on 32bit platforms.
 
-Dear Friend,
+It's getting late though, so I'll send out an update tomorrow.
 
-I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+Cheers,
+Kent.
 
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
-
-Below information is what i need from you so will can be reaching each other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa hugh.
