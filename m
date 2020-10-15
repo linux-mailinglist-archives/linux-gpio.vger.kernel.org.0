@@ -2,119 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C4EA28F174
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Oct 2020 13:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C1228F177
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Oct 2020 13:43:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgJOLk1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Oct 2020 07:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
+        id S1728185AbgJOLns (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Oct 2020 07:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgJOLk0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Oct 2020 07:40:26 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F97DC061755;
-        Thu, 15 Oct 2020 04:40:26 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id z2so3242753lfr.1;
-        Thu, 15 Oct 2020 04:40:26 -0700 (PDT)
+        with ESMTP id S1727923AbgJOLnp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Oct 2020 07:43:45 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AFE7C061755
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Oct 2020 04:43:44 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id n6so3824786ioc.12
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Oct 2020 04:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WtpDL7/t1P9RuyMG5iZdjHg44W+tOwtfwZ3CIyCNFtY=;
-        b=WJqjGxcTtReAwTmTismmlgc3XYFbe/0XDUdSoAfVCRDkEdCotRuxEO360ojNV0AmAx
-         W0v+EVeEV2N8XJr+TnKIpCSIJUr/I0dK6BWzJ8jueAG2hGlZHbOSgpv9J3VzJD5jIYv+
-         74rUHzYeCUlo3jFbnIv7SKI5TO1gQRpRwanF28BXp7glwjx8tcFOl09e3slodAazzcDW
-         Z07SsUU0pW66Kzg0GSZzYrcwezguXD1VI2dZ/DpMXvt5RHqJAnjsBJl6BmErdYmSclps
-         Dc9HGR6/otIaZQDVzWy8UvfSwk4Aoqyod2oTWcBAVVPamvcP86Wi6PWNzpXnrdhoN8bP
-         YDoA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xpp72X2In1PiJBULUmtQVdsTtZPQGeF81aTl5Den2KE=;
+        b=sZdQpXg474pzaIqJUYli8suAGbNtP7onlbtg0PLiyMU8Pg/niaya+VDVypdRbu210z
+         5lKx4Q/tl6KtjiJU2kJvr+AA08wSHRwBX3vDDiFu9gVgrNSVWx8tb3sTj0QcmbRRHElR
+         xLCTX8fpTuKAGUrxmDQe1yiXuN1yF3gvPNt+QALP1mjs8G9yQp4FHjsYmYuPNp5oXbyJ
+         3FpM2B+6VdcOYw5NckOsJH9epTEOERasKcNwR61LagzOYT0U1XoRXtvwHmY0SzrVWwY8
+         JFhuFwwkQkwJSWBEZFl5rWwjzoOhBhAoDh26ZV7q3kkb19ydkjrSD9oZRqV0K+/mt8/x
+         bmpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WtpDL7/t1P9RuyMG5iZdjHg44W+tOwtfwZ3CIyCNFtY=;
-        b=DK187gjIF1ZxUkA0g/vC7hgTkrCLNoRFK2wt0LA8cyDabuglxFcET5gZWxvbMbaX0v
-         YpcUPXY4hpVk/JOJgA5TPw7/Xh8AcSwkmTHWfDbEpO1n4qu0vxioAvotc4utsdRPon/6
-         5/edYZGX4gG1L++JH3Pi6kHuSStLm7q1psl0g6hq6woScmIK08D5uNi5dzqByvNeBSt9
-         M4PAipG2qImeY48T+CfZy0qCxT/00OGOHvR03Pryq7a92kzv77JX66J/FC/u7iNBWj9z
-         JENZkfO+palxEDX+fQRI72C3PdZiihhUNeD8yKY1i0N7BWahrj/tecC/piUbgkTZlsd+
-         cUbg==
-X-Gm-Message-State: AOAM531lh67wvM1p00Q3STQaHG9+5OdLy3uIq/dZO2F8XqGlqT2WGCv5
-        UxnLR7TmCgvoSKZsf3S0GrA=
-X-Google-Smtp-Source: ABdhPJxdWyzLMLepBW0eaHJJRrTVeEBkEga/kaziR7QGiNzUHNTxM4iX4vRGyXT8LY5KW0GGD0E8jA==
-X-Received: by 2002:a19:f510:: with SMTP id j16mr972157lfb.91.1602762025040;
-        Thu, 15 Oct 2020 04:40:25 -0700 (PDT)
-Received: from mobilestation ([95.79.141.114])
-        by smtp.gmail.com with ESMTPSA id c21sm940835lfm.308.2020.10.15.04.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2020 04:40:24 -0700 (PDT)
-Date:   Thu, 15 Oct 2020 14:40:22 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Wei Xu <xuwei5@hisilicon.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/8] remove never-used "snps,dw-apb-gpio-port"
-Message-ID: <20201015114022.7ptrl37g5d3lumyw@mobilestation>
-References: <20201015115524.24e3c36b@xhacker.debian>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xpp72X2In1PiJBULUmtQVdsTtZPQGeF81aTl5Den2KE=;
+        b=raqRMOcQHFd+47h/gY4AmlcjRlsPK2vY8OkCaV2AM+g+aP3bFCtvWIEvGX/MX5+qzA
+         SvchpiLBS9SWR74f2jsCy+udHVshfjKSvIKcjAEgzXcm7TlNuWI/sx7kOtPFpCb//vUe
+         boe0cIysbXHuVGfS1B4fx9xiNzgv2/E6+eGyhFeLDxfJt/2H+w9m1EXV4ic7emtSVhgj
+         tCKgIbiRP73CiTPD1pgOdmEXelFxdHUrEhmcQs4kDKH4EngA5itnoCVYhPCRLBY7P+Xo
+         2jaaQxfbL+f656Y567x+mC3sFuX39JBzI9FmWGr72PHyzdNyVlY6+RdRJ8GHxnxOO6Yy
+         QdSw==
+X-Gm-Message-State: AOAM533dVxkU35HzaH4oh4a9XMpT4GbYHP/PFB7PuFo39npjmZAhVo8y
+        YaValBfM7B0K6IYmUJtRW20PzKz/Z7hvDmtrm0/YcA==
+X-Google-Smtp-Source: ABdhPJyNZwTEzX/WELyMlfddBnPvlvpbCnmoWUyGlbAOaYGm/SHa7aYxOcBHaZAm+TvvOmdCqwMuqtwIWgL0wfyClus=
+X-Received: by 2002:a5d:91d2:: with SMTP id k18mr2768939ior.119.1602762223376;
+ Thu, 15 Oct 2020 04:43:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201015115524.24e3c36b@xhacker.debian>
+References: <20201015083805.GA10354@laureti-dev> <CAMRc=Md=ZeKLS-SKKgmq+V9VCt+7xdjNiwz89Ms-vOeTcwZBOw@mail.gmail.com>
+ <20201015093526.GA10891@laureti-dev> <CAMRc=McpnnK9NydujR=YRuy0ZBLhQqz3SSZ5eeisjqhMPUbMhA@mail.gmail.com>
+ <20201015105718.GA11027@laureti-dev>
+In-Reply-To: <20201015105718.GA11027@laureti-dev>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 15 Oct 2020 13:43:32 +0200
+Message-ID: <CAMRc=MdWi94uzYb6OprmVoGnfmSHUCevqAPPgXOPHQNVrj0jfQ@mail.gmail.com>
+Subject: Re: [libgpiod] cxx bindings: time_point vs duration
+To:     Helmut Grohne <helmut.grohne@intenta.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartekgola@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Jisheng,
+On Thu, Oct 15, 2020 at 12:57 PM Helmut Grohne <helmut.grohne@intenta.de> wrote:
+>
+> Hi,
+>
+> On Thu, Oct 15, 2020 at 12:05:23PM +0200, Bartosz Golaszewski wrote:
+> > In case of the event timestamps - we get them from the kernel as
+> > 64-bit unsigned integers. They're then converted to struct timespec as
+> > defined by libc and eventually to ::std::chrono:duration. The
+> > timestamps use the MONOTONIC kernel clock - the same that you would
+> > use by calling clock_gettime(CLOCK_MONOTONIC, ...). Is there any way
+> > to couple the C++ time_point to this clock?
+>
+> I got that wrong then as I thought they were wall clock time.
 
-Thanks for sending this cleanup and for the work you've done in its framework.
-The compatible property is indeed redundant in the DW APB GPIO bindings, because
-any sub-node is considered as one of the device port from the set {A,B,C,D} and I
-don't see why would we need to be there for anything else. The port index is
-initialized by the reg property, which I've just realized lack of a proper
-constraints.
+Well, it's a long story. It used to be what the kernel calls REALTIME
+clock, then it was changed to MONOTONIC and now there's a suggestion
+to make it configurable in v2. More on that here[1].
 
-Anyway see my comment to the DT binding file. The rest of the series is up to
-the corresponding subsystem maintainers.
+> CLOCK_MONOTONIC is the thing that backs std::chrono::steady_clock on
+> Linux. At least gcc and clang's libcxx implement steady_clock using
+> nanosecond resolution. I don't thing nanosecond resolution is
+> guarantueed, but maybe this is good enough and you can just use
+> steady_clock? That would certainly be most welcome by consuming client
+> code.
+>
 
--Sergey
+One question is: even if on linux the steady_clock is backed by
+CLOCK_MONOTONIC, is this a guarantee or just implementation? And can
+we rely on this if it's not defined?
 
-On Thu, Oct 15, 2020 at 11:55:24AM +0800, Jisheng Zhang wrote:
-> The "snps,dw-apb-gpio-port" is never used.
-> 
-> Jisheng Zhang (8):
->   ARM: dts: berlin: Remove compatible string from dw apb gpio port
->   ARM: dts: socfpga: Remove compatible string from dw apb gpio port
->   arm64: dts: apm: remove compatible string from dw apb gpio port
->   arm64: dts: bitmain: Remove compatible string from dw apb gpio port
->   arm64: dts: hip05: Remove compatible string from dw apb gpio port
->   arm: dts: socfpga: Remove compatible string from dw apb gpio port
->   arm64: dts: synaptics: Remove compatible string from dw apb gpio port
->   dt-bindings: gpio: dw-apb: remove never-used "snps,dw-apb-gpio-port"
-> 
->  .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 5 -----
->  arch/arm/boot/dts/berlin2.dtsi                              | 6 ------
->  arch/arm/boot/dts/berlin2cd.dtsi                            | 6 ------
->  arch/arm/boot/dts/berlin2q.dtsi                             | 6 ------
->  arch/arm/boot/dts/socfpga.dtsi                              | 3 ---
->  arch/arm/boot/dts/socfpga_arria10.dtsi                      | 3 ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi           | 2 --
->  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi                  | 1 -
->  arch/arm64/boot/dts/apm/apm-storm.dtsi                      | 1 -
->  arch/arm64/boot/dts/bitmain/bm1880.dtsi                     | 3 ---
->  arch/arm64/boot/dts/hisilicon/hip05.dtsi                    | 2 --
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi               | 2 --
->  arch/arm64/boot/dts/synaptics/as370.dtsi                    | 2 --
->  arch/arm64/boot/dts/synaptics/berlin4ct.dtsi                | 6 ------
->  14 files changed, 48 deletions(-)
-> 
-> -- 
-> 2.28.0
-> 
+> > Me neither, but the new user API exposed by the kernel addresses a lot
+> > of issues and adds new features and it's really impossible to keep the
+> > current library API while also leveraging them. I'll keep supporting
+> > the v1.6 stable branch for a long time though.
+>
+> Great news. Thank you.
+>
+> > Yes, it's what I intended indeed. I'm however worried that this isn't
+> > the best approach. Having learned more, I now think that lines should
+> > somehow weakly reference the chip - to emphasize that they don't
+> > control its lifetime in any way (which is the case now with each line
+> > storing a hard reference to the chip). Also what happens currently is
+> > the fact that a new line object is created each time get_line() method
+> > is called because we can't store lines in some array within the chip
+> > because that would lead to circular references. Maybe a line should
+> > store a weak_ptr to the underlying ::gpiod_chip? But then it would
+> > create a new chip object every time get_chip() is called. Is there any
+> > way around it? Making the chip and line non-copyable and expediting
+> > any shared_ptr management to the user?
+>
+> First of all, I don't think any of these types need to be copyable.
+> Keeping them moveable should be simple and makes handling them easy
+> enough.
+>
+
+Right now we rely on them being copyable to store them in
+::gpiod::line_bulk objects so that needs addressing too.
+
+> It seems like you'd want a chip to include all lines as is the case for
+> the C-api already. In that case, a line does not exist by itself, it
+> only is an observable part of a chip. I'm not convinced that a line
+> should weakly reference a chip. If you have a line and the underlying
+> chip disappears, all the gpiod_lines get cleared and your line suddenly
+> has a dangling reference. Actually, you line would be gone if it was
+> part of the chip. That does not seem useful to me. So the current design
+> of having lines control the lifetime of the chip seems useful to me.
+>
+
+Yes, except that with a weak_ptr we'd at least get a bad_weak_ptr
+exception instead of a segfault if the programmer goofs and lets the
+chip disappear before using a line.
+
+> Why do you take issue with the fact that each get_line creates a new
+> line object? This line object practically is a counted reference on the
+> chip together with a line identifier. It kinda is a complex pointer. Why
+> not have two distinct pointers point to the same thing?
+>
+
+It started with Python bindings actually. The pattern over there is
+similar except that Python objects are much more complex to create and
+initialize. Then I realized that C++ does the same. It also seems to
+me like reversed logic where a line has the power to keep the chip
+alive. Just doesn't feel good and I haven't seen this pattern
+anywhere.
+
+> Likewise creating new chip objects is not a problem in my book, because
+> a chip object is a (counted) reference to a gpiod_chip. Having two
+> pointers should be ok. Creating them is cheap.
+>
+
+Fair enough.
+
+> > The thing with gpiod_line struct (the one from C libgpiod, not C++
+> > class) is that the owner is the chip (struct gpiod_chip) - there's no
+> > need to free any resources, they'll be freed when the chip goes out of
+> > scope. You can copy the line pointer all you want, there's always a
+> > single line behind stored in the opaque struct gpiod_chip. So in C++ -
+> > I suppose - the chip should really own the C++ line (stored in a
+> > vector maybe) and the line should at most weakly reference the chip
+> > object. I'm just not sure how to correctly approach this so any advice
+> > is welcome.
+>
+> That helps a lot with my understanding. I mostly concur up to the point
+> where you say that a chip should own the C++ line. The C++ line
+> currently is a counted reference on a gpiod_chip together with a line
+> identifier. I don't see what's so precious about this to ensure it is
+> not copied. That seems entirely fine with me.
+>
+> Now if you go the route and have chips own lines, then your back
+> reference from line to chip can be a plain pointer. The forward
+> reference ensures that the pointer is always valid. It's still circular,
+> but you don't have to mess with weak_ptrs as long as destruction is
+> careful.
+>
+> So this seems mostly fine as is. Having lines manage the lifetime of
+> chips is very convenient for using the library.
+>
+> Helmut
+
+That's interesting to read. I was under the impression that this is
+bad C++ (or OOP in general). I have to think about it some more
+though, because my gut is telling me this is just wrong on the logical
+level - even if it's convenient.
+
+Bartosz
+
+[1] https://www.spinics.net/lists/linux-gpio/msg53796.html
