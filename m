@@ -2,84 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CC9628FB4E
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 00:47:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 415CB290549
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 14:37:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732252AbgJOWrZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Oct 2020 18:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732248AbgJOWrZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Oct 2020 18:47:25 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376B0C061755
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Oct 2020 15:47:21 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n9so202132pgf.9
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Oct 2020 15:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qFaWvmJbO9izPPnSObAj7cRVcOIfeQesk9dxI5egBBo=;
-        b=hHgmWdMnBFeq20UXsxBA5RWRLFTiFLvYV2Y8nBm1tgyv04b58s7Cg56KzsGyI/EB9g
-         fkYMpSumTrlrLEHvY2bOv48/BwgpkIe0+OM/sUFi9OUqWv2KppQhDXXkO26mK337rHMh
-         Lo20mVOs2AVBrb8xRvoVYv5h9iqdISzGcQDN/1tQOgvB7ElwkDlva1EypuUH6Qi9za+s
-         D2zMpJnen6pt7uc1PDEVCah2151Olso+cBqfPRdB6O9ixZ+O6sAnsZSq1de0wHOIwkYz
-         gRTO1N37H8GipKjyYQV47WXwU587TEOWbDtpotx4jdpW4AGa/vydLVABKQ8CDZ10h2gg
-         jCiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qFaWvmJbO9izPPnSObAj7cRVcOIfeQesk9dxI5egBBo=;
-        b=RJ2aWSSkMD1Osx9K5fXKIxyxkRW3PxaQEvVEtceUVHqYlkL+JaOjwpT3/x2PvFgKeS
-         Z3gxbrf+FzQ8PrgGKsgc5Hv6k7048lIvOTKJgAlmW48lXBkDjp8dWQmPRs1EGcmErhpa
-         cWJY9hDhqURCOorLMu4MaxXUMNeJXCA1oA0X/rKQKTQcKlUJM5ZTW/LYNkxcjq+WOXd9
-         5d2WPqeYtxM0KplKdwJvh8AavqCeoY/mAX6t/ZJ5JnIiYeRBIyPG7YrD/mq0Go0trtny
-         qPaOZRhywFBWNKH2LJRYhRdXamotudwACAi2H2+TUmmaUvZUubX3ddhcEvsGAZ8Le3gL
-         EsRw==
-X-Gm-Message-State: AOAM531fi4HZXhZdW1ezL39aB9+4fWRopDyGAIqVrLn5hjJURW5fukm4
-        0GQ+sF4tYNlVlmsT9quHP8PHWY9xYe2LKg==
-X-Google-Smtp-Source: ABdhPJwpyATONwExLKP32MrvkoJYRojCrWPoLY9zkILIOQ7cf4TKv7Sub7DitAhpwpPc5s8vT9mB2g==
-X-Received: by 2002:a63:f343:: with SMTP id t3mr636521pgj.86.1602802040345;
-        Thu, 15 Oct 2020 15:47:20 -0700 (PDT)
-Received: from sol.lan (106-69-182-59.dyn.iinet.net.au. [106.69.182.59])
-        by smtp.gmail.com with ESMTPSA id t6sm330957pfl.50.2020.10.15.15.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2020 15:47:19 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] gpiod.h: fix typo in gpiod_line_request_bulk() documentation
-Date:   Fri, 16 Oct 2020 06:47:11 +0800
-Message-Id: <20201015224711.8624-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        id S2407595AbgJPMh0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Oct 2020 08:37:26 -0400
+Received: from cpanel.giganet.cl ([190.96.78.139]:39766 "EHLO
+        cpanel.giganet.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407562AbgJPMhY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 08:37:24 -0400
+X-Greylist: delayed 20782 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 08:37:10 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dplgrout.cl
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
+        Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=TrgUs68YRs3neP+PfrvGhLoeMXh3YzKv5z9oCWPJ0m4=; b=m/ABHCVvyLYD2QkkwOjuWUgGFG
+        i9BJXsIic9wHOFEzjhXFPbcsR2XTWptcrmKLSqDrJOV7hGJM6za5nSEFhd4CC/+eaHHsgS48/E2jM
+        qvMpEeazlOlIrwSs4xM+Zdf/REorOK5GVU6ZAJUjCzQuCMv9dTVBPKuexZxj1Qoi2hPLiQ576Ik0L
+        XzwzerIXphINfmlVQ0r0UMIuChB1Vcn201QVmD2skB/Nh9D/yp0E95Av9ZMQq7ln6H0uEUnu/2/5Y
+        /CHuMEs39xrrgaYDtG7jTh3PfukIIcCJEs3b52/mZokA1w+tDL1dp0MaV2Z+qYj+Bzs13o0ru0vv/
+        Mq733mMw==;
+Received: from [::1] (port=55048 helo=cpanel.giganet.cl)
+        by cpanel.giganet.cl with esmtpa (Exim 4.93)
+        (envelope-from <info@controlypotencia.com>)
+        id 1kTJ7f-0009vt-N3; Fri, 16 Oct 2020 03:21:51 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date:   Fri, 16 Oct 2020 03:21:50 -0300
+From:   Ying Chongan <info@controlypotencia.com>
+To:     undisclosed-recipients:;
+Subject: Investment opportunity
+Reply-To: yingchongan@zohomail.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <e70e5a6e462f92c7f06eea146a612430@controlypotencia.com>
+X-Sender: info@controlypotencia.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.giganet.cl
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - controlypotencia.com
+X-Get-Message-Sender-Via: cpanel.giganet.cl: authenticated_id: mariapaz.lopez@dplgrout.cl
+X-Authenticated-Sender: cpanel.giganet.cl: mariapaz.lopez@dplgrout.cl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace 'prodivided' with 'provided'.
+Greetings,
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- include/gpiod.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This email is for an opportunity to invest in any lucrative business in 
+your country.
 
-diff --git a/include/gpiod.h b/include/gpiod.h
-index a6e34ae..f44a34f 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -1141,7 +1141,7 @@ int gpiod_line_request_both_edges_events_flags(struct gpiod_line *line,
-  *         this routine returns -1 and sets the last error number.
-  *
-  * If this routine succeeds, the caller takes ownership of the GPIO lines
-- * until they're released. All the requested lines must be prodivided by the
-+ * until they're released. All the requested lines must be provided by the
-  * same gpiochip.
-  */
- int gpiod_line_request_bulk(struct gpiod_line_bulk *bulk,
--- 
-2.28.0
+We offer a quick loan at low interest rate, if you are interested, 
+please reply to yingchongan@gmail.com for more details.
 
+Sincerely: Ying Chongan
