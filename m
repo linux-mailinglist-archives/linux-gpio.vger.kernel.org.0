@@ -2,90 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6033290764
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 16:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FA22290895
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 17:36:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406218AbgJPOmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Oct 2020 10:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395258AbgJPOmU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 10:42:20 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E810CC061755;
-        Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d6so1381813plo.13;
-        Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WVM45nYJVMYXAbkTU2+ioyOUEwvIX/0R0Kb3UcZPgnk=;
-        b=JeLyn4hgNSIIGZC73c3UhHFxozOtnpIfoi0nUwxmg6LrS6uDS980DBnjM7oXH+2tK1
-         Nx6g41BJrtQvrbIkWWw0xcmeAZidQ3oVh5lJaA2PrOVAapDFb81YG1Jsu3jly8Ludqfw
-         aiOsb4/fQ4EOU5on/su8KWeMIym1YbbolriAQmG9kltZzo/dkHAP5OiWHZy/FHDwtJJt
-         3/JfpGjYpXV00q+o64k77bxxvKnI17RfV9n6eWiC+Abf0Wki365AFThqgQfd77CSF2Pw
-         CZU8VB96TnlaxPFMANZEm/i5XB82bz/H1n93nSslAYmzJETQaQKeoZu6cuwqJ5K5XhXH
-         sGtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WVM45nYJVMYXAbkTU2+ioyOUEwvIX/0R0Kb3UcZPgnk=;
-        b=KHROIZZsbmdbBJW7zBBvUKg3fj+aS+6skdWNLa75X+rokkQ73VBitU40Qe+O1JiBkd
-         2P94DpGKeavZUDVdKL9RD2txd7h9Cuejh2QcoRXTMXEViHcuyQVVgH1sTmMcxxxCj1B5
-         qtARuzXrHnBv6PGyfa6K6GiBNKPI0HL5hbK5sZyeGqvsg02fZz1E+hZE/n6SEh1AcMyT
-         FxkIaa3w+BqlTmuzJFpGb2UpjivRPBp+GcdkfHBHKFz02IPMdsatXfizA5mhGQdiSYcj
-         dNKbL3Om8JfcCbIJ7ATiPTiGqhQm7G4KUwrDqjvOw2SL8UuU692NVhO0PBg1rK33Xb6S
-         4ayA==
-X-Gm-Message-State: AOAM532xCOSqItRrUx4mt4FBwO7M36MDUE+xN165IqF7Q1gj2C+w1z8O
-        DY0vxGhw/hHtlW+CguHHLe69whM6bS1K5npCUj8=
-X-Google-Smtp-Source: ABdhPJyLwKUyWwiaVV/dwyfQRPP5pjP1t4ZC+NAL1cs1Ahz7ogeX0JAHYlPdk81DSe3t0c/0rb/A2lxSdXhi/qqk5Xk=
-X-Received: by 2002:a17:90b:305:: with SMTP id ay5mr4443081pjb.129.1602859339375;
- Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201015115524.24e3c36b@xhacker.debian> <20201015115903.2a782f78@xhacker.debian>
- <20201015120457.qaooft5y5dzl4z7s@mobilestation>
-In-Reply-To: <20201015120457.qaooft5y5dzl4z7s@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Oct 2020 17:43:08 +0300
-Message-ID: <CAHp75Vf2GZ_kQT3cdr2hRtGqe8vA8as4EP7qH0_9uCkrk5PP2A@mail.gmail.com>
-Subject: Re: [PATCH 8/8] dt-bindings: gpio: dw-apb: remove never-used "snps,dw-apb-gpio-port"
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
+        id S2408419AbgJPPg4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Oct 2020 11:36:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:39846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408384AbgJPPg4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 16 Oct 2020 11:36:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F05C13D5;
+        Fri, 16 Oct 2020 08:36:55 -0700 (PDT)
+Received: from entos-thunderx2-02.shanghai.arm.com (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B8D373F719;
+        Fri, 16 Oct 2020 08:36:52 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia He <justin.he@arm.com>
+Subject: [PATCH] gpio: dwapb: Fix missing conversion to GPIO-lib-based IRQ-chip
+Date:   Fri, 16 Oct 2020 23:35:44 +0800
+Message-Id: <20201016153544.162611-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 15, 2020 at 3:33 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> On Thu, Oct 15, 2020 at 11:59:03AM +0800, Jisheng Zhang wrote:
-> > The compatible string is never used.
->
-> Before sending v2 could you run "make dt_binding_check" for the DT schema
-> modified in this patch? Like this:
->
-> make -j8 ARCH=mips CROSS_COMPILE=mipsel-baikal-linux- dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+Commit 0ea683931adb ("gpio: dwapb: Convert driver to using the
+GPIO-lib-based IRQ-chip") missed the case in dwapb_irq_set_wake().
 
-Do you really need to install all cross compilation tools for that?
-I think it should simple work as
+Without this fix, probing the dwapb gpio driver will hit a error:
+"address between user and kernel address ranges" on a Ampere armv8a
+server and cause a panic.
 
-% make dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+Fixes: 0ea683931adb ("gpio: dwapb: Convert driver to using the
+GPIO-lib-based IRQ-chip")
+Signed-off-by: Jia He <justin.he@arm.com>
+---
+ drivers/gpio/gpio-dwapb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index a5b326754124..2a9046c0fb16 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -343,8 +343,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+ #ifdef CONFIG_PM_SLEEP
+ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ {
+-	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+-	struct dwapb_gpio *gpio = igc->private;
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+ 	struct dwapb_context *ctx = gpio->ports[0].ctx;
+ 	irq_hw_number_t bit = irqd_to_hwirq(d);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
