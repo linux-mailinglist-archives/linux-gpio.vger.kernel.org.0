@@ -2,171 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF208290737
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 16:33:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6033290764
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 16:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406138AbgJPOd1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Oct 2020 10:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
+        id S2406218AbgJPOmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Oct 2020 10:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405628AbgJPOd0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 10:33:26 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FEFC061755;
-        Fri, 16 Oct 2020 07:33:26 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ds1so1487949pjb.5;
-        Fri, 16 Oct 2020 07:33:26 -0700 (PDT)
+        with ESMTP id S2395258AbgJPOmU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 10:42:20 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E810CC061755;
+        Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d6so1381813plo.13;
+        Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KF2OHmi3Hm9dz3KRKT0p1ji0RuquRawxEOEyVtCtb1Q=;
-        b=oG8r9fSD1r5uk75/nEX/vkwm/k3p/5kLORFfo2evLdgBOPeDn8LSrGON2l4sFsLxSV
-         Cia2y6WmpLftleEKlPYfOPGG/7p6U9qKGw1Pc5NlykLHxeDaNnwG6cxw04SkB1bdxJfK
-         2Fbaww/iFyMcU1IchELefWf9kpdnFWXwevkoLGJnImO2vPHrhOx1ph6RGL6CyPzkdE5Q
-         GrVwPRDhvI4L1ISfk2khNOm35JPV0n+9T9O3csmRud+q7bMEDF9GLrOmAka3Q3OAW37r
-         c9eHYEMIrxSseNHxb9o1M6UVeVVUYt2tz8d3FxQ7+oZg5MeGLC3y94e4MEAtDiv/6i0Z
-         FTtA==
+        bh=WVM45nYJVMYXAbkTU2+ioyOUEwvIX/0R0Kb3UcZPgnk=;
+        b=JeLyn4hgNSIIGZC73c3UhHFxozOtnpIfoi0nUwxmg6LrS6uDS980DBnjM7oXH+2tK1
+         Nx6g41BJrtQvrbIkWWw0xcmeAZidQ3oVh5lJaA2PrOVAapDFb81YG1Jsu3jly8Ludqfw
+         aiOsb4/fQ4EOU5on/su8KWeMIym1YbbolriAQmG9kltZzo/dkHAP5OiWHZy/FHDwtJJt
+         3/JfpGjYpXV00q+o64k77bxxvKnI17RfV9n6eWiC+Abf0Wki365AFThqgQfd77CSF2Pw
+         CZU8VB96TnlaxPFMANZEm/i5XB82bz/H1n93nSslAYmzJETQaQKeoZu6cuwqJ5K5XhXH
+         sGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KF2OHmi3Hm9dz3KRKT0p1ji0RuquRawxEOEyVtCtb1Q=;
-        b=Er5mXmuqPyZcvTPwZfK3iXr0vv6463St5TkPGLu8DkuCdLwZ+I7ooiICRSYtsZoX1a
-         whGeX+cK6JYFt0imzU9ogHEBUbVsJfPwdl3pgMfqer2gjO/a7gLMubFFZKssiR6W0k2h
-         oEcXjMkFLE1wnM+Yj1nd9ziuNvB8cqm6PDqWmaFZ0w0ca7T1IxoAbXYjZOKSG4TMjfKJ
-         XKMH7Mk+Qqmc9evp7sm+aCWU4q72qQIh/cR0wWo4xzyRKNEo6JxcClZqOvYRYHrB3Yoj
-         iz8QdrxLa0l6a5dkNKcBwO4z2jkEQ37clBzhuG6cwqO7NpGI00SWSUfOPm7yl21Fx2Ki
-         yXaA==
-X-Gm-Message-State: AOAM533bOJbXnHUPCoaK2mEucNKEgLMzJ2M4h4TbXDIzxuF6hKl3BSdN
-        Kan08CTeI3VQy59Fn58GcsDmFMIVP0VcM6e2+F0=
-X-Google-Smtp-Source: ABdhPJwi6nosLW1r7DhD0+BQ2E58/G1wVWIMDf17j7lx+tE8z7JpCaVWixIXAx3UJ6NWpNSHxowrREox+LfbZ087j1Y=
-X-Received: by 2002:a17:90b:305:: with SMTP id ay5mr4404555pjb.129.1602858806218;
- Fri, 16 Oct 2020 07:33:26 -0700 (PDT)
+        bh=WVM45nYJVMYXAbkTU2+ioyOUEwvIX/0R0Kb3UcZPgnk=;
+        b=KHROIZZsbmdbBJW7zBBvUKg3fj+aS+6skdWNLa75X+rokkQ73VBitU40Qe+O1JiBkd
+         2P94DpGKeavZUDVdKL9RD2txd7h9Cuejh2QcoRXTMXEViHcuyQVVgH1sTmMcxxxCj1B5
+         qtARuzXrHnBv6PGyfa6K6GiBNKPI0HL5hbK5sZyeGqvsg02fZz1E+hZE/n6SEh1AcMyT
+         FxkIaa3w+BqlTmuzJFpGb2UpjivRPBp+GcdkfHBHKFz02IPMdsatXfizA5mhGQdiSYcj
+         dNKbL3Om8JfcCbIJ7ATiPTiGqhQm7G4KUwrDqjvOw2SL8UuU692NVhO0PBg1rK33Xb6S
+         4ayA==
+X-Gm-Message-State: AOAM532xCOSqItRrUx4mt4FBwO7M36MDUE+xN165IqF7Q1gj2C+w1z8O
+        DY0vxGhw/hHtlW+CguHHLe69whM6bS1K5npCUj8=
+X-Google-Smtp-Source: ABdhPJyLwKUyWwiaVV/dwyfQRPP5pjP1t4ZC+NAL1cs1Ahz7ogeX0JAHYlPdk81DSe3t0c/0rb/A2lxSdXhi/qqk5Xk=
+X-Received: by 2002:a17:90b:305:: with SMTP id ay5mr4443081pjb.129.1602859339375;
+ Fri, 16 Oct 2020 07:42:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201014100707.2728637-1-lars.povlsen@microchip.com> <20201014100707.2728637-3-lars.povlsen@microchip.com>
-In-Reply-To: <20201014100707.2728637-3-lars.povlsen@microchip.com>
+References: <20201015115524.24e3c36b@xhacker.debian> <20201015115903.2a782f78@xhacker.debian>
+ <20201015120457.qaooft5y5dzl4z7s@mobilestation>
+In-Reply-To: <20201015120457.qaooft5y5dzl4z7s@mobilestation>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Oct 2020 17:34:15 +0300
-Message-ID: <CAHp75Vdd6ECJaWytYVz+5GYZrwybzZmviUOt3H=t-4LH=_idKg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl
- driver for Microsemi Serial GPIO
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        devicetree <devicetree@vger.kernel.org>,
+Date:   Fri, 16 Oct 2020 17:43:08 +0300
+Message-ID: <CAHp75Vf2GZ_kQT3cdr2hRtGqe8vA8as4EP7qH0_9uCkrk5PP2A@mail.gmail.com>
+Subject: Re: [PATCH 8/8] dt-bindings: gpio: dw-apb: remove never-used "snps,dw-apb-gpio-port"
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 6:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On Thu, Oct 15, 2020 at 3:33 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Thu, Oct 15, 2020 at 11:59:03AM +0800, Jisheng Zhang wrote:
+> > The compatible string is never used.
 >
-> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
-> (SGPIO) device used in various SoC's.
+> Before sending v2 could you run "make dt_binding_check" for the DT schema
+> modified in this patch? Like this:
+>
+> make -j8 ARCH=mips CROSS_COMPILE=mipsel-baikal-linux- dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
 
-...
+Do you really need to install all cross compilation tools for that?
+I think it should simple work as
 
-> +#define PIN_NAM_SZ     (sizeof("SGPIO_D_pXXbY")+1)
-
-+1 for what?
-
-...
-
-> +#define __shf(x)               (__builtin_ffsll(x) - 1)
-> +#define __BF_PREP(bf, x)       (bf & ((x) << __shf(bf)))
-> +#define __BF_GET(bf, x)                (((x & bf) >> __shf(bf)))
-
-This smells like bitfield.h.
-
-...
-
-> +static int sgpio_input_get(struct sgpio_priv *priv,
-> +                          struct sgpio_port_addr *addr)
-> +{
-
-> +       int ret;
-> +
-> +       ret = !!(sgpio_readl(priv, REG_INPUT_DATA, addr->bit) &
-> +                BIT(addr->port));
-> +
-> +       return ret;
-
-Sounds like one line.
-
-> +}
-
-> +static int sgpio_get_functions_count(struct pinctrl_dev *pctldev)
-> +{
-
-> +       return 1;
-
-I didn't get why it's not a pure GPIO driver?
-It has only one function (no pinmux).
-I didn't find any pin control features either.
-
-What did I miss?
-
-...
-
-> +static int microchip_sgpio_get_value(struct gpio_chip *gc, unsigned int gpio)
-> +{
-> +       struct sgpio_bank *bank = gpiochip_get_data(gc);
-> +       struct sgpio_priv *priv = bank->priv;
-> +       struct sgpio_port_addr addr;
-
-> +       int ret;
-
-No need.
-
-> +
-> +       sgpio_pin_to_addr(priv, gpio, &addr);
-> +
-> +       if (bank->is_input)
-> +               ret = sgpio_input_get(priv, &addr);
-> +       else
-> +               ret = sgpio_output_get(priv, &addr);
-> +
-> +       return ret;
-> +}
-
-
-...
-
-
-> +       ret = devm_gpiochip_add_data(dev, gc, bank);
-> +       if (ret == 0)
-
-> +               dev_info(dev, "Registered %d GPIOs\n", ngpios);
-
-No noise.
-
-> +       else
-> +               dev_err(dev, "Failed to register: ret %d\n", ret);
-> +
-
-...
-
-> +       /* Get register map */
-> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->regs = devm_ioremap_resource(dev, regs);
-
-devm_platform_ioremap_resource();
-
-> +       if (IS_ERR(priv->regs))
-> +               return PTR_ERR(priv->regs);
-
-> +       priv->properties = of_device_get_match_data(dev);
-
-It's interesting you have a mix between OF APIs and device property
-APIs. Choose one. If you stick with OF, use of_property_ and so,
-otherwise replace of_*() by corresponding device_*() or generic calls.
-
-Can you use gpio-regmap APIs?
+% make dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
 
 -- 
 With Best Regards,
