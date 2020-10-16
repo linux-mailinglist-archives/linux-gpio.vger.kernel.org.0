@@ -2,115 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97BB3290CEA
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 22:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B06D3290D46
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 23:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409072AbgJPUw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Oct 2020 16:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393599AbgJPUw5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 16:52:57 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1461EC061755;
-        Fri, 16 Oct 2020 13:52:57 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id p13so3859078edi.7;
-        Fri, 16 Oct 2020 13:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LugPJbth2L+5NzHqEmJU9Ma7NXcScsFxdJ4jE8WC+U4=;
-        b=Tu7vXfika4qfrXsXOIcn75dbSNc5REGqutvQkX6182ssmjsn2jxIUZ+kP8c4FqidD1
-         iMzZVkOEOhMbhuvETrQ/wljPan2CMq5kBxv+mBrz11X8ejGecJ8bWRBk8n5i1el2g865
-         DcJ19IfZWCT5lfDCWFPx7PDVa7mCH/RVW3L8uosA+GHrAE6AlJIKvI9YTPbecLzi8Zl4
-         jzEq+1N1XhG3Y53aL+JM7tkGhzIN5n4Di8Q1Ya0zBcGQFV/82K9vHhZHztRJVXCX8jxA
-         1TLFIqkAgvFYCRXj7lryJz8v9DXrS+Q/x9nl9BFk4o7ukXPoUCi3AXy1fiWoVQkhtyRR
-         Lo8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LugPJbth2L+5NzHqEmJU9Ma7NXcScsFxdJ4jE8WC+U4=;
-        b=M1sS6jgMdJVphvKsg93hRVoBd3QUrMRpMpEj6lliVh6CddE5rvlcaYFkiBYlnrxmsn
-         kkzXq5jOLTqjjHd9ZqE5cvU0c4Jt3DoSjbbtzlq7G7LVY+s+YTDWMjl5y/tQHIk1zJ56
-         mvptrkOWytmUqAWhQbbJNuIvMUl5CJ6gqDrmJG82aFkJNbYsBWbBXeC6pkdcrADzRvNr
-         dryKiUPK89bnY+8GA/XxD0tT2HrF+UhWQGLWVkCGByfHnKt9WN5KnHcN1PmSMYe2tuRl
-         /IVTJwI9jnpAyvfGmIHr+haex5Vcoxf2NvQLkO8himq1nIYjtiRxVKsQgYUBhBaOkvlA
-         fFow==
-X-Gm-Message-State: AOAM5336d8FlJU4OA5cnSyeXtFyPU5bLG+Qu7kk2T3vbxaxqUjUNVuBh
-        Ez8klFJtDCQ3T8Fv+u4bto18rLIvnmzx26MKMLI=
-X-Google-Smtp-Source: ABdhPJxZ42lByUDO+OTDvcJk4T2dgzm029Jq7A4vWTsHVjzFmUepjiwamlx320/sHJIq5iNEVzj9fJQxeoJTImluMKI=
-X-Received: by 2002:a50:d517:: with SMTP id u23mr6148394edi.338.1602881575797;
- Fri, 16 Oct 2020 13:52:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
- <20201004162908.3216898-3-martin.blumenstingl@googlemail.com>
- <CACRpkdbTw4UBw02RXX2prju45AsDZqPchhz=gdzsuT-QjhYHVw@mail.gmail.com>
- <CAFBinCAFDhWp6mgUqyOjdMVBR5oZQVpmVPjhnZs1Xg16tFa0PQ@mail.gmail.com>
- <CACRpkdZdwoQCxxqosn2jQPMXLDnTEjuxSWOxG-L1YGE33wbFrg@mail.gmail.com> <CAL_JsqLF8KHG6qZUJzdMyN5cX-ZvPDbuGSGZLOw=CkY90SUGLw@mail.gmail.com>
-In-Reply-To: <CAL_JsqLF8KHG6qZUJzdMyN5cX-ZvPDbuGSGZLOw=CkY90SUGLw@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 16 Oct 2020 22:52:44 +0200
-Message-ID: <CAFBinCBpDn1Vx1ZQdk-Gf-muuAyxjXb+zCkvW6jsH8jP6mDuTw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] dt-bindings: gpio: Add binding documentation for
- Etron EJ168/EJ188/EJ198
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S2391310AbgJPV2f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Oct 2020 17:28:35 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:38486 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390460AbgJPV2e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 17:28:34 -0400
+X-Greylist: delayed 526 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 17:28:33 EDT
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 428CE8062D;
+        Fri, 16 Oct 2020 23:19:45 +0200 (CEST)
+Date:   Fri, 16 Oct 2020 23:19:43 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH -next] omapfb: connector-hdmi: simplify the return
+ expression of hdmic_connect
+Message-ID: <20201016211943.GG1496366@ravnborg.org>
+References: <20200921131051.92661-1-miaoqinglang@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200921131051.92661-1-miaoqinglang@huawei.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=fu7ymmwf c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=i0EeH86SAAAA:8 a=e5mUnYsNAAAA:8
+        a=no2T8IuB39rNVZpCtwQA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Qinglang Miao
 
-On Wed, Oct 14, 2020 at 2:43 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Oct 13, 2020 at 8:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > On Wed, Oct 7, 2020 at 9:58 PM Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> > > On Wed, Oct 7, 2020 at 11:19 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > > On Sun, Oct 4, 2020 at 8:00 PM Martin Blumenstingl
-> > > > <martin.blumenstingl@googlemail.com> wrote:
-> > > >
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    enum:
-> > > > > +      - pci1b6f,7023
-> > > > > +      - pci1b6f,7052
-> > > >
-> > > > I think it is better to let the PCI driver for the whole hardware in
-> > > > drivers/usb/host/xhci-pci.c probe from the PCI configuration space
-> > > > numbers, and then add a gpio_chip to xhci-pci.c.
-> > >
-> > > to have everything consistent I will move the binding to
-> > > Documentation/devicetree/bindings/usb
-> >
-> > I do not understand why a PCI device would need a DT binding
-> > at all. They just probe from the magic number in the PCI
-> > config space, they spawn struct pci_dev PCI devices, not the
-> > type of platform devices coming out of the DT parser code.
-> > No DT compatible needed.
->
-> Same reason for all the discoverable buses need bindings. There can be
-> parts that are not discoverable or connections with non-discoverable
-> nodes. There's also cases where the discoverable device has to be
-> powered, reset deasserted, clocks enabled, etc. first to be
-> discovered.
->
-> If the GPIOs here had connections elsewhere in the DT, then we have to
-> describe the provider in DT.
-this is exactly what I need it for: that platform has hand-written
-.dts files and I need to wire up a GPIO LED
+On Mon, Sep 21, 2020 at 09:10:51PM +0800, Qinglang Miao wrote:
+> Simplify the return expression.
+> 
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 
+I dropped the changes to gpio-cs5535.c when I applied this patch to
+drm-misc-next. It looks like an accident that it was included here.
 
-Best regards,
-Martin
+	Sam
+
+> ---
+>  drivers/gpio/gpio-cs5535.c                                 | 6 +-----
+>  drivers/video/fbdev/omap2/omapfb/displays/connector-hdmi.c | 7 +------
+>  2 files changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-cs5535.c b/drivers/gpio/gpio-cs5535.c
+> index 53b24e3ae..57b9ddffd 100644
+> --- a/drivers/gpio/gpio-cs5535.c
+> +++ b/drivers/gpio/gpio-cs5535.c
+> @@ -345,12 +345,8 @@ static int cs5535_gpio_probe(struct platform_device *pdev)
+>  				mask_orig, mask);
+>  
+>  	/* finally, register with the generic GPIO API */
+> -	err = devm_gpiochip_add_data(&pdev->dev, &cs5535_gpio_chip.chip,
+> +	return devm_gpiochip_add_data(&pdev->dev, &cs5535_gpio_chip.chip,
+>  				     &cs5535_gpio_chip);
+> -	if (err)
+> -		return err;
+> -
+> -	return 0;
+>  }
+>  
+>  static struct platform_driver cs5535_gpio_driver = {
+> diff --git a/drivers/video/fbdev/omap2/omapfb/displays/connector-hdmi.c b/drivers/video/fbdev/omap2/omapfb/displays/connector-hdmi.c
+> index 49551afbd..670b9c6eb 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/displays/connector-hdmi.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/displays/connector-hdmi.c
+> @@ -50,18 +50,13 @@ static int hdmic_connect(struct omap_dss_device *dssdev)
+>  {
+>  	struct panel_drv_data *ddata = to_panel_data(dssdev);
+>  	struct omap_dss_device *in = ddata->in;
+> -	int r;
+>  
+>  	dev_dbg(ddata->dev, "connect\n");
+>  
+>  	if (omapdss_device_is_connected(dssdev))
+>  		return 0;
+>  
+> -	r = in->ops.hdmi->connect(in, dssdev);
+> -	if (r)
+> -		return r;
+> -
+> -	return 0;
+> +	return in->ops.hdmi->connect(in, dssdev);
+>  }
+>  
+>  static void hdmic_disconnect(struct omap_dss_device *dssdev)
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
