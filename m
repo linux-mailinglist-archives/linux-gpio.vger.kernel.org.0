@@ -2,112 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A0CD2908AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 17:42:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEC302909A1
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Oct 2020 18:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408615AbgJPPmf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Oct 2020 11:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        id S2410077AbgJPQYb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Oct 2020 12:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408608AbgJPPmf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 11:42:35 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD2BC061755;
-        Fri, 16 Oct 2020 08:42:35 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id p11so1488249pld.5;
-        Fri, 16 Oct 2020 08:42:35 -0700 (PDT)
+        with ESMTP id S2410075AbgJPQYa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Oct 2020 12:24:30 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AA5C061755;
+        Fri, 16 Oct 2020 09:24:29 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z2so3706633lfr.1;
+        Fri, 16 Oct 2020 09:24:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AAbghpaYZHbkqxI5bowqjpAtc3NHNID3auCHmv5xSqY=;
-        b=YBw/HrTYRU7xNRlN50SRo3xTSr6CvOaTWR11dIoj758OomuykXmZQrt4O2via32RfP
-         kBgXsXcB2oy0bA8vsJ1U5rSchWi+zYSGO8p9Nl7yBgrrs9FWs5fulA4oLkTu5TUh1rnD
-         N8fsS7ByF1Fecx4UBgfCyVrswLTa5crXvo/Tz/SsTtaTmCoNLAE09U8XLYh+7f5x7xaW
-         1pBiAECVkIRNjlYyYGHUqvt1XlyZVJPmk4PRPt89I6Y0H6pzsC0xtiXUl6LdaDy3+16M
-         XTNwLBfNuup8F6JmsgZ9z9eXpRGyqaHkZEaf6J5HggwhYzevRtQiUT8nAopsQK5pZ44j
-         /qzw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xde38+/8cu+9P7gw/FeWyr6Nhg09GB4d0Up3Y+zxXko=;
+        b=po7wJFb8l9GKeJPWH/0FKEIhxfE0LW9gU2OHxicgFTGo5fPZV/a6gHJr1qPkX5wz3c
+         pQrwJ59UrqQxNBB5uoTJEfqjPtiThSzMWrBzKZPiQqInK4JDF2hRwaoIWP3xxe2n1otL
+         nRZ9MomoNh/CH/5Q0oQnfjzdgMseNy0BSBZVjShiNXcSgvQyEQ4zagbDDA9RPGPN0Wpd
+         UVvDtX5t/rzEUlO/gHy4Btw8WfuPgGbdibB2gJqRxr9z9hzlWCgWrlNsm4wztvXjAq3o
+         UlSl8KnoYdtBxF95VtmIfTLEdg3mJHvBv4cmkyKxkSMONVBDO9ocd0G4HKk7XVVRbRDB
+         IcJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AAbghpaYZHbkqxI5bowqjpAtc3NHNID3auCHmv5xSqY=;
-        b=i0bmYJ3VqZG9h4k4G96YXQVv645gnK/GIDb/w7goyKSqjkRvO+WWq3yTsrmA6qk93c
-         zbM/2O4bygpoYcuRp6zIL0rxR+0OmMxqf64OEovFFKqSODB/HqQ8D5XlMde2l1dQ99fz
-         bhJGQ0DeR2pDel9zneykEs66Qw8gjAoOOjcj0bgfHYsDY4iKyGK1H2BV30LHVZFZqarF
-         z8GowV0qqexwZMY3WQwWojJXnbAPx+//rVZwFidA2I7QqCxLbfB1dA9Gjvk0MKxJWzbD
-         JMnjoqWSZgX+BEKYVpJS11ZjTxo3WLXiNtKxK5wBmcVVn48PSV4YFBuKjupod43/h78s
-         xkRg==
-X-Gm-Message-State: AOAM530iRoh/xNnrkJT0BKF0MrLYe27CFvEWzSSWmcA37RBgk06G7QLT
-        yyUUU5yw5FdiCci4tEe9bBKVq+MuTXxLcBigUtU=
-X-Google-Smtp-Source: ABdhPJxAX6hiE7Ts8mpORicINnf0zOKVYKb8a3OLR81zMNfEeORtZGXKk2cYZpL4TX4PT7tdEMseGRQIX5sXuDY/OI4=
-X-Received: by 2002:a17:902:ea8c:b029:d2:8abd:c8de with SMTP id
- x12-20020a170902ea8cb02900d28abdc8demr4620759plb.21.1602862954641; Fri, 16
- Oct 2020 08:42:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201016153544.162611-1-justin.he@arm.com>
-In-Reply-To: <20201016153544.162611-1-justin.he@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Oct 2020 18:43:23 +0300
-Message-ID: <CAHp75Vexk_He78uHN-o4Cev4aUYM_doK6g-bvwfqgKwHm3mTvA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dwapb: Fix missing conversion to GPIO-lib-based IRQ-chip
-To:     Jia He <justin.he@arm.com>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xde38+/8cu+9P7gw/FeWyr6Nhg09GB4d0Up3Y+zxXko=;
+        b=M/+Ub3zvx9QCTim9KRKdONuWSd/oD2gcCRU9ZVk04ZFWEIz52qyKRwUofaAygpieTq
+         PmcbMMIhgP9QCUTr36dDjWMgd1U8ZHbFY2FprUCMhis4Oxlpn16+PU/P2ViHd2jYoJXi
+         c+sVNvSnk09k3h1GCPCb+4uDBS3lbb+6uO1eCOTt9Vi+GzTA4dWCMy9TP/72sSXPyIwQ
+         Jnr1xjDeFgxiD0699usOEvV9/3MS8l9K0aaA+QjR7ANOaPP5V+spq5LkM9Z22tU6eeky
+         8LXSsmyYhNZ4GK0mgEwamn00ml9kC9iKEYasXDMAXqONdAGWlGpzTbvXgj8BPYrtKfpu
+         hjgA==
+X-Gm-Message-State: AOAM532/M4iFUd4uiyVOO8NyOT/5QhL8f0vp6WTeXhmG+kxxH8sreICf
+        xaal8Z8NNsmsZCTAbfpqhV0=
+X-Google-Smtp-Source: ABdhPJwh/paWLYSsZYjN85ac0bcVly5lDZ9kTtcGvgPQY94pfv5X4ZBgNg+YQayDbnBxpmFXz3PhlQ==
+X-Received: by 2002:a19:cc49:: with SMTP id c70mr1870015lfg.552.1602865467595;
+        Fri, 16 Oct 2020 09:24:27 -0700 (PDT)
+Received: from mobilestation ([95.79.141.114])
+        by smtp.gmail.com with ESMTPSA id m29sm960084lfj.144.2020.10.16.09.24.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Oct 2020 09:24:26 -0700 (PDT)
+Date:   Fri, 16 Oct 2020 19:24:19 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 8/8] dt-bindings: gpio: dw-apb: remove never-used
+ "snps,dw-apb-gpio-port"
+Message-ID: <20201016162419.qupop7qf5edjagxc@mobilestation>
+References: <20201015115524.24e3c36b@xhacker.debian>
+ <20201015115903.2a782f78@xhacker.debian>
+ <20201015120457.qaooft5y5dzl4z7s@mobilestation>
+ <CAHp75Vf2GZ_kQT3cdr2hRtGqe8vA8as4EP7qH0_9uCkrk5PP2A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf2GZ_kQT3cdr2hRtGqe8vA8as4EP7qH0_9uCkrk5PP2A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 16, 2020 at 6:36 PM Jia He <justin.he@arm.com> wrote:
->
-> Commit 0ea683931adb ("gpio: dwapb: Convert driver to using the
-> GPIO-lib-based IRQ-chip") missed the case in dwapb_irq_set_wake().
->
-> Without this fix, probing the dwapb gpio driver will hit a error:
-> "address between user and kernel address ranges" on a Ampere armv8a
-> server and cause a panic.
+On Fri, Oct 16, 2020 at 05:43:08PM +0300, Andy Shevchenko wrote:
+> On Thu, Oct 15, 2020 at 3:33 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > On Thu, Oct 15, 2020 at 11:59:03AM +0800, Jisheng Zhang wrote:
+> > > The compatible string is never used.
+> >
+> > Before sending v2 could you run "make dt_binding_check" for the DT schema
+> > modified in this patch? Like this:
+> >
+> > make -j8 ARCH=mips CROSS_COMPILE=mipsel-baikal-linux- dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+> 
 
-Thank you for a fix!
+> Do you really need to install all cross compilation tools for that?
+> I think it should simple work as
+> 
+> % make dt_binding_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Of course you don't. I just cited my normal command. Your version should be
+enough to perform the bindings file validation. Note that there are host
+tools/libs requirements, which need to be satisfied to make that command
+working. See the next file for details:
+Documentation/devicetree/writing-schema.rst
 
+-Sergey
 
-> Fixes: 0ea683931adb ("gpio: dwapb: Convert driver to using the
-> GPIO-lib-based IRQ-chip")
-
-Should be one line. But I think Bart or Linus may fix this problem if
-Serge is okay with a change in general.
-
-> Signed-off-by: Jia He <justin.he@arm.com>
-> ---
->  drivers/gpio/gpio-dwapb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index a5b326754124..2a9046c0fb16 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -343,8 +343,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
->  #ifdef CONFIG_PM_SLEEP
->  static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
->  {
-> -       struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
-> -       struct dwapb_gpio *gpio = igc->private;
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
->         struct dwapb_context *ctx = gpio->ports[0].ctx;
->         irq_hw_number_t bit = irqd_to_hwirq(d);
->
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
