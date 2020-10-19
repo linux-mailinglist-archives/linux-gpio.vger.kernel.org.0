@@ -2,95 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 604CD292E85
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Oct 2020 21:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E56292EA8
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Oct 2020 21:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbgJSTeD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Oct 2020 15:34:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50539 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730943AbgJSTeD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Oct 2020 15:34:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603136042;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=Kq5VxBu2z8uXUidFjxUtgnQ0vBBkojXZgIAYG1rS13k=;
-        b=XwisfWL1yDp8tjCx3C/o+yb35YDUfpHhNmDHKMMQkvlo618NOvPKmtzxfz6QEub/6HtMRK
-        jNmJ8pOvBxib7By4WeSp4UzijpIGxoVMj65CfurmiHc3JF7imWUIcQ36NKXZghuY9IKTkr
-        QuA44Tm7WOqehGyB+ui2W+woWrrqzOc=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-kMeJINLnNoy6gXWgKMojIA-1; Mon, 19 Oct 2020 15:34:00 -0400
-X-MC-Unique: kMeJINLnNoy6gXWgKMojIA-1
-Received: by mail-qt1-f198.google.com with SMTP id n8so709621qtf.10
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 12:34:00 -0700 (PDT)
+        id S1731263AbgJSTm3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Oct 2020 15:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731131AbgJSTm2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Oct 2020 15:42:28 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88CAC0613D0
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 12:42:27 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b19so343131pld.0
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 12:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=no6WOfZDuAXhTDfVia9Vunkz4L7BthY0F8m0jo4//vs=;
+        b=vqIoQqfPtCUD7ceHGEmbvFqqUZd/9dE0IpLQQ4p4nyONBXQMSFxBG5OzgCaJfT8eu8
+         Ez0DMwUntzcU9c2WJzs/WqMvxG3bzlj0mstlcz+E4fW0gt02sZNjrL1HdU6SHVwmCE5R
+         WFeHYzJRJuPZspqj8YJ2wlUmUN4Mc8MNrI6kLekCJ8yejCepkvkgEUeb7TbpDze1NnEh
+         TP2SjhqdakZDUedR00qYjd62k5W2m7FgfHIpcuS/rhjqMGxVL3Apppn+UDRO/ftdIfoh
+         duvoKavmXDacw9mysFV+xdp1Tg4QxCPiDxNSeCeZyO+34Y2S1kYSdX61NJzSKhmGsX5T
+         HLpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kq5VxBu2z8uXUidFjxUtgnQ0vBBkojXZgIAYG1rS13k=;
-        b=E8k5UJR7SBNLWKFogsq32W9wQaQ55K6CtZcI4fHDK41I84m+s2A+knAW+mQzRlCNl6
-         29ZSqclirJHwu0ey2LlLdGO3BhSfzINs7K3NwRZw4sjN0yG39lIWs8YgBrhSNBu7n2MU
-         vT3T831syilpEAGwEMBqEvErWVyEaeequ16Okj0YQoCdonyoYQOleUPHgkvq66PzPyhm
-         /0zVSBhExOEo3TGyo2Hb8HR/gcEZbVLJV3lXaUiiiA8qjo4eUww0BTh5dKj7bfPY2oKW
-         ccs7V//G6bzWbie4G6YTxDVDsg7qshIL6Q70bBowgewe7RcQdMZjWZlucDPk9oeomZ/S
-         yyGg==
-X-Gm-Message-State: AOAM530na4n6UgNGpIV+kY2nI/817op3as8WfQTyfzW9lawRPnuDSSrc
-        G/u6mjvvZL+St77OG3VXvJz3ND7lhVI9ZhSQ376MAsxrjkAl/2C4usGkoOZt7rL4DeWn5x/GJAy
-        yCtKBvW35jaWMw81KXHQ/Yg==
-X-Received: by 2002:a05:620a:998:: with SMTP id x24mr1093533qkx.160.1603136040061;
-        Mon, 19 Oct 2020 12:34:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyRBOMiv5G17G7LD/7F/VAfAiG22qRDwWAIDg5xLV1iQptDtvpB+4Rtxa35qcp0KfqWXbJFEQ==
-X-Received: by 2002:a05:620a:998:: with SMTP id x24mr1093513qkx.160.1603136039870;
-        Mon, 19 Oct 2020 12:33:59 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id h8sm358550qto.46.2020.10.19.12.33.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 12:33:59 -0700 (PDT)
-From:   trix@redhat.com
-To:     matti.vaittinen@fi.rohmeurope.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] gpio: bd70528: remove unneeded break
-Date:   Mon, 19 Oct 2020 12:33:53 -0700
-Message-Id: <20201019193353.13066-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=no6WOfZDuAXhTDfVia9Vunkz4L7BthY0F8m0jo4//vs=;
+        b=UEZvklMWwavks18aOnWXZkOzFrVI4vif99FJB79EzRVt5OhM+GFgZwcb7ZEK8eTphO
+         /r3yI2hZ59W/VX3iW1g/H9DOu3iHzOq8slwvXxfQGbrmfNRxcT1cT5FOTk26h4ehVyZQ
+         HlS5NW4/tNSFt99UKYMRWnj1/q4elRKqxRaR2EGWS8XOd9YZgzixnYGh/3OcHCjfto92
+         YP0HCEde0vf4JqIX2a913r2XIK5upNBKYw8Fu+6xgPvvoLyak0vS3lKBwbWlyGSfKZcw
+         NytUA4U5o+1ADvHpS6Q/Ng3uOY6IaN2CIZqmjI2SO+nSH8jO/f09c0sJOUy7jqVcVcxc
+         oegg==
+X-Gm-Message-State: AOAM531mNkA3HOtK9jTDztYEliDfYg8A8CLwZr4ny55YgAXqH0P96wqh
+        N0PAg5lpK871gK/U0REIwqIYlkAwjaWq3u2vyrYtVw==
+X-Google-Smtp-Source: ABdhPJxy4K+2uRaBuhFTeTSlHPetqrP1uAAP7dKvm6UBZz10SCa23PJUxb54E5JJmlle9J/y892Qp+TTrKvO4GeNXIk=
+X-Received: by 2002:a17:90a:ee87:: with SMTP id i7mr921476pjz.25.1603136546933;
+ Mon, 19 Oct 2020 12:42:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201017160928.12698-1-trix@redhat.com> <20201018054332.GB593954@kroah.com>
+In-Reply-To: <20201018054332.GB593954@kroah.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 19 Oct 2020 12:42:15 -0700
+Message-ID: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+To:     Tom Rix <trix@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        George Burgess <gbiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+> > From: Tom Rix <trix@redhat.com>
+> >
+> > This is a upcoming change to clean up a new warning treewide.
+> > I am wondering if the change could be one mega patch (see below) or
+> > normal patch per file about 100 patches or somewhere half way by collecting
+> > early acks.
+>
+> Please break it up into one-patch-per-subsystem, like normal, and get it
+> merged that way.
+>
+> Sending us a patch, without even a diffstat to review, isn't going to
+> get you very far...
 
-A break is not needed if it is preceded by a return
+Tom,
+If you're able to automate this cleanup, I suggest checking in a
+script that can be run on a directory.  Then for each subsystem you
+can say in your commit "I ran scripts/fix_whatever.py on this subdir."
+ Then others can help you drive the tree wide cleanup.  Then we can
+enable -Wunreachable-code-break either by default, or W=2 right now
+might be a good idea.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/gpio/gpio-bd70528.c | 3 ---
- 1 file changed, 3 deletions(-)
+Ah, George (gbiv@, cc'ed), did an analysis recently of
+`-Wunreachable-code-loop-increment`, `-Wunreachable-code-break`, and
+`-Wunreachable-code-return` for Android userspace.  From the review:
+```
+Spoilers: of these, it seems useful to turn on
+-Wunreachable-code-loop-increment and -Wunreachable-code-return by
+default for Android
+...
+While these conventions about always having break arguably became
+obsolete when we enabled -Wfallthrough, my sample turned up zero
+potential bugs caught by this warning, and we'd need to put a lot of
+effort into getting a clean tree. So this warning doesn't seem to be
+worth it.
+```
+Looks like there's an order of magnitude of `-Wunreachable-code-break`
+than the other two.
 
-diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
-index 45b3da8da336..931e5765fe92 100644
---- a/drivers/gpio/gpio-bd70528.c
-+++ b/drivers/gpio/gpio-bd70528.c
-@@ -71,17 +71,14 @@ static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- 					  GPIO_OUT_REG(offset),
- 					  BD70528_GPIO_DRIVE_MASK,
- 					  BD70528_GPIO_OPEN_DRAIN);
--		break;
- 	case PIN_CONFIG_DRIVE_PUSH_PULL:
- 		return regmap_update_bits(bdgpio->chip.regmap,
- 					  GPIO_OUT_REG(offset),
- 					  BD70528_GPIO_DRIVE_MASK,
- 					  BD70528_GPIO_PUSH_PULL);
--		break;
- 	case PIN_CONFIG_INPUT_DEBOUNCE:
- 		return bd70528_set_debounce(bdgpio, offset,
- 					    pinconf_to_config_argument(config));
--		break;
- 	default:
- 		break;
- 	}
+We probably should add all 3 to W=2 builds (wrapped in cc-option).
+I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
+follow up on.
 -- 
-2.18.1
-
+Thanks,
+~Nick Desaulniers
