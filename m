@@ -2,139 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B946B292825
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Oct 2020 15:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45B3B29282A
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Oct 2020 15:29:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgJSN2L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Oct 2020 09:28:11 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:56081 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727796AbgJSN2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Oct 2020 09:28:11 -0400
-X-IronPort-AV: E=Sophos;i="5.77,394,1596466800"; 
-   d="scan'208";a="60192166"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 19 Oct 2020 22:28:09 +0900
-Received: from localhost.localdomain (unknown [172.29.53.218])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D5B6C40065AD;
-        Mon, 19 Oct 2020 22:28:07 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] pinctrl: renesas: r8a7796: Optimize pinctrl image size for R8A774A1
-Date:   Mon, 19 Oct 2020 14:28:05 +0100
-Message-Id: <20201019132805.5996-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728290AbgJSN3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Oct 2020 09:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbgJSN3Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Oct 2020 09:29:24 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E84AC0613CE
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 06:29:23 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c141so14193448lfg.5
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 06:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JZZ9Nyx1nFQWbYDU88sxEsWn7NvcieGMLP7bzV7jBIQ=;
+        b=PixNjo8/mMu2adN6Zg/XxEoSsNoFBCKQIeypmSPBDYogD5DA+5rAnOzNFrWoWLT2NE
+         03Rz9f8ec07x+uUFyq5dj4ekBPichzmbRhjS83UKi3iZpZRQJz4ERGT+fTJslgz9LP34
+         mxtqtUx+plcRUbConeAtRyGjK8X+NCgwR2EgSWWIzazV42TS0o9bLX+IEJtocEOP4h2G
+         TkoS3gc5Mh56o0lX7a5+ms4qfGmbRXKdIwKcCamWPj5SYBqX9z8lKP6JBaCfKMitOGR0
+         yi1RtpaHDdGFgTyxP7ZGNJt7a31GLDE1sFLhhVf6XuLOXQY5dQoQ/Cek8wcblctGRhY9
+         fPGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JZZ9Nyx1nFQWbYDU88sxEsWn7NvcieGMLP7bzV7jBIQ=;
+        b=tBCPs0+yjqLKWhqs6RzH+PYi1Z9IohDx11zlU/hoDAqHgvXfrDn544UjlBNlRQuNd0
+         3qM23bl3TyUnLhI2MzvclHybmcb00hFiOxVyVDDGe5HNCoJHVS+S8DZoqp1H/MOUhNoi
+         l1x/xPmsmPJUfKu4gFJ/i9WZGlNIKEC5ZY7HFBuNvJdTpGrER5zhLPxDnA4do36Wi5my
+         7EBltmOpKgkYiKa7qgQoZx0AP27LWD5OL7Bt8lObJAzygxt9IkPIekqP37yqggfPCvLM
+         D+zf9OkQtOY3BOXnNmRbuLkLe1VxPFJ1D5ec3hT8EruCrhuaVGToqB9ikLXKiXtjumJE
+         jwkg==
+X-Gm-Message-State: AOAM532mibpzWjxtHlIXi9FsfeNIgnRe4jj4AI3RaLl61ChkJDBXHM+H
+        5OPrTi/ItC5qA7kdSH1b0PqOQ2MGyKCLlAcgygTFAQ==
+X-Google-Smtp-Source: ABdhPJy04oJSTJxt4acSKZSoyG9Q/xmrWFzBty9/ZSwnh0SFfn8xMyzkgdquPWmtrRTR9kZe0d3DlJXPS2l72mcCAvM=
+X-Received: by 2002:a19:e55:: with SMTP id 82mr5426510lfo.571.1603114161558;
+ Mon, 19 Oct 2020 06:29:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201009184359.16427-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201009184359.16427-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 19 Oct 2020 15:29:10 +0200
+Message-ID: <CACRpkdaiCszu=BduQe3QUh1tuotTvTXUA70jB-=YCcd782q8Aw@mail.gmail.com>
+Subject: Re: [PATCH v1] gpiolib: Use proper type for bias enumerator in gpio_set_bias()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver supports both RZ/G2M and R-Car M3-W/W+(R8A7796[0|1]) SoC's.
-Optimize pinctrl image size for RZ/G2M, when R-Car M3-W/W+(R8A7796[0|1])
-SoC's are disabled in the defconfig.
+On Fri, Oct 9, 2020 at 8:44 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v1->V2
- * Added missing R8A77960 check in automotive.
- (Ref:https://patchwork.kernel.org/project/linux-renesas-soc/patch/20201019124258.4574-3-biju.das.jz@bp.renesas.com/)
----
- drivers/pinctrl/renesas/pfc-r8a7796.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> First of all, bias has a special type as being a part of enum pin_config_param.
+> Second, 0 is also defined bias which is equivalent to BUS_HOLD.
+>
+> Taking into account above, change type of bias variable and refactor
+> gpio_set_bias() in a way that it doesn't use BUS_HOLD as a place holder.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7796.c b/drivers/pinctrl/renesas/pfc-r8a7796.c
-index 55f0344a3d3e..8203948a83ea 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7796.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7796.c
-@@ -1831,6 +1831,7 @@ static const unsigned int canfd1_data_mux[] = {
- 	CANFD1_TX_MARK,         CANFD1_RX_MARK,
- };
- 
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- /* - DRIF0 --------------------------------------------------------------- */
- static const unsigned int drif0_ctrl_a_pins[] = {
- 	/* CLK, SYNC */
-@@ -2045,6 +2046,7 @@ static const unsigned int drif3_data1_b_pins[] = {
- static const unsigned int drif3_data1_b_mux[] = {
- 	RIF3_D1_B_MARK,
- };
-+#endif
- 
- /* - DU --------------------------------------------------------------------- */
- static const unsigned int du_rgb666_pins[] = {
-@@ -4133,7 +4135,9 @@ static const unsigned int vin5_clk_mux[] = {
- 
- static const struct {
- 	struct sh_pfc_pin_group common[316];
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- 	struct sh_pfc_pin_group automotive[30];
-+#endif
- } pinmux_groups = {
- 	.common = {
- 		SH_PFC_PIN_GROUP(audio_clk_a_a),
-@@ -4453,6 +4457,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(vin5_clkenb),
- 		SH_PFC_PIN_GROUP(vin5_clk),
- 	},
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- 	.automotive = {
- 		SH_PFC_PIN_GROUP(drif0_ctrl_a),
- 		SH_PFC_PIN_GROUP(drif0_data0_a),
-@@ -4485,6 +4490,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(drif3_data0_b),
- 		SH_PFC_PIN_GROUP(drif3_data1_b),
- 	}
-+#endif
- };
- 
- static const char * const audio_clk_groups[] = {
-@@ -4543,6 +4549,7 @@ static const char * const canfd1_groups[] = {
- 	"canfd1_data",
- };
- 
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- static const char * const drif0_groups[] = {
- 	"drif0_ctrl_a",
- 	"drif0_data0_a",
-@@ -4584,6 +4591,7 @@ static const char * const drif3_groups[] = {
- 	"drif3_data0_b",
- 	"drif3_data1_b",
- };
-+#endif
- 
- static const char * const du_groups[] = {
- 	"du_rgb666",
-@@ -4997,7 +5005,9 @@ static const char * const vin5_groups[] = {
- 
- static const struct {
- 	struct sh_pfc_function common[50];
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- 	struct sh_pfc_function automotive[4];
-+#endif
- } pinmux_functions = {
- 	.common = {
- 		SH_PFC_FUNCTION(audio_clk),
-@@ -5051,12 +5061,14 @@ static const struct {
- 		SH_PFC_FUNCTION(vin4),
- 		SH_PFC_FUNCTION(vin5),
- 	},
-+#if defined(CONFIG_PINCTRL_PFC_R8A77960) || defined(CONFIG_PINCTRL_PFC_R8A77961)
- 	.automotive = {
- 		SH_PFC_FUNCTION(drif0),
- 		SH_PFC_FUNCTION(drif1),
- 		SH_PFC_FUNCTION(drif2),
- 		SH_PFC_FUNCTION(drif3),
- 	}
-+#endif
- };
- 
- static const struct pinmux_cfg_reg pinmux_config_regs[] = {
--- 
-2.17.1
+Patch applied.
 
+Yours,
+Linus Walleij
