@@ -2,103 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BAF3293558
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 08:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7839329355A
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 08:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404711AbgJTG7H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Oct 2020 02:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404710AbgJTG7H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Oct 2020 02:59:07 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9616EC061755
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 23:59:05 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id b8so1549824ioh.11
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Oct 2020 23:59:05 -0700 (PDT)
+        id S2404713AbgJTG7y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Oct 2020 02:59:54 -0400
+Received: from mail-bn7nam10on2075.outbound.protection.outlook.com ([40.107.92.75]:19617
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404710AbgJTG7x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 20 Oct 2020 02:59:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fqQC1TGsqFAIxa7GbMtXo3jBjpwsdk859B2zinvpBpacvS4aCQ7oJmjtk7NuY+mUGcF7g4iiavtcD3+211S1ioYwRKVVPXPu8+XLc9Qjt2uvnfA8BV+BbPqpah3tywE8CdJLQV3RkXaYL4a/jA1WgpKC4V9hj62eBq5UmtEL4IumAwhLgBfVs4utJtu5QrAKeKCbTeZLM+4gP4wWEQ15lKS0LfW+Nj0HC/Xq3ZjGIfPnC+MGYm4SVuvF+yqrxf4Fvd2NENuAfqceAl9HVFiYL8bKjGgV7ln8ZE2+gL/u1+CcHwMu0ZxYITyE71t28EYs+Y8u67lN8A1Do9NVCPdcnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98zPt5oDpfc1VAPZy0cBv6YLZSuwHcORtO2zFKZVo1k=;
+ b=LDya+9DYI7z3lRwwP2k//AIYXlsi3cbfcI79p52nH9JeLAjEhNUeKeMXvEtCLB9pTW39IDk5YmuwxTHS7mQzbpxdG4tb/HudzOilkzu4+PBxwbRHCymq1AJAdzDXdzMfitSvyScFb9fK43V58eTegPaFPcZw1YIFcs2dCjFEkKPbbsNMXugGO7osvxbd95NV5llHgqUKJ/DPkQnK6ASPMpvmq/qIQWbj44hMHlakGCfHF6QNHPHclSdyPYYxLg+OvtJjWkcW+u+g/rJMTZ+sAvR6UZw2fxTMC/QvD9aWKxAYfLdLm+Dc3YKcPIwqGwXhFbP1+378izUXewirSN0JHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oQ8GDjfspMGXyS8UXIyM7zzvUgdhYtP5hpcsB1MoYmo=;
-        b=GYhRWYNfD5mwum1GStkpUqfScCNZEmOgfuP41FnAtz48zue2vJdqFq7LXA78DsLqgT
-         Ap9bw5XlDU6ZtTePUVuYMhGOKMcUh+GJ6URacw8kNQ8godRchuYgL69lPBLegwvWqO2C
-         UWtWk0Suzxal8iMn0lgB1eu/jQqVgQM5zgWMwcBu4uixyLeagM/LcRiJ2kiXOQugLuGE
-         E3B/Pv7n39Fb78OnjI49NtR8+t/uWP54fpVL+O0jj2BkhDUmKZoKmREO3eZ9Lbkmfcob
-         F+aWrvBjM/7TemGMX4cxQULvcpvlUK+W8CTElu6c656DXj/EtH9eC2Tp2VmA0e/8eFgl
-         n2eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oQ8GDjfspMGXyS8UXIyM7zzvUgdhYtP5hpcsB1MoYmo=;
-        b=QmKbLOqOsXHoM3/mcK7Ll8DpaFVZWQXk8yBWBKAcfUQnl4B7VNnGm3lXO2V5Rbpqjn
-         Kd2wbJK0TO9uMXKhI2SDr+Z3KCzxHcYmoLNMJVbFTU/cGRAzfqbAvXhbFPI7H57eFWW2
-         ZidijnNvsO625yE2RzuBEYkQMfpcZnF0+A4XIxUOWW3oyX5iE2tlyoTY4+B0U/xyNBj3
-         8cwoUHzNmlVzliNtKUaO3kZfE4tBtiiHFQ7sitj5wHgBscRqUwxffVZ+I8ilwWTqpy0w
-         FQIfgkKLWeHXq/vIbNpoIsBKrjKavM39npNLAJZiqnL47IAPUmVvN6pNY3/AeKpeFnTF
-         Q8rA==
-X-Gm-Message-State: AOAM53135kMhsLM7zhZbRPTpsl/tHnypr6gt3QL36GJ7qXrz6fnGBDPp
-        D9Ls68PB5GGW7Yhige5n9y3CWOlty+4ocb8mz81R+iCQD06jqg==
-X-Google-Smtp-Source: ABdhPJyGl0g9XyKWW9WCiBPTVP6HdvWB5Sr2Cr26ZLxdBLNE/ALAyXE9ohgQXnH/h6A7/x9Bf4g9avjuNqkdWna0Qck=
-X-Received: by 2002:a6b:8bd7:: with SMTP id n206mr1110275iod.13.1603177144942;
- Mon, 19 Oct 2020 23:59:04 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98zPt5oDpfc1VAPZy0cBv6YLZSuwHcORtO2zFKZVo1k=;
+ b=OUzPOt+SNFo3aYjnYVcbmiwFKGyFzg1uAopcHtVlfyg9dZ8/y91C+rqFOUSpDMGSdB6SmJhETqTj4wuihiexBm6T+eFfYlG/QXdqhETEp8aXX6Q7oBx6iuZAmmlJK82g8Wutw0wlAmOIXHlDqfsI8h7bzKA29vPxlMguW+QT81w=
+Received: from DM6PR02MB5386.namprd02.prod.outlook.com (2603:10b6:5:75::25) by
+ DM6PR02MB4362.namprd02.prod.outlook.com (2603:10b6:5:2d::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3499.18; Tue, 20 Oct 2020 06:59:48 +0000
+Received: from DM6PR02MB5386.namprd02.prod.outlook.com
+ ([fe80::84ca:4b6c:d1e1:20e2]) by DM6PR02MB5386.namprd02.prod.outlook.com
+ ([fe80::84ca:4b6c:d1e1:20e2%5]) with mapi id 15.20.3477.028; Tue, 20 Oct 2020
+ 06:59:48 +0000
+From:   Srinivas Neeli <sneeli@xilinx.com>
+To:     Robert Hancock <robert.hancock@calian.com>,
+        Michal Simek <michals@xilinx.com>,
+        Srinivas Goud <sgoud@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>
+CC:     git <git@xilinx.com>, linux-gpio <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH V2 0/3] gpio-xilinx: Update on xilinx gpio driver
+Thread-Topic: [PATCH V2 0/3] gpio-xilinx: Update on xilinx gpio driver
+Thread-Index: AQHWYPp3HgetPDFFh0uAYJli9r7Ng6mfvfoAgADcH4A=
+Date:   Tue, 20 Oct 2020 06:59:48 +0000
+Message-ID: <DM6PR02MB53868B37CD6C93BB4F9FCF98AF1F0@DM6PR02MB5386.namprd02.prod.outlook.com>
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+ <YT1PR01MB3546541973024526CDB6BBECEC1E0@YT1PR01MB3546.CANPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <YT1PR01MB3546541973024526CDB6BBECEC1E0@YT1PR01MB3546.CANPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: calian.com; dkim=none (message not signed)
+ header.d=none;calian.com; dmarc=none action=none header.from=xilinx.com;
+x-originating-ip: [157.44.50.223]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b7c3a22b-f348-46f8-67bf-08d874c5bc07
+x-ms-traffictypediagnostic: DM6PR02MB4362:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR02MB43629CC53C8BEA6CEC5FDD36AF1F0@DM6PR02MB4362.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xUyYVYxhn81aRnvz7eWSipknwnrYmRSVaIlbnk/q/3zcGo0xwA+2EJUlXlnBI96O35mo8iCantudHF3bRP1c9AmymOgyvNweIhXnYDGN9l/wpq3xvMpQbsHEdaLWAxp0K4c6uqerIhNux1392rISSaY0e4W6JpPQ0SBOpU+uDp8K0ONVds1wbWCsUx4LPj3Qz4yIVIiHaOuQbnG0oAm9DlU0Rd6n3MC3XYtjdBY+htf2cdG8p+Dtl9GkPqGgrm7P1ZCqPRmHDmyqmzAfk7SQfh+ZykGUFiYQ3TXjb6+2EiO2nV/3QFcZT/wOgkJZYRE6SRaxYo0dMBtG4EW83duk7xZJFvpYld9XFWSpLwi35TDIvtnfmTAeDIzumaOlcVPxeWeLOZzoRVeZmFTdHS/9qQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB5386.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(366004)(396003)(136003)(39860400002)(15650500001)(8676002)(6506007)(55016002)(26005)(186003)(110136005)(316002)(508600001)(54906003)(7696005)(15974865002)(53546011)(33656002)(86362001)(4326008)(8936002)(2906002)(9686003)(6636002)(76116006)(52536014)(71200400001)(66446008)(66476007)(66946007)(64756008)(66556008)(5660300002)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: sxeaRhgAVTscg8VvK64Qx8lrJA9pcbTgUPOZFr9uhDXPIM1Xh7Wiq4BUQSfDVjsKcMGhsQ3XHp85WdSrfoCvTwAEhN0spse3vJk2K9SFAXEta2rnePGhFKkydu/+O/nUGTOAx5quY/hpR/TG8VPb5FwFlwF/PmcH2j14j8SXh/i0EECeM9Bg4g25uQG6Or4GaKwPzuh/ZWavby4T9ULJcbOeaj3pyDF6oaSJE2qdX+MB6NGFgfDsI+GaH2DP6IE8madaFbicteNjZ9laC0xAYkp+LdcNefJdM6jHQnurC6CtOYwx5/EejoRh1AM6sAMluogaP52WHdA39Dor9lU9CnJKEQbzYn4lyrzGldn2WEv1V/8KeIlhWkrYg0Qa04nRjSMxSqQiQsNZb1oNwXg02YW6xbekYzn8as4HKDjV9eH6NfP83mc4LyCHL9IN63Xf+29eXTMu+KtXske2w6OcJneC6jiQMEuHxjy1hpUv2twGXHhbJcJk38hh3Gm0TV8EL4Dx/bsYYQNuKeECU83WouFctxyYI+7wIsOafqq0OjPxwIA3P/dtMXwhFOP3aF9XrQRJ2DlTCtXplk5jmX01Eu20g1ZFyLOSdkw2js8OvFVuDsZgJBfKK3G2jg99MFN1SrkPkK/dGnQdWB6NEHDBJA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20201016090949.24456-1-brgl@bgdev.pl> <20201016102937.GA22245@laureti-dev>
- <CAMRc=Md1RxGiv+v27dZOSsGX4v1OEc=E-EJvd-4_8tMjgFicoA@mail.gmail.com>
- <CAMRc=MfjBai0PECzvXjLN9w_sP-ZE4QBxGL0-puow2zDKJd+Uw@mail.gmail.com>
- <20201019123801.GA5116@laureti-dev> <CAMpxmJU0y5Zze3we-NjnLi1fCG69v38fMwvTgCe0JXGK+RxLNQ@mail.gmail.com>
- <20201020055714.GA10256@laureti-dev>
-In-Reply-To: <20201020055714.GA10256@laureti-dev>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 20 Oct 2020 08:58:54 +0200
-Message-ID: <CAMRc=Meo5vcCo9hoA8-nbr_f7WHLL=AP87uwAZgMRiTmxVqxBw@mail.gmail.com>
-Subject: Re: [libgpiod][RFC PATCH] bindings: cxx: demote the line's parent
- chip reference to a weak_ptr
-To:     Helmut Grohne <helmut.grohne@intenta.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR02MB5386.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7c3a22b-f348-46f8-67bf-08d874c5bc07
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2020 06:59:48.2627
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SSLhjtrbaWHENmxu1bKHmY4IZ7SKNHYuM9UAWCZCDEYIFM36MXEwXw01R0s5t+E9TafO546idomyJKVICgcu5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4362
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 7:57 AM Helmut Grohne <helmut.grohne@intenta.de> wrote:
->
-> On Mon, Oct 19, 2020 at 03:06:18PM +0200, Bartosz Golaszewski wrote:
-> > But this still forces us to do
-> >
-> >     return chip(::std::shared_ptr<::gpiod_chip>(this->_m_owner));
-> >
-> > instead of a much more elegant
-> >
-> >     return chip(this->_m_owner);
-> >
-> > in line.cpp and there's an even less elegant thing in iter.cpp. Or am
-> > I missing something?
->
-> I confirm the behaviour you see. My intuition that the conversion would
-> happen implicitly was wrong.
->
-> Still the sticking point is this: Your constructor should allow for most
-> flexibility to the caller and in this case that means it should consume
-> a shared_ptr by value.
->
-> In order to make the case with a weak_ptr bearable, I suggest adding a
-> delegating constructor:
->
->     chip(const ::std::weak_ptr<::gpiod_chip>& chip_ptr) :
->         chip(::std::shared_ptr<::gpiod_chip>(chip_ptr)) {}
->
-> That way your desired way of calling should continue to work while not
-> forcing callers to convert a real shared_ptr to weak_ptr and back.
->
-> Sorry for the confusion about this.
+Hi Robert,
 
-This is a private constructor though and it's not meant to be exposed
-to callers of library interfaces. Only internal users will call it and
-they'll pass a weak_ptr to it alright. I really think it's fine the
-way it is now.
+Will send the next version(v3) after Mainline Window close.
 
-Bartosz
+Thanks
+Srinivas Neeli.
+
+> -----Original Message-----
+> From: Robert Hancock <robert.hancock@calian.com>
+> Sent: Monday, October 19, 2020 11:18 PM
+> To: Srinivas Neeli <sneeli@xilinx.com>; Michal Simek <michals@xilinx.com>=
+;
+> Srinivas Goud <sgoud@xilinx.com>; Shubhrajyoti Datta
+> <shubhraj@xilinx.com>
+> Cc: git <git@xilinx.com>; linux-gpio <linux-gpio@vger.kernel.org>
+> Subject: Re: [PATCH V2 0/3] gpio-xilinx: Update on xilinx gpio driver
+>=20
+> Hi Srinivas,
+>=20
+> Just checking if there is any update on this patchset? It looks like ther=
+e was
+> some feedback but I didn't see another version submitted.
+>=20
+> Robert Hancock
+> Senior Hardware Designer, Advanced Technologies www.calian.com
+> www.sedsystems.ca
+>=20
+> From: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Sent: July 23, 2020 8:36 AM
+> To: bgolaszewski <bgolaszewski@baylibre.com>; linus.walleij
+> <linus.walleij@linaro.org>; michal.simek <michal.simek@xilinx.com>; sgoud
+> <sgoud@xilinx.com>; shubhrajyoti.datta <shubhrajyoti.datta@xilinx.com>
+> Cc: git <git@xilinx.com>; linux-arm-kernel <linux-arm-
+> kernel@lists.infradead.org>; linux-gpio <linux-gpio@vger.kernel.org>; lin=
+ux-
+> kernel <linux-kernel@vger.kernel.org>
+> Subject: [PATCH V2 0/3] gpio-xilinx: Update on xilinx gpio driver
+>=20
+> This patch series does the following:
+> -Add clock adaption support
+> -Add interupt support
+> -Add MAINTAINERS fragment
+>=20
+> Changes in V2:
+> -Added check for return value of platform_get_irq() API.
+> -Updated code to support rising edge and falling edge.
+> -Added xgpio_xlate() API to support switch.
+> -Added MAINTAINERS fragment.
+> ---
+> Tested Below scenarios:
+> -Tested Loop Back.(channel 1.0 connected to channel 2.0) -Tested External
+> switch(Used DIP switch) -Tested Cascade scenario(Here gpio controller act=
+ing
+> as
+> =A0an interrupt controller).
+> ---
+>=20
+>=20
+> Srinivas Neeli (3):
+> =A0 gpio: xilinx: Add clock adaptation support
+> =A0 gpio: xilinx: Add interrupt support
+> =A0 MAINTAINERS: add fragment for xilinx GPIO drivers
+>=20
+> =A0MAINTAINERS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 10 ++
+> =A0drivers/gpio/Kconfig=A0=A0=A0=A0=A0=A0 |=A0=A0 1 +
+> =A0drivers/gpio/gpio-xilinx.c | 404
+> ++++++++++++++++++++++++++++++++++++++++++---
+> =A03 files changed, 395 insertions(+), 20 deletions(-)
+>=20
+> --
+> 2.7.4
