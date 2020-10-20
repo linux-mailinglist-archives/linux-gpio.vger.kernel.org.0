@@ -2,307 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DB17293A5D
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 13:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49456293D20
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 15:15:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393911AbgJTL73 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Oct 2020 07:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393854AbgJTL72 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Oct 2020 07:59:28 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7BF0C061755;
-        Tue, 20 Oct 2020 04:59:28 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id e15so1056324pfh.6;
-        Tue, 20 Oct 2020 04:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2G39uyzDlYr7wYhISE9BbPWobKRmjy0rPum9vOydAa0=;
-        b=mgC6LjU8DSsFbAQPr0jZutUqOpzb8vX8bkeXuDn66cMYqXMx0EuBwVP4fdnSLKeBSu
-         cBFc3sFukkNqVZGHftDowtBM21D0mDYxM0Fr4YXUHxae7Jz6LhtJ7GTelQmV+/vScyV/
-         F9xXgo6JBSxQGIkRbxk6V4qngnGZxkdVUVLVuE/hbCulaXzVTAB1M4QTunhclsew9lTA
-         /QjQPfQnQKqYjhDHshYjWhx4MseLmMiCNyxzLzFzm7kr1H9dKOyjBuUFYNe1lf9ounox
-         iLtD/+6GxSTYuAbuT1NZDxyK5RQN6ubj2a+4rD5YdDnuz7HHULj5aNBK09k8PIcfppAw
-         sPAQ==
+        id S2407389AbgJTNP3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Oct 2020 09:15:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40413 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407387AbgJTNP2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 20 Oct 2020 09:15:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603199727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=LjmPMVzXWf6DnC/UBBUMQlfucytTz/vlaecv5F/UKBM=;
+        b=A3YeW56bSEymTU+GyHsE+gUE46E2hfnyyE4tQ6oXnjebCDa3lDcPqunUAdiVyvLHR1TdVn
+        FWevIlRJjdtXM3iStqE/go0JpvG5ScijT+nQL5Pm0lwGg1Vlu8rK+CdOaAqcfxYrhPW6s4
+        vQxfa61D7xOOxBGznXsDWb8wcl2Jygg=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-572-ch6NM6RRMieVIG-5w8N9jg-1; Tue, 20 Oct 2020 09:15:26 -0400
+X-MC-Unique: ch6NM6RRMieVIG-5w8N9jg-1
+Received: by mail-qv1-f71.google.com with SMTP id eh4so1275769qvb.12
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Oct 2020 06:15:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2G39uyzDlYr7wYhISE9BbPWobKRmjy0rPum9vOydAa0=;
-        b=hVZsqfTmW3TBpVpa/zTWfNQeIk/Gk6kIGZfnHeVzl+twR93CPK+uEgLC/uwk7w4Ldo
-         B+D1MEeFMDavDwj/tGpD0PoxeuWaucW7zzzAxJrCzjJRqXff3xV8KSZx1ypII0zDh2fV
-         2M5aRhpdmlc9Ezbq3XH7x7+Jfi6ax7KL7lRFdL/wxiCs/i8MC/FJC806/Ps3S+EiU71x
-         0XAMfrEzZImbEazQ8WgfvWKpQSza8Fyc/Gx1yERWY92xGVTW9OUiua8E5WDFUOOVMaWG
-         6eC4oCLEmKROf1Iib+3jOnZIUoZ/+ziinpmVy7hBNWREOIrs07OYSOUVG70FFS+kWWkQ
-         K5Kg==
-X-Gm-Message-State: AOAM533Kbb8QbWnSXN0AOiV21fPDiAhbQESlf8zB66nK3i2p1Iayxvvn
-        uWtjsjMPXVS90B967dogum+cxGLVU/3lOdPWk+cjNmcpvq021XGT
-X-Google-Smtp-Source: ABdhPJzKAFhbTyFBSVI5GzFfezctKXEOPINvEBjVDs3F+C9oFP1ZbeeR0tat6x4qjSbZK2cXf0I3c5FMA8gBrO1mdU4=
-X-Received: by 2002:a62:343:0:b029:15c:e33c:faff with SMTP id
- 64-20020a6203430000b029015ce33cfaffmr2319787pfd.7.1603195167974; Tue, 20 Oct
- 2020 04:59:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201019141008.871177-1-daniel@0x0f.com> <20201019141008.871177-4-daniel@0x0f.com>
-In-Reply-To: <20201019141008.871177-4-daniel@0x0f.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 20 Oct 2020 15:00:17 +0300
-Message-ID: <CAHp75Vf5iUzKp32CqBbv_5MRo8q8CyBPsBcgzKsww6BFtGJwUA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LjmPMVzXWf6DnC/UBBUMQlfucytTz/vlaecv5F/UKBM=;
+        b=JwVDqq0MW3bh1gtqvor0FnHarVaQHsSMW7kcmZLjqxBAWQ3G+JHuovbklkrBGLNyck
+         cY10SFzvNkz2hxSBfHeR3MBi8eLjsJuuztRquLkG7Kg0Zi0rrYVgM0n1TNY8JOQAXfPr
+         XKWa7SBH0VQD3NUVEB3y3u4DbNevptrQd8+D4/awr49FtkSUHeQyp79+v83K10M47cax
+         rhFIZqcmpuD1DkNhcIaPi7GYh4gF6dONw2R4hschChY1uZ5iy5pw7JNB8Lz4IhbR7zK0
+         hjzjafTaj2sen756fFbN63GQE5/qeen4o8eZC8OLbrCiPK5h3xirCBrbLEP0eWRgZSIG
+         BT8w==
+X-Gm-Message-State: AOAM532LaDEDPZiQrIZQTQTLFmIoFKZxmQm8ZNyBwme9ATF7MRza3pZS
+        a7L/N7E1LMSDsM6F5RL8pfurZDt4uNlHDvIh9wC8UPJje50AJGurBBQu0kVSMSSSQYbue1HkWm/
+        8CpWNbsKRYP7cjNndgrZI6A==
+X-Received: by 2002:a37:6246:: with SMTP id w67mr2420715qkb.35.1603199725596;
+        Tue, 20 Oct 2020 06:15:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyxPR6bV4aLBGYacEtAaH/79e0HSmuiKtMeTJx0qcZazIVj5QKtDoi7jlYYjqw+n1IkdtGPIQ==
+X-Received: by 2002:a37:6246:: with SMTP id w67mr2420695qkb.35.1603199725399;
+        Tue, 20 Oct 2020 06:15:25 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id s90sm713248qtd.15.2020.10.20.06.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Oct 2020 06:15:24 -0700 (PDT)
+From:   trix@redhat.com
+To:     kgene@kernel.org, krzk@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH v2] pinctrl: samsung: pinctrl-s3c24xx: remove unneeded break
+Date:   Tue, 20 Oct 2020 06:15:20 -0700
+Message-Id: <20201020131520.29117-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 5:11 PM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> This adds a driver that supports the GPIO block found in
-> MStar/SigmaStar ARMv7 SoCs.
->
-> The controller seems to support 128 lines but where they
-> are wired up differs between chips and no currently known
-> chip uses anywhere near 128 lines so there needs to be some
-> per-chip data to collect together what lines actually have
-> physical pins attached and map the right names to them.
->
-> The core peripherals seem to use the same lines on the
-> currently known chips but the lines used for the sensor
-> interface, lcd controller etc pins seem to be totally
-> different between the infinity and mercury chips
->
-> The code tries to collect all of the re-usable names,
-> offsets etc together so that it's easy to build the extra
-> per-chip data for other chips in the future.
->
-> So far this only supports the MSC313 and MSC313E chips.
->
-> Support for the SSC8336N (mercury5) is trivial to add once
-> all of the lines have been mapped out.
-
-...
-
-> +config GPIO_MSC313
-> +       bool "MStar MSC313 GPIO support"
-
-Why boolean?
-
-> +       default y if ARCH_MSTARV7
-
-Simply
-       default ARCH_MSTARV7
-should work as well.
-
-Are you planning to extend this to other boards?
-
-> +       depends on ARCH_MSTARV7
-> +       select GPIOLIB_IRQCHIP
-> +       help
-> +         Say Y here to support GPIO on MStar MSC313 and later SoCs.
-
-Please, be more specific. Also it's recommended to have a module name
-to be included (but let's understand first why it's not a module)
-
-...
-
-> +/*
-> + * Copyright (C) 2020 Daniel Palmer<daniel@thingy.jp>
-> + */
-
-One line.
-
-...
-
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/gpio/driver.h>
-
-I believe this should be reworked.
-For example, it misses mod_devicetable.h, bits.h, io.h, types.h, etc, but has
-
-...
-
-> +/* These bits need to be saved to correctly restore the
-> + * gpio state when resuming from suspend to memory.
-> + */
-
-/*
- * For this subsystem the comment style for multi-line
- * like this.
- */
-
-...
-
-> +#ifdef CONFIG_MACH_INFINITY
-
-Does it make any sense?
-
-> +#endif
-
-...
-
-> +       return readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset])
-> +                       & MSC313_GPIO_IN;
-
-Usual pattern is to leave operators on the previous line.
-
-...
-
-> +static struct irq_chip msc313_gpio_irqchip = {
-> +       .name = "GPIO",
-
-Is this name good enough?
-
-> +       .irq_eoi = irq_chip_eoi_parent,
-> +       .irq_mask = irq_chip_mask_parent,
-> +       .irq_unmask = irq_chip_unmask_parent,
-> +       .irq_set_type = irq_chip_set_type_parent,
-> +};
-
-...
-
-> +static int msc313e_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
-> +                                            unsigned int child,
-> +                                            unsigned int child_type,
-> +                                            unsigned int *parent,
-> +                                            unsigned int *parent_type)
-> +{
-> +       struct msc313_gpio *priv = gpiochip_get_data(chip);
-> +       unsigned int offset = priv->gpio_data->offsets[child];
-> +       int ret = -EINVAL;
-> +
-> +       /* only the spi0 pins have interrupts on the parent
-> +        * on all of the known chips and so far they are all
-> +        * mapped to the same place
-> +        */
-
-Comment style!
-
-> +       if (offset >= OFF_SPI0_CZ && offset <= OFF_SPI0_DO) {
-> +               *parent_type = child_type;
-> +               *parent = ((offset - OFF_SPI0_CZ) >> 2) + 28;
-> +               ret = 0;
-> +       }
-> +
-> +       return ret;
-
-Oh, can, for a starter, we use a regular (not-so-twisted) pattern
-
-  if (...)
-    return -EINVAL;
-  ...
-  return 0;
-
-?
-
-> +}
-
-...
-
-> +       gpio->saved = devm_kzalloc(&pdev->dev, gpio->gpio_data->num * sizeof(*gpio->saved), GFP_KERNEL);
-
-devm_kcalloc()
-
-> +       if (!gpio->saved)
-> +               return -ENOMEM;
-
-...
-
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       gpio->base = devm_ioremap_resource(&pdev->dev, res);
-
-devm_platform_ioremap_resource()
-
-> +       if (IS_ERR(gpio->base))
-> +               return PTR_ERR(gpio->base);
-
-...
-
-> +       gpiochip->label = DRIVER_NAME;
-
-Not good. When you use user space how do you distinguish if more than
-one chip appears in the system?
-
-...
-
-> +       ret = gpiochip_add_data(gpiochip, gpio);
-> +       return ret;
-
-return ...(...);
-
-Why not devm_gpiochip_add_data() ?
-
-...
-
-> +static const struct of_device_id msc313_gpio_of_match[] = {
-
-> +#ifdef CONFIG_MACH_INFINITY
-
-To me this makes no sense.
-
-> +       {
-> +               .compatible = "mstar,msc313-gpio",
-> +               .data = &msc313_data,
-> +       },
-> +#endif
-> +       { }
-> +};
-
-...
-
-> +/* The GPIO controller loses the state of the registers when the
-> + * SoC goes into suspend to memory mode so we need to save some
-> + * of the register bits before suspending and put it back when resuming
-> + */
-
-Comment style!
-
-> +
-
-Redundant blank line.
-
-...
-
-> +static int __maybe_unused msc313_gpio_resume(struct device *dev)
-> +{
-
-> +}
-
-> +
-
-Redundant blank line.
-
-> +static SIMPLE_DEV_PM_OPS(msc313_gpio_ops, msc313_gpio_suspend, msc313_gpio_resume);
-
-...
-
-> +static struct platform_driver msc313_gpio_driver = {
-> +       .driver = {
-> +               .name = DRIVER_NAME,
-> +               .of_match_table = msc313_gpio_of_match,
-> +               .pm = &msc313_gpio_ops,
-
-You still allow to unbind.
-
-> +       },
-> +       .probe = msc313_gpio_probe,
-> +};
-
-> +
-
-Redundant blank line.
-
-> +builtin_platform_driver(msc313_gpio_driver);
-
-Why?
-
+From: Tom Rix <trix@redhat.com>
+
+A break is not needed if it is preceded by a return.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+
+v2: Improve commit log
+
+---
+ drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+index 5e24838a582f..2223ead5bd72 100644
+--- a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
++++ b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+@@ -108,19 +108,14 @@ static int s3c24xx_eint_get_trigger(unsigned int type)
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		return EINT_EDGE_RISING;
+-		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 		return EINT_EDGE_FALLING;
+-		break;
+ 	case IRQ_TYPE_EDGE_BOTH:
+ 		return EINT_EDGE_BOTH;
+-		break;
+ 	case IRQ_TYPE_LEVEL_HIGH:
+ 		return EINT_LEVEL_HIGH;
+-		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+ 		return EINT_LEVEL_LOW;
+-		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.18.1
+
