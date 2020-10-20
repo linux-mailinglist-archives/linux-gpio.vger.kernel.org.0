@@ -2,162 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0426293D49
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 15:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C233293DE1
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Oct 2020 15:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407330AbgJTN0S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Oct 2020 09:26:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407291AbgJTN0S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Oct 2020 09:26:18 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C243CC0613CE
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Oct 2020 06:26:17 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id d3so1869312wma.4
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Oct 2020 06:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jiEZwt1UVrshiu353nvFC1zKZwvPuTjPD9AQIUaHUPQ=;
-        b=YK2Jal9lJPuDGvNZgEhVpYxQR6C0JKOZhXubZAtjOGmvnFZUULMyZXNg1aDkkedl0N
-         fa106fGFd/uUlgBz50Ae0VGRitHCgNs7vqRFtFEPu81PCfWYZBefOnit0JiEki37WKKy
-         ZNIgHsL5bQyV4iQHk3Iz3TYlegkjKWreRKVL8=
+        id S2407741AbgJTN4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Oct 2020 09:56:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51152 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407716AbgJTN4F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 20 Oct 2020 09:56:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603202163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HyQ28xr5/lapv6azTtFCvHFT5XQ1+OzeHk+84iEm66Y=;
+        b=QUp+Tm/49C2D2ArfwdGiXcYEZLmxY3ITF9bXZyS+HEfcJJoqaGxmch+2EHiNHeADDWpHNz
+        Ouzap4oFcZixuWmorb4Ub+lRVmWRZDipZO+0tL8W1vnU06zVM/xfLz81/8VfcBPp80A1RW
+        EdBHqnK2mgm1gY9dzcmZeB2rW1Al8Fc=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-136-G-E8w7XCOfGUdVZo_1yFEA-1; Tue, 20 Oct 2020 09:56:01 -0400
+X-MC-Unique: G-E8w7XCOfGUdVZo_1yFEA-1
+Received: by mail-qk1-f197.google.com with SMTP id i2so1826257qkk.0
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Oct 2020 06:56:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jiEZwt1UVrshiu353nvFC1zKZwvPuTjPD9AQIUaHUPQ=;
-        b=DIx/E3rp6WJ60UjwfAlIHtkZnXw/RAGo755q235GvQskkO8/q8FTP+OQXe9dj0m2pP
-         HY76ZgMlbrP1K83uJ4JeE6bmwsbPP+OZtxMBQ5e0a+9tt6YhjzNZpmQiZfaZaJMd63He
-         HHX60K6pGwocohXVc2UL6r979M3H0gaGZIwm7jHEL0FmN0vUnjkov20ALXNl72fjdhUM
-         lqO+1hQC4tyajZmYlr0Q9Uu72OC3uM71CnwcO6LINPhMlyZ9ZgEKwXgMHM3uYwn6kMq5
-         ONGFxDdYPfm4KcSEUZc/9a/PExPDaM5mKiFPlAmiS318LjNmRVFaOpKVYbRr7rUEgIQL
-         EL9Q==
-X-Gm-Message-State: AOAM533RjVRtGWa8jTLtMIKoY9FJ236bsdqQABsE4i77iif9WEkwEU8E
-        jXTOmSpG6YrqwUACC8Y9FRr3uVWq+rQ0KjiQOb4Log==
-X-Google-Smtp-Source: ABdhPJxOSCaohNlotFC3fJ/SO8FGZ+IX/HeJ18+Z+rLPcpFl4yVk1/rmqgj7plCYZ+/rQ6+2hKvySr4nP9kWyidWceU=
-X-Received: by 2002:a1c:7518:: with SMTP id o24mr3045570wmc.137.1603200376398;
- Tue, 20 Oct 2020 06:26:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=HyQ28xr5/lapv6azTtFCvHFT5XQ1+OzeHk+84iEm66Y=;
+        b=G61w2uW8ruqoE8sUvY6SAW/yT4mSaRTg6zly5GCKEWn/4sXC5IMpYTVTlaZ067+cp/
+         ZAP2Qmz2T9FhC350WsuO3bjck2DSmQzIMZv0ekHLwLLz5kVPYyOfjCwjJkr25IT1t/NG
+         3fpNj/xL53+ZWmg/Bk5ZzyLq5Ymusq5kW4guMClBZe01II+AzqEG+7Q6dJCQxUbcKMTN
+         p7+DOUfud2DuICkmkehBwX1E1Osp01lJTHXMTXodaUkpFEbEESd4mLTcx/wicMt6eq10
+         qrVJiToM/lT9sWlOAISsYhBkbF9auUQDMBWZqMjKUJkKps8pfFOesqAv+PMJtckzlE4r
+         7hVA==
+X-Gm-Message-State: AOAM5330ikxz6LjrgWcnRxGC5J9xTxyuMomYELXchHCCMwlwU2UP3gH0
+        KdKsSnFuJg/WW+wnIuHlWfeQx8cZS9oMsxwMfyIpB+8/XXK+P1CMexl/XbchJWj6xOFfzIq7OQa
+        f8Mms85ID6Nw3jgzIJnrysQ==
+X-Received: by 2002:a05:6214:174f:: with SMTP id dc15mr3370431qvb.25.1603202160688;
+        Tue, 20 Oct 2020 06:56:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLUAfqrAOJzxwKF3+voCBF5yQYNbMOvfOkDZhumkJj3bEnT15V4x8vUJ5iQ5pWt9KusIZtsQ==
+X-Received: by 2002:a05:6214:174f:: with SMTP id dc15mr3370377qvb.25.1603202160139;
+        Tue, 20 Oct 2020 06:56:00 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b8sm775938qkn.133.2020.10.20.06.55.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2020 06:55:59 -0700 (PDT)
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        George Burgess <gbiv@google.com>, Joe Perches <joe@perches.com>
+References: <20201017160928.12698-1-trix@redhat.com>
+ <20201018054332.GB593954@kroah.com>
+ <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <ca1f50d6-1005-8e3d-8d5c-98c82a704338@redhat.com>
+Date:   Tue, 20 Oct 2020 06:55:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20201019141008.871177-1-daniel@0x0f.com> <20201019141008.871177-4-daniel@0x0f.com>
- <CAHp75Vf5iUzKp32CqBbv_5MRo8q8CyBPsBcgzKsww6BFtGJwUA@mail.gmail.com>
-In-Reply-To: <CAHp75Vf5iUzKp32CqBbv_5MRo8q8CyBPsBcgzKsww6BFtGJwUA@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Tue, 20 Oct 2020 22:26:50 +0900
-Message-ID: <CAFr9PXnhqS+3nbt8ZG8PKpkp=tFraxFQUb5ym1a2FtzmRgF4VA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
 
-On Tue, 20 Oct 2020 at 20:59, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > +config GPIO_MSC313
-> > +       bool "MStar MSC313 GPIO support"
+On 10/19/20 12:42 PM, Nick Desaulniers wrote:
+> On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>> On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+>>> From: Tom Rix <trix@redhat.com>
+>>>
+>>> This is a upcoming change to clean up a new warning treewide.
+>>> I am wondering if the change could be one mega patch (see below) or
+>>> normal patch per file about 100 patches or somewhere half way by collecting
+>>> early acks.
+>> Please break it up into one-patch-per-subsystem, like normal, and get it
+>> merged that way.
+>>
+>> Sending us a patch, without even a diffstat to review, isn't going to
+>> get you very far...
+> Tom,
+> If you're able to automate this cleanup, I suggest checking in a
+> script that can be run on a directory.  Then for each subsystem you
+> can say in your commit "I ran scripts/fix_whatever.py on this subdir."
+>  Then others can help you drive the tree wide cleanup.  Then we can
+> enable -Wunreachable-code-break either by default, or W=2 right now
+> might be a good idea.
+
+I should have waited for Joe Perches's fixer addition to checkpatch :)
+
+The easy fixes I did only cover about 1/2 of the problems.
+
+Remaining are mostly nested switches, which from a complexity standpoint is bad.
+
 >
-> Why boolean?
+> Ah, George (gbiv@, cc'ed), did an analysis recently of
+> `-Wunreachable-code-loop-increment`, `-Wunreachable-code-break`, and
+> `-Wunreachable-code-return` for Android userspace.  From the review:
+> ```
+> Spoilers: of these, it seems useful to turn on
+> -Wunreachable-code-loop-increment and -Wunreachable-code-return by
+> default for Android
 
-Because it's a built in driver. I could change it to tristate/a module
-but I didn't think it needed to be one.
-The machines this is used on generally only have 64 or 128MB of RAM so
-the kernel is usually built without modules and only the totally
-required stuff built in.
+In my simple add-a-cflag bot, i see there are about 250
 
-> > +       default y if ARCH_MSTARV7
+issues for -Wunreachable-code-return.
+
+I'll see about doing this one next.
+
+> ...
+> While these conventions about always having break arguably became
+> obsolete when we enabled -Wfallthrough, my sample turned up zero
+> potential bugs caught by this warning, and we'd need to put a lot of
+> effort into getting a clean tree. So this warning doesn't seem to be
+> worth it.
+> ```
+> Looks like there's an order of magnitude of `-Wunreachable-code-break`
+> than the other two.
 >
-> Simply
->        default ARCH_MSTARV7
-> should work as well.
->
-> Are you planning to extend this to other boards?
+> We probably should add all 3 to W=2 builds (wrapped in cc-option).
+> I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
+> follow up on.
 
-I think I copy/pasted the block above there. I'll fix this up.
+Yes, i think think these should be added.
 
-As for other boards. I think this GPIO controller is only present in
-MStar's SoCs and some MediaTek SoCs that inherited parts from MStar
-after MediaTek bought them. Like the MStar interrupt controller is
-present in some MediaTek TV chips.
+Tom
 
->
-> > +       depends on ARCH_MSTARV7
-> > +       select GPIOLIB_IRQCHIP
-> > +       help
-> > +         Say Y here to support GPIO on MStar MSC313 and later SoCs.
->
-> Please, be more specific. Also it's recommended to have a module name
-> to be included (but let's understand first why it's not a module)
-
-Ok. I'll rework that. As for it not being a module. I can make it
-possible to build it
-as a module. I just didn't really think it needed to be one.
-
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/gpio/driver.h>
->
-> I believe this should be reworked.
-> For example, it misses mod_devicetable.h, bits.h, io.h, types.h, etc, but has
-
-I'll look at this again.
-
-> > +/* These bits need to be saved to correctly restore the
-> > + * gpio state when resuming from suspend to memory.
-> > + */
->
-> /*
->  * For this subsystem the comment style for multi-line
->  * like this.
->  */
-
-Sorry, I'll fix these up.
-
-> > +#ifdef CONFIG_MACH_INFINITY
->
-> Does it make any sense?
->
-> > +#endif
-
-It doesn't make a lot of sense right now but it makes a bit more sense
-when the support for the mercury chips is added. They have their own
-set of offsets
-for the used pins. I cut that out of this series because I haven't
-fully reverse engineered all of the pins for those chips yet so the
-support for them has a lot of guesses and notes in the code.
-
-Anyhow, with only 64MB of RAM I thought it made sense to not compile
-in the mercury tables when support for those machines isn't enabled.
-I'll drop the if/defs for the next version.
-
-> > +static struct irq_chip msc313_gpio_irqchip = {
-> > +       .name = "GPIO",
->
-> Is this name good enough?
->
-
-There is only one GPIO block in the chips this is for so I think it's
-unique at least.
-
-> > +       gpiochip->label = DRIVER_NAME;
->
-> Not good. When you use user space how do you distinguish if more than
-> one chip appears in the system?
-
-So far there is only ever one of these GPIO controller for the whole system.
-There is another GPIO block in the system but it uses another driver
-as the register layout is totally different.
-
-Thank you for all of the comments. Sorry about the multiple style issues.
-I thought checkpatch had my back on that.
-
-Thanks,
-
-Daniel
