@@ -2,122 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 898AE294958
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 10:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5A1E2949CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 10:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407827AbgJUI3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 04:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407519AbgJUI3Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Oct 2020 04:29:24 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEB8C0613CE
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 01:29:24 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id n9so1048756pgt.8
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 01:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gOTbISMRVl2PhE2BQ5Q5SSqB79X6XyQQyaFYI+Lc0uI=;
-        b=CizGBLANK1C6c5uM3cFPjocTbeIGonkanRhyzl22cf87fvOYw/jRX8ewgelV4HZJgL
-         ooOc6mjLbaTL0ygooxSiF5ZbAjUDkMZ6eJbYnXfD+uP9RvC7B42W6iu/JnacXz3ibJiy
-         8267GIaDh6rrfKnPJAZoMXxoVJEx8dI+k4hTW10kt9+EyVqLp1cInITrg4jNqWZd8ImN
-         CmVYuU6WM1eGu/cu7oEdTPim0DWg+mxqdp6MFQUGA9N7vfaVWmiJF2Pb+R7xUTgqMSEe
-         O1UqLGVeksbiCK8fPlXk4sijiIBQRm4kTw28zJcPVY2PSd6adEsek5rA3lsdfazIJ3wb
-         qH5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gOTbISMRVl2PhE2BQ5Q5SSqB79X6XyQQyaFYI+Lc0uI=;
-        b=YiW2MYj3lhei0OjQwEGH/89RdC6hzJQlUzC5SrJRxDN5t7+iqkqPcl0BDgQtjXW/eg
-         eXghvhAPb8Qv+T+0clkfE0DXfZtGld7zr8us8bF1MuBW0PQA0xMYpvcQCVzZA8i2lXqZ
-         dhB6G3YCl1gyRX7HoBgzHhhWATKi0kX667eg94YE7L6ZS13Ymc8AAB6KInR504qd5a4Y
-         oaqSBjrUgHjUbWsLFMerxKOEHLbILpo9UHyLwLa/zj2lX2Q9oPjtPx5sScn7d13ZjAlA
-         vW6qLtGTHGbQqgZcNCIp3U+6DVgLNrm9XU78Spldqyc6I04NlHqUOD/116TcEx3VTUpX
-         WlJA==
-X-Gm-Message-State: AOAM531eq7zZniBEVa2xLhQjb5ADlP/pSPeVeETyAdI4tJuk6OQBjcuy
-        SYm3UqN3utSGEseUWmris0g=
-X-Google-Smtp-Source: ABdhPJw+c3TohD33DzMv6zrSRzyRi+66t4HRavc2c9k+VoWU1gAuk4SKhE/3uabaWHkRQyb/GqHRjg==
-X-Received: by 2002:a62:5215:0:b029:156:6a80:a257 with SMTP id g21-20020a6252150000b02901566a80a257mr2413168pfb.63.1603268963411;
-        Wed, 21 Oct 2020 01:29:23 -0700 (PDT)
-Received: from sol (106-69-190-250.dyn.iinet.net.au. [106.69.190.250])
-        by smtp.gmail.com with ESMTPSA id p188sm1646071pgp.65.2020.10.21.01.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2020 01:29:22 -0700 (PDT)
-Date:   Wed, 21 Oct 2020 16:29:17 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [libgpiod] Rethinking struct gpiod_line_bulk
-Message-ID: <20201021082917.GA22853@sol>
-References: <20201013005252.GA9387@sol>
- <CAMRc=Mf_ZG5FqEAd0CSCqx_GeEG_4ghEXf8S3Sdws4+XOFV2Ag@mail.gmail.com>
- <20201013085310.GB3119809@sol>
- <CAMRc=Mc_kNmWBUhyxMHvr9bComG03=_rR4KM8X4wgzkqjK6FZw@mail.gmail.com>
- <20201019162142.GA85778@sol>
- <CAMRc=MfoqJURP_X5uhMe4Gz=5h55pHpq90cNZmocA+rkMgb99Q@mail.gmail.com>
- <20201020150558.GA17003@sol>
- <CAMRc=MfbVTZF_=e7dtLEtKMzd0WQfEPBVzYDaamkyUZWoxbeoQ@mail.gmail.com>
- <20201020222440.GA4920@sol>
- <CAMRc=Mf9EEjVFSvguGzem2awf36DOJoib-nwTrJr6G1xzjT5rg@mail.gmail.com>
+        id S2502329AbgJUI6A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Oct 2020 04:58:00 -0400
+Received: from sonic317-28.consmr.mail.bf2.yahoo.com ([74.6.129.83]:42629 "EHLO
+        sonic317-28.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436655AbgJUI56 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Oct 2020 04:57:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1603270677; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=d4rrYv3V2GJTucSzxHI0poqvECxQCuSKX4APhFt9rKN6EimvrunRxtGLPpmGC+3G31roWA41aYuzFEMmlKmf7P/Q0sUlg3s9Ou4mxrpF6l/0oxHJMCWPcGiH1NGPUxo3gUtGq/oYSF7/c2NG7eTiJ8mJGMCIjPIokhiWkGTauRhfVPH3vsF9tiHj0+pBy3nWIp+jMl7frUYpHR5p3xM+PZhYKvpgKSjcFoDwKOqStiLRPOMH2JuHA7ReBF9vDTZtpkIs7u6Xtp6BRjwsCKRPQGQh0BmSa6IDfEnfn4ekYCkUY7IdgDEwCkvk9M2hqZgUuXdcuKt24Uw1x4LxbKiWsA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1603270677; bh=pUKPVXVUVqGBchhUwlgheIAjNXzldvseapb/CY56kLE=; h=Date:From:Subject; b=eMNdI2+afZpry5nL8TRuRk86ZlHYtwAsCIw82ymsAstPV0ytNjw0FxlbybpNHZHoY5qiTcucPrn2ZLMXTmcYjCUAAJAcHzRjZQmgFz7TaL0UBAE/HzD8ykDEjaD/d7LWHDxt3LP5X7XCSGHzIhZuIAP5IphSzgUO2gCmhX7BD2Hc6y0O32ennlncMC6YMPfVRRIanOeR9qRzcBxOy/hBT+jfwQYPxYzSjl2uM4e9Nqe2iQ03+Gr7yDiTDZc2zFdU5zq2nwLP6RCATI4q6KCD+l2sCOHdzT7MnmNjV83T43OzuOjxGBga4ZT3+WZkMARQGOdWyKPMdE6WFO5PhwT2xA==
+X-YMail-OSG: 27O9dHMVM1l0v1zZCY7N17sxiCY0UJUNa3S9RO84G7Mxo2xEe5xYKLte4._DV_a
+ eGb4t6ZaeisnE_wP4rHNd20rDmFadcIOz2ZRS4R1.WwbffWpez410aLx3Al0erAX.j6mdWIHv2x8
+ 4UsEM6conx3CapOGxAte_VV4u2NtrjvGggdFB6dWVERBtwaKEKm9tcGf2kgUD8Khr12r7IoaOEjf
+ M9RcoclxMd30nFX5RTdyrQ2.Mq5HvgcfmDNbXb_JoHmSU_xpkcxX28bnTujlnk5.fYllEQ1YIpyK
+ eDfob2o7GDp28zp8ZksAN7B0PlCla42pVz37ALxhu.bnGrgOxO8AZrCTNdfu6TKi_8sgF7qORPt4
+ jWu0pbbcqQ0QtsQSO8oaI6TX_aqWNBpddQe8QX6tPxVTSEhOcK8dAaA3pf3bMhUqhIi9IJEBfq6B
+ jn96vgCuxI6PsbWBlZj0odnEOSO8wUvUFiXzUtcK40UShkPxb8mD9OK3V.V25eKnqXQHw4FtUgrn
+ MDkGU3yozvuJ86_r4zF8xkkOlLYqC4hWMxjMVlqG9KDoH.L.hG99yuMXSOAKFy51JPqInct0QQ0B
+ bzdX3Bil1aKvhJUGay6lI5sWrd2jBkIwdkK3v2UBEO1l1rxUBAGlXHKlhoPlj0RiyFupyrSeV71U
+ 9rKIlINyoSsN4CqO3om6D0wlcIWXhJOdxsd6HEzrheqOdobW.fZNla16UCJeOhJdH2e6CVT0C7pS
+ 8Xh3P4yIxGtP86nUb8rgkl5F43cBBWNwseiHaM6lUD4Btw1UQBjucPXZmzVjXk_vvQ.qfCHuGd5D
+ nHkNOdTYLbCwzLiwF_cLNVj3o8cgQwSF9HcFX2q4MbLWWGHQWpXmfZcGkK8Cn6AsUZzSesQMirR4
+ gf4J1E3RdVGqDWhGhfx09EqE0DKy4ZQ6hGbn.9beBCoJWox3Q10vbxnmuCCSmXI70RPxMxBEyxYw
+ cOP.Twy9EMlkbgLqTbroTh6FgeVMrP1YFIDaa6KhM0cAG.wPa5QN_vB2Qftig_WcPKYR5hB.Wlvr
+ .EQNOCrguP24hZRm_QcCKwUIhwAC8vL02dWhwArYHkBqoHNm8h63A1u_DkTA5YU217FuWSxlED.X
+ qzYz5fX6DEtf5MkSQaG8tuBXY56LS565QV9p3.6OkHpvYhwHniYIZXMou3Kdkfk3f7spzAS3cPNR
+ YEc7pQoFWypS4F2YEiMM1G8T.Dw_rbTTX7D9A7ZCSDOJmBZFb3o11KA4gvoK6s6_ZkLK7wJj9qRW
+ xxE7nSte3exUdyXjbFYtXFe.c1rqr1AtdIZki5CVddLxtza._UD5NzBaWGk6DyaXQuEW9C38ZgRm
+ 7FBE1rWUt3kAOjwB38shxtCYEjWinKcdOixPVZZoTIHnks.VwwsrehFjdZIXDbch1ndjTpZp7aQT
+ wTTaRHtFUnyRU1P4cP6QoXxUFepUZIN3xL6OGUglLYbWs
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Wed, 21 Oct 2020 08:57:57 +0000
+Date:   Wed, 21 Oct 2020 08:57:55 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <772581317.1319804.1603270675650@mail.yahoo.com>
+Subject: YOUR CO-OPERATION FOR THIS BUSINESS (Ms Lisa Hugh).
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf9EEjVFSvguGzem2awf36DOJoib-nwTrJr6G1xzjT5rg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <772581317.1319804.1603270675650.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16868 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 09:33:03AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Oct 21, 2020 at 12:24 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Oct 20, 2020 at 05:53:31PM +0200, Bartosz Golaszewski wrote:
-> > > On Tue, Oct 20, 2020 at 5:06 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > >
-> > [snip]
-> > > > >
-> > > > > I'm now actually leaning more towards making it opaque but I need to
-> > > > > find a way to make gpiod_line_bulk_foreach_line work with hidden bulk
-> > > > > struct.
-> > > > >
-> > > >
-> > > > Why not just drop it in favour of gpiod_line_bulk_foreach_line_off()?
-> > > >
-> > >
-> > > The one with the line being supplied to the user automatically is more
-> > > elegant. If anything - I'd prefer to drop
-> > > gpiod_line_bulk_foreach_line_off(). Callbacks as suggested by Andy is
-> > > a good idea - something like what GLib does in a lot of helpers for
-> > > lists etc.
-> > >
-> >
-> > Not sure what you mean here - they both return the line, the difference
-> > is how they store the loop state, with gpiod_line_bulk_foreach_line()
-> > exposing the bulk->lines array via the lineptr.  That is the source of
-> > your problem if you go opaque - that array becomes hidden, as it
-> > probably should be.
-> >
-> 
-> No idea what I meant either. :)
-> 
-> When using a function with a callback we no longer need the user to
-> supply the memory for storing the loop state - it can be stored in the
-> stack frame of said function - so the callback should only take the
-> line as argument (+ void * user data) and the user can store the loop
-> state however they like. This is how I see it.
-> 
 
-That makes sense - if you are going opaque then the callback is cleaner.
 
-Will the callback have any return code, say to trigger a break from the
-loop?
+Dear Friend,
 
-Cheers,
-Kent.
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
