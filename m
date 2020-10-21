@@ -2,65 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BA6295310
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 21:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1CD229552F
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 01:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505061AbgJUTpW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 15:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438786AbgJUTpV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Oct 2020 15:45:21 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B2EC0613CE
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 12:45:21 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p5so4980758ejj.2
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 12:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vK9ss8MeUQvX1scGiGwfXticAesjqQKBtNGkqG2qcrE=;
-        b=cymAI3DaSpVftgKY+Zsk8ShmzIBDw3B+40JXGenrKT6Wab5cpqbuUrst2/EJ1tLIFI
-         JuaVYQvqTZ7zu5kBMF7PxOO5hbU6nuDV7pLnTm/76vhYjJWy9eDZwEKBnJz43P7+SFYr
-         /HkfAciTdyP9pteRowq6CObFZy7UEDqdD6pzqbp0BDVKLeo75SEJFl2LKdLYB/Z0d4Dc
-         TWdGIn2BOe1TCFnkXYIKfXreDYAzYN+uzT9gic82ZDgs4sbOpxDKa7HURwSRkd6C9CEw
-         mR38J6X5SJaY6aOBsDtAgRNyXt2T/U7BuM69wbaoFxQE1nOuanna377VQt0cOitk59mK
-         difA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vK9ss8MeUQvX1scGiGwfXticAesjqQKBtNGkqG2qcrE=;
-        b=gbttjVWrh1X44CK4SJaiwRZmlNlc9MeRbawf0APHaz+/12yi5tV8OXVimAHCttisWp
-         ngbrul7pXlydDSFr8tVb0sHqywb8WaD2RgP2WIeExMhN/9kRzNolpePuYyrjujgcV4Hf
-         zmgQxrK8981FDfSKULddxQJwbT9r+xq0SiJzZNtUs1TINfZCKZqwkec/G+42xDOYl6/g
-         1cr0x6tR725xrqGzf7syoDr/FQN5xV0RGl5QTMy/ptUHlRVTCkiNXBmvqIT4mNV/ewLX
-         ERntTtWLYGc9/hns+REwD5vkNklAzLHd3NKKemAiryXGERiR4ZLUX00JiAcxA41CIGg9
-         8g1Q==
-X-Gm-Message-State: AOAM532pp7KpYJUFgdXxEFUGfPJg0X33YQdmqLnlEiyXnMQ/u3kPC+jH
-        5nfYD8hphlAmszz48DeSJ0MTQL0DiqzcCxZYiPc=
-X-Google-Smtp-Source: ABdhPJyU+1p7qgHJgxzTb85q7/xvgCHbjzFhbc9xW8MhG5WiWdNh3LMlqgsgtrTR8ZCBWDEpQqRe+FbMXmgsgTAB6Ck=
-X-Received: by 2002:a17:906:14d:: with SMTP id 13mr5097677ejh.516.1603309518770;
- Wed, 21 Oct 2020 12:45:18 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a05:6402:d9:0:0:0:0 with HTTP; Wed, 21 Oct 2020 12:45:18
- -0700 (PDT)
-Reply-To: mfdp@tlen.pl
-From:   Mr Bill T Winters <hs8qfc11@gmail.com>
-Date:   Wed, 21 Oct 2020 12:45:18 -0700
-Message-ID: <CAJWArj4gBBYET0rTbwn+4QEkVW=UMveYgDoxtofKZkd4MZUdDg@mail.gmail.com>
-Subject: Good Morning!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S2507138AbgJUXjU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Oct 2020 19:39:20 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:45155 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439511AbgJUXjU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Oct 2020 19:39:20 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id BFE525C0601;
+        Wed, 21 Oct 2020 19:39:18 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Wed, 21 Oct 2020 19:39:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=KxHx0Z0PGBQzSx/sSWx4LOYQ1A63VNA
+        Y03C08nAGQgo=; b=A9UzhIFJIZu+1lp/W2zH5Iihyss26kn1j8ajLMnM0cej9yX
+        Oji0WUY1ayc7JppzPzDTp/LoFa6QGxw6wpmzIXvxINno7deGLtTnTXOGOl6bGEI0
+        QK6K4BHsFKSP7xsoTil3Srf1IQ931ZG8+XQojKKB/090FJPVvPqFCT/jMJkEmUPZ
+        TdPz5zT66hhiIS2+43CnWltQaB5mEftJ5MI2uqK30c64mfkbXzFjOvx/aE/bC/zr
+        8AOX0ymiD57QXMjkndo6CEGGypAcwmCzsyrHCrZDX/gJVmyIeOG7v0ldkpIQmUC8
+        nNRTi+aLwpkJe/yiypHp2wozVQbwTrykmrnpseQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KxHx0Z
+        0PGBQzSx/sSWx4LOYQ1A63VNAY03C08nAGQgo=; b=NQbJQb9uJDLbzlgDXN9Sx4
+        csLwy/VznH3pgG/gONqNU78ZLZ0nytSut+uzLfV0KJIakO+y/flLbgTJmJv7agaN
+        eE9EGfy5UIdmZx902SGRzTn7pHLgSsl/HkxpFffxFj7lakKmzUi/1tuNRtysON+7
+        cpSKVhzFjbHzohqf0Zk9L7yuNMXyVx742Gfui5UQgAHcgjzwKF2YPKnhV0AUTbrA
+        QTq2HA44rQ6CUJKTbb1r3hIkh43bpuHDVYCEtxLbmSjZMgwHVFfj/ao7K+okkQ02
+        4LUb6OrGEk4KvImOZiTWMYRvhK7ofGK5dX1UX8t2Z0NrlQA0AGkBnMO5dZWT1p9A
+        ==
+X-ME-Sender: <xms:pMaQX27oCqlQG3Vn-0iw08kZQrXtTLeUAXMYDOxc-5e5F-XdNOcI9A>
+    <xme:pMaQX_7m1bdwG_yA8c0BOHvUsvK-6jzdcEW2lNfujDZosQIFeRSfcFoz8R4Ekl4Ot
+    vlUOgHTfdOe-OZXVw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrjeeigddvvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:pMaQX1fmI6E149KCg3pGmXqlBOHQncmHq1fc4P-R3l1GfxKV0Ro5tA>
+    <xmx:pMaQXzKpUuyT53oSafsF01NF-hiaEFs-rTzby_msxU1GD_TZjd3jOQ>
+    <xmx:pMaQX6K6kHXir3o5Z5dKKOOtgdWrziy4u4aBh9lvkCY5h-udVO6MIg>
+    <xmx:psaQXy9F2z6VjByQqGV9xuZKqzTUN1pDvw8QV0QAYhs3tStUYPV9iw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id F042DE00B8; Wed, 21 Oct 2020 19:39:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-502-gfef6c88-fm-20201019.001-gfef6c888
+Mime-Version: 1.0
+Message-Id: <f56ce765-9d94-41b5-bda7-202c165ea8c9@www.fastmail.com>
+In-Reply-To: <20201019045026.10732-1-billy_tsai@aspeedtech.com>
+References: <20201019045026.10732-1-billy_tsai@aspeedtech.com>
+Date:   Thu, 22 Oct 2020 10:08:55 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Billy Tsai" <billy_tsai@aspeedtech.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Tao Ren" <rentao.bupt@gmail.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Cc:     BMC-SW@aspeedtech.com
+Subject: Re: [PATCH] gpio: aspeed: fix ast2600 bank properties
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-I Mr Bill T, did you Receive the (FUND), that was paid to you?
-Let me know with your full name:...  immediately,
 
-Sincerely Yours, Respectfully,
 
-Mr Bill T Winters,
-Group Chief Executive Officer & Executive Director,
+On Mon, 19 Oct 2020, at 15:20, Billy Tsai wrote:
+> GPIO_T is mapped to the most significant byte of input/output mask, and
+> the byte in "output" mask should be 0 because GPIO_T is input only. All
+> the other bits need to be 1 because GPIO_Q/R/S support both input and
+> output modes.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+
+Good catch, thanks Billy.
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
