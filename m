@@ -2,49 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E8FF294A2F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 11:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 206B9294AD2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 11:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbgJUJJp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 05:09:45 -0400
-Received: from mail.intenta.de ([178.249.25.132]:25710 "EHLO mail.intenta.de"
+        id S2441546AbgJUJyD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Oct 2020 05:54:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:58741 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388054AbgJUJJp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Oct 2020 05:09:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=Content-Type:MIME-Version:Message-ID:Subject:CC:To:From:Date; bh=4+JLmSdoZl18TAJEqStnByuocthWGAI7dD34rmmWrqQ=;
-        b=jb4+W+bmAFq2J0HQa5uq/pFOS8gfx6b3xbpwc1timxzXQvl4MSxP80xh91e50wlPV59hYSETkD3VLMUaMrjthn+Khe7yQ6hPaCb15+SElupBU54Gv9gFPXO1BWYyae5TbSEAHqRN8Aem2XDeADdQmCxFbW/lXOaV6T+7yUW2toOGj5OpNNrbgpu9rpO5Qwg/rvXNYItivIbZFDOFS5AIylU4q3eiZsl5+j0TvlmQNgeufw05oCzmbYibwFam4gt1e88z4CrPLgEf6wEo/1khx83I2TuQjwlKwXdR0Sm8W8CVRjLwF+E0bEc8eGXkSpmjUV2dLOXmIW6VAbcU2L7Gbw==;
-Date:   Wed, 21 Oct 2020 11:09:40 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     <linux-gpio@vger.kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>
-Subject: Why is the /dev/gpiochip line event kfifo so small?
-Message-ID: <20201021090938.GA13202@laureti-dev>
+        id S2441545AbgJUJyC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Oct 2020 05:54:02 -0400
+IronPort-SDR: c7CTpq8I6VOb3AyqcxrQujdY7xx12RZXwd0KD1BYV7wLmpNlsA6RrfeVvC3Eks4UztZ31K6YNN
+ lVTKQfTQL77w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9780"; a="228967259"
+X-IronPort-AV: E=Sophos;i="5.77,401,1596524400"; 
+   d="scan'208";a="228967259"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 02:54:00 -0700
+IronPort-SDR: MefIALYdM/TDSR+jO1AAcwrRK3YBtCLuhdXidGZAVwBoA1e+cvlD7D+Q68hgNy+HYWJG4TGU1N
+ /ZLHJCu05DWQ==
+X-IronPort-AV: E=Sophos;i="5.77,401,1596524400"; 
+   d="scan'208";a="348247441"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 02:53:58 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 21 Oct 2020 12:51:44 +0300
+Date:   Wed, 21 Oct 2020 12:51:44 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jamie McClymont <jamie@kwiius.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: intel: Fix 2 kOhm bias which is 833 Ohm
+Message-ID: <20201021095144.GT2495@lahna.fi.intel.com>
+References: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+In-Reply-To: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Wed, Oct 14, 2020 at 01:46:37PM +0300, Andy Shevchenko wrote:
+> 2 kOhm bias was never an option in Intel GPIO hardware, the available
+> matrix is:
+> 
+> 	000	none
+> 	001	1 kOhm (if available)
+> 	010	5 kOhm
+> 	100	20 kOhm
+> 
+> As easy to get the 3 resistors are gated separately and according to
+> parallel circuits calculations we may get combinations of the above where
+> the result is always strictly less than minimal resistance. Hence,
+> additional values can be:
+> 
+> 	011	~833.3 Ohm
+> 	101	~952.4 Ohm
+> 	110	~4 kOhm
+> 	111	~800 Ohm
+> 
+> That said, convert TERM definitions to be the bit masks to reflect the above.
+> 
+> While at it, enable the same setting for pull down case.
+> 
+> Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
+> Cc: Jamie McClymont <jamie@kwiius.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I was looking into using the /dev/gpiochip API to detect pulses. In my
-application, the crucial bit is to precisely identify the start time of
-the pule and the API mostly helps doing that by providing high precision
-kernel timestamps. However, it stuffs them into a kfifo with 16 entries.
-When your hardware is not properly debounced (which it always should,
-but often isn't), that space can fill quickly. Is there a reason to
-limit the API to such a small number of events?
-
-A single event is 16 bytes. So for every line, we incur 256 bytes of
-kfifo space. This space is only incurred for lines that are actually
-being watched. It seems to me that bumping up this size would not hurt
-badly. Non-realtime applications could then read events after-the-fact
-with a smaller risk of missing ones. I've encountered a full kfifo a
-number of times now.
-
-Helmut
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
