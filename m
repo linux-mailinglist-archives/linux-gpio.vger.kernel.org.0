@@ -2,100 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CF6C294BC2
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 13:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4112E294BC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 13:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439418AbgJULZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 07:25:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:60906 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439368AbgJULZz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Oct 2020 07:25:55 -0400
-IronPort-SDR: YQVLS7GzhhQPrZt5WIp36JYXk+RDByn16JYTTLzGn+CUe7lzc3ud7zsEnOFFZTIi502cNa7lKl
- kB64VH621//g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9780"; a="185005230"
-X-IronPort-AV: E=Sophos;i="5.77,401,1596524400"; 
-   d="scan'208";a="185005230"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 04:25:40 -0700
-IronPort-SDR: UE5o6qBCZ8On0v8nuCwRLzP7+SJ2mNHw1Dwot5RZV2n1MwRweX0c6cGEhbq/cUAeQyArGymN4g
- ZrDpCpOpq+AQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,401,1596524400"; 
-   d="scan'208";a="522713303"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Oct 2020 04:25:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 17CB75B; Wed, 21 Oct 2020 14:25:38 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] gpiolib: split error path in gpiod_request_commit()
-Date:   Wed, 21 Oct 2020 14:25:37 +0300
-Message-Id: <20201021112537.40738-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201021112537.40738-1-andriy.shevchenko@linux.intel.com>
-References: <20201021112537.40738-1-andriy.shevchenko@linux.intel.com>
+        id S2439384AbgJUL11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Oct 2020 07:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439421AbgJUL1Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Oct 2020 07:27:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A34DC0613CE
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 04:27:24 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l2so985750pjt.5
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 04:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1csRWgxZVDHQ05kiLJgmNDUfa3LsWHB7oDZvtkWY7TY=;
+        b=tmp141bsyhd84nmSdDXwDjnAYUZXm67p7b8m4ccmuIBGA4l0Xh3I92TpNaAAakV/kR
+         /UHEhSy6zLkQRdqHcP0kCRfdHn6EGtd57XEzeQCNgNLIwXrxkLckeHBKhp+G/T6tAEer
+         /RVnnFjYB0G3ARjtrOYp0e5fF9E11PPAFn1GIOAkEMStJ+Zdbi1/XFujnkv6NQRkFrkQ
+         qw+X3Uh2PiX5+zxPF2xVW2AasEVDTLubHaODKqE9xLJqJiF3C4Qp/DO8juzCuMc9vwRM
+         nDyOkOAR17y0fnN9WHvOWFumViPoAOhTdohv0vbn+Ggv2BykH+klDR2IrOYHEQs/0s5d
+         ymuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1csRWgxZVDHQ05kiLJgmNDUfa3LsWHB7oDZvtkWY7TY=;
+        b=ASuJp744yWnH8diyhAqFlrh3I7TkKWhhP3OFzUHapmudLEfk1Nerir7fOItmedmoC6
+         Pt4xORYun9dGCxOJ5oSBOWxTJg6265P1sjMeK1DjegYGaQdXVnlv06afkCkXAhoF03Ox
+         1N/o31yk9kBvg/+yCzwvGukAdhXwhHoPDDONF+LoEPiJhwF5NK4cpnuy2EgMx/KRDp/b
+         9sVe/Mm3VNFfpxWY9i4EzvyND1C1tEpgFvJYoJ1xASKwrXNyZjHwHAtbUW8Cmye8SGm4
+         r1ppNBg2fJ+qbRhDlibkMYV6r6bnLHz38zVOgS//YYwIk0qmfYhdbdlMUu09X+I/+/1N
+         y6KA==
+X-Gm-Message-State: AOAM5321OH3gvqa7WoshfrN9D1ZyEGLjfN5G2EcR8sWAzzEwNT8bzRoQ
+        lKi8ty0Rr8Rp+uK4RAvsQ9pKohM38r/emg==
+X-Google-Smtp-Source: ABdhPJxnVq83/SXHN/XV06+z4a8C678tClYJny4xOg3YAO5PYT7e9L6Z8Or31RxI/pwMGbWLJUoEHQ==
+X-Received: by 2002:a17:902:c395:b029:d3:f156:ef0c with SMTP id g21-20020a170902c395b02900d3f156ef0cmr3287847plg.55.1603279643412;
+        Wed, 21 Oct 2020 04:27:23 -0700 (PDT)
+Received: from sol (106-69-190-250.dyn.iinet.net.au. [106.69.190.250])
+        by smtp.gmail.com with ESMTPSA id f204sm2238643pfa.189.2020.10.21.04.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2020 04:27:22 -0700 (PDT)
+Date:   Wed, 21 Oct 2020 19:27:18 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Helmut Grohne <helmut.grohne@intenta.de>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: Why is the /dev/gpiochip line event kfifo so small?
+Message-ID: <20201021112718.GA26073@sol>
+References: <20201021090938.GA13202@laureti-dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201021090938.GA13202@laureti-dev>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For better maintenance and micro optimization split error path
-in the gpiod_request_commit().
+On Wed, Oct 21, 2020 at 11:09:40AM +0200, Helmut Grohne wrote:
+> Hi,
+> 
+> I was looking into using the /dev/gpiochip API to detect pulses. In my
+> application, the crucial bit is to precisely identify the start time of
+> the pule and the API mostly helps doing that by providing high precision
+> kernel timestamps. However, it stuffs them into a kfifo with 16 entries.
+> When your hardware is not properly debounced (which it always should,
+> but often isn't), that space can fill quickly. Is there a reason to
+> limit the API to such a small number of events?
+> 
+> A single event is 16 bytes. So for every line, we incur 256 bytes of
+> kfifo space. This space is only incurred for lines that are actually
+> being watched. It seems to me that bumping up this size would not hurt
+> badly. Non-realtime applications could then read events after-the-fact
+> with a smaller risk of missing ones. I've encountered a full kfifo a
+> number of times now.
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Debounce support is added in GPIO uAPI v2, as is configurable event buffer
+size. And sequence numbers in events to help detect buffer overflows.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 0e6dddce207d..43ddcf454b5f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1968,11 +1968,9 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 
- 	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
- 		desc_set_label(desc, label ? : "?");
--		ret = 0;
- 	} else {
--		kfree_const(label);
- 		ret = -EBUSY;
--		goto done;
-+		goto out_free_unlock;
- 	}
- 
- 	if (gc->request) {
-@@ -1987,9 +1985,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 
- 		if (ret) {
- 			desc_set_label(desc, NULL);
--			kfree_const(label);
- 			clear_bit(FLAG_REQUESTED, &desc->flags);
--			goto done;
-+			goto out_free_unlock;
- 		}
- 	}
- 	if (gc->get_direction) {
-@@ -1998,8 +1995,12 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 		gpiod_get_direction(desc);
- 		spin_lock_irqsave(&gpio_lock, flags);
- 	}
--done:
- 	spin_unlock_irqrestore(&gpio_lock, flags);
-+	return 0;
-+
-+out_free_unlock:
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+	kfree_const(label);
- 	return ret;
- }
- 
--- 
-2.28.0
+Btw, uAPI v2 is currently in train to be included in Linux v5.10.
+
+Cheers,
+Kent.
 
