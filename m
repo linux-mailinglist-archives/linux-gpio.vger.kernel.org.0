@@ -2,83 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D37294EE3
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 16:39:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AC57294FAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Oct 2020 17:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443023AbgJUOjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 10:39:37 -0400
-Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:37426 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442066AbgJUOjh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Oct 2020 10:39:37 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 0EF1887066B9;
-        Wed, 21 Oct 2020 14:39:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:967:968:973:988:989:1260:1263:1277:1311:1313:1314:1345:1359:1431:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2525:2553:2560:2563:2682:2685:2828:2859:2902:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3352:3622:3770:3865:3866:3867:3868:3872:3873:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:4362:5007:7875:7903:8828:9025:9121:10004:10394:10400:10848:11232:11233:11257:11658:11914:12043:12048:12262:12297:12438:12555:12679:12740:12760:12783:12895:12986:13069:13311:13357:13439:13846:14096:14097:14180:14181:14659:14721:14849:21080:21324:21365:21451:21611:21627:21740:21789:21939:30054:30083:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: joke73_430d3d127249
-X-Filterd-Recvd-Size: 2611
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 21 Oct 2020 14:39:34 +0000 (UTC)
-Message-ID: <42c1d07d46655f622c081f45b68ccaffba7361a1.camel@perches.com>
-Subject: Re: [PATCH] gpio: bd70528: remove unneeded break
-From:   Joe Perches <joe@perches.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "apw@canonical.com" <apw@canonical.com>
-Date:   Wed, 21 Oct 2020 07:39:33 -0700
-In-Reply-To: <db6856d5431aac3ff56cd3817312d204c41cf7d0.camel@fi.rohmeurope.com>
-References: <20201019193353.13066-1-trix@redhat.com>
-         <5b13773306265f89366b86afba71d2b4a4130e2b.camel@fi.rohmeurope.com>
-         <0738b0cc482cfd07400cf8b0b0b2092e671cfb34.camel@fi.rohmeurope.com>
-         <b435953eed76b9247a4b1dab88f268afe76ff470.camel@perches.com>
-         <db6856d5431aac3ff56cd3817312d204c41cf7d0.camel@fi.rohmeurope.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        id S2501917AbgJUPOh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Oct 2020 11:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2501892AbgJUPOg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Oct 2020 11:14:36 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1582AC0613CE
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 08:14:35 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id j8so2904264ilk.0
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Oct 2020 08:14:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rnHqLJWbLT0KWePjL4h1yJ3m/KR9l6S1R6Kyzqcb85w=;
+        b=ADGW0ji2vJ3YUQiqDJnsPcbeeeM/we0SrYD4gBHOncx4aArwEPR4Mt3PW4wzHCH9hM
+         uMgAzzemBrUJNpBRIeDJpB9x5knP5EFV+/0CXdcxKhtcbXAK9ek0p7Aa/CP6FYQgq0Pu
+         IF5NtuJ/zYBUCnkMMa1Nb0stMlmJY1pSp9EI3fVQ75wSeGfbE2pK6oXPHkRA7LWXnwmd
+         HWC9tG5AAUZW8PwubA8EzzfNpY24yaDANZaSiKr9S6VngGmYwS0oNe3Z8KBF7d8+T+cA
+         zAo8GCFIWSVGKM1ikFLjfYlXsNZfktqqKLBp3GCnrQwSZNsV5sFo0BdCx2xXEtJ90FwO
+         vsng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rnHqLJWbLT0KWePjL4h1yJ3m/KR9l6S1R6Kyzqcb85w=;
+        b=VxL6wlhFS3eT8hsRobItPmTkGnqHILtDKN+RVDTy4nT/FsMHtowujvXtDHnc9HWh4L
+         w0H28xQYIJXjWubhWPOdcZHDo8f5xBrr/3grGoFqsO6phOdIEgECtVnPige9O5zfUydG
+         mzAu3VP4hpSzHQQ283b7LQuFz2N7Y03D7lrdMBlAxw3IRhlihNRGSU5Cd2mrOjl+r4Hn
+         sv2RytVAr+4g38F8+2rdXlEe18s7BJtFww0LKyrMGZ8nuhZUbRxSYbr1gs2u9EvILV6d
+         GxvoU0S7zeGLYAUmlYGscsz+0ZdbCo6TOr+xyf17NkbtlUY5r5dG9xKp9du1Vlz1Xvkj
+         sEcQ==
+X-Gm-Message-State: AOAM5335R4MxH5jdRIu0pnGVpD1sgVodEOO+E1DqjToSD/cRgMza8t2J
+        9upxeTxl90GXrCvQ6wNWCQhx71GDte8GASN6eTR00w==
+X-Google-Smtp-Source: ABdhPJxCJp/xGL4PXgAfQKnKU+gmNk27qvIIvy3k1BSrOiyjn6SSfzwns3A0UyAWrWConnrKBUnt9iKGnooL377SSjs=
+X-Received: by 2002:a92:1952:: with SMTP id e18mr2824164ilm.189.1603293274347;
+ Wed, 21 Oct 2020 08:14:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20201015083805.GA10354@laureti-dev> <CAMRc=Md=ZeKLS-SKKgmq+V9VCt+7xdjNiwz89Ms-vOeTcwZBOw@mail.gmail.com>
+ <20201015093526.GA10891@laureti-dev> <CAMRc=McpnnK9NydujR=YRuy0ZBLhQqz3SSZ5eeisjqhMPUbMhA@mail.gmail.com>
+ <20201015105718.GA11027@laureti-dev> <CAMRc=MdWi94uzYb6OprmVoGnfmSHUCevqAPPgXOPHQNVrj0jfQ@mail.gmail.com>
+ <20201015121312.GA7166@laureti-dev> <CAMRc=McApWaCy8kUWurjZByN9vKqw8kZBwNVBtVXXf6-b3PsLg@mail.gmail.com>
+ <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
+In-Reply-To: <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 21 Oct 2020 17:14:23 +0200
+Message-ID: <CAMRc=MdEQqOryuEW06XhKvfzcYYMFxGOsT0sRg460ZAkD9G8FA@mail.gmail.com>
+Subject: Re: [libgpiod] cxx bindings: time_point vs duration
+To:     Jack Winch <sunt.un.morcov@gmail.com>
+Cc:     Helmut Grohne <helmut.grohne@intenta.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartekgola@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2020-10-21 at 07:25 +0000, Vaittinen, Matti wrote:
-> Hello Joe & All,
-> On Tue, 2020-10-20 at 11:36 -0700, Joe Perches wrote:
-> > On Tue, 2020-10-20 at 11:48 +0000, Vaittinen, Matti wrote:
-[]
-> > > And for peeps who have not been following - following function
-> > > triggers the checkpatch error above:
-> > 
-> > Huh?  what version of checkpatch are you using?
-> > Send it to me please.
-[]
-> Please find my version of checkpatch and the patch to trigger the
-> warning attached.
+On Wed, Oct 21, 2020 at 3:57 PM Jack Winch <sunt.un.morcov@gmail.com> wrote:
+>
+> Hello Folks,
+>
+> Me again.  I'm a bit late on this discussion, but wanted to raise a
+> couple of points on what's been discussed here.
+>
+> > As far as I can see, the chip class uses the pimpl pattern, so a chip
+> > practically is a reference counted pointer to the actual gpiod_chip.
+>
+> This has absolutely nothing to do with the PImpl pattern.  The
+> Pointer-to-Implementation pattern is about separating class interface
+> from implementation, in order to partially alleviate the absolute
+> nightmare of managing ABI compatibility for shared libraries which
+> expose a C++ interface.
+>
+> One of the questions I was going to raise on a separate thread,
+> Bartosz and Kent, was if you care about ABI compatibility for major
+> versions of the libgpiod API?  This is because, currently, almost all
+> changes to the C++ binding will result in an ABI breakage.
+>
 
-Thanks.  This test wasn't particularly useful
-(and had some false positives) and was removed by
+Yes, I am aware of this. We broke ABI in the core library once already
+- this is why libgpiod API version v1.6.0 has ABI version 2.2.1. I
+personally care a lot more about API compatibility than ABI - I'm
+mostly using libgpiod on bespoke embedded distros, built from scratch.
+I know this is important for desktop distros though so I try to avoid
+it whenever possible. This time however we'll be breaking both API and
+ABI, so that's not an issue - it really is a major release.
 
-commit ef3c005c0eb07a60949191bc6ee407d5f43cc502
-Author: Joe Perches <joe@perches.com>
-Date:   Tue Aug 11 18:35:19 2020 -0700
+> Exposing public C++ interfaces from shared libraries is never really a
+> good idea, even if ABI compatibility is properly managed and
+> considered at the forefront of each development cycle.  Granted, this
+> is more troublesome on that other major mainstream OS, but you still
+> face plenty of issues with this on GNU / Linux too.
+>
+> If so desired, I can start another thread on this topic.
+>
 
-    checkpatch: remove missing switch/case break test
-    
-    This test doesn't work well and newer compilers are much better
-    at emitting this warning.
-    
-    Signed-off-by: Joe Perches <joe@perches.com>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Cc: Cambda Zhu <cambda@linux.alibaba.com>
-    Link: http://lkml.kernel.org/r/7e25090c79f6a69d502ab8219863300790192fe2.camel@perches.com
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Yes, please. I'd love to learn what the alternative for C++ is then.
 
+> > I don't thing nanosecond resolution is
+> > guarantueed, but maybe this is good enough and you can just use
+> > steady_clock? That would certainly be most welcome by consuming client
+> > code.
+>
+> You are correct - nanosecond resolution is not guaranteed.  It is
+> completely up to the standard library implementation.  Which is why I,
+> personally, would steer away from making the proposed change to struct
+> line_event .  The timestamp resolution is currently well defined in
+> the existing implementation and changing this may not be desirable for
+> users.  If you really want a std::time_point, then you can construct
+> one from a std::duration object.  See
+> https://en.cppreference.com/w/cpp/chrono/time_point/time_point.
+>
+> Jack
 
+Maybe a time_point returning helper in this case?
+
+Bartosz
