@@ -2,76 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 782B32962A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 18:26:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A663429632F
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 18:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896989AbgJVQ00 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Oct 2020 12:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896986AbgJVQ00 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Oct 2020 12:26:26 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0799CC0613CE
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Oct 2020 09:26:25 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id l2so1235571pjt.5
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Oct 2020 09:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=fKNuFz0tzESvWOS3N0ECBXIENv0ncOLksuDyae91gxo=;
-        b=eIuwhwNM7/e6g2lJH2p1JSxYRXMyrZuDb/uoVl4JiTJqYc3ZV5zFgjfrMbPGUPf0EQ
-         Q7ZDh+BF+qat1f19gMVKn5kn9ze4WWPIReyqIR73+YK06h0MrF65dK/pktL4RJagsNB1
-         9VccngiFNAeKKLLc5z1HX0qesGO8Mt+ZRycDFRR1hoSzf4CMILS11C7Mzo2kM1Yy1GI3
-         A+Brup7pgZQkRwuVQ7neUlbWs/QpTFsep14bfA3IjtOnTgg6G0CHmkRXVzkl/3VL4eRi
-         CS3wt0wonOJCKyfZapZDeBvJ7v3aKiIuvab7VQQ53kWUG/qvAPUcTqkIahjWf7sotpR9
-         80PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=fKNuFz0tzESvWOS3N0ECBXIENv0ncOLksuDyae91gxo=;
-        b=oEAt4F1NM/e59Rnwb+Wqd+TJE2eCjkrfRJ+XtnM+0T6ij43g4joCikXtLogtqgNqSC
-         kBYmbz9UoW2kGEUDQBhFONXJLcNsj6RQkELV+0VIDPkquVawcTkCOJ5aSaD4tsxSGAmW
-         ucjPMTs8FNNGKTkDUbpRDp20uECa9SrS9tWEUe0kfRJchHytTntMjPK+54y0S9xk4DMB
-         pHxzDQgJ5bF6tV5WH/gvSeyfkr3NrpcWmQiFInAKIrMUe6v6PEkx+nwJbD/JopWqzQjX
-         TU4Hfyx3URPnMEy8JM0YErk72bpQkL/+N55NSByvPLhbweEL9g3ZU/wx7Llg0WjXyApm
-         YhDQ==
-X-Gm-Message-State: AOAM531FIhIGJHK2BDL3NpifGcVnw12uwwwLaln0OiKHTdl7iRpxvtsM
-        urptTinJUADKgR7XyA2Hk/nnvmTP94EQNhg77yX4DL7hDPp3cQ==
-X-Google-Smtp-Source: ABdhPJxX5bh5a87MVuRIM3JKmD4CRme9x+VijnusIPyvkQtmP9ywNmm12B7AimtEJ9kc7dWIOAcyOWGkgizrAJ4xcqo=
-X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
- m8-20020a1709026bc8b02900d60d9df28cmr3115440plt.17.1603383983916; Thu, 22 Oct
- 2020 09:26:23 -0700 (PDT)
-MIME-Version: 1.0
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 22 Oct 2020 19:27:13 +0300
-Message-ID: <CAHp75Veqdv8JnASmmsnv9AmrktByWH3R7Z36wLMyjJh0VffExw@mail.gmail.com>
-Subject: Is consumer documentation correct?
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexandre Courbot <gnurou@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S2898354AbgJVQ6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Oct 2020 12:58:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37596 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2898332AbgJVQ6w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Oct 2020 12:58:52 -0400
+IronPort-SDR: 5PbWAhRnY7yPgGn2oFGwRnERnVEKR5tAyujciDuIunREo/vKiavAFGymTptwMcxPzf5MCa8yJa
+ 863zi4HcRaBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9782"; a="147419167"
+X-IronPort-AV: E=Sophos;i="5.77,404,1596524400"; 
+   d="scan'208";a="147419167"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2020 09:58:51 -0700
+IronPort-SDR: GRdVEzrArwNe3Ss4Y8d2f3vESqd7eArs0f9yMHb9jJYm/lDiS4moaLcQib9gFaAH0D9PPUAZbw
+ GOMiVJjW7bHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,404,1596524400"; 
+   d="scan'208";a="321440180"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2020 09:58:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EEE14B8; Thu, 22 Oct 2020 19:58:48 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-gpio@vger.kernel.org, Linus@black.fi.intel.com,
+        Walleij@black.fi.intel.com, linus.walleij@linaro.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jamie McClymont <jamie@kwiius.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 1/3] gpiolib: acpi: Respect bias settings for GpioInt() resource
+Date:   Thu, 22 Oct 2020 19:58:45 +0300
+Message-Id: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi!
+In some cases the GpioInt() resource is coming with bias settings
+which may affect system functioning. Respect bias settings for
+GpioInt() resource by calling acpi_gpio_update_gpiod_*flags() API
+in acpi_dev_gpio_irq_get().
 
-It _seems_ between
-  79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
-and
-  14e85c0e69d5 ("gpio: remove gpio_descs global array")
-the "Interacting With the Legacy GPIO Subsystem" of GPIO consumer
-interface is correct.
+Reported-by: Jamie McClymont <jamie@kwiius.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+v2: preserved ordering of IRQ map (Hans, Mika), added Rb tag (Mika)
+ drivers/gpio/gpiolib-acpi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-But is it the case afterwards?
-
-Details of the question are here [1].
-
-[1]: https://stackoverflow.com/q/64455505/2511795
-
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 834a12f3219e..3a39e8a93226 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -942,6 +942,7 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
+ 
+ 		if (info.gpioint && idx++ == index) {
+ 			unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
++			enum gpiod_flags dflags = GPIOD_ASIS;
+ 			char label[32];
+ 			int irq;
+ 
+@@ -952,8 +953,11 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
+ 			if (irq < 0)
+ 				return irq;
+ 
++			acpi_gpio_update_gpiod_flags(&dflags, &info);
++			acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
++
+ 			snprintf(label, sizeof(label), "GpioInt() %d", index);
+-			ret = gpiod_configure_flags(desc, label, lflags, info.flags);
++			ret = gpiod_configure_flags(desc, label, lflags, dflags);
+ 			if (ret < 0)
+ 				return ret;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
