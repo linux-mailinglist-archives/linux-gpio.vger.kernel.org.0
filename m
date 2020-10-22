@@ -2,42 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE30A295DF8
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 14:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67DD5295DFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 14:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897833AbgJVMF2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Oct 2020 08:05:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36421 "EHLO
+        id S2897835AbgJVMF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Oct 2020 08:05:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38905 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503373AbgJVMF1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Oct 2020 08:05:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 32so1252610otm.3;
-        Thu, 22 Oct 2020 05:05:27 -0700 (PDT)
+        with ESMTP id S2503373AbgJVMF6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Oct 2020 08:05:58 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i12so1251488ota.5;
+        Thu, 22 Oct 2020 05:05:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Aw9svvfYcue3aKVkE3MHGWBr/KB7sEqHl2Ge/50Qks4=;
-        b=B+qtLenbTBXbUHDNbyjvjVbt94iDvqNOw41VOe1oXdwKP/UYdqGFxrlvYs3Bq45Uat
-         ZO6Y4jLWT6yySAOp/OzvpBSFg3DKv6kJOUiGdVnumGR58CraFHOvKFmaHrU+fUpHMKB8
-         qLNNsvmukaByA3gt73MGRQRp/I2XrrkTos+z3EAafdxcpvYnyonZTXPJBLu17SjCXYHG
-         Ip7GzAK6BizndZWOgqWv4kfWlX6VscpxwivmZSmnKn9fRZdAsmwA+CUJdaM1qyrkvO9C
-         tN8ad2gIp4+7/380L9eU7CXsMZwYNl0nJjulruYq1IEZ+YZtZeYuzR1fV+HS6Dhu8tO0
-         I27Q==
-X-Gm-Message-State: AOAM532aePDcK4mKID1KpI7y/onDqA6hVkF24uqm3L8hYikEtaw/waTg
-        b3VmHB9mQy75cmQfQMf3UGzILbzaSyWQydv5SDK8aC8u
-X-Google-Smtp-Source: ABdhPJzfDjCACQIXaBB7HY3OjzcwzsHPTUn4GqZL8gbOXcStsr4RNfDdorfdB3bu1FZR/tBtwqRlss2OQ00c+eibLGY=
-X-Received: by 2002:a9d:3b76:: with SMTP id z109mr1695082otb.250.1603368326819;
- Thu, 22 Oct 2020 05:05:26 -0700 (PDT)
+        bh=zXsf0JzowlWQk9Peu1meNL0npoiLDdl2GFMGp+hpMac=;
+        b=X0X8FFjwbbPNJvUfzVUn/Pnfg8zfc04R/fzZ5XgGuxBPvJvR72NxunXuaOPcrmj7rl
+         nt1WPxVAF8eHjUG2KgI6edtiS45j9Q0gW7w2BbARZTWtAXYvNasAmzKD4zq19p1ev+Sk
+         J1Jy3nB4+pIbb37i+pWYW8+NUW6TmPeJ2Dw6vMrjzla8FlZud/mej4LWRYmli8Q1hR6x
+         69lpJtfLDqk3zM2KzaS9rGlpZdpYpYd03JU1dDZh+Inn+sKrp0SArpo7kHwJLowZNZ1y
+         wcpsTljAWn6ikrE/l8Bsrae4/wt5uwRtPe10GnGF1lkJ9glS1avcnVaWIEU7y2j/7JlN
+         g1fw==
+X-Gm-Message-State: AOAM532CwMW05WxgZ2fyLYzIlFp2k5dcTwAaiNfxmBYebqaj039KbTlb
+        f1wYUvJy6BN0NUe6i5pW51sNY5K1/F6tnHT0lqM=
+X-Google-Smtp-Source: ABdhPJwlPm2VHQBnj+yovSxRVMdYueLPhgujOassdHBx6ya7L/wFoK/oDT5PgjvHXntC+177153T5zMpaz6gdf2aTcs=
+X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr1603488otc.145.1603368357392;
+ Thu, 22 Oct 2020 05:05:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201019124258.4574-1-biju.das.jz@bp.renesas.com>
- <20201019124258.4574-5-biju.das.jz@bp.renesas.com> <CAMuHMdXJ3TxDdge8juLMS7ZmWm9f8Z-dxt-CSAD-GjEvFjNE-w@mail.gmail.com>
-In-Reply-To: <CAMuHMdXJ3TxDdge8juLMS7ZmWm9f8Z-dxt-CSAD-GjEvFjNE-w@mail.gmail.com>
+References: <20201019124258.4574-1-biju.das.jz@bp.renesas.com> <20201019124258.4574-6-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20201019124258.4574-6-biju.das.jz@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 22 Oct 2020 14:05:13 +0200
-Message-ID: <CAMuHMdW4O4+NTC3KkPhb2uFwPOFhdzgpWRXF8zAAMXZFU_ndjA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] pinctrl: renesas: r8a77990: Optimize pinctrl image
- size for R8A774C0
+Date:   Thu, 22 Oct 2020 14:05:45 +0200
+Message-ID: <CAMuHMdXB2+z85nX1OLjaftZZYxYrvuXNhRwdDg39CEXRu6vF0Q@mail.gmail.com>
+Subject: Re: [PATCH 5/6] pinctrl: renesas: r8a7790: Optimize pinctrl image
+ size for R8A7742
 To:     Biju Das <biju.das.jz@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -50,14 +49,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 22, 2020 at 2:04 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Mon, Oct 19, 2020 at 2:43 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > This driver supports both RZ/G2E and R-Car E3(R8A774C0) SoC's.
-> > Optimize pinctrl image size for RZ/G2E, when R-Car E3(R8A774C0) SoC is
+On Mon, Oct 19, 2020 at 2:43 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> This driver supports both RZ/G1H and R-Car H2(R8A7790) SoC's.
+> Optimize pinctrl image size for RZ/G1H, when R-Car H2(R8A7790) SoC is
+> disabled in the shmobile_defconfig.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Ooops, R8A77990, twice. Will fix while applying.
-
-> > disabled in the defconfig.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.11, with comments added to
+the #endifs where appropriate.
 
 Gr{oetje,eeting}s,
 
