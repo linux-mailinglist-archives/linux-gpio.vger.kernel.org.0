@@ -2,89 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1CD229552F
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 01:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D83229587A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 08:39:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507138AbgJUXjU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Oct 2020 19:39:20 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:45155 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439511AbgJUXjU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Oct 2020 19:39:20 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BFE525C0601;
-        Wed, 21 Oct 2020 19:39:18 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Wed, 21 Oct 2020 19:39:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=KxHx0Z0PGBQzSx/sSWx4LOYQ1A63VNA
-        Y03C08nAGQgo=; b=A9UzhIFJIZu+1lp/W2zH5Iihyss26kn1j8ajLMnM0cej9yX
-        Oji0WUY1ayc7JppzPzDTp/LoFa6QGxw6wpmzIXvxINno7deGLtTnTXOGOl6bGEI0
-        QK6K4BHsFKSP7xsoTil3Srf1IQ931ZG8+XQojKKB/090FJPVvPqFCT/jMJkEmUPZ
-        TdPz5zT66hhiIS2+43CnWltQaB5mEftJ5MI2uqK30c64mfkbXzFjOvx/aE/bC/zr
-        8AOX0ymiD57QXMjkndo6CEGGypAcwmCzsyrHCrZDX/gJVmyIeOG7v0ldkpIQmUC8
-        nNRTi+aLwpkJe/yiypHp2wozVQbwTrykmrnpseQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KxHx0Z
-        0PGBQzSx/sSWx4LOYQ1A63VNAY03C08nAGQgo=; b=NQbJQb9uJDLbzlgDXN9Sx4
-        csLwy/VznH3pgG/gONqNU78ZLZ0nytSut+uzLfV0KJIakO+y/flLbgTJmJv7agaN
-        eE9EGfy5UIdmZx902SGRzTn7pHLgSsl/HkxpFffxFj7lakKmzUi/1tuNRtysON+7
-        cpSKVhzFjbHzohqf0Zk9L7yuNMXyVx742Gfui5UQgAHcgjzwKF2YPKnhV0AUTbrA
-        QTq2HA44rQ6CUJKTbb1r3hIkh43bpuHDVYCEtxLbmSjZMgwHVFfj/ao7K+okkQ02
-        4LUb6OrGEk4KvImOZiTWMYRvhK7ofGK5dX1UX8t2Z0NrlQA0AGkBnMO5dZWT1p9A
-        ==
-X-ME-Sender: <xms:pMaQX27oCqlQG3Vn-0iw08kZQrXtTLeUAXMYDOxc-5e5F-XdNOcI9A>
-    <xme:pMaQX_7m1bdwG_yA8c0BOHvUsvK-6jzdcEW2lNfujDZosQIFeRSfcFoz8R4Ekl4Ot
-    vlUOgHTfdOe-OZXVw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrjeeigddvvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
-    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
-    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:pMaQX1fmI6E149KCg3pGmXqlBOHQncmHq1fc4P-R3l1GfxKV0Ro5tA>
-    <xmx:pMaQXzKpUuyT53oSafsF01NF-hiaEFs-rTzby_msxU1GD_TZjd3jOQ>
-    <xmx:pMaQX6K6kHXir3o5Z5dKKOOtgdWrziy4u4aBh9lvkCY5h-udVO6MIg>
-    <xmx:psaQXy9F2z6VjByQqGV9xuZKqzTUN1pDvw8QV0QAYhs3tStUYPV9iw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id F042DE00B8; Wed, 21 Oct 2020 19:39:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-502-gfef6c88-fm-20201019.001-gfef6c888
-Mime-Version: 1.0
-Message-Id: <f56ce765-9d94-41b5-bda7-202c165ea8c9@www.fastmail.com>
-In-Reply-To: <20201019045026.10732-1-billy_tsai@aspeedtech.com>
-References: <20201019045026.10732-1-billy_tsai@aspeedtech.com>
-Date:   Thu, 22 Oct 2020 10:08:55 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Billy Tsai" <billy_tsai@aspeedtech.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Tao Ren" <rentao.bupt@gmail.com>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Cc:     BMC-SW@aspeedtech.com
-Subject: Re: [PATCH] gpio: aspeed: fix ast2600 bank properties
-Content-Type: text/plain
+        id S2504135AbgJVGjm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Oct 2020 02:39:42 -0400
+Received: from mail.intenta.de ([178.249.25.132]:28333 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437596AbgJVGjm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Oct 2020 02:39:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=8996ju8SvIfN5CY/b28Xp9M7xIW6s37mDv+6kF5R4Wk=;
+        b=vT83YVUrQt1wUUmTAX+/rnt0IHYiXBAc8Hbq7Yq89O2n95D8Yf6ToVyOsKRQkJ1Uc2aJXiWDUMeu3C7dnZCVpqyZFsLQxV0OS69RV27gL/M4vsX9Uitsag9v6HZxf3nfcxguTYTRn71A3udQsf3DBlZKjL98ljSZC/krJtQeoAevKgEORr2AleRD3dpsqPjo3A57qgu5mVjZ/FyJvrMeC4aDrxVFV9CPT3tDcD+PA2m4AQkq0/vJrxfzQXPZsPU/R3mC4PGLLJpijw6qsHjuwp3A+0pSeCW2ugxpqh0kPFz1h0bc+v0O5a5BB6CTx5igMLwlwExnUDoYGYxj56CXCQ==;
+Date:   Thu, 22 Oct 2020 08:39:35 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Jack Winch <sunt.un.morcov@gmail.com>
+CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartekgola@gmail.com>
+Subject: Re: [libgpiod] cxx bindings: time_point vs duration
+Message-ID: <20201022063935.GA23978@laureti-dev>
+References: <20201015083805.GA10354@laureti-dev>
+ <CAMRc=Md=ZeKLS-SKKgmq+V9VCt+7xdjNiwz89Ms-vOeTcwZBOw@mail.gmail.com>
+ <20201015093526.GA10891@laureti-dev>
+ <CAMRc=McpnnK9NydujR=YRuy0ZBLhQqz3SSZ5eeisjqhMPUbMhA@mail.gmail.com>
+ <20201015105718.GA11027@laureti-dev>
+ <CAMRc=MdWi94uzYb6OprmVoGnfmSHUCevqAPPgXOPHQNVrj0jfQ@mail.gmail.com>
+ <20201015121312.GA7166@laureti-dev>
+ <CAMRc=McApWaCy8kUWurjZByN9vKqw8kZBwNVBtVXXf6-b3PsLg@mail.gmail.com>
+ <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On Mon, 19 Oct 2020, at 15:20, Billy Tsai wrote:
-> GPIO_T is mapped to the most significant byte of input/output mask, and
-> the byte in "output" mask should be 0 because GPIO_T is input only. All
-> the other bits need to be 1 because GPIO_Q/R/S support both input and
-> output modes.
+On Wed, Oct 21, 2020 at 03:57:34PM +0200, Jack Winch wrote:
+> > I don't thing nanosecond resolution is
+> > guarantueed, but maybe this is good enough and you can just use
+> > steady_clock? That would certainly be most welcome by consuming client
+> > code.
 > 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> You are correct - nanosecond resolution is not guaranteed.  It is
+> completely up to the standard library implementation.  Which is why I,
+> personally, would steer away from making the proposed change to struct
+> line_event .  The timestamp resolution is currently well defined in
+> the existing implementation and changing this may not be desirable for
+> users.  If you really want a std::time_point, then you can construct
+> one from a std::duration object.  See
+> https://en.cppreference.com/w/cpp/chrono/time_point/time_point.
 
-Good catch, thanks Billy.
+You're arguing that a std::chrono::steady_clock::time_point is not a
+good match due to its undefined ratio. That can be fixed by using a
+clock with a well-defined ratio.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+The key here is that while you can easily convert your duration to a
+time_point, a duration is conceptually the wrong thing to use. The field
+does not contain a duration, but a time_point. Using a clock would give
+the user the ability to compare returned timestamps to the current time
+as the underlying clock provides that functionality.
+
+So regardless of whether steady_clock is the right clock to use here, a
+duration clearly is not. If you are not satisfied with the resolution
+guarantuee of steady_clock, just make your own clock. Doing so results
+in a lot of type safety. For instance, if you accidentally compute a
+difference between a system_clock::time_point and a gpiod timestamp,
+using a duration would just work whereas a time_point would result in a
+compilation failure.
+
+Helmut
