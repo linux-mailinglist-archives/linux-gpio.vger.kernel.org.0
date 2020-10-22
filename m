@@ -2,77 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D83229587A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 08:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 902FF295894
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 08:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504135AbgJVGjm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Oct 2020 02:39:42 -0400
-Received: from mail.intenta.de ([178.249.25.132]:28333 "EHLO mail.intenta.de"
+        id S2440852AbgJVGvr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Oct 2020 02:51:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41133 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437596AbgJVGjm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Oct 2020 02:39:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=8996ju8SvIfN5CY/b28Xp9M7xIW6s37mDv+6kF5R4Wk=;
-        b=vT83YVUrQt1wUUmTAX+/rnt0IHYiXBAc8Hbq7Yq89O2n95D8Yf6ToVyOsKRQkJ1Uc2aJXiWDUMeu3C7dnZCVpqyZFsLQxV0OS69RV27gL/M4vsX9Uitsag9v6HZxf3nfcxguTYTRn71A3udQsf3DBlZKjL98ljSZC/krJtQeoAevKgEORr2AleRD3dpsqPjo3A57qgu5mVjZ/FyJvrMeC4aDrxVFV9CPT3tDcD+PA2m4AQkq0/vJrxfzQXPZsPU/R3mC4PGLLJpijw6qsHjuwp3A+0pSeCW2ugxpqh0kPFz1h0bc+v0O5a5BB6CTx5igMLwlwExnUDoYGYxj56CXCQ==;
-Date:   Thu, 22 Oct 2020 08:39:35 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Jack Winch <sunt.un.morcov@gmail.com>
-CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bartekgola@gmail.com>
-Subject: Re: [libgpiod] cxx bindings: time_point vs duration
-Message-ID: <20201022063935.GA23978@laureti-dev>
-References: <20201015083805.GA10354@laureti-dev>
- <CAMRc=Md=ZeKLS-SKKgmq+V9VCt+7xdjNiwz89Ms-vOeTcwZBOw@mail.gmail.com>
- <20201015093526.GA10891@laureti-dev>
- <CAMRc=McpnnK9NydujR=YRuy0ZBLhQqz3SSZ5eeisjqhMPUbMhA@mail.gmail.com>
- <20201015105718.GA11027@laureti-dev>
- <CAMRc=MdWi94uzYb6OprmVoGnfmSHUCevqAPPgXOPHQNVrj0jfQ@mail.gmail.com>
- <20201015121312.GA7166@laureti-dev>
- <CAMRc=McApWaCy8kUWurjZByN9vKqw8kZBwNVBtVXXf6-b3PsLg@mail.gmail.com>
- <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
+        id S2409800AbgJVGvr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Oct 2020 02:51:47 -0400
+IronPort-SDR: rCNSIOieEwkjkeoSnm6MtMbraraVqW3HrW7IHnC9S948BXqkrU0Tz+NFwh84Utjty6VIwd+qq9
+ KoOmteAeTDMQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="155268543"
+X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
+   d="scan'208";a="155268543"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 23:51:46 -0700
+IronPort-SDR: q2ttoimC2NBnRjqwg1117ZZLJtHDgl8Ua1SYtbc/JZDs0tDn8IRxU1cgMBFLfwapzFsqsQs7jJ
+ zdzujeksZ+Eg==
+X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
+   d="scan'208";a="533830745"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 23:51:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 22 Oct 2020 09:51:41 +0300
+Date:   Thu, 22 Oct 2020 09:51:41 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jamie McClymont <jamie@kwiius.com>
+Subject: Re: [PATCH v1 1/3] gpiolib: acpi: Respect bias settings for
+ GpioInt() resource
+Message-ID: <20201022065141.GH2495@lahna.fi.intel.com>
+References: <20201014133154.30610-1-andriy.shevchenko@linux.intel.com>
+ <20201021095854.GV2495@lahna.fi.intel.com>
+ <20201021163844.GX4077@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFhCfDa7Yy2a9-ddk0nZmNidar_-H_ONTU93Cb+YatcEGy3NbQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+In-Reply-To: <20201021163844.GX4077@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 03:57:34PM +0200, Jack Winch wrote:
-> > I don't thing nanosecond resolution is
-> > guarantueed, but maybe this is good enough and you can just use
-> > steady_clock? That would certainly be most welcome by consuming client
-> > code.
+On Wed, Oct 21, 2020 at 07:38:44PM +0300, Andy Shevchenko wrote:
+> On Wed, Oct 21, 2020 at 12:58:54PM +0300, Mika Westerberg wrote:
+> > On Wed, Oct 14, 2020 at 04:31:52PM +0300, Andy Shevchenko wrote:
+> > > In some cases the GpioInt() resource is coming with bias settings
+> > > which may affect system functioning. Respect bias settings for
+> > > GpioInt() resource by calling acpi_gpio_update_gpiod_*flags() API
+> > > in acpi_dev_gpio_irq_get().
+> > > 
+> > > While at it, refactor to configure flags first and, only when succeeded,
+> > > map the IRQ descriptor.
 > 
-> You are correct - nanosecond resolution is not guaranteed.  It is
-> completely up to the standard library implementation.  Which is why I,
-> personally, would steer away from making the proposed change to struct
-> line_event .  The timestamp resolution is currently well defined in
-> the existing implementation and changing this may not be desirable for
-> users.  If you really want a std::time_point, then you can construct
-> one from a std::duration object.  See
-> https://en.cppreference.com/w/cpp/chrono/time_point/time_point.
+> ...
+> 
+> > > -			irq = gpiod_to_irq(desc);
+> > > -			if (irq < 0)
+> > > -				return irq;
+> > > +			acpi_gpio_update_gpiod_flags(&dflags, &info);
+> > > +			acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
+> > >  
+> > >  			snprintf(label, sizeof(label), "GpioInt() %d", index);
+> > > -			ret = gpiod_configure_flags(desc, label, lflags, info.flags);
+> > > +			ret = gpiod_configure_flags(desc, label, lflags, dflags);
+> > >  			if (ret < 0)
+> > >  				return ret;
+> > >  
+> > > +			irq = gpiod_to_irq(desc);
+> > > +			if (irq < 0)
+> > > +				return irq;
+> > 
+> > Should the above be undone if the conversion here fails?
+> 
+> But wouldn't it be not good if we changed direction, for example, and then
+> change it back? (IRQ requires input, which is safer, right?)
+> 
+> This makes me think what gpiod_to_irq() may do for physical state of the pin.
+> On the brief search it seems there is no side effect on the pin with that
+> function, so, perhaps the original order has that in mind to not shuffle with
+> line if mapping can't be established. But if setting flags fail, we may got
+> into the state which is not equal to the initial one, right?
+> 
+> So, in either case I see no good way to roll back the physical pin state
+> changes. But I can return ordering of the calls in next version.
+> 
+> What do you think?
 
-You're arguing that a std::chrono::steady_clock::time_point is not a
-good match due to its undefined ratio. That can be fixed by using a
-clock with a well-defined ratio.
-
-The key here is that while you can easily convert your duration to a
-time_point, a duration is conceptually the wrong thing to use. The field
-does not contain a duration, but a time_point. Using a clock would give
-the user the ability to compare returned timestamps to the current time
-as the underlying clock provides that functionality.
-
-So regardless of whether steady_clock is the right clock to use here, a
-duration clearly is not. If you are not satisfied with the resolution
-guarantuee of steady_clock, just make your own clock. Doing so results
-in a lot of type safety. For instance, if you accidentally compute a
-difference between a system_clock::time_point and a gpiod timestamp,
-using a duration would just work whereas a time_point would result in a
-compilation failure.
-
-Helmut
+If there is no good way rolling back to the previous state then I think
+this ordering is as good as the original, so up to you :-)
