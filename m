@@ -2,327 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59AC4296218
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 17:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 782B32962A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Oct 2020 18:26:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368944AbgJVP7Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Oct 2020 11:59:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48898 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S368938AbgJVP7Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Oct 2020 11:59:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4021EADF5;
-        Thu, 22 Oct 2020 15:59:21 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 10/10] pwm: Add Raspberry Pi Firmware based PWM bus
-Date:   Thu, 22 Oct 2020 17:58:57 +0200
-Message-Id: <20201022155858.20867-11-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201022155858.20867-1-nsaenzjulienne@suse.de>
-References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
+        id S2896989AbgJVQ00 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Oct 2020 12:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896986AbgJVQ00 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Oct 2020 12:26:26 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0799CC0613CE
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Oct 2020 09:26:25 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id l2so1235571pjt.5
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Oct 2020 09:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=fKNuFz0tzESvWOS3N0ECBXIENv0ncOLksuDyae91gxo=;
+        b=eIuwhwNM7/e6g2lJH2p1JSxYRXMyrZuDb/uoVl4JiTJqYc3ZV5zFgjfrMbPGUPf0EQ
+         Q7ZDh+BF+qat1f19gMVKn5kn9ze4WWPIReyqIR73+YK06h0MrF65dK/pktL4RJagsNB1
+         9VccngiFNAeKKLLc5z1HX0qesGO8Mt+ZRycDFRR1hoSzf4CMILS11C7Mzo2kM1Yy1GI3
+         A+Brup7pgZQkRwuVQ7neUlbWs/QpTFsep14bfA3IjtOnTgg6G0CHmkRXVzkl/3VL4eRi
+         CS3wt0wonOJCKyfZapZDeBvJ7v3aKiIuvab7VQQ53kWUG/qvAPUcTqkIahjWf7sotpR9
+         80PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=fKNuFz0tzESvWOS3N0ECBXIENv0ncOLksuDyae91gxo=;
+        b=oEAt4F1NM/e59Rnwb+Wqd+TJE2eCjkrfRJ+XtnM+0T6ij43g4joCikXtLogtqgNqSC
+         kBYmbz9UoW2kGEUDQBhFONXJLcNsj6RQkELV+0VIDPkquVawcTkCOJ5aSaD4tsxSGAmW
+         ucjPMTs8FNNGKTkDUbpRDp20uECa9SrS9tWEUe0kfRJchHytTntMjPK+54y0S9xk4DMB
+         pHxzDQgJ5bF6tV5WH/gvSeyfkr3NrpcWmQiFInAKIrMUe6v6PEkx+nwJbD/JopWqzQjX
+         TU4Hfyx3URPnMEy8JM0YErk72bpQkL/+N55NSByvPLhbweEL9g3ZU/wx7Llg0WjXyApm
+         YhDQ==
+X-Gm-Message-State: AOAM531FIhIGJHK2BDL3NpifGcVnw12uwwwLaln0OiKHTdl7iRpxvtsM
+        urptTinJUADKgR7XyA2Hk/nnvmTP94EQNhg77yX4DL7hDPp3cQ==
+X-Google-Smtp-Source: ABdhPJxX5bh5a87MVuRIM3JKmD4CRme9x+VijnusIPyvkQtmP9ywNmm12B7AimtEJ9kc7dWIOAcyOWGkgizrAJ4xcqo=
+X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
+ m8-20020a1709026bc8b02900d60d9df28cmr3115440plt.17.1603383983916; Thu, 22 Oct
+ 2020 09:26:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 22 Oct 2020 19:27:13 +0300
+Message-ID: <CAHp75Veqdv8JnASmmsnv9AmrktByWH3R7Z36wLMyjJh0VffExw@mail.gmail.com>
+Subject: Is consumer documentation correct?
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Alexandre Courbot <gnurou@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adds support to control the PWM bus available in official Raspberry Pi
-PoE HAT. Only RPi's co-processor has access to it, so commands have to
-be sent through RPi's firmware mailbox interface.
+Hi!
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+It _seems_ between
+  79a9becda894 ("gpiolib: export descriptor-based GPIO interface")
+and
+  14e85c0e69d5 ("gpio: remove gpio_descs global array")
+the "Interacting With the Legacy GPIO Subsystem" of GPIO consumer
+interface is correct.
 
----
+But is it the case afterwards?
 
-Changes since v1:
- - Use default pwm bindings and get rid of xlate() function
- - Correct spelling errors
- - Correct apply() function
- - Round values
- - Fix divisions in arm32 mode
- - Small cleanups
- - Add comment explaining weird Kconfig construct
+Details of the question are here [1].
 
- drivers/pwm/Kconfig           |   9 ++
- drivers/pwm/Makefile          |   1 +
- drivers/pwm/pwm-raspberrypi.c | 221 ++++++++++++++++++++++++++++++++++
- 3 files changed, 231 insertions(+)
- create mode 100644 drivers/pwm/pwm-raspberrypi.c
+[1]: https://stackoverflow.com/q/64455505/2511795
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 63be5362fd3a..b0ffb1e690c0 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -379,6 +379,15 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
- 
-+config PWM_RASPBERRYPI
-+	tristate "Raspberry Pi Firwmware PWM support"
-+	# Make sure not 'y' when RASPBERRYPI_FIRMWARE is 'm'. This can only
-+	# happen when COMPILE_TEST=y, hence the added !RASPBERRYPI_FIRMWARE.
-+	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-+	help
-+	  Enable Raspberry Pi firmware controller PWM bus used to control the
-+	  official RPI PoE hat
-+
- config PWM_RCAR
- 	tristate "Renesas R-Car PWM support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index cbdcd55d69ee..b557b549d9f3 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RASPBERRYPI)	+= pwm-raspberrypi.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-diff --git a/drivers/pwm/pwm-raspberrypi.c b/drivers/pwm/pwm-raspberrypi.c
-new file mode 100644
-index 000000000000..72dc0fc5a206
---- /dev/null
-+++ b/drivers/pwm/pwm-raspberrypi.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ * For more information on Raspberry Pi's PoE hat see:
-+ * https://www.raspberrypi.org/products/poe-hat/
-+ *
-+ * Limitations:
-+ *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
-+ *  - Only normal polarity
-+ *  - Fixed 12.5 kHz period
-+ *
-+ * The current period is completed when HW is reconfigured.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+#include <dt-bindings/pwm/raspberrypi,firmware-pwm.h>
-+
-+#define RPI_PWM_MAX_DUTY		255
-+#define RPI_PWM_PERIOD_NS		80000 /* 12.5 kHz */
-+
-+#define RPI_PWM_CUR_DUTY_REG		0x0
-+#define RPI_PWM_DEF_DUTY_REG		0x1
-+
-+struct raspberrypi_pwm {
-+	struct rpi_firmware *firmware;
-+	struct pwm_chip chip;
-+	unsigned int duty_cycle;
-+};
-+
-+struct raspberrypi_pwm_prop {
-+	__le32 reg;
-+	__le32 val;
-+	__le32 ret;
-+} __packed;
-+
-+static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct raspberrypi_pwm, chip);
-+}
-+
-+static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = cpu_to_le32(reg),
-+		.val = cpu_to_le32(val),
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	else if (msg.ret)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 *val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = reg
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	else if (msg.ret)
-+		return -EIO;
-+
-+	*val = le32_to_cpu(msg.val);
-+
-+	return 0;
-+}
-+
-+static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+
-+	state->period = RPI_PWM_PERIOD_NS;
-+	state->duty_cycle = DIV_ROUND_CLOSEST(rpipwm->duty_cycle * RPI_PWM_PERIOD_NS,
-+					      RPI_PWM_MAX_DUTY);
-+	state->enabled = !!(rpipwm->duty_cycle);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+}
-+
-+static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			         const struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+	unsigned int duty_cycle;
-+	int ret;
-+
-+        if (state->period < RPI_PWM_PERIOD_NS ||
-+            state->polarity != PWM_POLARITY_NORMAL)
-+                return -EINVAL;
-+
-+        if (!state->enabled)
-+                duty_cycle = 0;
-+        else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
-+                duty_cycle = DIV_ROUND_CLOSEST_ULL(state->duty_cycle * RPI_PWM_MAX_DUTY,
-+					           RPI_PWM_PERIOD_NS);
-+        else
-+                duty_cycle = RPI_PWM_MAX_DUTY;
-+
-+	if (duty_cycle == rpipwm->duty_cycle)
-+		return 0;
-+
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * This sets the default duty cycle after resetting the board, we
-+	 * updated it every time to mimic Raspberry Pi's downstream's driver
-+	 * behaviour.
-+	 */
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+        rpipwm->duty_cycle = duty_cycle;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops raspberrypi_pwm_ops = {
-+	.get_state = raspberrypi_pwm_get_state,
-+	.apply = raspberrypi_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int raspberrypi_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *firmware_node;
-+	struct device *dev = &pdev->dev;
-+	struct rpi_firmware *firmware;
-+	struct raspberrypi_pwm *rpipwm;
-+	int ret;
-+
-+	firmware_node = of_get_parent(dev->of_node);
-+	if (!firmware_node) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	firmware = rpi_firmware_get(firmware_node);
-+	of_node_put(firmware_node);
-+	if (!firmware)
-+		return -EPROBE_DEFER;
-+
-+	rpipwm = devm_kzalloc(&pdev->dev, sizeof(*rpipwm), GFP_KERNEL);
-+	if (!rpipwm)
-+		return -ENOMEM;
-+
-+	rpipwm->firmware = firmware;
-+	rpipwm->chip.dev = dev;
-+	rpipwm->chip.ops = &raspberrypi_pwm_ops;
-+	rpipwm->chip.base = -1;
-+	rpipwm->chip.npwm = RASPBERRYPI_FIRMWARE_PWM_NUM;
-+
-+	platform_set_drvdata(pdev, rpipwm);
-+
-+	ret = raspberrypi_pwm_get_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   &rpipwm->duty_cycle);
-+	if (ret) {
-+		dev_err(dev, "Failed to get duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return pwmchip_add(&rpipwm->chip);
-+}
-+
-+static int raspberrypi_pwm_remove(struct platform_device *pdev)
-+{
-+	struct raspberrypi_pwm *rpipwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rpipwm->chip);
-+	if (!ret)
-+		rpi_firmware_put(rpipwm->firmware);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id raspberrypi_pwm_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-pwm", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, raspberrypi_pwm_of_match);
-+
-+static struct platform_driver raspberrypi_pwm_driver = {
-+	.driver = {
-+		.name = "raspberrypi-pwm",
-+		.of_match_table = raspberrypi_pwm_of_match,
-+	},
-+	.probe = raspberrypi_pwm_probe,
-+	.remove = raspberrypi_pwm_remove,
-+};
-+module_platform_driver(raspberrypi_pwm_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi Firwmare Based PWM Bus Driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
