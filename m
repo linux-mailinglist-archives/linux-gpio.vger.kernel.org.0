@@ -2,104 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E73E229712A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Oct 2020 16:17:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C22029713F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Oct 2020 16:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1750414AbgJWORE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Oct 2020 10:17:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10641 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750401AbgJWORB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Oct 2020 10:17:01 -0400
-IronPort-SDR: sD4HPy5LJzeZIebs9M6qxzNTkJvPSUrYPLynj9CsGWIh9RxK5u40YLRmksfORd8fZZpVP4h0hQ
- OqUQSgxbLmBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9782"; a="252379486"
-X-IronPort-AV: E=Sophos;i="5.77,408,1596524400"; 
-   d="scan'208";a="252379486"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2020 07:16:55 -0700
-IronPort-SDR: fZkhYQcPT9lU1nvcYX6BQ91UPb6h4pCbwcob9qL3m+WjAQ49Qmsvr44p5Zcz/0I2wqwf/wN5NH
- 0sNnPyXYK8vw==
-X-IronPort-AV: E=Sophos;i="5.77,408,1596524400"; 
-   d="scan'208";a="349215562"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2020 07:16:51 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1kVxsr-00E8Fw-6G; Fri, 23 Oct 2020 17:17:33 +0300
-Date:   Fri, 23 Oct 2020 17:17:33 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod][PATCH] treewide: rework struct gpiod_line_bulk
-Message-ID: <20201023141733.GV4077@smile.fi.intel.com>
-References: <20201023092831.5842-1-brgl@bgdev.pl>
- <CAHp75VeiGSJO5XnpQLMs=0nT=otVjC1tOsR7xp1gJ3tLHwUTaA@mail.gmail.com>
- <CAMRc=McD7jtBQ_CPV26Pzr63T6-o_aPpYt_CT-48H_mGuhxrGw@mail.gmail.com>
- <CAHp75VcxaqmJocQ8jYouJ80P0anN5ENheH2yK2Sm-sHXjA5NoA@mail.gmail.com>
- <CAHp75VeGFuF7NrGJ9sc+kXz3e-wzGi3kTDmW56oaNKJf65NZLg@mail.gmail.com>
- <CAMpxmJWWt5MhqObJabOxtdm9U4rQ6EPvJR3PHBRH_J1uLMat+Q@mail.gmail.com>
+        id S374623AbgJWOV7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Oct 2020 10:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S374556AbgJWOV6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Oct 2020 10:21:58 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F17C0613CE;
+        Fri, 23 Oct 2020 07:21:58 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gs25so2664176ejb.1;
+        Fri, 23 Oct 2020 07:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:sender:from:date:message-id
+         :subject:to:cc;
+        bh=3rcXVSOL+tJRZBQm0pw/Zq9ogwm9bItd4VPlftbM00g=;
+        b=Bge8D9q4Ck+6oQR5swtz7kx/CVmO3H/gxI93IJbbAM8yPEyVzaym+n/+CREN6Aya6V
+         48qAhym76RmXks5OZYbeJqEh6rZj+GDw+9zgBKjBjHpYCpiUckLxwxM85Wxpqws4WCG1
+         kw6bp5+QWJAyIUd+vV5gVlCvpkg6SRKDSM36LJ0w3RW/wqdmznrdb01WoNfYVcRo/yjK
+         hqHr633nbepgJoGUrk2p+PeYO9lOG9GAetosPfND6Lk0euVNFd0YRCH46VaYi3reDIqo
+         37IYNKd0A/k96+BQXtXDcD8KJ3EuGkf0xITNm34FzUeTWudaHg33pg9qPLWTONieWWhM
+         WLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:sender:from
+         :date:message-id:subject:to:cc;
+        bh=3rcXVSOL+tJRZBQm0pw/Zq9ogwm9bItd4VPlftbM00g=;
+        b=d+uvW5Uq7QAr2ik/Wd7pq7jboStl0nEaMdZFcU8o1/ztx5XB2hoelmkUWOcakBvlB/
+         JuHII/rV5Es+l6Ifz7DazUwamEsVaM1P+63k8eypveWfxIgYCKb959WyL97r0DxC5sSU
+         8KIow+zHfZtcquhW8YMGSZG9I6d3U8kkGU4Ho8H3iZX4ZMxGn/ESDdChgsRUGrFNKUXy
+         i2M89dKNwroXn2PJhbT73YubR/jVcgCdRHWvYjgZ/lUe6dc3yScQ0SVETdxxgczZb/3m
+         LyreTGXvvPZetzLALY+LHkNNX87pQNvk6ZSoLr+PPcX3LYWGJ79ysJ/y4uG8TryRKFMX
+         arBA==
+X-Gm-Message-State: AOAM532Z60mF6n7d/YMCs3wVU4I1vlTt9Pfw96xYb/CLpnU+sH8VHXZn
+        /FN6hWemwQqgJXF64b6E7r2U8nfRs+F6lcf1Da8=
+X-Google-Smtp-Source: ABdhPJxPWuUVMmCsJll590lxcX3FUKbgd71i6nIoh0ZydFGbplw/o9febMpu6Mv6DOTrtp2ltM5kHrANFd2w2IZum5Q=
+X-Received: by 2002:a17:906:33c7:: with SMTP id w7mr2067255eja.398.1603462917224;
+ Fri, 23 Oct 2020 07:21:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJWWt5MhqObJabOxtdm9U4rQ6EPvJR3PHBRH_J1uLMat+Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20180129005948.7714-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180129005948.7714-1-bjorn.andersson@linaro.org>
+Sender: getarunks@gmail.com
+X-Google-Sender-Delegation: getarunks@gmail.com
+From:   Arun KS <arunks.linux@gmail.com>
+Date:   Fri, 23 Oct 2020 19:51:45 +0530
+X-Google-Sender-Auth: _vvNSE9j93IlwHnXLdmbEcZjtDI
+Message-ID: <CAKZGPAPrwXNeYk+bDiMBRczVf4PaBANnzhmenZie+V0BJ7OqBg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: msm: Use dynamic GPIO numbering
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Timur Tabi <timur@codeaurora.org>,
+        Arun KS <getarunks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 23, 2020 at 02:44:06PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Oct 23, 2020 at 2:08 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Fri, Oct 23, 2020 at 3:06 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, Oct 23, 2020 at 2:39 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > On Fri, Oct 23, 2020 at 12:24 PM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> >
-> > ...
-> >
-> > > > Nope because gcc will scream:
-> > > >
-> > > > error: flexible array member in union
-> > >
-> > > Ah, of course. Should be
-> > >   struct ... **lines;
-> >
-> > But it is not gonna work... we need an array here. or just one member
-> >
-> > struct *lines;
-> >
-> > bulk:
-> >   lines = malloc(num_lines * sizeof(lines));
-> >   xxx->lines = lines;
-> >
-> > single:
-> >   xxx->lines = line;
-> 
-> The definition I used is clearer - it's explicit about using an array
-> with a single member by default and can be extended as needed when
-> allocating.
+On Mon, Jan 29, 2018 at 8:30 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The base of the TLMM gpiochip should not be statically defined as 0, fix
+> this to not artificially restrict the existence of multiple pinctrl-msm
+> devices.
 
-According to [1] it makes harder to avoid sizeof() type of calculation
-mistakes for such struct.
+Can someone please provide the details why this is needed for
+pinctrl-msm.  Is there any msm-chipset using multiple tlmm devices?  I
+m only concerned because, after this change, the use of gpio number
+from user space has become a little difficult. Can we merge the patch
+from Timur to maintain the past behavior when multiple tlmm devices
+are not present, which is most likely the case?
 
-From my point of view extending something that has been already predefined
-is not cool. But it's up to you to decide.
+     static int base = 0;
 
-[1]: https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
+     chip->base = base;
+     base = -1;
 
+Regards,
+Arun
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
+> Reported-by: Timur Tabi <timur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 495432f3341b..95e5c5ea40af 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -818,7 +818,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>                 return -EINVAL;
+>
+>         chip = &pctrl->chip;
+> -       chip->base = 0;
+> +       chip->base = -1;
+>         chip->ngpio = ngpio;
+>         chip->label = dev_name(pctrl->dev);
+>         chip->parent = pctrl->dev;
+> --
+> 2.15.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
