@@ -2,101 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1658296F95
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Oct 2020 14:44:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6DDD297044
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Oct 2020 15:20:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S463969AbgJWMoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Oct 2020 08:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41344 "EHLO
+        id S464436AbgJWNUr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Oct 2020 09:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S463968AbgJWMoS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Oct 2020 08:44:18 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF34C0613CE
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Oct 2020 05:44:18 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id dn5so1389148edb.10
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Oct 2020 05:44:18 -0700 (PDT)
+        with ESMTP id S372261AbgJWNUr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Oct 2020 09:20:47 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4FC3C0613CE;
+        Fri, 23 Oct 2020 06:20:46 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w17so1314789ilg.8;
+        Fri, 23 Oct 2020 06:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MIeOvpkzyWPH53MnEJZgPzMzdcwfx+u8hSGtweDNtJ8=;
-        b=IR1zc0W2lT95OQxkKQPqD4WnSP9cvyBGDBqm/yZrbp4QMArCbo29QLepApoGxBKAU+
-         sQq9xSVVFyOoRzUWmlNXmDDeoUJqf1rToJhfFWW+Gyi8Jm5VRb6jeiJo/KBvMOTNw83D
-         9xg++K0vjsYq5GU+3393OnWpYwQT4Xx8DhcnPj7ewQHfyHbjJajGAs0xCUFAKI+r2gJm
-         Z+9W+vSFMbY9EnuEL4/PQctI/Hwn1AxtLXGBBMdml1r948y6CXEOOb8vnGKRokjfzUaz
-         t3FwXdKO0YGPK3qZWAs6eNTBJFBLMRppypHEEU3y9KkvuRZWqyFaIgdm4uSAroBw3fbi
-         iGXw==
+        bh=xeo0p2qdmsop/TDGgLs89AOUyadmvF116Tgqv/kxuwY=;
+        b=rA0a3idKXxsidmySKf+Rkby9uR/42z5EzIai/zfL40nh2Hp1baOLzQo7gW2oXp6ePA
+         DnLct+f+IP/d/4cM15oO56yQrZTPSPN5VjRHlrpu8U5v8hi1rlnZklmudQayA4HiSwAi
+         CAyx+A3fh7jqtpKrhJQDPd2G2qaaqjGmrxquAQ4+6rJddN6QenB2CeSmSYEajjHr3zAH
+         GP6qBdC5ilUJC2ygVbDU3U2gEe3WkczEO6+YQew/W8uS8n2sOvq39AjJbmXeWgMwmMR6
+         zP6eoYyCFf0QHzjnJLyIBfZo1ZDSox3835sl+fCVEXYWSIqUo04zFxpEcNok2fQZ2aiR
+         E8+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MIeOvpkzyWPH53MnEJZgPzMzdcwfx+u8hSGtweDNtJ8=;
-        b=CN6Kj8vSJN2rd0Ax9tYAZwlEzlOl0zGvkJKaIqYskLuUY9OuqidqZ5eMmrYj8ZS2j0
-         O0S8H/yXlcrbifkEeqbq7mgr8WWznXIsXeJYC59V6DopoibkYHVeRom5HoG9Si+ZiXXK
-         jp8fp7O2ZiEeKvKWvGRKJCpmf/RlvbZDQGUrEPtr2SMvvaSXmC6AJLtIrgol8vG2GeTC
-         36j9ngDgTUXt8Cgo1gNEqaCNFVxOpz9PuEoKaiixQja2ylLAnesWKNhlQ8GMhwItC+QJ
-         PayweUueiDFGK8B11d5zCYq66D6iis0A4HCIERzcjKk47z1oQlSBHoBX5lGGgAvckGGB
-         Nwmw==
-X-Gm-Message-State: AOAM532NSHIvZLF/Fshojo7zr3c8rb0n49GadzcLzAs9W1ENM8bxdD3J
-        BuZSizcQH9uFUJT7I9mNV2WuSy0rNXXG+yNBH26sTg==
-X-Google-Smtp-Source: ABdhPJxv+kBxxzNSWlx51PaCGLX5nayXaFTWeIz01EgVQdsZHbxa8V2uLHwTPmcCoZ5nsw4UQ9oDrr0tY24Xl3KWWkc=
-X-Received: by 2002:a50:9e0b:: with SMTP id z11mr2031207ede.341.1603457056896;
- Fri, 23 Oct 2020 05:44:16 -0700 (PDT)
+        bh=xeo0p2qdmsop/TDGgLs89AOUyadmvF116Tgqv/kxuwY=;
+        b=ZfNdl4dVpjxX96OQnSdqQEFh5djw6ZZCiNDaz2LMyxXiFHjBpi8yz7zkD//qoDKlqy
+         lHZLzH5OraNM2z5qZfMDWHW7QdMqZNcxCnuW/9nH2JK9WYir6haHlyJC2nUgzRgTktpl
+         k5vaQRkeZZllSj765KkiCDfSB63USF/UWqJltfC1asPmfxvLAujzpfrJVoCh+HTf6+DL
+         ZgpQMgOUlD11DOh5AklqouTJ898pyq7d7nUWIBsMqTCxAbNGuDyYDSwTyIBe4Ofn2DbG
+         hgRlRtTh+puyPGD1m5MEUXXzizVVglu6eLPy+5eZ4b6lZCPzXWocI61BAlJIJjekkwnU
+         6AlQ==
+X-Gm-Message-State: AOAM530vZmmTRJmLv0HZ8Fzt7dAC+7JRgQ7AaDEcB+Q6hHiYftsmjJgM
+        nTwIWJ68I4yjO/HqLZfzoa8YRvfRWh4lrSg8ydA=
+X-Google-Smtp-Source: ABdhPJwQCcuMZaG2NyGoy2d/3qKC/ZI6eB7q5tOvNNnzAZjOE5Rr6ZPQU1MCYZyj0UEzOHE6kIz0bBqP6t6tmDeCl58=
+X-Received: by 2002:a92:c213:: with SMTP id j19mr1656992ilo.205.1603459246105;
+ Fri, 23 Oct 2020 06:20:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201023092831.5842-1-brgl@bgdev.pl> <CAHp75VeiGSJO5XnpQLMs=0nT=otVjC1tOsR7xp1gJ3tLHwUTaA@mail.gmail.com>
- <CAMRc=McD7jtBQ_CPV26Pzr63T6-o_aPpYt_CT-48H_mGuhxrGw@mail.gmail.com>
- <CAHp75VcxaqmJocQ8jYouJ80P0anN5ENheH2yK2Sm-sHXjA5NoA@mail.gmail.com> <CAHp75VeGFuF7NrGJ9sc+kXz3e-wzGi3kTDmW56oaNKJf65NZLg@mail.gmail.com>
-In-Reply-To: <CAHp75VeGFuF7NrGJ9sc+kXz3e-wzGi3kTDmW56oaNKJf65NZLg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 23 Oct 2020 14:44:06 +0200
-Message-ID: <CAMpxmJWWt5MhqObJabOxtdm9U4rQ6EPvJR3PHBRH_J1uLMat+Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] treewide: rework struct gpiod_line_bulk
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
+References: <cover.1601974764.git.syednwaris@gmail.com> <CACRpkdZcfR8Vyavpi4xM1zJab6SgapGBYqK9GR2mp-xh=LuVsw@mail.gmail.com>
+In-Reply-To: <CACRpkdZcfR8Vyavpi4xM1zJab6SgapGBYqK9GR2mp-xh=LuVsw@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 23 Oct 2020 18:50:34 +0530
+Message-ID: <CACG_h5rHvWEUZSfHvF198_i+xjc_gN5ioXYniZqij0wx=3wnqQ@mail.gmail.com>
+Subject: Re: [PATCH v11 0/4] Introduce the for_each_set_clump macro
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "(Exiting) Amit Kucheria" <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 23, 2020 at 2:08 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Oct 7, 2020 at 2:09 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Fri, Oct 23, 2020 at 3:06 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Oct 23, 2020 at 2:39 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > On Fri, Oct 23, 2020 at 12:24 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
+> On Tue, Oct 6, 2020 at 11:20 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
 >
-> ...
+> > Since this patchset primarily affects GPIO drivers, would you like
+> > to pick it up through your GPIO tree?
 >
-> > > Nope because gcc will scream:
-> > >
-> > > error: flexible array member in union
-> >
-> > Ah, of course. Should be
-> >   struct ... **lines;
+> Definitely will, once we are finished!
 >
-> But it is not gonna work... we need an array here. or just one member
+> I see Andy still has comments and we need more iterations.
+> That is fine, because we are not in any hurry. Just keep posting
+> it!
 >
-> struct *lines;
+> Let's merge this for v5.11 when we are finished with it.
 >
-> bulk:
->   lines = malloc(num_lines * sizeof(lines));
->   xxx->lines = lines;
->
-> single:
->   xxx->lines = line;
->
+> Yours,
+> Linus Walleij
 
-The definition I used is clearer - it's explicit about using an array
-with a single member by default and can be extended as needed when
-allocating.
+Hi Linus,
 
-Bartosz
+Just thought of giving an update. The V-12 revision of the patchset
+has been submitted (19 Oct).
+
+Let me know if you face any questions regarding the V-12 patchset. Thanks !
+
+Regards
+Syed Nayyar Waris
