@@ -2,114 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5BA2990EB
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 16:21:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22DFB29925B
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 17:26:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1783705AbgJZPV5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 11:21:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34272 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1783704AbgJZPV5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 11:21:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id r3so4839066plo.1;
-        Mon, 26 Oct 2020 08:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oOkWxKNS7OgYcgr9AtuikvRP6VQyPR3f6F1K+1Zo1kQ=;
-        b=LmCoNC6Ua8HAVPvByC9bsoozCVkd2hq1VykdP1PgLd+mNUcO2yAbtatRvOrWF2lhdX
-         +STcJKR4Be3HsKEN+Y+sxBpGggDqHhp0KbwVHXhGaRiDGyoOsphrkWpwhpIwxDpLpGOP
-         8JWcS4tkSB7ZnrDLDPyo4Et7OWq/fNFOZ8XFca3sZiasR17l7eYDWZVGqF6dfxlHEEwj
-         d6tRummJL0LIMsaYwgWzosqI/qkcfdFRwzRcLchXH+ZfuDDkhk2tHxUzem72Zn69XJwc
-         cDm+3zLHNIKBW1d8CbwMTglwYlW/korgVg7SxrzXLw6kOBe2NQ+NDf0bH7LXlLNq5Hg2
-         CGfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oOkWxKNS7OgYcgr9AtuikvRP6VQyPR3f6F1K+1Zo1kQ=;
-        b=eqWrP0nlHDe9c65iWQ43mThungp564nZCQHYMhkgJHa3KbvLos22DgWYnFFkmvM6YK
-         aL+wqDvGvB0w8m5SHgOrEDaWV9J0GFBkv4xYz2l1QtD4Gx2EE14zi/+aqx3HVk82QWbv
-         DJNIgW5gtfI2l1guyNo9/mhQKErVgfCHLvu7xACtXmQuqIkYJ4OThppA5gSz4jX8gIs8
-         rqsgsgqaLI1mEuOhpqTLwBexqTxdooJEQIsMWQCxZ0pM7oLuTe84hfZGFmIMMTYLfyQa
-         RTlfSt2elcvFQLvi4z+GAavFd0n2bPkMpodtBnG1mCmOL1iOyhX5AkePTtK098igWPpt
-         CirQ==
-X-Gm-Message-State: AOAM532hqvOJvbGQx2ZeY5xPg/dMU9YxVYASlaYHnnH4Z3ARg1zrIH2p
-        mOHruI8wgekLoBGGeXOzKoY8n+cyP5ShSt29SwQ=
-X-Google-Smtp-Source: ABdhPJznEhCG/CtbsgET7HjL9PYwS6J3NDldIiYWYXp1Z7NeTSBhiQDAvJixd931Q/i4cOkOFqG+tG/prof3qtOOwsA=
-X-Received: by 2002:a17:902:aa8a:b029:d3:c9dd:77d1 with SMTP id
- d10-20020a170902aa8ab02900d3c9dd77d1mr8806039plr.0.1603725716344; Mon, 26 Oct
- 2020 08:21:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201026151600.2703-1-coiby.xu@gmail.com>
-In-Reply-To: <20201026151600.2703-1-coiby.xu@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 17:22:45 +0200
-Message-ID: <CAHp75VfZ+-rJFWVpowXyViA99_9tA5VaFLfJGH1WF4W=kQHr8w@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: amd: print debounce filter info in debugfs
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1773379AbgJZQ0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 12:26:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47980 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404162AbgJZQ0W (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Oct 2020 12:26:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EEE67AC48;
+        Mon, 26 Oct 2020 16:26:19 +0000 (UTC)
+Message-ID: <160f3f542a89e0263d5d375fdae796af6017c33c.camel@suse.de>
+Subject: Re: [PATCH v2 01/10] firmware: raspberrypi: Introduce
+ rpi_firmware_put()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+Date:   Mon, 26 Oct 2020 17:26:17 +0100
+In-Reply-To: <CAHp75Vej4UfsySRB6qXL7fFN7SjnTjy=p4Xkn1xBO0YOFy-kcQ@mail.gmail.com>
+References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
+         <20201022155858.20867-2-nsaenzjulienne@suse.de>
+         <CAHp75Vej4UfsySRB6qXL7fFN7SjnTjy=p4Xkn1xBO0YOFy-kcQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+M2bTZi8S7Ge32C0tkNp"
+User-Agent: Evolution 3.36.5 
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 5:16 PM Coiby Xu <coiby.xu@gmail.com> wrote:
->
-> Print the status of debounce filter as follows,
-> $ cat /sys/kernel/debug/gpio
-> pin129          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
->  disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter disabled|   0x50000
-> pin130          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
->  disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter (high) enabled| debouncing timeout is 124800 (us)| 0x503c8
->                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Thanks for an update!
-In general looks good, one nit below (sorry, missed it in v1 round)
+--=-+M2bTZi8S7Ge32C0tkNp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Thu, 2020-10-22 at 21:46 +0300, Andy Shevchenko wrote:
+> On Thu, Oct 22, 2020 at 9:06 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > When unbinding the firmware device we need to make sure it has no
+> > consumers left. Otherwise we'd leave them with a firmware handle
+> > pointing at freed memory.
+> >=20
+> > Keep a reference count of all consumers and make sure they all finished
+> > unbinding before we do.
+>=20
+> Wait, if it's a device, why do we need all these?
+> get_device() / put_device() along with module_get() / module_put()
+> should be sufficient, no?
 
-> +       char debounce_value[40];
+Could you expand here a little, I do see how I could use get_device()'s
+reference count. But it seems to me I'd be digging way too deep into kobj i=
+n
+order to get the functionality I need.
 
-(1)
+If you meant to say that it should be automatically taken care by the platf=
+orm
+bus, just FYI we're using 'simple-mfd' in DT. Where firmware supplier is th=
+e
+parent and all consumers are children.
 
-...
-
-> +                               if (tmr_large) {
-> +                                       if (tmr_out_unit)
-> +                                               unit = 62500;
-> +                                       else
-
-> +                                               unit = 15600;
-
-Side note: Hmm... Shouldn't be 15625? As 1/4.
-
-> +                               } else {
-> +                                       if (tmr_out_unit)
-> +                                               unit = 244;
-> +                                       else
-> +                                               unit = 61;
-
-...
+Regards,
+Nicolas
 
 
-> +                               snprintf(debounce_value, 40,
-> +                                        "debouncing timeout is %u (us)|", time * unit);
+--=-+M2bTZi8S7Ge32C0tkNp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-(2)
+-----BEGIN PGP SIGNATURE-----
 
-...
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W+KkACgkQlfZmHno8
+x/6XwQf+N4Vi5LyZRLbYPf2alcEVhV4rJF362cZVbIn76rK576WGug740xSWsiwO
+gfzWfNuZQ8dHdYtromdKWWMK3JYZ1EYnhWwxzQVC9bhKypTweP7tpIxNgdQLfoi0
+qS6Omn19ldcynO+YlLCEp76lrapt5ADWIGR5phjOWOj2yPHYJN0TsaQ80bNsNHZL
+caC8ddA5LxpEZKe8NEd9tqOdhB9rnvTHmPLG4A7CdjCsNdwcO6TXUTM4os21JNVv
+IB/eaEzZp7DLTWVAUJxV+HIX0SSdy80TCryzgCsfbcd8q6AuD2RWtWpVQ88Qtrbl
+fFrXd+Hf3/iVhraCCi5GKegidy4SyA==
+=30G8
+-----END PGP SIGNATURE-----
 
-> +                               snprintf(debounce_value, 40, " ");
+--=-+M2bTZi8S7Ge32C0tkNp--
 
-(3)
-
-Because of definition (1) can you in (2) and (3) use sizeof() ?
-
--- 
-With Best Regards,
-Andy Shevchenko
