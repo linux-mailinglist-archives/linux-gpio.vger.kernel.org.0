@@ -2,473 +2,478 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADEF2996C4
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 20:23:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD8192999EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 23:54:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1773155AbgJZTXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 15:23:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49247 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1773096AbgJZTX3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Oct 2020 15:23:29 -0400
-IronPort-SDR: wdV+QuiGjFtWhPcpbwcDvDI5I4jsPUZ+TL3wz45qEnt1U3uhVqV53AYtgD1mcIcB6K8aHm4Y6K
- 33Nkw0/T8Z2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9786"; a="155756073"
-X-IronPort-AV: E=Sophos;i="5.77,420,1596524400"; 
-   d="scan'208";a="155756073"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2020 12:23:28 -0700
-IronPort-SDR: Er/LAQxsCstxpfnbLKqTVyd9E5ngtRBJIyR+Xr6L+rlh4RCkmu3B5JIlS8hpLZQsMmr0Ukfexo
- 6RywoGDUv6vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,420,1596524400"; 
-   d="scan'208";a="334136811"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 26 Oct 2020 12:23:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0E8AF13C; Mon, 26 Oct 2020 21:23:25 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
+        id S2394858AbgJZWyg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 18:54:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46848 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394840AbgJZWyg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 18:54:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n16so6880021pgv.13
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 15:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JPZe4tGB5FcgMQzpYM8I9QtdzyyzXVbJSYU7XCxZnCc=;
+        b=uZJcxFTZxvlXwlecK+biS9uKuGjMAtY7kf9/hb27krh5ZQ7n6iSOBAOB0ONDI1i3pz
+         jz4snNTHFLVkHY7UEGVyH6g6L5ZFYN67EczSTDyk0rPxKqrO1DYe5aiQGkGdcAU6qsUr
+         vmMDTFEOsgVHWk93D7COblkfK3CtLp2qPPoWxBF2jc6JAP08LiG1is9YF9CxjJG/7FYz
+         G7f21Pw99m0L5fuGukzM+vUUjvmdIWt1GqgxEMs4Dbm2t7X80ZV6pDt/hUpg880LjVnw
+         wI8/Ot9gtOqIiaDhE6kBFKOGdRJNn7W/2kMeTEYEIoAnJ+chxOI7nZgwIO3iFkQbH7Nk
+         kt8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JPZe4tGB5FcgMQzpYM8I9QtdzyyzXVbJSYU7XCxZnCc=;
+        b=ssEF2wziBB6NaXtN9qvZ0LRaJPt+aY/i8rxgVE2F6gNaxjXwvv5FX18rDhRF34zS3d
+         1a0ry/CIjP04+6yRH5NByAlejQj8wwvJTx0ZUeuhDCyyXa5NeyWeAEG6prBQ679AA3DT
+         COEZ/a8cz9LXNd/o3ovvMUrTlOhYXKpr2CZZXsyNssDAMnOTte6OC+osXvGCiP51sJQU
+         UIx28azwJA59bTHTLNWMZjWVpah2tUmrZhek52agv/iI0tAvvzjZlU6j0d4VA9stum9l
+         ZgEmfmH+kUCu65i3AMXzn26SHIKU2tmVANuXPK/5eeB7GZrjXdsPtfbh6rNoQMCRuDvf
+         V+Zg==
+X-Gm-Message-State: AOAM531E5Dol/yakCsj1cWa3rw1Exv8UuqMwdDhzSqWjdqRvcZ0jduzS
+        gGj9pIX20GsqvUFBPXA7Rv8=
+X-Google-Smtp-Source: ABdhPJzHttgfQQJnnI56sf47AnT3Ld0egH3VSObjXmaV82C/4CIKheLSxzZBkqXPTPmdya2hBlN1SQ==
+X-Received: by 2002:a65:4cc1:: with SMTP id n1mr18282889pgt.404.1603752874454;
+        Mon, 26 Oct 2020 15:54:34 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id cv6sm8981325pjb.2.2020.10.26.15.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2020 15:54:33 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Tue, 27 Oct 2020 06:54:00 +0800
+To:     Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: [PATCH v1] pinctrl: intel: Add Intel Lakefield pin controller support
-Date:   Mon, 26 Oct 2020 21:23:25 +0200
-Message-Id: <20201026192325.20813-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+Message-ID: <20201026225400.37almqey2wxyazkn@Rk>
+References: <20201003230340.42mtl35n4ka4d5qw@Rk>
+ <20201004051644.f3fg2oavbobrwhf6@Rk>
+ <20201006044941.fdjsp346kc5thyzy@Rk>
+ <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
+ <20201006083157.3pg6zvju5buxspns@Rk>
+ <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
+ <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com>
+ <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
+ <20201014042420.fkkyabmrkiekpmfw@Rk>
+ <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver adds pinctrl/GPIO support for Intel Lakefield SoC. The
-GPIO controller is based on the next generation GPIO hardware but still
-compatible with the one supported by the Intel core pinctrl/GPIO driver.
+Hi Hans and Linus,
 
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/Kconfig             |   8 +
- drivers/pinctrl/intel/Makefile            |   1 +
- drivers/pinctrl/intel/pinctrl-lakefield.c | 374 ++++++++++++++++++++++
- 3 files changed, 383 insertions(+)
- create mode 100644 drivers/pinctrl/intel/pinctrl-lakefield.c
+Will you interpret the 0x0000 value for debounce timeout in GPIO
+Interrupt Connection Resource Descriptor as disabling debouncing
+filter?
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index 98494c8fdaf8..c619097c25b9 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -142,6 +142,14 @@ config PINCTRL_JASPERLAKE
- 	  This pinctrl driver provides an interface that allows configuring
- 	  of Intel Jasper Lake PCH pins and using them as GPIOs.
- 
-+config PINCTRL_LAKEFIELD
-+	tristate "Intel Lakefield SoC pinctrl and GPIO driver"
-+	depends on ACPI
-+	select PINCTRL_INTEL
-+	help
-+	  This pinctrl driver provides an interface that allows configuring
-+	  of Intel Lakefield SoC pins and using them as GPIOs.
-+
- config PINCTRL_LEWISBURG
- 	tristate "Intel Lewisburg pinctrl and GPIO driver"
- 	depends on ACPI
-diff --git a/drivers/pinctrl/intel/Makefile b/drivers/pinctrl/intel/Makefile
-index 0510e62475ab..5310626fe6ad 100644
---- a/drivers/pinctrl/intel/Makefile
-+++ b/drivers/pinctrl/intel/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PINCTRL_EMMITSBURG)	+= pinctrl-emmitsburg.o
- obj-$(CONFIG_PINCTRL_GEMINILAKE)	+= pinctrl-geminilake.o
- obj-$(CONFIG_PINCTRL_ICELAKE)		+= pinctrl-icelake.o
- obj-$(CONFIG_PINCTRL_JASPERLAKE)	+= pinctrl-jasperlake.o
-+obj-$(CONFIG_PINCTRL_LAKEFIELD)		+= pinctrl-lakefield.o
- obj-$(CONFIG_PINCTRL_LEWISBURG)		+= pinctrl-lewisburg.o
- obj-$(CONFIG_PINCTRL_SUNRISEPOINT)	+= pinctrl-sunrisepoint.o
- obj-$(CONFIG_PINCTRL_TIGERLAKE)		+= pinctrl-tigerlake.o
-diff --git a/drivers/pinctrl/intel/pinctrl-lakefield.c b/drivers/pinctrl/intel/pinctrl-lakefield.c
-new file mode 100644
-index 000000000000..3c72f92f9f8d
---- /dev/null
-+++ b/drivers/pinctrl/intel/pinctrl-lakefield.c
-@@ -0,0 +1,374 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Lakefield PCH pinctrl/GPIO driver
-+ *
-+ * Copyright (C) 2020, Intel Corporation
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-intel.h"
-+
-+#define LKF_PAD_OWN	0x020
-+#define LKF_PADCFGLOCK	0x080
-+#define LKF_HOSTSW_OWN	0x0b0
-+#define LKF_GPI_IS	0x100
-+#define LKF_GPI_IE	0x120
-+
-+#define LKF_GPP(r, s, e)				\
-+	{						\
-+		.reg_num = (r),				\
-+		.base = (s),				\
-+		.size = ((e) - (s) + 1),		\
-+	}
-+
-+#define LKF_COMMUNITY(b, s, e, g)			\
-+	{						\
-+		.barno = (b),				\
-+		.padown_offset = LKF_PAD_OWN,		\
-+		.padcfglock_offset = LKF_PADCFGLOCK,	\
-+		.hostown_offset = LKF_HOSTSW_OWN,	\
-+		.is_offset = LKF_GPI_IS,		\
-+		.ie_offset = LKF_GPI_IE,		\
-+		.pin_base = (s),			\
-+		.npins = ((e) - (s) + 1),		\
-+		.gpps = (g),				\
-+		.ngpps = ARRAY_SIZE(g),			\
-+	}
-+
-+/* Lakefield */
-+static const struct pinctrl_pin_desc lkf_pins[] = {
-+	/* EAST */
-+	PINCTRL_PIN(0, "MDSI_A_TE0"),
-+	PINCTRL_PIN(1, "MDSI_A_TE1"),
-+	PINCTRL_PIN(2, "PANEL0_AVDD_EN"),
-+	PINCTRL_PIN(3, "PANEL0_BKLTEN"),
-+	PINCTRL_PIN(4, "PANEL0_BKLTCTL"),
-+	PINCTRL_PIN(5, "PANEL1_AVDD_EN"),
-+	PINCTRL_PIN(6, "PANEL1_BKLTEN"),
-+	PINCTRL_PIN(7, "PANEL1_BKLTCTL"),
-+	PINCTRL_PIN(8, "THC0_SPI1_IO_0"),
-+	PINCTRL_PIN(9, "THC0_SPI1_IO_1"),
-+	PINCTRL_PIN(10, "THC0_SPI1_IO_2"),
-+	PINCTRL_PIN(11, "THC0_SPI1_IO_3"),
-+	PINCTRL_PIN(12, "THC0_SPI1_CSB"),
-+	PINCTRL_PIN(13, "THC0_SPI1_CLK"),
-+	PINCTRL_PIN(14, "THC0_SPI1_RESETB"),
-+	PINCTRL_PIN(15, "THC0_SPI1_CLK_FB"),
-+	PINCTRL_PIN(16, "SPI_TOUCH_CLK_FB"),
-+	PINCTRL_PIN(17, "THC1_SPI2_IO_0"),
-+	PINCTRL_PIN(18, "THC1_SPI2_IO_1"),
-+	PINCTRL_PIN(19, "THC1_SPI2_IO_2"),
-+	PINCTRL_PIN(20, "THC1_SPI2_IO_3"),
-+	PINCTRL_PIN(21, "THC1_SPI2_CSB"),
-+	PINCTRL_PIN(22, "THC1_SPI2_CLK"),
-+	PINCTRL_PIN(23, "THC1_SPI2_RESETB"),
-+	PINCTRL_PIN(24, "THC1_SPI2_CLK_FB"),
-+	PINCTRL_PIN(25, "eSPI_IO_0"),
-+	PINCTRL_PIN(26, "eSPI_IO_1"),
-+	PINCTRL_PIN(27, "eSPI_IO_2"),
-+	PINCTRL_PIN(28, "eSPI_IO_3"),
-+	PINCTRL_PIN(29, "eSPI_CSB"),
-+	PINCTRL_PIN(30, "eSPI_RESETB"),
-+	PINCTRL_PIN(31, "eSPI_CLK"),
-+	PINCTRL_PIN(32, "eSPI_CLK_FB"),
-+	PINCTRL_PIN(33, "FAST_SPI0_IO_0"),
-+	PINCTRL_PIN(34, "FAST_SPI0_IO_1"),
-+	PINCTRL_PIN(35, "FAST_SPI0_IO_2"),
-+	PINCTRL_PIN(36, "FAST_SPI0_IO_3"),
-+	PINCTRL_PIN(37, "FAST_SPI0_CSB_0"),
-+	PINCTRL_PIN(38, "FAST_SPI0_CSB_2"),
-+	PINCTRL_PIN(39, "FAST_SPI0_CLK"),
-+	PINCTRL_PIN(40, "FAST_SPI_CLK_FB"),
-+	PINCTRL_PIN(41, "FAST_SPI0_CSB_1"),
-+	PINCTRL_PIN(42, "ISH_GP_12"),
-+	PINCTRL_PIN(43, "THC0_SPI1_INTB"),
-+	PINCTRL_PIN(44, "THC1_SPI2_INTB"),
-+	PINCTRL_PIN(45, "PANEL0_AVEE_EN"),
-+	PINCTRL_PIN(46, "PANEL0_VIO_EN"),
-+	PINCTRL_PIN(47, "PANEL1_AVEE_EN"),
-+	PINCTRL_PIN(48, "PANEL1_VIO_EN"),
-+	PINCTRL_PIN(49, "PANEL0_RESET"),
-+	PINCTRL_PIN(50, "PANEL1_RESET"),
-+	PINCTRL_PIN(51, "ISH_GP_15"),
-+	PINCTRL_PIN(52, "ISH_GP_16"),
-+	PINCTRL_PIN(53, "ISH_GP_17"),
-+	PINCTRL_PIN(54, "ISH_GP_18"),
-+	PINCTRL_PIN(55, "ISH_GP_19"),
-+	PINCTRL_PIN(56, "ISH_GP_20"),
-+	PINCTRL_PIN(57, "ISH_GP_21"),
-+	PINCTRL_PIN(58, "ISH_GP_22"),
-+	PINCTRL_PIN(59, "ISH_GP_23"),
-+	/* NORTHWEST */
-+	PINCTRL_PIN(60, "MCSI_GPIO_0"),
-+	PINCTRL_PIN(61, "MCSI_GPIO_1"),
-+	PINCTRL_PIN(62, "MCSI_GPIO_2"),
-+	PINCTRL_PIN(63, "MCSI_GPIO_3"),
-+	PINCTRL_PIN(64, "LPSS_I2C0_SDA"),
-+	PINCTRL_PIN(65, "LPSS_I2C0_SCL"),
-+	PINCTRL_PIN(66, "LPSS_I2C1_SDA"),
-+	PINCTRL_PIN(67, "LPSS_I2C1_SCL"),
-+	PINCTRL_PIN(68, "LPSS_I2C2_SDA"),
-+	PINCTRL_PIN(69, "LPSS_I2C2_SCL"),
-+	PINCTRL_PIN(70, "LPSS_I2C3_SDA"),
-+	PINCTRL_PIN(71, "LPSS_I2C3_SCL"),
-+	PINCTRL_PIN(72, "LPSS_I2C4_SDA"),
-+	PINCTRL_PIN(73, "LPSS_I2C4_SCL"),
-+	PINCTRL_PIN(74, "LPSS_I2C5_SDA"),
-+	PINCTRL_PIN(75, "LPSS_I2C5_SCL"),
-+	PINCTRL_PIN(76, "LPSS_I3C0_SDA"),
-+	PINCTRL_PIN(77, "LPSS_I3C0_SCL"),
-+	PINCTRL_PIN(78, "LPSS_I3C0_SCL_FB"),
-+	PINCTRL_PIN(79, "LPSS_I3C1_SDA"),
-+	PINCTRL_PIN(80, "LPSS_I3C1_SCL"),
-+	PINCTRL_PIN(81, "LPSS_I3C1_SCL_FB"),
-+	PINCTRL_PIN(82, "ISH_I2C0_SDA"),
-+	PINCTRL_PIN(83, "ISH_I2C0_SCL"),
-+	PINCTRL_PIN(84, "ISH_I2C1_SCL"),
-+	PINCTRL_PIN(85, "ISH_I2C1_SDA"),
-+	PINCTRL_PIN(86, "DBG_PMODE"),
-+	PINCTRL_PIN(87, "BJTAG_TCK"),
-+	PINCTRL_PIN(88, "BJTAG_TDI"),
-+	PINCTRL_PIN(89, "BJTAGX"),
-+	PINCTRL_PIN(90, "BPREQ_B"),
-+	PINCTRL_PIN(91, "BJTAG_TMS"),
-+	PINCTRL_PIN(92, "BPRDY_B"),
-+	PINCTRL_PIN(93, "BJTAG_TDO"),
-+	PINCTRL_PIN(94, "BJTAG_TRST_B_0"),
-+	PINCTRL_PIN(95, "ISH_I3C0_SDA"),
-+	PINCTRL_PIN(96, "ISH_I3C0_SCL"),
-+	PINCTRL_PIN(97, "ISH_I3C0_SCL_FB"),
-+	PINCTRL_PIN(98, "AVS_I2S_BCLK_0"),
-+	PINCTRL_PIN(99, "AVS_I2S_MCLK_0"),
-+	PINCTRL_PIN(100, "AVS_I2S_SFRM_0"),
-+	PINCTRL_PIN(101, "AVS_I2S_RXD_0"),
-+	PINCTRL_PIN(102, "AVS_I2S_TXD_0"),
-+	PINCTRL_PIN(103, "AVS_I2S_BCLK_1"),
-+	PINCTRL_PIN(104, "AVS_I2S_SFRM_1"),
-+	PINCTRL_PIN(105, "AVS_I2S_RXD_1"),
-+	PINCTRL_PIN(106, "AVS_I2S_TXD_1"),
-+	PINCTRL_PIN(107, "AVS_I2S_BCLK_2"),
-+	PINCTRL_PIN(108, "AVS_I2S_SFRM_2"),
-+	PINCTRL_PIN(109, "AVS_I2S_RXD_2"),
-+	PINCTRL_PIN(110, "AVS_I2S_TXD_2"),
-+	PINCTRL_PIN(111, "AVS_I2S_BCLK_3"),
-+	PINCTRL_PIN(112, "AVS_I2S_SFRM_3"),
-+	PINCTRL_PIN(113, "AVS_I2S_RXD_3"),
-+	PINCTRL_PIN(114, "AVS_I2S_TXD_3"),
-+	PINCTRL_PIN(115, "AVS_I2S_BCLK_4"),
-+	PINCTRL_PIN(116, "AVS_I2S_SFRM_4"),
-+	PINCTRL_PIN(117, "AVS_I2S_RXD_4"),
-+	PINCTRL_PIN(118, "AVS_I2S_TXD_4"),
-+	PINCTRL_PIN(119, "AVS_I2S_SFRM_5"),
-+	PINCTRL_PIN(120, "AVS_I2S_RXD_5"),
-+	PINCTRL_PIN(121, "AVS_I2S_TXD_5"),
-+	PINCTRL_PIN(122, "AVS_I2S_BCLK_5"),
-+	PINCTRL_PIN(123, "AVS_SNDW_CLK_0"),
-+	PINCTRL_PIN(124, "AVS_SNDW_DATA_0"),
-+	PINCTRL_PIN(125, "AVS_SNDW_CLK_1"),
-+	PINCTRL_PIN(126, "AVS_SNDW_DATA_1"),
-+	PINCTRL_PIN(127, "AVS_SNDW_CLK_2"),
-+	PINCTRL_PIN(128, "AVS_SNDW_DATA_2"),
-+	PINCTRL_PIN(129, "AVS_SNDW_CLK_3"),
-+	PINCTRL_PIN(130, "AVS_SNDW_DATA_3"),
-+	PINCTRL_PIN(131, "VISA_PTI_CH0_D0_internal"),
-+	PINCTRL_PIN(132, "VISA_PTI_CH0_D1_internal"),
-+	PINCTRL_PIN(133, "VISA_PTI_CH0_D2_internal"),
-+	PINCTRL_PIN(134, "VISA_PTI_CH0_D3_internal"),
-+	PINCTRL_PIN(135, "VISA_PTI_CH0_D4_internal"),
-+	PINCTRL_PIN(136, "VISA_PTI_CH0_D5_internal"),
-+	PINCTRL_PIN(137, "VISA_PTI_CH0_D6_internal"),
-+	PINCTRL_PIN(138, "VISA_PTI_CH0_D7_internal"),
-+	PINCTRL_PIN(139, "VISA_PTI_CH0_CLK_internal"),
-+	PINCTRL_PIN(140, "VISA_PTI_CH1_D0_internal"),
-+	PINCTRL_PIN(141, "VISA_PTI_CH1_D1_internal"),
-+	PINCTRL_PIN(142, "VISA_PTI_CH1_D2_internal"),
-+	PINCTRL_PIN(143, "VISA_PTI_CH1_D3_internal"),
-+	PINCTRL_PIN(144, "VISA_PTI_CH1_D4_internal"),
-+	PINCTRL_PIN(145, "VISA_PTI_CH1_D5_internal"),
-+	PINCTRL_PIN(146, "VISA_PTI_CH1_D6_internal"),
-+	PINCTRL_PIN(147, "VISA_PTI_CH1_D7_internal"),
-+	PINCTRL_PIN(148, "VISA_PTI_CH1_CLK_internal"),
-+	/* WEST */
-+	PINCTRL_PIN(149, "LPSS_UART0_TXD"),
-+	PINCTRL_PIN(150, "LPSS_UART0_RXD"),
-+	PINCTRL_PIN(151, "LPSS_UART0_RTS_B"),
-+	PINCTRL_PIN(152, "LPSS_UART0_CTS_B"),
-+	PINCTRL_PIN(153, "LPSS_UART1_RXD"),
-+	PINCTRL_PIN(154, "LPSS_UART1_TXD"),
-+	PINCTRL_PIN(155, "LPSS_UART1_RTS_B"),
-+	PINCTRL_PIN(156, "LPSS_UART1_CTS_B"),
-+	PINCTRL_PIN(157, "ISH_UART0_RXD"),
-+	PINCTRL_PIN(158, "ISH_UART0_TXD"),
-+	PINCTRL_PIN(159, "ISH_UART0_RTSB"),
-+	PINCTRL_PIN(160, "ISH_UART0_CTSB"),
-+	PINCTRL_PIN(161, "LPSS_SSP_0_CLK"),
-+	PINCTRL_PIN(162, "LPSS_SSP_0_CLK_FB"),
-+	PINCTRL_PIN(163, "LPSS_SSP_0_FS0"),
-+	PINCTRL_PIN(164, "LPSS_SSP_0_FS1"),
-+	PINCTRL_PIN(165, "LPSS_SSP_0_RXD"),
-+	PINCTRL_PIN(166, "LPSS_SSP_0_TXD"),
-+	PINCTRL_PIN(167, "ISH_UART1_RXD"),
-+	PINCTRL_PIN(168, "ISH_UART1_TXD"),
-+	PINCTRL_PIN(169, "ISH_UART1_RTSB"),
-+	PINCTRL_PIN(170, "ISH_UART1_CTSB"),
-+	PINCTRL_PIN(171, "LPSS_SSP_1_FS0"),
-+	PINCTRL_PIN(172, "LPSS_SSP_1_FS1"),
-+	PINCTRL_PIN(173, "LPSS_SSP_1_CLK"),
-+	PINCTRL_PIN(174, "LPSS_SSP_1_CLK_FB"),
-+	PINCTRL_PIN(175, "LPSS_SSP_1_RXD"),
-+	PINCTRL_PIN(176, "LPSS_SSP_1_TXD"),
-+	PINCTRL_PIN(177, "LPSS_SSP_2_CLK"),
-+	PINCTRL_PIN(178, "LPSS_SSP_2_CLK_FB"),
-+	PINCTRL_PIN(179, "LPSS_SSP_2_FS0"),
-+	PINCTRL_PIN(180, "LPSS_SSP_2_FS1"),
-+	PINCTRL_PIN(181, "LPSS_SSP_2_RXD"),
-+	PINCTRL_PIN(182, "LPSS_SSP_2_TXD"),
-+	PINCTRL_PIN(183, "ISH_SPI0_CSB0"),
-+	PINCTRL_PIN(184, "ISH_SPI0_CSB1"),
-+	PINCTRL_PIN(185, "ISH_SPI0_CLK"),
-+	PINCTRL_PIN(186, "ISH_SPI0_MISO"),
-+	PINCTRL_PIN(187, "ISH_SPI0_MOSI"),
-+	PINCTRL_PIN(188, "ISH_GP_0"),
-+	PINCTRL_PIN(189, "ISH_GP_1"),
-+	PINCTRL_PIN(190, "ISH_GP_2"),
-+	PINCTRL_PIN(191, "ISH_GP_13"),
-+	PINCTRL_PIN(192, "ISH_GP_3"),
-+	PINCTRL_PIN(193, "ISH_GP_4"),
-+	PINCTRL_PIN(194, "ISH_GP_5"),
-+	PINCTRL_PIN(195, "ISH_GP_6"),
-+	PINCTRL_PIN(196, "ISH_GP_7"),
-+	PINCTRL_PIN(197, "ISH_GP_8"),
-+	PINCTRL_PIN(198, "ISH_GP_9"),
-+	PINCTRL_PIN(199, "ISH_GP_10"),
-+	PINCTRL_PIN(200, "ISH_GP_11"),
-+	PINCTRL_PIN(201, "ISH_GP_14"),
-+	PINCTRL_PIN(202, "ISH_GP_15"),
-+	PINCTRL_PIN(203, "ISH_GP_22"),
-+	PINCTRL_PIN(204, "ISH_GP_12"),
-+	PINCTRL_PIN(205, "ISH_GP_30_USB_OC"),
-+	PINCTRL_PIN(206, "LPDDRx_RESET0_n"),
-+	PINCTRL_PIN(207, "UFS_RESET_B"),
-+	PINCTRL_PIN(208, "UFS_REFCLK0"),
-+	PINCTRL_PIN(209, "EMMC_SD_CLK"),
-+	PINCTRL_PIN(210, "EMMC_SD_D0"),
-+	PINCTRL_PIN(211, "EMMC_SD_D1"),
-+	PINCTRL_PIN(212, "EMMC_SD_D2"),
-+	PINCTRL_PIN(213, "EMMC_SD_D3"),
-+	PINCTRL_PIN(214, "EMMC_D4"),
-+	PINCTRL_PIN(215, "EMMC_D5"),
-+	PINCTRL_PIN(216, "EMMC_D6"),
-+	PINCTRL_PIN(217, "EMMC_D7"),
-+	PINCTRL_PIN(218, "EMMC_SD_CMD"),
-+	PINCTRL_PIN(219, "EMMC_RCLK"),
-+	PINCTRL_PIN(220, "SDCARD_CLK_FB"),
-+	PINCTRL_PIN(221, "SD_Virtual_GPIO"),
-+	PINCTRL_PIN(222, "OSC_CLK_OUT_NFC"),
-+	PINCTRL_PIN(223, "OSC_CLK_OUT_CAM_0"),
-+	PINCTRL_PIN(224, "OSC_CLK_OUT_CAM_1"),
-+	PINCTRL_PIN(225, "OSC_CLK_OUT_CAM_2"),
-+	PINCTRL_PIN(226, "OSC_CLK_OUT_CAM_3"),
-+	PINCTRL_PIN(227, "PCIe_LINKDOWN"),
-+	PINCTRL_PIN(228, "NFC_CLK_REQ"),
-+	PINCTRL_PIN(229, "PCIE_CLKREQ_N_DEV2"),
-+	PINCTRL_PIN(230, "PCIE_CLKREQ_N_DEV3"),
-+	PINCTRL_PIN(231, "PCIE_CLKREQ_N_DEV4"),
-+	PINCTRL_PIN(232, "PCIE_CLKREQ_N_DEV1"),
-+	PINCTRL_PIN(233, "PCIE_CLKREQ_N_DEV0"),
-+	PINCTRL_PIN(234, "GMBUS_1_SCL"),
-+	PINCTRL_PIN(235, "GMBUS_1_SDA"),
-+	PINCTRL_PIN(236, "GMBUS_0_SCL"),
-+	PINCTRL_PIN(237, "GMBUS_0_SDA"),
-+	/* SOUTHEAST */
-+	PINCTRL_PIN(238, "COMPUTE_PMIC_SVID_DATA"),
-+	PINCTRL_PIN(239, "COMPUTE_PMIC_SVID_CLK"),
-+	PINCTRL_PIN(240, "COMPUTE_PMIC_SVID_ALERT_B"),
-+	PINCTRL_PIN(241, "ROP_PMIC_I2C_SCL"),
-+	PINCTRL_PIN(242, "ROP_PMIC_I2C_SDA"),
-+	PINCTRL_PIN(243, "ISH_TYPEC_I2C2_SDA"),
-+	PINCTRL_PIN(244, "ISH_TYPEC_I2C2_SCL"),
-+	PINCTRL_PIN(245, "COMPUTE_PMU_PROCHOT_B"),
-+	PINCTRL_PIN(246, "PMU_CATERR_B"),
-+	PINCTRL_PIN(247, "COMPUTE_PMIC_VR_READY"),
-+	PINCTRL_PIN(248, "FORCE_FW_RELOAD"),
-+	PINCTRL_PIN(249, "ROP_PMIC_IRQ_ISH_GPIO31_TPC_ALERT_B"),
-+	PINCTRL_PIN(250, "ROP_PMIC_RESET_B"),
-+	PINCTRL_PIN(251, "ROP_PMIC_STNBY_SLP_S0_B"),
-+	PINCTRL_PIN(252, "ROP_PMIC_THERMTRIP_B"),
-+	PINCTRL_PIN(253, "MODEM_CLKREQ"),
-+	PINCTRL_PIN(254, "TPC0_BSSB_SBU1"),
-+	PINCTRL_PIN(255, "TPC0_BSSB_SBU2"),
-+	PINCTRL_PIN(256, "OSC_CLK_OUT_CAM_4"),
-+	PINCTRL_PIN(257, "HPD1"),
-+	PINCTRL_PIN(258, "HPD0"),
-+	PINCTRL_PIN(259, "PMC_TIME_SYNC_0"),
-+	PINCTRL_PIN(260, "PMC_TIME_SYNC_1"),
-+	PINCTRL_PIN(261, "OSC_CLK_OUT_CAM_5"),
-+	PINCTRL_PIN(262, "ISH_GP_20"),
-+	PINCTRL_PIN(263, "ISH_GP_16"),
-+	PINCTRL_PIN(264, "ISH_GP_17"),
-+	PINCTRL_PIN(265, "ISH_GP_18"),
-+	PINCTRL_PIN(266, "ISH_GP_19"),
-+};
-+
-+static const struct intel_padgroup lkf_community0_gpps[] = {
-+	LKF_GPP(0, 0, 31),	/* EAST_0 */
-+	LKF_GPP(1, 32, 59),	/* EAST_1 */
-+};
-+
-+static const struct intel_padgroup lkf_community1_gpps[] = {
-+	LKF_GPP(0, 60, 91),	/* NORTHWEST_0 */
-+	LKF_GPP(1, 92, 123),	/* NORTHWEST_1 */
-+	LKF_GPP(2, 124, 148),	/* NORTHWEST_2 */
-+};
-+
-+static const struct intel_padgroup lkf_community2_gpps[] = {
-+	LKF_GPP(0, 149, 180),	/* WEST_0 */
-+	LKF_GPP(1, 181, 212),	/* WEST_1 */
-+	LKF_GPP(2, 213, 237),	/* WEST_2 */
-+};
-+
-+static const struct intel_padgroup lkf_community3_gpps[] = {
-+	LKF_GPP(0, 238, 266),	/* SOUTHEAST */
-+};
-+
-+static const struct intel_community lkf_communities[] = {
-+	LKF_COMMUNITY(0, 0, 59, lkf_community0_gpps),		/* EAST */
-+	LKF_COMMUNITY(1, 60, 148, lkf_community1_gpps),		/* NORTHWEST */
-+	LKF_COMMUNITY(2, 149, 237, lkf_community2_gpps),	/* WEST */
-+	LKF_COMMUNITY(3, 238, 266, lkf_community3_gpps),	/* SOUTHEAST */
-+};
-+
-+static const struct intel_pinctrl_soc_data lkf_soc_data = {
-+	.pins = lkf_pins,
-+	.npins = ARRAY_SIZE(lkf_pins),
-+	.communities = lkf_communities,
-+	.ncommunities = ARRAY_SIZE(lkf_communities),
-+};
-+
-+static const struct acpi_device_id lkf_pinctrl_acpi_match[] = {
-+	{ "INT34C4", (kernel_ulong_t)&lkf_soc_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, lkf_pinctrl_acpi_match);
-+
-+static INTEL_PINCTRL_PM_OPS(lkf_pinctrl_pm_ops);
-+
-+static struct platform_driver lkf_pinctrl_driver = {
-+	.probe = intel_pinctrl_probe_by_hid,
-+	.driver = {
-+		.name = "lakefield-pinctrl",
-+		.acpi_match_table = lkf_pinctrl_acpi_match,
-+		.pm = &lkf_pinctrl_pm_ops,
-+	},
-+};
-+module_platform_driver(lkf_pinctrl_driver);
-+
-+MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel Lakefield PCH pinctrl/GPIO driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.28.0
+GpioInt (EdgeLevel, ActiveLevel, Shared, PinConfig, DebounceTimeout, ResourceSource,
+ResourceSourceIndex, ResourceUsage, DescriptorName, VendorData) {PinList}
 
+I'm not sure if Windows' implementation is the de facto standard like
+i2c-hid. But if we are going to conform to the ACPI specs and we would
+regard 0x0000 debounce timeout as disabling debouncing filter, then we
+can fix this touchpad issue and potentially some related issues by
+implementing the feature of supporting configuring debounce timeout in
+drivers/gpio/gpiolib-acpi.c and removing all debounce filter
+configuration in amd_gpio_irq_set_type of drivers/pinctrl/pinctrl-amd.c.
+What do you think?
+
+A favorable evidence is I've collected five DSDT tables when
+investigating this issue. All 5 DSDT tables have an GpioInt specifying
+an non-zero debounce timeout value for the edge type irq and for all
+the level type irq, the debounce timeout is set to 0x0000.
+
+
+GpioInt in 5 five collected DSDT tables
+=======================================
+
+$ grep -rIi -A1 gpioint 1/dsdt.dsl
+              GpioInt (Edge, ActiveBoth, SharedAndWake, PullUp, 0x0BB8,
+                  "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+              GpioInt (Level, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
+                  "\\_SB.GPIO", 0x00, ResourceConsumer, _Y24,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Edge, ActiveHigh, SharedAndWake, PullNone, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+
+$ grep -rIi -A1 gpioint 2/dsdt.dsl
+              GpioInt (Edge, ActiveBoth, SharedAndWake, PullUp, 0x0BB8,
+                  "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
+                          "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+
+
+$ grep -rIi -A1 gpioint 3/dsdt.dsl
+                      GpioInt (Edge, ActiveBoth, SharedAndWake, PullNone, 0x2710,
+                          "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                          "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, _Y5B,
+--
+                      GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                          "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, _Y5D,
+
+$ grep -rIi -A1 gpioint 4/dsdt.dsl
+                      GpioInt (Edge, ActiveBoth, SharedAndWake, PullNone, 0x2710,
+                          "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                  GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                      "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+--
+                          GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                              "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, _Y3F,
+--
+                          GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+                              "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, _Y41,
+
+$ grep -rIi -A1 gpioint 5/dsdt.dsl
+              GpioInt (Edge, ActiveBoth, SharedAndWake, PullUp, 0x0BB8,
+                  "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+--
+              GpioInt (Level, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
+                  "\\_SB.GPIO", 0x00, ResourceConsumer, _Y24,
+--
+                  GpioInt (Level, ActiveLow, Exclusive, PullNone, 0x0000,
+                      "\\_SB.GPIO", 0x00, ResourceConsumer, ,
+On Wed, Oct 14, 2020 at 01:46:14PM +0200, Hans de Goede wrote:
+>Hi,
+>
+>On 10/14/20 6:24 AM, Coiby Xu wrote:
+>>On Tue, Oct 06, 2020 at 11:29:40AM +0200, Hans de Goede wrote:
+>>>
+>>>
+>>>On 10/6/20 11:28 AM, Hans de Goede wrote:
+>>>>Hi,
+>>>>
+>>>>On 10/6/20 10:55 AM, Hans de Goede wrote:
+>>>>>Hi,
+>>>>>
+>>>>>On 10/6/20 10:31 AM, Coiby Xu wrote:
+>>>>>>On Tue, Oct 06, 2020 at 08:28:40AM +0200, Hans de Goede wrote:
+>>>>>>>Hi,
+>>>>>>>
+>>>>>>>On 10/6/20 6:49 AM, Coiby Xu wrote:
+>>>>>>>>Hi Hans and Linus,
+>>>>>>>>
+>>>>>>>>I've found the direct evidence proving the GPIO interrupt controller is
+>>>>>>>>malfunctioning.
+>>>>>>>>
+>>>>>>>>I've found a way to let the GPIO chip trigger an interrupt by accident
+>>>>>>>>when playing with the GPIO sysfs interface,
+>>>>>>>>
+>>>>>>>>Ã‚Â - export pin130 which is used by the touchad
+>>>>>>>>Ã‚Â - set the direction to be "out"
+>>>>>>>>Ã‚Â - `echo 0 > value` will trigger the GPIO controller's parent irq and
+>>>>>>>>Ã‚Â Ã‚Â  "echo 1 > value" will make it stop firing
+>>>>>>>>
+>>>>>>>>(I'm not sure if this is yet another bug of the GPIO chip. Anyway I can
+>>>>>>>>manually trigger an interrupt now.)
+>>>>>>>>
+>>>>>>>>I wrote a C program is to let GPIO controller quickly generate some
+>>>>>>>>interrupts then disable the firing of interrupts by toggling pin#130's
+>>>>>>>>value with an specified time interval, i.e., set the value to 0 first
+>>>>>>>>and then after some time, re-set the value to 1. There is no interrupt
+>>>>>>>>firing unless time internal > 120ms (~7Hz). This explains why we can
+>>>>>>>>only see 7 interrupts for the GPIO controller's parent irq.
+>>>>>>>
+>>>>>>>That is a great find, well done.
+>>>>>>>
+>>>>>>>>My hypothesis is the GPIO doesn't have proper power setting so it stays
+>>>>>>>>in an idle state or its clock frequency is too low by default thus not
+>>>>>>>>quick enough to read interrupt input. Then pinctrl-amd must miss some
+>>>>>>>>code to configure the chip and I need a hardware reference manual of this
+>>>>>>>>GPIO chip (HID: AMDI0030) or reverse-engineer the driver for Windows
+>>>>>>>>since I couldn't find a copy of reference manual online? What would you
+>>>>>>>>suggest?
+>>>>>>>
+>>>>>>>This sounds like it might have something to do with the glitch filter.
+>>>>>>>The code in pinctrl-amd.c to setup the trigger-type also configures
+>>>>>>>the glitch filter, you could try changing that code to disable the
+>>>>>>>glitch-filter. The defines for setting the glitch-filter bits to
+>>>>>>>disabled are already there.
+>>>>>>>
+>>>>>>
+>>>>>>Disabling the glitch filter works like a charm! Other enthusiastic
+>>>>>>Linux users who have been troubled by this issue for months would
+>>>>>>also feel great to know this small tweaking could bring their
+>>>>>>touchpad back to life:) Thank you!
+>>>>>
+>>>>>That is good to hear, I'm glad that we have finally found a solution.
+>>>>>
+>>>>>>$ git diff
+>>>>>>diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+>>>>>>index 9a760f5cd7ed..e786d779d6c8 100644
+>>>>>>--- a/drivers/pinctrl/pinctrl-amd.c
+>>>>>>+++ b/drivers/pinctrl/pinctrl-amd.c
+>>>>>>@@ -463,7 +463,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>>>>>Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
+>>>>>>Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
+>>>>>>Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>>>>>>-Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
+>>>>>>+Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  /** pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF; */
+>>>>>>Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  irq_set_handler_locked(d, handle_level_irq);
+>>>>>>Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  break;
+>>>>>>
+>>>>>>I will learn more about the glitch filter and the implementation of
+>>>>>>pinctrl and see if I can disable glitch filter only for this touchpad.
+>>>>>
+>>>>>The glitch filter likely also has settings for how long a glitch
+>>>>>lasts, which apparently goes all the way up to 120ms. If it would
+>>>>>only delay reporting by say 0.1ms and consider any pulse longer
+>>>>>then 0.1s not a glitch, then having it enabled would be fine.
+>>>>>
+>>>>>I don't think we want some sort of quirk here to only disable the
+>>>>>glitch filter for some touchpads. One approach might be to simply
+>>>>>disable it completely for level type irqs.
+>>>>>
+>>>>>What we really need here is some input from AMD engineers with how
+>>>>>this is all supposed to work.
+>>>>>
+>>>>>E.g. maybe the glitch-filter is setup by the BIOS and we should not
+>>>>>touch it all ?
+>>>>>
+>>>>>Or maybe instead of DB_TYPE_PRESERVE_HIGH_GLITCH low level interrupts
+>>>>>should use DB_TYPE_PRESERVE_LOW_GLITCH ?Ã‚Â Ã‚Â  Some docs for the hw
+>>>>>would really help here ...
+>>>>
+>>>>So I've been digging through the history of the pinctrl-amd.c driver
+>>>>and once upon a time it used to set a default debounce time of
+>>>>2.75 ms.
+>>>>
+>>>>See the patch generated by doing:
+>>>>
+>>>>git format-patch 8cf4345575a416e6856a6856ac6eaa31ad883126~..8cf4345575a416e6856a6856ac6eaa31ad883126
+>>>>
+>>>>In a linux kernel checkout.
+>>>>
+>>>>So it would be interesting to add a debugging printk to see
+>>>>what the value of pin_reg & DB_TMR_OUT_MASK is for the troublesome
+>>>>GPIO.
+>>>>
+>>>>I guess that it might be all 1s (0xfffffffff) or some such which
+>>>>might be a way to check that we should disable the glitch-filter
+>>>>for this pin?
+>>>
+>>>p.s.
+>>>
+>>>Or maybe we should simply stop touching all the glitch-filter
+>>>related bits, in the same way as that old commit has already
+>>>removed the code setting the timing of the filter ?
+>>>
+>>>At least is seems that forcing the filter to be on without
+>>>sanitizing the de-bounce time is not a good idea.
+>>>
+>>Today I find an inconsistency in drivers/pinctrl/pinctrl-amd.c
+>>so there must be a bug. As far as I can understand pinctrl-amd,
+>>"pin_reg & ~DB_CNTRl_MASK" is used to mask out the debouncing
+>>feature,
+>>
+>>static int amd_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
+>>         unsigned debounce)
+>>{
+>>     ...
+>>     if (debounce) {
+>>         ...
+>>         if (debounce < 61) {
+>>             pin_reg |= 1;
+>>             pin_reg &= ~BIT(DB_TMR_OUT_UNIT_OFF);
+>>             pin_reg &= ~BIT(DB_TMR_LARGE_OFF);
+>>         ...
+>>         } else if (debounce < 1000000) {
+>>             time = debounce / 62500;
+>>             pin_reg |= time & DB_TMR_OUT_MASK;
+>>             pin_reg |= BIT(DB_TMR_OUT_UNIT_OFF);
+>>             pin_reg |= BIT(DB_TMR_LARGE_OFF);
+>>         } else {
+>>             pin_reg &= ~DB_CNTRl_MASK;
+>>             ret = -EINVAL;
+>>         }
+>>
+>>     } else {
+>>         ...
+>>         pin_reg &= ~DB_CNTRl_MASK;
+>>     }
+>>     ...
+>>}
+>>
+>>However in amd_gpio_irq_set_type, "ping_reg & ~(DB_CNTRl_MASK << DB_CNTRL_OFF)"
+>>is used,
+>>
+>>static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>{
+>>
+>>     ...
+>>     case IRQ_TYPE_LEVEL_LOW:
+>>         pin_reg |= LEVEL_TRIGGER << LEVEL_TRIG_OFF;
+>>         pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
+>>         pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
+>>         pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>>         pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
+>>         irq_set_handler_locked(d, handle_level_irq);
+>>         break;
+>>     ...
+>>}
+>>
+>>If "pin_reg & ~DB_CNTRl_MASK" is used instead, the touchpad will work
+>>flawlessly. So I believe "pin_reg & ~DB_CNTRl_MASK" is the correct way
+>>to mask out the debouncing filter and the bug lies in amd_gpio_set_type.
+>
+>I'm afraid that that is not the case, the current code is correct,
+>it clears bit 5 and 6 of the register which are the bits which control
+>the debounce type.
+>
+>You mentioned in an earlier mail that the value of the register is
+>0x500e8 before this function runs.
+>
+>If you drop the "<< DB_CNTRL_OFF" part then instead you are masking out
+>bits 0 and 1 which are already 0, so the mask becomes a no-op.
+>
+>>Btw, can you explain what's the difference between glitch filter and
+>>debouncing filter?
+>
+>There is no difference the driver mixes the terms, but they both refer
+>to the same thing this is most clear in the defines for the DB_CNTRL bits
+>(bits 5 and 6 of the register):
+>
+>#define DB_TYPE_NO_DEBOUNCE               0x0UL
+>#define DB_TYPE_PRESERVE_LOW_GLITCH       0x1UL
+>#define DB_TYPE_PRESERVE_HIGH_GLITCH      0x2UL
+>#define DB_TYPE_REMOVE_GLITCH             0x3UL
+>
+>Which is interesting because bits 5 and 6 are both 1 as set by the BIOS,
+>so with your little hack to dro the "<< DB_CNTRL_OFF" you are in essence
+>keeping bits 5 and 6 as DB_TYPE_REMOVE_GLITCH.
+>
+>So it seems that the problem is that the irq_set_type code changes
+>the glitch filter type from DB_TYPE_REMOVE_GLITCH (filter out all
+>glitches) to DB_TYPE_PRESERVE_HIGH_GLITCH, which apperently breaks
+>things.
+>
+>To test this you could replace the:
+>
+>DB_TYPE_PRESERVE_HIGH_GLITCH
+>
+>bit in the case IRQ_TYPE_LEVEL_LOW path with:
+>
+>DB_TYPE_REMOVE_GLITCH
+>
+>Which I would expect to also fix your touchpad.
+>
+>If that is the case an interesting experiment would be to
+>replace DB_TYPE_PRESERVE_HIGH_GLITCH with
+>DB_TYPE_PRESERVE_LOW_GLITCH instead.
+>
+>I've never seen this kinda glitch/debounce filter where
+>you can filter out only one type of level before, so
+>I wonder if the code maybe simply got it wrong, also for
+>a level type irq I really see no objection to just
+>use DB_TYPE_REMOVE_GLITCH instead of the weird "half"
+>filters.
+>
+>So I just ran a git blame and the DB_TYPE_PRESERVE_HIGH_GLITCH
+>has been there from the very first commit of this driver,
+>I wonder if it has been wrong all this time and should be
+>inverted (so DB_TYPE_PRESERVE_LOW_GLITCH instead).
+>
+>I think we may want to just play it safe though and simply
+>switch to DB_TYPE_REMOVE_GLITCH as we already do for all
+>edge types and when amd_gpio_set_config() gets called!
+>
+>Linus, what do you think about just switching to
+>DB_TYPE_REMOVE_GLITCH for level type irqs (unifying them
+>with all the other modes) and not mucking with this weird,
+>undocumented "half" filter modes ?
+>
+>>Or can you point to some references? I've gain some
+>>experience about how to configure the GPIO controller by studying the
+>>code of pinctrl-amd and pinctrl-baytrail (I can't find the hardware
+>>reference manual for baytrail either). I also tweaked the configuration
+>>in pinctrl-amd, for example, setting the debounce timeout to 976 usec
+>>and 3.9 msec without disabling the glitch filter could also save the
+>>touchpad. But I need some knowledge to understand why this touchpad [1]
+>>which also uses the buggy pinctrl-amd isn't affected.
+>>
+>>[1] https://github.com/Syniurge/i2c-amd-mp2/issues/11#issuecomment-707427095
+>
+>My guess would be that it uses edge types interrupts instead ?
+>I have seen that quite a few times, even though it is weird
+>to do that for i2c devices.
+>
+>Regards,
+>
+>Hans
+>
+
+--
+Best regards,
+Coiby
