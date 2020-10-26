@@ -2,118 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FD24298F59
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:32:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23500298F71
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:34:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781533AbgJZOcY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 10:32:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51442 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1781420AbgJZObw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Oct 2020 10:31:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3D1FAAD07;
-        Mon, 26 Oct 2020 14:31:50 +0000 (UTC)
-Message-ID: <2ca7430db77ca2924cb6f4b99e858f155d261a18.camel@suse.de>
-Subject: Re: [PATCH v2 05/10] soc: bcm: raspberrypi-power: Release firmware
- handle on unbind
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org
-Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Date:   Mon, 26 Oct 2020 15:31:47 +0100
-In-Reply-To: <20201022155858.20867-6-nsaenzjulienne@suse.de>
-References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
-         <20201022155858.20867-6-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-iro0+jQoAZrbRkqhy4O6"
-User-Agent: Evolution 3.36.5 
+        id S1781638AbgJZOem (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 10:34:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43170 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1781551AbgJZOdR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:33:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dn5so9569832edb.10
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 07:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NL7oE/FOu1FdsHVXtgRhlmVNZvxP63/3P1s2iUbijps=;
+        b=dK5R82NlOAMd7fUkIrlIbQkTB2oerujWd4Mw9WtN4FTE/lPkGh171HrY27lBvKr6vu
+         qjeipXZx6EA0OZLi04vOur2lkzUlmykDa5Peh3TMCwIaXnlrVZmmmSCHtC9EHGluDTSj
+         tYj+lv8ffsMq6neJxq2dtDet7+yC0lJRaaJjDyyKthx41MdC8b86hIecqPKtSLemLD/t
+         zIZTwFv6lxsX88YYwjCy3zHyUGPgC93hjOO0r4ks2iHDE5V05fhH0E36/UBhLyv1CHO/
+         Ufsvsj1cxwWXG+EyElFbNdTmz2hNcg/YATpDxiXP/JVY6Wq3RnrFEwzqBJgBLlCqLGhy
+         rnbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NL7oE/FOu1FdsHVXtgRhlmVNZvxP63/3P1s2iUbijps=;
+        b=ZjWDhbrz93vU0vPyaYfEnUxY+Ok8kgn0jR42Uhgf2IelI4ftVywP6Y5NiAH9RPVcdV
+         6rflu+TqsDhJwn/hi92yBj/u41/woi73xsGpYUj78ZkNps9Nr6gAci80ICmqqGtj0zIX
+         PTPi9sBXpUFwPimZawHjjHyk5W8qRsi8X7fZ45T3gm5zJ7snxVyjBPrFz+tBB5WYpDHE
+         p2Xnlekkpd2xbdnGrQ9W5ypG9Tb/w8sjAMvckY+48JeMGCbf8z7bUB7Vl8q/SYsBU9+O
+         68i9SWUonA1GWCrH4eGx21yqt7iAuwEJeK8jeNFCmmjhoi93JQcNGnb3l/2131s8zLUe
+         eT/Q==
+X-Gm-Message-State: AOAM533NlvzqM7KrHNSYnW01sPYY8TTcAbjtGvBUz2XddHHPxYJQvBFz
+        HVKyGpXfVPlLx+f69mmg3tiiiEydmpbq6BmVwGS0kQ==
+X-Google-Smtp-Source: ABdhPJzKi4tmV2Cv4sbeMgWAKFUg/xRJTcrF5bAtYkBBrbRRCZ/yk3UOFCsJ5Ct+BNZnK7a4S1TUBkEdvwENFEdk8+E=
+X-Received: by 2002:a50:99c3:: with SMTP id n3mr6280737edb.213.1603722795508;
+ Mon, 26 Oct 2020 07:33:15 -0700 (PDT)
 MIME-Version: 1.0
+References: <20201009060302.6220-1-mike.looijmans@topic.nl>
+In-Reply-To: <20201009060302.6220-1-mike.looijmans@topic.nl>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 26 Oct 2020 15:33:04 +0100
+Message-ID: <CAMpxmJVkM_Jp-PZwgYU2mrACy1z8-aCk+OkihKq8idWfobU3Qg@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: gpio: pca953x: Add support for the NXP PCAL9554B/C
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---=-iro0+jQoAZrbRkqhy4O6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2020-10-22 at 17:58 +0200, Nicolas Saenz Julienne wrote:
-> Upon unbinding the device make sure we release RPi's firmware interface.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Fri, Oct 9, 2020 at 8:03 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
+>
+> The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
+> with 8 GPIOs, latched interrupts and some advanced configuration
+> options. The "C" version only differs in I2C address.
+>
+> This adds the entry to the devicetree bindings.
+>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
->  drivers/soc/bcm/raspberrypi-power.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/drivers/soc/bcm/raspberrypi-power.c b/drivers/soc/bcm/raspbe=
-rrypi-power.c
-> index 5d1aacdd84ef..a0b38db5886c 100644
-> --- a/drivers/soc/bcm/raspberrypi-power.c
-> +++ b/drivers/soc/bcm/raspberrypi-power.c
-> @@ -225,6 +225,20 @@ static int rpi_power_probe(struct platform_device *p=
-dev)
->  	return 0;
->  }
-> =20
-> +static int rpi_power_remove(struct platform_device *pdev)
-> +{
-> +	struct rpi_power_domains *rpi_domains =3D platform_get_drvdata(pdev);
-> +
-> +	of_genpd_del_provider(dev->of_node);
-> +
-> +	for (i =3D 0; i < RPI_POWER_DOMAIN_COUNT; i++)
-> +		pm_genpd_remove(&rpi_domains->domains[i].base);
-> +
-> +	rpi_firmware_put(rpi_domaina->fw);
+> v2: Split devicetree and code into separate patches
+> v3: Devicetree bindings in yaml format
+>
+>  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> index 183ec23eda39..f5ee23c2df60 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> @@ -48,6 +48,7 @@ properties:
+>        - nxp,pcal6416
+>        - nxp,pcal6524
+>        - nxp,pcal9535
+> +      - nxp,pcal9554b
+>        - nxp,pcal9555a
+>        - onnn,cat9554
+>        - onnn,pca9654
+> --
+> 2.17.1
+>
 
-I Just realised I failed to squash a fix for this patch, so this will not
-build. Sorry for that.
+Hi Mike,
 
-Regards,
-Nicolas
+please resend this rebased on top of v5.10-rc1 with tags collected if
+you still want it merged.
 
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id rpi_power_of_match[] =3D {
->  	{ .compatible =3D "raspberrypi,bcm2835-power", },
->  	{},
-> @@ -237,6 +251,7 @@ static struct platform_driver rpi_power_driver =3D {
->  		.of_match_table =3D rpi_power_of_match,
->  	},
->  	.probe		=3D rpi_power_probe,
-> +	.remove		=3D rpi_power_remove,
->  };
->  builtin_platform_driver(rpi_power_driver);
-> =20
-
-
---=-iro0+jQoAZrbRkqhy4O6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W3dMACgkQlfZmHno8
-x/7DPAf/W6V8Brdbgq2QtE27YW5fEMV34Zg8X73FdarZ4ek3YR4/DxGnBXwz6/o3
-Uf4CVOLfSOnlwf+nO26rHfvMl8WBwo14AR37nVAiHBFUOSiTvExBO+aHFDvHfHRP
-LMcZeVRWNrH1XiVuYsXMlQ5BgeTba6ii+awS2itDOeR61xraPONJHgc0sVSbnjh+
-AqDo4TxRZHP7CifFfwTZFC/yYt5RXYGyVYvvi4rWu9FZbwjy06rlmMcGZyguGpgj
-grC4TlIs1actEIgrFa8cSS+zLNpcYCBgFe5HzVjqkyrhGu5lJZbFqmgbACV27+Jr
-nBhLMJ/JZSnUSDFMhDuAJtC0/132LA==
-=AyH+
------END PGP SIGNATURE-----
-
---=-iro0+jQoAZrbRkqhy4O6--
-
+Bartosz
