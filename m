@@ -2,158 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74E79298EC1
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:03:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 837AA298EFB
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:18:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1780886AbgJZODD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 10:03:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55984 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1780884AbgJZODD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Oct 2020 10:03:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 83880AD83;
-        Mon, 26 Oct 2020 14:03:00 +0000 (UTC)
-Message-ID: <13068cff8e3a994df5d8fbe19deb068a741365f3.camel@suse.de>
-Subject: Re: [PATCH v2 10/10] pwm: Add Raspberry Pi Firmware based PWM bus
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Date:   Mon, 26 Oct 2020 15:02:58 +0100
-In-Reply-To: <CAHp75VcB5oxXs38UH5taVGj21wUi3sHYdRPOj3wxa3yXg0vmUA@mail.gmail.com>
-References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
-         <20201022155858.20867-11-nsaenzjulienne@suse.de>
-         <CAHp75VcB5oxXs38UH5taVGj21wUi3sHYdRPOj3wxa3yXg0vmUA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-TTVm3kIKIXd08z1jOMlD"
-User-Agent: Evolution 3.36.5 
+        id S1776205AbgJZOSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 10:18:51 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:39292 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1780407AbgJZOSv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:18:51 -0400
+Received: by mail-wm1-f53.google.com with SMTP id d3so12664828wma.4
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 07:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z+Ur3tsnJ+KtlVIulRUK2X+mhrHRJ7Kyj1OjwnScNJY=;
+        b=Qf7qxzacM5hvP9R8srH4tT/f/UQA7msEy9Q2mhJ7bH2sSUpnk9C8lERQBVWH6ixJ34
+         NItcsWgEl63+t7JNi47inAA8dMvl+vSMdzpTBZNJOKibU61KU6vaGXNHHOjObN1smpbQ
+         ylqpvJp7b6vBi522IQQsQXxVBzyL83/w32Haw1k9HL8mrL8eXfspaGZ6zeVVDMBiLjMt
+         +qNhuncc8IgoZunKQOsx9zGZ1hSmx8vweJH0omimOncB+nf39uMC6sQFywNo9WhSEyTM
+         qm5gsnLpHiNz0m0cFojoC8g7FtRNzqSS0Ph16JMoEmXUDFm46t1T6kX6UrvxbbcoRQV3
+         QfRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z+Ur3tsnJ+KtlVIulRUK2X+mhrHRJ7Kyj1OjwnScNJY=;
+        b=qP0sMahjvtbvMYEct4Vv2mQkBry/0B/qmmUyIemUe6Ow1YL1n8Cl4YOr1/ojdwbrVt
+         DS296tX+OCSgh2ltCJfGCxnAj61A0o9yAKkOINjrZz0nEBm8KVeb2vFDrH2FxQNuxHBW
+         q57bWXgA41G1ae+1Ycz30uBfxEXW9tnTLu5zwgqPyeU6lchIZXUdVIkv/SWoFKcJLFXp
+         a0VXoUNo5rg67RmHuXYUOdP4uXNtQjugkBi/NuV9Eb4NkxvguqPZ3qD/y733+Vp8F3vH
+         yjqhm+ZpS+3EwXkeMldR7k0X9g5Xt2GlANVVWR/3f7/POhtszGDJrUAXwNWD8mqpr/Hw
+         snlA==
+X-Gm-Message-State: AOAM530ChAquTNhkUDgggBNaNsgPMPVbvWTDegD9CvhLwvolBq6Hh8wL
+        ObQdGd63Pu5FvfoEoeQpEnjLGhdeFyJVVQ==
+X-Google-Smtp-Source: ABdhPJws0P1F8rgvW7RbcSNksmIk+bMZjjf3Ti8A7HbX9ywC9heO4KIxDuY9v6QbosaoTZS5YA9vsA==
+X-Received: by 2002:a1c:7e82:: with SMTP id z124mr16132687wmc.8.1603721929378;
+        Mon, 26 Oct 2020 07:18:49 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
+        by smtp.gmail.com with ESMTPSA id e15sm21920841wro.13.2020.10.26.07.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2020 07:18:48 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 0/7] gpio: exar: refactor the driver
+Date:   Mon, 26 Oct 2020 15:18:32 +0100
+Message-Id: <20201026141839.28536-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---=-TTVm3kIKIXd08z1jOMlD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I just wanted to convert the driver to using simpler IDA API but ended up
+quickly converting it to using regmap. Unfortunately I don't have the HW
+to test it so marking the patches that introduce functional change as RFT
+and Cc'ing the original author.
 
-Hi Andy, thanks for the review!
+Bartosz Golaszewski (7):
+  gpio: exar: add a newline after the copyright notice
+  gpio: exar: include idr.h
+  gpio: exar: switch to a simpler IDA interface
+  gpio: exar: use a helper variable for &pdev->dev
+  gpio: exar: unduplicate address and offset computation
+  gpio: exar: switch to using regmap
+  gpio: exar: use devm action for freeing the IDA and drop remove()
 
-On Thu, 2020-10-22 at 21:53 +0300, Andy Shevchenko wrote:
-> On Thu, Oct 22, 2020 at 9:05 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Adds support to control the PWM bus available in official Raspberry Pi
-> > PoE HAT. Only RPi's co-processor has access to it, so commands have to
-> > be sent through RPi's firmware mailbox interface.
-> >  drivers/pwm/pwm-raspberrypi.c | 221 ++++++++++++++++++++++++++++++++++
->=20
-> Name is completely confusing.
-> Please, make it unique enough to understand that this is exactly the
-> device it serves for.
->=20
-> For example, pwm-rpi-poe is better.
+ drivers/gpio/Kconfig     |   1 +
+ drivers/gpio/gpio-exar.c | 155 +++++++++++++++++++--------------------
+ 2 files changed, 77 insertions(+), 79 deletions(-)
 
-Sounds reasonable, I'll change that.
-
->=20
-> ...
->=20
-> > + *  - Only normal polarity
->=20
-> Can't it be emulated? Isn't it 100% - duty cycle % ?
-
-I guess it can, OTOH given the rather specific use case, I doubt it'll be
-worth the effort.
-
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwm.h>
->=20
-> ...
->=20
-> > +       ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HA=
-T_VAL,
-> > +                                   &msg, sizeof(msg));
-> > +       if (ret)
-> > +               return ret;
-> > +       else if (msg.ret)
->=20
-> Redundant 'else'
-
-Noted.
-
-> > +       firmware_node =3D of_get_parent(dev->of_node);
-> > +       if (!firmware_node) {
-> > +               dev_err(dev, "Missing firmware node\n");
-> > +               return -ENOENT;
-> > +       }
-> > +
-> > +       firmware =3D rpi_firmware_get(firmware_node);
-> > +       of_node_put(firmware_node);
-> > +       if (!firmware)
-> > +               return -EPROBE_DEFER;
->=20
-> Looks like a hack.
-
-This is the pattern we've been using on all firmware dependent devices so f=
-ar.
-Feel free to suggest a better way, I'll be happy to look into it.
-
->=20
-> ...
->=20
-> > +       ret =3D pwmchip_remove(&rpipwm->chip);
-> > +       if (!ret)
-> > +               rpi_firmware_put(rpipwm->firmware);
-> > +
-> > +       return ret;
->=20
-> Can't you use the usual pattern?
-
-Yes of course. Don't know why I went this way.
-
-Regards,
-Nicolas
-
-
---=-TTVm3kIKIXd08z1jOMlD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W1xIACgkQlfZmHno8
-x/4NJgf/d3PqOAENee9eHOK6FqBMAsNsGn4fscamb7Q7MXABE4U/nFCFY7hg1Xo3
-g47j4m8+pNlzE3SjXX0ZyPle4beIWvNQWidQjSyprckUv+wNkJ1Wbt0lFH26GCig
-w8mRGcXYm12zKKDSpGf5Wg/qAhE9qV2ruti8nc94lkSoiP2kSlfp6j5MZZYzEd2p
-y4khOBqxT1e4Trh+QOhKke2pW43WHNZT0TW6ZhJxKq4UNq7lxzer9TFHWgda16oy
-C4kdNiGm9MDQicgNWAq18ctJTZvPoR1scLrBNpJOapJ1UuY0mCqjpMZJDi9W+/EB
-7FRq+EXSXY7hpOmPUUJ1pJm1mUNoOw==
-=ljds
------END PGP SIGNATURE-----
-
---=-TTVm3kIKIXd08z1jOMlD--
+-- 
+2.29.1
 
