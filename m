@@ -2,84 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C2D5298F93
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:40:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ECE2298F9F
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:41:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781789AbgJZOk1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 10:40:27 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50892 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1781785AbgJZOk0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:40:26 -0400
-Received: by mail-pj1-f67.google.com with SMTP id p21so3358288pju.0
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 07:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AuWslfBN5ejzhZENZmoJOy4rO2zUtnzh/8/yM7SxCRQ=;
-        b=CCf7DOR6Nr9EQiJeWO+jPQjrERcv/FfbWqJComunMyHUSr0gyLfaYpgVJ9nyXaA3a1
-         yyqu335QwzRqbaNY4/sy96qCSFy6Cd8HoS7rpcWi4PFChWkF9Yd02Yfi8yKXNzpFoTfm
-         Xri43WWPRv5dCUfIWoiQwK21C4YvcotxG4pxbjg7RA96dsy3cpZvs/H8X2PptQvLB6R7
-         bi9NmPQWlJ2/5BCcEFZJbyqIN4kxGki8Z9hm1p9n2Sth1Xjf8YgW2gG7ELmicjSt3Nbx
-         RxRpXF0T9SYBpCmTsjqekrALtMqsYoVn3hauPILucN3DFRYuynwkA1reZ/7nkbcRhw97
-         05ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AuWslfBN5ejzhZENZmoJOy4rO2zUtnzh/8/yM7SxCRQ=;
-        b=Y0BT3LYW5FW1Nbwzan8Sr2WFCVDyXw9wvx+BTnoNPxeCl2F/jtG7mSoXYTOVl7G/Do
-         4FbjMo3QCo4wrNDd5yJYAW3avlBA02mxpBd5CVQ2X9qfKNyDB7g+Py0r6FAeqn/4Lld/
-         o034Ax6bNlFiUELMPPkTXvVxXlQdGweSvqLlq5rvTBb7O0+k5MFU7ICkdXevpvGItMSP
-         fiLZ8tRrdKyOFX7Nn4FZtCLIfK7TeK8CO9GoPZTwUyqF7qpxjkehlW8c13kEM/pu2t2V
-         vUnzuD2e44oEJk83waCSwIBXME1vXhvpX9xzZlliP6XPmEaIktSIkH7l/k+sgrnzFaYk
-         Hvsg==
-X-Gm-Message-State: AOAM531aD+hGnJsPUcNPdsdCyplbAhYgAGANOdC0IrePUi18sOYjpv9X
-        ce9C5Mpw8r464dxfnIVped1UJ5jEk744v4rBv1g=
-X-Google-Smtp-Source: ABdhPJxhdq6fQIJMIAxyC9X5Nj65uc7tMg2ouBcSuZSgOVYewIYlotcCsv4l2ERNs/lBZWA+I78nq5u7wRipF+8F1EA=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr16486951pjs.181.1603723225595;
- Mon, 26 Oct 2020 07:40:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com> <20201022170319.GJ4077@smile.fi.intel.com>
-In-Reply-To: <20201022170319.GJ4077@smile.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 16:41:14 +0200
-Message-ID: <CAHp75VfqQ97oLfRe03pkAbmoS6hq3P7ZScS7Jr1Y=ZAYgWmP7w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] gpiolib: acpi: Respect bias settings for GpioInt() resource
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus@black.fi.intel.com, Walleij@black.fi.intel.com,
+        id S1781815AbgJZOly (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 10:41:54 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:5954 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1781813AbgJZOlx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:41:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1603723312; x=1635259312;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=Z51Y0WPuxfySceJvyCg6OljYCBlpG10jvErN7/lqG0I=;
+  b=R+NiQfz5B+DbyhcfeUE5eJ5esnaiMONIGQPcVmK9Dpjlzg2LvD8rgAZ0
+   m9W71NXMUI8i/MeR5zcSN7JQ9Vsc9L/XaFOh94HwBnPR6rip1tPSueraN
+   h59kR0O7hsqSiJWRxFAUQKynfDdyTC+6E0TcRP2H9tDmh4bAQXE6/TL8S
+   DsOl6XOVHVQnOuNYFsCeZmg0r+wIciDpqWRTZcGrGpAt7RZ+nhK/n7EGF
+   mm26htIActEplS1nE5LCBOdnPBgMfiZdtWO4eCaCj+WCAWTKXdp33CG/T
+   X66uSJhWLtWVpqgzemq8t8WclcT6gwYX+MBPpZXPMHL89bdMjCLSqT2Ks
+   Q==;
+IronPort-SDR: ur/iatolHsSQLlPgkra01jpyP5UkFR+f5oGAiX4Pjn2n9J/D9MuDMyL3kv6VEXO9c7A7mTJwUg
+ xkaD593Pxs3tt+NKcnSCwp5g5iVK4g1VwkmMkzF89Uf/vF0WGR5HTRPPs9RTW9rmrMcJ7rRppO
+ +mmBam0NpSmUlFv7OHKc9fODnfUkoz/5riwLNb2Z99G3KTobhCNw8swQiqoscQVQAhUOIWCOPy
+ ChnKC2dgkrJ97Jg3lR297+N8NYLzL+SR8oX+M2jADYlFdtkF7Mkpl/29SgZ4F3uB5IkWi3WB3T
+ AK4=
+X-IronPort-AV: E=Sophos;i="5.77,419,1596524400"; 
+   d="scan'208";a="91396107"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Oct 2020 07:41:52 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 26 Oct 2020 07:41:51 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 26 Oct 2020 07:41:49 -0700
+References: <20201014100707.2728637-1-lars.povlsen@microchip.com> <20201014100707.2728637-3-lars.povlsen@microchip.com> <CAHp75Vdd6ECJaWytYVz+5GYZrwybzZmviUOt3H=t-4LH=_idKg@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v6 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO
+In-Reply-To: <CAHp75Vdd6ECJaWytYVz+5GYZrwybzZmviUOt3H=t-4LH=_idKg@mail.gmail.com>
+Date:   Mon, 26 Oct 2020 15:41:48 +0100
+Message-ID: <87blgp9hhv.fsf@soft-dev15.microsemi.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 22, 2020 at 9:15 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Thu, Oct 22, 2020 at 07:58:45PM +0300, Andy Shevchenko wrote:
 
-> Missed comment as per v1:
+Hi Andy!
+
+Andy Shevchenko writes:
+
+> On Wed, Oct 14, 2020 at 6:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>>
+>> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
+>> (SGPIO) device used in various SoC's.
 >
-> This one highly depends on Intel pin control driver changes (for now [1],
-> but might be more), so it's probably not supposed to be backported (at least
-> right now).
+> ...
 >
-> [1]: https://lore.kernel.org/linux-gpio/20201014104638.84043-1-andriy.shevchenko@linux.intel.com/T/
+>> +#define PIN_NAM_SZ     (sizeof("SGPIO_D_pXXbY")+1)
+>
+> +1 for what?
+>
 
-I probably have to elaborate what above implies from integration p.o.v.
+Reverse fencepost :-). I'll remove it.
 
-I think the best way is to collect tags from GPIO maintainers and I
-can incorporate this into our Intel pin control branch which I will
-share with you as PR against GPIO and pin control subsystems.
+> ...
+>
+>> +#define __shf(x)               (__builtin_ffsll(x) - 1)
+>> +#define __BF_PREP(bf, x)       (bf & ((x) << __shf(bf)))
+>> +#define __BF_GET(bf, x)                (((x & bf) >> __shf(bf)))
+>
+> This smells like bitfield.h.
+>
 
-I'm also all ears for alternatives.
+Yes, and I would use it if I could, just bitfield.h don't like anything
+but constexpr. The driver support 3 SoC variants which (unfortunately)
+have different register layouts in some areas.
+
+> ...
+>
+>> +static int sgpio_input_get(struct sgpio_priv *priv,
+>> +                          struct sgpio_port_addr *addr)
+>> +{
+>
+>> +       int ret;
+>> +
+>> +       ret = !!(sgpio_readl(priv, REG_INPUT_DATA, addr->bit) &
+>> +                BIT(addr->port));
+>> +
+>> +       return ret;
+>
+> Sounds like one line.
+>
+
+Yes, I'll change that.
+
+>> +}
+>
+>> +static int sgpio_get_functions_count(struct pinctrl_dev *pctldev)
+>> +{
+>
+>> +       return 1;
+>
+> I didn't get why it's not a pure GPIO driver?
+> It has only one function (no pinmux).
+> I didn't find any pin control features either.
+>
+> What did I miss?
+
+The hardware has more functions, which are planned to be added
+later. This has already been agreed with Linux Walleij.
+
+>
+> ...
+>
+>> +static int microchip_sgpio_get_value(struct gpio_chip *gc, unsigned int gpio)
+>> +{
+>> +       struct sgpio_bank *bank = gpiochip_get_data(gc);
+>> +       struct sgpio_priv *priv = bank->priv;
+>> +       struct sgpio_port_addr addr;
+>
+>> +       int ret;
+>
+> No need.
+
+Ok, I'll trim it.
+
+>
+>> +
+>> +       sgpio_pin_to_addr(priv, gpio, &addr);
+>> +
+>> +       if (bank->is_input)
+>> +               ret = sgpio_input_get(priv, &addr);
+>> +       else
+>> +               ret = sgpio_output_get(priv, &addr);
+>> +
+>> +       return ret;
+>> +}
+>
+>
+> ...
+>
+>
+>> +       ret = devm_gpiochip_add_data(dev, gc, bank);
+>> +       if (ret == 0)
+>
+>> +               dev_info(dev, "Registered %d GPIOs\n", ngpios);
+>
+> No noise.
+>
+
+OK, gone.
+
+>> +       else
+>> +               dev_err(dev, "Failed to register: ret %d\n", ret);
+>> +
+>
+> ...
+>
+>> +       /* Get register map */
+>> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       priv->regs = devm_ioremap_resource(dev, regs);
+>
+> devm_platform_ioremap_resource();
+
+Yes, I'll replace with that.
+
+>
+>> +       if (IS_ERR(priv->regs))
+>> +               return PTR_ERR(priv->regs);
+>
+>> +       priv->properties = of_device_get_match_data(dev);
+>
+> It's interesting you have a mix between OF APIs and device property
+> APIs. Choose one. If you stick with OF, use of_property_ and so,
+> otherwise replace of_*() by corresponding device_*() or generic calls.
+
+Sure. I will change the device_property_read_u32() with
+of_property_read_u32().
+
+>
+> Can you use gpio-regmap APIs?
+
+No, I think the sgpio hardware is a little too odd for that
+(of_gpio_n_cells == 3). And then there's alternate pinctrl functions.
+
+Thank you for your comments, they are very much appreciated. Let me know
+if I missed anything.
+
+I will refresh the series shortly (on v5.10-rc1).
+
+---Lars
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lars Povlsen,
+Microchip
