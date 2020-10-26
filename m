@@ -2,108 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22DFB29925B
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 17:26:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 042AF29927D
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 17:32:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1773379AbgJZQ0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 12:26:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47980 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404162AbgJZQ0W (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Oct 2020 12:26:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EEE67AC48;
-        Mon, 26 Oct 2020 16:26:19 +0000 (UTC)
-Message-ID: <160f3f542a89e0263d5d375fdae796af6017c33c.camel@suse.de>
-Subject: Re: [PATCH v2 01/10] firmware: raspberrypi: Introduce
- rpi_firmware_put()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Date:   Mon, 26 Oct 2020 17:26:17 +0100
-In-Reply-To: <CAHp75Vej4UfsySRB6qXL7fFN7SjnTjy=p4Xkn1xBO0YOFy-kcQ@mail.gmail.com>
-References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
-         <20201022155858.20867-2-nsaenzjulienne@suse.de>
-         <CAHp75Vej4UfsySRB6qXL7fFN7SjnTjy=p4Xkn1xBO0YOFy-kcQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+M2bTZi8S7Ge32C0tkNp"
-User-Agent: Evolution 3.36.5 
-MIME-Version: 1.0
+        id S1786038AbgJZQcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 12:32:54 -0400
+Received: from atl4mhfb01.myregisteredsite.com ([209.17.115.55]:36338 "EHLO
+        atl4mhfb01.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1786037AbgJZQcx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Oct 2020 12:32:53 -0400
+Received: from jax4mhob21.registeredsite.com (jax4mhob21.registeredsite.com [64.69.218.109])
+        by atl4mhfb01.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 09QGWpjL029304
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 12:32:52 -0400
+Received: from mailpod.hostingplatform.com ([10.30.71.205])
+        by jax4mhob21.registeredsite.com (8.14.4/8.14.4) with ESMTP id 09QGWnQZ054057
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 12:32:49 -0400
+Received: (qmail 4608 invoked by uid 0); 26 Oct 2020 16:32:50 -0000
+X-TCPREMOTEIP: 81.173.50.109
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@81.173.50.109)
+  by 0 with ESMTPA; 26 Oct 2020 16:32:49 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     devicetree@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, krzk@kernel.org,
+        Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v4] dt-bindings: gpio: pca953x: Add support for the NXP PCAL9554B/C
+Date:   Mon, 26 Oct 2020 17:32:43 +0100
+Message-Id: <20201026163244.21610-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The NXP PCAL9554B is a variant of the PCA953x GPIO expander,
+with 8 GPIOs, latched interrupts and some advanced configuration
+options. The "C" version only differs in I2C address.
 
---=-+M2bTZi8S7Ge32C0tkNp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This adds the entry to the devicetree bindings.
 
-On Thu, 2020-10-22 at 21:46 +0300, Andy Shevchenko wrote:
-> On Thu, Oct 22, 2020 at 9:06 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > When unbinding the firmware device we need to make sure it has no
-> > consumers left. Otherwise we'd leave them with a firmware handle
-> > pointing at freed memory.
-> >=20
-> > Keep a reference count of all consumers and make sure they all finished
-> > unbinding before we do.
->=20
-> Wait, if it's a device, why do we need all these?
-> get_device() / put_device() along with module_get() / module_put()
-> should be sufficient, no?
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+v2: Split devicetree and code into separate patches
+v3: Devicetree bindings in yaml format
+v4: Rebase on v5.10-rc1
 
-Could you expand here a little, I do see how I could use get_device()'s
-reference count. But it seems to me I'd be digging way too deep into kobj i=
-n
-order to get the functionality I need.
+ Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you meant to say that it should be automatically taken care by the platf=
-orm
-bus, just FYI we're using 'simple-mfd' in DT. Where firmware supplier is th=
-e
-parent and all consumers are children.
-
-Regards,
-Nicolas
-
-
---=-+M2bTZi8S7Ge32C0tkNp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W+KkACgkQlfZmHno8
-x/6XwQf+N4Vi5LyZRLbYPf2alcEVhV4rJF362cZVbIn76rK576WGug740xSWsiwO
-gfzWfNuZQ8dHdYtromdKWWMK3JYZ1EYnhWwxzQVC9bhKypTweP7tpIxNgdQLfoi0
-qS6Omn19ldcynO+YlLCEp76lrapt5ADWIGR5phjOWOj2yPHYJN0TsaQ80bNsNHZL
-caC8ddA5LxpEZKe8NEd9tqOdhB9rnvTHmPLG4A7CdjCsNdwcO6TXUTM4os21JNVv
-IB/eaEzZp7DLTWVAUJxV+HIX0SSdy80TCryzgCsfbcd8q6AuD2RWtWpVQ88Qtrbl
-fFrXd+Hf3/iVhraCCi5GKegidy4SyA==
-=30G8
------END PGP SIGNATURE-----
-
---=-+M2bTZi8S7Ge32C0tkNp--
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+index 183ec23eda39..f5ee23c2df60 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+@@ -48,6 +48,7 @@ properties:
+       - nxp,pcal6416
+       - nxp,pcal6524
+       - nxp,pcal9535
++      - nxp,pcal9554b
+       - nxp,pcal9555a
+       - onnn,cat9554
+       - onnn,pca9654
+-- 
+2.17.1
 
