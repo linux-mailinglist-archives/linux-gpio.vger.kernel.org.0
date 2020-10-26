@@ -2,93 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19FFB298FC4
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:45:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C205E298FE1
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:50:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781928AbgJZOpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 10:45:51 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39228 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1781926AbgJZOpv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:45:51 -0400
-Received: by mail-pj1-f65.google.com with SMTP id m3so3210046pjf.4;
-        Mon, 26 Oct 2020 07:45:51 -0700 (PDT)
+        id S1782046AbgJZOuU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 10:50:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46254 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1782044AbgJZOuU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:50:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id 33so9632557edq.13
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Oct 2020 07:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vAbD5pPtU3ThLzaI4nC9N49Q4nZl815/lE7BJtV5/80=;
-        b=SGiqEhsprkLFhCW42iwff1fo8jDOeHE++peyz8Jn/LHdybqgaipsfSb2QEEAfj+2C3
-         TWOZnaFTSGBj3lUwt8ld0nkmZZmCTtcrG6s/BrxBjS9M4AtNB/+on47QGayljDCGmCAM
-         Ic/tH9oXeg/Zu0d6HS7KIqdQd9tUzZHuGE9CL8Teo4zyBpYHqS92KWru3fy77x5IP5g3
-         XnzNUSHSxppP4S2ABYWv0H5DLoE7c3l8JIReagM0RQhHlAN3AQO6pmjZtW/Ul5J0fn0G
-         n82CKfmOuwNfd8nxg+SAfVdSpHfD3XbMR/Aklh615a1QCMbQ1PGyvBaudlaSwnYNg2V6
-         6Gog==
+        bh=2bC0C8f6SVmggGuAiNHakUjoa8NDOkSBxpQiV8U8oeE=;
+        b=l80MJfwaRgVSRK0Hi9Img/WMe3gQ1NQ0U7mlE231Npx8OUjpW2CfGUKRTdxOZuVvFF
+         e5cunW5zmJPT1NQN8s/mFmz8qAEnvzgc2Atuu9mvBbftyqhmsUoQu9/e775G8ShL/Vbq
+         7OQi6qJwCOsMK/I9Q7LVVzj86W2ojWWRDCkqjmbH38G73Pg8NW6F97xJIOjwTohMSqLc
+         rHkBR78gKBJtYz0foUWYL2KE+HFW63nNwK4QWN6fk8l15if/rsjQTztMN2+fIzc52x8m
+         4339OJgtxQh4azrhDBApYRLS1NCyefbh6f8AJ/LNtVys5tgxJYz3p2hon8XG9qGj2DmX
+         075g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vAbD5pPtU3ThLzaI4nC9N49Q4nZl815/lE7BJtV5/80=;
-        b=V3FVWi/P+P+1EjynGBovy6EBN7X7drjkoW4r/9i3eFjkz0yHQtZiMk/COoEqpRDilh
-         P4k5fT2tMXbuSzDgM9s3QS/OHKazTT7dA4mvE73ZIpI+A9EfJeOpcE2Pxc64cWA7ES9A
-         Y+OQE1tHTvYqcy4ebwdJLJn00Q3qME2yJHg1t54DXpxa+qBcnAYVBvuvh8Z+dviX9cEb
-         GuCb+SGPEzqsRL2FhM2sshF+Q7YsZ6QOC/+JEUB5Ivh6llRJxtv4VogRUtUurCdf9hVK
-         Pi6dHZ6KaJutBwZCTc6BXsPlaPE59zW0aYGm4kX6rqjeEhKH3im8rgn/KVwsfbtIDyTf
-         tsEQ==
-X-Gm-Message-State: AOAM530rWB5UuqPRU5zhnVFZYbcIwq2aiCUAFS74VLYI9HhUoD25WiO8
-        Ebgobw9HaAs2BHlP8DMb+puj/T9l5GCHJ8jeJmcaJMNVe5Y=
-X-Google-Smtp-Source: ABdhPJzhQC8fKyt4wwBORn7QhDdA+TldreARroO5Vs8lmgLb4WkRsq7pOc4NPX+KUKoWafcy85byeXI8fgYJ0Tyft10=
-X-Received: by 2002:a17:902:101:b029:d5:bb23:b731 with SMTP id
- 1-20020a1709020101b02900d5bb23b731mr12329264plb.82.1603723550691; Mon, 26 Oct
- 2020 07:45:50 -0700 (PDT)
+        bh=2bC0C8f6SVmggGuAiNHakUjoa8NDOkSBxpQiV8U8oeE=;
+        b=h7VlA0/RIiuqgPCQidhqNoTfd4EsXYwjllpvWwa2oUxyAdDPAQ4OCUGGADNuZsErAL
+         kn9acjRxGqii61c9kcs1InjaG9CsgE9IMKXygNy069LuPKBFVjdvxqQgez3hQyPQkrxP
+         y5Tt9S6t9dFCZpDDiL2mLKk3oaoyIEoULT/3qXwH7/lpoMLa0xA+FkO1exGHMr8L3XYh
+         foAz2Rm9gjcJEkS2ElVc8BqJQI6w4EHlIjFLHHjZOt7XoTEnz1wYJt5PDkSHHAmwb2WO
+         x93yvhh58TAv6pt7f8IE437X9BwLkNnCd48cF1PxE0FDpMkMeO17VWn/7bSPSIwPlObJ
+         ePCg==
+X-Gm-Message-State: AOAM533kK0Q1NSGrXL+77pPs2+XqkJYW//SL6+vWaECPIo0Q3e5JJcj/
+        1f6s3dD715WoURXXXE7JQe6OW0Ell2zwwcKVMBKYPA==
+X-Google-Smtp-Source: ABdhPJxuMJy3ivLB5JJbRTrIeTAWyHaAyGCOXYHPDw5c7T7apKCYN9IyGGGSvLQbQmnXYa3oNHhDKn0aqyg3DAwe0rI=
+X-Received: by 2002:a05:6402:3045:: with SMTP id bu5mr16446052edb.232.1603723817500;
+ Mon, 26 Oct 2020 07:50:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201026141839.28536-1-brgl@bgdev.pl>
-In-Reply-To: <20201026141839.28536-1-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 16:46:39 +0200
-Message-ID: <CAHp75Vf07dsUXZ8Dr-KY-NFQv+C2QQVEOH_se7vYMT6hdm-U3Q@mail.gmail.com>
-Subject: Re: [PATCH 0/7] gpio: exar: refactor the driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+References: <20201016153544.162611-1-justin.he@arm.com>
+In-Reply-To: <20201016153544.162611-1-justin.he@arm.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 26 Oct 2020 15:50:05 +0100
+Message-ID: <CAMpxmJUf2jBgFe+9N3VVegyX2fbUyN5t57TFCDwZC4_q3ue6Eg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dwapb: Fix missing conversion to GPIO-lib-based IRQ-chip
+To:     Jia He <justin.he@arm.com>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 4:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Oct 16, 2020 at 5:36 PM Jia He <justin.he@arm.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Commit 0ea683931adb ("gpio: dwapb: Convert driver to using the
+> GPIO-lib-based IRQ-chip") missed the case in dwapb_irq_set_wake().
 >
-> I just wanted to convert the driver to using simpler IDA API but ended up
-> quickly converting it to using regmap. Unfortunately I don't have the HW
-> to test it so marking the patches that introduce functional change as RFT
-> and Cc'ing the original author.
+> Without this fix, probing the dwapb gpio driver will hit a error:
+> "address between user and kernel address ranges" on a Ampere armv8a
+> server and cause a panic.
+>
+> Fixes: 0ea683931adb ("gpio: dwapb: Convert driver to using the
+> GPIO-lib-based IRQ-chip")
 
-+Cc: Jan, AFAIR their devices are using Exar UART.
+No need to break the line in Fixes: tag.
 
-> Bartosz Golaszewski (7):
->   gpio: exar: add a newline after the copyright notice
->   gpio: exar: include idr.h
->   gpio: exar: switch to a simpler IDA interface
->   gpio: exar: use a helper variable for &pdev->dev
->   gpio: exar: unduplicate address and offset computation
->   gpio: exar: switch to using regmap
->   gpio: exar: use devm action for freeing the IDA and drop remove()
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->  drivers/gpio/Kconfig     |   1 +
->  drivers/gpio/gpio-exar.c | 155 +++++++++++++++++++--------------------
->  2 files changed, 77 insertions(+), 79 deletions(-)
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index a5b326754124..2a9046c0fb16 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -343,8 +343,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+>  #ifdef CONFIG_PM_SLEEP
+>  static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+>  {
+> -       struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+> -       struct dwapb_gpio *gpio = igc->private;
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+>         struct dwapb_context *ctx = gpio->ports[0].ctx;
+>         irq_hw_number_t bit = irqd_to_hwirq(d);
 >
 > --
-> 2.29.1
+> 2.17.1
 >
 
+Applied for fixes, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz
