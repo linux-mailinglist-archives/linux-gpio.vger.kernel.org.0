@@ -2,267 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7E52985D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 04:13:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61AAC2986EB
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 07:40:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1421814AbgJZDNF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 25 Oct 2020 23:13:05 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:54521 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389855AbgJZDNE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 25 Oct 2020 23:13:04 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id ED81B5802E9;
-        Sun, 25 Oct 2020 23:12:54 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Sun, 25 Oct 2020 23:12:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=M7CjQS2/FxcHf/vflaSSIDT/4BTmr/w
-        OMuomiSkQL04=; b=Vk1NGZAVYCuOuG0Aj/d8t7C9cB89JQkzA5SijAiP6sn4XwS
-        +69WiB4Q+rko2XvtDX2+3UFIUO9SMnDgyF+ICHqLYEY9z4uKaXjdtTyukPFNiuqM
-        rfz+DQXUO6wPB7vxv02glOQcG2dkTEAPx+4A1V9v1EGfMe0zMlHFFo/Ih7EEusCO
-        nEwg6XUJquoD+BAOgVEA3g/7W6KH0ARMr5mJ2SCiD2ZYthA+IufQLaseC5jwfuYK
-        nI7fcpJ5uSJ4P4gBG1ui62HZl29nM083YyFJ9fPT2XKJZMuw3EDk4CYmHBOwwczU
-        M0RnN8KsauAJ28wKAvwwBXm/AxN+QSzNa/N3qfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=M7CjQS
-        2/FxcHf/vflaSSIDT/4BTmr/wOMuomiSkQL04=; b=dJWXH/p5lDcshfSDxiAceF
-        z++cycO9V9r820d6JVqFRPW6LO981af7HCXN5OvT18U+bH91iJQxJBDWF6SU8TNV
-        h0ShXyQ74cLrp6de1nbwnAtjuyI1KbyK9tv5IMFD1ZJ5UhpvcgvLyQ3ixZmG4yV9
-        gv+iSDrISep4DCH8k/YvwPcMa9my5/cT6y74xFe6FGGq39FaLliGUU/T3PP7Q/tr
-        SGVx85Pw5KmVBumuz+WtlxhsZKUoKfiowaAmeuAa/hCSLaOMh9x/jKUPQtruB2QW
-        1aDt4B3Q24d4ImWEvczIgys3TpjtEWCZrKSGmcsgW+D7H3Gb/IKMWFW5rXY8uzWw
-        ==
-X-ME-Sender: <xms:tD6WX1gZC4pDyj9dtRd4WuyfTNq1JJp5zuFCCw9dRG_Mg-GE5Bq8gA>
-    <xme:tD6WX6D2lLS9LyAcPTh148T5bQJiNrg4bt0uYHMiS_EbFERzjOCSc1fF2pQ7jevj0
-    9PjfbPfRSGKZTzj3w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrkeehgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
-    htthgvrhhnpeduffdtvdevkeffgfetffffueevgeejleeghfffjedthedthfelgfekfefh
-    feekieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:tD6WX1Ea4cthkd0OprPOUBKbH5Q_-nfEA3HQANhxa6AMcelVRBOqTQ>
-    <xmx:tD6WX6RmDNIs5wIq1oKS1Q-idf5dDD00Veq9JyBKII5R8D8ONEoecA>
-    <xmx:tD6WXyzQ8qaKE1zQoFVkIm5ei1fgoD6jAG5hIiwY8VwsBEM4zmYWEQ>
-    <xmx:tj6WX3IG7ZREDdpIdzbhUd6gIcxjrrVrRmOiL6pnzV78t2eW7HMTDg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9FC70E050B; Sun, 25 Oct 2020 23:12:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-529-g69105b1-fm-20201021.003-g69105b13
-Mime-Version: 1.0
-Message-Id: <2e2d3a02-6677-4b0e-b538-d3130a3b20d1@www.fastmail.com>
-In-Reply-To: <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
-References: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
- <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
-Date:   Mon, 26 Oct 2020 13:42:08 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        "Rob Herring" <robh+dt@kernel.org>, "Joel Stanley" <joel@jms.id.au>
-Cc:     "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Corey Minyard" <minyard@acm.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "Cyril Bur" <cyrilbur@gmail.com>,
-        "Robert Lippert" <rlippert@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
+        id S1770489AbgJZGjN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 02:39:13 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16774 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1770486AbgJZGjM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 02:39:12 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f966efb0000>; Sun, 25 Oct 2020 23:38:51 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Oct
+ 2020 06:39:09 +0000
+Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Mon, 26 Oct 2020 06:39:05 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <jckuo@nvidia.com>,
+        <kyarlagadda@nvidia.com>, <lorenzo.pieralisi@arm.com>,
+        <amurray@thegoodpenguin.co.uk>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: Fix entry name for I/O High Voltage property
+Date:   Mon, 26 Oct 2020 12:09:01 +0530
+Message-ID: <20201026063902.14744-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
+MIME-Version: 1.0
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603694331; bh=HgUBHWCd2Nt7H938VkNrABLwzGofvKL5fDnjmwSsXZ4=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
+         MIME-Version:Content-Type;
+        b=hXGW2UXAjYe+nif59UbIhnSrorYC7Ft/vbP79id79sDHO6HD5pdNR2fV1Z3aeIX8k
+         CVb/Ty7TspQS5Tf94O3jjht2CFVDhQ9iZBJzE68ts3IT6M2K218kBvHUXGh+Nw+DaH
+         aE7BzgAyOMqrdiCl8yDEOZWD0vg9W8KXWtYYTrB+VAKT9jTDAz+siXXLXrn88hAfmx
+         lhthG4oqbvxDXl8QTTKNOi2q4yo03kH9vOVy7+ZY4fGTb4zqDoX1IZKe53tYW+1n2s
+         H+FneRCaWmiwycwVNqRA4sRoOKdabbjuIYh2cIK8tcEpkK0S/h26zP6iIfv553VMOt
+         6N3L5c8nuTSOA==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Wang Chia-Wei,
+Correct the name of the I/O High Voltage Property from
+'nvidia,io-high-voltage' to 'nvidia,io-hv'.
 
-On Mon, 5 Oct 2020, at 18:58, Chia-Wei, Wang wrote:
-> The LPC controller has no concept of the BMC and the Host partitions.
-> This patch fixes the documentation by removing the description on LPC
-> partitions. The register offsets illustrated in the DTS node examples
-> are also fixed to adapt to the LPC DTS change.
-> 
-> Signed-off-by: Chia-Wei, Wang <chiawei_wang@aspeedtech.com>
+Fixes: 2585a584f844 ("pinctrl: Add Tegra194 pinctrl DT bindings")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ .../devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The documentation at [1] suggests this should probably be patch 1/5 rather than 
-5/5, so if you send the series again I'd probably rearrange it. Following the 
-steps outlined in [1] helps catch Rob's attention in the right way :)
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+index 8763f448c376..90d38f710635 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+@@ -99,7 +99,7 @@ Example:
+ 					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
+ 					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
+ 					nvidia,enable-input = <TEGRA_PIN_DISABLE>;
+-					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
++					nvidia,io-hv = <TEGRA_PIN_ENABLE>;
+ 					nvidia,tristate = <TEGRA_PIN_DISABLE>;
+ 					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+ 				};
+-- 
+2.17.1
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/submitting-patches.rst?h=v5.9
-
-Rob:
-
-The changes here go some way towards cleaning up mistakes I made in the Aspeed 
-LPC controller binding. The proposed change is very much not backwards 
-compatible, but Joel and I don't want to live with the resulting mess in the 
-drivers of catering to both layouts. Another way we could avoid the driver mess 
-is to rev all the bindings and immediately drop support for the old compatibles 
-in the drivers. This creates a bit more churn in the bindings. What are you 
-willing to accommodate?
-
-All consumers I'm aware of ship the Aspeed BMC dtb in FIT images alongside the 
-kernel, so while backwards-incompatible changes are rightly frowned upon I feel 
-we probably wouldn't cause too much damage if we went that path.
-
-Andrew
-
-> ---
->  .../devicetree/bindings/mfd/aspeed-lpc.txt    | 85 +++----------------
->  1 file changed, 14 insertions(+), 71 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt 
-> b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> index a92acf1dd491..866f54a09e09 100644
-> --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> @@ -9,13 +9,7 @@ primary use case of the Aspeed LPC controller is as a 
-> slave on the bus
->  conditions it can also take the role of bus master.
->  
->  The LPC controller is represented as a multi-function device to account for the
-> -mix of functionality it provides. The principle split is between the register
-> -layout at the start of the I/O space which is, to quote the Aspeed datasheet,
-> -"basically compatible with the [LPC registers from the] popular BMC controller
-> -H8S/2168[1]", and everything else, where everything else is an eclectic
-> -collection of functions with a esoteric register layout. "Everything else",
-> -here labeled the "host" portion of the controller, includes, but is not limited
-> -to:
-> +mix of functionality, which includes, but is not limited to:
->  
->  * An IPMI Block Transfer[2] Controller
->  
-> @@ -44,8 +38,8 @@ Required properties
->  ===================
->  
->  - compatible:	One of:
-> -		"aspeed,ast2400-lpc", "simple-mfd"
-> -		"aspeed,ast2500-lpc", "simple-mfd"
-> +		"aspeed,ast2400-lpc", "simple-mfd", "syscon"
-> +		"aspeed,ast2500-lpc", "simple-mfd", "syscon"
->  
->  - reg:		contains the physical address and length values of the Aspeed
->                  LPC memory region.
-> @@ -55,66 +49,17 @@ Required properties
->  - ranges: 	Maps 0 to the physical address and length of the LPC memory
->                  region
->  
-> -Required LPC Child nodes
-> -========================
-> -
-> -BMC Node
-> ---------
-> -
-> -- compatible:	One of:
-> -		"aspeed,ast2400-lpc-bmc"
-> -		"aspeed,ast2500-lpc-bmc"
-> -
-> -- reg:		contains the physical address and length values of the
-> -                H8S/2168-compatible LPC controller memory region
-> -
-> -Host Node
-> ----------
-> -
-> -- compatible:   One of:
-> -		"aspeed,ast2400-lpc-host", "simple-mfd", "syscon"
-> -		"aspeed,ast2500-lpc-host", "simple-mfd", "syscon"
-> -
-> -- reg:		contains the address and length values of the host-related
-> -                register space for the Aspeed LPC controller
-> -
-> -- #address-cells: <1>
-> -- #size-cells:	<1>
-> -- ranges: 	Maps 0 to the address and length of the host-related LPC memory
-> -                region
-> -
->  Example:
->  
->  lpc: lpc@1e789000 {
-> -	compatible = "aspeed,ast2500-lpc", "simple-mfd";
-> +	compatible = "aspeed,ast2500-lpc", "simple-mfd", "syscon";
->  	reg = <0x1e789000 0x1000>;
->  
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  	ranges = <0x0 0x1e789000 0x1000>;
-> -
-> -	lpc_bmc: lpc-bmc@0 {
-> -		compatible = "aspeed,ast2500-lpc-bmc";
-> -		reg = <0x0 0x80>;
-> -	};
-> -
-> -	lpc_host: lpc-host@80 {
-> -		compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
-> -		reg = <0x80 0x1e0>;
-> -		reg-io-width = <4>;
-> -
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges = <0x0 0x80 0x1e0>;
-> -	};
->  };
->  
-> -BMC Node Children
-> -==================
-> -
-> -
-> -Host Node Children
-> -==================
->  
->  LPC Host Interface Controller
->  -------------------
-> @@ -145,14 +90,12 @@ Optional properties:
->  
->  Example:
->  
-> -lpc-host@80 {
-> -	lpc_ctrl: lpc-ctrl@0 {
-> -		compatible = "aspeed,ast2500-lpc-ctrl";
-> -		reg = <0x0 0x80>;
-> -		clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
-> -		memory-region = <&flash_memory>;
-> -		flash = <&spi>;
-> -	};
-> +lpc_ctrl: lpc-ctrl@80 {
-> +	compatible = "aspeed,ast2500-lpc-ctrl";
-> +	reg = <0x80 0x80>;
-> +	clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
-> +	memory-region = <&flash_memory>;
-> +	flash = <&spi>;
->  };
->  
->  LPC Host Controller
-> @@ -174,9 +117,9 @@ Required properties:
->  
->  Example:
->  
-> -lhc: lhc@20 {
-> +lhc: lhc@a0 {
->  	compatible = "aspeed,ast2500-lhc";
-> -	reg = <0x20 0x24 0x48 0x8>;
-> +	reg = <0xa0 0x24 0xc8 0x8>;
->  };
->  
->  LPC reset control
-> @@ -194,8 +137,8 @@ Required properties:
->  
->  Example:
->  
-> -lpc_reset: reset-controller@18 {
-> +lpc_reset: reset-controller@98 {
->          compatible = "aspeed,ast2500-lpc-reset";
-> -        reg = <0x18 0x4>;
-> +        reg = <0x98 0x4>;
->          #reset-cells = <1>;
->  };
-> -- 
-> 2.17.1
-> 
->
