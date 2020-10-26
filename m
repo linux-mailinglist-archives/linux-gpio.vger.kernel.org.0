@@ -2,62 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2767429879F
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 08:50:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B63E32988A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 09:40:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1771043AbgJZHuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 03:50:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbgJZHut (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Oct 2020 03:50:49 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F193222EA;
-        Mon, 26 Oct 2020 07:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603698649;
-        bh=5BX0mNli4+Nc9I3rS+xRDlYTpZ54Htob+yCptCWPDYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dp36Ah7NXr/0TAX9nfPjBDq1ulwaMVo8EjUo3rjOVSlpxOs/O1DYGhLscbEpN3+Ad
-         sUq+YuzZJ7n2ERWJkiDow4F6IBqLy8IEXUlFQc/9+edvDDOZJonth1HphLBxEdgnaT
-         Zypjr5yWbeC3SyD1lZO3JJB9TBezToIkhry3RJuA=
-Date:   Mon, 26 Oct 2020 15:50:40 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux@armlinux.org.uk, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, oleksandr.suvorov@toradex.com,
-        peng.fan@nxp.com, andreas@kemnade.info, hverkuil-cisco@xs4all.nl,
-        olof@lixom.net, krzk@kernel.org, geert+renesas@glider.be,
-        prabhakar.mahadev-lad.rj@bp.renesas.com, aisheng.dong@nxp.com,
-        lkundrak@v3.sk, joel@jms.id.au, bjorn.andersson@linaro.org,
-        leoyang.li@nxp.com, vkoul@kernel.org, michael@walle.cc,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/4] arm64: defconfig: Build in CONFIG_GPIO_MXC by
- default
-Message-ID: <20201026075039.GH9880@dragon>
-References: <1600320829-1453-1-git-send-email-Anson.Huang@nxp.com>
- <1600320829-1453-2-git-send-email-Anson.Huang@nxp.com>
+        id S1769258AbgJZIki (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 04:40:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42736 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1746866AbgJZIki (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 04:40:38 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v19so8382237edx.9;
+        Mon, 26 Oct 2020 01:40:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fPY3YUMaHx0SYLGgmZyNAyMNlSCq8nr0Au+mUxZwASo=;
+        b=V35cQF6bQXl6Tjm1KvJ2BH2QIJJxZWHCJcbPlvTlqsVrHGibEDS5Ay+8/qd7CSXMxX
+         aDa8Sfs7s96wBPMYgUCF6ZtuAYnxOIIMPjGIP7BtNKp0L6l74y6VLN3gC+IJozh3XZLb
+         L+UEnv8rJDdp05l5y2GwT6XxWCYDBnpsl1l1FherPwWGAa9IJqqVxkjbYNDBlXn/OgXR
+         e9VoF7dFba3gfToAdc4BO2gtmRUZ7rLZGd1nupaHDmFEYYgGPjzZwIp5ywwYHh0donDj
+         5mvWFgr8SZl8h7aA0xtHhwbglLdh/yxeU3OInwpMCjXgpZ5N5YukfbtSJlfikvt3ijhZ
+         QbAw==
+X-Gm-Message-State: AOAM531bWDXia5tRD3uKOL8jPeHe/fXvnI3vswP8NpdSYRETlGFvFatf
+        GTbT5w1z2GDRmsunG+u+dC4zVayPe3w=
+X-Google-Smtp-Source: ABdhPJzMNFAPm/G/FPe2T5GfoWx+hZWCWuIsNulsXqm9QWpIwDSzI0aXCpKKCmaS2zzfu6KxDgxn0A==
+X-Received: by 2002:a50:8f61:: with SMTP id 88mr14969192edy.175.1603701634845;
+        Mon, 26 Oct 2020 01:40:34 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id u10sm5306057ejh.54.2020.10.26.01.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2020 01:40:33 -0700 (PDT)
+Date:   Mon, 26 Oct 2020 09:40:31 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: More whitespace clean-ups in schema files
+Message-ID: <20201026084031.GA7466@kozik-lap>
+References: <20201023192258.3126047-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1600320829-1453-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20201023192258.3126047-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 01:33:47PM +0800, Anson Huang wrote:
-> i.MX SoC GPIO driver provides the basic functions of GPIO pin operations
-> and IRQ operations, it is now changed from "def_bool y" to "tristate", so
-> it should be explicitly enabled to make sure all consumers work normally.
+On Fri, Oct 23, 2020 at 02:22:58PM -0500, Rob Herring wrote:
+> Clean-up incorrect indentation, extra spaces, and missing EOF newline in
+> schema files. Most of the clean-ups are for list indentation which
+> should always be 2 spaces more than the preceding keyword.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Found with yamllint (now integrated into the checks).
+> 
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Applied patch #2 ~ #4 as fixes.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Shawn
+Best regards,
+Krzysztof
