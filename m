@@ -2,213 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ECE2298F9F
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:41:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31144298FA3
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Oct 2020 15:42:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1781815AbgJZOly (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Oct 2020 10:41:54 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:5954 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1781813AbgJZOlx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Oct 2020 10:41:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1603723312; x=1635259312;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=Z51Y0WPuxfySceJvyCg6OljYCBlpG10jvErN7/lqG0I=;
-  b=R+NiQfz5B+DbyhcfeUE5eJ5esnaiMONIGQPcVmK9Dpjlzg2LvD8rgAZ0
-   m9W71NXMUI8i/MeR5zcSN7JQ9Vsc9L/XaFOh94HwBnPR6rip1tPSueraN
-   h59kR0O7hsqSiJWRxFAUQKynfDdyTC+6E0TcRP2H9tDmh4bAQXE6/TL8S
-   DsOl6XOVHVQnOuNYFsCeZmg0r+wIciDpqWRTZcGrGpAt7RZ+nhK/n7EGF
-   mm26htIActEplS1nE5LCBOdnPBgMfiZdtWO4eCaCj+WCAWTKXdp33CG/T
-   X66uSJhWLtWVpqgzemq8t8WclcT6gwYX+MBPpZXPMHL89bdMjCLSqT2Ks
-   Q==;
-IronPort-SDR: ur/iatolHsSQLlPgkra01jpyP5UkFR+f5oGAiX4Pjn2n9J/D9MuDMyL3kv6VEXO9c7A7mTJwUg
- xkaD593Pxs3tt+NKcnSCwp5g5iVK4g1VwkmMkzF89Uf/vF0WGR5HTRPPs9RTW9rmrMcJ7rRppO
- +mmBam0NpSmUlFv7OHKc9fODnfUkoz/5riwLNb2Z99G3KTobhCNw8swQiqoscQVQAhUOIWCOPy
- ChnKC2dgkrJ97Jg3lR297+N8NYLzL+SR8oX+M2jADYlFdtkF7Mkpl/29SgZ4F3uB5IkWi3WB3T
- AK4=
-X-IronPort-AV: E=Sophos;i="5.77,419,1596524400"; 
-   d="scan'208";a="91396107"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Oct 2020 07:41:52 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 26 Oct 2020 07:41:51 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Mon, 26 Oct 2020 07:41:49 -0700
-References: <20201014100707.2728637-1-lars.povlsen@microchip.com> <20201014100707.2728637-3-lars.povlsen@microchip.com> <CAHp75Vdd6ECJaWytYVz+5GYZrwybzZmviUOt3H=t-4LH=_idKg@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        id S1781825AbgJZOmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Oct 2020 10:42:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36072 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1781658AbgJZOmK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Oct 2020 10:42:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2EF1CB8E1;
+        Mon, 26 Oct 2020 14:42:08 +0000 (UTC)
+Message-ID: <700a149849222f3efbec73cb8a6be56b4b1c5bcb.camel@suse.de>
+Subject: Re: [PATCH v2 03/10] gpio: raspberrypi-exp: Release firmware handle
+ on unbind
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v6 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO
-In-Reply-To: <CAHp75Vdd6ECJaWytYVz+5GYZrwybzZmviUOt3H=t-4LH=_idKg@mail.gmail.com>
-Date:   Mon, 26 Oct 2020 15:41:48 +0100
-Message-ID: <87blgp9hhv.fsf@soft-dev15.microsemi.net>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Mon, 26 Oct 2020 15:42:06 +0100
+In-Reply-To: <CAMpxmJXw12hKYCuMDjG-Ns6n=mXmr4B2x3HJaAJ19wH_xDUMag@mail.gmail.com>
+References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
+         <20201022155858.20867-4-nsaenzjulienne@suse.de>
+         <CAMpxmJXw12hKYCuMDjG-Ns6n=mXmr4B2x3HJaAJ19wH_xDUMag@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-4RJXy1XArEUanWEz7Yut"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Hi Andy!
+--=-4RJXy1XArEUanWEz7Yut
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Andy Shevchenko writes:
+On Mon, 2020-10-26 at 15:40 +0100, Bartosz Golaszewski wrote:
+> On Thu, Oct 22, 2020 at 5:59 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Upon unbinding the device make sure we release RPi's firmware interface=
+.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/gpio/gpio-raspberrypi-exp.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/gpio/gpio-raspberrypi-exp.c b/drivers/gpio/gpio-ra=
+spberrypi-exp.c
+> > index bb100e0124e6..c008336e1131 100644
+> > --- a/drivers/gpio/gpio-raspberrypi-exp.c
+> > +++ b/drivers/gpio/gpio-raspberrypi-exp.c
+> > @@ -231,8 +231,19 @@ static int rpi_exp_gpio_probe(struct platform_devi=
+ce *pdev)
+> >         rpi_gpio->gc.get =3D rpi_exp_gpio_get;
+> >         rpi_gpio->gc.set =3D rpi_exp_gpio_set;
+> >         rpi_gpio->gc.can_sleep =3D true;
+> > +       platform_set_drvdata(pdev, rpi_gpio);
+> >=20
+> > -       return devm_gpiochip_add_data(dev, &rpi_gpio->gc, rpi_gpio);
+> > +       return gpiochip_add_data(&rpi_gpio->gc, rpi_gpio);
+> > +}
+> > +
+> > +static int rpi_exp_gpio_remove(struct platform_device *pdev)
+> > +{
+> > +       struct rpi_exp_gpio *rpi_gpio =3D platform_get_drvdata(pdev);
+> > +
+> > +       gpiochip_remove(&rpi_gpio->gc);
+> > +       rpi_firmware_put(rpi_gpio->fw);
+> > +
+> > +       return 0;
+> >  }
+> >=20
+> >  static const struct of_device_id rpi_exp_gpio_ids[] =3D {
+> > @@ -247,6 +258,7 @@ static struct platform_driver rpi_exp_gpio_driver =
+=3D {
+> >                 .of_match_table =3D of_match_ptr(rpi_exp_gpio_ids),
+> >         },
+> >         .probe  =3D rpi_exp_gpio_probe,
+> > +       .remove =3D rpi_exp_gpio_remove,
+> >  };
+> >  module_platform_driver(rpi_exp_gpio_driver);
+> >=20
+> > --
+> > 2.28.0
+> >=20
+>=20
+> Why not introduce devm_rpi_firmware_get()? That would allow you to
+> keep the driver elegant without re-adding remove().
 
-> On Wed, Oct 14, 2020 at 6:25 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->>
->> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
->> (SGPIO) device used in various SoC's.
->
-> ...
->
->> +#define PIN_NAM_SZ     (sizeof("SGPIO_D_pXXbY")+1)
->
-> +1 for what?
->
+I like the idea, I'll look into it.
 
-Reverse fencepost :-). I'll remove it.
+Thanks,
+Nicolas
 
-> ...
->
->> +#define __shf(x)               (__builtin_ffsll(x) - 1)
->> +#define __BF_PREP(bf, x)       (bf & ((x) << __shf(bf)))
->> +#define __BF_GET(bf, x)                (((x & bf) >> __shf(bf)))
->
-> This smells like bitfield.h.
->
 
-Yes, and I would use it if I could, just bitfield.h don't like anything
-but constexpr. The driver support 3 SoC variants which (unfortunately)
-have different register layouts in some areas.
+--=-4RJXy1XArEUanWEz7Yut
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> ...
->
->> +static int sgpio_input_get(struct sgpio_priv *priv,
->> +                          struct sgpio_port_addr *addr)
->> +{
->
->> +       int ret;
->> +
->> +       ret = !!(sgpio_readl(priv, REG_INPUT_DATA, addr->bit) &
->> +                BIT(addr->port));
->> +
->> +       return ret;
->
-> Sounds like one line.
->
+-----BEGIN PGP SIGNATURE-----
 
-Yes, I'll change that.
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W4D4ACgkQlfZmHno8
+x/4RVwf/UZbRYwQfpY+67Gru7U3IMExckiPcjOHqeN3IO1Aqys6hi0LcCgQmZoRS
+yDES/QK4HITWb2LEOikdeICzUhcAmHLuD6l9Si1lOw/g7RZAcNoB+gejoLIKsxsJ
+BvBSsCz+ARcANf68gksyv52nsVLhMNlvZpnoVV6p9VTzTb0q7+QOBy7KndC73pyM
+cLs3LcbX7jTY71QjVIAVJql7UiQmzjA9V08bxNan8AF/yttAj0PgtZga1WYXQHG/
+ipUuvMADCJYB9WrHAhtY8TV1G1pGs0b+OTU6cEZukdSAUaNXzL+DKDHm3nlMi887
+7aRyD6vm++8u7ecNrtj2/Iug3MLyQg==
+=FwXW
+-----END PGP SIGNATURE-----
 
->> +}
->
->> +static int sgpio_get_functions_count(struct pinctrl_dev *pctldev)
->> +{
->
->> +       return 1;
->
-> I didn't get why it's not a pure GPIO driver?
-> It has only one function (no pinmux).
-> I didn't find any pin control features either.
->
-> What did I miss?
+--=-4RJXy1XArEUanWEz7Yut--
 
-The hardware has more functions, which are planned to be added
-later. This has already been agreed with Linux Walleij.
-
->
-> ...
->
->> +static int microchip_sgpio_get_value(struct gpio_chip *gc, unsigned int gpio)
->> +{
->> +       struct sgpio_bank *bank = gpiochip_get_data(gc);
->> +       struct sgpio_priv *priv = bank->priv;
->> +       struct sgpio_port_addr addr;
->
->> +       int ret;
->
-> No need.
-
-Ok, I'll trim it.
-
->
->> +
->> +       sgpio_pin_to_addr(priv, gpio, &addr);
->> +
->> +       if (bank->is_input)
->> +               ret = sgpio_input_get(priv, &addr);
->> +       else
->> +               ret = sgpio_output_get(priv, &addr);
->> +
->> +       return ret;
->> +}
->
->
-> ...
->
->
->> +       ret = devm_gpiochip_add_data(dev, gc, bank);
->> +       if (ret == 0)
->
->> +               dev_info(dev, "Registered %d GPIOs\n", ngpios);
->
-> No noise.
->
-
-OK, gone.
-
->> +       else
->> +               dev_err(dev, "Failed to register: ret %d\n", ret);
->> +
->
-> ...
->
->> +       /* Get register map */
->> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       priv->regs = devm_ioremap_resource(dev, regs);
->
-> devm_platform_ioremap_resource();
-
-Yes, I'll replace with that.
-
->
->> +       if (IS_ERR(priv->regs))
->> +               return PTR_ERR(priv->regs);
->
->> +       priv->properties = of_device_get_match_data(dev);
->
-> It's interesting you have a mix between OF APIs and device property
-> APIs. Choose one. If you stick with OF, use of_property_ and so,
-> otherwise replace of_*() by corresponding device_*() or generic calls.
-
-Sure. I will change the device_property_read_u32() with
-of_property_read_u32().
-
->
-> Can you use gpio-regmap APIs?
-
-No, I think the sgpio hardware is a little too odd for that
-(of_gpio_n_cells == 3). And then there's alternate pinctrl functions.
-
-Thank you for your comments, they are very much appreciated. Let me know
-if I missed anything.
-
-I will refresh the series shortly (on v5.10-rc1).
-
----Lars
-
--- 
-Lars Povlsen,
-Microchip
