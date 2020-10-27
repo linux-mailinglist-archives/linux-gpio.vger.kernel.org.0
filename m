@@ -2,65 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C9029EA57
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 12:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A75CE29EBCB
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 13:25:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbgJ2LRf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 07:17:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:37724 "EHLO mga03.intel.com"
+        id S1725832AbgJ2MZH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 08:25:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:47301 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbgJ2LRd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 29 Oct 2020 07:17:33 -0400
-IronPort-SDR: sryxUj1OFy/wT9KkR3xqrfAuAES8BAPJsUetZ2eEFD23q8E7vuPwHHsrA+vaBGv4XEOyBcwKsC
- HbJDGi+pf04A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="168514049"
+        id S1726495AbgJ2MZG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Oct 2020 08:25:06 -0400
+IronPort-SDR: Jv4L0JP8qvD67hEd+RSyU2o2EHfW36DcT5ndar5DiubXaGqSOYzIwYsGOhFzNJ5Nm1q8yoaL9F
+ 9l6FmFwLCjIw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="253129162"
 X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
-   d="scan'208";a="168514049"
+   d="scan'208";a="253129162"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 04:17:31 -0700
-IronPort-SDR: QwMMVjFf+VsEdVA/DtGUc4tcodVczIMmzVMs2JuTIw0pCVNHIMCgvdk2Xeuh7SB6wbu0e8Mx7s
- 37Dqhu3Ao+NA==
-X-ExtLoop1: 1
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 05:25:04 -0700
+IronPort-SDR: a7Tv429/vIUhkWHRhiooXn034w9LkKzLe6W50XO89fKT0I11GjHfIkMiCPcW/RNrTn+lYQf2Zy
+ eOSJCMB1GmWw==
 X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
-   d="scan'208";a="304403615"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Oct 2020 04:17:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2ACA8567; Thu, 29 Oct 2020 13:17:28 +0200 (EET)
+   d="scan'208";a="350948467"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 05:25:02 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kY70H-001Et7-CN; Thu, 29 Oct 2020 14:26:05 +0200
+Date:   Tue, 27 Oct 2020 15:58:09 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] pinctrl: intel: Add blank line before endif in Kconfig
-Date:   Thu, 29 Oct 2020 13:17:28 +0200
-Message-Id: <20201029111728.70196-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 4/8] pinctrl: use krealloc_array()
+Message-ID: <20201027135809.GE4077@smile.fi.intel.com>
+References: <20201027121725.24660-1-brgl@bgdev.pl>
+ <20201027121725.24660-5-brgl@bgdev.pl>
+ <20201027132911.GX4077@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201027132911.GX4077@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a blank line before endif directive in Kconfig for better readability.
+On Tue, Oct 27, 2020 at 03:29:11PM +0200, Andy Shevchenko wrote:
+> On Tue, Oct 27, 2020 at 01:17:21PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > 
+> > Use the helper that checks for overflows internally instead of manually
+> > calculating the size of the new array.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+After addressing a nit in previous message:
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index 015f59df4d38..c619097c25b9 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -174,4 +174,5 @@ config PINCTRL_TIGERLAKE
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
- 	  of Intel Tiger Lake PCH pins and using them as GPIOs.
-+
- endif
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
