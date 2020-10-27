@@ -2,162 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF7E29BEAA
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 17:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB9729BE06
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 17:50:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1813723AbgJ0QyA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Oct 2020 12:54:00 -0400
-Received: from mail-pl1-f169.google.com ([209.85.214.169]:32818 "EHLO
-        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1794515AbgJ0PMN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Oct 2020 11:12:13 -0400
-Received: by mail-pl1-f169.google.com with SMTP id b19so920134pld.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Oct 2020 08:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fYhKRNsaOy3JuzY6NhRsKUEpvHRxtWk36nnZxTv5ieA=;
-        b=AZek2jkJ/KZFif825xn+A21+EJA9urYrYd1myv9zoRuCI24F2kXMCK88hU73y6EcTH
-         kInZWUk4wpO6pr7th6UhldD7zTStkwpHqkIJ0foJqtZNQOcdQ64mjRaLNELCdnDLoER7
-         O2sTI4kGq9fVvn2/Chx7nuYpFa9bdNlFspRE11sSt2fYOfduUgWvFrW3ViBkx3NkDJcu
-         8zTVKU007+RFXual6FS53iXC7WbhXc5Sxe7AwZ75UQxk9IloK4rbWs61sAe8/7A/SUqE
-         THvwJzjGpSPQZA5hfMesP6q+vYtxdoDT+GSsb9bwAnNFZTJ9XPz0hMh+7ctTGhLmpYZ6
-         kFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fYhKRNsaOy3JuzY6NhRsKUEpvHRxtWk36nnZxTv5ieA=;
-        b=kW99UWOJG+3bpmK4qOEdlsB/6gawqjCkGV37QwbZwSvG+CB93GFLyQpWZ21OFJdFYy
-         xCO1sVPSxiN4VKEo7BtePeUUQWogUGjkDIEcPA2zF/UBfyfgOg2lVFdcBeoc3r94G9A2
-         S6+Ab1wA8eimcWwlEDj1X3369QqgEBfS+kDf2V83nBY/YcFIAB0CBktcUgLjJF+TkTdB
-         6WK+ZwyHVvMViRPoM4fCg+jqytheP9/IeXKSSy2jbiuKZnrqyk9a9xFQHlOuYnDhZy6W
-         +Z7nZcCIYU0ROg9wgso98MytcDWJPCsgS72NTr+Yc+tSY155RC1uKVZmOKI2py1t/7or
-         Ov9A==
-X-Gm-Message-State: AOAM532NGNWf4sylBFhJZv6Uw4aTrc68OV2DEUSgFoJrwMcB1GC1pDWm
-        FT/OEWn9nbfqdy/0MeRaxreAVgOMObsXeYW8W9k=
-X-Google-Smtp-Source: ABdhPJw5SRTL/8aywZLHxAqxg1wfqEDOV0gbmbztTKWxkLkyFNeeUAPqE1tMr9vb4y7PHSW2eVHwMwzRrYClAgR7Bqs=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr2359857pjs.181.1603811531781;
- Tue, 27 Oct 2020 08:12:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201003230340.42mtl35n4ka4d5qw@Rk> <20201004051644.f3fg2oavbobrwhf6@Rk>
- <20201006044941.fdjsp346kc5thyzy@Rk> <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
- <20201006083157.3pg6zvju5buxspns@Rk> <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
- <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com> <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
- <20201014042420.fkkyabmrkiekpmfw@Rk> <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
- <20201026225400.37almqey2wxyazkn@Rk> <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
-In-Reply-To: <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 27 Oct 2020 17:13:00 +0200
-Message-ID: <CAHp75VcwiGREBUJ0A06EEw-SyabqYsp+dqs2DpSrhaY-2GVdAA@mail.gmail.com>
-Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
- for broken touchpads of a new laptop model?
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Coiby Xu <coiby.xu@gmail.com>,
+        id S1813537AbgJ0Quw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Oct 2020 12:50:52 -0400
+Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:33548 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1813523AbgJ0Quu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 27 Oct 2020 12:50:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 86139180A7FE0;
+        Tue, 27 Oct 2020 16:50:43 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:69:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3353:3622:3865:3866:3870:3872:3874:4321:4605:5007:6742:6743:7576:7903:8603:10004:10400:10848:11026:11232:11473:11658:11914:12043:12296:12297:12438:12555:12740:12760:12895:12986:13069:13311:13357:13439:14096:14097:14181:14659:14721:21080:21451:21627:21990:30012:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:30,LUA_SUMMARY:none
+X-HE-Tag: bag02_2a11e012727d
+X-Filterd-Recvd-Size: 4083
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 27 Oct 2020 16:50:38 +0000 (UTC)
+Message-ID: <685d850347a1191bba8ba7766fc409b140d18f03.camel@perches.com>
+Subject: Re: [PATCH 3/8] vhost: vringh: use krealloc_array()
+From:   Joe Perches <joe@perches.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        wang jun <availa@outlook.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Jason Wang <jasowang@redhat.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 27 Oct 2020 09:50:36 -0700
+In-Reply-To: <20201027112607-mutt-send-email-mst@kernel.org>
+References: <20201027121725.24660-1-brgl@bgdev.pl>
+         <20201027121725.24660-4-brgl@bgdev.pl>
+         <20201027112607-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 4:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 10/26/20 11:54 PM, Coiby Xu wrote:
-> > Hi Hans and Linus,
-> >
-> > Will you interpret the 0x0000 value for debounce timeout in GPIO
-> > Interrupt Connection Resource Descriptor as disabling debouncing
-> > filter?
-> >
-> > GpioInt (EdgeLevel, ActiveLevel, Shared, PinConfig, DebounceTimeout, ResourceSource,
-> > ResourceSourceIndex, ResourceUsage, DescriptorName, VendorData) {PinList}
-> >
-> > I'm not sure if Windows' implementation is the de facto standard like
-> > i2c-hid. But if we are going to conform to the ACPI specs and we would
-> > regard 0x0000 debounce timeout as disabling debouncing filter, then we
-> > can fix this touchpad issue and potentially some related issues by
-> > implementing the feature of supporting configuring debounce timeout in
-> > drivers/gpio/gpiolib-acpi.c and removing all debounce filter
-> > configuration in amd_gpio_irq_set_type of drivers/pinctrl/pinctrl-amd.c.
-> > What do you think?
-> >
-> > A favorable evidence is I've collected five DSDT tables when
-> > investigating this issue. All 5 DSDT tables have an GpioInt specifying
-> > an non-zero debounce timeout value for the edge type irq and for all
-> > the level type irq, the debounce timeout is set to 0x0000.
->
-> That is a very interesting observation and this matches with my
-> instincts which say that we should just disable the debounce filter
-> for level triggered interrupts in pinctrl-amd.c
->
-> Yes that is a bit of a shortcut vs reading the valie from the ACPI
-> table, but I'm not sure that 0 always means disabled.
->
-> Specifically the ACPI 6.2 spec also has a notion of pinconf settings
-> and the docs on "PinConfig()"  say:
->
-> Note: There is some overlap between the properties set by GpioIo/GpioInt/ PinFunction and
-> PinConfig descriptors. For example, both are setting properties such as pull-ups. If the same
-> property is specified by multiple descriptors for the same pins, the order in which these properties
-> are applied is undetermined. To avoid any conflicts, GpioInt/GpioIo/PinFunction should provide a
-> default value for these properties when PinConfig is used. If PinConfig is used to set pin bias,
-> PullDefault should be used for GpioIo/GpioInt/ PinFunction. *If PinConfig is used to set debounce
-> timeout, 0 should be used for GpioIo/GpioInt.*
->
-> So that suggests that a value of 0 does not necessarily mean "disabled" but
-> it means use a default, or possibly get the value from somewhere else such
-> as from a ACPI PinConfig description (if present).
+On Tue, 2020-10-27 at 11:28 -0400, Michael S. Tsirkin wrote:
+> On Tue, Oct 27, 2020 at 01:17:20PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > 
+> > Use the helper that checks for overflows internally instead of manually
+> > calculating the size of the new array.
+> > 
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> No problem with the patch, it does introduce some symmetry in the code.
 
-Nope, it was added to get rid of disambiguation when both Gpio*() and
-PinConfig() are given.
-So, 0 means default *if and only if* PinConfig() is present.
+Perhaps more symmetry by using kmemdup
+---
+ drivers/vhost/vringh.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-I.o.w. the OS layers should do this:
+diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+index 8bd8b403f087..99222a3651cd 100644
+--- a/drivers/vhost/vringh.c
++++ b/drivers/vhost/vringh.c
+@@ -191,26 +191,23 @@ static int move_to_indirect(const struct vringh *vrh,
+ static int resize_iovec(struct vringh_kiov *iov, gfp_t gfp)
+ {
+ 	struct kvec *new;
+-	unsigned int flag, new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
++	size_t new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
++	size_t size;
+ 
+ 	if (new_num < 8)
+ 		new_num = 8;
+ 
+-	flag = (iov->max_num & VRINGH_IOV_ALLOCATED);
+-	if (flag)
+-		new = krealloc(iov->iov, new_num * sizeof(struct iovec), gfp);
+-	else {
+-		new = kmalloc_array(new_num, sizeof(struct iovec), gfp);
+-		if (new) {
+-			memcpy(new, iov->iov,
+-			       iov->max_num * sizeof(struct iovec));
+-			flag = VRINGH_IOV_ALLOCATED;
+-		}
+-	}
++	if (unlikely(check_mul_overflow(new_num, sizeof(struct iovec), &size)))
++		return -ENOMEM;
++
++	if (iov->max_num & VRINGH_IOV_ALLOCATED)
++		new = krealloc(iov->iov, size, gfp);
++	else
++		new = kmemdup(iov->iov, size, gfp);
+ 	if (!new)
+ 		return -ENOMEM;
+ 	iov->iov = new;
+-	iov->max_num = (new_num | flag);
++	iov->max_num = new_num | VRINGH_IOV_ALLOCATED;
+ 	return 0;
+ }
+ 
+ 
 
- - if Gpio*() provides Debounce != 0, we use it, otherwise
- - if PinConfig() is present for this pin with a debounce set, use it, otherwise
- - debounce is disabled.
-
-Now we missed a midentry implementation in the Linux kernel, hence go
-to last, i.e. disable debounce.
-But it should be rather done in gpiolib-acpi.c.
-
-Hope this helps.
-
-I Cc'ed this to Mika as co-author of that part of specification, he
-may correct me if I'm wrong.
-
-P.S. Does RedHat have a representative in ASWG? If any ambiguity is
-still present, feel free to propose ECR (IIRC abbreviation correctly)
-to ASWG.
-
-> So I see 2 ways to move forward with his:
->
-> 1. Just disable the debounce filter for level type IRQs; or
-> 2. Add a helper to sanitize the debounce pulse-duration setting and
->    call that when setting the IRQ type.
->    This helper would read the setting check it is not crazy long for
->    an IRQ-line (lets say anything above 1 ms is crazy long) and if it
->    is crazy long then overwrite it with a saner value.
->
-> 2. is a bit tricky, because if the IRQ line comes from a chip then
-> obviously max 1ms debouncing to catch eletrical interference should be
-> fine. But sometimes cheap buttons for things like volume up/down on tablets
-> are directly connected to GPIOs and then we may want longer debouncing...
->
-> So if we do 2. we may want to limit it to only level type IRQs too.
->
-> Note I have contacted AMD about this and asked them for some input on this,
-> ideally they can tell us how exactly we should program the debounce filter
-> and based on which data we should do that.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
