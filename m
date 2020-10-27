@@ -2,131 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1023029C60E
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 19:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3760229C6A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 19:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1825688AbgJ0SMg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Oct 2020 14:12:36 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34702 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1825664AbgJ0SMZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Oct 2020 14:12:25 -0400
-Received: by mail-il1-f193.google.com with SMTP id v18so2384824ilg.1
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Oct 2020 11:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NGv1Y/0reu20DBr8S7i4JOZE8sfHN0Ia0VoWgcxjJq4=;
-        b=JMe8vNVo3R2gGH6hqxz3WmFJwUEBTwiTGu9xMdWnrNLe6fle4LBhd0K6gTtvTEgwJi
-         UT+WjdmnSDBiGYlBvo8Fqx+84H/9xfgl6SK66y9qVHZRbWhju7cbHYUSUQXedmbpyrTK
-         lTX7UbBpUzrw6nJifz6eEbpfGkpUAZfQGLnRxUwualNard49/hO7P6SMgCVwjMT6w7Qq
-         ffscM32esnRHZbhvvuuy8VWZigLp/h/EtXan4UXYPuBzamZsN7cl+Kpja0dO9kkesqph
-         jkEbhP7HgweP/CXzPxUwyWNF7wK2uItsT4e7H2E+tyczvQkHg6hIy+0gunBliPDMJHCA
-         d/MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NGv1Y/0reu20DBr8S7i4JOZE8sfHN0Ia0VoWgcxjJq4=;
-        b=pIPAa8mSUObxfUWszQpQqAtb/4LhVsNamiutgm0OzrTHJoo58w6tk/q4UajaaJ2hbB
-         YYfciUhlhNcCAswvSZbCqHaGttfmcwBZeZ6OJyEEeevqq3T0ia5eOSHaL+gtkPNaInw6
-         ulg2IWLdO5RhFInG8rc7ouTeKI9T2DW6mKIk0y+Fs4Bq/IQwOtu+w7aJwaSxHWbhQwcU
-         xHGCtarUIajGH3ddp74r3x95VmQiKAQU1rj36est1EeAomysNiaJMjls6OhotxJgWIhe
-         WkHVoj7uAmw1DqBrotlAZcD4cisg4QcdsxLZDIBYtovz3dKPolVT50XMf3IXLwi0Ti9I
-         aEgA==
-X-Gm-Message-State: AOAM5317WBn1/6lLAY4IK7HKmcNrirBepHPfGlWU+s6qb9fqTyvWkFMr
-        cO5A9PcMzLOpeOmrpQaLrifxrYJUuRkyi878nzFq0w==
-X-Google-Smtp-Source: ABdhPJyTnQSKpb7ULx8ypqe5smcRjLTr9OXB2hTEElGXWXi2nGDOvd47JBO3gG3Scd0S9SvSSanP4ZAwgFMa+fh1jF4=
-X-Received: by 2002:a92:c5ce:: with SMTP id s14mr3130329ilt.40.1603822344388;
- Tue, 27 Oct 2020 11:12:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201027135325.22235-1-vincent.whitchurch@axis.com>
-In-Reply-To: <20201027135325.22235-1-vincent.whitchurch@axis.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 27 Oct 2020 19:12:13 +0100
-Message-ID: <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mockup: Allow probing from device tree
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        id S1827119AbgJ0SVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Oct 2020 14:21:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49322 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1826497AbgJ0SUK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 27 Oct 2020 14:20:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E2118ADCA;
+        Tue, 27 Oct 2020 18:20:07 +0000 (UTC)
+Subject: Re: [PATCH 1/8] mm: slab: provide krealloc_array()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kernel@axis.com, devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        alsa-devel@alsa-project.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20201027121725.24660-1-brgl@bgdev.pl>
+ <20201027121725.24660-2-brgl@bgdev.pl>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <21ae795b-c0f4-bbf3-20f6-830d0980a673@suse.cz>
+Date:   Tue, 27 Oct 2020 19:20:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.3
+MIME-Version: 1.0
+In-Reply-To: <20201027121725.24660-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 2:54 PM Vincent Whitchurch
-<vincent.whitchurch@axis.com> wrote:
->
-> Allow the mockup driver to be probed via the device tree without any
-> module parameters, allowing it to be used to configure and test higher
-> level drivers like the leds-gpio driver and corresponding userspace
-> before actual hardware is available.
->
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+On 10/27/20 1:17 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> When allocating an array of elements, users should check for
+> multiplication overflow or preferably use one of the provided helpers
+> like: kmalloc_array().
+> 
+> There's no krealloc_array() counterpart but there are many users who use
+> regular krealloc() to reallocate arrays. Let's provide an actual
+> krealloc_array() implementation.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Makes sense.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
-> v2: Remove most of the added code, since the latest driver doesn't need it.
->     Drop DT binding document, since Rob Herring was OK with not documenting
->     this:
->     https://lore.kernel.org/linux-devicetree/5baa1ae6.1c69fb81.847f2.3ab1@mx.google.com/
->
->  drivers/gpio/gpio-mockup.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 67ed4f238d43..c93892a6936a 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -13,6 +13,7 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> +#include <linux/of.h>
-
-Please keep the includes ordered alphabetically.
-
->  #include <linux/irq_sim.h>
->  #include <linux/irqdomain.h>
->  #include <linux/module.h>
-> @@ -460,9 +461,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->         return 0;
->  }
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id gpio_mockup_of_match[] = {
-> +       { .compatible = "gpio-mockup", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
-> +#endif
-
-You don't need this ifdef - of_match_ptr() will evaluate to NULL if
-CONFIG_OF is disabled and the compiler will optimize this struct out.
-
-Bartosz
-
+>   include/linux/slab.h | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index dd6897f62010..0e6683affee7 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -592,6 +592,17 @@ static inline void *kmalloc_array(size_t n, size_t size, gfp_t flags)
+>   	return __kmalloc(bytes, flags);
+>   }
+>   
+> +static __must_check inline void *
+> +krealloc_array(void *p, size_t new_n, size_t new_size, gfp_t flags)
+> +{
+> +	size_t bytes;
 > +
->  static struct platform_driver gpio_mockup_driver = {
->         .driver = {
->                 .name = "gpio-mockup",
-> +               .of_match_table = of_match_ptr(gpio_mockup_of_match),
->         },
->         .probe = gpio_mockup_probe,
->  };
-> @@ -556,8 +566,7 @@ static int __init gpio_mockup_init(void)
->  {
->         int i, num_chips, err;
->
-> -       if ((gpio_mockup_num_ranges < 2) ||
-> -           (gpio_mockup_num_ranges % 2) ||
-> +       if ((gpio_mockup_num_ranges % 2) ||
->             (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
->                 return -EINVAL;
->
-> --
-> 2.28.0
->
+> +	if (unlikely(check_mul_overflow(new_n, new_size, &bytes)))
+> +		return NULL;
+> +
+> +	return krealloc(p, bytes, flags);
+> +}
+> +
+>   /**
+>    * kcalloc - allocate memory for an array. The memory is set to zero.
+>    * @n: number of elements.
+> 
+
