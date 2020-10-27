@@ -2,139 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 319E429BFDB
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 18:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE47B29C6A0
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 19:28:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1816643AbgJ0RIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Oct 2020 13:08:15 -0400
-Received: from smtprelay0063.hostedemail.com ([216.40.44.63]:47840 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1816629AbgJ0RIO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 27 Oct 2020 13:08:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 45489182CED2A;
-        Tue, 27 Oct 2020 17:08:10 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:69:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:1801:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3872:3874:4321:4605:5007:6742:6743:7576:7903:8603:10004:10400:10848:11026:11232:11473:11658:11783:11914:12043:12296:12297:12438:12555:12679:12740:12895:12986:13161:13229:13439:13894:14096:14097:14181:14659:14721:21080:21451:21627:21990:30012:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: rake71_590ddfb2727d
-X-Filterd-Recvd-Size: 4916
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 27 Oct 2020 17:08:04 +0000 (UTC)
-Message-ID: <2767969b94fd66db1fb0fc13b5783ae65b7deb2f.camel@perches.com>
-Subject: Re: [PATCH 3/8] vhost: vringh: use krealloc_array()
-From:   Joe Perches <joe@perches.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        id S1753820AbgJ0SVj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Oct 2020 14:21:39 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:14093 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753663AbgJ0OBY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 27 Oct 2020 10:01:24 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Oct 2020 10:01:23 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1841; q=dns/txt; s=axis-central1;
+  t=1603807284; x=1635343284;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uAN2e5G3WcdT+cTOp4JBtFE0vznyZLRyeShhV3oIqGM=;
+  b=RdfBRU8iHpDTxIl7mRT7+1+gjrQO7JkZZ+XKFwNhik+vwZ5M4gnl0+4F
+   ymGBklJammhWiFGEHutsp2FjJe5G3TVifIlnXvZbbnG6X8I9kC7BNLUrC
+   Th4UD+KsF3HKAkZRLM5An3D+5ytZzStDBSxwaLx+oBraot4+FJnpRL7h6
+   JjTccvT/6jsp0JARKjQ0Q53TJYeZcaEvNqqFjuXJkBk+SOEOcerI4A+4h
+   AH2gpqBRkGnGVRO168GC32sMxXWju4VOXuAld1ICDw3EU4IR6ndLPbQru
+   tEP5+r0uOA8Ah65FkTCbOSw3HwDqBGG5rwjlgUs6vMiXWeFQqoQXhSWan
+   w==;
+IronPort-SDR: DP5SbzFMLwpxHViDs5672DnOGm8eyiW076asrV0u1HrOdGhEEEMRbgkt7x9oRSHvcFdy304U5Z
+ OjR4Py+c/8JVxKZnB3mOD3c9dWpUSTESWXPiyCboT+fBme8oJTHv9XP0gLI+kW/BkugQJe+uAe
+ ChElU+jL2wPfu5DrO0IdiEkTxk+uztJoJkh9k8yNHkQIHLRpjHU/Ba5Z6g74COAGk40nToM8WN
+ etWljz/RjGR4hA/VMwFYQVR0qVvKsvQI7S10e7UzfipJQi/xkGPGCEU1q2PUA4rykCDzsGxDQo
+ pS0=
+X-IronPort-AV: E=Sophos;i="5.77,424,1596492000"; 
+   d="scan'208";a="13956774"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-drm <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>, linux-mm@kvack.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>
-Date:   Tue, 27 Oct 2020 10:08:02 -0700
-In-Reply-To: <CAMpxmJU0C84DjPmqmWvPgv0zwgGLhkpKLRDuKkZHAa=wi+LvBA@mail.gmail.com>
-References: <20201027121725.24660-1-brgl@bgdev.pl>
-         <20201027121725.24660-4-brgl@bgdev.pl>
-         <20201027112607-mutt-send-email-mst@kernel.org>
-         <685d850347a1191bba8ba7766fc409b140d18f03.camel@perches.com>
-         <CAMpxmJU0C84DjPmqmWvPgv0zwgGLhkpKLRDuKkZHAa=wi+LvBA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <kernel@axis.com>, <devicetree@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] gpio: mockup: Allow probing from device tree
+Date:   Tue, 27 Oct 2020 14:53:25 +0100
+Message-ID: <20201027135325.22235-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2020-10-27 at 17:58 +0100, Bartosz Golaszewski wrote:
-> On Tue, Oct 27, 2020 at 5:50 PM Joe Perches <joe@perches.com> wrote:
-> > 
-> > On Tue, 2020-10-27 at 11:28 -0400, Michael S. Tsirkin wrote:
-> > > On Tue, Oct 27, 2020 at 01:17:20PM +0100, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > 
-> > > > Use the helper that checks for overflows internally instead of manually
-> > > > calculating the size of the new array.
-> > > > 
-> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > 
-> > > No problem with the patch, it does introduce some symmetry in the code.
-> > 
-> > Perhaps more symmetry by using kmemdup
-> > ---
-> >  drivers/vhost/vringh.c | 23 ++++++++++-------------
-> >  1 file changed, 10 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
-> > index 8bd8b403f087..99222a3651cd 100644
-> > --- a/drivers/vhost/vringh.c
-> > +++ b/drivers/vhost/vringh.c
-> > @@ -191,26 +191,23 @@ static int move_to_indirect(const struct vringh *vrh,
-> >  static int resize_iovec(struct vringh_kiov *iov, gfp_t gfp)
-> >  {
-> >         struct kvec *new;
-> > -       unsigned int flag, new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
-> > +       size_t new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
-> > +       size_t size;
-> > 
-> >         if (new_num < 8)
-> >                 new_num = 8;
-> > 
-> > -       flag = (iov->max_num & VRINGH_IOV_ALLOCATED);
-> > -       if (flag)
-> > -               new = krealloc(iov->iov, new_num * sizeof(struct iovec), gfp);
-> > -       else {
-> > -               new = kmalloc_array(new_num, sizeof(struct iovec), gfp);
-> > -               if (new) {
-> > -                       memcpy(new, iov->iov,
-> > -                              iov->max_num * sizeof(struct iovec));
-> > -                       flag = VRINGH_IOV_ALLOCATED;
-> > -               }
-> > -       }
-> > +       if (unlikely(check_mul_overflow(new_num, sizeof(struct iovec), &size)))
-> > +               return -ENOMEM;
-> > +
-> 
-> The whole point of using helpers such as kmalloc_array() is not doing
-> these checks manually.
+Allow the mockup driver to be probed via the device tree without any
+module parameters, allowing it to be used to configure and test higher
+level drivers like the leds-gpio driver and corresponding userspace
+before actual hardware is available.
 
-Tradeoffs for in readability for overflow and not mistyping or doing
-the multiplication of iov->max_num * sizeof(struct iovec) twice.
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+v2: Remove most of the added code, since the latest driver doesn't need it.
+    Drop DT binding document, since Rob Herring was OK with not documenting
+    this:
+    https://lore.kernel.org/linux-devicetree/5baa1ae6.1c69fb81.847f2.3ab1@mx.google.com/
 
-Just fyi:
+ drivers/gpio/gpio-mockup.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-the realloc doesn't do a multiplication overflow test as written so the
-suggestion is slightly more resistant to defect.
-
-   
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 67ed4f238d43..c93892a6936a 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -13,6 +13,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
++#include <linux/of.h>
+ #include <linux/irq_sim.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -460,9 +461,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id gpio_mockup_of_match[] = {
++	{ .compatible = "gpio-mockup", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
++#endif
++
+ static struct platform_driver gpio_mockup_driver = {
+ 	.driver = {
+ 		.name = "gpio-mockup",
++		.of_match_table = of_match_ptr(gpio_mockup_of_match),
+ 	},
+ 	.probe = gpio_mockup_probe,
+ };
+@@ -556,8 +566,7 @@ static int __init gpio_mockup_init(void)
+ {
+ 	int i, num_chips, err;
+ 
+-	if ((gpio_mockup_num_ranges < 2) ||
+-	    (gpio_mockup_num_ranges % 2) ||
++	if ((gpio_mockup_num_ranges % 2) ||
+ 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
+ 		return -EINVAL;
+ 
+-- 
+2.28.0
 
