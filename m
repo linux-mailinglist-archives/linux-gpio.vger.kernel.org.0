@@ -2,110 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE47B29C6A0
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 19:28:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61A0F29C4FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 19:08:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1753820AbgJ0SVj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Oct 2020 14:21:39 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:14093 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753663AbgJ0OBY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 27 Oct 2020 10:01:24 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Oct 2020 10:01:23 EDT
+        id S1824031AbgJ0SB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Oct 2020 14:01:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35837 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1823856AbgJ0SA7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Oct 2020 14:00:59 -0400
+Received: by mail-io1-f68.google.com with SMTP id k6so2528378ior.2
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Oct 2020 11:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1841; q=dns/txt; s=axis-central1;
-  t=1603807284; x=1635343284;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uAN2e5G3WcdT+cTOp4JBtFE0vznyZLRyeShhV3oIqGM=;
-  b=RdfBRU8iHpDTxIl7mRT7+1+gjrQO7JkZZ+XKFwNhik+vwZ5M4gnl0+4F
-   ymGBklJammhWiFGEHutsp2FjJe5G3TVifIlnXvZbbnG6X8I9kC7BNLUrC
-   Th4UD+KsF3HKAkZRLM5An3D+5ytZzStDBSxwaLx+oBraot4+FJnpRL7h6
-   JjTccvT/6jsp0JARKjQ0Q53TJYeZcaEvNqqFjuXJkBk+SOEOcerI4A+4h
-   AH2gpqBRkGnGVRO168GC32sMxXWju4VOXuAld1ICDw3EU4IR6ndLPbQru
-   tEP5+r0uOA8Ah65FkTCbOSw3HwDqBGG5rwjlgUs6vMiXWeFQqoQXhSWan
-   w==;
-IronPort-SDR: DP5SbzFMLwpxHViDs5672DnOGm8eyiW076asrV0u1HrOdGhEEEMRbgkt7x9oRSHvcFdy304U5Z
- OjR4Py+c/8JVxKZnB3mOD3c9dWpUSTESWXPiyCboT+fBme8oJTHv9XP0gLI+kW/BkugQJe+uAe
- ChElU+jL2wPfu5DrO0IdiEkTxk+uztJoJkh9k8yNHkQIHLRpjHU/Ba5Z6g74COAGk40nToM8WN
- etWljz/RjGR4hA/VMwFYQVR0qVvKsvQI7S10e7UzfipJQi/xkGPGCEU1q2PUA4rykCDzsGxDQo
- pS0=
-X-IronPort-AV: E=Sophos;i="5.77,424,1596492000"; 
-   d="scan'208";a="13956774"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <kernel@axis.com>, <devicetree@vger.kernel.org>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] gpio: mockup: Allow probing from device tree
-Date:   Tue, 27 Oct 2020 14:53:25 +0100
-Message-ID: <20201027135325.22235-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.28.0
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ed3AIF7qFllVghkuMSpgY+e4IbkAvQfdceeKpQaUdxk=;
+        b=UoiZn2ejgC7wXGBMzC5P1HZYY0nl6Wa3KE0/4S9Ciuieo7WYMXpDS0Iaqpc4XiAPdO
+         qMSPbldaS4qotDJxt10RTbnG9MLtwWkVWivTQZrOtp1ibfKEiirPfM/hcYKscWcE5G9+
+         hdA0OqGIyHCG+6wpH2Tcj5TcpWPTkljgGKnbGOzRrgHXz7X+jipA9gLH6g8zN/Jx0l4s
+         /OKkLzKstGxFD2CYIuU1B33wI1K0Ml8+qKW5x8c0LoZzpt+1zSKoX87G79JYtOSZ/rG6
+         gJ+d5QJ1DFf7m/UdqRG6MK7XEwKpEIVQ7cBBbC41y7jJlAMtCPK8jhzSkqrf6tO37h92
+         JCSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ed3AIF7qFllVghkuMSpgY+e4IbkAvQfdceeKpQaUdxk=;
+        b=TfCq442aukjpYsgREeMpUZSx78CnP+LuElP5kXWxRIfdETyBMH4Jt1OpIIZSC61ouy
+         rGMfP/j4LSZbbp0vE9Xw96FPTG/jthu5E1qXscuoouxLvhQ3Ejb2aAeNM641616QawCP
+         mqFeDUTX1YSflAwGVMX4WugVY1WOk0jTn82/92Qu0qvjY7aiNX4DBAi1iv54NqdcDGTO
+         NsUIM7ic6jbKIlfS+K8YSDg1rxcOciR5KkKA20qreUSBrWJMb57yTolcqQYRj7tx0ILw
+         QdRwRFFgAZF+HDfk1JsnmoqZ6sLfKvOqSOFGIuMe7dHnPwLNWVjQrh7vLBQ3dFKwTwm5
+         0vQA==
+X-Gm-Message-State: AOAM530jDeLp6Ket9Uuk23I406B8bhYLDjosYVoCeFD1a3v55EmucjSo
+        wjK2COKT6GhKkTK28JU2/2HtHyhbKeqRzehRv8Jn+A==
+X-Google-Smtp-Source: ABdhPJwN08N0ZyzhoITVdnvB4ryeaKood+3vq0iIUYgCE2JJfuXumCj2bIDB2qD60OdiaWwDhRbGH3iAIo+DCc+ziro=
+X-Received: by 2002:a6b:f401:: with SMTP id i1mr3323522iog.130.1603821657825;
+ Tue, 27 Oct 2020 11:00:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20201027121725.24660-1-brgl@bgdev.pl> <20201027121725.24660-4-brgl@bgdev.pl>
+ <20201027112607-mutt-send-email-mst@kernel.org> <685d850347a1191bba8ba7766fc409b140d18f03.camel@perches.com>
+ <CAMpxmJU0C84DjPmqmWvPgv0zwgGLhkpKLRDuKkZHAa=wi+LvBA@mail.gmail.com> <2767969b94fd66db1fb0fc13b5783ae65b7deb2f.camel@perches.com>
+In-Reply-To: <2767969b94fd66db1fb0fc13b5783ae65b7deb2f.camel@perches.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 27 Oct 2020 19:00:46 +0100
+Message-ID: <CAMRc=McvW_E0aE2Ep=3aZvb=kNDMz6=ZH-EQzARAD-tyJG5Rrg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] vhost: vringh: use krealloc_array()
+To:     Joe Perches <joe@perches.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-drm <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>, linux-mm@kvack.org,
+        Linux-ALSA <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow the mockup driver to be probed via the device tree without any
-module parameters, allowing it to be used to configure and test higher
-level drivers like the leds-gpio driver and corresponding userspace
-before actual hardware is available.
+On Tue, Oct 27, 2020 at 6:08 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2020-10-27 at 17:58 +0100, Bartosz Golaszewski wrote:
+> > On Tue, Oct 27, 2020 at 5:50 PM Joe Perches <joe@perches.com> wrote:
+> > >
+> > > On Tue, 2020-10-27 at 11:28 -0400, Michael S. Tsirkin wrote:
+> > > > On Tue, Oct 27, 2020 at 01:17:20PM +0100, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > >
+> > > > > Use the helper that checks for overflows internally instead of manually
+> > > > > calculating the size of the new array.
+> > > > >
+> > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > No problem with the patch, it does introduce some symmetry in the code.
+> > >
+> > > Perhaps more symmetry by using kmemdup
+> > > ---
+> > >  drivers/vhost/vringh.c | 23 ++++++++++-------------
+> > >  1 file changed, 10 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > > index 8bd8b403f087..99222a3651cd 100644
+> > > --- a/drivers/vhost/vringh.c
+> > > +++ b/drivers/vhost/vringh.c
+> > > @@ -191,26 +191,23 @@ static int move_to_indirect(const struct vringh *vrh,
+> > >  static int resize_iovec(struct vringh_kiov *iov, gfp_t gfp)
+> > >  {
+> > >         struct kvec *new;
+> > > -       unsigned int flag, new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
+> > > +       size_t new_num = (iov->max_num & ~VRINGH_IOV_ALLOCATED) * 2;
+> > > +       size_t size;
+> > >
+> > >         if (new_num < 8)
+> > >                 new_num = 8;
+> > >
+> > > -       flag = (iov->max_num & VRINGH_IOV_ALLOCATED);
+> > > -       if (flag)
+> > > -               new = krealloc(iov->iov, new_num * sizeof(struct iovec), gfp);
+> > > -       else {
+> > > -               new = kmalloc_array(new_num, sizeof(struct iovec), gfp);
+> > > -               if (new) {
+> > > -                       memcpy(new, iov->iov,
+> > > -                              iov->max_num * sizeof(struct iovec));
+> > > -                       flag = VRINGH_IOV_ALLOCATED;
+> > > -               }
+> > > -       }
+> > > +       if (unlikely(check_mul_overflow(new_num, sizeof(struct iovec), &size)))
+> > > +               return -ENOMEM;
+> > > +
+> >
+> > The whole point of using helpers such as kmalloc_array() is not doing
+> > these checks manually.
+>
+> Tradeoffs for in readability for overflow and not mistyping or doing
+> the multiplication of iov->max_num * sizeof(struct iovec) twice.
+>
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
-v2: Remove most of the added code, since the latest driver doesn't need it.
-    Drop DT binding document, since Rob Herring was OK with not documenting
-    this:
-    https://lore.kernel.org/linux-devicetree/5baa1ae6.1c69fb81.847f2.3ab1@mx.google.com/
+It's out of scope for this series - I want to add users for
+krealloc_array(), not refactor code I don't really know. If the
+maintainer of this bit objects, it can be dropped.
 
- drivers/gpio/gpio-mockup.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+> Just fyi:
+>
+> the realloc doesn't do a multiplication overflow test as written so the
+> suggestion is slightly more resistant to defect.
+>
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 67ed4f238d43..c93892a6936a 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -13,6 +13,7 @@
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
- #include <linux/irq_sim.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -460,9 +461,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_mockup_of_match[] = {
-+	{ .compatible = "gpio-mockup", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
-+#endif
-+
- static struct platform_driver gpio_mockup_driver = {
- 	.driver = {
- 		.name = "gpio-mockup",
-+		.of_match_table = of_match_ptr(gpio_mockup_of_match),
- 	},
- 	.probe = gpio_mockup_probe,
- };
-@@ -556,8 +566,7 @@ static int __init gpio_mockup_init(void)
- {
- 	int i, num_chips, err;
- 
--	if ((gpio_mockup_num_ranges < 2) ||
--	    (gpio_mockup_num_ranges % 2) ||
-+	if ((gpio_mockup_num_ranges % 2) ||
- 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
- 		return -EINVAL;
- 
--- 
-2.28.0
+I'm not sure what your point is. I used krealloc_array() exactly for
+this reason - to add the overflow test.
 
+BTW I suppose kmalloc_array() here can be replaced with
+krealloc_array() if the original pointer is NULL the first time it's
+called.
+
+Bartosz
