@@ -2,148 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F000C29D3BC
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 22:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3C0829D46F
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 22:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgJ1VqY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 17:46:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        id S1728271AbgJ1VwH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 17:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbgJ1VqU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:46:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25853C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:46:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 10so563294pfp.5
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:46:20 -0700 (PDT)
+        with ESMTP id S1727786AbgJ1VwG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:52:06 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921B1C0613CF;
+        Wed, 28 Oct 2020 14:52:06 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id f7so1156402oib.4;
+        Wed, 28 Oct 2020 14:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=D9yBEP0BC1CL/HX+S5BV6AJ+N9aTSedv3FZAQ2A8X3c=;
-        b=mqY58YKKEGA9l/mhFHD4sS4N+DebhKDcecQcHIIvclavs/oj2lAylRLEjWtAr/vvCh
-         t4kQG4fxq4W7dxX0ta07YQXsWKrSnpHh3qY+3z/OlVB0B7Q1bP/jciFRRcCfFhB0Vstu
-         XcUkIvm2uwP2URdM8kS5Mk2cKmaOBO7VA5eYmflpYWhb4WBLQ9QrQ0mItuylm8HTFh3u
-         Zlg9KF1+YC2ZRDntCIAc5qfCOUfA5IzPqPQouWEC+gVRxgB+Iiu0eMWkF+LxfOwPRzlb
-         8cCcE2PR5fk+bhmnbmdo50EWy+QbEtO5/1EKPZunEaBlrLaOk5K1QP+YXJDDgT/D0rcw
-         SPTQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hsiBaHtytHat8/EztZJPMms+wc+gkK9fFhRbXpui7XQ=;
+        b=MQEVLxlQBAUE8Edv0UruJBsGHTS6407b6J0mWXgnZtxQWJVTgvfoZAswU7xJkgQYQ0
+         Ddm8sQ76zjJVRKtkQlFy90/AG4a+nCqMy6zwee3lZeSF58nUjzSCyR6e5ipuATwKeQFx
+         +dpfnl3557iDt1HkVOdgqrc/F0u3oSsHc41Nw5dv21WL9SpIUx4hRzE3USyBCuRi6Rfd
+         7tuyWySJ5FCOs5D5P4BwoT+Kdd7sZpT5YW6+QKiL8YaQN3JGb90e1j3XsaGJDBGK6uGY
+         fiWnh8PoMxckM3nrVT395A+mMs9GIBD/ul5M6+fZHqzzmTg6GJIP3AVVGMnWB1PRla0t
+         k7+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=D9yBEP0BC1CL/HX+S5BV6AJ+N9aTSedv3FZAQ2A8X3c=;
-        b=CAtQhASsntTIZTG9+LE7ykxlvhHuTWYrwZBdKpPWtKfnLhYhkgdsSEJiLR/b5DYQFH
-         NNCxhzNqGW9zcd3qvci8Vroy0U7R2QyXArm0Ns4Nj8dJDczpjpppzmxp4UpkbtxryLkj
-         vmQqs+Um6AYs0zdG65Z8crSWt9Orqvx4vW03izsTzSp4xqFuqckJLvZzJ6aMSJAAGBQd
-         RARINTMAAJpTiTuU/uoTaxKDG/M2tFA/DgfMjsL3461csgwVOZxhouWIMm/Y67dH8GhM
-         PrJokuFTF5/FSYvVUxjVkBNxNXdQqlKJVqHyIToWRI8Ow4uSymDVOwOxNSR1oDZ2uoG0
-         dtzw==
-X-Gm-Message-State: AOAM5335b8GzylFtnB9vfro1zVwZY1yqEsJ/gVfqSFvQm5z6YRogRINg
-        UY2DmefBsj6wQM9X6s2fS+GD7R+y1RShKA==
-X-Google-Smtp-Source: ABdhPJxLQsw7bzutqzTXD9K6KVCfPPQlksvFJS0xOH5GloE7wk3twdqZCGcMY01VVRkPofY4bbkoXg==
-X-Received: by 2002:a63:8c59:: with SMTP id q25mr521735pgn.15.1603908088891;
-        Wed, 28 Oct 2020 11:01:28 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id lw12sm78864pjb.5.2020.10.28.11.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2020 11:01:28 -0700 (PDT)
-Message-ID: <5f99b1f8.1c69fb81.62d33.03f3@mx.google.com>
-Date:   Wed, 28 Oct 2020 11:01:28 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hsiBaHtytHat8/EztZJPMms+wc+gkK9fFhRbXpui7XQ=;
+        b=WNtPKcbP2JxSkulBXowV3IIiDZ12QDrGoILu5h7gcZLNJHspPhsy0Aw/4dGUdPAo5n
+         RAcb43Ez5gNj7vP4/zgXLTslWZFu765q8/QGKeOAz0gq6PzAbW4Ok0Q03Ri2gSdsWxVp
+         23St3rWcISojR3OHwYYtFU/4XEN7cuGATiROBb8cUjFXtXv2GqSAClF09zBmh1tvxJEb
+         55wTB2UHEXD3gYK8S7kzm6uOanYrNCojSEjfX2me9U/0U3XEUA3VoIgaSBbKLNp3N6KK
+         ilITnByRqdQpxhfzLWIoND3bzUyUQdPf6rjRxxQTTfeHsSkhgW53njsQyiYJFuNaZE8r
+         7K1w==
+X-Gm-Message-State: AOAM530mdRXOqrOzS84LUHvH7eXL5ZKLCRkSA1dVUHfJ7kAp/jZnUjPi
+        xrOePGq92UixBYb5LsabStWzDP/37xDPWnM+PJJ30Yt/MgA=
+X-Google-Smtp-Source: ABdhPJy8JQRH34yo0LYH7fgqv7KNi4P+zNVt6GyrQjGrjJOIklaLoU3uoLRGVJm039L01MwTAaSTVYc9qlINuCALcKg=
+X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr651136pjb.228.1603916683534;
+ Wed, 28 Oct 2020 13:24:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.10-rc1-6-g7ffa08169849
-X-Kernelci-Report-Type: test
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: fixes
-Subject: linusw/fixes baseline: 110 runs,
- 1 regressions (v5.10-rc1-6-g7ffa08169849)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20201027135325.22235-1-vincent.whitchurch@axis.com> <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
+In-Reply-To: <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 28 Oct 2020 22:25:32 +0200
+Message-ID: <CAHp75Vff1AyKDb=JiocsAefnft+tcm+BnuWDrxViQqZAQZjuVg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: mockup: Allow probing from device tree
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel@axis.com, devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes baseline: 110 runs, 1 regressions (v5.10-rc1-6-g7ffa08169849)
+On Wed, Oct 28, 2020 at 8:41 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Tue, Oct 27, 2020 at 2:54 PM Vincent Whitchurch
+> <vincent.whitchurch@axis.com> wrote:
 
-Regressions Summary
--------------------
+...
 
-platform | arch | lab           | compiler | defconfig          | regressio=
-ns
----------+------+---------------+----------+--------------------+----------=
---
-panda    | arm  | lab-collabora | gcc-8    | multi_v7_defconfig | 1        =
-  =
+> > +#include <linux/of.h>
+>
+> Please keep the includes ordered alphabetically.
 
+Besides the fact that that is a wrong header to be included.
+mod_devicetable.h is the correct one.
+(See also below)
 
-  Details:  https://kernelci.org/test/job/linusw/branch/fixes/kernel/v5.10-=
-rc1-6-g7ffa08169849/plan/baseline/
+...
 
-  Test:     baseline
-  Tree:     linusw
-  Branch:   fixes
-  Describe: v5.10-rc1-6-g7ffa08169849
-  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
-io.git/
-  SHA:      7ffa08169849be898eed6f3694aab8c425497749 =
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id gpio_mockup_of_match[] = {
+> > +       { .compatible = "gpio-mockup", },
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
+> > +#endif
+>
+> You don't need this ifdef - of_match_ptr() will evaluate to NULL if
+> CONFIG_OF is disabled and the compiler will optimize this struct out.
 
+It's not so. If you drop ugly ifdeffery (and I vote for that, see also
+above) the of_match_ptr() must be dropped as well.
+Otherwise the compiler will issue the warning. So it is either all or none.
 
-
-Test Regressions
----------------- =
-
-
-
-platform | arch | lab           | compiler | defconfig          | regressio=
-ns
----------+------+---------------+----------+--------------------+----------=
---
-panda    | arm  | lab-collabora | gcc-8    | multi_v7_defconfig | 1        =
-  =
-
-
-  Details:     https://kernelci.org/test/plan/id/5f99a90cde6fe0df00381020
-
-  Results:     4 PASS, 1 FAIL, 0 SKIP
-  Full config: multi_v7_defconfig
-  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/fixes/v5.10-rc1-6-g7ffa=
-08169849/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.txt
-  HTML log:    https://storage.kernelci.org//linusw/fixes/v5.10-rc1-6-g7ffa=
-08169849/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-4-g97706c5d9567/armel/baseline/rootfs.cpio.gz =
-
-
-
-  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f99a90cde6fe0d=
-f00381026
-        failing since 46 days (last pass: v5.8-rc5, first fail: v5.9-rc2-3-=
-g3c68e90fdb65)
-        60 lines
-
-    2020-10-28 17:23:18.829000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c802
-    2020-10-28 17:23:18.835000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c803
-    2020-10-28 17:23:18.841000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c804
-    2020-10-28 17:23:18.847000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c805
-    2020-10-28 17:23:18.853000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c806
-    2020-10-28 17:23:18.859000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c807
-    2020-10-28 17:23:18.865000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c808
-    2020-10-28 17:23:18.871000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c809
-    2020-10-28 17:23:18.877000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c80a
-    2020-10-28 17:23:18.883000+00:00  kern  :alert : BUG: Bad page state in=
- process swapper/0  pfn:9c80b =
-
-    ... (49 line(s) more)  =
-
- =20
+-- 
+With Best Regards,
+Andy Shevchenko
