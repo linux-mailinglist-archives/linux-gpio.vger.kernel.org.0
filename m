@@ -2,113 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D940029E31E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:46:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9695629E314
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:46:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgJ2Cp3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 22:45:29 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:29487 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgJ1Vdm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:33:42 -0400
+        id S1726310AbgJ2CpC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 22:45:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44779 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgJ1Vd7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:33:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t9so582244wrq.11
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1903; q=dns/txt; s=axis-central1;
-  t=1603920823; x=1635456823;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8WighlFxUCPG64E8rsKp51mjFDumWu/9Js1XeZaqNfY=;
-  b=hWTC//3AXQl4vaj8Ub2OfTMByzTPkg8QlLoaJXRnBy9EWaRSnBVSQNBY
-   ROMkSZcGUTT6p0+8ednqJZf4iT0Mi/0vo4u2ea/W2feTOFTL7ZYdIUjCA
-   KFboJmuKUstnT8NGyfUUBFwaN9RIX38WuD9uV3xYvW93exJ/PMKOuwfJQ
-   3iItUnHJM/OuY+j1QS+vL8mMFPl2L5xjBea8h84+1TS5H4zgYAl5WfVUm
-   AsmdT4EHFc8VrIUtBaO5Qg2fsmlkARZvjkOnh61awP6dKYp4XLHr5KoH6
-   D4oT9SKviNxnvcXfPAJ7Mqqff5ydEj668CRF9Ot2j09h5swLevNiRBe71
-   g==;
-IronPort-SDR: 9zQLRP0OGoRnoLBhjIuJp4l2jQDybWCBoKOjYwOSfnl3EMs1BA8SKp2nUvG+7u4f4TuoyXe4H1
- mOU2i9QicPYfCXj9ZrG1jC/E+f5wg4rLNDTNRZfYLbj4zdGjhYmZJFu41i/19SfvcAETkigbQD
- 5gzyICUvb/TfZwlRPKgucXIuzf91M3UdHzhXQ7RRw+wWci7JPguXiZN9ldODeEuyIWGog18yIg
- 8NhArZgXNFNMnTw2dcE/92y7KhdzQJmLJ37m1VHd0Mr2RPTWpoMP70nGMQhQ14BtqlzPtZ5oER
- mWM=
-X-IronPort-AV: E=Sophos;i="5.77,425,1596492000"; 
-   d="scan'208";a="13984864"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <kernel@axis.com>, <devicetree@vger.kernel.org>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] gpio: mockup: Allow probing from device tree
-Date:   Wed, 28 Oct 2020 09:57:48 +0100
-Message-ID: <20201028085748.17388-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.28.0
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RwHMd9nNJDrCZQQY9z9MsksS67ghdV6lf0qJYLBuL9w=;
+        b=aTm6r+eMKNxLRMIGLCcKhgs49InOA7XhLbWiAZ8Fd3GUsE1vqdKGuf8yz0Vce4w85e
+         xwvYL3xfpvCD5GJNf6F6behhTYCzHKYlB0JdoR6WmZ/4UUVN18WtIsVlHVUjvxoVxi1N
+         qMGyAVwbrMYiYSqCABbAHPvlSul0iqKmLv6dYMseSxFDtKXeBlK8oa9iD4/GuZ80UTjB
+         HZPIMWrNANB7IoD6R5cZX6dBU6CClzRkAEUz2fOdufW7fjA9YfWado2Q9ylMy3VVyzar
+         anfocd0VImDOQmW8a/1abWI2WWlK0TWl5gqRlGqPb/6SAWtx1XR/8Fbtykrrn2GnCmAD
+         huvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RwHMd9nNJDrCZQQY9z9MsksS67ghdV6lf0qJYLBuL9w=;
+        b=WWqIlZ10jbOMCtQksrbQAB7Vsebq2mTJsy/TWZrHnojPZmXvunyS7fkOI1KwN0L5Oi
+         z7fGaBRo9RL267tPBU2+JEQjxcbmdTrKy1120Nd2eHBFRaOh5mPEWqSQAEecsbtsgCv+
+         4PKfQBfJ70CA8S6ytNCsPSibHnyPIktfxiCMZ5dR4gAwAANeFRInknbzjVknlJOqVffY
+         MU+8iQAx6WpxsKblv9T85Pc34zmqsS32YMYtMasq0CqLAmLKjiqmApmllWm9XkOgzGb3
+         yJsMDKqbPkLipBGknWr86X2oic7FymsqEjsF6z4iTAkg9FB5VdrjyuBTlSwghypB0Hc4
+         9kCA==
+X-Gm-Message-State: AOAM530UQUKDqldLqjpcKblEWrFGTF81dDgmuAE0xq+LNVw36gLFxkWw
+        kGMtcfhQeURQb3raiURLUGnd0qKxnUMneTW2kMd0PQoi9TBMMA==
+X-Google-Smtp-Source: ABdhPJw939xH2jDNloF2M5EDl+nu2WQP9QKe67iGxQIrEdE6uS+aCV3rNRSgMKCxItJ3JdzJGWrxAgxigoGxnWREM4U=
+X-Received: by 2002:a19:191:: with SMTP id 139mr2699355lfb.502.1603899685282;
+ Wed, 28 Oct 2020 08:41:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20201028060556.56038-1-tony@atomide.com>
+In-Reply-To: <20201028060556.56038-1-tony@atomide.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 28 Oct 2020 16:41:14 +0100
+Message-ID: <CACRpkdYj_hjdA0iyOUdoyEDJ8N2v--JnEH_2CHhgVdJOFzfEkQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Revert "gpio: omap: Fix lost edge wake-up interrupts""
+To:     ext Tony Lindgren <tony@atomide.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow the mockup driver to be probed via the device tree without any
-module parameters, allowing it to be used to configure and test higher
-level drivers like the leds-gpio driver and corresponding userspace
-before actual hardware is available.
+On Wed, Oct 28, 2020 at 7:06 AM Tony Lindgren <tony@atomide.com> wrote:
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
+> This reverts commit 579ced8fdb00b8e94304a83e3cc419f6f8eab08e.
+>
+> Turns out I was overly optimistic about cpu_pm blocking idle being a
+> solution for handling edge interrupts. While it helps in preventing
+> entering idle states that potentially lose context, we can still get
+> an edge interrupt triggering while entering idle. So we need to also
+> add back the workaround for seeing if there are any pending edge
+> interrupts when waking up.
+>
+> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Ladislav Michl <ladis@linux-mips.org>
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: Russell King <rmk+kernel@armlinux.org.uk>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-Notes:
-    v3:
-    - Keep includes sorted alphabetically
-    - Drop CONFIG_OF ifdefs
-    
-    v2:
-    - Remove most of the added code, since the latest driver doesn't need it.
-    - Drop DT binding document, since Rob Herring was OK with not documenting this:
-      https://lore.kernel.org/linux-devicetree/5baa1ae6.1c69fb81.847f2.3ab1@mx.google.com/
+Patch applied for fixes!
 
- drivers/gpio/gpio-mockup.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 67ed4f238d43..ca87c590ef3f 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -16,6 +16,7 @@
- #include <linux/irq_sim.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-@@ -460,9 +461,16 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id gpio_mockup_of_match[] = {
-+	{ .compatible = "gpio-mockup", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
-+
- static struct platform_driver gpio_mockup_driver = {
- 	.driver = {
- 		.name = "gpio-mockup",
-+		.of_match_table = of_match_ptr(gpio_mockup_of_match),
- 	},
- 	.probe = gpio_mockup_probe,
- };
-@@ -556,8 +564,7 @@ static int __init gpio_mockup_init(void)
- {
- 	int i, num_chips, err;
- 
--	if ((gpio_mockup_num_ranges < 2) ||
--	    (gpio_mockup_num_ranges % 2) ||
-+	if ((gpio_mockup_num_ranges % 2) ||
- 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
- 		return -EINVAL;
- 
--- 
-2.28.0
-
+Yours,
+Linus Walleij
