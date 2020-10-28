@@ -2,120 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFFA529DAFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 00:42:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 057A029DB69
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 00:54:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgJ1XmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 19:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39400 "EHLO
+        id S2390081AbgJ1XyA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 19:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgJ1XmI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 19:42:08 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80296C0613CF;
-        Wed, 28 Oct 2020 16:42:08 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h12so791397qtc.9;
-        Wed, 28 Oct 2020 16:42:08 -0700 (PDT)
+        with ESMTP id S2389984AbgJ1XxH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 19:53:07 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D20EC0613CF;
+        Wed, 28 Oct 2020 16:53:07 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id r1so530668vsi.12;
+        Wed, 28 Oct 2020 16:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=04ThpYsSViFhWqOQvQSGIlYZRGcXGFtIhUlX8pfHTD8=;
-        b=OC6Zm4U5t2xQjcut4yBwkeEk5KarEkjfCrPdUlu381Nv4vJI895Svp7x8sDb3IBxS3
-         fPfhT1B7HGC5UpOKgQPbPKJ8OQ+Wh5ei1AjIXfyGnvpaGsc8RYdCba4m2e8dSOSNKG0r
-         6IaEkkFLl4zzAivCnLsMl8DdDeZ7xDzu5G81g=
+        bh=PYN4K1+Qo5CXy2dTkM2vzEcbUyt+oPx5TIK4442R5VA=;
+        b=OTy/e460iUjfhoI9aAffakKahhhxsFyOhcX7Pe8XatpgZgW4p2r22kefU9VUgmlNSX
+         KDszoNmWQKwSNCLYHwqqijzuit3JOvrkyMMyQXIb1HaAnxs90CHkW2cEoXJ12lTI+C3s
+         5Azit7cOIHaZvipRq0dWbvoHHoCE8qMBAmmfYc+3u0+swrtLuueJnwJO1UFQpupjpDmY
+         poV01fVvB9ipTBaS9KFW38ECjgEyw/AOSpJwQszvEa/ojLAznDklj2JhfzIlzk/j8ppX
+         AjaTQxHOpyaBoCvAX+zcB9jMsPpukP2XOHv2yGmFvn9sw92jh124DlIlGHp203Ve3ZzP
+         nQSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=04ThpYsSViFhWqOQvQSGIlYZRGcXGFtIhUlX8pfHTD8=;
-        b=DLMle3rBT5FB64Jk9Cu8f3eYwMY/3daZc7z+O2hNNbwt5pFquzv7nLowGJY4uNv0mj
-         uKcBG+PN5LFZZs7P+mUs34LQg5zJWR/oLVa9t2vrARLE2fjdrzL3Ij8qUs3dhSU0QO6y
-         +4w0I6BQOW7CInLVoEzrzDyL3oC4xg++q/Hg6QWSU5LYfQLRCIGNX6gAYmuIY2JeHpOh
-         hbi1xa1vMnyNz6L5bCUzZ3k1+tz/QQOXXZGGsaym8W56q7asN+U8fjaU9T3OiC238qr5
-         B+P/3RgZAVkkfiwH9M2aLqz8O/+3nScpD31x78+BKGDUOi9BddixEVME8i1VrIOBFgYl
-         nJtQ==
-X-Gm-Message-State: AOAM5300wHRy/OUwaVJZqGthLvjrALd7PddJlhopgrvW/ozb65VqlMum
-        I6R+hxE++nacojzzX1wzL4GZ5uBfyI2GR19WswbUdjtlX2xVCg==
-X-Google-Smtp-Source: ABdhPJyi2tYbl11+8oD/pTg7MqvJo0FJxH9J/m9YOi24yaf3RoUaPY8LWOMrUDpfxRRNH1Z9ZM9QvQ/K9quBWlRWBR8=
-X-Received: by 2002:a05:620a:1303:: with SMTP id o3mr5853719qkj.66.1603861861220;
- Tue, 27 Oct 2020 22:11:01 -0700 (PDT)
+        bh=PYN4K1+Qo5CXy2dTkM2vzEcbUyt+oPx5TIK4442R5VA=;
+        b=K713OENW9vYjrj+IVpqxbS9WOZY9hxQ1cW+0pa9U4t8KZ3SttnraP5qG7GA9vOwWg7
+         53++CZBwKItPfGQkOD/a8DQerhC0xaTOWlykWM0vFB1UvTibctEFE0W+YmzZ37K6F/J2
+         nJTKtAZS6rVty36TrJo+fliwbDLUGgCJweJ8FEF5iG20u4KqoEnQz4nyPSsVVgwMOsGo
+         t8VxIOk8O4L4lb+dVn3WgOCOBWqfFi5+jVs3EALrusxWBnfTu2FTG0t4THi3me//lu+v
+         ZZsafP5swQBtCEr+cBIIPUI1ujimrl8PnSI/Bj5XN2k5L7NO/dT+Uzgt/zx1UuaN+3DQ
+         5ZDg==
+X-Gm-Message-State: AOAM531ODNCIGe2FhZnBhk3/o2Vl94tU6FCcofRWMsmW8/z7Loyd+jmn
+        kGRRyrI0FKdyzpDbVRq4iGNohiWMKCl1kc8gsSAAIJOZSE8=
+X-Google-Smtp-Source: ABdhPJzbN6AZnSn8xnNQv9pn7KISq95/FDkNcUJaHWTCbZwD5tEAj00jhZ0o9cYB3yT6BKajRQoJVz5rlVnjh+xNoj4=
+X-Received: by 2002:a17:902:bc4a:b029:d6:7ef9:689c with SMTP id
+ t10-20020a170902bc4ab02900d67ef9689cmr288408plz.21.1603885245482; Wed, 28 Oct
+ 2020 04:40:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201012033150.21056-1-billy_tsai@aspeedtech.com>
- <20201012033150.21056-3-billy_tsai@aspeedtech.com> <CACPK8XdYvSmwdAkBzAO3kC8_PYa3CtPkNb0VxcOhmb2UYz5zDA@mail.gmail.com>
- <E0B8BD13-86F6-486E-95DF-1038D7F59A8B@aspeedtech.com>
-In-Reply-To: <E0B8BD13-86F6-486E-95DF-1038D7F59A8B@aspeedtech.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 28 Oct 2020 05:10:49 +0000
-Message-ID: <CACPK8Xeg_LRGv1EEm7cdDWK2xST0mBP=iG7=43UE5qmEMMDsHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] Arm: dts: aspeed-g6: Add sgpio node
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20201028103921.22486-1-zhe.he@windriver.com>
+In-Reply-To: <20201028103921.22486-1-zhe.he@windriver.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 28 Oct 2020 13:41:34 +0200
+Message-ID: <CAHp75VckpCLKeFLbf3RJ+eti5SX6a-ygvR7FM6M2-txp_kmMLQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: core: Add missing #ifdef CONFIG_GPIOLIB
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Drew Fustini <drew@beagleboard.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 12 Oct 2020 at 04:56, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+On Wed, Oct 28, 2020 at 12:40 PM He Zhe <zhe.he@windriver.com> wrote:
 >
-> Hi Joel,
+> To fix the following build warnings when CONFIG_GPIOLIB=n.
 >
-> Thanks for the review.
+> drivers/pinctrl/core.c:1607:20: warning: unused variable 'chip' [-Wunused-variable]
+>  1608 |  struct gpio_chip *chip;
+>       |                    ^~~~
+> drivers/pinctrl/core.c:1606:15: warning: unused variable 'gpio_num' [-Wunused-variable]
+>  1607 |  unsigned int gpio_num;
+>       |               ^~~~~~~~
+> drivers/pinctrl/core.c:1605:29: warning: unused variable 'range' [-Wunused-variable]
+>  1606 |  struct pinctrl_gpio_range *range;
+>       |                             ^~~~~
+
+Makes sense.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+>  drivers/pinctrl/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> On 2020/10/12, 12:35 PM, Joel Stanley wrote:
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index 3663d87f51a0..9fc4433fece4 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -1602,9 +1602,11 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>         struct pinctrl_dev *pctldev = s->private;
+>         const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+>         unsigned i, pin;
+> +#ifdef CONFIG_GPIOLIB
+>         struct pinctrl_gpio_range *range;
+>         unsigned int gpio_num;
+>         struct gpio_chip *chip;
+> +#endif
 >
->     > On Mon, 12 Oct 2020 at 03:32, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->     > >
->     > > This patch is used to add sgpiom and sgpios nodes and add compatible
->     > > string for sgpiom.
->     >
->     > You also need to add sgpios documentation to the bindings docs.
->     >
->     > Whenever you add new device tree bindings to the kernel tree you
->     > should add documentation for them.
->     >
->     > When preparing patches for submission, use scripts/checkpatch.pl to
->     > check for common issues. It will warn you if you are adding strings
->     > that are not documented.
->     >
->     > Cheers,
->     >
->     > Joel
->     >
->    Because the driver of sgpios doesn't be implemented, so I don't know how to describe it at sgpio-aspeed.txt.
->    Can I just add  compatible string " aspeed,ast2600-sgpios " to the document for bypassing the warning of checkpatch?
+>         seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+>
+> --
+> 2.17.1
+>
 
-Ignore the sgpios issue for now; we don't have a driver for it so
-there's no need to add strings. Drop that part from your dts patch.
 
->     > >
->     > >  - compatible : Should be one of
->     > > -  "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio"
->     > > +  "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio", "aspeed,ast2600-sgpiom"
->     >
->     > I think we should add sgpiom strings for the ast2500 (and ast2400?)
->     > too, as this is how they should have been named in the first place:
->     >
->    If I change the document whether I also need to send the patch for sgpio driver and g5/g4.dtsi?
-
-For the sgpiom? We already have a driver for that.
-
-As I said above, make this about fixing the sgpio master and put aside
-the sgpio slave issue for now.
-
-Cheers,
-
-Joel
-
->     > >  - compatible : Should be one of
->     > >    "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio"
->     > >   "aspeed,ast2400-sgpiom", "aspeed,ast2500-sgpiom", "aspeed,ast2600-sgpiom"
+-- 
+With Best Regards,
+Andy Shevchenko
