@@ -2,191 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0F229E1A1
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:03:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F43129E20C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgJ1Vss (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 17:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47402 "EHLO
+        id S1727091AbgJ2CFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 22:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgJ1Vmu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:42:50 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5C9C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:42:50 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id s89so401589ybi.12
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:42:50 -0700 (PDT)
+        with ESMTP id S1727090AbgJ1ViV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:38:21 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02E7C0613CF
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:38:21 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id x1so1065478oic.13
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+XiyYcEFSv40qmGk78jL7y009Wmf2FvqP17FLO0o/wQ=;
-        b=S/EeI5L5iAm7mA8nFOB8+fUM0G/jJrP+3a8lJEOvcn/KPF20Ut2xnUHnE6YtHhm5qf
-         68rA3FoD3tGHI1O5h37n4AdrDUFnHG8vciVcUz6pK0xlsMhjfCIKNKnDd9Gei3hMkYv0
-         7q6zQwD2pXp6tVZb4J6ieDqgGAB+l7vQUfiM9H2t0NPgKwMTEYXULF/4vKrKewrVzN5i
-         cCRiO6JBIWYcDuPj96QowHAxkNmd9t5j+V7gpngfEkCCexC5lG8w4cu9KBeoerQoAZed
-         fyTzQ+I4md8wSyL73/OBkeU3RcBiLN9QuDALxnTy3nONHMpeAcDi77n0b785ivDcM+KK
-         Ztsg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Wt+s6BlJ4D0pWj4799MnptGBNN3QDWrSO2jwSkSrrsU=;
+        b=hCh3HCwWp+z8Ck3xe7usGn56v/YM7VoMPZnSaVNWceto4fL12RWZ4aw84Qt1EpB820
+         QWJzcWflXAPDTP1SZHp3XuaURJ7F0xMcWxkzZaqYGpzfzx/ak3o1SwkEGZkvl4kScbM2
+         UkZ5PR390uI1l2cJUW5Of9SjN7I2CumezztRB5FelP2gGWvQ2nVp7C46rl6/y/fp4i2t
+         zTEbxe7BjsoMlgAYTlPScQ3Lij5+XhBX8lZdOjOm6JeerIJhr1RH4ByfaOqsHbKAfxbq
+         U4K6twAy3W3rYXuCQwZGf8Kpkdb0R/HahmWXwIO8EMRQaXNpreNzaVJ7RGKhZ2vWYEqq
+         jydQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+XiyYcEFSv40qmGk78jL7y009Wmf2FvqP17FLO0o/wQ=;
-        b=WVVw7gjiX/R56afJmS+HtshMXa/2hy+poiuGDcybBD3Y59SvYCjeek/lgIrBqrmt2a
-         gFeqiI0dM0x5RKU3JRv+JzTPn2waSwPYUwm7Oqd3+XR+ycw19d7tyjSVrSVaf1qItj+V
-         K9vdz/EsFeea548xt04G589aB3YFM/gU1uIDwUKVuUS0M5BEElDVycHoCrsvlStJdI9H
-         BlhYnPFPTmfi67h2+2UiYZoUf8rnNISHTvpY1KI7Zr8wyrVkvuCP4+2quh9FTGuk808H
-         FqJ0hgpDZtnmc5GdX8zmB/PWDBYoiPTCCfS20O3qb71EZdvK5Z6PiXy8uOMf5Gif1Ycd
-         Fqow==
-X-Gm-Message-State: AOAM531NInPF8WaiKDMISdjN8Kw26Vr2dF2ZK91g5BDWxzRGdEPsQjkc
-        PmjIr57UcNFNTcoW4EfLStOeBw81qUBG5g==
-X-Google-Smtp-Source: ABdhPJyOEsX2NrkArkQ+lhEF+JTD42MIssKbrKwgoF/zEzysvAYajpmNlBFC5Ml9f1fcMV7VXNEE5Q==
-X-Received: by 2002:a4a:d0a4:: with SMTP id t4mr6387691oor.21.1603902959220;
-        Wed, 28 Oct 2020 09:35:59 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id d145sm2810205oob.37.2020.10.28.09.35.57
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Wt+s6BlJ4D0pWj4799MnptGBNN3QDWrSO2jwSkSrrsU=;
+        b=LCJXOcnjIvwC4bTmTVGiE/OD6ljN+WfdZfX0yvch5A9Kj2VeGPM56YNv0cC1Z7n+gY
+         AXZBdrw8Q0xQXfACRvcpxoCq+2qAV7mun4agvO8EGHrexQiBk088s81wx+OqDD75cVWk
+         bGVf2YwFA7hLN1rgW9qs/QvknM5nJ+Vyr7WqxVPMtwehUN48Q+YzSeasW4FNeIJGh+N5
+         Dau9jTfcZwmafdOhDLsH+tMzjXN3mMx4VDC2buEpy5TtQeOKyIBRQ9OWpUYHV0tQX9Ew
+         sW2HFxqdI3+GSmRVlA4ANqjR+LpjtjxGtevFZduFx0SENKh8WgU1iUSHj4+40Z0Ctwb9
+         xYgQ==
+X-Gm-Message-State: AOAM533aBKalHvINkCD5o+/A12f18Wlcw/Alhuurmr8dbd2a9P8HgyL4
+        kPjJufMzcEhHHbLEJQkY7B1hek1jEJgOIQ==
+X-Google-Smtp-Source: ABdhPJw+ahrLt2oQgbDmT+r/MaUDO4QgE5KbxjrYa6s5oE/h38mvti22hLaODf0QE12Sue5lB0anHQ==
+X-Received: by 2002:a17:90a:3d0f:: with SMTP id h15mr128651pjc.234.1603907930036;
+        Wed, 28 Oct 2020 10:58:50 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id y13sm229281pfl.166.2020.10.28.10.58.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2020 09:35:58 -0700 (PDT)
-Date:   Wed, 28 Oct 2020 11:35:56 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jeevan Shriram <jshriram@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SDX55 pincontrol driver
-Message-ID: <20201028163556.GD3151@builder.lan>
-References: <20201028083017.611810-1-vkoul@kernel.org>
- <20201028083017.611810-2-vkoul@kernel.org>
+        Wed, 28 Oct 2020 10:58:49 -0700 (PDT)
+Message-ID: <5f99b159.1c69fb81.2f16e.0d8b@mx.google.com>
+Date:   Wed, 28 Oct 2020 10:58:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201028083017.611810-2-vkoul@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.10-rc1-4-g8aa163350506
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.10-rc1-4-g8aa163350506)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 28 Oct 03:30 CDT 2020, Vinod Koul wrote:
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-[..]
-> +static const struct msm_function sdx55_functions[] = {
-[..]
-> +	FUNCTION(qdss_gpio),
-> +	FUNCTION(qdss_gpio0),
-> +	FUNCTION(qdss_gpio1),
-> +	FUNCTION(qdss_gpio2),
-> +	FUNCTION(qdss_gpio3),
-> +	FUNCTION(qdss_gpio4),
-> +	FUNCTION(qdss_gpio5),
-> +	FUNCTION(qdss_gpio6),
-> +	FUNCTION(qdss_gpio7),
-> +	FUNCTION(qdss_gpio8),
-> +	FUNCTION(qdss_gpio9),
-> +	FUNCTION(qdss_gpio10),
-> +	FUNCTION(qdss_gpio11),
-> +	FUNCTION(qdss_gpio12),
-> +	FUNCTION(qdss_gpio13),
-> +	FUNCTION(qdss_gpio14),
-> +	FUNCTION(qdss_gpio15),
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc1-4-=
+g8aa163350506)
 
-As there are no overlaps within pingroups you can keep qdss_gpio as a
-single function.
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.10-rc1-4-g8aa163350506/
 
-> +	FUNCTION(qdss_stm0),
-> +	FUNCTION(qdss_stm1),
-> +	FUNCTION(qdss_stm2),
-> +	FUNCTION(qdss_stm3),
-> +	FUNCTION(qdss_stm4),
-> +	FUNCTION(qdss_stm5),
-> +	FUNCTION(qdss_stm6),
-> +	FUNCTION(qdss_stm7),
-> +	FUNCTION(qdss_stm8),
-> +	FUNCTION(qdss_stm9),
-> +	FUNCTION(qdss_stm10),
-> +	FUNCTION(qdss_stm11),
-> +	FUNCTION(qdss_stm12),
-> +	FUNCTION(qdss_stm13),
-> +	FUNCTION(qdss_stm14),
-> +	FUNCTION(qdss_stm15),
-> +	FUNCTION(qdss_stm16),
-> +	FUNCTION(qdss_stm17),
-> +	FUNCTION(qdss_stm18),
-> +	FUNCTION(qdss_stm19),
-> +	FUNCTION(qdss_stm20),
-> +	FUNCTION(qdss_stm21),
-> +	FUNCTION(qdss_stm22),
-> +	FUNCTION(qdss_stm23),
-> +	FUNCTION(qdss_stm24),
-> +	FUNCTION(qdss_stm25),
-> +	FUNCTION(qdss_stm26),
-> +	FUNCTION(qdss_stm27),
-> +	FUNCTION(qdss_stm28),
-> +	FUNCTION(qdss_stm29),
-> +	FUNCTION(qdss_stm30),
-> +	FUNCTION(qdss_stm31),
+Tree: linusw
+Branch: devel
+Git Describe: v5.10-rc1-4-g8aa163350506
+Git Commit: 8aa16335050663357281fb1f1b0483ab91b4d8de
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-Ditto.
+Warnings Detected:
 
-> +	FUNCTION(qlink0_en),
-> +	FUNCTION(qlink0_req),
-> +	FUNCTION(qlink0_wmss),
-> +	FUNCTION(qlink1_en),
-> +	FUNCTION(qlink1_req),
-> +	FUNCTION(qlink1_wmss),
-> +	FUNCTION(spmi_coex),
-> +	FUNCTION(sec_mi2s),
-> +	FUNCTION(spmi_vgi),
-> +	FUNCTION(tgu_ch0),
-> +	FUNCTION(uim1_clk),
-> +	FUNCTION(uim1_data),
-> +	FUNCTION(uim1_present),
-> +	FUNCTION(uim1_reset),
-> +	FUNCTION(uim2_clk),
-> +	FUNCTION(uim2_data),
-> +	FUNCTION(uim2_present),
-> +	FUNCTION(uim2_reset),
-> +	FUNCTION(usb2phy_ac),
-> +	FUNCTION(vsense_trigger),
-> +};
-> +
-> +/* Every pin is maintained as a single group, and missing or non-existing pin
-> + * would be maintained as dummy group to synchronize pin group index with
-> + * pin descriptor registered with pinctrl core.
-> + * Clients would not be able to request these dummy pin groups.
-> + */
-> +static const struct msm_pingroup sdx55_groups[] = {
-> +	[0] = PINGROUP(0, uim2_data, blsp_uart1, qdss_stm31, ebi0_wrcdc, _,
-> +		       _, _, _, _),
+arc:
 
-Please break the 80 character suggestion and leave these unwrapped.
+arm64:
+    defconfig (gcc-8): 8 warnings
 
-[..]
-> +	[108] = UFS_RESET(ufs_reset, 0x0),
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
 
-SDX55 doesn't have UFS support and I'm not able to find any UFS_RESET
-register in the TLMM block. So I suspect this is a copy paste issue
-somewhere.
+i386:
 
-PS. Don't forget to drop the macro, if we don't need it.
+mips:
 
-> +	[109] = SDC_PINGROUP(sdc1_rclk, 0x9a000, 15, 0),
-> +	[110] = SDC_PINGROUP(sdc1_clk, 0x9a000, 13, 6),
-> +	[111] = SDC_PINGROUP(sdc1_cmd, 0x9a000, 11, 3),
-> +	[112] = SDC_PINGROUP(sdc1_data, 0x9a000, 9, 0),
-> +};
-> +
-> +static const struct msm_pinctrl_soc_data sdx55_pinctrl = {
-> +	.pins = sdx55_pins,
-> +	.npins = ARRAY_SIZE(sdx55_pins),
-> +	.functions = sdx55_functions,
-> +	.nfunctions = ARRAY_SIZE(sdx55_functions),
-> +	.groups = sdx55_groups,
-> +	.ngroups = ARRAY_SIZE(sdx55_groups),
-> +	.ngpios = 108,
+riscv:
 
-If we had UFS_RESET, this should include it; i.e. be 109.
+x86_64:
 
-Regards,
-Bjorn
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
