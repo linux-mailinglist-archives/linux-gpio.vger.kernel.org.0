@@ -2,159 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 293C929C89C
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Oct 2020 20:21:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D6B729D29D
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 22:33:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1829640AbgJ0TTh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Oct 2020 15:19:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33580 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1829629AbgJ0TTf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Oct 2020 15:19:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b8so3216883wrn.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Oct 2020 12:19:34 -0700 (PDT)
+        id S1726203AbgJ1Vdl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 17:33:41 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:29487 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726176AbgJ1Vdk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:33:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=94FVc/lhmQBJbpQ0I0StwCkg4DMhTbsduFiN4bjClk4=;
-        b=Sld6hciHThDqeso8S8+jXbwutFt+C8GMsFv9uR38kkL9A2ymfTua46NMT/Q9ZBn3uh
-         noluYBIeHRwknPmU94BZzwh6l7DE4uJbJLLOru2dF0iDS5wDVUIl89TAYeWKJJDtgD9J
-         qGm+daZidj774s7wADWav2trLrU+zVLJfeX5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=94FVc/lhmQBJbpQ0I0StwCkg4DMhTbsduFiN4bjClk4=;
-        b=N35yk/7r/u+/eaJvV7Tbi2lAb3xLbF7oCecdOTdTVG8RJDRyYSH3xSTJm8s3RLeD/2
-         h8fDFAeTZ+mNFYyctuwm7rC52FhfqOFiwIfeei9ry6QvrQvqStTZdJEiDSFi73Qitlmb
-         PJRi1f8moHTm93nZoxBGrVXNFs3635i04UmDLjWd9fGtegrkBiOd8NRzf7IQ1wYBWjXk
-         0pDzcmbtYg13DdJ6Mchd7Y1iRBbFo56WbpT791BKLFONElGPheabSzzDT6NwRMYDjEyR
-         nN6q1DKc4wKni+HZDBVCnu69X7zjaphauGMWkqLV33nEQnkUDyp/aveiqS3tcQkmhq2p
-         Bl9g==
-X-Gm-Message-State: AOAM530M4Mq0elW+FaIJVX8UjhxH7lS0cy/1pA6KxId7tPNBXD6UUb2i
-        nbkxmzIYL/Y2RkMSWd5HRPKAeg==
-X-Google-Smtp-Source: ABdhPJxSeCImtuoOwiJ2SgVqpZLT/QAEeRHxQ9b1eMNAwd7xtGe8jna3O2uLNWNIxJE6aH3a1ktGnQ==
-X-Received: by 2002:a5d:4dc7:: with SMTP id f7mr4027819wru.375.1603826373382;
-        Tue, 27 Oct 2020 12:19:33 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h206sm3012251wmf.47.2020.10.27.12.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2020 12:19:32 -0700 (PDT)
-Date:   Tue, 27 Oct 2020 20:19:30 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
+  d=axis.com; l=1582; q=dns/txt; s=axis-central1;
+  t=1603920821; x=1635456821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wShs6Il8676fEisJ9OqkRk7Glv/K0kWtHAFo/leZB64=;
+  b=XueiRrt/TAHzdubbGmnVUpFvbr7WJRhWdQUAfkDeXQv2mFheCSUAtmhB
+   WPtKT9/R3VHqoyNLd7bYb6oGMVqRFk1AfQoAyK80LdGVIxNGkWpsP4Hv+
+   pz35u3QkxKWCdIPgylYwKzXunm2DI702z76LGKlnkN2Rrh2iu6onywlUX
+   eiEXSL00y8j2gSfMKScnxC0M77j9WbUXjyhPJwn4U456Ozx9zB8bXCBD1
+   evTL/IkKz2gfm1F4Yh+u7kjiMcTs7Y7hZvGnFyGHusWWddnz2hTyHtNRC
+   zzRUUg4lINfteKhB7EIfJdEqKhxafHvr9JAG1yEtnVR6RLQUs6FQbSg+n
+   A==;
+IronPort-SDR: U8zltDoScmoPmC4fPkt4No97bd/rwXnqaOG5X7a0JcHti08Il8LC8DtC222YcI/kIB6HgvWfwt
+ J/+H8AGXxQE/W2fpGK68aV/w+DL+bhkqgv8ZEqqoOf4EuyFJp7vUDOaI7ntfwxhFqFf5opGXoz
+ 7AM11J2KHztE6qRm628hbygd7ayww1h2buIKls+eNCank0Tl1VE92QLqmH0a4JS/oC5LabwAlC
+ slCRd1L83rroA2diWK8sYxBEz1gB2QvUU67wzHmoeKXcM9DyYQLhBPQy1LrCU5xy+74tC8qHFo
+ pCs=
+X-IronPort-AV: E=Sophos;i="5.77,425,1596492000"; 
+   d="scan'208";a="13984860"
+Date:   Wed, 28 Oct 2020 09:57:46 +0100
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+CC:     Bamvor Jian Zhang <bamv2005@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, alsa-devel@alsa-project.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 6/8] drm: atomic: use krealloc_array()
-Message-ID: <20201027191930.GQ401619@phenom.ffwll.local>
-Mail-Followup-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>, Robert Richter <rric@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        alsa-devel@alsa-project.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20201027121725.24660-1-brgl@bgdev.pl>
- <20201027121725.24660-7-brgl@bgdev.pl>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel <kernel@axis.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] gpio: mockup: Allow probing from device tree
+Message-ID: <20201028085746.bmyb4y6ypburdy5s@axis.com>
+References: <20201027135325.22235-1-vincent.whitchurch@axis.com>
+ <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20201027121725.24660-7-brgl@bgdev.pl>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+In-Reply-To: <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 01:17:23PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Oct 27, 2020 at 07:12:13PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Oct 27, 2020 at 2:54 PM Vincent Whitchurch
+> <vincent.whitchurch@axis.com> wrote:
+> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > index 67ed4f238d43..c93892a6936a 100644
+> > --- a/drivers/gpio/gpio-mockup.c
+> > +++ b/drivers/gpio/gpio-mockup.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/gpio/driver.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> > +#include <linux/of.h>
 > 
-> Use the helper that checks for overflows internally instead of manually
-> calculating the size of the new array.
+> Please keep the includes ordered alphabetically.
+
+Thanks, fixed in v3.
+
+> >  #include <linux/irq_sim.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/module.h>
+> > @@ -460,9 +461,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id gpio_mockup_of_match[] = {
+> > +       { .compatible = "gpio-mockup", },
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
+> > +#endif
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> You don't need this ifdef - of_match_ptr() will evaluate to NULL if
+> CONFIG_OF is disabled and the compiler will optimize this struct out.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+The compiler can't optimise out the struct in the case of a module build
+since there is a reference from the MODULE_DEVICE_TABLE:
 
-I don't expect conflicts with this going through some other tree, so
-please make that happen. Or resend once I can apply this to drm trees.
+ $ grep CONFIG_OF .config
+ # CONFIG_OF is not set
+ $ nm drivers/gpio/gpio-mockup.ko  | grep of_
+ 00000000 r gpio_mockup_of_match
+ 00000000 R __mod_of__gpio_mockup_of_match_device_table
 
-Thanks, Daniel
-
-> ---
->  drivers/gpu/drm/drm_atomic.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
-> index 58527f151984..09ad6a2ec17b 100644
-> --- a/drivers/gpu/drm/drm_atomic.c
-> +++ b/drivers/gpu/drm/drm_atomic.c
-> @@ -960,7 +960,8 @@ drm_atomic_get_connector_state(struct drm_atomic_state *state,
->  		struct __drm_connnectors_state *c;
->  		int alloc = max(index + 1, config->num_connector);
->  
-> -		c = krealloc(state->connectors, alloc * sizeof(*state->connectors), GFP_KERNEL);
-> +		c = krealloc_array(state->connectors, alloc,
-> +				   sizeof(*state->connectors), GFP_KERNEL);
->  		if (!c)
->  			return ERR_PTR(-ENOMEM);
->  
-> -- 
-> 2.29.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+But these few wasted bytes don't matter so I removed the CONFIG_OF
+anyway as you suggested.
