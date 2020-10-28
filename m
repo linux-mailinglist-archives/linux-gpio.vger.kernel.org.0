@@ -2,98 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3C0829D46F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 22:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8685A29D4BD
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 22:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgJ1VwH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 17:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgJ1VwG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:52:06 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921B1C0613CF;
-        Wed, 28 Oct 2020 14:52:06 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id f7so1156402oib.4;
-        Wed, 28 Oct 2020 14:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hsiBaHtytHat8/EztZJPMms+wc+gkK9fFhRbXpui7XQ=;
-        b=MQEVLxlQBAUE8Edv0UruJBsGHTS6407b6J0mWXgnZtxQWJVTgvfoZAswU7xJkgQYQ0
-         Ddm8sQ76zjJVRKtkQlFy90/AG4a+nCqMy6zwee3lZeSF58nUjzSCyR6e5ipuATwKeQFx
-         +dpfnl3557iDt1HkVOdgqrc/F0u3oSsHc41Nw5dv21WL9SpIUx4hRzE3USyBCuRi6Rfd
-         7tuyWySJ5FCOs5D5P4BwoT+Kdd7sZpT5YW6+QKiL8YaQN3JGb90e1j3XsaGJDBGK6uGY
-         fiWnh8PoMxckM3nrVT395A+mMs9GIBD/ul5M6+fZHqzzmTg6GJIP3AVVGMnWB1PRla0t
-         k7+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hsiBaHtytHat8/EztZJPMms+wc+gkK9fFhRbXpui7XQ=;
-        b=WNtPKcbP2JxSkulBXowV3IIiDZ12QDrGoILu5h7gcZLNJHspPhsy0Aw/4dGUdPAo5n
-         RAcb43Ez5gNj7vP4/zgXLTslWZFu765q8/QGKeOAz0gq6PzAbW4Ok0Q03Ri2gSdsWxVp
-         23St3rWcISojR3OHwYYtFU/4XEN7cuGATiROBb8cUjFXtXv2GqSAClF09zBmh1tvxJEb
-         55wTB2UHEXD3gYK8S7kzm6uOanYrNCojSEjfX2me9U/0U3XEUA3VoIgaSBbKLNp3N6KK
-         ilITnByRqdQpxhfzLWIoND3bzUyUQdPf6rjRxxQTTfeHsSkhgW53njsQyiYJFuNaZE8r
-         7K1w==
-X-Gm-Message-State: AOAM530mdRXOqrOzS84LUHvH7eXL5ZKLCRkSA1dVUHfJ7kAp/jZnUjPi
-        xrOePGq92UixBYb5LsabStWzDP/37xDPWnM+PJJ30Yt/MgA=
-X-Google-Smtp-Source: ABdhPJy8JQRH34yo0LYH7fgqv7KNi4P+zNVt6GyrQjGrjJOIklaLoU3uoLRGVJm039L01MwTAaSTVYc9qlINuCALcKg=
-X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr651136pjb.228.1603916683534;
- Wed, 28 Oct 2020 13:24:43 -0700 (PDT)
+        id S1728730AbgJ1VyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 17:54:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56605 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728686AbgJ1VyT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:54:19 -0400
+IronPort-SDR: PG89bDQe8icubWsJZ8ecNndUvvEq4by8y6DUig0vfmvN2pTFiw3xqpBkYJl6xscYHMr19UwBVV
+ oVzAWE8VFTxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="147617925"
+X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
+   d="scan'208";a="147617925"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 13:51:05 -0700
+IronPort-SDR: Hzdkf8dTs+GsrrqPUYE6r73IguoVXb3e7H1u4FziP/V4QDYtqkXKWF2DQfxH3HE4yvHy7I4gpi
+ lRIwXxSuW9hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
+   d="scan'208";a="394946435"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 28 Oct 2020 13:51:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 402013CB; Wed, 28 Oct 2020 22:51:02 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/3] Documentation: firmware-guide: gpio-properties: Fix factual mistakes
+Date:   Wed, 28 Oct 2020 22:50:59 +0200
+Message-Id: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20201027135325.22235-1-vincent.whitchurch@axis.com> <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 28 Oct 2020 22:25:32 +0200
-Message-ID: <CAHp75Vff1AyKDb=JiocsAefnft+tcm+BnuWDrxViQqZAQZjuVg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mockup: Allow probing from device tree
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kernel@axis.com, devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 8:41 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Tue, Oct 27, 2020 at 2:54 PM Vincent Whitchurch
-> <vincent.whitchurch@axis.com> wrote:
+Fix factual mistakes and style issues in GPIO properties document.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ .../firmware-guide/acpi/gpio-properties.rst   | 29 ++++++++++---------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-> > +#include <linux/of.h>
->
-> Please keep the includes ordered alphabetically.
-
-Besides the fact that that is a wrong header to be included.
-mod_devicetable.h is the correct one.
-(See also below)
-
-...
-
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id gpio_mockup_of_match[] = {
-> > +       { .compatible = "gpio-mockup", },
-> > +       {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
-> > +#endif
->
-> You don't need this ifdef - of_match_ptr() will evaluate to NULL if
-> CONFIG_OF is disabled and the compiler will optimize this struct out.
-
-It's not so. If you drop ugly ifdeffery (and I vote for that, see also
-above) the of_match_ptr() must be dropped as well.
-Otherwise the compiler will issue the warning. So it is either all or none.
-
+diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+index bb6d74f23ee0..e6e65ceb2ca1 100644
+--- a/Documentation/firmware-guide/acpi/gpio-properties.rst
++++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+@@ -20,9 +20,9 @@ index, like the ASL example below shows::
+ 
+       Name (_CRS, ResourceTemplate ()
+       {
+-          GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++          GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
+                   "\\_SB.GPO0", 0, ResourceConsumer) {15}
+-          GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++          GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
+                   "\\_SB.GPO0", 0, ResourceConsumer) {27, 31}
+       })
+ 
+@@ -49,7 +49,7 @@ index
+ pin
+   Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
+ active_low
+-  If 1 the GPIO is marked as active_low.
++  If 1, the GPIO is marked as active_low.
+ 
+ Since ACPI GpioIo() resource does not have a field saying whether it is
+ active low or high, the "active_low" argument can be used here.  Setting
+@@ -112,8 +112,8 @@ Example::
+   Package () {
+       "gpio-line-names",
+       Package () {
+-          "SPI0_CS_N", "EXP2_INT", "MUX6_IO", "UART0_RXD", "MUX7_IO",
+-          "LVL_C_A1", "MUX0_IO", "SPI1_MISO"
++          "SPI0_CS_N", "EXP2_INT", "MUX6_IO", "UART0_RXD",
++          "MUX7_IO", "LVL_C_A1", "MUX0_IO", "SPI1_MISO",
+       }
+   }
+ 
+@@ -137,7 +137,7 @@ to the GPIO lines it is going to use and provide the GPIO subsystem with a
+ mapping between those names and the ACPI GPIO resources corresponding to them.
+ 
+ To do that, the driver needs to define a mapping table as a NULL-terminated
+-array of struct acpi_gpio_mapping objects that each contain a name, a pointer
++array of struct acpi_gpio_mapping objects that each contains a name, a pointer
+ to an array of line data (struct acpi_gpio_params) objects and the size of that
+ array.  Each struct acpi_gpio_params object consists of three fields,
+ crs_entry_index, line_index, active_low, representing the index of the target
+@@ -154,13 +154,14 @@ question would look like this::
+   static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
+     { "reset-gpios", &reset_gpio, 1 },
+     { "shutdown-gpios", &shutdown_gpio, 1 },
+-    { },
++    { }
+   };
+ 
+ Next, the mapping table needs to be passed as the second argument to
+-acpi_dev_add_driver_gpios() that will register it with the ACPI device object
+-pointed to by its first argument.  That should be done in the driver's .probe()
+-routine.  On removal, the driver should unregister its GPIO mapping table by
++acpi_dev_add_driver_gpios() or its managed analogue that will
++register it with the ACPI device object pointed to by its first
++argument. That should be done in the driver's .probe() routine.
++On removal, the driver should unregister its GPIO mapping table by
+ calling acpi_dev_remove_driver_gpios() on the ACPI device object where that
+ table was previously registered.
+ 
+@@ -191,12 +192,12 @@ The driver might expect to get the right GPIO when it does::
+ but since there is no way to know the mapping between "reset" and
+ the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
+ 
+-The driver author can solve this by passing the mapping explictly
+-(the recommended way and documented in the above chapter).
++The driver author can solve this by passing the mapping explicitly
++(this is the recommended way and it's documented in the above chapter).
+ 
+ The ACPI GPIO mapping tables should not contaminate drivers that are not
+ knowing about which exact device they are servicing on. It implies that
+-the ACPI GPIO mapping tables are hardly linked to ACPI ID and certain
++the ACPI GPIO mapping tables are hardly linked to an ACPI ID and certain
+ objects, as listed in the above chapter, of the device in question.
+ 
+ Getting GPIO descriptor
+@@ -229,5 +230,5 @@ Case 2 explicitly tells GPIO core to look for resources in _CRS.
+ Be aware that gpiod_get_index() in cases 1 and 2, assuming that there
+ are two versions of ACPI device description provided and no mapping is
+ present in the driver, will return different resources. That's why a
+-certain driver has to handle them carefully as explained in previous
++certain driver has to handle them carefully as explained in the previous
+ chapter.
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
