@@ -2,96 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB26029D6DE
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 23:19:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D976329D799
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 23:28:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbgJ1WTC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 18:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731663AbgJ1WRk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:17:40 -0400
-Received: from mail.kernel.org (ip5f5ad5b2.dynamic.kabel-deutschland.de [95.90.213.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B16247A7;
-        Wed, 28 Oct 2020 14:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603895015;
-        bh=JAx1qWa20um1wQnui7p3l/DIW1YJ8YcH6WDCgd1IdSU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l751ojO5xWe+dORLoDgW1EzlSHs0QR+n1JmTHLoUWMW/Bx55nmbRxJb5Pb+/O9jxP
-         i8tJmF8TFQig657YLLejnAqH6bPS+rpaIlB7+BS9/udWOOgKAeo5a5uxGfeCHblYyc
-         3I6qm5ftuvDbCRoG9Y6B/dtFtB2dvF85lsdJ9te8=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kXmMP-003hln-A4; Wed, 28 Oct 2020 15:23:33 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 23/33] docs: ABI: don't escape ReST-incompatible chars from obsolete and removed
-Date:   Wed, 28 Oct 2020 15:23:21 +0100
-Message-Id: <53f82f9b3c063bb1b928bdea4986f1471ad3ace7.1603893146.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1603893146.git.mchehab+huawei@kernel.org>
-References: <cover.1603893146.git.mchehab+huawei@kernel.org>
+        id S1732649AbgJ1WYo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 18:24:44 -0400
+Received: from leibniz.telenet-ops.be ([195.130.137.77]:41692 "EHLO
+        leibniz.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732582AbgJ1WV4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 18:21:56 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4CLsc85sg3zMv7nV
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 16:16:40 +0100 (CET)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id lTGf2300h4C55Sk01TGf1z; Wed, 28 Oct 2020 16:16:40 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kXnBn-000pDZ-Ii; Wed, 28 Oct 2020 16:16:39 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kXnBn-007H8m-67; Wed, 28 Oct 2020 16:16:39 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/8] pinctrl: renesas: Remove superfluous goto in sh_pfc_gpio_set_direction()
+Date:   Wed, 28 Oct 2020 16:16:30 +0100
+Message-Id: <20201028151637.1734130-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201028151637.1734130-1-geert+renesas@glider.be>
+References: <20201028151637.1734130-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Commit b13431ed6eab808a ("pinctrl: sh-pfc: Remove incomplete flag
+"cfg->type"") removed the last statement in between the goto and the
+label.  Hence remove both.
 
-With just a single fix, the contents there can be parsed properly
-without the need to escape any ReST incompatible stuff.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/ABI/obsolete/sysfs-gpio      | 2 ++
- Documentation/admin-guide/abi-obsolete.rst | 1 +
- Documentation/admin-guide/abi-removed.rst  | 1 +
- 3 files changed, 4 insertions(+)
+ drivers/pinctrl/renesas/pinctrl.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/Documentation/ABI/obsolete/sysfs-gpio b/Documentation/ABI/obsolete/sysfs-gpio
-index e0d4e5e2dd90..b8b0fd341c17 100644
---- a/Documentation/ABI/obsolete/sysfs-gpio
-+++ b/Documentation/ABI/obsolete/sysfs-gpio
-@@ -13,6 +13,8 @@ Description:
-   GPIOs are identified as they are inside the kernel, using integers in
-   the range 0..INT_MAX.  See Documentation/admin-guide/gpio for more information.
+diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
+index 212a4a9c3a8fc1c7..f8d5fae66e862fd6 100644
+--- a/drivers/pinctrl/renesas/pinctrl.c
++++ b/drivers/pinctrl/renesas/pinctrl.c
+@@ -460,12 +460,7 @@ static int sh_pfc_gpio_set_direction(struct pinctrl_dev *pctldev,
+ 	}
  
-+  ::
-+
-     /sys/class/gpio
- 	/export ... asks the kernel to export a GPIO to userspace
- 	/unexport ... to return a GPIO to the kernel
-diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
-index cda9168445a5..d095867899c5 100644
---- a/Documentation/admin-guide/abi-obsolete.rst
-+++ b/Documentation/admin-guide/abi-obsolete.rst
-@@ -8,3 +8,4 @@ The description of the interface will document the reason why it is
- obsolete and when it can be expected to be removed.
- 
- .. kernel-abi:: $srctree/Documentation/ABI/obsolete
-+   :rst:
-diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
-index 497978fc9632..f7e9e43023c1 100644
---- a/Documentation/admin-guide/abi-removed.rst
-+++ b/Documentation/admin-guide/abi-removed.rst
-@@ -2,3 +2,4 @@ ABI removed symbols
- ===================
- 
- .. kernel-abi:: $srctree/Documentation/ABI/removed
-+   :rst:
+ 	spin_lock_irqsave(&pfc->lock, flags);
+-
+ 	ret = sh_pfc_config_mux(pfc, pin->enum_id, new_type);
+-	if (ret < 0)
+-		goto done;
+-
+-done:
+ 	spin_unlock_irqrestore(&pfc->lock, flags);
+ 	return ret;
+ }
 -- 
-2.26.2
+2.25.1
 
