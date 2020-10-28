@@ -2,177 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3D6C29D7F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 23:28:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AADD29D847
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Oct 2020 23:31:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbgJ1W2U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 18:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55404 "EHLO
+        id S2387821AbgJ1WbE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 18:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731994AbgJ1W2S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 18:28:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C9BC0613CF
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 15:28:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i6so852338lfd.1
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 15:28:17 -0700 (PDT)
+        with ESMTP id S2387840AbgJ1WbD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 18:31:03 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B791C0613CF
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 15:31:03 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id 13so654422pfy.4
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 15:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JzxgzmFEKg3uyOYq0U+7u1Sr88Fa5cBf5J/ai9Bi9w4=;
-        b=c8YXWXabra4sW5/XLNopgCr1Ey4kEIOYZ1bnz6+tWCnkIM88z4M2Q3I8N6B+DLSZt4
-         cJzYWSgKqRYIP05RISLd1JWNSMYFkd9oJV/3pYM+4YbdbwwpPxZY4yZg7EkQpNCDvAMI
-         gD29S7F17ZYzpny8Auzr9eQgNQUDt2NXaN1SE=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=IlGjamNZJQlb+bNbaicIlbYxcxVb5e3NoEjkDtwYOsM=;
+        b=GppF06XedzrMfmOa9p+EK8X7nn68I4wU8ciN4C90I197JntYCLxV8oT0OKod2DTPSs
+         PlwvWgpiF9GfA/IjZnrfjMFomonbyG8OUlK8yxmU/iyGKn5mMZTrHxj2pqtGI0yA/3uO
+         V9JT0YNO+UtcWohLxaFHoZRZ4Z/skFZTAGOeEcwE6cDqRcdRIjx7ZSFlXjn/Dzk8VHTg
+         Hi5vES1j/CtPNO67QAbzf7pRld8JxaeY7rqkLUfiZqcr3wHHfgt6LGnfhuhBgpax2Qwk
+         luTDE/HJXHfq3/uur9U5xwgqPru+SrxzFmfpFoKCcptvcuLNsTpoU9vh+l5jJDG3PBxv
+         rM4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JzxgzmFEKg3uyOYq0U+7u1Sr88Fa5cBf5J/ai9Bi9w4=;
-        b=Hh0zd71x/ToEB5cwDkOEofycHWnv8pLUScmdPI/WR9mnezLQfgYvbaWmT5bObicsKj
-         A6KyCBLDw+8LpnzXyjSD9YCmfuIn7iYtNJG2eJj1UpqYT5TFZe1nxQhAmdDiQzeCWzuD
-         QS55ubSIJLMfOAVdGEr6TF5+81oaZG41P+Cz0X3yRTWQUA+lrKfN+S0xV5f1JMOUI4jU
-         tNw8i5i1XOnz0b4c28DoYhxNMsiDJIswfP8nrLAU25LTCVQGquZcuoyQursFGVKyxKXo
-         eKWExOZeuSxgUHfQuwOznbShbgr+cOGUYiha/3RXS0uFFOdbo+OJAZ3TCog1dc4EmrYF
-         ylRQ==
-X-Gm-Message-State: AOAM5318XY0+/8XPlfytHIMgOvrnP6GAc2XwXX6n/X50ySMflbYdOAb1
-        XdXXeQns+oDW0/vHnY6Aalpc8DYNhedZm4w56Ss=
-X-Google-Smtp-Source: ABdhPJw9WvnFCFfe0bMtDkbOl61PKkk2WINL/17GJ+UJzZwPlfMZ2z28uuVsBREELq+J+ey2Z9mmqA==
-X-Received: by 2002:adf:e685:: with SMTP id r5mr390473wrm.340.1603905483580;
-        Wed, 28 Oct 2020 10:18:03 -0700 (PDT)
-Received: from alco.lan ([80.71.134.83])
-        by smtp.gmail.com with ESMTPSA id y4sm222505wrp.74.2020.10.28.10.18.02
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=IlGjamNZJQlb+bNbaicIlbYxcxVb5e3NoEjkDtwYOsM=;
+        b=qHlHlnSbPBlX1YMP/uhd8L+MGkiF2tu//8aLIETuzgolLJJHSDEKc8UKkQGPIA+dOG
+         v3qhtGdEJZHPbcA0GCoTTzXGBXVcQ6bePIVXX1tYiqB7/gGF5haxiWKGrJDD3EKbXBXn
+         be+0udkjTQf07H+fmq85Exowb/9dvh/TIGIylE9MhjbJPzjCVJNT+il4IbV/Sc+4nXG4
+         PprP5UUrIBSs6o5wpBW7XP4GrqkPCuqd/41QoaXC0xQTAEzEsKHDMKhS5nnVreigojkx
+         mNPBh4sdyM3v3vHl82Ev8ho0G0zs0rflROgW34rvpIyiqyYkQvNhsgpyg92A2pnl3wvJ
+         q1tQ==
+X-Gm-Message-State: AOAM531aryAjrKB2wApo/6zRnfDAk7D83NfSad361VO+mzjERaE3xBiz
+        gTIJLaIqJoeZ0HMyjxwgT2V6H1I6wjIPOA==
+X-Google-Smtp-Source: ABdhPJwYK1XCiCnKmGoca3JQHNNSMjAzPEsjv5SAKoINhlK7cRjeKbGdlXoVslqo80WHP1EDkLSnsA==
+X-Received: by 2002:a62:2ec7:0:b029:164:4811:e1d6 with SMTP id u190-20020a622ec70000b02901644811e1d6mr579204pfu.12.1603910601791;
+        Wed, 28 Oct 2020 11:43:21 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id j15sm97686pgn.32.2020.10.28.11.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2020 10:18:02 -0700 (PDT)
-From:   Ricardo Ribalda <ribalda@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda <ribalda@chromium.org>
-Subject: [PATCH] gpiolib: acpi: Support GpioInt with active_low polarity
-Date:   Wed, 28 Oct 2020 18:17:57 +0100
-Message-Id: <20201028171757.765866-1-ribalda@chromium.org>
-X-Mailer: git-send-email 2.29.0.rc2.309.g374f81d7ae-goog
+        Wed, 28 Oct 2020 11:43:21 -0700 (PDT)
+Message-ID: <5f99bbc9.1c69fb81.27557.045b@mx.google.com>
+Date:   Wed, 28 Oct 2020 11:43:21 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.10-rc1-4-g8aa163350506
+X-Kernelci-Report-Type: test
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel baseline: 116 runs,
+ 1 regressions (v5.10-rc1-4-g8aa163350506)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On the current implementation we only support active_high polarity for
-GpioInt.
+linusw/devel baseline: 116 runs, 1 regressions (v5.10-rc1-4-g8aa163350506)
 
-There can be cases where a GPIO has active_low polarity and it is also a
-IRQ source.
+Regressions Summary
+-------------------
 
-De-couple the irq_polarity and active_low fields instead of re-use it.
+platform | arch | lab           | compiler | defconfig          | regressio=
+ns
+---------+------+---------------+----------+--------------------+----------=
+--
+panda    | arm  | lab-collabora | gcc-8    | multi_v7_defconfig | 1        =
+  =
 
-With this patch we support ACPI devices such as:
 
-Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
-{
-        GpioInt (Edge, ActiveBoth, Exclusive, PullDefault, 0x0000,
-        "\\_SB.PCI0.GPIO", 0x00, ResourceConsumer, ,
-        )
-        {   // Pin list
-                0x0064
-        }
-})
-Name (_DSD, Package (0x02)  // _DSD: Device-Specific Data
-{
-        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301") /* Device Properties for _DSD */,
-        Package (0x01)
-        {
-        Package (0x02)
-        {
-                "privacy-gpio",
-                Package (0x04)
-                {
-                \_SB.PCI0.XHCI.RHUB.HS07,
-                Zero,
-                Zero,
-                One
-                }
-        }
-        }
-})
+  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.10-=
+rc1-4-g8aa163350506/plan/baseline/
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/gpio/gpiolib-acpi.c | 8 ++++----
- drivers/gpio/gpiolib-acpi.h | 6 ++++--
- 2 files changed, 8 insertions(+), 6 deletions(-)
+  Test:     baseline
+  Tree:     linusw
+  Branch:   devel
+  Describe: v5.10-rc1-4-g8aa163350506
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      8aa16335050663357281fb1f1b0483ab91b4d8de =
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 834a12f3219e..bc33c1056391 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -624,7 +624,7 @@ int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
- 		break;
- 	}
- 
--	if (info->polarity == GPIO_ACTIVE_LOW)
-+	if (info->active_low)
- 		*lookupflags |= GPIO_ACTIVE_LOW;
- 
- 	return 0;
-@@ -665,6 +665,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 					      agpio->pin_table[pin_index]);
- 		lookup->info.pin_config = agpio->pin_config;
- 		lookup->info.gpioint = gpioint;
-+		lookup->info.active_low = !!lookup->active_low;
- 
- 		/*
- 		 * Polarity and triggering are only specified for GpioInt
-@@ -675,11 +676,10 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 		 */
- 		if (lookup->info.gpioint) {
- 			lookup->info.flags = GPIOD_IN;
--			lookup->info.polarity = agpio->polarity;
-+			lookup->info.irq_polarity = agpio->polarity;
- 			lookup->info.triggering = agpio->triggering;
- 		} else {
- 			lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio);
--			lookup->info.polarity = lookup->active_low;
- 		}
- 	}
- 
-@@ -958,7 +958,7 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
- 				return ret;
- 
- 			irq_flags = acpi_dev_get_irq_type(info.triggering,
--							  info.polarity);
-+							  info.irq_polarity);
- 
- 			/* Set type if specified and different than the current one */
- 			if (irq_flags != IRQ_TYPE_NONE &&
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index 1c6d65cf0629..816a2d7a21ed 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -16,7 +16,8 @@ struct acpi_device;
-  * @flags: GPIO initialization flags
-  * @gpioint: if %true this GPIO is of type GpioInt otherwise type is GpioIo
-  * @pin_config: pin bias as provided by ACPI
-- * @polarity: interrupt polarity as provided by ACPI
-+ * @irq_polarity: interrupt polarity as provided by ACPI
-+ * @active_low: pin polarity as provided by ACPI
-  * @triggering: triggering type as provided by ACPI
-  * @quirks: Linux specific quirks as provided by struct acpi_gpio_mapping
-  */
-@@ -25,7 +26,8 @@ struct acpi_gpio_info {
- 	enum gpiod_flags flags;
- 	bool gpioint;
- 	int pin_config;
--	int polarity;
-+	int irq_polarity;
-+	bool active_low;
- 	int triggering;
- 	unsigned int quirks;
- };
--- 
-2.29.0.rc2.309.g374f81d7ae-goog
 
+
+Test Regressions
+---------------- =
+
+
+
+platform | arch | lab           | compiler | defconfig          | regressio=
+ns
+---------+------+---------------+----------+--------------------+----------=
+--
+panda    | arm  | lab-collabora | gcc-8    | multi_v7_defconfig | 1        =
+  =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f99b440c8617f188a38103c
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc1-4-g8aa1=
+63350506/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc1-4-g8aa1=
+63350506/arm/multi_v7_defconfig/gcc-8/lab-collabora/baseline-panda.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/armel/baseline/rootfs.cpio.gz =
+
+
+
+  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5f99b440c8617f1=
+88a381042
+        failing since 61 days (last pass: gpio-v5.8-2-103-g22cc422070d9, fi=
+rst fail: v5.9-rc1-10-gfeeaefd378ca)
+        60 lines
+
+    2020-10-28 18:11:07.202000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c802
+    2020-10-28 18:11:07.207000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c803
+    2020-10-28 18:11:07.213000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c804
+    2020-10-28 18:11:07.219000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c805
+    2020-10-28 18:11:07.225000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c806
+    2020-10-28 18:11:07.231000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c807
+    2020-10-28 18:11:07.237000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c808
+    2020-10-28 18:11:07.243000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c809
+    2020-10-28 18:11:07.249000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c80a
+    2020-10-28 18:11:07.255000+00:00  kern  :alert : BUG: Bad page state in=
+ process swapper/0  pfn:9c80b =
+
+    ... (49 line(s) more)  =
+
+ =20
