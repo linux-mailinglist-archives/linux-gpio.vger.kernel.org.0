@@ -2,89 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9695629E314
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:46:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5D3929E2FD
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:45:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgJ2CpC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 22:45:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44779 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgJ1Vd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:33:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t9so582244wrq.11
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:33:59 -0700 (PDT)
+        id S1726485AbgJ1VeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 17:34:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:32935 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgJ1VeQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:34:16 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s21so1135553oij.0
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RwHMd9nNJDrCZQQY9z9MsksS67ghdV6lf0qJYLBuL9w=;
-        b=aTm6r+eMKNxLRMIGLCcKhgs49InOA7XhLbWiAZ8Fd3GUsE1vqdKGuf8yz0Vce4w85e
-         xwvYL3xfpvCD5GJNf6F6behhTYCzHKYlB0JdoR6WmZ/4UUVN18WtIsVlHVUjvxoVxi1N
-         qMGyAVwbrMYiYSqCABbAHPvlSul0iqKmLv6dYMseSxFDtKXeBlK8oa9iD4/GuZ80UTjB
-         HZPIMWrNANB7IoD6R5cZX6dBU6CClzRkAEUz2fOdufW7fjA9YfWado2Q9ylMy3VVyzar
-         anfocd0VImDOQmW8a/1abWI2WWlK0TWl5gqRlGqPb/6SAWtx1XR/8Fbtykrrn2GnCmAD
-         huvg==
+        bh=khsXwY2FOIak2E0IL9IWqYVg7gg6o/TiC9wESQ4lpvE=;
+        b=nvCl8sKwfy5MaflP71vCYy5uZwYIEw6hBOTPLMirYPIM9coKxLjYxUttQyjPrhGAW3
+         wIYGldGZNGcC8gHmdV+ZWm/IqohhKrnRpZPcrTxQRcVfK0TKBfDHIMVWxU6FFW1n+y4V
+         jYFhtScOr2Uz8IHzxFnLUdzAeKgHTM5DbPgfw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RwHMd9nNJDrCZQQY9z9MsksS67ghdV6lf0qJYLBuL9w=;
-        b=WWqIlZ10jbOMCtQksrbQAB7Vsebq2mTJsy/TWZrHnojPZmXvunyS7fkOI1KwN0L5Oi
-         z7fGaBRo9RL267tPBU2+JEQjxcbmdTrKy1120Nd2eHBFRaOh5mPEWqSQAEecsbtsgCv+
-         4PKfQBfJ70CA8S6ytNCsPSibHnyPIktfxiCMZ5dR4gAwAANeFRInknbzjVknlJOqVffY
-         MU+8iQAx6WpxsKblv9T85Pc34zmqsS32YMYtMasq0CqLAmLKjiqmApmllWm9XkOgzGb3
-         yJsMDKqbPkLipBGknWr86X2oic7FymsqEjsF6z4iTAkg9FB5VdrjyuBTlSwghypB0Hc4
-         9kCA==
-X-Gm-Message-State: AOAM530UQUKDqldLqjpcKblEWrFGTF81dDgmuAE0xq+LNVw36gLFxkWw
-        kGMtcfhQeURQb3raiURLUGnd0qKxnUMneTW2kMd0PQoi9TBMMA==
-X-Google-Smtp-Source: ABdhPJw939xH2jDNloF2M5EDl+nu2WQP9QKe67iGxQIrEdE6uS+aCV3rNRSgMKCxItJ3JdzJGWrxAgxigoGxnWREM4U=
-X-Received: by 2002:a19:191:: with SMTP id 139mr2699355lfb.502.1603899685282;
- Wed, 28 Oct 2020 08:41:25 -0700 (PDT)
+        bh=khsXwY2FOIak2E0IL9IWqYVg7gg6o/TiC9wESQ4lpvE=;
+        b=KSCmoDc7NOo4u+I/llACMGnx5RBr2tUL9IL++5LdK6EwLco5IJb369P7EDwUYD+Cs/
+         4IBp3nbBQKU5o3AObXqjb3yALsBStWIH2CmPwe3QS6hiMgYpYigJabcFaluUNkW2VOpQ
+         wrGTnCIEq00fBscHkvgnXqsN1NMtE5EzRLUBPbEVWjD/Yl3LDsXLjJ1f7mEDBOx0DjkP
+         AZY0m/0XnZN03EegLXtgmC6mSSLpnv+rXh5u+h8ONprKAWgo1GvfI9sP+HNtH5dr+Q3y
+         zjDRZeaRn4QdUp0I2t92DqFvgC49HvzTQc6PBXCgoSBc7xIVmtlsaULuE6y6jZhWJs8S
+         5Bxg==
+X-Gm-Message-State: AOAM531riqT7gJaVBcwkDE5pbOxt1KSGI2/H+4JVi0L6iZdzZocLzsFS
+        Zm5KFM+Ryu/iQQIDd+2ZuKYOUYEWYzG5ijQehFI=
+X-Google-Smtp-Source: ABdhPJzgCUrdQ+LQTFddxZXfio+3uoYq6GZ3GmaeoJQ5Vxa5w+EasQhhMuP6cLRUT6/yXyreyLQ50Q==
+X-Received: by 2002:aca:220b:: with SMTP id b11mr691926oic.130.1603919455035;
+        Wed, 28 Oct 2020 14:10:55 -0700 (PDT)
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com. [209.85.167.169])
+        by smtp.gmail.com with ESMTPSA id l11sm136360oon.35.2020.10.28.14.10.54
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Oct 2020 14:10:54 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id u127so1032577oib.6
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:10:54 -0700 (PDT)
+X-Received: by 2002:a05:6808:602:: with SMTP id y2mr686737oih.11.1603919453681;
+ Wed, 28 Oct 2020 14:10:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201028060556.56038-1-tony@atomide.com>
-In-Reply-To: <20201028060556.56038-1-tony@atomide.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 28 Oct 2020 16:41:14 +0100
-Message-ID: <CACRpkdYj_hjdA0iyOUdoyEDJ8N2v--JnEH_2CHhgVdJOFzfEkQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "Revert "gpio: omap: Fix lost edge wake-up interrupts""
-To:     ext Tony Lindgren <tony@atomide.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tero Kristo <t-kristo@ti.com>
+References: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com> <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
+From:   Ricardo Ribalda <ribalda@chromium.org>
+Date:   Wed, 28 Oct 2020 22:10:42 +0100
+X-Gmail-Original-Message-ID: <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
+Message-ID: <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] Documentation: firmware-guide: gpio-properties:
+ active_low only for GpioIo()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 7:06 AM Tony Lindgren <tony@atomide.com> wrote:
+Hi Andy
 
-> This reverts commit 579ced8fdb00b8e94304a83e3cc419f6f8eab08e.
+Thanks for your patch and super fast response.
+
+I think there are two different concepts here:
+
+1) when the pin has a low value, it is  0 or a 1? =>active_low
+
+2) when do I get an irq, low->high or high->low => irq polarity
+
+When I read the acpi spec for GpioInt()
+https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf page
+934, it has the same problem as for GpioIo(), it does not express the
+active_low and this is where the _DSD field comes handy.
+
+Without using the active_low, how can we describe  a pin that is
+active low and has to trigger an irq on both edges?
+
+Thanks again
+
+
+On Wed, Oct 28, 2020 at 9:51 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Turns out I was overly optimistic about cpu_pm blocking idle being a
-> solution for handling edge interrupts. While it helps in preventing
-> entering idle states that potentially lose context, we can still get
-> an edge interrupt triggering while entering idle. So we need to also
-> add back the workaround for seeing if there are any pending edge
-> interrupts when waking up.
+> It appears that people may misinterpret active_low field in _DSD
+> for GpioInt() resource. Add a paragraph to clarify this.
 >
-> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: Ladislav Michl <ladis@linux-mips.org>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Russell King <rmk+kernel@armlinux.org.uk>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Reported-by: Ricardo Ribalda <ribalda@chromium.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  Documentation/firmware-guide/acpi/gpio-properties.rst | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> index e6e65ceb2ca1..370fe46c6af9 100644
+> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
+> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> @@ -55,6 +55,9 @@ Since ACPI GpioIo() resource does not have a field saying whether it is
+>  active low or high, the "active_low" argument can be used here.  Setting
+>  it to 1 marks the GPIO as active low.
+>
+> +Note, active_low in _DSD does not make sense for GpioInt() resource and
+> +must be 0. GpioInt() resource has its own means of defining it.
+> +
+>  In our Bluetooth example the "reset-gpios" refers to the second GpioIo()
+>  resource, second pin in that resource with the GPIO number of 31.
+>
+> --
+> 2.28.0
+>
 
-Patch applied for fixes!
 
-Yours,
-Linus Walleij
+-- 
+Ricardo Ribalda
