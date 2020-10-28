@@ -2,96 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C20B029DA72
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 00:23:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFFA529DAFF
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 00:42:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390289AbgJ1XXZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 19:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36200 "EHLO
+        id S1726159AbgJ1XmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Oct 2020 19:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390203AbgJ1XWR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 19:22:17 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97571C0613D2;
-        Wed, 28 Oct 2020 16:22:17 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o129so762946pfb.1;
-        Wed, 28 Oct 2020 16:22:17 -0700 (PDT)
+        with ESMTP id S1726094AbgJ1XmI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 19:42:08 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80296C0613CF;
+        Wed, 28 Oct 2020 16:42:08 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h12so791397qtc.9;
+        Wed, 28 Oct 2020 16:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z+hUYyDlaEK4lCFCCWRp2JTvLMWl+QVZfGI9YkRMX4U=;
-        b=ArN/lxLfAZjVgWV9asnrwIh3k9U916Fctx3VFWPYecAv6IjyEkF9qFbbMEL8QbiqhP
-         W/WWcCSSxsmjqSfxPkNuJyvxbVF54HRhRrTWWZU7cs9+SVvOLoyNlX6oExP6KpJFX+N+
-         DQ5KXjS8Nrx6Ms03yEo9sSsR/E6z7vbqgMBDv8TNsnKayPNc7qJfOZo2oWyhv9/sxYKc
-         kd3wrKYUt2Kq2FYLtZLMLPhVsQSzQYIGKeUM2bbU4YNIq06spM94N9VZnNUjWSOljPry
-         TsX1/uhALeG1GuBeVJI/lu9MVMrqkPzYLzOMq23iv6PIeUO/DnQUDg9kr5ydTL/QRe9o
-         nHMg==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=04ThpYsSViFhWqOQvQSGIlYZRGcXGFtIhUlX8pfHTD8=;
+        b=OC6Zm4U5t2xQjcut4yBwkeEk5KarEkjfCrPdUlu381Nv4vJI895Svp7x8sDb3IBxS3
+         fPfhT1B7HGC5UpOKgQPbPKJ8OQ+Wh5ei1AjIXfyGnvpaGsc8RYdCba4m2e8dSOSNKG0r
+         6IaEkkFLl4zzAivCnLsMl8DdDeZ7xDzu5G81g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z+hUYyDlaEK4lCFCCWRp2JTvLMWl+QVZfGI9YkRMX4U=;
-        b=osYyD3lZqZ30QRYgRR7bEYplnW8VOME7bsiwvjL0N1jPtcEfUSkL7DBSmtpcBdnkB9
-         n17MkXLp1dt1SkutRo2fPlb/Kyd0t+MADHMwR4jXGJSo+JWLBWUO/IP4nr2Rhnoc0uBc
-         fnibLxTrNJl3u7T2UIZk1lATq1ebS/awwzIlu0X5vuLtSmJ/sitPb9GI2jhh8R20k5DH
-         0WujDk0NR+EIiwq+ejdaTg/1Z0X17AG80oO0aAD/lfZBNJSFA0DrwNW3qauoOgWCEhE0
-         YjkRYZ6pq3M12J2LmT9QK5uwwCmdOr1fmdqdviis+856DAQMmaKgYehhqqLU9NgFQaQC
-         EO9g==
-X-Gm-Message-State: AOAM530ViReM9k1dXSDDXt0YQx4RcykydgWLbvz0qF+SUJq3WzSf5SfP
-        rgnLDIWIcgQtMyHMkz1jyoRfv7rIAyPLCw==
-X-Google-Smtp-Source: ABdhPJzJR/CrflVVwZohuLxz8b71t2b4N1qNYlGl/mluP5YARvLTLBec++coW0wanH5vMaK238BYug==
-X-Received: by 2002:a17:90a:9f8a:: with SMTP id o10mr1205982pjp.160.1603927337156;
-        Wed, 28 Oct 2020 16:22:17 -0700 (PDT)
-Received: from sol (106-69-179-84.dyn.iinet.net.au. [106.69.179.84])
-        by smtp.gmail.com with ESMTPSA id q35sm472345pja.28.2020.10.28.16.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2020 16:22:16 -0700 (PDT)
-Date:   Thu, 29 Oct 2020 07:22:11 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 0/3] gpiolib: cdev: allow edge event timestamps to be
- configured as REALTIME
-Message-ID: <20201028232211.GB4384@sol>
-References: <20201014231158.34117-1-warthog618@gmail.com>
- <CACRpkdbTsN6p4n3f9SJrgAjdkzDu2S67rU3tLWwX0X50ekjctQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=04ThpYsSViFhWqOQvQSGIlYZRGcXGFtIhUlX8pfHTD8=;
+        b=DLMle3rBT5FB64Jk9Cu8f3eYwMY/3daZc7z+O2hNNbwt5pFquzv7nLowGJY4uNv0mj
+         uKcBG+PN5LFZZs7P+mUs34LQg5zJWR/oLVa9t2vrARLE2fjdrzL3Ij8qUs3dhSU0QO6y
+         +4w0I6BQOW7CInLVoEzrzDyL3oC4xg++q/Hg6QWSU5LYfQLRCIGNX6gAYmuIY2JeHpOh
+         hbi1xa1vMnyNz6L5bCUzZ3k1+tz/QQOXXZGGsaym8W56q7asN+U8fjaU9T3OiC238qr5
+         B+P/3RgZAVkkfiwH9M2aLqz8O/+3nScpD31x78+BKGDUOi9BddixEVME8i1VrIOBFgYl
+         nJtQ==
+X-Gm-Message-State: AOAM5300wHRy/OUwaVJZqGthLvjrALd7PddJlhopgrvW/ozb65VqlMum
+        I6R+hxE++nacojzzX1wzL4GZ5uBfyI2GR19WswbUdjtlX2xVCg==
+X-Google-Smtp-Source: ABdhPJyi2tYbl11+8oD/pTg7MqvJo0FJxH9J/m9YOi24yaf3RoUaPY8LWOMrUDpfxRRNH1Z9ZM9QvQ/K9quBWlRWBR8=
+X-Received: by 2002:a05:620a:1303:: with SMTP id o3mr5853719qkj.66.1603861861220;
+ Tue, 27 Oct 2020 22:11:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbTsN6p4n3f9SJrgAjdkzDu2S67rU3tLWwX0X50ekjctQ@mail.gmail.com>
+References: <20201012033150.21056-1-billy_tsai@aspeedtech.com>
+ <20201012033150.21056-3-billy_tsai@aspeedtech.com> <CACPK8XdYvSmwdAkBzAO3kC8_PYa3CtPkNb0VxcOhmb2UYz5zDA@mail.gmail.com>
+ <E0B8BD13-86F6-486E-95DF-1038D7F59A8B@aspeedtech.com>
+In-Reply-To: <E0B8BD13-86F6-486E-95DF-1038D7F59A8B@aspeedtech.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 28 Oct 2020 05:10:49 +0000
+Message-ID: <CACPK8Xeg_LRGv1EEm7cdDWK2xST0mBP=iG7=43UE5qmEMMDsHQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] Arm: dts: aspeed-g6: Add sgpio node
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 05:01:49PM +0100, Linus Walleij wrote:
-> On Thu, Oct 15, 2020 at 1:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > This patch set adds the option to select CLOCK_REALTIME as the source
-> > clock for line events.
-> >
-> > The first patch is the core of the change, while the remaining two update
-> > the GPIO tools to make use of the new option.
-> >
-> > Changes for v2:
-> >  - change line_event_timestamp() return to u64 to avoid clipping to 32bits
-> >    on 32bit platforms.
-> >  - fix the line spacing after line_event_timestamp()
-> 
-> Where are we standing with this patch set? Good to go so
-> I should just try to merge it?
-> 
+On Mon, 12 Oct 2020 at 04:56, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>
+> Hi Joel,
+>
+> Thanks for the review.
+>
+> On 2020/10/12, 12:35 PM, Joel Stanley wrote:
+>
+>     > On Mon, 12 Oct 2020 at 03:32, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>     > >
+>     > > This patch is used to add sgpiom and sgpios nodes and add compatible
+>     > > string for sgpiom.
+>     >
+>     > You also need to add sgpios documentation to the bindings docs.
+>     >
+>     > Whenever you add new device tree bindings to the kernel tree you
+>     > should add documentation for them.
+>     >
+>     > When preparing patches for submission, use scripts/checkpatch.pl to
+>     > check for common issues. It will warn you if you are adding strings
+>     > that are not documented.
+>     >
+>     > Cheers,
+>     >
+>     > Joel
+>     >
+>    Because the driver of sgpios doesn't be implemented, so I don't know how to describe it at sgpio-aspeed.txt.
+>    Can I just add  compatible string " aspeed,ast2600-sgpios " to the document for bypassing the warning of checkpatch?
 
-I'm fine with it, especially now that I've tested it on 32bit platforms
-as well as 64bit.
+Ignore the sgpios issue for now; we don't have a driver for it so
+there's no need to add strings. Drop that part from your dts patch.
 
-Bart was ok with v1, and I doubt the changes for v2 would negatively
-impact that, though I did overlook adding his review tag.
+>     > >
+>     > >  - compatible : Should be one of
+>     > > -  "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio"
+>     > > +  "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio", "aspeed,ast2600-sgpiom"
+>     >
+>     > I think we should add sgpiom strings for the ast2500 (and ast2400?)
+>     > too, as this is how they should have been named in the first place:
+>     >
+>    If I change the document whether I also need to send the patch for sgpio driver and g5/g4.dtsi?
+
+For the sgpiom? We already have a driver for that.
+
+As I said above, make this about fixing the sgpio master and put aside
+the sgpio slave issue for now.
 
 Cheers,
-Kent.
 
-> Yours,
-> Linus Walleij
+Joel
+
+>     > >  - compatible : Should be one of
+>     > >    "aspeed,ast2400-sgpio", "aspeed,ast2500-sgpio"
+>     > >   "aspeed,ast2400-sgpiom", "aspeed,ast2500-sgpiom", "aspeed,ast2600-sgpiom"
