@@ -2,119 +2,228 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5D3929E2FD
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 03:45:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF77929E408
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 08:28:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgJ1VeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Oct 2020 17:34:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:32935 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgJ1VeQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Oct 2020 17:34:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s21so1135553oij.0
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=khsXwY2FOIak2E0IL9IWqYVg7gg6o/TiC9wESQ4lpvE=;
-        b=nvCl8sKwfy5MaflP71vCYy5uZwYIEw6hBOTPLMirYPIM9coKxLjYxUttQyjPrhGAW3
-         wIYGldGZNGcC8gHmdV+ZWm/IqohhKrnRpZPcrTxQRcVfK0TKBfDHIMVWxU6FFW1n+y4V
-         jYFhtScOr2Uz8IHzxFnLUdzAeKgHTM5DbPgfw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=khsXwY2FOIak2E0IL9IWqYVg7gg6o/TiC9wESQ4lpvE=;
-        b=KSCmoDc7NOo4u+I/llACMGnx5RBr2tUL9IL++5LdK6EwLco5IJb369P7EDwUYD+Cs/
-         4IBp3nbBQKU5o3AObXqjb3yALsBStWIH2CmPwe3QS6hiMgYpYigJabcFaluUNkW2VOpQ
-         wrGTnCIEq00fBscHkvgnXqsN1NMtE5EzRLUBPbEVWjD/Yl3LDsXLjJ1f7mEDBOx0DjkP
-         AZY0m/0XnZN03EegLXtgmC6mSSLpnv+rXh5u+h8ONprKAWgo1GvfI9sP+HNtH5dr+Q3y
-         zjDRZeaRn4QdUp0I2t92DqFvgC49HvzTQc6PBXCgoSBc7xIVmtlsaULuE6y6jZhWJs8S
-         5Bxg==
-X-Gm-Message-State: AOAM531riqT7gJaVBcwkDE5pbOxt1KSGI2/H+4JVi0L6iZdzZocLzsFS
-        Zm5KFM+Ryu/iQQIDd+2ZuKYOUYEWYzG5ijQehFI=
-X-Google-Smtp-Source: ABdhPJzgCUrdQ+LQTFddxZXfio+3uoYq6GZ3GmaeoJQ5Vxa5w+EasQhhMuP6cLRUT6/yXyreyLQ50Q==
-X-Received: by 2002:aca:220b:: with SMTP id b11mr691926oic.130.1603919455035;
-        Wed, 28 Oct 2020 14:10:55 -0700 (PDT)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com. [209.85.167.169])
-        by smtp.gmail.com with ESMTPSA id l11sm136360oon.35.2020.10.28.14.10.54
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Oct 2020 14:10:54 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id u127so1032577oib.6
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Oct 2020 14:10:54 -0700 (PDT)
-X-Received: by 2002:a05:6808:602:: with SMTP id y2mr686737oih.11.1603919453681;
- Wed, 28 Oct 2020 14:10:53 -0700 (PDT)
+        id S1728509AbgJ2H2j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 03:28:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18883 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728553AbgJ2H07 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Oct 2020 03:26:59 -0400
+IronPort-SDR: HZc/lxAC2WDhtQpOOAlmW5vi8DL87IVfCDkpGjcifxgWGvpyhK35TwU1uhocaK8ASUTt5++ugq
+ jpaT8imrh3Eg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="165788066"
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="165788066"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 21:23:42 -0700
+IronPort-SDR: chZhT5qgb1SDT/K/weEDZKMG/ZvQV52DB69qOaRiyeeFzJ8Kizevha0eeWfPscZcPK7k029t2V
+ EtmcXGF6+7UQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="351278164"
+Received: from lkp-server02.sh.intel.com (HELO 72b1a4bebef6) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2020 21:23:41 -0700
+Received: from kbuild by 72b1a4bebef6 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kXzTQ-00003V-OZ; Thu, 29 Oct 2020 04:23:40 +0000
+Date:   Thu, 29 Oct 2020 12:23:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ 8aa16335050663357281fb1f1b0483ab91b4d8de
+Message-ID: <5f9a43ba.uVferAAic2jIUcl4%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com> <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
-From:   Ricardo Ribalda <ribalda@chromium.org>
-Date:   Wed, 28 Oct 2020 22:10:42 +0100
-X-Gmail-Original-Message-ID: <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
-Message-ID: <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] Documentation: firmware-guide: gpio-properties:
- active_low only for GpioIo()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: 8aa16335050663357281fb1f1b0483ab91b4d8de  gpio: stmpe: Fix forgotten refactoring
 
-Thanks for your patch and super fast response.
+elapsed time: 724m
 
-I think there are two different concepts here:
+configs tested: 164
+configs skipped: 2
 
-1) when the pin has a low value, it is  0 or a 1? =>active_low
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-2) when do I get an irq, low->high or high->low => irq polarity
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+openrisc                         alldefconfig
+powerpc                 mpc8272_ads_defconfig
+mips                        maltaup_defconfig
+sh                           se7721_defconfig
+arc                          axs103_defconfig
+powerpc                    socrates_defconfig
+powerpc64                           defconfig
+arm                         nhk8815_defconfig
+arm                          pxa3xx_defconfig
+ia64                                defconfig
+arm                          prima2_defconfig
+ia64                        generic_defconfig
+mips                          malta_defconfig
+sh                          lboxre2_defconfig
+arm                        mvebu_v5_defconfig
+m68k                         amcore_defconfig
+arm                        mvebu_v7_defconfig
+mips                       lemote2f_defconfig
+alpha                            alldefconfig
+sh                          r7780mp_defconfig
+arm                            lart_defconfig
+mips                      bmips_stb_defconfig
+arm                        magician_defconfig
+m68k                        mvme147_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                              zx_defconfig
+c6x                         dsk6455_defconfig
+parisc                generic-32bit_defconfig
+powerpc                    gamecube_defconfig
+arm                      integrator_defconfig
+powerpc                     mpc5200_defconfig
+powerpc                      chrp32_defconfig
+arc                     haps_hs_smp_defconfig
+m68k                       m5249evb_defconfig
+arm                           tegra_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                     davinci_all_defconfig
+mips                     loongson1b_defconfig
+mips                             allyesconfig
+sh                           se7343_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                      bamboo_defconfig
+arm                      pxa255-idp_defconfig
+xtensa                           alldefconfig
+powerpc                     tqm8560_defconfig
+arc                 nsimosci_hs_smp_defconfig
+sh                        edosk7760_defconfig
+sh                ecovec24-romimage_defconfig
+riscv                            alldefconfig
+powerpc                     asp8347_defconfig
+powerpc                     mpc512x_defconfig
+mips                       capcella_defconfig
+xtensa                  nommu_kc705_defconfig
+arm                         s5pv210_defconfig
+arm                          tango4_defconfig
+arm                          badge4_defconfig
+powerpc                     tqm8540_defconfig
+sh                  sh7785lcr_32bit_defconfig
+mips                malta_qemu_32r6_defconfig
+sh                             espt_defconfig
+arm                          ixp4xx_defconfig
+um                            kunit_defconfig
+m68k                          multi_defconfig
+powerpc                    sam440ep_defconfig
+sh                          urquell_defconfig
+powerpc                      walnut_defconfig
+sh                          sdk7780_defconfig
+powerpc                     pseries_defconfig
+sh                              ul2_defconfig
+arm                            zeus_defconfig
+sh                          rsk7264_defconfig
+powerpc                    klondike_defconfig
+ia64                      gensparse_defconfig
+arm                          pxa168_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20201026
+i386                 randconfig-a003-20201026
+i386                 randconfig-a005-20201026
+i386                 randconfig-a001-20201026
+i386                 randconfig-a006-20201026
+i386                 randconfig-a004-20201026
+i386                 randconfig-a002-20201028
+i386                 randconfig-a005-20201028
+i386                 randconfig-a003-20201028
+i386                 randconfig-a001-20201028
+i386                 randconfig-a004-20201028
+i386                 randconfig-a006-20201028
+x86_64               randconfig-a011-20201028
+x86_64               randconfig-a013-20201028
+x86_64               randconfig-a016-20201028
+x86_64               randconfig-a015-20201028
+x86_64               randconfig-a012-20201028
+x86_64               randconfig-a014-20201028
+x86_64               randconfig-a011-20201026
+x86_64               randconfig-a013-20201026
+x86_64               randconfig-a016-20201026
+x86_64               randconfig-a015-20201026
+x86_64               randconfig-a012-20201026
+x86_64               randconfig-a014-20201026
+i386                 randconfig-a016-20201028
+i386                 randconfig-a014-20201028
+i386                 randconfig-a015-20201028
+i386                 randconfig-a013-20201028
+i386                 randconfig-a012-20201028
+i386                 randconfig-a011-20201028
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-When I read the acpi spec for GpioInt()
-https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf page
-934, it has the same problem as for GpioIo(), it does not express the
-active_low and this is where the _DSD field comes handy.
+clang tested configs:
+x86_64               randconfig-a001-20201028
+x86_64               randconfig-a002-20201028
+x86_64               randconfig-a003-20201028
+x86_64               randconfig-a006-20201028
+x86_64               randconfig-a005-20201028
+x86_64               randconfig-a004-20201028
+x86_64               randconfig-a001-20201026
+x86_64               randconfig-a003-20201026
+x86_64               randconfig-a002-20201026
+x86_64               randconfig-a006-20201026
+x86_64               randconfig-a004-20201026
+x86_64               randconfig-a005-20201026
 
-Without using the active_low, how can we describe  a pin that is
-active low and has to trigger an irq on both edges?
-
-Thanks again
-
-
-On Wed, Oct 28, 2020 at 9:51 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> It appears that people may misinterpret active_low field in _DSD
-> for GpioInt() resource. Add a paragraph to clarify this.
->
-> Reported-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/firmware-guide/acpi/gpio-properties.rst | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> index e6e65ceb2ca1..370fe46c6af9 100644
-> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> @@ -55,6 +55,9 @@ Since ACPI GpioIo() resource does not have a field saying whether it is
->  active low or high, the "active_low" argument can be used here.  Setting
->  it to 1 marks the GPIO as active low.
->
-> +Note, active_low in _DSD does not make sense for GpioInt() resource and
-> +must be 0. GpioInt() resource has its own means of defining it.
-> +
->  In our Bluetooth example the "reset-gpios" refers to the second GpioIo()
->  resource, second pin in that resource with the GPIO number of 31.
->
-> --
-> 2.28.0
->
-
-
--- 
-Ricardo Ribalda
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
