@@ -2,55 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6323D29E633
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 09:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC0E29E637
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 09:17:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgJ2IRC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 04:17:02 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16023 "EHLO mga14.intel.com"
+        id S1725832AbgJ2IRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 04:17:34 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:11815 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbgJ2IRB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 29 Oct 2020 04:17:01 -0400
-IronPort-SDR: Z8Bvg9N0QT8fZBxhyLpUXPYgUsvv5u0PoDbQrhnlsq3oSJZMUzw/U2Dq2pYRYg4Lq3qkxom8a+
- kgeq8Ok1jnYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="167615046"
-X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
-   d="scan'208";a="167615046"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 01:17:01 -0700
-IronPort-SDR: UwFC0FXri9LEqKTHloaDK3T3g+WG06cRg0eE7w8vva1GADv2/MhiJI20slE7qNA0/5LkaP5mA7
- cQU2T6U5ZV9Q==
-X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
-   d="scan'208";a="318890002"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 01:16:58 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 29 Oct 2020 10:16:56 +0200
-Date:   Thu, 29 Oct 2020 10:16:56 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] Documentation: firmware-guide: gpio-properties:
- Clarify initial output state
-Message-ID: <20201029081656.GQ2495@lahna.fi.intel.com>
-References: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com>
- <20201028205101.47583-3-andriy.shevchenko@linux.intel.com>
+        id S1726231AbgJ2IRb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Oct 2020 04:17:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=3148; q=dns/txt; s=axis-central1;
+  t=1603959450; x=1635495450;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZzrBKQ+s9dk85lZZfiJG0UtohbsCcBMHvXllHKW91mw=;
+  b=EV2mBWtKGeNDKZjkkpjEiqyd9f/U6ahEiOZRwo2Hjzlz+CjVjO0iWMEE
+   n42U0GYiAs4XguhUR3vwKfQ9y2wt/IWy7rvAnp/Eq7ZyiR7iDqTcVNF7n
+   RbOn6xCl4TP18d8czdMe8xVfO7KyEIIvvjwxuGaj2b+vLX1S7oCwkoGol
+   AeTQ4441GEpa5T4mhMSFdGb6RE1csZhVQo3Z66qe64EmEroSPvXTqVawi
+   4VMZJFbrBONkqMh2BiDxNnMIdScOEJWiedH2AqDs1d4RnBBYGmAx/o4Xk
+   /rzm5o/JP4RijyHg5NuAmJSAYH4wQYxaNwa1xZbR1qeMHjtxQb3Txi9HX
+   Q==;
+IronPort-SDR: k/BMqfxgNlRV9WmHIiQcDyvvKgrh4iESeehFl82DmRXwOq7zRPLaqqlPIyLd0/yyf8kF9SfJwr
+ 6IIeHaj9TbqJ+/BPrxCaZaFh7hO7KELxmpPg+ZDk0cYMu/42AVQlPH/57OmGds2oMFd341mw+o
+ koWF31u9kNUwVZbyJ10T7HkZ3q6GDPlPX6k6nLD/1CZb4fCTuuz9OMQbDiIdCbOyZ1lqQhwKER
+ isZBQykQYJnD2jzeJs0WoOkvzlsWkCDkHOU2ARrb7kqsQeMxrel9xep4UL1zEA94RkVqIeA7vV
+ BXw=
+X-IronPort-AV: E=Sophos;i="5.77,429,1596492000"; 
+   d="scan'208";a="14031930"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <kernel@axis.com>, <devicetree@vger.kernel.org>,
+        <andy.shevchenko@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] gpio: mockup: Allow probing from device tree
+Date:   Thu, 29 Oct 2020 09:17:20 +0100
+Message-ID: <20201029081721.9593-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201028205101.47583-3-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 10:51:01PM +0200, Andy Shevchenko wrote:
-> GpioIo() doesn't provide an explicit state for an output pin.
-> Linux tries to be smart and uses a common sense based on other
-> parameters. Document how it looks like in the code.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Allow the mockup driver to be probed via the device tree without any
+module parameters, allowing it to be used to configure and test higher
+level drivers like the leds-gpio driver and corresponding userspace
+before actual hardware is available.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+
+Notes:
+    v4:
+    - Remove of_match_ptr() to fix unused variable warning with W=1
+    - Include linux/mod_devicetable.h instead of linux/of.h
+    
+    v3:
+    - Keep includes sorted alphabetically
+    - Drop CONFIG_OF ifdefs
+    
+    v2:
+    - Remove most of the added code, since the latest driver doesn't need it.
+    - Drop DT binding document, since Rob Herring was OK with not documenting this:
+      https://lore.kernel.org/linux-devicetree/5baa1ae6.1c69fb81.847f2.3ab1@mx.google.com/
+
+Range-diff against v3:
+1:  1e9b8f36676d ! 1:  4e8fdcfe1a47 gpio: mockup: Allow probing from device tree
+    @@ Commit message
+     
+     
+      ## Notes ##
+    +    v4:
+    +    - Remove of_match_ptr() to fix unused variable warning with W=1
+    +    - Include linux/mod_devicetable.h instead of linux/of.h
+    +
+         v3:
+         - Keep includes sorted alphabetically
+         - Drop CONFIG_OF ifdefs
+    @@ Notes
+     
+      ## drivers/gpio/gpio-mockup.c ##
+     @@
+    + #include <linux/irq.h>
+      #include <linux/irq_sim.h>
+      #include <linux/irqdomain.h>
+    ++#include <linux/mod_devicetable.h>
+      #include <linux/module.h>
+    -+#include <linux/of.h>
+      #include <linux/platform_device.h>
+      #include <linux/property.h>
+    - #include <linux/slab.h>
+     @@ drivers/gpio/gpio-mockup.c: static int gpio_mockup_probe(struct platform_device *pdev)
+      	return 0;
+      }
+    @@ drivers/gpio/gpio-mockup.c: static int gpio_mockup_probe(struct platform_device
+      static struct platform_driver gpio_mockup_driver = {
+      	.driver = {
+      		.name = "gpio-mockup",
+    -+		.of_match_table = of_match_ptr(gpio_mockup_of_match),
+    ++		.of_match_table = gpio_mockup_of_match,
+      	},
+      	.probe = gpio_mockup_probe,
+      };
+
+ drivers/gpio/gpio-mockup.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 67ed4f238d43..28b757d34046 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -15,6 +15,7 @@
+ #include <linux/irq.h>
+ #include <linux/irq_sim.h>
+ #include <linux/irqdomain.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+@@ -460,9 +461,16 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id gpio_mockup_of_match[] = {
++	{ .compatible = "gpio-mockup", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
++
+ static struct platform_driver gpio_mockup_driver = {
+ 	.driver = {
+ 		.name = "gpio-mockup",
++		.of_match_table = gpio_mockup_of_match,
+ 	},
+ 	.probe = gpio_mockup_probe,
+ };
+@@ -556,8 +564,7 @@ static int __init gpio_mockup_init(void)
+ {
+ 	int i, num_chips, err;
+ 
+-	if ((gpio_mockup_num_ranges < 2) ||
+-	    (gpio_mockup_num_ranges % 2) ||
++	if ((gpio_mockup_num_ranges % 2) ||
+ 	    (gpio_mockup_num_ranges > GPIO_MOCKUP_MAX_RANGES))
+ 		return -EINVAL;
+ 
+-- 
+2.28.0
+
