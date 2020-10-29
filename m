@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 101BB29F2D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 18:20:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA17F29F320
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 18:26:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgJ2RUW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 13:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
+        id S1727909AbgJ2R0H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 13:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgJ2RUV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 13:20:21 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47998C0613CF;
-        Thu, 29 Oct 2020 10:20:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b3so2915669pfo.2;
-        Thu, 29 Oct 2020 10:20:20 -0700 (PDT)
+        with ESMTP id S1727800AbgJ2R0F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 13:26:05 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8D0C0613CF;
+        Thu, 29 Oct 2020 10:26:05 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t14so2927863pgg.1;
+        Thu, 29 Oct 2020 10:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S6Uz54WuxnDJ+k4Eco5IKqgdA9hb/8pbhmxkv/FMSmM=;
-        b=j/q/nLAGZfY9GIST0ARhhpYeBgZyoLu1xoaxwc6RZP45InpbchoeqONc3771SdTm0z
-         qTfgR1rKryboQSJjmQwxfPUPCXqEqmczYK5EKdVOzIHbcdsxXNvgaT8lcCAjYXD7IoBf
-         jqf9RIFyEUsrm43x6t1ar4ggrwCiBQExJqeiEjTfr1GkqL7Q2awzwbK7Bgw3mj92MNeI
-         7pE7c4OQkE5NKV0NPTePaHEAEzcO419VRAUrr3twD1pyfVH7RaagLq2aSFhVGzdcFa17
-         7bILTiycCNOii1b70W0mpgU5qRb5X6LM2C4lIZcG1DVdVOlv61uOGaDtqi/XJmbgWI2e
-         L1hw==
+        bh=8ztGYY/eyx/yp7ALYZLwGRqLddpCGI+AHHziIjGBV1M=;
+        b=FWL+cKVT0VDWznjXqhV+cIxsfltQ9roMo2r2thpj401yo3LUs19ERsrtoB8lf8mn4U
+         QoHoP3SYlAZiS4rza8d3MpGfvno4f+JGRTVA6fKuv2Ms2PXSQdEbNu67REs++qp3d3yv
+         hWTP8MNmlzZZDMqHUAj0U483eR1eWxUN8qrFrCtb7lxAqQfX7Q9YWYXx1YNUNFZNytG+
+         9V+X0qKDlHgZFRwBAhp0SO3dem299j8Jk/WiMaIc/agaz9F6xUuVDGapOByMtmxoAsJ7
+         zbSyhVaiG1MnImMq2bz0QWekcBafmsQSQKiCU0bUo7Zb4vqaTLxoZFchBE+UWZOika3B
+         RwGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S6Uz54WuxnDJ+k4Eco5IKqgdA9hb/8pbhmxkv/FMSmM=;
-        b=aq/qbyG0KfbXmKb9M6RKEdI0v1kT/Dr1c5795jWAELwH5or2q9bcp7D8S+bYeDesyS
-         x2OmyoGJrtHSCB3bL8fvo/hz41sDiZSSUddlXx7YZ1EfRyhUlR5j3Ra6gLiTAXC9uQK4
-         FRsE0AVrbV8ZIjJfh+PmXFsRLru3pXon7Zj7yIEKspbouDgYsxe3uqdIuxnz2MWIGnb7
-         MFXfThJWXap6b3JEWeuPUCMRnmYjUbjqa5PjKrCrt6sQc65iUkUSHHWUgqay3Ea3CSbT
-         P/KOcEL2UkESFNwdSCL9M00SCgyCT6BqCGEtd30aIPMvUxyo7knFmd075sqHGSSh8dSZ
-         u8Qw==
-X-Gm-Message-State: AOAM532ZA9IIGPPYejPXSb2UF5qPr29I1DXme3butG8sztvhQWLSK51m
-        kjKn/if3WH+RTe0UvG1aUdkW4B7sAStBpW/pFGuvmZrsvBc=
-X-Google-Smtp-Source: ABdhPJwFJT3T243YU8PhF0+GmN89Ub+5YNo/oaEw7I7FmY1FPHJhilZqPozPhipGzu6JGF2APB9sR3T6yN6Jq+GfayE=
-X-Received: by 2002:a63:1e02:: with SMTP id e2mr4778017pge.74.1603992019848;
- Thu, 29 Oct 2020 10:20:19 -0700 (PDT)
+        bh=8ztGYY/eyx/yp7ALYZLwGRqLddpCGI+AHHziIjGBV1M=;
+        b=R0b6ddBn6EzKFLorvbZikSzuwsauyQfKXxRnSAgU8PKOH1/m51EkIXThQddoCteNCY
+         0HZqBrI99qGGUPoiIG7lC0QfugZOJm4aGFnT6CDez1+mbDFcmcMrIR+Z08S9H2mLIZWC
+         x0rHhG4lazIse8k4dmodTCBTpLpsXVFpyixSDjFlK/s5OEGLKthZcygOhTs9543OHawD
+         xceBtePDQtaX7CeJ4s22EkyNwuGY/YY+7itUnPi0P73wNko68l1wdg6nR3cIr4EnVpUd
+         wbTrb5z6rmeU3JnzkFBBlivePMN+SbtRo+6aZkfXUYakPfV3Vl4TRJu9Q+SWHGxza/nk
+         +TgQ==
+X-Gm-Message-State: AOAM532M/yegaXF2iyrPu0Fy9RJKKP5/YQ+fcJDsbaIXQtKo51sKX7dt
+        MqwD5dcbAstc8ELZS6UT49+K3AQljkIJ5SUUXUxuw5gJLINy2w==
+X-Google-Smtp-Source: ABdhPJwGniRCTOAqXA7FRpEfoDNBbuG6hq2Pf+i11Cv8wRhq7HJW7mK2BPFYFTHOYzWdqOr0AbI/s3dn1NTD6/hQx1M=
+X-Received: by 2002:a65:47c2:: with SMTP id f2mr4946276pgs.4.1603992364948;
+ Thu, 29 Oct 2020 10:26:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com>
  <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
  <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
  <20201029144656.GD4077@smile.fi.intel.com> <CANiDSCuNVT=jr8rLyfWhGKNSOy5OnH7YBZaWSguBDVg219OGvQ@mail.gmail.com>
- <CAHp75VfuZPpBZsyUEyD_R+ZEjPms6Z9L1tDdBKYfusWnbhtyww@mail.gmail.com>
-In-Reply-To: <CAHp75VfuZPpBZsyUEyD_R+ZEjPms6Z9L1tDdBKYfusWnbhtyww@mail.gmail.com>
+ <CAHp75VfuZPpBZsyUEyD_R+ZEjPms6Z9L1tDdBKYfusWnbhtyww@mail.gmail.com> <CAHp75Vf-KXSC5x+07rH+wFgv_9xx_+DoMd9ZxTAqr_a5uxc7jA@mail.gmail.com>
+In-Reply-To: <CAHp75Vf-KXSC5x+07rH+wFgv_9xx_+DoMd9ZxTAqr_a5uxc7jA@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Oct 2020 19:20:03 +0200
-Message-ID: <CAHp75Vf-KXSC5x+07rH+wFgv_9xx_+DoMd9ZxTAqr_a5uxc7jA@mail.gmail.com>
+Date:   Thu, 29 Oct 2020 19:25:48 +0200
+Message-ID: <CAHp75Vd+doPgSZQEOSAW4oRoAqPUdJyoivtNvbO5d1q-e280Eg@mail.gmail.com>
 Subject: Re: [PATCH v1 2/3] Documentation: firmware-guide: gpio-properties:
  active_low only for GpioIo()
 To:     Ricardo Ribalda <ribalda@google.com>
@@ -66,39 +66,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 7:17 PM Andy Shevchenko
+On Thu, Oct 29, 2020 at 7:20 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
-> On Thu, Oct 29, 2020 at 4:55 PM Ricardo Ribalda <ribalda@google.com> wrote:
-> > On Thu, Oct 29, 2020 at 3:45 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Wed, Oct 28, 2020 at 10:10:42PM +0100, Ricardo Ribalda wrote:
 >
-> ...
->
-> > > ActiveLevel field is described in 19.6.55 GpioInt (GPIO Interrupt Connection
-> > > Resource Descriptor Macro).
+> On Thu, Oct 29, 2020 at 7:17 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Oct 29, 2020 at 4:55 PM Ricardo Ribalda <ribalda@google.com> wrote:
+> > > On Thu, Oct 29, 2020 at 3:45 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Wed, Oct 28, 2020 at 10:10:42PM +0100, Ricardo Ribalda wrote:
+> >
+> > ...
+> >
+> > > > ActiveLevel field is described in 19.6.55 GpioInt (GPIO Interrupt Connection
+> > > > Resource Descriptor Macro).
+> > > >
+> > > > > Without using the active_low, how can we describe  a pin that is
+> > > > > active low and has to trigger an irq on both edges?
+> > > >
+> > > > This is nonsense.
+> > > > What does it mean?
 > > >
-> > > > Without using the active_low, how can we describe  a pin that is
-> > > > active low and has to trigger an irq on both edges?
+> > > Let me try to explain myself again:
 > > >
-> > > This is nonsense.
-> > > What does it mean?
+> > > I have a gpio pin that produces IRQs on both edges. so ActiveLevel is Both
+> > >
+> > > The problem is that the value of that pin is inverted: Low means 1 and
+> > > high means 0.
+> > >
+> > > How can I describe that the pin "is inverted" without using the _DSD field?
 > >
-> > Let me try to explain myself again:
-> >
-> > I have a gpio pin that produces IRQs on both edges. so ActiveLevel is Both
-> >
-> > The problem is that the value of that pin is inverted: Low means 1 and
-> > high means 0.
-> >
-> > How can I describe that the pin "is inverted" without using the _DSD field?
+> > "Both edges" and "inverted" or "polarity low" in one sentence make no sense.
 >
-> "Both edges" and "inverted" or "polarity low" in one sentence make no sense.
+> To be on the constructive side, I can *imagine* so badly designed
+> hardware that uses level and edge at the same time, but before I go to
+> conclusions, can you share relevant (pieces of) datasheet?
 
-To be on the constructive side, I can *imagine* so badly designed
-hardware that uses level and edge at the same time, but before I go to
-conclusions, can you share relevant (pieces of) datasheet?
+The [1] is a real example of how GPIO is being used to detect changing
+of current level of the signal.
+Note, ACPI tables for that device have problems [2], but I guess you
+may get the idea.
 
+
+[1]: https://elixir.bootlin.com/linux/latest/source/drivers/extcon/extcon-intel-int3496.c#L138
+[2]: https://elixir.bootlin.com/linux/latest/source/drivers/extcon/extcon-intel-int3496.c#L45
 
 -- 
 With Best Regards,
