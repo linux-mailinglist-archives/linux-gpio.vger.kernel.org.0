@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E39829ED2B
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 14:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAD429ED2E
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 14:41:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgJ2Nks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 09:40:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52040 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbgJ2Nkr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 09:40:47 -0400
+        id S1727381AbgJ2Nky (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 09:40:54 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33536 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbgJ2Nkt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 09:40:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1603978846; x=1635514846;
+  t=1603978848; x=1635514848;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jwfNKHe9PxOHjsP2ZSYAcZv5yRbBIFPK1VAzrKp705o=;
-  b=S3CcBKEfcsVkee9qVjlsflgimcEDEanrjrtxzoHivF4X2MRPg+fn7hb7
-   fzjIHDO8CJSwoPjhadFAcm5xYoCfuno9UATOkarInHHXNRY1G1nxs7Lq8
-   8vibc3YcYopdCduZbjv+8R/c3rVCZL0aqZHKg+33Bioq+rYsy8QtBVYjC
-   wCpPdKz8FO0EXgCEFcXY5boJkfA8JifxQ71Dh6Nrs3gicynwgmhAcq4ze
-   nyGD8BViKrvwcwiydC4ffXs9MJf16UazfLrBpvow4VF7DtJ45wxOsUQC3
-   75+raWoce4DnY3VjdkV3At30d56nPAsJC11I6EDG+sIVY485GjcGP966o
-   g==;
-IronPort-SDR: Otrdf/Bbq9ZBwq5yUdSMYl2yMTaa+wKWVToWU/sAyOTKuj/3VPkjkwBBMLwjAGAZo96V8o2uhs
- YL6QpE5gjqM0LH9ToIWaI33fMmTmA1RCvzF1cOlpYm3wf6YKfK/fL4/WKd/wwgr0on0kECLu1I
- G07f1jXeKzXuJSyogKsT1bo4k9xZeQNumv2K9HkYvRVJA4tnQSz4Kh12hQ//mJNXWuqChGAPhR
- gI+4LkYvXcsCIEoHTl5ft0lcUs9lgzWqP5RH9KUEGH9pKrKETzRRLQFqZ1c8J0Z3yuOgVZpIZg
- yaY=
+  bh=ABbXMXJ+wjkizV38zFxbPfTkg8gQdTq8ISGdk0bwCLY=;
+  b=xFDuPJTImNb5KsXILoc6AXYfuFS0lwhXQYpmJUOAyYJGj+qxPuYgBBt/
+   6Z1gsyEKDUANG4KS9FpxfEjaI/oCPxuahk3wZUv7evIWlKL/iBjtmx0o3
+   zvMGmk3Tw27vgJt+98ypi6patr7kzO+/ZqRsNgw7wBOJQ57siTtZEiY7m
+   YQQiwRlbs46CcUDj9kWMepvPgLGOejgnmr/6PBXy95OMvzpSROhNj12mp
+   Ky6FaReVeZL152iritYnG5/24kmfs5/Yl02mElegvQDhANlAhkS5t12WA
+   QWAjURFniEHgmG5GXIqmAnOGkN+40tGAbjp4NIqCoR0q/c8yAjtrktH/s
+   Q==;
+IronPort-SDR: sPf7NHF1IzGtvB7zcjOPpiNpedkvzRxOrYgS8hlXkVMO9E8DMvDZdbjuiShI1ykMN66LjqRTKJ
+ DaBqU8GFBePkfUlJmA9I03gauqcBHFpwn93HWvwMeZvq1S9BzKLMvwYEx/Gs+qtQ/MzFqn8gWj
+ aaQHl4bWlMEh2l6W53NdAK7kN+KaGnrQF5rCRqZCyfgByMTsHCGrQNIqpkXvYz8fP9tjd/QQVM
+ qYz+TYk6PPgskg5ctuP0l53+kAIIHDhXdICFqFjd7Bcz+4Awr7L8Ayy5DvJ21rpQrYmwFES1/G
+ l48=
 X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
-   d="scan'208";a="97036195"
+   d="scan'208";a="91815742"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2020 06:40:45 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2020 06:40:48 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 29 Oct 2020 06:40:45 -0700
+ 15.1.1979.3; Thu, 29 Oct 2020 06:40:47 -0700
 Received: from soft-dev10.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 29 Oct 2020 06:40:43 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 29 Oct 2020 06:40:45 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
@@ -49,9 +49,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v7 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO
-Date:   Thu, 29 Oct 2020 14:40:26 +0100
-Message-ID: <20201029134027.232951-3-lars.povlsen@microchip.com>
+Subject: [PATCH v7 3/3] arm64: dts: sparx5: Add SGPIO devices
+Date:   Thu, 29 Oct 2020 14:40:27 +0100
+Message-ID: <20201029134027.232951-4-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201029134027.232951-1-lars.povlsen@microchip.com>
 References: <20201029134027.232951-1-lars.povlsen@microchip.com>
@@ -62,730 +62,491 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
-(SGPIO) device used in various SoC's.
+This adds SGPIO devices for the Sparx5 SoC and configures it for the
+applicable reference boards.
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- MAINTAINERS                               |   1 +
- drivers/pinctrl/Kconfig                   |  18 +
- drivers/pinctrl/Makefile                  |   1 +
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 653 ++++++++++++++++++++++
- 4 files changed, 673 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-microchip-sgpio.c
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  91 ++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |   5 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 258 ++++++++++++++++++
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  55 ++++
+ 4 files changed, 409 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e73636b75f29..75a00dfa824a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2117,6 +2117,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Supported
- T:	git git://github.com/microchip-ung/linux-upstream.git
- F:	arch/arm64/boot/dts/microchip/
-+F:	drivers/pinctrl/pinctrl-microchip-sgpio.c
- N:	sparx5
+diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+index 3cb01c39c3c8..f09707297a9f 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+@@ -226,6 +226,22 @@ si2_pins: si2-pins {
+ 				function = "si2";
+ 			};
  
- ARM/MIOA701 MACHINE SUPPORT
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 815095326e2d..94e49da49f5c 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -374,6 +374,24 @@ config PINCTRL_OCELOT
- 	select OF_GPIO
- 	select REGMAP_MMIO
++			sgpio0_pins: sgpio-pins {
++				pins = "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
++				function = "sg0";
++			};
++
++			sgpio1_pins: sgpio1-pins {
++				pins = "GPIO_4", "GPIO_5", "GPIO_12", "GPIO_13";
++				function = "sg1";
++			};
++
++			sgpio2_pins: sgpio2-pins {
++				pins = "GPIO_30", "GPIO_31", "GPIO_32",
++				       "GPIO_33";
++				function = "sg2";
++			};
++
+ 			uart_pins: uart-pins {
+ 				pins = "GPIO_10", "GPIO_11";
+ 				function = "uart";
+@@ -256,6 +272,81 @@ emmc_pins: emmc-pins {
+ 			};
+ 		};
  
-+config PINCTRL_MICROCHIP_SGPIO
-+	bool "Pinctrl driver for Microsemi/Microchip Serial GPIO"
-+	depends on OF
-+	depends on HAS_IOMEM
-+	select GPIOLIB
-+	select GENERIC_PINCONF
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select OF_GPIO
-+	help
-+	  Support for the serial GPIO interface used on Microsemi and
-+	  Microchip SoC's. By using a serial interface, the SIO
-+	  controller significantly extends the number of available
-+	  GPIOs with a minimum number of additional pins on the
-+	  device. The primary purpose of the SIO controller is to
-+	  connect control signals from SFP modules and to act as an
-+	  LED controller.
++		sgpio0: gpio@61101036c {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "microchip,sparx5-sgpio";
++			status = "disabled";
++			clocks = <&sys_clk>;
++			pinctrl-0 = <&sgpio0_pins>;
++			pinctrl-names = "default";
++			reg = <0x6 0x1101036c 0x100>;
++			sgpio_in0: gpio@0 {
++				compatible = "microchip,sparx5-sgpio-bank";
++				reg = <0>;
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++			sgpio_out0: gpio@1 {
++				compatible = "microchip,sparx5-sgpio-bank";
++				reg = <1>;
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++		};
 +
- source "drivers/pinctrl/actions/Kconfig"
- source "drivers/pinctrl/aspeed/Kconfig"
- source "drivers/pinctrl/bcm/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index f53933b2ff02..c9fcfafc45c7 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
- obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
- obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
- obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
-+obj-$(CONFIG_PINCTRL_MICROCHIP_SGPIO)	+= pinctrl-microchip-sgpio.o
- obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
++		sgpio1: gpio@611010484 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "microchip,sparx5-sgpio";
++			status = "disabled";
++			clocks = <&sys_clk>;
++			pinctrl-0 = <&sgpio1_pins>;
++			pinctrl-names = "default";
++			reg = <0x6 0x11010484 0x100>;
++			sgpio_in1: gpio@0 {
++				compatible = "microchip,sparx5-sgpio-bank";
++				reg = <0>;
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++			sgpio_out1: gpio@1 {
++				compatible = "microchip,sparx5-sgpio-bank";
++				reg = <1>;
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++		};
++
++		sgpio2: gpio@61101059c {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "microchip,sparx5-sgpio";
++			status = "disabled";
++			clocks = <&sys_clk>;
++			pinctrl-0 = <&sgpio2_pins>;
++			pinctrl-names = "default";
++			reg = <0x6 0x1101059c 0x100>;
++			sgpio_in2: gpio@0 {
++				reg = <0>;
++				compatible = "microchip,sparx5-sgpio-bank";
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++			sgpio_out2: gpio@1 {
++				compatible = "microchip,sparx5-sgpio-bank";
++				reg = <1>;
++				gpio-controller;
++				#gpio-cells = <3>;
++				ngpios = <96>;
++			};
++		};
++
+ 		i2c0: i2c@600101000 {
+ 			compatible = "snps,designware-i2c";
+ 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+index 6b2da7c7520c..9baa085d7861 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+@@ -69,6 +69,11 @@ spi-flash@9 {
+ 	};
+ };
  
- obj-y				+= actions/
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-new file mode 100644
-index 000000000000..1a9c01e2ad99
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -0,0 +1,653 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Microsemi/Microchip SoCs serial gpio driver
-+ *
-+ * Author: <lars.povlsen@microchip.com>
-+ *
-+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/clk.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/platform_device.h>
-+
-+#include "core.h"
-+#include "pinconf.h"
-+#include "pinmux.h"
-+
-+#define SGPIO_BITS_PER_WORD	32
-+#define SGPIO_MAX_BITS		4
-+
-+#define PIN_NAM_SZ	sizeof("SGPIO_D_pXXbY")
-+
-+enum {
-+	REG_INPUT_DATA,
-+	REG_PORT_CONFIG,
-+	REG_PORT_ENABLE,
-+	REG_SIO_CONFIG,
-+	REG_SIO_CLOCK,
-+	MAXREG
++&sgpio0 {
++	status = "okay";
++	microchip,sgpio-port-ranges = <0 23>;
 +};
 +
-+struct sgpio_properties {
-+	u8 regoff[MAXREG];
-+	u32 auto_repeat;
-+	u32 port_width;
-+	u32 clk_freq;
-+	u32 bit_source;
+ &i2c1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+index f37b478d6534..6820579448d0 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+@@ -36,6 +36,242 @@ gpio-restart {
+ 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
+ 		priority = <200>;
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++		led@0 {
++			label = "twr0:green";
++			gpios = <&sgpio_out0 8 0 GPIO_ACTIVE_LOW>;
++		};
++		led@1 {
++			label = "twr0:yellow";
++			gpios = <&sgpio_out0 8 1 GPIO_ACTIVE_LOW>;
++		};
++		led@2 {
++			label = "twr1:green";
++			gpios = <&sgpio_out0 9 0 GPIO_ACTIVE_LOW>;
++		};
++		led@3 {
++			label = "twr1:yellow";
++			gpios = <&sgpio_out0 9 1 GPIO_ACTIVE_LOW>;
++		};
++		led@4 {
++			label = "twr2:green";
++			gpios = <&sgpio_out0 10 0 GPIO_ACTIVE_LOW>;
++		};
++		led@5 {
++			label = "twr2:yellow";
++			gpios = <&sgpio_out0 10 1 GPIO_ACTIVE_LOW>;
++		};
++		led@6 {
++			label = "twr3:green";
++			gpios = <&sgpio_out0 11 0 GPIO_ACTIVE_LOW>;
++		};
++		led@7 {
++			label = "twr3:yellow";
++			gpios = <&sgpio_out0 11 1 GPIO_ACTIVE_LOW>;
++		};
++		led@8 {
++			label = "eth12:green";
++			gpios = <&sgpio_out0 12 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@9 {
++			label = "eth12:yellow";
++			gpios = <&sgpio_out0 12 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@10 {
++			label = "eth13:green";
++			gpios = <&sgpio_out0 13 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@11 {
++			label = "eth13:yellow";
++			gpios = <&sgpio_out0 13 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@12 {
++			label = "eth14:green";
++			gpios = <&sgpio_out0 14 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@13 {
++			label = "eth14:yellow";
++			gpios = <&sgpio_out0 14 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@14 {
++			label = "eth15:green";
++			gpios = <&sgpio_out0 15 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@15 {
++			label = "eth15:yellow";
++			gpios = <&sgpio_out0 15 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@16 {
++			label = "eth48:green";
++			gpios = <&sgpio_out1 16 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@17 {
++			label = "eth48:yellow";
++			gpios = <&sgpio_out1 16 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@18 {
++			label = "eth49:green";
++			gpios = <&sgpio_out1 17 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@19 {
++			label = "eth49:yellow";
++			gpios = <&sgpio_out1 17 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@20 {
++			label = "eth50:green";
++			gpios = <&sgpio_out1 18 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@21 {
++			label = "eth50:yellow";
++			gpios = <&sgpio_out1 18 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@22 {
++			label = "eth51:green";
++			gpios = <&sgpio_out1 19 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@23 {
++			label = "eth51:yellow";
++			gpios = <&sgpio_out1 19 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@24 {
++			label = "eth52:green";
++			gpios = <&sgpio_out1 20 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@25 {
++			label = "eth52:yellow";
++			gpios = <&sgpio_out1 20 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@26 {
++			label = "eth53:green";
++			gpios = <&sgpio_out1 21 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@27 {
++			label = "eth53:yellow";
++			gpios = <&sgpio_out1 21 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@28 {
++			label = "eth54:green";
++			gpios = <&sgpio_out1 22 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@29 {
++			label = "eth54:yellow";
++			gpios = <&sgpio_out1 22 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@30 {
++			label = "eth55:green";
++			gpios = <&sgpio_out1 23 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@31 {
++			label = "eth55:yellow";
++			gpios = <&sgpio_out1 23 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@32 {
++			label = "eth56:green";
++			gpios = <&sgpio_out1 24 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@33 {
++			label = "eth56:yellow";
++			gpios = <&sgpio_out1 24 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@34 {
++			label = "eth57:green";
++			gpios = <&sgpio_out1 25 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@35 {
++			label = "eth57:yellow";
++			gpios = <&sgpio_out1 25 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@36 {
++			label = "eth58:green";
++			gpios = <&sgpio_out1 26 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@37 {
++			label = "eth58:yellow";
++			gpios = <&sgpio_out1 26 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@38 {
++			label = "eth59:green";
++			gpios = <&sgpio_out1 27 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@39 {
++			label = "eth59:yellow";
++			gpios = <&sgpio_out1 27 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@40 {
++			label = "eth60:green";
++			gpios = <&sgpio_out1 28 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@41 {
++			label = "eth60:yellow";
++			gpios = <&sgpio_out1 28 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@42 {
++			label = "eth61:green";
++			gpios = <&sgpio_out1 29 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@43 {
++			label = "eth61:yellow";
++			gpios = <&sgpio_out1 29 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@44 {
++			label = "eth62:green";
++			gpios = <&sgpio_out1 30 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@45 {
++			label = "eth62:yellow";
++			gpios = <&sgpio_out1 30 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@46 {
++			label = "eth63:green";
++			gpios = <&sgpio_out1 31 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++		led@47 {
++			label = "eth63:yellow";
++			gpios = <&sgpio_out1 31 1 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &spi0 {
+@@ -70,6 +306,28 @@ spi-flash@9 {
+ 	};
+ };
+ 
++&sgpio0 {
++	status = "okay";
++	microchip,sgpio-port-ranges = <8 15>;
++	gpio@0 {
++		ngpios = <64>;
++	};
++	gpio@1 {
++		ngpios = <64>;
++	};
 +};
 +
-+#define __shf(x)		(__builtin_ffs(x) - 1)
-+#define __BF_PREP(bf, x)	(bf & ((x) << __shf(bf)))
-+#define __BF_GET(bf, x)		(((x & bf) >> __shf(bf)))
-+
-+#define SGPIO_M_CFG_SIO_AUTO_REPEAT(p)	  ((p)->properties->auto_repeat)
-+#define SGPIO_F_CFG_SIO_PORT_WIDTH(p, x)  __BF_PREP((p)->properties->port_width, x)
-+#define SGPIO_M_CFG_SIO_PORT_WIDTH(p)	  ((p)->properties->port_width)
-+#define SGPIO_F_CLOCK_SIO_CLK_FREQ(p, x)  __BF_PREP((p)->properties->clk_freq, x)
-+#define SGPIO_M_CLOCK_SIO_CLK_FREQ(p)     ((p)->properties->clk_freq)
-+#define SGPIO_F_PORT_CFG_BIT_SOURCE(p, x) __BF_PREP((p)->properties->bit_source, x)
-+#define SGPIO_X_PORT_CFG_BIT_SOURCE(p, x) __BF_GET((p)->properties->bit_source, x)
-+
-+const struct sgpio_properties properties_luton = {
-+	.regoff = { 0x00, 0x09, 0x29, 0x2a, 0x2b },
-+	.auto_repeat = BIT(5),
-+	.port_width  = GENMASK(3, 2),
-+	.clk_freq    = GENMASK(11, 0),
-+	.bit_source  = GENMASK(11, 0),
++&sgpio1 {
++	status = "okay";
++	microchip,sgpio-port-ranges = <24 31>;
++	gpio@0 {
++		ngpios = <64>;
++	};
++	gpio@1 {
++		ngpios = <64>;
++	};
 +};
 +
-+const struct sgpio_properties properties_ocelot = {
-+	.regoff = { 0x00, 0x06, 0x26, 0x04, 0x05 },
-+	.auto_repeat = BIT(10),
-+	.port_width  = GENMASK(8, 7),
-+	.clk_freq    = GENMASK(19, 8),
-+	.bit_source  = GENMASK(23, 12),
+ &gpio {
+ 	i2cmux_pins_i: i2cmux-pins-i {
+ 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+index b02b8c8ce44d..e28c6dd16377 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+@@ -20,6 +20,50 @@ gpio-restart {
+ 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
+ 		priority = <200>;
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++		led@0 {
++			label = "eth60:yellow";
++			gpios = <&sgpio_out1 28 0 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@1 {
++			label = "eth60:green";
++			gpios = <&sgpio_out1 28 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@2 {
++			label = "eth61:yellow";
++			gpios = <&sgpio_out1 29 0 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@3 {
++			label = "eth61:green";
++			gpios = <&sgpio_out1 29 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@4 {
++			label = "eth62:yellow";
++			gpios = <&sgpio_out1 30 0 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@5 {
++			label = "eth62:green";
++			gpios = <&sgpio_out1 30 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@6 {
++			label = "eth63:yellow";
++			gpios = <&sgpio_out1 31 0 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++		led@7 {
++			label = "eth63:green";
++			gpios = <&sgpio_out1 31 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++	};
+ };
+ 
+ &gpio {
+@@ -83,6 +127,17 @@ spi-flash@9 {
+ 	};
+ };
+ 
++&sgpio1 {
++	status = "okay";
++	microchip,sgpio-port-ranges = <24 31>;
++	gpio@0 {
++		ngpios = <64>;
++	};
++	gpio@1 {
++		ngpios = <64>;
++	};
 +};
 +
-+const struct sgpio_properties properties_sparx5 = {
-+	.regoff = { 0x00, 0x06, 0x26, 0x04, 0x05 },
-+	.auto_repeat = BIT(6),
-+	.port_width  = GENMASK(4, 3),
-+	.clk_freq    = GENMASK(19, 8),
-+	.bit_source  = GENMASK(23, 12),
-+};
-+
-+static const char * const functions[] = { "gpio" };
-+
-+struct sgpio_bank {
-+	struct sgpio_priv *priv;
-+	bool is_input;
-+	struct gpio_chip gpio;
-+	struct pinctrl_desc pctl_desc;
-+};
-+
-+struct sgpio_priv {
-+	struct device *dev;
-+	struct sgpio_bank in;
-+	struct sgpio_bank out;
-+	u32 bitcount;
-+	u32 ports;
-+	u32 clock;
-+	u32 __iomem *regs;
-+	const struct sgpio_properties *properties;
-+};
-+
-+struct sgpio_port_addr {
-+	u8 port;
-+	u8 bit;
-+};
-+
-+static inline void sgpio_pin_to_addr(struct sgpio_priv *priv, int pin,
-+				     struct sgpio_port_addr *addr)
-+{
-+	addr->port = pin / priv->bitcount;
-+	addr->bit = pin % priv->bitcount;
-+}
-+
-+static inline u32 sgpio_readl(struct sgpio_priv *priv, u32 rno, u32 off)
-+{
-+	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
-+
-+	return readl(reg);
-+}
-+
-+static inline void sgpio_writel(struct sgpio_priv *priv,
-+				u32 val, u32 rno, u32 off)
-+{
-+	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
-+
-+	writel(val, reg);
-+}
-+
-+static inline void sgpio_clrsetbits(struct sgpio_priv *priv,
-+				    u32 rno, u32 off, u32 clear, u32 set)
-+{
-+	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
-+	u32 val = readl(reg);
-+
-+	val &= ~clear;
-+	val |= set;
-+
-+	writel(val, reg);
-+}
-+
-+static void sgpio_output_set(struct sgpio_priv *priv,
-+			     struct sgpio_port_addr *addr,
-+			     int value)
-+{
-+	unsigned int bit = 3 * addr->bit;
-+
-+	sgpio_clrsetbits(priv, REG_PORT_CONFIG, addr->port,
-+			 SGPIO_F_PORT_CFG_BIT_SOURCE(priv, BIT(bit)),
-+			 SGPIO_F_PORT_CFG_BIT_SOURCE(priv, value << bit));
-+}
-+
-+static int sgpio_output_get(struct sgpio_priv *priv,
-+			    struct sgpio_port_addr *addr)
-+{
-+	u32 portval = sgpio_readl(priv, REG_PORT_CONFIG, addr->port);
-+	unsigned int bit = 3 * addr->bit;
-+
-+	return !!(SGPIO_X_PORT_CFG_BIT_SOURCE(priv, portval) & BIT(bit));
-+}
-+
-+static int sgpio_input_get(struct sgpio_priv *priv,
-+			   struct sgpio_port_addr *addr)
-+{
-+	return !!(sgpio_readl(priv, REG_INPUT_DATA, addr->bit) & BIT(addr->port));
-+}
-+
-+static int sgpio_pinconf_get(struct pinctrl_dev *pctldev,
-+			     unsigned int pin, unsigned long *config)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+	u32 param = pinconf_to_config_param(*config);
-+	int val;
-+
-+	sgpio_pin_to_addr(priv, pin, &addr);
-+
-+	switch (param) {
-+	case PIN_CONFIG_INPUT_ENABLE:
-+		val = bank->is_input;
-+		break;
-+
-+	case PIN_CONFIG_OUTPUT_ENABLE:
-+		val = !bank->is_input;
-+		break;
-+
-+	case PIN_CONFIG_OUTPUT:
-+		if (bank->is_input)
-+			return -EINVAL;
-+		val = sgpio_output_get(priv, &addr);
-+		break;
-+
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, val);
-+
-+	return 0;
-+}
-+
-+static int sgpio_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			     unsigned long *configs, unsigned int num_configs)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+	u32 param, arg;
-+	int cfg, err = 0;
-+
-+	sgpio_pin_to_addr(priv, pin, &addr);
-+
-+	for (cfg = 0; cfg < num_configs; cfg++) {
-+		param = pinconf_to_config_param(configs[cfg]);
-+		arg = pinconf_to_config_argument(configs[cfg]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_OUTPUT:
-+			if (bank->is_input)
-+				return -EINVAL;
-+			sgpio_output_set(priv, &addr, arg);
-+			break;
-+
-+		default:
-+			err = -EOPNOTSUPP;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static const struct pinconf_ops sgpio_confops = {
-+	.is_generic = true,
-+	.pin_config_get = sgpio_pinconf_get,
-+	.pin_config_set = sgpio_pinconf_set,
-+	.pin_config_config_dbg_show = pinconf_generic_dump_config,
-+};
-+
-+static int sgpio_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	return 1;
-+}
-+
-+static const char *sgpio_get_function_name(struct pinctrl_dev *pctldev,
-+					   unsigned int function)
-+{
-+	return functions[0];
-+}
-+
-+static int sgpio_get_function_groups(struct pinctrl_dev *pctldev,
-+				     unsigned int function,
-+				     const char *const **groups,
-+				     unsigned *const num_groups)
-+{
-+	*groups  = functions;
-+	*num_groups = ARRAY_SIZE(functions);
-+
-+	return 0;
-+}
-+
-+static int sgpio_pinmux_set_mux(struct pinctrl_dev *pctldev,
-+				unsigned int selector, unsigned int group)
-+{
-+	return 0;
-+}
-+
-+static int sgpio_gpio_set_direction(struct pinctrl_dev *pctldev,
-+				    struct pinctrl_gpio_range *range,
-+				    unsigned int pin, bool input)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	if (input != bank->is_input) {
-+		dev_err(pctldev->dev, "Pin %d direction as %s is not possible\n",
-+			pin, input ? "input" : "output");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sgpio_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				     struct pinctrl_gpio_range *range,
-+				     unsigned int offset)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+
-+	sgpio_pin_to_addr(priv, offset, &addr);
-+
-+	if ((priv->ports & BIT(addr.port)) == 0) {
-+		dev_warn(priv->dev, "%s: Request port %d for pin %d is not activated\n",
-+			 __func__, addr.port, offset);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops sgpio_pmx_ops = {
-+	.get_functions_count = sgpio_get_functions_count,
-+	.get_function_name = sgpio_get_function_name,
-+	.get_function_groups = sgpio_get_function_groups,
-+	.set_mux = sgpio_pinmux_set_mux,
-+	.gpio_set_direction = sgpio_gpio_set_direction,
-+	.gpio_request_enable = sgpio_gpio_request_enable,
-+};
-+
-+static int sgpio_pctl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return bank->pctl_desc.npins;
-+}
-+
-+static const char *sgpio_pctl_get_group_name(struct pinctrl_dev *pctldev,
-+					     unsigned int group)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return bank->pctl_desc.pins[group].name;
-+}
-+
-+static int sgpio_pctl_get_group_pins(struct pinctrl_dev *pctldev,
-+				     unsigned int group,
-+				     const unsigned int **pins,
-+				     unsigned int *num_pins)
-+{
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = &bank->pctl_desc.pins[group].number;
-+	*num_pins = 1;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops sgpio_pctl_ops = {
-+	.get_groups_count = sgpio_pctl_get_groups_count,
-+	.get_group_name = sgpio_pctl_get_group_name,
-+	.get_group_pins = sgpio_pctl_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static int microchip_sgpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct sgpio_bank *bank = gpiochip_get_data(gc);
-+
-+	/* Fixed-position function */
-+	return bank->is_input ? 0 : -EINVAL;
-+}
-+
-+static int microchip_sgpio_direction_output(struct gpio_chip *gc,
-+				       unsigned int gpio, int value)
-+{
-+	struct sgpio_bank *bank = gpiochip_get_data(gc);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+
-+	/* Fixed-position function */
-+	if (bank->is_input)
-+		return -EINVAL;
-+
-+	sgpio_pin_to_addr(priv, gpio, &addr);
-+
-+	sgpio_output_set(priv, &addr, value);
-+
-+	return 0;
-+}
-+
-+static int microchip_sgpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct sgpio_bank *bank = gpiochip_get_data(gc);
-+
-+	return bank->is_input ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static void microchip_sgpio_set_value(struct gpio_chip *gc,
-+				unsigned int gpio, int value)
-+{
-+	microchip_sgpio_direction_output(gc, gpio, value);
-+}
-+
-+static int microchip_sgpio_get_value(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct sgpio_bank *bank = gpiochip_get_data(gc);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+
-+	sgpio_pin_to_addr(priv, gpio, &addr);
-+
-+	return bank->is_input ?
-+		sgpio_input_get(priv, &addr) : sgpio_output_get(priv, &addr);
-+}
-+
-+static int microchip_sgpio_of_xlate(struct gpio_chip *gc,
-+			       const struct of_phandle_args *gpiospec,
-+			       u32 *flags)
-+{
-+	struct sgpio_bank *bank = gpiochip_get_data(gc);
-+	struct sgpio_priv *priv = bank->priv;
-+	int pin;
-+
-+	/* Note that the SGIO pin is defined by *2* numbers, a port
-+	 * number between 0 and 31, and a bit index, 0 to 3.
-+	 */
-+	if (gpiospec->args[0] > SGPIO_BITS_PER_WORD ||
-+	    gpiospec->args[1] > priv->bitcount)
-+		return -EINVAL;
-+
-+	pin = gpiospec->args[1] + (gpiospec->args[0] * priv->bitcount);
-+
-+	if (pin > gc->ngpio)
-+		return -EINVAL;
-+
-+	if (flags)
-+		*flags = gpiospec->args[2];
-+
-+	return pin;
-+}
-+
-+static int microchip_sgpio_get_ports(struct sgpio_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	int i, ret;
-+	u32 range_params[64];
-+
-+	/* Calculate port mask */
-+	ret = of_property_read_variable_u32_array(np,
-+						  "microchip,sgpio-port-ranges",
-+						  range_params,
-+						  2,
-+						  ARRAY_SIZE(range_params));
-+	if (ret < 0 || ret % 2) {
-+		dev_err(dev, "%s port range\n",
-+			ret == -EINVAL ? "Missing" : "Invalid");
-+		return ret;
-+	}
-+	for (i = 0; i < ret; i += 2) {
-+		int start, end;
-+
-+		start = range_params[i];
-+		end = range_params[i + 1];
-+		if (start > end || end >= SGPIO_BITS_PER_WORD) {
-+			dev_err(dev, "Ill-formed port-range [%d:%d]\n",
-+				start, end);
-+		}
-+		priv->ports |= GENMASK(end, start);
-+	}
-+
-+	return 0;
-+}
-+
-+static int microchip_sgpio_register_bank(struct device *dev,
-+					 struct sgpio_priv *priv,
-+					 struct fwnode_handle *fwnode,
-+					 int bankno)
-+{
-+	struct sgpio_bank *bank;
-+	struct pinctrl_pin_desc *pins;
-+	struct pinctrl_desc *pctl_desc;
-+	struct pinctrl_dev *pctldev;
-+	struct gpio_chip *gc;
-+	bool is_input = (bankno == 0);
-+	int ret;
-+	u32 ngpios;
-+
-+	/* Get overall bank struct */
-+	bank = is_input ? &priv->in : &priv->out;
-+	bank->is_input = is_input;
-+	bank->priv = priv;
-+
-+	if (fwnode_property_read_u32(fwnode, "ngpios", &ngpios)) {
-+		dev_info(dev, "failed to get number of gpios for bank%d\n",
-+			 bankno);
-+		ngpios = 64;
-+	}
-+
-+	priv->bitcount = ngpios / SGPIO_BITS_PER_WORD;
-+	if (priv->bitcount > SGPIO_MAX_BITS) {
-+		dev_err(dev, "Bit width exceeds maximum (%d)\n",
-+			SGPIO_MAX_BITS);
-+		return -EINVAL;
-+	}
-+
-+	pctl_desc = &bank->pctl_desc;
-+	pctl_desc->name = devm_kasprintf(dev, GFP_KERNEL, "%s-%sput",
-+					 dev_name(dev),
-+					 is_input ? "in" : "out");
-+	pctl_desc->pctlops = &sgpio_pctl_ops;
-+	pctl_desc->pmxops = &sgpio_pmx_ops;
-+	pctl_desc->confops = &sgpio_confops;
-+	pctl_desc->owner = THIS_MODULE;
-+
-+	pins = devm_kzalloc(dev, sizeof(*pins)*ngpios, GFP_KERNEL);
-+	if (pins) {
-+		int i;
-+		char *p, *names;
-+
-+		names = devm_kzalloc(dev, PIN_NAM_SZ*ngpios, GFP_KERNEL);
-+
-+		if (!names)
-+			return -ENOMEM;
-+
-+		pctl_desc->npins = ngpios;
-+		pctl_desc->pins = pins;
-+
-+		for (p = names, i = 0; i < ngpios; i++, p += PIN_NAM_SZ) {
-+			struct sgpio_port_addr addr;
-+
-+			sgpio_pin_to_addr(priv, i, &addr);
-+			snprintf(p, PIN_NAM_SZ, "SGPIO_%c_p%db%d",
-+				 is_input ? 'I' : 'O',
-+				 addr.port, addr.bit);
-+			pins[i].number = i;
-+			pins[i].name = p;
-+		}
-+	} else
-+		return -ENOMEM;
-+
-+	pctldev = devm_pinctrl_register(dev, pctl_desc, bank);
-+	if (IS_ERR(pctldev)) {
-+		dev_err(dev, "Failed to register pinctrl\n");
-+		return PTR_ERR(pctldev);
-+	}
-+
-+	gc			= &bank->gpio;
-+	gc->label		= pctl_desc->name;
-+	gc->parent		= dev;
-+	gc->of_node		= to_of_node(fwnode);
-+	gc->owner		= THIS_MODULE;
-+	gc->get_direction	= microchip_sgpio_get_direction;
-+	gc->direction_input	= microchip_sgpio_direction_input;
-+	gc->direction_output	= microchip_sgpio_direction_output;
-+	gc->get			= microchip_sgpio_get_value;
-+	gc->set			= microchip_sgpio_set_value;
-+	gc->request		= gpiochip_generic_request;
-+	gc->free		= gpiochip_generic_free;
-+	gc->of_xlate		= microchip_sgpio_of_xlate;
-+	gc->of_gpio_n_cells     = 3;
-+	gc->base		= -1;
-+	gc->ngpio		= ngpios;
-+
-+	ret = devm_gpiochip_add_data(dev, gc, bank);
-+	if (ret)
-+		dev_err(dev, "Failed to register: ret %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int microchip_sgpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct fwnode_handle *fwnode;
-+	struct sgpio_priv *priv;
-+	int div_clock = 0, ret, port;
-+	u32 val;
-+	struct clk *clk;
-+	int i, nbanks;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	/* Get clock */
-+	clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "Failed to get clock\n");
-+		return PTR_ERR(clk);
-+	}
-+	div_clock = clk_get_rate(clk);
-+	if (of_property_read_u32(dev->of_node, "bus-frequency", &priv->clock))
-+		priv->clock = 12500000;
-+	if (priv->clock <= 0 || priv->clock > (div_clock / 2)) {
-+		dev_err(dev, "Invalid frequency %d\n", priv->clock);
-+		return -EINVAL;
-+	}
-+
-+	/* Get register map */
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->regs))
-+		return PTR_ERR(priv->regs);
-+	priv->properties = of_device_get_match_data(dev);
-+
-+	/* Get rest of device properties */
-+	ret = microchip_sgpio_get_ports(priv);
-+	if (ret)
-+		return ret;
-+
-+	nbanks = device_get_child_node_count(dev);
-+	if (nbanks != 2) {
-+		dev_err(dev, "Must have 2 banks (have %d)\n", nbanks);
-+		return -EINVAL;
-+	}
-+
-+	i = 0;
-+	device_for_each_child_node(dev, fwnode) {
-+		ret = microchip_sgpio_register_bank(dev, priv, fwnode, i++);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (priv->in.gpio.ngpio != priv->out.gpio.ngpio) {
-+		dev_err(dev, "Banks must have same GPIO count\n");
-+		return -EINVAL;
-+	}
-+
-+	sgpio_clrsetbits(priv, REG_SIO_CONFIG, 0,
-+			 SGPIO_M_CFG_SIO_PORT_WIDTH(priv),
-+			 SGPIO_F_CFG_SIO_PORT_WIDTH(priv, priv->bitcount - 1) |
-+			 SGPIO_M_CFG_SIO_AUTO_REPEAT(priv));
-+	val = max(2U, div_clock / priv->clock);
-+	sgpio_clrsetbits(priv, REG_SIO_CLOCK, 0,
-+			 SGPIO_M_CLOCK_SIO_CLK_FREQ(priv),
-+			 SGPIO_F_CLOCK_SIO_CLK_FREQ(priv, val));
-+
-+	for (port = 0; port < SGPIO_BITS_PER_WORD; port++)
-+		sgpio_writel(priv, 0, REG_PORT_CONFIG, port);
-+	sgpio_writel(priv, priv->ports, REG_PORT_ENABLE, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id microchip_sgpio_gpio_of_match[] = {
-+	{
-+		.compatible = "microchip,sparx5-sgpio",
-+		.data = &properties_sparx5,
-+	}, {
-+		.compatible = "mscc,luton-sgpio",
-+		.data = &properties_luton,
-+	}, {
-+		.compatible = "mscc,ocelot-sgpio",
-+		.data = &properties_ocelot,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+
-+static struct platform_driver microchip_sgpio_pinctrl_driver = {
-+	.driver = {
-+		.name = "pinctrl-microchip-sgpio",
-+		.of_match_table = microchip_sgpio_gpio_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = microchip_sgpio_probe,
-+};
-+builtin_platform_driver(microchip_sgpio_pinctrl_driver);
+ &axi {
+ 	i2c0_imux: i2c0-imux@0 {
+ 		compatible = "i2c-mux-pinctrl";
 -- 
 2.25.1
 
