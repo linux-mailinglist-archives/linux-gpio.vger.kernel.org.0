@@ -2,91 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C7929ECBB
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 14:20:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19F2029ED22
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 14:40:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725771AbgJ2NUX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 09:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgJ2NUX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 09:20:23 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07733C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Oct 2020 06:20:22 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id f140so2144354ybg.3
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Oct 2020 06:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=yUiHroil23Ysm/oPYXt1mfZFVtFDWQvOgy/RoBiFB5Y=;
-        b=F0e43frA/cSkRLHzRqsMsJkf1fFp+1cQzJaHeLHi8wIx4Njj4T4S6bly5w/EqAP/tx
-         B1vZiDU9Gc0miXTtoDuGh8IbsCynuCD7TWR9HzPD1VA4E63LymI7qODjQVd0j04RAoSg
-         w0ov8tBo02Q5Z1E+wuLvNsFplA6bNTvZ8f5GYtwo8f2XF+VvWGFof2k8ecEsHRaGHR2P
-         Qe8SmdmfFqJbfDuTAgwXZHW3oilCDR2m6Tu49tzHu2smblRcik50jq2WRxmGmuf/pq+r
-         TxKzsLZPCx3Dg4TRLZzcOtKXLhyqv7sYWp1WsFih12FoIehrTycahR7XJwmciKQvFQtK
-         CKEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=yUiHroil23Ysm/oPYXt1mfZFVtFDWQvOgy/RoBiFB5Y=;
-        b=CQacfJxFU018uO2rvyumKcnVTxiG7kdm3hebq+m15fQIWzQtc1O8BpsTbLUOWAC+3D
-         KNqANYyGu1YGtkjNv10MbuWm08fStQkkd6fZBgnYUWCDAW+nxgniR5aXXS+VcyVukFVi
-         0bvAOEbEMoIv+tc2JsTWafP1uuQcz4z7i43dawnVMv23Ozmxg85xbedYcaLL6BXs/Oyk
-         bGh/mjJCzJfxgl76L7zvAAevxMeDv4uIXwauJZQtv0dD3K8e1Q5qMKs41exfIgs26jxO
-         gBMNRieunphT/njzzT04L8cNE51aMB6X/BpxIW76qVX7W1mg9HVFDpPld9oshUaK/sCp
-         DEhQ==
-X-Gm-Message-State: AOAM531cgdPcPQ3PFrqmGjiKBdNCWpNDtxuqMvpJao3BjYGzyvl7mSXM
-        lXZb8gC3vxQBtj5kWPWBhl0SinFqQIzKWLFrzO8=
-X-Google-Smtp-Source: ABdhPJyl7PQNOpTFoVmE1bGLtkipj/QTxAAYJJxZG1vDKC4WMRjAhGeuaSoR/zqL/onqxezUVacJWpdvDxY8OBrKJq8=
-X-Received: by 2002:a25:2a0b:: with SMTP id q11mr6294290ybq.305.1603977622246;
- Thu, 29 Oct 2020 06:20:22 -0700 (PDT)
+        id S1725826AbgJ2Nkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 09:40:43 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33536 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgJ2Nkm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 09:40:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1603978842; x=1635514842;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Uj31RIUPMHB2663+cdl+eyLqGnnK0YFqnxVMboDH4s0=;
+  b=VnckbwS74ZEuqlvvFGMxu2J8FcKqyE8hqZ2xyjNT0W861DhXPl+38dum
+   6R2eSNnLvwB1sakZ4A4zJIEFkM3JhYjbvE8UgU78catN8aJh/HY3uksbV
+   VYH+dtWgXp54Cf4wdg5wHzboBnDbnpF3Nkp7yZGoD/waOOt3iNZyaobix
+   UsLdA9YLHF+ev2adWMAAIyLrhzVc4Hk7+MwP61MyB1JWLpVZ/ql17+t2e
+   MXL7tTbVnEha//JeFBVR1755Olwx2CSflH6emRdVrE2VqUI61jntdaeQf
+   UrqRFr2+VNnldeKhPqHTFsl/eQPzHviPzJyJwexgBroUKUlLyJHS6NQec
+   A==;
+IronPort-SDR: PBWMSUHCAHMdlj4mBmYjjyAdW+Iou2cvbL8aSgG9onbaQsagM/JCVk2KTSS9xW+iYSEPMyDokx
+ unTgUv+UQNJWeNFyXq6bV/4us2NMumW37ONx/cXrZUscCxcv4a4zhGn5zJr3Unls9RlYdIvi2x
+ NYo+lzTdC63+oMOycr2aL7Nj43HbrUnQhQjQ1rX93N1RdrsMZSJwLpuafaL7akPcZrGsuaW07u
+ DdFxKKQ3xaN3+Sx7BiOc07OuEPwOpUpGiqjGq27FgJf/Fezglj4R8ceCL/JpnB6ilTlhOn5wZe
+ 3lQ=
+X-IronPort-AV: E=Sophos;i="5.77,430,1596524400"; 
+   d="scan'208";a="91815713"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2020 06:40:41 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 29 Oct 2020 06:40:41 -0700
+Received: from soft-dev10.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 29 Oct 2020 06:40:39 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v7 0/3] Adding support for Microchip/Microsemi serial GPIO controller
+Date:   Thu, 29 Oct 2020 14:40:24 +0100
+Message-ID: <20201029134027.232951-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:a05:7110:528f:b029:27:b220:7317 with HTTP; Thu, 29 Oct 2020
- 06:20:22 -0700 (PDT)
-Reply-To: mrjohnsonsmith009@gmail.com
-From:   Johnson smith <alvishilbasin65@gmail.com>
-Date:   Thu, 29 Oct 2020 13:20:22 +0000
-Message-ID: <CAHQBbB38HXLkczFdjujSE_BsgYzm+r-oDopbCTjYPwsDpApcLA@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
+The series add support for the serial GPIO controller used by
+Microchip Sparx5, as well as (MSCC) ocelot/jaguar2 SoCs.
 
-Attention Beneficiary
+v7 changes:
+- Fixed wrong sizeof in pin string name template. (Andy)
+- Collapsed sgpio_input_get() to one liner. (Andy)
+- Eliminated unneeded variable in microchip_sgpio_get_value()
+- Removed noisy dev_info(). (Andy)
+- Replaced platform_get_resource()+devm_ioremap_resource() with
+ devm_platform_ioremap_resource(). (Andy)
+- Replaced device_property_read_u32() with
+  of_property_read_u32(). (Andy)
+- Replaced __builtin_ffsll() with __builtin_ffs() for MIPS32 targets.
 
-To stop this dubious act, we agreed with the World Bank and the
-Federal Bureau of Investigation (FBI) that we the International
-Monetary Fund (IMF) can manage and monitor this payment to overcome
-the desperate situation of banks and other personnel. Organizations
-involved in the criminal process.
+v6 changes:
+- Use "bus-frequency" instead of "microchip,sgpio-frequency". Drop
+  '$ref'. (Robh)
+- Added "ngpios" description, bumped minimum to 32. (Linus)
+- Added "#size-cells" description. (Linus)
+- Changed "bus-frequency" validation in driver to reflect the YAML
+  description.
 
-We have obtained an irrevocable payment guarantee for your payment
-from the World Bank. We would like to inform you that the World Bank
-has decided to send you $ 350,000.00 dollars and transfer it through
-international ATM VISA card, which you can withdraw from any Visa ATM
-MACHINE anywhere in the world. (International Commercial Bank Senegal
-S.A) will issue an international ATM visa card in your name and send
-it to your home address through DHL Delivery Company.
+v5 changes (driver comments from Linus):
+- Collect bank data in sgpio_bank struct
+- Add is_input boolean to sgpio_bank struct
+- Use single-bit bitmasks in sgpio_output_set() and sgpio_output_get()
+- Eliminate superfluous struct pinctrl_dev *pctl_dev in bank data
+- Fix wrong ngpio consistency check
 
-Contact Mr Johnson James to send your (International Commercial Bank
-Senegal S.A) Visa card to your home address immediately.
+v4 changes (binding comments from Rob):
+- microchip,sgpio-port-ranges changed to uint32-matrix so tuples can
+  be represented properly.
+- gpio controller node name changed to "gpio@[0-1]"
+- whitespace fixes
+- DT files updated as per schema changes
 
-Email: mrjohnsonsmith009@gmail.com
+v3 changes:
+- Renamed all usage of "mchp" abbrevation with "microchip".
+- Split the in/output directions into (two) separate banks.
+- Eliminated the bindings include file (from above)
+- Changed SPDX license to "GPL-2.0-or-later"
+- Change -ENOTSUPP to -EOPNOTSUPP
+- Minor type/symbol naming changes
 
-Website: www.un.org
+v2 changes:
+- Adds both in and output modes.
+- Use direct adressing of the individual banks (#gpio-cells = <4>),
+  also osoleting need for addressing macros in bindings include file.
+- Property 'microchip,sgpio-ports' (uint32, bitmask) replaced by
+  proper range set (array of [start,end]) 'microchip,sgpio-port-ranges'.
+- Fixes whitespace issues in Kconfig file
 
-WhatsApp phone number +22890198522
+Lars Povlsen (3):
+  dt-bindings: pinctrl: Add bindings for pinctrl-microchip-sgpio driver
+  pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi
+    Serial GPIO
+  arm64: dts: sparx5: Add SGPIO devices
 
-Phone No:+22890198522
+ .../pinctrl/microchip,sparx5-sgpio.yaml       | 145 ++++
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  91 +++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |   5 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 258 +++++++
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  55 ++
+ drivers/pinctrl/Kconfig                       |  18 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-microchip-sgpio.c     | 653 ++++++++++++++++++
+ 9 files changed, 1227 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-microchip-sgpio.c
 
-Regards
-
-Mr Johnson James
-
-International Commercial Bank Senegal S.A, Management
+--
+2.25.1
