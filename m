@@ -2,78 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEFDE29E546
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 08:56:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 733BD29E59C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 09:01:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbgJ2Hz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 03:55:56 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:5043 "EHLO smtp2.axis.com"
+        id S1725805AbgJ2IAv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 04:00:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:23619 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731519AbgJ2Hya (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 29 Oct 2020 03:54:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1006; q=dns/txt; s=axis-central1;
-  t=1603958069; x=1635494069;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4gY4yVVX7l5rZ98kdmgu7rP8LiUim8X0dxJoLhLo+dQ=;
-  b=VKj5agu5NnUax4Ao6XLq1JLDlcM6lDQnIPxknMSn3XQ2sxeyPHIKVtjg
-   RLccP0+ev5U7k8psRCYy8XhhCrSDWU5ZqeGTqj+sL2Z3BFrgkIC7mYXu/
-   n8WRxNpIhBlCn58gWYisUOPKDSDoxHyLz1kpB/Le+xYd+6/i6+FhouGjn
-   NOQDdNrw/qLF8wUcVO2/hHGVXXlN4X+fBKdpIYEfuCbvp0+u+urMoIEcd
-   x9JnmTYIhKYkijS9p2giFfhOYI3Bb3MPtHkdEtC7gNG7ErrZNdkZkEwQO
-   2m5oSfdxj+2NlyeDavuaLeulvyA2FDEY+pxfNSZCnKeu66TFO9POMIcS2
-   g==;
-IronPort-SDR: QxxgPU9Y+ajVDspzc57wCdOnqfNlxgO+zd0K3eVDtsqNmqK5phMdo9VLBiOcjDMQkRjTVCUTPn
- X6YC6Ks5hQZB0BByA9XnhH9Ahi5M0TTMo2Q1yCvAkWElOEjBWL1b3AmBi40hxHphgVg2LAlEeK
- fPZdCG2L7c6/Uc1dnq4KIiPawFZxfIaKh1aUqusTwDbxTwjPJx7rscGK/ZGFqHhaMJ00LHxciI
- iqxSw5vii94y/SAgpV/qLpbDLyYdHiVMlSVeyTLAqXjQGBAyVUVC52cdNGg4ioE6ocM5kf2KrA
- HnA=
-X-IronPort-AV: E=Sophos;i="5.77,429,1596492000"; 
-   d="scan'208";a="14030929"
-Date:   Thu, 29 Oct 2020 08:54:28 +0100
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        id S1725497AbgJ2IAu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Oct 2020 04:00:50 -0400
+IronPort-SDR: QoxPAUsx4V1cfgK2He9iafkRI0wkT+takO7VvyTCjimBYLOE2rLmxxxbh4LX7h2o561ecYcM6p
+ dBRDr1LGuW6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="168493599"
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="168493599"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 01:00:49 -0700
+IronPort-SDR: VR7YhiAcfRUHHJb6Om7cQRdGZxxP5jm4twR7yryt7C+qY/qVvgbnX0dNcp3c5x2IkWRB4sHNhC
+ ArwZ83XLo6NQ==
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="323626906"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 01:00:46 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 29 Oct 2020 10:00:42 +0200
+Date:   Thu, 29 Oct 2020 10:00:42 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kernel <kernel@axis.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] gpio: mockup: Allow probing from device tree
-Message-ID: <20201029075427.t2hwvusjqx27pf6l@axis.com>
-References: <20201027135325.22235-1-vincent.whitchurch@axis.com>
- <CAMRc=Mdjm8tgxF_76T3f6r3TwghLKtrFtUv7ywtX3-nEQzVGtA@mail.gmail.com>
- <CAHp75Vff1AyKDb=JiocsAefnft+tcm+BnuWDrxViQqZAQZjuVg@mail.gmail.com>
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: Re: [PATCH v1] pinctrl: intel: Add Intel Lakefield pin controller
+ support
+Message-ID: <20201029080042.GL2495@lahna.fi.intel.com>
+References: <20201026192325.20813-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vff1AyKDb=JiocsAefnft+tcm+BnuWDrxViQqZAQZjuVg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20201026192325.20813-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 09:25:32PM +0100, Andy Shevchenko wrote:
-> On Wed, Oct 28, 2020 at 8:41 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Tue, Oct 27, 2020 at 2:54 PM Vincent Whitchurch
-> > > +#ifdef CONFIG_OF
-> > > +static const struct of_device_id gpio_mockup_of_match[] = {
-> > > +       { .compatible = "gpio-mockup", },
-> > > +       {},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, gpio_mockup_of_match);
-> > > +#endif
-> >
-> > You don't need this ifdef - of_match_ptr() will evaluate to NULL if
-> > CONFIG_OF is disabled and the compiler will optimize this struct out.
+On Mon, Oct 26, 2020 at 09:23:25PM +0200, Andy Shevchenko wrote:
+> This driver adds pinctrl/GPIO support for Intel Lakefield SoC. The
+> GPIO controller is based on the next generation GPIO hardware but still
+> compatible with the one supported by the Intel core pinctrl/GPIO driver.
 > 
-> It's not so. If you drop ugly ifdeffery (and I vote for that, see also
-> above) the of_match_ptr() must be dropped as well.  Otherwise the
-> compiler will issue the warning. So it is either all or none.
+> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yes, you're right.  I actually tested a !OF build before but it turns
-out that the warning is disabled by default and only enabled with W=1.
-I'll fix this and change the header in the next version.  Thank you.
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
