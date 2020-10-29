@@ -2,114 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA17F29F320
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 18:26:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EC829F346
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Oct 2020 18:31:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgJ2R0H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Oct 2020 13:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
+        id S1726753AbgJ2Rbh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Oct 2020 13:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgJ2R0F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 13:26:05 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8D0C0613CF;
-        Thu, 29 Oct 2020 10:26:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t14so2927863pgg.1;
-        Thu, 29 Oct 2020 10:26:05 -0700 (PDT)
+        with ESMTP id S1725879AbgJ2Rbh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Oct 2020 13:31:37 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BCFEC0613D5;
+        Thu, 29 Oct 2020 10:31:37 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id j5so1631283plk.7;
+        Thu, 29 Oct 2020 10:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8ztGYY/eyx/yp7ALYZLwGRqLddpCGI+AHHziIjGBV1M=;
-        b=FWL+cKVT0VDWznjXqhV+cIxsfltQ9roMo2r2thpj401yo3LUs19ERsrtoB8lf8mn4U
-         QoHoP3SYlAZiS4rza8d3MpGfvno4f+JGRTVA6fKuv2Ms2PXSQdEbNu67REs++qp3d3yv
-         hWTP8MNmlzZZDMqHUAj0U483eR1eWxUN8qrFrCtb7lxAqQfX7Q9YWYXx1YNUNFZNytG+
-         9V+X0qKDlHgZFRwBAhp0SO3dem299j8Jk/WiMaIc/agaz9F6xUuVDGapOByMtmxoAsJ7
-         zbSyhVaiG1MnImMq2bz0QWekcBafmsQSQKiCU0bUo7Zb4vqaTLxoZFchBE+UWZOika3B
-         RwGw==
+        bh=L4ra82p6fZeZOXOkClmLT1gG8p31YUcgYto+ENCnODI=;
+        b=Ki0hrf2SyzbOkwT5NXRdsgkIhoZqEYhdxCEOFpsf3d2jPRG/kQ2M3eY8raixBKvnJw
+         AaDUy9/TfMKR3RzJXHwndy0jNvMDiMtgtCypZe93gHf0b+GJnqqSo0h7NSLyQxp6vwQV
+         l4/itpSKWLCeTSOsEZWtzTbODEC/riXVvhwJVOvnMt2Drfx+5Sh+/gsP+tlsi7Lri+qv
+         VFxEk2Qco3ROcxD1r49sr/z1Y6ocX33YNDydRzbJO8kVuquFlG/SJggJwfqXDwOaqUY+
+         HiEtrxdk0ib+Hf/5mr3G29xnTxLO4fr9GoPo41Z4AZBv9FswJOo0lI5ARGsJfIgsOaGm
+         wd8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8ztGYY/eyx/yp7ALYZLwGRqLddpCGI+AHHziIjGBV1M=;
-        b=R0b6ddBn6EzKFLorvbZikSzuwsauyQfKXxRnSAgU8PKOH1/m51EkIXThQddoCteNCY
-         0HZqBrI99qGGUPoiIG7lC0QfugZOJm4aGFnT6CDez1+mbDFcmcMrIR+Z08S9H2mLIZWC
-         x0rHhG4lazIse8k4dmodTCBTpLpsXVFpyixSDjFlK/s5OEGLKthZcygOhTs9543OHawD
-         xceBtePDQtaX7CeJ4s22EkyNwuGY/YY+7itUnPi0P73wNko68l1wdg6nR3cIr4EnVpUd
-         wbTrb5z6rmeU3JnzkFBBlivePMN+SbtRo+6aZkfXUYakPfV3Vl4TRJu9Q+SWHGxza/nk
-         +TgQ==
-X-Gm-Message-State: AOAM532M/yegaXF2iyrPu0Fy9RJKKP5/YQ+fcJDsbaIXQtKo51sKX7dt
-        MqwD5dcbAstc8ELZS6UT49+K3AQljkIJ5SUUXUxuw5gJLINy2w==
-X-Google-Smtp-Source: ABdhPJwGniRCTOAqXA7FRpEfoDNBbuG6hq2Pf+i11Cv8wRhq7HJW7mK2BPFYFTHOYzWdqOr0AbI/s3dn1NTD6/hQx1M=
-X-Received: by 2002:a65:47c2:: with SMTP id f2mr4946276pgs.4.1603992364948;
- Thu, 29 Oct 2020 10:26:04 -0700 (PDT)
+        bh=L4ra82p6fZeZOXOkClmLT1gG8p31YUcgYto+ENCnODI=;
+        b=MaiUPjOLdpBT4ZdBi2bMfaGvIDVABiTyCMchhPPdm4p1uHWANKi1MGWPJcnz0blWFz
+         kBSRGs2wVzRVlZ7Hb3D5VvLiyIdwiPzBBobi52mv5UeYYF5LST6EeFqB9/YW9Xng+ejY
+         1yI6hN4wZz3XGqEpIYU96NWGKRTG1cEiiKSWenRPRTTpu/cjw6R3joqwj0LKaz/3deHL
+         VSJP8cQVpKbTXTLnDF/+YdQ8sW549ZFRNrKVJNw4Ch75+p0pW9jmHYmywnFwD1GK/38d
+         LWa+IFzAUa5dyA68HDYSrhynwEmIQE8TjLU2+Sem3zEOdwHWIO2O77hSg/fTissMM3cc
+         N+eQ==
+X-Gm-Message-State: AOAM532FiM5f41bou3kivMMTRrls93rANamoIAn/pGbKHY4nAKYGycvn
+        l7KWlMw1oL1JbiJhlXrTTGdK2RwOmD80ZcGX0FI=
+X-Google-Smtp-Source: ABdhPJz5hdiHBHE85St8QoKVAzHkqtj6l9doedFZdK6xGF2oBkDXCdJlmjpQ7OMPTvGOT4hncie+sP8XPCYkM2AcmW0=
+X-Received: by 2002:a17:902:bc4a:b029:d6:7ef9:689c with SMTP id
+ t10-20020a170902bc4ab02900d67ef9689cmr5149016plz.21.1603992696981; Thu, 29
+ Oct 2020 10:31:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201028205101.47583-1-andriy.shevchenko@linux.intel.com>
- <20201028205101.47583-2-andriy.shevchenko@linux.intel.com>
- <CANiDSCtRDwfFo9HE84iujjFe6h9aS6b3B8wkz5Rt0aO8=XMsNg@mail.gmail.com>
- <20201029144656.GD4077@smile.fi.intel.com> <CANiDSCuNVT=jr8rLyfWhGKNSOy5OnH7YBZaWSguBDVg219OGvQ@mail.gmail.com>
- <CAHp75VfuZPpBZsyUEyD_R+ZEjPms6Z9L1tDdBKYfusWnbhtyww@mail.gmail.com> <CAHp75Vf-KXSC5x+07rH+wFgv_9xx_+DoMd9ZxTAqr_a5uxc7jA@mail.gmail.com>
-In-Reply-To: <CAHp75Vf-KXSC5x+07rH+wFgv_9xx_+DoMd9ZxTAqr_a5uxc7jA@mail.gmail.com>
+References: <20201028171757.765866-1-ribalda@chromium.org> <20201028182744.GZ4077@smile.fi.intel.com>
+ <CANiDSCvy2dPyY8O5DVgTBwNNLmfA=kJ5HUKJqcFLnqQ8CWsJgA@mail.gmail.com>
+In-Reply-To: <CANiDSCvy2dPyY8O5DVgTBwNNLmfA=kJ5HUKJqcFLnqQ8CWsJgA@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Oct 2020 19:25:48 +0200
-Message-ID: <CAHp75Vd+doPgSZQEOSAW4oRoAqPUdJyoivtNvbO5d1q-e280Eg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] Documentation: firmware-guide: gpio-properties:
- active_low only for GpioIo()
+Date:   Thu, 29 Oct 2020 19:31:21 +0200
+Message-ID: <CAHp75Vc6LhqKvuAeOkVtTAniHGRMGV=7Pa71CNT7por=PRk9eQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: acpi: Support GpioInt with active_low polarity
 To:     Ricardo Ribalda <ribalda@google.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 7:20 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Thu, Oct 29, 2020 at 5:37 PM Ricardo Ribalda <ribalda@google.com> wrote:
+> On Thu, Oct 29, 2020 at 3:38 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Wed, Oct 28, 2020 at 06:17:57PM +0100, Ricardo Ribalda wrote:
+> > > On the current implementation we only support active_high polarity for
+> > > GpioInt.
+> > >
+> > > There can be cases where a GPIO has active_low polarity and it is also a
+> > > IRQ source.
+> > >
+> > > De-couple the irq_polarity and active_low fields instead of re-use it.
+> > >
+> > > With this patch we support ACPI devices such as:
+> >
+> > Is it real device on the market?!
 >
-> On Thu, Oct 29, 2020 at 7:17 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Oct 29, 2020 at 4:55 PM Ricardo Ribalda <ribalda@google.com> wrote:
-> > > On Thu, Oct 29, 2020 at 3:45 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Wed, Oct 28, 2020 at 10:10:42PM +0100, Ricardo Ribalda wrote:
-> >
-> > ...
-> >
-> > > > ActiveLevel field is described in 19.6.55 GpioInt (GPIO Interrupt Connection
-> > > > Resource Descriptor Macro).
-> > > >
-> > > > > Without using the active_low, how can we describe  a pin that is
-> > > > > active low and has to trigger an irq on both edges?
-> > > >
-> > > > This is nonsense.
-> > > > What does it mean?
-> > >
-> > > Let me try to explain myself again:
-> > >
-> > > I have a gpio pin that produces IRQs on both edges. so ActiveLevel is Both
-> > >
-> > > The problem is that the value of that pin is inverted: Low means 1 and
-> > > high means 0.
-> > >
-> > > How can I describe that the pin "is inverted" without using the _DSD field?
-> >
-> > "Both edges" and "inverted" or "polarity low" in one sentence make no sense.
+> Yes, it is a chromebook.
+
+You mean it's already on sale with this broken table?!
+
+> > This table is broken. _DSD GPIO active_low is only for GpioIo().
 >
-> To be on the constructive side, I can *imagine* so badly designed
-> hardware that uses level and edge at the same time, but before I go to
-> conclusions, can you share relevant (pieces of) datasheet?
+> AFAIK the format of the _DSD is not in the ACPI standard. We have
+> decided its fields. (please correct me if I am wrong here)
 
-The [1] is a real example of how GPIO is being used to detect changing
-of current level of the signal.
-Note, ACPI tables for that device have problems [2], but I guess you
-may get the idea.
+_DSD is a concept that is part of the spec, but each UUID and its
+application is out of scope indeed.
 
+GPIO application to _DSD is described in the in-kernel documentation.
+Thanks for pointing out the issues it has.
 
-[1]: https://elixir.bootlin.com/linux/latest/source/drivers/extcon/extcon-intel-int3496.c#L138
-[2]: https://elixir.bootlin.com/linux/latest/source/drivers/extcon/extcon-intel-int3496.c#L45
+> On the other mail I have described why we need to make use of the
+> active_low on a GpioInt()
+>
+> If there is another way of describing ActiveBoth + inverted polarity
+> please let me know and I will go that way.
+
+I answered it there, please, continue this topic there.
+NAK to the proposed change.
+
+> > If it is a ChromeBook, please fix the firmware.
 
 -- 
 With Best Regards,
