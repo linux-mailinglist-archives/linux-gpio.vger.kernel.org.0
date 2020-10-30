@@ -2,222 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD272A0E9B
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 20:24:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B382A1189
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Oct 2020 00:24:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgJ3TYj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Oct 2020 15:24:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41770 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbgJ3TYi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Oct 2020 15:24:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n15so6544948otl.8;
-        Fri, 30 Oct 2020 12:24:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7CC8EZYA7EKd+jMRhRgrtEId3HKWwKTjiQQx7JgP/lo=;
-        b=kl/6uievJqaxYyvBbwJIjUQY9kvWXV7YaXayGPXi8/IIkrOARxU9KGABqMaxEkKuAz
-         WzcoBl8NCde/gNR6dh5+I7QVuoegVTsu/b9OgsLedxg9GJRQ4YP2657JV87EWlwwIxuY
-         o/W06uSBilIhFIlMIdXF2J9UkoeSrzK4Z3PD0wYlt6hUJejE0nEBhgpPYKvkZJc2OsUk
-         hrYO0wj9Frymd14yWitqDyuxBnKJ+R8hdRvBau8dshINFOW+DrIStMMvzfe1+dP1P0KY
-         DKaRtSiIce1kQUP55uNc1h8264dBaWz4C/dbUDK7Ud+iA4Lr0JRM80v61L8sfiiz9+bF
-         78qQ==
-X-Gm-Message-State: AOAM530dx0iSTWWIS0QhlWlwqw2CBp9rf7vUqhHutgV14MFxnXRytfHv
-        ljFr4fP2LQEZg3T89BY3dgqJ8MvMeg==
-X-Google-Smtp-Source: ABdhPJxREACOlU1vLSVvMCVJes6ku9YB2JWJ0HahOwOj1kvJVybVhMN/nCWGMDq0g0Q6+sDwp5nRsg==
-X-Received: by 2002:a9d:2905:: with SMTP id d5mr2730120otb.343.1604085877153;
-        Fri, 30 Oct 2020 12:24:37 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i12sm1659842oon.26.2020.10.30.12.24.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2020 12:24:36 -0700 (PDT)
-Received: (nullmailer pid 4181835 invoked by uid 1000);
-        Fri, 30 Oct 2020 19:24:35 -0000
-Date:   Fri, 30 Oct 2020 14:24:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+        id S1726107AbgJ3XX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Oct 2020 19:23:56 -0400
+Received: from mail-am6eur05on2066.outbound.protection.outlook.com ([40.107.22.66]:58849
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726051AbgJ3XXz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Oct 2020 19:23:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O72TZe+b4fHEENL9RgHrteipUNZQ4AgyaPc8u5OGEZ1uWMDlc0/fVuXqtDM3zSOkahATKhmaeE2W1HPh/6QzXxOMKafzWHnXDWEZGfWVkVgSJ5m2dk+/qsKKJ0fOUa+LMLjWSIhubK0vkcBl1XfgdLxFOVdgclA3atuJrjC7g5YOvXAj1yloRqIDxWWADAwL5kVs2HJo4mCQEGhmQKcISNfTj71ps5O/2enMvn3d/e4NcG2xOxR507lMU+4zst0UX8j+1+EAGFrYHsg2WDRWznCRv2yzEgWWjvqBr5CK3OBTmpg4Xpqn0hZ5lHwQr+yVxmSYewjitzwg5c6XP0Zkng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vhj8bR0FEYSQLe26u0naRbFfDHrX8s0dwrX3QaS7wGs=;
+ b=jzpzll8g7Py1H/O4i1lHoukCTQ5E+caFHmSg9BwjkY7sTnEUZMNoyIi3R22uszHJzXjUD4qCHkDu7wfA7NE8TLSSiI96p4F5nrFTN5m3Xw8cxVRr6krFwZa7kvbvrGzwL2Trni5nPGUiiZlcQZJTrB4b3axvO24i7AFWid3E6PaLld6EqPGB4b/KNg9l6Z5pgiIs5oJv6gv5+yXC6M4r8rVK2NhlQX3w4xRYc19QJHItPv2WJ4PAngO6XruN8zAHRFOxP0YTvfNbfCJAEWQM06gIRAddCxguSSMJxovmOVHYeh1aXApkSkeur1pZAfG3oXAyjefM33VVmub1yGpIIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vhj8bR0FEYSQLe26u0naRbFfDHrX8s0dwrX3QaS7wGs=;
+ b=b6byclA7ptlazZI8GuuWgH8I8ZqLwy6whn2pyx0KnJRnU1QeJ4D3aPRf1h8EICWf4GVe10kwX/wKaQuPchI90gi6NwN5zMEx2C6QgQL/WT+QitQt4gfCNo8gMlpZhMWy2HezwALezW+iTPQAyJE4biKPGbB7ZD2p4vpQUJZCfCg=
+Received: from AM8PR04MB7300.eurprd04.prod.outlook.com (2603:10a6:20b:1c7::12)
+ by AM0PR0402MB3364.eurprd04.prod.outlook.com (2603:10a6:208:17::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19; Fri, 30 Oct
+ 2020 23:23:48 +0000
+Received: from AM8PR04MB7300.eurprd04.prod.outlook.com
+ ([fe80::b902:6be0:622b:26c2]) by AM8PR04MB7300.eurprd04.prod.outlook.com
+ ([fe80::b902:6be0:622b:26c2%4]) with mapi id 15.20.3499.029; Fri, 30 Oct 2020
+ 23:23:48 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        =?utf-8?B?TWFyZWsgTWFyY3p5a293c2tpLUfDs3JlY2tp?= 
+        <marmarek@invisiblethingslab.com>,
+        =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SDX55 pinctrl
- bindings
-Message-ID: <20201030192435.GA4179566@bogus>
-References: <20201028083017.611810-1-vkoul@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Chao Yu <chao@kernel.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Colin Cross <ccross@android.com>, Dan Murphy <dmurphy@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        David Sterba <dsterba@suse.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Jonas Meurer <jonas@freesources.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Kranthi Kuntala <kranthi.kuntala@intel.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Oleh Kravchenko <oleg@kaa.org.ua>, Pavel Machek <pavel@ucw.cz>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Roman Sudarikov <roman.sudarikov@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Rix <trix@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Vineela Tummalapalli <vineela.tummalapalli@intel.com>,
+        Wu Hao <hao.wu@intel.com>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: RE: [PATCH v2 31/39] docs: ABI: cleanup several ABI documents
+Thread-Topic: [PATCH v2 31/39] docs: ABI: cleanup several ABI documents
+Thread-Index: AQHWrpAP/5fyi5IMO0mg3rPCeBI8xamwyZ5A
+Date:   Fri, 30 Oct 2020 23:23:48 +0000
+Message-ID: <AM8PR04MB73004CAA0D31628FD8E0A7878B150@AM8PR04MB7300.eurprd04.prod.outlook.com>
+References: <cover.1604042072.git.mchehab+huawei@kernel.org>
+ <5bc78e5b68ed1e9e39135173857cb2e753be868f.1604042072.git.mchehab+huawei@kernel.org>
+In-Reply-To: <5bc78e5b68ed1e9e39135173857cb2e753be868f.1604042072.git.mchehab+huawei@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [222.65.215.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ab56f412-7e05-43a2-c8a2-08d87d2adaf8
+x-ms-traffictypediagnostic: AM0PR0402MB3364:
+x-microsoft-antispam-prvs: <AM0PR0402MB3364418B792F35188BB317EC8B150@AM0PR0402MB3364.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6cFTuXK2Z9T7IjE5nPSWOSW0H399lElCPFWNLu6mHH4GG8v3HOSeMavESO4H4I9gowW5Afs8cqovZdsdk4diWdRNgTMHQYwDH1gIcaeh79GVjuaHKoAYOp3+UqMXYEwxQUjNdknu4G2opTbyTt5NGMl3eveYDFQ1g+yALBS2JXjYDgu4OTZDsAdNins5Z9iDdhCsUh0n0Ac2pzEW3Phd67aVAH58rexxKss/OEMy3djmxSUwQ9eE4OVx9tAi4dePxA3E9MEfzHQJw/slZ/Ty7x+f7PPl2UIexlQS7zANo59gM4rJc6WFgnp+Rv6XZzIwB/1/1oMSKbmZPfGlnXqUqg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7300.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(396003)(39850400004)(66446008)(64756008)(66556008)(66476007)(66946007)(8676002)(8936002)(26005)(76116006)(33656002)(9686003)(558084003)(2906002)(6506007)(86362001)(71200400001)(4270600006)(7366002)(7416002)(7276002)(7336002)(7406005)(55016002)(478600001)(44832011)(316002)(4326008)(7696005)(52536014)(54906003)(110136005)(186003)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: LmyEy8+AlZr0dH3UtrHGN0gD8GkdEEPWI6n0X0Rk9JUl98O2+sB6+ZwOqVeIHcBYcxrKBjxFhjCb8dqfdB/GiKbLBrA0yyNdIPWoaTbTwIsLEJ1DBRVPEmlTd0blnrcQx9YbXzGI8eyhzke/H8OTBO8bY+bql8ELMv1wkrZDm9dzENVDiUbtBX3wGEYJYG+bR31awYvDh9k6VGUIH/Su5TWldhdNDcKPXkVmWmEM5d0sA1jF3QTyzY988DJJR6tJME+CvU93PQruGK+n3wrUZcn5HsmXC5AHnv3gFK+mMmGJRkDvfOtHItzNPyLoxDHdtbOd4hBKu9Eb6rw5XJ/PpWTH9gNj2Q2CaloNw7FWZfRwJ1nvMg/iUFq+eRpwELo1IANZ/LbdrOw/dIvuKtzdPbLUKTlyUm4qOqJjYqDF/OJ+LuAGU+BiWOBseSX7crvpQWuinc5ZbXMMgn1dkD/01Xls89DDDRP7Iw1ciEB4Im/5vXLnyyySSOlgIAQayat+uTuzaoD3U6VWZ3Kk8LLN5AeIKfYe5W6q7eUbyqOl1eeCC03y1tBciW6p5XccP84xOHvRLzjPponAsdRrafe1wbkM0cZhg0BrYnwpUtwg8KWqJ85Mk1ba56CTOL8R6NfE4LQ7lQBUVRpnNQl92xjpng==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201028083017.611810-1-vkoul@kernel.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7300.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab56f412-7e05-43a2-c8a2-08d87d2adaf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2020 23:23:48.6948
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8UMbaQT8WSLKAWQn2nnLbTWgleWz5CJPLtzNg9ghlA+i2S0NB1XdlA7k+9UyIpcqSYEp8v3iM7Y8S+CVX+++sQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3364
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 02:00:16PM +0530, Vinod Koul wrote:
-> Add device tree binding Documentation details for Qualcomm SDX55
-> pinctrl driver.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  | 144 ++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..2dd045a2fb03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml
-> @@ -0,0 +1,144 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdx55-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SDX55 TLMM block
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  SDX55 platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdx55-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Specifies the TLMM summary IRQ
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    description:
-> +      Specifies the PIN numbers and Flags, as defined in defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  wakeup-parent:
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '^.*$':
-> +    if:
-> +      type: object
-> +    then:
-
-For new bindings, just name the nodes '-pins$' and forget this hack.
-
-> +      properties:
-> +        pins:
-> +          description:
-> +            List of gpio pins affected by the properties specified in this
-> +            subnode.
-> +          items:
-> +            oneOf:
-> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
-> +              - enum: [ ufs_reset, sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data ]
-> +          minItems: 1
-> +          maxItems: 36
-> +
-> +        function:
-> +          description:
-> +            Specify the alternative function to be configured for the specified
-> +            pins.
-> +
-> +          enum: [ adsp_ext, atest, audio_ref, bimc_dte0, bimc_dte1, blsp_i2c1,
-> +                  blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_spi1, blsp_spi2,
-> +                  blsp_spi3, blsp_spi4, blsp_uart1, blsp_uart2, blsp_uart3,
-> +                  blsp_uart4, char_exec, coex_uart, coex_uart2, cri_trng,
-> +                  cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0,
-> +                  ebi0_wrcdc, ebi2_a, ebi2_lcd, emac_gcc0, emac_gcc1,
-> +                  emac_pps0, emac_pps1, ext_dbg, gcc_gp1, gcc_gp2, gcc_gp3,
-> +                  gcc_plltest, gpio, i2s_mclk, jitter_bist, ldo_en, ldo_update,
-> +                  mgpi_clk, m_voc, native_char, native_char0, native_char1,
-> +                  native_char2, native_char3, native_tsens, native_tsense,
-> +                  nav_gpio, pa_indicator, pcie_clkreq, pci_e, pll_bist, pll_ref,
-> +                  pll_test, pri_mi2s, prng_rosc, qdss_cti, qdss_gpio,
-> +                  qdss_gpio0, qdss_gpio1, qdss_gpio2, qdss_gpio3, qdss_gpio4,
-> +                  qdss_gpio5, qdss_gpio6, qdss_gpio7, qdss_gpio8, qdss_gpio9,
-> +                  qdss_gpio10, qdss_gpio11, qdss_gpio12, qdss_gpio13,
-> +                  qdss_gpio14, qdss_gpio15, qdss_stm0, qdss_stm1, qdss_stm2,
-> +                  qdss_stm3, qdss_stm4, qdss_stm5, qdss_stm6, qdss_stm7,
-> +                  qdss_stm8, qdss_stm9, qdss_stm10, qdss_stm11, qdss_stm12,
-> +                  qdss_stm13, qdss_stm14, qdss_stm15, qdss_stm16, qdss_stm17,
-> +                  qdss_stm18, qdss_stm19, qdss_stm20, qdss_stm21, qdss_stm22,
-> +                  qdss_stm23, qdss_stm24, qdss_stm25, qdss_stm26, qdss_stm27,
-> +                  qdss_stm28, qdss_stm29, qdss_stm30, qdss_stm31, qlink0_en,
-> +                  qlink0_req, qlink0_wmss, qlink1_en, qlink1_req, qlink1_wmss,
-> +                  spmi_coex, sec_mi2s, spmi_vgi, tgu_ch0, uim1_clk, uim1_data,
-> +                  uim1_present, uim1_reset, uim2_clk, uim2_data, uim2_present,
-> +                  uim2_reset, usb2phy_ac, vsense_trigger ]
-> +
-> +        drive-strength:
-> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +          default: 2
-> +          description:
-> +            Selects the drive strength for the specified pins, in mA.
-> +
-> +        bias-pull-down: true
-> +
-> +        bias-pull-up: true
-> +
-> +        bias-disable: true
-> +
-> +        output-high: true
-> +
-> +        output-low: true
-> +
-> +      required:
-> +        - pins
-> +        - function
-> +
-> +      additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        pinctrl@1f00000 {
-> +                compatible = "qcom,sdx55-pinctrl";
-> +                reg = <0x0f100000 0x300000>;
-> +                interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
-> +                #interrupt-cells = <2>;
-> +                interrupt-controller;
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +        };
-> +
-> +...
-> -- 
-> 2.26.2
-> 
+QWNrZWQtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4gDQoNCkZvcjoNCkRvY3Vt
+ZW50YXRpb24vQUJJL3Rlc3RpbmcvdXNiLWNoYXJnZXItdWV2ZW50DQoNClBldGVyDQo=
