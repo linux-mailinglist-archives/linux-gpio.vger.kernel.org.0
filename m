@@ -2,179 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8DB22A0B79
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 17:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 277772A0D74
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 19:33:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgJ3QnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Oct 2020 12:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgJ3QnG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Oct 2020 12:43:06 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECB4C0613DA
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Oct 2020 09:43:05 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id x20so7034486ilj.8
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Oct 2020 09:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NZmqGfCg08N6iXx9q7TVWlSnhQqIDOwOjzOwbvXDxjI=;
-        b=INVfZz/fkvsZivy8jdRFY4jjuumPUnT03fIMmAZxhr2j3OQtTxmqWeMui9FFLMvZFz
-         QB2ePhBsJkuNysGjMHbU9DiLLxlLmss4JFzjBmUNAkJoiiGzYBFH/upOKm0AUQMizu+W
-         okAB9PgkVOM5lyq7RfM3eZWziu4Lw6xFmIPsA3WEdWrepzCLkMsPGFysW4PIdG4Ix46W
-         ABDHiqA089OjzR7YGXqWWnY73UPmGi5ssu5dObic6I8EipSHtDNSFTIEabkYZFtOUw53
-         gKZFvyCe8mIA4cQPQ5Ji/NguzzOPrnGBpJ5jXdtWnz2BLO+k8PETRjkg1JznRZelvTOY
-         uyUg==
+        id S1727182AbgJ3Sc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Oct 2020 14:32:59 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39274 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgJ3Sc6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Oct 2020 14:32:58 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z16so1243124otq.6;
+        Fri, 30 Oct 2020 11:32:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NZmqGfCg08N6iXx9q7TVWlSnhQqIDOwOjzOwbvXDxjI=;
-        b=MMfTiKrAUhTUwic5DoKIGxayLvumqOc+hcTzB6UA7rD6F5b2U2XcAlLtYXnpSEaXzk
-         tulU8m3fuu8Ytz2/AxRTmcGm1bBg7m7ovhQwRU/csUr1+XOJYQg6t/NHjGy/pHZfd2lC
-         EAvbyRSIyzdUII3gCv8tjZLOwkA2zbhfzpZ69LLG0eUhVcuuUodnFHoa73lPB/KWve0Z
-         XgpHRkdsLQYaBcbnL05Yahu4wtZ1JaCcvRWaTr8sqHlfIF3UriTepyj1AVgLBNH6gT+e
-         0bsx2L/WGhjQL1MRrJh3ct5mL4BDTHgDbQTXK4/MX64N13viMKktNbA8+xF9ep5zSnnx
-         XS4Q==
-X-Gm-Message-State: AOAM530nJfjlf6SXlF1FuEWV4BjuHHDk+eezUfBuDIZAZGUqX0DH2ID0
-        x5ZmtPC//GNeuKZacKj13ezx2FHs4QGTceSvJH+GOg==
-X-Google-Smtp-Source: ABdhPJwYf7SWuKIRh8xsBOBodbVLmuU+KCM1QaVpZsez95JZOYKTbDYung3PLxm+lfmttII+vBXdnzsUUs8NHjrseg0=
-X-Received: by 2002:a92:6403:: with SMTP id y3mr2528711ilb.72.1604076184121;
- Fri, 30 Oct 2020 09:43:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U11U1RUcXJQMVTzn4DAQFEhylkdQvUKwt78eo7W7jVI=;
+        b=CChnYa7ay8Edl5BXAL6DeaFawt2YwH85MshKc2TTcZhdZdZYg9VYxtFY+PnCJRbY2A
+         oufEzXsPm8o/MFQONrWpO/BhFC3BnlkLHhW/XSELJSzkdI/13ZvQCwjKVODRvaQoJhg0
+         +88we/St3XurhwdejHwwKKHk7m7oVoS6C4UfgUnGyVa7GRQiC3dkb88LjMUqPKam9U3g
+         uSQhrcBo7/RrdKz1iaOIIkwzWLzcDKTAGtxbFg39muL6zJHChbeL09Ko3MRfu/3K92He
+         eSeHsmz2Dv+Y9EiK8ZaKrtQa9RbGbZqqa31b0+oGh8AePMmL18IQTHtJWB92BN8T563K
+         MBbg==
+X-Gm-Message-State: AOAM533Plz2cSIlXT8JPuAuC1Fdn8U/2fzBOGoED6c6JeiPM3tGyC7+g
+        /KCCVnk+AS5cRwJspFCOBg==
+X-Google-Smtp-Source: ABdhPJydLUAT3cGVwlYDKmLSTYmAxhTmAahEfuKb37pqdf9FFUjUpuAye1WCcA8uXXxsDHaC/qDyow==
+X-Received: by 2002:a05:6830:1089:: with SMTP id y9mr248688oto.191.1604082778089;
+        Fri, 30 Oct 2020 11:32:58 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u22sm1485907oor.13.2020.10.30.11.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Oct 2020 11:32:57 -0700 (PDT)
+Received: (nullmailer pid 4112164 invoked by uid 1000);
+        Fri, 30 Oct 2020 18:32:56 -0000
+Date:   Fri, 30 Oct 2020 13:32:56 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     kyarlagadda@nvidia.com, kthota@nvidia.com,
+        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
+        mmaddireddy@nvidia.com, linux-tegra@vger.kernel.org,
+        robh+dt@kernel.org, sagar.tv@gmail.com,
+        amurray@thegoodpenguin.co.uk, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, jckuo@nvidia.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Fix entry name for I/O High Voltage
+ property
+Message-ID: <20201030183256.GA4112134@bogus>
+References: <20201026063902.14744-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <cover.1604042072.git.mchehab+huawei@kernel.org> <5bc78e5b68ed1e9e39135173857cb2e753be868f.1604042072.git.mchehab+huawei@kernel.org>
-In-Reply-To: <5bc78e5b68ed1e9e39135173857cb2e753be868f.1604042072.git.mchehab+huawei@kernel.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 30 Oct 2020 10:42:53 -0600
-Message-ID: <CANLsYkxc2uzA57Hg5OX31JOx08JCZfynzebjABv=6H01796xGA@mail.gmail.com>
-Subject: Re: [PATCH v2 31/39] docs: ABI: cleanup several ABI documents
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
-        =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Chao Yu <chao@kernel.org>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        Colin Cross <ccross@android.com>, Dan Murphy <dmurphy@ti.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        David Sterba <dsterba@suse.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Jonas Meurer <jonas@freesources.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Kranthi Kuntala <kranthi.kuntala@intel.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Oleh Kravchenko <oleg@kaa.org.ua>, Pavel Machek <pavel@ucw.cz>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Roman Sudarikov <roman.sudarikov@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Vineela Tummalapalli <vineela.tummalapalli@intel.com>,
-        Wu Hao <hao.wu@intel.com>, ceph-devel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-f2fs-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201026063902.14744-1-vidyas@nvidia.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Oct 2020 at 01:41, Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> There are some ABI documents that, while they don't generate
-> any warnings, they have issues when parsed by get_abi.pl script
-> on its output result.
->
-> Address them, in order to provide a clean output.
->
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
-> Reviewed-by: Tom Rix <trix@redhat.com> # for fpga-manager
-> Reviewed-By: Kajol Jain<kjain@linux.ibm.com> # for sysfs-bus-event_source-devices-hv_gpci and sysfs-bus-event_source-devices-hv_24x7
-> Acked-by: Oded Gabbay <oded.gabbay@gmail.com> # for Habanalabs
-> Acked-by: Vaibhav Jain <vaibhav@linux.ibm.com> # for sysfs-bus-papr-pmem
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Mon, 26 Oct 2020 12:09:01 +0530, Vidya Sagar wrote:
+> Correct the name of the I/O High Voltage Property from
+> 'nvidia,io-high-voltage' to 'nvidia,io-hv'.
+> 
+> Fixes: 2585a584f844 ("pinctrl: Add Tegra194 pinctrl DT bindings")
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
+>  .../devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt      | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
->  .../testing/sysfs-bus-coresight-devices-etb10 |   5 +-
-
-For the CoreSight part:
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
