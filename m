@@ -2,184 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 870A929FDDE
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 07:33:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A6129FE6F
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 08:29:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgJ3Gdq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Oct 2020 02:33:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48006 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725355AbgJ3Gdq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Oct 2020 02:33:46 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09U6Ud2r194419;
-        Fri, 30 Oct 2020 02:33:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=a5fAtWaCtw2lw0dSgLdjA+CSR8i93E5P4UH6V5O3U0U=;
- b=ASUzYsr9w5PpIlo1FB1Ujvp4AT5YXH/OUre7Gkp3TDu90qGcpRmvyPjU0AUUYnRxmqG0
- 7vmmN2sP3M7cVc/O+Rda3iOTvpOVji7shv3DHKfGIdcDJXRZZuSMGr6NLUnJbjG+tBFp
- Juc6oDm95+h5SspcMspge/3HT+LWaYZ9I0uL4oB9nGfzicRJ6Wsfl7zvItlgDNcyTWt4
- nnY2QLVyYwMf//UzG7l+fzLLAO4V6HLrUQRGqTEM11EUfSLTfK3Sys6tWbG+1CfiTrPZ
- D3H7tFAQ317lT4utCRZMHCVhNuIYSoO8jmtflcv4DnHKDeKyWHhyzdUDndjk605C6MTD VA== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34g15h5cq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Oct 2020 02:33:44 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09U6O1Zx017390;
-        Fri, 30 Oct 2020 06:33:42 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 34f7s3s051-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Oct 2020 06:33:42 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09U6Xc8235455466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Oct 2020 06:33:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA5E7AE04D;
-        Fri, 30 Oct 2020 06:33:37 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF445AE055;
-        Fri, 30 Oct 2020 06:33:04 +0000 (GMT)
-Received: from vajain21.in.ibm.com (unknown [9.79.209.23])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 30 Oct 2020 06:33:04 +0000 (GMT)
-Received: by vajain21.in.ibm.com (sSMTP sendmail emulation); Fri, 30 Oct 2020 12:03:03 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Peter Chen <peter.chen@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        dri-devel@lists.freedesktop.org, Pavel Machek <pavel@ucw.cz>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        ceph-devel@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-acpi@vger.kernel.org,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ohad Ben-Cohen <ohad@wizery.com>, linux-pm@vger.kernel.org,
-        Simon Gaiser <simon@invisiblethingslab.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wu Hao <hao.wu@intel.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Marek =?utf-8?Q?Marczykowski-G=C3=B3r?= =?utf-8?Q?ecki?= 
-        <marmarek@invisiblethingslab.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Len Brown <lenb@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-media@vger.kernel.org,
-        Frederic@d06av26.portsmouth.uk.ibm.com,
-        "Barrat <fbarrat"@linux.ibm.com
-Subject: Re: [PATCH 30/33] docs: ABI: cleanup several ABI documents
-In-Reply-To: <95ef2cf3a58f4e50f17d9e58e0d9440ad14d0427.1603893146.git.mchehab+huawei@kernel.org>
-References: <cover.1603893146.git.mchehab+huawei@kernel.org>
- <95ef2cf3a58f4e50f17d9e58e0d9440ad14d0427.1603893146.git.mchehab+huawei@kernel.org>
-Date:   Fri, 30 Oct 2020 12:03:03 +0530
-Message-ID: <87k0v8jk9s.fsf@vajain21.in.ibm.com>
+        id S1725933AbgJ3H3q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Oct 2020 03:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgJ3H3p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Oct 2020 03:29:45 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78599C0613D4
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Oct 2020 00:29:45 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id n15so4759293otl.8
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Oct 2020 00:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x1HNzlzE8Xe7BCZntASgYibGuSDss2gCPnUeL9DbFBE=;
+        b=cKBxh4rpRRVGV2Cb957tV9l6Ra66YSurvzXoClIOYdQY/ei1i3CbqFC9aTTrIw1L2t
+         IpYOM8EvHbLuViHSLyypWh/CEEPPMt/liBjWKnCPQMD30F/43wG5NVHyb4FzaOpJhcp4
+         vJLo2CfsImacHJBRSJ2iNDGsIhMyu/NJIo8oKczVxCpyg/gj3me0SgywvMjlIxPPqi0o
+         ovmtQmRY6jxcKtuZeFQMsyx0iW+FJTAppCCcsB9BnwpJ/vB842bmFm0/xsaWWG/gtJ6m
+         JlGg0yAp7p7+OdRV5nASm50hm8DWLYwP6cgXcNN58QQVzEQwQ0yyr84LGcMQ60F24wdu
+         DDDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x1HNzlzE8Xe7BCZntASgYibGuSDss2gCPnUeL9DbFBE=;
+        b=su+0bn7j2U3HYah8MW/IB94aofreFl7dId0ekYn14ftkiKl1S5C5y4Bw6tpimLml6D
+         6JQSL66ky0RTczPFaWVZLuVvifhqZMLI5JRoNxFwcW974hyYP5WHrXe706JCiWWmByLr
+         g0yOxcve8EylxF1RIB9DqPNqeOzUeuxStNqfE/JD9heFXRecHsMhZGlTPTRzop4x0FF9
+         CUWH/+TCzH4PTj+t4f8yjGcCoYjSriD62KznxbFIo+fgc/aMjh1vUtFz88cMMZKVRD5B
+         4jucpgqMK51qUlrT1D6UVb5Dr9J7dTZiRcY2FGXBQ+bawDPo71IiOF2lxQwu0e8i4olj
+         iwMw==
+X-Gm-Message-State: AOAM533RF1Z9SKdYj28islPYC9KH2Hq69IaCMAb8RoEpHljbscrZ8I/f
+        RTGQxxaoZIREWkDy9wpX4W3oU9zMs/GEy+awA5Lq5A==
+X-Google-Smtp-Source: ABdhPJyPjxqNT05hEOD1VR+nwGQUXUkiOTyHEMAQa+LIPzla6zfvuL4s6VnTUq6JP2szt+CYg3pvlE06kyUuNT13sjg=
+X-Received: by 2002:a05:6830:400c:: with SMTP id h12mr738486ots.102.1604042984696;
+ Fri, 30 Oct 2020 00:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-29_12:2020-10-29,2020-10-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=2 bulkscore=0 adultscore=0 mlxscore=0
- spamscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010300046
+References: <20201030061242.92510-1-john.stultz@linaro.org> <20201030061242.92510-2-john.stultz@linaro.org>
+In-Reply-To: <20201030061242.92510-2-john.stultz@linaro.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 30 Oct 2020 00:29:32 -0700
+Message-ID: <CALAqxLVQDEQGfjhyu9y-jzLC727qWdj2h-bDHzag0K3o-niFBw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> diff --git a/drivers/net/wireless/ath/ath10k/Kconfig b/drivers/net/wireless/ath/ath10k/Kconfig
+> index 40f91bc8514d8..a490e78890017 100644
+> --- a/drivers/net/wireless/ath/ath10k/Kconfig
+> +++ b/drivers/net/wireless/ath/ath10k/Kconfig
+> @@ -44,6 +44,7 @@ config ATH10K_SNOC
+>         tristate "Qualcomm ath10k SNOC support"
+>         depends on ATH10K
+>         depends on ARCH_QCOM || COMPILE_TEST
+> +       depends on QCOM_QCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
 
-> There are some ABI documents that, while they don't generate
-> any warnings, they have issues when parsed by get_abi.pl script
-> on its output result.
->
-> Address them, in order to provide a clean output.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Doh. Apologies! I flubbed this line (SCM not QCM).  I'll fix and
+resend tomorrow.
 
-<snip>
-> diff --git a/Documentation/ABI/testing/sysfs-bus-papr-pmem b/Documentation/ABI/testing/sysfs-bus-papr-pmem
-> index c1a67275c43f..8316c33862a0 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-papr-pmem
-> +++ b/Documentation/ABI/testing/sysfs-bus-papr-pmem
-> @@ -11,19 +11,26 @@ Description:
->  		at 'Documentation/powerpc/papr_hcalls.rst' . Below are
->  		the flags reported in this sysfs file:
->  
-> -		* "not_armed"	: Indicates that NVDIMM contents will not
-> +		* "not_armed"
-> +				  Indicates that NVDIMM contents will not
->  				  survive a power cycle.
-> -		* "flush_fail"	: Indicates that NVDIMM contents
-> +		* "flush_fail"
-> +				  Indicates that NVDIMM contents
->  				  couldn't be flushed during last
->  				  shut-down event.
-> -		* "restore_fail": Indicates that NVDIMM contents
-> +		* "restore_fail"
-> +				  Indicates that NVDIMM contents
->  				  couldn't be restored during NVDIMM
->  				  initialization.
-> -		* "encrypted"	: NVDIMM contents are encrypted.
-> -		* "smart_notify": There is health event for the NVDIMM.
-> -		* "scrubbed"	: Indicating that contents of the
-> +		* "encrypted"
-> +				  NVDIMM contents are encrypted.
-> +		* "smart_notify"
-> +				  There is health event for the NVDIMM.
-> +		* "scrubbed"
-> +				  Indicating that contents of the
->  				  NVDIMM have been scrubbed.
-> -		* "locked"	: Indicating that NVDIMM contents cant
-> +		* "locked"
-> +				  Indicating that NVDIMM contents cant
->  				  be modified until next power cycle.
->  
->  What:		/sys/bus/nd/devices/nmemX/papr/perf_stats
-> @@ -51,4 +58,4 @@ Description:
->  		* "MedWDur " : Media Write Duration
->  		* "CchRHCnt" : Cache Read Hit Count
->  		* "CchWHCnt" : Cache Write Hit Count
-> -		* "FastWCnt" : Fast Write Count
-> \ No newline at end of file
-> +		* "FastWCnt" : Fast Write Count
-<snip>
-
-Thanks,
-
-I am fine with proposed changes to sysfs-bus-papr-pmem.
-
-Acked-by: Vaibhav Jain <vaibhav@linux.ibm.com> # for sysfs-bus-papr-pmem
-
+thanks
+-john
