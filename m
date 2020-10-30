@@ -2,70 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 277772A0D74
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 19:33:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5612A0D84
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Oct 2020 19:36:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbgJ3Sc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Oct 2020 14:32:59 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39274 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgJ3Sc6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Oct 2020 14:32:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z16so1243124otq.6;
-        Fri, 30 Oct 2020 11:32:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U11U1RUcXJQMVTzn4DAQFEhylkdQvUKwt78eo7W7jVI=;
-        b=CChnYa7ay8Edl5BXAL6DeaFawt2YwH85MshKc2TTcZhdZdZYg9VYxtFY+PnCJRbY2A
-         oufEzXsPm8o/MFQONrWpO/BhFC3BnlkLHhW/XSELJSzkdI/13ZvQCwjKVODRvaQoJhg0
-         +88we/St3XurhwdejHwwKKHk7m7oVoS6C4UfgUnGyVa7GRQiC3dkb88LjMUqPKam9U3g
-         uSQhrcBo7/RrdKz1iaOIIkwzWLzcDKTAGtxbFg39muL6zJHChbeL09Ko3MRfu/3K92He
-         eSeHsmz2Dv+Y9EiK8ZaKrtQa9RbGbZqqa31b0+oGh8AePMmL18IQTHtJWB92BN8T563K
-         MBbg==
-X-Gm-Message-State: AOAM533Plz2cSIlXT8JPuAuC1Fdn8U/2fzBOGoED6c6JeiPM3tGyC7+g
-        /KCCVnk+AS5cRwJspFCOBg==
-X-Google-Smtp-Source: ABdhPJydLUAT3cGVwlYDKmLSTYmAxhTmAahEfuKb37pqdf9FFUjUpuAye1WCcA8uXXxsDHaC/qDyow==
-X-Received: by 2002:a05:6830:1089:: with SMTP id y9mr248688oto.191.1604082778089;
-        Fri, 30 Oct 2020 11:32:58 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u22sm1485907oor.13.2020.10.30.11.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2020 11:32:57 -0700 (PDT)
-Received: (nullmailer pid 4112164 invoked by uid 1000);
-        Fri, 30 Oct 2020 18:32:56 -0000
-Date:   Fri, 30 Oct 2020 13:32:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     kyarlagadda@nvidia.com, kthota@nvidia.com,
-        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
-        mmaddireddy@nvidia.com, linux-tegra@vger.kernel.org,
-        robh+dt@kernel.org, sagar.tv@gmail.com,
-        amurray@thegoodpenguin.co.uk, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jckuo@nvidia.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Fix entry name for I/O High Voltage
- property
-Message-ID: <20201030183256.GA4112134@bogus>
-References: <20201026063902.14744-1-vidyas@nvidia.com>
+        id S1726704AbgJ3Sgv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Oct 2020 14:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgJ3Sgv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Oct 2020 14:36:51 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52FAC20797;
+        Fri, 30 Oct 2020 18:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604083010;
+        bh=Ij7toGsdodJH+g5af0r9MiYPy/qpAd3YN5F+RhUxgsY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2DVdS4mHCoUE4JHIUSmVHAmvB594iwVT4qjbLAdq0KaYWtLmkAcQzyhvgZg75ag0n
+         PEWhdDNqSIOTh1JMt0AAzcJ00Ze5LokKTaV/So8QMlv7X6uZVpJF15tiGGivE0hh7O
+         RCV+AWVeb5MnfC3QnfBRznxcfwWg7DAuaQExdjBQ=
+Received: by mail-ed1-f53.google.com with SMTP id k9so7681037edo.5;
+        Fri, 30 Oct 2020 11:36:50 -0700 (PDT)
+X-Gm-Message-State: AOAM531qj2Y3/x4fuECKir47rnu8tfT16djT+aiYZlfVPKjsPGrcTjq1
+        /GPNzpkXATT1Xqt488nP4huFA9iqXA6ckRyM0WE=
+X-Google-Smtp-Source: ABdhPJzlGGUy2WAzm1IY09sGJUjxwv5CeNCRC+4gAdJEbqaWeaJ5HOn9h3HyxBxr7WDmVj09M2PsHz3ShD//bDdRLiY=
+X-Received: by 2002:a05:6402:10d5:: with SMTP id p21mr3957562edu.327.1604083008757;
+ Fri, 30 Oct 2020 11:36:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201026063902.14744-1-vidyas@nvidia.com>
+References: <20201016204019.2606-1-linux@fw-web.de> <20201016204019.2606-4-linux@fw-web.de>
+ <CACRpkdZrUbq6h4uDoxfN70mzfbeWAeqo5KAdTWhiHbsb7VTbJg@mail.gmail.com>
+In-Reply-To: <CACRpkdZrUbq6h4uDoxfN70mzfbeWAeqo5KAdTWhiHbsb7VTbJg@mail.gmail.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Fri, 30 Oct 2020 11:36:37 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzosDB1V-b5ek1epzxkvvuow-7YCDHsgS=2WsvT_aZYHdg@mail.gmail.com>
+Message-ID: <CAGp9LzosDB1V-b5ek1epzxkvvuow-7YCDHsgS=2WsvT_aZYHdg@mail.gmail.com>
+Subject: Re: [RFC 3/3] pinctl: mt7622: drop pwm ch7 as mt7622 only has 6 channels
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 26 Oct 2020 12:09:01 +0530, Vidya Sagar wrote:
-> Correct the name of the I/O High Voltage Property from
-> 'nvidia,io-high-voltage' to 'nvidia,io-hv'.
-> 
-> Fixes: 2585a584f844 ("pinctrl: Add Tegra194 pinctrl DT bindings")
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  .../devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> > mt7622 is reported by mediatek to have only 6 pwm channels
+> > so drop pindefines for 7th channel
+> >
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+>
+> I can merge this patch to the pinctrl tree if I get some kind of
+> review response from one of the Mediatek maintainers.
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
+After confirming with the internal team, MT7622 actually does not have
+the 7th channel. Thanks for Frank's catchup and patch.
+
+Acked-by: Sean Wang <sean.wang@kernel.org>
+
+> The rest should probably go through ARM SoC.
+>
+> Yours,
+> Linus Walleij
