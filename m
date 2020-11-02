@@ -2,84 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B5AD2A303D
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 17:50:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDFDC2A33A7
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 20:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgKBQuf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Nov 2020 11:50:35 -0500
-Received: from mga06.intel.com ([134.134.136.31]:17706 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbgKBQue (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Nov 2020 11:50:34 -0500
-IronPort-SDR: jOrDihpYXk+DapDX66BK4ctBV96zm//TwVM6UlWv8cN0E7jfPDCRQxRs01ws6HY0yhUqy2t2Lv
- nI0jR4efAtiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="230545713"
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="230545713"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 08:50:33 -0800
-IronPort-SDR: wFNEZC1oxgGuE8oPQ4DjP0OpoDQ9BnWkVTK/7Wuulzj8lIR9MwtVtplre6eUcZR/p4mNXmiAAk
- +CUqMjUtO7bg==
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="528080607"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 08:50:30 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kZd3M-003GMN-AI; Mon, 02 Nov 2020 18:51:32 +0200
-Date:   Mon, 2 Nov 2020 18:51:32 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus@black.fi.intel.com, Walleij@black.fi.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] gpiolib: acpi: Respect bias settings for
- GpioInt() resource
-Message-ID: <20201102165132.GR4077@smile.fi.intel.com>
-References: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com>
- <20201022170319.GJ4077@smile.fi.intel.com>
- <CAHp75VfqQ97oLfRe03pkAbmoS6hq3P7ZScS7Jr1Y=ZAYgWmP7w@mail.gmail.com>
+        id S1725852AbgKBTFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Nov 2020 14:05:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgKBTFe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Nov 2020 14:05:34 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93ABC0617A6
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Nov 2020 11:05:34 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id r10so11589201pgb.10
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Nov 2020 11:05:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vcOhR29x/3SnW8U2CiNt+tjrEtmXX7l2/92ojb4Pxpk=;
+        b=DpaxtWiZMjYbNo0DhrRLPVPSP/knuZbX22hAKpoM8DDfByERoFXxP2piGgMQDgO8FB
+         QpMU2sUHj4oBBdInmgoStMt9hb9Tvkrab3cxlKadC6i3L+G7/IEZDzMbR3+YbxFoU4PN
+         iRrwWgGNFS7NeorZ7Nkl9OTuX3fy2gAg/PjLKxHUSeJqeQsWJ26mwcOAV+faia2Miugq
+         qzrIm9NdoX2QE6aWnu7m4SZwchqhGiUwL9M+Omn9gd3IKO26JkF7gI3xTdiYZ39Zh+LL
+         qzmHCPf9s3uO5KfbHNXDcsyGeUxP7JnW6N6vB3ZRvwLVZPF516V0RilwrDI7NBkZAo7t
+         Geng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vcOhR29x/3SnW8U2CiNt+tjrEtmXX7l2/92ojb4Pxpk=;
+        b=hINAUA6o5P2iGnKoPgRJt7FB9XUAjlSMwWpkHU8h2GpJx7MVgHQH05iEMkILqhPrXW
+         YIYs2w9U7HpbxQy9PYZjIQtZ8Su7TKDTcSkCcbIxX7ZSgR76ahbmCDHW7ye38aN+0Nlb
+         TTvDDXRJuo+OQHPfQfLqb/qfAHUHyd5eal1EtDUhtnis9kWo/UgQEx5riIyuMuSVk2+J
+         CfNkwg/xhkmbr00LrbPDvCarrV9rQbukpSIgg+QR7GLkEJ7uqeta12IQm1tyLhE/g+2U
+         GynJJFvYoSc+uXlPSWQguMS6xkgjVnSxRV7ZMqgoxZNsVQGO3iZ/SrBt8EQ3RSHPB2RG
+         1adg==
+X-Gm-Message-State: AOAM531CflcAjUc3eQX055xTLtdlviIkUJSWlc8RgejRKpeVmYVSlRTv
+        PVhzUOPp3St8UD0Z4UgJrVa9nm4WcaCr4ZuXKw07UY5Ybx0=
+X-Google-Smtp-Source: ABdhPJwPsbRWemfkUlObMtOEO+o6kF8HnAmoiWPrvzISru+uRYkWEuV0YWL7lyNWyivDdL7ZHYZPxLy4Y0igrwHoNm0=
+X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr19506158pjb.228.1604343934441;
+ Mon, 02 Nov 2020 11:05:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfqQ97oLfRe03pkAbmoS6hq3P7ZScS7Jr1Y=ZAYgWmP7w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
+ <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com> <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
+ <20201014042420.fkkyabmrkiekpmfw@Rk> <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
+ <20201026225400.37almqey2wxyazkn@Rk> <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
+ <CAHp75VcwiGREBUJ0A06EEw-SyabqYsp+dqs2DpSrhaY-2GVdAA@mail.gmail.com>
+ <86963e59-3661-c43c-4e08-a0f9b9e7ed07@redhat.com> <CAHp75VcEr0AcdM2+ig5neMQn+5cfuttpFuAak7CkSO-qVjPeCw@mail.gmail.com>
+ <20201030045421.si3r5zsbeeyhkwns@Rk>
+In-Reply-To: <20201030045421.si3r5zsbeeyhkwns@Rk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 2 Nov 2020 21:06:23 +0200
+Message-ID: <CAHp75Vej=LT06MEmoAvAxrHY7zzvPKEJLe03C3BN5X4EZos_JA@mail.gmail.com>
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 04:41:14PM +0200, Andy Shevchenko wrote:
-> On Thu, Oct 22, 2020 at 9:15 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Oct 22, 2020 at 07:58:45PM +0300, Andy Shevchenko wrote:
-> 
-> > Missed comment as per v1:
-> >
-> > This one highly depends on Intel pin control driver changes (for now [1],
-> > but might be more), so it's probably not supposed to be backported (at least
-> > right now).
-> >
-> > [1]: https://lore.kernel.org/linux-gpio/20201014104638.84043-1-andriy.shevchenko@linux.intel.com/T/
-> 
-> I probably have to elaborate what above implies from integration p.o.v.
-> 
-> I think the best way is to collect tags from GPIO maintainers and I
-> can incorporate this into our Intel pin control branch which I will
-> share with you as PR against GPIO and pin control subsystems.
-> 
-> I'm also all ears for alternatives.
+On Fri, Oct 30, 2020 at 6:54 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+> On Tue, Oct 27, 2020 at 06:09:49PM +0200, Andy Shevchenko wrote:
+> >On Tue, Oct 27, 2020 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 10/27/20 4:13 PM, Andy Shevchenko wrote:
 
-Linus, Bart, what do you think about this series?
+...
 
-(Linus, the patch 3/3 has been already applied by Bart as it's independent to ACPI anyway)
+> >> I see, so then the right thing to do for the bug which we are seeing
+> >> on some AMD platforms would be to honor the debounce setting I guess ?
+> >>
+> >> Can you and/or Mika write a patch(set) for this ?
+> >
+> >I will look at it, but meanwhile I would postpone until having a
+> >Mika's Ack on the action that my understanding and course of actions
+> >is correct.
+
+I will soon send a support patch against ACPI GPIO library code.
+
+> If you don't mind, let me write this patch(set) instead:)
+
+I leave to you whatever AMD code. It will suit our both interests :-)
+
+> I feel itchy
+> to fix this touchpad issue by myself after spending about a month of
+> my internship at Linux Foundation investigating this touchpad issue.
+> There are many enthusiastic Linux users waiting to get their touchpads
+> fixed and I could prioritize this task since I don't have other
+> obligations. I have provided a fallback solution [1] to save their
+> touchpads but it seems patches on gpiolib-acpi.c and pinctrl-amd could
+> reach mainline kernel much earlier.
+>
+> [1] https://lore.kernel.org/patchwork/patch/1323245/
+
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
