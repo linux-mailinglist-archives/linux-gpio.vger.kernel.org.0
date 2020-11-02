@@ -2,85 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE6D2A33E2
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 20:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE2FA2A33E3
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 20:17:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgKBTRy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Nov 2020 14:17:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:17567 "EHLO mga07.intel.com"
+        id S1726162AbgKBTR6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Nov 2020 14:17:58 -0500
+Received: from mga01.intel.com ([192.55.52.88]:31019 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgKBTRy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Nov 2020 14:17:54 -0500
-IronPort-SDR: rLorNOI9KrgQlANDhJs661G7b1oMyMicoX215WACiftmrJTp9jVL2lTQNY2Dfq6BzZDvjZm9tR
- mrOI+NMRY0DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="233106475"
+        id S1726088AbgKBTR6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Nov 2020 14:17:58 -0500
+IronPort-SDR: NRQUmyBAsSzeE2kOm3d59fw5wv0jxRRN0q0yRlXl/Q5AnxBBtbcrqBce5rkTR+EDcx4QqeYWdH
+ 4Y+vD3/hpSWg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="186776808"
 X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="233106475"
+   d="scan'208";a="186776808"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 11:17:53 -0800
-IronPort-SDR: I2SQYFoBbPOK4ri2eQ+r+OalfEBflq12UmM0v0hHKQY5Jui1nZtIXl3EOxRA0dW6f7XOpjtWdv
- YQXqjyGeZSpw==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 11:17:57 -0800
+IronPort-SDR: qGHFfzCDJqPumeXzWbDOsQTj9yuo9HmDzp9h1bVAhEj53sAu0YIiEp2rMm22MJWLZ7IDLtUKnV
+ G5+VASUPA09A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="526777974"
+   d="scan'208";a="336268092"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Nov 2020 11:17:50 -0800
+  by orsmga002.jf.intel.com with ESMTP; 02 Nov 2020 11:17:55 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 20CEFD2; Mon,  2 Nov 2020 21:17:49 +0200 (EET)
+        id 139F2D2; Mon,  2 Nov 2020 21:17:54 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Jamie McClymont <jamie@kwiius.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 0/4] gpiolib: acpi: pin configuration fixes
-Date:   Mon,  2 Nov 2020 21:17:18 +0200
-Message-Id: <20201102191722.81502-1-andriy.shevchenko@linux.intel.com>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 1/4] gpiolib: acpi: Respect bias settings for GpioInt() resource
+Date:   Mon,  2 Nov 2020 21:17:19 +0200
+Message-Id: <20201102191722.81502-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201102191722.81502-1-andriy.shevchenko@linux.intel.com>
+References: <20201102191722.81502-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are two fixes (and two small cleanups) that allow to take into
-consideration more parameters in ACPI, i.e. bias for GpioInt() and
-debounce time for GpioInt() and GpioIo() resources.
+In some cases the GpioInt() resource is coming with bias settings
+which may affect system functioning. Respect bias settings for
+GpioInt() resource by calling acpi_gpio_update_gpiod_*flags() API
+in acpi_dev_gpio_irq_get().
 
-The first patch highly depends on Intel pin control driver changes
-(for now [1], but might be more), so it's probably not supposed to be
-backported (at least right now).
+Reported-by: Jamie McClymont <jamie@kwiius.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-I think the best way is to collect tags from GPIO maintainers and I
-can incorporate this into our Intel pin control branch which I will
-share with you as PR against GPIO and pin control subsystems.
-
-I'm also all ears for alternatives.
-
-Cc: Jamie McClymont <jamie@kwiius.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-
-[1]: https://lore.kernel.org/linux-gpio/20201014104638.84043-1-andriy.shevchenko@linux.intel.com/T/
-
-Changelog v3:
-- dropped upstreamed OF patch
-- added debounce fix
-
-Andy Shevchenko (4):
-  gpiolib: acpi: Respect bias settings for GpioInt() resource
-  gpiolib: acpi: Use named item for enum gpiod_flags variable
-  gpiolib: acpi: Take into account debounce settings
-  gpiolib: acpi: Convert pin_index to be u16
-
- drivers/gpio/gpiolib-acpi.c | 23 ++++++++++++++++-------
- drivers/gpio/gpiolib-acpi.h |  2 ++
- 2 files changed, 18 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 834a12f3219e..3a39e8a93226 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -942,6 +942,7 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
+ 
+ 		if (info.gpioint && idx++ == index) {
+ 			unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
++			enum gpiod_flags dflags = GPIOD_ASIS;
+ 			char label[32];
+ 			int irq;
+ 
+@@ -952,8 +953,11 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
+ 			if (irq < 0)
+ 				return irq;
+ 
++			acpi_gpio_update_gpiod_flags(&dflags, &info);
++			acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
++
+ 			snprintf(label, sizeof(label), "GpioInt() %d", index);
+-			ret = gpiod_configure_flags(desc, label, lflags, info.flags);
++			ret = gpiod_configure_flags(desc, label, lflags, dflags);
+ 			if (ret < 0)
+ 				return ret;
+ 
 -- 
 2.28.0
 
