@@ -2,158 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E2012A213B
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Nov 2020 21:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 095952A2576
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 08:43:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgKAUIr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 1 Nov 2020 15:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
+        id S1728132AbgKBHnP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Nov 2020 02:43:15 -0500
+Received: from z5.mailgun.us ([104.130.96.5]:44684 "EHLO z5.mailgun.us"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgKAUIr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 1 Nov 2020 15:08:47 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        id S1728119AbgKBHnO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Nov 2020 02:43:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1604302994; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=JcW6i+Qb4VgBJvdLIWaHbAHYP0+oYiGUqaNaSh4Fg0Q=; b=egTt+G7hLtJSMTLD4PKTJzitL+ydo6z0uJ/BYyfFnyLevspqOEjwqczziB6zjN8cxaBYgreh
+ 6h0GlMKH7zmRYbpu3JyJ1Cyh64BtM3BdvMMMVbd1KAeg9Ocf/aqt3xECUWKSdqeisWn+WSNF
+ JO+F/Obu2pvTfYQ//2omkSOqny8=
+X-Mailgun-Sending-Ip: 104.130.96.5
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f9fb88803535904a02428dc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 02 Nov 2020 07:43:04
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31978C43391; Mon,  2 Nov 2020 07:43:04 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B491821556;
-        Sun,  1 Nov 2020 20:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604261326;
-        bh=SIgTKd0N8nhDYNLTmY/hNqgtdgwC5P3F+kkl30geDQo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xj0Vr0OloDVIiak+8o1E1ZLBMrKXcEo4oGp7EfwYC0n8Kp4Dj2FkYTNKxSsKxJuX3
-         PDij45UUKI9PerviJAQ4O9gxpo4a+NygiiUM2WxIOg4chxvcpnwS5Jri6fMDB/EbEd
-         G43s90Bhy4YpP9VNYRnLLVA7PyxThGlOPT3TeKaA=
-Received: by mail-qk1-f170.google.com with SMTP id s14so9806778qkg.11;
-        Sun, 01 Nov 2020 12:08:46 -0800 (PST)
-X-Gm-Message-State: AOAM5321odUFDCLBEcUX35/e8AAgzUYQ+yZ48fC/whiXvCyrMwPVGY6n
-        eWtZHlu3f6mh7F8Wkos+Uvx8So6thxT2CpvPHFA=
-X-Google-Smtp-Source: ABdhPJxhnYRlBcix9TfPYNQDdkwkJh1sZtaGL6/VFh5tr8iM23Pp8sqLnuw8PwNj+qi4eZfBqpSXNWo2ER1sOikOrEE=
-X-Received: by 2002:a05:620a:22c9:: with SMTP id o9mr12026019qki.286.1604261325894;
- Sun, 01 Nov 2020 12:08:45 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1603055402.git.syednwaris@gmail.com> <15a044d3ba23f00c31fd09437bdd3e5924bb91cd.1603055402.git.syednwaris@gmail.com>
- <CAK8P3a3f=fuq24QwNee3QgoMcSK5rcvLRpdTOWBZ9NJ4d-4bvA@mail.gmail.com> <20201101150033.GA68138@shinobu>
-In-Reply-To: <20201101150033.GA68138@shinobu>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Sun, 1 Nov 2020 21:08:29 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
-Message-ID: <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
-Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 194D5C433C6;
+        Mon,  2 Nov 2020 07:42:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 194D5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vinod Koul <vkoul@kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org, ath10k@lists.infradead.org
+Subject: Re: [PATCH v5 2/2] firmware: QCOM_SCM: Allow qcom_scm driver to be loadable as a permenent module
+References: <20201031003845.41137-1-john.stultz@linaro.org>
+        <20201031003845.41137-2-john.stultz@linaro.org>
+Date:   Mon, 02 Nov 2020 09:42:55 +0200
+In-Reply-To: <20201031003845.41137-2-john.stultz@linaro.org> (John Stultz's
+        message of "Sat, 31 Oct 2020 00:38:45 +0000")
+Message-ID: <87imaouruo.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 1, 2020 at 4:00 PM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
++ ath10k list
+
+John Stultz <john.stultz@linaro.org> writes:
+
+> Allow the qcom_scm driver to be loadable as a permenent module.
 >
-> On Thu, Oct 29, 2020 at 11:44:47PM +0100, Arnd Bergmann wrote:
-> > On Sun, Oct 18, 2020 at 11:44 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > >
-> > > This patch reimplements the xgpio_set_multiple() function in
-> > > drivers/gpio/gpio-xilinx.c to use the new generic functions:
-> > > bitmap_get_value() and bitmap_set_value(). The code is now simpler
-> > > to read and understand. Moreover, instead of looping for each bit
-> > > in xgpio_set_multiple() function, now we can check each channel at
-> > > a time and save cycles.
-> >
-> > This now causes -Wtype-limits warnings in linux-next with gcc-10:
+> This still uses the "depends on QCOM_SCM || !QCOM_SCM" bit to
+> ensure that drivers that call into the qcom_scm driver are
+> also built as modules. While not ideal in some cases its the
+> only safe way I can find to avoid build errors without having
+> those drivers select QCOM_SCM and have to force it on (as
+> QCOM_SCM=n can be valid for those drivers).
 >
-> Hi Arnd,
->
-> What version of gcc-10 are you running? I'm having trouble generating
-> these warnings so I suspect I'm using a different version than you.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: Maulik Shah <mkshah@codeaurora.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: linux-gpio@vger.kernel.org
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v3:
+> * Fix __arm_smccc_smc build issue reported by
+>   kernel test robot <lkp@intel.com>
+> v4:
+> * Add "depends on QCOM_SCM || !QCOM_SCM" bit to ath10k
+>   config that requires it.
+> v5:
+> * Fix QCOM_QCM typo in Kconfig, it should be QCOM_SCM
+> ---
+>  drivers/firmware/Kconfig                | 4 ++--
+>  drivers/firmware/Makefile               | 3 ++-
+>  drivers/firmware/qcom_scm.c             | 4 ++++
+>  drivers/iommu/Kconfig                   | 2 ++
+>  drivers/net/wireless/ath/ath10k/Kconfig | 1 +
+>  5 files changed, 11 insertions(+), 3 deletions(-)
 
-I originally saw it with the binaries from
-https://mirrors.edge.kernel.org/pub/tools/crosstool/, but I have
-also been able to reproduce it with a minimal test case on the
-binaries from godbolt.org, see https://godbolt.org/z/Wq8q4n
+For ath10k part:
 
-> Let me first verify that I understand the problem correctly. The issue
-> is the possibility of a stack smash in bitmap_set_value() when the value
-> of start + nbits is larger than the length of the map bitmap memory
-> region. This is because index (or index + 1) could be outside the range
-> of the bitmap memory region passed in as map. Is my understanding
-> correct here?
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-Yes, that seems to be the case here.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-> In xgpio_set_multiple(), the variables width[0] and width[1] serve as
-> possible start and nbits values for the bitmap_set_value() calls.
-> Because width[0] and width[1] are unsigned int variables, GCC considers
-> the possibility that the value of width[0]/width[1] might exceed the
-> length of the bitmap memory region named old and thus result in a stack
-> smash.
->
-> I don't know if invalid width values are actually possible for the
-> Xilinx gpio device, but let's err on the side of safety and assume this
-> is actually a possibility. We should verify that the combined value of
-> gpio_width[0] + gpio_width[1] does not exceed 64 bits; we can add a
-> check for this in xgpio_probe() when we grab the gpio_width values.
->
-> However, we're still left with the GCC warnings because GCC is not smart
-> enough to know that we've already checked the boundary and width[0] and
-> width[1] are valid values. I suspect we can avoid this warning is we
-> refactor bitmap_set_value() to increment map seperately and then set it:
-
-As I understand it, part of the problem is that gcc sees the possible
-range as being constrained by the operations on 'start' and 'nbits',
-in particular the shift in BIT_WORD() that put an upper bound on
-the index, but then it sees that the upper bound is higher than the
-upper bound of the array, i.e. element zero.
-
-I added a check
-
-      if (start >= 64 || start + size >= 64) return;
-
-in the godbolt.org testcase, which does help limit the start
-index appropriately, but it is not sufficient to let the compiler
-see that the 'if (space >= nbits) ' condition is guaranteed to
-be true for all values here.
-
-> static inline void bitmap_set_value(unsigned long *map,
->                                     unsigned long value,
->                                     unsigned long start, unsigned long nbits)
-> {
->         const unsigned long offset = start % BITS_PER_LONG;
->         const unsigned long ceiling = round_up(start + 1, BITS_PER_LONG);
->         const unsigned long space = ceiling - start;
->
->         map += BIT_WORD(start);
->         value &= GENMASK(nbits - 1, 0);
->
->         if (space >= nbits) {
->                 *map &= ~(GENMASK(nbits - 1, 0) << offset);
->                 *map |= value << offset;
->         } else {
->                 *map &= ~BITMAP_FIRST_WORD_MASK(start);
->                 *map |= value << offset;
->                 map++;
->                 *map &= ~BITMAP_LAST_WORD_MASK(start + nbits);
->                 *map |= value >> space;
->         }
-> }
->
-> This avoids adding a costly conditional check inside bitmap_set_value()
-> when almost all bitmap_set_value() calls will have static arguments with
-> well-defined and obvious boundaries.
->
-> Do you think this would be an acceptable solution to resolve your GCC
-> warnings?
-
-Unfortunately, it does not seem to make a difference, as gcc still
-knows that this compiles to the same result, and it produces the same
-warning as before (see https://godbolt.org/z/rjx34r)
-
-         Arnd
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
