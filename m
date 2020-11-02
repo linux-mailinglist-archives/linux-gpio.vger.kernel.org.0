@@ -2,109 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 522322A33E7
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 20:18:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE8DF2A36D2
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Nov 2020 23:56:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgKBTSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Nov 2020 14:18:11 -0500
-Received: from mga09.intel.com ([134.134.136.24]:5744 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbgKBTSL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Nov 2020 14:18:11 -0500
-IronPort-SDR: k7eo8yZeE+m+eBU5j2qK9K1HD9klcQQfaigDB8/3PcQjzFS3mILmVXYrs7gd3lZMBly760KsCD
- a8G+lC0u8SKA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="169070127"
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="169070127"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 11:18:10 -0800
-IronPort-SDR: QnfMFKpJotsWM/HXMu+SBHfEEsJcH68pEvwNUUUTW5gke6KlMbTb8H6sjH3vI79tKiO76ttrPs
- ZQj9IwvqIGcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="363345311"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 02 Nov 2020 11:18:09 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 38C06D2; Mon,  2 Nov 2020 21:18:07 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1725906AbgKBW4Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Nov 2020 17:56:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgKBW4Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Nov 2020 17:56:25 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1E4C0617A6
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Nov 2020 14:56:25 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id 1so7616233ple.2
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Nov 2020 14:56:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mqtRZlps0AFmnBWQDARp0gqOgumZWJt5mfGSNnjHUrY=;
+        b=UrvleR9G1FY4b/8at7PjPV2ZzEJuvq7ugpvcb5Kx/n+ex3K8ZZbcMZUGPPe1nJqv3E
+         Y2C8ChnGcnXiq63maAq0LSfpwmPtwB1i4hhVma1u1d37pExYBg0Zbhz3AHtK4+gca5YE
+         fyFJh6metsiqVPmB65FXXP5n0Pc+/hyxYUHnE5YaydaHdWwksZMX48C5bhKNCJv3opPF
+         dG5k7FQUKPXdfksVOZC2VtzqfibPNZKhksoyChHBgcc1/MrMIsQoSf7cDH0H5w7ZeUNA
+         HGal4P4Ymgo//O9UocQ6jHSFh6BIT/UrAtbxKastAx3DQqqT4kMLt3aw9asfX1APdnop
+         JEjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mqtRZlps0AFmnBWQDARp0gqOgumZWJt5mfGSNnjHUrY=;
+        b=FUGZb4viX042bIMHFkGmuf8Ap2qhWTlTwCTxu8tSTSf5yFZjv/zEkPOPtg/pVhL81p
+         /v54DGhCiDwKTXovnNbGMWbby8qAgSoR49PFaYpjjCyCr+EAJ5Njg/yiHup3EAK5b6C0
+         QX02VmPK1X5EbiSweypDwTeXLqUifaSELq5ipyf8WXjLM/0bv97zvgU2RXijJMLNiV0f
+         PijJQfgrzWm7Ue18rE8HGcpaaWADSc/7upDKO+vYo6kFYCl5UzMOZgEe4CZgK5C3MSd0
+         44ign1w90FYAyByRd+85dIqr4Xkdew3bM2uqahTK3SScdbqndKNLQPOjcFbVGgF5YLVZ
+         Hd1Q==
+X-Gm-Message-State: AOAM533xISKCtwUxxgUcdQ4QxATfXqIPOCY8adxqOXTWVIhrBnQyR0t+
+        qTq8wGxHEVJdmX/HXVwCLgA=
+X-Google-Smtp-Source: ABdhPJy3aEn2fLicGiYGq5ghWFgSjIBAh5KBg2aQ7vFtXuy1V0ZG09hkx6Xap9q85jCM0WQkmD7Vvw==
+X-Received: by 2002:a17:902:8605:b029:d5:a6dc:ad0a with SMTP id f5-20020a1709028605b02900d5a6dcad0amr23267313plo.56.1604357785123;
+        Mon, 02 Nov 2020 14:56:25 -0800 (PST)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id q125sm15292114pfq.120.2020.11.02.14.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2020 14:56:24 -0800 (PST)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Tue, 3 Nov 2020 06:56:00 +0800
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 4/4] gpiolib: acpi: Convert pin_index to be u16
-Date:   Mon,  2 Nov 2020 21:17:22 +0200
-Message-Id: <20201102191722.81502-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201102191722.81502-1-andriy.shevchenko@linux.intel.com>
-References: <20201102191722.81502-1-andriy.shevchenko@linux.intel.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+Message-ID: <20201102225600.nngn7lahtonni3sk@Rk>
+References: <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
+ <20201014042420.fkkyabmrkiekpmfw@Rk>
+ <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
+ <20201026225400.37almqey2wxyazkn@Rk>
+ <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
+ <CAHp75VcwiGREBUJ0A06EEw-SyabqYsp+dqs2DpSrhaY-2GVdAA@mail.gmail.com>
+ <86963e59-3661-c43c-4e08-a0f9b9e7ed07@redhat.com>
+ <CAHp75VcEr0AcdM2+ig5neMQn+5cfuttpFuAak7CkSO-qVjPeCw@mail.gmail.com>
+ <20201030045421.si3r5zsbeeyhkwns@Rk>
+ <CAHp75Vej=LT06MEmoAvAxrHY7zzvPKEJLe03C3BN5X4EZos_JA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vej=LT06MEmoAvAxrHY7zzvPKEJLe03C3BN5X4EZos_JA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As defined by ACPI the pin index is 16-bit unsigned integer.
-Define the variable, which holds it, accordingly.
+On Mon, Nov 02, 2020 at 09:06:23PM +0200, Andy Shevchenko wrote:
+>On Fri, Oct 30, 2020 at 6:54 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+>> On Tue, Oct 27, 2020 at 06:09:49PM +0200, Andy Shevchenko wrote:
+>> >On Tue, Oct 27, 2020 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> >> On 10/27/20 4:13 PM, Andy Shevchenko wrote:
+>
+>...
+>
+>> >> I see, so then the right thing to do for the bug which we are seeing
+>> >> on some AMD platforms would be to honor the debounce setting I guess ?
+>> >>
+>> >> Can you and/or Mika write a patch(set) for this ?
+>> >
+>> >I will look at it, but meanwhile I would postpone until having a
+>> >Mika's Ack on the action that my understanding and course of actions
+>> >is correct.
+>
+>I will soon send a support patch against ACPI GPIO library code.
+>
+>> If you don't mind, let me write this patch(set) instead:)
+>
+>I leave to you whatever AMD code. It will suit our both interests :-)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Excellent! Thank you!
+>
+>> I feel itchy
+>> to fix this touchpad issue by myself after spending about a month of
+>> my internship at Linux Foundation investigating this touchpad issue.
+>> There are many enthusiastic Linux users waiting to get their touchpads
+>> fixed and I could prioritize this task since I don't have other
+>> obligations. I have provided a fallback solution [1] to save their
+>> touchpads but it seems patches on gpiolib-acpi.c and pinctrl-amd could
+>> reach mainline kernel much earlier.
+>>
+>> [1] https://lore.kernel.org/patchwork/patch/1323245/
+>
+>
+>--
+>With Best Regards,
+>Andy Shevchenko
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index ad245b2a536e..a571dbf2093b 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -633,7 +633,7 @@ int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
- struct acpi_gpio_lookup {
- 	struct acpi_gpio_info info;
- 	int index;
--	int pin_index;
-+	u16 pin_index;
- 	bool active_low;
- 	struct gpio_desc *desc;
- 	int n;
-@@ -649,7 +649,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 	if (!lookup->desc) {
- 		const struct acpi_resource_gpio *agpio = &ares->data.gpio;
- 		bool gpioint = agpio->connection_type == ACPI_RESOURCE_GPIO_TYPE_INT;
--		int pin_index;
-+		u16 pin_index;
- 
- 		if (lookup->info.quirks & ACPI_GPIO_QUIRK_ONLY_GPIOIO && gpioint)
- 			lookup->index++;
-@@ -795,7 +795,7 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
- 		if (ret)
- 			return ERR_PTR(ret);
- 
--		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %d %d %u\n",
-+		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %d %u %u\n",
- 			dev_name(&lookup.info.adev->dev), lookup.index,
- 			lookup.pin_index, lookup.active_low);
- 	} else {
-@@ -991,7 +991,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 	struct gpio_chip *chip = achip->chip;
- 	struct acpi_resource_gpio *agpio;
- 	struct acpi_resource *ares;
--	int pin_index = (int)address;
-+	u16 pin_index = address;
- 	acpi_status status;
- 	int length;
- 	int i;
-@@ -1014,7 +1014,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 		return AE_BAD_PARAMETER;
- 	}
- 
--	length = min(agpio->pin_table_length, (u16)(pin_index + bits));
-+	length = min_t(u16, agpio->pin_table_length, pin_index + bits);
- 	for (i = pin_index; i < length; ++i) {
- 		int pin = agpio->pin_table[i];
- 		struct acpi_gpio_connection *conn;
--- 
-2.28.0
-
+--
+Best regards,
+Coiby
