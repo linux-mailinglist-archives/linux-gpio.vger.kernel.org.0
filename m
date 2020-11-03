@@ -2,124 +2,343 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A83F2A4D90
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 18:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 333A02A53A3
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 22:03:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgKCRyF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Nov 2020 12:54:05 -0500
-Received: from sonic315-13.consmr.mail.bf2.yahoo.com ([74.6.134.123]:33986
-        "EHLO sonic315-13.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728993AbgKCRyF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Nov 2020 12:54:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1604426043; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=bch5D8P6YjV82Ju66FbHMeusleo+2ujG+/1HVfc6dOVpyQ+M6ie9VSQeZAKzTlg6rOO6hQvzXc9WIl1U/JE6KrHgo23RnALPjUcNtPJlpdzsJ4Zj4PLvaAsZ7crYewOq5W/wLzLBWRx35StssAD2Bh9upXKy0eYsDOfyqUz8hG32cGilaKvpGo736zCu9BqZYgRzD4XjmxPrMZXURkXqwQUt8IKH+ORy3lCZ3r+xySRGgP+dwe2R2w3tQKjc8bRQk4NTx5GOngjP0doIYxpmFz3Afw8G6fhcYPo2wok3ET98RbbZE0sQccWIuJzxeNdwl/nqj1bdCjy2TnKCEtOX7g==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1604426043; bh=qQEZU3vsCJDzm3WrCS3MGxnmLeq7dob4JhL/UCo9Ufb=; h=Date:From:Subject; b=SCk+BTOfvHKEmjjMmrvXaEikeOCaZb9K0dHyJ3Nucdm/QaCygYw3HvgF19ic1ho0FamZXNbCaa2/ZlN6c3WdGOuYlqqd+Tbh6sZU4/Zr+vwwetpfghetyY9V8YR04V4abiFk8B402kaqxhvDKNI89JyAiem/wSV+3P+QHGv9xXXfGVx4u+Nv3w266HKec1H5k/ISTe+GjgvnXKkpyrQWexMw3UNBiV92VM0/j44u+ybxOACKkZ2NG+nFMNggRonvmowImRoLSvSttRWqDMQFG/5GuwxwbJSvmAGd5GaeWzM1uqOf6jMtFb2rv7T4dry1HhErp98Yxi7pJzFaYY3CrQ==
-X-YMail-OSG: uNHyDTsVM1lRSmzVA3XmJm1ToLeJl_RWh_UShUCmAEgslRgX52CyDWspeOubmU9
- EQ3VPamHP8ZxEbtLj1gpPaZynb_xFqJ8DXQo36s40bipnjzNkwo3u.1LBfWAAewY7gU7N6feZ5bO
- rDmAYmQQN7_OVlAvbm.8MOEw2jRwTZVVy31cfoky0IpgE_5RfYRroi7eh8UK7TeMxPX0Nnbv3D9b
- 7duWaK3mlIuSWw.TyC60LcJqBCkPivDnghI7I.SZ8epGyqWZdVgoJMY_CpmK4ux17d3_sSb1uTyT
- f0Tvh.9SlFKAFxSCu0gigk96rqBVqvHhyoFNyVDT9Cl.zgzlUvZTnRwPeFDU7mknaVeALf1ut62T
- z2XaOKvPWaNTOI3T51hfEmNONQPKSRMhzMK9qWdp3T_niNB2r9vAu2njoYBG0daDoDvvoRFD_jxM
- f1w5Eh9vqeMP5XCNvXfSWlb9TwShx4LjA5MUzmMG8bZOuK4XkB2cSwJHdN2Rhhd1i5jSj0pVfAh1
- f.k6vck3o8XQUn7RiRWtVRzUwPnJ8XD.cMvw6MOSkiel.b8Femdj.bmsGlWxxLl56qNR2iLRXPMs
- Xt8heJlvib1E8bF4Z973laY3wtvM3k255hXVJ5wcmsJ62GIdU1cCVi_ACBWvfxSJPu8CF9S8c.fv
- Gkp0aevT0JwSYvZiuMOgBjYNzx4zixQjDiXZ2iKyX3Q_yHaiqnYaKoegnvySeYk7mnwsToDulizi
- nBVmVXTuRSVsNnMefTozUF0zhDLTpzJuS0h0DsW3eEGGTFx4TG2O5iSqtybR6pMTk4xdgiDpKb6G
- lT3zE3lgqcY01IlwtpHTlAwuxqZZgYlOjV..j7sbtb7XAYEUH3ue.4QPkOxc2sI0L1leypsMVSAm
- 0jI7rGBxrPwnnoa.cfNBz5QQb9E3rhudW3L4IOvAwdyOud_C99e4OvujPUWfTEcoAC9qlJLaaoy8
- Q9bmcjpwMtbwMNoUQ.IRnq0cFZy2jno2Wo0jzTJAbwn8cAnu8N8ja.qTEpXGCNx.x5T3QzBhztdz
- 9zaTth4KLwex0U.zbUP5uLGH06Iu_Z8bM6wI_ydzuCO53B0AMH9Cy8OZ.yNMKup5QDmJUb20yCdc
- Qw72dmr4HRSkMJ2.6qa72Q6kkvVtLmBVZnbxRCeiWh7S5hRLrMfbKtpd830W2xT9j2oEbqWI_AV5
- IoD8K0D1GrbL_xZ0jNhxnq51K6FZSrqg1O7JCp9gKHN9qNYm18__7rXYDHHWlwWJV9NkWxQ_6tMN
- EPZEWBu51oj69qwG_LdASWP3DHelVIf5sZ7EkSRijwTpI17uWi4P.N.t1OBG9r4nYjX98YMJBeg3
- h_HmXzuP5QmkbtSao.JHsWyPzWbK.C46sokgMWOqL38XsOC45CF04RdymKUsCZbdATLDogjpZBgg
- 3Q2mttr42kIIgFnxXB0VlDcz.MOmz8MyfCu9upDWjTWlWs7Gm9QoNzdbrVgQ5f7hzPgTjP62KFS3
- GRzecezWe3fBowsx98Zu76gp3DBmmOTEeBoU543NdXT1ydFE3kvH_MsXD5qT7r4Q4oEnalc0wVQM
- 2IBZdH8J.YipoOs2OMPbNQqH..v.Ur3OGZS7idA_wO6giDImSddwT2DUm0._VUUErYgLJVvujjWh
- MVmPqeorvkWzCZnyoC82TkcEHJMG1fB7y3hHFwtp3FcHWHl83vj0nzlX2HD4dsYJoY8aRvIy7M8X
- 6rMcmGTiLQLs2jZw0KVITiuIJfhrpHKwBRToTggf1qn0jst_FZYZsmK59Hg0wkVJqd_Lnj9M0Xpc
- ygFhg4TNCxmZgUuNH39zjNr2QRB8m0iDmIKeHLeq9wNy12RVXXbVjc9lAbHIt2tQ4Qq1OTfGZn2n
- wILWvc4iiH6azLNwiM.2SzTAeMoMH3MGmQj9LkPJDQIWVTmEsxLgEW5u9lMJOdZVt1F7qt0FKpXa
- oEb8hFsHqXu3dIytWpoX8S5fyvEwyakzdfmgNz3r1O_RXK49bzlFT160QBHZQ19L9iRET8lIplJd
- VrtT08mbBA9ceS1pY6sshzncpWWlFeD5Cln6U3SvAqHWn6dbC4nhJwq0zlYs1GtA3yJAc2T9aTgQ
- J7UeQoL_aKsOoGydOm7mIqQ.c.yHhaeMrYsiDvar8ZFXmCwlKuVhVH2Bu1AumH6iTw9YKWA_T8AE
- E0gtZAXFbasolnwg0PoJLZAt1.LMjqekff3ADwZHEepEqJ.ARecDGI66Qh91NXSJ7cgEPowvwa8P
- OGDCB5trDmvYRIdUp4R8a7xXyQjfTAtZLHj3RMlANDAwlqitjDW1yTAHuGrxosWSu.q3JhFPETfd
- 5yDhQQZvLWaPyXJgr19I3aRKYnN1sGogI0rJzCW.lWwZjyRwNbfKFW8zepycgmAxggel6U3VRr51
- nsbg9YgqWPTWktIrd2kAOdG5dIvg589wzEV7mhXaVB6pedfdKQlkCjTrEHbs6dr95GRQt76.WZP.
- y_dcL1blxR84TLto1TzH2iJcuMxapncB64ZZoCOWnyXlInvEg97.RD6YPJKiAPX2G0QSUCoB9EBk
- aUqIhudhZzJZxMJe7ub1eLbxQ2LB8EM52bM8NPWTDYYnxoX4eBNE2W6h8zlFGhIsEORhBOCqXEDp
- 7tSMa2JdxWcRHOVRrWLBWm3daPeWMmzlcTOKvAX.YdKzN2PcoDvHA4JuTBwZvqFZOe6UH1uf7LIn
- DdjJt5b12rSl2lp4gdudj5UNOP9o0ADLXtGY8YRapZdDC6trpFBgQnmWvrVWeUHBSUdvunImS15Y
- NWobupverv0yo2_HGtPlVYv3Zcfa6HKC.Yi5XeRmyMT_nEIiDXamIqUOlEK_TImmo3RX8jkrXYz.
- .t8CyiZZdQx6hGRLI1PvSZsSh3__OFSf__tKVS1F_rSdM3WbHgyTEMRkMWYHn.BA_p9Dl9VQeIvc
- hrUB2F8Ub6mS8YYsNK4NWFa6P6rU4yfohDjOPqa71z2NpGPzWq3dbpyS6FO7zPvtR7J_DF3A9HNP
- lwZsR5o1hx5ha3kq6CG2Jz04dhyjDxthbMMHwysvgMBQ7mxNhnYkAHlG84NlIeZ53v87ibDKtQau
- OICsyS1px2IWrvHcqZ4RFxUp3NimsYwP8Q_.8kil_3ZIsu1LsuAyeUfMxxfSd13bCesH7.xHq51F
- VozrXHfVY8SFfFIPwNaDZYdYKRyyEZ8mbiqCnTCUbz_BJIFCZQECrFdTxHEpr58DlE9r_hy2e0mD
- XSnvr9EaqvtFbauYTgX99ryeALVglq4cFkzsRrHm7.Th11EYvdv4Cx4AC5oZvGU3xlYk62lGBm3u
- DmpEwxSPpsougA9Dv6h21obOimIT0IGcwMtNoCWhRH0B6ssBAoDFwwB5LVSl.dm56lILXaD1pHGb
- h7gLUbaFbtzhyA7em7SwKVu5bN03MzpHBx.DxX404.qVKL9dXKwi6mxZoBkogxIyJBxkz4PkMZxf
- OKjuptxRNmeNhPDBvEhAMYGOwUJks9d9Q7W4jlqH3ONPZTf_HwX6v5WdOxzU8E8WwGBQiexVXEbh
- mm4NeBj7JW7ZJdYCJa9qnbyV74AEnJhPJMRTDzLGfIiMXwV.xrnc82FWBetcfum2n7K2s8wbSBIv
- eDBa9gBsiC95AoMnqQLu5ZTkETo51CoAqLa65e2O6sp2IOLSXJkhAPU2KMOzCc.vJkZFDDnROcBH
- G.M40EQ5pjbkC1WryBdcVapXFMhnA3BxCXuYSTvVVP17lXpEQE7Xw2P7eLno9Tc6KLFHFcqWhUK4
- oeEwtzozPTWYS4v4lK3en1aaG.NfZKJoHhXvszlukSRPYBy8YhGT56t.TpOVEuudBNgTB64IVWh6
- loSmMIT0UVRM9eV0Gq.yzY1K_UiJjzpctlEupDD2edZ3eYFAbjEgkcPcjlve8GQj6a605PLYktlr
- iEhVpUbXywAWNqnq8ZftiWduWQlt808wQFGVDVJ5wTRO7HB2JVCnhaIAwRsOliiMaEDKdgQWBfH1
- 6_vS0B45dfbYX94vHwWMrmZjdfEMNZd2GfbUuTnKOwze_63rO1HLqIo0zDmnDB3O63mRHU9Oshk4
- kfVdm4fmGy6T6f66XIWcsh1X32jROP3braAnffvRyA20d.cKKpSK1CVsBL.XyyXGFg.hSi6dXcwa
- eGVJjH0_M0q2c_dvqqCgXaqJCFrwZuRRKHs9kM1t.8biEOzxrzKnpjKUZxUpX31sM_.hlxB7NKkP
- ue0KfPzQYk6ZesPNZl0ZN1jqnELSrv1NWwuvljtLbo8O_l9EOQbsTE7jjgU3aAre7LSO9H8aeH8u
- WqB_oea7jdVww9_If4zZjYZjr.GfuteMTHdAtpF_m0oSce0grYrjv65f6wlI3V42t.GuoHmHDTiH
- 5BfKVQpUkXGRxW6zwedjakYo2OQAe6Ptmn.pY910SMdHMmYTKvANLy7qAlQqAm9R475FXRjbjzWt
- XbgeSeUtB5lnjx_o33HZhr.pZj4yW6rKGTwSvenoXr8GQoUi5UFdO8rKJ71bn2Q2PS.GSaOKvSLM
- LRvEjP44PmLtwwQeVCk0DPLsgbeunR5w_6B_F3Q.VQ9NXKAkvYByTbpddFx7I95CgCnhnvFFhn9E
- 1vHRz71Iafjbxtu29mPduST_QNKySiN_XUyvvyXoMOiucATG7zJWwlcrLvjZg.SZsQdyrMEvG.mt
- QEJSJlXJKmPIPwK6Fu3qHJEc7qSZwctKLmIuWkfxAZQdtmLiFc2pvPWjDymYmkE1HlbemvJlvGvo
- 3PM.3.nk0fh8iv04eHlvU3HPCNWoGkAoSbEysCegALX_qiSpCraP3HUuctvf2qF_iCZHraB7Tf6l
- 4ClxCbbZlM0qEnQa7Bb4QTxZzf1PzDkIZQFt9JQDn4lSEUxLFE9D70wVrBX4vJJbbY_PTYFL6yTi
- Si6cEw9GiYKKQFGYwX.f.y4dSEuM4.cWF8ZEWHeYkUfM9xvKXDXSwOnbMXtS1ym7.633N.qz30ce
- XpSPzV4m09aOYYP88.hUGkojuOOP0vDPZmiAFaimQFGNLq5gn9UxD.kZlYLwJBJyrbktXpIAqRwR
- vkUxA1F3wJ.Mv25HjYA817QftloTTUyiXSQJvt2OKpE3TsWg2hgHNJToIweYmkSBvOp8Rqrdug02
- P0Aqvoj0GW2jMXjQ5joWG9Dm7HiH2jDBvWs0P3qVJIL4i9580av_tF7sAVbvRErLm1E5Ft9JbXJ7
- Fo6Q38dK.4zv4tS1vStgL.g--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.bf2.yahoo.com with HTTP; Tue, 3 Nov 2020 17:54:03 +0000
-Date:   Tue, 3 Nov 2020 17:54:02 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <1470430950.1119144.1604426042075@mail.yahoo.com>
-Subject: BUSINESS CO-OPERATION (Ms Lisa Hugh).
+        id S2387693AbgKCVC7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Nov 2020 16:02:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733010AbgKCVC6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Nov 2020 16:02:58 -0500
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473E6C0613D1
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Nov 2020 13:02:58 -0800 (PST)
+Received: by mail-il1-x12f.google.com with SMTP id t13so9476749ilp.2
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Nov 2020 13:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VabTwMxsZjyezZtWHKA7YCuACKMmfXVakzt5O1/VUJQ=;
+        b=YSe9bysvXhvfIagP9PYjYAPP0w1XUwMpbssXY+oL5sSUuP8b/L1B1YWCgN3NcGlm0N
+         TVbzJVjyVFujfMW4AFRSvhSWnoOxlkn3rgdR480VKhBmEEXyYOoNEI0tV7etNpMnuBVB
+         swI4PS8hV+pplf3BidF9a5znDTxyPCuOMkiBPkpuC8uYxbIqriLo+T0oJZE+uQt/ZW0C
+         XQm280WDk2KJ+WnhZsiHYeiK7e1l9W2qUPJeDHHLHucXYExACSpF+SmcFgM3qofBtCnP
+         0bvI7CydQUK8GHyai8mBLVAg05pbJUB3443GEQlwDWQCtgfH24Fp0AWnZFy74S2JlQ0w
+         xDsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VabTwMxsZjyezZtWHKA7YCuACKMmfXVakzt5O1/VUJQ=;
+        b=e6CQ7W8zBpvHHGHQwwnTxuHMimJ9zKEHNqw8nOfpt4V7zEHOVS+TnzmpM72d20kKLe
+         Vj0vtp7jJj8XH92WOwkxDODCV/qxUYLFp0vcM6KQ+95oSDll/DUT+4+KRJDxOP79bubw
+         aw+ETLS2+QnAJAx3KqjsQKBI12JUr37bJE25PvmjUz2GrjYfKFLoPh8WpdUyTl5nWws5
+         JaDAWJ6sKiAfxYV6HDOnIbW3NeUzpj69W5E++DajiXFrGpnl6QnW9518ERIVx6s+mdg4
+         EzvWCqsl8eeADeItGp/F6genpYlfLFTRNjxlvEHFOpvbs5SPQV3ZGa3YU8FQqGafhVA1
+         RThA==
+X-Gm-Message-State: AOAM530gJtA3Ml5FJcgHd0np6uESTutrHl2eGXENjvq/khENEIJid8UX
+        RizxwpBTqgveXMklS09Oscw8gbD94E1u+CHw3lh4ou5CV+0byA==
+X-Google-Smtp-Source: ABdhPJywIeIXjMSjgEWiF6rTIveJHHlKXd5gSD5lubZ1Cjtm0+iRP5uoKZdJkX42B7zAzXFbNJQjk/bjhInBXw/HGmU=
+X-Received: by 2002:a92:c8c4:: with SMTP id c4mr9735394ilq.161.1604437377288;
+ Tue, 03 Nov 2020 13:02:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1470430950.1119144.1604426042075.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16944 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0
-To:     unlisted-recipients:; (no To-header on input)
+References: <CAFhCfDY8te+OoYRyVrkwqvXH08-8tWNKuzvQU0bYtpgGKa6bjg@mail.gmail.com>
+ <CAMRc=MenVv0p2A7+E5z=5E8t50uh3vhhCWpg22oAfO0bEK1QJA@mail.gmail.com> <c0f159a1-32d7-d5b5-7f08-c0cb482e4501@gmail.com>
+In-Reply-To: <c0f159a1-32d7-d5b5-7f08-c0cb482e4501@gmail.com>
+From:   Jack Winch <sunt.un.morcov@gmail.com>
+Date:   Tue, 3 Nov 2020 21:06:40 +0000
+Message-ID: <CAFhCfDa1034qZvTX6=xU-SxGi0KtQEP6_EVAvxHDLxpRjV6VBw@mail.gmail.com>
+Subject: Re: [libgpiod] C++ Bindings ABI Compatibility
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartekgola@gmail.com>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+[Re-sent to list with proper formatting]
+
+Sorry for the delayed response.
+
+> I've had some experience in enterprise C++ a couple years ago (high
+> availability systems for a big corporation) and I've worked with some
+> brilliant C++ developers and I believe it. It's due to the fact that
+> such systems are usually packaged together and rebuilt from scratch.
+> Add to it a strong "not-invented-here" syndrome and you can basically
+> disregard any ABI issues.
+
+That's exactly it.
+
+> > 2.  Provide a C++ ABI, but implement the PImpl pattern such that it is
+> > possible to maintain ABI compatibility for the major version releases
+> > of the library (implementation details may be changed to implement bug
+> > fixes, etc, which is not possible without using the PImpl pattern).
+> > Even with this approach, there are limitations as to what should be
+> > passed over the shared library - application boundary.
+> >
+> Could you elaborate on the last sentence? Since my gut is telling me
+> PImpl would be the right choice, I'd like to know what these
+> limitations are.
+
+Sure.  The expansion of that comment is thus:  In order to reduce and
+eradicate ABI compatibility problems in this scenario, do not pass
+anything over the boundary unless you can be certain that the ABI of
+those items are stable and compatible.  This should be taken to mean
+objects where ABI stability is guaranteed by the provider or you have
+control of the ABI stability yourself.  On some platforms and with
+some standard library implementations, the exposure of standard
+library types in the public interface is out of the question, as ABI
+compatibility is not retained between major releases.
+
+You also have to consider the binary compatibility of how certain
+language features are implemented by the dependency and reverse
+dependency.  For example, the manner in which exceptions are handled
+may differ between the dependency and reverse dependency.  This issue
+in particular is why Qt makes exclusive use of return codes (and not
+exceptions) for error handling.  Of course, the implementation of such
+features is determined by the compiler collection being used to build
+each binary module (as well as any settings applied during the build).
+
+Fortunately, both libc++ and libstdc++ are relatively stable and
+somewhat compatible from an ABI point of view.  Both gcc and clang
+attempt to implement ABI stability and compatibility, with both
+implementing portions of the Itanium C++ ABI.  There are still issues
+though, but with time these issues are being resolved.  The detailed
+status of compatibility between other compiler collections for GNU /
+Linux is beyond me at current, though it would be safe to assume that
+ABI compatibility is not completely guaranteed.
+
+> Thanks for taking the time to write this down, very helpful!
+
+You're very welcome.  Obviously this is a very high-level and general
+overview, with more to be said on each approach.
+
+> As I mentioned above - I'm leaning towards PImpl. The reasons I see
+> for that are: we don't expose any templates to the user and we don't
+> need any polymorphism. We also seem to have a rather well defined
+> scope for the library - I can't imagine huge changes happening after
+> the v2.0 release.
+
+I agree that the scope of the library is well-defined and relatively
+limited.  As you also point out, templates and polymorphism are not
+utilised in the current form of the library and its public interface.
+Of course, it is possible that future features might come along within
+the gpio subsystem / libgpiod, where making use of these language
+features within the C++ binding might be desired.  That being said,
+it's not like we're developing a library of highly generic components.
+If required, we can make use of Qt as a reference for implementing
+polymorphic inheritance hierarchies and limited [dynamic] strong data
+type variation with the PImpl pattern.  So PImpl is a very viable
+option for the C++ binding, should you want to retain it being a
+shared library.
+
+> Header-only approach means every user includes everything and we still
+> need to recompile every user to update the library even with minor
+> changes. How do distros handle this anyway? Let's say boost gets a
+> bugfix - do all reverse dependencies get a bugfix release?
+
+That's how it usually works.  And that fact means that the reverse
+dependency can be confident as to whether a library bug fix is
+available at runtime, because it is compiled into the reverse
+dependency.  This differs from the shared library approach, as whether
+or not the bug fix is available will depend on which version of the
+shared library is available and which gets loaded and linked at
+runtime.
+
+With a lot of C++ developers, there is a cultural element around
+steering away from these types of issues if possible (and not for bad
+reason either).  So that is, in my opinion, one of the contributing
+reasons as to why this approach is seen as acceptable / preferred by a
+lot of this community.  If you make a bug fix to the library, you have
+to build the library and deploy it to the target anyway.  Personally,
+I'd rather build the reverse dependency with the bug fix 'baked in'
+and deploy that.
+
+Don't forget that if you make an ABI breaking change to the public
+interface of the shared library, you have to do a re-build and
+re-deployment of the library and reverse dependencies anyway.
+
+> I've been looking at what C++ shared libraries I have installed on my
+> regular Debian 10 system and then also browsed their code a bit. It
+> turns out that many of them also put the entire implementation in the
+> header (libjsoncpp, libmpeg2encpp and several others) and they're
+> still at relatively low ABI major versions of the shared object - so
+> I'm wondering if that's really such an issue? Or do so few people
+> realize this is a problem?
+
+ABI compatibility for C++ libraries is certainly less of an issue on
+GNU / Linux (as compared to other platforms), but it is still an
+issue.  I've not had experience with either of the packages you've
+mentioned, so it's possible they have not made ABI breaking changes or
+they just don't care (maybe through ignorance).
+
+I guess, like everything, it all comes down to what you're trying to
+achieve and what you really care about.  I've met individuals who
+didn't give a hoot about this particular issue, as the carnage it
+caused "wasn't their problem" and they still got paid at the end of
+the month.
+
+If you need me to expand on anything above, then let me know.
+Personally, I'm still for a header-only approach (eradicate the ABI
+concern entirely), but if you still want the C++ binding to be
+available as a shared library, the PImpl pattern would also be well
+suited in this case.  In either case, implementing the required
+changes should not be taxing.
+
+On a somewhat related note, I did a build of the libgpiod master
+branch yesterday.  Could you just confirm what the version should be
+for the resultant libgpiodcxx.so?  The built library has a version of
+1.1.1.
+
+Jack
 
 
-Dear Friend,
-
-I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
-
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
-
-Below information is what i need from you so will can be reaching each other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa hugh.
+On Tue, Nov 3, 2020 at 8:57 PM Jack Winch <sunt.un.morcov@gmail.com> wrote:
+>
+> Sorry for the delayed response.
+>
+>     I've had some experience in enterprise C++ a couple years ago (high
+>     availability systems for a big corporation) and I've worked with some
+>     brilliant C++ developers and I believe it. It's due to the fact that
+>     such systems are usually packaged together and rebuilt from scratch.
+>     Add to it a strong "not-invented-here" syndrome and you can basically
+>     disregard any ABI issues.
+>
+>
+> That's exactly it.
+>
+>     > 2.  Provide a C++ ABI, but  implement the PImpl pattern such that it is
+>     > possible to  maintain ABI compatibility for the major version releases
+>     > of the library  (implementation details may be changed to implement bug
+>     > fixes, etc, which  is not possible without using the PImpl pattern).
+>     > Even with this  approach, there are limitations as to what should be
+>     > passed over the  shared library - application boundary.
+>     >
+>     Could you elaborate on the last sentence? Since my gut is telling me
+>     PImpl would be the right choice, I'd like to know what these
+>     limitations are.
+>
+>
+> Sure.  The expansion of that comment is thus:
+>
+> In order to reduce ABI compatibility problems in this scenario, do not
+> pass anything over the boundary unless you can be certain that the ABI
+> of those items are stable and compatible.  This should be taken to mean
+> objects where ABI stability is guaranteed by the provider or you have
+> control of the ABI stability yourself.  On some platforms and with some
+> C++ standard library implementations, the exposure of standard library
+> types in the public interface is out of the question, as ABI
+> compatibility is not retained between major releases of the standard
+> library implementation.  These are the 'pain points' for the Qt
+> libraries on certain platforms and with certain compiler collections.
+>
+> You also have to consider the binary compatibility of how certain
+> language features are implemented by the dependency and reverse
+> dependency.  For example, the manner in which exceptions are handled may
+> differ between the dependency and reverse dependency.  This issue in
+> particular is why Qt makes exclusive use of return codes (and not
+> exceptions) for error handling.  Of course, the implementation of such
+> features is determined by the compiler collection being used to build
+> each binary module (as well as any settings applied during the build).
+>
+> Fortunately, both libc++ and libstdc++ are relatively stable and
+> somewhat compatible from an ABI point of view.  Both gcc and clang
+> attempt to implement ABI stability and compatibility, with both
+> implementing portions of the Itanium C++ ABI.  There are still some
+> issues though, but with time these issues are being resolved in later
+> releases of the compiler collections.
+>
+> The detailed status of compatibility between other compiler collections
+> for GNU / Linux is beyond me at current, though it would be safe to
+> assume that ABI compatibility is not completely guaranteed.
+>
+>     Thanks for taking the time to write this down, very helpful!
+>
+>
+> You're very welcome. Obviously this is a very high-level and general
+> overview.
+>
+>     As I mentioned above - I'm leaning towards PImpl. The reasons I see
+>     for that are: we don't expose any templates to the user and we don't
+>     need any polymorphism. We also seem to have a rather well defined
+>     scope for the library - I can't imagine huge changes happening after
+>     the v2.0 release.
+>
+>
+> I agree that the scope of the library is well-defined and relatively
+> limited.  As you also point out, templates and polymorphism are not
+> utilised in the current form of the library and its public interface.
+> Of course, it is possible that future features might come along within
+> the gpio subsystem / libgpiod, where making use of these language
+> features within the C++ binding might be desired. That being said, it's
+> not like we're developing a library of highly generic components.  If
+> required, we can make use of Qt as a reference for implementing
+> polymorphic inheritance hierarchies and limited [dynamic] strong data
+> type variation with the PImpl pattern. So PImpl is a very viable option
+> for the C++ binding, should you want to retain it being a shared library.
+>
+>     Header-only approach means every user includes everything and we still
+>     need to recompile every user to update the library even with minor
+>     changes. How do distros handle this anyway? Let's say boost gets a
+>     bugfix - do all reverse dependencies get a bugfix release?
+>
+>
+> That's how it usually works.  And that fact means that the reverse
+> dependency can be confident as to whether a library bug fix is available
+> at runtime, because it is compiled into the reverse dependency.  This
+> differs from the shared library approach, as whether or not the bug fix
+> is available will depend on which version of the shared library is
+> available and which gets loaded and linked at runtime.
+>
+> With a lot of C++ developers, there is a cultural element around
+> steering away from these types of issues if possible (and not for bad
+> reason either).  So that is, in my opinion, one of the contributing
+> reasons as to why this approach is seen as acceptable / preferred by a
+> lot of this community.  If you make a bug fix to the library, you have
+> to build the library and deploy it to the target anyway. Personally, I'd
+> rather build the reverse dependency with the bug fix 'baked in' and
+> deploy that.
+>
+> Don't forget that if you make an ABI breaking change to the public
+> interface of a shared library, you have to do a re-build and
+> re-deployment of the library and reverse dependencies anyway.  At least
+> if you go down the header-only library route, you remove the pain of
+> having to worry about ABI compatibility and stability entirely (while
+> being able to make full use of the features offered by the language).
+>
+>     I've been looking at what C++ shared libraries I have installed on my
+>     regular Debian 10 system and then also browsed their code a bit. It
+>     turns out that many of them also put the entire implementation in the
+>     header (libjsoncpp, libmpeg2encpp and several others) and they're
+>     still at relatively low ABI major versions of the shared object - so
+>     I'm wondering if that's really such an issue? Or do so few people
+>     realize this is a problem?
+>
+>
+> ABI compatibility for C++ libraries is certainly less of an issue on GNU
+> / Linux (as compared to other platforms), but it is still an issue.
+> I've not had experience with either of the packages you've mentioned, so
+> it's possible they have not made ABI breaking changes or they just don't
+> care (maybe through ignorance).
+>
+> I guess, like everything, it all comes down to what you're trying to
+> achieve and what you really care about.  I've met individuals who didn't
+> give a hoot about this particular issue, as the carnage it caused
+> downstream "wasn't their problem" and they "still get paid at the end of
+> the month".
+>
+> If you need me to expand on anything above, then let me know.
+> Personally, I'm still for a header-only approach, but if you still want
+> the C++ binding to be available as a shared library, the PImpl pattern
+> would also be well suited in this case.  In either case, implementing
+> the required changes should not be too taxing.
+>
+> On a somewhat related note, I did a build of the libgpiod master branch
+> yesterday.  Could you just confirm what the version should be for the
+> resultant libgpiodcxx.so?  The built library has a version of 1.1.1.
+>
+> Jack
