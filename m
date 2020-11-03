@@ -2,206 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CEB82A415A
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 11:12:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B3DB2A419A
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 11:22:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgKCKMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Nov 2020 05:12:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54482 "EHLO
+        id S1728024AbgKCKWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Nov 2020 05:22:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23780 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727470AbgKCKMP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Nov 2020 05:12:15 -0500
+        by vger.kernel.org with ESMTP id S1727385AbgKCKWH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Nov 2020 05:22:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604398333;
+        s=mimecast20190719; t=1604398925;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0MUFWE6mOnbnRG+Ni8WIQ3yfgCYil12Q6u/TIezmtsg=;
-        b=KyQ+vPCPXiaxQjpE2dtj2sUus4MiIFptxlkW/FHZ5D0gzOvnjc1lL0RM7wz/tNuKo1GCFV
-        V1FyTHCWAUijHDCpHBWaygmThB1WGRHRFo32TLn3+uoJbMvWcDRAQ+dn5UpK2bj869cXR+
-        +1AkiuEmVlI0IY9C6Bnt2O0VtQaph5w=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-8lH_Ba9vN1mGDEiQHCtcSA-1; Tue, 03 Nov 2020 05:12:12 -0500
-X-MC-Unique: 8lH_Ba9vN1mGDEiQHCtcSA-1
-Received: by mail-ej1-f70.google.com with SMTP id nt22so2223605ejb.17
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Nov 2020 02:12:11 -0800 (PST)
+        bh=+XR6506nPn8sKTI4vzdlsW0fAk2RS9aQxw0FRMAFP/I=;
+        b=TyHsX+ikFKn2lob/5t7W+VZAOvNpYhO9r7MLV7hmu0cefUFB/GsTy2n2i7PDNs0Z1xSVhw
+        MHkXXYjU58axVberHp63MC6gkmHfzRDMQEj6bsxsvOFfJ8TVWKYMyC6Diwu20lmlRXya/F
+        ZoWZVZgcC073NeVf5NkbMy6yy8uVuI4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-509-5_f2_UYiNSiVJxP7zQMh8A-1; Tue, 03 Nov 2020 05:22:03 -0500
+X-MC-Unique: 5_f2_UYiNSiVJxP7zQMh8A-1
+Received: by mail-ej1-f71.google.com with SMTP id t1so5216952ejb.21
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Nov 2020 02:22:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0MUFWE6mOnbnRG+Ni8WIQ3yfgCYil12Q6u/TIezmtsg=;
-        b=b1Li5Ppg99bX1qjaSpZixtdu+X4NgT868kMmQKHvVg3tII/YO3fJVOzRderGxf7ewN
-         QZHuR7b4VcIk4ayob1q70oDMes43+JQ0QL9GZ5ozoNRXKmv5s+RoSht2lCaeGGp3UVaZ
-         Pn4tZvVcqEmCGD+YGacVmmY7rN7f5pXYa01SKNouNPuxaVHNT3DsPK/fyPXCEUQCr5ye
-         h7SOV0v29f2vxCxC1+mh9/XqLKnT7BZU+k+3fQibxUKq3SICd9IbF4LXmDLDPC30OOom
-         Qr4G3+NC+VpZK3+MM/+Slt6JVNJJQcFEHikzEeZb2yltHQkxsQhgxTNcc7GWciB6wyoM
-         SHvQ==
-X-Gm-Message-State: AOAM532FRTpJ3RKuQ+VrnB96a/3oguSVgYhqLZdpeTQrPuikWsodxzOE
-        j17qV2Jihh4I2bD0LB9pPeWEkf7o/cLhdCD8Mhuinvta3Y4J0NljxYieizBoji+5Q92lQ+uMg0G
-        ymRnDpRUg4VBG4mWQgCXW7g==
-X-Received: by 2002:aa7:d709:: with SMTP id t9mr6130965edq.305.1604398330648;
-        Tue, 03 Nov 2020 02:12:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJypkhXwlBVdPP8Nwx/U9egOi9INTITIlOwLSF0+H3rc3ojEQIsQTVaupr2QiIMSubSp0nl6kw==
-X-Received: by 2002:aa7:d709:: with SMTP id t9mr6130944edq.305.1604398330401;
-        Tue, 03 Nov 2020 02:12:10 -0800 (PST)
+        bh=+XR6506nPn8sKTI4vzdlsW0fAk2RS9aQxw0FRMAFP/I=;
+        b=nmz3WnK90sUjWYLk3R77QMuji34YMSlA3wXlW3Z8mJ8GX2nbHfSItM0Oo42SzvITHr
+         NhQibKPJNV3KLr5IO4W182Qi48oyqjqAaQpR+Yp+r13UdX+Q2LvIKpYpfFDeMVn8vOPR
+         SJOboywSdZR3auoZvTn/QhpOGlwT0Lg2aYg4kiz4vYjSptb3hVP/wGMxnelZa7LW/2m9
+         oFpP33HXiOASpDa+wneN1jMfO2LJ8FsqBhRSrwBtsFz/fPnvxnulI0e8lhecz3eMWUn+
+         iOu4p9Gvqw2oC0PMAnI40mAGQ9bnhXouQR8chVtV4UIERSFTbTzxdRgPMZVdNJtaxKnG
+         lhdQ==
+X-Gm-Message-State: AOAM531D2JbtCXlNXl7DirJG4+W4UBMsM70FwihkTxS8fRuEYbFSpslQ
+        LA2rqXT8gV3+wwXHqAmnUfizfYHpSWWDB2wdGG72amSkZJbRdit7LoFLv9K9hK7stf+xi3ypEGq
+        OQkqHHghNUDke411g+o2A3w==
+X-Received: by 2002:a17:906:b0d6:: with SMTP id bk22mr19153011ejb.153.1604398922400;
+        Tue, 03 Nov 2020 02:22:02 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyfqgkAhBn5aF4g1kP8qOxfrO2hgg83HJ7gVq+LDUDIAF84HmbWErFGEF7Qd7Wh3MJwI+hG3A==
+X-Received: by 2002:a17:906:b0d6:: with SMTP id bk22mr19153001ejb.153.1604398922225;
+        Tue, 03 Nov 2020 02:22:02 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id hj13sm698941ejb.125.2020.11.03.02.12.09
+        by smtp.gmail.com with ESMTPSA id pk25sm7526401ejb.16.2020.11.03.02.22.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Nov 2020 02:12:09 -0800 (PST)
-Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
- for broken touchpads of a new laptop model?
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        wang jun <availa@outlook.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20201006044941.fdjsp346kc5thyzy@Rk>
- <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
- <20201006083157.3pg6zvju5buxspns@Rk>
- <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
- <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com>
- <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
- <20201014042420.fkkyabmrkiekpmfw@Rk>
- <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
- <20201026225400.37almqey2wxyazkn@Rk>
- <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
- <20201103000507.ufzukd2vkb5h2e3b@Rk>
+        Tue, 03 Nov 2020 02:22:01 -0800 (PST)
+Subject: Re: [PATCH 1/3 v3] x86/platform/geode: Convert net5501 LED to GPIO
+ machine descriptor
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andres Salomon <dilinger@queued.net>,
+        linux-geode@lists.infradead.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20201103000439.325448-1-linus.walleij@linaro.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2f4706a1-502f-75f0-9596-cc25b4933b6c@redhat.com>
-Date:   Tue, 3 Nov 2020 11:12:08 +0100
+Message-ID: <967ce9e6-0197-c488-2a7d-c7f491d9b361@redhat.com>
+Date:   Tue, 3 Nov 2020 11:22:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201103000507.ufzukd2vkb5h2e3b@Rk>
+In-Reply-To: <20201103000439.325448-1-linus.walleij@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 11/3/20 1:05 AM, Coiby Xu wrote:
-> On Tue, Oct 27, 2020 at 11:09:11AM +0100, Hans de Goede wrote:
->> Hi,
->>
-> ...
->>
->> So I see 2 ways to move forward with his:
->>
->> 1. Just disable the debounce filter for level type IRQs; or
->> 2. Add a helper to sanitize the debounce pulse-duration setting and
->>   call that when setting the IRQ type.
->>   This helper would read the setting check it is not crazy long for
->>   an IRQ-line (lets say anything above 1 ms is crazy long) and if it
->>   is crazy long then overwrite it with a saner value.
->>
->> 2. is a bit tricky, because if the IRQ line comes from a chip then
->> obviously max 1ms debouncing to catch eletrical interference should be
->> fine. But sometimes cheap buttons for things like volume up/down on tablets
->> are directly connected to GPIOs and then we may want longer debouncing...
->>
->> So if we do 2. we may want to limit it to only level type IRQs too.
->>
->> Note I have contacted AMD about this and asked them for some input on this,
->> ideally they can tell us how exactly we should program the debounce filter
->> and based on which data we should do that.
+On 11/3/20 1:04 AM, Linus Walleij wrote:
+> This makes the machine look up the LED from a GPIO machine
+> descriptor table. The Geode LEDs should be on the CS5535
+> companion chip.
 > 
-> Is there any update from AMD?
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Andres Salomon <dilinger@queued.net>
+> Cc: linux-geode@lists.infradead.org
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-I'm afraid not.
+Linus, in case you did not know yet, I have take over
+drivers/platform/x86 maintainership from Andy.
 
-> Based on the discussion, I'm going to
-> submit a patch to disable debounce filter for both level and edge
-> type IRQs, i.e. to remove relevant code in amd_gpio_irq_set_type of
-> drivers/pinctrl/pinctrl-amd.c since setting debounce filter is
-> orthogonal to setting irq type and Andy has submitted the patch to
-> support setting debounce setting supplied by ACPI in gpiolib-acpi.c
+Andy, the MAINTAINERS entry for arch/x86/platform says:
 
-Ok.
+X86 PLATFORM DRIVERS - ARCH
+R:      Darren Hart <dvhart@infradead.org>
+R:      Andy Shevchenko <andy@infradead.org>
+L:      platform-driver-x86@vger.kernel.org
+L:      x86@kernel.org
+S:      Maintained
+T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+F:      arch/x86/platform
 
-> Btw, did you contact AMD through a representative?
+Andy, so I guess that with your Reviewed-by added, these are expected to
+get picked up by the tip tree people ?
 
-Yes I'm using Red Hat's contacts in to AMD's server department,
-which are putting me in contact with AMD'se client department.
+Linus, it seems that you did not "Cc: x86@kernel.org" which is
+listed in MAINTAINERS for these, and is probably necessary to
+get these merged through the tip tree.
 
-> Obviously CC them
-> didn't get their attention. There is an inconsistency for configuring
-> debounce timeout in pinctrl-amd as was spotted by Andy [1]. I also need
-> their feedback for this matter.
-> 
-> [1] https://lore.kernel.org/patchwork/comment/1522675/
+Note I'm happy to pick these up through:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/
 
-This is a case where Andy is obviously right and you should just use the
-higher precision "unit = 15625" value (except probably that is wrong too,
-see below).
+I actually had them in my local review-hans branch before noticing that
+that they went to arch/x86/platform. But I've dropped them now as I'm
+not sure if merging them through the pdx86 tree is the right thing to do,
+the MAINTAINERS file at least suggests things should be done differently.
 
-We have had similar issues with the docs for getting the TSC frequency
-on some Intel chips, where the docs said 16.6 MHz for a certain register
-value, where what they meant was 100/6 MHz which really is significantly
-different. This was leading to a time drift of 5 minutes / day on non
-networked (so no NTP) Linux systems.
+Linus, if a v4 with "Cc: x86@kernel.org" is necessary you may add my:
 
-I think this is what Andy was referring to when he wrote:
-"What the heck with HW companies! (Just an emotion based on the experience)"
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-So the lesson learned there is when you can be reasonable certain that
-the value really is a/b and the resulting digits of the value in the
-hw doc match that taking the lousy precision into account then you
-should probably assume the value really is a/b and not the lousy
-precision value given in the docs (or the code comment in this case).
-
-I mean 15.6 msec has 3 significant numbers, that gives an imprecision /
-error of approx. 1000 ppm where as a decent clock crystal is in the order
-of 50 ppm, so the hardware has a drift / error of approx. 50 ppm which
-makes using a value with an error of 1000 ppm in the code really really
-bad.
-
-Actually all the values look somewhat suspect. The comment:
-
->                 Debounce        Debounce        Timer   Max
->                 TmrLarge        TmrOutUnit      Unit    Debounce
->                                                         Time
->                 0       0       61 usec (2 RtcClk)      976 usec
->                 0       1       244 usec (8 RtcClk)     3.9 msec
->                 1       0       15.6 msec (512 RtcClk)  250 msec
->                 1       1       62.5 msec (2048 RtcClk) 1 sec
-
-Helpfully gives the values in RtcClks. A typical RTC clock crystal
-is 32 KHz which gives us 31.25 usec per tick, so I would expect the
-values to be:
-
-                 0       0       62.500 usec (2 RtcClk)      
-                 0       1       250.00 usec (8 RtcClk)    
-                 1       0       16.000 msec (512 RtcClk) 
-                 1       1       64.000 msec (2048 RtcClk)
-
-And the max multiplier seems to be 15, not 16 as is used for the
-Max Debounce Time's in the comment, so those are wrong too. I have
-a feeling the table was build the wrong way around (minus the
-RtcClk parts). They started with a Max Debounce Time of 1 sec, then
-divided that by 16 given them 62.5 msec, where as in reality
-we have 2048 ticks of a 32 KHz clock giving us 64 millisec, etc.
-
-I also wonder if the 0-15 divider really is a 0-15 divider or a
-1-16 divider... This suggests:
-
-                if (debounce < 61) {
-                        pin_reg |= 1;
-
-It really is a 0-15 divider, so without docs we should just assume
-that it is 0-15 for now, which makes the divide 1 second by 16 thing
-which got them 62.5 msec (or so I believe) a bit suspect. Either the
-divide by 16 is wrong, or the divider really is a 1-16 divider...
+To the entire series.
 
 Regards,
 
 Hans
+
+
+
+
+
+> ---
+> ChangeLog v2->v3:
+> - Rebase on v5.10-rc1
+> - Resend
+> ChangeLog v1->v2:
+> - Drop excess comma after terminator { }
+> - Collect Andy's Reviewed-by
+> ---
+>  arch/x86/platform/geode/net5501.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
+> index 163e1b545517..558384acd777 100644
+> --- a/arch/x86/platform/geode/net5501.c
+> +++ b/arch/x86/platform/geode/net5501.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/input.h>
+>  #include <linux/gpio_keys.h>
+> +#include <linux/gpio/machine.h>
+>  
+>  #include <asm/geode.h>
+>  
+> @@ -55,9 +56,7 @@ static struct platform_device net5501_buttons_dev = {
+>  static struct gpio_led net5501_leds[] = {
+>  	{
+>  		.name = "net5501:1",
+> -		.gpio = 6,
+>  		.default_trigger = "default-on",
+> -		.active_low = 0,
+>  	},
+>  };
+>  
+> @@ -66,6 +65,15 @@ static struct gpio_led_platform_data net5501_leds_data = {
+>  	.leds = net5501_leds,
+>  };
+>  
+> +static struct gpiod_lookup_table net5501_leds_gpio_table = {
+> +	.dev_id = "leds-gpio",
+> +	.table = {
+> +		/* The Geode GPIOs should be on the CS5535 companion chip */
+> +		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_HIGH),
+> +		{ }
+> +	},
+> +};
+> +
+>  static struct platform_device net5501_leds_dev = {
+>  	.name = "leds-gpio",
+>  	.id = -1,
+> @@ -80,6 +88,7 @@ static struct platform_device *net5501_devs[] __initdata = {
+>  static void __init register_net5501(void)
+>  {
+>  	/* Setup LED control through leds-gpio driver */
+> +	gpiod_add_lookup_table(&net5501_leds_gpio_table);
+>  	platform_add_devices(net5501_devs, ARRAY_SIZE(net5501_devs));
+>  }
+>  
+> 
 
