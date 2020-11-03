@@ -2,151 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 894402A3780
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 01:09:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AED12A376F
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Nov 2020 01:05:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgKCAJv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Nov 2020 19:09:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55138 "EHLO
+        id S1726546AbgKCAFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Nov 2020 19:05:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgKCAJv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Nov 2020 19:09:51 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F96AC0617A6
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Nov 2020 16:09:49 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id l28so19773893lfp.10
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Nov 2020 16:09:49 -0800 (PST)
+        with ESMTP id S1725940AbgKCAFx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Nov 2020 19:05:53 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF0CC0617A6
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Nov 2020 16:05:53 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id c20so12621581pfr.8
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Nov 2020 16:05:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V8skaM7syXmbfJm4r1OgvU6gcYaHXE62TFQBSGlozhU=;
-        b=VPnuisHSt7KrX8al+dtlg++Qv7oCD8ZSQh9IGw0n1HPE37QSrZEJW44og/cG2KkNUM
-         ZvZbGsifKj022dvdpqsGfbON1hQ1C2fhCkgu/oqfb+Pf3PY4dwaf/Wo0HFrwTKi5GjEI
-         iklgVW6n49OGfnQp5fy87V5x620YoCiagJ6DMaL2Nrsb/TTrBvWBrucEAv7aFbS4nwFh
-         Fly1f19IVkNOk63tHpr0AGR/93ZW6HhBND1zlxY05NLgDLrD5ms1bKzwfLjhLOxdkzca
-         YcBwEirD+fk3m/uNC7ZoM9YlplfBBjMsGX/EwKCZlyiHxxoYZqNt13466NIDAgE0xhss
-         2iOA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZqsUyULNQ5T8eVJBY1wAcNGYl5gI5fUvIShFJJSQzK0=;
+        b=DfgNDEmfriKjtlAucXQj7bqPQtlYfUKZcYqfcCpViKFCMroSdVadUUPCA2eXpNxmeD
+         UAmzH52ywXogsmH/VmxvVkoSkJaoiO8cItn1kh04gAx0k29YtdpUSCRMEx+gIGI2wbzQ
+         I8DL86A7T7ah5GnGKrAkggTkRLxLjqvwlmJX0KY99DR5g9s3GZHmKQ0Um50ifs94Vh6P
+         j76n4hN5x1GymUjXJWtKJwgHNM/OBFKPKDZ6R0n8jAkHyoAPQMWsqp4N919YYhlhy2HV
+         3V9pVuTtKvtuxVvM4K8hWJOpLZvc/NaEQxvrISuzexfP32IZ6nw6nfwjBveZAeFAlth+
+         LrNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V8skaM7syXmbfJm4r1OgvU6gcYaHXE62TFQBSGlozhU=;
-        b=Dn9c2mNODJnxUT/zAljLQiOYI1KzG9U/f2XKtMnq1dTs4o7llFScZany5VSo1j9Zpm
-         xM2EUdnsx9Fjr5rOqSQK2frzsn+MBblW6b0qywHX4bKWsf8HQheOcSnZ+qmkmEOIyDui
-         O3dyrl9LV7Dt61NUjNg73qqB+0skTk5QEwSn91WBVGdZgDA0RfjtZXiAVYZrliXV546x
-         L2MrDtou0zrdOhoBKzUjpRzHoU8g18UbqoKTVpCd1dPBFpAt1W1rAf9JQqCb6jRST2jD
-         hc851BZ+QeGcF2maBt3cMJA1YCy/Qj0dyxa0W+22T7eIvCc6P8l7CikKG15h6wNKEyvY
-         KgOg==
-X-Gm-Message-State: AOAM531iB6HwmLLpsbLUZeDQJP0xyUR8QrPGmNRZ4uVLbG58mrwpe+6z
-        X+Ue+YKdtE2nrHUKE/EOFGb05Q==
-X-Google-Smtp-Source: ABdhPJx/IuAt811CpR0lxNywx/16JQNv0Oq7oOvk2mSd1UjmTTvjm6mdenCkmGpin2oeyX9IG1eFnA==
-X-Received: by 2002:ac2:5c4c:: with SMTP id s12mr6105789lfp.174.1604362187923;
-        Mon, 02 Nov 2020 16:09:47 -0800 (PST)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id a14sm671492lfo.116.2020.11.02.16.09.47
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZqsUyULNQ5T8eVJBY1wAcNGYl5gI5fUvIShFJJSQzK0=;
+        b=i+/8MfaV0G+pTZAY1Pf6Ddii7L1LEQM/tCZYywV844raCoBZDfU4REZdq9nIcpMuQS
+         +Yh3wBKy3z5k6tmeIg2pzct7qzwE0MS7rvdl3v+6m6/fk4jGGFI75VgbvNuzie/9J2Jj
+         hYxIzFuBObHSpzT72yEOy9o1MyeGnDmbXrwm8Qw/TDRyG5m1ijzmZlvQjRwkANa9D47n
+         MqPoobUgsyKaRjXv5U+8JFfEpEdZL2D73UmvvHSjttAFfJvniyco6PO7oUO8h0lF0BdA
+         0G5xuiA0cRWk1JWu3lLa6dCq2anBp6Qg49ExYufnS2WGDbg/5ieO/c5Jz8PlOE8CvRDX
+         BCyQ==
+X-Gm-Message-State: AOAM5315JDO6Itwyhxh64CHGFUYGQgEEaiR1P496MsKSPoUCmaHN7P5t
+        gwULq+l+68XDAig7fmxwaR7/KBiz75LtnA==
+X-Google-Smtp-Source: ABdhPJyGqbbOX2zoz+z1HEzXPjET4+G2CbC1xQbDICwsFOZFmmRGiYBaN2H+fXLPSSOS504un3c2FQ==
+X-Received: by 2002:a63:e34a:: with SMTP id o10mr14952419pgj.129.1604361953302;
+        Mon, 02 Nov 2020 16:05:53 -0800 (PST)
+Received: from localhost ([160.16.113.140])
+        by smtp.gmail.com with ESMTPSA id fy13sm606484pjb.10.2020.11.02.16.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2020 16:09:47 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-geode@lists.infradead.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH 3/3 v3] x86/platform/geode: Convert alix LED to GPIO machine descriptor
-Date:   Tue,  3 Nov 2020 01:04:39 +0100
-Message-Id: <20201103000439.325448-3-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201103000439.325448-1-linus.walleij@linaro.org>
-References: <20201103000439.325448-1-linus.walleij@linaro.org>
+        Mon, 02 Nov 2020 16:05:52 -0800 (PST)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Tue, 3 Nov 2020 08:05:07 +0800
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        wang jun <availa@outlook.com>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: Any other ways to debug GPIO interrupt controller (pinctrl-amd)
+ for broken touchpads of a new laptop model?
+Message-ID: <20201103000507.ufzukd2vkb5h2e3b@Rk>
+References: <20201006044941.fdjsp346kc5thyzy@Rk>
+ <e9cfac98-51fc-b169-cb74-80fd11de12ec@redhat.com>
+ <20201006083157.3pg6zvju5buxspns@Rk>
+ <69853d2b-239c-79d5-bf6f-7dc0eec65602@redhat.com>
+ <4f02cbdf-e1dd-b138-4975-118dd4f86089@redhat.com>
+ <a07d3890-f560-855f-3631-a3d5848dcdf5@redhat.com>
+ <20201014042420.fkkyabmrkiekpmfw@Rk>
+ <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
+ <20201026225400.37almqey2wxyazkn@Rk>
+ <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f15806d6-32e2-c6b0-8f96-670a196380a8@redhat.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes the machine look up the LED from a GPIO machine
-descriptor table. The Geode LEDs should be on the CS5535
-companion chip.
+On Tue, Oct 27, 2020 at 11:09:11AM +0100, Hans de Goede wrote:
+>Hi,
+>
+...
+>
+>So I see 2 ways to move forward with his:
+>
+>1. Just disable the debounce filter for level type IRQs; or
+>2. Add a helper to sanitize the debounce pulse-duration setting and
+>   call that when setting the IRQ type.
+>   This helper would read the setting check it is not crazy long for
+>   an IRQ-line (lets say anything above 1 ms is crazy long) and if it
+>   is crazy long then overwrite it with a saner value.
+>
+>2. is a bit tricky, because if the IRQ line comes from a chip then
+>obviously max 1ms debouncing to catch eletrical interference should be
+>fine. But sometimes cheap buttons for things like volume up/down on tablets
+>are directly connected to GPIOs and then we may want longer debouncing...
+>
+>So if we do 2. we may want to limit it to only level type IRQs too.
+>
+>Note I have contacted AMD about this and asked them for some input on this,
+>ideally they can tell us how exactly we should program the debounce filter
+>and based on which data we should do that.
 
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-geode@lists.infradead.org
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v2->v3:
-- Rebase on v5.10-rc1
-- Resend
-ChangeLog v1->v2:
-- Drop excess comma after terminator { }
-- Collect Andy's Reviewed-by
----
- arch/x86/platform/geode/alix.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+Is there any update from AMD? Based on the discussion, I'm going to
+submit a patch to disable debounce filter for both level and edge
+type IRQs, i.e. to remove relevant code in amd_gpio_irq_set_type of
+drivers/pinctrl/pinctrl-amd.c since setting debounce filter is
+orthogonal to setting irq type and Andy has submitted the patch to
+support setting debounce setting supplied by ACPI in gpiolib-acpi.c
 
-diff --git a/arch/x86/platform/geode/alix.c b/arch/x86/platform/geode/alix.c
-index c33f744b5388..b39bf3b5e108 100644
---- a/arch/x86/platform/geode/alix.c
-+++ b/arch/x86/platform/geode/alix.c
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
-+#include <linux/gpio/machine.h>
- #include <linux/dmi.h>
- 
- #include <asm/geode.h>
-@@ -69,21 +70,15 @@ static struct platform_device alix_buttons_dev = {
- static struct gpio_led alix_leds[] = {
- 	{
- 		.name = "alix:1",
--		.gpio = 6,
- 		.default_trigger = "default-on",
--		.active_low = 1,
- 	},
- 	{
- 		.name = "alix:2",
--		.gpio = 25,
- 		.default_trigger = "default-off",
--		.active_low = 1,
- 	},
- 	{
- 		.name = "alix:3",
--		.gpio = 27,
- 		.default_trigger = "default-off",
--		.active_low = 1,
- 	},
- };
- 
-@@ -92,6 +87,17 @@ static struct gpio_led_platform_data alix_leds_data = {
- 	.leds = alix_leds,
- };
- 
-+static struct gpiod_lookup_table alix_leds_gpio_table = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		/* The Geode GPIOs should be on the CS5535 companion chip */
-+		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("cs5535-gpio", 25, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("cs5535-gpio", 27, NULL, 2, GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
- static struct platform_device alix_leds_dev = {
- 	.name = "leds-gpio",
- 	.id = -1,
-@@ -106,6 +112,7 @@ static struct platform_device *alix_devs[] __initdata = {
- static void __init register_alix(void)
- {
- 	/* Setup LED control through leds-gpio driver */
-+	gpiod_add_lookup_table(&alix_leds_gpio_table);
- 	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
- }
- 
--- 
-2.26.2
+Btw, did you contact AMD through a representative? Obviously CC them
+didn't get their attention. There is an inconsistency for configuring
+debounce timeout in pinctrl-amd as was spotted by Andy [1]. I also need
+their feedback for this matter.
 
+[1] https://lore.kernel.org/patchwork/comment/1522675/
+>
+>Regards,
+>
+>Hans
+>
+
+--
+Best regards,
+Coiby
