@@ -2,114 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A52B2A6EE3
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 21:36:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF8D2A6EEA
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 21:37:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbgKDUgL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 15:36:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
+        id S1727389AbgKDUho (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 15:37:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgKDUgL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 15:36:11 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62362C0613D3;
-        Wed,  4 Nov 2020 12:36:11 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id z3so2855910pfb.10;
-        Wed, 04 Nov 2020 12:36:11 -0800 (PST)
+        with ESMTP id S1726777AbgKDUho (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 15:37:44 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BFCC0613D3;
+        Wed,  4 Nov 2020 12:37:44 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id f38so17573762pgm.2;
+        Wed, 04 Nov 2020 12:37:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YqBiLs3AHaM7H7/oAu2F5GBFFZxeV1BLgv40I95tuSs=;
-        b=LcPXCKqo1FPmvhi9eJ/JMXQQRodwH/VnPUpkTJ0zHPXBHrfO8Qr5QValOMq+gSg+uW
-         vW4SieXmzeVbc5dTvNpikjirtadPZoNLG3AqfimhTpbiYweMKEEgbRkU01sJQbcuiVoY
-         88em37kCsZa34fKFvmcI7OOgZEb48JL6a0eM/4j1cJu1u4HgcofYGS/EFpedFk8E1l1v
-         Bv9Re62YcIZFFgs+sf+8+vIMa76DO/GNmv2Xs/HR0HiD+2GufvoWrF3SR9Inxf188Xoz
-         nUvgaOf64n9wHpcRrhyq760zLokxU1stOKuSHG6bJ1edIXlxrnVAnRAfhRgHalAEqcO/
-         2gew==
+        bh=KqtmvIeCcEE4/0N0FwB4Be0GcMo80VuNERTsRMZmWY8=;
+        b=aXB4kSQJm7gg6cFUbtrYSByfJtj3mF5nBA64oUXvY9DLFZl1xDz1N2hbVH2umtgz+2
+         qZFe7/49PRzpHpMPcKtTsey77QZ6CJgnUyu49LUfyKtBg8NYJ+BqJu/ofvr/LH3oDduf
+         JBo1WfRa87+KTUaOjP0MCZauRUV+vgjg0yWqbTzlWPcrReQcZ/NbbT5loNuE9kdYGomB
+         aFNjzIE5zseztJP9XXJEqcVpP113GtjKVaYsYc/RVubPsEKEZ5Cw1PpQDpN65VARtKTH
+         MMYlJhXELBzSQMrTKSlgVdmANr1XzrH+E6mzRbpgLRi6oJzws+xr5EPYZDCyXP7CdL6E
+         aQqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YqBiLs3AHaM7H7/oAu2F5GBFFZxeV1BLgv40I95tuSs=;
-        b=pLFn31dlPiOL2UukmaFkYf2jrf2xhPRsFlOCg7LsoEyt1E9OPG19JJZuZnhpsEhUCO
-         cxkVyTc87fwVUuf++fb8+WedomPBgAW3lhkalNAL1Tix2Dnht3epHC6/m2sQwey159Pl
-         gjJU5sUQTC2YOWy/n56E5mfilPnKEZ5AdzJ4WrmsDDURqRFQlg8WBfFPd9vbnZxjK9BS
-         PNTSX6dCr9361pybv6eQ4cJmrXFwMmuXtDJ6UjBIRCJp7PFLyav001UGDeYedF8C8uew
-         LQm3V+lNBUbnk3BXM+xaU+O+hxVgIzykqQtfgOVB7nZTcWevOq4UkxokBILIAh25USUV
-         ebPg==
-X-Gm-Message-State: AOAM532UXpxCQZZuQeJyN+BwxMH3Ep2WDIbFu+fTLevic8QvvD9OsbRl
-        01cZsCygBkbmu8AUQgY0I6lM5KcRO4Lmt4NDrRs=
-X-Google-Smtp-Source: ABdhPJxkX0LBAF0P1JZ/ehrPDkHSOGepjlG4pWNqUAgrCoxxTZCIZpLaj9UAnC9VFk1lL7dbAZ3RqsDVUy/nL1IPAbY=
-X-Received: by 2002:a62:343:0:b029:15c:e33c:faff with SMTP id
- 64-20020a6203430000b029015ce33cfaffmr30847470pfd.7.1604522170922; Wed, 04 Nov
- 2020 12:36:10 -0800 (PST)
+        bh=KqtmvIeCcEE4/0N0FwB4Be0GcMo80VuNERTsRMZmWY8=;
+        b=cSeulsTLswyqRPgtsGEOm55fg99MzS3qeW/vLkiBFCb1rhHUztN1dhEMBG84Gz9/kv
+         vIy2/UPKz+mN9BvIipO67dzpReY2XG192fpiv/LvvACx3WihuqWe8P34+ndT1KQQ6MY0
+         zpVFnaejpSt+cYGgcQ7RmppS6AqWcVgvosjLO2X1FTfTQuAzVLbeit05oUZ1ira1o68U
+         e6tAmKtcwzU+JBfxj01PDc+D5uU3IXHBtyA0T/OIxzPmf8KSONNeXYNs0pJeZ9EWyg3R
+         ECMMZJw5zwzAokKk57bFOL4zQ1G1asRXEw6JiV85P9+vyoFrguWwaC7p5076uyXT6Jzx
+         Julw==
+X-Gm-Message-State: AOAM5307QYOZmeYXf5hN2OAjoEzNYz3Tp7JVSI/1I34JKoyhL6IvdHhe
+        d/Oqw8I9K3ZSz86DCKCHpdXZKLkiLIyRhsRG2FI=
+X-Google-Smtp-Source: ABdhPJzjJQXk1LfOeoT8BLyHAQ5mGIVCdPsCssU1DbU5ljyYDHA3v+4JutMxyMOTt76qlVclDHh0ntuxQd8atHvUB1I=
+X-Received: by 2002:a63:3e05:: with SMTP id l5mr3386282pga.74.1604522263794;
+ Wed, 04 Nov 2020 12:37:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104193051.32236-1-brgl@bgdev.pl>
-In-Reply-To: <20201104193051.32236-1-brgl@bgdev.pl>
+References: <20201104160344.4929-1-coiby.xu@gmail.com> <20201104160344.4929-2-coiby.xu@gmail.com>
+In-Reply-To: <20201104160344.4929-2-coiby.xu@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Nov 2020 22:36:59 +0200
-Message-ID: <CAHp75Ve0vMzK43QCqNxMwT6UpUESkbCvbvE3Ld=RZQd3bmJZpA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] gpio: exar: refactor the driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 4 Nov 2020 22:38:32 +0200
+Message-ID: <CAHp75Vf8NMWL99Eo5k8gLwYSjUjfU6wjoh97YzVz+M=nwGNfrg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: amd: fix incorrect way to disable debounce filter
+To:     Coiby Xu <coiby.xu@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        David Laight <David.Laight@aculab.com>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 9:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, Nov 4, 2020 at 6:05 PM Coiby Xu <coiby.xu@gmail.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> The correct way to disable debounce filter is to clear bit 5 and 6
+> of the register.
 >
-> I just wanted to convert the driver to using simpler IDA API but ended up
-> quickly converting it to using regmap. Unfortunately I don't have the HW
-> to test it so marking the patches that introduce functional change as RFT
-> and Cc'ing the original author.
->
-> v1 -> v2:
-> - add new regmap helper: regmap_assign_bits()
-> - fix lvl vs sel register access
-> - set value in direction_output callback
->
-> Note: I didn't use the fancy method of offset calculation Andy and David
-> suggested because this series broke the driver according to Jan - let's
-> get it right before we modify it any more. I found a couple problems that
-> could maybe cause the crash. Jan: could you give it another spin?
+> Cc: Hans de Goede <hdegoede@redhat.com>
 
-I would suggest perform two tests:
- a) full set
- b) with last two patches reverted / not being applied
+> Message-ID: <df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com>
 
-In that case if the series is still broken we may go with cleanups first.
-
->
-> Bartosz Golaszewski (8):
->   regmap: provide regmap_assign_bits()
->   gpio: exar: add a newline after the copyright notice
->   gpio: exar: include idr.h
->   gpio: exar: switch to a simpler IDA interface
->   gpio: exar: use a helper variable for &pdev->dev
->   gpio: exar: unduplicate address and offset computation
->   gpio: exar: switch to using regmap
->   gpio: exar: use devm action for freeing the IDA and drop remove()
->
->  drivers/gpio/Kconfig     |   1 +
->  drivers/gpio/gpio-exar.c | 151 +++++++++++++++++++--------------------
->  include/linux/regmap.h   |  16 +++++
->  3 files changed, 90 insertions(+), 78 deletions(-)
->
-> --
-> 2.29.1
->
-
+Can you use a Link tag with proper lore.kernel.org URL?
 
 -- 
 With Best Regards,
