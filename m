@@ -2,110 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B5A2A67FC
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:45:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 253C42A67FD
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:45:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgKDPpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 10:45:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
+        id S1730517AbgKDPpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 10:45:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730274AbgKDPpW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:45:22 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2266CC0613D3
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 07:45:21 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id p5so30429441ejj.2
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 07:45:21 -0800 (PST)
+        with ESMTP id S1730391AbgKDPpt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:45:49 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09843C0613D3;
+        Wed,  4 Nov 2020 07:45:49 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id x20so19693035qkn.1;
+        Wed, 04 Nov 2020 07:45:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=301FEJMfRdYT4JQEwH4FCOAr+TJIAAj4pMznGG/09vY=;
-        b=yTvGKGoV6x5UXlNACKUXPt7LqlkEvIUpU+wRaUOh8ctU/YHUixo8o00dRbvEGX0eeU
-         GMMrWgKQLx8bjgzPQ1jNRh20COiPLM4R5f4YJK8ASaKBBToLWaILqxFlCjrti2z5PPbb
-         miRA8JgSYYZhZHqs4vIcEnm3u4cbnOO4zJVUytcdKErD74FLDzbHulNzR5tlOLV7wX+R
-         85mwbvtaeMHR+uZjb8j6T4gTplWZ21PLhKgXHpev7I5AclnTY13Hooer5k+D3M8QASVR
-         wxvjs6VIjS+ALRTgzyNbJaR7QPp9UqF/EmQw+CvlZxWj9MvdIxseqPPuZe2proKSPv5P
-         6Z4w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C8okzA8sOEsVWkQrRSpAG+sSYpv4C493zXUAbeEuuQY=;
+        b=rRqlB9ZpPy/2Hy7eHiQO/sGV+iRjSpgsKdWo/swHyGrKVleb30VLORtZOc310PH+9A
+         Jyh4xqi5xQHPWSMCP3AcG4vc1YYBuZbeQ4/iAAAhJbG26cUJMPehbyuIS1uQ0QkFcpKI
+         MYBQuDKfk+FkSDqeFzkr3R48kqbMyg81lvmsUGAZ7tjeBIL+2x7H2KwybXFOavy2MC6V
+         lNb416Rhsy+zleqp6Uv5lgX37Of9I7tncqUp6nGfdTjTdd6+2NGT1mAyBQo2FLKLxi2y
+         Nl5xTcYGb4td15vP9xFRqLqK86c7oeFhhyBKdoJWVQLPkjQsVcGjyR/beQ6OcgDBN4x4
+         xgKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=301FEJMfRdYT4JQEwH4FCOAr+TJIAAj4pMznGG/09vY=;
-        b=Mo47JC19Qj/hiv4cSIvedv1RRSi6jpMJOpYoS08sdV/d4/lkx7f1kh7KuqwgKJuyfL
-         a2aa6rsmup8QAQOZ0CT+Nh8uiE0yCHfhiS7ZNA5fq2R2FyVzP+5cuyfJdlpCrVUWJVOA
-         njOdU4uh/nwCBMabklewwWNVj2yxQjajq+unly0wdzdEjThjo452A4DzVhVSTeqQlJNq
-         yG10bBfUB0ql9ayZ0WUsud88Y3Ob5kwDXesTxPq0OWDZsGCojxpAick5sppSYBJvygir
-         r1mUvawsMCaxHJzhTGNtugtH2tJ+PgZZFSqn5xSB9LyS2YJBbDKRxUlquCFBz0P459iI
-         b//Q==
-X-Gm-Message-State: AOAM531hpD70uPwy4/G0yymUNd22VfrNHrZHaNHIWQPJl60kqoadM5Ed
-        8YnITt+V1eXl+JDpBxBtt+yesF86bc4OHUAuS7ximfRbG68=
-X-Google-Smtp-Source: ABdhPJyxsiKpQbjq3xhZDhp0cUNvCdePoXfZmiqB+8ekz0x1lIIkIsMOkAWxF2HhsbUzuLujXmOu1W7TqCEF/nceNPE=
-X-Received: by 2002:a17:906:3146:: with SMTP id e6mr24405072eje.363.1604504717926;
- Wed, 04 Nov 2020 07:45:17 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C8okzA8sOEsVWkQrRSpAG+sSYpv4C493zXUAbeEuuQY=;
+        b=IRHjepQSDkdVWRRl2eDHzH7yPWhXKcY7Lle4G0yXVpHP9rh9/ZIoiSahFkbXqCztU8
+         Em/w0l2rpRDBavsMzQTGxMTIAInDRql/NE/5DkOBTyRw+GedqR4ixN3mCKTWhqV1UU9V
+         /qzzAZBj7yTsIT8FlKPqrNBH58wt9WfA6p5Slew06EqPyhtYa4wXuIqCuSnN6Nol5hLn
+         M1t/9Diy8SbYwUNrXrEzKIiJUPkOwz/AFyzi6WTonlyS22nh8fHrLp80r31GXYgTJ+uE
+         kBjxMTdMw9bPxktIqQYmOEnWHSb8elYiXNLR9QN5BzdK2JJ0GIpvs74wg57hscTFCyA3
+         TQHQ==
+X-Gm-Message-State: AOAM530WWkowTZwevpRER8IZuHsmPVSVidxnklIda+SK3k2/OMwkM8hH
+        7u0x7xXZAcTTQoCaNbLzank=
+X-Google-Smtp-Source: ABdhPJwVHWafu664QVPMYQHX/8Z/kOpGMg2bsN4nwbXGYjxjzeyzjZ/BXENA0xuD/9Kpp2xdxMO+7g==
+X-Received: by 2002:a37:9b0e:: with SMTP id d14mr1249249qke.168.1604504748224;
+        Wed, 04 Nov 2020 07:45:48 -0800 (PST)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id r16sm2618588qkm.1.2020.11.04.07.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2020 07:45:47 -0800 (PST)
+Date:   Wed, 4 Nov 2020 10:45:29 -0500
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Arnaud de Turckheim <quarium@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/3] gpio: pcie-idio-24: Fix IRQ handling
+Message-ID: <20201104154529.GA406355@shinobu>
+References: <20201104152455.40627-1-quarium@gmail.com>
 MIME-Version: 1.0
-References: <20201016090949.24456-1-brgl@bgdev.pl> <20201016102937.GA22245@laureti-dev>
- <CAMRc=Md1RxGiv+v27dZOSsGX4v1OEc=E-EJvd-4_8tMjgFicoA@mail.gmail.com>
- <CAMRc=MfjBai0PECzvXjLN9w_sP-ZE4QBxGL0-puow2zDKJd+Uw@mail.gmail.com>
- <20201019123801.GA5116@laureti-dev> <CAMpxmJU0y5Zze3we-NjnLi1fCG69v38fMwvTgCe0JXGK+RxLNQ@mail.gmail.com>
- <20201020055714.GA10256@laureti-dev> <CAMRc=Meo5vcCo9hoA8-nbr_f7WHLL=AP87uwAZgMRiTmxVqxBw@mail.gmail.com>
-In-Reply-To: <CAMRc=Meo5vcCo9hoA8-nbr_f7WHLL=AP87uwAZgMRiTmxVqxBw@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 4 Nov 2020 16:45:07 +0100
-Message-ID: <CAMpxmJU_LLQ0GqtvneOp2gSVRcajS7NwfYOD8E=un7_z7yhDTQ@mail.gmail.com>
-Subject: Re: [libgpiod][RFC PATCH] bindings: cxx: demote the line's parent
- chip reference to a weak_ptr
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Helmut Grohne <helmut.grohne@intenta.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Content-Disposition: inline
+In-Reply-To: <20201104152455.40627-1-quarium@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 8:59 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Tue, Oct 20, 2020 at 7:57 AM Helmut Grohne <helmut.grohne@intenta.de> wrote:
-> >
-> > On Mon, Oct 19, 2020 at 03:06:18PM +0200, Bartosz Golaszewski wrote:
-> > > But this still forces us to do
-> > >
-> > >     return chip(::std::shared_ptr<::gpiod_chip>(this->_m_owner));
-> > >
-> > > instead of a much more elegant
-> > >
-> > >     return chip(this->_m_owner);
-> > >
-> > > in line.cpp and there's an even less elegant thing in iter.cpp. Or am
-> > > I missing something?
-> >
-> > I confirm the behaviour you see. My intuition that the conversion would
-> > happen implicitly was wrong.
-> >
-> > Still the sticking point is this: Your constructor should allow for most
-> > flexibility to the caller and in this case that means it should consume
-> > a shared_ptr by value.
-> >
-> > In order to make the case with a weak_ptr bearable, I suggest adding a
-> > delegating constructor:
-> >
-> >     chip(const ::std::weak_ptr<::gpiod_chip>& chip_ptr) :
-> >         chip(::std::shared_ptr<::gpiod_chip>(chip_ptr)) {}
-> >
-> > That way your desired way of calling should continue to work while not
-> > forcing callers to convert a real shared_ptr to weak_ptr and back.
-> >
-> > Sorry for the confusion about this.
->
-> This is a private constructor though and it's not meant to be exposed
-> to callers of library interfaces. Only internal users will call it and
-> they'll pass a weak_ptr to it alright. I really think it's fine the
-> way it is now.
->
-> Bartosz
 
-I applied this for now in its current form as I want to start working
-on the PImpl changes. We can tweak it later.
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bartosz
+On Wed, Nov 04, 2020 at 04:24:52PM +0100, Arnaud de Turckheim wrote:
+> This patch set fixes the irq_mask/irq_unmask functions and enables the
+> PLX PEX8311 local interrupts.
+>=20
+> With the current version of the driver, gpiomon (from libgpiod) or a
+> poll(2) on the sysfs value are not working. According to
+> /proc/interrupts, there is no interruption triggered.
+> The main issue is that the local interrupts are not forwarded by the
+> PEX8311 to the PCI.
+>=20
+> There is also two bugs:
+>     - The IRQ mask is not correctly updated when unmasking an
+>       interruption.
+>     - The COS Enable Register value is not correctly updated when
+>       masking/unmasking an interruption.
+>=20
+> It seems this problems exist since the initial commit.
+>=20
+> Arnaud de Turckheim (3):
+>   gpio: pcie-idio-24: Fix irq mask when masking
+>   gpio: pcie-idio-24: Fix IRQ Enable Register value
+>   gpio: pcie-idio-24: Enable PEX8311 interrupts
+>=20
+>  drivers/gpio/gpio-pcie-idio-24.c | 62 ++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 6 deletions(-)
+>=20
+> --=20
+> 2.25.1
+>=20
+
+This patchset looks good to me and fixes several fundamental bugs. I'm
+going to reply to each patch individually to give my Reviewed-by tags
+for the benefit of those picking up the patches.
+
+Thanks!
+
+William Breathitt Gray
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl+izHIACgkQhvpINdm7
+VJJIXg//S/TIeMk+G+YlFHYyHYn0FwgG/2/ETVMgMBh5BG5ngJvf7lP08G1ntMMY
+WIIr24GHIpyQn0fREOhtAO0vScusaXizpDxPkZit3OD7OYnO/HBb3cp4+dsC9yi/
+t6YRpyruNiy+fObf5TYtFpg8SgSlfXe1djS03Ql1Ofaxjdj3CoV0lZM5iWRhrwJh
+PDbWbmBHpyRlmn8m+Dzt6Uqjd6xbwhkb7k8YvUMuyf/3my4vftYPSP9EYBj7DXnE
+a3Lg0wnjQ17rEpBjbpDhdpmGvhRXd0rek4SdJiX5L2c9wJYcUxVEyUmUrWUjUjZp
+r2So/+9BG97wuF5UdDBr9A2KkXtBbrFP2j5Q9P2aMP0LWM/f+EXO6liN3aTrOh9Y
+9U7sSJ5h63YccLAyn5p1TJWsvW5zfe9OxzhAPQpUL9AFAz7w+4m/h0pqWsQacuzS
+NJkgBNMYErydifHh25PMN1AI6aeqomIS6R8Oo6f+0usSjiNFTm23WlZt282SlGtX
+DMKFBHZemVn68xU6dWVzVTXS8Urx+AHOL+7lPdNZkvZh6ghdU2RH/ZoRWbLJJo9F
+MFZ1tZTn7UXkcVLTghhnrfCPOvfQ008k0FhtiMsgEj3+VTlHFbQJy4WHPHTDseGe
+6HUn0ialdpNlHwbJRz2j0FHz23+jj7mIgJpxK2yiAy6cFh5J8Qs=
+=iy2L
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
