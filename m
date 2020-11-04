@@ -2,106 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24C9D2A67FF
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:46:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE85B2A6801
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:47:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbgKDPqN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 10:46:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57782 "EHLO
+        id S1730424AbgKDPrM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 10:47:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730274AbgKDPqM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:46:12 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7743C0613D3
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 07:46:10 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id w13so16930916eju.13
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 07:46:10 -0800 (PST)
+        with ESMTP id S1730274AbgKDPrM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:47:12 -0500
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A2C0613D3;
+        Wed,  4 Nov 2020 07:47:12 -0800 (PST)
+Received: by mail-qk1-x742.google.com with SMTP id 11so93394qkd.5;
+        Wed, 04 Nov 2020 07:47:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kzlhjy9+1/W2BKXD9t1yEFeJPYmFHN+P4Yhf8isZx80=;
-        b=lZ5sbCk2GpazAMHXPquExXG1DKOw4TAipwANB3eeD+w3nClBe6RvISDpU8AtzFeUv0
-         xtjmPs0h1PO9sR+bHae8GLArDNtH3r3+iiIAunMbYEIPjk4fbQoMrNAObizL+0F5tB1+
-         VWoliD0hYuQFya1XWzsfE3eNypMtrEy/23Mj6GU5trsbp4c0IhlsV0Z903FPqt831yNS
-         x5TwJ58O9baA/mC12BDWizQn4LqphWpim8n32ia6f+pUXybis1JvlCEO8gO6sJ0EBPnT
-         id9onFzVLbzdnS3NLxMz4Dtdd5A+Qh9ZERffUytkpAtjgkVI4tsK+FIJZAeJfyVhDpR6
-         iEfA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=l/2D/bogFpKCDWQ5x1wkO00y8+j6f9nhwSfZULOrkvU=;
+        b=gzfToeJwioQ7A9lhYGlwofo4JyXtEs0/dGYXwE87/5tVtGN2y8Et8Fmoqq1na+xLTL
+         fbU8/k53x99Y9n+v4D0lD94Qsml+FovoaIL/xscyKfpEIQqLbq1xGai29hhtqSSVenZe
+         07M9xM/Xfmc25TjTm0sSTsgYVdWWiAQtKi4UMlhorMsb1QPqb9DJE9gO3HJOmNupeLY/
+         AEIVvFSJUdtNuJGlfZNdzfhS+0hFjvdbuF9ao7iNRW4Mc1kH+Hv1XEFmV568eFcXv749
+         Ystx/wPbcDeDimDMDJ+t9fXVdQ1eAx3KGCX5Gy6lvjeFQutj48Vc7lvLUsERfKIu5nvC
+         IQag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kzlhjy9+1/W2BKXD9t1yEFeJPYmFHN+P4Yhf8isZx80=;
-        b=UMQuJuz1M2qIa3JrEC+qWIkCUdiil0GqeiwMVFqyoWgPvmSe9nTiymS7MVcdjTZPvs
-         nEG/ld6n8A6SlGX/8zukjUJdhugaJEa8eLSkLDSuShdcEC1xIBR4RsEFcN6KWejR0rdF
-         R5ijbXZG3HaT+H/hkz5PvSyXkquewK8j4XCASeMHoJ4j5WkJQud8PJtpZ9yrmCakFMOr
-         UUcDoehddKN/k+rfGHYSdZU7KVauR82HLMIOXorHObFuZPdlQuPYKA9qD6PPVU0jl5rd
-         S35bxgda5/kXXxSkxr+VVsylSzGawzfS8c5by0aRUxLvO9rul9LaPnl2dCkLLpW2XWl2
-         6BVw==
-X-Gm-Message-State: AOAM532VUpfja9LJFBATc3aYFClSr+3+R4A6naE5Oe6sB/D/YZFcu4c6
-        6rM8Kn3jeAf0fMV047iUnLPG13Gs5VMhZ7FEeqd9Ww==
-X-Google-Smtp-Source: ABdhPJz41Qb0aJmzK3EfOYAmJRv7W8o9Hfup/0NsgKX8yVnRA4CcfNtGCvBEXznhyrXyfAaWumWuVHZDTvwRd0vGIRA=
-X-Received: by 2002:a17:906:1c84:: with SMTP id g4mr12387389ejh.155.1604504769493;
- Wed, 04 Nov 2020 07:46:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l/2D/bogFpKCDWQ5x1wkO00y8+j6f9nhwSfZULOrkvU=;
+        b=OzY9cJheVSFktFZT9uHYIdjk03yTXFCF3C75txX219touDyKcLaEESi8uuAnVzm0Wm
+         lZgALYilMz6IiZ3FFx9UMmeKlB+CDaIRoRTF4pXZWCK8mRnUcRW+MJjb+YfMVuOCR1bF
+         RO6QW983fANpDVdotJDpjIjREVDrdPmS43mex52FqqH7Y7+48aqk3CQ7s4PQRlwiHC+4
+         4EY08qllaKWJKde2B3r7WIatRD1jEUWls4gaYQN3RHRQRlZ04SFl15iwejKUbDv6J9j7
+         mVF9WkqrgGN8p/6hAGO3s5UEw9La2VNaJHWOHLmP4oXOtRo48OOa95lTGz/QoCH7EVTf
+         3jig==
+X-Gm-Message-State: AOAM532Ae6MUQQDwmpK4AaWbFrIogW1RWdw7CS00IEVdmaPr6rjuhvTE
+        7LWIV5sWRkOuLRR/1Xe+NvU=
+X-Google-Smtp-Source: ABdhPJz0rypOVrHg2msNeEJRs2LsorCYGS3LEOV0DGaFMfccmfv5kb5F8wBhC0kWyZR8g3CwN7CT6g==
+X-Received: by 2002:ae9:e508:: with SMTP id w8mr26662019qkf.110.1604504831072;
+        Wed, 04 Nov 2020 07:47:11 -0800 (PST)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id z69sm2840719qkb.7.2020.11.04.07.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2020 07:47:10 -0800 (PST)
+Date:   Wed, 4 Nov 2020 10:47:08 -0500
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Arnaud de Turckheim <quarium@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/3] gpio: pcie-idio-24: Fix irq mask when masking
+Message-ID: <20201104154708.GB406355@shinobu>
+References: <20201104152455.40627-1-quarium@gmail.com>
+ <20201104152455.40627-2-quarium@gmail.com>
 MIME-Version: 1.0
-References: <20201030142312.26754-1-brgl@bgdev.pl>
-In-Reply-To: <20201030142312.26754-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 4 Nov 2020 16:45:58 +0100
-Message-ID: <CAMpxmJUQ5=wwJS=jZ+p1CkptZoiQKPA8hCFVU9QNZWZTZMjhsA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3] treewide: rework struct gpiod_line_bulk
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
+Content-Disposition: inline
+In-Reply-To: <20201104152455.40627-2-quarium@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 3:23 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Current implementation of struct gpiod_line_bulk uses stack memory
-> excessively. The structure is big: it's an array 64 pointers + 4 bytes
-> size. That amounts to 260 bytes on 32-bit and 516 bytes on 64-bit
-> architectures respectively. It's also used everywhere as all functions
-> dealing with single lines eventually end up calling bulk counterparts.
->
-> The rework addresses it by making the bulk structure opaque and
-> providing appropriate interfaces for library users while retaining a way
-> for internal users to allocate single line bulks on the stack.
->
-> The macro-based loop has been removed. In its place we provide a function
-> iterating over all lines held by a bulk and calling the provided callback
-> function for each line.
->
-> Since bulk operations can now fail, a bunch of test-cases has been added
-> to cover the relevant code.
->
-> While at it: using the word offset both when referring to line's HW
-> offset in a chip as well as the offset in a bulk leads to confusion.
-> This patch renames the bulk offset to index.
->
-> Some additional improvements to the patch by:
->   Kent Gibson <warthog618@gmail.com>
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+--qcHopEYAB45HaUaB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 04, 2020 at 04:24:53PM +0100, Arnaud de Turckheim wrote:
+> Fix the bitwise operation to remove only the corresponding bit from the
+> mask.
+>=20
+> Fixes: 585562046628 ("gpio: Add GPIO support for the ACCES PCIe-IDIO-24 f=
+amily")
+> Signed-off-by: Arnaud de Turckheim <quarium@gmail.com>
+
+Reviewed-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+
 > ---
-> v1 -> v2:
-> - make offset -> index in all bulk-related interfaces and docs
-> - drop the owner chip reference from struct gpiod_line_bulk and reuse the
->   owner of the first line
-> - drop bulk_same_chip helper
->
-> v2 -> v3:
-> - drop bulk iterators in favor of looping over bulk indices
->
+>  drivers/gpio/gpio-pcie-idio-24.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-id=
+io-24.c
+> index a68941d19ac6..5ea517416366 100644
+> --- a/drivers/gpio/gpio-pcie-idio-24.c
+> +++ b/drivers/gpio/gpio-pcie-idio-24.c
+> @@ -339,7 +339,7 @@ static void idio_24_irq_mask(struct irq_data *data)
+> =20
+>  	raw_spin_lock_irqsave(&idio24gpio->lock, flags);
+> =20
+> -	idio24gpio->irq_mask &=3D BIT(bit_offset);
+> +	idio24gpio->irq_mask &=3D ~BIT(bit_offset);
+>  	new_irq_mask =3D idio24gpio->irq_mask >> bank_offset;
+> =20
+>  	if (!new_irq_mask) {
+> --=20
+> 2.25.1
+>=20
 
-Applied this patch. We can add some tweaks later.
+--qcHopEYAB45HaUaB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Bartosz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl+izPsACgkQhvpINdm7
+VJLTXhAAnRsqPsc2j18Y3YFH6nkX3Z1WbmixAbwJUGplfH1UfhdPzoExsXmHCmoU
+uiDdAS3H8X/+IsIWatO70+Gy/n637PCmJ1830ASPIaXS4F18mseXkTxJginY0wdU
+Mk0wEQPlKfZQhxrWCRJbEXwMmjxGuMKvx6ZnwseyaKo43MUREfTHRxPi+t07SMUP
+0rQTdbCmBZ9yIeJYBsrEqdM/QrWVld0ANPlwwZzIIj4M77dOtopb2H3KvYg0q9s5
+98t2400Fxk+Kn0imGDHkBRaKx6HadDAzDZhPoDekBfSk3e24W2ayg/fLglPH57WQ
+c+BH/TAEASX+TutcuxhDan4O00cVMllBC9lhULu/aLpJs0iAd0RDVTptU8v6JFyk
+Q0DavX2uh2LiB74XObW1BrkyGFnviY5KdnWxMxMzGbGpyzzEvvVi6qS9C0PFgGYV
+d5WYmG2Ocv1rl4LqW7jvGR0UKOXnUc5Kneu4QzC9+aIkOiKWTqbxTCV9gab8iNOy
+5XNASL/Jc3jLEXUcGka3x+ynUZWWmo46MNgB5DjzK4a5joI8oVdSDcU3R2+MPU9R
+OV/AhvctVEIbikHtw3T33Dwtwo3CXSd8rJvvZC0gCNOyJZ36wt6kqyRbvj4cNElL
+TmexmmJySSDfX0EvFth8yPxSHkzX0wrE/SR2xgy8MS2l95RK3do=
+=3V7R
+-----END PGP SIGNATURE-----
+
+--qcHopEYAB45HaUaB--
