@@ -2,104 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0F482A6B9A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 18:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B470F2A6D3A
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 19:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgKDR1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 12:27:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgKDR1H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 12:27:07 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE111C0613D3
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 09:27:06 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id 184so28174572lfd.6
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 09:27:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=4/Ari/JVxXZPHvRMjWeTV+TrzrBKoZb8CYCzssdi+Jk=;
-        b=zU8KvdbzfejJtmjKjKXOAdFbj8v2U8pzqMPP7KGpRYW3as5BxUkHLgpYUSy1uBdQh0
-         Qzu0FD5rCXdPTtKfb+3InVJ0+A4973QrqR8RyPmzYbqHY94aTp5kc3ZsUjCqjRuuBWLh
-         qVreGS5MOMAfG+2e5uPK7rpzpED8Cr6ErWfQdQyp6ZDAMtuEnlRYSdV3dGqsF5ms39iT
-         QKJCaW5xsbAt8YxVlSo3cXpCTQW8v3HpdK0P9K9sMvVs4b+iLDYeKTu0XAatdZD8nACG
-         FHoKeT8Dpggd2/92D22hdkflRVtllYkKF+bxXaRE0y0wQO/sGu0Rt3ghOgY0bylN6zL2
-         mdHA==
+        id S1731724AbgKDSyu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 13:54:50 -0500
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:43028 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgKDSyu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 13:54:50 -0500
+Received: by mail-oo1-f67.google.com with SMTP id z14so5317382oom.10;
+        Wed, 04 Nov 2020 10:54:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=4/Ari/JVxXZPHvRMjWeTV+TrzrBKoZb8CYCzssdi+Jk=;
-        b=qRA3dauL0ZOpP0S4TwB7pSXTWPrk2zKYE+Zsbuv705AxwhJb3tx2EP9J1HubjV2lwv
-         3CI5JTKOHpfCRxLFOGQwlOUyRf17qKSBDqlfAZ4Goq781Z419iJ3NQAFe7UA43JAZqjx
-         2aABy0Wi8pADseWFuG4BAuW8D7PmxwQKAGjFT4spaaKgBvosaq3I+l/aWollJB2+bKFg
-         Y4WrjSdv/nzFdLQnEfhXEVQ3iWpk/9WLy+y6HO6fCwR5+PnHZADgWTRZPbMN6HwUh6X8
-         7C9MW9IN9rj1y+dC0jgp5fQSXDTuSRmjtEr3bkPCGJvK/1CM1LK4gDhKsmbzpyBWbhYX
-         jG2A==
-X-Gm-Message-State: AOAM531gzorE+HRIln0w11PFb47j0p3SEW6w9xwV97UYjIlk5GO6a8Vy
-        4+b7GQxAdrVRemUTmTjsnWu4ljyXmisGmK0DYRvt6g==
-X-Google-Smtp-Source: ABdhPJzI4co41WmUWmXKKprceuX3wRtUhSLI5hYFN4sZyUcohC7uPZXCCtxbkrTqkwd3l7U1L2/9rKDlmESpLCyEDGg=
-X-Received: by 2002:a19:2d4f:: with SMTP id t15mr748178lft.346.1604510825213;
- Wed, 04 Nov 2020 09:27:05 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mHHq8sD2+JI52RyeEt4QoVswwQozOAw3HR0XdcqO4HQ=;
+        b=UjSLEBJH55/dZb1F/PgQLsB+0z+obxffycEkuyCUURj/sJ5fsRuDs5IHxoErPXX5B6
+         XCepqgNN2Bjvs7l/4oCT1ggpta5Y5p0YlBXngZVli+J6xzpUeAI/0L1oKu2ZsiohMkR6
+         AIewM5tcNcMxTT5vqoJgOd9kohb5rrS4V8TG1f5Rs1s18j8eR9sm1JFqdX9A0BywO7dd
+         HFxV9zc9JDnFiFJpTUFil0UMM3tg1WUO2It4SJmDPezXxIq56q9w8DxY5Bq575Vo2K+3
+         riGy8esqKlB/DkbrkUYFczjWruk7J62ixcT0L+mRG4BkNg8iOW/IUqGfFfpeLG5vTCuu
+         95WQ==
+X-Gm-Message-State: AOAM531AhHmbUGxATTkra29BmzBTD7koVP/r8szHjz+xxl+xI608OpLD
+        fdteikur1mtN6koxTO3Pp7/GTe8b+Q==
+X-Google-Smtp-Source: ABdhPJw3h1mbBqY2QhQq1HFG7O4JQHM0RdQPqFrraM6G19yb9NF9uitr9UmzzM6rN8uAYxnrnTQwBg==
+X-Received: by 2002:a4a:be92:: with SMTP id o18mr19864620oop.22.1604516089278;
+        Wed, 04 Nov 2020 10:54:49 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l11sm734703oon.35.2020.11.04.10.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2020 10:54:48 -0800 (PST)
+Received: (nullmailer pid 3944170 invoked by uid 1000);
+        Wed, 04 Nov 2020 18:54:47 -0000
+Date:   Wed, 4 Nov 2020 12:54:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SDX55 pinctrl
+ bindings
+Message-ID: <20201104185447.GA3943573@bogus>
+References: <20201103055801.472736-1-vkoul@kernel.org>
 MIME-Version: 1.0
-From:   Nicolas Schichan <nschichan@freebox.fr>
-Date:   Wed, 4 Nov 2020 18:26:54 +0100
-Message-ID: <CAHNNwZAucoc00gJrUsPRMpFc9U2r+os6NJfc1axsGh0m6ES=xQ@mail.gmail.com>
-Subject: gpiolib sysfs access when CONFIG_GPIO_CDEV is not set
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201103055801.472736-1-vkoul@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+On Tue, 03 Nov 2020 11:28:00 +0530, Vinod Koul wrote:
+> Add device tree binding Documentation details for Qualcomm SDX55
+> pinctrl driver.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml
+> 
 
-Following an update to the 5.10-rc1 kernel, I found out that trying to
-export a GPIO using /sys/class/gpio/export fails with the kernel
-reporting a message in the kernel logs:
 
-# echo 41 >/sys/class/gpio/export
-[   46.761394] kobject_add_internal failed for gpio (error: -2 parent:
-gpiochip2)
-sh: write error: No such file or directory
-#
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I have tracked it to the fact that I have CONFIG_GPIO_CDEV is disabled in
-my kernel config: Enabling CONFIG_GPIO_CDEV made export work again.
+yamllint warnings/errors:
 
-Enabling CONFIG_GPIO_CDEV and commenting all the code in
-gpiolib_cdev_register() except the final "return 0;" made the issue
-appear again, leading me to think that the issue is related to
-something that is done cdev_device_add() must be done to fix the
-issue.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:required: ['pins', 'function'] is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: Additional properties are not allowed ('bias-pull-down', 'output-low', 'output-high', 'bias-disable', 'drive-strength', 'bias-pull-up' were unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'drive-strength' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'bias-pull-down' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'bias-pull-up' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'bias-disable' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'output-high' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties:function: 'output-low' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'required'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: patternProperties:-pins$:properties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml: ignoring, error in schema: patternProperties: -pins$: properties: required
+warning: no schema found in file: ./Documentation/devicetree/bindings/pinctrl/qcom,sdx55-pinctrl.yaml
 
-Looking at the code of cdev_device_add() I was able to determine that
-the device_add() call made there is required to get the gpiolib sysfs
-export to work again.
 
-In the end I have done this (which I won't even pretend is the proper
-way to fix this), and sysfs attributes are finally working without
-CONFIG_GPIO_CDEV:
+See https://patchwork.ozlabs.org/patch/1392657
 
-diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
-index cb41dd757338..dd72bd0e4af4 100644
---- a/drivers/gpio/gpiolib-cdev.h
-+++ b/drivers/gpio/gpiolib-cdev.h
-@@ -16,7 +16,7 @@ void gpiolib_cdev_unregister(struct gpio_device *gdev);
+The base for the patch is generally the last rc1. Any dependencies
+should be noted.
 
- static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
- {
--    return 0;
-+    return device_add(&gdev->dev);
- }
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
- static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
+pip3 install dtschema --upgrade
 
-If this is the preferred solution I can send a proper patch.
+Please check and re-submit.
 
-Best Regards,
-
--- 
-Nicolas Schichan
