@@ -2,127 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD0D2A63B0
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 12:56:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DCC22A6511
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 14:26:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgKDLzU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 06:55:20 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:4858 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729630AbgKDLxx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 06:53:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1604490832; x=1636026832;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iOB0FmVKh2flypz/GhzcBtMmu6wDA36S0s4YdkICK68=;
-  b=csPjb4X6cB/mboHZayVUwr2h3LFNlpKgxAFvGljLng/rBJPthdD9OHF/
-   djzN6mOf58BGuh09B8gTl9Mtld9LkZf7NvtzrBL5v6j2c3ovc3vCcJgZh
-   BZYz8FIAaLwe1rDobElDXk7lZ9y0iKdjlIZgo3j930Dkc+HYpGaAiA0gO
-   LK2TnY9gs6Cozq/pLprVxFVdJ3NLtBbLXO8aHpuFjyYr2ruwoSOo6rbMp
-   PdlxQPYrkq9iJhvLX4afg3uUd10vhfNoopOSwWA7JlylhzHqV+Q9Kt8+Q
-   V71kZS9Vl83XR/K+khOSb6Ow8ON7WUHsAff2027zTfeDKWcNoiyiTD8gQ
-   Q==;
-IronPort-SDR: QJ2LhP7PPYFEQfitkCN+EUN8R3akJwdiUKtSDmNWGfKWslH1jesT5bTPHZoQmGarlNoamMiw7C
- 7RkYCmKrAk367aggXzCwUyuY77BNk/85oxlWSLr52bXZb0nTPxZnYVl/0rST+7YQqT7JDM+mTm
- /kbVTumwoUIgczgBB3xVZp8N9mJsruteoIgKKVR2gZug/4ym0uCsAhawb9ILtGeLgmGrMNdAZD
- tYSoRPenU8QHcZFH6vmWKLb1CKrJ/euAd2WBzls4y+0LxW9Cxbgvh/Q2iM/BiYTU+j87qjelOw
- q0I=
-X-IronPort-AV: E=Sophos;i="5.77,450,1596470400"; 
-   d="scan'208";a="261754753"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Nov 2020 19:53:52 +0800
-IronPort-SDR: UvsqZA2JHD0pYB0/l3W+3ltC73GGszlGqstpb8vByyHbPIhsQXM89k9DTIcz0rdUiHAFsOe4Jr
- G15igORmf+zGFO4wyLe2hj6WMWdW3DX3tXlld6lW4oVnOGQdztyFTJqEuZaGNWeq6CIbp+zP9c
- PO35DPsO7IFuTvX5ZnKrLcsEVdkoJlXOgXM/eoqA440ntv9jcVg1FAeG3RiPLC+uCwrap6Fl1Y
- q8kBFsO/58m0CT3JLfRHnYlW4CCSQ/oS1MayD5f4+gnGZpj1axLs4Eo+LNFGGFKNYyNxFGpN3j
- 6kpEIcB6RGrG7NMUVtoGfr7u
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 03:40:00 -0800
-IronPort-SDR: NsbssG1JbBySk/CIorKY2F67NCf4RhxbRwsOyAn3iVn4vXelossPiSeP/li3g6qOCn9XgK21GQ
- gb/W3oIIj7Oqu8DdZVivc/FYFKFp1tq8G+trPDu6+AAbq75Rr4eNyBUc3VFe8H7UC9eUu1u+0l
- VnYDqm64G1sW1DC3Y/sN0hn1m1qTuK/wnnWztpwF4XtVm+Sb894keOHu/62B/ayLHUABA8ChaC
- /6uqpZaJX88qdPQ1EG+aYmA7m3IjYdIhExhKKpOYW9F7iDAsOGevbwF3XqGbL3PLBbQcjormOk
- v2M=
-WDCIronportException: Internal
-Received: from wdapacbjl0003.my.asia.wdc.com (HELO twashi.fujisawa.hgst.com) ([10.84.71.79])
-  by uls-op-cesaip02.wdc.com with ESMTP; 04 Nov 2020 03:53:52 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1729787AbgKDN0r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 08:26:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbgKDN0r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 08:26:47 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6FDC0613D3;
+        Wed,  4 Nov 2020 05:26:46 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id 11so3397398ljf.2;
+        Wed, 04 Nov 2020 05:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p/FZImScqZ2Ir9kpVpIAqsDk+Y2Vxk6wtqjcKHY6zIo=;
+        b=F9g0EG+8zR2NYJrImIcDQGZbG7MXyErEFMGsBf/I9p3sHAWX5ZSv/Fg6H+Yr+Ad8tC
+         WFB3lYP06K16ybBL0BIyB7jcu+XnNfA5EMpeqEAynhIQM74e9xTxJRiqTdwiyKpXhnSb
+         lqIGVvPNkmsQ8AbCGZIEdcMxIXK5quvXMlAJHCnOwvDD99n/dp78kxwjZ6NfxgY3r4f6
+         jCnjHzv4UK89GuEwlfS8YQG0MOrDZG6ekZjjD92jxlOIWiM1u3dCLd2k9r9ZhoGIPXiy
+         +I62eXd4cW7FuymezvaaIYy0tyTZ3XUOKmgCA4NWCo/YMzAtCtUD8VFLinlw82QdalRe
+         oRsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p/FZImScqZ2Ir9kpVpIAqsDk+Y2Vxk6wtqjcKHY6zIo=;
+        b=WkAzOC8m+8uAz4AHFWIReDK0ruVfGH/q21o80wFwpYY4rZg3zLRWKvwcZXottCmdqw
+         5fHbiIbu2A1URDcW1OyuVmvx84PxVZnUnfXMbzc+bla1w3nkh2ghkSEereRc6+a+R90r
+         lu1Sg0VkeCh5zZh5iARuoBext6KFxcudei1JHkwXZ3DYAyOovsyc4E93hLQ6zXEUd8d6
+         hsu0Qz1lxTQ00ZcBECaZ6zptn8ltmkpewnqiuPuXq4U+7uRDoX6he8A9sXarRXvmTHF+
+         8nt7r/QUtkKMzoajvGWIUZAQrtYQ3DtD4GSpMegzdrrMmvIPCWRIqbK8IXWJhQCIJCRg
+         U5TQ==
+X-Gm-Message-State: AOAM532iRrRDR0BC6r4HDsVSRL4HR1hBEW3Yl/FUN8SO0OgnoDfncQcE
+        /yTlpbcuCtV7H68tG/aBLZ4=
+X-Google-Smtp-Source: ABdhPJxPrkm3OjW3KcWzFwCqoyXjeoysOxLSdStk0TzFZNuC/QQ0qxmYkRVTKBN/Om1BMw+D6DnoxA==
+X-Received: by 2002:a2e:5742:: with SMTP id r2mr923779ljd.161.1604496405114;
+        Wed, 04 Nov 2020 05:26:45 -0800 (PST)
+Received: from localhost.localdomain (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
+        by smtp.gmail.com with ESMTPSA id 82sm409715lfb.12.2020.11.04.05.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2020 05:26:44 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: Do not trigger WARN() with sysfs gpio export/unexport
-Date:   Wed,  4 Nov 2020 20:53:48 +0900
-Message-Id: <20201104115348.51930-1-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.28.0
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] gpio: tegra: Add lockdep class
+Date:   Wed,  4 Nov 2020 16:26:23 +0300
+Message-Id: <20201104132624.17168-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If a user tries to export or unexport an invalid gpio (e.g. gpio number
->= ARCH_NR_GPIOS), gpio_to_desc() will trigger a register dump through a
-WARN() call. Avoid this rather scary error message by first checking the
-validity of the gpio number before calling gpio_to_desc() in
-export_store() and unexport_store(). The user gets a normal error
-message to signal his/her error without any possible confusion with a
-kernel bug.
+Add lockdep class in order to fix debug warnings that are coming from a
+legit nested use of irq_set_irq_wake() by the Tegra GPIO driver.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+ WARNING: possible recursive locking detected
+ ...
+  (irq_set_irq_wake) from (tegra_gpio_irq_set_wake)
+  (tegra_gpio_irq_set_wake) from (irq_set_irq_wake)
+  (irq_set_irq_wake) from (brcmf_sdiod_intr_register [brcmfmac])
+ ...
+
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Reported-by: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpiolib-sysfs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-tegra.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 728f6c687182..b6fd0d82757a 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -3,6 +3,7 @@
- #include <linux/mutex.h>
- #include <linux/device.h>
- #include <linux/sysfs.h>
-+#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
-@@ -456,14 +457,15 @@ static ssize_t export_store(struct class *class,
- 				const char *buf, size_t len)
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 86568154cdb3..98fc78739ebf 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -560,6 +560,9 @@ static const struct dev_pm_ops tegra_gpio_pm_ops = {
+ 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+ };
+ 
++static struct lock_class_key gpio_lock_class;
++static struct lock_class_key gpio_request_class;
++
+ static int tegra_gpio_probe(struct platform_device *pdev)
  {
- 	long			gpio;
--	struct gpio_desc	*desc;
-+	struct gpio_desc	*desc = NULL;
- 	int			status;
+ 	struct tegra_gpio_info *tgi;
+@@ -661,6 +664,7 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ 		bank = &tgi->bank_info[GPIO_BANK(gpio)];
  
- 	status = kstrtol(buf, 0, &gpio);
- 	if (status < 0)
- 		goto done;
+ 		irq_set_chip_data(irq, bank);
++		irq_set_lockdep_class(irq, &gpio_lock_class, &gpio_request_class);
+ 		irq_set_chip_and_handler(irq, &tgi->ic, handle_simple_irq);
+ 	}
  
--	desc = gpio_to_desc(gpio);
-+	if (gpio_is_valid(gpio))
-+		desc = gpio_to_desc(gpio);
- 	/* reject invalid GPIOs */
- 	if (!desc) {
- 		pr_warn("%s: invalid GPIO %ld\n", __func__, gpio);
-@@ -503,14 +505,15 @@ static ssize_t unexport_store(struct class *class,
- 				const char *buf, size_t len)
- {
- 	long			gpio;
--	struct gpio_desc	*desc;
-+	struct gpio_desc	*desc = NULL;
- 	int			status;
- 
- 	status = kstrtol(buf, 0, &gpio);
- 	if (status < 0)
- 		goto done;
- 
--	desc = gpio_to_desc(gpio);
-+	if (gpio_is_valid(gpio))
-+		desc = gpio_to_desc(gpio);
- 	/* reject bogus commands (gpio_unexport ignores them) */
- 	if (!desc) {
- 		pr_warn("%s: invalid GPIO %ld\n", __func__, gpio);
 -- 
-2.28.0
+2.27.0
 
