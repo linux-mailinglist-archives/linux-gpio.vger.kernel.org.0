@@ -2,61 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE98E2A6963
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 17:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2BF42A69D6
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 17:33:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgKDQXo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 11:23:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
+        id S1726564AbgKDQdB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 11:33:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgKDQXm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 11:23:42 -0500
+        with ESMTP id S1730877AbgKDQc6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 11:32:58 -0500
 Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 089FDC0613D4
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 08:23:41 -0800 (PST)
-Received: by mail-io1-xd43.google.com with SMTP id o11so11505906ioo.11
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 08:23:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D12C0613D3
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 08:32:57 -0800 (PST)
+Received: by mail-io1-xd43.google.com with SMTP id u62so22820753iod.8
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 08:32:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hGHEBXl4t4FlUOwwa4BejHx4CUe078KEVor3Spe3A/A=;
-        b=w8JUSM0f32IBh7Zao/5wCL3OiHPwIngBoZ2GJxQSPYZq0asU7S3tNFWo0mRKTKeyfY
-         HKoJgFhY7a2evn4vy0/FRsMtjom2TvDCglEMErwZON/rHIrwQHPf+gei8TxuLl1G6SDG
-         Xl6ezpaIzTlrBI5bR2ykRN9gO0mCNKKkScbKgMCubuKSc5OgJX0oHpdKWR5w/9mN6n7N
-         R2CE4LdMKY6k1bYg60G5tXWDKjSEck+8XYkn6N9BQDIje2VWVvuunk0eHUPxPGJu/kwM
-         4F11ToCvtzjM2PL7T4mmVF45zZcxm9SW0ULiYklbRQUjJmeoO4HSJ+dLuLFDTsc7Tk+e
-         Qa5w==
+        bh=W89f9FhGl3ZmVVNh0IHsLhIBpTCURVceMfMaDhwTtHw=;
+        b=wOXbh51kkIYJs16L1wH3zkeCtTYv8T3jVyI9PcksX4T2ZXuxqC5XvQwkRVBbymWcyG
+         TYU5UXvAznrnKFiD+OFfz9pYVb7HHC3ZPM/DWvFTIt6TSN6dEuGo4JkCT1eI10I4TxGm
+         fdN5ynsz/tQLW95cF1DdBCu/iV/HEMG4pwV4CcKwVe1+DYxQIJnZb63+MfhDX5n9Xt4J
+         jd4K66pXpTidg9covNMepxicSh9d7ohLlI/UlvSDxmsI5XwbnVhcJsfXZSYc29zSLfI0
+         BsExRvy8tvEYvHhJldBW/hCWGxlOwl2cUai165/ViBT29XXai5mqfZ00DdKAlaU5auwY
+         R4mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hGHEBXl4t4FlUOwwa4BejHx4CUe078KEVor3Spe3A/A=;
-        b=J8jTsEW0s8AUQDBeF1X94WUMy+NyY1DKtzUtG983fNgfWVeX+M591yBkPfi1dEut4o
-         Y3N982dn4JX8luL5C+ODuxhx0e4IKYzaO7J+4AY1QxxtJq7SUfnpezpaFRBvtMLOhB8z
-         AxciwoFvD18ygmSzzjsMWVwv5+iLG1fgvDy/WY46AnfTmHhr/nrfIkS/1XrmwHMr7+1Z
-         LP/DD4I4ETBby4ELxJQW4cLl3/t/ca6GurJ3pAi5oChm8n2fldDH2LC1FrL5k/APTrKs
-         qWKl6wITw9+Ab5MHm+IT6u4ci3N7hFHZaMIH7wHeeH3pclLW7zAGKcGg+P3UUQ7DN6YC
-         jG1A==
-X-Gm-Message-State: AOAM531LrmXUtKIlsbkRRZZN9vtdHpKzZkHBWKFkX6BKFQWC8F/p2Rw2
-        n0IxJ1J/6AOsz8GKS0sVQh6zJLtkUirc3WiUnuF7CA==
-X-Google-Smtp-Source: ABdhPJwLwdwjEMHMoIOS+8+36IQ8PRe/FxcPAomSQgWKr8wj/R+t1Vzk1CF3kz5M6erf73ZQ/czhvyCXu3SJqDnYN+0=
-X-Received: by 2002:a6b:8d49:: with SMTP id p70mr784662iod.31.1604507020444;
- Wed, 04 Nov 2020 08:23:40 -0800 (PST)
+        bh=W89f9FhGl3ZmVVNh0IHsLhIBpTCURVceMfMaDhwTtHw=;
+        b=RxGieNk6gN9815XixIf0eWX6b9rVuoi6u9qKCHTqEq8iMCbp+avhWWG68pQ+PWT2jc
+         l+aFTISzfGKKTdQh+9/p19mSufIlnxBFQyfhV3tWJQ+VVdsH1shKjtF89K5wa85VCVem
+         eXCbXMmCVeiQp89mi7BszLs6coTyuEsDflJ83wImzuDoIF1BElkRQXozaF9K/gGQqDQD
+         MWdnkEbmzjqXYwV58jAPfqiomlYKkpAtdyfAUMTCTyr49wzSBxkYoQpYVHHqnNUaBjqY
+         5bHUHA7f5v+4bthM9h2EWg6mSDg84TNCwrmgP/4INXVr7K86oAtgNW8r1bxGf2zZEhtj
+         Q18A==
+X-Gm-Message-State: AOAM532zuXoW+fpsEPjuBmn5Ne5XD2S0tTs2WRPURk0qzpFr59AUGhTF
+        P3b9OvJqC5pfirhxWZbqw2F4WQcxZGurW+jPDSzACg==
+X-Google-Smtp-Source: ABdhPJzI+uzUtU73vm0s4A7AvEp9YID3FbNdalzqjNgFJmq5wpaL01y5gHvbqYCy2dkgoW+bhhed0RJ5Umd2Q8NVm7A=
+X-Received: by 2002:a02:65cf:: with SMTP id u198mr20169169jab.24.1604507577178;
+ Wed, 04 Nov 2020 08:32:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20201026141839.28536-1-brgl@bgdev.pl> <CAHp75Vf07dsUXZ8Dr-KY-NFQv+C2QQVEOH_se7vYMT6hdm-U3Q@mail.gmail.com>
- <1fd4d69b-4d64-05e5-45a3-b2182fb2d207@siemens.com> <0ab04241-4756-873b-980a-572b225c16e9@siemens.com>
- <CAHp75VdRNFqDySL6D-7BzBMRu1+aPgeT=kxWtcthYH3pVWRycg@mail.gmail.com>
-In-Reply-To: <CAHp75VdRNFqDySL6D-7BzBMRu1+aPgeT=kxWtcthYH3pVWRycg@mail.gmail.com>
+References: <20201026141839.28536-1-brgl@bgdev.pl> <20201026141839.28536-7-brgl@bgdev.pl>
+In-Reply-To: <20201026141839.28536-7-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Nov 2020 17:23:29 +0100
-Message-ID: <CAMRc=MfDvtb13NLnwZNPNnP8NtWZRnok-Rd664LviUryqKAJvg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] gpio: exar: refactor the driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Wed, 4 Nov 2020 17:32:46 +0100
+Message-ID: <CAMRc=Mfin3Rp9cFky4MKAc0cEtKU3LW3=R4nWE-Eeok7ypVVOQ@mail.gmail.com>
+Subject: Re: [RFT PATCH 6/7] gpio: exar: switch to using regmap
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 3:51 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, Oct 26, 2020 at 3:18 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> On Wed, Nov 4, 2020 at 3:57 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
-> > On 27.10.20 16:12, Jan Kiszka wrote:
-> > > On 26.10.20 15:46, Andy Shevchenko wrote:
-> > >> On Mon, Oct 26, 2020 at 4:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >>>
-> > >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >>>
-> > >>> I just wanted to convert the driver to using simpler IDA API but ended up
-> > >>> quickly converting it to using regmap. Unfortunately I don't have the HW
-> > >>> to test it so marking the patches that introduce functional change as RFT
-> > >>> and Cc'ing the original author.
-> > >>
-> > >> +Cc: Jan, AFAIR their devices are using Exar UART.
-> > >>
-> > >
-> > > Thanks for CC'ing. I cannot promise testing this soon, but I will try my
-> > > best.
-> > >
-> >
-> > Finally tested, unfortunately with bad news:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> > Code: Unable to access opcode bytes at RIP 0xffffffd6.
+> We can simplify the code in gpio-exar by using regmap. This allows us to
+> drop the mutex (regmap provides its own locking) and we can also reuse
+> regmap's bit operations instead of implementing our own update function.
 >
-> I guess it is due to missed error pointer handling somewhere, as above
-> is equal to -ENOMSG.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+[snip]
+
+>
+>  static int exar_direction_output(struct gpio_chip *chip, unsigned int offset,
+>                                  int value)
+>  {
+> -       exar_set_value(chip, offset, value);
+> -       return exar_set_direction(chip, 0, offset);
+> +       struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+> +       unsigned int addr = exar_offset_to_sel_addr(exar_gpio, offset);
+> +       unsigned int bit = exar_offset_to_bit(exar_gpio, offset);
+> +
+> +       regmap_clear_bits(exar_gpio->regs, addr, BIT(bit));
+> +
+> +       return 0;
+>  }
 >
 
-Yeah I'd guess it's the regmap pointer but we do check the return
-value of regmap init with IS_ERR(). :/
+Upon closer look I noticed this now ignores the value argument. I
+doubt however it's the culprit of the crash Jan reported.
+
+[snip]
 
 Bartosz
