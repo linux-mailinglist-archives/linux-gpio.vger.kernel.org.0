@@ -2,91 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA2682A6791
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:25:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D38E72A6798
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:25:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgKDPZS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 10:25:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
+        id S1730395AbgKDPZT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 10:25:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgKDPZQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:25:16 -0500
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D22C0613D4;
-        Wed,  4 Nov 2020 07:25:15 -0800 (PST)
-Received: by mail-wm1-x344.google.com with SMTP id c18so2742365wme.2;
-        Wed, 04 Nov 2020 07:25:15 -0800 (PST)
+        with ESMTP id S1730349AbgKDPZS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:25:18 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09375C0613D3;
+        Wed,  4 Nov 2020 07:25:18 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id x7so22497047wrl.3;
+        Wed, 04 Nov 2020 07:25:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hQuHwpO9W6EfVdvEexDpXK2yxO3fyCBXGcRXbSH1WmI=;
-        b=c38nYRy676SWec7f0EgQa52uS8Ebi+3J8uKzCJQDk9gB5bpQhQ4e5F2bGhFHdPfjf0
-         xBEYxSsef4gaiiPl2cYqP0AfmUpoyzU8eJfRIepZqsFPxO+O4D1eEK9FyHXYOHz128cl
-         9YYlLHiLwX5G31vpL9fcDVxPPGBkR0Rn8EUSm7bzwBH8u2vhf/2XEO3Qh77nybmF85Wy
-         Zz+7L9LeU9oXaJ2MVTR0ajbe8+O3g2dB5x8EM3NwHq539FkQtZ5rfgqdLwB2EE0up2rb
-         1kDiiJn2uHvSbP58nUQhwI51TykfBq9Suj0Wcz9VoEewhIhii6OkIdecwLSX+NPhGkIp
-         zzhw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BF7gpkzHkPFc34hVY9E9ZbHX268ds3rIV7llWF9u/o8=;
+        b=EAl3Ny7V5PvlOEbuMhVwjCjkp0PPEGY5PrBWvoidTsSINFel4Tv0uA+jQNg4pwqIlK
+         ojuDwKG7LWDA51y2Fg8l0QxXkjHp2qQ0j/+5b6SQqlLSKlVwtyoAI2IizZ+wZRfH+uds
+         hqmYdc1UtM17xtESd/D2qAcoEqyqfL0GuoR0hw9MrJhLkHk8uPHQHcHMesXyV+9EHqLd
+         cZ++Sy+Om5GpPCktZfPATQ+XbRIYM2ro83c3HkJImlyp0kWbbXqyCfNO3xc9zCDBVObd
+         lEdPGfNtYIWgUUthiwLYAtsNLhguGSY0dQxo+BL4oNmg2vl4zY6LunypjH16AaolfLZ5
+         D1gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hQuHwpO9W6EfVdvEexDpXK2yxO3fyCBXGcRXbSH1WmI=;
-        b=iOu9guYMNhSCXvNd2UJZfqxHWjGVBzImQqrFgbW4BZfsQ8VqqCCy8Lq2Hngofw8I6d
-         onbaDZMKnwiyiuSJMDJjQMmi9m2IX5hnA6MvQRPyMLHqeBYa8R1M0XEfl8yVhvwY8jJr
-         eozgfbhAIFdVp8/s0X8EYgIvejo1nSPHYj4Bftq9BfotqvpEg7E6QbrchMZ45y4GQ7Uw
-         XihA5R4Nrsjrzkt4IvejU7YfcRQU5o3OaAWKWq02Qg7VSL3zxqMGQAf4gEWcKuZi2AF9
-         lzLtv58ZKmiVD5Zq+edbEIiTpvvxElm90vdDax9rtuzk+NeBqDJ4bP+pLpP2pJAf+Dnl
-         TgMA==
-X-Gm-Message-State: AOAM531dKlv5GEM2DngNY51bJRMXVe/Z0SsICyUDxGVBCjoxfo/fPo25
-        WRshAHu8uFXUqk4L9log/Dk=
-X-Google-Smtp-Source: ABdhPJxvk8OnLYlJgX/MwAUVTAxCCGztXI7d3X1he06S/VWdeVwaH2YrOHL14r573YdVy4NfEQSKBw==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr5142035wmj.146.1604503513917;
-        Wed, 04 Nov 2020 07:25:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BF7gpkzHkPFc34hVY9E9ZbHX268ds3rIV7llWF9u/o8=;
+        b=N3Cpph2j5qXhcofcbUv32ZUEmAu1dcwJ2+F1jcSrmANNlddOO9vZw33uYJYygXfbnr
+         WjrqSqCYlBoeFxyfhH4JdRa5oUiBQ7GeBhxG54CM1AunBNjus7zbPLL+PFwrwVH6Hfzo
+         G8p7uVlJaZjwzuqT9GDXjNCZfctsCoI+ZGYKkR/j94rLtbE3v0cWuS5NmVW9ePU2UWs3
+         Ybr52aBrkSW27dxvvTNNXKXNIR3C/0MODOslaz12dqLUaakfDlyV9PS9UgG+UzFhdYkL
+         QqsgJ+T0K1gUlNmKm8rTuaSD1savgUxAiHauux6WXjuQraeS0ltu0Ce4dp6cTc+asBgO
+         uk+A==
+X-Gm-Message-State: AOAM532LUfyVTj36esEoJRMjurb5ltzvXdunmSif6VB2/X9Ms1OE6GqV
+        UqylmcgL11iM+6MukmgsNtgdMrga3pA=
+X-Google-Smtp-Source: ABdhPJwVgTXQO4aUB14NJoYkDr4bwwLx8LUKunKbtyH7Os1A/enmGBc5CVn7/wkjlJgZrwf+esPbGw==
+X-Received: by 2002:adf:c143:: with SMTP id w3mr32643252wre.62.1604503516797;
+        Wed, 04 Nov 2020 07:25:16 -0800 (PST)
 Received: from srv-dev.mgt.openheadend.tv (aob-ovh-4.easytools.tv. [51.210.1.153])
-        by smtp.gmail.com with ESMTPSA id t2sm3050077wrw.95.2020.11.04.07.25.12
+        by smtp.gmail.com with ESMTPSA id t2sm3050077wrw.95.2020.11.04.07.25.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 07:25:13 -0800 (PST)
+        Wed, 04 Nov 2020 07:25:16 -0800 (PST)
 From:   Arnaud de Turckheim <quarium@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     bgolaszewski@baylibre.com, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, vilhelm.gray@gmail.com,
         Arnaud de Turckheim <quarium@gmail.com>
-Subject: [PATCH 0/3] gpio: pcie-idio-24: Fix IRQ handling
-Date:   Wed,  4 Nov 2020 16:24:52 +0100
-Message-Id: <20201104152455.40627-1-quarium@gmail.com>
+Subject: [PATCH 1/3] gpio: pcie-idio-24: Fix irq mask when masking
+Date:   Wed,  4 Nov 2020 16:24:53 +0100
+Message-Id: <20201104152455.40627-2-quarium@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201104152455.40627-1-quarium@gmail.com>
+References: <20201104152455.40627-1-quarium@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch set fixes the irq_mask/irq_unmask functions and enables the
-PLX PEX8311 local interrupts.
+Fix the bitwise operation to remove only the corresponding bit from the
+mask.
 
-With the current version of the driver, gpiomon (from libgpiod) or a
-poll(2) on the sysfs value are not working. According to
-/proc/interrupts, there is no interruption triggered.
-The main issue is that the local interrupts are not forwarded by the
-PEX8311 to the PCI.
+Fixes: 585562046628 ("gpio: Add GPIO support for the ACCES PCIe-IDIO-24 family")
+Signed-off-by: Arnaud de Turckheim <quarium@gmail.com>
+---
+ drivers/gpio/gpio-pcie-idio-24.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There is also two bugs:
-    - The IRQ mask is not correctly updated when unmasking an
-      interruption.
-    - The COS Enable Register value is not correctly updated when
-      masking/unmasking an interruption.
-
-It seems this problems exist since the initial commit.
-
-Arnaud de Turckheim (3):
-  gpio: pcie-idio-24: Fix irq mask when masking
-  gpio: pcie-idio-24: Fix IRQ Enable Register value
-  gpio: pcie-idio-24: Enable PEX8311 interrupts
-
- drivers/gpio/gpio-pcie-idio-24.c | 62 ++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-idio-24.c
+index a68941d19ac6..5ea517416366 100644
+--- a/drivers/gpio/gpio-pcie-idio-24.c
++++ b/drivers/gpio/gpio-pcie-idio-24.c
+@@ -339,7 +339,7 @@ static void idio_24_irq_mask(struct irq_data *data)
+ 
+ 	raw_spin_lock_irqsave(&idio24gpio->lock, flags);
+ 
+-	idio24gpio->irq_mask &= BIT(bit_offset);
++	idio24gpio->irq_mask &= ~BIT(bit_offset);
+ 	new_irq_mask = idio24gpio->irq_mask >> bank_offset;
+ 
+ 	if (!new_irq_mask) {
 -- 
 2.25.1
 
