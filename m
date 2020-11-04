@@ -2,105 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C2DD2A6E5B
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 20:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD42D2A6EDF
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 21:35:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgKDTzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 14:55:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33184 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbgKDTzY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 4 Nov 2020 14:55:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 15DE6AC53;
-        Wed,  4 Nov 2020 19:55:22 +0000 (UTC)
-Message-ID: <4debc77f5c72e1f4eff36a700231493bf9fbf404.camel@suse.de>
-Subject: Re: [PATCH v3 09/11] dt-bindings: pwm: Add binding for RPi firmware
- PWM bus
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Ray Jui <rjui@broadcom.com>, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        linux-input@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        bgolaszewski@baylibre.com, sboyd@kernel.org,
-        linux-gpio@vger.kernel.org, Scott Branden <sbranden@broadcom.com>,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
-        andy.shevchenko@gmail.com
-Date:   Wed, 04 Nov 2020 20:55:19 +0100
-In-Reply-To: <20201104190612.GA3959462@bogus>
-References: <20201104103938.1286-1-nsaenzjulienne@suse.de>
-         <20201104103938.1286-10-nsaenzjulienne@suse.de>
-         <20201104190612.GA3959462@bogus>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-cU9/G+WYZ+w+iySzg6LF"
-User-Agent: Evolution 3.36.5 
+        id S1732247AbgKDUfA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 15:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731327AbgKDUfA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 15:35:00 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F646C0613D3;
+        Wed,  4 Nov 2020 12:35:00 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id b12so10848478plr.4;
+        Wed, 04 Nov 2020 12:35:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0nbZxI2GNfUHVdjomF7wphpVFR/5uKrsBk36HHQSxpY=;
+        b=kmqtjFevR8xE0aampV+XQAIJmpgYZ3UPn+fBtdM8PO0vS3HXqFUn9hcet3bbpfhyxS
+         riaSI9hPIrUtIvbRkDggoY1TzCNKRxf5Q2aynXMZsA24ZdhgZ10JvNezYnuHQ6PkAMi1
+         Yf/UZSTF4444Qug9zHBsmsN6/hqfWVYZmvZ8ZSGhZtgApa0jAuxba3ztmXt8ZE0CKtJl
+         w6hYnn27zawtdfiV3lPNN1zlxFEqQj4Q3LUfGYyuLCBk02XZKh44mBVSzuUKqq+lVTv2
+         Dn6uRFoDg0X5yOBo3czQ2qI/xqUoEMxRwN77IyeSbUx71l4US+Mzp4eoiW2MBOadXWT5
+         Zp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0nbZxI2GNfUHVdjomF7wphpVFR/5uKrsBk36HHQSxpY=;
+        b=uRahaedZJgYlsRcYYWOS/9AmmlW49xywrOt/RSfB5Inw01SYxrhEkQr14G/InSGEaW
+         mtzD8Aa8xmJqqKWqG8+K7tu4gO0kz8Hk2U4QCgpCMJFoadtQTW/QlewWL+U2ZWFR4/zW
+         VPHUd+CQLzv2sh9F4ngqt7digdCsJARmijGJInxC0MsWCU1hZQp59tbZwBhPPcp6Z4lX
+         3lPGnL/knTp3n5gUiDOaH/YdHMvNCFCNmCYzJjMnrzLd3BW38dPF30IAUqhguImtP5hL
+         MSLf2NsY/fRv3pqNOGWDyF4OKJLv/+UYTM4ZfCMnprlb5hQlsIN60cRja0XVpAxjhskj
+         9tyw==
+X-Gm-Message-State: AOAM530pJAZhcPqTwPgQyjNPMsWdOUIw5NDUrFX29IckpEYora39/uy6
+        dPw+bK3266cWdd6LFegh6mzduIC8/9LJSp5JujI=
+X-Google-Smtp-Source: ABdhPJwm4GnGhthPFmROHaM05TPfdVSf7fLvo4Crl4IDcUaw0SamgUxFn3BtV5UtzaroAFrCBQ8iFSZSAkmmC++cbqI=
+X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
+ m8-20020a1709026bc8b02900d60d9df28cmr30546085plt.17.1604522099700; Wed, 04
+ Nov 2020 12:34:59 -0800 (PST)
 MIME-Version: 1.0
+References: <20201104193051.32236-1-brgl@bgdev.pl> <20201104193051.32236-8-brgl@bgdev.pl>
+In-Reply-To: <20201104193051.32236-8-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Nov 2020 22:35:48 +0200
+Message-ID: <CAHp75Vfd4nsXvDOtbq-2TTcKWzWdwDs28Qm4Kuqa-j7YOR-YbQ@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 7/8] gpio: exar: switch to using regmap
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        David Laight <David.Laight@aculab.com>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Nov 4, 2020 at 9:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
---=-cU9/G+WYZ+w+iySzg6LF
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Wed, 2020-11-04 at 13:06 -0600, Rob Herring wrote:
-> On Wed, 04 Nov 2020 11:39:35 +0100, Nicolas Saenz Julienne wrote:
-> > The PWM bus controlling the fan in RPi's official PoE hat can only be
-> > controlled by the board's co-processor.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >  - Update bindings to use 2 #pwm-cells
-> >=20
-> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 20 +++++++++++++++++++
-> >  .../pwm/raspberrypi,firmware-pwm.h            | 13 ++++++++++++
-> >  2 files changed, 33 insertions(+)
-> >  create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-pwm.h
-> >=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/=
-bcm/raspberrypi,bcm2835-firmware.example.dt.yaml: firmware: pwm:#pwm-cells:=
-0:0: 2 was expected
+> +static const struct regmap_config exar_regmap_config = {
+> +       .name           = "exar-gpio",
+> +       .reg_bits       = 8,
+> +       .val_bits       = 8,
+> +};
 
-Yes I forgot to update the example...
+Looking at gpio-pca953xx regmap conversion I'm wondering shouldn't you
+provide a callback to define volatile registers (such as GPIO input
+bits)?
 
-Regards,
-Nicolas
-
-
---=-cU9/G+WYZ+w+iySzg6LF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+jBycACgkQlfZmHno8
-x/4lqwf+LNqmKYmR+D64RymsZ5v7t1WD9DkM2AcOluMdjU13iiD8I+U2KdCc2R8Y
-KhH9mNARA0Kd5JtfEzifsT4G3OqWIac7V/abpwHwrS7ilQjx2gLCACaBO87JwzK0
-R5uOO0FWqaEoLK5GknPO2HGn8ez34EPHU3cu4SXBBFqEnaEbEMr9cEl0ou+vdrYS
-3JnsvkWGZO7LY9vh05c9I/L2pyFg1JieOLU46BYJxAPvlqeILLwWvJ0oq4iiFM7I
-ZFjf/7VhrNk92HLeRMTgPt6/LuVsvnDBJXzAEknYiZt4Taa99Y11MxauWIIqAsk+
-LBfmYrGtxl88K4eRkxCDzH4wnYm/qQ==
-=Ei+W
------END PGP SIGNATURE-----
-
---=-cU9/G+WYZ+w+iySzg6LF--
-
+-- 
+With Best Regards,
+Andy Shevchenko
