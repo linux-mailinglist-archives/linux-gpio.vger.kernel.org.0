@@ -2,155 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DFE12A6514
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 14:27:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 863162A65BC
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 15:01:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgKDN0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 08:26:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbgKDN0s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 08:26:48 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84131C0613D3;
-        Wed,  4 Nov 2020 05:26:47 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id h6so27108798lfj.3;
-        Wed, 04 Nov 2020 05:26:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fVnYeYzliliY5BsuwGfKGaldOY8rDQp+9hQYWemQsLc=;
-        b=l1eTNNFEN4+w2i7yBBgkqaj+289N9TteLj6Rg2+nxfwPiPoHJHA3LSFyESHAw48Mpz
-         Jm6tL1VzJWYKSd+3botuUMUaLA3apJ0FpATqc+OedTt1CyXtk2aWkC1iQkZC0u0y32yA
-         9Lw7HYRM9rxo7e3oYBPU6UgAmFMhMPAST9DBcfEsTNLwzZ2YIrcgvHva3x/CmeE051UQ
-         AxwxMmKEoRtrdnbyAgkP2sAWk8jDUjeiAVKIP/IfDwUW1Tx+XTw1+AFG0vV9UIMdECBS
-         0TxnDS1m0NbAy9XCJNsPmZfdOwCqepQX+ytcuOZCeNpAqyRE1knaskxuy85/ED/2YoUg
-         IWew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fVnYeYzliliY5BsuwGfKGaldOY8rDQp+9hQYWemQsLc=;
-        b=Oa85xq4rUs8z8A5ucUgMABolwq9dAVdSn3pbOQCpN8p9Zssmx4heOtLFRaX8fwjFjy
-         B0AJHbUv5zOTUJeonFtjKbqdY5RV0FFWeznTtiXOl/EOhc/lyjXPqIjtiSfnE5aGzsuS
-         FTYiaUaGDObX9pnmy7kX7SMDuKtvOFh92crm8DAh8DcjBLUKy7aSCqTVxhIugrMvNTUV
-         to2/jlTELyrIzz+KElujy31tr1MRDAqHpeAR5oEWMQZe5NUEqG6AZ/JVBdPcM3QBhPMd
-         q9+XNR03ieudeYVEFj/Xb2WK9hg37qNMzr7o6ADoHEH97KzpnBCXwDF6244KkEredfE6
-         R/Aw==
-X-Gm-Message-State: AOAM531deC++PJPGNwQd7uTurWMe9NQ1rrUUysz9DmFHO9g/1o2O1hqT
-        2GxmIRM3dhDIjElQIv8e80C2+UBj/rU=
-X-Google-Smtp-Source: ABdhPJxmfzZFf3IT4zGgwTQY+FMZOv6cypSydER/UAZe3j0NgPcIGktaRqUS5+8KNooyqmTWwZ/UwA==
-X-Received: by 2002:ac2:48bb:: with SMTP id u27mr8838590lfg.516.1604496406041;
-        Wed, 04 Nov 2020 05:26:46 -0800 (PST)
-Received: from localhost.localdomain (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
-        by smtp.gmail.com with ESMTPSA id 82sm409715lfb.12.2020.11.04.05.26.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 05:26:45 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1729947AbgKDOBB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 09:01:01 -0500
+Received: from gecko.sbs.de ([194.138.37.40]:50023 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729481AbgKDN6C (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 4 Nov 2020 08:58:02 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 0A4DvuIv013592
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Nov 2020 14:57:56 +0100
+Received: from [167.87.41.231] ([167.87.41.231])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 0A4Dvuhl011779;
+        Wed, 4 Nov 2020 14:57:56 +0100
+Subject: Re: [PATCH 0/7] gpio: exar: refactor the driver
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] gpio: tegra: Use raw_spinlock
-Date:   Wed,  4 Nov 2020 16:26:24 +0300
-Message-Id: <20201104132624.17168-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201104132624.17168-1-digetx@gmail.com>
-References: <20201104132624.17168-1-digetx@gmail.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20201026141839.28536-1-brgl@bgdev.pl>
+ <CAHp75Vf07dsUXZ8Dr-KY-NFQv+C2QQVEOH_se7vYMT6hdm-U3Q@mail.gmail.com>
+ <1fd4d69b-4d64-05e5-45a3-b2182fb2d207@siemens.com>
+Message-ID: <0ab04241-4756-873b-980a-572b225c16e9@siemens.com>
+Date:   Wed, 4 Nov 2020 14:57:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1fd4d69b-4d64-05e5-45a3-b2182fb2d207@siemens.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use raw_spinlock in order to fix spurious messages about invalid context
-when spinlock debugging is enabled. This happens because there is a legit
-nested raw_spinlock->spinlock locking which debug code can't recognize and
-handle.
+On 27.10.20 16:12, Jan Kiszka wrote:
+> On 26.10.20 15:46, Andy Shevchenko wrote:
+>> On Mon, Oct 26, 2020 at 4:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>
+>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> I just wanted to convert the driver to using simpler IDA API but ended up
+>>> quickly converting it to using regmap. Unfortunately I don't have the HW
+>>> to test it so marking the patches that introduce functional change as RFT
+>>> and Cc'ing the original author.
+>>
+>> +Cc: Jan, AFAIR their devices are using Exar UART.
+>>
+> 
+> Thanks for CC'ing. I cannot promise testing this soon, but I will try my
+> best.
+> 
 
- [ BUG: Invalid wait context ]
- ...
-  (dump_stack) from (__lock_acquire)
-  (__lock_acquire) from (lock_acquire)
-  (lock_acquire) from (_raw_spin_lock_irqsave)
-  (_raw_spin_lock_irqsave) from (tegra_gpio_irq_set_type)
-  (tegra_gpio_irq_set_type) from (__irq_set_trigger)
-  (__irq_set_trigger) from (__setup_irq)
-  (__setup_irq) from (request_threaded_irq)
-  (request_threaded_irq) from (devm_request_threaded_irq)
-  (devm_request_threaded_irq) from (elants_i2c_probe)
-  (elants_i2c_probe) from (i2c_device_probe)
- ...
+Finally tested, unfortunately with bad news:
 
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpio/gpio-tegra.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+...
+at24 i2c-INT3499:00: 1024 byte INT3499:00 EEPROM, writable, 1 bytes/write
+pxa2xx_spi_pci 0000:00:15.0: enabling device (0000 -> 0002)
+pxa2xx_spi_pci 0000:00:15.1: enabling device (0000 -> 0002)
+exar_serial 0000:02:00.0: enabling device (0000 -> 0002)
+0000:02:00.0: ttyS2 at MMIO 0x90000000 (irq = 44, base_baud = 7812500) is a XR17V35X
+0000:02:00.0: ttyS3 at MMIO 0x90000400 (irq = 44, base_baud = 7812500) is a XR17V35X
+BUG: kernel NULL pointer dereference, address: 00000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0xc1150010) - not-present page
+*pde = 00000000 
+Oops: 0010 [#1] PREEMPT
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.10.0-rc2+ #438
+Hardware name: Intel Corp. QUARK/SIMATIC IOT2000, BIOS V24.02.01 10/30/2018
+Workqueue: events deferred_probe_work_func
+EIP: 0x0
+Code: Unable to access opcode bytes at RIP 0xffffffd6.
+EAX: 00000000 EBX: f7c74000 ECX: 00000004 EDX: 00000099
+ESI: 00000000 EDI: 00000000 EBP: c1157da8 ESP: c1157d90
+DS: 007b ES: 007b FS: 0000 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: ffffffd6 CR3: 03771000 CR4: 00100010
+Call Trace:
+ regmap_update_bits_base+0x22/0x60
+ ? exar_set_value+0x70/0x70 [gpio_exar]
+ ? exar_set_value+0x70/0x70 [gpio_exar]
+ exar_direction_output+0x47/0x50 [gpio_exar]
+ gpiod_direction_output_raw_commit+0x74/0x270
+ ? exar_direction_input+0x50/0x50 [gpio_exar]
+ ? exar_set_value+0x70/0x70 [gpio_exar]
+ gpiod_direction_output+0xf0/0x160
+ create_gpio_led+0xea/0x180
+ gpio_led_probe+0x22c/0x460
+ ? device_pm_check_callbacks+0x4c/0x100
+ platform_drv_probe+0x2d/0x80
+ really_probe+0xcb/0x330
+ driver_probe_device+0x49/0xa0
+ __device_attach_driver+0x61/0x80
+ ? driver_allows_async_probing+0x60/0x60
+ bus_for_each_drv+0x4f/0x90
+ __device_attach+0xbb/0x120
+ ? driver_allows_async_probing+0x60/0x60
+ device_initial_probe+0x12/0x20
+ bus_probe_device+0x6f/0x80
+ deferred_probe_work_func+0x56/0x80
+ process_one_work+0x1ce/0x390
+ worker_thread+0x37/0x420
+ kthread+0x115/0x130
+ ? process_one_work+0x390/0x390
+ ? kthread_create_on_node+0x20/0x20
+ ret_from_fork+0x19/0x30
+Modules linked in: gpio_exar(+) spi_pxa2xx_platform 8250_exar spi_pxa2xx_pci ti_adc108s102 industrialio_triggered_buffer kfifo_buf industrialio at24
+CR2: 0000000000000000
+---[ end trace d982fb210f759304 ]---
+EIP: 0x0
+Code: Unable to access opcode bytes at RIP 0xffffffd6.
+EAX: 00000000 EBX: f7c74000 ECX: 00000004 EDX: 00000099
+ESI: 00000000 EDI: 00000000 EBP: c1157da8 ESP: c1157d90
+DS: 007b ES: 007b FS: 0000 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: ffffffd6 CR3: 03771000 CR4: 00100010
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 98fc78739ebf..74a13534b9e4 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -61,8 +61,8 @@ struct tegra_gpio_info;
- struct tegra_gpio_bank {
- 	unsigned int bank;
- 	unsigned int irq;
--	spinlock_t lvl_lock[4];
--	spinlock_t dbc_lock[4];	/* Lock for updating debounce count register */
-+	raw_spinlock_t lvl_lock[4];
-+	raw_spinlock_t dbc_lock[4];	/* Lock for updating debounce count register */
- #ifdef CONFIG_PM_SLEEP
- 	u32 cnf[4];
- 	u32 out[4];
-@@ -242,12 +242,12 @@ static int tegra_gpio_set_debounce(struct gpio_chip *chip, unsigned int offset,
- 	/* There is only one debounce count register per port and hence
- 	 * set the maximum of current and requested debounce time.
- 	 */
--	spin_lock_irqsave(&bank->dbc_lock[port], flags);
-+	raw_spin_lock_irqsave(&bank->dbc_lock[port], flags);
- 	if (bank->dbc_cnt[port] < debounce_ms) {
- 		tegra_gpio_writel(tgi, debounce_ms, GPIO_DBC_CNT(tgi, offset));
- 		bank->dbc_cnt[port] = debounce_ms;
- 	}
--	spin_unlock_irqrestore(&bank->dbc_lock[port], flags);
-+	raw_spin_unlock_irqrestore(&bank->dbc_lock[port], flags);
- 
- 	tegra_gpio_mask_write(tgi, GPIO_MSK_DBC_EN(tgi, offset), offset, 1);
- 
-@@ -334,14 +334,14 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 		return -EINVAL;
- 	}
- 
--	spin_lock_irqsave(&bank->lvl_lock[port], flags);
-+	raw_spin_lock_irqsave(&bank->lvl_lock[port], flags);
- 
- 	val = tegra_gpio_readl(tgi, GPIO_INT_LVL(tgi, gpio));
- 	val &= ~(GPIO_INT_LVL_MASK << GPIO_BIT(gpio));
- 	val |= lvl_type << GPIO_BIT(gpio);
- 	tegra_gpio_writel(tgi, val, GPIO_INT_LVL(tgi, gpio));
- 
--	spin_unlock_irqrestore(&bank->lvl_lock[port], flags);
-+	raw_spin_unlock_irqrestore(&bank->lvl_lock[port], flags);
- 
- 	tegra_gpio_mask_write(tgi, GPIO_MSK_OE(tgi, gpio), gpio, 0);
- 	tegra_gpio_enable(tgi, gpio);
-@@ -675,8 +675,8 @@ static int tegra_gpio_probe(struct platform_device *pdev)
- 						 tegra_gpio_irq_handler, bank);
- 
- 		for (j = 0; j < 4; j++) {
--			spin_lock_init(&bank->lvl_lock[j]);
--			spin_lock_init(&bank->dbc_lock[j]);
-+			raw_spin_lock_init(&bank->lvl_lock[j]);
-+			raw_spin_lock_init(&bank->dbc_lock[j]);
- 		}
- 	}
- 
+Jan
+
 -- 
-2.27.0
-
+Siemens AG, T RDA IOT
+Corporate Competence Center Embedded Linux
