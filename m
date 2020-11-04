@@ -2,88 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E508F2A669D
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 15:45:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 653312A66AD
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 15:46:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgKDOpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 09:45:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47776 "EHLO
+        id S1729633AbgKDOqv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 09:46:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730203AbgKDOpP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 09:45:15 -0500
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28274C061A4C
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 06:45:15 -0800 (PST)
-Received: by mail-wr1-x444.google.com with SMTP id y12so22312248wrp.6
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 06:45:15 -0800 (PST)
+        with ESMTP id S1728522AbgKDOqu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 09:46:50 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9603BC0613D3;
+        Wed,  4 Nov 2020 06:46:50 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id w4so6566648pgg.13;
+        Wed, 04 Nov 2020 06:46:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9OWAUFWKR6t7bxReqmvWgrAg/iWvkWfLXWjhohm+HkY=;
-        b=Nt4YxLTrGbzEFLQlgB6jldAUWPyHzdaO8QckIIG3P91zfSi3pAfwp4Ov+s2oyMqdoX
-         HO5TECF9Di+dt+ZvRyQC2Pq/lKyCtBkp5mtGQqV91D5mMgXffpUmxdoqFXq0w0Huwcoo
-         2l4H02s1czM/hpASCPdQM/yXVm2DTdQbNHyUnvcEwLlpYbNfv3SJ509j4zbZoBuC3FMZ
-         sRaE6OwzA5ESm+ElT72CbZP1uzY50LeB/Vti9QiGUy2DJydm6ZxsT1mn5I68fxCbnR4V
-         DnnpB+8TayXBAOgNpNMP+Mz8wMk2YQFcVcO3JZrbFpx97CbVGR8wRnXySYYRqyNQsmMq
-         e6Bw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D13WCRMZZS+wHwyj06riYhDl3tpjBHjdfCjUyz/WQjw=;
+        b=Xmhu5+bFkF0L5G71ykrfhD4RWML66PbLeDUPxDN80j7mqAhdBoe35JnX6z7+v/a7Bo
+         7+R6+oHsqFud1zdiStPBgzniC0UPiEXjISKUDjI404YW/9W6yJo1Jdlcf6y5LplxldBn
+         Vyct/k9aeF42siOt9oAePCkaI0rnvCyFRQka+wMW93fVCekLHmsXvGfBdTBEayUGQdUL
+         YEjP906eHTFCXn15CCnkgmmFXw2Uj2vDoDQwHkCcfBxZ9xjjwjcGRTlzX1GXRjLCd+0r
+         0RVIcybXcWd+v+QY7aBxZytJAZtyLbiiv/qXxCyyUQgFFNvmBUnd96YwHOgxMFAbO/vd
+         6uIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9OWAUFWKR6t7bxReqmvWgrAg/iWvkWfLXWjhohm+HkY=;
-        b=GWMhTIMXUbYwsb6J95QraDvjs77J8fN1iWVbcNiqQyMf1OZi+qk9zpS3K2QFiLoS95
-         m73McetTOtL/tdNYzZg5Humj2GK8pKZ66P5aKpTZ7dpOYcvlRJO9jPvUGd97jxzT1HRY
-         FaGE7tzxLRUuf+t6xVPumwQROmW87wHG8IcAruUVmOf7FxTF3SBRNHXiKhK49sxcuFld
-         6XDz35rRTWNfuCRiM7DfxrfGjYY6a+11rOcm+QXwZf8kbLm9mc5lDequbeGFjEhcZMAJ
-         4snHDHAzdJGtjHip5Y9Go1Aqy86GkcwOxS6B5Uir3buQCIRiS93UidcMXSapRGBAVfu1
-         s2PA==
-X-Gm-Message-State: AOAM530AVPrs0Wc/iHgptWfCqpRXS+j1mnMxmA0lDt6aUCSO9w6tVmYU
-        ulL0j/V8V14NsR8II2+H4mouQA==
-X-Google-Smtp-Source: ABdhPJxHdgs8yA8BtfhGVcKDYrIhx3gbi+u4kSoZc49l5ZGadrCJN8o2W482MgUhplZtxB9qoB0JSw==
-X-Received: by 2002:a5d:4c8e:: with SMTP id z14mr1951514wrs.1.1604501113900;
-        Wed, 04 Nov 2020 06:45:13 -0800 (PST)
-Received: from dell ([91.110.221.242])
-        by smtp.gmail.com with ESMTPSA id t5sm2608695wmg.19.2020.11.04.06.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 06:45:13 -0800 (PST)
-Date:   Wed, 4 Nov 2020 14:45:11 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/5] mfd: tps65910: clean up after switching to regmap
-Message-ID: <20201104144511.GI4488@dell>
-References: <cover.1601164493.git.mirq-linux@rere.qmqm.pl>
- <8ebfb748eb55b68e5da4c5eefcf708ae9307b418.1601164493.git.mirq-linux@rere.qmqm.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D13WCRMZZS+wHwyj06riYhDl3tpjBHjdfCjUyz/WQjw=;
+        b=Lqh1LSzHJHOCaCKWikvKkDfN4zQ9bC04oeuT7VrXOJJfyxKrCdjlJOYjwQE912bHND
+         oiEpOBBodG70a2TUsRluOKreHDWntk6iGHrMA2xkMQApixebF3Uvr7ur66RltWNz7tAb
+         81rNYsU1JA2awwXiEsIAum8tyFPs/r1cwI346nF/u36U3O42NzM/hcVnKnUnHJW9b2bn
+         WwLHLSLljxfEUrMjI9Cl7Yw7pqjZ207q4cHIJdaB0SEaePQsGahnBMvcasMol1cmvM5o
+         QCIEeQevfW2HeXPcPXqwl8q7T5VYoQuaJhGYtQcBCHa9rTUzTEO/i5bpC6dVmxK28+Ju
+         +A4w==
+X-Gm-Message-State: AOAM5335Pwlfm6YA0xzW7nSh4C7atdHQG6h8xQ9xXN+ChcgYaBwUnAaK
+        h0I6Hnap1uvDAnHvc3eFL5tevH9zzwbyz0gSo7o=
+X-Google-Smtp-Source: ABdhPJxYW1pmghuHcu04Hyvy/6SKuowuLBL9UfmNV2kf2mBYRMh6Gj8quAE1cS+fHyXcOr6ZPHBscIGmP6v1dx6/lTo=
+X-Received: by 2002:a63:3e05:: with SMTP id l5mr2275127pga.74.1604501210176;
+ Wed, 04 Nov 2020 06:46:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ebfb748eb55b68e5da4c5eefcf708ae9307b418.1601164493.git.mirq-linux@rere.qmqm.pl>
+References: <20201104132624.17168-1-digetx@gmail.com> <20201104132624.17168-2-digetx@gmail.com>
+In-Reply-To: <20201104132624.17168-2-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Nov 2020 16:47:38 +0200
+Message-ID: <CAHp75VeJrQCxaCR+6u79=k=EP7y=LpEsytp6MWQ+UGz+oFXP6A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpio: tegra: Use raw_spinlock
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>, linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 27 Sep 2020, Michał Mirosław wrote:
+On Wed, Nov 4, 2020 at 3:27 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Use raw_spinlock in order to fix spurious messages about invalid context
+> when spinlock debugging is enabled. This happens because there is a legit
+> nested raw_spinlock->spinlock locking which debug code can't recognize and
+> handle.
 
-> Remove wrappers around regmap calls to remove now-useless indirection.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/mfd/tps65910.c       | 16 ++++++++--------
->  include/linux/mfd/tps65910.h | 35 -----------------------------------
->  2 files changed, 8 insertions(+), 43 deletions(-)
+This sounds like papering over a problem that exists somewhere else.
 
-Applied, thanks.
+What I would rather make as a selling point is that raw spin locks are
+necessary to be in the RT kernel for IRQ chips.
+
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
