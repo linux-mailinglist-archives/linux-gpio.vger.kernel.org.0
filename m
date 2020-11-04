@@ -2,94 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F08322A66BE
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 15:51:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 030C72A6702
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 16:03:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbgKDOvd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 09:51:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48972 "EHLO
+        id S1729457AbgKDPDM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 10:03:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729862AbgKDOvc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 09:51:32 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486C5C0613D3;
-        Wed,  4 Nov 2020 06:51:32 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id z24so16814630pgk.3;
-        Wed, 04 Nov 2020 06:51:32 -0800 (PST)
+        with ESMTP id S1728380AbgKDPDM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 10:03:12 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619F0C0613D3;
+        Wed,  4 Nov 2020 07:03:10 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id l28so27494957lfp.10;
+        Wed, 04 Nov 2020 07:03:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xsldh6viObbdlvXna6kQqZrBsn3XFnOdoohNZM4M/Jc=;
-        b=esDBk66hm5x1xVm+ucG4YzMOIMBniN65QTT+q4T1JHfTZqixdHJ3B+o9XZtTRdjwTa
-         g794kwsIAwpChOcx/QBrUKbYRTktQIGvlbYGbFun1FWieTNPJ9M07QJiGFw506huRiaA
-         GN/tch+PIU1EnTm4BrzvbjwN3sO7ln0N4YeB43BYWzhEUvsaAVd6rawD+E1eaS52ZwVb
-         rAIuT/MVM7zs8ZQCgIdt1du1S245ZjSmtLWAQAlEsFMaNgpEvLwUqFzL1DgvMROhd/Yq
-         /DjQ3TTsu6Nvs/mIlgLXkbbDjDRZZHXs1dPXO+QFnvDEtvlaDphMzJNVMwcY6mUvUN3I
-         Ii4Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gjWP17IJO7VBo6R8hUOdy+1jqM/u8FrFgqOf3bq/Ssc=;
+        b=ClLCMlLV4agLsqlq9876Lswawyy0LlctbGl5UdQggm7P9tz5gve6ro4bS1SDN2l36s
+         sHb/O3E7JituQ67Abmigh1bMcPadmnmJlwhAUA6+bySaX4JT7yrzitDwoGQoSOm24RvH
+         1lVlOsBytBXO64sZ5iPAjiM+WdI3/XYFHk5/pTK6+ta4Wyc0EJCGx4V0Xi3WWz+vKr6e
+         aeEMMiog7uZjC3fQlgQrpEbtxa9lzaP0KqNnwHOq5KPQK9XnWQ+IBnhy3ySO6sMOdmE5
+         KzDAx3mNwI2+szB0xE0o/ycLY3xH3xkNUM+LITJKQOFOxveHApifVu9ABoWJLs3ooC2L
+         IJSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xsldh6viObbdlvXna6kQqZrBsn3XFnOdoohNZM4M/Jc=;
-        b=JXADtwSQUwqb+lB3FfAnDC5x1kpru2xXe5erqvBn47iUeCrQH39r0JcfP5n5/7JqJJ
-         CswVJNdRGakrqfU7wFwVnnQySClhmQlyD2X35N/aIT+dcFw6G/KpT3Ym9Aky/tsLiAlK
-         enCEnE7yR5gwGOkHbhOET2/iPCvzJYvXt1FURcNQm8mgiRbczU8NIbDhOWokwxOoAEIz
-         C9Au5TsXA5Ycsl+p8xOWx5BTOQ161bd/rEBDdZ3Ow0/Fq3HmAufjLqPuef9XaBRG8avY
-         FCD1GgSBR6Nx5rzLuncvxM4mzID8dZLIRT9L1geZM665oSHS3h3ioVB6/D0URNM9h98U
-         de3w==
-X-Gm-Message-State: AOAM530ozjnGnrpy0KYOXHX+Jx+d0RDw/KK/Pbdps/E41C3a8usyT722
-        Pt0+3dduPPmUV7Rqf4LEVDuDezjZcZA1BV2Porv0Xu2WG4A=
-X-Google-Smtp-Source: ABdhPJyCCTnZc00o8G8dnYhH/9OpRLjxemRUpMS0vZYkML/ZyvNDFZM81yNY++LYyGvE1dZiUmc4nHlav72RpVX1UWM=
-X-Received: by 2002:a05:6a00:850:b029:18a:a8ce:d346 with SMTP id
- q16-20020a056a000850b029018aa8ced346mr21420962pfk.73.1604501491828; Wed, 04
- Nov 2020 06:51:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20201026141839.28536-1-brgl@bgdev.pl> <CAHp75Vf07dsUXZ8Dr-KY-NFQv+C2QQVEOH_se7vYMT6hdm-U3Q@mail.gmail.com>
- <1fd4d69b-4d64-05e5-45a3-b2182fb2d207@siemens.com> <0ab04241-4756-873b-980a-572b225c16e9@siemens.com>
-In-Reply-To: <0ab04241-4756-873b-980a-572b225c16e9@siemens.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Nov 2020 16:52:20 +0200
-Message-ID: <CAHp75VdRNFqDySL6D-7BzBMRu1+aPgeT=kxWtcthYH3pVWRycg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] gpio: exar: refactor the driver
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gjWP17IJO7VBo6R8hUOdy+1jqM/u8FrFgqOf3bq/Ssc=;
+        b=iSp8nl+xVsCbN73vCj0xxgybrLMrDzEN0UVA9jOeWyivF5It9HMNFOF+rOh99p2A0L
+         i7z58iUwVskvqZIq6mDR4bHmrCwze5TltjAYqvCnP6xKu0uARF8pVsLPIN3OvHcCYoiT
+         +TO1cck+7MfO2+fEExYLPJyvWmxpBwTHxLHG3/IlrDfYRf0H2ZxZTxdpflxi59g3+1hE
+         4EBfXuAPCsEovKA1E+Vgdzp71SjhPab2uPt45fFIeHp5hgn+OnMEKur4AAqeIMU6/uB6
+         HR/MIY0EUdACGrfXAZP+ZXoWrvEFSPS4cXORiAQM4FJOUddpgelWdEBAQRXJHyeNmJfP
+         DNuQ==
+X-Gm-Message-State: AOAM53333AvI7O167i5PJo7PoxXmT8a0gwUsy+pLDb+1jq0i8vhPsKDb
+        bmTdYcVSSlg9aXoiw0nKPUe+sa7vTWc=
+X-Google-Smtp-Source: ABdhPJwJ8A3eIiAPZEhfRhohkACkpIWiuyPBbu0ksy9XDFnhv9iszkLTTjI1rmMULXuzlc0ICQ3txw==
+X-Received: by 2002:ac2:59de:: with SMTP id x30mr9218249lfn.19.1604502188732;
+        Wed, 04 Nov 2020 07:03:08 -0800 (PST)
+Received: from [192.168.2.145] (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
+        by smtp.googlemail.com with ESMTPSA id d26sm541500ljj.102.2020.11.04.07.03.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Nov 2020 07:03:08 -0800 (PST)
+Subject: Re: [PATCH v1 2/2] gpio: tegra: Use raw_spinlock
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>, linux-tegra@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20201104132624.17168-1-digetx@gmail.com>
+ <20201104132624.17168-2-digetx@gmail.com>
+ <CAHp75VeJrQCxaCR+6u79=k=EP7y=LpEsytp6MWQ+UGz+oFXP6A@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <274bca60-6a8f-773b-aff1-2a897376a6b1@gmail.com>
+Date:   Wed, 4 Nov 2020 18:03:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VeJrQCxaCR+6u79=k=EP7y=LpEsytp6MWQ+UGz+oFXP6A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 3:57 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
-> On 27.10.20 16:12, Jan Kiszka wrote:
-> > On 26.10.20 15:46, Andy Shevchenko wrote:
-> >> On Mon, Oct 26, 2020 at 4:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >>>
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> I just wanted to convert the driver to using simpler IDA API but ended up
-> >>> quickly converting it to using regmap. Unfortunately I don't have the HW
-> >>> to test it so marking the patches that introduce functional change as RFT
-> >>> and Cc'ing the original author.
-> >>
-> >> +Cc: Jan, AFAIR their devices are using Exar UART.
-> >>
-> >
-> > Thanks for CC'ing. I cannot promise testing this soon, but I will try my
-> > best.
-> >
->
-> Finally tested, unfortunately with bad news:
+04.11.2020 17:47, Andy Shevchenko пишет:
+> On Wed, Nov 4, 2020 at 3:27 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Use raw_spinlock in order to fix spurious messages about invalid context
+>> when spinlock debugging is enabled. This happens because there is a legit
+>> nested raw_spinlock->spinlock locking which debug code can't recognize and
+>> handle.
+> 
+> This sounds like papering over a problem that exists somewhere else.
+> 
+> What I would rather make as a selling point is that raw spin locks are
+> necessary to be in the RT kernel for IRQ chips.
 
-> Code: Unable to access opcode bytes at RIP 0xffffffd6.
+This should be a well-known problem because other GPIO drivers also have
+it.
 
-I guess it is due to missed error pointer handling somewhere, as above
-is equal to -ENOMSG.
+For example this one:
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20201104&id=023892ec80f0efcffe22045e92bb89f3f1480f2d
+
+Although, looking at it again, I think there is no real need to change
+the dbc_lock since it doesn't relate to the IRQ. Perhaps this could be
+improved in a v2.
