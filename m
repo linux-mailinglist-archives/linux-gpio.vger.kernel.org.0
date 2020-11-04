@@ -2,116 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA862A5EEC
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 08:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE8AD2A6135
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 11:09:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgKDHrd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 02:47:33 -0500
-Received: from mail.intenta.de ([178.249.25.132]:34918 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbgKDHrd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 4 Nov 2020 02:47:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=Mh6DxMVtXm8SvcqSREY9TWk4w+Kfs0jG3JvQNb3/utY=;
-        b=kK6LM/281AF9dyMQI2SLZr1hUlPm57ZeoWmlxw+rn0OoM/4wCD1vfKrLr5veBqcM/d26s7vkgu7asdpnNIWAZt2OE0uIa8cawPIPtt4K+YQWzgFIh34ZxByXYtUtE7bEudsNmfgdId5yJ00sqMvKmChW0DWj6bhS6KlYYp2E/pYY/tWg05AeHkL1P/FhMnDVS1tMd240aNWssFW/qkPUUg4WAFhRh9cZSQMF4cE2Wjb/QEpsT4/IMgN+HBCycq9N5Zp8mbYMe9qgt0vZS3HDCAOduyleAzE476aEfK8Lx7EkKGWIavvTTKWy3P20KZpBm4GzwHGom0n+41SDSDxIwg==;
-Date:   Wed, 4 Nov 2020 08:47:19 +0100
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [libgpiod] libgpiod v2.0 API discussion
-Message-ID: <20201104074719.GA9518@laureti-dev>
-References: <CAMpxmJWkcg0SgcQVzE2TVjenogyfUEiZAOR_0ssR7y8a-AnZXA@mail.gmail.com>
+        id S1728586AbgKDKJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 05:09:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbgKDKJz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 05:09:55 -0500
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB37C0613D3;
+        Wed,  4 Nov 2020 02:09:54 -0800 (PST)
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4CR2Sw2w6lz9sTK; Wed,  4 Nov 2020 21:09:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1604484592;
+        bh=j+i1lX1PsZW/0GrkODpnzYhaB1+/DX2TTEqP93CyZjI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DzhLBdo2KgZz80mcMGk3llfgVqTCaBVr10DO2EwY/P9aygfMyHCNLOHYNR90M69XF
+         XAWuLjk1+t0h+SQ2EQwqt8+bYpeF3DaWII6L8QXAU8hn9MBDqNIugLo+pQ2qYjhG5l
+         HoYtUB/lC252+1TNIks5Nodvyz0CenE1aH6MPMSqWH8Ss2BVeeHRvuXDi/glFutY8+
+         Sz6lZH2kd/Zdy5dgS5jiWNbS2yVjWMV00BysQ6VZaIb2fHz2IBoPPC9MvT+YACEEUi
+         l1DmVB+epgTAzmEydaTpQXMgHcsRyTGlBdz1/e0LobiMG0YuS3qBWzf+TK/CCPf9Wp
+         HC87f2yY/SmaA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH 1/4] selftests/gpio: Use TEST_GEN_PROGS_EXTENDED
+Date:   Wed,  4 Nov 2020 21:08:40 +1100
+Message-Id: <20201104100843.660407-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJWkcg0SgcQVzE2TVjenogyfUEiZAOR_0ssR7y8a-AnZXA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 09:42:23PM +0100, Bartosz Golaszewski wrote:
-> * Line lookup by name
-> 
-> One thing that was omitted in the first version was the fact that GPIO
-> line names are not unique in the kernel. Functions that do name lookup
-> from a single chip should return bulk objects. Functions that can
-> lookup several lines with different names should probably be removed
-> because it's difficult to design an elegant API that would take this
-> non-uniqueness into account. Returning arrays of bulks sounds like a
-> bad idea.
+Use TEST_GEN_PROGS_EXTENDED rather than TEST_PROGS_EXTENDED.
 
-While there is no guarantuee that line names are unique in general, that
-tends to be the case in a number of practical cases. Notably, embedded
-system developers (which seem like a big part of the intended audience)
-are in control of line names and can ensure their uniqueness. It
-certainly makes sense to offer an API that deals with non-unique line
-names.  However, I think that keeping a less flexible convenience helper
-for looking up a line by supposedly unique name would be good. In case
-the uniqueness is violated, I'd expect an error.
+That tells the lib.mk logic that the files it references are to be
+generated by the Makefile.
 
-There is ENOTUNIQ. It is rarely used and while the description says that
-it is network-related, it is used for inifiband, nvme, virtualbox guest
-functionality and cifs beyond decnet and 802.11.
+Having done that we don't need to override the all rule.
 
-> * Reading line events
-> 
-> Since we now can have a single file descriptor for multiple monitored
-> lines - reading of the events needs to be modified. Event structure
-> needs to reference the line object with which it's associated. Adding
-> additional fields for the seq numbers is a no-brainer of course.
-> 
-> I'm wondering if we should still be using struct timespec for
-> timestamps. On one hand it's used everywhere in libc but it's also
-> subject to ABI change due to year 2036 problem. Maybe we should switch
-> to nanoseconds in 64-bit integer just like what we get from the kernel
-> but then user-space won't have standard tools to deal with such
-> timestamps.
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ tools/testing/selftests/gpio/Makefile | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Aside: It's 2038, not 2036. The key is that you thought of this. Thanks.
+diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
+index 32bdc978a711..c85fb5acf5f4 100644
+--- a/tools/testing/selftests/gpio/Makefile
++++ b/tools/testing/selftests/gpio/Makefile
+@@ -11,22 +11,20 @@ LDLIBS += $(VAR_LDLIBS)
+ 
+ TEST_PROGS := gpio-mockup.sh
+ TEST_FILES := gpio-mockup-sysfs.sh
+-TEST_PROGS_EXTENDED := gpio-mockup-chardev
++TEST_GEN_PROGS_EXTENDED := gpio-mockup-chardev
+ 
+ GPIODIR := $(realpath ../../../gpio)
+ GPIOOBJ := gpio-utils.o
+ 
+-all: $(TEST_PROGS_EXTENDED)
+-
+ override define CLEAN
+-	$(RM) $(TEST_PROGS_EXTENDED)
++	$(RM) $(TEST_GEN_PROGS_EXTENDED)
+ 	$(MAKE) -C $(GPIODIR) OUTPUT=$(GPIODIR)/ clean
+ endef
+ 
+ KSFT_KHDR_INSTALL := 1
+ include ../lib.mk
+ 
+-$(TEST_PROGS_EXTENDED): $(GPIODIR)/$(GPIOOBJ)
++$(TEST_GEN_PROGS_EXTENDED): $(GPIODIR)/$(GPIOOBJ)
+ 
+ $(GPIODIR)/$(GPIOOBJ):
+ 	$(MAKE) OUTPUT=$(GPIODIR)/ -C $(GPIODIR)
 
-The story for timespec is a little difficult for some time to come:
- * On 64bit architectures and some 32bit architectures (e.g. x32), using
-   timespec doesn't pose a 2038 problem.
- * On the kernel side, using timespec has become hard. However there now
-   is a timespec64 which is not encumbered with 2038 problems on any
-   architecture on the kernel ABI side.
- * On the userspace side, opting into timespec64 is still quite hard. I
-   think that the idea was to follow the process of widening off_t to
-   64 bits. So userspace won't get a timespec64, but instead will be
-   able to choose between 2038-buggy timespec and timespec64 using a
-   macro. glibc will do the translation (truncation) for many syscalls
-   to retain backwards compatibility. Unless I am mistaken, the macro is
-   supposed to be _TIME_BITS=64, but that doesn't seem to have
-   progressed very far.
+base-commit: cf7cd542d1b538f6e9e83490bc090dd773f4266d
+-- 
+2.25.1
 
-A real implication here is that unless all of your users enable this
-extra macro, they'll be affected by the problem on most 32bit
-architectures when you use timespec even if you use timespec64 on the
-kernel side.
-
-On the C++ side, ktime_t values can be stored in a suitable std::chrono
-clock without the need for a conversion. The released libgpiod however
-transforms it to timespec and then reconstructs the original value for
-std::chrono usage. In doing so it introduces a 2038 problem entirely on
-the userspace side besides incurring integer arithmetic that can be slow
-on certain arm processors. Please consider offering a libgpiod C-API
-that allows using the kernel time represntation without conversion.
-
-> * Opaque data types
-> 
-> For events the reason is simple: with opaque types we'd face an
-> overhead with malloc() and I think it's important that we can read
-> them as fast as possible.
-
-+1 to this part
-
-Helmut
