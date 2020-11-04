@@ -2,208 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 980542A702B
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Nov 2020 23:06:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3922E2A70EF
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 00:07:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbgKDWGA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 17:06:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44645 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgKDWGA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 17:06:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id m26so196115otk.11;
-        Wed, 04 Nov 2020 14:05:58 -0800 (PST)
+        id S1728416AbgKDXHb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 18:07:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbgKDXHa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 18:07:30 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120B9C0613CF;
+        Wed,  4 Nov 2020 15:07:30 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id 10so18602695pfp.5;
+        Wed, 04 Nov 2020 15:07:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5wFU/mPUt5bnAn1NYJxaqVm9bqWLQ5tB7/uIHYHp0HQ=;
+        b=b5MvlJWke83QbIoTA7AN/OK3LwdPyAjP45qdztR6fnfZhNhuZ/yniQQtrOmO6vWjlQ
+         6DJz2xY+ESN/R2uZvQUi8DDfEySyFk65kati9kdpnG6yYUQFDBNptmqpa5k2PwqfYPIW
+         HCLO5/XeMw4V3F4C0dPgtdvUe4EW3jKq8BDk3JoX46VPfJe0bpRNLS+fb6Q77weiB0C6
+         IJSCEv7FBI2rFR/YfdFQb/5SDYFrDfz06HDr5X5w4mJiJbXp2MZx+MkezKmTwSbjxMyW
+         OlA4lAHRg83At7utOYDWkVM8Df0KxCMNDazQotcpjAppt7/FdzWDVPm6bbpqutWFd7fN
+         yZhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3I49QOTD4X/4/x5/MQtOdffxAXsEpjW/71vUNYYUSPE=;
-        b=TfcKDoxsLk/DEB90gLzWhF680olxomkBnVM7VjhlU9e5gxfVau1aMqAK1Tevq5AhQ5
-         SLk25CAXMf1K1ToTxPzEgS1pqadq15gta+gSGEd2q/6q5jAQiLwHoLzVFnIhx3A44xld
-         oMQX+2bV6aBdLsaH5XffEGqVVdTh0To2oCxrmPdpiQTvge3f46xVhZJJxKf9Hx7ZtsLU
-         +/M/zWdX21kqmGbmm4/FQ3m0wNfadszy0KoHvysAq/yPWU15/4TqjFWFkD3B2Wt+6MNw
-         GQgTiPqf9ljY052dtpyMUU+4TTCBNR/ewOuPicruCcmniOj7jUJ2S75bH4Ac5qKExKv+
-         8Hag==
-X-Gm-Message-State: AOAM533vFJ2DTb76La/nv0LjVwp3S6JHNg+vRgEkvkaz5HJvU190+PU9
-        evd7IqlMWUo15BF/pD0/qw==
-X-Google-Smtp-Source: ABdhPJzPAZDNgH8OO2ReYwma4DX8NFzOc+g1ezUXqt668OTSsOk7i32BWg3QhT6ezZq7Jq8aDIrvbA==
-X-Received: by 2002:a05:6830:4c6:: with SMTP id s6mr14643765otd.31.1604527558162;
-        Wed, 04 Nov 2020 14:05:58 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j186sm761106oib.38.2020.11.04.14.05.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5wFU/mPUt5bnAn1NYJxaqVm9bqWLQ5tB7/uIHYHp0HQ=;
+        b=ZGJ982n4k+bJ+7zJvtKAGlxQ8qqtImTXpUqnV/b10oyAcLIKBIAd2v0N0U8BkHnQtk
+         o3P43sa72Shp4+/ZUbNbUDtdown4JRMHPSK4f+rsvxqh2AuDGT3GEiYmeiABDteyvTMX
+         h2gW8hkGGK3tiu8DW2IB9Jo+7prD6PLSMgcq4Y+PKwkJYZrJgB2sH7WBRtZA+TDkyaIq
+         AXxjLBvOxTUhwrm0HIYlZe25ZKrErnfTCj8bWK+BXsNPfKSQXUblwr3CkIL3+YMR7DxQ
+         VyDeB7g3OCrJDAkqPyaMuaYNtKqK+Oa3Gj83dBCqNyO3L9K2YAivb9uD8Qwati0B5WlX
+         4rrw==
+X-Gm-Message-State: AOAM531x3KYzbH4xdGouW61Q2cxi7xqgqy/j1qcGSJPZCmHnOy1WRUOF
+        ghU8eO6enmhgZ9ukr6V37JQ=
+X-Google-Smtp-Source: ABdhPJw9E9hqV27H7b7OfYUd72iM7FdbdnHf4qOTfDJhSmjibd+a412HkrfiITS+l5re7E4+/GcleQ==
+X-Received: by 2002:a62:26c1:0:b029:18a:e262:b6dc with SMTP id m184-20020a6226c10000b029018ae262b6dcmr135680pfm.28.1604531249674;
+        Wed, 04 Nov 2020 15:07:29 -0800 (PST)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id b3sm3418930pfd.66.2020.11.04.15.07.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 14:05:57 -0800 (PST)
-Received: (nullmailer pid 10420 invoked by uid 1000);
-        Wed, 04 Nov 2020 22:05:56 -0000
-Date:   Wed, 4 Nov 2020 16:05:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linus.walleij@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 lpass lpi
- pinctrl bindings
-Message-ID: <20201104220556.GA8198@bogus>
-References: <20201030163421.14041-1-srinivas.kandagatla@linaro.org>
- <20201030163421.14041-2-srinivas.kandagatla@linaro.org>
+        Wed, 04 Nov 2020 15:07:29 -0800 (PST)
+From:   Coiby Xu <coiby.xu@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/4] pinctrl: amd: fix incorrect way to disable debounce filter
+Date:   Thu,  5 Nov 2020 07:07:00 +0800
+Message-Id: <20201104230703.21466-2-coiby.xu@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201104230703.21466-1-coiby.xu@gmail.com>
+References: <20201104230703.21466-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201030163421.14041-2-srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 04:34:20PM +0000, Srinivas Kandagatla wrote:
-> Add device tree binding Documentation details for Qualcomm SM8250
-> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../pinctrl/qcom,lpass-lpi-pinctrl.yaml       | 129 ++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..8a0732574aee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,lpass-lpi-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
-> +  Low Power Island (LPI) TLMM block
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  LPASS LPI IP on most Qualcomm SoCs
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm8250-lpass-lpi-pinctrl
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  clocks:
-> +    items:
-> +      - description: LPASS Core voting clock
-> +      - description: LPASS Audio voting clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: audio
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '^.*$':
-> +    if:
-> +      type: object
-> +    then:
+The correct way to disable debounce filter is to clear bit 5 and 6
+of the register.
 
-For new bindings, avoid this hackery and do '-pins$' for the node names 
-pattern.
+Cc: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/linux-gpio/df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com/
+Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +      properties:
-> +        pins:
-> +          description:
-> +            List of gpio pins affected by the properties specified in this
-> +            subnode.
-> +          items:
-> +            oneOf:
-> +              - pattern: "^gpio([0-9]|[1-9][0-9])$"
-> +          minItems: 1
-> +          maxItems: 14
-> +
-> +        function:
-> +          enum: [ gpio, swr_tx_clk, qua_mi2s_sclk, swr_tx_data1, qua_mi2s_ws,
-> +                  swr_tx_data2, qua_mi2s_data0, swr_rx_clk, qua_mi2s_data1,
-> +                  swr_rx_data1, qua_mi2s_data2, swr_tx_data3, swr_rx_data2,
-> +                  dmic1_clk, i2s1_clk, dmic1_data, i2s1_ws, dmic2_clk,
-> +                  i2s1_data0, dmic2_data, i2s1_data1, i2s2_clk, wsa_swr_clk,
-> +                  i2s2_ws, wsa_swr_data, dmic3_clk, i2s2_data0, dmic3_data,
-> +                  i2s2_data1 ]
-> +          description:
-> +            Specify the alternative function to be configured for the specified
-> +            pins.
-> +
-> +        drive-strength:
-> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +          default: 2
-> +          description:
-> +            Selects the drive strength for the specified pins, in mA.
-> +
-> +        slew-rate:
-> +          enum: [0, 1, 2, 3]
-> +          default: 0
-> +          description: |
-> +              0: No adjustments
-> +              1: Higher Slew rate (faster edges)
-> +              2: Lower Slew rate (slower edges)
-> +              3: Reserved (No adjustments)
-> +
-> +        bias-pull-down: true
-> +
-> +        bias-pull-up: true
-> +
-> +        bias-disable: true
-> +
-> +        output-high: true
-> +
-> +        output-low: true
-> +
-> +      required:
-> +        - pins
-> +        - function
-> +
-> +      additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/sound/qcom,q6afe.h>
-> +    lpi_tlmm: pinctrl@33c0000 {
-> +        compatible = "qcom,sm8250-lpass-lpi-pinctrl";
-> +        reg = <0x33c0000 0x20000>,
-> +              <0x355a000 0x1000>;
-> +        clocks = <&q6afecc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-> +                 <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-> +        clock-names = "core", "audio";
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&lpi_tlmm 0 0 14>;
-> +    };
-> -- 
-> 2.21.0
-> 
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 9a760f5cd7ed..d6b2b4bd337c 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -166,14 +166,14 @@ static int amd_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
+ 			pin_reg |= BIT(DB_TMR_OUT_UNIT_OFF);
+ 			pin_reg |= BIT(DB_TMR_LARGE_OFF);
+ 		} else {
+-			pin_reg &= ~DB_CNTRl_MASK;
++			pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+ 			ret = -EINVAL;
+ 		}
+ 	} else {
+ 		pin_reg &= ~BIT(DB_TMR_OUT_UNIT_OFF);
+ 		pin_reg &= ~BIT(DB_TMR_LARGE_OFF);
+ 		pin_reg &= ~DB_TMR_OUT_MASK;
+-		pin_reg &= ~DB_CNTRl_MASK;
++		pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+ 	}
+ 	writel(pin_reg, gpio_dev->base + offset * 4);
+ 	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+-- 
+2.28.0
+
