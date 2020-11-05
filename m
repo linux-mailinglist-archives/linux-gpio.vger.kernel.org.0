@@ -2,79 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDBDF2A8105
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 15:35:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 672B42A8110
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 15:37:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgKEOfN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 09:35:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        id S1730616AbgKEOhr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 09:37:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbgKEOfN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 09:35:13 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573A0C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 06:35:11 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id u18so2586389lfd.9
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 06:35:11 -0800 (PST)
+        with ESMTP id S1730461AbgKEOhr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 09:37:47 -0500
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54F7C0613D2
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 06:37:46 -0800 (PST)
+Received: by mail-ed1-x543.google.com with SMTP id j20so1773717edt.8
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 06:37:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Z309JsXWECO0iyDgtcmyju8F+C6v3OJkibkVpUPfi34=;
-        b=HsiXs0VEUiEakbq3EXNQB/5+Q3y+7iqJsjnPA/Kth42Zs/uHRmD5ehYw+sWkcRqdRx
-         L5FwizhETXi5cQBx+5LZ2BYMCgD7y341SmxGtQ0lyOipTVgC3nWqfSF4VYBzE0EmnSOH
-         x17U3045IcT1LhWp3h/DtNF5qBJWlLCVS97E3FwUFhegzvIAyoa27/NhndNMO6Ohy7/i
-         clz0AfYWo+OvOakT64KFovD6uvi+EXrJdBp2HAUUEui5OnJ9nwmNyCY1liq3bxrFqM2f
-         wn7XubM0JOg3DfICI0O1voKT6Rms9hSTr0UR13OODY+xroSdkZ/bSDlOBZ/XfgZZ9P5x
-         4MYA==
+        bh=Gx4esp1H+t/CRh0pOUP9iWgL9zCSVVT3Kg6Fjz064Mc=;
+        b=Sza5uuRbnhrTeO3gZcJ2wSko7ScXGXe6WF+mW9RPfBtta0I5Pn7urHmD6fJSA9ByMA
+         XwOOqdtt7gQFYbbBAEkv7Jr0wgE7Tw7+cMWvAqFfZfJae0mhMOAY+A34sfyIvUTBOrjV
+         qQpPzrc3K2wRG1v7odAnsTQ6c8Nl6gMJLKclgI6j+2DwAMbACeb7x3qli21ekKOcUzSW
+         +/L44Lm5zQngoLduVkdihL3/By/4iwo/mWkB78kLzAOLHyhgpgu3x3K8pMulfHlDb2B8
+         V6a6s1E/lqcOPTPsXbBji1+Q/4Sz7ha3aehBRJ5nimjnlcn1g9Pb9uDfGyxDziuT81Yl
+         UUVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z309JsXWECO0iyDgtcmyju8F+C6v3OJkibkVpUPfi34=;
-        b=N19HzfKDHkIWB2S9VCqMzNhmill3iouMeFcA+ZwQlwVLeK1QwNkdMj8mozKjG/YXZi
-         Hi535eDvAECDZEV1//7uf58kB7TGodL/nheU7Atr7AOcyS6z+CCYYl2wKojIy1LoHfF0
-         QEhUBV+ylzLCBBR1mNUYTR1com30VCgtMLu7sJ4oAjnlvoFK5I2SySx9lFtQofL7ibXY
-         3vKsYqvslaTBiUffPU3mA126yRDBhA6aPboj9IrqdofnlHF9X0t8APHq0/JB/kujvj2E
-         ZPzBhSYEvTP6rhFMxv0YoxlHyZWJkW7+ssbo6t26Uuki6+Ooq6MUOWUy7xai1O17Y1vK
-         JWPQ==
-X-Gm-Message-State: AOAM533c34Kmhd6vtUoneURrXkWfcO6qZjExcfhforevEsKj5h3KXVGU
-        chTqVnHFdlQNIcm2NuK9agJH/5lX/3ON5B4TFLrXog==
-X-Google-Smtp-Source: ABdhPJwi4+FDtHZuNaZ2D07E95crUVSI4V31HmhkquL7JVxvR4IkomX9YeN0u5y/BL+pxjnLsc2vjrD0BOna3+dEwDk=
-X-Received: by 2002:a05:6512:322d:: with SMTP id f13mr1037730lfe.571.1604586909849;
- Thu, 05 Nov 2020 06:35:09 -0800 (PST)
+        bh=Gx4esp1H+t/CRh0pOUP9iWgL9zCSVVT3Kg6Fjz064Mc=;
+        b=aH2XHoMKQcm4WtvcgD8os0xP9lVQxiCJ6uJTdwaDCjusNKgAgXx9eCWiqHiWf4Tgj3
+         8Bs0DBPkClE94cIFywCad/hx0vuct2Gq3zjsdFVaQdnhYEFK65v4r2xeoQiJYjR3CJHM
+         Zh78UwUehEhGwBVStFcRCRRANSjalbvYDhkJux3swVLcJHByLQ+z8KFg4FLUKlYsh1kf
+         NkMZXLWue+TF6qlFxFAQdQCo9vxnc9lY7bZfvAurcJIcLAbUnqE7KeuHe1WIPuI87UZq
+         qPjlYqjQTgpuQMwDvilUCT29gK64CJbCwCGL4oRjtA9q3hfiDScbvPDuhLw2hBvU7MsJ
+         3zUA==
+X-Gm-Message-State: AOAM532jpfZXWcaJUDY7zeQtBdMv2ov1iU4MGLfyMiwjQC8rjOS4ULNA
+        YF5Feod6EDvM83W81wJ3vpo1mO9/+37LmCi6KQhwzw==
+X-Google-Smtp-Source: ABdhPJwTgu8lGloY30zcE8UObChuYq/kswE4wTmWEggG5cOpkg2mqkw66qs/1O6wNJd3gsLrfMuyXtjBLxSyvIi0CRM=
+X-Received: by 2002:a50:99c3:: with SMTP id n3mr2893903edb.213.1604587065503;
+ Thu, 05 Nov 2020 06:37:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20201027084417.10137-1-billy_tsai@aspeedtech.com> <20201030055450.29613-1-billy_tsai@aspeedtech.com>
-In-Reply-To: <20201030055450.29613-1-billy_tsai@aspeedtech.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 15:34:59 +0100
-Message-ID: <CACRpkdY+oOWoEVEn8ECckYkUcDUJw2Ts4JMAu0bCbVxs3WNvZg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: aspeed: Fix GPI only function problem.
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        BMC-SW@aspeedtech.com
+References: <20201105104049.91077-1-warthog618@gmail.com>
+In-Reply-To: <20201105104049.91077-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 5 Nov 2020 15:37:34 +0100
+Message-ID: <CAMpxmJXFsMYOVOHY8zp-C6gF9q6sfi=HuUYiSDmZBDYiJNDh3g@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix sysfs when cdev is not selected
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Schichan <nschichan@freebox.fr>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 6:55 AM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
-
-> Some gpio pin at aspeed soc is input only and the prefix name of these
-> pin is "GPI" only.
-> This patch fine-tune the condition of GPIO check from "GPIO" to "GPI"
-> and it will fix the usage error of banks D and E in the AST2400/AST2500
-> and banks T and U in the AST2600.
+On Thu, Nov 5, 2020 at 11:41 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Fixes: 4d3d0e4272d8 ("pinctrl: Add core support for Aspeed SoCs")
+> In gpiochip_setup_dev() the call to gpiolib_cdev_register() indirectly
+> calls device_add().  This is still required for the sysfs even when
+> CONFIG_GPIO_CDEV is not selected in the build.
 >
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> Replace the stubbed functions in gpiolib-cdev.h with macros in gpiolib.c
+> that perform the required device_add() and device_del() when
+> CONFIG_GPIO_CDEV is not selected.
+>
+> Fixes: d143493c01b7 (gpiolib: make cdev a build option)
+> Reported-by: Nicolas Schichan <nschichan@freebox.fr>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-Thanks Billy, patch applied for fixes!
+Applied for fixes with Nicolas' tag.
 
-Yours,
-Linus Walleij
+Bartosz
