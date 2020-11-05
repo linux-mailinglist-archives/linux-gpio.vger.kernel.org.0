@@ -2,80 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 162292A8015
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 14:56:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 656462A802D
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 14:57:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgKEN4O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 08:56:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        id S1730917AbgKEN55 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 08:57:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgKEN4M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 08:56:12 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A31BC0613D3
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 05:56:12 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id l2so2436834lfk.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 05:56:12 -0800 (PST)
+        with ESMTP id S1730676AbgKEN54 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 08:57:56 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417DBC0613D2
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 05:57:56 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id l2so2445420lfk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 05:57:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pWfr6I/1fhJwOoSf0YAlJNTAtwTO7N82LKv6JheUJrA=;
-        b=dh0smW5ZHA8/k2JdZxEaAbu1SFaVcaFR8n6fGRx1taylpO7O13Uia0bIG+nyAcp6Ze
-         58CH/affcXWzrdXyk7aumyOI6iONzzSyl2VU9uKIzfLQyEIdDWGUpoBZ6j2Zlb3x8uiw
-         ahq7w1R4k5Vc39DihoB8D/YnNSiqo22/xAbJauqwpOsGm5WupE6zqadGH8LMzXgbuohp
-         2gm/AfDkpazzOa3Z5Sy8hurv0CjN9wdBsdytjBJ5Bm4ecFA9AWSTBD47D+lo/HunH7u8
-         5XiE/+LhPEwIRdSZK7UT5liPBytxyoxydytEbZ8b5ehmCjk0xIJn5aGw436meUFwzCcw
-         +agg==
+        bh=hI0UzcPlzM3Z+TT8BLCsTb4B4PaVfW/TF8pw2jZ+3SI=;
+        b=rI4ESeXM81khgcgR6VhCZFZCkhrDyz3SIB12oAg7aevlhKQnfwxm9DRbitflnAvySF
+         b1+dCx0m83TOzFMQGZwu7zNhPOmY3mmvUQhzRTdKxLNkVT7kcXUsbga9iaNUP94wqONn
+         HcOpAPayUbys/sx7e+1QFzx1rG6ppvxwBQnsLb8WXkR0i+wuTc6bKp4xVgOzX+k4uMox
+         gcQMpeuLqq5aD/5FfogyW5ppol6/4UXTiW39v/24AqNx2otBT+thZL6nOfGhJDC7YXLT
+         6XF/Eu4jZQ0GCf4aMXgOyA6B19+xP20CWGHGAj6oyWL+z5BNUpKQK26HmLXEAsMDKFOp
+         Z46Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pWfr6I/1fhJwOoSf0YAlJNTAtwTO7N82LKv6JheUJrA=;
-        b=X9T5qcPo5kHqhKFgcFs3ysB457cC6eGCHZrpvIwnJLRciD+RzzvMuw+fOe5EpJgJtM
-         cigZw0OnHa7ZcMPGzrR3bbThI3h6oY4BPmnnU7HeCspjNTPRuar8vYE7ohlNcKd6zY1B
-         /vrYwYzEWLmGRgTDMG3mhSr3ENEsX+zUlqtzrWVfVq2rfP1qKwn5E5ruvKLC2xh4rYHP
-         +peSo1BRnSN8uy/1g8uoiDaEc5hlLjL2I9YeP9d24qeR2NkUpfE+YhAZzsCib8uA1PEr
-         lvn6Z5ELQMHPvu2uHkzeXvY6ksQEG9QKcohuCxbBnAOuRsFdGW++rAoS7RThQ22gyk+Y
-         r7KA==
-X-Gm-Message-State: AOAM5318u7q73xfLE7x2y78dkDLtMbjQm1OwHLMlsbYsUmvYwfLYUCjc
-        U5Xpw8e32/CLb87xrbAqAQtogQ0MUehNxPVntX7rKA==
-X-Google-Smtp-Source: ABdhPJz1NkMdVDk2FKVmNqglkouzFOqJK2r6nNAUhTjFtrEgBbtn9xveKMPS3FTyRh2Xf7ZdUcxMmijM8XkJxyAwmCE=
-X-Received: by 2002:a05:6512:3225:: with SMTP id f5mr987061lfe.441.1604584570861;
- Thu, 05 Nov 2020 05:56:10 -0800 (PST)
+        bh=hI0UzcPlzM3Z+TT8BLCsTb4B4PaVfW/TF8pw2jZ+3SI=;
+        b=fsJCKWyuStwNOp/W3muMzYx0FwtxW3fFonSNjEPl0/HUgs2suS5OSAp8mrFpM0y2ZC
+         r1CztvD0tgVDHnXfAe5nfYBop7ziedWZbjD8QgtfEO+y9MV6Ic+TZfWUM3T2EiNB6Lp2
+         ii+nwVsTgEylcue0SbccE/4DTD2elBSz/mgLE/i9LbCsLW64r6zuf555/lRk/CsDPJsw
+         15Q95OhWIeOQAGcbMAY4l3MHDqtm1jhUHeRZhv4SEDPcBEJHAM/N1oaZUgvhAe4QLmcI
+         HpbThNqO3r9gMsI5tq6uy0I5RGcaDuFIF+og1nHo8aMfsJPhrihM3Um9RvHxDaZEZDrT
+         C9/g==
+X-Gm-Message-State: AOAM5333ZibUgKY9eQdcUUnS/+4fHGvNZkwmVMtKOb5/H23hp0AqN3JB
+        CEKApUGwX2FjjxNLIQCXfBKhU2hx14CZdiHZPEqsRw==
+X-Google-Smtp-Source: ABdhPJylKuZVTDjj0TM1vn3dfgBS2xLU+0Zy/JEB0e0mx8z3Xl+Cke+L0nZBl0FCSalSQ25Ca/7WB9cpgUs4vwTFDQg=
+X-Received: by 2002:ac2:50c1:: with SMTP id h1mr983249lfm.333.1604584674765;
+ Thu, 05 Nov 2020 05:57:54 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1603893146.git.mchehab+huawei@kernel.org> <53f82f9b3c063bb1b928bdea4986f1471ad3ace7.1603893146.git.mchehab+huawei@kernel.org>
-In-Reply-To: <53f82f9b3c063bb1b928bdea4986f1471ad3ace7.1603893146.git.mchehab+huawei@kernel.org>
+References: <20201028145117.1731876-1-geert+renesas@glider.be>
+In-Reply-To: <20201028145117.1731876-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 14:56:00 +0100
-Message-ID: <CACRpkdZMpRvF3OhgPzSnk_qJcMNW+RtcYud8VEhgz2RVzN=ntQ@mail.gmail.com>
-Subject: Re: [PATCH 23/33] docs: ABI: don't escape ReST-incompatible chars
- from obsolete and removed
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Thu, 5 Nov 2020 14:57:44 +0100
+Message-ID: <CACRpkdayhrcfyXEB4P+apjOyF=8DZgmu=_H8+aQEr4XEbB0NeQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Remove hole in pinctrl_gpio_range
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 3:23 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+On Wed, Oct 28, 2020 at 3:51 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> On 64-bit platforms, pointer size and alignment are 64-bit, hence two
+> 4-byte holes are present before the pins and gc members of the
+> pinctrl_gpio_range structure.  Get rid of these holes by moving the
+> pins pointer.
 >
-> With just a single fix, the contents there can be parsed properly
-> without the need to escape any ReST incompatible stuff.
+> This reduces kernel size of an arm64 Rockchip kernel by ca. 512 bytes.
 >
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Compile-tested only (arm/multi_v7_defconfig and arm64/defconfig).
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
+
+Do you think it'd be worth it to add a check to checkpatch to suggest
+to move pointers toward the end of any struct?
 
 Yours,
 Linus Walleij
