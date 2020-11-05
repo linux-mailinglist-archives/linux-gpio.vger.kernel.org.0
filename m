@@ -2,156 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 179982A7C0C
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 11:41:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D11AC2A7C46
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 11:52:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgKEKlM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 05:41:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
+        id S1730129AbgKEKwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 05:52:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgKEKlM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 05:41:12 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365F3C0613CF;
-        Thu,  5 Nov 2020 02:41:12 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id t22so584809plr.9;
-        Thu, 05 Nov 2020 02:41:12 -0800 (PST)
+        with ESMTP id S1730061AbgKEKwm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 05:52:42 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654CFC0613D3
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 02:52:42 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id k25so1072053lji.9
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 02:52:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W3gnZyAmXTZVbhb7LKm3sXbvwT/SP+v0RFw1GtMWZEY=;
-        b=QNMc1AYzlOPIB/liIT2N1ErCmfxMFn1NCL2emcN8pRZOJeuFwroV+yfR5Aeqm0pvha
-         PwAXn8uRQIx1NKmD6/QJ67moDVSjf4o43neKGS1uUmI+WXID9abYTVzGyRJcHkqKEGFE
-         lunXYbm9K+NdyNiArvGzWpHaE13raq/FoDQ/KhuGijfYjvCTLJ9+1VGDEXUpOuptNOoC
-         JvDwhM+6KN9dw/L0aLNUt5zOFY/3g9WjMLNNYSyF8kR3rOikq/sscJOXkiN7wTW85rSE
-         SOQQGF8wn+sTvH92Jdn9PKvq/+NXb77qLakLHieVjMrRtH9SXqOpuvTNWtYZs1WhSpoa
-         LyDg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IbC7h6sutytvBKVgRkW8YBm4v4oQThhwvuIz3XlFJpw=;
+        b=d/RC4QlHsEU0Pk+87b5hebgQR1nvUbGfz+KWgyYPw8avJty+oHtYWwRBfI9ZwNnjQk
+         6x1f9VNEkjxS+WacQizm9QFnRFRoNTRgXz7J8hUL7gDHTr1r0B4CDTIH++hxOUWPbRHA
+         faB9Z1G3wfURCCb570cPMFzwdpYsz5NNLR9grwb6NletLAXur80zPGuj6TnPTgqIsI6W
+         73tvdQLbSeHs/ZIHScGvMbbglljfvtEcmDpRr1SmCjt0Cs2115AxcxEJIltrAcsJpAIs
+         i7f4CKXDgFTYIlx2Oia+shgKsQ9vbBqcm5RZnKYsE+6tO+5eUkPHBV9yZoGBsu8zWwxP
+         sFlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W3gnZyAmXTZVbhb7LKm3sXbvwT/SP+v0RFw1GtMWZEY=;
-        b=ITx48TxQY3Glgq0B+bK0+6kFLn6ru2TVVjzurI+lMQckMmaGllWoVGi131Opj/dxOy
-         lrUI+VapSyxy2UtIs1YZJgXYTj+pClxzwu6bPyNjTl9Ccl4bA33iFuGsjhmUFoaKnwUS
-         3FHaRGhSde1mJwe4h74K7eUgPrAuRf8ncNbFxSbmveGWTH0cVaZi9647K95V3RlD/KMi
-         2/3Ued847HFnExQiW8DL+Rm8wzbJjI4HVnSiyPKKwp5NLtgh+w8EEp0k8HAJXjvvCv23
-         2kTieWyEacvWMg7fMCQZ1NVHJCPIQCy/WrH3YZHTIDwOjm/3ui2qod8AetyCLHj0wm7o
-         Dyyw==
-X-Gm-Message-State: AOAM531zmxAtx68xSvmmsGS4Ffjq7dUvOCENVR3haGGm6lGT743PEjnN
-        bxNIvK6LWKUSsazyrhy5haQkWSmqUneJrg==
-X-Google-Smtp-Source: ABdhPJwP10PA1Cn+4qHlossF98IQc+6Etq+eMVs1qDsn4o7YRK6XQfxxHAR/yI0opAWZu81/HZSNoQ==
-X-Received: by 2002:a17:902:82c3:b029:d6:c377:c87e with SMTP id u3-20020a17090282c3b02900d6c377c87emr1687122plz.85.1604572871236;
-        Thu, 05 Nov 2020 02:41:11 -0800 (PST)
-Received: from sol.lan (106-69-171-141.dyn.iinet.net.au. [106.69.171.141])
-        by smtp.gmail.com with ESMTPSA id j13sm2055855pfd.97.2020.11.05.02.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 02:41:10 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Nicolas Schichan <nschichan@freebox.fr>
-Subject: [PATCH] gpiolib: fix sysfs when cdev is not selected
-Date:   Thu,  5 Nov 2020 18:40:49 +0800
-Message-Id: <20201105104049.91077-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IbC7h6sutytvBKVgRkW8YBm4v4oQThhwvuIz3XlFJpw=;
+        b=L3+rPDKVOThsqvVHYGSiAr6jS3dybi12F/nryjhROlx4CZeozfGKz0QSSiil0Z2UpH
+         tMdl4zENEzoEVMq3mJGfIhC0ktsSkK6LqTOtIFvEzvx7axBpjx4IUOREDKzsabL31BGN
+         3lp9ytyzlimM9v9/z+poaUVRzrA17sa5cN2yXxDXHlQAEU22qgkZ44CNujTcodw49zyv
+         s8bKHgW7lcS4ZH2ZdavaQlZbyl5SGzkcuzihV/t1YZ3x0PvDKkhm8Ox421aiMD2EP4BU
+         C178l8r76g5QzvkL36BJCtYzrvEkK1/iGprf+RYGsA/GTd+nhonkH2Zx3eWtLli0g6Mj
+         WPXg==
+X-Gm-Message-State: AOAM530BqzdKR7Sy4gw+BVrsq2rUVViN1UG5qBAWgTvstyn9763U01oR
+        z2Vt7YKywcwyFQwUEz/+IPgG4FvWml4gagoB06Xyiw==
+X-Google-Smtp-Source: ABdhPJwMZsQSFYx3yHXvvtRlVkabm7C64j8LuP2+XUU2+XVFwAx/DWoa4YDvNPprZ43yAgspd5XcguY3mqI1O9Ir5Vs=
+X-Received: by 2002:a05:651c:1205:: with SMTP id i5mr726163lja.283.1604573560846;
+ Thu, 05 Nov 2020 02:52:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201027121725.24660-1-brgl@bgdev.pl>
+In-Reply-To: <20201027121725.24660-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 5 Nov 2020 11:52:30 +0100
+Message-ID: <CACRpkdYbpOZGmWONeOQFY7DE+t2ev30DQQ-8cxrJNoK9fVVunA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] slab: provide and use krealloc_array()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In gpiochip_setup_dev() the call to gpiolib_cdev_register() indirectly
-calls device_add().  This is still required for the sysfs even when
-CONFIG_GPIO_CDEV is not selected in the build.
+On Tue, Oct 27, 2020 at 1:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Replace the stubbed functions in gpiolib-cdev.h with macros in gpiolib.c
-that perform the required device_add() and device_del() when
-CONFIG_GPIO_CDEV is not selected.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Andy brought to my attention the fact that users allocating an array of
+> equally sized elements should check if the size multiplication doesn't
+> overflow. This is why we have helpers like kmalloc_array().
+>
+> However we don't have krealloc_array() equivalent and there are many
+> users who do their own multiplication when calling krealloc() for arrays.
+>
+> This series provides krealloc_array() and uses it in a couple places.
+>
+> A separate series will follow adding devm_krealloc_array() which is
+> needed in the xilinx adc driver.
 
-Fixes: d143493c01b7 (gpiolib: make cdev a build option)
-Reported-by: Nicolas Schichan <nschichan@freebox.fr>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.h | 15 ---------------
- drivers/gpio/gpiolib.c      | 18 +++++++++++++++---
- 2 files changed, 15 insertions(+), 18 deletions(-)
+The series:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
-index cb41dd757338..b42644cbffb8 100644
---- a/drivers/gpio/gpiolib-cdev.h
-+++ b/drivers/gpio/gpiolib-cdev.h
-@@ -7,22 +7,7 @@
- 
- struct gpio_device;
- 
--#ifdef CONFIG_GPIO_CDEV
--
- int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
- void gpiolib_cdev_unregister(struct gpio_device *gdev);
- 
--#else
--
--static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
--{
--	return 0;
--}
--
--static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
--{
--}
--
--#endif /* CONFIG_GPIO_CDEV */
--
- #endif /* GPIOLIB_CDEV_H */
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8e29a60c3697..c980ddcda833 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -480,11 +480,23 @@ static void gpiodevice_release(struct device *dev)
- 	kfree(gdev);
- }
- 
-+#ifdef CONFIG_GPIO_CDEV
-+#define gcdev_register(gdev, devt)	gpiolib_cdev_register((gdev), (devt))
-+#define gcdev_unregister(gdev)		gpiolib_cdev_unregister((gdev))
-+#else
-+/*
-+ * gpiolib_cdev_register() indirectly calls device_add(), which is still
-+ * required even when cdev is not selected.
-+ */
-+#define gcdev_register(gdev, devt)	device_add(&(gdev)->dev)
-+#define gcdev_unregister(gdev)		device_del(&(gdev)->dev)
-+#endif
-+
- static int gpiochip_setup_dev(struct gpio_device *gdev)
- {
- 	int ret;
- 
--	ret = gpiolib_cdev_register(gdev, gpio_devt);
-+	ret = gcdev_register(gdev, gpio_devt);
- 	if (ret)
- 		return ret;
- 
-@@ -500,7 +512,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
- 	return 0;
- 
- err_remove_device:
--	gpiolib_cdev_unregister(gdev);
-+	gcdev_unregister(gdev);
- 	return ret;
- }
- 
-@@ -825,7 +837,7 @@ void gpiochip_remove(struct gpio_chip *gc)
- 	 * be removed, else it will be dangling until the last user is
- 	 * gone.
- 	 */
--	gpiolib_cdev_unregister(gdev);
-+	gcdev_unregister(gdev);
- 	put_device(&gdev->dev);
- }
- EXPORT_SYMBOL_GPL(gpiochip_remove);
--- 
-2.29.2
+I really like this.
 
+Yours,
+Linus Walleij
