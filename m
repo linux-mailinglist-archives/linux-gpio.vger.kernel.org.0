@@ -2,154 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF6B92A8768
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 20:37:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B124D2A8A8D
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 00:19:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbgKEThh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 14:37:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36606 "EHLO
+        id S1731060AbgKEXTe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 18:19:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbgKEThh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 14:37:37 -0500
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B991C0613D2
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 11:37:37 -0800 (PST)
-Received: by mail-oi1-x244.google.com with SMTP id u127so2884282oib.6
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 11:37:37 -0800 (PST)
+        with ESMTP id S1729162AbgKEXTe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 18:19:34 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C97C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 15:19:34 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id c20so2566509pfr.8
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 15:19:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0IeuWIyuaS2pCWkh8SM9vIHTk3Z9xKMgQga1epoP3ng=;
-        b=KhyQlJxDU6io8FVXlTraVtbTy3bQuNC6sKWSQlCJoDV3eVUN8R8qBKymBN5FpTznBJ
-         4MhBYMa2IuKyTowiy9/fZZPa8rYN0sdd7tu4P2gSHcjnay4/Ewu7Fnkn90lA7bFKqFwU
-         yb6Ge7spA+x/jLS4G8ilTQ0oIFhVBUcg0IOm74/C4jRoKRtkmLSh/gFsNOSLkaQvAvkX
-         LhSfYwfDvUD2o+ek/F5TywPUJ/TNO/UTLQPZ5VTC7cDsFWpESDgcORcU32pa8PnSWqnO
-         98vNzQjj6t5oS5WFavOU9azcEjKsPpiPdpnK/9hEeczBP+OekrcPzv7NotIFDIo4DCVj
-         gLig==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hnu7BZsCf25j81o0/FyIcCSZu6usgCOiyrsaZLAuAWY=;
+        b=ulx3og2JVeePgxNZ0jDe1Q0Nm4UVgQo4WUzZCRJaqY8MiP8qbtyl6BmIcK6pYvxao3
+         kS5TM1R131bQbBWbn7hk94pW4dV7r2WmBShAWry073jShECILKo/5ZoWu0Fpb2pUUeKq
+         A0eXv44SfglMYykRC8ogdc+Js242DfQ8H7/AGJWIIUrCcs/JW3enxc/DE8Ir2kdx+g4j
+         4aWaRLkBp7V9qfyKV6vHexQc8XaYS5wrwwpD1Rish1S04ksWct67ROO9j5YtRuZXaiF0
+         m20kDwjHtTNa443Ami1s134rH6mY83D9/JD/yxrE5V7JsTlkZHEi8AmwoR7GcOoUkyWD
+         Pqjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0IeuWIyuaS2pCWkh8SM9vIHTk3Z9xKMgQga1epoP3ng=;
-        b=R+iUOQ5FZ9y1YTbD8ZlGrV0i2abrmBxxzBYqUJ+o+Gn4lEOAk8hSR3qJtEATGKe3AZ
-         wsK9ALZCcUWbPRt3hd9K/4FR02UlSyNdKDaJvjH440G7ZkaJxvFJVorLl17sGN4Qlm2v
-         d+DDa88hJqcBf9U0gnPm44EorSYK15NTIYyrnBuT5bxjFWTGlPRxO0MIWQCuTPHbpDUJ
-         7Sib8aV2EmtFi2JwJfvYsk4AcTYMN9gueWa4ZKTUCBeN+9PKnzhA134ajgPti/b0Plo8
-         kKvDHtV0j9vNb/r1LyVwf8fJkpD/3jGvWwCRy28HYummLNK6hDJtRv68UMulkdwhTv9U
-         spCQ==
-X-Gm-Message-State: AOAM530WQDr9ZFaauWecnXWVrxLEe0TsebTbLC7UIcSDdS/UPToIpADR
-        MP4/w2k9fx40BR1HJTjaFTcbaHtnUU4m/AvGhE5kng==
-X-Google-Smtp-Source: ABdhPJy6EmV/kijD0O5lYgC/y/tG7BvaOubM7LfjvxCX96j17pkf6e0nRm/f++LPHQRFDQ7t06YdyL9HKphcyBMRX3A=
-X-Received: by 2002:aca:1a07:: with SMTP id a7mr587040oia.169.1604605056727;
- Thu, 05 Nov 2020 11:37:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20201031003845.41137-1-john.stultz@linaro.org> <CACRpkda1MV2=0MOMk3t4mr1RczdvfeiNTdbYXX6Jig+6p3TABA@mail.gmail.com>
-In-Reply-To: <CACRpkda1MV2=0MOMk3t4mr1RczdvfeiNTdbYXX6Jig+6p3TABA@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 5 Nov 2020 11:37:26 -0800
-Message-ID: <CALAqxLV_GG1tPf9NEHhQN0dtL6DJmOvENVvzdnS-4_o3pNOzoA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] pinctrl: qcom: Allow pinctrl-msm code to be
- loadable as a module
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hnu7BZsCf25j81o0/FyIcCSZu6usgCOiyrsaZLAuAWY=;
+        b=GiAZt2fDhDMMocqbmuvmipRlCEVLyv4pVB8E0VUYIgjuqLPD7V7XuSGMDXt3ya2/qV
+         I3sSEhfNK9QxOQECfAVlEaYf59zgR/XizVZcHzrLUsGNjzh90cHS0rD+Gr1jTPCo0e6E
+         D5ZU7QzpE61VdltH10ngHg9FilcfrQ2Ah4XVONUIICQPhW0J/G3w6zaw+Nccx+nVbSFE
+         aqT/qQ3uxgBbb8MeEAz1FmjSFrSQgBx3ZB3mXXT9XxMJ11JtvOf8fx1EDZL6E6X+JgBU
+         KuHCIOpBSVnRkOgPRPsrR/fZs53uFqH11CB/1oEUc6jM7jhG26piiqbfyWou2P3V8PDI
+         mUoA==
+X-Gm-Message-State: AOAM533F4xfrqpp7e+K2fME4jrwDpUKHSxdDSdbP6rGPJo8ggpSz2vb0
+        lpXskwJnXegZSP7PYyktWAk=
+X-Google-Smtp-Source: ABdhPJy31HRbkUymrRY6bPCwzgshxyqrnSW0cjyuBykUK4kmuhj13SAMMyvNzka2Xzk+Rz8JWi0msQ==
+X-Received: by 2002:a63:42c2:: with SMTP id p185mr1840311pga.245.1604618374018;
+        Thu, 05 Nov 2020 15:19:34 -0800 (PST)
+Received: from localhost ([160.16.113.140])
+        by smtp.gmail.com with ESMTPSA id w65sm3911562pfw.145.2020.11.05.15.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2020 15:19:33 -0800 (PST)
+From:   Coiby Xu <coiby.xu@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Andy Gross <agross@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/4] pinctrl: amd: debounce filter fixes
+Date:   Fri,  6 Nov 2020 07:19:08 +0800
+Message-Id: <20201105231912.69527-1-coiby.xu@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 6:17 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sat, Oct 31, 2020 at 1:38 AM John Stultz <john.stultz@linaro.org> wrote:
->
-> > Tweaks to allow pinctrl-msm code to be loadable as a module.
-> >
-> > This is needed in order to support having the qcom-scm driver,
-> > which pinctrl-msm calls into, configured as a module.
-> >
-> > This requires that we tweak Kconfigs selecting PINCTRL_MSM to
-> > also depend on QCOM_SCM || QCOM_SCM=n so that we match the
-> > module setting of QCOM_SCM.
-> >
-> > Unlike the previous revision of this patch:
-> >   https://lore.kernel.org/lkml/20200625001039.56174-5-john.stultz@linaro.org/
-> > this version reworks PINCTRL_MSM to be a visible option and
-> > instead of having the various SoC specific drivers select
-> > PINCTRL_MSM, this switches those configs to depend on
-> > PINCTRL_MSM. This avoids adding the oddish looking:
-> >   "depend on QCOM_SCM || QCOM_SCM=n"
-> > to every SoC specific driver, as that becomes a maintenance
-> > headache.
-> >
-> > We also add PINCTRL_MSM to the arm64 defconfig to avoid
-> > surprises as otherwise PINCTRL_MSM/IPQ* options previously
-> > enabled, will be off.
-> >
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Jason Cooper <jason@lakedaemon.net>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: Maulik Shah <mkshah@codeaurora.org>
-> > Cc: Lina Iyer <ilina@codeaurora.org>
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: linux-arm-msm@vger.kernel.org
-> > Cc: iommu@lists.linux-foundation.org
-> > Cc: linux-gpio@vger.kernel.org
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> > v2:
-> > * Module description and whitespace fixes suggested by Bjorn
-> > * Added QCOM_SCM || QCOM_SCM=n bits on Kconfigs selecting
-> >   PINCTRL_MSM. Reported by both Todd and Bjorn.
-> > v3:
-> > * Make sure the QCOM_SCM || QCOM_SCM=n trick is commented
-> > v4:
-> > * Rework "select PINCTRL_MSM" to "depends on PINCTRL_MSM"
-> >   to consolidate the QCOM_SCM dependency.
-> > v5:
-> > * Add PINCTRL_MSM to arm64 defconfig
->
-> Bjorn can you have a look at this series?
->
-> BTW John  I'm afraid I just merged a new QCOM subdriver so we might
-> need to respin this to cover all.
->
-> It's an important patch so I'll help out in rebasing it if the only problem is
-> that my tree is moving under your feet.
+There are three fixes (and one improvement) that fix the debounce
+filter issues in pinctrl-amd.
 
-No worries. I'm mostly wanting to make sure there are no objections
-with switching PINCTRL_MSM from a selected config to a depended
-config.
+Changelog v3:
+ - Explain why the driver mistakenly took the slightly deviated value
+   of debounce timeout in the commit message (patch 2/4) [Andy Shevchenko]
+ - Explain why other touchpads are affected by the issue of setting debounce
+   filter in IRQ type setting in the commit message (patch 4/4)
 
-If that seems ok, I can redo it on whatever point you would like.
+Changelog v2:
+ - Message-Id to Link and grammar fixes for commit messages [Andy Shevchenko]
 
-I realize I can also split that change out separately from the module
-enablement bits as well if its helpful.
 
-thanks
--john
+Coiby Xu (4):
+  pinctrl: amd: fix incorrect way to disable debounce filter
+  pinctrl: amd: use higher precision for 512 RtcClk
+  pinctrl: amd: print debounce filter info in debugfs
+  pinctrl: amd: remove debounce filter setting in IRQ type setting
+
+ drivers/pinctrl/pinctrl-amd.c | 56 +++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 12 deletions(-)
+
+--
+2.28.0
+
