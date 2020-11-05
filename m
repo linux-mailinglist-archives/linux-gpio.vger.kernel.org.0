@@ -2,85 +2,243 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 781E12A7A25
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C0D12A7A37
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:14:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbgKEJLO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:11:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51102 "EHLO
+        id S1730906AbgKEJOA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:14:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730788AbgKEJLL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:11:11 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78014C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:11:09 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id h6so1237360lfj.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:11:09 -0800 (PST)
+        with ESMTP id S1731044AbgKEJN7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:13:59 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D3AC0613D6
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:13:57 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id cw8so1542718ejb.8
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:13:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R0y5gVIpn/AdoIrclQ35fvG8jExsjx9oUlGQ4SSdRvM=;
-        b=OBDEBRw1XQC3TF3Ujh14Do4dSNZfC5XcJwZ3/bgFQ+sx4K3XUmiyLaQCtmaraJniD2
-         dI4T8c1xdRCYc6hOieisMIn/BXIYYXXtbrCoXXUVcu/n+dNMu9HYYQeMgGgHgLzHavoN
-         LVWiu97oelCd0Chcpw0NeQODveRSIQ3u2xOhva3fn5rWs41Uv4WPEsBnKriGOIqQzXaw
-         F2ndncW0lLmvkp/UJuETbVOhB9Xu32Mzoac95D9wwg9vHDOuqEoFLTr3BRoVVNWUSiDY
-         ZMKimJPPn31JOs76+XDZArTABgEXph3X4yOAOpezGHK0+DR1MN4bp/BbwS4ynjAbxx0E
-         mN1g==
+         :cc:content-transfer-encoding;
+        bh=cosNbBc+pGCwoieZsWO9CcMsgFAi+qgVJh6/ZaKe1v0=;
+        b=h2AbCJ6xtX9calmobLzMDdUmOt4016ZAljqf+kWZm3SpJ5dyWf5xX8QV+8uAKO7KzB
+         whVd90vtF4kEq0FjKmV2eXJCusoVmf8b1ZXm4g19A6c9d3zpTGecCZcl0xPaOrSMnUzM
+         OGxi6KTPLoJsWq0pzXzySThLXXe1GQN0O9JNP7hJsN0mTV3NqA97jL96kLNinAgMKhRQ
+         8LQz93+7bzMlzUxaAtidPL1DLIRzbOEahVB/7cnJeyFT+Us2VOVrMCBQcnomz5KE/6GC
+         gF+l6kEcCMCIt86RD/mLxN3qSNhWZV0UIk0wGcZ/d2v9DKiSjhWGarH/Lc5p3RkZiIJ/
+         zceA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R0y5gVIpn/AdoIrclQ35fvG8jExsjx9oUlGQ4SSdRvM=;
-        b=E7ylgLnTQyWbuo7+sKCnz85VlIqqHhwSx7hMou6IcKYKgKuKmM8DUxLDfVU/o7+BMN
-         KXVoFAR+XtMV7+aztCO+7oQgxlSCKqlyoySCMAY2T+RjdDglv6tPHGXqztKLpEt/Hl7y
-         9gxpVat/TwVaWzAkZvKR1dhGGqRgkG1/xKQ+rc8u1lfK38SDHLMScCWETnG27fBg9FQ3
-         SXDOzEtNP/lMgY6AlRl93Pct7w4om2XyukBcZoB4T8c1O6lsfhy5RD9/qhVKYEK3jr1P
-         RWQ+OXnhuI/yljv36a9ujXImogvcWh6SlyjpC3oi7wW0eVvcmr98ZRLBa54ngMRu0gzl
-         C+4Q==
-X-Gm-Message-State: AOAM531ILAn8inFoaXjOAv8nJc+FtTymXvc28NGgISm0lU5f44CKNXDQ
-        UnkW7JT09xZ1nR/9OGCUSwOrxXn1HeWt4TqHQFvDvQ==
-X-Google-Smtp-Source: ABdhPJzqB9jSOZSfJwAF6NxekJgcXcBnjncy+ksjyFQ9f8WPlYctN2Gs84q49hGyTJZnrCtPAjPxbSo30cnPWuokgKU=
-X-Received: by 2002:a19:824f:: with SMTP id e76mr564699lfd.572.1604567467941;
- Thu, 05 Nov 2020 01:11:07 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cosNbBc+pGCwoieZsWO9CcMsgFAi+qgVJh6/ZaKe1v0=;
+        b=WYs9/pdF20q19uBm4+VWcPsCxTozm/8DOYumww8Aq4zzAIs+MhaGQQ/njJDQxJSzrv
+         mXoNWpdB3rFFgifgzgcubHPh1zi7UuIGk3unA3MutbAi0h+G4reD+LTBqDEy8Zdo7hNa
+         eIX8VhIsoe0GGEbTKTArZfrf+p7EwJNX+iYWhwZkYrFRB6LYpZ0JUmP6KAf/lDt41zSy
+         9CQ0GQsIHmrxx1RfeJ1EvWJiSf942STHQF6Dwi0C0Mt7daaEH29JXcERo2wbpjixXhug
+         0ola5DZ8JaK9Ix9eR9KlxcEb2LB2UoMAfhmNkfh8YE2Wsd7ba6oWUQ9RQxq9es2fsDak
+         2nKA==
+X-Gm-Message-State: AOAM530wMUpwqApbCXX72ooGkLSt3vSlnUbr19EzRddnAE/K++zXjN05
+        6PPFS7f2/JXtpGiAqpMq9Z8TiT+T386Ztg8b4XJoNA==
+X-Google-Smtp-Source: ABdhPJyFgzr6/OtoGqHbIjxgJayFJFC6ooeiWsm56YhTmEcoAALq1JBufGgUh3laISQqZelpAaKQMgQ7rYi7EiPI/xk=
+X-Received: by 2002:a17:907:420d:: with SMTP id oh21mr1350987ejb.429.1604567636515;
+ Thu, 05 Nov 2020 01:13:56 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1603055402.git.syednwaris@gmail.com> <5e94ad3c156b98d2ed28617b2ca25bacadc189d5.1603055402.git.syednwaris@gmail.com>
-In-Reply-To: <5e94ad3c156b98d2ed28617b2ca25bacadc189d5.1603055402.git.syednwaris@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 10:10:57 +0100
-Message-ID: <CACRpkdbZ4US4Onhr-AmkPoqxQU0enrsicx775kLKdpEVtkTbhg@mail.gmail.com>
-Subject: Re: [PATCH v12 3/4] gpio: thunderx: Utilize for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20201104103938.1286-1-nsaenzjulienne@suse.de> <20201104103938.1286-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20201104103938.1286-2-nsaenzjulienne@suse.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 5 Nov 2020 10:13:45 +0100
+Message-ID: <CAMpxmJWJRcQQiLitJCLWKmhQVQWr3bMDY=td5FEn5uy2YZfwkA@mail.gmail.com>
+Subject: Re: [PATCH v3 01/11] firmware: raspberrypi: Introduce devm_rpi_firmware_get()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 18, 2020 at 11:41 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-
-> This patch reimplements the thunderx_gpio_set_multiple function in
-> drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-> Instead of looping for each bank in thunderx_gpio_set_multiple
-> function, now we can skip bank which is not set and save cycles.
+On Wed, Nov 4, 2020 at 11:39 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> Cc: Robert Richter <rrichter@marvell.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> When unbinding the firmware device we need to make sure it has no
+> consumers left. Otherwise we'd leave them with a firmware handle
+> pointing at freed memory.
+>
+> Keep a reference count of all consumers and introduce
+> devm_rpi_firmware_get() which will automatically decrease the reference
+> count upon unbinding consumer drivers.
+>
+> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
 > ---
-> Changes in v12:
->  - No change.
+>
+> Changes since v2:
+>  - Create devm_rpi_firmware_get()
+>
+>  drivers/firmware/raspberrypi.c             | 46 ++++++++++++++++++++++
+>  include/soc/bcm2835/raspberrypi-firmware.h |  8 ++++
+>  2 files changed, 54 insertions(+)
+>
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
+i.c
+> index 2371d08bdd17..74bdb3bde9dc 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -11,7 +11,9 @@
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/refcount.h>
+>  #include <linux/slab.h>
+> +#include <linux/wait.h>
+>  #include <soc/bcm2835/raspberrypi-firmware.h>
+>
+>  #define MBOX_MSG(chan, data28)         (((data28) & ~0xf) | ((chan) & 0x=
+f))
+> @@ -27,6 +29,9 @@ struct rpi_firmware {
+>         struct mbox_chan *chan; /* The property channel. */
+>         struct completion c;
+>         u32 enabled;
+> +
+> +       refcount_t consumers;
+> +       wait_queue_head_t wait;
+>  };
+>
+>  static DEFINE_MUTEX(transaction_lock);
+> @@ -247,6 +252,8 @@ static int rpi_firmware_probe(struct platform_device =
+*pdev)
+>         }
+>
+>         init_completion(&fw->c);
+> +       refcount_set(&fw->consumers, 1);
+> +       init_waitqueue_head(&fw->wait);
+>
+>         platform_set_drvdata(pdev, fw);
+>
+> @@ -275,11 +282,21 @@ static int rpi_firmware_remove(struct platform_devi=
+ce *pdev)
+>         rpi_hwmon =3D NULL;
+>         platform_device_unregister(rpi_clk);
+>         rpi_clk =3D NULL;
+> +
+> +       wait_event(fw->wait, refcount_dec_if_one(&fw->consumers));
+>         mbox_free_channel(fw->chan);
+>
+>         return 0;
+>  }
+>
+> +static void rpi_firmware_put(void *data)
+> +{
+> +       struct rpi_firmware *fw =3D data;
+> +
+> +       refcount_dec(&fw->consumers);
+> +       wake_up(&fw->wait);
+> +}
+> +
+>  /**
+>   * rpi_firmware_get - Get pointer to rpi_firmware structure.
+>   * @firmware_node:    Pointer to the firmware Device Tree node.
+> @@ -297,6 +314,35 @@ struct rpi_firmware *rpi_firmware_get(struct device_=
+node *firmware_node)
+>  }
+>  EXPORT_SYMBOL_GPL(rpi_firmware_get);
+>
+> +/**
+> + * devm_rpi_firmware_get - Get pointer to rpi_firmware structure.
+> + * @firmware_node:    Pointer to the firmware Device Tree node.
+> + *
+> + * Returns NULL is the firmware device is not ready.
+> + */
+> +struct rpi_firmware *devm_rpi_firmware_get(struct device *dev,
+> +                                          struct device_node *firmware_n=
+ode)
+> +{
+> +       struct platform_device *pdev =3D of_find_device_by_node(firmware_=
+node);
+> +       struct rpi_firmware *fw;
+> +
+> +       if (!pdev)
+> +               return NULL;
+> +
+> +       fw =3D platform_get_drvdata(pdev);
+> +       if (!fw)
+> +               return NULL;
+> +
+> +       if (!refcount_inc_not_zero(&fw->consumers))
+> +               return NULL;
+> +
+> +       if (devm_add_action_or_reset(dev, rpi_firmware_put, fw))
+> +               return NULL;
+> +
+> +       return fw;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_rpi_firmware_get);
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Usually I'd expect the devres variant to simply call
+rpi_firmware_get() and then schedule a release callback which would
+call whatever function is the release counterpart for it currently.
+Devres actions are for drivers which want to schedule some more
+unusual tasks at driver detach. Any reason for designing it this way?
 
-If Andrew merges this through his tree.
+Bartosz
 
-Yours,
-Linus Walleij
+> +
+>  static const struct of_device_id rpi_firmware_of_match[] =3D {
+>         { .compatible =3D "raspberrypi,bcm2835-firmware", },
+>         {},
+> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm=
+2835/raspberrypi-firmware.h
+> index cc9cdbc66403..8fe64f53a394 100644
+> --- a/include/soc/bcm2835/raspberrypi-firmware.h
+> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
+> @@ -141,6 +141,8 @@ int rpi_firmware_property(struct rpi_firmware *fw,
+>  int rpi_firmware_property_list(struct rpi_firmware *fw,
+>                                void *data, size_t tag_size);
+>  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)=
+;
+> +struct rpi_firmware *devm_rpi_firmware_get(struct device *dev,
+> +                                          struct device_node *firmware_n=
+ode);
+>  #else
+>  static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag=
+,
+>                                         void *data, size_t len)
+> @@ -158,6 +160,12 @@ static inline struct rpi_firmware *rpi_firmware_get(=
+struct device_node *firmware
+>  {
+>         return NULL;
+>  }
+> +
+> +static inline struct rpi_firmware *devm_rpi_firmware_get(struct device *=
+dev,
+> +                                       struct device_node *firmware_node=
+)
+> +{
+> +       return NULL;
+> +}
+>  #endif
+>
+>  #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
+> --
+> 2.29.1
+>
