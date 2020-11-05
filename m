@@ -2,91 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4986F2A8374
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 17:25:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B32E2A8393
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 17:34:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgKEQZH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 11:25:07 -0500
-Received: from mga01.intel.com ([192.55.52.88]:60487 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgKEQZH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 5 Nov 2020 11:25:07 -0500
-IronPort-SDR: L1UFwJAaFMfedMteJd9o/o30Kj1HjIVdrJTPr0i5vyecM9F2n654pKH9Sei6VXhilj48gu2A++
- pxST6OldoQYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9796"; a="187320317"
-X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
-   d="scan'208";a="187320317"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 08:25:06 -0800
-IronPort-SDR: qoPbISHkZ9K0qkytvnjEzOCchEHrf5bt86hhJ87GY+8HtZP+0waWROKt/BogcdCg7fmHnH8YpQ
- bdSkM8IOmT9w==
-X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
-   d="scan'208";a="539468181"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 08:25:05 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1kai5P-0046ST-B0; Thu, 05 Nov 2020 18:26:07 +0200
-Date:   Thu, 5 Nov 2020 18:26:07 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 3/3] gpiolib: of: Use named item for enum gpiod_flags
- variable
-Message-ID: <20201105162607.GZ4077@smile.fi.intel.com>
-References: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com>
- <20201022165847.56153-3-andriy.shevchenko@linux.intel.com>
- <CAMpxmJWhENX6bEWihp5hFjDnbXz5asdmEpw96_SJdx1v3+U1AA@mail.gmail.com>
- <CAHp75VdBahEEB5qnbbquPBG+iErEaupoAA-f1vTroAXoLLJFNw@mail.gmail.com>
- <CACRpkdZAFNqq-z5xBgtjdt5LXNMR32wtWjMt7yRm6azDmuMndA@mail.gmail.com>
+        id S1727275AbgKEQez (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 11:34:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbgKEQey (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 11:34:54 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C614AC0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 08:34:54 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id v12so1775745pfm.13
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 08:34:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Qwf4Zj5N+1JuJPQNqpXWlgnV03WB+MR9BHzXJZpWVs=;
+        b=NZzSe7ukV2JFdz0ofQ0d638TqQdeEQCHVx0JA3VwaYSJ++4RqBpCLwyeqoKKTQCXfV
+         UphkvU0KA0gDQZ3dUtARCFmYzkWJvaRuT7ElpeD0LwQnbJOKIeV0CzkNKj4HbqK1PoPk
+         /kqbSWOhhfT32gDi9gFKai/39STLKZho2Uw+AoDY+fJEyMUXMvMwV/4ZRKJae/fwqMma
+         EWH7gPz66e/ZmekBkB/SkebzLsalkYvrbrJ50SLP1ntiR/riB99t/7lqg6SyF5XJ0Ul2
+         OQ6uf07l5Mrvp2RnTZoScuzvc45JofCeDu2lY1Y7Gyhxa+fjTAlp5H9WCTH+59ThMQU0
+         mfVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Qwf4Zj5N+1JuJPQNqpXWlgnV03WB+MR9BHzXJZpWVs=;
+        b=JvWxC9iNosFl96P+YHVMZYRZHIqpn2/BBsm8BnQPBfkqDtNWd4aIZJK5GGzkiAFc3f
+         7AZOu7+rkUv93Qz1Ospom2FicsRwNznt2BlPHE/YUCpKsC6qbWOH2B027yxg88E1ji2+
+         MPTngiUN5OPe5vxxILSMT0AmRYHP3FYVYn5MyMTfrloOnxLCSor6im445oEMu44/oid4
+         3m0O2UjNK9r3DW5cRNtnLZB7pY/xpKqM/Owsnksq87LqNfKYlu60/9uJd9XsdAdmbox2
+         rJ0gjBrGvL5PbudUAItlZSjAYnNUjD3qHM4GbRcgNyESZ/PYoqIUVVOIykcDfRaMfeDS
+         KxuQ==
+X-Gm-Message-State: AOAM530E4qrlNvZCM19fgATHXMas/NQFLP3tN2IV3hfGKXM3JYcjbtxn
+        OyO8bg5MXhbKlLEbtUzbFXBsxoi2djhdu2giOUq2PhkbMB8=
+X-Google-Smtp-Source: ABdhPJyxl132JNTmcCyVknabcH4bOz9cO5RX0t9ASV4mPcehLQD2gqZzW5Hxd2e3KHm9YY6ST2/C+Hng33A+FJ9ZP1Y=
+X-Received: by 2002:a63:d54e:: with SMTP id v14mr3230047pgi.203.1604594094326;
+ Thu, 05 Nov 2020 08:34:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZAFNqq-z5xBgtjdt5LXNMR32wtWjMt7yRm6azDmuMndA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201104230703.21466-1-coiby.xu@gmail.com> <CAHp75VcczvAHE8wztdFkGE=9QKbPFCJ0wxnE9CGjqayi+oZp=g@mail.gmail.com>
+ <20201105144755.rqnq5ut6szauj4az@Rk>
+In-Reply-To: <20201105144755.rqnq5ut6szauj4az@Rk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Nov 2020 18:35:42 +0200
+Message-ID: <CAHp75Ve4XiAG7hS_QmwOiTLfFabAvgWHUoWxsHUpY+RTdMHujQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] pinctrl: amd: debounce filter fixes
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 05, 2020 at 10:05:52AM +0100, Linus Walleij wrote:
-> On Mon, Oct 26, 2020 at 3:43 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Oct 26, 2020 at 4:40 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > >
-> > > On Thu, Oct 22, 2020 at 6:58 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > Use named item instead of plain integer for enum gpiod_flags
-> > > > to make it clear that even 0 has its own meaning.
+On Thu, Nov 5, 2020 at 4:48 PM Coiby Xu <coiby.xu@gmail.com> wrote:
+>
+> On Thu, Nov 05, 2020 at 02:41:12PM +0200, Andy Shevchenko wrote:
+> >Missed mailing list.
+>
+> Sorry, I don't understand this comment. Which mailing list was missed?
+
+The cover letter (this message) has missed the mailing list AFAICT.
+How I see it is a private message addressed to me and Linus personally.
+
+> >On Thu, Nov 5, 2020 at 1:07 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+> >>
+> >> There are three fixes (and one improvement) that fix the debounce
+> >> filter issues in pinctrl-amd.
+> >>
+> >> Changelog v2:
+> >>  - Message-Id to Link and grammar fixes for commit messages [Andy Shevchenko]
+> >>
+> >> Coiby Xu (4):
+> >>   pinctrl: amd: fix incorrect way to disable debounce filter
+> >>   pinctrl: amd: use higher precision for 512 RtcClk
+> >>   pinctrl: amd: print debounce filter info in debugfs
+> >>   pinctrl: amd: remove debounce filter setting in irq type setting
+> >>
+> >>  drivers/pinctrl/pinctrl-amd.c | 56 +++++++++++++++++++++++++++--------
+> >>  1 file changed, 44 insertions(+), 12 deletions(-)
+> >>
+> >> --
+> >> 2.28.0
+> >>
 > >
-> > > This patch doesn't seem to depend on the others in this series so I
-> > > applied it to my tree. Let me know if that's not the case. I'll let
-> > > you take the ACPI patches.
 > >
-> > It's fine, thanks! I have just sent an additional message to elaborate
-> > my vision, but again, the approach for this patch you chose is just
-> > fine.
-> 
-> I might have lost track of the state of this patch set and mix it
-> up conceptually with some other patch sets so bear with me if
-> there are mistakes.
+> >--
+> >With Best Regards,
+> >Andy Shevchenko
+>
+> --
+> Best regards,
+> Coiby
 
-Consider to review / Ack [1]. I hope I addressed all / most of the comments.
 
-> I see that Bartosz applied this one patch at least.
-
-Yes.
-
-[1]: https://lore.kernel.org/linux-gpio/20201102191722.81502-1-andriy.shevchenko@linux.intel.com/
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
