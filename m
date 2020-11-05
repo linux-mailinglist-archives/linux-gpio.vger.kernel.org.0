@@ -2,144 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A22E2A7CB4
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 12:13:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231852A7DAC
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 13:02:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgKELNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 06:13:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42078 "EHLO
+        id S1728371AbgKEMCJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 07:02:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729827AbgKELNH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 06:13:07 -0500
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20D7C0613CF;
-        Thu,  5 Nov 2020 03:13:07 -0800 (PST)
-Received: by mail-pf1-x444.google.com with SMTP id v12so1213061pfm.13;
-        Thu, 05 Nov 2020 03:13:07 -0800 (PST)
+        with ESMTP id S1726067AbgKEMCI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 07:02:08 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C0DC0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 04:02:08 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id b1so1887803lfp.11
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 04:02:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=freebox-fr.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iuw3NCxX1XbUVG00e3Jk6RmUo6GlRMmd3AcO4LL+Yks=;
-        b=s9I4eo9qWFe/xyKMAQHpYDRVYFQKKnNdOHn88076GhJXbaJwN7sN3heP7Mke2JEvHS
-         ei+Krwu3UEO9bUNF+hlwdO1V4GKvenuil3qRi00O1eOa0V/rCHM0eEBfNHwwwFAlsv5z
-         62scZuPIAmkqJL13IyMqfRO//pAC9pYlbOu3vgH+Kvo/cxy7lUMlOQhzyrMLzPeSU7w3
-         gWA/DPUJJCOMBHoEmd9gdKMJYMGcQmnMWkyxVbWkp1aLkg3dWvLiBCFhVwVwfvPbWBr7
-         785rDGsBLuKuHjaehjyn+LqKmEHvdO1Xi73+A2VbAz6RkPCIc98pge6CvVJUPhLFdP1R
-         /CPQ==
+        bh=acijxDiGDEUt4I2cDxK+O6StwjSex3WB5cQlpv1FYyQ=;
+        b=c1DuOiIS8rPp2H8sU37QjdQYjSswWCIIgyzuwlAyEbZIntV825P2HzlPSSjZTjmu+L
+         PszfPceqjXJZE3LxcculepH396McEkrMcacEBfbWTKDIuxFJVLdyR/r2uTu1xEmz4NHS
+         O7B/VMMq90xd9ZL2fdZZjfC3kqEm5bCiAF6kK18Lx9BstIArgNFaCCPh1RABYhNPFmbf
+         85kT9ZILCNVzdgY5lbbKVIb3iBW2U8IOnhGugZhsMXUEr5iklI+lSWALVeFO5tNZEgny
+         Y2lZGPiSFIXOwpnvMNrP7RjvrGt+OU5J33PbFiC65pUc0Fd46LHxGknOTccCnCyPlexE
+         nV0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iuw3NCxX1XbUVG00e3Jk6RmUo6GlRMmd3AcO4LL+Yks=;
-        b=Ay57o/oO8MWJHUEBOiU6fBGe2R5SMaeLPLgOtl80S+uWWzrM1/oJwePR3kvUQxoZ4P
-         In7oC3a/g9tDKyMbQTk148JnHtiid5KrO+eBtCdgM3CIj2+S7rtHwRsUuZsRhuKvLWnW
-         tDyraf+AvPdclnWn7AtSNfHeyD006436vDG3R9416ZQfpKudFA9uLNc3wfEWG82Hk6/u
-         OO90h1kPN2rMxb3+4ZgCUIAy8wvn44eJLUQbGkgVigWB7daHg2hsgdCcpDma72cQM/V4
-         L7yKND3K60cHjvg9S01A9ahSetTS4F+C/T4QTnNZffO7epSBMMrfoug9UWmuNQH3i2IF
-         Tv0Q==
-X-Gm-Message-State: AOAM530BAEKqf68t1GKspDJFSIa98yhnPEVTDrbxzLJN+KZvczOWYGnK
-        Lel3IKMDkSxPhLNRwBpqZyA1RL15tbvTWM/pYhK0gHNcSbBP1w==
-X-Google-Smtp-Source: ABdhPJwsqxmCsLgUTazBd/x1YzIH1UkYo5WWYre3ge4qGqaLv9kEsY6k59I2DesqUG3g+LLc+0EhGdN6Q33DdNsJT4Y=
-X-Received: by 2002:a17:90a:430b:: with SMTP id q11mr1968328pjg.129.1604574787291;
- Thu, 05 Nov 2020 03:13:07 -0800 (PST)
+        bh=acijxDiGDEUt4I2cDxK+O6StwjSex3WB5cQlpv1FYyQ=;
+        b=E9B1NTVFCfU1delZ1jZjvndM3GdIjQVe1zG4/03u7P2OkANi+gur7awRwmaTQ0LihK
+         HhegAHxUtaYKtpZG2dscgSszlxBctPKdv6+UBxpjt3IyF9SokYuO6KFw7BZIaZcaqEuo
+         KeThq17NPrNogEmyVTr5AoRpm3uXcH/4fpomg19aFF1bjT5ILA5pbp10RUHjpjQAd/X+
+         sJqntVIqpx/dPLt8lQrTxQXHYNPjWpNzd0NY5Lr1UqYzlm5YzU0iH/I4JPjEd4HbiqkL
+         JpU/hCaynbHOXfnSSnnnFpHMet2aFi9AnlaYuyhVl3ZtSmrqepVo4adRLUxjKhYXgvCM
+         VnrA==
+X-Gm-Message-State: AOAM5311midjNK+pqGF+/qFfXbrRzGkuZ0B52ZFNMy0PoUs08+KQYAB2
+        SdqFKFiAbQVPQUjIBgWtcWM7Aj1Y5xbBBQSR/eq7VA==
+X-Google-Smtp-Source: ABdhPJyz0HCk27eSLygMgMvm/T9U7y0iTjhhVG7vQ+YCf7tpS/9vOrdlmgnxW0GYpObhQrtZFYwo80EfEJVI6GO5GsU=
+X-Received: by 2002:a19:6a0e:: with SMTP id u14mr815519lfu.254.1604577726840;
+ Thu, 05 Nov 2020 04:02:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104230703.21466-1-coiby.xu@gmail.com> <20201104230703.21466-5-coiby.xu@gmail.com>
-In-Reply-To: <20201104230703.21466-5-coiby.xu@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Nov 2020 13:13:56 +0200
-Message-ID: <CAHp75VfXAJjZw1nc-axWvDsZATU7AKUdUKzabdaD=WhcRKT7tw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] pinctrl: amd: remove debounce filter setting in
- irq type setting
-To:     Coiby Xu <coiby.xu@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20201105104049.91077-1-warthog618@gmail.com>
+In-Reply-To: <20201105104049.91077-1-warthog618@gmail.com>
+From:   Nicolas Schichan <nschichan@freebox.fr>
+Date:   Thu, 5 Nov 2020 13:01:55 +0100
+Message-ID: <CAHNNwZDiwKbhBgkOhStGip2+cMKOEBTUa13n2vuHrTc_nk2sMg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix sysfs when cdev is not selected
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 1:07 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+Hello Kent,
+
+On Thu, Nov 5, 2020 at 11:41 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Debounce filter setting should be independent from irq type setting
-> because according to the ACPI specs, there are separate arguments for
-> specifying debounce timeout and irq type in GpioIo and GpioInt.
-
-irq -> IRQ
-GpioIo()
-GpioInt()
-
-> This will fix broken touchpads for Lenovo Legion-5 AMD gaming laptops
-> including 15ARH05 (R7000) and R7000P whose BIOS set the debounce timeout
-> to 124.8ms which led to the kernel receiving only ~7 HID reports per
-> second.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1887190
-> Link: https://lore.kernel.org/linux-gpio/CAHp75VcwiGREBUJ0A06EEw-SyabqYsp%2Bdqs2DpSrhaY-2GVdAA%40mail.gmail.com/
-> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> In gpiochip_setup_dev() the call to gpiolib_cdev_register() indirectly
+> calls device_add().  This is still required for the sysfs even when
+> CONFIG_GPIO_CDEV is not selected in the build.
+>
+> Replace the stubbed functions in gpiolib-cdev.h with macros in gpiolib.c
+> that perform the required device_add() and device_del() when
+> CONFIG_GPIO_CDEV is not selected.
+>
+> Fixes: d143493c01b7 (gpiolib: make cdev a build option)
+> Reported-by: Nicolas Schichan <nschichan@freebox.fr>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  drivers/pinctrl/pinctrl-amd.c | 7 -------
->  1 file changed, 7 deletions(-)
+>  drivers/gpio/gpiolib-cdev.h | 15 ---------------
+>  drivers/gpio/gpiolib.c      | 18 +++++++++++++++---
+>  2 files changed, 15 insertions(+), 18 deletions(-)
 >
-> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index e9b761c2b77a..2d4acf21117c 100644
-> --- a/drivers/pinctrl/pinctrl-amd.c
-> +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -468,7 +468,6 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 pin_reg &= ~BIT(LEVEL_TRIG_OFF);
->                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                 pin_reg |= ACTIVE_HIGH << ACTIVE_LEVEL_OFF;
-> -               pin_reg |= DB_TYPE_REMOVE_GLITCH << DB_CNTRL_OFF;
->                 irq_set_handler_locked(d, handle_edge_irq);
->                 break;
+> diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
+> index cb41dd757338..b42644cbffb8 100644
+> --- a/drivers/gpio/gpiolib-cdev.h
+> +++ b/drivers/gpio/gpiolib-cdev.h
+> @@ -7,22 +7,7 @@
 >
-> @@ -476,7 +475,6 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 pin_reg &= ~BIT(LEVEL_TRIG_OFF);
->                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                 pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
-> -               pin_reg |= DB_TYPE_REMOVE_GLITCH << DB_CNTRL_OFF;
->                 irq_set_handler_locked(d, handle_edge_irq);
->                 break;
+>  struct gpio_device;
 >
-> @@ -484,7 +482,6 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 pin_reg &= ~BIT(LEVEL_TRIG_OFF);
->                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                 pin_reg |= BOTH_EADGE << ACTIVE_LEVEL_OFF;
-> -               pin_reg |= DB_TYPE_REMOVE_GLITCH << DB_CNTRL_OFF;
->                 irq_set_handler_locked(d, handle_edge_irq);
->                 break;
+> -#ifdef CONFIG_GPIO_CDEV
+> -
+>  int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
+>  void gpiolib_cdev_unregister(struct gpio_device *gdev);
 >
-> @@ -492,8 +489,6 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 pin_reg |= LEVEL_TRIGGER << LEVEL_TRIG_OFF;
->                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                 pin_reg |= ACTIVE_HIGH << ACTIVE_LEVEL_OFF;
-> -               pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
-> -               pin_reg |= DB_TYPE_PRESERVE_LOW_GLITCH << DB_CNTRL_OFF;
->                 irq_set_handler_locked(d, handle_level_irq);
->                 break;
+> -#else
+> -
+> -static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> -{
+> -       return 0;
+> -}
+> -
+> -static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
+> -{
+> -}
+> -
+> -#endif /* CONFIG_GPIO_CDEV */
+> -
+>  #endif /* GPIOLIB_CDEV_H */
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 8e29a60c3697..c980ddcda833 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -480,11 +480,23 @@ static void gpiodevice_release(struct device *dev)
+>         kfree(gdev);
+>  }
 >
-> @@ -501,8 +496,6 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 pin_reg |= LEVEL_TRIGGER << LEVEL_TRIG_OFF;
->                 pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
->                 pin_reg |= ACTIVE_LOW << ACTIVE_LEVEL_OFF;
-> -               pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
-> -               pin_reg |= DB_TYPE_PRESERVE_HIGH_GLITCH << DB_CNTRL_OFF;
->                 irq_set_handler_locked(d, handle_level_irq);
->                 break;
+> +#ifdef CONFIG_GPIO_CDEV
+> +#define gcdev_register(gdev, devt)     gpiolib_cdev_register((gdev), (devt))
+> +#define gcdev_unregister(gdev)         gpiolib_cdev_unregister((gdev))
+> +#else
+> +/*
+> + * gpiolib_cdev_register() indirectly calls device_add(), which is still
+> + * required even when cdev is not selected.
+> + */
+> +#define gcdev_register(gdev, devt)     device_add(&(gdev)->dev)
+> +#define gcdev_unregister(gdev)         device_del(&(gdev)->dev)
+> +#endif
+> +
+>  static int gpiochip_setup_dev(struct gpio_device *gdev)
+>  {
+>         int ret;
 >
+> -       ret = gpiolib_cdev_register(gdev, gpio_devt);
+> +       ret = gcdev_register(gdev, gpio_devt);
+>         if (ret)
+>                 return ret;
+>
+> @@ -500,7 +512,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>         return 0;
+>
+>  err_remove_device:
+> -       gpiolib_cdev_unregister(gdev);
+> +       gcdev_unregister(gdev);
+>         return ret;
+>  }
+>
+> @@ -825,7 +837,7 @@ void gpiochip_remove(struct gpio_chip *gc)
+>          * be removed, else it will be dangling until the last user is
+>          * gone.
+>          */
+> -       gpiolib_cdev_unregister(gdev);
+> +       gcdev_unregister(gdev);
+>         put_device(&gdev->dev);
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_remove);
 > --
-> 2.28.0
+> 2.29.2
 >
 
+I have tested your patch and it works for both CONFIG_GPIO_CDEV set and unset.
+
+Tested-by: Nicolas Schichan <nschichan@freebox.fr>
+
+Regards,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Nicolas Schichan
+Freebox SAS
