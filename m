@@ -2,119 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58BA62A8270
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 16:43:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B0902A8364
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 17:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbgKEPng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 10:43:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
+        id S1729361AbgKEQVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 11:21:41 -0500
+Received: from mga12.intel.com ([192.55.52.136]:45918 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730660AbgKEPnf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 5 Nov 2020 10:43:35 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E25A8206FA;
-        Thu,  5 Nov 2020 15:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604591015;
-        bh=O3AhsxtY8sUUmWn1Tx+mj7l7kuAvEn+JmbDXMOa/Low=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dDiNEL9mysTp69jFVW6Bu/aoH8wXuz7T8H+cs/AHpFmLs5+2xBFmFumlo/wxvpj0V
-         4SkmeL/sVRV9xWdrR1S1QZXqYYxkTNfy87F3jd2DDClC8Edk/GNt01bb7ZmbzU45o2
-         JBRky2AchLfI+sT4HZbfKGn979X50dqKIAofnM1Y=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kahQC-007sGn-ND; Thu, 05 Nov 2020 15:43:32 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 05 Nov 2020 15:43:32 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1725998AbgKEQVl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 5 Nov 2020 11:21:41 -0500
+IronPort-SDR: QjLkw2Ixu6vsKkBCPp2NrT3I9BJUckvY+4hkMGkdxxqk0rACwfkcg4nKnq/hYqSENgnWSw8yYD
+ 8ySKAUzrlJcw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9796"; a="148691535"
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="148691535"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 08:21:40 -0800
+IronPort-SDR: lEhrknC+qM7uO23QoYWw2BIe7IHTX6lupNi3rZ5cNS49n5bUPySl1Jew6TIStBqEeaqEyc80+n
+ FrOTyndOVYqA==
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="326078848"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 08:21:38 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kai23-0046Oo-Gd; Thu, 05 Nov 2020 18:22:39 +0200
+Date:   Thu, 5 Nov 2020 18:22:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-In-Reply-To: <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
-References: <20201019141008.871177-1-daniel@0x0f.com>
- <20201019141008.871177-4-daniel@0x0f.com>
- <CACRpkdZNr6sDqJhg3KcX0bCbcd8fh2gXFYbS1r2H2Sq+vGqjUw@mail.gmail.com>
- <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org>
- <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <71f3632bee262a18e1b7edb74980ae9a@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: daniel@0x0f.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Jamie McClymont <jamie@kwiius.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: intel: Fix 2 kOhm bias which is 833 Ohm
+Message-ID: <20201105162239.GY4077@smile.fi.intel.com>
+References: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdb_zWU0a3th4XAiZn65iO=8mAt6mpAEOjz-q32kYKpLZQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb_zWU0a3th4XAiZn65iO=8mAt6mpAEOjz-q32kYKpLZQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-11-05 15:23, Daniel Palmer wrote:
-> Hi Marc,
+On Thu, Nov 05, 2020 at 10:09:45AM +0100, Linus Walleij wrote:
+> On Wed, Oct 14, 2020 at 12:46 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> On Thu, 5 Nov 2020 at 21:08, Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On 2020-11-05 09:40, Linus Walleij wrote:
->> > On Mon, Oct 19, 2020 at 4:10 PM Daniel Palmer <daniel@0x0f.com> wrote:
->> 
->> [...]
->> 
->> >> +/* The parent interrupt controller needs the GIC interrupt type set
->> >> to GIC_SPI
->> >> + * so we need to provide the fwspec. Essentially
->> >> gpiochip_populate_parent_fwspec_twocell
->> >> + * that puts GIC_SPI into the first cell.
->> >> + */
->> 
->> nit: comment style.
+> > 2 kOhm bias was never an option in Intel GPIO hardware, the available
+> > matrix is:
+> >
+> >         000     none
+> >         001     1 kOhm (if available)
+> >         010     5 kOhm
+> >         100     20 kOhm
+> >
+> > As easy to get the 3 resistors are gated separately and according to
+> > parallel circuits calculations we may get combinations of the above where
+> > the result is always strictly less than minimal resistance. Hence,
+> > additional values can be:
+> >
+> >         011     ~833.3 Ohm
+> >         101     ~952.4 Ohm
+> >         110     ~4 kOhm
+> >         111     ~800 Ohm
+> >
+> > That said, convert TERM definitions to be the bit masks to reflect the above.
+> >
+> > While at it, enable the same setting for pull down case.
+> >
+> > Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
+> > Cc: Jamie McClymont <jamie@kwiius.com>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> I've fixed these and some other bits for the v3.
-> I've held off on pushing that until the rest of it seemed right.
+> Good research!
 > 
->> >> +static void *msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
->> >> +                                            unsigned int
->> >> parent_hwirq,
->> >> +                                            unsigned int parent_type)
->> >> +{
->> >> +       struct irq_fwspec *fwspec;
->> >> +
->> >> +       fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
->> >> +       if (!fwspec)
->> >> +               return NULL;
->> >> +
->> >> +       fwspec->fwnode = gc->irq.parent_domain->fwnode;
->> >> +       fwspec->param_count = 3;
->> >> +       fwspec->param[0] = GIC_SPI;
->> >> +       fwspec->param[1] = parent_hwirq;
->> >> +       fwspec->param[2] = parent_type;
->> >> +
->> >> +       return fwspec;
->> >> +}
->> >
->> > Clever. Looping in Marc Z so he can say if this looks allright to him.
->> 
->> Yup, this looks correct. However, looking at the bit of the patch that
->> isn't quoted here, I see that msc313_gpio_irqchip doesn't have a
->> .irq_set_affinity callback. Is this system UP only?
-> 
-> What is in mainline right now is UP only but there are chips with a
-> second cortex A7 that I have working in my tree.
-> So I will add that in for v3 if I can work out what I should actually
-> do there. :)
+> I expect this as part of a pull request for fixes or devel.
 
-Probably nothing more than setting the callback to 
-irq_chip_set_affinity_parent,
-I'd expect.
+for-next, but yes, I don't want to be in hurry of backporting this, better to
+test it carefully.
 
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
+
+
