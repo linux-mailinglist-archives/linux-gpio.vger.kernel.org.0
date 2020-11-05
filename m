@@ -2,92 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 525DF2A79C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 09:56:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E28302A7A05
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbgKEI4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 03:56:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48828 "EHLO
+        id S1730406AbgKEJGG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:06:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731103AbgKEI4d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 03:56:33 -0500
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAA3C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 00:56:33 -0800 (PST)
-Received: by mail-io1-xd43.google.com with SMTP id u19so1031878ion.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 00:56:33 -0800 (PST)
+        with ESMTP id S1730399AbgKEJGF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:06:05 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7790C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:06:04 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id y184so1171905lfa.12
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fPgLW1SZzQ9kSf4B4ZPTqu2ZkqCZpDpbWT4A4r46WNk=;
-        b=EeS4BjveArSP9SnROzZo8z2sB+17XKrDsG8UA40uYBiOMbKV4DAjsaL55zUB4F7ruv
-         LP6HNi+6WKKAOdw+V/uWFUaOr9uMaBOul8FOy4oAm5ToQ8CnUW6zAAFz++URQgd8mVOh
-         LBMDv9cbFLg8scEtvH48WE8iURa0XGgE8WF1PBR2bsF+/R7WflyTdm0IIXYgPnv80ItU
-         zG5XJWI0BYLXF3PUEdndcuziYChPHr7CEc5yUr+AINrVkblW8H9gdT0gFnATq3sDjs+S
-         idrMQNs5lQbG9pxj3UnrK+pOZmjRCdIp1lZOmStWgRtaOVX+uLHncOVMtS0pd1ilvEf9
-         Iuiw==
+        bh=YtAIGT05ka0U0U8qTU5HJgv3fZIJWc6IOm4akHQZnO0=;
+        b=AC9JM14LMsctAtear3fUzCllWj493psDLQ1BL8q9dQOyyWrzYT7yNZsGro4Nb1swdY
+         6y3DOyGh/8hmqEOcDlMtNUEyoGu6ETovmrIRLs3DBdNT1XRwUEbJz1TTR3T2CNGaPrAU
+         ZlHQjbUC5578tGJgft1mTnJynn2yMXPg7uJRIbow4GRyLARi9QD7S7X1+X9iBe5iPXjf
+         no4LP7gwwSipaTdkVHW3FDrAaTcaQLtShb40KBODE+Jj4rrSpQzz2rTJKQctYkP5a7if
+         3YaUPwRbwMLh6uCmDsRvVvC/WxJuAv8dNu5mQ0fbxvgS1HqRj+9qIh51ayrPcuJ9p+aG
+         UtpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fPgLW1SZzQ9kSf4B4ZPTqu2ZkqCZpDpbWT4A4r46WNk=;
-        b=QZdYAOktC8Qq2bO719BFrGenAlsQCf/kVu4mbPGjKPgmI6N4AKHXNwUOxq4wEjsPsK
-         hdOVD4+FwT1zBG6AM1zNJz/vLz8Rq9J+RtJ1/UyK4MeNq/SSggQwsODrclxibGTPrUQl
-         xmS+mi7Db5XGE6wVvdu6xlQGMfb6Hj9xQUNcQpCjkc3ID7u9VO2S0iB8Dpob20DFAC/1
-         zHUibQ6oFMgiSd/MY22KpGvn3OlzM/pgH5HFcFMTywtETwn5B+RYxdUZhpumphLAaJqm
-         D0pMWuICG7hrBypJR1TL4a/xu2/SQCyHN1QGWebuWl0JilZkgVfwHcpXeEyPS+CSfGTP
-         HWWA==
-X-Gm-Message-State: AOAM5316Z9vQDlg2OKUMMkvuhXGJFKuRXjVxxKVnF8ex+P0ZklWFUD6C
-        EMsU3Rl3fdXiIxV1uVzl+rpw/cLcfY/pJHBHLh5dbw==
-X-Google-Smtp-Source: ABdhPJziiq6+VhTFDcItvVspvJFYgEuuTh7S5SSPwUJ2B5yHMojOtUwOBbB7t6HnYqrVnkvtD461PAn4RQGxxOO9F7Y=
-X-Received: by 2002:a05:6638:3f1:: with SMTP id s17mr1194399jaq.102.1604566592561;
- Thu, 05 Nov 2020 00:56:32 -0800 (PST)
+        bh=YtAIGT05ka0U0U8qTU5HJgv3fZIJWc6IOm4akHQZnO0=;
+        b=kMeRN9iN/Ktt5qXrnfWUb74RvkXOpsPBtq5MzxvyI0LTSKrpUjO1Ur4MWBCKHrYTps
+         +9ojgKgZd6aPcD6j/I3HWIkmepgjcDsBII0Qy+h0decl5yDOwzlfoxiWyElTJyo8nwqb
+         kglMn+XS29q2uHIV3ljjy5vCfxW5YEwlj46diCh6WBm9uh6Kd9nlS4jllhLcOTtcaH/d
+         iJ5gTcupZ5oWLX3ID+2eU6umtz4eF2EK6nOaStv0OPF6FO36yQDXi1ZrDEq8Puzv4Lz0
+         laXd6rbXVwqe2oySsVFEfBMNCFTtok8DOz2tSfHDIBPFU6in2JIYXeQSSLzaCcXMfkxY
+         AnjA==
+X-Gm-Message-State: AOAM532KbeqNX/7b6h7REonxFpkVys78TBvsH1QrAmsX4AJfqH4+p3J/
+        tIayvCzWYdwzzarJ+0+cIU5eyyH4JklBZKzeY6bdM+BP2taXBA==
+X-Google-Smtp-Source: ABdhPJznzdNj+7qQRYYY4KOB2aPbXr30TKpk6FaQy68J/HD625ljr2hyUNl0p2cq0ea//+TbgOTGUUZO7gIe/dprIRY=
+X-Received: by 2002:a19:7b06:: with SMTP id w6mr638206lfc.260.1604567163431;
+ Thu, 05 Nov 2020 01:06:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104193051.32236-1-brgl@bgdev.pl> <20201104193051.32236-8-brgl@bgdev.pl>
- <CAHp75Vfd4nsXvDOtbq-2TTcKWzWdwDs28Qm4Kuqa-j7YOR-YbQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vfd4nsXvDOtbq-2TTcKWzWdwDs28Qm4Kuqa-j7YOR-YbQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Nov 2020 09:56:21 +0100
-Message-ID: <CAMRc=MdR=tADdLmo3grXQq3FjxX7JnWjLBDXSv-j41hv6no-Wg@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 7/8] gpio: exar: switch to using regmap
+References: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com>
+ <20201022165847.56153-3-andriy.shevchenko@linux.intel.com>
+ <CAMpxmJWhENX6bEWihp5hFjDnbXz5asdmEpw96_SJdx1v3+U1AA@mail.gmail.com> <CAHp75VdBahEEB5qnbbquPBG+iErEaupoAA-f1vTroAXoLLJFNw@mail.gmail.com>
+In-Reply-To: <CAHp75VdBahEEB5qnbbquPBG+iErEaupoAA-f1vTroAXoLLJFNw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 5 Nov 2020 10:05:52 +0100
+Message-ID: <CACRpkdZAFNqq-z5xBgtjdt5LXNMR32wtWjMt7yRm6azDmuMndA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: of: Use named item for enum gpiod_flags variable
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        David Laight <David.Laight@aculab.com>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 9:35 PM Andy Shevchenko
+On Mon, Oct 26, 2020 at 3:43 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
+> On Mon, Oct 26, 2020 at 4:40 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> >
+> > On Thu, Oct 22, 2020 at 6:58 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Use named item instead of plain integer for enum gpiod_flags
+> > > to make it clear that even 0 has its own meaning.
 >
-> On Wed, Nov 4, 2020 at 9:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > This patch doesn't seem to depend on the others in this series so I
+> > applied it to my tree. Let me know if that's not the case. I'll let
+> > you take the ACPI patches.
 >
-> ...
->
-> > +static const struct regmap_config exar_regmap_config = {
-> > +       .name           = "exar-gpio",
-> > +       .reg_bits       = 8,
-> > +       .val_bits       = 8,
-> > +};
->
-> Looking at gpio-pca953xx regmap conversion I'm wondering shouldn't you
-> provide a callback to define volatile registers (such as GPIO input
-> bits)?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> It's fine, thanks! I have just sent an additional message to elaborate
+> my vision, but again, the approach for this patch you chose is just
+> fine.
 
-I think this was done in pca953x due to weird calculations of banks
-and registers. For a rather simple driver like this one I don't think
-this is needed.
+I might have lost track of the state of this patch set and mix it
+up conceptually with some other patch sets so bear with me if
+there are mistakes.
 
-Bartosz
+I see that Bartosz applied this one patch at least.
+
+Yours,
+Linus Walleij
