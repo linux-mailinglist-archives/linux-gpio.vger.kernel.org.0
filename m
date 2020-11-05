@@ -2,119 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C08CB2A7B26
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A05DF2A7B79
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 11:16:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725468AbgKEJ6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:58:47 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46324 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgKEJ6r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:58:47 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g19so858030otp.13;
-        Thu, 05 Nov 2020 01:58:47 -0800 (PST)
+        id S1727968AbgKEKQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 05:16:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgKEKQb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 05:16:31 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28EA6C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 02:16:30 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id t13so959944ljk.12
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 02:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XzY1VkvmYL3pvQ6ooemzXER1+NGHzQExssTtwYHfu3I=;
+        b=XTFQbF5935sVeuBgqmaOO5pdnb3YL+UApn4NnnwcaWSfdg4FAy6KlYTD8nryvGlxg1
+         zmPsKr1X/9039LndgggUw00Pk+GXaNGvH1pRx2VVE5oowCpSYyb2407ZeNMNTnh++S3g
+         jFihuaqOm1X5T2ZVRothVsfeqaqcW1kGB4eZxaC7Sp0ydjd6NRHvC/r2L4WXFLJ9SNA7
+         8Ye1SiLbKEiHIeW6QWCn5epaHTPKW+nhHBOkqUlxMQg9ke6QBQ3MuX924sxywTVuTXZP
+         2V1c/2Gbcq0mBXzpawm8qxP7jzSJz5xS4QNVuQlLYTMJ+lvcxQKKkfqEQvYQ/YnHtkaD
+         /aIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Me0TxsAtEvEGhLYsiw3jk0Khslvv8w6ZE1Tr6N+Xt8k=;
-        b=elmIFE3G80GXQIYa0K++eQcSR12EJWrR9fZ3Ljq5SY2lYmHo5IWYmcppugXWtSixc8
-         Af7ofUk2VTajm42aofkazQU3PeQDos1BA0i8yssBWcN1robfA3nuo9HbbOeTd64Gswzb
-         I5maJNhdmF/ub51EFOrSrd4IsCapbhIRdUhQDqu2CqO9/JKv8xrdODm6ABDzaG2XH2MT
-         gHNc6/i2R8LzKyYQ5HjPZk52qKDESeOhfG8MeWtSYImqNm51ZqE1Go5diDVxRE8U0bNi
-         68Uf1HIvn8UhJSFZQjevKyummGOfXi+jEJt0jIyo7TEr+8/bg663epUJTydaLtuVQqOh
-         tzpg==
-X-Gm-Message-State: AOAM5331U7ogX/GU9otuC1UY5IhfeLqhA9r0doImIA8Twv0fhejqElWi
-        uwjmB40bSvg2clI0Xb1ra/gY+/JRxlqhJeQ1P20=
-X-Google-Smtp-Source: ABdhPJwcS8F6wj5rpD8VCt8uuB6TBYtg185qCmGvg2SR6W9XfEymKzsePF7yTKk5Rogi7kgCAA7ewpo0E9RXmxpImKA=
-X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr1085013otc.145.1604570326715;
- Thu, 05 Nov 2020 01:58:46 -0800 (PST)
+        bh=XzY1VkvmYL3pvQ6ooemzXER1+NGHzQExssTtwYHfu3I=;
+        b=Q2F9S+2+Ve4WiDwpmv5gbbc3ZZz5ySRORi7Z2u3SWu73IHhKH415+BEjtqxM5dBoq2
+         qT9dAilArTvsNqzf8nTG9y4QYugUN7Ux5g2k8ebJkoLu2IFLK+BFmvkzPobIdHueSbfJ
+         oq7rjtybigut/FZ1lqNY/13zMYiQ84cYhBcrlZmumO4MoA0y+7bzedh4IpYFZdL6DJ7h
+         fUcYtR8M/DbhLbuPUgqLJ18BBowDmbBCc/k6zL18YP7RBtCJj3MHY/hh0h9jhnqC1U+u
+         hJQJ/M9t63rNmQBfDrz+AjOnIEVi6crdbMT3Fc+s9nErC/0Elzj1ArubNwJBHD/+ow50
+         g4EQ==
+X-Gm-Message-State: AOAM533hZlcNsWlltM3LwRqu1mhokGFJ8YEUe0oswyjaIyMtvTneL9DX
+        0o/x6aD19V3dwAbEogTBkBTSoHbNW/tzxmb1of3S7g==
+X-Google-Smtp-Source: ABdhPJxaq73gcB/JxlAqEL/i+o9calac2E7MR1bcyxAJh/tpAKN316vVzkkP8N7+kPd9X5pE5hxh+OwUmsUZtVAg2Gw=
+X-Received: by 2002:a2e:80d2:: with SMTP id r18mr668709ljg.286.1604571388670;
+ Thu, 05 Nov 2020 02:16:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20201028151637.1734130-1-geert+renesas@glider.be>
- <20201028151637.1734130-4-geert+renesas@glider.be> <CACRpkdYVT0KL4+KdE0QP7UEKCrAUOOS0aAXV7xfY_28DtpvokA@mail.gmail.com>
-In-Reply-To: <CACRpkdYVT0KL4+KdE0QP7UEKCrAUOOS0aAXV7xfY_28DtpvokA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 5 Nov 2020 10:58:35 +0100
-Message-ID: <CAMuHMdXOG6Wj-3OK6h_R7CZZt0N0+ajyzkb_Hzpz+CZcq9AdqQ@mail.gmail.com>
-Subject: Re: [PATCH 3/8] pinctrl: renesas: Reorder struct sh_pfc_pin to remove hole
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20180129005948.7714-1-bjorn.andersson@linaro.org> <CAKZGPAPrwXNeYk+bDiMBRczVf4PaBANnzhmenZie+V0BJ7OqBg@mail.gmail.com>
+In-Reply-To: <CAKZGPAPrwXNeYk+bDiMBRczVf4PaBANnzhmenZie+V0BJ7OqBg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 5 Nov 2020 11:16:17 +0100
+Message-ID: <CACRpkdZ2UzA=Hyw+b20dCqzu8+L7_D1bTM44MKbbue2VFCY4UQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: msm: Use dynamic GPIO numbering
+To:     Arun KS <arunks.linux@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@codeaurora.org>,
+        Arun KS <getarunks@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Oct 23, 2020 at 4:21 PM Arun KS <arunks.linux@gmail.com> wrote:
 
-On Thu, Nov 5, 2020 at 10:52 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Oct 28, 2020 at 4:16 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > On arm64, pointer size and alignment is 64-bit, hence a 4-byte hole is
-> > present in between the enum_id and name members of the sh_pfc_pin
-> > structure.  Get rid of this hole by sorting the structure's members by
-> > decreasing size.
-> >
-> > This saves up to 1.5 KiB per enabled SoC, and reduces the size of a
-> > kernel including support for all R-Car Gen3 SoCs by more than 10 KiB.
-> >
-> > This has no size impact on SH and arm32.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  drivers/pinctrl/renesas/sh_pfc.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
-> > index eff1bb872325ef3a..3b390dffacb4910d 100644
-> > --- a/drivers/pinctrl/renesas/sh_pfc.h
-> > +++ b/drivers/pinctrl/renesas/sh_pfc.h
-> > @@ -34,10 +34,10 @@ enum {
-> >  #define SH_PFC_PIN_CFG_NO_GPIO         (1 << 31)
-> >
-> >  struct sh_pfc_pin {
-> > -       u16 pin;
-> > -       u16 enum_id;
-> >         const char *name;
-> >         unsigned int configs;
-> > +       u16 pin;
-> > +       u16 enum_id;
-> >  };
->
-> Hehehe :D
->
-> The compiler people have something that is called "premature optimization"
-> which is when you try to outsmart the compiler.
->
-> So since you have metrics on this you have obviously outsmarted the
-> ARM64 compiler (I guess GCC).
->
-> What I'm thinking is that some compiler person should look at this
-> and say that "yeah sometimes you have to do that". In this case
-> I suppose the compiler really isn't allowed to reshuffle struct members
-> in memory since there is plenty of code that relies on them being
-> laid out strictly in the order they are defined into the struct. So this
-> is really necessary.
+> Im only concerned because, after this change, the use of gpio number
+> from user space has become a little difficult.
 
-The compiler is not allowed to reorder the members (FWIW, this
-might be a description of hardware register layout).
+This makes me a bit puzzled so I need to push back a bit
+here.
 
-> Second I think it warrants a comment in the code to be careful with
-> aligning structs on 64bit boundaries?
+What is this userspace and what interface is it using?
 
-IMHO that's overkill: if we go that route, we have to add such comments
-to every structure that contains members of different sizes...
+We recommend using the GPIO character device with
+libgpiod for userspace applications:
+https://www.kernel.org/doc/html/latest/driver-api/gpio/using-gpio.html
 
-Gr{oetje,eeting}s,
+Is there any problem with this?
 
-                        Geert
+sysfs is deprecated for years now:
+https://www.kernel.org/doc/html/latest/admin-guide/gpio/sysfs.html
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
