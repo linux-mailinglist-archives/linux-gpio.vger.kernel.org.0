@@ -2,91 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E28302A7A05
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:06:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A85192A7A15
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:09:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbgKEJGG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:06:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        id S1730209AbgKEJJM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:09:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730399AbgKEJGF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:06:05 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7790C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:06:04 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id y184so1171905lfa.12
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:06:04 -0800 (PST)
+        with ESMTP id S1730061AbgKEJJK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:09:10 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B802DC0613D4
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:09:08 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id w1so715816edv.11
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:09:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YtAIGT05ka0U0U8qTU5HJgv3fZIJWc6IOm4akHQZnO0=;
-        b=AC9JM14LMsctAtear3fUzCllWj493psDLQ1BL8q9dQOyyWrzYT7yNZsGro4Nb1swdY
-         6y3DOyGh/8hmqEOcDlMtNUEyoGu6ETovmrIRLs3DBdNT1XRwUEbJz1TTR3T2CNGaPrAU
-         ZlHQjbUC5578tGJgft1mTnJynn2yMXPg7uJRIbow4GRyLARi9QD7S7X1+X9iBe5iPXjf
-         no4LP7gwwSipaTdkVHW3FDrAaTcaQLtShb40KBODE+Jj4rrSpQzz2rTJKQctYkP5a7if
-         3YaUPwRbwMLh6uCmDsRvVvC/WxJuAv8dNu5mQ0fbxvgS1HqRj+9qIh51ayrPcuJ9p+aG
-         UtpA==
+        bh=DAVVTcqOtshkqa//jG0tMqJnAZn8lkJ/jC3ZQlpD4iI=;
+        b=gnCWxb3A2YT1XunheHSuiLH9SajfLtYxFoSSt/SMRqAjsx1al/ZDjdmGmdcaRCgATD
+         VjIP7kiSbjNExGEXiLiKkUKac6IoHWJ/Fimd03ck22Y3TV8a4rMz01X4WGQkmlH9oyFA
+         9esubFwVfP/2m1vKPl5C03O/MKjH3usvIu/M/u1jCtkmZsVaRlPUI4GOMG2G25yqE1WE
+         FkwCiZzuIp80ijwg2sDMrq/aDxArFsCDn2GSr7ejg4GkjzXoXRmPg7sE+KMD8rfx5UT2
+         P0rDV2vx/4uXjrJDE1VHH5s96ArZURV9t0QiVse/pLv22O/+my2jfZQspbaaigUdqAgS
+         xSDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YtAIGT05ka0U0U8qTU5HJgv3fZIJWc6IOm4akHQZnO0=;
-        b=kMeRN9iN/Ktt5qXrnfWUb74RvkXOpsPBtq5MzxvyI0LTSKrpUjO1Ur4MWBCKHrYTps
-         +9ojgKgZd6aPcD6j/I3HWIkmepgjcDsBII0Qy+h0decl5yDOwzlfoxiWyElTJyo8nwqb
-         kglMn+XS29q2uHIV3ljjy5vCfxW5YEwlj46diCh6WBm9uh6Kd9nlS4jllhLcOTtcaH/d
-         iJ5gTcupZ5oWLX3ID+2eU6umtz4eF2EK6nOaStv0OPF6FO36yQDXi1ZrDEq8Puzv4Lz0
-         laXd6rbXVwqe2oySsVFEfBMNCFTtok8DOz2tSfHDIBPFU6in2JIYXeQSSLzaCcXMfkxY
-         AnjA==
-X-Gm-Message-State: AOAM532KbeqNX/7b6h7REonxFpkVys78TBvsH1QrAmsX4AJfqH4+p3J/
-        tIayvCzWYdwzzarJ+0+cIU5eyyH4JklBZKzeY6bdM+BP2taXBA==
-X-Google-Smtp-Source: ABdhPJznzdNj+7qQRYYY4KOB2aPbXr30TKpk6FaQy68J/HD625ljr2hyUNl0p2cq0ea//+TbgOTGUUZO7gIe/dprIRY=
-X-Received: by 2002:a19:7b06:: with SMTP id w6mr638206lfc.260.1604567163431;
- Thu, 05 Nov 2020 01:06:03 -0800 (PST)
+        bh=DAVVTcqOtshkqa//jG0tMqJnAZn8lkJ/jC3ZQlpD4iI=;
+        b=EurwjJ+AOPVi1vgrU4QmHb8lDohkPkt/rseQW70aCdPiqxuQatfw/sA2SWk7x21hs4
+         JexLC9ZGDA3rXgJ4DdvfQlC6olQiT3zSBqA/6P4osCklshPsVRmEAh+tiaVhwTJfKPqI
+         JhJc0RcGjVBJuRtBYA3mFZQMVNnp6vRQvPIuQkijQm67/WaKfon8UF0N8BDzHpTS6/gd
+         xBUAZkWvekk79JwHeQ4ROJEJJbF0TWBQkhqsmn2+YTnIfug6do0SM4N6q5d/qRY7iINh
+         EAegpyljLO3uQaCnpw/WLFboQWfQvltSm6w5MAotqjNtk/r511+8h+R+6/yU0sW+3PT3
+         jxQg==
+X-Gm-Message-State: AOAM532uwZBIHpLUrZEihkHCS5ZUaMf5qyXh+0McyTM3ga0ezzBRl+Qq
+        YIb5cgX6DcN5q9rOhpswpflFA2agcmA9p7gwrJbbUg==
+X-Google-Smtp-Source: ABdhPJyqANWyJ3aSTbJtEhMCIaR58Dz9yl2OLSrIAItWEawq6opjRvdm8/eux/hxk+LAgMAS7EPN7dAVW7T2X8+w+iU=
+X-Received: by 2002:a05:6402:283:: with SMTP id l3mr1593849edv.232.1604567347374;
+ Thu, 05 Nov 2020 01:09:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20201022165847.56153-1-andriy.shevchenko@linux.intel.com>
- <20201022165847.56153-3-andriy.shevchenko@linux.intel.com>
- <CAMpxmJWhENX6bEWihp5hFjDnbXz5asdmEpw96_SJdx1v3+U1AA@mail.gmail.com> <CAHp75VdBahEEB5qnbbquPBG+iErEaupoAA-f1vTroAXoLLJFNw@mail.gmail.com>
-In-Reply-To: <CAHp75VdBahEEB5qnbbquPBG+iErEaupoAA-f1vTroAXoLLJFNw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 10:05:52 +0100
-Message-ID: <CACRpkdZAFNqq-z5xBgtjdt5LXNMR32wtWjMt7yRm6azDmuMndA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] gpiolib: of: Use named item for enum gpiod_flags variable
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20201104103938.1286-1-nsaenzjulienne@suse.de> <20201104103938.1286-4-nsaenzjulienne@suse.de>
+In-Reply-To: <20201104103938.1286-4-nsaenzjulienne@suse.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 5 Nov 2020 10:08:56 +0100
+Message-ID: <CAMpxmJWv3nfD2xpS4jEq+vJvr=+cD7BV3AFDnsRjCG5qB60c-A@mail.gmail.com>
+Subject: Re: [PATCH v3 03/11] gpio: raspberrypi-exp: Release firmware handle
+ on unbind
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 3:43 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Oct 26, 2020 at 4:40 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> >
-> > On Thu, Oct 22, 2020 at 6:58 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > Use named item instead of plain integer for enum gpiod_flags
-> > > to make it clear that even 0 has its own meaning.
+On Wed, Nov 4, 2020 at 11:39 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> > This patch doesn't seem to depend on the others in this series so I
-> > applied it to my tree. Let me know if that's not the case. I'll let
-> > you take the ACPI patches.
+> Use devm_rpi_firmware_get() so as to make sure we release RPi's firmware
+> interface when unbinding the device.
 >
-> It's fine, thanks! I have just sent an additional message to elaborate
-> my vision, but again, the approach for this patch you chose is just
-> fine.
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes since v2:
+>  - Use devm_rpi_firmware_get(), instead of remove function
+>
+>  drivers/gpio/gpio-raspberrypi-exp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-raspberrypi-exp.c b/drivers/gpio/gpio-raspberrypi-exp.c
+> index bb100e0124e6..64a552ecc2ad 100644
+> --- a/drivers/gpio/gpio-raspberrypi-exp.c
+> +++ b/drivers/gpio/gpio-raspberrypi-exp.c
+> @@ -208,7 +208,7 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
+>                 return -ENOENT;
+>         }
+>
+> -       fw = rpi_firmware_get(fw_node);
+> +       fw = devm_rpi_firmware_get(&pdev->dev, fw_node);
+>         of_node_put(fw_node);
+>         if (!fw)
+>                 return -EPROBE_DEFER;
+> --
+> 2.29.1
+>
 
-I might have lost track of the state of this patch set and mix it
-up conceptually with some other patch sets so bear with me if
-there are mistakes.
-
-I see that Bartosz applied this one patch at least.
-
-Yours,
-Linus Walleij
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
