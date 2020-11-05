@@ -2,77 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 321852A8038
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 14:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2412F2A803E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 15:01:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbgKEN7k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 08:59:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39782 "EHLO
+        id S1730799AbgKEOB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 09:01:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730681AbgKEN7k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 08:59:40 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16209C0613D2
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 05:59:40 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id l28so2405968lfp.10
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 05:59:40 -0800 (PST)
+        with ESMTP id S1726067AbgKEOBZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 09:01:25 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B74EC0613D3
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 06:01:25 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id y184so2404876lfa.12
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 06:01:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qCrN31ShCh5kklAu2ybIlh671dbzV48lSFSfynZtC2g=;
-        b=j6KSBm+wjUlygW1EdRVrx0blw6jsHzSB5/CgOkXRCqH/NcuFNb1htk1kDeF80U3QJK
-         vSCEymduhh7Cley52uGQ6m4mfhRuSTyUdCQDwWmLU5QZLFNcN2hrsebkrNkSx34mTibg
-         zog7uZxwmycHyHzro0eilsHPofHCjZWg83ydatCFTyFmWNEa82wIXlMxaykBLwYggeR5
-         jdNsg5wwO1mjk7gc3QWwrO5R8Qo4l1uSQlIBi0Gvz+ShWTDfIRWIi553lxvFpf3m7FNN
-         8N8uZXEzZLkKXcxNNrwLh94zQrE1bCPTIPgp/6JYcIGmbvoasQ6+0Z0x8STUwF+7QCqX
-         Xr+Q==
+        bh=YTXLlhkJUN9wDt8Jv8WPFw5g42cb2iR5qevTYziYtbk=;
+        b=OK14Bnt3+9IeiZ6/M6McIw1LkFDy9LJWahWCHGMdSqbBSVOwLBmGir1yeEiClM89/t
+         mvkzJ1x4S9L/syjymwTkxNlizAAYao/MnA3qdsfAyStk6SQL6fZelVeqox0kMIKl5n6Z
+         zWgT6iKuOLL65ScYqJ9M5GQOeS5dsGoxshMLkR/qPSjvJvtAVBJaR49hdvDSfovIowtc
+         3XNGfaMTuA6XkPTGawdpx563b5LgCrVgSYFmkYUMhjvmWqZMmmYJL2P1zZzHPCgXSEXe
+         ivOCZq3p2hVOqsSq0HXrEmRt4VoRkEnVD9J2Gyvpfkc7mBArdUCN/6FJODadaK6LpIt3
+         /EmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qCrN31ShCh5kklAu2ybIlh671dbzV48lSFSfynZtC2g=;
-        b=pHFLeIlD08jHU8bUWqu8W04YhPWBAtP19nzuegHN8vJdFdRQ5Gfxl9tnLfgE2Yeeuq
-         j1p1RL8RYZ4b+TnpXGdLAW2hkv+UrvuNuru8zJ71z43WRSJH8M51arc/a7ZzuUsMIF6Z
-         bo9wZwSQnr2rXMvk2GadIiigTu7hkdHzdlqiZotLl/84OetYdH/8eB6xzmcQBxj3DgQ9
-         0KPigq166u80ZaBAR9pN091JiBhjJ7Tcb7rwTA4iavc2KsHKAJPKBaohEtPtHFUFttN4
-         ZFC6bKNnf3Wx3whu8swYJfkZotxd+Wyy+dIQXpDwyVfBpFEWjqPsWr8AQRFbfU/RXnHy
-         brGA==
-X-Gm-Message-State: AOAM5313Lq1asoseQB114kavuDpebYLsrhL+P1/hV10iqRAwe2DOE5E8
-        mznzqlw4f+kos/Moc8BhrOSFr5oYhjnTOWHMX0Y7kovIe6ATcA==
-X-Google-Smtp-Source: ABdhPJw61W8PpYTmFeXsj72HbktXi8an2Ur5ijYtczp7vaWIvD5508dx6WXNwKxjaYVfl864h4lBwtpaJA4elHNr3dw=
-X-Received: by 2002:a05:6512:3225:: with SMTP id f5mr992749lfe.441.1604584778531;
- Thu, 05 Nov 2020 05:59:38 -0800 (PST)
+        bh=YTXLlhkJUN9wDt8Jv8WPFw5g42cb2iR5qevTYziYtbk=;
+        b=kjs9TfumHZuoJg8s0nR/HQirDWenJgCBF+MfhmEF/NXMtst5rlxJ+NFhfxpkBYZpGp
+         OgkXc+kaK8+BCP0wocc6FXf7edAn/fArMt6HnRpbIKoSu7yfbkR1DYzZ0MeAeioU81uy
+         APx4OkbR27jSi3f3afDzACMjtUHKHft/keTPEkjP5cLUxOuaqW9IqYC2ykXmrvjIni18
+         KgGv64GXoo5EGi13Ad9LbHf1U6RksERi9l76k4iKHk3bipHG/fmX8hxw2FXo4cAeo39C
+         U9gc97snULSszS5y1X655RIOTY/9u4JgqFvdv+VCYjbAzTKGjAursLD+iA5Sgi2jhwRX
+         x0gA==
+X-Gm-Message-State: AOAM531T5zJlCuxGq7z0BtZJMhmbf9l9bhR65vgBQ9voAUKmMveSIKct
+        zaKeJVhPDZulBkuLlnGh2k+x9J5xADmvLFdO4yPAXg==
+X-Google-Smtp-Source: ABdhPJzvM65+qqxut8Q8K9FX99fxAPBlc0gUibPjENKKmydRQK0QV33V0O2d25Zm7Cor//tf/DGwRsM1lFrKsUhrY3k=
+X-Received: by 2002:a19:824f:: with SMTP id e76mr987111lfd.572.1604584882549;
+ Thu, 05 Nov 2020 06:01:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20201028043642.1141723-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20201028043642.1141723-1-bjorn.andersson@linaro.org>
+References: <20201007160611.942754-1-junak.pub@gmail.com>
+In-Reply-To: <20201007160611.942754-1-junak.pub@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 14:59:27 +0100
-Message-ID: <CACRpkdaBbdC5_6y=w5eL-jJ_Mk+toKWy8kj9t-UWx02wNfjo+g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: sm8250: Specify PDC map
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+Date:   Thu, 5 Nov 2020 15:01:08 +0100
+Message-ID: <CACRpkdY_SHWbHpsHQiQswQ9DzSLH-P=tAmeHG2JddQZ76_-0mQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: qcom: add pinctrl driver for msm8953
+To:     Vladimir Lypak <junak.pub@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         MSM <linux-arm-msm@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 5:36 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Wed, Oct 7, 2020 at 6:26 PM Vladimir Lypak <junak.pub@gmail.com> wrote:
 
-> Specify the PDC mapping for SM8250, so that gpio interrupts are
-> propertly mapped to the wakeup IRQs of the PDC.
+> Add inititial pinctrl driver for MSM8953 platform. Compatible SoCs are:
+> MSM8953, APQ8053, SDM(SDA)450, SDM(SDA)632.
+> Based off CAF implementation.
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> Signed-off-by: Vladimir Lypak <junak.pub@gmail.com>
+> ---
+> Changes in V2:
+> - sorted SDC_QDSD_PINGROUP entries in msm8953_groups array.
 
-Patch applied for next (v5.11).
-
-If this is urgent and needs to go into fixes, just provide me
-a Fixes: tag and I will move it to the fixes branch.
+Both patches applied, thanks!
 
 Yours,
 Linus Walleij
