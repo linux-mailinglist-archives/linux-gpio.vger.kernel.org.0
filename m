@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA1D2A8A90
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 00:19:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCA42A8A93
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 00:19:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732434AbgKEXTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 18:19:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
+        id S1732414AbgKEXTs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 18:19:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732430AbgKEXTo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 18:19:44 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F840C0613CF;
-        Thu,  5 Nov 2020 15:19:43 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id e7so2557243pfn.12;
-        Thu, 05 Nov 2020 15:19:43 -0800 (PST)
+        with ESMTP id S1732527AbgKEXTr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 18:19:47 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97995C0613CF;
+        Thu,  5 Nov 2020 15:19:47 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id t14so2459889pgg.1;
+        Thu, 05 Nov 2020 15:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cU4M3aO8qNJPEDcKvc9bBkdj1lsD85B54nwk8zjxH+w=;
-        b=uSzJkTaI8hT3mLK+ArT+3F+RuaNucDSTpT0h7/8Ymo4J0M80PMs+32Uyx+KulVsXn2
-         uDEl51QZtfSKP2reRpI2nb97nk9X8BkxiR6uCASh11HueeouSIws0W2lCiMHjangXABn
-         Xdk+JU6VqGcPV2b4c0mmGQUnLjreB/y4C1btMNNsy7CWWFEyQICeuFw5/3Dr63KhLHVC
-         kaX0TjL1P+3RkrqDYy5//IpT2EuWppraY7UFJjpjkUC22XFCo6wYZJal1NxiFNheumco
-         uFgX5/HqPYZb2RqzKN67CjqNH/N0rYj6ONyw8BNjOciiLK1RWuceGG/D3V2N5ZDkjHHz
-         fB/A==
+        bh=sxq6iS7z4TMJrVBzCyMOFVUa+T3+DeO/GNTrIU6LLsY=;
+        b=k+pgNX0qsdFoufT/Pl2/0UGIEFkbKnyX9DaoDHWa4eqDo2hX44fuhEGVlhNpC1Ovgg
+         t8ffv8Vey8+t2NYAZPvP72Wij9tYenx649q1PZ1AaEt/47QHaI7dEuEOiHLwQ2poF1Ez
+         prrd9c4k6Mhw6ZjLIkmV7ANsC3se4GKnRbdAGHhmumsvyAreVa/IufeCHfsj57uZrznu
+         6OVBdtP1pgHfSpvbNPPTeSufmUS9e+iXVrF48AI208sbkvQCunp2WiaWmFPPNXb1B/IH
+         Z941Qk8WxnM2nFBmO91oIffj3bmknMxdDE6ipeSL6bi9L0bhrVPSTjpMEaBLiH/Vaesp
+         Jkrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cU4M3aO8qNJPEDcKvc9bBkdj1lsD85B54nwk8zjxH+w=;
-        b=tOfbxtfIxWDj9DfwFI6aw4P+CU5Y/eVRgdqf/QH0wFpZuW+cnturVvBIqwOxspgqK0
-         BMC05TJHXsQHHc2xZJiKz0gGnr5vNvMh7CYqmalVNHlaDtVSYE4uzw96bARCDYELL+Ac
-         57N8ucPjTj8Xb7MHuzYy7FpusGZYsEhN2u47CZxyJstki3EszZH8ADLyHq57cgcZegW8
-         vEr8eR3wN2/sgQOTW5blBFWSRwiP++X+NrpSLSpau7qSP0GVHrA2NxFoN6u2ifTPTKnP
-         fqcU1nLp5uO61dgTNcJxrMv04vQQH1uLNky7NEH6w8FqMMgVnVt3+JMbQus/0qngsmPT
-         j9Fw==
-X-Gm-Message-State: AOAM532I1vBGqxXaAY6uLmGw0xTzSTNrEp2B+Nd85XGFy+LbfAIAbHnY
-        g6gbNBOLEEZmrvR2Zk/ifWA=
-X-Google-Smtp-Source: ABdhPJzG+698/3x4qsSqZKPRK6U5QQsJRfmcRkBLQwF3ME8sDn+cvyXpuYK44n6CcES+uipk38t7iQ==
-X-Received: by 2002:a63:c6:: with SMTP id 189mr170411pga.417.1604618382788;
-        Thu, 05 Nov 2020 15:19:42 -0800 (PST)
+        bh=sxq6iS7z4TMJrVBzCyMOFVUa+T3+DeO/GNTrIU6LLsY=;
+        b=bvB6wmZMbRDn3o1FYyyOZYyFZ3doLazro+vIVphHE++fN6vLPvRZ76QHD/isZZJhAf
+         U0zCpjaf4CfJUMBQTYY4V4K13j3Bd4Zb8O8EFMRJah/LwqePIyXySgE+PVlY+vQMmNvp
+         Sjgz+ePbj13jl7IZhCj/ugB4tEzr3krMiqOyP3u5YxeMcLzwRPUw8YQavFPfqUunLt3/
+         3LjVZedkVxlU1qpYD+Mia4kuCmWSJto8ywVJDg65116hNVOx8w3qoVz+HoXpZtd3ZGVj
+         ogcmMuoFxjc4giqdWnKeyUUUEaO1n8sZ5ItOxvNrSpv03fVDiTSDWrArG9AhaxnXsmiG
+         bGPQ==
+X-Gm-Message-State: AOAM530ZlLNiB2yA9Q02ByM+DCvLzemaSnJjBAocY/kQaekcc4LomcwA
+        tC1Rxpt3fYQSB8SoLLT232w=
+X-Google-Smtp-Source: ABdhPJzxmYcu+EKr6p0fk2axsk6eWQmNg9l2ZKcsfR8AykkidZs6kr8WF9+n1qwVAMAaUS72F37MTA==
+X-Received: by 2002:a17:90b:1b43:: with SMTP id nv3mr5054026pjb.67.1604618387186;
+        Thu, 05 Nov 2020 15:19:47 -0800 (PST)
 Received: from localhost ([160.16.113.140])
-        by smtp.gmail.com with ESMTPSA id 34sm3393528pgv.53.2020.11.05.15.19.41
+        by smtp.gmail.com with ESMTPSA id d4sm3397400pjj.45.2020.11.05.15.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 15:19:42 -0800 (PST)
+        Thu, 05 Nov 2020 15:19:46 -0800 (PST)
 From:   Coiby Xu <coiby.xu@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/4] pinctrl: amd: use higher precision for 512 RtcClk
-Date:   Fri,  6 Nov 2020 07:19:10 +0800
-Message-Id: <20201105231912.69527-3-coiby.xu@gmail.com>
+Subject: [PATCH v3 3/4] pinctrl: amd: print debounce filter info in debugfs
+Date:   Fri,  6 Nov 2020 07:19:11 +0800
+Message-Id: <20201105231912.69527-4-coiby.xu@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201105231912.69527-1-coiby.xu@gmail.com>
 References: <20201105231912.69527-1-coiby.xu@gmail.com>
@@ -64,33 +64,97 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RTC is 32.768kHz thus 512 RtcClk equals 15625 usec. The documentation
-likely has dropped precision and that's why the driver mistakenly took
-the slightly deviated value.
+Print the status of debounce filter as follows,
+$ cat /sys/kernel/debug/gpio
+pin129          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
+ disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter disabled|   0x50000
+                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+pin130          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
+ disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter (high) enabled| debouncing timeout is 124800 (us)| 0x503c8
+                                                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Suggested-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/linux-gpio/2f4706a1-502f-75f0-9596-cc25b4933b6c@redhat.com/
 Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
 ---
- drivers/pinctrl/pinctrl-amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-amd.c | 43 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index d6b2b4bd337c..4aea3e05e8c6 100644
+index 4aea3e05e8c6..e9b761c2b77a 100644
 --- a/drivers/pinctrl/pinctrl-amd.c
 +++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -156,7 +156,7 @@ static int amd_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
- 			pin_reg |= BIT(DB_TMR_OUT_UNIT_OFF);
- 			pin_reg &= ~BIT(DB_TMR_LARGE_OFF);
- 		} else if (debounce < 250000) {
--			time = debounce / 15600;
-+			time = debounce / 15625;
- 			pin_reg |= time & DB_TMR_OUT_MASK;
- 			pin_reg &= ~BIT(DB_TMR_OUT_UNIT_OFF);
- 			pin_reg |= BIT(DB_TMR_LARGE_OFF);
+@@ -197,10 +197,16 @@ static int amd_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
+ {
+ 	u32 pin_reg;
++	u32 db_cntrl;
+ 	unsigned long flags;
+ 	unsigned int bank, i, pin_num;
+ 	struct amd_gpio *gpio_dev = gpiochip_get_data(gc);
+ 
++	bool tmr_out_unit;
++	unsigned int time;
++	unsigned int unit;
++	bool tmr_large;
++
+ 	char *level_trig;
+ 	char *active_level;
+ 	char *interrupt_enable;
+@@ -214,6 +220,8 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
+ 	char *pull_down_enable;
+ 	char *output_value;
+ 	char *output_enable;
++	char debounce_value[40];
++	char *debounce_enable;
+ 
+ 	for (bank = 0; bank < gpio_dev->hwbank_num; bank++) {
+ 		seq_printf(s, "GPIO bank%d\t", bank);
+@@ -327,13 +335,44 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
+ 					pin_sts = "input is low|";
+ 			}
+ 
++			db_cntrl = (DB_CNTRl_MASK << DB_CNTRL_OFF) & pin_reg;
++			if (db_cntrl) {
++				tmr_out_unit = pin_reg & BIT(DB_TMR_OUT_UNIT_OFF);
++				tmr_large = pin_reg & BIT(DB_TMR_LARGE_OFF);
++				time = pin_reg & DB_TMR_OUT_MASK;
++				if (tmr_large) {
++					if (tmr_out_unit)
++						unit = 62500;
++					else
++						unit = 15625;
++				} else {
++					if (tmr_out_unit)
++						unit = 244;
++					else
++						unit = 61;
++				}
++				if ((DB_TYPE_REMOVE_GLITCH << DB_CNTRL_OFF) == db_cntrl)
++					debounce_enable = "debouncing filter (high and low) enabled|";
++				else if ((DB_TYPE_PRESERVE_LOW_GLITCH << DB_CNTRL_OFF) == db_cntrl)
++					debounce_enable = "debouncing filter (low) enabled|";
++				else
++					debounce_enable = "debouncing filter (high) enabled|";
++
++				snprintf(debounce_value, sizeof(debounce_value),
++					 "debouncing timeout is %u (us)|", time * unit);
++			} else {
++				debounce_enable = "debouncing filter disabled|";
++				snprintf(debounce_value, sizeof(debounce_value), " ");
++			}
++
+ 			seq_printf(s, "%s %s %s %s %s %s\n"
+-				" %s %s %s %s %s %s %s 0x%x\n",
++				" %s %s %s %s %s %s %s %s %s 0x%x\n",
+ 				level_trig, active_level, interrupt_enable,
+ 				interrupt_mask, wake_cntrl0, wake_cntrl1,
+ 				wake_cntrl2, pin_sts, pull_up_sel,
+ 				pull_up_enable, pull_down_enable,
+-				output_value, output_enable, pin_reg);
++				output_value, output_enable,
++				debounce_enable, debounce_value, pin_reg);
+ 		}
+ 	}
+ }
 -- 
 2.28.0
 
