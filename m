@@ -2,95 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0852A7A17
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:09:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 781E12A7A25
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgKEJJ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:09:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        id S1730830AbgKEJLO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:11:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgKEJJ5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:09:57 -0500
+        with ESMTP id S1730788AbgKEJLL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:11:11 -0500
 Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2B9C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:09:57 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id 126so1206513lfi.8
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:09:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78014C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:11:09 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id h6so1237360lfj.3
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:11:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9FrWvCfEx0fgNoGTJY2C8+/GPZpBWAF7MF2RrTEBwyY=;
-        b=QIIKZbpfYCvwo/SrHQCx2wyaY/eN0XtnsywgLdK7jWXijzGnUiZFyUG4uQCYpRogDy
-         KxXClTFipbEIT7zk2DH1h5nnE7lpDB0SrCLJIbfrSroXKSGPJYnImvSbwG0YgxmvCcPY
-         4/TkrWinNGato3nlI5/1I4c0s26GrRSTIWkFnvaOcJCkIZXKlkC9U67ENNLbZogTr8nf
-         kYd9Xv+HbRmrh4QiaUM/kimjTYo+Z8+k+3zkBEWzFV3SrAHJGns/OWgABTtnesssFgSJ
-         0VLVIVTdQnExZUKRGe13yXxOomc8o3RBmnsg8vDa3moGXtz1gsOWOnwKQxI5Agao/XMq
-         KTog==
+        bh=R0y5gVIpn/AdoIrclQ35fvG8jExsjx9oUlGQ4SSdRvM=;
+        b=OBDEBRw1XQC3TF3Ujh14Do4dSNZfC5XcJwZ3/bgFQ+sx4K3XUmiyLaQCtmaraJniD2
+         dI4T8c1xdRCYc6hOieisMIn/BXIYYXXtbrCoXXUVcu/n+dNMu9HYYQeMgGgHgLzHavoN
+         LVWiu97oelCd0Chcpw0NeQODveRSIQ3u2xOhva3fn5rWs41Uv4WPEsBnKriGOIqQzXaw
+         F2ndncW0lLmvkp/UJuETbVOhB9Xu32Mzoac95D9wwg9vHDOuqEoFLTr3BRoVVNWUSiDY
+         ZMKimJPPn31JOs76+XDZArTABgEXph3X4yOAOpezGHK0+DR1MN4bp/BbwS4ynjAbxx0E
+         mN1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9FrWvCfEx0fgNoGTJY2C8+/GPZpBWAF7MF2RrTEBwyY=;
-        b=UoAFu/lyPQtyHTupyKk2fGc5d/pHzzU3XRSIkZ1qKgD72w4x9Zp0JatwhMOOo9Vlhn
-         GAx+th/PQiQiO1yjXG5O/w1AkCgIC1/v0Rr01684f4se5zBBbOdGUnNqAktl8VP67++N
-         0CTSgt+l/4mTOsyza2fnC0RLueks6vkO02Mk5cZpUvgEoywHpKa8jglC/kXap9SlyQgw
-         Vct/9SFr8UR1b29Ch9bra4/5M7a8F2RB8UmgK2fLqo+fhUGj+qPQBJcMgoFWhumcJ+EX
-         MVvg4hT7N3AqbJAU5aQoFNdMcBbO0Y+t4it7Ke6pQgcciAmePznFFQmeUonjXXbhsyx6
-         j+Lw==
-X-Gm-Message-State: AOAM531i3zDg3nSdxUU0mN/yKQsLFBH+m/Ceg8kmdxvhtHKnnfUg3XP/
-        Dwg+AIZJ+3NkfdNLSWz4asd3DRQiWTleLeWxk9ZsS5x25ogNBw==
-X-Google-Smtp-Source: ABdhPJyv8eYxvsawpVw0jeCSMvMnujpQ7XwVA5W1XIDFLBHmG8xy9I7hFIujFM/LKoEoRPGrdfw4on1oOf4mzkH6r8Y=
-X-Received: by 2002:a19:5e0b:: with SMTP id s11mr545101lfb.502.1604567395983;
- Thu, 05 Nov 2020 01:09:55 -0800 (PST)
+        bh=R0y5gVIpn/AdoIrclQ35fvG8jExsjx9oUlGQ4SSdRvM=;
+        b=E7ylgLnTQyWbuo7+sKCnz85VlIqqHhwSx7hMou6IcKYKgKuKmM8DUxLDfVU/o7+BMN
+         KXVoFAR+XtMV7+aztCO+7oQgxlSCKqlyoySCMAY2T+RjdDglv6tPHGXqztKLpEt/Hl7y
+         9gxpVat/TwVaWzAkZvKR1dhGGqRgkG1/xKQ+rc8u1lfK38SDHLMScCWETnG27fBg9FQ3
+         SXDOzEtNP/lMgY6AlRl93Pct7w4om2XyukBcZoB4T8c1O6lsfhy5RD9/qhVKYEK3jr1P
+         RWQ+OXnhuI/yljv36a9ujXImogvcWh6SlyjpC3oi7wW0eVvcmr98ZRLBa54ngMRu0gzl
+         C+4Q==
+X-Gm-Message-State: AOAM531ILAn8inFoaXjOAv8nJc+FtTymXvc28NGgISm0lU5f44CKNXDQ
+        UnkW7JT09xZ1nR/9OGCUSwOrxXn1HeWt4TqHQFvDvQ==
+X-Google-Smtp-Source: ABdhPJzqB9jSOZSfJwAF6NxekJgcXcBnjncy+ksjyFQ9f8WPlYctN2Gs84q49hGyTJZnrCtPAjPxbSo30cnPWuokgKU=
+X-Received: by 2002:a19:824f:: with SMTP id e76mr564699lfd.572.1604567467941;
+ Thu, 05 Nov 2020 01:11:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
+References: <cover.1603055402.git.syednwaris@gmail.com> <5e94ad3c156b98d2ed28617b2ca25bacadc189d5.1603055402.git.syednwaris@gmail.com>
+In-Reply-To: <5e94ad3c156b98d2ed28617b2ca25bacadc189d5.1603055402.git.syednwaris@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 10:09:45 +0100
-Message-ID: <CACRpkdb_zWU0a3th4XAiZn65iO=8mAt6mpAEOjz-q32kYKpLZQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] pinctrl: intel: Fix 2 kOhm bias which is 833 Ohm
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+Date:   Thu, 5 Nov 2020 10:10:57 +0100
+Message-ID: <CACRpkdbZ4US4Onhr-AmkPoqxQU0enrsicx775kLKdpEVtkTbhg@mail.gmail.com>
+Subject: Re: [PATCH v12 3/4] gpio: thunderx: Utilize for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jamie McClymont <jamie@kwiius.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 12:46 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sun, Oct 18, 2020 at 11:41 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
 
-> 2 kOhm bias was never an option in Intel GPIO hardware, the available
-> matrix is:
+> This patch reimplements the thunderx_gpio_set_multiple function in
+> drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
+> Instead of looping for each bank in thunderx_gpio_set_multiple
+> function, now we can skip bank which is not set and save cycles.
 >
->         000     none
->         001     1 kOhm (if available)
->         010     5 kOhm
->         100     20 kOhm
->
-> As easy to get the 3 resistors are gated separately and according to
-> parallel circuits calculations we may get combinations of the above where
-> the result is always strictly less than minimal resistance. Hence,
-> additional values can be:
->
->         011     ~833.3 Ohm
->         101     ~952.4 Ohm
->         110     ~4 kOhm
->         111     ~800 Ohm
->
-> That said, convert TERM definitions to be the bit masks to reflect the above.
->
-> While at it, enable the same setting for pull down case.
->
-> Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
-> Cc: Jamie McClymont <jamie@kwiius.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Robert Richter <rrichter@marvell.com>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+> Changes in v12:
+>  - No change.
 
-Good research!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I expect this as part of a pull request for fixes or devel.
+If Andrew merges this through his tree.
 
 Yours,
 Linus Walleij
