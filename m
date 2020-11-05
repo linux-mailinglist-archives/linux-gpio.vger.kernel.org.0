@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 407832A753D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 03:08:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A467C2A753C
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 03:08:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgKECIj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1733241AbgKECIj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 4 Nov 2020 21:08:39 -0500
-Received: from mga17.intel.com ([192.55.52.151]:3213 "EHLO mga17.intel.com"
+Received: from mga05.intel.com ([192.55.52.43]:10245 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733237AbgKECIj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1728045AbgKECIj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Wed, 4 Nov 2020 21:08:39 -0500
-IronPort-SDR: MMI8p4e0YBNqlmTb9tv2RRh71t+pHvvR2DPWcp09qgmev52+gVaZqGd9vPv0mgyU06HjoJSV6s
- 9EovyI/4UDXw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9795"; a="149168974"
+IronPort-SDR: JfXQkbwwvsZCzY0resCEAc+CF8rgjoZWCffWgJCXGDNXZxj0hyXKEuMqHPVOS4TqJ3dLH3MG7V
+ 7WatlVpYk3Tg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9795"; a="254023300"
 X-IronPort-AV: E=Sophos;i="5.77,451,1596524400"; 
-   d="scan'208";a="149168974"
+   d="scan'208";a="254023300"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 18:08:37 -0800
-IronPort-SDR: VdCbcYFpJG6HrNsmbRFvcK7803n3JgzqJT6i6CYpNbQRjtlVHLnyo0ZKH5/UKg+YZbreRlaxve
- 0lGAKHD65BbQ==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 18:08:37 -0800
+IronPort-SDR: IsdCcwbz6wKFoCmliI6c6XVtioKI5lZYxqKyE3QSX9P/PHsVQLx/MzXm9EC3AAPsx7tG1x9jLP
+ rRl5PRzisU2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,451,1596524400"; 
-   d="scan'208";a="325842782"
+   d="scan'208";a="354095763"
 Received: from lkp-server02.sh.intel.com (HELO e61783667810) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 04 Nov 2020 18:08:36 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 04 Nov 2020 18:08:36 -0800
 Received: from kbuild by e61783667810 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kaUhX-0001Af-Tf; Thu, 05 Nov 2020 02:08:35 +0000
-Date:   Thu, 05 Nov 2020 10:08:33 +0800
+        id 1kaUhX-0001Ad-S5; Thu, 05 Nov 2020 02:08:35 +0000
+Date:   Thu, 05 Nov 2020 10:08:35 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 1f955a68d179cdbad083d85e0fbb6ec7360a03d1
-Message-ID: <5fa35ea1.WzsSjuKWa441P5Bx%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 8045ec42d14c6f77b5e925d1421150c043dfb75d
+Message-ID: <5fa35ea3.t9TC2xsqlZerrRlH%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,12 +45,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
-branch HEAD: 1f955a68d179cdbad083d85e0fbb6ec7360a03d1  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
+branch HEAD: 8045ec42d14c6f77b5e925d1421150c043dfb75d  pinctrl: rockchip: create irq mapping in gpio_to_irq
 
 elapsed time: 725m
 
-configs tested: 158
+configs tested: 157
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -120,16 +120,12 @@ m68k                          hp300_defconfig
 openrisc                         alldefconfig
 mips                          malta_defconfig
 arc                          axs103_defconfig
-arm                             pxa_defconfig
-xtensa                         virt_defconfig
-powerpc                          allyesconfig
-c6x                        evmc6678_defconfig
-sh                        apsh4ad0a_defconfig
-mips                           ip22_defconfig
 mips                         tb0287_defconfig
 sh                         ap325rxa_defconfig
 powerpc                     stx_gp3_defconfig
 sh                     magicpanelr2_defconfig
+powerpc                     taishan_defconfig
+arm                          ep93xx_defconfig
 powerpc                      katmai_defconfig
 m68k                       bvme6000_defconfig
 sh                     sh7710voipgw_defconfig
@@ -142,10 +138,6 @@ powerpc                  iss476-smp_defconfig
 arm                          moxart_defconfig
 m68k                             allmodconfig
 arc                           tb10x_defconfig
-ia64                        generic_defconfig
-arm                         mv78xx0_defconfig
-sh                            shmin_defconfig
-m68k                          multi_defconfig
 arm                          gemini_defconfig
 powerpc                     asp8347_defconfig
 powerpc                      ppc64e_defconfig
@@ -178,6 +170,7 @@ sparc                               defconfig
 i386                                defconfig
 mips                             allyesconfig
 mips                             allmodconfig
+powerpc                          allyesconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
 i386                 randconfig-a004-20201104
@@ -186,6 +179,12 @@ i386                 randconfig-a005-20201104
 i386                 randconfig-a001-20201104
 i386                 randconfig-a002-20201104
 i386                 randconfig-a003-20201104
+i386                 randconfig-a004-20201105
+i386                 randconfig-a006-20201105
+i386                 randconfig-a005-20201105
+i386                 randconfig-a001-20201105
+i386                 randconfig-a002-20201105
+i386                 randconfig-a003-20201105
 x86_64               randconfig-a012-20201104
 x86_64               randconfig-a015-20201104
 x86_64               randconfig-a013-20201104
