@@ -2,57 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C02ED2A800A
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 14:53:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 162292A8015
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 14:56:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbgKENxo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 08:53:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38824 "EHLO
+        id S1730466AbgKEN4O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 08:56:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgKENxn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 08:53:43 -0500
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE95AC0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 05:53:41 -0800 (PST)
-Received: by mail-lj1-x241.google.com with SMTP id m16so1648698ljo.6
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 05:53:41 -0800 (PST)
+        with ESMTP id S1726874AbgKEN4M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 08:56:12 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A31BC0613D3
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 05:56:12 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id l2so2436834lfk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 05:56:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=N9Zqvg7WZxUAVGMZvcOLT+Q/3cV0loMEtaVDCrciEcI=;
-        b=YGsS+L0GJe38vGzMAAf/iqcef2czOsK8rhWfSZWSSD1qZEI02SM56Q2B9f7zHbzlIw
-         ll4PLaTJ2DO2WgJ3wk9tJNf5jmCaRcp+xymoUVKcWxxTnIFo8u4HQW4YpyZ4uJRyycxV
-         4EYD29gE9BfEm842RsafvdQITKg0lMbdr1L+y0XXMlNcd707Equ/ou9zX/UVuVXD3e0L
-         c6fYtaNfnlY1ROam+844oEzfsGFEHzS+TM6S6Ba8XLjLyRo7nYWMq4rUQx743bKV67pT
-         GoeTJWK0DB4UJHYe7IwzpY2uEFiqOvjHJJLXLEseoV2c5nsmZKk9ViR40MxwYCpY2OR+
-         DTWg==
+        bh=pWfr6I/1fhJwOoSf0YAlJNTAtwTO7N82LKv6JheUJrA=;
+        b=dh0smW5ZHA8/k2JdZxEaAbu1SFaVcaFR8n6fGRx1taylpO7O13Uia0bIG+nyAcp6Ze
+         58CH/affcXWzrdXyk7aumyOI6iONzzSyl2VU9uKIzfLQyEIdDWGUpoBZ6j2Zlb3x8uiw
+         ahq7w1R4k5Vc39DihoB8D/YnNSiqo22/xAbJauqwpOsGm5WupE6zqadGH8LMzXgbuohp
+         2gm/AfDkpazzOa3Z5Sy8hurv0CjN9wdBsdytjBJ5Bm4ecFA9AWSTBD47D+lo/HunH7u8
+         5XiE/+LhPEwIRdSZK7UT5liPBytxyoxydytEbZ8b5ehmCjk0xIJn5aGw436meUFwzCcw
+         +agg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=N9Zqvg7WZxUAVGMZvcOLT+Q/3cV0loMEtaVDCrciEcI=;
-        b=uN8lwpeLDuKPM5fyk1b8X283lr4/0ww4LGUQ8pDwzKQcNUYdQoMmO9/nojiDgMLwyQ
-         kRYOBTNRAqiuObKN/Ibo0aGT0mPfDilQJh1uEiPz1xnritXdt6CCuxDG6UFui8yhyGHH
-         31F8GpSPGfzG5FdFd9piOy8/UHjutGFZx9mYAxkhrMZ+zmlDo1TApp2cEIM2UUCSU4/a
-         YRgFTbufruk4oSmkmfkijX4fceJN0Ee3dbMeLx/r3MMPFBHOPwssRIsCvLtcf54cwhB8
-         G/3wPxiNRhLa7wd1iWFyZTQJQ2Eng+XX4m6IUdAx2HOd71G6nEz3vQJ7XsAsAaOH4Lai
-         E4zg==
-X-Gm-Message-State: AOAM532yUY6r5Z+s7gqhoYrE9AIbgv0aVoEY3Ct7KZKGhs1xL/7zq2as
-        30byobwyWPMvlTloc3q3hflfXxdHaKfjj/QDY/cu4A==
-X-Google-Smtp-Source: ABdhPJzrFA0RMW47oT1TZfT8vbCcm+x9sACMgF1v/Ljf5rP5DkwG2nhMBA54YnjxTHcR0D2HWpCkxtbA01Sq2vs/O6M=
-X-Received: by 2002:a05:651c:1050:: with SMTP id x16mr1014859ljm.100.1604584420462;
- Thu, 05 Nov 2020 05:53:40 -0800 (PST)
+        bh=pWfr6I/1fhJwOoSf0YAlJNTAtwTO7N82LKv6JheUJrA=;
+        b=X9T5qcPo5kHqhKFgcFs3ysB457cC6eGCHZrpvIwnJLRciD+RzzvMuw+fOe5EpJgJtM
+         cigZw0OnHa7ZcMPGzrR3bbThI3h6oY4BPmnnU7HeCspjNTPRuar8vYE7ohlNcKd6zY1B
+         /vrYwYzEWLmGRgTDMG3mhSr3ENEsX+zUlqtzrWVfVq2rfP1qKwn5E5ruvKLC2xh4rYHP
+         +peSo1BRnSN8uy/1g8uoiDaEc5hlLjL2I9YeP9d24qeR2NkUpfE+YhAZzsCib8uA1PEr
+         lvn6Z5ELQMHPvu2uHkzeXvY6ksQEG9QKcohuCxbBnAOuRsFdGW++rAoS7RThQ22gyk+Y
+         r7KA==
+X-Gm-Message-State: AOAM5318u7q73xfLE7x2y78dkDLtMbjQm1OwHLMlsbYsUmvYwfLYUCjc
+        U5Xpw8e32/CLb87xrbAqAQtogQ0MUehNxPVntX7rKA==
+X-Google-Smtp-Source: ABdhPJz1NkMdVDk2FKVmNqglkouzFOqJK2r6nNAUhTjFtrEgBbtn9xveKMPS3FTyRh2Xf7ZdUcxMmijM8XkJxyAwmCE=
+X-Received: by 2002:a05:6512:3225:: with SMTP id f5mr987061lfe.441.1604584570861;
+ Thu, 05 Nov 2020 05:56:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20201028103921.22486-1-zhe.he@windriver.com>
-In-Reply-To: <20201028103921.22486-1-zhe.he@windriver.com>
+References: <cover.1603893146.git.mchehab+huawei@kernel.org> <53f82f9b3c063bb1b928bdea4986f1471ad3ace7.1603893146.git.mchehab+huawei@kernel.org>
+In-Reply-To: <53f82f9b3c063bb1b928bdea4986f1471ad3ace7.1603893146.git.mchehab+huawei@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 14:53:29 +0100
-Message-ID: <CACRpkdZOcObSgRDPtjxB69VeM1FEeSsPJ8SZ=RqWOT2fEN0ynw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: core: Add missing #ifdef CONFIG_GPIOLIB
-To:     He Zhe <zhe.he@windriver.com>, Chris Sorenson <csoren@isd.net>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+Date:   Thu, 5 Nov 2020 14:56:00 +0100
+Message-ID: <CACRpkdZMpRvF3OhgPzSnk_qJcMNW+RtcYud8VEhgz2RVzN=ntQ@mail.gmail.com>
+Subject: Re: [PATCH 23/33] docs: ABI: don't escape ReST-incompatible chars
+ from obsolete and removed
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -60,25 +64,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 11:40 AM He Zhe <zhe.he@windriver.com> wrote:
+On Wed, Oct 28, 2020 at 3:23 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 
-> To fix the following build warnings when CONFIG_GPIOLIB=n.
+> From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 >
-> drivers/pinctrl/core.c:1607:20: warning: unused variable 'chip' [-Wunused-variable]
->  1608 |  struct gpio_chip *chip;
->       |                    ^~~~
-> drivers/pinctrl/core.c:1606:15: warning: unused variable 'gpio_num' [-Wunused-variable]
->  1607 |  unsigned int gpio_num;
->       |               ^~~~~~~~
-> drivers/pinctrl/core.c:1605:29: warning: unused variable 'range' [-Wunused-variable]
->  1606 |  struct pinctrl_gpio_range *range;
->       |                             ^~~~~
+> With just a single fix, the contents there can be parsed properly
+> without the need to escape any ReST incompatible stuff.
 >
-> Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Patch applied. I first applied a similar patch by Chris, but I realized
-it ended up mixing code and declarations so I'll go for this one instead.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
