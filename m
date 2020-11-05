@@ -2,103 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDEF62A70F9
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 00:10:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7DB2A7505
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 02:47:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgKDXKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Nov 2020 18:10:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgKDXKB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Nov 2020 18:10:01 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B797EC0613CF;
-        Wed,  4 Nov 2020 15:10:01 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id r186so158176pgr.0;
-        Wed, 04 Nov 2020 15:10:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nAEB7MGHIrO5v7Gd1XDA2NI5HdyMy7kQ/oBNM6wJnN0=;
-        b=kOa3pyPY/D5GqanGw+MdSUZnZxrvlTo2B2wR+QPrBAzIQlrryFKWRldDNJnwpcyBoq
-         o/AEtSr2P7KrjQt1a3zfwd/ENUoPsPY8DP5CZ8MfECrYdkEYtXUtbodtmbR7BUFts1Pi
-         ZexsluUNvR24XFdgKCt8RpMUPFIzFd/+elDtLW+WKmrtBX3+enN84z4Io4tjmCZnE31y
-         LGcpIfJHxYk/xCraln5M6b1ZY2+hystvgqvEMFjY/KrmfRW9gWxTnW/w3eZfFVI9C/+i
-         3FBMfuzxR7sWMA0Fbl0VVCO2qZxszYIfSC6Q0Ek+RjSrQCyeR8zSx613POYTG4EsUkQ4
-         kQWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nAEB7MGHIrO5v7Gd1XDA2NI5HdyMy7kQ/oBNM6wJnN0=;
-        b=JTt/bLXPySENODkwmFRtZ+MUf83wmXrjoAwlVTHCvWs4jhqEF8+fgHqptLn62Ka53W
-         Soj/S4j91rz3BKiAF+L0tN9BjlmDnHJNj2O2IVqQ27E2unFTGV2//XX/UV1ZzNSbLG7b
-         twgF1cqm1xzs9Z8DNmpHPV5tP28+8SneNM90eNR7Te6udsdSv1kIavSv3+Wc5W5VYw1p
-         wB1XPpPAVSDLwpn8h/GfyfEB5TtN4jyIWVcyT9AFoY7xfhJziri3mCV19sOQ/wznuwtH
-         /rFhZ3aBgCrG4uid/Wzep8NU52tlycz/MPGfQdVaprfo9iq9Q8hS5qYe9NmgjEDpQ6W+
-         hokw==
-X-Gm-Message-State: AOAM532jWLnnOS7ULQWdbMRi1w20q+tYtomaMEZEuEimGY+6Hc75olU5
-        Vne1a73X56XI2sBR3Jf6xbU=
-X-Google-Smtp-Source: ABdhPJz+SokgLKffky4K/lUNPxZIEpC5iOaIKjgEX4cHFI5R3NH4999eyYAjMvSlC76CL1dPvx87hQ==
-X-Received: by 2002:a17:90a:8b93:: with SMTP id z19mr188354pjn.123.1604531401389;
-        Wed, 04 Nov 2020 15:10:01 -0800 (PST)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id u24sm3524639pfn.205.2020.11.04.15.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 15:10:01 -0800 (PST)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Thu, 5 Nov 2020 07:09:21 +0800
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        id S1731210AbgKEBrc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Nov 2020 20:47:32 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:3689 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgKEBrc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 4 Nov 2020 20:47:32 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4CRRGn2ncnzkL;
+        Thu,  5 Nov 2020 02:47:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1604540850; bh=1TyHBCCwpl8WXLOw+y00Ta+ECeljoineDBn6iSjkCAw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TUrf1FzY/5AEa3aMTEedGY7q3vRnqz53uDcIDmF2tLB03WrhU7s8SNdhNkT/J8TaB
+         DEKCRz62wqI0c75H/ZFqT/JOExo7DNBacbn55pPNJqpgmp7k9zWT365wrtrEtiBZhb
+         3l0jL3+SVin6CDQJAUvMjk+KoELxR4rJUHXdCOE4bdrTJG4chekK693/R0MmY7wxVZ
+         NfnynWCXECVjzULYWf64tPwBxA6Bbylty/Z+7pmb492+hhgblsWkUJBfAqomK3/q2k
+         7kr9HoIG3O7qJ63SG3esoJPziNMTcz+s5hrgsb9x3+7TSUCK8YL7Kd6NJHUFXpYqFf
+         wsxQAp6Y87Aug==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Thu, 5 Nov 2020 02:47:28 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        1887190@bugs.launchpad.net,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] pinctrl: amd: remove debounce filter setting in irq
- type setting
-Message-ID: <20201104230921.7kpt7sqaghpgywqa@Rk>
-References: <20201104160344.4929-1-coiby.xu@gmail.com>
- <20201104160344.4929-5-coiby.xu@gmail.com>
- <CAHp75VcA6vk0dXQ0iOpSM8YdmBBBoU+veqBuK3hur9sbCiwkww@mail.gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH 1/5] gpio: tps65910: use regmap accessors
+Message-ID: <20201105014728.GC17266@qmqm.qmqm.pl>
+References: <cover.1601164493.git.mirq-linux@rere.qmqm.pl>
+ <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
+ <CACRpkdaMHH35C1LqUROFBte3T00Lz0zApHy3hdZ83Z8EZR04hw@mail.gmail.com>
+ <20201001090104.GM6148@dell>
+ <20201104144331.GG4488@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcA6vk0dXQ0iOpSM8YdmBBBoU+veqBuK3hur9sbCiwkww@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201104144331.GG4488@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 10:42:38PM +0200, Andy Shevchenko wrote:
->On Wed, Nov 4, 2020 at 6:05 PM Coiby Xu <coiby.xu@gmail.com> wrote:
->>
->> Debounce filter setting should be independent from irq type setting
->> because according to the ACPI specs, there are separate arguments for
->> specifying debounce timeout and irq type in GpioIo and GpioInt.
->>
->> This will fix broken touchpads for Lenovo Legion-5 AMD gaming laptops
->> including 15ARH05 (R7000) and R7000P whose BIOS set the debounce timeout
->> to 124.8ms which led to kernel receiving only ~7 HID reports per second.
->
->to the kernel
+On Wed, Nov 04, 2020 at 02:43:31PM +0000, Lee Jones wrote:
+> On Thu, 01 Oct 2020, Lee Jones wrote:
+> > On Wed, 30 Sep 2020, Linus Walleij wrote:
+> > > On Sun, Sep 27, 2020 at 1:59 AM Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
+> > > > Use regmap accessors directly for register manipulation - removing one
+> > > > layer of abstraction.
+> > > >
+> > > > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > 
+> > > I suppose it is easiest that Lee apply all patches to the MFD tree?
+> > Yes, that's fine.
+> I think this patch is orthogonal right?
+> 
+> Not sure why it need to go in via MFD.
+[...]
 
-Thank you for correcting my grammar mistakes!
+The patch 4 assumes all previous patches are applied (or there will be
+build breakage).
 
->
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: 1887190@bugs.launchpad.net
->> BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1887190
->
->> Message-Id: <CAHp75VcwiGREBUJ0A06EEw-SyabqYsp+dqs2DpSrhaY-2GVdAA@mail.gmail.com>
->
->Link: https://lore.kernel.org/...
->
->--
->With Best Regards,
->Andy Shevchenko
-
---
-Best regards,
-Coiby
+Best Regards
+Micha³ Miros³aw
