@@ -2,78 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 672B42A8110
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 15:37:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D59282A814A
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 15:48:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbgKEOhr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 09:37:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S1731367AbgKEOsa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 09:48:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730461AbgKEOhr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 09:37:47 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54F7C0613D2
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 06:37:46 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id j20so1773717edt.8
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 06:37:46 -0800 (PST)
+        with ESMTP id S1731345AbgKEOs3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 09:48:29 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3216DC0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 06:48:28 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id q10so1003251pfn.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 06:48:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gx4esp1H+t/CRh0pOUP9iWgL9zCSVVT3Kg6Fjz064Mc=;
-        b=Sza5uuRbnhrTeO3gZcJ2wSko7ScXGXe6WF+mW9RPfBtta0I5Pn7urHmD6fJSA9ByMA
-         XwOOqdtt7gQFYbbBAEkv7Jr0wgE7Tw7+cMWvAqFfZfJae0mhMOAY+A34sfyIvUTBOrjV
-         qQpPzrc3K2wRG1v7odAnsTQ6c8Nl6gMJLKclgI6j+2DwAMbACeb7x3qli21ekKOcUzSW
-         +/L44Lm5zQngoLduVkdihL3/By/4iwo/mWkB78kLzAOLHyhgpgu3x3K8pMulfHlDb2B8
-         V6a6s1E/lqcOPTPsXbBji1+Q/4Sz7ha3aehBRJ5nimjnlcn1g9Pb9uDfGyxDziuT81Yl
-         UUVQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0cNRue06Kg3etWs92TwtIDhKtJtQC1AdGrrm6JimBHY=;
+        b=My6V3yek/d4wRR7+RW5mfyyK4FgujsyOAucIyz0QkaH0p9VOnEgTjImBXwmh02wuR/
+         sTo19ziN9RRMpjb6hnxZBC5ZzkA21e1oH2q1he7xKQRv5V58nIZid5sd9v/MyIFC66RJ
+         PnzIuC433Erf3FMLJ3ITfR6WAzbhXpIw+0XswZZtK0A656yGGUd9R0oqjeDdaj7K0hpi
+         pnN+DDMFo1xlzX68sUlJOXMqZQIKmqmjlzJ6kGILhmONbo05w99uGtx1j+9qa5fFYgY2
+         K3IUBX4PQuseoWqb7g/3pzFHO44utwaldHZZvcEJHc4XEs9MdCiwkq8+06iBPjNJGjGR
+         3jpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gx4esp1H+t/CRh0pOUP9iWgL9zCSVVT3Kg6Fjz064Mc=;
-        b=aH2XHoMKQcm4WtvcgD8os0xP9lVQxiCJ6uJTdwaDCjusNKgAgXx9eCWiqHiWf4Tgj3
-         8Bs0DBPkClE94cIFywCad/hx0vuct2Gq3zjsdFVaQdnhYEFK65v4r2xeoQiJYjR3CJHM
-         Zh78UwUehEhGwBVStFcRCRRANSjalbvYDhkJux3swVLcJHByLQ+z8KFg4FLUKlYsh1kf
-         NkMZXLWue+TF6qlFxFAQdQCo9vxnc9lY7bZfvAurcJIcLAbUnqE7KeuHe1WIPuI87UZq
-         qPjlYqjQTgpuQMwDvilUCT29gK64CJbCwCGL4oRjtA9q3hfiDScbvPDuhLw2hBvU7MsJ
-         3zUA==
-X-Gm-Message-State: AOAM532jpfZXWcaJUDY7zeQtBdMv2ov1iU4MGLfyMiwjQC8rjOS4ULNA
-        YF5Feod6EDvM83W81wJ3vpo1mO9/+37LmCi6KQhwzw==
-X-Google-Smtp-Source: ABdhPJwTgu8lGloY30zcE8UObChuYq/kswE4wTmWEggG5cOpkg2mqkw66qs/1O6wNJd3gsLrfMuyXtjBLxSyvIi0CRM=
-X-Received: by 2002:a50:99c3:: with SMTP id n3mr2893903edb.213.1604587065503;
- Thu, 05 Nov 2020 06:37:45 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0cNRue06Kg3etWs92TwtIDhKtJtQC1AdGrrm6JimBHY=;
+        b=gdmKe8rUOl9lDNATWVaIOVDkkwIC4NlztXV2FP+PgE6KApuSMGSHCtVX1Fm9OsO9p/
+         8C4KSLCm2TX66/e/t3ajI3HPoVkd7v+Vd92TGUxsJmO7sJJo/23k6lG1K6z8bw7iWOrz
+         HcrmsvKNbWTu//Rwj1/E+xK5twMedMXmUC7Dld0OfJPot7tC5BwTnFEEmHLYgzVzQAYA
+         DZ/I5WnMKeAJzRx9rQa4m2YTsvH0N+ap0IoY6LaBdTlFxFdp5ROKddrEB4sORcMLBdW5
+         /VY90As8VnL3vkfNAfDOho7juVDdSgzcz+fmKGQFWAUJzgrfZ0VVvk4/qtWunftZp/Cj
+         8zdQ==
+X-Gm-Message-State: AOAM532uXYbYmpNP3JVP8hB8J2PUeWNhNKJMvmAYXDV7cSNYKRrjvfn+
+        BTIO2wyBwsmBaKtgC+YanO1N0xDgpWDVtQ==
+X-Google-Smtp-Source: ABdhPJxVTz0NURxjphjdjOpx8OMjG1nW+mwuCt8b4in+Ed4/bKWnbMT75b9bYrFnjSgZ2UouDRwdTg==
+X-Received: by 2002:a63:f54e:: with SMTP id e14mr1384024pgk.195.1604587707797;
+        Thu, 05 Nov 2020 06:48:27 -0800 (PST)
+Received: from localhost ([160.16.113.140])
+        by smtp.gmail.com with ESMTPSA id ii20sm2539692pjb.57.2020.11.05.06.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2020 06:48:27 -0800 (PST)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Thu, 5 Nov 2020 22:47:55 +0800
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 0/4] pinctrl: amd: debounce filter fixes
+Message-ID: <20201105144755.rqnq5ut6szauj4az@Rk>
+References: <20201104230703.21466-1-coiby.xu@gmail.com>
+ <CAHp75VcczvAHE8wztdFkGE=9QKbPFCJ0wxnE9CGjqayi+oZp=g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20201105104049.91077-1-warthog618@gmail.com>
-In-Reply-To: <20201105104049.91077-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 5 Nov 2020 15:37:34 +0100
-Message-ID: <CAMpxmJXFsMYOVOHY8zp-C6gF9q6sfi=HuUYiSDmZBDYiJNDh3g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix sysfs when cdev is not selected
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Schichan <nschichan@freebox.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcczvAHE8wztdFkGE=9QKbPFCJ0wxnE9CGjqayi+oZp=g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 11:41 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> In gpiochip_setup_dev() the call to gpiolib_cdev_register() indirectly
-> calls device_add().  This is still required for the sysfs even when
-> CONFIG_GPIO_CDEV is not selected in the build.
->
-> Replace the stubbed functions in gpiolib-cdev.h with macros in gpiolib.c
-> that perform the required device_add() and device_del() when
-> CONFIG_GPIO_CDEV is not selected.
->
-> Fixes: d143493c01b7 (gpiolib: make cdev a build option)
-> Reported-by: Nicolas Schichan <nschichan@freebox.fr>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+On Thu, Nov 05, 2020 at 02:41:12PM +0200, Andy Shevchenko wrote:
+>Missed mailing list.
 
-Applied for fixes with Nicolas' tag.
+Sorry, I don't understand this comment. Which mailing list was missed?
+>
+>On Thu, Nov 5, 2020 at 1:07 AM Coiby Xu <coiby.xu@gmail.com> wrote:
+>>
+>> There are three fixes (and one improvement) that fix the debounce
+>> filter issues in pinctrl-amd.
+>>
+>> Changelog v2:
+>>  - Message-Id to Link and grammar fixes for commit messages [Andy Shevchenko]
+>>
+>> Coiby Xu (4):
+>>   pinctrl: amd: fix incorrect way to disable debounce filter
+>>   pinctrl: amd: use higher precision for 512 RtcClk
+>>   pinctrl: amd: print debounce filter info in debugfs
+>>   pinctrl: amd: remove debounce filter setting in irq type setting
+>>
+>>  drivers/pinctrl/pinctrl-amd.c | 56 +++++++++++++++++++++++++++--------
+>>  1 file changed, 44 insertions(+), 12 deletions(-)
+>>
+>> --
+>> 2.28.0
+>>
+>
+>
+>--
+>With Best Regards,
+>Andy Shevchenko
 
-Bartosz
+--
+Best regards,
+Coiby
