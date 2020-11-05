@@ -2,109 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85192A7A15
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:09:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F0852A7A17
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:09:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgKEJJM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:09:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
+        id S1726756AbgKEJJ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:09:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbgKEJJK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:09:10 -0500
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B802DC0613D4
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:09:08 -0800 (PST)
-Received: by mail-ed1-x542.google.com with SMTP id w1so715816edv.11
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:09:08 -0800 (PST)
+        with ESMTP id S1726400AbgKEJJ5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:09:57 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2B9C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:09:57 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id 126so1206513lfi.8
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:09:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DAVVTcqOtshkqa//jG0tMqJnAZn8lkJ/jC3ZQlpD4iI=;
-        b=gnCWxb3A2YT1XunheHSuiLH9SajfLtYxFoSSt/SMRqAjsx1al/ZDjdmGmdcaRCgATD
-         VjIP7kiSbjNExGEXiLiKkUKac6IoHWJ/Fimd03ck22Y3TV8a4rMz01X4WGQkmlH9oyFA
-         9esubFwVfP/2m1vKPl5C03O/MKjH3usvIu/M/u1jCtkmZsVaRlPUI4GOMG2G25yqE1WE
-         FkwCiZzuIp80ijwg2sDMrq/aDxArFsCDn2GSr7ejg4GkjzXoXRmPg7sE+KMD8rfx5UT2
-         P0rDV2vx/4uXjrJDE1VHH5s96ArZURV9t0QiVse/pLv22O/+my2jfZQspbaaigUdqAgS
-         xSDg==
+        bh=9FrWvCfEx0fgNoGTJY2C8+/GPZpBWAF7MF2RrTEBwyY=;
+        b=QIIKZbpfYCvwo/SrHQCx2wyaY/eN0XtnsywgLdK7jWXijzGnUiZFyUG4uQCYpRogDy
+         KxXClTFipbEIT7zk2DH1h5nnE7lpDB0SrCLJIbfrSroXKSGPJYnImvSbwG0YgxmvCcPY
+         4/TkrWinNGato3nlI5/1I4c0s26GrRSTIWkFnvaOcJCkIZXKlkC9U67ENNLbZogTr8nf
+         kYd9Xv+HbRmrh4QiaUM/kimjTYo+Z8+k+3zkBEWzFV3SrAHJGns/OWgABTtnesssFgSJ
+         0VLVIVTdQnExZUKRGe13yXxOomc8o3RBmnsg8vDa3moGXtz1gsOWOnwKQxI5Agao/XMq
+         KTog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DAVVTcqOtshkqa//jG0tMqJnAZn8lkJ/jC3ZQlpD4iI=;
-        b=EurwjJ+AOPVi1vgrU4QmHb8lDohkPkt/rseQW70aCdPiqxuQatfw/sA2SWk7x21hs4
-         JexLC9ZGDA3rXgJ4DdvfQlC6olQiT3zSBqA/6P4osCklshPsVRmEAh+tiaVhwTJfKPqI
-         JhJc0RcGjVBJuRtBYA3mFZQMVNnp6vRQvPIuQkijQm67/WaKfon8UF0N8BDzHpTS6/gd
-         xBUAZkWvekk79JwHeQ4ROJEJJbF0TWBQkhqsmn2+YTnIfug6do0SM4N6q5d/qRY7iINh
-         EAegpyljLO3uQaCnpw/WLFboQWfQvltSm6w5MAotqjNtk/r511+8h+R+6/yU0sW+3PT3
-         jxQg==
-X-Gm-Message-State: AOAM532uwZBIHpLUrZEihkHCS5ZUaMf5qyXh+0McyTM3ga0ezzBRl+Qq
-        YIb5cgX6DcN5q9rOhpswpflFA2agcmA9p7gwrJbbUg==
-X-Google-Smtp-Source: ABdhPJyqANWyJ3aSTbJtEhMCIaR58Dz9yl2OLSrIAItWEawq6opjRvdm8/eux/hxk+LAgMAS7EPN7dAVW7T2X8+w+iU=
-X-Received: by 2002:a05:6402:283:: with SMTP id l3mr1593849edv.232.1604567347374;
- Thu, 05 Nov 2020 01:09:07 -0800 (PST)
+        bh=9FrWvCfEx0fgNoGTJY2C8+/GPZpBWAF7MF2RrTEBwyY=;
+        b=UoAFu/lyPQtyHTupyKk2fGc5d/pHzzU3XRSIkZ1qKgD72w4x9Zp0JatwhMOOo9Vlhn
+         GAx+th/PQiQiO1yjXG5O/w1AkCgIC1/v0Rr01684f4se5zBBbOdGUnNqAktl8VP67++N
+         0CTSgt+l/4mTOsyza2fnC0RLueks6vkO02Mk5cZpUvgEoywHpKa8jglC/kXap9SlyQgw
+         Vct/9SFr8UR1b29Ch9bra4/5M7a8F2RB8UmgK2fLqo+fhUGj+qPQBJcMgoFWhumcJ+EX
+         MVvg4hT7N3AqbJAU5aQoFNdMcBbO0Y+t4it7Ke6pQgcciAmePznFFQmeUonjXXbhsyx6
+         j+Lw==
+X-Gm-Message-State: AOAM531i3zDg3nSdxUU0mN/yKQsLFBH+m/Ceg8kmdxvhtHKnnfUg3XP/
+        Dwg+AIZJ+3NkfdNLSWz4asd3DRQiWTleLeWxk9ZsS5x25ogNBw==
+X-Google-Smtp-Source: ABdhPJyv8eYxvsawpVw0jeCSMvMnujpQ7XwVA5W1XIDFLBHmG8xy9I7hFIujFM/LKoEoRPGrdfw4on1oOf4mzkH6r8Y=
+X-Received: by 2002:a19:5e0b:: with SMTP id s11mr545101lfb.502.1604567395983;
+ Thu, 05 Nov 2020 01:09:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104103938.1286-1-nsaenzjulienne@suse.de> <20201104103938.1286-4-nsaenzjulienne@suse.de>
-In-Reply-To: <20201104103938.1286-4-nsaenzjulienne@suse.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 5 Nov 2020 10:08:56 +0100
-Message-ID: <CAMpxmJWv3nfD2xpS4jEq+vJvr=+cD7BV3AFDnsRjCG5qB60c-A@mail.gmail.com>
-Subject: Re: [PATCH v3 03/11] gpio: raspberrypi-exp: Release firmware handle
- on unbind
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
-        Linux Input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201014104638.84043-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 5 Nov 2020 10:09:45 +0100
+Message-ID: <CACRpkdb_zWU0a3th4XAiZn65iO=8mAt6mpAEOjz-q32kYKpLZQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: intel: Fix 2 kOhm bias which is 833 Ohm
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jamie McClymont <jamie@kwiius.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 11:39 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Use devm_rpi_firmware_get() so as to make sure we release RPi's firmware
-> interface when unbinding the device.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->
-> ---
->
-> Changes since v2:
->  - Use devm_rpi_firmware_get(), instead of remove function
->
->  drivers/gpio/gpio-raspberrypi-exp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-raspberrypi-exp.c b/drivers/gpio/gpio-raspberrypi-exp.c
-> index bb100e0124e6..64a552ecc2ad 100644
-> --- a/drivers/gpio/gpio-raspberrypi-exp.c
-> +++ b/drivers/gpio/gpio-raspberrypi-exp.c
-> @@ -208,7 +208,7 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
->                 return -ENOENT;
->         }
->
-> -       fw = rpi_firmware_get(fw_node);
-> +       fw = devm_rpi_firmware_get(&pdev->dev, fw_node);
->         of_node_put(fw_node);
->         if (!fw)
->                 return -EPROBE_DEFER;
-> --
-> 2.29.1
->
+On Wed, Oct 14, 2020 at 12:46 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 2 kOhm bias was never an option in Intel GPIO hardware, the available
+> matrix is:
+>
+>         000     none
+>         001     1 kOhm (if available)
+>         010     5 kOhm
+>         100     20 kOhm
+>
+> As easy to get the 3 resistors are gated separately and according to
+> parallel circuits calculations we may get combinations of the above where
+> the result is always strictly less than minimal resistance. Hence,
+> additional values can be:
+>
+>         011     ~833.3 Ohm
+>         101     ~952.4 Ohm
+>         110     ~4 kOhm
+>         111     ~800 Ohm
+>
+> That said, convert TERM definitions to be the bit masks to reflect the above.
+>
+> While at it, enable the same setting for pull down case.
+>
+> Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
+> Cc: Jamie McClymont <jamie@kwiius.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Good research!
+
+I expect this as part of a pull request for fixes or devel.
+
+Yours,
+Linus Walleij
