@@ -2,138 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A5BF2A7818
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 08:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F382A7860
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 08:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgKEHie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 02:38:34 -0500
-Received: from z5.mailgun.us ([104.130.96.5]:38052 "EHLO z5.mailgun.us"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725287AbgKEHie (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 5 Nov 2020 02:38:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1604561913; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jrJcmf3UQJ0AFxNzksWVPLzLFiGbLtv+PPF03P26Zy0=; b=LD4v+qBjpwJcgMLi6hbGF+v40zuKADb6sls29Y2UchPZIHJimkvu91mO2+QLBW3m/rDJODFc
- E9VbKAbU68Yv2Y9Xbkw3qZlRboQKMWAApZvy+OpC9Fkssu+Hs8KeJdymDd8S++8J1xbtZLl1
- +xelLtLiEWzMc+HOoEj8llIJfew=
-X-Mailgun-Sending-Ip: 104.130.96.5
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5fa3abec5a326dd91f1aeb24 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 05 Nov 2020 07:38:20
- GMT
-Sender: mkshah=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5F42FC433CB; Thu,  5 Nov 2020 07:38:20 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E082DC433C8;
-        Thu,  5 Nov 2020 07:38:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E082DC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, dianders@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, mka@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH] pinctrl: qcom: Move clearing pending IRQ to .irq_request_resources callback
-Date:   Thu,  5 Nov 2020 13:08:04 +0530
-Message-Id: <1604561884-10166-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S1726849AbgKEH5G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 02:57:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgKEH5G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 02:57:06 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD673C0613D3
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Nov 2020 23:57:05 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id 126so928004lfi.8
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Nov 2020 23:57:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=308hJZzaUbmvdeU54RQUNo8pQhYrFfiuEQmHsqSUMhs=;
+        b=lHHA3F+j6jJOXITRA7KesznGB7VEYOeoHiKIVjdrK4MaiIGlwgL2s7HfGM8t4YmjAR
+         IPscvhLw0bGvf/bJsGGSTXhbgpylfVvl/VBvMeJdKgrxldgmVewtHHDy02H9yXZVW1Hk
+         rXXnrqM3Zghn9J4fm+sbZoPTK+dgekCFpQ7qvEP+FEB+TPTRSUSSJ3FTANRbHzNETr8Z
+         sJ1sZzjJXx9NUlfQi/srVNhvIpUwqmE3KwYMo6A1z1u1ma8fsH2VvXS/ge8Ff2nTJHVL
+         9k72VfLBM1NFV2qbicOskSJkcA62twAmVJoT4jWy5ggDaiMZwmqkZg79cOAXgvpBu0kz
+         Bvpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=308hJZzaUbmvdeU54RQUNo8pQhYrFfiuEQmHsqSUMhs=;
+        b=mOzYD9TB9+E5WnZh160c3k68fZr66npjT+4BjHa/6aS4FaUsFG4U93Afgu+lZP0XK6
+         UM+7DLAfIsjW+/aSoT0k8kjiIVYuyCvk91LjajHDOSrMhKIFvCrPaJv3X+tkn+MO6boI
+         6woGkvf+fqt6ytkavweSTLzYTTKF8U2w9N1vKg1pGaN2pMAeGYwhwjmYo3ZbaOEhttF8
+         hwVO0Fim3wldTiPm5UH7snyLsoZg+ykkxv1yf7hPj5Doo1FnZD9KKL5ODk6O8tFiQK1f
+         N4yJwdKYhM4MaGujsAYY5xTrY79UWRqhXBWRUItE1I8CEVAlqEDDkCm8pYCP954gdCq0
+         aw/A==
+X-Gm-Message-State: AOAM5303T99xXjFz0O+Y7jAtrwcyWXzGEhHcC1ErqWQJTlrTEjf47AIO
+        gDxv6XVHel4DpXdhdJPV9i8wXem/jqyJdEDP2r2UZw==
+X-Google-Smtp-Source: ABdhPJx16ZrBT1WG+PwPGLY85+LISLAnsGCJv8llI9La0Ohi7AJGnXDejqIaHXt2hwlZrKqx2cBKbJdNwXec7/1JTZ0=
+X-Received: by 2002:a05:6512:322d:: with SMTP id f13mr452676lfe.571.1604563024053;
+ Wed, 04 Nov 2020 23:57:04 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1601164493.git.mirq-linux@rere.qmqm.pl> <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <e3a3979657babf716e5f4072e373637ce86ad7ff.1601164493.git.mirq-linux@rere.qmqm.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 5 Nov 2020 08:56:53 +0100
+Message-ID: <CACRpkdb=XisqsuGSftKo4GbRm37av3GFCJUhcD9sH369czc=Cg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: tps65910: use regmap accessors
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When GPIOs that are routed to PDC are used as output they can still latch
-the IRQ pending at GIC. As a result the spurious IRQ was handled when the
-client driver change the direction to input to starts using it as IRQ.
+On Sun, Sep 27, 2020 at 1:59 AM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
+qmqm.pl> wrote:
 
-Currently such erroneous latched IRQ are cleared with .irq_enable callback
-however if the driver continue to use GPIO as interrupt and invokes
-disable_irq() followed by enable_irq() then everytime during enable_irq()
-previously latched interrupt gets cleared.
+> Use regmap accessors directly for register manipulation - removing one
+> layer of abstraction.
+>
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
 
-This can make edge IRQs not seen after enable_irq() if they had arrived
-after the driver has invoked disable_irq() and were pending at GIC.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Move clearing erroneous IRQ to .irq_request_resources callback as this is
-the place where GPIO direction is changed as input and its locked as IRQ.
-
-While at this add a missing check to invoke msm_gpio_irq_clear_unmask()
-from .irq_enable callback only when GPIO is not routed to PDC.
-
-Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index c4bcda9..77a25bd 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -815,21 +815,14 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
- 
- static void msm_gpio_irq_enable(struct irq_data *d)
- {
--	/*
--	 * Clear the interrupt that may be pending before we enable
--	 * the line.
--	 * This is especially a problem with the GPIOs routed to the
--	 * PDC. These GPIOs are direct-connect interrupts to the GIC.
--	 * Disabling the interrupt line at the PDC does not prevent
--	 * the interrupt from being latched at the GIC. The state at
--	 * GIC needs to be cleared before enabling.
--	 */
--	if (d->parent_data) {
--		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+
-+	if (d->parent_data)
- 		irq_chip_enable_parent(d);
--	}
- 
--	msm_gpio_irq_clear_unmask(d, true);
-+	if (!test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+		msm_gpio_irq_clear_unmask(d, true);
- }
- 
- static void msm_gpio_irq_disable(struct irq_data *d)
-@@ -1104,6 +1097,19 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
- 		ret = -EINVAL;
- 		goto out;
- 	}
-+
-+	/*
-+	 * Clear the interrupt that may be pending before we enable
-+	 * the line.
-+	 * This is especially a problem with the GPIOs routed to the
-+	 * PDC. These GPIOs are direct-connect interrupts to the GIC.
-+	 * Disabling the interrupt line at the PDC does not prevent
-+	 * the interrupt from being latched at the GIC. The state at
-+	 * GIC needs to be cleared before enabling.
-+	 */
-+	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
-+
- 	return 0;
- out:
- 	module_put(gc->owner);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Yours,
+Linus Walleij
