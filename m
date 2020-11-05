@@ -2,114 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE512A821D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 16:23:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C3922A8255
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 16:38:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbgKEPXH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 10:23:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        id S1730854AbgKEPi1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 10:38:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730660AbgKEPXG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 10:23:06 -0500
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BED1C0613D3
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 07:23:06 -0800 (PST)
-Received: by mail-qk1-x743.google.com with SMTP id y197so1472429qkb.7
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 07:23:06 -0800 (PST)
+        with ESMTP id S1730977AbgKEPi1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 10:38:27 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B81C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 07:38:26 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id k9so1523095qki.6
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 07:38:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1SxuLZqP7expcmyIeWKucvYuGkstgspzMuDDrhMmksY=;
-        b=QgkcEaYbFwTbauWuAVLqGTRxvWi76twgcpDbNcMEkx8DmTQPUhNPmJTCJnGwcitJZ+
-         EcvTydCY9JAEc0P8ZsX8G4IO4KlR5W//1ksdtn7VPaN0RNh3NYcVSnEaXXQgJb94Wwij
-         RtwwcVVTXOiXvAtpie6fdSsuT/TNr9UEs2EOs=
+        bh=oe4W/9IIStX5PS7df8SEBHKooPDTXbwCBDTfcyxclaE=;
+        b=ibKi6Xco8MbXn0RJgBL8wrtu+4b1FSUNJKWqyMWfWNim4CmEOYuxl+56dpkCSXEp1F
+         EKWCuq3aDu78RxAcJc5idAsuNU14Dpg2ZljVY1dm4WShBh7QxwRZAF9efcnsuNUTJlqm
+         IbJOUdV5Td1YLwBQcBjIMGxJxu4n9gwVJgVYU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1SxuLZqP7expcmyIeWKucvYuGkstgspzMuDDrhMmksY=;
-        b=X91hxtz1RtbVkj6Hj2vFSZrQDiLj2fxSypRgt3e5bK7CcjC7Su7qerTXp/Nu1AGTBh
-         +aQZ6yePE25e81d+uiSyBh3xQzOsWVsxAexKZcjDBoud+dTHZwR1X1F9RigofYQ5aaan
-         tix6BOqn+YC90flrrZCIpojnmGp++ZEDe67qufTuVLu11Dui8m0jHw8F3nyUPfqpAPb2
-         yRruCkj5pf9u1zdFDUqCNnpFhz05T5ae72IrNJnL0VXZsC5qUWct5frZzzasaYMnL71y
-         R7XUjlMaom7u6qCrIMvKSCV7ydJ4E86RGwLCJu3AM1ZgV4h6wfqsqxYjXBJQr9loBamt
-         WZhQ==
-X-Gm-Message-State: AOAM533FgIq+fJrDrPmneia7FaUecAdCBUv8ky/GQ7MPBHMJ7xwTZzSe
-        3hgqPRx1I/jlx7+wVQaFxHTVgGDHvpvOteCiVnJFTVInR4M=
-X-Google-Smtp-Source: ABdhPJxR5v810eCnN+xy4FPc5ORemteS4sufWGdQhxFtZCEDINdix51Ym1Hs+vbSKWGg17A+984EwIkolOj+XlVlAug=
-X-Received: by 2002:a37:7687:: with SMTP id r129mr1781089qkc.54.1604589785561;
- Thu, 05 Nov 2020 07:23:05 -0800 (PST)
+        bh=oe4W/9IIStX5PS7df8SEBHKooPDTXbwCBDTfcyxclaE=;
+        b=T3+MuLne7E2+8YXoKHSjAcPSQcU1oaBtweEKjauSwaR0nL0oA+z9PnvaMyvMsGseGE
+         1AnpkIw/3bqtfq7gbUBxKQJicegzhudynRIr86MGbGVVUmAu1KDccl7+By8vpITynJAa
+         oWU8I5/w0SJmla4kZzjXovgxJUgR+BDhdNfbXUPidPXUf4McDWM+IZcNC0OaqdErBI4I
+         sZzgviB/J8JWnjiRNIZNXfc639s5ddrsWwuXfD4sgk/r89v6E931cIPj3DQgPULsyVFx
+         anY/ggVFTHamtlAn/jjDHKj4ibx0Uyf7JFar7zKpMfQ9EUjVh3Do82/d/tbpPIMkWYQP
+         x4Jg==
+X-Gm-Message-State: AOAM531B8u4ZvU/ZjZAPlBwSf9eYEYiAIARm4EIQAMrBklW477+WDrM8
+        FgpoKZ+SJXvw/f0W8+inKSn9uzHZ3l7VTZuIb+7HBg==
+X-Google-Smtp-Source: ABdhPJxqzr8GwXgp1slRIIYdEd3E4yBt6kDC1cbU1KcQVJm5YduAh2GloUcUEP6vdSccYfzmfa2M85AqTpiEECH58R8=
+X-Received: by 2002:a05:620a:1024:: with SMTP id a4mr2677116qkk.390.1604590706076;
+ Thu, 05 Nov 2020 07:38:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20201019141008.871177-1-daniel@0x0f.com> <20201019141008.871177-4-daniel@0x0f.com>
- <CACRpkdZNr6sDqJhg3KcX0bCbcd8fh2gXFYbS1r2H2Sq+vGqjUw@mail.gmail.com> <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org>
-In-Reply-To: <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org>
+References: <20201011024831.3868571-1-daniel@0x0f.com> <20201011024831.3868571-4-daniel@0x0f.com>
+ <CACRpkdYmdZ81q_tsXRQ56aFjGsvV3AwJ8_hiu31mD14DGiK84A@mail.gmail.com>
+ <CAFr9PXnX7QyM0VUmosFYueSe4ewA7uT2VZMfxFPaFt6-jUhoSw@mail.gmail.com>
+ <CACRpkdbx+T3uX9taZNjsURHGc6qVLvGGC2boEC4=NaOi4_uZTQ@mail.gmail.com>
+ <20201105093107.GB21245@1wt.eu> <CACRpkdbCB_n_jNJ+wqWWMKHG80du3kqya0vdOu41Cb4vdvOtyg@mail.gmail.com>
+In-Reply-To: <CACRpkdbCB_n_jNJ+wqWWMKHG80du3kqya0vdOu41Cb4vdvOtyg@mail.gmail.com>
 From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Fri, 6 Nov 2020 00:23:52 +0900
-Message-ID: <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 6 Nov 2020 00:39:13 +0900
+Message-ID: <CAFr9PXkZYL0arngaeLcKSjVum2d3ewDL8M66PfPdC5pXAtbuPQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] gpio: msc313: MStar MSC313 GPIO driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Willy Tarreau <w@1wt.eu>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+Hi Linus,
 
-On Thu, 5 Nov 2020 at 21:08, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-11-05 09:40, Linus Walleij wrote:
-> > On Mon, Oct 19, 2020 at 4:10 PM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> [...]
->
-> >> +/* The parent interrupt controller needs the GIC interrupt type set
-> >> to GIC_SPI
-> >> + * so we need to provide the fwspec. Essentially
-> >> gpiochip_populate_parent_fwspec_twocell
-> >> + * that puts GIC_SPI into the first cell.
-> >> + */
->
-> nit: comment style.
+Thanks for all of the comments.
 
-I've fixed these and some other bits for the v3.
-I've held off on pushing that until the rest of it seemed right.
-
-> >> +static void *msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
-> >> +                                            unsigned int
-> >> parent_hwirq,
-> >> +                                            unsigned int parent_type)
-> >> +{
-> >> +       struct irq_fwspec *fwspec;
-> >> +
-> >> +       fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
-> >> +       if (!fwspec)
-> >> +               return NULL;
-> >> +
-> >> +       fwspec->fwnode = gc->irq.parent_domain->fwnode;
-> >> +       fwspec->param_count = 3;
-> >> +       fwspec->param[0] = GIC_SPI;
-> >> +       fwspec->param[1] = parent_hwirq;
-> >> +       fwspec->param[2] = parent_type;
-> >> +
-> >> +       return fwspec;
-> >> +}
+On Thu, 5 Nov 2020 at 18:42, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Thu, Nov 5, 2020 at 10:31 AM Willy Tarreau <w@1wt.eu> wrote:
+> > On Thu, Nov 05, 2020 at 10:21:27AM +0100, Linus Walleij wrote:
+>
+> > > If your SoC is only used by OpenWrt (like ixp4xx) then it is fine
+> > > to just use bool because that distribution is always built with an
+> > > image for a specific hardware, whereas distributions are generic.
 > >
-> > Clever. Looping in Marc Z so he can say if this looks allright to him.
+.. snip ..
+>> It's unlikely that we'll see very
+> > generic distros there given the limited storage you'd typically have
+> > in an SPI NOR (16-32 MB) and the small RAM (64MB) which tends to
+> > discourage anyone from booting a regular distro over other storage
+> > anyway.
+> >
+> > Thus my guess is that most users will keep building their own kernels.
+> >
+> > But this just emphasizes your points :-)
 >
-> Yup, this looks correct. However, looking at the bit of the patch that
-> isn't quoted here, I see that msc313_gpio_irqchip doesn't have a
-> .irq_set_affinity callback. Is this system UP only?
+> I think that is a good argument to keep this as bool.
 
-What is in mainline right now is UP only but there are chips with a
-second cortex A7 that I have working in my tree.
-So I will add that in for v3 if I can work out what I should actually
-do there. :)
+Thanks. I did change it to a tristate for v3 but I'll change it back.
+
+Just a heads up:
+There is another GPIO driver for this chip (same functionality,
+totally different register layout for no reason) that'll look pretty
+similar to this that'll follow soon.
+It might be similar enough that people confuse the two series as the same thing.
 
 Thanks,
 
