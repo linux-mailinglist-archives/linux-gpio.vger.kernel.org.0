@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5254C2A7B04
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5484E2A7B0E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Nov 2020 10:54:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbgKEJw4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 04:52:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
+        id S1725827AbgKEJyV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 04:54:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgKEJw4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:52:56 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467AAC0613CF
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:52:54 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id v19so913088lji.5
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:52:54 -0800 (PST)
+        with ESMTP id S1725308AbgKEJyU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 04:54:20 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAB7C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 01:54:18 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id v144so1353910lfa.13
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 01:54:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7+TxYIIv3+XKkfN40exA1OolXvZmQTS7eH4pZ266X/8=;
-        b=nO9UrRmax30wHrf2cNbf7PxTaCUypntKNicZDA8Y+7qyZ2/bsPVXIXcXIV3zJqHQAx
-         UuSj+Nf//c1+iqhMEp0GQXM/xEpUD3uciPS7D5HSsBO8i48Ook5A+VcB0a7X2QN6Yrpx
-         TNRAOfhI+u8NeUsuX9Fy2WCmsSrGSodAD4p3VUax5nAnZR4+PcgyhBcXmMunSvfwmwjP
-         HthrT/PwUYm5ernY3NT7bY9ZAfdJA1OB0B6TZ5dztKjXf1zHeDrxsoIZIo1Q/U3M15gY
-         0W2L/6b5hBBXKo01InTyaDUDMuN7+KGprF6mLUYUOKw5WwT0ww+jNkikfbBLY7uLpNOH
-         +Mrg==
+        bh=nn46Rfb7E01dgOnZghj9LxIH092CO41d7sQ5WYhFVdQ=;
+        b=jfkCQR9WMVdZiz0I+ac/hxFxAyN2v5LKXGC6V5xrBLsKvH6+4/Yq8SG/WVt26/P76v
+         y/qWzQ6swEXFspWiKAFWGvpIVzXZBmSsV5xM+IYOflpeIhI8GhDQqdLKaPEsh3s+NMXr
+         gzFxhpI8fOIYnpZCvYJBD78tKxkFkrC6/hK7xQXvZQn8/7zCAlOGMKZEdTFZw9z+5wAx
+         NDf2dDOvIP9iN0P84KBM7er3rPl2kHic0NDjSszzrL6qgxzME4w7fuiW9DmTpfJdeVu7
+         0KEZdJ1kZuvfDMtFD49DgJPZcFzk/m85PaTEVKNZLWuTaSVM87wZYc5KhGVDvIEYqNsj
+         wJtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7+TxYIIv3+XKkfN40exA1OolXvZmQTS7eH4pZ266X/8=;
-        b=nReTT5NmsxLD1eAKJ9+Fuoe5q+3NvoXtWZHAnobtvHUtdjOSXKyqYV4o4AWjXG1QsX
-         R37XtANpP8qp0sIyswlu1E0TCf6uFuYuUfergNI65ZQZY4aLQ0iqBhqoZb31Keoi/jNj
-         Hov9THRytTm8b8VKqxkrWABBNq2vPB2c6PIxFUi/B8LsV8VZipd0/7ZBTEIqn5/clbLC
-         s5xk9Q9mEU49ijXfMSOJ8h1ZPh/DU9vy+uC/RA8fpuEE9Ke2zUS+pcXETaP42ppMY8U2
-         3qr1GGWB+8tNYrMMHRWRLLmm3A80J4NEfZ/A+s/hFoVVRqDE+y8Q0dVN4Mol7qXX7Wpl
-         0i4Q==
-X-Gm-Message-State: AOAM533pcVHUQiGmV5a6vGQtR47fSyUbR7UutNHAL+N1vqmWwFYHNLxP
-        z64yI5otnTGS26I+xxGJXkyBIRpDqDg7uct0x9tMuDSURZApfA==
-X-Google-Smtp-Source: ABdhPJyld8rWHfsJdEsNav4GDmAxi3+b7TTt42kQPme4xBfa7WOQGbXRQ0yyjAzgNOoRhcHUGHuJAQ9qVE4eh6NDIMc=
-X-Received: by 2002:a2e:8905:: with SMTP id d5mr570231lji.144.1604569972777;
- Thu, 05 Nov 2020 01:52:52 -0800 (PST)
+        bh=nn46Rfb7E01dgOnZghj9LxIH092CO41d7sQ5WYhFVdQ=;
+        b=J0z51w4cespwLb+bCF342qhUBJI7xLWNoE9R6TnI6OxT8vsNVuM3lmJ1yj+xitl0bw
+         hnb0yPrrHA0QdNSlczC+L7S6HV6TwxUO/zxSsKTnZR1FXiVeSsnajV5+wEJfYgUpnRZ9
+         A5pwBD6SKvzpT3mRYiM0BQST7LYaPpun8R7fB0DO3eIk6PDK4xEv2QlW0MKlf/xvQXSH
+         axeWRAASvZyEqxarfR8GDPfgX5uZjZHbgb7D8LfM4+y94TbeeQkkvPjB1/dLpgLFuue4
+         i8TqKhFT8OVWT9CKSPixqhwyYdZuWX62kNOaSozSnoY+QtgOa1EP+6yAedkfY8YFpL7z
+         RTXQ==
+X-Gm-Message-State: AOAM533AUjlr8NbNrk64/OcVyEcx/pAvU+7UZkkXO0jSfkfeevNnkYus
+        8G7uO1yapUIBxBb5I45G+w43vwnFeOzGOkvYMhMItQ==
+X-Google-Smtp-Source: ABdhPJxH8fkyaJj843nvQE3/sKrUAkmTYiCfA/u1a8EZfY5GBIYnjGtqplVsXyUn1piJHUgSLwE9JOWll1WCZT7M0Bk=
+X-Received: by 2002:a19:7b06:: with SMTP id w6mr714172lfc.260.1604570056828;
+ Thu, 05 Nov 2020 01:54:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20201028151637.1734130-1-geert+renesas@glider.be> <20201028151637.1734130-4-geert+renesas@glider.be>
-In-Reply-To: <20201028151637.1734130-4-geert+renesas@glider.be>
+References: <20201028151637.1734130-1-geert+renesas@glider.be>
+In-Reply-To: <20201028151637.1734130-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 10:52:42 +0100
-Message-ID: <CACRpkdYVT0KL4+KdE0QP7UEKCrAUOOS0aAXV7xfY_28DtpvokA@mail.gmail.com>
-Subject: Re: [PATCH 3/8] pinctrl: renesas: Reorder struct sh_pfc_pin to remove hole
+Date:   Thu, 5 Nov 2020 10:54:06 +0100
+Message-ID: <CACRpkdYC3PXex0CBGfLC7Hdj6a9J=Vb-P9Cay-p4G8B5_VSUwg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] pinctrl: renesas: Cleanups and improvements
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Ulrich Hecht <uli+renesas@fpond.eu>,
@@ -64,54 +64,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Oct 28, 2020 at 4:16 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> On arm64, pointer size and alignment is 64-bit, hence a 4-byte hole is
-> present in between the enum_id and name members of the sh_pfc_pin
-> structure.  Get rid of this hole by sorting the structure's members by
-> decreasing size.
+> This patch series contains several cleanups and improvements for the
+> Renesas pin control drivers.
 >
-> This saves up to 1.5 KiB per enabled SoC, and reduces the size of a
-> kernel including support for all R-Car Gen3 SoCs by more than 10 KiB.
->
-> This has no size impact on SH and arm32.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/pinctrl/renesas/sh_pfc.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
-> index eff1bb872325ef3a..3b390dffacb4910d 100644
-> --- a/drivers/pinctrl/renesas/sh_pfc.h
-> +++ b/drivers/pinctrl/renesas/sh_pfc.h
-> @@ -34,10 +34,10 @@ enum {
->  #define SH_PFC_PIN_CFG_NO_GPIO         (1 << 31)
->
->  struct sh_pfc_pin {
-> -       u16 pin;
-> -       u16 enum_id;
->         const char *name;
->         unsigned int configs;
-> +       u16 pin;
-> +       u16 enum_id;
->  };
+> I plan to queue these in renesas-pinctrl for v5.11.
 
-Hehehe :D
-
-The compiler people have something that is called "premature optimization"
-which is when you try to outsmart the compiler.
-
-So since you have metrics on this you have obviously outsmarted the
-ARM64 compiler (I guess GCC).
-
-What I'm thinking is that some compiler person should look at this
-and say that "yeah sometimes you have to do that". In this case
-I suppose the compiler really isn't allowed to reshuffle struct members
-in memory since there is plenty of code that relies on them being
-laid out strictly in the order they are defined into the struct. So this
-is really necessary.
-
-Second I think it warrants a comment in the code to be careful with
-aligning structs on 64bit boundaries?
+Looks good to me, just some generic talk around the optimization.
+I saw Biju also sent some interesting optimization patches.
 
 Yours,
 Linus Walleij
