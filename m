@@ -2,111 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FAD32A9614
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 13:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E36F2A9717
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 14:40:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgKFMR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Nov 2020 07:17:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727216AbgKFMR2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 6 Nov 2020 07:17:28 -0500
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A44B20715;
-        Fri,  6 Nov 2020 12:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604665047;
-        bh=bZKxLN7RY3HhlK+0rxvWdPBgq3Fle0UPqj94HYU3RGU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1GY4xHL0sRl9FfS2prnzEVLTSNnG1Fmgmn+DetygieeuVuprMQwjik3X3Ru80NdT3
-         5E6f7OTD2CVxNRXkvyvk3UZxWJ2hSmnesQagdM+aTg12kC80rvk9bngqc6L68nQFlC
-         70cc6fJyWsmHpIriPBj1XRz5yfyqu5+Pu+0oIp2E=
-Date:   Fri, 6 Nov 2020 12:17:15 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        David Laight <David.Laight@aculab.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [RFT PATCH v2 7/8] gpio: exar: switch to using regmap
-Message-ID: <20201106121715.GA49612@sirena.org.uk>
-References: <20201104193051.32236-1-brgl@bgdev.pl>
- <20201104193051.32236-8-brgl@bgdev.pl>
- <20201105174057.GG4856@sirena.org.uk>
- <CAMRc=Mffr4pn+mnuO6WVP9p3JT-G_t8buJBZMBBRFjQDsfLeuw@mail.gmail.com>
+        id S1727214AbgKFNkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Nov 2020 08:40:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbgKFNkn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Nov 2020 08:40:43 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F7EC0613D3
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Nov 2020 05:40:42 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id 126so1961269lfi.8
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Nov 2020 05:40:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JfCJQ0jO5eraFDJbfYizUOVGWnEdmH9dyGuSSJLkvIw=;
+        b=W9caSxE1LFwmaV36thpbhx25S8CmHaMDJztjs2sJYmrOs3KwLI8SmDCv/KzE1u8Kp1
+         0J7/gWiX8hSRB7kFATEZR6NZS05ooJj3LxmWxh5FMqoF1IfZrnJfeq8GNvYUivZtD3he
+         oZVCrBqwPhpB5NeWR9YZqcmtu+71j/NYe5UZW+8Mt2MEXlddTWqFdGdH/eQmrFczPHxJ
+         FWuMhj2cD744AvRU7RDD1xhDM4jhs+OVwZhwnR2qvtDIIp6DSkGJ8I1l0fEWYfti7t2B
+         tOKxCTQCnAZa/XYxdl1+oRSk/P057E0JWqYJG86FgoWxzygd6R8CKuAPgFfLCtpRvEOE
+         Nonw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JfCJQ0jO5eraFDJbfYizUOVGWnEdmH9dyGuSSJLkvIw=;
+        b=rI4A5SA/+9836G4xT21Q4ltVhxzfpYV8CooAaERsS60pXfpO9zgPGUdQSnj6+m/SdL
+         rLFI9WZd5IXo0iHGqK6bPeOt4sLUWYCnYbs3Y4n9WIzSdmkbqMnScGMsjqYx4LnM4QMn
+         Gnru5SK5RXhwhZY9at7MM44u4Bbagyab0FBWbx0QMmFyaZbASYplPcdpv1ny+yUxevLj
+         CVUg5uZnLlxIGBn/+YaLWoW31pQxxYKH8a8oR09G6nlQyl4e5nEq87OACnL6wnzfCqW8
+         vxCtsp+VkXLilJs+yRxm1xO9bMkekJz4QJ/JaPy4Bcu9cXnqYXkQ43AWF0TQKirvP7tM
+         NC6w==
+X-Gm-Message-State: AOAM533dDlzNwM2G7K/7YLaBrceGZpO7I1nGqPpevkgyDxnGsTlhv1IZ
+        +UJtVeWNcOkVfTBxqdWasMVvOA68jrpD18teJlD5EWj+mqBZjw==
+X-Google-Smtp-Source: ABdhPJwZytu/TucMs/LzjMgrHms4raPSqPz486Urbgq99iCqReLz35olpz8fmr6pdMYLedtRThpCSPblGeiM1QLNkGQ=
+X-Received: by 2002:a05:6512:3225:: with SMTP id f5mr871293lfe.441.1604670040988;
+ Fri, 06 Nov 2020 05:40:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mffr4pn+mnuO6WVP9p3JT-G_t8buJBZMBBRFjQDsfLeuw@mail.gmail.com>
-X-Cookie: When does later become never?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20201016204019.2606-1-linux@fw-web.de> <20201016204019.2606-4-linux@fw-web.de>
+In-Reply-To: <20201016204019.2606-4-linux@fw-web.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 6 Nov 2020 14:40:30 +0100
+Message-ID: <CACRpkdbjp87VH0Jq8SCtcMs1xaaKy3P+DPzMN8J=cuDad-YSvw@mail.gmail.com>
+Subject: Re: [RFC 3/3] pinctl: mt7622: drop pwm ch7 as mt7622 only has 6 channels
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Oct 16, 2020 at 10:40 PM Frank Wunderlich <linux@fw-web.de> wrote:
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Frank Wunderlich <frank-w@public-files.de>
+>
+> mt7622 is reported by mediatek to have only 6 pwm channels
+> so drop pindefines for 7th channel
+>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-On Fri, Nov 06, 2020 at 12:13:55PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Nov 5, 2020 at 6:41 PM Mark Brown <broonie@kernel.org> wrote:
+This patch (3/3) applied to the pinctrl tree.
 
-> > AFAICT (and indeed now I dig around assign_bit() only works on a single
-> > bit and does both shifts which makes the correspondance with that
-> > interface super unclear, we're not mirroring that interface here).  If
-> > you're trying to clone the bitops function it should probably be an
-> > actual clone of the bitops function not something different, that would
-> > be clearer and it'd be easier to understand why someone would want the
-> > API in the first place.  But perhaps I'm missing something here?
+Please apply 1-2 to the ARM SoC tree.
 
-> It's true that bitops set/clear/assign bit macros work on single bits
-> and take their offsets as arguments. However all regmap helpers
-> operate on masks. Two release cycles back we added two helpers
-> regmap_set_bits() and regmap_clear_bits() which are just wrappers
-> around regmap_update_bits(). The naming was inspired by bitops
-> (because how would one name these operations differently anyway?) but
-> it was supposed to be able to clear/set multiple bits at once - at
-> least this was my use-case in mtk-star-emac driver I was writing at
-> the time and for which I wrote these helpers.
-
-Which is fine and not at all unclear since there's no separate value
-argument, the value comes along with the name. =20
-
-> Now the regmap_assign_bits() helper is just an extension to these two
-> which allows users to use one line instead of four. I'm not trying to
-> clone bitops - it's just that I don't have a better idea for the
-> naming.
-
-I really don't see the benefit to the helper, it makes sense in the
-context of bitops where the operation does all the shifting and it's
-only a single bit but for regmap where it's dealing with bitmasks as
-well and the naming doesn't make it crystal clear I can only see this
-being confusing to people.  Had the set and clear helpers for regmap
-been done as single bits it'd be a lot easier but that's not the case
-and it'd also be odd to have just this one helper that took a shift
-rather than a bitmask.
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+lPsoACgkQJNaLcl1U
-h9B+RAf/YyKNM+XnHh2JvHiISQaTNYhLlUfYUKDPeMWWQBUJbgGMGrc85OM8pazO
-9MdyCQtmU9N11JcmHWzS+9hbg1sg+8YY5Wvfh6FJSfUqTjGa+MBg9rl0n16US54D
-88kXLCvg6xSf46vewCrD7h2PynyDSQEguK5n0y7qrl/8wa8kT1ftxWwON9fgQho8
-nOz/7AfbIBfibYdq1SjA5DhyuGlidta4Tv1mkd4ouXxZLeHcalP623bZmwmFQ7Yo
-I0Gc11CBg89EkcCofD8At/Q7peLwac8uysTXN9leBHgZyKR6BavrCeuSqlYMd54V
-WuxLfmBxSDPDLQcmfjt6ETauXE7UWQ==
-=78fN
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+Yours,
+Linus Walleij
