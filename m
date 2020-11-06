@@ -2,161 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2589A2A97A8
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 15:32:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 056982A97F6
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 15:55:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgKFOcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Nov 2020 09:32:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        id S1727346AbgKFOzV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Nov 2020 09:55:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbgKFOcB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Nov 2020 09:32:01 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3590CC0613CF
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Nov 2020 06:32:00 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id a15so1493179edy.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Nov 2020 06:32:00 -0800 (PST)
+        with ESMTP id S1726422AbgKFOzV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Nov 2020 09:55:21 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5492C0613CF
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Nov 2020 06:55:20 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id g7so1557281pfc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Nov 2020 06:55:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oB1Imkum9eDeaPIc2hKzTYzV0vCEPBOSK4bPPbyIfFo=;
-        b=MJZxZb9Np7qkyYy2+/tuO+PJ7RD8i5hCMCSDVGIKwTmGEMUp8jBXPxbi+ypenl2uOX
-         qJ+L1g3+lrM0rI9q1py697lLpVRpbpkvaX0ElM8ptuKvrrkiH2JpsDBGnsMgMYG1cxgj
-         rf004YD74RsbNxZw9n64cR/SXbBsAMzl7nmG9y4aWGHYSDiJIASZMOZKw1AJaZ4GgIvq
-         dlNw/F+0nf0rg9hu3C2ImbB6PPdVRLjidafVVXKzFiq/1l+5YdtMlfZc6GuqsDe5Vz4T
-         jjDqLv8LS3Z8+gbHNi8Btm42PrEaRycBGPh5rEGzK7ffR3uGl6alKh5Vqg0qZUM0QFth
-         YvKA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=oMQrTmIOzw84zfWg2rJFLCS2ZOAM/ayc2FHsSfpXaIE=;
+        b=cipGMhvqFAlmy/bKYgO+qY+NMWNn8gNhvuTRtOMV07VFU1Sop7EgsWC9RhVTkgZmhj
+         0Y9uEVTkMn8nVBzDWskiVyRdEEfMw0LVPwdtXCrbIGnmiKpHxcYx1Z2ZdJGzvVL7eskl
+         Br/466uJcuDfRAYnNwscP2ISjbyguH3AAIszA22MToAYX+UeW5J9/ADtsJ8sMKQwrI7H
+         7rwn+ES4wWzzi1Adl1IhceZjW29ErjGjfuraDNHn3tAdYd9MzH2/jpWjxwqdBWWy8XOf
+         bkZ6Tc4kQWodMgAknbrWkY3tQ7wrTgzCGDyDy04tqDRLvzaRez2ciPQJPOnA+XbQNSoQ
+         4Lig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oB1Imkum9eDeaPIc2hKzTYzV0vCEPBOSK4bPPbyIfFo=;
-        b=QdcQ4Ekm8vHBiVcDl8N/asT2wL/9d+p9GK/l4u01Rjb1p6r7xbwSc4IMbYoeUfP7be
-         pZQGqb78ci7qpMs9R4ehK7QP/IBZw8TaIBV1U5TIrmEkpLJm9G9eGSeMnFodPY5/4d8X
-         mleszc851aI0v0pJLyyFN3p8o9ZUKRB4gBrvIN1/P98dfBfLvpdo5GOwcBBEscXtkHHN
-         HIdpy1j1hnF5+jANLgzHkeuQMcID4Tug9RPeXmutA1GnccK0zZuiTFjDOzsZ1eQ+Fj+H
-         4uCrSUiMb7CHu4T0HoaOHO7e8GKlJrWtL+3z8Q4GRJX21BMK0ib2C3Ln9wZzd3lDEl1T
-         VQCw==
-X-Gm-Message-State: AOAM5328NNbifuQFLJJafidgKJlr0u5FnB5HpmqmZ+prtMf+Y4CsjCgZ
-        qDhkCrFgyyCrTytRUXjxuUts0QZA1Fy8rpTm7dU46A==
-X-Google-Smtp-Source: ABdhPJwN3sBPbMXm3I2rAZin69LJ3GQIjqXtM+gIxWu/GLSx5jjjouxHaYHt0BHaZZKKHv3ulQCoB71rLRAWQxWPAZw=
-X-Received: by 2002:a50:ab15:: with SMTP id s21mr2279062edc.88.1604673118970;
- Fri, 06 Nov 2020 06:31:58 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=oMQrTmIOzw84zfWg2rJFLCS2ZOAM/ayc2FHsSfpXaIE=;
+        b=q0NHZLlEf+P0foLfdT/WRppzUUTEV93qUr/hRcwQp4wPrQUzX1Yz0BfnfGdNlvgmoy
+         T1piA7a6o3iBuG7DM/BCFktNe7DeTk/BrVuvNL9i66rUY5USY3gn4vaMOuwG0GmaEF49
+         nMG8R9l+QYlnEPGldkurcdgcsWDCSTU7PB1NEoc+BDWof9BA18yk1b0uQNRcnDpDWDd4
+         bsvw2TfVRVuolRB/8YSA0Mx/VBxZQ2ba7fEyH0NDfgfz/jNoI7AcqeRYMhcx6PZXoCoC
+         ihmVRDmyBGehYDg6xxBxCSVfuwpeH3FP2qFaYWEWzU+cfXfzAN8g4Holn5j/dYegQHx5
+         2IiQ==
+X-Gm-Message-State: AOAM53162eKL6Mt6qbMXtADrkdnzhQRZv5ZBJE2bSD+6Ls4KbGjbRKnY
+        SaB4OxeL5z5OfIJEzDVFznhzSHHCQzpuAg==
+X-Google-Smtp-Source: ABdhPJxns5wi7+H5V7t/uPIgImBP8ROKUgyO3Ims61p1qrz2iBbKRJU32TbU4xZVJhyIlrnlCINH9Q==
+X-Received: by 2002:aa7:8b0b:0:b029:152:900d:2288 with SMTP id f11-20020aa78b0b0000b0290152900d2288mr2344345pfd.53.1604674519986;
+        Fri, 06 Nov 2020 06:55:19 -0800 (PST)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id j184sm2474491pfg.207.2020.11.06.06.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Nov 2020 06:55:19 -0800 (PST)
+Message-ID: <5fa563d7.1c69fb81.8451c.40ac@mx.google.com>
+Date:   Fri, 06 Nov 2020 06:55:19 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20201104170423.23436-1-digetx@gmail.com> <20201104170423.23436-2-digetx@gmail.com>
-In-Reply-To: <20201104170423.23436-2-digetx@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 6 Nov 2020 15:31:48 +0100
-Message-ID: <CAMpxmJVUkXxDkPDKQr98H0uCWJF9zKKzpe9np3McmT3MmeLJ3A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: tegra: Use raw_spinlock
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>, linux-tegra@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+X-Kernelci-Kernel: v5.10-rc1-5-gb9bf97105f4b9
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.10-rc1-5-gb9bf97105f4b9)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 6:04 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> Use raw_spinlock in order to fix spurious messages about invalid context
-> when spinlock debugging is enabled. This happens because there is a legit
-> nested raw_spinlock->spinlock locking usage within IRQ-related code. IRQ
-> core uses raw spinlock and then Tegra GPIO driver uses a nested spinlock.
-> The debug code can't recognize and handle this case, hence we need to use
-> raw spinlock in the GPIO driver.
->
->  [ BUG: Invalid wait context ]
->  ...
->   (dump_stack) from (__lock_acquire)
->   (__lock_acquire) from (lock_acquire)
->   (lock_acquire) from (_raw_spin_lock_irqsave)
->   (_raw_spin_lock_irqsave) from (tegra_gpio_irq_set_type)
->   (tegra_gpio_irq_set_type) from (__irq_set_trigger)
->   (__irq_set_trigger) from (__setup_irq)
->   (__setup_irq) from (request_threaded_irq)
->   (request_threaded_irq) from (devm_request_threaded_irq)
->   (devm_request_threaded_irq) from (elants_i2c_probe)
->   (elants_i2c_probe) from (i2c_device_probe)
->  ...
->
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->
-> Changelog:
->
-> v2: - Only lvl_lock is converted to raw_spinlock. The dbc_lock doesn't
->       relate to IRQ and doesn't need the conversion.
->
->     - Improved commit message by clarifying that IRQ core uses raw
->       spinlock.
->
->     - Added clarifying comment to the code for the lvl_lock.
->
->  drivers/gpio/gpio-tegra.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-> index 98fc78739ebf..e19ebff6018c 100644
-> --- a/drivers/gpio/gpio-tegra.c
-> +++ b/drivers/gpio/gpio-tegra.c
-> @@ -61,8 +61,16 @@ struct tegra_gpio_info;
->  struct tegra_gpio_bank {
->         unsigned int bank;
->         unsigned int irq;
-> -       spinlock_t lvl_lock[4];
-> -       spinlock_t dbc_lock[4]; /* Lock for updating debounce count register */
-> +
-> +       /*
-> +        * IRQ-core code uses raw locking, and thus, nested locking also
-> +        * should be raw in order not to trip spinlock debug warnings.
-> +        */
-> +       raw_spinlock_t lvl_lock[4];
-> +
-> +       /* Lock for updating debounce count register */
-> +       spinlock_t dbc_lock[4];
-> +
->  #ifdef CONFIG_PM_SLEEP
->         u32 cnf[4];
->         u32 out[4];
-> @@ -334,14 +342,14 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->                 return -EINVAL;
->         }
->
-> -       spin_lock_irqsave(&bank->lvl_lock[port], flags);
-> +       raw_spin_lock_irqsave(&bank->lvl_lock[port], flags);
->
->         val = tegra_gpio_readl(tgi, GPIO_INT_LVL(tgi, gpio));
->         val &= ~(GPIO_INT_LVL_MASK << GPIO_BIT(gpio));
->         val |= lvl_type << GPIO_BIT(gpio);
->         tegra_gpio_writel(tgi, val, GPIO_INT_LVL(tgi, gpio));
->
-> -       spin_unlock_irqrestore(&bank->lvl_lock[port], flags);
-> +       raw_spin_unlock_irqrestore(&bank->lvl_lock[port], flags);
->
->         tegra_gpio_mask_write(tgi, GPIO_MSK_OE(tgi, gpio), gpio, 0);
->         tegra_gpio_enable(tgi, gpio);
-> @@ -675,7 +683,7 @@ static int tegra_gpio_probe(struct platform_device *pdev)
->                                                  tegra_gpio_irq_handler, bank);
->
->                 for (j = 0; j < 4; j++) {
-> -                       spin_lock_init(&bank->lvl_lock[j]);
-> +                       raw_spin_lock_init(&bank->lvl_lock[j]);
->                         spin_lock_init(&bank->dbc_lock[j]);
->                 }
->         }
-> --
-> 2.27.0
->
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc1-5-=
+gb9bf97105f4b9)
 
-Patch applied, thanks!
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.10-rc1-5-gb9bf97105f4b9/
 
-Bartosz
+Tree: linusw
+Branch: devel
+Git Describe: v5.10-rc1-5-gb9bf97105f4b9
+Git Commit: b9bf97105f4b9adc32604d24072147b242564fb3
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
+
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #size-cells (1) differs from / (2)
+    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
+dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
+s" property but its #address-cells (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #size-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
+ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
+its #address-cells (1) differs from / (2)
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
+SPI bus
+    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
+spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
+or SPI bus
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
+7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
+operty but its #size-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+address-cells (1) differs from / (2)
+    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
+size-cells (1) differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
+I bus
+    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
+us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
+us
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
