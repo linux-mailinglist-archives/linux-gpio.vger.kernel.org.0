@@ -2,109 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE8C82A979B
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 15:28:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D61EE2A97A6
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 15:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgKFO2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Nov 2020 09:28:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
+        id S1726939AbgKFObd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Nov 2020 09:31:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgKFO2s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Nov 2020 09:28:48 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7FFC0613CF
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Nov 2020 06:28:46 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id e6so1541560wro.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Nov 2020 06:28:46 -0800 (PST)
+        with ESMTP id S1726812AbgKFObc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Nov 2020 09:31:32 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF66C0613D3
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Nov 2020 06:31:32 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id s25so2215908ejy.6
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Nov 2020 06:31:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMg4wfg55kHxvg63ZC3OOdJuQaIKtdTNOJPE3qI5tSE=;
-        b=q2QFPHxqiVtYgVYysBTbspcLCMWCpvCMCQBUrM8B0t2e1nMvsdoAdDZfzcsEhNVNBV
-         1nDmcriReO4nZfKgFLElsMek/c0kg5WZQQV9DwIgPkeb/VXtOIXUqsIIRinuCqYhiOSA
-         gYRto11i3o3JyecafrI6zeKVGXZWBhEyPS/TSsoL2yBDiQP3eXtF+v1WEsafxyXg6WvB
-         xXxQF/eazmd/Rh5EcFAL/mHpAz808/d0DGum6eJTW+zcgt/6/ZJBOSYJmAobCko3ALlp
-         U0GW7ZI+1V7DuGHe1KG+x/ol8QYS4OImoYKPntX3iWD5mwG74oOSZXXHmHidtAIos67Y
-         2Wlw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6jO1JvdLqeiH3264lCYhj7Gy4bF9zHfZntEVAZAvsks=;
+        b=lRfYqwlHmkiO4L+mrhKBCy1RCydVF0Kae5XfTywnCxqgNk+I/3qMeYsauHG0w5FBmR
+         PdLJSqAmuwKnGakZbKzazDkGs1VlbE+/vqA6HTYIU2k+t1L+FGQI2xpCGRFG22V9K7ty
+         2EAtn08MMb4m5QALnbsoSzjHB+I749tCBb0g5c9myKCEaD1RhOh/s4D1Cyr0ji9susAU
+         ngJMq1+Coj95GQkB/QOJ9SazWWSEEM6UwZhyO0M2NR+8BQvul9jGWGp2G4CEn8JEjWrx
+         V8Vn9S0Vsw1B4aw61v8UbFRxXxxB+KxJYZVmEhNjIRWfULykQgGb40pa9SYL2ojantMJ
+         UCfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMg4wfg55kHxvg63ZC3OOdJuQaIKtdTNOJPE3qI5tSE=;
-        b=rlxg4QY162ftg54QU7aW49Qs7rmGPtC2YXAjBdqvDXdat26mkcHq9BWh1Ou2fiYc1o
-         61qQvQotBkzD2La146//fg+1KctXLjvKIc/15+inhgKpPNZnyZNdssyA1W1/8cHpiZAJ
-         J4octl+zmfQ1wG0H4lr5V5DPvQXjHS1HoDFjMR1FfTcGSIuw/MguQEj0JycxiYT64XiC
-         ygzv4jfWxEQZ+t0JHB5hhQAg7jeoHvfxR5xMZRhgVBO/LuLWMDEqbBjumdjFe5T5YbaZ
-         1Ccw6s4PL6Pd6kSQWrrU5Lp/xBlUXNUXflAuHinS2rpg4UcMBR8KmZE/IlSIjEMuqPwY
-         MBTQ==
-X-Gm-Message-State: AOAM531RJUylsF1mUggnTNDdUCvaJ+3TQ/SndKlvAE+HfFo0yen6OmHX
-        UwkEBkzanXvRiXRqkAD2d38dkA==
-X-Google-Smtp-Source: ABdhPJzqP0gfzfrQb3IB7bnm/Dbci2x+ijz3cvMSkpwi7mvAMQmAyOm33RBYK85nBMknDdSJx+vsIw==
-X-Received: by 2002:adf:fa02:: with SMTP id m2mr3050420wrr.324.1604672925560;
-        Fri, 06 Nov 2020 06:28:45 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id x81sm2713390wmg.5.2020.11.06.06.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Nov 2020 06:28:44 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.10-rc3
-Date:   Fri,  6 Nov 2020 15:28:40 +0100
-Message-Id: <20201106142840.29730-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.29.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6jO1JvdLqeiH3264lCYhj7Gy4bF9zHfZntEVAZAvsks=;
+        b=CNERlQrncK03cQ2kD2G8XcE4XqOpHomiGj6yWEWosW/jfQ8VbInCtHBM9g2rux6cv0
+         mfzaPt6YF99+x+Ujpbfdku8vQ7gi8RcIkLAP358R3cSbIq7Vd5eOjAFJSOl1Hf43+GD2
+         38d50egAUFHYFJlzmtSm08swqEJ/s2JSWZsPasPJxHFG9fy/8qeBo7M1rOHFCa3w+GdH
+         Eg/7i/R0uCZGvZY664Y/w+FM/SI7TK58/VrFiq9ZEzCnC4Tt7PbpIXYBs9f1WS9CgGTv
+         9xu1sg2cTQNw+Cwdc5xE/yaGYW9Iop+g3MJ1TS7aCvrE3jd3/dv+tJ0V6QPFx9+6/He8
+         axhQ==
+X-Gm-Message-State: AOAM53051QzP9KWw9BeQkWoPFjESKd0BfS5pyIHKMrws9P7jieF3ZsOT
+        v7edQzet/aITPCMYppaOeyFtTiCzW4lVutD8lT19Wg==
+X-Google-Smtp-Source: ABdhPJxteyN0q/t8Zh7XAfYNQLAzU6gV+MgbSN1UI1ZQ0Y8oOfjDV9opyYXqFQewhFn2CA8VYBwpcKz7ZTds54vTPiY=
+X-Received: by 2002:a17:906:1c83:: with SMTP id g3mr2246116ejh.168.1604673090686;
+ Fri, 06 Nov 2020 06:31:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201104132624.17168-1-digetx@gmail.com>
+In-Reply-To: <20201104132624.17168-1-digetx@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 6 Nov 2020 15:31:20 +0100
+Message-ID: <CAMpxmJWwC-gqVERsUzdNH7jA5jC40fzekkFXJvagDmau1-F9QQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpio: tegra: Add lockdep class
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, Nov 4, 2020 at 2:26 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Add lockdep class in order to fix debug warnings that are coming from a
+> legit nested use of irq_set_irq_wake() by the Tegra GPIO driver.
+>
+>  WARNING: possible recursive locking detected
+>  ...
+>   (irq_set_irq_wake) from (tegra_gpio_irq_set_wake)
+>   (tegra_gpio_irq_set_wake) from (irq_set_irq_wake)
+>   (irq_set_irq_wake) from (brcmf_sdiod_intr_register [brcmfmac])
+>  ...
+>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Reported-by: Peter Geis <pgwipeout@gmail.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/gpio/gpio-tegra.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 86568154cdb3..98fc78739ebf 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -560,6 +560,9 @@ static const struct dev_pm_ops tegra_gpio_pm_ops = {
+>         SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+>  };
+>
+> +static struct lock_class_key gpio_lock_class;
+> +static struct lock_class_key gpio_request_class;
+> +
+>  static int tegra_gpio_probe(struct platform_device *pdev)
+>  {
+>         struct tegra_gpio_info *tgi;
+> @@ -661,6 +664,7 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+>                 bank = &tgi->bank_info[GPIO_BANK(gpio)];
+>
+>                 irq_set_chip_data(irq, bank);
+> +               irq_set_lockdep_class(irq, &gpio_lock_class, &gpio_request_class);
+>                 irq_set_chip_and_handler(irq, &tgi->ic, handle_simple_irq);
+>         }
+>
+> --
+> 2.27.0
+>
 
-Linus,
+Patch applied, thanks!
 
-Please pull the first batch of fixes for this release cycle.
-
-The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
-
-  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.10-rc3
-
-for you to fetch changes up to 10a2f11d3c9e48363c729419e0f0530dea76e4fe:
-
-  gpio: pcie-idio-24: Enable PEX8311 interrupts (2020-11-06 15:19:44 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v5.10-rc3
-
-- fix missing conversion to gpiolib irqchip in gpio-dwapb
-- fix bank properties for ast2600 variant in gpio-aspeed
-- make sysfs work again when the character device is disabled
-- fix interrupt handling in gpio-pcie-idio-24
-
-----------------------------------------------------------------
-Arnaud de Turckheim (3):
-      gpio: pcie-idio-24: Fix irq mask when masking
-      gpio: pcie-idio-24: Fix IRQ Enable Register value
-      gpio: pcie-idio-24: Enable PEX8311 interrupts
-
-Billy Tsai (1):
-      gpio: aspeed: fix ast2600 bank properties
-
-Jia He (1):
-      gpio: dwapb: Fix missing conversion to GPIO-lib-based IRQ-chip
-
-Kent Gibson (1):
-      gpiolib: fix sysfs when cdev is not selected
-
- drivers/gpio/gpio-aspeed.c       |  1 +
- drivers/gpio/gpio-dwapb.c        |  4 +--
- drivers/gpio/gpio-pcie-idio-24.c | 62 ++++++++++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib-cdev.h      | 15 ----------
- drivers/gpio/gpiolib.c           | 18 ++++++++++--
- 5 files changed, 74 insertions(+), 26 deletions(-)
+Bartosz
