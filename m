@@ -2,219 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E752A8D40
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 03:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B256F2A8D44
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Nov 2020 03:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgKFC5L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Nov 2020 21:57:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+        id S1725852AbgKFC6y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Nov 2020 21:58:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgKFC5J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 21:57:09 -0500
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA89C0613D3
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 18:57:08 -0800 (PST)
-Received: by mail-ot1-x341.google.com with SMTP id 79so38619otc.7
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 18:57:08 -0800 (PST)
+        with ESMTP id S1725828AbgKFC6y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Nov 2020 21:58:54 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5A3C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Nov 2020 18:58:54 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id p4so3634plr.1
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Nov 2020 18:58:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aBjGvGWDZWDNyo0wXKsA/2ZZMFYSNHsXKMDpkJKmgg0=;
-        b=zZ+0fRGPq3WO2ejFZUEmCEUBsFlpeNlYkAxZi6GoqqCzeKwBSQeoXJ0aAmF/yswZ8j
-         s5ZIKGe52tJrTY6Jkg2S3uCxV1h2loryLM0M11WQSntPVRC1Zinr3Zlj6ot2t9eVikkQ
-         oYUmS8KVd9Ctm0szZE+uJOX7ALFeHNzMt9O3Y8t8zTX4AusyZA5QT3fF7MQg2yO+iSvV
-         snhVw/TU3UUmEG1Ap7uuHn237gmd1YHuYikDHfLrhuy64y06gA3GHgZs0Jax9XO/wWd3
-         2jjURh5XyPKrTxVKVBSBFOBssJON6hFcgHZ19jXwrsRQmc6AVvsGHowwRH52pdGEiH3/
-         N9cw==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j/IwG69As01vkurELrZjlxWULg4rCN71pSp13igOTSw=;
+        b=T52XGD4jcHFlhP+uETcaw0rLP1WvsLZjzmde/uvRYkqmrtH3+csM7TI0/Rc41bCfZk
+         meaef3wIrDALcLoMbLyoDDRoHcpOnCEqCBtbzewQw/BEJ0uKOOSmOGm4gfHQhT+Z8UgM
+         C5O6MjYFqkO0ce3BrmsaeiMcDlozTpp+O88gqTdt9VuUlcJe5v5XvcmiaTmtzw8/Szii
+         XfVIjf0M4P6+pc6Q8hi1GzixCmx/4tqYEUVyyQGwt+2FH93WEJo8wPhDpF0HaXTS/lvi
+         V8NJlAxSwzWMmDCdIi/BdqMsSCXBw0q/L8jiIyP/a9LU31muy94+r4Wftca/gCHuZoNr
+         aEmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aBjGvGWDZWDNyo0wXKsA/2ZZMFYSNHsXKMDpkJKmgg0=;
-        b=LO0Rx2F+Uj//9SLlue4WwfYZefdZkgD1jrl2xRBECi6IRqUw1Y2rZoXoMi0IU04Gqk
-         XB5+CUN1MyoTpQ74H4BZJN5tVjS9vhRsqPOw10C8QTWfijFp9wGrSh6RVClSiad9QUM/
-         2Ox7mbEWyciyih2UetE+xD0muo3XVkSmLe4jR9Kwy1M59QjBE6jOwJYv8086ML3P6QVE
-         EnOdvlltDgtiHsY9Ctw+YtwGifIHykFON3KevyyPwMiioyOz2zDmrq3H3YuWu76LPlKr
-         orX6wgCEGz/s4rkRaFu1y4LfPuk7wEBJaAjDvKOKpmgjTYLI+uHHG7rQABZMGpTEfw9n
-         a2OQ==
-X-Gm-Message-State: AOAM531uwRmJbBepMpEeFngZK1YPGHuJHgLi4MLc7a/XIV300mrzD+qx
-        O/tOhExyTZryxu72OBjZ45hg3g==
-X-Google-Smtp-Source: ABdhPJxcGSQ9Kri8+3YIvlJn2ZM1KijUrAuZbpqUWzJIJU6KH+C65BAHY6nKyb53S3c3QKPKHxgcOw==
-X-Received: by 2002:a05:6830:232d:: with SMTP id q13mr3755223otg.324.1604631427166;
-        Thu, 05 Nov 2020 18:57:07 -0800 (PST)
-Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id e47sm12546ote.50.2020.11.05.18.57.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j/IwG69As01vkurELrZjlxWULg4rCN71pSp13igOTSw=;
+        b=sqOU8RTnf6BlFjLnC0/zo7PYCekKF7cxnNvleQvOgUs5NO9doirML2b6lw6B2EukFW
+         gE2ymr8vQfslrakNiK4pBJTJ7viZ0mQ4jv58ii1LhHitKovNshD6YLO+uGffTvgZ/LWF
+         XgA2F6Wk9ooYXgpCIvJGlm9tuKi5IT2G9H0tLsTKUo5aL9glWaNVhXtQPEWQFrJ7unP2
+         g1ncm5+gf/dnFPg8EbxiDQa5pqlexWB7CxEBtgm2eQX1DWSVfH/rfifu6bNY6aCZhi+G
+         emnkQmsdnLi0UyipvgYr6lE+lEXpYZ9whamFodEpyDP7b9RZ1mFBqscbSgKfpNRY8jao
+         HPCg==
+X-Gm-Message-State: AOAM53164nmy4S+lJMToWlGQLRhKo+4vL0ByHgOR4+Wme06HlmBiiPOu
+        qGcQSWctIbet3PWi6/W8Q2VGRg==
+X-Google-Smtp-Source: ABdhPJyoYAkt/8qlfuBZLghCFj4//jXpw3xyNocSLEbNZeaxlBGfZhaYfNSnJsqDrZIyrPaxxlWHIQ==
+X-Received: by 2002:a17:902:b203:b029:d2:1fde:d452 with SMTP id t3-20020a170902b203b02900d21fded452mr5110470plr.36.1604631534085;
+        Thu, 05 Nov 2020 18:58:54 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id c11sm3822572pgl.20.2020.11.05.18.58.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 18:57:06 -0800 (PST)
-Date:   Thu, 5 Nov 2020 20:57:03 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Andy Gross <agross@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20201106025703.GC807@yoga>
-References: <20201031003845.41137-1-john.stultz@linaro.org>
- <20201031003845.41137-2-john.stultz@linaro.org>
+        Thu, 05 Nov 2020 18:58:53 -0800 (PST)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     greentime.hu@sifive.com, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@dabbelt.com, paul.walmsley@sifive.com
+Cc:     Yash Shah <yash.shah@sifive.com>
+Subject: [RFC PATCH 1/1] gpio: sifive: To get gpio irq offset from device tree data
+Date:   Fri,  6 Nov 2020 10:58:49 +0800
+Message-Id: <802c8865b70c3bdf70e44d37f14e7767b6495e88.1604631371.git.greentime.hu@sifive.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201031003845.41137-2-john.stultz@linaro.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 30 Oct 19:38 CDT 2020, John Stultz wrote:
+We can get hwirq number of the gpio by its irq_data->hwirq so that we don't
+need to add more macros for different platforms. This patch is tested in
+SiFive Unleashed board and SiFive Unmatched board.
 
-> Allow the qcom_scm driver to be loadable as a permenent module.
-> 
-> This still uses the "depends on QCOM_SCM || !QCOM_SCM" bit to
-> ensure that drivers that call into the qcom_scm driver are
-> also built as modules. While not ideal in some cases its the
-> only safe way I can find to avoid build errors without having
-> those drivers select QCOM_SCM and have to force it on (as
-> QCOM_SCM=n can be valid for those drivers).
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: Maulik Shah <mkshah@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: linux-gpio@vger.kernel.org
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+---
+ drivers/gpio/gpio-sifive.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index c54dd08f2cbf..e8cd8741dbae 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -29,7 +29,6 @@
+ #define SIFIVE_GPIO_OUTPUT_XOR	0x40
+ 
+ #define SIFIVE_GPIO_MAX		32
+-#define SIFIVE_GPIO_IRQ_OFFSET	7
+ 
+ struct sifive_gpio {
+ 	void __iomem		*base;
+@@ -37,7 +36,7 @@ struct sifive_gpio {
+ 	struct regmap		*regs;
+ 	unsigned long		irq_state;
+ 	unsigned int		trigger[SIFIVE_GPIO_MAX];
+-	unsigned int		irq_parent[SIFIVE_GPIO_MAX];
++	unsigned int		irq_number[SIFIVE_GPIO_MAX];
+ };
+ 
+ static void sifive_gpio_set_ie(struct sifive_gpio *chip, unsigned int offset)
+@@ -144,8 +143,10 @@ static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+ 					     unsigned int *parent,
+ 					     unsigned int *parent_type)
+ {
++	struct sifive_gpio *chip = gpiochip_get_data(gc);
++	struct irq_data *d = irq_get_irq_data(chip->irq_number[child]);
++	*parent = d->hwirq;
+ 	*parent_type = IRQ_TYPE_NONE;
+-	*parent = child + SIFIVE_GPIO_IRQ_OFFSET;
+ 	return 0;
+ }
+ 
+@@ -165,7 +166,7 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 	struct irq_domain *parent;
+ 	struct gpio_irq_chip *girq;
+ 	struct sifive_gpio *chip;
+-	int ret, ngpio;
++	int ret, ngpio, i;
+ 
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+@@ -200,6 +201,9 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	for (i = 0; i < ngpio; i++)
++		chip->irq_number[i] = irq_of_parse_and_map(node, i);
++
+ 	ret = bgpio_init(&chip->gc, dev, 4,
+ 			 chip->base + SIFIVE_GPIO_INPUT_VAL,
+ 			 chip->base + SIFIVE_GPIO_OUTPUT_VAL,
+-- 
+2.29.2
 
-Regards,
-Bjorn
-
-> ---
-> v3:
-> * Fix __arm_smccc_smc build issue reported by
->   kernel test robot <lkp@intel.com>
-> v4:
-> * Add "depends on QCOM_SCM || !QCOM_SCM" bit to ath10k
->   config that requires it.
-> v5:
-> * Fix QCOM_QCM typo in Kconfig, it should be QCOM_SCM
-> ---
->  drivers/firmware/Kconfig                | 4 ++--
->  drivers/firmware/Makefile               | 3 ++-
->  drivers/firmware/qcom_scm.c             | 4 ++++
->  drivers/iommu/Kconfig                   | 2 ++
->  drivers/net/wireless/ath/ath10k/Kconfig | 1 +
->  5 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 3315e3c215864..5e369928bc567 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -235,8 +235,8 @@ config INTEL_STRATIX10_RSU
->  	  Say Y here if you want Intel RSU support.
->  
->  config QCOM_SCM
-> -	bool
-> -	depends on ARM || ARM64
-> +	tristate "Qcom SCM driver"
-> +	depends on (ARM && HAVE_ARM_SMCCC) || ARM64
->  	select RESET_CONTROLLER
->  
->  config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 5e013b6a3692e..523173cbff335 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -17,7 +17,8 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
->  obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
->  obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
->  obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
-> -obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
-> +obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
-> +qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
->  obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
->  obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
->  obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 7be48c1bec96d..6f431b73e617d 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -1280,6 +1280,7 @@ static const struct of_device_id qcom_scm_dt_match[] = {
->  	{ .compatible = "qcom,scm" },
->  	{}
->  };
-> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
->  
->  static struct platform_driver qcom_scm_driver = {
->  	.driver = {
-> @@ -1295,3 +1296,6 @@ static int __init qcom_scm_init(void)
->  	return platform_driver_register(&qcom_scm_driver);
->  }
->  subsys_initcall(qcom_scm_init);
-> +
-> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. SCM driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 04878caf6da49..c64d7a2b65134 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -248,6 +248,7 @@ config SPAPR_TCE_IOMMU
->  config ARM_SMMU
->  	tristate "ARM Ltd. System MMU (SMMU) Support"
->  	depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> +	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU if ARM
-> @@ -375,6 +376,7 @@ config QCOM_IOMMU
->  	# Note: iommu drivers cannot (yet?) be built as modules
->  	bool "Qualcomm IOMMU Support"
->  	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> +	depends on QCOM_SCM=y
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU
-> diff --git a/drivers/net/wireless/ath/ath10k/Kconfig b/drivers/net/wireless/ath/ath10k/Kconfig
-> index 40f91bc8514d8..741289e385d59 100644
-> --- a/drivers/net/wireless/ath/ath10k/Kconfig
-> +++ b/drivers/net/wireless/ath/ath10k/Kconfig
-> @@ -44,6 +44,7 @@ config ATH10K_SNOC
->  	tristate "Qualcomm ath10k SNOC support"
->  	depends on ATH10K
->  	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
->  	select QCOM_QMI_HELPERS
->  	help
->  	  This module adds support for integrated WCN3990 chip connected
-> -- 
-> 2.17.1
-> 
