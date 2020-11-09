@@ -2,102 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A0F2AC074
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 17:04:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0794B2AC098
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 17:14:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbgKIQEr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 11:04:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgKIQEr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 11:04:47 -0500
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850AE206CB;
-        Mon,  9 Nov 2020 16:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604937886;
-        bh=qpWupAqFktlAEJCGUxawGfsjvPHqwItam4PilNDZDXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=odJWZEdORfx4XYNW+XSLTcqpyLh0L6/TizWw7/tBSYB0os70KfIybjw1fYuz2377d
-         TZLCkYm3yI1wN/YILWmIFVM5fwhRHo/ij6rbj2SLFFg5g4uH+Qu/q/wfw+ZaTeA1R7
-         D0UWuhrjTm+M+XZAwx4UXPGqnh/LqjXpXQbLeXHY=
-Date:   Mon, 9 Nov 2020 16:04:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
-Subject: Re: [PATCH 04/32] spi: dw: Introduce polling device tree property
-Message-ID: <20201109160432.GF6380@sirena.org.uk>
-References: <20201107081420.60325-1-damien.lemoal@wdc.com>
- <20201107081420.60325-5-damien.lemoal@wdc.com>
+        id S1729998AbgKIQOn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 11:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgKIQOn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 11:14:43 -0500
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9E9C0613CF;
+        Mon,  9 Nov 2020 08:14:41 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id 62so7512459pgg.12;
+        Mon, 09 Nov 2020 08:14:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qFLPfbMyI673S69duDZ3Cwv5aXYQyOe/K7YD64BQqTI=;
+        b=i/4wyYTktFpXofS3SmdsBNgfiy0Y51YLwbUDhUhKfaeuQ2zSRnJP6Pmx427YqdxfjA
+         r7NUlZ191eIBn9ke5NxVOcsETxgJvm2ySGr6Sldf+boO45pl3OUD9kisr+D7CgzpyQ83
+         aQzrNDOiwM8AyqCXkVeWuwgA5hS7aY/vw2BtJ470FSlTdY+ROGaKWs6QRjMuObFQOJz0
+         HyTVbPYZiN2mi3ytoW+BV35c8yIBrUwL5WJhuQSg2ssjKI4IdoB0Be+TE3aBySF4fD+L
+         RmIJZJmzgu2yGk6w+Z00Fjit4+6jb87lkiVvML5H1uBhINiGUf+iUfup7A2VVqHXYNKQ
+         bSCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qFLPfbMyI673S69duDZ3Cwv5aXYQyOe/K7YD64BQqTI=;
+        b=QkPU2ciGUdXylzZ/kJOucVo7eEyDe8U7kwKR724FP+gIjY833BeJ2BJxKyTeqIc63W
+         BMB1K7iB10x/wutbGWYaN06WNI6ODP6M85xRVtzTRvTJc90HXxtZnRHmOhVUlqTi9Gnh
+         MNBHUILQYXWler+i1FyRTELPFq1ZqyS1WPy8bJtzWrIT4LM3X4yZyzez0b2d+mzoVTOF
+         4ERBXZt5gJiPrbTK/ySkY4indo7OPkkcl96htAJiQHAgHA30w58vCvBjFwDjCZ1IOnz7
+         gctLQiYS4mEnUPPdpo8Mv/NnIyCIN5hhxsQqXPk5rHmQJhgdpe6AzsM78z1HSzEqswJE
+         p6Pg==
+X-Gm-Message-State: AOAM533dTLrmqrI/1E0ahwOCmIFQWvBxL8SzkRz49bbZgE6bdMn7nXzk
+        CqH93eKUBAWrSIIH55XQwDE9W6euOsrsFnLP1B4qco9dbAo=
+X-Google-Smtp-Source: ABdhPJxDqA5Nr0SKOAzL8y48EaUVxGFC07iEmn1XuJxzuj/RIJBFUQBbDW/4v6Mmrl7bH/A7LUIB3+owLXi1prAKJog=
+X-Received: by 2002:a17:90b:fc6:: with SMTP id gd6mr29773pjb.181.1604938481158;
+ Mon, 09 Nov 2020 08:14:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
-Content-Disposition: inline
-In-Reply-To: <20201107081420.60325-5-damien.lemoal@wdc.com>
-X-Cookie: This fortune is false.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20201109132643.457932-1-lars.povlsen@microchip.com>
+ <20201109132643.457932-3-lars.povlsen@microchip.com> <CAHp75Vdfm7A5=Mi-LZ1sHJS5fSngypZQ50-rGQ7A6kD2kmVFTA@mail.gmail.com>
+ <20201109143237.GJ1257108@piout.net> <CAHp75Vc7eRDq5wUyUdvCZCnV_VS+afGnbJpQeDSeXVE9K_MGng@mail.gmail.com>
+ <20201109152748.GA1691943@piout.net>
+In-Reply-To: <20201109152748.GA1691943@piout.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 9 Nov 2020 18:15:30 +0200
+Message-ID: <CAHp75VfcgyMEr3YscC2Na_RCTtd=ozCzCGq=UO6zKAa+9b4rqg@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl
+ driver for Microsemi Serial GPIO
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Nov 9, 2020 at 5:27 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 09/11/2020 17:16:49+0200, Andy Shevchenko wrote:
+> > On Mon, Nov 9, 2020 at 4:32 PM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> > > On 09/11/2020 16:17:40+0200, Andy Shevchenko wrote:
 
---rMWmSaSbD7nr+du9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Sat, Nov 07, 2020 at 05:13:52PM +0900, Damien Le Moal wrote:
+> > > > > +               dev_err(pctldev->dev, "Pin %d direction as %s is not possible\n",
+> > > > > +                       pin, input ? "input" : "output");
+> > > >
+> > > > Do we need this noise? Isn't user space getting a proper error code as
+> > > > per doc and can handle this?
+> > >
+> > > Why would userspace get the error code?
+> >
+> > Huh?! Why it shouldn't. How will users know if they are doing something wrong?
+> >
+> > > Userspace should never have to
+> > > handle gpios directly or you are doing something wrong.
+> >
+> > This is true, but check how error codes are propagated to the user space.
+> >
+>
+> your point is to remove an error message because the error may be
+> propagated to userspace. My point is that userspace should never use
+> gpios and the kernel has to be the consumer.
 
-> With boards that have slow interrupts context switch, and a fast device
-> connected to a spi master, e.g. an SD card through mmc-spi, using
-> dw_spi_poll_transfer() intead of the regular interrupt based
-> dw_spi_transfer_handler() function is more efficient and can avoid a lot
-> of RX FIFO overflow errors while keeping the device SPI frequency
-> reasonnably high (for speed). Introduce the "polling" device tree
-> property to allow requesting polled processing of transfer depending on
-> the connected device while keeping the spi master interrupts property
-> unschanged. E.g. device trees such as:
+Tell this to plenty of users of old sysfs interface and to libgpiod ones.
+If what you are saying had been true, we would have never had the new
+ABI for GPIOs.
 
-This isn't something that looks like it should be configured via DT as a
-separate property, this is more of a tuning property as far as I can see
-- even on the same hardware there might be cases where people prefer to
-keep using interrupts but for example allow transfers to stall while
-waiting for the interrupt controller giving lower throughput but more
-CPU cycles available for other things.
+> I don't see how your answer
+> is relevant here.
 
-Unfortunately we don't have any information about how much interrupt
-latency we should expect which makes this a bit annoying.  I do see that
-there's already some existing attempt in the DMA code to tune burst
-sizes to avoid FIFO overflows - it looks like the hardware is doing
-something unusual and possibly unfortunate here though I've never
-looked at it so I'm not sure exactly what is going on there but perhaps
-ther's some tuning that can be done in there?  TBH I'm not clear what
-the failure mode is where we need software to service interrupts
-promptly in the middle of a DMA transfer in the first place, that seems
-really strange.
+I have an opposite opinion.
 
---rMWmSaSbD7nr+du9
-Content-Type: application/pgp-signature; name="signature.asc"
+> Did you already check all the call sites from the
+> kernel too?
 
------BEGIN PGP SIGNATURE-----
+If you think we have to print a message on each possible error case
+(but not always the one) we will get lost in the messages disaster and
+dmesg overflow.
+It is consumer who should decide if the setting is critical or not to
+be printed to user.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+paI8ACgkQJNaLcl1U
-h9D74gf+M46xb04/TMs2lLQseMfMEPw7Fh0jhSYWXuEmx5c0TM/8PPV56XCoV6CF
-RuIPkAKLK0Gz0FwLWQ7hNLwz9TczwxzKygGLVcODVuQqhQf7rRlTb4wABZirWIkp
-GnOJ3npCwKyvsCc61l3sdyasnwbnmi1X3X3qgmLWEGrK1RAyVLF/bx8swuL29L9n
-LUdhKqqzFHS0czgcTQXMgkrGE7GpM2CFZP7bYA/meuOjLB6/8u9siqAdD/e/Fvub
-ccmw/vmi5UIUGSP0xTc5p27QmjqOG/8GiZIGq4IPqKdawxgErIrYoLblm4N/BGrT
-EmfK2cMi+qlFLQLy76Fixh/wnOZhSg==
-=mHA6
------END PGP SIGNATURE-----
-
---rMWmSaSbD7nr+du9--
+-- 
+With Best Regards,
+Andy Shevchenko
