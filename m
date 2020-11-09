@@ -2,551 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4572D2ABB5D
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:28:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F8D32ABCD6
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:41:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbgKIN1b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 08:27:31 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:28462 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733098AbgKIN1X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:27:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1604928443; x=1636464443;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ABbXMXJ+wjkizV38zFxbPfTkg8gQdTq8ISGdk0bwCLY=;
-  b=Oz53cTZgi948f7o91enixPSnFOn4zhZjAoBEvFx0XnjEW5JzmAlpISNK
-   GUWj+odYC/BjR8HRZNC4EeWXxKhpCgIKqfJypuTT1UcyKyGVua42JMSE9
-   5VHNjsxlWgpeyWtm1c8ZnzXOCnroqGPa1IiSye7l5LM6Ekj4HxQSquerE
-   QJaRFrwFAAzVItKJ9qW5/BF1ZHRMsKkDkEbUp5DMs4k5NCMOWQQruZK7M
-   czTQgZQ6wmiduG5uqzky+293BO+LItvozzn0dC7/qf+4Ka58967xB+Iiq
-   EWaL4IB8yeOQWVDxw1AZgvDMrfpTbJpUMeha5FiJ+ikqBbYmSPLTzEbcW
-   A==;
-IronPort-SDR: Y9CGgXgcWeIpOB7ObNJ4Q7mmdVtv2w4zvVaUwNVRlJVIStS1UTOw1snLOl/76xLCCZE5/YoNKl
- YOpoqRPsrR1yzR64JzbX5LyrZfzfkBL1Cw7mDQW2Ke0RMZQoj30a1bS6ijt3fVFGv2Vgh0T+UE
- QjWKUDZpogXZ06yUuZA2W+fOoQBLXT1AzrdJZvFuyDlHy6lBse2y8RejmWofZp8NQohVsmxp4V
- EbNpRUbxtfesBbruRKBmixyA56OLglAJDaqtsvnxiBsbcyL48CxIkYvy0NMSsImCNj0doHIVYi
- Z98=
-X-IronPort-AV: E=Sophos;i="5.77,463,1596524400"; 
-   d="scan'208";a="95609834"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Nov 2020 06:27:22 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 9 Nov 2020 06:27:22 -0700
-Received: from soft-dev10.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 9 Nov 2020 06:27:19 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v8 3/3] arm64: dts: sparx5: Add SGPIO devices
-Date:   Mon, 9 Nov 2020 14:26:43 +0100
-Message-ID: <20201109132643.457932-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201109132643.457932-1-lars.povlsen@microchip.com>
-References: <20201109132643.457932-1-lars.povlsen@microchip.com>
+        id S1730620AbgKINjH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 08:39:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730607AbgKINBw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:01:52 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF77C0613D4
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Nov 2020 05:01:50 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id 23so8582537wrc.8
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 05:01:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z9RxCG2dK/UJMA4EuFffdX8+hzKCSPZ9ADW27XtraBI=;
+        b=D49tBI74fzz2MEEwNWYcmRES8YSib+Qj65+puZ0m5J7dfnX+sINlyvg3uO+RtyaLGb
+         Zjt9E3vdpw3jC7KYXZA3WAJxDiO1iWK6iOFqh94IBvEkkm0o+Tk6/1G2Lc4h+m8o06LT
+         DZ7uZCMdgO1EGbqcRr+6OIPS3Bs22hUPFB5OnaxCXeueuXOHW+nT5l2131S06dmHldED
+         RYQy+tfg6+BV5nkucs42CQvuz2cXA3RXcRfTUn777XOtzBiYjwmdPudWmg2+GSJHM5gc
+         wPBBIY05h/77O1cq+8ZqtCux6wOXmumFG+znrul5D5DIB4CQxlMXGCrcNl4f5PVV0Wy7
+         MZpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z9RxCG2dK/UJMA4EuFffdX8+hzKCSPZ9ADW27XtraBI=;
+        b=lJOtbe407wQdbc6gA00luLLEycAIupt6MKQICaNAm1gyRJfW7o+n0Hx0jNNclbk7ep
+         QMqjrjCDqffIpfuY66AO1/SgaD6bZIBOs8RUkZLSdTQ7cX6VeHNSoUGAmZMZkDax4JMM
+         tofXRG9QzZaHp+wrYKTjUWIGZSZuCHreQkQcqBKTL1xg9FI5yGV82grFJJ1xQm61u1GO
+         qA7uOgd6HPSJZKdT7PDCCLphOLLsF7td5fepAGiC+jAFn+EB3EiuJVJsN1vMukPJWsMm
+         3CC2Q5RGhie5LANf8ZAFzbV/rDGpykARk7+3D3ZS38iDkQsyaOjgHAj4OE/sHZfFrF7t
+         v4uw==
+X-Gm-Message-State: AOAM532H05+AcRIwhbygNdi+ij1wk7P7o9tBw48O8eOeKFOrL+CzeWQ8
+        xgqYJwcx86rNaFnN6liSfW9thg==
+X-Google-Smtp-Source: ABdhPJy+c20JY5rcE/Lg2B+Rt5GfKNz2OFbjI9lrN+MwarjXXYVoiCLQwTPsSkAAkfn8SS45xSiFcA==
+X-Received: by 2002:adf:b1d6:: with SMTP id r22mr17068843wra.136.1604926908683;
+        Mon, 09 Nov 2020 05:01:48 -0800 (PST)
+Received: from srini-hackbox.lan (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.gmail.com with ESMTPSA id z5sm13135938wrw.87.2020.11.09.05.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2020 05:01:47 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl support
+Date:   Mon,  9 Nov 2020 13:01:33 +0000
+Message-Id: <20201109130135.28589-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds SGPIO devices for the Sparx5 SoC and configures it for the
-applicable reference boards.
+This patch adds support for LPASS (Low Power Audio SubSystem)
+LPI (Low Power Island) pinctrl on SM8250.
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     |  91 ++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      |   5 +
- .../dts/microchip/sparx5_pcb134_board.dtsi    | 258 ++++++++++++++++++
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  55 ++++
- 4 files changed, 409 insertions(+)
+This patch has been tested on support to Qualcomm Robotics RB5 Development
+Kit based on QRB5165 Robotics SoC. This board has 2 WSA881X smart speakers
+with onboard DMIC connected to internal LPASS codec via WSA  and VA macros
+respectively.
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 3cb01c39c3c8..f09707297a9f 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -226,6 +226,22 @@ si2_pins: si2-pins {
- 				function = "si2";
- 			};
- 
-+			sgpio0_pins: sgpio-pins {
-+				pins = "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
-+				function = "sg0";
-+			};
-+
-+			sgpio1_pins: sgpio1-pins {
-+				pins = "GPIO_4", "GPIO_5", "GPIO_12", "GPIO_13";
-+				function = "sg1";
-+			};
-+
-+			sgpio2_pins: sgpio2-pins {
-+				pins = "GPIO_30", "GPIO_31", "GPIO_32",
-+				       "GPIO_33";
-+				function = "sg2";
-+			};
-+
- 			uart_pins: uart-pins {
- 				pins = "GPIO_10", "GPIO_11";
- 				function = "uart";
-@@ -256,6 +272,81 @@ emmc_pins: emmc-pins {
- 			};
- 		};
- 
-+		sgpio0: gpio@61101036c {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "microchip,sparx5-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio0_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101036c 0x100>;
-+			sgpio_in0: gpio@0 {
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				reg = <0>;
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+			sgpio_out0: gpio@1 {
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				reg = <1>;
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+		};
-+
-+		sgpio1: gpio@611010484 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "microchip,sparx5-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio1_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x11010484 0x100>;
-+			sgpio_in1: gpio@0 {
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				reg = <0>;
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+			sgpio_out1: gpio@1 {
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				reg = <1>;
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+		};
-+
-+		sgpio2: gpio@61101059c {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "microchip,sparx5-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio2_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101059c 0x100>;
-+			sgpio_in2: gpio@0 {
-+				reg = <0>;
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+			sgpio_out2: gpio@1 {
-+				compatible = "microchip,sparx5-sgpio-bank";
-+				reg = <1>;
-+				gpio-controller;
-+				#gpio-cells = <3>;
-+				ngpios = <96>;
-+			};
-+		};
-+
- 		i2c0: i2c@600101000 {
- 			compatible = "snps,designware-i2c";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 6b2da7c7520c..9baa085d7861 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -69,6 +69,11 @@ spi-flash@9 {
- 	};
- };
- 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-port-ranges = <0 23>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index f37b478d6534..6820579448d0 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -36,6 +36,242 @@ gpio-restart {
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led@0 {
-+			label = "twr0:green";
-+			gpios = <&sgpio_out0 8 0 GPIO_ACTIVE_LOW>;
-+		};
-+		led@1 {
-+			label = "twr0:yellow";
-+			gpios = <&sgpio_out0 8 1 GPIO_ACTIVE_LOW>;
-+		};
-+		led@2 {
-+			label = "twr1:green";
-+			gpios = <&sgpio_out0 9 0 GPIO_ACTIVE_LOW>;
-+		};
-+		led@3 {
-+			label = "twr1:yellow";
-+			gpios = <&sgpio_out0 9 1 GPIO_ACTIVE_LOW>;
-+		};
-+		led@4 {
-+			label = "twr2:green";
-+			gpios = <&sgpio_out0 10 0 GPIO_ACTIVE_LOW>;
-+		};
-+		led@5 {
-+			label = "twr2:yellow";
-+			gpios = <&sgpio_out0 10 1 GPIO_ACTIVE_LOW>;
-+		};
-+		led@6 {
-+			label = "twr3:green";
-+			gpios = <&sgpio_out0 11 0 GPIO_ACTIVE_LOW>;
-+		};
-+		led@7 {
-+			label = "twr3:yellow";
-+			gpios = <&sgpio_out0 11 1 GPIO_ACTIVE_LOW>;
-+		};
-+		led@8 {
-+			label = "eth12:green";
-+			gpios = <&sgpio_out0 12 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@9 {
-+			label = "eth12:yellow";
-+			gpios = <&sgpio_out0 12 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@10 {
-+			label = "eth13:green";
-+			gpios = <&sgpio_out0 13 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@11 {
-+			label = "eth13:yellow";
-+			gpios = <&sgpio_out0 13 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@12 {
-+			label = "eth14:green";
-+			gpios = <&sgpio_out0 14 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@13 {
-+			label = "eth14:yellow";
-+			gpios = <&sgpio_out0 14 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@14 {
-+			label = "eth15:green";
-+			gpios = <&sgpio_out0 15 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@15 {
-+			label = "eth15:yellow";
-+			gpios = <&sgpio_out0 15 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@16 {
-+			label = "eth48:green";
-+			gpios = <&sgpio_out1 16 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@17 {
-+			label = "eth48:yellow";
-+			gpios = <&sgpio_out1 16 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@18 {
-+			label = "eth49:green";
-+			gpios = <&sgpio_out1 17 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@19 {
-+			label = "eth49:yellow";
-+			gpios = <&sgpio_out1 17 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@20 {
-+			label = "eth50:green";
-+			gpios = <&sgpio_out1 18 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@21 {
-+			label = "eth50:yellow";
-+			gpios = <&sgpio_out1 18 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@22 {
-+			label = "eth51:green";
-+			gpios = <&sgpio_out1 19 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@23 {
-+			label = "eth51:yellow";
-+			gpios = <&sgpio_out1 19 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@24 {
-+			label = "eth52:green";
-+			gpios = <&sgpio_out1 20 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@25 {
-+			label = "eth52:yellow";
-+			gpios = <&sgpio_out1 20 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@26 {
-+			label = "eth53:green";
-+			gpios = <&sgpio_out1 21 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@27 {
-+			label = "eth53:yellow";
-+			gpios = <&sgpio_out1 21 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@28 {
-+			label = "eth54:green";
-+			gpios = <&sgpio_out1 22 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@29 {
-+			label = "eth54:yellow";
-+			gpios = <&sgpio_out1 22 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@30 {
-+			label = "eth55:green";
-+			gpios = <&sgpio_out1 23 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@31 {
-+			label = "eth55:yellow";
-+			gpios = <&sgpio_out1 23 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@32 {
-+			label = "eth56:green";
-+			gpios = <&sgpio_out1 24 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@33 {
-+			label = "eth56:yellow";
-+			gpios = <&sgpio_out1 24 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@34 {
-+			label = "eth57:green";
-+			gpios = <&sgpio_out1 25 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@35 {
-+			label = "eth57:yellow";
-+			gpios = <&sgpio_out1 25 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@36 {
-+			label = "eth58:green";
-+			gpios = <&sgpio_out1 26 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@37 {
-+			label = "eth58:yellow";
-+			gpios = <&sgpio_out1 26 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@38 {
-+			label = "eth59:green";
-+			gpios = <&sgpio_out1 27 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@39 {
-+			label = "eth59:yellow";
-+			gpios = <&sgpio_out1 27 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@40 {
-+			label = "eth60:green";
-+			gpios = <&sgpio_out1 28 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@41 {
-+			label = "eth60:yellow";
-+			gpios = <&sgpio_out1 28 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@42 {
-+			label = "eth61:green";
-+			gpios = <&sgpio_out1 29 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@43 {
-+			label = "eth61:yellow";
-+			gpios = <&sgpio_out1 29 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@44 {
-+			label = "eth62:green";
-+			gpios = <&sgpio_out1 30 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@45 {
-+			label = "eth62:yellow";
-+			gpios = <&sgpio_out1 30 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@46 {
-+			label = "eth63:green";
-+			gpios = <&sgpio_out1 31 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+		led@47 {
-+			label = "eth63:yellow";
-+			gpios = <&sgpio_out1 31 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &spi0 {
-@@ -70,6 +306,28 @@ spi-flash@9 {
- 	};
- };
- 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-port-ranges = <8 15>;
-+	gpio@0 {
-+		ngpios = <64>;
-+	};
-+	gpio@1 {
-+		ngpios = <64>;
-+	};
-+};
-+
-+&sgpio1 {
-+	status = "okay";
-+	microchip,sgpio-port-ranges = <24 31>;
-+	gpio@0 {
-+		ngpios = <64>;
-+	};
-+	gpio@1 {
-+		ngpios = <64>;
-+	};
-+};
-+
- &gpio {
- 	i2cmux_pins_i: i2cmux-pins-i {
- 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-index b02b8c8ce44d..e28c6dd16377 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-@@ -20,6 +20,50 @@ gpio-restart {
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led@0 {
-+			label = "eth60:yellow";
-+			gpios = <&sgpio_out1 28 0 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@1 {
-+			label = "eth60:green";
-+			gpios = <&sgpio_out1 28 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@2 {
-+			label = "eth61:yellow";
-+			gpios = <&sgpio_out1 29 0 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@3 {
-+			label = "eth61:green";
-+			gpios = <&sgpio_out1 29 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@4 {
-+			label = "eth62:yellow";
-+			gpios = <&sgpio_out1 30 0 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@5 {
-+			label = "eth62:green";
-+			gpios = <&sgpio_out1 30 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@6 {
-+			label = "eth63:yellow";
-+			gpios = <&sgpio_out1 31 0 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+		led@7 {
-+			label = "eth63:green";
-+			gpios = <&sgpio_out1 31 1 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &gpio {
-@@ -83,6 +127,17 @@ spi-flash@9 {
- 	};
- };
- 
-+&sgpio1 {
-+	status = "okay";
-+	microchip,sgpio-port-ranges = <24 31>;
-+	gpio@0 {
-+		ngpios = <64>;
-+	};
-+	gpio@1 {
-+		ngpios = <64>;
-+	};
-+};
-+
- &axi {
- 	i2c0_imux: i2c0-imux@0 {
- 		compatible = "i2c-mux-pinctrl";
+Most of the work is derived from downstream Qualcomm kernels.
+Credits to various Qualcomm authors from Patrick Lai's team who have
+contributed to this code.
+
+Am guessing existing qcom folder should cover maintining this driver too!
+If not I can send additional patch to consolidate this along with other
+Audio related drivers in Maintainer file!
+
+Changes since v2:
+ - addressed various coding style related comments by Andy Shevchenko
+ - moved to devm  and bluk apis as suggested by Andy Shevchenko
+ - moved slew offset to group struct for more clarity
+ - updated comment log to reflect few similarities between other msm TLMM blocks.
+
+Srinivas Kandagatla (2):
+  dt-bindings: pinctrl: qcom: Add sm8250 lpass lpi pinctrl bindings
+  pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver
+
+ .../pinctrl/qcom,lpass-lpi-pinctrl.yaml       | 129 +++
+ drivers/pinctrl/qcom/Kconfig                  |   8 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c      | 734 ++++++++++++++++++
+ 4 files changed, 872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+
 -- 
-2.25.1
+2.21.0
 
