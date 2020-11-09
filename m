@@ -2,127 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 564D02ABD93
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:47:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 147862ABDCE
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:50:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbgKINrO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 08:47:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729974AbgKINrN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:47:13 -0500
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C688C0613CF;
-        Mon,  9 Nov 2020 05:47:13 -0800 (PST)
-Received: by mail-qv1-xf43.google.com with SMTP id ed14so4023687qvb.4;
-        Mon, 09 Nov 2020 05:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3P4Xy4X3O8T4Nf4PgfEYUgS4xFf3jYJhHCyEVrGcPOA=;
-        b=CnkNa2H+6dHsGG7oCncPC1SvCVCwADCa9oL2vYqCUUL6ad1Mh28I2FOsrm9mgoH5WX
-         g55LdA13TrGDSXZ055BjdxAzQ0M9jIyGi3wzjqndyaXTv0IBwgw7Pc8MVJ5RDDjAgcIt
-         9ZR/1NXyTe7eLwblNB2plK5rsEMXcvcwrdKR3H2HTUllWkHNWUDrjyXm4oW2D0s72FOC
-         zbg5CnVzs0TFt18VD/0akL0kKhkS2osuOx3UfPkM7UXHtE50ZJcrVUQ4wuc+5WMA1Cms
-         hxWduHV+ffDJv0vlyOKvQsrU7c6OZuTvDYzNHKaSkBYFVxPVQkjnbZeHw7JJz4xD8F2Q
-         e34g==
+        id S1730142AbgKINuJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 08:50:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27258 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727826AbgKINuI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:50:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604929806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PLsp/KuWTDbrVBv5ybtaH5oT3koUPcBqYT/mOxOLceQ=;
+        b=AfD32ZcTAV7vsq0RkMi7YRaz+YNyxtU2BtuKTh8FlyK01szEIQS7pSt3HK+TOkowK5JMfB
+        +6pxFNAk8SIMIpQphSiTmdzAjvwLiszYgjJlkX08Ahi6FVaLqwskB2xFqE2Q+Rd6SPGAL/
+        HRQJ5T14vRTOTCD+v0a8FoEbsrs5H4s=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-spy5dL5yMRS6ye8e4Unbrw-1; Mon, 09 Nov 2020 08:50:04 -0500
+X-MC-Unique: spy5dL5yMRS6ye8e4Unbrw-1
+Received: by mail-ej1-f72.google.com with SMTP id t1so3429704ejb.21
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 05:50:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3P4Xy4X3O8T4Nf4PgfEYUgS4xFf3jYJhHCyEVrGcPOA=;
-        b=FtKc5rAT+AN6p3sV7dcYeq8yrw1vNkMlvjQTb77zzMP4kYMrnUspGSHgzd7nXlWxGR
-         4/pgoa1MCtCFV2LU2JYdLzNQsNx4wPtE+SKcKQe5rwpu6QI4MGW8ad98esVwGWHaraPM
-         fijVJsCkuwK2r9rLKItzjyTZvKlRjcejpVoxXRz5ZQPcjTey+EaOLnDPjVC4C1VHenAC
-         scSjIdFdhwk2ZBJxDgssKnf1a+bMZ44hzK7VVQ/vPR4HD73TiHZXrnA9HRNwgn+NxpEO
-         vmlX4ggenQ7q+gOx4ZBIQjC+3yrbnonkdwZwlEMKH9BrqrRhhj82a/9MQiTHbnFBvJ+e
-         Hbog==
-X-Gm-Message-State: AOAM531mwZFkTwnvhpcbisC5g2f5FVDy8gQL8ILDpgIVTXImJ3dL/k1I
-        d2BDcKqxuntMmwBGPkd5LhQ=
-X-Google-Smtp-Source: ABdhPJzU05Fw0kzNgO7z+uoXZtYaKr3IfKDrqYuQ/4WUNUe6l+9tEW5JmP/HvpwEVZFqdcj9iMWp3Q==
-X-Received: by 2002:ad4:4e2f:: with SMTP id dm15mr1130200qvb.7.1604929632527;
-        Mon, 09 Nov 2020 05:47:12 -0800 (PST)
-Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
-        by smtp.googlemail.com with ESMTPSA id j50sm6081221qtc.5.2020.11.09.05.47.11
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PLsp/KuWTDbrVBv5ybtaH5oT3koUPcBqYT/mOxOLceQ=;
+        b=GAS9cIs75waR6ugTY4yAuCuLK/yIm2QR+uSu8eDs4Zx+nzvKgXnp5exuIryOq4A9+6
+         EB8Fy/Q040uAtZHFM+VGVAgi/UMJKZH5A3NGxudTMmR4j7z5InrJD5FPBOAjfEYRdlwy
+         O4wh4sfnwclZktFWTsLKTOrInf+XL2m3n1a8cJTwzhjvu7Y1hs2OSxU36i5JbKeaqWPK
+         WYRpqHOvcmFrPWXnF9+DHRt9RJX/tv0LMdN88foY+htLZkWM1l+3WSYdjetW4QIjHpF1
+         +JncAF9Pe46WICQToROYEpYIpsOTU510p7jcnQAbrpVnUv91vfzDZiuARqsLJrxDVWO/
+         jnmQ==
+X-Gm-Message-State: AOAM533QU91edDOpZnBzcpv+hna1Tm8lMEtT5Dto/76HJovwRDfJ/zQQ
+        0mtJNmO3pZaVBYZX1WtM3oqpKuzs/kNhYAffuvyyx1VVfiAqTX1pvAWIHjoZgEc+X06SJEmpxgs
+        toXqgKSpppyqJl9QZwOk+0w==
+X-Received: by 2002:a17:906:f98e:: with SMTP id li14mr15753281ejb.75.1604929802355;
+        Mon, 09 Nov 2020 05:50:02 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyG5clFDtGgr1oPP2mVomKl27liMRXknZE3eR/J1H9KeINk4KWFWJqQ2n3Bapo3TKqzD5Axdw==
+X-Received: by 2002:a17:906:f98e:: with SMTP id li14mr15753268ejb.75.1604929802203;
+        Mon, 09 Nov 2020 05:50:02 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
+        by smtp.gmail.com with ESMTPSA id k23sm8760275ejs.100.2020.11.09.05.50.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2020 05:47:11 -0800 (PST)
-Subject: Re: [PATCH 03/32] spi: dw: Fix driving MOSI low while recieving
-To:     Mark Brown <broonie@kernel.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-References: <20201107081420.60325-1-damien.lemoal@wdc.com>
- <20201107081420.60325-4-damien.lemoal@wdc.com>
- <20201109132935.GB6380@sirena.org.uk>
-From:   Sean Anderson <seanga2@gmail.com>
-Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
- mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
- 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
- lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
- GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
- F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
- AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
- AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
- bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
- +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
- Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
- N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
- SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
- w8jpXnbEPQN3A2ZJCbeM
-Message-ID: <c37ca9be-ea92-b07a-b600-d68de4f7bde5@gmail.com>
-Date:   Mon, 9 Nov 2020 08:47:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mon, 09 Nov 2020 05:50:01 -0800 (PST)
+Subject: Re: [PATCH v3 1/4] pinctrl: amd: fix incorrect way to disable
+ debounce filter
+To:     Coiby Xu <coiby.xu@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+References: <20201105231912.69527-1-coiby.xu@gmail.com>
+ <20201105231912.69527-2-coiby.xu@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ce36bc69-56ae-1c22-68b6-44f788275dab@redhat.com>
+Date:   Mon, 9 Nov 2020 14:50:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201109132935.GB6380@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20201105231912.69527-2-coiby.xu@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/9/20 8:29 AM, Mark Brown wrote:
-> On Sat, Nov 07, 2020 at 05:13:51PM +0900, Damien Le Moal wrote:
+Hi,
+
+On 11/6/20 12:19 AM, Coiby Xu wrote:
+> The correct way to disable debounce filter is to clear bit 5 and 6
+> of the register.
 > 
->> The resting state of MOSI is high when nothing is driving it. If we
->> drive it low while recieving, it looks like we are transmitting 0x00
->> instead of transmitting nothing. This can confuse slaves (like SD cards)
->> which allow new commands to be sent over MOSI while they are returning
->> data over MISO. The return of MOSI from 0 to 1 at the end of recieving
->> a byte can look like a start bit and a transmission bit to an SD card.
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Link: https://lore.kernel.org/linux-gpio/df2c008b-e7b5-4fdd-42ea-4d1c62b52139@redhat.com/
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/pinctrl/pinctrl-amd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> If client devices are interpreting the transmitted data then I would
-> expect the drivers for that hardware to be ensuring that whatever we
-> transmit matches what the device is expecting.  We shouldn't be putting
-> a hack in a particular controller driver to paper over things, that will
-> mean that the device will break when used with other controllers and if
-> different devices have different requirements then obviously we can't
-> satisfy them.  There is not meaningfully a general specification for SPI
-> which says what happens when signals are idle, it's all specific to the
-> client device.
->
-> In this case it also looks like the controller hardware requires
-> transmit data and therefore should be setting SPI_MUST_TX and just
-> removing the in driver default anyway, though that will have no effect
-> one way or anther on the issue you're seeing.
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+> index 9a760f5cd7ed..d6b2b4bd337c 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -166,14 +166,14 @@ static int amd_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
+>  			pin_reg |= BIT(DB_TMR_OUT_UNIT_OFF);
+>  			pin_reg |= BIT(DB_TMR_LARGE_OFF);
+>  		} else {
+> -			pin_reg &= ~DB_CNTRl_MASK;
+> +			pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>  			ret = -EINVAL;
+>  		}
+>  	} else {
+>  		pin_reg &= ~BIT(DB_TMR_OUT_UNIT_OFF);
+>  		pin_reg &= ~BIT(DB_TMR_LARGE_OFF);
+>  		pin_reg &= ~DB_TMR_OUT_MASK;
+> -		pin_reg &= ~DB_CNTRl_MASK;
+> +		pin_reg &= ~(DB_CNTRl_MASK << DB_CNTRL_OFF);
+>  	}
+>  	writel(pin_reg, gpio_dev->base + offset * 4);
+>  	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+> 
 
-There is a recieve-only mode, but it is not used by this driver. Perhaps
-it should be.
-
-> Please also try to avoid the use of master/slave terminology where
-> reasonable, controller and device tend to work for SPI (though MOSI/MISO
-> are going to be harder to shift).
-
-Here I use it to draw distinction between the SPI master and the SPI
-slave, which are both devices in different contexts. 
-
---Sean
