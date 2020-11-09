@@ -2,143 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 090BA2AC65E
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 21:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605FD2AC65F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 21:53:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgKIUxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 15:53:49 -0500
-Received: from mga17.intel.com ([192.55.52.151]:41590 "EHLO mga17.intel.com"
+        id S1730181AbgKIUxw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 15:53:52 -0500
+Received: from mga01.intel.com ([192.55.52.88]:25510 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgKIUxt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 15:53:49 -0500
-IronPort-SDR: hRLFbvkRU0yRKkiFexBVJvYVDIlEZtpKYgzXIg3beUP7GkxN7aSM+Q1nHJMldt+L1df12etP+k
- q+uHaKHMyc+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149719600"
+        id S1729817AbgKIUxv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 15:53:51 -0500
+IronPort-SDR: Jpx0D7VEXKBz2B/FS9NJUzNdmhD0xDxga+Wosl2eeyU8Is5zqHYarVP3bFxgCtuh2oxVPGHBBs
+ KPh1n74uZG8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="187826499"
 X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="149719600"
+   d="scan'208";a="187826499"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 12:53:47 -0800
-IronPort-SDR: 7Wleu15OxicyFEQvj474dliGnY0+wqWTqXGYiPL2lhljdmCp4udcQFC4U9F8vqOvjavBFLPLxT
- GkaizfsF/U+g==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 12:53:50 -0800
+IronPort-SDR: ds5MM9+u8s4EVE7iggKdSwDbW7pYd5Q8xsxteGHHtNt5HZ+VJeG9gRmxbDhdCwzN1d0QRcZgKF
+ LgDHMQ7aBTkQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="541019875"
+   d="scan'208";a="307778218"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2020 12:53:45 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 09 Nov 2020 12:53:48 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9A51517C; Mon,  9 Nov 2020 22:53:44 +0200 (EET)
+        id E3EA517C; Mon,  9 Nov 2020 22:53:47 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jamie McClymont <jamie@kwiius.com>
-Subject: [PATCH v5 00/17] gpiolib: acpi: pin configuration fixes
-Date:   Mon,  9 Nov 2020 22:53:15 +0200
-Message-Id: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 01/17] gpiolib: Replace unsigned by unsigned int
+Date:   Mon,  9 Nov 2020 22:53:16 +0200
+Message-Id: <20201109205332.19592-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
+References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are fixes (and plenty cleanups) that allow to take into consideration
-more parameters in ACPI, i.e. bias for GpioInt() and debounce timeout
-for Operation Regions, Events and GpioInt() resources.
+Replace unsigned by unsigned int in GPIO library code.
+Note, legacy API left untouched.
 
-During review Hans noted, that gpiod_set_debounce() returns -ENOTSUPP for
-the cases when feature is not supported either by driver or a controller.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c        | 16 ++++++++--------
+ include/linux/gpio/consumer.h |  4 ++--
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-It appears that we have slightly messy API here:
-
-  FUNC			Relation with ENOTSUPP
-
-  gpiod_set_config()	 returns if not supported
-  gpiod_set_debounce()	 as gpiod_set_config() above
-  gpio_set_debounce()	 legacy wrapper on top of gpiod_set_debounce()
-  gpiod_set_transitory() skips it (returns okay) with debug message
-  gpio_set_config()	 returns if not supported
-  gpio_set_bias()	 skips it (returns okay)
-
-Last two functions are internal to GPIO library, while the rest is
-exported API. In order to be consistent with both naming schemas
-the series introduces gpio_set_debounce_timeout() that considers
-the feature optional. New API is only for internal use.
-
-While at it, the few first patches do clean up the current GPIO library
-code to unify it to some extend.
-
-The above is followed by changes made in ACPI GPIO library part.
-
-The bias patch highly depends on Intel pin control driver changes
-(they are material for v5.10 [1]), due to this and amount of the
-prerequisite changes this series is probably not supposed to be
-backported (at least right now).
-
-The last patch adds Intel GPIO tree as official one for ACPI GPIO
-changes.
-
-Assuming [1] makes v5.10 this series can be sent as PR to Linus
-for v5.11 cycle.
-
-Note, some patches are also depend to the code from GPIO fixes / for-next
-repositories. Unfortunately there is no one repository which contains all
-up to date for-next changes against GPIO subsystem. That's why I have merged
-Bart's for-current followed by Linus' fixes followed by Bart's for-next
-followed by Linus' for-next branches as prerequisites to the series.
-
-Cc: Jamie McClymont <jamie@kwiius.com>
-
-[1]: https://lore.kernel.org/linux-gpio/20201106181938.GA41213@black.fi.intel.com/
-
-Changelog v5:
-- introduced gpio_set_debounce_timeout()
-- made a prerequisite refactoring in GPIO library code
-- updated the rest accordingly
-
-Changelog v4:
-- extended debounce setting to ACPI events and Operation Regions
-- added Ack (Linus)
-- added few more cleanup patches, including MAINTAINERS update
-
-Changelog v3:
-- dropped upstreamed OF patch
-- added debounce fix
-
-Andy Shevchenko (17):
-  gpiolib: Replace unsigned by unsigned int
-  gpiolib: add missed break statement
-  gpiolib: use proper API to pack pin configuration parameters
-  gpiolib: Add temporary variable to gpiod_set_transitory() for cleaner
-    code
-  gpiolib: Extract gpio_set_config_with_argument() for future use
-  gpiolib: move bias related code from gpio_set_config() to
-    gpio_set_bias()
-  gpiolib: Extract gpio_set_config_with_argument_optional() helper
-  gpiolib: Extract gpio_set_debounce_timeout() for internal use
-  gpiolib: acpi: Respect bias settings for GpioInt() resource
-  gpiolib: acpi: Use named item for enum gpiod_flags variable
-  gpiolib: acpi: Take into account debounce settings
-  gpiolib: acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
-  gpiolib: acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
-  gpiolib: acpi: Extract acpi_request_own_gpiod() helper
-  gpiolib: acpi: Convert pin_index to be u16
-  gpiolib: acpi: Use BIT() macro to increase readability
-  gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work
-
- MAINTAINERS                   |   1 +
- drivers/gpio/gpiolib-acpi.c   | 130 ++++++++++++++++++++--------------
- drivers/gpio/gpiolib-acpi.h   |   2 +
- drivers/gpio/gpiolib.c        |  97 ++++++++++++++-----------
- drivers/gpio/gpiolib.h        |   1 +
- include/linux/gpio/consumer.h |   4 +-
- 6 files changed, 141 insertions(+), 94 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index bb5a9557b350..f94225d7817b 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -211,7 +211,7 @@ static int gpiochip_find_base(int ngpio)
+ int gpiod_get_direction(struct gpio_desc *desc)
+ {
+ 	struct gpio_chip *gc;
+-	unsigned offset;
++	unsigned int offset;
+ 	int ret;
+ 
+ 	gc = gpiod_to_chip(desc);
+@@ -1333,7 +1333,7 @@ void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
+ 
+-static int gpiochip_to_irq(struct gpio_chip *gc, unsigned offset)
++static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct irq_domain *domain = gc->irq.domain;
+ 
+@@ -1635,7 +1635,7 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
+  * @gc: the gpiochip owning the GPIO
+  * @offset: the offset of the GPIO to request for GPIO function
+  */
+-int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset)
++int gpiochip_generic_request(struct gpio_chip *gc, unsigned int offset)
+ {
+ #ifdef CONFIG_PINCTRL
+ 	if (list_empty(&gc->gpiodev->pin_ranges))
+@@ -1651,7 +1651,7 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
+  * @gc: the gpiochip to request the gpio function for
+  * @offset: the offset of the GPIO to free from GPIO function
+  */
+-void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset)
++void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	pinctrl_gpio_free(gc->gpiodev->base + offset);
+ }
+@@ -1663,7 +1663,7 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+  * @offset: the offset of the GPIO to apply the configuration
+  * @config: the configuration to be applied
+  */
+-int gpiochip_generic_config(struct gpio_chip *gc, unsigned offset,
++int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+ 			    unsigned long config)
+ {
+ 	return pinctrl_gpio_set_config(gc->gpiodev->base + offset, config);
+@@ -1994,7 +1994,7 @@ void gpiod_free(struct gpio_desc *desc)
+  * help with diagnostics, and knowing that the signal is used as a GPIO
+  * can help avoid accidentally multiplexing it to another controller.
+  */
+-const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned offset)
++const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct gpio_desc *desc;
+ 
+@@ -2098,7 +2098,7 @@ static int gpio_set_config(struct gpio_desc *desc, enum pin_config_param mode)
+ {
+ 	struct gpio_chip *gc = desc->gdev->chip;
+ 	unsigned long config;
+-	unsigned arg;
++	unsigned int arg;
+ 
+ 	switch (mode) {
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+@@ -2354,7 +2354,7 @@ EXPORT_SYMBOL_GPL(gpiod_set_config);
+  * 0 on success, %-ENOTSUPP if the controller doesn't support setting the
+  * debounce time.
+  */
+-int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
++int gpiod_set_debounce(struct gpio_desc *desc, unsigned int debounce)
+ {
+ 	unsigned long config;
+ 
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 901aab89d025..ef49307611d2 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -158,7 +158,7 @@ int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
+ 				       unsigned long *value_bitmap);
+ 
+ int gpiod_set_config(struct gpio_desc *desc, unsigned long config);
+-int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce);
++int gpiod_set_debounce(struct gpio_desc *desc, unsigned int debounce);
+ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
+ void gpiod_toggle_active_low(struct gpio_desc *desc);
+ 
+@@ -481,7 +481,7 @@ static inline int gpiod_set_config(struct gpio_desc *desc, unsigned long config)
+ 	return -ENOSYS;
+ }
+ 
+-static inline int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
++static inline int gpiod_set_debounce(struct gpio_desc *desc, unsigned int debounce)
+ {
+ 	/* GPIO can never have been requested */
+ 	WARN_ON(desc);
 -- 
 2.28.0
 
