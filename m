@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD312AC3EA
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 19:35:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E9C2AC3ED
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 19:36:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgKISf6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 13:35:58 -0500
-Received: from mga12.intel.com ([192.55.52.136]:23134 "EHLO mga12.intel.com"
+        id S1730045AbgKISgL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 13:36:11 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54300 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbgKISf6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 13:35:58 -0500
-IronPort-SDR: JaV8+c2QPG1D0/4LNunNOvaOsS47LL8R6Qht96ZSWCPebWOAdY6rW3YhaubA02m0I9VHtU1l7w
- ok2jAdTUVwww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149130879"
+        id S1729829AbgKISgL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 13:36:11 -0500
+IronPort-SDR: GzUF3ZhJTpjcne8sS82eCh3A+CDnKEW2VNESioQLOQR8igrPehlkivcYS+FCAxYI+zSpToG5iM
+ eiWiLSCmj0KQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="231480366"
 X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="149130879"
+   d="scan'208";a="231480366"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 10:35:57 -0800
-IronPort-SDR: 1zJtGaDbNn7sqd6eK8hKIMepW1PeIUU9VJ3R8naOBCwHUF6P1jSufK4zC7bHHAxLXCypDy3H1Y
- oPOPM1Kd1Gyg==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 10:36:07 -0800
+IronPort-SDR: BGBu5TcNhZWL+AiuO/qXpgVMQ/ts09UUguTfTbYLXDty8C1V8tjcN2yq+QUqICnSiggaXl3HOD
+ 2UhrJxg19gvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="354215488"
+   d="scan'208";a="359794701"
 Received: from lkp-server01.sh.intel.com (HELO d0be80f1a028) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 09 Nov 2020 10:35:55 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 09 Nov 2020 10:35:58 -0800
 Received: from kbuild by d0be80f1a028 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kcC1D-0000Lw-69; Mon, 09 Nov 2020 18:35:55 +0000
-Date:   Tue, 10 Nov 2020 02:34:57 +0800
+        id 1kcC1D-0000M7-8U; Mon, 09 Nov 2020 18:35:55 +0000
+Date:   Tue, 10 Nov 2020 02:34:59 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-leds] BUILD SUCCESS
- 773ccb52b685f4360c28756d225471b60f8dca9b
-Message-ID: <5fa98bd1.g/HcnHALWWn+uNQv%lkp@intel.com>
+Subject: [gpio:gpio-descriptors-extcon-cleanup] BUILD REGRESSION
+ b22cd8b5becaca1b51a7b8f0b8bcbad0b288c41d
+Message-ID: <5fa98bd3.dNjaaRGL3iZd1qlZ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,16 +45,145 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-leds
-branch HEAD: 773ccb52b685f4360c28756d225471b60f8dca9b  x86/platform/geode: Convert alix LED to GPIO machine descriptor
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-extcon-cleanup
+branch HEAD: b22cd8b5becaca1b51a7b8f0b8bcbad0b288c41d  extcon: gpio: Always check state on resume
+
+Error/Warning reports:
+
+https://lore.kernel.org/linux-gpio/202011091819.tK6Nf2GM-lkp@intel.com
+
+Error/Warning in current branch:
+
+drivers/extcon/extcon-gpio.c:85:10: error: 'struct gpio_extcon_data' has no member named 'extcon_id'
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- alpha-randconfig-r021-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arc-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arc-randconfig-r005-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arc-randconfig-r013-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arc-randconfig-r034-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arm-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arm-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- arm64-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- c6x-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- c6x-randconfig-r005-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- c6x-randconfig-r022-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- h8300-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a001-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a002-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a003-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a004-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a005-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-a006-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-r004-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-r005-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-r006-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- i386-randconfig-r031-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- ia64-randconfig-r022-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- m68k-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- m68k-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- m68k-randconfig-r001-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- m68k-randconfig-r036-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- microblaze-randconfig-r033-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- mips-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- mips-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- mips-randconfig-r021-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- nds32-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- nios2-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- nios2-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- openrisc-randconfig-r006-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- openrisc-randconfig-s032-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- parisc-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- parisc-randconfig-r004-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- powerpc-randconfig-m031-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- powerpc-randconfig-r006-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- riscv-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- riscv-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- riscv-randconfig-r025-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- riscv-randconfig-s031-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- s390-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sh-allmodconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sh-randconfig-r022-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sh-randconfig-r023-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sparc-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sparc-randconfig-r033-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sparc64-randconfig-m031-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- sparc64-randconfig-r003-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- x86_64-randconfig-p002-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- x86_64-randconfig-r035-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- x86_64-randconfig-s032-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- xtensa-allyesconfig
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+|-- xtensa-randconfig-r005-20201109
+|   `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
+`-- xtensa-randconfig-r006-20201109
+    `-- drivers-extcon-extcon-gpio.c:error:struct-gpio_extcon_data-has-no-member-named-extcon_id
 
 elapsed time: 720m
 
-configs tested: 120
-configs skipped: 51
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+configs tested: 117
+configs skipped: 2
 
 gcc tested configs:
 arm                                 defconfig
@@ -75,6 +204,12 @@ powerpc                    sam440ep_defconfig
 powerpc                     pseries_defconfig
 m68k                         amcore_defconfig
 arm                         s5pv210_defconfig
+mips                  cavium_octeon_defconfig
+m68k                             alldefconfig
+nios2                         10m50_defconfig
+powerpc                     tqm8548_defconfig
+c6x                        evmc6474_defconfig
+sh                          rsk7201_defconfig
 nios2                         3c120_defconfig
 powerpc                mpc7448_hpc2_defconfig
 arm                          badge4_defconfig
@@ -95,21 +230,12 @@ arc                              alldefconfig
 arm                        multi_v5_defconfig
 powerpc                 mpc834x_mds_defconfig
 powerpc                 mpc836x_mds_defconfig
-arm                       omap2plus_defconfig
-mips                           ip27_defconfig
-powerpc                 mpc8560_ads_defconfig
-mips                        qi_lb60_defconfig
 m68k                        m5307c3_defconfig
 arm                             rpc_defconfig
 m68k                        m5272c3_defconfig
 c6x                              alldefconfig
 powerpc                      pmac32_defconfig
 arm                          imote2_defconfig
-arc                        vdk_hs38_defconfig
-arm                          pcm027_defconfig
-arm                        realview_defconfig
-mips                          rb532_defconfig
-mips                        nlm_xlr_defconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
