@@ -2,140 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 753942ABF3C
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E56F62ABF5F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 16:06:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgKIOwg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 09:52:36 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34754 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730294AbgKIOwg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 09:52:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604933554;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wyASXJWqc46031Uf9Z70fpFSxLQq5esgBO8Dsb2GQ2U=;
-        b=EYFbnOxFum1rKF6Ex9NcAuw4Vs4WnkNc2EcNuX69+HOOD7XnFLKDzE1NM2FDCo9BW4uwyj
-        j6XBbfaCY8PbVf92wJU1SAahubU/qVmvkNbA2HEGJjtfFFu5klROb/WIokJRzL42+mCWl7
-        rIUdqsJ1yyPgGPnq8nBJl2v4u7bbkX4=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-PwNg1nl_M4WK-oUJtLgZQw-1; Mon, 09 Nov 2020 09:52:33 -0500
-X-MC-Unique: PwNg1nl_M4WK-oUJtLgZQw-1
-Received: by mail-ej1-f69.google.com with SMTP id z18so3527426eji.1
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 06:52:32 -0800 (PST)
+        id S1731715AbgKIPF7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 10:05:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730350AbgKIPFH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 10:05:07 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB1EC0613CF;
+        Mon,  9 Nov 2020 07:05:07 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id q19so8979371ljc.10;
+        Mon, 09 Nov 2020 07:05:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9Fi5Hhyl7gelaqOmcgAJ5M1MZ/xVgsIzn2nzYEuzd1A=;
+        b=tvuwBxx+Iv7Mda16xZUTuva+GASbvOuK2AZr0+o3QLQXajOmpBYoQ2ksHZau/GPle3
+         BnyfEpgqAizWpJZOUyG9cc81uDC4ctAzj7jerluvanbj5XzZFcl+OzIrG+T5tfN9aIQe
+         qx/6Xe8wJYguBk8LCwmig2QjdWGpEZwb9WPzzUuXAkETNGNZ59CSb5RNkjQCYBW0S1w8
+         xj5wtAlX1JDVF8R5eGZmckL1XFGUUoWqxvKVZN15IE90rKivrim8RltvVTvr7Nr2BXDk
+         bFLJt3HzZtH14a/FB373L3IG43mtwtw6/dazdPun9KjLC0WrFU8wdfw5s2VAMqyp/Rho
+         043w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wyASXJWqc46031Uf9Z70fpFSxLQq5esgBO8Dsb2GQ2U=;
-        b=mRxPlDRb0qb9Tm9RyvT9YWAVTW5gIo+HYU2v+q1NJC2bKgaj7qMhngi7HlhiCaDVkI
-         QO1ANGDxD5a2Y3yYwsfXH0xG3OKoklzcnS+XfWwCqXFk901bqv0KY/DccRy93Q6Vw3OQ
-         cjDBOW1AAo1y2ThtYmU7WUqsVMASUixEcAZSoriUdtthxC4VouHkSf6ol+Nj5XUqa5Rq
-         wKxdmIhA46EojK46+SU92UphUDN1MTMQZmGOvq5SRmNbMX45hEEkQWoy2ODzisaBiExo
-         W7QG64B+o4HChwb5ruwRk2cyrtT2Gg2q2Mrmyp+T5IjR86rUv9vre7Sm1LkI1PWgilHy
-         b/3g==
-X-Gm-Message-State: AOAM533hnLa7EQSqC/Zkk8g9KMl6c2Ay4Q4wESXnpdenONNFHcbO7ulh
-        Ea0IuwiqYZF47XtDBnSHYzeiKJTsGNDZwpEQPCMIwMP3OtNiYjD96ouRc25HO37jje4sJ6/VjDw
-        YjtAHA3bOeGgIr+B7fi1HoA==
-X-Received: by 2002:a17:907:2166:: with SMTP id rl6mr15497270ejb.61.1604933550597;
-        Mon, 09 Nov 2020 06:52:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz+2v6xzNZW7ELtKDBSrr/SHUX+WSeJuLL5hifrDbZwJDiEllSTfhwms9bT8HMR+2AWiEhKaQ==
-X-Received: by 2002:a17:907:2166:: with SMTP id rl6mr15497241ejb.61.1604933550336;
-        Mon, 09 Nov 2020 06:52:30 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id u2sm9059030edr.70.2020.11.09.06.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2020 06:52:29 -0800 (PST)
-Subject: Re: How to handle a level-triggered interrupt that is slow to
- de-assert itself
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <a491261f-8463-474d-a6b3-d674670c7bb7@www.fastmail.com>
- <CAHp75VcBB9wGdrBKXXSnCeHRwS1uEEz9TSrnbxzZ5g+yGdXaiA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1bca4d42-c055-b765-bd82-f3a9f74ae32f@redhat.com>
-Date:   Mon, 9 Nov 2020 15:52:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9Fi5Hhyl7gelaqOmcgAJ5M1MZ/xVgsIzn2nzYEuzd1A=;
+        b=nsx7gMPcxktCEypAmjdc+KRcsgMZo6om9YKS+UpR/dsBZpHxWtsEoU7EwMw4SkKsVo
+         xTB9hO2D+QO9B4dGzyK/nwSjeTXBYHOa9+WkJr1SNXVuVOLkVZV0+1XvCvGEApK6ke5i
+         vax6Tw8IwMKnu6GaRGCWz7OOXSllYcDQQHi7UHBPBVh5iA3mKbDyUNa3pJxexuJJ4Xte
+         pg0IuKJUXxi0/4PbsZxkbw/RD3cKv4mxbSNTxtmPnvvFUnelA2UHNC7EneKOZiYU2eXI
+         4OayFnYw73iOYjFgiWBs15xpVLKDn9o/v2klvr+roSSPJdbZAghCWPQiwzxBtKAMVtar
+         8J/w==
+X-Gm-Message-State: AOAM531lVwLZ5Ptml5AHdrOTIwBaOgc7pG7SvQ0LR9QRPTpKhuL5KgIt
+        h4+3Sb17b2x7D9av8BwAmSw=
+X-Google-Smtp-Source: ABdhPJz8ZT9IqU+wtfbrOXL+B3JrzFSM+Jqh+Cc+c2Mi1XuR1K1aT8v1QkfGUTsrsUzG/NrzrDIviQ==
+X-Received: by 2002:a2e:b4f3:: with SMTP id s19mr4036487ljm.196.1604934305938;
+        Mon, 09 Nov 2020 07:05:05 -0800 (PST)
+Received: from mobilestation ([95.79.141.114])
+        by smtp.gmail.com with ESMTPSA id w12sm2216805ljo.67.2020.11.09.07.05.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2020 07:05:05 -0800 (PST)
+Date:   Mon, 9 Nov 2020 18:05:03 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Subject: Re: [PATCH 01/32] of: Fix property supplier parsing
+Message-ID: <20201109150503.ijc72z76i6wjxfhx@mobilestation>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-2-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcBB9wGdrBKXXSnCeHRwS1uEEz9TSrnbxzZ5g+yGdXaiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201107081420.60325-2-damien.lemoal@wdc.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 11/9/20 3:30 PM, Andy Shevchenko wrote:
-> On Mon, Nov 9, 2020 at 2:57 PM Jamie McClymont <jamie@kwiius.com> wrote:
+On Sat, Nov 07, 2020 at 05:13:49PM +0900, Damien Le Moal wrote:
+> The DesignWare GPIO driver gpio-dwapb ("snps,dw-apb-gpio" or
+> "apm,xgene-gpio-v2" compatible string) defines the property
+> "snps,nr-gpios" for the user to specify the number of GPIOs available
+> on a port. The "-gpios" suffix of this property name ends up being
+> interpreted as a cell reference when properties are parsed in
+> of_link_to_suppliers(), leading to error messages such as:
 > 
-> Looking into the problem I think the better people to answer are ones
-> from the input subsystem (or closer), so I have added a few to the Cc
-> list.
+> OF: /soc/bus@50200000/gpio-controller@50200000/gpio-port@0: could not
+> find phandle
 > 
->> Background context:
->>
->> I'm continuing my efforts to reverse-engineer and write a driver for the Goodix GXFP5187 fingerprint sensor in my Huawei Matebook X Pro (the host is an Intel i5-8250U).
->>
->> The device is connected via SPI plus a GPIO Interrupt pin, defined like so in the ACPI tables:
->>
->>     GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
->>         "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,) { 0x0000 }
->>
->> This line is held down by the device when it has a message for the host, and stays held down until the host finishes reading the message out over SPI.
->>
->> I'm handling this with a devm_request_threaded_irq-type handler, where the irq part is just "return IRQ_WAKE_THREAD", and the threaded part does all the work. My understanding is that this is a reasonable approach since I don't have tight latency requirements (and the sleeping spi functions are convenient, plus I don't want to introduce any unnecessary jitter to the system) -- please correct me if I shouldn't actually be using a threaded handler here.
->>
->> ---
->>
->> Here's my problem:
->>
->> the IRQ line actually stays held down for roughly 180us after I've finished reading out the message over SPI. That means that as soon as the handler finishes, a new one starts, and it reads out corrupted data, since the sensor doesn't have anything to say.
->>
->> This is okay in theory -- the corrupted message header can be detected by its checksum, and disregarded. However, this leads to a race condition where the chip can decide it DOES have something to say to the host, WHILE the host is reading out the corrupted header. At that point, the two sides de-sync in their ideas of what needs to be read, and everything stops working.
->>
->> So, I'd like some way to pause interrupt handling for 200us+, and only re-run the handler if the line is still held down after that time.
->>
->> My first approach was to add a sleep (usleep_range) at the end of the threaded handler, right before returning IRQ_HANDLED. However, it appears that after the sleep finishes, the IRQ is triggered one more time -- presumably it has been set as pending before/during the sleep?
+> Fix this by manually defining a parse_gpios() function which ignores
+> this property, skipping the search for the supplier and thus avoiding
+> the device tree parsing error.
 
-That should not happen, as long as the threaded handler clears the interrupt source before it returns,
-then the IRQ should not be triggered a second time.
+That's why I have introduced the "ngpios" property support and marked the 
+"snps,nr-gpios" as deprecated here:
+https://lkml.org/lkml/2020/7/22/1298
 
-The IRQ will be masked as soon as it registers the first time and then stay masked until
-the threaded handler is done, note this behavior requires setting the IRQF_ONESHOT flag.
-Which AFAIK is mandatory for threaded handlers anyways unless you are also providing a
-non-threaded handler ?
+to encourage the later one from being used in favor of the first one. So I
+suggest for you to convert your dts'es (if you have ones) to using the
+"ngpios" property anyway.
 
-I'm not sure what the conventions are if you supply both and not set IRQF_ONESHOT.
+> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
+>  drivers/of/property.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 408a7b5f06a9..d16111c0d6da 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1308,7 +1308,6 @@ DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
+>  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
+>  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+>  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+> -DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+>  
+>  static struct device_node *parse_iommu_maps(struct device_node *np,
+>  					    const char *prop_name, int index)
+> @@ -1319,6 +1318,22 @@ static struct device_node *parse_iommu_maps(struct device_node *np,
+>  	return of_parse_phandle(np, prop_name, (index * 4) + 1);
+>  }
+>  
 
-But it sounds to me like you should only provide a threaded-handler and pass
-IRQF_ONESHOT when requesting the IRQ.
+> +static struct device_node *parse_gpios(struct device_node *np,
+> +				       const char *prop_name, int index)
+> +{
+> +	/*
+> +	 * Quirck for the DesignWare gpio-dwapb GPIO driver which defines
+           ^
+           |
+           Quirk?     
+> +	 * the "snps,nr-gpios" property to indicate the total number of GPIOs
+> +	 * available. As this conflict with "xx-gpios" reference properties,
+> +	 * ignore it.
+> +	 */
+> +	if (strcmp(prop_name, "snps,nr-gpios") == 0)
+> +		return NULL;
+> +
+> +	return parse_suffix_prop_cells(np, prop_name, index,
+> +				       "-gpios", "#gpio-cells");
+> +}
+> +
 
-As long as you do the following:
+Personally I'd prefer to convert all the dts-es to using the "ngpios' instead of
+the vendor-specific property. That's why I haven't fixed the problem the way you
+suggest in the first place, to encourage people to send the patches with such
+fixes. Anyway it's up to the OF-subsystem maintainers to decide whether to accept
+this quirk.
 
-1) Clear the reason why the device is asserting its IRQ in the threaded handler
-2) Wait at minimum any IRQ clearing latency before exiting the threaded handler
+-Sergey
 
-Then the IRQ should not fire a second time after 2.
-
-Probably something which you have already tried, but have you tried using a slightly
-longer sleep ?
-
-To me using usleep_range at the end of the threaded handler seems like it is
-exactly what you should do; and it should work.
-
-Regards,
-
-Hans
-
+>  static const struct supplier_bindings of_supplier_bindings[] = {
+>  	{ .parse_prop = parse_clocks, },
+>  	{ .parse_prop = parse_interconnects, },
+> -- 
+> 2.28.0
+> 
