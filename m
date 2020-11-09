@@ -2,306 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C30002ABCF2
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:42:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 564D02ABD93
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:47:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733161AbgKINlq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 08:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
+        id S1730364AbgKINrO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 08:47:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732868AbgKINlp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:41:45 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1A2C0613CF;
-        Mon,  9 Nov 2020 05:41:45 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id q22so581663qkq.6;
-        Mon, 09 Nov 2020 05:41:45 -0800 (PST)
+        with ESMTP id S1729974AbgKINrN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:47:13 -0500
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C688C0613CF;
+        Mon,  9 Nov 2020 05:47:13 -0800 (PST)
+Received: by mail-qv1-xf43.google.com with SMTP id ed14so4023687qvb.4;
+        Mon, 09 Nov 2020 05:47:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6suTyo4TXlaNokCXSHMT1l0mhWwQ6HTAA/EgSaVZH8k=;
-        b=HxXrRMJMDA3c0CXRKUCj5J6ueLRDZHlb5EsKxs0hvHoqjciEx8fJRXKM8QJo20cbj5
-         zhEe5qS9PbAk9ph8fVZO+h0zb3tzpAaq6BtHcT6CpxG7tHZCuyw9zifJGf6YezGwiYB3
-         LJVmGTthjqgG/4yxS1DXPlOqd+Nlu3MR+3XrOvzthf0du8maGbpc25AFFblD8hSIEt65
-         zZB0QRiYeUmZIaFprd2ovYaasK+9QFhgJPOj/IeS/vw/eGupQs8OWXfX/6v1p4JMPHlG
-         cxxrn4/tqgWhBpOuN6P2/12oD9pSjmGfLQRkBgNwpqrW57As9nyi2h1Xt4uc/D80kGes
-         aKJg==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3P4Xy4X3O8T4Nf4PgfEYUgS4xFf3jYJhHCyEVrGcPOA=;
+        b=CnkNa2H+6dHsGG7oCncPC1SvCVCwADCa9oL2vYqCUUL6ad1Mh28I2FOsrm9mgoH5WX
+         g55LdA13TrGDSXZ055BjdxAzQ0M9jIyGi3wzjqndyaXTv0IBwgw7Pc8MVJ5RDDjAgcIt
+         9ZR/1NXyTe7eLwblNB2plK5rsEMXcvcwrdKR3H2HTUllWkHNWUDrjyXm4oW2D0s72FOC
+         zbg5CnVzs0TFt18VD/0akL0kKhkS2osuOx3UfPkM7UXHtE50ZJcrVUQ4wuc+5WMA1Cms
+         hxWduHV+ffDJv0vlyOKvQsrU7c6OZuTvDYzNHKaSkBYFVxPVQkjnbZeHw7JJz4xD8F2Q
+         e34g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6suTyo4TXlaNokCXSHMT1l0mhWwQ6HTAA/EgSaVZH8k=;
-        b=cIiV7ya7rPxHrqmx89Qy8fIwAQbRkujKPAk0qV061Wx+C9nIDPN/P4WftGVsn4Cv9X
-         2TrPXs0ctKzeRROVaDUQqZZxrNUy2KZxg5vMI68XDQR9L0PJLESmudyap72mjx5LlY3C
-         AtTB71ToOdU3MCiGLJdfoEmX1XjAdjc5N0TWbf8xix3zbds/y1e6b93b5EAWCLmis+TK
-         uMdE7oaljFWowM+R98TyYO6/sWOXPaSTPadiZSGCsEZP+7FYBdXKFz/9k1vb4Dm9nW1s
-         iRowF0gnQzv8RdCFUB99EBz/kH0mpu8CqlbFBlbNf1Bb+Ve8ZZBEMDDMlAMXGiAtkMfO
-         lpAw==
-X-Gm-Message-State: AOAM53106giz8QLWZymAsRy0NHc9bcMpAZO21J9wfTxe+HEHJvcVbB3t
-        uP53a6XuBjyAI6zUlk32oHQ=
-X-Google-Smtp-Source: ABdhPJyI5eMgEbZkAVel5Tv5l3zwCXrtrLf2cCo7PxplIsv2Zw4jKq/hneWxBtta0zpYtrGfDXTfiA==
-X-Received: by 2002:a05:620a:10a3:: with SMTP id h3mr2820364qkk.459.1604929304530;
-        Mon, 09 Nov 2020 05:41:44 -0800 (PST)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id l125sm6214424qkc.111.2020.11.09.05.41.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 05:41:43 -0800 (PST)
-Date:   Mon, 9 Nov 2020 08:41:28 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value
-Message-ID: <20201109134128.GA5596@shinobu>
-References: <cover.1603055402.git.syednwaris@gmail.com>
- <15a044d3ba23f00c31fd09437bdd3e5924bb91cd.1603055402.git.syednwaris@gmail.com>
- <CAK8P3a3f=fuq24QwNee3QgoMcSK5rcvLRpdTOWBZ9NJ4d-4bvA@mail.gmail.com>
- <20201101150033.GA68138@shinobu>
- <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
- <20201109123411.GA19869@syed>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3P4Xy4X3O8T4Nf4PgfEYUgS4xFf3jYJhHCyEVrGcPOA=;
+        b=FtKc5rAT+AN6p3sV7dcYeq8yrw1vNkMlvjQTb77zzMP4kYMrnUspGSHgzd7nXlWxGR
+         4/pgoa1MCtCFV2LU2JYdLzNQsNx4wPtE+SKcKQe5rwpu6QI4MGW8ad98esVwGWHaraPM
+         fijVJsCkuwK2r9rLKItzjyTZvKlRjcejpVoxXRz5ZQPcjTey+EaOLnDPjVC4C1VHenAC
+         scSjIdFdhwk2ZBJxDgssKnf1a+bMZ44hzK7VVQ/vPR4HD73TiHZXrnA9HRNwgn+NxpEO
+         vmlX4ggenQ7q+gOx4ZBIQjC+3yrbnonkdwZwlEMKH9BrqrRhhj82a/9MQiTHbnFBvJ+e
+         Hbog==
+X-Gm-Message-State: AOAM531mwZFkTwnvhpcbisC5g2f5FVDy8gQL8ILDpgIVTXImJ3dL/k1I
+        d2BDcKqxuntMmwBGPkd5LhQ=
+X-Google-Smtp-Source: ABdhPJzU05Fw0kzNgO7z+uoXZtYaKr3IfKDrqYuQ/4WUNUe6l+9tEW5JmP/HvpwEVZFqdcj9iMWp3Q==
+X-Received: by 2002:ad4:4e2f:: with SMTP id dm15mr1130200qvb.7.1604929632527;
+        Mon, 09 Nov 2020 05:47:12 -0800 (PST)
+Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
+        by smtp.googlemail.com with ESMTPSA id j50sm6081221qtc.5.2020.11.09.05.47.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Nov 2020 05:47:11 -0800 (PST)
+Subject: Re: [PATCH 03/32] spi: dw: Fix driving MOSI low while recieving
+To:     Mark Brown <broonie@kernel.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-4-damien.lemoal@wdc.com>
+ <20201109132935.GB6380@sirena.org.uk>
+From:   Sean Anderson <seanga2@gmail.com>
+Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
+ mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
+ 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
+ lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
+ GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
+ F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
+ AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
+ AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
+ bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
+ +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
+ Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
+ N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
+ SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
+ w8jpXnbEPQN3A2ZJCbeM
+Message-ID: <c37ca9be-ea92-b07a-b600-d68de4f7bde5@gmail.com>
+Date:   Mon, 9 Nov 2020 08:47:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Content-Disposition: inline
-In-Reply-To: <20201109123411.GA19869@syed>
+In-Reply-To: <20201109132935.GB6380@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 11/9/20 8:29 AM, Mark Brown wrote:
+> On Sat, Nov 07, 2020 at 05:13:51PM +0900, Damien Le Moal wrote:
+> 
+>> The resting state of MOSI is high when nothing is driving it. If we
+>> drive it low while recieving, it looks like we are transmitting 0x00
+>> instead of transmitting nothing. This can confuse slaves (like SD cards)
+>> which allow new commands to be sent over MOSI while they are returning
+>> data over MISO. The return of MOSI from 0 to 1 at the end of recieving
+>> a byte can look like a start bit and a transmission bit to an SD card.
+> 
+> If client devices are interpreting the transmitted data then I would
+> expect the drivers for that hardware to be ensuring that whatever we
+> transmit matches what the device is expecting.  We shouldn't be putting
+> a hack in a particular controller driver to paper over things, that will
+> mean that the device will break when used with other controllers and if
+> different devices have different requirements then obviously we can't
+> satisfy them.  There is not meaningfully a general specification for SPI
+> which says what happens when signals are idle, it's all specific to the
+> client device.
+>
+> In this case it also looks like the controller hardware requires
+> transmit data and therefore should be setting SPI_MUST_TX and just
+> removing the in driver default anyway, though that will have no effect
+> one way or anther on the issue you're seeing.
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is a recieve-only mode, but it is not used by this driver. Perhaps
+it should be.
 
-On Mon, Nov 09, 2020 at 06:04:11PM +0530, Syed Nayyar Waris wrote:
-> On Sun, Nov 01, 2020 at 09:08:29PM +0100, Arnd Bergmann wrote:
-> > On Sun, Nov 1, 2020 at 4:00 PM William Breathitt Gray
-> > <vilhelm.gray@gmail.com> wrote:
-> > >
-> > > On Thu, Oct 29, 2020 at 11:44:47PM +0100, Arnd Bergmann wrote:
-> > > > On Sun, Oct 18, 2020 at 11:44 PM Syed Nayyar Waris <syednwaris@gmai=
-l.com> wrote:
-> > > > >
-> > > > > This patch reimplements the xgpio_set_multiple() function in
-> > > > > drivers/gpio/gpio-xilinx.c to use the new generic functions:
-> > > > > bitmap_get_value() and bitmap_set_value(). The code is now simpler
-> > > > > to read and understand. Moreover, instead of looping for each bit
-> > > > > in xgpio_set_multiple() function, now we can check each channel at
-> > > > > a time and save cycles.
-> > > >
-> > > > This now causes -Wtype-limits warnings in linux-next with gcc-10:
-> > >
-> > > Hi Arnd,
-> > >
-> > > What version of gcc-10 are you running? I'm having trouble generating
-> > > these warnings so I suspect I'm using a different version than you.
-> >=20
-> > I originally saw it with the binaries from
-> > https://mirrors.edge.kernel.org/pub/tools/crosstool/, but I have
-> > also been able to reproduce it with a minimal test case on the
-> > binaries from godbolt.org, see https://godbolt.org/z/Wq8q4n
-> >=20
-> > > Let me first verify that I understand the problem correctly. The issue
-> > > is the possibility of a stack smash in bitmap_set_value() when the va=
-lue
-> > > of start + nbits is larger than the length of the map bitmap memory
-> > > region. This is because index (or index + 1) could be outside the ran=
-ge
-> > > of the bitmap memory region passed in as map. Is my understanding
-> > > correct here?
-> >=20
-> > Yes, that seems to be the case here.
-> >=20
-> > > In xgpio_set_multiple(), the variables width[0] and width[1] serve as
-> > > possible start and nbits values for the bitmap_set_value() calls.
-> > > Because width[0] and width[1] are unsigned int variables, GCC conside=
-rs
-> > > the possibility that the value of width[0]/width[1] might exceed the
-> > > length of the bitmap memory region named old and thus result in a sta=
-ck
-> > > smash.
-> > >
-> > > I don't know if invalid width values are actually possible for the
-> > > Xilinx gpio device, but let's err on the side of safety and assume th=
-is
-> > > is actually a possibility. We should verify that the combined value of
-> > > gpio_width[0] + gpio_width[1] does not exceed 64 bits; we can add a
-> > > check for this in xgpio_probe() when we grab the gpio_width values.
-> > >
-> > > However, we're still left with the GCC warnings because GCC is not sm=
-art
-> > > enough to know that we've already checked the boundary and width[0] a=
-nd
-> > > width[1] are valid values. I suspect we can avoid this warning is we
-> > > refactor bitmap_set_value() to increment map seperately and then set =
-it:
-> >=20
-> > As I understand it, part of the problem is that gcc sees the possible
-> > range as being constrained by the operations on 'start' and 'nbits',
-> > in particular the shift in BIT_WORD() that put an upper bound on
-> > the index, but then it sees that the upper bound is higher than the
-> > upper bound of the array, i.e. element zero.
-> >=20
-> > I added a check
-> >=20
-> >       if (start >=3D 64 || start + size >=3D 64) return;
-> >=20
-> > in the godbolt.org testcase, which does help limit the start
-> > index appropriately, but it is not sufficient to let the compiler
-> > see that the 'if (space >=3D nbits) ' condition is guaranteed to
-> > be true for all values here.
-> >=20
-> > > static inline void bitmap_set_value(unsigned long *map,
-> > >                                     unsigned long value,
-> > >                                     unsigned long start, unsigned lon=
-g nbits)
-> > > {
-> > >         const unsigned long offset =3D start % BITS_PER_LONG;
-> > >         const unsigned long ceiling =3D round_up(start + 1, BITS_PER_=
-LONG);
-> > >         const unsigned long space =3D ceiling - start;
-> > >
-> > >         map +=3D BIT_WORD(start);
-> > >         value &=3D GENMASK(nbits - 1, 0);
-> > >
-> > >         if (space >=3D nbits) {
-> > >                 *map &=3D ~(GENMASK(nbits - 1, 0) << offset);
-> > >                 *map |=3D value << offset;
-> > >         } else {
-> > >                 *map &=3D ~BITMAP_FIRST_WORD_MASK(start);
-> > >                 *map |=3D value << offset;
-> > >                 map++;
-> > >                 *map &=3D ~BITMAP_LAST_WORD_MASK(start + nbits);
-> > >                 *map |=3D value >> space;
-> > >         }
-> > > }
-> > >
-> > > This avoids adding a costly conditional check inside bitmap_set_value=
-()
-> > > when almost all bitmap_set_value() calls will have static arguments w=
-ith
-> > > well-defined and obvious boundaries.
-> > >
-> > > Do you think this would be an acceptable solution to resolve your GCC
-> > > warnings?
-> >=20
-> > Unfortunately, it does not seem to make a difference, as gcc still
-> > knows that this compiles to the same result, and it produces the same
-> > warning as before (see https://godbolt.org/z/rjx34r)
-> >=20
-> >          Arnd
->=20
-> Hi Arnd,
->=20
-> Sharing a different version of bitmap_set_valuei() function. See below.
->=20
-> Let me know if the below solution looks good to you and if it resolves
-> the above compiler warning.
->=20
->=20
-> @@ -1,5 +1,5 @@
->  static inline void bitmap_set_value(unsigned long *map,
-> -                                    unsigned long value,
-> +                                    unsigned long value, const size_t le=
-ngth,
->                                      unsigned long start, unsigned long n=
-bits)
->  {
->          const size_t index =3D BIT_WORD(start);
-> @@ -7,6 +7,9 @@ static inline void bitmap_set_value(unsigned long *map,
->          const unsigned long ceiling =3D round_up(start + 1, BITS_PER_LON=
-G);
->          const unsigned long space =3D ceiling - start;
-> =20
-> +       if (index >=3D length)
-> +               return;
-> +
->          value &=3D GENMASK(nbits - 1, 0);
-> =20
->          if (space >=3D nbits) {
-> @@ -15,6 +18,10 @@ static inline void bitmap_set_value(unsigned long *map,
->          } else {
->                  map[index + 0] &=3D ~BITMAP_FIRST_WORD_MASK(start);
->                  map[index + 0] |=3D value << offset;
-> +
-> +               if (index + 1 >=3D length)
-> +                       return;
-> +
->                  map[index + 1] &=3D ~BITMAP_LAST_WORD_MASK(start + nbits=
-);
->                  map[index + 1] |=3D value >> space;
->          }
+> Please also try to avoid the use of master/slave terminology where
+> reasonable, controller and device tend to work for SPI (though MOSI/MISO
+> are going to be harder to shift).
 
-One of my concerns is that we're incurring the latency two additional
-conditional checks just to suppress a compiler warning about a case that
-wouldn't occur in the actual use of bitmap_set_value(). I'm hoping
-there's a way for us to suppress these warnings without adding onto the
-latency of this function; given that bitmap_set_value() is intended to
-be used in loops, conditionals here could significantly increase latency
-in drivers.
+Here I use it to draw distinction between the SPI master and the SPI
+slave, which are both devices in different contexts. 
 
-I wonder if array_index_nospec() might have the side effect of
-suppressing these warnings for us. For example, would this work:
-
-static inline void bitmap_set_value(unsigned long *map,
-				    unsigned long value,
-				    unsigned long start, unsigned long nbits)
-{
-	const unsigned long offset =3D start % BITS_PER_LONG;
-	const unsigned long ceiling =3D round_up(start + 1, BITS_PER_LONG);
-	const unsigned long space =3D ceiling - start;
-	size_t index =3D BIT_WORD(start);
-
-	value &=3D GENMASK(nbits - 1, 0);
-
-	if (space >=3D nbits) {
-		index =3D array_index_nospec(index, index + 1);
-
-		map[index] &=3D ~(GENMASK(nbits - 1, 0) << offset);
-		map[index] |=3D value << offset;
-	} else {
-		index =3D array_index_nospec(index, index + 2);
-
-		map[index + 0] &=3D ~BITMAP_FIRST_WORD_MASK(start);
-		map[index + 0] |=3D value << offset;
-		map[index + 1] &=3D ~BITMAP_LAST_WORD_MASK(start + nbits);
-		map[index + 1] |=3D value >> space;
-	}
-}
-
-Or is this going to produce the same warning because we're not using an
-explicit check against the map array size?
-
-William Breathitt Gray
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl+pRvQACgkQhvpINdm7
-VJJpyQ//bhvn/+QqYckOWct6OuWH4FmJK16nBeN5cVHQfhgnIZZ0PplxJ9l7JaLd
-7xCphMvKonQXLBzNBdKpRLxIBZEt7qG3Fc3b4VBkEdV1iUGLQ2YddoMbwJdNYpt3
-WxaP81/eDq6SJrKqy6+3RB3S/fkfzywYMVLYnXnt1Di6Z7JsRD28vWdMvZC2CdM9
-yKxdHkxn/VqjaS6czPlAwlElKG+YvKv2wSyzSoj9dIBNd1WdFH4zLi8DxZPe/jtd
-gtCWqpzI80pDLMH+WGyh8vKqfGmccohZ5QYsaNJBbexa473BjZlovrt+Krsdoeho
-UvP0Urn5DRRZDyuPQ57VOhNnCbv01g4/+UD/pnh/JvpduXph9O14KvlTkplC8H2f
-ibhan9bywAHwoZuup+oWak+hZgPT6+W4GXxwvLhIFRUY+jXsCzs5FcSeqCjlOGcf
-pPToEoWGnhKuO/nrgxbIHaDzH7JAa7IYmD7Z9Jzvb5Cv63IeKQj25tf2yBh/AbKD
-vSaJftmu0ItxbRrFGFVV15Ju0mYZFZSYJ5Eisa5YWhin8IilFV2G4wR9j86/iVDE
-9xrovGSEwpjnLZrfjAyecXwJfr4VbPBocYhq4dwbx0yi8kbDmJcahU9W8r7opfVU
-NxmDdy28i/hGCzqkiqhTpST71FZEJvope2elB+T1wTID5LYaHkc=
-=wbBm
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+--Sean
