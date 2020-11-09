@@ -2,155 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9470F2ABEEC
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E832ABEE5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:40:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbgKIOle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 09:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbgKIOld (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 09:41:33 -0500
-Received: from saruman (88-113-213-94.elisa-laajakaista.fi [88.113.213.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7FEE20789;
-        Mon,  9 Nov 2020 14:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604932892;
-        bh=yAypb4Z+4goyWfKuvwVWnsSV+ZMyJbAKwefaPjlJpIU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=fuCpaK/GXwQcADBF293ZmU1fhjQnR9mQAqKGemh/yOLWxyYokGyxeYRc3r/nofDL6
-         CXScDlLVxe0eNh3QBA2inEmCMoafenPJEwLA+HaWDNWgapdp1/1i/OAiwdbhGxX/3w
-         MD19d3/NtL3ufoVNaC9koH7LUSOBMK3sXVUuPEFI=
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: How to handle a level-triggered interrupt that is slow to
- de-assert itself
-In-Reply-To: <CAHp75VcBB9wGdrBKXXSnCeHRwS1uEEz9TSrnbxzZ5g+yGdXaiA@mail.gmail.com>
-References: <a491261f-8463-474d-a6b3-d674670c7bb7@www.fastmail.com>
- <CAHp75VcBB9wGdrBKXXSnCeHRwS1uEEz9TSrnbxzZ5g+yGdXaiA@mail.gmail.com>
-Date:   Mon, 09 Nov 2020 16:41:24 +0200
-Message-ID: <87tuty384r.fsf@kernel.org>
+        id S1730848AbgKIOkk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 09:40:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730098AbgKIOkk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 09:40:40 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1C4C0613CF;
+        Mon,  9 Nov 2020 06:40:39 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id i13so2534199pgm.9;
+        Mon, 09 Nov 2020 06:40:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D35EDlDK16EWIltc01Yrg7/CsfVYBQcvvB8Ix+TT1us=;
+        b=ip3BVgMKiauzd4a5fsf1ODx3qhmqLy8nttnSg5raPkaWQx8GjNJL+QhxhnUhWds9us
+         OZStQB/ulbYJ3bslooxV9GsmwOwtAa6iavQrUWVkWhsZEC5ZcnchA9U7avBEJia20ymF
+         /q+3MKFL4RH4/SRzyLE2dFSPINGxmc59RlVXmaKM5XE/YSS8k9oEDn8+81AVro5zT3og
+         KHO7qAQm0GlxcFcFCD+QGCRXBUuXLbbk/fUHuCWkUe8zwbjlY3XQXcam+yzU3AdHSdnJ
+         dVENfBn4851dtJ3MzTRVjuHOcr2mLKNMKs2dwuLSVJ4/XpyQkgcb/PffPSJV/wqpabv2
+         flGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D35EDlDK16EWIltc01Yrg7/CsfVYBQcvvB8Ix+TT1us=;
+        b=gD3/FfYzZ5/j4WoCbM643aGwdy0ZdMEFdXzMY5ij3BIBDrnDneFKFeVsaEMrMQpX7w
+         LC6F9WFhoyjEybYoVfQidzMFA0ivroyy3cOThMcK1t3McucqzckpcBS0OgOPQjt1dES4
+         n19TEg//tzYtr6CRvNcv6XDR7ZrNuoSQeH4dw0XCJtFrq0vTrbWkzNeyJx0Vxv8sksqG
+         XOewVgWT9M2jJWMt49U2sSHpUJIrqHxjOUowRGGeXKEhJpWnNtMPZcExuQuwOWjJqgkb
+         LLgOq9T5IUofKOb0gY6fXTpq/GAuI5ezmzIVh+t7i2brseGVOpBvQklu83Fl+yRjoCUW
+         cVkQ==
+X-Gm-Message-State: AOAM533oZtDEGdCSK3H00goMy9xe5/E2p+np8OQ6CpRBL9HlIspvdad2
+        5wDwQAihMbISONSfRGDRxrxAHZ8n3hx6Z/jEvBM=
+X-Google-Smtp-Source: ABdhPJxYLSKMi85uilQdG9UgvG5aiuKo/w+WnpjA83tGtKFNeV1eTUaT5WzTkYcsgycY2IhuNNcZK/y5O7B7qM4p5C8=
+X-Received: by 2002:aa7:8c4f:0:b029:18b:f361:4aa3 with SMTP id
+ e15-20020aa78c4f0000b029018bf3614aa3mr7824997pfd.73.1604932839518; Mon, 09
+ Nov 2020 06:40:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-3-damien.lemoal@wdc.com>
+ <20201109142529.tt5ojjyn36vd3ohe@mobilestation> <6dc6d52e-a39d-c351-5280-71b9e8eafe37@gmail.com>
+ <CAHp75VejtoTRAM1JmGib3OaJwzuw9Bb-qb08+XhdZUOuzTGUKw@mail.gmail.com>
+In-Reply-To: <CAHp75VejtoTRAM1JmGib3OaJwzuw9Bb-qb08+XhdZUOuzTGUKw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 9 Nov 2020 16:41:28 +0200
+Message-ID: <CAHp75Vc+h5PCqBUnyFshw8RE4zWusE+zdvKKSxBxfFw1_5k0vQ@mail.gmail.com>
+Subject: Re: [PATCH 02/32] spi: dw: Add support for 32-bits ctrlr0 layout
+To:     Sean Anderson <seanga2@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> On Mon, Nov 9, 2020 at 2:57 PM Jamie McClymont <jamie@kwiius.com> wrote:
+On Mon, Nov 9, 2020 at 4:40 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Looking into the problem I think the better people to answer are ones
-> from the input subsystem (or closer), so I have added a few to the Cc
-> list.
+> On Mon, Nov 9, 2020 at 4:34 PM Sean Anderson <seanga2@gmail.com> wrote:
+> > On 11/9/20 9:25 AM, Serge Semin wrote:
+> > > On Sat, Nov 07, 2020 at 05:13:50PM +0900, Damien Le Moal wrote:
 >
->> Background context:
->>
->> I'm continuing my efforts to reverse-engineer and write a driver for
->> the Goodix GXFP5187 fingerprint sensor in my Huawei Matebook X Pro
->> (the host is an Intel i5-8250U).
->>
->> The device is connected via SPI plus a GPIO Interrupt pin, defined
->> like so in the ACPI tables:
->>
->>     GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
->>         "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,) { 0x0000 }
->>
->> This line is held down by the device when it has a message for the
->> host, and stays held down until the host finishes reading the message
->> out over SPI.
->>
->> I'm handling this with a devm_request_threaded_irq-type handler,
->> where the irq part is just "return IRQ_WAKE_THREAD", and the threaded
+> ...
+>
+> > > Are you sure they have been moved from [0, 3] to [16, 20]? I don't have the
+> > > manual for the 4.0x version of the core, but according to this patch:
+> > > https://patchwork.kernel.org/project/spi-devel-general/patch/1575907443-26377-7-git-send-email-wan.ahmad.zainie.wan.mohamad@intel.com/
+> > > it has been ok to use the lowest four bits for DFS setting. Is the commit
+> > > message misleading there?
+> >
+> > This commit message is a truncated version of [1].
+>
+> I don't see how they are related.
 
-I think you should pass NULL as the top half and make sure you have
-IRQF_ONESHOT flag while requesting the interrupt. This way, the line
-will be disabled by IRQ subsystem for the duration of the bottom half.
+For DW_ssi v1.x DFS is always for transfers up to 32-bit.
 
->> part does all the work. My understanding is that this is a reasonable
->> approach since I don't have tight latency requirements (and the
->> sleeping spi functions are convenient, plus I don't want to introduce
->> any unnecessary jitter to the system) -- please correct me if I
->> shouldn't actually be using a threaded handler here.
->>
->> ---
->>
->> Here's my problem:
->>
->> the IRQ line actually stays held down for roughly 180us after I've
->> finished reading out the message over SPI. That means that as soon as
->> the handler finishes, a new one starts, and it reads out corrupted
->> data, since the sensor doesn't have anything to say.
->>
->> This is okay in theory -- the corrupted message header can be
->> detected by its checksum, and disregarded. However, this leads to a
->> race condition where the chip can decide it DOES have something to
->> say to the host, WHILE the host is reading out the corrupted
->> header. At that point, the two sides de-sync in their ideas of what
->> needs to be read, and everything stops working.
->>
->> So, I'd like some way to pause interrupt handling for 200us+, and
->> only re-run the handler if the line is still held down after that
->> time.
+> > Importantly, DFS is
+> > valid when SSI_MAX_XFER_SIZE=16. When it =32, then DFS_32 must be used
+> > (since DFS is constant 0xF). Since SSI_MAX_XFER_SIZE is a synthesis
+> > parameter, there exist devices where DFS must be used, and also where
+> > DFS_32 must be used.
+> >
+> > [1] https://patchwork.ozlabs.org/project/uboot/patch/20201016225755.302659-10-seanga2@gmail.com/
 
-usleep_range(180, 200) before exitting the handler? You're in the bottom
-half anyway.
 
->> My first approach was to add a sleep (usleep_range) at the end of the
->> threaded handler, right before returning IRQ_HANDLED. However, it
->> appears that after the sleep finishes, the IRQ is triggered one more
->> time -- presumably it has been set as pending before/during the
->> sleep?
->>
->> My new workaround is to save a ktime_get_ns timestamp at the end of
->> the handler, and check it against the current ktime at the start,
->> returning early if not enough time has yet elapsed. This is
->> unsatisfactory, as it is effectively a 180us busy-wait, and gets in
->> the way of whatever the core could better be doing (presumably idling
->> and saving power :).
->>
->> Is it possible to return to the first approach, but prevent that one
->> spurious interrupt from firing after the handler ends?
 
-IRQF_ONESHOT would probably help with this part, I guess. Could you give
-it a shot?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl+pVRQRHGJhbGJpQGtl
-cm5lbC5vcmcACgkQzL64meEamQY+UQ//bLX8KcF3VEkMeNM7YV4X3jAWEY54hIyM
-nf719I8+D77AhzbEPhUYSNNKe80qimbvaSPG6caoIIMC7PRlrkwVrlDjtgoPpmmz
-60fyTY6ynUCgeH7P/rpDQtgxmA6o/km/plc6TTlsPg9XlRTScIVssV9ZD5gvLSlH
-B0EfOvWuWO8ZCsHqRRY3nwBRT4z7V1K0iOjv3j3KyRwFdxovCECRnVGP+0P9tkL0
-CJoEplQ2DWj2l28NmxbAqk5opnU72dYLr6+zdHmMVJygxFnwUdQsTbk8jcK3QRi5
-DFClPusJC99/jDvPDX5vlPnGxBWNksPQnQa3xnTEpQeri9D8c87xG0hNQyQKKDIu
-i1odsnUOgKsjXgmT2PrUUFr7NqKYaF2Qm6NWJbStqMna/gG+BEqCYmqG6Bujj5UG
-kEWkeqmPQf0Sd83q1c8dAqGZE9WenMquqzfJwOtLNqCUQiUvl63rdhynyInOb1ov
-C18HkipaZJuTOTQTdFxESGvikDg9E+dAMS2ZFtNyTVVrhGcyrBm72F8E64gmjF1k
-0sRHLcMDy0CybWwPCru7f4neecxiT901gEiT3l+iOsS+jz2WKsYsfbDKm3qQS0qj
-RpD+xQoCiriYeJwwpJS0HdNZPYsJgIHIxk9cusDGih1K6CgUt0FvfGBT/ii8Myqn
-vG6RIVtJA0g=
-=vKK3
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+With Best Regards,
+Andy Shevchenko
