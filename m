@@ -2,113 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 078D82ABEF6
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A41B92ABF23
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:48:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbgKIOmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 09:42:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbgKIOmL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 09:42:11 -0500
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5132B221E9;
-        Mon,  9 Nov 2020 14:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604932930;
-        bh=sqs6Ab6qmHb8wLjpO8+s17ibG0cExkZUhwdEEn/31RM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=I0iWJXq7f8C4w8yCYfE3FJzyDJQWdci2e2Yo5BRR9N1qSpD90kCXxUr//h8p5d63l
-         +zV4WPLmIRHHsTCfNzdRO/HdzzXaIZ7PKpQ76S7Yf4QyvazXUtPDly4j26hIe08QP8
-         KbhJeRUpCqLE2tWq83v7JaAVW9L0uqPr3XV6+Kmk=
-Received: by mail-ot1-f48.google.com with SMTP id j14so9125993ots.1;
-        Mon, 09 Nov 2020 06:42:10 -0800 (PST)
-X-Gm-Message-State: AOAM5331pGgHLlj7FzCqTxsUz1K5+Xs/9kzQx7QHfnWclOREc6+xkhEH
-        O/aKcGAdyUbj6Mt3JV177qp1JSvSjBGlGXb4860=
-X-Google-Smtp-Source: ABdhPJzeeo6JiBdT3OYlZsQwt9pc+G9cyqIJAbkyOtDcxvKwYR4vZ799vC2P3NypOkrxzEQQr00gdSY/oBLDecIaZeM=
-X-Received: by 2002:a05:6830:22d2:: with SMTP id q18mr9636879otc.305.1604932929586;
- Mon, 09 Nov 2020 06:42:09 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1603055402.git.syednwaris@gmail.com> <15a044d3ba23f00c31fd09437bdd3e5924bb91cd.1603055402.git.syednwaris@gmail.com>
- <CAK8P3a3f=fuq24QwNee3QgoMcSK5rcvLRpdTOWBZ9NJ4d-4bvA@mail.gmail.com>
- <20201101150033.GA68138@shinobu> <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
- <20201109123411.GA19869@syed> <20201109134128.GA5596@shinobu>
-In-Reply-To: <20201109134128.GA5596@shinobu>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Mon, 9 Nov 2020 15:41:53 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2FMkMc0K+hu0pnqC8wEMeapKPkZXaBm+HFYYPTes5NHA@mail.gmail.com>
-Message-ID: <CAK8P3a2FMkMc0K+hu0pnqC8wEMeapKPkZXaBm+HFYYPTes5NHA@mail.gmail.com>
-Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        id S1731064AbgKIOsN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 09:48:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730338AbgKIOsN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 09:48:13 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088BAC0613CF;
+        Mon,  9 Nov 2020 06:48:13 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id e27so12775472lfn.7;
+        Mon, 09 Nov 2020 06:48:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K0FA6hn3mgfs3nr4Tq0aLjhCMC7Ar/moVNi5BoLwQZ0=;
+        b=l6evJkKbqsoNee9rn/v9Uq+TWjJuWeQ6uKAIo58ktqGngWVJhFv2/I+GhDxG2BciPg
+         WxgmObUCndcHUXQPIyJTC9bvoaWIgljVw4chV42s4idasbBz7QUcNcKejlio7Q6hbbiS
+         3bwMsM1ZkxLJ5t2e56/m2a3zjtix5Wzp16UrqPsvTrIZC6aj9+OymGA2DnApkl4kzTwE
+         jG183liWmwY8GRRmf/wIHUugf7QyBbXNTOBkXzL7gUFMLlbBKOr8+//182rj0eFTNqMQ
+         3wgjQ1g7h9DiXPEQ3tAOlZ/hWbvtyMS9ZnXrisDeih6aHBWXLbN7a0wjZuLhm6Omdraa
+         1Byg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K0FA6hn3mgfs3nr4Tq0aLjhCMC7Ar/moVNi5BoLwQZ0=;
+        b=oKScaCSBxKd8JkEI5kXcPxqusqiYbCEWe+y6UDyPZC5XAakQkTRXg7lOvjWFAy3ggs
+         6Xj6aCX5Nxd962oQvQdpx6fBe8xyJxbcxJDxRj7G+vBc4QPwyUxtjVa0KWFeVWLNozVM
+         5aKtRa4oTw6JA+NfFNcozgZ4iHRJvOCZ16fgFkQdrM7hjrRucQwUh3lgEJX7HRrOnVRg
+         Gfl2sZqUko3o6Zsst5V+qFaJLIzHWTVSJngDXPt41NZqsK0iYuA0LWToZiV6o9xwXiwh
+         CPYuxRoZ8Ojx1N3SN2+SlphhcRAkRWvTjzdcAFHplSqJIemKwVq/mY+GMVeHcdb27eR0
+         d7nQ==
+X-Gm-Message-State: AOAM5324pYDAiFRq1At8sYq1gBkLomTUAmuahrqCo/HPaPKssRoWDBN3
+        9CiWHBmQGhtnYKzj/Z5HDjr26KSZAzGEnmFG
+X-Google-Smtp-Source: ABdhPJwAYSC7luYDcL7xMZ5Pf3F7g3S4iKqCFXZDtrfHDwHahR6oW6F/q1A+lv8u2Laa/2TruqAzRw==
+X-Received: by 2002:a19:7b06:: with SMTP id w6mr6263479lfc.260.1604933291552;
+        Mon, 09 Nov 2020 06:48:11 -0800 (PST)
+Received: from mobilestation ([95.79.141.114])
+        by smtp.gmail.com with ESMTPSA id t22sm2200248ljh.89.2020.11.09.06.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2020 06:48:10 -0800 (PST)
+Date:   Mon, 9 Nov 2020 17:48:08 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Mark Brown <broonie@kernel.org>, Sean Anderson <seanga2@gmail.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 03/32] spi: dw: Fix driving MOSI low while recieving
+Message-ID: <20201109144808.mvttq2f6st7xd7sm@mobilestation>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-4-damien.lemoal@wdc.com>
+ <20201109132935.GB6380@sirena.org.uk>
+ <c37ca9be-ea92-b07a-b600-d68de4f7bde5@gmail.com>
+ <20201109141422.GD6380@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201109141422.GD6380@sirena.org.uk>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 2:41 PM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
-> On Mon, Nov 09, 2020 at 06:04:11PM +0530, Syed Nayyar Waris wrote:
->
-> One of my concerns is that we're incurring the latency two additional
-> conditional checks just to suppress a compiler warning about a case that
-> wouldn't occur in the actual use of bitmap_set_value(). I'm hoping
-> there's a way for us to suppress these warnings without adding onto the
-> latency of this function; given that bitmap_set_value() is intended to
-> be used in loops, conditionals here could significantly increase latency
-> in drivers.
+On Mon, Nov 09, 2020 at 02:14:22PM +0000, Mark Brown wrote:
+> On Mon, Nov 09, 2020 at 08:47:10AM -0500, Sean Anderson wrote:
+> > On 11/9/20 8:29 AM, Mark Brown wrote:
+> 
+> > > In this case it also looks like the controller hardware requires
+> > > transmit data and therefore should be setting SPI_MUST_TX and just
+> > > removing the in driver default anyway, though that will have no effect
+> > > one way or anther on the issue you're seeing.
+> 
 
-At least for this caller, the size check would be a compile-time
-constant that can be eliminated.
+> > There is a recieve-only mode, but it is not used by this driver. Perhaps
+> > it should be.
+> 
+> I'd expect it'd perform better, especially on systems that are
+> apparently struggling for CPU bandwidth like yours seems to.
 
-> I wonder if array_index_nospec() might have the side effect of
-> suppressing these warnings for us. For example, would this work:
->
-> static inline void bitmap_set_value(unsigned long *map,
->                                     unsigned long value,
->                                     unsigned long start, unsigned long nbits)
-> {
->         const unsigned long offset = start % BITS_PER_LONG;
->         const unsigned long ceiling = round_up(start + 1, BITS_PER_LONG);
->         const unsigned long space = ceiling - start;
->         size_t index = BIT_WORD(start);
->
->         value &= GENMASK(nbits - 1, 0);
->
->         if (space >= nbits) {
->                 index = array_index_nospec(index, index + 1);
->
->                 map[index] &= ~(GENMASK(nbits - 1, 0) << offset);
->                 map[index] |= value << offset;
->         } else {
->                 index = array_index_nospec(index, index + 2);
->
->                 map[index + 0] &= ~BITMAP_FIRST_WORD_MASK(start);
->                 map[index + 0] |= value << offset;
->                 map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
->                 map[index + 1] |= value >> space;
->         }
-> }
->
-> Or is this going to produce the same warning because we're not using an
-> explicit check against the map array size?
+Well, it might seem a good idea to use that mode, but there are multiple problems
+you may get in implementing it.
 
-https://godbolt.org/z/fxnsG9
+First of all the Receive-only mode is having a limited number bytes to receive
+at once. It's just 64KB. So in order to implement it you'd need to split the
+bigger transfers up, and feed the DMA engine with smaller chunks one-by-one.
 
-It still warns about the 'map[index + 1]' access: from all I can tell,
-gcc mainly complains because it cannot rule out that 'space < nbits',
-and then it knows the size of 'DECLARE_BITMAP(old, 64)' and finds
-that if 'index + 0' is correct, then 'index + 1' overflows that array.
+Secondly the Receive-only mode will make the DW SSI controller to constantly receive
+the data from the SPI bus and to put it into the Rx FIFO. So your DMA engine will
+have to keep up with extracting the data from there on time, otherwise you'll
+end up with Rx FIFO overflow error eventually. The problem will be actual for the
+DMA engines/system buses, which are slower than the SPI bus speed, second for the
+DMA engines with no hardware accelerated LLP traversal support (like on our DWC DMA
+controller). The second problem can be also fixed by splitting the transfers up as
+it has been already implemented in the spi-dw-dma.c. But the first problem can't be
+fixed, but just workarounded by limiting the SPI bus frequency so the DMA engine
+would keep up with incoming data traffic.
 
-      Arnd
+-Sergey
+
+> 
+> > > Please also try to avoid the use of master/slave terminology where
+> > > reasonable, controller and device tend to work for SPI (though MOSI/MISO
+> > > are going to be harder to shift).
+> 
+> > Here I use it to draw distinction between the SPI master and the SPI
+> > slave, which are both devices in different contexts. 
+> 
+> If you find the use of device to refer to the device being controlled
+> confusing consider also using something like client device instead,
+> there's a number of ways to do it (there's a list in Documentation IIRC).
+
+
