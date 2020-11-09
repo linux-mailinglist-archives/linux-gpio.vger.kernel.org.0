@@ -2,107 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09E832ABEE5
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:40:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 078D82ABEF6
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:42:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbgKIOkk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 09:40:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730098AbgKIOkk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 09:40:40 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1C4C0613CF;
-        Mon,  9 Nov 2020 06:40:39 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id i13so2534199pgm.9;
-        Mon, 09 Nov 2020 06:40:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D35EDlDK16EWIltc01Yrg7/CsfVYBQcvvB8Ix+TT1us=;
-        b=ip3BVgMKiauzd4a5fsf1ODx3qhmqLy8nttnSg5raPkaWQx8GjNJL+QhxhnUhWds9us
-         OZStQB/ulbYJ3bslooxV9GsmwOwtAa6iavQrUWVkWhsZEC5ZcnchA9U7avBEJia20ymF
-         /q+3MKFL4RH4/SRzyLE2dFSPINGxmc59RlVXmaKM5XE/YSS8k9oEDn8+81AVro5zT3og
-         KHO7qAQm0GlxcFcFCD+QGCRXBUuXLbbk/fUHuCWkUe8zwbjlY3XQXcam+yzU3AdHSdnJ
-         dVENfBn4851dtJ3MzTRVjuHOcr2mLKNMKs2dwuLSVJ4/XpyQkgcb/PffPSJV/wqpabv2
-         flGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D35EDlDK16EWIltc01Yrg7/CsfVYBQcvvB8Ix+TT1us=;
-        b=gD3/FfYzZ5/j4WoCbM643aGwdy0ZdMEFdXzMY5ij3BIBDrnDneFKFeVsaEMrMQpX7w
-         LC6F9WFhoyjEybYoVfQidzMFA0ivroyy3cOThMcK1t3McucqzckpcBS0OgOPQjt1dES4
-         n19TEg//tzYtr6CRvNcv6XDR7ZrNuoSQeH4dw0XCJtFrq0vTrbWkzNeyJx0Vxv8sksqG
-         XOewVgWT9M2jJWMt49U2sSHpUJIrqHxjOUowRGGeXKEhJpWnNtMPZcExuQuwOWjJqgkb
-         LLgOq9T5IUofKOb0gY6fXTpq/GAuI5ezmzIVh+t7i2brseGVOpBvQklu83Fl+yRjoCUW
-         cVkQ==
-X-Gm-Message-State: AOAM533oZtDEGdCSK3H00goMy9xe5/E2p+np8OQ6CpRBL9HlIspvdad2
-        5wDwQAihMbISONSfRGDRxrxAHZ8n3hx6Z/jEvBM=
-X-Google-Smtp-Source: ABdhPJxYLSKMi85uilQdG9UgvG5aiuKo/w+WnpjA83tGtKFNeV1eTUaT5WzTkYcsgycY2IhuNNcZK/y5O7B7qM4p5C8=
-X-Received: by 2002:aa7:8c4f:0:b029:18b:f361:4aa3 with SMTP id
- e15-20020aa78c4f0000b029018bf3614aa3mr7824997pfd.73.1604932839518; Mon, 09
- Nov 2020 06:40:39 -0800 (PST)
+        id S1731493AbgKIOmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 09:42:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731491AbgKIOmL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 09:42:11 -0500
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5132B221E9;
+        Mon,  9 Nov 2020 14:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604932930;
+        bh=sqs6Ab6qmHb8wLjpO8+s17ibG0cExkZUhwdEEn/31RM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I0iWJXq7f8C4w8yCYfE3FJzyDJQWdci2e2Yo5BRR9N1qSpD90kCXxUr//h8p5d63l
+         +zV4WPLmIRHHsTCfNzdRO/HdzzXaIZ7PKpQ76S7Yf4QyvazXUtPDly4j26hIe08QP8
+         KbhJeRUpCqLE2tWq83v7JaAVW9L0uqPr3XV6+Kmk=
+Received: by mail-ot1-f48.google.com with SMTP id j14so9125993ots.1;
+        Mon, 09 Nov 2020 06:42:10 -0800 (PST)
+X-Gm-Message-State: AOAM5331pGgHLlj7FzCqTxsUz1K5+Xs/9kzQx7QHfnWclOREc6+xkhEH
+        O/aKcGAdyUbj6Mt3JV177qp1JSvSjBGlGXb4860=
+X-Google-Smtp-Source: ABdhPJzeeo6JiBdT3OYlZsQwt9pc+G9cyqIJAbkyOtDcxvKwYR4vZ799vC2P3NypOkrxzEQQr00gdSY/oBLDecIaZeM=
+X-Received: by 2002:a05:6830:22d2:: with SMTP id q18mr9636879otc.305.1604932929586;
+ Mon, 09 Nov 2020 06:42:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-3-damien.lemoal@wdc.com>
- <20201109142529.tt5ojjyn36vd3ohe@mobilestation> <6dc6d52e-a39d-c351-5280-71b9e8eafe37@gmail.com>
- <CAHp75VejtoTRAM1JmGib3OaJwzuw9Bb-qb08+XhdZUOuzTGUKw@mail.gmail.com>
-In-Reply-To: <CAHp75VejtoTRAM1JmGib3OaJwzuw9Bb-qb08+XhdZUOuzTGUKw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 9 Nov 2020 16:41:28 +0200
-Message-ID: <CAHp75Vc+h5PCqBUnyFshw8RE4zWusE+zdvKKSxBxfFw1_5k0vQ@mail.gmail.com>
-Subject: Re: [PATCH 02/32] spi: dw: Add support for 32-bits ctrlr0 layout
-To:     Sean Anderson <seanga2@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+References: <cover.1603055402.git.syednwaris@gmail.com> <15a044d3ba23f00c31fd09437bdd3e5924bb91cd.1603055402.git.syednwaris@gmail.com>
+ <CAK8P3a3f=fuq24QwNee3QgoMcSK5rcvLRpdTOWBZ9NJ4d-4bvA@mail.gmail.com>
+ <20201101150033.GA68138@shinobu> <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
+ <20201109123411.GA19869@syed> <20201109134128.GA5596@shinobu>
+In-Reply-To: <20201109134128.GA5596@shinobu>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 9 Nov 2020 15:41:53 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2FMkMc0K+hu0pnqC8wEMeapKPkZXaBm+HFYYPTes5NHA@mail.gmail.com>
+Message-ID: <CAK8P3a2FMkMc0K+hu0pnqC8wEMeapKPkZXaBm+HFYYPTes5NHA@mail.gmail.com>
+Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
+ and _set_value
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 4:40 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, Nov 9, 2020 at 2:41 PM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+> On Mon, Nov 09, 2020 at 06:04:11PM +0530, Syed Nayyar Waris wrote:
 >
-> On Mon, Nov 9, 2020 at 4:34 PM Sean Anderson <seanga2@gmail.com> wrote:
-> > On 11/9/20 9:25 AM, Serge Semin wrote:
-> > > On Sat, Nov 07, 2020 at 05:13:50PM +0900, Damien Le Moal wrote:
+> One of my concerns is that we're incurring the latency two additional
+> conditional checks just to suppress a compiler warning about a case that
+> wouldn't occur in the actual use of bitmap_set_value(). I'm hoping
+> there's a way for us to suppress these warnings without adding onto the
+> latency of this function; given that bitmap_set_value() is intended to
+> be used in loops, conditionals here could significantly increase latency
+> in drivers.
+
+At least for this caller, the size check would be a compile-time
+constant that can be eliminated.
+
+> I wonder if array_index_nospec() might have the side effect of
+> suppressing these warnings for us. For example, would this work:
 >
-> ...
+> static inline void bitmap_set_value(unsigned long *map,
+>                                     unsigned long value,
+>                                     unsigned long start, unsigned long nbits)
+> {
+>         const unsigned long offset = start % BITS_PER_LONG;
+>         const unsigned long ceiling = round_up(start + 1, BITS_PER_LONG);
+>         const unsigned long space = ceiling - start;
+>         size_t index = BIT_WORD(start);
 >
-> > > Are you sure they have been moved from [0, 3] to [16, 20]? I don't have the
-> > > manual for the 4.0x version of the core, but according to this patch:
-> > > https://patchwork.kernel.org/project/spi-devel-general/patch/1575907443-26377-7-git-send-email-wan.ahmad.zainie.wan.mohamad@intel.com/
-> > > it has been ok to use the lowest four bits for DFS setting. Is the commit
-> > > message misleading there?
-> >
-> > This commit message is a truncated version of [1].
+>         value &= GENMASK(nbits - 1, 0);
 >
-> I don't see how they are related.
+>         if (space >= nbits) {
+>                 index = array_index_nospec(index, index + 1);
+>
+>                 map[index] &= ~(GENMASK(nbits - 1, 0) << offset);
+>                 map[index] |= value << offset;
+>         } else {
+>                 index = array_index_nospec(index, index + 2);
+>
+>                 map[index + 0] &= ~BITMAP_FIRST_WORD_MASK(start);
+>                 map[index + 0] |= value << offset;
+>                 map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+>                 map[index + 1] |= value >> space;
+>         }
+> }
+>
+> Or is this going to produce the same warning because we're not using an
+> explicit check against the map array size?
 
-For DW_ssi v1.x DFS is always for transfers up to 32-bit.
+https://godbolt.org/z/fxnsG9
 
-> > Importantly, DFS is
-> > valid when SSI_MAX_XFER_SIZE=16. When it =32, then DFS_32 must be used
-> > (since DFS is constant 0xF). Since SSI_MAX_XFER_SIZE is a synthesis
-> > parameter, there exist devices where DFS must be used, and also where
-> > DFS_32 must be used.
-> >
-> > [1] https://patchwork.ozlabs.org/project/uboot/patch/20201016225755.302659-10-seanga2@gmail.com/
+It still warns about the 'map[index + 1]' access: from all I can tell,
+gcc mainly complains because it cannot rule out that 'space < nbits',
+and then it knows the size of 'DECLARE_BITMAP(old, 64)' and finds
+that if 'index + 0' is correct, then 'index + 1' overflows that array.
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+      Arnd
