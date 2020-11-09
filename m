@@ -2,151 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A40722ABE09
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:00:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3360C2ABE2E
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 15:03:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbgKIN7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 08:59:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729697AbgKIN7a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 08:59:30 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8045C0613CF;
-        Mon,  9 Nov 2020 05:59:27 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id f38so7232495pgm.2;
-        Mon, 09 Nov 2020 05:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zd8LqA4AvziCIC3LVVI5CDJXP/RwRW09TDwr3WHSIkM=;
-        b=Z+jnaxEQ3CiyUWVlSfYghQzqYoIeYURKS4e3afZe7gQikjEfqRpP0HtUepHmqK3euV
-         m8NpMD5bwO+eLZ0UTZH2uroxZEcxkFf2Px1Z3uAuNnNsrBa+dhcaaUx82AGim6d9hncH
-         FROHCxCxNd0MfX3Kl17nvFDXLx5F7qaqoVsC+OaZHbmcqCFiBUBHkkJN7BdL4OqftzE9
-         1XQAvc6kkoYWnux3M4LCBjQpU/GFNEvC0kfz++ozefctxirbl5af7C2wzyv0B34qy62G
-         8Ogr/FhkYCTaEsVvuw16l6qXHOgFgBH0r3bQZoWL5qmfm16tXqymkfATTCnxJmjtOuvx
-         +czQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zd8LqA4AvziCIC3LVVI5CDJXP/RwRW09TDwr3WHSIkM=;
-        b=mK+pbUjNgkqNq8IaH5LHGWE23E/mz/RaETpiOhtttGx2+Zohj4dfbAitJNef1mtyQX
-         Bhq8PR3UfsZL1nhp86TTwIqC3Z0zreotncreE89oMEYU2jJYYHvCMV4WhrhWqZUH9R+7
-         VB4Ip6iwKkR0hmxFhtTvOxJK2C8qbFfWhl0HXtQwoEW4USPBLrjnhs7i5KCTqkpqTeTF
-         AC0klLEroIADmcEF+EAr5NSx7Wyu9Sk+87Ht6xY8h2iyIumylrepDfJvcjH5u9lhP1h8
-         JnQs18hDGjb30yzlMPcnK3wA/AX0E4+RKMOmSbvLQRoDPTY+NyYMGK/meuYDnPNVDwwH
-         by3w==
-X-Gm-Message-State: AOAM531yZNiU7HsNcW+Ut3qTovpeFSXoO2aD3PjzP4dEYWFzSucv0C//
-        HuatSlvJENHOIsCtMG2oOKTeslaD7dBdGzA6Md6ycHO1TaQ=
-X-Google-Smtp-Source: ABdhPJya5ocOqVzr/IsQwH0RKfu6x+cnUxaTtxoNr0cNw7bTQm+3u7A+SU9B+0Trg6LYgGaPveIKJPkYbHv8BKxoelQ=
-X-Received: by 2002:aa7:942a:0:b029:164:a853:f0fc with SMTP id
- y10-20020aa7942a0000b0290164a853f0fcmr13471964pfo.40.1604930367398; Mon, 09
- Nov 2020 05:59:27 -0800 (PST)
+        id S1730823AbgKIODu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 09:03:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730301AbgKIODu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 09:03:50 -0500
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A05920867;
+        Mon,  9 Nov 2020 14:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604930629;
+        bh=0qWoR1msH12ErNOfjXIHiUCH+yFjvnvefxpiB9RfPxg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wRs15LHircWzvXOo5eAGcE1LTAtxbL4/0ZY88LI86gw7Ho0CwqdiuVsSEAQIGcUv1
+         9I95eKzIRan+x1t7Duk9Jp1J5q71sIvNo0ijBwWxGhLnAcqvNWBnm09ukjE8xqjK7x
+         RUnP9miyPzSp53rkkKslalwQownd4flZ5FKmtZ60=
+Date:   Mon, 9 Nov 2020 14:03:35 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Subject: Re: [PATCH 05/32] spi: dw: Introduce DW_SPI_CAP_POLL_NODELAY
+Message-ID: <20201109140335.GC6380@sirena.org.uk>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-6-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-References: <20201029134027.232951-1-lars.povlsen@microchip.com>
- <20201029134027.232951-3-lars.povlsen@microchip.com> <CAHp75VedcNP5x72PN4tqZ_0HhbCyd666T=AWn+TFr7Fp8EEs7Q@mail.gmail.com>
- <874klyg2dg.fsf@microchip.com>
-In-Reply-To: <874klyg2dg.fsf@microchip.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 9 Nov 2020 16:00:16 +0200
-Message-ID: <CAHp75VeN4jKjOA=WO0mgkSAbWZUMUfkrX3yV83y0iYnh1rp84Q@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl
- driver for Microsemi Serial GPIO
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZmUaFz6apKcXQszQ"
+Content-Disposition: inline
+In-Reply-To: <20201107081420.60325-6-damien.lemoal@wdc.com>
+X-Cookie: This fortune is false.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 2:07 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
-> > On Thu, Oct 29, 2020 at 3:40 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-...
+--ZmUaFz6apKcXQszQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +#define __shf(x)               (__builtin_ffs(x) - 1)
-> >> +#define __BF_PREP(bf, x)       (bf & ((x) << __shf(bf)))
-> >> +#define __BF_GET(bf, x)                (((x & bf) >> __shf(bf)))
-> >
-> > Isn't it home grown reimplementation of bitfield.h?
->
-> This was answered in the aforementioned mail.
+On Sat, Nov 07, 2020 at 05:13:53PM +0900, Damien Le Moal wrote:
+> On slow systems, i.e. systems with a slow CPU resulting in slow context
+> switches, calling spi_delay_exec() when executing polled transfers
+> using dw_spi_poll_transfer() can lead to RX FIFO overflows. Allow
+> platforms to opt out of delayed polling by introducing the
+> DW_SPI_CAP_POLL_NODELAY DW SPI capability flag to disable
+> the execution of spi_delay_exec() in dw_spi_poll_transfer().
 
-Perhaps it makes sense to add functions like field_get(), field_prep()
-to that header?
+This feels like it should be done based on something like a cutoff for
+sufficiently small delays rather than with a capability - it's tuning,
+not a property of the system.
 
-...
+--ZmUaFz6apKcXQszQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> >> +       /* Calculate port mask */
-> >> +       ret = of_property_read_variable_u32_array(np,
-> >> +                                                 "microchip,sgpio-port-ranges",
-> >> +                                                 range_params,
-> >> +                                                 2,
-> >> +                                                 ARRAY_SIZE(range_params));
-> >> +       if (ret < 0 || ret % 2) {
-> >> +               dev_err(dev, "%s port range\n",
-> >> +                       ret == -EINVAL ? "Missing" : "Invalid");
-> >
-> >
->
-> ?? Did you have a comment?
+-----BEGIN PGP SIGNATURE-----
 
-OF vs device property API I think.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+pTDcACgkQJNaLcl1U
+h9ANcwf/YmBAqrHq0UScXKCySZxkuvWStVH14/YdQZtvZPP/q+momYYX4pc3kd/c
+TBpsNlmcayA1zutuPZnLrGDvbvZveMzTmNelO1tPR3Of2cCvVzxsg7ll9McnW0tO
+lQH/+nQTFzmRa2VmkMwf4qOSjkmBmtTZxn7tEJeuXLHNzNXWuChhNxTaDe8nVW16
+YgDEFpyJP4apsxGFPAbFEgvPmbdz38L0VIlKE7779QjJ+s2l2npzVFpB9kVAPYX0
+InWN9ZugvH0NFUo1vP2s6Ap57nSDtx2uNiY8YC+Q2O9tJYEp8ayKAFvh2pMQaq1k
+s9tHGmXcudhAm0qR5VH22WaH1cXUTw==
+=zXja
+-----END PGP SIGNATURE-----
 
-> >> +               return ret;
-> >> +       }
-> >> +       for (i = 0; i < ret; i += 2) {
-> >> +               int start, end;
-> >> +
-> >> +               start = range_params[i];
-> >> +               end = range_params[i + 1];
-> >> +               if (start > end || end >= SGPIO_BITS_PER_WORD) {
-> >> +                       dev_err(dev, "Ill-formed port-range [%d:%d]\n",
-> >> +                               start, end);
-> >> +               }
-> >> +               priv->ports |= GENMASK(end, start);
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >
-> > Doesn't GPIO / pin control framework have this helper already?
-> > If no, have you considered to use proper bitmap API here? (For
-> > example, bitmap_parselist() or so)
->
-> Past reviews suggested using an array form. And as the binding is
-> already reviewed, I would like to keep this as is.
-
-Yes, but you are using something like a,b,c,d which corresponds to
-[a..b], [c..d] if I'm not mistaken. And I believe that there are
-plenty of drivers using this approach for some ranges (not
-specifically for GPIO). And it should be an API available which does
-all these checks and other stuff under the hood. I will be surprised
-if there is no such. In the latter case, add one and use, many will
-benefit from it.
-
-
-...
-
-> >> +       i = 0;
-> >> +       device_for_each_child_node(dev, fwnode) {
-> >
-> > Ditto.
-> >
->
-> Don't sure I understand this comment, but device_for_each_child_node()
-> is from <linux/property.h> - this should be OK I think.
-
-Yes, either leave it (as you have done), or replace it with OF centric one.
-
--- 
-With Best Regards,
-Andy Shevchenko
+--ZmUaFz6apKcXQszQ--
