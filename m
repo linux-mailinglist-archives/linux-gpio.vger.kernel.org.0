@@ -2,156 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3856E2AC7A1
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 22:48:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D646F2AC7BE
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 22:55:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgKIVss (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 16:48:48 -0500
-Received: from mga12.intel.com ([192.55.52.136]:38913 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgKIVss (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 16:48:48 -0500
-IronPort-SDR: MvK8lx0e8LfM0NWaoAMoOVtdhLV0x6MOVL4hDXmnwxd/rNpcVW9TWwqTXISUcH9Ng+SBr7+1z/
- 3Ib0249ezNMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149157105"
-X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="149157105"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 13:48:48 -0800
-IronPort-SDR: KCGTmNLUU5JXRFr0ru6PsQWg2p4hlleyiEJM3TFK5TWNsgFVJwa08AWrlDtZkH77ecn/KJ7TnD
- UN9nih/+lFNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="365621868"
-Received: from lkp-server01.sh.intel.com (HELO d0be80f1a028) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 09 Nov 2020 13:48:46 -0800
-Received: from kbuild by d0be80f1a028 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kcF1q-0000Qx-26; Mon, 09 Nov 2020 21:48:46 +0000
-Date:   Tue, 10 Nov 2020 05:48:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:for-next] BUILD SUCCESS
- 9a6907e948a36e55d45f53b5e82fdb73aa4397f7
-Message-ID: <5fa9b92c.pXi3X2H4sOoX1QbQ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731653AbgKIVz3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 16:55:29 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40270 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731617AbgKIVz1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 16:55:27 -0500
+Received: by mail-oi1-f193.google.com with SMTP id m143so11922660oig.7;
+        Mon, 09 Nov 2020 13:55:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=04FVsg3be89rhioIr4Vul6hS9/ZyD/kx4pWYlaKleBM=;
+        b=p4y/du7JxMJ2asjV9Mhfcdl+s23xxcSFJpkroK93obUaVz1zoZz3c61rSk9zl1bPz9
+         xE4pCMnnHiW2FIdrL/LA1DWQ4oWkp2T8mbvHRu+J+GaorYCYC7XWvSW1GIA1l34qyQ7/
+         zzkx4WQxy1o5H7Rk/ifVWEyzWAOUo2UKijrCiglbsaVDPcP0rW6S72FYGMZEth+M9Hz2
+         o10W9xUUNCaOUDp9JM68HP5Z302FILAbyLZ4+WHTLKnBE4BTkPioh/9XEe7etk9JQ7T+
+         amX2J2teKGD9AA1cyVoRVvFtC/v/HugCgTdZ1RiJDUO+ysDmLnpuI8GNnvEkbMkQRoK9
+         cT+g==
+X-Gm-Message-State: AOAM532iWfE2tSRFvtO55Onc10kcR8JSquk9W0did4JesdqLeBfgCYIG
+        SP/2XpjQKjpYFb7sxCKkqg==
+X-Google-Smtp-Source: ABdhPJzL2GcGme0D4867kVwep2Xa+C8mW3Fs8Qp4DkNNiQWlPr7shzCEUKfk7gGEG6DgNm+m3wq1VA==
+X-Received: by 2002:a05:6808:d0:: with SMTP id t16mr797254oic.79.1604958926366;
+        Mon, 09 Nov 2020 13:55:26 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c31sm2753199otb.27.2020.11.09.13.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2020 13:55:25 -0800 (PST)
+Received: (nullmailer pid 1824495 invoked by uid 1000);
+        Mon, 09 Nov 2020 21:55:24 -0000
+Date:   Mon, 9 Nov 2020 15:55:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Subject: Re: [PATCH 06/32] spi: dw: Add support for the Kendryte K210 SoC
+Message-ID: <20201109215524.GA1819368@bogus>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-7-damien.lemoal@wdc.com>
+ <20201109212158.y34otj3uy2hev75c@mobilestation>
+ <BL0PR04MB6514111AE633C1E53B6F08A3E7EA0@BL0PR04MB6514.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <BL0PR04MB6514111AE633C1E53B6F08A3E7EA0@BL0PR04MB6514.namprd04.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
-branch HEAD: 9a6907e948a36e55d45f53b5e82fdb73aa4397f7  Merge branch 'devel' into for-next
+On Mon, Nov 09, 2020 at 09:39:19PM +0000, Damien Le Moal wrote:
+> On 2020/11/10 6:22, Serge Semin wrote:
+> > On Sat, Nov 07, 2020 at 05:13:54PM +0900, Damien Le Moal wrote:
+> >> The DW SPI master of the Kendryte K210 RISC-V SoC uses the 32-bits
+> >> ctrlr0 register format. This SoC is also quite slow and gets significant
+> >> SD card performance improvements from using no-delay polled transfers.
+> >> Add the dw_spi_k210_init() function tied to the
+> >> "canaan,kendryte-k210-spi" compatible string to set the
+> >> DW_SPI_CAP_DFS_32 and DW_SPI_CAP_POLL_NODELAY DW SPI capability fields
+> >> for this SoC.
+> >>
+> >> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> >> ---
+> >>  drivers/spi/spi-dw-mmio.c | 9 +++++++++
+> >>  1 file changed, 9 insertions(+)
+> >>
+> >> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> >> index 3f1bc384cb45..a00def6c5b39 100644
+> >> --- a/drivers/spi/spi-dw-mmio.c
+> >> +++ b/drivers/spi/spi-dw-mmio.c
+> >> @@ -223,6 +223,14 @@ static int dw_spi_keembay_init(struct platform_device *pdev,
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +static int dw_spi_k210_init(struct platform_device *pdev,
+> >> +			    struct dw_spi_mmio *dwsmmio)
+> >> +{
+> >> +	dwsmmio->dws.caps = DW_SPI_CAP_DFS_32 | DW_SPI_CAP_POLL_NODELAY;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >>  static int dw_spi_mmio_probe(struct platform_device *pdev)
+> >>  {
+> >>  	int (*init_func)(struct platform_device *pdev,
+> >> @@ -340,6 +348,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
+> >>  	{ .compatible = "snps,dwc-ssi-1.01a", .data = dw_spi_dwc_ssi_init},
+> >>  	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
+> >>  	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
+> > 
+> >> +	{ .compatible = "canaan,kendryte-k210-spi", .data = dw_spi_k210_init},
+> > 
+> > Other than the comments from Sean and Mark regarding the DFS_32
+> > feature runtime detectability, I couldn't find a patch with adding the
+> > new new compatible string into the DW APB SSI DT schema. Have I missed
+> > it? If I haven't could you add one to the next version of the series?
+> 
+> Yes, I will. I forgot to change the DW DT binding doc for this. I did add a
+> patch for the "polling" property but forgot the compatible string.
+> 
+> In any case, I think that this new compatible string change can be dropped by
+> switching to automatically detecting the DFS32 and using a different solution
+> than the polling property change I sent for the RX fifo overflow problem.
 
-elapsed time: 914m
+No, new SoC needs new compatible string. Especially if a new vendor. 
 
-configs tested: 92
-configs skipped: 2
+> 
+> I am still going through all the emails trying to understand what to try next to
+> avoid the polling "hack".
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Use compatible.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                    sam440ep_defconfig
-powerpc                     pseries_defconfig
-m68k                         amcore_defconfig
-arm                         s5pv210_defconfig
-xtensa                  audio_kc705_defconfig
-arc                                 defconfig
-mips                      fuloong2e_defconfig
-sh                         microdev_defconfig
-arm                            mmp2_defconfig
-arm                          collie_defconfig
-sh                        sh7757lcr_defconfig
-m68k                        m5307c3_defconfig
-arm                             rpc_defconfig
-m68k                        m5272c3_defconfig
-c6x                              alldefconfig
-powerpc                      pmac32_defconfig
-arm                          imote2_defconfig
-parisc                           alldefconfig
-arm                        shmobile_defconfig
-arm                   milbeaut_m10v_defconfig
-powerpc                     tqm8540_defconfig
-powerpc                     skiroot_defconfig
-arm                         shannon_defconfig
-nds32                               defconfig
-arm                           corgi_defconfig
-arm                          gemini_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20201109
-i386                 randconfig-a006-20201109
-i386                 randconfig-a005-20201109
-i386                 randconfig-a001-20201109
-i386                 randconfig-a003-20201109
-i386                 randconfig-a002-20201109
-i386                 randconfig-a014-20201109
-i386                 randconfig-a015-20201109
-i386                 randconfig-a013-20201109
-i386                 randconfig-a016-20201109
-i386                 randconfig-a011-20201109
-i386                 randconfig-a012-20201109
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a012-20201109
-x86_64               randconfig-a015-20201109
-x86_64               randconfig-a013-20201109
-x86_64               randconfig-a011-20201109
-x86_64               randconfig-a014-20201109
-x86_64               randconfig-a016-20201109
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Rob
