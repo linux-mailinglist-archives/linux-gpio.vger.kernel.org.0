@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD9032AB802
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 13:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49F472AB805
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 13:18:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgKIMSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 07:18:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        id S1729741AbgKIMSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 07:18:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbgKIMSa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 07:18:30 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92CBBC0613D3
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Nov 2020 04:18:29 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id t18so4663051plo.0
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 04:18:29 -0800 (PST)
+        with ESMTP id S1729715AbgKIMSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 07:18:33 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6522BC0613CF
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Nov 2020 04:18:32 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id b12so4658182plr.4
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 04:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wWmlfMfRUXU44J3q+Sc5kmE5CqBvigtZaPIOQbZQHF8=;
-        b=Xttw3JWftH5F6nYAMRHB94r+/xuVVekPxG5xY57CpspsotoypVnZ/McuG8ak6VZNEN
-         drAUyJod/SbePFKvfNZKqyAOMs5WkVdvRMREtJR5iYm+NxBE8e8C6U43M9AqMvhbXXTx
-         C3cMYPayqBg9ZCvhWjI3WpdC6n3rxLm7rAGHw=
+        bh=wrj41exBVsFT2ruWANUpkTAM3iJ4f0R4z1Ghp6re6RU=;
+        b=uHfgsx7O4vNYo1kZbj/J92OYTKRPc/1tuRCNtmWsomrq2paQILdQucCSNLfIRoodTr
+         a6NHD0bIzQwA016wwbG4eyulZ12Y4SHo8bN4hf2RSCf1o16YBDCKpLD9oUdFSkHLnOBz
+         jOJgqf/MPax2NrKMB/tK154CZVsI0Oss5N1Rc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wWmlfMfRUXU44J3q+Sc5kmE5CqBvigtZaPIOQbZQHF8=;
-        b=jZ51/D0iNhjnt/kfw5Qi2ShagzR1BTabNZhuE+wT4qPqPjPclbLujZ6FPaYCNO//+2
-         2PNWFJ03j2SQjyJoWTnXcSVcdaEUTQidRqtNTdo+pfrVOy6BKTLu/iaLovx7rOAKexgM
-         NeKDsfgQ68QkSCtmIuMYInP5ZJjh4bAZnh7TilFNH1kBntG4nr4icwbrkfOedwjSgiCf
-         /5LgTLCchgfyapZy7Y4I/593kXUF6+w+EvokFBjZHoieK2WDdn+KZRPCIXiarNPKZmC6
-         xKtjRwsGxkCOxdJbVVa5r/ZIuqQatmiSaXk6Y62SEy0RSLn1742/1lIP/8Z3NS9W/vCj
-         JV9Q==
-X-Gm-Message-State: AOAM531Sl7/Z90DzFtCsBRKAmo2yhgZEp31FACkOCSu+1oqh31qEgZEv
-        uq0K8XH9iaJ+pZMCC+IXqduTXcPnx/xGZA==
-X-Google-Smtp-Source: ABdhPJzTrCkoWqzth3LbUrGmAO6H7Cm1AYYsxKHAD1WHKBpHCwpPP1N6RkIDe+FfRnohjogyE36OfA==
-X-Received: by 2002:a17:902:9347:b029:d5:d554:9922 with SMTP id g7-20020a1709029347b02900d5d5549922mr11990623plp.56.1604924309106;
-        Mon, 09 Nov 2020 04:18:29 -0800 (PST)
+        bh=wrj41exBVsFT2ruWANUpkTAM3iJ4f0R4z1Ghp6re6RU=;
+        b=tXkgpn/jVQsSYhtiPQSV5YxSmA1XyJ0mOK4PblbXwLusJAIucKnTzsqBvQqZe5b121
+         Yl2gJILqo5l7MhBJ61aRyabVSug0jdJu7ey4TSezKt9RqnGFKPK7831ZQ0ZNttcHLxpM
+         Co/8t/PnjSgotWXuV/Wb6XzZ1I3C8DnrOa944jwA/doQlaB50oEQqZsy91bEbEIryNvk
+         5aAot7m3iWEWsrNaTM6gxthde2vpAwXygd9rfKIOX6DD+j5B8Xt5p1g779YiB8pmtZaC
+         UhLbxwhd56a7zc8/3bNIcGYgKkkMt+0OzXgdRRsSJrjHYvyBYPVJOyWaP4rnlyXA5qWa
+         YHCw==
+X-Gm-Message-State: AOAM530ilHtMyNQs2WZdZI2cIfvIdfU5MWRlZyXELnUJkxeMdtgrnOjK
+        zHOxlbYV82HwtKbOeXJos87t4g==
+X-Google-Smtp-Source: ABdhPJx6+CUDJkgdXJHKe20hthJrS0svJ6otgBMCfdIDVYNC+eHvqCZ8WgnsQJFeZHFQAXmp04dFRg==
+X-Received: by 2002:a17:902:868e:b029:d7:eb0d:79e8 with SMTP id g14-20020a170902868eb02900d7eb0d79e8mr1340469plo.12.1604924311879;
+        Mon, 09 Nov 2020 04:18:31 -0800 (PST)
 Received: from shiro.work (p1268123-ipngn200803sizuokaden.shizuoka.ocn.ne.jp. [118.13.124.123])
-        by smtp.googlemail.com with ESMTPSA id i123sm11425204pfc.13.2020.11.09.04.18.26
+        by smtp.googlemail.com with ESMTPSA id i123sm11425204pfc.13.2020.11.09.04.18.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 04:18:28 -0800 (PST)
+        Mon, 09 Nov 2020 04:18:31 -0800 (PST)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     soc@kernel.org, linux-gpio@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         maz@kernel.org, w@1wt.eu, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v3 2/5] dt-bindings: gpio: Binding for MStar MSC313 GPIO controller
-Date:   Mon,  9 Nov 2020 21:17:28 +0900
-Message-Id: <20201109121731.1537580-3-daniel@0x0f.com>
+Subject: [PATCH v3 3/5] gpio: msc313: MStar MSC313 GPIO driver
+Date:   Mon,  9 Nov 2020 21:17:29 +0900
+Message-Id: <20201109121731.1537580-4-daniel@0x0f.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201109121731.1537580-1-daniel@0x0f.com>
 References: <20201109121731.1537580-1-daniel@0x0f.com>
@@ -61,96 +61,550 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a binding description for the MStar/SigmaStar GPIO controller
-found in the MSC313 and later ARMv7 SoCs.
+This adds a driver that supports the GPIO block found in
+MStar/SigmaStar ARMv7 SoCs.
+
+The controller seems to have enough register for 128 lines
+but where they are wired up differs between chips and
+no currently known chip uses anywhere near 128 lines so there
+needs to be some per-chip data to collect together what lines
+actually have physical pins attached and map the right names to them.
+
+The core peripherals seem to use the same lines on the
+currently known chips but the lines used for the sensor
+interface, lcd controller etc pins seem to be totally
+different between the infinity and mercury chips
+
+The code tries to collect all of the re-usable names,
+offsets etc together so that it's easy to build the extra
+per-chip data for other chips in the future.
+
+So far this only supports the MSC313 and MSC313E chips.
+
+Support for the SSC8336N (mercury5) is trivial to add once
+all of the lines have been mapped out.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- .../bindings/gpio/mstar,msc313-gpio.yaml      | 62 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+ MAINTAINERS                |   1 +
+ drivers/gpio/Kconfig       |  11 +
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-msc313.c | 460 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 473 insertions(+)
+ create mode 100644 drivers/gpio/gpio-msc313.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml b/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
-new file mode 100644
-index 000000000000..8c7cfe3a51b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/mstar,msc313-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MStar/SigmaStar GPIO controller
-+
-+maintainers:
-+  - Daniel Palmer <daniel@thingy.jp>
-+
-+properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
-+  compatible:
-+    const: mstar,msc313-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-ranges: true
-+
-+  gpio-ranges-group-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/msc313-gpio.h>
-+
-+    gpio: gpio@207800 {
-+      compatible = "mstar,msc313e-gpio";
-+      #gpio-cells = <2>;
-+      reg = <0x207800 0x200>;
-+      gpio-controller;
-+      gpio-ranges = <&pinctrl 0 36 22>,
-+                    <&pinctrl 22 63 4>,
-+                    <&pinctrl 26 68 6>;
-+      #interrupt-cells = <2>;
-+      interrupt-controller;
-+      interrupt-parent = <&intc_fiq>;
-+    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index db9c008a0395..87ca71f55de3 100644
+index 87ca71f55de3..864e37e7659e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2131,6 +2131,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	http://linux-chenxing.org/
- F:	Documentation/devicetree/bindings/arm/mstar/*
-+F:	Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+@@ -2134,6 +2134,7 @@ F:	Documentation/devicetree/bindings/arm/mstar/*
+ F:	Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
  F:	arch/arm/boot/dts/mstar-*
  F:	arch/arm/mach-mstar/
++F:	drivers/gpio/gpio-msc313.c
  F:	include/dt-bindings/gpio/msc313-gpio.h
+ 
+ ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5d4de5cd6759..22ad5902299a 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -737,6 +737,17 @@ config GPIO_AMD_FCH
+ 	  Note: This driver doesn't registers itself automatically, as it
+ 	  needs to be provided with platform specific configuration.
+ 	  (See eg. CONFIG_PCENGINES_APU2.)
++
++config GPIO_MSC313
++	bool "MStar MSC313 GPIO support"
++	depends on ARCH_MSTARV7
++	default ARCH_MSTARV7
++	select GPIOLIB_IRQCHIP
++	select IRQ_DOMAIN_HIERARCHY
++	help
++	  Say Y here to support the main GPIO block on MStar/SigmaStar
++	  ARMv7 based SoCs.
++
+ endmenu
+ 
+ menu "Port-mapped I/O GPIO drivers"
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 09dada80ac34..b6c116a7c785 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -101,6 +101,7 @@ obj-$(CONFIG_GPIO_MOCKUP)		+= gpio-mockup.o
+ obj-$(CONFIG_GPIO_MOXTET)		+= gpio-moxtet.o
+ obj-$(CONFIG_GPIO_MPC5200)		+= gpio-mpc5200.o
+ obj-$(CONFIG_GPIO_MPC8XXX)		+= gpio-mpc8xxx.o
++obj-$(CONFIG_GPIO_MSC313)		+= gpio-msc313.o
+ obj-$(CONFIG_GPIO_MSIC)			+= gpio-msic.o
+ obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
+ obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
+diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+new file mode 100644
+index 000000000000..da31a5ff7a2b
+--- /dev/null
++++ b/drivers/gpio/gpio-msc313.c
+@@ -0,0 +1,460 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2020 Daniel Palmer<daniel@thingy.jp> */
++
++#include <linux/bitops.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/gpio/driver.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include <dt-bindings/gpio/msc313-gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++#define DRIVER_NAME "gpio-msc313"
++
++#define MSC313_GPIO_IN  BIT(0)
++#define MSC313_GPIO_OUT BIT(4)
++#define MSC313_GPIO_OEN BIT(5)
++
++/*
++ * These bits need to be saved to correctly restore the
++ * gpio state when resuming from suspend to memory.
++ */
++#define MSC313_GPIO_BITSTOSAVE (MSC313_GPIO_OUT | MSC313_GPIO_OEN)
++
++/* pad names for fuart, same for all SoCs so far */
++#define MSC313_PINNAME_FUART_RX		"fuart_rx"
++#define MSC313_PINNAME_FUART_TX		"fuart_tx"
++#define MSC313_PINNAME_FUART_CTS	"fuart_cts"
++#define MSC313_PINNAME_FUART_RTS	"fuart_rts"
++
++/* pad names for sr, mercury5 is different */
++#define MSC313_PINNAME_SR_IO2		"sr_io2"
++#define MSC313_PINNAME_SR_IO3		"sr_io3"
++#define MSC313_PINNAME_SR_IO4		"sr_io4"
++#define MSC313_PINNAME_SR_IO5		"sr_io5"
++#define MSC313_PINNAME_SR_IO6		"sr_io6"
++#define MSC313_PINNAME_SR_IO7		"sr_io7"
++#define MSC313_PINNAME_SR_IO8		"sr_io8"
++#define MSC313_PINNAME_SR_IO9		"sr_io9"
++#define MSC313_PINNAME_SR_IO10		"sr_io10"
++#define MSC313_PINNAME_SR_IO11		"sr_io11"
++#define MSC313_PINNAME_SR_IO12		"sr_io12"
++#define MSC313_PINNAME_SR_IO13		"sr_io13"
++#define MSC313_PINNAME_SR_IO14		"sr_io14"
++#define MSC313_PINNAME_SR_IO15		"sr_io15"
++#define MSC313_PINNAME_SR_IO16		"sr_io16"
++#define MSC313_PINNAME_SR_IO17		"sr_io17"
++
++/* pad names for sd, same for all SoCs so far */
++#define MSC313_PINNAME_SD_CLK		"sd_clk"
++#define MSC313_PINNAME_SD_CMD		"sd_cmd"
++#define MSC313_PINNAME_SD_D0		"sd_d0"
++#define MSC313_PINNAME_SD_D1		"sd_d1"
++#define MSC313_PINNAME_SD_D2		"sd_d2"
++#define MSC313_PINNAME_SD_D3		"sd_d3"
++
++/* pad names for i2c1, same for all SoCs so for */
++#define MSC313_PINNAME_I2C1_SCL		"i2c1_scl"
++#define MSC313_PINNAME_I2C1_SCA		"i2c1_sda"
++
++/* pad names for spi0, same for all SoCs so far */
++#define MSC313_PINNAME_SPI0_CZ		"spi0_cz"
++#define MSC313_PINNAME_SPI0_CK		"spi0_ck"
++#define MSC313_PINNAME_SPI0_DI		"spi0_di"
++#define MSC313_PINNAME_SPI0_DO		"spi0_do"
++
++#define FUART_NAMES			\
++	MSC313_PINNAME_FUART_RX,	\
++	MSC313_PINNAME_FUART_TX,	\
++	MSC313_PINNAME_FUART_CTS,	\
++	MSC313_PINNAME_FUART_RTS
++
++#define OFF_FUART_RX	0x50
++#define OFF_FUART_TX	0x54
++#define OFF_FUART_CTS	0x58
++#define OFF_FUART_RTS	0x5c
++
++#define FUART_OFFSETS	\
++	OFF_FUART_RX,	\
++	OFF_FUART_TX,	\
++	OFF_FUART_CTS,	\
++	OFF_FUART_RTS
++
++#define SR_NAMES		\
++	MSC313_PINNAME_SR_IO2,	\
++	MSC313_PINNAME_SR_IO3,	\
++	MSC313_PINNAME_SR_IO4,	\
++	MSC313_PINNAME_SR_IO5,	\
++	MSC313_PINNAME_SR_IO6,	\
++	MSC313_PINNAME_SR_IO7,	\
++	MSC313_PINNAME_SR_IO8,	\
++	MSC313_PINNAME_SR_IO9,	\
++	MSC313_PINNAME_SR_IO10,	\
++	MSC313_PINNAME_SR_IO11,	\
++	MSC313_PINNAME_SR_IO12,	\
++	MSC313_PINNAME_SR_IO13,	\
++	MSC313_PINNAME_SR_IO14,	\
++	MSC313_PINNAME_SR_IO15,	\
++	MSC313_PINNAME_SR_IO16,	\
++	MSC313_PINNAME_SR_IO17
++
++#define OFF_SR_IO2	0x88
++#define OFF_SR_IO3	0x8c
++#define OFF_SR_IO4	0x90
++#define OFF_SR_IO5	0x94
++#define OFF_SR_IO6	0x98
++#define OFF_SR_IO7	0x9c
++#define OFF_SR_IO8	0xa0
++#define OFF_SR_IO9	0xa4
++#define OFF_SR_IO10	0xa8
++#define OFF_SR_IO11	0xac
++#define OFF_SR_IO12	0xb0
++#define OFF_SR_IO13	0xb4
++#define OFF_SR_IO14	0xb8
++#define OFF_SR_IO15	0xbc
++#define OFF_SR_IO16	0xc0
++#define OFF_SR_IO17	0xc4
++
++#define SR_OFFSETS	\
++	OFF_SR_IO2,	\
++	OFF_SR_IO3,	\
++	OFF_SR_IO4,	\
++	OFF_SR_IO5,	\
++	OFF_SR_IO6,	\
++	OFF_SR_IO7,	\
++	OFF_SR_IO8,	\
++	OFF_SR_IO9,	\
++	OFF_SR_IO10,	\
++	OFF_SR_IO11,	\
++	OFF_SR_IO12,	\
++	OFF_SR_IO13,	\
++	OFF_SR_IO14,	\
++	OFF_SR_IO15,	\
++	OFF_SR_IO16,	\
++	OFF_SR_IO17
++
++#define SD_NAMES		\
++	MSC313_PINNAME_SD_CLK,	\
++	MSC313_PINNAME_SD_CMD,	\
++	MSC313_PINNAME_SD_D0,	\
++	MSC313_PINNAME_SD_D1,	\
++	MSC313_PINNAME_SD_D2,	\
++	MSC313_PINNAME_SD_D3
++
++#define OFF_SD_CLK	0x140
++#define OFF_SD_CMD	0x144
++#define OFF_SD_D0	0x148
++#define OFF_SD_D1	0x14c
++#define OFF_SD_D2	0x150
++#define OFF_SD_D3	0x154
++
++#define SD_OFFSETS	\
++	OFF_SD_CLK,	\
++	OFF_SD_CMD,	\
++	OFF_SD_D0,	\
++	OFF_SD_D1,	\
++	OFF_SD_D2,	\
++	OFF_SD_D3
++
++#define I2C1_NAMES			\
++	MSC313_PINNAME_I2C1_SCL,	\
++	MSC313_PINNAME_I2C1_SCA
++
++#define OFF_I2C1_SCL	0x188
++#define OFF_I2C1_SCA	0x18c
++
++#define I2C1_OFFSETS	\
++	OFF_I2C1_SCL,	\
++	OFF_I2C1_SCA
++
++#define SPI0_NAMES		\
++	MSC313_PINNAME_SPI0_CZ,	\
++	MSC313_PINNAME_SPI0_CK,	\
++	MSC313_PINNAME_SPI0_DI,	\
++	MSC313_PINNAME_SPI0_DO
++
++#define OFF_SPI0_CZ	0x1c0
++#define OFF_SPI0_CK	0x1c4
++#define OFF_SPI0_DI	0x1c8
++#define OFF_SPI0_DO	0x1cc
++
++#define SPI0_OFFSETS	\
++	OFF_SPI0_CZ,	\
++	OFF_SPI0_CK,	\
++	OFF_SPI0_DI,	\
++	OFF_SPI0_DO
++
++struct msc313_gpio_data {
++	const char * const *names;
++	const unsigned int *offsets;
++	const unsigned int num;
++};
++
++#define MSC313_GPIO_CHIPDATA(_chip) \
++static const struct msc313_gpio_data _chip##_data = { \
++	.names = _chip##_names, \
++	.offsets = _chip##_offsets, \
++	.num = ARRAY_SIZE(_chip##_offsets), \
++}
++
++#ifdef CONFIG_MACH_INFINITY
++static const char * const msc313_names[] = {
++	FUART_NAMES,
++	SR_NAMES,
++	SD_NAMES,
++	I2C1_NAMES,
++	SPI0_NAMES,
++};
++
++static const unsigned int msc313_offsets[] = {
++	FUART_OFFSETS,
++	SR_OFFSETS,
++	SD_OFFSETS,
++	I2C1_OFFSETS,
++	SPI0_OFFSETS,
++};
++
++MSC313_GPIO_CHIPDATA(msc313);
++#endif
++
++struct msc313_gpio {
++	void __iomem *base;
++	const struct msc313_gpio_data *gpio_data;
++	u8 *saved;
++};
++
++static void msc313_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	struct msc313_gpio *gpio = gpiochip_get_data(chip);
++	u8 gpioreg = readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]);
++
++	if (value)
++		gpioreg |= MSC313_GPIO_OUT;
++	else
++		gpioreg &= ~MSC313_GPIO_OUT;
++
++	writeb_relaxed(gpioreg, gpio->base + gpio->gpio_data->offsets[offset]);
++}
++
++static int msc313_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct msc313_gpio *gpio = gpiochip_get_data(chip);
++
++	return readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]) & MSC313_GPIO_IN;
++}
++
++static int msc313_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
++{
++	struct msc313_gpio *gpio = gpiochip_get_data(chip);
++	u8 gpioreg = readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]);
++
++	gpioreg |= MSC313_GPIO_OEN;
++	writeb_relaxed(gpioreg, gpio->base + gpio->gpio_data->offsets[offset]);
++
++	return 0;
++}
++
++static int msc313_gpio_direction_output(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	struct msc313_gpio *gpio = gpiochip_get_data(chip);
++	u8 gpioreg = readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]);
++
++	gpioreg &= ~MSC313_GPIO_OEN;
++	if (value)
++		gpioreg |= MSC313_GPIO_OUT;
++	else
++		gpioreg &= ~MSC313_GPIO_OUT;
++	writeb_relaxed(gpioreg, gpio->base + gpio->gpio_data->offsets[offset]);
++
++	return 0;
++}
++
++/*
++ * The interrupt handling happens in the parent interrupt controller,
++ * we don't do anything here.
++ */
++static struct irq_chip msc313_gpio_irqchip = {
++	.name = "GPIO",
++	.irq_eoi = irq_chip_eoi_parent,
++	.irq_mask = irq_chip_mask_parent,
++	.irq_unmask = irq_chip_unmask_parent,
++	.irq_set_type = irq_chip_set_type_parent,
++	.irq_set_affinity = irq_chip_set_affinity_parent,
++};
++
++/*
++ * The parent interrupt controller needs the GIC interrupt type set to GIC_SPI
++ * so we need to provide the fwspec. Essentially gpiochip_populate_parent_fwspec_twocell
++ * that puts GIC_SPI into the first cell.
++ */
++static void *msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
++					     unsigned int parent_hwirq,
++					     unsigned int parent_type)
++{
++	struct irq_fwspec *fwspec;
++
++	fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
++	if (!fwspec)
++		return NULL;
++
++	fwspec->fwnode = gc->irq.parent_domain->fwnode;
++	fwspec->param_count = 3;
++	fwspec->param[0] = GIC_SPI;
++	fwspec->param[1] = parent_hwirq;
++	fwspec->param[2] = parent_type;
++
++	return fwspec;
++}
++
++static int msc313e_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
++					     unsigned int child,
++					     unsigned int child_type,
++					     unsigned int *parent,
++					     unsigned int *parent_type)
++{
++	struct msc313_gpio *priv = gpiochip_get_data(chip);
++	unsigned int offset = priv->gpio_data->offsets[child];
++
++	/*
++	 * only the spi0 pins have interrupts on the parent
++	 * on all of the known chips and so far they are all
++	 * mapped to the same place
++	 */
++	if (offset >= OFF_SPI0_CZ && offset <= OFF_SPI0_DO) {
++		*parent_type = child_type;
++		*parent = ((offset - OFF_SPI0_CZ) >> 2) + 28;
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
++static int msc313_gpio_probe(struct platform_device *pdev)
++{
++	const struct msc313_gpio_data *match_data;
++	struct msc313_gpio *gpio;
++	struct gpio_chip *gpiochip;
++	struct gpio_irq_chip *gpioirqchip;
++	struct irq_domain *parent_domain;
++	struct device_node *parent_node;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	match_data = of_device_get_match_data(dev);
++	if (!match_data)
++		return -EINVAL;
++
++	parent_node = of_irq_find_parent(dev->of_node);
++	if (!parent_node)
++		return -ENODEV;
++
++	parent_domain = irq_find_host(parent_node);
++	if (!parent_domain)
++		return -ENODEV;
++
++	gpio = devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	gpio->gpio_data = match_data;
++
++	gpio->saved = devm_kcalloc(dev, gpio->gpio_data->num, sizeof(*gpio->saved), GFP_KERNEL);
++	if (!gpio->saved)
++		return -ENOMEM;
++
++	gpio->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(gpio->base))
++		return PTR_ERR(gpio->base);
++
++	platform_set_drvdata(pdev, gpio);
++
++	gpiochip = devm_kzalloc(dev, sizeof(*gpiochip), GFP_KERNEL);
++	if (!gpiochip)
++		return -ENOMEM;
++
++	gpiochip->label = DRIVER_NAME;
++	gpiochip->parent = dev;
++	gpiochip->request = gpiochip_generic_request;
++	gpiochip->free = gpiochip_generic_free;
++	gpiochip->direction_input = msc313_gpio_direction_input;
++	gpiochip->direction_output = msc313_gpio_direction_output;
++	gpiochip->get = msc313_gpio_get;
++	gpiochip->set = msc313_gpio_set;
++	gpiochip->base = -1;
++	gpiochip->ngpio = gpio->gpio_data->num;
++	gpiochip->names = gpio->gpio_data->names;
++
++	gpioirqchip = &gpiochip->irq;
++	gpioirqchip->chip = &msc313_gpio_irqchip;
++	gpioirqchip->fwnode = of_node_to_fwnode(dev->of_node);
++	gpioirqchip->parent_domain = parent_domain;
++	gpioirqchip->child_to_parent_hwirq = msc313e_gpio_child_to_parent_hwirq;
++	gpioirqchip->populate_parent_alloc_arg = msc313_gpio_populate_parent_fwspec;
++	gpioirqchip->handler = handle_bad_irq;
++	gpioirqchip->default_type = IRQ_TYPE_NONE;
++
++	ret = devm_gpiochip_add_data(dev, gpiochip, gpio);
++	return ret;
++}
++
++static int msc313_gpio_remove(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static const struct of_device_id msc313_gpio_of_match[] = {
++#ifdef CONFIG_MACH_INFINITY
++	{
++		.compatible = "mstar,msc313-gpio",
++		.data = &msc313_data,
++	},
++#endif
++	{ }
++};
++
++/*
++ * The GPIO controller loses the state of the registers when the
++ * SoC goes into suspend to memory mode so we need to save some
++ * of the register bits before suspending and put it back when resuming
++ */
++static int __maybe_unused msc313_gpio_suspend(struct device *dev)
++{
++	struct msc313_gpio *gpio = dev_get_drvdata(dev);
++	int i;
++
++	for (i = 0; i < gpio->gpio_data->num; i++)
++		gpio->saved[i] = readb_relaxed(gpio->base + gpio->gpio_data->offsets[i]) & MSC313_GPIO_BITSTOSAVE;
++
++	return 0;
++}
++
++static int __maybe_unused msc313_gpio_resume(struct device *dev)
++{
++	struct msc313_gpio *gpio = dev_get_drvdata(dev);
++	int i;
++
++	for (i = 0; i < gpio->gpio_data->num; i++)
++		writeb_relaxed(gpio->saved[i], gpio->base + gpio->gpio_data->offsets[i]);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(msc313_gpio_ops, msc313_gpio_suspend, msc313_gpio_resume);
++
++static struct platform_driver msc313_gpio_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++		.of_match_table = msc313_gpio_of_match,
++		.pm = &msc313_gpio_ops,
++	},
++	.probe = msc313_gpio_probe,
++	.remove = msc313_gpio_remove,
++};
++
++builtin_platform_driver(msc313_gpio_driver);
 -- 
 2.29.2
 
