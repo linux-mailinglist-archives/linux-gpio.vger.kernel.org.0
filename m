@@ -2,162 +2,239 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D82192AC01F
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 16:42:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79D9F2AC032
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 16:45:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgKIPmy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 10:42:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46226 "EHLO
+        id S1729491AbgKIPp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 10:45:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgKIPmy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 10:42:54 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E1AC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Nov 2020 07:42:54 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id x13so7456820pgp.7
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Nov 2020 07:42:54 -0800 (PST)
+        with ESMTP id S1729174AbgKIPpz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 10:45:55 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C39A9C0613CF;
+        Mon,  9 Nov 2020 07:45:55 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id d28so3196806qka.11;
+        Mon, 09 Nov 2020 07:45:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qh3GhGR0WPXyo+or7QQbAcqfmMQMrMs1tUQ8I47VQzM=;
-        b=II4nQSM38slbux0KTWxGPSPivRUB7aCz4GQTKvzEhuEo05LX7iDopavZ8FeksDUNZX
-         DV5tBrWuD3iPUpqf3CVtCgC0Fe9gdsxxr2mW4kEAAUJyHtoI2wJMh1FHOeY/qq3uSvG2
-         HUaf1MmTEOPqrB7Pk3ei0lHnSm+jrb9QR2QrghEa9hJ+BvrLsPqAF0AJ0kGBcM4YIW42
-         TMIGH0fkGSkWVg80LvQY2i1Aj1dE+lY+BYiZ6LXbaJOwQaG2qW9V3LSsPGQGLTZdFvmA
-         wEryBJNHMXPjTd7BtpdIq7zOw4rAKR1aX2GnSllma8WSDSBIdNh+VT+tPW9VcbYp4JN+
-         k+Qg==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t6Yf+sMEnysuGEtJE0jXIIPWFzhinCXEIJNIE/9Krlo=;
+        b=nTRhYkXQPj6oCvt1hed4gVi7ed4AknoSL14YilIkiHoS+Wf9C+yczRy5PyOx+mFioK
+         I4rXsr/TbC7Qx75VFlui34JHSK7J1OhBvjQJ1VZ42ha81oUTIjHb+OL1nGQpyATOTLuN
+         oe+kHPjU3Mbv8Z6002FDOyypRqcCZVDLSv3nN9ETKSb4k/v1KQbTRwMLmVWj/cuPKoY+
+         YJQBGE5sxRm2RKgT/I0deO2IPVnzw1lChvYCN44gfVfEgx/TCn7MY6Ofggpmm+GNszIh
+         4FIAE6smy5yCip2R4FqbD6aMiFLFUaCoXVB5MAwU17UzxKYhEMfIVVxIvIANYk/kJRuf
+         /Gkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qh3GhGR0WPXyo+or7QQbAcqfmMQMrMs1tUQ8I47VQzM=;
-        b=P4xisdlk8pSsYdp2gEA/iUltYoOt88IblU7ZTu3MpRzqGBkFQiW8hJeATlVVK/UM69
-         YZYhohryGhg2m3UuO8zsJuXto3wTKMXhEvKIvTr/j6X7m10ccSB3R4qyCICcLC7OyuVE
-         p4+x5Xni+6CTBW1nEXpZTdNXQGzyNbu9OJgfIL8XnP4q503zNx11ssjbkql1c3BgxqiI
-         fJmhIzPub5MJFCtac9GmlNRO/FGSWkricoFMSRp3NeuQ45ApCRWrffRcQHx0wJ2nuyol
-         VIhibNnBuMGb9/E72ojERmeqPJsJWIWuKYsabzt8PnvCx9on8isUfv3lUzRI/c6YaLnr
-         fKaQ==
-X-Gm-Message-State: AOAM533hsqiRabcSVq6HLEWFh3Xq9ASZOd5fJ/SNfREr28QNpfCNU30R
-        YT0lla+Tzb4ma/k8HVN/EAetkrzstOlUItaNvNg=
-X-Google-Smtp-Source: ABdhPJxCKpgUu99m9nY38IqoBx2SQt8bEhsUud6eoThG2Oq6wlrkE1rzkX+yjDdWgIvxth7Usu4PS4HfNrz6kQcwdqA=
-X-Received: by 2002:a17:90a:430b:: with SMTP id q11mr14004675pjg.129.1604936573850;
- Mon, 09 Nov 2020 07:42:53 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=t6Yf+sMEnysuGEtJE0jXIIPWFzhinCXEIJNIE/9Krlo=;
+        b=LTzt4Sj+mfPAGExkTnR3j+PIfrM3pMAZdBuvLrJX6HMR4PGu/mkjpvQynav8qdhUPh
+         5kNvesylVgB2+WSo/3MYA7DJ4+5BBfIIVHoeA8FfvbIAdEftF7sO+H0N5tCZYy900e2U
+         Pea9TvCF3LubgWxR5MbIbSg+VxyDQW7HLewi2X4myWZgJo2uSIjoXMnQsthL+UlH0jUd
+         YX/4GypmFxXwSfJg8ekEim5puU0+nDBi3UvxExJ4Q15Jghe61HNKaeMyN+Sy1b7a+wCL
+         TtqMqzxHSJonCovkUBC0MAOhM63qG14tYaSgKOy3Le9+Bc0MiKRjG0EsOQ0keKZBNZtk
+         iocA==
+X-Gm-Message-State: AOAM531jkHofiWcDUb22GEXrwrUGTEO5JiJD+HMDf0Z0KbsQNBnDj36Q
+        yUPN0eFuEFwPrZ+xd8HnGuk=
+X-Google-Smtp-Source: ABdhPJxzTXnRRctFaCp0/SBDiD/D/14kREbi+rLR78C2+JEyF9IlirjH6mVXxOTjvltL7NJOyY92RA==
+X-Received: by 2002:a37:d08:: with SMTP id 8mr6717554qkn.306.1604936754965;
+        Mon, 09 Nov 2020 07:45:54 -0800 (PST)
+Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
+        by smtp.googlemail.com with ESMTPSA id z1sm5854162qtz.46.2020.11.09.07.45.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Nov 2020 07:45:54 -0800 (PST)
+Subject: Re: [PATCH 24/32] dt-bindings: Document kendryte,k210-fpioa bindings
+To:     Rob Herring <robh@kernel.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-25-damien.lemoal@wdc.com>
+ <20201109153625.GB1330401@bogus>
+From:   Sean Anderson <seanga2@gmail.com>
+Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
+ mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
+ 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
+ lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
+ GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
+ F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
+ AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
+ AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
+ bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
+ +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
+ Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
+ N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
+ SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
+ w8jpXnbEPQN3A2ZJCbeM
+Message-ID: <04b266c7-bba9-d847-a526-f64f76c11a50@gmail.com>
+Date:   Mon, 9 Nov 2020 10:45:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20201106192304.49179-1-andriy.shevchenko@linux.intel.com>
- <20201106192304.49179-4-andriy.shevchenko@linux.intel.com>
- <0756cd6c-c0a7-17e8-2e32-de3e6db6a69b@redhat.com> <CAHp75Vf8MkaNGmH1-FWxR66mB6pAWoV=Xw3sAi2Riw1uLe5YNA@mail.gmail.com>
- <35581c32-8022-87e6-259d-84ea6aaebbae@redhat.com> <20201109114511.GZ4077@smile.fi.intel.com>
- <3658b0a1-f6e4-b904-cd7d-2b173403fb8b@redhat.com>
-In-Reply-To: <3658b0a1-f6e4-b904-cd7d-2b173403fb8b@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 9 Nov 2020 17:43:42 +0200
-Message-ID: <CAHp75VcZL=CCvEY19NQjZqmsGvRCcfUCDJiKcqSyc0-z7MTxyg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] gpiolib: acpi: Take into account debounce settings
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Coiby Xu <coiby.xu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201109153625.GB1330401@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+Cc: my work address back (by some reason Gmail(?) dropped it)
+On 11/9/20 10:36 AM, Rob Herring wrote:
+> On Sat, Nov 07, 2020 at 05:14:12PM +0900, Damien Le Moal wrote:
+>> Document the device tree bindings for the Kendryte K210 SoC Fully
+>> Programmable IO Array (FPIOA) pinctrl driver in
+>> Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+>>
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>> ---
+>>  .../bindings/pinctrl/kendryte,k210-fpioa.yaml | 106 ++++++++++++++++++
+>>  1 file changed, 106 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml b/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+>> new file mode 100644
+>> index 000000000000..8730add88ee0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+>> @@ -0,0 +1,106 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/kendryte,k210-fpioa.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Kendryte K210 FPIOA (Fully Programmable IO Array) Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Damien Le Moal <damien.lemoal@wdc.com>
+>> +
+>> +description:
+>> +  The Kendryte K210 SoC Fully Programmable IO Array controller allows assiging
+>> +  any of 256 possible functions to any of 48 IO pins. Pin function configuration
+>> +  is performed on a per-pin basis.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: kendryte,k210-fpioa
+>> +
+>> +  reg:
+>> +    description: FPIOA controller register space base address and size
+>> +
+>> +  clocks:
+>> +    minItems: 2
+>> +    maxItems: 2
+> 
+> Can drop these. Implied by 'items' length.
+> 
+>> +    items:
+>> +      - description: Controller reference clock source
+>> +      - description: APB interface clock source
+>> +
+>> +  clock-names:
+>> +    minItems: 2
+>> +    maxItems: 2
+>> +    items:
+>> +      - const: ref
+>> +      - const: pclk
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  kendryte,sysctl:
+>> +    minItems: 1
+>> +    maxItems: 1
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      phandle to the system controller node
+>> +
+>> +  kendryte,power-offset:
+>> +    minItems: 1
+>> +    maxItems: 1
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Offset of the power domain control register of the system controller.
+> 
+> Sounds like you should be using power-domains binding.
 
-On Mon, Nov 9, 2020 at 1:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/9/20 12:45 PM, Andy Shevchenko wrote:
-> > On Sun, Nov 08, 2020 at 10:31:32AM +0100, Hans de Goede wrote:
-> >> On 11/7/20 4:26 PM, Andy Shevchenko wrote:
-> >>> On Sat, Nov 7, 2020 at 4:49 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>>> On 11/6/20 8:22 PM, Andy Shevchenko wrote:
-> >
-> > ...
-> >
-> >>> Thank you very much for the testing! I remember that I fixed debounce
-> >>> for BayTrail, but it seems I have yet to fix Cherry Trail pin control
-> >>> as a prerequisite to this patch.
-> >>>
-> >>> And like I said this series is definitely not for backporting.
-> >>
-> >> Independent of fixing the CherryTrail pinctrl driver to support this,
-> >> I strongly believe that -ENOTSUPP should be ignored (treated as success)
-> >> by this patch. Remember ACPI is not only used on x86 but also on ARM
-> >> now a days. We simply cannot guarantee that all pinctrls will support
-> >> (let alone implement) debounce settings. E.g. I'm pretty sure that
-> >> the pinctrl on the popular Allwinner A64 does not support debouncing
-> >> and there are builts using a combination of uboot + EDK2 to boot!
-> >>
-> >> The documentation for gpiod_set_debounce even explicitly mentioned that
-> >> -ENOTSUPP is an error which one may expect (and thus treat specially).
-> >>
-> >> The same goes for the bias stuff too.
-> >
-> > While for debounce I absolutely agree with you I don't think it applies to
-> > bias. ACPI table is coupled with a platform and setting bias == !PullNone
+This is for pin power domains. E.g. pins 0-5 can be set to 1V8 or 3V3 logic levels.
 
-s/None/Default/
+--Sean
 
-> > implies that bias is supported.
->
-> What about PullDefault ? I can easily see DSDT writers using PullDefault
-> on platforms where bias setting is not supported.
+> 
+>> +      The value should be the macro K210_SYSCTL_POWER_SEL defined in
+>> +      dt-bindings/mfd/k210-sysctl.h.
+>> +
+>> +patternProperties:
+>> +  '^.*$':
+>> +    if:
+>> +      type: object
+>> +    then:
+> 
+> This is a hack for existing bindings. Use '-pins$' for the node names.
+> 
+>> +      patternProperties:
+>> +        "^pinmux$":
+> 
+> Not really a pattern.
+> 
+>> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+> 
+> This is at the wrong level. Goes up 1 level.
+> 
+>> +          description:
+>> +            An array of IO pins alternate functions. The values for each
+>> +            IO pin is a combination of an IO pin number (0 to 47) with the
+>> +            desired function for the IO pin. Functions are defined as macros in
+>> +            dt-bindings/pinctrl/k210-pinctrl.h. The K210_FPIOA(IO pin, function)
+>> +            is provided to facilitate the combination of IO pin numbers and
+>> +            functions.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - resets
+>> +  - kendryte,sysctl
+>> +  - kendryte,power-offset
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/pinctrl/k210-pinctrl.h>
+>> +    #include <dt-bindings/mfd/k210-sysctl.h>
+>> +    #include <dt-bindings/clock/k210-sysctl.h>
+>> +    #include <dt-bindings/reset/k210-sysctl.h>
+>> +
+>> +    fpioa: pinmux@502B0000 {
+>> +      compatible = "kendryte,k210-fpioa";
+>> +      reg = <0x502B0000 0x100>;
+>> +      clocks = <&sysclk K210_CLK_FPIOA>;
+>> +      resets = <&sysrst K210_RST_FPIOA>;
+>> +      kendryte,sysctl = <&sysctl>;
+>> +      kendryte,power-offset = <K210_SYSCTL_POWER_SEL>;
+>> +      pinctrl-0 = <&fpioa_jtag>;
+>> +      pinctrl-names = "default";
+>> +
+>> +      fpioa_jtag: jtag {
+>> +        pinmux = <K210_FPIOA(0, K210_PCF_JTAG_TCLK)>,
+>> +                 <K210_FPIOA(1, K210_PCF_JTAG_TDI)>,
+>> +                 <K210_FPIOA(2, K210_PCF_JTAG_TMS)>,
+>> +                 <K210_FPIOA(3, K210_PCF_JTAG_TDO)>;
+>> +      };
+>> +    };
+>> -- 
+>> 2.28.0
+>>
 
-PullDefault is ASIS in terms of BIAS, it's always supported.
-I mistakenly took None in the upper paragraph, but I got your point.
-
-> > If we break something with this it means:
-> > - ACPI table is broken and we need a quirk
->
-> Broken ACPI tables are as common as rain in the Netherlands, where ever
-> possible we want to deal with these / workaround the brokenness
-> without requiring per device quirks. Requiring a per device quirk for
-> every broken ACPI table out there does not scale.
-
-Okay.
-
-> > - GPIO library is broken on architectural level and needs not to return
-> >   ENOTSUPP for the flags configuration.
->
-> Usually we handle features not being implemented gracefully. E.g chances
-> are good that whatever bias is required was already setup by the firmware
-> (or bootloader in the uboot + EDK2 case). Making bias set failures a
-> critical error will likely regress working platforms in various cases.
->
-> Keep in mind we have an existing userbase where things is working fine
-> without taking the bias settings into account now. So if we hit the
-> -ENOTSUPP case on any platform out there, then that is a regression
-> plain and simple and as you know regressions are a big red flag.
-
-Yeah, probably the best is to have these things optional and thus
-return only real error cases.
-
-> Since it is really easy to avoid the regression here we really
-> should avoid it IMHO. What about just printing a warning on ENOTSUPP
-> when setting the bias instead ?
-
-So, looking into this deeper I have got the following:
-
-FUNC            Relation to ENOTSUPP
-
-gpiod_set_config()  returns if not supported
-gpiod_set_debounce()  as gpiod_set_config() above
-gpio_set_debounce()  legacy wrapper on top of gpiod_set_debounce()
-gpiod_set_transitory()  skips it (returns okay) with debug message
-gpio_set_config()  returns if not supported
-gpio_set_bias()  skips it (returns okay)
-
-Now, what the heck are the last ones? Why do we have this difference?
-(I meant APIs)
-
-So, I will try to unify it. Not sure that we need to issue a message
-in case something is not supported. Debug one? Might be, but don't
-think we need it right now.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
