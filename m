@@ -2,99 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66BB72AB8C9
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 13:57:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4689A2ABB76
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 14:28:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgKIM47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 07:56:59 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:49807 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729882AbgKIM4t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Nov 2020 07:56:49 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0DDF45C02B4
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Nov 2020 07:56:49 -0500 (EST)
-Received: from imap22 ([10.202.2.72])
-  by compute4.internal (MEProxy); Mon, 09 Nov 2020 07:56:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiius.com; h=
-        mime-version:message-id:date:from:to:subject:content-type; s=
-        fm3; bh=nJND+74rJtWsZauz0uPnNk+J58BKR0M50nAkBoSy/jo=; b=0dyJfg5J
-        RmcVdku97553VZT968gO+p+zXLwGpc+gPW6IfWdJESwE7KGjcX19CH4+y/8YKBel
-        F2r0pMhXhERwBvDAj+8tF3FVstUzJFppLuvt6fmtmN3NJHlIBkbGyH4af/5W5FAi
-        Z1kDCFEUbR6WCxSfXCAgONClopUtH/+6AyGKaYsQIl8mi7IJRIlG5tCUiWphK8Se
-        /YS19g+n5dIMsYJbsWCtgVhMkvQuR/YYjXDSYrTCI7SLmRb5iCMK5hEHCPNli4XV
-        st5Qtj5dZOY09Jo37wRJWubi4Y23yIbKbeZuLbA6tOH9cWWhibm3gjatfAdY0zur
-        b4OeivF2ssEwmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm1; bh=nJND+74rJtWsZauz0uPnNk+J58BKR
-        0M50nAkBoSy/jo=; b=X+C4Is/DvSPh4LloxP6piW/vleU3lISnpsbshH877uLt/
-        t/BsE8ZczYbqhfWIrhcHF6oEZcpRWPuMyAJ2rt5sKXqOOs9OpNST8pi0T7X2IUnu
-        lJpiHJ+il5tqOu4ulJ/YbrYSYvXM4BJo+N7HuyfRl4Jfbwktk/r4SGRbhQi70/lD
-        OrGWV12f0ijK6+eH3+T8l6lf4muq27mlyRx9bbo5nBXdYUqcEaredEpUjT2yTWVm
-        oFDsVzVEU7xXa+Dx23kVBkGbcnXKcvhqcnyeXaen0lX0ZSuzIZgAtP/hpGcIIQmk
-        BKGBzC3pqAYCtQpG5Dgii+HDlShpMO8xhcBUnHBtw==
-X-ME-Sender: <xms:kDypX6PSpXjkZfMVHDr6wPEY5nzaRGy2UzAoX3-RsDbrbU2aMdnKWA>
-    <xme:kDypX489Eyolm4sIC4UM75AVxnirMqVWLeO8fOJvFd_IksAWeZfJD8ddvCPMk7JJZ
-    aaoj9-Lgx1y3ZtSOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudduhedggeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfffhffvufgtsehttdertd
-    erreejnecuhfhrohhmpedflfgrmhhivgcuofgtvehlhihmohhnthdfuceojhgrmhhivges
-    khifihhiuhhsrdgtohhmqeenucggtffrrghtthgvrhhnpeeludejleehvddutdefleffhe
-    ffffffffeljeejieegheeguddtjedvveekieevfeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehjrghmihgvsehkfihiihhushdrtghomh
-X-ME-Proxy: <xmx:kDypXxQItOy4gGr_40YfNqa8oPKmd5flW4_WnzpYiyebM6uJaPX8-w>
-    <xmx:kDypX6vUPJfvxe85_PH0hcf8jkX403W-gsYRMWzPiS1401YrIMs3Ig>
-    <xmx:kDypXyfz359t2Mp1eo0tnva6kam8qzdSMXpP8etrkweK4Y_8oYeGaQ>
-    <xmx:kTypX8rOEsbEETKufaW6Xy0UPG5rnZqjtctIiC9qJ_K5_KG2E_WbOQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7E40C668007A; Mon,  9 Nov 2020 07:56:48 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-570-gba0a262-fm-20201106.001-gba0a2623
-Mime-Version: 1.0
-Message-Id: <a491261f-8463-474d-a6b3-d674670c7bb7@www.fastmail.com>
-Date:   Tue, 10 Nov 2020 01:56:27 +1300
-From:   "Jamie McClymont" <jamie@kwiius.com>
-To:     linux-gpio@vger.kernel.org
-Subject: =?UTF-8?Q?How_to_handle_a_level-triggered_interrupt_that_is_slow_to_de-a?=
- =?UTF-8?Q?ssert_itself?=
-Content-Type: text/plain
+        id S1731112AbgKIN2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 08:28:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733012AbgKINNs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 08:13:48 -0500
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 888C5221F1;
+        Mon,  9 Nov 2020 13:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604927627;
+        bh=C62EO4IC0tkPHza1Z5wLuwCPmHs9dymzQ6bTKN291E0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lu6ZloQxCpVK9XPcQeKzDCyoPfapyzr8TmXS1ZEQ5eLaXSQuhBcR94+nOWdM77AES
+         kV44ekL3qEsJoQl40SCbzafHpHB/U5BDiFZlYsy1bDuBBjuiPNMvRlmyINyVtsgYHP
+         +CZ44kZDC+mqx34R9oQDI2jfLLxSNjX09++Ubcyg=
+Received: by mail-oi1-f178.google.com with SMTP id w188so4585167oib.1;
+        Mon, 09 Nov 2020 05:13:47 -0800 (PST)
+X-Gm-Message-State: AOAM533ghNW5C4wTcPw1BTBJ/wO7q05blkQ5kGYW8aF+6QmwHPWFBrsy
+        dUT41dKrbdJymQJI6f5pIgDgRFwIDPQfe/6m6zA=
+X-Google-Smtp-Source: ABdhPJxw91Hj0jZh5TbrSnMgwYuPfwA98iCODNQAPuLfkdT9c4QN2Zz2pIgElY5nW2+5lWSvP9BtJ7kmgCwWxxMgu9A=
+X-Received: by 2002:aca:e0d7:: with SMTP id x206mr9417239oig.67.1604927626755;
+ Mon, 09 Nov 2020 05:13:46 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1603055402.git.syednwaris@gmail.com> <15a044d3ba23f00c31fd09437bdd3e5924bb91cd.1603055402.git.syednwaris@gmail.com>
+ <CAK8P3a3f=fuq24QwNee3QgoMcSK5rcvLRpdTOWBZ9NJ4d-4bvA@mail.gmail.com>
+ <20201101150033.GA68138@shinobu> <CAK8P3a0y7mh=ZDPefgpawY97gpYv79UXFLBzoGfu3ex2up2aDQ@mail.gmail.com>
+ <20201109123411.GA19869@syed>
+In-Reply-To: <20201109123411.GA19869@syed>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 9 Nov 2020 14:13:30 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2_1xT7Jz_q-xZstnW6dSRkRp4Q9Cqyz1t7Bo189zgfaA@mail.gmail.com>
+Message-ID: <CAK8P3a2_1xT7Jz_q-xZstnW6dSRkRp4Q9Cqyz1t7Bo189zgfaA@mail.gmail.com>
+Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
+ and _set_value
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi all,
+On Mon, Nov 9, 2020 at 1:34 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> On Sun, Nov 01, 2020 at 09:08:29PM +0100, Arnd Bergmann wrote:
+> > > This avoids adding a costly conditional check inside bitmap_set_value()
+> > > when almost all bitmap_set_value() calls will have static arguments with
+> > > well-defined and obvious boundaries.
+> > >
+> > > Do you think this would be an acceptable solution to resolve your GCC
+> > > warnings?
+> >
+> > Unfortunately, it does not seem to make a difference, as gcc still
+> > knows that this compiles to the same result, and it produces the same
+> > warning as before (see https://godbolt.org/z/rjx34r)
+> >
+> >          Arnd
+>
+> Hi Arnd,
+>
+> Sharing a different version of bitmap_set_valuei() function. See below.
+>
+> Let me know if the below solution looks good to you and if it resolves
+> the above compiler warning.
 
-Background context:
+Thanks for the follow-up!
 
-I'm continuing my efforts to reverse-engineer and write a driver for the Goodix GXFP5187 fingerprint sensor in my Huawei Matebook X Pro (the host is an Intel i5-8250U).
+> @@ -1,5 +1,5 @@
+>  static inline void bitmap_set_value(unsigned long *map,
+> -                                    unsigned long value,
+> +                                    unsigned long value, const size_t length,
+>                                      unsigned long start, unsigned long nbits)
+>  {
+>          const size_t index = BIT_WORD(start);
+> @@ -7,6 +7,9 @@ static inline void bitmap_set_value(unsigned long *map,
+>          const unsigned long ceiling = round_up(start + 1, BITS_PER_LONG);
+>          const unsigned long space = ceiling - start;
+>
+> +       if (index >= length)
+> +               return;
+> +
+>          value &= GENMASK(nbits - 1, 0);
+>
+>          if (space >= nbits) {
+> @@ -15,6 +18,10 @@ static inline void bitmap_set_value(unsigned long *map,
+>          } else {
+>                  map[index + 0] &= ~BITMAP_FIRST_WORD_MASK(start);
+>                  map[index + 0] |= value << offset;
+> +
+> +               if (index + 1 >= length)
+> +                       return;
+> +
+>                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+>                  map[index + 1] |= value >> space;
+>          }
 
-The device is connected via SPI plus a GPIO Interrupt pin, defined like so in the ACPI tables:
+Yes, this does address the warning: https://godbolt.org/z/3nsGzq
 
-    GpioInt (Level, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
-        "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,) { 0x0000 }
+Not sure what the best calling conventions would be though, as the function
+now has five arguments, and the one called 'nbits' appears to be what
+all other helpers in include/linux/bitmap.h use for the length of the bitmap,
+while this one uses it for the length of the value.
 
-This line is held down by the device when it has a message for the host, and stays held down until the host finishes reading the message out over SPI.
+I'd prefer passing the number of bits in the bitmap rather than the number
+of 'unsigned long' words in it, and calling that 'nbits', while renaming
+the current 'nbits' to something else, e.g.:
 
-I'm handling this with a devm_request_threaded_irq-type handler, where the irq part is just "return IRQ_WAKE_THREAD", and the threaded part does all the work. My understanding is that this is a reasonable approach since I don't have tight latency requirements (and the sleeping spi functions are convenient, plus I don't want to introduce any unnecessary jitter to the system) -- please correct me if I shouldn't actually be using a threaded handler here.
+static inline void bitmap_set_value(unsigned long *map,
+                                    unsigned long value, unsigned long start,
+                                    unsigned long clump_size, unsigned
+long nbits);
 
----
+Though I'm still unsure about the argument order. Having 'nbits'
+right next to 'map' would be the most logical to me as they logically
+belong together, but most other linux/bitops.h helpers seem to have
+'nbits' as the last argument.
 
-Here's my problem:
-
-the IRQ line actually stays held down for roughly 180us after I've finished reading out the message over SPI. That means that as soon as the handler finishes, a new one starts, and it reads out corrupted data, since the sensor doesn't have anything to say.
-
-This is okay in theory -- the corrupted message header can be detected by its checksum, and disregarded. However, this leads to a race condition where the chip can decide it DOES have something to say to the host, WHILE the host is reading out the corrupted header. At that point, the two sides de-sync in their ideas of what needs to be read, and everything stops working.
-
-So, I'd like some way to pause interrupt handling for 200us+, and only re-run the handler if the line is still held down after that time.
-
-My first approach was to add a sleep (usleep_range) at the end of the threaded handler, right before returning IRQ_HANDLED. However, it appears that after the sleep finishes, the IRQ is triggered one more time -- presumably it has been set as pending before/during the sleep?
-
-My new workaround is to save a ktime_get_ns timestamp at the end of the handler, and check it against the current ktime at the start, returning early if not enough time has yet elapsed. This is unsatisfactory, as it is effectively a 180us busy-wait, and gets in the way of whatever the core could better be doing (presumably idling and saving power :).
-
-Is it possible to return to the first approach, but prevent that one spurious interrupt from firing after the handler ends?
-
-Thanks
--- Jamie McClymont
+        Arnd
