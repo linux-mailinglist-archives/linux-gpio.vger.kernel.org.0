@@ -2,119 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D6D82AC658
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 21:52:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 090BA2AC65E
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Nov 2020 21:53:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbgKIUwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Nov 2020 15:52:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
+        id S1727311AbgKIUxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Nov 2020 15:53:49 -0500
+Received: from mga17.intel.com ([192.55.52.151]:41590 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbgKIUwm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Nov 2020 15:52:42 -0500
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81380221FB;
-        Mon,  9 Nov 2020 20:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604955161;
-        bh=D2C0dwhvGc/byaIhEDmOPOOvSRn49LYfvX5fua57lQU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zZSrg3tvNee2ietU2BpJkGBKg/kzb2mddFoYf98vEp4qdGqMDk//tKMvlLoVGSLOC
-         jyajCyn85Hvzt+jWYbMNDEm7FsGVuDKSf4enMv4N166pyV7R554+HlcgaiYUbVbDdb
-         wRPyA6Kdam7lkVaDQsa/y8BFBXXw0QAmETjyz+6k=
-Received: by mail-ot1-f44.google.com with SMTP id i18so10364136ots.0;
-        Mon, 09 Nov 2020 12:52:41 -0800 (PST)
-X-Gm-Message-State: AOAM533bjSa3CIPq3ojS15SA1xiudcZxVVnlLlfX0xBtCZxqo2d93rVa
-        nwl55FHhPGdAfBt2lb6Pa4162CWgM4uzYYckKg==
-X-Google-Smtp-Source: ABdhPJxOhi7q2TyR1cU1bUXAG1nazgiWne5zeC8nU0nRaw0X6g9uRWTSp5SOeyBKdMyk9NnV3n4OJCWoPencr/BRt0Q=
-X-Received: by 2002:a9d:5e14:: with SMTP id d20mr10925302oti.107.1604955160785;
- Mon, 09 Nov 2020 12:52:40 -0800 (PST)
+        id S1725946AbgKIUxt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Nov 2020 15:53:49 -0500
+IronPort-SDR: hRLFbvkRU0yRKkiFexBVJvYVDIlEZtpKYgzXIg3beUP7GkxN7aSM+Q1nHJMldt+L1df12etP+k
+ q+uHaKHMyc+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149719600"
+X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
+   d="scan'208";a="149719600"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 12:53:47 -0800
+IronPort-SDR: 7Wleu15OxicyFEQvj474dliGnY0+wqWTqXGYiPL2lhljdmCp4udcQFC4U9F8vqOvjavBFLPLxT
+ GkaizfsF/U+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
+   d="scan'208";a="541019875"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2020 12:53:45 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9A51517C; Mon,  9 Nov 2020 22:53:44 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jamie McClymont <jamie@kwiius.com>
+Subject: [PATCH v5 00/17] gpiolib: acpi: pin configuration fixes
+Date:   Mon,  9 Nov 2020 22:53:15 +0200
+Message-Id: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-2-damien.lemoal@wdc.com>
- <CAHp75VfvUZ6h+JGCUQ65i7qFsugvbd3n=aCprgvp=geRSpQEhQ@mail.gmail.com> <20201109174450.myombn5skpj5wcxh@mobilestation>
-In-Reply-To: <20201109174450.myombn5skpj5wcxh@mobilestation>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 9 Nov 2020 14:52:29 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+sz09YWxpyM_tBbvJzidbARUVF2fvxMe-SS666WvNRBQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+sz09YWxpyM_tBbvJzidbARUVF2fvxMe-SS666WvNRBQ@mail.gmail.com>
-Subject: Re: [PATCH 01/32] of: Fix property supplier parsing
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 11:45 AM Serge Semin <fancer.lancer@gmail.com> wrote:
->
-> Hello Andy,
->
-> On Mon, Nov 09, 2020 at 05:14:21PM +0200, Andy Shevchenko wrote:
-> > On Sat, Nov 7, 2020 at 10:14 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
-> >
-> > > @@ -1308,7 +1308,6 @@ DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
-> > >  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
-> > >  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
-> > >  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
-> > > -DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
-> >
-> > Sorry, but the above doesn't sound right to me.
-> > It's a generic code and you may imagine how many systems you broke by
-> > this change.
->
-> Damien replaced the macro above with the code below (your removed it from your
-> message):
->
-> +static struct device_node *parse_gpios(struct device_node *np,
-> +                                      const char *prop_name, int index)
-> +{
-> +       /*
-> +        * Quirck for the DesignWare gpio-dwapb GPIO driver which defines
-> +        * the "snps,nr-gpios" property to indicate the total number of GPIOs
-> +        * available. As this conflict with "xx-gpios" reference properties,
-> +        * ignore it.
-> +        */
-> +       if (strcmp(prop_name, "snps,nr-gpios") == 0)
-> +               return NULL;
-> +
-> +       return parse_suffix_prop_cells(np, prop_name, index,
-> +                                      "-gpios", "#gpio-cells");
-> +}
->
-> So AFAICS removing the macro shouldn't cause any problem.
->
-> My concern was whether the quirk has been really needed. As I said the
-> "snps,nr-gpios" property has been marked as deprecated in favor of the standard
-> "ngpios" one. Due to the problem noted by Damien any deprecated property
-> utilization will cause the DW APB SSI DT-nodes probe malfunction. That
-> though implicitly but is supposed to encourage people to provide fixes for
-> the dts-files with the deprecated property replaced with "ngpios".
+There are fixes (and plenty cleanups) that allow to take into consideration
+more parameters in ACPI, i.e. bias for GpioInt() and debounce timeout
+for Operation Regions, Events and GpioInt() resources.
 
-May be deprecated, but we've still got 53 cases in upstream dts files.
-Plus changing doesn't work well for new DT with old kernels unless we
-backport 'ngpios' support.
+During review Hans noted, that gpiod_set_debounce() returns -ENOTSUPP for
+the cases when feature is not supported either by driver or a controller.
 
-> On the other hand an encouragement based on breaking the kernel doesn't seem a
-> good solution. So as I see it either we should accept the solution provided by
-> Damien, or replace it with a series of fixes for all dts-es with DW APB SSI
-> DT-node defined. I suggest to hear the OF-subsystem maintainers out what
-> solution would they prefer.
+It appears that we have slightly messy API here:
 
-I'd suggest making failing to parse a warning rather than an error.
-The devlink stuff is off by default anyways and is still changing.
+  FUNC			Relation with ENOTSUPP
 
-Rob
+  gpiod_set_config()	 returns if not supported
+  gpiod_set_debounce()	 as gpiod_set_config() above
+  gpio_set_debounce()	 legacy wrapper on top of gpiod_set_debounce()
+  gpiod_set_transitory() skips it (returns okay) with debug message
+  gpio_set_config()	 returns if not supported
+  gpio_set_bias()	 skips it (returns okay)
+
+Last two functions are internal to GPIO library, while the rest is
+exported API. In order to be consistent with both naming schemas
+the series introduces gpio_set_debounce_timeout() that considers
+the feature optional. New API is only for internal use.
+
+While at it, the few first patches do clean up the current GPIO library
+code to unify it to some extend.
+
+The above is followed by changes made in ACPI GPIO library part.
+
+The bias patch highly depends on Intel pin control driver changes
+(they are material for v5.10 [1]), due to this and amount of the
+prerequisite changes this series is probably not supposed to be
+backported (at least right now).
+
+The last patch adds Intel GPIO tree as official one for ACPI GPIO
+changes.
+
+Assuming [1] makes v5.10 this series can be sent as PR to Linus
+for v5.11 cycle.
+
+Note, some patches are also depend to the code from GPIO fixes / for-next
+repositories. Unfortunately there is no one repository which contains all
+up to date for-next changes against GPIO subsystem. That's why I have merged
+Bart's for-current followed by Linus' fixes followed by Bart's for-next
+followed by Linus' for-next branches as prerequisites to the series.
+
+Cc: Jamie McClymont <jamie@kwiius.com>
+
+[1]: https://lore.kernel.org/linux-gpio/20201106181938.GA41213@black.fi.intel.com/
+
+Changelog v5:
+- introduced gpio_set_debounce_timeout()
+- made a prerequisite refactoring in GPIO library code
+- updated the rest accordingly
+
+Changelog v4:
+- extended debounce setting to ACPI events and Operation Regions
+- added Ack (Linus)
+- added few more cleanup patches, including MAINTAINERS update
+
+Changelog v3:
+- dropped upstreamed OF patch
+- added debounce fix
+
+Andy Shevchenko (17):
+  gpiolib: Replace unsigned by unsigned int
+  gpiolib: add missed break statement
+  gpiolib: use proper API to pack pin configuration parameters
+  gpiolib: Add temporary variable to gpiod_set_transitory() for cleaner
+    code
+  gpiolib: Extract gpio_set_config_with_argument() for future use
+  gpiolib: move bias related code from gpio_set_config() to
+    gpio_set_bias()
+  gpiolib: Extract gpio_set_config_with_argument_optional() helper
+  gpiolib: Extract gpio_set_debounce_timeout() for internal use
+  gpiolib: acpi: Respect bias settings for GpioInt() resource
+  gpiolib: acpi: Use named item for enum gpiod_flags variable
+  gpiolib: acpi: Take into account debounce settings
+  gpiolib: acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
+  gpiolib: acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
+  gpiolib: acpi: Extract acpi_request_own_gpiod() helper
+  gpiolib: acpi: Convert pin_index to be u16
+  gpiolib: acpi: Use BIT() macro to increase readability
+  gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work
+
+ MAINTAINERS                   |   1 +
+ drivers/gpio/gpiolib-acpi.c   | 130 ++++++++++++++++++++--------------
+ drivers/gpio/gpiolib-acpi.h   |   2 +
+ drivers/gpio/gpiolib.c        |  97 ++++++++++++++-----------
+ drivers/gpio/gpiolib.h        |   1 +
+ include/linux/gpio/consumer.h |   4 +-
+ 6 files changed, 141 insertions(+), 94 deletions(-)
+
+-- 
+2.28.0
+
