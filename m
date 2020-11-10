@@ -2,113 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC8D2B1E6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 16:18:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EC992B1ECE
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 16:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgKMPSP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Nov 2020 10:18:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgKMPSO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Nov 2020 10:18:14 -0500
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7ACBC0617A6
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Nov 2020 07:18:13 -0800 (PST)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by andre.telenet-ops.be with bizsmtp
-        id rrJA2300E4C55Sk01rJAMu; Fri, 13 Nov 2020 16:18:12 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kdaq2-0028KQ-6w; Fri, 13 Nov 2020 16:18:10 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kdaq1-00GSzA-GZ; Fri, 13 Nov 2020 16:18:09 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.11
-Date:   Fri, 13 Nov 2020 16:18:07 +0100
-Message-Id: <20201113151807.3924625-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        id S1726869AbgKMPcX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Nov 2020 10:32:23 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:39133 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726731AbgKMPcU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Nov 2020 10:32:20 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E042F58032D;
+        Fri, 13 Nov 2020 10:32:18 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 13 Nov 2020 10:32:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:date:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=iQvsGPPa0tYF2NuoRivcownR9ft
+        NLwLD3BYTJEqiN68=; b=lSysGwVB7uEO/OD640HhdDjd1HDZweo4kZul3xT9ZZb
+        0QhyoL6zjbLQenu11bkjQ56NKvcFI9Vin1bBd06Uud3+PwXKy6qKeCQcaCiX3Nix
+        TqBIn+WPVvZDm7sw6drhgyS+vbLOqc6pZ+KKyHPx4xGi3A/Y/+VcNYzG+y0uuovn
+        5rWeeiiqERqhOAyiEo9akMy8TUZX4MQSkLMPkTCjY8kgFtCV5ssoWbVnXJlGmYXc
+        FRSmpXdBhD0XhpoR69kEMXizqVKgjJafS27ff3o5CRM5X79G+ONZPXg3ydPFSfut
+        6UtqsHXrQkJ6k4VqqCW68LFZLZ8z6wNmqdC7s/dPBYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=iQvsGP
+        Pa0tYF2NuoRivcownR9ftNLwLD3BYTJEqiN68=; b=EJEe7fiMO/W7hIRq1R4VkM
+        Zit5RF0UHiDUTx6SfZKALDBAWTFgnK20cOfruzgTloS29toHAzz9N+GEz7rq/zx8
+        yLPixecY5+AXwqbZ7sCzmo0LOcrfL29ODL89uzAJlA56HyssX9qrta4NPZnMoxbz
+        I5q3M4mPKf0MwE9V4tdYhZRPJEikPDzVC5fdpaacyloLcIJOJyoKpti/64rdTwAj
+        /Gv0s9sL1Qg5aK/CboQnGKNUvqEFnTN5B0fgsQHfGoUtsPl8nhnsBVKE6eQDVxXH
+        SQ2rJ3EJVfbLNEFd3b+oFJvyjudcxqFG0onlp35JDRt7IALKPWoEbWk3YjcrD3gg
+        ==
+X-ME-Sender: <xms:AKeuXzhp5yOZuzx_8jABAGLEMIARQ5xo40fJkpSR4FuyWLt-6jzgAw>
+    <xme:AKeuXwA5pgknbzpFZOXlJtT48gdkLWQj5Td8uDZtGkQWAl8sQgDry2t8w2V5qT_XX
+    Eeuk1BzA1nEqMDoPDA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedruddvhedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephfffvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpehmrgigihhm
+    vgestggvrhhnohdrthgvtghhnecuggftrfgrthhtvghrnhephffffffgteejgeeiteelue
+    dvkeffudekjeejheevleekgffggfekkedvhfeigefgnecukfhppeeltddrkeelrdeikedr
+    jeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmh
+    grgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:AKeuXzGdXPY-QZyakhb_12fR12Jd5ZHQl-EScwayMt7F4680Um_lDw>
+    <xmx:AKeuXwRguMbGG6BXUiUDFA9shhP9V3h4cjovwPpd_fCwkqtq-yjcbg>
+    <xmx:AKeuXww-uHpJSrMnSdsgyDrytpFfi7fDFWSH7WxmiJVs-U6ojPrIlw>
+    <xmx:AqeuX9jrNtkIa69VlNHt4vbw5TVITyxF4-jAagikg_6BBmBDNV88dA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BE0853064AAE;
+        Fri, 13 Nov 2020 10:32:15 -0500 (EST)
+From:   maxime@cerno.tech
+Date:   Tue, 10 Nov 2020 13:55:36 +0100
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Frank Lee <tiny.windzz@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, kishon@ti.com,
+        wim@linux-watchdog.org, Guenter Roeck <linux@roeck-us.net>,
+        dan.j.williams@intel.com, Linus Walleij <linus.walleij@linaro.org>,
+        wsa+renesas@sang-engineering.com, dianders@chromium.org,
+        marex@denx.de, Colin King <colin.king@canonical.com>,
+        rdunlap@infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        rikard.falkeborn@gmail.com, dmaengine@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 00/19] Second step support for A100
+Message-ID: <20201110125536.gxxbgzkh3tlmn2ze@gilmour.lan>
+65;6201;1cFrom: Maxime Ripard <maxime@cerno.tech>
+References: <20201110040553.1381-1-frank@allwinnertech.com>
+ <CAEExFWsc4Rx2U+BVuqTJkL0wj-gdNcF=emJRcStQ2Uq=FQEx1g@mail.gmail.com>
+ <CAJKOXPf4ARNnSnvDpn7vVC0kGNd+m_dkfgKkmH_bca2AZ_Osyg@mail.gmail.com>
+ <CAEExFWv2o9aTfUVM5NzZz10kAO_Ya8VJvJrmyjh55=U_5G8RJw@mail.gmail.com>
+ <20201110124829.GB161013@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dakuxhxxqpi2fsmh"
+Content-Disposition: inline
+In-Reply-To: <20201110124829.GB161013@vkoul-mobl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
 
-The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
+--dakuxhxxqpi2fsmh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+On Tue, Nov 10, 2020 at 06:18:29PM +0530, Vinod Koul wrote:
+> On 10-11-20, 16:51, Frank Lee wrote:
+> > On Tue, Nov 10, 2020 at 4:43 PM Krzysztof Kozlowski <krzk@kernel.org> w=
+rote:
+> > >
+> > > On Tue, 10 Nov 2020 at 07:00, Frank Lee <tiny.windzz@gmail.com> wrote:
+> > > >
+> > > > It seems that sending too many e-mails at one time will cause some
+> > > > emails to fail to be sent out. I will try again.
+> > >
+> > > Hi,
+> > >
+> > > Instead please reduce the address list to relevant people, as pointed
+> > > out by scripts/get_maintainer.pl. Don't Cc irrelevant developers
+> > > unless a file is abandoned and you need to get as much audience as
+> > > possible... but sunxi is not abandoned.
+> >=20
+> > Thank you for the reminder. I resend the version in the afternoon,
+> > only CC the relevant people. I'm not sure. Should the cover be copied
+> > to everyone?
+>=20
+> Any reason why this should be a single series.. why not split it to
+> bunch of chunks, one per subsystem like pinctrl, phy, dmaengine, etc...
+> And then DTS parts and CC relevant list and maintainers. I do not think
+> there is any dependency, right?
 
-are available in the Git repository at:
+Yeah, I agree.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.11-tag1
+One series should be about one topic, so you should have at least:
+  - One for the pinctrl fixes
+  - One for the DMA controller and related DT patches
+  - One for the MMC controller and related DT patches
+  - One for the USB controllers and related DT patches
+    * And for the PHY, the enable_pmu_unk1 and devm_* patches should be
+      sent independently as well
+  - One for the watchdog
+  - And the PMU patch should be sent independently too
 
-for you to fetch changes up to d4aac7d439c2d9307cb5137fc285464a36978107:
+Maxime
 
-  pinctrl: renesas: Constify sh73a0_vccq_mc0_ops (2020-11-13 15:37:41 +0100)
+--dakuxhxxqpi2fsmh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.11
+-----BEGIN PGP SIGNATURE-----
 
-  - Add remaining video-in (VIN) pin groups on R-Car H2 and RZ/G1H,
-  - Image size optimizations and code consolidations,
-  - Minor fixes and improvements.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX6qNyAAKCRDj7w1vZxhR
+xZhsAQDnDysv0PDMRF+pQ9Aae6T48f6wAJcVf1ozDJ6SaYxctQEAjoXFWWcwmX5u
+DkWVsDJgDp4anqqJj/n9YqMwDCBJ9Q0=
+=LbiZ
+-----END PGP SIGNATURE-----
 
-Thanks for pulling!
-----------------------------------------------------------------
-Biju Das (6):
-      pinctrl: renesas: r8a77951: Optimize pinctrl image size for R8A774E1
-      pinctrl: renesas: r8a7796: Optimize pinctrl image size for R8A774A1
-      pinctrl: renesas: r8a77965: Optimize pinctrl image size for R8A774B1
-      pinctrl: renesas: r8a77990: Optimize pinctrl image size for R8A774C0
-      pinctrl: renesas: r8a7790: Optimize pinctrl image size for R8A7742
-      pinctrl: renesas: r8a7791: Optimize pinctrl image size for R8A774[34]
-
-Geert Uytterhoeven (8):
-      pinctrl: renesas: Remove superfluous goto in sh_pfc_gpio_set_direction()
-      pinctrl: renesas: Singular/plural grammar fixes
-      pinctrl: renesas: Reorder struct sh_pfc_pin to remove hole
-      pinctrl: renesas: Optimize sh_pfc_pin_config
-      pinctrl: renesas: Factor out common R-Car Gen3 bias handling
-      pinctrl: renesas: r8a7778: Use physical addresses for PUPR regs
-      pinctrl: renesas: r8a7778: Use common R-Car bias handling
-      pinctrl: renesas: Protect GPIO leftovers by CONFIG_PINCTRL_SH_FUNC_GPIO
-
-Lad Prabhakar (1):
-      pinctrl: renesas: r8a7790: Add VIN1-B and VIN2-G pins, groups and functions
-
-Rikard Falkeborn (1):
-      pinctrl: renesas: Constify sh73a0_vccq_mc0_ops
-
- drivers/pinctrl/renesas/core.c         |   2 +
- drivers/pinctrl/renesas/core.h         |   4 +
- drivers/pinctrl/renesas/gpio.c         |   2 +-
- drivers/pinctrl/renesas/pfc-r8a7778.c  |  55 ++-----------
- drivers/pinctrl/renesas/pfc-r8a7790.c  | 146 ++++++++++++++++++++++++++++++++-
- drivers/pinctrl/renesas/pfc-r8a7791.c  |  18 ++++
- drivers/pinctrl/renesas/pfc-r8a77950.c |  45 +---------
- drivers/pinctrl/renesas/pfc-r8a77951.c |  59 ++++---------
- drivers/pinctrl/renesas/pfc-r8a7796.c  |  57 ++++---------
- drivers/pinctrl/renesas/pfc-r8a77965.c |  57 ++++---------
- drivers/pinctrl/renesas/pfc-r8a77990.c |  57 ++++---------
- drivers/pinctrl/renesas/pfc-sh73a0.c   |   2 +-
- drivers/pinctrl/renesas/pinctrl.c      |  68 +++++++++++----
- drivers/pinctrl/renesas/sh_pfc.h       |  12 +--
- 14 files changed, 298 insertions(+), 286 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+--dakuxhxxqpi2fsmh--
