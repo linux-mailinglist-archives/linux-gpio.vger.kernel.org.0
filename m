@@ -2,85 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F1D2AD855
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:11:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2512E2AD852
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:11:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbgKJOLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:11:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
+        id S1730097AbgKJOLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:11:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbgKJOLt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:11:49 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563C1C0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:11:49 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id i6so17747722lfd.1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:11:49 -0800 (PST)
+        with ESMTP id S1726721AbgKJOLF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:11:05 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46600C0613CF;
+        Tue, 10 Nov 2020 06:11:05 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id v12so11514668pfm.13;
+        Tue, 10 Nov 2020 06:11:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KpEnlnWHjDYLqMoNrHt/KysUsi09ROrhJWtHTDCWRGI=;
-        b=BDkgs4woTqGqDFzLsQFt4eu4Kw92iGzSuCTQeQElSxv66BP10wEsrSFhEWFcyZ8k+1
-         PY2O0/GuW4gT1FhsqFZJi3uxOBoAEcecE1Zua8LkaBKmPibKBYDWknfrRvfVCBmfE15S
-         WHvzbxRGlltekn5L7pZkl/bAllYsZT+H9vsyI8xK8CTZujcKHBkTnRDmIdOUVT8QoiXK
-         PjOG6C3zAZa4FamO6GIFICx+i4z8QX3Yia4XxDo5GyTR8msPcqbZWUG2rvPmTTAzgugE
-         URxSZbvHY/vHKL/LjDwynre8bcWqE/RPy5l8pxFgc70rkWm08TN0LEKlQTfEiA64FeZ1
-         PQtA==
+        bh=ZrP1XAHiZ90F1ruflFERIhIFX48as5H9Y+mX9mtoFcI=;
+        b=LU7+l0lCOB5cVkiaUP7L7/vVWtsAaImpMjSoTbWcRgNgrJU0nFzf8Dc0bWhmkW3yTr
+         MUKgGrPpa8mLmDZqMarXRnyF+LXEy5lvvSWJX2pyuJUNd+DWPCWjyyepQj77VbBB0+6j
+         cfBzYo5HJ0Wt6WoI85fxynGxDNkymOPjpBftxy8dFPcLxpSTEpwN0M1biaOYf2mUqqgJ
+         gbP9PaYNCie+irVjuQC21WLpzcmYZ+/71NG2neBZjrS66hjK/XNJ+tzlrW9muTageeiW
+         6gek6S0V6loyLS4IsayfdkBqy2jTaoVIn2FHYzfaPFc5sf37RsLJWy008G2rmf99pXbE
+         DXvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KpEnlnWHjDYLqMoNrHt/KysUsi09ROrhJWtHTDCWRGI=;
-        b=LzFzOEG+jWS7dDWXm43pGiKegLWC/nj59Yiq8X4eihibCjU4nutAKh1zMoWJS48R9Q
-         q6AGyGktMlASMfBjHv7910J+UMSxoUQ0ZxylPA8PAhArx+c0X6vZSORSWDoQT7Z6+kOO
-         amO2dmuqhrz0v67LY9Bwv4uYxlfw9b9S/eHcOKr8ERpa5UhXkozvz/EH5QKgaUkNesTo
-         Pr5LO3cr1mXn4Y8eYTjzuQ7uEG87uFkh5Qre3xxV36r2FpCEqOr1+Ayt/6Cl41hvbEXB
-         zxaAl+R5uz+XrGMqihfIOPLlVTbTM7nnFBWXKO+Qm4iVethv+hbaK5TLYoKo0+ChHfNy
-         slyw==
-X-Gm-Message-State: AOAM530yuoWjf0iwwiTc5c5oZsIL3lF9bvRJB4PGFlDmbnA1ohpeKScC
-        RKy7Q6orIU1wqK+G6ncp4JiUTgMPz5l6Dc0tzuuugA==
-X-Google-Smtp-Source: ABdhPJzvVokIIH3qqB2eJVY8gRVEaKtrnAHyEY9b7k7GNoTkcxcN1g1p9HGvhDxeQyifSTCtb1kd1CZTXmDi34FpIYM=
-X-Received: by 2002:a19:5e0b:: with SMTP id s11mr6995400lfb.502.1605017507860;
- Tue, 10 Nov 2020 06:11:47 -0800 (PST)
+        bh=ZrP1XAHiZ90F1ruflFERIhIFX48as5H9Y+mX9mtoFcI=;
+        b=GojTOhLs6mX5yx+zIzGnMlaKV6jgNG9+RfNV0xHTJU3Q5sOaIcuCO2uOvFrxO/X0mC
+         oo+4XfUUXCLIirvxOL2dcH7u1afDSr4B/rhBsA0cwag2pmzHejWI4ObLWTNiTCsmKFtv
+         kmaRZdkS0b4ExWsAT7WF6LkD+c/cXbhYcrncpnFNgpdMi/XZ3Dh75m9bb+zxuB5B2TAk
+         bWaUCX9NOSwbh+18ZXatzwSCYpodGXxkvb4OZ8BZu/mvlO+Gaz/VB1nLkQSKn6vqaJFL
+         GhzTLsRCqgS0KiriHW3YK3F33uYRorfvcacV1OaKdWga1+hP0hxjm4LyiEUNR72zUJo1
+         dnNQ==
+X-Gm-Message-State: AOAM530KkSa2wcXwgeRYbEh2PlcvbANHCM2BaM23sBi6nU9lD0/rdQsi
+        bfzRr+kqPcIClkXL+CUdOj3Bvj95jn3KlEvOWMU=
+X-Google-Smtp-Source: ABdhPJylcT+YGM5oCMXr+QrH4yI4b+m92nokWWdmSmnRsuzPjjfauIIfa5h/Nc/3t2pZPijarnO0ErHrYRu1Utx1K5U=
+X-Received: by 2002:aa7:8c4f:0:b029:18b:f361:4aa3 with SMTP id
+ e15-20020aa78c4f0000b029018bf3614aa3mr1125363pfd.73.1605017464647; Tue, 10
+ Nov 2020 06:11:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20201106093118.965152-1-gregory.clement@bootlin.com>
-In-Reply-To: <20201106093118.965152-1-gregory.clement@bootlin.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 15:11:37 +0100
-Message-ID: <CACRpkdYJHd47-vpuXjb8s0Y=Y=w+QaAMEK+=STqRFbESXJ8M-g@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Extend pinctrl ocelot driver to support other SoCs
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>
+References: <20201110123406.3261-1-brgl@bgdev.pl> <20201110123406.3261-7-brgl@bgdev.pl>
+In-Reply-To: <20201110123406.3261-7-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Nov 2020 16:11:53 +0200
+Message-ID: <CAHp75VekgB1ch4QjHkvvgbE2_KRWG-AynBMP=aLmoM8jBGRmTQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] gpio: exar: switch to using regmap
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        David Laight <David.Laight@aculab.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 6, 2020 at 10:31 AM Gregory CLEMENT
-<gregory.clement@bootlin.com> wrote:
+On Tue, Nov 10, 2020 at 2:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Ocelot SoC belongs to a larger family of SoCs which use the same
-> interrupt controller with a few variation.
->
-> This series of patches add support for Luton and Serval, they are all
-> MIPS based.
->
-> The first patches of the series also updates the binding documentation
-> with the new compatible strings.
+...
 
-All 4 patches applied.
+>  struct exar_gpio_chip {
+>         struct gpio_chip gpio_chip;
+> -       struct mutex lock;
 
-Please consider converting the device tree bindings to YAML
-when/if you have time.
+> +       struct regmap *regs;
 
-Yours,
-Linus Walleij
+Leaving the same name is a call for potential troubles.
+
+>         int index;
+> -       void __iomem *regs;
+>         char name[20];
+>         unsigned int first_pin;
+>  };
+
+...
+
+> +static const struct regmap_config exar_regmap_config = {
+> +       .name           = "exar-gpio",
+> +       .reg_bits       = 8,
+> +       .val_bits       = 8,
+> +};
+
+Looking at the crash, are you sure this is a comprehensive description?
+Maybe it requires something like stride or so?
+
+-- 
+With Best Regards,
+Andy Shevchenko
