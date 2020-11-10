@@ -2,57 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3FC2AD766
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:21:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4011E2AD769
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:23:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbgKJNV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:21:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49800 "EHLO
+        id S1729832AbgKJNXr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:23:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729898AbgKJNV1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:21:27 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34A1C0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:21:26 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id v18so14652745ljc.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:21:26 -0800 (PST)
+        with ESMTP id S1726721AbgKJNXr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:23:47 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D9EC0613D1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:23:46 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id v144so17419693lfa.13
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:23:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fvmdrHjEnYSfYwEFHbWu3E6GP9e3mtGxt3Sg0AJq41k=;
-        b=V8VKUqNgVFUqdWj0+42YrvL6hxZqWLjsCSrmjSQhvcCwZYnxPYk9qfEQ+pPHhhOz2U
-         NoUlNzAUt/LphmvmOLMy9/RdwM4rRa5NVHF8D5xcaR7waBPiCeNLDExsKCBVXqa84jwT
-         mNqPHoiaJKIrjL4ETrIAlfhio3+ghFcJLx0e/SNPdhhJga9K07zBcQs53n2IfCTMWxJq
-         ZiUd9lkEsk85xV35TNaFk64HBZdcMAvE55uDDyUi2p+c4a0xxh2pcqUegDViMCU7tfOB
-         RS7xet0qQ8qfDBuuba4AGMSe2BUCZSRI7MN9AhBr65/zH09SJcpcbP3PCk1OaC1Ws9f0
-         t12Q==
+        bh=anY0fDmqZf06M51XMjl+y1hfzhD8VdxufKL6ec1avkQ=;
+        b=uRDAAQZ2yXEIso6pDZnJjZa23Cttl92TlkscjI2ix8+hgHrYZat15DgQpmmpTVUsBr
+         SFmLlTr/CtssX+80JnqUfLqR+sdk+wENKWUyexD+s0Nz56QFXg7JejhEMZGpQo+a68iw
+         RdQy/4lENdser8H3Hq/aJobT2wZ1Z9e8RrvQ9+uOhUPDsDQ0v0GqzzzNBiFYmS7mOX0J
+         RGKYsw0+lnwai0vohBsBDy1h9mpYcXfYwYtAzkyYxXwvZle4GadAE6T/A9YDbjRmWE8e
+         3KwX91ri0vN0bALT+3+jkG2vlVk4g2Yg2YYcoVK9o+cpS5VjDhagbzIMc1DqojWm/DHn
+         HI4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fvmdrHjEnYSfYwEFHbWu3E6GP9e3mtGxt3Sg0AJq41k=;
-        b=PAiUX82ggiHF6euww/wUHwC9gzEHX5lVDqVz9RvlXUCHInVVmRVI98wT+tGurb7QoV
-         IYJQdNpPCxt+yPNStXXdY5a05Xb9jOpL34HPgiqC14yBkvFNDTmK0TEt4cb/GUL1bb3l
-         tRfwAZ6e3WMcTjqLPjeG4RLufW0jaQzeQWEXWLFh0B/b0X1+hIVS43SbGqbld0BpKAHW
-         zvrSRjeGND1oHBdh+M5O6IUBk7ZiDmB8XniGKCWLWVq9/+fKA/3FTXTrkOL/T70znIiL
-         h1ZCRSrBYAKEYLCXd8HlnQF2P6YVo8ce3/C6ZjcLoHdy31nOfhueWATgZOh/TR4qAqF7
-         tO8Q==
-X-Gm-Message-State: AOAM531bp4TLfsGiksndraJZ0lFIYfSvXDxr92obYHdVl+Dcwbi0Veqc
-        NPg9M/DN9E160p1vShAsXQk2pFAXelLusHf71Oz7ig==
-X-Google-Smtp-Source: ABdhPJyqYfi9VXD1BdUg31+zuT2i/xWg1y18bAyC205h+GjlzHEpJ7dWgXgWGZL0nWrwyQlgl+CJIsjckM29Sj52uIc=
-X-Received: by 2002:a05:651c:1205:: with SMTP id i5mr8893338lja.283.1605014484734;
- Tue, 10 Nov 2020 05:21:24 -0800 (PST)
+        bh=anY0fDmqZf06M51XMjl+y1hfzhD8VdxufKL6ec1avkQ=;
+        b=dQog/VzC7vO5lmZBneaFXJ94JYKF8UcN1x841zVXDinXWuDEOLQH/uF4WiNwNC9Tkv
+         2T1GjyH/I3sSsgxoj28cf75wQSlX1SYDYhY56QTCrKFQwFdtuHYCEAy5XsdAJlpO6yDg
+         lCOFqWhMq60+z2zDoMs3rxsjtxiqu97Rol3BbBZ2rL6KRWmwv4UrQNkW0lMxk67Ua2h+
+         sBl9yTzmP4SBQD6y3SDygvl+KjZbsBpp3DauoQk2Gtsowujz1qLq3SvxsteSJ1hCOnEQ
+         MKJlS32aPg5DvoM5Ty0LzGZQjs8olmYbAePodlic1y0fnBqZt5zpbHmg7HOtF1ChUOga
+         +GAQ==
+X-Gm-Message-State: AOAM531L7xzDT8IYwC35y3bxj0GnndXnLsr+KQbxZWMQpLUJxiY2ImKb
+        2k8/RoOLYrXst9ascNbNE1WGvhtCI8o13aKBzhfH5g==
+X-Google-Smtp-Source: ABdhPJxjroiQ9eW/8CTijDlNPTQGqbxPragcT+vzN69RiXln2dVGzasUsN/OXpEtnpfBivHVFhkzHt/1o9oRa2P6G20=
+X-Received: by 2002:a19:7b06:: with SMTP id w6mr8180050lfc.260.1605014625078;
+ Tue, 10 Nov 2020 05:23:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20201105231912.69527-1-coiby.xu@gmail.com> <20201105231912.69527-4-coiby.xu@gmail.com>
-In-Reply-To: <20201105231912.69527-4-coiby.xu@gmail.com>
+References: <20201105231912.69527-1-coiby.xu@gmail.com> <20201105231912.69527-5-coiby.xu@gmail.com>
+In-Reply-To: <20201105231912.69527-5-coiby.xu@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 14:21:14 +0100
-Message-ID: <CACRpkdZBo+kY_AMNADmj0uGRavb=HsJ8doJ170RJmopmA1c9Nw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] pinctrl: amd: print debounce filter info in debugfs
+Date:   Tue, 10 Nov 2020 14:23:34 +0100
+Message-ID: <CACRpkdbNDQrZYx=B7fuc34j-5Mb0=h8VnFROQYHD5DzX9Orb=A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] pinctrl: amd: remove debounce filter setting in
+ IRQ type setting
 To:     Coiby Xu <coiby.xu@gmail.com>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable <stable@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
@@ -61,18 +65,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Fri, Nov 6, 2020 at 12:19 AM Coiby Xu <coiby.xu@gmail.com> wrote:
 
-> Print the status of debounce filter as follows,
-> $ cat /sys/kernel/debug/gpio
-> pin129          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
->  disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter disabled|   0x50000
->                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> pin130          interrupt is disabled| interrupt is masked| disable wakeup in S0i3 state| disable wakeup in S3 state|
->  disable wakeup in S4/S5 state| input is high|   pull-up is disabled| Pull-down is disabled|   output is disabled| debouncing filter (high) enabled| debouncing timeout is 124800 (us)| 0x503c8
->                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Debounce filter setting should be independent from IRQ type setting
+> because according to the ACPI specs, there are separate arguments for
+> specifying debounce timeout and IRQ type in GpioIo() and GpioInt().
 >
+> This will fix broken touchpads for laptops whose BIOS set the debounce
+> timeout to a relatively large value. For example, the BIOS of Lenovo
+> Legion-5 AMD gaming laptops including 15ARH05 (R7000) and R7000P set
+> the debounce timeout to 124.8ms. This led to the kernel receiving only
+> ~7 HID reports per second from the Synaptics touchpad
+> (MSFT0001:00 06CB:7F28). Existing touchpads like [1][2] are not troubled
+> by this bug because the debounce timeout has been set to 0 by the BIOS
+> before enabling the debounce filter in setting IRQ type.
+>
+> [1] https://github.com/Syniurge/i2c-amd-mp2/issues/11#issuecomment-721331582
+> [2] https://forum.manjaro.org/t/random-short-touchpad-freezes/30832/28
+>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1887190
+> Link: https://lore.kernel.org/linux-gpio/CAHp75VcwiGREBUJ0A06EEw-SyabqYsp%2Bdqs2DpSrhaY-2GVdAA%40mail.gmail.com/
 > Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
 
-Patch applied for the next kernel (v5.11).
+As I have applied patches 1-3 we only have this one to land.
+
+If Andy or someone else needs to take it through the ACPI
+tree you can add my:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+If I should apply it or if Andy sends me a pull request, just
+ping me and tell me what to do :)
 
 Yours,
 Linus Walleij
