@@ -2,86 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6F02AD7DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:41:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D8702AD7EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:43:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgKJNlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:41:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730391AbgKJNlP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:41:15 -0500
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62E4C0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:41:13 -0800 (PST)
-Received: by mail-lj1-x241.google.com with SMTP id 11so14711655ljf.2
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:41:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dEJhY1zERWxEopN/whfB1JLtWNsq333saf4QkVZJP1A=;
-        b=AxT+Pqd40H3iYJyuE/ZHIaheMsEV+0/SlK7CWrvf8h08tX4OPZbNWOa/t59rjMCSSb
-         ZdmVNSXeqBKW0M5k+gW/2t1WG4dVSfjOhefg+eqvLuf0d8tS2IZTQZSRvN9cgFPN+3UL
-         EI77lJHkue1CkJFPRA9w1L3Oc+JBin3wyGWfaCJh2Ro4mJZdbPtztpdp/9naIHcolqmg
-         gWnS12ufV/fi2KmQu+0SuaZEu4cpE/S4GUPC00ODfg1XQYA3kC4Tu5y5asNjF+DrK1jq
-         4+l7gAJf60ZcT6RbS1OF6eC+XEpSZbplQByEdksK4TWRUdYmKGrly67TwWrnUgsy1mck
-         /HpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dEJhY1zERWxEopN/whfB1JLtWNsq333saf4QkVZJP1A=;
-        b=S261ku+xZzY+eg6+tHjdRnDhgW8RbEonprhb0m2F5GHPKkBJbWJqUegQvuAl+UN+40
-         w9aFB5NAIXcjKMxH7yYMI608tv3taCZt8KTo5vUb5S7K8A8pWBTP2GQ8ln+8edAV3LWY
-         9Sz6t7R+Jq61miYsXT/quZ6Cr3dxMmr/IaA9rStSIermvoFFP+AllY+iVKYUqXgWnvKV
-         3zvGoIMcuxXZl6HEx/WZnafPDMt3ibhxmEGZ1ROvUmazHFyolVugihP5p4JLKDkFnggI
-         Nn3lXRYF8mIln7fr0eP5mNnr6OsCTdMf77EyYUEsdSZ6Xv94NdcFGWvISqfDb8HJ26TC
-         5r3w==
-X-Gm-Message-State: AOAM5321eaCK40CezVYaLXvYt7psE4/ZCjlsJjAfD0K6ZGXOAGbxfhhc
-        QIImjBzUSKqh5EbcKAAT8zstvKhgjMawDjBoCPb/SQ==
-X-Google-Smtp-Source: ABdhPJyKm+2t1eAbsc7coZRnQZMuYl/PiLgXGbRpSrPAOz96sa5SQMUqbuChaR73Dl03LC2/bBgXUK9vfaCex/s4xVo=
-X-Received: by 2002:a2e:9b0c:: with SMTP id u12mr7594702lji.338.1605015672358;
- Tue, 10 Nov 2020 05:41:12 -0800 (PST)
+        id S1731950AbgKJNnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:43:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730099AbgKJNnx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Nov 2020 08:43:53 -0500
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F84420731;
+        Tue, 10 Nov 2020 13:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605015833;
+        bh=8a93PI75TfxaQ/45J7emDK1Y8Q31siD/1/I+xtXuprk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=onGLtCfW9xKqxLvawwxMVgVhxER7U4G8YaW6HCGl5H1Oc57M6y6rsASGGm5EV0csi
+         08nKnppFYrxJw8xcq0+KhtqR5TmjJyOb7SOEzbBBDCuiYVgtRGwCDDyPsPKohqgvzK
+         HqyN/6m2iyy9nSjZprAZzrqY6m0ood8Ew2dHCvLQ=
+Date:   Tue, 10 Nov 2020 13:43:38 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Sean Anderson <seanga2@gmail.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 03/32] spi: dw: Fix driving MOSI low while recieving
+Message-ID: <20201110134338.GB5957@sirena.org.uk>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-4-damien.lemoal@wdc.com>
+ <20201109132935.GB6380@sirena.org.uk>
+ <c37ca9be-ea92-b07a-b600-d68de4f7bde5@gmail.com>
+ <20201109141422.GD6380@sirena.org.uk>
+ <20201109191909.wfuwpddng4rdn4ca@mobilestation>
+ <20201109202052.GL6380@sirena.org.uk>
+ <20201109210531.wp4dmug4w2r4kh4p@mobilestation>
 MIME-Version: 1.0
-References: <20201009060302.6220-1-mike.looijmans@topic.nl>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.1d75dfaa-ac5d-4795-8910-47c61fe5f7fe@emailsignatures365.codetwo.com>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.18a45163-1aba-4d15-b42d-af12641f62ac@emailsignatures365.codetwo.com>
- <CACRpkdYLDUURK5yFC5UDZ3trQ8vN4pL_0zpU_FrgfhRUXibnLQ@mail.gmail.com> <d66dd1db-ec13-2fae-9487-beccdf73a7bb@topic.nl>
-In-Reply-To: <d66dd1db-ec13-2fae-9487-beccdf73a7bb@topic.nl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 14:41:01 +0100
-Message-ID: <CACRpkdaP+OZtv2L8a7i6mJ4-N3ajdKP9rRJag2RD+i0C6ZSvfA@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: gpio: pca953x: Add support for the NXP PCAL9554B/C
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Disposition: inline
+In-Reply-To: <20201109210531.wp4dmug4w2r4kh4p@mobilestation>
+X-Cookie: Disk crisis, please clean up!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 11:30 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
-> On 05-11-2020 11:25, Linus Walleij wrote:
-> > On Fri, Oct 9, 2020 at 8:03 AM Mike Looijmans <mike.looijmans@topic.nl> wrote:
-> >
-> >>         - nxp,pcal9535
-> >> +      - nxp,pcal9554b
-> >>         - nxp,pcal9555a
-> >
-> > This triggers my OCD. Putting B before A? Please make it alphabetic.
->
-> Nothing wrong with a bit of OCD, it's probably in our job description :)
->
-> But there's a "4" before the "5" too.
 
-My perception isn't as good as my OCD apparently :D
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is already merged anyways, no big deal.
+On Tue, Nov 10, 2020 at 12:05:31AM +0300, Serge Semin wrote:
 
-Yours,
-Linus Walleij
+> If by general Rx-only half-duplex transfers you meant that the client
+> SPI-device shall just not care what the MOSI level, then the only
+> acceptable solution of the noted in this patch problem is to fix the
+> client driver. Since in case of the MMC-SPI client device sometimes it
+> does care about the level.
+
+Yes, that's how the API is at present (as you say) and is the more
+general case for SPI devices that I've seen - I'm not *totally* against
+adding something to the core if there's enough users that could usefully
+use it but if it's just one or two then it seems like it'll be more
+robust to stick with the current API.
+
+--H+4ONPRPur6+Ovig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+qmQoACgkQJNaLcl1U
+h9B0Rwf+KopRKnXYo5wqZqMUc6Z6nfo2YpwZsWiUO1Sy8+hG9keAbGxcnu5bOGDJ
+90r9oFQxqTjVPKZ556EN5XNqKBijwQMnBPjvCBnfV7U31rvhcd5xiOMh6GXCi18H
+yuvD88KqsXweetYSO7EHqr0MARsZ8OT7khH4/U2b+37uvhfIHDsICIkPHRp4jQQH
+p5hOgTE8uoHNPz6pMzEBmXEMq/yR3Hvt4gMSPAioVH/0sKgB77fMlAdpDyXZewl0
+tQiilBL5bv2mq9IDl/4J3oJf0gM4VT2k4oOehY5wpaXZgn5LJlJVl7DUxJBlmG0r
+4kUkW4N97ZkMpwo/MulisIT+1LpECQ==
+=ZOI9
+-----END PGP SIGNATURE-----
+
+--H+4ONPRPur6+Ovig--
