@@ -2,92 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D8702AD7EA
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAB6E2AD7EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:44:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731950AbgKJNnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:43:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730099AbgKJNnx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Nov 2020 08:43:53 -0500
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F84420731;
-        Tue, 10 Nov 2020 13:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605015833;
-        bh=8a93PI75TfxaQ/45J7emDK1Y8Q31siD/1/I+xtXuprk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=onGLtCfW9xKqxLvawwxMVgVhxER7U4G8YaW6HCGl5H1Oc57M6y6rsASGGm5EV0csi
-         08nKnppFYrxJw8xcq0+KhtqR5TmjJyOb7SOEzbBBDCuiYVgtRGwCDDyPsPKohqgvzK
-         HqyN/6m2iyy9nSjZprAZzrqY6m0ood8Ew2dHCvLQ=
-Date:   Tue, 10 Nov 2020 13:43:38 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Sean Anderson <seanga2@gmail.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 03/32] spi: dw: Fix driving MOSI low while recieving
-Message-ID: <20201110134338.GB5957@sirena.org.uk>
-References: <20201107081420.60325-1-damien.lemoal@wdc.com>
- <20201107081420.60325-4-damien.lemoal@wdc.com>
- <20201109132935.GB6380@sirena.org.uk>
- <c37ca9be-ea92-b07a-b600-d68de4f7bde5@gmail.com>
- <20201109141422.GD6380@sirena.org.uk>
- <20201109191909.wfuwpddng4rdn4ca@mobilestation>
- <20201109202052.GL6380@sirena.org.uk>
- <20201109210531.wp4dmug4w2r4kh4p@mobilestation>
+        id S1730074AbgKJNn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:43:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730099AbgKJNn5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:43:57 -0500
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91CC1C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:43:57 -0800 (PST)
+Received: by mail-lj1-x22b.google.com with SMTP id y16so8664545ljh.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:43:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OMks7TCxypfO5zEMmipqoyz9iMqo2n6lpAYXT3GQdZE=;
+        b=ZQc4irTYSXr7Uynl52t5lAyJ3t7rTZZ8zDrkNuxqhTZ559c4Nxt5sAfq+M1mF8/i9C
+         QPupN+mkrcVfSsMuRoQj+Y4XOc9YEjOV9wjN6M36AqOSNzzteZhNd+Vyn70PWrI2Aj41
+         t/d1+IncCak1EMA7w+3fUuX5sC7yIpR6tl2/dyQMM8aPnFt3IyMuMGVb4g8Wrb3tP8k/
+         j4AxzVLYvDj+IRXt2Mhq6G63LnLXa2pbc+aHxdsbHUFcPT0Rd7C8TXtbB7aTevfBagkz
+         EADOPXaglrGnKqrxS4q1KJy4zz6wGtBMg0qYp55j62Hm7k+6e7H6zZQuVkPck7UDpE0u
+         PVdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OMks7TCxypfO5zEMmipqoyz9iMqo2n6lpAYXT3GQdZE=;
+        b=A9EZaUH601n8qPyU66ZgEeF1UM0QuA0KUqJ9x883nLAUdnNm1eZUtzbM8/o+ikIurQ
+         ByqjiXKkGTqOGMaBgPumJqipS6KLvSdFm8mE3ldTHUjaRP+t1OU+D/yd5l1MJb2jzcYB
+         39tdUl/6s9Qu9KtBh4mmVwolGvK3Kxb5sg8e8GYK/ZTKykpPvbk8X9t/wvqyhosMwmo+
+         tDedj6W3f3OQMNlh/DYPgQ3cVkCTWM83nukWjF6ZX2bLmvIeZWlQai7QrCEQPNYggYoP
+         YOH8NZnRLm6J9Lrj71I/NDOfOUm6//ku18aDpPVPjeJlrJXuzqfj+1WHivUG7O0qnaNy
+         QblA==
+X-Gm-Message-State: AOAM530eoWrQKjOsn+WSqWarx+LNbZrZMQOCQa3+I5EfHCAWeYi/EZ1z
+        KBVDzo2pB5ChSasXl0JpzftxGzkQNa7DEqZMY0YWZA==
+X-Google-Smtp-Source: ABdhPJw2JVrii/Lp5BJnQVyUrauPeK2zgq1rilJyDhm5OQIL+Qesys0TTnEHOCRlwDICOKoIfiL4zx/thHFdAq7Q0Ws=
+X-Received: by 2002:a2e:86d4:: with SMTP id n20mr8854254ljj.293.1605015836059;
+ Tue, 10 Nov 2020 05:43:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
-Content-Disposition: inline
-In-Reply-To: <20201109210531.wp4dmug4w2r4kh4p@mobilestation>
-X-Cookie: Disk crisis, please clean up!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAHNNwZAucoc00gJrUsPRMpFc9U2r+os6NJfc1axsGh0m6ES=xQ@mail.gmail.com>
+In-Reply-To: <CAHNNwZAucoc00gJrUsPRMpFc9U2r+os6NJfc1axsGh0m6ES=xQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 14:43:45 +0100
+Message-ID: <CACRpkdZzLNY1B7e3CECpxNfgxAQsB=-Z9WmVSAT-EwKBgN9krg@mail.gmail.com>
+Subject: Re: gpiolib sysfs access when CONFIG_GPIO_CDEV is not set
+To:     Nicolas Schichan <nschichan@freebox.fr>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Nov 4, 2020 at 6:27 PM Nicolas Schichan <nschichan@freebox.fr> wrote:
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I have tracked it to the fact that I have CONFIG_GPIO_CDEV is disabled in
+> my kernel config: Enabling CONFIG_GPIO_CDEV made export work again.
 
-On Tue, Nov 10, 2020 at 12:05:31AM +0300, Serge Semin wrote:
+We have deliberately made it hard to remove the character device
+because we want to encourage people to use it.
 
-> If by general Rx-only half-duplex transfers you meant that the client
-> SPI-device shall just not care what the MOSI level, then the only
-> acceptable solution of the noted in this patch problem is to fix the
-> client driver. Since in case of the MMC-SPI client device sometimes it
-> does care about the level.
+> Yes, we have no users of the character device gpio interface on our
+> platform, so I have disabled it explicitly when updating the defconfig
+> to the 5.10-rc1 kernel.
 
-Yes, that's how the API is at present (as you say) and is the more
-general case for SPI devices that I've seen - I'm not *totally* against
-adding something to the core if there's enough users that could usefully
-use it but if it's just one or two then it seems like it'll be more
-robust to stick with the current API.
+Please consider getting users of the character device, since if they
+are using the sysfs they are using an explicitly obsoleted interface.
 
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+qmQoACgkQJNaLcl1U
-h9B0Rwf+KopRKnXYo5wqZqMUc6Z6nfo2YpwZsWiUO1Sy8+hG9keAbGxcnu5bOGDJ
-90r9oFQxqTjVPKZ556EN5XNqKBijwQMnBPjvCBnfV7U31rvhcd5xiOMh6GXCi18H
-yuvD88KqsXweetYSO7EHqr0MARsZ8OT7khH4/U2b+37uvhfIHDsICIkPHRp4jQQH
-p5hOgTE8uoHNPz6pMzEBmXEMq/yR3Hvt4gMSPAioVH/0sKgB77fMlAdpDyXZewl0
-tQiilBL5bv2mq9IDl/4J3oJf0gM4VT2k4oOehY5wpaXZgn5LJlJVl7DUxJBlmG0r
-4kUkW4N97ZkMpwo/MulisIT+1LpECQ==
-=ZOI9
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
+Yours,
+Linus Walleij
