@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E43002AD795
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:33:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F181E2AD799
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:34:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgKJNds (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:33:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51728 "EHLO
+        id S1731962AbgKJNeP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:34:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730373AbgKJNdr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:33:47 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A6AC0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:33:46 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id w142so10565351lff.8
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:33:46 -0800 (PST)
+        with ESMTP id S1730373AbgKJNeP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:34:15 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7522C0613D1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:34:14 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id r17so9028324ljg.5
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:34:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q+6VXi/5fY0aP8aAL5vEFMrlAfYUy6hH2SKWPsznW1Q=;
-        b=FmlAGRfSk4J3zgXbJDv8yHH20lrNZWFBkHg/DnPlYXHe2VccCLgYFTG8bjdBptozIj
-         C2SnnYxyrVFoEIY8U1UhC6ub3gwPf//MyHB4gfw2rbPTQhPCPbO5KO4f2s9/x01x5c2q
-         d6E8PMeQIsrG5wuAilg4l2FHg93/R/9JGkgflAWK9Hl3OzEvAijLIUAx7ofhK+AaESb+
-         1GmPNkrH2tMp7ciAAlxzkR08SQ+fhcGiiToI55gcDiBOR7/lsm7BVrnvEM5ycDQakWp1
-         s0DF7ekcsMLZBvO0AbIver97jjPizf/gVWAnl+PQFCdABi/mw1+gmjWTI039J+xVWXTO
-         gE3A==
+        bh=KGLM9fPNY7+GT4p8nJCSTip3uZZh4KalRevc6NBKqSw=;
+        b=h3fs2yDbhXzIKAaNrM+h8p/XSPvr3EH34ss06aruBBygOKO9jCk2Y2fGVpLMiUHrXI
+         LE6Lep9wERBSv9edvF2R2doBF6UAXzV/t6wvEqJGmP2fv/BKT/WdMvx9o3EnhCP6JLVi
+         Q1xUeqe6Uu/vuhmQBEe7HAqerEUcGEq2nQwgaTgrpDmXvvfR5zTO9Gvv6n00nixmJ40E
+         IwnKLpjoF9/iK0H8bBSdj24Ftf0Wj/OpGR7dBsrwYGZC2Z+nEBeRufIeob+3TLmbiUHU
+         tgVSzrE7cn5YGxROsHaRqAZ4NEXXzsPQLOwEu1nPCsTN9ZyJANwF9wGuLlNEpwaEPI9O
+         /iOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q+6VXi/5fY0aP8aAL5vEFMrlAfYUy6hH2SKWPsznW1Q=;
-        b=Qw6A9vizkAcsN6nrZfpeAPulgiku8Oy8pVHm++kxkbPW2FXJROiOAHCwbB2cIRaRc6
-         K/hhJ/9uV4zr8fegFuKyRK6zbMFy/Qc9wl/80iCLnFwTRQ+X2wrvi2+KAez2d60Iag6y
-         z1cuqsgwCj+oulmLqfeEEHsaYx3QCZ+twZKzCNAx1gLUKWbeXidAa5HBM2+lCzMOmMtm
-         R4rVtWh8x5hzedZoiPZm/e/WgVfvrjHMdMwS2YiGCYc8KbH+wA3Ftz8JQjlxt7SwcojE
-         9xX9FcM6Q4lQSEGUFC+tPig+pmTdVhK3ZD/H0c6iNK4qrAHsyGhSKUt+8PudMlWcOQI/
-         RQXg==
-X-Gm-Message-State: AOAM530ec/x1cxe/a0EjIkcMZG59aVKGK9UaIrKo15rrnphSkthJ17Br
-        knxHpHWBWAebQFRLaVVzxGaIn0TmyhQXRhLEka248Q==
-X-Google-Smtp-Source: ABdhPJwuAaqcMMw0q1QKD4oDxOC2Zd/QBV3ne5UQWRpT2XN+r51MyMsPZhWlpVqWlaIpmZiQGEvtoy7cfNG7jCXEoB0=
-X-Received: by 2002:a19:f00b:: with SMTP id p11mr7200799lfc.585.1605015225371;
- Tue, 10 Nov 2020 05:33:45 -0800 (PST)
+        bh=KGLM9fPNY7+GT4p8nJCSTip3uZZh4KalRevc6NBKqSw=;
+        b=c7M+WwZYdyvi6BYf5tOlU3ZlyzsL2nfUiMjinKMK2tuHx43Hy/0lkbb42RRTfLhBEU
+         AXdwHQaxuMW0q0n2Zw907HEz7BHzkqhpgJ5mzk3BX1zVK1nx/FsPenaBx4erfdD6xWQA
+         TT6zYyQebpgJItoyVWgyhNnwmZAIkbzkl6TnqWrTz4kw8m/hw7H0q0DbCcVLh22c6x/Q
+         swt5Zb64eAtH2SUOvLXQTmewRh/c3n/NmLZVC2iFfxzK4DRrwMeQMFrUw6ZflL4i0/rX
+         mx8VGGq39Bdw+2EQ25KtpDnMkhY04WLkwl0VuJWNLCJw4qIKfRgfeoyiJQd4KP6YIti6
+         YHRQ==
+X-Gm-Message-State: AOAM532bdLWx0x5Yrz5ScIIcFnHAKoLDrOvZBOWT1TfUVaB6tX0RuQ8e
+        AV/bp1xqex74ejcmBkIiPiUgjHq1pb+SAAU3+RuiUg==
+X-Google-Smtp-Source: ABdhPJw4l95Aug60napiBX1bSOo2GaerufcLINoM+ZkU5hACFyVVdkrKEpvI/w+Qkg+bt6DgzwF/QHjFBj4ZnqZLbQo=
+X-Received: by 2002:a2e:8604:: with SMTP id a4mr8277742lji.100.1605015253248;
+ Tue, 10 Nov 2020 05:34:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20201106042710.55979-1-john.stultz@linaro.org>
-In-Reply-To: <20201106042710.55979-1-john.stultz@linaro.org>
+References: <20201106042710.55979-1-john.stultz@linaro.org> <20201106042710.55979-2-john.stultz@linaro.org>
+In-Reply-To: <20201106042710.55979-2-john.stultz@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 14:33:34 +0100
-Message-ID: <CACRpkdY2oH47Om1Xa=ku4csU-YHBB8XFrsemgfOvh0XCTog-aQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] pinctrl: qcom: Kconfig: Rework PINCTRL_MSM to be a
- depenency rather then a selected config
+Date:   Tue, 10 Nov 2020 14:34:02 +0100
+Message-ID: <CACRpkdYf-SGfqjbE_SFfJLidH8v+Q3=_hwKkHZGfKNgD_GdLMg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] pinctrl: qcom: Allow pinctrl-msm code to be
+ loadable as a module
 To:     John Stultz <john.stultz@linaro.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -77,20 +77,14 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Fri, Nov 6, 2020 at 5:27 AM John Stultz <john.stultz@linaro.org> wrote:
 
-> This patch reworks PINCTRL_MSM to be a visible option, and
-> instead of having the various SoC specific drivers select
-> PINCTRL_MSM, this switches those configs to depend on
-> PINCTRL_MSM.
+> Tweaks to allow pinctrl-msm code to be loadable as a module.
 >
-> This is useful, as it will be needed in order to cleanly support
-> having the qcom-scm driver, which pinctrl-msm calls into,
-> configured as a module. Without this change, we would eventually
-> have to add dependency lines to every config that selects
-> PINCTRL_MSM, and that would becomes a maintenance headache.
+> This is needed in order to support having the qcom-scm driver,
+> which pinctrl-msm calls into, configured as a module.
 >
-> We also add PINCTRL_MSM to the arm64 defconfig to avoid
-> surprises as otherwise PINCTRL_MSM/IPQ* options previously
-> enabled, will be off.
+> This requires that we tweak Kconfigs selecting PINCTRL_MSM to
+> also depend on QCOM_SCM || QCOM_SCM=n so that we match the
+> module setting of QCOM_SCM.
 >
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: Will Deacon <will@kernel.org>
