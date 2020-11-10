@@ -2,107 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4363C2AD92D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:48:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6392AD943
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgKJOsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:48:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730432AbgKJOsp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:48:45 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CD5C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:48:43 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id s30so17906713lfc.4
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:48:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TRtX8baRaCtbeDJjWA3IRYfdgtIW44Wdj4Sdz3HfZMA=;
-        b=An/Ddk0HLR+91xPRpInCFnfZ9o+5szjLSy+NtnyMq7UJRY1S3pi1mcTpeSPq8yWGO7
-         +hYo5dzW6PHxmv0YE0x63sDphTthBePQ7rc/OdTTaSn1XaXPVNTS2Qj572/59VtqdnSE
-         ADq1kQeLGgCPetyHlz4LQ8E+f4lA+tewwA3JqwJikM3iaVmfqn+lcqYRQW/wE7ooEhJ+
-         bUglFTYdPjIL+R6utnbfqDb4IhOZ5rx4bucFlRBZmrj8DrD8Mjij9VzBx0YIKOoIC2Nb
-         AA/x0kRUOLLFfqW7r0bkOIMPkR+YoHRBgD+4KlQ2b15e9/I5sO+IMBiDslv4L69nF3h/
-         5YMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TRtX8baRaCtbeDJjWA3IRYfdgtIW44Wdj4Sdz3HfZMA=;
-        b=GT/NvM9GwldssFNH8F8JSnMyuMB3o6EE89D6oQ1Sy1cO9bt3p5GenyVf82VTsKPhAY
-         Vz5p7M1o0j9hp88MdLWmyVeKrFTja35UL0GkrpSW7XBJrPeSNyaXTIB1xYaz00YHQnfe
-         SNIDQGF94zb/w/k4/eSngrjIlx6UC9XQPMkpIOLIqTeAK8SXivIUZtnKtiY76+O/9ael
-         A+zM8G7/BOCxyFs+mPAfks4FbHN9lW3c2IuEiDCD0zqdPSscTdV9FLFKtVIOXFGb3Uhr
-         xVa9kfH8al+RRrDwrONpg8/3hRkxNR2qev1bNIAgJh01l/hkBGBYivW6mixosjTl8SMo
-         x9iQ==
-X-Gm-Message-State: AOAM530VNH0gyK1cxRErv8CN5WMel4ClRkFcUxuk72+jUdusfhUpMzNe
-        bzLj3o8wPRSEZ+egEwU5G3OnxQsF05Zt5Yjs+HCjHA==
-X-Google-Smtp-Source: ABdhPJw46ud/uUkcZJ6tSOXJvAqor8Mj5zSR0l7JClGYT9/b+K2wIXlkgMzo8k4v5SokXVFThmMVRoGjQRQOqS4C810=
-X-Received: by 2002:ac2:4ac7:: with SMTP id m7mr5517480lfp.572.1605019721579;
- Tue, 10 Nov 2020 06:48:41 -0800 (PST)
+        id S1730870AbgKJOuc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:50:32 -0500
+Received: from david.siemens.de ([192.35.17.14]:55844 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730200AbgKJOuc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Nov 2020 09:50:32 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 0AAEoEXS011180
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Nov 2020 15:50:14 +0100
+Received: from [167.87.33.169] ([167.87.33.169])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 0AAEoCko001593;
+        Tue, 10 Nov 2020 15:50:12 +0100
+Subject: Re: [PATCH v3 6/7] gpio: exar: switch to using regmap
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Laight <David.Laight@aculab.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20201110123406.3261-1-brgl@bgdev.pl>
+ <20201110123406.3261-7-brgl@bgdev.pl>
+ <20201110142624.GT4077@smile.fi.intel.com>
+ <20201110142750.GU4077@smile.fi.intel.com>
+ <CAMpxmJUQ3t02q-Chd-WE+pYRAsOOEnbQ0jB+G_uAGv+sJBK1tg@mail.gmail.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <a5b0fcd0-eb62-79b3-3f27-6595b9bdb91c@siemens.com>
+Date:   Tue, 10 Nov 2020 15:50:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-References: <20201109110654.12547-1-brgl@bgdev.pl> <20201109110654.12547-6-brgl@bgdev.pl>
-In-Reply-To: <20201109110654.12547-6-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 15:48:30 +0100
-Message-ID: <CACRpkdZ9tRHFS51pnQg_TgKGed3pD_hRE_rGP_9tiFNcGrb1bQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] pinctrl: use krealloc_array()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMpxmJUQ3t02q-Chd-WE+pYRAsOOEnbQ0jB+G_uAGv+sJBK1tg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 12:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Use the helper that checks for overflows internally instead of manually
-> calculating the size of the new array.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 10.11.20 15:30, Bartosz Golaszewski wrote:
+> On Tue, Nov 10, 2020 at 3:26 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>>
+>> On Tue, Nov 10, 2020 at 04:26:24PM +0200, Andy Shevchenko wrote:
+>>> On Tue, Nov 10, 2020 at 01:34:05PM +0100, Bartosz Golaszewski wrote:
+>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> We can simplify the code in gpio-exar by using regmap. This allows us to
+>>>> drop the mutex (regmap provides its own locking) and we can also reuse
+>>>> regmap's bit operations instead of implementing our own update function.
+>>>
+>>> ...
+>>>
+>>>> +   /*
+>>>> +    * We don't need to check the return values of mmio regmap operations (unless
+>>>> +    * the regmap has a clock attached which is not the case here).
+>>>> +    */
+>>>> +   exar_gpio->regs = devm_regmap_init_mmio(dev, p, &exar_regmap_config);
+>>>> +   if (IS_ERR(exar_gpio->regs))
+>>>> +           return PTR_ERR(exar_gpio->regs);
+>>>>
+>>>>     index = ida_alloc(&ida_index, GFP_KERNEL);
+>>>> -   if (index < 0) {
+>>>> -           ret = index;
+>>>> -           goto err_mutex_destroy;
+>>>> -   }
+>>>> +   if (index < 0)
+>>>> +           return index;
+>>>
+>>> And below you effectively use p as regmap!
+>>> That's what renaming of variable regs -> regmap or map can easily reveal.
+>>>
+>>>       exar_gpio->regs = p;
+>>
+>> Jan, if you remove this line, does it help?
+>>
+> 
+> Ha! I guess you were right saying that keeping the name is asking for
+> trouble then. :)
+> 
+> I think that may be it but address width should still be changed to 16.
+> 
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Removing the line that Andy found made things work here. And switching
+to 16 for reg_bits didn't make things worse again.
 
-Yours,
-Linus Walleij
+Jan
+
+-- 
+Siemens AG, T RDA IOT
+Corporate Competence Center Embedded Linux
