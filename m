@@ -2,74 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C6022AD8FE
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:41:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28C7C2AD92B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgKJOlH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:41:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34188 "EHLO
+        id S1730070AbgKJOrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:47:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730059AbgKJOlH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:41:07 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5F4C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:41:05 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id i13so5546437pgm.9
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:41:05 -0800 (PST)
+        with ESMTP id S1730672AbgKJOrV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:47:21 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D77C0613D4
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:47:21 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id i6so17930141lfd.1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:47:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=94SMVHlHxacGDgm2q3giI2hZLO+mR8k8TKdaWeq9tQ4=;
-        b=pXEGHrkBjX9Y6T504uaZk4TfN5NIJ1PSdjIKU9x1hv+5KqxtDiIKIljXLVBql61sYz
-         wt172j/5hWTUPqt+gyNjS7DnwT+0W1mA59Cexn7HfUgGzp0ZuQ5AqN/CkZjO3tqJZQB+
-         auDLdXvGaA3Wf+N+fW9SOusWkUWSBl+Gv7K78KlRPRYr+PeSUkj9fDzOGHZ/wdZgxunf
-         XHWwXQFDDEYbkIAx+Tv+Wa9p0Uz8Xlj5ZKa2dC85zl6Dyy1+VU+gUcQYPgPjH/8vM2y9
-         K0QwTfrQtfD6xwBZ5wEySfRIluZnQd8WbhJWfO2n+AqLISq1+cQfqLVZjtjj0MLN++Q4
-         Ta5g==
+        bh=kiWbHwM/Lr8KmmLC2XpYaczHAMgXswVwBOFL89IZblY=;
+        b=XZOD1vKezmecxMgGB2KrnL99f6D1FfXpEp38edLi+v6XX+/2DwlTq8GQNRMPlUGcas
+         WTmTOsZdFoW/F53Xc4MjByycnOx3skWg7Lw0au4+WC+y+fbxiT1FbuIA2K3TF1ZkM6hX
+         sfaq/f+id1NXynG39rkmv2VNdGaoFkt6cx7J2wfOatok+ZvBVD2Ytc3SsqTyLkNOvHBk
+         i0no7VAoh9Ty6snnjOyibxmv6PpiNg40TvV5mMylXUrkJUsOY9LRTDcyHLJqT04KgZqN
+         Kny7Cje9XUnNHbZ+6YjaD7VdtuKilcGIYHrsqOnNwLspmNYbT1W4Ns+IzTmDKpThPqlR
+         YhFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=94SMVHlHxacGDgm2q3giI2hZLO+mR8k8TKdaWeq9tQ4=;
-        b=atTCIJIWqxX3pENE3z39vCvD7qAB93ctOZDQrP9IJ6lc6XO2cIJtOVrtMw3NCLe0hX
-         uuYglLH8+G79OJxyDJxQ7WL4fTlr0NoFhNkQpgjFhirbaEPdTvmFRh/X+lkz6PNMa5LT
-         9BYl9e/BpSwOW39hyIKLL9CsHw1LgNgcEDBRxvJNx6zLTzL3HKeVqYG8VssfhaLYy8sZ
-         0EQxcaT4F/FVLodqG5D4oqfBf3k9oAnKAsSahftW9XLIfV/3gf3M12GMKm6m4ItIkHiG
-         duLj0MfAL3GOzfWkfki3coY3VfQEJzPKsMn+U98lzJRm65Qbem+gC0M872FeNnyZkiiL
-         w/Ug==
-X-Gm-Message-State: AOAM5316GMNzHTyih0q1fnMjxuytfKELQyYbtabwKQZaZ/O4/6DjKzGU
-        Y8NRozcKwZd1g9IHFDHeTOde6vr62ZYQuJSnKvU=
-X-Google-Smtp-Source: ABdhPJzXZsFYBfKWyA4ohwJhykDOLRZvN4cSFmUokAvQIHyC+iQ5jM1j+WGdwjUS/J/UAZ44lIcVPsePRjjR9jm0cuw=
-X-Received: by 2002:a17:90a:4816:: with SMTP id a22mr5716497pjh.228.1605019265472;
- Tue, 10 Nov 2020 06:41:05 -0800 (PST)
+        bh=kiWbHwM/Lr8KmmLC2XpYaczHAMgXswVwBOFL89IZblY=;
+        b=lYO40TQWiYCZgppopqPZiAL2ceAj2BfUuAwll2TH0Ic1Y+Sg2yYMLeyQrAdv2u/0BU
+         cxb/B+h/mJsjuyquQVDXa/ULSwWzsa4/yEFwKKKsMzLuyYEYjLporYNeWGhumZzmvdbd
+         SrKwuWjjBnsEj6kNaIWuqMQaQEMShATBMioviXTsXJYruFt6BiP8FD2lT204n/UEbEYP
+         q0u7ko8Mw5GJ3bZ/ze8JAqFBm+1dM/JqwcJJKcCDEvCCyzj5gVckkCdMfQUV6XsaGa7w
+         toXHP1KrUzOQGCWtpGTL8YrnnKfmgvcAKs32xauSND9fZGwlRpwIKAMNpnmQUmycvvOX
+         +J1A==
+X-Gm-Message-State: AOAM5318X8zFGC+wZmBVZ0mIrxBWIgMuDFbQQ5ge7xpqkagmsnHbzd5n
+        ic1si6WAWG2EDZhSBpwHvH3JThyVgSoUzVUx3Ox/vA==
+X-Google-Smtp-Source: ABdhPJyi74cMCtvgB2LhCZiGshSdj4vtK9CzMPI7ALGe90BKtPZD+3vJoENQBsDaxfuy/JxgoF7vPVs3eoY3U4dEbmw=
+X-Received: by 2002:ac2:50c1:: with SMTP id h1mr7305358lfm.333.1605019639735;
+ Tue, 10 Nov 2020 06:47:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20201110142724.14760-1-linus.walleij@linaro.org>
-In-Reply-To: <20201110142724.14760-1-linus.walleij@linaro.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 16:41:54 +0200
-Message-ID: <CAHp75Veg_1S76i7by+3sJNhb3to_V=Qs8t_DydewzUYFtOhNUw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sysfs: Enforce character device
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20201109062620.14566-1-vkoul@kernel.org>
+In-Reply-To: <20201109062620.14566-1-vkoul@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 15:47:08 +0100
+Message-ID: <CACRpkdY=g4omnvgTzsBP6qwg7s8VYaFwChgAsJciQFS7SJ67jQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pinctrl: qcom: Add binding and driver for SDX55 pincontrol
+To:     Vinod Koul <vkoul@kernel.org>, John Stultz <john.stultz@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 4:27 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, Nov 9, 2020 at 7:26 AM Vinod Koul <vkoul@kernel.org> wrote:
 
+> This series add device tree binding documentation and driver for SDX55 SOC
+> pincontroller.
+>
+> Changes in v3:
+>  - Add ack by Bjorn
+>  - Fix dt_binding_check errors
+>  - Add gpio ranges in binding
 
+Excellent, patches applied for v5.11.
 
-> +       select GPIO_CDEV # We need to encourage the new ABI
+I also just applied John Stultz patches for modularizing the Qualcomm
+drivers so there might be some need to patch up so this driver can
+also modularize, check the result!
 
-While I am all for new ABI, I don't think this is a good idea.
-If they are brave enough to move to old ABI it should be a reason
-(supporting old scripts all around the product while updating the
-kernel, comes to my mind).
-But at the same time they may want to keep a low memory footprint.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
