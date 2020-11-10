@@ -2,86 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75ADC2AD8A7
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:22:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE6A2AD8AE
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:24:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgKJOWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:22:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
+        id S1730819AbgKJOYP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:24:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgKJOWa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:22:30 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6414C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:22:29 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id h23so10408755ljg.13
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:22:29 -0800 (PST)
+        with ESMTP id S1730672AbgKJOYP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:24:15 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FBCC0613D1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:24:14 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id f23so11184231ejk.2
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:24:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FMD86tEXECv7YvaePhPTtJTj0MM3XK9o0NyCS2R6PI0=;
-        b=nTB8b/mNiIgxqPiAbAnkScARq99GnGp4EB22HUjcyZyPc9mNSY6o1zIUX91y/P29cs
-         O9TrrSiZBDbQ9+yRePrZQHAEr2jM23RvkOCMiasVxkmTGLrUUF3IQmI1ZeUIUIPQmNBH
-         5ux9M86vDPNJadiUSWsSCKw+CQS3ahVdsJJYKEZFmWpSk7uHyvQ3SmPkJV7e1LreEIlU
-         T69vaOgM5KbxeLSIw7/fxGIyTjZa10WcmO1dAlv4kJnMkBsIwnWnTQh0e1tg/au1GpvB
-         gFXC8i2j/U8Y+WwObeLnQ3vT3jBG2HFI3eTvIY6UQoF3fit31sQbXacVxckNMrIrfoVV
-         sNtw==
+        bh=u6GB7ypk83KMaLnug0kEhxxuhg0irI7q+WnuAwKUDz4=;
+        b=z6lVbF7hbH9X2l93H3Ds7VcmaP1i40C685zORXYPM+UvzOmOd/uv5rOpNySsFWY6Td
+         M5RNFY9fjeUW+oluZfzRSnHIfxf8Y6/fDjzy3WOQnEfBXb/jSjh1R8iAc3vl4zkQSgY1
+         Np5QndhNUKpNZKb3obtpsedD0LLbao0Fx+EY9IJc8UW52Tuotb4cnULPkeOoSlzjnp2k
+         BX6TiJ+1CXf1fLpG4IYBgdyqso1xQ8i7viqm8NY1XtfL2ot1tMjNF3YFXMxlJoKQXYxU
+         u+wFNOMyQIOvB2t/n9Knfs8akKf3F0iLwR+gbffDnSC2UN6PUEpFCS499P98tuSciXHw
+         zFoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FMD86tEXECv7YvaePhPTtJTj0MM3XK9o0NyCS2R6PI0=;
-        b=iWHyxBEcKeYFc2QVE9K4JLA1qq6CJefq2zCIYBSf/AmSuXuqvWVUlRAaJP9a87lMkl
-         XpJPVcLUnkGKtlrWoL3AYu+AmRF5bGf44TDav7RtGERNrnVRqqWK7I3tw3KgLwMa5onh
-         KCIbtSNisSxNSMLanX7AGd+bU4GVAGyo4VCLyxPTdat4M5/Vr/UjpB0Y1n7CL5uBx/qL
-         GSLk3LmF1CRcbh1Np8z1fzgUaWn9NcK44o33tAIkm71Ob60wR8atggSWs8b+/Aq5BSOy
-         Nhe+6ycal00lSSa/mvIk/QmXzlgKA9EySq27S+7drCUQd45iYli1bZlFUmiH5YuELUOx
-         ywOA==
-X-Gm-Message-State: AOAM5301EL2zHMC4h4n179HDoAy3zcY5BJipyzth/1eI7GGwl+os0+LP
-        hXKwaJmt3O7/wP9WZPFqBlhaZfOftg/MWYcX1t5QYw==
-X-Google-Smtp-Source: ABdhPJwkKmX6iy3vh5cOc4kYxG7IZxuzAgGMQHBTaeexCSw6q0TsbV/SNEsF6jK1e+aRTpNJWn9XV8ZzvXL5sH7ZOCE=
-X-Received: by 2002:a2e:9a0c:: with SMTP id o12mr7974674lji.104.1605018148131;
- Tue, 10 Nov 2020 06:22:28 -0800 (PST)
+        bh=u6GB7ypk83KMaLnug0kEhxxuhg0irI7q+WnuAwKUDz4=;
+        b=QviRPICOTuEQVXs++3KLlrH6xYkvSxipw5/jAOlt368F5ZygJntN0pNy0UvOv/opbm
+         NJs7aAEJtjT8isrCQRZ6JTEiLfG8NSHJ9kXtZM+Z95XPAd2GRpwrYjBqWlayRv9AL4iJ
+         AQxFVSkIlrCHEarcGnyRMjRHqH8/CTFGv4ezJsiru2WjUUtrbKKkkDM3ozfAYekn7iLE
+         CPtGP0RZoRt+iTEQLhTjcGFWSBIpbD4Z1VkZCouFYPOK8zYencsR7T+REGy7TmPhj+6v
+         IZ7TE8t+7bN7UnPYpqDc2ctuOScBh44GnmIzkPCknRMPmBwOnEmhaH+zH1gccQdSoehm
+         aFlA==
+X-Gm-Message-State: AOAM533l90+/nRn5MRbDvUdZ2THBrBjA3jzbi9yAW/rxtACYINHAL4+d
+        CZ/QsPmpx0eLqJrDBRJk7fS146wkSvNKmCvsTr/OyA==
+X-Google-Smtp-Source: ABdhPJx30Zk9w+Bs/0VfrWJHfOBCeMB9VX9ifkstoX3lH+ntpsdokpy96vRRKYCOAcZ1VsUjRmNOLK680JnfY1jggZ0=
+X-Received: by 2002:a17:906:1c84:: with SMTP id g4mr21453325ejh.155.1605018252919;
+ Tue, 10 Nov 2020 06:24:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104115348.51930-1-damien.lemoal@wdc.com> <CAMpxmJUO-fyQRyjKD4gNZFw=_iAH7eMd=xyLXLuwAikC0OnLsQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJUO-fyQRyjKD4gNZFw=_iAH7eMd=xyLXLuwAikC0OnLsQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 15:22:17 +0100
-Message-ID: <CACRpkda_mKYPH8Y4ak1WmFGy17yMkhCgitcL=EjAf1dxYtRWUw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Do not trigger WARN() with sysfs gpio export/unexport
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20201110123406.3261-1-brgl@bgdev.pl> <20201110123406.3261-7-brgl@bgdev.pl>
+ <CAHp75VekgB1ch4QjHkvvgbE2_KRWG-AynBMP=aLmoM8jBGRmTQ@mail.gmail.com>
+In-Reply-To: <CAHp75VekgB1ch4QjHkvvgbE2_KRWG-AynBMP=aLmoM8jBGRmTQ@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 10 Nov 2020 15:24:02 +0100
+Message-ID: <CAMpxmJUfRi8g1B7ufya4py+ta-jnCWew+QR94O-HCDuuWyiLdA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] gpio: exar: switch to using regmap
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        David Laight <David.Laight@aculab.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 6, 2020 at 10:27 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-
-> How about we change that to an unconditional WARN() everytime the user
-> tries to export a GPIO over sysfs so that people switch over to the
-> character device?
+On Tue, Nov 10, 2020 at 3:11 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> I'm joking a bit but I think it's time to start discouraging people
-> from using sysfs and a warning may be a good start.
+> On Tue, Nov 10, 2020 at 2:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> ...
+>
+> >  struct exar_gpio_chip {
+> >         struct gpio_chip gpio_chip;
+> > -       struct mutex lock;
+>
+> > +       struct regmap *regs;
+>
+> Leaving the same name is a call for potential troubles.
+>
+> >         int index;
+> > -       void __iomem *regs;
+> >         char name[20];
+> >         unsigned int first_pin;
+> >  };
+>
+> ...
+>
+> > +static const struct regmap_config exar_regmap_config = {
+> > +       .name           = "exar-gpio",
+> > +       .reg_bits       = 8,
+> > +       .val_bits       = 8,
+> > +};
+>
+> Looking at the crash, are you sure this is a comprehensive description?
+> Maybe it requires something like stride or so?
+>
 
-I think maybe we should hide the Kconfig for sysfs under
-EXPERT as well.
+This is what I'm looking at ATM. Looking at the datasheet[1], there
+are no breaks in the registers so the default stride of 1 should be
+fine as is the value bits width of 8. I think that I got the address
+width wrong though. Should be 16 bits probably.
 
-I would also seriously don't mind to make CDEV compulsory
-for GPIO_SYSFS.
+Jan: could you change reg_bits to 16 and try again?
 
-GPIO_SYSFS
-   depends on EXPERT
-   select GPIO_CDEV
+Bartosz
 
-If people to bad only want the deprecated sysfs they can patch
-their kernel to get rid of it :/
-
-I will send a patch for this.
-
-Yours,
-Linus Walleij
+[1] https://www.maxlinear.com/ds/xr17v352.pdf
