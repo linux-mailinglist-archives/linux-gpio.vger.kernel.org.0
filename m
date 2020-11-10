@@ -2,78 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B6932AD8E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:37:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31BE42AD8F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:40:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgKJOhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:37:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33590 "EHLO
+        id S1730819AbgKJOkK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:40:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgKJOhQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:37:16 -0500
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41364C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:37:15 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id y17so12240887ilg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:37:15 -0800 (PST)
+        with ESMTP id S1730432AbgKJOkK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:40:10 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6181CC0613D3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:40:10 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id l2so17906266lfk.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:40:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E4+BxuhfG/QUAirFNxwrItWcfHe9bxlKV4TGmzbyMso=;
-        b=Sc7qlP35S9hLq0yr0yoTz4HNlwqYLySD5uWd98h8t8Nb5wINhb+l8L/LZjizF2jYUd
-         QhmOlAO38y8nN8FDShhtGt4/n3QDPpFf+mmhhkifyFpw8mDGFjpyAQbSwCtD+Whi2kAP
-         zBjrAqNMbpypytgya7oV7Asg8nR8balVvFq1b2tBsQI/vDLxfoZDvcfnzKdynsdxAsb5
-         r/Atsus820AcTtUajmvz/RVICZyF7vzg3Krt7dLwaY9+zVMMzcRuIUjGD9+V7svH5YhR
-         N5mz9dH9R5YAQdpbL0pKnF7D6fGXR4UFEXW4WBOjOi8fFkcOKpNf+8tuV1/TbMmEox2q
-         eyjA==
+        bh=XMIR0x3v/SOduiNJI+iAqXslKNdg1Phd+avxtEvAmZ0=;
+        b=yMvmv62jzEb5fWYRyJZ4EfNvXQWxI0M2a6MD6A14Kx2zX0+pJwr0BFTgurkn/NFcYN
+         SEuffXDjbLtIeQtWDaXAhzdEJoRKIeHAT5dvDEySvCGFrvh9bPI0L3QFezJRcPZWqkwR
+         FIQqy4YacfO3Oj7lxlpiIQnlZ4lyLWMQFP58iJL3VeCk2S/Z0o+9+n36DPvrUm3djefP
+         Nf8fsoRkRTr406syuJyIdGYjtpWJFYIFc/AlaHKP8gv0mbHpRynDsz7F35XR6HyAaEkO
+         LEgu4epTlp38o7p3nKYvORMzrP2I8j9HTmYhHZ1PbN3l0woZQdGi2pyG9yox7ZCDvkr+
+         JmKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E4+BxuhfG/QUAirFNxwrItWcfHe9bxlKV4TGmzbyMso=;
-        b=WVt+3019rg0RDcca2lfQreZcJGtZGfXqn0PboQlTHI1d6t4YZFOTw0FhStHkJgKtft
-         Ze+fm06RTHw5ISGvg/R8xVzQC8QkO5wwmtKxJfhNsWDtsxc5vHNIfuWmqiEXAQEJBZ68
-         pJ13CG0EWDP58zhEYhSBbbS4U/jCdUr5OuRMayoq1PVfknnHCsB3os217GeX8nMqpcr8
-         jVcczktkBA3gwqqeqwQlcFB5J4Z4+fZevSixzkU4Aj9gliu9X2kjtrX0sGZL1BfufIDj
-         YxqJQU4MQyIhQHWW8hW5Eebd7/UwVBC8OFJg81P95d+DCRO9UldP/MOgtYIh8+k+4Vo0
-         LLpQ==
-X-Gm-Message-State: AOAM531pOog2qyz6VCkTnSQby2pmML1TpMk65UHZeM7DEgCyjINCxwbO
-        LHvu9h0X4HYPT0e3e1/7iZMkjxqphwQsFA+jnAoMhtj5HMQ=
-X-Google-Smtp-Source: ABdhPJxxPumTpR+PctvGeeHU1X3gA3FHTLSPgtFaYX3KEhtE7nAVe1kvwQ2TuED+YavzE5pYyYaHh33nsjvFgHyBmJk=
-X-Received: by 2002:a92:dc07:: with SMTP id t7mr6852082iln.189.1605019034560;
- Tue, 10 Nov 2020 06:37:14 -0800 (PST)
+        bh=XMIR0x3v/SOduiNJI+iAqXslKNdg1Phd+avxtEvAmZ0=;
+        b=XGf17b6S0bP68u3lnQBs7M5X8vW1hxArxwONwrI6cWECJT1nuRovcbrHnBZN4l/8Ik
+         OGBW9OWZHg6VLDXdkTGVA5GAPtu+vKRCaP5tUqVj18aEKivcHAQw/e3Cxnc0sOQZIPRB
+         J95VPEKrUwqKGuLMcKzmnUe9t44HsQn07+fXqs5dTLvjyzgq9zeDU8ojHmf1hbti5h2y
+         DFjSYhkK0j+B4AEP4+sz9PNpHjIpX5Tb5ykB8Q27jzfzxjhzMlCWnV0n/lA8GcZ96DNP
+         U5p78cCAiBQ1jhL+dbd4qUb01H3nvSpFi+kx+DTM5kZwJpTHOUi3p8Q9oECN66IZV4Qj
+         WK1g==
+X-Gm-Message-State: AOAM5337iuWMSH+0E3E8h9d21d/0NUeUkeX6wpHRNawq3tXdMz1HSk7x
+        Ul5ktYDisdU/ktypkmAWAMzuzrY3vue6+PrPBsDeGA==
+X-Google-Smtp-Source: ABdhPJwZKZCcPYORmeuUmPxVdMBipXbwsghexY2Fo6mTCT8Nwc9BfXeRqZ9vpij7/rcd11cpqaaXACeFiLO1OmB0y3k=
+X-Received: by 2002:a19:ca05:: with SMTP id a5mr4591668lfg.571.1605019208781;
+ Tue, 10 Nov 2020 06:40:08 -0800 (PST)
 MIME-Version: 1.0
-References: <454bd58b-7498-0052-8442-8f20b6681a7d@radiodata.biz>
-In-Reply-To: <454bd58b-7498-0052-8442-8f20b6681a7d@radiodata.biz>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 10 Nov 2020 15:37:03 +0100
-Message-ID: <CAMRc=McOU7Sh_SApPcxJOc4YuENtpT=YO+DVfYG6_8-pRU93pg@mail.gmail.com>
-Subject: Re: [libgpiod] query state of output pin
-To:     Christian Schneider <cschneider@radiodata.biz>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-10-damien.lemoal@wdc.com>
+In-Reply-To: <20201107081420.60325-10-damien.lemoal@wdc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 15:39:57 +0100
+Message-ID: <CACRpkda1Pd3hTiEHWDOAz3zCMA6WK4VmvjkNv0O_ckFaWQ-zSw@mail.gmail.com>
+Subject: Re: [PATCH 09/32] riscv: Fix SiFive gpio probe
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 9, 2020 at 6:34 PM Christian Schneider
-<cschneider@radiodata.biz> wrote:
->
-> Hi and sorry for asking user question here, but I couldn't find any
-> other place to ask, and the documentation doesn't mention it.
->
-> Is it OK to query the state an output pin is set to with
-> gpiod_line_get_value(), or does this give not what I want/expect?
->
-> BR, Christian
+On Sat, Nov 7, 2020 at 9:14 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
 
-Hi Christian!
+> Fix the check on the number of IRQs to allow up to the maximum (32)
+> instead of only the maximum minus one.
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 
-If your program is driving that pin then there's no reason to check
-its value. If it's another process that is driving it then you can't
-request it and read its value at the same time. We'll eventually get
-to having a centralized user-space daemon that allows it but for now
-you would have to hack your own solution.
+I just ripped this patch out of your patch set and applied it to
+the GPIO tree with some minor change to the subject.
 
-Bartosz
+Yours,
+Linus Walleij
