@@ -2,86 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60E7E2AD81D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:56:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C4742AD828
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:58:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgKJN4z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:56:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
+        id S1730511AbgKJN6D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:58:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729832AbgKJN4z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:56:55 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB9AC0613CF;
-        Tue, 10 Nov 2020 05:56:55 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id a18so11317143pfl.3;
-        Tue, 10 Nov 2020 05:56:55 -0800 (PST)
+        with ESMTP id S1730744AbgKJN6B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:58:01 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B10C0613D3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:58:01 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id a25so8785918lfb.2
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mpnRgVxMMUNeiw92WlpVsVqIDwQcDc5++U/ogKQkyQk=;
-        b=T1gAQtBJp21GevZ263nOtzKOSdYNNVYrLFUyplmnnWtxuYyJMDrA84ci/Vs9rXsjL7
-         UT6lewPfHO7uS8ImiOi0kEs9/65Mb80Y5mjNwFUHEvQdERfY6GXtd8YZ6zbBjnVmePO0
-         N+FVfmLVt8RenOXDJjRhYg/9OK0T7+ugMD47B9/+V/z7GUGFsFpxLqtt51VS+bY76AHj
-         zFqrDW49wRsa9hj4nWBYTYHXmq8TUnc+/nqrcSXxmViaY6Dw4YmgeSiNse3UnDgkIoC6
-         CfZFvEUVtpihVcvxUWjoP9MgRctMPRRIneuAuTubhv60vIqp8Vivyxbn2G3PMRvVu+jm
-         98qQ==
+        bh=EuWsqptt1n9mhqLua/Oud+hmIlWR48NHrRbAFuuuDZg=;
+        b=GCc0h1EsBndLL/ZhuCjj0hiSElwGiZutwHX3KZXlV+o/pY93C+o1oTV/erVNK9cEKF
+         vKSS3/WuK5jq5TTuTdME8rJCkaQuz5MARY/Q43Q4tg4xzhw/UwWji6ESx70v52M9aN8e
+         JPutB91SulOk2+mAU09imr4saTEqUlCT6U7Ti15SHtHvgABhGzVrbLwnl0uud4BpD7ID
+         rtRqCMq49/qZ+vU9dRgEEpvy/7GrXQpIzOCtsQjwCoG0uD11C0XIo45/j8iSF3dXzC0/
+         7KI8mmelAUD7BmDONYzKnpXZHcbSPMaVQH0uEyMmdNLti7/m4CnHs83gkWczxF/ICDI2
+         OXNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mpnRgVxMMUNeiw92WlpVsVqIDwQcDc5++U/ogKQkyQk=;
-        b=NPkaPuMMcuG6A0GO4APWcNDSL9GOoK2XLjfT8R40zG0ZQBCVO8mfER2Wb5QdIyS2HR
-         ETQsE3DA1As08hzobExssv44eY2cjSJMtgXiyNhKOn52w/wCqGJ6p3xJw0PPNpOzblQx
-         pkeCpNfd2puAGepo68VB2IaDwL1c+DQZL5GPOtu5/jGUAEp/eOJxRAn0/CO8RKcWCH6o
-         Ts1EbV4Be4zGHN1E+kV5SryXRe7mjsRAc0FMQR2Zxg3w1VReDVVlpOFESXtyU0eGRJzs
-         DmJ6RUHcovtWSGc2nIF2YlXLU+S/dtv18PTgIkTDBdcLdRuGTT1XyvqmoVOTeK5QkxhY
-         AQ5Q==
-X-Gm-Message-State: AOAM532V5O2rR/rH0wR+/OpvBxlSVO6PeJvM73L6VWFNzpm4P2MOdVm6
-        13YH72hQfGArivZWb5lYys/Rnm8mos4TtKWaQN0=
-X-Google-Smtp-Source: ABdhPJyr1H95bJ6XvUbdzmooeNRvpIzzSrqbSFKrbouxCneBVgAf3t30nKkDIgFz46kU8YjkGujxt/u2tG8EurFdwes=
-X-Received: by 2002:a63:4d64:: with SMTP id n36mr8331872pgl.203.1605016613859;
- Tue, 10 Nov 2020 05:56:53 -0800 (PST)
+        bh=EuWsqptt1n9mhqLua/Oud+hmIlWR48NHrRbAFuuuDZg=;
+        b=ACbP2Gh2bkTaXdW8xSHDAQ1lb/jVGd+/8rWFMzlkw3DKdDOj89TR2FEIVEDY3uPtJC
+         Zg7GaqmZ83O9SaK+0C3YUg126DhHUZhno7Z9RcKTHnKXm43CeHufBokEYEyk3wEOPOTb
+         vNK5ueqxx/ecwP+BQZ2sf/yoFjCjVpn4OTSnhL5YF6H4iQGOzy/PamR+S/yLsvacdyIC
+         FkXY9oWr9U8vGg3aCoLt9VkFX77icbgYNLS+7HX9BPr3cRPTkEJ/yS0f2uRGKS+x9jgV
+         68hJ6dkxNPICz58dMRiSRwWnSncjadMdLEKzGK89v4ThaP895q5cfJx1m/EbTybdBlai
+         PZig==
+X-Gm-Message-State: AOAM530mtDkUL5NcXLKpzKmZG2/rLNYPYeN7NOFZjqR+Q+K/p1cFj7YH
+        hFML4OetKw2LBff7BNUn8zXHiGgJ1nFp+EH97oZnHg==
+X-Google-Smtp-Source: ABdhPJy9Y5uqpU0IXwknk4/ZnEVzED9Jx1G0aAyPe95iTs9e2vO5D0sypAmSYqjfjCJHBqK80/yyAa9w3qRe89O8wO0=
+X-Received: by 2002:a19:f00b:: with SMTP id p11mr7237212lfc.585.1605016679593;
+ Tue, 10 Nov 2020 05:57:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20201105231912.69527-1-coiby.xu@gmail.com> <20201105231912.69527-5-coiby.xu@gmail.com>
- <CACRpkdbNDQrZYx=B7fuc34j-5Mb0=h8VnFROQYHD5DzX9Orb=A@mail.gmail.com>
-In-Reply-To: <CACRpkdbNDQrZYx=B7fuc34j-5Mb0=h8VnFROQYHD5DzX9Orb=A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 15:57:42 +0200
-Message-ID: <CAHp75VdohrhNyfARir4e2T-PqjbAs7Dvn37zEw=zziHEwLzNAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] pinctrl: amd: remove debounce filter setting in
- IRQ type setting
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Coiby Xu <coiby.xu@gmail.com>,
+References: <20201028043642.1141723-1-bjorn.andersson@linaro.org>
+ <CACRpkdaBbdC5_6y=w5eL-jJ_Mk+toKWy8kj9t-UWx02wNfjo+g@mail.gmail.com> <d1c2a25e-3cb1-5d67-d038-be80094c64be@linaro.org>
+In-Reply-To: <d1c2a25e-3cb1-5d67-d038-be80094c64be@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 14:57:48 +0100
+Message-ID: <CACRpkdb=qt7rNORLs3VJCa=Wg1yzgL5-1wujOr4r+GhRUx3_yA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sm8250: Specify PDC map
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 3:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Nov 6, 2020 at 12:19 AM Coiby Xu <coiby.xu@gmail.com> wrote:
-
-...
-
-> If Andy or someone else needs to take it through the ACPI
-> tree you can add my:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Nov 5, 2020 at 4:01 PM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+> On 05/11/2020 16:59, Linus Walleij wrote:
+> > On Wed, Oct 28, 2020 at 5:36 AM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> >
+> >> Specify the PDC mapping for SM8250, so that gpio interrupts are
+> >> propertly mapped to the wakeup IRQs of the PDC.
+> >>
+> >> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >
+> > Patch applied for next (v5.11).
+> >
+> > If this is urgent and needs to go into fixes, just provide me
+> > a Fixes: tag and I will move it to the fixes branch.
 >
-> If I should apply it or if Andy sends me a pull request, just
-> ping me and tell me what to do :)
+> Yes, please:
+>
+> Fixes: 4e3ec9e407ad ("pinctrl: qcom: Add sm8250 pinctrl driver.")
 
-I can take it, but I would need few things:
-- Hans' blessing of my series
-- tested on top of my series (hence tested-by tag for my series)
-- I would like to perform more tests myself
+OK moved this over to fixes and added the tag.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
