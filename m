@@ -2,87 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4742AD828
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:58:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0E72AD839
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:02:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgKJN6D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 08:58:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        id S1730532AbgKJOC3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:02:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730744AbgKJN6B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:58:01 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B10C0613D3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:58:01 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id a25so8785918lfb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:58:01 -0800 (PST)
+        with ESMTP id S1730345AbgKJOC3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:02:29 -0500
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8AEC0613D3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:02:28 -0800 (PST)
+Received: by mail-lj1-x241.google.com with SMTP id v18so14816568ljc.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:02:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EuWsqptt1n9mhqLua/Oud+hmIlWR48NHrRbAFuuuDZg=;
-        b=GCc0h1EsBndLL/ZhuCjj0hiSElwGiZutwHX3KZXlV+o/pY93C+o1oTV/erVNK9cEKF
-         vKSS3/WuK5jq5TTuTdME8rJCkaQuz5MARY/Q43Q4tg4xzhw/UwWji6ESx70v52M9aN8e
-         JPutB91SulOk2+mAU09imr4saTEqUlCT6U7Ti15SHtHvgABhGzVrbLwnl0uud4BpD7ID
-         rtRqCMq49/qZ+vU9dRgEEpvy/7GrXQpIzOCtsQjwCoG0uD11C0XIo45/j8iSF3dXzC0/
-         7KI8mmelAUD7BmDONYzKnpXZHcbSPMaVQH0uEyMmdNLti7/m4CnHs83gkWczxF/ICDI2
-         OXNg==
+        bh=pJq65w6MHfv54HDA+7kJE/AlEyk8Ahf0nXwLPuOGbs4=;
+        b=ssaXnhgL/V9+3zrmH550cjg6hzPJHv38SIpXQrq4Hg/9lHt0GBBA+A2T6TGro+UuqC
+         JXonfm6G0/6iGHb0BR2iY3uDOXfS0u5XgTrbFrdwF1YPeGcQsFq/4ycOTGMq+Kfqhb5Q
+         X/xqmnYsqeGP0gMqKHtZe+may2+RhBW8O9sUKNE/S1iAyD5XCXM/sA1B935fDVFYN8Ch
+         gHcnb5NyejuBqTefKUjaw7SB5ltDENtlTC1G0affLryJSB1OM6dbiE9tPzSXJjbgA2i4
+         a5BnS/7AA6GtGqFJLBrQkr+qq8eCfU9DwOMFpkc813IxXBNVR2xqimLu3MsxmDjnT4mJ
+         IbUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EuWsqptt1n9mhqLua/Oud+hmIlWR48NHrRbAFuuuDZg=;
-        b=ACbP2Gh2bkTaXdW8xSHDAQ1lb/jVGd+/8rWFMzlkw3DKdDOj89TR2FEIVEDY3uPtJC
-         Zg7GaqmZ83O9SaK+0C3YUg126DhHUZhno7Z9RcKTHnKXm43CeHufBokEYEyk3wEOPOTb
-         vNK5ueqxx/ecwP+BQZ2sf/yoFjCjVpn4OTSnhL5YF6H4iQGOzy/PamR+S/yLsvacdyIC
-         FkXY9oWr9U8vGg3aCoLt9VkFX77icbgYNLS+7HX9BPr3cRPTkEJ/yS0f2uRGKS+x9jgV
-         68hJ6dkxNPICz58dMRiSRwWnSncjadMdLEKzGK89v4ThaP895q5cfJx1m/EbTybdBlai
-         PZig==
-X-Gm-Message-State: AOAM530mtDkUL5NcXLKpzKmZG2/rLNYPYeN7NOFZjqR+Q+K/p1cFj7YH
-        hFML4OetKw2LBff7BNUn8zXHiGgJ1nFp+EH97oZnHg==
-X-Google-Smtp-Source: ABdhPJy9Y5uqpU0IXwknk4/ZnEVzED9Jx1G0aAyPe95iTs9e2vO5D0sypAmSYqjfjCJHBqK80/yyAa9w3qRe89O8wO0=
-X-Received: by 2002:a19:f00b:: with SMTP id p11mr7237212lfc.585.1605016679593;
- Tue, 10 Nov 2020 05:57:59 -0800 (PST)
+        bh=pJq65w6MHfv54HDA+7kJE/AlEyk8Ahf0nXwLPuOGbs4=;
+        b=dUT5fzlU0YN1dkrB3HwPt7grxpqZQ+pZnsIUBF0DKnkQW4nUt9AR+XWq8vjJmtgdBI
+         p+Eco9Gsz9ttOEz+8qBLJnqI1THHijVQZDmoZN0YSYpKHgm7CEzHqXbE1Hdhm5eKEGhQ
+         sdwn2OOJbSuE9J/2FbxHM+oadoMqa0qAqm5AnkwuKmMIQg+hTG9or38YTXPQkZaDdPHP
+         2hTgPWnceQQ2J2Rq+ROO2jvvXKrsPriOTsAvCbQmzxetw5yRaNwJKO4iR4rTi9f0mo8i
+         4v/yxtRpS9bo9i7dN1sqo8vxkfIma1195TxMLuqVt4wVhiCHQFgFdT2dTr8e/xADYTId
+         /fZg==
+X-Gm-Message-State: AOAM531+OYyl3iHsNpVvPCFs+n3hvH4sRWAn7xYw2tJmWkUSLD51mRIz
+        HEAa7mEG7cF2R7xxpbTcMgkZRfvWQfD6rUrgCD7Xvi+Oc7pVPg==
+X-Google-Smtp-Source: ABdhPJx9+S0o/CpR55UGyjAKVRbYDirS4+h60H7HCvYUDyYNZOghWALu3cF+NPKEm4wlk+W/JJylRBPhhTBuHs4ZkNs=
+X-Received: by 2002:a05:651c:1205:: with SMTP id i5mr8974026lja.283.1605016946760;
+ Tue, 10 Nov 2020 06:02:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20201028043642.1141723-1-bjorn.andersson@linaro.org>
- <CACRpkdaBbdC5_6y=w5eL-jJ_Mk+toKWy8kj9t-UWx02wNfjo+g@mail.gmail.com> <d1c2a25e-3cb1-5d67-d038-be80094c64be@linaro.org>
-In-Reply-To: <d1c2a25e-3cb1-5d67-d038-be80094c64be@linaro.org>
+References: <20201019141008.871177-1-daniel@0x0f.com> <20201019141008.871177-4-daniel@0x0f.com>
+ <CACRpkdZNr6sDqJhg3KcX0bCbcd8fh2gXFYbS1r2H2Sq+vGqjUw@mail.gmail.com>
+ <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org> <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
+ <71f3632bee262a18e1b7edb74980ae9a@kernel.org>
+In-Reply-To: <71f3632bee262a18e1b7edb74980ae9a@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Nov 2020 14:57:48 +0100
-Message-ID: <CACRpkdb=qt7rNORLs3VJCa=Wg1yzgL5-1wujOr4r+GhRUx3_yA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: sm8250: Specify PDC map
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Tue, 10 Nov 2020 15:02:15 +0100
+Message-ID: <CACRpkdYr+yhyROQzaYfFrGwG74DuZiA=fMVOesgOKrDajhTodQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Daniel Palmer <daniel@0x0f.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 4:01 PM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
-> On 05/11/2020 16:59, Linus Walleij wrote:
-> > On Wed, Oct 28, 2020 at 5:36 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> >
-> >> Specify the PDC mapping for SM8250, so that gpio interrupts are
-> >> propertly mapped to the wakeup IRQs of the PDC.
-> >>
-> >> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >
-> > Patch applied for next (v5.11).
-> >
-> > If this is urgent and needs to go into fixes, just provide me
-> > a Fixes: tag and I will move it to the fixes branch.
->
-> Yes, please:
->
-> Fixes: 4e3ec9e407ad ("pinctrl: qcom: Add sm8250 pinctrl driver.")
+On Thu, Nov 5, 2020 at 4:43 PM Marc Zyngier <maz@kernel.org> wrote:
+> On 2020-11-05 15:23, Daniel Palmer wrote:
+> > On Thu, 5 Nov 2020 at 21:08, Marc Zyngier <maz@kernel.org> wrote:
 
-OK moved this over to fixes and added the tag.
+> > >  I see that msc313_gpio_irqchip doesn't have a
+> >> .irq_set_affinity callback. Is this system UP only?
+> >
+> > What is in mainline right now is UP only but there are chips with a
+> > second cortex A7 that I have working in my tree.
+> > So I will add that in for v3 if I can work out what I should actually
+> > do there. :)
+>
+> Probably nothing more than setting the callback to
+> irq_chip_set_affinity_parent,
+
+Hm, is this something all GPIO irqchips used on SMP systems
+should be doing? Or just hierarchical ones?
 
 Yours,
 Linus Walleij
