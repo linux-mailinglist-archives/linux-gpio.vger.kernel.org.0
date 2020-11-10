@@ -2,87 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2D572AD8B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:25:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D073E2AD8BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:27:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbgKJOZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:25:30 -0500
-Received: from mga17.intel.com ([192.55.52.151]:27858 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbgKJOZa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Nov 2020 09:25:30 -0500
-IronPort-SDR: QzA3QmzmFLJLlJUfxkZYl7IgbaNylm7uRX4OFgq6N42qD0RApPHvHuu3GHZ7HF+dLChFE4iOPy
- X9elMPPXz2LA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="149828463"
-X-IronPort-AV: E=Sophos;i="5.77,466,1596524400"; 
-   d="scan'208";a="149828463"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 06:25:26 -0800
-IronPort-SDR: Z5BU9JB8aJAwr7+dl1qNAFm+zfoqECM4ktvmtgoWJhgIh0y2BNOi8NWKkkzwYZ+OWwfLY6BChN
- xCxNmLp3vGrw==
-X-IronPort-AV: E=Sophos;i="5.77,466,1596524400"; 
-   d="scan'208";a="529817722"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 06:25:23 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kcUbI-005UuV-Kj; Tue, 10 Nov 2020 16:26:24 +0200
-Date:   Tue, 10 Nov 2020 16:26:24 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 6/7] gpio: exar: switch to using regmap
-Message-ID: <20201110142624.GT4077@smile.fi.intel.com>
-References: <20201110123406.3261-1-brgl@bgdev.pl>
- <20201110123406.3261-7-brgl@bgdev.pl>
+        id S1730070AbgKJO13 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:27:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730059AbgKJO13 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:27:29 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019BCC0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:27:28 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id d17so14414811lfq.10
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n8uglzR99agOJ88UjmIg/xjEt6zI6BVGiVZlK7lsq1U=;
+        b=gLQ36k4F1V9h9aVY7TAbTh120++aQJGBrhaJa3jDA+0z+QhElzKWDk28UJv6j+6cpQ
+         9rWqr0dfIKsqmtuhH6/qkYHaoHq/A0Cx6JKaVIB+wOn02sOpna0znJEkD/8RRS5juWZ+
+         J3eyD/lNMveWUGlGUSkzymmJ0JV0zxqQdGjbN/qNr1wbS2YcLS4OzKBo63o+fIm4ROGj
+         GxtxoI6KNhwOZb0xXwTZitjL1d77X8z+NxRjNGY6XaR6nQwtv5RqXkXmEYzzayp3yBQ7
+         4PS2y8fHJyfZgAm5CzpIhI9+jBfbJ9LaOXlesxkg6l4F0/hIi78WHyOvaL70/OzgbeGu
+         5f0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n8uglzR99agOJ88UjmIg/xjEt6zI6BVGiVZlK7lsq1U=;
+        b=Vb+E38rTDZQnrpNkti3p8l3CBPSfykOJs1U5r4QNFx/CLippI6wh105eMFhVBF9tF0
+         Z8QeMPwaRWIirN0IjhM4nF+HdQKYNQ9jcaYAYBcASPb0SqeQqOaRQ2TCm6WsqjLXkc3w
+         jzwivLwejzxT5sK1Zt04zXh7WfV+ma1mNZs598yFd3w1nqwbe3edBkcRRlmY+AGXWYXg
+         NxUhJqyqAxhdZe2jKAyvjAR1dHELfI11prNvWCTQk8giCIE5eML0tOvI7kFp6P8eHpz2
+         TbqokwpN4Kw5TQL+pqyobZSIepmietklR45TTISQpDVPUywjjRYeli0Tp8lGVaCIv65M
+         8Ydw==
+X-Gm-Message-State: AOAM5336/Ooj2i1Dj620X04mBJMumc8Cst9tGoCrY0g79/yYy4Jq5sDR
+        L+0OeLPeigTv70z9Sh/Ubzp9jbpDZr1DdOoI
+X-Google-Smtp-Source: ABdhPJxm4knAULXYjEMhhUzfEEXlvu5jBC+dpJzFVajo5pvRPAIy87Gy0IhBnG/pWUkwqH+qa9XtdA==
+X-Received: by 2002:ac2:5607:: with SMTP id v7mr4732783lfd.71.1605018446327;
+        Tue, 10 Nov 2020 06:27:26 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id y2sm426169lfh.130.2020.11.10.06.27.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2020 06:27:25 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: sysfs: Enforce character device
+Date:   Tue, 10 Nov 2020 15:27:24 +0100
+Message-Id: <20201110142724.14760-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201110123406.3261-7-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 01:34:05PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We can simplify the code in gpio-exar by using regmap. This allows us to
-> drop the mutex (regmap provides its own locking) and we can also reuse
-> regmap's bit operations instead of implementing our own update function.
+If users select sysfs support they get the character device
+as well so that end-users cannot complain that they
+"only have sysfs on my system". They should have the
+character device at all times.
 
-...
+If someone is in so dire need of stripping out the
+character device while still enabling the sysfs ABI they
+can very well patch the kernel.
 
-> +	/*
-> +	 * We don't need to check the return values of mmio regmap operations (unless
-> +	 * the regmap has a clock attached which is not the case here).
-> +	 */
-> +	exar_gpio->regs = devm_regmap_init_mmio(dev, p, &exar_regmap_config);
-> +	if (IS_ERR(exar_gpio->regs))
-> +		return PTR_ERR(exar_gpio->regs);
->  
->  	index = ida_alloc(&ida_index, GFP_KERNEL);
-> -	if (index < 0) {
-> -		ret = index;
-> -		goto err_mutex_destroy;
-> -	}
-> +	if (index < 0)
-> +		return index;
+Also only show this obsolete option to expert users.
 
-And below you effectively use p as regmap!
-That's what renaming of variable regs -> regmap or map can easily reveal.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	exar_gpio->regs = p;
-
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5d4de5cd6759..4dd566f7ea39 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -59,8 +59,9 @@ config DEBUG_GPIO
+ 	  that are most common when setting up new platforms or boards.
+ 
+ config GPIO_SYSFS
+-	bool "/sys/class/gpio/... (sysfs interface)"
++	bool "/sys/class/gpio/... (sysfs interface)" if EXPERT
+ 	depends on SYSFS
++	select GPIO_CDEV # We need to encourage the new ABI
+ 	help
+ 	  Say Y here to add the legacy sysfs interface for GPIOs.
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
