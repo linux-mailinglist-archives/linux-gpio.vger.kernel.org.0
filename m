@@ -2,87 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E33A42AD6CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 13:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B2B2AD73C
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 14:14:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgKJMsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 07:48:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbgKJMsf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Nov 2020 07:48:35 -0500
-Received: from localhost (unknown [122.179.121.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274B220637;
-        Tue, 10 Nov 2020 12:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605012514;
-        bh=HqIlZJaFEcBlGvTPmE4/CCgkt70rXFffPU39yaxTjmE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DBAL5u1I4TzkVzdXuoV3Ai5oHJZmFiicO/oeiVsBnxBqZfIy7HD4oEyq7v4EX8RtU
-         TXEzqzjHJ13slfR1iCfqUsCSrf2OTWNfUx/zQAEH76ivOjVVRYjaAqv2jF1QWzmTAb
-         RPWU3YmrUBn1V7mT06dG6xz5435t1JnGh3eZL0Rc=
-Date:   Tue, 10 Nov 2020 18:18:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, kishon@ti.com,
-        wim@linux-watchdog.org, Guenter Roeck <linux@roeck-us.net>,
-        dan.j.williams@intel.com, Linus Walleij <linus.walleij@linaro.org>,
-        wsa+renesas@sang-engineering.com, dianders@chromium.org,
-        marex@denx.de, Colin King <colin.king@canonical.com>,
-        rdunlap@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        rikard.falkeborn@gmail.com, dmaengine@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 00/19] Second step support for A100
-Message-ID: <20201110124829.GB161013@vkoul-mobl>
-References: <20201110040553.1381-1-frank@allwinnertech.com>
- <CAEExFWsc4Rx2U+BVuqTJkL0wj-gdNcF=emJRcStQ2Uq=FQEx1g@mail.gmail.com>
- <CAJKOXPf4ARNnSnvDpn7vVC0kGNd+m_dkfgKkmH_bca2AZ_Osyg@mail.gmail.com>
- <CAEExFWv2o9aTfUVM5NzZz10kAO_Ya8VJvJrmyjh55=U_5G8RJw@mail.gmail.com>
+        id S1729898AbgKJNOR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 08:14:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgKJNOR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 08:14:17 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F322C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:14:16 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id s9so12873136ljo.11
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 05:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OUhMNrjSOQ+Bw1FD3c+VDosxzcBXOSZeX70sYKZW3Vw=;
+        b=Gl67TdOApP+aifYxl9aCqaV0sEJJHN+gTaJqlTt6vVOYvI5z/Fc+k999rF8eRiJdKl
+         WGESbb5Tv6PaovntOORurY/qUX2gqxIkWiJDF4ugogP8FLmkOd3ckWVi+usGL8ST065r
+         Hr2bnQ/gHaxDppAifFNPnro68o8eF9TSW4I+q8VRaqcoEixwkSrTvoIcRYgPWXWeu2Kq
+         gn0gU+GVmtwfxbIFSqgvjOW1TvH+urd25ME1WL+Y2/5WAbTVswhBkKqBZFyoAEWUss/p
+         M0aDqefIPzZDknM8oVZhXYBQTctROwq/4oafexTBelBP6Jjj1ohNm44h5n5aUEFUjxWY
+         Gtug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OUhMNrjSOQ+Bw1FD3c+VDosxzcBXOSZeX70sYKZW3Vw=;
+        b=KGNs6l4N4hQ5t1PUKBvP3EOdZfQ0kXYoTnZwtNFOjrxqhq1BeiQ/BL28fcvkV9gzVs
+         1a9jDAiaASvgD4+RpKJ2g0HsOae1CuK/uIpyNnaPKJ1UKna3pl+eGBS3N+DhcASenLrs
+         pnDCK1w9+2svT9BhmWQKBc8L5u4Tg6F3qu+y4/Xo1sRDmci748OX6dXMpiPrSI8cGLY9
+         cfjWIG3XU++VfxgBYp4+XdkZG2kgZMy8p5bbKzSIHAghmUFB8zeHvNPAmW36AtkThbMM
+         feBZldBrU4kBGj9Bv7qa9VYxLLtzzI52zKvhH4eqEgpF6oTIFtNtlqd5dijFURzIx8UD
+         QPkg==
+X-Gm-Message-State: AOAM5335KcE8P8TjZqiKPzg7TUEX9hDAKR+5/qv7sWCVhLZeZgCAOsTc
+        417JCwX7CJflgo8fDirE2JMLDI447UCWFUqgZtIPYiuYdeWbjw==
+X-Google-Smtp-Source: ABdhPJxHe6UIOOpPCGNH092WFyVKa9vEf2NU5ywJdxDBWfXhjVlbjsiNyayuspisEk+NsTiEMNsInaaX5gN8VEDlMuo=
+X-Received: by 2002:a2e:80d2:: with SMTP id r18mr8924536ljg.286.1605014055112;
+ Tue, 10 Nov 2020 05:14:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEExFWv2o9aTfUVM5NzZz10kAO_Ya8VJvJrmyjh55=U_5G8RJw@mail.gmail.com>
+References: <20201106142840.29730-1-brgl@bgdev.pl>
+In-Reply-To: <20201106142840.29730-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 14:14:04 +0100
+Message-ID: <CACRpkdaoGjA0-wVakz02VJqMzUknoggd5pwUYenkvjJZGuZy=w@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v5.10-rc3
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10-11-20, 16:51, Frank Lee wrote:
-> On Tue, Nov 10, 2020 at 4:43 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Tue, 10 Nov 2020 at 07:00, Frank Lee <tiny.windzz@gmail.com> wrote:
-> > >
-> > > It seems that sending too many e-mails at one time will cause some
-> > > emails to fail to be sent out. I will try again.
-> >
-> > Hi,
-> >
-> > Instead please reduce the address list to relevant people, as pointed
-> > out by scripts/get_maintainer.pl. Don't Cc irrelevant developers
-> > unless a file is abandoned and you need to get as much audience as
-> > possible... but sunxi is not abandoned.
-> 
-> Thank you for the reminder. I resend the version in the afternoon,
-> only CC the relevant people. I'm not sure. Should the cover be copied
-> to everyone?
+On Fri, Nov 6, 2020 at 3:28 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Any reason why this should be a single series.. why not split it to
-bunch of chunks, one per subsystem like pinctrl, phy, dmaengine, etc...
-And then DTS parts and CC relevant list and maintainers. I do not think
-there is any dependency, right?
+> Please pull the first batch of fixes for this release cycle.
+>
+> The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
+>
+>   Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.10-rc3
 
--- 
-~Vinod
+Pulled in for fixes!
+
+I'll get this to Torvalds too ASAP.
+
+Yours,
+Linus Walleij
