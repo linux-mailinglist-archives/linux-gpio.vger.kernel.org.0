@@ -2,80 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D16F2AD21F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 10:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8E1B2AD29D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 10:39:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgKJJIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 04:08:50 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:44648 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgKJJIt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 04:08:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1604999329; x=1636535329;
-  h=from:subject:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Vi4oSqcaW147X+OPEnvBxt8RzY3S5hCwov5jmSawii8=;
-  b=mUHoIG1P08MPwoeLeHkJKeAYMWowLg05qi6TFoS/NkV3u0MFk9f89cb6
-   vn+sLILhd3giK1cYbAeTK1ujbKS322Cl/7SuYCgdLbNToiE/nmed6/Pyk
-   d0a4BJIeAZbdN8ZcLV9cix0ijlz0eGcVn5xeGygXOKblufL5ymSopxyXP
-   KHiiCjS2mmjHBlN8PCIofEtyh4KNGFVZYfsZNpFowoUzrV+mgQKv7bERn
-   +nVL8hNeLa5AgQgzQXl/cpY3eCUHFYeXANigyriuw/6f79FDY7+FIRtwg
-   Lh+EcY0pwrPs6VyNeTLZ/PFIpfkLRBDfcwficFpfIUEhoYTRIgXNSZnn+
-   Q==;
-IronPort-SDR: 4H767wXXUELlw/fV+Fmj0fcuEu+wPa2y5RdL6QrwC+8kRdPH4Hb02T8vOLnBiir3XCCYFQ9oYp
- oAkfZ//2Mjr9Z8kSwDwJ34i1iLhi4yo5wNnAoObobnKenhuQrOvCsvcU29L8OpTnTS3P21dpM+
- wjeL3uggoDZiphSxyEWmnoSJmcTB+G2KoYE6N7ji53t7KgsB66vcvX3q1r+7QZru2xb8z7r/mF
- CJbUhBDanBNd2XQpjWz5Tqi6kmb2xri52+B6VNCbALdmq6fecvZDAwISbXqACkLeJYQBvCv8KB
- vBk=
-X-IronPort-AV: E=Sophos;i="5.77,466,1596524400"; 
-   d="scan'208";a="97839074"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Nov 2020 02:08:49 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 10 Nov 2020 02:08:48 -0700
-Received: from [10.171.246.109] (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 10 Nov 2020 02:08:45 -0700
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-at91-pio4: Set irq handler and data in
- one go
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20201108180144.28594-1-martin@kaiser.cx>
- <CAHp75VeVPUJ_a4L+Lj-zR6Wm3Woq6F0uHzmtx3NCRO=TVopvrw@mail.gmail.com>
-Organization: microchip
-Message-ID: <fc6a99af-7cee-b0ae-c4b1-cc7249e22b6c@microchip.com>
-Date:   Tue, 10 Nov 2020 10:08:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729518AbgKJJj2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 04:39:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729490AbgKJJj0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 04:39:26 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84116C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 01:39:24 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id c9so2305207wml.5
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 01:39:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vZLUaWFTByQWu6s5ZS8hX5AOyEXEz1LfB4bMODRqx2s=;
+        b=yqQV0dlIIVbfxAvTSByGngssmwgZ5aAs7eLkR5Tvv7rkbWYIEeTmEdmWk/z19MqCH3
+         EYphXRLLq5OA8GRrsm95G7If/3mmKYqMhyt3++eHQbp2AnFrpupRXJHhGJF79px8b8k1
+         LxdUnpuJeZiWmLSVnxgPx4kgqpcrwiCt+W7tPSMLsdjSe+KsBq0U+90VvGbaFoVZ8ula
+         f6FaOKT93el9a4gd6i0AAI/++cxbanc1SrojAWgAC8hxS3wy2Z3gjRJUeTb9oihJYSFp
+         nUwsD2/KCTReCZC5gGTpLn7uXZ2cwsMmU+8e2lNQITB9vTYqRgNUs0rIetyCGOi32lXC
+         0Nsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vZLUaWFTByQWu6s5ZS8hX5AOyEXEz1LfB4bMODRqx2s=;
+        b=SV1WDkgTohR1ZXvGi6f+j3LL79HiFFLccBOBSdaSnJOprqv5ONFTmeDSNZn1dHaYUE
+         6zWKAr7rEbl2yPqUp52tqRKzJUM+EEby9xmNzA/QRUyp0Yu2uWFXyQ2WKto4xdYw/nQ8
+         nCCoet+KKn3dAoa/c+4X7J5zl5WJ+fnbIGoU3gDk+1O1nAesHHmqO2bQP11XP/nDV0Z+
+         4mEsI/fUGAzLQPYHe5A5NmBRSynNmbZtsD9a9hkrqlNwe4jjk4nySKeZ8WvzuuPORz+U
+         POj7C2AUma++/d7e1Gri85IysjTeEeQMO9xifK8Ve/pvQEXYP6eFGWy5y8dyPxPyk5gv
+         3eZw==
+X-Gm-Message-State: AOAM530ebMPDj2cJFzzRAW89CZ504cNEATbj6lpKtz/gwgsrl7fgF5Fz
+        d42pkKdVCJzEKIjZSVKOlhUOng==
+X-Google-Smtp-Source: ABdhPJz2Xn6qn8iV1vth7Tf8U+Dr7aNqxdYL78ciDMNIMkUPTuYih94NjVQArEPsc8GzCKlMTQfPqA==
+X-Received: by 2002:a1c:b387:: with SMTP id c129mr3949884wmf.66.1605001163321;
+        Tue, 10 Nov 2020 01:39:23 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id d3sm16279143wre.91.2020.11.10.01.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2020 01:39:22 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpiolib: devres: shrink devm_gpiochip_add_data_with_key()
+Date:   Tue, 10 Nov 2020 10:39:21 +0100
+Message-Id: <20201110093921.3731-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VeVPUJ_a4L+Lj-zR6Wm3Woq6F0uHzmtx3NCRO=TVopvrw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/11/2020 at 12:26, Andy Shevchenko wrote:
-> On Sun, Nov 8, 2020 at 8:05 PM Martin Kaiser <martin@kaiser.cx> wrote:
->>
->> Replace the two separate calls for setting the irq handler and data with a
->> single irq_set_chained_handler_and_data() call.
-> 
-> Can it be rewritten to use the GPIO core facility of instantiating IRQ chip?
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I have the feeling it's out of scope for this (tiny) patch.
+If all we want to manage is a single pointer, there's no need to
+manually allocate and add a new devres. We can simply use
+devm_add_action_or_reset() and shrink the code by a good bit.
 
-Regards,
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib-devres.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 7dbce4c4ebdf..0a292dd3e2a6 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -479,9 +479,9 @@ void devm_gpio_free(struct device *dev, unsigned int gpio)
+ }
+ EXPORT_SYMBOL_GPL(devm_gpio_free);
+ 
+-static void devm_gpio_chip_release(struct device *dev, void *res)
++static void devm_gpio_chip_release(void *data)
+ {
+-	struct gpio_chip *gc = *(struct gpio_chip **)res;
++	struct gpio_chip *gc = data;
+ 
+ 	gpiochip_remove(gc);
+ }
+@@ -507,23 +507,12 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, vo
+ 				    struct lock_class_key *lock_key,
+ 				    struct lock_class_key *request_key)
+ {
+-	struct gpio_chip **ptr;
+ 	int ret;
+ 
+-	ptr = devres_alloc(devm_gpio_chip_release, sizeof(*ptr),
+-			     GFP_KERNEL);
+-	if (!ptr)
+-		return -ENOMEM;
+-
+ 	ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
+-	if (ret < 0) {
+-		devres_free(ptr);
++	if (ret < 0)
+ 		return ret;
+-	}
+ 
+-	*ptr = gc;
+-	devres_add(dev, ptr);
+-
+-	return 0;
++	return devm_add_action_or_reset(dev, devm_gpio_chip_release, gc);
+ }
+ EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
 -- 
-Nicolas Ferre
+2.29.1
+
