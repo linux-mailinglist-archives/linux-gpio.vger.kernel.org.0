@@ -2,92 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C909A2AD88F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:19:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75ADC2AD8A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Nov 2020 15:22:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgKJOT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 09:19:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730594AbgKJOT7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Nov 2020 09:19:59 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37A5F207D3;
-        Tue, 10 Nov 2020 14:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605017998;
-        bh=K7JJrB+ZpQ1NkraBnAoR4CMvmKGwDe7qvMqD9qefqps=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0FDk3afOEqhgxaKJxzKNjfr1qDa268skoAzIc5DpyZzvns5zLYV9Cy2+XYyyaPahv
-         kZTTKRHD83c35jpnF3WcWijfT29a3Q217C7eVuXoHbuAfmqaN+5qHLcDsezvuSyS56
-         ma7RwqoU6Cv05O0mxeeFOk6/F0HPrO8qeymtYgkY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kcUV2-009THw-4u; Tue, 10 Nov 2020 14:19:56 +0000
+        id S1730070AbgKJOWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 09:22:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgKJOWa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 09:22:30 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6414C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:22:29 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id h23so10408755ljg.13
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 06:22:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FMD86tEXECv7YvaePhPTtJTj0MM3XK9o0NyCS2R6PI0=;
+        b=nTB8b/mNiIgxqPiAbAnkScARq99GnGp4EB22HUjcyZyPc9mNSY6o1zIUX91y/P29cs
+         O9TrrSiZBDbQ9+yRePrZQHAEr2jM23RvkOCMiasVxkmTGLrUUF3IQmI1ZeUIUIPQmNBH
+         5ux9M86vDPNJadiUSWsSCKw+CQS3ahVdsJJYKEZFmWpSk7uHyvQ3SmPkJV7e1LreEIlU
+         T69vaOgM5KbxeLSIw7/fxGIyTjZa10WcmO1dAlv4kJnMkBsIwnWnTQh0e1tg/au1GpvB
+         gFXC8i2j/U8Y+WwObeLnQ3vT3jBG2HFI3eTvIY6UQoF3fit31sQbXacVxckNMrIrfoVV
+         sNtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FMD86tEXECv7YvaePhPTtJTj0MM3XK9o0NyCS2R6PI0=;
+        b=iWHyxBEcKeYFc2QVE9K4JLA1qq6CJefq2zCIYBSf/AmSuXuqvWVUlRAaJP9a87lMkl
+         XpJPVcLUnkGKtlrWoL3AYu+AmRF5bGf44TDav7RtGERNrnVRqqWK7I3tw3KgLwMa5onh
+         KCIbtSNisSxNSMLanX7AGd+bU4GVAGyo4VCLyxPTdat4M5/Vr/UjpB0Y1n7CL5uBx/qL
+         GSLk3LmF1CRcbh1Np8z1fzgUaWn9NcK44o33tAIkm71Ob60wR8atggSWs8b+/Aq5BSOy
+         Nhe+6ycal00lSSa/mvIk/QmXzlgKA9EySq27S+7drCUQd45iYli1bZlFUmiH5YuELUOx
+         ywOA==
+X-Gm-Message-State: AOAM5301EL2zHMC4h4n179HDoAy3zcY5BJipyzth/1eI7GGwl+os0+LP
+        hXKwaJmt3O7/wP9WZPFqBlhaZfOftg/MWYcX1t5QYw==
+X-Google-Smtp-Source: ABdhPJwkKmX6iy3vh5cOc4kYxG7IZxuzAgGMQHBTaeexCSw6q0TsbV/SNEsF6jK1e+aRTpNJWn9XV8ZzvXL5sH7ZOCE=
+X-Received: by 2002:a2e:9a0c:: with SMTP id o12mr7974674lji.104.1605018148131;
+ Tue, 10 Nov 2020 06:22:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 10 Nov 2020 14:19:56 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Daniel Palmer <daniel@0x0f.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-In-Reply-To: <CACRpkdYr+yhyROQzaYfFrGwG74DuZiA=fMVOesgOKrDajhTodQ@mail.gmail.com>
-References: <20201019141008.871177-1-daniel@0x0f.com>
- <20201019141008.871177-4-daniel@0x0f.com>
- <CACRpkdZNr6sDqJhg3KcX0bCbcd8fh2gXFYbS1r2H2Sq+vGqjUw@mail.gmail.com>
- <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org>
- <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
- <71f3632bee262a18e1b7edb74980ae9a@kernel.org>
- <CACRpkdYr+yhyROQzaYfFrGwG74DuZiA=fMVOesgOKrDajhTodQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <bc0ab2f10bb72fe5b455ca12958f6444@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, daniel@0x0f.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20201104115348.51930-1-damien.lemoal@wdc.com> <CAMpxmJUO-fyQRyjKD4gNZFw=_iAH7eMd=xyLXLuwAikC0OnLsQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJUO-fyQRyjKD4gNZFw=_iAH7eMd=xyLXLuwAikC0OnLsQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Nov 2020 15:22:17 +0100
+Message-ID: <CACRpkda_mKYPH8Y4ak1WmFGy17yMkhCgitcL=EjAf1dxYtRWUw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Do not trigger WARN() with sysfs gpio export/unexport
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-11-10 14:02, Linus Walleij wrote:
-> On Thu, Nov 5, 2020 at 4:43 PM Marc Zyngier <maz@kernel.org> wrote:
->> On 2020-11-05 15:23, Daniel Palmer wrote:
->> > On Thu, 5 Nov 2020 at 21:08, Marc Zyngier <maz@kernel.org> wrote:
-> 
->> > >  I see that msc313_gpio_irqchip doesn't have a
->> >> .irq_set_affinity callback. Is this system UP only?
->> >
->> > What is in mainline right now is UP only but there are chips with a
->> > second cortex A7 that I have working in my tree.
->> > So I will add that in for v3 if I can work out what I should actually
->> > do there. :)
->> 
->> Probably nothing more than setting the callback to
->> irq_chip_set_affinity_parent,
-> 
-> Hm, is this something all GPIO irqchips used on SMP systems
-> should be doing? Or just hierarchical ones?
+On Fri, Nov 6, 2020 at 10:27 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 
-Probably only the hierarchical ones. I'd expect the non-hierarchical
-GPIOs to be muxed behind a single interrupt, which makes it impossible
-to move a single GPIO around, and moving the mux interrupt would break
-userspace's expectations that interrupts move independently of each 
-others.
+> How about we change that to an unconditional WARN() everytime the user
+> tries to export a GPIO over sysfs so that people switch over to the
+> character device?
+>
+> I'm joking a bit but I think it's time to start discouraging people
+> from using sysfs and a warning may be a good start.
 
-Thanks,
+I think maybe we should hide the Kconfig for sysfs under
+EXPERT as well.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+I would also seriously don't mind to make CDEV compulsory
+for GPIO_SYSFS.
+
+GPIO_SYSFS
+   depends on EXPERT
+   select GPIO_CDEV
+
+If people to bad only want the deprecated sysfs they can patch
+their kernel to get rid of it :/
+
+I will send a patch for this.
+
+Yours,
+Linus Walleij
