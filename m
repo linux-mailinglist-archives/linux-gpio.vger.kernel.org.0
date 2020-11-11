@@ -2,85 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E662AF41A
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:53:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DAAC2AF42F
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:56:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgKKOxV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 09:53:21 -0500
-Received: from smtp.asem.it ([151.1.184.197]:60288 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgKKOxU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 09:53:20 -0500
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000601011.MSG 
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 15:53:15 +0100S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 11
- Nov 2020 15:53:13 +0100
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1979.003; Wed, 11 Nov 2020 15:53:13 +0100
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1] Documentation: ACPI: explain how to use
- gpio-line-names
-Thread-Topic: [PATCH v1] Documentation: ACPI: explain how to use
- gpio-line-names
-Thread-Index: AQHWuCs2DratU6tfqk6ZIQJSnDA95anC5K8AgAAdYVA=
-Date:   Wed, 11 Nov 2020 14:53:13 +0000
-Message-ID: <93941f3b0142473399bfdd18608a4056@asem.it>
-References: <20201111130435.432982-1-f.suligoi@asem.it>
- <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
-In-Reply-To: <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726900AbgKKO4a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 09:56:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgKKO43 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:56:29 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DFCC0613D4
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:56:29 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id d17so3484388lfq.10
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:56:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rivQZ+Gyx3QuncUn7XBIjPPOLaniOfHJYPZkKaC2XyQ=;
+        b=wFMqaQOrP9txqLtE2MUq/5BDVuwGIOJ4qBOl8O8bRs6hNHlYRbW46F7+MRjKsLKoKr
+         vFK+fLRw0bOcCx+IR7daSCKiTgvC4TM4LBYIrKCX+8iLh3ECKP7yt1JaxmF0ODamE9Vq
+         19ZUtDXidztuIALealoaBH1yL9zwNqzS/2iBRdAmRb/acmGH4/Uh6XZc+a0E4pe3R1Qg
+         uOUVujSgOcGBEFiOG7v/8jUitiJDBXZsDbTniHWf7hLwNr2dh7n44lohvBvaKUSlis9l
+         mvk7sTNr94Lqze9Jwil2Y1R9rx0CgBhAcgPzegKFJwAkUO2asHk0KWvsVB9SW1JKwxAF
+         HWxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rivQZ+Gyx3QuncUn7XBIjPPOLaniOfHJYPZkKaC2XyQ=;
+        b=PnRioJUW3E6GRNnVouX2d1COZbDyyVUhgi1eNqrg3YrEaq/Og6/+tOtc4wXWtxhLj2
+         MpWhblXd1+/7alzeXZcaSeV5MAx/x7WpuIKnkhXa0+JI7FeB37IT6UP04VX8uXH5NOM6
+         Qx6gVlg7Xts+hdfgl7cU4Q5AqlL9XEOG+8hmM/Berdw16E/qKhqLUztCVf8DVSkWqcwf
+         76zNTNjU+ngwFC33I8zL651i2KPE+Id0oLTqGDNbLUkg1nd5pEFgaSPFh0Csl78kS5zp
+         Ilj6etU9f0QbIropRE1DHo8Ex+peT0UUAsyhgOHAhUwYiHgxQV06/axGzInyajHDkycE
+         Raaw==
+X-Gm-Message-State: AOAM5333qCcTtQ/HX8HvHv0rW/BtgJ1lEzsviVn6j/aW2dt2UpaYDZ7S
+        Rvt2+ueh5FhXf8/9UQ6WMKfwXi68rxtGFG1SMqeOWsIrwmmf/g==
+X-Google-Smtp-Source: ABdhPJwfBaWwlxbC2/Te89Fx3tc2hajIPhEhZ8zHgZBE8A/4E+0qxVyOIrLIyy7Bv5yKOODe8uQXHjo6Ugjrgs8spgA=
+X-Received: by 2002:a19:546:: with SMTP id 67mr733928lff.502.1605106587819;
+ Wed, 11 Nov 2020 06:56:27 -0800 (PST)
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090213.5FABFADA.0015,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+References: <20201110093921.3731-1-brgl@bgdev.pl>
+In-Reply-To: <20201110093921.3731-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Nov 2020 15:56:17 +0100
+Message-ID: <CACRpkdbbMcJ+GDkYZB9vZMKk6r=RAB-cSGcthVCR8zm5bYaVVg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: devres: shrink devm_gpiochip_add_data_with_key()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQW5keSwNCg0KPiA+IFRoaXMgY29tbWl0IGFsc28gZml4IGEgdHJpdmlhbCBzeW50YXggZXJy
-b3IuDQo+IA0KPiBmaXggLT4gZml4ZXMNCj4gc3ludGF4IGVycm9yIC0+IHNwZWxsaW5nIG1pc3Rh
-a2UNCg0Kb2sNCg0KPiA+IC1FeGFtcGxlOjoNCj4gPiArVGhlICJncGlvLWxpbmUtbmFtZXMiIGRl
-Y2xhcmF0aW9uIGlzIGEgbGlzdCBvZiBzdHJpbmdzICgibmFtZXMiKSwgd2hpY2gNCj4gPiArZGVz
-Y3JpYmVzIGVhY2ggbGluZS9waW4gb2YgYSBHUElPIGNvbnRyb2xsZXIvZXhwYW5kZXIuDQo+ID4g
-K1RoaXMgbGlzdCwgY29udGFpbmVkIGluIGEgcGFja2FnZSwgbXVzdCBiZSBpbnNlcnRlZCBpbnNp
-ZGUgdGhlIEdQSU8NCj4gY29udHJvbGxlcg0KPiA+ICtkZWNsYXJhdGlvbiBvZiBhbiBBQ1BJIHRh
-YmxlICh0eXBpY2FsbHkgaW5zaWRlIHRoZSBEU0RUKS4NCj4gPiArVGhlIGdwaW8tbGluZS1uYW1l
-cyBsaXN0IG11c3QgcmVzcGVjdCB0aGUgZm9sbG93aW5nIHJ1bGVzIChzZWUgYWxzbyB0aGUNCj4g
-PiArZXhhbXBsZXMpOg0KPiANCj4gU2luY2UgaXQncyByZXN0LCBJIHdvdWxkIGV4cGVjdCBncGlv
-LWxpbmUtbmFtZXMgaW4gYWJvdmUgcGFyYWdyYXBocyB0bw0KPiBiZSBhIHRlcm0sIHNvbWV0aGlu
-ZyBsaWtlDQo+IGBgZ3Bpby1saW5lLW5hbWVzYGAgKGRvdWJsZSBiYWNrIHF1b3RlcyBvbiBlYWNo
-IHNpZGUpLiBZZXMsIEkga25vdw0KPiB0aGF0IHRoZXJlIGFyZSBvdGhlciBwbGFjZXMgd2hpY2gg
-bmVlZCB0byBiZSBhbWVuZGVkLCBidXQgSSBiZWxpZXZlDQo+IGl0J3Mgb3V0IG9mIHNjb3BlIG9m
-IHRoaXMgcGF0Y2guDQoNCk9rLCBJJ2xsIHVzZSB0aGUgYmFja3F1b3RlcyBmb3IgY29kZSBzYW1w
-bGVzLCByaWdodCENCklmIHlvdSB3YW50LCB3aGVuIHRoaXMgcGF0Y2ggd2lsbCBiZSBjb25jbHVk
-ZWQsIEkgY2FuIGNoZWNrIGFsbCB0aGUgQUNQSQ0KZG9jdW1lbnRhdGlvbiB0byBwdXQgYWxsIGNv
-ZGUgc2FtcGxlcyBpbnRvIGJhY2txdW90ZXMuDQoNCj4gDQo+IEFsc28gbm8gbmVlZCB0byBoYXZl
-IGVhY2ggc2VudGVuY2UgdG8gYmUgc3RhcnRlZCBmcm9tIGEgbmV3IGxpbmUsIGl0DQo+IHdpbGwg
-YmUgcmVuZGVyZWQgYXMgaXQgaGFzIG9uZSB3aGl0ZSBzcGFjZSBpbiBiZXR3ZWVuLg0KDQpvaw0K
-DQo+ID4gKyAgICBvdGhlciB3b3JkcywgaXQgaXMgbm90IG1hbmRhdG9yeSB0byBmaWxsIGFsbCB0
-aGUgR1BJTyBsaW5lcw0KPiA+ICsgIC0gZW1wdHkgbmFtZXMgYXJlIGFsbG93ZWQgKHR3byBxdW90
-YXRpb24gbWFya3MgIiIgY29ycmVzcG9uZCB0byBhbg0KPiBlbXB0eSBuYW1lKQ0KPiANCj4gYGAi
-ImBgIGJ1dCBiZXR0ZXIgdG8gY2hlY2sgdGhlIHJlc3VsdGluZyAocmVuZGVyZWQpIGZpbGUuIFlv
-dSBtYXkgdXNlDQo+IHJzdDJwZGYgc2NyaXB0IGZvciB0aGF0Lg0KDQpPSyBmb3IgdGhlYGAiImBg
-Lg0KSSBjaGVjayB0aGUgcmVuZGVyZWQgSFRNTCB1c2luZyB0aGUgdXN1YWwgIm1ha2UgaHRtbGRv
-Y3MiLiBJcyBpdCBlbm91Z2g/DQoNCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkg
-U2hldmNoZW5rbw0KDQpSZWdhcmRzLA0KRmxhdmlvDQo=
+On Tue, Nov 10, 2020 at 10:39 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> If all we want to manage is a single pointer, there's no need to
+> manually allocate and add a new devres. We can simply use
+> devm_add_action_or_reset() and shrink the code by a good bit.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Sweet!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+I suppose I will get this with a pull request.
+
+Yours,
+Linus Walleij
