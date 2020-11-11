@@ -2,73 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54492AFB0B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C2E2AFB18
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:07:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgKKWGZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 17:06:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:8979 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbgKKWGY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 17:06:24 -0500
-IronPort-SDR: qcFPVv/vt686AVy1bKZmlk+WEM8Zjn4QQX6gxOp2DJacEsFSg6V6bDIPp2p/JSBmgqs+uDlMpm
- z/+/KRN9PyrQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="149498451"
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="149498451"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:06:24 -0800
-IronPort-SDR: lWfMqqGTnnKkMSfY+2xJl/6pQ3fF8czfVkujVznaq9PYVLigSsYCXuB6pieHMh7GPCLNFxkNc8
- RwUrrSZb6MkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="366390838"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 11 Nov 2020 14:06:23 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 232BB7A1; Thu, 12 Nov 2020 00:06:18 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v6 18/18] ARM: Drop ARCH_NR_GPIOS definition
-Date:   Thu, 12 Nov 2020 00:05:59 +0200
-Message-Id: <20201111220559.39680-19-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com>
-References: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com>
+        id S1725996AbgKKWHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 17:07:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbgKKWHn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 17:07:43 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D308C0613D1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:07:42 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id x9so3805743ljc.7
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:07:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ghHaB9kFwZ+qWAzm5xF5KDNSEe6oUbM3S2WPBG/P04=;
+        b=l4r8L7BpAE5bSyQi70Q1YZN3JegNYg18O4HteLK1ZXu1pfzKV7mKFD90Vqs+omfqq9
+         KYBm07efYDGacg3jhnOG3CpOdgulHuzjwtjPentitjhak/L9Or4Jy4had/1uo/GLYcLv
+         Dcl5wChXjSMwP1lFuH43fiWe3hPJykQbRN1HA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ghHaB9kFwZ+qWAzm5xF5KDNSEe6oUbM3S2WPBG/P04=;
+        b=G9KJ6EATQablObmyVKKMhjxrp/ZDsXxihvCQaAAzO7NPCKBXNb8zGbni07KHzcMyc+
+         wzLkjhLFEihcZhgbjB2FjEbY8OSS7o1q1j67VwNTijwuXb8IVEPctr2w8ZwaRVhxtWJo
+         ScMRLKst3W88oPlDiRhP4ms24AUeghrW5CrJKwMDt5/qvnfrozkB2SwGhsg6BxjOv4vg
+         X/f7sjInXSn7tNXIZQyjjH2qmmgGIBEzctcJbxi0CXnjEaBU7YGuz5Hm5mEvl1AQgaDG
+         R5FUueQ+IYeXfQMUvtOSQcYjjLbJ90wFysRnYOLTMRBSY2/c3XoiltAaxrR4fEIHy/QO
+         OfGA==
+X-Gm-Message-State: AOAM533lo5TzPP4yFfL7YmKGZxrP0lLj8sbq04U/0EAw6nyYRGlthbem
+        766739Q5OdT7lo9clopx57X2Jp6ErpVr6Q==
+X-Google-Smtp-Source: ABdhPJyXw2BM19O8RzKxcWWeBzcsQ/NjtQgFi6EQ/W0UVDa/Kg8P0lfXanxtshuJkHHRX0a5vP7jkQ==
+X-Received: by 2002:a2e:7a0a:: with SMTP id v10mr7713234ljc.5.1605132460792;
+        Wed, 11 Nov 2020 14:07:40 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id p14sm354408lfc.40.2020.11.11.14.07.40
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Nov 2020 14:07:40 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id s9so3786536ljo.11
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:07:40 -0800 (PST)
+X-Received: by 2002:a2e:880f:: with SMTP id x15mr3599683ljh.99.1605132459597;
+ Wed, 11 Nov 2020 14:07:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201111215401.34449-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201111215401.34449-1-andriy.shevchenko@linux.intel.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 11 Nov 2020 14:07:03 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7cuEiA+esfsA4NCj4xKx5jA=Da_Su9Y+vUjM2vCeimXg@mail.gmail.com>
+Message-ID: <CAE=gft7cuEiA+esfsA4NCj4xKx5jA=Da_Su9Y+vUjM2vCeimXg@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: jasperlake: Fix HOSTSW_OWN register offset
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The conditional by the generic header is the same,
-hence drop unnecessary duplication.
+On Wed, Nov 11, 2020 at 1:54 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Jasper Lake uses different offset for HOSTSW_OWN register.
+> Fix it here.
+>
+> Fixes: e278dcb7048b ("pinctrl: intel: Add Intel Jasper Lake pin controller support")
+> Reported-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> I have got a confirmation that PADCFGLOCK is still 0x80.
+> I updated my patch and put your name as Reported-by. If you want me
+> to have your patch instead, I can review it (it needs some massage
+> of the commit message)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/arm/include/asm/gpio.h | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
-index c50e383358c4..f3bb8a2bf788 100644
---- a/arch/arm/include/asm/gpio.h
-+++ b/arch/arm/include/asm/gpio.h
-@@ -2,10 +2,6 @@
- #ifndef _ARCH_ARM_GPIO_H
- #define _ARCH_ARM_GPIO_H
- 
--#if CONFIG_ARCH_NR_GPIO > 0
--#define ARCH_NR_GPIOS CONFIG_ARCH_NR_GPIO
--#endif
--
- /* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio.h */
- #include <asm-generic/gpio.h>
- 
--- 
-2.28.0
-
+Either way is ok. I'm happy to spin and edit my commit message, let me
+know how to change.
+-Evan
