@@ -2,96 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B03C2AF434
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:57:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD8F2AF44E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 16:01:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgKKO5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 09:57:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
+        id S1726953AbgKKPBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 10:01:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgKKO5E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:57:04 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C90EC0613D1;
-        Wed, 11 Nov 2020 06:57:04 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d3so1093184plo.4;
-        Wed, 11 Nov 2020 06:57:04 -0800 (PST)
+        with ESMTP id S1726553AbgKKPBV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 10:01:21 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7972CC0613D1;
+        Wed, 11 Nov 2020 07:01:21 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id v12so1728062pfm.13;
+        Wed, 11 Nov 2020 07:01:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MyApQ3Qe0ikm4e96wlEFsdUKuOOWp3HZjy/jI5jhpdQ=;
-        b=TC05TcfmI0zGf3u+l4x7bhmD2pAZ5ansAdrIpTH+gvMFEveSyZ/zWF4nAxcxhujaod
-         6aSitX5yQNexfhAl/d+iJkL6MseppAI75My+pbUN75qKjq5iYArRb0fpHNRkEHWwybIz
-         /VNZtCDsDGsXyb0Zd84xQ7IujxOWh3nHStw0HW89ARgw6qzO1BjtZVXwBwhpdMO3A1K5
-         Q8N7zJwUEEAcULlHUsgMODJKBnDx4+jBnbhrV/toKPa0B8obDwMf3qSJCyA2PwdZMLBL
-         kAQIQHyU1Eo/TGy0n0BV0iltvqCoO+C6vsK7ELKF4zQvrl0c8iDnGATssPGWzpVSIhVc
-         MGtw==
+        bh=dTw07PXCm9f+sMZyny8xFD7GUyUJB8EhOILXJ7ADhU0=;
+        b=Gq25Dk2U3e7nhbUC55/HaiMEDdF/29apkSnG//wL1MJev+p2AAKA+xeSBcUeEhlXTg
+         Vx18yBrBEIrUqYqCgd5tk2YjrlccH7gJI8MJeJ8NrkZXfniKoWRYZUDRbb9bZWGCDbJG
+         /BB+rRHJIpbnQmTAodPSIioz8NWB9Xrfp8nWyGLwE9B6ctxT1C6LQEuCbRz/A4E4CNYj
+         tOnE16BVnIMTrBKSngDJjKzu60o9RTphGZj1kdZTGnrRxl1r9yWAG0/oVlrPhahwsXk6
+         41BWB0x0zaqFZ4A1CtFl4lK8h8e16J5gAUOU8QjyCMPayToZQgX227YwtfgyK2WVL8ea
+         z7sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MyApQ3Qe0ikm4e96wlEFsdUKuOOWp3HZjy/jI5jhpdQ=;
-        b=bzBdSKfNOMWvaGYJrrqxRGCh6YYNnXJN28iFTpp2/bs3qXE0D9rBUuoqYtm6ATxtQ5
-         egn3RnX5iZqwbu/882ZMHuJy7hEzLSRrw6fvV3jE/j1ev6ROMwMNPEpolUrgFWzeRMJq
-         PKA7bPT2SHoKQ6ke2TfCajitL+D/3a08PV5OodtZbSL7jBQIdBO2BSmysKmkp527EQZ3
-         sDtIVWWzWysKv3KsnLk5GtShTucUzvT3Eh7cW+6cuNRnQDrHE4Jm1fLCvYECxjGkRCK3
-         s6qSfWP6qdudSI+I5sDktcQ4B4MTlOiR/NEy/WJishLtTjr/hRT7kTiZSV1AnuFM3AHC
-         5XxA==
-X-Gm-Message-State: AOAM532aPb/YXoSUJ/5iS0qG7cJ2bbickviyVK2PIOvqM3WL520IzjGR
-        npPLXfTjF0QUIg6f37VMBFlaPzLpHCesMYqNiP5oms96zv4=
-X-Google-Smtp-Source: ABdhPJxYzvEL9bujfSelart5xnHseI7z2+ubQqYjhGqDNU8DhEDl09EpsXM6Df/4Eum3wxbzysunMace65GxTLvCiiI=
-X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
- m8-20020a1709026bc8b02900d60d9df28cmr5734362plt.17.1605106624126; Wed, 11 Nov
- 2020 06:57:04 -0800 (PST)
+        bh=dTw07PXCm9f+sMZyny8xFD7GUyUJB8EhOILXJ7ADhU0=;
+        b=rkV27qyt6hmmuCgIjhdCA6x2HnEUVj3OET6tknSNOXaXG/aCDobkV8uhUWAU4pXQvG
+         1EijwMhsTLRGkQiixJZaCtwj9ksN+vKbJCG1eFWBvuYMYqlblhu2se9dmoXFXsraFFMY
+         A5KrxhL1J/1F36gQctPgzPxtRKLuSKgt++owkeNFF1HRC2T82Wc14GqI/CJ0lTJ2TvDS
+         A7QLY9oMNOGyJlvEpogfiSejmyWShRaIAjXCwaZECGmrvKQZSuM2zti3hxF14CX5bcQE
+         BJs+ijOkrb2HDm7f+TLv2fVFyg4VG1RtQz3ZkmCewWb2Q/7Sm0ERmQcDbQiJ7FEipCkH
+         CJpA==
+X-Gm-Message-State: AOAM530G+sIuSNJDi62XMu58BBLIxwmYm5MMWCAj1HY0ORqYRI6JRTmo
+        +gnMeUE1luyAtcwZdbIx7cW2nU+w5mKGnOFZWuE=
+X-Google-Smtp-Source: ABdhPJy0wQdnzPQ9LXaMVo3zj2ttIqZISP0y5zmG28vToQ8AtXVbVKI+sA5Id11mwX7nUu19CajZLaJZf7OpA720+hc=
+X-Received: by 2002:a62:7c95:0:b029:18c:5002:a1ab with SMTP id
+ x143-20020a627c950000b029018c5002a1abmr6885612pfc.40.1605106880991; Wed, 11
+ Nov 2020 07:01:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20201111130435.432982-1-f.suligoi@asem.it> <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
- <93941f3b0142473399bfdd18608a4056@asem.it>
-In-Reply-To: <93941f3b0142473399bfdd18608a4056@asem.it>
+References: <20201110093921.3731-1-brgl@bgdev.pl>
+In-Reply-To: <20201110093921.3731-1-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Nov 2020 16:57:53 +0200
-Message-ID: <CAHp75Vdhd2Swu5qiYszgBG4pfB8LG=jxgi=YMHNviogWQR_oJw@mail.gmail.com>
-Subject: Re: [PATCH v1] Documentation: ACPI: explain how to use gpio-line-names
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+Date:   Wed, 11 Nov 2020 17:02:09 +0200
+Message-ID: <CAHp75VeRvO-PpNpcQHKXBRdWQqavfvQwqai2gRys+FbhBuVy4Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: devres: shrink devm_gpiochip_add_data_with_key()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 4:53 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
-
-...
-
-> > Since it's rest, I would expect gpio-line-names in above paragraphs to
-> > be a term, something like
-> > ``gpio-line-names`` (double back quotes on each side). Yes, I know
-> > that there are other places which need to be amended, but I believe
-> > it's out of scope of this patch.
+On Tue, Nov 10, 2020 at 11:42 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Ok, I'll use the backquotes for code samples, right!
-> If you want, when this patch will be concluded, I can check all the ACPI
-> documentation to put all code samples into backquotes.
-
-I'm not sure I understand what you meant under 'code samples'. The
-code excerpts like below are fine, what I'm talking about is the
-reference to properties in the text.
-
-...
-
-> > ``""`` but better to check the resulting (rendered) file. You may use
-> > rst2pdf script for that.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> OK for the``""``.
-> I check the rendered HTML using the usual "make htmldocs". Is it enough?
+> If all we want to manage is a single pointer, there's no need to
+> manually allocate and add a new devres. We can simply use
+> devm_add_action_or_reset() and shrink the code by a good bit.
 
-Ideally it's not enough. html, pdf and man all should be checked.
+Yes, it is possible to convert all one-function-based devm_*()
+wrappers to use this approach.
+
+The problem is, it will call the release() function on error which is
+new (and probably undesired) behaviour.
+I suppose you meant devm_add_action() here.
+
 
 -- 
 With Best Regards,
