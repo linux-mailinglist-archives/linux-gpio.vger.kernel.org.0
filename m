@@ -2,87 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B22AC2AF489
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 16:14:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 153FC2AF494
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 16:18:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgKKPOz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 10:14:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgKKPOz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 10:14:55 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8310DC0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 07:14:54 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id l2so3653836lfk.0
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 07:14:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=al9AhlnpLROQkeJcp4KmhZIYQISi9OqNRGCz0MVINWw=;
-        b=y08ZYrv1xG5Qj0tEoDGVettd6ppj4PdfFQR2GwrfLIq1X4UljS2YNirJRLLAMNsMF1
-         YTxjjI10M9sQ2VXUJT6wxadFuaQWiqAK94OAVdQtplsvx4WTvCjU6XbAAkSDy2XgIGpf
-         h/6KBI5kuT+xeh+/nBRhxS0shHxLGmUFyKPrukHuvICv+VY8DcBfifYCE+GFxOsEvsIz
-         sCpg+dQyFJ/01xmRiXdd91CTkdPW7kp2lMgLwsaUNeweovFq0rcokhjqrW2WxRVOP4G1
-         qXisn1eVPedSZ5H9KJSuWCj6mCV46sMdlL/4c8+vMg2ZoN8TY+Pma+FKvcFLG6YFMnII
-         NjYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=al9AhlnpLROQkeJcp4KmhZIYQISi9OqNRGCz0MVINWw=;
-        b=SiCNVpo/NlP9sF9O94JYpECPLutoWgH+kU2MjzHHET7tLEJeA5C617UzH+VpN7pB4z
-         0gpcAjMbK3ThMgDHM5Z4UubxPQvzXfL7163WFow6BhU6DFnrbQheSrlIh3SKB9/+oH+u
-         K71ioemlR05nz/+oX1Z7H60RjKlHn7CtyNu6mKQvjNZkEkXvoUI30P2twyDLU34uH9sh
-         5x4ELEK+XQ9xevcGEKWd3px6TAQ78VEGgNJ0voXHIMhxEarWvs1UX8RG5SbWAvT1jAtv
-         xmAafcne32GU+B65EByKqLZ5Go/VgDLWBvRPImuUEGUsHyIPq2IKuf+9UfrbfbaYaOac
-         Umlg==
-X-Gm-Message-State: AOAM532x4hj/PDgeSxUX3/zMYgv20bHIhYLWWv2GMT0X4llNHedjBKQO
-        7+z5sjVc8YQqOA3QLNngDqHy1U2JhbYEEGgk9H3d66EhnFRttQ==
-X-Google-Smtp-Source: ABdhPJwS69Hw3ZIr9pybPqkVIWtgoqFtluUp54n8mRWhaDl7choUIRTC8pYtRhQB9bhsJlsGjbijABs4I51xhw104NE=
-X-Received: by 2002:a19:e08:: with SMTP id 8mr1037175lfo.441.1605107692888;
- Wed, 11 Nov 2020 07:14:52 -0800 (PST)
+        id S1726807AbgKKPSF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 10:18:05 -0500
+Received: from mga03.intel.com ([134.134.136.65]:50289 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgKKPSE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 10:18:04 -0500
+IronPort-SDR: WG0mkO3aAIV0aRdOlkNmi9xTDwOsYtH4wXfzbE+OnDUWXCJPyaogxZCXeO9n1EO1+B5mTo8XdQ
+ G1J8IvbxNLGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="170269250"
+X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
+   d="scan'208";a="170269250"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 07:18:02 -0800
+IronPort-SDR: wKk65U1Po0Lk8ONFx00yCMAW6u//XgKDK5FCiVoc54LVOSX4/gZtULWbtyg6iStjZplWPdmoB3
+ xzVZYTeZZY6Q==
+X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
+   d="scan'208";a="473883830"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 07:18:00 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 11 Nov 2020 17:17:57 +0200
+Date:   Wed, 11 Nov 2020 17:17:57 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v5 01/17] gpiolib: Replace unsigned by unsigned int
+Message-ID: <20201111151757.GX2495@lahna.fi.intel.com>
+References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
+ <20201109205332.19592-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20201104115348.51930-1-damien.lemoal@wdc.com> <CAMpxmJUO-fyQRyjKD4gNZFw=_iAH7eMd=xyLXLuwAikC0OnLsQ@mail.gmail.com>
- <4dae7924b5d8b020e747a36ecb015063090b819b.camel@wdc.com> <CACRpkdZup58yojegKUxpok-aqE95sk18JDc0kuiUoiOj1XKpGA@mail.gmail.com>
- <b551cfa97c1ee0aa892d80454a47ed859b9a420c.camel@wdc.com>
-In-Reply-To: <b551cfa97c1ee0aa892d80454a47ed859b9a420c.camel@wdc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Nov 2020 16:14:42 +0100
-Message-ID: <CACRpkda_4JrF=akOO+Y8=xcDqQ3710ztbcj+Z2PPk65nz37Vag@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Do not trigger WARN() with sysfs gpio export/unexport
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201109205332.19592-2-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 7:54 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+On Mon, Nov 09, 2020 at 10:53:16PM +0200, Andy Shevchenko wrote:
+> Replace unsigned by unsigned int in GPIO library code.
+> Note, legacy API left untouched.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> > We need to think about a similar facility for users which is less
-> > damaging but fulfils the same needs. I think I saw something a while
-> > back that looked promising and added some funky files in debugfs
-> > in a hierarchical manner per-gpiochip instead. That is how debugfs
-> > should be used.
->
-> I like this idea too. The point is (my opinion only), anything that allows
-> quick testing using only a shell without any extra tooling needed is fine.
-> Extra tooling is not really an issue when using a full distro, but it can be a
-> problem when working with things like buildroot (or busybox directly). And
-> indeed, as its name implies, debugfs seems like a good alternative to sysfs.
-
-I would say the problem is something like, I want to test some simple
-GPIO access like turning a LED on/off and recompiling the rootfs
-is a pain, so some simple debugfs facility would be nice to have to test
-it and get on with development.
-
-OK I'll think of some TODO item.
-
-I am slightly worried that people will start abusing debugfs to do products
-"because it is so simple" if we add this but wel...
-
-Yours,
-Linus Walleij
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
