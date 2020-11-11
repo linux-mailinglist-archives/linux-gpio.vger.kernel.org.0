@@ -2,77 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DAAC2AF42F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:56:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B03C2AF434
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:57:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgKKO4a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 09:56:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        id S1727103AbgKKO5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 09:57:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgKKO43 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:56:29 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DFCC0613D4
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:56:29 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id d17so3484388lfq.10
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:56:29 -0800 (PST)
+        with ESMTP id S1726553AbgKKO5E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:57:04 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C90EC0613D1;
+        Wed, 11 Nov 2020 06:57:04 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d3so1093184plo.4;
+        Wed, 11 Nov 2020 06:57:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rivQZ+Gyx3QuncUn7XBIjPPOLaniOfHJYPZkKaC2XyQ=;
-        b=wFMqaQOrP9txqLtE2MUq/5BDVuwGIOJ4qBOl8O8bRs6hNHlYRbW46F7+MRjKsLKoKr
-         vFK+fLRw0bOcCx+IR7daSCKiTgvC4TM4LBYIrKCX+8iLh3ECKP7yt1JaxmF0ODamE9Vq
-         19ZUtDXidztuIALealoaBH1yL9zwNqzS/2iBRdAmRb/acmGH4/Uh6XZc+a0E4pe3R1Qg
-         uOUVujSgOcGBEFiOG7v/8jUitiJDBXZsDbTniHWf7hLwNr2dh7n44lohvBvaKUSlis9l
-         mvk7sTNr94Lqze9Jwil2Y1R9rx0CgBhAcgPzegKFJwAkUO2asHk0KWvsVB9SW1JKwxAF
-         HWxA==
+        bh=MyApQ3Qe0ikm4e96wlEFsdUKuOOWp3HZjy/jI5jhpdQ=;
+        b=TC05TcfmI0zGf3u+l4x7bhmD2pAZ5ansAdrIpTH+gvMFEveSyZ/zWF4nAxcxhujaod
+         6aSitX5yQNexfhAl/d+iJkL6MseppAI75My+pbUN75qKjq5iYArRb0fpHNRkEHWwybIz
+         /VNZtCDsDGsXyb0Zd84xQ7IujxOWh3nHStw0HW89ARgw6qzO1BjtZVXwBwhpdMO3A1K5
+         Q8N7zJwUEEAcULlHUsgMODJKBnDx4+jBnbhrV/toKPa0B8obDwMf3qSJCyA2PwdZMLBL
+         kAQIQHyU1Eo/TGy0n0BV0iltvqCoO+C6vsK7ELKF4zQvrl0c8iDnGATssPGWzpVSIhVc
+         MGtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rivQZ+Gyx3QuncUn7XBIjPPOLaniOfHJYPZkKaC2XyQ=;
-        b=PnRioJUW3E6GRNnVouX2d1COZbDyyVUhgi1eNqrg3YrEaq/Og6/+tOtc4wXWtxhLj2
-         MpWhblXd1+/7alzeXZcaSeV5MAx/x7WpuIKnkhXa0+JI7FeB37IT6UP04VX8uXH5NOM6
-         Qx6gVlg7Xts+hdfgl7cU4Q5AqlL9XEOG+8hmM/Berdw16E/qKhqLUztCVf8DVSkWqcwf
-         76zNTNjU+ngwFC33I8zL651i2KPE+Id0oLTqGDNbLUkg1nd5pEFgaSPFh0Csl78kS5zp
-         Ilj6etU9f0QbIropRE1DHo8Ex+peT0UUAsyhgOHAhUwYiHgxQV06/axGzInyajHDkycE
-         Raaw==
-X-Gm-Message-State: AOAM5333qCcTtQ/HX8HvHv0rW/BtgJ1lEzsviVn6j/aW2dt2UpaYDZ7S
-        Rvt2+ueh5FhXf8/9UQ6WMKfwXi68rxtGFG1SMqeOWsIrwmmf/g==
-X-Google-Smtp-Source: ABdhPJwfBaWwlxbC2/Te89Fx3tc2hajIPhEhZ8zHgZBE8A/4E+0qxVyOIrLIyy7Bv5yKOODe8uQXHjo6Ugjrgs8spgA=
-X-Received: by 2002:a19:546:: with SMTP id 67mr733928lff.502.1605106587819;
- Wed, 11 Nov 2020 06:56:27 -0800 (PST)
+        bh=MyApQ3Qe0ikm4e96wlEFsdUKuOOWp3HZjy/jI5jhpdQ=;
+        b=bzBdSKfNOMWvaGYJrrqxRGCh6YYNnXJN28iFTpp2/bs3qXE0D9rBUuoqYtm6ATxtQ5
+         egn3RnX5iZqwbu/882ZMHuJy7hEzLSRrw6fvV3jE/j1ev6ROMwMNPEpolUrgFWzeRMJq
+         PKA7bPT2SHoKQ6ke2TfCajitL+D/3a08PV5OodtZbSL7jBQIdBO2BSmysKmkp527EQZ3
+         sDtIVWWzWysKv3KsnLk5GtShTucUzvT3Eh7cW+6cuNRnQDrHE4Jm1fLCvYECxjGkRCK3
+         s6qSfWP6qdudSI+I5sDktcQ4B4MTlOiR/NEy/WJishLtTjr/hRT7kTiZSV1AnuFM3AHC
+         5XxA==
+X-Gm-Message-State: AOAM532aPb/YXoSUJ/5iS0qG7cJ2bbickviyVK2PIOvqM3WL520IzjGR
+        npPLXfTjF0QUIg6f37VMBFlaPzLpHCesMYqNiP5oms96zv4=
+X-Google-Smtp-Source: ABdhPJxYzvEL9bujfSelart5xnHseI7z2+ubQqYjhGqDNU8DhEDl09EpsXM6Df/4Eum3wxbzysunMace65GxTLvCiiI=
+X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
+ m8-20020a1709026bc8b02900d60d9df28cmr5734362plt.17.1605106624126; Wed, 11 Nov
+ 2020 06:57:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20201110093921.3731-1-brgl@bgdev.pl>
-In-Reply-To: <20201110093921.3731-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Nov 2020 15:56:17 +0100
-Message-ID: <CACRpkdbbMcJ+GDkYZB9vZMKk6r=RAB-cSGcthVCR8zm5bYaVVg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: devres: shrink devm_gpiochip_add_data_with_key()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20201111130435.432982-1-f.suligoi@asem.it> <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
+ <93941f3b0142473399bfdd18608a4056@asem.it>
+In-Reply-To: <93941f3b0142473399bfdd18608a4056@asem.it>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 Nov 2020 16:57:53 +0200
+Message-ID: <CAHp75Vdhd2Swu5qiYszgBG4pfB8LG=jxgi=YMHNviogWQR_oJw@mail.gmail.com>
+Subject: Re: [PATCH v1] Documentation: ACPI: explain how to use gpio-line-names
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 10:39 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, Nov 11, 2020 at 4:53 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+...
+
+> > Since it's rest, I would expect gpio-line-names in above paragraphs to
+> > be a term, something like
+> > ``gpio-line-names`` (double back quotes on each side). Yes, I know
+> > that there are other places which need to be amended, but I believe
+> > it's out of scope of this patch.
 >
-> If all we want to manage is a single pointer, there's no need to
-> manually allocate and add a new devres. We can simply use
-> devm_add_action_or_reset() and shrink the code by a good bit.
+> Ok, I'll use the backquotes for code samples, right!
+> If you want, when this patch will be concluded, I can check all the ACPI
+> documentation to put all code samples into backquotes.
+
+I'm not sure I understand what you meant under 'code samples'. The
+code excerpts like below are fine, what I'm talking about is the
+reference to properties in the text.
+
+...
+
+> > ``""`` but better to check the resulting (rendered) file. You may use
+> > rst2pdf script for that.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> OK for the``""``.
+> I check the rendered HTML using the usual "make htmldocs". Is it enough?
 
-Sweet!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Ideally it's not enough. html, pdf and man all should be checked.
 
-I suppose I will get this with a pull request.
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
