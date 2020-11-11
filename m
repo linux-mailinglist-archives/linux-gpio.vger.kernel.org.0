@@ -2,201 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2312A2AFB32
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B0952AFB3E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:20:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgKKWQ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 17:16:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgKKWQ2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 17:16:28 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9532C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:16:28 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id m13so2387178pgl.7
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:16:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=d6+I63FDwsG1UytSxO+bWQK8H3b/fGEm8g072lVn/fI=;
-        b=MfvzkMa3MnIWHzrJMKDBz8W7NN53uQh1xhVd2kjZ6xEWk0qyP5fIwJMFyFLubVvyRM
-         Tqp1OPqiX4RL9lgDNDnozVlXGrzpalYBgQJnh1kxIBI/vO/jf1B2rxQwE7fZmR6tRJNm
-         IS1jOUjDRtkrm9sc0jIGWqSJudA5fVOP/u4AvM0gexFws/aX8YL8IEtNYayyBhKzZV2f
-         p3Px1EMFWZ0UvSzK0GUd+2T6yXzTRIYha4znXZwcSyxnmemkV0AVS9Y5fSDv5wJm+QAw
-         wlFr8mG695TvJgzRF60tyBdHmK6ZswmldWc6eRRlnkubRwg8xlA9RwwUuN8jxEmQkSDE
-         d1sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=d6+I63FDwsG1UytSxO+bWQK8H3b/fGEm8g072lVn/fI=;
-        b=JAl9GNCTo56pDpXS8zgtB/8oca5UDALRT61onSJZDJdv1v9tlieTEYW4QKQVjcaOjx
-         8N0zZ4D91IZE9Wb1GOBdemr60Zjn2Ku/wxqDTzChfOa0+Cdp4uCKXEMlcbenioPpR+2h
-         ptag1cOzS0SVgvvulOBDNEjwCiwnYOPGEst9Daep43jcJiL7wEfeShFcOCXgD2YgP4NF
-         2cMyNZBnVcWBn5vb8HAD0u4GHqSMYcN0r0owWGP/2U+q8lnl6i5nFud7oJsB5lDll4RN
-         QZFvBsfGtKUaO2Y6htgz4JwONBTeJSAWZiadJifpKFQ7St1rSdEKZfLFIu0PZafhBdnb
-         GzKQ==
-X-Gm-Message-State: AOAM530T3qpV2DxIwmhz/aUTntnAX3Yd91QrE0wjM3FxWJh6BZnkNJpl
-        SSq9YC4YQpXfzfg1f6qjXdRGT0a4s63HZA==
-X-Google-Smtp-Source: ABdhPJyYlSF6CncIoZKPLe6CnNH90jb+F8BTHLw+5uKKe8qVPbu7+CPhSUaYi/2momZLtJ2/eu3LYQ==
-X-Received: by 2002:a63:f54e:: with SMTP id e14mr23069150pgk.195.1605132987864;
-        Wed, 11 Nov 2020 14:16:27 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id j11sm3740449pfe.80.2020.11.11.14.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 14:16:26 -0800 (PST)
-Message-ID: <5fac62ba.1c69fb81.26bb0.80f7@mx.google.com>
-Date:   Wed, 11 Nov 2020 14:16:26 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726671AbgKKWUZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 17:20:25 -0500
+Received: from mga17.intel.com ([192.55.52.151]:63860 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgKKWUZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 17:20:25 -0500
+IronPort-SDR: f6UOH5lQul12Stjb7f/je25vhz1mMbA9k5vdJtWsEP/CiuVYm03weDOH/VfssMjsEk2lSOsl1u
+ BJdzF4KUTC2w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="150077415"
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="150077415"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:20:24 -0800
+IronPort-SDR: VhPwuFAKRNEeYUNBKYb7jlUxl5cghs+tjUGbW/oLx42bkT0N7MrBaasFHWOjl0dFIDft59NJGG
+ z79gIyia7LtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="354991153"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 11 Nov 2020 14:20:23 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 19532B1; Thu, 12 Nov 2020 00:20:21 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jamie McClymont <jamie@kwiius.com>,
+        Coiby Xu <coiby.xu@gmail.com>,
+        Vasile-Laurentiu Stanimir 
+        <vasile-laurentiu.stanimir@windriver.com>
+Subject: [PATCH v7 00/18] gpiolib: acpi: pin configuration fixes
+Date:   Thu, 12 Nov 2020 00:19:50 +0200
+Message-Id: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: fixes
-X-Kernelci-Kernel: v5.10-rc1-14-gb72de3ff19fd
-Subject: linusw/fixes build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc1-14-gb72de3ff19fd)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc1-14=
--gb72de3ff19fd)
+There are fixes (and plenty cleanups) that allow to take into consideration
+more parameters in ACPI, i.e. bias for GpioInt() and debounce timeout
+for Operation Regions, Events and GpioInt() resources.
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.10-rc1-14-gb72de3ff19fd/
+During review Hans noted, that gpiod_set_debounce() returns -ENOTSUPP for
+the cases when feature is not supported either by driver or a controller.
 
-Tree: linusw
-Branch: fixes
-Git Describe: v5.10-rc1-14-gb72de3ff19fd
-Git Commit: b72de3ff19fdc4bbe4d4bb3f4483c7e46e00bac3
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+It appears that we have slightly messy API here:
 
-Warnings Detected:
+  FUNC			Relation with ENOTSUPP
 
-arc:
+  gpiod_set_config()	 returns if not supported
+  gpiod_set_debounce()	 as gpiod_set_config() above
+  gpio_set_debounce()	 legacy wrapper on top of gpiod_set_debounce()
+  gpiod_set_transitory() skips it (returns okay) with debug message
+  gpio_set_config()	 returns if not supported
+  gpio_set_bias()	 skips it (returns okay)
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+Last two functions are internal to GPIO library, while the rest is
+exported API. In order to be consistent with both naming schemas
+the series introduces gpio_set_debounce_timeout() that considers
+the feature optional. New API is only for internal use.
 
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
+While at it, the few first patches clean up the current GPIO library
+code to unify it to some extend.
 
-i386:
+The above is followed by changes made in ACPI GPIO library part.
 
-mips:
+The bias patch highly depends on Intel pin control driver changes
+(they are material for v5.10 [1]), due to this and amount of the
+prerequisite changes this series is probably not supposed to be
+backported (at least right now).
 
-riscv:
+The last patch adds Intel GPIO tree as official one for ACPI GPIO
+changes.
 
-x86_64:
+Assuming [1] makes v5.10 this series can be sent as PR to Linus
+for v5.11 cycle.
 
+Note, some patches are also depend to the code from GPIO fixes / for-next
+repositories. Unfortunately there is no one repository which contains all
+up to date for-next changes against GPIO subsystem. That's why I have merged
+Linus' for-next followed by Bart's for-next branches as prerequisites
+to the series.
 
-Warnings summary:
+Cc: Jamie McClymont <jamie@kwiius.com>
+Cc: Coiby Xu <coiby.xu@gmail.com>
+Cc: Vasile-Laurentiu Stanimir <vasile-laurentiu.stanimir@windriver.com>
 
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
-SPI bus
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
-or SPI bus
+[1]: https://lore.kernel.org/linux-gpio/20201106181938.GA41213@black.fi.intel.com/
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+Changelog v7:
+- sent correct set of patches
 
-Detailed per-defconfig build reports:
+Changelog v6:
+- added tags (Hans, Mika, Linus)
+- dropped temporary variables in couple of patches (Mika)
+- dropped "Add temporary variable to gpiod_set_transitory()..." (Mika)
+- added patch to move assignments outside a lock (Mika)
+- added patch from Vasile
+- due to above rebased accordingly the affected ones
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
+Changelog v5:
+- introduced gpio_set_debounce_timeout()
+- made a prerequisite refactoring in GPIO library code
+- updated the rest accordingly
 
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
+Changelog v4:
+- extended debounce setting to ACPI events and Operation Regions
+- added Ack (Linus)
+- added few more cleanup patches, including MAINTAINERS update
 
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
+Changelog v3:
+- dropped upstreamed OF patch
+- added debounce fix
 
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
+Andy Shevchenko (17):
+  gpiolib: Replace unsigned by unsigned int
+  gpiolib: add missed break statement
+  gpiolib: use proper API to pack pin configuration parameters
+  gpiolib: Extract gpio_set_config_with_argument() for future use
+  gpiolib: move bias related code from gpio_set_config() to
+    gpio_set_bias()
+  gpiolib: Extract gpio_set_config_with_argument_optional() helper
+  gpiolib: Introduce gpio_set_debounce_timeout() for internal use
+  gpiolib: acpi: Respect bias settings for GpioInt() resource
+  gpiolib: acpi: Use named item for enum gpiod_flags variable
+  gpiolib: acpi: Take into account debounce settings
+  gpiolib: acpi: Move non-critical code outside of critical section
+  gpiolib: acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
+  gpiolib: acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
+  gpiolib: acpi: Extract acpi_request_own_gpiod() helper
+  gpiolib: acpi: Convert pin_index to be u16
+  gpiolib: acpi: Use BIT() macro to increase readability
+  gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work
 
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
+Vasile-Laurentiu Stanimir (1):
+  gpiolib: acpi: Set initial value for output pin based on bias and
+    polarity
 
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
+ MAINTAINERS                   |   1 +
+ drivers/gpio/gpiolib-acpi.c   | 138 +++++++++++++++++++++-------------
+ drivers/gpio/gpiolib-acpi.h   |   2 +
+ drivers/gpio/gpiolib.c        |  98 ++++++++++++++----------
+ drivers/gpio/gpiolib.h        |   1 +
+ include/linux/gpio/consumer.h |   4 +-
+ 6 files changed, 147 insertions(+), 97 deletions(-)
 
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
+-- 
+2.28.0
 
-Warnings:
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
-I bus
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
-us
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
