@@ -2,73 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EEF12AEFB5
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 12:34:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E6A52AEFCC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 12:39:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgKKLet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 06:34:49 -0500
-Received: from mga11.intel.com ([192.55.52.93]:3693 "EHLO mga11.intel.com"
+        id S1725933AbgKKLjj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 06:39:39 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54484 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgKKLen (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 06:34:43 -0500
-IronPort-SDR: mzuhsxlPeDK1gilIGMa50Hp7ll471t0+JXm2y0PJ3zG/iKAcKMPeErJuLLjDTuOwmIZU3+sZIR
- CtBdSE+k2tlw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="166622823"
+        id S1726240AbgKKLjY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 06:39:24 -0500
+IronPort-SDR: AC/iGqreUAxXSVM8JKq648K2jvbW6QtUsXVaCwQvoiFF11Os651wkTuhywv+LGvm8qlIKPIA1n
+ qAhwndVZfuXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="231756922"
 X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="166622823"
+   d="scan'208";a="231756922"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 03:34:35 -0800
-IronPort-SDR: VpMthXpH50YP+maPjsdaeo4OqlBzTbofruPomQHMLK00esJCxe4yZd9hZB3OTcXqOvNkVl5kP0
- FjU0qV0+kPlA==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 03:39:16 -0800
+IronPort-SDR: Px8v2eIjZESv93Xk7q0gaZFPFK2pPUeYbdNGz7+zEaojoJcQrOk/sj7NuNLqkrjeMCrKakyz+a
+ KB6d4lTAPjVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="339044942"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 11 Nov 2020 03:34:34 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2F2D2A7; Wed, 11 Nov 2020 13:34:33 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] pinctrl: lynxpoint: Enable pin configuration setting for GPIO chip
-Date:   Wed, 11 Nov 2020 13:34:32 +0200
-Message-Id: <20201111113432.35641-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201111113432.35641-1-andriy.shevchenko@linux.intel.com>
-References: <20201111113432.35641-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="366218195"
+Received: from lkp-server02.sh.intel.com (HELO 5b2c7e53fe46) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 11 Nov 2020 03:39:15 -0800
+Received: from kbuild by 5b2c7e53fe46 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kcoT4-00008g-IN; Wed, 11 Nov 2020 11:39:14 +0000
+Date:   Wed, 11 Nov 2020 19:38:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:for-next] BUILD SUCCESS
+ 4c15bd0cae70169f69840930ccaef7243db158c9
+Message-ID: <5fabcd3c.9NnuTltK4VMgsfSJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It appears that pin configuration for GPIO chip hasn't been enabled yet
-due to absence of ->set_config() callback.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: 4c15bd0cae70169f69840930ccaef7243db158c9  Merge branch 'devel' into for-next
 
-Enable it here for Intel Lynxpoint PCH.
+elapsed time: 778m
 
-Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+configs tested: 114
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+nios2                            alldefconfig
+powerpc                      pcm030_defconfig
+powerpc                    amigaone_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                      ppc64e_defconfig
+arm                      pxa255-idp_defconfig
+powerpc64                           defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                 mpc85xx_cds_defconfig
+arm                           efm32_defconfig
+arm                          iop32x_defconfig
+arm                        cerfcube_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                               defconfig
+arm                         at91_dt_defconfig
+mips                  decstation_64_defconfig
+um                            kunit_defconfig
+sh                         apsh4a3a_defconfig
+arm                       netwinder_defconfig
+arm                         mv78xx0_defconfig
+sh                            migor_defconfig
+powerpc                   bluestone_defconfig
+sh                         ap325rxa_defconfig
+s390                             allyesconfig
+powerpc                      bamboo_defconfig
+sh                            shmin_defconfig
+powerpc                     tqm8540_defconfig
+mips                        maltaup_defconfig
+arm                        magician_defconfig
+mips                 decstation_r4k_defconfig
+arm                            zeus_defconfig
+mips                     cu1830-neo_defconfig
+arm                           stm32_defconfig
+m68k                         amcore_defconfig
+powerpc                     taishan_defconfig
+c6x                              alldefconfig
+m68k                            q40_defconfig
+arc                      axs103_smp_defconfig
+parisc                              defconfig
+x86_64                           alldefconfig
+arm                   milbeaut_m10v_defconfig
+arm                         nhk8815_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201111
+i386                 randconfig-a005-20201111
+i386                 randconfig-a002-20201111
+i386                 randconfig-a001-20201111
+i386                 randconfig-a003-20201111
+i386                 randconfig-a004-20201111
+x86_64               randconfig-a015-20201111
+x86_64               randconfig-a011-20201111
+x86_64               randconfig-a014-20201111
+x86_64               randconfig-a013-20201111
+x86_64               randconfig-a016-20201111
+x86_64               randconfig-a012-20201111
+i386                 randconfig-a012-20201111
+i386                 randconfig-a014-20201111
+i386                 randconfig-a016-20201111
+i386                 randconfig-a011-20201111
+i386                 randconfig-a015-20201111
+i386                 randconfig-a013-20201111
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a003-20201111
+x86_64               randconfig-a005-20201111
+x86_64               randconfig-a004-20201111
+x86_64               randconfig-a002-20201111
+x86_64               randconfig-a006-20201111
+x86_64               randconfig-a001-20201111
+
 ---
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index 2e9670fc479a..0a48ca46ab59 100644
---- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-+++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -874,6 +874,7 @@ static int lp_gpio_probe(struct platform_device *pdev)
- 	gc->direction_output = lp_gpio_direction_output;
- 	gc->get = lp_gpio_get;
- 	gc->set = lp_gpio_set;
-+	gc->set_config = gpiochip_generic_config;
- 	gc->get_direction = lp_gpio_get_direction;
- 	gc->base = -1;
- 	gc->ngpio = LP_NUM_GPIO;
--- 
-2.28.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
