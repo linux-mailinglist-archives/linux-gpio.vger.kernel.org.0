@@ -2,185 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 169BE2AF2C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 14:59:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFFA52AF31C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:09:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbgKKN71 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 08:59:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
+        id S1726851AbgKKOJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 09:09:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgKKN6u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 08:58:50 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5A8C0613D1;
-        Wed, 11 Nov 2020 05:58:50 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id q5so1656192pfk.6;
-        Wed, 11 Nov 2020 05:58:50 -0800 (PST)
+        with ESMTP id S1726898AbgKKOIg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:08:36 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF9AC0613D1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:08:36 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id q19so2207899ljc.10
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:08:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qX2IknY34AVLLsHKeEvJf13PSvdzJ2CHpJHjlbr+QWs=;
-        b=DHcXpGaP1Bhzy1k2x0jQBqu7WZ7PgcGJh1laWS28dfzZ4qUwBw2VDcUAjkhrRS/7Yg
-         kka5FFAw6g8OwGQ7eEzt4SV/lrk6w84Dqw21JDebOJ6ABzIZSt0V2kt8vWa6Yl4tPnrD
-         cvp9sb95LU6olmxJ3Gu1oad3z0nh4u6XpnERWrehlKFGYREqQr/jvNzb2o397wY9R8dO
-         FrhJ2oSLsQdRyQ+saY0TDBH/PCofMYfL47gTbJ2rPzahNLULTh+FE07Xf21c3qktKgF+
-         73W1RBcm72nASy9BumLe9MV3Uo7kvK3nwm9cK6Ey9QIjb0UEeYqt2tkf9KoQZG3uu4vL
-         SYpg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sl17UnNN1853pv8Fm2YJwHvBxDhtc6bmkJMszso6wJw=;
+        b=lWCk5qxlFFQNf1X4wZDbIoSNQ3OiEi8AuwEDxdVDpD/FZYdWPgEs4hRKyE5ukfSPrE
+         26Yy+SvJwmncWe4l0jv9MZL2TXygHdnV88DClbSbAUqnTkWlLKLRCuou0nzhv8eQX/Yf
+         ytT82aZuzfvEGFobCoyI/yDnDzjZITTWeZmH4eQrJfpy64UTO8ROsHIuL29u8cx1omSk
+         hZUTPl3KE7+q+tx7Hyft5vhSYgbY9MOPNpEqOb184/eN49bJqDQpX2qovNb/qUnDu4a1
+         ke4D0UiHdXpiVLTGtQlTYLWDkVGTrmsgPr+MYVpimrJPzHX3dOLCA/M1YhdlpT6oXJsr
+         uzAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qX2IknY34AVLLsHKeEvJf13PSvdzJ2CHpJHjlbr+QWs=;
-        b=s4sLjA9+0KA8bo+0a5ts2WqFuLLk7fx9FWxVxsL7/L/rhVef/Lxb2JegpVI+D4LtqC
-         4XuxBYGs/O4D5FRur4UOYRfDTZq9SY+bkt0fvDJOTIW6oWOLOvMUBVmzIS6zgpnLdU3l
-         LpQ7sDHa8MYlkMHv4mCP8IUbIhUFDBJqX+yh6Bx+1TsIhEw9UXp+6D8obtpiU10SelIj
-         Z0yhYaitXAIXZJGokjF/Q6t8ktee9ar14mafZG4VEMgnszf/xdr01AT0f0cEsDNxrFwf
-         T1G2GMegrFZR0AVK1x07KMOpl0UuLRg4f5F1+9blBjFUlJyM77Z2GCNMctsMxSLALzla
-         L+xA==
-X-Gm-Message-State: AOAM532T3OevRK82/eJynqCUsLbIYKDUYYusycJZclJw6lCa3TO6PGi3
-        /qSe0nAG2udXlbgFs7ijUOgpJzztnndeCOaJqphGLRN9Hfo=
-X-Google-Smtp-Source: ABdhPJz5ScUzutVG3Yc6hFE+som1BIyVyqo/NnVgIKRNwsYUcaN7O04JLogjpy9P/0a2RrS/HKq6ftC5P8kENZpR7CM=
-X-Received: by 2002:a63:4d64:: with SMTP id n36mr13334019pgl.203.1605103130049;
- Wed, 11 Nov 2020 05:58:50 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sl17UnNN1853pv8Fm2YJwHvBxDhtc6bmkJMszso6wJw=;
+        b=KEepOjN/uslpsuwkf0Pq9+r56wEuQrWlGtbYsmpzZxl3gLXIRPREijZ6/BRZNumRFm
+         eS8PbhhKizEkoa12Ftfcss4DnIPuR00Kpw5s9B4oES737SbERCjXFovT8MK+iLyFHMvE
+         /hGZn5bU8yJzjZQQ+hBMxDPntNg4B+qHVZISpQvUHnZgLRi1DbXRu1BLaX0B4VgEjcO2
+         cS9Iz4F30q1iEnK+/ZBtDJSBQUfkLc41xvwhBFN/MWFe5Av0hir+Fo1n/ubSUTQAlc63
+         ARMsU6rqnziZilf7A1mqYGjo0Z47Zk6B7Zc6fgJcdCXlxT7NWWJEP9ERwOkITgUFBspk
+         mCEQ==
+X-Gm-Message-State: AOAM530lpDPTBRTE7xlSzF/MViEf7OPdsapowoQyg1HtqgYio1yRgERy
+        rqn4D2gBXtYDlHsNG/ekMZyPV9XwRR8yvCZs
+X-Google-Smtp-Source: ABdhPJyAs/q8Le7LKnDYllritZSni6VfKOCDnj9B2EL0oOnPFEJzW5PGDYFeQ23zK8ZkAz4cX6MROw==
+X-Received: by 2002:a2e:8753:: with SMTP id q19mr2262360ljj.188.1605103714503;
+        Wed, 11 Nov 2020 06:08:34 -0800 (PST)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id w10sm245437ljo.130.2020.11.11.06.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2020 06:08:33 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yash Shah <yash.shah@sifive.com>,
+        "Wesley W . Terpstra" <wesley@sifive.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 1/2] RFT: gpio: sifive: Set affinity callback to parent
+Date:   Wed, 11 Nov 2020 15:06:27 +0100
+Message-Id: <20201111140628.24067-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20201111130435.432982-1-f.suligoi@asem.it>
-In-Reply-To: <20201111130435.432982-1-f.suligoi@asem.it>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Nov 2020 15:59:38 +0200
-Message-ID: <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
-Subject: Re: [PATCH v1] Documentation: ACPI: explain how to use gpio-line-names
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 3:07 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->
-> The "gpio-line-names" declaration is not fully
-> documented, so can be useful to add some important
-> information and one more example.
->
-> This commit also fix a trivial syntax error.
+This assigns the .irq_set_affinity to the parent callback.
+I assume the sifive GPIO can be used in systems with
+SMP.
 
-fix -> fixes
-syntax error -> spelling mistake
+I used the pattern making the hirerarchy tolerant for missing
+parent as in Marc's earlier patches.
 
-Taking into account this done from the experience, it's a very good job, thanks!
+Cc: Yash Shah <yash.shah@sifive.com>
+Cc: Wesley W. Terpstra <wesley@sifive.com>
+Suggested-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-sifive.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Also nit-picks below.
-
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  .../firmware-guide/acpi/gpio-properties.rst   | 58 ++++++++++++++++++-
->  1 file changed, 56 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> index bb6d74f23ee0..a9f4dfa932cc 100644
-> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> @@ -107,7 +107,61 @@ Example::
->
->  - gpio-line-names
->
-> -Example::
-> +The "gpio-line-names" declaration is a list of strings ("names"), which
-> +describes each line/pin of a GPIO controller/expander.
-> +This list, contained in a package, must be inserted inside the GPIO controller
-> +declaration of an ACPI table (typically inside the DSDT).
-> +The gpio-line-names list must respect the following rules (see also the
-> +examples):
-
-Since it's rest, I would expect gpio-line-names in above paragraphs to
-be a term, something like
-``gpio-line-names`` (double back quotes on each side). Yes, I know
-that there are other places which need to be amended, but I believe
-it's out of scope of this patch.
-
-Also no need to have each sentence to be started from a new line, it
-will be rendered as it has one white space in between.
-
-> +  - the first name in the list corresponds with the first line/pin of the GPIO
-> +    controller/expander
-> +  - the names inside the list must be consecutive (no "holes" are permitted)
-> +  - the list can be incomplete and can end before the last GPIO line: in
-> +    other words, it is not mandatory to fill all the GPIO lines
-> +  - empty names are allowed (two quotation marks "" correspond to an empty name)
-
-``""`` but better to check the resulting (rendered) file. You may use
-rst2pdf script for that.
-
-> +Example of a GPIO controller of 16 lines, with an incomplete list with two
-> +empty names::
-> +
-> +  Package () {
-> +      "gpio-line-names",
-> +      Package () {
-> +          "pin_0",
-> +          "pin_1",
-> +          "",
-> +          "",
-> +          "pin_3",
-> +          "pin_4_push_button"
-
-+ comma at the end here as well.
-
-> +      }
-> +  }
-> +
-> +At runtime, the above declaration produces the following result (using the
-> +"libgpiod" tools)::
-> +
-> +  root@debian:~# gpioinfo gpiochip4
-> +  gpiochip4 - 16 lines:
-> +          line   0:      "pin_0"       unused   input  active-high
-> +          line   1:      "pin_1"       unused   input  active-high
-> +          line   2:      unnamed       unused   input  active-high
-> +          line   3:      unnamed       unused   input  active-high
-> +          line   4:      "pin_3"       unused   input  active-high
-> +          line   5: "pin_4_push_button" unused input active-high
-> +          line   6:      unnamed       unused   input  active-high
-> +          line   7       unnamed       unused   input  active-high
-> +          line   8:      unnamed       unused   input  active-high
-> +          line   9:      unnamed       unused   input  active-high
-> +          line  10:      unnamed       unused   input  active-high
-> +          line  11:      unnamed       unused   input  active-high
-> +          line  12:      unnamed       unused   input  active-high
-> +          line  13:      unnamed       unused   input  active-high
-> +          line  14:      unnamed       unused   input  active-high
-> +          line  15:      unnamed       unused   input  active-high
-> +  root@debian:~# gpiofind pin_4_push_button
-> +  gpiochip4 5
-> +  root@debian:~#
-> +
-> +Another example::
->
->    Package () {
->        "gpio-line-names",
-> @@ -191,7 +245,7 @@ The driver might expect to get the right GPIO when it does::
->  but since there is no way to know the mapping between "reset" and
->  the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
->
-> -The driver author can solve this by passing the mapping explictly
-> +The driver author can solve this by passing the mapping explicitly
->  (the recommended way and documented in the above chapter).
->
->  The ACPI GPIO mapping tables should not contaminate drivers that are not
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index c54dd08f2cbf..e4c190562132 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -128,6 +128,16 @@ static void sifive_gpio_irq_eoi(struct irq_data *d)
+ 	irq_chip_eoi_parent(d);
+ }
+ 
++static int sifive_gpio_irq_set_affinity(struct irq_data *data,
++					const struct cpumask *dest,
++					bool force)
++{
++	if (data->parent_data)
++		return irq_chip_set_affinity_parent(data, dest, force);
++
++	return 0;
++}
++
+ static struct irq_chip sifive_gpio_irqchip = {
+ 	.name		= "sifive-gpio",
+ 	.irq_set_type	= sifive_gpio_irq_set_type,
+@@ -136,6 +146,7 @@ static struct irq_chip sifive_gpio_irqchip = {
+ 	.irq_enable	= sifive_gpio_irq_enable,
+ 	.irq_disable	= sifive_gpio_irq_disable,
+ 	.irq_eoi	= sifive_gpio_irq_eoi,
++	.irq_set_affinity = sifive_gpio_irq_set_affinity,
+ };
+ 
+ static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
+
