@@ -2,201 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 638952AFD10
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 02:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C5E2AFD13
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 02:50:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgKLBcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 20:32:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgKKXZB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 18:25:01 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8AEC061A48
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 15:24:17 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id b3so1767074pls.11
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 15:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=nkwoNxjYR+y9+yMDwT3txn+EnMLw/SiDNzswHf0/edU=;
-        b=MD36DDEZiQ2ayPe91k4siS6/Onkc9vDVMkTxuAzV/+10wiDG0MWX9QgUeXS0yZrGCw
-         MjGYOGs6HxFXiAtFvjG8sW3gHEFOWxLoaIKHRdQ2wJox16xi0kw452HmQ3yfAVr4kL9S
-         oBcbm82bghQxwye0ZxFAzuXQYrho1dYI3Gq76dH2EPeJiqF5GOHKHK7+hSp/Td22SC0J
-         iZoLEGZd6y0hf5A4uP4MAh5yWY8z4PLjTKyrYvSjE8mMpvBkLIk3TmTCYRzCwN1ghNPY
-         Jy87IO2gP6DRjR7yzCqY63Jvtjk+3PstOT6IuX+39qxixqCLFbZ/jefi0YCjp6Szw9t4
-         nr2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=nkwoNxjYR+y9+yMDwT3txn+EnMLw/SiDNzswHf0/edU=;
-        b=kPt1yHxbowbBSizgK+AfWCFmBhWOKRJL42i0IOWz6Vy/PqAqJ9VIQSr2S3eABx6Rh/
-         prLY1316tPo7/ENE0eIbuaiQ8LyFmLtMAIQ4fUoJ/+2b1uA031geLFh7cxatlStHOjZX
-         FtAeSpe2DtLW53KWz53oewgotSzKX8/dlDvdvD/36ELNEduLqIyB4LVKsC9dz9lJIutq
-         eg+M/UY4fjGffSb5zOKMx30wrWvKT1yT5BCYPON+n2kzqGtsk2a0wmGkJqYiw/VxP7f4
-         m0K0g5AVrI2j02F8C20h8TIdhR/ibKRYp4ha3EnBZjNE5knSVhTTHqkWaj5NSPS5ykGV
-         D8ow==
-X-Gm-Message-State: AOAM531Rve13FPqVLerXhKRtUH4GlLyDf1W2flqR7BmiknB/zFDq+iRB
-        U9KN/dJCBINSDlvW4DFJmi8dLq1bM3OnBQ==
-X-Google-Smtp-Source: ABdhPJzXVBZiqXpMdzhKbSb69+FU7Fn9y0BfE67lI7SDTkHRWsb/FExDHBh8Xn7KFQnATKazdGyh2Q==
-X-Received: by 2002:a17:902:988d:b029:d6:edaa:b0c0 with SMTP id s13-20020a170902988db02900d6edaab0c0mr23758840plp.15.1605137056858;
-        Wed, 11 Nov 2020 15:24:16 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id y24sm3863463pfn.176.2020.11.11.15.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 15:24:15 -0800 (PST)
-Message-ID: <5fac729f.1c69fb81.e277.84d2@mx.google.com>
-Date:   Wed, 11 Nov 2020 15:24:15 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1728138AbgKLBcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 20:32:18 -0500
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:44514 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727926AbgKKXb3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 18:31:29 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 0ABNVF1W012197; Thu, 12 Nov 2020 08:31:15 +0900
+X-Iguazu-Qid: 2wHHjV7mwWTUzZyVaS
+X-Iguazu-QSIG: v=2; s=0; t=1605137475; q=2wHHjV7mwWTUzZyVaS; m=qdzL3FmPwUzOTh+X5YYacVrNgBQ6c7qXFMJeFaTqLYw=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1113) id 0ABNVE05007658;
+        Thu, 12 Nov 2020 08:31:14 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 0ABNVEn7028254;
+        Thu, 12 Nov 2020 08:31:14 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 0ABNVD0K032349;
+        Thu, 12 Nov 2020 08:31:13 +0900
+Date:   Thu, 12 Nov 2020 08:31:12 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        punit1.agrawal@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
+        yuji2.ishikawa@toshiba.co.jp
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: Add bindings for Toshiba Visconti
+ GPIO Controller
+X-TSB-HOP: ON
+Message-ID: <20201111233112.GA803632@toshiba.co.jp>
+References: <20201111172553.1369282-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20201111172553.1369282-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20201111191838.GA1860931@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-X-Kernelci-Kernel: v5.10-rc1-20-g27b5ea2fcb90
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc1-20-g27b5ea2fcb90)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111191838.GA1860931@bogus>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc1=
--20-g27b5ea2fcb90)
+Hi,
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc1-20-g27b5ea2fcb90/
+On Wed, Nov 11, 2020 at 01:18:38PM -0600, Rob Herring wrote:
+> On Thu, 12 Nov 2020 02:25:50 +0900, Nobuhiro Iwamatsu wrote:
+> > Add bindings for the Toshiba Visconti GPIO Controller.
+> > 
+> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > ---
+> >  .../bindings/gpio/toshiba,gpio-visconti.yaml  | 85 +++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> > 
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml: properties:gpio-ranges: 'truei' is not of type 'object', 'boolean'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml: ignoring, error in schema: properties: gpio-ranges
+> warning: no schema found in file: ./Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> 
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc1-20-g27b5ea2fcb90
-Git Commit: 27b5ea2fcb90d2dbc3be03e3a171bc28117eef14
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+Oh, this was typo...
+I will fix this, thanks.
 
-Warnings Detected:
+> 
+> See https://patchwork.ozlabs.org/patch/1398028
+> 
+> The base for the patch is generally the last rc1. Any dependencies
+> should be noted.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit.
+> 
 
-arc:
-
-arm64:
-    defconfig (gcc-8): 8 warnings
-
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
-
-i386:
-
-mips:
-
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
-SPI bus
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
-or SPI bus
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
-I bus
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
-us
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Best regards,
+  Nobuhiro
