@@ -2,91 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4DC72AF03D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 13:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A3B02AF067
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 13:18:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgKKMGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 07:06:12 -0500
-Received: from mga07.intel.com ([134.134.136.100]:45707 "EHLO mga07.intel.com"
+        id S1726541AbgKKMSA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 07:18:00 -0500
+Received: from mga17.intel.com ([192.55.52.151]:6097 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgKKMGM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 07:06:12 -0500
-IronPort-SDR: JmIBS0NtO0WwMqxFYzWTV/IOQMJHLjOZO8k7cTH15FOe6jAeTCaU6jiEa4QVq0pM+LKxR0b2Vi
- pvGegrIq2Aug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="234301703"
+        id S1726479AbgKKMQF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 07:16:05 -0500
+IronPort-SDR: if+ilNbfvERO7DguXrCdYqWD3FXFIIZEYXRld43cPevjgRsfLe7rAEjJpAmKotthxieCZOrRRu
+ m6Pd56CqeiXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="149984855"
 X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="234301703"
+   d="scan'208";a="149984855"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 04:06:08 -0800
-IronPort-SDR: iQ3StTC6gxNLiI2It0d6PNWE1/WUVbd46zetql/gxs/DwLrBtYweNx/sZhdsu/ph6jyjPgeyOa
- 0985jCUM+yeA==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 04:15:29 -0800
+IronPort-SDR: P0pxOyGYOJXKe5WjlCj0CoXCOjRax99APokYTyNSKuPFTrHrvLEVn0MYLxrN2Co+5fOKc4Am2B
+ nM6KIiM7rTug==
 X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="308802075"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Nov 2020 04:06:06 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D329AB1; Wed, 11 Nov 2020 14:06:05 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] pinctrl: merrifield: Set default bias in case no particular value given
-Date:   Wed, 11 Nov 2020 14:06:05 +0200
-Message-Id: <20201111120605.50881-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+   d="scan'208";a="541768713"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 04:15:27 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1kcp37-005u0W-C7; Wed, 11 Nov 2020 14:16:29 +0200
+Date:   Wed, 11 Nov 2020 14:16:29 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: intel: Fix Jasperlake hostown offset
+Message-ID: <20201111121629.GL4077@smile.fi.intel.com>
+References: <20201110144932.1.I54a30ec0a7eb1f1b791dc9d08d5e8416a1e8e1ef@changeid>
+ <CAHp75VcfmJ6-cqCsZ6BjbghGDt+w-AbxGxLoWG61VVF2Knor-Q@mail.gmail.com>
+ <CAE=gft4vdBytT2=tCbv2aE3RRoDut5CiHdBODjXJamGM5yB3Bw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE=gft4vdBytT2=tCbv2aE3RRoDut5CiHdBODjXJamGM5yB3Bw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When GPIO library asks pin control to set the bias, it doesn't pass
-any value of it and argument is considered boolean (and this is true
-for ACPI GpioIo() / GpioInt() resources, by the way). Thus, individual
-drivers must behave well, when they got the resistance value of 1 Ohm,
-i.e. transforming it to sane default.
+On Tue, Nov 10, 2020 at 04:03:57PM -0800, Evan Green wrote:
+> On Tue, Nov 10, 2020 at 3:48 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wednesday, November 11, 2020, Evan Green <evgreen@chromium.org> wrote:
+> >>
+> >> GPIOs that attempt to use interrupts get thwarted with a message like:
+> >> "pin 161 cannot be used as IRQ" (for instance with SD_CD). This is because
+> >> the JSL_HOSTSW_OWN offset is incorrect, so every GPIO looks like it's
+> >> owned by ACPI.
+> >
+> >
+> > Funny, I have created a similar patch few hours ago. Are you sure this is enough? In mine I have also padcfglock updated. But I have to confirm that, that’s why I didn’t send it out.
+> 
+> Oh weird! I didn't check padcfglock since it didn't happen to be
+> involved in the bug I was tracking down. I was trying to clean out
+> some skeletons in my kernel closet [1] and debugged it down to this.
+> 
+> If you want to smash the two patches together I'm fine with that. Let
+> me know, and CC me if you do post something.
 
-In case of Intel Merrifield pin control hardware the 20 kOhm sounds plausible
-because it gives a good trade off between weakness and minimization of leakage
-current (will be only 50 uA with the above choice).
+Can you test that 0x90 is correct value for padcfglock offset?
 
-Fixes: 4e80c8f50574 ("pinctrl: intel: Add Intel Merrifield pin controller support")
-Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-merrifield.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> [1] https://chromium.googlesource.com/chromiumos/overlays/board-overlays/+/master/overlay-dedede/sys-kernel/chromeos-kernel-5_4/files/0001-CHROMIUM-pinctrl-intel-Allow-pin-as-IRQ-even-in-ACPI.patch
 
-diff --git a/drivers/pinctrl/intel/pinctrl-merrifield.c b/drivers/pinctrl/intel/pinctrl-merrifield.c
-index e4ff8da1b894..3ae141e0b421 100644
---- a/drivers/pinctrl/intel/pinctrl-merrifield.c
-+++ b/drivers/pinctrl/intel/pinctrl-merrifield.c
-@@ -745,6 +745,10 @@ static int mrfld_config_set_pin(struct mrfld_pinctrl *mp, unsigned int pin,
- 		mask |= BUFCFG_Px_EN_MASK | BUFCFG_PUPD_VAL_MASK;
- 		bits |= BUFCFG_PU_EN;
- 
-+		/* Set default strength value in case none is given */
-+		if (arg == 1)
-+			arg = 20000;
-+
- 		switch (arg) {
- 		case 50000:
- 			bits |= BUFCFG_PUPD_VAL_50K << BUFCFG_PUPD_VAL_SHIFT;
-@@ -765,6 +769,10 @@ static int mrfld_config_set_pin(struct mrfld_pinctrl *mp, unsigned int pin,
- 		mask |= BUFCFG_Px_EN_MASK | BUFCFG_PUPD_VAL_MASK;
- 		bits |= BUFCFG_PD_EN;
- 
-+		/* Set default strength value in case none is given */
-+		if (arg == 1)
-+			arg = 20000;
-+
- 		switch (arg) {
- 		case 50000:
- 			bits |= BUFCFG_PUPD_VAL_50K << BUFCFG_PUPD_VAL_SHIFT;
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
