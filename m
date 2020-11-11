@@ -2,119 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3245A2AF537
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 16:41:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A802AF538
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 16:41:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgKKPl2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 10:41:28 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27857 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgKKPl2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 10:41:28 -0500
-IronPort-SDR: bFtomjY0OLeJkdah8FrPxEjOyNFuajTYl7H+Jt/lX07e+q/nAaVEKB3v9J9mVQOx24XeleWo77
- wiVfVRIf1tSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="157178124"
-X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="157178124"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 07:41:26 -0800
-IronPort-SDR: lDWUl4EG2pX3oane6hj1VumsQjJfRM9ktavn2JzPeD9RTFNC7L9wkhpuB05ytUir4QfJViuqEp
- 85Bp001Ts9NA==
-X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
-   d="scan'208";a="473894704"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 07:41:24 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 11 Nov 2020 17:41:21 +0200
-Date:   Wed, 11 Nov 2020 17:41:21 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+        id S1727046AbgKKPlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 10:41:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbgKKPly (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 10:41:54 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBAFC0613D1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 07:41:52 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id b23so937242pju.5
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 07:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wj13sIwRA1pufHl932qLY7J4VdwChA/eB1gNL5+Yblo=;
+        b=dYgFch4JT47f5zah0T9f5AcL23HWpB3frAsZ2rAZ9jaYbKtqCNALwDb9P1SI5+7fQa
+         hfHM7PwZgc0vov0tUANH5YTnKeXhdeAbWGJku8UcdrwsdzF3skFTfvZAC3zNdAlydJZr
+         bgYWxPaMHsLilKLw1cEi7UrBqkILmcwNba+cQCbzNBP1Sdt8XpHMya67uU5QKPnVg9ez
+         c/W4KZsuLFPpRr1tpzoTetpDdMiwbA4ry1KPI9cSzRADJ0bjqhQ+WA6UGMH3uftGnXTk
+         s03eue5XXDiEWL1eI8OSVF9HvfrvjUEu6Ddnvq0zIYJZluw88Ieh0M9RNJheZ7yMFk4R
+         ZJEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wj13sIwRA1pufHl932qLY7J4VdwChA/eB1gNL5+Yblo=;
+        b=iBp3Y0JBOicZkQcAKnrc2HSnlPlj2Lh5baKwi4MOuzz3i5YZnZEdNM8x0RDEzCpZzx
+         3Nzu9a1Hh8MM6RAfVsOGo9g0KCW9ajLb+YxTQDMnOoPaQxtpNhA3q8h8lMu3yL8pQ0Wt
+         rcAROYc9PsCF9GiAT+KJdC0C52FvuvPiRtD2zCog87jKJs47vw6/fQgYFpGS9xt6xDQt
+         kSmdhjKxiMoLA75rOxeJOuVdt4qUQ+Rrtq5WBqRjjYQqY9jewpEDoeU5vPRQMUDM+dM0
+         w9mTXYOOWSnKtb9WI0G4W2vhosz7a/0Wlgp4hR2FJnIvX5Rv+Eb1wETPEHnAqdTg/kG3
+         ilUg==
+X-Gm-Message-State: AOAM530dmEfYKa3kGdsZjCJeS8b8H+1Y2lCAKrw6NyJnSM+PlyMeASB1
+        NCHLaSxWnRFkQHlycXFXwF5PJPx7oNRYz9b/gjY=
+X-Google-Smtp-Source: ABdhPJwZOSOoZwjwN9oygpcLCNiDKCQNKb9P7U/kuTMyEX5hav1mwHu694KVoEVeZBmJU9xpSTd/T6LLR+/uWFq/yv8=
+X-Received: by 2002:a17:90a:4816:: with SMTP id a22mr4564741pjh.228.1605109311880;
+ Wed, 11 Nov 2020 07:41:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com> <20201109205332.19592-8-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201109205332.19592-8-andriy.shevchenko@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 Nov 2020 17:42:40 +0200
+Message-ID: <CAHp75VfdRwXg6Ys=+XJe+GGOe+gqN2uvKsBPBzvwVCwKtSSGmA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/17] gpiolib: Extract gpio_set_config_with_argument_optional()
+ helper
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Coiby Xu <coiby.xu@gmail.com>
-Subject: Re: [PATCH v5 11/17] gpiolib: acpi: Take into account debounce
- settings
-Message-ID: <20201111154121.GF2495@lahna.fi.intel.com>
-References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
- <20201109205332.19592-12-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201109205332.19592-12-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 10:53:26PM +0200, Andy Shevchenko wrote:
-> We didn't take into account the debounce settings supplied by ACPI.
-> This change is targeting the mentioned gap.
-> 
-> Reported-by: Coiby Xu <coiby.xu@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/gpiolib-acpi.c | 18 ++++++++++++++++++
->  drivers/gpio/gpiolib-acpi.h |  2 ++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index c127b410a7a2..6cbad96be866 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -299,6 +299,10 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
->  		return AE_OK;
->  	}
->  
-> +	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
-> +	if (ret)
-> +		goto fail_free_desc;
-> +
->  	ret = gpiochip_lock_as_irq(chip, pin);
->  	if (ret) {
->  		dev_err(chip->parent,
-> @@ -664,6 +668,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
->  		lookup->desc = acpi_get_gpiod(agpio->resource_source.string_ptr,
->  					      agpio->pin_table[pin_index]);
->  		lookup->info.pin_config = agpio->pin_config;
-> +		lookup->info.debounce = agpio->debounce_timeout;
->  		lookup->info.gpioint = gpioint;
->  
->  		/*
-> @@ -961,6 +966,10 @@ int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
->  			if (ret < 0)
->  				return ret;
->  
-> +			ret = gpio_set_debounce_timeout(desc, info.debounce);
-> +			if (ret)
-> +				return ret;
-> +
->  			irq_flags = acpi_dev_get_irq_type(info.triggering,
->  							  info.polarity);
->  
-> @@ -1048,6 +1057,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
->  		if (!found) {
->  			enum gpiod_flags flags = acpi_gpio_to_gpiod_flags(agpio);
->  			const char *label = "ACPI:OpRegion";
-> +			int ret;
->  
->  			desc = gpiochip_request_own_desc(chip, pin, label,
->  							 GPIO_ACTIVE_HIGH,
-> @@ -1058,6 +1068,14 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
->  				goto out;
->  			}
->  
-> +			ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
-> +			if (ret) {
-> +				status = AE_ERROR;
-> +				gpiochip_free_own_desc(desc);
-> +				mutex_unlock(&achip->conn_lock);
+On Mon, Nov 9, 2020 at 10:55 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> This function is useful for internal use in GPIO library.
+> There will be new user coming, prepare a helper for the new comer
+> and the existing ones.
 
-Nit: I think you can set status outside of the critical section.
+Just to show how temporary variable is re-used here
 
-Otherwise looks good,
+>         enum pin_config_param mode = PIN_CONFIG_PERSIST_STATE;
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> +       return gpio_set_config_with_argument_optional(desc, mode, !transitory);
+
+Leaving constant in the parameter line will make it either long or ugly split.
+
+-- 
+With Best Regards,
+Andy Shevchenko
