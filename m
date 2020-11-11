@@ -2,92 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A6342AF360
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:19:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ABD92AF39F
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:32:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgKKOTo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 09:19:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
+        id S1726995AbgKKOcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 09:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgKKOTo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Nov 2020 09:19:44 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726338AbgKKOcR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 09:32:17 -0500
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F19262072C;
-        Wed, 11 Nov 2020 14:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DDD9207BB;
+        Wed, 11 Nov 2020 14:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605104383;
-        bh=h4WV9Lcvcmda9mj7Yvwdlkfda2VnKDl/S6Wue0cEbww=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J+gK39itAQr1hKBU/oBohrqJyBNJp+dhObEcEcGN5hENc74Sxjkwn4y83Xr0E0scq
-         ZTuNeetHzWbbExckVB+IBU6pDWScsGE04JhlgM3smFXNE3SWRfpGk4Tk3iyVhsVsA9
-         lISmyCUIictkOKQOZ3oofavfuSId0rVBpseD76iE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kcqyK-009mkO-WA; Wed, 11 Nov 2020 14:19:41 +0000
+        s=default; t=1605105136;
+        bh=muSLYibs0ZGONy3L3c3n/+gux1chNtnCxNxW3stscoY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hFrzd16CQbRJJPLAQQTpdLQo9C4aF3SuO8TVnJGuUByiW/sFMF7U+EjQcJUgQWl8q
+         jT9hFgWFtHhUE2CXdk2ELs2U4FsIWQ1qB7qnEyINQQ+BFMIXXvXLTNnvwtf33vgQl0
+         06CfiJvGvJuGCsWAn9fthW6u8Of7C0n1Dv8/H0FQ=
+Received: by mail-oi1-f176.google.com with SMTP id m17so2372584oie.4;
+        Wed, 11 Nov 2020 06:32:16 -0800 (PST)
+X-Gm-Message-State: AOAM531NAuFq9m1ALadD7tdYO2toDm9sZ5TC98+hOz8qDCVgE6TfDCZR
+        FxdyAXq8avsGWHFmn3OeHf74bRwnRnFVNxj5cA==
+X-Google-Smtp-Source: ABdhPJyBAmSgmXMjpq6AAOkmqmbZGZptg0qCA3HGPghqhOTq/+URiIjllWXA/wYIci1U+X2mffVzaZzIIAj2IJIQudY=
+X-Received: by 2002:aca:5dc2:: with SMTP id r185mr2316288oib.106.1605105135706;
+ Wed, 11 Nov 2020 06:32:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Nov 2020 14:19:40 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Daniel Palmer <daniel@0x0f.com>,
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-25-damien.lemoal@wdc.com>
+ <20201109153625.GB1330401@bogus> <04b266c7-bba9-d847-a526-f64f76c11a50@gmail.com>
+In-Reply-To: <04b266c7-bba9-d847-a526-f64f76c11a50@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 11 Nov 2020 08:32:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJy_6ALEKdk7ZOEaM58Xi6NLBYd_aYNeVr2CpyjSBVpmA@mail.gmail.com>
+Message-ID: <CAL_JsqJy_6ALEKdk7ZOEaM58Xi6NLBYd_aYNeVr2CpyjSBVpmA@mail.gmail.com>
+Subject: Re: [PATCH 24/32] dt-bindings: Document kendryte,k210-fpioa bindings
+To:     Sean Anderson <seanga2@gmail.com>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] gpio: msc313: MStar MSC313 GPIO driver
-In-Reply-To: <CACRpkdaTknFRSm4pcSf-v7Be8A_SnMMrhegu6W67gUjOJVLEBQ@mail.gmail.com>
-References: <20201019141008.871177-1-daniel@0x0f.com>
- <20201019141008.871177-4-daniel@0x0f.com>
- <CACRpkdZNr6sDqJhg3KcX0bCbcd8fh2gXFYbS1r2H2Sq+vGqjUw@mail.gmail.com>
- <3fd04aeb5047d8059ddecc1eda19c2e4@kernel.org>
- <CAFr9PX=vxCCQgCWe9FPb6Z=0=a48HwGOfM_uOG3SqGN9VSYQUA@mail.gmail.com>
- <71f3632bee262a18e1b7edb74980ae9a@kernel.org>
- <CACRpkdYr+yhyROQzaYfFrGwG74DuZiA=fMVOesgOKrDajhTodQ@mail.gmail.com>
- <bc0ab2f10bb72fe5b455ca12958f6444@kernel.org>
- <CACRpkdaTknFRSm4pcSf-v7Be8A_SnMMrhegu6W67gUjOJVLEBQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <40fec073b2423b698ef4d91c499c7c9f@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, daniel@0x0f.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-11-11 14:09, Linus Walleij wrote:
-> On Tue, Nov 10, 2020 at 3:19 PM Marc Zyngier <maz@kernel.org> wrote:
->> On 2020-11-10 14:02, Linus Walleij wrote:
-> 
->> >> Probably nothing more than setting the callback to
->> >> irq_chip_set_affinity_parent,
->> >
->> > Hm, is this something all GPIO irqchips used on SMP systems
->> > should be doing? Or just hierarchical ones?
->> 
->> Probably only the hierarchical ones. I'd expect the non-hierarchical
->> GPIOs to be muxed behind a single interrupt, which makes it impossible
->> to move a single GPIO around, and moving the mux interrupt would break
->> userspace's expectations that interrupts move independently of each
->> others.
-> 
-> I found two suspects and sent patches. I think I might have some
-> more candidates down in pinctrl. I do have some hierarchical IRQ
-> that is on UP systems, I suppose these are not affected.
+On Mon, Nov 9, 2020 at 9:45 AM Sean Anderson <seanga2@gmail.com> wrote:
+>
+> On 11/9/20 10:36 AM, Rob Herring wrote:
+> > On Sat, Nov 07, 2020 at 05:14:12PM +0900, Damien Le Moal wrote:
+> >> Document the device tree bindings for the Kendryte K210 SoC Fully
+> >> Programmable IO Array (FPIOA) pinctrl driver in
+> >> Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+> >>
+> >> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> >> ---
+> >>  .../bindings/pinctrl/kendryte,k210-fpioa.yaml | 106 ++++++++++++++++++
+> >>  1 file changed, 106 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml b/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+> >> new file mode 100644
+> >> index 000000000000..8730add88ee0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml
+> >> @@ -0,0 +1,106 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/pinctrl/kendryte,k210-fpioa.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Kendryte K210 FPIOA (Fully Programmable IO Array) Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Damien Le Moal <damien.lemoal@wdc.com>
+> >> +
+> >> +description:
+> >> +  The Kendryte K210 SoC Fully Programmable IO Array controller allows assiging
+> >> +  any of 256 possible functions to any of 48 IO pins. Pin function configuration
+> >> +  is performed on a per-pin basis.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: kendryte,k210-fpioa
+> >> +
+> >> +  reg:
+> >> +    description: FPIOA controller register space base address and size
+> >> +
+> >> +  clocks:
+> >> +    minItems: 2
+> >> +    maxItems: 2
+> >
+> > Can drop these. Implied by 'items' length.
+> >
+> >> +    items:
+> >> +      - description: Controller reference clock source
+> >> +      - description: APB interface clock source
+> >> +
+> >> +  clock-names:
+> >> +    minItems: 2
+> >> +    maxItems: 2
+> >> +    items:
+> >> +      - const: ref
+> >> +      - const: pclk
+> >> +
+> >> +  resets:
+> >> +    maxItems: 1
+> >> +
+> >> +  kendryte,sysctl:
+> >> +    minItems: 1
+> >> +    maxItems: 1
+> >> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> >> +    description: |
+> >> +      phandle to the system controller node
+> >> +
+> >> +  kendryte,power-offset:
+> >> +    minItems: 1
+> >> +    maxItems: 1
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    description: |
+> >> +      Offset of the power domain control register of the system controller.
+> >
+> > Sounds like you should be using power-domains binding.
+>
+> This is for pin power domains. E.g. pins 0-5 can be set to 1V8 or 3V3 logic levels.
 
-Yup, they look good. Feel free to add my Ack to them.
-And yes, UP systems are naturally oblivious of interrupt affinity.
+Okay, please make that clear in the description. You can combine the
+above 2 properties into one which is a phandle+offset.
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Rob
