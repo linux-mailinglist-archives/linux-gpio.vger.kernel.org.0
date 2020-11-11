@@ -2,82 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B41222AFB1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:08:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDE132AFB1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:09:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgKKWIX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 17:08:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49148 "EHLO
+        id S1725981AbgKKWJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 17:09:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgKKWIW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 17:08:22 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8BF4C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:08:22 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id s2so1690667plr.9
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:08:22 -0800 (PST)
+        with ESMTP id S1725933AbgKKWJf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 17:09:35 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE83DC0613D1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:09:33 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id w4so2349086pgg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:09:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=g7RpFRytjES/bc6AKTo9nRj4iH9D2kDE835VJPCM1iw=;
-        b=km/PHc5F3S8v671eYMGdDgkd+fYS+ocPnRTJNAQCJZX2wKgtDMrmuVHjOax69StYTb
-         q6d/UQZ1MlxJyt0LoGCEMlmWoZmmYBwkDpL5sRfbTvBkfdbxD4lC4r6Xy9xI7smePn/z
-         RCk/UBI7VKK90fXK+YSWI/7+aCjpRUMOLa6EiDIB3Lt+4VIbFrE4pxmO2E8aUJbvWg0U
-         hauW6pZGxOb2CqNF4Zwjqzl0Djztq49vdvECI6brr9j+U44WzyniZWjAJO7EzyN9nvAK
-         IFxXo48oplr0/o84LtB6KAgq2D3pq0cdPviFUoVoR4cU4dD2iiwGhsdlBtBvbMzh4vl/
-         icSQ==
+        bh=d03dQMWe0vSqP7hc3PlrkEsd8Ckz4T0m9O887PxVMxI=;
+        b=DMAITTIVDaFnDSqV2VUzY58cn0cPNm4bmTfRhaFtvs6cg6wSDIojKmeCVa2vloFauw
+         a5Amnnbngm9ttatm+xDB77LrGVpJhGscQKzzXGVimMfJ5LEsLlBtlng15dFnHRd7uxr4
+         nTct95hISIXg627j0bs1qTwTMBlZWrl7A2RBKEqDpy7+1K6brgNkb4cWX9C4YNz30A5E
+         PbwFSrs7HW7LiLpuODdwFLAPBekyLAB/QuSsdqanbdzL4HlAG6Y+kYqqVHXbC5uCnnW3
+         pVtgUYUqq9nw0lcshViFSc1hn+hACjp6+vSLLKBZsq8qgr1U79DS+GX2CWUUA04hj2y5
+         5oVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=g7RpFRytjES/bc6AKTo9nRj4iH9D2kDE835VJPCM1iw=;
-        b=qVYnRZ61LCvQBC1f0zYACxOOgck2e0gEVAiDiycr9TlAfVr0q2Fqi39iqOZfQwdI81
-         owfPEtatZZInc1xyFYATf0vyiefkvvSOVgL5RFh0Hbgn1IxSHHV/uzazo5HMSSloTLlY
-         se7x33iE69FVIdGZB7M0gUvPRZDD/XkwDP7ihYn35db1Ru+3ZmUxUHg5uOO/rcaUK9n/
-         v1200JV6O9VtkqbRIlOzT1ZSo21KPOWKl2BWw01q3UrQ3BGEZkselbzk9bdteN9fZ5QT
-         7Rf85nhELJ1WVJ+9WVTR+Knu+uX8iVpzciVy5c4Jw/U4u3AhpIG5y2YrEq/9uMaSgkjn
-         30lQ==
-X-Gm-Message-State: AOAM530dOdo7DhDah8wGlcKOEBdWzM51eAOoKXASrTBYlX2fnfINFyuu
-        i3MqiPXVtHBP1tKWKAv8fz+SwL3IiOgsbNkYI8U=
-X-Google-Smtp-Source: ABdhPJws6JYaFe+MPtFfBUnAsyLfFdj7nLvgb9PFv39b898p4jcmgoLtxzNLnAQAF2CClLQUq5Av8vEdSF3Z7Ggq6d0=
-X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
- m8-20020a1709026bc8b02900d60d9df28cmr7164840plt.17.1605132501538; Wed, 11 Nov
- 2020 14:08:21 -0800 (PST)
+        bh=d03dQMWe0vSqP7hc3PlrkEsd8Ckz4T0m9O887PxVMxI=;
+        b=hr82xLOkkkN98HmQPezcjMhh4WGVTV2IALHE+zCbDs5Sli+qxpuhq/7VAn7FHx7NEM
+         3c+Dr9fXDtT0yXRQQ0/CuVqhSuB64z8uz1oUvUaat87OosRC0RQ1cyRms2CyUBOwjmYl
+         3SSHJ0dJCoQHdd0+WI8CKJ2I5WP4RxFTzpkhY28e6a5YHOEmU/6q6NWPCLAV6YsA1ro9
+         6tZzl+qvv6zgNqPKKTugCcJEv0AyqkvCw8JOBml5DhvHyUU+oA4uemeO56UnSwVcR9NH
+         n44hXvk7H9FQf7u8NioDMpqJI4OfsGdn4cDvum9aa2lJ6iETSOE8A+QwMikbO84jV8wO
+         8Dwg==
+X-Gm-Message-State: AOAM530tXN9UUCaJ67sxbeAnpE2htAFa9XBX7cIpnOQPohNzmgZN3UAl
+        0lsVHtJ7ifueNAbJArJEGJqoZ74s+Auec+o0l7+uqXtSt8k=
+X-Google-Smtp-Source: ABdhPJw916+XE9KvBDSXRp9jFSFqdwGomnY/G6uVhohXaJUy05xs9JIhLppX4eWtQIiUOUi29DNz2R5XWSvh98E/BGw=
+X-Received: by 2002:a63:4511:: with SMTP id s17mr23511331pga.4.1605132573330;
+ Wed, 11 Nov 2020 14:09:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com>
+References: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com> <20201111220559.39680-19-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201111220559.39680-19-andriy.shevchenko@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Nov 2020 00:09:10 +0200
-Message-ID: <CAHp75VdRFciyYcDymfCGx-_Zx+6rtsArecFHRzBD+s8P5_P9aA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/18] gpiolib: acpi: pin configuration fixes
+Date:   Thu, 12 Nov 2020 00:10:22 +0200
+Message-ID: <CAHp75VfNaiL8DJx-yqo948yHMqJZ6kKPeR0crr7rhSp9=6EMNw@mail.gmail.com>
+Subject: Re: [PATCH v6 18/18] ARM: Drop ARCH_NR_GPIOS definition
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Coiby Xu <coiby.xu@gmail.com>,
-        Vasile-Laurentiu Stanimir 
-        <vasile-laurentiu.stanimir@windriver.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 12:06 AM Andy Shevchenko
+On Thu, Nov 12, 2020 at 12:07 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> There are fixes (and plenty cleanups) that allow to take into consideration
-> more parameters in ACPI, i.e. bias for GpioInt() and debounce timeout
-> for Operation Regions, Events and GpioInt() resources.
->
-> During review Hans noted, that gpiod_set_debounce() returns -ENOTSUPP for
-> the cases when feature is not supported either by driver or a controller.
->
-> It appears that we have slightly messy API here:
+> The conditional by the generic header is the same,
+> hence drop unnecessary duplication.
 
-Please, discard this version, I mistakenly sent shifted series (missed
-first patches and extra in the end)
+This has been sent by mistake, sorry. Please use v1 of this standalone change.
 
 -- 
 With Best Regards,
