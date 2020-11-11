@@ -2,71 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF8B12AFB1F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BFA12AFB27
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 23:13:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgKKWKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 17:10:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgKKWKY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 17:10:24 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A95C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:10:21 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id u2so1691725pls.10
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 14:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3y3n+ki3u41mi6k5wDNqXFpkq5aM538XV2t4JM5Dnaw=;
-        b=ZfrXGfXshgHwK+1KXO69GdLko6/f40OGc9NCEVyApATO7mfEqQbd/TcymC+zvtkRBq
-         9/XHP7Pz+ZJGRMbwZ+oxXmnFJSMeEzN0lnMnZGLeq/O7FVauZUr5lckS5jM7VX6B7Ts/
-         hg5s1gfInHEhHLD9euG5fBGpvrk8OJ20XUO/fwH60I7a48IIS9tjo2U6oMnoOfv6sFpO
-         OfCMQcU9+7sAasyGMtRI2QuTPMr1EOS43zE3TEXFvDW5TzXZAMdTlcHmHwcMS9w2SVcr
-         lLAanvBMHVID7WWr3d2n1es//YqEnHFOs6OP3Iz9TVuz43EmvQojfQ5WRLhEQLKjAwyG
-         hXww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3y3n+ki3u41mi6k5wDNqXFpkq5aM538XV2t4JM5Dnaw=;
-        b=UXRrbv1s9RRWGASqTzuRxoaFTcpaNE+545/4gdwch9v7OO8Ql4VLoK9tWewIoqtrKn
-         /VGnSa2YBjN//AqUkBg94dX8U1lqqyMkZs6UUlUK5407Flob4v+/jVIvSDMk7i3yeh/U
-         vHUuypaUHMDjAn3gkENG8TLmdGCE+k2c5kZlsLXdyirE6J31FbyW5k+da9Ib1AFSujzq
-         UUD+bpHzCa7x14VDb+gNJJwvmk3/5ZRPg2u3bstHcQoRRgSPuQlSNnnOZRWCOnCskkmL
-         LqzYGv3vo5kYcLp3FdmlEwSTEiZ1X5IzlMhxZH+8dtGh+lw/tPlK0FPv144pi12ueIg0
-         L+KQ==
-X-Gm-Message-State: AOAM532waCY9gUZJ4ciCLVwF3DFfN4MLELR1HNEvPDMhLHXb6f4TW1vB
-        701hVvdR3SfiB+0Q2LaJzPiW7J1Li16j4MTILPU=
-X-Google-Smtp-Source: ABdhPJyRninn0dwOomdAgiptDIelhZKYulASdrMjq289OMl1bdglHkajSdZOkZWNq6z4A0v6HB9U1At9v4SCYKNUdhE=
-X-Received: by 2002:a17:902:aa8a:b029:d3:c9dd:77d1 with SMTP id
- d10-20020a170902aa8ab02900d3c9dd77d1mr23370789plr.0.1605132621071; Wed, 11
- Nov 2020 14:10:21 -0800 (PST)
+        id S1726587AbgKKWNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 17:13:02 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47570 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgKKWNC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 17:13:02 -0500
+IronPort-SDR: mQQkc7YFjt0ykhIKax5+VyNr5Q+tC5xo7IZ5Xx71gFI903S3gau9ac+j+ru5jBw2VEREtiC5dQ
+ OHe4oO2QpPtw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="254934223"
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="254934223"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:13:01 -0800
+IronPort-SDR: oc+ody3g8xZ/L2AxXe4jREsKbIgl3VLQlwX9uSzn6jJV1BRL+bGe1qNFmW4q0i4qrzv8PCTuFd
+ 3voHy987I57w==
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="474015871"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:12:59 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kcyNM-0064C2-T8; Thu, 12 Nov 2020 00:14:00 +0200
+Date:   Thu, 12 Nov 2020 00:14:00 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Andy Shevchenko <andy@kernel.org>, stable@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: intel: Fix Jasperlake hostown offset
+Message-ID: <20201111221400.GT4077@smile.fi.intel.com>
+References: <20201110144932.1.I54a30ec0a7eb1f1b791dc9d08d5e8416a1e8e1ef@changeid>
 MIME-Version: 1.0
-References: <20201111220559.39680-1-andriy.shevchenko@linux.intel.com> <20201111220559.39680-18-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201111220559.39680-18-andriy.shevchenko@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Nov 2020 00:11:09 +0200
-Message-ID: <CAHp75VcPd1oHkmFZ35SiPwu7bNCj+MnAYVOL4mhcv1bbNnCBQw@mail.gmail.com>
-Subject: Re: [PATCH v6 17/18] sh: Drop ARCH_NR_GPIOS definition
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201110144932.1.I54a30ec0a7eb1f1b791dc9d08d5e8416a1e8e1ef@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 12:07 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The default by generic header is the same, hence drop unnecessary definition.
+On Tue, Nov 10, 2020 at 02:49:49PM -0800, Evan Green wrote:
+> GPIOs that attempt to use interrupts get thwarted with a message like:
+> "pin 161 cannot be used as IRQ" (for instance with SD_CD). This is because
+> the JSL_HOSTSW_OWN offset is incorrect, so every GPIO looks like it's
 
-Sorry, sent by mistake, please ignore this email.
+Simply HOSTSW_OWN, and same spelling in the subject, please.
+
+> owned by ACPI.
+
+
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+
+> Fixes: e278dcb7048b1 ("pinctrl: intel: Add Intel Jasper Lake pin
+> controller support")
+
+It must be one line, and put it first in the tag block
+
+
+> Cc: stable@vger.kernel.org
+
+This is second one...
+
+ Fixes: ...
+ Cc: ...
+ SoB: ...
+
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
