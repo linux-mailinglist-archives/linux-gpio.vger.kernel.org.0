@@ -2,90 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8668E2AF5F2
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 17:15:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED4E2AF6A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 17:34:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgKKQO7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 11:14:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50888 "EHLO
+        id S1726934AbgKKQen (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 11:34:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgKKQOw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 11:14:52 -0500
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11942C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 08:14:52 -0800 (PST)
-Received: by mail-pf1-x441.google.com with SMTP id q5so1878830pfk.6
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 08:14:52 -0800 (PST)
+        with ESMTP id S1725979AbgKKQen (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 11:34:43 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C970C0613D1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 08:34:43 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id gv24so956162pjb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 08:34:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7xTgF/S6xSn4D+K2fMuG6UmmoOgpCf+V0fTNKYLCsJE=;
-        b=TKgddnHenz/Gt9mhDfzikvI1Gey2EdvKVl/eMrcDN1/cNSha+jf6thfO8bgTtoL0GC
-         Tg5gPqjRMAoBEpQVI9eFigDVTWFpTI+T90XFgIWHcPhluSqxRuQQ/5Gk1uw9aiKwfkcC
-         4md4bFIT21Rypfh12dU+7gVasMV90Xfg6gk8dppPUIGNtSldyEIq6NBIRUKtM6NnM0BW
-         cpM8jaZAyUV4pofpiq8kPV7FH6k6N8dJZxssCaXGhI3bHjhc+MMaXZ8LL/P5fOqNyaZo
-         K2fU7I/qZ9xndnaNMNCfdyyImJnhmaxHVIhKpH/4Z5YW0HQKU7UR02VZ9A0A+ATT8iWo
-         d6Ow==
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=E7tdJv/SATHNIn829RMc3Dy+9UyApMjdjMPVfkBbrsk=;
+        b=hPFx5IuHaxeJELBn8a/6FXoQzTXaA4P6tVtDUuOMW7GWbi/yCgDUL4CxbD/v/ZLoEY
+         bXoK2++cjH2Vhueb9F+BbvmMNatQ0ewQJlwl1qYaPPMSIEAjp27k2+WyOzw4KlI6gDcx
+         bYX9md2+Qj3Gt+SPwymjGN6H3BdlhJR4ODuBJolA3wI4RTCMWhvOMbzIYmAAKVUETcUs
+         vds6cOLcU/hn80WNIrGekNePOFbil8DXeRki9yUyoaH7Rd0rlchLbG2w5/ZZaBEIZGE2
+         4u2jsaraD9+VBKlMk+YxeOW4R1d89oHt7Lcjz3CTF3tQ2byluEl630iCBM9sTbHnchx/
+         6LTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7xTgF/S6xSn4D+K2fMuG6UmmoOgpCf+V0fTNKYLCsJE=;
-        b=R895p7FmseSrZ6Rdk2AqpaPghYvU92DL18sd3vtgunFEzNAhj1LlpNPK7/TgZ6TJa+
-         F8yA191y0exo/M20yUsaTRrUjL2Cq+XdNaMYynpHllTynr1TtQonoTX8Th76Ktsy5GZa
-         +brBXkIAngVistveWYfIH2fb4OdHjfP8/o7FIufIgH72TAeYEWc8IlPiNM7CNu6dQA4U
-         3jbwh4TJY0PldiX2vCQQ47LFdJ40HLPuEJBrwL89mQ3ovGX4akzn7R9napRqK1wy6CJV
-         DAanoU9sBobdnLPxuRliLkqjnEbnodFhER4Tsawfh8n7GNa8CLJAUeurXWmAubWY0Ip5
-         JcFw==
-X-Gm-Message-State: AOAM530JQjzSQ85nVmwzXocOBYWTtBTOUP05OLssnkmN90K0y3Lvsgup
-        MK5+U8W2bDXwONjM9JZAZLPJWDnctA8FnVO901I=
-X-Google-Smtp-Source: ABdhPJxoJSYFNuIiYAlylLv/ueY5d/QJBr5gTObkNwUBQxrgDNZWalgs7R8ws5RfNeYdYJGPSDmySY7uU9q2tKWKYiw=
-X-Received: by 2002:a63:4511:: with SMTP id s17mr22429846pga.4.1605111291621;
- Wed, 11 Nov 2020 08:14:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
- <20201109205332.19592-9-andriy.shevchenko@linux.intel.com>
- <20201111153907.GE2495@lahna.fi.intel.com> <CAHp75VcfS7YDC=pEraqGaN1L4YT7EQEq6JHxMkq=Cz4PQPSkbQ@mail.gmail.com>
- <20201111155213.GJ2495@lahna.fi.intel.com>
-In-Reply-To: <20201111155213.GJ2495@lahna.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Nov 2020 18:15:40 +0200
-Message-ID: <CAHp75VeHs5oP-5ZVoweRmPN1efyZeeN+kQR8G3NLe9OkYidgmA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/17] gpiolib: Extract gpio_set_debounce_timeout() for
- internal use
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E7tdJv/SATHNIn829RMc3Dy+9UyApMjdjMPVfkBbrsk=;
+        b=Yksruii02v9Xcy3kTObL4iw8dm8XRV+W8xJnrVcAosQQFqdCqvLDUSnDj4KLEiB/b0
+         kZDOTU8TVAyxzqncnOcxpmCMmo/BsqH8ZjVJilmY5sxiC9jHZjz6mwAU6jwQAicCMrwP
+         9AM0YPXsJymWfiU5sMY++2v7mdg19o0Yx19yg9IaeuhPfjMimtXKKKxqH26OvrlViV3G
+         d1NA2qbfyoxnGj7Mz50AQqngzoKOxGNyuHcLP3+sZnbXswrgQdIu+PhNz874Jr6z8be2
+         OBj7sM9ttt5AFswNYdM4pbdyMT37OMV0glCzF1gOnO51h+EnU+/yCRG3nB7WK3eN/NPQ
+         UFzA==
+X-Gm-Message-State: AOAM532VFM5uvAsR7KXfwIe3HFw28H5NYgk1rEMEU81x1ylLTVc8hRyr
+        I2EtXye28eNgGl+M25pNo4FiHfConjqnefNa
+X-Google-Smtp-Source: ABdhPJzyEEZSr7GhXUEQUpmvkSfKa89fHU8pKhjajrQ6W0i7H1mIgobF6AVYHVPEtFAPv4icFmZPug==
+X-Received: by 2002:a17:90a:1d09:: with SMTP id c9mr4619291pjd.80.1605112482289;
+        Wed, 11 Nov 2020 08:34:42 -0800 (PST)
+Received: from [192.168.11.16] (softbank126112255110.biz.bbtec.net. [126.112.255.110])
+        by smtp.gmail.com with ESMTPSA id b142sm3120743pfb.186.2020.11.11.08.34.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Nov 2020 08:34:41 -0800 (PST)
+Subject: Re: [PATCH v1] sh: Drop ARCH_NR_GPIOS definition
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20201012154050.68039-1-andriy.shevchenko@linux.intel.com>
+ <20201109121333.GC4077@smile.fi.intel.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <10b4dc8e-db87-3f78-3ab7-e08469b9fe55@landley.net>
+Date:   Wed, 11 Nov 2020 10:45:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <20201109121333.GC4077@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 5:54 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Wed, Nov 11, 2020 at 05:46:55PM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 11, 2020 at 5:40 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Mon, Nov 09, 2020 at 10:53:23PM +0200, Andy Shevchenko wrote:
+On 11/9/20 6:13 AM, Andy Shevchenko wrote:
+> On Mon, Oct 12, 2020 at 06:40:50PM +0300, Andy Shevchenko wrote:
+>> The default by generic header is the same, hence drop unnecessary definition.
+> 
+> Any comment on this?
 
-...
+Acked-by: Rob Landley <rob@landley.net>
 
-> > > Again I think mode variable is pretty useless here and does not improve
-> > > readability.
-> >
-> > You mean something like
-> >
-> >     return gpio_set_config_with_argument_optional(desc,
-> >                 PIN_CONFIG_INPUT_DEBOUNCE, debounce);
-> >
-> > is better?
+It's in the stack I forwarded to Rich to look at this weekend.
 
-Hmm... Not sure I can agree with this, but I can change.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
