@@ -2,201 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 583972AEC40
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 09:44:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 897412AEC5D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 09:52:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgKKIop (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 03:44:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgKKIoo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 03:44:44 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B05AC0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 00:44:44 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id z1so610912plo.12
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 00:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=GPbo+fMk1oQVaFhTli2HwpffYn6WYVA+SVTDuBKtA3k=;
-        b=gdOmDv3hb9R5ZkEmu8YX0DCO8l1DoOaqF/ccB2AMBtigrbJdzYghGQbdZVWIm/oJJ6
-         9wqyFZINrJux0/L0JPQ9dkHu4fRGsOl2uht6lebtQ4NqwbCcBPeeifKDtjN3CnxaIzhQ
-         kb1AHK52hj/VAYLAf/DTsYbZUX3mz1XUNbsvkejDjbNCbaXSKSF29MIOc9QzMwt1fSwy
-         4b+CToAEgii86iy+bKApGZ/mZC/oG6U9uMkxM9fNMEVvEtia6vCmOV8sQ+26feUxEdNW
-         V2nP74fQdv+PriIVSg8iqajBELsSkDKWoOVhHTGsO+mWDrZMRtAc6pfjEe77RU5ZoUGK
-         uwCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=GPbo+fMk1oQVaFhTli2HwpffYn6WYVA+SVTDuBKtA3k=;
-        b=gRFTM++yY28Q8AHt7UT+M5zZYA4/hpgyWxa0px2iibJ6CJmwoNkzOhDO7dlbbRZCa1
-         O7hYeM9fGm9EzvCg7abFOYiVx0JEZdZKqcu4IVcVSTIc9lXOc+/lQE3vE5Gx7zvWMAzw
-         L6XbUd5dru7HpaXGoeq1lRF4+CFrCetxkI3KlNPGYZRbqkOUWL/23iLoH8W0ugGgUCkt
-         7Jh8bwxnXM/yO7yWW0sAqecvopTVUlKlAAg5jYCExXq7OqI5jMelgAYEi9eIW68tE+na
-         fHmP/gZUfaA+aB5qRZIf6hdL1gzAwGvxE0FwNTRqyFkR5ddmVMomJaAD/KXZxVhAbzbU
-         rcoQ==
-X-Gm-Message-State: AOAM530lI4P/wF4NenBlaIdHI04miQWzXj3h/D/HOsDbeVJjVkTOZoPr
-        kz8TsvPPZ7rNY1KRRe5lIbxhVbO+rO/xJg==
-X-Google-Smtp-Source: ABdhPJwOIhuCOfokctIJ3CWyZ9QSNF/vQ8FoYaETq0k3PgRpv3wD5qghrrZDB8ZdM3b5u3xU4HC03A==
-X-Received: by 2002:a17:90a:5882:: with SMTP id j2mr2803603pji.177.1605084283698;
-        Wed, 11 Nov 2020 00:44:43 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id e22sm1675124pfd.153.2020.11.11.00.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 00:44:43 -0800 (PST)
-Message-ID: <5faba47b.1c69fb81.fdcc7.4181@mx.google.com>
-Date:   Wed, 11 Nov 2020 00:44:43 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726230AbgKKIwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 03:52:30 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:55759 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgKKIwa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 03:52:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1605084749; x=1636620749;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=mPPy1TkcVOlW/Zjck2Emjg838QadGoDmShOXyWNzpns=;
+  b=fKtP3O0POp+1kmQ15AGUDU196cBf1tDpgc71CqLRqhphd1lTRY7UpETS
+   1UHkz2i3VN/uBeTagbIj7We0KIFO+MusJAqKbCziLaA8MwJwOLwN/SzA+
+   gHl0dVtw2VkEJw62fq01bv7S/0WKFeabXnxLbM/EL3e7tOu17TEO6BU/9
+   lmX+Eq/ep4OkAx/ZQbD459LiAGWEU4KCIsXGolFwKRNVY1a/BG72aMeuN
+   XVIJQ5ZXjcGlcIDXUOnHn0rprj94100vRxxZEeej+m4o+My7CbAf+bzD7
+   Q54BsOArzCq735haCaG4n7Dtrt5JXqnyAP1v0SeTwj2Exh+eRvMvq5LJg
+   Q==;
+IronPort-SDR: vriVf8UGjCnWN9V1LMJVSV66qS6uYu96PDzWV8heInFGVS3xNRLeUhigGq6SrUWEgFCLf+xD5Q
+ 5SNx2NqrpRHKkmjbP6xjwKJ0Aa/CB7RHEwHx/hU0d6eWiX4CkwulRDBfCuy8bmiPAzj859x0wM
+ Xh4drdJEfsWayKYHbwk1GzbbP5wXbJDfac8ZfcNvHj24Dc/tpjBbYg7GPj+Gwk7rmw8MkB/gZc
+ tIHKAW5GuLMnFWieBTq1+s1v3M8h3KBxlYL/DrdBiukeOx2vwPUpe602nOKPTsmRPFjt6LNo4D
+ Tec=
+X-IronPort-AV: E=Sophos;i="5.77,469,1596524400"; 
+   d="scan'208";a="103025944"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Nov 2020 01:52:29 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 11 Nov 2020 01:52:28 -0700
+Received: from soft-dev10.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Wed, 11 Nov 2020 01:52:26 -0700
+References: <20201109132643.457932-1-lars.povlsen@microchip.com> <20201109132643.457932-3-lars.povlsen@microchip.com> <CAHp75Vdfm7A5=Mi-LZ1sHJS5fSngypZQ50-rGQ7A6kD2kmVFTA@mail.gmail.com> <87361hfbwu.fsf@microchip.com> <CAHp75VfZ=hJvpYiAOz72yRpJTxLU6ZOo9hEz4BsBcgSwAcjCFA@mail.gmail.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v8 2/3] pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO
+In-Reply-To: <CAHp75VfZ=hJvpYiAOz72yRpJTxLU6ZOo9hEz4BsBcgSwAcjCFA@mail.gmail.com>
+Date:   Wed, 11 Nov 2020 09:51:52 +0100
+Message-ID: <87zh3oe0nr.fsf@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: for-next
-X-Kernelci-Kernel: v5.10-rc1-20-g4c15bd0cae70
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc1-20-g4c15bd0cae70)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc1=
--20-g4c15bd0cae70)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc1-20-g4c15bd0cae70/
+Andy Shevchenko writes:
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc1-20-g4c15bd0cae70
-Git Commit: 4c15bd0cae70169f69840930ccaef7243db158c9
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+> On Tue, Nov 10, 2020 at 5:51 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>> > On Mon, Nov 9, 2020 at 3:27 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> >> This adds a pinctrl driver for the Microsemi/Microchip Serial GPIO
+>> >> (SGPIO) device used in various SoC's.
+>> >
+>> > Please, elaborate what you said previously, because now it has no
+>> > justification to be a pin control driver.
+>>
+>> As previously stated, the individual pins have possible other functions
+>> than GPIO. When these functions are added, the driver will need pinctrl
+>> functinality. This was accepted by Linux Walleij.
+>
+> Yes, I understand that. What I meant is to update the commit message
+> to tell this to the reviewers / readers / anthropologists.
 
-Warnings Detected:
+Ok, will do.
 
-arc:
+>
+> ...
+>
+>> >> +               return -EOPNOTSUPP;
+>> >
+>> > Are you sure? IIRC internally we are using ENOTSUPP.
+>> >
+>> > Couple of drivers seem to be wrongly using the other one.
+>>
+>> Checkpatch complains about ENOTSUPP:
+>>
+>> # ENOTSUPP is not a standard error code and should be avoided in new patches.
+>> # Folks usually mean EOPNOTSUPP (also called ENOTSUP), when they type ENOTSUPP.
+>
+> checkpatch is wrong if this is internal code and to me sounds like
+> it's not going out of the kernel.
+>
+> ...
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+As it appears there are different opinions on this I'll let the pinctrl
+maintainer decide.
 
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
+>
+>> >> +                       err = -EOPNOTSUPP;
+>> >
+>> > Ditto.
+>>
+>> Ditto.
+>
+> Ditto.
+>
+> ...
+>
+>> >> +               dev_err(pctldev->dev, "Pin %d direction as %s is not possible\n",
+>> >> +                       pin, input ? "input" : "output");
+>> >
+>> > Do we need this noise? Isn't user space getting a proper error code as
+>> > per doc and can handle this?
+>> >
+>>
+>> This need not go to user space, as one use-case is using the pin as a
+>> i2c mux. In this case no signs of the error condition is recorded, it
+>> just doesn't work. So I concur it is not noise, it is sign of an
+>> erroneous situation which should be fixed, IMHO.
+>>
+>> The message makes it easy to locate the issue, if any. The message will
+>> not occur on a properly configured system.
+>
+> It's noise. As we discussed with Alexandre (and I guess came to the
+> same page) that its consumer's business how to treat the error.
+>
+>> Lets have the maintainer make the call.
+>
+> ...
 
-i386:
+I digress. I'll remove it.
 
-mips:
+>
+>> >> +static int microchip_sgpio_get_ports(struct sgpio_priv *priv)
+>> >> +{
+>
+>> >> +}
+>> >
+>> > As per previous version comment, i.e. perhaps find an existing API for
+>> > this kind of parser or introduce a generic one.
+>>
+>> I fixed the use of OF api's - that was surely an oversight.
+>>
+>> I have searched for a suitable API without finding one. The closest
+>> thing was the parsing of "gpio-reserved-ranges" in gpiolib-of.c, but
+>> that was coded directly. So I think this might not be of general use.
+>>
+>> If it is, lets do that after the driver is merged.
+>
+> I guess it will be a lot of benefit to have such API earlier than later.
 
-riscv:
+Thank you for your comments. I'll send the new version shortly.
 
-x86_64:
+---Lars
 
-
-Warnings summary:
-
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
-SPI bus
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
-or SPI bus
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
-I bus
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
-us
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+--
+Lars Povlsen,
+Microchip
