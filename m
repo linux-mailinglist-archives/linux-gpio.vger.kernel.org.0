@@ -2,85 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80E392AF415
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:53:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E662AF41A
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 15:53:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgKKOxR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 09:53:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgKKOxR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 09:53:17 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F101C0613D1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:53:17 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id v144so3447520lfa.13
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 06:53:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZVLlXwDe5fMTOgU+8fzchgHyqxUszJ9a/tL8hlboio=;
-        b=xc8wsRKk6zyyqqhu0VJTkcJlwAnC4Q79uq/8+TbZoSG/ykQgRiT+HKe87VLF9uZstn
-         MgDS1NM8zimQQMC8/jfVnY3MqxXXdM5x3Go4u5KHIXLd1aqt2yY1r2ZgEbjQHbAI8EEe
-         mXDqQFmCTy5ppXABOYt0Ldwz2KroXRF/g9/1g2Ehd4CNOy3d5yi+KW7k/3JETlKs7m/I
-         THLvuNGyXT7xze+fjDBzpwof0BmsU2XUkLYRlml7ln4KFzfjnw+1JsXVQ0maDaGSCn7k
-         YCp2QSskXDmS8xZlClwEhlofC9h+pJWAjuwStDWEHTNWh6MPQ7+0rsn3TSErW8mSIEyb
-         Ikvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZVLlXwDe5fMTOgU+8fzchgHyqxUszJ9a/tL8hlboio=;
-        b=Qo1ac3uJmw/UHeWZ33O4kBTq+mnAauS5Gq9EaocYbqe0Yrh2iQcWsI6ol38jmmmgjS
-         vfMQ2IueuWId36MTfE3yY4Pm3THILxsF1E6NZ45m3yGtAEZR/03E/Rip6FnR3Y5eTZml
-         BHHAS/ZeM4r1EfzWqOELICgm/oOqDVsAb09SUi3loOLDuJpn6MKX/b5UJLh2wRGgsHvw
-         FiACd7sLRlBd4GJcX/DEHRmcj6kRJ0rdHq754Wz1PHN+wfBM959YH/pGcpWHRwlnXaYC
-         XBV2ibxmtPXt+oNgBCTQTgrPnYK9oxL0a84TY4UP7cpikOYBKhcNmmckvCygjWVfjDA+
-         SK/A==
-X-Gm-Message-State: AOAM530Rp8LH48bPd7tYW7dJi6LxhsDx2kD+4Bn242fzlGuXo3GVewsl
-        wyNismDP/CscZiCqTBaPJeLnA3QAQn2IzjRUeGcM6Q==
-X-Google-Smtp-Source: ABdhPJzSEoIuAvWpeEhGWcyet/dlWnEpWoX24604qd6BmgRHaExWp2au6Wt3tP7E8zvOBiKSncIlPnSi6HXI9tld7Ws=
-X-Received: by 2002:a19:ca05:: with SMTP id a5mr6514401lfg.571.1605106395648;
- Wed, 11 Nov 2020 06:53:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20201108180144.28594-1-martin@kaiser.cx> <CAHp75VeVPUJ_a4L+Lj-zR6Wm3Woq6F0uHzmtx3NCRO=TVopvrw@mail.gmail.com>
- <fc6a99af-7cee-b0ae-c4b1-cc7249e22b6c@microchip.com>
-In-Reply-To: <fc6a99af-7cee-b0ae-c4b1-cc7249e22b6c@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Nov 2020 15:53:04 +0100
-Message-ID: <CACRpkdYyAvDzZ5fqtcYWxhdLU+JS00iKbo3pogG0AnvWv4-ucQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-at91-pio4: Set irq handler and data in
- one go
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        id S1727171AbgKKOxV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 09:53:21 -0500
+Received: from smtp.asem.it ([151.1.184.197]:60288 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgKKOxU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 09:53:20 -0500
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000601011.MSG 
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 15:53:15 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 11
+ Nov 2020 15:53:13 +0100
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Wed, 11 Nov 2020 15:53:13 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: RE: [PATCH v1] Documentation: ACPI: explain how to use
+ gpio-line-names
+Thread-Topic: [PATCH v1] Documentation: ACPI: explain how to use
+ gpio-line-names
+Thread-Index: AQHWuCs2DratU6tfqk6ZIQJSnDA95anC5K8AgAAdYVA=
+Date:   Wed, 11 Nov 2020 14:53:13 +0000
+Message-ID: <93941f3b0142473399bfdd18608a4056@asem.it>
+References: <20201111130435.432982-1-f.suligoi@asem.it>
+ <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
+In-Reply-To: <CAHp75VeccWtKRQkQE0XyyDZVvkD3QrBig2yU6=pz3KEG-bCKjA@mail.gmail.com>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090213.5FABFADA.0015,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 10:08 AM Nicolas Ferre
-<nicolas.ferre@microchip.com> wrote:
-> On 09/11/2020 at 12:26, Andy Shevchenko wrote:
-> > On Sun, Nov 8, 2020 at 8:05 PM Martin Kaiser <martin@kaiser.cx> wrote:
-> >>
-> >> Replace the two separate calls for setting the irq handler and data with a
-> >> single irq_set_chained_handler_and_data() call.
-> >
-> > Can it be rewritten to use the GPIO core facility of instantiating IRQ chip?
->
-> I have the feeling it's out of scope for this (tiny) patch.
-
-True, but a good suggestion anyways.
-
-If you have a TODO for the AT91 pin controllers I think both using
-the GPIOLIB_IRQCHIP can cut down
-the code in these files quite a bit, and probably fix some unknown bugs.
-
-Yours,
-Linus Walleij
+SGkgQW5keSwNCg0KPiA+IFRoaXMgY29tbWl0IGFsc28gZml4IGEgdHJpdmlhbCBzeW50YXggZXJy
+b3IuDQo+IA0KPiBmaXggLT4gZml4ZXMNCj4gc3ludGF4IGVycm9yIC0+IHNwZWxsaW5nIG1pc3Rh
+a2UNCg0Kb2sNCg0KPiA+IC1FeGFtcGxlOjoNCj4gPiArVGhlICJncGlvLWxpbmUtbmFtZXMiIGRl
+Y2xhcmF0aW9uIGlzIGEgbGlzdCBvZiBzdHJpbmdzICgibmFtZXMiKSwgd2hpY2gNCj4gPiArZGVz
+Y3JpYmVzIGVhY2ggbGluZS9waW4gb2YgYSBHUElPIGNvbnRyb2xsZXIvZXhwYW5kZXIuDQo+ID4g
+K1RoaXMgbGlzdCwgY29udGFpbmVkIGluIGEgcGFja2FnZSwgbXVzdCBiZSBpbnNlcnRlZCBpbnNp
+ZGUgdGhlIEdQSU8NCj4gY29udHJvbGxlcg0KPiA+ICtkZWNsYXJhdGlvbiBvZiBhbiBBQ1BJIHRh
+YmxlICh0eXBpY2FsbHkgaW5zaWRlIHRoZSBEU0RUKS4NCj4gPiArVGhlIGdwaW8tbGluZS1uYW1l
+cyBsaXN0IG11c3QgcmVzcGVjdCB0aGUgZm9sbG93aW5nIHJ1bGVzIChzZWUgYWxzbyB0aGUNCj4g
+PiArZXhhbXBsZXMpOg0KPiANCj4gU2luY2UgaXQncyByZXN0LCBJIHdvdWxkIGV4cGVjdCBncGlv
+LWxpbmUtbmFtZXMgaW4gYWJvdmUgcGFyYWdyYXBocyB0bw0KPiBiZSBhIHRlcm0sIHNvbWV0aGlu
+ZyBsaWtlDQo+IGBgZ3Bpby1saW5lLW5hbWVzYGAgKGRvdWJsZSBiYWNrIHF1b3RlcyBvbiBlYWNo
+IHNpZGUpLiBZZXMsIEkga25vdw0KPiB0aGF0IHRoZXJlIGFyZSBvdGhlciBwbGFjZXMgd2hpY2gg
+bmVlZCB0byBiZSBhbWVuZGVkLCBidXQgSSBiZWxpZXZlDQo+IGl0J3Mgb3V0IG9mIHNjb3BlIG9m
+IHRoaXMgcGF0Y2guDQoNCk9rLCBJJ2xsIHVzZSB0aGUgYmFja3F1b3RlcyBmb3IgY29kZSBzYW1w
+bGVzLCByaWdodCENCklmIHlvdSB3YW50LCB3aGVuIHRoaXMgcGF0Y2ggd2lsbCBiZSBjb25jbHVk
+ZWQsIEkgY2FuIGNoZWNrIGFsbCB0aGUgQUNQSQ0KZG9jdW1lbnRhdGlvbiB0byBwdXQgYWxsIGNv
+ZGUgc2FtcGxlcyBpbnRvIGJhY2txdW90ZXMuDQoNCj4gDQo+IEFsc28gbm8gbmVlZCB0byBoYXZl
+IGVhY2ggc2VudGVuY2UgdG8gYmUgc3RhcnRlZCBmcm9tIGEgbmV3IGxpbmUsIGl0DQo+IHdpbGwg
+YmUgcmVuZGVyZWQgYXMgaXQgaGFzIG9uZSB3aGl0ZSBzcGFjZSBpbiBiZXR3ZWVuLg0KDQpvaw0K
+DQo+ID4gKyAgICBvdGhlciB3b3JkcywgaXQgaXMgbm90IG1hbmRhdG9yeSB0byBmaWxsIGFsbCB0
+aGUgR1BJTyBsaW5lcw0KPiA+ICsgIC0gZW1wdHkgbmFtZXMgYXJlIGFsbG93ZWQgKHR3byBxdW90
+YXRpb24gbWFya3MgIiIgY29ycmVzcG9uZCB0byBhbg0KPiBlbXB0eSBuYW1lKQ0KPiANCj4gYGAi
+ImBgIGJ1dCBiZXR0ZXIgdG8gY2hlY2sgdGhlIHJlc3VsdGluZyAocmVuZGVyZWQpIGZpbGUuIFlv
+dSBtYXkgdXNlDQo+IHJzdDJwZGYgc2NyaXB0IGZvciB0aGF0Lg0KDQpPSyBmb3IgdGhlYGAiImBg
+Lg0KSSBjaGVjayB0aGUgcmVuZGVyZWQgSFRNTCB1c2luZyB0aGUgdXN1YWwgIm1ha2UgaHRtbGRv
+Y3MiLiBJcyBpdCBlbm91Z2g/DQoNCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkg
+U2hldmNoZW5rbw0KDQpSZWdhcmRzLA0KRmxhdmlvDQo=
