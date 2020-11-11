@@ -2,91 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 061192AF8D9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 20:18:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0642AF8F6
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 20:23:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbgKKTSl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 14:18:41 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46635 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgKKTSl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 14:18:41 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q206so3379810oif.13;
-        Wed, 11 Nov 2020 11:18:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=di89ZznidawI0fMPrCxwKTCrqn1VoBZdN86rMbY1IMU=;
-        b=ENz2AS9qObd278EHm1mjKHtmsZvokB9l/x7XeQcajnXck01tyYMd37SReWVE5tzM0m
-         rI2q3H/5I4qJuSCUKinHan7lFyjsphBAwBZQ62gHYNovBKzvWzTXpwWs7Nw9imKOViuG
-         Vj+513ddz3h3wZwn314poP7rCoYVWGpIcJfmQg5MqUyyh4qQtv2lBwnBvoQWzJg8J6qe
-         RIwJ2E9DpfeaMAzBbq2rlwOFInnvQEyfEb4YzCFzb43Av6wbC4+EwHozy6QB/W+plQIC
-         WiY0nsP4P0smGMBs/E1jHLzY59n4gmnd2CvAz8lRxZAjufwC/bHR63hQJS8U8N4XKJ1p
-         QL9g==
-X-Gm-Message-State: AOAM532Y0yaumzkuvtFQA3Vwl8thEmuSi7r1F2PtACwppg6t2JSYMoKB
-        bKrFziLEOeMNIpFb3Ee03A==
-X-Google-Smtp-Source: ABdhPJzE5izdS/sK8OLSXsE4E3wtRh49ZnaKPqcrf64roQtnapt1kpAeuSbgJ27Zyva0dTwPbTN8vg==
-X-Received: by 2002:aca:492:: with SMTP id 140mr3029530oie.108.1605122320334;
-        Wed, 11 Nov 2020 11:18:40 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n15sm693407otj.41.2020.11.11.11.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 11:18:39 -0800 (PST)
-Received: (nullmailer pid 1861378 invoked by uid 1000);
-        Wed, 11 Nov 2020 19:18:38 -0000
-Date:   Wed, 11 Nov 2020 13:18:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        punit1.agrawal@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        yuji2.ishikawa@toshiba.co.jp
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: Add bindings for Toshiba Visconti
- GPIO Controller
-Message-ID: <20201111191838.GA1860931@bogus>
-References: <20201111172553.1369282-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20201111172553.1369282-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+        id S1727159AbgKKTXn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 14:23:43 -0500
+Received: from mga05.intel.com ([192.55.52.43]:33522 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgKKTXn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Nov 2020 14:23:43 -0500
+IronPort-SDR: iWxAyBWcmiMnH7bUSz2q9a30GqvDTXGJlWHQo+8tFrjL28ZP/tlhn2XP/DHt7inWED7vWvXOr8
+ ldel4Uk97XCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="254910738"
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="254910738"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 11:23:33 -0800
+IronPort-SDR: BufQXdD8f0g3lvxYN4/I0+O3nU4KHowA5j7y1qOT5lh1ups1TVj06p5DKj7KWTOvxpXPDVcFwg
+ hrpIMmlfD3Wg==
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="328220945"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 11:23:32 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kcvjO-005zFj-7P; Wed, 11 Nov 2020 21:24:34 +0200
+Date:   Wed, 11 Nov 2020 21:24:34 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v5 04/17] gpiolib: Add temporary variable to
+ gpiod_set_transitory() for cleaner code
+Message-ID: <20201111192434.GR4077@smile.fi.intel.com>
+References: <20201109205332.19592-1-andriy.shevchenko@linux.intel.com>
+ <20201109205332.19592-5-andriy.shevchenko@linux.intel.com>
+ <20201111153231.GA2495@lahna.fi.intel.com>
+ <CAHp75VeF8oDkFdyGoxA76QFxu0wuHRyRuwShrOZF8fvemLJO3w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201111172553.1369282-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+In-Reply-To: <CAHp75VeF8oDkFdyGoxA76QFxu0wuHRyRuwShrOZF8fvemLJO3w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 Nov 2020 02:25:50 +0900, Nobuhiro Iwamatsu wrote:
-> Add bindings for the Toshiba Visconti GPIO Controller.
-> 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> ---
->  .../bindings/gpio/toshiba,gpio-visconti.yaml  | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> 
+On Wed, Nov 11, 2020 at 05:40:16PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 11, 2020 at 5:33 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > On Mon, Nov 09, 2020 at 10:53:19PM +0200, Andy Shevchenko wrote:
 
+...
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> > To me this looks better and reads easier:
+> >
+> >         packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE, !transitory);
+> >
+> > But not insisting so if GPIO maintainers are fine then no objections :)
 
-yamllint warnings/errors:
+I have dropped this patch.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml: properties:gpio-ranges: 'truei' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml: ignoring, error in schema: properties: gpio-ranges
-warning: no schema found in file: ./Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+-- 
+With Best Regards,
+Andy Shevchenko
 
-
-See https://patchwork.ozlabs.org/patch/1398028
-
-The base for the patch is generally the last rc1. Any dependencies
-should be noted.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
 
