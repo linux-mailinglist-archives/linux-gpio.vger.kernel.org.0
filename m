@@ -2,123 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3272AE3F6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 00:23:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A27DB2AE492
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Nov 2020 01:04:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbgKJXXv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Nov 2020 18:23:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
+        id S1732043AbgKKAEq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Nov 2020 19:04:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgKJXXt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 18:23:49 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394E7C0613D1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 15:23:41 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id s30so587516lfc.4
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 15:23:41 -0800 (PST)
+        with ESMTP id S1732029AbgKKAEq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Nov 2020 19:04:46 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B080C0613D1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 16:04:40 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id p12so2296026ljc.9
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 16:04:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0iPOT1kCpEb8GIA2V0tWg7Hf1K8amg0YQm1Ma4D+KDc=;
-        b=Ol/s+/ZvSqEfl2maqK5UhQOnw5386GSawhVN7yVbtpq0Eu0Y4f6VxAWnM8uq5uLNJ0
-         gVtBNkODM++bI9b+HyNA5IJsRSOBtD2V6KTQVeIlG2QJtPNvXxudvgRdzzkTPf6y2nwF
-         JzIDNwIDWvvgE/QUaPNsJ8+Lcr6aq3t5AVM4Ecz6d7nTkN5VKcgEXxUu8irQefoTY/og
-         G1ep0Pc7KuPmHRRHhV3F3GvLJ+SChNOnrZdxlgaVe2CWKIaUu5Vq5LLvWTb1LX6aWvSL
-         q9S7Snr2UM51CX4rhuFgkElJqHUFxLuk/Gx/Mpa3vnfjBs2nBRQDkBI0j7QVm8JWB1s6
-         y8Aw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JzWWY6NuciTI33aQq96X3WiN1h2jDKoGrOwhs2Ifrxc=;
+        b=DSw+pVH6EQmIKgMM49DrSxbYR8Ia08GpFokAgc4lncdWrInFkSMUP0k/INRLZEBshA
+         H2s4OgDrG9h5nRuZF9VelAC2M2CMq1b94qV7D7IyW3sgxYCmDNn3qsfFlcskaARrnfZ4
+         ap7L10qrulUSlTgUG7ZnTO4n1N/I+WLuiUtjQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0iPOT1kCpEb8GIA2V0tWg7Hf1K8amg0YQm1Ma4D+KDc=;
-        b=tGp0Dtxgb4gc0+AMxTcnVmX+cAJ9QfZKRpMj2cXJC4Hp6gcWvx3E0kDCKMkZ0+i7LG
-         S4jdx/m+zWYDNItwCmHmju9Nt7Thtv+kFDecs6g67ajIiT3fhpOFE+7tyLW9GbyBD2oU
-         1wT9lYBuHlbW92w+xZ7tJIMxGGOfBIxKtSLiTt+qRDKk0OXN5UZ1XP2JKk1HVxg16KNm
-         wZ4RB5b2pAj9mdOxCIPu6kpDz/3BnZyMfqE2QD7CnLiGgo5deTNIc2s2fqJ1xj6Kbiti
-         2z3kewzGkbbof3WO8Lzqos+lmGJ/TnRDTCEpW706h6MmHVBZNnaxlzfz7eu6zXu4zFNl
-         +vAQ==
-X-Gm-Message-State: AOAM5304Alqc1shfOBgvBI7WTrc5gmRsVXQbnJHqYcB+kHnbkT3BmdBt
-        AeUptFWFhNb4QqDZtSgb2F1C0rpZ6rKTWjUl
-X-Google-Smtp-Source: ABdhPJwY+wdLaDHBCIG51IOXaiFgJQE0qFCe4uiaZueX0yYMTCn3Bn5Pg5B7tsGfY1JTMDdY2NjuLw==
-X-Received: by 2002:a19:d02:: with SMTP id 2mr6237586lfn.294.1605050614879;
-        Tue, 10 Nov 2020 15:23:34 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id c19sm33523lfr.182.2020.11.10.15.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2020 15:23:34 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] pinctrl: nomadik: db8500: Add more detailed LCD groups
-Date:   Wed, 11 Nov 2020 00:23:30 +0100
-Message-Id: <20201110232330.2242167-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JzWWY6NuciTI33aQq96X3WiN1h2jDKoGrOwhs2Ifrxc=;
+        b=fgkpGxGR56p1b+X/MfKA3IKG6eVhyezxLtb1zs+x+48m746SXBXcYPEXY9SlmKjQWL
+         cAVE5WH58eu28zLVuxMIaYtAb7YDH0ny3P1e+kI2DWLQSXv3kIN28g9rXA/s7q/jzY0x
+         f0+DnD8YEuK/ewYhrOxe9aho2Cka366Jav74OzAt59uG3G3Mp/0af2kJZohM+vkfa2j0
+         C4ov+Atkl0nz5DQAVQCIeQgwQ7NpMOkApxRJ0371Mzw/VEjnIrckqKYmh21XDtb/Cd1z
+         84Ik/b0WXiz/VHWg7eWZBpDGRYv9zHSjwEKQPA2c61/QxAS0TPGtIkrHRt+QJsBA+0DU
+         O3Hg==
+X-Gm-Message-State: AOAM530WO2lmQ4M+Dx7TJft+WuyuVJ8+MSIkCSTyzui7WVR3T+bhbLxA
+        1yOOk8jo9tyMscaMozDX7CkV4pEvVgHzUw==
+X-Google-Smtp-Source: ABdhPJzedm0tngZe5TXWoBTxspwJT5vY+lZkdPGl6JgkkPmsjIbn3E5awH0F5FuKgmTMCvGiZKrNog==
+X-Received: by 2002:a2e:7c12:: with SMTP id x18mr3878476ljc.447.1605053075686;
+        Tue, 10 Nov 2020 16:04:35 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id q15sm42461lfb.163.2020.11.10.16.04.34
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Nov 2020 16:04:35 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id 74so699662lfo.5
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Nov 2020 16:04:34 -0800 (PST)
+X-Received: by 2002:a19:408b:: with SMTP id n133mr8002533lfa.564.1605053074001;
+ Tue, 10 Nov 2020 16:04:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201110144932.1.I54a30ec0a7eb1f1b791dc9d08d5e8416a1e8e1ef@changeid>
+ <CAHp75VcfmJ6-cqCsZ6BjbghGDt+w-AbxGxLoWG61VVF2Knor-Q@mail.gmail.com>
+In-Reply-To: <CAHp75VcfmJ6-cqCsZ6BjbghGDt+w-AbxGxLoWG61VVF2Knor-Q@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Tue, 10 Nov 2020 16:03:57 -0800
+X-Gmail-Original-Message-ID: <CAE=gft4vdBytT2=tCbv2aE3RRoDut5CiHdBODjXJamGM5yB3Bw@mail.gmail.com>
+Message-ID: <CAE=gft4vdBytT2=tCbv2aE3RRoDut5CiHdBODjXJamGM5yB3Bw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: Fix Jasperlake hostown offset
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need a more granular distribution among funcion A
-and function B for the LCD pins for the Samsung
-GT-I9070 . Provide some new pin groups so we can
-configure this phone properly.
+On Tue, Nov 10, 2020 at 3:48 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> On Wednesday, November 11, 2020, Evan Green <evgreen@chromium.org> wrote:
+>>
+>> GPIOs that attempt to use interrupts get thwarted with a message like:
+>> "pin 161 cannot be used as IRQ" (for instance with SD_CD). This is becau=
+se
+>> the JSL_HOSTSW_OWN offset is incorrect, so every GPIO looks like it's
+>> owned by ACPI.
+>
+>
+> Funny, I have created a similar patch few hours ago. Are you sure this is=
+ enough? In mine I have also padcfglock updated. But I have to confirm that=
+, that=E2=80=99s why I didn=E2=80=99t send it out.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Oh weird! I didn't check padcfglock since it didn't happen to be
+involved in the bug I was tracking down. I was trying to clean out
+some skeletons in my kernel closet [1] and debugged it down to this.
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-index acad3887cc74..0b9b6cbfd10c 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-@@ -421,6 +421,8 @@ static const unsigned lcd_d0_d7_a_1_pins[] = {
- /* D8 thru D11 often used as TVOUT lines */
- static const unsigned lcd_d8_d11_a_1_pins[] = { DB8500_PIN_F4,
- 	DB8500_PIN_E3, DB8500_PIN_E4, DB8500_PIN_D2 };
-+static const unsigned lcd_d12_d15_a_1_pins[] = {
-+	DB8500_PIN_C1, DB8500_PIN_D3, DB8500_PIN_C2, DB8500_PIN_D5 };
- static const unsigned lcd_d12_d23_a_1_pins[] = {
- 	DB8500_PIN_C1, DB8500_PIN_D3, DB8500_PIN_C2, DB8500_PIN_D5,
- 	DB8500_PIN_C6, DB8500_PIN_B3, DB8500_PIN_C4, DB8500_PIN_E6,
-@@ -535,6 +537,9 @@ static const unsigned lcd_b_1_pins[] = { DB8500_PIN_D17, DB8500_PIN_D16,
- 	DB8500_PIN_A18, DB8500_PIN_C18, DB8500_PIN_B19, DB8500_PIN_B20,
- 	DB8500_PIN_D21, DB8500_PIN_D20, DB8500_PIN_C20, DB8500_PIN_B21,
- 	DB8500_PIN_C21, DB8500_PIN_A22, DB8500_PIN_B24, DB8500_PIN_C22 };
-+static const unsigned lcd_d16_d23_b_1_pins[] = {
-+	DB8500_PIN_D21, DB8500_PIN_D20, DB8500_PIN_C20, DB8500_PIN_B21,
-+	DB8500_PIN_C21, DB8500_PIN_A22, DB8500_PIN_B24, DB8500_PIN_C22 };
- static const unsigned ddrtrig_b_1_pins[] = { DB8500_PIN_AJ27 };
- static const unsigned pwl_b_1_pins[] = { DB8500_PIN_AF25 };
- static const unsigned spi1_b_1_pins[] = { DB8500_PIN_AG15, DB8500_PIN_AF13,
-@@ -689,6 +694,7 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
- 	DB8500_PIN_GROUP(lcdvsi1_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(lcd_d0_d7_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(lcd_d8_d11_a_1, NMK_GPIO_ALT_A),
-+	DB8500_PIN_GROUP(lcd_d12_d15_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(lcd_d12_d23_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(kp_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(kpskaskb_a_1, NMK_GPIO_ALT_A),
-@@ -741,6 +747,7 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
- 	DB8500_PIN_GROUP(lcdaclk_b_1, NMK_GPIO_ALT_B),
- 	DB8500_PIN_GROUP(lcda_b_1, NMK_GPIO_ALT_B),
- 	DB8500_PIN_GROUP(lcd_b_1, NMK_GPIO_ALT_B),
-+	DB8500_PIN_GROUP(lcd_d16_d23_b_1, NMK_GPIO_ALT_B),
- 	DB8500_PIN_GROUP(ddrtrig_b_1, NMK_GPIO_ALT_B),
- 	DB8500_PIN_GROUP(pwl_b_1, NMK_GPIO_ALT_B),
- 	DB8500_PIN_GROUP(spi1_b_1, NMK_GPIO_ALT_B),
-@@ -846,7 +853,8 @@ DB8500_FUNC_GROUPS(mc0, "mc0_a_1", "mc0_a_2", "mc0_dat47_a_1", "mc0dat31dir_a_1"
- DB8500_FUNC_GROUPS(msp1, "msp1txrx_a_1", "msp1_a_1", "msp1txrx_b_1");
- DB8500_FUNC_GROUPS(lcdb, "lcdb_a_1");
- DB8500_FUNC_GROUPS(lcd, "lcdvsi0_a_1", "lcdvsi1_a_1", "lcd_d0_d7_a_1",
--	"lcd_d8_d11_a_1", "lcd_d12_d23_a_1", "lcd_b_1");
-+		   "lcd_d8_d11_a_1", "lcd_d12_d15_a_1", "lcd_d12_d23_a_1", "lcd_b_1",
-+		   "lcd_d16_d23_b_1");
- DB8500_FUNC_GROUPS(kp, "kp_a_1", "kp_a_2", "kp_b_1", "kp_b_2", "kp_c_1", "kp_oc1_1");
- DB8500_FUNC_GROUPS(mc2, "mc2_a_1", "mc2rstn_c_1");
- DB8500_FUNC_GROUPS(ssp1, "ssp1_a_1");
--- 
-2.26.2
+If you want to smash the two patches together I'm fine with that. Let
+me know, and CC me if you do post something.
+-Evan
 
+[1] https://chromium.googlesource.com/chromiumos/overlays/board-overlays/+/=
+master/overlay-dedede/sys-kernel/chromeos-kernel-5_4/files/0001-CHROMIUM-pi=
+nctrl-intel-Allow-pin-as-IRQ-even-in-ACPI.patch
