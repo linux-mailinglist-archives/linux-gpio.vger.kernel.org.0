@@ -2,86 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99D1E2B01B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 10:08:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 929E32B01C4
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 10:10:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgKLJIM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 04:08:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37746 "EHLO mx2.suse.de"
+        id S1726061AbgKLJKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 04:10:23 -0500
+Received: from mga17.intel.com ([192.55.52.151]:54144 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgKLJGZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Nov 2020 04:06:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay1.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 96635AE78;
-        Thu, 12 Nov 2020 09:06:23 +0000 (UTC)
-Message-ID: <9e3a04f0ae76675f610bf25e6b53b4aff26afae4.camel@suse.de>
-Subject: Re: [PATCH v3 07/11] input: raspberrypi-ts: Release firmware handle
- when not needed
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
-        f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
-        sboyd@kernel.org, linux-rpi-kernel@lists.infradead.org,
-        bgolaszewski@baylibre.com, andy.shevchenko@gmail.com
-Date:   Thu, 12 Nov 2020 10:06:21 +0100
-In-Reply-To: <20201112014542.GA1003057@dtor-ws>
-References: <20201104103938.1286-1-nsaenzjulienne@suse.de>
-         <20201104103938.1286-8-nsaenzjulienne@suse.de>
-         <20201112014542.GA1003057@dtor-ws>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-j2+UKM6wkcW3jVx2ysNJ"
-User-Agent: Evolution 3.36.5 
+        id S1725995AbgKLJKW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Nov 2020 04:10:22 -0500
+IronPort-SDR: fFn3QPeURwlpsuf1LDCLorull+SxaRVmfUegmUUOATJvYZmshH2cO+2Zn/m5c6nnqXIugTNesd
+ B7MLrXM43jxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="150130968"
+X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
+   d="scan'208";a="150130968"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 01:10:22 -0800
+IronPort-SDR: bYhYXVdd+E8f4Dz0NuEa9W9y8iluQ4usf/ozyjTLC5OtPUdUZIc2ikq/p4HnJjkzLgHSlTpHz/
+ q3MwAN1f494w==
+X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
+   d="scan'208";a="542186972"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 01:10:19 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 12 Nov 2020 11:10:16 +0200
+Date:   Thu, 12 Nov 2020 11:10:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org,
+        Vasile-Laurentiu Stanimir 
+        <vasile-laurentiu.stanimir@windriver.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v7 13/18] gpiolib: acpi: Set initial value for output pin
+ based on bias and polarity
+Message-ID: <20201112091016.GY2495@lahna.fi.intel.com>
+References: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
+ <20201111222008.39993-14-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111222008.39993-14-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 12, 2020 at 12:20:03AM +0200, Andy Shevchenko wrote:
+> From: Vasile-Laurentiu Stanimir <vasile-laurentiu.stanimir@windriver.com>
+> 
+> GpioIo() resources don't contain an initial value for the output pin.
+> Therefore instead of deducting its value solely based on bias field
+> we should deduce that value from the polarity and the bias fields.
+> Typical scenario is, when pin is defined in the table and its polarity,
+> specified in _DSD or via platform code, is defined as active low,
+> in the following call chain:
+> 
+>   -> acpi_populate_gpio_lookup()
+>      -> acpi_gpio_to_gpiod_flags()
+> 
+> it will return GPIOD_OUT_HIGH if bias is set no matter if polarity
+> is GPIO_ACTIVE_LOW, so it will return the current level instead of
+> the logical level.
+> 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 
---=-j2+UKM6wkcW3jVx2ysNJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2020-11-11 at 17:45 -0800, Dmitry Torokhov wrote:
-> Hi Nicolas,
->=20
-> On Wed, Nov 04, 2020 at 11:39:33AM +0100, Nicolas Saenz Julienne wrote:
-> > Use devm_rpi_firmware_get() so as to make sure we release RPi's firmwar=
-e
-> > interface when unbinding the device.
->=20
-> Unless I am mistaken this driver does not really need the firmware
-> structure past rpi_ts_probe(), and will be fine if it disappears earlier
-> than unbind time.
-
-Yes, I missed that. Will update it.
-
-Regards,
-Nicolas
-
-
---=-j2+UKM6wkcW3jVx2ysNJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+s+w0ACgkQlfZmHno8
-x/5iuQgApaPJZjl0NVPJ80THZ1yICuyOa9+6d8Bal28kwj6Ft8Xb+Z6ploXmWJ5T
-EPDFQF4pFMoSBGmgGSspJj4dl/KD3UaeJIRB3c3UNqIC7icH9TpBZY4Z41Mioqsv
-l4QH1DIWYVsRYi/9I1vhoijsquL5t5WK0c1N9GBs6GIQjVwEMN9tsDcQ3flTLKZs
-93saK4xtDp6UbqsYQYtwmupmREvAIxqnm0g3GB/Qk8Fkg9vpIK0H5cRBaJT9bfb8
-tQPpTY2LWTXQ53azvlBOcZC7yJQRBKitR2GkibS1ynNoNl43f5ZjyWXkzK2TEw1j
-HOKtCH+6NObb7Wm+xwL50tkanpTaGg==
-=eql2
------END PGP SIGNATURE-----
-
---=-j2+UKM6wkcW3jVx2ysNJ--
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
