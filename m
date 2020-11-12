@@ -2,105 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECE192B04B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 13:07:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F4BB2B04F5
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 13:30:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbgKLMHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 07:07:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbgKLMHp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 07:07:45 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94BAC0613D1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 04:07:43 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id k7so2679276plk.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 04:07:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RszaLDToYH6nO4Sqpgj6prrhQ62xSJa0nDudetVemdw=;
-        b=HHT0i23qjQKAdtd2CuX6hegL/REGo0qJDhiEjmw1IuVeUuS2nHUBnooX4Zg85MJrxE
-         ALcZTe82klIpcDmfpq0hN1EdawR1NfK63I2GWUZNH5hLjT2T1SJpZZvumGs+EgLjU51M
-         5UGXL8XXEkYzs8pT4Jh66GV7T9WBnm21xSkn75fkKCPORVu6rT0rGmkzYopfIXOmLADZ
-         BlwmG4+MjZF9LBg/cHBsFEyDuNTdSFItRWy4TtvvE+bKnIC2s10ylC6Y5rgBmaA45uU9
-         46QO59z9Xf3HCMB6ZhokYUPfFYYX4piRxKx9p8GWU/mPIyPtWawJ8hFWKNWSKu4Fc4z6
-         rcvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RszaLDToYH6nO4Sqpgj6prrhQ62xSJa0nDudetVemdw=;
-        b=gdGqKayELwHIbbIpi/ZMz8utZtZViaU3qSflX/JociXIzB39m5rM3OBtI/5eN8SeNV
-         o0ockMHczCrilFnrVtdunvNatLrZ5B6YPBCyoBbu40Hd7vJk5y4zGS+LxFtiAHrYYlU8
-         eI5Nm7xQhWtcyX20Uy3ry+aAvcwZGyXU4DBEdmnovix7BJsWtYN/sCpOcA6PK/DmE6e2
-         V+tOu25jEWLdf8Wcvz6kKLD5AWM3YwPGrxmqOoZwUwVW5tESp0U9CI97oiwqZd4A8AXt
-         wlVUqrgFFfa5c22igsA5gB4NV/dursDiMzfLHw6Whk4STQb67uYJgxQlE4zkMyOTgc72
-         Cc7Q==
-X-Gm-Message-State: AOAM5332oLZL28nBTdXdiJstEHZ3IiUsg1ErBvzd78ppyzxdIyy7mB+J
-        BpleW3UbVhOk5T27lpf+FVkY4yaoCbWLcsHA8NU=
-X-Google-Smtp-Source: ABdhPJxL5v6WGkD6rKmj83INfAAZgE9DaPnnGLOH+cqPrl1bTyF3EIV95KSceKf16pTV2OCOt5E5aQIs2TkDbOplBIk=
-X-Received: by 2002:a17:902:bc4a:b029:d6:7ef9:689c with SMTP id
- t10-20020a170902bc4ab02900d67ef9689cmr26516052plz.21.1605182863497; Thu, 12
- Nov 2020 04:07:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
- <20201111222008.39993-8-andriy.shevchenko@linux.intel.com>
- <20201112081638.GV2495@lahna.fi.intel.com> <CAHp75Vehbo-Ai5SE8JX1g4wggrQvz9TpwjsiS6C0r5mztwSg6A@mail.gmail.com>
- <20201112110601.GA2495@lahna.fi.intel.com> <e176656b-81e1-d9f8-a108-ac8376f6c136@redhat.com>
-In-Reply-To: <e176656b-81e1-d9f8-a108-ac8376f6c136@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Nov 2020 14:08:31 +0200
-Message-ID: <CAHp75VfEXW030w3Tnmig+8+wLFb=XUSvE9hjnZ8RPdJQxDRFZQ@mail.gmail.com>
-Subject: Re: [PATCH v7 07/18] gpiolib: Introduce gpio_set_debounce_timeout()
- for internal use
-To:     Hans de Goede <hdegoede@redhat.com>
+        id S1728009AbgKLMak (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 07:30:40 -0500
+Received: from mga18.intel.com ([134.134.136.126]:37540 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgKLMaj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Nov 2020 07:30:39 -0500
+IronPort-SDR: h/mViDQNjntVi33CfCi9802VvSsKjBssiZnC31fsH4OzmBt+5zUFMJH8UJW1U+XmgXHIezlU3q
+ hePFXvGboF2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="158078519"
+X-IronPort-AV: E=Sophos;i="5.77,472,1596524400"; 
+   d="scan'208";a="158078519"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 04:30:37 -0800
+IronPort-SDR: IX5G07I5r7Fa3ycS3E5e+scfE3PD0jywPOjnJeKppnpcjbQyN69YvgGlcmoazDnhFoGNY4hFRV
+ c+hfoGsznjng==
+X-IronPort-AV: E=Sophos;i="5.77,472,1596524400"; 
+   d="scan'208";a="328481629"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 04:30:35 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kdBlJ-006CgX-VS; Thu, 12 Nov 2020 14:31:37 +0200
+Date:   Thu, 12 Nov 2020 14:31:37 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Flavio Suligoi <f.suligoi@asem.it>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: ACPI: explain how to use
+ gpio-line-names
+Message-ID: <20201112123137.GA4077@smile.fi.intel.com>
+References: <20201112090241.570637-1-f.suligoi@asem.it>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201112090241.570637-1-f.suligoi@asem.it>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 1:12 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/12/20 12:06 PM, Mika Westerberg wrote:
-> > On Thu, Nov 12, 2020 at 12:19:37PM +0200, Andy Shevchenko wrote:
-> >> On Thu, Nov 12, 2020 at 10:17 AM Mika Westerberg
-> >> <mika.westerberg@linux.intel.com> wrote:
-> >>> On Thu, Nov 12, 2020 at 12:19:57AM +0200, Andy Shevchenko wrote:
-> >>
-> >> ...
-> >>
-> >>>> +int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
-> >>
-> >>> Sorry for commenting this late but I realized we have
-> >>> gpiod_set_debounce() already. At least this new function should follow
-> >>> the naming (gpiod as it takes descriptior):
-> >>>
-> >>> int gpiod_set_debounce_optional(struct gpio_desc *desc, unsigned int debounce);
-> >>
-> >> Unfortunately it will be inconsistent with the naming schema. I
-> >> explained the choice of name in the cover letter. I will elaborate a
-> >> bit there.
-> >
-> > OK, It seems that I was not CC'd cover letter of the last two versions,
-> > or it got dropped somewhere.
->
-> Yes I did not get the cover-letter either, I was actually wondering if there
-> was one...
+On Thu, Nov 12, 2020 at 10:02:41AM +0100, Flavio Suligoi wrote:
+> The "gpio-line-names" declaration is not fully
+> documented, so can be useful to add some important
+> information and one more example.
+> 
+> This commit also fixes a trivial spelling mistake.
 
-Oops, I dropped --cc because of your Rb tags (and I have added Cc when
-there is no tag), but I forgot to add Cc to the cover letter.
+Thanks!
 
-Here we are [1].
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[1]: https://lore.kernel.org/linux-gpio/20201111222008.39993-1-andriy.shevchenko@linux.intel.com/
-
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+> 
+> v2: - fix commit spelling mistakes
+>     - add double back quotes to gpio-line-names
+>     - adjust documentation lines layout
+>     - add comma at the end of Package list names in the first example
+> 
+>  .../firmware-guide/acpi/gpio-properties.rst   | 58 ++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> index bb6d74f23ee0..ae5396a1f092 100644
+> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
+> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> @@ -107,7 +107,61 @@ Example::
+>  
+>  - gpio-line-names
+>  
+> -Example::
+> +The ``gpio-line-names`` declaration is a list of strings ("names"), which
+> +describes each line/pin of a GPIO controller/expander. This list, contained in
+> +a package, must be inserted inside the GPIO controller declaration of an ACPI
+> +table (typically inside the DSDT). The ``gpio-line-names`` list must respect the
+> +following rules (see also the examples):
+> +
+> +  - the first name in the list corresponds with the first line/pin of the GPIO
+> +    controller/expander
+> +  - the names inside the list must be consecutive (no "holes" are permitted)
+> +  - the list can be incomplete and can end before the last GPIO line: in
+> +    other words, it is not mandatory to fill all the GPIO lines
+> +  - empty names are allowed (two quotation marks ``""`` correspond to an empty
+> +    name)
+> +
+> +Example of a GPIO controller of 16 lines, with an incomplete list with two
+> +empty names::
+> +
+> +  Package () {
+> +      "gpio-line-names",
+> +      Package () {
+> +          "pin_0",
+> +          "pin_1",
+> +          "",
+> +          "",
+> +          "pin_3",
+> +          "pin_4_push_button",
+> +      }
+> +  }
+> +
+> +At runtime, the above declaration produces the following result (using the
+> +"libgpiod" tools)::
+> +
+> +  root@debian:~# gpioinfo gpiochip4
+> +  gpiochip4 - 16 lines:
+> +          line   0:      "pin_0"       unused   input  active-high
+> +          line   1:      "pin_1"       unused   input  active-high
+> +          line   2:      unnamed       unused   input  active-high
+> +          line   3:      unnamed       unused   input  active-high
+> +          line   4:      "pin_3"       unused   input  active-high
+> +          line   5: "pin_4_push_button" unused input active-high
+> +          line   6:      unnamed       unused   input  active-high
+> +          line   7       unnamed       unused   input  active-high
+> +          line   8:      unnamed       unused   input  active-high
+> +          line   9:      unnamed       unused   input  active-high
+> +          line  10:      unnamed       unused   input  active-high
+> +          line  11:      unnamed       unused   input  active-high
+> +          line  12:      unnamed       unused   input  active-high
+> +          line  13:      unnamed       unused   input  active-high
+> +          line  14:      unnamed       unused   input  active-high
+> +          line  15:      unnamed       unused   input  active-high
+> +  root@debian:~# gpiofind pin_4_push_button
+> +  gpiochip4 5
+> +  root@debian:~#
+> +
+> +Another example::
+>  
+>    Package () {
+>        "gpio-line-names",
+> @@ -191,7 +245,7 @@ The driver might expect to get the right GPIO when it does::
+>  but since there is no way to know the mapping between "reset" and
+>  the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
+>  
+> -The driver author can solve this by passing the mapping explictly
+> +The driver author can solve this by passing the mapping explicitly
+>  (the recommended way and documented in the above chapter).
+>  
+>  The ACPI GPIO mapping tables should not contaminate drivers that are not
+> -- 
+> 2.25.1
+> 
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
