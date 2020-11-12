@@ -2,48 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F0C02B0054
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 08:27:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BCB22B0042
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 08:21:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgKLH1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 02:27:18 -0500
-Received: from smtp.rcn.com ([69.168.97.78]:12655 "EHLO smtp.rcn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgKLH1S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Nov 2020 02:27:18 -0500
-X-Greylist: delayed 1200 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Nov 2020 02:27:17 EST
-DKIM-Signature: v=1; a=rsa-sha1; d=rcn.com; s=20180516; c=relaxed/simple;
-        q=dns/txt; i=@rcn.com; t=1605164836;
-        h=From:Subject:Date:To:MIME-Version:Content-Type;
-        bh=sVXy0K2LcMM7ofIsrpq2g4Nt85A=;
-        b=s0Owauacz30UrEboMJ5AAD562cc3KiAQzsSkGTD92rkvsfBcjZTgCd1vHa2nwyLF
-        +zWPkQGMzTQAkvihpS7UMirVzghZXr8Ux+23nj34L5YTfwUrw2i443zpLrXtoOH3
-        62Xht8yovT3/cnubktSJg2DxZdp6PWwl6GU9ki12kSUDwwHOgDhg4o1kl0fmxqfR
-        M7sQHyINQ3fPh+bEdq/5SlCHQuIGWUnlkDVSaJ04MAzyOoHOOe+cz5qE1vwKC4iT
-        rLOxcXBOae2iFQN4coolaXRKddwngjx9QWGYluzTZD2UcVEkCHN2enpCA0lH6uNp
-        mitvZ2uabqeZ7mnxodm/DA==;
-X-User-Whitelist: YES
-X-Authed-Username: am95Y2V3a2lkZEByY24uY29t
-Authentication-Results: smtp02.rcn.cmh.synacor.com smtp.mail=joycewkidd@rcn.com; spf=softfail; sender-id=softfail
-Authentication-Results: smtp02.rcn.cmh.synacor.com header.from=joycewkidd@rcn.com; sender-id=softfail
-Received: from [10.33.66.2] ([10.33.66.2:54978] helo=md08.rcn.cmh.synacor.com)
-        by smtp.rcn.com (envelope-from <joycewkidd@rcn.com>)
-        (ecelerity 3.6.25.56547 r(Core:3.6.25.0)) with ESMTP
-        id 27/CE-38180-42FDCAF5; Thu, 12 Nov 2020 02:07:16 -0500
-Date:   Thu, 12 Nov 2020 02:07:16 -0500 (EST)
-From:   Dr poonam Tiwari <joycewkidd@rcn.com>
-Reply-To: Dr poonam Tiwari <drpnmtw98@gmail.com>
-To:     RCN Technical Support <rcnts@rcn.com>
-Message-ID: <105300169.16805747.1605164836174.JavaMail.root@rcn.com>
-In-Reply-To: <1048987288.16799524.1605163819160.JavaMail.root@md08.rcn.cmh.synacor.com>
-Subject: Re: hi!
+        id S1725966AbgKLHV3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 02:21:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbgKLHV3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 02:21:29 -0500
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE669C0617A6
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 23:21:28 -0800 (PST)
+Received: by mail-il1-x142.google.com with SMTP id h6so731425ilj.8
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 23:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ab2X7D8rQV+rUh3MG2vmCj3eeC4kvsZIlLSd9hzapi4=;
+        b=o695KMSlvlKK8s2nZB3RnNNjASazEvqZxx7SlWDLIfkA7DjvTGHQKtr7OeUjA+JK/W
+         6AsWT7BcKyt6qJFEm42kuZq/NhNqqk+O/5M33EKitgOxYwwKwIv4xVOTPW0KtSDKxWoi
+         N/WtmAKQP0MX+WWeb1AnqArll7M6n1MD4y/2o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ab2X7D8rQV+rUh3MG2vmCj3eeC4kvsZIlLSd9hzapi4=;
+        b=gWTWEZ+4/BKJ5M5G3SWLiHpStRa3vVVT5noNXQB6/gnO9S1pEMKzuvKUSkQrVevAos
+         owiL5408daqjTRY2jaN0fACyla+g64q6vnvKE4ZevJ/BBYo6BU9qImL1wIp81dviuS9r
+         7Y16M5lY0q586l7rCC1jGyRWE0BM0oOjgUpoQHqJdKbg8YCIeme9X4hjHOmiQY2bkL1N
+         kjdJVS/66fXB9HaaAanTBizqSwWW4kEp7vHWwsmhv/pBPqyz9oDsXEBrnecDqDZjslQi
+         1y4slrUn7FTpVRbo1jKLHE+NfAkQY4kGavNgqX22cMpCGENj/qz+RCmLQX/bC7VEMZ/K
+         9v3g==
+X-Gm-Message-State: AOAM530iBl0jPsdP8bczUiuRWmyIOCHUy7sp8exHPRhHpauU05sHkOhx
+        meVGcSEkgIcniBJZUGBWlaNQ0+j62DUDngnRosd6
+X-Google-Smtp-Source: ABdhPJwG3l0icsmB1IU32yQpvlFd8k79z2GNzpvnNWW307BnW87hWqYbQJNHXepVhLwR9j1SCouAAn38lAiRUpIrLCw=
+X-Received: by 2002:a92:512:: with SMTP id q18mr20861835ile.147.1605165688041;
+ Wed, 11 Nov 2020 23:21:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [89.187.171.145]
-X-Mailer: Zimbra 7.2.7_GA_2942 (zclient/7.2.7_GA_2942)
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-9-damien.lemoal@wdc.com>
+In-Reply-To: <20201107081420.60325-9-damien.lemoal@wdc.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 11 Nov 2020 23:21:17 -0800
+Message-ID: <CAOnJCUJO3Oqy94MbT-eV+xaJn9obE0H=zpvuJuch-aY5e9bfgQ@mail.gmail.com>
+Subject: Re: [PATCH 08/32] riscv: Fix kernel time_init()
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-goood aftrnn
+On Sat, Nov 7, 2020 at 12:15 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
+>
+> If of_clk_init() is not called in time_init(), clock providers defined
+> in the system device tree are not initialized, resulting in failures for
+> other devices to initialize due to missing clocks.
+> Similarly to other architectures and to the default kernel time_init()
+> implementation, call of_clk_init() before executing timer_probe() in
+> time_init().
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
+>  arch/riscv/kernel/time.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+> index 4d3a1048ad8b..8a5cf99c0776 100644
+> --- a/arch/riscv/kernel/time.c
+> +++ b/arch/riscv/kernel/time.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>
+> +#include <linux/of_clk.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/delay.h>
+>  #include <asm/sbi.h>
+> @@ -24,6 +25,8 @@ void __init time_init(void)
+>         riscv_timebase = prop;
+>
+>         lpj_fine = riscv_timebase / HZ;
+> +
+> +       of_clk_init(NULL);
+>         timer_probe();
+>  }
+>
+> --
+> 2.28.0
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+
+-- 
+Regards,
+Atish
