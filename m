@@ -2,148 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE2772B0283
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 11:10:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB1532B029D
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 11:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgKLKKI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 05:10:08 -0500
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:50788 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgKLKKH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 05:10:07 -0500
-Received: from relay10.mail.gandi.net (unknown [217.70.178.230])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id A13463ADCF7
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 10:08:32 +0000 (UTC)
-Received: from localhost (lfbn-lyo-1-997-19.w86-194.abo.wanadoo.fr [86.194.74.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8480B240015;
-        Thu, 12 Nov 2020 10:07:32 +0000 (UTC)
-Date:   Thu, 12 Nov 2020 11:07:31 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH v2 16/25] arch: arm: mach-at91: pm: Move prototypes to
- mutually included header
-Message-ID: <20201112100731.GC4556@piout.net>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-17-lee.jones@linaro.org>
- <20201112093918.GV2063125@dell>
+        id S1725966AbgKLKSu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 05:18:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbgKLKSt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 05:18:49 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8AAC0613D1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:18:49 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id g7so4120086pfc.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:18:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=If19d4PlEmtpLirWXQE0qH5dDeLMMmzCA7Exweg6r7I=;
+        b=Ffs2kssEL6e/DLq9lSybGYZQy5tQx7OGpp7amk2eoUJEPhRLkw/d2NscVAXnwSJUs0
+         54V+mpEAsUrtf8kTtNIPa0kXXV51QVaHVl7BOWj3l/8DwuqajDEwIY2cLPcT4eHGgO4p
+         R0neM5I+T3yBZyEqsokLtQiTQrxmpHs2sHEiHrNn7ws2coSqzkYmULKvJnpbBFNkgond
+         WdymQqRM3OImX6lCVrzBYuSmMYvKMMlEB7pYoBGrHd3iZopqIAnPQ5rSY0xGwiv5tJQN
+         0cWVSWETzZgJyBNu9gWLJqLQPzzhr2qM0UfSwdKhZx7lE0itk5jCNebBbtU8YtQHfwYl
+         nQTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=If19d4PlEmtpLirWXQE0qH5dDeLMMmzCA7Exweg6r7I=;
+        b=jDwJqcLm6746zJxwbZmeuAMU8D1cuGmA7kR5sPqP1dQGw5Ch9HKyeKHB+FcQUb+itE
+         CY6gAEYBIQP8UebG0oO7OXpq+NUu7sW5/wePohZXxQaEhTQ70YHNXtjZqpKsWA8kvd5u
+         iEpKZIb8/3WXB9o888g3+hVVNnNAINv0iv8AucQO7lmC2qGGmF5b1BVYkZpLgMOKNMYn
+         B9jd5e9SWYssW41DJ7xSPnzKzW2Qd1fWQUsEq5zvQo5m/oPATce9bwN04KmGmE4TnrdR
+         GO4jT1bUH/GXnNWmy8mMaclFFHGAo//2ExTx9r3KukkV3n7oF3Zx4lPQ/FKIItdOqyMY
+         j+pw==
+X-Gm-Message-State: AOAM531TOU74ZVF7UVjUZEL1egzOxn2Uprl0eLXXGDN1F8lwiIbz/jYA
+        Okns9NudJanc8sjs663Bhp8BO3YLSPU+N0IAdqVZIEMIZNY=
+X-Google-Smtp-Source: ABdhPJx+tDF7vnm5Qp70shcQqxlI0Y2pbAamMjTFejVErBEpTQg1rVLRsn94Cd1ULD05Sqt+G/op/ROKc52tXyWDKqM=
+X-Received: by 2002:a63:4511:: with SMTP id s17mr25448203pga.4.1605176328766;
+ Thu, 12 Nov 2020 02:18:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201112093918.GV2063125@dell>
+References: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
+ <20201111222008.39993-8-andriy.shevchenko@linux.intel.com> <20201112081638.GV2495@lahna.fi.intel.com>
+In-Reply-To: <20201112081638.GV2495@lahna.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 12 Nov 2020 12:19:37 +0200
+Message-ID: <CAHp75Vehbo-Ai5SE8JX1g4wggrQvz9TpwjsiS6C0r5mztwSg6A@mail.gmail.com>
+Subject: Re: [PATCH v7 07/18] gpiolib: Introduce gpio_set_debounce_timeout()
+ for internal use
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Thu, Nov 12, 2020 at 10:17 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Thu, Nov 12, 2020 at 12:19:57AM +0200, Andy Shevchenko wrote:
 
-On 12/11/2020 09:39:18+0000, Lee Jones wrote:
-> Both the caller and the supplier's source file should have access to
-> the include file containing the prototypes.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
->  1637 | void at91_pinctrl_gpio_suspend(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
->  1661 | void at91_pinctrl_gpio_resume(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> 
-> v2: Moved shared header to: include/soc/at91/pm.h
-> 
->  arch/arm/mach-at91/pm.c        | 19 ++++++++-----------
->  drivers/pinctrl/pinctrl-at91.c |  2 ++
->  include/soc/at91/pm.h          |  9 +++++++++
->  3 files changed, 19 insertions(+), 11 deletions(-)
->  create mode 100644 include/soc/at91/pm.h
-> 
-> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-> index 120f9aa6fff32..90dcdfe3b3d0d 100644
-> --- a/arch/arm/mach-at91/pm.c
-> +++ b/arch/arm/mach-at91/pm.c
-> @@ -17,6 +17,8 @@
->  #include <linux/clk/at91_pmc.h>
->  #include <linux/platform_data/atmel.h>
->  
-> +#include <soc/at91/pm.h>
-> +
->  #include <asm/cacheflush.h>
->  #include <asm/fncpy.h>
->  #include <asm/system_misc.h>
-> @@ -25,17 +27,6 @@
->  #include "generic.h"
->  #include "pm.h"
->  
-> -/*
-> - * FIXME: this is needed to communicate between the pinctrl driver and
-> - * the PM implementation in the machine. Possibly part of the PM
-> - * implementation should be moved down into the pinctrl driver and get
-> - * called as part of the generic suspend/resume path.
-> - */
-> -#ifdef CONFIG_PINCTRL_AT91
-> -extern void at91_pinctrl_gpio_suspend(void);
-> -extern void at91_pinctrl_gpio_resume(void);
-> -#endif
-> -
->  struct at91_soc_pm {
->  	int (*config_shdwc_ws)(void __iomem *shdwc, u32 *mode, u32 *polarity);
->  	int (*config_pmc_ws)(void __iomem *pmc, u32 mode, u32 polarity);
-> @@ -326,6 +317,12 @@ static void at91_pm_suspend(suspend_state_t state)
->  static int at91_pm_enter(suspend_state_t state)
->  {
->  #ifdef CONFIG_PINCTRL_AT91
-> +	/*
-> +	 * FIXME: this is needed to communicate between the pinctrl driver and
-> +	 * the PM implementation in the machine. Possibly part of the PM
-> +	 * implementation should be moved down into the pinctrl driver and get
-> +	 * called as part of the generic suspend/resume path.
-> +	 */
->  	at91_pinctrl_gpio_suspend();
->  #endif
->  
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 72edc675431ce..0a7e10d39505c 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -23,6 +23,8 @@
->  /* Since we request GPIOs from ourself */
->  #include <linux/pinctrl/consumer.h>
->  
-> +#include <soc/at91/pm.h>
-> +
->  #include "pinctrl-at91.h"
->  #include "core.h"
->  
-> diff --git a/include/soc/at91/pm.h b/include/soc/at91/pm.h
-> new file mode 100644
-> index 0000000000000..0fd5093f7f73a
-> --- /dev/null
-> +++ b/include/soc/at91/pm.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * atmel platform data
-> + */
-> +
-> +#ifdef CONFIG_PINCTRL_AT91
+...
 
-Shouldn't that be a header guard instead of depending on PINCTRL_AT91 ?
+> > +int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
+
+> Sorry for commenting this late but I realized we have
+> gpiod_set_debounce() already. At least this new function should follow
+> the naming (gpiod as it takes descriptior):
+>
+> int gpiod_set_debounce_optional(struct gpio_desc *desc, unsigned int debounce);
+
+Unfortunately it will be inconsistent with the naming schema. I
+explained the choice of name in the cover letter. I will elaborate a
+bit there.
 
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
