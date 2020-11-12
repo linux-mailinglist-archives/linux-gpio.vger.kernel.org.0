@@ -2,126 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF9C52B0BA2
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 18:51:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 018202B0D67
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 20:06:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgKLRv0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 12:51:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgKLRvZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 12:51:25 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D06C0613D1;
-        Thu, 12 Nov 2020 09:51:25 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id i7so4813208pgh.6;
-        Thu, 12 Nov 2020 09:51:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EywCTDkeiYnus//+DkG9p7x5uOXcjsUoW/CpBJQjGh4=;
-        b=V5FRj9dv8LZyKY//w8MnGopC83oSkh3/f67EKu2H49jcmyUNYveReXkMJBzGvyFd4q
-         mKcvNnhVICd/UhAL/HH1jUpFUyrBz0394onSteeXHeV50i9Ez+UPXVRJ/ggkQfCzqgGm
-         kZTUJSpVayCtwC4cSeh7i9ajykTWfmMo/ei8+RErGCyLv9pJdlXF4oU6ddtDfkVU1QZ3
-         C/k7/c7VYeacSw8c3j9jFOs+fpuV13Cto+tr+PxtXt9xpKbVtuE00030bzHITnLQ8DGM
-         vefvzjW/M2wcH5x0dDt9q//PluUhKPH7ylVjCzGUXYm7NdXATfhWLzirDL/eJBFpUpwn
-         k6TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EywCTDkeiYnus//+DkG9p7x5uOXcjsUoW/CpBJQjGh4=;
-        b=e28/RxZ+ARc7dvK3ScOb7cdlXt99THlRc2eehygJRH565Wb3mbY3N4MsyeplAosISQ
-         f33vgt+HuvDTiXul+CDzKFkcPtBRfWosQ9eSPJKDUqCXjSKPa9Iv955b8062n3HysKas
-         0aYPsX3avOIz6Zpz4iP/ft9xqv206uf/+qaC9TOnLo6yaQgTaKRkjt0P+ONOD9mobpYp
-         eJR8ndYvN/wCN5lY06RxFaElbhxdf/ZzjXwWlwtL4UwIifZpYNHfgZpLNfdeNvKtB0w9
-         e06a9Mmzn2spHxiPvO9v5wRqFe1GANtXlrJNbUANj4nnFHbGWrxiOg9BvYiGQVU8K33F
-         dqGQ==
-X-Gm-Message-State: AOAM533fe6X4eJ5dfHMAQ4HA+d9OGTwRatLeHY4rlLXPV9lTSk0sCVh/
-        BLWnIlefQZMwNtkuBXeWDG3PE151O1eInNO/ehk=
-X-Google-Smtp-Source: ABdhPJxXX/B6x0+15Jl1eMPJKowvsEayj1f13ku4DPhKXTBbwSAC5XSxvuq5WfIMJ/rZXp3ScqiK3LDy0pqYaPrr47I=
-X-Received: by 2002:a17:90b:fc6:: with SMTP id gd6mr287022pjb.181.1605203485218;
- Thu, 12 Nov 2020 09:51:25 -0800 (PST)
+        id S1727199AbgKLTDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 14:03:13 -0500
+Received: from mga07.intel.com ([134.134.136.100]:15111 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgKLTDM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Nov 2020 14:03:12 -0500
+IronPort-SDR: ty6gkxt/RwBwa5F1OzXCLT1H1fwvb6WX+zgzcqGrvHcoGCIxB+lMCsbL2Ez62BqAU1MNXvt1UX
+ sOnQACMH9TfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9803"; a="234523508"
+X-IronPort-AV: E=Sophos;i="5.77,472,1596524400"; 
+   d="scan'208";a="234523508"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 11:03:05 -0800
+IronPort-SDR: h0cDfQf03PE1RIuQI4GqsxwDpo20tuTNAxGmS9ptzNgTd8wRON0qYxILAlPwdibPZ3GzmDQFZC
+ q3j6MoPygeww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,472,1596524400"; 
+   d="scan'208";a="309327805"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Nov 2020 11:03:04 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9EA9B14B; Thu, 12 Nov 2020 21:03:01 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] pinctrl: baytrail: Avoid clearing debounce value when turning it off
+Date:   Thu, 12 Nov 2020 21:03:01 +0200
+Message-Id: <20201112190301.44373-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20201112163630.17177-1-nsaenzjulienne@suse.de> <20201112163630.17177-2-nsaenzjulienne@suse.de>
-In-Reply-To: <20201112163630.17177-2-nsaenzjulienne@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Nov 2020 19:52:14 +0200
-Message-ID: <CAHp75Vf9E7UWVDMs=eRjLjoSN6SVOWw9thNdnR8ruCL6GmY7JQ@mail.gmail.com>
-Subject: Re: [PATCH v4 01/11] firmware: raspberrypi: Keep count of all consumers
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 6:40 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> When unbinding the firmware device we need to make sure it has no
-> consumers left. Otherwise we'd leave them with a firmware handle
-> pointing at freed memory.
->
-> Keep a reference count of all consumers and introduce rpi_firmware_put()
-> which will permit automatically decrease the reference count upon
-> unbinding consumer drivers.
+Baytrail pin control has a common register to set up debounce timeout.
+When a pin configuration requested debounce to be disabled, the rest
+of the pins may still want to have debounce enabled and thus rely on
+the common timeout value. Avoid clearing debounce value when turning
+it off for one pin while others may still use it.
 
-...
+Fixes: 658b476c742f ("pinctrl: baytrail: Add debounce configuration")
+Depends-on: 04ff5a095d66 ("pinctrl: baytrail: Rectify debounce support")
+Depends-on: 827e1579e1d5 ("pinctrl: baytrail: Rectify debounce support (part 2)")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->  /**
-> - * rpi_firmware_get - Get pointer to rpi_firmware structure.
->   * @firmware_node:    Pointer to the firmware Device Tree node.
->   *
-> + * The reference to rpi_firmware has to be released with rpi_firmware_put().
-> + *
->   * Returns NULL is the firmware device is not ready.
->   */
->  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
->  {
->         struct platform_device *pdev = of_find_device_by_node(firmware_node);
-> +       struct rpi_firmware *fw;
->
->         if (!pdev)
->                 return NULL;
->
-> -       return platform_get_drvdata(pdev);
-> +       fw = platform_get_drvdata(pdev);
-> +       if (!fw)
-> +               return NULL;
-> +
-> +       if (!kref_get_unless_zero(&fw->consumers))
-> +               return NULL;
-
-Don't we have a more traditional way of doing this, i.e.
-try_module_get() coupled with get_device() ?
-
-> +       return fw;
->  }
-
-
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index d49aab3cfbaa..394a421a19d5 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1049,7 +1049,6 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 			break;
+ 		case PIN_CONFIG_INPUT_DEBOUNCE:
+ 			debounce = readl(db_reg);
+-			debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 
+ 			if (arg)
+ 				conf |= BYT_DEBOUNCE_EN;
+@@ -1058,24 +1057,31 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 
+ 			switch (arg) {
+ 			case 375:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_375US;
+ 				break;
+ 			case 750:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_750US;
+ 				break;
+ 			case 1500:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_1500US;
+ 				break;
+ 			case 3000:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_3MS;
+ 				break;
+ 			case 6000:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_6MS;
+ 				break;
+ 			case 12000:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_12MS;
+ 				break;
+ 			case 24000:
++				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+ 				debounce |= BYT_DEBOUNCE_PULSE_24MS;
+ 				break;
+ 			default:
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
