@@ -2,196 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C48F2B02A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 11:23:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEFE72B0307
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 11:48:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgKLKXu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 05:23:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49054 "EHLO
+        id S1727836AbgKLKsQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 05:48:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgKLKXt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 05:23:49 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A344C0613D1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:23:49 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id h6so3804287pgk.4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:23:49 -0800 (PST)
+        with ESMTP id S1727890AbgKLKsQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 05:48:16 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632A7C0613D1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:48:14 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id r17so5517111wrw.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 02:48:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PHMBNOWcq0xh/cgA7kW3gzIqu8kdIFed4Jq9FLGC650=;
-        b=HY3PlzkZsTfh3t9frGUqs1ySurXU3bw18coLjvtvHmKGpdLdznRvxXHLjtB2KKzlx1
-         fGT0PB/aYm/tVOZHjDKgtcBb4uXsVhdZlLWMbSFU6ndALrgLM1x1mvZSs1cml6+EXdgn
-         vdjrbdmfWPpDYEQIO/oosezo3Yk8eImsq3bRJqReVoxFb+EzuAhBj5fVIQgpbdkmbWbx
-         MCLECpYxlqLEm9zpAlxrlnC1qwmf9vVRi5J43t0hf3RVizU5O/bTz98I8h24+B0UWeRC
-         ifWyCKRtNp5LLfIiDTAdoy2FB/Gr9O00MYsWzCgO4549Bk9dHvbdZrbbwD7SzeyGcPJ0
-         AXPw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=tPHs26tZVzjYTtDdN/JsS0EUnogdFtiSHtkC4AZzcV0=;
+        b=JbcZc2KM5Zvf4uoQzgfwxcB0lbhWGxGNY9TEFLEBbD9ZCA1xtJ9YeXdFnZV67a88bq
+         K8C2Iu/kY9bnzQb5Kpc8EVzrVmC0EL51sMYY3bpTfEr5qxC73cJHf37FAVHObafN2+rX
+         5uB84Zzx5SKIrijPGRPd3sa0wmukSEoyFZel+HhvAy5soadpoOws70Z/jifAm0O/0IhU
+         t1gy7JAmL2i6JYnJUQlMDK4MzUZWvK63CEmxz5FbhwZn402GgIC31QrbVv+eQLuwzI+0
+         Adeg0VSAvYxXXEK+lua91QJDNezFDblMrwA8tOs9CwfPK4l7MT/f0gsPqrWg64b0wFU0
+         VTng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PHMBNOWcq0xh/cgA7kW3gzIqu8kdIFed4Jq9FLGC650=;
-        b=CpgCXOEUX/G0iHE1FzODz2jvL/FTePbjADq/qR6pamOXahfm8TD3lySyoUNZE/Mqyu
-         x3r/2B+xIABTzjZTHogXUgr3XI/tsBlDo3VM36qxb2lYrgbLKjg386iHQ2hTHeLHOIba
-         /1GwLU3nRf+1j175PAtlfXEzThk7DAFcFdZyIxWQ2YXwQ5lG2/60/wGDaj8Eb4vCsfxb
-         S5CFUKsHAgLn1uyfZDoxnfw2km45v/b2NWw+yGMiSWNuCGw/sdUzYTaQ+8e/XnWE3TnP
-         gZDwks+ST3+KbzW4041DKYOyzFiJ7R+Ynd88WdJygu6rXHTs5AWMxZ9TCj5Y+CNT2oX6
-         8GmA==
-X-Gm-Message-State: AOAM5309AitVK/bEfaterTJ+MZaAHZiVVTR+q8Ds9FBegbq2IeKKiKwS
-        7NshKkyBjqA0/tt+dVP7N+TXldfm2JCQZe/q4YY=
-X-Google-Smtp-Source: ABdhPJz1i3wrWzIy6SvJQ0XT2+w6pW8hdppkVU/vvNZbDFuIhEiQZpT7L48xuc8tjOjIViX75RAgxQON3ILXAx0Coos=
-X-Received: by 2002:a63:4d64:: with SMTP id n36mr17033509pgl.203.1605176629095;
- Thu, 12 Nov 2020 02:23:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=tPHs26tZVzjYTtDdN/JsS0EUnogdFtiSHtkC4AZzcV0=;
+        b=Ohz9DAG4hbpw12eYPirhlxheMwq0nnvnOpZU6MyWfoHtCywma95M5UO5qqVmd619FO
+         SHOqWI0TgEEZrL2jIWguBP3WlxkRiiaivVr7GSmi/nmU8OMtbCQ0snxXUGLkGLz7fRTs
+         0SZmeW+3Ufsl8SlTRzP08YCOBV6xahOO2PqjDVxHU/KVenqFwDJKVzYIZuf0x7bgaLPM
+         DirpzG8wHiUFW6CZEhJk0vsZY31h8CcrqjcY1poYbUL9b5cxs75jghERMjVnrpCiqg4r
+         uGbBon8dktDpqGfdx3kR5woN4LeLnD/M5/dTfsTOoZ7ES5Sgz2OZbxxQ5tcA3Xm4dWfA
+         rpgw==
+X-Gm-Message-State: AOAM532nmHc2RqZwaRqWYQYYTH6cJmkblQgFdd66j+b/IBbNmkGtw76W
+        ie5jipMI7Uz5V14BnWpF86p46A==
+X-Google-Smtp-Source: ABdhPJxJe257UJcNJBZatQ/sRn63dN4+H1TdZfn2l1zm1QawGzpMKVmhSLXfHTRO3tSAocrzqyTICQ==
+X-Received: by 2002:adf:eacb:: with SMTP id o11mr24600043wrn.208.1605178093161;
+        Thu, 12 Nov 2020 02:48:13 -0800 (PST)
+Received: from dell ([91.110.221.159])
+        by smtp.gmail.com with ESMTPSA id 89sm6300574wrp.58.2020.11.12.02.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 02:48:12 -0800 (PST)
+Date:   Thu, 12 Nov 2020 10:48:10 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 16/25] arch: arm: mach-at91: pm: Move prototypes to
+ mutually included header
+Message-ID: <20201112104810.GH1997862@dell>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-17-lee.jones@linaro.org>
+ <20201112093918.GV2063125@dell>
+ <20201112100731.GC4556@piout.net>
 MIME-Version: 1.0
-References: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201111222008.39993-1-andriy.shevchenko@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Nov 2020 12:24:38 +0200
-Message-ID: <CAHp75Vcfr-=v5Ba3VhR5NTnJM3gEYevUNJUdBnhdh4YUvTzVLA@mail.gmail.com>
-Subject: Re: [PATCH v7 00/18] gpiolib: acpi: pin configuration fixes
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jamie McClymont <jamie@kwiius.com>,
-        Coiby Xu <coiby.xu@gmail.com>,
-        Vasile-Laurentiu Stanimir 
-        <vasile-laurentiu.stanimir@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201112100731.GC4556@piout.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 12:21 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> There are fixes (and plenty cleanups) that allow to take into consideration
-> more parameters in ACPI, i.e. bias for GpioInt() and debounce timeout
-> for Operation Regions, Events and GpioInt() resources.
->
-> During review Hans noted, that gpiod_set_debounce() returns -ENOTSUPP for
-> the cases when feature is not supported either by driver or a controller.
->
-> It appears that we have slightly messy API here:
->
->   FUNC                  Relation with ENOTSUPP
->
->   gpiod_set_config()     returns if not supported
->   gpiod_set_debounce()   as gpiod_set_config() above
->   gpio_set_debounce()    legacy wrapper on top of gpiod_set_debounce()
->   gpiod_set_transitory() skips it (returns okay) with debug message
->   gpio_set_config()      returns if not supported
->   gpio_set_bias()        skips it (returns okay)
+On Thu, 12 Nov 2020, Alexandre Belloni wrote:
 
-Mika, the above list is all about GPIO descriptors with an exception
-of gpio_set_debounce(). The gpio_set_*(struct gpio_desc *desc, ...)
-schema is used not only for the above set of functions, but also
-another *internal* ones
+> Hi,
+> 
+> On 12/11/2020 09:39:18+0000, Lee Jones wrote:
+> > Both the caller and the supplier's source file should have access to
+> > the include file containing the prototypes.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
+> >  1637 | void at91_pinctrl_gpio_suspend(void)
+> >  | ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >  drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
+> >  1661 | void at91_pinctrl_gpio_resume(void)
+> >  | ^~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
 
-gpio_set_open_drain_value_commit()
-gpio_set_open_source_value_commit()
+[...]
 
-Hope this helps.
+> > diff --git a/include/soc/at91/pm.h b/include/soc/at91/pm.h
+> > new file mode 100644
+> > index 0000000000000..0fd5093f7f73a
+> > --- /dev/null
+> > +++ b/include/soc/at91/pm.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * atmel platform data
+> > + */
+> > +
+> > +#ifdef CONFIG_PINCTRL_AT91
+> 
+> Shouldn't that be a header guard instead of depending on PINCTRL_AT91 ?
 
-I think I can move gpio_set_debounce_timeout out of gpiod_* group of
-declarations in gpiolib.h to avoid confusion. Will it work for you?
+I copied the same semantics from the header it was taken from.
 
-> Last two functions are internal to GPIO library, while the rest is
-> exported API. In order to be consistent with both naming schemas
-> the series introduces gpio_set_debounce_timeout() that considers
-> the feature optional. New API is only for internal use.
->
-> While at it, the few first patches clean up the current GPIO library
-> code to unify it to some extend.
->
-> The above is followed by changes made in ACPI GPIO library part.
->
-> The bias patch highly depends on Intel pin control driver changes
-> (they are material for v5.10 [1]), due to this and amount of the
-> prerequisite changes this series is probably not supposed to be
-> backported (at least right now).
->
-> The last patch adds Intel GPIO tree as official one for ACPI GPIO
-> changes.
->
-> Assuming [1] makes v5.10 this series can be sent as PR to Linus
-> for v5.11 cycle.
->
-> Note, some patches are also depend to the code from GPIO fixes / for-next
-> repositories. Unfortunately there is no one repository which contains all
-> up to date for-next changes against GPIO subsystem. That's why I have merged
-> Linus' for-next followed by Bart's for-next branches as prerequisites
-> to the series.
->
-> Cc: Jamie McClymont <jamie@kwiius.com>
-> Cc: Coiby Xu <coiby.xu@gmail.com>
-> Cc: Vasile-Laurentiu Stanimir <vasile-laurentiu.stanimir@windriver.com>
->
-> [1]: https://lore.kernel.org/linux-gpio/20201106181938.GA41213@black.fi.intel.com/
->
-> Changelog v7:
-> - sent correct set of patches
->
-> Changelog v6:
-> - added tags (Hans, Mika, Linus)
-> - dropped temporary variables in couple of patches (Mika)
-> - dropped "Add temporary variable to gpiod_set_transitory()..." (Mika)
-> - added patch to move assignments outside a lock (Mika)
-> - added patch from Vasile
-> - due to above rebased accordingly the affected ones
->
-> Changelog v5:
-> - introduced gpio_set_debounce_timeout()
-> - made a prerequisite refactoring in GPIO library code
-> - updated the rest accordingly
->
-> Changelog v4:
-> - extended debounce setting to ACPI events and Operation Regions
-> - added Ack (Linus)
-> - added few more cleanup patches, including MAINTAINERS update
->
-> Changelog v3:
-> - dropped upstreamed OF patch
-> - added debounce fix
->
-> Andy Shevchenko (17):
->   gpiolib: Replace unsigned by unsigned int
->   gpiolib: add missed break statement
->   gpiolib: use proper API to pack pin configuration parameters
->   gpiolib: Extract gpio_set_config_with_argument() for future use
->   gpiolib: move bias related code from gpio_set_config() to
->     gpio_set_bias()
->   gpiolib: Extract gpio_set_config_with_argument_optional() helper
->   gpiolib: Introduce gpio_set_debounce_timeout() for internal use
->   gpiolib: acpi: Respect bias settings for GpioInt() resource
->   gpiolib: acpi: Use named item for enum gpiod_flags variable
->   gpiolib: acpi: Take into account debounce settings
->   gpiolib: acpi: Move non-critical code outside of critical section
->   gpiolib: acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
->   gpiolib: acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
->   gpiolib: acpi: Extract acpi_request_own_gpiod() helper
->   gpiolib: acpi: Convert pin_index to be u16
->   gpiolib: acpi: Use BIT() macro to increase readability
->   gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work
->
-> Vasile-Laurentiu Stanimir (1):
->   gpiolib: acpi: Set initial value for output pin based on bias and
->     polarity
->
->  MAINTAINERS                   |   1 +
->  drivers/gpio/gpiolib-acpi.c   | 138 +++++++++++++++++++++-------------
->  drivers/gpio/gpiolib-acpi.h   |   2 +
->  drivers/gpio/gpiolib.c        |  98 ++++++++++++++----------
->  drivers/gpio/gpiolib.h        |   1 +
->  include/linux/gpio/consumer.h |   4 +-
->  6 files changed, 147 insertions(+), 97 deletions(-)
->
-> --
-> 2.28.0
->
-
+Happy to turn it into a proper header file too.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
