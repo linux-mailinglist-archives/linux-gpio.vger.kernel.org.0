@@ -2,114 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCB22B0042
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 08:21:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 561162B00B5
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 09:00:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgKLHV3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 02:21:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbgKLHV3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 02:21:29 -0500
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE669C0617A6
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 23:21:28 -0800 (PST)
-Received: by mail-il1-x142.google.com with SMTP id h6so731425ilj.8
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Nov 2020 23:21:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ab2X7D8rQV+rUh3MG2vmCj3eeC4kvsZIlLSd9hzapi4=;
-        b=o695KMSlvlKK8s2nZB3RnNNjASazEvqZxx7SlWDLIfkA7DjvTGHQKtr7OeUjA+JK/W
-         6AsWT7BcKyt6qJFEm42kuZq/NhNqqk+O/5M33EKitgOxYwwKwIv4xVOTPW0KtSDKxWoi
-         N/WtmAKQP0MX+WWeb1AnqArll7M6n1MD4y/2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ab2X7D8rQV+rUh3MG2vmCj3eeC4kvsZIlLSd9hzapi4=;
-        b=gWTWEZ+4/BKJ5M5G3SWLiHpStRa3vVVT5noNXQB6/gnO9S1pEMKzuvKUSkQrVevAos
-         owiL5408daqjTRY2jaN0fACyla+g64q6vnvKE4ZevJ/BBYo6BU9qImL1wIp81dviuS9r
-         7Y16M5lY0q586l7rCC1jGyRWE0BM0oOjgUpoQHqJdKbg8YCIeme9X4hjHOmiQY2bkL1N
-         kjdJVS/66fXB9HaaAanTBizqSwWW4kEp7vHWwsmhv/pBPqyz9oDsXEBrnecDqDZjslQi
-         1y4slrUn7FTpVRbo1jKLHE+NfAkQY4kGavNgqX22cMpCGENj/qz+RCmLQX/bC7VEMZ/K
-         9v3g==
-X-Gm-Message-State: AOAM530iBl0jPsdP8bczUiuRWmyIOCHUy7sp8exHPRhHpauU05sHkOhx
-        meVGcSEkgIcniBJZUGBWlaNQ0+j62DUDngnRosd6
-X-Google-Smtp-Source: ABdhPJwG3l0icsmB1IU32yQpvlFd8k79z2GNzpvnNWW307BnW87hWqYbQJNHXepVhLwR9j1SCouAAn38lAiRUpIrLCw=
-X-Received: by 2002:a92:512:: with SMTP id q18mr20861835ile.147.1605165688041;
- Wed, 11 Nov 2020 23:21:28 -0800 (PST)
+        id S1727624AbgKLIA2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 03:00:28 -0500
+Received: from mga06.intel.com ([134.134.136.31]:30398 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727416AbgKLIAT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Nov 2020 03:00:19 -0500
+IronPort-SDR: AG15wB6Lkg9f/VB6CsA0hXHFBkTDdPoCoCLTrLlVb0TXSgxbh37aycAKpRvrkctX5Thr0FppvG
+ 3V+IZwLGtmQg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="231893744"
+X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
+   d="scan'208";a="231893744"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 00:00:17 -0800
+IronPort-SDR: Id7aFsxmUTr/VL6dKsJtuUZEKk6DS+e7eftMWxXpwbqvKXwCU8vs/phgZZAvuutkrpq7FYUYKS
+ iU8uT5y1l+bw==
+X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
+   d="scan'208";a="474181763"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 00:00:15 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 12 Nov 2020 10:00:12 +0200
+Date:   Thu, 12 Nov 2020 10:00:12 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/2] pinctrl: lynxpoint: Use defined constant for
+ disabled bias explicitly
+Message-ID: <20201112080012.GR2495@lahna.fi.intel.com>
+References: <20201111113432.35641-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-9-damien.lemoal@wdc.com>
-In-Reply-To: <20201107081420.60325-9-damien.lemoal@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 11 Nov 2020 23:21:17 -0800
-Message-ID: <CAOnJCUJO3Oqy94MbT-eV+xaJn9obE0H=zpvuJuch-aY5e9bfgQ@mail.gmail.com>
-Subject: Re: [PATCH 08/32] riscv: Fix kernel time_init()
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111113432.35641-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Nov 7, 2020 at 12:15 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
->
-> If of_clk_init() is not called in time_init(), clock providers defined
-> in the system device tree are not initialized, resulting in failures for
-> other devices to initialize due to missing clocks.
-> Similarly to other architectures and to the default kernel time_init()
-> implementation, call of_clk_init() before executing timer_probe() in
-> time_init().
->
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->  arch/riscv/kernel/time.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-> index 4d3a1048ad8b..8a5cf99c0776 100644
-> --- a/arch/riscv/kernel/time.c
-> +++ b/arch/riscv/kernel/time.c
-> @@ -4,6 +4,7 @@
->   * Copyright (C) 2017 SiFive
->   */
->
-> +#include <linux/of_clk.h>
->  #include <linux/clocksource.h>
->  #include <linux/delay.h>
->  #include <asm/sbi.h>
-> @@ -24,6 +25,8 @@ void __init time_init(void)
->         riscv_timebase = prop;
->
->         lpj_fine = riscv_timebase / HZ;
-> +
-> +       of_clk_init(NULL);
->         timer_probe();
->  }
->
-> --
-> 2.28.0
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+On Wed, Nov 11, 2020 at 01:34:31PM +0200, Andy Shevchenko wrote:
+> We have a specific constant to describe a disabled bias,
+> i.e. GPIWP_NONE. Use it explicitly instead of making
+> an assumption about its value.
+> 
+> While at it, move argument assignment to the switch-case
+> in lp_pin_config_get().
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-
--- 
-Regards,
-Atish
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
