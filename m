@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 243652AFC1E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 02:32:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 065802AFD0F
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 02:50:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgKLBcU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Nov 2020 20:32:20 -0500
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:39100 "EHLO
+        id S1727223AbgKLBcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Nov 2020 20:32:18 -0500
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:43448 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbgKKXmX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 18:42:23 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 0ABNgBtO004573; Thu, 12 Nov 2020 08:42:11 +0900
-X-Iguazu-Qid: 2wHHV20KPmXSE6z9Zg
-X-Iguazu-QSIG: v=2; s=0; t=1605138131; q=2wHHV20KPmXSE6z9Zg; m=4N+CvX23mKlsNGvGLKo/FPQu0W0ccP8J6JucCZN54lU=
+        with ESMTP id S1727950AbgKKXmT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Nov 2020 18:42:19 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 0ABNg66E009260; Thu, 12 Nov 2020 08:42:06 +0900
+X-Iguazu-Qid: 34ts1bXBCXSu4OSPUu
+X-Iguazu-QSIG: v=2; s=0; t=1605138126; q=34ts1bXBCXSu4OSPUu; m=xXF7JgmhEwQeBssEhZm68YCzVGkPRkbZDeL57Ldken4=
 Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1112) id 0ABNgAb1007555;
-        Thu, 12 Nov 2020 08:42:10 +0900
+        by relay.securemx.jp (mx-mr1511) id 0ABNg5KY001300;
+        Thu, 12 Nov 2020 08:42:05 +0900
 Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 0ABNgA3W002687;
-        Thu, 12 Nov 2020 08:42:10 +0900 (JST)
+        by imx12.toshiba.co.jp  with ESMTP id 0ABNg5q1002648;
+        Thu, 12 Nov 2020 08:42:05 +0900 (JST)
 Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 0ABNg9MW008022;
-        Thu, 12 Nov 2020 08:42:10 +0900
+        by enc02.toshiba.co.jp  with ESMTP id 0ABNg43j007925;
+        Thu, 12 Nov 2020 08:42:05 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
@@ -30,10 +30,10 @@ Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v2 1/4] dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller
-Date:   Thu, 12 Nov 2020 17:40:54 +0900
+Subject: [PATCH v2 2/4] gpio: visoconti: Add Toshiba Visconti GPIO support
+Date:   Thu, 12 Nov 2020 17:40:55 +0900
 X-TSB-HOP: ON
-Message-Id: <20201112084057.1399983-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+Message-Id: <20201112084057.1399983-3-nobuhiro1.iwamatsu@toshiba.co.jp>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201112084057.1399983-1-nobuhiro1.iwamatsu@toshiba.co.jp>
 References: <20201112084057.1399983-1-nobuhiro1.iwamatsu@toshiba.co.jp>
@@ -43,105 +43,380 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add bindings for the Toshiba Visconti GPIO Controller.
+Add the GPIO driver for Toshiba Visconti ARM SoCs.
 
 Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 ---
- .../bindings/gpio/toshiba,gpio-visconti.yaml  | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+ drivers/gpio/Kconfig                      |   8 +
+ drivers/gpio/Makefile                     |   1 +
+ drivers/gpio/gpio-visconti.c              | 287 ++++++++++++++++++++++
+ drivers/pinctrl/visconti/pinctrl-common.c |  23 ++
+ 4 files changed, 319 insertions(+)
+ create mode 100644 drivers/gpio/gpio-visconti.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5d4de5cd6759..fd8bd229b0c6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -631,6 +631,14 @@ config GPIO_VF610
+ 	help
+ 	  Say yes here to support Vybrid vf610 GPIOs.
+ 
++config GPIO_VISCONTI
++	tristate "Toshiba Visconti GPIO support"
++	depends on ARCH_VISCONTI || COMPILE_TEST
++	depends on OF_GPIO
++	select GPIOLIB_IRQCHIP
++	help
++	  Say yes here to support GPIO on Tohisba Visconti.
++
+ config GPIO_VR41XX
+ 	tristate "NEC VR4100 series General-purpose I/O Uint support"
+ 	depends on CPU_VR41XX
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 09dada80ac34..02c9d8d83a54 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -162,6 +162,7 @@ obj-$(CONFIG_GPIO_UCB1400)		+= gpio-ucb1400.o
+ obj-$(CONFIG_GPIO_UNIPHIER)		+= gpio-uniphier.o
+ obj-$(CONFIG_GPIO_VF610)		+= gpio-vf610.o
+ obj-$(CONFIG_GPIO_VIPERBOARD)		+= gpio-viperboard.o
++obj-$(CONFIG_GPIO_VISCONTI)		+= gpio-visconti.o
+ obj-$(CONFIG_GPIO_VR41XX)		+= gpio-vr41xx.o
+ obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
+ obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
+diff --git a/drivers/gpio/gpio-visconti.c b/drivers/gpio/gpio-visconti.c
 new file mode 100644
-index 000000000000..735b5c811c57
+index 000000000000..e12f53ad1a0b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/toshiba,gpio-visconti.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpio/gpio-visconti.c
+@@ -0,0 +1,287 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Toshiba Visconti GPIO Support
++ *
++ * (C) Copyright 2020 Toshiba Electronic Devices & Storage Corporation
++ * (C) Copyright 2020 Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
++ */
 +
-+title: Toshiba Visconti ARM SoCs GPIO controller
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/io.h>
++#include <linux/platform_device.h>
++#include <linux/gpio/driver.h>
++#include <linux/of.h>
++#include <linux/bitops.h>
 +
-+maintainers:
-+  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
++/* register offset */
++#define GPIO_DIR	0x00
++#define GPIO_IDATA	0x08
++#define GPIO_ODATA	0x10
++#define GPIO_OSET	0x18
++#define GPIO_OCLR	0x20
++#define GPIO_INTMODE	0x30
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: toshiba,gpio-tmpv7708
++#define VISCONTI_GPIO_NR	32
 +
-+  reg:
-+    maxItems: 1
++struct visconti_gpio {
++	void __iomem *base;
++	int *irq;
++	spinlock_t lock; /* protect gpio register */
++	struct device *dev;
++	struct gpio_chip gpio_chip;
++	struct irq_chip irq_chip;
++};
 +
-+  "#gpio-cells":
-+    const: 2
++static void visconti_gpio_irq_mask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct visconti_gpio *priv = gpiochip_get_data(gc);
 +
-+  gpio-ranges: true
++	disable_irq_nosync(priv->irq[irqd_to_hwirq(d)]);
++}
 +
-+  gpio-controller: true
++static void visconti_gpio_irq_unmask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct visconti_gpio *priv = gpiochip_get_data(gc);
 +
-+  interrupt-controller: true
++	enable_irq(priv->irq[irqd_to_hwirq(d)]);
++}
 +
-+  "#interrupt-cells":
-+    const: 2
++static int visconti_gpio_irq_set_type(struct irq_data *d, unsigned int type)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct visconti_gpio *priv = gpiochip_get_data(gc);
++	u32 offset = irqd_to_hwirq(d);
++	u32 bit = BIT(offset);
++	u32 intc_type = IRQ_TYPE_EDGE_RISING;
++	u32 intmode, odata;
++	int ret = 0;
++	unsigned long flags;
 +
-+  interrupts:
-+    description:
-+      interrupt mapping one per GPIO.
-+    minItems: 32
-+    maxItems: 32
++	spin_lock_irqsave(&priv->lock, flags);
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#gpio-cells"
-+  - gpio-ranges
-+  - gpio-controller
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - interrupts
++	odata = readl(priv->base + GPIO_ODATA);
++	intmode = readl(priv->base + GPIO_INTMODE);
 +
-+additionalProperties: false
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++		odata &= ~bit;
++		intmode &= ~bit;
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		odata |= bit;
++		intmode &= ~bit;
++		break;
++	case IRQ_TYPE_EDGE_BOTH:
++		intmode |= bit;
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		intc_type = IRQ_TYPE_LEVEL_HIGH;
++		odata &= ~bit;
++		intmode &= ~bit;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		intc_type = IRQ_TYPE_LEVEL_HIGH;
++		odata |= bit;
++		intmode &= ~bit;
++		break;
++	default:
++		ret = -EINVAL;
++		goto err;
++	}
 +
-+examples:
-+  - |
-+      #include <dt-bindings/interrupt-controller/irq.h>
-+      #include <dt-bindings/interrupt-controller/arm-gic.h>
++	writel(odata, priv->base + GPIO_ODATA);
++	writel(intmode, priv->base + GPIO_INTMODE);
++	irq_set_irq_type(priv->irq[offset], intc_type);
++err:
++	spin_unlock_irqrestore(&priv->lock, flags);
 +
-+      soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++	return ret;
++}
 +
-+        gpio: gpio@28020000 {
-+          compatible = "toshiba,gpio-tmpv7708";
-+          reg = <0 0x28020000 0 0x1000>;
-+          #gpio-cells = <0x2>;
-+          gpio-ranges = <&pmux 0 0 32>;
-+          gpio-controller;
-+          interrupt-controller;
-+          #interrupt-cells = <2>;
-+          interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+              <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+      };
-+...
++static irqreturn_t visconti_gpio_irq_handler(int irq, void *dev_id)
++{
++	struct visconti_gpio *priv = dev_id;
++	u32 offset = irq - priv->irq[0];
++
++	generic_handle_irq(irq_find_mapping(priv->gpio_chip.irq.domain, offset));
++
++	return IRQ_HANDLED;
++}
++
++static int visconti_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct visconti_gpio *priv = gpiochip_get_data(chip);
++
++	return !!(readl(priv->base + GPIO_IDATA) & BIT(offset));
++}
++
++static void visconti_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	struct visconti_gpio *priv = gpiochip_get_data(chip);
++	u32 bit = BIT(offset);
++
++	if (value)
++		writel(bit, priv->base + GPIO_OSET);
++	else
++		writel(bit, priv->base + GPIO_OCLR);
++}
++
++static int visconti_gpio_get_dir(struct gpio_chip *chip, unsigned int offset)
++{
++	struct visconti_gpio *priv = gpiochip_get_data(chip);
++
++	return !(readl(priv->base + GPIO_DIR) & BIT(offset));
++}
++
++static int visconti_gpio_dir_in(struct gpio_chip *chip, unsigned int offset)
++{
++	struct visconti_gpio *priv = gpiochip_get_data(chip);
++	unsigned long flags;
++	u32 val;
++
++	spin_lock_irqsave(&priv->lock, flags);
++	val = readl(priv->base + GPIO_DIR);
++	val &= ~BIT(offset);
++	writel(val, priv->base + GPIO_DIR);
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return 0;
++}
++
++static int visconti_gpio_dir_out(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	struct visconti_gpio *priv = gpiochip_get_data(chip);
++	unsigned long flags;
++	u32 val;
++
++	spin_lock_irqsave(&priv->lock, flags);
++	visconti_gpio_set(chip, offset, value);
++	val = readl(priv->base + GPIO_DIR);
++	val |= BIT(offset);
++	writel(val, priv->base + GPIO_DIR);
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return 0;
++}
++
++static void visconti_init_irq_valid_mask(struct gpio_chip *chip, unsigned long *valid_mask,
++					 unsigned int ngpios)
++{
++	int i;
++
++	/* Exclude GPIO pins 16-31 from irq */
++	for (i = 16; i < ngpios; i++)
++		clear_bit(i, valid_mask);
++}
++
++static int visconti_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct visconti_gpio *priv;
++	struct gpio_chip *gpio_chip;
++	struct irq_chip *irq_chip;
++	struct irq_desc *desc;
++	const char *name = dev_name(dev);
++	int i, ret, num_irq;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++	spin_lock_init(&priv->lock);
++
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	ret = platform_irq_count(pdev);
++	if (!ret) {
++		dev_err(dev, "Couldn't determine # GPIO banks\n");
++		return -ENOENT;
++	}
++	num_irq = ret;
++
++	priv->irq = devm_kcalloc(dev, num_irq, sizeof(priv->irq), GFP_KERNEL);
++	if (!priv->irq)
++		return -ENOMEM;
++
++	for (i = 0; i < num_irq; i++) {
++		priv->irq[i] = platform_get_irq(pdev, i);
++		if (priv->irq[i] < 0) {
++			dev_err(dev, "invalid IRQ[%d]\n", i);
++			return priv->irq[i];
++		}
++	}
++
++	gpio_chip = &priv->gpio_chip;
++	gpio_chip->label = name;
++	gpio_chip->owner = THIS_MODULE;
++	gpio_chip->parent = dev;
++	gpio_chip->request = gpiochip_generic_request;
++	gpio_chip->free = gpiochip_generic_free;
++	gpio_chip->get = visconti_gpio_get;
++	gpio_chip->set = visconti_gpio_set;
++	gpio_chip->get_direction = visconti_gpio_get_dir;
++	gpio_chip->direction_input = visconti_gpio_dir_in;
++	gpio_chip->direction_output = visconti_gpio_dir_out;
++	gpio_chip->base = 0;
++	gpio_chip->ngpio = VISCONTI_GPIO_NR;
++	gpio_chip->irq.init_valid_mask = visconti_init_irq_valid_mask;
++
++	irq_chip = &priv->irq_chip;
++	irq_chip->name = "gpio-visconti";
++	irq_chip->irq_mask = visconti_gpio_irq_mask;
++	irq_chip->irq_unmask = visconti_gpio_irq_unmask;
++	irq_chip->irq_set_type = visconti_gpio_irq_set_type;
++	irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
++
++	ret = devm_gpiochip_add_data(dev, gpio_chip, priv);
++	if (ret) {
++		dev_err(dev, "failed to add GPIO chip\n");
++		return ret;
++	}
++
++	ret = gpiochip_irqchip_add(gpio_chip, irq_chip, 0, handle_level_irq,
++				   IRQ_TYPE_NONE);
++	if (ret) {
++		dev_err(dev, "cannot add IRQ chip\n");
++		return ret;
++	}
++
++	for (i = 0; i < num_irq; i++) {
++		desc = irq_to_desc(priv->irq[i]);
++		desc->status_use_accessors |= IRQ_NOAUTOEN;
++		if (devm_request_irq(dev, priv->irq[i],
++				     visconti_gpio_irq_handler, 0, name, priv)) {
++			dev_err(dev, "failed to request IRQ[%d]\n", i);
++			return -ENOENT;
++		}
++	}
++
++	return ret;
++}
++
++static const struct of_device_id visconti_gpio_of_match[] = {
++	{ .compatible = "toshiba,gpio-tmpv7708", },
++	{ /* end of table */ }
++};
++MODULE_DEVICE_TABLE(of, visconti_gpio_of_match);
++
++static struct platform_driver visconti_gpio_driver = {
++	.probe		= visconti_gpio_probe,
++	.driver		= {
++		.name	= "visconti_gpio",
++		.of_match_table = of_match_ptr(visconti_gpio_of_match),
++	}
++};
++module_platform_driver(visconti_gpio_driver);
++
++MODULE_AUTHOR("Toshiba Electronic Devices & Storage Corporation");
++MODULE_AUTHOR("Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>");
++MODULE_DESCRIPTION("Toshiba Visconti GPIO Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pinctrl/visconti/pinctrl-common.c b/drivers/pinctrl/visconti/pinctrl-common.c
+index 0cb10b7b4430..21c7e0d18fea 100644
+--- a/drivers/pinctrl/visconti/pinctrl-common.c
++++ b/drivers/pinctrl/visconti/pinctrl-common.c
+@@ -245,11 +245,34 @@ static int visconti_set_mux(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
++static int visconti_gpio_request_enable(struct pinctrl_dev *pctldev,
++				      struct pinctrl_gpio_range *range,
++				      unsigned int pin)
++{
++	struct visconti_pinctrl *priv = pinctrl_dev_get_drvdata(pctldev);
++	const struct visconti_mux *gpio_mux = &priv->devdata->gpio_mux[pin];
++	unsigned long flags;
++	unsigned int val;
++
++	dev_dbg(priv->dev, "%s: pin = %d\n", __func__, pin);
++
++	/* update mux */
++	spin_lock_irqsave(&priv->lock, flags);
++	val = readl(priv->base + gpio_mux->offset);
++	val &= ~gpio_mux->mask;
++	val |= gpio_mux->val;
++	writel(val, priv->base + gpio_mux->offset);
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return 0;
++}
++
+ static const struct pinmux_ops visconti_pinmux_ops = {
+ 	.get_functions_count	= visconti_get_functions_count,
+ 	.get_function_name	= visconti_get_function_name,
+ 	.get_function_groups	= visconti_get_function_groups,
+ 	.set_mux		= visconti_set_mux,
++	.gpio_request_enable	= visconti_gpio_request_enable,
+ 	.strict			= true,
+ };
+ 
 -- 
 2.29.2
 
