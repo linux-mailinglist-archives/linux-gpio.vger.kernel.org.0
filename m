@@ -2,326 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF492B0A90
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 17:45:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3875D2B0B04
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 18:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgKLQp0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 11:45:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51300 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgKLQp0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:45:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 87DC1AFC8;
-        Thu, 12 Nov 2020 16:45:23 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v4 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
-Date:   Thu, 12 Nov 2020 17:36:29 +0100
-Message-Id: <20201112163630.17177-12-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201112163630.17177-1-nsaenzjulienne@suse.de>
-References: <20201112163630.17177-1-nsaenzjulienne@suse.de>
+        id S1726147AbgKLRNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 12:13:08 -0500
+Received: from mail-dm6nam12on2062.outbound.protection.outlook.com ([40.107.243.62]:39585
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726125AbgKLRNI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Nov 2020 12:13:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a0UVbsn+rZtBdnZd0xcEqznd0FuO4c4aivpABq59DUrfONi1fYy57HBRlPYU5QuFO4fZQLDNdJLnaIuQktpK3dhBIer1UEPoAdHkhjv5Ne6S+xuzZz93lC2Q10wwNIRM0Ayev5w9BNxKhV5WTUVAu+Ud3nMsKzrQjdovYVF/cWQ0l2jFHHc4WS11Up7tzdR0QaR7cn043iL8bEnFsuSOlTLWVunexAHfNfiCUFlFJc7rOqcwjMoIX5NNdHNv1kM8fyCmMtWaC+mpkuMBEtoiYpxPOaPCc9JYHnneDUEHRIK9fA2xG3BtPpKyNzINjnK7dxzy10fI/jQK9WHCk3xyIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mqOdOCBHoP17O1vvgVmilpx/hi+QoeecyEWvajsd56I=;
+ b=W6wmVAQ2WOtJpGudD/GpR4gTQ3L7I8qCVjS3lAcTUx8efVRN2jrNwiMuRAdsvXCfYvOmD4JlG6yEXVJhqCebinc+ty+rzJERvj4SrN7hdowFoTAuoaEuRrpd07Jlg/+gDmF6xOlWB48SuCzVJ3hORQgJu8DYnlsAjwFE6+fazIgNQKy3znwHnKoFN4/5wT4GTLn5i3wOqbI761jNBedvrDoRefCyueY3gccbNat58+A2/Sec0WgzN9tbGukeEbbPGnQMzjwSqatM1/5XeTeNBtQ0eWWUs70vYOpmMbQQD5c/Oa/5Am+Tba33Nrx38m8GMZ01W5a0Te16xQnwnmp3vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mqOdOCBHoP17O1vvgVmilpx/hi+QoeecyEWvajsd56I=;
+ b=TM4g6chXr/5Z7yUJYJNB6DPaOLbqlXCi1OIQtg6ajXANNboKPYSAycSgkdK/mMC+xc41xitB2JehFeBLiAgLidF9xb9r4I8pIscMnXaMhon8eP32cG/4opPe1xzFY4xMkQtPyjnK5/7bo0nJgYjlQ+rOuL2fiXk/3Z8TjTHPTAQ=
+Received: from BL1PR13CA0019.namprd13.prod.outlook.com (2603:10b6:208:256::24)
+ by DM5PR02MB3896.namprd02.prod.outlook.com (2603:10b6:4:b7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.32; Thu, 12 Nov
+ 2020 17:13:05 +0000
+Received: from BL2NAM02FT029.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:256:cafe::1c) by BL1PR13CA0019.outlook.office365.com
+ (2603:10b6:208:256::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.24 via Frontend
+ Transport; Thu, 12 Nov 2020 17:13:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ BL2NAM02FT029.mail.protection.outlook.com (10.152.77.100) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3564.22 via Frontend Transport; Thu, 12 Nov 2020 17:13:04 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 12 Nov 2020 09:12:34 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Thu, 12 Nov 2020 09:12:34 -0800
+Envelope-to: git@xilinx.com,
+ michal.simek@xilinx.com,
+ linus.walleij@linaro.org,
+ bgolaszewski@baylibre.com,
+ hancock@sedsystems.ca,
+ linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Received: from [10.140.6.6] (port=44844 helo=xhdappanad40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1kdG9B-0005SG-MA; Thu, 12 Nov 2020 09:12:34 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <michal.simek@xilinx.com>, <shubhrajyoti.datta@xilinx.com>,
+        <sgoud@xilinx.com>, <hancock@sedsystems.ca>
+CC:     <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <git@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Subject: [LINUX PATCH V3 0/9] gpio-xilinx: Update on xilinx gpio driver
+Date:   Thu, 12 Nov 2020 22:42:19 +0530
+Message-ID: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c9cf96c3-a3c0-41bf-adad-08d8872e37f8
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3896:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB389670A9FA9C1ADA39D8A7A9AFE70@DM5PR02MB3896.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +KoYbwp4Lk+p9xVsfDCsc1CTlfnoGWivWBkTJrdGE23eEZ0ud+uQeOHhYqqY/j6NmfLQ5RuGif0SCfGsQJWbNhWu8B+HtSK9wxXruArM8g4ng2ANruBn0l7kenfdFLiyLrt/z8tM+/tAPiY5e6ni5kiIxHr2gb1Lr20Hf7fDo2sI5SL/Qt3xIeMZNRzzzqzBnFBm6D+VO2jC4LlriomZZJmEYjlCuXbowTgTXJwlkPPvjR93CPqi6ujVEE/jbXGTYdHOjiqzRdh53CWsjLpZigZXswa5s9RZf+LTFBFg+zKglBEhFl31LEKHvpY08SoJnJ0pQrF7U1d7ETI5Wz9bOHoZk8ngXSv3dfD5CkfG4jKyutXKF/G00ZmOT5jCKsNoUq5ySJL/vHcsjmJcQwCOWe4v0Al6wLW60i5TR4hHxnw=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(46966005)(15650500001)(9786002)(7696005)(8936002)(107886003)(6666004)(2616005)(2906002)(5660300002)(26005)(70586007)(36906005)(186003)(426003)(336012)(110136005)(54906003)(316002)(8676002)(82310400003)(70206006)(83380400001)(7636003)(47076004)(4326008)(36756003)(82740400003)(356005)(478600001)(44832011)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2020 17:13:04.8785
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9cf96c3-a3c0-41bf-adad-08d8872e37f8
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT029.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3896
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adds support to control the PWM bus available in official Raspberry Pi
-PoE HAT. Only RPi's co-processor has access to it, so commands have to
-be sent through RPi's firmware mailbox interface.
+This patch series does the following:
+-Add clock support
+-Add interrupt support
+-Add support for suspend and resume
+-Add remove support
+-Add MAINTAINERS fragment
+---
+Changes in V3:
+-Created separate patch to arrange headers in sorting order.
+-Updated dt-bindings.
+-Created separate patch for Clock changes and runtime resume.
+ and suspend.
+-Created separate patch for spinlock changes.
+-Created separate patch for remove support.
+-Fixed coverity errors.
+-Updated minor review comments.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Changes in V2:
+-Added check for return value of platform_get_irq() API.
+-Updated code to support rising edge and falling edge.
+-Added xgpio_xlate() API to support switch.
+-Added MAINTAINERS fragment.
+
+Tested Below scenarios:
+-Tested Loop Back.(channel 1.0 connected to channel 2.0)
+-Tested External switch(Used DIP switch)
+-Tested Cascade scenario(Here gpio controller acting as
+ an interrupt controller).
 ---
 
-Changes since v2:
- - Use devm_rpi_firmware_get()
- - Rename driver
- - Small cleanups
+Srinivas Neeli (9):
+  gpio: gpio-xilinx: Arrange headers in sorting order
+  dt-bindings: gpio: gpio-xilinx: Add clk support to xilinx soft gpio IP
+  gpio: gpio-xilinx: Add clock support
+  gpio: gpio-xilinx: Reduce spinlock array to single
+  gpio: gpio-xilinx: Add interrupt support
+  gpio: gpio-xilinx: Add remove function
+  gpio: gpio-xilinx: Add support for suspend and resume
+  gpio: gpio-xilinx: Check return value of of_property_read_u32
+  MAINTAINERS: add fragment for xilinx GPIO drivers
 
-Changes since v1:
- - Use default pwm bindings and get rid of xlate() function
- - Correct spelling errors
- - Correct apply() function
- - Round values
- - Fix divisions in arm32 mode
- - Small cleanups
+ .../devicetree/bindings/gpio/gpio-xilinx.txt       |   2 +
+ MAINTAINERS                                        |  10 +
+ drivers/gpio/Kconfig                               |   2 +
+ drivers/gpio/gpio-xilinx.c                         | 398 +++++++++++++++++++--
+ 4 files changed, 390 insertions(+), 22 deletions(-)
 
- drivers/pwm/Kconfig               |   9 ++
- drivers/pwm/Makefile              |   1 +
- drivers/pwm/pwm-raspberrypi-poe.c | 216 ++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index b2a87fd7e8fb..3445984a5a50 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -409,6 +409,15 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
- 
-+config PWM_RASPBERRYPI_POE
-+	tristate "Raspberry Pi Firwmware PoE Hat PWM support"
-+	# Make sure not 'y' when RASPBERRYPI_FIRMWARE is 'm'. This can only
-+	# happen when COMPILE_TEST=y, hence the added !RASPBERRYPI_FIRMWARE.
-+	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-+	help
-+	  Enable Raspberry Pi firmware controller PWM bus used to control the
-+	  official RPI PoE hat
-+
- config PWM_RCAR
- 	tristate "Renesas R-Car PWM support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 18b89d7fd092..ed28d7bd4c64 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+= pwm-raspberrypi-poe.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberrypi-poe.c
-new file mode 100644
-index 000000000000..91cd826a36f3
---- /dev/null
-+++ b/drivers/pwm/pwm-raspberrypi-poe.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ * For more information on Raspberry Pi's PoE hat see:
-+ * https://www.raspberrypi.org/products/poe-hat/
-+ *
-+ * Limitations:
-+ *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
-+ *  - Only normal polarity
-+ *  - Fixed 12.5 kHz period
-+ *
-+ * The current period is completed when HW is reconfigured.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+#include <dt-bindings/pwm/raspberrypi,firmware-pwm.h>
-+
-+#define RPI_PWM_MAX_DUTY		255
-+#define RPI_PWM_PERIOD_NS		80000 /* 12.5 kHz */
-+
-+#define RPI_PWM_CUR_DUTY_REG		0x0
-+#define RPI_PWM_DEF_DUTY_REG		0x1
-+
-+struct raspberrypi_pwm {
-+	struct rpi_firmware *firmware;
-+	struct pwm_chip chip;
-+	unsigned int duty_cycle;
-+};
-+
-+struct raspberrypi_pwm_prop {
-+	__le32 reg;
-+	__le32 val;
-+	__le32 ret;
-+} __packed;
-+
-+static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct raspberrypi_pwm, chip);
-+}
-+
-+static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = cpu_to_le32(reg),
-+		.val = cpu_to_le32(val),
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	if (msg.ret)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 *val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = reg
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	if (msg.ret)
-+		return -EIO;
-+
-+	*val = le32_to_cpu(msg.val);
-+
-+	return 0;
-+}
-+
-+static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+
-+	state->period = RPI_PWM_PERIOD_NS;
-+	state->duty_cycle = DIV_ROUND_CLOSEST(rpipwm->duty_cycle * RPI_PWM_PERIOD_NS,
-+					      RPI_PWM_MAX_DUTY);
-+	state->enabled = !!(rpipwm->duty_cycle);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+}
-+
-+static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			         const struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+	unsigned int duty_cycle;
-+	int ret;
-+
-+        if (state->period < RPI_PWM_PERIOD_NS ||
-+            state->polarity != PWM_POLARITY_NORMAL)
-+                return -EINVAL;
-+
-+        if (!state->enabled)
-+                duty_cycle = 0;
-+        else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
-+                duty_cycle = DIV_ROUND_CLOSEST_ULL(state->duty_cycle * RPI_PWM_MAX_DUTY,
-+					           RPI_PWM_PERIOD_NS);
-+        else
-+                duty_cycle = RPI_PWM_MAX_DUTY;
-+
-+	if (duty_cycle == rpipwm->duty_cycle)
-+		return 0;
-+
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * This sets the default duty cycle after resetting the board, we
-+	 * updated it every time to mimic Raspberry Pi's downstream's driver
-+	 * behaviour.
-+	 */
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+        rpipwm->duty_cycle = duty_cycle;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops raspberrypi_pwm_ops = {
-+	.get_state = raspberrypi_pwm_get_state,
-+	.apply = raspberrypi_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int raspberrypi_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *firmware_node;
-+	struct device *dev = &pdev->dev;
-+	struct rpi_firmware *firmware;
-+	struct raspberrypi_pwm *rpipwm;
-+	int ret;
-+
-+	firmware_node = of_get_parent(dev->of_node);
-+	if (!firmware_node) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	firmware = devm_rpi_firmware_get(&pdev->dev, firmware_node);
-+	of_node_put(firmware_node);
-+	if (!firmware)
-+		return -EPROBE_DEFER;
-+
-+	rpipwm = devm_kzalloc(&pdev->dev, sizeof(*rpipwm), GFP_KERNEL);
-+	if (!rpipwm)
-+		return -ENOMEM;
-+
-+	rpipwm->firmware = firmware;
-+	rpipwm->chip.dev = dev;
-+	rpipwm->chip.ops = &raspberrypi_pwm_ops;
-+	rpipwm->chip.base = -1;
-+	rpipwm->chip.npwm = RASPBERRYPI_FIRMWARE_PWM_NUM;
-+
-+	platform_set_drvdata(pdev, rpipwm);
-+
-+	ret = raspberrypi_pwm_get_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   &rpipwm->duty_cycle);
-+	if (ret) {
-+		dev_err(dev, "Failed to get duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return pwmchip_add(&rpipwm->chip);
-+}
-+
-+static int raspberrypi_pwm_remove(struct platform_device *pdev)
-+{
-+	struct raspberrypi_pwm *rpipwm = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&rpipwm->chip);
-+}
-+
-+static const struct of_device_id raspberrypi_pwm_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-pwm", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, raspberrypi_pwm_of_match);
-+
-+static struct platform_driver raspberrypi_pwm_driver = {
-+	.driver = {
-+		.name = "raspberrypi-pwm",
-+		.of_match_table = raspberrypi_pwm_of_match,
-+	},
-+	.probe = raspberrypi_pwm_probe,
-+	.remove = raspberrypi_pwm_remove,
-+};
-+module_platform_driver(raspberrypi_pwm_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi Firwmare Based PWM Bus Driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.29.2
+2.7.4
 
