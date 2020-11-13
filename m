@@ -2,106 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37E1F2B0DB8
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Nov 2020 20:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C32C2B144C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 03:34:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgKLTRi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Nov 2020 14:17:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
+        id S1726050AbgKMCeC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Nov 2020 21:34:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgKLTRi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 14:17:38 -0500
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A810C0613D6
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 11:17:38 -0800 (PST)
-Received: by mail-oo1-xc42.google.com with SMTP id t10so1584002oon.4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 11:17:38 -0800 (PST)
+        with ESMTP id S1726011AbgKMCeC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Nov 2020 21:34:02 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087FEC0613D1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 18:34:02 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id c20so6340013pfr.8
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Nov 2020 18:34:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DbWNwoS/yA7kFAHQEVZG/j97G/b6ri6eA2QM6vIo46Q=;
-        b=yz0ymP9pfxOL7R9kW/KCBuusxjIPnYw6bv7tfZWUECDoktuk0IiAxrkqivHwV+rriT
-         dTrOTJ2Dd6NHXgMpnvcfW0SO1AZ7TZdGZVXsexIER4OF5YimMmgixv3vFk07fd9dWfNC
-         F06SeSfSE4ZZSsJbbnXx7d90EtlAgpIH0AKMSpfLCsBYbcLq0usM0MQCSkTs7I2afZJJ
-         Hw7mh681pob5cxX7yJ+tRTDJ9CmGSOl9BrFJGuu+K4EUYI44exl4WSAm8kosyC5kqKZ4
-         6INGhj66NSL3gimg9zwKMliZg6fWGsgt0hDEL77kaWnS/ohjlHwKV4d92WMEQmHNsdj/
-         kZFw==
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ejXfZ1mmSlVkQ2SZPpazp5/sRAvJ9j7gM/7PmisIs44=;
+        b=L7o8rnKl1i3/GnXdAdJsZ0BuC8Dna41VHg392jjZJ/9ysLWdVQ11ctb51lczabtxvF
+         3Q8nAeGzDBssZhIIECvAvBrPY7pDCXBilvYYueknPN3rD969H525/eidIBpwcXVias0D
+         5E0f6fXlB6u1SBR3RpdpY330IKkJIiyQ2JjU7jTH75wwIvZwo7USJFdIcLZi0UkqT5xY
+         pS4gZWM2IYV11CL82MiujdwhU310DuOX1sXuRX7npwFD7LdRgJJiC37h1vl7zC4vSe/3
+         jGr7wMBgiv92ZU8QrzO0wGOQ1n4p2TnFfUqgswkywyas18zNpIjnoH1UasXfGlE/NPtm
+         kVOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DbWNwoS/yA7kFAHQEVZG/j97G/b6ri6eA2QM6vIo46Q=;
-        b=ormhwix9SiOugDy8A99nSUi9Q42vbfYosTPOZ+pq8ygSZZDNhVNuQQkFL2yUrF637j
-         RoyVFFXEUgKkfSg3lORm6eiCEV2eC6OUs3fL4s5ZH2cvKAYe3g/MOBBZL2EI3jKBs5Ep
-         vB1d7QcvlrVrR7jVUPskLR1fJiGqtNYWsBXhGvBYMz8kMbI+GH/h677aaiUWsPPD67Gy
-         HG63ZiuAArNpinkVIvnx9ZvR7iDy4ECSSNRNqKd3IFMGF+QfVRD625MmMnQWmPWM/0OL
-         QnXRdWqHmlY0i/L3/D2//kT/WShJX8n4rd7WDzXWBY2enE4CaXokRizKozBBEFLrOruR
-         KnaA==
-X-Gm-Message-State: AOAM531yO/+34TJ1vRL3hlp7KP6ujhklHW2zoGK/jheKAGZ1pZiJ0Lls
-        WP7SPEoCS3RH2ipXbzTTC8FIV0sWReD59r9RvlRGZA==
-X-Google-Smtp-Source: ABdhPJzgTS+q8i38W1HnqJ1uOTJLpUkruB06T/Rv8JZYX8xhAUjWunWguACyKENcXkwSa8gHdkehxZAoBIlJVyrwgIU=
-X-Received: by 2002:a4a:c218:: with SMTP id z24mr625496oop.9.1605208657781;
- Thu, 12 Nov 2020 11:17:37 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ejXfZ1mmSlVkQ2SZPpazp5/sRAvJ9j7gM/7PmisIs44=;
+        b=lPso3Uu+5W+DkocQcnf6thdD4YPtfZBsSdXwwrol3KxCIuKWUDLhccp3gIrZixTLzM
+         EeboaK0oW0zTh4Gg8ytQNRkuv7qCNvacambV8rJwlJ44fCVwxDwXoSze3Hy4fKFrsbUP
+         fR+JyOOCMzE4/JlgMrz7o9AjsYGj+Gbm0SUNpSLGyPxhhDeoP+FweQiM2Gixjhj1FV2w
+         Do4XShgC9v8DTzCadqvpFeI5qj+VgaWXkbHUIognSxaRWdhgJYR/HsBYf4tTotcjTza+
+         RhYczBjMRXPi/puuDSpXbDAIeLOqAnrvCOj0os1qIgpBd+qByNzrIBoUVmXL6rod/EEp
+         sJdQ==
+X-Gm-Message-State: AOAM5312kBkp4B/Cl4MNA5DWNznUE3Tj5uXYELuaJJNEh595zXpjE5MP
+        bNNJUfuo4icn2ga4A3cPpmCnvg==
+X-Google-Smtp-Source: ABdhPJy7ett4bGSjt7SpZThhU12xUM8cvoPkfFBbEY47GmSwkAbDvZianrCuK2vKnIeT0YKcNJaSTg==
+X-Received: by 2002:a17:90b:150c:: with SMTP id le12mr303788pjb.139.1605234841458;
+        Thu, 12 Nov 2020 18:34:01 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id mm23sm8476315pjb.31.2020.11.12.18.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 18:34:00 -0800 (PST)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     greentime.hu@sifive.com, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@dabbelt.com, paul.walmsley@sifive.com,
+        andy.shevchenko@gmail.com, yash.shah@sifive.com
+Subject: [PATCH v3] gpio: sifive: To get gpio irq offset from device tree data
+Date:   Fri, 13 Nov 2020 10:33:55 +0800
+Message-Id: <20201113023355.43406-1-greentime.hu@sifive.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20201106042710.55979-1-john.stultz@linaro.org>
- <20201106042710.55979-3-john.stultz@linaro.org> <CACRpkdYhfjRBz8GwMyCrOTzjd-Y6-G16xPjH6xhwSHcnaJfuXA@mail.gmail.com>
- <CALAqxLXigwvauJgvN5FxoND60zybYw1L78POHY6KoxP2_gpkFA@mail.gmail.com> <20201112173721.GB20000@willie-the-truck>
-In-Reply-To: <20201112173721.GB20000@willie-the-truck>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 12 Nov 2020 11:17:27 -0800
-Message-ID: <CALAqxLWQ2SfbFZs+S=CcJJwrX7iok5vvGo-c=2htWQWTc486wg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-To:     Will Deacon <will@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 9:37 AM Will Deacon <will@kernel.org> wrote:
-> On Tue, Nov 10, 2020 at 10:51:46AM -0800, John Stultz wrote:
-> > On Tue, Nov 10, 2020 at 5:35 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > On Fri, Nov 6, 2020 at 5:27 AM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > > Allow the qcom_scm driver to be loadable as a permenent module.
-> > > >
-> > ...
-> > > I applied this patch to the pinctrl tree as well, I suppose
-> > > that was the intention. If someone gets upset I can always
-> > > pull it out.
-> >
-> > Will: You ok with this?
->
-> We didn't come up with something better, so I can live with it.
+We can get hwirq number of the gpio by its irq_data->hwirq so that we don't
+need to add more macros for different platforms. This patch is tested in
+SiFive Unleashed board and SiFive Unmatched board.
 
-Ok, thanks!
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+---
+ drivers/gpio/gpio-sifive.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-> Not sure
-> about the otehr issues that were reported by Robin though -- your RFC for
-> fixing those looked a bit more controversial ;)
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index c54dd08f2cbf..630bddec48e5 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -29,7 +29,6 @@
+ #define SIFIVE_GPIO_OUTPUT_XOR	0x40
+ 
+ #define SIFIVE_GPIO_MAX		32
+-#define SIFIVE_GPIO_IRQ_OFFSET	7
+ 
+ struct sifive_gpio {
+ 	void __iomem		*base;
+@@ -37,7 +36,7 @@ struct sifive_gpio {
+ 	struct regmap		*regs;
+ 	unsigned long		irq_state;
+ 	unsigned int		trigger[SIFIVE_GPIO_MAX];
+-	unsigned int		irq_parent[SIFIVE_GPIO_MAX];
++	unsigned int		irq_number[SIFIVE_GPIO_MAX];
+ };
+ 
+ static void sifive_gpio_set_ie(struct sifive_gpio *chip, unsigned int offset)
+@@ -144,8 +143,12 @@ static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+ 					     unsigned int *parent,
+ 					     unsigned int *parent_type)
+ {
++	struct sifive_gpio *chip = gpiochip_get_data(gc);
++	struct irq_data *d = irq_get_irq_data(chip->irq_number[child]);
++
+ 	*parent_type = IRQ_TYPE_NONE;
+-	*parent = child + SIFIVE_GPIO_IRQ_OFFSET;
++	*parent = irqd_to_hwirq(d);
++
+ 	return 0;
+ }
+ 
+@@ -165,7 +168,7 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 	struct irq_domain *parent;
+ 	struct gpio_irq_chip *girq;
+ 	struct sifive_gpio *chip;
+-	int ret, ngpio;
++	int ret, ngpio, i;
+ 
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+@@ -200,6 +203,9 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	for (i = 0; i < ngpio; i++)
++		chip->irq_number[i] = platform_get_irq(pdev, i);
++
+ 	ret = bgpio_init(&chip->gc, dev, 4,
+ 			 chip->base + SIFIVE_GPIO_INPUT_VAL,
+ 			 chip->base + SIFIVE_GPIO_OUTPUT_VAL,
+-- 
+2.29.2
 
-Huh, I hadn't heard anything back on that series and was going to
-resend it. Do let me know if you have more thoughts on that one.
-
-thanks
--john
