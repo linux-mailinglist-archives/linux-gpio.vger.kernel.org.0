@@ -2,136 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A6CF2B1660
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 08:26:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 828222B167E
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 08:31:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgKMH0f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Nov 2020 02:26:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgKMH0f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Nov 2020 02:26:35 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD95C0613D1;
-        Thu, 12 Nov 2020 23:26:19 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id d3so4150880plo.4;
-        Thu, 12 Nov 2020 23:26:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bVc4aZk4rKy/6/VqEhMXbEQ5ZVosOHXwKRbVIxDDoGY=;
-        b=GMiotV0GyRZSn0pn1dgPWm/1yR1DzPikBgKi5Lbkr2+y/iNDlpqYBVO7SfIvAgqAbf
-         uIaCVLY528t7w5yWehm/+G4BNoS1lB69IH4dB9iSPueZ2vY4/XYJoWpU0aQEMS570PMt
-         gfyrGW2DRdfuIkQPiOQfGiyd6Icf9TqwlJVhKT9GlbO7q/Mj4/7h6vRa/vNWfxW1mehI
-         GBBBTEzl+JU36/Sc52m4n+V0gVtafzPbCLB2RuMl1UZyUSG2LeWJBlAiNPu5ZgflYKFh
-         dBz3JOOX0NRmiUfmf22A+yolC5R2dAEyS/GcPJGRpS4tu3Prtj7hQV+cpG105mS2OmpU
-         cB8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bVc4aZk4rKy/6/VqEhMXbEQ5ZVosOHXwKRbVIxDDoGY=;
-        b=ilHQ4bKelIaLk5fRLJ4K1wju+atXDEou+ME04dzDW8cMYGS+v2y4Y4OjmjWaHt6BLT
-         eEVVnoYvNVkyO6tOmQLejfAufnSDjZuoTvwvvqHkVtXRuWhISdm/Qgo9Y8tkj0WidDHo
-         ymwkSnf3iGUQ41ZzQgnQALh5rSRSgJ9QG7o48MyseNa5w2DKiU6EjmOFODonKVWSRRc5
-         AjS58F6JdNtusghqSNWVNuYSJhP7j2rnXn9Mz6NswUsWoQrVv/rv0pnZTbxSt4sU/bfn
-         6Y54Prxym1xcAfx7r49UWixjR/ArssAhsVQE5gLkxzz7gGdRLh8vjL0bBBUOV5LcWBrf
-         BwvQ==
-X-Gm-Message-State: AOAM532fH+1JKn1dF+HSjqLXCfcqO5Y2WwahbF5zC1zyGjqPSCo7Rkh5
-        esLkJOwqWGGCZ2wfXQzYJZ0=
-X-Google-Smtp-Source: ABdhPJwxvk3sEiTwtCGzh6+CErNAzuUpI0fhTqrV5pUBqPIIf6eT7t4y2GPOTdCy6tzoqSvWpYqfbA==
-X-Received: by 2002:a17:902:c016:b029:d7:1a0:7cf0 with SMTP id v22-20020a170902c016b02900d701a07cf0mr878425plx.64.1605252379251;
-        Thu, 12 Nov 2020 23:26:19 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id l20sm9170507pfd.103.2020.11.12.23.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 23:26:18 -0800 (PST)
-Date:   Thu, 12 Nov 2020 23:26:15 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        linux-input <linux-input@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 01/11] firmware: raspberrypi: Keep count of all
- consumers
-Message-ID: <20201113072615.GE356503@dtor-ws>
-References: <20201112163630.17177-1-nsaenzjulienne@suse.de>
- <20201112163630.17177-2-nsaenzjulienne@suse.de>
- <CAHp75Vf9E7UWVDMs=eRjLjoSN6SVOWw9thNdnR8ruCL6GmY7JQ@mail.gmail.com>
+        id S1726360AbgKMHbo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Nov 2020 02:31:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbgKMHbo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Nov 2020 02:31:44 -0500
+Received: from kernel.org (unknown [104.132.1.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD6B2085B;
+        Fri, 13 Nov 2020 07:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605252704;
+        bh=IxHFr+O2Qeh2nbz9XeXyx6Xdc9c/exv2Y07r+qrDnTE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=a07F7osUltHrv80bza86dFbbwqa8o6pChOyptgMVnw1icH731bI5MQBphl5ha1WaP
+         iNYgD3I7OohPhTAa1j0APFrCMDttT1nZ4bNLswvIkB3LYLTmKp7o97u370vJthEpkn
+         u+DwZUMidzSuJMvo1haBpal+J1XvNDWH1ER1uLUk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf9E7UWVDMs=eRjLjoSN6SVOWw9thNdnR8ruCL6GmY7JQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201107081420.60325-9-damien.lemoal@wdc.com>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-9-damien.lemoal@wdc.com>
+Subject: Re: [PATCH 08/32] riscv: Fix kernel time_init()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sean Anderson <seanga2@gmail.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-spi@vger.kernel.org
+Date:   Thu, 12 Nov 2020 23:31:42 -0800
+Message-ID: <160525270249.60232.12874105352298232293@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 07:52:14PM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 12, 2020 at 6:40 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> >
-> > When unbinding the firmware device we need to make sure it has no
-> > consumers left. Otherwise we'd leave them with a firmware handle
-> > pointing at freed memory.
-> >
-> > Keep a reference count of all consumers and introduce rpi_firmware_put()
-> > which will permit automatically decrease the reference count upon
-> > unbinding consumer drivers.
-> 
-> ...
-> 
-> >  /**
-> > - * rpi_firmware_get - Get pointer to rpi_firmware structure.
-> >   * @firmware_node:    Pointer to the firmware Device Tree node.
-> >   *
-> > + * The reference to rpi_firmware has to be released with rpi_firmware_put().
-> > + *
-> >   * Returns NULL is the firmware device is not ready.
-> >   */
-> >  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
-> >  {
-> >         struct platform_device *pdev = of_find_device_by_node(firmware_node);
-> > +       struct rpi_firmware *fw;
-> >
-> >         if (!pdev)
-> >                 return NULL;
-> >
-> > -       return platform_get_drvdata(pdev);
-> > +       fw = platform_get_drvdata(pdev);
-> > +       if (!fw)
-> > +               return NULL;
-> > +
-> > +       if (!kref_get_unless_zero(&fw->consumers))
-> > +               return NULL;
-> 
-> Don't we have a more traditional way of doing this, i.e.
-> try_module_get() coupled with get_device() ?
+Quoting Damien Le Moal (2020-11-07 00:13:56)
+> If of_clk_init() is not called in time_init(), clock providers defined
+> in the system device tree are not initialized, resulting in failures for
+> other devices to initialize due to missing clocks.
+> Similarly to other architectures and to the default kernel time_init()
+> implementation, call of_clk_init() before executing timer_probe() in
+> time_init().
 
-get_device() will make sure that device is there, but gives no
-assurances that device is bound to a driver, so it will not help with
-the racy access to firmware via platform_get_drvdata() call.
-
-Thanks.
-
--- 
-Dmitry
+Do you have timers that need clks to be running or queryable this early?
+This of_clk_init() call is made here when architectures need to call
+things like clk_get_rate() to figure out some clk frequency for their
+clockevent or clocksource. It is OK to have this call here, I'm just
+curious if this is actually necessary vs. delaying it to later.
