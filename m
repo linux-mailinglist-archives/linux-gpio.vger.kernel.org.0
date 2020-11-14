@@ -2,155 +2,238 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA8362B2763
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Nov 2020 22:46:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB9772B2A5F
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Nov 2020 02:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgKMVpB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Nov 2020 16:45:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgKMVoy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Nov 2020 16:44:54 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C10C0613D1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Nov 2020 13:44:52 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id h2so11353777wmm.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Nov 2020 13:44:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BR5+3LFA8r0c9JDlLtSGl4pZYsR9RDM5WddUZ0ezacg=;
-        b=ul73Er9tekrt/a8h/BV+rCgaDhgiSmcNMuBeKLMbsAPnc6ABddW/zISuVfx6uBD21g
-         NjTqk9EoddBmD5CSrsfi5YiCpDl8nBr3Q9qzEC/sHH8tZ75Fx0pesE7SCBMJmpAXimT+
-         cde8kBjKxXvTHqAS/rHS46uQW28wMF2UxsI6/4bACecGlMVn73iez5eop8D07R23Lvc1
-         S5OSUGdUZZpXpHC7VdQl+K6FkdQHUPmDCJUFy788eN4e1+pw/OVShYRdKjV1BkJAhT+F
-         JpdGgh/s8ktYWHwYfclrmAaJkx18wXDlvqnbmd1w4WfMxzKedO3g14M7FC2wzrxdi7Z4
-         QSlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BR5+3LFA8r0c9JDlLtSGl4pZYsR9RDM5WddUZ0ezacg=;
-        b=bJssr8tnMh/Tiu/LSadupWb5HkfHOUUXKIqkxk7QtYjg4u1Znd93v2xREZLeAre71E
-         fJ4Z5aNI0IP8jqO0cfMM18wdRS00kwy8zIvZITcgWeijl1AsDbtMprp6WuVHGWwtzJnK
-         mW2v0kHsPChEwuKpvJA93dn7pCoM3IVmgYb2lW2Ac2GkMrEB+IlRPYCUp1ae3W3ldfn7
-         MmGGX6mcYtGvXov7hju/bfokL6qCIoB+x6U2yCjmdLVy92DkZTaGfy7rzjLVCO5NSJ9N
-         nR4/a4FrCmU6PEFe58NfSK1R6OkACQtwmJPBNrnvtUe24vhtDHRSYgZaSPCx66OeoKr8
-         syVw==
-X-Gm-Message-State: AOAM531kQE1fRpco5b1jKK1B1+iXiqjLFZE0QF/O/1sQJJAIB0iK0+Oy
-        p7UHEOM7lT2uLjNhQGOfPmLBwjwh8eg=
-X-Google-Smtp-Source: ABdhPJybrTmM1wVy5xrexsBryK2A4G9lDACAfBCjwsZjrpBkUES58n62R/v5tAy4wO6Xc1dCiHasyQ==
-X-Received: by 2002:a05:600c:2c4c:: with SMTP id r12mr1404779wmg.157.1605303891559;
-        Fri, 13 Nov 2020 13:44:51 -0800 (PST)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id i10sm12363243wrs.22.2020.11.13.13.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 13:44:50 -0800 (PST)
-Date:   Fri, 13 Nov 2020 22:44:48 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
+        id S1726270AbgKNBO7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Nov 2020 20:14:59 -0500
+Received: from mga14.intel.com ([192.55.52.115]:28830 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgKNBO7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Nov 2020 20:14:59 -0500
+IronPort-SDR: qtdRNRFAbmrKPA0J/4PvYrMn+juxR9ZfCFgy50UghfoivFGWZhkfpqe04SFJxhkKczpq/9kGS8
+ EA4GJe1CkGiw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="169771103"
+X-IronPort-AV: E=Sophos;i="5.77,477,1596524400"; 
+   d="scan'208";a="169771103"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 17:14:53 -0800
+IronPort-SDR: lXk+W+OjJNDf/lzsfuBwJefZOwWH+UuWqU0M6ZzaOa18XwlxeW/bB19omZo0r6LRw7+GhX1ORO
+ e1XspgRYjn0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,477,1596524400"; 
+   d="scan'208";a="355725503"
+Received: from lkp-server02.sh.intel.com (HELO 697932c29306) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 13 Nov 2020 17:14:49 -0800
+Received: from kbuild by 697932c29306 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kdk9R-0000bu-7y; Sat, 14 Nov 2020 01:14:49 +0000
+Date:   Sat, 14 Nov 2020 09:14:04 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 2/2] RFT: gpio: tegra186: Set affinity callback to parent
-Message-ID: <20201113214448.GA2138577@ulmo>
-References: <20201111140628.24067-1-linus.walleij@linaro.org>
- <20201111140628.24067-2-linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-spi] BUILD SUCCESS
+ a40edbe3d2bf76cbc1a7c30b50de679811427aaf
+Message-ID: <5faf2f5c.szuPkQAxKrEmFwZd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Content-Disposition: inline
-In-Reply-To: <20201111140628.24067-2-linus.walleij@linaro.org>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-spi
+branch HEAD: a40edbe3d2bf76cbc1a7c30b50de679811427aaf  spi: mpc512x-psc: Convert to use GPIO descriptors
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 723m
 
-On Wed, Nov 11, 2020 at 03:06:28PM +0100, Linus Walleij wrote:
-> This assigns the .irq_set_affinity to the parent callback.
-> I assume the Tegra186 is an SMP system so this would be
-> beneficial.
->=20
-> I used the pattern making the hirerarchy tolerant for missing
-> parent as in Marc's earlier patch.
->=20
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/gpio-tegra186.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 9500074b1f1b..5060e81f5f49 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -444,6 +444,16 @@ static int tegra186_irq_set_wake(struct irq_data *da=
-ta, unsigned int on)
->  	return 0;
->  }
-> =20
-> +static int tegra186_irq_set_affinity(struct irq_data *data,
-> +				     const struct cpumask *dest,
-> +				     bool force)
-> +{
-> +	if (data->parent_data)
-> +		return irq_chip_set_affinity_parent(data, dest, force);
-> +
-> +	return 0;
-> +}
-> +
->  static void tegra186_gpio_irq(struct irq_desc *desc)
->  {
->  	struct tegra_gpio *gpio =3D irq_desc_get_handler_data(desc);
-> @@ -690,6 +700,7 @@ static int tegra186_gpio_probe(struct platform_device=
- *pdev)
->  	gpio->intc.irq_unmask =3D tegra186_irq_unmask;
->  	gpio->intc.irq_set_type =3D tegra186_irq_set_type;
->  	gpio->intc.irq_set_wake =3D tegra186_irq_set_wake;
-> +	gpio->intc.irq_set_affinity =3D tegra186_irq_set_affinity;
-> =20
->  	irq =3D &gpio->gpio.irq;
->  	irq->chip =3D &gpio->intc;
+configs tested: 174
+configs skipped: 3
 
-This does seem to mostly work, but I do get this new warning during
-boot:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-    [    6.406230] genirq: irq_chip gpio did not update eff. affinity mask =
-of irq 70
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                  cavium_octeon_defconfig
+powerpc                     pq2fads_defconfig
+powerpc                 xes_mpc85xx_defconfig
+mips                     loongson1b_defconfig
+powerpc                     rainier_defconfig
+ia64                          tiger_defconfig
+powerpc                    sam440ep_defconfig
+h8300                    h8300h-sim_defconfig
+sh                             shx3_defconfig
+xtensa                              defconfig
+powerpc                  iss476-smp_defconfig
+arm                         ebsa110_defconfig
+m68k                         apollo_defconfig
+sh                            titan_defconfig
+mips                         mpc30x_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                     magicpanelr2_defconfig
+powerpc                     sequoia_defconfig
+powerpc                       eiger_defconfig
+arm                        neponset_defconfig
+powerpc                     kmeter1_defconfig
+m68k                                defconfig
+mips                         bigsur_defconfig
+arm                         s3c6400_defconfig
+arm                         s5pv210_defconfig
+arm                        cerfcube_defconfig
+arm                         assabet_defconfig
+sh                           se7343_defconfig
+nios2                            alldefconfig
+sh                          rsk7203_defconfig
+m68k                            q40_defconfig
+openrisc                    or1ksim_defconfig
+arm                         hackkit_defconfig
+powerpc                  storcenter_defconfig
+sparc                       sparc32_defconfig
+powerpc                     ppa8548_defconfig
+arm                          gemini_defconfig
+m68k                       m5249evb_defconfig
+arm                          iop32x_defconfig
+arm                          simpad_defconfig
+arm                           sunxi_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                           h3600_defconfig
+arm                          tango4_defconfig
+powerpc                     stx_gp3_defconfig
+mips                         rt305x_defconfig
+powerpc                   bluestone_defconfig
+powerpc               mpc834x_itxgp_defconfig
+ia64                                defconfig
+arm                      pxa255-idp_defconfig
+powerpc                     tqm8560_defconfig
+powerpc                 mpc832x_rdb_defconfig
+mips                        omega2p_defconfig
+powerpc                      cm5200_defconfig
+powerpc                      bamboo_defconfig
+mips                        bcm47xx_defconfig
+powerpc64                        alldefconfig
+sh                   sh7724_generic_defconfig
+alpha                            alldefconfig
+arm                         vf610m4_defconfig
+arm                      integrator_defconfig
+sh                         ecovec24_defconfig
+sh                           se7750_defconfig
+mips                           jazz_defconfig
+powerpc                      acadia_defconfig
+xtensa                          iss_defconfig
+m68k                       m5208evb_defconfig
+mips                           xway_defconfig
+mips                        jmr3927_defconfig
+mips                          rb532_defconfig
+powerpc                          allmodconfig
+nds32                            alldefconfig
+arm                       aspeed_g4_defconfig
+um                            kunit_defconfig
+powerpc                      chrp32_defconfig
+sh                               j2_defconfig
+m68k                            mac_defconfig
+mips                        vocore2_defconfig
+xtensa                         virt_defconfig
+arm                        shmobile_defconfig
+powerpc64                           defconfig
+arm                           sama5_defconfig
+mips                           ip32_defconfig
+riscv                               defconfig
+sh                          kfr2r09_defconfig
+mips                     loongson1c_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                           spitz_defconfig
+mips                         tb0226_defconfig
+m68k                        m5272c3_defconfig
+arm                            xcep_defconfig
+mips                 decstation_r4k_defconfig
+arm                         axm55xx_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+arm                       versatile_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                    mvme5100_defconfig
+ia64                        generic_defconfig
+arm                           stm32_defconfig
+mips                        bcm63xx_defconfig
+sh                          rsk7269_defconfig
+powerpc                         wii_defconfig
+mips                        nlm_xlr_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201113
+i386                 randconfig-a005-20201113
+i386                 randconfig-a002-20201113
+i386                 randconfig-a001-20201113
+i386                 randconfig-a003-20201113
+i386                 randconfig-a004-20201113
+x86_64               randconfig-a015-20201113
+x86_64               randconfig-a011-20201113
+x86_64               randconfig-a014-20201113
+x86_64               randconfig-a013-20201113
+x86_64               randconfig-a016-20201113
+x86_64               randconfig-a012-20201113
+i386                 randconfig-a012-20201113
+i386                 randconfig-a014-20201113
+i386                 randconfig-a016-20201113
+i386                 randconfig-a011-20201113
+i386                 randconfig-a015-20201113
+i386                 randconfig-a013-20201113
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Any idea what that's supposed to mean? I can probably dig in some more
-early next week to see if I can track down why exactly that happens.
+clang tested configs:
+x86_64               randconfig-a003-20201113
+x86_64               randconfig-a005-20201113
+x86_64               randconfig-a004-20201113
+x86_64               randconfig-a002-20201113
+x86_64               randconfig-a006-20201113
+x86_64               randconfig-a001-20201113
 
-Thierry
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+u/kwACgkQ3SOs138+
-s6FdJw/9EfQRDW+uY8QtO5C8zZgiIOYT4Xn00tV/AlrTu2Iq9E0CVmvAqZqQLDx3
-6jWjpvOHj70pJyzMj7KkOyIAvPNLkOCqYajMivqhI3HT3z4egIEKDFp8ST1mqXyG
-9rwRjRNMS2yOO6W0ut3FLAFZpKbL6F+8oztom5dso3CGfLjXwSFc+Thwc5EX7YX4
-D1KO3XjARq7vwCkusGah+a923Gvd58YBYHA4cV4tDu0oT/jmK8nulvm86MmXOxun
-JS0WOXaZixk1FiqrhPiHsVltjeWei0Ck6DjnAn2kQO91zoCudW0pVRLX8T3JTdvh
-hF5wXhl2Q7naPQxtMj0bSxjJzx2xdTO+4B3RA2C48vtGhBQm9Br5fzSaCzdHAa/c
-BqzuHpxwjLicvFlN7mFs7sl0JDwUhNsKse/nVYviZAiKNBZZk1hyGqpQgCbJ0pWj
-ti6I8GSY137Ut6Mjy6xgGUEkYv+/NQDVS7LeWvbTolJrO2zK/6GU9bnhrA7dAk0d
-krxMeM5uzStb2jseAsQCf99ixwo1JxST9dq70nyJNM200SjSV8fU2UVmvSM3ZW3X
-C32bUy3A1rQHiDKesT9b9NEjr6myHhSTXCqRyWxlE+KlQ1Ap3ChGM+meTokYwzrq
-l1bZfFNr8b33ZyDrtYTZYfSteOe1zhJfH17DMh51bHW9Rr1MmTs=
-=PvH7
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
