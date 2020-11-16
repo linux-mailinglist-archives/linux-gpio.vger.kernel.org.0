@@ -2,82 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D37B2B5403
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 22:59:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48AA92B5415
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 23:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgKPV7P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Nov 2020 16:59:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
+        id S1727204AbgKPWGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Nov 2020 17:06:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbgKPV7P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Nov 2020 16:59:15 -0500
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D4BCC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Nov 2020 13:59:15 -0800 (PST)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 39006806A8;
-        Tue, 17 Nov 2020 10:59:06 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1605563946;
-        bh=8KWdMd8qaxPKtziTolyHFsm/ErZmO9Vb61jZx+cWi2A=;
-        h=From:To:Cc:Subject:Date;
-        b=fcB1Zq6DCpncjQzJ6xeU3LC0ynE9o7QBjXRszneE13cVtdTf14nNPEZ5XzLtJ2gvN
-         2agVxS7+B1/PmOPwVYlocH8nSSKR6slvJ8j6NGXOc03Itq6ICuLWOKGXWBgJtLTnD4
-         MCq86dSw2zBZUd3SgLuF57IYMYCX+1WB1CS45hoLM6fE/rLkt1G6kVtZGv+jAQHuYv
-         29vaSQpk6g5dHHWHJLiMwP3TVEeqTWDEDu4lLIayHuNHiPFrk4z5Bzt+AFfPvNFUt4
-         1vHlcPTE8IiGrudW2lRnoMoD9Mo2FGY+70Cy5Ujnt9gubgsZ1aSWX5exvwALPC7Ecb
-         2JMaRoJ1h8sjA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5fb2f6290000>; Tue, 17 Nov 2020 10:59:05 +1300
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id D448C13ED56;
-        Tue, 17 Nov 2020 10:59:05 +1300 (NZDT)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 0B57D340FC5; Tue, 17 Nov 2020 10:59:06 +1300 (NZDT)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     rjui@broadcom.com, sbranden@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH] pinctrl: bcm: pinctrl-iproc-gpio: Fix setting GPIO as output
-Date:   Tue, 17 Nov 2020 10:58:42 +1300
-Message-Id: <20201116215842.29488-1-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.29.2
+        with ESMTP id S1727098AbgKPWGo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Nov 2020 17:06:44 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD18CC0613CF;
+        Mon, 16 Nov 2020 14:06:43 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id x9so21913104ljc.7;
+        Mon, 16 Nov 2020 14:06:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BJxsU8gN59tvuGgU7PNdMo5fT7THwls7sknlrTbR/LI=;
+        b=Dzbvq7jedO3PcJom1SrUcQvsxJ8jFOdFumGcK2rmcwJwZGsmVTyjrYF/OMRmTFJub9
+         tVspSg+BzS5AvYB2h4VhuaIDU9XJc9IrheSXoEBnY2LNc6qODA7O7CkwpNS1iAwbjnHw
+         oiVvCY3oynumTov2j3ns3vDvoCX2nMB8KElSOu/TiY5VVAxnmK6zhPtxK9+H+QDAp60w
+         2Wrd/QzGEU+eLLmGTx4aXT7Lj52dv2gSYX59IntvyTZDa2dYIkoaieufTHpjTNon4ix4
+         pifwxW/tMNxIqIbNkp1X3OxDtH0r0FrNaAayMAck1wFjMMe7GPVof9aMYcrnT51TfTIp
+         jIKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BJxsU8gN59tvuGgU7PNdMo5fT7THwls7sknlrTbR/LI=;
+        b=MFi7JaGw6lhwH1SKKIZQ+xpCgKynP+wyNY/TEOeDNZuVUZrSXy6d7EXa0qnZGVybrP
+         x0a2Zx3TfW9peuam85sxO7yZu1nBq4hdHuA08WmT8D/Ud0/IdmVlZLRY/SjQj/e4xDDN
+         9yEqvb2ymmhUY/QC8xFGF2iYrdA8USROkOUHj6vsYira7n5p4zbw5O7UI0iUEGb8OIl3
+         /VUMFndKA3OeUyIRe6a1yJ/ophO5bpnfe2xAJb6Pw8+IHzuc2YsvCXAV8ueDiCT5Cc5U
+         JepNLoBnZxAVWpf6u89+FijALzrtlDWpMDFeB/4cZKufKtudduQeJdclcwNrZmBtI2Bk
+         QLSw==
+X-Gm-Message-State: AOAM532gF99jMY4c2GRLUeuCtPKL/EZe8Qaz1u5HAbAFQ0z/RnRmlXft
+        WD7mdE5PBvYHqLqY/67SaCe7pUnqqU6V3/vk
+X-Google-Smtp-Source: ABdhPJyf4bQRr3U3N2oJ43oLqlb4UWVX9zldVIP1uKyiEN1cpLv1Kt1MOolmlKctMFvj+U1UU5b7xg==
+X-Received: by 2002:a05:651c:207:: with SMTP id y7mr600414ljn.428.1605564400898;
+        Mon, 16 Nov 2020 14:06:40 -0800 (PST)
+Received: from mobilestation ([95.79.141.114])
+        by smtp.gmail.com with ESMTPSA id i7sm2756834lfi.269.2020.11.16.14.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 14:06:40 -0800 (PST)
+Date:   Tue, 17 Nov 2020 01:06:38 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Subject: Re: [PATCH 01/32] of: Fix property supplier parsing
+Message-ID: <20201116220638.ljrj6zgvgmvyib3k@mobilestation>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-2-damien.lemoal@wdc.com>
+ <CAHp75VfvUZ6h+JGCUQ65i7qFsugvbd3n=aCprgvp=geRSpQEhQ@mail.gmail.com>
+ <20201109174450.myombn5skpj5wcxh@mobilestation>
+ <BL0PR04MB6514880A6977E605D38D68BEE7E30@BL0PR04MB6514.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR04MB6514880A6977E605D38D68BEE7E30@BL0PR04MB6514.namprd04.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When setting a GPIO pin to an output, it is important to set the value
-correctly before enabling the output so that a glitch is not seen on the
-pin. This glitch may be very short, but can be important if this is a
-reset signal.
+On Mon, Nov 16, 2020 at 07:30:15AM +0000, Damien Le Moal wrote:
+> On 2020/11/10 2:45, Serge Semin wrote:
+> > Hello Andy,
+> > 
+> > On Mon, Nov 09, 2020 at 05:14:21PM +0200, Andy Shevchenko wrote:
+> >> On Sat, Nov 7, 2020 at 10:14 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
+> >>
+> >>> @@ -1308,7 +1308,6 @@ DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
+> >>>  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
+> >>>  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+> >>>  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+> >>> -DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+> >>
+> >> Sorry, but the above doesn't sound right to me.
+> >> It's a generic code and you may imagine how many systems you broke by
+> >> this change.
+> > 
+> > Damien replaced the macro above with the code below (your removed it from your
+> > message):
+> > 
+> > +static struct device_node *parse_gpios(struct device_node *np,
+> > +                                      const char *prop_name, int index)
+> > +{
+> > +       /*
+> > +        * Quirck for the DesignWare gpio-dwapb GPIO driver which defines
+> > +        * the "snps,nr-gpios" property to indicate the total number of GPIOs
+> > +        * available. As this conflict with "xx-gpios" reference properties,
+> > +        * ignore it.
+> > +        */
+> > +       if (strcmp(prop_name, "snps,nr-gpios") == 0)
+> > +               return NULL;
+> > +
+> > +       return parse_suffix_prop_cells(np, prop_name, index,
+> > +                                      "-gpios", "#gpio-cells");
+> > +}
+> > 
+> > So AFAICS removing the macro shouldn't cause any problem.
+> > 
+> > My concern was whether the quirk has been really needed. As I said the
+> > "snps,nr-gpios" property has been marked as deprecated in favor of the standard
+> > "ngpios" one. Due to the problem noted by Damien any deprecated property
+> > utilization will cause the DW APB SSI DT-nodes probe malfunction. That
+> > though implicitly but is supposed to encourage people to provide fixes for
+> > the dts-files with the deprecated property replaced with "ngpios".
+> > 
+> > On the other hand an encouragement based on breaking the kernel doesn't seem a
+> > good solution. So as I see it either we should accept the solution provided by
+> > Damien, or replace it with a series of fixes for all dts-es with DW APB SSI
+> > DT-node defined. I suggest to hear the OF-subsystem maintainers out what
+> > solution would they prefer.
+> 
 
-Fixes: b64333ce769c ("pinctrl: cygnus: add gpio/pinconf driver")
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> As Rob mentioned, there are still a lot of DTS out there using "snps,nr-gpios",
+> so I think the fix is needed,
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/b=
-cm/pinctrl-iproc-gpio.c
-index e2bd2dce6bb4..cadcf5eb0466 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -348,8 +348,8 @@ static int iproc_gpio_direction_output(struct gpio_ch=
-ip *gc, unsigned gpio,
- 	unsigned long flags;
-=20
- 	raw_spin_lock_irqsave(&chip->lock, flags);
--	iproc_set_bit(chip, IPROC_GPIO_OUT_EN_OFFSET, gpio, true);
- 	iproc_set_bit(chip, IPROC_GPIO_DATA_OUT_OFFSET, gpio, !!(val));
-+	iproc_set_bit(chip, IPROC_GPIO_OUT_EN_OFFSET, gpio, true);
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
-=20
- 	dev_dbg(chip->dev, "gpio:%u set output, value:%d\n", gpio, val);
---=20
-2.29.2
+Yes.
 
+> albeit with an added warning as Rob suggested so
+> that board maintainers can notice and update their DT.
+
+Yes.
+
+> And I can send a patch
+> for the DW gpio apb driver to first try the default "ngpios" property, and if it
+> is not defined, fallback to the legacy "snps,nr-gpios". With that, these new
+> RISC-V boards will not add another use case of the deprecated "snsps,nr-gpios".
+> Does that sound like a good plan ?
+
+It has already been added in 5.10:
+https://elixir.bootlin.com/linux/v5.10-rc4/source/drivers/gpio/gpio-dwapb.c#L585
+so there is no need in sending a patch for the gpio-dwapb.c driver.
+
+-Sergey
+
+> 
+> 
+> > 
+> > -Sergey
+> > 
+> >>
+> >> -- 
+> >> With Best Regards,
+> >> Andy Shevchenko
+> > 
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
