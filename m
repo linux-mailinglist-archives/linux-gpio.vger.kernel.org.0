@@ -2,156 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 017FB2B492C
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 16:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C05FA2B49B6
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 16:45:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgKPP0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Nov 2020 10:26:30 -0500
-Received: from mga01.intel.com ([192.55.52.88]:31316 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgKPP03 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Nov 2020 10:26:29 -0500
-IronPort-SDR: NEf5mSV3Hdc+/llGSPZhU2iomMV/vuFIIkHFdWZbgoGj82B7/2QhqS/2WS8IQsJnUtgIKZao5Z
- LHTLEr+IIo1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9807"; a="188805698"
-X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
-   d="scan'208";a="188805698"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 07:26:28 -0800
-IronPort-SDR: zcO4V+xiY6ljCCLy52xenx6gBqRcOKsbV/IDtqZ6J5R5LD1nVYoOiSkz8E0upCdI2IUtU3xS52
- qzy5cXRmxixw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
-   d="scan'208";a="329711201"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 16 Nov 2020 07:26:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D0B401F7; Mon, 16 Nov 2020 17:26:25 +0200 (EET)
-Date:   Mon, 16 Nov 2020 17:26:25 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 5.11-1
-Message-ID: <20201116152625.GA20187@black.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        id S1730741AbgKPPoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Nov 2020 10:44:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729795AbgKPPoQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Nov 2020 10:44:16 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAB9C0613CF
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Nov 2020 07:44:16 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id o66so3773448qkd.4
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Nov 2020 07:44:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eSunKcksHHT/bVys02/ZbrpRg77FJh70tQ/dvpdAX8E=;
+        b=HyseX0xw3GI7emA7dS02JQ9OxcHw5RndxIRnUO0Py3qI4nagtkXgMskrbX+mQuih7w
+         2cFKBpUbpIb4NCZlcMer2MIzi2YdwWsY7ArNUzER2ySxdrDpcOSMpTjt67Mb9V4QBWL5
+         xcIa1wncjfpetIPRI6SEbPXzlLyoAe8sl6QtSL4RSRkdUqBlZONRUs5H36Mx2k70TzBB
+         icgSzzyKA9PV7mkTPqB9o225+JVowRmsZ9LeeTSfIuSnE1CXVPgsacFQjq+Ae/sAkCkB
+         I0qMMy5cNOhoiFW8qel1yJXhnN9i3Ri33OagGyGOlK0L1zTLvJy7yxJDwUIHYXdm95iJ
+         ElDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eSunKcksHHT/bVys02/ZbrpRg77FJh70tQ/dvpdAX8E=;
+        b=dECICP0Mnl+rLs8cvpbE5MpL8nIDuNkHxpVlr1/Owi+J5yiMdOBY4wNbUVdO9JgqAg
+         VpDrpax9ErmMKuvmoZhAeBbueK23tYsSOHSIbGeurw9m/5ljETulnEyZDvs+aQzrmrbK
+         AEs/V8JvJnzL2dsU2dYDmKQZdFTbKhCNo5AUrSXjhCTckBLKVO1PQkwCOUwjmU5hxSul
+         zLdVLdn0rbBHckQvo231j37i09w93RPIothpNBzxsGZM2zz33eG49ogk091HDQLcFNW8
+         dfoZV3zfd6tsI408B9sy1nFhRERj7NAQWbO7OxB5mS5I8CGE1HNyZJYw97JzW6pys/24
+         2WPw==
+X-Gm-Message-State: AOAM531y0BjdzYBap4bdSmS4GbBIqwcKCh4zuHVRkhBnntKZ1CN4UupG
+        80EHaRHo40VvPneciWMsdW0=
+X-Google-Smtp-Source: ABdhPJyCe5pzUULS55NLjLoDFCq/JBxJzsyVkOrjc3nrqOH3vwk3dAUVAdeW0s9jsGpyA4otSvV4Yg==
+X-Received: by 2002:ae9:eb10:: with SMTP id b16mr14959976qkg.494.1605541455739;
+        Mon, 16 Nov 2020 07:44:15 -0800 (PST)
+Received: from localhost.localdomain ([2804:14c:482:997:213a:a240:fc07:36c8])
+        by smtp.gmail.com with ESMTPSA id 189sm8192778qkn.125.2020.11.16.07.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 07:44:15 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] gpio: mxc: Remove unused .id_table support
+Date:   Mon, 16 Nov 2020 12:44:07 -0300
+Message-Id: <20201116154407.15179-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO  maintainers,
+Since 5.10-rc1 i.MX is a devicetree-only platform and the existing
+.id_table support in this driver was only useful for old non-devicetree
+platforms.
 
-ACPI GPIO library refactoring. It's based on recent gpio/for-next.
+Get rid of the .id_table since it is no longer used.
 
-Thanks,
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/gpio/gpio-mxc.c | 29 +++++------------------------
+ 1 file changed, 5 insertions(+), 24 deletions(-)
 
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit b72de3ff19fdc4bbe4d4bb3f4483c7e46e00bac3:
-
-  gpio: sifive: Fix SiFive gpio probe (2020-11-11 09:53:09 +0100)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.11-1
-
-for you to fetch changes up to e709a7b5a066362b697d65dda90edc71f913df70:
-
-  gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work (2020-11-16 14:14:35 +0200)
-
-----------------------------------------------------------------
-intel-gpio for v5.11-1
-
-* Refactor GPIO library to support bias and debounce ACPI settings
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  acpi: Make Intel GPIO tree official for GPIO ACPI work
- -  acpi: Use BIT() macro to increase readability
- -  acpi: Convert pin_index to be u16
- -  acpi: Extract acpi_request_own_gpiod() helper
- -  acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
- -  acpi: Set initial value for output pin based on bias and polarity
- -  acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
- -  acpi: Move non-critical code outside of critical section
- -  acpi: Take into account debounce settings
- -  acpi: Use named item for enum gpiod_flags variable
- -  acpi: Respect bias settings for GpioInt() resource
- -  Introduce gpio_set_debounce_timeout() for internal use
- -  Extract gpio_set_config_with_argument_optional() helper
- -  move bias related code from gpio_set_config() to gpio_set_bias()
- -  Extract gpio_set_config_with_argument() for future use
- -  use proper API to pack pin configuration parameters
- -  add missed break statement
- -  Replace unsigned by unsigned int
-
-Merge tag 'intel-pinctrl-v5.10-2' into HEAD:
- - Merge tag 'intel-pinctrl-v5.10-2' into HEAD
-
-pinctrl:
- -  intel: Set default bias in case no particular value given
- -  intel: Fix 2 kOhm bias which is 833 Ohm
-
-----------------------------------------------------------------
-Andy Shevchenko (20):
-      gpiolib: Use proper type for bias enumerator in gpio_set_bias()
-      gpiolib: Switch to use compat_need_64bit_alignment_fixup() helper
-      Merge tag 'intel-pinctrl-v5.10-2' into HEAD
-      gpiolib: Replace unsigned by unsigned int
-      gpiolib: add missed break statement
-      gpiolib: use proper API to pack pin configuration parameters
-      gpiolib: Extract gpio_set_config_with_argument() for future use
-      gpiolib: move bias related code from gpio_set_config() to gpio_set_bias()
-      gpiolib: Extract gpio_set_config_with_argument_optional() helper
-      gpiolib: Introduce gpio_set_debounce_timeout() for internal use
-      gpiolib: acpi: Respect bias settings for GpioInt() resource
-      gpiolib: acpi: Use named item for enum gpiod_flags variable
-      gpiolib: acpi: Take into account debounce settings
-      gpiolib: acpi: Move non-critical code outside of critical section
-      gpiolib: acpi: Move acpi_gpio_to_gpiod_flags() upper in the code
-      gpiolib: acpi: Make acpi_gpio_to_gpiod_flags() usable for GpioInt()
-      gpiolib: acpi: Extract acpi_request_own_gpiod() helper
-      gpiolib: acpi: Convert pin_index to be u16
-      gpiolib: acpi: Use BIT() macro to increase readability
-      gpiolib: acpi: Make Intel GPIO tree official for GPIO ACPI work
-
-Deepak R Varma (1):
-      gpio: 104-idi-48: improve code indentation
-
-Linus Walleij (3):
-      gpio: Retire the explicit gpio irqchip code
-      gpio: stmpe: Fix forgotten refactoring
-      Merge branch 'devel' into for-next
-
-Vasile-Laurentiu Stanimir (1):
-      gpiolib: acpi: Set initial value for output pin based on bias and polarity
-
- Documentation/driver-api/gpio/driver.rst |  67 +++++---
- MAINTAINERS                              |   1 +
- drivers/gpio/TODO                        |  49 ------
- drivers/gpio/gpio-104-idi-48.c           |   6 +-
- drivers/gpio/gpio-stmpe.c                |  10 +-
- drivers/gpio/gpiolib-acpi.c              | 138 ++++++++++-------
- drivers/gpio/gpiolib-acpi.h              |   2 +
- drivers/gpio/gpiolib-cdev.c              |  24 +--
- drivers/gpio/gpiolib.c                   | 256 ++++++++-----------------------
- drivers/gpio/gpiolib.h                   |   1 +
- drivers/pinctrl/intel/pinctrl-intel.c    |  40 +++--
- include/linux/gpio/consumer.h            |   4 +-
- include/linux/gpio/driver.h              |  71 ---------
- 13 files changed, 235 insertions(+), 434 deletions(-)
-
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 643f4c557ac2..aadc11064b74 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -133,30 +133,12 @@ static struct mxc_gpio_hwdata *mxc_gpio_hwdata;
+ #define GPIO_INT_FALL_EDGE	(mxc_gpio_hwdata->fall_edge)
+ #define GPIO_INT_BOTH_EDGES	0x4
+ 
+-static const struct platform_device_id mxc_gpio_devtype[] = {
+-	{
+-		.name = "imx1-gpio",
+-		.driver_data = IMX1_GPIO,
+-	}, {
+-		.name = "imx21-gpio",
+-		.driver_data = IMX21_GPIO,
+-	}, {
+-		.name = "imx31-gpio",
+-		.driver_data = IMX31_GPIO,
+-	}, {
+-		.name = "imx35-gpio",
+-		.driver_data = IMX35_GPIO,
+-	}, {
+-		/* sentinel */
+-	}
+-};
+-
+ static const struct of_device_id mxc_gpio_dt_ids[] = {
+-	{ .compatible = "fsl,imx1-gpio", .data = &mxc_gpio_devtype[IMX1_GPIO], },
+-	{ .compatible = "fsl,imx21-gpio", .data = &mxc_gpio_devtype[IMX21_GPIO], },
+-	{ .compatible = "fsl,imx31-gpio", .data = &mxc_gpio_devtype[IMX31_GPIO], },
+-	{ .compatible = "fsl,imx35-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
+-	{ .compatible = "fsl,imx7d-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
++	{ .compatible = "fsl,imx1-gpio", .data = (const void *)IMX1_GPIO },
++	{ .compatible = "fsl,imx21-gpio", .data = (const void *)IMX21_GPIO },
++	{ .compatible = "fsl,imx31-gpio", .data = (const void *)IMX31_GPIO },
++	{ .compatible = "fsl,imx35-gpio", .data = (const void *)IMX35_GPIO },
++	{ .compatible = "fsl,imx7d-gpio", .data = (const void *)IMX35_GPIO },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, mxc_gpio_dt_ids);
+@@ -596,7 +578,6 @@ static struct platform_driver mxc_gpio_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe		= mxc_gpio_probe,
+-	.id_table	= mxc_gpio_devtype,
+ };
+ 
+ static int __init gpio_mxc_init(void)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
