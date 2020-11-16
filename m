@@ -2,120 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C05FA2B49B6
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 16:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F31B2B49D3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Nov 2020 16:48:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgKPPoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Nov 2020 10:44:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729795AbgKPPoQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Nov 2020 10:44:16 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAB9C0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Nov 2020 07:44:16 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id o66so3773448qkd.4
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Nov 2020 07:44:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eSunKcksHHT/bVys02/ZbrpRg77FJh70tQ/dvpdAX8E=;
-        b=HyseX0xw3GI7emA7dS02JQ9OxcHw5RndxIRnUO0Py3qI4nagtkXgMskrbX+mQuih7w
-         2cFKBpUbpIb4NCZlcMer2MIzi2YdwWsY7ArNUzER2ySxdrDpcOSMpTjt67Mb9V4QBWL5
-         xcIa1wncjfpetIPRI6SEbPXzlLyoAe8sl6QtSL4RSRkdUqBlZONRUs5H36Mx2k70TzBB
-         icgSzzyKA9PV7mkTPqB9o225+JVowRmsZ9LeeTSfIuSnE1CXVPgsacFQjq+Ae/sAkCkB
-         I0qMMy5cNOhoiFW8qel1yJXhnN9i3Ri33OagGyGOlK0L1zTLvJy7yxJDwUIHYXdm95iJ
-         ElDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eSunKcksHHT/bVys02/ZbrpRg77FJh70tQ/dvpdAX8E=;
-        b=dECICP0Mnl+rLs8cvpbE5MpL8nIDuNkHxpVlr1/Owi+J5yiMdOBY4wNbUVdO9JgqAg
-         VpDrpax9ErmMKuvmoZhAeBbueK23tYsSOHSIbGeurw9m/5ljETulnEyZDvs+aQzrmrbK
-         AEs/V8JvJnzL2dsU2dYDmKQZdFTbKhCNo5AUrSXjhCTckBLKVO1PQkwCOUwjmU5hxSul
-         zLdVLdn0rbBHckQvo231j37i09w93RPIothpNBzxsGZM2zz33eG49ogk091HDQLcFNW8
-         dfoZV3zfd6tsI408B9sy1nFhRERj7NAQWbO7OxB5mS5I8CGE1HNyZJYw97JzW6pys/24
-         2WPw==
-X-Gm-Message-State: AOAM531y0BjdzYBap4bdSmS4GbBIqwcKCh4zuHVRkhBnntKZ1CN4UupG
-        80EHaRHo40VvPneciWMsdW0=
-X-Google-Smtp-Source: ABdhPJyCe5pzUULS55NLjLoDFCq/JBxJzsyVkOrjc3nrqOH3vwk3dAUVAdeW0s9jsGpyA4otSvV4Yg==
-X-Received: by 2002:ae9:eb10:: with SMTP id b16mr14959976qkg.494.1605541455739;
-        Mon, 16 Nov 2020 07:44:15 -0800 (PST)
-Received: from localhost.localdomain ([2804:14c:482:997:213a:a240:fc07:36c8])
-        by smtp.gmail.com with ESMTPSA id 189sm8192778qkn.125.2020.11.16.07.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2020 07:44:15 -0800 (PST)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] gpio: mxc: Remove unused .id_table support
-Date:   Mon, 16 Nov 2020 12:44:07 -0300
-Message-Id: <20201116154407.15179-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1730175AbgKPPrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Nov 2020 10:47:52 -0500
+Received: from mga18.intel.com ([134.134.136.126]:29331 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbgKPPrw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Nov 2020 10:47:52 -0500
+IronPort-SDR: R2OlNHbXdeKlxDAs5ScNSPUPObcOlNtdUp5YtQPbbT2kDcxhGjB108819p/kLc1icLXx46f01a
+ L3bt+NPwj/zA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9807"; a="158540505"
+X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
+   d="scan'208";a="158540505"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 07:47:51 -0800
+IronPort-SDR: Ya0dtIgegTfSiO2+RkIRMB1vL9B/N/d01gJDdRm64n5scfhaFxU/RCsPNwD8phyyow3da5vjS/
+ 54j9xqXPdrvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
+   d="scan'208";a="362147140"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Nov 2020 07:47:49 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DC92C1F7; Mon, 16 Nov 2020 17:47:48 +0200 (EET)
+Date:   Mon, 16 Nov 2020 17:47:48 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.10-3
+Message-ID: <20201116154748.GA73963@black.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since 5.10-rc1 i.MX is a devicetree-only platform and the existing
-.id_table support in this driver was only useful for old non-devicetree
-platforms.
+Hi Linus,
 
-Get rid of the .id_table since it is no longer used.
+Couple of fixes for Jasper Lake looks big, but actually they are not and one
+small change induced renumbering of pins that's why it rather dozens of LOCs
+being changed. Otherwise it's simple set of fixes.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/gpio/gpio-mxc.c | 29 +++++------------------------
- 1 file changed, 5 insertions(+), 24 deletions(-)
+Thanks,
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 643f4c557ac2..aadc11064b74 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -133,30 +133,12 @@ static struct mxc_gpio_hwdata *mxc_gpio_hwdata;
- #define GPIO_INT_FALL_EDGE	(mxc_gpio_hwdata->fall_edge)
- #define GPIO_INT_BOTH_EDGES	0x4
- 
--static const struct platform_device_id mxc_gpio_devtype[] = {
--	{
--		.name = "imx1-gpio",
--		.driver_data = IMX1_GPIO,
--	}, {
--		.name = "imx21-gpio",
--		.driver_data = IMX21_GPIO,
--	}, {
--		.name = "imx31-gpio",
--		.driver_data = IMX31_GPIO,
--	}, {
--		.name = "imx35-gpio",
--		.driver_data = IMX35_GPIO,
--	}, {
--		/* sentinel */
--	}
--};
--
- static const struct of_device_id mxc_gpio_dt_ids[] = {
--	{ .compatible = "fsl,imx1-gpio", .data = &mxc_gpio_devtype[IMX1_GPIO], },
--	{ .compatible = "fsl,imx21-gpio", .data = &mxc_gpio_devtype[IMX21_GPIO], },
--	{ .compatible = "fsl,imx31-gpio", .data = &mxc_gpio_devtype[IMX31_GPIO], },
--	{ .compatible = "fsl,imx35-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
--	{ .compatible = "fsl,imx7d-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
-+	{ .compatible = "fsl,imx1-gpio", .data = (const void *)IMX1_GPIO },
-+	{ .compatible = "fsl,imx21-gpio", .data = (const void *)IMX21_GPIO },
-+	{ .compatible = "fsl,imx31-gpio", .data = (const void *)IMX31_GPIO },
-+	{ .compatible = "fsl,imx35-gpio", .data = (const void *)IMX35_GPIO },
-+	{ .compatible = "fsl,imx7d-gpio", .data = (const void *)IMX35_GPIO },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, mxc_gpio_dt_ids);
-@@ -596,7 +578,6 @@ static struct platform_driver mxc_gpio_driver = {
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe		= mxc_gpio_probe,
--	.id_table	= mxc_gpio_devtype,
- };
- 
- static int __init gpio_mxc_init(void)
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit f3c75e7a9349d1d33eb53ddc1b31640994969f73:
+
+  pinctrl: intel: Set default bias in case no particular value given (2020-10-26 13:26:50 +0200)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.10-3
+
+for you to fetch changes up to 5f714771d01e0e0d410f06d4d192fb27b1ca0edd:
+
+  pinctrl: baytrail: Avoid clearing debounce value when turning it off (2020-11-16 12:07:57 +0200)
+
+----------------------------------------------------------------
+intel-pinctrl for v5.10-3
+
+* Fix HOSTSW_OWN offset and unhide SPI group of pins on Jasper Lake
+* Fix debounce configuration on Baytrail when it's turned off
+* Fix default bias setting on Merrifield
+
+The following is an automated git shortlog grouped by driver:
+
+baytrail:
+ -  Avoid clearing debounce value when turning it off
+
+jasperlake:
+ -  Fix HOSTSW_OWN offset
+ -  Unhide SPI group of pins
+
+merrifield:
+ -  Set default bias in case no particular value given
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      pinctrl: jasperlake: Unhide SPI group of pins
+      pinctrl: merrifield: Set default bias in case no particular value given
+      pinctrl: baytrail: Avoid clearing debounce value when turning it off
+
+Evan Green (1):
+      pinctrl: jasperlake: Fix HOSTSW_OWN offset
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   |   8 +-
+ drivers/pinctrl/intel/pinctrl-jasperlake.c | 452 +++++++++++++++--------------
+ drivers/pinctrl/intel/pinctrl-merrifield.c |   8 +
+ 3 files changed, 246 insertions(+), 222 deletions(-)
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
