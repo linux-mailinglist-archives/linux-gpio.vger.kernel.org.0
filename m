@@ -2,42 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1C12B5FF1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 14:00:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D95C62B5FD9
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 14:00:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgKQM5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 07:57:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        id S1728637AbgKQM53 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 07:57:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbgKQM5F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Nov 2020 07:57:05 -0500
+        id S1728625AbgKQM52 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Nov 2020 07:57:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E612465E;
-        Tue, 17 Nov 2020 12:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD543246B3;
+        Tue, 17 Nov 2020 12:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605617825;
-        bh=Dnu8iBGItyBWo369q6DLtywwEWWtsRu49TGsKXt5pkg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jI7miV2WRzVvKfh868xaDNeIJ+JvKaGfOAxLr2c9j5NuMbYAYiIrLW3Lota+S5qJ1
-         WvCUV/GFIIoRcgS+bSYUqrzPfrrEdAZwaZUam2zyeHl7uJUfrJm+9Y9ZNLw2wvrXz/
-         cgdaMNfY/Sbnhu4EQdU4FCMYJuowMzgDrhEIKcjQ=
+        s=default; t=1605617847;
+        bh=nSlSpaDNHRKZweh1WkMRoomRVitUFX3MT3jYGTWMGM4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rgDIMhm6074hLDUJIfG65tksW4Vu2NkHSRL2SoViR527pQkMFHkKfQFXLqC3VLNsH
+         +rf8mEMMbaddJblprkVHAM6ACtVWTCg1gd2L3g/lV7ipjoRwMydla78KUITV08mRx1
+         X/SmcBxP6bLq8f8H8FhmLyqxNy3XSvTGyGJ3g1NE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
-        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kever Yang <kever.yang@rock-chips.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 07/21] pinctrl: mcp23s08: Print error message when regmap init fails
-Date:   Tue, 17 Nov 2020 07:56:38 -0500
-Message-Id: <20201117125652.599614-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 01/11] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
+Date:   Tue, 17 Nov 2020 07:57:15 -0500
+Message-Id: <20201117125725.599833-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201117125652.599614-1-sashal@kernel.org>
-References: <20201117125652.599614-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -45,36 +44,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Jianqun Xu <jay.xu@rock-chips.com>
 
-[ Upstream commit a835d3a114ab0dc2f0d8c6963c3f53734b1c5965 ]
+[ Upstream commit 63fbf8013b2f6430754526ef9594f229c7219b1f ]
 
-It is useful for debugging to have the error message printed
-when regmap initialisation fails. Add it to the driver.
+There need to enable pclk_gpio when do irq_create_mapping, since it will
+do access to gpio controller.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Martin Hundebøll <martin@geanix.com>
-Link: https://lore.kernel.org/r/20201009180856.4738-2-andriy.shevchenko@linux.intel.com
-Tested-by: Jan Kundrát <jan.kundrat@cesnet.cz>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Kever Yang<kever.yang@rock-chips.com>
+Link: https://lore.kernel.org/r/20201013063731.3618-3-jay.xu@rock-chips.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-mcp23s08_spi.c | 2 ++
+ drivers/pinctrl/pinctrl-rockchip.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-index 1f47a661b0a79..52e32634bb5a7 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-@@ -126,6 +126,8 @@ static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
- 	copy->name = name;
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 1bd8840e11a6e..930edfc32f597 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -2811,7 +2811,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 	if (!bank->domain)
+ 		return -ENXIO;
  
- 	mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp, copy);
-+	if (IS_ERR(mcp->regmap))
-+		dev_err(dev, "regmap init failed for %s\n", mcp->chip.label);
- 	return PTR_ERR_OR_ZERO(mcp->regmap);
++	clk_enable(bank->clk);
+ 	virq = irq_create_mapping(bank->domain, offset);
++	clk_disable(bank->clk);
+ 
+ 	return (virq) ? : -ENXIO;
  }
- 
 -- 
 2.27.0
 
