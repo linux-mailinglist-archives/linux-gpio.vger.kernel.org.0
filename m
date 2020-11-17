@@ -2,92 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B50B2B5DB2
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 12:00:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 614012B5F78
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 13:59:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgKQLAJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 06:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgKQLAJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 06:00:09 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB00C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 03:00:09 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id d17so8515911plr.5
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 03:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vMrsJ0mjdfWTMnKiKc/71S+hMwiMC+3w+1OPLxrqsEk=;
-        b=El6c/aGlCjhHFWSNIlL/LNsO9pCG/nTv5Qg9AtGePjwo/b2j4QCAEtuV4wefeGxa1D
-         Hi/EuQ2YnPJFQ1vNZO08Hqzrg5AetEhW/O2Dy2yLkch+5Qe+GriMBdn1jbmloNmwp0rF
-         +ZH6PqJV6jZCTfRI4BeCpAgEA2utLVfd3oWjhwjxs5Sa3qhh0LWITwAXAHHi/XfbLPBI
-         JztOQ2Ri7yt3Ji6DTRkX4Zx6NYc0D3ODA8ynt3M20ByL7zuUVIpK1NhTttTxnZn6Njcf
-         d1WEROaWRQiUF3sMf2TFC+zzkFk9I91XnAJKFBgjzza5o5LoPUivADZZTXjmce6fZ4Wo
-         v+DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vMrsJ0mjdfWTMnKiKc/71S+hMwiMC+3w+1OPLxrqsEk=;
-        b=R5NMvwwACa9IVI0fzrVoO9umGXS6fbhOQ5+h0ip/pT93mjc8tbfVygA+r6jqBWlFku
-         LRH4E1k2QwELAQK86V9cogxsDN3JhPh3N9PlSnS41w//+evRrOcsxpzW8NqdcJ2aiKLj
-         k13etlSFWUmpN6IYspP7QwG3oe9hU3lS0U9nrLy/7b7CLfBp30cTCd4OrLZy1we3qViO
-         Z/46h3et2hMS2tDzbu+gvCQsOa2VEHwfzvO2E28FxPPVmRxVqp1+GX6RyNt3bfbA/ST0
-         8mGXx5SP1uqsT0KJWS1UXCa3Ra0NVXTi18aL1RuOwTrvpwsDl0q6Oc2wWiZmJlRKbSYO
-         KhVw==
-X-Gm-Message-State: AOAM532BkqLTgGldpb3+AR5TnzT8NOkibsELltEr7zBbPdXdfFdn8T2H
-        M5TJnlh/lPHmrvpGa3H939D7eEU/h8H1KfkvyUY=
-X-Google-Smtp-Source: ABdhPJxtqMe//nPCwHD4kmzt0FttV4HhPofsQ4x9ACDd33n8tZSz101kvQkVdBLjtlTEI12KP5xzu2nXkDZYp+1h8eI=
-X-Received: by 2002:a17:902:ac93:b029:d8:d2c5:e5b1 with SMTP id
- h19-20020a170902ac93b02900d8d2c5e5b1mr16381983plr.17.1605610808535; Tue, 17
- Nov 2020 03:00:08 -0800 (PST)
+        id S1728344AbgKQM45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 07:56:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbgKQM44 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Nov 2020 07:56:56 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314002151B;
+        Tue, 17 Nov 2020 12:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605617815;
+        bh=Uq7Mm0fH0GeoEf0FK7NZg4YvfEhyM/7m8LEGhI5rbic=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ubcbgztce59LlW2+OTAwTLVCT6WwQN1zhxdUDaxBm1NWgwi/l1cAwu8LGt1oi5Ulq
+         Xjrn7pL5tEpTBoRMUnPgPjHnOQR54XQ9Av7Rk/k2qaR99WmRPGNORJ9B0GyVhPCf18
+         yjEG1eJwjDFrh7EHeSSBjg6etnO19YZhJGsD/QHs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.9 01/21] Revert "Revert "gpio: omap: Fix lost edge wake-up interrupts""
+Date:   Tue, 17 Nov 2020 07:56:32 -0500
+Message-Id: <20201117125652.599614-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20201116191311.12477-1-festevam@gmail.com> <CAHp75VcdOUm2vEgUUgUPUcrMwkXOdZ3Q3RWCvagerfQskznC_w@mail.gmail.com>
- <CAOMZO5C-Xoix9NSQLA0rh6eRahTfZdhVq6tZyYVqL3dqUXUeDw@mail.gmail.com>
-In-Reply-To: <CAOMZO5C-Xoix9NSQLA0rh6eRahTfZdhVq6tZyYVqL3dqUXUeDw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 17 Nov 2020 12:59:52 +0200
-Message-ID: <CAHp75VehOfT70OXJ3Tk4veGuBodhG8LgALXWVoYLNLOm_EGjsQ@mail.gmail.com>
-Subject: Re: [PATCH v3] mxc: gpio: Convert the driver to DT-only
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 12:55 PM Fabio Estevam <festevam@gmail.com> wrote:
-> On Tue, Nov 17, 2020 at 7:38 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->
-> > I like the result!
-> > FWIW,
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> Thanks for the suggestions and review.
->
-> I noticed that I will have to change one line:
->
-> > > -       if (mxc_gpio_hwtype == IMX21_GPIO) {
-> > > +       if (port->hwdata == &imx1_imx21_gpio_hwdata) {
->
-> as the original condition was only true for the "mx21" type of GPIO
-> and now evaluates true for both imx1 and imx21.
->
-> I will change this to:
->
-> -       if (mxc_gpio_hwtype == IMX21_GPIO) {
-> +       if (of_device_is_compatible(np, "fsl,imx21-gpio")) {
->
-> to keep the original logic and send a v4.
+From: Tony Lindgren <tony@atomide.com>
 
-Fine with me, you may keep my tag.
+[ Upstream commit 7ffa08169849be898eed6f3694aab8c425497749 ]
 
+This reverts commit 579ced8fdb00b8e94304a83e3cc419f6f8eab08e.
+
+Turns out I was overly optimistic about cpu_pm blocking idle being a
+solution for handling edge interrupts. While it helps in preventing
+entering idle states that potentially lose context, we can still get
+an edge interrupt triggering while entering idle. So we need to also
+add back the workaround for seeing if there are any pending edge
+interrupts when waking up.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Tero Kristo <t-kristo@ti.com>
+Link: https://lore.kernel.org/r/20201028060556.56038-1-tony@atomide.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpio-omap.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 0ea640fb636cf..3b87989e27640 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1114,13 +1114,23 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
+ {
+ 	struct device *dev = bank->chip.parent;
+ 	void __iomem *base = bank->base;
+-	u32 nowake;
++	u32 mask, nowake;
+ 
+ 	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
+ 
+ 	if (!bank->enabled_non_wakeup_gpios)
+ 		goto update_gpio_context_count;
+ 
++	/* Check for pending EDGE_FALLING, ignore EDGE_BOTH */
++	mask = bank->enabled_non_wakeup_gpios & bank->context.fallingdetect;
++	mask &= ~bank->context.risingdetect;
++	bank->saved_datain |= mask;
++
++	/* Check for pending EDGE_RISING, ignore EDGE_BOTH */
++	mask = bank->enabled_non_wakeup_gpios & bank->context.risingdetect;
++	mask &= ~bank->context.fallingdetect;
++	bank->saved_datain &= ~mask;
++
+ 	if (!may_lose_context)
+ 		goto update_gpio_context_count;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
