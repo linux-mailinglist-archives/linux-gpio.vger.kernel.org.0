@@ -2,185 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A63092B6490
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 14:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E01252B6609
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 15:01:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732802AbgKQNsA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 08:48:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35304 "EHLO
+        id S1731245AbgKQOA2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 09:00:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732727AbgKQNr7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 08:47:59 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7C3C0613CF;
-        Tue, 17 Nov 2020 05:47:59 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id p22so3305900wmg.3;
-        Tue, 17 Nov 2020 05:47:59 -0800 (PST)
+        with ESMTP id S1730114AbgKQOA1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 09:00:27 -0500
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EF3C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 06:00:27 -0800 (PST)
+Received: by mail-il1-x144.google.com with SMTP id l12so18656871ilo.1
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 06:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wtRPmHgnz5X1Kb5wQe988YxeBIzauGayM+LxupkV9hU=;
-        b=K6exzerX/Go7V6Q+x7FHPm4xpHTN9zwV+3KNS3M8AkytQWvrn4uJce020n04UP9PTm
-         i0FZdnDeBf2cuK0V+XzlQAfuhjjTLm9YN/aX/rUNM6D7fib+zH7fQ0lGkpj6C6qlEbsX
-         LPttGJve39Wv0RoocN4UDfCbrY/LD+h+BdGnLoDBfU/fHmKk5IsPJTBFFpUBps3BzouI
-         o6lxWGoSMlFMEl00AapPCLUvp7x4YHvur3Q8dENYXw0rq2E6sTCbS1F9lg8RbqPSULOR
-         iRN+JP4uUCyM7+96Sh7ST3EuEU+HWtlvYTV+mdFXf4TIVyaITFD+/OgR1FRwc87NnLN6
-         R+fA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3nFNDLVLoHTas1KT6t0+LqZeSm003JAtDw/BnaCURTs=;
+        b=zbR5V+Gr20CJq+1APgHjmwmiPbddXdn+0ynTFVpXKzECoKBdcGSRAXXlQZzQCWivF3
+         6eCXvz6D4KjY8alMQn66F9udDo7aK5hgblvZN63hNeDrwFxeVB337f7K3xpaAHYAzefx
+         mtMW5iG/6+DJ8QfnofCsk4gkK6VN0dYmRnHUW58xtbHqMxy11yLrsq0rZxjrDp6V0ISW
+         IaQm8OSV5tD5sn3VWmySnw2M/Z2AYkVglt12ZNqQh7omCK7oWAw2cUNq0CbOZuig5A8t
+         85sWTMOiIJdK/grC17Bzd4RA4KT9o8QfFWIV47DOze46eB/ODz/Sw+X9sRzqKW/BWhRN
+         V1fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wtRPmHgnz5X1Kb5wQe988YxeBIzauGayM+LxupkV9hU=;
-        b=Wm8b3UOy7DQqgB5hGZaY6xCmYVdyQLTNP8ELJ11ZkaIPhi2oHpI8pQaw7mkykXdIhX
-         gQ3ooD+lUezGN+ndPfk9YyZ3TxHL47GU0ZzTgvXVtkOwDExhJ4zNQrtC26M8yVw2rnes
-         0glr9o06ePwZJT3ZGOMXvVHdaZp9AJgQzFlnscTaDcoXn9iOsn08wtRwuhivczp3RI/F
-         bOqAT2xt7JvfZlpghe8PaNpLZSq8O7VFzeF5BgwOcD8rva8Uj2kIPYK4nyfvoab3O/ZI
-         Ex6k3GMYsURLAOep9S2ep7XLRa2c97H8vRiaTyCOGxeqbroiGrOFf7og9FdIBMdAydHS
-         vSQg==
-X-Gm-Message-State: AOAM531oh66/rXuIKcVK6Pn5Zw8XmVlW+uryo+6kWJV37rYzrhBpZG1t
-        un5MFs9wk1/ek+DYBd5sDzQ=
-X-Google-Smtp-Source: ABdhPJxUkbY+s0j/Ih+dPCP6czx7rsv21c1tFlLFkPICYayWqEzmgqz4lJIWMofYOMOBJQktU1rlHQ==
-X-Received: by 2002:a1c:ddc4:: with SMTP id u187mr4693503wmg.55.1605620877837;
-        Tue, 17 Nov 2020 05:47:57 -0800 (PST)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id 30sm20901859wrd.88.2020.11.17.05.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 05:47:56 -0800 (PST)
-Date:   Tue, 17 Nov 2020 14:47:54 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v6 3/3] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20201117134754.GB2589875@ulmo>
-References: <20201106042710.55979-1-john.stultz@linaro.org>
- <20201106042710.55979-3-john.stultz@linaro.org>
- <20201116155936.GE2224373@ulmo>
- <20201116163603.GA30507@willie-the-truck>
- <CALAqxLVDm923WRSB+DVxFacmEtmEPS7Qeq+rW_jbCDMNMWw9PQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3nFNDLVLoHTas1KT6t0+LqZeSm003JAtDw/BnaCURTs=;
+        b=dSpCyfs4GgoReO+7JYKdCUs012EVrsIRrBhm6lTfDObMCaFLV9OCMtQS/14jGkKKSZ
+         QsI82WrjC4BZ6REY3xFpKNU1CTLdlK/GThphAM8bcEXKvhlUSpZ3OEapjIw7wH9V2Z2+
+         PCnA7HADPNyBfsop13Uk850COpzrdxxxH8g0obGtWpw7nWbaScnG4PdmiVLnVLaPxCkv
+         3ipDwz+zhxZIffVDUsfj3EarvkAlXujSB63pLbrhajkUcG/odg6ilaH96jQUBns2fFGc
+         IhPqBgqdBMch1XCSUKDEKMNVq5jZsCNmgb1bO2cQduSeehTgfycLR3acTYASLC+IBX27
+         tFUA==
+X-Gm-Message-State: AOAM532sDRvh6841KeE5cEOo9EL8eX6eXjtqcMMtZ8oTNTS+vA2aZnNl
+        HiKk7a8h33aPcUymoZaW8O6+geNlfbgL9oeXXFtZMOU0BCw=
+X-Google-Smtp-Source: ABdhPJzvUHO+DMI+2qX8l8HB7KM4G1WEDgSycrjpItG/WOnxDyUZKJsC3kRDa1fVmfIX+/A+ZWoDd1LqSsMw1s/Laos=
+X-Received: by 2002:a92:c112:: with SMTP id p18mr5114263ile.220.1605621626998;
+ Tue, 17 Nov 2020 06:00:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVDm923WRSB+DVxFacmEtmEPS7Qeq+rW_jbCDMNMWw9PQ@mail.gmail.com>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+References: <20201112110642.14903-1-brgl@bgdev.pl>
+In-Reply-To: <20201112110642.14903-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 17 Nov 2020 15:00:16 +0100
+Message-ID: <CAMRc=McTPODnPEBezSJcHhS9ErWbnuHNnBR1NwyBD83td9q3pA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/2] treewide: remove ctxless API
+To:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 12, 2020 at 12:06 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> As I mentioned in another thread: the context-less API seems to be unused
+> outside the gpio-tools. There's no reason to keep it in v2 then. Let's
+> remove it and convert gpio-tools to regular API.
+>
+> The tools are converted in a rather quick and dirty way because I don't want
+> to spend a lot of time on something that'll be modified soon once we convert
+> the library to using uAPI v2.
+>
+> All tests still pass.
+>
+> Bartosz Golaszewski (2):
+>   core: provide gpiod_line_bulk_clear()
+>   ctxless: drop all context-less interfaces
+>
+>  include/gpiod.h            | 412 +--------------------------------
+>  lib/Makefile.am            |   2 +-
+>  lib/core.c                 |   8 +-
+>  lib/ctxless.c              | 456 -------------------------------------
+>  tests/Makefile.am          |   1 -
+>  tests/tests-ctxless.c      | 375 ------------------------------
+>  tools/gpio-tools-test.bats |  12 +-
+>  tools/gpiofind.c           |  25 +-
+>  tools/gpioget.c            |  36 ++-
+>  tools/gpiomon.c            | 177 +++++++-------
+>  tools/gpioset.c            |  42 +++-
+>  tools/tools-common.c       |   6 +-
+>  12 files changed, 182 insertions(+), 1370 deletions(-)
+>  delete mode 100644 lib/ctxless.c
+>  delete mode 100644 tests/tests-ctxless.c
+>
+> --
+> 2.29.1
+>
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If there are no objections, I intend to apply this tomorrow.
 
-On Mon, Nov 16, 2020 at 11:48:39AM -0800, John Stultz wrote:
-> On Mon, Nov 16, 2020 at 8:36 AM Will Deacon <will@kernel.org> wrote:
-> > On Mon, Nov 16, 2020 at 04:59:36PM +0100, Thierry Reding wrote:
-> > > On Fri, Nov 06, 2020 at 04:27:10AM +0000, John Stultz wrote:
-> > > Unfortunately, the ARM SMMU module will eventually end up being loaded
-> > > once the root filesystem has been mounted (for example via SDHCI or
-> > > Ethernet, both with using just plain, non-IOMMU-backed DMA API) and t=
-hen
-> > > initialize, configuring as "fault by default", which then results fro=
-m a
-> > > slew of SMMU faults from all the devices that have previously configu=
-red
-> > > themselves without IOMMU support.
-> >
-> > I wonder if fw_devlink=3Don would help here?
-> >
-> > But either way, I'd be more inclined to revert this change if it's caus=
-ing
-> > problems for !QCOM devices.
-> >
-> > Linus -- please can you drop this one (patch 3/3) for now, given that i=
-t's
-> > causing problems?
->=20
-> Agreed. Apologies again for the trouble.
->=20
-> I do feel like the probe timeout to handle optional links is causing a
-> lot of the trouble here. I expect fw_devlink would solve this, but it
-> may be awhile before it can be always enabled.  I may see about
-> pushing the default probe timeout value to be a little further out
-> than init (I backed away from my last attempt as I didn't want to
-> cause long (30 second) delays for cases like NFS root, but maybe 2-5
-> seconds would be enough to make things work better for everyone).
-
-I think there are two problems here: 1) the deferred probe timeout can
-cause a mismatch between what SMMU masters and the SMMU think is going
-on and 2) a logistical problem of dealing with the SMMU driver being a
-loadable module.
-
-The second problem can be dealt with by shipping the module in the
-initial ramdisk. That's a bit annoying, but perhaps the right thing to
-do. At least on Tegra we need this because all the devices that carry
-the root filesystem (Ethernet for NFS and SDHCI/USB/SATA/PCI for disk
-boot) are SMMU masters and will start to fault once the SMMU driver is
-loaded.
-
-The first problem is trickier, but if the ARM SMMU driver is built as a
-module and shipped in the initial ramdisk it should work. Like I said,
-this is annoying because it makes the development a bit more complicated
-than just rebuilding a kernel image and flashing it (or boot it straight
-=66rom TFTP) because now everytime the ARM SMMU module is built the
-initial ramdisk needs to be updated (and potentially flashed) as well.
-
-Thierry
-
-P.S.: Interestingly this is very similar to the problem that I've been
-trying to address for display hardware that's left on by the bootloader.
-Given that, one potential solution would be to somehow retrieve memory
-allocations done by these devices and create identity mappings in the
-ARM SMMU address spaces for such devices, much like we plan to do for
-devices left on by the bootloader (like the display controller for
-showing a boot splash). I suspect that it's not really worth doing this
-for devices that are only initialized by the kernel because we have a
-bit of control over when we enable them, so I'd prefer if we just kept
-things reasonably simple and made sure the SMMU was either always used
-by a device from the start or not at all. Dynamically switching between
-SMMU and no-SMMU seems a bit eccentric.
-
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+z1IgACgkQ3SOs138+
-s6F6ohAAneS0yFFBHoNDyOBvzWz0HOfTqXdo3x/QX0dAfVKc6bJ0Qe/RLBWwNpSY
-UjiqerKccBGe8l7Bf+b6Bj6/vKDLeMfI6hUawI51x3w4pf3u8HPsVEvsTOtPuVrX
-IEmw4B24/OCZCaYLlVB8a23JXGV8zSleTvHCUehX2eqCmhVF1/UAz2ZqVKt1WVNw
-BoIejtEgEvUkAgC+K2xlEXkKwhQCwc1ZyT3O98Ckc0oBmQm9PjxDL+TvUsWJWPNY
-Bu0TVlQCrq6arWhuu78Bo+IhayrMcCiHKSW5UHpmAYK+8nMSjQx7G2pz6iu11TTk
-LOeUemfODzr38DlHswfFdaDhWnTs6e5bA/4To719EoVai89kld+Ch4vcC9LXunp5
-ZPBmeX/pOBtcqt62YzkGFMMhMsD5+4ufGKK1rXZANisp9DMBThO7OKcCh/vXtE1T
-INGW040P33ZB6rNT3cEziha7AUMO/MsbcvMM78cy79jzp6rKwhHM5JNJtQ6vKaOn
-pXjCt8cRQH7OY+BmyDEBJQFqTAd8rmrvtRxr6lNEMpxea3fy3u0BP9FjTf2EgF6S
-FVQ1suGBvbYueWsjSDOML9C/CYZHojAmUNyadmYmBwEKyd9NNHi9RRTteZpWESPS
-/Psgw2xKXBu2mxWo1v+lv6lEH4m/aVlM0a8iMJT6yWL4SSPN6Bo=
-=oG/d
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
+Bartosz
