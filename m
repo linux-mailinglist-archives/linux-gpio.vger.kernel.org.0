@@ -2,127 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EF922B7091
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 21:59:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD4492B709A
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 22:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgKQU7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 15:59:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
+        id S1726199AbgKQVEQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 16:04:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbgKQU7U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 15:59:20 -0500
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EFBC0617A7
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 12:59:18 -0800 (PST)
-Received: by mail-lj1-x243.google.com with SMTP id l10so25892966lji.4
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 12:59:18 -0800 (PST)
+        with ESMTP id S1725823AbgKQVEQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 16:04:16 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE21AC0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 13:04:15 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id u18so32054495lfd.9
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 13:04:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lhOVKceVBv7kVKCgOWNBzO70XQrC0EF5U4LspVOWhdQ=;
-        b=jFWNWp2TgwOeIaJn/jRrE7BtuYTGCLhCbYE1gTAv9xgjHbnUiLNIEgwBwRvKlTP/bW
-         EYstaUc5JEc0i4QC2VMllWpVxHobX2i95V0FGI/LQF35NIJjY9Pn96rE2RzgO588ungl
-         EXiEGgjrT3HGHa4BzkBHA5XlatVXLUwTAANULsOvBtkNeGKIFfqsqwrxasdbzxiFLpoZ
-         jOhE37cjXz3dN7vSaw2HY19SCUhSz0AkicBVW49Ovamx3xoTaRKO7MgaJkI+oTEcIeoY
-         k9GBD+p52hRY5liL5DAx6xBuZH1JDEFrh6/uuxfbnU+tma0kHkEcZX2ImRsdqCo9WCZN
-         t7rw==
+        bh=zgl6E2Ykw2oSQn1w28fmsugeMPZaQxHqS8oXF+f20co=;
+        b=q2zdu4NoqBNyZHCKmy7C0hrKA3Mv9ZZvSpQzk05yDpf0tq/F898wVTkjyKiGI3X965
+         URrsRDR6Uwaj0PRrPG7T5GAwKh/UWLhtMwYw9h0Am0Xs66ZaxGtmCs0jGfwwYsbeR74d
+         yKWypHjJRqpCqpNp6B1NyN+LFAlNcGhkPjdp0hSoOFZ0z1/I7J2kzaS8ktF7bbBY6FLr
+         kFNWdZvPGO68Dxi9m2XnRzV0bGPH0V36Dz/IKwjW/QsbJgYNYP7hhkBoAbR28e7/26UR
+         tlHUlSMf/uEB8p46UwgUHBy54WEjVolgcZEoTlGFENLAb23zZw6GxINyLx1J++fnSrCS
+         z1cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lhOVKceVBv7kVKCgOWNBzO70XQrC0EF5U4LspVOWhdQ=;
-        b=g51I/G6Kfo2sce91zs6CWYGCESSBEQ6tUn3Y1hpKAqwf2YPo8v26DF/+eMYRZ3ldRW
-         pml5BktoIcLKZ1znC0cJZFZbfXovqL3DD/0NtrkbS0+y4agKdcAmbsnnaNcKIvodAC5P
-         4S9v4hnr98g91GEvzShaKmborIyU+DFbI6LgK57frHX3Ko4VlMkKeAUX3tbAMPupW3Q/
-         RSe3pAQuVE3xEdQ5K6CP9DBGbjLoP62Qa8i/5rl/Zz5k+ZXt/z51RlNGgA9GDoxAoufh
-         H2aE8MYbOBOCaPaOYQRzQWYGnrHDx1FpN3yZC34QG0FvVQ4lsggcq5o72GGdNCzG8OVS
-         8/Dg==
-X-Gm-Message-State: AOAM530WjAV26UMmpB5N3txAvHaOr39Um0DxJ8hFrogx2OPZJEo0A23u
-        CQYdTnu60YmGTa/0NkX65VV52RinVGSoKXQDOAlnLg==
-X-Google-Smtp-Source: ABdhPJxjUwnRMlyZ1I6GdoT/R74osOxNheL4gleSpdaSISqhkb43ujnEF7gLzIuthlDegCWIFpbwtFMORGY7wdDa0eU=
-X-Received: by 2002:a2e:321a:: with SMTP id y26mr2883348ljy.293.1605646757115;
- Tue, 17 Nov 2020 12:59:17 -0800 (PST)
+        bh=zgl6E2Ykw2oSQn1w28fmsugeMPZaQxHqS8oXF+f20co=;
+        b=II5olpZbkbDdDbV0b4zmuxQBPXqtDsvpqBMUPvpEEi4fxYOxetskWBvipZreVSxVeq
+         ASC94S3OmKjpVaJvt6x4h5WOJ7ZaReN5YX9Re/PmWk2eONDpaSms2qO/8M/P8JIzWR5o
+         ANNqagh5+2knJ8el/tq0qWTrGGQlhGmjRHFmA0cw2+ePYOEKli4oQWIiIz+N8IPNHq3B
+         piAVE4n6bEVWw7K98jPsFfCtcuiZaUpyiXI1+zMcBjua7QeonTzLQXhYHz1naUpI7DUP
+         VPyufQSPTRo+6KZcc5Ako6WGIvUJBDJc2jnWw7lcWB1OL6PGtS68dtE4uHnpYmLJRvb6
+         E7+g==
+X-Gm-Message-State: AOAM532Uq8a79OiINnGAkXLP1A8RNmDBSMOBtzNWNcvvI6E6t1btPhGo
+        /8b6OfRf8ig2T2qNsBMuhsyvgC04MjzyEgUHOpcimg==
+X-Google-Smtp-Source: ABdhPJynjCbVNSZR7txIN1CNMuxzgyFSB3kNdjYDK2X7OxfCX5DONMDpJ99UxLL8MoDYnQbi75J9pOWRi00X+Qo1Id8=
+X-Received: by 2002:a19:8686:: with SMTP id i128mr2298194lfd.333.1605647054194;
+ Tue, 17 Nov 2020 13:04:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20201112084057.1399983-1-nobuhiro1.iwamatsu@toshiba.co.jp> <20201112084057.1399983-3-nobuhiro1.iwamatsu@toshiba.co.jp>
-In-Reply-To: <20201112084057.1399983-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+References: <20201113151807.3924625-1-geert+renesas@glider.be>
+In-Reply-To: <20201113151807.3924625-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 17 Nov 2020 21:59:06 +0100
-Message-ID: <CACRpkdbtkLjzMqRKzd3ppmwZ9hZESL4+zGOf7-uqjuF==Wm=3A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] gpio: visoconti: Add Toshiba Visconti GPIO support
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        yuji2.ishikawa@toshiba.co.jp,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 17 Nov 2020 22:04:03 +0100
+Message-ID: <CACRpkdZTuh-qR3PEr2y5nMnLj78WM8=2Zq+-v=xXercA6+JCNg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.11
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Nobuhiro,
+On Fri, Nov 13, 2020 at 4:18 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-On Thu, Nov 12, 2020 at 12:42 AM Nobuhiro Iwamatsu
-<nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
-
-> Add the GPIO driver for Toshiba Visconti ARM SoCs.
+> The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
 >
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+>   Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.11-tag1
+>
+> for you to fetch changes up to d4aac7d439c2d9307cb5137fc285464a36978107:
+>
+>   pinctrl: renesas: Constify sh73a0_vccq_mc0_ops (2020-11-13 15:37:41 +0100)
 
-I just noticed this:
-
-> +config GPIO_VISCONTI
-> +       tristate "Toshiba Visconti GPIO support"
-> +       depends on ARCH_VISCONTI || COMPILE_TEST
-> +       depends on OF_GPIO
-> +       select GPIOLIB_IRQCHIP
-> +       help
-> +         Say yes here to support GPIO on Tohisba Visconti.
-
-Add:
-select GPIO_GENERIC
-
-Then all of these:
-
-> +static int visconti_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +static void visconti_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +static int visconti_gpio_get_dir(struct gpio_chip *chip, unsigned int offset)
-> +static int visconti_gpio_dir_in(struct gpio_chip *chip, unsigned int offset)
-> +static int visconti_gpio_dir_out(struct gpio_chip *chip, unsigned int offset, int value)
-
-Can be implemented by the genric MMIO GPIO library.
-
-> +       gpio_chip = &priv->gpio_chip;
-> +       gpio_chip->label = name;
-> +       gpio_chip->owner = THIS_MODULE;
-> +       gpio_chip->parent = dev;
-> +       gpio_chip->request = gpiochip_generic_request;
-> +       gpio_chip->free = gpiochip_generic_free;
-> +       gpio_chip->get = visconti_gpio_get;
-> +       gpio_chip->set = visconti_gpio_set;
-> +       gpio_chip->get_direction = visconti_gpio_get_dir;
-> +       gpio_chip->direction_input = visconti_gpio_dir_in;
-> +       gpio_chip->direction_output = visconti_gpio_dir_out;
-> +       gpio_chip->base = 0;
-> +       gpio_chip->ngpio = VISCONTI_GPIO_NR;
-> +       gpio_chip->irq.init_valid_mask = visconti_init_irq_valid_mask;
-
-Initialized the generic helpers using the addresses of the
-GPIO registers here by a call to bgpio_init().
-
-Check this driver for an example:
-drivers/gpio/gpio-ftgpio010.c
-
-If you get uncertain about the arguments to bgpio_init()
-check drivers/gpio/gpio-mmio.c, there is kerneldoc for the
-function.
-
-By doing this you get implementations of gpio_[get|set]_multiple()
-for free.
+Pulled into my devel branch for v5.11. Thanks!
 
 Yours,
 Linus Walleij
