@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 802012B5FAD
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 14:00:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E32092B5FBB
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Nov 2020 14:00:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgKQM5t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 07:57:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
+        id S1726853AbgKQM55 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 07:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728735AbgKQM5q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Nov 2020 07:57:46 -0500
+        id S1728766AbgKQM54 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Nov 2020 07:57:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA322225B;
-        Tue, 17 Nov 2020 12:57:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0426D2225E;
+        Tue, 17 Nov 2020 12:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605617865;
-        bh=jiXUb3dHuj6wF3mgnGob5udyk4xvwnvCnIdVrrxyCAY=;
+        s=default; t=1605617876;
+        bh=R4LWO04Ts5s9UfBFE1ucirvhHuqqdNVcbzsVK+aoODw=;
         h=From:To:Cc:Subject:Date:From;
-        b=itOuL32LLcu0LNIOKCtc3XBKIEfLoYEHGS0CQUjaUC1jPAmZmS0Bk5AGH8Mrns9wp
-         C3L66jk3tqHFcNpm0LrNISm4uz5uPd+3QYEAu4bTiip9kBRTiasAeI25AkVo1Aniib
-         Is+yOC+nDc/z4aqM3nKCRdKkY3cdXK4IRaukwmnM=
+        b=FNzNK5gwpwEX5Q+5PEm01pR7gVqg/K99W2KuVMIOiUIiwe9s4SlX3DjZBj7Iqdcp7
+         PfJqaVvnOd5WG4rjaq4RxbobWvtaTd58WcAX4bjmqU3iFQYmCnbTyGzGCwObhQuTpU
+         6nslcXjJnMS5BVByB8INcCrinH6M8aOt+z1/mdZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
@@ -32,9 +32,9 @@ Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 1/6] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
-Date:   Tue, 17 Nov 2020 07:57:38 -0500
-Message-Id: <20201117125743.599974-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 1/3] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
+Date:   Tue, 17 Nov 2020 07:57:51 -0500
+Message-Id: <20201117125753.600073-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 X-stable: review
@@ -62,10 +62,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 005df24f5b3f1..4d3b62707524a 100644
+index 5d6cf024ee9c8..26974973ecdde 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.c
 +++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -2778,7 +2778,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+@@ -2547,7 +2547,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
  	if (!bank->domain)
  		return -ENXIO;
  
