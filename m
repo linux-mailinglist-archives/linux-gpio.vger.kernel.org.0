@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1692B72C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:04:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DF02B72CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:04:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbgKRABO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 19:01:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
+        id S1725814AbgKRADI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 19:03:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgKRABN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:01:13 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216CFC0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:01:12 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id d17so333411lfq.10
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:01:12 -0800 (PST)
+        with ESMTP id S1725774AbgKRADI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:03:08 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8A2C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:03:08 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id w142so351689lff.8
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:03:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L4ycXUMGSCeTsWaW7nmdLeqpi6qBx0yLCpRoblXT9KU=;
-        b=DhZpw9q63G31YygvD9yuw+yE681SiE1BU8LFNB1VAbJKxD9t/37kOwhFwfaVHrETh4
-         GZUj++glg6kzICymCXr/ksdK06KGELdwRhq/ZslIcaAK8Jz97X+UgCXRa6EWs+uv3ptF
-         mLRIUTOfrbDPgyTEblMz1MtIAJc4Wg/O1z7esUCvLsKCrI72WDpM5Zq2nITJvcScWonU
-         cnPr5hh9SGyVealdIJwVDQAtWWGOz8TCbNPfIwiQzQyOKLao8V7NS+61vuxYyW9YqdQ/
-         88ZfaIN+blZ+rDxn5ZeZVKVrlRAZP55rM5Nk8oUHFy7qUSuDsNwm0i19i3h3BV9cxBca
-         RYlQ==
+        bh=J9RXigtzZqvF8NKIRf2sG4Ypb/c5XwyoqVNxlI7Ir5E=;
+        b=O+k6airmtoeTQZpHPonJn6WuBOScgaR+GqsM3cToHhHL6UXlqbinprGKfpo2XDgXO2
+         eVVu/RFOBPr7Z1w3KkH/YKP2j3ydCTsTYPys3u2SS+V3ZEbQV+pKKMF4P53Bg92qodWR
+         2hAxCsgoI4BjN/3Hofb4/ctFxk5McwckRR96SP7xWb+4JoouByzQ7QV/dbTFVxZGS+H5
+         kp4HZxktM/WGE4cQsd8AfO2rPekTDrkPNFzPFtFUzSgHKYSQgZBaJVuQsa/OB3vcvB7D
+         lku3q+zSIlLsdgzBQQxKY3EoFjGUyA+wSx/NwZQi1psDRpdDYvq37cNr8QLIpbV9j9a/
+         1V4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L4ycXUMGSCeTsWaW7nmdLeqpi6qBx0yLCpRoblXT9KU=;
-        b=BBsAWy9NZQ+ojAmVpr+eFnyBAIgKYgi6bYIlw4GwYjYEa1ECnyaQzcZQ0v2Lj6RP4R
-         7H+iwJjyALng7cCWcWzMSbSNNJW2497t9f7UdF/92/8urTcTDGw8umqlfPTDV/bgvuPM
-         VVwVqSixHDWs0o7/bwONgfXEoPCTanH/d8lnOwwHWqf7x2kNmesuFYa2llKc0+RjY+7A
-         gnj8ZJz4ecOuASHEixvLhVahlZ6hl+TkRo0i8Ftm+FlXWewjplELQmFUUPAfFM7uu9jz
-         zX2x1GcqhQXoywZhWY4mzBbFjp6/zV6slZ6snalvEGxlBeyaQgvumnsBNSoKTaNhhSo+
-         9qzQ==
-X-Gm-Message-State: AOAM533Mjcx2buTKFR6LnIRdMlE0p0un5EM7FFwcxU/rQAqZ4y728uUr
-        jZfloZooADeHvELS7M+WhVJ7QIjsMvddA7o2NQechg==
-X-Google-Smtp-Source: ABdhPJykej3jZlv5oi3l2bnvYBqKQn3+3VXMjsO0fsxudyst3FZId2oJkHK8ASswjD+RBh69JWnUJtAo8TSCSqYEaXY=
-X-Received: by 2002:a05:6512:3e7:: with SMTP id n7mr2480741lfq.585.1605657670638;
- Tue, 17 Nov 2020 16:01:10 -0800 (PST)
+        bh=J9RXigtzZqvF8NKIRf2sG4Ypb/c5XwyoqVNxlI7Ir5E=;
+        b=iAkm6ivZeAx5ySdX6j3vNK3ZOu1X65qxdQ2FFGbZNDtQ/n18YwPHlONtSSuUm15Iu5
+         3+ouKR4fXRXLfIVTJdfa0ozu3I1wR8z1zWB6GPG/zBpIbvFomqr/NT8TEi7RK07Ue9RK
+         m8o1LhUU+s9a5wDbZ1phKMflriS9RxRASEv0hC5PiSVYzyM/o+4uUHL9Tgagmuknqdcv
+         goTuVp9eL/7Y5BcTYKV5UFSIDWoHZ/AR8yaH3Noklc7QA9ZQVKHcP9N7KXr04jCoI054
+         E2MB/+JgwvEHWf//m1hGPWNQIKIRmo20VHO3DbURw6qdkZXtVwWS4b/J2KIeUqh3mxvW
+         Mclg==
+X-Gm-Message-State: AOAM533R0BpCTWt3aDDYYAo88kMbEVX/uHxI0VyDRv9hsxjtojQMtyPp
+        hz35JPcbqqH1Eyu+P+nJZAs8ONp1xcI25CfiOVvoYQ==
+X-Google-Smtp-Source: ABdhPJyJu9tHRpFd4TthwF9GL52PbEJxM9JfWHXC753KZYvspsLBP+BURDqaZ3+VvaUbStkvgsLJy1JUicAoWlFlFEQ=
+X-Received: by 2002:a19:e08:: with SMTP id 8mr2441966lfo.441.1605657786579;
+ Tue, 17 Nov 2020 16:03:06 -0800 (PST)
 MIME-Version: 1.0
-References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com>
- <1605201148-4508-4-git-send-email-srinivas.neeli@xilinx.com> <CACRpkdZw_rYXUq_UuJrjUk-moSZAiNL1f_nkuWhA2xovgk-vtg@mail.gmail.com>
-In-Reply-To: <CACRpkdZw_rYXUq_UuJrjUk-moSZAiNL1f_nkuWhA2xovgk-vtg@mail.gmail.com>
+References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-5-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1605201148-4508-5-git-send-email-srinivas.neeli@xilinx.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 18 Nov 2020 01:00:59 +0100
-Message-ID: <CACRpkdbwuMRR=mMg49bKnTEaUAb8vt1vx=iVTcfUJ3Kd3mNFug@mail.gmail.com>
-Subject: Re: [LINUX PATCH V3 3/9] gpio: gpio-xilinx: Add clock support
+Date:   Wed, 18 Nov 2020 01:02:55 +0100
+Message-ID: <CACRpkdaSeZSvS0TpATD0MSAxbM3yP+yVU9C2zTEXJ+xuNHUfLA@mail.gmail.com>
+Subject: Re: [LINUX PATCH V3 4/9] gpio: gpio-xilinx: Reduce spinlock array to single
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -65,26 +64,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 12:53 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Nov 12, 2020 at 6:13 PM Srinivas Neeli
-> <srinivas.neeli@xilinx.com> wrote:
->
-> > Adds clock support to the Xilinx GPIO driver.
-> >
-> > Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
->
-> (...)
-> > +       chip->clk = devm_clk_get_optional(&pdev->dev, NULL);
-> > +       if (IS_ERR(chip->clk)) {
-> > +               if (PTR_ERR(chip->clk) != -EPROBE_DEFER)
-> > +                       dev_dbg(&pdev->dev, "Input clock not found\n");
-> > +               return PTR_ERR(chip->clk);
-> > +       }
->
-> You can now use return dev_err_probe(dev, ret, "failed to get clock\n");
-> to avoid all the comparing with -EPROBE_DEFER.
+On Thu, Nov 12, 2020 at 6:12 PM Srinivas Neeli
+<srinivas.neeli@xilinx.com> wrote:
 
-Patch applied anyways, this can be done separately.
+> Changed spinlock array to single. It is preparation for irq support which
+> is shared between two channels that's why spinlock should be only one.
+>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+
+This patch does not apply to my "devel" tree.
 
 Yours,
 Linus Walleij
