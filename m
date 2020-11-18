@@ -2,214 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D71D12B73DE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 02:47:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A39E62B742E
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 03:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgKRBqD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 20:46:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34250 "EHLO
+        id S1726215AbgKRCaq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 21:30:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgKRBqC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 20:46:02 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9143BC061A4D
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 17:46:02 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id h12so205491pjv.2
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 17:46:02 -0800 (PST)
+        with ESMTP id S1725767AbgKRCap (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 21:30:45 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA45CC061A48
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 18:30:45 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id gi3so270519pjb.3
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 18:30:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=jFyzA13naR+YmcAfO4T+mlZol+MzM4a4hvQPqCv7FOw=;
-        b=OLQmI56MPnkxZiyAjxSIHozXS5jjAYdbrncuaIgwWKDlmDcUQuL52NJIjLlS7m2OdE
-         htHFF2TDumo4O98J2T6a/9DOcReynUMm3y0LQrAGGNgEp2577CW1oNPstid3+rxCZIcX
-         jMEPnBwuBMArLZoWUHGcAlhosg/3tGf5Wu/baLzaHOFXC/z9+QM05Ujm/OtecKUHP7Sj
-         /IsUbY4lFKaQPjyWxWNd+gZpIDjscBkQz9zkb1GsWMI63ResA9YIxM9RWbWY9Ri5CyVC
-         bqkGKPFRSvUvgT8vaLBI1BkReFyrZ9poyRLmfx/3H7MpIpXQiyPfbsAcguRXbsaOFJNt
-         UOfw==
+        bh=aCwkEmbqVaZtZzev/lt2MLOEMLUuNqOfcTlhvOfZ+CM=;
+        b=uwIJoNO4cFwugAloeqDl12ApEiy+TIXcf5uPnQBRfS4a6ubKFTzMGO0WY8hjuCCnx0
+         BfNahycr6OtXYMLwosO+LTc6mZPDBezMSjorh0x5bKy3BJUgvKxJNMYFlnpyzkLAdGib
+         7xBwh5rtWyPuTkRuB5hJP/mHRx5/Eai302tXKymwuaibKbF6lpjVFqtUcBZICisD7Uw4
+         SLvncRnDeRbwrjy/dt2MpB6cy1qF6JfbmcdVIENuW+o+15UGA/dDYXoCgjSmXzHCQ8Kb
+         Sj5bUtr3ZFTMWDw2gQFGkJMHNDBEQLjyb8LN3SY8PPKO8imRCU2EJXw+Mx5USr3r8TUb
+         jcbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=jFyzA13naR+YmcAfO4T+mlZol+MzM4a4hvQPqCv7FOw=;
-        b=lWc20vlT2ajgK93I0wcDlT62uIedC4+C1QVJunOWI9H6SUEKiUk4caHlQnR0icYUVU
-         OVL1XblxB+TGpRWJsT4wBFYqgzl3oILpugzjR3y5+4ZYqxxdUhDfMO4IOzPBcVy2qI3v
-         5awnATEEGKPmrveMgDCssTM3yg37/fBcQyAwguwHsi3PTV7tcsqMIoELOjD3X96VwhlC
-         d+aLkOXcuHV0w6ZcGYj1L6LkfKpU2Su5tF1K4cfO0fICOYVD4ahD39DrsDFMjG4of2gg
-         ZoKCbgwafpmQxE0MMUoJxDXb8Vks7Ysa13a7qMkwXO3wbpql5h+DgnvB7McGOrE0RnMD
-         iW2g==
-X-Gm-Message-State: AOAM532oK4rxKwZpadZpEB0sT2L+NhKWmngB3bf/0pMvJZmmuZkuaxLh
-        u0W1aSnX7Nz2GebVeDxK/4xr/RJP12WM0w==
-X-Google-Smtp-Source: ABdhPJwsGI/OC7RrQ9nHxMzC+z+k3Mq6a1IZNkO2tPWXONoATTepRyM+e50jHxto4Cw9Zf0rRzgJfg==
-X-Received: by 2002:a17:90b:30d0:: with SMTP id hi16mr1754703pjb.144.1605663961658;
-        Tue, 17 Nov 2020 17:46:01 -0800 (PST)
+        bh=aCwkEmbqVaZtZzev/lt2MLOEMLUuNqOfcTlhvOfZ+CM=;
+        b=MR64eEWEMSJUeZswZY6y+hi/S+4FIACH0JaR1fozHDPjZ+n7HMi+TWfxGt4mXejtFA
+         dUtMJs8v9Omj0f8tKC8V9TFYHNgTYUvafD8ln1WLWZ8wMSjnXeELJbYm0pn9U/QJxegn
+         pP+NEq39QnDQR7J5X6npc6FWVGkkk4PVNsPrMPsrwFr7i0scjqvyYRGnte16zSGpb2r1
+         cBI/LNpRQNf2T+Y7evxhCunO5zt+ligQeL/eaN1YBR7cCR9rsNZ4WoDoUmLpZSPqmOAj
+         jiDFvbNZVb1P1EzdCZuCnXsh8UgDh27ObMxZNE7DatMT5aEus/QtE2Ai7UXWKhUTr0U1
+         VhZg==
+X-Gm-Message-State: AOAM531zPBH4khotbFbkXQmXEWj4Xz6TgsK9H0V6ly370FgflLw5Lidq
+        9Jo87kumHzvrZUc1YbEpVuk1wwqxKFQ2PQ==
+X-Google-Smtp-Source: ABdhPJz/DKt/3aKru9Fa1kGUnRg9KXZpx0NUNz2TjR3WpuSqxi6t+I1zSm8xHmf5k8l/Mi/NdYW+dg==
+X-Received: by 2002:a17:902:9f98:b029:d6:f124:e297 with SMTP id g24-20020a1709029f98b02900d6f124e297mr2314228plq.81.1605666644822;
+        Tue, 17 Nov 2020 18:30:44 -0800 (PST)
 Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id a3sm23339040pfd.58.2020.11.17.17.46.00
+        by smtp.gmail.com with ESMTPSA id w4sm482613pjh.14.2020.11.17.18.30.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 17:46:00 -0800 (PST)
-Message-ID: <5fb47cd8.1c69fb81.de91d.444e@mx.google.com>
-Date:   Tue, 17 Nov 2020 17:46:00 -0800 (PST)
+        Tue, 17 Nov 2020 18:30:44 -0800 (PST)
+Message-ID: <5fb48754.1c69fb81.f3452.1874@mx.google.com>
+Date:   Tue, 17 Nov 2020 18:30:44 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
+X-Kernelci-Report-Type: test
 X-Kernelci-Kernel: v5.10-rc4-34-gfec3b9548c97c
 X-Kernelci-Tree: linusw
 X-Kernelci-Branch: devel
-Subject: linusw/devel build: 7 builds: 2 failed, 5 passed, 2 errors,
- 10 warnings (v5.10-rc4-34-gfec3b9548c97c)
+Subject: linusw/devel baseline: 62 runs,
+ 3 regressions (v5.10-rc4-34-gfec3b9548c97c)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 7 builds: 2 failed, 5 passed, 2 errors, 10 warnings (v5=
-.10-rc4-34-gfec3b9548c97c)
+linusw/devel baseline: 62 runs, 3 regressions (v5.10-rc4-34-gfec3b9548c97c)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.10-rc4-34-gfec3b9548c97c/
+Regressions Summary
+-------------------
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.10-rc4-34-gfec3b9548c97c
-Git Commit: fec3b9548c97c2d8e96d1b402a1b376ffcdbf8d5
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+platform        | arch  | lab          | compiler | defconfig | regressions
+----------------+-------+--------------+----------+-----------+------------
+bcm2837-rpi-3-b | arm64 | lab-baylibre | gcc-8    | defconfig | 1          =
 
-Build Failures Detected:
+imx8mn-ddr4-evk | arm64 | lab-nxp      | gcc-8    | defconfig | 1          =
 
-arm:
-    multi_v7_defconfig: (gcc-8) FAIL
+meson-gxm-q200  | arm64 | lab-baylibre | gcc-8    | defconfig | 1          =
 
-mips:
-    32r2el_defconfig: (gcc-8) FAIL
 
-Errors and Warnings Detected:
+  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.10-=
+rc4-34-gfec3b9548c97c/plan/baseline/
 
-arc:
+  Test:     baseline
+  Tree:     linusw
+  Branch:   devel
+  Describe: v5.10-rc4-34-gfec3b9548c97c
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      fec3b9548c97c2d8e96d1b402a1b376ffcdbf8d5 =
 
-arm64:
-    defconfig (gcc-8): 8 warnings
 
-arm:
-    multi_v7_defconfig (gcc-8): 1 error, 1 warning
 
-i386:
+Test Regressions
+---------------- =
 
-mips:
-    32r2el_defconfig (gcc-8): 1 error, 1 warning
 
-riscv:
 
-x86_64:
+platform        | arch  | lab          | compiler | defconfig | regressions
+----------------+-------+--------------+----------+-----------+------------
+bcm2837-rpi-3-b | arm64 | lab-baylibre | gcc-8    | defconfig | 1          =
 
-Errors summary:
 
-    2    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit d=
-eclaration of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =
-=E2=80=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+  Details:     https://kernelci.org/test/plan/id/5fb47bd5eb4df9b542d8d916
 
-Warnings summary:
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
 
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    2    cc1: some warnings being treated as errors
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
 
-Detailed per-defconfig build reports:
+  * baseline.dmesg.crit: https://kernelci.org/test/case/id/5fb47bd5eb4df9b5=
+42d8d919
+        new failure (last pass: v5.10-rc1-5-gb9bf97105f4b)
+        2 lines
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 FAIL, 1 error, 1 warning, 0 sectio=
-n mismatches
+    2020-11-18 01:38:50.958000+00:00  Connected to bcm2837-rpi-3-b console =
+[channel connected] (~$quit to exit)
+    2020-11-18 01:38:50.958000+00:00  (user:khilman) is already connected
+    2020-11-18 01:39:06.652000+00:00  =00
+    2020-11-18 01:39:06.652000+00:00  =
 
-Errors:
-    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit declar=
-ation of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =E2=80=
-=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+    2020-11-18 01:39:06.652000+00:00  U-Boot 2018.11 (Dec 04 2018 - 10:54:3=
+2 -0800)
+    2020-11-18 01:39:06.652000+00:00  =
 
-Warnings:
-    cc1: some warnings being treated as errors
+    2020-11-18 01:39:06.653000+00:00  DRAM:  948 MiB
+    2020-11-18 01:39:06.668000+00:00  RPI 3 Model B (0xa02082)
+    2020-11-18 01:39:06.756000+00:00  MMC:   mmc@7e202000: 0, sdhci@7e30000=
+0: 1
+    2020-11-18 01:39:06.788000+00:00  Loading Environment from FAT... *** W=
+arning - bad CRC, using default environment =
 
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
+    ... (388 line(s) more)  =
 
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
+ =
 
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
 
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
 
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
+platform        | arch  | lab          | compiler | defconfig | regressions
+----------------+-------+--------------+----------+-----------+------------
+imx8mn-ddr4-evk | arm64 | lab-nxp      | gcc-8    | defconfig | 1          =
 
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 FAIL, 1 error, 1 warning, 0 secti=
-on mismatches
 
-Errors:
-    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit declar=
-ation of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =E2=80=
-=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+  Details:     https://kernelci.org/test/plan/id/5fb47d8bd8aece1cccd8d90c
 
-Warnings:
-    cc1: some warnings being treated as errors
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mn-ddr4-evk.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mn-ddr4-evk.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
 
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
 
----
-For more info write to <info@kernelci.org>
+
+  * baseline.login: https://kernelci.org/test/case/id/5fb47d8bd8aece1cccd8d=
+90d
+        new failure (last pass: v5.10-rc1-5-gb9bf97105f4b) =
+
+ =
+
+
+
+platform        | arch  | lab          | compiler | defconfig | regressions
+----------------+-------+--------------+----------+-----------+------------
+meson-gxm-q200  | arm64 | lab-baylibre | gcc-8    | defconfig | 1          =
+
+
+  Details:     https://kernelci.org/test/plan/id/5fb47d155b39deb6ffd8d903
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxm-q200.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-34-gfec=
+3b9548c97c/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxm-q200.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
+
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5fb47d155b39deb6ffd8d=
+904
+        new failure (last pass: v5.10-rc1-5-gb9bf97105f4b) =
+
+ =20
