@@ -2,214 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D712B747C
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 04:03:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF3D2B74F3
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 04:49:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgKRDCj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 22:02:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        id S1727135AbgKRDrQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 22:47:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgKRDCi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 22:02:38 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D94AC0613D4
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 19:02:37 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id x15so220834pll.2
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 19:02:37 -0800 (PST)
+        with ESMTP id S1726989AbgKRDrQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 22:47:16 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B39C0613D4
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 19:47:16 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id 34so246188pgp.10
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 19:47:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=6jQ0f3nWSr8IXn6idKQqB1VLxC8cORzbBlwWmF8r2k4=;
-        b=BKkj71uondpDC9DHDEB5x4Vn8NAVeshP6DFSPYUe2lVqYe/AOh9akvyX4Q7kfgmIqo
-         7J97+iLOHqiOuOtrxso+wH7PAJmQ/OIQ+p+1ygXnNAJ9z6DQziIkDn8dDSM11kMMk0gD
-         X1nGQh1a+Jzr8m6QVru/0E07DlUjvY/bmQOQZpi6/EbawhDWUO0BKHkBISaAfooHn/GQ
-         Lj8C00JQe5uXoiN8bnSq5N+HgxnKDQIqPYrj96OMeijSZirGAKLB6tpXUQKq+RsF0+Zo
-         RPVUkSy59zDN0STgHRFYVBQprUfOB5MGZFAChlqlU3Et/jUIV6NkfGp5QlcHS6JFjGyX
-         EsfQ==
+        bh=qIAw8SORVey5lPIPQxQbQ4vqipKlaOWCa1GBi1DCxM4=;
+        b=TwZnLmY65xXbrLqqCo23fzPIe67g+YqXpNDs+yl6ouYOIkdzZccfWWXyuXz5+RcrOA
+         ltiGnzaYY0XsjmHA7VoUlsVqRAWl2empLFHvN0Sy692KO1CQl7zCh7JcORCQx5TgLcSr
+         2Vi5HytsYz0OaasjRcFmPhTVR6W0MbcHFkJD6lFLjfdm56d9lX8HMM/QDzz+gHdpUjpg
+         gBoo8BuSaARWHDxyBA6F9wcR3mnm/qemwxA1eYJUqtDQcUnQZ62WKL1o9KYP6o2xOmOr
+         AN8SdAbzKiwTbHZXKaCuYwVimyjmh7TYtuIFiXp2Pu0nIZyeHfSQL1Q8D83zO3uaziZv
+         qqnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=6jQ0f3nWSr8IXn6idKQqB1VLxC8cORzbBlwWmF8r2k4=;
-        b=YlpjrP/9RdDa0IEsUF1eCFdboDTGOq84d37hPfb3U6hJ5Alx68LuiE0JyfM6PKouYP
-         sVATiqy/gEIHGQkLqt36dXMCXwGuOt9IaprrBpE4vAqlD6weyrxetuNM/UuTJ5J/7zzg
-         XObmWIxK4Ho1h5oRzNJkRmDX89a7YowUbkJ6ESbujdOaKQKiFza3x4E+BVyxfcS1N2fX
-         Xi6RySeG7Xlk09IwSLrl2QiUxp1NhaprA5OZtqAWA/d38OERcvOmCtn57f7Dr5bJdzW+
-         Aebb6MwiIUIgelQUE/2QnBLxvfKbzvWnt53bcpnGzFKyXc0o0fJBYzrUk2iv4rtL6/4U
-         N+Kg==
-X-Gm-Message-State: AOAM530GFbJMCF5+FTFNaxHro925sVlSanxMWJPwv7o30XM/6ssAZVVY
-        b9qnTJoFyw4tpNxZxk8xkVcjNBEwV3skfg==
-X-Google-Smtp-Source: ABdhPJxPiHL6HwZWCOFwPtgkxqPMQDNIwdkH5ZDKaW7ISOaiCxBFo7fuMbETyFAuLLTSTskyDuqZTw==
-X-Received: by 2002:a17:90a:5d0a:: with SMTP id s10mr444010pji.160.1605668556162;
-        Tue, 17 Nov 2020 19:02:36 -0800 (PST)
+        bh=qIAw8SORVey5lPIPQxQbQ4vqipKlaOWCa1GBi1DCxM4=;
+        b=uhbB4FPb07qz8EOL5L1N1F882AbKGdXMQc0etDFJ59+1dDv5a3cf7seyI4Hvzj0P8g
+         WqBomwi3D5FXRESpdg2wGvUVyALpcbjp2YjdNKlsiZufkSZHscgXqk5Eeq1SQdh7vzLw
+         FYc+iUYZ0Ee2I3ha9UsoUvaVe5aaZ3aw+iza+X5jF6azcibckNWTXnBvp9c/itiRh9Mx
+         QqyxWIr8t8m2mscgHO34QhbSJbc9XDBV4eIInm4cyFWu/lj73YxnRCF/GrAQfOqwJys2
+         kchxmszXY0B7dLDckzXemjhuh1EJvqI8U3n/NxNFqt2DwoeZh1Fkbe9Oy8o+P3bPkQmw
+         f7+w==
+X-Gm-Message-State: AOAM533Trg9zmyOcthCkGQnBXQtByjLiRU8gAWToNVRHgUl/Fh/7x4ub
+        Q8u15Vu4w9wzH61LFeKDEZGHnzk3XxgqDA==
+X-Google-Smtp-Source: ABdhPJy/bcI8zlhsrZox+tDHMG1Vpv+v/N3wxF+mBnacrXZow/emgLkLjBc1yIRrYSAPrfp2rJNWuQ==
+X-Received: by 2002:a63:1e5e:: with SMTP id p30mr6257788pgm.159.1605671235761;
+        Tue, 17 Nov 2020 19:47:15 -0800 (PST)
 Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id h10sm516181pjm.47.2020.11.17.19.02.34
+        by smtp.gmail.com with ESMTPSA id 205sm20290124pge.76.2020.11.17.19.47.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 19:02:35 -0800 (PST)
-Message-ID: <5fb48ecb.1c69fb81.d66a3.182a@mx.google.com>
-Date:   Tue, 17 Nov 2020 19:02:35 -0800 (PST)
+        Tue, 17 Nov 2020 19:47:15 -0800 (PST)
+Message-ID: <5fb49943.1c69fb81.9c2a9.cc16@mx.google.com>
+Date:   Tue, 17 Nov 2020 19:47:15 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
+X-Kernelci-Report-Type: test
 X-Kernelci-Kernel: v5.10-rc4-34-gfec3b9548c97
 X-Kernelci-Tree: linusw
 X-Kernelci-Branch: for-next
-Subject: linusw/for-next build: 7 builds: 2 failed, 5 passed, 2 errors,
- 10 warnings (v5.10-rc4-34-gfec3b9548c97)
+Subject: linusw/for-next baseline: 61 runs,
+ 2 regressions (v5.10-rc4-34-gfec3b9548c97)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 2 failed, 5 passed, 2 errors, 10 warnings =
-(v5.10-rc4-34-gfec3b9548c97)
+linusw/for-next baseline: 61 runs, 2 regressions (v5.10-rc4-34-gfec3b9548c9=
+7)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc4-34-gfec3b9548c97/
+Regressions Summary
+-------------------
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc4-34-gfec3b9548c97
-Git Commit: fec3b9548c97c2d8e96d1b402a1b376ffcdbf8d5
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+platform       | arch  | lab          | compiler | defconfig | regressions
+---------------+-------+--------------+----------+-----------+------------
+meson-gxm-q200 | arm64 | lab-baylibre | gcc-8    | defconfig | 2          =
 
-Build Failures Detected:
 
-arm:
-    multi_v7_defconfig: (gcc-8) FAIL
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.=
+10-rc4-34-gfec3b9548c97/plan/baseline/
 
-mips:
-    32r2el_defconfig: (gcc-8) FAIL
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: v5.10-rc4-34-gfec3b9548c97
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      fec3b9548c97c2d8e96d1b402a1b376ffcdbf8d5 =
 
-Errors and Warnings Detected:
 
-arc:
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+Test Regressions
+---------------- =
 
-arm:
-    multi_v7_defconfig (gcc-8): 1 error, 1 warning
 
-i386:
 
-mips:
-    32r2el_defconfig (gcc-8): 1 error, 1 warning
+platform       | arch  | lab          | compiler | defconfig | regressions
+---------------+-------+--------------+----------+-----------+------------
+meson-gxm-q200 | arm64 | lab-baylibre | gcc-8    | defconfig | 2          =
 
-riscv:
 
-x86_64:
+  Details:     https://kernelci.org/test/plan/id/5fb48bb22b3e55f281d8d909
 
-Errors summary:
+  Results:     3 PASS, 2 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.10-rc4-34-g=
+fec3b9548c97/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxm-q200.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.10-rc4-34-g=
+fec3b9548c97/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxm-q200.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
 
-    2    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit d=
-eclaration of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =
-=E2=80=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
 
-Warnings summary:
 
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    2    cc1: some warnings being treated as errors
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
+  * baseline.dmesg.alert: https://kernelci.org/test/case/id/5fb48bb22b3e55f=
+281d8d90d
+        new failure (last pass: v5.10-rc1-20-g27b5ea2fcb90)
+        11 lines
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+    2020-11-18 02:49:17.489000+00:00  kern  :alert : Mem abort info:
+    2020-11-18 02:49:17.489000+00:00  kern  :alert :   ESR =3D 0x96000004
+    2020-11-18 02:49:17.530000+00:00  kern  :alert :   EC =3D 0x25: DABT (c=
+urrent EL), IL =3D 32 bits
+    2020-11-18 02:49:17.530000+00:00  kern  :alert :   SET =3D 0, FnV =3D 0
+    2020-11-18 02:49:17.531000+00:00  kern  :alert :   EA =3D 0, S1PTW =3D 0
+    2020-11-18 02:49:17.531000+00:00  kern  :alert : Data abort info:
+    2020-11-18 02:49:17.531000+00:00  kern  :alert :   ISV =3D 0, ISS =3D 0=
+x00000004
+    2020-11-18 02:49:17.531000+00:00  kern  :alert :   CM =3D 0, WnR =3D 0
+    2020-11-18 02:49:17.531000+00:00  kern  :alert : user pgtable: 4k pages=
+, 48-bit VAs, pgdp=3D0000000044ed9000
+    2020-11-18 02:49:17.531000+00:00  kern  :alert : [0000030200000418] pgd=
+=3D0000000000000000   =
 
-Detailed per-defconfig build reports:
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 FAIL, 1 error, 1 warning, 0 sectio=
-n mismatches
+  * baseline.dmesg.emerg: https://kernelci.org/test/case/id/5fb48bb22b3e55f=
+281d8d90e
+        new failure (last pass: v5.10-rc1-20-g27b5ea2fcb90)
+        2 lines
 
-Errors:
-    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit declar=
-ation of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =E2=80=
-=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+    2020-11-18 02:49:17.561000+00:00  kern  :emerg : Code: 12000b56 1400000=
+3 f9400273 b4000893 (b85fc265)    =
 
-Warnings:
-    cc1: some warnings being treated as errors
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 FAIL, 1 error, 1 warning, 0 secti=
-on mismatches
-
-Errors:
-    /scratch/linux/drivers/gpio/gpio-xilinx.c:275:2: error: implicit declar=
-ation of function =E2=80=98pm_runtime_disable=E2=80=99; did you mean =E2=80=
-=98migrate_disable=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-
-Warnings:
-    cc1: some warnings being treated as errors
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+ =20
