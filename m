@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E9262B7339
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F31F2B7341
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:41:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgKRAkF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 19:40:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
+        id S1729061AbgKRAk4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 19:40:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgKRAkE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:40:04 -0500
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C52AC061A4F
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:40:04 -0800 (PST)
-Received: by mail-lj1-x242.google.com with SMTP id o24so410555ljj.6
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:40:04 -0800 (PST)
+        with ESMTP id S1725767AbgKRAky (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:40:54 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43865C061A4F
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:40:53 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id a9so492930lfh.2
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:40:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fpRq5oGbKPQIWf1i8EYl3vqTi7XQsrMlJoxcyJpJKNQ=;
-        b=rg9U2K7Llz1s3ghw9hvLqwjk2o3u9dU95otVL20eLEDgygNZpRsb/sSLWiOeDncl18
-         Z9ZlnNAKkQYzXBOzoP8p4066v9X8E+lkBlE9K6zlVwaGxNXB2daW6FoM23RSROU0AP+e
-         l5UbRlaxteh1YV4DvoaortMefIJ9vEEfoFqOVkKapvJeO0XXBJa7At0YHa/xREuZGZDx
-         V9cUUvpjLYKaA7j2BQOO5pkaY8eFkiEbNcnQfFo6Qo5a9O1hI5SiBYGhppQTvqSQcgrq
-         PLaOQy/oTp8eDLPhB7EadrlRhfJ6FhdAbcYqUZM2iyYwFlIBD07wyxmXAjPZc08Dn1Yr
-         DaDQ==
+        bh=hlnCGH+LFWSKa3NWbEHZCA+KnyqTJ5mJquycr6mzLC0=;
+        b=b35D5dRCngV85Jkliq8amklURhmzxmMXQXkmzvPciHNdKxKKW9BhNIkUxb8Yd7KzCy
+         TxHf/H8xRvfgsEb1vKyJdNoECmnkfmfOJWmbefl/A0VFLDLvGdwQjwBkDH+ExPVjWC1i
+         TcQeyjHEY3drDUSyOSxOCAWFx97UyAlVjGH0QiKgY9oRQxpnISjGvWWIuFubXekxBV/m
+         oNhErG7gPFfWbJ5rukSn7tJ1+57uFlLzEBk6h0TqEksjg1y81DiFYLQxNRfFwHaOFB9n
+         7/uTM4jWbKsfgI9cKJQRsY269jsnq3Eo4TiUF3QUbLr11I5uOd1NrwFpVg4g/Oaejv0A
+         lf0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fpRq5oGbKPQIWf1i8EYl3vqTi7XQsrMlJoxcyJpJKNQ=;
-        b=k8eL6z9vZnyqe1xvikplQhF9gwZQDVTDEMo0rT0c5X672w+wC1T74eFnHVZWFQRsyZ
-         eWkH+cQre4nPuJDaOUMBhVM202+dBClPQqiB1IpLMbq93vR30Jqh6bTqOLkEzx+pWxhL
-         0KwIUAle8Un7Pyq9MOzBU7BMWMcnEAHBBLelo00swywAJE/v0LsPMp0fDGm9v6UQWnfi
-         +UmNRX2FYRRrVUk12jytqx+SXBYWGxm0s1FnJ0iREeAQ61KZKWZVzGpLDFrhftVVmIs0
-         PA1OaC1QQMRKxIujSDkIpg8B/4WZNWtqZisUL8YY6nEwL9sWKk7B1SE3vpe8VmzDCpYW
-         uwOA==
-X-Gm-Message-State: AOAM533KIXzOLeEvYOD+0BEGbFxbhDMVe1vLjdvEc44lk8WcNRIl1Sg+
-        sx9xiYJ4T4m08CuTF3YAuHvCuDR6OpnWeaETcIHnZpEzZPHlWQ==
-X-Google-Smtp-Source: ABdhPJwDHv2OLnWaiVJw3Tn/fOTtEHtSJELlqaEXImCpNOkLLD4kW0MqQMaFSXoCNdxMD3ZRlv2kLE3SERO9ndosTTg=
-X-Received: by 2002:a2e:321a:: with SMTP id y26mr3183401ljy.293.1605660002899;
- Tue, 17 Nov 2020 16:40:02 -0800 (PST)
+        bh=hlnCGH+LFWSKa3NWbEHZCA+KnyqTJ5mJquycr6mzLC0=;
+        b=UpOTUc9uBIBKuUSkwb/SzCah6472xh93ruMoa8rLVBt+XfZV7A+yZC20nM/iaCXVbp
+         xREeUzh3uMVseildP9xDBwxrGNT9qMdIqHMYlP+9NUGYlsk7ylOLm3tJdAcJ/BNkmHzt
+         FsjgzJgsP+S7bqmE0yvq/s1nSCpcRkLhTQDx2gEDXAXo2T7pYD5uU+8ljqTpmD7+TaV0
+         NZWtxqHBJIC+1kW0H1sI8zLX3hs2o0EFNm3+LRMvQb5hPRIFg76P8t0+WFtXK7yvOQ9f
+         7fQcY52GnCxAGviRPUYGsdu9yAzztoJM5ZTdctbAszRi8fizO5zitxoB+726E7orpnaz
+         SevA==
+X-Gm-Message-State: AOAM5332zD68I352pq384snoyoJbB1kTtn2eP8MTEdBpKpECDqHuSxXv
+        Mp+EvpVAH01+loKgcgU/i/uVU7IidJ2Z1dBXhaHvog==
+X-Google-Smtp-Source: ABdhPJwHvhC6sS5DO4wWxQ0fGIfgHWvnruMbSZXZ13Nm+lY/aSnXpasjCmNCCVodVpaIuuBfv35soaLWZ+nIIxzxjCM=
+X-Received: by 2002:a19:7b06:: with SMTP id w6mr2870290lfc.260.1605660051811;
+ Tue, 17 Nov 2020 16:40:51 -0800 (PST)
 MIME-Version: 1.0
-References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-9-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1605201148-4508-9-git-send-email-srinivas.neeli@xilinx.com>
+References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-10-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1605201148-4508-10-git-send-email-srinivas.neeli@xilinx.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 18 Nov 2020 01:39:52 +0100
-Message-ID: <CACRpkdZPCHnNiiyu8Tj4cZ=m-NEPKuh664hbc0+PkyLo1kHQCA@mail.gmail.com>
-Subject: Re: [LINUX PATCH V3 8/9] gpio: gpio-xilinx: Check return value of of_property_read_u32
+Date:   Wed, 18 Nov 2020 01:40:41 +0100
+Message-ID: <CACRpkdZca9s2ybNx3N2MnrT-YfVPoSq1Enz3gQ6RS2FSQF8F+g@mail.gmail.com>
+Subject: Re: [LINUX PATCH V3 9/9] MAINTAINERS: add fragment for xilinx GPIO drivers
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -67,12 +67,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Nov 12, 2020 at 6:13 PM Srinivas Neeli
 <srinivas.neeli@xilinx.com> wrote:
 
-> In two different instances the return value of "of_property_read_u32"
-> API was neither captured nor checked.
-> Fixed it by capturing the return value and then checking for any error.
+> Added entry for xilinx GPIO drivers.
 >
-> Addresses-Coverity: "check_return"
 > Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Acked-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
 Patch applied.
 
