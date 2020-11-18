@@ -2,237 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8832B7AFA
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 11:15:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 515D82B7B01
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 11:15:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbgKRKN0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Nov 2020 05:13:26 -0500
-Received: from mga01.intel.com ([192.55.52.88]:54929 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgKRKN0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Nov 2020 05:13:26 -0500
-IronPort-SDR: R+58pK+KUTJWESw3aiieDLehnil4PWwe2FVoTF0Xp9eBFqmT1YIEbSt10pD7odDO5popcH9eUA
- IuSvSt2127WA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9808"; a="189168821"
-X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
-   d="scan'208";a="189168821"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2020 02:13:25 -0800
-IronPort-SDR: O80BwckpBlqmkh870XGeaRpW3s9/laRRK9/p3gck3v9TgKvwwB4MB0s+wBoux0FjOBDediGJJP
- edh6vDJgG/EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
-   d="scan'208";a="330427469"
-Received: from lkp-server02.sh.intel.com (HELO 67996b229c47) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 18 Nov 2020 02:13:22 -0800
-Received: from kbuild by 67996b229c47 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kfKSn-00002p-G2; Wed, 18 Nov 2020 10:13:21 +0000
-Date:   Wed, 18 Nov 2020 18:13:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:fixes] BUILD SUCCESS
- 5fa9c5f9a4076d32913b5857bac7620f46f27267
-Message-ID: <5fb4f3ac.OudMfIMkiYB4Z57B%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726249AbgKRKOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Nov 2020 05:14:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgKRKOS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Nov 2020 05:14:18 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048C4C0613D4;
+        Wed, 18 Nov 2020 02:14:17 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id y7so1102340pfq.11;
+        Wed, 18 Nov 2020 02:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HN6u+FaAjlCZ1H4jPrUouV4ZFgMNcWdPZdmdiKhmcQE=;
+        b=WPTRWJnYWV1uyEiESoGUSJC5xeaHrjCL0uIuthI6VL4iIXHMc3a8Yx/9DjzmyWshCj
+         kfusP6YtKW1SPZAnAz6d+4ZLHBsZi+Gd7G0eRO1+CmutyJnJ0iOENrRWBsQEc7z8ZN+0
+         xpWbVFCntQRGMvBzJiRJEe5eXiVgQ9eZcMTM/cF0ay9hto/A1EJ8rYzwAv2CA842w3iI
+         V2Z34PviqHHx8+YmrrDLc+E236LZ3V8nlyHhTzyMFuULO1KTWeqhd3wamNX+dK+grvw4
+         N2KcO5xRBO0k2Wu5ss4tXaK9IjIQTHShhesm0IjxdpH/guK/H5+MXKnVDACQZuEtmnSr
+         BJ+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HN6u+FaAjlCZ1H4jPrUouV4ZFgMNcWdPZdmdiKhmcQE=;
+        b=n5V77fBaGGxraE0RIJDO/w4CF/TRVgPMZkyHUzvUrTW0dScQg5seDhWIXGH0B+W/74
+         JjUzWw0ZvE15DtHQZ/4N4tLCUc30Ai0YeAaTzEjbPB32niMIQPUwG+DceeoNIZpnV3vH
+         k/CzlSTmgVkYJEzz110HXg/2MhaQk0SE7S4xspB6ktvJ/QaiMlRoKGbSCQHRgul7zYdX
+         vYcrKk3FBonwOdS6lvtTgDNaWmJBXkEl8XiR1sE9UJWRqBt/wH4I3DazimpmNejh23M8
+         ylinTu67aD1/4O9JWOHigzTAIfCPRVIdOQ0kBC8uU33LaoCRAgpVkoC75WjMJefUVoqR
+         xmaQ==
+X-Gm-Message-State: AOAM532BD47Q/QtrYaINrlF4EWUE9JU5suczZte8f/Jsc4IyJnCudI7d
+        x9hr32akYistepd8TQERQsoB8jNIFj0NdT41EYM=
+X-Google-Smtp-Source: ABdhPJwgZoth9XotQe6oYHEscjQKz6WMp04ErJrrau3wx2TytZxtGiTtOJ0WqYvYj0mKnzMPvmckakWe+5SXArELSW0=
+X-Received: by 2002:a62:7c95:0:b029:18c:5002:a1ab with SMTP id
+ x143-20020a627c950000b029018c5002a1abmr3757599pfc.40.1605694456561; Wed, 18
+ Nov 2020 02:14:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20201117154340.18216-1-info@metux.net> <CAHp75VfPio=TacTTrY=vZp8vZ7qst_7zWeXKDpYvJ6q7oh2Hdw@mail.gmail.com>
+ <20201118095342.sviuxvfsbmmn22mo@pengutronix.de> <CAHp75Vd9QUCcUoPLUW3kkJC0h=mPUqHNqNJPY74gDGSu67t8Hw@mail.gmail.com>
+ <CAHp75Vcdu1aOLuF+EFDZibbi0OwGH4QfBhJQm9VZQkeEGEeKDQ@mail.gmail.com> <20201118100856.GQ1869941@dell>
+In-Reply-To: <20201118100856.GQ1869941@dell>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 18 Nov 2020 12:15:05 +0200
+Message-ID: <CAHp75VcO6Abz5=go0w2Vg6uTEuTw59fZ-yHfFCY9CQ=_JZXWFg@mail.gmail.com>
+Subject: Re: [PATCH] drivers: gpio: use of_match_ptr() and ACPI_PTR() macros
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alban Bedel <albeu@free.fr>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kevin Hilman <khilman@kernel.org>, zhang.lyra@gmail.com,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>, orsonzhai@gmail.com,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-pwm@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>, baolin.wang7@gmail.com,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
-branch HEAD: 5fa9c5f9a4076d32913b5857bac7620f46f27267  Merge tag 'intel-pinctrl-v5.10-3' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
+On Wed, Nov 18, 2020 at 12:09 PM Lee Jones <lee.jones@linaro.org> wrote:
+> On Wed, 18 Nov 2020, Andy Shevchenko wrote:
+> > On Wed, Nov 18, 2020 at 11:56 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Wed, Nov 18, 2020 at 11:54 AM Uwe Kleine-K=C3=B6nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Tue, Nov 17, 2020 at 06:45:37PM +0200, Andy Shevchenko wrote:
+> >
+> > ...
+> >
+> > > > So a system without CONFIG_OF might still make use of .of_match_tab=
+le?
+> > >
+> > > Yep!
+> >
+> > If you are curious:
+> > https://elixir.bootlin.com/linux/latest/source/drivers/acpi/bus.c#L615
+>
+> This still doesn't sit quite well with me.
+>
+> Not the process of ACPI using OF artifacts or the possibilty to embed
+> OF type structures into ACPI tables, but the fact that an OF-only user
+> (or so they think) should have to care about that special use-case.
 
-elapsed time: 726m
+OF-only users shouldn't take care about this. If you are sure that the
+driver may not be used on a non-OF platform.
 
-configs tested: 173
-configs skipped: 2
+> What if we make ACPI select OF?  Or handle the ACPI case explicitly in
+> the of_match_ptr() declaration?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I guess you are a bit late, but you always may propose patches to ACPI
+maintainers.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          rsk7269_defconfig
-powerpc                 mpc832x_rdb_defconfig
-sh                        edosk7760_defconfig
-sh                         microdev_defconfig
-sh                            shmin_defconfig
-sh                            migor_defconfig
-arm                            hisi_defconfig
-arm                         assabet_defconfig
-powerpc                     kmeter1_defconfig
-sh                     sh7710voipgw_defconfig
-sh                         ecovec24_defconfig
-powerpc                 mpc8315_rdb_defconfig
-arc                          axs101_defconfig
-c6x                        evmc6678_defconfig
-sh                        sh7785lcr_defconfig
-arm                          pxa910_defconfig
-powerpc                 mpc85xx_cds_defconfig
-sh                          landisk_defconfig
-powerpc                        warp_defconfig
-arm                            u300_defconfig
-mips                           ci20_defconfig
-arm                      tct_hammer_defconfig
-c6x                         dsk6455_defconfig
-csky                             alldefconfig
-sparc64                             defconfig
-arm                        cerfcube_defconfig
-arm                           viper_defconfig
-arc                         haps_hs_defconfig
-sh                   sh7770_generic_defconfig
-arm                          tango4_defconfig
-mips                      loongson3_defconfig
-arm                            mps2_defconfig
-arc                     nsimosci_hs_defconfig
-mips                            ar7_defconfig
-powerpc                      cm5200_defconfig
-mips                          malta_defconfig
-openrisc                    or1ksim_defconfig
-arm                         hackkit_defconfig
-m68k                         apollo_defconfig
-mips                          rm200_defconfig
-mips                  decstation_64_defconfig
-sh                            hp6xx_defconfig
-arm                         shannon_defconfig
-h8300                       h8s-sim_defconfig
-sh                   sh7724_generic_defconfig
-powerpc                    klondike_defconfig
-powerpc                 mpc832x_mds_defconfig
-powerpc                    gamecube_defconfig
-arm                       mainstone_defconfig
-mips                       bmips_be_defconfig
-xtensa                       common_defconfig
-arm                        neponset_defconfig
-arm                            zeus_defconfig
-arm                        clps711x_defconfig
-sh                         ap325rxa_defconfig
-mips                     cu1000-neo_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                          rsk7203_defconfig
-powerpc                      pcm030_defconfig
-openrisc                         alldefconfig
-sparc                               defconfig
-powerpc                     kilauea_defconfig
-powerpc                  mpc866_ads_defconfig
-arm                              zx_defconfig
-powerpc                     mpc83xx_defconfig
-sh                             shx3_defconfig
-powerpc                     ppa8548_defconfig
-powerpc                    adder875_defconfig
-m68k                         amcore_defconfig
-mips                            e55_defconfig
-arm                         socfpga_defconfig
-powerpc                 mpc8313_rdb_defconfig
-sh                               j2_defconfig
-arm                          exynos_defconfig
-xtensa                  cadence_csp_defconfig
-sh                          polaris_defconfig
-arm                            lart_defconfig
-arm                          prima2_defconfig
-h8300                            alldefconfig
-mips                      bmips_stb_defconfig
-arm                           h5000_defconfig
-s390                             alldefconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20201117
-i386                 randconfig-a005-20201117
-i386                 randconfig-a001-20201117
-i386                 randconfig-a003-20201117
-i386                 randconfig-a002-20201117
-i386                 randconfig-a004-20201117
-x86_64               randconfig-a005-20201118
-x86_64               randconfig-a003-20201118
-x86_64               randconfig-a004-20201118
-x86_64               randconfig-a002-20201118
-x86_64               randconfig-a006-20201118
-x86_64               randconfig-a001-20201118
-i386                 randconfig-a012-20201117
-i386                 randconfig-a014-20201117
-i386                 randconfig-a016-20201117
-i386                 randconfig-a011-20201117
-i386                 randconfig-a013-20201117
-i386                 randconfig-a015-20201117
-i386                 randconfig-a012-20201118
-i386                 randconfig-a014-20201118
-i386                 randconfig-a016-20201118
-i386                 randconfig-a011-20201118
-i386                 randconfig-a013-20201118
-i386                 randconfig-a015-20201118
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a003-20201117
-x86_64               randconfig-a005-20201117
-x86_64               randconfig-a004-20201117
-x86_64               randconfig-a002-20201117
-x86_64               randconfig-a001-20201117
-x86_64               randconfig-a006-20201117
-x86_64               randconfig-a015-20201116
-x86_64               randconfig-a011-20201116
-x86_64               randconfig-a014-20201116
-x86_64               randconfig-a013-20201116
-x86_64               randconfig-a016-20201116
-x86_64               randconfig-a012-20201116
-x86_64               randconfig-a015-20201118
-x86_64               randconfig-a014-20201118
-x86_64               randconfig-a011-20201118
-x86_64               randconfig-a013-20201118
-x86_64               randconfig-a016-20201118
-x86_64               randconfig-a012-20201118
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--=20
+With Best Regards,
+Andy Shevchenko
