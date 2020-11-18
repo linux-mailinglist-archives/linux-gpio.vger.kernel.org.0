@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EA9B2B72EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5832B2B72EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:17:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725771AbgKRAPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 19:15:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
+        id S1726985AbgKRARh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 19:17:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgKRAPo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:15:44 -0500
+        with ESMTP id S1726202AbgKRARg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:17:36 -0500
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D806EC0617A6
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:15:43 -0800 (PST)
-Received: by mail-lj1-x243.google.com with SMTP id r17so368433ljg.5
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:15:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCD6C0617A6
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:17:34 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id 142so341699ljj.10
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:17:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eWrhbtxMaDvAA/hqZtx4oXS0+2NR8hi9OYu+UfYxShM=;
-        b=eW9ytAHGHiQg0UjXTBR2k5vHOB0NAXJ6YaKbN8S6L09yrDcZNbH8+z4GWfYUzfhW3t
-         dzMuoT3NE4oZTkYczeQRW/gufIrbJN9ca7ZWH66NdhDmdwSjgTYMibESojmaoZcq35wr
-         XoAMrI3eC4yy9MqqxMDiaV+3CaIUqfFiQoy6Fkv/o2sCnuzTiXxiA2Jccqvh0lvkzmAK
-         mAU3B6JFW9rh8NE8GDLQ4Udmys+N76Ac8+xucJwBSxI7phXYbeoBsjddLquKWuLgWWiN
-         cwXKFVUjAxBLCdQ2aYWpz/872jnOmvRxvJSki6BzeUoJKxNxzMRRTFwbPlWHoN5XW+85
-         pzbg==
+        bh=itEmzLXgCFTsEMcLeMQFGTZ6eyauUN+nMLUP2RUCNQw=;
+        b=SD/i7W8Kd1DZxajpdO0JE2KkHfMFm18jKRvy8zwWdTpalEBE7ZpzBRs1XmIW7LGQPG
+         3iVv8Z4oDk8aEx6k1zhrBke5P9rkMv/V6Pxjo79Si+P6sqgF+YeTB60H9KIsp1IrLWyL
+         Yrp8ztYnjz0jNZhGPmCauhvjj8BzXMtmOaN5xnX+GTVDR7MX/Je67hSgjBu387/17cYf
+         o6gmolahdP7rpSzfATNttVCTR9kzjBbmXHMlz7SR1JyzY/INn5Ti1pC1Z4b4A0aJVspw
+         T7tnQcdVCNwsXdaxsqQdfP0/xKEnpRPgHdLL+Z0S+SVXkLJGdmd3fBfoTbnPJKgXOret
+         OrzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eWrhbtxMaDvAA/hqZtx4oXS0+2NR8hi9OYu+UfYxShM=;
-        b=uK2Uwjw1acKk3QwUFRYVbtKNX2JiVwarrQ/3CiI1tVvDCt2JvN7RlW4lt/u4x0gtrn
-         R4kKJ1kI7aqYpasRfX/nd6RH+lCJ6rX7yidgJ4kOa2qaqyRzzC5d/+mr7HBTWjh+5AMS
-         fgVR/eYveLl1/8uuVvBY9goDRg7N0g6P7rHwCrrPvPMmrdaqxhRv56YmTD00JU/HwDIr
-         EcpQWkwyHiEErDkfDjXCcDfQ8WOdInY4oow0oJ7PfWhWuEgyZnw4/qpTSIG8Z++h+2es
-         5LoMCDIICNVvI8vSM0bRsJMdeK+FVEKPptSG5ozBF9Ko5lFIgIlEBvZ7NUAj2YJMDg+p
-         qFqA==
-X-Gm-Message-State: AOAM5313VF6SHT/2psFMT1NkT+zadTrAJE9FRBBYWAD5x0cIMhzihTMy
-        E2MmgqzuJfUEin+zA3FKVdjlbkkQd7JCuiJ4sISieA==
-X-Google-Smtp-Source: ABdhPJyeahuY3HMFK2a8FC+b5Gfa6NyYvm+3NwaEh5oPTktmnIxFCR9vwlEUeZSFblV0ihPS9NFFlAixhcvod44jUX8=
-X-Received: by 2002:a2e:998e:: with SMTP id w14mr3143826lji.100.1605658542224;
- Tue, 17 Nov 2020 16:15:42 -0800 (PST)
+        bh=itEmzLXgCFTsEMcLeMQFGTZ6eyauUN+nMLUP2RUCNQw=;
+        b=BNua21uL2fZlvzZ3twtos2YXVA1gKHMvKpWOFHVS5PE9OCwuoz4dQizmMLrFDczs1J
+         mcgMJuHU1XVCVWL6z45f8GA4usGQ6OD+lyWX7mxy7TFnRmKgag2a/+uAqGjaIdxdltFi
+         wZ6MjMr9yua37Cnxy47YOzYPOdfsAo4Q5rJdT30RszJVubbmJ9mGNPUsstsjWEikvEgj
+         EuA69bARdQmEeXvbWKgiwYOXF0z0jz8KXdg5jrL2tIYJxrb2hL/MDXiCx7+1yVdUZymv
+         VnwnfkaPRjYUGL+mXaoTYRHmWtEOK2I4xQiVfsxnBYleZdF4X9XLJCSSyLnJKqApaAN2
+         oJJg==
+X-Gm-Message-State: AOAM5317eRcfRQ7lRQU9zGcZMf+Y+qxD7YrSWLrL3od1RPE0IZekL63p
+        E65OEfWi0se5TPGG6UxfBSGswnmIfqHofwztma82Gw==
+X-Google-Smtp-Source: ABdhPJzqGBIETrUOwWe711WB62z05yQi+shXIPIXgRCLYa9CIu7//O4+TmZ+ma9DFYOKZzUOtjh17WD72SI2hv05Ieo=
+X-Received: by 2002:a2e:7c03:: with SMTP id x3mr2581893ljc.338.1605658653361;
+ Tue, 17 Nov 2020 16:17:33 -0800 (PST)
 MIME-Version: 1.0
-References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-6-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1605201148-4508-6-git-send-email-srinivas.neeli@xilinx.com>
+References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-7-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1605201148-4508-7-git-send-email-srinivas.neeli@xilinx.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 18 Nov 2020 01:15:31 +0100
-Message-ID: <CACRpkdYsWpB-09efW1OPRXvrS_e=i5HduSJkEor7Lfb3NgmHpw@mail.gmail.com>
-Subject: Re: [LINUX PATCH V3 5/9] gpio: gpio-xilinx: Add interrupt support
+Date:   Wed, 18 Nov 2020 01:17:22 +0100
+Message-ID: <CACRpkdZpz3LtJ9W6R+AwLf7LAT6Bppzjkpqywn_GS-Wx=c0j_Q@mail.gmail.com>
+Subject: Re: [LINUX PATCH V3 6/9] gpio: gpio-xilinx: Add remove function
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -64,44 +64,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Srinivas!
-
-On Thu, Nov 12, 2020 at 6:12 PM Srinivas Neeli
+On Thu, Nov 12, 2020 at 6:13 PM Srinivas Neeli
 <srinivas.neeli@xilinx.com> wrote:
 
-> Adds interrupt support to the Xilinx GPIO driver so that rising and
-> falling edge line events can be supported. Since interrupt support is
-> an optional feature in the Xilinx IP, the driver continues to support
-> devices which have no interrupt provided.
+> Added remove function support.
 >
-> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> ---
+> Changes in V3:
+> -Created new patch for remove function.
 
-(...)
->  config GPIO_XILINX
->         tristate "Xilinx GPIO support"
-> +       select GPIOLIB_IRQCHIP
-> +       depends on OF_GPIO
->         help
->           Say yes here to support the Xilinx FPGA GPIO device
-
-Please add:
-select IRQ_DOMAIN_HIERARCHY
-
-Because your driver requires this.
-
-> +       /* Update cells with gpio-cells value */
-> +       if (of_property_read_u32(np, "#gpio-cells", &cells))
-> +               dev_dbg(&pdev->dev, "Missing gpio-cells property\n");
-(...)
-> +       chip->gc.of_gpio_n_cells = cells;
-
-Why is this necessary?
-Mention in the commit.
-
-Other than that this looks very good and good use
-of the hierarchical IRQ feature in gpiolib!
+Patch applied despite not applying 4 or 5: this needs to go
+in with the clock support.
 
 Yours,
 Linus Walleij
