@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47DF02B72CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:04:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EA9B2B72EA
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 01:17:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725814AbgKRADI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Nov 2020 19:03:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        id S1725771AbgKRAPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Nov 2020 19:15:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgKRADI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:03:08 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8A2C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:03:08 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id w142so351689lff.8
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:03:07 -0800 (PST)
+        with ESMTP id S1725767AbgKRAPo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Nov 2020 19:15:44 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D806EC0617A6
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:15:43 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id r17so368433ljg.5
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Nov 2020 16:15:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=J9RXigtzZqvF8NKIRf2sG4Ypb/c5XwyoqVNxlI7Ir5E=;
-        b=O+k6airmtoeTQZpHPonJn6WuBOScgaR+GqsM3cToHhHL6UXlqbinprGKfpo2XDgXO2
-         eVVu/RFOBPr7Z1w3KkH/YKP2j3ydCTsTYPys3u2SS+V3ZEbQV+pKKMF4P53Bg92qodWR
-         2hAxCsgoI4BjN/3Hofb4/ctFxk5McwckRR96SP7xWb+4JoouByzQ7QV/dbTFVxZGS+H5
-         kp4HZxktM/WGE4cQsd8AfO2rPekTDrkPNFzPFtFUzSgHKYSQgZBaJVuQsa/OB3vcvB7D
-         lku3q+zSIlLsdgzBQQxKY3EoFjGUyA+wSx/NwZQi1psDRpdDYvq37cNr8QLIpbV9j9a/
-         1V4w==
+        bh=eWrhbtxMaDvAA/hqZtx4oXS0+2NR8hi9OYu+UfYxShM=;
+        b=eW9ytAHGHiQg0UjXTBR2k5vHOB0NAXJ6YaKbN8S6L09yrDcZNbH8+z4GWfYUzfhW3t
+         dzMuoT3NE4oZTkYczeQRW/gufIrbJN9ca7ZWH66NdhDmdwSjgTYMibESojmaoZcq35wr
+         XoAMrI3eC4yy9MqqxMDiaV+3CaIUqfFiQoy6Fkv/o2sCnuzTiXxiA2Jccqvh0lvkzmAK
+         mAU3B6JFW9rh8NE8GDLQ4Udmys+N76Ac8+xucJwBSxI7phXYbeoBsjddLquKWuLgWWiN
+         cwXKFVUjAxBLCdQ2aYWpz/872jnOmvRxvJSki6BzeUoJKxNxzMRRTFwbPlWHoN5XW+85
+         pzbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J9RXigtzZqvF8NKIRf2sG4Ypb/c5XwyoqVNxlI7Ir5E=;
-        b=iAkm6ivZeAx5ySdX6j3vNK3ZOu1X65qxdQ2FFGbZNDtQ/n18YwPHlONtSSuUm15Iu5
-         3+ouKR4fXRXLfIVTJdfa0ozu3I1wR8z1zWB6GPG/zBpIbvFomqr/NT8TEi7RK07Ue9RK
-         m8o1LhUU+s9a5wDbZ1phKMflriS9RxRASEv0hC5PiSVYzyM/o+4uUHL9Tgagmuknqdcv
-         goTuVp9eL/7Y5BcTYKV5UFSIDWoHZ/AR8yaH3Noklc7QA9ZQVKHcP9N7KXr04jCoI054
-         E2MB/+JgwvEHWf//m1hGPWNQIKIRmo20VHO3DbURw6qdkZXtVwWS4b/J2KIeUqh3mxvW
-         Mclg==
-X-Gm-Message-State: AOAM533R0BpCTWt3aDDYYAo88kMbEVX/uHxI0VyDRv9hsxjtojQMtyPp
-        hz35JPcbqqH1Eyu+P+nJZAs8ONp1xcI25CfiOVvoYQ==
-X-Google-Smtp-Source: ABdhPJyJu9tHRpFd4TthwF9GL52PbEJxM9JfWHXC753KZYvspsLBP+BURDqaZ3+VvaUbStkvgsLJy1JUicAoWlFlFEQ=
-X-Received: by 2002:a19:e08:: with SMTP id 8mr2441966lfo.441.1605657786579;
- Tue, 17 Nov 2020 16:03:06 -0800 (PST)
+        bh=eWrhbtxMaDvAA/hqZtx4oXS0+2NR8hi9OYu+UfYxShM=;
+        b=uK2Uwjw1acKk3QwUFRYVbtKNX2JiVwarrQ/3CiI1tVvDCt2JvN7RlW4lt/u4x0gtrn
+         R4kKJ1kI7aqYpasRfX/nd6RH+lCJ6rX7yidgJ4kOa2qaqyRzzC5d/+mr7HBTWjh+5AMS
+         fgVR/eYveLl1/8uuVvBY9goDRg7N0g6P7rHwCrrPvPMmrdaqxhRv56YmTD00JU/HwDIr
+         EcpQWkwyHiEErDkfDjXCcDfQ8WOdInY4oow0oJ7PfWhWuEgyZnw4/qpTSIG8Z++h+2es
+         5LoMCDIICNVvI8vSM0bRsJMdeK+FVEKPptSG5ozBF9Ko5lFIgIlEBvZ7NUAj2YJMDg+p
+         qFqA==
+X-Gm-Message-State: AOAM5313VF6SHT/2psFMT1NkT+zadTrAJE9FRBBYWAD5x0cIMhzihTMy
+        E2MmgqzuJfUEin+zA3FKVdjlbkkQd7JCuiJ4sISieA==
+X-Google-Smtp-Source: ABdhPJyeahuY3HMFK2a8FC+b5Gfa6NyYvm+3NwaEh5oPTktmnIxFCR9vwlEUeZSFblV0ihPS9NFFlAixhcvod44jUX8=
+X-Received: by 2002:a2e:998e:: with SMTP id w14mr3143826lji.100.1605658542224;
+ Tue, 17 Nov 2020 16:15:42 -0800 (PST)
 MIME-Version: 1.0
-References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-5-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1605201148-4508-5-git-send-email-srinivas.neeli@xilinx.com>
+References: <1605201148-4508-1-git-send-email-srinivas.neeli@xilinx.com> <1605201148-4508-6-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1605201148-4508-6-git-send-email-srinivas.neeli@xilinx.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 18 Nov 2020 01:02:55 +0100
-Message-ID: <CACRpkdaSeZSvS0TpATD0MSAxbM3yP+yVU9C2zTEXJ+xuNHUfLA@mail.gmail.com>
-Subject: Re: [LINUX PATCH V3 4/9] gpio: gpio-xilinx: Reduce spinlock array to single
+Date:   Wed, 18 Nov 2020 01:15:31 +0100
+Message-ID: <CACRpkdYsWpB-09efW1OPRXvrS_e=i5HduSJkEor7Lfb3NgmHpw@mail.gmail.com>
+Subject: Re: [LINUX PATCH V3 5/9] gpio: gpio-xilinx: Add interrupt support
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -64,15 +64,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Srinivas!
+
 On Thu, Nov 12, 2020 at 6:12 PM Srinivas Neeli
 <srinivas.neeli@xilinx.com> wrote:
 
-> Changed spinlock array to single. It is preparation for irq support which
-> is shared between two channels that's why spinlock should be only one.
+> Adds interrupt support to the Xilinx GPIO driver so that rising and
+> falling edge line events can be supported. Since interrupt support is
+> an optional feature in the Xilinx IP, the driver continues to support
+> devices which have no interrupt provided.
 >
+> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 
-This patch does not apply to my "devel" tree.
+(...)
+>  config GPIO_XILINX
+>         tristate "Xilinx GPIO support"
+> +       select GPIOLIB_IRQCHIP
+> +       depends on OF_GPIO
+>         help
+>           Say yes here to support the Xilinx FPGA GPIO device
+
+Please add:
+select IRQ_DOMAIN_HIERARCHY
+
+Because your driver requires this.
+
+> +       /* Update cells with gpio-cells value */
+> +       if (of_property_read_u32(np, "#gpio-cells", &cells))
+> +               dev_dbg(&pdev->dev, "Missing gpio-cells property\n");
+(...)
+> +       chip->gc.of_gpio_n_cells = cells;
+
+Why is this necessary?
+Mention in the commit.
+
+Other than that this looks very good and good use
+of the hierarchical IRQ feature in gpiolib!
 
 Yours,
 Linus Walleij
