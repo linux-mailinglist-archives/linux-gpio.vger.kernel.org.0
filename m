@@ -2,97 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37ECF2B839F
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 19:10:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C60882B84D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Nov 2020 20:22:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgKRSKF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Nov 2020 13:10:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        id S1727412AbgKRTTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Nov 2020 14:19:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgKRSKF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Nov 2020 13:10:05 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4AFC0613D4;
-        Wed, 18 Nov 2020 10:10:04 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id y17so4034786ejh.11;
-        Wed, 18 Nov 2020 10:10:04 -0800 (PST)
+        with ESMTP id S1727407AbgKRTTt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Nov 2020 14:19:49 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA9AC0613D6
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Nov 2020 11:19:49 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id q5so2912456qkc.12
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Nov 2020 11:19:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pxELOt6GfZS0tNdRK6kX1TfQriizca3PB6DRDDt/oRE=;
-        b=ARZ/DpQWE3vHp4KvYJiP0MPbTy8gGHTlVEzX8Q2sAyqbiwomX5JR9e0+Xq8P4ALeA9
-         Cj/SbWXr3SfCCp3F8suHbL8HOtlkYdZg3yjtBG+YwlDvmzvXOaBdSjFvYGsrT7mRRDpW
-         5uWclLo253shnOYvG7CD+UoEZ4eYKBwbZkgM257FpKwKvQxGJE21Rtq3Y8kYDp7mULvW
-         SE99GdqcrfE2VFsSk7FhxfDZSz2xgfbL+uL1U2SqbZB0AA4QlYm9EVbB1J5UqA07WoRz
-         +m47a+WerueTtR3wePnIEzsIaJa5bK9ekZ/VFrKaown7lSa+iL6bGwoaNRIdOea43meB
-         dbbA==
+        h=from:to:cc:subject:date:message-id;
+        bh=J4RKqYCS75CkogYyH9S4ETLutwo/22Uyz8nHlVrDlJ0=;
+        b=mSFPAg/wWtE8xA2ttOKLbx1oMQoJr16ExH8GN1ttjzYV+DeeBunzwy9mpkqEYY9i+K
+         ok+HyfOfH/YwBn7TBY/zW2+gjdnL3osxFHZ8d2r6jviZE2u5Mxy3IygkEAynmBzTAWFQ
+         CQhhI3REPlrudT6NXxx00z3fu7QWHb78SZrk54h6StbVPX0R8L3sGT2WQUe4esCWGNGA
+         R0qLdj6Xclb5x61jCkZ0eppRrngctMsSNadQ1pFZ3+GeAvippJKqoWaTXxOETOIgW/Fj
+         3N7xU/y/CMuGiNQ4RharmtzYK7agjSmToE6ThyfTnsUPO7jw7pCcOHjHoG5Jt+pS5uj+
+         vZOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pxELOt6GfZS0tNdRK6kX1TfQriizca3PB6DRDDt/oRE=;
-        b=hMwO1lj4qNpKCgLkJGDDmNgYQiMc6SMkaYN6Jm7EK2TC6rHJTTaMHrCh50TselbcVZ
-         jh5k2W76RR5AjZSXVKzPTUpKTBYMmf+GaUHvCuawYLSQXnZbTQdsH/KJ65pLq4X2Pd+H
-         mG4qFNWkvpW1RZ+vnMslw0HjAHDJbBIHYVCNwMnOUKTdkNKzJfN3EIqCV8OWLcBj1biN
-         wQFFCvVlEWKNW795M/XtJWTLiJAW1D43hBudHnzlZjaksaUXpBgNQ1D8aKL7E22eAeXA
-         sDXyFKqEH5EeUiXbPb3TccRcydjVA9NxWL91w1gZH/nIgReMHGrCHKOQ4veirE/2KK7D
-         XZAQ==
-X-Gm-Message-State: AOAM531HKlz6HexINDbcjJ0e7X9Qay5NfqvKvpAIuHV6RsNwd1JMO3z6
-        7D8IBXHrARViGft37NwjlcThr+GH7qovVw==
-X-Google-Smtp-Source: ABdhPJygaSh3dhehHH5Wu64My3bzhXbfEB6R0xPAHy3T+2lelDqTPu9nlj2EDqeFRWzMnKMkbhFHlg==
-X-Received: by 2002:a17:906:ca83:: with SMTP id js3mr26018362ejb.42.1605723003484;
-        Wed, 18 Nov 2020 10:10:03 -0800 (PST)
-Received: from localhost.localdomain ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id dk8sm1483425ejb.88.2020.11.18.10.10.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=J4RKqYCS75CkogYyH9S4ETLutwo/22Uyz8nHlVrDlJ0=;
+        b=IUfJHCqXMIMrZD2ipXQl3joDEIfEw/WG+CzledyQU89l4dYPl4FSecw0IvXdeE3Stk
+         VH1lQBIRkDwZfNjaW86KVIrguCkdMuy5K8JoeYqNwiouQzTl++NNgohmF5tAPKzHy/Xm
+         wpKNYzBKkrUqKulfwW+1wV8Ws0NF98A08tfAmlQCZHY/ZYFuFJ3WCclsyzioq8zCHfKM
+         BGdLsddsg5gpTNV58kE+a8n580d9ZAiBrsYAFLbc4SR8d27d93smONpwfqC5ckZ8xaMJ
+         Yw8bBbQmSjJJy+O+zyYjtQ/nY1LBaeFPul0UeI1YKFP7/JxPr3w4W0+1/eeN20K4JTvr
+         tN/A==
+X-Gm-Message-State: AOAM530CqoamZyfcmpFFScOomR3MEvINNr1nSXEF0czw3SmXb2fCq1Fi
+        /aCRhNhG2Q6CeFh13LfdOx0=
+X-Google-Smtp-Source: ABdhPJyClD//8MkG5Lqnm/lC4z3XIoCW1pKyC4hDmGM2jLqf6mrnB8o1Seb8MCuMBVLitMQSae/rXQ==
+X-Received: by 2002:a37:63cb:: with SMTP id x194mr6556968qkb.257.1605727188673;
+        Wed, 18 Nov 2020 11:19:48 -0800 (PST)
+Received: from localhost.localdomain ([2804:14c:482:997:213a:a240:fc07:36c8])
+        by smtp.gmail.com with ESMTPSA id h4sm18009039qkh.93.2020.11.18.11.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 10:10:02 -0800 (PST)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: [PATCH 1/1] pinctrl: actions: pinctrl-s500: Constify s500_padinfo[]
-Date:   Wed, 18 Nov 2020 20:10:00 +0200
-Message-Id: <24505deb08d050eb4ce38f186f4037d7541ea217.1605722628.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.29.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 18 Nov 2020 11:19:47 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     shawnguo@kernel.org, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] gpio: mxs: Remove unused .id_table support
+Date:   Wed, 18 Nov 2020 16:19:38 -0300
+Message-Id: <20201118191938.32693-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-s500_padinfo[] is never modified and should be made 'const' to allow
-the compiler to optimize code generation, i.e. put it in the text
-section instead of the data section.
+mxs is a devicetree-only platform and hence it does not make use
+of the id_table mechanism.
 
-Before:
-   text    data     bss     dec     hex filename
-  12503    5088       0   17591    44b7 drivers/pinctrl/actions/pinctrl-s500.o
+Get rid of the .id_table as it is unused.
 
-After:
-   text    data     bss     dec     hex filename
-  14435    3156       0   17591    44b7 drivers/pinctrl/actions/pinctrl-s500.o
-
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- drivers/pinctrl/actions/pinctrl-s500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-mxs.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
-index 38e30914af6e..ced778079b76 100644
---- a/drivers/pinctrl/actions/pinctrl-s500.c
-+++ b/drivers/pinctrl/actions/pinctrl-s500.c
-@@ -1485,7 +1485,7 @@ static PAD_PULLCTL_CONF(DNAND_D6, 2, 2, 1);
- static PAD_PULLCTL_CONF(DNAND_D7, 2, 2, 1);
+diff --git a/drivers/gpio/gpio-mxs.c b/drivers/gpio/gpio-mxs.c
+index c4a314c68555..dfc0c1eb1b33 100644
+--- a/drivers/gpio/gpio-mxs.c
++++ b/drivers/gpio/gpio-mxs.c
+@@ -254,19 +254,6 @@ static int mxs_gpio_get_direction(struct gpio_chip *gc, unsigned offset)
+ 	return GPIO_LINE_DIRECTION_IN;
+ }
  
- /* Pad info table */
--static struct owl_padinfo s500_padinfo[NUM_PADS] = {
-+static const struct owl_padinfo s500_padinfo[NUM_PADS] = {
- 	[DNAND_DQS] = PAD_INFO_PULLCTL(DNAND_DQS),
- 	[DNAND_DQSN] = PAD_INFO_PULLCTL(DNAND_DQSN),
- 	[ETH_TXD0] = PAD_INFO_ST(ETH_TXD0),
+-static const struct platform_device_id mxs_gpio_ids[] = {
+-	{
+-		.name = "imx23-gpio",
+-		.driver_data = IMX23_GPIO,
+-	}, {
+-		.name = "imx28-gpio",
+-		.driver_data = IMX28_GPIO,
+-	}, {
+-		/* sentinel */
+-	}
+-};
+-MODULE_DEVICE_TABLE(platform, mxs_gpio_ids);
+-
+ static const struct of_device_id mxs_gpio_dt_ids[] = {
+ 	{ .compatible = "fsl,imx23-gpio", .data = (void *) IMX23_GPIO, },
+ 	{ .compatible = "fsl,imx28-gpio", .data = (void *) IMX28_GPIO, },
+@@ -370,7 +357,6 @@ static struct platform_driver mxs_gpio_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe		= mxs_gpio_probe,
+-	.id_table	= mxs_gpio_ids,
+ };
+ 
+ static int __init mxs_gpio_init(void)
 -- 
-2.29.2
+2.17.1
 
