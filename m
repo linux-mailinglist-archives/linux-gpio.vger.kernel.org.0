@@ -2,114 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 368F02B92B3
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Nov 2020 13:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39EA52B9337
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Nov 2020 14:13:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgKSMnw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Nov 2020 07:43:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgKSMnv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Nov 2020 07:43:51 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F03C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Nov 2020 04:43:51 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id r9so8002833lfn.11
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Nov 2020 04:43:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4aLdtervtWp2F077eRbUzMPckoW3DESEXHpbokPPTzc=;
-        b=RcXMnezo4L57xM1OLJ9nMpYoV3Q9SCvDZi9qmaoYTnjHHbcvz25tCjE0itaNNtPZPW
-         ssa4MPl4QOVfrhI2+LVjKo5CtqAfjH5r78gA8PInU5UN8yY4ado/ACLslti7n3AKucAx
-         xS6OeawPx1hJaVMOei7s/vhQ6npexEFWasClyY4yWveNb8U02jX3VO4Ccvl48lylKd2n
-         LCRI9wQjuoWY3vAKmn2kwy78DW3Z24aGtqVBmgnUlTVQpTlURs1pOUpkEIQU7kqdJBEI
-         PG6ivbkk9ECsd2Gw8eb6H1gRVo3yzbDq/8N2zcY5qBTW9Fu+Se2knJCui+cNvVC1ZO7B
-         94sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4aLdtervtWp2F077eRbUzMPckoW3DESEXHpbokPPTzc=;
-        b=K0IE/jHGjFf9Gy7mW9Aw5w6pDTaTVmBYeYRHFzbcePF8Z0/FWRIfR9d71X0KTMJytS
-         z2ObKh21gDDF6t2HkC4WxpjL6mTxetVwwNN3dBYIyzwogolhZYEZIG8dzfFn4qubADX6
-         HmgNC2XkkQRZ9xzI9vvAHn1+4TvVkZw0dV9fS8EWb/jxzeqhJSe/mW1ZtmaNAJHYnCBi
-         kPOlZpLtXSCpwKVYvahUESng85jynhFHME7WHwd7E4zUg47P19UtYEUOtOgCgH7SJ0Zx
-         sjyJ0JpVQ/IFRqbtImw5pLjF2FDdLbiknF3qIDBwH050h+iTZxmF+a0XpTAvQq+U2kIk
-         j3Sw==
-X-Gm-Message-State: AOAM530IHQSzPxR1/qDCMfi3UIvn42lxOp3BwVBG4kh6FRj6InWlytTV
-        LSOpvZ4WPrMIAL/LhM3e1bZM2EE99K3Mn2+qRM7HKg==
-X-Google-Smtp-Source: ABdhPJxPfBfQQbben9LdBUQrSFvhh3YO8bpHCOqeTS0YDmQvYpVqSJEfdFjLx4VFIckJQ+MaR7JX9i/1L4gkHvCDP1g=
-X-Received: by 2002:a19:e08:: with SMTP id 8mr5400721lfo.441.1605789830053;
- Thu, 19 Nov 2020 04:43:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20201116152625.GA20187@black.fi.intel.com> <CACRpkdbgO++4scNqX=3D0XKSyUhah67UvMjHDbaT4SyX0ESF-A@mail.gmail.com>
- <20201118141811.GV4077@smile.fi.intel.com> <CACRpkdZO+OGvYVF1+ZxgnaMO-HUCCJ2oAJPQgP_zKQwXeOLtCQ@mail.gmail.com>
- <20201119105828.GZ4077@smile.fi.intel.com>
-In-Reply-To: <20201119105828.GZ4077@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Nov 2020 13:43:38 +0100
-Message-ID: <CACRpkdb4ZKZpOQyV1FHnF2k1QFWe4WA=Yo0rQmk_1zgTG9r8-w@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 5.11-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727122AbgKSNJk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Nov 2020 08:09:40 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:39606 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727429AbgKSNJj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 19 Nov 2020 08:09:39 -0500
+X-IronPort-AV: E=Sophos;i="5.77,490,1596466800"; 
+   d="scan'208";a="63036279"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 19 Nov 2020 22:09:37 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C6C954005E1A;
+        Thu, 19 Nov 2020 22:09:35 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/4] Renesas add QSPI{0,1} pins to r8a77{96,951,965,990} SoC
+Date:   Thu, 19 Nov 2020 13:09:22 +0000
+Message-Id: <20201119130926.25692-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 11:57 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi All,
 
-> > And that patch was on my fixes branch, which went into v5.10-rc4,
-> > so in order to have the base commit in the devel tree I had to merge
-> > in v5.10-rc4.
->
-> I based solely on your gpio/for-next as has been stated in the cover letter.
-> So, the PR might have been applied on top of your gpio/for-next without any
-> additional merge required.
+This patch series adds QSPI{0,1} pins to r8a77{96,951,965,990} SoC.
 
-OK but my for-next isn't what is going to be merged by Torvalds so there
-is some misunderstanding here.
+Patches are based on top of [1].
 
-In my tree "for-next" does not mean "for the next kernel that Torvalds
-is going to release", it means "for the linux-next integration tree".
+[1]  https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+     renesas-drivers.git/log/?h=renesas-pinctrl-for-v5.11
+Cheers,
+Prabhakar
 
-What is going into v5.11 is "devel" and that is why I'm always talking
-about pulling stuff into devel etc.
+Lad Prabhakar (4):
+  pinctrl: renesas: r8a77990: Add QSPI[01] pins, groups and functions
+  pinctrl: renesas: r8a77951: Add QSPI[01] pins, groups and functions
+  pinctrl: renesas: r8a7796: Add QSPI[01] pins, groups and functions
+  pinctrl: renesas: r8a77965: Add QSPI[01] pins, groups and functions
 
-for-next is created when I merged a few patches like this:
+ drivers/pinctrl/renesas/pfc-r8a77951.c | 75 +++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  | 75 +++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77965.c | 75 +++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77990.c | 75 +++++++++++++++++++++++++-
+ 4 files changed, 292 insertions(+), 8 deletions(-)
 
-> git checkout for-next
-> git reset --hard fixes
-> git merge devel
+-- 
+2.17.1
 
-(Procedure to create integration branch recommended by
-Stephen Rothwell at one point.)
-
-This is why your pull request work fine anyways if I merge in -rc4
-because then "devel" will contain all commits from these two
-branches at that point.
-
-> I admit that PR automatic text is a bit deviated (it has been taken from wrong
-> base, note that tag is correct nevertheless). I will look forward to amend my
-> scripts.
-
-Don't worry about it.
-
-Maybe I need to think about how I name stuff.
-
-Should I rename the branch "for-next" to "for-sjr-next" and
-rename "devel" to "for-torvalds-next" then "fixes"
-into "for-torvalds-current" or something
-so it is crystal clear what they are for?
-
-The community doesn't really have an established standard
-here.
-
-Yours,
-Linus Walleij
