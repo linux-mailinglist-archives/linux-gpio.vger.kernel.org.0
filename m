@@ -2,306 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2792B90AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Nov 2020 12:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5A7F2B90DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Nov 2020 12:22:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgKSLI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Nov 2020 06:08:26 -0500
-Received: from mga11.intel.com ([192.55.52.93]:20059 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgKSLI0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 19 Nov 2020 06:08:26 -0500
-IronPort-SDR: 1/mJzocLENP1MLNcR92aNVyEj3ORzm49DRHoHh+4J8BP805HoOQluWpPe8mlsolBTu/TymurhZ
- 1mpO0WtbHTTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9809"; a="167760903"
-X-IronPort-AV: E=Sophos;i="5.77,490,1596524400"; 
-   d="scan'208";a="167760903"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 03:08:20 -0800
-IronPort-SDR: q9Fn4HBFJ/jBqF8Kq1AJiSUB/wKNNR+jphULGCkodly7lT0ywyOUyjZ9HXstVaKoWdk/KeD2o9
- m/0ZMKobPdlQ==
-X-IronPort-AV: E=Sophos;i="5.77,490,1596524400"; 
-   d="scan'208";a="359934471"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 03:08:19 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kfhoX-007ulQ-Bi; Thu, 19 Nov 2020 13:09:21 +0200
-Date:   Thu, 19 Nov 2020 13:09:21 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] docs: ACPI: enumeration: add PCI hierarchy
- representation
-Message-ID: <20201119110921.GB4077@smile.fi.intel.com>
-References: <20201119101233.701918-1-f.suligoi@asem.it>
+        id S1725931AbgKSLWb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Nov 2020 06:22:31 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:29318 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgKSLWa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Nov 2020 06:22:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1605784949; x=1637320949;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Ge/pHFZW6CmfDvVtpZh+cDiAkaVqXt3bMUJWG4eusys=;
+  b=mj2rO86EYmYlM7PJ9YMULrFjq/xWLekXiVVjdE1fT9Dytr+RkwGVdpUI
+   oVBsb3oEUKg2jvSVRxvJVHE7J2BkgLKoWtMYKRwsS6KYx/ZMsUMxTDq/v
+   HXJkYwbAF6jOAKc99rTxLYhYdGWJWYl2G72JwGMU2pwiZcRmCc3PLmPMg
+   s42WtVEwYh1ZehNgIPRUUqND+jOX5iirRZ9DJ9MmVD4LMLYZSl55mrtME
+   F9YAVKgd3QFvjhv2IsW7XFO8cyvu2ZWICZyeNn7aUfF1+yr5oWFdbW7Ci
+   rfuJk3vtFxKWfVZ+TwtUEZOPDQdbynyRPLv/aqVoxlEF9A70/Rq7JWOQX
+   A==;
+IronPort-SDR: bckLJJlFupBQR7v/b3SA8Y5+uc437CmYLqChIx+dNpD1NzTEICTgPvhEaHxbO/UDxRuC+BJSYA
+ Sz9O2I7LYVcCECTcAawEJktIj6Xk8/yVsPBlRJjrcsLWvwMHhLBk1bniXaKoQMxHQg8GkpnIdp
+ R2hXtAEgXneFmeGR812j2H5bB07/IvTRAR+gh6hMZrP7S9EzTVTVqShEEyu3G73Yp0NcFjfZ7l
+ JtEIVIbk0Rs9ZE5uyjURURyU9RkzVLOceGtw5Z1GyS7rahwGaNk/BX6IIBPVow7R9/hI5ztnna
+ /EQ=
+X-IronPort-AV: E=Sophos;i="5.77,490,1596470400"; 
+   d="scan'208";a="153062735"
+Received: from mail-cys01nam02lp2051.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.51])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Nov 2020 19:22:28 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZ3Z+5YpPeGRtQxH8zdKTJaLgFMZqFRY44fwgL5cO3cMG7O/qG6xsev5gSuAHSMKGKvQKmVprLbprwMp+KaD2e5uxjRLXb9SWTsEJ2VopVEL1GUawq+rK/KPwvSrdCx7G29QlWQUP1xsJM3YCjg//e8co/wx71EktP9y6QSvoYEAdH7Md5XnkqyPgqjgz+wo3AKBQcRVghgFFq5J0B0zNrHdwD4VLmNcNPkhFkz3E/GxemYYKbAH0WtqF9AFys7XsW6rYD4vX4G7kFJ9KSa9YcvsDcCIbYmM1bXXN7+dl0c4VI/sbDVOMhVZla1w1A8Ni40rA1bMktMjDlgTT0q2hA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x6SgIfPUJbXPreM+cABcdMc43jWJnuJZ0/aVS+wIlAM=;
+ b=bOeEpFfkwc9VNcorFIFqHwTUu9JTFuemzbfr+IV6Ai4YrJVKQYT+DhRxL9zBdF7JF9wc7/hFeIonhyPh7RRkiykJpsVD+NG8solo21d0UqWAzI/+rqQ9UdDpSLlfyFUBELj+gzhslhkoREIs0NYpDTJLLTrPe104nIiMJdUZBNogvGr18TwPakGJrEyB3Ayh1yU/0rLErFwy6EkS6TgFCvLzj4XoBv+7juZDIS6eLkFXPx0IN2vzUqF9vFhqzgp6Oxra3V/x+luv+Qd4d+/AOPXut+kKJIkE96zY5H3a0rvInf3oOFFNjps403Zn+31PIMANjBHVK2h6fioZgMY7CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x6SgIfPUJbXPreM+cABcdMc43jWJnuJZ0/aVS+wIlAM=;
+ b=EZO8seH7wnbs2qidBAe3ju6e33iPkZnBmlW3jWw8hPF+LcV//MrHobpBeDTrQoOOJvruQA4YrzeBMu8xcOqLA3rzDuNPOTew21DLAYIRaL/minzICZAFL0Omh5zoM5KDpSpDofQZkWQWtszEBP12rb8oH9nqN4I6CeOaFDdnecU=
+Received: from BL0PR04MB6514.namprd04.prod.outlook.com (2603:10b6:208:1ca::23)
+ by BL0PR04MB4532.namprd04.prod.outlook.com (2603:10b6:208:4f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Thu, 19 Nov
+ 2020 11:22:25 +0000
+Received: from BL0PR04MB6514.namprd04.prod.outlook.com
+ ([fe80::4c3e:2b29:1dc5:1a85]) by BL0PR04MB6514.namprd04.prod.outlook.com
+ ([fe80::4c3e:2b29:1dc5:1a85%7]) with mapi id 15.20.3499.034; Thu, 19 Nov 2020
+ 11:22:25 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sean Anderson <seanga2@gmail.com>
+CC:     Rob Herring <robh@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 24/32] dt-bindings: Document kendryte,k210-fpioa bindings
+Thread-Topic: [PATCH 24/32] dt-bindings: Document kendryte,k210-fpioa bindings
+Thread-Index: AQHWtN4pogxbCuVPg0qTFpKg863FNg==
+Date:   Thu, 19 Nov 2020 11:22:24 +0000
+Message-ID: <BL0PR04MB65143886DECE34E61DAEE9BBE7E00@BL0PR04MB6514.namprd04.prod.outlook.com>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com>
+ <20201107081420.60325-25-damien.lemoal@wdc.com>
+ <20201109153625.GB1330401@bogus>
+ <04b266c7-bba9-d847-a526-f64f76c11a50@gmail.com>
+ <CAMuHMdV0GL-GoY5=cgsW5QEWPB=ySK-8EyVeKLwt=6oODV4z3A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-m68k.org; dkim=none (message not signed)
+ header.d=none;linux-m68k.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2400:2411:43c0:6000:752d:4d55:43bb:285f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 00869975-0540-4f71-f18f-08d88c7d641c
+x-ms-traffictypediagnostic: BL0PR04MB4532:
+x-microsoft-antispam-prvs: <BL0PR04MB45323F90958417F013493B16E7E00@BL0PR04MB4532.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Rq+ve6LCXF4g9af8TPbLbNO7PReaCXOfSATaoYMUwySmsjzpj+wE1jMZ49rQLGpw35YiT+e8mNL/Eq4MlMC9lEa46+np1Zu4tCEkuTLMkyT4GvShUSrS4Xhj1lizvO/SnqK1MhiHIXbGjm1GExJ0pS71MnVgavRYV17ovfutmc+Gym+DCM+xAJGHhduv+4SSadiB5x7GnNBnlc1KC4zxQXmpbK4FCGF9WsP/5xO8yx1VODrFTNwX22ULgOrhgVOtTFqmVN/bNCb/aGp0ptHzRaz/OVdDzEETLfoCr8ROeuQKTS+pI/f1zCnGRTXmuOZLDnu1IhK/8F9jepveiSBYUw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR04MB6514.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(478600001)(110136005)(86362001)(7696005)(316002)(6506007)(53546011)(186003)(7416002)(4326008)(9686003)(55016002)(8676002)(71200400001)(8936002)(54906003)(66556008)(2906002)(52536014)(33656002)(5660300002)(64756008)(91956017)(76116006)(66946007)(66476007)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: FmKh0QTqnaX2zOf9cWNv2UPiJzB6nv8H6upvyzdyvNCzDo7TNzbJ+oN36msQqf51kqkyakY0rOzdJ5o7RSJwWcaEfKtY0W7EncTNSJog237k6rDPG9lemZ+LCYaej+93yZRDUuA5mQKH3Xn80lZ3uKfQBaQJZPuWM6qdYbLSE5f2PnZt6PV6iTt5P3F5+3fFfsdGdGwiJTzLLWBha1NV/whlOQDoZY1T5I+MgxKgze9o9Tavs+xvbNWYdxXNm9XPdIt+zQwT4ekzClwOs5uWrnPlzW8GSk85z6FfNoqmrHQYWXCIBKqHymfpD4DEqeoLe/cTUdFlij4WAemrq6Bit7W6dW9asUCSVsVXwYfGH5mvLnBS0fPPyY1isT/oTh3WvsLy71n9gSCpUwQ5MwoWzUVT5sB1ORVLmET1HzjRUwP0je1cJiRDnvThWcYESIfO1Jrj7LR866lO0w4f836AOm9LPYVeTWC2BIG8AEaIBOeoZaFItWottB1dYqZyq8aDkGgq6kV/yLAyr0tdnkPQ8hKqhmsTD2kJUS0KA+qMuTd5WgeWA2EMHyq3zGHaqLohIcwMI/6mtQkhO166I8kuq8TB21QW4efwED0QzQcyMVT0ZPAKdE72Gcv+6Hmk4tnXovtWnah939L6b5196uZ3IFsTk6G3aB9z+3cdFWyxYdBfo/76TBKZNjd7uUXUT49hmxNf5o4ZeH8F4l2TUVmg8Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201119101233.701918-1-f.suligoi@asem.it>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR04MB6514.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00869975-0540-4f71-f18f-08d88c7d641c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2020 11:22:25.0010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w2ChgSClezmhD6HYH7GBdpdRYPPYywegTC9STL1RQ4GdSMZEc/kbAFzqG0fSu47V6dBMotmbW4/pMj4EoEpSQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4532
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 11:12:33AM +0100, Flavio Suligoi wrote:
-
-Thank you very much for nice piece of documentation!
-My comments below.
-
-> For "fixed" PCI devices, such as chips directly soldered
-> on the main board (ethernet, wi-fi, serial ports, etc.),
-
-Wi-Fi
-
-> it is possible to find an ACPI enumeration.
-> 
-> This allows to add useful properties to these devices.
-> Just for an example: the property "gpio-line-names" can be
-> added to the pins of a GPIO expander on the PCI bus.
-> 
-> In order to find the ACPI name of a PCI device , it's necessary
-
-No space before comma.
-
-> to disassemble the BIOS ACPI tables (in particular the DSDT)
-> and also to analyze the PCI bus topology of the board.
-> 
-> This patch, with a practical example, show how to do this.
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  .../firmware-guide/acpi/enumeration.rst       | 180 ++++++++++++++++++
->  1 file changed, 180 insertions(+)
-> 
-> diff --git a/Documentation/firmware-guide/acpi/enumeration.rst b/Documentation/firmware-guide/acpi/enumeration.rst
-> index c13fee8b02ba..b08431a93cf5 100644
-> --- a/Documentation/firmware-guide/acpi/enumeration.rst
-> +++ b/Documentation/firmware-guide/acpi/enumeration.rst
-> @@ -461,3 +461,183 @@ Otherwise, the _DSD itself is regarded as invalid and therefore the "compatible"
->  property returned by it is meaningless.
->  
->  Refer to :doc:`DSD-properties-rules` for more information.
-> +
-> +PCI hierarchy representation
-> +============================
-> +
-> +Sometimes could be useful to enumerate a PCI device, knowing its position on the
-> +PCI bus.
-> +
-> +For example, some systems use PCI devices soldered directly on the mother board,
-> +in a fixed position (ethernet, wi-fi, serial ports, etc.). In this conditions it
-
-Wi-Fi
-
-> +is possible to refer to these PCI devices knowing their position on the PCI bus
-> +topology.
-> +
-> +To identify a PCI device, a complete hierarchical description is required, from
-> +the chipset root port to the final device, through all the intermediate
-> +bridges/switches of the board.
-> +
-> +For example, let us assume to have a system with a PCIe serial port, an
-> +Exar XR17V3521, soldered on the main board. This UART chip also includes
-> +16 GPIOs and we want to add the property ``gpio-line-names`` [1] to these pins.
-> +In this case, the ``lspci`` output for this component is::
-> +
-> +	07:00.0 Serial controller: Exar Corp. XR17V3521 Dual PCIe UART (rev 03)
-> +
-> +The complete ``lspci`` output (manually reduced in length) is::
-> +
-> +	root@debian:~# lspci
-> +	00:00.0 Host bridge: Intel Corp... Host Bridge (rev 0d)
-> +	00:02.0 VGA compatible controller: Intel Corporation Device 5a85 (rev 0d)
-> +	00:0e.0 Audio device: Intel Corp... Audio Cluster (rev 0d)
-> +	00:0f.0 Communication controller: Intel Corp... Trusted Execution Engine (rev 0d)
-> +	00:12.0 SATA controller: Intel Corp... SATA AHCI Controller (rev 0d)
-> +	00:13.0 PCI bridge: Intel Corp... PCI Express Port A #1 (rev fd)
-> +	00:13.1 PCI bridge: Intel Corp... PCI Express Port A #2 (rev fd)
-> +	00:13.2 PCI bridge: Intel Corp... PCI Express Port A #3 (rev fd)
-> +	00:14.0 PCI bridge: Intel Corp... PCI Express Port B #1 (rev fd)
-> +	00:14.1 PCI bridge: Intel Corp... PCI Express Port B #2 (rev fd)
-> +	00:15.0 USB controller: Intel Corp... USB xHCI (rev 0d)
-> +	00:16.0 Signal processing controller: Intel Corp... I2C Controller #1 (rev 0d)
-> +	00:16.1 Signal processing controller: Intel Corp... I2C Controller #2 (rev 0d)
-> +	00:19.0 Signal processing controller: Intel Corp... SPI Controller #1 (rev 0d)
-> +	00:19.1 Signal processing controller: Intel Corp... SPI Controller #2 (rev 0d)
-> +	00:19.2 Signal processing controller: Intel Corp... SPI Controller #3 (rev 0d)
-> +	00:1f.0 ISA bridge: Intel Corp... Low Pin Count Interface (rev 0d)
-> +	00:1f.1 SMBus: Intel Corp... SMBus Controller (rev 0d)
-> +	01:00.0 Ethernet controller: Intel Corp... I210 Gigabit Network Connection (rev 03)
-> +	02:00.0 Ethernet controller: Intel Corp... I210 Gigabit Network Connection (rev 03)
-> +	04:00.0 Ethernet controller: Intel Corp... I210 Gigabit Network Connection (rev 03)
-> +	05:00.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-> +	06:01.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-> +	06:02.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-> +	06:03.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-> +	07:00.0 Serial controller: Exar Corp. XR17V3521 Dual PCIe UART (rev 03) <-- Exar
-> +	08:00.0 Ethernet controller: Intel Corp... I210 Gigabit Network Connection (rev 03)
-> +	root@debian:~#
-
-At least here, I would rather drop unrelated lines (except bridges, serial controller).
-
-Like:
-
-	00:00.0 Host bridge: Intel Corp... Host Bridge (rev 0d)
-	...
-	00:14.0 PCI bridge: Intel Corp... PCI Express Port B #1 (rev fd)
-	00:14.1 PCI bridge: Intel Corp... PCI Express Port B #2 (rev fd)
-	...
-	05:00.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-	06:01.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-	06:02.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-	06:03.0 PCI bridge: Pericom Semiconductor Device 2404 (rev 05)
-	07:00.0 Serial controller: Exar Corp. XR17V3521 Dual PCIe UART (rev 03) <-- Exar
-	...
-
-> +The bus topology is::
-> +
-> +	root@debian:~# lspci -t
-> +	-[0000:00]-+-00.0
-> +	           +-02.0
-> +	           +-0e.0
-> +	           +-0f.0
-> +	           +-12.0
-> +	           +-13.0-[01]----00.0
-> +	           +-13.1-[02]----00.0
-> +	           +-13.2-[03]--
-> +	           +-14.0-[04]----00.0
-> +	           +-14.1-[05-09]----00.0-[06-09]--+-01.0-[07]----00.0 <-- Exar
-> +	           |                               +-02.0-[08]----00.0
-> +	           |                               \-03.0-[09]--
-> +	           +-15.0
-> +	           +-16.0
-> +	           +-16.1
-> +	           +-19.0
-> +	           +-19.1
-> +	           +-19.2
-> +	           +-1f.0
-> +	           \-1f.1
-
-And possible here cut unneeded branches.
-
-> +	root@debian:~#
-
-This is not needed.
-
-> +To describe this Exar device on the PCI bus, we must start from the ACPI name
-> +of the chipset bridge (also called "root port") with address::
-> +
-> +	Bus: 0 - Device: 14 - Function: 1
-> +
-> +To find this information is necessary disassemble the BIOS ACPI tables, in
-> +particular the DSDT (see also [2])::
-
-> +	cd /sys/firmware/acpi
-> +	cp -a tables/ ~
-> +	cd ~/tables/
-
-acpidump followed by acpixtract from ACPI tools is better to advertise.
-
-> +	find . -type f -exec mv {} {}.aml \;
-
-Unnecessary step. But I think you wanted to have it to distinguish sources and
-binaries in the text below.
-
-> +	iasl -e SSDT?.* -d DSDT.aml
-> +
-> +Now, in the DSDT.dsl, we have to search the device whose address is related to
-> +0x14 (device) and 0x01 (function). In this case we can find the following
-> +device::
-> +
-> +	Scope (_SB.PCI0)
-> +	{
-> +	... other definitions follow ...
-> +		Device (RP02)
-> +		{
-> +			Method (_ADR, 0, NotSerialized)  // _ADR: Address
-> +			{
-> +				If ((RPA2 != Zero))
-> +				{
-> +					Return (RPA2) /* \RPA2 */
-> +				}
-> +				Else
-> +				{
-> +					Return (0x00140001)
-> +				}
-> +			}
-> +	... other definitions follow ...
-> +
-> +and the _ADR method [3] returns exactly the device/function couple that
-> +we are looking for. With this information and analyzing the above ``lspci``
-> +output (both the devices list and the devices tree), we can write the following
-> +ACPI description for the Exar PCIe UART, also adding the list of its GPIO line
-> +names::
-> +
-> +	Scope (_SB.PCI0.RP02)
-> +	{
-> +		Device (BRG1) //Bridge
-> +		{
-> +			Name (_ADR, 0x0000)
-> +
-> +			Device (BRG2) //Bridge
-> +			{
-> +				Name (_ADR, 0x00010000)
-> +
-> +				Device (EXAR)
-> +				{
-> +					Name (_ADR, 0x0000)
-> +
-> +					Name (_DSD, Package ()
-> +					{
-> +						ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +						Package ()
-> +						{
-> +							Package ()
-> +							{
-> +								"gpio-line-names",
-> +								Package ()
-> +								{
-> +									"mode_232",
-> +									"mode_422",
-> +									"mode_485",
-> +									"misc_1",
-> +									"misc_2",
-> +									"misc_3",
-> +									"",
-> +									"",
-> +									"aux_1",
-> +									"aux_2",
-> +									"aux_3",
-> +								}
-> +							}
-> +						}
-> +					})
-> +				}
-> +			}
-> +		}
-> +	}
-> +
-> +The location "_SB.PCI0.RP02" is obtained by the above investigation in the
-> +DSDT.dsl table, whereas the device names "BRG1", "BRG2" and "EXAR" are
-> +created analyzing the position of the Exar UART in the PCI bus topology.
-> +
-> +References
-> +==========
-> +
-> +[1] Documentation/firmware-guide/acpi/gpio-properties.rst
-> +
-> +[2] Documentation/firmware-guide/acpi/method-customizing.rst
-> +
-> +[3] ACPI Specifications, Version 6.3 - Paragraph 6.1.1 _ADR Address)
-> +    https://uefi.org/sites/default/files/resources/ACPI_6_3_May16.pdf,
-> +    referenced 2020-11-18
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On 2020/11/19 19:58, Geert Uytterhoeven wrote:=0A=
+> Hi Damien, Sean,=0A=
+> =0A=
+> On Mon, Nov 9, 2020 at 4:46 PM Sean Anderson <seanga2@gmail.com> wrote:=
+=0A=
+>> On 11/9/20 10:36 AM, Rob Herring wrote:=0A=
+>>> On Sat, Nov 07, 2020 at 05:14:12PM +0900, Damien Le Moal wrote:=0A=
+>>>> Document the device tree bindings for the Kendryte K210 SoC Fully=0A=
+>>>> Programmable IO Array (FPIOA) pinctrl driver in=0A=
+>>>> Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.yaml=0A=
+>>>>=0A=
+>>>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+> =0A=
+>>>> --- /dev/null=0A=
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/kendryte,k210-fpioa.ya=
+ml=0A=
+> =0A=
+>>>> +  kendryte,power-offset:=0A=
+>>>> +    minItems: 1=0A=
+>>>> +    maxItems: 1=0A=
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+>>>> +    description: |=0A=
+>>>> +      Offset of the power domain control register of the system contr=
+oller.=0A=
+>>>=0A=
+>>> Sounds like you should be using power-domains binding.=0A=
+>>=0A=
+>> This is for pin power domains. E.g. pins 0-5 can be set to 1V8 or 3V3 lo=
+gic levels.=0A=
+> =0A=
+> Which brings to my attention the power-source property is not=0A=
+> documented below...=0A=
+> =0A=
+>>>> +      The value should be the macro K210_SYSCTL_POWER_SEL defined in=
+=0A=
+>>>> +      dt-bindings/mfd/k210-sysctl.h.=0A=
+>>>> +=0A=
+>>>> +patternProperties:=0A=
+>>>> +  '^.*$':=0A=
+>>>> +    if:=0A=
+>>>> +      type: object=0A=
+>>>> +    then:=0A=
+> =0A=
+> As the driver supports e.g. bias and drive-strength, these should be=0A=
+> documented here, too.=0A=
+=0A=
+Thanks for the review. I fixed everything today and ran everything through =
+"make=0A=
+dt_binding_check". Will send a V2 series tomorrow after some more fixes and=
+ tests.=0A=
+=0A=
+> =0A=
+> Gr{oetje,eeting}s,=0A=
+> =0A=
+>                         Geert=0A=
+> =0A=
+> --=0A=
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org=0A=
+> =0A=
+> In personal conversations with technical people, I call myself a hacker. =
+But=0A=
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.=0A=
+>                                 -- Linus Torvalds=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
