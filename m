@@ -2,314 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97E392BAB7C
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 14:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF5A02BABB6
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 15:17:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgKTNpQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Nov 2020 08:45:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53570 "EHLO
+        id S1725890AbgKTOPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Nov 2020 09:15:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgKTNpQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 08:45:16 -0500
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD333C0613CF;
-        Fri, 20 Nov 2020 05:45:15 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id u4so8826817qkk.10;
-        Fri, 20 Nov 2020 05:45:15 -0800 (PST)
+        with ESMTP id S1725805AbgKTOPq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 09:15:46 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565C8C0613CF
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Nov 2020 06:15:46 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id p1so10134224wrf.12
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Nov 2020 06:15:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TVErl+yUYUePGU0nTk/KsCd3ew9UC+hz3+AKG6dMjkk=;
-        b=LsShfHWjulzMbu9dHKSkWzY4krsEbpkOtPQLqzo4pU9lRPxJ3vt5cYITZmyBgRLB9H
-         k2l3oiJpVegQ9uz1a20ejSvp8B38sAUwYHVZF4uPRJ29Csr+jYYkl2IclCNxfUiUHvEm
-         gKcs+J66lPHuSbH6PDwJJWkZT17k/TjcLPrxxfngrUxAvfK3Rz77EnGyV9kfIffvnlyd
-         HxkKtYQjqeVaxtsGuAMzDvtneTfYaPUdTKYnoGfw7nsZLXDqWFZrFkdr2TqDzfQzf2Ag
-         ZxMx3E42ESs/+3mz6q7lC7cWM6dEE0CUvEUWURLoQMG8DtEFrn9f07k2wjnTrhXnStC1
-         g0Uw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HAutSBNtNBwp7vgNrxmIP2Dv8vvHz+JAXNrFXkeXW8g=;
+        b=s+B1PUMKQfgMiqwZqa6l82JZ+DOMpuK+eH0TiYl02ghBzVGfLJNqUz1y6sgV4p/m9A
+         rsFPmK1eJs9fj4ny7tgzMrj1PGOVs13bHqUH0RaASYf7ZiEWonR92n5EEmbQgp97kX/L
+         Wj27QrX9kSjrswZIVaAmFX8OgVPP1a2DCEHmx8kOzSKRm9qEm6xuUNoHnkrkIdex+6Wp
+         uyrSFUHtQFEuyhNHGCEWc3dO+4SMT/WdZRWGltWbyIRESNDRourN0/13m3vPDp81UHPY
+         /54sFaJzD4C+xWcNlZmV7rkWaImbHjsLrKOPVahJ5wLQ3PhZd3CxVuE5fExSrW7/m8Ry
+         zYVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TVErl+yUYUePGU0nTk/KsCd3ew9UC+hz3+AKG6dMjkk=;
-        b=DhMT8Toz4PVXPGTJ1LjsTh6aa3ARXwyOf0Zq73iO142A3VCUzXFJoG1MHbu7zxjxLl
-         EynVqKgYslbNhnmopNkO6Fmz9sZMFxSI+jfhRllXTrcVroyndwVWghPCxL0nCngxZHDC
-         cQEjJXw4HcdhvDg6JB3uXGS+fQLLNmfxteArPZkL5U333724lJETxuFEeJbeED0gUUIY
-         t6+v7vgpF3XV4fH/BJzWcheVNs4ngSCb1zCSHozZvTNDHwcyKE93RdMDRGRcoBwoIjTX
-         AMjSc94O3yMO6MkUKBDvM3bOOEvEuedDWN3lvjXWQpMt7M0lUzLOzhyiiOMEIxswjr/J
-         ue6w==
-X-Gm-Message-State: AOAM530sVcm2q7V+yoT2l+J8SeGmBEH8AjKunsObprYPXM0zRl2npe+v
-        BdGfE1mueVWDhbuYaV6k/f+pzjgz4hazQw==
-X-Google-Smtp-Source: ABdhPJzpmL0Ig5oHLbhkd/aQ+lU/SeiuCubucuADElq/qfxeHgOt9X8nQKvQ6XI17LNfft9zFgdy6A==
-X-Received: by 2002:a37:6697:: with SMTP id a145mr16917733qkc.296.1605879914980;
-        Fri, 20 Nov 2020 05:45:14 -0800 (PST)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id x72sm1989260qkb.90.2020.11.20.05.45.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HAutSBNtNBwp7vgNrxmIP2Dv8vvHz+JAXNrFXkeXW8g=;
+        b=s68SqQpb8n6iIF8lxthgWWrfXl1fUKZqDoahMPdTn0E1D5vdotTg/glfqH+ZBY0cCm
+         WyrSe0oSK4yr9x4geTc+IpToNdOn1v3tlVFiSOV6Mi6ewvsiP7A8E1VuymSD34gbPYe9
+         +3xHkS3pRTduGieYMRT9mqmIh3B6Xna4SNj/W/N1HCqb55MKSrrTT5X5Y1zH4gRAjRuu
+         4nEIji3ndjuej2BhoXJgX7t1X3Vp8Hb53lj8QjmkI6URmoeRGBzxlHXTQYSvaw1ektt4
+         pU6JbdzSgNO5aNpCpVaTAt0dcyYhAjTWuDTkfKiq1D4TR2VAWo3nVbYElELslCHyfhLR
+         Umng==
+X-Gm-Message-State: AOAM5337ReyG+mCF/Qi8hvIJDtwyGw8G1AQfq8oPZ5Nyn/GcByFsjPHn
+        w+bEZYw4aQgRMdGakgrCIExvWA==
+X-Google-Smtp-Source: ABdhPJyc6q9FmKoHj/AY130tvFzbbDtR3Uz6QtwEBNGz7fA6DVupjZ3tzOgdVDpHpKiQS9onxpp/9w==
+X-Received: by 2002:adf:fc41:: with SMTP id e1mr16021710wrs.406.1605881745043;
+        Fri, 20 Nov 2020 06:15:45 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id z189sm4642001wme.23.2020.11.20.06.15.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 05:45:14 -0800 (PST)
-Date:   Fri, 20 Nov 2020 08:45:10 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fri, 20 Nov 2020 06:15:44 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v12 4/4] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value
-Message-ID: <X7fIZrTD6dWB8+xI@shinobu>
-References: <20201109171140.GA14045@shinobu>
- <20201109172220.GI4077@smile.fi.intel.com>
- <20201109173107.GA14643@shinobu>
- <fe1cfe4c-e4d7-f9fb-1218-7a1d48e6f68a@xilinx.com>
- <20201110123538.GA3193@shinobu>
- <CACG_h5p84sKjDnK5xYRNjGnRzwsbjZ-76P-cC13LKx=7x=4KqQ@mail.gmail.com>
- <20201110174316.GA12192@shinobu>
- <20201110220004.GA25801@syed>
- <CACG_h5orr+smPGFdHbEDAgYS=RUJYZCvf10KjGkkvS9rkbzQFA@mail.gmail.com>
- <CAK8P3a07ohL40kSgj1EJ-EuQk5HUGyVGXE1acsg50PiKf7j=mA@mail.gmail.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Michael Nosthoff <buildroot@heine.tech>
+Subject: [libgpiod][PATCH] build: allow building with pre-v5.5 kernel headers
+Date:   Fri, 20 Nov 2020 15:15:39 +0100
+Message-Id: <20201120141539.11025-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3ntze8mJ8ASb++Up"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a07ohL40kSgj1EJ-EuQk5HUGyVGXE1acsg50PiKf7j=mA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---3ntze8mJ8ASb++Up
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+libgpiod v1.6 requires at least v5.5 linux kernel headers to build. This
+is because several new symbols have been defined in linux v5.5. In order
+to allow building with kernel headers v4.6 and on, let's check the
+presence of the new symbols and redefine them if needed.
 
-On Fri, Nov 20, 2020 at 02:26:35PM +0100, Arnd Bergmann wrote:
-> On Fri, Nov 13, 2020 at 5:52 PM Syed Nayyar Waris <syednwaris@gmail.com> =
-wrote:
-> > On Wed, Nov 11, 2020 at 3:30 AM Syed Nayyar Waris <syednwaris@gmail.com=
-> wrote:
-> > > On Tue, Nov 10, 2020 at 12:43:16PM -0500, William Breathitt Gray wrot=
-e:
-> > > > On Tue, Nov 10, 2020 at 10:52:42PM +0530, Syed Nayyar Waris wrote:
-> > > > > On Tue, Nov 10, 2020 at 6:05 PM William Breathitt Gray
-> > > > > <vilhelm.gray@gmail.com> wrote:
-> > > > > >
-> > > > > > On Tue, Nov 10, 2020 at 11:02:43AM +0100, Michal Simek wrote:
-> > > > > > >
-> > > > > > >
-> > > > > > > On 09. 11. 20 18:31, William Breathitt Gray wrote:
-> > > > > > > > On Mon, Nov 09, 2020 at 07:22:20PM +0200, Andy Shevchenko w=
-rote:
-> > > > > > > >> On Mon, Nov 09, 2020 at 12:11:40PM -0500, William Breathit=
-t Gray wrote:
-> > > > > > > >>> On Mon, Nov 09, 2020 at 10:15:29PM +0530, Syed Nayyar War=
-is wrote:
-> > > > > > > >>>> On Mon, Nov 09, 2020 at 03:41:53PM +0100, Arnd Bergmann =
-wrote:
-> > > > > > > >>
-> > > > > > > >> ...
-> > > > > > > >>
-> > > > > > > >>>>  static inline void bitmap_set_value(unsigned long *map,
-> > > > > > > >>>> -                                    unsigned long value,
-> > > > > > > >>>> +                                    unsigned long value=
-, const size_t length,
-> > > > > > > >>>>                                      unsigned long start=
-, unsigned long nbits)
-> > > > > > > >>>>  {
-> > > > > > > >>>>          const size_t index =3D BIT_WORD(start);
-> > > > > > > >>>> @@ -15,6 +15,10 @@ static inline void bitmap_set_value(u=
-nsigned long *map,
-> > > > > > > >>>>          } else {
-> > > > > > > >>>>                  map[index + 0] &=3D ~BITMAP_FIRST_WORD_=
-MASK(start);
-> > > > > > > >>>>                  map[index + 0] |=3D value << offset;
-> > > > > > > >>>> +
-> > > > > > > >>>> +               if (index + 1 >=3D length)
-> > > > > > > >>>> +                       __builtin_unreachable();
-> > > > > > > >>>> +
-> > > > > > > >>>>                  map[index + 1] &=3D ~BITMAP_LAST_WORD_M=
-ASK(start + nbits);
-> > > > > > > >>>>                  map[index + 1] |=3D value >> space;
-> > > > > > > >>>>          }
-> > > > > > > >>>
-> > > > > > > >>> Hi Syed,
-> > > > > > > >>>
-> > > > > > > >>> Let's rename 'length' to 'nbits' as Arnd suggested, and r=
-ename 'nbits'
-> > > > > > > >>> to value_width.
-> > > > > > > >>
-> > > > > > > >> length here is in longs. I guess this is the point of enti=
-re patch.
-> > > > > > > >
-> > > > > > > > Ah yes, this should become 'const unsigned long nbits' and =
-represent the
-> > > > > > > > length of the bitmap in bits and not longs.
-> > > > >
-> > > > > Hi William, Andy and All,
-> > > > >
-> > > > > Thank You for reviewing. I was looking into the review comments a=
-nd I
-> > > > > have a question on the above.
-> > > > >
-> > > > > Actually, in bitmap_set_value(), the intended comparison is to be=
- made
-> > > > > between 'index + 1' and 'length' (which is now renamed as 'nbits'=
-).
-> > > > > That is, the comparison would look-like as follows:
-> > > > > if (index + 1 >=3D nbits)
-> > > > >
-> > > > > The 'index' is getting populated with BIT_WORD(start).
-> > > > > The 'index' variable in above is the actual index of the bitmap a=
-rray,
-> > > > > while in previous mail it is suggested to use 'nbits' which repre=
-sent
-> > > > > the length of the bitmap in bits and not longs.
-> > > > >
-> > > > > Isn't it comparing two different things? index of array (not the
-> > > > > bit-wise-length) on left hand side and nbits (bit-wise-length) on
-> > > > > right hand side?
-> > > > >
-> > > > > Have I misunderstood something? If yes, request to clarify.
-> > > > >
-> > > > > Or do I have to first divide 'nbits' by BITS_PER_LONG and then co=
-mpare
-> > > > > it with 'index + 1'? Something like this?
-> > > > >
-> > > > > Regards
-> > > > > Syed Nayyar Waris
-> > > >
-> > > > The array elements of the bitmap memory region are abstracted away =
-for
-> > > > the covenience of the users of the bitmap_* functions; the driver
-> > > > authors are able to treat their bitmaps as just a set of contiguous=
- bits
-> > > > and not worry about where the division between array elements happe=
-n.
-> > > >
-> > > > So to match the interface of the other bitmap_* functions, you shou=
-ld
-> > > > take in nbits and figure out the actual array length by dividing by
-> > > > BITS_PER_LONG inside bitmap_set_value(). Then you can use your
-> > > > conditional check (index + 1 >=3D length) like you have been doing =
-so far.
-> > > >
-> > > > William Breathitt Gray
-> > >
-> > > Hi Arnd,
-> > >
-> > > Sharing a new version of bitmap_set_value(). Let me know if it looks
-> > > good and whether it suppresses the compiler warning.
-> > >
-> > > The below patch is created against the v12 version of bitmap_set_valu=
-e().
-> > >
-> > > -static inline void bitmap_set_value(unsigned long *map,
-> > > -                                    unsigned long value,
-> > > -                                    unsigned long start, unsigned lo=
-ng nbits)
-> > > +static inline void bitmap_set_value(unsigned long *map, unsigned lon=
-g nbits,
-> > > +                                   unsigned long value, unsigned lon=
-g value_width,
-> > > +                                   unsigned long start)
-> > >  {
-> > > -        const size_t index =3D BIT_WORD(start);
-> > > +        const unsigned long index =3D BIT_WORD(start);
-> > > +        const unsigned long length =3D BIT_WORD(nbits);
-> > >          const unsigned long offset =3D start % BITS_PER_LONG;
-> > >          const unsigned long ceiling =3D round_up(start + 1, BITS_PER=
-_LONG);
-> > >          const unsigned long space =3D ceiling - start;
-> > >
-> > > -        value &=3D GENMASK(nbits - 1, 0);
-> > > +        value &=3D GENMASK(value_width - 1, 0);
-> > >
-> > > -        if (space >=3D nbits) {
-> > > -                map[index] &=3D ~(GENMASK(nbits - 1, 0) << offset);
-> > > +        if (space >=3D value_width) {
-> > > +                map[index] &=3D ~(GENMASK(value_width - 1, 0) << off=
-set);
-> > >                  map[index] |=3D value << offset;
-> > >          } else {
-> > >                  map[index + 0] &=3D ~BITMAP_FIRST_WORD_MASK(start);
-> > >                  map[index + 0] |=3D value << offset;
-> > > -                map[index + 1] &=3D ~BITMAP_LAST_WORD_MASK(start + n=
-bits);
-> > > +
-> > > +               if (index + 1 >=3D length)
-> > > +                       __builtin_unreachable();
-> > > +
-> > > +                map[index + 1] &=3D ~BITMAP_LAST_WORD_MASK(start + v=
-alue_width);
-> > >                  map[index + 1] |=3D value >> space;
-> > >          }
-> > >  }
-> > >
-> > >
-> >
-> > Hi Arnd,
-> >
-> > What do you think of the above solution ( new version of
-> > bitmap_set_value() )? Does it look good?
->=20
-> Sorry for the late reply and thanks for continuing to look at solutions.
->=20
-> I don't really like the idea of having the __builtin_unreachable() in
-> there, since that would lead to even worse undefined behavior
-> (jumping to a random instruction) than the previous one (writing
-> to a random location) when invalid data gets passed.
->=20
-> Isn't passing the length of the bitmap sufficient to suppress the
-> warning (sorry I did not try myself)? If not, maybe this could
-> be a "BUG_ON(index + 1 >=3D length)" instead of the
-> __builtin_unreachable(). That way it would at least crash
-> in a well-defined way.
->=20
->      Arnd
+The new features won't work on kernels pre v5.5 but the build won't fail
+anymore.
 
-Hi Arnd,
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Michael Nosthoff <buildroot@heine.tech>
+---
+Downstream complains a lot about libgpiod v1.6 not building with kernel
+headers pre-v5.5. We've had a discussion on that over at buildroot[1].
 
-I don't think we need to worry about incorrect values being passed into
-bitmap_set_value(). This condition should never be possible in the code
-because the boundaries are required to be correct before the function is
-called.
+For libgpiod v2.0 we need to figure out a better way of dealing with new
+kernel features added after the release of v2.0 but for v1.6 let's just
+redefine the symbols if needed.
 
-This is the same reason other bitmap_* functions such as bitmap_fill()
-don't check the boundaries either: they are expected to be correct
-before the function is called; the responsibility is on the caller for
-ensuring the boundaries are correct.
+[1] http://lists.busybox.net/pipermail/buildroot/2020-October/295314.html
 
-Our motivation here is simply to silence the GCC warning messages
-because GCC is not aware that the boundaries have already been checked.
-As such, we're better off using __builtin_unreachable() here because we
-can avoid the latency of the conditional check entirely, whereas
-BUG_ON() would still have some amount -- albeit small given the
-unlikely() within.
+ configure.ac | 10 +++++++++-
+ lib/core.c   | 18 ++++++++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-William Breathitt Gray
+diff --git a/configure.ac b/configure.ac
+index cd337ff..6aef289 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -95,13 +95,21 @@ AC_CHECK_HEADERS([sys/sysmacros.h], [], [HEADER_NOT_FOUND_LIB([sys/sysmacros.h])
+ AC_CHECK_HEADERS([linux/gpio.h], [], [HEADER_NOT_FOUND_LIB([linux/gpio.h])])
+ AC_CHECK_HEADERS([linux/version.h], [], [HEADER_NOT_FOUND_LIB([linux/version.h])])
+ 
++AC_COMPILE_IFELSE([AC_LANG_SOURCE(
++#include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 6, 0)
++#error
++#endif
++)],
++[], [AC_MSG_ERROR(["libgpiod needs linux headers version >= v4.6.0"])])
++
+ AC_COMPILE_IFELSE([AC_LANG_SOURCE(
+ #include <linux/version.h>
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 5, 0)
+ #error
+ #endif
+ )],
+-[], [AC_MSG_ERROR(["libgpiod needs linux headers version >= v5.5.0"])])
++[], [AC_DEFINE([KERNEL_PRE_5_5], [], [We need to define symbols added in linux v5.5])])
+ 
+ AC_ARG_ENABLE([tools],
+ 	[AC_HELP_STRING([--enable-tools],
+diff --git a/lib/core.c b/lib/core.c
+index b964272..f49743b 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -22,6 +22,24 @@
+ #include <sys/types.h>
+ #include <unistd.h>
+ 
++#ifdef KERNEL_PRE_5_5
++#define GPIOLINE_FLAG_BIAS_PULL_UP		(1UL << 5)
++#define GPIOLINE_FLAG_BIAS_PULL_DOWN		(1UL << 6)
++#define GPIOLINE_FLAG_BIAS_DISABLE		(1UL << 7)
++
++#define GPIOHANDLE_REQUEST_BIAS_PULL_UP		(1UL << 5)
++#define GPIOHANDLE_REQUEST_BIAS_PULL_DOWN	(1UL << 6)
++#define GPIOHANDLE_REQUEST_BIAS_DISABLE		(1UL << 7)
++
++struct gpiohandle_config {
++	__u32 flags;
++	__u8 default_values[GPIOHANDLES_MAX];
++	__u32 padding[4]; /* padding for future use */
++};
++
++#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
++#endif /* KERNEL_PRE_5_5 */
++
+ enum {
+ 	LINE_FREE = 0,
+ 	LINE_REQUESTED_VALUES,
+-- 
+2.29.1
 
---3ntze8mJ8ASb++Up
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl+3yFIACgkQhvpINdm7
-VJJU3w/7BQIfNrrLiKetqTQuwEYNPKZHal+3sxcz7UKuUWiTJpMyK+93KdeEBGGg
-lCNyhWcssRpJS6aj0uLH45m4sb0VHiXBNFHRYMoLjwvZKha7bjiVoGtJ+z38y0Rh
-TEeYCbNVNw+UFxpl5qKBQfv9RDlbGCpt67OzYmqK2zLjCI5R1p+8W+FtFqhUh0Zy
-CX+4jlXtnkYWTca28pZEkFMmL4iR2yOcnQMQBAkLqJxvSaUH7/+suzi5wqM/Svkk
-uHOxi/RqU57V3pKuA1wxWGKquMQLVKZCUVy1+7aFdKA5fA0euUobxPxioyKg1r+z
-XaTQ+42frAUQ941JUgUYYxDmYBAdcPIOM/uTXA5QnXsto2Htztdqarc7QX67a88K
-Yfq8Fy5XrdW2mi9zNLZH26oYyl1dOkhMCppCwnlUMqnMEvxZifVzZgkuJpXuRUBT
-IQffZMix5+mu0xUrJ22f3XIw+EV7Qn9+3uwcIXD6TXdaBpGuF9eVwtxHmM0B+jL7
-ssAi9mDkBbbDSA67s5KHNEDd6bMail3hdHpvjvmPOem0YQGwzgyQ3X5d2I31DJ98
-3juYPYSWNTPCFpG3W8y//FAcnSeSBFFyV7kuGue+hYNpFuKA2bKUogUAjmEIFQwx
-+H0fhdBYTXFw/x2SAIiyT9rBh8dLZ1en5zj9R6hG/f5WE4TsEpk=
-=TIH+
------END PGP SIGNATURE-----
-
---3ntze8mJ8ASb++Up--
