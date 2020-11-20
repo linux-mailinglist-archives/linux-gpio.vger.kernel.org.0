@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A0DB2BA4CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 09:40:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9620D2BA4ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 09:43:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgKTIiS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Nov 2020 03:38:18 -0500
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:37812 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgKTIiQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 03:38:16 -0500
-Received: by mail-oo1-f67.google.com with SMTP id t10so2042888oon.4;
-        Fri, 20 Nov 2020 00:38:16 -0800 (PST)
+        id S1727196AbgKTIm4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Nov 2020 03:42:56 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45115 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgKTImz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 03:42:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k3so8026228otp.12;
+        Fri, 20 Nov 2020 00:42:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
         bh=UV+TC/nIwAvGxe27TfWZuXpBFdXk+Z+MJcbi20RbkeU=;
-        b=eIacIT8z2vDIUOLlvn7KuqiYOxLlnNo79paIpbcE7SVGFSffMVyrQUtTZPBxUTJp5K
-         ROZsMJLwxRCwWr6zqrwzw3BD/hD9T5BszMwbvWmzVsigkh177O0kAzrt30XhB04XuvUt
-         euCDJunZb4/gkLuI2YsnGbn0rDinyPtPSEMtavSfMzS/bYTN/Yeyr5G1F7X+To8Y+CcF
-         aDAw40UkidmSGt3pha3FcFcnkdsPLQZyOLFRZ9bkFulkfmHK2O8Re9sgCILOpFiwZR1C
-         E2jM5uEbqjYT/l6XWR3IJzc0yW4N2aRsVea09TH2rgDYLCQ+Pft5IH5Jfzq4mvDjuySA
-         J/EA==
-X-Gm-Message-State: AOAM532JESzbsTFITWUUnh14OPNEhpD9Y4wq/zWG6ENd0IxkEPj5l/Iu
-        YHRQpXF2lKrF0EmXgz+SURtwuH17CbumCUTICkA=
-X-Google-Smtp-Source: ABdhPJzR2//2OJGmAKmRurcCF5Pmnvd6Zw26PQX+HmnocDInNWRSJsXMuOxEhUFxFac+BI2+l6sGNVQCQfmxyanSYpo=
-X-Received: by 2002:a4a:e5ce:: with SMTP id r14mr13417862oov.11.1605861496120;
- Fri, 20 Nov 2020 00:38:16 -0800 (PST)
+        b=fiWGkgLbyGpgTRi0J1o4wNIfl4C73YYam9BpqYSR5dkwFdx+nMHlFazAikCPJJd68h
+         1lrBGPacCP7/CX6Vzk1gQxUrvnrMsuz56tdzu8VaRhYoEloIaBIOY7CIYoQIdrsEhYqY
+         ND9f+8lTTISZXx23tiJPr/xvpDlSoCcxE3dQxcDmecFNTeT6ozIktD8BETkCm0yp/00u
+         ZP60sUZ/34b1gkSPzJpPIAr5ufGpvbH3bFIeTsex+BekhL9P9ykJ2mXNzEqsLHdC7QEy
+         8xfRBqX6ICsmK+olv4jmCpYde+hGtlZ2xGlisX5h2ed1iPxxYrQqtBEoFSrlKs3mV2PS
+         lATg==
+X-Gm-Message-State: AOAM533C//VZN9lZNkJtj6ULQrjfMakHV1Tsce6cEE39isc18Lhok1Oq
+        hkgeQH8NYgx4aWQ6fe7jcmiBmve/e+/kZjOmT+C0QgR64nFbew==
+X-Google-Smtp-Source: ABdhPJysBuhRN2/Vvm7x22WAU1I04V4C8112Rod8kJhLnvdzDP3lGjsaBbZfL2ops0uWL5Lz3UoYlGYdfyZUK9xG+FA=
+X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr13409297oth.250.1605861774814;
+ Fri, 20 Nov 2020 00:42:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20201119130926.25692-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20201119130926.25692-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20201119130926.25692-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20201119130926.25692-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20201119130926.25692-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20201119130926.25692-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Nov 2020 09:38:05 +0100
-Message-ID: <CAMuHMdV+FDJ2pFyC0rGgOS3LwpA-dg8siTiA6gCjNLr05iDSGw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pinctrl: renesas: r8a77951: Add QSPI[01] pins, groups
+Date:   Fri, 20 Nov 2020 09:42:43 +0100
+Message-ID: <CAMuHMdVr6u=QOmN-OGmfZQegcaDLU=6tCRNy0kYwxiq8QiN80g@mail.gmail.com>
+Subject: Re: [PATCH 3/4] pinctrl: renesas: r8a7796: Add QSPI[01] pins, groups
  and functions
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
