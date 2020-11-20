@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 444F92BB1AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 18:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A49972BB1B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 18:48:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgKTRrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Nov 2020 12:47:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        id S1728944AbgKTRsW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Nov 2020 12:48:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728816AbgKTRrC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 12:47:02 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA24DC0613CF;
-        Fri, 20 Nov 2020 09:47:02 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id v21so3966079plo.12;
-        Fri, 20 Nov 2020 09:47:02 -0800 (PST)
+        with ESMTP id S1728104AbgKTRsW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 12:48:22 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C8FC0613CF;
+        Fri, 20 Nov 2020 09:48:21 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id w6so8583741pfu.1;
+        Fri, 20 Nov 2020 09:48:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uRfbcvxICboodQKlXinezNDbNPHvNn9T8ybYNIuKq0c=;
-        b=QrKRFlMzxWnE/Ue3q/KmittrUjJjuEF4OPURcyVq7nhRqz0JfxrgqLN6zQh+gHym+9
-         k7rrN2qLtBi6jxTox7VWExWFFitaOV5Y2ltFx8CjyIxu0YM2sAppHoBXBRdvgYqs/lQE
-         qBrhzi7kgGGr+Wreg+KjKM4RPlXsB6E16qVc4mHT5i4Comk6cSRNNVdYPW76IrAmfBSe
-         7SV9AVwG9+EcrA5nG81N1NlgMdNmZLicVZlhr7PsN733TGKOfjalgOWGO9HIfT64VKcC
-         tn7LGnands5CUXs0q78EzAtbpVkHB1EVSxeyg5tkbBvDRXPha4zokV3Ml95H5qCUfNZE
-         iRvg==
+        bh=Yy8mAP2XRxcUpsdCsTm+KdTXMmpuQJot11SefIetIN0=;
+        b=VuHTdBnuHwGkq10ElqUJ8YPGsbNvZ5vJJtt345M1qoUcGa3PYxR4lS7NACyEa+776y
+         25Cok+kYcBGNapvo76mDOaCx8R2BhsQd67Zihv5M92ISuwt+n+e197ksp/H9yZz5VV+/
+         ADTwNtS4gbRFYkl+arTBx2OS0264zqmjJ2ndkSB/48sDHXwgG4IwXqArceJsjSnxlWxf
+         sUjVZ4YMgL5Aw4nKwy3LDKR75YoSGXaAZCzQ/kskAh7Q9IFmzf/ggVl5bZkIqyDkWZ0t
+         9aIWKV1ISFUpBCLK2/LFkJgp345efuZZCPzuoptlJ4cPGAB6IPJ6YDMAr0H3vX9kBXfW
+         vSNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uRfbcvxICboodQKlXinezNDbNPHvNn9T8ybYNIuKq0c=;
-        b=aXXs39MLWlu/s1IpstfRtATC3ZCSYKg4aOYI7k/F2iTkwCPnbz3UZBT9+KaJAuXUI1
-         lU4OsWAwV+vFHh0j4gTJ1qBY+JJ/LQk9/iork8bEaz9Fgpj/7ug9e1jWWcZwHYwVBCqF
-         SJF5YvUhbV2yWnoGQNwkzJVseigTn0oF7vpCNymgB5FGMZW/k68zdD8RdpF+Mf57qGX3
-         7XzwJsew37fisnNIsp4wLXYESejQIBnbBYC2/axz4ipOC4HjhZKLzNm00ckzD7vDi25p
-         qYz3ldjzWEcN8b69wAK1p3YdJP2UPwKtFUrLNsWdVx0BMq1uBQ8q2sZZSBEcPIaqdDqx
-         Rmqg==
-X-Gm-Message-State: AOAM530f2dg5lDcoMOKndhxkHOkfSDnEJAMq3/1qcDj/QMZA7nkezYwQ
-        fISDQpkTcIbpRSqnfHC+9+w=
-X-Google-Smtp-Source: ABdhPJwxzFrhgYSWjQYVZb3/YDn5TAj02ZE2o3DR/INcrJCXODyEyqj+UWac7dctbvBTSIVUSUmVvQ==
-X-Received: by 2002:a17:902:868e:b029:d7:eb0d:79e8 with SMTP id g14-20020a170902868eb02900d7eb0d79e8mr14536568plo.12.1605894422031;
-        Fri, 20 Nov 2020 09:47:02 -0800 (PST)
+        bh=Yy8mAP2XRxcUpsdCsTm+KdTXMmpuQJot11SefIetIN0=;
+        b=f51oCExfbge1ttSQVFbxJ4bgBWTDEp1Q6zMLftPBdFi2nBHeQ7Ym/ftaPPkSTC6eLR
+         XGzeOUGWMwsk4uQSoPwSMN3ExLLiMYhtvUkJ4r/nmwG+loXyqSscaAihaBVCUwECYais
+         XK4JEhUHnilo7XBPK2C+rDVyS7BqKuHL3uX015Q6qLBT3q0ILhMcBB1+uKWmYjAJXIax
+         IVCdGu84DS0cunv5Bovl47Uzuk1QWSKzN2VDaMrg8m1lvtFTW4PETwvpfpu8uORHd0/H
+         OiwxjFdUe7kQ5gyMs6QY1BNyDXAPCrvv3HuBAgN2b/i121+qAUASnaXVy3hs/gXkxWwb
+         vAwA==
+X-Gm-Message-State: AOAM532iSUBYDy1zE/VWmb4RsYhX5paWK0EriMMeCG2bVZkw/bD61L6c
+        oRkmJnjgnIBYdSo0YHYdEoE=
+X-Google-Smtp-Source: ABdhPJypIr3JQuMN0qO4OWeuGSIuRkEhb9DiluX5rcaHCu1V7dwikNflgns/SgKwMc7WyNCqdpQDvw==
+X-Received: by 2002:a17:90b:38e:: with SMTP id ga14mr10935553pjb.45.1605894501500;
+        Fri, 20 Nov 2020 09:48:21 -0800 (PST)
 Received: from syed ([2401:4900:2e82:cfda:fc82:287b:3e19:db98])
-        by smtp.gmail.com with ESMTPSA id k8sm4394747pfh.6.2020.11.20.09.46.57
+        by smtp.gmail.com with ESMTPSA id 184sm4533205pfc.28.2020.11.20.09.48.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Nov 2020 09:47:01 -0800 (PST)
-Date:   Fri, 20 Nov 2020 23:16:46 +0530
+        Fri, 20 Nov 2020 09:48:20 -0800 (PST)
+Date:   Fri, 20 Nov 2020 23:18:05 +0530
 From:   Syed Nayyar Waris <syednwaris@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
         bgolaszewski@baylibre.com, michal.simek@xilinx.com,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] gpio: xilinx: Modify bitmap_set_value() calls
-Message-ID: <c509c26eb9903414bd730bdd344b7864aedaa6f1.1605893642.git.syednwaris@gmail.com>
+Subject: [PATCH 4/4] gpio: xilinx: Add extra check to see if sum of widths
+ exceed 64
+Message-ID: <5581771d86df1abaf33545ccd60caf4db7ad3c5e.1605893643.git.syednwaris@gmail.com>
 References: <cover.1605893641.git.syednwaris@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -66,43 +67,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Modify the bitmap_set_value() calls. bitmap_set_value()
-now takes an extra bitmap width as second argument and the width of
-value is now present as the fourth argument.
+Add extra check to see if sum of widths does not exceed 64. If it
+exceeds then return -EINVAL alongwith appropriate error message.
 
 Cc: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
 ---
- drivers/gpio/gpio-xilinx.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-xilinx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index ad4ee4145db4..05dae086c4d0 100644
+index 05dae086c4d0..a2e92a1cf50b 100644
 --- a/drivers/gpio/gpio-xilinx.c
 +++ b/drivers/gpio/gpio-xilinx.c
-@@ -151,16 +151,16 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 	spin_lock_irqsave(&chip->gpio_lock[0], flags);
- 	spin_lock(&chip->gpio_lock[1]);
+@@ -340,6 +340,12 @@ static int xgpio_probe(struct platform_device *pdev)
  
--	bitmap_set_value(old, state[0], 0, width[0]);
--	bitmap_set_value(old, state[1], width[0], width[1]);
-+	bitmap_set_value(old, 64, state[0], width[0], 0);
-+	bitmap_set_value(old, 64, state[1], width[1], width[0]);
- 	bitmap_replace(new, old, bits, mask, gc->ngpio);
- 
--	bitmap_set_value(old, state[0], 0, 32);
--	bitmap_set_value(old, state[1], 32, 32);
-+	bitmap_set_value(old, 64, state[0], 32, 0);
-+	bitmap_set_value(old, 64, state[1], 32, 32);
- 	state[0] = bitmap_get_value(new, 0, width[0]);
- 	state[1] = bitmap_get_value(new, width[0], width[1]);
--	bitmap_set_value(new, state[0], 0, 32);
--	bitmap_set_value(new, state[1], 32, 32);
-+	bitmap_set_value(new, 64, state[0], 32, 0);
-+	bitmap_set_value(new, 64, state[1], 32, 32);
- 	bitmap_xor(changed, old, new, 64);
- 
- 	if (((u32 *)changed)[0])
+ 	chip->gc.base = -1;
+ 	chip->gc.ngpio = chip->gpio_width[0] + chip->gpio_width[1];
++
++	if (chip->gc.ngpio > 64) {
++		dev_err(&pdev->dev, "invalid configuration: number of GPIO is greater than 64");
++		return -EINVAL;
++	}
++
+ 	chip->gc.parent = &pdev->dev;
+ 	chip->gc.direction_input = xgpio_dir_in;
+ 	chip->gc.direction_output = xgpio_dir_out;
 -- 
 2.29.0
 
