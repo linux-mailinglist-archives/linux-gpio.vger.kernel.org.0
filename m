@@ -2,87 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 012EC2BA639
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 10:32:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B8C72BA663
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Nov 2020 10:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgKTJbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Nov 2020 04:31:16 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:55334 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727591AbgKTJbK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 04:31:10 -0500
-X-UUID: aaaa45181b4c4c9092ec3788acec7136-20201120
-X-UUID: aaaa45181b4c4c9092ec3788acec7136-20201120
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 306028507; Fri, 20 Nov 2020 17:31:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 20 Nov 2020 17:31:02 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 20 Nov 2020 17:31:01 +0800
-From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
-To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <sean.wang@kernel.org>
-CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
-        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
-        <jg_poxu@mediatek.com>, <biao.huang@mediatek.com>,
-        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
-        <sean.wang@mediatek.com>, <seiya.wang@mediatek.com>,
-        <sj.huang@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH] pinctrl: fix low level output voltage issue
-Date:   Fri, 20 Nov 2020 17:30:58 +0800
-Message-ID: <20201120093058.7248-2-zhiyong.tao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20201120093058.7248-1-zhiyong.tao@mediatek.com>
-References: <20201120093058.7248-1-zhiyong.tao@mediatek.com>
+        id S1727543AbgKTJjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Nov 2020 04:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbgKTJjg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Nov 2020 04:39:36 -0500
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 769D5C0613CF;
+        Fri, 20 Nov 2020 01:39:36 -0800 (PST)
+Received: by mail-yb1-xb41.google.com with SMTP id s8so7969472yba.13;
+        Fri, 20 Nov 2020 01:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fFPfmPF5+IB1CSCpeDv7kPz4TOEhwS34Jbv+FQyjbaE=;
+        b=lSRqU0HuqlLznHw5Y4Tzuk7duPPcLptsUvZ++NYrpcw0k378LQNKqI98Ij0q22z04O
+         p8aTLxlfd66mCTL1QZ0+Ho/YSnraRtTphPl7jUnIgDZC5hxbcnwmUoKWevFFnTbvmumw
+         l7UXAXeobmeEFvG1rMaDnWoukISnpW5W2fSwjIrM8LGY3wZrulTKdRUuA9OKNeqnFtLq
+         caVy+w0V57jMil8jZEe+qnfVfQ//i6b8Whptjj1QbWP4GkZZIhSR5MhQppPfEllnoVjS
+         pzHtNS8zzct4Kj86sHTGCH9jWcwj+Ta7zAOadgglVKr8i3YVeHjjr3R6xrInvIstbJ4J
+         BgIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fFPfmPF5+IB1CSCpeDv7kPz4TOEhwS34Jbv+FQyjbaE=;
+        b=Ugr+cubYtMHyVKWHmWbxKNmfkFARlf9/Dr+VEZa+XB1k0VONGJCjbrjc+LMV3/X9x5
+         wH9rI5Nk9rTJooAbStHGMsmk4rgdGWPqaFQXcMP0FAMTTcO0J7YFbq0QfQgTw543HhaI
+         q+gKLQZDJVzXHH+Px7lF76epyuloaoAFHvIffBuwUIqQsfXgzWyKfNbC+Ix5X3N3tZ8W
+         DLD/vO862S1Kk8T1Ns11YSdtGI3dFk7Ls/SQJVsZYcz16yvg41Uv+QoHqzeKOkjLX8+6
+         5fJJHxTe4ukeQoaS1T9ZU7IMScmSVqc/qxY6TNhwmA+iZTvcMPYXLkZ9+rMWiIhNQmbi
+         l0lQ==
+X-Gm-Message-State: AOAM531qCFSGg3crxiLNedQN2H6Yu4TCnY5TFVnv7P7WVBqzdVyaG7vh
+        wR44O5pyO8d8SoTLYmPuevV7H/rFBWJcgX+8BP4=
+X-Google-Smtp-Source: ABdhPJywsq3Uz+rYF+hGDahyM01ugd8IVS1TQjg5eSb36+IlyId+U+B0N8Em2nDVUxaVgzM9mBR9ceUjSeS9ItrKmzs=
+X-Received: by 2002:a25:209:: with SMTP id 9mr26638905ybc.127.1605865175851;
+ Fri, 20 Nov 2020 01:39:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20201119130926.25692-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20201119130926.25692-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUGqkqZVY9YZ1Xo=uq_4kn3ybh50VMSNBCLOSKWyDd3kw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUGqkqZVY9YZ1Xo=uq_4kn3ybh50VMSNBCLOSKWyDd3kw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 20 Nov 2020 09:39:09 +0000
+Message-ID: <CA+V-a8uNsb3RGnNx8w3amhJCpOKk2df==9CbYPuermmUJM0y_w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: renesas: r8a77990: Add QSPI[01] pins, groups
+ and functions
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch is used to fix low level output voltage issue.
-A pin is changed from input pull-up to output high.
-The Dout value of the pin is default as 0.
-If we change the direction of the pin before the dout value of the pin,
-It maybe produce a low level output voltage between "input pull-up" and
-"output high".
+Hi Geert,
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thank you for the review.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 623af4410b07..039ce9be19c5 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -247,13 +247,13 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SR, !!arg);
- 		break;
- 	case PIN_CONFIG_OUTPUT:
--		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
--				       MTK_OUTPUT);
-+		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO,
-+				       arg);
- 		if (err)
- 			goto err;
- 
--		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO,
--				       arg);
-+		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
-+				       MTK_OUTPUT);
- 		break;
- 	case PIN_CONFIG_INPUT_SCHMITT:
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
--- 
-2.18.0
+On Fri, Nov 20, 2020 at 9:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> On Thu, Nov 19, 2020 at 2:09 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add pins, groups and functions for QSPIO[01].
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-pinctrl-for-v5.11...
+>
+> > --- a/drivers/pinctrl/renesas/pfc-r8a77990.c
+> > +++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
+> > @@ -2810,6 +2810,57 @@ static const unsigned int pwm6_b_mux[] = {
+> >         PWM6_B_MARK,
+> >  };
+> >
+> > +/* - QSPI0 ------------------------------------------------------------------ */
+> > +static const unsigned int qspi0_ctrl_pins[] = {
+> > +       /* SPCLK, SSL */
+>
+> ... with the missing QSPI0_ prefix added...
+>
+Argh missed that.
 
+> > +       RCAR_GP_PIN(2, 0), RCAR_GP_PIN(2, 5),
+> > +};
+> > +static const unsigned int qspi0_ctrl_mux[] = {
+> > +       QSPI0_SPCLK_MARK, QSPI0_SSL_MARK,
+> > +};
+> > +static const unsigned int qspi0_data2_pins[] = {
+> > +       /* QSPI0_MOSI_IO0, QSPI0_MISO_IO1 */
+> > +       RCAR_GP_PIN(2, 1), RCAR_GP_PIN(2, 2),
+> > +};
+> > +static const unsigned int qspi0_data2_mux[] = {
+> > +       QSPI0_MOSI_IO0_MARK, QSPI0_MISO_IO1_MARK,
+> > +};
+> > +static const unsigned int qspi0_data4_pins[] = {
+> > +       /* QSPI0_MOSI_IO0, QSPI0_MISO_IO1 */
+> > +       RCAR_GP_PIN(2, 1), RCAR_GP_PIN(2, 2),
+> > +       /*  QSPI0_IO2, QSPI0_IO3 */
+>
+> ... and the bogus space dropped.
+>
+Thanks for taking care of it.
+
+Cheers,
+Prabhakar
+
+> > +       RCAR_GP_PIN(2, 3), RCAR_GP_PIN(2, 4),
+> > +};
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
