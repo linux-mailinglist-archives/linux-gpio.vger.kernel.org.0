@@ -2,134 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 335032BC946
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Nov 2020 21:37:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 652252BC9B9
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Nov 2020 22:50:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgKVUgN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 Nov 2020 15:36:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
+        id S1726502AbgKVVtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 Nov 2020 16:49:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727637AbgKVUgM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Nov 2020 15:36:12 -0500
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A97FC0613D3;
-        Sun, 22 Nov 2020 12:36:10 -0800 (PST)
-Received: by mail-yb1-xb2f.google.com with SMTP id 10so14048150ybx.9;
-        Sun, 22 Nov 2020 12:36:10 -0800 (PST)
+        with ESMTP id S1726339AbgKVVtK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Nov 2020 16:49:10 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46477C0613CF;
+        Sun, 22 Nov 2020 13:49:10 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id v12so13023047pfm.13;
+        Sun, 22 Nov 2020 13:49:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GG13N+h9bYKW0tA8PzZdEh0PqD5/qSPuWfMm4/MLZZE=;
-        b=tX7AFJY3IoP+sTWjLWjwUeA0EiMqyjgmEMGUK52Uheybmur4GieXYHjq/4452d4+Q2
-         I9IJc2W+KgP7eM5cLMrffBSaL1fq5VPLYq7a7Nqy7aqiJs+SWc7hYJy9lsWlIs20dLH2
-         W28Iwaw2K1E1/9bR59jMmk/7Gq8vv14a82SqbrX8Cr26/AWqo5ergIUL6PfX6EI1DxrF
-         H3tDAymEGdy6lnWgT39rAP3JOfP6UnfKa9FSSCeE7ggKiNT9+2hZ/9zdGiTOU+6HH+d5
-         TmFQQAuEaRP9Z2Bh9bU0txdUhaZCbT+Ezs+qExtvq1zOJlrZzRYF6kJpZnKXIPWyTN/2
-         bJqw==
+        bh=+kGNoLLnyvYj54sIYNg+yEQxr8OU1H3KIfMv0EVZHNc=;
+        b=gAPL0Zd0tcbTyPHShleI5QTPJM5FZ8BZeX/kKAVCiMn6xPLCNzqV4Bv+1hj0wPmP0e
+         bEYviEFF22VqkLh0zJ0/qqyNjH2Nw940qoYeADdw6FZURkBBv40r1e9vq2WWM2auqRgs
+         XFyhC5bc3cfagFkKLuc5l1Y1/bckw8yQFauK7GeTWVaMa7fWJPy8ufX1sFl/OgjbpjWa
+         rpU3Lg+n/0ItdLcX3gz36lFPlT/yjYJ2W80K2t1j/3/LauvAFyOCEL6/5OnzM24vnvfH
+         sttEq/Bd34zpVetEXIvwgYN2FJWENbEf7i2q8WGtSsTMxalQBaxW2uzBQlT1b5XWB8oo
+         lzDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GG13N+h9bYKW0tA8PzZdEh0PqD5/qSPuWfMm4/MLZZE=;
-        b=cJfjc+j5slxPJthWAzX8B2rKYrwB5xpjQ+veY6dlcvnvHvWXN4pGZ5nOhwkwrbgOpe
-         wswNL7rRwNIhUcponoGCjSbguzv+CwxcD01lrqGgYDBrXDflfjyNiv6hZunD3GhpPl3D
-         1lxEqgUzrMN1gWnS/Us5xnk5Nkit3Ouo29JBvj+poY3mAEe4rsIpu95pcVmU2//LGeGz
-         YvMXoL4AEKkN8UYks8ZHGK35KzC1nOCkCltug4kSBr5jauBhFHAKbd9844otAsupDU1R
-         2VXLIpg4k4B3GNggLw2OGG7McXjUJ4NsG6g/mEqlKuFq0yNig3IEUFI/+wUcwhlk+dCx
-         8EMQ==
-X-Gm-Message-State: AOAM532pxbXaeBX/VOkcgBR/mHHA2Ye/5KC0aTKAoxoVPE6mZi/LceAi
-        nUuMkdbFliZ69jO1+Z3ynceay3eoOITWkRPMaBg=
-X-Google-Smtp-Source: ABdhPJzCLkP7XKvI+ogPcqXNjFlbBz0ulixnxLa8L+LTJiC1sb757UHHSouM0vJ9LX/4+Ocy8hzM6Anb9s4lPpy7cZY=
-X-Received: by 2002:a25:6986:: with SMTP id e128mr4956056ybc.93.1606077369721;
- Sun, 22 Nov 2020 12:36:09 -0800 (PST)
+        bh=+kGNoLLnyvYj54sIYNg+yEQxr8OU1H3KIfMv0EVZHNc=;
+        b=Y3e9yqcuHoVLKIzkt5DTU/1p/cv+a/puLnPVkwt/Bn+ONpoofUk4eY3AwTYdPUnw/x
+         n/xha4Tq+vMseAj+XnnA0f6xA3tlQKW1l0DRjcz1ubsMz1qglu0ZDGOEmmFLFfJpxwE1
+         RsepUcnCt6I3OzL+tXsrpBkhTnr49AzLxZZqa2eO2iTqb/dCmPA0rw/6/y+9aRo1xRkT
+         Cl8oNoB6Kq7hjLGU+c852HpkGs34a4AfXDkcKLVt7movs0A5Fhi/x4aiHKPXWpNARtJc
+         3NFSk3NNm8ho39lhnwEQVai5flvtdGby0O41A/vF4fwk/PI39xo47GOy8oEWc23rSROR
+         DZ/w==
+X-Gm-Message-State: AOAM530V1XlU7P2bQeSGnLGv7c5iHEjvHf6bpQjWqNybX+IRo8iHOwhY
+        ynDLePnPgGTE6+T1i3VnaeD1E5vXfW099fKcQb8K76iMK+fFm7O4
+X-Google-Smtp-Source: ABdhPJxV6lA6ghtou6EpKCE18fdMtuWx0iK+rbIJw372e6dZDjyUjLMB9YO7mnJJ6TdK8ZJQPw4lxQtRj7hrg4sLFHE=
+X-Received: by 2002:a62:55c6:0:b029:197:f982:e980 with SMTP id
+ j189-20020a6255c60000b0290197f982e980mr4549251pfb.40.1606081749791; Sun, 22
+ Nov 2020 13:49:09 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
-In-Reply-To: <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sun, 22 Nov 2020 21:35:58 +0100
-Message-ID: <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+References: <20201122092548.61979-1-gnurou@gmail.com> <CAAVeFuJ+j5qDq457h-LESmd5CY+rXUFQqGpn960S2Cz0d1O0Jw@mail.gmail.com>
+In-Reply-To: <CAAVeFuJ+j5qDq457h-LESmd5CY+rXUFQqGpn960S2Cz0d1O0Jw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 22 Nov 2020 23:48:52 +0200
+Message-ID: <CAHp75Vf7OaaZZhsGg=PVQfVXCdfKozZzizdUBQOQ-YNXVySwXQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: fix typo and unclear legacy API section
+To:     Alexandre Courbot <gnurou@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 7:22 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+On Sun, Nov 22, 2020 at 11:31 AM Alexandre Courbot <gnurou@gmail.com> wrote:
 >
-> Well, it's a problem in an error leg, sure, but it's not a really
-> compelling reason for a 141 patch series, is it?  All that fixing this
-> error will do is get the driver to print "oh dear there's a problem"
-> under four more conditions than it previously did.
+> On Sun, Nov 22, 2020 at 6:25 PM Alexandre Courbot <gnurou@gmail.com> wrote:
+> >
+> > The "Interacting With the Legacy GPIO Subsystem" of the documentation
+> > was unclear at best, and even included a sentence that seems to say the
+> > opposite of what it should say about the lifetime of the return value of
+> > the conversion functions.
+> >
+> > Try to clarify things a bit and hopefully make that section more
+> > readable.
+> >
+> > Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
 >
-> We've been at this for three years now with nearly a thousand patches,
-> firstly marking all the fall throughs with /* fall through */ and later
-> changing it to fallthrough.  At some point we do have to ask if the
-> effort is commensurate with the protection afforded.  Please tell me
-> our reward for all this effort isn't a single missing error print.
+> Realized after sending this should also have a
+>
+> Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> Apologies for the omission Andy!
 
-It isn't that much effort, isn't it? Plus we need to take into account
-the future mistakes that it might prevent, too. So even if there were
-zero problems found so far, it is still a positive change.
+NP
 
-I would agree if these changes were high risk, though; but they are
-almost trivial.
+And perhaps
+BugLink: https://stackoverflow.com/q/64455505/2511795
 
-Cheers,
-Miguel
+>
+> > ---
+> >  Documentation/driver-api/gpio/consumer.rst | 18 ++++++++++--------
+> >  1 file changed, 10 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/driver-api/gpio/consumer.rst
+> > index 423492d125b9..173e4c7b037d 100644
+> > --- a/Documentation/driver-api/gpio/consumer.rst
+> > +++ b/Documentation/driver-api/gpio/consumer.rst
+> > @@ -440,18 +440,20 @@ For details refer to Documentation/firmware-guide/acpi/gpio-properties.rst
+> >
+> >  Interacting With the Legacy GPIO Subsystem
+> >  ==========================================
+> > -Many kernel subsystems still handle GPIOs using the legacy integer-based
+> > -interface. Although it is strongly encouraged to upgrade them to the safer
+> > -descriptor-based API, the following two functions allow you to convert a GPIO
+> > -descriptor into the GPIO integer namespace and vice-versa::
+> > +Many kernel subsystems and drivers still handle GPIOs using the legacy
+> > +integer-based interface. It is strongly recommended to update these to the new
+> > +gpiod interface. For cases where both interfaces need to be used, the following
+> > +two functions allow to convert a GPIO descriptor into the GPIO integer namespace
+> > +and vice-versa::
+> >
+> >         int desc_to_gpio(const struct gpio_desc *desc)
+> >         struct gpio_desc *gpio_to_desc(unsigned gpio)
+> >
+> > -The GPIO number returned by desc_to_gpio() can be safely used as long as the
+> > -GPIO descriptor has not been freed. All the same, a GPIO number passed to
+> > -gpio_to_desc() must have been properly acquired, and usage of the returned GPIO
+> > -descriptor is only possible after the GPIO number has been released.
+> > +The GPIO number returned by desc_to_gpio() can safely be used as a parameter of
+> > +the gpio\_*() functions for as long as the GPIO descriptor `desc` is not freed.
+> > +All the same, a GPIO number passed to gpio_to_desc() must first be properly
+> > +acquired using e.g. gpio_request_one(), and the returned GPIO descriptor is only
+> > +considered valid until that GPIO number is released using gpio_free().
+> >
+> >  Freeing a GPIO obtained by one API with the other API is forbidden and an
+> >  unchecked error.
+> > --
+> > 2.29.2
+> >
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
