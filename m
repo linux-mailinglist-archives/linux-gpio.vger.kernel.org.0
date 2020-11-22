@@ -2,113 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D68CA2BC4B3
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Nov 2020 10:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57E6E2BC4B6
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Nov 2020 10:29:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbgKVJ0B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 Nov 2020 04:26:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60766 "EHLO
+        id S1727306AbgKVJ3A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 Nov 2020 04:29:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbgKVJ0A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Nov 2020 04:26:00 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF15BC0613CF;
-        Sun, 22 Nov 2020 01:25:59 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id q34so11400097pgb.11;
-        Sun, 22 Nov 2020 01:25:59 -0800 (PST)
+        with ESMTP id S1726741AbgKVJ27 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Nov 2020 04:28:59 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50DE4C0613CF
+        for <linux-gpio@vger.kernel.org>; Sun, 22 Nov 2020 01:28:59 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id d20so3725013lfe.11
+        for <linux-gpio@vger.kernel.org>; Sun, 22 Nov 2020 01:28:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yLNf64cxRwyCkQ3UwwzNzMfSfN7sMJmJohesR2Q1JJA=;
-        b=VSGqEpxg+T1nAqFaEn3HalChOB0AZCOeaimtpZAWMCeItGIKb+L2eqvE2LdZE+6aUS
-         wjVBN338VwTR7dCF0NjdZYHmv4PRFQoUPbXhCvQk/ZMSCLPGrSS2XUXd9ZjzbgX5ES48
-         QqJH8cMowiK/6Q8aWHzGsDyOX187lpXhGNWmf6L+R5jgbvdCFv4IMDmK7uCw0RZwk1xr
-         XGv7SAaRVsi+a90swe90WjJNoskwf9M01bU6DLqzkNe7u1BtoLPx8B0QKCrJgfUv9F4c
-         57llE+egVUG0ldkzKVALREUnxgOEg721fHLRWG/l9CtQsmBy+fTR56VIAiHcoSE52+9J
-         XZLQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sXt5vpx40ce9lr20UD80jY3Rhq/h8sioxR/mHZJTx6Y=;
+        b=szeguPXXuRNBNLMq96cAA5vnTJ4ZYjc8EfxJk5hoaL8+bNSYEu4/zw8AdZZu8MWYog
+         kwDfBdI8T5layxjl+DE5DpYrx41xHSdKdPxO5rCkx9+AiY4R6vfhFZv7+lrKVE6PxSIb
+         iJnF7zKv2G9Vu1aDS3aYyrANesjV5HfZkuZ3SE1xAHf8+d0d1NMfsaPTnQwGaawZ/zer
+         y2YdXj6b7VVdzafI+gWCAO3r5uXyXQyrHntawGKfNGEVIIr7pBJpXHYkqiAhg1kUX6ts
+         DWcaFuHioytobnkuDVoIYdmA6MNzhtq+DtwOv3h+VnRgAewCgOSGAYaY7VxBlJzWy3Sy
+         bRyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yLNf64cxRwyCkQ3UwwzNzMfSfN7sMJmJohesR2Q1JJA=;
-        b=sK8joSUKnNgJmwQEN05r1+kR9O2uy1AXR8Jkub6VSB6iZOEOXPrKdpK6ia+qWb0Tqh
-         gdma27AchDL7Fjca5+x0qrOY15pF0fX7p2nHXnWP29tPumCiXJngg0XQxuUC7cXc2jDf
-         PlwxALmOKdJhS43GXDu3nktG6DqwZzzb3WoDaQl53LxYHYND+DOcFv7nRDennUA8tG0z
-         qwPrZHLoJy5uHXrakERvwmM/UOKhRCM/+cqwGozTqMm6zR1lQS4bLd9P2oKwZeMSzeWG
-         Tafu2UuW+DY8bw4HGOllO0HnizrpsVivBzgV4VGx65DCkJwoKjnkm1DtGPeSZl2s+na9
-         2Jeg==
-X-Gm-Message-State: AOAM532EvKa5pOc14AB/C31+VKx0ZkXCt8JuBeoZR/Dc7fVP557sYFIZ
-        IXQV94NKqG8zfARsR0VcAM8=
-X-Google-Smtp-Source: ABdhPJzypt4O1tQ6sk09hDVizpeDqRCGRkN6F1rnvELSMIOyTUDFOtfBzn3iJtQrjkPjik5L4WoYEg==
-X-Received: by 2002:a62:7ac2:0:b029:18b:c5bb:303d with SMTP id v185-20020a627ac20000b029018bc5bb303dmr20950694pfc.71.1606037159002;
-        Sun, 22 Nov 2020 01:25:59 -0800 (PST)
-Received: from localhost.localdomain ([240d:1a:8f0:6c00:89cb:88d1:b6b2:3345])
-        by smtp.gmail.com with ESMTPSA id k23sm3643090pfk.50.2020.11.22.01.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Nov 2020 01:25:57 -0800 (PST)
-From:   Alexandre Courbot <gnurou@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
-Subject: [PATCH] Documentation: gpio: fix typo and unclear legacy API section
-Date:   Sun, 22 Nov 2020 18:25:48 +0900
-Message-Id: <20201122092548.61979-1-gnurou@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sXt5vpx40ce9lr20UD80jY3Rhq/h8sioxR/mHZJTx6Y=;
+        b=Rq6F1BB7228iGCFY6eCGqS6A/kzGqwtYoRJHX0HNQm2/KjlPKiswSYFfD+W7Kw1gjT
+         SjQg8lBq9H3Kfm9jHTNyjNd2uPbaYKq4u0WZBq+HzQSX1r5TLac7rudNL09H+eDivp1C
+         hrteO0xhIYpAtJtbmJFC8JwID07ksFTbYub/Q3HeQlYn0oO+BJwqgr5i7RR99NaaUjz2
+         mgx+gQUhyS1sHX03hJ3K+H8+sFN9LVTO7CjIHhLLU3kQSjju7jX4CjdbJIJXKtqqkTkx
+         5np9jJ/Yc/rQGvaY9G+mSYxzYyts79JlXR773s4qsKaWJ15734iwr1ocLfwUt8Jq/UZA
+         JpnQ==
+X-Gm-Message-State: AOAM533V2swWRV4TKPtCwQJ0lDwju0jxLI2l17YP2DbxA4sE+lXUeMl8
+        VauKnPfzkHFKpgBlEKgoZH8LUN8u6w5n4RHsz8ZljZ++8jgjKg==
+X-Google-Smtp-Source: ABdhPJzm0pgABSg5f8Ga7PVTXsahnN3XJoDIYqIaqvD2kUnvnFV2Wpfi7k7fqe9tsFXD3Mqt2OFD2LrSoAM2sqxcgb4=
+X-Received: by 2002:a05:6512:528:: with SMTP id o8mr11956947lfc.374.1606037337136;
+ Sun, 22 Nov 2020 01:28:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHp75Veqdv8JnASmmsnv9AmrktByWH3R7Z36wLMyjJh0VffExw@mail.gmail.com>
+ <CACRpkdaAryt0PdbMQ-LMjJ=LNvmNVSHrjHfPn15uJo7WALpNEQ@mail.gmail.com>
+ <CAHp75VfdRfROFwa+wsL6rW7v5=E+qYrE+rwy7zBP2YkZsgjdgQ@mail.gmail.com>
+ <CACRpkdYjHERoO-rzoXa77VCjDrF0N+3q+q_MXOstMEkk3Y2CnA@mail.gmail.com>
+ <CAAVeFuLRWsxeZW=0jWyXb7N=o1n53F6n1Wwd0t=dUSppk9-xrQ@mail.gmail.com>
+ <CAHp75Ve=_2Ye7K6rY8sLhpYh7DF9fqVbS7c2OVSWDZi3XYBbzw@mail.gmail.com>
+ <CAHp75VdnNi-wWeRnOCLYi+K-x0sKz4s2=OqtHdkZJWQw4-d8wQ@mail.gmail.com>
+ <CAAVeFu+YtiZ69btLyiZvPwXJYo+KW6T9SyhrJvd_4L=qJqJhpA@mail.gmail.com> <CACRpkdbK=AAPQNGaDkHwS1o7xopZkj-7cwJGtFB2N9=q=sLjDw@mail.gmail.com>
+In-Reply-To: <CACRpkdbK=AAPQNGaDkHwS1o7xopZkj-7cwJGtFB2N9=q=sLjDw@mail.gmail.com>
+From:   Alexandre Courbot <gnurou@gmail.com>
+Date:   Sun, 22 Nov 2020 18:28:46 +0900
+Message-ID: <CAAVeFu+id4=-frfrvVaH6D2XY-eG6b0R5vNpZWfV69PnMaONnw@mail.gmail.com>
+Subject: Re: Is consumer documentation correct?
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The "Interacting With the Legacy GPIO Subsystem" of the documentation
-was unclear at best, and even included a sentence that seems to say the
-opposite of what it should say about the lifetime of the return value of
-the conversion functions.
+On Thu, Nov 5, 2020 at 11:49 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Alexandre,
+>
+> long time no C! :D
 
-Try to clarify things a bit and hopefully make that section more
-readable.
+Hi Linus! Indeed! :D
 
-Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
----
- Documentation/driver-api/gpio/consumer.rst | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+>
+> On Fri, Oct 30, 2020 at 3:36 PM Alexandre Courbot <gnurou@gmail.com> wrote:
+>
+> > So yeah the documentation (which I have written as far as I can
+> > remember) looks a bit clumsy at best and I probably should amend it a
+> > bit. Now I don't want to give the impression that these functions
+> > should be used as they absolutely should not. :)
+>
+> Yes pretty please with sugar on top can you send a patch to clear
+> this up once and for all so I don't have to!
 
-diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/driver-api/gpio/consumer.rst
-index 423492d125b9..173e4c7b037d 100644
---- a/Documentation/driver-api/gpio/consumer.rst
-+++ b/Documentation/driver-api/gpio/consumer.rst
-@@ -440,18 +440,20 @@ For details refer to Documentation/firmware-guide/acpi/gpio-properties.rst
- 
- Interacting With the Legacy GPIO Subsystem
- ==========================================
--Many kernel subsystems still handle GPIOs using the legacy integer-based
--interface. Although it is strongly encouraged to upgrade them to the safer
--descriptor-based API, the following two functions allow you to convert a GPIO
--descriptor into the GPIO integer namespace and vice-versa::
-+Many kernel subsystems and drivers still handle GPIOs using the legacy
-+integer-based interface. It is strongly recommended to update these to the new
-+gpiod interface. For cases where both interfaces need to be used, the following
-+two functions allow to convert a GPIO descriptor into the GPIO integer namespace
-+and vice-versa::
- 
- 	int desc_to_gpio(const struct gpio_desc *desc)
- 	struct gpio_desc *gpio_to_desc(unsigned gpio)
- 
--The GPIO number returned by desc_to_gpio() can be safely used as long as the
--GPIO descriptor has not been freed. All the same, a GPIO number passed to
--gpio_to_desc() must have been properly acquired, and usage of the returned GPIO
--descriptor is only possible after the GPIO number has been released.
-+The GPIO number returned by desc_to_gpio() can safely be used as a parameter of
-+the gpio\_*() functions for as long as the GPIO descriptor `desc` is not freed.
-+All the same, a GPIO number passed to gpio_to_desc() must first be properly
-+acquired using e.g. gpio_request_one(), and the returned GPIO descriptor is only
-+considered valid until that GPIO number is released using gpio_free().
- 
- Freeing a GPIO obtained by one API with the other API is forbidden and an
- unchecked error.
--- 
-2.29.2
+Sorry for the time it took to get back to this, but you should have a
+patch in your Inbox.
 
+>
+> FYI when it comes to GPIO descriptor refactoring we are churning
+> along with it, my tentative plan is to finish it before I retire.
+> I still have ~22 years until regular retirement age in Sweden so
+> I think I might be able to pull it off!
+> If you would feel an urge to jump in and help out here is the TODO:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/TODO
+
+$ git grep gpio_set |wc -l
+2649
+
+Yikes. ^_^; but it looks like we are gaining ground nonetheless:
+
+$ git grep gpiod_set |wc -l
+1548
