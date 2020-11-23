@@ -2,70 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C775A2C114A
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 18:03:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80B1F2C11C4
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 18:20:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388190AbgKWRCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 12:02:35 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34383 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387757AbgKWRCf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 12:02:35 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h19so3930240otr.1;
-        Mon, 23 Nov 2020 09:02:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0lGM4pOPvAmkdRh3kP6eJPs9iYpu5tJR7XH1PIxCUmM=;
-        b=Pv7plHtcmS+Ov8zY1kf7+xi2lBlKtOaqVNPwKaazM7X4mA9/UKSMU+A7P7PQYenz3k
-         n5F+7QpOS6pYGCqIlM35Z7aAevusrh8Sn4y/T57rGey+wX3hD3TtV/R3kwykG6ZNrm4j
-         bGwNfiMIR6CELoMpFqy9mxVFF6wCDDL6xEywvwEKWSOlqj6BzJ68D7KQHwVkNxxfGRXN
-         gUFZlx+TvVN5czDDuIHM+qtQy3TQuZQovP1rSq1iL2jndIpq0WerJgqxWrzs+KeiXJ5f
-         3WQAv6BxXW1RMN3B84x/TytK9a+Z/AylP1AZfT8X0jP1ckN2I/zPL44cSK8dCIbPQZJv
-         WZ+g==
-X-Gm-Message-State: AOAM530K3yv4/FlImwQmk9qVIxqi05/oZXvE1MXdxBFfZTakLkDam5Z2
-        AM1kj1xPHFPL5yX2m8sn9byezjwot6WN2rnrXvQs7H/+l74=
-X-Google-Smtp-Source: ABdhPJwyCdVjVibPqKrQy4Lj7nZfu82474LEJlTPdJCRpsaDGQ6SLPYaUcR9e9CSN9uaQ+ctlMQPylBDJuBQMtMH0ho=
-X-Received: by 2002:a9d:16f:: with SMTP id 102mr207668otu.206.1606150954566;
- Mon, 23 Nov 2020 09:02:34 -0800 (PST)
+        id S1730829AbgKWRTj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Nov 2020 12:19:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58310 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgKWRTj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 23 Nov 2020 12:19:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 52398AC82;
+        Mon, 23 Nov 2020 17:19:37 +0000 (UTC)
+Message-ID: <ac38b89133f80f82b857ad2b4e421b501c2f4826.camel@suse.de>
+Subject: Re: [PATCH v4 01/11] firmware: raspberrypi: Keep count of all
+ consumers
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        linux-input <linux-input@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 23 Nov 2020 18:19:35 +0100
+In-Reply-To: <20201113072615.GE356503@dtor-ws>
+References: <20201112163630.17177-1-nsaenzjulienne@suse.de>
+         <20201112163630.17177-2-nsaenzjulienne@suse.de>
+         <CAHp75Vf9E7UWVDMs=eRjLjoSN6SVOWw9thNdnR8ruCL6GmY7JQ@mail.gmail.com>
+         <20201113072615.GE356503@dtor-ws>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-4mT4pfaztxo3yJL0guCg"
+User-Agent: Evolution 3.38.1 
 MIME-Version: 1.0
-References: <20201120111125.78296-1-f.suligoi@asem.it>
-In-Reply-To: <20201120111125.78296-1-f.suligoi@asem.it>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 23 Nov 2020 18:02:23 +0100
-Message-ID: <CAJZ5v0jTLcvcyzKRvM6N_2xJq94PseUNtd5xCPpS59Nz4VvWnQ@mail.gmail.com>
-Subject: Re: [PATCH v2] docs: ACPI: enumeration: add PCI hierarchy representation
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:12 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->
-> For "fixed" PCI devices, such as chips directly soldered
-> on the main board (ethernet, Wi-Fi, serial ports, etc.),
-> it is possible to find an ACPI enumeration.
->
-> This allows to add useful properties to these devices.
-> Just for an example: the property "gpio-line-names" can be
-> added to the pins of a GPIO expander on the PCI bus.
->
-> In order to find the ACPI name of a PCI device, it's necessary
-> to disassemble the BIOS ACPI tables (in particular the DSDT)
-> and also to analyze the PCI bus topology of the board.
->
-> This patch, with a practical example, show how to do this.
->
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
 
-Applied as 5.11 material with the R-by tags from Mika and Andy, thanks!
+--=-4mT4pfaztxo3yJL0guCg
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2020-11-12 at 23:26 -0800, Dmitry Torokhov wrote:
+> On Thu, Nov 12, 2020 at 07:52:14PM +0200, Andy Shevchenko wrote:
+> > On Thu, Nov 12, 2020 at 6:40 PM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > >=20
+> > > When unbinding the firmware device we need to make sure it has no
+> > > consumers left. Otherwise we'd leave them with a firmware handle
+> > > pointing at freed memory.
+> > >=20
+> > > Keep a reference count of all consumers and introduce rpi_firmware_pu=
+t()
+> > > which will permit automatically decrease the reference count upon
+> > > unbinding consumer drivers.
+> >=20
+> > ...
+> >=20
+> > > =C2=A0/**
+> > > - * rpi_firmware_get - Get pointer to rpi_firmware structure.
+> > > =C2=A0=C2=A0* @firmware_node:    Pointer to the firmware Device Tree =
+node.
+> > > =C2=A0=C2=A0*
+> > > + * The reference to rpi_firmware has to be released with rpi_firmwar=
+e_put().
+> > > + *
+> > > =C2=A0=C2=A0* Returns NULL is the firmware device is not ready.
+> > > =C2=A0=C2=A0*/
+> > > =C2=A0struct rpi_firmware *rpi_firmware_get(struct device_node *firmw=
+are_node)
+> > > =C2=A0{
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct platform_devic=
+e *pdev =3D of_find_device_by_node(firmware_node);
+> > > +       struct rpi_firmware *fw;
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!pdev)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
+> > >=20
+> > > -       return platform_get_drvdata(pdev);
+> > > +       fw =3D platform_get_drvdata(pdev);
+> > > +       if (!fw)
+> > > +               return NULL;
+> > > +
+> > > +       if (!kref_get_unless_zero(&fw->consumers))
+> > > +               return NULL;
+> >=20
+
+Hi Andy, Dimitry,
+
+> > Don't we have a more traditional way of doing this, i.e.
+> > try_module_get() coupled with get_device() ?
+>=20
+> get_device() will make sure that device is there, but gives no
+> assurances that device is bound to a driver, so it will not help with
+> the racy access to firmware via platform_get_drvdata() call.
+
+I also looked at using get/put_device() just as a means for refcounting (i.=
+e.
+replacing fw->consumers), but I can't make it work either. I'd need a way t=
+o
+hook up into one of the struct device_ktype release() functions. AFAIK it's=
+ not
+possible for private uses like this.
+
+IIUC the way to do this would be to bypass platform device and create a spe=
+cial
+device class/bus for RPi's firmware dependent devices (I could pretty much =
+copy
+SCMI's implementation), but I fear that's overkill.
+
+So, for now I'll stick with the kref based implementation, I'll be happy to
+change it if you find a better solution. :)
+
+Regards,
+Nicolas
+
+
+--=-4mT4pfaztxo3yJL0guCg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+77ycACgkQlfZmHno8
+x/4SuAf/fbVt5dbVlASpaXs9h1cMXb/e8xl+GmDU2l1pP/uQHmyY+sGKGqNo7+G1
+gtKuEhPEavnasiHhJaBTWCCpwytJF9/iToX0i75cDZIObrF1xbO1A3L7hvlRiO6x
+C+oECKGo3/Awayb7MRHqEiRrLqtuu0odnT3Usn26Rbo7J2o5Lc4KF8WwYblFkmV9
+KCW77SlB/6W865vD6KK1KaN6nPqOD3XmKC7doM/MWHIvYd8siFy8qlT5m06s/vhC
+OHHbX2/7bhgcB+3/9LA9TF5J/JU9KIDHuUVbPYC2hcAVbkELXL93OwJ3DnN7csjp
+6obres4oiWUNt0B5Zi7lJDT4Y1KnUw==
+=C3d8
+-----END PGP SIGNATURE-----
+
+--=-4mT4pfaztxo3yJL0guCg--
+
