@@ -2,107 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D1D42C0BED
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 14:57:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E51EC2C0BFC
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 14:57:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgKWNdc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 08:33:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730742AbgKWNdQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 08:33:16 -0500
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5494DC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 05:33:14 -0800 (PST)
-Received: by mail-il1-x142.google.com with SMTP id v3so1717254ilo.5
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 05:33:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B86W+jdVxuWIBPQvh9VgYQZlnqJjyNB5p5InAyRoB6I=;
-        b=Ql+B5HYPmAmLy91ozR3CtGnnrhQQcGm7J219+3qkj1QbqFA5NSFZ+53URtCaAZT5Wz
-         mHi4LpbDZVPZNkfNnvgXiwgCbF68xX0VM75It6kkBHOvkUxvB+0tXqDqZ8+C4hSJ9STm
-         EW3mVDzssW88YlKed6bULwvfZZy929cSDs0GC4vJAOmCSQx9ao9emyU1yiUYnCk5I6mq
-         Kfu9ZePha0xTRdNKbDey5RbU32dM/gdBioX7rzdMEbTxS5BfHS2IqhNzx9CeDpRB+OsQ
-         8GapysEAT6UI//oDNv3Q4fGAqAyIt428bOzgatRAjZtuHPjST5lp2ViK+vEG4Rayo/KV
-         68Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B86W+jdVxuWIBPQvh9VgYQZlnqJjyNB5p5InAyRoB6I=;
-        b=gxplBwWZYPG+nDHrJWwXdWuTrzU2+8X8jgV6ksq3lFdCWB5G5LohyhXZQOtg9MClFT
-         npLqZMtmRnIou6PwhEaM5aBkjZc+AgeQulZEXmsCJ9+83ql+ORSn/NcIg+uqknRAj8Ui
-         YEGSbZFMPySB9lH9PpGQACqA4AXmrI1hgEzeJii4AlvD/E9KcmbbjPA2Sm4UosIe3az6
-         VE7gSCYsWx3mAd/i14HaMzQryaA3CbudDO0LxeeED3rUSnK7v82Ho4oKXuBev719QT5D
-         HfVkzDdbFfttsFrF/G3M05eKGHcUqWT4KeDII8HEXoG6u9MBJ11GFNGCTMxJprHq6cul
-         rp0g==
-X-Gm-Message-State: AOAM532yUjC3Q2oKXcvuVKxdoKdZrpUFH1Oo4lzW/yPP5JEX2wsLq9AD
-        pfQgXYThJspIsvdUOxXIfye75heurLUwdgOmKYH5UQ==
-X-Google-Smtp-Source: ABdhPJycqSQElwVZGEibmP19tZAWy2OngMjiRi5rnuSzVjw3YWvslTK4f2cE5l7Xvyx7SmC6df6yYxWbtJmvsnBt3MI=
-X-Received: by 2002:a92:dc07:: with SMTP id t7mr34265185iln.189.1606138393796;
- Mon, 23 Nov 2020 05:33:13 -0800 (PST)
+        id S1731825AbgKWNel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Nov 2020 08:34:41 -0500
+Received: from mga06.intel.com ([134.134.136.31]:17839 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732491AbgKWNek (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 23 Nov 2020 08:34:40 -0500
+IronPort-SDR: SJWVQd30A8Ly3+QlfF8WSze7M0dCLN30G0e7J2DOhwm4PQfunUDRYijbYE4i6zoPmsEIURiNJU
+ u67Q9e7Z/+ng==
+X-IronPort-AV: E=McAfee;i="6000,8403,9813"; a="233375200"
+X-IronPort-AV: E=Sophos;i="5.78,363,1599548400"; 
+   d="scan'208";a="233375200"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 05:34:37 -0800
+IronPort-SDR: lDBoM4lugsyVQEIUrMaezDzm9IeNjqXN9hybpDy4AsmPZ+/rQo78mwSoEQDw1xescTgE3Aknwg
+ 1u+R1xcJ7/5Q==
+X-IronPort-AV: E=Sophos;i="5.78,363,1599548400"; 
+   d="scan'208";a="536099207"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 05:34:34 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1khC0G-009AMH-BF; Mon, 23 Nov 2020 15:35:36 +0200
+Date:   Mon, 23 Nov 2020 15:35:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     caizhaopeng@uniontech.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhangyueqian <zhangyueqian@uniontech.com>,
+        Zhangshuang <zhangshuang@uniontech.com>,
+        Hualet Wang <wangyaohua@uniontech.com>,
+        Zhanglei <zhanglei@uniontech.com>
+Subject: Re: [PATCH 1/1] pinctrl: add IRQF_EARLY_RESUME flags with gpio irq
+ for elan touchpad.
+Message-ID: <20201123133536.GC4077@smile.fi.intel.com>
+References: <20200424091201.568-1-caizhaopeng@uniontech.com>
+ <20201112135221.GC4077@smile.fi.intel.com>
+ <1e67c040-2aff-65bd-188a-bacf9a7fd7c4@redhat.com>
 MIME-Version: 1.0
-References: <20201116104242.19907-1-brgl@bgdev.pl> <CAMRc=Mdkr+65Nu7ddjtMHTbedpNf22w1bE97vipKSdXBYm8=fw@mail.gmail.com>
- <86bf5fda-eeb5-5cb2-901f-a887af7584f6@siemens.com> <CAMRc=MeayB1-hUiNUgKoG5v+CFt-Kxx88s+b-12iZDBfMjvttw@mail.gmail.com>
- <fe36f3f9-fc33-c39a-1b6e-962fe2567bb8@siemens.com>
-In-Reply-To: <fe36f3f9-fc33-c39a-1b6e-962fe2567bb8@siemens.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 23 Nov 2020 14:33:03 +0100
-Message-ID: <CAMRc=Mcai324zc-W52jVeyUeG6pcCmBZx2Q-Ao_d-GMMwW6ATg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] gpio: exar: refactor the driver
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e67c040-2aff-65bd-188a-bacf9a7fd7c4@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 2:00 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
->
-> On 23.11.20 13:12, Bartosz Golaszewski wrote:
-> > Thanks!On Mon, Nov 23, 2020 at 1:03 PM Jan Kiszka
-> > <jan.kiszka@siemens.com> wrote:
-> >>
-> >> On 23.11.20 12:38, Bartosz Golaszewski wrote:
-> >>> On Mon, Nov 16, 2020 at 11:42 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >>>>
-> >>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>>
-> >>>> I just wanted to convert the driver to using simpler IDA API but ended up
-> >>>> quickly converting it to using regmap. Unfortunately I don't have the HW
-> >>>> to test it so marking the patches that introduce functional change as RFT
-> >>>> and Cc'ing the original author.
-> >>>>
-> >>>
-> >>> Hi Jan!
-> >>>
-> >>> Could you give this last version a final spin before I merge it?
-> >>>
-> >>
-> >> [   14.250117] exar_serial 0000:02:00.0: enabling device (0000 -> 0002)
-> >> [   14.336622] 0000:02:00.0: ttyS2 at MMIO 0x90000000 (irq = 44, base_baud = 7812500) is a XR17V35X
-> >> [   14.391588] 0000:02:00.0: ttyS3 at MMIO 0x90000400 (irq = 44, base_baud = 7812500) is a XR17V35X
-> >> [   19.250510] gpio_exar: probe of gpio_exar.1.auto failed with error -22
-> >>
-> >> That's "new"...
-> >>
-> >
-> > And if you change reg_bits from 11 to 16?
-> >
->
-> 16 works. Didn't we have that already?
->
-> Jan
+On Mon, Nov 23, 2020 at 01:46:50PM +0100, Hans de Goede wrote:
+> On 11/12/20 2:52 PM, Andy Shevchenko wrote:
+> > 
+> > +Cc: Hans.
+> > 
+> > I can't speak for AMD, but I think it may be useful for Intel pin control.
+> > However, I didn't check what may be the side effects of this change and neither
+> > contributor answered to my comments...
+> 
+> AFAICT setting IRQF_EARLY_RESUME causes it to not be resumed during
+> normal IRQ resuming, but earlier during the syscore_resume() call.
+> 
+> There are 2 problems with this:
+> 
+> 1. When using S3 suspend syscore_resume() runs before any device
+> suspend handlers, so any state restoring which the GPIO controller's
+> resume handler is doing has not been done yet. While esp. after
+> S3 suspend the restoring may be important (s2idle suspend should
+> not touch the GPIO registers contents).
+> 
+> 2. When using S2idle suspend syscore_resume() *never* runs, and
+> IRQs marked with IRQF_EARLY_RESUME are skipped during the normal
+> IRQ resume phase, so these IRQs will never be resumed.
+> 
+> Also IRQF_EARLY_RESUME is used almost no where:
 
-Yes we have, Andy suggested 11 is fine because it fits the highest
-address we need to access but it seems regmap doesn't like this value.
-Ok so I'll change it when applying, is that fine with you?
+Yes, I also noticed this.
 
-Bart
+> [hans@x1 linux]$ ack -l IRQF_EARLY_RESUME drivers
+> drivers/xen/events/events_base.c
+> drivers/rtc/rtc-sc27xx.c
+> drivers/mfd/twl4030-irq.c
+> 
+> Which is probably why we have not yet hit the s2idle issue with it.
+> 
+> So this all in all seems like a bad idea, and we need to better root
+> cause the issue with these Elan touchpads and fix the actual issue.
+
+Thanks! That is useful to know.
+
+> > So, just heads up.
+> > 
+> > On Fri, Apr 24, 2020 at 05:12:01PM +0800, caizhaopeng@uniontech.com wrote:
+> >> From: Caicai <caizhaopeng@uniontech.com>
+> >>
+> >> I had tested two Notebook machines, the Intel i5(or amd ryzen)
+> >> with elan touchpad, and there's a probability that the touchpad
+> >> won't work after going to the S3/S4 to wake up, that it would
+> >> appear no more than 15 times. I found that there's no interrupt
+> >> to check for /proc/interrupt. It was found that the gpio
+> >> interrupt of i2c was also not on top. By adding the gpio
+> >> interrupt flags with IRQF_EARLY_RESUME, now the touchpad tested
+> >> 200 + times works well.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
