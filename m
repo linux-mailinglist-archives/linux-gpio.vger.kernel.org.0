@@ -2,103 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10E032C0C06
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 14:57:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 408052C0CD9
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 15:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgKWNj4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 08:39:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
+        id S1730553AbgKWOFt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Nov 2020 09:05:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbgKWNjz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 08:39:55 -0500
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4BEC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 05:39:55 -0800 (PST)
-Received: by mail-lj1-x235.google.com with SMTP id f18so37371ljg.9
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 05:39:54 -0800 (PST)
+        with ESMTP id S1730352AbgKWOFq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 09:05:46 -0500
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15474C0613CF;
+        Mon, 23 Nov 2020 06:05:44 -0800 (PST)
+Received: by mail-yb1-xb43.google.com with SMTP id 10so16032864ybx.9;
+        Mon, 23 Nov 2020 06:05:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lBxwRMELSYYR5zOAyumFnn/Ao6xysXUlX+NLYD7cTec=;
-        b=H/axjPa6BBTm7OpR0TiZXirgRWalCDPzgA6zkRHRYwb8CLpXixTsbIHwaiGp2HbNiY
-         UaooxI+X3YSZcThTgQgGZzNfUup73ZiT4enFs3KoST3/1RbwJtrrUQd2DIdMYNMkzibh
-         N8TJt4Ei3s3gpP/llY+FdGrwLv2TQj2OFbtqAfMGXDD7T/2JrqVQ6gGtB5sqev7QkCRl
-         hmtkhMsn0jQqNg27nP9J3Umf6o4Pak0Zrzs3zAQvdTjgkh60srDUqcxKistxvaN8Tj66
-         rc+cDSMM3ij6etNT2SuyRWXzTmKiTuLSHgXN+YUz35gYJzFgoe+aizp/cF8P6TfvYjPu
-         Abrw==
+        bh=RhHqKgQbKUW77nc47JuvCnp+w8QNxENxQLSt6AHkTqQ=;
+        b=uc3VE1PZNnY/Z1NgZXLeWe/Nj5hsoBfQkeeHXaE+d0SDr9xNRMPYxU1o6fpuaiqkgi
+         yuFjhawxyOxFbziEfkWs4inb92LCIVTnNTVXAL7657JtY5jUPnHae9XC4JONvfltcDzK
+         9TpDS0ylXwfesoyru6or5tLuj2Wgq4fxc0XGG5evkxw7F5K63x1NbbMukm854FcfQLy0
+         gnTDe+NWIPcxyPxl6ZwlkcZY1OnasK1C98JFaIzSzrlrdcg6icgY2nCNokwGspTvBpMG
+         u0c2fJxhgJsKPBZAzgP85ZG8VhKJUulmNcJ8sZ+phgCZ9U4trQ3IF/NnqsJiuQ1qY+5Q
+         UH8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lBxwRMELSYYR5zOAyumFnn/Ao6xysXUlX+NLYD7cTec=;
-        b=enbImCRE+kWJ/B/mQ+KPqanmRv4yDsgcrGKBNWv0Eu4th1n+lpmF/EYHvD0NxR5jhp
-         O9+8iaDDC3ycXnggNG+OnuKxqWGrpZAk4YUO9hpyvTiRxYbdDsM1/YYyJIckLA6+NcSo
-         OjkZSdkNoEtJmOaQ6lnWofcBRc8C2bDJ5Fx6QMC5VG1esN+D68ufY8K11+7GJc6qu+XP
-         w6sY0XSnvZzMGLav8v+0DS5TG4M1SKO5xiuWT/XK+L5u9g2C1HWkDf8pcs/JvgWRTo5e
-         OMZC+kDuN8bkoQ0eL3k4ya5apVawR7CdOKhG29lkhi+ic7sJLncwNhrrAV0U9gAdrAz5
-         ofLA==
-X-Gm-Message-State: AOAM531WkabJQ84caMxEtSZwHweFoDUL0Ty14h+QVDFKW4yKAmnboCrC
-        ncow0BK5R3/Otl7vzNDjkVqnveBbvDqEw+WnI/2Mfg==
-X-Google-Smtp-Source: ABdhPJyEys2B6f+oQ/DSlEaxwqOPntnsN8Oax253BKfZam1RjOKfmPhtxG0A5qhFRC3SGvQbi6Jthn6j8PcE377KYjM=
-X-Received: by 2002:a2e:998e:: with SMTP id w14mr13996151lji.100.1606138793546;
- Mon, 23 Nov 2020 05:39:53 -0800 (PST)
+        bh=RhHqKgQbKUW77nc47JuvCnp+w8QNxENxQLSt6AHkTqQ=;
+        b=WedzhOTXaYjPvNaPhmohdRJ+58gonX0b+ZI3sjwFseX7aF5YDJk0KL0cBl/X1uVgsC
+         We1dczeA+a4BK//RvFHkRTxDc8BbTalyjcQ4gnkIU9cfPcqJg+tZC+68mMrkubh7AGNF
+         fvO9dxWcqQW+4jlWSA7EhFOjC+n4jFiOB8jUMl7Ex3eiIqW1poARTffV5jYeQBAu2OMK
+         sBygNg3BHt5eyDS5b2o48qFp8QnKJ2TYxM0fi6Wij1HP/cKim9lhpUlhBdCEtnnK+OjH
+         QzeyboGg6JxYcFDMMePMGw5mChseG7FQWM1KsCbS1BMq1YrycaQ3I+n+89mM8kqD+8Qa
+         Tamg==
+X-Gm-Message-State: AOAM5326FS91Tk/kyeYNAWweyK5tdCS3nYjJ+iR0xlt/wSuuwpjMlR9n
+        Xjc1+NNgNNNn3BpMzB57GgYvVZWxZhDGGINKkQk=
+X-Google-Smtp-Source: ABdhPJz9DsZ58e7OIIOr/VE9Xtax3PWaLuFuRyVLpjTsCzIYcuPGWJiVUhGusztX9v02ET+47HU3GtURC6oS5LfC9Lw=
+X-Received: by 2002:a5b:40e:: with SMTP id m14mr35121900ybp.33.1606140343388;
+ Mon, 23 Nov 2020 06:05:43 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHp75Veqdv8JnASmmsnv9AmrktByWH3R7Z36wLMyjJh0VffExw@mail.gmail.com>
- <CACRpkdaAryt0PdbMQ-LMjJ=LNvmNVSHrjHfPn15uJo7WALpNEQ@mail.gmail.com>
- <CAHp75VfdRfROFwa+wsL6rW7v5=E+qYrE+rwy7zBP2YkZsgjdgQ@mail.gmail.com>
- <CACRpkdYjHERoO-rzoXa77VCjDrF0N+3q+q_MXOstMEkk3Y2CnA@mail.gmail.com>
- <CAAVeFuLRWsxeZW=0jWyXb7N=o1n53F6n1Wwd0t=dUSppk9-xrQ@mail.gmail.com>
- <CAHp75Ve=_2Ye7K6rY8sLhpYh7DF9fqVbS7c2OVSWDZi3XYBbzw@mail.gmail.com>
- <CAHp75VdnNi-wWeRnOCLYi+K-x0sKz4s2=OqtHdkZJWQw4-d8wQ@mail.gmail.com>
- <CAAVeFu+YtiZ69btLyiZvPwXJYo+KW6T9SyhrJvd_4L=qJqJhpA@mail.gmail.com>
- <CACRpkdbK=AAPQNGaDkHwS1o7xopZkj-7cwJGtFB2N9=q=sLjDw@mail.gmail.com> <CAAVeFu+id4=-frfrvVaH6D2XY-eG6b0R5vNpZWfV69PnMaONnw@mail.gmail.com>
-In-Reply-To: <CAAVeFu+id4=-frfrvVaH6D2XY-eG6b0R5vNpZWfV69PnMaONnw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 23 Nov 2020 14:39:41 +0100
-Message-ID: <CACRpkdaFiuOemPPaEgyDepZhhphTApUxR1GfrHWwiBb_JGmT6w@mail.gmail.com>
-Subject: Re: Is consumer documentation correct?
-To:     Alexandre Courbot <gnurou@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com> <alpine.LNX.2.23.453.2011230938390.7@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.23.453.2011230938390.7@nippy.intranet>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 23 Nov 2020 15:05:31 +0100
+Message-ID: <CANiq72=z+tmuey9wj3Kk7wX5s0hTHpsQdLhAqcOVNrHon6xn5Q@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 10:28 AM Alexandre Courbot <gnurou@gmail.com> wrote:
-> On Thu, Nov 5, 2020 at 11:49 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> Sorry for the time it took to get back to this, but you should have a
-> patch in your Inbox.
-
-Thanks!
-
-> > FYI when it comes to GPIO descriptor refactoring we are churning
-> > along with it, my tentative plan is to finish it before I retire.
-> > I still have ~22 years until regular retirement age in Sweden so
-> > I think I might be able to pull it off!
-> > If you would feel an urge to jump in and help out here is the TODO:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/TODO
+On Sun, Nov 22, 2020 at 11:54 PM Finn Thain <fthain@telegraphics.com.au> wrote:
 >
-> $ git grep gpio_set |wc -l
-> 2649
+> We should also take into account optimisim about future improvements in
+> tooling.
+
+Not sure what you mean here. There is no reliable way to guess what
+the intention was with a missing fallthrough, even if you parsed
+whitespace and indentation.
+
+> It is if you want to spin it that way.
+
+How is that a "spin"? It is a fact that we won't get *implicit*
+fallthrough mistakes anymore (in particular if we make it a hard
+error).
+
+> But what we inevitably get is changes like this:
 >
-> Yikes. ^_^; but it looks like we are gaining ground nonetheless:
+>  case 3:
+>         this();
+> +       break;
+>  case 4:
+>         hmmm();
 >
-> $ git grep gpiod_set |wc -l
-> 1548
+> Why? Mainly to silence the compiler. Also because the patch author argued
+> successfully that they had found a theoretical bug, often in mature code.
 
-There are ways to make it look better!
+If someone changes control flow, that is on them. Every kernel
+developer knows what `break` does.
 
-$ git grep 'linux/gpio\.h' |wc -l
-632
-$ git grep 'linux/gpio/consumer\.h' |wc -l
-644
+> But is anyone keeping score of the regressions? If unreported bugs count,
+> what about unreported regressions?
 
-Makes it look like more than halfway there, hey!
+Introducing `fallthrough` does not change semantics. If you are really
+keen, you can always compare the objects because the generated code
+shouldn't change.
 
-Yours,
-Linus Walleij
+Cheers,
+Miguel
