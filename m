@@ -2,147 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 739632C0D49
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 15:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDA552C0DB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Nov 2020 15:41:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388939AbgKWOUI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 09:20:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44652 "EHLO
+        id S2388919AbgKWObE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Nov 2020 09:31:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730804AbgKWOUH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 09:20:07 -0500
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97705C061A4D;
-        Mon, 23 Nov 2020 06:20:06 -0800 (PST)
-Received: by mail-yb1-xb41.google.com with SMTP id r127so12314537yba.10;
-        Mon, 23 Nov 2020 06:20:06 -0800 (PST)
+        with ESMTP id S1731451AbgKWObD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 09:31:03 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AD5C061A4E
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 06:31:03 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id v14so1850201lfo.3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 06:31:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WUYMqcUnfpAQa1YuH9tQ3ze5bp2bxaoGLXc9Sg/470Y=;
-        b=b0LkeT2q71Z3peIccxL7MkU5QadaCN3igdEC89IE4ykmdOxIlhuoo/0+H7pQCoNmlh
-         0UX19Z7soasUpz2fDZHX56luUWrH4GLKAJ9K28HwPu9km7qlcvasqfBffaQW+LtXvh6a
-         fVP4J8wQFxbi1QWFB10Wsq9dLONxRShLcqQtcaktrZCy3tSRV5R4FOw2MSdgwNuCxNwd
-         cKQMyE/jYgmlc9Qm972BZKz9xJaasT5iW6gpZgai8YpCh1sxJNgZFzlfCpv21Fvd7rwb
-         akOsznbnFT4mJT95mXFDUPnplTdAJirWAcm8YfzHFRAfOGn9Vk91PuRcq7JipLelDPMB
-         VWgQ==
+        bh=GE6v8E2ojBT8gyIKpzNyRNdjMuQFL5/ViCcNT+Rjg/Y=;
+        b=lO+ZSMajGkyqdB+ed1LvkbDiWTdMQ5lpQrmd+cYlUO6ZUMTJgs7EZPvj17uhGlPNo9
+         BDoyL1p0Y8v+j/qlZ/6k92qK6LRPnc9gtLEfewLqoeMY9FKuxaEs5zJb81yzSnEmebFw
+         GMy6FqbmkfDcI7Ug75EoxBORformeKkrHQinFOD/B6wLIwThTPPqJAyMr1BktKbrLFdk
+         6yJKzysU6FPNILBdRutTAFNCljRwgswHMQjSRZrBKxVyTZISXg4tYiKFYShL88H2NAEu
+         HjYGTPA4XabQHMe7eE19/J9fXT1+A8phcgzHCr0xWSAdOxaErty1158Sdbp0w7NIw7SZ
+         fZZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WUYMqcUnfpAQa1YuH9tQ3ze5bp2bxaoGLXc9Sg/470Y=;
-        b=lKwdUTbbfqoTkTAIgp9mZrmqU0ijWcHp+iS8IAhntH72d3s9iYJuX87xfDva9I4lf3
-         v8fZFrd6A/ZoNnnKI9Ufo/CQd84EPCVmP699vgDnaebb1AOTGh35TDQox+Tjt+Mkl+PO
-         9xhrICCS8DPqhs5qDLfgPBudTzTlVuoCX1zMCGn265RUXoKazk8TNw8gVmCeIWmxjXu0
-         9atl13SD50eRTituupdU7yHj0eeNc1FZy80Dql4f4jClf3PJKAd0dw0fF0iq70BlyjBm
-         D/8h5bsNDzQDKcXJmk5WKbzZmOyiV9nWldAukc3pft/P820sC0PeoGme7yQLVJZl6dNN
-         68lQ==
-X-Gm-Message-State: AOAM533cX8axbPLyO/5uGloelj8h1rp7LshnxgMBjIAQvMSvBl7c7+7W
-        X/53WSk6j6xjolzoHOFypqUhx/48H/iN54UXOIs=
-X-Google-Smtp-Source: ABdhPJyiJqjBIpEzWlk5pyqpoGG3+KpoWdKnlyza2YA6ODhXnRhATytwh5Bq+iGOzNqc5gs+zuqHC8iB1cjfDTXU/ik=
-X-Received: by 2002:a25:bcc7:: with SMTP id l7mr32380985ybm.115.1606141205830;
- Mon, 23 Nov 2020 06:20:05 -0800 (PST)
+        bh=GE6v8E2ojBT8gyIKpzNyRNdjMuQFL5/ViCcNT+Rjg/Y=;
+        b=JPuFF/IzbO5mh/Bc8frb1yKmxbh9ymtTpPLdWx6wzH/zOvSNa7JXzH5mkSCknnj1WM
+         0aivIeG4KPqNKO40YvcbiyVhJ8JmAlbnifxlCDrMnaYn5LIimwL1ssRGAjq/BM9sh6t0
+         1d6g9biWRJeF0qPvvBJp/AlZYWtSLDdcV4h0Aj9S4mG5S6drFVGaw+asGx2lBTfTrzzI
+         +8+4e7mmjd2UIel84niJhf4GVNy4tlcykAOCIPm8VWEGUSTyLcD5IMq1FRrH5N6Tf3uS
+         fi3DJuFrQVOFex3EAyOMxnj4Pic3kAUlN9EayFU4oGN4BgxGvGU2etPGhXes/7CTGuje
+         4NZg==
+X-Gm-Message-State: AOAM531/WQOicpKP0M8Bw+TbPnDYbkWPEs5recUQdmX1Cj8GO83Hgnf3
+        PyfHOCZHHAFxUIEvDLPGtYFQCtYdmDYcxBMtCWH/Cg==
+X-Google-Smtp-Source: ABdhPJyZJqXr+dLHqStiKgw3ORarJdbm/HNFkaqvJjCidCi/ORD+fr97rDZI555wKcii44p9glt8qeYLc/ezHvDZTxs=
+X-Received: by 2002:a19:8d8:: with SMTP id 207mr829367lfi.441.1606141861442;
+ Mon, 23 Nov 2020 06:31:01 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com> <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
-In-Reply-To: <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 23 Nov 2020 15:19:55 +0100
-Message-ID: <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+References: <20201113145151.68900-1-lars.povlsen@microchip.com>
+In-Reply-To: <20201113145151.68900-1-lars.povlsen@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 23 Nov 2020 15:30:50 +0100
+Message-ID: <CACRpkdZAc2yKFpngBHCdxjFBpc0XCVAYWyEERMSHX+7sL7Fgrg@mail.gmail.com>
+Subject: Re: [PATCH v10 0/3] Adding support for Microchip/Microsemi serial
+ GPIO controller
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 11:36 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+On Fri, Nov 13, 2020 at 3:52 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+
+> The series add support for the serial GPIO controller used by
+> Microchip Sparx5, as well as (MSCC) ocelot/jaguar2 SoCs.
 >
-> Well, it seems to be three years of someone's time plus the maintainer
-> review time and series disruption of nearly a thousand patches.  Let's
-> be conservative and assume the producer worked about 30% on the series
-> and it takes about 5-10 minutes per patch to review, merge and for
-> others to rework existing series.  So let's say it's cost a person year
-> of a relatively junior engineer producing the patches and say 100h of
-> review and application time.  The latter is likely the big ticket item
-> because it's what we have in least supply in the kernel (even though
-> it's 20x vs the producer time).
+> v10 changes - anniversary edition (from Andy):
+>  - Fixed "Author" comment
+>  - Added missing "break;" in default switch case
+>  - Return -EINVAL when requesting pin disabled in bitstream
+>  - Change bank consistency check to return -ERANGE if failed (-EINVAL
+>    previously)
 
-How are you arriving at such numbers? It is a total of ~200 trivial lines.
+Patches 1 & 2 applied to the GPIO tree!
 
-> It's not about the risk of the changes it's about the cost of
-> implementing them.  Even if you discount the producer time (which
-> someone gets to pay for, and if I were the engineering manager, I'd be
-> unhappy about), the review/merge/rework time is pretty significant in
-> exchange for six minor bug fixes.  Fine, when a new compiler warning
-> comes along it's certainly reasonable to see if we can benefit from it
-> and the fact that the compiler people think it's worthwhile is enough
-> evidence to assume this initially.  But at some point you have to ask
-> whether that assumption is supported by the evidence we've accumulated
-> over the time we've been using it.  And if the evidence doesn't support
-> it perhaps it is time to stop the experiment.
+Patch 3 needs to go to the SoC tree.
 
-Maintainers routinely review 1-line trivial patches, not to mention
-internal API changes, etc.
+Thanks for your hard work!
 
-If some company does not want to pay for that, that's fine, but they
-don't get to be maintainers and claim `Supported`.
-
-Cheers,
-Miguel
+Yours,
+Linus Walleij
