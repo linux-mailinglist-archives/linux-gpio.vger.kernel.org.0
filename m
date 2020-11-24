@@ -2,93 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0FD62C20C5
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 10:05:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD6E2C20FA
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 10:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbgKXJDe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 04:03:34 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:9588 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730963AbgKXJD0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 04:03:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1606208606; x=1637744606;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H0qxxYcDQov/j23eYl/lQskQ2ib5uTauAr4/A4GSZqg=;
-  b=L8joNyzYpD4jDx1gZqt6j06bGYbZNoWkN4rBJNXbSO0HcJe6Iv4QYUam
-   RJ0J7e3lNJ5ZawkoVjITVvP8X09txyNq7Rz8h132rKpUMUz5ltpAZm3d5
-   ImuuWWE4mS8NtRfaLzhp43INbLMvBbMEkaTEa1yYj+xB6EIpuP7N6C9nu
-   DcdGUg51/AQ5m0P/eLsyd/yTKaDP+Lo8EVj8r4ssknC432rFIHoW/Inlj
-   lJ/dTZFpxPb7HjVNouNNjwI0k9a13cmgwnYH/HhTwyj2Lc5F8Q7A2bxsr
-   e7+ik60KcHHmZYxmPXBOaiBTeAaDYh+LnAgTxUaArgwBQ0GgDWVKdYDLw
-   Q==;
-IronPort-SDR: pS66dmLCNTccBY0EyjSooQz5evvoqMyGNNI9vKU1pvu6huqSr2ZyBejWWFTosrllsPxSqCTaD6
- 1c/JOPfurlq9eigw9E4GfNyhUz0KSfinfMpMQ9S8sJS/KvZGNfzafkUqQJ52570QOl8xACXL3U
- 6Xgy2JX09cCjk296xbePiW6roTj9//thDlAT23xpP99Q4Ft34bsG8f795kzLxX0sgcOdanropB
- guEAnaNZBzq/wJtmfJ95JvhKw3z/M99+Of5UTT2A2nq/t8boF3A9KdT+pVhbOaqohwIXTpG1dP
- PLc=
-X-IronPort-AV: E=Sophos;i="5.78,365,1599548400"; 
-   d="scan'208";a="94696778"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Nov 2020 02:03:24 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 24 Nov 2020 02:03:24 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 24 Nov 2020 02:03:23 -0700
-Date:   Tue, 24 Nov 2020 10:03:22 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+        id S1730974AbgKXJRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 04:17:10 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:54212 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728967AbgKXJRK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Nov 2020 04:17:10 -0500
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxmtCQz7xfgOUVAA--.35926S2;
+        Tue, 24 Nov 2020 17:17:04 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: add support for fewer lines on last
- PIO bank
-Message-ID: <20201124090322.cjugamri37yxcqy7@sekiro>
-References: <20201113132429.420940-1-eugen.hristev@microchip.com>
- <CACRpkdYdPp_ihSEHkPaLa0_mcX+8ypnPZ4dn0d-PY9Mes1XntQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYdPp_ihSEHkPaLa0_mcX+8ypnPZ4dn0d-PY9Mes1XntQ@mail.gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] pinctrl: at91-pio4: Make PINCTRL_AT91PIO4 depend on HAS_IOMEM to fix build error
+Date:   Tue, 24 Nov 2020 17:17:03 +0800
+Message-Id: <1606209423-4742-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxmtCQz7xfgOUVAA--.35926S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrW7Cr4DuFyfZFWfWw48WFg_yoWfZFb_ua
+        yvgrn7JryUCws7Kw1jva1fuFy0ya90gr1xKF1qqa4S9347Xa47t34DWF4kJwn7G3yxGFyq
+        vay8Xr1F9w1jyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU8iSdDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 09:31:36AM +0100, Linus Walleij wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Fri, Nov 13, 2020 at 2:25 PM Eugen Hristev
-> <eugen.hristev@microchip.com> wrote:
-> 
-> > Some products, like sama7g5, do not have a full last bank of PIO lines.
-> > In this case for example, sama7g5 only has 8 lines for the PE bank.
-> > PA0-31, PB0-31, PC0-31, PD0-31, PE0-7, in total 136 lines.
-> > To cope with this situation, added a data attribute that is product dependent,
-> > to specify the number of lines of the last bank.
-> > In case this number is different from the macro ATMEL_PIO_NPINS_PER_BANK,
-> > adjust the total number of lines accordingly.
-> > This will avoid advertising 160 lines instead of the actual 136, as this
-> > product supports, and to avoid reading/writing to invalid register addresses.
-> >
-> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Nico/Ludovic: can you please look at this patch?
+If CONFIG_HAS_IOMEM is not set, devm_platform_ioremap_resource() will
+be not built in drivers/base/platform.c and then there exists a build
+error about undefined reference to "devm_platform_ioremap_resource"
+in pinctrl-at91-pio4.c under COMPILE_TEST and CONFIG_PINCTRL_AT91PIO4,
+make PINCTRL_AT91PIO4 depend on HAS_IOMEM to fix it.
 
-I acked it one week ago but I get some nasty behaviors with my emails. Maybe you
-didn't receive the answer.
-https://lore.kernel.org/linux-gpio/20201116061549.ks6hfonyplwhknmq@sekiro/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/pinctrl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 8150953..d132e1a 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -82,6 +82,7 @@ config PINCTRL_AT91
+ config PINCTRL_AT91PIO4
+ 	bool "AT91 PIO4 pinctrl driver"
+ 	depends on OF
++	depends on HAS_IOMEM
+ 	depends on ARCH_AT91 || COMPILE_TEST
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+-- 
+2.1.0
 
-Ludovic
-
-> 
-> Yours,
-> Linus Walleij
