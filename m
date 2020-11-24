@@ -2,184 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C7CE2C1D13
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 05:38:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 993752C1D38
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 06:06:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgKXEiQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 23:38:16 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:36189 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgKXEiP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 23:38:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606192695; x=1637728695;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Dr60Dd5w6mhOffnaoMhKIVWagEomMPZTmljzPR2qAVg=;
-  b=SgP3RP43s6oyQHyYZ4C1CIg4DmFKIsSie7Dm7iBc35k4JsFBxtmFmgQE
-   umid+GepQsfnJvMyjm5coBbLmC3gRF5+w2ChRyiUJ1J72AvKb6iGWIY3A
-   KCwdHYCuZL48eBcz4UHlE0/t294fIHBazIyQAKx0l6UI0tVkOmoN05bPv
-   3wiubPF7798xG+giSLp3fQQhURnO8tpNQDJ5PLsxHXB+gQ1RqzmQU4Chb
-   pOsWq9EoIB79r23AGzaB0q/oskq/2yv0+ZfiXv+Z922eBl/bmiossWG4D
-   FJif/Y9BuND4ORfeqW96Vn/fqn3hk99nRn5RA4LWt/xrlCqhXiqy7000j
-   A==;
-IronPort-SDR: 1D+bQYAA1Cc7S6br/L7UlUBEljrUiuRMPjN2sOZQtU5Jjn+LrqzuTw00Vnjcz2d+IGysIvdYd3
- Maq7KhVJmqKDWxmwUXncjTXXo5KHUrKNlhLpUiHCQfI7LeRkE5yy0NuvoZBRCMXlLiJP1v9oJC
- jOKFe661pZRZl9PVMam4f3wjJ2bQGBr99NHzfasmRwVA4FH+v84e/zP13VacJtK7mzM3hIPFCv
- lanmMun49SH4nmoZri0HKVpz/fVLdYQrIZdxSOw79PoSk+Ytr1SDYMJbdpvuY8fSaFcqmkSceJ
- 0kI=
-X-IronPort-AV: E=Sophos;i="5.78,365,1599494400"; 
-   d="scan'208";a="154498218"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Nov 2020 12:38:15 +0800
-IronPort-SDR: 2CzvQqHvKpnIjjH9noXeow9G+vvBhWSlJGD/b20C0yWj5VuwzNHt5ZkhRB+IIZh7bm38IRD3Qo
- e9uB0QSTAGaYDWdBEyR3rByq4fQdkymfY=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 20:23:59 -0800
-IronPort-SDR: OKMwJnqI3CivFmdAi2nKsXaw9v2HbAqaZQuRZZcMNz+hlVCgIV8BvaiKEifgVD3TbdYOO0sURX
- QorA1R0nxVsw==
-WDCIronportException: Internal
-Received: from hdrdzf2.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.163])
-  by uls-op-cesaip01.wdc.com with ESMTP; 23 Nov 2020 20:38:12 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v2 21/21] riscv: Add Canaan Kendryte K210 SD card defconfig
-Date:   Tue, 24 Nov 2020 13:37:28 +0900
-Message-Id: <20201124043728.199852-22-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201124043728.199852-1-damien.lemoal@wdc.com>
-References: <20201124043728.199852-1-damien.lemoal@wdc.com>
+        id S1726282AbgKXFGW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 00:06:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgKXFGV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 00:06:21 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772FEC0613CF
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 21:06:21 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id w202so1488277pff.10
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 21:06:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=t84FGtb1zqwFP9+gcpDWOJ23J5kLn0xfIZescE5RdAg=;
+        b=Zc2KdqBNxYB8xjxn5tTvXx63XU9sSiwOQ5bx1m4TeNVcPVAfLror94nHTOVzZ+ZNu3
+         fQu23QQrFlQfzrwzZTPHHkKsCpc/9FMMJzOh2KNyLB8uhpH1ems/YpRfkjPMh74OhPbw
+         242dDi5kxAmJzWCccUwJeYs1NnEPKMyNu7RSKWzTST2C3GE0dNAwKcZow3y0U6KHzjbH
+         hUvNKLBcGloaDU9uGqwLoN4kI9oOFnNXrc/WH9mjhLed1OTx/SYChE6zYCsQuOr9aZ+g
+         blj08t+eSZdSmPRzKvciu4rboNxc0HqFOjt8nXjU0MOMZVWU5dJXU+HkEtzmhesKxOhk
+         pu8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=t84FGtb1zqwFP9+gcpDWOJ23J5kLn0xfIZescE5RdAg=;
+        b=gD3VVzubyGNZX46NSOOhZqyneQZgsAgdfil2ZwCuZfpubc9USeSFy736nJ2DMIkPt5
+         Em1qTbac1PZ/RJTqJE0frJoGB89Cko8nLEmahb4UgoxweP8p/1bYA1tVGMBsbJPDFyBT
+         CQfunPCFm4KRfW7rXtFakq10ko5LADxQ0p7JxZPOrj/fKIza14uGtERSuVTPWrOTdtkA
+         1P6P9Oer004jfHRJpAI0UIAhMg0bP2JfS03HKVwwvv+wtMyxWOQ/juLvXW7FznaznnqU
+         NOzNwHzXgNa5pftC8g3mFUjXfRXQU8vWPaP9RE94q8L/aVuuU4MoDLmkBF4tdOqqrnWL
+         ob8A==
+X-Gm-Message-State: AOAM5303eHox/ZJuTuNFBbyTHrU0zP5QdbqpIjyZ6EAqQNLPEiUNXtLX
+        wVYs558N2vrPgRoNYDNTmGm7Oks9/4t4WA==
+X-Google-Smtp-Source: ABdhPJz98eS0KOZDEN5ciizxnoNQfjEfuxC2oQL9mIxpr6zyBPi29Dl3a0yZPU/R7DM88WKv9VYqtw==
+X-Received: by 2002:a63:ff18:: with SMTP id k24mr2296838pgi.273.1606194381086;
+        Mon, 23 Nov 2020 21:06:21 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:1bab:7221:4aae:c48d])
+        by smtp.gmail.com with ESMTPSA id e17sm12707727pfm.155.2020.11.23.21.06.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2020 21:06:20 -0800 (PST)
+Date:   Mon, 23 Nov 2020 21:06:18 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Pawan Gupta <writetopawan@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: core: Fix unused variable build warnings
+Message-ID: <20201124050618.GA337876@x1>
+References: <d1a71663e96239ced28509980ea484cadc10c80a.1606170299.git.writetopawan@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d1a71663e96239ced28509980ea484cadc10c80a.1606170299.git.writetopawan@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The nommu_k210_defconfig default configuration allows booting a K210
-SoC based board using an embedded intramfs cpio file. Modifying this
-configuration to enable support for the board SD card is not
-trivial for all users. To help beginners getting started with this
-board, add the nommu_k210_sdcard_defconfig default configuration file
-to set all configuration options necessary to use the board mmc-spi
-sd card for the root file system. This configuration adds support for
-the block layer, the mmc-spi driver and modifies the boot options to
-specify the rootfs device as mmcblk0p1 (first partition of the sd card
-block device). The ext2 file system is selected by default to encourage
-its use as that results in only about 4KB added to the kernel image
-size. The default device tree compiled in is unchanged and must be
-replaced by the user with the device tree suitable for the board being
-used (k210_maix_bit, k210_maix_dock, k210_maix_go, k210_maixduino or
-k210_kd233).
+On Mon, Nov 23, 2020 at 02:33:33PM -0800, Pawan Gupta wrote:
+> A recent commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs
+> file") added build warnings when CONFIG_GPIOLIB=n. Offcourse the kernel
+> fails to build when warnings are treated as errors. Below is the error
+> message:
+> 
+>   $ make CFLAGS_KERNEL+=-Werror
+> 
+>   drivers/pinctrl/core.c: In function ‘pinctrl_pins_show’:
+>   drivers/pinctrl/core.c:1607:20: error: unused variable ‘chip’ [-Werror=unused-variable]
+>    1607 |  struct gpio_chip *chip;
+>         |                    ^~~~
+>   drivers/pinctrl/core.c:1606:15: error: unused variable ‘gpio_num’ [-Werror=unused-variable]
+>    1606 |  unsigned int gpio_num;
+>         |               ^~~~~~~~
+>   drivers/pinctrl/core.c:1605:29: error: unused variable ‘range’ [-Werror=unused-variable]
+>    1605 |  struct pinctrl_gpio_range *range;
+>         |                             ^~~~~
+>   cc1: all warnings being treated as errors
+> 
+> These variables are only used inside #ifdef CONFIG_GPIOLIB, fix the
+> build warnings by wrapping the definition inside the config.
+> 
+> Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
+> Signed-off-by: Pawan Gupta <writetopawan@gmail.com>
+> ---
+>  drivers/pinctrl/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index 3663d87f51a0..1bb371a5cf8d 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -1602,10 +1602,11 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+>  	struct pinctrl_dev *pctldev = s->private;
+>  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+>  	unsigned i, pin;
+> +#ifdef CONFIG_GPIOLIB
+>  	struct pinctrl_gpio_range *range;
+>  	unsigned int gpio_num;
+>  	struct gpio_chip *chip;
+> -
+> +#endif
+>  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+>  
+>  	mutex_lock(&pctldev->mutex);
+> -- 
+> 2.21.3
+> 
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- .../riscv/configs/nommu_k210_sdcard_defconfig | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig
+Thanks for pointing this out.  I don't have any systems where I build
+without CONFIG_GPIOLIB so I missed this.
 
-diff --git a/arch/riscv/configs/nommu_k210_sdcard_defconfig b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-new file mode 100644
-index 000000000000..3d2cb4747e7f
---- /dev/null
-+++ b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-@@ -0,0 +1,90 @@
-+# CONFIG_CPU_ISOLATION is not set
-+CONFIG_LOG_BUF_SHIFT=13
-+CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+# CONFIG_SYSFS_SYSCALL is not set
-+# CONFIG_FHANDLE is not set
-+# CONFIG_BASE_FULL is not set
-+# CONFIG_FUTEX is not set
-+# CONFIG_EPOLL is not set
-+# CONFIG_SIGNALFD is not set
-+# CONFIG_TIMERFD is not set
-+# CONFIG_EVENTFD is not set
-+# CONFIG_AIO is not set
-+# CONFIG_IO_URING is not set
-+# CONFIG_ADVISE_SYSCALLS is not set
-+# CONFIG_MEMBARRIER is not set
-+# CONFIG_KALLSYMS is not set
-+CONFIG_EMBEDDED=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLOB=y
-+# CONFIG_MMU is not set
-+CONFIG_SOC_CANAAN=y
-+CONFIG_SOC_CANAAN_K210_DTB_SOURCE="k210_generic"
-+CONFIG_MAXPHYSMEM_2GB=y
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
-+CONFIG_CMDLINE="earlycon console=ttySIF0 rootdelay=2 root=/dev/mmcblk0p1 rw"
-+CONFIG_CMDLINE_FORCE=y
-+# CONFIG_SECCOMP is not set
-+# CONFIG_STACKPROTECTOR is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+CONFIG_BINFMT_FLAT=y
-+# CONFIG_COREDUMP is not set
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_FW_LOADER is not set
-+# CONFIG_ALLOW_DEV_COREDUMP is not set
-+# CONFIG_BLK_DEV is not set
-+# CONFIG_INPUT_LEDS is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_LDISC_AUTOLOAD is not set
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_DEVMEM is not set
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=y
-+# CONFIG_I2C_HELPER_AUTO is not set
-+CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_SPI=y
-+# CONFIG_SPI_MEM is not set
-+CONFIG_SPI_DESIGNWARE=y
-+CONFIG_SPI_DW_MMIO=y
-+CONFIG_GPIO_SYSFS=y
-+# CONFIG_GPIO_CDEV_V1 is not set
-+CONFIG_GPIO_DWAPB=y
-+CONFIG_GPIO_SIFIVE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+# CONFIG_HWMON is not set
-+# CONFIG_VGA_CONSOLE is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+CONFIG_MMC=y
-+# CONFIG_PWRSEQ_EMMC is not set
-+# CONFIG_PWRSEQ_SIMPLE is not set
-+CONFIG_MMC_SPI=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_USER=y
-+# CONFIG_VIRTIO_MENU is not set
-+# CONFIG_VHOST_MENU is not set
-+CONFIG_EXT2_FS=y
-+# CONFIG_FILE_LOCKING is not set
-+# CONFIG_DNOTIFY is not set
-+# CONFIG_INOTIFY_USER is not set
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_LSM="[]"
-+CONFIG_PRINTK_TIME=y
-+# CONFIG_SYMBOLIC_ERRNAME is not set
-+# CONFIG_DEBUG_BUGVERBOSE is not set
-+# CONFIG_DEBUG_MISC is not set
-+CONFIG_PANIC_ON_OOPS=y
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_RCU_TRACE is not set
-+# CONFIG_FTRACE is not set
-+# CONFIG_RUNTIME_TESTING_MENU is not set
--- 
-2.28.0
+I'm having trouble figuring out a .config that will reproduce this.  I
+tried tinyconfig but it compiled clean.
 
+Could you share your .config?
+
+Thank you,
+Drew
