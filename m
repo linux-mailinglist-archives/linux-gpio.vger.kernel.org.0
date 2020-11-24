@@ -2,83 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27DDC2C2041
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 09:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08C052C204A
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 09:45:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbgKXImC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 03:42:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45442 "EHLO
+        id S1730757AbgKXInn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 03:43:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730763AbgKXImB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 03:42:01 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5214DC0613CF
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:42:01 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id s27so7737376lfp.5
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:42:01 -0800 (PST)
+        with ESMTP id S1730492AbgKXInm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 03:43:42 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42233C0613CF
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:43:42 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id j205so27708772lfj.6
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:43:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wvJieEgip1g2WEMiOdWtOXx++qG4HU5IWILT3U6RFgs=;
-        b=mJUb4iGMJjIWX8lPMq4tIdVYYwCQ67pBbsA+TPEjhQUqZSAatFbBhuCBKyZsKh8fCc
-         JGpV0Cc2ww5FVkjK63FldrCA9Ig/lclWUIkH+vU/D421GHQ60WDTVS7RhVSTyJmRPPbm
-         vlKNUUw+ltheJYgTJ6WBZ/vKeTtoG5+fj2fyzvIPf8kBhK4gxu6qfLs/P1Qgksfm4fvE
-         gCqb1lv58LleBY/hA5uwf9esy/7WwKX1IeTsIZVNuXTpHvrVix6x+q/3uc+HHz85ECOP
-         7c8+s1vq6e5L2fQCf1ooqPCMlZ5x42ijySwcRxEE/jL/qA+EjXMtSGYmuBEFllkrARzE
-         mNtg==
+        bh=AaOgVY3DT0axuPXm6Wf+nM+h8FcaH7ypPyzww8UGHiA=;
+        b=lN5cc08a6CagxJpTMEus4nk8yN3LrNsf+6Fb1xG5jouQm5lQ9g0JNVT3AHjCbW1gGc
+         QZkNd5wSRX8H/RmI0c/v09Ybd/WNDgtW0kdaD+AgYuFVr8nmG3xf0OnUfQYzhIUoBqcJ
+         58A6Es0AU2RwJdzQ6Orj1gQLa5+/TmY8nOPDyKFDS6qPBMf+VEf8q37y8s87PeJ3/zaX
+         iw6Pk8tGJZ7z6d1jfUBwNgdYEpQALn309O3FCy8sp9marTgkYzjLRqK8dVeMeCFJLX35
+         PROf7S91HkoVlyMjJfFPWGroDxuBaltHv6OTVKyUJDYOEXywsQ1ze9tfB76Oh+0Q260U
+         c9Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wvJieEgip1g2WEMiOdWtOXx++qG4HU5IWILT3U6RFgs=;
-        b=loAdSV6/OHoiyffDbyTkJmCrCeMo6nCRtdQ0kWzYQE2JXOjCNRcoCud+fpa7kQIrpb
-         wVPKcelQZL+CGfSblBh0MJf/DGk6aOyxdECCXSEOw2hTavcT1zqHZ7VYChyJS2U1Wj1v
-         Jg9fAglGp1Bi5w25y1J/v45N0VmFSBRHVj1jkzf6yZiMnyxVXIKFGGoiwttmcpGtDF2b
-         cqr1Unrw0yFS9+FlvxLCVdRGRgwW1Io1TGx25e0bjz28YmBtgtJnp/uKI+w/rcS+UR7X
-         cSTVfGeXpGZwRxPkRfW3TktI8cSBdxiimSWDAif6OlKXeCI8oGOEVNsfr5s4LtX7JXGn
-         ZjeA==
-X-Gm-Message-State: AOAM532GFRIs/+9BZifYwwFP+MWS9RveCGGHqy1AIEzJMY3RUCp+eITL
-        0GsvW5VKWFyYbCHpC8JyWZNs/5YIMPXFOiec9OcIPA==
-X-Google-Smtp-Source: ABdhPJwq8vXwP1njCi8d7YRqNvXM/K6scFYWCwRR28xF1q8lPLVDfnosAP2q9vjrVciFTOlk0Ez/FkVcAKgB/NO8E4k=
-X-Received: by 2002:a19:7b06:: with SMTP id w6mr1430812lfc.260.1606207319854;
- Tue, 24 Nov 2020 00:41:59 -0800 (PST)
+        bh=AaOgVY3DT0axuPXm6Wf+nM+h8FcaH7ypPyzww8UGHiA=;
+        b=RzIBe2QSWaxpGtgJvb2KR+8XTxgqAGILxBcqUADnVO240GxqmG/gDqujW6T8pXS6wf
+         v1c+TlIsxY4ZxhGSoWkfe3Cd9JCza97r8+7iRZVxyaLgJ1moNB0ivLDdrove1sZrj4JX
+         X3unew5nncv00z05CN95+kWyIc8TUrgQCMYIjuZ0/KcfP/IOfQq7gNWmLRRVHi0fOdO9
+         SnLnLTWGPI7nmg45U9j45CcbNbDUpx8wqppX2qt4iXKcI2dpAYCxgiW/ZY48AhzqZJ8Y
+         4+HEGqZYpOdBqgWgaKFjKuCY9aKKuVvG9pHVs2NrlUIM1pb+m/B3a/XCs71cdlt9UeBb
+         sUTA==
+X-Gm-Message-State: AOAM531Fwn7TTWwrEH/GNgv+LC6XLPQOR3uHV4cvnd5nu4liAEi7vRjq
+        aWwVkL/7GfQ+te2kx1RXQ9Q70Us84YcVlxCXbj/0lQ==
+X-Google-Smtp-Source: ABdhPJwfslqVfk1bAlpxvLALOaiPyZkEzCXcFjklOgHwERbpK3OuBSxE/8+9JiCpkPggMPoqlydmwwG1XchrhzX2p5A=
+X-Received: by 2002:a19:8686:: with SMTP id i128mr1245870lfd.333.1606207420757;
+ Tue, 24 Nov 2020 00:43:40 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1604988979.git.frank@allwinnertech.com> <85263ce8b058e80cea25c6ad6383eb256ce96cc8.1604988979.git.frank@allwinnertech.com>
-In-Reply-To: <85263ce8b058e80cea25c6ad6383eb256ce96cc8.1604988979.git.frank@allwinnertech.com>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-21-damien.lemoal@wdc.com>
+In-Reply-To: <20201107081420.60325-21-damien.lemoal@wdc.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Nov 2020 09:41:49 +0100
-Message-ID: <CACRpkdbYe7dRLn=-+f0KPu_gzfaOKwz+=2VwzQKOS7xFHu0qPA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 03/19] pinctrl: sunxi: Always call
- chained_irq_{enter, exit} in sunxi_pinctrl_irq_handler
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
+Date:   Tue, 24 Nov 2020 09:43:30 +0100
+Message-ID: <CACRpkdZhOxz5NhrkFxZ5G4aOrmBoAcQodOvqzNROQtXpHVQGDQ@mail.gmail.com>
+Subject: Re: [PATCH 20/32] riscv: Add Kendryte K210 FPIOA pinctrl driver
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 7:24 AM Frank Lee <frank@allwinnertech.com> wrote:
+On Sat, Nov 7, 2020 at 9:15 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
 
-> From: Yangtao Li <frank@allwinnertech.com>
+> Add the pinctrl-k210.c pinctrl driver for the Kendryte K210 FPIOA
+> (fully programmable IO array) to allow configuring the SoC pin
+> functions. The K210 has 48 programmable pins which can take any of 256
+> possible functions.
 >
-> It is found on many allwinner soc that there is a low probability that
-> the interrupt status cannot be read in sunxi_pinctrl_irq_handler. This
-> will cause the interrupt status of a gpio bank to always be active on
-> gic, preventing gic from responding to other spi interrupts correctly.
+> This patch is inspired from the k210 pinctrl driver for the u-boot
+> project and contains many direct contributions from Sean Anderson.
 >
-> So we should call the chained_irq_* each time enter sunxi_pinctrl_irq_handler().
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Signed-off-by: Sean Anderson <seanga2@gmail.com>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 
-Patch applied.
+The kernel build robot is complaining about this patch so I'm waiting for
+a new version.
+
+Would also be nice if the maintainer could add some comments?
 
 Yours,
 Linus Walleij
