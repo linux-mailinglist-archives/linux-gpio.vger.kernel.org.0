@@ -2,107 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4B02C2A54
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 15:48:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE86F2C2AA1
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 16:02:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389345AbgKXOru (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 09:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388174AbgKXOrt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Nov 2020 09:47:49 -0500
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5073206F9;
-        Tue, 24 Nov 2020 14:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606229266;
-        bh=KHWIOvsVxIgxzJ3ANvrXr+IcifXvCH3d9eC+5p4MJwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tWoPDQgvsKVPCfxibPNl9c0zBQ9NfBrnsDyv8UIAtPJxHLfF4o1CuP3vwUt19y/P8
-         Y66kkjj2Cim4kMyRQiiYzb1whNr+v/N+nMKfcHqv3RaX8mBnUDrFmNddDbw9/dIVnH
-         xirANyC4hb8bYXXRvxw8qG9eYp8JWf8UX9D38PQM=
-Date:   Tue, 24 Nov 2020 08:47:54 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-sctp@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        bridge@lists.linux-foundation.org, GR-Linux-NIC-Dev@marvell.com,
-        rds-devel@oss.oracle.com, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, wcn36xx@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        reiserfs-devel@vger.kernel.org, oss-drivers@netronome.com,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        virtualization@lists.linux-foundation.org,
-        Joe Perches <joe@perches.com>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-cifs@vger.kernel.org, coreteam@netfilter.org,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-scsi@vger.kernel.org, linux-afs@lists.infradead.org,
-        netfilter-devel@vger.kernel.org, linux-geode@lists.infradead.org,
-        drbd-dev@lists.linbit.com, linux-ext4@vger.kernel.org,
-        linux-hams@vger.kernel.org, target-devel@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        tipc-discussion@lists.sourceforge.net,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-renesas-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-nfs@vger.kernel.org,
-        devel@driverdev.osuosl.org, selinux@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, linux-iio@vger.kernel.org,
-        linux-i3c@lists.infradead.org, Miguel Ojeda <ojeda@kernel.org>,
-        linux-can@vger.kernel.org, linux-integrity@vger.kernel.org,
-        GR-everest-linux-l2@marvell.com, keyrings@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-usb@vger.kernel.org,
-        nouveau@lists.freedesktop.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org,
-        cluster-devel@redhat.com, linux1394-devel@lists.sourceforge.net,
-        linux-decnet-user@lists.sourceforge.net,
-        op-tee@lists.trustedfirmware.org, linux-ide@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-        dm-devel@redhat.com, linux-watchdog@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ceph-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-Message-ID: <20201124144754.GL16084@embeddedor>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <160616392671.21180.16517492185091399884.b4-ty@kernel.org>
+        id S2388076AbgKXPBZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 10:01:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731164AbgKXPBY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 10:01:24 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A54C0613D6;
+        Tue, 24 Nov 2020 07:01:24 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id v21so9564141plo.12;
+        Tue, 24 Nov 2020 07:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e3cDrG679ihqpisNhP/stj2I962GpQ7amV8CNs8/PaQ=;
+        b=smGIZTDgXcM6Jyu631FZoO91xmcTi16ubvE6AprWkirHNLx5TzD5S3wKvstwo0732s
+         mZiopWnEsz/wcF3AOVkyWv/MVjzIJESUOq9yQE1moZM+73upBDzMayx7KpgFqbyEKU0i
+         BdyL8siDS0BL/LW79RtvO6fjrwOtyoGBAv4ougj2hr8m3qYM5435R5vHT1IIJWtIbmRz
+         bVtooDbORU0K+hwZHkVy/V87Ozz3cD5TzLEdl3Y6OYp3gSR2rCEFpIzEy4r1cXm890kL
+         tIJLAhZJkQ5ohADKXNza0h6x3N5CqSYvCatTP8xpSaToIqkS8wxk/o98XRGLrIgq/9qq
+         X2mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e3cDrG679ihqpisNhP/stj2I962GpQ7amV8CNs8/PaQ=;
+        b=SZBVxrRHyGxCO+QOcagnwGLQiXNi+UDZ/j2muOIG51Y3PZqMpyXwAIajLcQJtVkuHt
+         UzPaGGOQlvy7Sdm5izhLsqqFIA4/0+JDwB+TgRmPPs7COS8Lx/k2QrmaLuQVgxGxRgTM
+         M6pz0htK+k4ojU6BUTyeOICJUtfBiDB+2BauQtUI5H2FY7JfhCGMbuwu82YVUTEWvy4y
+         3+2/PBrm6Erlkbmv20CyqJtFzSS/AacmxGQ+8mMt4PvgVJhHLf3Tpcsx5/gGt0ELhRkn
+         PnenO0/cYH+SOthFbvkJh1kOaVAmJHFHSCyBuk3gx61dGbwwhRf7I8gTWOnyoFOf0eP/
+         NR8w==
+X-Gm-Message-State: AOAM532LynqNWzP0Sjye2Ja4LVPxD2iwl5VIGeq2jQTlHmFgDFEbBn2P
+        ph9oAHPWtSrQHYi5kn93qE8mWLuQjqAJ2QM645Y=
+X-Google-Smtp-Source: ABdhPJwRVslghkzivG9spVlq4JaFv1qAFKbeNSMKmoKNRE7VjMwKy2VrolHb9GNSCdYPl91dnM6lScdO0JkY+T48azA=
+X-Received: by 2002:a17:902:bc4a:b029:d6:7ef9:689c with SMTP id
+ t10-20020a170902bc4ab02900d67ef9689cmr4269486plz.21.1606230084391; Tue, 24
+ Nov 2020 07:01:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160616392671.21180.16517492185091399884.b4-ty@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
+ <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com> <20201124144300.GM2532@lahna.fi.intel.com>
+In-Reply-To: <20201124144300.GM2532@lahna.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 24 Nov 2020 17:02:13 +0200
+Message-ID: <CAHp75Vd6HJpt0DgE3ugB-qXGT5FL2tzg=CCKn9a-PeAYY+n+ow@mail.gmail.com>
+Subject: Re: Request for pre-review of pending MID removal patch series
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 08:38:46PM +0000, Mark Brown wrote:
-> On Fri, 20 Nov 2020 12:21:39 -0600, Gustavo A. R. Silva wrote:
-> > This series aims to fix almost all remaining fall-through warnings in
-> > order to enable -Wimplicit-fallthrough for Clang.
-> > 
-> > In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
-> > add multiple break/goto/return/fallthrough statements instead of just
-> > letting the code fall through to the next case.
-> > 
-> > [...]
-> 
-> Applied to
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-> 
-> Thanks!
-> 
-> [1/1] regulator: as3722: Fix fall-through warnings for Clang
->       commit: b52b417ccac4fae5b1f2ec4f1d46eb91e4493dc5
+On Tue, Nov 24, 2020 at 4:43 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Mon, Nov 23, 2020 at 07:59:29PM +0200, Andy Shevchenko wrote:
+> > +Cc: Mika
+> >
+> > On Fri, Oct 23, 2020 at 8:07 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > Hi!
+> > >
+> > > There is a pending patch series [1] to remove a lot of legacy code
+> > > related to old Intel MID platforms. (Note, not all of them, since we
+> > > have an ACPI based Intel Edison edition which continue working nicely
+> > > after this)
+> > >
+> > > Most of the code is shuffling arch/x86 and the series is quite
+> > > dependent on the contents of that folder (for the sake of
+> > > bisectability). Since that the only way it would be integrated is
+> > > through the tip tree I would like to have your preliminary review on
+> > > other contents =E2=80=94 #3 and #4 are PDx86 and GPIO subsystems. In =
+this case
+> > > I won't resend this many times.
+> > >
+> > > I have a preliminary offline agreement with Len Brown on SFI removal
+> > > (#2 in the list).
+> > >
+> > > [1]: https://gitlab.com/andy-shev/next/-/commits/topic/mid-removal/
+>
+> Looks pretty good to me.
 
-Thank you, Mark.
---
-Gustavo
+Thanks! Can I use your tag (which is better?) for some patches (which ones?=
+)?
+
+> I wonder it is possible to remove gma500 also
+> or it is used in Edison?
+
+It can be used on other platforms based on not-going-to-be-removed
+Merrifield and possibly Moorefield.
+Hence I would like to leave it for now.
+
+--=20
+With Best Regards,
+Andy Shevchenko
