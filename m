@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 047CF2C2026
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 09:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DB932C202E
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 09:40:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbgKXIiA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 03:38:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
+        id S1730546AbgKXIjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 03:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgKXIh7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 03:37:59 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A3FC0613D6
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:37:59 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id y7so6149396lji.8
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:37:59 -0800 (PST)
+        with ESMTP id S1726689AbgKXIjI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 03:39:08 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD735C061A4D
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:39:07 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id s30so27730352lfc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Nov 2020 00:39:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2H8XWRLs/cbmJeRBTAh4/48CwYXMne1DsJ3h7TEz2GM=;
-        b=j82cKN347mqaeqLKt04crgSBJJhiSMO8zoQY1YHiSWBV5gT/+AAOjpGTyfh+o9Q3mc
-         KHFXiUvWy4L8mloe3qazA7AGbiCOUmr9MI79Q8Qorm6PeTTm7W3gZgRNltxjOQjEyIaV
-         4yfbQpXwQYNq0j0PqKL1VReBP4VB7paculjpmhWTKHB/ToDqwDyfAMXNgYE7uGXZilfe
-         kMDoIaflhclMeVnN++SvYryLZ1aI9eBBg2U4nzuo2aMqgT4KwU/L0BiEvKj/Gh4JQwfY
-         hrsNjQFpooCvU9CbZVDQUeFqZLbna0MQ08epM/Lx2YIiHqjlHEYsRgzvYxyfT11OnGue
-         MOcQ==
+        bh=i8+bYCeKuOJvnepjKUXd1bAXp/xtxeuCkyy0njL/NAA=;
+        b=pM2yYux2OW5DIOxHgUVmKI58b7pM94gtzpow1fv7nhugyA1ylNk6yTjvTfL6Isdxa0
+         RL/fpFvBHQmjRmSqhc9JPxpgv4Hh8ZdWdWI/E3jRb8mDsuIlEa8niLuk/MPJrYGDbpC1
+         ADKmWNH3/BnBsyr72JUrUNzFnzVK/KfPZEgi72Q5YZ4KCmMlzZ47dgHY6QO2za5gPKB5
+         VTGRXum+qhzFRudFxIXNExPBbDtNE8JkFI04gjlMrBOsyvWtsD4l6S422YBS7glv9aTv
+         GVrFYKXL+T7T05X0vlLfSlmzxYxqNnh7dO0mGfiJzBO5zM6/1XhzLSL3OAJaHlc2kx3c
+         9TCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2H8XWRLs/cbmJeRBTAh4/48CwYXMne1DsJ3h7TEz2GM=;
-        b=Ylp6SeqJEL4UwsrN0z1JN7HloA0Bm8gUNAGyg2kCDZ6dr8NlXEYHsrWXMrJIoONIc1
-         oXe7xttYvlrocEN3JQXtXSmIkiv5UO7GGQS1C4O6G09gNO9RGSYTcS49oWQ+ly65UKlq
-         TkqbrqqJsgpYphlwyshJKqznOiJTMN1IOt6m9NgfLIZXppsQ93XXS4Ph24BH0xiqKJEv
-         o7x+K+oljbQd4lo1Dgc2ZVD3HFbzXagGvhHnLR6MYnRI+kScvQp6DWjasdtoS5qoxT/S
-         oKW/MwIQ/5zanvrLn47d4/b6Axqrlkcz4ypSO7ZCc60+MmX1nSMI+hZmTA977w7w9Sxx
-         IgwA==
-X-Gm-Message-State: AOAM533CKCMyoqk2IeOZP7CNtMkAikVJwuITU6tu4QKEhjYl4Ym4sQs/
-        yl5bdO2J5fIc3nv0wYWh8Zz2jdOOjOq/vAKi1hDdjg==
-X-Google-Smtp-Source: ABdhPJxGrELU+sr+1kgkl/qdZ/XZwXL4XRm5dMDFIKZ0RZe+Cq1K9uCu5AlgW+v6i3cT7KOpEXWCGVfu8zUwNKOSIdo=
-X-Received: by 2002:a2e:93cd:: with SMTP id p13mr1323677ljh.144.1606207077648;
- Tue, 24 Nov 2020 00:37:57 -0800 (PST)
+        bh=i8+bYCeKuOJvnepjKUXd1bAXp/xtxeuCkyy0njL/NAA=;
+        b=rGNS/70z1MJJTCwrO1nQfF6PyEOOBVN9iw4D8doIOoV8O0ohE3XQhV4NWwD5fA4Lxm
+         C6auyGTn+LBWardeg1f+/IVCwYMw6hYmEZOJM0eU9CvyGCHj7KI3C3oExz7W/s6oQ5QY
+         +PxTt/rnoyJ7MPsCLt5FQOg31l0Gdccx8x5hnmzh03PW5Vzc59RuyOXUQzJ2b/Npnz1+
+         RNrcxA9ODYi/C0070iFp+mUmwPdgO3VNGUivo1t68YdWKLmPhUyQecGVXwaBF9C03GF7
+         DcUCAAik+ygLMjG/LHxaInU99vyYEod4zpacpq4SkMZr0enx5vb3sHc/eDUPHshBfFPm
+         z92Q==
+X-Gm-Message-State: AOAM532T1/p2XsFrwWCLzKUCeQTkyUVmUMCaDXW9M60PbI2InS90QR1I
+        rGdL5VPmyNpNToWS4RkpzBN7O3kiQChI0kqRbS+3+Q==
+X-Google-Smtp-Source: ABdhPJzQT4fDtfKY20ncG9HETAsp8RdTF79Jyc6mRKyoBEhhdyG1qtyOY5kKpTCHvD7v0L+Hn6wSYsEYEGC2qtveh2Q=
+X-Received: by 2002:a19:5f11:: with SMTP id t17mr1212354lfb.572.1606207146303;
+ Tue, 24 Nov 2020 00:39:06 -0800 (PST)
 MIME-Version: 1.0
-References: <1604570192-15057-1-git-send-email-rnayak@codeaurora.org>
-In-Reply-To: <1604570192-15057-1-git-send-email-rnayak@codeaurora.org>
+References: <1604570192-15057-1-git-send-email-rnayak@codeaurora.org> <1604570192-15057-2-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1604570192-15057-2-git-send-email-rnayak@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Nov 2020 09:37:46 +0100
-Message-ID: <CACRpkdYcdrC+xbaoZ6dEePtRcD3hqAdotQq=jddOC8=OMa6EFw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add sc7280 pinctrl bindings
-To:     Rajendra Nayak <rnayak@codeaurora.org>
+Date:   Tue, 24 Nov 2020 09:38:55 +0100
+Message-ID: <CACRpkdbrOKct5v2YY6L8G5fweP=eOFpcS9=Z6nUyA2E4Of+h7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: Add sc7280 pinctrl driver
+To:     Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,15 +67,24 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Nov 5, 2020 at 10:56 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 
-> Add device tree binding Documentation details for Qualcomm SC7280
-> TLMM block.
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for SC7280 SoC
 >
 > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 > v2: Consolidated functions under phase_flag and qdss
+>     Moved ufs reset pin to pin175 so its exposed as a gpio
+>     npios updated from 175 to 176
 
 Patch applied.
+
+> +config PINCTRL_SC7280
+> +       tristate "Qualcomm Technologies Inc SC7280 pin controller driver"
+> +       depends on GPIOLIB && OF
+> +       select PINCTRL_MSM
+
+I changed this to depends on PINCTRL_MSM in the process to stay
+consistent with John's changes to modularize the pin controllers.
 
 Yours,
 Linus Walleij
