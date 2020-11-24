@@ -2,201 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B36612C1ACD
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 02:28:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E932C1AE7
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 02:34:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgKXBYd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Nov 2020 20:24:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34712 "EHLO
+        id S1730175AbgKXBdJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Nov 2020 20:33:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgKXBYc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 20:24:32 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5885FC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 17:24:32 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id l1so1561665pld.5
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 17:24:32 -0800 (PST)
+        with ESMTP id S1729483AbgKXBdG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Nov 2020 20:33:06 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F3EC08C5F2
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 17:33:05 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id 131so16811483pfb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Nov 2020 17:33:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=JPjNbv2ZIuTPNgf6VDjCpiJ0+h05+p6cb/LrqzTZiTQ=;
-        b=tdSmDvas1D5MtX7EWKvkK5yko3r6PwWUu4FPnGkb+wnGkYoJtBgfjLgKty9JyuycUW
-         8lakplsbW9Kr1YXiGIn4bSVOzQkOsYt0P3FRA6TuFvxE4tJVpYLJ9GKFOKA799Xq5+z/
-         JZ6EjD/JfCQxS0bHpacNpK1o+tSdXno7YAUwfVpZAeRUbkCK8m/VtdJkarGJtClcmyYz
-         TxTR3695aI5k+g/Tif9BSNdN7l79vjuhHs6irLA6YqS9N8gXq8DSRKPoVXIQSeLIiJPa
-         18UL2VI6+C8m3VEvGh3g2aINoR42UkpOnACVh/1lENu+wjmkUDtPxe2GT9drTIWitiPA
-         JeDA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Fpt+3NGNjcuXPoKd+YKzvfWCCI+i2QS11ln4xb/K2c=;
+        b=mZ10EKN9Q6HwSmECmmsUHbUHF/oTLT4c/YpQVGCE0gPLnlz6SgHQW3ieQ7zeUHJnUi
+         XUPs+F1GoZaFLBKWU3CvMTPUTS8a5+RdM3NBjgdsJpNB5L7Gee8a5rDblh6bnWIWT9TK
+         uir+AjWjaGJnRAA0K84IM0yu+WQnaSePUaJNJPiE7LfLBhB3Pd0A4gWblql3Lao7defI
+         n9Uw15itvZVSId22hyle+f6GM1M4THjCwMgL7v1hyU5f7oNm+YC3/Fk6KnTIGBq7Lgby
+         +eM5Ju8Jh9l5BxBe3HwjA5bt+bnUjVm7e9zM9zQUlIbVcSVLiqKYS2m+arIIzBAIXu/j
+         s+uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=JPjNbv2ZIuTPNgf6VDjCpiJ0+h05+p6cb/LrqzTZiTQ=;
-        b=BseUBByuPKE1Ymb555mjtr9GZiCK+csnANaD7NUkIf2mypTsr7d8AQZYM5wgHZun6B
-         3C5AkpvRQlQZOgSIT+MPKkk+5wHHGtB9dnLs/k/Cc2g3b6DJuTdNbhYqIjxWuhomOvQc
-         32p/EC2+wk2ACp+J7EreaQcEVJrj20YSS6r3IB4iYKeec406spFI0ocFMUBRr/MfLdIm
-         jJszHrA3X5gvYJsfz7rWSjlOmJl7hmiL+ukTeYXDDXQFTaHHcxmLBd0oNL73W3CnfDQr
-         gTMVce9efZqph1cKSOWYso2TzxAMUplFsS2vnY8TR2OUfXqsrRBT5SOOSOH6VUQtEJHF
-         nJTg==
-X-Gm-Message-State: AOAM530g4Ne0JLQd4NUiCHnSeUnR+0i3bjxcjFY1T+bRAX0HA5IfpoOd
-        ifkkEl4lk44OUDPiG7omcU+j/JS9U/ei7g==
-X-Google-Smtp-Source: ABdhPJxDzFgFeohEFDwFY5HIzpGXe2unX/S4KFoZj3vXQ+vottsqc8zFQVBo0U9lLrxLKgqC+meGrg==
-X-Received: by 2002:a17:902:446:b029:d7:cdda:87 with SMTP id 64-20020a1709020446b02900d7cdda0087mr1934417ple.11.1606181071552;
-        Mon, 23 Nov 2020 17:24:31 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id m4sm6259784pfd.203.2020.11.23.17.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2020 17:24:30 -0800 (PST)
-Message-ID: <5fbc60ce.1c69fb81.8107.0673@mx.google.com>
-Date:   Mon, 23 Nov 2020 17:24:30 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Fpt+3NGNjcuXPoKd+YKzvfWCCI+i2QS11ln4xb/K2c=;
+        b=QN2T79tBjAxQNqb5MTOCo1uwDDs1Itugnl42Zf8Mw7W5R4ekVOsCr4qFcvx42ZWflG
+         CANyaipVw5AYSpp1VW+OEEGYP1lWM4aZKfWIK1dyrPbKKMGxqDYjyN2eA8pszXc+9Xh8
+         nAiZag6GMjxNAGl5x9/Z3X3WhOcWj9UpgMdqlHpJu8Fo0w5Cv+uXc4rd+5bAveonRZ0n
+         UrfPuCQm5/XbBuqBA03W8pzj9+RK3sB18XdxAAqEJ5Hjjj+X0CG9S+Wcng2zHxvqQF5C
+         K9sUUcTGhnkR2pvD2JrsviU9WBqJytZRt14YFzWYO//iWqyV23rP7KVPPEcby67vSdoG
+         N0VQ==
+X-Gm-Message-State: AOAM531cj2IBMcq7ekr2QIKdTgq6u6WWbfewMyQtfiBLvWvP15tfFakv
+        kwZ3X55vbzHv2h9l0SFYaQb6dxw4kHk0zdwqss4E3w==
+X-Google-Smtp-Source: ABdhPJwQDF2vxX46wbajF4ioOOwzM/J33jC4qlEIQ0nX0CJ8Ae2/iYNAtfiNkgC6UbM9BT3sKlieSNPFWrTquhIIwSk=
+X-Received: by 2002:a65:6a4e:: with SMTP id o14mr1859973pgu.263.1606181584110;
+ Mon, 23 Nov 2020 17:33:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.10-rc4-36-g6c33287665e0
-X-Kernelci-Report-Type: build
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc4-36-g6c33287665e0)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook>
+In-Reply-To: <202011220816.8B6591A@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 23 Nov 2020 17:32:51 -0800
+Message-ID: <CAKwvOdntVfXj2WRR5n6Kw7BfG7FdKpTeHeh5nPu5AzwVMhOHTg@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc4=
--36-g6c33287665e0)
+On Sun, Nov 22, 2020 at 8:17 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Nov 20, 2020 at 11:51:42AM -0800, Jakub Kicinski wrote:
+> > If none of the 140 patches here fix a real bug, and there is no change
+> > to machine code then it sounds to me like a W=2 kind of a warning.
+>
+> FWIW, this series has found at least one bug so far:
+> https://lore.kernel.org/lkml/CAFCwf11izHF=g1mGry1fE5kvFFFrxzhPSM6qKAO8gxSp=Kr_CQ@mail.gmail.com/
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc4-36-g6c33287665e0/
+So looks like the bulk of these are:
+switch (x) {
+  case 0:
+    ++x;
+  default:
+    break;
+}
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc4-36-g6c33287665e0
-Git Commit: 6c33287665e093cdf885e700487380b65e402d33
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+I have a patch that fixes those up for clang:
+https://reviews.llvm.org/D91895
 
-Warnings Detected:
+There's 3 other cases that don't quite match between GCC and Clang I
+observe in the kernel:
+switch (x) {
+  case 0:
+    ++x;
+  default:
+    goto y;
+}
+y:;
 
-arc:
+switch (x) {
+  case 0:
+    ++x;
+  default:
+    return;
+}
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+switch (x) {
+  case 0:
+    ++x;
+  default:
+    ;
+}
 
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
-
-i386:
-
-mips:
-
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #size-cells (1) differs from / (2)
-    3    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.=
-dtsi:7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-range=
-s" property but its #address-cells (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #size-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: War=
-ning (dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but =
-its #address-cells (1) differs from / (2)
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for =
-SPI bus
-    1    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (=
-spi_bus_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells f=
-or SPI bus
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:=
-7.3-14: Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" pr=
-operty but its #size-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-address-cells (1) differs from / (2)
-    /scratch/linux/arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning =
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but its #=
-size-cells (1) differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SP=
-I bus
-    /scratch/linux/arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_b=
-us_bridge): /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI b=
-us
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Based on your link, and Nathan's comment on my patch, maybe Clang
+should continue to warn for the above (at least the `default: return;`
+case) and GCC should change?  While the last case looks harmless,
+there were only 1 or 2 across the tree in my limited configuration
+testing; I really think we should just add `break`s for those.
+-- 
+Thanks,
+~Nick Desaulniers
