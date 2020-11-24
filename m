@@ -2,246 +2,478 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C7AB2C227F
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 11:07:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E13022C2313
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 11:38:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgKXKFa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 05:05:30 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:42125 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728872AbgKXKF3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Nov 2020 05:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606212329; x=1637748329;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=e9l8e++pF/+TPdH+k7RyD/7T1jcZRcFhUKgVyMnPLNs=;
-  b=J+suLB1SrNl9o7QwbMzNttx30ns+t+sxSuZSgTU467OYVLbWzjn201wa
-   ZFiyo//LiH3UE77wIYznChEfgkQksxdcZ5xDfqD4TMQgTXBIe2XOtAFx6
-   7VNovkkeCdbOGVQM1t3yfA9+ictmUeF0FY1HMknQMADVPVJYUp8q6iEDp
-   nhXYcFI0IgiWrq77mwReqQ3R/9PuSfZI0KfEQAiMPOW4uJoYpWCEQrmd9
-   2xHRWswrSOcc9qu6NhgulI9P6WNLZ2WM+3PWVuGj7IGnfdkiFEmDx7U+p
-   cmMm12JSRO2OUAfJQhnIXHrU+W5CQugPNoonhiHgqCJOrF0NMeeoLfBmH
-   Q==;
-IronPort-SDR: S9lG7gYF/fuNpudSBwHZD5+0rf1N57FXBBfG2l9wWqdso320jiMcQCi2U3WzYNpYHiHcGsEqRl
- RpOKq7xokqcjEyogu1LLWgm1eMp1vB6SSRaRRrHUnmik7sUN4kcScIURde+00IHkro1idgtpvQ
- IIVixoLUxU2ayW24YdOBgWQUTaMNKbDhG+qSH8b+IGtXKK/cSwJ3/6IIFPxh0BocXV8T03mvU7
- QtjN9kpj15QdcYWnj3Yq0pTtF8I0c0di2Fkzzr1m167tagpi3TvZ4FBtuVfCyYJFW61U1PBc9S
- 42g=
-X-IronPort-AV: E=Sophos;i="5.78,366,1599494400"; 
-   d="scan'208";a="153248338"
-Received: from mail-dm6nam12lp2173.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.173])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Nov 2020 18:05:27 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U61omKiXvucSPLzGA67fLwu/UHPWY0F57OdVQelvJzO1EE7nGHCDduX1vOJ8K6GZmAAqCu8dVQsCf4Ev/1JmFttNieAymVTntxZ5BRYIs/5q9W/rQa4+/M4ibkwMeLY/BfqUCWrOPaLdgwcfMIQSTB24ZvpCcbaAQIwIwJjha5H0M5MHsJR2gMM6PobkIjCclwn4GkrpHXYh+lU5QugWzAnF9QWffm8NsNKzcuSy5/hIKIM7rgfZjLhIUoZ0vJn1BxzHyLoOfM3rBnIsHBm62ThhQfUu2XoZ1M+xx+LWvNFb3jD2KB5hiYOwf3G9sYrt0eHvM3dTsdOm6SAFXCtFPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gU2qmvbV8wge+LjfgGsNeEMo8AKtCeuVRgfvH9NEunM=;
- b=dE3E2H953ogF0qFgg1NGvhY0vm3ucHhhIc22T9BXuzqIIJpsoooEt4pZZT+ZKBrgU4CSThzXev+owLDahDfF+EvBNcGLGFn20TgD4g0LW9ZU/5ogyFx8ZVOorwqgixZn5KkF++InR5M8xDtAwfoF/0co3yw9q9Rtse4UoBrJNVHY8IhOwy2qzxuyjb0dv69VmJk45kqB9i5dLiVvIEvSVHzzMZtvmTZqt3ItcCxQjWYSixKM15/u0SH/ClspTuabPaSmgK21cMqR5IDV0yghkfyIwI5g9J+jFV8anUtasyMu4uB2Og+5gY21uAVVPINPpTzHK2uNfA+snHlbO2KR9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gU2qmvbV8wge+LjfgGsNeEMo8AKtCeuVRgfvH9NEunM=;
- b=pK/I5+3LJIh2H/mfYlmkL/lSpshAQyORD38E/rLv/h64sAEXxGbgiyT47ZbBC7XHxzg8bBtqSzq1xD9WIQNcjHpHFS1WQvkVZfGmeCLs0krx5cCAdX8+WPs+lATTqOBIHYzWAu3R2AQn8zxSIcicBxDRYOA+4nqmbwS44ahlJ3c=
-Received: from CH2PR04MB6522.namprd04.prod.outlook.com (2603:10b6:610:34::19)
- by CH2PR04MB6871.namprd04.prod.outlook.com (2603:10b6:610:a3::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.22; Tue, 24 Nov
- 2020 10:05:25 +0000
-Received: from CH2PR04MB6522.namprd04.prod.outlook.com
- ([fe80::897c:a04b:4eb0:640a]) by CH2PR04MB6522.namprd04.prod.outlook.com
- ([fe80::897c:a04b:4eb0:640a%7]) with mapi id 15.20.3589.022; Tue, 24 Nov 2020
- 10:05:25 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
-Subject: Re: [PATCH v2 09/21] dt-bindings: Document canaan,k210-fpioa bindings
-Thread-Topic: [PATCH v2 09/21] dt-bindings: Document canaan,k210-fpioa
- bindings
-Thread-Index: AQHWwhuTTl+n9RngRUi4SREztTsSrg==
-Date:   Tue, 24 Nov 2020 10:05:25 +0000
-Message-ID: <CH2PR04MB6522F476C51D4C65F116BE9EE7FB0@CH2PR04MB6522.namprd04.prod.outlook.com>
-References: <20201124043728.199852-1-damien.lemoal@wdc.com>
- <20201124043728.199852-10-damien.lemoal@wdc.com>
- <CAMuHMdXov3Dr7EmAeE7yrKRmtu_L3539u9cjeiGiaRu32YVPQQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2400:2411:43c0:6000:ccb9:9212:86f5:6af]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c1a6edb0-737d-4e7b-aa8f-08d89060767d
-x-ms-traffictypediagnostic: CH2PR04MB6871:
-x-microsoft-antispam-prvs: <CH2PR04MB6871AA4F7C18E3587358A105E7FB0@CH2PR04MB6871.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3iWVproal6e0zlwDoujtfRSZym4VKuYcLFgDctOoXMmOVi1H6vC4eitNjFf2QniHCFnlRzeVvqlssAt6v58eTxnFIZ/Kwfi/oJgoWkgCWzl0wzQOhS7A4mRytFaOUuRapPkIl1V05AS7njcg7Y9c1VQtLEpznfCyNXDd/xVroThjNFdKPDZfea8he7/vnR3H9RSQUKxv2xk1DKw77wWAXnOgWe6l8tkvxUUdxIjyqR5yQmRJqDj5aZ980FSlQQ2dRqkcpFb67FcGBd69ouHPQVawsjo8uPQgxejbg0jcvpruNOgS5ALm/lZOXojhHCaeyBGJf7knIyfEpC2zWPWSuA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6522.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(86362001)(8936002)(66446008)(7696005)(66946007)(64756008)(52536014)(76116006)(91956017)(66476007)(66556008)(2906002)(71200400001)(7416002)(186003)(8676002)(53546011)(478600001)(33656002)(4326008)(55016002)(9686003)(54906003)(6916009)(6506007)(83380400001)(5660300002)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?fxN1S4osD4z7mDUA7H5ctzMFuFw/yPmbLrj/ic++rV3cIhVoWTUF+fmY9bZo?=
- =?us-ascii?Q?G/2e545qLi698qf2wJUTRvtfCAG+ieW0ftyfftGIpB+VzCglrnwdztg0S47F?=
- =?us-ascii?Q?922QdN9xzknpt009e9ENlS4wJyj0ltI0h4rEYMaCMTI8QFr4PqhRFEZvjFdq?=
- =?us-ascii?Q?k9gCbBjg6IkBQhtbKFYCdIK1jlApiBOHsxjTz234v4h4uRTnkYKyMif3KAhH?=
- =?us-ascii?Q?1+JE8B+utMrMxKdy7RvmmZpDvcQGDCWigvCKHAMkaj4UYv8R2vezokCxIyV0?=
- =?us-ascii?Q?1Sks6iGbWsk3IE9gLGBs5hif+7O8O/8lYqR+ROWqxygnK2trYH3gf4di/VGq?=
- =?us-ascii?Q?CuAz+6n6ah6oxrjUakN8HYPKyI5rwKdm1QO71JYP6wYNczgiKCxwxlE2qaZd?=
- =?us-ascii?Q?mQ8ZtpMg/1Fo27eg+rp6+VQzU2Kvgx4UmTPQmhG7+qwB6B/Pxzxc+4vBxO4w?=
- =?us-ascii?Q?RBqeM+D+V8b/8ZTZ7lsHP6zgGsfkT0adC0cXiS375UjwA3imkwPBnQwMq67O?=
- =?us-ascii?Q?hpeFDiTuCIZpfgz1gDsctjidH9MhvQPmX5rWCotshJBWQNHb+hAagb6aFtMZ?=
- =?us-ascii?Q?okYE3lwejfD7Kp7qa5LVZX6BXDameVgFKNk6ZC6UGp9+dusymGZN5IB8PWbI?=
- =?us-ascii?Q?GumVx3t+TW2duPZIHfo9rvhvqFdBNmxG5+O0LEI+vwEHm4SNvp3Zibl/QaIp?=
- =?us-ascii?Q?na5Xwh+naT2yHr1nTeJOm+1pvia0+hGOaxGOwECDWhSZmrcthPGcT1HYoKU3?=
- =?us-ascii?Q?OgrhejkEerWZswErkCFSr5e7+ASFyaBeZ3bVA8F/M73otEBnXiYplJbvzfW2?=
- =?us-ascii?Q?v+39B+g75E16HYe144UmoPorxmCLTBEtnIr9t7X8vyn5CCTG9nuGHu+0pJk/?=
- =?us-ascii?Q?uAHB3TS1uaavFIvLAZI4I6NwbcOrgGd2ZFL82nwOlmUmh2zo/1aHAeTBqB7x?=
- =?us-ascii?Q?zBCZq/9mRKPgXjUizE/ZhQ=3D=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1732036AbgKXKhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 05:37:25 -0500
+Received: from z5.mailgun.us ([104.130.96.5]:19924 "EHLO z5.mailgun.us"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731097AbgKXKhY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Nov 2020 05:37:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1606214243; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Kchv5+315YS+TseHmsUO3yy2jMFvYmZRMnZbpjpfgn0=; b=UUtk5ItxUEzR0aIKOauOYSTnnAhKULABZtWdedkjFGlpSsQJK0q1reA8dVEFzfkQA7LM17YJ
+ mpDd988YkFYfsHFrsQaLRUfEXD4KFnhdAKmpooWvpNpQbeVYoGWn9uqetIbYD00KPL9qJtc9
+ pR6lqEFSh78r+Fix/z55dUQsZuk=
+X-Mailgun-Sending-Ip: 104.130.96.5
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5fbce25a0c9500dc7bc9d62a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 24 Nov 2020 10:37:14
+ GMT
+Sender: mkshah=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3DE8FC43461; Tue, 24 Nov 2020 10:37:14 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.77.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AE78C433C6;
+        Tue, 24 Nov 2020 10:37:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AE78C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH 3/3] pinctrl: qcom: Clear possible pending irq when
+ remuxing GPIOs
+To:     Douglas Anderson <dianders@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Srinivas Ramana <sramana@codeaurora.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
+References: <20201123160139.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+ <20201123160139.3.I771b6594b2a4d5b7fe7e12a991a6640f46386e8d@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <502b39f5-a2b3-5893-da18-47b034f4895d@codeaurora.org>
+Date:   Tue, 24 Nov 2020 16:07:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6522.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1a6edb0-737d-4e7b-aa8f-08d89060767d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Nov 2020 10:05:25.1316
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vk9snIOLBnSYs2nA2+i6rtqu/9fBRhJBB8KHNZpNj2yrd1CYu9l76vljG7gLmei+JfpcOZTjnyuYO1HZvb3yCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6871
+In-Reply-To: <20201123160139.3.I771b6594b2a4d5b7fe7e12a991a6640f46386e8d@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020/11/24 18:49, Geert Uytterhoeven wrote:=0A=
-> Hi Damien,=0A=
-> =0A=
-> On Tue, Nov 24, 2020 at 5:40 AM Damien Le Moal <damien.lemoal@wdc.com> wr=
-ote:=0A=
->> Document the device tree bindings for the Canaan Kendryte K210 SoC=0A=
->> Fully Programmable IO Array (FPIOA) pinctrl driver in=0A=
->> Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml. The=0A=
->> new header file include/dt-bindings/pinctrl/k210-fpioa.h is added to=0A=
->> define all 256 possible pin functions of the SoC IO pins, as well as=0A=
->> macros simplifying the definition of pin functions in a device tree.=0A=
->>=0A=
->> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
-> =0A=
-> Thanks for your patch!=0A=
-> =0A=
->> --- /dev/null=0A=
->> +++ b/Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml=
-=0A=
-> =0A=
->> +  canaan,k210-sysctl-power:=0A=
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array=0A=
->> +    description: |=0A=
->> +      phandle of the K210 system controller node and offset of the its=
-=0A=
-> =0A=
-> of its=0A=
-> =0A=
->> +      power domain control register.=0A=
-> =0A=
-> Your k210-sysctl-v15 branch has a bogus trailing space here.=0A=
-=0A=
-Oops. Forgot to push the fixed up patches. Just did it now (forced update=
-=0A=
-k210-sysctl-v15).=0A=
-=0A=
-> =0A=
->> +=0A=
->> +patternProperties:=0A=
-> =0A=
->> +  '-pins$':=0A=
->> +    type: object=0A=
->> +    $ref: /schemas/pinctrl/pincfg-node.yaml=0A=
->> +    description:=0A=
->> +      FPIOA client devices use sub-nodes to define the desired=0A=
->> +      configuration of pins. Client device sub-nodes use the=0A=
->> +      properties below.=0A=
->> +=0A=
->> +    properties:=0A=
-> =0A=
->> +      input-schmitt: true=0A=
->> +=0A=
->> +      input-schmitt-enable: true=0A=
-> =0A=
-> Do you need both?=0A=
-> Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml documents=0A=
-> input-schmitt-enable and input-schmitt-disable, but not input-schmitt.=0A=
-=0A=
-Ah. Yes. My bad. Will correct that.=0A=
-=0A=
-> =0A=
->> +=0A=
->> +      intput-polarity-invert:=0A=
-> =0A=
-> input-polarity-invert=0A=
-> =0A=
->> +        description:=0A=
->> +          Enable or disable pin input polarity inversion.=0A=
-> =0A=
-> Still, this is a non-standard property.  Do you need it, or can this be=
-=0A=
-> handled by the software GPIO_ACTIVE_LOW flag?=0A=
-=0A=
-For GPIO, yes, that would work. But not all pin functions are GPIOs on this=
- SoC,=0A=
-and the hardware supports this. Strictly speaking, this is not really neces=
-sary=0A=
-as pins that needs inversion have that coded in the function code given by =
-the=0A=
-pinmux node. So we could remove this. But that is not a lot of code at all =
-in=0A=
-the driver to support it and the hardware allows that to be set per pin,=0A=
-regardless of the pin function assigned in the pinmux node.=0A=
-=0A=
-> =0A=
->> +      output-polarity-invert:=0A=
->> +        description:=0A=
->> +          Enable or disable pin output polarity inversion.=0A=
-> =0A=
-> Same comment as for input.=0A=
-=0A=
-Same answer :)=0A=
-=0A=
-> =0A=
-> Gr{oetje,eeting}s,=0A=
-> =0A=
->                         Geert=0A=
-> =0A=
-> --=0A=
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org=0A=
-> =0A=
-> In personal conversations with technical people, I call myself a hacker. =
-But=0A=
-> when I'm talking to journalists I just say "programmer" or something like=
- that.=0A=
->                                 -- Linus Torvalds=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Hi Doug,
+
+On 11/24/2020 5:31 AM, Douglas Anderson wrote:
+> Conceptually, we can envision the input on Qualcomm SoCs to pass
+> through a bunch of blocks between coming into the chip and becoming a
+> GPIO interrupt.  From guessing and running a handful of tests, I
+> believe that we can represent the state of the world with a drawing
+> that looks something like this:
+>
+>   +-----------------+       +-----------------+       +-----------------+
+>   |      INPUT      |  -->  |      PINMUX     |       |    IS_INPUT     |
+>   +-----------------+       |                 |  -->  |                 |
+>                             | output bogus (?)|       | output bogus (?)|
+>                             | if not muxed    |       | if input disab. |
+>                             +-----------------+       +-----------------+
+>                                                                |
+>            +---------------------------------------------------+--> to PDC
+>            |
+>            V
+>   +-----------------+       +-----------------+       +-----------------+
+>   | INTR RAW ENABLE |       | DETECTION LOGIC |       | STATUS REGISTER |
+>   |                 |       |                 |       |                 |
+>   | output bogus (?)|  -->  | maybe handles   |       | latches inputs  |
+>   | if disabled     |       | polarity diffs  |  -->  | that are high   |
+>   +-----------------+       |                 |       |                 |
+>                             | maybe debounces |       | write 1 to clr  |
+>                             | level irqs      |       +-----------------+
+>                             +-----------------+                |
+>                                                                |
+>            +---------------------------------------------------+
+>            |
+>            V
+>   +-----------------+
+>   |      ENABLE     |
+>   |                 |       +-----------------+
+>   | nothing passes  |  -->  |   SUMMARY IRQ   |
+>   | through if      |       +-----------------+
+>   | disabled        |
+>   +-----------------+
+>
+> The above might not be 100% exact, but for the purpose of this
+> discussion, the point is that there are a whole bunch of gates and
+> transformations on the input before it gets to the circuitry that
+> generates interrupts.
+>
+> As you might guess, if you reconfigure one of the gates in the above
+> diagram while the system is configured to detect interrupts things get
+> a little wacky.  Specifically it appears that if you gate the input at
+> any step it can cause various glitches in the later steps because they
+> are still paying attention to their input but their input isn't really
+> sane anymore.
+>
+> I did some poking and I found that I could generate bogus interrupts
+> in the system both when muxing away from GPIO mode and also when
+> muxing back to GPIO mode.  When configured to use the PDC path for
+> generating interrupts I found that if the external input on the GPIO
+> was low that I'd get what looked like a rising edge when unmuxing and
+> a falling edge when muxing.  When configured away from the PDC path I
+> got slightly different glitch interrupts when changing muxing.
+>
+> These glitches when remuxing matter in reality, not just in theory.
+> To be concrete, let's take the special "wakeup_irq" in
+> qcom_geni_serial.c as an example.  In sc7180-trogdor.dtsi we configure
+> the uart3 to have two pinctrl states, sleep and default, and mux
+> between the two during runtime PM and system suspend (see
+> geni_se_resources_{on,off}() for more details).  The difference
+> between the sleep and default state is that the RX pin is muxed to a
+> GPIO during sleep and muxed to the UART otherwise.  When we switch
+> between these two states we can generate the glitches talked about
+> above because we're configured to look for edges but the transition
+> from the gated input (which is bogus) to the real input can look like
+> an edge.
+>
+> Historically the UART case above was handled by the fact that the
+> "enable" function in the MSM GPIO driver did an "unmask and clear".
+> This relied on the fact that the system happens to have the interrupt
+> disabled until suspend time and that it would enable it after the
+> pinmux change happened, thus clearing the interrupt.
+>
+> The historical solution, however, had a few problems.  The first
+> problem (that nobody seemed to have tripped) is that we can still get
+> bogus interrupts if we remux when the interrupt isn't disabled during
+> the muxing and re-enabled after.  The second problem is that it
+> violates how I believe that the interrupt enable path is supposed to
+> work.
+>
+> In Linux, if a driver does disable_irq() and later does enable_irq()
+> on its interrupt, I believe it's expecting these properties:
+> * If an interrupt was pending when the driver disabled then it will
+>    still be pending after the driver re-enables.
+> * If an edge-triggered interrupt comes in while an interrupt is
+>    disabled it should assert when the interrupt is re-enabled.
+>
+> If you think that the above sounds a lot like the disable_irq() and
+> enable_irq() are supposed to be masking/unmasking the interrupt
+> instead of disabling/enabling it then you've made an astute
+> observation.  Specifically when talking about interrupts, "mask"
+> usually means to stop posting interrupts but keep tracking them and
+> "disable" means to fully shut off interrupt detection.  It's
+> unfortunate that this is so confusing, but presumably this is all the
+> way it is for historical reasons.
+>
+> Perhaps more confusing than the above is that, even though clients of
+> IRQs themselves don't have a way to request mask/unmask
+> vs. disable/enable calls, IRQ chips themselves can implement both.
+> ...and yet more confusing is that if an IRQ chip implements
+> disable/enable then they will be called when a client driver calls
+> disable_irq() / enable_irq().
+>
+> It does feel like some of the above could be cleared up.  However,
+> without any other core interrupt changes it should be clear that when
+> an IRQ chip gets a request to "disable" an IRQ that it has to treat it
+> like a mask of that IRQ.
+>
+> In any case, after that long interlude you can see that the "unmask
+> and clear" can break things.  Maulik tried to fix it so that we no
+> longer did "unmask and clear" in commit 71266d9d3936 ("pinctrl: qcom:
+> Move clearing pending IRQ to .irq_request_resources callback"), but it
+> didn't work for two reasons:
+> * It only tried to address the problem for interrupts that had parents
+>    (like the PDC).
+> * It regressed the problem that the original clearing was trying to
+>    solve.
+>
+> I think we can safely assume that if someone muxes a pin to be
+> something other than a GPIO and then muxes it back that we can clear
+> any interrupts that were pending on it without violating any
+> assumptions that client drivers are making.  Presumably the client
+> drivers are intentionally remuxing the pin away from a dedicated
+> purpose to be a plain GPIO so they don't care what the pin state was
+> before the mux switch and they don't expect to see the pin change
+> level during this switch.  Let's move the clearing of the IRQ to the
+> pin muxing routine so that we'll clear a pending IRQ if we're muxing
+> from some non-GPIO mode to a GPIO mode.
+>
+> Fixes: 71266d9d3936 ("pinctrl: qcom: Move clearing pending IRQ to .irq_request_resources callback")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> This is a pretty hairy little patch and presumably needs a good amount
+> of testing / discussion before landing.  If this patch is totally
+> broken / wrong feel free to consider it as an RFC and suggest how it
+> should be better.
+>
+> Also note: I wanted to put this in the same series as patch #1, but
+> IMO that patch can stand on its own.  If it looks Ok but we want to
+> have lots of debate about this one, please land patch #1 on its own
+> and we can split the series.
+>
+> I have done most of this patch testing on the Chrome OS 5.4 kernel
+> tree (with many backports) but have sanity checked it on mainline.
+>
+>   drivers/pinctrl/qcom/pinctrl-msm.c | 104 ++++++++++++++++++-----------
+>   1 file changed, 64 insertions(+), 40 deletions(-)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 588df91274e2..e7c3927c7d54 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -166,14 +166,42 @@ static int msm_get_function_groups(struct pinctrl_dev *pctldev,
+>   	return 0;
+>   }
+>   
+> +static void msm_pinctrl_clear_pending_irq(struct msm_pinctrl *pctrl,
+> +					  unsigned int group,
+> +					  unsigned int irq)
+> +{
+> +	struct irq_data *d = irq_get_irq_data(irq);
+> +	const struct msm_pingroup *g;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	if (!d)
+> +		return;
+> +
+> +	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
+> +		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
+> +
+
+can you add return here if IRQ has parent PDC?
+
+also replace 0 with false as Marc suggested in patch 1 of this series.
+
+     if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs)) {
+         irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, false);
+         return;
+     }
+> +	g = &pctrl->soc->groups[group];
+> +
+> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +	val = msm_readl_intr_status(pctrl, g);
+> +	val &= ~BIT(g->intr_status_bit);
+> +	msm_writel_intr_status(val, pctrl, g);
+> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +}
+> +
+>   static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
+>   			      unsigned function,
+>   			      unsigned group)
+>   {
+>   	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct gpio_chip *gc = &pctrl->chip;
+> +	unsigned int irq = irq_find_mapping(gc->irq.domain, group);
+>   	const struct msm_pingroup *g;
+>   	unsigned long flags;
+>   	u32 val, mask;
+> +	u32 oldval;
+> +	u32 old_i;
+>   	int i;
+>   
+>   	g = &pctrl->soc->groups[group];
+> @@ -187,15 +215,26 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
+>   	if (WARN_ON(i == g->nfuncs))
+>   		return -EINVAL;
+>   
+> -	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +	disable_irq(irq);
+>   
+> -	val = msm_readl_ctl(pctrl, g);
+> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +	oldval = val = msm_readl_ctl(pctrl, g);
+>   	val &= ~mask;
+>   	val |= i << g->mux_bit;
+>   	msm_writel_ctl(val, pctrl, g);
+> -
+>   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>   
+> +	/*
+> +	 * Clear IRQs if switching to/from GPIO mode since muxing to/from
+> +	 * the GPIO path can cause phantom edges.
+> +	 */
+> +	old_i = (oldval & mask) >> g->mux_bit;
+> +	if (old_i != i &&
+> +	    (i == pctrl->soc->gpio_func || old_i == pctrl->soc->gpio_func))
+> +		msm_pinctrl_clear_pending_irq(pctrl, group, irq);
+
+disable_irq() and enable_irq() should be moved inside this if loop. as 
+only use for this is to mask the IRQ when switching back to gpio IRQ mode?
+
+i also don't think we should leave IRQ enabled at the end of this 
+function by default, probably need to check if IRQ was already unmasked 
+before disabling it, then only call enable_irq().
+
+> +
+> +	enable_irq(irq);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -456,32 +495,45 @@ static const struct pinconf_ops msm_pinconf_ops = {
+>   static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+>   {
+>   	const struct msm_pingroup *g;
+> +	unsigned int irq = irq_find_mapping(chip->irq.domain, offset);
+>   	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
+>   	unsigned long flags;
+> +	u32 oldval;
+>   	u32 val;
+>   
+>   	g = &pctrl->soc->groups[offset];
+>   
+> +	disable_irq(irq);
+> +
+>   	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>   
+> -	val = msm_readl_ctl(pctrl, g);
+> +	oldval = val = msm_readl_ctl(pctrl, g);
+>   	val &= ~BIT(g->oe_bit);
+>   	msm_writel_ctl(val, pctrl, g);
+>   
+>   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>   
+> +	if (oldval != val)
+> +		msm_pinctrl_clear_pending_irq(pctrl, offset, irq);
+> +
+> +	enable_irq(irq);
+
+i do not think we need disable_irq() and enable_irq() here, changing 
+direction to input does not mean its being used for interrupt only, it 
+may be set to use something like Rx mode in UART.
+
+the client driver should enable IRQ when needed.
+
+> +
+>   	return 0;
+>   }
+>   
+>   static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, int value)
+>   {
+>   	const struct msm_pingroup *g;
+> +	unsigned int irq = irq_find_mapping(chip->irq.domain, offset);
+>   	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
+>   	unsigned long flags;
+> +	u32 oldval;
+>   	u32 val;
+>   
+>   	g = &pctrl->soc->groups[offset];
+>   
+> +	disable_irq(irq);
+> +
+>   	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>   
+>   	val = msm_readl_io(pctrl, g);
+> @@ -491,12 +543,17 @@ static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, in
+>   		val &= ~BIT(g->out_bit);
+>   	msm_writel_io(val, pctrl, g);
+>   
+> -	val = msm_readl_ctl(pctrl, g);
+> +	oldval = msm_readl_ctl(pctrl, g);
+>   	val |= BIT(g->oe_bit);
+>   	msm_writel_ctl(val, pctrl, g);
+>   
+>   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>   
+> +	if (oldval != val)
+> +		msm_pinctrl_clear_pending_irq(pctrl, offset, irq);
+> +
+> +	enable_irq(irq);
+> +
+same as above, we changing the direction to output so should not 
+enable_irq().
+>   	return 0;
+>   }
+>   
+> @@ -774,7 +831,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+>   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>   }
+>   
+> -static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+> +static void msm_gpio_irq_unmask(struct irq_data *d)
+>   {
+>   	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>   	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> @@ -792,17 +849,6 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+>   
+>   	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>   
+> -	if (status_clear) {
+> -		/*
+> -		 * clear the interrupt status bit before unmask to avoid
+> -		 * any erroneous interrupts that would have got latched
+> -		 * when the interrupt is not in use.
+> -		 */
+can you please carry this comment in msm_pinctrl_clear_pending_irq()?
+> -		val = msm_readl_intr_status(pctrl, g);
+> -		val &= ~BIT(g->intr_status_bit);
+> -		msm_writel_intr_status(val, pctrl, g);
+> -	}
+> -
+>   	val = msm_readl_intr_cfg(pctrl, g);
+>   	val |= BIT(g->intr_raw_status_bit);
+>   	val |= BIT(g->intr_enable_bit);
+> @@ -815,14 +861,10 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+>   
+>   static void msm_gpio_irq_enable(struct irq_data *d)
+>   {
+> -	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> -	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> -
+>   	if (d->parent_data)
+>   		irq_chip_enable_parent(d);
+>   
+> -	if (!test_bit(d->hwirq, pctrl->skip_wake_irqs))
+> -		msm_gpio_irq_clear_unmask(d, true);
+> +	msm_gpio_irq_unmask(d);
+>   }
+>   
+>   static void msm_gpio_irq_disable(struct irq_data *d)
+> @@ -837,11 +879,6 @@ static void msm_gpio_irq_disable(struct irq_data *d)
+>   		msm_gpio_irq_mask(d);
+>   }
+>   
+> -static void msm_gpio_irq_unmask(struct irq_data *d)
+> -{
+> -	msm_gpio_irq_clear_unmask(d, false);
+> -}
+> -
+>   /**
+>    * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
+>    * @d: The irq dta.
+> @@ -1097,19 +1134,6 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
+>   		ret = -EINVAL;
+>   		goto out;
+>   	}
+> -
+> -	/*
+> -	 * Clear the interrupt that may be pending before we enable
+> -	 * the line.
+> -	 * This is especially a problem with the GPIOs routed to the
+> -	 * PDC. These GPIOs are direct-connect interrupts to the GIC.
+> -	 * Disabling the interrupt line at the PDC does not prevent
+> -	 * the interrupt from being latched at the GIC. The state at
+> -	 * GIC needs to be cleared before enabling.
+> -	 */
+can you please carry this comment in msm_pinctrl_clear_pending_irq()?
+> -	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
+> -		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
+> -
+>   	return 0;
+>   out:
+>   	module_put(gc->owner);
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
