@@ -2,78 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E39742C29EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 15:44:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC092C2A19
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Nov 2020 15:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389225AbgKXOnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Nov 2020 09:43:08 -0500
-Received: from mga05.intel.com ([192.55.52.43]:4460 "EHLO mga05.intel.com"
+        id S2389283AbgKXOq7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Nov 2020 09:46:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389221AbgKXOnH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Nov 2020 09:43:07 -0500
-IronPort-SDR: 5/3Yv/HPgahPYAAElHRBJ3xKjdQI7IckzLOl7qYihkLyAAl02ATRF5meACgRSxiaV0o8Taaz54
- +ppVz2xlJfvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9814"; a="256663330"
-X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="256663330"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 06:43:06 -0800
-IronPort-SDR: AKBlFz7WKEYjYzKpDQSzes7RmKgB/IIPT6Q2bvXiQ/zfjq4wG3d4TuIIK7CUxR4fqniyjfwRM5
- QRxuFytNKMqA==
-X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="478521342"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 06:43:03 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 24 Nov 2020 16:43:00 +0200
-Date:   Tue, 24 Nov 2020 16:43:00 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: Request for pre-review of pending MID removal patch series
-Message-ID: <20201124144300.GM2532@lahna.fi.intel.com>
-References: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
- <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com>
+        id S2389219AbgKXOq6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Nov 2020 09:46:58 -0500
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296CF206F9;
+        Tue, 24 Nov 2020 14:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606229216;
+        bh=3zQtrTTCw8twqJtP/1a4NB1MKrz6/NphiIiwgRncCiQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nf940VeIUgpffOGETTY1L3G0QcIjfozBFvnFoqG8O328ZSxeeaAXcr0hOe3zQgRlG
+         fbix380mdFR2g9eZBg8DhbUZBvf1w7UYgoM6pwiYDzTHildmv27dPl4/uYYBPb4fgA
+         1gCiZGhi+wbnwk7bOx0yc8Qq/SRuVl9DTTdMTQVI=
+Date:   Tue, 24 Nov 2020 08:47:05 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        amd-gfx@lists.freedesktop.org, bridge@lists.linux-foundation.org,
+        ceph-devel@vger.kernel.org, cluster-devel@redhat.com,
+        coreteam@netfilter.org, devel@driverdev.osuosl.org,
+        dm-devel@redhat.com, drbd-dev@lists.linbit.com,
+        dri-devel@lists.freedesktop.org, GR-everest-linux-l2@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+Message-ID: <20201124144705.GK16084@embeddedor>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <20201123200345.GA38546@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20201123200345.GA38546@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 07:59:29PM +0200, Andy Shevchenko wrote:
-> +Cc: Mika
+On Mon, Nov 23, 2020 at 04:03:45PM -0400, Jason Gunthorpe wrote:
+> On Fri, Nov 20, 2020 at 12:21:39PM -0600, Gustavo A. R. Silva wrote:
 > 
-> On Fri, Oct 23, 2020 at 8:07 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > Hi!
-> >
-> > There is a pending patch series [1] to remove a lot of legacy code
-> > related to old Intel MID platforms. (Note, not all of them, since we
-> > have an ACPI based Intel Edison edition which continue working nicely
-> > after this)
-> >
-> > Most of the code is shuffling arch/x86 and the series is quite
-> > dependent on the contents of that folder (for the sake of
-> > bisectability). Since that the only way it would be integrated is
-> > through the tip tree I would like to have your preliminary review on
-> > other contents — #3 and #4 are PDx86 and GPIO subsystems. In this case
-> > I won't resend this many times.
-> >
-> > I have a preliminary offline agreement with Len Brown on SFI removal
-> > (#2 in the list).
-> >
-> > [1]: https://gitlab.com/andy-shev/next/-/commits/topic/mid-removal/
+> >   IB/hfi1: Fix fall-through warnings for Clang
+> >   IB/mlx4: Fix fall-through warnings for Clang
+> >   IB/qedr: Fix fall-through warnings for Clang
+> >   RDMA/mlx5: Fix fall-through warnings for Clang
+> 
+> I picked these four to the rdma tree, thanks
 
-Looks pretty good to me. I wonder it is possible to remove gma500 also
-or it is used in Edison?
+Awesome. :)
+
+Thank you, Jason.
+--
+Gustavo
