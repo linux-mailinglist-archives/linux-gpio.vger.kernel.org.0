@@ -2,158 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0AA2C3DDF
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Nov 2020 11:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 471002C3FD5
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Nov 2020 13:22:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgKYKhc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Nov 2020 05:37:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgKYKh3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Nov 2020 05:37:29 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572EAC0613D6;
-        Wed, 25 Nov 2020 02:37:29 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id b23so898046pls.11;
-        Wed, 25 Nov 2020 02:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lG3+Uwz8lZti6FSb8xjGyaQfdt5OwV03xvf6+L3ZqWc=;
-        b=YCtEdyPA4vCzWZsMjIt3djSgR9gg7vMRhn3I5LT7lEmWHdT3b/jEkR0QdduouORJ7k
-         kiuUl5RijkS3EJmc3PIdIbhuWrYEtLAccN+wdoprBDsU56ruoUGszfH1Sxvuy4WXIhMK
-         0dDt7R//JtRYOU1+gQ96Rpa2FinP3O1pFccTMutbPTGjvqTac0chojMQO8cZdySzLIim
-         HHsTKo91pUaUTwyxPnWizwDASocTC+n+eyDdN/HKPn9pe4V2vLDA/DOFrCcWbsrVXkvE
-         5CsjPeXzCB0gF8EvrEVdW+qQjVnUcViOyjSAD57xy0gbwLs+FCHLejwxIxOdH/xJHiTG
-         +NRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lG3+Uwz8lZti6FSb8xjGyaQfdt5OwV03xvf6+L3ZqWc=;
-        b=HqxCMBnUjIt02wGgCngQgoatqmWXXlAtuei00ZaLA+J48O+B1j6bCYFuvdzJZHAMy9
-         SQZI3ZiFCUDUFHusJmIWT0MC92rOtiWOq6sEYoy8q25N3mDQAz1InmwPUJ2Roy/M3iPa
-         vltnthynrm17qL0rghDuth0vDo20iDxAaR+anXajOpA/0VENftxw7HJGmAtN+2MyxP0c
-         cw4tjtyc+WlxAzt4+qTpy9KvfvIVCmRuF5v3nK5U6GDt/TDSh1+4tewI/akYbvoF8/uY
-         f1WblEOyb3N1rkqS7L34BJzRlxD6yYBVFdYI5Vs/ET0tu9tthm6XyZscWs0u3X//933D
-         hunw==
-X-Gm-Message-State: AOAM5304mZtoVvAcNBp/cPMGh/vdShE0t5qCmjw2XeMKosWoDEmFIXv8
-        IAHmTwESxPjqzwmi9sJ7XwoV7crHuuNgZomTcvU=
-X-Google-Smtp-Source: ABdhPJzEY8ebPN4xZ4jf0ZFVw9i65L6qlCom+E751HZA34/qY3SkadUuuLf2HukIG4qONDPWI5feIsM1VQGLuSbFYSc=
-X-Received: by 2002:a17:902:ead2:b029:da:2596:198e with SMTP id
- p18-20020a170902ead2b02900da2596198emr1937529pld.21.1606300648824; Wed, 25
- Nov 2020 02:37:28 -0800 (PST)
+        id S1728306AbgKYMUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Nov 2020 07:20:30 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:64633 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbgKYMUa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Nov 2020 07:20:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1606306829; x=1637842829;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=la+zR68Z2qgsSCWfX3ZjMl6N8D1EgMq70rPj15IUVuw=;
+  b=uN0Cj4Rz9i8o94FudY56Y11olUjTHPu0P4EYsNK+nJPoYx/G4+IqKdjZ
+   WnxDl6mIWnb5dnfo/K68uz5zJo9wYxiklHGt2JX9bacHrsC0QkKfub4i8
+   L4c4/ye9QOatGwoNQMSiyYo9N7iv3XrsGut0JBjfBglC0J9r5ldOhtZaR
+   04+olgMtKwmNlhNFtJVsPxfHP0R+W+ATJoSHI0x/lN868zwO9yLiNDVAA
+   1Ij5A5fVlaNUZXGWdP/4STorCc3UF8RLyLM/vcBYkrqFKDXS/8nATjEAn
+   E/zHxkbWCxmRKyNO5QlNL2Fgef2XvhuWEJTvwAHJk6fJa3fqWZMD8CLzf
+   Q==;
+IronPort-SDR: rHQmA/K0p7euYiTN3POg2mbiZNs0X3mRppQFArVNJr1EXkFLqzNiNCZQJDczX3p8bRmV3P1Erp
+ Hs9RCmYkIgJ0/D7Yqf1HjCUTxMGB3e4iMAILHLYiByZ67lmr5c2X5GV7BH08uaSkihwiLNGrPo
+ oA+1NBSjEPecpRH1Rk5D/QS9bAI3UoJ9zx0XehzQypCN3AC7tD62SF3LjFa+jwH493pNSjDCI4
+ OVrIf78+0PzBipljDpa5ga54v8dFRg4WANyZ+R8oVf+NQvmOkxuQaZVIQLFUz9B2ynDl5p45M2
+ 9k8=
+X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
+   d="scan'208";a="104998394"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Nov 2020 05:20:29 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 25 Nov 2020 05:20:29 -0700
+Received: from soft-dev10.microsemi.net (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 25 Nov 2020 05:20:27 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH -next] pinctrl: pinctrl-microchip-sgpio: Add OF config dependency
+Date:   Wed, 25 Nov 2020 13:20:14 +0100
+Message-ID: <20201125122014.11237-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
- <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
- <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
- <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
- <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com> <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
-In-Reply-To: <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Nov 2020 12:38:17 +0200
-Message-ID: <CAHp75VfaewwkLsrht95Q7DaxFk7JpQjwx0KQ7Jvh5f7DUbZkRA@mail.gmail.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        amd-gfx@lists.freedesktop.org, bridge@lists.linux-foundation.org,
-        ceph-devel@vger.kernel.org, cluster-devel@redhat.com,
-        coreteam@netfilter.org,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        device-mapper development <dm-devel@redhat.com>,
-        drbd-dev@lists.linbit.com,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        linux-geode@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        linux-nfs@vger.kernel.org,
-        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        USB <linux-usb@vger.kernel.org>, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org,
-        target-devel <target-devel@vger.kernel.org>,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 10:39 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
-> On Mon, 2020-11-23 at 19:56 +0100, Miguel Ojeda wrote:
-> > On Mon, Nov 23, 2020 at 4:58 PM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
+The pinctrl-microchip-sgpio driver needs OF support, so add that to
+Kconfig.
 
-...
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ drivers/pinctrl/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > But if we do the math, for an author, at even 1 minute per line
-> > change and assuming nothing can be automated at all, it would take 1
-> > month of work. For maintainers, a couple of trivial lines is noise
-> > compared to many other patches.
->
-> So you think a one line patch should take one minute to produce ... I
-> really don't think that's grounded in reality.  I suppose a one line
-> patch only takes a minute to merge with b4 if no-one reviews or tests
-> it, but that's not really desirable.
-
-In my practice most of the one line patches were either to fix or to
-introduce quite interesting issues.
-1 minute is 2-3 orders less than usually needed for such patches.
-That's why I don't like churn produced by people who often even didn't
-compile their useful contributions.
-
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 9b8ed7516355..94e49da49f5c 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -376,11 +376,13 @@ config PINCTRL_OCELOT
+ 
+ config PINCTRL_MICROCHIP_SGPIO
+ 	bool "Pinctrl driver for Microsemi/Microchip Serial GPIO"
++	depends on OF
+ 	depends on HAS_IOMEM
+ 	select GPIOLIB
+ 	select GENERIC_PINCONF
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
++	select OF_GPIO
+ 	help
+ 	  Support for the serial GPIO interface used on Microsemi and
+ 	  Microchip SoC's. By using a serial interface, the SIO
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
