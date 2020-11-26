@@ -2,142 +2,223 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63EFD2C4DED
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 05:19:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B092C4EC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 07:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbgKZETN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Nov 2020 23:19:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387555AbgKZETM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Nov 2020 23:19:12 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50123C0617A7
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Nov 2020 20:19:11 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id f17so610006pge.6
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Nov 2020 20:19:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Rpn93xyHdtfENnB9aPQg9YqgzSxRxwjIcf8Cx2Aw6ww=;
-        b=KzfA6UixuIRy9YpElltDdqwk2yfBpMvK4InTPHVxb2DKTdzm+T/3lMkDfNP090J/US
-         aG5r4XgrvAQ4V1USt6D6FcvRATGhVHudbruItrARRWt4jU450scBjIvNcXmXCpTGsj6f
-         0XgpTRs6ipDfObLv2CaNcIGeGPHWoql6is/qw6Mkxl2lzxJ4tL6Dhq/H7jMkQmWPj2dX
-         SxCVQETd/9zLvcfaUoSrsuPTnJ3r7tyq8NlCAzL/ngYncJ8D+3FUS6ghjzWYLpz2L2i3
-         0DxOl98ryJI8wHAAVOPR0+hY4iG9lyb7OCiUQay/fUOsiAbTWPa+yoHDoRtpgjHPmLye
-         gS+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Rpn93xyHdtfENnB9aPQg9YqgzSxRxwjIcf8Cx2Aw6ww=;
-        b=ehPs2xYh7JzovqsfrkBgiuz+xrXY/9RSV04RrWZ4iJM3wC5BYIxEnAqjFjLEbI6Pvs
-         5ytMdkJoq1jx+EqljjBYTpdtMdkqmEON4d+JhlHvhMX2l72BjnIeKn90UGbj/eB3DVTH
-         CxzgIOlbfQlzYgFbZv8tAjrxGczBU0nMFOY+XqYoARboyLo66GTohDlR2hydOrVs3IrY
-         LVmKKxkrrNtEKb49YEhyIvstZ5RgXZCsWRf2+5ZwYItJIFXFem2Xd+W0beEV3/hWG5p5
-         awrQDLJk1ijvFCStSCxDIAW847T/N7JH7Ky6liMSn1UEg6swBCyPLhDAjqIWD3V1kd10
-         Rnxg==
-X-Gm-Message-State: AOAM532IrJ0ZLn53w5/0gGHsjvBzEQVNozbdfI1Ao6uCh0D003dqrInk
-        MS1mn0O5UYVu9snRjaxsQW8Jcg==
-X-Google-Smtp-Source: ABdhPJwFW97K6R+OFJRII5EMZIBZoUx7TnX2r1rh+kuNeSDWcHFbYBYkyIWy5rzp5848SCALwZ9bKA==
-X-Received: by 2002:a17:90a:2c47:: with SMTP id p7mr1428721pjm.48.1606364350732;
-        Wed, 25 Nov 2020 20:19:10 -0800 (PST)
-Received: from x1 ([2601:1c0:4701:ae70:df19:3df8:ea8b:660d])
-        by smtp.gmail.com with ESMTPSA id p14sm4320595pjo.53.2020.11.25.20.19.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2020 20:19:10 -0800 (PST)
-Date:   Wed, 25 Nov 2020 20:19:08 -0800
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Pawan Gupta <writetopawan@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: core: Fix unused variable build warnings
-Message-ID: <20201126041908.GA420140@x1>
-References: <d1a71663e96239ced28509980ea484cadc10c80a.1606170299.git.writetopawan@gmail.com>
- <20201124050618.GA337876@x1>
- <20201124075129.GA1339@guptapadev.amr>
+        id S2388095AbgKZGeT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Nov 2020 01:34:19 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43405 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732690AbgKZGeS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 26 Nov 2020 01:34:18 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 06FF45C0170;
+        Thu, 26 Nov 2020 01:34:17 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 26 Nov 2020 01:34:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=LM/6syswR/TQC0khtK3z7jyG15
+        eRUPMaixWhJ0PAO+Q=; b=ieJnHukIWBS9UvDusn03XU9iAbEe5i4FM++CRwRojs
+        XR4cunNolOQgd3eBSei6UNbxX2zDY1+T2TwGz+dUblZ5CdvItdfesU/p/CtMLgNk
+        gjQkAeFcPblHLFCSYxCMv4UjQlwte85MhnOMo8g8MhPe86kXL40TpDi+UbgdpFDQ
+        2z6KbgXoOCwMUR0v5XVEOnoEdHQ0HIgZBybt3WMmUPgFgkgAg2I9ACYZcPPi+Zu1
+        1GKPGriYt5psACLi3J8V95ObxHVjkbrinNhtDd2Hyn3N1SdkqB+ZtcN+fqbc145r
+        AzCs0P4GO2k/Q44D0D7XeRaxqf71DYD6raSteCE//zIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=LM/6syswR/TQC0kht
+        K3z7jyG15eRUPMaixWhJ0PAO+Q=; b=aq1sPllfWvE+7PynW7a8zTDgOeIWUIrGj
+        EMKdtwMK2n6av2TIbtU5To89Elhn1wJLjt14oG/ZnG+W/KClb8bUGm0Zwq1mn0bk
+        an+EAniiB7KLqPQIXpxdRnnqxXMtWoyM2Oup5kb0Ea01z3LhLlKEP2bByaoGVDxz
+        dMU7Rr3lQdf6lQHh4K/c1KRgWeWNMFwuPWCQojonQ2fpSuY7QIgxltruqKkr2Knz
+        IBudK508YFZa3Ggi/zDh6TNgofP4Qa2wPI8QlYFHXlvN9V/D01kTOvlNDBkaMJ8/
+        3dccsqhsPoFGUnyDf/NqUsb/lqQW1xP3UKKqXP+wMKPUeoqRj2Cew==
+X-ME-Sender: <xms:aEy_X6vLmo4H9awTDFKj-lhi_9FWVkzQ0prbNaLXnDCSIe-c0C9cQQ>
+    <xme:aEy_X_d1fh7KuCSFneSFJd-CrPzCe1pWkWH8HLirA-j05hdNYn_OSueZLIIOXo1N6
+    8bvLwm8oEE3m-aefQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudehuddgleekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
+    dvvddthefftedujeethfeuueelfedtnecukfhppedvtdefrdehjedrvddtkedrudegieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurh
+    gvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:aEy_X1x86IKtSlHMuRJUpYO_YAK_zBkPLEeWZE9FHhXts_k4iIECxg>
+    <xmx:aEy_X1MHa05VAEwWnsSN6FSSSIhjHp-6W3w1PFfgGJzGtv6mZefIhQ>
+    <xmx:aEy_X6907oItowjdP5aJrwQ-X5s32FXnkPeWdW1U1sQMgRzCz2RX0Q>
+    <xmx:aUy_X6xxzn9RoJlUmylQhhXRzkyARU5GFgHNlpppNENwKEY8DTeWIQ>
+Received: from localhost.localdomain (203-57-208-146.dyn.iinet.net.au [203.57.208.146])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0F2ED328005D;
+        Thu, 26 Nov 2020 01:34:12 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, joel@jms.id.au,
+        billy_tsai@aspeedtech.com, sashal@kernel.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: [PATCH] pinctrl: aspeed: Fix GPIO requests on pass-through banks
+Date:   Thu, 26 Nov 2020 17:03:37 +1030
+Message-Id: <20201126063337.489927-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201124075129.GA1339@guptapadev.amr>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 11:51:29PM -0800, Pawan Gupta wrote:
-> On Mon, Nov 23, 2020 at 09:06:18PM -0800, Drew Fustini wrote:
-> > On Mon, Nov 23, 2020 at 02:33:33PM -0800, Pawan Gupta wrote:
-> > > A recent commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs
-> > > file") added build warnings when CONFIG_GPIOLIB=n. Offcourse the kernel
-> > > fails to build when warnings are treated as errors. Below is the error
-> > > message:
-> > > 
-> > >   $ make CFLAGS_KERNEL+=-Werror
-> > > 
-> > >   drivers/pinctrl/core.c: In function ‘pinctrl_pins_show’:
-> > >   drivers/pinctrl/core.c:1607:20: error: unused variable ‘chip’ [-Werror=unused-variable]
-> > >    1607 |  struct gpio_chip *chip;
-> > >         |                    ^~~~
-> > >   drivers/pinctrl/core.c:1606:15: error: unused variable ‘gpio_num’ [-Werror=unused-variable]
-> > >    1606 |  unsigned int gpio_num;
-> > >         |               ^~~~~~~~
-> > >   drivers/pinctrl/core.c:1605:29: error: unused variable ‘range’ [-Werror=unused-variable]
-> > >    1605 |  struct pinctrl_gpio_range *range;
-> > >         |                             ^~~~~
-> > >   cc1: all warnings being treated as errors
-> > > 
-> > > These variables are only used inside #ifdef CONFIG_GPIOLIB, fix the
-> > > build warnings by wrapping the definition inside the config.
-> > > 
-> > > Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-> > > Signed-off-by: Pawan Gupta <writetopawan@gmail.com>
-> > > ---
-> > >  drivers/pinctrl/core.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> > > index 3663d87f51a0..1bb371a5cf8d 100644
-> > > --- a/drivers/pinctrl/core.c
-> > > +++ b/drivers/pinctrl/core.c
-> > > @@ -1602,10 +1602,11 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
-> > >  	struct pinctrl_dev *pctldev = s->private;
-> > >  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
-> > >  	unsigned i, pin;
-> > > +#ifdef CONFIG_GPIOLIB
-> > >  	struct pinctrl_gpio_range *range;
-> > >  	unsigned int gpio_num;
-> > >  	struct gpio_chip *chip;
-> > > -
-> > > +#endif
-> > >  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
-> > >  
-> > >  	mutex_lock(&pctldev->mutex);
-> > > -- 
-> > > 2.21.3
-> > > 
-> > 
-> > Thanks for pointing this out.  I don't have any systems where I build
-> > without CONFIG_GPIOLIB so I missed this.
-> > 
-> > I'm having trouble figuring out a .config that will reproduce this.  I
-> > tried tinyconfig but it compiled clean.
-> 
-> Just setting CONFIG_GPIOLIB=n via menuconfig is not an option?  Have you
-> tried x86?
+Commit 6726fbff19bf ("pinctrl: aspeed: Fix GPI only function problem.")
+fixes access to GPIO banks T and U on the AST2600. Both banks contain
+input-only pins and the GPIO pin function is named GPITx and GPIUx
+respectively. Unfortunately the fix had a negative impact on GPIO banks
+D and E for the AST2400 and AST2500 where the GPIO pass-through
+functions take similar "GPI"-style names. The net effect on the older
+SoCs was that when the GPIO subsystem requested a pin in banks D or E be
+muxed for GPIO, they were instead muxed for pass-through mode.
+Mistakenly muxing pass-through mode e.g. breaks booting the host on
+IBM's Witherspoon (AC922) platform where GPIOE0 is used for FSI.
 
-There were other options related to pinctrl both for my ARM board and my
-laptop that were forcing GPIOLIB to stay on. 
+Further exploit the names in the provided expression structure to
+differentiate pass-through from pin-specific GPIO modes.
 
-> 
-> > Could you share your .config?
-> 
-> Attaching the .config that reproduces the build warning.
+This follow-up fix gives the expected behaviour for the following tests:
 
-Thanks.  I was able to reproduce the error with your config.
+Witherspoon BMC (AST2500):
 
-I applied your patch and it did resolve the error for me.
+1. Power-on the Witherspoon host
+2. Request GPIOD1 be muxed via /sys/class/gpio/export
+3. Request GPIOE1 be muxed via /sys/class/gpio/export
+4. Request the balls for GPIOs E2 and E3 be muxed as GPIO pass-through
+   ("GPIE2" mode) via a pinctrl hog in the devicetree
 
-Reviewed-by: Drew Fustini <drew@beagleboard.org>
+Rainier BMC (AST2600):
+
+5. Request GPIT0 be muxed via /sys/class/gpio/export
+6. Request GPIU0 be muxed via /sys/class/gpio/export
+
+Together the tests demonstrate that all three pieces of functionality
+(general GPIOs via 1, 2 and 3, input-only GPIOs via 5 and 6, pass-through
+mode via 4) operate as desired across old and new SoCs.
+
+Fixes: 6726fbff19bf ("pinctrl: aspeed: Fix GPI only function problem.")
+Cc: Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c | 74 +++++++++++++++++++++++--
+ drivers/pinctrl/aspeed/pinmux-aspeed.h  |  7 ++-
+ 2 files changed, 72 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+index 1d603732903f..9c44ef11b567 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+@@ -286,14 +286,76 @@ int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
+ static bool aspeed_expr_is_gpio(const struct aspeed_sig_expr *expr)
+ {
+ 	/*
+-	 * The signal type is GPIO if the signal name has "GPI" as a prefix.
+-	 * strncmp (rather than strcmp) is used to implement the prefix
+-	 * requirement.
++	 * We need to differentiate between GPIO and non-GPIO signals to
++	 * implement the gpio_request_enable() interface. For better or worse
++	 * the ASPEED pinctrl driver uses the expression names to determine
++	 * whether an expression will mux a pin for GPIO.
+ 	 *
+-	 * expr->signal might look like "GPIOB1" in the GPIO case.
+-	 * expr->signal might look like "GPIT0" in the GPI case.
++	 * Generally we have the following - A GPIO such as B1 has:
++	 *
++	 *    - expr->signal set to "GPIOB1"
++	 *    - expr->function set to "GPIOB1"
++	 *
++	 * Using this fact we can determine whether the provided expression is
++	 * a GPIO expression by testing the signal name for the string prefix
++	 * "GPIO".
++	 *
++	 * However, some GPIOs are input-only, and the ASPEED datasheets name
++	 * them differently. An input-only GPIO such as T0 has:
++	 *
++	 *    - expr->signal set to "GPIT0"
++	 *    - expr->function set to "GPIT0"
++	 *
++	 * It's tempting to generalise the prefix test from "GPIO" to "GPI" to
++	 * account for both GPIOs and GPIs, but in doing so we run aground on
++	 * another feature:
++	 *
++	 * Some pins in the ASPEED BMC SoCs have a "pass-through" GPIO
++	 * function where the input state of one pin is replicated as the
++	 * output state of another (as if they were shorted together - a mux
++	 * configuration that is typically enabled by hardware strapping).
++	 * This feature allows the BMC to pass e.g. power button state through
++	 * to the host while the BMC is yet to boot, but take control of the
++	 * button state once the BMC has booted by muxing each pin as a
++	 * separate, pin-specific GPIO.
++	 *
++	 * Conceptually this pass-through mode is a form of GPIO and is named
++	 * as such in the datasheets, e.g. "GPID0". This naming similarity
++	 * trips us up with the simple GPI-prefixed-signal-name scheme
++	 * discussed above, as the pass-through configuration is not what we
++	 * want when muxing a pin as GPIO for the GPIO subsystem.
++	 *
++	 * On e.g. the AST2400, a pass-through function "GPID0" is grouped on
++	 * balls A18 and D16, where we have:
++	 *
++	 *    For ball A18:
++	 *    - expr->signal set to "GPID0IN"
++	 *    - expr->function set to "GPID0"
++	 *
++	 *    For ball D16:
++	 *    - expr->signal set to "GPID0OUT"
++	 *    - expr->function set to "GPID0"
++	 *
++	 * By contrast, the pin-specific GPIO expressions for the same pins are
++	 * as follows:
++	 *
++	 *    For ball A18:
++	 *    - expr->signal looks like "GPIOD0"
++	 *    - expr->function looks like "GPIOD0"
++	 *
++	 *    For ball D16:
++	 *    - expr->signal looks like "GPIOD1"
++	 *    - expr->function looks like "GPIOD1"
++	 *
++	 * Testing both the signal _and_ function names gives us the means
++	 * differentiate the pass-through GPIO pinmux configuration from the
++	 * pin-specific configuration that the GPIO subsystem is after: An
++	 * expression is a pin-specific (non-pass-through) GPIO configuration
++	 * if the signal prefix is "GPI" and the signal name matches the
++	 * function name.
+ 	 */
+-	return strncmp(expr->signal, "GPI", 3) == 0;
++	return !strncmp(expr->signal, "GPI", 3) &&
++			!strcmp(expr->signal, expr->function);
+ }
+ 
+ static bool aspeed_gpio_in_exprs(const struct aspeed_sig_expr **exprs)
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index f86739e800c3..dba5875ff276 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -452,10 +452,11 @@ struct aspeed_sig_desc {
+  * evaluation of the descriptors.
+  *
+  * @signal: The signal name for the priority level on the pin. If the signal
+- *          type is GPIO, then the signal name must begin with the string
+- *          "GPIO", e.g. GPIOA0, GPIOT4 etc.
++ *          type is GPIO, then the signal name must begin with the
++ *          prefix "GPI", e.g. GPIOA0, GPIT0 etc.
+  * @function: The name of the function the signal participates in for the
+- *            associated expression
++ *            associated expression. For pin-specific GPIO, the function
++ *            name must match the signal name.
+  * @ndescs: The number of signal descriptors in the expression
+  * @descs: Pointer to an array of signal descriptors that comprise the
+  *         function expression
+-- 
+2.27.0
+
