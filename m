@@ -2,125 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BDCA2C4CC8
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 02:48:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63EFD2C4DED
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 05:19:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgKZBr0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Nov 2020 20:47:26 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:25409 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731763AbgKZBr0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Nov 2020 20:47:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606356394; x=1637892394;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=jaazsxrVvV8tPhcRqmgPoIk7ltaGY+++dUPG/KOZ+94=;
-  b=bA+ZNZPMUrbRCEwpQsYRJaalOFrZlDbucLyB36Ez20vMzhWi4ubcRvBi
-   VXp/32PtH8TZhl5gUMjd6zbTYx1FWdvgA4CPmCS+N3Xr9NU+uWd7Wz2mT
-   iubSScH323GHMWqYwItMkZQd/e0RWFS3KwI3ZKC8pVqDZXv1FW8+GpNwX
-   HaASl5Asj4+87OXbkK5+AtWU0gmf1eoOEgv3xMpOmWyVgnBuSmjDyTW2F
-   tHiDyX6OIhyNSc39qiDQpMcQELkJjIh7vDou+6SU7nbeS1vllZVUjdv0H
-   Vb4NRqAOhqq63zof+O1MuMl3xpujYI9IiKXgG7h0z7a24xpCpDvFN5qYb
-   g==;
-IronPort-SDR: kPeMmynqB0DomEPOntIsO1C5DjefzzZI+K5Qwto5Tm+aQX5TGEEFTecRN3tUM6b+3nsOfrueTA
- yZzzzhw1F6bcvITEQJa0hfJG2i1InNE8ZZV8TuySfGHcZqweL5u+OKFuwYYY4aS/VdJUk8xvLZ
- CjILBhGfor24zUe62uLvaIHxp8OY+yinU4/Qoa8px3LQv1VVy+bBdS+tO7QnRdqF2162hRfb90
- 2dROEJFN32pIt3e+OjYC2pJIwjx1c2tujExVGJdvfkDvKY/XYjUciqk6DjRUb2PIOMJofBl6AO
- Fc8=
-X-IronPort-AV: E=Sophos;i="5.78,370,1599494400"; 
-   d="scan'208";a="257148716"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Nov 2020 10:06:34 +0800
-IronPort-SDR: FUBX6QhPYK/710wlDfWcRsDecqJJtxRnLhcCMHoGU69+4bZ3PhAcDBkM/qsNIet0UjOYRZnvum
- ac8EhPF8RB9POGgtgOibh1qp2FjZnZGZE=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 17:33:08 -0800
-IronPort-SDR: Fz9r/tcQs5K5pT+XQ8Wci6I6bZGHjj/Nu2Ra56t/K7bXPaAtMuk7GoyqBx/sJj9zVSVlIfd7bz
- YZqvmOIED4+A==
-WDCIronportException: Internal
-Received: from 57m2vf2.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.135])
-  by uls-op-cesaip02.wdc.com with ESMTP; 25 Nov 2020 17:47:24 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v3 1/1] of: Fix gpios supplier parsing
-Date:   Thu, 26 Nov 2020 10:47:16 +0900
-Message-Id: <20201126014716.34545-2-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201126014716.34545-1-damien.lemoal@wdc.com>
-References: <20201126014716.34545-1-damien.lemoal@wdc.com>
+        id S2387556AbgKZETN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Nov 2020 23:19:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387555AbgKZETM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Nov 2020 23:19:12 -0500
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50123C0617A7
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Nov 2020 20:19:11 -0800 (PST)
+Received: by mail-pg1-x541.google.com with SMTP id f17so610006pge.6
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Nov 2020 20:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Rpn93xyHdtfENnB9aPQg9YqgzSxRxwjIcf8Cx2Aw6ww=;
+        b=KzfA6UixuIRy9YpElltDdqwk2yfBpMvK4InTPHVxb2DKTdzm+T/3lMkDfNP090J/US
+         aG5r4XgrvAQ4V1USt6D6FcvRATGhVHudbruItrARRWt4jU450scBjIvNcXmXCpTGsj6f
+         0XgpTRs6ipDfObLv2CaNcIGeGPHWoql6is/qw6Mkxl2lzxJ4tL6Dhq/H7jMkQmWPj2dX
+         SxCVQETd/9zLvcfaUoSrsuPTnJ3r7tyq8NlCAzL/ngYncJ8D+3FUS6ghjzWYLpz2L2i3
+         0DxOl98ryJI8wHAAVOPR0+hY4iG9lyb7OCiUQay/fUOsiAbTWPa+yoHDoRtpgjHPmLye
+         gS+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Rpn93xyHdtfENnB9aPQg9YqgzSxRxwjIcf8Cx2Aw6ww=;
+        b=ehPs2xYh7JzovqsfrkBgiuz+xrXY/9RSV04RrWZ4iJM3wC5BYIxEnAqjFjLEbI6Pvs
+         5ytMdkJoq1jx+EqljjBYTpdtMdkqmEON4d+JhlHvhMX2l72BjnIeKn90UGbj/eB3DVTH
+         CxzgIOlbfQlzYgFbZv8tAjrxGczBU0nMFOY+XqYoARboyLo66GTohDlR2hydOrVs3IrY
+         LVmKKxkrrNtEKb49YEhyIvstZ5RgXZCsWRf2+5ZwYItJIFXFem2Xd+W0beEV3/hWG5p5
+         awrQDLJk1ijvFCStSCxDIAW847T/N7JH7Ky6liMSn1UEg6swBCyPLhDAjqIWD3V1kd10
+         Rnxg==
+X-Gm-Message-State: AOAM532IrJ0ZLn53w5/0gGHsjvBzEQVNozbdfI1Ao6uCh0D003dqrInk
+        MS1mn0O5UYVu9snRjaxsQW8Jcg==
+X-Google-Smtp-Source: ABdhPJwFW97K6R+OFJRII5EMZIBZoUx7TnX2r1rh+kuNeSDWcHFbYBYkyIWy5rzp5848SCALwZ9bKA==
+X-Received: by 2002:a17:90a:2c47:: with SMTP id p7mr1428721pjm.48.1606364350732;
+        Wed, 25 Nov 2020 20:19:10 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:df19:3df8:ea8b:660d])
+        by smtp.gmail.com with ESMTPSA id p14sm4320595pjo.53.2020.11.25.20.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2020 20:19:10 -0800 (PST)
+Date:   Wed, 25 Nov 2020 20:19:08 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Pawan Gupta <writetopawan@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: core: Fix unused variable build warnings
+Message-ID: <20201126041908.GA420140@x1>
+References: <d1a71663e96239ced28509980ea484cadc10c80a.1606170299.git.writetopawan@gmail.com>
+ <20201124050618.GA337876@x1>
+ <20201124075129.GA1339@guptapadev.amr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201124075129.GA1339@guptapadev.amr>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The DesignWare gpio-dwapb GPIO driver ("snps,dw-apb-gpio" or
-"apm,xgene-gpio-v2" compatible string) defines the now deprecated
-property "snps,nr-gpios" to specify the number of GPIOs available
-on a port. However, if this property is used in a device tree, its
-"-gpios" suffix causes the generic property supplier parsing code to
-interpret it as a cell reference when properties are parsed in
-of_link_to_suppliers(), leading to an error messages such as:
+On Mon, Nov 23, 2020 at 11:51:29PM -0800, Pawan Gupta wrote:
+> On Mon, Nov 23, 2020 at 09:06:18PM -0800, Drew Fustini wrote:
+> > On Mon, Nov 23, 2020 at 02:33:33PM -0800, Pawan Gupta wrote:
+> > > A recent commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs
+> > > file") added build warnings when CONFIG_GPIOLIB=n. Offcourse the kernel
+> > > fails to build when warnings are treated as errors. Below is the error
+> > > message:
+> > > 
+> > >   $ make CFLAGS_KERNEL+=-Werror
+> > > 
+> > >   drivers/pinctrl/core.c: In function ‘pinctrl_pins_show’:
+> > >   drivers/pinctrl/core.c:1607:20: error: unused variable ‘chip’ [-Werror=unused-variable]
+> > >    1607 |  struct gpio_chip *chip;
+> > >         |                    ^~~~
+> > >   drivers/pinctrl/core.c:1606:15: error: unused variable ‘gpio_num’ [-Werror=unused-variable]
+> > >    1606 |  unsigned int gpio_num;
+> > >         |               ^~~~~~~~
+> > >   drivers/pinctrl/core.c:1605:29: error: unused variable ‘range’ [-Werror=unused-variable]
+> > >    1605 |  struct pinctrl_gpio_range *range;
+> > >         |                             ^~~~~
+> > >   cc1: all warnings being treated as errors
+> > > 
+> > > These variables are only used inside #ifdef CONFIG_GPIOLIB, fix the
+> > > build warnings by wrapping the definition inside the config.
+> > > 
+> > > Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
+> > > Signed-off-by: Pawan Gupta <writetopawan@gmail.com>
+> > > ---
+> > >  drivers/pinctrl/core.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> > > index 3663d87f51a0..1bb371a5cf8d 100644
+> > > --- a/drivers/pinctrl/core.c
+> > > +++ b/drivers/pinctrl/core.c
+> > > @@ -1602,10 +1602,11 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+> > >  	struct pinctrl_dev *pctldev = s->private;
+> > >  	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+> > >  	unsigned i, pin;
+> > > +#ifdef CONFIG_GPIOLIB
+> > >  	struct pinctrl_gpio_range *range;
+> > >  	unsigned int gpio_num;
+> > >  	struct gpio_chip *chip;
+> > > -
+> > > +#endif
+> > >  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+> > >  
+> > >  	mutex_lock(&pctldev->mutex);
+> > > -- 
+> > > 2.21.3
+> > > 
+> > 
+> > Thanks for pointing this out.  I don't have any systems where I build
+> > without CONFIG_GPIOLIB so I missed this.
+> > 
+> > I'm having trouble figuring out a .config that will reproduce this.  I
+> > tried tinyconfig but it compiled clean.
+> 
+> Just setting CONFIG_GPIOLIB=n via menuconfig is not an option?  Have you
+> tried x86?
 
-OF: /soc/bus@50200000/gpio-controller@50200000/gpio-port@0: could not
-find phandle
+There were other options related to pinctrl both for my ARM board and my
+laptop that were forcing GPIOLIB to stay on. 
 
-As this deprecated property is still present in many device trees, fix
-this problem by manually defining a parse_gpios() instead of using the
-DEFINE_SUFFIX_PROP() macro. This new parsing function issues a warning
-and then ignores the deprecated property, skipping the phandle parsing
-and thus avoiding the device tree parsing error.
+> 
+> > Could you share your .config?
+> 
+> Attaching the .config that reproduces the build warning.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- drivers/of/property.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+Thanks.  I was able to reproduce the error with your config.
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 408a7b5f06a9..304459add299 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1308,7 +1308,6 @@ DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
- DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
--DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
- 
- static struct device_node *parse_iommu_maps(struct device_node *np,
- 					    const char *prop_name, int index)
-@@ -1319,6 +1318,25 @@ static struct device_node *parse_iommu_maps(struct device_node *np,
- 	return of_parse_phandle(np, prop_name, (index * 4) + 1);
- }
- 
-+static struct device_node *parse_gpios(struct device_node *np,
-+				       const char *prop_name, int index)
-+{
-+	/*
-+	 * Quirk for the deprecated "snps,nr-gpios" property of the
-+	 * DesignWare gpio-dwapb GPIO driver: as this property parsing
-+	 * conflicts with the "xx-gpios" phandle reference property,
-+	 * issue a warning and ignore it.
-+	 */
-+	if (strcmp(prop_name, "snps,nr-gpios") == 0) {
-+		pr_warn("%pOF: \"snps,nr-gpios\" property is deprecated in favor of \"ngpios\"\n",
-+			np);
-+		return NULL;
-+	}
-+
-+	return parse_suffix_prop_cells(np, prop_name, index,
-+				       "-gpios", "#gpio-cells");
-+}
-+
- static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_clocks, },
- 	{ .parse_prop = parse_interconnects, },
--- 
-2.28.0
+I applied your patch and it did resolve the error for me.
 
+Reviewed-by: Drew Fustini <drew@beagleboard.org>
