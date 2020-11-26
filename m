@@ -2,177 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D0C2C554D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 14:29:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3042C5796
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 15:54:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389852AbgKZN2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Nov 2020 08:28:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
+        id S2391270AbgKZOxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Nov 2020 09:53:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389807AbgKZN2o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Nov 2020 08:28:44 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7AAC0613D4
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Nov 2020 05:28:44 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id r3so2167306wrt.2
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Nov 2020 05:28:44 -0800 (PST)
+        with ESMTP id S2391237AbgKZOxk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Nov 2020 09:53:40 -0500
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2597BC0617A7;
+        Thu, 26 Nov 2020 06:53:40 -0800 (PST)
+Received: by mail-yb1-xb42.google.com with SMTP id 2so1842167ybc.12;
+        Thu, 26 Nov 2020 06:53:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=j3jIfABHebgIQYyFTFzGmbyYJsJoQbpfkOYYN2ZM7fo=;
-        b=ZV/eZfIM43W03jQJiomsNpvL3M8Xh3ZEDa9SgEFel/1eJgOCQRYNDwnjNphuFPVUe6
-         Cu75OlfOHnbtg1VPxD16IwF+kqVWISdtQr7/IRrg6HPxJ0zR4hdIqTXJ63SLaRyc7gGJ
-         zACoRj3zLKrxWyfpMeOSgLIBTqTCAPyEYD0b9BecjSqrb1LSdSnmRS95P2/X6snZKlbB
-         b4PBHCSLFZ4AYJb0pnowd2rpv5vbOjVFQf91wUnS50wMFC/mIaOrlyA1xLHJ6Erkk2NO
-         Gl55jhGewJFv/NI3Oq0nu6iCPtl2Nk8qqGFykzALj/kWMqnZ3B/aF0coK2WgRBgJwa0h
-         5nfg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DTotsfb8u+PB0eT0g4gTrA/vgT4HfiDZTYQ/geteWC4=;
+        b=QWuS1TBfImi/m9J+5lB37414TjwoB+kfRyX/7ohuLNDuEazbBA4fEE506RPmuhzrQT
+         KCYao+uRLv4Su9SW/eKLjGfymcNDAcVP9irkT5MfO/ys+N1YXqwwODp/at6Hjf5mbn7y
+         sEjBq+fitA5RwLT9szzutyPemHxF/3vzz+qMkDnIA1HF+rIjtAU7PcoRO+GQ0ANzP2/3
+         4RgPAdoGGim7svP8Zrp9IWC0s7kVtrSQn/PXobh5aGfJoVk3uyVZYliED/q0Nk6tCoA8
+         W9fyUHPup50QVVdVd9NqYx0m2pkDUcyuxLwwV68mOS3NFLJOgvtFKpngAgg7rBEfKLyO
+         Kn5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=j3jIfABHebgIQYyFTFzGmbyYJsJoQbpfkOYYN2ZM7fo=;
-        b=R2b+GNMMBEjbRJGv1ZhQIrYpxQtBqpyHt5plYsfN2qYgJq8OPBqp9I7zfmGG7kq1gA
-         k3rx7EcbWhBGuu7fjd80Afu4F9KaVVa8w1d01BADrjMUXIqaWq025IfP3V5qd9zydYLE
-         +V0EjDfIKT8gHUsIyPKayLeSt7etQx7LNM/+Q4LDdlJ6a6U7a9YCaYvPIYAuPLHWNcTh
-         2TEslt00lWQwAN7hS/guOloHRVdsYCYLRnQX299IyPo12SA4PIVQgqgdVd4PTNlUem1A
-         o1ZCqHRq9uuCCFN8OoZs8o+ZOXf0GklCzm8wAAzkpSimpIGzJVfodghf9ZsdG+aOxjsJ
-         JYwA==
-X-Gm-Message-State: AOAM532smVDL9D7nPxfWu/7B9Z9qAxSqSZhBjZ3QwqUFEJac6yoOyCPK
-        xnMIHdXcjlUF+2TRHYlrGqzxaAue1GwWJURo
-X-Google-Smtp-Source: ABdhPJxjSIJGgNUpcnxPjjDIW+t5f0FHzaGLdtLotQpqb9VBHJar1Tt99YBGNFo23H7IPjUPjwYxMQ==
-X-Received: by 2002:adf:fd06:: with SMTP id e6mr3897159wrr.206.1606397323119;
-        Thu, 26 Nov 2020 05:28:43 -0800 (PST)
-Received: from dell ([91.110.221.235])
-        by smtp.gmail.com with ESMTPSA id b18sm9316605wrt.54.2020.11.26.05.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2020 05:28:42 -0800 (PST)
-Date:   Thu, 26 Nov 2020 13:28:40 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH v3 16/25] arch: arm: mach-at91: pm: Move prototypes to
- mutually included header
-Message-ID: <20201126132840.GD2455276@dell>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-17-lee.jones@linaro.org>
- <20201112093918.GV2063125@dell>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DTotsfb8u+PB0eT0g4gTrA/vgT4HfiDZTYQ/geteWC4=;
+        b=mBK0BS6TVWjBRFU3odjyPBI0qUdtX5J2whJBBOZokPbmjZIFVhPQnqE5GmfY4vHvbV
+         HT2pTD/gdZPIyz+Ka8PZGwpqbqdnkJfeOU9ZWd1J0G+AjKdTWQiUQCXttTdwVpWBkqMv
+         ZINBj1InBzUZ/P06rN6Bt3BjJ6CSLqJSeAuQxg9CxkWZIOoaLDaG++1QWREVsBaSYvRt
+         rJ6vRbz1dUvdEIH2YPGs/ain50d2odcAPpiaD9QrMy94hESh3GeN4484YDZQR0EzvWHR
+         D1wuVku4ZKmbiM7N92dZI/sc7+qWB6e5/CKVhuCqFPMTebfStQrhTXq966yIKfcdlSzb
+         lORw==
+X-Gm-Message-State: AOAM530vshkiTFDvlahcV12UmE3qEmIlTM0l8dSkFhzBb5xKoNJCfxZ0
+        N+i4NOp+YhaNoPiX0GTlQqWA0Bm14r406uJVaEc=
+X-Google-Smtp-Source: ABdhPJxnOXTYq+iR4KCiqWmvI5brXjGTtWFP5n3J8AJAa70YoLiXvitjZtrbfPlByRts+Q0mJZBucXgMnTrbOCoAA44=
+X-Received: by 2002:a25:aac5:: with SMTP id t63mr5128050ybi.22.1606402419264;
+ Thu, 26 Nov 2020 06:53:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201112093918.GV2063125@dell>
+References: <cover.1605896059.git.gustavoars@kernel.org> <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
+ <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
+ <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
+ <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
+ <CANiq72k5tpDoDPmJ0ZWc1DGqm+81Gi-uEENAtvEs9v3SZcx6_Q@mail.gmail.com>
+ <4993259d01a0064f8bb22770503490f9252f3659.camel@HansenPartnership.com>
+ <CANiq72kqO=bYMJnFS2uYRpgWATJ=uXxZuNUsTXT+3aLtrpnzvQ@mail.gmail.com> <44005bde-f6d4-5eaa-39b8-1a5efeedb2d3@gmail.com>
+In-Reply-To: <44005bde-f6d4-5eaa-39b8-1a5efeedb2d3@gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 26 Nov 2020 15:53:27 +0100
+Message-ID: <CANiq72nobq=ptWK-qWxU91JHqkKhMcRtJNnw2XJd5-vSJWZd8Q@mail.gmail.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+To:     Edward Cree <ecree.xilinx@gmail.com>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
+        cluster-devel@redhat.com, coreteam@netfilter.org,
+        devel@driverdev.osuosl.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-decnet-user@lists.sourceforge.net,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Both the caller and the supplier's source file should have access to
-the include file containing the prototypes.
+On Wed, Nov 25, 2020 at 11:44 PM Edward Cree <ecree.xilinx@gmail.com> wrote=
+:
+>
+> To make the intent clear, you have to first be certain that you
+>  understand the intent; otherwise by adding either a break or a
+>  fallthrough to suppress the warning you are just destroying the
+>  information that "the intent of this code is unknown".
 
-Fixes the following W=1 kernel build warning(s):
+If you don't know what the intent of your own code is, then you
+*already* have a problem in your hands.
 
- drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
- 1637 | void at91_pinctrl_gpio_suspend(void)
- | ^~~~~~~~~~~~~~~~~~~~~~~~~
- drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
- 1661 | void at91_pinctrl_gpio_resume(void)
- | ^~~~~~~~~~~~~~~~~~~~~~~~
+> Figuring out the intent of a piece of unfamiliar code takes more
+>  than 1 minute; just because
+>     case foo:
+>         thing;
+>     case bar:
+>         break;
+>  produces identical code to
+>     case foo:
+>         thing;
+>         break;
+>     case bar:
+>         break;
+>  doesn't mean that *either* is correct =E2=80=94 maybe the author meant
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/mach-at91/pm.c        | 19 ++++++++-----------
- drivers/pinctrl/pinctrl-at91.c |  2 ++
- include/soc/at91/pm.h          | 16 ++++++++++++++++
- 3 files changed, 26 insertions(+), 11 deletions(-)
- create mode 100644 include/soc/at91/pm.h
+What takes 1 minute is adding it *mechanically* by the author, i.e. so
+that you later compare whether codegen is the same.
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 120f9aa6fff32..90dcdfe3b3d0d 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -17,6 +17,8 @@
- #include <linux/clk/at91_pmc.h>
- #include <linux/platform_data/atmel.h>
- 
-+#include <soc/at91/pm.h>
-+
- #include <asm/cacheflush.h>
- #include <asm/fncpy.h>
- #include <asm/system_misc.h>
-@@ -25,17 +27,6 @@
- #include "generic.h"
- #include "pm.h"
- 
--/*
-- * FIXME: this is needed to communicate between the pinctrl driver and
-- * the PM implementation in the machine. Possibly part of the PM
-- * implementation should be moved down into the pinctrl driver and get
-- * called as part of the generic suspend/resume path.
-- */
--#ifdef CONFIG_PINCTRL_AT91
--extern void at91_pinctrl_gpio_suspend(void);
--extern void at91_pinctrl_gpio_resume(void);
--#endif
--
- struct at91_soc_pm {
- 	int (*config_shdwc_ws)(void __iomem *shdwc, u32 *mode, u32 *polarity);
- 	int (*config_pmc_ws)(void __iomem *pmc, u32 mode, u32 polarity);
-@@ -326,6 +317,12 @@ static void at91_pm_suspend(suspend_state_t state)
- static int at91_pm_enter(suspend_state_t state)
- {
- #ifdef CONFIG_PINCTRL_AT91
-+	/*
-+	 * FIXME: this is needed to communicate between the pinctrl driver and
-+	 * the PM implementation in the machine. Possibly part of the PM
-+	 * implementation should be moved down into the pinctrl driver and get
-+	 * called as part of the generic suspend/resume path.
-+	 */
- 	at91_pinctrl_gpio_suspend();
- #endif
- 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 72edc675431ce..0a7e10d39505c 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -23,6 +23,8 @@
- /* Since we request GPIOs from ourself */
- #include <linux/pinctrl/consumer.h>
- 
-+#include <soc/at91/pm.h>
-+
- #include "pinctrl-at91.h"
- #include "core.h"
- 
-diff --git a/include/soc/at91/pm.h b/include/soc/at91/pm.h
-new file mode 100644
-index 0000000000000..7a41e53a3ffa3
---- /dev/null
-+++ b/include/soc/at91/pm.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Atmel Power Management
-+ *
-+ * Copyright (C) 2020 Atmel
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org>
-+ */
-+
-+#ifndef __SOC_ATMEL_PM_H
-+#define __SOC_ATMEL_PM_H
-+
-+void at91_pinctrl_gpio_suspend(void);
-+void at91_pinctrl_gpio_resume(void);
-+
-+#endif /* __SOC_ATMEL_PM_H */
--- 
-2.25.1
+>  to write
+>     case foo:
+>         return thing;
+>     case bar:
+>         break;
+>  and by inserting that break you've destroyed the marker that
+>  would direct someone who knew what the code was about to look
+>  at that point in the code and spot the problem.
+
+Then it means you already have a bug. This patchset gives the
+maintainer a chance to notice it, which is a good thing. The "you've
+destroyed the market" claim is bogus, because:
+  1. you were not looking into it
+  2. you didn't notice the bug so far
+  3. is implicit -- harder to spot
+  4. is only useful if you explicitly take a look at this kind of bug.
+So why don't you do it now?
+
+> Thus, you *always* have to look at more than just the immediate
+>  mechanical context of the code, to make a proper judgement that
+>  yes, this was the intent.
+
+I find that is the responsibility of the maintainers and reviewers for
+tree-wide patches like this, assuming they want. They can also keep
+the behavior (and the bugs) without spending time. Their choice.
+
+> If you think that that sort of thing
+>  can be done in an *average* time of one minute, then I hope you
+>  stay away from code I'm responsible for!
+
+Please don't accuse others of recklessness or incompetence, especially
+if you didn't understand what they said.
+
+> A warning is only useful because it makes you *think* about the
+>  code.  If you suppress the warning without doing that thinking,
+>  then you made the warning useless; and if the warning made you
+>  think about code that didn't *need* it, then the warning was
+>  useless from the start.
+
+We are not suppressing the warning. Quite the opposite, in fact.
+
+> So make your mind up: does Clang's stricter -Wimplicit-fallthrough
+>  flag up code that needs thought (in which case the fixes take
+>  effort both to author and to review)
+
+As I said several times already, it does take time to review if the
+maintainer wants to take the chance to see if they had a bug to begin
+with, but it does not require thought for the author if they just go
+for equivalent codegen.
+
+> or does it flag up code
+>  that can be mindlessly "fixed" (in which case the warning is
+>  worthless)?  Proponents in this thread seem to be trying to
+>  have it both ways.
+
+A warning is not worthless just because you can mindlessly fix it.
+There are many counterexamples, e.g. many
+checkpatch/lint/lang-format/indentation warnings, functional ones like
+the `if (a =3D b)` warning...
+
+Cheers,
+Miguel
