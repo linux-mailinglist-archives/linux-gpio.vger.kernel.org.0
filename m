@@ -2,223 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B092C4EC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 07:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F14DF2C4F37
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Nov 2020 08:19:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbgKZGeT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Nov 2020 01:34:19 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43405 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732690AbgKZGeS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 26 Nov 2020 01:34:18 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 06FF45C0170;
-        Thu, 26 Nov 2020 01:34:17 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 26 Nov 2020 01:34:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=LM/6syswR/TQC0khtK3z7jyG15
-        eRUPMaixWhJ0PAO+Q=; b=ieJnHukIWBS9UvDusn03XU9iAbEe5i4FM++CRwRojs
-        XR4cunNolOQgd3eBSei6UNbxX2zDY1+T2TwGz+dUblZ5CdvItdfesU/p/CtMLgNk
-        gjQkAeFcPblHLFCSYxCMv4UjQlwte85MhnOMo8g8MhPe86kXL40TpDi+UbgdpFDQ
-        2z6KbgXoOCwMUR0v5XVEOnoEdHQ0HIgZBybt3WMmUPgFgkgAg2I9ACYZcPPi+Zu1
-        1GKPGriYt5psACLi3J8V95ObxHVjkbrinNhtDd2Hyn3N1SdkqB+ZtcN+fqbc145r
-        AzCs0P4GO2k/Q44D0D7XeRaxqf71DYD6raSteCE//zIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=LM/6syswR/TQC0kht
-        K3z7jyG15eRUPMaixWhJ0PAO+Q=; b=aq1sPllfWvE+7PynW7a8zTDgOeIWUIrGj
-        EMKdtwMK2n6av2TIbtU5To89Elhn1wJLjt14oG/ZnG+W/KClb8bUGm0Zwq1mn0bk
-        an+EAniiB7KLqPQIXpxdRnnqxXMtWoyM2Oup5kb0Ea01z3LhLlKEP2bByaoGVDxz
-        dMU7Rr3lQdf6lQHh4K/c1KRgWeWNMFwuPWCQojonQ2fpSuY7QIgxltruqKkr2Knz
-        IBudK508YFZa3Ggi/zDh6TNgofP4Qa2wPI8QlYFHXlvN9V/D01kTOvlNDBkaMJ8/
-        3dccsqhsPoFGUnyDf/NqUsb/lqQW1xP3UKKqXP+wMKPUeoqRj2Cew==
-X-ME-Sender: <xms:aEy_X6vLmo4H9awTDFKj-lhi_9FWVkzQ0prbNaLXnDCSIe-c0C9cQQ>
-    <xme:aEy_X_d1fh7KuCSFneSFJd-CrPzCe1pWkWH8HLirA-j05hdNYn_OSueZLIIOXo1N6
-    8bvLwm8oEE3m-aefQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudehuddgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
-    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
-    dvvddthefftedujeethfeuueelfedtnecukfhppedvtdefrdehjedrvddtkedrudegieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurh
-    gvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:aEy_X1x86IKtSlHMuRJUpYO_YAK_zBkPLEeWZE9FHhXts_k4iIECxg>
-    <xmx:aEy_X1MHa05VAEwWnsSN6FSSSIhjHp-6W3w1PFfgGJzGtv6mZefIhQ>
-    <xmx:aEy_X6907oItowjdP5aJrwQ-X5s32FXnkPeWdW1U1sQMgRzCz2RX0Q>
-    <xmx:aUy_X6xxzn9RoJlUmylQhhXRzkyARU5GFgHNlpppNENwKEY8DTeWIQ>
-Received: from localhost.localdomain (203-57-208-146.dyn.iinet.net.au [203.57.208.146])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0F2ED328005D;
-        Thu, 26 Nov 2020 01:34:12 -0500 (EST)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        billy_tsai@aspeedtech.com, sashal@kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: [PATCH] pinctrl: aspeed: Fix GPIO requests on pass-through banks
-Date:   Thu, 26 Nov 2020 17:03:37 +1030
-Message-Id: <20201126063337.489927-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.27.0
+        id S2388360AbgKZHQS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Nov 2020 02:16:18 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:8406 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388333AbgKZHQS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Nov 2020 02:16:18 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ChTZ01dRjz73wt;
+        Thu, 26 Nov 2020 15:15:52 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Nov 2020
+ 15:16:10 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
+        <Sergey.Semin@baikalelectronics.ru>
+CC:     <andy.shevchenko@gmail.com>, <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1] gpio: dwapb: fix NULL pointer dereference at dwapb_gpio_suspend()
+Date:   Thu, 26 Nov 2020 15:16:31 +0800
+Message-ID: <1606374991-55165-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 6726fbff19bf ("pinctrl: aspeed: Fix GPI only function problem.")
-fixes access to GPIO banks T and U on the AST2600. Both banks contain
-input-only pins and the GPIO pin function is named GPITx and GPIUx
-respectively. Unfortunately the fix had a negative impact on GPIO banks
-D and E for the AST2400 and AST2500 where the GPIO pass-through
-functions take similar "GPI"-style names. The net effect on the older
-SoCs was that when the GPIO subsystem requested a pin in banks D or E be
-muxed for GPIO, they were instead muxed for pass-through mode.
-Mistakenly muxing pass-through mode e.g. breaks booting the host on
-IBM's Witherspoon (AC922) platform where GPIOE0 is used for FSI.
+Following Calltrace is found when running echo freeze > /sys/power/state.
 
-Further exploit the names in the provided expression structure to
-differentiate pass-through from pin-specific GPIO modes.
+[  272.755506] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+[  272.755508] Mem abort info:
+[  272.755508]   ESR = 0x96000006
+[  272.755510]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  272.755511]   SET = 0, FnV = 0
+[  272.755512]   EA = 0, S1PTW = 0
+[  272.755513] Data abort info:
+[  272.755514]   ISV = 0, ISS = 0x00000006
+[  272.755515]   CM = 0, WnR = 0
+[  272.755517] user pgtable: 4k pages, 48-bit VAs, pgdp=00000020a3b66000
+[  272.755519] [0000000000000010] pgd=00000020a5ebe003, p4d=00000020a5ebe003, pud=0000002093cd3003, pmd=0000000000000000
+[  272.755525] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[  272.755527] Modules linked in:
+[  272.755532] CPU: 2 PID: 3523 Comm: bash Not tainted 5.10.0-rc1-109487-g2893d0937cea-dirty #936
+[  272.755533] Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 03/10/2020
+[  272.755535] pstate: 60400009 (nZCv daif +PAN -UAO -TCO BTYPE=--)
+[  272.755544] pc : dwapb_gpio_suspend+0x18/0x318
+[  272.755550] lr : pm_generic_suspend+0x2c/0x48
+[  272.755551] sp : ffff80002f0aba90
+[  272.755552] x29: ffff80002f0aba90 x28: 0000000000000000
+[  272.755555] x27: ffffbc08c155c000 x26: 0000000000000002
+[  272.755557] x25: ffffbc08c155c5f8 x24: ffffbc08c1621000
+[  272.755559] x23: 0000000000000000 x22: ffffbc08c15cc000
+[  272.755561] x21: ffff357204472410 x20: ffffbc08bfd6a7a0
+[  272.755563] x19: 0000000000000000 x18: ffffffffffffffff
+[  272.755565] x17: 0000000000000000 x16: 0000000000000000
+[  272.755567] x15: 0000004a5f1918b8 x14: 0000000000000219
+[  272.755570] x13: 0000000000000219 x12: 0000000000000000
+[  272.755572] x11: 0000000000000000 x10: 0000000000000000
+[  272.755574] x9 : 0000000000000000 x8 : ffff15729beb6180
+[  272.755576] x7 : 0000000000000000 x6 : 000000000000000b
+[  272.755578] x5 : ffff15729dbd4600 x4 : 0000000000000000
+[  272.755580] x3 : ffff357204472504 x2 : ffffbc08bfcefef0
+[  272.755582] x1 : 0000000000000000 x0 : ffff357204472410
+[  272.755585] Call trace:
+[  272.755587]  dwapb_gpio_suspend+0x18/0x318
+[  272.755588]  pm_generic_suspend+0x2c/0x48
+[  272.755595]  acpi_subsys_suspend+0x60/0x70
+[  272.755599]  dpm_run_callback.isra.18+0x40/0xe0
+[  272.755601]  __device_suspend+0xf4/0x360
+[  272.755603]  dpm_suspend+0xf0/0x1f8
+[  272.755605]  dpm_suspend_start+0xa0/0xa8
+[  272.755610]  suspend_devices_and_enter+0xe0/0x618
+[  272.755612]  pm_suspend+0x250/0x308
+[  272.755613]  state_store+0x8c/0x118
+[  272.755621]  kobj_attr_store+0x18/0x30
+[  272.755625]  sysfs_kf_write+0x40/0x58
+[  272.755626]  kernfs_fop_write+0x148/0x240
+[  272.755630]  vfs_write+0xc0/0x230
+[  272.755632]  ksys_write+0x6c/0x100
+[  272.755633]  __arm64_sys_write+0x1c/0x28
+[  272.755639]  el0_svc_common.constprop.3+0x68/0x170
+[  272.755641]  do_el0_svc+0x24/0x90
+[  272.755646]  el0_sync_handler+0x118/0x168
+[  272.755647]  el0_sync+0x158/0x180
+[  272.755651] Code: 910003fd f9000bf3 f9001ff8 f9403c13 (f9400a78)
+[  272.755724] ---[ end trace afcb0e834c241837 ]---
+[  272.937286] Kernel panic - not syncing: Oops: Fatal exception
+[  273.210068] SMP: stopping secondary CPUs
+[  273.214006] Kernel Offset: 0x3c08af7b0000 from 0xffff800010000000
+[  273.220071] PHYS_OFFSET: 0xffffeaae00000000
+[  273.224235] CPU features: 0x0040002,62808a38
+[  273.228486] Memory Limit: none
+[  273.234390] ---[ end Kernel panic - not syncing: Oops: Fatal exception ]---
 
-This follow-up fix gives the expected behaviour for the following tests:
+The reason is platform_set_drvdata() is deleted, and dwapb_gpio_suspend()
+get *gpio by dev_get_drvdata().
 
-Witherspoon BMC (AST2500):
+Fixes: feeaefd378ca ("gpio: dwapb: Use resource managed GPIO-chip add data method")
 
-1. Power-on the Witherspoon host
-2. Request GPIOD1 be muxed via /sys/class/gpio/export
-3. Request GPIOE1 be muxed via /sys/class/gpio/export
-4. Request the balls for GPIOs E2 and E3 be muxed as GPIO pass-through
-   ("GPIE2" mode) via a pinctrl hog in the devicetree
-
-Rainier BMC (AST2600):
-
-5. Request GPIT0 be muxed via /sys/class/gpio/export
-6. Request GPIU0 be muxed via /sys/class/gpio/export
-
-Together the tests demonstrate that all three pieces of functionality
-(general GPIOs via 1, 2 and 3, input-only GPIOs via 5 and 6, pass-through
-mode via 4) operate as desired across old and new SoCs.
-
-Fixes: 6726fbff19bf ("pinctrl: aspeed: Fix GPI only function problem.")
-Cc: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 74 +++++++++++++++++++++++--
- drivers/pinctrl/aspeed/pinmux-aspeed.h  |  7 ++-
- 2 files changed, 72 insertions(+), 9 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-index 1d603732903f..9c44ef11b567 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -286,14 +286,76 @@ int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
- static bool aspeed_expr_is_gpio(const struct aspeed_sig_expr *expr)
- {
- 	/*
--	 * The signal type is GPIO if the signal name has "GPI" as a prefix.
--	 * strncmp (rather than strcmp) is used to implement the prefix
--	 * requirement.
-+	 * We need to differentiate between GPIO and non-GPIO signals to
-+	 * implement the gpio_request_enable() interface. For better or worse
-+	 * the ASPEED pinctrl driver uses the expression names to determine
-+	 * whether an expression will mux a pin for GPIO.
- 	 *
--	 * expr->signal might look like "GPIOB1" in the GPIO case.
--	 * expr->signal might look like "GPIT0" in the GPI case.
-+	 * Generally we have the following - A GPIO such as B1 has:
-+	 *
-+	 *    - expr->signal set to "GPIOB1"
-+	 *    - expr->function set to "GPIOB1"
-+	 *
-+	 * Using this fact we can determine whether the provided expression is
-+	 * a GPIO expression by testing the signal name for the string prefix
-+	 * "GPIO".
-+	 *
-+	 * However, some GPIOs are input-only, and the ASPEED datasheets name
-+	 * them differently. An input-only GPIO such as T0 has:
-+	 *
-+	 *    - expr->signal set to "GPIT0"
-+	 *    - expr->function set to "GPIT0"
-+	 *
-+	 * It's tempting to generalise the prefix test from "GPIO" to "GPI" to
-+	 * account for both GPIOs and GPIs, but in doing so we run aground on
-+	 * another feature:
-+	 *
-+	 * Some pins in the ASPEED BMC SoCs have a "pass-through" GPIO
-+	 * function where the input state of one pin is replicated as the
-+	 * output state of another (as if they were shorted together - a mux
-+	 * configuration that is typically enabled by hardware strapping).
-+	 * This feature allows the BMC to pass e.g. power button state through
-+	 * to the host while the BMC is yet to boot, but take control of the
-+	 * button state once the BMC has booted by muxing each pin as a
-+	 * separate, pin-specific GPIO.
-+	 *
-+	 * Conceptually this pass-through mode is a form of GPIO and is named
-+	 * as such in the datasheets, e.g. "GPID0". This naming similarity
-+	 * trips us up with the simple GPI-prefixed-signal-name scheme
-+	 * discussed above, as the pass-through configuration is not what we
-+	 * want when muxing a pin as GPIO for the GPIO subsystem.
-+	 *
-+	 * On e.g. the AST2400, a pass-through function "GPID0" is grouped on
-+	 * balls A18 and D16, where we have:
-+	 *
-+	 *    For ball A18:
-+	 *    - expr->signal set to "GPID0IN"
-+	 *    - expr->function set to "GPID0"
-+	 *
-+	 *    For ball D16:
-+	 *    - expr->signal set to "GPID0OUT"
-+	 *    - expr->function set to "GPID0"
-+	 *
-+	 * By contrast, the pin-specific GPIO expressions for the same pins are
-+	 * as follows:
-+	 *
-+	 *    For ball A18:
-+	 *    - expr->signal looks like "GPIOD0"
-+	 *    - expr->function looks like "GPIOD0"
-+	 *
-+	 *    For ball D16:
-+	 *    - expr->signal looks like "GPIOD1"
-+	 *    - expr->function looks like "GPIOD1"
-+	 *
-+	 * Testing both the signal _and_ function names gives us the means
-+	 * differentiate the pass-through GPIO pinmux configuration from the
-+	 * pin-specific configuration that the GPIO subsystem is after: An
-+	 * expression is a pin-specific (non-pass-through) GPIO configuration
-+	 * if the signal prefix is "GPI" and the signal name matches the
-+	 * function name.
- 	 */
--	return strncmp(expr->signal, "GPI", 3) == 0;
-+	return !strncmp(expr->signal, "GPI", 3) &&
-+			!strcmp(expr->signal, expr->function);
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 2a9046c..4275c18 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -724,6 +724,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 			return err;
+ 	}
+ 
++	platform_set_drvdata(pdev, gpio);
++
+ 	return 0;
  }
  
- static bool aspeed_gpio_in_exprs(const struct aspeed_sig_expr **exprs)
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index f86739e800c3..dba5875ff276 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -452,10 +452,11 @@ struct aspeed_sig_desc {
-  * evaluation of the descriptors.
-  *
-  * @signal: The signal name for the priority level on the pin. If the signal
-- *          type is GPIO, then the signal name must begin with the string
-- *          "GPIO", e.g. GPIOA0, GPIOT4 etc.
-+ *          type is GPIO, then the signal name must begin with the
-+ *          prefix "GPI", e.g. GPIOA0, GPIT0 etc.
-  * @function: The name of the function the signal participates in for the
-- *            associated expression
-+ *            associated expression. For pin-specific GPIO, the function
-+ *            name must match the signal name.
-  * @ndescs: The number of signal descriptors in the expression
-  * @descs: Pointer to an array of signal descriptors that comprise the
-  *         function expression
 -- 
-2.27.0
+2.7.4
 
