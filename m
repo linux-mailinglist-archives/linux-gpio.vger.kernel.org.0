@@ -2,115 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A43112C65EB
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 13:49:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69BC32C6716
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 14:44:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgK0Mps (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Nov 2020 07:45:48 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:54913 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgK0Mpr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Nov 2020 07:45:47 -0500
-Received: from [192.168.1.155] ([95.114.158.11]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPp0l-1kWAmh23Dn-00Mw0R; Fri, 27 Nov 2020 13:45:20 +0100
-Subject: Re: [PATCH] drivers: gpio: use of_match_ptr() and ACPI_PTR() macros
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alban Bedel <albeu@free.fr>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kevin Hilman <khilman@kernel.org>, zhang.lyra@gmail.com,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>, orsonzhai@gmail.com,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-pwm@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Sascha Hauer <kernel@pengutronix.de>, baolin.wang7@gmail.com,
-        Shawn Guo <shawnguo@kernel.org>
-References: <20201117154340.18216-1-info@metux.net>
- <CAHp75VfPio=TacTTrY=vZp8vZ7qst_7zWeXKDpYvJ6q7oh2Hdw@mail.gmail.com>
- <20201118095342.sviuxvfsbmmn22mo@pengutronix.de>
- <CAHp75Vd9QUCcUoPLUW3kkJC0h=mPUqHNqNJPY74gDGSu67t8Hw@mail.gmail.com>
- <CAHp75Vcdu1aOLuF+EFDZibbi0OwGH4QfBhJQm9VZQkeEGEeKDQ@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <40d468a6-f8ba-7535-55dd-e91ba8299958@metux.net>
-Date:   Fri, 27 Nov 2020 13:45:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1729888AbgK0NnJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Nov 2020 08:43:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729592AbgK0NnI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Nov 2020 08:43:08 -0500
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D47C0613D1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Nov 2020 05:43:08 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by michel.telenet-ops.be with bizsmtp
+        id xRj62300Z4C55Sk06Rj6Bw; Fri, 27 Nov 2020 14:43:06 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kie1i-0065Xo-Hf; Fri, 27 Nov 2020 14:43:06 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kie1i-000Kd1-0K; Fri, 27 Nov 2020 14:43:06 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.11 (take two)
+Date:   Fri, 27 Nov 2020 14:43:04 +0100
+Message-Id: <20201127134304.79252-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vcdu1aOLuF+EFDZibbi0OwGH4QfBhJQm9VZQkeEGEeKDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yMIP6nH7cKntCrJuLgf/M3+4XwFIPkg7UfYtSb9J0SkpG6sGOv7
- /IR7PEjcUkbXZfn95xvF9kPZZUOb9RUnvrwEmPu6rP+AgFH9G1KbtEQbrGI6dOjDEAwqV/E
- EczzEgEJ3pvoStGVhjYfBSBY8R6QOUQt5Ao1T/pFBNKAztiWswegrgTUhY7Sz/LsMkjc4PG
- AXU7u5vqunrqkbLcYUoQg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m5fjPJhCYJQ=:4vrnvGfA8e+95x4fem3OkF
- DfLkWIz4U0aBa8HLZrIOXcD4NWRi5pMo8Oa4rh/JJ6ngXDJTm/+FAY8quNYB/ANwdfDZQe48s
- k2CqQzxtZtilcnmHKe3lkzxpcwcFbAmCgCYFK3D/auj506nTbYO4c624QAzeKlxqJ9aCHd+Wt
- hI3o1ZxJl9DrzDwcoXjkznsF6FbhuSIoOss3ewNaFyBSbu3g2nqwNlNyj2HOFbPxM+r/J2tuu
- bZJU0A6yKpvQn5LrOthHb8IMcDYU+ctkst0nQXTHzlI8rZMMh1Y6r4K/vLbyb1aJ7BZlF8YaF
- Qx59hp3Vk6LqR7JSnkqsESRE70Qu6MnElAe5u2/7HTI9LGVM6UaRVUiDMjxUT4psNxVyefUaX
- /w7EbD7LArRl27YIShkQumClWDiabxBy/5FbFvypZGCtrLVGaftrxq8KTeQFL
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18.11.20 11:01, Andy Shevchenko wrote:
+	Hi Linus,
 
->>> So a system without CONFIG_OF might still make use of .of_match_table?
->>
->> Yep!
-> 
-> If you are curious:
-> https://elixir.bootlin.com/linux/latest/source/drivers/acpi/bus.c#L615
+The following changes since commit d4aac7d439c2d9307cb5137fc285464a36978107:
 
-Phuh, this changes everything ... sorry, didn't know that.
+  pinctrl: renesas: Constify sh73a0_vccq_mc0_ops (2020-11-13 15:37:41 +0100)
 
-If ACPI now can contain OF pieces, we should ask the question whether
-of_match_ptr() should be used at all.
+are available in the Git repository at:
 
-Would it be a compromise introducing a new macro (eg. "OF_MATCH_PTR()")
-which passes through the pointer if either OF or ACPI is enabled.
-Maybe we could introduce a new config item (eg "OF_MATCH_TABLE") for
-that, which is enabled by both OF and ACPI. And maybe add an option for
-of-compatible checking in ACPI.
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.11-tag2
 
-How do you folks think about that ?
+for you to fetch changes up to 7ba4a9591a8ac058bf976485975f78128c273800:
 
+  pinctrl: renesas: Fix fall-through warnings for Clang (2020-11-23 09:47:28 +0100)
 
---mtx
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.11 (take two)
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+  - Add QSPI pin groups on R-Car E3, H3, M3-W/W+, and M3-N,
+  - A small fix for a Clang warning.
+
+Thanks for pulling!
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      pinctrl: renesas: Fix fall-through warnings for Clang
+
+Lad Prabhakar (4):
+      pinctrl: renesas: r8a77990: Add QSPI[01] pins, groups and functions
+      pinctrl: renesas: r8a77951: Add QSPI[01] pins, groups and functions
+      pinctrl: renesas: r8a7796: Add QSPI[01] pins, groups and functions
+      pinctrl: renesas: r8a77965: Add QSPI[01] pins, groups and functions
+
+ drivers/pinctrl/renesas/pfc-r8a77951.c | 75 +++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  | 75 +++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77965.c | 75 +++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77990.c | 75 +++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pinctrl-rza1.c |  1 +
+ 5 files changed, 293 insertions(+), 8 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
