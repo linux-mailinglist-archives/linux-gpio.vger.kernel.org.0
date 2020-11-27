@@ -2,135 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A5E82C5F92
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 06:23:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5461C2C6130
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 09:50:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgK0FWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Nov 2020 00:22:54 -0500
-Received: from m12-18.163.com ([220.181.12.18]:59772 "EHLO m12-18.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgK0FWy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 27 Nov 2020 00:22:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=lmgddvHtAi5SdHCftt
-        KJz4DYN1iYMVB/xgJ/V1LKoCk=; b=R8BM8/vlkT+tsLpWQrvFzKdF3WjF4n60Kv
-        pDgJ4rg4HksCHlmGz8fJ7C/bgSmTepjx3bwZj1nEG9u6gNF3Hy71w4dTVRkszhn6
-        0xo7UAdPGgqokb1yuOKk27LwSOdEzi5qu8A4LuHMlbBpfRozMPvF5EaNWACTnUyv
-        myQwGWsTA=
-Received: from localhost.localdomain (unknown [115.238.52.186])
-        by smtp14 (Coremail) with SMTP id EsCowAB3t_6_jMBfeM8wGg--.52279S3;
-        Fri, 27 Nov 2020 13:21:04 +0800 (CST)
-From:   linsheng_111@163.com
-To:     linus.walleij@linaro.org, khilman@baylibre.com,
-        narmstrong@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, linshenghuan@hangtu-china.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lin shenghuan <linsheng_111@163.com>
-Subject: [PATCH] add amlogic gpio to irq
-Date:   Fri, 27 Nov 2020 13:21:02 +0800
-Message-Id: <1606454462-3826-1-git-send-email-linsheng_111@163.com>
+        id S1725946AbgK0Itw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Nov 2020 03:49:52 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8045 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgK0Itw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Nov 2020 03:49:52 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cj7bW5BKRzhXwL;
+        Fri, 27 Nov 2020 16:49:27 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 27 Nov 2020
+ 16:49:42 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
+        <Sergey.Semin@baikalelectronics.ru>
+CC:     <andy.shevchenko@gmail.com>, <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+Subject: [PATCH v2] gpio: dwapb: fix NULL pointer dereference at dwapb_gpio_suspend()
+Date:   Fri, 27 Nov 2020 16:50:02 +0800
+Message-ID: <1606467002-62964-1-git-send-email-luojiaxing@huawei.com>
 X-Mailer: git-send-email 2.7.4
-Signed-off-by: Lin shenghuan <linshenghuan@hangtu-china.com>
-X-CM-TRANSID: EsCowAB3t_6_jMBfeM8wGg--.52279S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJFy3Zr4xtw47Kr45Kr48WFg_yoW5WF45pF
-        43GFyYyr13JF47WryrAanrAFW3K3WxJFW2gay7Ka97uw13GFyDtFy29FW5Zrs8WrW5CF4r
-        Jr4rGFWUWr45AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UlPfLUUUUU=
-X-Originating-IP: [115.238.52.186]
-X-CM-SenderInfo: polq2x5hqjsiirr6il2tof0z/1tbipADpOlr7rnYvbQAAsM
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lin shenghuan <linsheng_111@163.com>
+Following Calltrace is found when running echo freeze > /sys/power/state.
+
+[  272.755506] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+[  272.755585] Call trace:
+[  272.755587]  dwapb_gpio_suspend+0x18/0x318
+[  272.755588]  pm_generic_suspend+0x2c/0x48
+[  272.755595]  acpi_subsys_suspend+0x60/0x70
+[  272.755599]  dpm_run_callback.isra.18+0x40/0xe0
+[  272.755601]  __device_suspend+0xf4/0x360
+
+The reason is platform_set_drvdata() is deleted, and dwapb_gpio_suspend()
+get *gpio by dev_get_drvdata().
+
+Fixes: feeaefd378ca ("gpio: dwapb: Use resource managed GPIO-chip add data method")
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 36 +++++++++++++++++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.h |  1 +
- 2 files changed, 37 insertions(+)
+   v1->v2:
+          1. reduce calltrace log
+          2. delete blank line in tag block
+---
+---
+ drivers/gpio/gpio-dwapb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 20683cd..b91ff2c 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -51,6 +51,7 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/seq_file.h>
-+#include <linux/of_irq.h>
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 2a9046c..4275c18 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -724,6 +724,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 			return err;
+ 	}
  
- #include "../core.h"
- #include "../pinctrl-utils.h"
-@@ -598,6 +599,34 @@ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
- 	return !!(val & BIT(bit));
++	platform_set_drvdata(pdev, gpio);
++
+ 	return 0;
  }
  
-+static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned int gpio)
-+{
-+	struct meson_pinctrl *pc = gpiochip_get_data(chip);
-+	struct meson_bank *bank;
-+	struct irq_fwspec fwspec;
-+	int hwirq;
-+
-+	if (meson_get_bank(pc, gpio, &bank))
-+		return -EINVAL;
-+
-+	if (bank->irq_first < 0) {
-+		dev_warn(pc->dev, "no support irq for pin[%d]\n", gpio);
-+		return -EINVAL;
-+	}
-+	if (!pc->of_irq) {
-+		dev_err(pc->dev, "invalid device node of gpio INTC\n");
-+		return -EINVAL;
-+	}
-+
-+	hwirq = gpio - bank->first + bank->irq_first;
-+	fwspec.fwnode = of_node_to_fwnode(pc->of_irq);
-+	fwspec.param_count = 2;
-+	fwspec.param[0] = hwirq;
-+	fwspec.param[1] = IRQ_TYPE_NONE;
-+
-+	return irq_create_fwspec_mapping(&fwspec);
-+}
-+
- static int meson_gpiolib_register(struct meson_pinctrl *pc)
- {
- 	int ret;
-@@ -612,6 +641,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
- 	pc->chip.direction_output = meson_gpio_direction_output;
- 	pc->chip.get = meson_gpio_get;
- 	pc->chip.set = meson_gpio_set;
-+	pc->chip.to_irq = meson_gpio_to_irq;
- 	pc->chip.base = -1;
- 	pc->chip.ngpio = pc->data->num_pins;
- 	pc->chip.can_sleep = false;
-@@ -682,6 +712,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
- 
- 	pc->of_node = gpio_np;
- 
-+	pc->of_irq = of_find_compatible_node(NULL,
-+			NULL, "amlogic,meson-gpio-intc");
-+	if (!pc->of_irq)
-+		pc->of_irq = of_find_compatible_node(NULL,
-+			NULL, "amlogic,meson-gpio-intc-ext");
-+
- 	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
- 	if (IS_ERR_OR_NULL(pc->reg_mux)) {
- 		dev_err(pc->dev, "mux registers not found\n");
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index f8b0ff9..0f808bb 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -131,6 +131,7 @@ struct meson_pinctrl {
- 	struct regmap *reg_ds;
- 	struct gpio_chip chip;
- 	struct device_node *of_node;
-+	struct device_node *of_irq;
- };
- 
- #define FUNCTION(fn)							\
 -- 
 2.7.4
-
 
