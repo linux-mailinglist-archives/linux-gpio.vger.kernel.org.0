@@ -2,79 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5461C2C6130
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 09:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 227772C61E1
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Nov 2020 10:41:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgK0Itw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Nov 2020 03:49:52 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8045 "EHLO
+        id S1728153AbgK0Jks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Nov 2020 04:40:48 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8603 "EHLO
         szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgK0Itw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Nov 2020 03:49:52 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cj7bW5BKRzhXwL;
-        Fri, 27 Nov 2020 16:49:27 +0800 (CST)
-Received: from huawei.com (10.69.192.56) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 27 Nov 2020
- 16:49:42 +0800
-From:   Luo Jiaxing <luojiaxing@huawei.com>
-To:     <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
-        <Sergey.Semin@baikalelectronics.ru>
-CC:     <andy.shevchenko@gmail.com>, <andriy.shevchenko@linux.intel.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: [PATCH v2] gpio: dwapb: fix NULL pointer dereference at dwapb_gpio_suspend()
-Date:   Fri, 27 Nov 2020 16:50:02 +0800
-Message-ID: <1606467002-62964-1-git-send-email-luojiaxing@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        with ESMTP id S1728740AbgK0Jkm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Nov 2020 04:40:42 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cj8k321tPzLwPQ;
+        Fri, 27 Nov 2020 17:40:11 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 27 Nov 2020 17:40:29 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>
+CC:     <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>
+Subject: [PATCH] gpio: zynq: fix reference leak in zynq_gpio functions
+Date:   Fri, 27 Nov 2020 17:44:45 +0800
+Message-ID: <20201127094445.121232-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Following Calltrace is found when running echo freeze > /sys/power/state.
+pm_runtime_get_sync will increment pm usage counter even it
+failed. Forgetting to putting operation will result in a
+reference leak here.
 
-[  272.755506] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-[  272.755585] Call trace:
-[  272.755587]  dwapb_gpio_suspend+0x18/0x318
-[  272.755588]  pm_generic_suspend+0x2c/0x48
-[  272.755595]  acpi_subsys_suspend+0x60/0x70
-[  272.755599]  dpm_run_callback.isra.18+0x40/0xe0
-[  272.755601]  __device_suspend+0xf4/0x360
+A new function pm_runtime_resume_and_get is introduced in
+[0] to keep usage counter balanced. So We fix the reference
+leak by replacing it with new funtion.
 
-The reason is platform_set_drvdata() is deleted, and dwapb_gpio_suspend()
-get *gpio by dev_get_drvdata().
+[0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
 
-Fixes: feeaefd378ca ("gpio: dwapb: Use resource managed GPIO-chip add data method")
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+Fixes: c2df3de0d07e ("gpio: zynq: properly support runtime PM for GPIO used as interrupts")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
-   v1->v2:
-          1. reduce calltrace log
-          2. delete blank line in tag block
----
----
- drivers/gpio/gpio-dwapb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpio-zynq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 2a9046c..4275c18 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -724,6 +724,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 			return err;
- 	}
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 0b5a17ab9..3521c1dc3 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -574,7 +574,7 @@ static int zynq_gpio_irq_reqres(struct irq_data *d)
+ 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+ 	int ret;
  
-+	platform_set_drvdata(pdev, gpio);
-+
- 	return 0;
- }
+-	ret = pm_runtime_get_sync(chip->parent);
++	ret = pm_runtime_resume_and_get(chip->parent);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -942,7 +942,7 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0)
+ 		goto err_pm_dis;
  
 -- 
-2.7.4
+2.23.0
 
