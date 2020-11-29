@@ -2,119 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D75CB2C7290
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Nov 2020 23:09:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C93972C78B5
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 12:09:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389857AbgK1VuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
+        id S1727181AbgK2LJF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Nov 2020 06:09:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733303AbgK1SR7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Nov 2020 13:17:59 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B27D9C02A188
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Nov 2020 04:21:40 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id u19so10914092lfr.7
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Nov 2020 04:21:40 -0800 (PST)
+        with ESMTP id S1725882AbgK2LIy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Nov 2020 06:08:54 -0500
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AD2C0613D2
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 03:08:14 -0800 (PST)
+Received: by mail-pg1-x541.google.com with SMTP id q3so320747pgr.3
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 03:08:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=dj3qfXJ4Iec3raMLz9uZPv/2iNP/sFcmUQrTQYmXPI4=;
-        b=o9vDpD1dqWWqph26Yhd4G7BcLVySzLILRkWBtHtyr40ZkF+2hDgeXlhMnEi8YqJ3ZJ
-         zGVuLOVLyWbqkHAvQjMUw08ohIScuoCAKEv0ni6llRgh659nNgNvfEBwOVpqGum5Wzuo
-         wV1sqyPYc3JabkbJWYwPkzzsTSk69pCQhXig4ONinKDfWjP1WelkF4VpEL5e5xNTj+LN
-         Dp5FmwKDfBWSNM88w1Vcd7aJ7GHTO56ehJ16PaCzHXpB3d95K3pamgfFBOMm5Kkjucqb
-         Y6cXJVHYrsjsYRJhUtcouQu6djD5oanSkaCHtBeOFolG4TcjsS5KsWdgM06kyuVb5ZRI
-         kakA==
+        d=0x0f.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hfG3IJYFfaN+LLPLPN9u5BA6DY35eu9G1j5saJ10vaQ=;
+        b=sKo2DUTDonDaiIv9hFnn0BJLMzL4XqOt+FgwsQebG2oxgVCSSgvueeNbnkq00vT/fn
+         +0IqL36Aqs6B5P0bRgcN1eD8JTPI7oVWWM4a0a5ecelIheCW185xNziicy/8GGXGr0gG
+         KsEW3oC0jkfxgG0hmRVy/gDIT9GmgXLnZNyMA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=dj3qfXJ4Iec3raMLz9uZPv/2iNP/sFcmUQrTQYmXPI4=;
-        b=hBh7Ew/KdOMpxFMioqWCdTgT0k6Zn27ujKErRSaqF2AJmXC5XR9LcLRvDLbiG0GFk/
-         YuR/RoU64R6uFhhkhax66kgOMh3Z17SfmP/OjB+VmKZSbjsIUvZKJ9XQpPcp9bhBXs6J
-         RMWuixLrdf81xsiM4QOn4E35SsJ0TE3a3sAdm9Lu7fdPEeLAwyTCjrGwLdpjcLjruJiy
-         MtRWSKq0e0aTpk5agt2wmqdrYiwoUg8qVKK/wn8dDum4Pf8wMtCrMGPCbUV1KQNfwSMo
-         NjZbat4f8Jg410tgle7zM6x/sXE1EqyT+G2CrGQeR1Zhjua4ZCiSFTxBnTHiikA6oOyJ
-         bsFA==
-X-Gm-Message-State: AOAM5336EuILXE52keGjlxKf4CdJAALeO2mCTJHcACzYYauHXxmerWo2
-        DEyaX5QGNYrdDzuLoc0Br8IzI0Gt+fHidnsZmgI=
-X-Google-Smtp-Source: ABdhPJzQk/S1nG9Ww17zUthK2VX/Fro867c/MtHdOqP1WGX1v96LoNLBYMuWViUbM4drVUlNfLKf7FtNjAxFlS2z8Ek=
-X-Received: by 2002:a19:c005:: with SMTP id q5mr5826183lff.400.1606566099003;
- Sat, 28 Nov 2020 04:21:39 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hfG3IJYFfaN+LLPLPN9u5BA6DY35eu9G1j5saJ10vaQ=;
+        b=k5l366DzUTgjOWaIRXG9fIwJW/wuqYeI9mZuT6LbfnImL99dy3O7KM77xf2ynf0K8I
+         KtQZ+/gUT36zr8U1LOGAn/9pB/TnrxtbgcqoQyKoA8F+/BhGfVdkItxf/mUEWbT06Pah
+         ZDK4uhyW8fln0aYDpRve+RTdbhOc5rNk9XYCBA2BTWqKBNocwnxacpunxoinxx53qrZu
+         gesLxpA1+hiCFJO6al2UEm+lvvUv4sBRUWRuRT3/wMDYf0Rr2GKNqZ6TXovJD1LC7dg7
+         tESqTGBwt+1fzhprsCknIqDp6/2NlKszAJbkhjfa6suykg7+DESj7b9Zbpc6lRObj2Rs
+         mpSQ==
+X-Gm-Message-State: AOAM531VdsT5/uutaDlk3tXOgP/XSyeCrkOBRVJjqIArcvfvKNcgKD/B
+        0KdjfTx9cAMERcrL2+FpD3BYLw==
+X-Google-Smtp-Source: ABdhPJx2TWa65jQIOPR1bVgac6u1Qz7JaJNyTfwd5Cu71RgjmSi4gPQzIEb34BD6JhIN/Kg5vSRbgg==
+X-Received: by 2002:a17:90b:203:: with SMTP id fy3mr18895929pjb.231.1606648093633;
+        Sun, 29 Nov 2020 03:08:13 -0800 (PST)
+Received: from shiro.work (p1268123-ipngn200803sizuokaden.shizuoka.ocn.ne.jp. [118.13.124.123])
+        by smtp.googlemail.com with ESMTPSA id 21sm13095653pfw.105.2020.11.29.03.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Nov 2020 03:08:13 -0800 (PST)
+From:   Daniel Palmer <daniel@0x0f.com>
+To:     soc@kernel.org, linux-gpio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        robh@kernel.org, w@1wt.eu, daniel@0x0f.com
+Subject: [PATCH v4 0/5] Add GPIO support for MStar/SigmaStar ARMv7
+Date:   Sun, 29 Nov 2020 20:07:57 +0900
+Message-Id: <20201129110803.2461700-1-daniel@0x0f.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Sender: alexanderluis646@gmail.com
-Received: by 2002:ab3:744c:0:0:0:0:0 with HTTP; Sat, 28 Nov 2020 04:21:38
- -0800 (PST)
-From:   "Ms. Nadia Emaan" <mrsnadiaemaan50@gmail.com>
-Date:   Sat, 28 Nov 2020 12:21:38 +0000
-X-Google-Sender-Auth: vxnb54uxsdIMOWvAgf6_xRpDuvw
-Message-ID: <CALiTr0jj-iBjvt5sDGtBo7iEd6PHM8A=UxDd4ghnuNPfw+rXUg@mail.gmail.com>
-Subject: May the Peace of God be with You!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-May God Bless you My beloved,
+At the moment the MStar/SigmaStar support is only really
+capable of shell from an initramfs and not much else.
 
-I am contacting you through this means because I need your urgent
-assistance and also help me to carry a charity project in your
-country. I found your email address as a true child of God for past
-few days now that I have been praying to know if you are really the
-chosen one for this great charity project, according to God's
-direction, after all prayers I am convinced, and I have decided to
-contact you. Please, i want you use the funds for the Lord's work,
-with confidence, read and respond now.
+Most of the interesting drivers are blocked on clock and pinctrl
+drivers and those are going to take me a little while to get cleaned
+up.
 
+Clock and pinctrl aren't needed for basic GPIO to work (all pins
+start off as GPIOs..) and it makes it possible to actually do something
+so this series adds everything that is needed for the main GPIO
+block in these chips.
 
-My name is Ms. Nadia Emaan , a widow, but currently based in West
-Africa since my life with my late husband, who was a businessman in
-this country before dying some years ago. We were married to many
-years without a child. He died after a brief illness that lasted only
-six days and I myself have been suffering from an ovarian cancer
-disease. At this moment I am about to finish the race in this way
-because the disease has reached a very bad stage, without any family
-member and without children. I hope you do not expose or betray this
-trust and I am sure that I am about to trust you for the mutual
-benefit of orphans and the less privileged. I have some funds that I
-inherited from my late husband, the total sum of ($ 12,500,000.00)
-deposited at a bank here in Burkina Faso. After knowing my current
-state of health, I decided to trust you with this fund, believing that
-you will use it in the way I will instruct here.
+Changes since v3:
+- Remove unneeded "gpio-ranges-group-names" property from binding yaml.
 
+Changes since v2:
 
-you will use this $12.5 Million for public benefit as follows;
+- Numerous style and code cleanups as suggested by Andy Shevchenko,
+  Linus Walleij, Marc Zyngier and Rob Herring.
 
-1. Establish An Orphanage Home To Help The Orphanages Children.
-2. Build A Hospital To Help The Poor.
-3. Build A Nursing Home For Elderly People Need Care & Meal.
+- Pad names moved out of the binding header because they are no longer
+  needed there. The pin/pad numbers are still there as I couldn't think
+  of a better way to do this. meson8b-gpio.h seems to be similar.
 
-You will named them after my late husband.Therefore, I need you to
-help me and claim this money and use it for charities, for orphanages
-and provide justice and help to the poor, needy and to promote the
-words of God and the effort to maintain the house of God, according to
-the bible in the book of. Jeremiah 22: 15-16.
+Changes since v1:
 
-It will be a pleasure to compensate with 40% percent of the total
-money for your effort in handling the transaction, while 60% of the
-money will go to charity project.
+- Moves the binding header commit before the yaml commit
+  
+- Fixes the license on the binding header to include BSD-2-Clause
 
-All I need from you is sincerity and ability to complete the task of
-God without any failure. It will be my pleasure to see that the bank
-has finally released and transferred the fund to your bank account in
-the country, even before I die here in the hospital, due to my current
-state of health, everything must be processed as soon as possible.
+- The driver has been reworked to use the gpiolib irqchip functionality
+  as suggested by Linus[0]. I think I got this right. The gpio controller
+  doesn't actually do anything with interrupts itself.. It just happens
+  to have 4 lines that are also wired to lines on one of the interrupt
+  controllers.
 
- I am waiting for your immediate response, if you are only interested
-in obtaining more details about the transaction and execution of this
-humanitarian project for the glory and honor of God.
+- Now that the driver is an interrupt controller in it's own right for
+  the gpio lines that have associated interrupts the binding description
+  has been updated to add the interrupt-controller bits and remove the
+  description of the interrupt-names that described how the interrupts
+  used to be passed in.
 
-Sorry if you received this letter in your spam, is due to recent
-connection/network error here in the country.
+Daniel Palmer (5):
+  dt-bindings: gpio: Add a binding header for the MSC313 GPIO driver
+  dt-bindings: gpio: Binding for MStar MSC313 GPIO controller
+  gpio: msc313: MStar MSC313 GPIO driver
+  ARM: mstar: Add gpio controller to MStar base dtsi
+  ARM: mstar: Fill in GPIO controller properties for infinity
 
-Please I am waiting for your urgent reply now.
+ .../bindings/gpio/mstar,msc313-gpio.yaml      |  59 +++
+ MAINTAINERS                                   |   3 +
+ arch/arm/boot/dts/mstar-infinity.dtsi         |   7 +
+ arch/arm/boot/dts/mstar-v7.dtsi               |  10 +
+ drivers/gpio/Kconfig                          |  11 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-msc313.c                    | 460 ++++++++++++++++++
+ include/dt-bindings/gpio/msc313-gpio.h        |  53 ++
+ 8 files changed, 604 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-msc313.c
+ create mode 100644 include/dt-bindings/gpio/msc313-gpio.h
 
-May God Bless you,
-Ms Nadia Emaan .
+-- 
+2.29.2
+
