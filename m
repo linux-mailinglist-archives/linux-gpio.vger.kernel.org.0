@@ -2,89 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B6E22C7B1C
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 21:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 942262C7B69
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 22:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgK2UNP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Nov 2020 15:13:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22052 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbgK2UNP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 29 Nov 2020 15:13:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606680709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zaOiU6gv3Cl3SmrnFPxyyv/QzuHHKMlBz/t6xjcea8E=;
-        b=ZRFLJDIY1w/ZKe7U3iJi3ZcRs58UqEx0OoRO0+UZfllk0nGBD4EDj7QsqWaA3hbbj4Qt/W
-        XcN14RFa+2SrEIfwl5hl5eAYlDNGLL2k14ldFloZOOFbLabaj8FyvuF4MDYPar6Hk9YHX9
-        ca/dcWccZ6sh5s0l8U/mSQ8/0/j6kQ0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-73-_Dz7fdG2MjWCWm05G2x1fw-1; Sun, 29 Nov 2020 15:11:47 -0500
-X-MC-Unique: _Dz7fdG2MjWCWm05G2x1fw-1
-Received: by mail-wr1-f70.google.com with SMTP id x16so2478564wrm.20
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 12:11:47 -0800 (PST)
+        id S1728015AbgK2Vef (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Nov 2020 16:34:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbgK2Vef (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Nov 2020 16:34:35 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5088CC0613D2
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 13:33:49 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id f18so14018171ljg.9
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 13:33:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DRks1S+Ljz02h+7aEMkPQyYH0KJUMNRRjQT6vkjrJ6U=;
+        b=LzYwWyNh2aq60HnaalbW2E/tfDV3QS5ABPetwv/LjVocBlaMX7p8EW6wSpLS5A+xb6
+         3RYtKYPxh3tlC4eQbu6yQKmPtsDYTe+XHrG3aefbkfkGpkyuGSceFP20lxofOmU62OuZ
+         jCDZzZvOeeb9rr+liyzgPtp15kW0t5oMmCWPVHMtFmJUzKwYJoSvUw+IOgwl+OIitkEt
+         0GYNtHEFzYR21Fqyfr9LrWkLBvuAdd7WcEJWkhAd5/ypnjcyODBcG34cskFi3J5BnKCE
+         bwGyj3H502ljkfysjViKkFi0CqGDKaKGdxv8ZMvvVu2cqiGIfoSS8QAhEPPPNcA5KDjB
+         cyMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zaOiU6gv3Cl3SmrnFPxyyv/QzuHHKMlBz/t6xjcea8E=;
-        b=odZJUBox/BMgMm0XXCvxXQeg/4ennj7FU8p+GvlCLjq2HrilLeWqSzEqbIsmB5xqAx
-         LN2H8Nkhy4/YkhkqThzNDNLo+nSytd1D3hSduRFbYwd8npXQP4R6JU90RvxVVMEYcDQo
-         WwMZdOU0zivpvxq7WJ419bxNaQcDt+pgYsLyR/OSXeQRqdBvkMX9pA6RydreztDCIIuD
-         ebem42yz7jvVDL1zIHgufLunwzrM+0S3ECBfRy/SQUPNrqRThi2ZoD3VYlT9DsupPXNq
-         LAqmxBN33uVz3RY2OVI6SOfVsymp/jj1n/2PwnKzwQBRO/st050UMVKF4vi6NIzO9ZEM
-         OupQ==
-X-Gm-Message-State: AOAM532OGP9BnpOsBz5PpUxMusU2gSBzYazt+Q+F3CknK6dY7siNpoEk
-        r/eA1Fsu6pOPKXsbRPcfBqYkcS+8PWCXv7RBa8vmbeKj6BXmfco+vFkC1nf6F0lhFCNS9p1RD8V
-        Z3FFEk1SDae1bwEnstieJiA==
-X-Received: by 2002:a05:6000:105:: with SMTP id o5mr18151672wrx.164.1606680706163;
-        Sun, 29 Nov 2020 12:11:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzPka2aHaDPPX0PTgwDnAG/w5i0WrMz+FyjrUMAbM+Qjqz54JODofUJr+22IVyBqFlX4tuyzw==
-X-Received: by 2002:a05:6000:105:: with SMTP id o5mr18151664wrx.164.1606680706012;
-        Sun, 29 Nov 2020 12:11:46 -0800 (PST)
-Received: from redhat.com (bzq-79-176-44-197.red.bezeqint.net. [79.176.44.197])
-        by smtp.gmail.com with ESMTPSA id 34sm24071900wrh.78.2020.11.29.12.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 12:11:45 -0800 (PST)
-Date:   Sun, 29 Nov 2020 15:11:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, jasowang@redhat.com,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
-Message-ID: <20201129151113-mutt-send-email-mst@kernel.org>
-References: <20201127183003.2849-1-info@metux.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DRks1S+Ljz02h+7aEMkPQyYH0KJUMNRRjQT6vkjrJ6U=;
+        b=o3nvC/RBCCXRqnbqVArgni1z5P0VQowf/2gnZhclJKtW5bq8E3SQrdGyLOQ+g2r55i
+         8CIT8CYwT8cG7FrStoG3IUzDn90nrC71uGOSS0oTADAI7H9r4sH1p1AchFy4UE4UJ18+
+         /nN3Zoeqb+eWzQNd7hHiBlfa93EauWnZdmRI9I/tWMBDih5/OGVptIJblQevbkMiu3nL
+         M3yTiGySmmQlMLAIRt3qA+ME69zXDzcNYUg5Lh+DOifFWxQJ8OW8Sn5e+WHNyvFnyERg
+         IK/X2OOzjrHsKB9jlTFM/TflRzazwa7wr/tSmVA3qPBWJQNLoA9ZTgQ0zlvvj4R6CpVh
+         fqfA==
+X-Gm-Message-State: AOAM530LmiEHHny44iOl7QazBCGt+WcBxE0Su1RFdqYGILz82vXNWIoY
+        l7/Db9ldhBHBSWmPZmOxMfRFOmIgELSKPfNkheAbAQ==
+X-Google-Smtp-Source: ABdhPJytWDlyUMuTJm2jW8TQXYrQA7Ue6rxAsqM+YqSfqeqX2hNWQDHsQOsrBzNYb3DWeZ5mYjjq9y/2I8HLd94BvcY=
+X-Received: by 2002:a2e:321a:: with SMTP id y26mr7756884ljy.293.1606685627784;
+ Sun, 29 Nov 2020 13:33:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201127183003.2849-1-info@metux.net>
+References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-21-damien.lemoal@wdc.com>
+ <CACRpkdZhOxz5NhrkFxZ5G4aOrmBoAcQodOvqzNROQtXpHVQGDQ@mail.gmail.com> <CH2PR04MB65228DE061918A4D2A08A0CFE7FB0@CH2PR04MB6522.namprd04.prod.outlook.com>
+In-Reply-To: <CH2PR04MB65228DE061918A4D2A08A0CFE7FB0@CH2PR04MB6522.namprd04.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 29 Nov 2020 22:33:36 +0100
+Message-ID: <CACRpkdbA_JMiyraKC_3WT26mMUxfuLD=Q_HREmbEB=yNPpuHjw@mail.gmail.com>
+Subject: Re: [PATCH 20/32] riscv: Add Kendryte K210 FPIOA pinctrl driver
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 27, 2020 at 07:30:03PM +0100, Enrico Weigelt, metux IT consult wrote:
-> diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
-> index b052355ac7a3..85772c0bcb4b 100644
-> --- a/include/uapi/linux/virtio_ids.h
-> +++ b/include/uapi/linux/virtio_ids.h
-> @@ -48,5 +48,6 @@
->  #define VIRTIO_ID_FS           26 /* virtio filesystem */
->  #define VIRTIO_ID_PMEM         27 /* virtio pmem */
->  #define VIRTIO_ID_MAC80211_HWSIM 29 /* virtio mac80211-hwsim */
-> +#define VIRTIO_ID_GPIO           30 /* virtio GPIO */
+On Tue, Nov 24, 2020 at 9:53 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+> On 2020/11/24 17:43, Linus Walleij wrote:
 
+> > Would also be nice if the maintainer could add some comments?
+>
+> What do you mean ? I do not understand. scripts/get_maintainer.pl indicates that
+> you are the maintainer of the pinctrl drivers subsystem.
 
-Pls remember to reserve the ID with the virtio TC
-before using it in the driver. Thanks!
+Sorry I thought we had a RISCV driver already, and we don't
+so this is cool.
 
->  #endif /* _LINUX_VIRTIO_IDS_H */
-> -- 
-> 2.11.0
+> Do you mean adding an
+> entry to the MAINTAINER file for this driver ? I can do that and put my self as
+> maintainer. Or do you mean you would like a comment from Palmer (riscv arch
+> maintainer) ?
 
+That would be nice. Whoever will enthusiastically review patches to
+this driver and make sure it works and get modernized should ideally
+be listed as maintainer. I suggest you list yourself.
+
+The only input I want from the RISCV arch maintainer would
+be on this code:
+
++/*
++ * Most devices on the K210 SoC depend on pin mapping changes to initialize
++ * correctly. So initialize this driver early as part of the post core
++ * initialization.
++ */
++static int __init k210_fpioa_init(void)
++{
++       return platform_driver_register(&k210_fpioa_driver);
++}
++postcore_initcall(k210_fpioa_init);
+
+This is a bit nasty and we do not recommend it. But I will accept it
+if the arch maintainer claims it is necessary. What happens if you
+just make it initialize at driver level?
+
+Yours,
+Linus Walleij
