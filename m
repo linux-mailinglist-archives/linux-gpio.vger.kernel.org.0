@@ -2,112 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 942262C7B69
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 22:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D615D2C7BA1
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 23:14:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgK2Vef (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Nov 2020 16:34:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgK2Vef (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Nov 2020 16:34:35 -0500
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5088CC0613D2
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 13:33:49 -0800 (PST)
-Received: by mail-lj1-x243.google.com with SMTP id f18so14018171ljg.9
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 13:33:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DRks1S+Ljz02h+7aEMkPQyYH0KJUMNRRjQT6vkjrJ6U=;
-        b=LzYwWyNh2aq60HnaalbW2E/tfDV3QS5ABPetwv/LjVocBlaMX7p8EW6wSpLS5A+xb6
-         3RYtKYPxh3tlC4eQbu6yQKmPtsDYTe+XHrG3aefbkfkGpkyuGSceFP20lxofOmU62OuZ
-         jCDZzZvOeeb9rr+liyzgPtp15kW0t5oMmCWPVHMtFmJUzKwYJoSvUw+IOgwl+OIitkEt
-         0GYNtHEFzYR21Fqyfr9LrWkLBvuAdd7WcEJWkhAd5/ypnjcyODBcG34cskFi3J5BnKCE
-         bwGyj3H502ljkfysjViKkFi0CqGDKaKGdxv8ZMvvVu2cqiGIfoSS8QAhEPPPNcA5KDjB
-         cyMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DRks1S+Ljz02h+7aEMkPQyYH0KJUMNRRjQT6vkjrJ6U=;
-        b=o3nvC/RBCCXRqnbqVArgni1z5P0VQowf/2gnZhclJKtW5bq8E3SQrdGyLOQ+g2r55i
-         8CIT8CYwT8cG7FrStoG3IUzDn90nrC71uGOSS0oTADAI7H9r4sH1p1AchFy4UE4UJ18+
-         /nN3Zoeqb+eWzQNd7hHiBlfa93EauWnZdmRI9I/tWMBDih5/OGVptIJblQevbkMiu3nL
-         M3yTiGySmmQlMLAIRt3qA+ME69zXDzcNYUg5Lh+DOifFWxQJ8OW8Sn5e+WHNyvFnyERg
-         IK/X2OOzjrHsKB9jlTFM/TflRzazwa7wr/tSmVA3qPBWJQNLoA9ZTgQ0zlvvj4R6CpVh
-         fqfA==
-X-Gm-Message-State: AOAM530LmiEHHny44iOl7QazBCGt+WcBxE0Su1RFdqYGILz82vXNWIoY
-        l7/Db9ldhBHBSWmPZmOxMfRFOmIgELSKPfNkheAbAQ==
-X-Google-Smtp-Source: ABdhPJytWDlyUMuTJm2jW8TQXYrQA7Ue6rxAsqM+YqSfqeqX2hNWQDHsQOsrBzNYb3DWeZ5mYjjq9y/2I8HLd94BvcY=
-X-Received: by 2002:a2e:321a:: with SMTP id y26mr7756884ljy.293.1606685627784;
- Sun, 29 Nov 2020 13:33:47 -0800 (PST)
+        id S1727897AbgK2WMj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Nov 2020 17:12:39 -0500
+Received: from mout.gmx.net ([212.227.15.18]:59911 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbgK2WMj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 29 Nov 2020 17:12:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606687859;
+        bh=iXkhSMriV5maLLXF4ec2emP2gdExku4QakTNWEWxKUk=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=XDpBE+Ncm04FRwJ8vuODrGgKLku41S/SLjyJKexDsg8yKXkkz1nq4E0r8hWZmkYVa
+         sBpJNwquAuFevwavdDte9KcxOQtU30m39ANkaqQ28WzThFVrCaEZIdi6bBGkog4oqh
+         NxDUHpDDQvRiIFnkufGLiPnZYponASPII+rH28Ns=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MdNcA-1kARCk3xVg-00ZPKJ; Sun, 29
+ Nov 2020 23:10:59 +0100
+Date:   Sun, 29 Nov 2020 23:10:50 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, mst@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        bgolaszewski@baylibre.com, linux-riscv@lists.infradead.org,
+        jasowang@redhat.com
+Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
+Message-ID: <20201129221050.GH456020@latitude>
+References: <20201127183003.2849-1-info@metux.net>
 MIME-Version: 1.0
-References: <20201107081420.60325-1-damien.lemoal@wdc.com> <20201107081420.60325-21-damien.lemoal@wdc.com>
- <CACRpkdZhOxz5NhrkFxZ5G4aOrmBoAcQodOvqzNROQtXpHVQGDQ@mail.gmail.com> <CH2PR04MB65228DE061918A4D2A08A0CFE7FB0@CH2PR04MB6522.namprd04.prod.outlook.com>
-In-Reply-To: <CH2PR04MB65228DE061918A4D2A08A0CFE7FB0@CH2PR04MB6522.namprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 29 Nov 2020 22:33:36 +0100
-Message-ID: <CACRpkdbA_JMiyraKC_3WT26mMUxfuLD=Q_HREmbEB=yNPpuHjw@mail.gmail.com>
-Subject: Re: [PATCH 20/32] riscv: Add Kendryte K210 FPIOA pinctrl driver
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rV8arf8D5Dod9UkK"
+Content-Disposition: inline
+In-Reply-To: <20201127183003.2849-1-info@metux.net>
+X-Provags-ID: V03:K1:3k7JLc2Hawk0Hil86ZD/XR/DnpRxdu29H+22sf1XPZsO3A3cFlf
+ SxQ/j3JYOOj5W/6OrAzXx2V3O076zc9+NrzDyDM8AZ8wqGocU5aewHzEQInNuo92+4UlsDD
+ B+dmWGwciIxLEEEY8/RzK2w4ZvuG/ZUrlNEM1WfjP/lYlfRxEUuSgC0+llkx1LTYcu8lE+t
+ 5QoHc123fP+9CRYN/+MfQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PPw4bc4Tusg=:mupDuzXAshUvS65GdN+8BR
+ /rLiFI9/5Z0tUqMq/dJViG9x/bF6MH+06xhtAoJa4XdVbdXG9tF0yqZT2SrwnWJdWJc0O2V1y
+ /8orh1WzXNoHT4PDDB6CxJr5GN/b9oPnZxkL15TSkf5daQMQuWAhJxE+URDXtXg7nRXI6yg9Y
+ OHO9ZYljwUriW6RjUL97GZi3dfGfFTZ8LLNNqfy4MZiCC6eed4zuXrSMRa0Wmu3lLZ9Qozhcr
+ KlO/RYtp7kbxVsi2EBOxH0qDUytd1D4dbAILaedAkTzDzEz+IpJ7q50RPYzhJti03COA1W7Vz
+ H+FtdxZMc7y6Zf6sGh1m614l3EMkplr9YWk4fPWjNM/SgO7x0BEWzdg1ShVOM1uw9dBeaXZor
+ HAIhZ8O1zZ52a0Y9dsuZkDLUwc4ijHvM+zvdtNCyMcxz8MFHbMz2sDfNw6voWfYJYE3oskXS9
+ j+jB22Xgo+tFP2Goi23ChJgRfVkrpjo6OruoCK9JVA11U9YvcWkYQ3r/t0Xaod5Jlt22SOkRS
+ +GTlzhdh6mgjtkXssxIYHDfFcn0+nIcmfJRXr+8SYreTE5WlMpasDD2bwINEp2rjWpYwYAuKt
+ vU15CgqAhGOUGIl3saac33BVUO6+cZG9QIAoA5FCKsbdrCrJn5ue/PrMh9fcCzhUsuyDS4agE
+ 5w27uuRB/sM6SaHV0nk0L0PlheUy+BU5IZuhmB4OlEhluox3EGWNXTxWkSreqkGidHG8uj0cT
+ J6uRwXLBB6ahsp/+cWSb9xQ16VzOeBv/23hmvrlbFvMPiV8UgvnvwTS0DjEUcN8+/h+5tlcpy
+ E60TDZ70kJKQCg/v1fJCS0aVHce6fgkz6h7atHTyw9of9lFauyayNnkf8vt28V8znk0nTVxJT
+ SwhCuFdz7xvXV2yUt3fA==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 9:53 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
-> On 2020/11/24 17:43, Linus Walleij wrote:
 
-> > Would also be nice if the maintainer could add some comments?
->
-> What do you mean ? I do not understand. scripts/get_maintainer.pl indicates that
-> you are the maintainer of the pinctrl drivers subsystem.
+--rV8arf8D5Dod9UkK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry I thought we had a RISCV driver already, and we don't
-so this is cool.
+Hi,
 
-> Do you mean adding an
-> entry to the MAINTAINER file for this driver ? I can do that and put my self as
-> maintainer. Or do you mean you would like a comment from Palmer (riscv arch
-> maintainer) ?
+On Fri, Nov 27, 2020 at 07:30:03PM +0100, Enrico Weigelt, metux IT consult =
+wrote:
+> Introducing new gpio driver for virtual GPIO devices via virtio.
+>=20
+> The driver allows routing gpio control into VM guests, eg. brigding
+> virtual gpios to specific host gpios, or attaching simulators for
+> automatic application testing.
+>=20
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-That would be nice. Whoever will enthusiastically review patches to
-this driver and make sure it works and get modernized should ideally
-be listed as maintainer. I suggest you list yourself.
+is there a spec of the virtio-gpio protocol available? If so, linking it
+in the commit message and/or driver/Kconfig would be nice.
 
-The only input I want from the RISCV arch maintainer would
-be on this code:
 
-+/*
-+ * Most devices on the K210 SoC depend on pin mapping changes to initialize
-+ * correctly. So initialize this driver early as part of the post core
-+ * initialization.
-+ */
-+static int __init k210_fpioa_init(void)
-+{
-+       return platform_driver_register(&k210_fpioa_driver);
-+}
-+postcore_initcall(k210_fpioa_init);
+Best regards,
+Jonathan Neusch=C3=A4fer
 
-This is a bit nasty and we do not recommend it. But I will accept it
-if the arch maintainer claims it is necessary. What happens if you
-just make it initialize at driver level?
+--rV8arf8D5Dod9UkK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yours,
-Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl/EHGIACgkQCDBEmo7z
+X9vgjQ/7BGdfYQq78KeC7gpheGKolr7itYaIjyPeiwVUbLBnd98RdTr2u5bLTMJL
+bcE7IrgMjDos6NW2AvHqwS/n2McBo07w3mW2u0CcWPNn2T31cgjvMRPacVpm6SXk
+jYQ2Y9Yu/12fBWd6Bqp/GZH7brS00onhkkdjwpLJ85Kmj4T3BtPDVdteSgNyNQ+9
+q0T06QDzgstQCOUN8Rizjfmm/kP62VyV1H8fGeFIbqWyChIeNy3CpA1y1cNH2YOx
+8Qfot8iwWzAWjSHsYVZk5Nkf+4kV4/qVRNbVPvAhPBfge7zGJfwEmAmReEND4N4d
+6TOeEmEPDNLPHv3TynOtUWgGVB4RFblVh2PDqynP5cEvF+m7zhv2ZN14hJL8R146
+mPCU2pfEldzCloaiYEquriAXG+fTc7872OI7eF3oSzF+UyEs0HuZpsYZS17TVbhi
+cNT1JZ2unfZmcFOM5Xp1J+VrJ1zYGHp+9EPTX8Cp6DEDG+HL5zxv5Vaa7tjrmmIN
+7krg65s3g61Jo839BQQlJtb8P5BLU+RLDQYpiBS3X2YR3iCqCH4r3UWQyiRl3tcn
+Sa6qNES5SHMhTXWS8FFCelolQei7XVJ19aqN1mtz+zSS85I5U1kxbVOuMTFLgzu3
+K34XZBYz5Gj7Glv1uIF48IifPI5UVo1wlUy3roHIGBh36W4+fv0=
+=SCq+
+-----END PGP SIGNATURE-----
+
+--rV8arf8D5Dod9UkK--
