@@ -2,92 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD242C78C2
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 12:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B6E22C7B1C
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Nov 2020 21:13:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgK2LK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Nov 2020 06:10:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbgK2LK0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Nov 2020 06:10:26 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84F6C061A54
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 03:08:27 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id p6so4893834plr.7
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 03:08:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sSxJk69Cd2LemrQN9ehPZlO0F43/6TrspTvKZvZYbs0=;
-        b=ffUK02opWwOFvHW21tRs0l4+Mo38eIrN56iqqYVXgFwGevSQSh8qK2fv8dEfQTxpvJ
-         mpiJo9gnnIfv/ntuqs6s0NG0qUrvjYXlDFghdoqhaG3hqTkM8uFe2cLgJnABDDQbqk+b
-         JqmG4htvg0K3vSGvdkAruDhmMg4CU4VXpXRUg=
+        id S1726344AbgK2UNP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Nov 2020 15:13:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22052 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgK2UNP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 29 Nov 2020 15:13:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606680709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zaOiU6gv3Cl3SmrnFPxyyv/QzuHHKMlBz/t6xjcea8E=;
+        b=ZRFLJDIY1w/ZKe7U3iJi3ZcRs58UqEx0OoRO0+UZfllk0nGBD4EDj7QsqWaA3hbbj4Qt/W
+        XcN14RFa+2SrEIfwl5hl5eAYlDNGLL2k14ldFloZOOFbLabaj8FyvuF4MDYPar6Hk9YHX9
+        ca/dcWccZ6sh5s0l8U/mSQ8/0/j6kQ0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-_Dz7fdG2MjWCWm05G2x1fw-1; Sun, 29 Nov 2020 15:11:47 -0500
+X-MC-Unique: _Dz7fdG2MjWCWm05G2x1fw-1
+Received: by mail-wr1-f70.google.com with SMTP id x16so2478564wrm.20
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Nov 2020 12:11:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sSxJk69Cd2LemrQN9ehPZlO0F43/6TrspTvKZvZYbs0=;
-        b=MBNxoTrBKn1U052cbKITr70wkxuqZ430x1N8sDskNvVExdmaYjH9Uy5sZ2O/mqnYwA
-         DXfVQT6bAd7SRspBIypxclWb6Yr+C8+POrLIRDNmx+tiPtlDmvEjLMFdzaKwzcMvpRQR
-         XjEe04zU5U7JYrIXQ/zYURYolGhMLc07KUo9Xti4RpiwQh7VsmMDoCjSdfessrrtW5bJ
-         LI20qqYAbmoBVa0a0FUa8bfsgbz2+rxP6e00LHGUBD8zI76NM0RCRaeuizq70tHOxGsm
-         ps+EqeYw8AsSTM/FKuX++/JMjwD3J3OayfiSQPw0gIJilYl3ppzVy7toD2tsgKbGicO7
-         nUgg==
-X-Gm-Message-State: AOAM532GoyRssIj//58mGxFLOpjCkUzbTLKDmFUhfww7z3Edds83l5+h
-        gl1rrz9x4Z3A73/58UczEe6B4A==
-X-Google-Smtp-Source: ABdhPJzib+nYFpwBxldfEI+z6vafVcrbaAPzvzvDZh07vXmrjbJ1TdqRII3WABzDnjub/RJWE7p+rA==
-X-Received: by 2002:a17:902:8691:b029:d7:e0f9:b1b with SMTP id g17-20020a1709028691b02900d7e0f90b1bmr14505268plo.37.1606648107325;
-        Sun, 29 Nov 2020 03:08:27 -0800 (PST)
-Received: from shiro.work (p1268123-ipngn200803sizuokaden.shizuoka.ocn.ne.jp. [118.13.124.123])
-        by smtp.googlemail.com with ESMTPSA id 21sm13095653pfw.105.2020.11.29.03.08.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zaOiU6gv3Cl3SmrnFPxyyv/QzuHHKMlBz/t6xjcea8E=;
+        b=odZJUBox/BMgMm0XXCvxXQeg/4ennj7FU8p+GvlCLjq2HrilLeWqSzEqbIsmB5xqAx
+         LN2H8Nkhy4/YkhkqThzNDNLo+nSytd1D3hSduRFbYwd8npXQP4R6JU90RvxVVMEYcDQo
+         WwMZdOU0zivpvxq7WJ419bxNaQcDt+pgYsLyR/OSXeQRqdBvkMX9pA6RydreztDCIIuD
+         ebem42yz7jvVDL1zIHgufLunwzrM+0S3ECBfRy/SQUPNrqRThi2ZoD3VYlT9DsupPXNq
+         LAqmxBN33uVz3RY2OVI6SOfVsymp/jj1n/2PwnKzwQBRO/st050UMVKF4vi6NIzO9ZEM
+         OupQ==
+X-Gm-Message-State: AOAM532OGP9BnpOsBz5PpUxMusU2gSBzYazt+Q+F3CknK6dY7siNpoEk
+        r/eA1Fsu6pOPKXsbRPcfBqYkcS+8PWCXv7RBa8vmbeKj6BXmfco+vFkC1nf6F0lhFCNS9p1RD8V
+        Z3FFEk1SDae1bwEnstieJiA==
+X-Received: by 2002:a05:6000:105:: with SMTP id o5mr18151672wrx.164.1606680706163;
+        Sun, 29 Nov 2020 12:11:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzPka2aHaDPPX0PTgwDnAG/w5i0WrMz+FyjrUMAbM+Qjqz54JODofUJr+22IVyBqFlX4tuyzw==
+X-Received: by 2002:a05:6000:105:: with SMTP id o5mr18151664wrx.164.1606680706012;
+        Sun, 29 Nov 2020 12:11:46 -0800 (PST)
+Received: from redhat.com (bzq-79-176-44-197.red.bezeqint.net. [79.176.44.197])
+        by smtp.gmail.com with ESMTPSA id 34sm24071900wrh.78.2020.11.29.12.11.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 03:08:26 -0800 (PST)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     soc@kernel.org, linux-gpio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        robh@kernel.org, w@1wt.eu, daniel@0x0f.com
-Subject: [PATCH v4 5/5] ARM: mstar: Fill in GPIO controller properties for infinity
-Date:   Sun, 29 Nov 2020 20:08:02 +0900
-Message-Id: <20201129110803.2461700-6-daniel@0x0f.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201129110803.2461700-1-daniel@0x0f.com>
-References: <20201129110803.2461700-1-daniel@0x0f.com>
+        Sun, 29 Nov 2020 12:11:45 -0800 (PST)
+Date:   Sun, 29 Nov 2020 15:11:42 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, jasowang@redhat.com,
+        linux-gpio@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
+Message-ID: <20201129151113-mutt-send-email-mst@kernel.org>
+References: <20201127183003.2849-1-info@metux.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201127183003.2849-1-info@metux.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fill in the properties needed to use the GPIO controller
-in the infinity and infinity3 chips.
+On Fri, Nov 27, 2020 at 07:30:03PM +0100, Enrico Weigelt, metux IT consult wrote:
+> diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
+> index b052355ac7a3..85772c0bcb4b 100644
+> --- a/include/uapi/linux/virtio_ids.h
+> +++ b/include/uapi/linux/virtio_ids.h
+> @@ -48,5 +48,6 @@
+>  #define VIRTIO_ID_FS           26 /* virtio filesystem */
+>  #define VIRTIO_ID_PMEM         27 /* virtio pmem */
+>  #define VIRTIO_ID_MAC80211_HWSIM 29 /* virtio mac80211-hwsim */
+> +#define VIRTIO_ID_GPIO           30 /* virtio GPIO */
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/boot/dts/mstar-infinity.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mstar-infinity.dtsi b/arch/arm/boot/dts/mstar-infinity.dtsi
-index cd911adef014..0bee517797f4 100644
---- a/arch/arm/boot/dts/mstar-infinity.dtsi
-+++ b/arch/arm/boot/dts/mstar-infinity.dtsi
-@@ -6,6 +6,13 @@
- 
- #include "mstar-v7.dtsi"
- 
-+#include <dt-bindings/gpio/msc313-gpio.h>
-+
- &imi {
- 	reg = <0xa0000000 0x16000>;
- };
-+
-+&gpio {
-+	compatible = "mstar,msc313-gpio";
-+	status = "okay";
-+};
--- 
-2.29.2
+Pls remember to reserve the ID with the virtio TC
+before using it in the driver. Thanks!
+
+>  #endif /* _LINUX_VIRTIO_IDS_H */
+> -- 
+> 2.11.0
 
