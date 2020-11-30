@@ -2,286 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 689142C92C6
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 00:37:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 392452C9308
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 00:51:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389044AbgK3Xfe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 18:35:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389039AbgK3Xfd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 18:35:33 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA4BC0613D4;
-        Mon, 30 Nov 2020 15:34:53 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id h21so427214wmb.2;
-        Mon, 30 Nov 2020 15:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=cDrxtunMJFq8xOo3v3iOxtWN4Qb0df5wwbPG2PKfOvQ=;
-        b=qdKfTI+dI9rbpa8Xb5wAT9uc7rxdo9LAOTrAGedsz0pK6M2Awfs7CznWtkGOmqD5r1
-         7WHmeGPPzQkRrivE6w6FkAelyuEkLPfmDIF+whvSq5cnM9l/Dh81y2tQk7TzU3rdWDnr
-         10+CfmhFd+c1Js56W4t3Igms3RhlFHPtcopNN+nmLJo4975YwnHGCCxnLBaZHqNIjcCV
-         L3YxPoLQ13zOBBIU2VNv2x0x64hPmdYfMAxWoqoZfkyi27ZFdeFKLrh9hLdbNtoROD4B
-         6Hod51nmsOxazpAkf9dgQeOrUYADtzmJQ7FfC+c/AhLCk3FLtOXrZZ5UYjNsKq4AbRh8
-         H1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=cDrxtunMJFq8xOo3v3iOxtWN4Qb0df5wwbPG2PKfOvQ=;
-        b=BW4kOmqF0qoPy3uIe+5HfNobySR2Nrh5S6UKqM6HbYzwwpH/wzlAx5cVdjf8678dwi
-         c0fnHwPonGL/gCDfch1ag1X52O1Qr8rcRBlx7vF/uBLxVxPPldfWT4ACIr5luuAUnmxa
-         CMfaKqHzGTzb7f/JNF+S3nQVC5gSm8xbtjVNGdYY3jLtpsToQk+p1CnUky3HQ6xFX8q2
-         HLDNiky6Uqy8IGtX5XOQw7gqnBh7KQpytfz7fTy2GlUKZqhYFA1qEZCO4lPp5A06y6JR
-         zptVuQz5tKGDWZv6AT9pfk+P2U0s6c+2o7Nv5NZBngbNlPpK0kAh+Ve38Wfycu5g0NmZ
-         ypmA==
-X-Gm-Message-State: AOAM53254us6FVUFBGLP9nkMABgCkSbN3O6e1xdcsxrmMnSonEu0M/xe
-        PfAJo4nd8WTg3ANZ04okEwI=
-X-Google-Smtp-Source: ABdhPJxHj2LSJjhlluZ6m4v35YpmQyymKHHORQD8CRM55/d+cnmFsg5VT9LdJAQeJcH+1I6Q1lCT3Q==
-X-Received: by 2002:a1c:96c2:: with SMTP id y185mr237883wmd.84.1606779292102;
-        Mon, 30 Nov 2020 15:34:52 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.80])
-        by smtp.gmail.com with ESMTPSA id d8sm30750973wrp.44.2020.11.30.15.34.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Nov 2020 15:34:51 -0800 (PST)
-Subject: Re: [PATCH 07/18] software_node: Add support for fwnode_graph*()
- family of functions
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
-        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
-        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
-        jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-8-djrscally@gmail.com>
- <20201130162538.GK14465@pendragon.ideasonboard.com>
-From:   Dan Scally <djrscally@gmail.com>
-Message-ID: <048110de-ebc0-96b2-3cae-58114a272ba2@gmail.com>
-Date:   Mon, 30 Nov 2020 23:34:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2388260AbgK3Xtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 18:49:41 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:7846 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387812AbgK3Xtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 18:49:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1606780572; x=1638316572;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fnmKSjO+7e/ctbTEIGBkQ41kSawchDGA3iHH6aL3+wU=;
+  b=FvuvG7DLS3LceSnowuJrd09b1hiUqZzVY/wsirYr4Ry3zNQ7N2zJVNsd
+   0VNC8oQkckDVCFKYZU1wgCscE23FkLXdrRjLqMnxwyZkt5VPRijJ9HeOS
+   8VKYx/jbN1OKF3A8vkx9ODsgtAJ6aDtF+uTa/SYdkUOkkEcvQitgjl74B
+   FPkVMxbIC1EyC7TR+JpW7dnOWfPBzvXOL6IqwspyunrN6DM5oh5YSbCAV
+   /XkZMWOHte+tHq8yIE1qSXSsHNee/w9Guw7h/muHmmZSH2VIJIPrue9d+
+   V9ug7SxOoKb8LyEIZkRpD3LDSv/mbwi8Ziju/TnXik7HXRyVynTXus06N
+   A==;
+IronPort-SDR: R9Fdl6duHHzMPuQkNTzAUtcl6KJnT2xZtldUSwEEOL3drw8hfoVfA3DLZQzxYdlLOPe6dYDnd9
+ ZBZaYp/GxK/cHgHFDmkczHSNbJnbDtyuD14jIQHVHUTJuSqOQmwgJO4IiZx3d1OVW0/H1mTPTS
+ ppYrHdq5t0XMXrClA+Mb/zLXXGrLlz8HKhEaUveGcE7qi9uKdau8rKbZN0w5UcbMfuaytd8G0d
+ ZTWjVqdqAob0L4ZbUVbyk8gmvlytdKY5wzVRAvjvQeCcsKzYydAIQJmv1sfDapSnZwVCPmUusl
+ t3c=
+X-IronPort-AV: E=Sophos;i="5.78,382,1599494400"; 
+   d="scan'208";a="257538286"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Dec 2020 07:54:33 +0800
+IronPort-SDR: kh+L2LBTls258WIzPwqqURcwS/VprKdjsmeW2VWJUu0oaKPY3Ol8JaTiilXqPbuTk0Z8C0KWMJ
+ XDuR2tZp4hASaszjAk8Cxm/24ov4sTzEQ=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2020 15:32:48 -0800
+IronPort-SDR: gX7wqsfLsXH8OS+a8zwznwDPffjp7OcaoygGKVar8NCVT27U3ItDrN8hSCTJuTJDgkAW2vwtsw
+ Lr5AdwG1soTA==
+WDCIronportException: Internal
+Received: from phd004834.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.196])
+  by uls-op-cesaip01.wdc.com with ESMTP; 30 Nov 2020 15:48:32 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Sean Anderson <seanga2@gmail.com>
+Subject: [PATCH v3 00/21] RISC-V Kendryte K210 support improvements
+Date:   Tue,  1 Dec 2020 08:48:08 +0900
+Message-Id: <20201130234829.118298-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20201130162538.GK14465@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Laurent
+This series of patches improves support for boards based on the Kendryte
+K210 RISC-V dual core SoC. Minimal support for this SoC is already
+included in the kernel. These patches complete it, enabling support for
+most peripherals present on the SoC as well as introducing device trees
+for the various K210 boards available on the market today from SiPeed
+and Kendryte.
 
-On 30/11/2020 16:25, Laurent Pinchart wrote:
-> Hi Daniel and Heikki,
->
-> Thank you for the patch.
->
-> On Mon, Nov 30, 2020 at 01:31:18PM +0000, Daniel Scally wrote:
->> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>
->> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>
-> There seems to be one From: line too many. You can drop the one in the
-> commit message, git-format-patch will add it automatically.
-Ah! Thanks, sorry about that
->> This implements the remaining .graph_* callbacks in the
->> fwnode operations vector for the software nodes. That makes
-> s/vector/structure/ ?
-Yeah, sure.
->> the fwnode_graph*() functions available in the drivers also
->> when software nodes are used.
->>
->> The implementation tries to mimic the "OF graph" as much as
->> possible, but there is no support for the "reg" device
->> property. The ports will need to have the index in their
->> name which starts with "port" (for example "port0", "port1",
->> ...) and endpoints will use the index of the software node
->> that is given to them during creation. The port nodes can
->> also be grouped under a specially named "ports" subnode,
->> just like in DT, if necessary.
-> I'm not very familiar with swnodes, but could we name ports port@n
-> instead of portn to mimic OF nodes ?
-Yes, I don't see any reason why not.
->
->> The remote-endpoints are reference properties under the
->> endpoint nodes that are named "remote-endpoint".
->>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->> Co-developed-by: Daniel Scally <djrscally@gmail.com>
->> Signed-off-by: Daniel Scally <djrscally@gmail.com>
->> ---
->> changes since RFC v3:
->> 	- Simplified software_node_get_next_endpoint() a little
->> 	- Squared away references in software_node_get_next_endpoint()
->> 	and swnode_graph_find_next_port(), since they were affected by
->> 	the change to the earlier patch that had *get_next_child() also
->> 	put the previous reference.
->> 	- Dropped Andy's R-b, since the code changed.
->> changes in RFC v3:
->> 	- removed software_node_device_is_available
->> 	- moved the change to software_node_get_next_child to a separate
->> 	patch
->> 	- switched to use fwnode_handle_put() in graph_get_next_endpoint()
->> 	instead of software_node_put()
->>
->> changes in RFC v2:
->> 	- added software_node_device_is_available
->> 	- altered software_node_get_next_child to get references
->> 	- altered software_node_get_next_endpoint to release references
->> 	to ports and avoid passing invalid combinations of swnodes to
->> 	software_node_get_next_child
->> 	- altered swnode_graph_find_next_port to release port rather than
->> 	old
->>
->>  drivers/base/swnode.c | 110 +++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 109 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
->> index 9bd0bb77ad5b..0c7a8d6b9ea8 100644
->> --- a/drivers/base/swnode.c
->> +++ b/drivers/base/swnode.c
->> @@ -540,6 +540,110 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->>  	return 0;
->>  }
->>  
->> +static struct fwnode_handle *
->> +swnode_graph_find_next_port(const struct fwnode_handle *parent,
->> +			    struct fwnode_handle *port)
->> +{
->> +	struct fwnode_handle *old = port;
->> +
->> +	while ((port = software_node_get_next_child(parent, old))) {
->> +		if (!strncmp(to_swnode(port)->node->name, "port", 4))
->> +			return port;
->> +		old = port;
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +static struct fwnode_handle *
->> +software_node_graph_get_next_endpoint(const struct fwnode_handle *fwnode,
->> +				      struct fwnode_handle *endpoint)
->> +{
->> +	struct swnode *swnode = to_swnode(fwnode);
->> +	struct fwnode_handle *old = endpoint;
->> +	struct fwnode_handle *parent;
->> +	struct fwnode_handle *port;
->> +
->> +	if (!swnode)
->> +		return NULL;
->> +
->> +	if (endpoint) {
->> +		port = software_node_get_parent(endpoint);
->> +		parent = software_node_get_parent(port);
->> +	} else {
->> +		parent = software_node_get_named_child_node(fwnode, "ports");
->> +		if (!parent)
->> +			parent = software_node_get(&swnode->fwnode);
->> +
->> +		port = swnode_graph_find_next_port(parent, NULL);
->> +	}
->> +
->> +	for (; port; port = swnode_graph_find_next_port(parent, port)) {
->> +		endpoint = software_node_get_next_child(port, old);
->> +		if (endpoint) {
->> +			fwnode_handle_put(port);
->> +			break;
->> +		}
->> +
->> +		/* No more endpoints for that port, so stop passing old */
->> +		old = NULL;
->> +	}
->> +
->> +	fwnode_handle_put(parent);
->> +
->> +	return endpoint;
->> +}
->> +
->> +static struct fwnode_handle *
->> +software_node_graph_get_remote_endpoint(const struct fwnode_handle *fwnode)
->> +{
->> +	struct swnode *swnode = to_swnode(fwnode);
->> +	const struct software_node_ref_args *ref;
->> +	const struct property_entry *prop;
->> +
->> +	if (!swnode)
->> +		return NULL;
->> +
->> +	prop = property_entry_get(swnode->node->properties, "remote-endpoint");
->> +	if (!prop || prop->type != DEV_PROP_REF || prop->is_inline)
->> +		return NULL;
->> +
->> +	ref = prop->pointer;
->> +
->> +	return software_node_get(software_node_fwnode(ref[0].node));
->> +}
->> +
->> +static struct fwnode_handle *
->> +software_node_graph_get_port_parent(struct fwnode_handle *fwnode)
->> +{
->> +	struct swnode *swnode = to_swnode(fwnode);
->> +	struct fwnode_handle *parent;
->> +
->> +	if (!strcmp(swnode->parent->node->name, "ports"))
->> +		parent = &swnode->parent->parent->fwnode;
->> +	else
->> +		parent = &swnode->parent->fwnode;
->> +
->> +	return software_node_get(parent);
->> +}
->> +
->> +static int
->> +software_node_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->> +				   struct fwnode_endpoint *endpoint)
->> +{
->> +	struct swnode *swnode = to_swnode(fwnode);
->> +	int ret;
->> +
->> +	ret = kstrtou32(swnode->parent->node->name + 4, 10, &endpoint->port);
-> If we use port@, s/4/5/. But I suppose we also want to support the case
-> where a single port is used, with its name set to "port" ? The logic
-> would then need to be a tad more complex. Not sure if the consistency is
-> worth the additional complexity, up to you.
-I'm conflicted; consistency is good but in my mind keeping the name as
-"port@0" for a single port rather than dropping the suffix is the better
-approach anyway.
->> +	if (ret)
->> +		return ret;
->> +
->> +	endpoint->id = swnode->id;
->> +	endpoint->local_fwnode = fwnode;
->> +
->> +	return 0;
->> +}
->> +
->>  static const struct fwnode_operations software_node_ops = {
->>  	.get = software_node_get,
->>  	.put = software_node_put,
->> @@ -551,7 +655,11 @@ static const struct fwnode_operations software_node_ops = {
->>  	.get_parent = software_node_get_parent,
->>  	.get_next_child_node = software_node_get_next_child,
->>  	.get_named_child_node = software_node_get_named_child_node,
->> -	.get_reference_args = software_node_get_reference_args
->> +	.get_reference_args = software_node_get_reference_args,
->> +	.graph_get_next_endpoint = software_node_graph_get_next_endpoint,
->> +	.graph_get_remote_endpoint = software_node_graph_get_remote_endpoint,
->> +	.graph_get_port_parent = software_node_graph_get_port_parent,
->> +	.graph_parse_endpoint = software_node_graph_parse_endpoint,
->>  };
->>  
->>  /* -------------------------------------------------------------------------- */
+Pathes 1 to 4 are various fixes for riscv arch code and riscv
+dependent devices. Of note here is patch 3 which fix system calls
+execution in the no MMU case, and patch 4 which simplifies DTB builtin
+handling.
+
+Patch 5 fixes naming of directories and configuration options to use the
+K210 SoC vendor name (Canaan) instead of its branding name (Kendryte).
+
+The following patches 6 to 10 document device tree bindings for the SoC
+drivers. The implementation of these drivers is provided in patches 11,
+12 and 13, respectively implementing the SoC clock driver, SOC pin
+function control and reset controller.
+
+Patches 14 to 19 update the existing K210 device tree and add new
+device tree files for several K210 based boards: MAIX Bit, MAIXDUINO,
+MAIX Dock and MAIX Go boards from SiPeed and the KD233 development
+board from Canaan.
+
+Finally the last two patches updates the k210 nommu defconfig to include
+the newly implemented drivers and provide a new default configuration
+file enabling SD card support.
+
+A lot of the work on the device tree and on the K210 drivers come from
+the work by Sean Anderson for the U-Boot project support of the K210
+SoC. Sean also helped with debugging many aspects of this series.
+
+A tree with all patches applied is available here:
+https://github.com/damien-lemoal/linux, k210-sysctl-v16 branch.
+A demonstration of this series used on a SiPeed MAIX Dock
+board together with an I2C servo controller can be seen here:
+https://damien-lemoal.github.io/linux-robot-arm/#example
+
+This tree was used to build userspace busybox environment image that is
+then copied onto an SD card formatted with ext2:
+https://github.com/damien-lemoal/buildroot
+Of note is that running this userspace environment requires a revert of
+commit 2217b982624680d19a80ebb4600d05c8586c4f96 introduced during the
+5.9 development cycle. Without this revert, execution of the init
+process fails. A problem with the riscv port of elf2flt is suspected but
+not confirmed. I am now starting to investigate this problem.
+
+Reviews and comments are as always much welcome.
+
+Changes from V2:
+* Add MAINTAINERS file entry for the SoC support, listing myself as
+  maintainer.
+* Removed use of postcore_initcall() for declaring the drivers, using
+  the regular builtin_platform_driver() instead.
+* Fixed fpio pinctrl driver bindings documentation as commented by
+  Geert: removed input-schmitt and added input-schmitt-disable, fixed
+  typo and added input-disable and output-disable.
+* Fixed device tree to have cs-gpios active low, as per the default, as
+  active high necessity was an artifact of the gpio level double
+  inversion bug fixed recently.
+* Removed CONFIG_VT from defconfigs to reduce the kernel image size as
+  suggested by Geert.
+
+Changes from v1:
+* Improved DT bindings documentation
+* SPI and GPIO patches removed from this series (and being processed
+  directly through the relevant subsystems directly)
+* Improved device trees
+* Various cleanup and improvments of the drivers
+
+Damien Le Moal (21):
+  riscv: Fix kernel time_init()
+  riscv: Fix sifive serial driver
+  riscv: Enable interrupts during syscalls with M-Mode
+  riscv: Fix builtin DTB handling
+  riscv: Use vendor name for K210 SoC support
+  dt-bindings: Add Canaan vendor prefix
+  dt-binding: clock: Document canaan,k210-clk bindings
+  dt-bindings: reset: Document canaan,k210-rst bindings
+  dt-bindings: pinctrl: Document canaan,k210-fpioa bindings
+  dt-binding: mfd: Document canaan,k210-sysctl bindings
+  riscv: Add Canaan Kendryte K210 clock driver
+  riscv: Add Canaan Kendryte K210 FPIOA driver
+  riscv: Add Canaan Kendryte K210 reset controller
+  riscv: Update Canaan Kendryte K210 device tree
+  riscv: Add SiPeed MAIX BiT board device tree
+  riscv: Add SiPeed MAIX DOCK board device tree
+  riscv: Add SiPeed MAIX GO board device tree
+  riscv: Add SiPeed MAIXDUINO board device tree
+  riscv: Add Kendryte KD233 board device tree
+  riscv: Update Canaan Kendryte K210 defconfig
+  riscv: Add Canaan Kendryte K210 SD card defconfig
+
+ .../bindings/clock/canaan,k210-clk.yaml       |  55 +
+ .../bindings/mfd/canaan,k210-sysctl.yaml      | 116 +++
+ .../bindings/pinctrl/canaan,k210-fpioa.yaml   | 171 +++
+ .../bindings/reset/canaan,k210-rst.yaml       |  40 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |  16 +
+ arch/riscv/Kconfig.socs                       |  38 +-
+ arch/riscv/Makefile                           |   2 +-
+ arch/riscv/boot/dts/Makefile                  |   2 +-
+ arch/riscv/boot/dts/canaan/Makefile           |   5 +
+ arch/riscv/boot/dts/canaan/k210.dtsi          | 625 +++++++++++
+ arch/riscv/boot/dts/canaan/k210_generic.dts   |  46 +
+ arch/riscv/boot/dts/canaan/k210_kd233.dts     | 178 ++++
+ arch/riscv/boot/dts/canaan/k210_maix_bit.dts  | 227 ++++
+ arch/riscv/boot/dts/canaan/k210_maix_dock.dts | 229 ++++
+ arch/riscv/boot/dts/canaan/k210_maix_go.dts   | 237 +++++
+ arch/riscv/boot/dts/canaan/k210_maixduino.dts | 201 ++++
+ arch/riscv/boot/dts/kendryte/Makefile         |   4 -
+ arch/riscv/boot/dts/kendryte/k210.dts         |  23 -
+ arch/riscv/boot/dts/kendryte/k210.dtsi        | 125 ---
+ arch/riscv/configs/nommu_k210_defconfig       |  39 +-
+ .../riscv/configs/nommu_k210_sdcard_defconfig |  93 ++
+ arch/riscv/include/asm/soc.h                  |  38 -
+ arch/riscv/kernel/entry.S                     |   9 +
+ arch/riscv/kernel/soc.c                       |  27 -
+ arch/riscv/kernel/time.c                      |   3 +
+ arch/riscv/mm/init.c                          |   6 +-
+ drivers/clk/Kconfig                           |   9 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-k210.c                        | 959 +++++++++++++++++
+ drivers/pinctrl/Kconfig                       |  13 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-k210.c                | 984 ++++++++++++++++++
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-k210.c                    | 141 +++
+ drivers/soc/Kconfig                           |   2 +-
+ drivers/soc/Makefile                          |   2 +-
+ drivers/soc/canaan/Kconfig                    |   9 +
+ drivers/soc/canaan/Makefile                   |   3 +
+ drivers/soc/canaan/k210-sysctl.c              |  79 ++
+ drivers/soc/kendryte/Kconfig                  |  14 -
+ drivers/soc/kendryte/Makefile                 |   3 -
+ drivers/soc/kendryte/k210-sysctl.c            | 260 -----
+ drivers/tty/serial/sifive.c                   |   1 +
+ include/dt-bindings/clock/k210-clk.h          |  61 +-
+ include/dt-bindings/pinctrl/k210-fpioa.h      | 276 +++++
+ include/dt-bindings/reset/k210-rst.h          |  42 +
+ include/soc/canaan/k210-sysctl.h              |  43 +
+ 49 files changed, 4939 insertions(+), 531 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/canaan,k210-sysctl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+ create mode 100644 Documentation/devicetree/bindings/reset/canaan,k210-rst.yaml
+ create mode 100644 arch/riscv/boot/dts/canaan/Makefile
+ create mode 100644 arch/riscv/boot/dts/canaan/k210.dtsi
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_generic.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_kd233.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_bit.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_dock.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_go.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maixduino.dts
+ delete mode 100644 arch/riscv/boot/dts/kendryte/Makefile
+ delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dts
+ delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dtsi
+ create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig
+ create mode 100644 drivers/clk/clk-k210.c
+ create mode 100644 drivers/pinctrl/pinctrl-k210.c
+ create mode 100644 drivers/reset/reset-k210.c
+ create mode 100644 drivers/soc/canaan/Kconfig
+ create mode 100644 drivers/soc/canaan/Makefile
+ create mode 100644 drivers/soc/canaan/k210-sysctl.c
+ delete mode 100644 drivers/soc/kendryte/Kconfig
+ delete mode 100644 drivers/soc/kendryte/Makefile
+ delete mode 100644 drivers/soc/kendryte/k210-sysctl.c
+ create mode 100644 include/dt-bindings/pinctrl/k210-fpioa.h
+ create mode 100644 include/dt-bindings/reset/k210-rst.h
+ create mode 100644 include/soc/canaan/k210-sysctl.h
+
+-- 
+2.28.0
+
