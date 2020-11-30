@@ -2,66 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2EB32C8776
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:13:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 321422C87F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:29:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgK3PMz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 10:12:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54080 "EHLO
+        id S1726270AbgK3P3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 10:29:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbgK3PMy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:12:54 -0500
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA2FC0613D2
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:12:08 -0800 (PST)
-Received: by mail-oi1-x22d.google.com with SMTP id d9so14506772oib.3
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:12:08 -0800 (PST)
+        with ESMTP id S1725870AbgK3P3M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:29:12 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA0FC0613CF
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:28:31 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id m19so16827279ejl.11
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:28:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gfK59qElpmcMSWiFsxzdYlNuH1Et8G2dRjUlpzcjxEE=;
-        b=cfL4REVf4wekpdf+32fi3ly1HgK8FyIKFhu/+cG/fIZyKzpBtb4GGB8FrtIamCgBGD
-         4OvlEx0r4+qfnCXeXpIhudpLJnXlw2rTOS+92xCTgUlIPlJmnw+ac+uRmV5YsaBC/j5Y
-         +xBnmfLlLjy1Bev8Yuh6Z8lyWWB4gaHjvPyk2l90TBpWPVwUcyi0AQ/Mp23fJfLCtgXW
-         mof0+rjMCKerPkLIty4vRlSsGE12dEwL0jRtDFQiqWmgGPNNH02Xgam83SjPmqWoTi1i
-         hwlj+VhB1dTmnyrbX+1RZHoaVSEYVuj7doCbjsvttfsfWtDonBx2UMszYlx6ouf+t0l8
-         LOGg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vGbjw3VgCVVCET8HkVpqbdL8nSTX7h3rpdcHZNixdkY=;
+        b=1g9kv6r4mkEEmse4afUqm4ScOQmWSPlquFl/9CFDk+RwuEY+Mmy4IuyDUKPI2nzSkT
+         +lpEF3iIqNWFppx3ma4KCh++jcoyarl5TBHULLwbmPKV6pykwNkSSYvdi4D8Wr60L4lr
+         Jb/jOs5NvuMtYlxVlmz7gkOVh3oKiqoLTdNrRxdxhSmUfr/y0/TnEx3cunwUGf7V6/8g
+         ENubR1hrsY3S1ZGaotS98VP4QI1FRravSW7/SG9lqVHfOMJZNAQoHEByhzmCsPnbFUy8
+         lDtLTbnjFnB4eeL02i5D2nQQAGxK/LtonPbxMVRsiTkH6YvFYDjRhoBCfbX97emMlixP
+         LZ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gfK59qElpmcMSWiFsxzdYlNuH1Et8G2dRjUlpzcjxEE=;
-        b=CS//KyzzaeHOWjvNY1mrDnbAE72Ix8q+rlcv0S7epCTMfU1dj6ohaDpnzTBkmzUg/x
-         6dYprhsJ4DjHlyqySaK4e1DXFDqzMLE6hipcF7I1UNvQve2o8AjxFIWQpTYMalibUIxR
-         A8gdcsK9c+qE1mVOwcvHtIDJkRV4TKQFJ76j4dOs+RThi2v6hJAZI6Ji4eR0tZkwIkhX
-         Bgky7lmvDWU3ViEZXZNdQcUAAo7hzgXbtvdhsWj4GL3r0x0jb5qhWlfaxOGJBW6VH0Ql
-         GTQud+lz03ePPYCKbIM523M5EpiS0FAuvnikJ12OCxOkHcEUAhrb/dAa1Idv/RMjV7gt
-         DXDg==
-X-Gm-Message-State: AOAM530WXQ+910VPDfVnqW9sToiZmr5FLEO04zdwVroXNNszjfuwSSE5
-        pVymZklIv7/D//fgG6s6tImDCpNG4Qb//V4oZwE=
-X-Google-Smtp-Source: ABdhPJzx8dTFTS+0h9hboMndR70rSUmNsPY2oFtdP57Ra3OsJ1n2crx/PQpz/7194kJ4axPPbK9k5ITf6DL88AV1LKE=
-X-Received: by 2002:a05:6808:3da:: with SMTP id o26mr15332382oie.80.1606749127862;
- Mon, 30 Nov 2020 07:12:07 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vGbjw3VgCVVCET8HkVpqbdL8nSTX7h3rpdcHZNixdkY=;
+        b=Nca4mzDqsigCwDPXei9LfhgI+uxJwl6e1+rsDERC2s1lTSIAwmsLs41J3cI78kRe6i
+         q0sL1y4QYd8Ns066rS6uvwDqaxJ3NJ3mO16pyTJqf2V6vpau9RrboybXeDhnbUvEr/Js
+         AIbs8M8RRfhZWYAOdumfjsiP8Djx7gYMsmtSBFW76eRfdmiSoD1Lw89F60qRcQ5lHSXL
+         hbzUsIJZQ5+VPkx6hs/WHi9BcJNM+fI3RLaXw5tzz5/MeraZM6jo2eVxKjM6bhb5jfZh
+         XFfYoepf25sAxUbDawxtXrMdBF4wk1Q10NG+JqrUsw+J6QEKpxv79JXa05/CkKuNLY6t
+         vzJg==
+X-Gm-Message-State: AOAM533BdlkorM87pF20jI6p9qbzP1jZ2SBj3hzEC/n22r97I74cTiMx
+        gPaN+BQ0DEwSt0NQbkgCRkk0gzw0119Fkf3qZ4jLuA==
+X-Google-Smtp-Source: ABdhPJy4I/DDpA3eOSgQiWEbS/uDH+jiFrQnPjaI1etUWEdpFOWri9ryUAEVQtXfZ5XQOHaddQfbBc/MdsMzAFx2Pjo=
+X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr21071938ejr.429.1606750110520;
+ Mon, 30 Nov 2020 07:28:30 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:aca:c642:0:0:0:0:0 with HTTP; Mon, 30 Nov 2020 07:12:07
- -0800 (PST)
-Reply-To: hs8qfc11@gmail.com
-From:   Mr Bill T Winters <ptsd383@gmail.com>
-Date:   Mon, 30 Nov 2020 16:12:07 +0100
-Message-ID: <CAPdjYafeT5STPBjQoUk=m9__UvhUk8z7JCoW8vyTQOtK8dPk+Q@mail.gmail.com>
-Subject: Good Morning,
-To:     undisclosed-recipients:;
+References: <20201124030606.40588-1-zhengliang6@huawei.com>
+In-Reply-To: <20201124030606.40588-1-zhengliang6@huawei.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 30 Nov 2020 16:28:19 +0100
+Message-ID: <CAMpxmJU0og39qAtvDgTdhK6OweE9G0wcunFVjprbfu7QaTbdgg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: arizona: disable pm_runtime in case of failure
+To:     Zheng Liang <zhengliang6@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>, wangli74@huawei.com,
+        fangwei1@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-I Mr Bill T, did you Receive the (FUND), that was paid to you? please,
-do not hesitate to Let me know with your full name:.. for immediate
-verification notice,
+On Tue, Nov 24, 2020 at 3:08 AM Zheng Liang <zhengliang6@huawei.com> wrote:
+>
+> pm_runtime_enable will increase power disable depth. Thus a
+> pairing decrement is needed on the error handling path to keep
+> it balanced.
+>
+> Fixes:27a49ed17e224(gpio: arizona: Add support for GPIOs that)
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
+> ---
+>  drivers/gpio/gpio-arizona.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+> index 5bda38e0780f..2bc173c352ce 100644
+> --- a/drivers/gpio/gpio-arizona.c
+> +++ b/drivers/gpio/gpio-arizona.c
+> @@ -192,6 +192,7 @@ static int arizona_gpio_probe(struct platform_device *pdev)
+>         ret = devm_gpiochip_add_data(&pdev->dev, &arizona_gpio->gpio_chip,
+>                                      arizona_gpio);
+>         if (ret < 0) {
+> +               pm_runtime_disable(&pdev->dev);
+>                 dev_err(&pdev->dev, "Could not register gpiochip, %d\n",
+>                         ret);
+>                 return ret;
+> --
+> 2.17.1
+>
 
-Sincerely Yours, Respectfully,
+Applied, thanks!
 
-Mr Bill T Winters,
-Group Chief Executive Officer & Executive Director,
+Bartosz
