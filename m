@@ -2,306 +2,231 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 105DD2C9034
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 22:46:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B67B2C9036
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 22:47:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgK3Vpa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 16:45:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgK3Vpa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 16:45:30 -0500
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E935DC0613D3
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 13:44:49 -0800 (PST)
-Received: by mail-ua1-x941.google.com with SMTP id q4so4253203ual.8
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 13:44:49 -0800 (PST)
+        id S1726841AbgK3Vqm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 16:46:42 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:63625 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgK3Vqm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 16:46:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1606772800; x=1638308800;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=zCxzLDj96wMsaKjdizCCGCmgiMtvG99jBQBbouplU3I=;
+  b=cOGBVp9Px81SSk6Av8CZfnllNjXb8ATcQ30pFzhicA4jv5V74EniiZRO
+   AJ8GubhsWuSzZUQuWY3GHmhTj1JQUJEhjsIuLfJDHeozanoJDJ1aytIS6
+   CnHeFSWBjiny+yvvMXEO4HoB0Ln7QJsn4oqr+bnZn1+qEzx1mqkZaS7w8
+   NfLV3QtRBjiw1jrQyOpGJRFsFKcjFZIerfTYScXymZm15mZxXktXt4Q2G
+   48386tn7YTHGxd4YCtdDwKLY05j95ycws+OR42J3bq9/zVNmMlWGVyCTC
+   hwBisyLS2CKOKnRQaak+VHiQY6gwdKiFOYCBrV9QYqGcsPPMDqABPQLr2
+   A==;
+IronPort-SDR: ZZSVFDRmpsO5FBVirDb1J2bxtFefYqPZB3lUB5tmvAlizrUAteb/e44OXgBPsf86dSkc/vQ8Zb
+ E5Dy5AIooBvNd0Pq3o1OU/oxqAFj7VjIT6DN/ws25bZ00SsSWF5TXNVIGW0dC8IOibjae6z/MG
+ KjK6H80x68++pmGxH3DgyAOGqfwB8H7S0x7cbC1ArLxeCgI/eZzHLVNcmCJ40UEwUlTDycqeXl
+ 4znarDdv+yznIw1pNUuZvQzB7j3PCf+XMyYOOuyXR/ORTU8RChiaa3EPPIpOuTY+6nxQU/vrJX
+ 2SY=
+X-IronPort-AV: E=Sophos;i="5.78,382,1599494400"; 
+   d="scan'208";a="158318024"
+Received: from mail-co1nam11lp2169.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.169])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Dec 2020 05:45:35 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k6z42mKQTnvrVlhmDTs9G55j3DvU3750lZ5D4bIbiR16pxkd8GHEEExJN0GjaPLA232GA2POWahZo1ZHxbpLvA82/PtUmbiveFMTcoz87oniT6dlH3zyD2nIva9lhMSz5I0hHjm+svVKyAoqJd+xRXmOIzNQS0CNHH4+vtyG3GsVsU7XJCNvy6SWuJsXhOXveEQd3LDEMoPYWtFQqEOT6KS8MY//U7wH5vDCwAjDaLTO2IaK4YRRxb/s/y2mLInhyjZWyhez4kpWasRMwJkJEX7JIur5b1AS6jUX0QXCE2R0olAGXQy4G8MXcrCOBFH9BNiqHvRVjzpxIc0vpoH4Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sWjcJtdJ4Y7Eysl9toUC/VGELNBly+OgkTOCaND+paE=;
+ b=M3GODI0KZtYRZgCB4fz5QXK3JWkmZtk+OJnC4u+PcWblzoA+MVEhM78Ul5Q9dYbobkganl/cvtF4n73+Q/8vHQSgV6lNK51et+M57MLgm3mVS3S9YYmCeQ5v5XdxUcNJiXKf4zSIHQgEo1PJcTwneyPz6hucSkNSBjl8juZMNHqh61YbtQiAJyRZPdzqGgnY9bUnYqPEFKXq6eXqsL+8GV9HK5KKPG7y9hbnT9OX/nyQG5El8Q7XU8fTDo/ZgNXbpnjqgOLASaIFgZt9qhC7rCPY7Zhyvv2rECACY0Q6Y3t1TP98ah4uQrMWv0YtoCjaqN0Tj3nljCjFpybyldAxDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IzzFMOQ2YRkMCxvmCHg5ti/PD9Utfx1/a9X+8+nAZS8=;
-        b=DiM9VTBpsGfF9Mg6DLeQBhQngC+yXQQoSTzGiVNcv2tsU3mDuzvVLjiOQgTRau2QLp
-         CD40nTcjniPdPwpqwJtj2FKR5bg6PWcyzSbPvWijZwXUe1nYzdZIO3WGYtPerKjIOqFz
-         zfWXVP1/W0A6/XDilEZ8xvQXeYPk2m7qV9QpY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IzzFMOQ2YRkMCxvmCHg5ti/PD9Utfx1/a9X+8+nAZS8=;
-        b=Cq5/yuUGyXuvTYC2aA+p7in64pV4pX3V+xMzcs+b3bqTJWdP99re6CoM11k4gSBjNc
-         VCDoIhR/JlzbCqBsKTspUYT700FIGXe/WIU0kmi40xrQsNj5z6hKw3pM5qGuFzBpsa8d
-         7qDGtqo/XP1zbhVbYhrFbkZQivSYcePbtFa9qOJJuRIYX5Y0Cg4XiHPL0QXy7wnqGeqH
-         KeGyQmLLQPmIEY9qn5uA6bERESZzsVA3tNguZbqDLPccosakgvRPvJP7QEfUI7hkOfQ7
-         Z9pAeI2PQrikcJNzwxmPXPO8Y5hJCebqPBXS+QDfsMHmlQsDgQoNGjCKy2xLN95A3qdQ
-         Cykw==
-X-Gm-Message-State: AOAM530MDNICT5mzHtVzgech00S2RayvSWyEU8OacLZwxI5+CiTL0l2R
-        38jwimqKVqlSCac5El0y8KoRMXCb7RmydA==
-X-Google-Smtp-Source: ABdhPJxVdUhQjMSK2CA+oHruEG97XPxrUaE7NxntGK6PqufbktZ+Tc2i820wqdyKMa6wk6XHx3DQ9g==
-X-Received: by 2002:ab0:3901:: with SMTP id b1mr20457867uaw.34.1606772688323;
-        Mon, 30 Nov 2020 13:44:48 -0800 (PST)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id j21sm5650721vsf.18.2020.11.30.13.44.47
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Nov 2020 13:44:47 -0800 (PST)
-Received: by mail-ua1-f44.google.com with SMTP id x4so2995875uac.11
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 13:44:47 -0800 (PST)
-X-Received: by 2002:a9f:24eb:: with SMTP id 98mr14259940uar.90.1606772686598;
- Mon, 30 Nov 2020 13:44:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20201124094636.v2.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
- <20201124094636.v2.3.I771b6594b2a4d5b7fe7e12a991a6640f46386e8d@changeid> <d6c5dba9-bcc7-fac9-dd41-c989509c822b@codeaurora.org>
-In-Reply-To: <d6c5dba9-bcc7-fac9-dd41-c989509c822b@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 30 Nov 2020 13:44:35 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UOSkHQMcSV8Zq5qPfBoUu5xYzfNZqUPmymvD7PXUAN4w@mail.gmail.com>
-Message-ID: <CAD=FV=UOSkHQMcSV8Zq5qPfBoUu5xYzfNZqUPmymvD7PXUAN4w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: qcom: Clear possible pending irq when
- remuxing GPIOs
-To:     Maulik Shah <mkshah@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sWjcJtdJ4Y7Eysl9toUC/VGELNBly+OgkTOCaND+paE=;
+ b=q1f84cAzNRXWgHkKA/21/84YwVw/FqduFQntPDs7l9YLnwXwq5xOKNydrlQPDg2hGXvOtXyOXc7zk9UP36JLf30E3KQRml8kOobmQIyrv0R7+8tjO7aR2YKgfcdPB+U+yQL1bHua3VPFPwWKbmhTKsws1lZdfji8DSr5+3hTPHU=
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com (2603:10b6:610:34::19)
+ by CH2PR04MB6903.namprd04.prod.outlook.com (2603:10b6:610:94::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.22; Mon, 30 Nov
+ 2020 21:45:33 +0000
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a]) by CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a%7]) with mapi id 15.20.3589.022; Mon, 30 Nov 2020
+ 21:45:33 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Rowand <frowand.list@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] of: Fix property supplier parsing
+Thread-Topic: [PATCH v2 1/2] of: Fix property supplier parsing
+Thread-Index: AQHWvjqJIvzXqRm0WESMRT49uj4HQQ==
+Date:   Mon, 30 Nov 2020 21:45:32 +0000
+Message-ID: <CH2PR04MB6522F9DE3CC39BBDA1C56690E7F50@CH2PR04MB6522.namprd04.prod.outlook.com>
+References: <20201119060921.311747-1-damien.lemoal@wdc.com>
+ <20201119060921.311747-2-damien.lemoal@wdc.com>
+ <20201125210629.27al2cjp5jjuj354@mobilestation>
+ <CAL_JsqK3VDb4Jv2H+0Rh7V3ZA+PmKt=+fbn+_a4eHHh8zQmQ9Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d87ab491-121c-4e1b-aec1-08d895794390
+x-ms-traffictypediagnostic: CH2PR04MB6903:
+x-microsoft-antispam-prvs: <CH2PR04MB6903618DFBBB61E321D89E8AE7F50@CH2PR04MB6903.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pfxZjG6gLAsSxEn1IcpEPcGOcdSi3yQ0oF+CTf8T7zISvSM4RbJlzeA0r6nV8wcZEcgrYNsj15rCUoSGOjeF09HImLQ9/OGRtP77JfU6KKwa7YJTYo1+BCd7JElCZKwLfusjoFvGeMbf8Ud7pyHxQBPen7Y9ygPHY/1dKa9CLWYfvGcsygIbc4bgMj3Y8w1ESxMQMOrVHtIuELkjcnhpZqhoVPzO4zUaIdXlkYKb9tMFnsf+9yMTnqwT9Wz0aBm2Jgx/qAQXknimImYShN9ivJWTqafYt4MUqLuHPZWhSBcZNbcvlN5YJgZSSTYUR1Lm5XXL47H4BOTcI0gdltxhug==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6522.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(396003)(39860400002)(136003)(346002)(86362001)(33656002)(7696005)(55016002)(71200400001)(9686003)(478600001)(4326008)(54906003)(5660300002)(8676002)(2906002)(26005)(91956017)(64756008)(8936002)(186003)(110136005)(52536014)(83380400001)(53546011)(76116006)(66446008)(316002)(66946007)(66556008)(6506007)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?iQuc35aMDNabmSYWyrwAl1grQdY7SBHvuoMEEuOPt4n57Cr5/DfR3hJrunc9?=
+ =?us-ascii?Q?iWbRPQsmgzqmTLPCF7k+zB1MrFR6L9DWGfoQ9SaZb6sYDMXzMTIARnb0l0dQ?=
+ =?us-ascii?Q?1EGMM95leoQVGEy2GK1gz2pDvupg5dW6DyPvL1bDcKmxNFlwEIfetwtZUXk4?=
+ =?us-ascii?Q?XZLbYTvDED0jjvqWOueHnuc589bTHsJYh4J7IMSNP7X72Fxqb3OOSGUjtDzX?=
+ =?us-ascii?Q?32y4jYdecinK8xfZiBY+d+19yi0aOVVkwL57ougD0gC77exhE12so+HHBCk4?=
+ =?us-ascii?Q?K5Kvs31V0NGq+FcgwzuiMHjfHOdogFzCPZdQqS5kBSIaqijq0cO0BMuYMVkW?=
+ =?us-ascii?Q?iH2Nb+Alorqa7O+POn4TCF89ykUp0hreGt7YIc6C89traOrzarcLtHCt3iPs?=
+ =?us-ascii?Q?dddUqnY2ypcNpQYBHpkSdMt8+7q2pLjFQOnDY7QiIaeMZT0bCXXCQ2ZTMrJk?=
+ =?us-ascii?Q?mZ2ONpocZKrm2Zn6RE4f94QZ6CEpvRK3IY5sBA+QEfg2+99mijXNVy0GCpD0?=
+ =?us-ascii?Q?A8yXHuNNEH6dnx0xRQ/cAywLSx9iTrpR7L2dDymzyaBzXBI3OCKU3YNuj4kB?=
+ =?us-ascii?Q?rnkxdWuxIWCbu1GgUgnBmxuobgpwBrwO8W+kTM+EDqusnrzYQRCFmGntH3+q?=
+ =?us-ascii?Q?6vZyl6i5gllnqLi7mVJ7OeVO/+iioa4WjuyofW4agE9ja8EuMkK5bpwRJ6Qt?=
+ =?us-ascii?Q?eeiK+X+X3qA/xRNJdIjraAO+S3y0XeHbGrJnsJCwvaYwS2Rdvbq4nwnusMwz?=
+ =?us-ascii?Q?MZEmQupRkX9c/QqquSgjWaJPP9qw6ybraLgZJAfqBdZEv2h4aErqjMiEL9um?=
+ =?us-ascii?Q?lTtKhrljUo9c5RVWLeU7PjpeEEzB1SL1alUVAp3KQe8qKN2ZuYVFfQNunJ5k?=
+ =?us-ascii?Q?vXkggOGi7jdSQ4gG+s0LXzVqI8F+Ccb03h5G4vCNXBsDJFTFF3Y4ZyQOD2B0?=
+ =?us-ascii?Q?XMxIIlQrDVO0XLb6vA4T7x+XCac4TZoWuQNf0pILSSyMr9yB/uKZX6E506mr?=
+ =?us-ascii?Q?JV+U?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6522.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d87ab491-121c-4e1b-aec1-08d895794390
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2020 21:45:32.9195
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zrIJ7yp8HIuB8ZMoPgp9uDOHCg+ewdUa6wvdA7g8MLdmrIkXILrVfxEq7xp8ouGNZ9lND3+v7Cxi2CNTTEUO0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6903
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Mon, Nov 30, 2020 at 2:33 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> > [1] https://lore.kernel.org/r/603c691f-3614-d87b-075a-0889e9ffc453@codeaurora.org
-> Please wait to land [1] before i confirm with HW team if this is indeed
-> valid case.
-
-Oh, oops.  Somehow I thought your reply was in response to patch #3 in
-the series, not #1.  I responded to patch #1 in the series now to make
-it clear to wait for you.
-
-
-> > @@ -187,15 +217,26 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
-> >       if (WARN_ON(i == g->nfuncs))
-> >               return -EINVAL;
-> >
-> > -     raw_spin_lock_irqsave(&pctrl->lock, flags);
-> > +     disable_irq(irq);
-> >
-> > -     val = msm_readl_ctl(pctrl, g);
-> > +     raw_spin_lock_irqsave(&pctrl->lock, flags);
-> > +     oldval = val = msm_readl_ctl(pctrl, g);
-> >       val &= ~mask;
-> >       val |= i << g->mux_bit;
-> >       msm_writel_ctl(val, pctrl, g);
-> > -
-> >       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> >
-> > +     /*
-> > +      * Clear IRQs if switching to/from GPIO mode since muxing to/from
-> > +      * the GPIO path can cause phantom edges.
-> > +      */
-> > +     old_i = (oldval & mask) >> g->mux_bit;
-> > +     if (old_i != i &&
-> > +         (i == pctrl->soc->gpio_func || old_i == pctrl->soc->gpio_func))
-> > +             msm_pinctrl_clear_pending_irq(pctrl, group, irq);
-> > +
->
-> The phantom irq can come when switching to GPIO irq mode. so may be only
-> check if (i == pctrl->soc->gpio_func) {
-
-Have you tested this experimentally?
-
-I have experimentally tested this and I can actually see an interrupt
-generated when I _leave_ GPIO as well as when I enter GPIO mode.  If
-you can't see this I can re-setup my test, but this was one of those
-things that convinced me that the _transition_ is what was causing the
-fake interrupt.
-
-I think my test CL <https://crrev.com/c/2556012/> can help you with
-testing if you wish.
-
-
-> even better if you can clear this unconditionally.
-
-Why?  It should only matter if we're going to/from GPIO mode.
-
-
-> > @@ -456,32 +497,49 @@ static const struct pinconf_ops msm_pinconf_ops = {
-> >   static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-> >   {
-> >       const struct msm_pingroup *g;
-> > +     unsigned int irq = irq_find_mapping(chip->irq.domain, offset);
-> >       struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
-> >       unsigned long flags;
-> > +     u32 oldval;
-> >       u32 val;
-> >
-> >       g = &pctrl->soc->groups[offset];
-> >
-> > +     disable_irq(irq);
-> > +
-> >       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> >
-> > -     val = msm_readl_ctl(pctrl, g);
-> > +     oldval = val = msm_readl_ctl(pctrl, g);
-> >       val &= ~BIT(g->oe_bit);
-> >       msm_writel_ctl(val, pctrl, g);
-> >
-> >       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> >
-> > +     /*
-> > +      * Clear IRQs if switching to/from input mode since that can use
-> > +      * a phantom edge.
-> > +      */
-> > +     if (oldval != val)
-> > +             msm_pinctrl_clear_pending_irq(pctrl, offset, irq);
-> same as above, can you clear this unconditionally.
-
-Any reason why?  If we didn't change anything then there's no reason
-to go through all this extra code?
-
-
-> >   static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, int value)
-> >   {
-> >       const struct msm_pingroup *g;
-> > +     unsigned int irq = irq_find_mapping(chip->irq.domain, offset);
-> >       struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
-> >       unsigned long flags;
-> > +     u32 oldval;
-> >       u32 val;
-> >
-> >       g = &pctrl->soc->groups[offset];
-> >
-> > +     disable_irq(irq);
-> > +
-> >       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> >
-> >       val = msm_readl_io(pctrl, g);
-> > @@ -491,12 +549,21 @@ static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, in
-> >               val &= ~BIT(g->out_bit);
-> >       msm_writel_io(val, pctrl, g);
-> >
-> > -     val = msm_readl_ctl(pctrl, g);
-> > +     oldval = msm_readl_ctl(pctrl, g);
->
-> should be, oldval = val = msm_readl_ctl(pctrl, g);
->
-> otherwise val will carry invalid value.
-
-Whoa!  Good catch.  How did I miss that and how did it not fail?  I
-will fix in a v3 but will wait until other questions are resolved
-before sending.
-
-
-> >       val |= BIT(g->oe_bit);
-> >       msm_writel_ctl(val, pctrl, g);
-> >
-> >       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> >
-> > +     /*
-> > +      * Clear IRQs if switching to/from input mode since that can use
-> > +      * a phantom edge.
-> > +      */
-> > +     if (oldval != val)
-> > +             msm_pinctrl_clear_pending_irq(pctrl, offset, irq);
->
-> i don't see a reason to clear the edges when switching to output mode.
->
-> can you remove the changes from .direction_output callback?
-
-I haven't confirmed that this can glitch, however I did confirm that I
-could glitch when muxing _away_ from GPIO mode.  This makes me believe
-that I could also glitch when muxing to an output.
-
-I can try to concoct a test for this if necessary.
-
-
-> > @@ -792,17 +859,6 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
-> >
-> >       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> >
-> > -     if (status_clear) {
-> > -             /*
-> > -              * clear the interrupt status bit before unmask to avoid
-> > -              * any erroneous interrupts that would have got latched
-> > -              * when the interrupt is not in use.
-> > -              */
-> > -             val = msm_readl_intr_status(pctrl, g);
-> > -             val &= ~BIT(g->intr_status_bit);
-> > -             msm_writel_intr_status(val, pctrl, g);
-> > -     }
-> > -
-> Above change was clearing irq in .irq_enable callback which will do
-> clear + unmask from irq_startup() at the very end.
-> With your change, The problem is we have cleared the phantom irq much
-> earlier in __setup_irq() phase and in below case its still latched as
-> pending.
->
-> 1. The client driver calls request_irq() => __setup_irq()
-> 2. __setup_irq() then first invokes irq_request_resources() =>
-> msm_gpio_irq_reqres() => msm_pinmux_set_mux() =>
-> msm_pinctrl_clear_pending_irq()
-> 3. __setup_irq() goes ahead and invokes __irq_set_trigger() =>
-> msm_gpio_irq_set_type()
-> 4. __setup_irq() then invokes irq_startup() => gpiochip_irq_enable() =>
-> msm_gpio_irq_enable()
->
-> The phantom irq gets cleared in step (2) here, but with step (3) it gets
-> latched again and at the end of step (4) still get phantom irq.
-> This seems because as per below comment in driver, pasting the part
-> which has info,
-> /*
->   * The edge detection logic seems to have a problem where toggling the
-> RAW_STATUS_EN bit may
->   * cause the status bit to latch spuriously when there isn't any edge
->   */
-> In step (3) msm_gpio_irq_set_type() touches the RAW_STATUS_EN making the
-> phantom irq pending again.
-> To resolve this, you will need to invoke msm_pinctrl_clear_pending_irq()
-> at the end of the msm_gpio_irq_set_type().
->
-> I would like Rajendra's (already in cc) review as well on above part.
-
-Ugh, so we need a clear in yet another place.  Joy.  OK, I will wait
-for Rajendra's comment but I can add similar code in
-msm_gpio_irq_enable().
-
-
-> >       val = msm_readl_intr_cfg(pctrl, g);
-> >       val |= BIT(g->intr_raw_status_bit);
-> >       val |= BIT(g->intr_enable_bit);
-> > @@ -815,14 +871,10 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
-> >
-> >   static void msm_gpio_irq_enable(struct irq_data *d)
-> >   {
-> > -     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > -     struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> > -
-> >       if (d->parent_data)
-> >               irq_chip_enable_parent(d);
-> >
-> > -     if (!test_bit(d->hwirq, pctrl->skip_wake_irqs))
-> > -             msm_gpio_irq_clear_unmask(d, true);
-> > +     msm_gpio_irq_unmask(d);
->
-> Still need the above if condition, the previous call
-> irq_chip_enable_parent() already enabled the IRQ at PDC and GIC, so only
-> go ahead to enable it at TLMM if there wasn't any parent.
->
-> if (!test_bit(d->hwirq, pctrl->skip_wake_irqs))
->          msm_gpio_irq_unmask(d);
-
-Right.  I'll fix it when I send the v3.  Thanks!
-
--Doug
+On 2020/12/01 3:22, Rob Herring wrote:=0A=
+> On Wed, Nov 25, 2020 at 2:06 PM Serge Semin <fancer.lancer@gmail.com> wro=
+te:=0A=
+>>=0A=
+>> On Thu, Nov 19, 2020 at 03:09:20PM +0900, Damien Le Moal wrote:=0A=
+>>> The DesignWare gpio-dwapb GPIO driver ("snps,dw-apb-gpio" or=0A=
+>>> "apm,xgene-gpio-v2" compatible string) defines the now deprecated=0A=
+>>> property "snps,nr-gpios" to specify the number of GPIOs available=0A=
+>>> on a port. However, if this property is used in a device tree, its=0A=
+>>> "-gpios" suffix causes the generic property supplier parsing code to=0A=
+>>> interpret it as a cell reference when properties are parsed in=0A=
+>>> of_link_to_suppliers(), leading to an error messages such as:=0A=
+>>>=0A=
+>>> OF: /soc/bus@50200000/gpio-controller@50200000/gpio-port@0: could not=
+=0A=
+>>> find phandle=0A=
+>>>=0A=
+>>> Fix this by manually defining a parse_gpios() function which ignores=0A=
+>>> this deprecated property that is still present in many device trees,=0A=
+>>> skipping the search for the supplier and thus avoiding the device tree=
+=0A=
+>>> parsing error.=0A=
+>>>=0A=
+>>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+>>> ---=0A=
+>>>  drivers/of/property.c | 16 +++++++++++++++-=0A=
+>>>  1 file changed, 15 insertions(+), 1 deletion(-)=0A=
+>>>=0A=
+>>> diff --git a/drivers/of/property.c b/drivers/of/property.c=0A=
+>>> index 408a7b5f06a9..4eefe8efc2fe 100644=0A=
+>>> --- a/drivers/of/property.c=0A=
+>>> +++ b/drivers/of/property.c=0A=
+>>> @@ -1308,7 +1308,6 @@ DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)=
+=0A=
+>>>  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)=0A=
+>>>  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)=0A=
+>>>  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")=0A=
+>>> -DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")=0A=
+>>>=0A=
+>>>  static struct device_node *parse_iommu_maps(struct device_node *np,=0A=
+>>>                                           const char *prop_name, int in=
+dex)=0A=
+>>> @@ -1319,6 +1318,21 @@ static struct device_node *parse_iommu_maps(stru=
+ct device_node *np,=0A=
+>>>       return of_parse_phandle(np, prop_name, (index * 4) + 1);=0A=
+>>>  }=0A=
+>>>=0A=
+>>> +static struct device_node *parse_gpios(struct device_node *np,=0A=
+>>> +                                    const char *prop_name, int index)=
+=0A=
+>>> +{=0A=
+>>> +     /*=0A=
+>>> +      * Quirk for the deprecated "snps,nr-gpios" property of the=0A=
+>>> +      * DesignWare gpio-dwapb GPIO driver: as this property parsing=0A=
+>>> +      * conflicts with the "xx-gpios" phandle reference property, igno=
+re it.=0A=
+>>> +      */=0A=
+>>=0A=
+>>> +     if (strcmp(prop_name, "snps,nr-gpios") =3D=3D 0)=0A=
+>>> +             return NULL;=0A=
+>>=0A=
+>> What about printing the warning from instead of doing that from the driv=
+er?=0A=
+>> Like this:=0A=
+>>=0A=
+>> +       if (strcmp(prop_name, "snps,nr-gpios") =3D=3D 0) {=0A=
+>> +               pr_warn("%pOF: %s is deprecated in favor of ngpios\n");=
+=0A=
+>> +               return NULL;=0A=
+>> +       }=0A=
+>>=0A=
+>> So when the property is removed from all dts'es we wouldn't=0A=
+>> forget to discard the quirk?=0A=
+> =0A=
+> Why do we need this change at all? We've already got a message printed=0A=
+> and devlink is still default off. If someone cares about devlink and=0A=
+> the error message, then they should fix their dts file.=0A=
+> =0A=
+> Now if there's a stable/mature platform using "snps,nr-gpios" and we=0A=
+> enable devlink by default (which needs to happen at some point), then=0A=
+> I'd feel differently and we'll need to handle this. But until then, I=0A=
+> don't want to carry this quirk.=0A=
+=0A=
+I have the device tree fixed for my use case, so there is no problem anymor=
+e.=0A=
+The improvement this patch brings is a clearer error message. The one that=
+=0A=
+shows up without the patch is fairly obscure and it took me a while to figu=
+re=0A=
+out what was wrong. But again, no problems for me since the DT is fixed. So=
+=0A=
+sure, we can drop this patch.=0A=
+=0A=
+> =0A=
+> Rob=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
