@@ -2,108 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABA92C8A98
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 18:16:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39F542C8AA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 18:17:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgK3RPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 12:15:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        id S2387393AbgK3RQv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 12:16:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgK3RPY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 12:15:24 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF368C0613D2;
-        Mon, 30 Nov 2020 09:14:44 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id t37so10455905pga.7;
-        Mon, 30 Nov 2020 09:14:44 -0800 (PST)
+        with ESMTP id S1725955AbgK3RQv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 12:16:51 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F519C0613CF;
+        Mon, 30 Nov 2020 09:16:11 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id x24so10818000pfn.6;
+        Mon, 30 Nov 2020 09:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AcjX8xJ/mzO5y/RwIA0/U8QFX9nWoqdtSQYRTJvpO4g=;
-        b=rouCmimZdLe0JMJoBrQrsENsu+VlOgnXXgexijD6wuH7yGEOYbLsGHB4C/h7atFcE+
-         Qc9JXfzYYRZwf83GXPHUA5Ij++71yGgPzIpnOS7I24m2pBLHNpvbSAd5qxXHjQmevsvE
-         nWziM2H/8E2xiIUcOI3K4w0rnlayMU1la/waO7LfuKa8tVxlOrh+Wmxlo9HxEuEJ2smV
-         mTtsmlRwszid1DmsRypz1NrxTYcFqyZ+q9qbUBnTdU77NpCBlYw8EDf7ZodLEDe1iVGt
-         dRkN95LP0Xkq3dNOSN77zvwLajQqWekolNvnH8QbDGzMS5VqouuniwYHe5sbDaHzg8TV
-         m1OQ==
+        bh=xyuaUQNlZ+Wr7lRf3nZ/9q8iV++QMK7ihsb3scweM/4=;
+        b=LJo645cu6Dc21q6H5tXRhmsxSmDTrudgcosig/TUZDRaag8cGD9K422OZUx3VsCxyv
+         4F7IJt+uc3vU7/vMMSaBd1+XYk0zsuc12yQ0l42z/m2fjw1q9ynqj9mmu6+kpy2f6F5g
+         h1Q2AJfLsmbue83/DIxV9TrVf+Lu1v8i7ovW4iHKnGU3I/ibmIyFQe4jn8Ip296IkuwF
+         C8f+PAlfM+zWccJJ1FNB4hCf3vKibwulko4llqzM+ESRqQwxnt9zNVRo/eWtnejuFXw3
+         fpadnP5Y/znsCDxRR326J2afDg4yLeCIgyGTsSvCbID374EGQyOCOdvnvRdXyo7dHMKJ
+         ub3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AcjX8xJ/mzO5y/RwIA0/U8QFX9nWoqdtSQYRTJvpO4g=;
-        b=eZy0Lk/qvPCqAqajb7X7ApuakY9IiOp67mNYlI43bJ9qe0QxZMjGFyZUEPL3MZp1Q5
-         +VZ6EUOkYIfwQMYwug50wtqG5DX50Uh+7Za2vX/1Q4Zf+4imrsT2pkakeOjVKJet1AWM
-         oiqk5tVg6KFrj7F9aT4PvBJacc+EkM6g53ALjeHHX9I0aG+5DiuwC5N3m5Pj90SP+u55
-         etkfc4KBg8PGBR43pDLRReLfLP0SMs0Gm3mzcaP7pzf0cCcWSwOT3UaEmJKORJaudIu6
-         zIhJN55nfhCenVwduw0W8ituQklbN1YQSbvpGQAllkjzayS/850FEteJ2fe/8elhoavY
-         4GUg==
-X-Gm-Message-State: AOAM5310wBivgJzsSCrwMMJxca1OYkJxb9efQIQy+nG9qMFe708SM/Nd
-        xPsUBPAhpOY9iNA/XwRjvxiYERT/wvR/rmI+HzU=
-X-Google-Smtp-Source: ABdhPJz60aDGNsmDuMTGO3Hot+tVcwa2ykVMGMRLJRhJoMk597SLELNvn9r5gFsgcCFLBodR6+8WfF9yFB3o3qMFB38=
-X-Received: by 2002:a62:7e4f:0:b029:18c:9322:739b with SMTP id
- z76-20020a627e4f0000b029018c9322739bmr19543390pfc.7.1606756484369; Mon, 30
- Nov 2020 09:14:44 -0800 (PST)
+        bh=xyuaUQNlZ+Wr7lRf3nZ/9q8iV++QMK7ihsb3scweM/4=;
+        b=GWcMS5y0RnyaWC1ZyHsP2zX4eqrlw0XnC0RXw3Ef3KYl/MG9C1v9rSEValinvj27Z/
+         1rRmU3LI1zXoLDVYVdI3Sm3kNKOhOrgz/Dra2tPpg0eQbwG3mwoy4TPpD+Hk1CyVpNGZ
+         7NTYjilwl9t9F6A4w5pmDrlAZ5taKm/T08rKqpn4I/s1FaG0JnnB5N6ne0HRhtmwFlef
+         ust8HHnTwo7+GeTbFnprpLN8I7JsxtWKRKz9DC6lixiFWJ0OtgftMYtBnM9fwjCUymkC
+         P3ptgPXZtRrkWnrNuhTLt5gP2srPxSsGlTUv43iBCrYFuwzEpPdq0swgKuPenm+CcVeL
+         bV5Q==
+X-Gm-Message-State: AOAM533GGAf1YsR0uBwWTFgkptR1caW5cfKo2I6enhJu/ltkKUYVGted
+        BtQ8GvkjS/8+TkyMN3VWwaSBK0wQSLJL42pP+vE=
+X-Google-Smtp-Source: ABdhPJwbYAjaHu4+YFGhnmxvHBwRcaj9DcadlyfYub6DkQF9J3079948EtG5DH1IdaDWYfjUs60QN1FtmQGU8XGwiH8=
+X-Received: by 2002:a63:1514:: with SMTP id v20mr18729291pgl.203.1606756570899;
+ Mon, 30 Nov 2020 09:16:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20201119170739.GA22665@embeddedor> <CAHp75Ve2G25FBzMKAaTw-9mFAvwU2uBG+TZ0UdLW+c8zra=Fhg@mail.gmail.com>
- <CAMpxmJWq0_ZXsPsWhgWC_93egDm9y2A5P3GiCQ4YTcdGrGTSZQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJWq0_ZXsPsWhgWC_93egDm9y2A5P3GiCQ4YTcdGrGTSZQ@mail.gmail.com>
+References: <20201119142104.85566-1-alexandru.ardelean@analog.com>
+ <CAHp75VdkomLMPYZbB7-KerGmyxXxB8hQuAjLtJ0bhB5f5vfuNA@mail.gmail.com> <CAMpxmJXbpiiKzxsrBk5mdLf1Kk5_-5pwJYOeCsTTqKmS2QUMTQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJXbpiiKzxsrBk5mdLf1Kk5_-5pwJYOeCsTTqKmS2QUMTQ@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 30 Nov 2020 19:15:33 +0200
-Message-ID: <CAHp75Vec4zaYixJMkMf81+uJFcciGdOhECvTZJrPeQL=MZx39A@mail.gmail.com>
-Subject: Re: [PATCH][next] gpiolib: acpi: Fix fall-through warnings for Clang
+Date:   Mon, 30 Nov 2020 19:16:59 +0200
+Message-ID: <CAHp75Vd=S26VgrkcQoMN=xFburOn8207MUYbGzMBLHgn0iuErA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xra1403: remove unneeded spi_set_drvdata()
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
+        Nandor Han <nandor.han@ge.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 6:51 PM Bartosz Golaszewski
+On Mon, Nov 30, 2020 at 6:37 PM Bartosz Golaszewski
 <bgolaszewski@baylibre.com> wrote:
 >
-> On Thu, Nov 19, 2020 at 7:46 PM Andy Shevchenko
+> On Thu, Nov 19, 2020 at 4:04 PM Andy Shevchenko
 > <andy.shevchenko@gmail.com> wrote:
 > >
-> > On Thu, Nov 19, 2020 at 7:08 PM Gustavo A. R. Silva
-> > <gustavoars@kernel.org> wrote:
+> > On Thu, Nov 19, 2020 at 4:17 PM Alexandru Ardelean
+> > <alexandru.ardelean@analog.com> wrote:
 > > >
-> > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > > by explicitly adding a break statement instead of letting the code fall
-> > > through to the next case.
+> > > There is no matching spi_get_drvdata() call in the driver, so there is no
+> > > need to do spi_set_drvdata(). This looks like it probably was copied from a
+> > > driver that used both spi_set_drvdata() & spi_get_drvdata().
 > >
+> > While above luckily (*) okay it may not always be the case.
+> >
+> > *) it can be paired with dev_get_drvdata() which is usual for PM callbacks.
+> >
+> > With amended commit message
 > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > >
-> > > Link: https://github.com/KSPP/linux/issues/115
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > ---
-> > >  drivers/gpio/gpiolib-acpi.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> > > index 6cc5f91bfe2e..e37a57d0a2f0 100644
-> > > --- a/drivers/gpio/gpiolib-acpi.c
-> > > +++ b/drivers/gpio/gpiolib-acpi.c
-> > > @@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
-> > >                 default:
-> > >                         break;
-> > >                 }
-> > > +               break;
-> > >         default:
-> > >                 break;
-> > >         }
+>
+> I applied this patch. I wasn't sure exactly how you want the commit
+> message to be changed - it sounds pretty clear to me so I took it.
 
-> Are you taking it through your tree?
-
-I don't  have anything else, so please proceed directly. That's why I
-gave the tag.
+For example, by adding " or dev_get_drvdata()" to the end.
 
 -- 
 With Best Regards,
