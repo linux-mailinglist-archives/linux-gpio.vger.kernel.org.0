@@ -2,92 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 321422C87F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:29:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F05672C8805
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:32:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgK3P3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 10:29:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
+        id S1726769AbgK3PcG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 10:32:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgK3P3M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:29:12 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA0FC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:28:31 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id m19so16827279ejl.11
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:28:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vGbjw3VgCVVCET8HkVpqbdL8nSTX7h3rpdcHZNixdkY=;
-        b=1g9kv6r4mkEEmse4afUqm4ScOQmWSPlquFl/9CFDk+RwuEY+Mmy4IuyDUKPI2nzSkT
-         +lpEF3iIqNWFppx3ma4KCh++jcoyarl5TBHULLwbmPKV6pykwNkSSYvdi4D8Wr60L4lr
-         Jb/jOs5NvuMtYlxVlmz7gkOVh3oKiqoLTdNrRxdxhSmUfr/y0/TnEx3cunwUGf7V6/8g
-         ENubR1hrsY3S1ZGaotS98VP4QI1FRravSW7/SG9lqVHfOMJZNAQoHEByhzmCsPnbFUy8
-         lDtLTbnjFnB4eeL02i5D2nQQAGxK/LtonPbxMVRsiTkH6YvFYDjRhoBCfbX97emMlixP
-         LZ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vGbjw3VgCVVCET8HkVpqbdL8nSTX7h3rpdcHZNixdkY=;
-        b=Nca4mzDqsigCwDPXei9LfhgI+uxJwl6e1+rsDERC2s1lTSIAwmsLs41J3cI78kRe6i
-         q0sL1y4QYd8Ns066rS6uvwDqaxJ3NJ3mO16pyTJqf2V6vpau9RrboybXeDhnbUvEr/Js
-         AIbs8M8RRfhZWYAOdumfjsiP8Djx7gYMsmtSBFW76eRfdmiSoD1Lw89F60qRcQ5lHSXL
-         hbzUsIJZQ5+VPkx6hs/WHi9BcJNM+fI3RLaXw5tzz5/MeraZM6jo2eVxKjM6bhb5jfZh
-         XFfYoepf25sAxUbDawxtXrMdBF4wk1Q10NG+JqrUsw+J6QEKpxv79JXa05/CkKuNLY6t
-         vzJg==
-X-Gm-Message-State: AOAM533BdlkorM87pF20jI6p9qbzP1jZ2SBj3hzEC/n22r97I74cTiMx
-        gPaN+BQ0DEwSt0NQbkgCRkk0gzw0119Fkf3qZ4jLuA==
-X-Google-Smtp-Source: ABdhPJy4I/DDpA3eOSgQiWEbS/uDH+jiFrQnPjaI1etUWEdpFOWri9ryUAEVQtXfZ5XQOHaddQfbBc/MdsMzAFx2Pjo=
-X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr21071938ejr.429.1606750110520;
- Mon, 30 Nov 2020 07:28:30 -0800 (PST)
+        with ESMTP id S1726366AbgK3PcF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:32:05 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B87C0613D3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:31:25 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kjl8v-0000p3-UN; Mon, 30 Nov 2020 16:31:09 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kjl8Q-0000Q5-K1; Mon, 30 Nov 2020 16:30:38 +0100
+Date:   Mon, 30 Nov 2020 16:30:36 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] gpio: mvebu: fix potential user-after-free on probe
+Message-ID: <20201130153036.p3gdsauxsmas3rbo@pengutronix.de>
+References: <4db704460547d715a1d9cf86d51612b347e38a7b.1606748993.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-References: <20201124030606.40588-1-zhengliang6@huawei.com>
-In-Reply-To: <20201124030606.40588-1-zhengliang6@huawei.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 30 Nov 2020 16:28:19 +0100
-Message-ID: <CAMpxmJU0og39qAtvDgTdhK6OweE9G0wcunFVjprbfu7QaTbdgg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: arizona: disable pm_runtime in case of failure
-To:     Zheng Liang <zhengliang6@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>, wangli74@huawei.com,
-        fangwei1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wnqbim4d3bbi66xo"
+Content-Disposition: inline
+In-Reply-To: <4db704460547d715a1d9cf86d51612b347e38a7b.1606748993.git.baruch@tkos.co.il>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 3:08 AM Zheng Liang <zhengliang6@huawei.com> wrote:
->
-> pm_runtime_enable will increase power disable depth. Thus a
-> pairing decrement is needed on the error handling path to keep
-> it balanced.
->
-> Fixes:27a49ed17e224(gpio: arizona: Add support for GPIOs that)
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
+
+--wnqbim4d3bbi66xo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 30, 2020 at 05:09:53PM +0200, Baruch Siach wrote:
+> When mvebu_pwm_probe() fails IRQ domain is not released. Goto the
+> err_domain label on failure to release IRQ domain.
+>=20
+> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+> Reported-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
->  drivers/gpio/gpio-arizona.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-> index 5bda38e0780f..2bc173c352ce 100644
-> --- a/drivers/gpio/gpio-arizona.c
-> +++ b/drivers/gpio/gpio-arizona.c
-> @@ -192,6 +192,7 @@ static int arizona_gpio_probe(struct platform_device *pdev)
->         ret = devm_gpiochip_add_data(&pdev->dev, &arizona_gpio->gpio_chip,
->                                      arizona_gpio);
->         if (ret < 0) {
-> +               pm_runtime_disable(&pdev->dev);
->                 dev_err(&pdev->dev, "Could not register gpiochip, %d\n",
->                         ret);
->                 return ret;
-> --
-> 2.17.1
->
+> v2: Don't leak pwm resources (Uwe Kleine-K=F6nig)
+>=20
+> This is split out of the "gpio: mvebu: Armada 8K/7K PWM support" series.
+> I'll rebase the series v2 on top on this fix.
+> ---
+>  drivers/gpio/gpio-mvebu.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 433e2c3f3fd5..c53ed975a180 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -1255,8 +1255,11 @@ static int mvebu_gpio_probe(struct platform_device=
+ *pdev)
+>  	}
+> =20
+>  	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+> -	if (IS_ENABLED(CONFIG_PWM))
+> -		return mvebu_pwm_probe(pdev, mvchip, id);
+> +	if (IS_ENABLED(CONFIG_PWM)) {
+> +		err =3D mvebu_pwm_probe(pdev, mvchip, id);
+> +		if (err)
+> +			goto err_domain;
 
-Applied, thanks!
+I only looked quickly, but I wonder if you need to undo
+irq_alloc_domain_generic_chips(), too?!
 
-Bartosz
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wnqbim4d3bbi66xo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/FEBoACgkQwfwUeK3K
+7An/owf/W6KGXP9GtEVQVnd4DuNU0sk4sm9aIL3RGojIC/oBbLxqRLoVqns0Nsvq
+uD+dukpN3jJ3R007GPzfWAq4KCA5mEB3CANQPucR3ZEAF7tRT52fUcxfBWx20ENz
++LHZVtzHTmHAYmWq6wTsrAKczcYO+604J+FGtfIh6Uv0Q1gGEAecaxrP2+3iyxLo
+gN9WlSZlFQMkMeMYklvmUlYrqo3FhrCKAcz8Wi4K8PuciFSErzeekAw64tjmW2Zu
+m8SGdIj0J3ISuuvTl2Ty5gnGqkm5h6hKmh+8QVA/EJ0sQEQwEv2q0hQSZs3Oi/Gh
+rBbjGIZPo++DpGq01WuqsCxGXAfVBw==
+=5Tda
+-----END PGP SIGNATURE-----
+
+--wnqbim4d3bbi66xo--
