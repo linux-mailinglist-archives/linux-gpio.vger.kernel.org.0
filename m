@@ -2,119 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F05672C8805
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:32:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B382C88A6
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 16:56:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgK3PcG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Nov 2020 10:32:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
+        id S1726880AbgK3PzG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 10:55:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgK3PcF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:32:05 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B87C0613D3
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Nov 2020 07:31:25 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kjl8v-0000p3-UN; Mon, 30 Nov 2020 16:31:09 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kjl8Q-0000Q5-K1; Mon, 30 Nov 2020 16:30:38 +0100
-Date:   Mon, 30 Nov 2020 16:30:36 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] gpio: mvebu: fix potential user-after-free on probe
-Message-ID: <20201130153036.p3gdsauxsmas3rbo@pengutronix.de>
-References: <4db704460547d715a1d9cf86d51612b347e38a7b.1606748993.git.baruch@tkos.co.il>
+        with ESMTP id S1725870AbgK3PzG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Nov 2020 10:55:06 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F38C0613CF;
+        Mon, 30 Nov 2020 07:54:26 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id hk16so1621124pjb.4;
+        Mon, 30 Nov 2020 07:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zesD9faGXKfbEuXEqSCTj0ccUc65wmLW/4/yHQTzcz8=;
+        b=gwYbeeA/XiuwxzFx62fUnO9bSA3njd22Bk5f9nyDO0zFjG/1lX6PErcP1PbdLqERs5
+         EwycBG4MhmVMVJ1pkUwfgfDyiW2ObtOKz0UK2P2yKnu0WXJq+SrR+VH+6hHe9bo1gaXv
+         PTYHbtuCmLx67iyaBJBYv+Hgnc6KoPyPUrx/RllA5pZEsKHaoguDtR8vl2T7b4nuzIJ8
+         j57dmNdquJ2l9RFQhN8EiQQThACmStIGPefWhR/3unU94ojTuAE9O9zISvWVrSgp7gvu
+         WxgxPfwJFWhOIw6sL8i+CqfiHixuMKuV3W/sdGguLzgUACWFZaJVAI1KYPNGApjAJ9ey
+         05YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zesD9faGXKfbEuXEqSCTj0ccUc65wmLW/4/yHQTzcz8=;
+        b=hZnD4aoWCdYu3e8eRKipJFLdkjdI6D69HlxxdFg8N906so7hEdE8rxQL2ZibyvZA8L
+         mEnVtMjOJUGzQsncRICLnRuIbJVCZaLzWW99BRviypoqr/SNR8HZX9Ya+mrGyq0/01Wi
+         jr15ggGM3MxBlgbSykYi8U2Wo9cuE29zziOJkgqQA9hgs9mH7enPkAeIBpO+hsizoK+q
+         Nm0XXz1zRQlnzPNrWewD7+DkhelhlpGrGFVUdmV7/OGhtupL6VdGpYRuUfA+2IAa3iMu
+         /CxWHqJ+h3mUJJg39yLOMvdbEdqehhgO05NJS66xrHBWpzs3N7gmNaSjXXGbWt05nm92
+         RsiQ==
+X-Gm-Message-State: AOAM531FKvZy53KB5uppNZAPDuuQF//FjsAJv5iGdHFKsJNAhx4fcy3C
+        pCmrFoRqnvSvFOnwF95Wd7A=
+X-Google-Smtp-Source: ABdhPJw9nK9xTTC0/xCOmca/W25LMh0JxHZQy60vyo5NUBN4yAzs3Zy2VHby6qJ9oEAy2hb8rSavcg==
+X-Received: by 2002:a17:90a:6346:: with SMTP id v6mr27184285pjs.162.1606751665709;
+        Mon, 30 Nov 2020 07:54:25 -0800 (PST)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id 204sm17331660pfy.59.2020.11.30.07.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Nov 2020 07:54:24 -0800 (PST)
+Date:   Tue, 1 Dec 2020 00:54:22 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
+        lenb@kernel.org, gregkh@linuxfoundation.org,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+Subject: Re: [PATCH 08/18] lib/test_printf.c: Use helper function to unwind
+ array of software_nodes
+Message-ID: <X8UVroTsTYqp2R1M@jagdpanzerIV.localdomain>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-9-djrscally@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wnqbim4d3bbi66xo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4db704460547d715a1d9cf86d51612b347e38a7b.1606748993.git.baruch@tkos.co.il>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <20201130133129.1024662-9-djrscally@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On (20/11/30 13:31), Daniel Scally wrote:
+> 
+> Use the software_node_unregister_nodes() helper function to unwind this
+> array in a cleaner way.
+> 
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
 
---wnqbim4d3bbi66xo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-On Mon, Nov 30, 2020 at 05:09:53PM +0200, Baruch Siach wrote:
-> When mvebu_pwm_probe() fails IRQ domain is not released. Goto the
-> err_domain label on failure to release IRQ domain.
->=20
-> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
-> Reported-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v2: Don't leak pwm resources (Uwe Kleine-K=F6nig)
->=20
-> This is split out of the "gpio: mvebu: Armada 8K/7K PWM support" series.
-> I'll rebase the series v2 on top on this fix.
-> ---
->  drivers/gpio/gpio-mvebu.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 433e2c3f3fd5..c53ed975a180 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -1255,8 +1255,11 @@ static int mvebu_gpio_probe(struct platform_device=
- *pdev)
->  	}
-> =20
->  	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
-> -	if (IS_ENABLED(CONFIG_PWM))
-> -		return mvebu_pwm_probe(pdev, mvchip, id);
-> +	if (IS_ENABLED(CONFIG_PWM)) {
-> +		err =3D mvebu_pwm_probe(pdev, mvchip, id);
-> +		if (err)
-> +			goto err_domain;
-
-I only looked quickly, but I wonder if you need to undo
-irq_alloc_domain_generic_chips(), too?!
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wnqbim4d3bbi66xo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/FEBoACgkQwfwUeK3K
-7An/owf/W6KGXP9GtEVQVnd4DuNU0sk4sm9aIL3RGojIC/oBbLxqRLoVqns0Nsvq
-uD+dukpN3jJ3R007GPzfWAq4KCA5mEB3CANQPucR3ZEAF7tRT52fUcxfBWx20ENz
-+LHZVtzHTmHAYmWq6wTsrAKczcYO+604J+FGtfIh6Uv0Q1gGEAecaxrP2+3iyxLo
-gN9WlSZlFQMkMeMYklvmUlYrqo3FhrCKAcz8Wi4K8PuciFSErzeekAw64tjmW2Zu
-m8SGdIj0J3ISuuvTl2Ty5gnGqkm5h6hKmh+8QVA/EJ0sQEQwEv2q0hQSZs3Oi/Gh
-rBbjGIZPo++DpGq01WuqsCxGXAfVBw==
-=5Tda
------END PGP SIGNATURE-----
-
---wnqbim4d3bbi66xo--
+	-ss
