@@ -2,114 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4466E2C8C5C
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 19:13:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C571E2C8C69
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Nov 2020 19:15:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgK3SNi convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 30 Nov 2020 13:13:38 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:46661 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387885AbgK3SNh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 30 Nov 2020 13:13:37 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 5503E44013A;
-        Mon, 30 Nov 2020 20:12:54 +0200 (IST)
-References: <4db704460547d715a1d9cf86d51612b347e38a7b.1606748993.git.baruch@tkos.co.il>
- <20201130153036.p3gdsauxsmas3rbo@pengutronix.de>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] gpio: mvebu: fix potential user-after-free on probe
-In-reply-to: <20201130153036.p3gdsauxsmas3rbo@pengutronix.de>
-Date:   Mon, 30 Nov 2020 20:12:53 +0200
-Message-ID: <878saipvbu.fsf@tarshish>
+        id S2387996AbgK3SOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Nov 2020 13:14:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:15914 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgK3SOv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 30 Nov 2020 13:14:51 -0500
+IronPort-SDR: t8+AuJ3qQ0PPsKOAFXSEN1kua9YzS9fWUJX1lpKLlswj5AZnV0c7Q+8FWcMP4thHQNJsWYGRm1
+ 3q+XXsqrZUnA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9821"; a="234288837"
+X-IronPort-AV: E=Sophos;i="5.78,382,1599548400"; 
+   d="scan'208";a="234288837"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2020 10:13:13 -0800
+IronPort-SDR: 0Ewksw0H9/WDhu0uxD54ptK+TqChK/cqDELjzzWqAAHt2Kgac+AYDSJSDr7WP9eBlRYOJz/Wc0
+ nn6tZLav9HZg==
+X-IronPort-AV: E=Sophos;i="5.78,382,1599548400"; 
+   d="scan'208";a="345155875"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2020 10:13:06 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kjngd-00B6Q6-3y; Mon, 30 Nov 2020 20:14:07 +0200
+Date:   Mon, 30 Nov 2020 20:14:07 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        gregkh@linuxfoundation.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+Subject: Re: [PATCH 13/18] ipu3-cio2: Add functionality allowing
+ software_node connections to sensors on platforms designed for Windows
+Message-ID: <20201130181407.GV4077@smile.fi.intel.com>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-14-djrscally@gmail.com>
+ <20201130170955.GN14465@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201130170955.GN14465@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
+On Mon, Nov 30, 2020 at 07:09:55PM +0200, Laurent Pinchart wrote:
+> On Mon, Nov 30, 2020 at 01:31:24PM +0000, Daniel Scally wrote:
 
-(+ tglx)
+I agree with most of Laurent's comments. S
 
-On Mon, Nov 30 2020, Uwe Kleine-König wrote:
-> On Mon, Nov 30, 2020 at 05:09:53PM +0200, Baruch Siach wrote:
->> When mvebu_pwm_probe() fails IRQ domain is not released. Goto the
->> err_domain label on failure to release IRQ domain.
->> 
->> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
->> Reported-by: Andrew Lunn <andrew@lunn.ch>
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->> ---
->> v2: Don't leak pwm resources (Uwe Kleine-König)
->> 
->> This is split out of the "gpio: mvebu: Armada 8K/7K PWM support" series.
->> I'll rebase the series v2 on top on this fix.
->> ---
->>  drivers/gpio/gpio-mvebu.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
->> index 433e2c3f3fd5..c53ed975a180 100644
->> --- a/drivers/gpio/gpio-mvebu.c
->> +++ b/drivers/gpio/gpio-mvebu.c
->> @@ -1255,8 +1255,11 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
->> -	if (IS_ENABLED(CONFIG_PWM))
->> -		return mvebu_pwm_probe(pdev, mvchip, id);
->> +	if (IS_ENABLED(CONFIG_PWM)) {
->> +		err = mvebu_pwm_probe(pdev, mvchip, id);
->> +		if (err)
->> +			goto err_domain;
->
-> I only looked quickly, but I wonder if you need to undo
-> irq_alloc_domain_generic_chips(), too?!
+...
 
-So it seems. __irq_alloc_domain_generic_chips() calls kzalloc() for the
-gc field of irq_domain. But I could not find any code that releases this
-allocation. These drivers call irq_alloc_domain_generic_chips(), but do
-not release gc on failure:
+> > +	  Say Y here if your device is a detachable / hybrid laptop that comes
+> > +	  with Windows installed by the OEM, for example:
+> > +
 
-drivers/irqchip/irq-ingenic-tcu.c
-drivers/irqchip/irq-orion.c
-drivers/irqchip/irq-renesas-irqc.c
-drivers/irqchip/irq-sunxi-nmi.c
-drivers/pinctrl/pinctrl-rockchip.c
+> > +	  	- Microsoft Surface models (except Surface Pro 3)
 
-Some of them apparently skip the cleanup because the system would be
-unusable anyway. But most of them call irq_domain_remove() on failure.
+In this line mixed TABs and spaces. Not sure if it's only in Laurent's reply.
 
-Thomas, what is the right thing to do here? Should we just call
+> > +		- The Lenovo Miix line (for example the 510, 520, 710 and 720)
+> > +		- Dell 7285
 
-  kfree(mvchip->domain->gc);
+...
 
-directly to release the allocation?
+> > +	for (i = 0; i < ARRAY_SIZE(cio2_supported_devices); i++) {
+> > +		const char *this_device = cio2_supported_devices[i];
+> 
+> s/this_device/name/ (or sensor_name, ...) ?
 
-Thanks,
-baruch
+I would go with hid.
+
+...
+
+> > +		for_each_acpi_dev_match(adev, this_device, NULL, -1) {
+> > +			if (!adev || !(adev->status.present && adev->status.enabled))
+> 
+> 			if (!adev || !adev->status.present || !adev->status.enabled))
+> 
+> may be a bit more readable. Does for_each_acpi_dev_match() return NULL
+> devices though ? If no, you could drop the !adev check. You may also be
+> able to drop the !present check, as I don't think ACPI allows !present
+> && enabled.
+
+I think this should be rather
+
+        if (acpi_bus_get_status(adev) || !adev->status.present)
 
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+With Best Regards,
+Andy Shevchenko
+
+
