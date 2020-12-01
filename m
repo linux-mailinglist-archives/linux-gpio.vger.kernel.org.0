@@ -2,120 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88AC62CA728
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:38:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D2982CA777
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:55:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391714AbgLAPe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 10:34:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390521AbgLAPe0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 10:34:26 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45C6C0613D6
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 07:33:40 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id f9so4976065ejw.4
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 07:33:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HfEmRbTUVu5buzmFymRjrzPmVpKwAUdxNZbmsbAARHI=;
-        b=zpM6mciORqM6FM9fWyXykgzZO3tN82WyO0CznE01WirlCqvzyB+NGE5sturlw191Qx
-         Xq63A6beE6QUlpwGR8Y2YKDluTLb33Ve5fE1Uc28FMlxUg54ywnsX8QPhpf1MHECTtqZ
-         ScroKkCi3TaDc25Jq20JrHOD/xCk6mneZMpeNk/pcThyqwNMh5X5EjN17rbvEZvvOhqO
-         Q+GW6ry+hLHmpavB/uFRWpWIRCSqR5An+CX7Ea1DvPduQXTsImNn/KJfEoH3ZU37N+pP
-         HN9G5K2EnscgljSpnGyrGFRRWTNDf5RxzEi+fuWqxcZrq2vWBCAipkpsHGklZeiyXvcF
-         Qwuw==
+        id S2389503AbgLAPvi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 10:51:38 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45773 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391886AbgLAPvi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 10:51:38 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so3659941ljc.12;
+        Tue, 01 Dec 2020 07:51:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HfEmRbTUVu5buzmFymRjrzPmVpKwAUdxNZbmsbAARHI=;
-        b=lIO+HmeiFd+hfZNKpGhlqlxkRPriWwxu2yYp4a2iVpQsPdOpzRBZ1hqaUus5wJ3nK9
-         rJzfuqgfsHGaFo8x3OqPEafUBeYirVhMwelD+d2RcO5nkaMYzVfC+9/l7xl0W3KPXRbV
-         LOiqxup+kItxaKO9AGCTI4b+Ut3wmWoQjBydbBqMl7HBxEFC66Wn0f+CPEoRykjRqjBj
-         ivQcxKoJHNbrsqZzzuwZgWq1MvV8sOyWoXyZal4/AvaNvspZIUeyncnJNj6J9nCdfye4
-         BGVBs7YAvome7gF3zyxzG/KlYJf7+Jr0QENxrqfGQzii7TEv94VLJEqVcyUQbI/hNcmG
-         fPAQ==
-X-Gm-Message-State: AOAM530IUbhbOXyc5XtRmXH/xNbAzhFDLSnGwbO0WU4tHSwvyzOwcdL4
-        VGYceJkIxRnl3hdabvJiCHcLG7vsXkA6R27mrrfl/A==
-X-Google-Smtp-Source: ABdhPJwaleYJQJJT3SsISIG12SOKNywBoidZAcD+gTb6G8zgyBFg95d1+qKFI19arkSUdTOEX+v3bvq6AXYs2hdUcY4=
-X-Received: by 2002:a17:907:b09:: with SMTP id h9mr3591194ejl.155.1606836819337;
- Tue, 01 Dec 2020 07:33:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7pLlIXqniIb8lLwcUv8C5IJZPzU955Z7Fl+CrmV2OEM=;
+        b=uYvoluBnXyroJbptCW+Ar8hQraDaB7efOpodeAryrR+f0TFXYZQTI9Ob3eotE/344U
+         r+BNzSYfkpn3diiNfUSBk+iw7fnKXap9uKY2gN8QvsNF231+So1PLidDqHlqig8gOBsT
+         ulkD8sIQTMrqyrtULzhKzsnYWtklZh/qISO3CkkLXWfLSxJZx6IerVLLAjZ/Li4q31GQ
+         1nfZm8vYaTKeGZf7hUuvT0P6aqKeaDrMo2rapYaf+FcKXkwGv7n6X3vc8+qk0DCpfbMr
+         rDMQ1ZMVZJVRDgtDSS4ypQ2f4WHdG9xcGIRhuz+eQ9J4CR24j0al0kNoejyEedIEYMWM
+         Dw/w==
+X-Gm-Message-State: AOAM533jcit9LZUEqdQx+Y68W+XbndZG5Uc/Znw4W15GkCPIoFkm06+g
+        b4eXhcQ7TpHFq6GP23tJaYo=
+X-Google-Smtp-Source: ABdhPJyhTjIgdv44tVnheFanh1pnwuEnyZJ/oM1M51QMxVVcd7XlZQKoZ+kvHyYbdjILfHiOD6l3PA==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr1685019ljg.60.1606837855694;
+        Tue, 01 Dec 2020 07:50:55 -0800 (PST)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id w3sm238215lfn.293.2020.12.01.07.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 07:50:54 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kk7w5-0001qm-32; Tue, 01 Dec 2020 16:51:25 +0100
+Date:   Tue, 1 Dec 2020 16:51:25 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        angelo.dureghello@timesys.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <X8ZmfbQp7/BGgxec@localhost>
+References: <20201122170822.21715-1-mani@kernel.org>
+ <20201122170822.21715-3-mani@kernel.org>
+ <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1605893641.git.syednwaris@gmail.com> <c509c26eb9903414bd730bdd344b7864aedaa6f1.1605893642.git.syednwaris@gmail.com>
-In-Reply-To: <c509c26eb9903414bd730bdd344b7864aedaa6f1.1605893642.git.syednwaris@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 16:33:28 +0100
-Message-ID: <CAMpxmJVNPWCUFnBXzDW3uJ_1Sv4rQ=M0WbKmoW4juYLUQP-ABA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 3/4] gpio: xilinx: Modify bitmap_set_value() calls
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 7:46 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
->
-> Modify the bitmap_set_value() calls. bitmap_set_value()
-> now takes an extra bitmap width as second argument and the width of
-> value is now present as the fourth argument.
->
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> ---
->  drivers/gpio/gpio-xilinx.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index ad4ee4145db4..05dae086c4d0 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -151,16 +151,16 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->         spin_lock_irqsave(&chip->gpio_lock[0], flags);
->         spin_lock(&chip->gpio_lock[1]);
->
-> -       bitmap_set_value(old, state[0], 0, width[0]);
-> -       bitmap_set_value(old, state[1], width[0], width[1]);
-> +       bitmap_set_value(old, 64, state[0], width[0], 0);
-> +       bitmap_set_value(old, 64, state[1], width[1], width[0]);
->         bitmap_replace(new, old, bits, mask, gc->ngpio);
->
-> -       bitmap_set_value(old, state[0], 0, 32);
-> -       bitmap_set_value(old, state[1], 32, 32);
-> +       bitmap_set_value(old, 64, state[0], 32, 0);
-> +       bitmap_set_value(old, 64, state[1], 32, 32);
->         state[0] = bitmap_get_value(new, 0, width[0]);
->         state[1] = bitmap_get_value(new, width[0], width[1]);
-> -       bitmap_set_value(new, state[0], 0, 32);
-> -       bitmap_set_value(new, state[1], 32, 32);
-> +       bitmap_set_value(new, 64, state[0], 32, 0);
-> +       bitmap_set_value(new, 64, state[1], 32, 32);
->         bitmap_xor(changed, old, new, 64);
->
->         if (((u32 *)changed)[0])
-> --
-> 2.29.0
->
+On Tue, Dec 01, 2020 at 03:37:38PM +0100, Linus Walleij wrote:
+> On Sun, Nov 22, 2020 at 6:08 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> 
+> > Add gpiochip support for Maxlinear/Exar USB to serial converter
+> > for controlling the available gpios.
 
-This series is not bisectable because you modify the interface -
-breaking existing users - and you only fix them later. Please squash
-those changes into a single commit.
+> One minor notice:
+> 
+> > +enum gpio_pins {
+> > +       GPIO_RI = 0,
+> > +       GPIO_CD,
+> > +       GPIO_DSR,
+> > +       GPIO_DTR,
+> > +       GPIO_CTS,
+> > +       GPIO_RTS,
+> > +       GPIO_MAX,
+> > +};
+> 
+> You know the names of the pins...
+> 
+> > +       port_priv->gc.ngpio = 6;
+> > +       port_priv->gc.label = "xr_gpios";
+> > +       port_priv->gc.request = xr_gpio_request;
+> > +       port_priv->gc.free = xr_gpio_free;
+> > +       port_priv->gc.get_direction = xr_gpio_direction_get;
+> > +       port_priv->gc.direction_input = xr_gpio_direction_input;
+> > +       port_priv->gc.direction_output = xr_gpio_direction_output;
+> > +       port_priv->gc.get = xr_gpio_get;
+> > +       port_priv->gc.set = xr_gpio_set;
+> > +       port_priv->gc.owner = THIS_MODULE;
+> > +       port_priv->gc.parent = &port->dev;
+> > +       port_priv->gc.base = -1;
+> > +       port_priv->gc.can_sleep = true;
+> 
+> So assign port_priv->gc.names here as well with an array
+> of strings with the names ("RI", "CD", ... etc).
+> This makes it look really nice in userspace if you do
+> e.g. "lsgpio".
 
-Bartosz
+Last time we tried that gpiolib still used a flat namespace so that you
+can't have have more than one device using the same names. Unless that
+has changed this is a no-go. See
+
+	https://lore.kernel.org/r/20180930122703.7115-1-johan@kernel.org
+
+for our previous discussion about this.
+
+Johan
