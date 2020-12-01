@@ -2,122 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4A02CA6F6
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88AC62CA728
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391794AbgLAPXw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 10:23:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54698 "EHLO
+        id S2391714AbgLAPe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 10:34:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391739AbgLAPXt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 10:23:49 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81AD8C0613CF;
-        Tue,  1 Dec 2020 07:23:03 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id a6so3708791wmc.2;
-        Tue, 01 Dec 2020 07:23:03 -0800 (PST)
+        with ESMTP id S2390521AbgLAPe0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 10:34:26 -0500
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45C6C0613D6
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 07:33:40 -0800 (PST)
+Received: by mail-ej1-x644.google.com with SMTP id f9so4976065ejw.4
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 07:33:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yADVRMh/EY6ElQ2fDzuAEHfJk7R1Ue0wFYgwIbY8SU4=;
-        b=ufKAFIXDThq6pW+Sj32IvUaxOtQH2TGECe7CGUE7RHXDZXP6RBYu2En0UnVg/Xw3Pq
-         plhEnti1LjoRMxNFODbT+cLDWXf76bGNFjshBXTD/fkLNcibUpYSHyNP3rLo/NvOLMro
-         SLDBvAua0DC5P4YsbnqqogEkPt6Jk0UAJKIoHAvcW/NKMGnp+SJiymkOLE3nlPtgkRWT
-         p/u8FiEzVdjNRxgLKtipg8YY5HTL7VuBA9hGXXxCgSwNa3Kw8rjchYk6yGZC9y1IyMqx
-         Glsxbh08YB/MznIJO+NO+Bd07f9Y8r5jbt+j8Z36ZPUq6jTM7n51ueLIRB5MAlhye2fo
-         xuCg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HfEmRbTUVu5buzmFymRjrzPmVpKwAUdxNZbmsbAARHI=;
+        b=zpM6mciORqM6FM9fWyXykgzZO3tN82WyO0CznE01WirlCqvzyB+NGE5sturlw191Qx
+         Xq63A6beE6QUlpwGR8Y2YKDluTLb33Ve5fE1Uc28FMlxUg54ywnsX8QPhpf1MHECTtqZ
+         ScroKkCi3TaDc25Jq20JrHOD/xCk6mneZMpeNk/pcThyqwNMh5X5EjN17rbvEZvvOhqO
+         Q+GW6ry+hLHmpavB/uFRWpWIRCSqR5An+CX7Ea1DvPduQXTsImNn/KJfEoH3ZU37N+pP
+         HN9G5K2EnscgljSpnGyrGFRRWTNDf5RxzEi+fuWqxcZrq2vWBCAipkpsHGklZeiyXvcF
+         Qwuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yADVRMh/EY6ElQ2fDzuAEHfJk7R1Ue0wFYgwIbY8SU4=;
-        b=n43njrWIhR1x6lWTUT+Wgj4qvDzyJH02JyQFbN/MZwhP6V5f309pv6YsRWMfNSd8tE
-         xQihOc3WjEj/aM5bl2i9EaKTKTbl6fkwSFBzjrZbwkRo4OVZYdgC3u7C//j9/FWaGsbW
-         4oO22jFYSDWs7SS2QMjcYsxnMIKQFzfjCnJUhMMvR6ICwLpuAJ8DIVuKHbZXkm22RLes
-         hoFrSi/HVhcUx2TYiAaDoGiBeOt1NskNWhKDjCNyivDyggXhcD4pBhT8E5cBwVccaqU8
-         4pIUMvPNItz98T84ymJVUWwSRjEdoFnnsqsHd7ZLz/6tiAkrGaxowWrZM7eQezlx+fbE
-         16Yg==
-X-Gm-Message-State: AOAM5327h804x1rFR+0WgfD1fzIHbHHEdu8rUk8esbU24iHXeDLfZNx/
-        LvYv1z8mFtd1B4chWNrsZr0=
-X-Google-Smtp-Source: ABdhPJxcHJN0zQ1xaZvWXO8OSl+Ad4sFnkieJdvurZiCfNEOeCrpgUOvoEneb7pfHHk7dMEXDS0u/g==
-X-Received: by 2002:a1c:208f:: with SMTP id g137mr3137329wmg.67.1606836182294;
-        Tue, 01 Dec 2020 07:23:02 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.80])
-        by smtp.gmail.com with ESMTPSA id h83sm322241wmf.9.2020.12.01.07.23.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Dec 2020 07:23:01 -0800 (PST)
-Subject: Re: [PATCH 14/18] acpi: utils: Add function to fetch dependent
- acpi_devices
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
-        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
-        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
-        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-15-djrscally@gmail.com>
- <20201130182354.GW4077@smile.fi.intel.com>
- <26d7fa3f-3552-90e0-1f64-5c39449dcdd7@gmail.com>
- <20201201151012.GG4077@smile.fi.intel.com>
-From:   Dan Scally <djrscally@gmail.com>
-Message-ID: <1244ac3e-2835-6cb2-611d-af0a4f5614a9@gmail.com>
-Date:   Tue, 1 Dec 2020 15:23:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HfEmRbTUVu5buzmFymRjrzPmVpKwAUdxNZbmsbAARHI=;
+        b=lIO+HmeiFd+hfZNKpGhlqlxkRPriWwxu2yYp4a2iVpQsPdOpzRBZ1hqaUus5wJ3nK9
+         rJzfuqgfsHGaFo8x3OqPEafUBeYirVhMwelD+d2RcO5nkaMYzVfC+9/l7xl0W3KPXRbV
+         LOiqxup+kItxaKO9AGCTI4b+Ut3wmWoQjBydbBqMl7HBxEFC66Wn0f+CPEoRykjRqjBj
+         ivQcxKoJHNbrsqZzzuwZgWq1MvV8sOyWoXyZal4/AvaNvspZIUeyncnJNj6J9nCdfye4
+         BGVBs7YAvome7gF3zyxzG/KlYJf7+Jr0QENxrqfGQzii7TEv94VLJEqVcyUQbI/hNcmG
+         fPAQ==
+X-Gm-Message-State: AOAM530IUbhbOXyc5XtRmXH/xNbAzhFDLSnGwbO0WU4tHSwvyzOwcdL4
+        VGYceJkIxRnl3hdabvJiCHcLG7vsXkA6R27mrrfl/A==
+X-Google-Smtp-Source: ABdhPJwaleYJQJJT3SsISIG12SOKNywBoidZAcD+gTb6G8zgyBFg95d1+qKFI19arkSUdTOEX+v3bvq6AXYs2hdUcY4=
+X-Received: by 2002:a17:907:b09:: with SMTP id h9mr3591194ejl.155.1606836819337;
+ Tue, 01 Dec 2020 07:33:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201201151012.GG4077@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1605893641.git.syednwaris@gmail.com> <c509c26eb9903414bd730bdd344b7864aedaa6f1.1605893642.git.syednwaris@gmail.com>
+In-Reply-To: <c509c26eb9903414bd730bdd344b7864aedaa6f1.1605893642.git.syednwaris@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 1 Dec 2020 16:33:28 +0100
+Message-ID: <CAMpxmJVNPWCUFnBXzDW3uJ_1Sv4rQ=M0WbKmoW4juYLUQP-ABA@mail.gmail.com>
+Subject: Re: [RESEND PATCH 3/4] gpio: xilinx: Modify bitmap_set_value() calls
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-arch@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 01/12/2020 15:10, Andy Shevchenko wrote:
-> On Mon, Nov 30, 2020 at 11:54:44PM +0000, Dan Scally wrote:
->> Hi Andy
->>
->> On 30/11/2020 18:23, Andy Shevchenko wrote:
->>> On Mon, Nov 30, 2020 at 01:31:25PM +0000, Daniel Scally wrote:
->>>> ACPI devices declare themselves dependent on other devices via the _DEP
->>>> buffer. Fetching the dependee from dependent is a matter of parsing
->>>> _DEP, but currently there's no method to fetch dependent from dependee.
->>>> Add one, so we can parse sensors dependent on a PMIC from the PMIC's
->>>> acpi_driver.
->>> Do I understand correctly that it's an existing table provided by firmware that
->>> (ab)uses _DEP in such way? Note, the specification doesn't tell we may use it
->>> in this way, OTOH I don't remember if it strictly forbids such use.
->>>
->>> So, please elaborate in the commit message why you need this and pint out to
->>> the 6.5.8 "_DEP (Operation Region Dependencies)" which clearly says about
->>> OpRegions and that part already supported by ACPI in the Linux, if I'm not
->>> mistaken, need to refresh my memory.
->>
->> Laurent's reply is good explanation, but for example see my Lenovo Miix
->> 510's DSDT:
->>
->>
->> https://gist.githubusercontent.com/djrscally/e64d112180517352fa3392878b0f4a7d/raw/88b90b3ea4204fd7845257b6666fdade47cc2981/dsdt.dsl
->>
->>
->> Search OVTI2680 and OVTI5648 for the cameras. Both are dependent on
->> IN3472 devices (PMI0 and PMI1) which are the discrete type that we're
->> attempting to handle here.
-> Yes, it seems since PMIC is kinda "power resource" (don't mix with real power
-> resource as by ACPI specifications) and that's why they decided to include it
-> into _DEP.  So, it seems a de facto common practice. Thus, it would be nice to
-> have the above in the commit message in some form. Can you do it?
+On Fri, Nov 20, 2020 at 7:46 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
 >
-Sure, no problem. I'll include that in the next version
+> Modify the bitmap_set_value() calls. bitmap_set_value()
+> now takes an extra bitmap width as second argument and the width of
+> value is now present as the fourth argument.
+>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index ad4ee4145db4..05dae086c4d0 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -151,16 +151,16 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>         spin_lock_irqsave(&chip->gpio_lock[0], flags);
+>         spin_lock(&chip->gpio_lock[1]);
+>
+> -       bitmap_set_value(old, state[0], 0, width[0]);
+> -       bitmap_set_value(old, state[1], width[0], width[1]);
+> +       bitmap_set_value(old, 64, state[0], width[0], 0);
+> +       bitmap_set_value(old, 64, state[1], width[1], width[0]);
+>         bitmap_replace(new, old, bits, mask, gc->ngpio);
+>
+> -       bitmap_set_value(old, state[0], 0, 32);
+> -       bitmap_set_value(old, state[1], 32, 32);
+> +       bitmap_set_value(old, 64, state[0], 32, 0);
+> +       bitmap_set_value(old, 64, state[1], 32, 32);
+>         state[0] = bitmap_get_value(new, 0, width[0]);
+>         state[1] = bitmap_get_value(new, width[0], width[1]);
+> -       bitmap_set_value(new, state[0], 0, 32);
+> -       bitmap_set_value(new, state[1], 32, 32);
+> +       bitmap_set_value(new, 64, state[0], 32, 0);
+> +       bitmap_set_value(new, 64, state[1], 32, 32);
+>         bitmap_xor(changed, old, new, 64);
+>
+>         if (((u32 *)changed)[0])
+> --
+> 2.29.0
+>
+
+This series is not bisectable because you modify the interface -
+breaking existing users - and you only fix them later. Please squash
+those changes into a single commit.
+
+Bartosz
