@@ -2,100 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF602CA5F6
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 15:43:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35A7D2CA649
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 15:53:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391380AbgLAOmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 09:42:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48088 "EHLO
+        id S2391723AbgLAOtx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 09:49:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389266AbgLAOmw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 09:42:52 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE54C061A04
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 06:42:12 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id pg6so4589912ejb.6
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 06:42:12 -0800 (PST)
+        with ESMTP id S2389488AbgLAOtw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 09:49:52 -0500
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E2FC0613CF
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 06:49:06 -0800 (PST)
+Received: by mail-ej1-x644.google.com with SMTP id jx16so4602927ejb.10
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 06:49:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wKPA9Trb1gdcfbmvahL7WdqHhHJJ0n41ize6GvJPbig=;
-        b=qlZSJBo/itDAhzQGoWneBhtkT9dtN4uwqEZvwkh8dbUVSXKK15jlFu5X/UocAE3GL8
-         DdVOAKL5I5Dw7lIPGYXR3qPQMvrFUucaoYh0qWkbwjVpB+P6xW6xx5dnCNcokIxbxrrc
-         UUlZAOZbOx8aIfHXLdCQ5ho9nXoM+bYE1Ci0gg1pzijDtCUTFEW2+7VNc6drazpTTeWI
-         hQJdJEvKme+4icpjEnM57TsGqaJ3GUryyl5Jau/j8FN4kkXcv4fUaoLKghSQDdpU8av7
-         ExD4lut8sQN6/O+rbrLn3S263RQrLqkW5y+8ziYKH6PgcpIQOEkE8Mw0N3YpQtmwbQjZ
-         5CQg==
+        bh=lQmiVxJd+Kl2UDX74aE8ZcT26AtGS/wklDJV5DWlb3M=;
+        b=jwAPYMuzH8oNFpb2B3klwVMdsmIjlpPrDfYD0OKHi+ansmJ1xkPwf6DfJacdvGbEhh
+         6WnHZBSNLKx7hcEJ2IPsIojFee9my/FoLbJlkNlz/NbhTV9jhkQn8ME8J7cdaryRPbo8
+         lVhF5Ij3hgCndTWby3BXtKNErZ9FUeF2dUMjr7NkjYJHyTGXtXou+nSO17xVSXHUawJz
+         8/bOnngSJaErW3NxFTeBTklslB6aQJ0/vTHSJRfjmDuGPnLEFkSvpufW90liCaX/o4QK
+         2nbG3vny/XyoEpAtuaTbCZeWeZwxVQS0F+fr8h56vGWhO1g473rDd0lc0sFTO3XPtqru
+         sIcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wKPA9Trb1gdcfbmvahL7WdqHhHJJ0n41ize6GvJPbig=;
-        b=iuO9JwjK5b3kvImhgrRQz3LktA+nnS9pN0qa8yFTTJDJH37VCvbQ+A3kQ3Nqkp7DTC
-         3t3YgmkOmbpZixO+K11VpOchenzcx+97IXdYgshW7gA+ppTY8JTQAMOfixF+EgG7bOAs
-         2vtjS8ms27OSs/qZ47ceSkFPAv21x+lu3GnkXUsnrpRg8nUMyixs1N0AYOc78HaQJMC8
-         o5GKdbuZeg+7uO5EdMr91pzzkv6EybkOJwSg1F0408XRlkXja2z+gouFaytOt2cQ4XKG
-         X/UFb4M5yAwmialQTWKhccYT0RzL11eqWPg0Yu1Ff7AYDcRXYBQMKN1lAwk+sT7RH0Ey
-         u5/A==
-X-Gm-Message-State: AOAM533zBW/BT6typD/LYPB/BZVqI3da0dik4fize06AHxGxoZCroQwB
-        KAfkMIzlCCHgGap/RMSHxvHLeht2x6hDL7mOjbWHcw==
-X-Google-Smtp-Source: ABdhPJwJLYBGBSKQBfecB3lzNduBcx4IK6dvErjyKFHcmyGhzPtaqJWgu7Doi2dT5LcXVnwLNOIwV9BH0AGTWUXtwNo=
-X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr3255758ejr.429.1606833730786;
- Tue, 01 Dec 2020 06:42:10 -0800 (PST)
+        bh=lQmiVxJd+Kl2UDX74aE8ZcT26AtGS/wklDJV5DWlb3M=;
+        b=OsGjRKAYg+JUK00mJYO02OU6lgl2qZ06BOcfWSCPd/9MB36NvSAyu+d3LXLgiaVMa1
+         2mALefeDkWFMxfrM3HAAdyafQP+wjvhARpBbY5bnELDeAU1ZkAPsyY1cB2yBmfl/Dv/5
+         LE6+is73sZW8JLNODqzgumDqZJSaG1J+lg1W52xnAi6Up0QrchncyPBi6DK4SpMeV3yU
+         dGn/h51ngO+0yUPfOuF/z+djulYXLjjEO2/4quvtctaSDwQawXofkadpqzORK0zFDrm3
+         77BrOvYpU8D9tFjiHjgiC8PkiMugbOCdqGtyJ8z6KEyzGoEpuPgFGBmcqUTMDUqbdj7W
+         YfHA==
+X-Gm-Message-State: AOAM531bt0WehLoSEQa+uK0gIts4DPQZqwf7fpAzhJEkU4+bZpIZgm5F
+        0+k6sAyeKFSjbiMncgDo8DLKNLgu+xnEo5FDZtgocw==
+X-Google-Smtp-Source: ABdhPJx/znI8GH1T3tz02M68wDeFcvy3SeGIIJVLF7bwXNUsXDKYkXpr1p5++qs6ZnNs6bz2c6CH7QTdAPo10EfXcyM=
+X-Received: by 2002:a17:906:d8dc:: with SMTP id re28mr3382153ejb.168.1606834145234;
+ Tue, 01 Dec 2020 06:49:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20201130224753.1569357-1-willmcvicker@google.com> <20201130224753.1569357-2-willmcvicker@google.com>
-In-Reply-To: <20201130224753.1569357-2-willmcvicker@google.com>
+References: <20201119170739.GA22665@embeddedor>
+In-Reply-To: <20201119170739.GA22665@embeddedor>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 15:41:59 +0100
-Message-ID: <CAMpxmJUb43gNHY_pFZyNjVVhumXTQCGkH2m6uM=Aezv3L29ULQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Don't free if pin ranges are not defined
-To:     Will McVicker <willmcvicker@google.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
+Date:   Tue, 1 Dec 2020 15:48:54 +0100
+Message-ID: <CAMpxmJXhy4wRNZWz0iqfB5=g5-F2cdE_q9hRcPr-zRxg9O-jDw@mail.gmail.com>
+Subject: Re: [PATCH][next] gpiolib: acpi: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 11:48 PM Will McVicker <willmcvicker@google.com> wrote:
+On Thu, Nov 19, 2020 at 6:07 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
 >
-> From: Edmond Chung <edmondchung@google.com>
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
 >
-> A similar check was added in gpiochip_generic_request, but not in free.
-> This has caused an imbalance count of request vs. free calls to the
-> pinctrl driver. This patch is targeted to fix that issue.
->
-> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
-> Signed-off-by: Edmond Chung <edmondchung@google.com>
-> Signed-off-by: Andrew Chant <achant@google.com>
-> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/gpio/gpiolib.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/gpio/gpiolib-acpi.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 089ddcaa9bc6..6e3c4d7a7d14 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1806,6 +1806,11 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
->   */
->  void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset)
->  {
-> +#ifdef CONFIG_PINCTRL
-> +       if (list_empty(&gc->gpiodev->pin_ranges))
-> +               return;
-> +#endif
-> +
->         pinctrl_gpio_free(gc->gpiodev->base + offset);
->  }
->  EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 6cc5f91bfe2e..e37a57d0a2f0 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
+>                 default:
+>                         break;
+>                 }
+> +               break;
+>         default:
+>                 break;
+>         }
 > --
-> 2.29.2.454.gaff20da3a2-goog
+> 2.27.0
 >
 
 Applied, thanks!
