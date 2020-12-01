@@ -2,77 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED0392CA6B2
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:12:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C42D52CA6B6
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390174AbgLAPJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 10:09:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390172AbgLAPJx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 10:09:53 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A687C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 07:09:07 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id v22so3690088edt.9
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 07:09:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RTOWmJcTi6tDwprZNdib9Hdn63NVGgGhw7pXQyKPyrk=;
-        b=M6GzMfZ6FF7DbGPeP3NnXgxaIiQw4pdouFhBBJ+/YkU0qgns2g9J910z6UaG/504fR
-         yo6SiAO+F9hFvvdZHOS29XEzYnpQF/JgL7IjpVsTFAxFmioDZAJZzqAzUMjgyqEOvEC5
-         KVfjAE9Mb4jFaoBgbnn9qb4Zk8l74i2mShu2CaY9zJ2ORIYkDzUcMEnwwbfEwFzVmY87
-         dEWsQPiu7OjYl5oV0BB5vAV0lxVVuHhfikU3wBXiO49UJedrpXtnthVuj2xNhDAcPqvl
-         tySGoyMX+FBR6krNlJr/HrBybicyTg2y6RgT1lpI1UwWsxcwStC0FDcPZGl//6n8iklx
-         2vgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RTOWmJcTi6tDwprZNdib9Hdn63NVGgGhw7pXQyKPyrk=;
-        b=M7WVS/kaEmkr5tgelGtSd7iiM6AuxtAXssDAzdAdhrBZmX5ARGa3ZbBKQHDsl/5yZk
-         th88DGl39WY8yLmhgTLBWXJP8KnniyNJ/CShyeghDIePND37+asaEmPnuFa8g09/zpz4
-         OGUZPHFp3qla1O24Gy/hzj+lYq20x+u3wRqsl8prNSvYXQnHqV1FYj8ctdN6kJJWyDk4
-         AKvgafSpYb+H9HzB+Cgc1uYKrGQ+y01reAzXoPOitH0CBVDbEzeSULWjmPGlTKK5N8fy
-         EJBZTxSaGzQ84Sg7PSQigdHcY9FfHOX+JntBNwtdbpCKGwCyKgDpT4mBgdkFxf2u1tHB
-         spxQ==
-X-Gm-Message-State: AOAM532NGfLN7nJ6rOsTsOu+pzVBypGV33y2q4OBBFtvogEIb901Xsnf
-        tHZoWybhWxEgBk+x2pCHLrKjLnYg5bVwqNl6Eb1CZw==
-X-Google-Smtp-Source: ABdhPJzrWBdQJnmW0BM0NTPvh2J75LukiUCSsiOAD+wTKDT0AULBU0OK7XeO2+V7DnpJ+Qa4WT6COZy0AbS/GJiikqY=
-X-Received: by 2002:a05:6402:88c:: with SMTP id e12mr3532883edy.88.1606835346190;
- Tue, 01 Dec 2020 07:09:06 -0800 (PST)
+        id S2389543AbgLAPLD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 10:11:03 -0500
+Received: from mga09.intel.com ([134.134.136.24]:2314 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387678AbgLAPLD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 1 Dec 2020 10:11:03 -0500
+IronPort-SDR: cyCZegX4Q8P86CgvrjL5zo32f7NZ3c8PQjfyd0lbKC7vuRwgG0gT8Hh/poc1djlcXctK4iDF2N
+ Kbu2Nr9VXZVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="172999501"
+X-IronPort-AV: E=Sophos;i="5.78,384,1599548400"; 
+   d="scan'208";a="172999501"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 07:09:19 -0800
+IronPort-SDR: RlyogqPQm/v07Bl/w7DaKQ+1EqQ55TIIGsAcJsPsGxpr8ZpFsm/ANdOg3KbkaZAy/vlY2lXXiU
+ f/Wnrtqn3eyw==
+X-IronPort-AV: E=Sophos;i="5.78,384,1599548400"; 
+   d="scan'208";a="345492105"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 07:09:12 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kk7IC-00BIQf-5v; Tue, 01 Dec 2020 17:10:12 +0200
+Date:   Tue, 1 Dec 2020 17:10:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dan Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
+        lenb@kernel.org, gregkh@linuxfoundation.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
+        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
+        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
+        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
+        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+Subject: Re: [PATCH 14/18] acpi: utils: Add function to fetch dependent
+ acpi_devices
+Message-ID: <20201201151012.GG4077@smile.fi.intel.com>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-15-djrscally@gmail.com>
+ <20201130182354.GW4077@smile.fi.intel.com>
+ <26d7fa3f-3552-90e0-1f64-5c39449dcdd7@gmail.com>
 MIME-Version: 1.0
-References: <20201127140852.123192-1-thierry.reding@gmail.com> <20201127140852.123192-3-thierry.reding@gmail.com>
-In-Reply-To: <20201127140852.123192-3-thierry.reding@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 16:08:55 +0100
-Message-ID: <CAMpxmJVDo9DmKLsDzRH75GNzRAu2OTGOfEcPz6oEj55tvSFtEA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: tegra: Convert to gpio_irq_chip
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26d7fa3f-3552-90e0-1f64-5c39449dcdd7@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 27, 2020 at 3:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> From: Thierry Reding <treding@nvidia.com>
->
-> Convert the Tegra GPIO driver to use the gpio_irq_chip infrastructure.
-> This allows a bit of boiler plate to be removed and while at it enables
-> support for hierarchical domains, which is useful to support PMC wake
-> events on Tegra210 and earlier.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
+On Mon, Nov 30, 2020 at 11:54:44PM +0000, Dan Scally wrote:
+> Hi Andy
+> 
+> On 30/11/2020 18:23, Andy Shevchenko wrote:
+> > On Mon, Nov 30, 2020 at 01:31:25PM +0000, Daniel Scally wrote:
+> >> ACPI devices declare themselves dependent on other devices via the _DEP
+> >> buffer. Fetching the dependee from dependent is a matter of parsing
+> >> _DEP, but currently there's no method to fetch dependent from dependee.
+> >> Add one, so we can parse sensors dependent on a PMIC from the PMIC's
+> >> acpi_driver.
+> > Do I understand correctly that it's an existing table provided by firmware that
+> > (ab)uses _DEP in such way? Note, the specification doesn't tell we may use it
+> > in this way, OTOH I don't remember if it strictly forbids such use.
+> >
+> > So, please elaborate in the commit message why you need this and pint out to
+> > the 6.5.8 "_DEP (Operation Region Dependencies)" which clearly says about
+> > OpRegions and that part already supported by ACPI in the Linux, if I'm not
+> > mistaken, need to refresh my memory.
+> 
+> 
+> Laurent's reply is good explanation, but for example see my Lenovo Miix
+> 510's DSDT:
+> 
+> 
+> https://gist.githubusercontent.com/djrscally/e64d112180517352fa3392878b0f4a7d/raw/88b90b3ea4204fd7845257b6666fdade47cc2981/dsdt.dsl
+> 
+> 
+> Search OVTI2680 and OVTI5648 for the cameras. Both are dependent on
+> IN3472 devices (PMI0 and PMI1) which are the discrete type that we're
+> attempting to handle here.
 
-This looks good to me but Linus is much better versed in hierarchical
-domains so I'll let him take a look before picking it up.
+Yes, it seems since PMIC is kinda "power resource" (don't mix with real power
+resource as by ACPI specifications) and that's why they decided to include it
+into _DEP.  So, it seems a de facto common practice. Thus, it would be nice to
+have the above in the commit message in some form. Can you do it?
 
-Bartosz
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
