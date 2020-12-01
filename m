@@ -2,94 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 103542CA64F
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 15:53:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9F502CA68B
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 16:08:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391467AbgLAOvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 09:51:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389791AbgLAOvF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 09:51:05 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B12C0613D4
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 06:50:24 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id qw4so4591147ejb.12
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 06:50:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u11hnNgXTS9zHw9F1VKspmTAQsvSEt7QVrPJBjDHu6g=;
-        b=M6aCuNhUcEkKmxd2/vopzwE3KJ+WxtGAgKPzeagXFjrrmNAkATleXsRB/oZM/db+dt
-         ls2r4BhXUW2CdPXcopCP75b6Lc8PeGrN6y2MV1V+OEikX1tCgtSTAaov149IlIMU1+P2
-         1umLDMyp5eZZm8FyqysZpP8Z0FIHWVGSg5twL6zjAVagJTQeo5pjd5YF9csMisiSVwTM
-         kTsWUlW2dgQ4h+H5/Y2oA5uQcayqKSuG+TVNxW2ltAM96/x4tHzSC86aFdA0ubYT4uXu
-         ehUSpDUW6w5aASkXX2LO6oFFKZ17FdtCaKdq3F959IqbAUMydq6RsktatxMoU3Q6hVXK
-         Qivg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u11hnNgXTS9zHw9F1VKspmTAQsvSEt7QVrPJBjDHu6g=;
-        b=BT5EYieRLw4FIL65709uIpr7H4dBGhD650+Q6qNu/bIKObP28T+pmzBElOY+Qd2eYe
-         yOdoAJBWb+yYOxs6u4rs9PXwtw6lpzp44oFAKzHv2sdAg7sJ72QMJqdff5nPzTb0GD7t
-         6CpKbDW7Vrjel/2o8iMTXdHgVb8AXMV5mWRSINtqL1+3aGGBMP9j5d7nzLujH6nKgCzj
-         8xksj2njdNKdl4RBGfPR7X1MxZe2qMhbIu5C8H4JQ3I0vp7pr8oYukRFy+x0ioNG+9BZ
-         g5EhiNYFh2+zNlYLyq6R6RR610qaEz2rNKgDDRZFnT6uXWQqyQD1c6sLuodYkjXg6bYP
-         NLzw==
-X-Gm-Message-State: AOAM532IE7bN2dfboR/+uLARvVPRv6isu/LsOIweoGKV85YUa5iFxb/P
-        FiUHlMllsQKCBYKcZC+GZixZYcpw/pQOWWSA4aE6pg==
-X-Google-Smtp-Source: ABdhPJwG0IqVrtCOsiapz9tOGvEqeMur8iwjMo+Odo3ubld5i/SHRYQZyOqybTSa9RuzGktyWVLOruBXRsHV2wJcHmo=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr3193264ejd.363.1606834223625;
- Tue, 01 Dec 2020 06:50:23 -0800 (PST)
+        id S2391681AbgLAPHT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 10:07:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:56660 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387462AbgLAPHT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 1 Dec 2020 10:07:19 -0500
+IronPort-SDR: O0Gq3HRctk79IbPZ5bOC9GaU9TuwpVT112ZXX20mvKAQnlJp+Nn5XMHWLUNlCoZ5/hyBzQKYrQ
+ Q5zMmdkXyMSA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="152093092"
+X-IronPort-AV: E=Sophos;i="5.78,384,1599548400"; 
+   d="scan'208";a="152093092"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 07:05:36 -0800
+IronPort-SDR: OQ4oSN/ZfoiCZhKZjYG9XGJcVgAuKTLV12ethorldSZdb2n1J8QTmg5CGra7aN4/3BwuY5Evsq
+ sSZ/uEhZiGHw==
+X-IronPort-AV: E=Sophos;i="5.78,384,1599548400"; 
+   d="scan'208";a="367579376"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 07:05:30 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kk7Ec-00BIOo-Rr; Tue, 01 Dec 2020 17:06:30 +0200
+Date:   Tue, 1 Dec 2020 17:06:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        gregkh@linuxfoundation.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+Subject: Re: [PATCH 13/18] ipu3-cio2: Add functionality allowing
+ software_node connections to sensors on platforms designed for Windows
+Message-ID: <20201201150630.GF4077@smile.fi.intel.com>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-14-djrscally@gmail.com>
+ <20201130203551.GP4351@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-References: <20201119170901.GA22703@embeddedor>
-In-Reply-To: <20201119170901.GA22703@embeddedor>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 15:50:12 +0100
-Message-ID: <CAMpxmJXD+qiJLoEdFxmceVNyXPDfmvKPwG+SthOS8oHd2GqLuA@mail.gmail.com>
-Subject: Re: [PATCH][next] gpio: ath79: Fix fall-through warning for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201130203551.GP4351@valkosipuli.retiisi.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 6:08 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-> warning by explicitly adding a fallthrough pseudo-keyword to indicate
-> that the code is intended to fall through to the next case.
->
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/gpio/gpio-ath79.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-> index d5359341cc6b..678ddd375891 100644
-> --- a/drivers/gpio/gpio-ath79.c
-> +++ b/drivers/gpio/gpio-ath79.c
-> @@ -123,6 +123,7 @@ static int ath79_gpio_irq_set_type(struct irq_data *data,
->         switch (flow_type) {
->         case IRQ_TYPE_EDGE_RISING:
->                 polarity |= mask;
-> +               fallthrough;
->         case IRQ_TYPE_EDGE_FALLING:
->         case IRQ_TYPE_EDGE_BOTH:
->                 break;
-> --
-> 2.27.0
->
+On Mon, Nov 30, 2020 at 10:35:51PM +0200, Sakari Ailus wrote:
+> On Mon, Nov 30, 2020 at 01:31:24PM +0000, Daniel Scally wrote:
 
-Applied, thanks!
+...
 
-Bartosz
+> > +/*
+> > + * Extend this array with ACPI Hardware ID's of devices known to be working.
+> > + * Do not add a HID for a sensor that is not actually supported.
+> > + */
+> > +static const char * const cio2_supported_devices[] = {
+> > +	"INT33BE",
+> > +	"OVTI2680",
+> 
+> I guess we don't have the known-good frequencies for the CSI-2 bus in
+> firmware?
+> 
+> One option would be to put there what the drivers currently use. This
+> assumes the support for these devices is, well, somewhat opportunistic but
+> I guess there's no way around that right now at least.
+> 
+> As the systems are laptops, they're likely somewhat less prone to EMI
+> issues to begin with than mobile phones anyway.
+
+ACPI has only XTAL clock frequency (dunno if it's the same as CSI-2 bus clock).
+Currently it may be one out of 19.2 MHz, 24 MHz (with a remark that all sensors
+must use same value as PMIC can't produce several clocks).
+
+> > +};
+
+...
+
+> > +	strcpy(sensor->prop_names.clock_frequency, "clock-frequency");
+> > +	strcpy(sensor->prop_names.rotation, "rotation");
+> > +	strcpy(sensor->prop_names.bus_type, "bus-type");
+> > +	strcpy(sensor->prop_names.data_lanes, "data-lanes");
+> > +	strcpy(sensor->prop_names.remote_endpoint, "remote-endpoint");
+> 
+> Please use the actual field size instead with strncpy / strscpy.
+
+Perhaps Laurent's proposal is better?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
