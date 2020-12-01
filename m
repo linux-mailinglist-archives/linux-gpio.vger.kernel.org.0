@@ -2,137 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB3BF2CA321
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 13:52:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47EA12CA51C
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 15:11:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390594AbgLAMtM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 07:49:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390585AbgLAMtM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 07:49:12 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21895C0613CF;
-        Tue,  1 Dec 2020 04:48:32 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id e7so2442066wrv.6;
-        Tue, 01 Dec 2020 04:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=E7KISZiUZx5OJ0OBhs8wlh6COiaDQH/ZVHVCHKyzjEk=;
-        b=etC6JcuALdpc+RtrgJomZYX0mIy+qG2liKm9JXAo5RZJQwGx+6CEc8UmOX+O6ibWAH
-         tvjkpDIkIWSCqbCFhtngBD3D4/6vnpbG0harZSRjm0XHN95o81Znfzj/07+K3e+/ZgcT
-         r/yvfgVUsTyGuDCxzQLfceO8tfRsNggB9Hq4DEdWc4w2M2xoGmmLUQNz7z53ahQ4dM/Z
-         Hap0ZGGVlKXLOD2KI3j8HmRH1WIqLozKjrE9cBOJsOQo2MZslGwaoYX2aU3AEVW3g6Az
-         HgJbzV2HAsEthdwW0XHXPhurtpFenVdU8qoaVVTwVx9YJWPQihsji1jZSM5KnHJTv1Hr
-         suVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=E7KISZiUZx5OJ0OBhs8wlh6COiaDQH/ZVHVCHKyzjEk=;
-        b=WmmA9GJ+vfvVFXeuLwd6fuJ8fsrQdu0zsqRv+BPBXFOTdkCqP5JbzeyilCchwpYsvk
-         Pw3PMhfvgCJagmGXfrl4CCMGzEX4oprSjHr4p480xWZNkJeBygLYwrKBUGVDMujyEEXs
-         ht4BxItmHRIPaf8MjrSc/7BtojZgHvDVsuSSiDjipYeBSaqmelWTLfToZiJsoAOuTuvJ
-         jlTCQObbPTgBmU55+xKdIa/WIzLUmCXMvZdrOiFCX6z1AscE6TKqdOnQ/hxSsZI3Ha+M
-         Qus4+4BQ3cug+sZIFybtSDpjZnD8jc5ydPGRb2sEI1QHNwaBRvIHJ7L7JUAArg7YIHik
-         cQAA==
-X-Gm-Message-State: AOAM530g+defYqbuTb2smPZvp+iqvvwB/vpTWbSQ0kdfNeX3LZFzJOMV
-        Z/FZOUI+Y6wtJajQLvng2nY=
-X-Google-Smtp-Source: ABdhPJygrmmsdIFW8rKXVfMkLtQWY8gptVJpqzq0f98XrHiiDQPIDru+U45QZZ5AVf8FFNLLIWC8tg==
-X-Received: by 2002:adf:f3c7:: with SMTP id g7mr3624806wrp.91.1606826910838;
-        Tue, 01 Dec 2020 04:48:30 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.80])
-        by smtp.gmail.com with ESMTPSA id w21sm2624343wmi.29.2020.12.01.04.48.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Dec 2020 04:48:30 -0800 (PST)
-Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
-        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
-        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
-        jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-19-djrscally@gmail.com>
- <20201130205203.GQ4351@valkosipuli.retiisi.org.uk>
- <3e8494a0-a2c0-59e7-46bb-9635c3c239dd@gmail.com>
- <20201201064421.GR4351@valkosipuli.retiisi.org.uk>
- <2a548835-78c6-8fe3-cceb-1fc000707157@gmail.com>
- <20201201123244.GT4351@valkosipuli.retiisi.org.uk>
-From:   Dan Scally <djrscally@gmail.com>
-Message-ID: <0f85d875-cac2-8273-d687-e5845f4c2bb8@gmail.com>
-Date:   Tue, 1 Dec 2020 12:48:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729059AbgLAOJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 09:09:09 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38534 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbgLAOJI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 09:09:08 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B1DtHP4002730;
+        Tue, 1 Dec 2020 14:07:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=pTmh0fAx41hLIvYDyOekZfZD8/4rzzXxS/TqqdPExwg=;
+ b=vLWTsjjic+1p3i9uxybiHNVi42dcBKcTvA6AfpFTEr0sUNmVqp9yRxLgg7kIK5qGUN0J
+ oofgNIgToJJBxsPbFd+Am4pBxk6JPpjzRqo19VpEwymshbhsnRALOcfpiO21XOp3kmxr
+ lgOLJrUqyUshUH+0ojxyxXIg1LFHdnj2t2Bklh5y68LsxqqiRxoSPtOWNIoWynIJF754
+ 5bVkuWqCYCEFs8tq7LyeOV+zI3/vr+tI5ZKBss7pqjTfnpXNJRaPwJeD8R6AGcywA+BA
+ lerBH0PS/hUi55aURtflNdJ2juhGcYo6ht8r8gtlOn38U9XkoMGDxbASv62fD9VykISM Rg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 353dyqjnq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Dec 2020 14:07:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B1Du5R6003844;
+        Tue, 1 Dec 2020 14:05:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 3540ey0hqt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Dec 2020 14:05:41 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B1E1twO021849;
+        Tue, 1 Dec 2020 14:05:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3540ey0hp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Dec 2020 14:05:40 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B1E5MSD015816;
+        Tue, 1 Dec 2020 14:05:23 GMT
+Received: from kadam (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Dec 2020 06:05:21 -0800
+Date:   Tue, 1 Dec 2020 17:04:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
+        linux-atm-general@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-ide@vger.kernel.org, dm-devel@redhat.com,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
+        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        usb-storage@lists.one-eyed-alien.net, drbd-dev@tron.linbit.com,
+        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
+        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
+        intel-wired-lan@lists.osuosl.org, linux-input@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        tipc-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        selinux@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
+        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        x86@kernel.org, linux-nfs@vger.kernel.org,
+        GR-Linux-NIC-Dev@marvell.com, linux-mm@kvack.org,
+        netdev@vger.kernel.org, linux-decnet-user@lists.sourceforge.net,
+        linux-mmc@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-usb@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, patches@opensource.cirrus.com,
+        Joe Perches <joe@perches.com>, linux-integrity@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+Message-ID: <20201201140449.GG2767@kadam>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook>
+ <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20201201123244.GT4351@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202011220816.8B6591A@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ clxscore=1011 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012010090
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Nov 22, 2020 at 08:17:03AM -0800, Kees Cook wrote:
+> On Fri, Nov 20, 2020 at 11:51:42AM -0800, Jakub Kicinski wrote:
+> > On Fri, 20 Nov 2020 11:30:40 -0800 Kees Cook wrote:
+> > > On Fri, Nov 20, 2020 at 10:53:44AM -0800, Jakub Kicinski wrote:
+> > > > On Fri, 20 Nov 2020 12:21:39 -0600 Gustavo A. R. Silva wrote:  
+> > > > > This series aims to fix almost all remaining fall-through warnings in
+> > > > > order to enable -Wimplicit-fallthrough for Clang.
+> > > > > 
+> > > > > In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
+> > > > > add multiple break/goto/return/fallthrough statements instead of just
+> > > > > letting the code fall through to the next case.
+> > > > > 
+> > > > > Notice that in order to enable -Wimplicit-fallthrough for Clang, this
+> > > > > change[1] is meant to be reverted at some point. So, this patch helps
+> > > > > to move in that direction.
+> > > > > 
+> > > > > Something important to mention is that there is currently a discrepancy
+> > > > > between GCC and Clang when dealing with switch fall-through to empty case
+> > > > > statements or to cases that only contain a break/continue/return
+> > > > > statement[2][3][4].  
+> > > > 
+> > > > Are we sure we want to make this change? Was it discussed before?
+> > > > 
+> > > > Are there any bugs Clangs puritanical definition of fallthrough helped
+> > > > find?
+> > > > 
+> > > > IMVHO compiler warnings are supposed to warn about issues that could
+> > > > be bugs. Falling through to default: break; can hardly be a bug?!  
+> > > 
+> > > It's certainly a place where the intent is not always clear. I think
+> > > this makes all the cases unambiguous, and doesn't impact the machine
+> > > code, since the compiler will happily optimize away any behavioral
+> > > redundancy.
+> > 
+> > If none of the 140 patches here fix a real bug, and there is no change
+> > to machine code then it sounds to me like a W=2 kind of a warning.
+> 
+> FWIW, this series has found at least one bug so far:
+> https://lore.kernel.org/lkml/CAFCwf11izHF=g1mGry1fE5kvFFFrxzhPSM6qKAO8gxSp=Kr_CQ@mail.gmail.com/
 
-On 01/12/2020 12:32, Sakari Ailus wrote:
-> Hi Dan,
->
-> On Tue, Dec 01, 2020 at 08:08:26AM +0000, Dan Scally wrote:
->> On 01/12/2020 06:44, Sakari Ailus wrote:
->>> Hi Dan,
->>>
->>> On Mon, Nov 30, 2020 at 11:06:03PM +0000, Dan Scally wrote:
->>>> Hi Sakari
->>>>
->>>> On 30/11/2020 20:52, Sakari Ailus wrote:
->>>>>> +static const struct acpi_device_id int3472_device_id[] = {
->>>>>> +	{ "INT3472", 0 },
->>>>> The INT3472 _HID is really allocated for the tps68470 PMIC chip. It may not
->>>>> be used by other drivers; people will want to build kernels where both of
->>>>> these ACPI table layouts are functional.
->>>>>
->>>>> Instead, I propose, that you add this as an option to the tps68470 driver
->>>>> that figures out whether the ACPI device for the tps68470 device actually
->>>>> describes something else, in a similar fashion you do with the cio2-bridge
->>>>> driver. I think it may need a separate Kconfig option albeit this and
->>>>> cio2-bridge cannot be used separately.
->>>> It actually occurs to me that that may not work (I know I called that
->>>> out as an option we considered, but that was a while ago actually). The
->>>> reason I wasn't worried about the existing tps68470 driver binding to
->>>> these devices is that it's an i2c driver, and these dummy devices don't
->>>> have an I2cSerialBusV2, so no I2C device is created by them the kernel.
->>>>
->>>>
->>>> Won't that mean the tps68470 driver won't ever be probed for these devices?
->>> Oops. I missed this indeed was not an I²C driver. So please ignore the
->>> comment.
->>>
->>> So I guess this wouldn't be an actual problem. I'd still like to test this
->>> on a system with tps68470, as the rest of the set.
->> On my Go2, it .probes() for the actual tps68740 (that machine has both
->> types of INT3472 device) but fails with EINVAL when it can't find the
->> CLDB buffer that these discrete type devices have. My understanding is
->> that means it's free for the actual tps68470 driver to grab the device;
->> although that's not happening because I had to blacklist that driver or
->> it stops the machine from booting at the moment - haven't gotten round
->> to investigating yet.
-> Oh, then the problem is actually there. If it probes the tps68470 driver on
-> the systems with Windows ACPI tables, then it should be that driver which
-> works with the Windows ACPI tables, too.
-Sorry, clarification here: The INT3472 driver in patch #18 runs probe()
-for the device representing a physical tps68470, but then -EINVAL's. The
-existing tps68470 mfd driver doesn't probe() for the dummy INT3472 device.
+This is a fallthrough to a return and not to a break.  That should
+trigger a warning.  The fallthrough to a break should not generate a
+warning.
+
+The bug we're trying to fix is "missing break statement" but if the
+result of the bug is "we hit a break statement" then now we're just
+talking about style.  GCC should limit itself to warning about
+potentially buggy code.
+
+regards,
+dan carpenter
