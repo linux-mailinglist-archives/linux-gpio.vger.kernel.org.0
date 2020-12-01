@@ -2,124 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DAA22C9ABA
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 10:03:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C462C9C6F
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 10:18:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbgLAJAQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 04:00:16 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9079 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387613AbgLAJAP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 04:00:15 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Clbcf2FrYzLvK7;
-        Tue,  1 Dec 2020 16:58:58 +0800 (CST)
-Received: from [127.0.0.1] (10.57.22.126) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Dec 2020
- 16:59:21 +0800
-Subject: Re: [PATCH v1] gpio: dwapb: mask/unmask IRQ when disable/enable it
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
-        <Sergey.Semin@baikalelectronics.ru>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1606728979-44259-1-git-send-email-luojiaxing@huawei.com>
- <20201130112250.GK4077@smile.fi.intel.com>
-From:   luojiaxing <luojiaxing@huawei.com>
-Message-ID: <63f7dcc4-a924-515a-2fea-31ec80f3353e@huawei.com>
-Date:   Tue, 1 Dec 2020 16:59:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S2390523AbgLAJSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 04:18:10 -0500
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:34400 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390506AbgLAJSF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 04:18:05 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 0B19Fwxw003761; Tue, 1 Dec 2020 18:15:59 +0900
+X-Iguazu-Qid: 34trnO8aDoHi8rwigd
+X-Iguazu-QSIG: v=2; s=0; t=1606814158; q=34trnO8aDoHi8rwigd; m=CQIFhqIeZ/1OaGN+K0KBw/hoFYRMv2SIsojsKTfpIuc=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1510) id 0B19FwwH036934;
+        Tue, 1 Dec 2020 18:15:58 +0900
+Received: from enc01.toshiba.co.jp ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 0B19FvRW024694;
+        Tue, 1 Dec 2020 18:15:57 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.toshiba.co.jp  with ESMTP id 0B19Fv1N031159;
+        Tue, 1 Dec 2020 18:15:57 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v3 0/4] gpio: visconti: Add Toshiba Visconti GPIO support
+Date:   Wed,  2 Dec 2020 03:14:02 +0900
+X-TSB-HOP: ON
+Message-Id: <20201201181406.2371881-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20201130112250.GK4077@smile.fi.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.57.22.126]
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
-On 2020/11/30 19:22, Andy Shevchenko wrote:
-> On Mon, Nov 30, 2020 at 05:36:19PM +0800, Luo Jiaxing wrote:
->> The mask and unmask registers are not configured in dwapb_irq_enable() and
->> dwapb_irq_disable(). In the following situations, the IRQ will be masked by
->> default after the IRQ is enabled:
->>
->> mask IRQ -> disable IRQ -> enable IRQ
->>
->> In this case, the IRQ status of GPIO controller is inconsistent with it's
->> irq_data too. For example, in __irq_enable(), IRQD_IRQ_DISABLED and
->> IRQD_IRQ_MASKED are both clear, but GPIO controller do not perform unmask.
-> Sounds a bit like a papering over the issue which is slightly different.
-> Can you elaborate more, why ->irq_mask() / ->irq_unmask() are not being called?
+This series is the GPIO driver for Toshiba's ARM SoC, Visconti[0].
+This provides DT binding documentation, device driver, MAINTAINER files, and updates to DT files.
 
+Update:
 
-Sure, The basic software invoking process is as follows:
+  dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller:
+    v2 -> v3: Fix dtschema/dtc warnings.
+      dtschema/dtc warnings/errors:
+        Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.example.dt.yaml: gpio@28020000: interrupts: [[0, 24, 4], [0, 25, 4], [0, 26, 4], [0, 27, 4], [0, 28, 4], [0, 29, 4], [0, 30, 4], [0, 31, 4], [0, 32, 4], [0, 33, 4], [0, 34, 4], [0, 35, 4], [0, 36, 4], [0, 37, 4], [0, 38, 4], [0, 39, 4]] is too short
+	  From schema: Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+    v1 -> v2: Fix typo.
 
-Release IRQ:
-free_irq() -> __free_irq() -> irq_shutdown() ->__irq_disable()
+  gpio: visoconti: Add Toshiba Visconti GPIO support:
+    v2 -> v3: Add select GPIO_GENERIC
+              Use genric MMIO GPIO library
+              Use bgpio_init() as initialized the generic helpers.
+              Use irqchip template instead of gpiochip_irqchip_add().
+    v1 -> v2: No update
 
-Disable IRQ:
-disable_irq() -> __disable_irq_nosync() -> __disable_irq -> irq_disable 
--> __irq_disable()
+  MAINTAINERS: Add entries for Toshiba Visconti GPIO controller:
+    v2 -> v3: No update
+    v1 -> v2: No update
 
-As shown before, both will call __irq_disable(). The code of it is as 
-follows:
+  arm: dts: visconti: Add DT support for Toshiba Visconti5 GPIO driver:
+    v2 -> v3: Fix compatible string.
+    v1 -> v2: No update
 
-if (irqd_irq_disabled(&desc->irq_data)) {
-     if (mask)
-         mask_irq(desc);
+Best regards,
+  Nobuhiro
 
-} else {
-         irq_state_set_disabled(desc);
-             if (desc->irq_data.chip->irq_disable) {
-desc->irq_data.chip->irq_disable(&desc->irq_data);
-                 irq_state_set_masked(desc);
-             } else if (mask) {
-                 mask_irq(desc);
-     }
-}
+[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
 
-Because gpio-dwapb.c provides the hook function of irq_disable, 
-__irq_disable() will directly calls chip->irq_disable() instead of 
-mask_irq().
+Nobuhiro Iwamatsu (4):
+  dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller
+  gpio: visconti: Add Toshiba Visconti GPIO support
+  MAINTAINERS: Add entries for Toshiba Visconti GPIO controller
+  arm: dts: visconti: Add DT support for Toshiba Visconti5 GPIO driver
 
-For irq_enable(), it's similar and the code is as follows:
+ .../bindings/gpio/toshiba,gpio-visconti.yaml  |  85 +++++++
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/toshiba/tmpv7708-rm-mbrc.dts     |   4 +
+ arch/arm64/boot/dts/toshiba/tmpv7708.dtsi     |  27 ++
+ drivers/gpio/Kconfig                          |   9 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-visconti.c                  | 232 ++++++++++++++++++
+ drivers/pinctrl/visconti/pinctrl-common.c     |  23 ++
+ 8 files changed, 383 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+ create mode 100644 drivers/gpio/gpio-visconti.c
 
-if (!irqd_irq_disabled(&desc->irq_data)) {
-     unmask_irq(desc);
-} else {
-     irq_state_clr_disabled(desc);
-     if (desc->irq_data.chip->irq_enable) {
-desc->irq_data.chip->irq_enable(&desc->irq_data);
-         irq_state_clr_masked(desc);
-     } else {
-         unmask_irq(desc);
-     }
-}
-
-Similarly, because gpio-dwapb.c provides the hook function of 
-irq_enable, irq_enable() will directly calls chip->irq_enable() but does 
-not call unmask_irq().
-
-
-Therefore, the current handle is as follows:
-
-API of IRQ:        |   mask_irq()             | disable_irq()            
-|    enable_irq()
-
-gpio-dwapb.c:  |   chip->irq_mask()   | chip->irq_diable()   |    
-chip->irq_enable()
-
-I do not know why irq_enable() only calls chip->irq_enable(). However, 
-the code shows that irq_enable() clears the disable and masked flags in 
-the irq_data state.
-
-Therefore, for gpio-dwapb.c, I thinks ->irq_enable also needs to clear 
-the disable and masked flags in the hardware register.
-
-
-
-
+-- 
+2.29.2
