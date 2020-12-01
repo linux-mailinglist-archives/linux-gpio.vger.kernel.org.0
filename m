@@ -2,129 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6943C2C99DB
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 09:50:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAA22C9ABA
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 10:03:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgLAIrC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 03:47:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbgLAIrC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 03:47:02 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0837BC0613CF;
-        Tue,  1 Dec 2020 00:46:22 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id r3so1371088wrt.2;
-        Tue, 01 Dec 2020 00:46:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=a9Yz4EamC4dgi6fKIVTGyhZQWgOK381EdypTSdD0mPY=;
-        b=OJY69vaIsojTi7SIOQM7tMldgXhjzktFjtr/RsqN3AFlhmoglWbyYC470YrVRYB/7o
-         9t1+G9Qv9P7CtY88qLGwqEhRpoG4PzRT3rkgghNnsW7wbUNjnsJ/15KCajFQ3+tKeKL1
-         2sqP93Rc1LcSYR3+MStRMBeNCpHMZyrB7M4J+gkzJnja362WPxS+AtP67hA5Yr1P3Zji
-         Nue+Pl7F7j7h0VKh9I/YZhCMe8SczaVDEbq4IFeCAFhVNe0Gngqrl27PEK5qJlFpD+Iv
-         03JG+qjLBkouZ2tF/ATaF8f0p6KwUlRExT5f9CCy4/kGx9lSE+s2liKy/SBGpyVaiLMq
-         VGrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=a9Yz4EamC4dgi6fKIVTGyhZQWgOK381EdypTSdD0mPY=;
-        b=NIdvb2J4WRYVELREE1o8alv24CzI/fEheeyv1qsVyWSYFN8iHEwJP8HuOqiciKpJA/
-         OVw1PILKNj1wS6+USF0afKdiNGyI1yHzbVwr7QtA+2xg87hP4olMMrY05I8DHFVse9Py
-         ORa5F0DdWemgu3DYcRn2aWyEUUYldi7PMnV7K0T82lxWRwu2TluJu5VvvHHMta9JAGXb
-         6L0E53TTIoXEwtiYSlK8uLBVURsTgotJ16zeZmSccv2gFOVufCdF7ZmYMGkazhf0T2LL
-         Y8eIrup/B/Y2LvoCr9uotK0tE0NC7NTwnzB3ktBPZG2qrQcrqA0zX2KMJYbNhEt5L7XK
-         Lh/w==
-X-Gm-Message-State: AOAM5318fT8bEbapCBEH5wCSaoZH5IPAZPRaJB+3vnmsT4PpuXN0dIb4
-        z70j3sf/j1oj91ordVO+nIk=
-X-Google-Smtp-Source: ABdhPJyKMVTe84MZnEwR1mkSqgxzXmZV+8YQVqAYMRkyJc+fP59HhFEnaoWqUhGv6WWr93SPt0UrSg==
-X-Received: by 2002:adf:f9c5:: with SMTP id w5mr2390087wrr.69.1606812380608;
-        Tue, 01 Dec 2020 00:46:20 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.80])
-        by smtp.gmail.com with ESMTPSA id m4sm1587855wmi.41.2020.12.01.00.46.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Dec 2020 00:46:19 -0800 (PST)
-Subject: Re: [PATCH 01/18] property: Return true in fwnode_device_is_available
- for node types that do not implement this operation
-To:     Bingbu Cao <bingbu.cao@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
-        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
-        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
-        jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-2-djrscally@gmail.com>
- <7da1d242-b32a-58f5-e50b-15441730aa0f@linux.intel.com>
-From:   Dan Scally <djrscally@gmail.com>
-Message-ID: <b1909613-38ac-7a5b-aced-c8090d645af8@gmail.com>
-Date:   Tue, 1 Dec 2020 08:46:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2388270AbgLAJAQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 04:00:16 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9079 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387613AbgLAJAP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 04:00:15 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Clbcf2FrYzLvK7;
+        Tue,  1 Dec 2020 16:58:58 +0800 (CST)
+Received: from [127.0.0.1] (10.57.22.126) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Dec 2020
+ 16:59:21 +0800
+Subject: Re: [PATCH v1] gpio: dwapb: mask/unmask IRQ when disable/enable it
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
+        <Sergey.Semin@baikalelectronics.ru>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1606728979-44259-1-git-send-email-luojiaxing@huawei.com>
+ <20201130112250.GK4077@smile.fi.intel.com>
+From:   luojiaxing <luojiaxing@huawei.com>
+Message-ID: <63f7dcc4-a924-515a-2fea-31ec80f3353e@huawei.com>
+Date:   Tue, 1 Dec 2020 16:59:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <7da1d242-b32a-58f5-e50b-15441730aa0f@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20201130112250.GK4077@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-Originating-IP: [10.57.22.126]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bingbu
 
-On 01/12/2020 03:12, Bingbu Cao wrote:
-> Daniel, thanks for your patch.
->
-> On 11/30/20 9:31 PM, Daniel Scally wrote:
->> Some types of fwnode_handle do not implement the device_is_available()
->> check, such as those created by software_nodes. There isn't really a
->> meaningful way to check for the availability of a device that doesn't
->> actually exist, so if the check isn't implemented just assume that the
->> "device" is present.
+On 2020/11/30 19:22, Andy Shevchenko wrote:
+> On Mon, Nov 30, 2020 at 05:36:19PM +0800, Luo Jiaxing wrote:
+>> The mask and unmask registers are not configured in dwapb_irq_enable() and
+>> dwapb_irq_disable(). In the following situations, the IRQ will be masked by
+>> default after the IRQ is enabled:
 >>
->> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Signed-off-by: Daniel Scally <djrscally@gmail.com>
->> ---
->> Changes since RFC v3:
+>> mask IRQ -> disable IRQ -> enable IRQ
 >>
->> 	patch introduced
->>
->>  drivers/base/property.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/base/property.c b/drivers/base/property.c
->> index 4c43d30145c6..a5ca2306796f 100644
->> --- a/drivers/base/property.c
->> +++ b/drivers/base/property.c
->> @@ -785,9 +785,14 @@ EXPORT_SYMBOL_GPL(fwnode_handle_put);
->>  /**
->>   * fwnode_device_is_available - check if a device is available for use
->>   * @fwnode: Pointer to the fwnode of the device.
->> + *
->> + * For fwnode node types that don't implement the .device_is_available()
->> + * operation, this function returns true.
->>   */
->>  bool fwnode_device_is_available(const struct fwnode_handle *fwnode)
->>  {
->> +	if (!fwnode_has_op(fwnode, device_is_available))
->> +		return true;
-> blank line here?
-Sure thing - I'll add one in
->>  	return fwnode_call_bool_op(fwnode, device_is_available);
->>  }
->>  EXPORT_SYMBOL_GPL(fwnode_device_is_available);
->>
+>> In this case, the IRQ status of GPIO controller is inconsistent with it's
+>> irq_data too. For example, in __irq_enable(), IRQD_IRQ_DISABLED and
+>> IRQD_IRQ_MASKED are both clear, but GPIO controller do not perform unmask.
+> Sounds a bit like a papering over the issue which is slightly different.
+> Can you elaborate more, why ->irq_mask() / ->irq_unmask() are not being called?
+
+
+Sure, The basic software invoking process is as follows:
+
+Release IRQ:
+free_irq() -> __free_irq() -> irq_shutdown() ->__irq_disable()
+
+Disable IRQ:
+disable_irq() -> __disable_irq_nosync() -> __disable_irq -> irq_disable 
+-> __irq_disable()
+
+As shown before, both will call __irq_disable(). The code of it is as 
+follows:
+
+if (irqd_irq_disabled(&desc->irq_data)) {
+     if (mask)
+         mask_irq(desc);
+
+} else {
+         irq_state_set_disabled(desc);
+             if (desc->irq_data.chip->irq_disable) {
+desc->irq_data.chip->irq_disable(&desc->irq_data);
+                 irq_state_set_masked(desc);
+             } else if (mask) {
+                 mask_irq(desc);
+     }
+}
+
+Because gpio-dwapb.c provides the hook function of irq_disable, 
+__irq_disable() will directly calls chip->irq_disable() instead of 
+mask_irq().
+
+For irq_enable(), it's similar and the code is as follows:
+
+if (!irqd_irq_disabled(&desc->irq_data)) {
+     unmask_irq(desc);
+} else {
+     irq_state_clr_disabled(desc);
+     if (desc->irq_data.chip->irq_enable) {
+desc->irq_data.chip->irq_enable(&desc->irq_data);
+         irq_state_clr_masked(desc);
+     } else {
+         unmask_irq(desc);
+     }
+}
+
+Similarly, because gpio-dwapb.c provides the hook function of 
+irq_enable, irq_enable() will directly calls chip->irq_enable() but does 
+not call unmask_irq().
+
+
+Therefore, the current handle is as follows:
+
+API of IRQ:        |   mask_irq()             | disable_irq()            
+|    enable_irq()
+
+gpio-dwapb.c:  |   chip->irq_mask()   | chip->irq_diable()   |    
+chip->irq_enable()
+
+I do not know why irq_enable() only calls chip->irq_enable(). However, 
+the code shows that irq_enable() clears the disable and masked flags in 
+the irq_data state.
+
+Therefore, for gpio-dwapb.c, I thinks ->irq_enable also needs to clear 
+the disable and masked flags in the hardware register.
+
+
+
+
