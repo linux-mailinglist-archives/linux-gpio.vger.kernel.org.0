@@ -2,92 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A352CAAA7
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172202CAAAB
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:23:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgLASV0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 13:21:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgLASV0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 13:21:26 -0500
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6D3C0613CF
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 10:20:46 -0800 (PST)
-Received: by mail-io1-xd42.google.com with SMTP id f20so2581747ioc.12
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 10:20:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9VB4WdJpknAhtdy/6FU5lpgVyQvzyyXRv43V/9k8IIg=;
-        b=UGtZmI5uMYtK2j8reNzIsyprn805+aTQG8IEtXBx/wGYt54MWP0paYcBfYu/zUEzBx
-         gxTo5K+7m42S2QcbeYNCaOe6Du/NsG84wl1uSC0RcC4+OUyqRWTcbU71kqttZXjUdSbz
-         Q5Fe7pN0YGjlfs0xaFQ1AU9Uw1Y0XQr6ZZWC1JTvl67xOMDeiQZfCv0jO5LwmLupNJ0e
-         VZ/Y5lUnVkBbvrVkJfYkkgAONtYJ4JQ5pZ9IW3wtlPAY+JjUZKYxroShbxpk5ec6Z8Qt
-         N2gdz1Ujt+HXy13JQy/rc8GnMOYQ0r1Fbnqf3aFaB7Jf8rsIkkB8NjpGUoRwftpe/YnP
-         HuEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9VB4WdJpknAhtdy/6FU5lpgVyQvzyyXRv43V/9k8IIg=;
-        b=s7Zqh2YQE0YwPmhQiKSnRETI7pf7rqCXmzBcDARqmLo7m3LGr5uxbKUi3iMpYJSi/o
-         qJaUvIyp06yNV8YxQkESSEnqB7RjU2uJqGQ6S+LD2nl2i4t4ZmSC0i26FoNtwEpdzl+D
-         H3S3989uS6sAMp4kA7kJJ3Rpmn3LaNPWjK04QJRDg3/Lx41rOApxucaErEhWwmBNIbRE
-         9Yp8bH+d/R8tNOqyIEyfRGZm/LPapAjMFKBQddPzSMo5/DQgVZBxAoIu+PRGJdegRR6Y
-         PaD4Qy6s0dxvdJNYYkvqjY5FafktyCrFGeTMfAX/jCt8HLSjrjZM6VWnJ7mJHL90o48n
-         ClPA==
-X-Gm-Message-State: AOAM532ajwIqkdxOH3CAIKdBUvgGmQP0H2fg5Np/1Mj6l/oEqFi/+elU
-        fFlAl1ceVxIc1Uh5VZKKu8aXTBuCFT3Q+AkDDYDIJA==
-X-Google-Smtp-Source: ABdhPJyA/x5M6ycyZAEa1UC93jJ/ctxhlSWPFIvDzBIEz5KFMsYDbZfHW//l9ShSmwH4SH1GSfL+h6Gdu1JeCUQHE5I=
-X-Received: by 2002:a02:3b26:: with SMTP id c38mr3731469jaa.114.1606846845673;
- Tue, 01 Dec 2020 10:20:45 -0800 (PST)
+        id S1726884AbgLASW0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 13:22:26 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:48332 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726733AbgLASWZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 1 Dec 2020 13:22:25 -0500
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 0910B440069;
+        Tue,  1 Dec 2020 20:21:36 +0200 (IST)
+References: <cover.1605694661.git.baruch@tkos.co.il>
+ <db0d6d619a0686eef1b15ca7409d73813440856f.1605694661.git.baruch@tkos.co.il>
+ <20201118231811.GH1853236@lunn.ch> <878sax6f43.fsf@tarshish>
+ <20201119133429.GS1804098@lunn.ch> <877dqhfogp.fsf@tarshish>
+ <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
+User-agent: mu4e 1.4.13; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] gpio: mvebu: add pwm support for Armada 8K/7K
+In-reply-to: <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
+Date:   Tue, 01 Dec 2020 20:21:33 +0200
+Message-ID: <87lfeho09e.fsf@tarshish>
 MIME-Version: 1.0
-References: <20201014231158.34117-1-warthog618@gmail.com> <CACRpkdbTsN6p4n3f9SJrgAjdkzDu2S67rU3tLWwX0X50ekjctQ@mail.gmail.com>
- <20201028232211.GB4384@sol> <CAMpxmJX61dRE_d2Eyu2nXKx64rNrrTfScrdg=Cc-N-R_FKfUNg@mail.gmail.com>
- <CAMpxmJXiObcKyoE264oyiZOs08=uRYno6siMzz6BH+jmT_NKgQ@mail.gmail.com>
- <20201031000139.GA7042@sol> <CACRpkdZ2MoV04YCVxCxG-wPTgNAORkN6D+AXVOC1vEqsdGqo8w@mail.gmail.com>
-In-Reply-To: <CACRpkdZ2MoV04YCVxCxG-wPTgNAORkN6D+AXVOC1vEqsdGqo8w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 1 Dec 2020 19:20:35 +0100
-Message-ID: <CAMRc=MctVES7EVrOMwcH5j4D=PwhSjFseQZ+ggigBgeZqQiLhw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] gpiolib: cdev: allow edge event timestamps to be
- configured as REALTIME
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 6, 2020 at 2:49 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sat, Oct 31, 2020 at 1:01 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Fri, Oct 30, 2020 at 03:52:24PM +0100, Bartosz Golaszewski wrote:
->
-> > > The series no longer applies on top of v5.10-rc1. Could you rebase and resend?
-> >
-> > Nuts, it relies on my doc tidy-up series that Linus has pulled into
-> > fixes, and so will likely go into v5.10-rc2??
->
-> If I have time to get the GPIO fixes into -rc2. Otherwise -rc3
-> and then I need to merge the resulting -rc into the devel branch
-> before applying.
->
-> I will get to it sooner or later, I think Bartosz might have some
-> more GPIO fixes that I need to pull first before sending any
-> fixes upstream.
->
-> Yours,
-> Linus Walleij
+Hi Bartosz,
 
-Hi Linus,
+On Tue, Dec 01 2020, Bartosz Golaszewski wrote:
+> On Thu, Nov 19, 2020 at 2:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
+>> On Thu, Nov 19 2020, Andrew Lunn wrote:
+>> >> >> @@ -1200,6 +1235,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+>> >> >>
+>> >> >>   devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+>> >> >>
+>> >> >> + /* Some MVEBU SoCs have simple PWM support for GPIO lines */
+>> >> >> + if (IS_ENABLED(CONFIG_PWM)) {
+>> >> >> +         err = mvebu_pwm_probe(pdev, mvchip, id);
+>> >> >> +         if (err)
+>> >> >> +                 return err;
+>> >> >> + }
+>> >> >> +
+>> >> >
+>> >> > The existing error handling looks odd here. Why is there no goto
+>> >> > err_domain when probing the PWMs fails? I wonder if this a bug from me
+>> >> > from a long time again?
+>> >>
+>> >> What would you release under the err_domain label? As far as I can see
+>> >> all resources are allocated using devres, and released automatically on
+>> >> failure exit.
+>> >
+>> > The IRQ domain is still registers. So once the memory is automatically
+>> > freed, don't we have a potential use after free?
+>>
+>> This patch moves PWM registration before IRQ domain registration for
+>> another reason as mentioned in the commit log. So this might
+>> incidentally fix the bug.
+>>
+>> Would you prefer a separate patch for that with a 'Fixes:
+>> 757642f9a584e8' tag?
+>
+> Baruch: does this series conflict with the fix you sent? I'm thinking
+> about how to take it through the next and fixes trees.
 
-Just a gentle ping on this, so it doesn't get forgotten before the
-next merge window.
+Yes, It conflicts.
 
-Bartosz
+I can send in a single series v3 of the fix along with the other patches
+rebased on top. Would that work for you?
+
+Thanks,
+baruch
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
