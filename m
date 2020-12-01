@@ -2,195 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 452BF2CAD32
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 21:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18B692CAD78
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 21:37:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgLAUWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 15:22:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgLAUWq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 15:22:46 -0500
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55B5C0613D6
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 12:22:00 -0800 (PST)
-Received: by mail-io1-xd41.google.com with SMTP id j23so2982620iog.6
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 12:22:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4gs7t9MjEYA5UWOLu3eX1LUX0CiZ69mOlK5lwM97vkI=;
-        b=Kit/biOu4sHqQEb5yzcx6x6d+9T6rLZbLjREZOUmKQG21dAFnBUUQtpUEwzhT4eODp
-         ifXpgMxqpgHPZLUfGuv+Pj5uTAhYrHz+T/opfsr4VxkoS1dIAncp29x7DrHdDhgvb3wL
-         JX8eWxJN9Zl2yu+KHsNfcml9Ae5agzS0GwCgU=
+        id S2387746AbgLAUgh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 15:36:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48864 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387809AbgLAUgg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 15:36:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606854909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A7/8+RJkGeSEwmLgpTG65Q4kAPCFxfMme+BpS8NvGD0=;
+        b=dGwwbD3Bjn19MrzJCwTM2semuZ8k1mffOJ7cJzvyQJXqoukbWcYVZom5DGsRqgG6O4NhDw
+        IRMTwGrZS3efzYVTa7ISI5Dtswpny6eYDu7eevpjQIyXChxlQv4ZuR5Dq7Xw2kLT3z0yPO
+        W7cyA+K4ySjoMs9Zx2B2cjSwdq7qUfo=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-9Z0y5LeMOK-t552GtQjG2w-1; Tue, 01 Dec 2020 15:35:02 -0500
+X-MC-Unique: 9Z0y5LeMOK-t552GtQjG2w-1
+Received: by mail-ej1-f70.google.com with SMTP id u10so1893443ejy.18
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 12:35:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4gs7t9MjEYA5UWOLu3eX1LUX0CiZ69mOlK5lwM97vkI=;
-        b=Bv4XuO0EnFA8yT0SBNHftHqIJ4GwnJk8jcF309XGr9O4fq7mkSzfINTEYi2dsXDEMr
-         Lt6EbPvxvIGQkeHu30F5e4lx7QYi/5gy6Seyrx2j7cisoh28K6jOysIt9hDh5EmpM9oE
-         PiZD7YLhGi/sNB6HaPgXmSBcXhSl8t38vcey2bRNv6wfua2uBMYu8odprgeGNpPf6WTK
-         8n3qqnU2hMU/Ns7i5Bvq0mQcPQRazrpa4Muybh+iVP4Glq4P4tLASLVPtsbOjwGY0Xtx
-         VZpiiFgzeAQEipV40FrR7OY869f4qhx9FkbXw8qG8H3Bj18v0/VMMbGd7AB/AYu9zW+w
-         o36g==
-X-Gm-Message-State: AOAM533O31FEk2t9pSLPO2XqJT/1eKaJBUpaP1o3BGQdcyQ2bH8ZVRqr
-        o3AtR3XVkaU9xntioS9tNP7hjw==
-X-Google-Smtp-Source: ABdhPJwgfKTuzX231iuOFh3HM2J+8+V8c7Ho5xKvWB5EHAHLg8Ugj3Bns3j9Y2oGfqRLOQK11r1igg==
-X-Received: by 2002:a5d:9049:: with SMTP id v9mr3846181ioq.199.1606854120097;
-        Tue, 01 Dec 2020 12:22:00 -0800 (PST)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id d5sm322949ios.25.2020.12.01.12.21.59
+        bh=A7/8+RJkGeSEwmLgpTG65Q4kAPCFxfMme+BpS8NvGD0=;
+        b=sXihDIesIVnVYHa2aIBhpseJKeegU3JVlIIQkUADe/eUa7rLuUlZZYF9CcEIKDtA0f
+         SHVyZlUtuayGwQTYMFE+aneofAP/hGanLExyzSP0D0vOZHbfNBIjDtoeOzNyUQpTnUU+
+         BPSAbUIldgvhTH7w1bj0HAmZtS/89b8gbGdeY801cfvWW9HhANRTQM2M1vS0gW6B8PYZ
+         rb4wqHe9XiOd+4zsXEadbHLLhtrnxD0MpxWc0xjCB6mOfYLnge4DpqzrlAiS6aQUWd0y
+         W3VB+2qhRtHs3uDlDF4+4pJpOTRq67IG5wNbniyhUWUcDpjcYuJ2CyfcfGKTHYS9ZJdE
+         Bxgg==
+X-Gm-Message-State: AOAM533/FaI9J8NKESN+sN1vxzwfRyUAF3m1TZfHFL4BaUPE/p6u1bhY
+        LKatsgsJQLZrfAVWnypKtYpddY46CGN1OLpdlXXRkR9lDLLQhGS5B/hRf8huDgCkrl+IV30YCyZ
+        aSSRh0/S/otiH4aBrLhGJtw==
+X-Received: by 2002:a05:6402:2377:: with SMTP id a23mr4959736eda.34.1606854901206;
+        Tue, 01 Dec 2020 12:35:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwLq9OZNQRnGhP9eq3qlTmDQto7T45obR28fwzCSfvUxGuqUM2j8W9ulPaAbdBh7MLqvz+s1w==
+X-Received: by 2002:a05:6402:2377:: with SMTP id a23mr4959715eda.34.1606854900954;
+        Tue, 01 Dec 2020 12:35:00 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id i2sm410497edk.93.2020.12.01.12.34.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Dec 2020 12:21:59 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linus.walleij@linaro.org, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20201201142830.13152-1-srinivas.kandagatla@linaro.org>
- <20201201142830.13152-3-srinivas.kandagatla@linaro.org>
-From:   Alex Elder <elder@ieee.org>
-Message-ID: <bf18cc63-77b2-7929-625a-1ea3d108916e@ieee.org>
-Date:   Tue, 1 Dec 2020 14:21:58 -0600
+        Tue, 01 Dec 2020 12:35:00 -0800 (PST)
+Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Dan Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        gregkh@linuxfoundation.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-19-djrscally@gmail.com>
+ <20201130200719.GB4077@smile.fi.intel.com>
+ <8a1b0f5b-1289-256b-b25d-cf8af43bdc84@gmail.com>
+ <20201201185417.GL4077@smile.fi.intel.com>
+ <20201201185548.GV4569@pendragon.ideasonboard.com>
+ <20201201190523.GO4077@smile.fi.intel.com>
+ <20201201190638.GZ4569@pendragon.ideasonboard.com>
+ <20201201192137.GR4077@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4831d44a-5bcc-8cf3-964c-c7dca6827458@redhat.com>
+Date:   Tue, 1 Dec 2020 21:34:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201201142830.13152-3-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20201201192137.GR4077@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/1/20 8:28 AM, Srinivas Kandagatla wrote:
-> Add initial pinctrl driver to support pin configuration for
-> LPASS (Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
-> on SM8250.
+Hi,
+
+On 12/1/20 8:21 PM, Andy Shevchenko wrote:
+> On Tue, Dec 01, 2020 at 09:06:38PM +0200, Laurent Pinchart wrote:
+>> On Tue, Dec 01, 2020 at 09:05:23PM +0200, Andy Shevchenko wrote:
+>>> On Tue, Dec 01, 2020 at 08:55:48PM +0200, Laurent Pinchart wrote:
+>>>> On Tue, Dec 01, 2020 at 08:54:17PM +0200, Andy Shevchenko wrote:
+>>>>> On Tue, Dec 01, 2020 at 08:30:03AM +0000, Dan Scally wrote:
+>>>>>> On 30/11/2020 20:07, Andy Shevchenko wrote:
+>>>
+>>> ...
+>>>
+>>>>>>>> +static struct int3472_sensor_regulator_map int3472_sensor_regulator_maps[] = {
+>>>>>>>> +	{ "GNDF140809R", 2, miix_510_ov2680 },
+>>>>>>>> +	{ "YHCU", 2, surface_go2_ov5693 },
+>>>>>>>> +	{ "MSHW0070", 2, surface_book_ov5693 },
+>>>>>>>> +};
+>>>>>>>
+>>>>>>> Hmm... Usual way is to use DMI for that. I'm not sure above will not give us
+>>>>>>> false positive matches.
+>>>>>>
+>>>>>> I considered DMI too, no problem to switch to that if it's a better choice.
+>>>>>
+>>>>> I prefer DMI as it's a standard way to describe platform quirks in x86 world.
+>>>>
+>>>> Do you think the Windows driver would use DMI ?
+>>>
+>>> Linux is using DMI for quirks.
+>>>
+>>>> That seems quite
+>>>> unlikely to me, given how they would have to release a new driver binary
+>>>> for every machine. I'm pretty sure that a different mechanism is used to
+>>>> identify camera integration, and I think it would make sense to follow
+>>>> the same approach. That would allow us to avoid large tables of DMI
+>>>> identifiers that would need to be constently updated, potentially making
+>>>> user experience better.
+>>>
+>>> All Surface family can be matched in a way as Apple machines [1].
+>>>
+>>> [1]: https://lkml.org/lkml/2020/4/15/1198
+>>
+>> But not all Surface machines necessarily have the same camera
+>> architecture. My point is that there seems to be identifiers reported in
+>> ACPI for the exact purpose of identifying the camera architecture. If we
+>> used DMI instead, we would have to handle each machine individually.
 > 
-> This IP is an additional pin control block for Audio Pins on top the
-> existing SoC Top level pin-controller.
-> Hardware setup looks like:
+> With help of DMI we may narrow down the search.
 > 
-> TLMM GPIO[146 - 159] --> LPASS LPI GPIO [0 - 13]
+> But again, we are talking about uncertainity. It may be your way (a lot of
+> platforms that have different settings), or mine (only a few with more or less
+> standard sets of settings).
 > 
-> This pin controller has some similarities compared to Top level
-> msm SoC Pin controller like 'each pin belongs to a single group'
-> and so on. However this one is intended to control only audio
-> pins in particular, which can not be configured/touched by the
-> Top level SoC pin controller except setting them as gpios.
-> Apart from this, slew rate is also available in this block for
-> certain pins which are connected to SLIMbus or SoundWire Bus.
+> DMI is simply standard in Linux (people usually easier can grep for quirks for
+> a specific platform).
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> I would rather ask Hans' opinion since he has quite an expertise with DMI for
+> good and bad.
 
-Bjorn called my attention to a comment he made on this patch.
-I'm not giving it a full review right now, but I have a
-general suggestion below.
+So generally there are 2 ways how things like this can go:
 
-> ---
->   drivers/pinctrl/qcom/Kconfig             |   8 +
->   drivers/pinctrl/qcom/Makefile            |   1 +
->   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 727 +++++++++++++++++++++++
->   3 files changed, 736 insertions(+)
->   create mode 100644 drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> 
-> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> index 5fe7b8aaf69d..d3e4e89c2810 100644
-> --- a/drivers/pinctrl/qcom/Kconfig
-> +++ b/drivers/pinctrl/qcom/Kconfig
-> @@ -236,4 +236,12 @@ config PINCTRL_SM8250
->   	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
->   	  Technologies Inc SM8250 platform.
->   
-> +config PINCTRL_LPASS_LPI
-> +	tristate "Qualcomm Technologies Inc LPASS LPI pin controller driver"
-> +	depends on GPIOLIB
-> +	help
-> +	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> +	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
-> +	  (Low Power Island) found on the Qualcomm Technologies Inc SoCs.
-> +
->   endif
-> diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-> index 9e3d9c91a444..c8520155fb1b 100644
-> --- a/drivers/pinctrl/qcom/Makefile
-> +++ b/drivers/pinctrl/qcom/Makefile
-> @@ -28,3 +28,4 @@ obj-$(CONFIG_PINCTRL_SDM660)   += pinctrl-sdm660.o
->   obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
->   obj-$(CONFIG_PINCTRL_SM8150) += pinctrl-sm8150.o
->   obj-$(CONFIG_PINCTRL_SM8250) += pinctrl-sm8250.o
-> +obj-$(CONFIG_PINCTRL_LPASS_LPI) += pinctrl-lpass-lpi.o
-> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> new file mode 100644
-> index 000000000000..96c63a33fc99
-> --- /dev/null
-> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> @@ -0,0 +1,727 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2020 Linaro Ltd.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include "../core.h"
-> +#include "../pinctrl-utils.h"
-> +
-> +#define LPI_GPIO_CFG_REG		0x00
-> +#define LPI_GPIO_VALUE_REG		0x04
-> +#define LPI_SLEW_RATE_CTL_REG		0xa000
-> +#define LPI_SLEW_RATE_MAX		0x03
-> +#define LPI_SLEW_BITS_SIZE		0x02
-> +#define LPI_GPIO_PULL_SHIFT		0x0
-> +#define LPI_GPIO_PULL_MASK		GENMASK(1, 0)
+1) There is sufficient information in the ACPI table and we use data from the
+ACPI tables
 
-. . .
+2) There is unsufficient info in the ACPI tables (or we don't know how to
+get / interpret the data) and we use DMI quirks
 
-If you have a mask like this, you do not need the shift.
-The mask alone encodes both the position and the width
-of the field you are describing.  It is better to use
-just the one (mask) value and avoid even the possibility
-of the mask and shift being inconsistent.  You halve the
-number of symbols you need to describe fields too.
+Although we do often also use a combination, getting what we can from ACPI,
+combined with a set of defaults for what we cannot get from ACPI
+based on what reference designs use (IOW what most devices seem to have
+copy and pasted). Combined with DMI quirks for when the defaults do not
+work (which is quite often).
 
-For the macros and functions in <linux/bitfield.h> the
-mask values must be constant at compile time, but you
-have that here.
+Depending on if "not working because of wrong defaults" has bad side effects,
+another option is also to only allow the driver to load on devices which
+have the necessary info provided through a DMI match.
 
-For the LPI_GPIO_PULL, you use it below this way:
-     pull = (ctl_reg & LPI_GPIO_PULL_MASK) >> LPI_GPIO_PULL_SHIFT;
-Instead, use:
-     pull = u32_get_bits(ctl_reg, LPI_GPIO_PULL_MASK);
+I hope this helps.
 
-I see you're using u32_replace_bits(), and what I see
-looks good.  But you can use u32_encode_bits() as well.
-For example, instead of:
-     lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG,
-                    value << LPI_GPIO_DIR_SHIFT);
-Use:
-     val = u32_encode_bits(value ? 1 : 0, LPI_GPIO_DIR_MASK);
-     lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG, val);
-(This one-bit mask might not be a great example.)
+Regards,
 
-In addition to getting rid of extra symbols, using these
-functions typically results in simpler-looking code.
+Hans
 
-					-Alex
