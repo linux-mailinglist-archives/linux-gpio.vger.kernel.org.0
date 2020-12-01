@@ -2,98 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 172202CAAAB
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:23:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D089C2CAACB
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:33:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgLASW0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 13:22:26 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:48332 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgLASWZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 1 Dec 2020 13:22:25 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 0910B440069;
-        Tue,  1 Dec 2020 20:21:36 +0200 (IST)
-References: <cover.1605694661.git.baruch@tkos.co.il>
- <db0d6d619a0686eef1b15ca7409d73813440856f.1605694661.git.baruch@tkos.co.il>
- <20201118231811.GH1853236@lunn.ch> <878sax6f43.fsf@tarshish>
- <20201119133429.GS1804098@lunn.ch> <877dqhfogp.fsf@tarshish>
- <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] gpio: mvebu: add pwm support for Armada 8K/7K
-In-reply-to: <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
-Date:   Tue, 01 Dec 2020 20:21:33 +0200
-Message-ID: <87lfeho09e.fsf@tarshish>
+        id S2391625AbgLASc3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 13:32:29 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57354 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729907AbgLASc2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 1 Dec 2020 13:32:28 -0500
+IronPort-SDR: v1rLwKhuY+QuZYK91E/wSW7W8DPVJ7w2GRL4OagZqBfot0pRCA8th3tr8hXSIKzTatMBAxHw1J
+ hl9GTQOf0eBw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="172979594"
+X-IronPort-AV: E=Sophos;i="5.78,385,1599548400"; 
+   d="scan'208";a="172979594"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 10:30:46 -0800
+IronPort-SDR: w94DK1WYz2kVijJmCAm7U5E8Ycz+LLKPkSJ0tTZhaiEulD6TyTP3p2QW9AWgyJkMhmzjXf5sDx
+ du8GyQZRfBgA==
+X-IronPort-AV: E=Sophos;i="5.78,385,1599548400"; 
+   d="scan'208";a="481208366"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 10:30:39 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kkAR9-00BKxI-LB; Tue, 01 Dec 2020 20:31:39 +0200
+Date:   Tue, 1 Dec 2020 20:31:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dan Scally <djrscally@gmail.com>
+Cc:     Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
+        lenb@kernel.org, gregkh@linuxfoundation.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
+        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
+        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
+        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
+        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
+Message-ID: <20201201183139.GH4077@smile.fi.intel.com>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-19-djrscally@gmail.com>
+ <f5aca6eb-cc41-64d6-cb72-19ee3a8afd1e@ideasonboard.com>
+ <fba097b3-6c61-c1ad-2928-3cb55bff6d19@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fba097b3-6c61-c1ad-2928-3cb55bff6d19@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Mon, Nov 30, 2020 at 11:20:55PM +0000, Dan Scally wrote:
+> On 30/11/2020 16:17, Jean-Michel Hautbois wrote:
 
-On Tue, Dec 01 2020, Bartosz Golaszewski wrote:
-> On Thu, Nov 19, 2020 at 2:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
->> On Thu, Nov 19 2020, Andrew Lunn wrote:
->> >> >> @@ -1200,6 +1235,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->> >> >>
->> >> >>   devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
->> >> >>
->> >> >> + /* Some MVEBU SoCs have simple PWM support for GPIO lines */
->> >> >> + if (IS_ENABLED(CONFIG_PWM)) {
->> >> >> +         err = mvebu_pwm_probe(pdev, mvchip, id);
->> >> >> +         if (err)
->> >> >> +                 return err;
->> >> >> + }
->> >> >> +
->> >> >
->> >> > The existing error handling looks odd here. Why is there no goto
->> >> > err_domain when probing the PWMs fails? I wonder if this a bug from me
->> >> > from a long time again?
->> >>
->> >> What would you release under the err_domain label? As far as I can see
->> >> all resources are allocated using devres, and released automatically on
->> >> failure exit.
->> >
->> > The IRQ domain is still registers. So once the memory is automatically
->> > freed, don't we have a potential use after free?
->>
->> This patch moves PWM registration before IRQ domain registration for
->> another reason as mentioned in the commit log. So this might
->> incidentally fix the bug.
->>
->> Would you prefer a separate patch for that with a 'Fixes:
->> 757642f9a584e8' tag?
->
-> Baruch: does this series conflict with the fix you sent? I'm thinking
-> about how to take it through the next and fixes trees.
+...
 
-Yes, It conflicts.
+> but the ACPI table doesn't define an I2CSerialBusV2 for it. Instead it's
+> rolled under the sensor's entry, there's a second entry in _CRS for the
+> sensor that matches the address of the new device:
+> 
+> 
+>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>             {
+>                 Name (SBUF, ResourceTemplate ()
+>                 {
+>                     I2cSerialBusV2 (0x0036, ControllerInitiated, 0x00061A80,
+>                         AddressingMode7Bit, "\\_SB.PCI0.I2C2",
+>                         0x00, ResourceConsumer, , Exclusive,
+>                         )
+>                     I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
+>                         AddressingMode7Bit, "\\_SB.PCI0.I2C2",
+>                         0x00, ResourceConsumer, , Exclusive,
+>                         )
+>                 })
+>                 Return (SBUF) /* \_SB_.PCI0.CAM0._CRS.SBUF */
+>             }
+> 
+> So that's another thing we need to work on. At the moment it doesn't
+> exist as far as the kernel is concerned.
 
-I can send in a single series v3 of the fix along with the other patches
-rebased on top. Would that work for you?
+Maybe something along i2c-multi-instantiate can help here (maybe not).
 
-Thanks,
-baruch
+P.S. Dan, can you drop unrelated text when replying?
 
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+With Best Regards,
+Andy Shevchenko
+
+
