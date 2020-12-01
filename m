@@ -2,185 +2,227 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D1B62CA9A1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 18:30:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B90572CA9AE
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 18:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgLAR3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 12:29:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45882 "EHLO
+        id S2403773AbgLARaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 12:30:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgLAR3G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 12:29:06 -0500
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A650DC0613D6
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 09:28:26 -0800 (PST)
-Received: by mail-ot1-x341.google.com with SMTP id h19so2433401otr.1
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 09:28:26 -0800 (PST)
+        with ESMTP id S2390586AbgLARaE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 12:30:04 -0500
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDDFC0613D4
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 09:29:24 -0800 (PST)
+Received: by mail-ot1-x344.google.com with SMTP id z24so2415357oto.6
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 09:29:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TQyDhRIJ7rEiN9hCk9WyxKUDIyuozNAVVNkVc8YrpXg=;
-        b=HfuFhzV/ccCro+uCbOb/y50FQGd5wN4ICHnvajiWVk0nS0pZiS+AOSFCnDHG7PnRCa
-         GEox+dpy6qHL+erQkJ2IQLymTJ6UQECBqBn5BvhP7dbdM0wD5uLSEmIYpiNlFrDQ827v
-         jMOmW+I724aOht3pb+uWjMxOQRMrdGoRi1HBBi9hfK2ymeetdRiogM10SAQnKMbzIm0G
-         UsPT43p69dvtYbW3lCG+44I27of1q2IDNftLwQWY6AsqBeGi7Ci9v08C0oNx5g8eVL+E
-         y23fVimIgWEuF98Q/cOVWI/lqISILVUdDAFTu7TGq0FjEU+RkKrtkNH54u6DYZxd0OL8
-         +N6g==
+        bh=l8vvlkbHOcQOjYY/Opy47c8Dw9W68kDnh+apjcsK7jc=;
+        b=sxS/hByLKJEQs8SSpaMjUL2ervlOHphMtva39THckGzCiSJ0dC7d7ErfZ4WOlA2kdQ
+         waAcYJt22YVIySKlh/I2Pei/RI3PxprBd5kCcxd/5NNqSYnb272u6JuF21Dv2O59xsij
+         ToSgRLw6WbARZntnWaQmmn473GNz8dbbRXveK5bcQpGQ2SGc8VWCPutpwq+SicvIPe/P
+         3bTOExhjWNAFc+sLKYmF672WfQOtXkXCC7jR3gtRmztqHcuD3RfiWzkJ2esYGXfRdoJj
+         OKUTBXHYy+xrp1yxghCo7D3C66p7qhvU7lOC3un4nRiTdTedkhfk1SBpSa1r+Cm2yXH0
+         g33A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TQyDhRIJ7rEiN9hCk9WyxKUDIyuozNAVVNkVc8YrpXg=;
-        b=Gci16EQEkrOT61innbTWKOumpJ8QcQCfE48wWwJZV66/Ff2N15ruE2wuN98hBch9Z7
-         1p7B0llrkX8buchdt3Lqq2T3Ty25iUgGZjFHSj1+tPzHKUjxgdXhbBLTKAsGqHTx1biH
-         upG9uS41PgWhYib1uyiJXqt/zWVvttxD7ysaLBfVD6+n9TS4T4crk8qAgQeBUpiJNSK5
-         6o4w7KVpX5ilr0xOkUffg25V/4yxENIysii2CBCUWfNMfqvt4rti4SJejPHVKobdcGoH
-         I7sLn2JeCa/MZFcnxFB+5MJrvbhQ5ZBZxvWH0w9FrbUGmVWFLZjM8qrTSPD2MnFRQQ2e
-         6TeA==
-X-Gm-Message-State: AOAM530IBInoyu+gAeyldVBgtqSL3CbLteexhQvQypNfBOWuaCORBprH
-        QmXCLQfbqCt5XGy/EGo/tnk/gQ==
-X-Google-Smtp-Source: ABdhPJyUjovjQasEJ8gL40gzaNNC8d5vbgNE/y2i5fRr/dA851rZ+zDqg+lrEeDCBXhCwBTr76kNkA==
-X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr2591590otd.358.1606843705684;
-        Tue, 01 Dec 2020 09:28:25 -0800 (PST)
+        bh=l8vvlkbHOcQOjYY/Opy47c8Dw9W68kDnh+apjcsK7jc=;
+        b=suAyDYClfvHnibuaQuHrLszCiVMSC64RiHpqq+6QBBWK7cUBEeZ0dSg2ftAUV0D87t
+         abq8WxHRRVstKgDOltZOEEWJ9sdKz0xqN0cFRy8E6JSUdbPTwXtMAOOmRTwejOaX4Pz/
+         uX5tC1sHsK50r3aT0eNxrCYAvMFmvxbbi2Lle8wrahPXKQ4+IGdkx+nop5nVWklLAD2f
+         ryX4Xk8YN9TDgKIh0b62dgqTocGDc1/wwg36i9dJ344b/9kTv00tV8nXp4iN+2mq+19E
+         gn+f160sOBuoSp0ED9naHAvd1vPjQ9LuAmNuTMbKrGxrNQzYBmo69E+EZBnKdtMz/wya
+         N5dw==
+X-Gm-Message-State: AOAM531faQC++eWzlptIZUfMsztlFdEVvGJVNPHswLtqsiTuBObaoVKf
+        1J3xOUPky1BF1O3pigwKYA+Heg==
+X-Google-Smtp-Source: ABdhPJz219+0deBZngPjxwfYWY8oaCEqmDmI14IiB4RoHGZbWyhwhfuH1sFxngCr18KnCvfhpECMww==
+X-Received: by 2002:a9d:5c04:: with SMTP id o4mr2564678otk.372.1606843763504;
+        Tue, 01 Dec 2020 09:29:23 -0800 (PST)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id g2sm78160ooh.39.2020.12.01.09.28.24
+        by smtp.gmail.com with ESMTPSA id 60sm87238ott.32.2020.12.01.09.29.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Dec 2020 09:28:25 -0800 (PST)
-Date:   Tue, 1 Dec 2020 11:28:23 -0600
+        Tue, 01 Dec 2020 09:29:22 -0800 (PST)
+Date:   Tue, 1 Dec 2020 11:29:21 -0600
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver
-Message-ID: <X8Z9N2Yu8xiyPRmj@builder.lan>
-References: <20201116143432.15809-1-srinivas.kandagatla@linaro.org>
- <20201116143432.15809-3-srinivas.kandagatla@linaro.org>
- <X8WSucFKyROFJ7gF@builder.lan>
- <ec14afaa-8660-03ac-fbf9-79ff37889de3@linaro.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add sm8250 lpass lpi
+ pinctrl bindings
+Message-ID: <X8Z9cUOmHQRNuvCD@builder.lan>
+References: <20201201142830.13152-1-srinivas.kandagatla@linaro.org>
+ <20201201142830.13152-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ec14afaa-8660-03ac-fbf9-79ff37889de3@linaro.org>
+In-Reply-To: <20201201142830.13152-2-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 01 Dec 04:01 CST 2020, Srinivas Kandagatla wrote:
+On Tue 01 Dec 08:28 CST 2020, Srinivas Kandagatla wrote:
 
-> Many thanks for review Bjorn,
+> Add device tree binding Documentation details for Qualcomm SM8250
+> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
 > 
-> 
-> On 01/12/2020 00:47, Bjorn Andersson wrote:
-> > On Mon 16 Nov 08:34 CST 2020, Srinivas Kandagatla wrote:
-> > 
-> > > Add initial pinctrl driver to support pin configuration for
-> > > LPASS (Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
-> > > on SM8250.
-> > > 
-> > > This IP is an additional pin control block for Audio Pins on top the
-> > > existing SoC Top level pin-controller.
-> > > Hardware setup looks like:
-> > > 
-> > > TLMM GPIO[146 - 159] --> LPASS LPI GPIO [0 - 13]
-> > > 
-> > 
-> > Iiuc the LPI TLMM block is just "another pinmux/pinconf block" found in
-> > these SoCs, with the additional magic that the 14 pads are muxed with
-> > some of the TLMM pins - to allow the system integrator to choose how
-> > many pins the LPI should have access to.
-> > 
-> > I also believe this is what the "egpio" bit in the TLMM registers are
-> > used for (i.e. egpio = route to LPI, egpio = 1 route to TLMM), so we
-> > should need to add support for toggling this bit in the TLMM as well
-> > (which I think we should do as a pinconf in the pinctrl-msm).
-> 
-> Yes, we should add egpio function to these pins in main TLMM pinctrl!
-> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I was thinking about abusing the pinconf system, but reading you
-sentence makes me feel that expressing it as a "function" and adding a
-special case handling in msm_pinmux_set_mux() would actually make things
-much cleaner to the outside.
-
-i.e. we would then end up with something in DT like:
-
-	pin-is-normal-tlmm-pin {
-		pins = "gpio146";
-		function = "gpio";
-	};
-
-and
-
-	pin-routed-to-lpi-pin {
-		pins = "gpio146";
-		function = "egpio";
-	};
-
-Only "drawback" I can see is that we're inverting the chip's meaning of
-"egpio" (i.e. active means route-to-tlmm in the hardware).
-
-> > 
-> > > This pin controller has some similarities compared to Top level
-> > > msm SoC Pin controller like 'each pin belongs to a single group'
-> > > and so on. However this one is intended to control only audio
-> > > pins in particular, which can not be configured/touched by the
-> > > Top level SoC pin controller except setting them as gpios.
-[..]
-> > > diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-[..]
-> > > +	LPI_MUX_qua_mi2s_sclk,
-> > > +	LPI_MUX_swr_tx_data1,
-> > 
-> > As there's no single pin that can be both data1 and data2 I think you
-> > should have a single group for swr_tx_data and use this function for
-> > both swr_tx_data pins. Or perhaps even just have one for swr or swr_tx.
-> > 
-> > (This is nice when you're writing DT later on)
-> 
-> I did think about this, but we have a rx_data2 pin in different function
-> compared to other rx data pins.
-> 
-> The reason to keep it as it is :
-> 1> as this will bring in an additional complexity to the code
-
-For each pin lpi_gpio_set_mux() will be invoked and you'd be searching
-for the index (i) among that pins .funcs. So it doesn't matter that
-looking up a particular function results in different register values
-for different pins, it's already dealt with.
-
-> 2> we have these represented exactly as what hw data sheet mentions it!
-> 
-
-That is true, but the result is that you have to write 2 states in the
-DT to get your 2 pins to switch to the particular function. By grouping
-them you could do:
-
-	data-pins {
-		pins = "gpio1", "gpio2";
-		function = "swr_tx_data";
-	};
-
-
-We do this quite extensively for the TLMM (pinctrl-msm) because it
-results in cleaner DT.
-
-> > 
-> > > +	LPI_MUX_qua_mi2s_ws,
-[..]
-> > > +static struct lpi_pinctrl_variant_data sm8250_lpi_data = {
-> > > +	.tlmm_reg_offset = 0x1000,
-> > 
-> > Do we have any platform in sight where this is not 0x1000? Could we just
-> > make a define out of it?
-> Am not 100% sure ATM, But I wanted to keep this flexible as these offsets in
-> downstream were part of device tree for some reason, so having offset here
-> for particular compatible made more sense for me!
-> 
-
-Downtream does indeed favor "flexible" code. I tend to prefer a #define
-until we actually need the flexibility...
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> ---
+>  .../pinctrl/qcom,lpass-lpi-pinctrl.yaml       | 132 ++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..3543324d9194
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,lpass-lpi-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
+> +  Low Power Island (LPI) TLMM block
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  LPASS LPI IP on most Qualcomm SoCs
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8250-lpass-lpi-pinctrl
+> +
+> +  reg:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  clocks:
+> +    items:
+> +      - description: LPASS Core voting clock
+> +      - description: LPASS Audio voting clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: audio
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9])$"
+> +        minItems: 1
+> +        maxItems: 14
+> +
+> +      function:
+> +        enum: [ gpio, swr_tx_clk, qua_mi2s_sclk, swr_tx_data1, qua_mi2s_ws,
+> +                swr_tx_data2, qua_mi2s_data0, swr_rx_clk, qua_mi2s_data1,
+> +                swr_rx_data1, qua_mi2s_data2, swr_tx_data3, swr_rx_data2,
+> +                dmic1_clk, i2s1_clk, dmic1_data, i2s1_ws, dmic2_clk,
+> +                i2s1_data0, dmic2_data, i2s1_data1, i2s2_clk, wsa_swr_clk,
+> +                i2s2_ws, wsa_swr_data, dmic3_clk, i2s2_data0, dmic3_data,
+> +                i2s2_data1 ]
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +      drive-strength:
+> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +        default: 2
+> +        description:
+> +          Selects the drive strength for the specified pins, in mA.
+> +
+> +      slew-rate:
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +        description: |
+> +            0: No adjustments
+> +            1: Higher Slew rate (faster edges)
+> +            2: Lower Slew rate (slower edges)
+> +            3: Reserved (No adjustments)
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      bias-disable: true
+> +
+> +      output-high: true
+> +
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/sound/qcom,q6afe.h>
+> +    lpi_tlmm: pinctrl@33c0000 {
+> +        compatible = "qcom,sm8250-lpass-lpi-pinctrl";
+> +        reg = <0x33c0000 0x20000>,
+> +              <0x3550000 0x10000>;
+> +        clocks = <&q6afecc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
+> +                 <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
+> +        clock-names = "core", "audio";
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&lpi_tlmm 0 0 14>;
+> +    };
+> -- 
+> 2.21.0
+> 
