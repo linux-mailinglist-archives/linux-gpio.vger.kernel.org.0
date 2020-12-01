@@ -2,102 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECCAD2CA963
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 18:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D1B62CA9A1
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 18:30:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbgLARSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 12:18:06 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39700 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgLARSF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 12:18:05 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B1HGS3L057029;
-        Tue, 1 Dec 2020 11:16:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1606842988;
-        bh=+/8lyXJJSu5/Re7ayYkj7yhn8aeSYzNq7g4xT2/NVsA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XMEB5Oj/IwmUbjJy9aZhp0MCc1eaaEKQxm932voUeK3Rw8UeeOwx+s8G8EpSkghMO
-         ayNED+3GwBBQ/A5LJ1jQFhZ253SdsUXRUjKXsg/wClZ34aiQYqq8PK9FBz47K08F+/
-         2xKvxifkGZanE8S0NHy5pkmrtSiZQfSUyhhz7Wm8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B1HGSk7067916
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Dec 2020 11:16:28 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Dec
- 2020 11:16:27 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 1 Dec 2020 11:16:28 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B1HGLcl125971;
-        Tue, 1 Dec 2020 11:16:24 -0600
-Subject: Re: [PATCH] gpiolib: do not print err message for EPROBE_DEFER
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20201118142917.25752-1-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <69388132-1a81-e222-76fc-5d3b860a2d53@ti.com>
-Date:   Tue, 1 Dec 2020 19:16:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727826AbgLAR3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 12:29:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgLAR3G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 12:29:06 -0500
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A650DC0613D6
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 09:28:26 -0800 (PST)
+Received: by mail-ot1-x341.google.com with SMTP id h19so2433401otr.1
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 09:28:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TQyDhRIJ7rEiN9hCk9WyxKUDIyuozNAVVNkVc8YrpXg=;
+        b=HfuFhzV/ccCro+uCbOb/y50FQGd5wN4ICHnvajiWVk0nS0pZiS+AOSFCnDHG7PnRCa
+         GEox+dpy6qHL+erQkJ2IQLymTJ6UQECBqBn5BvhP7dbdM0wD5uLSEmIYpiNlFrDQ827v
+         jMOmW+I724aOht3pb+uWjMxOQRMrdGoRi1HBBi9hfK2ymeetdRiogM10SAQnKMbzIm0G
+         UsPT43p69dvtYbW3lCG+44I27of1q2IDNftLwQWY6AsqBeGi7Ci9v08C0oNx5g8eVL+E
+         y23fVimIgWEuF98Q/cOVWI/lqISILVUdDAFTu7TGq0FjEU+RkKrtkNH54u6DYZxd0OL8
+         +N6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TQyDhRIJ7rEiN9hCk9WyxKUDIyuozNAVVNkVc8YrpXg=;
+        b=Gci16EQEkrOT61innbTWKOumpJ8QcQCfE48wWwJZV66/Ff2N15ruE2wuN98hBch9Z7
+         1p7B0llrkX8buchdt3Lqq2T3Ty25iUgGZjFHSj1+tPzHKUjxgdXhbBLTKAsGqHTx1biH
+         upG9uS41PgWhYib1uyiJXqt/zWVvttxD7ysaLBfVD6+n9TS4T4crk8qAgQeBUpiJNSK5
+         6o4w7KVpX5ilr0xOkUffg25V/4yxENIysii2CBCUWfNMfqvt4rti4SJejPHVKobdcGoH
+         I7sLn2JeCa/MZFcnxFB+5MJrvbhQ5ZBZxvWH0w9FrbUGmVWFLZjM8qrTSPD2MnFRQQ2e
+         6TeA==
+X-Gm-Message-State: AOAM530IBInoyu+gAeyldVBgtqSL3CbLteexhQvQypNfBOWuaCORBprH
+        QmXCLQfbqCt5XGy/EGo/tnk/gQ==
+X-Google-Smtp-Source: ABdhPJyUjovjQasEJ8gL40gzaNNC8d5vbgNE/y2i5fRr/dA851rZ+zDqg+lrEeDCBXhCwBTr76kNkA==
+X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr2591590otd.358.1606843705684;
+        Tue, 01 Dec 2020 09:28:25 -0800 (PST)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id g2sm78160ooh.39.2020.12.01.09.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 09:28:25 -0800 (PST)
+Date:   Tue, 1 Dec 2020 11:28:23 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver
+Message-ID: <X8Z9N2Yu8xiyPRmj@builder.lan>
+References: <20201116143432.15809-1-srinivas.kandagatla@linaro.org>
+ <20201116143432.15809-3-srinivas.kandagatla@linaro.org>
+ <X8WSucFKyROFJ7gF@builder.lan>
+ <ec14afaa-8660-03ac-fbf9-79ff37889de3@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20201118142917.25752-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec14afaa-8660-03ac-fbf9-79ff37889de3@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-hi Bartosz, All,
+On Tue 01 Dec 04:01 CST 2020, Srinivas Kandagatla wrote:
 
-On 18/11/2020 16:29, Grygorii Strashko wrote:
-> The gpiochip may have dependencies from pinmux and so got deferred. Now it
-> will print error message every time -EPROBE_DEFER is returned which is
-> unnecessary:
+> Many thanks for review Bjorn,
 > 
-> "gpiochip_add_data_with_key: GPIOs 0..31 (gpio-0-31) failed to register, -517"
 > 
-> Hence, do suppress error message for -EPROBE_DEFER case.
+> On 01/12/2020 00:47, Bjorn Andersson wrote:
+> > On Mon 16 Nov 08:34 CST 2020, Srinivas Kandagatla wrote:
+> > 
+> > > Add initial pinctrl driver to support pin configuration for
+> > > LPASS (Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
+> > > on SM8250.
+> > > 
+> > > This IP is an additional pin control block for Audio Pins on top the
+> > > existing SoC Top level pin-controller.
+> > > Hardware setup looks like:
+> > > 
+> > > TLMM GPIO[146 - 159] --> LPASS LPI GPIO [0 - 13]
+> > > 
+> > 
+> > Iiuc the LPI TLMM block is just "another pinmux/pinconf block" found in
+> > these SoCs, with the additional magic that the 14 pads are muxed with
+> > some of the TLMM pins - to allow the system integrator to choose how
+> > many pins the LPI should have access to.
+> > 
+> > I also believe this is what the "egpio" bit in the TLMM registers are
+> > used for (i.e. egpio = route to LPI, egpio = 1 route to TLMM), so we
+> > should need to add support for toggling this bit in the TLMM as well
+> > (which I think we should do as a pinconf in the pinctrl-msm).
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->   drivers/gpio/gpiolib.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 089ddcaa9bc6..fd2c503a6aab 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -771,9 +771,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->   	ida_free(&gpio_ida, gdev->id);
->   err_free_gdev:
->   	/* failures here can mean systems won't boot... */
-> -	pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
-> -	       gdev->base, gdev->base + gdev->ngpio - 1,
-> -	       gc->label ? : "generic", ret);
-> +	if (ret != -EPROBE_DEFER) {
-> +		pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
-> +		       gdev->base, gdev->base + gdev->ngpio - 1,
-> +		       gc->label ? : "generic", ret);
-> +	}
->   	kfree(gdev);
->   	return ret;
->   }
+> Yes, we should add egpio function to these pins in main TLMM pinctrl!
 > 
 
-Any comments for this patch?
+I was thinking about abusing the pinconf system, but reading you
+sentence makes me feel that expressing it as a "function" and adding a
+special case handling in msm_pinmux_set_mux() would actually make things
+much cleaner to the outside.
 
-Note. Modern dev_err_probe() seems can't be used as gpio_chip->parent is not guaranteed to be set and
-it's not clear if chip_err() still can be used at this stage.
+i.e. we would then end up with something in DT like:
 
--- 
-Best regards,
-grygorii
+	pin-is-normal-tlmm-pin {
+		pins = "gpio146";
+		function = "gpio";
+	};
+
+and
+
+	pin-routed-to-lpi-pin {
+		pins = "gpio146";
+		function = "egpio";
+	};
+
+Only "drawback" I can see is that we're inverting the chip's meaning of
+"egpio" (i.e. active means route-to-tlmm in the hardware).
+
+> > 
+> > > This pin controller has some similarities compared to Top level
+> > > msm SoC Pin controller like 'each pin belongs to a single group'
+> > > and so on. However this one is intended to control only audio
+> > > pins in particular, which can not be configured/touched by the
+> > > Top level SoC pin controller except setting them as gpios.
+[..]
+> > > diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+[..]
+> > > +	LPI_MUX_qua_mi2s_sclk,
+> > > +	LPI_MUX_swr_tx_data1,
+> > 
+> > As there's no single pin that can be both data1 and data2 I think you
+> > should have a single group for swr_tx_data and use this function for
+> > both swr_tx_data pins. Or perhaps even just have one for swr or swr_tx.
+> > 
+> > (This is nice when you're writing DT later on)
+> 
+> I did think about this, but we have a rx_data2 pin in different function
+> compared to other rx data pins.
+> 
+> The reason to keep it as it is :
+> 1> as this will bring in an additional complexity to the code
+
+For each pin lpi_gpio_set_mux() will be invoked and you'd be searching
+for the index (i) among that pins .funcs. So it doesn't matter that
+looking up a particular function results in different register values
+for different pins, it's already dealt with.
+
+> 2> we have these represented exactly as what hw data sheet mentions it!
+> 
+
+That is true, but the result is that you have to write 2 states in the
+DT to get your 2 pins to switch to the particular function. By grouping
+them you could do:
+
+	data-pins {
+		pins = "gpio1", "gpio2";
+		function = "swr_tx_data";
+	};
+
+
+We do this quite extensively for the TLMM (pinctrl-msm) because it
+results in cleaner DT.
+
+> > 
+> > > +	LPI_MUX_qua_mi2s_ws,
+[..]
+> > > +static struct lpi_pinctrl_variant_data sm8250_lpi_data = {
+> > > +	.tlmm_reg_offset = 0x1000,
+> > 
+> > Do we have any platform in sight where this is not 0x1000? Could we just
+> > make a define out of it?
+> Am not 100% sure ATM, But I wanted to keep this flexible as these offsets in
+> downstream were part of device tree for some reason, so having offset here
+> for particular compatible made more sense for me!
+> 
+
+Downtream does indeed favor "flexible" code. I tend to prefer a #define
+until we actually need the flexibility...
+
+Regards,
+Bjorn
