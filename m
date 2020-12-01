@@ -2,114 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 907F72CAA73
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC892CAA9A
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Dec 2020 19:18:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392230AbgLASEN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 13:04:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51304 "EHLO
+        id S1729073AbgLASRm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 13:17:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392229AbgLASEM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 13:04:12 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C473CC0613D4
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 10:03:25 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id c7so4604436edv.6
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 10:03:25 -0800 (PST)
+        with ESMTP id S1728310AbgLASRm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 13:17:42 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B07C0613D4
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Dec 2020 10:16:56 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id u19so4715485edx.2
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Dec 2020 10:16:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TgW1FQnuQrgiK+Z/NzD7lu4StuId76dlqMcpFgHdPgE=;
-        b=SX8R2HCj3E6TK16HzCLIiiaA/lc8URSZ25p/usXodYxou4SmJ+kvSZ4vkMYQzIe6qU
-         WEEwaGi/fmyr9BZUFkvUWvir11iQ+vawxaX8QlmopOlfLEM0qqzqgZiXBBFuV33VyYI1
-         sea4iuAmvUvhJHLhywz4iiPfN4weGnoQFAOQQRDVyNLT0Q610vNiz7p0UuMruJu55Eq7
-         /d4e69E9zHAxchZOqomlonhaVnKN0VBCnj+WaBGmt9+f7sbGAXgycv9v78dI9hGHp5ej
-         N+EMP8ltrgNhOk8GqbGXqHYFbzWKLHwHW35PzgOfeJHHm7wDvD3HGE/M07QzwSp/90H7
-         csbA==
+        bh=N/syJ22a7pW9UW70CpIkZYiyUgRG7SInot7yd6BD7U8=;
+        b=CVx56aS+gy5rI7qQSyuavnHAdlDpFsbemK8vMOXXUNa4lUVMCM2PapwdtDHkKVh4FT
+         Re6W1840rMxQTWTtch+pXJqo3XrBTFC82M5ltQpmr9LDYzp6PvPzth7h7A7ZPRE4uYm0
+         lca6HzE7y7PbW6rxBkEmWsA52XJSOSA+KOfAwDGJuaF+FoROBRUyWkJm1kwk2wBJk0tI
+         cskTotCWOxzUjvyHYOBYPPTr9PadeXR1CXo42k3MH2mO9N9KNO/8krF9oqPI6yn6QFHn
+         Z7zwL2Pzv/yZHP8Jsog1jUyPLopceJzUHnNxUlYxFswA/PRogYzJqPFSmsP0SJXDqyGP
+         UL7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TgW1FQnuQrgiK+Z/NzD7lu4StuId76dlqMcpFgHdPgE=;
-        b=ssJfe/z/BvcSYPMk09y0x2zxRucLGEL8A+NKOnLVLDyp48h3WIPUnfmHanV83fUFpA
-         BIeCpR79iX4LME1RD3giyfq1PikCWAAatBGqwW+bP/1h1HRefSppDZLiGrL+b3rw5bvQ
-         8HsJi6XBewFyGTAJ6oXmc7F1YoCpGgXsC0Ynqo2K4bhUsF/nFaLcUWmx0BHPpVnJxDRR
-         PfF0whLGWwP0AhDY/p/XSo9mPGlRM5jW2U3pQa6yrV3UcQ3foevDs6WRwESga+I5B8uG
-         2DyI8rJleOv5ALOQXB/eBJwgJBpN+uHRxaa6xt2FhvxCTD1J/oH7UhYi6l7xZfZj4E7e
-         byPw==
-X-Gm-Message-State: AOAM532wEXAqdfBBquTvPkPhB/M9oh/+T9EiiH0FyLumOLeaBAyXg/Q5
-        98MEdTTNeCveg2ps2cpTnfPyhYAJl7y7vNe07V06eA==
-X-Google-Smtp-Source: ABdhPJxDShoJOPz5mzzbK+n0B02t3W2Iny2yhDuMLenzQhQrug6PBpx4se84F5I8VtjhfSjx5LS5bjyhQ24sGAxsOBo=
-X-Received: by 2002:aa7:d54b:: with SMTP id u11mr4267700edr.341.1606845804485;
- Tue, 01 Dec 2020 10:03:24 -0800 (PST)
+        bh=N/syJ22a7pW9UW70CpIkZYiyUgRG7SInot7yd6BD7U8=;
+        b=ikemFTmvSwAUYnu51ZfVCT70VMZnzKsfmV6kBVb+b8ffhOaCUWtPMMX+9dgvA/uK9O
+         QWFNmaaH8pweRrBYEJolc5jkfZBh8wmr6lGy/VQe3Z9jTEUu7mC05OGf+MbAonluZPCQ
+         8Hu6UG9QHSzccYqsQ3a4LAD9QSOpkqYNJu6Hhmh5cJvMhxA8kpsBcb2nKGa1Ann/04j6
+         TXua7RvV19eqiPCkiQ1kk4ch3hSKksIVsNazPyJQTxY1LnSu/k4nZdx9cD1hfRG7yFHZ
+         G2qqz1Tq25VL6An5BhZKXwVgXV3Cc/bOPIdwxZyy4O5zDIiJs31+oWP+AEb/fRzNd0LW
+         75wA==
+X-Gm-Message-State: AOAM530qQWRWSOgaJpDMYKPN1Rob4qHzTfjlu6WwGNjgMR9EJM22jYA1
+        wlsiyQzwneUab9H6aRlLMiUGopCWiWy0bdQvH2VK4VZCVCE=
+X-Google-Smtp-Source: ABdhPJzZBcB/VgZ5zRSb8ttjziMnVObAH4snT/eaRIi4824W7GO7AWHS1kW6s5I8UCf/qQ7fK3eV5oZO15A2zl5vw/U=
+X-Received: by 2002:aa7:d54b:: with SMTP id u11mr4333357edr.341.1606846614778;
+ Tue, 01 Dec 2020 10:16:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20201118142917.25752-1-grygorii.strashko@ti.com> <69388132-1a81-e222-76fc-5d3b860a2d53@ti.com>
-In-Reply-To: <69388132-1a81-e222-76fc-5d3b860a2d53@ti.com>
+References: <cover.1605694661.git.baruch@tkos.co.il> <db0d6d619a0686eef1b15ca7409d73813440856f.1605694661.git.baruch@tkos.co.il>
+ <20201118231811.GH1853236@lunn.ch> <878sax6f43.fsf@tarshish>
+ <20201119133429.GS1804098@lunn.ch> <877dqhfogp.fsf@tarshish>
+In-Reply-To: <877dqhfogp.fsf@tarshish>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 19:03:13 +0100
-Message-ID: <CAMpxmJVM3fdcDtTggkk4d7cuPso1B5Vw-YpmTC5sYZBzY=YMmg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: do not print err message for EPROBE_DEFER
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 1 Dec 2020 19:16:44 +0100
+Message-ID: <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] gpio: mvebu: add pwm support for Armada 8K/7K
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 1, 2020 at 6:16 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Thu, Nov 19, 2020 at 2:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
 >
-> hi Bartosz, All,
+> Hi Andrew,
 >
-> On 18/11/2020 16:29, Grygorii Strashko wrote:
-> > The gpiochip may have dependencies from pinmux and so got deferred. Now it
-> > will print error message every time -EPROBE_DEFER is returned which is
-> > unnecessary:
+> On Thu, Nov 19 2020, Andrew Lunn wrote:
+> >> >> @@ -1200,6 +1235,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+> >> >>
+> >> >>   devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+> >> >>
+> >> >> + /* Some MVEBU SoCs have simple PWM support for GPIO lines */
+> >> >> + if (IS_ENABLED(CONFIG_PWM)) {
+> >> >> +         err = mvebu_pwm_probe(pdev, mvchip, id);
+> >> >> +         if (err)
+> >> >> +                 return err;
+> >> >> + }
+> >> >> +
+> >> >
+> >> > The existing error handling looks odd here. Why is there no goto
+> >> > err_domain when probing the PWMs fails? I wonder if this a bug from me
+> >> > from a long time again?
+> >>
+> >> What would you release under the err_domain label? As far as I can see
+> >> all resources are allocated using devres, and released automatically on
+> >> failure exit.
 > >
-> > "gpiochip_add_data_with_key: GPIOs 0..31 (gpio-0-31) failed to register, -517"
-> >
-> > Hence, do suppress error message for -EPROBE_DEFER case.
-> >
-> > Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > ---
-> >   drivers/gpio/gpiolib.c | 8 +++++---
-> >   1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index 089ddcaa9bc6..fd2c503a6aab 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -771,9 +771,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
-> >       ida_free(&gpio_ida, gdev->id);
-> >   err_free_gdev:
-> >       /* failures here can mean systems won't boot... */
-> > -     pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
-> > -            gdev->base, gdev->base + gdev->ngpio - 1,
-> > -            gc->label ? : "generic", ret);
-> > +     if (ret != -EPROBE_DEFER) {
-> > +             pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
-> > +                    gdev->base, gdev->base + gdev->ngpio - 1,
-> > +                    gc->label ? : "generic", ret);
-> > +     }
-> >       kfree(gdev);
-> >       return ret;
-> >   }
-> >
+> > The IRQ domain is still registers. So once the memory is automatically
+> > freed, don't we have a potential use after free?
 >
-> Any comments for this patch?
+> This patch moves PWM registration before IRQ domain registration for
+> another reason as mentioned in the commit log. So this might
+> incidentally fix the bug.
 >
-> Note. Modern dev_err_probe() seems can't be used as gpio_chip->parent is not guaranteed to be set and
-> it's not clear if chip_err() still can be used at this stage.
+> Would you prefer a separate patch for that with a 'Fixes:
+> 757642f9a584e8' tag?
 >
-> --
-> Best regards,
-> grygorii
+> baruch
+>
 
-I applied this patch now. We seem to have a patch congestion on the
-list - I'm trying to get through unread email but more is coming
-everyday. :(
+Baruch: does this series conflict with the fix you sent? I'm thinking
+about how to take it through the next and fixes trees.
 
 Bartosz
