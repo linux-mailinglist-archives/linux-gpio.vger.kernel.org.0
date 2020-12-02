@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C6962CB363
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 04:28:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B99E2CB365
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 04:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgLBD2Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Dec 2020 22:28:16 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:25543 "EHLO
+        id S2387394AbgLBD2R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Dec 2020 22:28:17 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:25485 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgLBD2P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 22:28:15 -0500
+        with ESMTP id S1728196AbgLBD2Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Dec 2020 22:28:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1606879693; x=1638415693;
+  t=1606879695; x=1638415695;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=a6vShJx+p50NpF8i+hlHJSnSBtiDUjhzQEjYjxELoHo=;
-  b=KdnItoQMp5QkaZcWM9WpnPGYSdalA4LVBT5zA/cmLWtafyBstqgVX04r
-   eGvWsOud6EhhK4XqMU9K89gT1Yc64TFRF1H4peuSwD4581hFzWQ+eqTFE
-   IJbQfQw+EaKBw5oP0SxdMkW9aHF88YiIH8c8bUPMVObZafI2f8maiHh1M
-   p0eCDSoVBm4l11aLFbcHgVn6e1LRLlG0cZn2Zp31nJMAVzMnKElFaA4ic
-   myZ4GWuCHyqqTL6sloCpRoJbM018VjUz5M2hLX/y4QqRYXBQj1qA+oj/T
-   pJERzlya8oqv7KRYhh3ChuhvRZjzjbwmhvpaj5gIyPng6VrWerFBFHi99
+  bh=/GMPXBokjpdHOXgrCytu/1aKv4txlAE3Rql5KlvphBU=;
+  b=PBvYkFPCwip7ofKUwFJK3f/pUtHipz0i5ElZYdaFYL+ADB+3Rt+vC8AV
+   b8oE1zr5Hc0dYIfUnoZZzMMRct1yjPaY3lT5DZzSyt2FdyPS5lT3hys1m
+   NM6KcM17Kx3dIj86qy7FaQ8mpUdNjNY9di9IbUMYadyaFSVOAJ4X2zu/T
+   1wEBxFYsotnCszl+SDlHQD2d2QsMpCRRYYLo7P3C3pIvbPL5JpeiBF4YG
+   RYaExBnFFE9CTE3bKT3eyyduRaDdyoQ7vQ+hctIYg0XZo7TrigWLOldAV
+   zc1Ehcp7cUkvye7fyAczWnOJUMjjIBJzn2I5TzplgZQgTKDtxFcLnXvh/
    g==;
-IronPort-SDR: kLUIfEe7WbHArC66usouuMer+hgYop9IoIWb20y4l2OeECMXRda5s3L41cxFknn6w3Ig1U9+xi
- gaFjozmEeTZ38ok/xrHZ4wjOoYoTym7QFnxIN4ZvrIxeOeeqTTL459R2t1cb/xxfuu+hVISG3Y
- EBeQLad9oXgWNqQNmzknZWEHO5S/CkGAJkqY7vvSQ+/FfsZsJjzznOETyuEnaTXnCOr9VXo7Hg
- 9lMEtynAsjfEhs1u1kOZp4YH5OMFK5ekCuKvLv08OCEOLkJVMm1Ltfeh9eDcBQ0CGtnjlNXfLF
- kWY=
+IronPort-SDR: 5UVM9/hgafFmVLgqZl8FwZRalv7wk06ELGH7w0ug1HTEPXuZ0WQpcU3WtMvsP5r0KL3QAja/2h
+ PuTh7x313DyB9vpP4ZTBsVwuPHore2oqQw3fkKJ60wFbudgFWW8qKLhpqJTvRp6/22FYG4dXYP
+ 6qQ7EYRPXcMl9QM95K9MnJk2cV1nQDLguVuTcGtqdD9ne+m75zm0/e/7b+mgTA6W5pAkjWbVe+
+ gngAY3oqAFAXT0ZN3WjbYC3DisdOaC/5CsoBewO4apcjTyZt0gu7/5FwdSbjfvgqnvpWEU9oO0
+ UGY=
 X-IronPort-AV: E=Sophos;i="5.78,385,1599494400"; 
-   d="scan'208";a="155183556"
+   d="scan'208";a="155183559"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2020 11:25:28 +0800
-IronPort-SDR: elknaJuleN6IBj/jNa9RProUI0YvXSYaGv+Kuevvu0+J2m6PuZXp4Wz19n4gxE7L/nQ5XsxzGr
- EIJhF6Eur+5e8HZtGPV9PM3cI05fs4Uvg=
+  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2020 11:25:30 +0800
+IronPort-SDR: hty5KckWZcnJMjZGp9TEEEBUUq1YgOgNBdmqaYN7hZOGy1BZwTdwnmlUwPI4Dc8IW9EhEIwKDw
+ fuQhtjm1X9olWaX0ZEgjd2cZKGhbx2iGI=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 19:11:02 -0800
-IronPort-SDR: u/fJsNnxZd0o45eKynSm8e3KiFVb1G8+xuKq8d8ACs8XhRKCfr9Wy/lP8grF1tebnkYRXMJP68
- e6B0/zXv66lw==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 19:11:04 -0800
+IronPort-SDR: dGiuks+ufFJL/S60W76OMms/1o9WRpEzIs4lpTqOCbElWYprVemNr1oVj73ZltrqjJjOfxvzez
+ BeclV/+W0HkQ==
 WDCIronportException: Internal
 Received: from phd004834.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.196])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Dec 2020 19:25:26 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 01 Dec 2020 19:25:28 -0800
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
@@ -50,9 +50,9 @@ To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v4 11/21] riscv: Add Canaan Kendryte K210 clock driver
-Date:   Wed,  2 Dec 2020 12:24:50 +0900
-Message-Id: <20201202032500.206346-12-damien.lemoal@wdc.com>
+Subject: [PATCH v4 12/21] riscv: Add Canaan Kendryte K210 FPIOA driver
+Date:   Wed,  2 Dec 2020 12:24:51 +0900
+Message-Id: <20201202032500.206346-13-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201202032500.206346-1-damien.lemoal@wdc.com>
 References: <20201202032500.206346-1-damien.lemoal@wdc.com>
@@ -62,1450 +62,1085 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a clock provider driver for the Canaan Kendryte K210 RISC-V SoC.
-This new driver with the compatible string "canaan,k210-clk" implements
-support for the full clock structure of the K210 SoC. Since it is
-required for the correct operation of the SoC, this driver is
-automatically selected for compilation when the SOC_CANAAN option is
-selected.
+Add the pinctrl-k210.c pinctrl driver for the Canaan Kendryte K210
+field programmable IO array (FPIOA) to allow configuring the SoC pin
+functions. The K210 has 48 programmable pins which can take any of 256
+possible functions.
 
-With this change, the k210-sysctl driver is turned into a simple
-platform driver which enables its power bus clock and triggers
-populating its child nodes. This driver is also automatically selected
-for compilation with the selection of SOC_CANAAN. The sysctl driver
-retains the SOC early initialization code, but the implementation now
-relies on the new function k210_clk_early_init() provided by the new
-clk-k210 driver. This function declaration is done using the new header
-file include/soc/canaan/k210-sysctl.h which also include register
-definitions for the system controller.
+This patch is inspired from the k210 pinctrl driver for the u-boot
+project and contains many direct contributions from Sean Anderson.
 
-The clock structure implemented and many of the coding ideas for the
-driver come from the work by Sean Anderson on the K210 support for the
-U-Boot project.
+The MAINTAINERS file is updated, adding the entry "CANAAN/KENDRYTE K210
+SOC FPIOA DRIVER" with myself listed as maintainer for this driver.
 
-The MAINTAINERS file is updated, adding the entries "CANAAN/KENDRYTE
-K210 SOC CLOCK DRIVER" and "CANAAN/KENDRYTE K210 SOC SYSTEM CONTROLLER
-DRIVER" with myself listed as maintainer for these drivers.
-
+Signed-off-by: Sean Anderson <seanga2@gmail.com>
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- MAINTAINERS                      |  16 +
- arch/riscv/Kconfig.socs          |   2 +
- drivers/clk/Kconfig              |   9 +
- drivers/clk/Makefile             |   1 +
- drivers/clk/clk-k210.c           | 959 +++++++++++++++++++++++++++++++
- drivers/soc/canaan/Kconfig       |  17 +-
- drivers/soc/canaan/Makefile      |   2 +-
- drivers/soc/canaan/k210-sysctl.c | 241 ++------
- include/soc/canaan/k210-sysctl.h |  43 ++
- 9 files changed, 1073 insertions(+), 217 deletions(-)
- create mode 100644 drivers/clk/clk-k210.c
- create mode 100644 include/soc/canaan/k210-sysctl.h
+ MAINTAINERS                    |   7 +
+ arch/riscv/Kconfig.socs        |   2 +
+ drivers/pinctrl/Kconfig        |  13 +
+ drivers/pinctrl/Makefile       |   1 +
+ drivers/pinctrl/pinctrl-k210.c | 984 +++++++++++++++++++++++++++++++++
+ 5 files changed, 1007 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-k210.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 2daa6ee673f7..3da9a7a02f61 100644
+index 3da9a7a02f61..a059ab02fa8a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3822,6 +3822,22 @@ W:	https://github.com/Cascoda/ca8210-linux.git
- F:	Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
- F:	drivers/net/ieee802154/ca8210.c
+@@ -3830,6 +3830,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
+ F:	drivers/clk/clk-k210.c
  
-+CANAAN/KENDRYTE K210 SOC CLOCK DRIVER
++CANAAN/KENDRYTE K210 SOC FPIOA DRIVER
 +M:	Damien Le Moal <damien.lemoal@wdc.com>
 +L:	linux-riscv@lists.infradead.org
-+L:	linux-clk@vger.kernel.org (clock driver)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
-+F:	drivers/clk/clk-k210.c
++L:	linux-gpio@vger.kernel.org (pinctrl driver)
++F:	Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
++F:	drivers/pinctrl/pinctrl-k210.c
 +
-+CANAAN/KENDRYTE K210 SOC SYSTEM CONTROLLER DRIVER
-+M:	Damien Le Moal <damien.lemoal@wdc.com>
-+L:	linux-riscv@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/mfd/canaan,k210-sysctl.yaml
-+F:	drivers/soc/canaan/
-+F:	include/soc/canaan/
-+
- CACHEFILES: FS-CACHE BACKEND FOR CACHING ON MOUNTED FILESYSTEMS
- M:	David Howells <dhowells@redhat.com>
- L:	linux-cachefs@redhat.com (moderated for non-subscribers)
+ CANAAN/KENDRYTE K210 SOC SYSTEM CONTROLLER DRIVER
+ M:	Damien Le Moal <damien.lemoal@wdc.com>
+ L:	linux-riscv@lists.infradead.org
 diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 88ac0d1a5da4..f2f9633087d1 100644
+index f2f9633087d1..68bdd664b5c2 100644
 --- a/arch/riscv/Kconfig.socs
 +++ b/arch/riscv/Kconfig.socs
-@@ -29,6 +29,8 @@ config SOC_CANAAN
- 	select SERIAL_SIFIVE if TTY
- 	select SERIAL_SIFIVE_CONSOLE if TTY
+@@ -31,6 +31,8 @@ config SOC_CANAAN
  	select SIFIVE_PLIC
-+	select SOC_K210_SYSCTL
-+	select CLK_K210
+ 	select SOC_K210_SYSCTL
+ 	select CLK_K210
++	select PINCTRL
++	select PINCTRL_K210
  	help
  	  This enables support for Canaan Kendryte K210 SoC platform hardware.
  
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index c715d4681a0b..6f10f1ecc8d6 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -359,6 +359,15 @@ config COMMON_CLK_FIXED_MMIO
- 	help
- 	  Support for Memory Mapped IO Fixed clocks
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 815095326e2d..fec380c27075 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -374,6 +374,19 @@ config PINCTRL_OCELOT
+ 	select OF_GPIO
+ 	select REGMAP_MMIO
  
-+config CLK_K210
-+	bool "Clock driver for the Canaan Kendryte K210 SoC"
++config PINCTRL_K210
++	bool "Pinctrl driver for the Canaan Kendryte K210 SoC"
 +	depends on RISCV && SOC_CANAAN
-+	depends on COMMON_CLK && OF
++	depends on OF && HAS_IOMEM
++	select PINMUX
++	select GENERIC_PINCONF
++	select GPIOLIB
++	select OF_GPIO
++	select REGMAP_MMIO
 +	help
-+	  Support for the Kendryte K210 RISC-V SoC clocks. This option
-+	  is automatically selected when the SOC_KENDRYTE option is selected
-+	  in the "SOC selection" menu.
++	  Add support for the Canaan Kendryte K210 RISC-V SOC Field
++	  Programmable IO Array (FPIOA) controller.
 +
- source "drivers/clk/actions/Kconfig"
- source "drivers/clk/analogbits/Kconfig"
- source "drivers/clk/baikal-t1/Kconfig"
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index da8fcf147eb1..ccac89e0fdfe 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_VC5)		+= clk-versaclock5.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_CLK_K210)			+= clk-k210.o
+ source "drivers/pinctrl/actions/Kconfig"
+ source "drivers/pinctrl/aspeed/Kconfig"
+ source "drivers/pinctrl/bcm/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index f53933b2ff02..d6f913adb04a 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
+ obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+ obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
+ obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
++obj-$(CONFIG_PINCTRL_K210)	+= pinctrl-k210.o
  
- # please keep this section sorted lexicographically by directory path name
- obj-y					+= actions/
-diff --git a/drivers/clk/clk-k210.c b/drivers/clk/clk-k210.c
+ obj-y				+= actions/
+ obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
+diff --git a/drivers/pinctrl/pinctrl-k210.c b/drivers/pinctrl/pinctrl-k210.c
 new file mode 100644
-index 000000000000..95d830a38911
+index 000000000000..c1fd30b3b7da
 --- /dev/null
-+++ b/drivers/clk/clk-k210.c
-@@ -0,0 +1,959 @@
++++ b/drivers/pinctrl/pinctrl-k210.c
+@@ -0,0 +1,984 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Copyright (C) 2019-20 Sean Anderson <seanga2@gmail.com>
-+ * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-+ */
-+#define pr_fmt(fmt)     "k210-clk: " fmt
-+
-+#include <linux/io.h>
-+#include <linux/spinlock.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <asm/soc.h>
-+#include <soc/canaan/k210-sysctl.h>
-+
-+#include <dt-bindings/clock/k210-clk.h>
-+
-+/*
-+ * in0: fixed-rate 26MHz oscillator base clock.
-+ */
-+#define K210_IN0_RATE		26000000UL
-+
-+/*
-+ * Clocks parameters.
-+ */
-+struct k210_clk_cfg {
-+	u8 gate_reg;
-+	u8 gate_bit;
-+	u8 div_reg;
-+	u8 div_shift;
-+	u8 div_width;
-+	u8 div_type;
-+	u8 mux_reg;
-+	u8 mux_bit;
-+};
-+
-+enum k210_clk_div_type {
-+	DIV_NONE,
-+	DIV_ONE_BASED,
-+	DIV_DOUBLE_ONE_BASED,
-+	DIV_POWER_OF_TWO,
-+};
-+
-+#define GATE(_reg, _bit)	\
-+	.gate_reg = (_reg),	\
-+	.gate_bit = (_bit)
-+#define DIV(_reg, _shift, _width, _type)	\
-+	.div_reg = (_reg),			\
-+	.div_shift = (_shift),			\
-+	.div_width = (_width),			\
-+	.div_type = (_type)
-+#define MUX(_reg, _bit)		\
-+	.mux_reg = (_reg),	\
-+	.mux_bit = (_bit)
-+
-+static struct k210_clk_cfg k210_clks[K210_NUM_CLKS] = {
-+
-+	/* Gated clocks, no mux, no divider */
-+	[K210_CLK_CPU] = { GATE(K210_SYSCTL_EN_CENT, 0) },
-+	[K210_CLK_DMA] = { GATE(K210_SYSCTL_EN_PERI, 1) },
-+	[K210_CLK_FFT] = { GATE(K210_SYSCTL_EN_PERI, 4) },
-+	[K210_CLK_GPIO] = { GATE(K210_SYSCTL_EN_PERI, 5) },
-+	[K210_CLK_UART1] = { GATE(K210_SYSCTL_EN_PERI, 16) },
-+	[K210_CLK_UART2] = { GATE(K210_SYSCTL_EN_PERI, 17) },
-+	[K210_CLK_UART3] = { GATE(K210_SYSCTL_EN_PERI, 18) },
-+	[K210_CLK_FPIOA] = { GATE(K210_SYSCTL_EN_PERI, 20) },
-+	[K210_CLK_SHA] = { GATE(K210_SYSCTL_EN_PERI, 26) },
-+	[K210_CLK_AES] = { GATE(K210_SYSCTL_EN_PERI, 19) },
-+	[K210_CLK_OTP] = { GATE(K210_SYSCTL_EN_PERI, 27) },
-+	[K210_CLK_RTC] = { GATE(K210_SYSCTL_EN_PERI, 29) },
-+
-+	/* Gated divider clocks */
-+	[K210_CLK_SRAM0] = {
-+		GATE(K210_SYSCTL_EN_CENT, 1),
-+		DIV(K210_SYSCTL_THR0, 0, 4, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_SRAM1] = {
-+		GATE(K210_SYSCTL_EN_CENT, 2),
-+		DIV(K210_SYSCTL_THR0, 4, 4, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_ROM] = {
-+		GATE(K210_SYSCTL_EN_PERI, 0),
-+		DIV(K210_SYSCTL_THR0, 16, 4, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_DVP] = {
-+		GATE(K210_SYSCTL_EN_PERI, 3),
-+		DIV(K210_SYSCTL_THR0, 12, 4, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_APB0] = {
-+		GATE(K210_SYSCTL_EN_CENT, 3),
-+		DIV(K210_SYSCTL_SEL0, 3, 3, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_APB1] = {
-+		GATE(K210_SYSCTL_EN_CENT, 4),
-+		DIV(K210_SYSCTL_SEL0, 6, 3, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_APB2] = {
-+		GATE(K210_SYSCTL_EN_CENT, 5),
-+		DIV(K210_SYSCTL_SEL0, 9, 3, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_AI] = {
-+		GATE(K210_SYSCTL_EN_PERI, 2),
-+		DIV(K210_SYSCTL_THR0, 8, 4, DIV_ONE_BASED)
-+	},
-+	[K210_CLK_SPI0] = {
-+		GATE(K210_SYSCTL_EN_PERI, 6),
-+		DIV(K210_SYSCTL_THR1, 0, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_SPI1] = {
-+		GATE(K210_SYSCTL_EN_PERI, 7),
-+		DIV(K210_SYSCTL_THR1, 8, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_SPI2] = {
-+		GATE(K210_SYSCTL_EN_PERI, 8),
-+		DIV(K210_SYSCTL_THR1, 16, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2C0] = {
-+		GATE(K210_SYSCTL_EN_PERI, 13),
-+		DIV(K210_SYSCTL_THR5, 8, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2C1] = {
-+		GATE(K210_SYSCTL_EN_PERI, 14),
-+		DIV(K210_SYSCTL_THR5, 16, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2C2] = {
-+		GATE(K210_SYSCTL_EN_PERI, 15),
-+		DIV(K210_SYSCTL_THR5, 24, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_WDT0] = {
-+		GATE(K210_SYSCTL_EN_PERI, 24),
-+		DIV(K210_SYSCTL_THR6, 0, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_WDT1] = {
-+		GATE(K210_SYSCTL_EN_PERI, 25),
-+		DIV(K210_SYSCTL_THR6, 8, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2S0] = {
-+		GATE(K210_SYSCTL_EN_PERI, 10),
-+		DIV(K210_SYSCTL_THR3, 0, 16, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2S1] = {
-+		GATE(K210_SYSCTL_EN_PERI, 11),
-+		DIV(K210_SYSCTL_THR3, 16, 16, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2S2] = {
-+		GATE(K210_SYSCTL_EN_PERI, 12),
-+		DIV(K210_SYSCTL_THR4, 0, 16, DIV_DOUBLE_ONE_BASED)
-+	},
-+
-+	/* Divider clocks, no gate, no mux */
-+	[K210_CLK_I2S0_M] = {
-+		DIV(K210_SYSCTL_THR4, 16, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2S1_M] = {
-+		DIV(K210_SYSCTL_THR4, 24, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+	[K210_CLK_I2S2_M] = {
-+		DIV(K210_SYSCTL_THR4, 0, 8, DIV_DOUBLE_ONE_BASED)
-+	},
-+
-+	/* Muxed gated divider clocks */
-+	[K210_CLK_SPI3] = {
-+		GATE(K210_SYSCTL_EN_PERI, 9),
-+		DIV(K210_SYSCTL_THR1, 24, 8, DIV_DOUBLE_ONE_BASED),
-+		MUX(K210_SYSCTL_SEL0, 12)
-+	},
-+	[K210_CLK_TIMER0] = {
-+		GATE(K210_SYSCTL_EN_PERI, 21),
-+		DIV(K210_SYSCTL_THR2,  0, 8, DIV_DOUBLE_ONE_BASED),
-+		MUX(K210_SYSCTL_SEL0, 13)
-+	},
-+	[K210_CLK_TIMER1] = {
-+		GATE(K210_SYSCTL_EN_PERI, 22),
-+		DIV(K210_SYSCTL_THR2, 8, 8, DIV_DOUBLE_ONE_BASED),
-+		MUX(K210_SYSCTL_SEL0, 14)
-+	},
-+	[K210_CLK_TIMER2] = {
-+		GATE(K210_SYSCTL_EN_PERI, 23),
-+		DIV(K210_SYSCTL_THR2, 16, 8, DIV_DOUBLE_ONE_BASED),
-+		MUX(K210_SYSCTL_SEL0, 15)
-+	},
-+};
-+
-+/*
-+ * PLL control register bits.
-+ */
-+#define K210_PLL_CLKR		GENMASK(3, 0)
-+#define K210_PLL_CLKF		GENMASK(9, 4)
-+#define K210_PLL_CLKOD		GENMASK(13, 10)
-+#define K210_PLL_BWADJ		GENMASK(19, 14)
-+#define K210_PLL_RESET		(1 << 20)
-+#define K210_PLL_PWRD		(1 << 21)
-+#define K210_PLL_INTFB		(1 << 22)
-+#define K210_PLL_BYPASS		(1 << 23)
-+#define K210_PLL_TEST		(1 << 24)
-+#define K210_PLL_EN		(1 << 25)
-+#define K210_PLL_SEL		GENMASK(27, 26) /* PLL2 only */
-+
-+/*
-+ * PLL lock register bits.
-+ */
-+#define K210_PLL_LOCK		0
-+#define K210_PLL_CLEAR_SLIP	2
-+#define K210_PLL_TEST_OUT	3
-+
-+/*
-+ * Clock selector register bits.
-+ */
-+#define K210_ACLK_SEL		BIT(0)
-+#define K210_ACLK_DIV		GENMASK(2, 1)
-+
-+/*
-+ * PLLs.
-+ */
-+enum k210_pll_id {
-+	K210_PLL0, K210_PLL1, K210_PLL2, K210_PLL_NUM
-+};
-+
-+struct k210_pll {
-+enum k210_pll_id id;
-+	/* PLL setup register */
-+	void __iomem *reg;
-+
-+	/* Common lock register */
-+	void __iomem *lock;
-+
-+	/* Offset and width of lock bits */
-+	u8 lock_shift;
-+	u8 lock_width;
-+
-+	struct clk_hw hw;
-+};
-+#define to_k210_pll(hw)	container_of(hw, struct k210_pll, hw)
-+
-+struct k210_pll_cfg {
-+	/* PLL setup register offset */
-+	u32 reg;
-+
-+	/* Offset and width fo the lock bits */
-+	u8 lock_shift;
-+	u8 lock_width;
-+
-+	/* PLL setup initial factors */
-+	u32 r, f, od, bwadj;
-+};
-+
-+/*
-+ * PLL factors:
-+ * By default, PLL0 runs at 780 MHz and PLL1 at 299 MHz.
-+ * The first 2 sram banks depend on ACLK/CPU clock which is by default
-+ * PLL0 rate divided by 2. Set PLL1 to 390 MHz so that the third sram
-+ * bank has the same clock.
-+ */
-+static struct k210_pll_cfg k210_plls_cfg[] = {
-+	{ K210_SYSCTL_PLL0,  0, 2, 0, 59, 1, 59 }, /* 780 MHz */
-+	{ K210_SYSCTL_PLL1,  8, 1, 0, 59, 3, 59 }, /* 390 MHz */
-+	{ K210_SYSCTL_PLL2, 16, 1, 0, 22, 1, 22 }, /* 299 MHz */
-+};
-+
-+/*
-+ * Clocks data.
-+ */
-+struct k210_clk {
-+	void __iomem			*regs;
-+	spinlock_t			clk_lock;
-+	struct k210_pll			plls[K210_PLL_NUM];
-+	struct clk_hw			aclk;
-+	struct clk_hw			clks[K210_NUM_CLKS];
-+	struct clk_hw_onecell_data	*clk_data;
-+};
-+
-+static struct k210_clk *kcl;
-+
-+/*
-+ * Set ACLK parent selector: 0 for IN0, 1 for PLL0.
-+ */
-+static void k210_aclk_set_selector(u8 sel)
-+{
-+	u32 reg = readl(kcl->regs + K210_SYSCTL_SEL0);
-+
-+	if (sel)
-+		reg |= K210_ACLK_SEL;
-+	else
-+		reg &= K210_ACLK_SEL;
-+	writel(reg, kcl->regs + K210_SYSCTL_SEL0);
-+}
-+
-+static void k210_init_pll(struct k210_pll *pll, enum k210_pll_id id,
-+			  void __iomem *base)
-+{
-+	pll->id = id;
-+	pll->lock = base + K210_SYSCTL_PLL_LOCK;
-+	pll->reg = base + k210_plls_cfg[id].reg;
-+	pll->lock_shift = k210_plls_cfg[id].lock_shift;
-+	pll->lock_width = k210_plls_cfg[id].lock_width;
-+}
-+
-+static void k210_pll_wait_for_lock(struct k210_pll *pll)
-+{
-+	u32 reg, mask = GENMASK(pll->lock_width - 1, 0) << pll->lock_shift;
-+
-+	while (true) {
-+		reg = readl(pll->lock);
-+		if ((reg & mask) == mask)
-+			break;
-+
-+		reg |= BIT(pll->lock_shift + K210_PLL_CLEAR_SLIP);
-+		writel(reg, pll->lock);
-+	}
-+}
-+
-+static bool k210_pll_hw_is_enabled(struct k210_pll *pll)
-+{
-+	u32 reg = readl(pll->reg);
-+	u32 mask = K210_PLL_PWRD | K210_PLL_EN;
-+
-+	if (reg & K210_PLL_RESET)
-+		return false;
-+
-+	return (reg & mask) == mask;
-+}
-+
-+static void k210_pll_enable_hw(struct k210_pll *pll)
-+{
-+	struct k210_pll_cfg *pll_cfg = &k210_plls_cfg[pll->id];
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+
-+	if (k210_pll_hw_is_enabled(pll))
-+		goto unlock;
-+
-+	if (pll->id == K210_PLL0) {
-+		/* Re-parent aclk to IN0 to keep the CPUs running */
-+		k210_aclk_set_selector(0);
-+	}
-+
-+	/* Set factors */
-+	reg = readl(pll->reg);
-+	reg &= ~GENMASK(19, 0);
-+	reg |= FIELD_PREP(K210_PLL_CLKR, pll_cfg->r);
-+	reg |= FIELD_PREP(K210_PLL_CLKF, pll_cfg->f);
-+	reg |= FIELD_PREP(K210_PLL_CLKOD, pll_cfg->od);
-+	reg |= FIELD_PREP(K210_PLL_BWADJ, pll_cfg->bwadj);
-+	reg |= K210_PLL_PWRD;
-+	writel(reg, pll->reg);
-+
-+	/* Ensure reset is low before asserting it */
-+	reg &= ~K210_PLL_RESET;
-+	writel(reg, pll->reg);
-+	reg |= K210_PLL_RESET;
-+	writel(reg, pll->reg);
-+	nop();
-+	nop();
-+	reg &= ~K210_PLL_RESET;
-+	writel(reg, pll->reg);
-+
-+	k210_pll_wait_for_lock(pll);
-+
-+	reg &= ~K210_PLL_BYPASS;
-+	reg |= K210_PLL_EN;
-+	writel(reg, pll->reg);
-+
-+	if (pll->id == K210_PLL0) {
-+		/* Re-parent aclk back to PLL0 */
-+		k210_aclk_set_selector(1);
-+	}
-+unlock:
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+}
-+
-+static void k210_pll_disable_hw(struct k210_pll *pll)
-+{
-+	unsigned long flags;
-+	u32 reg;
-+
-+	/*
-+	 * Bypassing before powering off is important so child clocks don't stop
-+	 * working. This is especially important for pll0, the indirect parent
-+	 * of the cpu clock.
-+	 */
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+	reg = readl(pll->reg);
-+	reg |= K210_PLL_BYPASS;
-+	writel(reg, pll->reg);
-+
-+	reg &= ~K210_PLL_PWRD;
-+	reg &= ~K210_PLL_EN;
-+	writel(reg, pll->reg);
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+}
-+
-+static int k210_pll_enable(struct clk_hw *hw)
-+{
-+	k210_pll_enable_hw(to_k210_pll(hw));
-+
-+	return 0;
-+}
-+
-+static void k210_pll_disable(struct clk_hw *hw)
-+{
-+	k210_pll_disable_hw(to_k210_pll(hw));
-+}
-+
-+static int k210_pll_is_enabled(struct clk_hw *hw)
-+{
-+	return k210_pll_hw_is_enabled(to_k210_pll(hw));
-+}
-+
-+static int k210_pll_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct k210_pll *pll = to_k210_pll(hw);
-+	unsigned long flags;
-+	int ret = 0;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+
-+	switch (pll->id) {
-+	case K210_PLL0:
-+	case K210_PLL1:
-+		if (WARN_ON(index != 0))
-+			ret = -EINVAL;
-+		break;
-+	case K210_PLL2:
-+		if (WARN_ON(index > 2)) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+		reg = readl(pll->reg);
-+		reg &= ~K210_PLL_SEL;
-+		reg |= FIELD_PREP(K210_PLL_SEL, index);
-+		writel(reg, pll->reg);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+
-+	return ret;
-+}
-+
-+static u8 k210_pll_get_parent(struct clk_hw *hw)
-+{
-+	struct k210_pll *pll = to_k210_pll(hw);
-+	u32 reg;
-+
-+	switch (pll->id) {
-+	case K210_PLL0:
-+	case K210_PLL1:
-+		return 0;
-+	case K210_PLL2:
-+		reg = readl(pll->reg);
-+		return FIELD_GET(K210_PLL_SEL, reg);
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static unsigned long k210_pll_get_rate(struct clk_hw *hw,
-+				       unsigned long parent_rate)
-+{
-+	struct k210_pll *pll = to_k210_pll(hw);
-+	u32 reg = readl(pll->reg);
-+	u32 r, f, od;
-+
-+	if (reg & K210_PLL_BYPASS)
-+		return parent_rate;
-+
-+	if (!(reg & K210_PLL_PWRD))
-+		return 0;
-+
-+	r = FIELD_GET(K210_PLL_CLKR, reg) + 1;
-+	f = FIELD_GET(K210_PLL_CLKF, reg) + 1;
-+	od = FIELD_GET(K210_PLL_CLKOD, reg) + 1;
-+
-+	return (u64)parent_rate * f / (r * od);
-+}
-+
-+static const struct clk_ops k210_pll_ops = {
-+	.enable		= k210_pll_enable,
-+	.disable	= k210_pll_disable,
-+	.is_enabled	= k210_pll_is_enabled,
-+	.set_parent	= k210_pll_set_parent,
-+	.get_parent	= k210_pll_get_parent,
-+	.recalc_rate	= k210_pll_get_rate,
-+};
-+
-+static const char *pll_parents[] = { NULL, "pll0", "pll1" };
-+
-+static struct clk_hw *k210_register_pll(enum k210_pll_id id, const char *name,
-+				const char **parent_names, int num_parents,
-+				unsigned long flags)
-+{
-+	struct k210_pll *pll = &kcl->plls[id];
-+	struct clk_init_data init = {};
-+	int ret;
-+
-+	init.name = name;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
-+	init.flags = flags;
-+	init.ops = &k210_pll_ops;
-+	pll->hw.init = &init;
-+
-+	ret = clk_hw_register(NULL, &pll->hw);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &pll->hw;
-+}
-+
-+static int k210_aclk_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	if (WARN_ON(index > 1))
-+		return -EINVAL;
-+
-+	k210_aclk_set_selector(index);
-+
-+	return 0;
-+}
-+
-+static u8 k210_aclk_get_parent(struct clk_hw *hw)
-+{
-+	u32 sel = readl(kcl->regs + K210_SYSCTL_SEL0);
-+
-+	return (sel & K210_ACLK_SEL) ? 1 : 0;
-+}
-+
-+static unsigned long k210_aclk_get_rate(struct clk_hw *hw,
-+					unsigned long parent_rate)
-+{
-+	u32 reg = readl(kcl->regs + K210_SYSCTL_SEL0);
-+	unsigned int shift;
-+
-+	if (!(reg & 0x1))
-+		return parent_rate;
-+
-+	shift = FIELD_GET(K210_ACLK_DIV, reg);
-+
-+	return parent_rate / (2UL << shift);
-+}
-+
-+static const struct clk_ops k210_aclk_ops = {
-+	.set_parent	= k210_aclk_set_parent,
-+	.get_parent	= k210_aclk_get_parent,
-+	.recalc_rate	= k210_aclk_get_rate,
-+};
-+
-+static const char *aclk_parents[] = { NULL, "pll0" };
-+
-+static struct clk_hw *k210_register_aclk(void)
-+{
-+	struct clk_init_data init = {};
-+	int ret;
-+
-+	init.name = "aclk";
-+	init.parent_names = aclk_parents;
-+	init.num_parents = 2;
-+	init.flags = 0;
-+	init.ops = &k210_aclk_ops;
-+	kcl->aclk.init = &init;
-+
-+	ret = clk_hw_register(NULL, &kcl->aclk);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &kcl->aclk;
-+}
-+
-+#define to_k210_clk_id(hw)	((unsigned int)((hw) - &kcl->clks[0]))
-+#define to_k210_clk_cfg(hw)	(&k210_clks[to_k210_clk_id(hw)])
-+
-+static u32 k210_clk_get_div_val(struct k210_clk_cfg *kclk)
-+{
-+	u32 reg = readl(kcl->regs + kclk->div_reg);
-+
-+	return (reg >> kclk->div_shift) & GENMASK(kclk->div_width - 1, 0);
-+}
-+
-+static unsigned long k210_clk_divider(struct k210_clk_cfg *kclk,
-+				      u32 div_val)
-+{
-+	switch (kclk->div_type) {
-+	case DIV_ONE_BASED:
-+		return div_val + 1;
-+	case DIV_DOUBLE_ONE_BASED:
-+		return (div_val + 1) * 2;
-+	case DIV_POWER_OF_TWO:
-+		return 2UL << div_val;
-+	case DIV_NONE:
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int k210_clk_enable(struct clk_hw *hw)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	if (!kclk->gate_reg)
-+		return 0;
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+	reg = readl(kcl->regs + kclk->gate_reg);
-+	reg |= BIT(kclk->gate_bit);
-+	writel(reg, kcl->regs + kclk->gate_reg);
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static void k210_clk_disable(struct clk_hw *hw)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	if (!kclk->gate_reg)
-+		return;
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+	reg = readl(kcl->regs + kclk->gate_reg);
-+	reg &= ~BIT(kclk->gate_bit);
-+	writel(reg, kcl->regs + kclk->gate_reg);
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+}
-+
-+static int k210_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+
-+	if (!kclk->gate_reg)
-+		return 1;
-+
-+	return readl(kcl->regs + kclk->gate_reg) & BIT(kclk->gate_bit);
-+}
-+
-+static int k210_clk_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	if (!kclk->mux_reg) {
-+		if (WARN_ON(index != 0))
-+			return -EINVAL;
-+		return 0;
-+	}
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+	reg = readl(kcl->regs + kclk->mux_reg);
-+	if (index)
-+		reg |= BIT(kclk->mux_bit);
-+	else
-+		reg &= ~BIT(kclk->mux_bit);
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static u8 k210_clk_get_parent(struct clk_hw *hw)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+	unsigned long flags;
-+	u32 reg, idx;
-+
-+	if (!kclk->mux_reg)
-+		return 0;
-+
-+	spin_lock_irqsave(&kcl->clk_lock, flags);
-+	reg = readl(kcl->regs + kclk->mux_reg);
-+	idx = (reg & BIT(kclk->mux_bit)) ? 1 : 0;
-+	spin_unlock_irqrestore(&kcl->clk_lock, flags);
-+
-+	return idx;
-+}
-+
-+static unsigned long k210_clk_get_rate(struct clk_hw *hw,
-+				       unsigned long parent_rate)
-+{
-+	struct k210_clk_cfg *kclk = to_k210_clk_cfg(hw);
-+	unsigned long divider;
-+
-+	if (!kclk->div_reg)
-+		return parent_rate;
-+
-+	divider = k210_clk_divider(kclk, k210_clk_get_div_val(kclk));
-+	if (WARN_ON(!divider))
-+		return 0;
-+
-+	return parent_rate / divider;
-+}
-+
-+static const struct clk_ops k210_clk_ops = {
-+	.enable		= k210_clk_enable,
-+	.is_enabled	= k210_clk_is_enabled,
-+	.disable	= k210_clk_disable,
-+	.set_parent	= k210_clk_set_parent,
-+	.get_parent	= k210_clk_get_parent,
-+	.recalc_rate	= k210_clk_get_rate,
-+};
-+
-+static const char *mux_parents[] = { NULL, "pll0" };
-+
-+static struct clk_hw *k210_register_clk(int id, const char *name,
-+					const char *parent, unsigned long flags)
-+{
-+	struct clk_init_data init = {};
-+	int ret;
-+
-+	init.name = name;
-+	if (parent) {
-+		init.parent_names = &parent;
-+		init.num_parents = 1;
-+	} else {
-+		init.parent_names = mux_parents;
-+		init.num_parents = 2;
-+	}
-+	init.flags = flags;
-+	init.ops = &k210_clk_ops;
-+	kcl->clks[id].init = &init;
-+
-+	ret = clk_hw_register(NULL, &kcl->clks[id]);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &kcl->clks[id];
-+}
-+
-+static void __init k210_clk_init(struct device_node *np)
-+{
-+	struct device_node *sysctl_np;
-+	struct clk *in0_clk;
-+	const char *in0;
-+	struct clk_hw **hws;
-+	int i, ret;
-+
-+	kcl = kzalloc(sizeof(*kcl), GFP_KERNEL);
-+	if (!kcl)
-+		return;
-+
-+	sysctl_np = of_find_compatible_node(NULL, NULL, "canaan,k210-sysctl");
-+	if (!sysctl_np || sysctl_np != np->parent)
-+		goto err;
-+
-+	kcl->regs = of_iomap(sysctl_np, 0);
-+	if (!kcl->regs)
-+		goto err;
-+
-+	kcl->clk_data = kzalloc(struct_size(kcl->clk_data, hws, K210_NUM_CLKS),
-+				GFP_KERNEL);
-+	if (!kcl->clk_data)
-+		goto err;
-+
-+	for (i = 0; i < K210_PLL_NUM; i++)
-+		k210_init_pll(&kcl->plls[i], i, kcl->regs);
-+	spin_lock_init(&kcl->clk_lock);
-+	kcl->clk_data->num = K210_NUM_CLKS;
-+	hws = kcl->clk_data->hws;
-+	for (i = 1; i < K210_NUM_CLKS; i++)
-+		hws[i] = ERR_PTR(-EPROBE_DEFER);
-+
-+	/*
-+	 * in0 is the system base fixed-rate 26MHz oscillator which
-+	 * should already be defined by the device tree. If it is not,
-+	 * create it here.
-+	 */
-+	in0_clk = of_clk_get(np, 0);
-+	if (IS_ERR(in0_clk)) {
-+		pr_warn("%pOFP: in0 oscillator not found\n", np);
-+		hws[K210_CLK_IN0] =
-+			clk_hw_register_fixed_rate(NULL, "in0", NULL,
-+						   0, K210_IN0_RATE);
-+	} else {
-+		hws[K210_CLK_IN0] = __clk_get_hw(in0_clk);
-+	}
-+	if (IS_ERR(hws[K210_CLK_IN0])) {
-+		pr_err("%pOFP: failed to get base oscillator\n", np);
-+		goto err;
-+	}
-+
-+	in0 = clk_hw_get_name(hws[K210_CLK_IN0]);
-+	aclk_parents[0] = in0;
-+	pll_parents[0] = in0;
-+	mux_parents[0] = in0;
-+
-+	/* PLLs */
-+	hws[K210_CLK_PLL0] =
-+		k210_register_pll(K210_PLL0, "pll0", pll_parents, 1, 0);
-+	hws[K210_CLK_PLL1] =
-+		k210_register_pll(K210_PLL1, "pll1", pll_parents, 1, 0);
-+	hws[K210_CLK_PLL2] =
-+		k210_register_pll(K210_PLL2, "pll2", pll_parents, 3, 0);
-+
-+	/* aclk: muxed of in0 and pll0_d, no gate */
-+	hws[K210_CLK_ACLK] = k210_register_aclk();
-+
-+	/*
-+	 * Clocks with aclk as source: the CPU clock is obviously critical.
-+	 * So is the CLINT clock as the scheduler clocksource.
-+	 */
-+	hws[K210_CLK_CPU] =
-+		k210_register_clk(K210_CLK_CPU, "cpu", "aclk", CLK_IS_CRITICAL);
-+	hws[K210_CLK_CLINT] =
-+		clk_hw_register_fixed_factor(NULL, "clint", "aclk",
-+					     CLK_IS_CRITICAL, 1, 50);
-+	hws[K210_CLK_DMA] =
-+		k210_register_clk(K210_CLK_DMA, "dma", "aclk", 0);
-+	hws[K210_CLK_FFT] =
-+		k210_register_clk(K210_CLK_FFT, "fft", "aclk", 0);
-+	hws[K210_CLK_ROM] =
-+		k210_register_clk(K210_CLK_ROM, "rom", "aclk", 0);
-+	hws[K210_CLK_DVP] =
-+		k210_register_clk(K210_CLK_DVP, "dvp", "aclk", 0);
-+	hws[K210_CLK_APB0] =
-+		k210_register_clk(K210_CLK_APB0, "apb0", "aclk", 0);
-+	hws[K210_CLK_APB1] =
-+		k210_register_clk(K210_CLK_APB1, "apb1", "aclk", 0);
-+	hws[K210_CLK_APB2] =
-+		k210_register_clk(K210_CLK_APB2, "apb2", "aclk", 0);
-+
-+	/*
-+	 * There is no sram driver taking a ref on the sram banks clocks.
-+	 * So make them critical so they are not disabled due to being unused
-+	 * as seen by the clock infrastructure.
-+	 */
-+	hws[K210_CLK_SRAM0] =
-+		k210_register_clk(K210_CLK_SRAM0,
-+				  "sram0", "aclk", CLK_IS_CRITICAL);
-+	hws[K210_CLK_SRAM1] =
-+		k210_register_clk(K210_CLK_SRAM1,
-+				  "sram1", "aclk", CLK_IS_CRITICAL);
-+
-+	/* Clocks with PLL0 as source */
-+	hws[K210_CLK_SPI0] =
-+		k210_register_clk(K210_CLK_SPI0, "spi0", "pll0", 0);
-+	hws[K210_CLK_SPI1] =
-+		 k210_register_clk(K210_CLK_SPI1, "spi1", "pll0", 0);
-+	hws[K210_CLK_SPI2] =
-+		 k210_register_clk(K210_CLK_SPI2, "spi2", "pll0", 0);
-+	hws[K210_CLK_I2C0] =
-+		 k210_register_clk(K210_CLK_I2C0, "i2c0", "pll0", 0);
-+	hws[K210_CLK_I2C1] =
-+		 k210_register_clk(K210_CLK_I2C1, "i2c1", "pll0", 0);
-+	hws[K210_CLK_I2C2] =
-+		 k210_register_clk(K210_CLK_I2C2, "i2c2", "pll0", 0);
-+
-+	/*
-+	 * Clocks with PLL1 as source: there is only the AI clock for the
-+	 * (unused) KPU device. As this clock also drives the aisram bank
-+	 * which is used as general memory, make it critical.
-+	 */
-+	 hws[K210_CLK_AI] =
-+		 k210_register_clk(K210_CLK_AI, "ai", "pll1", CLK_IS_CRITICAL);
-+
-+	/* Clocks with PLL2 as source */
-+	hws[K210_CLK_I2S0] =
-+		 k210_register_clk(K210_CLK_I2S0, "i2s0", "pll2", 0);
-+	hws[K210_CLK_I2S1] =
-+		 k210_register_clk(K210_CLK_I2S1, "i2s1", "pll2", 0);
-+	hws[K210_CLK_I2S2] =
-+		k210_register_clk(K210_CLK_I2S2, "i2s2", "pll2", 0);
-+	hws[K210_CLK_I2S0_M] =
-+		k210_register_clk(K210_CLK_I2S0_M, "i2s0_m", "pll2", 0);
-+	hws[K210_CLK_I2S1_M] =
-+		k210_register_clk(K210_CLK_I2S1_M, "i2s1_m", "pll2", 0);
-+	hws[K210_CLK_I2S2_M] =
-+		k210_register_clk(K210_CLK_I2S2_M, "i2s2_m", "pll2", 0);
-+
-+	/* Clocks with IN0 as source */
-+	hws[K210_CLK_WDT0] =
-+		k210_register_clk(K210_CLK_WDT0, "wdt0", in0, 0);
-+	hws[K210_CLK_WDT1] =
-+		 k210_register_clk(K210_CLK_WDT1, "wdt1", in0, 0);
-+	hws[K210_CLK_RTC] =
-+		 k210_register_clk(K210_CLK_RTC, "rtc", in0, 0);
-+
-+	/* Clocks with APB0 as source */
-+	hws[K210_CLK_GPIO] =
-+		k210_register_clk(K210_CLK_GPIO, "gpio", "apb0", 0);
-+	hws[K210_CLK_UART1] =
-+		k210_register_clk(K210_CLK_UART1, "uart1", "apb0", 0);
-+	hws[K210_CLK_UART2] =
-+		k210_register_clk(K210_CLK_UART2, "uart2", "apb0", 0);
-+	hws[K210_CLK_UART3] =
-+		k210_register_clk(K210_CLK_UART3, "uart3", "apb0", 0);
-+	hws[K210_CLK_FPIOA] =
-+		k210_register_clk(K210_CLK_FPIOA, "fpioa", "apb0", 0);
-+	hws[K210_CLK_SHA] =
-+		k210_register_clk(K210_CLK_SHA, "sha", "apb0", 0);
-+
-+	/* Clocks with APB1 as source */
-+	hws[K210_CLK_AES] =
-+		 k210_register_clk(K210_CLK_AES, "aes", "apb1", 0);
-+	hws[K210_CLK_OTP] =
-+		 k210_register_clk(K210_CLK_OTP, "otp", "apb1", 0);
-+
-+	/* Muxed clocks with in0/pll0 as source */
-+	hws[K210_CLK_SPI3] =
-+		k210_register_clk(K210_CLK_SPI3, "spi3", NULL, 0);
-+	hws[K210_CLK_TIMER0] =
-+		k210_register_clk(K210_CLK_TIMER0, "timer0", NULL, 0);
-+	hws[K210_CLK_TIMER1] =
-+		k210_register_clk(K210_CLK_TIMER1, "timer1", NULL, 0);
-+	hws[K210_CLK_TIMER2] =
-+		k210_register_clk(K210_CLK_TIMER2, "timer2", NULL, 0);
-+
-+	for (i = 0; i < K210_NUM_CLKS; i++) {
-+		if (IS_ERR(hws[i])) {
-+			pr_err("%pOFP: register clock %d failed %ld\n",
-+			       np, i, PTR_ERR(hws[i]));
-+			goto err;
-+		}
-+	}
-+
-+	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, kcl->clk_data);
-+	if (ret)
-+		pr_err("%pOFP: add clock provider failed %d\n", np, ret);
-+	else
-+		pr_info("%pOFP: CPU running at %lu MHz\n",
-+			np, clk_hw_get_rate(hws[K210_CLK_CPU]) / 1000000);
-+
-+	return;
-+err:
-+	pr_err("%pOFP: clock initialization failed\n", np);
-+	iounmap(kcl->regs);
-+	kfree(kcl->clk_data);
-+	kfree(kcl);
-+	kcl = NULL;
-+}
-+
-+CLK_OF_DECLARE_DRIVER(k210_clk, "canaan,k210-clk", k210_clk_init);
-+
-+/*
-+ * Enable PLL1 to be able to use the AI SRAM.
-+ */
-+void __init k210_clk_early_init(void __iomem *regs)
-+{
-+	struct k210_pll pll1;
-+
-+	/* Make sure aclk selector is set to PLL0 */
-+	k210_aclk_set_selector(1);
-+
-+	/* Startup PLL1 to enable the aisram bank for general memory use */
-+	k210_init_pll(&pll1, K210_PLL1, regs);
-+	k210_pll_enable_hw(&pll1);
-+}
-diff --git a/drivers/soc/canaan/Kconfig b/drivers/soc/canaan/Kconfig
-index 5232d13f07e5..86f7d50302a5 100644
---- a/drivers/soc/canaan/Kconfig
-+++ b/drivers/soc/canaan/Kconfig
-@@ -1,14 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--if SOC_CANAAN
--
--config K210_SYSCTL
-+config SOC_K210_SYSCTL
- 	bool "Canaan Kendryte K210 SoC system controller"
--	default y
--	depends on RISCV
--	help
--	  Enables controlling the K210 various clocks and to enable
--	  general purpose use of the extra 2MB of SRAM normally
--	  reserved for the AI engine.
--
--endif
-+	depends on RISCV && SOC_CANAAN && OF
-+        select PM
-+        select SIMPLE_PM_BUS
-+        select SYSCON
-+        select MFD_SYSCON
-diff --git a/drivers/soc/canaan/Makefile b/drivers/soc/canaan/Makefile
-index 002d9ce95c0d..570280ad7967 100644
---- a/drivers/soc/canaan/Makefile
-+++ b/drivers/soc/canaan/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--obj-$(CONFIG_K210_SYSCTL)	+= k210-sysctl.o
-+obj-$(CONFIG_SOC_K210_SYSCTL)	+= k210-sysctl.o
-diff --git a/drivers/soc/canaan/k210-sysctl.c b/drivers/soc/canaan/k210-sysctl.c
-index 4608fbca20e1..b01647fb661f 100644
---- a/drivers/soc/canaan/k210-sysctl.c
-+++ b/drivers/soc/canaan/k210-sysctl.c
-@@ -3,205 +3,45 @@
-  * Copyright (c) 2019 Christoph Hellwig.
-  * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-  */
--#include <linux/types.h>
- #include <linux/io.h>
--#include <linux/of.h>
- #include <linux/platform_device.h>
--#include <linux/clk-provider.h>
--#include <linux/clkdev.h>
--#include <linux/bitfield.h>
-+#include <linux/of_platform.h>
-+#include <linux/clk.h>
- #include <asm/soc.h>
- 
--#define K210_SYSCTL_CLK0_FREQ		26000000UL
-+#include <soc/canaan/k210-sysctl.h>
- 
--/* Registers base address */
--#define K210_SYSCTL_SYSCTL_BASE_ADDR	0x50440000ULL
--
--/* Registers */
--#define K210_SYSCTL_PLL0		0x08
--#define K210_SYSCTL_PLL1		0x0c
--/* clkr: 4bits, clkf1: 6bits, clkod: 4bits, bwadj: 4bits */
--#define   PLL_RESET		(1 << 20)
--#define   PLL_PWR		(1 << 21)
--#define   PLL_INTFB		(1 << 22)
--#define   PLL_BYPASS		(1 << 23)
--#define   PLL_TEST		(1 << 24)
--#define   PLL_OUT_EN		(1 << 25)
--#define   PLL_TEST_EN		(1 << 26)
--#define K210_SYSCTL_PLL_LOCK		0x18
--#define   PLL0_LOCK1		(1 << 0)
--#define   PLL0_LOCK2		(1 << 1)
--#define   PLL0_SLIP_CLEAR	(1 << 2)
--#define   PLL0_TEST_CLK_OUT	(1 << 3)
--#define   PLL1_LOCK1		(1 << 8)
--#define   PLL1_LOCK2		(1 << 9)
--#define   PLL1_SLIP_CLEAR	(1 << 10)
--#define   PLL1_TEST_CLK_OUT	(1 << 11)
--#define   PLL2_LOCK1		(1 << 16)
--#define   PLL2_LOCK2		(1 << 16)
--#define   PLL2_SLIP_CLEAR	(1 << 18)
--#define   PLL2_TEST_CLK_OUT	(1 << 19)
--#define K210_SYSCTL_CLKSEL0	0x20
--#define   CLKSEL_ACLK		(1 << 0)
--#define K210_SYSCTL_CLKEN_CENT		0x28
--#define   CLKEN_CPU		(1 << 0)
--#define   CLKEN_SRAM0		(1 << 1)
--#define   CLKEN_SRAM1		(1 << 2)
--#define   CLKEN_APB0		(1 << 3)
--#define   CLKEN_APB1		(1 << 4)
--#define   CLKEN_APB2		(1 << 5)
--#define K210_SYSCTL_CLKEN_PERI		0x2c
--#define   CLKEN_ROM		(1 << 0)
--#define   CLKEN_DMA		(1 << 1)
--#define   CLKEN_AI		(1 << 2)
--#define   CLKEN_DVP		(1 << 3)
--#define   CLKEN_FFT		(1 << 4)
--#define   CLKEN_GPIO		(1 << 5)
--#define   CLKEN_SPI0		(1 << 6)
--#define   CLKEN_SPI1		(1 << 7)
--#define   CLKEN_SPI2		(1 << 8)
--#define   CLKEN_SPI3		(1 << 9)
--#define   CLKEN_I2S0		(1 << 10)
--#define   CLKEN_I2S1		(1 << 11)
--#define   CLKEN_I2S2		(1 << 12)
--#define   CLKEN_I2C0		(1 << 13)
--#define   CLKEN_I2C1		(1 << 14)
--#define   CLKEN_I2C2		(1 << 15)
--#define   CLKEN_UART1		(1 << 16)
--#define   CLKEN_UART2		(1 << 17)
--#define   CLKEN_UART3		(1 << 18)
--#define   CLKEN_AES		(1 << 19)
--#define   CLKEN_FPIO		(1 << 20)
--#define   CLKEN_TIMER0		(1 << 21)
--#define   CLKEN_TIMER1		(1 << 22)
--#define   CLKEN_TIMER2		(1 << 23)
--#define   CLKEN_WDT0		(1 << 24)
--#define   CLKEN_WDT1		(1 << 25)
--#define   CLKEN_SHA		(1 << 26)
--#define   CLKEN_OTP		(1 << 27)
--#define   CLKEN_RTC		(1 << 29)
--
--struct k210_sysctl {
--	void __iomem		*regs;
--	struct clk_hw		hw;
--};
--
--static void k210_set_bits(u32 val, void __iomem *reg)
--{
--	writel(readl(reg) | val, reg);
--}
--
--static void k210_clear_bits(u32 val, void __iomem *reg)
--{
--	writel(readl(reg) & ~val, reg);
--}
--
--static void k210_pll1_enable(void __iomem *regs)
-+static int __init k210_sysctl_probe(struct platform_device *pdev)
- {
--	u32 val;
-+	struct device *dev = &pdev->dev;
-+	struct clk *pclk;
-+	int ret;
- 
--	val = readl(regs + K210_SYSCTL_PLL1);
--	val &= ~GENMASK(19, 0);				/* clkr1 = 0 */
--	val |= FIELD_PREP(GENMASK(9, 4), 0x3B);		/* clkf1 = 59 */
--	val |= FIELD_PREP(GENMASK(13, 10), 0x3);	/* clkod1 = 3 */
--	val |= FIELD_PREP(GENMASK(19, 14), 0x3B);	/* bwadj1 = 59 */
--	writel(val, regs + K210_SYSCTL_PLL1);
-+	dev_info(dev, "K210 system controller\n");
- 
--	k210_clear_bits(PLL_BYPASS, regs + K210_SYSCTL_PLL1);
--	k210_set_bits(PLL_PWR, regs + K210_SYSCTL_PLL1);
--
--	/*
--	 * Reset the pll. The magic NOPs come from the Kendryte reference SDK.
--	 */
--	k210_clear_bits(PLL_RESET, regs + K210_SYSCTL_PLL1);
--	k210_set_bits(PLL_RESET, regs + K210_SYSCTL_PLL1);
--	nop();
--	nop();
--	k210_clear_bits(PLL_RESET, regs + K210_SYSCTL_PLL1);
--
--	for (;;) {
--		val = readl(regs + K210_SYSCTL_PLL_LOCK);
--		if (val & PLL1_LOCK2)
--			break;
--		writel(val | PLL1_SLIP_CLEAR, regs + K210_SYSCTL_PLL_LOCK);
-+	/* Get power bus clock */
-+	pclk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pclk)) {
-+		dev_err(dev, "Get bus clock failed\n");
-+		return PTR_ERR(pclk);
- 	}
- 
--	k210_set_bits(PLL_OUT_EN, regs + K210_SYSCTL_PLL1);
--}
--
--static unsigned long k210_sysctl_clk_recalc_rate(struct clk_hw *hw,
--		unsigned long parent_rate)
--{
--	struct k210_sysctl *s = container_of(hw, struct k210_sysctl, hw);
--	u32 clksel0, pll0;
--	u64 pll0_freq, clkr0, clkf0, clkod0;
--
--	/*
--	 * If the clock selector is not set, use the base frequency.
--	 * Otherwise, use PLL0 frequency with a frequency divisor.
--	 */
--	clksel0 = readl(s->regs + K210_SYSCTL_CLKSEL0);
--	if (!(clksel0 & CLKSEL_ACLK))
--		return K210_SYSCTL_CLK0_FREQ;
--
--	/*
--	 * Get PLL0 frequency:
--	 * freq = base frequency * clkf0 / (clkr0 * clkod0)
--	 */
--	pll0 = readl(s->regs + K210_SYSCTL_PLL0);
--	clkr0 = 1 + FIELD_GET(GENMASK(3, 0), pll0);
--	clkf0 = 1 + FIELD_GET(GENMASK(9, 4), pll0);
--	clkod0 = 1 + FIELD_GET(GENMASK(13, 10), pll0);
--	pll0_freq = clkf0 * K210_SYSCTL_CLK0_FREQ / (clkr0 * clkod0);
--
--	/* Get the frequency divisor from the clock selector */
--	return pll0_freq / (2ULL << FIELD_GET(0x00000006, clksel0));
--}
--
--static const struct clk_ops k210_sysctl_clk_ops = {
--	.recalc_rate	= k210_sysctl_clk_recalc_rate,
--};
--
--static const struct clk_init_data k210_clk_init_data = {
--	.name		= "k210-sysctl-pll1",
--	.ops		= &k210_sysctl_clk_ops,
--};
--
--static int k210_sysctl_probe(struct platform_device *pdev)
--{
--	struct k210_sysctl *s;
--	int error;
--
--	pr_info("Kendryte K210 SoC sysctl\n");
--
--	s = devm_kzalloc(&pdev->dev, sizeof(*s), GFP_KERNEL);
--	if (!s)
--		return -ENOMEM;
--
--	s->regs = devm_ioremap_resource(&pdev->dev,
--			platform_get_resource(pdev, IORESOURCE_MEM, 0));
--	if (IS_ERR(s->regs))
--		return PTR_ERR(s->regs);
--
--	s->hw.init = &k210_clk_init_data;
--	error = devm_clk_hw_register(&pdev->dev, &s->hw);
--	if (error) {
--		dev_err(&pdev->dev, "failed to register clk");
--		return error;
-+	ret = clk_prepare_enable(pclk);
-+	if (ret) {
-+		dev_err(dev, "Enable bus clock failed\n");
-+		return ret;
- 	}
- 
--	error = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_simple_get,
--					    &s->hw);
--	if (error) {
--		dev_err(&pdev->dev, "adding clk provider failed\n");
--		return error;
--	}
-+	/* Populate children */
-+	ret = devm_of_platform_populate(dev);
-+	if (ret)
-+		dev_err(dev, "Populate platform failed %d\n", ret);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct of_device_id k210_sysctl_of_match[] = {
--	{ .compatible = "kendryte,k210-sysctl", },
-+	{ .compatible = "canaan,k210-sysctl", },
- 	{}
- };
- 
-@@ -212,12 +52,13 @@ static struct platform_driver k210_sysctl_driver = {
- 	},
- 	.probe			= k210_sysctl_probe,
- };
-+builtin_platform_driver(k210_sysctl_driver);
- 
--static int __init k210_sysctl_init(void)
--{
--	return platform_driver_register(&k210_sysctl_driver);
--}
--core_initcall(k210_sysctl_init);
-+/*
-+ * System controller registers base address and size.
-+ */
-+#define K210_SYSCTL_BASE_ADDR	0x50440000ULL
-+#define K210_SYSCTL_BASE_SIZE	0x1000
- 
- /*
-  * This needs to be called very early during initialization, given that
-@@ -225,24 +66,14 @@ core_initcall(k210_sysctl_init);
-  */
- static void __init k210_soc_early_init(const void *fdt)
- {
--	void __iomem *regs;
--
--	regs = ioremap(K210_SYSCTL_SYSCTL_BASE_ADDR, 0x1000);
--	if (!regs)
--		panic("K210 sysctl ioremap");
--
--	/* Enable PLL1 to make the KPU SRAM useable */
--	k210_pll1_enable(regs);
--
--	k210_set_bits(PLL_OUT_EN, regs + K210_SYSCTL_PLL0);
-+	void __iomem *sysctl_base;
- 
--	k210_set_bits(CLKEN_CPU | CLKEN_SRAM0 | CLKEN_SRAM1,
--		      regs + K210_SYSCTL_CLKEN_CENT);
--	k210_set_bits(CLKEN_ROM | CLKEN_TIMER0 | CLKEN_RTC,
--		      regs + K210_SYSCTL_CLKEN_PERI);
-+	sysctl_base = ioremap(K210_SYSCTL_BASE_ADDR, K210_SYSCTL_BASE_SIZE);
-+	if (!sysctl_base)
-+		panic("k210-sysctl: ioremap failed");
- 
--	k210_set_bits(CLKSEL_ACLK, regs + K210_SYSCTL_CLKSEL0);
-+	k210_clk_early_init(sysctl_base);
- 
--	iounmap(regs);
-+	iounmap(sysctl_base);
- }
--SOC_EARLY_INIT_DECLARE(generic_k210, "kendryte,k210", k210_soc_early_init);
-+SOC_EARLY_INIT_DECLARE(k210_soc, "canaan,kendryte-k210", k210_soc_early_init);
-diff --git a/include/soc/canaan/k210-sysctl.h b/include/soc/canaan/k210-sysctl.h
-new file mode 100644
-index 000000000000..50b21484f7c7
---- /dev/null
-+++ b/include/soc/canaan/k210-sysctl.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2019-20 Sean Anderson <seanga2@gmail.com>
++ * Copyright (C) 2020 Sean Anderson <seanga2@gmail.com>
 + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
 + */
-+#ifndef K210_SYSCTL_H
-+#define K210_SYSCTL_H
++#include <linux/io.h>
++#include <linux/of_device.h>
++#include <linux/clk.h>
++#include <linux/mfd/syscon.h>
++#include <linux/platform_device.h>
++#include <linux/bitfield.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/io.h>
++
++#include <dt-bindings/pinctrl/k210-fpioa.h>
++
++#include "core.h"
++#include "pinconf.h"
++#include "pinctrl-utils.h"
 +
 +/*
-+ * Kendryte K210 SoC system controller registers offsets.
-+ * Taken from Kendryte SDK (kendryte-standalone-sdk).
++ * The K210 only implements 8 drive levels, even though
++ * there is register space for 16
 + */
-+#define K210_SYSCTL_GIT_ID	0x00 /* Git short commit id */
-+#define K210_SYSCTL_UART_BAUD	0x04 /* Default UARTHS baud rate */
-+#define K210_SYSCTL_PLL0	0x08 /* PLL0 controller */
-+#define K210_SYSCTL_PLL1	0x0C /* PLL1 controller */
-+#define K210_SYSCTL_PLL2	0x10 /* PLL2 controller */
-+#define K210_SYSCTL_PLL_LOCK	0x18 /* PLL lock tester */
-+#define K210_SYSCTL_ROM_ERROR	0x1C /* AXI ROM detector */
-+#define K210_SYSCTL_SEL0	0x20 /* Clock select controller 0 */
-+#define K210_SYSCTL_SEL1	0x24 /* Clock select controller 1 */
-+#define K210_SYSCTL_EN_CENT	0x28 /* Central clock enable */
-+#define K210_SYSCTL_EN_PERI	0x2C /* Peripheral clock enable */
-+#define K210_SYSCTL_SOFT_RESET	0x30 /* Soft reset ctrl */
-+#define K210_SYSCTL_PERI_RESET	0x34 /* Peripheral reset controller */
-+#define K210_SYSCTL_THR0	0x38 /* Clock threshold controller 0 */
-+#define K210_SYSCTL_THR1	0x3C /* Clock threshold controller 1 */
-+#define K210_SYSCTL_THR2	0x40 /* Clock threshold controller 2 */
-+#define K210_SYSCTL_THR3	0x44 /* Clock threshold controller 3 */
-+#define K210_SYSCTL_THR4	0x48 /* Clock threshold controller 4 */
-+#define K210_SYSCTL_THR5	0x4C /* Clock threshold controller 5 */
-+#define K210_SYSCTL_THR6	0x50 /* Clock threshold controller 6 */
-+#define K210_SYSCTL_MISC	0x54 /* Miscellaneous controller */
-+#define K210_SYSCTL_PERI	0x58 /* Peripheral controller */
-+#define K210_SYSCTL_SPI_SLEEP	0x5C /* SPI sleep controller */
-+#define K210_SYSCTL_RESET_STAT	0x60 /* Reset source status */
-+#define K210_SYSCTL_DMA_SEL0	0x64 /* DMA handshake selector 0 */
-+#define K210_SYSCTL_DMA_SEL1	0x68 /* DMA handshake selector 1 */
-+#define K210_SYSCTL_POWER_SEL	0x6C /* IO Power Mode Select controller */
++#define K210_PC_DRIVE_MASK	GENMASK(11, 8)
++#define K210_PC_DRIVE_SHIFT	8
++#define K210_PC_DRIVE_0		(0 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_1		(1 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_2		(2 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_3		(3 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_4		(4 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_5		(5 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_6		(6 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_7		(7 << K210_PC_DRIVE_SHIFT)
++#define K210_PC_DRIVE_MAX	7
++#define K210_PC_MODE_MASK	GENMASK(23, 12)
 +
-+void __init k210_clk_early_init(void __iomem *regs);
++/*
++ * output enabled == PC_OE & (PC_OE_INV ^ FUNCTION_OE)
++ * where FUNCTION_OE is a physical signal from the function.
++ */
++#define K210_PC_OE		BIT(12) /* Output Enable */
++#define K210_PC_OE_INV		BIT(13) /* INVert Output Enable */
++#define K210_PC_DO_OE		BIT(14) /* set Data Out to Output Enable sig */
++#define K210_PC_DO_INV		BIT(15) /* INVert final Data Output */
++#define K210_PC_PU		BIT(16) /* Pull Up */
++#define K210_PC_PD		BIT(17) /* Pull Down */
++/* Strong pull up not implemented on K210 */
++#define K210_PC_SL		BIT(19) /* reduce SLew rate */
++/* Same semantics as OE above */
++#define K210_PC_IE		BIT(20) /* Input Enable */
++#define K210_PC_IE_INV		BIT(21) /* INVert Input Enable */
++#define K210_PC_DI_INV		BIT(22) /* INVert Data Input */
++#define K210_PC_ST		BIT(23) /* Schmitt Trigger */
++#define K210_PC_DI		BIT(31) /* raw Data Input */
 +
-+#endif
++#define K210_PC_BIAS_MASK	(K210_PC_PU & K210_PC_PD)
++
++#define K210_PC_MODE_IN		(K210_PC_IE | K210_PC_ST)
++#define K210_PC_MODE_OUT	(K210_PC_DRIVE_7 | K210_PC_OE)
++#define K210_PC_MODE_I2C	(K210_PC_MODE_IN | K210_PC_SL | \
++				 K210_PC_OE | K210_PC_PU)
++#define K210_PC_MODE_SCCB	(K210_PC_MODE_I2C | \
++				 K210_PC_OE_INV | K210_PC_IE_INV)
++#define K210_PC_MODE_SPI	(K210_PC_MODE_IN | K210_PC_IE_INV | \
++				 K210_PC_MODE_OUT | K210_PC_OE_INV)
++#define K210_PC_MODE_GPIO	(K210_PC_MODE_IN | K210_PC_MODE_OUT)
++
++#define K210_PG_FUNC		GENMASK(7, 0)
++#define K210_PG_DO		BIT(8)
++#define K210_PG_PIN		GENMASK(22, 16)
++
++/*
++ * struct k210_fpioa: Kendryte K210 FPIOA memory mapped registers
++ * @pins: 48 32-bits IO pin registers
++ * @tie_en: 256 (one per function) input tie enable bits
++ * @tie_val: 256 (one per function) input tie value bits
++ */
++struct k210_fpioa {
++	u32 pins[48];
++	u32 tie_en[8];
++	u32 tie_val[8];
++};
++
++struct k210_fpioa_data {
++
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++
++	struct k210_fpioa __iomem *fpioa;
++	struct regmap *sysctl_map;
++	u32 power_offset;
++	struct clk *clk;
++	struct clk *pclk;
++};
++
++#define K210_PIN_NAME(i)	("IO_" #i)
++#define K210_PIN(i)		[(i)] = PINCTRL_PIN((i), K210_PIN_NAME(i))
++
++static const struct pinctrl_pin_desc k210_pins[] = {
++	K210_PIN(0),  K210_PIN(1),  K210_PIN(2),
++	K210_PIN(3),  K210_PIN(4),  K210_PIN(5),
++	K210_PIN(6),  K210_PIN(7),  K210_PIN(8),
++	K210_PIN(9),  K210_PIN(10), K210_PIN(11),
++	K210_PIN(12), K210_PIN(13), K210_PIN(14),
++	K210_PIN(15), K210_PIN(16), K210_PIN(17),
++	K210_PIN(18), K210_PIN(19), K210_PIN(20),
++	K210_PIN(21), K210_PIN(22), K210_PIN(23),
++	K210_PIN(24), K210_PIN(25), K210_PIN(26),
++	K210_PIN(27), K210_PIN(28), K210_PIN(29),
++	K210_PIN(30), K210_PIN(31), K210_PIN(32),
++	K210_PIN(33), K210_PIN(34), K210_PIN(35),
++	K210_PIN(36), K210_PIN(37), K210_PIN(38),
++	K210_PIN(39), K210_PIN(40), K210_PIN(41),
++	K210_PIN(42), K210_PIN(43), K210_PIN(44),
++	K210_PIN(45), K210_PIN(46), K210_PIN(47)
++};
++
++#define K210_NPINS ARRAY_SIZE(k210_pins)
++
++/*
++ * Pin groups: each of the 48 programmable pins is a group.
++ * To this are added 8 power domain groups, which for the purposes of
++ * the pin subsystem, contain no pins. The power domain groups only exist
++ * to set the power level. The id should never be used (since there are
++ * no pins 48-55).
++ */
++static const char *const k210_group_names[] = {
++	/* The first 48 groups are for pins, one each */
++	K210_PIN_NAME(0),  K210_PIN_NAME(1),  K210_PIN_NAME(2),
++	K210_PIN_NAME(3),  K210_PIN_NAME(4),  K210_PIN_NAME(5),
++	K210_PIN_NAME(6),  K210_PIN_NAME(7),  K210_PIN_NAME(8),
++	K210_PIN_NAME(9),  K210_PIN_NAME(10), K210_PIN_NAME(11),
++	K210_PIN_NAME(12), K210_PIN_NAME(13), K210_PIN_NAME(14),
++	K210_PIN_NAME(15), K210_PIN_NAME(16), K210_PIN_NAME(17),
++	K210_PIN_NAME(18), K210_PIN_NAME(19), K210_PIN_NAME(20),
++	K210_PIN_NAME(21), K210_PIN_NAME(22), K210_PIN_NAME(23),
++	K210_PIN_NAME(24), K210_PIN_NAME(25), K210_PIN_NAME(26),
++	K210_PIN_NAME(27), K210_PIN_NAME(28), K210_PIN_NAME(29),
++	K210_PIN_NAME(30), K210_PIN_NAME(31), K210_PIN_NAME(32),
++	K210_PIN_NAME(33), K210_PIN_NAME(34), K210_PIN_NAME(35),
++	K210_PIN_NAME(36), K210_PIN_NAME(37), K210_PIN_NAME(38),
++	K210_PIN_NAME(39), K210_PIN_NAME(40), K210_PIN_NAME(41),
++	K210_PIN_NAME(42), K210_PIN_NAME(43), K210_PIN_NAME(44),
++	K210_PIN_NAME(45), K210_PIN_NAME(46), K210_PIN_NAME(47),
++	[48] = "A0", [49] = "A1", [50] = "A2",
++	[51] = "B3", [52] = "B4", [53] = "B5",
++	[54] = "C6", [55] = "C7"
++};
++
++#define K210_NGROUPS	ARRAY_SIZE(k210_group_names)
++
++enum k210_pinctrl_mode_id {
++	K210_PC_DEFAULT_DISABLED,
++	K210_PC_DEFAULT_IN,
++	K210_PC_DEFAULT_IN_TIE,
++	K210_PC_DEFAULT_OUT,
++	K210_PC_DEFAULT_I2C,
++	K210_PC_DEFAULT_SCCB,
++	K210_PC_DEFAULT_SPI,
++	K210_PC_DEFAULT_GPIO,
++	K210_PC_DEFAULT_INT13,
++};
++
++#define K210_PC_DEFAULT(mode) \
++	[K210_PC_DEFAULT_##mode] = K210_PC_MODE_##mode
++
++static const u32 k210_pinconf_mode_id_to_mode[] = {
++	[K210_PC_DEFAULT_DISABLED] = 0,
++	K210_PC_DEFAULT(IN),
++	[K210_PC_DEFAULT_IN_TIE] = K210_PC_MODE_IN,
++	K210_PC_DEFAULT(OUT),
++	K210_PC_DEFAULT(I2C),
++	K210_PC_DEFAULT(SCCB),
++	K210_PC_DEFAULT(SPI),
++	K210_PC_DEFAULT(GPIO),
++	[K210_PC_DEFAULT_INT13] = K210_PC_MODE_IN | K210_PC_PU,
++};
++
++#undef DEFAULT
++
++/*
++ * Pin functions configuration information.
++ */
++struct k210_pcf_info {
++	char name[15];
++	u8 mode_id;
++};
++
++#define K210_FUNC(id, mode)				\
++	[K210_PCF_##id] = {				\
++		.name = #id,				\
++		.mode_id = K210_PC_DEFAULT_##mode	\
++	}
++
++static const struct k210_pcf_info k210_pcf_infos[] = {
++	K210_FUNC(JTAG_TCLK,		IN),
++	K210_FUNC(JTAG_TDI,		IN),
++	K210_FUNC(JTAG_TMS,		IN),
++	K210_FUNC(JTAG_TDO,		OUT),
++	K210_FUNC(SPI0_D0,		SPI),
++	K210_FUNC(SPI0_D1,		SPI),
++	K210_FUNC(SPI0_D2,		SPI),
++	K210_FUNC(SPI0_D3,		SPI),
++	K210_FUNC(SPI0_D4,		SPI),
++	K210_FUNC(SPI0_D5,		SPI),
++	K210_FUNC(SPI0_D6,		SPI),
++	K210_FUNC(SPI0_D7,		SPI),
++	K210_FUNC(SPI0_SS0,		OUT),
++	K210_FUNC(SPI0_SS1,		OUT),
++	K210_FUNC(SPI0_SS2,		OUT),
++	K210_FUNC(SPI0_SS3,		OUT),
++	K210_FUNC(SPI0_ARB,		IN_TIE),
++	K210_FUNC(SPI0_SCLK,		OUT),
++	K210_FUNC(UARTHS_RX,		IN),
++	K210_FUNC(UARTHS_TX,		OUT),
++	K210_FUNC(RESV6,		IN),
++	K210_FUNC(RESV7,		IN),
++	K210_FUNC(CLK_SPI1,		OUT),
++	K210_FUNC(CLK_I2C1,		OUT),
++	K210_FUNC(GPIOHS0,		GPIO),
++	K210_FUNC(GPIOHS1,		GPIO),
++	K210_FUNC(GPIOHS2,		GPIO),
++	K210_FUNC(GPIOHS3,		GPIO),
++	K210_FUNC(GPIOHS4,		GPIO),
++	K210_FUNC(GPIOHS5,		GPIO),
++	K210_FUNC(GPIOHS6,		GPIO),
++	K210_FUNC(GPIOHS7,		GPIO),
++	K210_FUNC(GPIOHS8,		GPIO),
++	K210_FUNC(GPIOHS9,		GPIO),
++	K210_FUNC(GPIOHS10,		GPIO),
++	K210_FUNC(GPIOHS11,		GPIO),
++	K210_FUNC(GPIOHS12,		GPIO),
++	K210_FUNC(GPIOHS13,		GPIO),
++	K210_FUNC(GPIOHS14,		GPIO),
++	K210_FUNC(GPIOHS15,		GPIO),
++	K210_FUNC(GPIOHS16,		GPIO),
++	K210_FUNC(GPIOHS17,		GPIO),
++	K210_FUNC(GPIOHS18,		GPIO),
++	K210_FUNC(GPIOHS19,		GPIO),
++	K210_FUNC(GPIOHS20,		GPIO),
++	K210_FUNC(GPIOHS21,		GPIO),
++	K210_FUNC(GPIOHS22,		GPIO),
++	K210_FUNC(GPIOHS23,		GPIO),
++	K210_FUNC(GPIOHS24,		GPIO),
++	K210_FUNC(GPIOHS25,		GPIO),
++	K210_FUNC(GPIOHS26,		GPIO),
++	K210_FUNC(GPIOHS27,		GPIO),
++	K210_FUNC(GPIOHS28,		GPIO),
++	K210_FUNC(GPIOHS29,		GPIO),
++	K210_FUNC(GPIOHS30,		GPIO),
++	K210_FUNC(GPIOHS31,		GPIO),
++	K210_FUNC(GPIO0,		GPIO),
++	K210_FUNC(GPIO1,		GPIO),
++	K210_FUNC(GPIO2,		GPIO),
++	K210_FUNC(GPIO3,		GPIO),
++	K210_FUNC(GPIO4,		GPIO),
++	K210_FUNC(GPIO5,		GPIO),
++	K210_FUNC(GPIO6,		GPIO),
++	K210_FUNC(GPIO7,		GPIO),
++	K210_FUNC(UART1_RX,		IN),
++	K210_FUNC(UART1_TX,		OUT),
++	K210_FUNC(UART2_RX,		IN),
++	K210_FUNC(UART2_TX,		OUT),
++	K210_FUNC(UART3_RX,		IN),
++	K210_FUNC(UART3_TX,		OUT),
++	K210_FUNC(SPI1_D0,		SPI),
++	K210_FUNC(SPI1_D1,		SPI),
++	K210_FUNC(SPI1_D2,		SPI),
++	K210_FUNC(SPI1_D3,		SPI),
++	K210_FUNC(SPI1_D4,		SPI),
++	K210_FUNC(SPI1_D5,		SPI),
++	K210_FUNC(SPI1_D6,		SPI),
++	K210_FUNC(SPI1_D7,		SPI),
++	K210_FUNC(SPI1_SS0,		OUT),
++	K210_FUNC(SPI1_SS1,		OUT),
++	K210_FUNC(SPI1_SS2,		OUT),
++	K210_FUNC(SPI1_SS3,		OUT),
++	K210_FUNC(SPI1_ARB,		IN_TIE),
++	K210_FUNC(SPI1_SCLK,		OUT),
++	K210_FUNC(SPI2_D0,		SPI),
++	K210_FUNC(SPI2_SS,		IN),
++	K210_FUNC(SPI2_SCLK,		IN),
++	K210_FUNC(I2S0_MCLK,		OUT),
++	K210_FUNC(I2S0_SCLK,		OUT),
++	K210_FUNC(I2S0_WS,		OUT),
++	K210_FUNC(I2S0_IN_D0,		IN),
++	K210_FUNC(I2S0_IN_D1,		IN),
++	K210_FUNC(I2S0_IN_D2,		IN),
++	K210_FUNC(I2S0_IN_D3,		IN),
++	K210_FUNC(I2S0_OUT_D0,		OUT),
++	K210_FUNC(I2S0_OUT_D1,		OUT),
++	K210_FUNC(I2S0_OUT_D2,		OUT),
++	K210_FUNC(I2S0_OUT_D3,		OUT),
++	K210_FUNC(I2S1_MCLK,		OUT),
++	K210_FUNC(I2S1_SCLK,		OUT),
++	K210_FUNC(I2S1_WS,		OUT),
++	K210_FUNC(I2S1_IN_D0,		IN),
++	K210_FUNC(I2S1_IN_D1,		IN),
++	K210_FUNC(I2S1_IN_D2,		IN),
++	K210_FUNC(I2S1_IN_D3,		IN),
++	K210_FUNC(I2S1_OUT_D0,		OUT),
++	K210_FUNC(I2S1_OUT_D1,		OUT),
++	K210_FUNC(I2S1_OUT_D2,		OUT),
++	K210_FUNC(I2S1_OUT_D3,		OUT),
++	K210_FUNC(I2S2_MCLK,		OUT),
++	K210_FUNC(I2S2_SCLK,		OUT),
++	K210_FUNC(I2S2_WS,		OUT),
++	K210_FUNC(I2S2_IN_D0,		IN),
++	K210_FUNC(I2S2_IN_D1,		IN),
++	K210_FUNC(I2S2_IN_D2,		IN),
++	K210_FUNC(I2S2_IN_D3,		IN),
++	K210_FUNC(I2S2_OUT_D0,		OUT),
++	K210_FUNC(I2S2_OUT_D1,		OUT),
++	K210_FUNC(I2S2_OUT_D2,		OUT),
++	K210_FUNC(I2S2_OUT_D3,		OUT),
++	K210_FUNC(RESV0,		DISABLED),
++	K210_FUNC(RESV1,		DISABLED),
++	K210_FUNC(RESV2,		DISABLED),
++	K210_FUNC(RESV3,		DISABLED),
++	K210_FUNC(RESV4,		DISABLED),
++	K210_FUNC(RESV5,		DISABLED),
++	K210_FUNC(I2C0_SCLK,		I2C),
++	K210_FUNC(I2C0_SDA,		I2C),
++	K210_FUNC(I2C1_SCLK,		I2C),
++	K210_FUNC(I2C1_SDA,		I2C),
++	K210_FUNC(I2C2_SCLK,		I2C),
++	K210_FUNC(I2C2_SDA,		I2C),
++	K210_FUNC(DVP_XCLK,		OUT),
++	K210_FUNC(DVP_RST,		OUT),
++	K210_FUNC(DVP_PWDN,		OUT),
++	K210_FUNC(DVP_VSYNC,		IN),
++	K210_FUNC(DVP_HSYNC,		IN),
++	K210_FUNC(DVP_PCLK,		IN),
++	K210_FUNC(DVP_D0,		IN),
++	K210_FUNC(DVP_D1,		IN),
++	K210_FUNC(DVP_D2,		IN),
++	K210_FUNC(DVP_D3,		IN),
++	K210_FUNC(DVP_D4,		IN),
++	K210_FUNC(DVP_D5,		IN),
++	K210_FUNC(DVP_D6,		IN),
++	K210_FUNC(DVP_D7,		IN),
++	K210_FUNC(SCCB_SCLK,		SCCB),
++	K210_FUNC(SCCB_SDA,		SCCB),
++	K210_FUNC(UART1_CTS,		IN),
++	K210_FUNC(UART1_DSR,		IN),
++	K210_FUNC(UART1_DCD,		IN),
++	K210_FUNC(UART1_RI,		IN),
++	K210_FUNC(UART1_SIR_IN,		IN),
++	K210_FUNC(UART1_DTR,		OUT),
++	K210_FUNC(UART1_RTS,		OUT),
++	K210_FUNC(UART1_OUT2,		OUT),
++	K210_FUNC(UART1_OUT1,		OUT),
++	K210_FUNC(UART1_SIR_OUT,	OUT),
++	K210_FUNC(UART1_BAUD,		OUT),
++	K210_FUNC(UART1_RE,		OUT),
++	K210_FUNC(UART1_DE,		OUT),
++	K210_FUNC(UART1_RS485_EN,	OUT),
++	K210_FUNC(UART2_CTS,		IN),
++	K210_FUNC(UART2_DSR,		IN),
++	K210_FUNC(UART2_DCD,		IN),
++	K210_FUNC(UART2_RI,		IN),
++	K210_FUNC(UART2_SIR_IN,		IN),
++	K210_FUNC(UART2_DTR,		OUT),
++	K210_FUNC(UART2_RTS,		OUT),
++	K210_FUNC(UART2_OUT2,		OUT),
++	K210_FUNC(UART2_OUT1,		OUT),
++	K210_FUNC(UART2_SIR_OUT,	OUT),
++	K210_FUNC(UART2_BAUD,		OUT),
++	K210_FUNC(UART2_RE,		OUT),
++	K210_FUNC(UART2_DE,		OUT),
++	K210_FUNC(UART2_RS485_EN,	OUT),
++	K210_FUNC(UART3_CTS,		IN),
++	K210_FUNC(UART3_DSR,		IN),
++	K210_FUNC(UART3_DCD,		IN),
++	K210_FUNC(UART3_RI,		IN),
++	K210_FUNC(UART3_SIR_IN,		IN),
++	K210_FUNC(UART3_DTR,		OUT),
++	K210_FUNC(UART3_RTS,		OUT),
++	K210_FUNC(UART3_OUT2,		OUT),
++	K210_FUNC(UART3_OUT1,		OUT),
++	K210_FUNC(UART3_SIR_OUT,	OUT),
++	K210_FUNC(UART3_BAUD,		OUT),
++	K210_FUNC(UART3_RE,		OUT),
++	K210_FUNC(UART3_DE,		OUT),
++	K210_FUNC(UART3_RS485_EN,	OUT),
++	K210_FUNC(TIMER0_TOGGLE1,	OUT),
++	K210_FUNC(TIMER0_TOGGLE2,	OUT),
++	K210_FUNC(TIMER0_TOGGLE3,	OUT),
++	K210_FUNC(TIMER0_TOGGLE4,	OUT),
++	K210_FUNC(TIMER1_TOGGLE1,	OUT),
++	K210_FUNC(TIMER1_TOGGLE2,	OUT),
++	K210_FUNC(TIMER1_TOGGLE3,	OUT),
++	K210_FUNC(TIMER1_TOGGLE4,	OUT),
++	K210_FUNC(TIMER2_TOGGLE1,	OUT),
++	K210_FUNC(TIMER2_TOGGLE2,	OUT),
++	K210_FUNC(TIMER2_TOGGLE3,	OUT),
++	K210_FUNC(TIMER2_TOGGLE4,	OUT),
++	K210_FUNC(CLK_SPI2,		OUT),
++	K210_FUNC(CLK_I2C2,		OUT),
++	K210_FUNC(INTERNAL0,		OUT),
++	K210_FUNC(INTERNAL1,		OUT),
++	K210_FUNC(INTERNAL2,		OUT),
++	K210_FUNC(INTERNAL3,		OUT),
++	K210_FUNC(INTERNAL4,		OUT),
++	K210_FUNC(INTERNAL5,		OUT),
++	K210_FUNC(INTERNAL6,		OUT),
++	K210_FUNC(INTERNAL7,		OUT),
++	K210_FUNC(INTERNAL8,		OUT),
++	K210_FUNC(INTERNAL9,		IN),
++	K210_FUNC(INTERNAL10,		IN),
++	K210_FUNC(INTERNAL11,		IN),
++	K210_FUNC(INTERNAL12,		IN),
++	K210_FUNC(INTERNAL13,		INT13),
++	K210_FUNC(INTERNAL14,		I2C),
++	K210_FUNC(INTERNAL15,		IN),
++	K210_FUNC(INTERNAL16,		IN),
++	K210_FUNC(INTERNAL17,		IN),
++	K210_FUNC(CONSTANT,		DISABLED),
++	K210_FUNC(INTERNAL18,		IN),
++	K210_FUNC(DEBUG0,		OUT),
++	K210_FUNC(DEBUG1,		OUT),
++	K210_FUNC(DEBUG2,		OUT),
++	K210_FUNC(DEBUG3,		OUT),
++	K210_FUNC(DEBUG4,		OUT),
++	K210_FUNC(DEBUG5,		OUT),
++	K210_FUNC(DEBUG6,		OUT),
++	K210_FUNC(DEBUG7,		OUT),
++	K210_FUNC(DEBUG8,		OUT),
++	K210_FUNC(DEBUG9,		OUT),
++	K210_FUNC(DEBUG10,		OUT),
++	K210_FUNC(DEBUG11,		OUT),
++	K210_FUNC(DEBUG12,		OUT),
++	K210_FUNC(DEBUG13,		OUT),
++	K210_FUNC(DEBUG14,		OUT),
++	K210_FUNC(DEBUG15,		OUT),
++	K210_FUNC(DEBUG16,		OUT),
++	K210_FUNC(DEBUG17,		OUT),
++	K210_FUNC(DEBUG18,		OUT),
++	K210_FUNC(DEBUG19,		OUT),
++	K210_FUNC(DEBUG20,		OUT),
++	K210_FUNC(DEBUG21,		OUT),
++	K210_FUNC(DEBUG22,		OUT),
++	K210_FUNC(DEBUG23,		OUT),
++	K210_FUNC(DEBUG24,		OUT),
++	K210_FUNC(DEBUG25,		OUT),
++	K210_FUNC(DEBUG26,		OUT),
++	K210_FUNC(DEBUG27,		OUT),
++	K210_FUNC(DEBUG28,		OUT),
++	K210_FUNC(DEBUG29,		OUT),
++	K210_FUNC(DEBUG30,		OUT),
++	K210_FUNC(DEBUG31,		OUT),
++};
++
++#define PIN_CONFIG_OUTPUT_INVERT	(PIN_CONFIG_END + 1)
++#define PIN_CONFIG_INPUT_INVERT		(PIN_CONFIG_END + 2)
++
++static const struct pinconf_generic_params k210_pinconf_custom_params[] = {
++	{ "output-polarity-invert", PIN_CONFIG_OUTPUT_INVERT, 1 },
++	{ "input-polarity-invert",  PIN_CONFIG_INPUT_INVERT, 1 },
++};
++
++/*
++ * Max drive strength in uA.
++ */
++static const int k210_pinconf_drive_strength[] = {
++	[0] = 11200,
++	[1] = 16800,
++	[2] = 22300,
++	[3] = 27800,
++	[4] = 33300,
++	[5] = 38700,
++	[6] = 44100,
++	[7] = 49500,
++};
++
++static int k210_pinconf_get_drive(unsigned int max_strength_ua)
++{
++	int i;
++
++	for (i = K210_PC_DRIVE_MAX; i; i--) {
++		if (k210_pinconf_drive_strength[i] <= max_strength_ua)
++			return i;
++	}
++
++	return -EINVAL;
++}
++
++static void k210_pinmux_set_pin_function(struct pinctrl_dev *pctldev,
++					 u32 pin, u32 func)
++{
++	struct k210_fpioa_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	const struct k210_pcf_info *info = &k210_pcf_infos[func];
++	u32 mode = k210_pinconf_mode_id_to_mode[info->mode_id];
++	u32 val = func | mode;
++
++	dev_dbg(pdata->dev, "set pin %u function %s (%u) -> 0x%08x\n",
++		pin, info->name, func, val);
++
++	writel(val, &pdata->fpioa->pins[pin]);
++}
++
++static int k210_pinconf_set_param(struct pinctrl_dev *pctldev,
++				  unsigned int pin,
++				  unsigned int param, unsigned int arg)
++{
++	struct k210_fpioa_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	u32 val = readl(&pdata->fpioa->pins[pin]);
++	int drive;
++
++	dev_dbg(pdata->dev, "set pin %u param %u, arg 0x%x\n",
++		pin, param, arg);
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		val &= ~K210_PC_BIAS_MASK;
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		if (!arg)
++			return -EINVAL;
++		val |= K210_PC_PD;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		if (!arg)
++			return -EINVAL;
++		val |= K210_PC_PD;
++		break;
++	case PIN_CONFIG_DRIVE_STRENGTH:
++		arg *= 1000;
++		fallthrough;
++	case PIN_CONFIG_DRIVE_STRENGTH_UA:
++		drive = k210_pinconf_get_drive(arg);
++		if (drive < 0)
++			return drive;
++		val &= ~K210_PC_DRIVE_MASK;
++		val |= FIELD_PREP(K210_PC_DRIVE_MASK, drive);
++		break;
++	case PIN_CONFIG_INPUT_ENABLE:
++		if (arg)
++			val |= K210_PC_IE;
++		else
++			val &= ~K210_PC_IE;
++		break;
++	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++		if (arg)
++			val |= K210_PC_ST;
++		else
++			val &= ~K210_PC_ST;
++		break;
++	case PIN_CONFIG_OUTPUT:
++		k210_pinmux_set_pin_function(pctldev, pin, K210_PCF_CONSTANT);
++		val = readl(&pdata->fpioa->pins[pin]);
++		val |= K210_PC_MODE_OUT;
++		if (!arg)
++			val |= K210_PC_DO_INV;
++		break;
++	case PIN_CONFIG_OUTPUT_ENABLE:
++		if (arg)
++			val |= K210_PC_OE;
++		else
++			val &= ~K210_PC_OE;
++		break;
++	case PIN_CONFIG_SLEW_RATE:
++		if (arg)
++			val |= K210_PC_SL;
++		else
++			val &= ~K210_PC_SL;
++		break;
++	case PIN_CONFIG_OUTPUT_INVERT:
++		if (arg)
++			val |= K210_PC_DO_INV;
++		else
++			val &= ~K210_PC_DO_INV;
++		break;
++	case PIN_CONFIG_INPUT_INVERT:
++		if (arg)
++			val |= K210_PC_DI_INV;
++		else
++			val &= ~K210_PC_DI_INV;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	writel(val, &pdata->fpioa->pins[pin]);
++
++	return 0;
++}
++
++static int k210_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			    unsigned long *configs, unsigned int num_configs)
++{
++	unsigned int param, arg;
++	int i, ret;
++
++	if (WARN_ON(pin >= K210_NPINS))
++		return -EINVAL;
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++		ret = k210_pinconf_set_param(pctldev, pin, param, arg);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static void k210_pinconf_dbg_show(struct pinctrl_dev *pctldev,
++				  struct seq_file *s, unsigned int pin)
++{
++	struct k210_fpioa_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++
++	seq_printf(s, "%#x", readl(&pdata->fpioa->pins[pin]));
++}
++
++static int k210_pinconf_group_set(struct pinctrl_dev *pctldev,
++				  unsigned int selector, unsigned long *configs,
++				  unsigned int num_configs)
++{
++	struct k210_fpioa_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	unsigned int param, arg;
++	u32 bit;
++	int i;
++
++	/* Pins should be configured with pinmux, not groups*/
++	if (selector < K210_NPINS)
++		return -EINVAL;
++
++	/* Otherwise it's a power domain */
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		if (param != PIN_CONFIG_POWER_SOURCE)
++			return -EINVAL;
++
++		arg = pinconf_to_config_argument(configs[i]);
++		bit = BIT(selector - K210_NPINS);
++		regmap_update_bits(pdata->sysctl_map,
++				   pdata->power_offset,
++				   bit, arg ? bit : 0);
++	}
++
++	return 0;
++}
++
++static void k210_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
++					struct seq_file *s,
++					unsigned int selector)
++{
++	struct k210_fpioa_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	int ret;
++	u32 val;
++
++	if (selector < K210_NPINS)
++		return k210_pinconf_dbg_show(pctldev, s, selector);
++
++	ret = regmap_read(pdata->sysctl_map, pdata->power_offset, &val);
++	if (ret) {
++		dev_err(pdata->dev, "Failed to read power reg\n");
++		return;
++	}
++
++	seq_printf(s, "%s: %s V", k210_group_names[selector],
++		   val & BIT(selector - K210_NPINS) ? "1.8" : "3.3");
++}
++
++static const struct pinconf_ops k210_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_set = k210_pinconf_set,
++	.pin_config_group_set = k210_pinconf_group_set,
++	.pin_config_dbg_show = k210_pinconf_dbg_show,
++	.pin_config_group_dbg_show = k210_pinconf_group_dbg_show,
++};
++
++static int k210_pinmux_get_function_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(k210_pcf_infos);
++}
++
++static const char *k210_pinmux_get_function_name(struct pinctrl_dev *pctldev,
++						 unsigned int selector)
++{
++	return k210_pcf_infos[selector].name;
++}
++
++static int k210_pinmux_get_function_groups(struct pinctrl_dev *pctldev,
++					   unsigned int selector,
++					   const char * const **groups,
++					   unsigned int * const num_groups)
++{
++	/* Any function can be mapped to any pin */
++	*groups = k210_group_names;
++	*num_groups = K210_NPINS;
++
++	return 0;
++}
++
++static int k210_pinmux_set_mux(struct pinctrl_dev *pctldev,
++			       unsigned int function,
++			       unsigned int group)
++{
++	/* Can't mux power domains */
++	if (group >= K210_NPINS)
++		return -EINVAL;
++
++	k210_pinmux_set_pin_function(pctldev, group, function);
++
++	return 0;
++}
++
++static const struct pinmux_ops k210_pinmux_ops = {
++	.get_functions_count = k210_pinmux_get_function_count,
++	.get_function_name = k210_pinmux_get_function_name,
++	.get_function_groups = k210_pinmux_get_function_groups,
++	.set_mux = k210_pinmux_set_mux,
++	.strict = true,
++};
++
++static int k210_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return K210_NGROUPS;
++}
++
++static const char *k210_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++					       unsigned int group)
++{
++	return k210_group_names[group];
++}
++
++static int k210_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++				       unsigned int group,
++				       const unsigned int **pins,
++				       unsigned int *npins)
++{
++	if (group >= K210_NPINS) {
++		*pins = NULL;
++		*npins = 0;
++		return 0;
++	}
++
++	*pins = &k210_pins[group].number;
++	*npins = 1;
++
++	return 0;
++}
++
++static void k210_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
++				      struct seq_file *s, unsigned int offset)
++{
++	seq_printf(s, "%s", dev_name(pctldev->dev));
++}
++
++static int k210_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++					  struct device_node *np,
++					  struct pinctrl_map **map,
++					  unsigned int *reserved_maps,
++					  unsigned int *num_maps)
++{
++	struct property *prop;
++	const __be32 *p;
++	int ret, pinmux_groups;
++	u32 pinmux_group;
++	unsigned long *configs = NULL;
++	unsigned int num_configs = 0;
++	unsigned int reserve = 0;
++
++	ret = of_property_count_strings(np, "groups");
++	if (!ret)
++		return pinconf_generic_dt_subnode_to_map(pctldev, np, map,
++						reserved_maps, num_maps,
++						PIN_MAP_TYPE_CONFIGS_GROUP);
++
++	pinmux_groups = of_property_count_u32_elems(np, "pinmux");
++	if (pinmux_groups <= 0) {
++		/* Ignore this node */
++		return 0;
++	}
++
++	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
++					      &num_configs);
++	if (ret < 0) {
++		dev_err(pctldev->dev, "%pOF: could not parse node property\n",
++			np);
++		return ret;
++	}
++
++	reserve = pinmux_groups * (1 + num_configs);
++	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
++					reserve);
++	if (ret < 0)
++		goto exit;
++
++	of_property_for_each_u32(np, "pinmux", prop, p, pinmux_group) {
++		const char *group_name, *func_name;
++		u32 pin = FIELD_GET(K210_PG_PIN, pinmux_group);
++		u32 func = FIELD_GET(K210_PG_FUNC, pinmux_group);
++
++		if (pin >= K210_NPINS) {
++			ret = -EINVAL;
++			goto exit;
++		}
++
++		group_name = k210_group_names[pin];
++		func_name = k210_pcf_infos[func].name;
++
++		dev_dbg(pctldev->dev, "Pinmux %s: pin %u func %s\n",
++			np->name, pin, func_name);
++
++		ret = pinctrl_utils_add_map_mux(pctldev, map, reserved_maps,
++						num_maps, group_name,
++						func_name);
++		if (ret < 0) {
++			dev_err(pctldev->dev, "%pOF add mux map failed %d\n",
++				np, ret);
++			goto exit;
++		}
++
++		if (num_configs) {
++			ret = pinctrl_utils_add_map_configs(pctldev, map,
++					reserved_maps, num_maps, group_name,
++					configs, num_configs,
++					PIN_MAP_TYPE_CONFIGS_PIN);
++			if (ret < 0) {
++				dev_err(pctldev->dev,
++					"%pOF add configs map failed %d\n",
++					np, ret);
++				goto exit;
++			}
++		}
++	}
++
++	ret = 0;
++
++exit:
++	kfree(configs);
++	return ret;
++}
++
++static int k210_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
++				       struct device_node *np_config,
++				       struct pinctrl_map **map,
++				       unsigned int *num_maps)
++{
++	unsigned int reserved_maps;
++	struct device_node *np;
++	int ret;
++
++	reserved_maps = 0;
++	*map = NULL;
++	*num_maps = 0;
++
++	ret = k210_pinctrl_dt_subnode_to_map(pctldev, np_config, map,
++					     &reserved_maps, num_maps);
++	if (ret < 0)
++		goto err;
++
++	for_each_available_child_of_node(np_config, np) {
++		ret = k210_pinctrl_dt_subnode_to_map(pctldev, np, map,
++						     &reserved_maps, num_maps);
++		if (ret < 0)
++			goto err;
++	}
++	return 0;
++
++err:
++	pinctrl_utils_free_map(pctldev, *map, *num_maps);
++	return ret;
++}
++
++
++static const struct pinctrl_ops k210_pinctrl_ops = {
++	.get_groups_count = k210_pinctrl_get_groups_count,
++	.get_group_name = k210_pinctrl_get_group_name,
++	.get_group_pins = k210_pinctrl_get_group_pins,
++	.pin_dbg_show = k210_pinctrl_pin_dbg_show,
++	.dt_node_to_map = k210_pinctrl_dt_node_to_map,
++	.dt_free_map = pinconf_generic_dt_free_map,
++};
++
++static struct pinctrl_desc k210_pinctrl_desc = {
++	.name = "k210-pinctrl",
++	.pins = k210_pins,
++	.npins = K210_NPINS,
++	.pctlops = &k210_pinctrl_ops,
++	.pmxops = &k210_pinmux_ops,
++	.confops = &k210_pinconf_ops,
++	.custom_params = k210_pinconf_custom_params,
++	.num_custom_params = ARRAY_SIZE(k210_pinconf_custom_params),
++};
++
++static void k210_fpioa_init_ties(struct k210_fpioa_data *pdata)
++{
++	struct k210_fpioa __iomem *fpioa = pdata->fpioa;
++	u32 val;
++	int i, j;
++
++	dev_dbg(pdata->dev, "Init pin ties\n");
++
++	/* Init pin functions input ties */
++	for (i = 0; i < ARRAY_SIZE(fpioa->tie_en); i++) {
++		val = 0;
++		for (j = 0; j < 32; j++) {
++			if (k210_pcf_infos[i * 32 + j].mode_id ==
++			    K210_PC_DEFAULT_IN_TIE) {
++				dev_dbg(pdata->dev,
++					"tie_en function %d (%s)\n",
++					i * 32 + j,
++					k210_pcf_infos[i * 32 + j].name);
++				val |= BIT(j);
++			}
++		}
++
++		/* Set value before enable */
++		writel(val, &fpioa->tie_val[i]);
++		writel(val, &fpioa->tie_en[i]);
++	}
++}
++
++static int __init k210_fpioa_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct k210_fpioa_data *pdata;
++	int ret;
++
++	dev_info(dev, "K210 FPIOA pin controller\n");
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
++
++	pdata->dev = dev;
++	platform_set_drvdata(pdev, pdata);
++
++	pdata->fpioa = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pdata->fpioa))
++		return PTR_ERR(pdata->fpioa);
++
++	pdata->clk = devm_clk_get(dev, "ref");
++	if (IS_ERR(pdata->clk))
++		return PTR_ERR(pdata->clk);
++
++	ret = clk_prepare_enable(pdata->clk);
++	if (ret)
++		return ret;
++
++	pdata->pclk = devm_clk_get_optional(dev, "pclk");
++	if (!IS_ERR(pdata->pclk))
++		clk_prepare_enable(pdata->pclk);
++
++	pdata->sysctl_map =
++		syscon_regmap_lookup_by_phandle_args(np,
++						"canaan,k210-sysctl-power",
++						1, &pdata->power_offset);
++	if (IS_ERR(pdata->sysctl_map))
++		return PTR_ERR(pdata->sysctl_map);
++
++	k210_fpioa_init_ties(pdata);
++
++	pdata->pctl = pinctrl_register(&k210_pinctrl_desc, dev, (void *)pdata);
++	if (IS_ERR(pdata->pctl))
++		return PTR_ERR(pdata->pctl);
++
++	return 0;
++}
++
++static const struct of_device_id k210_fpioa_dt_ids[] = {
++	{ .compatible = "canaan,k210-fpioa" },
++};
++
++static struct platform_driver k210_fpioa_driver = {
++	.probe	= k210_fpioa_probe,
++	.driver = {
++		.name		= "k210-fpioa",
++		.of_match_table	= k210_fpioa_dt_ids,
++	},
++};
++builtin_platform_driver(k210_fpioa_driver);
 -- 
 2.28.0
 
