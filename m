@@ -2,253 +2,292 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5838A2CBD29
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 13:41:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A78A2CBD3B
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 13:44:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgLBMjO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Dec 2020 07:39:14 -0500
-Received: from mga06.intel.com ([134.134.136.31]:13826 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgLBMjO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Dec 2020 07:39:14 -0500
-IronPort-SDR: cjsEUt+H511EtFUHjJUh2i1ya7OKysEFdWh5mROFu9oxgOr6iAsJoNNKHEeUObGhq4x/gI2h7P
- 0OTmF8VcgpLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="234613662"
-X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="234613662"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 04:38:29 -0800
-IronPort-SDR: km6kONML2ZTBSNh+gVDzrv0P9rEJP4kIao24OCmyfKIeiSMDYZjKtxJgw3BX/CZKA1jY5t9ZU0
- igIpSOqRX1Xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="550042364"
-Received: from lkp-server01.sh.intel.com (HELO 54133fc185c3) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2020 04:38:27 -0800
-Received: from kbuild by 54133fc185c3 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kkROt-000078-4p; Wed, 02 Dec 2020 12:38:27 +0000
-Date:   Wed, 02 Dec 2020 20:38:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-usb] BUILD SUCCESS
- 46c1a5ed966186b574c4146a3757ed689723e251
-Message-ID: <5fc78ab5.oE3iXbmePk+ZOyqm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726516AbgLBMnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Dec 2020 07:43:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgLBMnT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Dec 2020 07:43:19 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5182EC0613CF;
+        Wed,  2 Dec 2020 04:42:39 -0800 (PST)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 62C3C31D;
+        Wed,  2 Dec 2020 13:42:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1606912957;
+        bh=uCg6TyIii1s5v0WeSqtkpiOld1cs/X5JMk4hle7skKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fTVcbBIbDyWsui2B5V2e+rpZRbl/9mRZ9R1GR5OFzmc4ZMjrD8k90A0gVZCi2h/mf
+         O3kNKGKoTP+rA29iJPIaWAsDh6bNEDzfvGeYpb9sZdK2W2SKqSJwMusLX/4R2ew3lM
+         GH6MMKtLdRGDMoLe0FgEoVKabrPxEhPHTCJSNj0I=
+Date:   Wed, 2 Dec 2020 14:42:28 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
+        lenb@kernel.org, gregkh@linuxfoundation.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
+Message-ID: <20201202124228.GF4486@pendragon.ideasonboard.com>
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-19-djrscally@gmail.com>
+ <20201130200719.GB4077@smile.fi.intel.com>
+ <20201130233232.GD25713@pendragon.ideasonboard.com>
+ <20201201155513.GB852@paasikivi.fi.intel.com>
+ <20201201183758.GE3085@pendragon.ideasonboard.com>
+ <20201202110956.GD852@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20201202110956.GD852@paasikivi.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-usb
-branch HEAD: 46c1a5ed966186b574c4146a3757ed689723e251  usb: ohci-omap: Fix descriptor conversion
+On Wed, Dec 02, 2020 at 01:09:56PM +0200, Sakari Ailus wrote:
+> Hi Laurent,
+> 
+> On Tue, Dec 01, 2020 at 08:37:58PM +0200, Laurent Pinchart wrote:
+> > Hi Sakari,
+> > 
+> > On Tue, Dec 01, 2020 at 05:55:13PM +0200, Sakari Ailus wrote:
+> > > On Tue, Dec 01, 2020 at 01:32:32AM +0200, Laurent Pinchart wrote:
+> > > > On Mon, Nov 30, 2020 at 10:07:19PM +0200, Andy Shevchenko wrote:
+> > > > > On Mon, Nov 30, 2020 at 01:31:29PM +0000, Daniel Scally wrote:
+> > > > > > On platforms where ACPI is designed for use with Windows, resources
+> > > > > > that are intended to be consumed by sensor devices are sometimes in
+> > > > > > the _CRS of a dummy INT3472 device upon which the sensor depends. This
+> > > > > > driver binds to the dummy acpi device (which does not represent a
+> > > > > 
+> > > > > acpi device -> acpi_device
+> > > > > 
+> > > > > > physical PMIC) and maps them into GPIO lines and regulators for use by
+> > > > > > the sensor device instead.
+> > > > > 
+> > > > > ...
+> > > > > 
+> > > > > > This patch contains the bits of this process that we're least sure about.
+> > > > > > The sensors in scope for this work are called out as dependent (in their
+> > > > > > DSDT entry's _DEP) on a device with _HID INT3472. These come in at least
+> > > > > > 2 kinds; those with an I2cSerialBusV2 entry (which we presume therefore
+> > > > > > are legitimate tps68470 PMICs that need handling by those drivers - work
+> > > > > > on that in the future). And those without an I2C device. For those without
+> > > > > > an I2C device they instead have an array of GPIO pins defined in _CRS. So
+> > > > > > for example, my Lenovo Miix 510's OVTI2680 sensor is dependent on one of
+> > > > > > the _latter_ kind of INT3472 devices, with this _CRS:
+> > > > > > 
+> > > > > > Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> > > > > > {
+> > > > > >     Name (SBUF, ResourceTemplate ()
+> > > > > >     {
+> > > > > >         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
+> > > > > > 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
+> > > > > > 	    0x00, ResourceConsumer, ,
+> > > > > >             )
+> > > > > >             {   // Pin list
+> > > > > >                 0x0079
+> > > > > >             }
+> > > > > >         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
+> > > > > > 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
+> > > > > > 	    0x00, ResourceConsumer, ,
+> > > > > >             )
+> > > > > >             {   // Pin list
+> > > > > >                 0x007A
+> > > > > >             }
+> > > > > >         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
+> > > > > > 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
+> > > > > > 	    0x00, ResourceConsumer, ,
+> > > > > >             )
+> > > > > >             {   // Pin list
+> > > > > >                 0x008F
+> > > > > >             }
+> > > > > >     })
+> > > > > >     Return (SBUF) /* \_SB_.PCI0.PMI1._CRS.SBUF */
+> > > > > > }
+> > > > > > 
+> > > > > > and the same device has a _DSM Method, which returns 32-bit ints where
+> > > > > > the second lowest byte we noticed to match the pin numbers of the GPIO
+> > > > > > lines:
+> > > > > > 
+> > > > > > Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
+> > > > > > {
+> > > > > >     If ((Arg0 == ToUUID ("79234640-9e10-4fea-a5c1-b5aa8b19756f")))
+> > > > > >     {
+> > > > > >         If ((Arg2 == One))
+> > > > > >         {
+> > > > > >             Return (0x03)
+> > > > > >         }
+> > > > > > 
+> > > > > >         If ((Arg2 == 0x02))
+> > > > > >         {
+> > > > > >             Return (0x01007900)
+> > > > > >         }
+> > > > > > 
+> > > > > >         If ((Arg2 == 0x03))
+> > > > > >         {
+> > > > > >             Return (0x01007A0C)
+> > > > > >         }
+> > > > > > 
+> > > > > >         If ((Arg2 == 0x04))
+> > > > > >         {
+> > > > > >             Return (0x01008F01)
+> > > > > >         }
+> > > > > >     }
+> > > > > > 
+> > > > > >     Return (Zero)
+> > > > > > }
+> > > > > > 
+> > > > > > We know that at least some of those pins have to be toggled active for the
+> > > > > > sensor devices to be available in i2c, so the conclusion we came to was
+> > > > > > that those GPIO entries assigned to the INT3472 device actually represent
+> > > > > > GPIOs and regulators to be consumed by the sensors themselves. Tsuchiya
+> > > > > > noticed that the lowest byte in the return values of the _DSM method
+> > > > > > seemed to represent the type or function of the GPIO line, and we
+> > > > > > confirmed that by testing on each surface device that GPIO lines where the
+> > > > > > low byte in the _DSM entry for that pin was 0x0d controlled the privacy
+> > > > > > LED of the cameras.
+> > > > > > 
+> > > > > > We're guessing as to the exact meaning of the function byte, but I
+> > > > > > conclude they're something like this:
+> > > > > > 
+> > > > > > 0x00 - probably a reset GPIO
+> > > > > > 0x01 - regulator for the sensor
+> > > > > > 0x0c - regulator for the sensor
+> > > > > > 0x0b - regulator again, but for a VCM or EEPROM
+> > > > > > 0x0d - privacy led (only one we're totally confident of since we can see
+> > > > > >        it happen!)
+> > > > > 
+> > > > > It's solely Windows driver design...
+> > > > > Luckily I found some information and can clarify above table:
+> > > > > 
+> > > > > 0x00 Reset
+> > > > > 0x01 Power down
+> > > > > 0x0b Power enable
+> > > > > 0x0c Clock enable
+> > > > > 0x0d LED (active high)
+> > > > 
+> > > > That's very useful information ! Thank you.
+> > > > 
+> > > > > The above text perhaps should go somewhere under Documentation.
+> > > > 
+> > > > Or in the driver source code, but definitely somewhere else than in the
+> > > > commit message.
+> > > > 
+> > > > > > After much internal debate I decided to write this as a standalone
+> > > > > > acpi_driver. Alternative options we considered:
+> > > > > > 
+> > > > > > 1. Squash all this into the cio2-bridge code, which I did originally write
+> > > > > > but decided I didn't like.
+> > > > > > 2. Extend the existing tps68470 mfd driver...they share an ACPI ID so this
+> > > > > > kinda makes sense, but ultimately given there is no actual physical
+> > > > > > tps68470 in the scenario this patch handles I decided I didn't like this
+> > > > > > either.
+> > > > > 
+> > > > > Looking to this I think the best is to create a module that can be consumed by tps68470 and separately.
+> > > > > So, something near to it rather than under ipu3 hood.
+> > > > > 
+> > > > > You may use same ID's in both drivers (in PMIC less case it can be simple
+> > > > > platform and thus they won't conflict), but both of them should provide GPIO
+> > > > > resources for consumption.
+> > > > > 
+> > > > > So, something like
+> > > > > 
+> > > > >  tps68470.h with API to consume
+> > > > >  split tps68470 to -core, -i2c parts
+> > > > >  add int3472, which will serve for above and be standalone platform driver
+> > > > >  update cio2-bridge accordingly
+> > > > > 
+> > > > > Would it be feasible?
+> > > > 
+> > > > Given that INT3472 means Intel camera power management device (that's
+> > > > more or less the wording in Windows, I can double-check), would the
+> > > > following make sense ?
+> > > > 
+> > > > A top-level module named intel-camera-pmic (or int3472, or ...) would
+> > > > register two drivers, a platform driver and an I2C driver, to
+> > > > accommodate for both cases ("discrete PMIC" that doesn't have an
+> > > > I2cSerialBusV2, and TPS64870 or uP6641Q that are I2C devices). The probe
+> > > > function would perform the following:
+> > > > 
+> > > > - If there's no CLDB, then the device uses the Chrome OS "ACPI
+> > > >   bindings", and refers to a TPS64870. The code that exists in the
+> > > >   kernel today (registering GPIOs, and registering an OpRegion to
+> > > >   communicate with the power management code in the DSDT) would be
+> > > >   activated.
+> > > > 
+> > > > - If there's a CLDB, then the device type would be retrieved from it:
+> > > > 
+> > > >   - If the device is a "discrete PMIC", the driver would register clocks
+> > > >     and regulators controlled by GPIOs, and create clock, regulator and
+> > > >     GPIO lookup entries for the sensor device that references the PMIC.
+> > > > 
+> > > >   - If the device is a TPS64870, the code that exists in the kernel
+> > > >     today to register GPIOs would be activated, and new code would need
+> > > >     to be written to register regulators and clocks.
+> > > > 
+> > > >   - If the device is a uP6641Q, a new driver will need to be written (I
+> > > >     don't know on which devices this PMIC is used, so this can probably
+> > > >     be deferred).
+> > > > 
+> > > > We can split this in multiple files and/or modules.
+> > > 
+> > > That's what I thought of, too, as one option, but with some more detail.
+> > > This would be indeed the cleanest option.
+> > > 
+> > > I think it'd be nice if the CLDB stuff (apart from checking whether it's
+> > > there) would be in a different module to avoid cluttering up the real
+> > > tps68470 driver.
+> > 
+> > Given the amount of code, and the fact that the driver should be
+> > compiled as a module, I don't think it will make a huge difference in
+> > the memory footprint.
+> 
+> I'd still prefer to keep the ACPI hack support and the real driver well
+> separated. That way it'd be also easy to put them to their respective
+> modules. That's actually how the tps68470 MFD driver is currently arranged;
+> the GPIO and OP region drivers are separate from each other.
 
-elapsed time: 726m
+I think we should consider ACPI to be a hack in the first place :-)
 
-configs tested: 189
-configs skipped: 2
+> Could this be just one more platform device for each of the three cases (or
+> one for the two latter; I'm not quite sure yet)?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Using MFD for this seems a bit overkill to me. I won't care much as I
+won't maintain those drivers, but the current situation is complex
+enough, it was hard for me to understand how things worked. Adding yet
+another layer with another platform device won't make it any simpler.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                         ps3_defconfig
-mips                malta_qemu_32r6_defconfig
-x86_64                           alldefconfig
-mips                          ath25_defconfig
-sh                          rsk7201_defconfig
-arm                        clps711x_defconfig
-sh                        edosk7760_defconfig
-powerpc                        cell_defconfig
-sh                            hp6xx_defconfig
-mips                          ath79_defconfig
-openrisc                         alldefconfig
-sh                               j2_defconfig
-mips                       capcella_defconfig
-arm                           viper_defconfig
-c6x                        evmc6474_defconfig
-riscv                    nommu_k210_defconfig
-arm                          pxa3xx_defconfig
-c6x                        evmc6457_defconfig
-m68k                            q40_defconfig
-arc                        nsim_700_defconfig
-arc                         haps_hs_defconfig
-mips                         tb0226_defconfig
-m68k                        m5272c3_defconfig
-nios2                               defconfig
-mips                malta_kvm_guest_defconfig
-sh                ecovec24-romimage_defconfig
-powerpc                         wii_defconfig
-arm                      integrator_defconfig
-arm                          imote2_defconfig
-mips                           ip28_defconfig
-powerpc                  mpc866_ads_defconfig
-mips                          rm200_defconfig
-arm                              zx_defconfig
-s390                       zfcpdump_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                    klondike_defconfig
-mips                     loongson1c_defconfig
-arc                        nsimosci_defconfig
-mips                           gcw0_defconfig
-xtensa                         virt_defconfig
-c6x                        evmc6678_defconfig
-sh                             shx3_defconfig
-mips                  maltasmvp_eva_defconfig
-powerpc                     tqm5200_defconfig
-arc                 nsimosci_hs_smp_defconfig
-powerpc                    mvme5100_defconfig
-s390                                defconfig
-sh                         ap325rxa_defconfig
-m68k                       m5475evb_defconfig
-c6x                                 defconfig
-powerpc                     ep8248e_defconfig
-arm                          pcm027_defconfig
-mips                           ip22_defconfig
-m68k                       m5208evb_defconfig
-m68k                        mvme16x_defconfig
-m68k                          atari_defconfig
-sh                        dreamcast_defconfig
-arm                            mps2_defconfig
-sh                           se7722_defconfig
-sh                   sh7724_generic_defconfig
-arm                           u8500_defconfig
-arm                        magician_defconfig
-arm                          exynos_defconfig
-riscv                               defconfig
-powerpc                        fsp2_defconfig
-powerpc                      ppc40x_defconfig
-h8300                               defconfig
-powerpc                      ppc44x_defconfig
-arm                              alldefconfig
-powerpc                 mpc834x_itx_defconfig
-mips                          malta_defconfig
-ia64                         bigsur_defconfig
-powerpc                     tqm8540_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                    ge_imp3a_defconfig
-powerpc                       ebony_defconfig
-powerpc                 mpc8313_rdb_defconfig
-sh                           se7343_defconfig
-arm                      footbridge_defconfig
-powerpc                mpc7448_hpc2_defconfig
-parisc                           alldefconfig
-arm                           h3600_defconfig
-mips                           jazz_defconfig
-ia64                        generic_defconfig
-arm                     davinci_all_defconfig
-sh                        apsh4ad0a_defconfig
-sh                  sh7785lcr_32bit_defconfig
-m68k                        m5407c3_defconfig
-arm                       cns3420vb_defconfig
-mips                 decstation_r4k_defconfig
-powerpc                 linkstation_defconfig
-ia64                          tiger_defconfig
-s390                             alldefconfig
-mips                      fuloong2e_defconfig
-sparc                            allyesconfig
-sparc                       sparc64_defconfig
-arm                        vexpress_defconfig
-powerpc                       eiger_defconfig
-powerpc                      pasemi_defconfig
-powerpc                  storcenter_defconfig
-parisc                generic-32bit_defconfig
-mips                    maltaup_xpa_defconfig
-mips                            e55_defconfig
-mips                           xway_defconfig
-xtensa                  audio_kc705_defconfig
-arm                            dove_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                     skiroot_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20201201
-i386                 randconfig-a005-20201201
-i386                 randconfig-a001-20201201
-i386                 randconfig-a002-20201201
-i386                 randconfig-a006-20201201
-i386                 randconfig-a003-20201201
-i386                 randconfig-a004-20201202
-i386                 randconfig-a005-20201202
-i386                 randconfig-a001-20201202
-i386                 randconfig-a002-20201202
-i386                 randconfig-a006-20201202
-i386                 randconfig-a003-20201202
-x86_64               randconfig-a016-20201201
-x86_64               randconfig-a012-20201201
-x86_64               randconfig-a014-20201201
-x86_64               randconfig-a013-20201201
-x86_64               randconfig-a015-20201201
-x86_64               randconfig-a011-20201201
-i386                 randconfig-a014-20201201
-i386                 randconfig-a013-20201201
-i386                 randconfig-a011-20201201
-i386                 randconfig-a015-20201201
-i386                 randconfig-a012-20201201
-i386                 randconfig-a016-20201201
-x86_64               randconfig-a004-20201202
-x86_64               randconfig-a006-20201202
-x86_64               randconfig-a001-20201202
-x86_64               randconfig-a002-20201202
-x86_64               randconfig-a005-20201202
-x86_64               randconfig-a003-20201202
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+If we want to split this in two, I'd rather have a tps68470 driver on
+one side, without ACPI op region support, but registering regulators,
+GPIOs and clocks (without using separate drivers and devices for these
+three features), and an INT3472 driver on the other side, with all the
+ACPI glue and hacks. The tps68470 code could possibly even be structured
+in such a way that it would be used as a library by the INT3472 driver
+instead of requiring a separate platform device.
 
-clang tested configs:
-x86_64               randconfig-a004-20201201
-x86_64               randconfig-a006-20201201
-x86_64               randconfig-a001-20201201
-x86_64               randconfig-a002-20201201
-x86_64               randconfig-a005-20201201
-x86_64               randconfig-a003-20201201
+> The GPIO regulator case is relatively safe, but the real PMICs require
+> regulator voltage control as well as enabling and disabling the regulators.
+> That probably requires either schematics or checking the register values at
+> runtime on Windows (i.e. finding out which system you're dealing with, at
+> runtime).
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Regards,
+
+Laurent Pinchart
