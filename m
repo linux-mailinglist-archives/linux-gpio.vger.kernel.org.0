@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADE202CCAC4
+	by mail.lfdr.de (Postfix) with ESMTP id 107E02CCAC3
 	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 01:00:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgLBX4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728021AbgLBX4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 2 Dec 2020 18:56:04 -0500
-Received: from mga03.intel.com ([134.134.136.65]:22101 "EHLO mga03.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:2368 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbgLBX4E (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Dec 2020 18:56:04 -0500
-IronPort-SDR: 8vmqvRE1lPC8ALFhpf/JXhBePWHDzwRK07NW1hE7+3ZzktzJjSKrxCvaqzyD6edPdzqU0YoYwD
- i8KY0C98c44g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="173203104"
+        id S1726735AbgLBX4D (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 2 Dec 2020 18:56:03 -0500
+IronPort-SDR: gS2hUEnxD7kXS1lt0fr36tJnwy4TIKiO1L3SX4QdSVI3QCfT+PQlYnpDNiw7XYFSsOhtVy/B+h
+ b1fuHix0FOVQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="172325840"
 X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
-   d="scan'208";a="173203104"
+   d="scan'208";a="172325840"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 15:55:23 -0800
-IronPort-SDR: wO2o8WzS/NQhOGJKfnAs4F3/Gi5S8P9okcE84dPs/hNTn8xfvvDnu4kOjiE/k2Z8vvBFwL8iAq
- yE5tF0UEVBlw==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 15:55:23 -0800
+IronPort-SDR: QQDX8lZyRJaUhQNZYsgb0dpUBwk5HQxd9tGjkoG7UCIRLqDoXcrFctL7kExQFxkPcQxOCf1YdI
+ OKK600at/aIQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
-   d="scan'208";a="335748559"
+   d="scan'208";a="373689071"
 Received: from lkp-server01.sh.intel.com (HELO 54133fc185c3) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 02 Dec 2020 15:55:22 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Dec 2020 15:55:21 -0800
 Received: from kbuild by 54133fc185c3 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kkbxx-0000Q3-9Z; Wed, 02 Dec 2020 23:55:21 +0000
-Date:   Thu, 03 Dec 2020 07:55:15 +0800
+        id 1kkbxx-0000Q5-AK; Wed, 02 Dec 2020 23:55:21 +0000
+Date:   Thu, 03 Dec 2020 07:55:17 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 552a9cc02b0e8a63d802b3a80ceefce0c89cee8a
-Message-ID: <5fc82963.D6IUwfjIilw4N3HO%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ be100b6604d1e01960577b0f628d75bab6ea8c21
+Message-ID: <5fc82965.sjL2PBFKZnI40mwl%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,8 +45,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 552a9cc02b0e8a63d802b3a80ceefce0c89cee8a  pinctrl: pinctrl-microchip-sgpio: Add OF config dependency
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
+branch HEAD: be100b6604d1e01960577b0f628d75bab6ea8c21  Merge branch 'devel' into for-next
 
 elapsed time: 724m
 
