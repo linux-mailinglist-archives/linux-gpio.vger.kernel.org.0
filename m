@@ -2,103 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F41F32CB94C
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 10:45:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D502CB99E
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 10:49:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgLBJmv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Dec 2020 04:42:51 -0500
-Received: from mga05.intel.com ([192.55.52.43]:44310 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgLBJmv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Dec 2020 04:42:51 -0500
-IronPort-SDR: +KrSmAWDBf/PpOKTyAqnxBpZx0JbeG1SB/rV6HfeZkEkvpoyBv05PeccrRQ0QqxEC33h4OZDF7
- SB0vxORkspOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="257699549"
-X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="257699549"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 01:41:08 -0800
-IronPort-SDR: Zx6VlAW35gwhSvlfmzRtK+FycGmpD1pbZmxBP4828B2i7JP0s/z7sh4te87ElBTiqiOF7H49x3
- 9WIv4MI16nFg==
-X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="345808276"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 01:41:01 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kkOeA-00BTnE-JO; Wed, 02 Dec 2020 11:42:02 +0200
-Date:   Wed, 2 Dec 2020 11:42:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dan Scally <djrscally@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
-        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
-        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
-        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
-Message-ID: <20201202094202.GV4077@smile.fi.intel.com>
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-19-djrscally@gmail.com>
- <20201130200719.GB4077@smile.fi.intel.com>
- <8a1b0f5b-1289-256b-b25d-cf8af43bdc84@gmail.com>
- <20201201185417.GL4077@smile.fi.intel.com>
- <20201201185548.GV4569@pendragon.ideasonboard.com>
- <20201201190523.GO4077@smile.fi.intel.com>
- <20201201190638.GZ4569@pendragon.ideasonboard.com>
- <20201201192137.GR4077@smile.fi.intel.com>
- <efd0ae7a-4ba2-e02e-6111-7f3d382d1eac@gmail.com>
+        id S1729189AbgLBJqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Dec 2020 04:46:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgLBJqf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Dec 2020 04:46:35 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEBDC0613CF
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Dec 2020 01:45:49 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id c7so2912779edv.6
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Dec 2020 01:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dAzfm1GPRmqmkkKCelIOFgT4CWV7j2OzoUKEFgOroWw=;
+        b=Tgu/dQWLG7lUvAVYc/Qt+C6zK6ZEcWGuLwgfwY+PayGbyOwrL/t6wN+RH6+CISgGT0
+         mwGcrHRX4JOmf2H9t/79JLs7qc5tSsTl/e5z+LJd8yis+MOMJ5FPj+4Hqnng96v8htD4
+         Z9hTGWnp4q4kpaY7BOIbL0kjBHx2HwlhNVvq1SMi1mOWEYdwvtTBjurLv19lWG+Pi4r/
+         ib9MTD2elJ/vutaBipPQTPaPPZPRuYUIMp0QWHx3ZSo9rEwygag/5IOSddn5gNS6W5Q1
+         wdJOaDq6/D1Zyz46Q2lchJYvPhKMdfEbPU6H04PLuHUXweKD1sjpta5PytP+nRpv7Rgl
+         n8DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dAzfm1GPRmqmkkKCelIOFgT4CWV7j2OzoUKEFgOroWw=;
+        b=ukXQnwH2wJiYz9drAO1k0Vhj/dJtcPPltoUUbvOyZycCgqVLhFlMCQaRLMwVYDN1Qi
+         Xuvzd2bsf7LHfcyjye7INa563cXkdaIrsVdaWLQCY835quL+uPDs/9G6zJzwcea7qGR1
+         k9D53BgNHHE0e/WcpQuZ//zdzzLtTWUtq2SihnCIDBJeipUisFLzbA5f/TbE91sSOlmA
+         bEOn1PflDawgo0L/sv2b7URJevjOam9DQyROlSJfs++hVlqza/J1TzihUI+2bXA/ui/k
+         uD9EGnhJthHTpgYMe/Jnn6tsXnmNxEzf6xDFtXMh+7rAFNE5fbdQbGH1gVuoCgKbRetE
+         XkVA==
+X-Gm-Message-State: AOAM531hUgKGi86n2O299gDeFGUR5SRIbtAvKtzjyijq1ZeTCPe0psw9
+        TILi44j4/spfCzjCPlL6JLJQp1NwKZ4yS/IlrECHyN9N0bg=
+X-Google-Smtp-Source: ABdhPJyHwjHdplSfOvl0jRfKJN8w06y7AZNvDr+NrxjByMV4bOVADMNqjEMcto9Ssqm+Qp3a8AT4toWW+qT2fnpkedU=
+X-Received: by 2002:a05:6402:307c:: with SMTP id bs28mr1782845edb.186.1606902347990;
+ Wed, 02 Dec 2020 01:45:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <efd0ae7a-4ba2-e02e-6111-7f3d382d1eac@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201127094445.121232-1-miaoqinglang@huawei.com>
+In-Reply-To: <20201127094445.121232-1-miaoqinglang@huawei.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 2 Dec 2020 10:45:37 +0100
+Message-ID: <CAMpxmJXww=a3HoKcGvKQ3M2K6kAO0KGfyB9aCKbG+E_F_0iq7A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: zynq: fix reference leak in zynq_gpio functions
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 01, 2020 at 09:05:11PM +0000, Dan Scally wrote:
-> On 01/12/2020 19:21, Andy Shevchenko wrote:
-> > On Tue, Dec 01, 2020 at 09:06:38PM +0200, Laurent Pinchart wrote:
+On Fri, Nov 27, 2020 at 10:40 AM Qinglang Miao <miaoqinglang@huawei.com> wrote:
+>
+> pm_runtime_get_sync will increment pm usage counter even it
+> failed. Forgetting to putting operation will result in a
+> reference leak here.
+>
+> A new function pm_runtime_resume_and_get is introduced in
+> [0] to keep usage counter balanced. So We fix the reference
+> leak by replacing it with new funtion.
+>
+> [0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
+>
+> Fixes: c2df3de0d07e ("gpio: zynq: properly support runtime PM for GPIO used as interrupts")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> ---
+>  drivers/gpio/gpio-zynq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index 0b5a17ab9..3521c1dc3 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -574,7 +574,7 @@ static int zynq_gpio_irq_reqres(struct irq_data *d)
+>         struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+>         int ret;
+>
+> -       ret = pm_runtime_get_sync(chip->parent);
+> +       ret = pm_runtime_resume_and_get(chip->parent);
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -942,7 +942,7 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+>
+>         pm_runtime_set_active(&pdev->dev);
+>         pm_runtime_enable(&pdev->dev);
+> -       ret = pm_runtime_get_sync(&pdev->dev);
+> +       ret = pm_runtime_resume_and_get(&pdev->dev);
+>         if (ret < 0)
+>                 goto err_pm_dis;
+>
+> --
+> 2.23.0
+>
 
-...
+Applied, thanks!
 
-> > I would rather ask Hans' opinion since he has quite an expertise with DMI for
-> > good and bad.
-> >
-> I have no real preference as to the current method or DMI, but thoughts
-> that come to mind are:
-> 
-> 
-> 1. given your info that low byte 0x0c means clock enable, we need to
-> register a clock too. Do we need to extend this device specific section
-> to map a clock name, or is it acceptable for them to be nameless (ISTR
-> that the API will let you fetch a clock using devm_clock_get(dev, NULL);)
-> 
-> 2. Given only 0x0b pin is actually a regulator and it's controlling
-> multiple devices, my plan when we got round to adding the VCM / EEPROM
-> support was simply to extend those mapping tables so that those
-> supplementary devices were also able to get that regulator...and the two
-> would share it. I think, from reading the regulator code and
-> documentation, that that's all fine - and it won't actually be disabled
-> until both drivers disable it. Does that sound about right?
-
-Sounds right. Next step is to see the code. :-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz
