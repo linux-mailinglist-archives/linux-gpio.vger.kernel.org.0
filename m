@@ -2,84 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 962D72CBDBF
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 14:08:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09A002CBE94
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Dec 2020 14:43:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgLBNGG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Dec 2020 08:06:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgLBNGF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Dec 2020 08:06:05 -0500
-Date:   Wed, 2 Dec 2020 13:04:53 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606914323;
-        bh=H/0q95DkccdCRUrw4XH+vTeIYaOMliOk5cchInyn50s=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XN4iwfS0e15JIk6QbbRWo06n83/17cHOf1EB50auZeul+QGtc/13lfbgtv6+wW0Is
-         Szfq7wPy1Fs1ozKlq6gWjB6qyzr37tkyRdpgHjzw5V8eWgDd+QwMnWfbFhnKKNczc1
-         6gbGvGbLNXfummISxh5gdd4ayEeG7bU34nc4LRp4=
-From:   Mark Brown <broonie@kernel.org>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        gregkh@linuxfoundation.org, aou@eecs.berkeley.edu,
-        lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
-        thierry.reding@gmail.com, andrew@lunn.ch, peter@korsgaard.com,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, robh+dt@kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        sachin.ghadi@sifive.com
-Subject: Re: [PATCH 1/4] dt-bindings: riscv: Update DT binding docs to
- support SiFive FU740 SoC
-Message-ID: <20201202130452.GC5560@sirena.org.uk>
-References: <1606896236-62780-1-git-send-email-yash.shah@sifive.com>
- <1606896236-62780-2-git-send-email-yash.shah@sifive.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Content-Disposition: inline
-In-Reply-To: <1606896236-62780-2-git-send-email-yash.shah@sifive.com>
-X-Cookie: Sauron is alive in Argentina!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729839AbgLBNk1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Dec 2020 08:40:27 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:45643 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgLBNk1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Dec 2020 08:40:27 -0500
+Received: from orion.localdomain ([77.7.48.174]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N64FC-1k8zv90JuS-016L9F; Wed, 02 Dec 2020 14:37:55 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2] gpio: just plain warning when nonexisting gpio requested
+Date:   Wed,  2 Dec 2020 14:37:54 +0100
+Message-Id: <20201202133754.32045-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:x509up239nMwUVSsvhFUtmNN65DNpopoJqJa79l9iIluvPMt7mE
+ O8tNgzo6nCm7380ByRyvDalQu2XmVYYgV3WjLbn6SLEk7DyBH6v0j7ZOMtodXI43bzCh0XQ
+ 0iWNTu/+M3a5CJ5u0y8nsO4gpGaMXqat6Tn0VXr6+nBwD0+MkOvJbDtBRu18+xWvccmvTs1
+ 4ymIJsDS8ii7UwhjQYmtQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tXWjYQRg/tM=:V2T8r2rk7sbhOVtBqb7/gN
+ sQJf5ELXMjzzvsFV55QvSgzNYM4fYcyE49NUFavA8QfRAHCU3MHYEklZxIHM0FUz55RmytM3Y
+ BMAv7oj+Ls3mQXk6NnO9qdaR2+sdSwrN205NYzAU7b7fzyXHCYQg6Lrxc93D3UO8h4BGgfin4
+ 9dM9rhBFfOXT5uXQ7qvwi4SmJCecF7uQNrvuIPGBuH3oZRPKJkdnUYTpq77PSHQahRUEVZJ8j
+ UFfZQq5t70Rt+3S2/3QNA2yNdGRatY7KyR8jFOw0Pnkqd0rvaQmds9w0OoZFNFTByy2JhtS0g
+ 7l7Ap7myX2s6abYoSRvvxJ5k0EmoflwjkOUXqCvUo5HQ8eKADBkdrAmxoLzLJ2z4gq2s3pglW
+ f321KB1gtnYS9/npsLJLicuJcIE4/XQFiCZoZFwd8mdaTAn4yKY8Kf5dk2TIH
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Enrico Weigelt <info@metux.net>
 
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+When trying to export an nonexisting gpio ID, the kernel prints out a
+big warning w/ stacktrace, sounding like a huge problem. In fact it's
+a pretty normal situation, like file or device not found.
 
-On Wed, Dec 02, 2020 at 01:33:53PM +0530, Yash Shah wrote:
+So, just print a more relaxed warning instead.
 
-> ---
->  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml     |  4 +++-
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt        |  6 ++++--
->  Documentation/devicetree/bindings/pwm/pwm-sifive.yaml       |  9 ++++++---
->  Documentation/devicetree/bindings/riscv/cpus.yaml           |  6 ++++++
->  Documentation/devicetree/bindings/serial/sifive-serial.yaml |  4 +++-
->  Documentation/devicetree/bindings/spi/spi-sifive.yaml       | 10 ++++++----
->  6 files changed, 28 insertions(+), 11 deletions(-)
+changes v2: drop defining pr_fmt()
 
-The driver bindings for the various subsystems would normally be sent as
-independent patches to those subsystems.  Driver changes mostly get
-reviewed by subsystem maintainers rather than architecture maintainers.
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/gpio/gpiolib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 089ddcaa9bc6..6639e7b77d6c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -119,7 +120,7 @@ struct gpio_desc *gpio_to_desc(unsigned gpio)
+ 	spin_unlock_irqrestore(&gpio_lock, flags);
+ 
+ 	if (!gpio_is_valid(gpio))
+-		WARN(1, "invalid GPIO %d\n", gpio);
++		pr_warn("invalid GPIO %d\n", gpio);
+ 
+ 	return NULL;
+ }
+-- 
+2.11.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/HkPQACgkQJNaLcl1U
-h9D+bAf/RB0pMK5XXva0fPJseHnvrYMw0AwuOBd006M10fxLWLou777VnMt6gMI3
-oDXTEO2BXZU5QZ/QoKhAKqi2lsLUNrHZ94cii76pAe/eU18sRIDl146RkxGX0FtZ
-zcqLnhbpbS55c8dEDr06w5AEMGvEEQ9cir6/sOHCYnEc3Rd5UR1XunrviLyyxqhG
-MofmAaxxj+zqvd5e9JJxqfhpaw8dd20uKpcDoqdQnxeTqZ22yKbf0/NmysqI6kig
-WuO5Pr3X1S/NWKTAdz6m12kTRf2XhvI5pPJ6FM+yXb+qV7sp9OlyXknL1OKC1DUG
-fb8cYgkuBUdiyfcB+lBrsqrqDT3FAg==
-=b00E
------END PGP SIGNATURE-----
-
---Pk6IbRAofICFmK5e--
