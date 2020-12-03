@@ -2,124 +2,238 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A5C2CD0B5
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 09:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA3492CD0CA
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 09:06:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgLCICa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Dec 2020 03:02:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36300 "EHLO
+        id S2387609AbgLCIGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Dec 2020 03:06:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgLCICa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Dec 2020 03:02:30 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF69C061A4E
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Dec 2020 00:01:49 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id d18so1080512edt.7
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Dec 2020 00:01:49 -0800 (PST)
+        with ESMTP id S2387443AbgLCIGs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Dec 2020 03:06:48 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D962C061A53
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Dec 2020 00:05:27 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id jx16so2057727ejb.10
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Dec 2020 00:05:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RuHOe2Akk+J2QlLhyukacf2T9N/gwVrROTnJh+LYhs4=;
-        b=EkMCF9aat7r8j0C4i0IhP/4yixIPCsHiv4aS8xJM37D5skQz6JTOvy00LnNj26hCOH
-         vo0L2AC8XvXwGaaBsknW6dYFSEasyMyaqJywrTUGK144dfeal6MA5GPI5qn4G6KTBc99
-         po5whjHpThY7nFCifXlSMSYB4Mv2JRVvrO2yPvx/e2yRWlbf3aPtDDjKH9PY7LAzvtOg
-         jz9TixThxbFD4y8RBCPlRXrU6rEQZMKOS5ic1vc+VfHlEoRWXRwg//Nzhs5D2ew0UeQF
-         JQreqGwNEj78/0qKi4+vFIk5J6N6BDkH1ozDeBqxDKVKmfBcGjOHFolgMm3Ecs5ptIBK
-         JAqA==
+         :cc:content-transfer-encoding;
+        bh=FZ8VxZZvqmh6ehr3KHE/PiRk3db+weOkpDGOlsh3YO8=;
+        b=haDseJv+D02T10aLAxQHXG0BsYACsfkijqaB+ELZmfch2JYU9g6y9ryqDyIqWShXaW
+         yaAZ88xKKVmpIrZKV/qetu3zM2AbVORk0wYWL03XQMh8ss+hr7Dc6CnNOdvjOspJC/vQ
+         R2df0RgSro0FHNGu8o3DpusAvPeMobIgNjOfc7hfwHJ6Nvy0U69h0GmKMctPOdP8JHuK
+         uCRMiqbef850rMYfMmIEUS0TzdqaTlcSg4Jgua9sT1AuBgZSfdy1txMa/Fszl/iCAsRa
+         6RBF8zj3OIpntYgPprvZoROYfpZUKnhmmTVDrR3O2ZTkmVat83g3y0aDOoH39HHPuS4h
+         RbOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RuHOe2Akk+J2QlLhyukacf2T9N/gwVrROTnJh+LYhs4=;
-        b=XZbSrf4oe+5Hz/M61M0kNCc0K3J8uS0bXgvfGqf8WVxa1eWXWityVuE+50M+K3B6FO
-         E62+inwhFYrHoqtU5a5P4b08UDTdyMok3Ccqv/GguPKSWpVUtYRB/oDFLWy3HLcdXO7I
-         bVHLSfXlfvf0q3OJOQsgG6HB086lmOllqer3w8W6jpx62O5e7HSKwhLGBPSoGS2W0bPw
-         JTKnElwug1Ca36UfwUbYU0TqrIWj07rdLCIntE0iKcnm8nah5iXHlr1ebX/INgrxYVdE
-         M8R3uIZrKwGh9hkRgrmv7snaRWiGOv40dpuN4EoCGjypzGymgx7yNvV5g2MpYYKJ09j6
-         JyJw==
-X-Gm-Message-State: AOAM5303Jmc+t+JQtk8aF4eig+ESijeZwwItTVpvc/Xm453DN6TGM8RP
-        SGvBhgWZmQKTcemyfmDZsbyTbUeu2yR7iTrJplWG4g==
-X-Google-Smtp-Source: ABdhPJxPRhOJ0mVusBf7DGxwNYxazF+B0dm42xTTpebRsIgCx4qZcDu8yl6pTQtVn0Q3Ma+cXndWRbx6dbfXdcasMYc=
-X-Received: by 2002:aa7:d54b:: with SMTP id u11mr1694134edr.341.1606982508208;
- Thu, 03 Dec 2020 00:01:48 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FZ8VxZZvqmh6ehr3KHE/PiRk3db+weOkpDGOlsh3YO8=;
+        b=PgWXv/u/CJbsJjKiv0Fefx9BhWQtP8BEmCfS2So6UtIYmd0uGYIkUshMD7ur2eKBPJ
+         /Rqbfd+jkXNVueMWTE+VF7zKgsXNSzzocqIdZgBfiDjQptCACe3HYFZP1lpi5u5xPadF
+         wzO37YhnRyWvSwc7EIFidCWxW6GtiaMVfHyQO+8KLswHqEO7MTQ7bkXVlFlxnu9TI1pJ
+         d2StHi2FY/Hc+pzphDQrMCsgi89I+42WgR3+X3zae2cJwpNrLB6OYNwHK2mxZeFZ08FL
+         JV3a333X3XflJ0w4fiX3gOI4cOuRvhUc6t5i8IU9bnZ6hlhAgWh6BmnXW0Chq0NaBfXr
+         Palg==
+X-Gm-Message-State: AOAM5303UyFrEr62vxWRpLv9vJcCTbF3O+JGnA31G3/81i3Y3JYZWgTf
+        92v4So2MvazA5MdAe7UAjcjcFwHzZ9VTaGLkFHut4g==
+X-Google-Smtp-Source: ABdhPJxP2EJznI3pbg+Rqtm4SZQefIKFXf0kkiRRTqzbUDyEG5oMEZvNtOYbyFNg3cm8vTl+G0cfLIdKavT7T0DOD1k=
+X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr1414079ejr.429.1606982726027;
+ Thu, 03 Dec 2020 00:05:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20201203073910.20113-1-biwen.li@oss.nxp.com>
-In-Reply-To: <20201203073910.20113-1-biwen.li@oss.nxp.com>
+References: <20201123183833.18750-1-nsaenzjulienne@suse.de> <20201123183833.18750-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20201123183833.18750-2-nsaenzjulienne@suse.de>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 3 Dec 2020 09:01:37 +0100
-Message-ID: <CAMpxmJV97uexBKK3zHuOWfBQ77uorgxadUcrieBP2fLPs0dPeA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mpc8xxx: resolve coverity warnings
-To:     Biwen Li <biwen.li@oss.nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, aisheng.dong@nxp.com,
-        LKML <linux-kernel@vger.kernel.org>, jiafei.pan@nxp.com,
+Date:   Thu, 3 Dec 2020 09:05:15 +0100
+Message-ID: <CAMpxmJX6zdoYek2THEj2x8ycJYz-bxqE_5RnOz1sYv0vwLSFpA@mail.gmail.com>
+Subject: Re: [PATCH v5 01/11] firmware: raspberrypi: Keep count of all consumers
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Biwen Li <biwen.li@nxp.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 8:31 AM Biwen Li <biwen.li@oss.nxp.com> wrote:
+On Mon, Nov 23, 2020 at 7:38 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> From: Biwen Li <biwen.li@nxp.com>
+> When unbinding the firmware device we need to make sure it has no
+> consumers left. Otherwise we'd leave them with a firmware handle
+> pointing at freed memory.
 >
-> Resolve coverity warnings as follows,
->     cond_at_most: Checking gpio >= 28U implies that gpio may be up
->     to 27 on the false branch.
->     overrun-call: Overrunning callees array of size 3 by passing
->     argument gpio (which evaluates to 27)
->     in call to *mpc8xxx_gc->direction_output
+> Keep a reference count of all consumers and introduce rpi_firmware_put()
+> which will permit automatically decrease the reference count upon
+> unbinding consumer drivers.
 >
->     cond_at_least: Checking gpio <= 3U implies that gpio is at least 4 on
->     the false branch.
->     overrun-call: Overrunning callee's array of size 3 by passing argument
->     gpio (which evaluates to 4) in call to *mpc8xxx_gc->direction_output
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
->  drivers/gpio/gpio-mpc8xxx.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index a6c2bbdcaa10..12c9a91d87b7 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -3,6 +3,7 @@
->   *
->   * Copyright (C) 2008 Peter Korsgaard <jacmet@sunsite.dk>
->   * Copyright (C) 2016 Freescale Semiconductor Inc.
-> + * Copyright 2020 NXP
-
-A copyright notice on a two-line change is a bit too much, don't you think?
-
->   *
->   * This file is licensed under the terms of the GNU General Public License
->   * version 2.  This program is licensed "as is" without any warranty of any
-> @@ -80,7 +81,7 @@ static int mpc5121_gpio_dir_out(struct gpio_chip *gc,
+> Changes since v3:
+> - Use kref instead of waiting on refcount
+>
+>  drivers/firmware/raspberrypi.c             | 37 +++++++++++++++++++---
+>  include/soc/bcm2835/raspberrypi-firmware.h |  2 ++
+>  2 files changed, 35 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
+i.c
+> index 30259dc9b805..ed793aef7851 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -7,6 +7,7 @@
+>   */
+>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/kref.h>
+>  #include <linux/mailbox_client.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+> @@ -27,6 +28,8 @@ struct rpi_firmware {
+>         struct mbox_chan *chan; /* The property channel. */
+>         struct completion c;
+>         u32 enabled;
+> +
+> +       struct kref consumers;
+>  };
+>
+>  static DEFINE_MUTEX(transaction_lock);
+> @@ -225,12 +228,27 @@ static void rpi_register_clk_driver(struct device *=
+dev)
+>                                                 -1, NULL, 0);
+>  }
+>
+> +static void rpi_firmware_delete(struct kref *kref)
+> +{
+> +       struct rpi_firmware *fw =3D container_of(kref, struct rpi_firmwar=
+e,
+> +                                              consumers);
+> +
+> +       mbox_free_channel(fw->chan);
+> +       kfree(fw);
+> +}
+> +
+> +void rpi_firmware_put(struct rpi_firmware *fw)
+> +{
+> +       kref_put(&fw->consumers, rpi_firmware_delete);
+> +}
+> +EXPORT_SYMBOL_GPL(rpi_firmware_put);
+> +
+>  static int rpi_firmware_probe(struct platform_device *pdev)
 >  {
->         struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
->         /* GPIO 28..31 are input only on MPC5121 */
-> -       if (gpio >= 28)
-> +       if (gpio >= 28U)
->                 return -EINVAL;
+>         struct device *dev =3D &pdev->dev;
+>         struct rpi_firmware *fw;
+>
+> -       fw =3D devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
 
-I don't really understand the commit message but looking at the code
-is even more confusing. What are you fixing here actually?
+One nit from my side: maybe add a comment here saying that you really
+want to use non-managed kzalloc() because you're going to get people
+blindly converting it to devm_kzalloc() very soon.
 
 Bartosz
 
+> +       fw =3D kzalloc(sizeof(*fw), GFP_KERNEL);
+>         if (!fw)
+>                 return -ENOMEM;
 >
->         return mpc8xxx_gc->direction_output(gc, gpio, val);
-> @@ -91,7 +92,7 @@ static int mpc5125_gpio_dir_out(struct gpio_chip *gc,
+> @@ -247,6 +265,7 @@ static int rpi_firmware_probe(struct platform_device =
+*pdev)
+>         }
+>
+>         init_completion(&fw->c);
+> +       kref_init(&fw->consumers);
+>
+>         platform_set_drvdata(pdev, fw);
+>
+> @@ -275,25 +294,35 @@ static int rpi_firmware_remove(struct platform_devi=
+ce *pdev)
+>         rpi_hwmon =3D NULL;
+>         platform_device_unregister(rpi_clk);
+>         rpi_clk =3D NULL;
+> -       mbox_free_channel(fw->chan);
+> +
+> +       rpi_firmware_put(fw);
+>
+>         return 0;
+>  }
+>
+>  /**
+> - * rpi_firmware_get - Get pointer to rpi_firmware structure.
+>   * @firmware_node:    Pointer to the firmware Device Tree node.
+>   *
+> + * The reference to rpi_firmware has to be released with rpi_firmware_pu=
+t().
+> + *
+>   * Returns NULL is the firmware device is not ready.
+>   */
+>  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
 >  {
->         struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
->         /* GPIO 0..3 are input only on MPC5125 */
-> -       if (gpio <= 3)
-> +       if (gpio <= 3U)
->                 return -EINVAL;
+>         struct platform_device *pdev =3D of_find_device_by_node(firmware_=
+node);
+> +       struct rpi_firmware *fw;
 >
->         return mpc8xxx_gc->direction_output(gc, gpio, val);
+>         if (!pdev)
+>                 return NULL;
+>
+> -       return platform_get_drvdata(pdev);
+> +       fw =3D platform_get_drvdata(pdev);
+> +       if (!fw)
+> +               return NULL;
+> +
+> +       if (!kref_get_unless_zero(&fw->consumers))
+> +               return NULL;
+> +
+> +       return fw;
+>  }
+>  EXPORT_SYMBOL_GPL(rpi_firmware_get);
+>
+> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm=
+2835/raspberrypi-firmware.h
+> index cc9cdbc66403..fdfef7fe40df 100644
+> --- a/include/soc/bcm2835/raspberrypi-firmware.h
+> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
+> @@ -140,6 +140,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
+>                           u32 tag, void *data, size_t len);
+>  int rpi_firmware_property_list(struct rpi_firmware *fw,
+>                                void *data, size_t tag_size);
+> +void rpi_firmware_put(struct rpi_firmware *fw);
+>  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)=
+;
+>  #else
+>  static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag=
+,
+> @@ -154,6 +155,7 @@ static inline int rpi_firmware_property_list(struct r=
+pi_firmware *fw,
+>         return -ENOSYS;
+>  }
+>
+> +static inline void rpi_firmware_put(struct rpi_firmware *fw) { }
+>  static inline struct rpi_firmware *rpi_firmware_get(struct device_node *=
+firmware_node)
+>  {
+>         return NULL;
 > --
-> 2.17.1
+> 2.29.2
 >
