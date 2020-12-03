@@ -2,171 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 445242CD13F
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 09:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F2ED2CD124
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 09:21:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgLCIZo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Dec 2020 03:25:44 -0500
-Received: from mo-csw-fb1116.securemx.jp ([210.130.202.175]:41170 "EHLO
-        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387620AbgLCIZn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Dec 2020 03:25:43 -0500
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Dec 2020 03:25:41 EST
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1116) id 0B38J5Uf031051; Thu, 3 Dec 2020 17:19:05 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 0B38GtsC030349; Thu, 3 Dec 2020 17:16:55 +0900
-X-Iguazu-Qid: 2wHHO7WlUUsYyHhPnC
-X-Iguazu-QSIG: v=2; s=0; t=1606983414; q=2wHHO7WlUUsYyHhPnC; m=esrYAEcl8iFwxarpR4rmTqyCBxWwvF3ZB9Rezqxt6L4=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1110) id 0B38GrpO000301;
-        Thu, 3 Dec 2020 17:16:54 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 0B38GrWo002495;
-        Thu, 3 Dec 2020 17:16:53 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 0B38Grch028118;
-        Thu, 3 Dec 2020 17:16:53 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, yuji2.ishikawa@toshiba.co.jp,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller
-References: <20201201181406.2371881-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-        <20201201181406.2371881-2-nobuhiro1.iwamatsu@toshiba.co.jp>
-Date:   Thu, 03 Dec 2020 17:16:51 +0900
-In-Reply-To: <20201201181406.2371881-2-nobuhiro1.iwamatsu@toshiba.co.jp>
-        (Nobuhiro Iwamatsu's message of "Wed, 2 Dec 2020 03:14:03 +0900")
-X-TSB-HOP: ON
-Message-ID: <87sg8n483w.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        id S2388340AbgLCITi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Dec 2020 03:19:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388237AbgLCITi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Dec 2020 03:19:38 -0500
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27679C061A51
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Dec 2020 00:18:58 -0800 (PST)
+Received: by mail-ed1-x543.google.com with SMTP id b2so1149931edm.3
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Dec 2020 00:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MFI8X7LTPxfxGnHVnTh7HU5fhkIJdGHe319oXUiaOMg=;
+        b=hxDEkT+CnPTTluKPdfjsvD7vZ5oEtmAvD59tEncI4rMof+lmV243KDQUpBZ+usebfw
+         PgU1bzfy6bWjMDkq53fYjWsaFfah2AzdvmaGvmeWbOo1AsAbtjbebZzysqBFPlpxjvr/
+         Q2IyiKX7/OPD1MzchSNkBrRZne+5aXnTOWl22SBUqUGYUEOHhFJ3rPDEQ/bHq/q4YwNX
+         VkbqRrLkaxkoan/8i1lQuJJdFT/uvJPgeW5nYTPe6+NJekju042FHliduluGyxIuFIrR
+         0Op0jpddYUQ6ExmXHzFHQLkhDnVwShiMdIqYR2TrKnFmjMchB/Kqb+PV7/SdYAMS/Urr
+         ouzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MFI8X7LTPxfxGnHVnTh7HU5fhkIJdGHe319oXUiaOMg=;
+        b=Ta8JoyE75EZPKFmrN4JjpnYKCnVymKje3KnLbeLbdsh5aUO8sEXNRMmzM5pZReRwqd
+         SFlvCTT/XYi1/rhWKYgRIlwsvsgQldfCzguVyvx12Et7B/tfvN/zbt9wPpc56rJAIFeo
+         mT2kInrKhWMfyvutqrhstsEmQJy56djs8ZTvhj7ew8XWKjCweoX7CImzv6AUmDE5QmSf
+         37m3muiWcVFtrQjwGtOipAIrZK+j0LvgFQqybbacyMr2qG1ewsuCw08WMcwoNSo59zAp
+         VZtQltptaGa+A9GBb4d6zdmUmYioiiYoHjYJkO9DNhnJ71YzMyqiOew0/r5oh/Qi82SY
+         g3uA==
+X-Gm-Message-State: AOAM5333oVxhWusk/VYqqIG8W1mEAo7o9zhIpgGhi5xYZw0OlVhijR5o
+        qwDKwcLkJMidovsh+Oii5MpRQHUp6ApM6IrHwgBuEg==
+X-Google-Smtp-Source: ABdhPJzlVZ28tE0cF4tC2Pn9vCk/OZqgnCdO9Uos47a8iakfFul7OT5IcCEOU76VcJI4pRgOkgXNVVPKPg4EXoeAJl8=
+X-Received: by 2002:a05:6402:16c8:: with SMTP id r8mr1744893edx.59.1606983536735;
+ Thu, 03 Dec 2020 00:18:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20201203073910.20113-1-biwen.li@oss.nxp.com> <CAMpxmJV97uexBKK3zHuOWfBQ77uorgxadUcrieBP2fLPs0dPeA@mail.gmail.com>
+ <DB6PR0401MB243884BFCB97E719642385FA8FF20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0401MB243884BFCB97E719642385FA8FF20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 3 Dec 2020 09:18:46 +0100
+Message-ID: <CAMpxmJWzHOZrm90TXy-00do0xSaxPfReiWRuCMj-GwAXN5NbPA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpc8xxx: resolve coverity warnings
+To:     "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+Cc:     Leo Li <leoyang.li@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Iwamatsu-san,
-
-Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp> writes:
-
-> Add bindings for the Toshiba Visconti GPIO Controller.
+On Thu, Dec 3, 2020 at 9:07 AM Biwen Li (OSS) <biwen.li@oss.nxp.com> wrote:
 >
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> ---
->  .../bindings/gpio/toshiba,gpio-visconti.yaml  | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> new file mode 100644
-> index 000000000000..5168a15b90e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/toshiba,gpio-visconti.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toshiba Visconti ARM SoCs GPIO controller
-> +
-> +maintainers:
-> +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: toshiba,gpio-tmpv7708
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-ranges: true
+> > On Thu, Dec 3, 2020 at 8:31 AM Biwen Li <biwen.li@oss.nxp.com> wrote:
+> > >
+> > > From: Biwen Li <biwen.li@nxp.com>
+> > >
+> > > Resolve coverity warnings as follows,
+> > >     cond_at_most: Checking gpio >= 28U implies that gpio may be up
+> > >     to 27 on the false branch.
+> > >     overrun-call: Overrunning callees array of size 3 by passing
+> > >     argument gpio (which evaluates to 27)
+> > >     in call to *mpc8xxx_gc->direction_output
+> > >
+> > >     cond_at_least: Checking gpio <= 3U implies that gpio is at least 4 on
+> > >     the false branch.
+> > >     overrun-call: Overrunning callee's array of size 3 by passing argument
+> > >     gpio (which evaluates to 4) in call to
+> > > *mpc8xxx_gc->direction_output
+> > >
+> > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > ---
+> > >  drivers/gpio/gpio-mpc8xxx.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> > > index a6c2bbdcaa10..12c9a91d87b7 100644
+> > > --- a/drivers/gpio/gpio-mpc8xxx.c
+> > > +++ b/drivers/gpio/gpio-mpc8xxx.c
+> > > @@ -3,6 +3,7 @@
+> > >   *
+> > >   * Copyright (C) 2008 Peter Korsgaard <jacmet@sunsite.dk>
+> > >   * Copyright (C) 2016 Freescale Semiconductor Inc.
+> > > + * Copyright 2020 NXP
+> >
+> > A copyright notice on a two-line change is a bit too much, don't you think?
+> Okay, got it. Will remove it in v2.
+> >
+> > >   *
+> > >   * This file is licensed under the terms of the GNU General Public License
+> > >   * version 2.  This program is licensed "as is" without any warranty
+> > > of any @@ -80,7 +81,7 @@ static int mpc5121_gpio_dir_out(struct
+> > > gpio_chip *gc,  {
+> > >         struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
+> > >         /* GPIO 28..31 are input only on MPC5121 */
+> > > -       if (gpio >= 28)
+> > > +       if (gpio >= 28U)
+> > >                 return -EINVAL;
+> >
+> > I don't really understand the commit message but looking at the code is even
+> > more confusing. What are you fixing here actually?
+> Try to fix code warning that generated by coverity scan tool(static code analysis tool)
 
-I am not sure I have a good handle on the yaml schema definitions but
-"gpio-ranges" feels like it should be a list of ranges not a boolean.
+Please explain what benefit there is to using 28U over 28. No tool is
+perfect, that's why you should try to understand what it is it's
+trying to fix. I don't see any reason this code could fail.
 
-Something like -
+Bartosz
 
-    gpio-ranges:
-      maxItems: 1
-
-feels more appropriate.
-
-I see both the usages in gpio bindings and for other range properties so
-maybe it's OK. I hope Rob or somebody more knowledgeable on this can
-clarify the usage.
-
-Otherwise, the patch looks good.
-
-Thanks,
-Punit
-
-> +
-> +  gpio-controller: true
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping one per GPIO.
-> +    minItems: 16
-> +    maxItems: 16
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-ranges
-> +  - gpio-controller
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/interrupt-controller/irq.h>
-> +      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +      soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        gpio: gpio@28020000 {
-> +          compatible = "toshiba,gpio-tmpv7708";
-> +          reg = <0 0x28020000 0 0x1000>;
-> +          #gpio-cells = <0x2>;
-> +          gpio-ranges = <&pmux 0 0 32>;
-> +          gpio-controller;
-> +          interrupt-controller;
-> +          #interrupt-cells = <2>;
-> +          interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-> +              <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +      };
-> +...
+> >
+> > Bartosz
+> >
+> > >
+> > >         return mpc8xxx_gc->direction_output(gc, gpio, val); @@ -91,7
+> > > +92,7 @@ static int mpc5125_gpio_dir_out(struct gpio_chip *gc,  {
+> > >         struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
+> > >         /* GPIO 0..3 are input only on MPC5125 */
+> > > -       if (gpio <= 3)
+> > > +       if (gpio <= 3U)
+> > >                 return -EINVAL;
+> > >
+> > >         return mpc8xxx_gc->direction_output(gc, gpio, val);
+> > > --
+> > > 2.17.1
+> > >
