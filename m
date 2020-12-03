@@ -2,169 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1A832CD1DC
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 09:55:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C792CD203
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Dec 2020 10:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgLCIx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Dec 2020 03:53:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58580 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730016AbgLCIx4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Dec 2020 03:53:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6E0E5AC55;
-        Thu,  3 Dec 2020 08:53:14 +0000 (UTC)
-Message-ID: <401be3062e06f4896662da179a751a1a08b8a75a.camel@suse.de>
-Subject: Re: [PATCH v5 01/11] firmware: raspberrypi: Keep count of all
- consumers
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
-        Linux Input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 03 Dec 2020 09:53:12 +0100
-In-Reply-To: <CAMpxmJX6zdoYek2THEj2x8ycJYz-bxqE_5RnOz1sYv0vwLSFpA@mail.gmail.com>
-References: <20201123183833.18750-1-nsaenzjulienne@suse.de>
-         <20201123183833.18750-2-nsaenzjulienne@suse.de>
-         <CAMpxmJX6zdoYek2THEj2x8ycJYz-bxqE_5RnOz1sYv0vwLSFpA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-SBC+IJay38JRk592gNwQ"
-User-Agent: Evolution 3.38.2 
+        id S2387468AbgLCJEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Dec 2020 04:04:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729951AbgLCJEd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Dec 2020 04:04:33 -0500
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16335C061A4D
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Dec 2020 01:03:53 -0800 (PST)
+Received: by mail-il1-x144.google.com with SMTP id r17so1195979ilo.11
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Dec 2020 01:03:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b8vPrErhs2SeNesKdqnrR0Y61VWgyx6uy7JYVlF36VM=;
+        b=SXZC2srFWwAKsc0BkmzUe3oDyV1t88UJZrWOVbdvjiwhC4D0lH4PjkcaYSsSlsJcyJ
+         GGwITeELhdiFbZrSHBTiMnuXopk8K0U/qW1KASBGSE4Oon13bAUqSDCauWT12xDV1sjb
+         MckjM8hv7w4trjd2KTUlJWEfphZe6ifCygna/zvB97c69b36glBgLZkFXdx7Hsy2flDv
+         b6ldEv2HlKt3aFnOANmTIR9UK1EOx7DvIfEbiCnqDbL9Uxhuv3tPxcXc+jIJ0Su/46Ov
+         LFOiiQNeDnW/5zVx/acliomw6hF9gX4LXuSi2bKjNDhwNRvSasMGFE3pVtQW1JbJseAH
+         Lysg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b8vPrErhs2SeNesKdqnrR0Y61VWgyx6uy7JYVlF36VM=;
+        b=gPGqNs3BK2yRNtXROcZ985qceyn4Tu/iiuvzctoNbx2vMeHwBZ+8C1jd/04/zKwWUJ
+         8VtFjMW1m1HJc6HARVpHHr4kfwnrw0epqfvA+h7qgeRSfWeBMLb2Jg6ogoDPJNIZCi9k
+         UoTeT3FCK4oNBAR7q0tUMkTarE5Fmpm5AHoC4lN+1PVNKkvshzrgTB6hxnHRSIvlVlBj
+         YvsffC+IvZRYnfOgEDwNloBum7rda2dhGzPrpdS1KiyjEQHZzfRBJ0X66XF7LaFspfPs
+         zb9huZwX9C2nne7RjsIJv4QLKOdyE5wdpz9QqNa4gcYz3pQ2mlCVCXk81fc4V+XKASlE
+         vAUA==
+X-Gm-Message-State: AOAM531DTod7+uQ2k5cmKrvOyd3GJ+U8GgD5xsfXE4oneDaGaLQJAHzZ
+        9HmG3762zILEBCjmWC61kyMSy7QwvgopCBujjGSM6Q==
+X-Google-Smtp-Source: ABdhPJzcSUaEtnlVMu7OoKcTW1g+4zI4gBZdlftEzUdf/MHJcLW/518+6k64ido1TpvpH4cmDC9C5JWlZstEm7yAAd8=
+X-Received: by 2002:a92:d1c9:: with SMTP id u9mr2157204ilg.189.1606986232418;
+ Thu, 03 Dec 2020 01:03:52 -0800 (PST)
 MIME-Version: 1.0
+References: <20201203073910.20113-1-biwen.li@oss.nxp.com> <CAMpxmJV97uexBKK3zHuOWfBQ77uorgxadUcrieBP2fLPs0dPeA@mail.gmail.com>
+ <DB6PR0401MB243884BFCB97E719642385FA8FF20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+ <CAMpxmJWzHOZrm90TXy-00do0xSaxPfReiWRuCMj-GwAXN5NbPA@mail.gmail.com> <DB6PR0401MB2438E60B3BE8D6E917B80D0C8FF20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0401MB2438E60B3BE8D6E917B80D0C8FF20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 3 Dec 2020 10:03:41 +0100
+Message-ID: <CAMRc=McYHmiZqAp68Sbrmfo4YwO9mr=jFx6qKfOiLAQPPKoSMg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpc8xxx: resolve coverity warnings
+To:     "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Dec 3, 2020 at 9:51 AM Biwen Li (OSS) <biwen.li@oss.nxp.com> wrote:
+>
+> >
+> > On Thu, Dec 3, 2020 at 9:07 AM Biwen Li (OSS) <biwen.li@oss.nxp.com> wrote:
+> > >
+> > > > On Thu, Dec 3, 2020 at 8:31 AM Biwen Li <biwen.li@oss.nxp.com> wrote:
+> > > > >
+> > > > > From: Biwen Li <biwen.li@nxp.com>
+> > > > >
+> > > > > Resolve coverity warnings as follows,
+> > > > >     cond_at_most: Checking gpio >= 28U implies that gpio may be up
+> > > > >     to 27 on the false branch.
+> > > > >     overrun-call: Overrunning callees array of size 3 by passing
+> > > > >     argument gpio (which evaluates to 27)
+> > > > >     in call to *mpc8xxx_gc->direction_output
+> > > > >
+> > > > >     cond_at_least: Checking gpio <= 3U implies that gpio is at least 4 on
+> > > > >     the false branch.
+> > > > >     overrun-call: Overrunning callee's array of size 3 by passing argument
+> > > > >     gpio (which evaluates to 4) in call to
+> > > > > *mpc8xxx_gc->direction_output
+> > > > >
+> > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > ---
+> > > > >  drivers/gpio/gpio-mpc8xxx.c | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpio/gpio-mpc8xxx.c
+> > > > > b/drivers/gpio/gpio-mpc8xxx.c index a6c2bbdcaa10..12c9a91d87b7
+> > > > > 100644
+> > > > > --- a/drivers/gpio/gpio-mpc8xxx.c
+> > > > > +++ b/drivers/gpio/gpio-mpc8xxx.c
+> > > > > @@ -3,6 +3,7 @@
+> > > > >   *
+> > > > >   * Copyright (C) 2008 Peter Korsgaard <jacmet@sunsite.dk>
+> > > > >   * Copyright (C) 2016 Freescale Semiconductor Inc.
+> > > > > + * Copyright 2020 NXP
+> > > >
+> > > > A copyright notice on a two-line change is a bit too much, don't you think?
+> > > Okay, got it. Will remove it in v2.
+> > > >
+> > > > >   *
+> > > > >   * This file is licensed under the terms of the GNU General Public License
+> > > > >   * version 2.  This program is licensed "as is" without any
+> > > > > warranty of any @@ -80,7 +81,7 @@ static int
+> > > > > mpc5121_gpio_dir_out(struct gpio_chip *gc,  {
+> > > > >         struct mpc8xxx_gpio_chip *mpc8xxx_gc =
+> > gpiochip_get_data(gc);
+> > > > >         /* GPIO 28..31 are input only on MPC5121 */
+> > > > > -       if (gpio >= 28)
+> > > > > +       if (gpio >= 28U)
+> > > > >                 return -EINVAL;
+> > > >
+> > > > I don't really understand the commit message but looking at the code
+> > > > is even more confusing. What are you fixing here actually?
+> > > Try to fix code warning that generated by coverity scan tool(static
+> > > code analysis tool)
+> >
+> > Please explain what benefit there is to using 28U over 28. No tool is perfect,
+> > that's why you should try to understand what it is it's trying to fix. I don't see any
+> > reason this code could fail.
+> This code couldn't fail.
+> The variable gpio is unsigned int type, prefer to append "U" for unsigned typed values, this makes is clearer also when comparing values and variables.
+> >
 
---=-SBC+IJay38JRk592gNwQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This only makes sense if we're using large values that could
+potentially overflow a signed int. This is a small constant value so
+there's no reason for this churn. NAK
 
-On Thu, 2020-12-03 at 09:05 +0100, Bartosz Golaszewski wrote:
-> On Mon, Nov 23, 2020 at 7:38 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> >=20
-> > When unbinding the firmware device we need to make sure it has no
-> > consumers left. Otherwise we'd leave them with a firmware handle
-> > pointing at freed memory.
-> >=20
-> > Keep a reference count of all consumers and introduce rpi_firmware_put(=
-)
-> > which will permit automatically decrease the reference count upon
-> > unbinding consumer drivers.
-> >=20
-> > Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >=20
-> > Changes since v3:
-> > - Use kref instead of waiting on refcount
-> >=20
-> > =C2=A0drivers/firmware/raspberrypi.c             | 37 +++++++++++++++++=
-++---
-> > =C2=A0include/soc/bcm2835/raspberrypi-firmware.h |  2 ++
-> > =C2=A02 files changed, 35 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberr=
-ypi.c
-> > index 30259dc9b805..ed793aef7851 100644
-> > --- a/drivers/firmware/raspberrypi.c
-> > +++ b/drivers/firmware/raspberrypi.c
-> > @@ -7,6 +7,7 @@
-> > =C2=A0=C2=A0*/
-> >=20
-> > =C2=A0#include <linux/dma-mapping.h>
-> > +#include <linux/kref.h>
-> > =C2=A0#include <linux/mailbox_client.h>
-> > =C2=A0#include <linux/module.h>
-> > =C2=A0#include <linux/of_platform.h>
-> > @@ -27,6 +28,8 @@ struct rpi_firmware {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mbox_chan *chan;=
- /* The property channel. */
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct completion c;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 enabled;
-> > +
-> > +       struct kref consumers;
-> > =C2=A0};
-> >=20
-> > =C2=A0static DEFINE_MUTEX(transaction_lock);
-> > @@ -225,12 +228,27 @@ static void rpi_register_clk_driver(struct device=
- *dev)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0-1, NU=
-LL, 0);
-> > =C2=A0}
-> >=20
-> > +static void rpi_firmware_delete(struct kref *kref)
-> > +{
-> > +       struct rpi_firmware *fw =3D container_of(kref, struct rpi_firmw=
-are,
-> > +                                              consumers);
-> > +
-> > +       mbox_free_channel(fw->chan);
-> > +       kfree(fw);
-> > +}
-> > +
-> > +void rpi_firmware_put(struct rpi_firmware *fw)
-> > +{
-> > +       kref_put(&fw->consumers, rpi_firmware_delete);
-> > +}
-> > +EXPORT_SYMBOL_GPL(rpi_firmware_put);
-> > +
-> > =C2=A0static int rpi_firmware_probe(struct platform_device *pdev)
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct device *dev =3D =
-&pdev->dev;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct rpi_firmware *fw=
-;
-> >=20
-> > -       fw =3D devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
->=20
-> One nit from my side: maybe add a comment here saying that you really
-> want to use non-managed kzalloc() because you're going to get people
-> blindly converting it to devm_kzalloc() very soon.
+Bartosz
 
-Good point, I'll change it.
-
-Regards,
-Nicolas
-
-
---=-SBC+IJay38JRk592gNwQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl/Ip3gACgkQlfZmHno8
-x/5Ncwf8C0HFE7YBc4W1hWu3koQkBNupWVGDMLkAR36Dfmk6pph04kKcLSt6ZIu1
-2SMHgfQG4VikmJnqGQp66Y93QWodjPeglOr+09VL5rY7rehOGcdBICaNPJcS1vrl
-LnF+n0Lqyfirpq4rVd7qX5taBOz890GfthlZMmFsNcbFcSEuuUVogJC7iCDe+0cy
-nqEYLXfaCEVDE0jR4Zvmyvs20dEZpXHR0gfoc29hMBtRLDL2l1CClG7Vm9im7Ob1
-2Jm9YqHMduon8YCqLZF+jxnZesbb9ktTry5StYQ7lSZyfDxb32nOjAQqGeZfsYyF
-y1nknR5dNeL/6dbIqCn33h4p6HSTbA==
-=idux
------END PGP SIGNATURE-----
-
---=-SBC+IJay38JRk592gNwQ--
-
+> > Bartosz
+> >
+> > > >
+> > > > Bartosz
+> > > >
+> > > > >
+> > > > >         return mpc8xxx_gc->direction_output(gc, gpio, val); @@
+> > > > > -91,7
+> > > > > +92,7 @@ static int mpc5125_gpio_dir_out(struct gpio_chip *gc,  {
+> > > > >         struct mpc8xxx_gpio_chip *mpc8xxx_gc =
+> > gpiochip_get_data(gc);
+> > > > >         /* GPIO 0..3 are input only on MPC5125 */
+> > > > > -       if (gpio <= 3)
+> > > > > +       if (gpio <= 3U)
+> > > > >                 return -EINVAL;
+> > > > >
+> > > > >         return mpc8xxx_gc->direction_output(gc, gpio, val);
+> > > > > --
+> > > > > 2.17.1
+> > > > >
