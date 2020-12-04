@@ -2,69 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E94402CE952
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A56282CE962
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgLDIQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:16:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36186 "EHLO
+        id S1725866AbgLDITS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:19:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgLDIQa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:16:30 -0500
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDA8C061A51
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:15:43 -0800 (PST)
-Received: by mail-lj1-x229.google.com with SMTP id f24so5566730ljk.13
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:15:43 -0800 (PST)
+        with ESMTP id S1728942AbgLDITR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:19:17 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D0EC061A51
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:18:37 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id q13so6503200lfr.10
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:18:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=g+k1qgO29JdecjqgUrn+EfM03fZMfShm+Q74wK2D/vk=;
-        b=XmRLwbRlU1vLghBqdnHzKLXXvFM2BGFTjmqYq19H/7CXWhgk5YxxLxfpmu12fprlUu
-         CZEkG3olajP+EHsE2RaKc5Nl77RD8ip8xEjFqiTb4XRTKkIlbyL0vthPeVU5pDQCMqFJ
-         4qjdl8G3Wot51SqgG0FXCHPvRxQYFPyNhbRi4bH6l8qVUYDUDdKxBxwoPvH/uNKD29Zx
-         yIWh3nBH8Zwofw1McYh86M1AqDq8LJaAwSwTkfPSYBx+DjkLB0NQJcL4nd+j+n3+pBam
-         4/5x5smmjssGVZyH72FoHwuNgbaVWAUNaaJxEi9XECAgPieZD5hvuFSOy24SAHDCzFCU
-         JKoA==
+        bh=BgQjS7gQq1hlMzOMWkicyzD5TPU/0rBQi3d50MpHvXk=;
+        b=A6wS7fSiRdRqJh0w+C5baSJ8MXvSjxuAeExfPI1DffG3xon7jxq0d+MEH3O/Eapvyt
+         0ZNhToGOQba6E+cpiw38iyPL7lrgWFZCJ9XHOxka6U8voWwgrcr4K0IT2LYqaFkSGKIM
+         Jm45pRKTASUIsfVzGCrhHTRre/FHaGx0BfIcxqbG7noRjs5blbm1StuMVsByXPgv6pEY
+         +EEcaGj7jLHi31tMJTJbzl9kNi3FQHjmiIWojKExhO8KpTsa17gsZGsdCr+nk9spcYuP
+         WFXTVFIe7Lzt5sI/AsknJowOmfOABzrYJMb+5KFXv6O3QjA42CmJY+fZpd/fEWK38uKX
+         F1KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=g+k1qgO29JdecjqgUrn+EfM03fZMfShm+Q74wK2D/vk=;
-        b=YF+x6VEZOrcdqjIuRVN32kqyvKy5CSbYCIjqKcqlWHJFMlClDhGPxBltLYqW7fRQZT
-         cCk9QPOWvQx0O/ZNJ3vxSPSC5XsTXj6u/CRbT7sui4JpOX22yd2AMczmY2NMmJR7nh7R
-         +nBZneIbjijksEDWe2POjKGeYCmlyMZiBcS1pCTu6zlQX/j65hO/pRz0C7AgOnKe2Fs2
-         AeWD7Q76ZJ75iVRUByOiPUOLzYAtgO9IAEOkQZvMkMOOyZ+BJhvBDT4YLCVMtYn8ECzl
-         Ql1ZxD5qr/fdacE58fSJKw73d3QYyP5vRhWwwajVWmsK2NE3rfn2av9hvwZnt5tlUKAx
-         8s1w==
-X-Gm-Message-State: AOAM532FhMrhrmIDdompxAOI7bfb/cJaVMUj44plvetMiTmIUWK8FdbS
-        sNS90ZzdA7cpsCRDYB96jVKmhY/VfbSJlvR2sGioi/53u0T8YA==
-X-Google-Smtp-Source: ABdhPJx5xMLC2SbQ/cP1+LTC/MdYRBq+BrK80il5gK/ULug9NraaulJu4Me/HwCV6NfEThkAlAzq5Yy27AIZiQyJ6B0=
-X-Received: by 2002:a05:651c:39d:: with SMTP id e29mr2709273ljp.144.1607069742412;
- Fri, 04 Dec 2020 00:15:42 -0800 (PST)
+        bh=BgQjS7gQq1hlMzOMWkicyzD5TPU/0rBQi3d50MpHvXk=;
+        b=M4VgjHnCK7yl17FgRcdEu2hPT8o06NOJ00h/FtMCN5MRMyydC9bxUjuSaKgJS48ma2
+         ti/uPFjRPbk7XHhhimxtYK3XZumKYjCnY5dY8LKqhnDFXhMutM8sqDL989ICNdBq3jmW
+         3JcgNGOCvIQZ0oJtgeqnSdDNxX9XZQkaV+kRHlUI3mddBqG/uwhOOhzGTAKBApdt151m
+         6HG9bYKiBxmU+nNUCI2IF7os35sqj0nCgD/T/56M4YNQzNPU75e9jYZQLObl6XJZkREW
+         NPgGz0w+RmLghE/4QtGiFCvRdvEmDWJ2HS1M3Sw/OzNFfX5tstnl6IAEMuFu2/opDtEO
+         EvQg==
+X-Gm-Message-State: AOAM533adzUJ95a00en4CQt3wqo8hu9BfZHdYIuedfEz3li5UHBf3aEs
+        cARg35YgWFLkikpRcPRQPlpQZiIyea1QXY388r0Q0A==
+X-Google-Smtp-Source: ABdhPJzdwTxSgpoTuZSw7pbs08kjXuXmhNScBCoylbhnJkoaRGoCFiMID+kU2gmYDGtZErQtFSYTQ9ffazTisrPJH7Y=
+X-Received: by 2002:a19:5f11:: with SMTP id t17mr2741438lfb.572.1607069915656;
+ Fri, 04 Dec 2020 00:18:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20201203100448.17201-1-brgl@bgdev.pl>
-In-Reply-To: <20201203100448.17201-1-brgl@bgdev.pl>
+References: <e6241dd2-9ce8-9334-93f7-a4f84b20834e@web.de> <20201119011219.2248232-1-yukuai3@huawei.com>
+In-Reply-To: <20201119011219.2248232-1-yukuai3@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Dec 2020 09:15:31 +0100
-Message-ID: <CACRpkdb0Z2gPDhRxT5V=FXF0mOG=tJkR7Mbk7LK_xko4NN3mjQ@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.10-rc7
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 4 Dec 2020 09:18:24 +0100
+Message-ID: <CACRpkdZ9aOTFF=vO8UdQYj0g+JABwx-78ipP3Qj38jop+whMkg@mail.gmail.com>
+Subject: Re: [PATCH V2] pinctrl: falcon: add missing put_device() call in pinctrl_falcon_probe()
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     Thomas Langer <thomas.langer@lantiq.com>,
+        John Crispin <blogic@openwrt.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        yi.zhang@huawei.com, zhangxiaoxu5@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 11:04 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Nov 19, 2020 at 2:08 AM Yu Kuai <yukuai3@huawei.com> wrote:
 
-> Here's a bunch of fixes for you. They're rebased on top of v5.10-rc6 because
-> the gpio-zynq patch depends on a function that's been merged this release
-> cycle but post rc1.
+> if of_find_device_by_node() succeed, pinctrl_falcon_probe() doesn't have
+> a corresponding put_device(). Thus add put_device() to fix the exception
+> handling for this function implementation.
+>
+> Fixes: e316cb2b16bb ("OF: pinctrl: MIPS: lantiq: adds support for FALCON SoC")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-Thanks! Pulled into my fixes branch.
+Patch applied!
 
 Yours,
 Linus Walleij
