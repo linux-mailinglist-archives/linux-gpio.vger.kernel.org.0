@@ -2,90 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1990C2CEA7B
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 10:07:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 863512CEA99
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 10:15:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgLDJGx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 04:06:53 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:37821 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgLDJGw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 04:06:52 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 982AD22FB3;
-        Fri,  4 Dec 2020 10:06:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1607072770;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkNJaPluVvv+Tgikv99K04Dg3690ZJDLlH87exn6LzY=;
-        b=JW5j1Xw1BL9NmJQmZ4uE36/eh60zijRhhyEQJRwX0zz2jRUxEhkuOEELk0hupoOHt4Hxtr
-        UBvJ0dJBhNv9hnLNBl/tFYM7ZpkcmpjnR13T/z5nYHWtul/6s+zXfaTg3wUdiZkM0+lrD+
-        2zpJ+iCfUh94Sasx1TxTFOg7UAB83CU=
+        id S2387569AbgLDJOj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 04:14:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387531AbgLDJOj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 04:14:39 -0500
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5180C061A54
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 01:13:52 -0800 (PST)
+Received: by mail-lj1-x22a.google.com with SMTP id 142so5741099ljj.10
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 01:13:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7XN3FvCjmFNo5Sr6ESr4GizIse9YN91u6D5JhDvwqTc=;
+        b=GBst2pETPJ1j+SpZum1btOVpGJOd6ns7aePudho7xjkOALoKW9+qWfjMJvKK3OxElK
+         p8z0BgvKP8/IT40pDMT0s6H6VKbA70f15oN3L+ocyFtEnnqChD6WNaQ2qQNChI0/UWdt
+         YklAsG4+m4LHxLTt4kjbDG9h5veAtuCvXhBgPx/r7Rj7yv0H4RUG0sMkn7kc1mO8HURq
+         p9N7JUnTyyRq7oNTzmD8tL77QrEuQl7QFxdbeb3+HtOiJqlxdxgNCBYex7IF9Vd+1PBZ
+         n6eFRCPU1n1s6yvRDYX7oTmK537tQiBJsGS5AYpfLeuKLpdT9ODGZdZ3VaWJ+9uqGYv9
+         FKZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7XN3FvCjmFNo5Sr6ESr4GizIse9YN91u6D5JhDvwqTc=;
+        b=RJbjf6H/6Xx1HOtkQjedufSFHlyJZJ811j1gM94fdYmv0gE+v4BzjPI8KEWINQUEbo
+         +6DDvBLxHKhYe/SRpwErUSNcl0O5ViWZr5xb+YOtoMmA3SMeNkJOqjFL/PMtRNHhFCoj
+         VFE++WcrCJDZL18Nl8HbcB76gEELRWRH7M0bMBxWyuXR/BfZANdKO9gi99PyTZxRzAwB
+         PAOW9xqOfbi3RQv73GcTq/wlTfbyUcST2DqmeEL+QPxE91x/Fb9wfU0GuTPa+OXvksyM
+         pw2Z6QyRemO0rHFLiBuFD8mVFKFgnzorjU98EsQk41sHvBsxqX+EVNF8ZGZZcKM4MGES
+         1Fbw==
+X-Gm-Message-State: AOAM532UlH1Ku1J8RAD580pURDeq4Rd7ZO5kcYgskq4M0uvPG9nlpNi7
+        K7vjkRDzdKRyPpL1zUwnQpaKqmpQdRBjt4LKpKMZBQ==
+X-Google-Smtp-Source: ABdhPJw5qYm+l+Rp/69vH4PvUB0w/FnfN/CwLKYy56wGElmGSDNFyMyPm7Ra81YrEho49ZapdSAiLLv+b56JVz4/h3c=
+X-Received: by 2002:a2e:97c8:: with SMTP id m8mr2792964ljj.338.1607073231283;
+ Fri, 04 Dec 2020 01:13:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 04 Dec 2020 10:06:10 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
+References: <tencent_220963AF059847E1171B4AB9@qq.com>
+In-Reply-To: <tencent_220963AF059847E1171B4AB9@qq.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 4 Dec 2020 10:13:40 +0100
+Message-ID: <CACRpkdbvKWcD04SLLBOBuZWzN64xpVv1nfCXZGcSp9cs0MPivQ@mail.gmail.com>
+Subject: Re: 0001-add-amlogic-gpio-to-irq
+To:     =?UTF-8?B?5p6X5Zyj5qyi?= <linshenghuan@hangtu-china.com>
+Cc:     khilman <khilman@baylibre.com>,
+        narmstrong <narmstrong@baylibre.com>,
+        jbrunet <jbrunet@baylibre.com>,
+        "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
-In-Reply-To: <8ab347b9-8b1a-f49f-d194-f98284fa6099@metux.net>
-References: <20201127183003.2849-1-info@metux.net>
- <CAMpxmJXJLTzM20xLCoM4spjibXbA-FfdPmOBp1QcV+9cScNNMw@mail.gmail.com>
- <f14c0197-b346-7af5-9dd0-9b8018baaeaf@metux.net>
- <b287f185d554b5a87b82ea8ca79cb5a2@walle.cc>
- <8ab347b9-8b1a-f49f-d194-f98284fa6099@metux.net>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <0dde3c67e0e895b8ce70de910a285fd8@walle.cc>
-X-Sender: michael@walle.cc
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-12-04 09:28, schrieb Enrico Weigelt, metux IT consult:
-> On 03.12.20 23:35, Michael Walle wrote:
->> Am 2020-12-03 20:00, schrieb Enrico Weigelt, metux IT consult:
->>> On 02.12.20 15:15, Bartosz Golaszewski wrote:
->>>>> +               bufwalk = name_buffer;
->>>>> +
->>>>> +               while (idx < priv->num_gpios &&
->>>>> +                      bufwalk < (name_buffer+cf.names_size)) {
->>>>> +                       gpio_names[idx] = (strlen(bufwalk) ? 
->>>>> bufwalk
->>>>> : NULL);
->>>>> +                       bufwalk += strlen(bufwalk)+1;
->>>>> +                       idx++;
->>>> 
->>>> 
->>>> Something's wrong with indentation here.
->>> 
->>> i dont think so: the "bufwalk ..." line belongs to the while 
->>> expression
->>> and is right under the "idx", as it should be. I didn't want to break 
->>> up
->>> at the "<" operator. shall i do this instead ?
->> 
->> Or don't break the lines at all. Both lines don't add up to more than
->> 100 chars,
->> right?
-> 
-> IIRC checkpatch complains at 80 chars. Has that been changed ?
+Hi Lisheng,
 
-yes,
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bdc48fa11e46f867ea4d75fa59ee87a7f48be144
+this patch got a bit mangled but I get where you're going.
 
--michael
+I think Meson needs to be augmented to use hierarchical gpiolib irqchip
+because this seems to be what the system is doing.
+
+So start with drivers/pinctrl/meson/Kconfig and add:
+
+select GPIOLIB_IRQCHIP
+select IRQ_DOMAIN_HIEARARCHY
+
+Then use the generic hierarchical gpiolib irqchip as described
+in Documentation/driver-api/gpio/driver.rst
+Type
+git grep child_to_parent_hwirq
+for several examples of how to do this.
+
+Yours,
+Linus Walleij
