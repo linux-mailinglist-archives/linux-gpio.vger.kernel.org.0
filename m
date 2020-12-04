@@ -2,120 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B2502CE9FA
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:39:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2ED12CEA0F
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:44:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgLDIiT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:38:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
+        id S1729055AbgLDIoj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:44:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgLDIiT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:38:19 -0500
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E67C061A52
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:37:38 -0800 (PST)
-Received: by mail-lj1-x242.google.com with SMTP id s9so5636186ljo.11
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:37:38 -0800 (PST)
+        with ESMTP id S1729044AbgLDIoj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:44:39 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A294BC061A53
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:43:58 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id t6so6570967lfl.13
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:43:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kb+N/BiD+8VZLhG5BIu1MXMjUnmAPmkEZ70mPpWWHns=;
-        b=Qu9ZyLYSlaTnUm0W8h/57N0QTm49ArZCAa2ep9KVOBgAJpoylLFQuJ3Xx7mfZ/tznJ
-         kH+HIrhIm/q4iOC9lPVvnYUgYORIWqqa1U0aYtZloFV4ZkCh+T2Al6Lxuvtg/B08BYxP
-         nt6L7HC92fX3/4PbgQHaPGBKolmyCPDYv6F0HFZi9njJ1Hb6Sq0LOU163xVlSpk8kfOe
-         m0E3q7z4quHZ/p2AkzzSORWdBBnQlACZESgfpS5Vs49pc2kKQY2KUauuDEShJm+rdE2C
-         wQp2s75yV/at9d7IGMcmJnOqofcpNeMxZzmaYhU/wnWHDPEto3NPUxx6vzC4inBhWjK+
-         av1Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KET1E+zuak3FlCY4zF7z/1ILHVvC2UNzSxg2qMKY1c0=;
+        b=HxSx5uVAmmhLrfNvxVpDEfIm79FjWwE+/pIOwU9OCK4itu6RvC3I29vkt6XN+XnlQO
+         35qbSosF0096esxtPaOnQPzrtaaFB7ldlWwSM8k6l7VOnau3V36cTZM947r6Yy5jxp6j
+         V/UltUuV1NUcCDh14YfCLi2AQKk8jemX3ddOis+X+igZvQK39fa643oOfJrBRyI7Cdbb
+         paw/zZAVesnY5ei4at4uYjHLTYCaHAvyWaqAf0sGcjOPfNlnYoyO7Pn8kbXazuKA3Z28
+         OYVHXUhRguDKlf0ec/j9CbVkRgRlnWXbPEL1PlzphOt8/IImroG9s1ne8Axif63KivuQ
+         WtEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kb+N/BiD+8VZLhG5BIu1MXMjUnmAPmkEZ70mPpWWHns=;
-        b=gMTrZiiPgIhSMMcKgi2ulQvZsi0/xNedyHJ6bXk/i4q2DRuSvEwq5UOvLNP+99hfx6
-         ipHUPoruTP1eDL11ZCURQPyQPcblOW3CwMWqQVu8B4gFGnb40Kx1hsYyZLaxp2Z/wsMD
-         8v330bhLJJz5Mb6sdnXZWUeUabvIGB7w8Hl2SoJFK45eqQNy2EysHtIEeB8PqaZleGQy
-         dOyrXuxb9xUx9DEmj/voL9D7ZR6MI3gfBgj0k8LYj77igGcuaqWEeF8szpYDAhMIx2nG
-         +hxvEKZc6op+Got2zEjgtVT6lgDZ3N6rsXc59e4dydfETvp+/gmLYHe/er7MDYpyxj37
-         Txgg==
-X-Gm-Message-State: AOAM531O7AYNW80mKG/UsK/sLT0yO5Z7NejsNqFfxgNOjxvQYSkT8Crq
-        FuSmzmcMtpYa0SAJ4+Y9lUoIeLAXS3G30Xf0
-X-Google-Smtp-Source: ABdhPJza8rjFOxM2B4TjmFeYzFseMOaK8uDrVu+u6np2VgctFAo1tsj7PBUVot135ScLMiY/nMqXDA==
-X-Received: by 2002:a2e:8496:: with SMTP id b22mr2994298ljh.252.1607071056990;
-        Fri, 04 Dec 2020 00:37:36 -0800 (PST)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id q5sm1426795ljc.46.2020.12.04.00.37.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 00:37:36 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpio: Add TODO item for debugfs interface
-Date:   Fri,  4 Dec 2020 09:35:33 +0100
-Message-Id: <20201204083533.65830-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KET1E+zuak3FlCY4zF7z/1ILHVvC2UNzSxg2qMKY1c0=;
+        b=TnCVyFIkBbT/E7iRmqFrrcN6U0fzcGk7mNuw6BBc6exy5jegS3bJKe/IcHyAXa0mij
+         PuaIPQIEWlaFEUzpOjmOJUbAzUP+9iXp2RpNZpmMnMaLkWgRyLk2v2HdidrBY8Fwyn9m
+         ZCyD0oy3whwuApiNea/eH22RFtDyf5YmFDlyXXm9br/qLmpe9e/XSjJmqhXPeEH/7M0j
+         kishegSSwR53Sm7OITBxMfMSrdG8UGv2n022r7C3tpuXN8Y9elUw73QU96qP4SHauh50
+         j0vtCgnj7yFdwgA+gmZwGflyqyxADXGqUqrAN0QFmOVWxDReP3qRsYBHlKpapiXmcE8s
+         4prA==
+X-Gm-Message-State: AOAM533wMrplJVocMGTWxJAdzQpLjJYGErqYx+Y7vSwxyP2QIeOnrNYw
+        sJNAkHgxbAHe2/InU3QlMsNFuhAV3JQfWo34YEFzvw==
+X-Google-Smtp-Source: ABdhPJxSmtAp/6oFP6JQUcOPafIUSq25E/Xy3Sy4VeE2x4VQ+ZmXA8JyQPwmPHVM/WpFq9Ryq05QtDCFXaeHkuFJhTs=
+X-Received: by 2002:ac2:4308:: with SMTP id l8mr2768677lfh.260.1607071437123;
+ Fri, 04 Dec 2020 00:43:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201120093058.7248-1-zhiyong.tao@mediatek.com> <20201120093058.7248-2-zhiyong.tao@mediatek.com>
+In-Reply-To: <20201120093058.7248-2-zhiyong.tao@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 4 Dec 2020 09:43:46 +0100
+Message-ID: <CACRpkdYbVbgUEvGk4t2YHieUaFvMMg1EOR8opuCqm-w4wCYCOg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: fix low level output voltage issue
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com,
+        hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>,
+        jg_poxu@mediatek.com, Biao Huang <biao.huang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>, seiya.wang@mediatek.com,
+        sj.huang@mediatek.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The idea to create a debugfs to replace the aging and
-dangerous sysfs ABI for hacking and tinkering came up
-on the list.
+On Fri, Nov 20, 2020 at 10:31 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
 
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/TODO | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> This patch is used to fix low level output voltage issue.
+> A pin is changed from input pull-up to output high.
+> The Dout value of the pin is default as 0.
+> If we change the direction of the pin before the dout value of the pin,
+> It maybe produce a low level output voltage between "input pull-up" and
+> "output high".
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index cd04e0b60159..b49ad263c516 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -142,3 +142,39 @@ use of the global GPIO numbers. Once the above is complete, it may
- make sense to simply join the subsystems into one and make pin
- multiplexing, pin configuration, GPIO, etc selectable options in one
- and the same pin control and GPIO subsystem.
-+
-+
-+Debugfs in place of sysfs
-+
-+The old sysfs code that enables simple uses of GPIOs from the
-+command line is still popular despite the existance of the proper
-+character device. The reason is that it is simple to use on
-+root filesystems where you only have a minimal set of tools such
-+as "cat", "echo" etc.
-+
-+The old sysfs still need to be strongly deprecated and removed
-+as it relies on the global GPIO numberspace that assume a strict
-+order of global GPIO numbers that do not change between boots
-+and is independent of probe order.
-+
-+To solve this and provide an ABI that people can use for hacks
-+and development, implement a debugfs interface to manipulate
-+GPIO lines that can do everything that sysfs can do today: one
-+directory per gpiochip and one file entry per line:
-+
-+/sys/kernel/debug/gpiochip/gpiochip0
-+/sys/kernel/debug/gpiochip/gpiochip0/0
-+/sys/kernel/debug/gpiochip/gpiochip0/1
-+/sys/kernel/debug/gpiochip/gpiochip0/2
-+/sys/kernel/debug/gpiochip/gpiochip0/3
-+...
-+/sys/kernel/debug/gpiochip/gpiochip1
-+/sys/kernel/debug/gpiochip/gpiochip1/0
-+/sys/kernel/debug/gpiochip/gpiochip1/1
-+...
-+
-+The exact files and design of the debugfs interface can be
-+discussed but the idea is to provide a low-level access point
-+for debugging and hacking and to expose all lines without the
-+need of any exporting. Also provide ample ammunition to shoot
-+oneself in the foot, because this is debugfs after all.
--- 
-2.26.2
+Patch applied!
 
+Yours,
+Linus Walleij
