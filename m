@@ -2,82 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D802CE933
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:08:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37DFF2CE93F
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:10:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgLDIHx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:07:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        id S1728347AbgLDIKL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:10:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgLDIHx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:07:53 -0500
+        with ESMTP id S1726122AbgLDIKK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:10:10 -0500
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D59C061A4F
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:07:12 -0800 (PST)
-Received: by mail-lj1-x242.google.com with SMTP id s9so5546211ljo.11
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:07:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F34C061A51
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:09:30 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id o24so5589517ljj.6
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:09:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yX8j4Zc6r/G3qEMx5P335vQOgY7XxWfI8gCDr2DAO3c=;
-        b=jOjb14vbi/ICQVDR+N5WlNELy+GMtxUHXHl63d4T9jWbwhs3ydZftkYWMXcjYh3iIv
-         zz4dCH5cwlou55Gp0mpTqSj4rgZltncqEtjV9SbkkoYe9/N4fq32oxhTVLlAGd8BKdUs
-         UR0V9LbEWqw0w7Zwu4HeOo6vzCTR3nlAWSwlHIx1lbW0MjINrHxYxBN7XXHf2js3MN91
-         u9mtvJZ+cTt+D0gE+eb+pQmN92QJ1cQ4rokNzZ70P5MYhz3Ff+UvRBE1e+LATNFo8aFR
-         lykS5c7Kgbkmq0snVKFdMB3Kg8/Yw943yTJgYek7MzzSMFuJRE3NJlizh8Lqzn5kDp3k
-         z0lg==
+        bh=60nFvN//5vKmx+XxqeLSc0jKpEu1cRheUue0ifjZ7b4=;
+        b=f6OweXEfl9JrvupUpkKoqg7SMskyzobz6044YhHiwMUT2N9bX5DVywIjVh3pF5OUxo
+         hqun2ifsaKfFE7BrpI8AJZo2Qbt7pnv/Z9CmXjMe1ERLsZ2JRodm2osC7KlxxAHmhbUh
+         o7eWwSm5wqdQCwNGlQKjC7pgfLtx8pUxgHs5N4ATO6oCOIEIe7KBUvUnpRTc17XxxTDV
+         8YfgMNwa1cI9LYbEGZOuR+Dk+bJSYA4xTcmPyaEV8m2uN4O0dQ8mvp0wfiSVidE50lQh
+         r1ozR4PSnCZdBcxOC2axsuAHY6pA2fv6cXbKnR3bKbspEd3xGWFTwYpsiJ1n1JHLE/Au
+         I9ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yX8j4Zc6r/G3qEMx5P335vQOgY7XxWfI8gCDr2DAO3c=;
-        b=UeAgSA6+R2EdJGkfBfccHtTOACAPs4VVlcJ3s5ekf261hK2XnzUwy8wr9j4c/Uz2o7
-         SoVyg/c+vtSOtmSqJqa/k7RHsluLG7LLoE4pXtt1pOdJLvbTNqNUYLXfCfmHN+tPQTFF
-         mVsqSt5D1mHWzxI72JBbYs8Wrz+Y6CDglKhwwFfMXsI5igVk7r2cl+kwOyp4S+VxmdR3
-         Ttul8BTXJ2Km4t0oK/iU+PWVifruPdYjagbqTh3S5mKkHnC/xipjgjVpHHp0mW3md5Y0
-         3yWqMhxXkxo/kqUvi8AZ187jqu9O9Lil5UOvyZX+6Tt/DIcWUM+cVjjy5wH9rDaMzSdA
-         tMTA==
-X-Gm-Message-State: AOAM530+lFyxRjbvIcEVHuxO8qpEgjwSQw8EUnDhQq3zapC9x3MYz4N3
-        ctZRMFJmH9O+ekX//+5LESwnhBBgKi9h0JcK2bjnu7D0a1WLtg==
-X-Google-Smtp-Source: ABdhPJyujIvA+3fbQ3u8na7bGvEvTitc/TtlhppiehVaP7Ddj81M94noixPJVvbspU0gwxZBNHJR1TblG5npcdIqJqw=
-X-Received: by 2002:a2e:321a:: with SMTP id y26mr2839981ljy.293.1607069231260;
- Fri, 04 Dec 2020 00:07:11 -0800 (PST)
+        bh=60nFvN//5vKmx+XxqeLSc0jKpEu1cRheUue0ifjZ7b4=;
+        b=L3BosHxXsX9tEN6Vz2RMW4ivxB6wUirEuKivAwf/5BTy4+hhvsab2XbDfvi3AWAOMV
+         q6Fxc4kIusVeIAMDIz9sIWpBfPC58MqOp+nbcEw3lSzejUyp+uVJjFDsb9pNQ/Qx/qCi
+         OMxLyJCpo1sV4vnosWGnkhN6UhN/WYz3QWVUnV8bIAAogZhLVfuNtymW67FV0kmGW/Ik
+         mP0cr3xiKPOsRgLRv30cYhm1amHanjrbvZfWVJD3QooFRREESMmDPbQu/OYXbLzC+i30
+         cqjhN2Wnc+1NVJO5TxSXl6EE/eMh2GUG077pKPJivYMElxSm5cFBIAO1MPpAUKIPyVlt
+         DcoA==
+X-Gm-Message-State: AOAM533xYxLcve3qSVriEMsoVUmF26RxPN76WG1n/weDWDgxrCRRHPXF
+        xOJyZyOmnAbXQj4HIADqQe8B/dPJDqBeOqOjgPbRcQ2z1qB/ug==
+X-Google-Smtp-Source: ABdhPJyyugrsBrx0EOfk3cw0ej3Ujc8kY3YZo5UGSOPAotCPDImR5GUdV6DLpKC1UVdJnSEGiK3GlrVkHHMyLNBL75c=
+X-Received: by 2002:a2e:b1c9:: with SMTP id e9mr2925633lja.283.1607069368855;
+ Fri, 04 Dec 2020 00:09:28 -0800 (PST)
 MIME-Version: 1.0
-References: <24505deb08d050eb4ce38f186f4037d7541ea217.1605722628.git.cristian.ciocaltea@gmail.com>
-In-Reply-To: <24505deb08d050eb4ce38f186f4037d7541ea217.1605722628.git.cristian.ciocaltea@gmail.com>
+References: <20201118191938.32693-1-festevam@gmail.com>
+In-Reply-To: <20201118191938.32693-1-festevam@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Dec 2020 09:07:00 +0100
-Message-ID: <CACRpkdY-7bCC5-yGQB+vhLX7ZRB4irH_3u7KcfKmN0QiiXpHwA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: actions: pinctrl-s500: Constify s500_padinfo[]
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-actions@lists.infradead.org
+Date:   Fri, 4 Dec 2020 09:09:17 +0100
+Message-ID: <CACRpkda3TpbXZn_eG+ZP14H8VFJ0js0nZXLqY++s0MhkbADRKA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxs: Remove unused .id_table support
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 7:10 PM Cristian Ciocaltea
-<cristian.ciocaltea@gmail.com> wrote:
+On Wed, Nov 18, 2020 at 8:19 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-> s500_padinfo[] is never modified and should be made 'const' to allow
-> the compiler to optimize code generation, i.e. put it in the text
-> section instead of the data section.
+> mxs is a devicetree-only platform and hence it does not make use
+> of the id_table mechanism.
 >
-> Before:
->    text    data     bss     dec     hex filename
->   12503    5088       0   17591    44b7 drivers/pinctrl/actions/pinctrl-s500.o
+> Get rid of the .id_table as it is unused.
 >
-> After:
->    text    data     bss     dec     hex filename
->   14435    3156       0   17591    44b7 drivers/pinctrl/actions/pinctrl-s500.o
->
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 
 Patch applied.
 
