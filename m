@@ -2,75 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A56282CE962
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:19:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAD902CE99E
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbgLDITS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:19:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbgLDITR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:19:17 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D0EC061A51
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:18:37 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id q13so6503200lfr.10
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:18:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BgQjS7gQq1hlMzOMWkicyzD5TPU/0rBQi3d50MpHvXk=;
-        b=A6wS7fSiRdRqJh0w+C5baSJ8MXvSjxuAeExfPI1DffG3xon7jxq0d+MEH3O/Eapvyt
-         0ZNhToGOQba6E+cpiw38iyPL7lrgWFZCJ9XHOxka6U8voWwgrcr4K0IT2LYqaFkSGKIM
-         Jm45pRKTASUIsfVzGCrhHTRre/FHaGx0BfIcxqbG7noRjs5blbm1StuMVsByXPgv6pEY
-         +EEcaGj7jLHi31tMJTJbzl9kNi3FQHjmiIWojKExhO8KpTsa17gsZGsdCr+nk9spcYuP
-         WFXTVFIe7Lzt5sI/AsknJowOmfOABzrYJMb+5KFXv6O3QjA42CmJY+fZpd/fEWK38uKX
-         F1KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BgQjS7gQq1hlMzOMWkicyzD5TPU/0rBQi3d50MpHvXk=;
-        b=M4VgjHnCK7yl17FgRcdEu2hPT8o06NOJ00h/FtMCN5MRMyydC9bxUjuSaKgJS48ma2
-         ti/uPFjRPbk7XHhhimxtYK3XZumKYjCnY5dY8LKqhnDFXhMutM8sqDL989ICNdBq3jmW
-         3JcgNGOCvIQZ0oJtgeqnSdDNxX9XZQkaV+kRHlUI3mddBqG/uwhOOhzGTAKBApdt151m
-         6HG9bYKiBxmU+nNUCI2IF7os35sqj0nCgD/T/56M4YNQzNPU75e9jYZQLObl6XJZkREW
-         NPgGz0w+RmLghE/4QtGiFCvRdvEmDWJ2HS1M3Sw/OzNFfX5tstnl6IAEMuFu2/opDtEO
-         EvQg==
-X-Gm-Message-State: AOAM533adzUJ95a00en4CQt3wqo8hu9BfZHdYIuedfEz3li5UHBf3aEs
-        cARg35YgWFLkikpRcPRQPlpQZiIyea1QXY388r0Q0A==
-X-Google-Smtp-Source: ABdhPJzdwTxSgpoTuZSw7pbs08kjXuXmhNScBCoylbhnJkoaRGoCFiMID+kU2gmYDGtZErQtFSYTQ9ffazTisrPJH7Y=
-X-Received: by 2002:a19:5f11:: with SMTP id t17mr2741438lfb.572.1607069915656;
- Fri, 04 Dec 2020 00:18:35 -0800 (PST)
+        id S1728831AbgLDIbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:31:14 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:42415 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgLDIbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:31:14 -0500
+Received: from [192.168.1.155] ([95.114.158.118]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1McY0J-1kAPBb3rJt-00cyWv; Fri, 04 Dec 2020 09:28:31 +0100
+Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
+To:     Michael Walle <michael@walle.cc>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org
+References: <20201127183003.2849-1-info@metux.net>
+ <CAMpxmJXJLTzM20xLCoM4spjibXbA-FfdPmOBp1QcV+9cScNNMw@mail.gmail.com>
+ <f14c0197-b346-7af5-9dd0-9b8018baaeaf@metux.net>
+ <b287f185d554b5a87b82ea8ca79cb5a2@walle.cc>
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+Message-ID: <8ab347b9-8b1a-f49f-d194-f98284fa6099@metux.net>
+Date:   Fri, 4 Dec 2020 09:28:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <e6241dd2-9ce8-9334-93f7-a4f84b20834e@web.de> <20201119011219.2248232-1-yukuai3@huawei.com>
-In-Reply-To: <20201119011219.2248232-1-yukuai3@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Dec 2020 09:18:24 +0100
-Message-ID: <CACRpkdZ9aOTFF=vO8UdQYj0g+JABwx-78ipP3Qj38jop+whMkg@mail.gmail.com>
-Subject: Re: [PATCH V2] pinctrl: falcon: add missing put_device() call in pinctrl_falcon_probe()
-To:     Yu Kuai <yukuai3@huawei.com>
-Cc:     Thomas Langer <thomas.langer@lantiq.com>,
-        John Crispin <blogic@openwrt.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        yi.zhang@huawei.com, zhangxiaoxu5@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b287f185d554b5a87b82ea8ca79cb5a2@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:dUT0JUegZ42giGfrKmvHoKDvhv2oHRjR2063rWeXiFKSlSKKSyF
+ WV3WiUrtvsZF8oudGAy6r09BIw/6WCr/bvdKoDhqqeFsgRNMxZiIcr/bEbVJVAbNONrMlLL
+ ZKyfCItATcn+5Cjf9IiwAlWeioaYBVHkZbBmOtEJMapTGLJGku2ayhdFc+ZdiwURrgBL1zQ
+ eYyGWJ48hhAM00fOJggdg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wJpMIBpJjRM=:Zv5F/JE0GNEQiLQcvQT3Kk
+ pvvBPGjOoKfmD6WIu2hZZcnJuc4GTp8QcZIOCWowwKSVSAYayPuVlHPEQBSd5V6Q1xlMbogB1
+ ZWbgeu2rVH0pueqyXhtJgRoLMTBBdPGQ8mirjUMQ7NR1LUc9HrN2CWbR/51Ggqh4j9F9o0MuA
+ 3acqKkusqAK1L0lguerq37BmBS7ugEVE4jJurmX+A4lhZ1+NNIpRcIr5sxHXQCmT/8aq/F1rJ
+ KdlTugkX5k5yx9l+2MusPfQefa6xGnZpi5GRsi/CvyJh6aZDDuk3csd7iDLX6/IF/qYkGx6g1
+ NFg6+7jGf9gJ+bSkiuomIcRIsWd9YFvB9RV/YO+OhY1uhUajnKCIsiRRG+YX2Unkn98FNq044
+ wVDPk/nv94eA/WxauJpokuglPDiEl86izI+N7eEyp5db3b9Ziib556pDZqpfk
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 2:08 AM Yu Kuai <yukuai3@huawei.com> wrote:
+On 03.12.20 23:35, Michael Walle wrote:
+> Am 2020-12-03 20:00, schrieb Enrico Weigelt, metux IT consult:
+>> On 02.12.20 15:15, Bartosz Golaszewski wrote:
+>>>> +               bufwalk = name_buffer;
+>>>> +
+>>>> +               while (idx < priv->num_gpios &&
+>>>> +                      bufwalk < (name_buffer+cf.names_size)) {
+>>>> +                       gpio_names[idx] = (strlen(bufwalk) ? bufwalk
+>>>> : NULL);
+>>>> +                       bufwalk += strlen(bufwalk)+1;
+>>>> +                       idx++;
+>>>
+>>>
+>>> Something's wrong with indentation here.
+>>
+>> i dont think so: the "bufwalk ..." line belongs to the while expression
+>> and is right under the "idx", as it should be. I didn't want to break up
+>> at the "<" operator. shall i do this instead ?
+> 
+> Or don't break the lines at all. Both lines don't add up to more than
+> 100 chars,
+> right?
 
-> if of_find_device_by_node() succeed, pinctrl_falcon_probe() doesn't have
-> a corresponding put_device(). Thus add put_device() to fix the exception
-> handling for this function implementation.
->
-> Fixes: e316cb2b16bb ("OF: pinctrl: MIPS: lantiq: adds support for FALCON SoC")
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+IIRC checkpatch complains at 80 chars. Has that been changed ?
 
-Patch applied!
 
-Yours,
-Linus Walleij
+--mtx
+
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
