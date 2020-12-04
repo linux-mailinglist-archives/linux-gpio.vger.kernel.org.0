@@ -2,340 +2,357 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF2792CEB17
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 10:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24B3C2CEB1A
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 10:40:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgLDJjo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 04:39:44 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:41131 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgLDJjo (ORCPT
+        id S1727518AbgLDJjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 04:39:45 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:9380 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729610AbgLDJjo (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 04:39:44 -0500
-Received: from [192.168.1.155] ([95.114.158.118]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MTigN-1kbbwT2HDJ-00U5aG; Fri, 04 Dec 2020 10:36:56 +0100
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mst@redhat.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
-Date:   Fri, 4 Dec 2020 10:36:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4CnSLz0Ww3z78TC;
+        Fri,  4 Dec 2020 17:38:35 +0800 (CST)
+Received: from [127.0.0.1] (10.57.22.126) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 4 Dec 2020
+ 17:38:55 +0800
+Subject: Re: [PATCH v1 1/3] gpio: gpio-hisi: Add HiSilicon GPIO support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+References: <1606901543-8957-1-git-send-email-luojiaxing@huawei.com>
+ <1606901543-8957-2-git-send-email-luojiaxing@huawei.com>
+ <20201202100405.GY4077@smile.fi.intel.com>
+From:   luojiaxing <luojiaxing@huawei.com>
+Message-ID: <492f6852-48f0-891f-c017-65d3562144a6@huawei.com>
+Date:   Fri, 4 Dec 2020 17:38:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
+In-Reply-To: <20201202100405.GY4077@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mOFd+JW7LQb94sy2J5a6Zrm6GQyrCzOe1foidRfS2Sdq5ZJFDNr
- c9yXWiDh78oST49XU5yOT2hkWmi+sHBEeoCthMcDLadIjN7f33OyR95JbbbWC81VZvkKsJ2
- CyEL1bcP6HGIcQKMdx+26NZtYVdXg7Tmeoc3QjBu3oN58zjc3+CyfltBuq0Ay50wvkv6a5l
- qfTjbCjDluCwMRQUxcNqg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qtpKIGiM1QU=:9HXPFi4Z0pQrtpSEQjPRtZ
- JtGyl92IC0eeKKCWknd9gvTWDpN+lXZQKRBaJ+lBRKjFApBrEvqRmswQ1aAhRYb2w+eejfugo
- eC7B3VI6W6sRYKGQQMrDDzkH6ZXjoirbr+q28PGbRyY+bzodAnvWs1EGx2M/aqG69gdvjLTRX
- 6IMYsUTKWhk4usvsgW11YbdKH1e/y31rqbdHNMpVFr4Ti4gWYsVgEegiUoLuYuKdqdU+TkU5n
- x5yzzR3+5yAODcNZy9zjHJBRGxLg8AxpAcX69/elxA+GjkIbMvPMeytzQDiMEocj2QpfQVGMq
- 86j47f6GvwRDPf/me9+9BhZfqUTplqzJ5Sc4MFXJirhwcP2QgerCKlvMiwJgq9yetG/xUIeIW
- u8O9OjFfy3L6ZFMNe2TJMvNljme/73qPxwpWAKQ9DrqGX7uqhJ/PC2MDHpPGO
+Content-Language: en-US
+X-Originating-IP: [10.57.22.126]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04.12.20 04:35, Jason Wang wrote:
+Hi
 
-Hi,
+On 2020/12/2 18:04, Andy Shevchenko wrote:
+> On Wed, Dec 02, 2020 at 05:32:21PM +0800, Luo Jiaxing wrote:
+>> This GPIO driver is for HiSilicon's ARM SoC.
+>>
+>> HiSilicon's GPIO controller support double-edge interrupt and multi-core
+>> concurrent access.
+>>
+>> ACPI table example for this GPIO controller:
+>> Device (GPO0)
+>> {
+>> 	Name (_HID, "HISI0184")
+>> 	Device (PRTA)
+>> 	{
+>> 		Name (_ADR, Zero)
+>> 		Name (_UID, Zero)
+>> 		Name (_DSD, Package (0x01)
+>> 		{
+>> 			Package (0x02)
+>> 			{
+>> 				"hisi-ngpio",
+> Can it be standard property?
 
-> Is the plan to keep this doc synced with the one in the virtio
-> specification?
 
-Yes, of course. I'm still in progress of doing the beaurocratic stuff w/
-virtio-tc folks (ID registration, ...) - yet have to see whether they
-wanna add it to their spec documents ...
+sure, I think you mean that "ngpios" should be used here.
 
-BTW: if you feel, sometings not good w/ the current spec, please raise
-your voice now.
 
-> I think it's better to use u8 ot uint8_t here.Git grep told me the
-> former is more popular under Documentation/.
+> Please, fix firmware.
+>
+>> 				0x20
+>> 			}
+>> 		})
+>> 	}
+>> }
+> ...
+>
+>> +config GPIO_HISI
+>> +	tristate "HISILICON GPIO controller driver"
+>> +	depends on (ARM64 && ACPI) || COMPILE_TEST
+> This is wrong. (Homework to understand why. Also see below)]
 
-thx, I'll fix that
 
->> +- for version field currently only value 1 supported.
->> +- the line names block holds a stream of zero-terminated strings,
->> +  holding the individual line names.
-> 
-> I'm not sure but does this mean we don't have a fixed length of config
-> space? Need to check whether it can bring any trouble to
-> migration(compatibility).
+I think it should be
 
-Yes, it depends on how many gpio lines are present and how much space
-their names take up.
+depends on (ARM64 || COMPILE_TEST) && ACPI
 
-A fixed size would either put unpleasent limits on the max number of
-lines or waste a lot space when only few lines present.
 
-Not that virtio-gpio is also meant for small embedded workloads running
-under some hypervisor.
+>
+>> +	select GPIO_GENERIC
+>> +	select GENERIC_IRQ_CHIP
+>> +	help
+>> +	  Say Y or M here to build support for the HiSilicon GPIO controller driver
+>> +	  GPIO block.
+>> +	  This controller support double-edge interrupt and multi-core concurrent
+>> +	  access.
+> No module name?
 
->> +- unspecified fields are reserved for future use and should be zero.
+
+sorry, I didn't get what you mean. What module name should I add here?
+
+
+>
+> ...
+>
+>> +/*
+>> + * Copyright (c) 2020 HiSilicon Limited.
+>> + */
+> One line.
+
+
+ok
+
+
+>
+> ...
+>
+>> +#include <linux/acpi.h>
+> Don't see user of it (but see above and below as well).
+> At the same time missed mod_devicetable.h.
+
+
+sure, let me check it.
+
+
+>> +#include <linux/gpio/driver.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/property.h>
+> ...
+>
+>> +#include "gpiolib.h"
+>> +#include "gpiolib-acpi.h"
+> Any user of this?
+
+
+This should be deleted, I used to use 
+acpi_gpiochip_request_interrupts(), but delete it later.
+
+
+>
+> ...
+>
+>> +#define HISI_GPIO_SWPORT_DR_SET_WX	0x0
+> 	...
+>> +#define HISI_GPIO_INT_DEDGE_SET		0xb0
+> 	...
+>> +#define HISI_GPIO_REG_MAX	0x100
+> Use fixed width for register offsets, like:
+> 	0x000
+> 	...
+> 	0x0b0
+> 	...
+> 	0x100
+
+
+ok
+
+
+> ...
+>
+>> +struct hisi_gpio {
+>> +	struct device		*dev;
+>> +	void __iomem		*reg_base;
+>> +	unsigned int		pin_num;
+>> +	struct gpio_chip	chip;
+> Moving this to be a first member of the struct will make corresponding
+> container_of() no-op.
+
+
+sure
+
+
+>
+>> +	struct irq_chip		irq_chip;
+>> +	int			irq;
+>> +};
+> ...
+>
+>> +	unsigned long mask = BIT(off);
+> No need to have temporary variable. Use directly BIT(off) which fits into 80.
+
+
+sure
+
+
 >> +
->> +------------------------
->> +Virtqueues and messages:
->> +------------------------
+>> +	if (debounce)
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_DEBOUNCE_SET_WX, mask);
+>> +	else
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_DEBOUNCE_CLR_WX, mask);
+> ...
+>
+>> +	switch (config_para) {
+>> +	case PIN_CONFIG_INPUT_DEBOUNCE:
+>> +		config_arg = pinconf_to_config_argument(config);
+>> +		hisi_gpio_set_debounce(chip, offset, config_arg);
+>> +		break;
+> Move...
+>
+>> +	default:
+>> +		return -ENOTSUPP;
+>> +	}
 >> +
->> +- Queue #0: transmission from host to guest
->> +- Queue #1: transmission from guest to host
-> 
-> 
-> Virtio became more a popular in the area without virtualization. So I
-> think it's better to use "device/driver" instead of "host/guest" here.
+>> +	return 0;
+> ...this above.
 
-Good point. But I'd prefer "cpu" instead of "driver" in that case.
 
-> Not a native speaker but event sounds like something driver read from
-> device. Looking at the below lists, most of them except for
-> VIRTIO_GPIO_EV_HOST_LEVEL looks more like a command.
+Sorry, what do you mean by Move ... this above?
 
-okay, shall I name it "message" ?
 
-> Another question is, what's the benefit of unifying the message format
-> of the two queues. E.g VIRTIO_GPIO_EV_HOST_LEVEL can only works fro rxq.
+>
+> ...
+>
+>> +	/* Return 0 if output, 1 if input */
+> Useless comment.
 
-Simplicity. Those fields that aren't really relevant (eg. replies also
-carry the line id), can just be ignored.
 
-> Not familiar with GPIO but I wonder the value of a standalone
-> VIRTIO_GPIO_EV_GUEST_DIRECTION_INPUT/OUTPUT. Can we simply imply them in
-> SET/GET_VALUE?
+will be deleted
 
-Would introduce more complexity. Somewhere I'd have to fit in some extra
-bit for differenciating between line state and line direction. The
-direction tells whether the line currently acts as input or output. The
-"value" (hmm, maybe I should rethink terminology here) is the current
-line level (high/low or active/inactive).
 
->> +----------------------
->> +Data flow:
->> +----------------------
->> +
->> +- all operations, except ``VIRTIO_GPIO_EV_HOST_LEVEL``, are
->> guest-initiated
->> +- host replies ``VIRTIO_GPIO_EV_HOST_LEVEL`` OR'ed to the ``type`` field
->> +- ``VIRTIO_GPIO_EV_HOST_LEVEL`` is only sent asynchronically from
->> host to guest
->> +- in replies, a negative ``value`` field denotes an unix-style errno
->> code
-> 
-> 
-> Virtio is in a different scope, so we need to define the error code on
-> our own.
-> 
-> E.g for virtio-net we define:
-> 
-> 
-> #define VIRTIO_NET_OK     0
-> #define VIRTIO_NET_ERR    1
-
-hmm, so I'd need to define all the error codes that possibly could happen ?
-
->>   +config GPIO_VIRTIO
->> +    tristate "VirtIO GPIO support"
->> +    depends on VIRTIO
-> 
-> 
-> Let's use select, since there's no prompt for VIRTIO and it doesn't have
-> any dependencies.
-
-Ok. I just was under the impression that subsystems and busses should
-not be select'ed, but depends on (eg. some time ago tried that w/ gpio
-subsys and failed).
-
->> +    help
->> +      Say Y here to enable guest support for virtio-based GPIOs.
->> +
->> +      These virtual GPIOs can be routed to real GPIOs or attached to
->> +      simulators on the host (qemu).
-> 
-> 
-> It's better to avoid talking host and qemu here for new virtio devices.
-
-Ok, dropped that line.
-
->> +static int virtio_gpio_xmit(struct virtio_gpio_priv *priv, int type,
->> +                int pin, int value, struct virtio_gpio_event *ev)
+>
+> ...
+>
+>> +static int hisi_gpio_irq_set_type(struct irq_data *d, u32 type)
 >> +{
->> +    struct scatterlist sg[1];
->> +    int ret;
->> +    unsigned long flags;
+>> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+>> +	unsigned int mask = BIT(irqd_to_hwirq(d));
 >> +
->> +    WARN_ON(!ev);
+>> +	switch (type) {
+>> +	case IRQ_TYPE_EDGE_BOTH:
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INT_DEDGE_SET, mask);
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_RISING:
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INTTYPE_EDGE_SET_WX, mask);
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INT_POLARITY_SET_WX, mask);
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_FALLING:
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INTTYPE_EDGE_SET_WX, mask);
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INT_POLARITY_CLR_WX, mask);
+>> +		break;
+>> +	case IRQ_TYPE_LEVEL_HIGH:
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INTTYPE_EDGE_CLR_WX, mask);
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INT_POLARITY_SET_WX, mask);
+>> +		break;
+>> +	case IRQ_TYPE_LEVEL_LOW:
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INTTYPE_EDGE_CLR_WX, mask);
+>> +		hisi_gpio_write_reg(chip, HISI_GPIO_INT_POLARITY_CLR_WX, mask);
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
 >> +
->> +    ev->type = type;
->> +    ev->pin = pin;
->> +    ev->value = value;
+>> +	/*
+>> +	 * The dual-edge interrupt and other interrupt's registers do not
+>> +	 * take effect at the same time. The registers of the two-edge
+>> +	 * interrupts have higher priorities, the configuration of
+>> +	 * the dual-edge interrupts must be disabled before the configuration
+>> +	 * of other kind of interrupts.
+>> +	 */
+> This comment sounds like below should be moved before switch-case. Can you elaborate?
+
+
+Our GPIO controller uses two separate registers to enable/disable the 
+double-edge interrupt,
+
+and once enable double-edge, the setting of edge and polarity register() 
+will be ignored by the hardware.
+
+Therefore, each time we update trigger type, an extra check is required: 
+if the interrupt is not double-edges, ensure that it is disabled.
+
+
+>
+>> +	if (type != IRQ_TYPE_EDGE_BOTH) {
+>> +		unsigned int both = hisi_gpio_read_reg(chip, HISI_GPIO_INT_DEDGE_ST);
 >> +
->> +    sg_init_table(sg, 1);
->> +    sg_set_buf(&sg[0], ev, sizeof(struct virtio_gpio_event));
+>> +		if (both & mask)
+>> +			hisi_gpio_write_reg(chip, HISI_GPIO_INT_DEDGE_CLR, mask);
+>> +	}
 >> +
->> +    spin_lock_irqsave(&priv->vq_lock, flags);
->> +    ret = virtqueue_add_outbuf(priv->vq_tx, sg, ARRAY_SIZE(sg),
->> +                   priv, GFP_KERNEL);
->> +    if (ret < 0) {
->> +        dev_err(&priv->vdev->dev,
->> +            "virtqueue_add_outbuf() failed: %d\n", ret);
->> +        goto out;
-> 
-> 
-> So except for the error log, the failure is silently ignored by the
-> caller. Is this intended?
-
-ups, I've forgotten the error handling in the caller. fixed in v3.
-
->> +static int virtio_gpio_req(struct virtio_gpio_priv *priv, int type,
->> +               int pin, int value)
->> +{
->> +    struct virtio_gpio_event *ev
->> +        = kzalloc(&priv->vdev->dev, sizeof(struct virtio_gpio_event),
->> +              GFP_KERNEL);
+>> +	if (type & IRQ_TYPE_LEVEL_MASK)
+>> +		irq_set_handler_locked(d, handle_level_irq);
+>> +	else if (type & IRQ_TYPE_EDGE_BOTH)
+>> +		irq_set_handler_locked(d, handle_edge_irq);
 >> +
->> +    if (!ev)
->> +        return -ENOMEM;
+>> +	return 0;
+>> +}
+> ...
+>
+>> +	while (irq_msk) {
+>> +		int hwirq = fls(irq_msk) - 1;
+>> +		irq_msk &= ~BIT(hwirq);
+>> +	}
+> NIH of for_each_set_bit().
+
+
+sure,  it's better than fls
+
+
+>
+> ...
+>
+>> +	res = bgpio_init(&hisi_gpio->chip, hisi_gpio->dev, HISI_GPIO_REG_SIZE, dat, set,
+>> +			 clr, NULL, NULL, 0);
+>> +	if (res) {
+>> +		dev_err(dev, "failed to init\n");
+>> +		return res;
+>> +	}
+> Wondering if you can use regmap GPIO.
+
+
+I looked at gpio-regmap.c, which is a newly uploaded feature. I think 
+it's good, but I'd rather keep the current design.
+
+Because it means my code needs to be modified and re-tested, this will 
+take a while, but the actual business needs will not allow it.
+
+
+>
+> ...
+>
+>> +static struct platform_driver hisi_gpio_driver = {
+>> +	.driver		= {
+>> +		.name	= HISI_GPIO_DRIVER_NAME,
+>> +		.acpi_match_table = ACPI_PTR(hisi_gpio_acpi_match),
+> This is wrong. If you use COMPILE_TEST the ACPI_PTR in !ACPI case is no op.
+> Compiler will warn you about unused variable. Have you compile tested it in
+> such conditions?
+>
+> Hint: remove ACPI_PTR(). In 99% this macro shouldn't be used.
+
+
+sure
+
+
+>
+>> +	},
+>> +	.probe		= hisi_gpio_probe,
+>> +};
 >> +
->> +    clear_event(priv, type);
->> +    virtio_gpio_xmit(priv, type, pin, value, ev);
->> +    wait_event_interruptible(priv->waitq, check_event(priv, type));
-> 
-> 
-> If I read the code correctly, this expects there will be at most a
-> single type of event that can be processed at the same time. E.g can
-> upper layer want to read from different lines in parallel? If yes, we
-> need to deal with that.
-
-@Linus @Bartosz: can that happen or does gpio subsys already serialize
-requests ?
-
-Initially, I tried to protect it by spinlock (so, only one request may
-run at a time, other calls just wait until the first is finished), but
-it crashed when gpio cdev registration calls into the driver (fetches
-the status) while still in bootup.
-
-Don't recall the exact error anymore, but something like an
-inconsistency in the spinlock calls.
-
-Did I just use the wrong type of lock ?
-
->> +static void virtio_gpio_data_rx(struct virtqueue *vq)
->> +{
->> +    struct virtio_gpio_priv *priv = vq->vdev->priv;
->> +    void *data;
->> +    unsigned int len;
->> +    struct virtio_gpio_event *ev;
->> +
->> +    data = virtqueue_get_buf(priv->vq_rx, &len);
->> +    if (!data || !len) {
->> +        dev_warn(&vq->vdev->dev, "RX received no data ! %d\n", len);
->> +        return;
->> +    }
->> +
->> +    ev = data;
->> +    WARN_ON(data != &priv->rcv_buf);
->> +
->> +    memcpy(&priv->last, &priv->rcv_buf, sizeof(struct
->> virtio_gpio_event));
->> +
->> +    switch (ev->type) {
->> +    case VIRTIO_GPIO_EV_HOST_LEVEL:
->> +        virtio_gpio_signal(priv, ev->type, ev->pin, ev->value);
->> +        break;
->> +    default:
->> +        wakeup_event(priv, ev->type & ~VIRTIO_GPIO_EV_REPLY);
-> 
-> 
-> This looks suspicious, it looks to me what is done here is, consider we
-> want to do VIRTIO_GPIO_EV_GUEST_SET_VALUE
-> 
-> 1) put the event in txq, wait
-> 2) the result is returned from rxq, wakeup
-> 
-> It looks to me this is racy since the device should be able to process a
-> batch of descriptors and there's no guarantee that the descriptor is
-> processed in order from the virtio level.
-
-Not sure whether we're on the same page, but:
-
-VIRTIO_GPIO_EV_HOST_LEVEL is kinda interrupt - it tells cpu when the
-input has changed level. We can receive this async event, it shouldn't
-matter whether somebody else (another thread) is doing a regular call,
-thus waiting for reply at the same time. The reply will be next in
-queue.
-
-What could go wrong here ?
+> Redundant blank line.
 
 
-> I wonder why not introduce two virtqueues:
-> 
-> 1) command vq
-> 2) event vq
-> 
-> All commands were sent via command vq and then device can write back to
-> the command buffer as other virtio device did. Then there's no worries
-> of batching or out of order completion.
-
-I've been under the impression that queues only work in only one
-direction. (at least that's what my web research was telling).
-
-Could you please give an example how bi-directional transmission within
-the same queue could look like ?
-
->> +        break;
->> +    }
->> +    virtio_gpio_prepare_inbuf(priv);
-> 
-> 
-> This assumes at most one event could be generated, is this how GPIO
-> device expect to behave? I think level could change several times.
-
-Should I add more buffers ?
-
-Maybe add one new buffer per request and one new per received async
-signal ?
-
->> +static int virtio_gpio_probe(struct virtio_device *vdev)
->> +{
->> +    struct virtio_gpio_priv *priv;
->> +    struct virtio_gpio_config cf = {};
->> +    char *name_buffer;
->> +    const char **gpio_names = NULL;
->> +    struct device *dev = &vdev->dev;
->> +
->> +    priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
-> 
-> 
-> Is devres guaranteed to be enabled here?
-
-How should it not ? Could virtio probing so early that even devm
-isn't working yet ?
+sure
 
 
---mtx
+Thanks
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Jiaxing
+
+
+>
+>> +module_platform_driver(hisi_gpio_driver);
+
