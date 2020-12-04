@@ -2,85 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 400E72CEA48
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:54:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11BAC2CEA4F
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:56:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgLDIxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:53:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41994 "EHLO
+        id S1729162AbgLDI4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:56:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgLDIxp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:53:45 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDF3C061A51
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:53:05 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id s30so6641474lfc.4
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:53:05 -0800 (PST)
+        with ESMTP id S1725866AbgLDI4D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:56:03 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841A4C061A4F
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:55:17 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id u9so1108495lfm.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:55:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OvnhVAvJ+aVTGs3i380olP2vILDpA1stTISjjteIyyo=;
-        b=kHXlscX2tTXD1z5Yaey7v8lWrMbkzDRF0BdDvZi4O0qBqBXhAZBG0lXBM9zWaP0/dZ
-         1hFDdJ07vxlyRg4S/rtMjfsFZvjygoy+PEwX4/8snWeMhDs2AbgBZ+0q6hc7e+93SUiA
-         U74hpS93K7ZZhJoA5dXo/roez9nkDFmOHRq+eBYg6lnGXbAtAFrUnF6AnnitgoQVYgMv
-         YVx/jriftYzolvI41VMMclIT8HhXQBcmmCnTFYIakSVlbiIBKfjTBNmsBI7Umy9yqxZ2
-         6r2vVeE29nTQgcxiB1HGf7diQpk6QSQASqOcoX3evpdcTeSaPi/YwW8nZPfsfdRLvZHc
-         k+Wg==
+        bh=w11pISD3ZzCp+PCHo3vHRCO9EBjGTo8P0aXtAJmnTo4=;
+        b=fgfeaSr4dZ0rRbcUlwIHDyO/G44Arb5zXnT+n42ij23Uv6FesC5DuO4rSkJsU62+oK
+         6bs1UjbBeQGnkJhvJ2pxdyM6wp1POla4qNbmrnNIg07vJhO7J1bJT8Xoq5DV994CwLK9
+         jxOFbwfPP+CyK9N/ynjjPYb7OmALM4TgS9tUKXWTQUgylIsfwHx4NFaxGO7EOtsZ16wv
+         jCTxlgpWZDiuoKA6rkUwUsiR5Eu7r9I6TSFB27D6RJCRVAXQZr36BNG178rMo1T3obq4
+         5RpNb4seqeG7O7fzxVxm333qQWqoH7WlGGtziRYgXzrX9s2qsGnD7MabeFqvIt2V1fUF
+         /0GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OvnhVAvJ+aVTGs3i380olP2vILDpA1stTISjjteIyyo=;
-        b=BmgaCRelLfHn7jYGkiSII9/PKwe9WF69p9V85R5Zm1AR5nYURjmWZH1xd+rhX9AR29
-         b0sRSKZMjlfVQgvR0tdCxu5KuyCst1kdXMhdHcjKD2JfkGFmHTGEeFoioEC/7myz+API
-         5vbNNN6ASRibeozfd9T6zQip4/uJplqxPaAA08PUUx4nitAqlHXapRqurNWqi0JEtlNo
-         aFVavLsCr4XDdRZQ2K0/sG+cVaBk8qwotFTJY3xdE6uYaTPPkcCsvMWKYxpuqoLmcUbn
-         KluiGMEgNv4jdy2zsrWvEYo2v3J69m0W0teIaLPRbpxr1jEpVAQ74Znhwxr4I0KsQZ9V
-         3ZAA==
-X-Gm-Message-State: AOAM530J6JLleDy/T5H7J9ObI0Osq+hAka7L67zPhlqFbn3RlqvYRiV8
-        k80AiATJDawADRZS3sqJ07H4y4wgFJ2F3UXUko/mIg==
-X-Google-Smtp-Source: ABdhPJwuilOTB0n9qQh2b7zD4iD8K4vY/jP5i3QcM9ws3a1L8Gv28Ri/VitZSRGz8yfhbh6HJpnyAk7clI8dOhuPLPk=
-X-Received: by 2002:ac2:4308:: with SMTP id l8mr2780465lfh.260.1607071983809;
- Fri, 04 Dec 2020 00:53:03 -0800 (PST)
+        bh=w11pISD3ZzCp+PCHo3vHRCO9EBjGTo8P0aXtAJmnTo4=;
+        b=fv07eWwdfYTzMKoJ191S+jf5cIATyCNVEY0/9QpT4obfV7xvG67yhyAA1Uj94U97Yy
+         zYqXFab2MvHHTWFqQhhZt/uewEyVmndiG7S5bM1IoYg2J89fel/Fl57uZb15eSOqOHTw
+         7vb9YEthAmn/Yt2UPHOvK+lU7XBh2eCZ8T0bvLNBPdM+3qFrAKWy2DzqFXqWQzQAKDMS
+         ZTkx7T7WP8lXUL3xPEJK0xmzDbtpYHBK9TiVl9LSluaCpA8AOmjy1GxwPXZnl1zuYMKm
+         PpKJVOHUNk682dy/vyxF9OYsrJCNKBqmdPWrh+hLFuPtoqAoZYPGpehuQ/c1vKOXRVwD
+         Z9VA==
+X-Gm-Message-State: AOAM533MDyPtP30icVZdDJyegd1CpdIO6dO5SpLHZwUXiKHaDAQAmUzu
+        LGta+0gOzWR+qY1VEg70cqsqUum8ZTrCXAc/9Mcoh5YgO/Hq6Q==
+X-Google-Smtp-Source: ABdhPJzRAVBef0NNjG8hXo9GslnzbC1enX5sHI4l2bPqpkojJh7SNn+3F8d8H2uAIItko0ROzOWp935Bwubt4c44eK8=
+X-Received: by 2002:a19:8d8:: with SMTP id 207mr2748031lfi.441.1607072116080;
+ Fri, 04 Dec 2020 00:55:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20201124094636.v2.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
- <CAD=FV=W2i7dfcg2J2a-EO8nBvwHU0AMp79Esoy1Y=H_hNc+jvw@mail.gmail.com>
-In-Reply-To: <CAD=FV=W2i7dfcg2J2a-EO8nBvwHU0AMp79Esoy1Y=H_hNc+jvw@mail.gmail.com>
+References: <1606209423-4742-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1606209423-4742-1-git-send-email-yangtiezhu@loongson.cn>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Dec 2020 09:52:53 +0100
-Message-ID: <CACRpkdb_v0f-D6arQbUL_F2z7ZkQ5SUn+AOKSzyWVaBpC-9Q=g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] irqchip: qcom-pdc: Fix phantom irq when changing
- between rising/falling
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Archana Sathyakumar <asathyak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 4 Dec 2020 09:55:05 +0100
+Message-ID: <CACRpkdb_2uCoJhYK5QKXK5YDiOrfjpa1-uUp=zqY63fFJHT6WA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91-pio4: Make PINCTRL_AT91PIO4 depend on
+ HAS_IOMEM to fix build error
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 10:32 PM Doug Anderson <dianders@chromium.org> wrote:
+On Tue, Nov 24, 2020 at 10:17 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-> NOTE: even though this has Maulik's tags, he has requested [1] that we
-> should wait before landing while he talks with HW folks.
+> If CONFIG_HAS_IOMEM is not set, devm_platform_ioremap_resource() will
+> be not built in drivers/base/platform.c and then there exists a build
+> error about undefined reference to "devm_platform_ioremap_resource"
+> in pinctrl-at91-pio4.c under COMPILE_TEST and CONFIG_PINCTRL_AT91PIO4,
+> make PINCTRL_AT91PIO4 depend on HAS_IOMEM to fix it.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-OK I'm holding this series back until you have confirmation.
-When you know you want it applied, poke me (or send a new
-iteration).
+Patch applied as non-critical fix for v5.11.
 
 Yours,
 Linus Walleij
