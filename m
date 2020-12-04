@@ -2,94 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAD902CE99E
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:31:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B2502CE9FA
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Dec 2020 09:39:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgLDIbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 03:31:14 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:42415 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgLDIbO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:31:14 -0500
-Received: from [192.168.1.155] ([95.114.158.118]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1McY0J-1kAPBb3rJt-00cyWv; Fri, 04 Dec 2020 09:28:31 +0100
-Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
-To:     Michael Walle <michael@walle.cc>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+        id S1727479AbgLDIiT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Dec 2020 03:38:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgLDIiT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 03:38:19 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E67C061A52
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Dec 2020 00:37:38 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id s9so5636186ljo.11
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Dec 2020 00:37:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kb+N/BiD+8VZLhG5BIu1MXMjUnmAPmkEZ70mPpWWHns=;
+        b=Qu9ZyLYSlaTnUm0W8h/57N0QTm49ArZCAa2ep9KVOBgAJpoylLFQuJ3Xx7mfZ/tznJ
+         kH+HIrhIm/q4iOC9lPVvnYUgYORIWqqa1U0aYtZloFV4ZkCh+T2Al6Lxuvtg/B08BYxP
+         nt6L7HC92fX3/4PbgQHaPGBKolmyCPDYv6F0HFZi9njJ1Hb6Sq0LOU163xVlSpk8kfOe
+         m0E3q7z4quHZ/p2AkzzSORWdBBnQlACZESgfpS5Vs49pc2kKQY2KUauuDEShJm+rdE2C
+         wQp2s75yV/at9d7IGMcmJnOqofcpNeMxZzmaYhU/wnWHDPEto3NPUxx6vzC4inBhWjK+
+         av1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kb+N/BiD+8VZLhG5BIu1MXMjUnmAPmkEZ70mPpWWHns=;
+        b=gMTrZiiPgIhSMMcKgi2ulQvZsi0/xNedyHJ6bXk/i4q2DRuSvEwq5UOvLNP+99hfx6
+         ipHUPoruTP1eDL11ZCURQPyQPcblOW3CwMWqQVu8B4gFGnb40Kx1hsYyZLaxp2Z/wsMD
+         8v330bhLJJz5Mb6sdnXZWUeUabvIGB7w8Hl2SoJFK45eqQNy2EysHtIEeB8PqaZleGQy
+         dOyrXuxb9xUx9DEmj/voL9D7ZR6MI3gfBgj0k8LYj77igGcuaqWEeF8szpYDAhMIx2nG
+         +hxvEKZc6op+Got2zEjgtVT6lgDZ3N6rsXc59e4dydfETvp+/gmLYHe/er7MDYpyxj37
+         Txgg==
+X-Gm-Message-State: AOAM531O7AYNW80mKG/UsK/sLT0yO5Z7NejsNqFfxgNOjxvQYSkT8Crq
+        FuSmzmcMtpYa0SAJ4+Y9lUoIeLAXS3G30Xf0
+X-Google-Smtp-Source: ABdhPJza8rjFOxM2B4TjmFeYzFseMOaK8uDrVu+u6np2VgctFAo1tsj7PBUVot135ScLMiY/nMqXDA==
+X-Received: by 2002:a2e:8496:: with SMTP id b22mr2994298ljh.252.1607071056990;
+        Fri, 04 Dec 2020 00:37:36 -0800 (PST)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id q5sm1426795ljc.46.2020.12.04.00.37.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Dec 2020 00:37:36 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201127183003.2849-1-info@metux.net>
- <CAMpxmJXJLTzM20xLCoM4spjibXbA-FfdPmOBp1QcV+9cScNNMw@mail.gmail.com>
- <f14c0197-b346-7af5-9dd0-9b8018baaeaf@metux.net>
- <b287f185d554b5a87b82ea8ca79cb5a2@walle.cc>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <8ab347b9-8b1a-f49f-d194-f98284fa6099@metux.net>
-Date:   Fri, 4 Dec 2020 09:28:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: Add TODO item for debugfs interface
+Date:   Fri,  4 Dec 2020 09:35:33 +0100
+Message-Id: <20201204083533.65830-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <b287f185d554b5a87b82ea8ca79cb5a2@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:dUT0JUegZ42giGfrKmvHoKDvhv2oHRjR2063rWeXiFKSlSKKSyF
- WV3WiUrtvsZF8oudGAy6r09BIw/6WCr/bvdKoDhqqeFsgRNMxZiIcr/bEbVJVAbNONrMlLL
- ZKyfCItATcn+5Cjf9IiwAlWeioaYBVHkZbBmOtEJMapTGLJGku2ayhdFc+ZdiwURrgBL1zQ
- eYyGWJ48hhAM00fOJggdg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wJpMIBpJjRM=:Zv5F/JE0GNEQiLQcvQT3Kk
- pvvBPGjOoKfmD6WIu2hZZcnJuc4GTp8QcZIOCWowwKSVSAYayPuVlHPEQBSd5V6Q1xlMbogB1
- ZWbgeu2rVH0pueqyXhtJgRoLMTBBdPGQ8mirjUMQ7NR1LUc9HrN2CWbR/51Ggqh4j9F9o0MuA
- 3acqKkusqAK1L0lguerq37BmBS7ugEVE4jJurmX+A4lhZ1+NNIpRcIr5sxHXQCmT/8aq/F1rJ
- KdlTugkX5k5yx9l+2MusPfQefa6xGnZpi5GRsi/CvyJh6aZDDuk3csd7iDLX6/IF/qYkGx6g1
- NFg6+7jGf9gJ+bSkiuomIcRIsWd9YFvB9RV/YO+OhY1uhUajnKCIsiRRG+YX2Unkn98FNq044
- wVDPk/nv94eA/WxauJpokuglPDiEl86izI+N7eEyp5db3b9Ziib556pDZqpfk
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03.12.20 23:35, Michael Walle wrote:
-> Am 2020-12-03 20:00, schrieb Enrico Weigelt, metux IT consult:
->> On 02.12.20 15:15, Bartosz Golaszewski wrote:
->>>> +               bufwalk = name_buffer;
->>>> +
->>>> +               while (idx < priv->num_gpios &&
->>>> +                      bufwalk < (name_buffer+cf.names_size)) {
->>>> +                       gpio_names[idx] = (strlen(bufwalk) ? bufwalk
->>>> : NULL);
->>>> +                       bufwalk += strlen(bufwalk)+1;
->>>> +                       idx++;
->>>
->>>
->>> Something's wrong with indentation here.
->>
->> i dont think so: the "bufwalk ..." line belongs to the while expression
->> and is right under the "idx", as it should be. I didn't want to break up
->> at the "<" operator. shall i do this instead ?
-> 
-> Or don't break the lines at all. Both lines don't add up to more than
-> 100 chars,
-> right?
+The idea to create a debugfs to replace the aging and
+dangerous sysfs ABI for hacking and tinkering came up
+on the list.
 
-IIRC checkpatch complains at 80 chars. Has that been changed ?
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/TODO | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-
---mtx
-
-
+diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+index cd04e0b60159..b49ad263c516 100644
+--- a/drivers/gpio/TODO
++++ b/drivers/gpio/TODO
+@@ -142,3 +142,39 @@ use of the global GPIO numbers. Once the above is complete, it may
+ make sense to simply join the subsystems into one and make pin
+ multiplexing, pin configuration, GPIO, etc selectable options in one
+ and the same pin control and GPIO subsystem.
++
++
++Debugfs in place of sysfs
++
++The old sysfs code that enables simple uses of GPIOs from the
++command line is still popular despite the existance of the proper
++character device. The reason is that it is simple to use on
++root filesystems where you only have a minimal set of tools such
++as "cat", "echo" etc.
++
++The old sysfs still need to be strongly deprecated and removed
++as it relies on the global GPIO numberspace that assume a strict
++order of global GPIO numbers that do not change between boots
++and is independent of probe order.
++
++To solve this and provide an ABI that people can use for hacks
++and development, implement a debugfs interface to manipulate
++GPIO lines that can do everything that sysfs can do today: one
++directory per gpiochip and one file entry per line:
++
++/sys/kernel/debug/gpiochip/gpiochip0
++/sys/kernel/debug/gpiochip/gpiochip0/0
++/sys/kernel/debug/gpiochip/gpiochip0/1
++/sys/kernel/debug/gpiochip/gpiochip0/2
++/sys/kernel/debug/gpiochip/gpiochip0/3
++...
++/sys/kernel/debug/gpiochip/gpiochip1
++/sys/kernel/debug/gpiochip/gpiochip1/0
++/sys/kernel/debug/gpiochip/gpiochip1/1
++...
++
++The exact files and design of the debugfs interface can be
++discussed but the idea is to provide a low-level access point
++for debugging and hacking and to expose all lines without the
++need of any exporting. Also provide ample ammunition to shoot
++oneself in the foot, because this is debugfs after all.
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.26.2
+
