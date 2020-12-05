@@ -2,1202 +2,305 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7332CF9FB
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 07:20:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB9342CFA4E
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 08:44:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgLEGUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Dec 2020 01:20:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbgLEGUl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 5 Dec 2020 01:20:41 -0500
-Content-Type: text/plain; charset="utf-8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607149198;
-        bh=LvfcAgAsNgDSaeGsDhD+21mLH4R5BQtDLlbgu2VICTs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Ti5Us9SGMHwcXcaP2JsAlw9gYAMo+xsqbtILqgSOFLPCVkxnU0cyvLa3h+cOxfDnl
-         orXBQCG5puHoCCoP0O/KL2OFnNnb+XNL4VFJMuuJsTfX7k8XCZOtfMEt2+pRqW0gBg
-         uaV4BnC+vHPqnuJGAffuXfvyjXFtze/FpgJKx9LUnQdr0HhgmdXR3cDmPmHYvgZRAb
-         UVY9fufJwBFj4NsMUDSdtVU8YyZ0EgzqtTB7gUvjsyDBUmaY28MQeILpQwY1HY9OU+
-         zxE+cMHTWNhUDCECZMiXBeR3L/wF7wPf9NNiI8EcWK8c+Lsz4yR2/5WPrDvRbqf79H
-         M6IvK4GdXidpQ==
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20201202032500.206346-12-damien.lemoal@wdc.com>
-References: <20201202032500.206346-1-damien.lemoal@wdc.com> <20201202032500.206346-12-damien.lemoal@wdc.com>
+        id S1728132AbgLEHoX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 02:44:23 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:21286 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbgLEHoX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 02:44:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1607154262; x=1638690262;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=FxZ7hkyVitxiM09/aEvwBKSKqZgv2QM0Ff1uFuqiF1w=;
+  b=BBjNjAZA9IEBVzaDN5SWZs7QS9FCIFlpLy5KedbiHlwW8Hdcp6djJbX3
+   h1JKhE8hQxnCaB/ZnZYMMnNtfuYnAnc4kDMsJn0J5L1psGVYPdqXiUHdR
+   KW3UmhRKvzUgmzGMWhY8Xt5RFHBbi4IeDy0gxA4xBXoZlje9ES/clVzYA
+   rt8VnJM14PJ4Takwbg/tT1n/8f/70vzRimlFvWXEKFnbNLv1eGaoVxdcj
+   B5CD5LL2O1bCyBzBnmRzIezi/r2NtXWDsvcdKZzwjPtBeOhZcFBU7Pr4/
+   hT3u3MFMqJ9njErCw2yk+Y6QeK9hcWdYg4PjXw9SZD3i5iYkzw8N1vSXl
+   Q==;
+IronPort-SDR: fXQ1BJob72CeSB5f5kgsVWKNQuRQZZvXDW/kz1i/+5wcZMXQKZQYylNlmEbU4viY19fxU4ZVHD
+ ReNdkL7+LUvHTgCUyeY9k2Kwi6Oin3uaEAB26dRpLAKbJses+lVySUqBeO5QFMBjkRZHIUNgek
+ YUgS0xMoRNX8JjLLqGn+mShTTSS9r5LO6fmvOKXT9KBWiJGgS88rosX47pCMv7QYMZvSfZVM8u
+ 5PAWVuQvjzPx9Sniqdo9kc26F3JqBDr+4SILUoMAmMIzrtMWP+7f355lMyM3Ouwp+vakfBH58s
+ nGE=
+X-IronPort-AV: E=Sophos;i="5.78,395,1599494400"; 
+   d="scan'208";a="154548478"
+Received: from mail-sn1nam02lp2059.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.59])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Dec 2020 15:43:15 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fel1zHL94yt5JY7gXCCYCT4CUW08a/AZeGa7wmSD34ciyvxhg06e+kAbEJuTaXRs7jmicdQuB5QVb76xPcf34xBfxWuBiOE9UMxyq0TMzu+/pflCufi5k3dLoUXLbyoHndVzmIkgtFgcvTfrMwr1seC9iCPYe5n8E9Rdc2cQlOiyqiiRELOpioTXBROSWkIhTsp9nXJVbpH/T5ArXHxEetvfQhdVvvhBhEObiXnoMz7Cqada3M0fnPqnFZ4vW6hnL2i7YOVqDaQggJndd9FKbDS4HBs3NNUOuoQFrAtCEs7hodbor8rgBS187lCNAjrAETRdcWVsaSVXAsDbbLM4Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FxZ7hkyVitxiM09/aEvwBKSKqZgv2QM0Ff1uFuqiF1w=;
+ b=AzLCMsOryHixgb6+Ou83CSG9Lfej8Q8Jd5rSsZeowukx+qZK2ODkXc36pePxHZM1UlqIE+mt8VL6XRmvQ2ETCHoy0SbgnmZkD1fc5rn61xc0FNKHRWcUmD1GlMMoI0VOIm8rMWcdRuc6x3tnLfZgEI7H5isByIHCQA683bYUkFKDuNBxrJXjS1pf0roX3A5rroLQTZwcUCtZ+dyQ2hoCbTbydmX9ZhOs8oW5F770pgV59fQ7paFds8iawYb3+qOIv+vEmEuC6q++UU2A5LWl5JUuXFxcpMwFl8AZGWlwAvc9OD3YM0Bal6tn+j14AHWJelJeGPAwaneZ7bGFrsP9gA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FxZ7hkyVitxiM09/aEvwBKSKqZgv2QM0Ff1uFuqiF1w=;
+ b=TxP5+wvZKMIZbtmJAhCFhnC+06HBbexhIH1K1WfBi73IQdrieK4f7vyiSLN8IJ61FPZjWJF+4cKErcxK0bbpEqSehrDtqOjFMEWxRalhyndfnx9X6fFYolZVR7B/AYeHzSU6EosxNs12t5Fj8yXzDOX5cyQJMXHVmwYQjUzHxw8=
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com (2603:10b6:610:34::19)
+ by CH2PR04MB6758.namprd04.prod.outlook.com (2603:10b6:610:90::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.29; Sat, 5 Dec
+ 2020 07:43:14 +0000
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a]) by CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a%7]) with mapi id 15.20.3589.022; Sat, 5 Dec 2020
+ 07:43:14 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     "seanga2@gmail.com" <seanga2@gmail.com>
 Subject: Re: [PATCH v4 11/21] riscv: Add Canaan Kendryte K210 clock driver
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Sean Anderson <seanga2@gmail.com>
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Date:   Fri, 04 Dec 2020 22:19:56 -0800
-Message-ID: <160714919628.1580929.1456162330322523777@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Thread-Topic: [PATCH v4 11/21] riscv: Add Canaan Kendryte K210 clock driver
+Thread-Index: AQHWyFrJ31Bqsdz07kaNo2YIn/vMLanoDJcAgAAXRYA=
+Date:   Sat, 5 Dec 2020 07:43:14 +0000
+Message-ID: <d9aec92299e5f427aaf5c5e892194e27006f8bbc.camel@wdc.com>
+References: <20201202032500.206346-1-damien.lemoal@wdc.com>
+         <20201202032500.206346-12-damien.lemoal@wdc.com>
+         <160714919628.1580929.1456162330322523777@swboyd.mtv.corp.google.com>
+In-Reply-To: <160714919628.1580929.1456162330322523777@swboyd.mtv.corp.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+authentication-results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=wdc.com;
+x-originating-ip: [2400:2411:43c0:6000:8d3e:27aa:85c2:44b5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dce85943-3f85-4881-9252-08d898f16c54
+x-ms-traffictypediagnostic: CH2PR04MB6758:
+x-microsoft-antispam-prvs: <CH2PR04MB6758E74A680A6B3397DDA50FE7F00@CH2PR04MB6758.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: D0FH1F3giDccYwxfsnrQ+klRcGWCp45fw+QwMpjAwcKo/sR14k5sbXrpTREzhyt2mRHCMaTtn9ZmUcSmyCToGqPOxQ1fefzgsjoBGgK/XwIUujZaQT02z3j4DGmVjEcUvQIz4aLB/2lI6OkzYExPnfFOE91KcQbUvPBgbDtW3UWYMg0fe9bspQ89wbJz+JwbOYovxk2tzni8nAkoTCzsbqWBox4wP17gWASHaUWrU2C4gYjhdz7zB7hVGD8TaSCTMMgA6DInYDAt9y31mrNqUGKIgiZfyn7aIOJUMuyP8BK6OGwqYnP+F+QNLsNMfOZaCevf3o91XygxPV+2rusG0DdebSVyqWpRXAWe8XJ3Epl6x/nSIg6VlyF+zGv4OggynHLc66Vfhb1KyCt3haNoMw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6522.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(396003)(346002)(376002)(136003)(478600001)(2906002)(4326008)(91956017)(966005)(66946007)(76116006)(8936002)(66476007)(64756008)(6506007)(36756003)(86362001)(66556008)(7416002)(66446008)(5660300002)(2616005)(8676002)(6486002)(6512007)(110136005)(71200400001)(186003)(83380400001)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?VGZIUW56dFF6V2M4YnVVeUw4aUV1YjJTa29KenNkQnlLMStkNUVZenlFYnVs?=
+ =?utf-8?B?K05xZjBzdXVZZGF2NWRnMjgrQW9lZEErbHV4UWM2aUdnVk43OUxUbnZCZ1Bv?=
+ =?utf-8?B?WmJONWpFd1EwbEN2UWJvTlBJZlVQcjFJUzMzM0U2RXlTbkJOMHVWVVU5OC8y?=
+ =?utf-8?B?bnNKQWc4VldvbFF0UjBSalRRalJ6R1J6WDZxM0xmeUU2b0kvTDZKeDFVS2Vs?=
+ =?utf-8?B?c1hOSE5jeVhkVzF4MDZKWnFMcThQT3JEMjhUT2dGVmhiSUhoVDhmWGJpaEdN?=
+ =?utf-8?B?aWFWMGlWUGVCSkFrTkVFd0djcXBBL3Z2ZllHczExTHQxd09IUnFua0Z5YjFU?=
+ =?utf-8?B?VGpMVk95dGd3L295N3pFT2xzSHBYR3NzR0U2UlVzMWtWdkI0WENrQTJQbWQ1?=
+ =?utf-8?B?TUtmRjJBYVgwY25oUUVsUHg4UDFXNGxjQmZERS9sRVdNRlZHelZucHhCdVIv?=
+ =?utf-8?B?ZEtSSTNxNlFGV0dCdkx3Z0c3TzAyZkIrNGhoYzdMWmkvakp2UlRZb1QxT0wv?=
+ =?utf-8?B?bWVQR05EQitxVmYvU2dXTG1hMFZxL0RwTytoaDBSbmZKVHc0UTJCWU9uVnZX?=
+ =?utf-8?B?L1dFZUt2ZTYvczl1ZVA2Y1VPTjRzY0YvQVFnaG0yTEZsRWFBRmswMmR3S1hQ?=
+ =?utf-8?B?ZTVkRktsazMvRzhNM3dRK283MW9qOFVwT0lBdEVRem81STRGV0RVZ2UvSHBx?=
+ =?utf-8?B?RlEydWZlbWYxS2VwdU9FVTVUc0FkRnI4cTYzdXRvM1RmRUhQcEw1aDVmN3NB?=
+ =?utf-8?B?RUtyTXRsRGo4RC9VSFN6MXJ2RkFvZkhMOUw1M2lvSThOTmVsN05tYlRMZ0pp?=
+ =?utf-8?B?RmJ6eWpOdTV5ZEtIWFNTN3M0SE93bUtOL1NHVHJlZkF2R2NqbXZUOWplWGV0?=
+ =?utf-8?B?UXpGZWRNb01zbVRCR0RtSEtQZEdVZ2xwalFCTC9sRWFsL0tGTURsU1RGNVBq?=
+ =?utf-8?B?L1k5MjV5MHpOYWM3VU40NlorR0w0VW1ZbjM0bExOdTU3MkVFUFNzaVRBbW5D?=
+ =?utf-8?B?dEY0aFg2RXcwQnprV0FZazM1VG9nWmF3cEd2M09hWHhoVjdGTENIQkk4MHY5?=
+ =?utf-8?B?ZisxSklLNFBzdmZFTGV5Sjh3UWlrWUdtUVFITVlnemNsd3VLZDZwMmtBZWhv?=
+ =?utf-8?B?M0ZXR1d5bnFZNDNqZU01S1ZoaGNBbGlibHVwRDZDV2twZ2xMT3RQMjNkMWlG?=
+ =?utf-8?B?MXZSRjkvQysrNU9HOXQ0SkhKeUJGc0tsY3ZkelJGWGV6dHpiMTRPTUNOWFBy?=
+ =?utf-8?B?d2NxemtKSXBGbjF1ZWdTampxTTdtTHc3Zld4bXo5SE1USzFicVlCYmgyUHcr?=
+ =?utf-8?B?eTFaTzNEakVOdXhEMUFuWmFXOFBSazQ4TTlFTk9WWjhvL0hxWkZpdlRYb2hL?=
+ =?utf-8?B?MDlwd21Wc2JHS0RLVE81RkJ5Z1FiMjVvWWtNTVQzaUF2amRJckVKYnVhb2E5?=
+ =?utf-8?Q?QqAPGxZy?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <664F5BB577324645A8EA59C11B4383CD@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6522.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dce85943-3f85-4881-9252-08d898f16c54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2020 07:43:14.3722
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bf4bTHCvF2TW+Fyk9E+BoTM1ktpVHCaFpjEZmJXXf09Zfm8+c2FD0dcZFdzW5vOPyIYfNRXz+HX4WHBtAgBXCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6758
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Damien Le Moal (2020-12-01 19:24:50)
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2daa6ee673f7..3da9a7a02f61 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3822,6 +3822,22 @@ W:       https://github.com/Cascoda/ca8210-linux.g=
-it
->  F:     Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
->  F:     drivers/net/ieee802154/ca8210.c
-> =20
-> +CANAAN/KENDRYTE K210 SOC CLOCK DRIVER
-> +M:     Damien Le Moal <damien.lemoal@wdc.com>
-> +L:     linux-riscv@lists.infradead.org
-> +L:     linux-clk@vger.kernel.org (clock driver)
-
-Is this needed? I think we cover all of drivers/clk/ and bindings/clock
-already.
-
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
-> +F:     drivers/clk/clk-k210.c
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 88ac0d1a5da4..f2f9633087d1 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -29,6 +29,8 @@ config SOC_CANAAN
->         select SERIAL_SIFIVE if TTY
->         select SERIAL_SIFIVE_CONSOLE if TTY
->         select SIFIVE_PLIC
-> +       select SOC_K210_SYSCTL
-> +       select CLK_K210
-
-Any reason to do this vs. just make it the default?
-
->         help
->           This enables support for Canaan Kendryte K210 SoC platform hard=
-ware.
-> =20
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index c715d4681a0b..6f10f1ecc8d6 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -359,6 +359,15 @@ config COMMON_CLK_FIXED_MMIO
->         help
->           Support for Memory Mapped IO Fixed clocks
-> =20
-> +config CLK_K210
-
-Every one else is using COMMON_CLK_ prefix so probably should follow
-suit and then sort alphabetically.
-
-> +       bool "Clock driver for the Canaan Kendryte K210 SoC"
-> +       depends on RISCV && SOC_CANAAN
-> +       depends on COMMON_CLK && OF
-
-i.e. default SOC_CANAAN here
-
-> +       help
-> +         Support for the Kendryte K210 RISC-V SoC clocks. This option
-> +         is automatically selected when the SOC_KENDRYTE option is selec=
-ted
-> +         in the "SOC selection" menu.
-> +
->  source "drivers/clk/actions/Kconfig"
->  source "drivers/clk/analogbits/Kconfig"
->  source "drivers/clk/baikal-t1/Kconfig"
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index da8fcf147eb1..ccac89e0fdfe 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_VT8500)             +=3D clk-vt8500.o
->  obj-$(CONFIG_COMMON_CLK_VC5)           +=3D clk-versaclock5.o
->  obj-$(CONFIG_COMMON_CLK_WM831X)                +=3D clk-wm831x.o
->  obj-$(CONFIG_COMMON_CLK_XGENE)         +=3D clk-xgene.o
-> +obj-$(CONFIG_CLK_K210)                 +=3D clk-k210.o
-
-Same sort order please.
-
-> =20
->  # please keep this section sorted lexicographically by directory path na=
-me
->  obj-y                                  +=3D actions/
-> diff --git a/drivers/clk/clk-k210.c b/drivers/clk/clk-k210.c
-> new file mode 100644
-> index 000000000000..95d830a38911
-> --- /dev/null
-> +++ b/drivers/clk/clk-k210.c
-> @@ -0,0 +1,959 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2019-20 Sean Anderson <seanga2@gmail.com>
-> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> + */
-> +#define pr_fmt(fmt)     "k210-clk: " fmt
-> +
-> +#include <linux/io.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clk.h>
-
-Preferably this include is dropped.
-
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-
-Is this used? Hopefully no.
-
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <asm/soc.h>
-> +#include <soc/canaan/k210-sysctl.h>
-> +
-> +#include <dt-bindings/clock/k210-clk.h>
-> +
-> +/*
-> + * in0: fixed-rate 26MHz oscillator base clock.
-> + */
-> +#define K210_IN0_RATE          26000000UL
-> +
-> +/*
-> + * Clocks parameters.
-> + */
-> +struct k210_clk_cfg {
-> +       u8 gate_reg;
-> +       u8 gate_bit;
-> +       u8 div_reg;
-> +       u8 div_shift;
-> +       u8 div_width;
-> +       u8 div_type;
-> +       u8 mux_reg;
-> +       u8 mux_bit;
-> +};
-> +
-> +enum k210_clk_div_type {
-> +       DIV_NONE,
-> +       DIV_ONE_BASED,
-> +       DIV_DOUBLE_ONE_BASED,
-> +       DIV_POWER_OF_TWO,
-> +};
-> +
-> +#define GATE(_reg, _bit)       \
-> +       .gate_reg =3D (_reg),     \
-> +       .gate_bit =3D (_bit)
-> +#define DIV(_reg, _shift, _width, _type)       \
-> +       .div_reg =3D (_reg),                      \
-> +       .div_shift =3D (_shift),                  \
-> +       .div_width =3D (_width),                  \
-> +       .div_type =3D (_type)
-> +#define MUX(_reg, _bit)                \
-> +       .mux_reg =3D (_reg),      \
-> +       .mux_bit =3D (_bit)
-> +
-> +static struct k210_clk_cfg k210_clks[K210_NUM_CLKS] =3D {
-> +
-> +       /* Gated clocks, no mux, no divider */
-> +       [K210_CLK_CPU] =3D { GATE(K210_SYSCTL_EN_CENT, 0) },
-> +       [K210_CLK_DMA] =3D { GATE(K210_SYSCTL_EN_PERI, 1) },
-> +       [K210_CLK_FFT] =3D { GATE(K210_SYSCTL_EN_PERI, 4) },
-> +       [K210_CLK_GPIO] =3D { GATE(K210_SYSCTL_EN_PERI, 5) },
-> +       [K210_CLK_UART1] =3D { GATE(K210_SYSCTL_EN_PERI, 16) },
-> +       [K210_CLK_UART2] =3D { GATE(K210_SYSCTL_EN_PERI, 17) },
-> +       [K210_CLK_UART3] =3D { GATE(K210_SYSCTL_EN_PERI, 18) },
-> +       [K210_CLK_FPIOA] =3D { GATE(K210_SYSCTL_EN_PERI, 20) },
-> +       [K210_CLK_SHA] =3D { GATE(K210_SYSCTL_EN_PERI, 26) },
-> +       [K210_CLK_AES] =3D { GATE(K210_SYSCTL_EN_PERI, 19) },
-> +       [K210_CLK_OTP] =3D { GATE(K210_SYSCTL_EN_PERI, 27) },
-> +       [K210_CLK_RTC] =3D { GATE(K210_SYSCTL_EN_PERI, 29) },
-> +
-> +       /* Gated divider clocks */
-> +       [K210_CLK_SRAM0] =3D {
-> +               GATE(K210_SYSCTL_EN_CENT, 1),
-> +               DIV(K210_SYSCTL_THR0, 0, 4, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_SRAM1] =3D {
-> +               GATE(K210_SYSCTL_EN_CENT, 2),
-> +               DIV(K210_SYSCTL_THR0, 4, 4, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_ROM] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 0),
-> +               DIV(K210_SYSCTL_THR0, 16, 4, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_DVP] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 3),
-> +               DIV(K210_SYSCTL_THR0, 12, 4, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_APB0] =3D {
-> +               GATE(K210_SYSCTL_EN_CENT, 3),
-> +               DIV(K210_SYSCTL_SEL0, 3, 3, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_APB1] =3D {
-> +               GATE(K210_SYSCTL_EN_CENT, 4),
-> +               DIV(K210_SYSCTL_SEL0, 6, 3, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_APB2] =3D {
-> +               GATE(K210_SYSCTL_EN_CENT, 5),
-> +               DIV(K210_SYSCTL_SEL0, 9, 3, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_AI] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 2),
-> +               DIV(K210_SYSCTL_THR0, 8, 4, DIV_ONE_BASED)
-> +       },
-> +       [K210_CLK_SPI0] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 6),
-> +               DIV(K210_SYSCTL_THR1, 0, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_SPI1] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 7),
-> +               DIV(K210_SYSCTL_THR1, 8, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_SPI2] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 8),
-> +               DIV(K210_SYSCTL_THR1, 16, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2C0] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 13),
-> +               DIV(K210_SYSCTL_THR5, 8, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2C1] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 14),
-> +               DIV(K210_SYSCTL_THR5, 16, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2C2] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 15),
-> +               DIV(K210_SYSCTL_THR5, 24, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_WDT0] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 24),
-> +               DIV(K210_SYSCTL_THR6, 0, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_WDT1] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 25),
-> +               DIV(K210_SYSCTL_THR6, 8, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2S0] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 10),
-> +               DIV(K210_SYSCTL_THR3, 0, 16, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2S1] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 11),
-> +               DIV(K210_SYSCTL_THR3, 16, 16, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2S2] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 12),
-> +               DIV(K210_SYSCTL_THR4, 0, 16, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +
-> +       /* Divider clocks, no gate, no mux */
-> +       [K210_CLK_I2S0_M] =3D {
-> +               DIV(K210_SYSCTL_THR4, 16, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2S1_M] =3D {
-> +               DIV(K210_SYSCTL_THR4, 24, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +       [K210_CLK_I2S2_M] =3D {
-> +               DIV(K210_SYSCTL_THR4, 0, 8, DIV_DOUBLE_ONE_BASED)
-> +       },
-> +
-> +       /* Muxed gated divider clocks */
-> +       [K210_CLK_SPI3] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 9),
-> +               DIV(K210_SYSCTL_THR1, 24, 8, DIV_DOUBLE_ONE_BASED),
-> +               MUX(K210_SYSCTL_SEL0, 12)
-> +       },
-> +       [K210_CLK_TIMER0] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 21),
-> +               DIV(K210_SYSCTL_THR2,  0, 8, DIV_DOUBLE_ONE_BASED),
-> +               MUX(K210_SYSCTL_SEL0, 13)
-> +       },
-> +       [K210_CLK_TIMER1] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 22),
-> +               DIV(K210_SYSCTL_THR2, 8, 8, DIV_DOUBLE_ONE_BASED),
-> +               MUX(K210_SYSCTL_SEL0, 14)
-> +       },
-> +       [K210_CLK_TIMER2] =3D {
-> +               GATE(K210_SYSCTL_EN_PERI, 23),
-> +               DIV(K210_SYSCTL_THR2, 16, 8, DIV_DOUBLE_ONE_BASED),
-> +               MUX(K210_SYSCTL_SEL0, 15)
-> +       },
-> +};
-> +
-> +/*
-> + * PLL control register bits.
-> + */
-> +#define K210_PLL_CLKR          GENMASK(3, 0)
-> +#define K210_PLL_CLKF          GENMASK(9, 4)
-> +#define K210_PLL_CLKOD         GENMASK(13, 10)
-> +#define K210_PLL_BWADJ         GENMASK(19, 14)
-> +#define K210_PLL_RESET         (1 << 20)
-> +#define K210_PLL_PWRD          (1 << 21)
-> +#define K210_PLL_INTFB         (1 << 22)
-> +#define K210_PLL_BYPASS                (1 << 23)
-> +#define K210_PLL_TEST          (1 << 24)
-> +#define K210_PLL_EN            (1 << 25)
-> +#define K210_PLL_SEL           GENMASK(27, 26) /* PLL2 only */
-> +
-> +/*
-> + * PLL lock register bits.
-> + */
-> +#define K210_PLL_LOCK          0
-> +#define K210_PLL_CLEAR_SLIP    2
-> +#define K210_PLL_TEST_OUT      3
-> +
-> +/*
-> + * Clock selector register bits.
-> + */
-> +#define K210_ACLK_SEL          BIT(0)
-> +#define K210_ACLK_DIV          GENMASK(2, 1)
-> +
-> +/*
-> + * PLLs.
-> + */
-> +enum k210_pll_id {
-> +       K210_PLL0, K210_PLL1, K210_PLL2, K210_PLL_NUM
-> +};
-> +
-> +struct k210_pll {
-> +enum k210_pll_id id;
-
-Not sure what happened here but it's not tabbed.
-
-> +       /* PLL setup register */
-> +       void __iomem *reg;
-> +
-> +       /* Common lock register */
-> +       void __iomem *lock;
-> +
-> +       /* Offset and width of lock bits */
-> +       u8 lock_shift;
-> +       u8 lock_width;
-> +
-> +       struct clk_hw hw;
-> +};
-> +#define to_k210_pll(hw)        container_of(hw, struct k210_pll, hw)
-> +
-> +struct k210_pll_cfg {
-> +       /* PLL setup register offset */
-> +       u32 reg;
-> +
-> +       /* Offset and width fo the lock bits */
-> +       u8 lock_shift;
-> +       u8 lock_width;
-> +
-> +       /* PLL setup initial factors */
-> +       u32 r, f, od, bwadj;
-
-Please have one line per struct member. I guess our kernel style is to
-do that so we can quickly see how many members there are.
-
-> +};
-> +
-> +/*
-> + * PLL factors:
-> + * By default, PLL0 runs at 780 MHz and PLL1 at 299 MHz.
-> + * The first 2 sram banks depend on ACLK/CPU clock which is by default
-> + * PLL0 rate divided by 2. Set PLL1 to 390 MHz so that the third sram
-> + * bank has the same clock.
-> + */
-> +static struct k210_pll_cfg k210_plls_cfg[] =3D {
-> +       { K210_SYSCTL_PLL0,  0, 2, 0, 59, 1, 59 }, /* 780 MHz */
-> +       { K210_SYSCTL_PLL1,  8, 1, 0, 59, 3, 59 }, /* 390 MHz */
-> +       { K210_SYSCTL_PLL2, 16, 1, 0, 22, 1, 22 }, /* 299 MHz */
-> +};
-> +
-> +/*
-> + * Clocks data.
-
-This comment could be kernel-doc and be more helpful.
-
-> + */
-> +struct k210_clk {
-> +       void __iomem                    *regs;
-> +       spinlock_t                      clk_lock;
-> +       struct k210_pll                 plls[K210_PLL_NUM];
-> +       struct clk_hw                   aclk;
-> +       struct clk_hw                   clks[K210_NUM_CLKS];
-> +       struct clk_hw_onecell_data      *clk_data;
-> +};
-> +
-> +static struct k210_clk *kcl;
-> +
-> +/*
-> + * Set ACLK parent selector: 0 for IN0, 1 for PLL0.
-> + */
-> +static void k210_aclk_set_selector(u8 sel)
-> +{
-> +       u32 reg =3D readl(kcl->regs + K210_SYSCTL_SEL0);
-> +
-> +       if (sel)
-> +               reg |=3D K210_ACLK_SEL;
-> +       else
-> +               reg &=3D K210_ACLK_SEL;
-> +       writel(reg, kcl->regs + K210_SYSCTL_SEL0);
-> +}
-> +
-> +static void k210_init_pll(struct k210_pll *pll, enum k210_pll_id id,
-> +                         void __iomem *base)
-> +{
-> +       pll->id =3D id;
-> +       pll->lock =3D base + K210_SYSCTL_PLL_LOCK;
-> +       pll->reg =3D base + k210_plls_cfg[id].reg;
-> +       pll->lock_shift =3D k210_plls_cfg[id].lock_shift;
-> +       pll->lock_width =3D k210_plls_cfg[id].lock_width;
-> +}
-> +
-> +static void k210_pll_wait_for_lock(struct k210_pll *pll)
-> +{
-> +       u32 reg, mask =3D GENMASK(pll->lock_width - 1, 0) << pll->lock_sh=
-ift;
-
-GENMASK should take the pll->lock_shift instead of shifting it after the
-fact. That way we don't have to think about overflow.
-
-> +
-> +       while (true) {
-> +               reg =3D readl(pll->lock);
-> +               if ((reg & mask) =3D=3D mask)
-> +                       break;
-> +
-> +               reg |=3D BIT(pll->lock_shift + K210_PLL_CLEAR_SLIP);
-> +               writel(reg, pll->lock);
-
-Is this readl_poll_timeout?
-
-> +       }
-> +}
-> +
-> +static bool k210_pll_hw_is_enabled(struct k210_pll *pll)
-> +{
-> +       u32 reg =3D readl(pll->reg);
-> +       u32 mask =3D K210_PLL_PWRD | K210_PLL_EN;
-> +
-> +       if (reg & K210_PLL_RESET)
-> +               return false;
-> +
-> +       return (reg & mask) =3D=3D mask;
-> +}
-> +
-> +static void k210_pll_enable_hw(struct k210_pll *pll)
-> +{
-> +       struct k210_pll_cfg *pll_cfg =3D &k210_plls_cfg[pll->id];
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +
-> +       if (k210_pll_hw_is_enabled(pll))
-> +               goto unlock;
-> +
-> +       if (pll->id =3D=3D K210_PLL0) {
-> +               /* Re-parent aclk to IN0 to keep the CPUs running */
-> +               k210_aclk_set_selector(0);
-> +       }
-> +
-> +       /* Set factors */
-> +       reg =3D readl(pll->reg);
-> +       reg &=3D ~GENMASK(19, 0);
-> +       reg |=3D FIELD_PREP(K210_PLL_CLKR, pll_cfg->r);
-> +       reg |=3D FIELD_PREP(K210_PLL_CLKF, pll_cfg->f);
-> +       reg |=3D FIELD_PREP(K210_PLL_CLKOD, pll_cfg->od);
-> +       reg |=3D FIELD_PREP(K210_PLL_BWADJ, pll_cfg->bwadj);
-> +       reg |=3D K210_PLL_PWRD;
-> +       writel(reg, pll->reg);
-> +
-> +       /* Ensure reset is low before asserting it */
-> +       reg &=3D ~K210_PLL_RESET;
-> +       writel(reg, pll->reg);
-> +       reg |=3D K210_PLL_RESET;
-> +       writel(reg, pll->reg);
-> +       nop();
-> +       nop();
-
-Are these nops needed for some reason? Any comment to add here? It's
-basically non-portable code and hopefully nothing is inserted into that
-writel function that shouldn't be there.
-
-> +       reg &=3D ~K210_PLL_RESET;
-> +       writel(reg, pll->reg);
-> +
-> +       k210_pll_wait_for_lock(pll);
-> +
-> +       reg &=3D ~K210_PLL_BYPASS;
-> +       reg |=3D K210_PLL_EN;
-> +       writel(reg, pll->reg);
-> +
-> +       if (pll->id =3D=3D K210_PLL0) {
-> +               /* Re-parent aclk back to PLL0 */
-> +               k210_aclk_set_selector(1);
-> +       }
-> +unlock:
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +}
-> +
-> +static void k210_pll_disable_hw(struct k210_pll *pll)
-> +{
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       /*
-> +        * Bypassing before powering off is important so child clocks don=
-'t stop
-> +        * working. This is especially important for pll0, the indirect p=
-arent
-> +        * of the cpu clock.
-> +        */
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +       reg =3D readl(pll->reg);
-> +       reg |=3D K210_PLL_BYPASS;
-> +       writel(reg, pll->reg);
-> +
-> +       reg &=3D ~K210_PLL_PWRD;
-> +       reg &=3D ~K210_PLL_EN;
-> +       writel(reg, pll->reg);
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +}
-> +
-> +static int k210_pll_enable(struct clk_hw *hw)
-> +{
-> +       k210_pll_enable_hw(to_k210_pll(hw));
-> +
-> +       return 0;
-> +}
-> +
-> +static void k210_pll_disable(struct clk_hw *hw)
-> +{
-> +       k210_pll_disable_hw(to_k210_pll(hw));
-> +}
-> +
-> +static int k210_pll_is_enabled(struct clk_hw *hw)
-> +{
-> +       return k210_pll_hw_is_enabled(to_k210_pll(hw));
-> +}
-> +
-> +static int k210_pll_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +       struct k210_pll *pll =3D to_k210_pll(hw);
-> +       unsigned long flags;
-> +       int ret =3D 0;
-> +       u32 reg;
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +
-> +       switch (pll->id) {
-> +       case K210_PLL0:
-> +       case K210_PLL1:
-> +               if (WARN_ON(index !=3D 0))
-> +                       ret =3D -EINVAL;
-> +               break;
-> +       case K210_PLL2:
-
-Instead of a pll->id can we have two different clk ops?
-
-> +               if (WARN_ON(index > 2)) {
-> +                       ret =3D -EINVAL;
-> +                       break;
-> +               }
-> +               reg =3D readl(pll->reg);
-> +               reg &=3D ~K210_PLL_SEL;
-> +               reg |=3D FIELD_PREP(K210_PLL_SEL, index);
-> +               writel(reg, pll->reg);
-> +               break;
-> +       default:
-> +               ret =3D -EINVAL;
-> +               break;
-> +       }
-> +
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +
-> +       return ret;
-> +}
-> +
-> +static u8 k210_pll_get_parent(struct clk_hw *hw)
-> +{
-> +       struct k210_pll *pll =3D to_k210_pll(hw);
-> +       u32 reg;
-> +
-> +       switch (pll->id) {
-> +       case K210_PLL0:
-> +       case K210_PLL1:
-> +               return 0;
-> +       case K210_PLL2:
-> +               reg =3D readl(pll->reg);
-> +               return FIELD_GET(K210_PLL_SEL, reg);
-> +       default:
-> +               return 0;
-> +       }
-> +}
-> +
-> +static unsigned long k210_pll_get_rate(struct clk_hw *hw,
-> +                                      unsigned long parent_rate)
-> +{
-> +       struct k210_pll *pll =3D to_k210_pll(hw);
-> +       u32 reg =3D readl(pll->reg);
-> +       u32 r, f, od;
-> +
-> +       if (reg & K210_PLL_BYPASS)
-> +               return parent_rate;
-> +
-> +       if (!(reg & K210_PLL_PWRD))
-> +               return 0;
-> +
-> +       r =3D FIELD_GET(K210_PLL_CLKR, reg) + 1;
-> +       f =3D FIELD_GET(K210_PLL_CLKF, reg) + 1;
-> +       od =3D FIELD_GET(K210_PLL_CLKOD, reg) + 1;
-> +
-> +       return (u64)parent_rate * f / (r * od);
-> +}
-> +
-> +static const struct clk_ops k210_pll_ops =3D {
-> +       .enable         =3D k210_pll_enable,
-> +       .disable        =3D k210_pll_disable,
-> +       .is_enabled     =3D k210_pll_is_enabled,
-> +       .set_parent     =3D k210_pll_set_parent,
-> +       .get_parent     =3D k210_pll_get_parent,
-> +       .recalc_rate    =3D k210_pll_get_rate,
-> +};
-> +
-> +static const char *pll_parents[] =3D { NULL, "pll0", "pll1" };
-
-This should get a k210 prefix as to not pollute the global namespace of
-kernel symbols (of which there are so many!).
-
-> +
-> +static struct clk_hw *k210_register_pll(enum k210_pll_id id, const char =
-*name,
-> +                               const char **parent_names, int num_parent=
-s,
-> +                               unsigned long flags)
-> +{
-> +       struct k210_pll *pll =3D &kcl->plls[id];
-> +       struct clk_init_data init =3D {};
-> +       int ret;
-> +
-> +       init.name =3D name;
-> +       init.parent_names =3D parent_names;
-> +       init.num_parents =3D num_parents;
-> +       init.flags =3D flags;
-> +       init.ops =3D &k210_pll_ops;
-> +       pll->hw.init =3D &init;
-> +
-> +       ret =3D clk_hw_register(NULL, &pll->hw);
-> +       if (ret)
-> +               return ERR_PTR(ret);
-> +
-> +       return &pll->hw;
-> +}
-> +
-> +static int k210_aclk_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +       if (WARN_ON(index > 1))
-
-Is this possible? What am I going to do as a user if this happens?
-
-> +               return -EINVAL;
-> +
-> +       k210_aclk_set_selector(index);
-> +
-> +       return 0;
-> +}
-> +
-> +static u8 k210_aclk_get_parent(struct clk_hw *hw)
-> +{
-> +       u32 sel =3D readl(kcl->regs + K210_SYSCTL_SEL0);
-> +
-> +       return (sel & K210_ACLK_SEL) ? 1 : 0;
-
-Preferably write as
-
-	u32 sel;
-
-	sel =3D readl(kclk->regs + K210_SYSCTL_SEL0);
-	sel &=3D K210_ACLK_SEL;
-
-	return sel ? 1 : 0;=20
-
-> +}
-> +
-> +static unsigned long k210_aclk_get_rate(struct clk_hw *hw,
-> +                                       unsigned long parent_rate)
-> +{
-> +       u32 reg =3D readl(kcl->regs + K210_SYSCTL_SEL0);
-> +       unsigned int shift;
-> +
-> +       if (!(reg & 0x1))
-> +               return parent_rate;
-> +
-> +       shift =3D FIELD_GET(K210_ACLK_DIV, reg);
-> +
-> +       return parent_rate / (2UL << shift);
-> +}
-> +
-> +static const struct clk_ops k210_aclk_ops =3D {
-> +       .set_parent     =3D k210_aclk_set_parent,
-> +       .get_parent     =3D k210_aclk_get_parent,
-> +       .recalc_rate    =3D k210_aclk_get_rate,
-> +};
-> +
-> +static const char *aclk_parents[] =3D { NULL, "pll0" };
-> +
-> +static struct clk_hw *k210_register_aclk(void)
-> +{
-> +       struct clk_init_data init =3D {};
-> +       int ret;
-> +
-> +       init.name =3D "aclk";
-> +       init.parent_names =3D aclk_parents;
-> +       init.num_parents =3D 2;
-> +       init.flags =3D 0;
-
-Remove? It's the default now that init =3D {}.
-
-> +       init.ops =3D &k210_aclk_ops;
-> +       kcl->aclk.init =3D &init;
-> +
-> +       ret =3D clk_hw_register(NULL, &kcl->aclk);
-> +       if (ret)
-> +               return ERR_PTR(ret);
-> +
-> +       return &kcl->aclk;
-> +}
-> +
-> +#define to_k210_clk_id(hw)     ((unsigned int)((hw) - &kcl->clks[0]))
-> +#define to_k210_clk_cfg(hw)    (&k210_clks[to_k210_clk_id(hw)])
-> +
-> +static u32 k210_clk_get_div_val(struct k210_clk_cfg *kclk)
-> +{
-> +       u32 reg =3D readl(kcl->regs + kclk->div_reg);
-> +
-> +       return (reg >> kclk->div_shift) & GENMASK(kclk->div_width - 1, 0);
-
-Use FIELD_GET()?
-
-> +}
-> +
-> +static unsigned long k210_clk_divider(struct k210_clk_cfg *kclk,
-> +                                     u32 div_val)
-> +{
-> +       switch (kclk->div_type) {
-> +       case DIV_ONE_BASED:
-> +               return div_val + 1;
-> +       case DIV_DOUBLE_ONE_BASED:
-> +               return (div_val + 1) * 2;
-> +       case DIV_POWER_OF_TWO:
-> +               return 2UL << div_val;
-> +       case DIV_NONE:
-> +       default:
-> +               return 0;
-> +       }
-> +}
-> +
-> +static int k210_clk_enable(struct clk_hw *hw)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       if (!kclk->gate_reg)
-> +               return 0;
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +       reg =3D readl(kcl->regs + kclk->gate_reg);
-> +       reg |=3D BIT(kclk->gate_bit);
-> +       writel(reg, kcl->regs + kclk->gate_reg);
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static void k210_clk_disable(struct clk_hw *hw)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       if (!kclk->gate_reg)
-> +               return;
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +       reg =3D readl(kcl->regs + kclk->gate_reg);
-> +       reg &=3D ~BIT(kclk->gate_bit);
-> +       writel(reg, kcl->regs + kclk->gate_reg);
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +}
-> +
-> +static int k210_clk_is_enabled(struct clk_hw *hw)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +
-> +       if (!kclk->gate_reg)
-> +               return 1;
-> +
-> +       return readl(kcl->regs + kclk->gate_reg) & BIT(kclk->gate_bit);
-> +}
-> +
-> +static int k210_clk_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       if (!kclk->mux_reg) {
-> +               if (WARN_ON(index !=3D 0))
-> +                       return -EINVAL;
-> +               return 0;
-> +       }
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +       reg =3D readl(kcl->regs + kclk->mux_reg);
-> +       if (index)
-> +               reg |=3D BIT(kclk->mux_bit);
-> +       else
-> +               reg &=3D ~BIT(kclk->mux_bit);
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static u8 k210_clk_get_parent(struct clk_hw *hw)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +       unsigned long flags;
-> +       u32 reg, idx;
-> +
-> +       if (!kclk->mux_reg)
-> +               return 0;
-> +
-> +       spin_lock_irqsave(&kcl->clk_lock, flags);
-> +       reg =3D readl(kcl->regs + kclk->mux_reg);
-> +       idx =3D (reg & BIT(kclk->mux_bit)) ? 1 : 0;
-> +       spin_unlock_irqrestore(&kcl->clk_lock, flags);
-> +
-> +       return idx;
-> +}
-> +
-> +static unsigned long k210_clk_get_rate(struct clk_hw *hw,
-> +                                      unsigned long parent_rate)
-> +{
-> +       struct k210_clk_cfg *kclk =3D to_k210_clk_cfg(hw);
-> +       unsigned long divider;
-> +
-> +       if (!kclk->div_reg)
-> +               return parent_rate;
-> +
-> +       divider =3D k210_clk_divider(kclk, k210_clk_get_div_val(kclk));
-> +       if (WARN_ON(!divider))
-> +               return 0;
-> +
-> +       return parent_rate / divider;
-> +}
-> +
-> +static const struct clk_ops k210_clk_ops =3D {
-> +       .enable         =3D k210_clk_enable,
-> +       .is_enabled     =3D k210_clk_is_enabled,
-> +       .disable        =3D k210_clk_disable,
-> +       .set_parent     =3D k210_clk_set_parent,
-> +       .get_parent     =3D k210_clk_get_parent,
-> +       .recalc_rate    =3D k210_clk_get_rate,
-> +};
-> +
-> +static const char *mux_parents[] =3D { NULL, "pll0" };
-> +
-> +static struct clk_hw *k210_register_clk(int id, const char *name,
-> +                                       const char *parent, unsigned long=
- flags)
-> +{
-> +       struct clk_init_data init =3D {};
-> +       int ret;
-> +
-> +       init.name =3D name;
-> +       if (parent) {
-> +               init.parent_names =3D &parent;
-> +               init.num_parents =3D 1;
-> +       } else {
-> +               init.parent_names =3D mux_parents;
-> +               init.num_parents =3D 2;
-> +       }
-> +       init.flags =3D flags;
-> +       init.ops =3D &k210_clk_ops;
-> +       kcl->clks[id].init =3D &init;
-> +
-> +       ret =3D clk_hw_register(NULL, &kcl->clks[id]);
-> +       if (ret)
-> +               return ERR_PTR(ret);
-> +
-> +       return &kcl->clks[id];
-> +}
-> +
-> +static void __init k210_clk_init(struct device_node *np)
-> +{
-> +       struct device_node *sysctl_np;
-> +       struct clk *in0_clk;
-> +       const char *in0;
-> +       struct clk_hw **hws;
-> +       int i, ret;
-> +
-> +       kcl =3D kzalloc(sizeof(*kcl), GFP_KERNEL);
-> +       if (!kcl)
-> +               return;
-> +
-> +       sysctl_np =3D of_find_compatible_node(NULL, NULL, "canaan,k210-sy=
-sctl");
-> +       if (!sysctl_np || sysctl_np !=3D np->parent)
-> +               goto err;
-> +
-> +       kcl->regs =3D of_iomap(sysctl_np, 0);
-> +       if (!kcl->regs)
-> +               goto err;
-> +
-> +       kcl->clk_data =3D kzalloc(struct_size(kcl->clk_data, hws, K210_NU=
-M_CLKS),
-> +                               GFP_KERNEL);
-> +       if (!kcl->clk_data)
-> +               goto err;
-> +
-> +       for (i =3D 0; i < K210_PLL_NUM; i++)
-> +               k210_init_pll(&kcl->plls[i], i, kcl->regs);
-> +       spin_lock_init(&kcl->clk_lock);
-> +       kcl->clk_data->num =3D K210_NUM_CLKS;
-> +       hws =3D kcl->clk_data->hws;
-> +       for (i =3D 1; i < K210_NUM_CLKS; i++)
-> +               hws[i] =3D ERR_PTR(-EPROBE_DEFER);
-> +
-> +       /*
-> +        * in0 is the system base fixed-rate 26MHz oscillator which
-> +        * should already be defined by the device tree. If it is not,
-> +        * create it here.
-
-Are there old DTBs that don't have this? Sadface.
-
-> +        */
-> +       in0_clk =3D of_clk_get(np, 0);
-> +       if (IS_ERR(in0_clk)) {
-> +               pr_warn("%pOFP: in0 oscillator not found\n", np);
-> +               hws[K210_CLK_IN0] =3D
-> +                       clk_hw_register_fixed_rate(NULL, "in0", NULL,
-> +                                                  0, K210_IN0_RATE);
-> +       } else {
-> +               hws[K210_CLK_IN0] =3D __clk_get_hw(in0_clk);
-> +       }
-> +       if (IS_ERR(hws[K210_CLK_IN0])) {
-> +               pr_err("%pOFP: failed to get base oscillator\n", np);
-> +               goto err;
-> +       }
-> +
-> +       in0 =3D clk_hw_get_name(hws[K210_CLK_IN0]);
-> +       aclk_parents[0] =3D in0;
-> +       pll_parents[0] =3D in0;
-> +       mux_parents[0] =3D in0;
-
-Can we use the new way of specifying clk parents so that we don't have
-to use __clk_get_hw(), of_clk_get(), and clk_hw_get_name()? Hopefully
-the core can handl that all instead of this driver.
-
-> +
-> +       /* PLLs */
-> +       hws[K210_CLK_PLL0] =3D
-> +               k210_register_pll(K210_PLL0, "pll0", pll_parents, 1, 0);
-> +       hws[K210_CLK_PLL1] =3D
-> +               k210_register_pll(K210_PLL1, "pll1", pll_parents, 1, 0);
-> +       hws[K210_CLK_PLL2] =3D
-> +               k210_register_pll(K210_PLL2, "pll2", pll_parents, 3, 0);
-> +
-> +       /* aclk: muxed of in0 and pll0_d, no gate */
-> +       hws[K210_CLK_ACLK] =3D k210_register_aclk();
-> +
-> +       /*
-> +        * Clocks with aclk as source: the CPU clock is obviously critica=
-l.
-> +        * So is the CLINT clock as the scheduler clocksource.
-> +        */
-> +       hws[K210_CLK_CPU] =3D
-> +               k210_register_clk(K210_CLK_CPU, "cpu", "aclk", CLK_IS_CRI=
-TICAL);
-> +       hws[K210_CLK_CLINT] =3D
-> +               clk_hw_register_fixed_factor(NULL, "clint", "aclk",
-> +                                            CLK_IS_CRITICAL, 1, 50);
-
-Is anyone getting these clks? It's nice and all to model things in the
-clk framework but if they never have a consumer then it is sort of
-useless and just wastes memory and causes more overhead.
-
-> +       hws[K210_CLK_DMA] =3D
-> +               k210_register_clk(K210_CLK_DMA, "dma", "aclk", 0);
-> +       hws[K210_CLK_FFT] =3D
-> +               k210_register_clk(K210_CLK_FFT, "fft", "aclk", 0);
-> +       hws[K210_CLK_ROM] =3D
-> +               k210_register_clk(K210_CLK_ROM, "rom", "aclk", 0);
-> +       hws[K210_CLK_DVP] =3D
-> +               k210_register_clk(K210_CLK_DVP, "dvp", "aclk", 0);
-> +       hws[K210_CLK_APB0] =3D
-> +               k210_register_clk(K210_CLK_APB0, "apb0", "aclk", 0);
-> +       hws[K210_CLK_APB1] =3D
-> +               k210_register_clk(K210_CLK_APB1, "apb1", "aclk", 0);
-> +       hws[K210_CLK_APB2] =3D
-> +               k210_register_clk(K210_CLK_APB2, "apb2", "aclk", 0);
-> +
-> +       /*
-> +        * There is no sram driver taking a ref on the sram banks clocks.
-> +        * So make them critical so they are not disabled due to being un=
-used
-> +        * as seen by the clock infrastructure.
-> +        */
-> +       hws[K210_CLK_SRAM0] =3D
-> +               k210_register_clk(K210_CLK_SRAM0,
-> +                                 "sram0", "aclk", CLK_IS_CRITICAL);
-> +       hws[K210_CLK_SRAM1] =3D
-> +               k210_register_clk(K210_CLK_SRAM1,
-> +                                 "sram1", "aclk", CLK_IS_CRITICAL);
-> +
-> +       /* Clocks with PLL0 as source */
-> +       hws[K210_CLK_SPI0] =3D
-> +               k210_register_clk(K210_CLK_SPI0, "spi0", "pll0", 0);
-> +       hws[K210_CLK_SPI1] =3D
-> +                k210_register_clk(K210_CLK_SPI1, "spi1", "pll0", 0);
-> +       hws[K210_CLK_SPI2] =3D
-> +                k210_register_clk(K210_CLK_SPI2, "spi2", "pll0", 0);
-> +       hws[K210_CLK_I2C0] =3D
-> +                k210_register_clk(K210_CLK_I2C0, "i2c0", "pll0", 0);
-> +       hws[K210_CLK_I2C1] =3D
-> +                k210_register_clk(K210_CLK_I2C1, "i2c1", "pll0", 0);
-> +       hws[K210_CLK_I2C2] =3D
-> +                k210_register_clk(K210_CLK_I2C2, "i2c2", "pll0", 0);
-> +
-> +       /*
-> +        * Clocks with PLL1 as source: there is only the AI clock for the
-> +        * (unused) KPU device. As this clock also drives the aisram bank
-> +        * which is used as general memory, make it critical.
-> +        */
-> +        hws[K210_CLK_AI] =3D
-> +                k210_register_clk(K210_CLK_AI, "ai", "pll1", CLK_IS_CRIT=
-ICAL);
-> +
-> +       /* Clocks with PLL2 as source */
-> +       hws[K210_CLK_I2S0] =3D
-> +                k210_register_clk(K210_CLK_I2S0, "i2s0", "pll2", 0);
-> +       hws[K210_CLK_I2S1] =3D
-> +                k210_register_clk(K210_CLK_I2S1, "i2s1", "pll2", 0);
-> +       hws[K210_CLK_I2S2] =3D
-> +               k210_register_clk(K210_CLK_I2S2, "i2s2", "pll2", 0);
-> +       hws[K210_CLK_I2S0_M] =3D
-> +               k210_register_clk(K210_CLK_I2S0_M, "i2s0_m", "pll2", 0);
-> +       hws[K210_CLK_I2S1_M] =3D
-> +               k210_register_clk(K210_CLK_I2S1_M, "i2s1_m", "pll2", 0);
-> +       hws[K210_CLK_I2S2_M] =3D
-> +               k210_register_clk(K210_CLK_I2S2_M, "i2s2_m", "pll2", 0);
-> +
-> +       /* Clocks with IN0 as source */
-> +       hws[K210_CLK_WDT0] =3D
-> +               k210_register_clk(K210_CLK_WDT0, "wdt0", in0, 0);
-> +       hws[K210_CLK_WDT1] =3D
-> +                k210_register_clk(K210_CLK_WDT1, "wdt1", in0, 0);
-> +       hws[K210_CLK_RTC] =3D
-> +                k210_register_clk(K210_CLK_RTC, "rtc", in0, 0);
-> +
-> +       /* Clocks with APB0 as source */
-> +       hws[K210_CLK_GPIO] =3D
-> +               k210_register_clk(K210_CLK_GPIO, "gpio", "apb0", 0);
-> +       hws[K210_CLK_UART1] =3D
-> +               k210_register_clk(K210_CLK_UART1, "uart1", "apb0", 0);
-> +       hws[K210_CLK_UART2] =3D
-> +               k210_register_clk(K210_CLK_UART2, "uart2", "apb0", 0);
-> +       hws[K210_CLK_UART3] =3D
-> +               k210_register_clk(K210_CLK_UART3, "uart3", "apb0", 0);
-> +       hws[K210_CLK_FPIOA] =3D
-> +               k210_register_clk(K210_CLK_FPIOA, "fpioa", "apb0", 0);
-> +       hws[K210_CLK_SHA] =3D
-> +               k210_register_clk(K210_CLK_SHA, "sha", "apb0", 0);
-> +
-> +       /* Clocks with APB1 as source */
-> +       hws[K210_CLK_AES] =3D
-> +                k210_register_clk(K210_CLK_AES, "aes", "apb1", 0);
-> +       hws[K210_CLK_OTP] =3D
-> +                k210_register_clk(K210_CLK_OTP, "otp", "apb1", 0);
-> +
-> +       /* Muxed clocks with in0/pll0 as source */
-> +       hws[K210_CLK_SPI3] =3D
-> +               k210_register_clk(K210_CLK_SPI3, "spi3", NULL, 0);
-> +       hws[K210_CLK_TIMER0] =3D
-> +               k210_register_clk(K210_CLK_TIMER0, "timer0", NULL, 0);
-> +       hws[K210_CLK_TIMER1] =3D
-> +               k210_register_clk(K210_CLK_TIMER1, "timer1", NULL, 0);
-> +       hws[K210_CLK_TIMER2] =3D
-> +               k210_register_clk(K210_CLK_TIMER2, "timer2", NULL, 0);
-> +
-> +       for (i =3D 0; i < K210_NUM_CLKS; i++) {
-> +               if (IS_ERR(hws[i])) {
-> +                       pr_err("%pOFP: register clock %d failed %ld\n",
-> +                              np, i, PTR_ERR(hws[i]));
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +       ret =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get, kcl->cl=
-k_data);
-> +       if (ret)
-> +               pr_err("%pOFP: add clock provider failed %d\n", np, ret);
-> +       else
-> +               pr_info("%pOFP: CPU running at %lu MHz\n",
-
-Is this important? Is there a CPUfreq driver that runs and tells us the
-boot CPU frequency instead? Doesn't feel like we care in the clk driver
-about this.
-
-> +                       np, clk_hw_get_rate(hws[K210_CLK_CPU]) / 1000000);
-> +
-> +       return;
-> +err:
-> +       pr_err("%pOFP: clock initialization failed\n", np);
-> +       iounmap(kcl->regs);
-> +       kfree(kcl->clk_data);
-> +       kfree(kcl);
-> +       kcl =3D NULL;
-
-Why?
-
-> +}
-> +
-> +CLK_OF_DECLARE_DRIVER(k210_clk, "canaan,k210-clk", k210_clk_init);
-
-Is this needed or can this just be a plain platform driver? If something
-is needed early for a clocksource or clockevent then the driver can be
-split to register those few clks early from this hook and then register
-the rest later when the platform device probes. That's what
-CLK_OF_DECLARE_DRIVER is for. A DECLARE_DRIVER without a platform driver
-is incorrect.
-
-> +
-> +/*
-> + * Enable PLL1 to be able to use the AI SRAM.
-> + */
-> +void __init k210_clk_early_init(void __iomem *regs)
-> +{
-> +       struct k210_pll pll1;
-> +
-> +       /* Make sure aclk selector is set to PLL0 */
-> +       k210_aclk_set_selector(1);
-> +
-> +       /* Startup PLL1 to enable the aisram bank for general memory use =
-*/
-> +       k210_init_pll(&pll1, K210_PLL1, regs);
-> +       k210_pll_enable_hw(&pll1);
-> +}
-> diff --git a/include/soc/canaan/k210-sysctl.h b/include/soc/canaan/k210-s=
-ysctl.h
-> new file mode 100644
-> index 000000000000..50b21484f7c7
-> --- /dev/null
-> +++ b/include/soc/canaan/k210-sysctl.h
-[...]
-> +#define K210_SYSCTL_DMA_SEL0   0x64 /* DMA handshake selector 0 */
-> +#define K210_SYSCTL_DMA_SEL1   0x68 /* DMA handshake selector 1 */
-> +#define K210_SYSCTL_POWER_SEL  0x6C /* IO Power Mode Select controller */
-> +
-> +void __init k210_clk_early_init(void __iomem *regs);
-
-We don't need __init in header files. Please remove the marking.
+SGkgU3RlcGhlbiwNCg0KVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3LiBJIHdpbGwgYWRkcmVzcyBh
+bGwgeW91ciBjb21tZW50cy4NCkkganVzdCBoYXZlIGEgZmV3IHF1ZXN0aW9ucyBiZWxvdy4NCg0K
+T24gRnJpLCAyMDIwLTEyLTA0IGF0IDIyOjE5IC0wODAwLCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+
+IFF1b3RpbmcgRGFtaWVuIExlIE1vYWwgKDIwMjAtMTItMDEgMTk6MjQ6NTApDQo+ID4gZGlmZiAt
+LWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gPiBpbmRleCAyZGFhNmVlNjczZjcu
+LjNkYTlhN2EwMmY2MSAxMDA2NDQNCj4gPiAtLS0gYS9NQUlOVEFJTkVSUw0KPiA+ICsrKyBiL01B
+SU5UQUlORVJTDQo+ID4gQEAgLTM4MjIsNiArMzgyMiwyMiBAQCBXOiAgICAgICBodHRwczovL2dp
+dGh1Yi5jb20vQ2FzY29kYS9jYTgyMTAtbGludXguZ2l0DQo+ID4gwqBGOiAgICAgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9pZWVlODAyMTU0L2NhODIxMC50eHQNCj4gPiDC
+oEY6ICAgICBkcml2ZXJzL25ldC9pZWVlODAyMTU0L2NhODIxMC5jDQo+ID4gwqANCj4gPiANCj4g
+PiANCj4gPiANCj4gPiArQ0FOQUFOL0tFTkRSWVRFIEsyMTAgU09DIENMT0NLIERSSVZFUg0KPiA+
+ICtNOiAgICAgRGFtaWVuIExlIE1vYWwgPGRhbWllbi5sZW1vYWxAd2RjLmNvbT4NCj4gPiArTDog
+ICAgIGxpbnV4LXJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiArTDogICAgIGxpbnV4LWNs
+a0B2Z2VyLmtlcm5lbC5vcmcgKGNsb2NrIGRyaXZlcikNCj4gDQo+IElzIHRoaXMgbmVlZGVkPyBJ
+IHRoaW5rIHdlIGNvdmVyIGFsbCBvZiBkcml2ZXJzL2Nsay8gYW5kIGJpbmRpbmdzL2Nsb2NrDQo+
+IGFscmVhZHkuDQoNCkkgd2FzIG5vdCBzdXJlIGFib3V0IHRoYXQgc28gSSBhZGRlZCB0aGUgZW50
+cnkuIFdpbGwgcmVtb3ZlIGl0Lg0KDQo+IA0KPiA+ICtTOiAgICAgTWFpbnRhaW5lZA0KPiA+ICtG
+OiAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NhbmFhbixrMjEw
+LWNsay55YW1sDQo+ID4gK0Y6ICAgICBkcml2ZXJzL2Nsay9jbGstazIxMC5jDQo+ID4gZGlmZiAt
+LWdpdCBhL2FyY2gvcmlzY3YvS2NvbmZpZy5zb2NzIGIvYXJjaC9yaXNjdi9LY29uZmlnLnNvY3MN
+Cj4gPiBpbmRleCA4OGFjMGQxYTVkYTQuLmYyZjk2MzMwODdkMSAxMDA2NDQNCj4gPiAtLS0gYS9h
+cmNoL3Jpc2N2L0tjb25maWcuc29jcw0KPiA+ICsrKyBiL2FyY2gvcmlzY3YvS2NvbmZpZy5zb2Nz
+DQo+ID4gQEAgLTI5LDYgKzI5LDggQEAgY29uZmlnIFNPQ19DQU5BQU4NCj4gPiDCoMKgwqDCoMKg
+wqDCoMKgc2VsZWN0IFNFUklBTF9TSUZJVkUgaWYgVFRZDQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNl
+bGVjdCBTRVJJQUxfU0lGSVZFX0NPTlNPTEUgaWYgVFRZDQo+ID4gwqDCoMKgwqDCoMKgwqDCoHNl
+bGVjdCBTSUZJVkVfUExJQw0KPiA+ICsgICAgICAgc2VsZWN0IFNPQ19LMjEwX1NZU0NUTA0KPiA+
+ICsgICAgICAgc2VsZWN0IENMS19LMjEwDQo+IA0KPiBBbnkgcmVhc29uIHRvIGRvIHRoaXMgdnMu
+IGp1c3QgbWFrZSBpdCB0aGUgZGVmYXVsdD8NCg0KSSBkbyBub3QgdW5kZXJzdGFuZCBoZXJlLi4u
+IEp1c3Qgc2VsZWN0aW5nIHRoZSBkcml2ZXJzIG5lZWRlZCBmb3IgdGhlIFNvQyBoZXJlLg0KSXMg
+dGhlcmUgYW55IG90aGVyIHdheSBvZiBkb2luZyB0aGlzID8NCg0KWy4uLl0NCj4gPiArDQo+ID4g
+KyAgICAgICB3aGlsZSAodHJ1ZSkgew0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSByZWFkbChw
+bGwtPmxvY2spOw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoKHJlZyAmIG1hc2spID09IG1hc2sp
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKw0KPiA+ICsgICAgICAg
+ICAgICAgICByZWcgfD0gQklUKHBsbC0+bG9ja19zaGlmdCArIEsyMTBfUExMX0NMRUFSX1NMSVAp
+Ow0KPiA+ICsgICAgICAgICAgICAgICB3cml0ZWwocmVnLCBwbGwtPmxvY2spOw0KPiANCj4gSXMg
+dGhpcyByZWFkbF9wb2xsX3RpbWVvdXQ/DQoNCk9oLiBZZXMsIGl0IGlzLiBJIGRpZCBub3Qga25v
+dyBhYm91dCB0aGlzIGZ1bmN0aW9uLiBXaWxsIGNoYW5nZSB0aGUgY29kZSB0byB1c2UNCml0Lg0K
+DQo+IA0KPiA+ICsgICAgICAgfQ0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgYm9vbCBrMjEw
+X3BsbF9od19pc19lbmFibGVkKHN0cnVjdCBrMjEwX3BsbCAqcGxsKQ0KPiA+ICt7DQo+ID4gKyAg
+ICAgICB1MzIgcmVnID0gcmVhZGwocGxsLT5yZWcpOw0KPiA+ICsgICAgICAgdTMyIG1hc2sgPSBL
+MjEwX1BMTF9QV1JEIHwgSzIxMF9QTExfRU47DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHJlZyAm
+IEsyMTBfUExMX1JFU0VUKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+ID4g
+Kw0KPiA+ICsgICAgICAgcmV0dXJuIChyZWcgJiBtYXNrKSA9PSBtYXNrOw0KPiA+ICt9DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgdm9pZCBrMjEwX3BsbF9lbmFibGVfaHcoc3RydWN0IGsyMTBfcGxsICpw
+bGwpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBrMjEwX3BsbF9jZmcgKnBsbF9jZmcgPSAm
+azIxMF9wbGxzX2NmZ1twbGwtPmlkXTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7
+DQo+ID4gKyAgICAgICB1MzIgcmVnOw0KPiA+ICsNCj4gPiArICAgICAgIHNwaW5fbG9ja19pcnFz
+YXZlKCZrY2wtPmNsa19sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGsyMTBf
+cGxsX2h3X2lzX2VuYWJsZWQocGxsKSkNCj4gPiArICAgICAgICAgICAgICAgZ290byB1bmxvY2s7
+DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHBsbC0+aWQgPT0gSzIxMF9QTEwwKSB7DQo+ID4gKyAg
+ICAgICAgICAgICAgIC8qIFJlLXBhcmVudCBhY2xrIHRvIElOMCB0byBrZWVwIHRoZSBDUFVzIHJ1
+bm5pbmcgKi8NCj4gPiArICAgICAgICAgICAgICAgazIxMF9hY2xrX3NldF9zZWxlY3RvcigwKTsN
+Cj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICAvKiBTZXQgZmFjdG9ycyAqLw0KPiA+
+ICsgICAgICAgcmVnID0gcmVhZGwocGxsLT5yZWcpOw0KPiA+ICsgICAgICAgcmVnICY9IH5HRU5N
+QVNLKDE5LCAwKTsNCj4gPiArICAgICAgIHJlZyB8PSBGSUVMRF9QUkVQKEsyMTBfUExMX0NMS1Is
+IHBsbF9jZmctPnIpOw0KPiA+ICsgICAgICAgcmVnIHw9IEZJRUxEX1BSRVAoSzIxMF9QTExfQ0xL
+RiwgcGxsX2NmZy0+Zik7DQo+ID4gKyAgICAgICByZWcgfD0gRklFTERfUFJFUChLMjEwX1BMTF9D
+TEtPRCwgcGxsX2NmZy0+b2QpOw0KPiA+ICsgICAgICAgcmVnIHw9IEZJRUxEX1BSRVAoSzIxMF9Q
+TExfQldBREosIHBsbF9jZmctPmJ3YWRqKTsNCj4gPiArICAgICAgIHJlZyB8PSBLMjEwX1BMTF9Q
+V1JEOw0KPiA+ICsgICAgICAgd3JpdGVsKHJlZywgcGxsLT5yZWcpOw0KPiA+ICsNCj4gPiArICAg
+ICAgIC8qIEVuc3VyZSByZXNldCBpcyBsb3cgYmVmb3JlIGFzc2VydGluZyBpdCAqLw0KPiA+ICsg
+ICAgICAgcmVnICY9IH5LMjEwX1BMTF9SRVNFVDsNCj4gPiArICAgICAgIHdyaXRlbChyZWcsIHBs
+bC0+cmVnKTsNCj4gPiArICAgICAgIHJlZyB8PSBLMjEwX1BMTF9SRVNFVDsNCj4gPiArICAgICAg
+IHdyaXRlbChyZWcsIHBsbC0+cmVnKTsNCj4gPiArICAgICAgIG5vcCgpOw0KPiA+ICsgICAgICAg
+bm9wKCk7DQo+IA0KPiBBcmUgdGhlc2Ugbm9wcyBuZWVkZWQgZm9yIHNvbWUgcmVhc29uPyBBbnkg
+Y29tbWVudCB0byBhZGQgaGVyZT8gSXQncw0KPiBiYXNpY2FsbHkgbm9uLXBvcnRhYmxlIGNvZGUg
+YW5kIGhvcGVmdWxseSBub3RoaW5nIGlzIGluc2VydGVkIGludG8gdGhhdA0KPiB3cml0ZWwgZnVu
+Y3Rpb24gdGhhdCBzaG91bGRuJ3QgYmUgdGhlcmUuDQoNCk5vIGNsdWUuLi4gVGhleSBhcmUgIm1h
+Z2ljIiBub3BzIHRoYXQgYXJlIHByZXNlbnQgaW4gdGhlIEsyMTAgU0RLIGZyb20NCktlbmRyeXRl
+LiBJIGNvcGllZCB0aGF0LCBidXQgZG8gbm90IGFjdHVhbGx5IGtub3cgaWYgdGhleSBhcmUgcmVh
+bGx5IG5lZWRlZC4gSQ0KYW0gd29ya2luZyB3aXRob3V0IGFueSBzcGVjcyBmb3IgdGhlIGhhcmR3
+YXJlOiB0aGUgS2VuZHJ5dGUgU0RLIGlzIG15IG1haW4NCnNvdXJjZSBvZiBpbmZvcm1hdGlvbiBo
+ZXJlLiBJIHdpbGwgdHJ5IHRvIHJlbW92ZSB0aGVtIG9yIGp1c3QgcmVwbGFjZSB0aGlzIHdpdGgN
+CmEgZGVsYXkoKSBjYWxsIGEgbmQgc2VlIHdoYXQgaGFwcGVucy4NCg0KWy4uLl0NCj4gPiArc3Rh
+dGljIGludCBrMjEwX2FjbGtfc2V0X3BhcmVudChzdHJ1Y3QgY2xrX2h3ICpodywgdTggaW5kZXgp
+DQo+ID4gK3sNCj4gPiArICAgICAgIGlmIChXQVJOX09OKGluZGV4ID4gMSkpDQo+IA0KPiBJcyB0
+aGlzIHBvc3NpYmxlPyBXaGF0IGFtIEkgZ29pbmcgdG8gZG8gYXMgYSB1c2VyIGlmIHRoaXMgaGFw
+cGVucz8NCg0KTm8sIGl0IGlzIG5vdCBwb3NzaWJsZS4gV2lsbCByZW1vdmUgdGhpcy4gSSBjb3Vs
+ZCBwdXQgYSBCVUdfT04oKSwgYnV0IEkgYW0gbm90DQphIGZhbiB0aGlzIGV4dHJlbWUuDQoNClsu
+Li5dDQo+ID4gKyAgICAgICAvKg0KPiA+ICsgICAgICAgICogaW4wIGlzIHRoZSBzeXN0ZW0gYmFz
+ZSBmaXhlZC1yYXRlIDI2TUh6IG9zY2lsbGF0b3Igd2hpY2gNCj4gPiArICAgICAgICAqIHNob3Vs
+ZCBhbHJlYWR5IGJlIGRlZmluZWQgYnkgdGhlIGRldmljZSB0cmVlLiBJZiBpdCBpcyBub3QsDQo+
+ID4gKyAgICAgICAgKiBjcmVhdGUgaXQgaGVyZS4NCj4gDQo+IEFyZSB0aGVyZSBvbGQgRFRCcyB0
+aGF0IGRvbid0IGhhdmUgdGhpcz8gU2FkZmFjZS4NCg0KTm8sIG5vdCBhbnkgb2xkIERUQi4gV2ls
+bCByZW1vdmUgdGhhdC4NCg0KPiANCj4gPiArICAgICAgICAqLw0KPiA+ICsgICAgICAgaW4wX2Ns
+ayA9IG9mX2Nsa19nZXQobnAsIDApOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihpbjBfY2xrKSkg
+ew0KPiA+ICsgICAgICAgICAgICAgICBwcl93YXJuKCIlcE9GUDogaW4wIG9zY2lsbGF0b3Igbm90
+IGZvdW5kXG4iLCBucCk7DQo+ID4gKyAgICAgICAgICAgICAgIGh3c1tLMjEwX0NMS19JTjBdID0N
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbGtfaHdfcmVnaXN0ZXJfZml4ZWRfcmF0ZShO
+VUxMLCAiaW4wIiwgTlVMTCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAwLCBLMjEwX0lOMF9SQVRFKTsNCj4gPiArICAgICAgIH0gZWxzZSB7
+DQo+ID4gKyAgICAgICAgICAgICAgIGh3c1tLMjEwX0NMS19JTjBdID0gX19jbGtfZ2V0X2h3KGlu
+MF9jbGspOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsgICAgICAgaWYgKElTX0VSUihod3NbSzIxMF9D
+TEtfSU4wXSkpIHsNCj4gPiArICAgICAgICAgICAgICAgcHJfZXJyKCIlcE9GUDogZmFpbGVkIHRv
+IGdldCBiYXNlIG9zY2lsbGF0b3JcbiIsIG5wKTsNCj4gPiArICAgICAgICAgICAgICAgZ290byBl
+cnI7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgaW4wID0gY2xrX2h3X2dldF9u
+YW1lKGh3c1tLMjEwX0NMS19JTjBdKTsNCj4gPiArICAgICAgIGFjbGtfcGFyZW50c1swXSA9IGlu
+MDsNCj4gPiArICAgICAgIHBsbF9wYXJlbnRzWzBdID0gaW4wOw0KPiA+ICsgICAgICAgbXV4X3Bh
+cmVudHNbMF0gPSBpbjA7DQo+IA0KPiBDYW4gd2UgdXNlIHRoZSBuZXcgd2F5IG9mIHNwZWNpZnlp
+bmcgY2xrIHBhcmVudHMgc28gdGhhdCB3ZSBkb24ndCBoYXZlDQo+IHRvIHVzZSBfX2Nsa19nZXRf
+aHcoKSwgb2ZfY2xrX2dldCgpLCBhbmQgY2xrX2h3X2dldF9uYW1lKCk/IEhvcGVmdWxseQ0KPiB0
+aGUgY29yZSBjYW4gaGFuZGwgdGhhdCBhbGwgaW5zdGVhZCBvZiB0aGlzIGRyaXZlci4NCg0KTm90
+IHN1cmUgd2hhdCBuZXcgd2F5IG9mIHNwZWNpZnlpbmcgdGhlIHBhcmVudCB5b3UgYXJlIHJlZmVy
+cmluZyB0byBoZXJlLg0KY2xrX2h3X3NldF9wYXJlbnQoKSA/DQoNCj4gDQo+ID4gKw0KPiA+ICsg
+ICAgICAgLyogUExMcyAqLw0KPiA+ICsgICAgICAgaHdzW0syMTBfQ0xLX1BMTDBdID0NCj4gPiAr
+ICAgICAgICAgICAgICAgazIxMF9yZWdpc3Rlcl9wbGwoSzIxMF9QTEwwLCAicGxsMCIsIHBsbF9w
+YXJlbnRzLCAxLCAwKTsNCj4gPiArICAgICAgIGh3c1tLMjEwX0NMS19QTEwxXSA9DQo+ID4gKyAg
+ICAgICAgICAgICAgIGsyMTBfcmVnaXN0ZXJfcGxsKEsyMTBfUExMMSwgInBsbDEiLCBwbGxfcGFy
+ZW50cywgMSwgMCk7DQo+ID4gKyAgICAgICBod3NbSzIxMF9DTEtfUExMMl0gPQ0KPiA+ICsgICAg
+ICAgICAgICAgICBrMjEwX3JlZ2lzdGVyX3BsbChLMjEwX1BMTDIsICJwbGwyIiwgcGxsX3BhcmVu
+dHMsIDMsIDApOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIGFjbGs6IG11eGVkIG9mIGluMCBhbmQg
+cGxsMF9kLCBubyBnYXRlICovDQo+ID4gKyAgICAgICBod3NbSzIxMF9DTEtfQUNMS10gPSBrMjEw
+X3JlZ2lzdGVyX2FjbGsoKTsNCj4gPiArDQo+ID4gKyAgICAgICAvKg0KPiA+ICsgICAgICAgICog
+Q2xvY2tzIHdpdGggYWNsayBhcyBzb3VyY2U6IHRoZSBDUFUgY2xvY2sgaXMgb2J2aW91c2x5IGNy
+aXRpY2FsLg0KPiA+ICsgICAgICAgICogU28gaXMgdGhlIENMSU5UIGNsb2NrIGFzIHRoZSBzY2hl
+ZHVsZXIgY2xvY2tzb3VyY2UuDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIGh3c1tLMjEw
+X0NMS19DUFVdID0NCj4gPiArICAgICAgICAgICAgICAgazIxMF9yZWdpc3Rlcl9jbGsoSzIxMF9D
+TEtfQ1BVLCAiY3B1IiwgImFjbGsiLCBDTEtfSVNfQ1JJVElDQUwpOw0KPiA+ICsgICAgICAgaHdz
+W0syMTBfQ0xLX0NMSU5UXSA9DQo+ID4gKyAgICAgICAgICAgICAgIGNsa19od19yZWdpc3Rlcl9m
+aXhlZF9mYWN0b3IoTlVMTCwgImNsaW50IiwgImFjbGsiLA0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIENMS19JU19DUklUSUNBTCwgMSwgNTApOw0KPiAN
+Cj4gSXMgYW55b25lIGdldHRpbmcgdGhlc2UgY2xrcz8gSXQncyBuaWNlIGFuZCBhbGwgdG8gbW9k
+ZWwgdGhpbmdzIGluIHRoZQ0KPiBjbGsgZnJhbWV3b3JrIGJ1dCBpZiB0aGV5IG5ldmVyIGhhdmUg
+YSBjb25zdW1lciB0aGVuIGl0IGlzIHNvcnQgb2YNCj4gdXNlbGVzcyBhbmQganVzdCB3YXN0ZXMg
+bWVtb3J5IGFuZCBjYXVzZXMgbW9yZSBvdmVyaGVhZC4NCg0KVGhlIENQVSBhbmQgU1JBTSBjbG9j
+a3MgZG8gbm90IGhhdmUgYW55IGNvbnN1bWVyLCBzbyBJIGNvdWxkIHJlbW92ZSB0aGVtIChqdXN0
+DQplbmFibGUgdGhlIEhXIGJ1dCBub3QgcmVwcmVzZW50IHRoZW0gYXMgY2xvY2tzIGluIHRoZSBk
+cml2ZXIpLiBUaGVyZSBpcyBubw0KZGlyZWN0IGNvbnN1bWVyIG9mIEFDTEsgYnV0IGl0IGlzIHRo
+ZSBwYXJlbnQgb2YgbXVsdGlwbGUgY2xvY2tzLCBpbmNsdWRpbmcgdGhlDQpTUkFNIGNsb2Nrcy4g
+U28gaXQgbmVlZHMgdG8gYmUgcmVwcmVzZW50ZWQgYXMgYSBjbG9jayBhbmQga2VwdCBhbGl2ZSBl
+dmVuIGlmDQphbGwgdGhlIHBlcmlwaGVyYWwgZHJpdmVycyBuZWVkaW5nIGl0IGFyZSBkaXNhYmxl
+ZC4gT3RoZXJ3aXNlLCB0aGUgc3lzdGVtIGp1c3QNCnN0b3BzIChTUkFNIGFjY2Vzc2VzIGhhbmcp
+Lg0KDQpbLi4uXQ0KPiA+ICsgICAgICAgcmV0ID0gb2ZfY2xrX2FkZF9od19wcm92aWRlcihucCwg
+b2ZfY2xrX2h3X29uZWNlbGxfZ2V0LCBrY2wtPmNsa19kYXRhKTsNCj4gPiArICAgICAgIGlmIChy
+ZXQpDQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiJXBPRlA6IGFkZCBjbG9jayBwcm92aWRl
+ciBmYWlsZWQgJWRcbiIsIG5wLCByZXQpOw0KPiA+ICsgICAgICAgZWxzZQ0KPiA+ICsgICAgICAg
+ICAgICAgICBwcl9pbmZvKCIlcE9GUDogQ1BVIHJ1bm5pbmcgYXQgJWx1IE1IelxuIiwNCj4gDQo+
+IElzIHRoaXMgaW1wb3J0YW50PyBJcyB0aGVyZSBhIENQVWZyZXEgZHJpdmVyIHRoYXQgcnVucyBh
+bmQgdGVsbHMgdXMgdGhlDQo+IGJvb3QgQ1BVIGZyZXF1ZW5jeSBpbnN0ZWFkPyBEb2Vzbid0IGZl
+ZWwgbGlrZSB3ZSBjYXJlIGluIHRoZSBjbGsgZHJpdmVyDQo+IGFib3V0IHRoaXMuDQoNClRoZXJl
+IGlzIG5vIENQVSBmcmVxIGRyaXZlciB0aGF0IGdpdmVzIHRoaXMgZnJlcXVlbmN5IHRoYXQgSSBr
+bm93IG9mLiBUaGF0IGlzDQp3aHkgSSBhZGRlZCB0aGUgbWVzc2FnZSBzaW5jZSB0aGUgZHJpdmVy
+IGJhc2ljYWxseSBqdXN0IGNvbWVzIHVwIHVzaW5nIHRoZQ0KZGVmYXVsdCBIVyBzZXR0aW5ncyBm
+b3IgdGhlIFNvQy4gQ1BVIGZyZXEgc3BlZWQgY2FuIGJlIGNoYW5nZWQgdGhvdWdoIGJ5DQppbmNy
+ZWFzaW5nIHRoZSBQTEwgZnJlcS4gSnVzdCBub3Qgc3VwcG9ydGluZyB0aGlzIGZvciBub3cgYXMg
+aXQgaXMgdHJpY2t5IHRvDQpkbzogdGhlIFNSQU0gY2xvY2tzIGRlcGVuZCBvbiBhY2xrIGFuZCBQ
+TEwxIGFuZCBpZiB0aGVzZSBhcmUgbm90IHRoZSBzYW1lDQp2YWx1ZSwgdGhlIHN5c3RlbSBoYW5n
+cyAobW9zdCBsaWtlbHkgYmVjYXVzZSB3ZSBlbmQgdXAgd2l0aCB0aGUgc3JhbSBiYW5rcw0KcnVu
+bmluZyBhdCBkaWZmZXJlbnQgc3BlZWRzLCB3aGljaCB0aGUgU29DIGNhY2hlIGRvZXMgbm90IGxp
+a2UpLiANCg0KWy4uLl0NCj4gPiArQ0xLX09GX0RFQ0xBUkVfRFJJVkVSKGsyMTBfY2xrLCAiY2Fu
+YWFuLGsyMTAtY2xrIiwgazIxMF9jbGtfaW5pdCk7DQo+IA0KPiBJcyB0aGlzIG5lZWRlZCBvciBj
+YW4gdGhpcyBqdXN0IGJlIGEgcGxhaW4gcGxhdGZvcm0gZHJpdmVyPyBJZiBzb21ldGhpbmcNCj4g
+aXMgbmVlZGVkIGVhcmx5IGZvciBhIGNsb2Nrc291cmNlIG9yIGNsb2NrZXZlbnQgdGhlbiB0aGUg
+ZHJpdmVyIGNhbiBiZQ0KPiBzcGxpdCB0byByZWdpc3RlciB0aG9zZSBmZXcgY2xrcyBlYXJseSBm
+cm9tIHRoaXMgaG9vayBhbmQgdGhlbiByZWdpc3Rlcg0KPiB0aGUgcmVzdCBsYXRlciB3aGVuIHRo
+ZSBwbGF0Zm9ybSBkZXZpY2UgcHJvYmVzLiBUaGF0J3Mgd2hhdA0KPiBDTEtfT0ZfREVDTEFSRV9E
+UklWRVIgaXMgZm9yLiBBIERFQ0xBUkVfRFJJVkVSIHdpdGhvdXQgYSBwbGF0Zm9ybSBkcml2ZXIN
+Cj4gaXMgaW5jb3JyZWN0Lg0KDQpJIHRoaW5rIEkgY2FuIGNsZWFuIHRoaXMgdXA6IGFjbGsgYW5k
+IGNsaW50IGNsb2NrcyBhcmUgbmVlZGVkIGVhcmx5IGJ1dCBvdGhlcnMNCmNhbiBsaWtlbHkgYmUg
+ZGVmZXJyZWQuIFdpbGwgZml4IHRoaXMgdXAuDQoNClRoYW5rcyAhDQoNCi0tIA0KRGFtaWVuIExl
+IE1vYWwNCldlc3Rlcm4gRGlnaXRhbA0K
