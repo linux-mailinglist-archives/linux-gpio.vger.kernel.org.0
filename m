@@ -2,124 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38A712CFEA6
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 21:08:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A80242CFEBA
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 21:18:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbgLEUIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Dec 2020 15:08:10 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:54631 "EHLO
+        id S1725536AbgLEUSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 15:18:17 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:47905 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgLEUIJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 15:08:09 -0500
+        with ESMTP id S1725379AbgLEUSQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 15:18:16 -0500
 Received: from [192.168.1.155] ([95.117.6.188]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MKbPg-1kSsSo2JCe-00KvFk; Sat, 05 Dec 2020 21:05:18 +0100
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MbRwP-1k9pJD3wRl-00bwGo; Sat, 05 Dec 2020 21:15:31 +0100
+Subject: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
+ drivers: gpio: add virtio-gpio guest driver
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     corbet@lwn.net, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, mst@redhat.com, jasowang@redhat.com,
         linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org, stefanha@redhat.com,
-        msuchanek@suse.de
+        linux-riscv@lists.infradead.org
 References: <20201203191135.21576-1-info@metux.net>
  <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
- <20201205142218-mutt-send-email-mst@kernel.org>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <e69569b5-0c45-e072-5de4-81a4acecdae3@metux.net>
-Date:   Sat, 5 Dec 2020 21:05:16 +0100
+Message-ID: <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
+Date:   Sat, 5 Dec 2020 21:15:29 +0100
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20201205142218-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20201203191135.21576-2-info@metux.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QugltoubQsv7+6FipOEchA2SlXCGRjERRAI/iuCtMDvu9KDBRRq
- saQTyePYS/E5loL/IxLrDFxgvPJ5JGmBzjTKIcVIrHGc/f9AGEkatuhoHw3jThMUeX5Ck8N
- ZMgEGXkxFB7huSU0tSGiu9ycGb4dQB+6+3LD3fCzBbfr+/KPagDfjvKGE3ZWg5Rkw2ZXhVY
- ZWUytYSOdq9CBmccEdCYg==
+X-Provags-ID: V03:K1:6Us/Eccm2b+8uFxw1F3t+QrfFkxImB2I2ty+Sf0QMFWg/I08C+0
+ l/putPEzoIZdUH7OratR6bhG5Wy5rbrzir2gcr2T83PhcZL3s+tN+LfQ0QpaonL4C2Nu5/I
+ baDn5qVWWroBU8pOeaRhpPy9tmeBMVkzlfmhLKOxlsZCYIiEIxKjJMl57Kc88zmH7OFxMy5
+ x+dpS83a3PhirR79mANbQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2it/pa0pkAM=:oFJFH+K8FRt4xExK6On0dO
- IFQ4fpnbkvP9d1krIcL/bcTDB2bAF0+lBGVmZa9S1za8Jrc/uZtc8/+jHtAgwrYp+v5g33ZaR
- m+A6CYjJC2IGU3h400s3xfPZKdRDKK4XCZqd4PFQOU/x5g2EjxnlDfteF6Ao/JBNWIdC7qDbT
- RUp+t3icVWxWEDISAetAMkDqbwY4bd9ygxbehmHiFzeY6Xf5F1O6LzWtu4VhYKvnchqhqPfdG
- FYNj0m7RzUP+szC8fWKQeVfmfCQluY/ppzurcFmlMkIZEbZq48JZv1wEmurUS4qNDiOWMJUyG
- UoqkrpJG/4p4FSrepw7H+NefIpsJqm8cPwM58vwmyxWULjoNJKwtGRQU3A2r18InX7oyUlXFM
- H0Ei0ybi98Tuggk8+zRcKWbh8Ji1tUBVGCNE36E1Hf/7X0kBrLhGGHsaWlnk9
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TmIGK7FxUCU=:yAJyBYcomdQV3KBUpDYeoh
+ 7Ge9qY1V8TDxnX8V6yve7wUof8n/FkUM9wClbl4yh6qUcL5r3mNwZRDoNPECQQjpoDTUHMytG
+ rYjGRCAbBatBR7IYgg9wiBYMHqUMHlbwByVqAdq0Wwn7PxImKXp+bSiXl69HnKUwFkeZ/ZXqk
+ h7QYanonsFRUq1z+CNJS2v0F5n2uJAOZL+4iqVYbpHSrq2O/IZHcrZ2uNiwnzBJ/1mQecCdlW
+ +3AIO9ESFYwOJe+Z6nzDzhW1+/cKJsiNBhb9EaNDCxmetXm5oNpXhXtkKr0UsoGSrYe7hxNzM
+ 3PmuVvz/ILrxFzD4ElD91NMu4TjHDRZjD/L29ni5LEktB3rSDvAHDnxTveECZjzMYejJ7H9/I
+ miRi2KQ5May5m3yoPoMC9K+c0UhmWEUFlPN95YJidQg0YPEgQQTmIRibVZDLs
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05.12.20 20:32, Michael S. Tsirkin wrote:
+On 03.12.20 20:11, Enrico Weigelt, metux IT consult wrote:
 
-Hi,
+Friends,
 
-> It seems a bit of a mess, at this point I'm not entirely sure when
-> should drivers select VIRTIO and when depend on it.
+I've still got a problem w/ signal/irq handling:
 
-if VIRTIO just enables something that could be seen as library
-functions, then select should be right, IMHO.
+The virtio-gpio device/host can raise a signal on line state change.
+Kinda IRQ, but not actually running through real IRQs, instead by a
+message running though queue. (hmm, kida MSI ? :o).
 
-> The text near it says:
-> 
-> # SPDX-License-Identifier: GPL-2.0-only
-> config VIRTIO
->         tristate
+I've tried allocating an IRQ range and calling generic_handle_irq(),
+but then I'm getting unhanled IRQ trap.
 
-oh, wait, doesn't have an menu text, so we can't even explicitly enable
-it (not shown in menu) - only implicitly. Which means that some other
-option must select it, in order to become availe at all, and in order
-to make others depending on it becoming available.
+My hope was some gpio lib function for calling in when an line state
+changes, that does all the magic (somebody listening on some gpio,
+or gpio used as interrupt source), but the only thing I could find
+was some helpers for gpio chips that have their own builtin
+interrupt controller (VIRTIO_GPIO_EV_HOST_LEVEL).
 
-IMHO, therefore select is the correct approach.
+Somehow feels that's not quite what I'm looking for.
 
-
->         help
->           This option is selected by any driver which implements the virtio
->           bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
->           or CONFIG_S390_GUEST.
-> 
-> Which seems clear enough and would indicate drivers for devices *behind*
-> the bus should not select VIRTIO and thus presumably should "depend on" it.
-> This is violated in virtio console and virtio fs drivers.
-
-See above: NAK. because it can't even be enabled directly (by the user).
-If it wasn't meant otherwise, we'd have to add an menu text.
-
-> For console it says:
-> 
-> commit 9f30eb29c514589e16f2999ea070598583d1f6ec
-> Author: Michal Suchanek <msuchanek@suse.de>
-> Date:   Mon Aug 31 18:58:50 2020 +0200
-> 
->     char: virtio: Select VIRTIO from VIRTIO_CONSOLE.
->     
->     Make it possible to have virtio console built-in when
->     other virtio drivers are modular.
->     
->     Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->     Reviewed-by: Amit Shah <amit@kernel.org>
->     Link: https://lore.kernel.org/r/20200831165850.26163-1-msuchanek@suse.de
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> which seems kind of bogus - why do we care about allowing a builtin
-> virtio console driver if the pci virtio bus driver is a module?
-> There won't be any devices on the bus to attach to ...
-
-When using other transports ?
-In my current project, eg. I'm using mmio - my kernel has pci completely
-disabled.
-
-> I am inclined to fix console and virtio fs to depend on VIRTIO:
-> select is harder to use correctly ...
-
-I don't thinkt that would be good - instead everybody should just select
-VIRTIO, never depend on it (maybe depend on VIRTIO_MENU instead)
+Could anybody please give me more insights ?
 
 
 --mtx
