@@ -2,54 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCE1A2CF82F
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 01:48:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D362CF9CF
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 06:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgLEAq7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Dec 2020 19:46:59 -0500
-Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:49526 "EHLO
-        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgLEAq5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Dec 2020 19:46:57 -0500
-X-Greylist: delayed 14573 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 19:46:41 EST
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
-        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id 274A31A5589;
-        Sat,  5 Dec 2020 04:44:55 +0900 (JST)
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
-        by postfix.imss71 (Postfix) with ESMTP id E5C39838858;
-        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
-Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
-        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id B84F6838260;
-        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
+        id S1728471AbgLEFmZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 00:42:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727444AbgLEFmZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 5 Dec 2020 00:42:25 -0500
+Content-Type: text/plain; charset="utf-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607146904;
+        bh=1UOM3lyrYNIHNQmUwBpCqtJorNVR7n1hPqtb+XM0tww=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=MA1iZSIwjlf5aB6MkgnstF2EhHg1aeaFegQlC4e4IqyTJ8tHBTyJtoEqe3FJfNGNO
+         SoMQf7vq05Tx5xLfWgdSSwaD3ApiFcY9gPsK+XuJNoPygGk9Vpf++d8pAQcwyJw+1u
+         LmVGJ7d1+A3R5bGrrZ6de9PGw3vEE8rzwzVQJVA/T3gq41guMRt6U2Gd31BEi9CcYo
+         DVoue+GnmE1fpqqoTjLy677Z3Pwj1K0bxjdtGFSMlyNHviuxAjU9LZpz77637a2loe
+         qjWqNC+dpcfpjacRZ0DU81hayhdA+dd6PJZmMQYTF2skgyLa62kCzoWajT/wx0aS9K
+         5YnYBCzJ/X+MQ==
 MIME-Version: 1.0
-Message-ID: <20201204194454.00002B21.0147@hyogo-dai.ac.jp>
-Date:   Sat, 05 Dec 2020 04:44:54 +0900
-From:   "Dr.Raymond" <tabata@hyogo-dai.ac.jp>
-To:     <infocarferr1@aim.com>
-Reply-To: <infocarfer@aim.com>
-Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
-         Kuo Fung I have Important Matter to Discuss with you concerning
-         my late client. Died without a NEXT OF KIN. Send me your private
-         email for full details information. 
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MAILER: Active! mail
-X-TM-AS-MML: disable
-X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
-X-TM-AS-Result: No--4.326-5.0-31-10
-X-imss-scan-details: No--4.326-5.0-31-10
-X-TM-AS-User-Approved-Sender: No
-X-TMASE-MatchedRID: +T4Z3mpR0x5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce/bj
-        Enpjm61/Gf23dqZJjE4Erxo5p8V1/E1+zyfzlN7y/sToY2qzpx7w5nZ/qYg41XEWw1TkKAjcYff
-        qdBtG2ocgOkCKsW/kbuunGEBqPil++coAzulIP8gMTyJMXCOBhj9BWL7GG0LsKrauXd3MZDUZaR
-        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
-        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201202032500.206346-2-damien.lemoal@wdc.com>
+References: <20201202032500.206346-1-damien.lemoal@wdc.com> <20201202032500.206346-2-damien.lemoal@wdc.com>
+Subject: Re: [PATCH v4 01/21] riscv: Fix kernel time_init()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sean Anderson <seanga2@gmail.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Date:   Fri, 04 Dec 2020 21:41:43 -0800
+Message-ID: <160714690354.1580929.8976634034112573437@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-infocarfer@aim.com
+Quoting Damien Le Moal (2020-12-01 19:24:40)
+> If of_clk_init() is not called in time_init(), clock providers defined
+> in the system device tree are not initialized, resulting in failures for
+> other devices to initialize due to missing clocks.
+> Similarly to other architectures and to the default kernel time_init()
+> implementation, call of_clk_init() before executing timer_probe() in
+> time_init().
+>=20
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
 
-
-
+Acked-by: Stephen Boyd <sboyd@kernel.org>
