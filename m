@@ -2,87 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80242CFEBA
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 21:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE6992CFF40
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 22:34:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgLEUSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Dec 2020 15:18:17 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:47905 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgLEUSQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 15:18:16 -0500
-Received: from [192.168.1.155] ([95.117.6.188]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MbRwP-1k9pJD3wRl-00bwGo; Sat, 05 Dec 2020 21:15:31 +0100
-Subject: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
- drivers: gpio: add virtio-gpio guest driver
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mst@redhat.com, jasowang@redhat.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
-Date:   Sat, 5 Dec 2020 21:15:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1725933AbgLEVeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 16:34:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgLEVeR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 16:34:17 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728E9C0613CF
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Dec 2020 13:33:37 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id e7so468712ljg.10
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Dec 2020 13:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=44cM81jwDy3oSJ5c3tpV4IlBGDrsE7jmCYgRJXxm894=;
+        b=olsBNT8OXaV/QWtQpC33sHoZgjrGOoBbg/3DZZGkM7R1HtfgTJsytlsl9xTl1LdLKj
+         +X+1S8OTcdUDtaqr88DMBHhoj0jUjOoiQ0Db6/za+mN+dXxtSF12wyr1n43ePih4Ibhd
+         7jizVyoP/RxPRFKwIjLd2mXYfLU7cD6QHIVj0ZpSQ/+CkjAyxmJTm7qTaHVQuCMJOWey
+         mfY0R8x/hj9PS9X/JhqOHdEcbLdqzCz76tTfLW6PdEva/mb7KPKseWXh1945ToF/8T4i
+         Q26YUNjB9Tg6PGIAOozjZP1hv2H6PKTllOzPUskkQc0Y9T/44hBz3zjRP5DvQO08ce8R
+         X8qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=44cM81jwDy3oSJ5c3tpV4IlBGDrsE7jmCYgRJXxm894=;
+        b=dfg3xd33CbzIDR+cFaAAUecqEEKmZbyR1xu8ANnnQW9ayXdYogclBLeBwU+HYmarZL
+         5XSHwpyt/HyZjOA3QZdc3tiDA00liJYKv6RgxpijjVWakHRYNhYAP6Ppg/W17HLoLeKI
+         IbXoeSdArWj35wLTP/tOoymnvWRzA/k0S2sY6JWKixZPz/6Pyk1AQxeay3wFl5UlOOsg
+         yqU0IXXBqycvox9CnlYaCi0NFtqHqo3lwdRiWjNhx1wjxSJ3O1oC1r1kUakchrW87zXR
+         mL4lzmtZ8XJt/j4HWqtzWhZHXaPI4MybR6sBdJqfejb6zzoqGk8wjXZ1NYTXGKgeakG1
+         wD8A==
+X-Gm-Message-State: AOAM533FyxutbqTcEk8ZsEjNDh3MaqhLn+fOSegdOYJuhK0rxJXofSdi
+        rCWCKUuhkWFYfUlKjbbNw1+0BxSzT8pMCMWlgk6h/A==
+X-Google-Smtp-Source: ABdhPJyS/nBnudQvrGNGdH8DXPxEfZtPNZH7bAoPMUKmttA9jwmhgIJBCwKO6CfEItZdbV5BfC4BEsqVV22asvr4nt0=
+X-Received: by 2002:a2e:b1c9:: with SMTP id e9mr5995158lja.283.1607204015946;
+ Sat, 05 Dec 2020 13:33:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201203191135.21576-2-info@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6Us/Eccm2b+8uFxw1F3t+QrfFkxImB2I2ty+Sf0QMFWg/I08C+0
- l/putPEzoIZdUH7OratR6bhG5Wy5rbrzir2gcr2T83PhcZL3s+tN+LfQ0QpaonL4C2Nu5/I
- baDn5qVWWroBU8pOeaRhpPy9tmeBMVkzlfmhLKOxlsZCYIiEIxKjJMl57Kc88zmH7OFxMy5
- x+dpS83a3PhirR79mANbQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TmIGK7FxUCU=:yAJyBYcomdQV3KBUpDYeoh
- 7Ge9qY1V8TDxnX8V6yve7wUof8n/FkUM9wClbl4yh6qUcL5r3mNwZRDoNPECQQjpoDTUHMytG
- rYjGRCAbBatBR7IYgg9wiBYMHqUMHlbwByVqAdq0Wwn7PxImKXp+bSiXl69HnKUwFkeZ/ZXqk
- h7QYanonsFRUq1z+CNJS2v0F5n2uJAOZL+4iqVYbpHSrq2O/IZHcrZ2uNiwnzBJ/1mQecCdlW
- +3AIO9ESFYwOJe+Z6nzDzhW1+/cKJsiNBhb9EaNDCxmetXm5oNpXhXtkKr0UsoGSrYe7hxNzM
- 3PmuVvz/ILrxFzD4ElD91NMu4TjHDRZjD/L29ni5LEktB3rSDvAHDnxTveECZjzMYejJ7H9/I
- miRi2KQ5May5m3yoPoMC9K+c0UhmWEUFlPN95YJidQg0YPEgQQTmIRibVZDLs
+References: <20201127140852.123192-1-thierry.reding@gmail.com> <20201127140852.123192-3-thierry.reding@gmail.com>
+In-Reply-To: <20201127140852.123192-3-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 5 Dec 2020 22:33:24 +0100
+Message-ID: <CACRpkdZ3Krgsjyc3-NU0pmYkzFPue_-1VWqkdNvxoG2c6OF7aQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: tegra: Convert to gpio_irq_chip
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03.12.20 20:11, Enrico Weigelt, metux IT consult wrote:
+On Fri, Nov 27, 2020 at 3:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Friends,
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Convert the Tegra GPIO driver to use the gpio_irq_chip infrastructure.
+> This allows a bit of boiler plate to be removed and while at it enables
+> support for hierarchical domains, which is useful to support PMC wake
+> events on Tegra210 and earlier.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-I've still got a problem w/ signal/irq handling:
+The patch didn't apply to my "devel" branch for some reason
+so have a look at that, seems gpio-tegra.c has some changes not
+in my tree.
 
-The virtio-gpio device/host can raise a signal on line state change.
-Kinda IRQ, but not actually running through real IRQs, instead by a
-message running though queue. (hmm, kida MSI ? :o).
+>  struct tegra_gpio_soc_config {
+> @@ -93,12 +91,12 @@ struct tegra_gpio_soc_config {
+>  struct tegra_gpio_info {
+>         struct device                           *dev;
+>         void __iomem                            *regs;
+> -       struct irq_domain                       *irq_domain;
+>         struct tegra_gpio_bank                  *bank_info;
+>         const struct tegra_gpio_soc_config      *soc;
+>         struct gpio_chip                        gc;
+>         struct irq_chip                         ic;
+>         u32                                     bank_count;
+> +       unsigned int                            *irqs;
 
-I've tried allocating an IRQ range and calling generic_handle_irq(),
-but then I'm getting unhanled IRQ trap.
+So this is hierarchical with several IRQs.
 
-My hope was some gpio lib function for calling in when an line state
-changes, that does all the magic (somebody listening on some gpio,
-or gpio used as interrupt source), but the only thing I could find
-was some helpers for gpio chips that have their own builtin
-interrupt controller (VIRTIO_GPIO_EV_HOST_LEVEL).
+>  static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>  {
+>         unsigned int gpio = d->hwirq, port = GPIO_PORT(gpio), lvl_type;
+> -       struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
+> -       struct tegra_gpio_info *tgi = bank->tgi;
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +       struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
+> +       struct tegra_gpio_bank *bank;
+>         unsigned long flags;
+> -       u32 val;
+>         int ret;
+> +       u32 val;
+> +
+> +       bank = &tgi->bank_info[GPIO_BANK(d->hwirq)];
 
-Somehow feels that's not quite what I'm looking for.
+So the general idea is to look up the bank from the IRQ offset.
 
-Could anybody please give me more insights ?
+But...
 
+> -       return 0;
+> +       if (d->parent_data)
+> +               ret = irq_chip_set_type_parent(d, type);
+> +
+> +       return ret;
 
---mtx
+I don't quite get this. This makes sense if there is one parent IRQ
+per interrupt, but if one of the users of a GPIO in a bank sets the
+IRQ type to edge and then another one comes in and set another
+of the lines to level and then the function comes here, what type
+gets set on the parent? Whichever comes last?
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Normally with banked GPIOs collecting several lines in a cascaded
+fashion, the GPIO out of the bank toward the GIC is level triggered.
+
+I don't understand how this GPIO controller can be hierarchical,
+it looks cascaded by the definition of the document
+Documentation/driver-api/gpio/driver.rst
+
+Yours,
+Linus Walleij
