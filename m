@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE6992CFF40
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 22:34:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBC662CFF47
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 22:37:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgLEVeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Dec 2020 16:34:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        id S1726948AbgLEVgd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 16:36:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgLEVeR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 16:34:17 -0500
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728E9C0613CF
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Dec 2020 13:33:37 -0800 (PST)
-Received: by mail-lj1-x242.google.com with SMTP id e7so468712ljg.10
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Dec 2020 13:33:37 -0800 (PST)
+        with ESMTP id S1726828AbgLEVgd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 16:36:33 -0500
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBA1C0613D1
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Dec 2020 13:35:52 -0800 (PST)
+Received: by mail-lj1-x241.google.com with SMTP id x23so3701183lji.7
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Dec 2020 13:35:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=44cM81jwDy3oSJ5c3tpV4IlBGDrsE7jmCYgRJXxm894=;
-        b=olsBNT8OXaV/QWtQpC33sHoZgjrGOoBbg/3DZZGkM7R1HtfgTJsytlsl9xTl1LdLKj
-         +X+1S8OTcdUDtaqr88DMBHhoj0jUjOoiQ0Db6/za+mN+dXxtSF12wyr1n43ePih4Ibhd
-         7jizVyoP/RxPRFKwIjLd2mXYfLU7cD6QHIVj0ZpSQ/+CkjAyxmJTm7qTaHVQuCMJOWey
-         mfY0R8x/hj9PS9X/JhqOHdEcbLdqzCz76tTfLW6PdEva/mb7KPKseWXh1945ToF/8T4i
-         Q26YUNjB9Tg6PGIAOozjZP1hv2H6PKTllOzPUskkQc0Y9T/44hBz3zjRP5DvQO08ce8R
-         X8qA==
+        bh=S6yDFs+MOk2PtIoISDQLgO3LlwE7ZoVUixw+MtDWOT4=;
+        b=WgW7YBiOCD+LJQM2IQJpa+jsEsAzvq5DYcY74cBIBQMW7q0cgpBp5dZIdy+VXzs6F3
+         PGCzj6p4yBIbKK0W4AY01a79X/H0sRvA2veSM0MMm7Cnv599qf3sRdAaNbtj6PFKlXUq
+         NEsJV0DQPU9ZKgFwancqtdBUaRiBWoXdJm/wP/sZ/2nazc/XDErRzdD5J2smHrKLKQtl
+         vEVB+g6mp9vWbvO8RbakziFlGrmodgji56bU/GdEEau/SZaZDxNR1V+V43ukHdywSlb1
+         wZj5UpsRC1zYCJEUidd9mYVrp2HSPGDF/vyx7VZCIDXLMOq8XD+ssCAk3lISpwz7+RjY
+         K67A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=44cM81jwDy3oSJ5c3tpV4IlBGDrsE7jmCYgRJXxm894=;
-        b=dfg3xd33CbzIDR+cFaAAUecqEEKmZbyR1xu8ANnnQW9ayXdYogclBLeBwU+HYmarZL
-         5XSHwpyt/HyZjOA3QZdc3tiDA00liJYKv6RgxpijjVWakHRYNhYAP6Ppg/W17HLoLeKI
-         IbXoeSdArWj35wLTP/tOoymnvWRzA/k0S2sY6JWKixZPz/6Pyk1AQxeay3wFl5UlOOsg
-         yqU0IXXBqycvox9CnlYaCi0NFtqHqo3lwdRiWjNhx1wjxSJ3O1oC1r1kUakchrW87zXR
-         mL4lzmtZ8XJt/j4HWqtzWhZHXaPI4MybR6sBdJqfejb6zzoqGk8wjXZ1NYTXGKgeakG1
-         wD8A==
-X-Gm-Message-State: AOAM533FyxutbqTcEk8ZsEjNDh3MaqhLn+fOSegdOYJuhK0rxJXofSdi
-        rCWCKUuhkWFYfUlKjbbNw1+0BxSzT8pMCMWlgk6h/A==
-X-Google-Smtp-Source: ABdhPJyS/nBnudQvrGNGdH8DXPxEfZtPNZH7bAoPMUKmttA9jwmhgIJBCwKO6CfEItZdbV5BfC4BEsqVV22asvr4nt0=
-X-Received: by 2002:a2e:b1c9:: with SMTP id e9mr5995158lja.283.1607204015946;
- Sat, 05 Dec 2020 13:33:35 -0800 (PST)
+        bh=S6yDFs+MOk2PtIoISDQLgO3LlwE7ZoVUixw+MtDWOT4=;
+        b=kK3MtDn38yuY8WitDitHGeCGSFyBSaWoUYXp4p7h8td7fyqt/Djle7jp+yVyTLqikF
+         9GO2vkEXJFozrOA/VXsfV8at9+Y0IBcyA/sXyYSxSwWiOheWdAeC9EO973XFxyIDUxEV
+         0OplwqHCUhAsG3617euZbtZIScclfB7vthE7z2DlNT2RfyQGV5sPczATAXESUhbybpk8
+         q6PSkTvIpJFcxJkiYEdC2QoYXtQi2G7MedP9XsW22uadTNq7JNOrxUkSlbu/iYuniKuc
+         m0OncZmBr2x7eYjvnLibeCsMGZCxr0qhjjwIsRS9FmKPd1ANyLKHstRdzfLyCE2Y84B9
+         rbng==
+X-Gm-Message-State: AOAM531fNSaSaXV/K0Z/8nl1h0BmYTix3DJf/V1eJ0b+DtMG3EcVz9zY
+        NgCrgUFRa5wosLNldQbZKkqzC4EDjBHrmfcnCFDSarIPRyHBQg==
+X-Google-Smtp-Source: ABdhPJxKTF3dU+xB0xBIpJKLMg6prHGMhqYwxnR9SzXhGrUGwCuiMg9nPL71f0IsJwTwEHW8snGIYf1ghEYUZ52PxgI=
+X-Received: by 2002:a05:651c:c2:: with SMTP id 2mr5672345ljr.104.1607204151129;
+ Sat, 05 Dec 2020 13:35:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20201127140852.123192-1-thierry.reding@gmail.com> <20201127140852.123192-3-thierry.reding@gmail.com>
-In-Reply-To: <20201127140852.123192-3-thierry.reding@gmail.com>
+References: <20201127140852.123192-1-thierry.reding@gmail.com> <20201127140852.123192-2-thierry.reding@gmail.com>
+In-Reply-To: <20201127140852.123192-2-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Dec 2020 22:33:24 +0100
-Message-ID: <CACRpkdZ3Krgsjyc3-NU0pmYkzFPue_-1VWqkdNvxoG2c6OF7aQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: tegra: Convert to gpio_irq_chip
+Date:   Sat, 5 Dec 2020 22:35:40 +0100
+Message-ID: <CACRpkdY4-RN8KYn1scmoEHQucb4+FJtcpNX0TDYhUMLFiS3gGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Use Tegra186-specific include guard
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -64,69 +64,12 @@ On Fri, Nov 27, 2020 at 3:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
 > From: Thierry Reding <treding@nvidia.com>
 >
-> Convert the Tegra GPIO driver to use the gpio_irq_chip infrastructure.
-> This allows a bit of boiler plate to be removed and while at it enables
-> support for hierarchical domains, which is useful to support PMC wake
-> events on Tegra210 and earlier.
+> Use a unique include guard for the Tegra186 GPIO DT bindings header to
+> avoid clashes with the DT bindings header for earlier chips.
 >
 > Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-The patch didn't apply to my "devel" branch for some reason
-so have a look at that, seems gpio-tegra.c has some changes not
-in my tree.
-
->  struct tegra_gpio_soc_config {
-> @@ -93,12 +91,12 @@ struct tegra_gpio_soc_config {
->  struct tegra_gpio_info {
->         struct device                           *dev;
->         void __iomem                            *regs;
-> -       struct irq_domain                       *irq_domain;
->         struct tegra_gpio_bank                  *bank_info;
->         const struct tegra_gpio_soc_config      *soc;
->         struct gpio_chip                        gc;
->         struct irq_chip                         ic;
->         u32                                     bank_count;
-> +       unsigned int                            *irqs;
-
-So this is hierarchical with several IRQs.
-
->  static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  {
->         unsigned int gpio = d->hwirq, port = GPIO_PORT(gpio), lvl_type;
-> -       struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
-> -       struct tegra_gpio_info *tgi = bank->tgi;
-> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +       struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
-> +       struct tegra_gpio_bank *bank;
->         unsigned long flags;
-> -       u32 val;
->         int ret;
-> +       u32 val;
-> +
-> +       bank = &tgi->bank_info[GPIO_BANK(d->hwirq)];
-
-So the general idea is to look up the bank from the IRQ offset.
-
-But...
-
-> -       return 0;
-> +       if (d->parent_data)
-> +               ret = irq_chip_set_type_parent(d, type);
-> +
-> +       return ret;
-
-I don't quite get this. This makes sense if there is one parent IRQ
-per interrupt, but if one of the users of a GPIO in a bank sets the
-IRQ type to edge and then another one comes in and set another
-of the lines to level and then the function comes here, what type
-gets set on the parent? Whichever comes last?
-
-Normally with banked GPIOs collecting several lines in a cascaded
-fashion, the GPIO out of the bank toward the GIC is level triggered.
-
-I don't understand how this GPIO controller can be hierarchical,
-it looks cascaded by the definition of the document
-Documentation/driver-api/gpio/driver.rst
+This patch applied!
 
 Yours,
 Linus Walleij
