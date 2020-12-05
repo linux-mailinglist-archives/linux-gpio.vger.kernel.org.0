@@ -2,74 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC662CFF47
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 22:37:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B41E2CFF57
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Dec 2020 22:46:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgLEVgd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Dec 2020 16:36:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
+        id S1727046AbgLEVny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Dec 2020 16:43:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgLEVgd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 16:36:33 -0500
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBA1C0613D1
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Dec 2020 13:35:52 -0800 (PST)
-Received: by mail-lj1-x241.google.com with SMTP id x23so3701183lji.7
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Dec 2020 13:35:52 -0800 (PST)
+        with ESMTP id S1726152AbgLEVnx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Dec 2020 16:43:53 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45834C0613D4
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Dec 2020 13:43:07 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id q8so10679781ljc.12
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Dec 2020 13:43:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S6yDFs+MOk2PtIoISDQLgO3LlwE7ZoVUixw+MtDWOT4=;
-        b=WgW7YBiOCD+LJQM2IQJpa+jsEsAzvq5DYcY74cBIBQMW7q0cgpBp5dZIdy+VXzs6F3
-         PGCzj6p4yBIbKK0W4AY01a79X/H0sRvA2veSM0MMm7Cnv599qf3sRdAaNbtj6PFKlXUq
-         NEsJV0DQPU9ZKgFwancqtdBUaRiBWoXdJm/wP/sZ/2nazc/XDErRzdD5J2smHrKLKQtl
-         vEVB+g6mp9vWbvO8RbakziFlGrmodgji56bU/GdEEau/SZaZDxNR1V+V43ukHdywSlb1
-         wZj5UpsRC1zYCJEUidd9mYVrp2HSPGDF/vyx7VZCIDXLMOq8XD+ssCAk3lISpwz7+RjY
-         K67A==
+        bh=700HkyTVIFp9nZiWIVsyfYqFVm65sXEMC2ghItegDYE=;
+        b=YafReqCUo5/xizSfSIS3eP6fIPD2UUW2x4UkHHsy1SSLo8OE8qcD9agG/wfCEVdrAG
+         SxObFlizYVZ3nb6EqQyXyKNsVjQF6A/GwwsFLTbqirAR4miX3Em8ffTq7XUGZiIe5uT0
+         uxqUeG/gaUj+pmjrQsHQrtxKVaeZHzld9tPg4ZGin61fb166k92rwaWcNR4o1rN1tnwV
+         7hJj3ivRoqBOwgfqvdyGFgaNMIoFzKCXO2FgHx9F7hF28iGduKGjHT7llzihQF+/dF54
+         T8D/ADXwaIOUnrxzXrz3RNTCbpux8yUVY+6aXwNRnEtMGuWBO0ZcoLRT1WZE5XacEm1L
+         8c/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S6yDFs+MOk2PtIoISDQLgO3LlwE7ZoVUixw+MtDWOT4=;
-        b=kK3MtDn38yuY8WitDitHGeCGSFyBSaWoUYXp4p7h8td7fyqt/Djle7jp+yVyTLqikF
-         9GO2vkEXJFozrOA/VXsfV8at9+Y0IBcyA/sXyYSxSwWiOheWdAeC9EO973XFxyIDUxEV
-         0OplwqHCUhAsG3617euZbtZIScclfB7vthE7z2DlNT2RfyQGV5sPczATAXESUhbybpk8
-         q6PSkTvIpJFcxJkiYEdC2QoYXtQi2G7MedP9XsW22uadTNq7JNOrxUkSlbu/iYuniKuc
-         m0OncZmBr2x7eYjvnLibeCsMGZCxr0qhjjwIsRS9FmKPd1ANyLKHstRdzfLyCE2Y84B9
-         rbng==
-X-Gm-Message-State: AOAM531fNSaSaXV/K0Z/8nl1h0BmYTix3DJf/V1eJ0b+DtMG3EcVz9zY
-        NgCrgUFRa5wosLNldQbZKkqzC4EDjBHrmfcnCFDSarIPRyHBQg==
-X-Google-Smtp-Source: ABdhPJxKTF3dU+xB0xBIpJKLMg6prHGMhqYwxnR9SzXhGrUGwCuiMg9nPL71f0IsJwTwEHW8snGIYf1ghEYUZ52PxgI=
-X-Received: by 2002:a05:651c:c2:: with SMTP id 2mr5672345ljr.104.1607204151129;
- Sat, 05 Dec 2020 13:35:51 -0800 (PST)
+        bh=700HkyTVIFp9nZiWIVsyfYqFVm65sXEMC2ghItegDYE=;
+        b=PzWBhb/xUFZH+w7hnR/7Rfr6hK7XkzC9uzD2DI5T5rZ0wW7JGS2GBjmbnC7pg7AtEB
+         jChhnSJJtQGiSj111hwlSKAoKIFnlo8PAOsucPPzRDcPyC0995m323FrH28vjjmGRbiN
+         QCfWoDsgezON/B0usl26WcsGUifBXSJf21W8fK0kPAZQGIOSPtM4Vi/MH23doN+9tOxb
+         WnSGEO7Yg5dWycsluAUD2EsBBhIAQ6cwPsDSHAE7PHL/ZXdRCXUokEjLEXMEYUWtAiHz
+         wzPT8JFmVwfd2X8Ic7edxskpJ4jHg6J9GICrLSWZYR9f1GzUimeJkOUSJUUJ6bpDCRMR
+         4P9g==
+X-Gm-Message-State: AOAM530JtGZFoA+p+2wKZj8WVy+xZB0wEqN1z+gjzyZKiElmaGssVykS
+        cRpu+WVT8hEgJWHdRdU6X4dypTrZ4QZbzG4CSWlYqg==
+X-Google-Smtp-Source: ABdhPJxOBXULP7OBc7vXFcwbfQDybB9Vs66oJlYkEGsjHLd3VRw9w9OMx28IXZxfzQVww4oMJ5ir7VUoAimLdzmSMDU=
+X-Received: by 2002:a2e:998e:: with SMTP id w14mr6262208lji.100.1607204585830;
+ Sat, 05 Dec 2020 13:43:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20201127140852.123192-1-thierry.reding@gmail.com> <20201127140852.123192-2-thierry.reding@gmail.com>
-In-Reply-To: <20201127140852.123192-2-thierry.reding@gmail.com>
+References: <20201129110803.2461700-1-daniel@0x0f.com>
+In-Reply-To: <20201129110803.2461700-1-daniel@0x0f.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Dec 2020 22:35:40 +0100
-Message-ID: <CACRpkdY4-RN8KYn1scmoEHQucb4+FJtcpNX0TDYhUMLFiS3gGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: Use Tegra186-specific include guard
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+Date:   Sat, 5 Dec 2020 22:42:54 +0100
+Message-ID: <CACRpkdYEzFYw=CbBFCs9=DfarsCQKD0zA2WvE95nF8ehA_2i1g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] Add GPIO support for MStar/SigmaStar ARMv7
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     SoC Team <soc@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 27, 2020 at 3:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+On Sun, Nov 29, 2020 at 12:08 PM Daniel Palmer <daniel@0x0f.com> wrote:
 
-> From: Thierry Reding <treding@nvidia.com>
+> At the moment the MStar/SigmaStar support is only really
+> capable of shell from an initramfs and not much else.
 >
-> Use a unique include guard for the Tegra186 GPIO DT bindings header to
-> avoid clashes with the DT bindings header for earlier chips.
+> Most of the interesting drivers are blocked on clock and pinctrl
+> drivers and those are going to take me a little while to get cleaned
+> up.
 >
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Clock and pinctrl aren't needed for basic GPIO to work (all pins
+> start off as GPIOs..) and it makes it possible to actually do something
+> so this series adds everything that is needed for the main GPIO
+> block in these chips.
+>
+> Changes since v3:
+> - Remove unneeded "gpio-ranges-group-names" property from binding yaml.
 
-This patch applied!
+OK finished!
+Patches 1, 2 & 3 applied to the GPIO tree for v5.11.
+
+Thanks for the good work!
 
 Yours,
 Linus Walleij
