@@ -2,374 +2,287 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 192DC2D098E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 04:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 884F12D0991
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 04:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgLGDui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Dec 2020 22:50:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26523 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726858AbgLGDuh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Dec 2020 22:50:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607312949;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UAtUjz5a2aQCr+DW94a/DkJ+FddnQ5fghxolrmXkarA=;
-        b=Omjz9e6Xh3Ddt/1ShXcIjnLncOrAoAD2tJ+az7qoXA80b+celNoGfNGu7q9AjMjXtwL/tS
-        JGN9TT0O6AmFYLaEm0lCmXlEkhRR35PePy3YcOOsw8lgJrfaMgqsP3kU9xup6pYWrVU41G
-        p6tcoqhi+W4tKS6Ng5+StkWwA6QJGJk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-pXbhSBVXOsKN31RmPaLm3Q-1; Sun, 06 Dec 2020 22:49:04 -0500
-X-MC-Unique: pXbhSBVXOsKN31RmPaLm3Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC5C651DB;
-        Mon,  7 Dec 2020 03:49:02 +0000 (UTC)
-Received: from [10.72.13.171] (ovpn-13-171.pek2.redhat.com [10.72.13.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD4A55D9DC;
-        Mon,  7 Dec 2020 03:48:55 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mst@redhat.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <37a9fbc6-d75f-f6cd-f052-0dd416594a84@redhat.com>
-Date:   Mon, 7 Dec 2020 11:48:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1726858AbgLGDwF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Dec 2020 22:52:05 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:59323 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbgLGDwF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Dec 2020 22:52:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1607313124; x=1638849124;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=5qpk8SVgUUpYiSuNZjAOhD6FFX5x9AEpM3/R00Fn7i4=;
+  b=Xa/zqsgOIRHB0MdOyXxCxYjcJaBmgrZcQPPq+UEsP4vVijQcFw3SxHiD
+   Gh3JoKwAENBvAAlp+8kTz9OtWBruWB8IzM9C15cVDlhOVObw2FIIn2p1W
+   L8Mw6REYg6K2jP5RV6YJlPikHvJXlidLP3JGQH/pPkczGMFsgN8sGqtdq
+   WgRCQwOqZeP6RmE1FN8RD1m+F6AJLZapR0xkY4ds1h9NFSi8Qyw6l8QyL
+   bChrr8BB7heayRMhDclH9JKSsA186KUm+H/6omFTl+HxCn9EWPcrWYVvR
+   TZQrPjAgrlVaYuiMBl7dTj365xBm42yXB6AkTIIp9AqfXT+IFYDP8znZ0
+   A==;
+IronPort-SDR: XGxy2zGLE0PBZDGA5NIrcuDUibyGv6jWqWlgIq2U67OM9HnQvlTV+ylQwupDiUTm4UtUDoVOmg
+ FiI4SZgSR1a1Kb4I3XbLbTiq6HsiAEmNxFllYmb52Q7Iy4iN6VlkOWlsIdxCNWpbdgMkAvUREP
+ 1hRghe6obBBUaS3DFhwUdfoeqbE7OtlgTr96/WM0VlUAKyoIiAdRGgAVb+mZeo5dwBPv78O3Le
+ V7Cqxh0NmmkFoRgRiEbd0rjrhrpuMw6+oYoEMAYfqT5W5o+c2eM63IhZRAAYRN/8WbjvJYMyS7
+ NOQ=
+X-IronPort-AV: E=Sophos;i="5.78,398,1599494400"; 
+   d="scan'208";a="154619401"
+Received: from mail-bn8nam08lp2045.outbound.protection.outlook.com (HELO NAM04-BN8-obe.outbound.protection.outlook.com) ([104.47.74.45])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Dec 2020 11:50:57 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nSkcj5zRxEPTsl+UD+AY/k23vqVBgTr9rHHBI9tbfEx9cdbxzSlUdBi6yyuWbVEpq63wuH3utlChQGxwp6WJ9Tgq/ZQUh5Xq956nXys8x4+c6spSDWvmMYWVHkHklYud1Gx/UJktGrMpHRi6bVGTB2l0a2wj66eTDMf1BweAiamjhAgCxXl2h0nkvhdMauLQBFejRTPe61dbXm2CnHozSrFdXQHipR8CGR8wwQzFTlTGtB0eNu3d+Fl20Api7XDMy7azFdUUmtKKBu9S8kpArzwcFyC28XjZc1bmt3Un2fsd/SzkEk/nCdqQdS6ynEarr3c8JvOTJdDRZCTDik4kMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qpk8SVgUUpYiSuNZjAOhD6FFX5x9AEpM3/R00Fn7i4=;
+ b=iHGre6Y6lGy5PmMFjJQPrkq3XnehRbcCmUXpcU4BP2oeveW1ydoXoL9erGqlAEXYWFPsWrHDZhFi84BOsMfwImsec5OYylq1YyrpUMM/mC5dckp+EZqmGKvVzaPZnCRtCUN/w0ELSqHp46PsQ72zLDC9lEJuePP2cnjzpO94AlM7LT+P8OKUUK3uH+46OionQf2sSDVr3q0f8B9gTnL5apcY3eYxXOCAAsOoGFdlE871M7AjOeqI5bFNR7NyXW4xt1H1SzM1gH0Xqi0U8qApZyO941VoVraaCLIeL2koE+lw1DxR1M3xRRRpyYDEN1H270a09kRyVh9/4iOuzgUs2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qpk8SVgUUpYiSuNZjAOhD6FFX5x9AEpM3/R00Fn7i4=;
+ b=RIDkxz1y/7XZWvbyJKNLiAqh0W2T36jt91597NoN6TVwpmcNbFrl9pAB7G5sNBB/dtRRdUxLxsQI/G5RFkr1JBhEMAB67gruNUBF8DNYKKdwhfwHaPJWiv8pqVkXkIrik7+ApqwnUdJBWC0JeBbC7ImKSyL+6eCvcpEYkDfizuQ=
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com (2603:10b6:610:34::19)
+ by CH2PR04MB6725.namprd04.prod.outlook.com (2603:10b6:610:94::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.22; Mon, 7 Dec
+ 2020 03:50:54 +0000
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a]) by CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a%7]) with mapi id 15.20.3632.023; Mon, 7 Dec 2020
+ 03:50:54 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     "seanga2@gmail.com" <seanga2@gmail.com>
+Subject: Re: [PATCH v4 11/21] riscv: Add Canaan Kendryte K210 clock driver
+Thread-Topic: [PATCH v4 11/21] riscv: Add Canaan Kendryte K210 clock driver
+Thread-Index: AQHWyFrJ31Bqsdz07kaNo2YIn/vMLanoDJcAgAL7BAA=
+Date:   Mon, 7 Dec 2020 03:50:54 +0000
+Message-ID: <b5eb9c289fe58119185550bff7228501d95b730e.camel@wdc.com>
+References: <20201202032500.206346-1-damien.lemoal@wdc.com>
+         <20201202032500.206346-12-damien.lemoal@wdc.com>
+         <160714919628.1580929.1456162330322523777@swboyd.mtv.corp.google.com>
+In-Reply-To: <160714919628.1580929.1456162330322523777@swboyd.mtv.corp.google.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+authentication-results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=wdc.com;
+x-originating-ip: [2400:2411:43c0:6000:8d3e:27aa:85c2:44b5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bf95df5e-9c51-42d2-cd70-08d89a634c5f
+x-ms-traffictypediagnostic: CH2PR04MB6725:
+x-microsoft-antispam-prvs: <CH2PR04MB67258BDA586E94AEC95D03EFE7CE0@CH2PR04MB6725.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KiZWMzWXY21qDXmpEz1hZqNEJ/jY4I1RbxnCl2UGrHLk0GH1icp+6beUq1GJ07SrUk4kjmZnbXfX82c6pmx9AmPs7SERiCqZ3PD5OibHp31NTxz9Lv/O3y/yl/W3Q8C8a7AY/ZqBWz58JD4JpHTa2wlBJb8KCnhxbnXoTu1GM+zYakd1v5I9o9jHzdhk7E2wAK7oXBPXPeX5UlDApwFVt/ik8X/9mtn/oiGXAHOXoh4oJcryo4/4s+aU9UiCtl24v6gikmta98sZpQ224g8m5bWmagJUl/kazDjtWHNUBcPgAs8k6CNrRIk6Is5mLfKJwtqWCSb41ch3yIx9HcTM5Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6522.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(136003)(39860400002)(376002)(396003)(36756003)(5660300002)(71200400001)(110136005)(6506007)(316002)(186003)(64756008)(66946007)(66556008)(8936002)(478600001)(6486002)(76116006)(83380400001)(91956017)(66446008)(7416002)(4326008)(2616005)(6512007)(8676002)(66476007)(2906002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?a2xGdm5mZEh2MmZTT1dlazl1dWY0STRKWDV1MWVyQ2tYSTNnWVhPT3dldnpw?=
+ =?utf-8?B?ZlZ0V0pVcmpLOWRUSm1GejdYYUpKWkw3MWQzMlQ5YXpQMGJnRG0yZVNJNFJT?=
+ =?utf-8?B?UnN1Y1A1Q1BSa09EbmlDaG5nQ0R3SEc0ZzZYK1lCNlM5aDlHKzNxMW8ySWo5?=
+ =?utf-8?B?Qnp6d2YwVEtaVDV2K2RkMkUyVXF0b2lqN0VycmZZMHRRc25LSDNwV1IwZG5N?=
+ =?utf-8?B?RE9iL21XSmJDSmVSdkM0NnFtQUxMZEpwY1pocitpMTNScW5JZFdaSFVhYVha?=
+ =?utf-8?B?cCt3aUlEQWhZZGt0b3ZoWFBLSCtJOVFSc1BvR2F6Y2U1NnhMRWpuNzhWZFdM?=
+ =?utf-8?B?RTlxOTZvZ2lBVm1xcmNBc1gvZjNmWHd6d0h4VUVNdElVS3VOL051YUdEc3NU?=
+ =?utf-8?B?VGMxalVzYzlVVUV1ZWY0NFk1WVRtaE1VRDVpQ1JGOG9Ic1IzclVwaWQxdFkr?=
+ =?utf-8?B?UG84c2s5K2lkbS9xRkF6OW5HZ09pbTBxQ0M5YlhROEVzRlROWEYxWnVaNVA4?=
+ =?utf-8?B?VVJ4cWJPRDVTdUJoYURvWmYxblFWV0R5dDZxNkpFOG5uY2x2K3U3VWhOODh4?=
+ =?utf-8?B?MUdkY25GQnRTM3Y1czgyaWh1MkVzSDIrd3FCOHdseksrcTd0QmtKQndiNzBJ?=
+ =?utf-8?B?alhkMjlTWmlSb2hHTUY1bTVrVWMrZ2ZVVThiQ0JBSlB5ek1uWHFLYmxCdTRn?=
+ =?utf-8?B?NEx6b1dnMlEzRmhLRWtWZlhyaXg2dGRlTlFLT3drWUZmbVlacmxqdjlubzRW?=
+ =?utf-8?B?TmV2R3RPa2ZDV1pIUGE3UjNvUjhiL2VLb2hvWXlYQ2toVlBUckxoSnFGMkNV?=
+ =?utf-8?B?d05HOVZIZWE4eHc1TTBYajNrcnpzbXhjQXRsTkJUR2hqQjV0cmczV3VXeEZ5?=
+ =?utf-8?B?SlBtN2MzaG9iRXdCelFqaHE3WXhKMkxxdXlBRnkwWmRGeEd4Z1dMZnVPZkVZ?=
+ =?utf-8?B?aXQyc0NpbkdXYXYvMEk3U2xhS250aE9OTXlHMW84T0Y2bU9RMU5idGpBY2Nh?=
+ =?utf-8?B?U1U2ME04ZlRZbURpYmpOMDk5WEtsTUc0LzV6cFZZRlBrcktUS3F6eHlkdjVG?=
+ =?utf-8?B?Z051SFIyL1VlRm9ZOHZINXpySVVnSGtFNDVQTDRlNXF2YURINXljN2pNZjg5?=
+ =?utf-8?B?aVZFNzd6UHN1ZmpkYkJpYzZDK2Nxd2RKcFJtdVV2TzgxYzAxV1Fkc3hRRWJV?=
+ =?utf-8?B?K1VNT1U0TW1GNk81VllPSXkzWnFwVE5jbDRWUUh6NTJHOEhZMHdMaGgxVXIr?=
+ =?utf-8?B?MndtRzN6R0o1dW52UEF0WmJKUDdWMm9GVnhUeWoxbXhZRFRkVFhlMUl1aUxL?=
+ =?utf-8?B?RC80MEFDQkxqbmhWZFVHVDlmZjlZaGMwbTlrTVZ6eDhRWTNBWEhsWnlxZkFt?=
+ =?utf-8?B?aDhjRjQ3NFJEckhqTnZFWlk0VW5UR2QyMWlOa2dFMzlxc1RDcGkzWUhMS3Q4?=
+ =?utf-8?Q?KuelToCf?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7D3E68459377BA47BD12C0FE4D1FE413@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6522.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf95df5e-9c51-42d2-cd70-08d89a634c5f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Dec 2020 03:50:54.5716
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C8ielD28GU0YgyoHMppArC5P57RKsD7EZxqLaZR+Uxe/G7OyCwUuPDyOt6+aRYuNM83x3P858n4XpXvqKnRgjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6725
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 2020/12/4 下午5:36, Enrico Weigelt, metux IT consult wrote:
-> On 04.12.20 04:35, Jason Wang wrote:
->
-> Hi,
->
->> Is the plan to keep this doc synced with the one in the virtio
->> specification?
-> Yes, of course. I'm still in progress of doing the beaurocratic stuff w/
-> virtio-tc folks (ID registration, ...) - yet have to see whether they
-> wanna add it to their spec documents ...
->
-> BTW: if you feel, sometings not good w/ the current spec, please raise
-> your voice now.
-
-
-But, has the spec path posted?
-
-
->
->> I think it's better to use u8 ot uint8_t here.Git grep told me the
->> former is more popular under Documentation/.
-> thx, I'll fix that
->
->>> +- for version field currently only value 1 supported.
->>> +- the line names block holds a stream of zero-terminated strings,
->>> +  holding the individual line names.
->> I'm not sure but does this mean we don't have a fixed length of config
->> space? Need to check whether it can bring any trouble to
->> migration(compatibility).
-> Yes, it depends on how many gpio lines are present and how much space
-> their names take up.
->
-> A fixed size would either put unpleasent limits on the max number of
-> lines or waste a lot space when only few lines present.
->
-> Not that virtio-gpio is also meant for small embedded workloads running
-> under some hypervisor.
->
->>> +- unspecified fields are reserved for future use and should be zero.
->>> +
->>> +------------------------
->>> +Virtqueues and messages:
->>> +------------------------
->>> +
->>> +- Queue #0: transmission from host to guest
->>> +- Queue #1: transmission from guest to host
->>
->> Virtio became more a popular in the area without virtualization. So I
->> think it's better to use "device/driver" instead of "host/guest" here.
-> Good point. But I'd prefer "cpu" instead of "driver" in that case.
->
->> Not a native speaker but event sounds like something driver read from
->> device. Looking at the below lists, most of them except for
->> VIRTIO_GPIO_EV_HOST_LEVEL looks more like a command.
-> okay, shall I name it "message" ?
-
-
-It might be better.
-
-
->
->> Another question is, what's the benefit of unifying the message format
->> of the two queues. E.g VIRTIO_GPIO_EV_HOST_LEVEL can only works fro rxq.
-> Simplicity. Those fields that aren't really relevant (eg. replies also
-> carry the line id), can just be ignored.
->
->> Not familiar with GPIO but I wonder the value of a standalone
->> VIRTIO_GPIO_EV_GUEST_DIRECTION_INPUT/OUTPUT. Can we simply imply them in
->> SET/GET_VALUE?
-> Would introduce more complexity. Somewhere I'd have to fit in some extra
-> bit for differenciating between line state and line direction. The
-> direction tells whether the line currently acts as input or output. The
-> "value" (hmm, maybe I should rethink terminology here) is the current
-> line level (high/low or active/inactive).
-
-
-Ok.
-
-
->
->>> +----------------------
->>> +Data flow:
->>> +----------------------
->>> +
->>> +- all operations, except ``VIRTIO_GPIO_EV_HOST_LEVEL``, are
->>> guest-initiated
->>> +- host replies ``VIRTIO_GPIO_EV_HOST_LEVEL`` OR'ed to the ``type`` field
->>> +- ``VIRTIO_GPIO_EV_HOST_LEVEL`` is only sent asynchronically from
->>> host to guest
->>> +- in replies, a negative ``value`` field denotes an unix-style errno
->>> code
->>
->> Virtio is in a different scope, so we need to define the error code on
->> our own.
->>
->> E.g for virtio-net we define:
->>
->>
->> #define VIRTIO_NET_OK     0
->> #define VIRTIO_NET_ERR    1
-> hmm, so I'd need to define all the error codes that possibly could happen ?
-
-
-Yes, I think you need.
-
-
->
->>>    +config GPIO_VIRTIO
->>> +    tristate "VirtIO GPIO support"
->>> +    depends on VIRTIO
->>
->> Let's use select, since there's no prompt for VIRTIO and it doesn't have
->> any dependencies.
-> Ok. I just was under the impression that subsystems and busses should
-> not be select'ed, but depends on (eg. some time ago tried that w/ gpio
-> subsys and failed).
->
->>> +    help
->>> +      Say Y here to enable guest support for virtio-based GPIOs.
->>> +
->>> +      These virtual GPIOs can be routed to real GPIOs or attached to
->>> +      simulators on the host (qemu).
->>
->> It's better to avoid talking host and qemu here for new virtio devices.
-> Ok, dropped that line.
->
->>> +static int virtio_gpio_xmit(struct virtio_gpio_priv *priv, int type,
->>> +                int pin, int value, struct virtio_gpio_event *ev)
->>> +{
->>> +    struct scatterlist sg[1];
->>> +    int ret;
->>> +    unsigned long flags;
->>> +
->>> +    WARN_ON(!ev);
->>> +
->>> +    ev->type = type;
->>> +    ev->pin = pin;
->>> +    ev->value = value;
->>> +
->>> +    sg_init_table(sg, 1);
->>> +    sg_set_buf(&sg[0], ev, sizeof(struct virtio_gpio_event));
->>> +
->>> +    spin_lock_irqsave(&priv->vq_lock, flags);
->>> +    ret = virtqueue_add_outbuf(priv->vq_tx, sg, ARRAY_SIZE(sg),
->>> +                   priv, GFP_KERNEL);
->>> +    if (ret < 0) {
->>> +        dev_err(&priv->vdev->dev,
->>> +            "virtqueue_add_outbuf() failed: %d\n", ret);
->>> +        goto out;
->>
->> So except for the error log, the failure is silently ignored by the
->> caller. Is this intended?
-> ups, I've forgotten the error handling in the caller. fixed in v3.
->
->>> +static int virtio_gpio_req(struct virtio_gpio_priv *priv, int type,
->>> +               int pin, int value)
->>> +{
->>> +    struct virtio_gpio_event *ev
->>> +        = kzalloc(&priv->vdev->dev, sizeof(struct virtio_gpio_event),
->>> +              GFP_KERNEL);
->>> +
->>> +    if (!ev)
->>> +        return -ENOMEM;
->>> +
->>> +    clear_event(priv, type);
->>> +    virtio_gpio_xmit(priv, type, pin, value, ev);
->>> +    wait_event_interruptible(priv->waitq, check_event(priv, type));
->>
->> If I read the code correctly, this expects there will be at most a
->> single type of event that can be processed at the same time. E.g can
->> upper layer want to read from different lines in parallel? If yes, we
->> need to deal with that.
-> @Linus @Bartosz: can that happen or does gpio subsys already serialize
-> requests ?
->
-> Initially, I tried to protect it by spinlock (so, only one request may
-> run at a time, other calls just wait until the first is finished), but
-> it crashed when gpio cdev registration calls into the driver (fetches
-> the status) while still in bootup.
->
-> Don't recall the exact error anymore, but something like an
-> inconsistency in the spinlock calls.
->
-> Did I just use the wrong type of lock ?
-
-
-I'm not sure since I am not familiar with GPIO. But a question is, if at 
-most one request is allowed, I'm not sure virtio is the best choice here 
-since we don't even need a queue(virtqueue) here.
-
-
->
->>> +static void virtio_gpio_data_rx(struct virtqueue *vq)
->>> +{
->>> +    struct virtio_gpio_priv *priv = vq->vdev->priv;
->>> +    void *data;
->>> +    unsigned int len;
->>> +    struct virtio_gpio_event *ev;
->>> +
->>> +    data = virtqueue_get_buf(priv->vq_rx, &len);
->>> +    if (!data || !len) {
->>> +        dev_warn(&vq->vdev->dev, "RX received no data ! %d\n", len);
->>> +        return;
->>> +    }
->>> +
->>> +    ev = data;
->>> +    WARN_ON(data != &priv->rcv_buf);
->>> +
->>> +    memcpy(&priv->last, &priv->rcv_buf, sizeof(struct
->>> virtio_gpio_event));
->>> +
->>> +    switch (ev->type) {
->>> +    case VIRTIO_GPIO_EV_HOST_LEVEL:
->>> +        virtio_gpio_signal(priv, ev->type, ev->pin, ev->value);
->>> +        break;
->>> +    default:
->>> +        wakeup_event(priv, ev->type & ~VIRTIO_GPIO_EV_REPLY);
->>
->> This looks suspicious, it looks to me what is done here is, consider we
->> want to do VIRTIO_GPIO_EV_GUEST_SET_VALUE
->>
->> 1) put the event in txq, wait
->> 2) the result is returned from rxq, wakeup
->>
->> It looks to me this is racy since the device should be able to process a
->> batch of descriptors and there's no guarantee that the descriptor is
->> processed in order from the virtio level.
-> Not sure whether we're on the same page, but:
->
-> VIRTIO_GPIO_EV_HOST_LEVEL is kinda interrupt - it tells cpu when the
-> input has changed level. We can receive this async event, it shouldn't
-> matter whether somebody else (another thread) is doing a regular call,
-> thus waiting for reply at the same time. The reply will be next in
-> queue.
->
-> What could go wrong here ?
-
-
-I think it's still about whether or not we need allow a batch of 
-requests via a queue. Consider you've submitted two request A and B, and 
-if B is done first, current code won't work. This is because, the reply 
-is transported via rxq buffers not just reuse the txq buffer if I read 
-the code correctly.
-
-
->
->
->> I wonder why not introduce two virtqueues:
->>
->> 1) command vq
->> 2) event vq
->>
->> All commands were sent via command vq and then device can write back to
->> the command buffer as other virtio device did. Then there's no worries
->> of batching or out of order completion.
-> I've been under the impression that queues only work in only one
-> direction. (at least that's what my web research was telling).
->
-> Could you please give an example how bi-directional transmission within
-> the same queue could look like ?
-
-
-You can check how virtio-blk did this in:
-
-https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html#x1-2500006
-
-
->
->>> +        break;
->>> +    }
->>> +    virtio_gpio_prepare_inbuf(priv);
->>
->> This assumes at most one event could be generated, is this how GPIO
->> device expect to behave? I think level could change several times.
-> Should I add more buffers ?
->
-> Maybe add one new buffer per request and one new per received async
-> signal ?
-
-
-It would be safe to fill the whole rxq and do the refill e.g when half 
-of the queue is used.
-
-
->
->>> +static int virtio_gpio_probe(struct virtio_device *vdev)
->>> +{
->>> +    struct virtio_gpio_priv *priv;
->>> +    struct virtio_gpio_config cf = {};
->>> +    char *name_buffer;
->>> +    const char **gpio_names = NULL;
->>> +    struct device *dev = &vdev->dev;
->>> +
->>> +    priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>> +    if (!priv)
->>> +        return -ENOMEM;
->>
->> Is devres guaranteed to be enabled here?
-> How should it not ? Could virtio probing so early that even devm
-> isn't working yet ?
-
-
-I think you are right, I misread the patch.
-
-Thanks
-
-
->
->
-> --mtx
->
-
+SGkgU3RlcGhlbiwNCg0KSSBwcmVwYXJlZCBhIHY1IHNlcmllcyBhZGRyZXNzaW5nIHlvdXIgY29t
+bWVudHMgKGFuZCBvdGhlciBjb21tZW50cykuDQpJIHdpbGwgcG9zdCB0aGF0IGxhdGVyIHRvZGF5
+IGFmdGVyIHNvbWUgbW9yZSB0ZXN0cy4NCg0KQmVsb3cgYXJlIHNvbWUgY29tbWVudHMgb24gaG93
+IEkgYWRkcmVzc2VkIHNvbWUgb2YgeW91ciByZW1hcmtzLg0KDQpPbiBGcmksIDIwMjAtMTItMDQg
+YXQgMjI6MTkgLTA4MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gPiArUzogICAgIE1haW50YWlu
+ZWQNCj4gPiArRjogICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9j
+YW5hYW4sazIxMC1jbGsueWFtbA0KPiA+ICtGOiAgICAgZHJpdmVycy9jbGsvY2xrLWsyMTAuYw0K
+PiA+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L0tjb25maWcuc29jcyBiL2FyY2gvcmlzY3YvS2Nv
+bmZpZy5zb2NzDQo+ID4gaW5kZXggODhhYzBkMWE1ZGE0Li5mMmY5NjMzMDg3ZDEgMTAwNjQ0DQo+
+ID4gLS0tIGEvYXJjaC9yaXNjdi9LY29uZmlnLnNvY3MNCj4gPiArKysgYi9hcmNoL3Jpc2N2L0tj
+b25maWcuc29jcw0KPiA+IEBAIC0yOSw2ICsyOSw4IEBAIGNvbmZpZyBTT0NfQ0FOQUFODQo+ID4g
+wqDCoMKgwqDCoMKgwqDCoHNlbGVjdCBTRVJJQUxfU0lGSVZFIGlmIFRUWQ0KPiA+IMKgwqDCoMKg
+wqDCoMKgwqBzZWxlY3QgU0VSSUFMX1NJRklWRV9DT05TT0xFIGlmIFRUWQ0KPiA+IMKgwqDCoMKg
+wqDCoMKgwqBzZWxlY3QgU0lGSVZFX1BMSUMNCj4gPiArICAgICAgIHNlbGVjdCBTT0NfSzIxMF9T
+WVNDVEwNCj4gPiArICAgICAgIHNlbGVjdCBDTEtfSzIxMA0KPiANCj4gQW55IHJlYXNvbiB0byBk
+byB0aGlzIHZzLiBqdXN0IG1ha2UgaXQgdGhlIGRlZmF1bHQ/DQoNCkkgdW5kZXJzdG9vZCB3aGF0
+IHlvdSBtZWFudCBhbmQgYWRkZWQgdGhlIGNoYW5nZS4NCg0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2Nsay9jbGstazIxMC5jIGIvZHJpdmVycy9jbGsvY2xrLWsyMTAuYw0KPiA+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi45NWQ4MzBhMzg5MTENCj4gPiAt
+LS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvY2xrLWsyMTAuYw0KPiA+IEBAIC0w
+LDAgKzEsOTU5IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9y
+LWxhdGVyDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOS0yMCBTZWFuIEFuZGVy
+c29uIDxzZWFuZ2EyQGdtYWlsLmNvbT4NCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE5IFdlc3Rl
+cm4gRGlnaXRhbCBDb3Jwb3JhdGlvbiBvciBpdHMgYWZmaWxpYXRlcy4NCj4gPiArICovDQo+ID4g
+KyNkZWZpbmUgcHJfZm10KGZtdCkgICAgICJrMjEwLWNsazogIiBmbXQNCj4gPiArDQo+ID4gKyNp
+bmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc3BpbmxvY2suaD4NCj4g
+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGlu
+dXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+DQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4g
+DQo+IFByZWZlcmFibHkgdGhpcyBpbmNsdWRlIGlzIGRyb3BwZWQuDQoNCkZpeGVkIChzZWUgY29t
+bWVudCBiZWxvdyBhYm91dCAiaW4wIiBoYW5kbGluZykuDQoNCj4gPiArI2luY2x1ZGUgPGxpbnV4
+L2Nsay1wcm92aWRlci5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrZGV2Lmg+DQo+IA0KPiBJ
+cyB0aGlzIHVzZWQ/IEhvcGVmdWxseSBuby4NCg0KUmVtb3ZlZCBpdCwgaXQgd2FzIG5vdCBuZWVk
+ZWQuDQoNCj4gPiArDQo+ID4gKyAgICAgICB3aGlsZSAodHJ1ZSkgew0KPiA+ICsgICAgICAgICAg
+ICAgICByZWcgPSByZWFkbChwbGwtPmxvY2spOw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoKHJl
+ZyAmIG1hc2spID09IG1hc2spDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+
+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICByZWcgfD0gQklUKHBsbC0+bG9ja19zaGlmdCArIEsy
+MTBfUExMX0NMRUFSX1NMSVApOw0KPiA+ICsgICAgICAgICAgICAgICB3cml0ZWwocmVnLCBwbGwt
+PmxvY2spOw0KPiANCj4gSXMgdGhpcyByZWFkbF9wb2xsX3RpbWVvdXQ/DQoNCkFzIG1lbnRpb25l
+ZCBpbiBhIHByZXZpb3VzIGVtYWlsLCB1c2luZyByZWFkbF9wb2xsX3RpbWVvdXQoKSBtYWtlIHRo
+ZSBjb2RlDQpoYXJkZXIgc2luY2UgZm9yIGVhY2ggcG9sbCBsb29wIHRoZSBDTEVBUiBTTElQIGJp
+dCBuZWVkcyB0byBiZSBzZXQuIFNvIEkga2VwdA0KdGhpcyBhcyBpcy4NCg0KPiA+ICtzdGF0aWMg
+dm9pZCBrMjEwX3BsbF9lbmFibGVfaHcoc3RydWN0IGsyMTBfcGxsICpwbGwpDQo+ID4gK3sNCj4g
+PiArICAgICAgIHN0cnVjdCBrMjEwX3BsbF9jZmcgKnBsbF9jZmcgPSAmazIxMF9wbGxzX2NmZ1tw
+bGwtPmlkXTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKyAgICAgICB1
+MzIgcmVnOw0KPiA+ICsNCj4gPiArICAgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZrY2wtPmNsa19s
+b2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGsyMTBfcGxsX2h3X2lzX2VuYWJs
+ZWQocGxsKSkNCj4gPiArICAgICAgICAgICAgICAgZ290byB1bmxvY2s7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgaWYgKHBsbC0+aWQgPT0gSzIxMF9QTEwwKSB7DQo+ID4gKyAgICAgICAgICAgICAgIC8q
+IFJlLXBhcmVudCBhY2xrIHRvIElOMCB0byBrZWVwIHRoZSBDUFVzIHJ1bm5pbmcgKi8NCj4gPiAr
+ICAgICAgICAgICAgICAgazIxMF9hY2xrX3NldF9zZWxlY3RvcigwKTsNCj4gPiArICAgICAgIH0N
+Cj4gPiArDQo+ID4gKyAgICAgICAvKiBTZXQgZmFjdG9ycyAqLw0KPiA+ICsgICAgICAgcmVnID0g
+cmVhZGwocGxsLT5yZWcpOw0KPiA+ICsgICAgICAgcmVnICY9IH5HRU5NQVNLKDE5LCAwKTsNCj4g
+PiArICAgICAgIHJlZyB8PSBGSUVMRF9QUkVQKEsyMTBfUExMX0NMS1IsIHBsbF9jZmctPnIpOw0K
+PiA+ICsgICAgICAgcmVnIHw9IEZJRUxEX1BSRVAoSzIxMF9QTExfQ0xLRiwgcGxsX2NmZy0+Zik7
+DQo+ID4gKyAgICAgICByZWcgfD0gRklFTERfUFJFUChLMjEwX1BMTF9DTEtPRCwgcGxsX2NmZy0+
+b2QpOw0KPiA+ICsgICAgICAgcmVnIHw9IEZJRUxEX1BSRVAoSzIxMF9QTExfQldBREosIHBsbF9j
+ZmctPmJ3YWRqKTsNCj4gPiArICAgICAgIHJlZyB8PSBLMjEwX1BMTF9QV1JEOw0KPiA+ICsgICAg
+ICAgd3JpdGVsKHJlZywgcGxsLT5yZWcpOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIEVuc3VyZSBy
+ZXNldCBpcyBsb3cgYmVmb3JlIGFzc2VydGluZyBpdCAqLw0KPiA+ICsgICAgICAgcmVnICY9IH5L
+MjEwX1BMTF9SRVNFVDsNCj4gPiArICAgICAgIHdyaXRlbChyZWcsIHBsbC0+cmVnKTsNCj4gPiAr
+ICAgICAgIHJlZyB8PSBLMjEwX1BMTF9SRVNFVDsNCj4gPiArICAgICAgIHdyaXRlbChyZWcsIHBs
+bC0+cmVnKTsNCj4gPiArICAgICAgIG5vcCgpOw0KPiA+ICsgICAgICAgbm9wKCk7DQo+IA0KPiBB
+cmUgdGhlc2Ugbm9wcyBuZWVkZWQgZm9yIHNvbWUgcmVhc29uPyBBbnkgY29tbWVudCB0byBhZGQg
+aGVyZT8gSXQncw0KPiBiYXNpY2FsbHkgbm9uLXBvcnRhYmxlIGNvZGUgYW5kIGhvcGVmdWxseSBu
+b3RoaW5nIGlzIGluc2VydGVkIGludG8gdGhhdA0KPiB3cml0ZWwgZnVuY3Rpb24gdGhhdCBzaG91
+bGRuJ3QgYmUgdGhlcmUuDQoNCkkga2VwdCB0aGlzIGFzIGlzIHNpbmNlIHRoaXMgZnVuY3Rpb24g
+aXMgY2FsbGVkIGZyb20gazIxMF9jbGtfZWFybHlfaW5pdCgpIChTb0MNCmVhcmx5IGluaXRpYWxp
+emF0aW9uLCBiZWZvcmUgdGhlIERUQiBpcyBwYXJzZWQpLiBGcm9tIHRoYXQgY29udGV4dCwgZGVs
+YXkoKQ0KZnVuY3Rpb25zIGNhbm5vdCBiZSB1c2VkLiBTaW5jZSB0aGlzIGRyaXZlciBpcyB2ZXJ5
+IHNwZWNpZmljIHRvIHRoaXMgUklTQy1WDQpTb0MsIEkgZG8gbm90IHRoaW5rIHRoZXJlIGlzIGFu
+eSBwb3J0YWJpbGl0eSBpc3N1ZS4NCg0KPiA+ICtzdGF0aWMgdTMyIGsyMTBfY2xrX2dldF9kaXZf
+dmFsKHN0cnVjdCBrMjEwX2Nsa19jZmcgKmtjbGspDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiBy
+ZWcgPSByZWFkbChrY2wtPnJlZ3MgKyBrY2xrLT5kaXZfcmVnKTsNCj4gPiArDQo+ID4gKyAgICAg
+ICByZXR1cm4gKHJlZyA+PiBrY2xrLT5kaXZfc2hpZnQpICYgR0VOTUFTSyhrY2xrLT5kaXZfd2lk
+dGggLSAxLCAwKTsNCj4gDQo+IFVzZSBGSUVMRF9HRVQoKT8NCg0KVW5mb3J0dW5hdGVseSwgRklF
+TERfR0VUKCkgcmVxdWlyZXMgYSBtYXNrIHRoYXQgaXMgYSBjb25zdGFudCwgd2hpY2ggaXMgbm90
+IHRoZQ0KY2FzZSBoZXJlLg0KDQo+ID4gKyAgICAgICBpbjBfY2xrID0gb2ZfY2xrX2dldChucCwg
+MCk7DQo+ID4gKyAgICAgICBpZiAoSVNfRVJSKGluMF9jbGspKSB7DQo+ID4gKyAgICAgICAgICAg
+ICAgIHByX3dhcm4oIiVwT0ZQOiBpbjAgb3NjaWxsYXRvciBub3QgZm91bmRcbiIsIG5wKTsNCj4g
+PiArICAgICAgICAgICAgICAgaHdzW0syMTBfQ0xLX0lOMF0gPQ0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGNsa19od19yZWdpc3Rlcl9maXhlZF9yYXRlKE5VTEwsICJpbjAiLCBOVUxMLA0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAs
+IEsyMTBfSU4wX1JBVEUpOw0KPiA+ICsgICAgICAgfSBlbHNlIHsNCj4gPiArICAgICAgICAgICAg
+ICAgaHdzW0syMTBfQ0xLX0lOMF0gPSBfX2Nsa19nZXRfaHcoaW4wX2Nsayk7DQo+ID4gKyAgICAg
+ICB9DQo+ID4gKyAgICAgICBpZiAoSVNfRVJSKGh3c1tLMjEwX0NMS19JTjBdKSkgew0KPiA+ICsg
+ICAgICAgICAgICAgICBwcl9lcnIoIiVwT0ZQOiBmYWlsZWQgdG8gZ2V0IGJhc2Ugb3NjaWxsYXRv
+clxuIiwgbnApOw0KPiA+ICsgICAgICAgICAgICAgICBnb3RvIGVycjsNCj4gPiArICAgICAgIH0N
+Cj4gPiArDQo+ID4gKyAgICAgICBpbjAgPSBjbGtfaHdfZ2V0X25hbWUoaHdzW0syMTBfQ0xLX0lO
+MF0pOw0KPiA+ICsgICAgICAgYWNsa19wYXJlbnRzWzBdID0gaW4wOw0KPiA+ICsgICAgICAgcGxs
+X3BhcmVudHNbMF0gPSBpbjA7DQo+ID4gKyAgICAgICBtdXhfcGFyZW50c1swXSA9IGluMDsNCj4g
+DQo+IENhbiB3ZSB1c2UgdGhlIG5ldyB3YXkgb2Ygc3BlY2lmeWluZyBjbGsgcGFyZW50cyBzbyB0
+aGF0IHdlIGRvbid0IGhhdmUNCj4gdG8gdXNlIF9fY2xrX2dldF9odygpLCBvZl9jbGtfZ2V0KCks
+IGFuZCBjbGtfaHdfZ2V0X25hbWUoKT8gSG9wZWZ1bGx5DQo+IHRoZSBjb3JlIGNhbiBoYW5kbCB0
+aGF0IGFsbCBpbnN0ZWFkIG9mIHRoaXMgZHJpdmVyLg0KDQpJIHJlbW92ZWQgYWxsIHRoaXMgYnkg
+YWRkaW5nOg0KDQpjbG9jay1vdXRwdXQtbmFtZXMgPSAiaW4wIjsNCg0KdG8gdGhlIERUIGZpeGVk
+LXJhdGUgb3NjaWxsYXRvciBjbG9jayBub2RlIChhbmQgZG9jdW1lbnRlZCB0aGF0IHRvbykuIERv
+aW5nIHNvLA0KY2xrX2h3X2dldF9uYW1lKCksIF9fY2xrX2dldF9odygpIGFuZCBvZl9jbGtfZ2V0
+KCkgYXJlIG5vdCBuZWVkZWQgYW55bW9yZSBhbmQNCnRoZSBwYXJlbnRzIGNsb2NrIG5hbWVzIGFy
+cmF5cyBkbyBub3QgbmVlZCBydW4tdGltZSB1cGRhdGUuDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAg
+ICAgLyogUExMcyAqLw0KPiA+ICsgICAgICAgaHdzW0syMTBfQ0xLX1BMTDBdID0NCj4gPiArICAg
+ICAgICAgICAgICAgazIxMF9yZWdpc3Rlcl9wbGwoSzIxMF9QTEwwLCAicGxsMCIsIHBsbF9wYXJl
+bnRzLCAxLCAwKTsNCj4gPiArICAgICAgIGh3c1tLMjEwX0NMS19QTEwxXSA9DQo+ID4gKyAgICAg
+ICAgICAgICAgIGsyMTBfcmVnaXN0ZXJfcGxsKEsyMTBfUExMMSwgInBsbDEiLCBwbGxfcGFyZW50
+cywgMSwgMCk7DQo+ID4gKyAgICAgICBod3NbSzIxMF9DTEtfUExMMl0gPQ0KPiA+ICsgICAgICAg
+ICAgICAgICBrMjEwX3JlZ2lzdGVyX3BsbChLMjEwX1BMTDIsICJwbGwyIiwgcGxsX3BhcmVudHMs
+IDMsIDApOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIGFjbGs6IG11eGVkIG9mIGluMCBhbmQgcGxs
+MF9kLCBubyBnYXRlICovDQo+ID4gKyAgICAgICBod3NbSzIxMF9DTEtfQUNMS10gPSBrMjEwX3Jl
+Z2lzdGVyX2FjbGsoKTsNCj4gPiArDQo+ID4gKyAgICAgICAvKg0KPiA+ICsgICAgICAgICogQ2xv
+Y2tzIHdpdGggYWNsayBhcyBzb3VyY2U6IHRoZSBDUFUgY2xvY2sgaXMgb2J2aW91c2x5IGNyaXRp
+Y2FsLg0KPiA+ICsgICAgICAgICogU28gaXMgdGhlIENMSU5UIGNsb2NrIGFzIHRoZSBzY2hlZHVs
+ZXIgY2xvY2tzb3VyY2UuDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIGh3c1tLMjEwX0NM
+S19DUFVdID0NCj4gPiArICAgICAgICAgICAgICAgazIxMF9yZWdpc3Rlcl9jbGsoSzIxMF9DTEtf
+Q1BVLCAiY3B1IiwgImFjbGsiLCBDTEtfSVNfQ1JJVElDQUwpOw0KPiA+ICsgICAgICAgaHdzW0sy
+MTBfQ0xLX0NMSU5UXSA9DQo+ID4gKyAgICAgICAgICAgICAgIGNsa19od19yZWdpc3Rlcl9maXhl
+ZF9mYWN0b3IoTlVMTCwgImNsaW50IiwgImFjbGsiLA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIENMS19JU19DUklUSUNBTCwgMSwgNTApOw0KPiANCj4g
+SXMgYW55b25lIGdldHRpbmcgdGhlc2UgY2xrcz8gSXQncyBuaWNlIGFuZCBhbGwgdG8gbW9kZWwg
+dGhpbmdzIGluIHRoZQ0KPiBjbGsgZnJhbWV3b3JrIGJ1dCBpZiB0aGV5IG5ldmVyIGhhdmUgYSBj
+b25zdW1lciB0aGVuIGl0IGlzIHNvcnQgb2YNCj4gdXNlbGVzcyBhbmQganVzdCB3YXN0ZXMgbWVt
+b3J5IGFuZCBjYXVzZXMgbW9yZSBvdmVyaGVhZC4NCg0KSSBkcm9wcGVkIHRoZSBDTElOVCBjbG9j
+ayBhcyBpdCBpcyBub3QgbmVlZGVkIGJ5IHRoZSBjbGludCBkcml2ZXIgYW5kIGEgY2xvY2sNCnBy
+b3BlcnR5IGlzIG5vdCBkb2N1bWVudGVkIGZvciBpdC4gSSBrZXB0IHRoZSBDUFUgY2xvY2sgYXMg
+aXQgaXMgcmVmZXJlbmNlZCBieQ0KdGhlIHVhcnRocyAoc2VyaWFsIGNvbnNvbGUpIGRyaXZlci4N
+CkkgYWxzbyByZW1vdmVkIElOMCwgdGhlIFBMTHMgYW5kIEFDTEsgZnJvbSB0aGUgY2xvY2sgZGF0
+YSBhcnJheSBzaW5jZSB0aGVzZSBhcmUNCm5vdCByZWZlcmVuY2VkIGluIHRoZSBkZXZpY2UgdHJl
+ZS4NCg0KPiA+ICtDTEtfT0ZfREVDTEFSRV9EUklWRVIoazIxMF9jbGssICJjYW5hYW4sazIxMC1j
+bGsiLCBrMjEwX2Nsa19pbml0KTsNCj4gDQo+IElzIHRoaXMgbmVlZGVkIG9yIGNhbiB0aGlzIGp1
+c3QgYmUgYSBwbGFpbiBwbGF0Zm9ybSBkcml2ZXI/IElmIHNvbWV0aGluZw0KPiBpcyBuZWVkZWQg
+ZWFybHkgZm9yIGEgY2xvY2tzb3VyY2Ugb3IgY2xvY2tldmVudCB0aGVuIHRoZSBkcml2ZXIgY2Fu
+IGJlDQo+IHNwbGl0IHRvIHJlZ2lzdGVyIHRob3NlIGZldyBjbGtzIGVhcmx5IGZyb20gdGhpcyBo
+b29rIGFuZCB0aGVuIHJlZ2lzdGVyDQo+IHRoZSByZXN0IGxhdGVyIHdoZW4gdGhlIHBsYXRmb3Jt
+IGRldmljZSBwcm9iZXMuIFRoYXQncyB3aGF0DQo+IENMS19PRl9ERUNMQVJFX0RSSVZFUiBpcyBm
+b3IuIEEgREVDTEFSRV9EUklWRVIgd2l0aG91dCBhIHBsYXRmb3JtIGRyaXZlcg0KPiBpcyBpbmNv
+cnJlY3QuDQoNCkkgdHJpZWQgdG8gc3BsaXQgdGhlIGRyaXZlciBpbnRvIHRoZSBlYXJseSBpbml0
+IGFuZCBwbGF0Zm9ybSBkcml2ZXIgcGFydHMgYnV0DQp0aGVyZSBpcyBhIGNpcmN1bGFyIGRlcGVu
+ZGVuY3kgd2l0aCB0aGUgc3lzY3RsIGRyaXZlcjogc3lzY3RsIGRlZmluZXMgdGhlIGsyMTAtDQpj
+bGsgbm9kZSAoZm9yIHRoZSByZWdtYXApIGJ1dCBzeXNjdGwgaGFzIGEgcmVmZXJlbmNlIHRvIGl0
+cyBhZHZhbmNlZCBwb3dlciBidXMNCmNsb2NrIHRvby4gVGhpcyBkZXBlbmRlbmNpZXMgY2Fubm90
+IGJlIHJlc29sdmVkIGVsZWdhbnRseS4gU28gSSBjaGFuZ2VkIHRoZQ0KZHJpdmVyIGRlY2xhcmF0
+aW9uIHRvIHVzZSBDTEtfT0ZfREVDTEFSRSgpIGluc3RlYWQgb2YgQ0xLX09GX0RFQ0xBUkVfRFJJ
+VkVSKCkuDQoNClRoYW5rcyAhDQoNCi0tIA0KRGFtaWVuIExlIE1vYWwNCldlc3Rlcm4gRGlnaXRh
+bA0K
