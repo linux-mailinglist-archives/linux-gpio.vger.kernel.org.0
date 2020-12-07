@@ -2,105 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D29B2D1AA2
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 21:37:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C70B2D1AB5
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 21:41:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgLGUhk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 15:37:40 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:45839 "EHLO
+        id S1726208AbgLGUku (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 15:40:50 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:34607 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgLGUhk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 15:37:40 -0500
-Received: from [192.168.1.155] ([95.114.88.149]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mum6l-1jvEXL33ml-00rn89; Mon, 07 Dec 2020 21:34:56 +0100
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org, stefanha@redhat.com,
-        msuchanek@suse.de
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
- <20201205142218-mutt-send-email-mst@kernel.org>
- <e69569b5-0c45-e072-5de4-81a4acecdae3@metux.net>
- <20201206075131-mutt-send-email-mst@kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <dadc99c5-dd63-9b3e-aa00-c9dc0b622134@metux.net>
-Date:   Mon, 7 Dec 2020 21:34:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20201206075131-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:hbxWK5NoTU1gQ95fGH3BMY4QAmnZBlvFnu9xed6dReXqGP9zoef
- MckleM1vV7HliBSRZ6udkFDg4oyUKSNbZwul7Y66weAy+oon65LCWdmf+dxfK6r3WTQNoS4
- h3/cDg6RD1w561g9mrzJSlidlzrboqRUVJhpHVuHlrVchpYU/bfHn/az49skSDmMNfUtWjr
- zd0PBJPpX1GrxPAxwHQmw==
+        with ESMTP id S1725774AbgLGUkt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 15:40:49 -0500
+Received: from orion.localdomain ([95.114.88.149]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MQPVR-1kZVFY2h73-00MHAf; Mon, 07 Dec 2020 21:38:17 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3] drivers: gpio: put virtual gpio device into their own submenu
+Date:   Mon,  7 Dec 2020 21:38:16 +0100
+Message-Id: <20201207203816.18269-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:eI/5m4FrSEirjVdlYJ1a8RaLSFyfKPxQtHZQk6VK3JLE3YdIRH6
+ HdmFavy3rUyMw/5DrJH+DnQ9ZfHJwCyzUqM/DvUwDYej8LYSz+1ABBF77Yxf5MKKxnqBB6W
+ Eei9ifbabkHaU/taqDM0/mKiNiyOXMHUk2QQwRslvflyjPV0oeETBrreQCL/AzjGwRrFi+b
+ YcIuQa4dn1qebwEGOI27Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a1HG/QGb8tY=:0q0pD8h55NgouMf6dv3JD2
- Cmx7N9LkvLMDbG6kymexPbp1HKRzx7Rorroj2ZlFUcC7DgJUW/cKzL/tB4CyNoE0tfadzvgWR
- bKZcQEkxGiiiXDLxGxZN31wPYHCpJE3AnuMMRqhHMlRbsY7l9Gw4vYhc2Z5xyIVpb4d7TX8ar
- lBAAh6lHX5wJL44SeNWREbvfTDEkT8JE0A7/FGxY0QMVapvLqU+tUnES7VA7OVAL/BMcBsZAR
- mUfUnQC5YTSsKej0IiwPX5L7/EhgLUAoJufCr5ePB6QiYs0//YTjXBmuTkPRZ9iMf2WA5LiKE
- EWc75DMdfsNl2sI5I1wAmNtpnkJ7Eh+BIiQNXpFYikpjA2IcRQDXbwBkOmf7j4zJPg4vp0ZmI
- skM9M1UncysVw4xvpgNJA3M80NZgL50I41KvIF5I0T9ArXakC5fAvYc4NfJVv
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/y4/O1rS4+s=:rSFSrUlEZSwgHF4i6CthdQ
+ MXb28Z2T3JJftMFGWmtetS4mCX2QEX16g0Lo86R5MWG6t1P0M3PuSlZbgEZQ6q3uHjKYh89fL
+ 6H0uDUH8fuwr5boPWO4rfFjVd/D/YVnJlfNB18bEFnGGFJ83HM3RCSfHaKk8oNFPSrk3WJ2ft
+ rTwUo6BnhaPNhaRolBD3d6JfzMYcnRHOGgbHcUrJhcq6pgF5x9YyGRBqpXyxOaLkozUIsMDzT
+ ytoUNlIkwVEi0NwHbt+Lyy1VIoumGoAMG1B/2wEovOqeR5SKveidHb8pyupSt4Ut2qFkVd37C
+ mA0crfrAumpgSPZ/yxsp9xL1upkYPTjIREs4LzlNCesgrYWMPDix53W24YmCXG9T1FNDuLhTm
+ 9n3++3LeQ7w7/MQdC+yDnC7yEcN8Ra43Juq7gQhLRDN+AunBf3/Xf20wX+PEQ
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07.12.20 14:52, Michael S. Tsirkin wrote:
+Since we already have a few virtual GPIO drivers, and more to come,
+this category deserves its own submenu.
 
->> See above: NAK. because it can't even be enabled directly (by the user).
->> If it wasn't meant otherwise, we'd have to add an menu text.
-> 
-> The point is that user enables one of the bindings.
-> That in turn enables drivers. If we merely select VIRTIO
-> there's a chance user won't remember to select any bindings
-> and will be surprised not to see any devices.
+changes v2: fixed menu title (replaced "devices" by "drivers")
+changes v3: added patch changelog
 
-Not sure what you mean by "bindings" ... transports ?
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/gpio/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-IMHO, transports and device drivers are entirely orthogonal. Both *use*
-the core, but I don't think they shall only show up, after the core was
-enabled explicitly. Any combination of transports is valid (having none
-at all, of course, isn't actually useful).
-
->> When using other transports ?
-> 
-> Any transport selects VIRTIO so if you enable that, you get
-> VIRTIO and thus it's enough to depend on it.
-
-The combination of 'select VIRTIO' and 'depends on VIRTIO' is what
-caused the recursive dependency. Chaning everything to 'select VIRTIO'
-fixed that.
-
->> I don't thinkt that would be good - instead everybody should just select
->> VIRTIO, never depend on it (maybe depend on VIRTIO_MENU instead)
-> 
-> GPU depends on VIRTIO and on VIRTIO_MENU ... which seems even messier
-> ...
-
-See:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2404871.html
-
-
---mtx
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5d4de5cd6759..8596f9320971 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1590,6 +1590,8 @@ config GPIO_VIPERBOARD
+ 
+ endmenu
+ 
++menu "Virtual GPIO drivers"
++
+ config GPIO_AGGREGATOR
+ 	tristate "GPIO Aggregator"
+ 	help
+@@ -1613,4 +1615,6 @@ config GPIO_MOCKUP
+ 	  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
+ 	  it.
+ 
++endmenu
++
+ endif
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.11.0
+
