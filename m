@@ -2,106 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 591912D0E09
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 11:32:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D33BC2D0E80
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 11:57:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgLGKcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 05:32:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
+        id S1726384AbgLGK4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 05:56:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgLGKcG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 05:32:06 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2D6C0613D1
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 02:31:26 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id b9so8391239ejy.0
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 02:31:26 -0800 (PST)
+        with ESMTP id S1726148AbgLGK4l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 05:56:41 -0500
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B770EC0613D0
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 02:55:55 -0800 (PST)
+Received: by mail-qk1-x742.google.com with SMTP id 19so4489546qkm.8
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 02:55:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=avwXTY4xKF4GYJux7MHK5WB/0Z5FSjvXovshldSv0FY=;
-        b=Koz8pLD92Bc+OA38U/SVkLaUxErp6GlaZiBlKyqXz1eMnIAAlJ1AzWywkxnWEpTuqH
-         jcpvF2CqCxtziXQ7kd8q4pe836G+LkCaA5WsZfZ+pm4I/4SkjmXLtjrf6laDzMx6YhkD
-         SyBhLnB81hYrCMvTbf578MOKilnaYFTq/NK1CVGPEbc0M1UMpiq1F8EYEDb7K6Ev5RWH
-         aEJnikVY4spRTMvGWM0UD5D+eqnZN53w2nheq9/FxLG3obYGCPgEMKPqABacz7+/06xW
-         IhMcpuOukOTei6R7dZMXRvM6D7SIU/KSQDdBaPuloTNPORL20DniuYKo5CX05qvRp1We
-         kP7g==
+        bh=5ia12m9uDX+0LNlAEFwkrOarHwftjJKLgewl2oTIgrE=;
+        b=lzzmt0CZmK2Jmd7kyroYw+RWFtJX3ikmVxwIpkx+vZ/gCDKMah0PBZ3pRvKxqo8lN4
+         eStRjgjM4ibwnew31RMzb0hOwrT6uiFAFmqPXGWbPGnLbol0VBIpkeSQGAMsmcvQpOll
+         n6xniOcxXcDXSYxpEDnLx9saK/zqAazjt5HMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=avwXTY4xKF4GYJux7MHK5WB/0Z5FSjvXovshldSv0FY=;
-        b=Am6Mu6DIF/09qLggPeoryI2DkovX2IldCJHAtZdKVggbRA1uOOs33qnqsCLnlPR3cp
-         0MRxHQRWrro2fdSk+OMqBXBOOoP6zXKpaXO6ZEn6RCxL+8sNEQV2aveNqKddBvppZvhK
-         BHHz2+o/QyvQ6z7oIzuGamW6hc66QLwCGROfkvBBL6EdM2GDU9Tu5mXfPyfn8a8gXp7F
-         Knrsty1ZP1h3VJj6Z444xaD5eAF5IuEaOBfERE/d/ws0TbdW88QlE9Yj+gt9ig6Zdid7
-         cl9lGBmDhSt0HLCEliU4jz/Z5rCjMHMov332lkYAUl86H7nZB76r/iIGfBRo4dnwTIYt
-         K9yQ==
-X-Gm-Message-State: AOAM532q6g6Taj4ROZU8H0cYYx//u7JXngNvuPpTAiP6JxxhcHG8CXVW
-        Q7QsRP5eZmextYuegqStBLskFs//hxkSBxwrEl8gYg==
-X-Google-Smtp-Source: ABdhPJzXz9wKScnULYT5yiqNYTc0tuNX148+tIwRVDm7K1qucm+VxxovDI70gPvRQXH3EBb4Z3MpwQMNCuOuDuVMuAE=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr17640381ejd.363.1607337085119;
- Mon, 07 Dec 2020 02:31:25 -0800 (PST)
+        bh=5ia12m9uDX+0LNlAEFwkrOarHwftjJKLgewl2oTIgrE=;
+        b=Nz2vro5tKzBlQ+rt8G2T7DahLFRTRdP/atTsikjzjllewXVMuFtSbj/oxeeTIT6ydi
+         IUcf85MFjQNxeeWaXAgEaQaykZ/iXeN5huPSaQotJimASkmueulDWuYkdVNHN0spmg3K
+         K0ZOwahEEogjSRMnyZAXOnPuYiUH+JA/gqqcoU8lrVQPCV7Bt0ARvuYtGvRsuaNNllCd
+         dh8qu7pHPsmNDWuxPYJG/AqYGLp6mJILLRO5ht3R6rcT97yhO4LdGFTroSlqmrHRSrSG
+         +uyfKZY3HCsRXlUctMrLpqX64oNJxvTCdECRkZtqy8Z9/YFQNlq44zodrNXnIKFNMxqr
+         Z7tQ==
+X-Gm-Message-State: AOAM530g+sRm8xljKXRfxy5vVk/0PSRk6L1MLBq2LDgWFm5QPENZKf0I
+        Advx4W/xgfaEAKH5Y1dP9CG7PjRLRa7G6EYIe2IxqA==
+X-Google-Smtp-Source: ABdhPJz5LN12jxi1tLmMe+C2qEWEij3QetZAtETxe63ezdGfiuGGd8prNeyfZ8+OZ//s1SFdN8nthpHV6T5ni1agtns=
+X-Received: by 2002:a37:8681:: with SMTP id i123mr22759135qkd.54.1607338554890;
+ Mon, 07 Dec 2020 02:55:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20201203191135.21576-1-info@metux.net>
-In-Reply-To: <20201203191135.21576-1-info@metux.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 7 Dec 2020 11:31:14 +0100
-Message-ID: <CAMpxmJVkXeH_B4A_e1Vy4H2LcQnNz0BVoZyXNKEXmG8NvgO6cw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] drivers: gpio: put virtual gpio device into their
- own submenu
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
+References: <20201129110803.2461700-1-daniel@0x0f.com> <CACRpkdYEzFYw=CbBFCs9=DfarsCQKD0zA2WvE95nF8ehA_2i1g@mail.gmail.com>
+In-Reply-To: <CACRpkdYEzFYw=CbBFCs9=DfarsCQKD0zA2WvE95nF8ehA_2i1g@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Mon, 7 Dec 2020 19:55:44 +0900
+Message-ID: <CAFr9PXmx1XZmVOp8mLygnDUfEKPpo6=ZQPMKSCnZf0i23mNqVw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] Add GPIO support for MStar/SigmaStar ARMv7
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>, olof@lixom.net
+Cc:     SoC Team <soc@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 8:11 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Since we already have a few virtual gpio devices, and more to come,
-> this category deserves its own submenu.
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  drivers/gpio/Kconfig | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 5d4de5cd6759..01619eb58396 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1590,6 +1590,8 @@ config GPIO_VIPERBOARD
->
->  endmenu
->
-> +menu "Virtual GPIO devices"
-> +
->  config GPIO_AGGREGATOR
->         tristate "GPIO Aggregator"
->         help
-> @@ -1613,4 +1615,6 @@ config GPIO_MOCKUP
->           tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
->           it.
->
-> +endmenu
-> +
->  endif
-> --
-> 2.11.0
->
+Hi Linus,
 
-I'd call this section "Virtual GPIO drivers" because the code contains
-drivers not devices.
+On Sun, 6 Dec 2020 at 06:43, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Bartosz
+> OK finished!
+> Patches 1, 2 & 3 applied to the GPIO tree for v5.11.
+
+Awesome! Thank you Linus. :)
+
+Arnd and Olof: Sorry for being a noob.. Is there anything I need to do
+for patches 4 and 5 (device tree bits)?
+They are in the Linux SoC patchwork.
+
+Thanks,
+
+Daniel
