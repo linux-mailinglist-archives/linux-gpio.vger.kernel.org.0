@@ -2,86 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54F22D0DDD
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 11:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 591912D0E09
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 11:32:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgLGKSW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 05:18:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        id S1726385AbgLGKcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 05:32:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgLGKSV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 05:18:21 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD866C0613D1;
-        Mon,  7 Dec 2020 02:17:41 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id w4so8472473pgg.13;
-        Mon, 07 Dec 2020 02:17:41 -0800 (PST)
+        with ESMTP id S1726023AbgLGKcG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 05:32:06 -0500
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2D6C0613D1
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 02:31:26 -0800 (PST)
+Received: by mail-ej1-x644.google.com with SMTP id b9so8391239ejy.0
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 02:31:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=szht+q557K6QXYFXak80NbTgGz6XROzE5Ko0mOeRIdw=;
-        b=QGLYL/hY/ySDQqquUqATa57X9iZKoJ1oZeCdqFTuCFGLPs6+LSt5T6wuFDp/gLRUKg
-         4bZcVB3HXmtx7NJkXKCnH/iMgHsHUfKRMeAJkBqKUaoo7mOQPRBZymdIlz75HM+oW4KC
-         7WsfDIv5qIDRkZbc9/HmUhA6lB+O868Stkxe+qau/c+Ks4aATFO+tqX9yzSKo/SvaB2X
-         JPB7YXp/tUj8eGjh9kH9jJN0dCt52TsfozvS5AAkg09XYaMc91lFnJ4x0OIZfpo9b7cO
-         gHuPmf1QfXFENDBMpBUYyaHoVWqmS38E7OqPPtcU46heVqaITq7osc+NZLSxR6euxHin
-         2uqA==
+        bh=avwXTY4xKF4GYJux7MHK5WB/0Z5FSjvXovshldSv0FY=;
+        b=Koz8pLD92Bc+OA38U/SVkLaUxErp6GlaZiBlKyqXz1eMnIAAlJ1AzWywkxnWEpTuqH
+         jcpvF2CqCxtziXQ7kd8q4pe836G+LkCaA5WsZfZ+pm4I/4SkjmXLtjrf6laDzMx6YhkD
+         SyBhLnB81hYrCMvTbf578MOKilnaYFTq/NK1CVGPEbc0M1UMpiq1F8EYEDb7K6Ev5RWH
+         aEJnikVY4spRTMvGWM0UD5D+eqnZN53w2nheq9/FxLG3obYGCPgEMKPqABacz7+/06xW
+         IhMcpuOukOTei6R7dZMXRvM6D7SIU/KSQDdBaPuloTNPORL20DniuYKo5CX05qvRp1We
+         kP7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=szht+q557K6QXYFXak80NbTgGz6XROzE5Ko0mOeRIdw=;
-        b=eiLBvYMsSTvUvTeEYRda+bIqR9C6BufI7GDP4+4++1MFNc4qBRkItbJtT9zg5NEUjl
-         sDoV7MurqCuq0cOZeAd5VLCucVOc3VMg/nmcG+hJk4TO9oeis0elP7KPhZgIQwuD968Z
-         +fkgFwUtdAw0GOJUsNVRDJKpxoWP3f2pRwU1x7mx9lr401nKxeD2i7igf2cBdSO+d2qx
-         dclVOgQDn7a5887TNOz04Xa9Nl+fuAfqhzrOiCdHWyKK2/3JmIM05JXq2b9bs0ZGP0A+
-         yFFcL0XGU9XekIVofG/Uvp64yNTpS9qP/3KdqeTAikbX6nhT9fP/2lGJbiKfdRwmyaOq
-         r6ng==
-X-Gm-Message-State: AOAM530uj4IvGdVRTyGwP1IS20ii/xqDAGzJ/IkUyyF5gYtlP43kmZRo
-        vquc9zK7sFYewzBrhVwPk/kiMgVKF+ibGtCb8i2sAUwZGWQ=
-X-Google-Smtp-Source: ABdhPJzNPheYkcqjCTxjnzfr8Z04g6FUo9B9zhpTBRJtKnCdXL0ko5vzAVHOrSXMNCyS6Xn64kSx7RF818+ol+aiJe8=
-X-Received: by 2002:a17:902:c244:b029:da:e63c:cede with SMTP id
- 4-20020a170902c244b02900dae63ccedemr8008417plg.0.1607336261018; Mon, 07 Dec
- 2020 02:17:41 -0800 (PST)
+        bh=avwXTY4xKF4GYJux7MHK5WB/0Z5FSjvXovshldSv0FY=;
+        b=Am6Mu6DIF/09qLggPeoryI2DkovX2IldCJHAtZdKVggbRA1uOOs33qnqsCLnlPR3cp
+         0MRxHQRWrro2fdSk+OMqBXBOOoP6zXKpaXO6ZEn6RCxL+8sNEQV2aveNqKddBvppZvhK
+         BHHz2+o/QyvQ6z7oIzuGamW6hc66QLwCGROfkvBBL6EdM2GDU9Tu5mXfPyfn8a8gXp7F
+         Knrsty1ZP1h3VJj6Z444xaD5eAF5IuEaOBfERE/d/ws0TbdW88QlE9Yj+gt9ig6Zdid7
+         cl9lGBmDhSt0HLCEliU4jz/Z5rCjMHMov332lkYAUl86H7nZB76r/iIGfBRo4dnwTIYt
+         K9yQ==
+X-Gm-Message-State: AOAM532q6g6Taj4ROZU8H0cYYx//u7JXngNvuPpTAiP6JxxhcHG8CXVW
+        Q7QsRP5eZmextYuegqStBLskFs//hxkSBxwrEl8gYg==
+X-Google-Smtp-Source: ABdhPJzXz9wKScnULYT5yiqNYTc0tuNX148+tIwRVDm7K1qucm+VxxovDI70gPvRQXH3EBb4Z3MpwQMNCuOuDuVMuAE=
+X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr17640381ejd.363.1607337085119;
+ Mon, 07 Dec 2020 02:31:25 -0800 (PST)
 MIME-Version: 1.0
-References: <tencent_220963AF059847E1171B4AB9@qq.com> <CACRpkdbvKWcD04SLLBOBuZWzN64xpVv1nfCXZGcSp9cs0MPivQ@mail.gmail.com>
- <1jeek5ps3b.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jeek5ps3b.fsf@starbuckisacylon.baylibre.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 7 Dec 2020 12:18:29 +0200
-Message-ID: <CAHp75VeQGxnGO4o5a1vFzS9XAMjmvwoJ3=pWLvNQT6mXEKcqWQ@mail.gmail.com>
-Subject: Re: 0001-add-amlogic-gpio-to-irq
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?B?5p6X5Zyj5qyi?= <linshenghuan@hangtu-china.com>,
-        khilman <khilman@baylibre.com>,
-        narmstrong <narmstrong@baylibre.com>,
-        "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
+References: <20201203191135.21576-1-info@metux.net>
+In-Reply-To: <20201203191135.21576-1-info@metux.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 7 Dec 2020 11:31:14 +0100
+Message-ID: <CAMpxmJVkXeH_B4A_e1Vy4H2LcQnNz0BVoZyXNKEXmG8NvgO6cw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drivers: gpio: put virtual gpio device into their
+ own submenu
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 4, 2020 at 4:25 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> On Fri 04 Dec 2020 at 10:13, Linus Walleij <linus.walleij@linaro.org> wrote:
+On Thu, Dec 3, 2020 at 8:11 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Since we already have a few virtual gpio devices, and more to come,
+> this category deserves its own submenu.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/gpio/Kconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 5d4de5cd6759..01619eb58396 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1590,6 +1590,8 @@ config GPIO_VIPERBOARD
+>
+>  endmenu
+>
+> +menu "Virtual GPIO devices"
+> +
+>  config GPIO_AGGREGATOR
+>         tristate "GPIO Aggregator"
+>         help
+> @@ -1613,4 +1615,6 @@ config GPIO_MOCKUP
+>           tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
+>           it.
+>
+> +endmenu
+> +
+>  endif
+> --
+> 2.11.0
+>
 
-> This HW only has 8 irqs that can each be mapped to a pin. No direct
-> translation can be made, we have to allocate an irq to monitor the line.
-> So when gpio_to_irq() was called, we had to do that allocation dynamically
-> to return a valid irq number. Since there was no counter part to
-> gpio_to_irq(), those allocation cannot be freed during the lifetime of
-> the device.
+I'd call this section "Virtual GPIO drivers" because the code contains
+drivers not devices.
 
-I'm not sure why we are talking about legacy API which should not be used.
-Besides that I didn't get what you meant under counterpart API (IRQ
-descriptor has a mapping to the IRQ chip which keeps the mapping to
-whatever hardware wants).
-
---
-With Best Regards,
-Andy Shevchenko
+Bartosz
