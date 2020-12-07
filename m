@@ -2,78 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8AA2D180F
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 19:02:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 011FB2D1831
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 19:09:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgLGSB3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 13:01:29 -0500
-Received: from mga02.intel.com ([134.134.136.20]:3091 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgLGSB3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Dec 2020 13:01:29 -0500
-IronPort-SDR: Fk9iNsrhe+pLqXxwYWuUsm//frhVSQJeX+NTWTC1SbySru9AY7hHdxv+EaheJffb7GvyO8pZQY
- gqOdTFTNLp4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="160788005"
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="160788005"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2020 09:59:43 -0800
-IronPort-SDR: hZvcWPlywH52uWsZpERbwyJx5KG0RT++R5gzcUt+U/IS7KjeKp0X9WBisD321D5/IfoRqcCRaK
- +03g6eHYabGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="332201515"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 07 Dec 2020 09:59:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DBA0714B; Mon,  7 Dec 2020 19:59:40 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v1] pinctrl: intel: Actually disable Tx and Rx buffers on GPIO request
-Date:   Mon,  7 Dec 2020 19:59:40 +0200
-Message-Id: <20201207175940.10631-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.29.2
+        id S1725917AbgLGSHy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 13:07:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgLGSHy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 13:07:54 -0500
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6847FC061749
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 10:07:14 -0800 (PST)
+Received: by mail-pj1-x1042.google.com with SMTP id hk16so50170pjb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 10:07:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zCNNBS3csor3coTLP3Ao5O1+FY7G9OIB3P3+OVMQuks=;
+        b=UGKT983pI4fOHbP77MPPFOr1hyKiMWUA5O/pIhCXGDCMKcs81PygjKdPtSFGie4Hro
+         61geRe5Wkf6X3NUHm/lMPP55Bzq+0IvKXKNorBsMFhP0J10fXU8waKRot3w0lxbAe0LF
+         lMvkn1LZUl9SOFh22ybHoWVG9FDF7h1Q/0zwGWtmwjOmD9p4YgyG7sIcl0g532EaR792
+         nxmNspxujrf4pMsAjpgpLzoUhyY7KXwsu1d5kxxqwLvbm8gssksPnbikealtc/L8ejE/
+         VTzBvZa1mG7qorC80zUUJG4tdMQ0jrqBFDY1YF1dKViL9mQbliaDCD2ORR57FNMvJaFN
+         XahA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zCNNBS3csor3coTLP3Ao5O1+FY7G9OIB3P3+OVMQuks=;
+        b=hlCcPE5PMeEi46OJshIHa+zNKwokpR8DQc7wbl/XQyyj21iIRwMwUUvmJDBle+Gh3Y
+         b0AA6rg2duv2bswcbW+GuPfxHjiGQmhJt0pJucl29U4GrCM7h7qLftPsi9PB1DCnJZsH
+         s8iWYUg0d4Iv8sfnguHCfcz5IjTLkaUjdf8Z5jmWSe+6sGTLIZM1XCM4IqIO+tlXXUIU
+         YgBCm7bcb3nWc4Tt+9ueROKbNtooWCOh0D5NQfAp7VypOVHzgUw/jel6YHtlTci82Sxi
+         7mXOEaC/LzuV0Js3MCjYoPnpfMAN1tCbAtWynG3H5b/3RmlcIuK6AooptIfaUyDNP0Ul
+         5YFg==
+X-Gm-Message-State: AOAM531uff2AwPOI+o4Xu3w2QXhtazvek5BN7wz7NBkp5zTvB6uqeb4w
+        cg0egYFITOXeyc6h56UWedrp4RayBCWLtPCDfGI=
+X-Google-Smtp-Source: ABdhPJyhaxXZQgVxzeDyXCeMSAy3DhehoSLloSXLQuF+ryjJ8j+4iKnNWZJnsIIA2t/N/KOC0cj9B+IyhZEhtFtKENU=
+X-Received: by 2002:a17:90a:c592:: with SMTP id l18mr34222pjt.228.1607364433887;
+ Mon, 07 Dec 2020 10:07:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201207175940.10631-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201207175940.10631-1-andriy.shevchenko@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Dec 2020 20:08:02 +0200
+Message-ID: <CAHp75VeHz3CAZMQgQsU+WdDyjS+woMTyeOWYDzARePq1aaa=Og@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: intel: Actually disable Tx and Rx buffers on
+ GPIO request
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mistakenly the buffers (input and output) become together enabled for a little
-period of time during GPIO request. This is problematic, because instead of
-initial motive to disable them in the commit af7e3eeb84e2
-("pinctrl: intel: Disable input and output buffer when switching to GPIO"),
-the driven value on the pin, which might be used as an IRQ line, brings
-firmware of some touch pads in an awkward state that needs a full power off
-to recover. Fix this by, as stated in a culprit commit, disabling the buffers.
+On Mon, Dec 7, 2020 at 8:02 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Mistakenly the buffers (input and output) become together enabled for a little
+> period of time during GPIO request. This is problematic, because instead of
+> initial motive to disable them in the commit af7e3eeb84e2
+> ("pinctrl: intel: Disable input and output buffer when switching to GPIO"),
+> the driven value on the pin, which might be used as an IRQ line, brings
+> firmware of some touch pads in an awkward state that needs a full power off
+> to recover. Fix this by, as stated in a culprit commit, disabling the buffers.
 
-Fixes: af7e3eeb84e2 ("pinctrl: intel: Disable input and output buffer when switching to GPIO")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210497
-Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Linus, since we are at rc7 I'm not going to send a PR for this single
+fix (I truly do not expect anything to come). Please, proceed as usual
+(either to v5.10 or to v5.11 cycle, there is not much difference b/c
+culptin is sitting in v5.9).
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index e77145e3b31b..5cd720f5b0e1 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -452,8 +452,8 @@ static void intel_gpio_set_gpio_mode(void __iomem *padcfg0)
- 	value |= PADCFG0_PMODE_GPIO;
- 
- 	/* Disable input and output buffers */
--	value &= ~PADCFG0_GPIORXDIS;
--	value &= ~PADCFG0_GPIOTXDIS;
-+	value |= PADCFG0_GPIORXDIS;
-+	value |= PADCFG0_GPIOTXDIS;
- 
- 	/* Disable SCI/SMI/NMI generation */
- 	value &= ~(PADCFG0_GPIROUTIOXAPIC | PADCFG0_GPIROUTSCI);
 -- 
-2.29.2
-
+With Best Regards,
+Andy Shevchenko
