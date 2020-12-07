@@ -2,120 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 398892D14D6
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 16:39:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2D32D14F2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 16:42:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgLGPfI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 10:35:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgLGPfH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 7 Dec 2020 10:35:07 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5C623730;
-        Mon,  7 Dec 2020 15:34:27 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kmIWt-00GnSK-En; Mon, 07 Dec 2020 15:34:24 +0000
+        id S1726016AbgLGPmQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 10:42:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgLGPmQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 10:42:16 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F40DC061749;
+        Mon,  7 Dec 2020 07:41:30 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id q3so9221124pgr.3;
+        Mon, 07 Dec 2020 07:41:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E6bwFpo35es8wLk5NhibYg+TeLN+z3hooUCzqmhyN1U=;
+        b=epAl91DNeg6fZtFYD67aKCCsc1e45j8LLu0urPe3RtMRICJgT8yIOmqvdiT9QTpk2q
+         4HqiE3YE7lbZxRjDxm5QHyb8nvpWaXBWXrBRe457xwlM23WlHLxIRzMhm3bdG9FTfps2
+         ZGm6azTvbvQ/mOr5QRVdaTKljQJfxzLaiiQAdov5bt2Vj17JlMp0FvgP54bIPZIJJd6S
+         h5mrxVR/c8ga3C9+mj9EZLRHJBk/zI0BDEu4IbRrJiUgZPh79OzfSMxwdxZVL0/hwflE
+         0EZ0P5hDyc5NR1YJuUzPpCjXqWWLnlgBWTm5kqvFPxNOdiu57dsOBvK1HAqL5jpOo1g/
+         kRFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E6bwFpo35es8wLk5NhibYg+TeLN+z3hooUCzqmhyN1U=;
+        b=W1Cr1EpgYBlwHmOmpD53O9Sf/KZ+EBRAWfkrZHxvfN9CtfX7McRzK6+jkx36RTXcjx
+         wCzdb28Mgz1nmwVbUyAB4LrGZIS0yhJbZ4zXsLiH7/4Zil6tDylqMOxtx43m7osRRI+q
+         wklM+WwCTjpuahr6hCu1/u+DjkO9uM4TgH2tT8rxuFq6dfW1SttqDEej287fXzQ7crOb
+         rY8c7IkwPSABsAMzpZFHHnCUMBdqfaHvMO/X7QnHSQD1LbZ3gkS1pEwjdVDBWJDtltTe
+         DUQrXg67F2ZO8kfjtXGkpRMPaM59eof9jxRWs24+WFJasDwQGTPX9+tIQI/Pvcjp6/ta
+         tlOw==
+X-Gm-Message-State: AOAM532FZahaPkDiDKWc8Z0iTduZGLuk7NGxNKIWFi8Cyqu4mu/zmj+k
+        CLIWDro2AtI8GOS7YXooGb7YuaQj08cCbaTqKAs=
+X-Google-Smtp-Source: ABdhPJy0J0wMIbx/uoMm5AY9VvNc+405O1p/i7YOAoUKvbaSg//wrHj2iKkiEZQO64u8lwSzUv6UkJyDyibKFQGLj0o=
+X-Received: by 2002:a62:445:0:b029:19c:162b:bbef with SMTP id
+ 66-20020a6204450000b029019c162bbbefmr16587022pfe.40.1607355689471; Mon, 07
+ Dec 2020 07:41:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 07 Dec 2020 15:34:23 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+References: <20201207112354.13884-1-info@metux.net>
+In-Reply-To: <20201207112354.13884-1-info@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Dec 2020 17:42:18 +0200
+Message-ID: <CAHp75Vd_iiqTYvgD59C7j+btx70s_Ge0UC4JU2uPa33enFW08w@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers: gpio: put virtual gpio device into their own submenu
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
-In-Reply-To: <X85FVc07Hc7LQQU8@localhost>
-References: <20201204164739.781812-1-maz@kernel.org>
- <X841xwCChUEqi5Ad@localhost> <73d57fe9fefe50955771846ea52004fb@kernel.org>
- <X85FVc07Hc7LQQU8@localhost>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <d5fa2065009d5854b4c719003ebcb255@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: johan@kernel.org, linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, gregkh@linuxfoundation.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-12-07 15:08, Johan Hovold wrote:
-> On Mon, Dec 07, 2020 at 02:41:03PM +0000, Marc Zyngier wrote:
->> On 2020-12-07 14:01, Johan Hovold wrote:
->> > On Fri, Dec 04, 2020 at 04:47:35PM +0000, Marc Zyngier wrote:
->> >> Having recently tried to use the CBUS GPIOs that come thanks to the
->> >> ftdio_sio driver, it occurred to me that the driver has a couple of
->> >> usability issues:
->> >>
->> >> - it advertises potential GPIOs that are reserved to other uses (LED
->> >>   control, or something else)
->> >
->> > Consider the alternative, that the gpio offsets (for CBUS0, CBUS1,
->> > CBUS2
->> > or CBUS4) varies depending on how the pins have been muxed. Hardly very
->> > user friendly.
->> 
->> That's not what I suggest. If you want fixed GPIO offsets, fine by me.
->> But telling the user "these are GPIOs you can use", and then
->> "on second though, you can't" is not exactly consistent.
-> 
-> It's really no different from any other gpio chip which registers all
-> its lines, including those which may have been muxed for other 
-> purposes.
+On Mon, Dec 7, 2020 at 1:29 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Since we already have a few virtual GPIO drivers, and more to come,
+> this category deserves its own submenu.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
 
-If they claim that their lines are available, and then refuse to
-let the user play with it, that's just a bug willing to be fixed.
+You are not a first day contributor, where is the changelog?
 
->> >> - it returns an odd error (-ENODEV), instead of the expected -EINVAL
->> >>   when a line is unavailable, leading to a difficult diagnostic
->> >
->> > Hmm, maybe. Several gpio driver return -ENODEV when trying to request
->> > reserved pins. Even gpiolib returns -ENODEV when a pins is not yet
->> > available due to probe deferal.
->> 
->> -ENODEV really means "no GPIOchip" in this context. The fact that
->> other drivers return -ENODEV for reserved pins looks like a bug to me.
-> 
-> No, the chip is there. The -ENODEV is what you get when requesting the
-> line, because the line isn't available.
-
-I still believe that ENODEV is the wrong error. The device is there,
-but the request is invalid because the line is used by something else.
-EINVAL, EBUSY, ENXIO would all be (sort of) OK.
-
-> 
->> > -EBUSY could also be an alternative, but that's used to indicate that a
->> > line is already in use as a gpio.
->> 
->> Or something else. Which is exactly the case, as it's been allocated
->> to another function.
-> 
-> Right, there are invalid requests (e.g. requesting line five of a four
-> line chip), lines that are already in use, and lines not available due
-> to muxing.
-> 
-> And then there's the question of whether to use the same or distinct
-> errnos for these. I believe using distinct errnos provides more
-> feedback, but we can certainly pick another errno for this if it's
-> really that confusing.
-
-Fundamentally, I don't think the backend driver should be in charge
-of the error reporting. That should be the char device's job. Leaving it
-to the individual drivers is a sure way to have an inconsistent API.
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
