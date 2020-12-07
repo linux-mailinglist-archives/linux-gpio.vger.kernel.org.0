@@ -2,195 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AC6C2D12A8
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 14:56:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BECA72D12FF
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 15:02:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgLGNzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 08:55:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60382 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbgLGNzY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 08:55:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607349237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a53OP+sz/FZD7xQxfgASvprmIF0p8vj6RU1ckdy2paI=;
-        b=aM5TDMJxG/FVronwgtzV8QOV3KmvIeUJZnO8EVF5bW5pUBACubemrKzyQRp0ch5HwSHCGd
-        tXfMDxW0cHuxt1Za8WXQimCK4V1bUFzadNHmQXEOJBAFktk7cBCwgBfAbR5UNWdOaDC+CL
-        gJTlTLtz4frBr2g/LcfeCPmx/rGhJ08=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-543-FEB9vyCmOf6YzbzmUvWDMw-1; Mon, 07 Dec 2020 08:53:55 -0500
-X-MC-Unique: FEB9vyCmOf6YzbzmUvWDMw-1
-Received: by mail-wr1-f72.google.com with SMTP id m2so4874736wro.1
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 05:53:54 -0800 (PST)
+        id S1727346AbgLGOBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 09:01:52 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33387 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbgLGOBv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 09:01:51 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t22so15084836ljk.0;
+        Mon, 07 Dec 2020 06:01:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=a53OP+sz/FZD7xQxfgASvprmIF0p8vj6RU1ckdy2paI=;
-        b=nvGdxREGazGwC/XEASKScJGUZi/4yrynIKQOQCd/H6baHzRA7M63bC273ghTdOpywU
-         QXjFXaEplVB6PoHw9VsRfJrwTBphkCuhisBLQd99v2DYrtUipBnJLi/K4jKStDArK8TI
-         JdJZUjvDJFGBt84MlGFRSCxkMaVXxcgtv0doprE9J+pA8sSxgzmboWnIP0mzBUldO7s5
-         8IKR2sqlQOBT/ICp0BSJsOLvUBYMmfsgx8gyd6UiOQ0GZZwGIGV7GrbYaR/uIjnwPJu8
-         eYMi+9CdexxT/SYAo42U3GcNZq6/MFxmw0S6pJBBBteSoK8EGDuVMnugKwvcemxX9A2i
-         3+3g==
-X-Gm-Message-State: AOAM531K06CYlHx/Oz4+EBQRwDON+9+c1wQOvrM9aI4DkMSeio3DLlJ5
-        IH1okhfFIOnuykTcX9UiVB+udIsnKw7nBhoDohqpQeF6PBezZfvOu7KgFZepSwqRY3qxeEKfMd2
-        PmxInHQv3/qTJbtg/nMFEVA==
-X-Received: by 2002:a1c:7218:: with SMTP id n24mr18476345wmc.186.1607349233152;
-        Mon, 07 Dec 2020 05:53:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxDMDoy/W2sgstBoP6oEPEFLzcmZHr+KtnYFjyMu7YeY3+NBrhAUVxzjo1UnbiGlW76bxVjFA==
-X-Received: by 2002:a1c:7218:: with SMTP id n24mr18476325wmc.186.1607349232936;
-        Mon, 07 Dec 2020 05:53:52 -0800 (PST)
-Received: from redhat.com (bzq-79-176-44-197.red.bezeqint.net. [79.176.44.197])
-        by smtp.gmail.com with ESMTPSA id m81sm13857942wmf.29.2020.12.07.05.53.50
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZJadRuqd/X/33u5mpXvpNeLeZmHhShIKn6hwyJ9UfKA=;
+        b=LhtyHvC/0dOXB0ZN4sET4ns81ik1dID9qQriSwHYnQUlQcP4zXQCCsKn6Q3hlWCQXc
+         6i7KrIwtKhq0ppiHsWe/QHQZmw+HIP5+ZEm2nvmkA+PW+22nlYqg2qzG2JWFX6pqZfeH
+         4wXtlLjZ06oLkudLGM4VavQW790aTrYGGo9AQzPVQ4oE1TtuM3wdgeR7BB8kR8CYbzUR
+         oNsTAT8kF+5kjkky+Pnrne1IG4xfyLhqYNaX1QtXorOvANUWxBukizF0Nul57fPN1sE3
+         dXhCaBWFEwdIR1b2+2loBO36SfKHq30TgWPIdm8pwTENfQppVevmX9JmBJoBMr6+0vTi
+         7ATA==
+X-Gm-Message-State: AOAM530+2PmmgRmRzq778IXLN0sp8a9kGFGwASEierd+3lXD7LjRvkCR
+        GeqiY4A8+nFk9bfHojXaqHM=
+X-Google-Smtp-Source: ABdhPJwIK6DWcc2jbvjLKzTf3YHVukzIYpfk6l++v/K20CulH1k1FGe/dCo5jsEM0SIBRO47JY3cfA==
+X-Received: by 2002:a05:651c:8d:: with SMTP id 13mr2441212ljq.33.1607349669142;
+        Mon, 07 Dec 2020 06:01:09 -0800 (PST)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id k13sm336342lfo.294.2020.12.07.06.01.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 05:53:52 -0800 (PST)
-Date:   Mon, 7 Dec 2020 08:53:49 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org, stefanha@redhat.com,
-        msuchanek@suse.de
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-Message-ID: <20201207085247-mutt-send-email-mst@kernel.org>
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
- <20201205142218-mutt-send-email-mst@kernel.org>
- <842519cc-94ca-3c11-ddd6-543e5a89c998@redhat.com>
+        Mon, 07 Dec 2020 06:01:08 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kmH5D-0002ji-SH; Mon, 07 Dec 2020 15:01:43 +0100
+Date:   Mon, 7 Dec 2020 15:01:43 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
+Message-ID: <X841xwCChUEqi5Ad@localhost>
+References: <20201204164739.781812-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <842519cc-94ca-3c11-ddd6-543e5a89c998@redhat.com>
+In-Reply-To: <20201204164739.781812-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 07, 2020 at 11:12:50AM +0800, Jason Wang wrote:
+On Fri, Dec 04, 2020 at 04:47:35PM +0000, Marc Zyngier wrote:
+> Having recently tried to use the CBUS GPIOs that come thanks to the
+> ftdio_sio driver, it occurred to me that the driver has a couple of
+> usability issues:
 > 
-> On 2020/12/6 上午3:32, Michael S. Tsirkin wrote:
-> > On Sat, Dec 05, 2020 at 08:59:55AM +0100, Enrico Weigelt, metux IT consult wrote:
-> > > On 04.12.20 04:35, Jason Wang wrote:
-> > > 
-> > > > > --- a/drivers/gpio/Kconfig
-> > > > > +++ b/drivers/gpio/Kconfig
-> > > > > @@ -1615,6 +1615,15 @@ config GPIO_MOCKUP
-> > > > > Â Â Â Â Â Â Â  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the
-> > > > > usage in
-> > > > > Â Â Â Â Â Â Â  it.
-> > > > > Â  +config GPIO_VIRTIO
-> > > > > +Â Â Â  tristate "VirtIO GPIO support"
-> > > > > +Â Â Â  depends on VIRTIO
-> > > > 
-> > > > Let's use select, since there's no prompt for VIRTIO and it doesn't have
-> > > > any dependencies.
-> > > whoops, it's not that simple:
-> > > 
-> > > make: Entering directory '/home/nekrad/src/apu2-dev/pkg/kernel.apu2.git'
-> > > make[1]: Entering directory
-> > > '/home/nekrad/src/dk/DistroKit/platform-x86_64/build-target/linux-5.8.9-build'
-> > >    GEN     Makefile
-> > > drivers/gpu/drm/Kconfig:74:error: recursive dependency detected!
-> > > drivers/gpu/drm/Kconfig:74:	symbol DRM_KMS_HELPER is selected by
-> > > DRM_VIRTIO_GPU
-> > > drivers/gpu/drm/virtio/Kconfig:2:	symbol DRM_VIRTIO_GPU depends on VIRTIO
-> > > drivers/virtio/Kconfig:2:	symbol VIRTIO is selected by GPIO_VIRTIO
-> > > drivers/gpio/Kconfig:1618:	symbol GPIO_VIRTIO depends on GPIOLIB
-> > > drivers/gpio/Kconfig:14:	symbol GPIOLIB is selected by I2C_MUX_LTC4306
-> > > drivers/i2c/muxes/Kconfig:47:	symbol I2C_MUX_LTC4306 depends on I2C
-> > > drivers/i2c/Kconfig:8:	symbol I2C is selected by FB_DDC
-> > > drivers/video/fbdev/Kconfig:63:	symbol FB_DDC depends on FB
-> > > drivers/video/fbdev/Kconfig:12:	symbol FB is selected by DRM_KMS_FB_HELPER
-> > > drivers/gpu/drm/Kconfig:80:	symbol DRM_KMS_FB_HELPER depends on
-> > > DRM_KMS_HELPER
-> > > 
-> > > Seems that we can only depend on or select some symbol - we run into
-> > > huge trouble if thats mixed. Just changed DRM_VIRTIO_GPU to just select
-> > > VIRIO instead of depending on it, and now it works.
-> > > 
-> > > I've posted another patch for fixing drivers/gpu/drm/virtio/Kconfig
-> > > to use 'select' instead of 'depends on'.
-> > It seems a bit of a mess, at this point I'm not entirely sure when
-> > should drivers select VIRTIO and when depend on it.
-> > 
-> > The text near it says:
-> > 
-> > # SPDX-License-Identifier: GPL-2.0-only
-> > config VIRTIO
-> >          tristate
-> >          help
-> >            This option is selected by any driver which implements the virtio
-> >            bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
-> >            or CONFIG_S390_GUEST.
-> > 
-> > Which seems clear enough and would indicate drivers for devices *behind*
-> > the bus should not select VIRTIO and thus presumably should "depend on" it.
-> > This is violated in virtio console and virtio fs drivers.
-> > 
-> > For console it says:
-> > 
-> > commit 9f30eb29c514589e16f2999ea070598583d1f6ec
-> > Author: Michal Suchanek <msuchanek@suse.de>
-> > Date:   Mon Aug 31 18:58:50 2020 +0200
-> > 
-> >      char: virtio: Select VIRTIO from VIRTIO_CONSOLE.
-> >      Make it possible to have virtio console built-in when
-> >      other virtio drivers are modular.
-> >      Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> >      Reviewed-by: Amit Shah <amit@kernel.org>
-> >      Link: https://lore.kernel.org/r/20200831165850.26163-1-msuchanek@suse.de
-> >      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > which seems kind of bogus - why do we care about allowing a builtin
-> > virtio console driver if the pci virtio bus driver is a module?
-> > There won't be any devices on the bus to attach to ...
-> 
-> 
-> For testing like switching bus from pci to MMIO?
+> - it advertises potential GPIOs that are reserved to other uses (LED
+>   control, or something else)
 
+Consider the alternative, that the gpio offsets (for CBUS0, CBUS1, CBUS2
+or CBUS4) varies depending on how the pins have been muxed. Hardly very
+user friendly.
 
-Not sure I understand ... can you give an example?
+> - it returns an odd error (-ENODEV), instead of the expected -EINVAL
+>   when a line is unavailable, leading to a difficult diagnostic
 
-> 
-> > And for virtio fs it was like this from the beginning.
-> > 
-> > I am inclined to fix console and virtio fs to depend on VIRTIO:
-> > select is harder to use correctly ...
-> > 
-> > Jason?
-> 
-> 
-> I think it works, but we need a prompt for VIRTIO otherwise there's no way
-> to enable it.
-> 
-> Thanks
+Hmm, maybe. Several gpio driver return -ENODEV when trying to request
+reserved pins. Even gpiolib returns -ENODEV when a pins is not yet
+available due to probe deferal.
 
-That's even messier. No one needs VIRTIO core by itself - it's only used
-by transports and drivers.
+-EBUSY could also be an alternative, but that's used to indicate that a
+line is already in use as a gpio.
 
+> We address the issues in a number of ways:
 > 
-> > 
-> > 
-> > > -- 
-> > > ---
-> > > Hinweis: unverschlÃ¼sselte E-Mails kÃ¶nnen leicht abgehÃ¶rt und manipuliert
-> > > werden ! FÃ¼r eine vertrauliche Kommunikation senden Sie bitte ihren
-> > > GPG/PGP-SchlÃ¼ssel zu.
-> > > ---
-> > > Enrico Weigelt, metux IT consult
-> > > Free software and Linux embedded engineering
-> > > info@metux.net -- +49-151-27565287
+> - Stop reporting invalid GPIO lines as valid to userspace. It
+>   definitely seems odd to do so. Instead, report the line as being
+>   used, making the userspace interface a bit more consistent.
+> 
+> - Implement the init_valid_mask() callback in the ftdi_sio driver,
+>   allowing it to report which lines are actually valid.
+> 
+> - As suggested by Linus, give an indication to the user of why some of
+>   the GPIO lines are unavailable, and point them to a useful tool
+>   (once per boot). It is a bit sad that there next to no documentation
+>   on how to use these CBUS pins.
 
+Don't be sad, Marc; write some documentation. ;)
+
+Johan
