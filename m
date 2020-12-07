@@ -2,159 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 182652D109C
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 13:35:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 613242D10C9
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 13:46:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgLGMfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 07:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgLGMfL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 07:35:11 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC582C0613D0
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 04:34:30 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id f11so2879759ljn.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 04:34:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=boKMjDjJa5tRLm1VPCUmtsYmlC2fesJJoaLCTYk8EUo=;
-        b=XRCkYUCdOmvRRAtRW3hi67kI3cSeDfNcypHvLS8jdjZZe/bAI5psCeUuTET6Ap9u/a
-         5vY1eRHmi2x5zg4MXni5dltguovscn5Vx3S8VYcRZaFkS6Xh6yKIhlvAz9GaKMKYZ2jL
-         bypClOGEwkbSDSCtYJUpOdXlkMHCfpDbv5lgyAMEqIRY6tCKHpMjxBMym9nMiaNZpZ4r
-         qkGb4ZLSq7dUPqVo0McnPOil2TXOvm33hPJK/S4rEnAIB7HVJ2nl+1UdMreUuvqDVSgl
-         bAs2J7FdEnjl0ku+0IfuhgiDcU/fYPx1YUxP0BS5VEkva4tHgDXe73Iv5BD+lKX1cXYe
-         hkjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=boKMjDjJa5tRLm1VPCUmtsYmlC2fesJJoaLCTYk8EUo=;
-        b=ZBxepKeA+P6h6grTwBMmV5vOnCDhStp6+bAW7vYmeX5WBvibZ8jwQPfsZLJx7EpnjO
-         2tEB5MXbgBD32RsXdoIAfuAdzNiOvb/GwpJBHBlhBvPRr5ZhbFjFR76cvPIeDayQfRqu
-         gap3Yc9bTUtGnfKicr3cVO7vZBDs04HvA6mLYMUe4ouxbGl0Jx7H8Fc/u0j1Zb6sCqUL
-         zqKFZEmT/0MOSU1zBtAWMJAYGZ3SbvkdYaGtKDE2oO49H/diySvhqJIg+42Dk89UfkYG
-         YvPrWYCSqxeOaLvk9oIGJOqWeEIQ1hqgRqpksrW4qZhrufJ7HiFMcXlTvTeSzuxa8AG7
-         QROg==
-X-Gm-Message-State: AOAM532KsIjYinN8fyRJBzQBal6ueXJ3ZqvZnu0IvMNdEV4wQZ8mfX/e
-        H4ZlqTvz6BtHw2aV+4EjgWU4sna6qGc4H3dL03DS1A==
-X-Google-Smtp-Source: ABdhPJxCMdxWp9BFOclJM4l0os50hx76oBCQDWSP9Mz1ISgEte4ORw7PcLsLj6UH4DkqJ6zlcpFPOuTE9rfLfpwTh4Y=
-X-Received: by 2002:a2e:321a:: with SMTP id y26mr8487351ljy.293.1607344469350;
- Mon, 07 Dec 2020 04:34:29 -0800 (PST)
+        id S1725800AbgLGMpu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 07:45:50 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8720 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgLGMpt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 07:45:49 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CqNL060spzkmlP;
+        Mon,  7 Dec 2020 20:44:24 +0800 (CST)
+Received: from [127.0.0.1] (10.57.22.126) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Dec 2020
+ 20:44:56 +0800
+Subject: Re: [PATCH v1] gpio: dwapb: mask/unmask IRQ when disable/enable it
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <bgolaszewski@baylibre.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+References: <1606728979-44259-1-git-send-email-luojiaxing@huawei.com>
+ <20201130112250.GK4077@smile.fi.intel.com>
+ <63f7dcc4-a924-515a-2fea-31ec80f3353e@huawei.com>
+ <20201205221522.ifjravnir5bzmjff@mobilestation>
+From:   luojiaxing <luojiaxing@huawei.com>
+Message-ID: <a25a0eaf-f4ce-b2db-dea2-667fac62985f@huawei.com>
+Date:   Mon, 7 Dec 2020 20:44:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <tencent_220963AF059847E1171B4AB9@qq.com> <CACRpkdbvKWcD04SLLBOBuZWzN64xpVv1nfCXZGcSp9cs0MPivQ@mail.gmail.com>
- <1jeek5ps3b.fsf@starbuckisacylon.baylibre.com> <CAHp75VeQGxnGO4o5a1vFzS9XAMjmvwoJ3=pWLvNQT6mXEKcqWQ@mail.gmail.com>
- <1jtusxkh6v.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jtusxkh6v.fsf@starbuckisacylon.baylibre.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 7 Dec 2020 13:34:18 +0100
-Message-ID: <CACRpkdZmM3GK6mebmm6nT-XXfdTB5KGwArAFk-1Gx6noZDxVAw@mail.gmail.com>
-Subject: Re: 0001-add-amlogic-gpio-to-irq
-To:     Jerome Brunet <jbrunet@baylibre.com>, Marc Zyngier <maz@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?B?5p6X5Zyj5qyi?= <linshenghuan@hangtu-china.com>,
-        khilman <khilman@baylibre.com>,
-        narmstrong <narmstrong@baylibre.com>,
-        "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201205221522.ifjravnir5bzmjff@mobilestation>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.57.22.126]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 7, 2020 at 12:07 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> On Mon 07 Dec 2020 at 11:18, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Dec 4, 2020 at 4:25 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >> On Fri 04 Dec 2020 at 10:13, Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> >> This HW only has 8 irqs that can each be mapped to a pin. No direct
-> >> translation can be made, we have to allocate an irq to monitor the line.
-> >> So when gpio_to_irq() was called, we had to do that allocation dynamically
-> >> to return a valid irq number. Since there was no counter part to
-> >> gpio_to_irq(), those allocation cannot be freed during the lifetime of
-> >> the device.
 
-gpio_to_irq() is just a helper really and should not really be used to allocate
-anything.
+On 2020/12/6 6:15, Serge Semin wrote:
+> On Tue, Dec 01, 2020 at 04:59:21PM +0800, luojiaxing wrote:
+>> On 2020/11/30 19:22, Andy Shevchenko wrote:
+>>> On Mon, Nov 30, 2020 at 05:36:19PM +0800, Luo Jiaxing wrote:
+>>>> The mask and unmask registers are not configured in dwapb_irq_enable() and
+>>>> dwapb_irq_disable(). In the following situations, the IRQ will be masked by
+>>>> default after the IRQ is enabled:
+>>>>
+>>>> mask IRQ -> disable IRQ -> enable IRQ
+>>>>
+>>>> In this case, the IRQ status of GPIO controller is inconsistent with it's
+>>>> irq_data too. For example, in __irq_enable(), IRQD_IRQ_DISABLED and
+>>>> IRQD_IRQ_MASKED are both clear, but GPIO controller do not perform unmask.
+>>> Sounds a bit like a papering over the issue which is slightly different.
+>>> Can you elaborate more, why ->irq_mask() / ->irq_unmask() are not being called?
+>>
+>> Sure, The basic software invoking process is as follows:
+>>
+>> Release IRQ:
+>> free_irq() -> __free_irq() -> irq_shutdown() ->__irq_disable()
+>>
+>> Disable IRQ:
+>> disable_irq() -> __disable_irq_nosync() -> __disable_irq -> irq_disable ->
+>> __irq_disable()
+>>
+>> As shown before, both will call __irq_disable(). The code of it is as
+>> follows:
+>>
+>> if (irqd_irq_disabled(&desc->irq_data)) {
+>>      if (mask)
+>>          mask_irq(desc);
+>>
+>> } else {
+>>          irq_state_set_disabled(desc);
+>>              if (desc->irq_data.chip->irq_disable) {
+>> desc->irq_data.chip->irq_disable(&desc->irq_data);
+>>                  irq_state_set_masked(desc);
+>>              } else if (mask) {
+>>                  mask_irq(desc);
+>>      }
+>> }
+>>
+>> Because gpio-dwapb.c provides the hook function of irq_disable,
+>> __irq_disable() will directly calls chip->irq_disable() instead of
+>> mask_irq().
+>>
+>> For irq_enable(), it's similar and the code is as follows:
+>>
+>> if (!irqd_irq_disabled(&desc->irq_data)) {
+>>      unmask_irq(desc);
+>> } else {
+>>      irq_state_clr_disabled(desc);
+>>      if (desc->irq_data.chip->irq_enable) {
+>> desc->irq_data.chip->irq_enable(&desc->irq_data);
+>>          irq_state_clr_masked(desc);
+>>      } else {
+>>          unmask_irq(desc);
+>>      }
+>> }
+>>
+>> Similarly, because gpio-dwapb.c provides the hook function of irq_enable,
+>> irq_enable() will directly calls chip->irq_enable() but does not call
+>> unmask_irq().
+>>
+>>
+>> Therefore, the current handle is as follows:
+>>
+>> API of IRQ:        |   mask_irq()             | disable_irq()
+>> |    enable_irq()
+>>
+>> gpio-dwapb.c:  |   chip->irq_mask()   | chip->irq_diable()   |
+>> chip->irq_enable()
+>>
+>> I do not know why irq_enable() only calls chip->irq_enable(). However, the
+>> code shows that irq_enable() clears the disable and masked flags in the
+>> irq_data state.
+>>
+>> Therefore, for gpio-dwapb.c, I thinks ->irq_enable also needs to clear the
+>> disable and masked flags in the hardware register.
+>>
+> Hmm, that sounds like a problem, but the explanation is a bit unclear
+> to me. AFAICS you are saying that the only callbacks which are
+> called during the IRQ request/release are the irq_enable(), right?
 
-In device tree systems, the GPIO provider should nominally present itsel
-as a dual-mode gpio-controller and interrupt-controller for example:
 
-                gpio1: gpio@4e000000 {
-                        compatible = "cortina,gemini-gpio", "faraday,ftgpio010";
-                        reg = <0x4e000000 0x100>;
-                        interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
-                        resets = <&syscon GEMINI_RESET_GPIO1>;
-                        clocks = <&syscon GEMINI_CLK_APB>;
-                        gpio-controller;
-                        #gpio-cells = <2>;
-                        interrupt-controller;
-                        #interrupt-cells = <2>;
-                };
+Yes, but one point needs to be clarified, for IRQ requests, it calls 
+irq_enable(); for IRQ release, it calls irq_disable().
 
-The GPIOs are normally *not* translated to IRQs in this set-up. Rather the
-interrupts are requested by consumers using request_[threaded_]irq()
-which means you should be using the irqchip callbacks such as
-.irq_request_resources() and .irq_release_resources() to allocate one
-of the free irq lines to use. These will be called at the right points if a
-properly written driver requests an IRQ and when the driver is removed.
+Actually I am thinking that why only irq_enable()/irq_disable() is 
+called since the mask and enable flags of irq_data are both set.
 
-In some rare cases gpio_to_irq() is used because all the driver knows is
-a GPIO number and it want to try to obtain an IRQ for it, and if a 1-to-1
-mapping exists it returns this number. This is not the norm, but the
-exception.
+Does IRQ subsystem expect irq_enable to set both mask and enable? If we 
+didn't do that, the state machine of the software is different from 
+hardware, at least for mask bit.
 
-So maybe the problem is that you need to go back and think about
-updating the DT bindings for this thing to include interrupt-controller
-as well?
 
->  * This HW has to create the mapping between GPIO and irq number
->    dynamically. The number of irqs available is very limited.
+> If
+> so then the only reason why we haven't got a problem reported due to
+> that so far is that the IRQs actually unmasked by default.
 
-This should be done using irq_chip callbacks.
 
->  * We only get to know a mapping is required when gpio_to_irq() is called
+yes, I think so, Common drivers do not mask the IRQ before releasing it. 
+But that's possible.
 
-No that callback should not be used for that.
 
->  * There is no way to know when it is safe to dispose of the created
->    mapping
+>
+> In anyway I'd suggest to join someone from the kernel IRQs-related
+> subsystem to this discussion to ask their opinion whether the IRQs
+> setup procedure is supposed to work like you say and the irq_enable
+> shall actually also unmask IRQs.
+>
+> Thomas, Jason, Mark, could you give us your comment about the issue?
+>
+> -Sergey
+>
+>>
+>>
+> .
+>
 
-The way that is done is when .irq_release_resources() is called.
-
->  * Some drivers require a trigger type we don't support. These will create
->    mappings and not use it because of the failure when .set_type() is
->    called
-
-I don't quite understand this. Do you mean you are bombarded by pointless
-requests for interrupts that will not work anyways? Then do not assign
-interrupts to these drivers in the device tree. These requesting devices
-and their requests are under your control. The drivers should be able to
-back out and work without interrupt if request_irq() fails because it
-can't provide the type on interrupt you want:
-
-int irq = request_irq(irq, my_isr, IRQF_TRIGGER_RISING |
-IRQF_TRIGGER_FALLING, "My ISR", cookie);
-// This results in .irq_request_resources() and .irq_set_type()
-if (irq < 0) {
-   // Oopps out of IRQs or couldn't support double edges, bail out or
-use polling
-}
-
-Just do it like this (you might have to augment your drivers) and you'll
-be fine?
-
-> To answer your question, there an API which lets us know a mapping is
-> needed, but none to inform that it is not required anymore. The GPIO API
-> was not meant to used like this. Not saying it is good or bad, this is
-> just how it is.
-
-So don't use it?
-
-Yours,
-Linus Walleij
