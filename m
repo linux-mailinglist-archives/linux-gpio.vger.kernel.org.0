@@ -2,111 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 152162D0D30
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 10:39:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 785772D0D7A
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 10:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgLGJjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 04:39:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        id S1725802AbgLGJzW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 04:55:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgLGJjU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 04:39:20 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FFFC0613D2
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 01:38:34 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id x22so10842515wmc.5
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 01:38:34 -0800 (PST)
+        with ESMTP id S1725800AbgLGJzV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 04:55:21 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F94C0613D4;
+        Mon,  7 Dec 2020 01:54:14 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id t7so9332345pfh.7;
+        Mon, 07 Dec 2020 01:54:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XpZ628O5xaXa4RdOKN7MsGWRWJi7+t1IcOBgJgwxavs=;
-        b=sfF17KBm2xoH141r0pfHE47pI1OemoN9EybfIO3Ncd9nZlNuvMJj8l+4ARZJMO4FvT
-         iW8eTCDgYZFqyxaCPdVDBID3vQFjxEVX9a7ufst4amolQGqi2keHfkRhzvyt1jhf7hEw
-         1de/iabQBbAjgqGX3NeGFXk7UWMh2Ke2mHj9BUN2iGQ0JGYaoskfyp7KCVbAVE43xIwi
-         Kjqw6xZ+LhKxAellDgvDuGw552lhrdpU4+X/cGHQaHPwGepodWmsBQ2qOz2hJ0dzWQKT
-         zg3k/G3Yp8y7XG9LovsnFJ5IKhKXWaDpjenONKVgn/URho/cNUIrjzNlEX/werJ0Bq30
-         Tjuw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cQNqejnHKcv71ogNXQXWu1nJrilCEf7ocHyvluhTstc=;
+        b=g30udMM1VuAWbWxL2/BJDWR/lG7bQE0VU8xjEd13qKZzRC6KOfzAM3WN6wc1JFbUHA
+         paIDx534W92bNFGN6L83h9q3FDnYpttE7r7Bv2xV3Ze43sSth+v2VYm26zGOeHaZrOWB
+         K5JT73YDl7u5Lb9cS975oglkf40inKuAm0n9Dipd+bsG/QvK5CZ4xKAwGOcPaigvGP/a
+         g9aakI2R15t8MdqHVPsbX+FOBUjheBnAA/bXO015PUAAlY1cLo93A6lJTeqqUmQidw14
+         tJoEpe61zudYXm6NDHfTEutMMmOKqCVCKc5O4pMdKMgzQDzAi0V7NWH+nIXFGyJzdJlz
+         lelA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XpZ628O5xaXa4RdOKN7MsGWRWJi7+t1IcOBgJgwxavs=;
-        b=PhIzjwbbwCogoY9uRZumhSvzsLZo82wbEqJMEIA9Rdj5s3Nd8xD8/OBBiZgG3QrLf3
-         ARi7I3TR16n29rcBE/Sy5t83Gv57Wp+77cMeyzgR9WfI3Vr8Oim8W3ciCtTWL9sznabQ
-         iUfy1g0uNy36XdiEIs7WSSpPguCp7iZVAxP6t2rPwFUYA/SQ8uzaHy9kNZd3jxFW26Hn
-         uUNh4SiYIt17p1ht8OA8aWuJJLbhl/SAdFdHJnY3tR/+NFS5hLqLrhQlcL1yQcZ5G1r9
-         KFhze/gl3Pxggm5rEB25Jz4AdNZ/SqNJBW7vhajQUJ1LTn3QQRZCdXmYMjBpiwoWlJOS
-         tf4Q==
-X-Gm-Message-State: AOAM532yyhAr66RexmBumC0+TZEFWj7SA0Y4qXs4Z83MV9QNhILGJSgW
-        Mnc3hh2ZRbFAWp6Q6bR6Ao27OQ==
-X-Google-Smtp-Source: ABdhPJxGvianTv9DEmfI3MU5uIAXw/ZzSnzw9NA0pWoTLejhJd+h21+1YtLVTZFvErdVAlqf4iLZpg==
-X-Received: by 2002:a1c:9ecf:: with SMTP id h198mr17284160wme.104.1607333913196;
-        Mon, 07 Dec 2020 01:38:33 -0800 (PST)
-Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.googlemail.com with ESMTPSA id h15sm14315088wrw.15.2020.12.07.01.38.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Dec 2020 01:38:32 -0800 (PST)
-Subject: Re: [RESEND PATCH v6 2/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl
- driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20201202163443.26499-1-srinivas.kandagatla@linaro.org>
- <20201202163443.26499-3-srinivas.kandagatla@linaro.org>
- <CACRpkdabPygUmZXT6FMT4fEU6D638Y3XRwvODy8ucUAbuQ4kvg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <4073d9ec-e959-7216-79fa-ee210fbfff17@linaro.org>
-Date:   Mon, 7 Dec 2020 09:38:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cQNqejnHKcv71ogNXQXWu1nJrilCEf7ocHyvluhTstc=;
+        b=QwI18E4a6B3FAKeIgWsVohwaqw8/ogjF4oDgnKOOHJiKLOFhKZlMPq1n1V1szgMHyH
+         Sh78YPBB2HclboGB8RIU00ULlQ2M/JmGbmRwRKsSPUX9iVjPMWYDok4hNXEHEd0Zj57v
+         ZIkhNVUBCtZe0WVnoTOqhYW3HfyWRFBgI2Jyw5sXLv2DacqIcnHhU6CG9EixVhrcuZ6/
+         E/KRav3C6HF0H9MOnAy0XQ2Ei6Vrexc+GxTNGgi+I3agOC1EKmaSUugGESpLUQElqCQu
+         5XKpx1Kgt1AFWV3EyOJqUpryWJaebRfF4DCAIYlkf6F0HxNN++dGS9P1ed05DBDqluuz
+         EG3A==
+X-Gm-Message-State: AOAM5332PXVg6a6IKiQgAqe/prlzhTIin/CbR8qvWJi/zs5JpUYMFYy2
+        qdTHZzYV0pr4ubhpY/nKIrNWNv6soNh4pbDqFGI=
+X-Google-Smtp-Source: ABdhPJyjR8NCqP4BwkiF+lJpanNRuoSGVUTlMMZMbsnJVenOsZ3LLSVlxWxATKrXkRR4Y8N6SIPiC5/CdXA7fBL9rLg=
+X-Received: by 2002:a62:445:0:b029:19c:162b:bbef with SMTP id
+ 66-20020a6204450000b029019c162bbbefmr15382640pfe.40.1607334854121; Mon, 07
+ Dec 2020 01:54:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdabPygUmZXT6FMT4fEU6D638Y3XRwvODy8ucUAbuQ4kvg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201204164739.781812-1-maz@kernel.org>
+In-Reply-To: <20201204164739.781812-1-maz@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Dec 2020 11:55:02 +0200
+Message-ID: <CAHp75VcDqHLzaAZ=EOV8EfhOxLvEC4do+UDVmAWD229xmEok+w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     USB <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Dec 4, 2020 at 6:49 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Having recently tried to use the CBUS GPIOs that come thanks to the
+> ftdio_sio driver, it occurred to me that the driver has a couple of
+> usability issues:
+>
+> - it advertises potential GPIOs that are reserved to other uses (LED
+>   control, or something else)
+>
+> - it returns an odd error (-ENODEV), instead of the expected -EINVAL
+>   when a line is unavailable, leading to a difficult diagnostic
+>
+> We address the issues in a number of ways:
+>
+> - Stop reporting invalid GPIO lines as valid to userspace. It
+>   definitely seems odd to do so. Instead, report the line as being
+>   used, making the userspace interface a bit more consistent.
+>
+> - Implement the init_valid_mask() callback in the ftdi_sio driver,
+>   allowing it to report which lines are actually valid.
+>
+> - As suggested by Linus, give an indication to the user of why some of
+>   the GPIO lines are unavailable, and point them to a useful tool
+>   (once per boot). It is a bit sad that there next to no documentation
+>   on how to use these CBUS pins.
+>
+> - Drop the error reporting code, which has become useless at this
+>   point.
+>
+> Tested with a couple of FTDI devices (FT230X and FT231X) and various
+> CBUS configurations.
+
+Series looks pretty good to me, FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Marc Zyngier (4):
+>   gpiolib: cdev: Flag invalid GPIOs as used
+>   USB: serial: ftdi_sio: Report the valid GPIO lines to gpiolib
+>   USB: serial: ftdi_sio: Log the CBUS GPIO validity
+>   USB: serial: ftdi_sio: Drop GPIO line checking dead code
+>
+>  drivers/gpio/gpiolib-cdev.c   |  1 +
+>  drivers/usb/serial/ftdi_sio.c | 26 +++++++++++++++++++++++---
+>  2 files changed, 24 insertions(+), 3 deletions(-)
+>
+> --
+> 2.28.0
+>
 
 
-On 05/12/2020 22:36, Linus Walleij wrote:
-> On Wed, Dec 2, 2020 at 5:35 PM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
-> 
->> Add initial pinctrl driver to support pin configuration for
->> LPASS (Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
->> on SM8250.
-> 
-> Patch applied!
-> 
->> +config PINCTRL_LPASS_LPI
->> +       tristate "Qualcomm Technologies Inc LPASS LPI pin controller driver"
->> +       depends on GPIOLIB
-> 
-> I added:
-> 
->      select PINMUX
->      select PINCONF
->      select GENERIC_PINCONF
-> 
-> When applying. You need these I think, your code is working because
-> other drivers are selecting these for you, right? The build robot would
-> hack this to pieces though.
-
-Many thanks for doing this!
-
---srini
-
-> 
-> Yours,
-> Linus Walleij
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
