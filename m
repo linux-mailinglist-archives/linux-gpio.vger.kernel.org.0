@@ -2,75 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 608A62D0EEF
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 12:26:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C3822D0EFE
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 12:27:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgLGLZe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 06:25:34 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:45757 "EHLO
+        id S1726788AbgLGL01 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 06:26:27 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:47763 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgLGLZe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 06:25:34 -0500
-Received: from [192.168.1.155] ([95.114.88.149]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MMY9X-1kTKyR0ddv-00JXzz; Mon, 07 Dec 2020 12:22:52 +0100
-Subject: Re: [PATCH v2 1/2] drivers: gpio: put virtual gpio device into their
- own submenu
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <CAMpxmJVkXeH_B4A_e1Vy4H2LcQnNz0BVoZyXNKEXmG8NvgO6cw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <169ead3f-8d6a-5de2-772e-707b7cbab635@metux.net>
-Date:   Mon, 7 Dec 2020 12:22:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <CAMpxmJVkXeH_B4A_e1Vy4H2LcQnNz0BVoZyXNKEXmG8NvgO6cw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ln1Vk8aZ+xYN6SKVVwyXg/icq2rUNG6aQh3VOfQKle0ytH4nyGl
- AuDiIa1NR1CbTBRsRm1LRT8KMgL3tFtW9Sd+dTB7zyjB+BP3wlWe5i7vdCN2/uorFtn7n2x
- +WEAQiCGcEG8YNQDrUbqzJQAzB3/0CfHFk6Sg4QaNVJ2idBfoTvlWDAgcKHlVD5jm6Solmb
- wmb2e+WBXCjyEjVi2rBnA==
+        with ESMTP id S1726254AbgLGL01 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 06:26:27 -0500
+Received: from orion.localdomain ([95.114.88.149]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mzyi6-1jyNnJ1PQk-00x1YA; Mon, 07 Dec 2020 12:23:55 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2] drivers: gpio: put virtual gpio device into their own submenu
+Date:   Mon,  7 Dec 2020 12:23:54 +0100
+Message-Id: <20201207112354.13884-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:vXs3ufNNxVIBLADw+fS7GRAFOKyDWCH5wh6co6se6r2Eh9pELot
+ 7Bz11dU9v4IqaYUGgsNTmNSlL1gCmInj4kNmev9MGf+goPe/tPVfDfKHQ+2/4llRDIOOOyX
+ IpKlD+aFPgCxtBp4jtnrYF4j0UghEL/huTXZSbrNDeVqmhCOg4UrQXrcgKhptdnt/rfbyQL
+ FDv5GH5dzbA0hoAI6pzcw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ja1UYl5fJlI=:TnURbpt5+bz13c3bg+gtyg
- QDkV/NyH+je8tGZeHnHcwpToLOhMMMw0bXBq6apc4/rUVNALaCHRSo+VTgD7TWlm8PyM1IByL
- 6dZRjL2FX2FVOCqnDwFKbIbBUaAiaq/PnlczOkN3vXSs0EVgo+581eD2uLZOdrz8zG1oejWvr
- sX94szIess39b9Y5QpCzY/5zjSj6h9QOhvKoQjfrk3jW1cRMwojvQnk08ShSkdRq4khvkh6PP
- srsVXie4+zDVG51ML0m8fLyNfV4GbaXKHNX7+KMg7z/0oE4doQ58XiV8qFDD5zH5TH0HI/yWG
- 5cSQ2BjAJ5uyvnUcvItsha4f2IiCCeMkiEyBwDBItAfYC5/+izHrh7XIG3FOk+M/mWuMBqQBo
- 1pI+60cPNqll7ACVHSVxEh2aVxMVEXBiTiajkIFF8OIyTsOznG1j9om4iFvjP
+X-UI-Out-Filterresults: notjunk:1;V03:K0:75VhAbi4Upw=:Szu1c02QnxJ1kAFb8gW0F7
+ y2Df3OTq3/HLX6eNOwLv0FwQ4uAsBMJyc0mVqLf+9cHyQhTkPm4c0WIfdTElDdEHyFcdivTzJ
+ hZALmLIM7x0I+A37BaMTxUBPM/4LLe2vjSeJ4ZE91euLw0zEipgoKUHR0AEb2EacvAnsvLL05
+ ObKVdo4/7tptWnin6s1Gq8sh6E7NtqicPTqmigyi8QAlYH9aks5CBWgAG+AKsndgVye/Nira4
+ a1KGOsO5+vZxcgbGlJmFXqUVNBxIdh4zXjyBnRRnMaGQbb1SCuqrh2dUB5ftvKfvFfYsjLCSy
+ lYlZnrn4ECd1kGM2U3mXWrsefvvHBVgpCVsXOMQeDE0qNQl/X3Nqcngb+An3d+paW9IM2m1si
+ DpLV2rQeMOhhnVRoyG4OjIDAeaRliNyRVw+OAIPEuKT/pSvsaldx+QURSG1Pb
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07.12.20 11:31, Bartosz Golaszewski wrote:
+Since we already have a few virtual GPIO drivers, and more to come,
+this category deserves its own submenu.
 
-> I'd call this section "Virtual GPIO drivers" because the code contains
-> drivers not devices.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/gpio/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-fixed in v2.
-
-
---mtx
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5d4de5cd6759..8596f9320971 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1590,6 +1590,8 @@ config GPIO_VIPERBOARD
+ 
+ endmenu
+ 
++menu "Virtual GPIO drivers"
++
+ config GPIO_AGGREGATOR
+ 	tristate "GPIO Aggregator"
+ 	help
+@@ -1613,4 +1615,6 @@ config GPIO_MOCKUP
+ 	  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
+ 	  it.
+ 
++endmenu
++
+ endif
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.11.0
+
