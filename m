@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BECA72D12FF
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 15:02:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 625642D1362
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 15:17:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgLGOBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 09:01:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33387 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgLGOBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 09:01:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t22so15084836ljk.0;
-        Mon, 07 Dec 2020 06:01:34 -0800 (PST)
+        id S1726952AbgLGOQ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 09:16:58 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41776 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgLGOQ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 09:16:58 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r24so18278150lfm.8;
+        Mon, 07 Dec 2020 06:16:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ZJadRuqd/X/33u5mpXvpNeLeZmHhShIKn6hwyJ9UfKA=;
-        b=LhtyHvC/0dOXB0ZN4sET4ns81ik1dID9qQriSwHYnQUlQcP4zXQCCsKn6Q3hlWCQXc
-         6i7KrIwtKhq0ppiHsWe/QHQZmw+HIP5+ZEm2nvmkA+PW+22nlYqg2qzG2JWFX6pqZfeH
-         4wXtlLjZ06oLkudLGM4VavQW790aTrYGGo9AQzPVQ4oE1TtuM3wdgeR7BB8kR8CYbzUR
-         oNsTAT8kF+5kjkky+Pnrne1IG4xfyLhqYNaX1QtXorOvANUWxBukizF0Nul57fPN1sE3
-         dXhCaBWFEwdIR1b2+2loBO36SfKHq30TgWPIdm8pwTENfQppVevmX9JmBJoBMr6+0vTi
-         7ATA==
-X-Gm-Message-State: AOAM530+2PmmgRmRzq778IXLN0sp8a9kGFGwASEierd+3lXD7LjRvkCR
-        GeqiY4A8+nFk9bfHojXaqHM=
-X-Google-Smtp-Source: ABdhPJwIK6DWcc2jbvjLKzTf3YHVukzIYpfk6l++v/K20CulH1k1FGe/dCo5jsEM0SIBRO47JY3cfA==
-X-Received: by 2002:a05:651c:8d:: with SMTP id 13mr2441212ljq.33.1607349669142;
-        Mon, 07 Dec 2020 06:01:09 -0800 (PST)
+        bh=De8f5tX14bb8AEEyWxX1ChJ02+bhkDyPCHWdmOL4kMc=;
+        b=qQ7+YOZlUSXWH/siW+RCSsAJzYYIJ7L2Jd2bK76yqxulELh3cEHkPFNcaj5kV3ebTB
+         GY43VGsVvhh33U5H8wySP8JyaMrUrymQTcj0q7SehHE/aT2OxVyQpr9J0pqW/p5UfBsr
+         Xz4v2rv5G0haaK0wDyXnzjo71tu2VuUNjq4b1QkVmv6YaKxxXKYUQSRr67Jy4+bMDUOO
+         KtR9eThfDxV0qaxFnCs9omSAP7WLOWexImekPDAHgtYKlXn5vXtghtAantfiiTidEvbk
+         doWM3u+93pwsUhNbJF9Hi0JvFpKN3OPKgHindtusch/fHAY0aDVFtGR3gDNr5j8n3EWM
+         v55w==
+X-Gm-Message-State: AOAM530PIwDU3qOp06H9uxCMKa2TLbs0kFQs78+f37jhw+zAsnlGMFFa
+        QZfL0HWUdbbhCtLlB7uOEkU=
+X-Google-Smtp-Source: ABdhPJwam/DokCF6LTWM7C91t/CQk0I8bWOaEkegl4L51Lb73wDreP7x6w5mcyhZX8BwjItXTXx1KQ==
+X-Received: by 2002:a19:5ca:: with SMTP id 193mr2110713lff.375.1607350575796;
+        Mon, 07 Dec 2020 06:16:15 -0800 (PST)
 Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id k13sm336342lfo.294.2020.12.07.06.01.08
+        by smtp.gmail.com with ESMTPSA id c19sm2965326lfr.182.2020.12.07.06.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 06:01:08 -0800 (PST)
+        Mon, 07 Dec 2020 06:16:14 -0800 (PST)
 Received: from johan by xi.terra with local (Exim 4.93.0.4)
         (envelope-from <johan@kernel.org>)
-        id 1kmH5D-0002ji-SH; Mon, 07 Dec 2020 15:01:43 +0100
-Date:   Mon, 7 Dec 2020 15:01:43 +0100
+        id 1kmHJq-0002pK-Fu; Mon, 07 Dec 2020 15:16:50 +0100
+Date:   Mon, 7 Dec 2020 15:16:50 +0100
 From:   Johan Hovold <johan@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -46,53 +46,61 @@ Cc:     linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
         Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         kernel-team@android.com
-Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
-Message-ID: <X841xwCChUEqi5Ad@localhost>
+Subject: Re: [PATCH 1/4] gpiolib: cdev: Flag invalid GPIOs as used
+Message-ID: <X845UohmzGM7+FPu@localhost>
 References: <20201204164739.781812-1-maz@kernel.org>
+ <20201204164739.781812-2-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201204164739.781812-1-maz@kernel.org>
+In-Reply-To: <20201204164739.781812-2-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 04, 2020 at 04:47:35PM +0000, Marc Zyngier wrote:
-> Having recently tried to use the CBUS GPIOs that come thanks to the
-> ftdio_sio driver, it occurred to me that the driver has a couple of
-> usability issues:
+On Fri, Dec 04, 2020 at 04:47:36PM +0000, Marc Zyngier wrote:
+> When reporting the state of a GPIO to userspace, we never check
+> for the actual validity of the line, meaning we report invalid
+> lines as being usable. A subsequent request will fail though,
+> which is an inconsistent behaviour from a userspace perspective.
 > 
-> - it advertises potential GPIOs that are reserved to other uses (LED
->   control, or something else)
-
-Consider the alternative, that the gpio offsets (for CBUS0, CBUS1, CBUS2
-or CBUS4) varies depending on how the pins have been muxed. Hardly very
-user friendly.
-
-> - it returns an odd error (-ENODEV), instead of the expected -EINVAL
->   when a line is unavailable, leading to a difficult diagnostic
-
-Hmm, maybe. Several gpio driver return -ENODEV when trying to request
-reserved pins. Even gpiolib returns -ENODEV when a pins is not yet
-available due to probe deferal.
-
--EBUSY could also be an alternative, but that's used to indicate that a
-line is already in use as a gpio.
-
-> We address the issues in a number of ways:
+> Instead, let's check for the validity of the line and report it
+> as used if it is invalid. This allows a tool such as gpioinfo
+> to report something sensible:
 > 
-> - Stop reporting invalid GPIO lines as valid to userspace. It
->   definitely seems odd to do so. Instead, report the line as being
->   used, making the userspace interface a bit more consistent.
+> gpiochip3 - 4 lines:
+> 	line   0:      unnamed       unused   input  active-high
+> 	line   1:      unnamed       kernel   input  active-high [used]
+> 	line   2:      unnamed       kernel   input  active-high [used]
+> 	line   3:      unnamed       unused   input  active-high
 > 
-> - Implement the init_valid_mask() callback in the ftdi_sio driver,
->   allowing it to report which lines are actually valid.
+> In this example, lines 1 and 2 are invalid, and cannot be used by
+> userspace.
 > 
-> - As suggested by Linus, give an indication to the user of why some of
->   the GPIO lines are unavailable, and point them to a useful tool
->   (once per boot). It is a bit sad that there next to no documentation
->   on how to use these CBUS pins.
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index e9faeaf65d14..a0fcb4ccaa02 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -1910,6 +1910,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>  	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+>  	    test_bit(FLAG_EXPORT, &desc->flags) ||
+>  	    test_bit(FLAG_SYSFS, &desc->flags) ||
+> +	    !gpiochip_line_is_valid(gc, info->offset) ||
+>  	    !ok_for_pinctrl)
+>  		info->flags |= GPIO_V2_LINE_FLAG_USED;
 
-Don't be sad, Marc; write some documentation. ;)
+So this is somewhat separate from the rest of the series in case it
+applies also to gpio chips with reserved ranges (e.g.
+"gpio-reserved-ranges" devicetree property). Are they currently reported
+as available?
+
+Looks like this will work well also for USB gpio controllers with static
+muxing configured in EEPROM, especially as that is how we already report
+pins reported as unavailable by pinctrl (i.e. ok_for_pinctrl).
 
 Johan
