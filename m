@@ -2,78 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D33BC2D0E80
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 11:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C6622D0EA8
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 12:08:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgLGK4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 05:56:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34924 "EHLO
+        id S1726320AbgLGLI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 06:08:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgLGK4l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 05:56:41 -0500
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B770EC0613D0
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 02:55:55 -0800 (PST)
-Received: by mail-qk1-x742.google.com with SMTP id 19so4489546qkm.8
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 02:55:55 -0800 (PST)
+        with ESMTP id S1726299AbgLGLI0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 06:08:26 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCD4C0613D1
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 03:07:39 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id a12so5539951wrv.8
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 03:07:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5ia12m9uDX+0LNlAEFwkrOarHwftjJKLgewl2oTIgrE=;
-        b=lzzmt0CZmK2Jmd7kyroYw+RWFtJX3ikmVxwIpkx+vZ/gCDKMah0PBZ3pRvKxqo8lN4
-         eStRjgjM4ibwnew31RMzb0hOwrT6uiFAFmqPXGWbPGnLbol0VBIpkeSQGAMsmcvQpOll
-         n6xniOcxXcDXSYxpEDnLx9saK/zqAazjt5HMY=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:message-id
+         :date:mime-version;
+        bh=fXKwSDv16AOh+KVLgtrXO8MP7h/qcJpU35hR/cYiidI=;
+        b=jjnXwZBExlA+jNskPXLyHx7XlGVcvXHpeqhzK23So8UPP9i4SLl+29SBBR1OC3jx2Y
+         Mdkyc1ZYxIu4Et9sLTH6EZXbgx9uArDCx8jEIof72bFGkK0fhZYPozBlYBgV/lUTimlH
+         I83tCvHVqEDYW8bgeVw3ypLeVgjiMqXQmcKPbiy0kavnPaYpVq2jIS+0X7e61k6Pa6Io
+         qELk+CxcR3vLs5iFwAC2C2eGWvRKVXH+g6wpyZICUKpeeenQ3369Rpo9dilWdThI3sbB
+         uOK1lNPy9BSvx8m3Rj4mlj3axQwZIWQQwIU3Tj0W+iudvHQcndDWsjsr46o3X1fi5Mol
+         5vrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5ia12m9uDX+0LNlAEFwkrOarHwftjJKLgewl2oTIgrE=;
-        b=Nz2vro5tKzBlQ+rt8G2T7DahLFRTRdP/atTsikjzjllewXVMuFtSbj/oxeeTIT6ydi
-         IUcf85MFjQNxeeWaXAgEaQaykZ/iXeN5huPSaQotJimASkmueulDWuYkdVNHN0spmg3K
-         K0ZOwahEEogjSRMnyZAXOnPuYiUH+JA/gqqcoU8lrVQPCV7Bt0ARvuYtGvRsuaNNllCd
-         dh8qu7pHPsmNDWuxPYJG/AqYGLp6mJILLRO5ht3R6rcT97yhO4LdGFTroSlqmrHRSrSG
-         +uyfKZY3HCsRXlUctMrLpqX64oNJxvTCdECRkZtqy8Z9/YFQNlq44zodrNXnIKFNMxqr
-         Z7tQ==
-X-Gm-Message-State: AOAM530g+sRm8xljKXRfxy5vVk/0PSRk6L1MLBq2LDgWFm5QPENZKf0I
-        Advx4W/xgfaEAKH5Y1dP9CG7PjRLRa7G6EYIe2IxqA==
-X-Google-Smtp-Source: ABdhPJz5LN12jxi1tLmMe+C2qEWEij3QetZAtETxe63ezdGfiuGGd8prNeyfZ8+OZ//s1SFdN8nthpHV6T5ni1agtns=
-X-Received: by 2002:a37:8681:: with SMTP id i123mr22759135qkd.54.1607338554890;
- Mon, 07 Dec 2020 02:55:54 -0800 (PST)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:message-id:date:mime-version;
+        bh=fXKwSDv16AOh+KVLgtrXO8MP7h/qcJpU35hR/cYiidI=;
+        b=d7YsKqMBaAKgpjizTB/mOcwcO3Zv1xWA3GjAFC6oA9qRGYmgiz0aDqMYOuaWwiGIGz
+         v0tU8bmbu1vaUA7Oe97+hEsuoJQDI7H9fR2lJu8YYnDsLL2HcoBIteIYmQgKDvfliXN3
+         3V9KiB8Vq0dt4zFkKEVV47k4nozo19o2Rhh+3Ji1aCKT2ENEUHr682ek3KSAyHG3ohMl
+         q3/4rv8XENTbErd508iOdzmTwYz8ytop7gbgsmXuLk6pnOEfqRB9pMBSkb3vZfDi54XZ
+         sJXYj2D2hyzYc9bWTVGPbru4LoYk9dw4HOI8wTrzrkw5ykGH+cdrU4CZYfhkyMO7snbx
+         ML8g==
+X-Gm-Message-State: AOAM530TdwrNajDI6LCBadZ6arI2jqHZxwR8OSgV+FkXfmBI4zVCAQcr
+        tOT0P0FNL+Jt7ib5medK4XYwFQ==
+X-Google-Smtp-Source: ABdhPJwE5n6HwO553Bm7gWNTT5QYa/KtHJFapNmhnaLnMoSS1kVbdYU3iWE4x2cOCWZAYF0xz/NpCg==
+X-Received: by 2002:adf:8503:: with SMTP id 3mr2072019wrh.56.1607339258533;
+        Mon, 07 Dec 2020 03:07:38 -0800 (PST)
+Received: from localhost (82-65-169-74.subs.proxad.net. [82.65.169.74])
+        by smtp.gmail.com with ESMTPSA id m2sm13399888wml.34.2020.12.07.03.07.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Dec 2020 03:07:37 -0800 (PST)
+References: <tencent_220963AF059847E1171B4AB9@qq.com>
+ <CACRpkdbvKWcD04SLLBOBuZWzN64xpVv1nfCXZGcSp9cs0MPivQ@mail.gmail.com>
+ <1jeek5ps3b.fsf@starbuckisacylon.baylibre.com>
+ <CAHp75VeQGxnGO4o5a1vFzS9XAMjmvwoJ3=pWLvNQT6mXEKcqWQ@mail.gmail.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        =?utf-8?B?5p6X5Zyj5qyi?= <linshenghuan@hangtu-china.com>,
+        khilman <khilman@baylibre.com>,
+        narmstrong <narmstrong@baylibre.com>,
+        "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: 0001-add-amlogic-gpio-to-irq
+In-reply-to: <CAHp75VeQGxnGO4o5a1vFzS9XAMjmvwoJ3=pWLvNQT6mXEKcqWQ@mail.gmail.com>
+Message-ID: <1jtusxkh6v.fsf@starbuckisacylon.baylibre.com>
+Date:   Mon, 07 Dec 2020 12:07:37 +0100
 MIME-Version: 1.0
-References: <20201129110803.2461700-1-daniel@0x0f.com> <CACRpkdYEzFYw=CbBFCs9=DfarsCQKD0zA2WvE95nF8ehA_2i1g@mail.gmail.com>
-In-Reply-To: <CACRpkdYEzFYw=CbBFCs9=DfarsCQKD0zA2WvE95nF8ehA_2i1g@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Mon, 7 Dec 2020 19:55:44 +0900
-Message-ID: <CAFr9PXmx1XZmVOp8mLygnDUfEKPpo6=ZQPMKSCnZf0i23mNqVw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Add GPIO support for MStar/SigmaStar ARMv7
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@kernel.org>, olof@lixom.net
-Cc:     SoC Team <soc@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-On Sun, 6 Dec 2020 at 06:43, Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon 07 Dec 2020 at 11:18, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> OK finished!
-> Patches 1, 2 & 3 applied to the GPIO tree for v5.11.
+> On Fri, Dec 4, 2020 at 4:25 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> On Fri 04 Dec 2020 at 10:13, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+>> This HW only has 8 irqs that can each be mapped to a pin. No direct
+>> translation can be made, we have to allocate an irq to monitor the line.
+>> So when gpio_to_irq() was called, we had to do that allocation dynamically
+>> to return a valid irq number. Since there was no counter part to
+>> gpio_to_irq(), those allocation cannot be freed during the lifetime of
+>> the device.
+>
+> I'm not sure why we are talking about legacy API which should not be
+> used.
 
-Awesome! Thank you Linus. :)
+I would have been happy to forget about it, but it seems to be the topic
+of the thread :)
 
-Arnd and Olof: Sorry for being a noob.. Is there anything I need to do
-for patches 4 and 5 (device tree bits)?
-They are in the Linux SoC patchwork.
+> Besides that I didn't get what you meant under counterpart API (IRQ
+> descriptor has a mapping to the IRQ chip which keeps the mapping to
+> whatever hardware wants).
 
-Thanks,
+ * This HW has to create the mapping between GPIO and irq number
+   dynamically. The number of irqs available is very limited.
+ * We only get to know a mapping is required when gpio_to_irq() is called
+ * There is no way to know when it is safe to dispose of the created
+   mapping
+ * Some drivers require a trigger type we don't support. These will create
+   mappings and not use it because of the failure when .set_type() is
+   called
 
-Daniel
+To answer your question, there an API which lets us know a mapping is
+needed, but none to inform that it is not required anymore. The GPIO API
+was not meant to used like this. Not saying it is good or bad, this is
+just how it is.
+
+If there was a way to know it is safe to dispose of the mapping, then
+letting users of gpio_to_irq() try and fail would be OK, but we don't
+have that AFAIK.
+
+This is why gpio_to_irq() or gpiolib irqchip had not been added so far
+on this HW. I don't think it is worth fixing, especially if the API is
+considered to be legacy.
+
+On this HW, getting an interupt from a pin is done by going directly
+after the interrupt controller, like here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts#n173
+
+AFAICT, making pps-gpio parse an "interrupt" property should be doable
+too.
