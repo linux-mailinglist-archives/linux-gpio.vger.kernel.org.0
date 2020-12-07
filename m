@@ -2,155 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B85E52D0D22
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 10:37:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 152162D0D30
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Dec 2020 10:39:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgLGJgp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 04:36:45 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:33651 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgLGJgp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 04:36:45 -0500
-Received: from [192.168.1.155] ([95.114.88.149]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MnFps-1kKX8C3xeW-00jMNg; Mon, 07 Dec 2020 10:33:57 +0100
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     Jason Wang <jasowang@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mst@redhat.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
- <37a9fbc6-d75f-f6cd-f052-0dd416594a84@redhat.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <635faeb7-950e-e594-3217-69032ed9cbd1@metux.net>
-Date:   Mon, 7 Dec 2020 10:33:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726379AbgLGJjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 04:39:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgLGJjU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 04:39:20 -0500
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FFFC0613D2
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Dec 2020 01:38:34 -0800 (PST)
+Received: by mail-wm1-x343.google.com with SMTP id x22so10842515wmc.5
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Dec 2020 01:38:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XpZ628O5xaXa4RdOKN7MsGWRWJi7+t1IcOBgJgwxavs=;
+        b=sfF17KBm2xoH141r0pfHE47pI1OemoN9EybfIO3Ncd9nZlNuvMJj8l+4ARZJMO4FvT
+         iW8eTCDgYZFqyxaCPdVDBID3vQFjxEVX9a7ufst4amolQGqi2keHfkRhzvyt1jhf7hEw
+         1de/iabQBbAjgqGX3NeGFXk7UWMh2Ke2mHj9BUN2iGQ0JGYaoskfyp7KCVbAVE43xIwi
+         Kjqw6xZ+LhKxAellDgvDuGw552lhrdpU4+X/cGHQaHPwGepodWmsBQ2qOz2hJ0dzWQKT
+         zg3k/G3Yp8y7XG9LovsnFJ5IKhKXWaDpjenONKVgn/URho/cNUIrjzNlEX/werJ0Bq30
+         Tjuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XpZ628O5xaXa4RdOKN7MsGWRWJi7+t1IcOBgJgwxavs=;
+        b=PhIzjwbbwCogoY9uRZumhSvzsLZo82wbEqJMEIA9Rdj5s3Nd8xD8/OBBiZgG3QrLf3
+         ARi7I3TR16n29rcBE/Sy5t83Gv57Wp+77cMeyzgR9WfI3Vr8Oim8W3ciCtTWL9sznabQ
+         iUfy1g0uNy36XdiEIs7WSSpPguCp7iZVAxP6t2rPwFUYA/SQ8uzaHy9kNZd3jxFW26Hn
+         uUNh4SiYIt17p1ht8OA8aWuJJLbhl/SAdFdHJnY3tR/+NFS5hLqLrhQlcL1yQcZ5G1r9
+         KFhze/gl3Pxggm5rEB25Jz4AdNZ/SqNJBW7vhajQUJ1LTn3QQRZCdXmYMjBpiwoWlJOS
+         tf4Q==
+X-Gm-Message-State: AOAM532yyhAr66RexmBumC0+TZEFWj7SA0Y4qXs4Z83MV9QNhILGJSgW
+        Mnc3hh2ZRbFAWp6Q6bR6Ao27OQ==
+X-Google-Smtp-Source: ABdhPJxGvianTv9DEmfI3MU5uIAXw/ZzSnzw9NA0pWoTLejhJd+h21+1YtLVTZFvErdVAlqf4iLZpg==
+X-Received: by 2002:a1c:9ecf:: with SMTP id h198mr17284160wme.104.1607333913196;
+        Mon, 07 Dec 2020 01:38:33 -0800 (PST)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id h15sm14315088wrw.15.2020.12.07.01.38.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Dec 2020 01:38:32 -0800 (PST)
+Subject: Re: [RESEND PATCH v6 2/2] pinctrl: qcom: Add sm8250 lpass lpi pinctrl
+ driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20201202163443.26499-1-srinivas.kandagatla@linaro.org>
+ <20201202163443.26499-3-srinivas.kandagatla@linaro.org>
+ <CACRpkdabPygUmZXT6FMT4fEU6D638Y3XRwvODy8ucUAbuQ4kvg@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <4073d9ec-e959-7216-79fa-ee210fbfff17@linaro.org>
+Date:   Mon, 7 Dec 2020 09:38:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <37a9fbc6-d75f-f6cd-f052-0dd416594a84@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uyhQiyLYIW2+ht8ujHR3ocz5i10aYyRMp5NddJBt91W9n5CxJwR
- er36oazoeWX6Z4GoxbZ4xMlWA2hLnzmUFiqcqQ27WHsxdfoIKkY80aa0wg3rp35pxb4fsHa
- qq31FRXicF33+I6GzajXHH8RM8IxzkBTzHN10gwSpdWEp8HTG7lSlVp8TeRIQ6zeqbeuI4H
- nanv24HHaY/Fs3hmOKHhQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VPbMj2CC5EU=:LIkWLnAHT3uJ58igbF8Wwa
- mOWcFo1umrUdXT3rFzQZssgyXE7NjwxsmPUDVQfcMDQXkMc0RnUbhBaup+JcQ4asNXwq6Iu7M
- /KCeGfavK6h7OmGFrz7pTaa2kbrJiBrV9RVgRjzqfKC8CB0/usK43jBYxF3HiduIcT88wRn+M
- bxVgXNZ+ezdB9t9YeHY0L77yLRS8u3BP48hzVmEGTvON1SuPutR7yHGKpOLQNQyqCx/2wvQ7O
- dVle384Glr4IDdg/+TCbJ0aJLYxL6J6aBJo8x1XfGBXeTqYLEnbdBLCOk4oruOKoP0mVQQdC1
- DDOQx4myVQBUBng2gLmV2XE2TCQMMf/bUEQrRXVYfSUJ6wfbL5vBq69poFRc8vNxgv6eI4Y4L
- a0k0aLt0+PCj0RmiqZ53Gtnunn+BCBsPI/D7XwSFDzl0mkE2QIXweKnQ/Z65N
+In-Reply-To: <CACRpkdabPygUmZXT6FMT4fEU6D638Y3XRwvODy8ucUAbuQ4kvg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07.12.20 04:48, Jason Wang wrote:
 
-Hi,
 
->>> Not a native speaker but event sounds like something driver read from
->>> device. Looking at the below lists, most of them except for
->>> VIRTIO_GPIO_EV_HOST_LEVEL looks more like a command.
->> okay, shall I name it "message" ?
+On 05/12/2020 22:36, Linus Walleij wrote:
+> On Wed, Dec 2, 2020 at 5:35 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
 > 
+>> Add initial pinctrl driver to support pin configuration for
+>> LPASS (Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
+>> on SM8250.
 > 
-> It might be better.
-
-Okay, renamed to messages in v3.
-
->>> #define VIRTIO_NET_OK     0
->>> #define VIRTIO_NET_ERR    1
->> hmm, so I'd need to define all the error codes that possibly could
->> happen ?
+> Patch applied!
 > 
+>> +config PINCTRL_LPASS_LPI
+>> +       tristate "Qualcomm Technologies Inc LPASS LPI pin controller driver"
+>> +       depends on GPIOLIB
 > 
-> Yes, I think you need.
-
-Okay, going to do it in the next version.
-
->>> If I read the code correctly, this expects there will be at most a
->>> single type of event that can be processed at the same time. E.g can
->>> upper layer want to read from different lines in parallel? If yes, we
->>> need to deal with that.
->> @Linus @Bartosz: can that happen or does gpio subsys already serialize
->> requests ?
->>
->> Initially, I tried to protect it by spinlock (so, only one request may
->> run at a time, other calls just wait until the first is finished), but
->> it crashed when gpio cdev registration calls into the driver (fetches
->> the status) while still in bootup.
->>
->> Don't recall the exact error anymore, but something like an
->> inconsistency in the spinlock calls.
->>
->> Did I just use the wrong type of lock ?
+> I added:
 > 
-> I'm not sure since I am not familiar with GPIO. But a question is, if at
-> most one request is allowed, I'm not sure virtio is the best choice here
-> since we don't even need a queue(virtqueue) here.
-
-I guess, I should add locks to the gpio callback functions (where gpio
-subsys calls in). That way, requests are requests are strictly ordered.
-The locks didn't work in my previous attempts, but probably because I've
-missed to set the can_sleep flag (now fixed in v3).
-
-The gpio ops are already waiting for reply of the corresponding type, so
-the only bad thing that could happen is the same operation being called
-twice (when coming from different threads) and replies mixed up between
-first and second one. OTOH I don't see much problem w/ that. This can be
-fixed by adding a global lock.
-
-> I think it's still about whether or not we need allow a batch of
-> requests via a queue. Consider you've submitted two request A and B, and
-> if B is done first, current code won't work. This is because, the reply
-> is transported via rxq buffers not just reuse the txq buffer if I read
-> the code correctly.
-
-Meanwhile I've changed it to allocate a new rx buffer for the reply
-(done right before the request is sent), so everything should be
-processed in the order it had been sent. Assuming virtio keeps the
-order of the buffers in the queues.
-
->> Could you please give an example how bi-directional transmission within
->> the same queue could look like ?
+>      select PINMUX
+>      select PINCONF
+>      select GENERIC_PINCONF
 > 
-> You can check how virtio-blk did this in:
+> When applying. You need these I think, your code is working because
+> other drivers are selecting these for you, right? The build robot would
+> hack this to pieces though.
+
+Many thanks for doing this!
+
+--srini
+
 > 
-> https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html#x1-2500006
-
-hmm, still don't see how the code would actually look like. (in qemu as
-well as kernel). Just add the fetched inbuf as an outbuf (within the
-same queue) ?
-
->> Maybe add one new buffer per request and one new per received async
->> signal ?
+> Yours,
+> Linus Walleij
 > 
-> It would be safe to fill the whole rxq and do the refill e.g when half
-> of the queue is used.
-
-Okay, doing that now in v3: there's always at least one rx buffer,
-and requests as well as the intr receiver always add a new one.
-(they get removed on fetching, IMHO).
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
