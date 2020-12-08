@@ -2,76 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7992B2D2E6E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 16:39:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56DCD2D2F49
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 17:18:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgLHPjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 10:39:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729558AbgLHPjn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 10:39:43 -0500
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B21C0613D6
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Dec 2020 07:39:02 -0800 (PST)
-Received: by mail-lj1-x242.google.com with SMTP id f24so20100200ljk.13
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Dec 2020 07:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E68YCVU353cKqGzcecaO2qcMBCpw9VzpwMqNEW7t7hM=;
-        b=t3K4zowymoM5L/STU4K2XcY1jJjr673wOqRexRL1mgHYiat8uhIgVYYUemnB/XSEq4
-         sfgSCrpxAxY4ae6/Ec6szVBrCj1gA9UeAxz31rNK8ar2N06cgE9tDZ63AZgMhD+6v93p
-         9R2xcxTljkYzpCMXbJ3zvAY8Q73YAO1qAi3wO5WlqRbNAmg5PXnLnYGtQIwOue8P9Bid
-         aMUlqtYn0Jot2jFnO/xil0WN+sg+UJo4nFsEqkHRBJSgOwDN4Wd8iXU4JSax8ZrNhb2n
-         GJbIYmzFZsW44ah0WdXQZkArXEszhCDa9hfz77+5EPNDTgeL2O3A+KYfVgCsG+gHZ/+x
-         /M6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E68YCVU353cKqGzcecaO2qcMBCpw9VzpwMqNEW7t7hM=;
-        b=XfNH0P1tFCZRmd15cO92btugtH9uxIADfRTq8wFuOHoNdse7trOfchnteYzUwNKCa5
-         okq+bD/tOOAykDNTjQeA4DjXs305DEmtpUv7CSj39xsWkEIa0DJJ4X/chuYr6w1r3aTO
-         eY3fOpG8dOLo2Dy035mg61EHAa59EA8+6LvtgwA4M3LrJsVTfB+PDFVxNLKspBovNoKN
-         phfl2Jp1oTMuvES6VZXKLDUAs+0vvxupIa12dmdI9GClnrm712atcOgRB5jXILco62pJ
-         NuPOBeKMPl0JS4TDraIOZm8SZJ80Ym01L2GXmYfV9JMNvpfdIsLf/pJLmy7cALxvrtcu
-         jCVQ==
-X-Gm-Message-State: AOAM533epyBbd9r/hqIUb3E5r6Tgm/1aE56OIhJX8zpKXVB82+34SGLZ
-        ntms2ceFRia5V/a301xe9WmW43qjdn1ynFZCZx2K1A==
-X-Google-Smtp-Source: ABdhPJwmnHGshYCN8sEZ8rlC0Iw7HnOm6xaI2fawrWgnTMxKmnGQx1G1rqKkcyXXpHcDm6XQrWGRD7Jnjsim+nbPBIk=
-X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr5377596ljj.326.1607441941062;
- Tue, 08 Dec 2020 07:39:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20201207175940.10631-1-andriy.shevchenko@linux.intel.com>
- <CAHp75VeHz3CAZMQgQsU+WdDyjS+woMTyeOWYDzARePq1aaa=Og@mail.gmail.com>
- <CACRpkdb4AYx1dOYkZvHzRD7fbGfVbKoGqdnmh1m=rdhGnAaPag@mail.gmail.com> <20201208094853.GF4077@smile.fi.intel.com>
-In-Reply-To: <20201208094853.GF4077@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 8 Dec 2020 16:38:49 +0100
-Message-ID: <CACRpkdbNQ6cwdFgraaZQJ4+uzjcs0xd6K3hZKb6Q_WinHwhanA@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: intel: Actually disable Tx and Rx buffers on
- GPIO request
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        id S1730095AbgLHQRA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 11:17:00 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41950 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729667AbgLHQRA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 11:17:00 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8GFuO1021516;
+        Tue, 8 Dec 2020 10:15:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1607444156;
+        bh=WiNdks4Je7o7SD1jGll8k06315J6vHdjJNp9aadg/FE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pxeiPtRq2cgW5M5HSIcjk/wHXc19JmfrO43OO3mADZmzxaw3kio/xvlUVPZeIAhPe
+         i7IYVQxyjWgceDqu6gUJD4Nhxq2nS7iIAVCJqtgluJuOI8dq9sP85vGbcf+l9FUHWo
+         ngPoLPjEDOqxMv+nMe5hycuqLNjRKpqcwE8tsmQw=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8GFul6048136
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Dec 2020 10:15:56 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Dec
+ 2020 10:15:55 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Dec 2020 10:15:55 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B8GFqYm050075;
+        Tue, 8 Dec 2020 10:15:52 -0600
+Subject: Re: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
+ drivers: gpio: add virtio-gpio guest driver
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        <virtualization@lists.linux-foundation.org>,
+        <linux-riscv@lists.infradead.org>
+References: <20201203191135.21576-1-info@metux.net>
+ <20201203191135.21576-2-info@metux.net>
+ <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
+ <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
+ <51d3efb7-b7eb-83d7-673a-308dd51616d3@metux.net>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <87a486d8-70a0-89f7-1ae4-cd408d0e31be@ti.com>
+Date:   Tue, 8 Dec 2020 18:15:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <51d3efb7-b7eb-83d7-673a-308dd51616d3@metux.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 10:47 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
 
-> Linus, thanks, however something happened to it. i.e. BugLink tag disappeared.
-> It's not good, because due to that link and Kai's report I quickly understood
-> what was the issue.
 
-Oh I think that is an issue with the b4 tool that I use to extract patches.
-It was reported some time back and might not be fixed in the version
-I'm running.
+On 08/12/2020 16:04, Enrico Weigelt, metux IT consult wrote:
+> On 08.12.20 10:38, Linus Walleij wrote:
+> 
+> Hi,
+> 
+>> This is Bartosz territory, but the gpio-mockup.c driver will insert
+>> IRQs into the system, he went and added really core stuff
+>> into kernel/irq to make this happen. Notice that in Kconfig
+>> it does:
+>>
+>> select IRQ_SIM
+>>
+>> Then this is used:
+>> include/linux/irq_sim.h
+>>
+>> This is intended for simulating IRQs and both GPIO and IIO use it.
+>> I think this inserts IRQs from debugfs and I have no idea how
+>> flexible that is.
+> 
+> Oh, thx.
+> 
+> It seems to implement a pseudo-irqchip driver. I've already though about
+> doing that, but didn't think its worth it, just for my driver alone.
+> I've implemented a few irq handling cb's directly the driver. But since
+> we already have it, I'll reconsider :)
+> 
+> BUT: this wasn't exactly my question :p
+> 
+> I've been looking for some more direct notification callback for gpio
+> consumers: here the consumer would register itself as a listener on
+> some gpio_desc and called back when something changes (with data what
+> exactly changed, eg. "gpio #3 input switched to high").
 
-Yours,
-Linus Walleij
+But this is exactly why there is GPIO IRQs in the first place,
+which are used to notify consumers.
+
+More over most consumers doesn't know where the IRQ came from - on one HW it can be gpio,
+while on another HW - direct interrupt controller line.
+
+-- 
+Best regards,
+grygorii
