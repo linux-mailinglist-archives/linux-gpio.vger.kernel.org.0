@@ -2,92 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E355F2D27BE
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:34:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6A12D27E3
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:40:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgLHJeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 04:34:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
+        id S1728996AbgLHJju (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 04:39:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbgLHJeS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 04:34:18 -0500
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E500EC061749;
-        Tue,  8 Dec 2020 01:33:37 -0800 (PST)
-Received: by mail-oi1-x244.google.com with SMTP id s2so9295544oij.2;
-        Tue, 08 Dec 2020 01:33:37 -0800 (PST)
+        with ESMTP id S1727831AbgLHJju (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 04:39:50 -0500
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F91C061257
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Dec 2020 01:38:56 -0800 (PST)
+Received: by mail-lj1-x241.google.com with SMTP id f11so6479684ljn.2
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Dec 2020 01:38:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Sn6Mvm7ZmrJkPQrGVxcpQJZVeyCsWajsVTNwPKt74sU=;
-        b=aC0F/6iu9EwuGc8jmPYxCi2CB5N/zPLlA4IB0bhhlvYRvNoe0YzEs13jDF0aPVdqFE
-         OuRjz6q/9B+WfSd9Aez7oDv+kRYaNvAKJAc/2dAkbH93J7M9j+hWCdPqL1SsfOojkaf0
-         cLvtXn5Rd/l11BhYJa07xEo5dHYyKm8jP9dEIaziTdGutEs+gCdp6NqwHK39krD/M4CY
-         OP84yHsLzf1Ed7mkL9KYpu0GpkE3okt9FO/W8urjNBw+oCrpoUWdz/UjffBBWL/e5QWQ
-         DJiyCgcZ4qnHt/hBoqFY8quQhdccqHmV+Y312gXxG3eEuKYIgtMIpLYKz532Ao8+cmxv
-         bJ/Q==
+        bh=Df6CqLv6JOagx1Y8po8wBRxgE1D965nfEA75Zeqy5oU=;
+        b=hiBfGGso9wRtqNNhBBDBX1PZJI4bsFd8GYtW1arlG6wQ4COUeIZUEbdlyvCERMJMNo
+         G3mKLQX6l8yLU9kEnfD7DSvjlpMv/k/voYdOTNP7XWZPPJ/qSQk8mxqGTTh8jNzexWF+
+         IM8Az+l2VS7WmMT17YcIg6P/3wHd3R+VH1SSg9INsPTtt3qSUiUthy5zd7hakcqWkB+O
+         qSfwe3vWou5ZGLP9SOQvoHKDMgFZGQ1O3JUjz3sj++5TS4p8K381xHRqUXYIzwKWdgKO
+         FQZL/lFJPkZkG5N/3mq019RC7s6wgK9FMFx6XuoeVpbfGEDxYEjwM070MoklamNKuEIX
+         cY5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Sn6Mvm7ZmrJkPQrGVxcpQJZVeyCsWajsVTNwPKt74sU=;
-        b=fxbryvbuBTuLabXwkDmkgdeU0JWVQYP6vxxo35+Fc46NI4TWibF12zjHJlAxZg177j
-         udkOGrYol9tC0rUYlyyOUZhcnl3r1NuegqqLy16UYGkhfAPPlAhQI0PcxT8FInTwuTL9
-         ynfmAXJbCa+mUel9tlL9iOe79sCzrfHjXhq5ZHl76fj8NoBQUrTcNI6TW4ZJhx2nwzXL
-         lNSiG48YXISmP9DuffJAaGLvKDdcI+HirsmuPaLmpG9oPatOX0MhSvuEluBBPXwmHD5T
-         NWfvnxCqpc3LzeJA+XIEnrQvhYkuy/1fKO39tzjh0RXUdUiJdGLP/lVt/9LM+DsNcZiF
-         iCww==
-X-Gm-Message-State: AOAM530Wkvj+RLHZBpYIcHTqXPW10GImb32a4m8B3OsifwLxRieO6QOn
-        /27Qf6UjRN+zpe5wjGIH5NDJbEEfwut4aA00PcI=
-X-Google-Smtp-Source: ABdhPJxnkpUAZAlkDDdw3nw8s6hL//yyR64F45aERlZd75YSXFrAA4SqLcC0/0BsSQcjU7uTwP2w/+dX2MZVoTS/7n4=
-X-Received: by 2002:aca:5a86:: with SMTP id o128mr1978305oib.23.1607420017349;
- Tue, 08 Dec 2020 01:33:37 -0800 (PST)
+        bh=Df6CqLv6JOagx1Y8po8wBRxgE1D965nfEA75Zeqy5oU=;
+        b=EVr+9f3IE00zUplvJ/L30879bkiKqmU7aQ2DpUpvrIoQB2tSfBAwLdYUo3QqTjDp4n
+         M31VdqZUpoAWYoPxLW+IGYZS6WvDKBZ3wzFaAAywYCw6LJwqkdRlwfFtudlr4IQUwjEM
+         Rx+uXP1UE/FYXxKqtyP9Fm00uhElbNJ3KMPjfv4615u/Tbi3cvntSXzf30g4OfvwQ1ti
+         ZTObr12cC8TvBODQMvB6yen1amwTX2A6Npic9x0DU7EKzcvDyLGiH2RPhfcFt6xOLS4i
+         wroifbZRV2yWHF5eshVEcd9ZiZ2QnWGjEOrMSGVg9okg+mAkZFEgvo4KDDDjJLrpvpnO
+         mkDg==
+X-Gm-Message-State: AOAM530EuhV+P64NypQi0qKWvwS1xyTorh0z1Anl2eFeOIiSDowKf52P
+        h5MwiinL67Afu08ass9YKmr/Gw+ACON+nPvfk674ZQ==
+X-Google-Smtp-Source: ABdhPJxQWX+drL6yggghfNbiTL59lvfCIOzavoQ1GoTxnH37PaUwIwrN8fyjAkWeHJ5nGm3eQq7eo4VvW5wksxdLa68=
+X-Received: by 2002:a2e:910f:: with SMTP id m15mr10801861ljg.467.1607420334616;
+ Tue, 08 Dec 2020 01:38:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20201208075523.7060-1-sergio.paracuellos@gmail.com>
- <20201208075523.7060-3-sergio.paracuellos@gmail.com> <CACRpkdY_Me8kO-Fa-vUspJNv+2vy0fswTM-RaUoaZJ5rCfuynA@mail.gmail.com>
- <X89BiDacLNQ7ZQOH@kroah.com>
-In-Reply-To: <X89BiDacLNQ7ZQOH@kroah.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 8 Dec 2020 10:33:26 +0100
-Message-ID: <CAMhs-H9ZW0f9wvjk9OeiZpiHQT+qFFEbvHsH4jxwEa6xYXVy0g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: ralink: add a pinctrl driver for the
- rt2880 family
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+References: <20201203191135.21576-1-info@metux.net> <20201203191135.21576-2-info@metux.net>
+ <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
+In-Reply-To: <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 8 Dec 2020 10:38:43 +0100
+Message-ID: <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
+Subject: Re: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
+ drivers: gpio: add virtio-gpio guest driver
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jason Yan <yanaijie@huawei.com>
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 10:03 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Dec 08, 2020 at 09:21:31AM +0100, Linus Walleij wrote:
-> > On Tue, Dec 8, 2020 at 8:55 AM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> >
-> > > These Socs have 1-3 banks of 8-32 gpios. Rather then setting the muxing of each
-> > > pin individually, these socs have mux groups that when set will effect 1-N pins.
-> > > Pin groups have a 2, 4 or 8 different muxes.
-> > >
-> > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> >
-> > Greg I'm happy if you just apply this right now for v5.11, as Sergio
-> > is obviously on top of things and the DT bindings will get there
-> > eventually so I don't see any need to hold back the de-staging just
-> > waiting for patch 1 (which I will eventually apply directly anyway).
->
-> Now merged into my tree, thanks!
->
-> greg k-h
+On Sat, Dec 5, 2020 at 9:15 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
 
-Thanks!
+> The virtio-gpio device/host can raise a signal on line state change.
+> Kinda IRQ, but not actually running through real IRQs, instead by a
+> message running though queue. (hmm, kida MSI ? :o).
+>
+> I've tried allocating an IRQ range and calling generic_handle_irq(),
+> but then I'm getting unhanled IRQ trap.
 
-Best regards,
-    Sergio Paracuellos
+This is Bartosz territory, but the gpio-mockup.c driver will insert
+IRQs into the system, he went and added really core stuff
+into kernel/irq to make this happen. Notice that in Kconfig
+it does:
+
+select IRQ_SIM
+
+Then this is used:
+include/linux/irq_sim.h
+
+This is intended for simulating IRQs and both GPIO and IIO use it.
+I think this inserts IRQs from debugfs and I have no idea how
+flexible that is.
+
+If it is suitable for what you want to do I don't know but it's
+virtio so...
+
+Yours,
+Linus Walleij
