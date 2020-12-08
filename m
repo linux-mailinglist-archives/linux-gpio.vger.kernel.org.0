@@ -2,123 +2,286 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 074FB2D2890
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 11:12:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 977312D28A7
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 11:18:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgLHKLe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 05:11:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60810 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbgLHKLe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Dec 2020 05:11:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A2735AD12;
-        Tue,  8 Dec 2020 10:10:52 +0000 (UTC)
-Date:   Tue, 8 Dec 2020 11:10:51 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Jason Wang <jasowang@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org, stefanha@redhat.com
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-Message-ID: <20201208101051.GC6564@kitsune.suse.cz>
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
- <20201205142218-mutt-send-email-mst@kernel.org>
+        id S1728956AbgLHKSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 05:18:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:40768 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbgLHKSc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 05:18:32 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8A9wAU017871;
+        Tue, 8 Dec 2020 10:17:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=CrNk+1mbj+kIOENVQanyHPlDiySaYqaUJlvtN/mqJ54=;
+ b=vH9zLyUQXSpNv8ogNouX7eZ876ou09jPSekcXcJaoXTJnQCMFXUqeq4ug5ramzgicGAw
+ nbx3BfSpwt2gjMU/dVy8wHrPMiETatOOcXknF/aCG6zbt97aVoiwJG2fIGi/7Q7Hgpz+
+ a4G+TvWZHKFk0jfLJiR4nEC6a+RadP2pHaiRb0fs4r9JBHaAAMWSw1ewBaOP9FaobPw/
+ rse8ITOE3KOwufN4m2fq24OuzS1ekihXWsWFo8MluUxl8j9P/k75YERvvFdbjF00g9fe
+ i78M9GMP3XM3ucAIJ4J0rjcBxhfW8RdH8oN99FHiDrBmH4gX3PNXWNBg+AQ3uMknKDAI bQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3581mqt1vd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 10:17:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B8AAe7i068001;
+        Tue, 8 Dec 2020 10:17:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 358kysnbj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Dec 2020 10:17:38 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B8AHbPC024867;
+        Tue, 8 Dec 2020 10:17:37 GMT
+Received: from kadam (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Dec 2020 02:17:36 -0800
+Date:   Tue, 8 Dec 2020 13:17:28 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linus.walleij@linaro.org, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, yanaijie@huawei.com,
+        gregkh@linuxfoundation.org, linux-gpio@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH 2/3] pinctrl: ralink: add a pinctrl driver for the rt2880
+ family
+Message-ID: <20201208101728.GZ2767@kadam>
+References: <20201207192104.6046-1-sergio.paracuellos@gmail.com>
+ <20201207192104.6046-3-sergio.paracuellos@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201205142218-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20201207192104.6046-3-sergio.paracuellos@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9828 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080063
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9828 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ clxscore=1011 malwarescore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012080063
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello
+On Mon, Dec 07, 2020 at 08:21:03PM +0100, Sergio Paracuellos wrote:
+> +static struct pinctrl_desc rt2880_pctrl_desc = {
+> +	.owner		= THIS_MODULE,
+> +	.name		= "rt2880-pinmux",
+> +	.pctlops	= &rt2880_pctrl_ops,
+> +	.pmxops		= &rt2880_pmx_group_ops,
+> +};
+> +
+> +static struct rt2880_pmx_func gpio_func = {
+> +	.name = "gpio",
+> +};
+> +
+> +static int rt2880_pinmux_index(struct rt2880_priv *p)
 
-On Sat, Dec 05, 2020 at 02:32:04PM -0500, Michael S. Tsirkin wrote:
-> On Sat, Dec 05, 2020 at 08:59:55AM +0100, Enrico Weigelt, metux IT consult wrote:
-> > On 04.12.20 04:35, Jason Wang wrote:
-> > 
-> > > 
-> > > Let's use select, since there's no prompt for VIRTIO and it doesn't have
-> > > any dependencies.
-> > 
-> > whoops, it's not that simple:
-> > 
-> > make: Entering directory '/home/nekrad/src/apu2-dev/pkg/kernel.apu2.git'
-> > make[1]: Entering directory
-> > '/home/nekrad/src/dk/DistroKit/platform-x86_64/build-target/linux-5.8.9-build'
-> >   GEN     Makefile
-> > drivers/gpu/drm/Kconfig:74:error: recursive dependency detected!
-> > drivers/gpu/drm/Kconfig:74:	symbol DRM_KMS_HELPER is selected by
-> > DRM_VIRTIO_GPU
-> > drivers/gpu/drm/virtio/Kconfig:2:	symbol DRM_VIRTIO_GPU depends on VIRTIO
-> > drivers/virtio/Kconfig:2:	symbol VIRTIO is selected by GPIO_VIRTIO
-> > drivers/gpio/Kconfig:1618:	symbol GPIO_VIRTIO depends on GPIOLIB
-> > drivers/gpio/Kconfig:14:	symbol GPIOLIB is selected by I2C_MUX_LTC4306
-> > drivers/i2c/muxes/Kconfig:47:	symbol I2C_MUX_LTC4306 depends on I2C
-> > drivers/i2c/Kconfig:8:	symbol I2C is selected by FB_DDC
-> > drivers/video/fbdev/Kconfig:63:	symbol FB_DDC depends on FB
-> > drivers/video/fbdev/Kconfig:12:	symbol FB is selected by DRM_KMS_FB_HELPER
-> > drivers/gpu/drm/Kconfig:80:	symbol DRM_KMS_FB_HELPER depends on
-> > DRM_KMS_HELPER
-> > 
-> > Seems that we can only depend on or select some symbol - we run into
-> > huge trouble if thats mixed. Just changed DRM_VIRTIO_GPU to just select
-> > VIRIO instead of depending on it, and now it works.
-> > 
-> > I've posted another patch for fixing drivers/gpu/drm/virtio/Kconfig
-> > to use 'select' instead of 'depends on'.
-> 
-> It seems a bit of a mess, at this point I'm not entirely sure when
-> should drivers select VIRTIO and when depend on it.
-> 
-> The text near it says:
-> 
-> # SPDX-License-Identifier: GPL-2.0-only
-> config VIRTIO
->         tristate
->         help
->           This option is selected by any driver which implements the virtio
->           bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
->           or CONFIG_S390_GUEST.
-> 
-> Which seems clear enough and would indicate drivers for devices *behind*
-> the bus should not select VIRTIO and thus presumably should "depend on" it.
-> This is violated in virtio console and virtio fs drivers.
-> 
-> For console it says:
-> 
-> commit 9f30eb29c514589e16f2999ea070598583d1f6ec
-> Author: Michal Suchanek <msuchanek@suse.de>
-> Date:   Mon Aug 31 18:58:50 2020 +0200
-> 
->     char: virtio: Select VIRTIO from VIRTIO_CONSOLE.
->     
->     Make it possible to have virtio console built-in when
->     other virtio drivers are modular.
->     
->     Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->     Reviewed-by: Amit Shah <amit@kernel.org>
->     Link: https://lore.kernel.org/r/20200831165850.26163-1-msuchanek@suse.de
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> which seems kind of bogus - why do we care about allowing a builtin
-> virtio console driver if the pci virtio bus driver is a module?
-> There won't be any devices on the bus to attach to ...
-The console driver provides early console which should initialize
-without any transport. I have not tested it actually works but the code
-seems to be there to support this use case.
 
-Thanks
+This function name is not great.  I assumed that it would return the
+index.
 
-Michal
+> +{
+> +	struct rt2880_pmx_func **f;
+
+Get rid of this "f" variable and use "p->func" instead.
+
+> +	struct rt2880_pmx_group *mux = p->groups;
+> +	int i, j, c = 0;
+> +
+> +	/* count the mux functions */
+> +	while (mux->name) {
+> +		p->group_count++;
+> +		mux++;
+> +	}
+> +
+> +	/* allocate the group names array needed by the gpio function */
+> +	p->group_names = devm_kcalloc(p->dev, p->group_count,
+> +				      sizeof(char *), GFP_KERNEL);
+> +	if (!p->group_names)
+> +		return -1;
+
+Return proper error codes in this function.  s/-1/-ENOMEM/
+
+> +
+> +	for (i = 0; i < p->group_count; i++) {
+> +		p->group_names[i] = p->groups[i].name;
+> +		p->func_count += p->groups[i].func_count;
+> +	}
+> +
+> +	/* we have a dummy function[0] for gpio */
+> +	p->func_count++;
+> +
+> +	/* allocate our function and group mapping index buffers */
+> +	f = p->func = devm_kcalloc(p->dev,
+> +				   p->func_count,
+> +				   sizeof(*p->func),
+> +				   GFP_KERNEL);
+> +	gpio_func.groups = devm_kcalloc(p->dev, p->group_count, sizeof(int),
+> +					GFP_KERNEL);
+> +	if (!f || !gpio_func.groups)
+> +		return -1;
+> +
+> +	/* add a backpointer to the function so it knows its group */
+> +	gpio_func.group_count = p->group_count;
+> +	for (i = 0; i < gpio_func.group_count; i++)
+> +		gpio_func.groups[i] = i;
+> +
+> +	f[c] = &gpio_func;
+> +	c++;
+> +
+> +	/* add remaining functions */
+> +	for (i = 0; i < p->group_count; i++) {
+> +		for (j = 0; j < p->groups[i].func_count; j++) {
+> +			f[c] = &p->groups[i].func[j];
+> +			f[c]->groups = devm_kzalloc(p->dev, sizeof(int),
+> +						    GFP_KERNEL);
+
+Add a NULL check.
+
+> +			f[c]->groups[0] = i;
+> +			f[c]->group_count = 1;
+> +			c++;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rt2880_pinmux_pins(struct rt2880_priv *p)
+> +{
+> +	int i, j;
+> +
+> +	/*
+> +	 * loop over the functions and initialize the pins array.
+> +	 * also work out the highest pin used.
+> +	 */
+> +	for (i = 0; i < p->func_count; i++) {
+> +		int pin;
+> +
+> +		if (!p->func[i]->pin_count)
+> +			continue;
+> +
+> +		p->func[i]->pins = devm_kcalloc(p->dev,
+> +						p->func[i]->pin_count,
+> +						sizeof(int),
+> +						GFP_KERNEL);
+
+This can fit on two lines.
+
+		p->func[i]->pins = devm_kcalloc(p->dev, p->func[i]->pin_count,
+						sizeof(int), GFP_KERNEL);
+
+> +		for (j = 0; j < p->func[i]->pin_count; j++)
+> +			p->func[i]->pins[j] = p->func[i]->pin_first + j;
+> +
+> +		pin = p->func[i]->pin_first + p->func[i]->pin_count;
+> +		if (pin > p->max_pins)
+> +			p->max_pins = pin;
+> +	}
+> +
+> +	/* the buffer that tells us which pins are gpio */
+> +	p->gpio = devm_kcalloc(p->dev, p->max_pins, sizeof(u8), GFP_KERNEL);
+> +	/* the pads needed to tell pinctrl about our pins */
+> +	p->pads = devm_kcalloc(p->dev, p->max_pins,
+> +			       sizeof(struct pinctrl_pin_desc), GFP_KERNEL);
+> +	if (!p->pads || !p->gpio) {
+> +		dev_err(p->dev, "Failed to allocate gpio data\n");
+
+Delete this error message.  #checkpatch.pl
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	memset(p->gpio, 1, sizeof(u8) * p->max_pins);
+> +	for (i = 0; i < p->func_count; i++) {
+> +		if (!p->func[i]->pin_count)
+> +			continue;
+> +
+> +		for (j = 0; j < p->func[i]->pin_count; j++)
+> +			p->gpio[p->func[i]->pins[j]] = 0;
+> +	}
+> +
+> +	/* pin 0 is always a gpio */
+> +	p->gpio[0] = 1;
+> +
+> +	/* set the pads */
+> +	for (i = 0; i < p->max_pins; i++) {
+> +		/* strlen("ioXY") + 1 = 5 */
+> +		char *name = devm_kzalloc(p->dev, 5, GFP_KERNEL);
+> +
+
+		char *name;
+
+		name = kasprintf(GFP_KERNEL, "io%d", i);
+
+
+> +		if (!name)
+> +			return -ENOMEM;
+> +		snprintf(name, 5, "io%d", i);
+> +		p->pads[i].number = i;
+> +		p->pads[i].name = name;
+> +	}
+> +	p->desc->pins = p->pads;
+> +	p->desc->npins = p->max_pins;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rt2880_pinmux_probe(struct platform_device *pdev)
+> +{
+> +	struct rt2880_priv *p;
+> +	struct pinctrl_dev *dev;
+> +
+> +	if (!rt2880_pinmux_data)
+> +		return -ENOTSUPP;
+> +
+> +	/* setup the private data */
+> +	p = devm_kzalloc(&pdev->dev, sizeof(struct rt2880_priv), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +
+> +	p->dev = &pdev->dev;
+> +	p->desc = &rt2880_pctrl_desc;
+> +	p->groups = rt2880_pinmux_data;
+> +	platform_set_drvdata(pdev, p);
+> +
+> +	/* init the device */
+> +	if (rt2880_pinmux_index(p)) {
+> +		dev_err(&pdev->dev, "failed to load index\n");
+> +		return -EINVAL;
+
+Preserve the error code:
+
+	err = rt2880_pinmux_index(p);
+	if (err) {
+		dev_err(&pdev->dev, "failed to load index\n");
+		return err;
+	}
+
+
+> +	}
+> +	if (rt2880_pinmux_pins(p)) {
+> +		dev_err(&pdev->dev, "failed to load pins\n");
+> +		return -EINVAL;
+
+Same.
+
+> +	}
+> +	dev = pinctrl_register(p->desc, &pdev->dev, p);
+> +	if (IS_ERR(dev))
+> +		return PTR_ERR(dev);
+> +
+> +	return 0;
+> +}
+
+regards,
+dan carpenter
