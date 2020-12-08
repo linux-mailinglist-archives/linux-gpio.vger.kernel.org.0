@@ -2,124 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34FBC2D2B7A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 13:53:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 347672D2CA0
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 15:08:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgLHMxk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 07:53:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgLHMxk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Dec 2020 07:53:40 -0500
-Date:   Tue, 8 Dec 2020 18:22:50 +0530
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607431979;
-        bh=oNMSmNezk0/IPDTVM+CthNykiMyH1a+B7oR1jQ/A5qk=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nS3TeL8gHhizbF2IkCQroAS2g3NbunEH1wdGO1pQPI5YADTlJtYo+CrjiBgldISkb
-         2s4VDbA2ivrhORxVZor+wTrCWG/R0iWEn6VamVq+gOm9qCa6Ibq8e1Aiw2Cu7D3sEF
-         LnxEH88hFnjTZQLEUkTE4G9PhRtwQKzagYYW3FKQHKl0OHSZh+Bn+YrBn7wTKjPmVp
-         jSkyhr+c8YFrw7zmOb7FtQy7GNvUv4pVL4N8VtyGWzEvZiZkUFMEHtJULmDazQuvED
-         O/w4jJB7q2pivp25AiJIi/WX76fUJtU0fNzHXkqvsObxLTdogKi0Q1N3FeTVWn09B4
-         Nye3xN+U91oqA==
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
+        id S1729497AbgLHOHy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 09:07:54 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:60269 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729462AbgLHOHy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 09:07:54 -0500
+Received: from [192.168.1.155] ([95.117.39.192]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mzhax-1jzus61WUL-00viD2; Tue, 08 Dec 2020 15:05:07 +0100
+Subject: Re: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
+ drivers: gpio: add virtio-gpio guest driver
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
-Message-ID: <20201208125250.GB9925@work>
-References: <20201122170822.21715-1-mani@kernel.org>
- <20201122170822.21715-3-mani@kernel.org>
- <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
- <X8ZmfbQp7/BGgxec@localhost>
- <CACRpkdZJdxqxUEQaKUHctHRSQAUpYZJtuxonwVd_ZFAsLBbKrA@mail.gmail.com>
- <X89OOUOG0x0SSxXA@localhost>
- <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org
+References: <20201203191135.21576-1-info@metux.net>
+ <20201203191135.21576-2-info@metux.net>
+ <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
+ <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <51d3efb7-b7eb-83d7-673a-308dd51616d3@metux.net>
+Date:   Tue, 8 Dec 2020 15:04:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:G4pb0xE5H22ojPKBimkPJ8QHTZy9Ztkg67vq+dnwAqAyIP7Owjp
+ PtM4xLyYwEOsOB5Jeky7p0oHn4OV0smr3NYA6ZBFzuAz8Wj154fwdKeJAA7RKqTpXhphJ0A
+ KZ+KK0E+bN0KXeCyh8zH7Zs4RpyqkMmgg1F2DoLmutar7t2c9swfhYmzbPPLxZS31ACp14U
+ zhqcJNgYORsE2qZ0/AFTw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:a0Ff9jNvXYo=:mUVNahr6lKpBJFzi+wLba2
+ BTDIDBHKoHwdSkhKUdoqJmrbqtF3ZYCKFqGIgJUBJmegkGz/SOcu3pd2KOd4s2s3/QuXaNdk0
+ uguRGeRDIcNPst62WfMtiwo4Iw/Vunm5FNmfJFeatXDqWazimqqDCanpscLSdrblTa20JB1VW
+ c7kuVDEz155jDxAxRrlCHa4xGdgZYPY0yAQaS4Dv3uUFDVLnMUFpMkDRsUEKPq4noO6+ucdvE
+ SRzQXp3T1n3zUjTN8U0oP43qsyQntWyl1RTCSoXTQO9xSgs89oOoNRoJT2rv1BUKKBfwqnqmI
+ LpZWwaBmU/uSsj4PGpYC4o/F9bS7XDbzC7/lddp5AyIn8cCAKy4qL8gpxMSWZ9sTqpjvl4Hqq
+ 945/WLdlpTWKQh+Nbd0YlPUVBPRRhnU8HM133F3fS5h9vHMLhveOWfk66rqfG
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 01:41:52PM +0100, Linus Walleij wrote:
-> On Tue, Dec 8, 2020 at 10:57 AM Johan Hovold <johan@kernel.org> wrote:
-> > [Me]
-> 
-> > > A better approach might be to create an array of names
-> > > prepended with something device-unique like the USB
-> > > bus topology? Or do we need a helper to help naming the
-> > > GPIOs? What would be helpful here?
-> > >
-> > > name = kasprintf(GFP_KERNEL, "%s-NAME", topology_str);
-> >
-> > Well we started discussing this back when we only had the sysfs
-> > interface which suffered from the same problem. I thought the chardev
-> > interface was supposed to get rid of the assumption of a flat name
-> > space? Perhaps in v3 of the ABI. ;P
-> 
-> It's "mostly true" that the line names are unique per-chip actually,
-> because people don't like the nasty warning message. I wonder
-> if anything would really break if I go in and make a patch to
-> enforce it, since all drivers passing ->names in the gpiochip
-> are in the kernel we can check them all.
-> 
-> If the names are unique-per-chip, we can add a restriction like this
-> with the requirement:
-> 
-> depends on !GPIO_SYSFS
-> 
+On 08.12.20 10:38, Linus Walleij wrote:
 
-This sounds reasonable to me.
+Hi,
 
-> so it can't even be compiled in if someone is using the sysfs.
+> This is Bartosz territory, but the gpio-mockup.c driver will insert
+> IRQs into the system, he went and added really core stuff
+> into kernel/irq to make this happen. Notice that in Kconfig
+> it does:
 > 
-> That should solve the situation where people are (ab)using
-> the sysfs and getting name collisions as a result.
+> select IRQ_SIM
 > 
-> Then it should be fine for any driver to provide a names array
-> provided all the names are unique on that gpiochip.
+> Then this is used:
+> include/linux/irq_sim.h
 > 
-> I doubt it would break anything, but let's see what Geert says.
-> He has some special usecases in the gpio-aggregator driver
-> which will incidentally look for just linenames when
-> aggregating gpios, but I feel it is a bit thick for it to work
-> with multiple hot-pluggable GPIO chips as well, I don't think
-> that is its usecase. (We all want to be perfect but...)
-> 
-> > But what about any other non-pluggable
-> > IC, which provides a few named GPIO lines and of which there could be
-> > more than one in a system?
-> 
-> I think if there are such, and the lines are unique per-chip
-> we should make the drivers depend on !GPIO_SYSFS.
-> 
-> > The topology is already encoded in sysfs and it seems backwards to have
-> > each and every gpio driver reconstruct it.
-> 
-> I agree.
-> 
-> I think if this driver already has unique line-names per-gpiochip
-> we could actually make it depend on !GPIO_SYSFS and
-> just add the names.
-> 
+> This is intended for simulating IRQs and both GPIO and IIO use it.
+> I think this inserts IRQs from debugfs and I have no idea how
+> flexible that is.
 
-Sure thing.
+Oh, thx.
 
-Johan, if you are okay with this I can resubmit incorporating Linus's
-suggestion.
+It seems to implement a pseudo-irqchip driver. I've already though about
+doing that, but didn't think its worth it, just for my driver alone.
+I've implemented a few irq handling cb's directly the driver. But since
+we already have it, I'll reconsider :)
 
-Thanks,
-Mani
+BUT: this wasn't exactly my question :p
 
-> Yours,
-> Linus Walleij
+I've been looking for some more direct notification callback for gpio
+consumers: here the consumer would register itself as a listener on
+some gpio_desc and called back when something changes (with data what
+exactly changed, eg. "gpio #3 input switched to high").
+
+Seems we currently just have the indirect path via interrupts.
+
+--mtx
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
