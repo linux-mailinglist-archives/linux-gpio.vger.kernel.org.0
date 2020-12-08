@@ -2,92 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 678072D281F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:51:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B4A2D2826
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:52:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgLHJtz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 04:49:55 -0500
-Received: from mga05.intel.com ([192.55.52.43]:49714 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727612AbgLHJty (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Dec 2020 04:49:54 -0500
-IronPort-SDR: AhwOPcVDt1ers1VwhQ30CvzDh7ptS9Gief+Lbcru42k2cav8eAzoyGjjKYJY/N9J2O21bCUuhq
- lPPG8wQCUyBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="258571502"
-X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
-   d="scan'208";a="258571502"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 01:49:12 -0800
-IronPort-SDR: dRj7bKcKtov4mcBPA406RnmF+B6iFBRFMdsFp4hdm3Y0WhVKe28/yEzITYaK+kzfEAm21yfwuU
- yh92aHMZZ14g==
-X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
-   d="scan'208";a="407554476"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 01:49:11 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1kmZdN-00CnCZ-GL; Tue, 08 Dec 2020 11:50:13 +0200
-Date:   Tue, 8 Dec 2020 11:50:13 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH v1] pinctrl: intel: Actually disable Tx and Rx buffers on
- GPIO request
-Message-ID: <20201208095013.GG4077@smile.fi.intel.com>
-References: <20201207175940.10631-1-andriy.shevchenko@linux.intel.com>
- <CAHp75VeHz3CAZMQgQsU+WdDyjS+woMTyeOWYDzARePq1aaa=Og@mail.gmail.com>
- <CACRpkdb4AYx1dOYkZvHzRD7fbGfVbKoGqdnmh1m=rdhGnAaPag@mail.gmail.com>
- <20201208094853.GF4077@smile.fi.intel.com>
+        id S1726734AbgLHJvl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 04:51:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728658AbgLHJvk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 04:51:40 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B931C061749
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Dec 2020 01:50:54 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id bo9so23646230ejb.13
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Dec 2020 01:50:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=10M18cVAuscOUxDbYGRHkvB3zRG0OEfv/jnc8FTzxqc=;
+        b=0mvZiavMpbegbyJwQjflRyNIpoDJ73hHK7WJBJ6gAqNazVCc+Mcoe8fXxAWVSVTf5V
+         nAXV3S2ckKzjmQfpQU0fSpm5md+DitG0bpxILVYKScJbgMVRlqUGwzN38sX7ie7cYOrI
+         rCyaNr5URFjC6+hUj+XzaFgl3Kh7pbE6GRyEztzk+AiVUePpGr1meHD4KtScGfrzNt0B
+         elBOLIDeg87fdA7m47w8EdIEFh+1MbTFwJbRw6jBsVekeSYzTHPdTetOMddPiSCQVxYj
+         KpdxT8PgjspEftwMwB7RpnzgNW+szamL1h30h6cW2GHOlJnTMQQ6BIzxrYzyXyEyr/Tc
+         QVpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=10M18cVAuscOUxDbYGRHkvB3zRG0OEfv/jnc8FTzxqc=;
+        b=YSlPkgGdRZUQVC24ihvm8jP6eBVZflCsKP17U7KWMgF6yiS5mpIMdPV7y+h9YAvZ5N
+         TCRSwX0gSBXWmDFJk16z6VLHHsuz6wX3yUvqgPWn9tXweV9YXC//8bXyf0VTPxZhFdB/
+         ZHARweDy+BBunSiCWzCUOL2YT2UQ3V7widigxaEJxLygxotaKf0aDa8uphWuQxSFCBzz
+         D7I3/gBh3Qdt6hnXml+XN0+FSJQ6J5s5ecVgNIv8916wOzy0bt572+4jTuPbOY6w6TWh
+         dQFfZpuRlfJsIDWgtgiMEkMGPOfEJ3Dxw9noClS8L0NXFZ92LBUP4XrBrzlK61YNnTKp
+         q+2A==
+X-Gm-Message-State: AOAM531iVn/cU+++lVo71R3lGZi7TTkdS+FkJcsUyaqnrvELKmfwfDls
+        tKWXNpRSB2McQ+HwtAbuix7fsjimcAMB9YmMaxDbB8YD3hQ=
+X-Google-Smtp-Source: ABdhPJzNtD4WQ/Xm+ojAxbBmrEYphGTPDBm/F4wJmiTlnsWbAIPBGceR5zEP7TdKDCcbFi2JJuvGseVZknVEMMqe97Q=
+X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr21798676ejd.363.1607421053288;
+ Tue, 08 Dec 2020 01:50:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201208094853.GF4077@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201207203816.18269-1-info@metux.net> <CAMpxmJWinRPUrmpcqsLaE62uAQpZ3Cb1ys3s7oHmeKM6rUUqQg@mail.gmail.com>
+ <c839fa75-80ee-31e6-2ccb-87155281e1d4@metux.net>
+In-Reply-To: <c839fa75-80ee-31e6-2ccb-87155281e1d4@metux.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 8 Dec 2020 10:50:42 +0100
+Message-ID: <CAMpxmJX2RN7N8h+KeMpb6Zmj6Uh5sHEAWObK+kRVcB4H6XXbpg@mail.gmail.com>
+Subject: Re: [PATCH v3] drivers: gpio: put virtual gpio device into their own submenu
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 11:48:53AM +0200, Andy Shevchenko wrote:
-> On Tue, Dec 08, 2020 at 09:34:43AM +0100, Linus Walleij wrote:
-> > On Mon, Dec 7, 2020 at 7:07 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Mon, Dec 7, 2020 at 8:02 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Dec 8, 2020 at 10:40 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> On 08.12.20 10:15, Bartosz Golaszewski wrote:
+> > On Mon, Dec 7, 2020 at 9:38 PM Enrico Weigelt, metux IT consult
+> > <info@metux.net> wrote:
+> >>
+> >> Since we already have a few virtual GPIO drivers, and more to come,
+> >> this category deserves its own submenu.
+> >>
+> >> changes v2: fixed menu title (replaced "devices" by "drivers")
+> >> changes v3: added patch changelog
+> >
+> > This should be below the --- under all tags because we don't want this
+> > in the actual log that goes into git.
+>
+>
+> Sorry, wasn't aware of that. Does git-am automatically cut it off ?
+>
 
-...
+Yes, everything between the --- and the actual diff is dropped.
 
-> > > Linus, since we are at rc7 I'm not going to send a PR for this single
-> > > fix (I truly do not expect anything to come). Please, proceed as usual
-> > > (either to v5.10 or to v5.11 cycle, there is not much difference b/c
-> > > culptin is sitting in v5.9).
-> > 
-> > OK no problem, I applied the patch directly for fixes so we get it in ASAP.
-> 
-> Linus, thanks, however something happened to it. i.e. BugLink tag disappeared.
-> It's not good, because due to that link and Kai's report I quickly understood
-> what was the issue.
-> 
-> Besides that commit message has some grammar / style issues.
-> Can you please fix above and use below (fixed) text as commit message?
-> 
-> ---8<---8<---
-> 
-> Mistakenly the buffers (input and output) become together enabled for a short
-> period of time during GPIO request. This is problematic, because instead of
-> initial motive to disable them in the commit af7e3eeb84e2
-> ("pinctrl: intel: Disable input and output buffer when switching to GPIO"),
-> the driven value on the pin, which might be used as an IRQ line, brings
-> firmwares of some touch pads to an awkward state that needs a full power off
-> to recover. Fix this by, as stated in the culprit commit, disabling the buffers.
-> 
-> P.S. I'm looking at 5f4592bc20c8 in your pin control tree, fixes branch.
-
-I can send a v2 for your convenience.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz
