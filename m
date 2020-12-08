@@ -2,137 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13F412D23EF
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 07:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E24FC2D240A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 08:05:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgLHGx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 01:53:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgLHGx5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 01:53:57 -0500
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB78C061749;
-        Mon,  7 Dec 2020 22:53:17 -0800 (PST)
-Received: by mail-oi1-x242.google.com with SMTP id 15so7217766oix.8;
-        Mon, 07 Dec 2020 22:53:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w8Ytad3VuLBGnRL8FnISbJTqrw/aOetIiRAo11y3tYk=;
-        b=k6fhVB1PRaoqPDAK0H73+nQgv4+gbvxI/9TjZyGX78xL6M7SXRwcCrOYSHwkZpYtAe
-         qtoo5/NdWZS+LWDQGShMbypYGI6bEQ64vfnkvZpVekpjHVu2cdWCnfjX4xoxQ7N7e9Hn
-         ePdagRrW+RNjCBb1t5vOkzMObGcP6aiUEm41qwrfxtcx9ga1UqJb7LMjrWyfFzQCVDFq
-         2SMolyaZdJkNU2ZPseVSj6pgGTL+YbXmHezgGLxdNZ/TKUEO0pS3j7zbUbykhzlSSWa8
-         GDduV+4M4BFWG+RrFvT/mrnRsyyPT4FwM8PfUHTeqm1MZ0Hfm/UXNzVJs/Vl2QQiyctn
-         vgiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w8Ytad3VuLBGnRL8FnISbJTqrw/aOetIiRAo11y3tYk=;
-        b=nkszluBf1odZT1ejt1FD1yhhAYzmUpSs+eZ2wq4ZWLeW308svJXNePWFiNWit1U4ZO
-         CosZFaPODRGAvuk2pAWblz6WMV5wwOT7X01fdqv4v6kUTaiFqanADhRNXqSNnxZoMjEr
-         wQ1z7viPEpJ1Fy0uOy1/J6piyWFSy9hfV7bvTyJahwiJSSxQ2CpPTx4BIH/J4UMLD1Gb
-         /GuGnNaYCMisoLHaqfBc2f3TXgHwTyYzsnhuUTAvx3K2vqe1qDkW8wVdTAG3a0r+fMZN
-         3iziH2yDrE7nj93zL5SGYzuyKZOpovS/fxm2O7NHaOpeUgjK1taL2AtcO/sJepJNkGHD
-         AOcQ==
-X-Gm-Message-State: AOAM530hHy+spvUPQ7RIx7zYOL2DKbiTuNymMjCdv8iYspEmR2z2HKhs
-        3dYHcPPGaU4KV8ECpjhw6W83OaHBDw/Da2W7Pwk=
-X-Google-Smtp-Source: ABdhPJyUFcAD7BvLYxlbEegaPyHTpi4N5EZAJwwAncq+TWlN8EWXzX4C1AAZQvVI+HL+kOzBgiGF2tGubr+gzGPtIa8=
-X-Received: by 2002:aca:5a86:: with SMTP id o128mr1679369oib.23.1607410396528;
- Mon, 07 Dec 2020 22:53:16 -0800 (PST)
+        id S1726007AbgLHHFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 02:05:23 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:54529 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgLHHFW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 02:05:22 -0500
+Received: from [192.168.1.155] ([95.117.39.192]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N1gac-1k2W2w0CRk-0122tg; Tue, 08 Dec 2020 08:02:38 +0100
+Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
+To:     Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org, stefanha@redhat.com,
+        msuchanek@suse.de
+References: <20201203191135.21576-1-info@metux.net>
+ <20201203191135.21576-2-info@metux.net>
+ <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
+ <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
+ <20201205142218-mutt-send-email-mst@kernel.org>
+ <842519cc-94ca-3c11-ddd6-543e5a89c998@redhat.com>
+ <20201207085247-mutt-send-email-mst@kernel.org>
+ <0a9c19bd-0d25-1035-57e3-b1f5f204c309@redhat.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <500d0c68-0c6d-f5fb-665b-74aec6d59f99@metux.net>
+Date:   Tue, 8 Dec 2020 08:02:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20201207192104.6046-1-sergio.paracuellos@gmail.com>
- <20201207192104.6046-3-sergio.paracuellos@gmail.com> <CACRpkdagTdkMbg=nw-N9KQhsWXqLxofzpD_9YLgpKPBxo0vyhQ@mail.gmail.com>
-In-Reply-To: <CACRpkdagTdkMbg=nw-N9KQhsWXqLxofzpD_9YLgpKPBxo0vyhQ@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 8 Dec 2020 07:53:05 +0100
-Message-ID: <CAMhs-H_LWSU1dGTHqKCtyfvaaRh3CYnEXeAWW4R=gZrU61y0+g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: ralink: add a pinctrl driver for the rt2880 family
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jason Yan <yanaijie@huawei.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0a9c19bd-0d25-1035-57e3-b1f5f204c309@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:yN/BLdqz0Vt6Gc78kBHQubmPRXCo+73gjuzZ/FFo2aygJNFdokw
+ bIFudmapyFmrSTiIyDb+aUPLo4yjgmjzlZMHyY524wcRKwqJq6WUoQuYl0k5Pj+8yTyR84y
+ vzIM/cQCfW0r7jZgN8QvC1Wc8KV3kJ84BqpcGGXAv4vtZ2kMN43JYtqtkbJ/w0CRh6eQyeu
+ CxLLWsOi5p/z4+EPl66hw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:J6pWCIG+eKA=:YbDwb0QlpqYTg8o6ISKAj2
+ 2nx0ApszFX4DE52Hscm8BkPNFR0h/2Fr+oZcQFep2yDc08ctJ8p3fmYPuNV0jI70LoAD5gsmZ
+ UxJi4zgWgNmSEvnNeoGRSVyAPJzxpqhOYJlqrEfs6XBgcCp4H31ur0WIKnKawxt5XmNQaEbyU
+ Rd1swVS5bTy3atV1TPcwwydDrVdZEbmA90gVpyvuZVgeJqSAU/BNLajbH7aJTMgwe+L9AD1TU
+ atTQxHBFZtuKkB6bOLxKMt0WimiYKuxTkIqGHJUnP832C47aTjMj9ATICWRI1Lt8a0McjrO0T
+ 9tPJ17odptw/ER8zz/fYEcdCYQV1gkbJatZw3JfUkDE3zbSJphmhDX4SyLdWuI/DPlFWqZi+K
+ 5tuNk+qVAyf10TKOHLGmyg6s05gRd1Kdo0Mt3jgjYDktLNgL9yI5eZAWfZ8U9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On 08.12.20 03:36, Jason Wang wrote:
 
-On Tue, Dec 8, 2020 at 12:00 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Hi Serigio,
->
-> I dug around some to try to understand the patch I think I get
-> it now :)
->
-> Squash this with the third patch so it becomes a
-> "move" of this file, preserving history. With that:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Hi,
 
-Ok, will squash those two if you prefer that way with your 'Acked-by'.
+> So we endup with two solutions (without a prompt):
+> 
+> 1) using select, user may end up with driver without transport
 
->
-> I have ideas, but it is better to move the driver out
-> of staging and improve it in pinctrl.
->
-> Since there might be many sub-SoCs for this pin
-> controller, what about creating
-> drivers/pinctrl/ralink/* for this at the same time?
+IMHO not an entirely unusual situation in other places of the kernel,
+eg. one can enable USB devices, w/o having an usb host adapter enabled.
 
-Ok, I will put this inside a ralink subdirectory in pinctrl.
+And even if some USB-HA driver is enabled, the actualy machine doesn't
+necessarily have the corresponding device.
 
->
-> On Mon, Dec 7, 2020 at 8:21 PM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> >
-> > These Socs have 1-3 banks of 8-32 gpios. Rather then setting the muxing of each
-> > pin individually, these socs have mux groups that when set will effect 1-N pins.
-> > Pin groups have a 2, 4 or 8 different muxes.
-> >
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> (...)
-> > +#include <asm/mach-ralink/ralink_regs.h>
-> > +#include <asm/mach-ralink/pinmux.h>
-> > +#include <asm/mach-ralink/mt7620.h>
->
-> I think in the next step we should move the contents of
-> rt2880_pinmux_data into this driver, then we can drop these
-> mach-headers and show the way for the rest of the ralink
-> chips to push their data down into this driver (or subdrivers)
-> and depopulate mach-ralink a bit.
+> 2) using depends, user need to enable at least one transport
+> 
+> 2) looks a little bit better I admit.
 
-Agree. Doing that no arch dependencies are included and we can cleanly
-enable the driver also for COMPILE_TEST without adding special flags
-in pinctrl Makefile.
+So, all virtio devices should depend on TRANSPORT_A || TRANSPORT_B ||
+TRANSPORT_C || ... ? (and also change all these places if another
+transport is added) ?
 
->
-> > +       p->groups = rt2880_pinmux_data;
->
-> So this is where the driver actually gets a pointer to all
-> groups and functions, and these groups and functions all
-> come from arch/mips/ralink/mt7621.c right?
+--mtx
 
-Yes, all of that is defined there.
-
->
-> I think after this first step we should move mt7621.c
-> to pinctrl and become a subdriver for this pin controller
-> and then we can hopefully move the rest as well once
-> you set the pattern for how we do this.
-
-I see. Thanks for advices.
-
->
-> Yours,
-> Linus Walleij
-
-Best regards,
-    Sergio Paracuellos
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
