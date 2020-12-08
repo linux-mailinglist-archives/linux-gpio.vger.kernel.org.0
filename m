@@ -2,163 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C61F2D2124
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 03:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C96E72D225D
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 05:56:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgLHCus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Dec 2020 21:50:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50203 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725877AbgLHCus (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 21:50:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607395761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HntMT6HlcO+PPg+xL5NcseaQ7qpjGnU814ibQC6Ox/I=;
-        b=XEcJWlPz4DEl2Brt81ECAvqcUqsQuMgIpGRlRBk1TPUgQuiM020DKXu1xt3jBPwj4voFjV
-        0NptdDWdVdPsUiWD8JCRTZTsjEhLrfr7MCyk4UuNTSZty7BwxYAgk71jQ5AeGJYpMEvWS3
-        ik/Ly1IuHrW9L2P4H6s4RxFl1a0xlIQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-EToiXG03Mv2XEkNJtBUdtg-1; Mon, 07 Dec 2020 21:49:14 -0500
-X-MC-Unique: EToiXG03Mv2XEkNJtBUdtg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0CC2800D62;
-        Tue,  8 Dec 2020 02:49:12 +0000 (UTC)
-Received: from [10.72.12.91] (ovpn-12-91.pek2.redhat.com [10.72.12.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABB0C10023AD;
-        Tue,  8 Dec 2020 02:49:04 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mst@redhat.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        id S1727483AbgLHEyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Dec 2020 23:54:01 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58180 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgLHEyB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Dec 2020 23:54:01 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B84nxYX064111;
+        Tue, 8 Dec 2020 04:52:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1e3cV7XKyt5cBPHNeWYhYMHu3W87CKppja6U1Jvw5F4=;
+ b=V+G180Fh0lHbcmydQJqS5i+cerb42SoRrRI9QCXlQMjyWKKfj0acXqExTQUiK+7OEtft
+ OuMy/8L57grCegXY4FPi2mfpdUD9NETOrjU6XyLEGnB6yCKU9e30d2WSgQTsYBxq/cMN
+ 5junVfgiRpfFB5rc1EfDtZHP43anCs3FIrUtz16u4yPsKG0NCInMT5yeMTaPCX1MMJeq
+ qZ1GHIcbwNatFRQ/tELhwJDJybfqjlIskC/pDoCLpTPJ2KTrod7PX9rst5aaRTC3xIQA
+ veh/+mbPHLjYXfePq5oiUCHv2+7Gowf8M2KKiHFzojpZKSSSQD2meZy2nTRpI8CVh6TQ Yg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 35825m0srp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 04:52:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B84ocFe155422;
+        Tue, 8 Dec 2020 04:52:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 358kys9m8t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 04:52:34 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B84qX4M159553;
+        Tue, 8 Dec 2020 04:52:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 358kys9m7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Dec 2020 04:52:33 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B84qDZf015901;
+        Tue, 8 Dec 2020 04:52:15 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Dec 2020 20:52:13 -0800
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        coreteam@netfilter.org, selinux@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        linux-hardening@vger.kernel.org, reiserfs-devel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, patches@opensource.cirrus.com,
+        linux-fbdev@vger.kernel.org, keyrings@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-ext4@vger.kernel.org,
+        wcn36xx@lists.infradead.org, GR-everest-linux-l2@marvell.com,
+        x86@kernel.org, linux-watchdog@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-usb@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        netfilter-devel@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
- <37a9fbc6-d75f-f6cd-f052-0dd416594a84@redhat.com>
- <635faeb7-950e-e594-3217-69032ed9cbd1@metux.net>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2882f118-3555-614c-33a0-30865673deb3@redhat.com>
-Date:   Tue, 8 Dec 2020 10:49:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        linux-mediatek@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        samba-technical@lists.samba.org, ceph-devel@vger.kernel.org,
+        drbd-dev@tron.linbit.com, intel-gfx@lists.freedesktop.org,
+        dm-devel@redhat.com, linux-acpi@vger.kernel.org,
+        linux-ide@vger.kernel.org, xen-devel@lists.xenproject.org,
+        op-tee@lists.trustedfirmware.org, linux-hwmon@vger.kernel.org,
+        linux-sctp@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-mtd@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-can@vger.kernel.org, rds-devel@oss.oracle.com,
+        oss-drivers@netronome.com, tipc-discussion@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-rdma@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux1394-devel@lists.sourceforge.net, alsa-devel@alsa-project.org,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-afs@lists.infradead.org, nouveau@lists.freedesktop.org,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-mm@kvack.org,
+        intel-wired-lan@lists.osuosl.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: (subset) [PATCH 000/141] Fix fall-through warnings for Clang
+Date:   Mon,  7 Dec 2020 23:52:01 -0500
+Message-Id: <160740299787.710.4201881220590518200.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
+References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <635faeb7-950e-e594-3217-69032ed9cbd1@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9828 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=740 clxscore=1015 priorityscore=1501 mlxscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080029
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, 20 Nov 2020 12:21:39 -0600, Gustavo A. R. Silva wrote:
 
-On 2020/12/7 下午5:33, Enrico Weigelt, metux IT consult wrote:
-> On 07.12.20 04:48, Jason Wang wrote:
->
-> Hi,
->
->>>> Not a native speaker but event sounds like something driver read from
->>>> device. Looking at the below lists, most of them except for
->>>> VIRTIO_GPIO_EV_HOST_LEVEL looks more like a command.
->>> okay, shall I name it "message" ?
->>
->> It might be better.
-> Okay, renamed to messages in v3.
->
->>>> #define VIRTIO_NET_OK     0
->>>> #define VIRTIO_NET_ERR    1
->>> hmm, so I'd need to define all the error codes that possibly could
->>> happen ?
->>
->> Yes, I think you need.
-> Okay, going to do it in the next version.
->
->>>> If I read the code correctly, this expects there will be at most a
->>>> single type of event that can be processed at the same time. E.g can
->>>> upper layer want to read from different lines in parallel? If yes, we
->>>> need to deal with that.
->>> @Linus @Bartosz: can that happen or does gpio subsys already serialize
->>> requests ?
->>>
->>> Initially, I tried to protect it by spinlock (so, only one request may
->>> run at a time, other calls just wait until the first is finished), but
->>> it crashed when gpio cdev registration calls into the driver (fetches
->>> the status) while still in bootup.
->>>
->>> Don't recall the exact error anymore, but something like an
->>> inconsistency in the spinlock calls.
->>>
->>> Did I just use the wrong type of lock ?
->> I'm not sure since I am not familiar with GPIO. But a question is, if at
->> most one request is allowed, I'm not sure virtio is the best choice here
->> since we don't even need a queue(virtqueue) here.
-> I guess, I should add locks to the gpio callback functions (where gpio
-> subsys calls in). That way, requests are requests are strictly ordered.
-> The locks didn't work in my previous attempts, but probably because I've
-> missed to set the can_sleep flag (now fixed in v3).
->
-> The gpio ops are already waiting for reply of the corresponding type, so
-> the only bad thing that could happen is the same operation being called
-> twice (when coming from different threads) and replies mixed up between
-> first and second one. OTOH I don't see much problem w/ that. This can be
-> fixed by adding a global lock.
->
->> I think it's still about whether or not we need allow a batch of
->> requests via a queue. Consider you've submitted two request A and B, and
->> if B is done first, current code won't work. This is because, the reply
->> is transported via rxq buffers not just reuse the txq buffer if I read
->> the code correctly.
-> Meanwhile I've changed it to allocate a new rx buffer for the reply
-> (done right before the request is sent), so everything should be
-> processed in the order it had been sent. Assuming virtio keeps the
-> order of the buffers in the queues.
+> This series aims to fix almost all remaining fall-through warnings in
+> order to enable -Wimplicit-fallthrough for Clang.
+> 
+> In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
+> add multiple break/goto/return/fallthrough statements instead of just
+> letting the code fall through to the next case.
+> 
+> [...]
 
+Applied to 5.11/scsi-queue, thanks!
 
-Unfortunately, there's no guarantee that virtio will keep the order or 
-it needs to advertise VIRTIO_F_IN_ORDER. (see 2.6.9 in the virtio spec).
+[054/141] target: Fix fall-through warnings for Clang
+          https://git.kernel.org/mkp/scsi/c/492096ecfa39
 
-Btw, if possible, it's better to add a link to the userspace code here.
-
-
->
->>> Could you please give an example how bi-directional transmission within
->>> the same queue could look like ?
->> You can check how virtio-blk did this in:
->>
->> https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html#x1-2500006
-> hmm, still don't see how the code would actually look like. (in qemu as
-> well as kernel). Just add the fetched inbuf as an outbuf (within the
-> same queue) ?
-
-
-Yes, virtio allows adding IN buffers after OUT buffer through descriptor 
-chaining.
-
-Thanks
-
-
->
->>> Maybe add one new buffer per request and one new per received async
->>> signal ?
->> It would be safe to fill the whole rxq and do the refill e.g when half
->> of the queue is used.
-> Okay, doing that now in v3: there's always at least one rx buffer,
-> and requests as well as the intr receiver always add a new one.
-> (they get removed on fetching, IMHO).
->
->
-> --mtx
->
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
