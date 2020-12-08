@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 088662D23CE
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 07:47:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13F412D23EF
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 07:53:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgLHGrh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 01:47:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
+        id S1726465AbgLHGx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 01:53:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgLHGrh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 01:47:37 -0500
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA324C061749;
-        Mon,  7 Dec 2020 22:46:56 -0800 (PST)
-Received: by mail-ot1-x335.google.com with SMTP id q25so3179394otn.10;
-        Mon, 07 Dec 2020 22:46:56 -0800 (PST)
+        with ESMTP id S1726221AbgLHGx5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 01:53:57 -0500
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB78C061749;
+        Mon,  7 Dec 2020 22:53:17 -0800 (PST)
+Received: by mail-oi1-x242.google.com with SMTP id 15so7217766oix.8;
+        Mon, 07 Dec 2020 22:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FHeqGcpUq0K/LfMy6iWPf10Yt7dCiT+hVL7+V0mFEG4=;
-        b=ZbufPNenq+pVtfYd22sI3tBeluvAD8zx/IiJrcTWvRq860NWC0mMJJHhbKqPS5+NgE
-         8upDHajGqUXVsdHjBST0+zFB8YJ6XajUAxvMLj20nUp/hyUCmPW1oMcr7M6XymwcjmPR
-         kYhQCbjFAjoRe4PcglK8ifIY0sdoa+5kjQN+WhWtjctcnQtsEdqu1BudMB46JMRKp82J
-         0enoOHiIZkJo4+dTATwDHgroskEV4f5EhMVHJIiX91xDJL0GF4wyxw6qZ+pE2/qAvgHy
-         DP7RX0Fb8l634zbgR/py2EBOqcGbEJqAonYYWTCQ2Y7NTQ/GFbGC1XlYH+obVoBsLZn7
-         4jKg==
+        bh=w8Ytad3VuLBGnRL8FnISbJTqrw/aOetIiRAo11y3tYk=;
+        b=k6fhVB1PRaoqPDAK0H73+nQgv4+gbvxI/9TjZyGX78xL6M7SXRwcCrOYSHwkZpYtAe
+         qtoo5/NdWZS+LWDQGShMbypYGI6bEQ64vfnkvZpVekpjHVu2cdWCnfjX4xoxQ7N7e9Hn
+         ePdagRrW+RNjCBb1t5vOkzMObGcP6aiUEm41qwrfxtcx9ga1UqJb7LMjrWyfFzQCVDFq
+         2SMolyaZdJkNU2ZPseVSj6pgGTL+YbXmHezgGLxdNZ/TKUEO0pS3j7zbUbykhzlSSWa8
+         GDduV+4M4BFWG+RrFvT/mrnRsyyPT4FwM8PfUHTeqm1MZ0Hfm/UXNzVJs/Vl2QQiyctn
+         vgiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FHeqGcpUq0K/LfMy6iWPf10Yt7dCiT+hVL7+V0mFEG4=;
-        b=AauOHelPJLhorD03FJffEj4+mnjlxtgxyCT0dxvGsJiaNFYpb0QTMg9GVdIntfJQBx
-         fRvHTbbU0wXcd4UBI5/E/2zICmXyxv59WtQieNRzSLmTVNA/bjzipqjFecVGaWgolKqp
-         utTiUgz+omt6KZwb2frd4ucZ9rZ5M2PVwyU65oCCKtJNKAWGg9M18DN6Ma3jA4JkJSlx
-         Bt+wYxYs/KIYfL5zZPGATovcDVB9Cxkw3S08uSaCVtlBs0NNA5u0Pb+gzfmvT718rv9z
-         SXbiJvg9Nz7PVww4uS6L96njd6PdHKHHiBxugL6eqTIlfnMA9+6zU/faoC7oBwghUNjI
-         5IVg==
-X-Gm-Message-State: AOAM5322UkgAnMsgewzcwYUke5wGnMq3JzN8Xvv3q6cire+Inbe9wkEz
-        hw3stQE2xdV82wpOTeh6PevQp2U7/TkF1gVT3y8=
-X-Google-Smtp-Source: ABdhPJzCAaa7yN+Wk5sFAvAe9YX5TxXG43cpkSCDjtkK9c8g7PvLcNOUJnzq9Y0HW6a+IRBMoNzYb6/AZ+oHIaDen3I=
-X-Received: by 2002:a9d:589:: with SMTP id 9mr15977543otd.72.1607410016335;
- Mon, 07 Dec 2020 22:46:56 -0800 (PST)
+        bh=w8Ytad3VuLBGnRL8FnISbJTqrw/aOetIiRAo11y3tYk=;
+        b=nkszluBf1odZT1ejt1FD1yhhAYzmUpSs+eZ2wq4ZWLeW308svJXNePWFiNWit1U4ZO
+         CosZFaPODRGAvuk2pAWblz6WMV5wwOT7X01fdqv4v6kUTaiFqanADhRNXqSNnxZoMjEr
+         wQ1z7viPEpJ1Fy0uOy1/J6piyWFSy9hfV7bvTyJahwiJSSxQ2CpPTx4BIH/J4UMLD1Gb
+         /GuGnNaYCMisoLHaqfBc2f3TXgHwTyYzsnhuUTAvx3K2vqe1qDkW8wVdTAG3a0r+fMZN
+         3iziH2yDrE7nj93zL5SGYzuyKZOpovS/fxm2O7NHaOpeUgjK1taL2AtcO/sJepJNkGHD
+         AOcQ==
+X-Gm-Message-State: AOAM530hHy+spvUPQ7RIx7zYOL2DKbiTuNymMjCdv8iYspEmR2z2HKhs
+        3dYHcPPGaU4KV8ECpjhw6W83OaHBDw/Da2W7Pwk=
+X-Google-Smtp-Source: ABdhPJyUFcAD7BvLYxlbEegaPyHTpi4N5EZAJwwAncq+TWlN8EWXzX4C1AAZQvVI+HL+kOzBgiGF2tGubr+gzGPtIa8=
+X-Received: by 2002:aca:5a86:: with SMTP id o128mr1679369oib.23.1607410396528;
+ Mon, 07 Dec 2020 22:53:16 -0800 (PST)
 MIME-Version: 1.0
 References: <20201207192104.6046-1-sergio.paracuellos@gmail.com>
- <20201207192104.6046-2-sergio.paracuellos@gmail.com> <CACRpkdavpQ+QP56MVQ5E0oxNKWb0tR9g8vHay6-LAc+Bj7tAQQ@mail.gmail.com>
-In-Reply-To: <CACRpkdavpQ+QP56MVQ5E0oxNKWb0tR9g8vHay6-LAc+Bj7tAQQ@mail.gmail.com>
+ <20201207192104.6046-3-sergio.paracuellos@gmail.com> <CACRpkdagTdkMbg=nw-N9KQhsWXqLxofzpD_9YLgpKPBxo0vyhQ@mail.gmail.com>
+In-Reply-To: <CACRpkdagTdkMbg=nw-N9KQhsWXqLxofzpD_9YLgpKPBxo0vyhQ@mail.gmail.com>
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 8 Dec 2020 07:46:45 +0100
-Message-ID: <CAMhs-H8rT7ofTsBn7mkp5rWhGfSrMCUHtbn1KLeEUKEeH20=1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: rt2880: add binding document
+Date:   Tue, 8 Dec 2020 07:53:05 +0100
+Message-ID: <CAMhs-H_LWSU1dGTHqKCtyfvaaRh3CYnEXeAWW4R=gZrU61y0+g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: ralink: add a pinctrl driver for the rt2880 family
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Greg KH <gregkh@linuxfoundation.org>,
@@ -66,148 +66,73 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Linus,
 
-Thanks for the review. There weren't too many yaml samples for this so
-as you had seen this was a bit messy and I really needed this review,
-especially in the 'if' clause part :).
+On Tue, Dec 8, 2020 at 12:00 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Serigio,
+>
+> I dug around some to try to understand the patch I think I get
+> it now :)
+>
+> Squash this with the third patch so it becomes a
+> "move" of this file, preserving history. With that:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-On Mon, Dec 7, 2020 at 11:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+Ok, will squash those two if you prefer that way with your 'Acked-by'.
+
 >
-> Hi Sergio,
+> I have ideas, but it is better to move the driver out
+> of staging and improve it in pinctrl.
 >
-> thanks for driving this!
+> Since there might be many sub-SoCs for this pin
+> controller, what about creating
+> drivers/pinctrl/ralink/* for this at the same time?
+
+Ok, I will put this inside a ralink subdirectory in pinctrl.
+
 >
 > On Mon, Dec 7, 2020 at 8:21 PM Sergio Paracuellos
 > <sergio.paracuellos@gmail.com> wrote:
->
-> > The commit adds rt2880 compatible node in binding document.
+> >
+> > These Socs have 1-3 banks of 8-32 gpios. Rather then setting the muxing of each
+> > pin individually, these socs have mux groups that when set will effect 1-N pins.
+> > Pin groups have a 2, 4 or 8 different muxes.
 > >
 > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > (...)
-> > +description:
-> > +  The rt2880 pinmux can only set the muxing of pin groups. muxing indiviual pins
-> > +  is not supported. There is no pinconf support.
+> > +#include <asm/mach-ralink/ralink_regs.h>
+> > +#include <asm/mach-ralink/pinmux.h>
+> > +#include <asm/mach-ralink/mt7620.h>
 >
-> OK!
->
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - ralink,rt2880-pinmux
-> > +
-> > +  pinctrl-0:
-> > +    description:
-> > +      A phandle to the node containing the subnodes containing default
-> > +      configurations.
->
-> As it is a node on the pin controller itself, this is a hog so write something
-> about that this is for pinctrl hogs.
+> I think in the next step we should move the contents of
+> rt2880_pinmux_data into this driver, then we can drop these
+> mach-headers and show the way for the rest of the ralink
+> chips to push their data down into this driver (or subdrivers)
+> and depopulate mach-ralink a bit.
 
-Ok, will do.
+Agree. Doing that no arch dependencies are included and we can cleanly
+enable the driver also for COMPILE_TEST without adding special flags
+in pinctrl Makefile.
 
 >
-> > +  pinctrl-names:
-> > +    description:
-> > +      A pinctrl state named "default" must be defined.
-> > +    const: default
+> > +       p->groups = rt2880_pinmux_data;
 >
-> Is it really compulsory?
+> So this is where the driver actually gets a pointer to all
+> groups and functions, and these groups and functions all
+> come from arch/mips/ralink/mt7621.c right?
 
-Not really, I guess. The current device tree contains one so I added
-here because of this.
->
-> > +required:
-> > +  - compatible
-> > +  - pinctrl-names
-> > +  - pinctrl-0
->
-> I wonder if the hogs are really compulsory.
-
-Ok, so I guess I should remove both 'pinctrl-names' and ' pinctrl-0'
-from the required but maintain its desciption.
+Yes, all of that is defined there.
 
 >
-> > +patternProperties:
-> > +  '^.*$':
->
-> That's liberal node naming!
-> What about [a-z0-9_-]+ or something?
+> I think after this first step we should move mt7621.c
+> to pinctrl and become a subdriver for this pin controller
+> and then we can hopefully move the rest as well once
+> you set the pattern for how we do this.
 
-hahaha. Yeah, I like freedom :), but yes, you are right, I will change
-the pattern using the one proposed here.
-
->
-> > +    if:
-> > +      type: object
-> > +      description: |
-> > +        A pinctrl node should contain at least one subnodes representing the
-> > +        pinctrl groups available on the machine.
-> > +      $ref: "pinmux-node.yaml"
-> > +      required:
-> > +        - groups
-> > +        - function
-> > +      additionalProperties: false
-> > +    then:
-> > +      properties:
-> > +        groups:
-> > +          description:
-> > +            Name of the pin group to use for the functions.
-> > +          $ref: "/schemas/types.yaml#/definitions/string"
-> > +          enum: [i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2, mdio,
-> > +                 pcie, sdhci]
-> > +        function:
-> > +          description:
-> > +            The mux function to select
-> > +          $ref: "/schemas/types.yaml#/definitions/string"
-> > +          enum: [gpio, i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2,
-> > +                 mdio, nand1, nand2, sdhci]
->
-> Why do we have this complex if: clause?
-
-To be honest to avoid problems with other pinctrl root nodes because
-they are not type 'object' and not having real idea in what way this
-should be achieved :).
-
-> $ref: "pinmux-node.yaml" should bring in the groups and
-> function properties. Then you can add some further restrictions
-> on top of that, right?
->
-> I would just do:
->
-> patternProperties:
->   '^[a-z0-9_]+$':
->     type: object
->       description: node for pinctrl
->       $ref "pinmux-node.yaml"
->
->       properties:
->         groups:
->           description: groups...
->           enum: [i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2, mdio,
-> pcie, sdhci]
->         function:
->           description: function...
->           enum: [gpio, i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2,
-> mdio, nand1, nand2, sdhci]
->
-> Note: the function names are fine but the group names are a bit
-> confusion since often a group can be used for more than one
-> function, and e.g.
->
-> function = "i2c";
-> group = "uart1";
->
-> to use the uart1 pins for an i2c is gonna look mildly confusing.
->
-> But if this is what the hardware calls it I suppose it is
-> fine.
-
-This is the way is currently being used in the device tree.
+I see. Thanks for advices.
 
 >
 > Yours,
 > Linus Walleij
 
-Thanks again. I will change this and send v2.
-
 Best regards,
-     Sergio Paracuellos
+    Sergio Paracuellos
