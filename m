@@ -2,73 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A00FF2D30A7
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 18:12:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45CEA2D3219
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 19:26:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbgLHRMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 12:12:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53112 "EHLO mail.kernel.org"
+        id S1730909AbgLHSZ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 13:25:59 -0500
+Received: from mga12.intel.com ([192.55.52.136]:16108 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbgLHRMY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Dec 2020 12:12:24 -0500
-From:   Mark Brown <broonie@kernel.org>
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
-To:     linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     aou@eecs.berkeley.edu, peter@korsgaard.com,
-        paul.walmsley@sifive.com, u.kleine-koenig@pengutronix.de,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        gregkh@linuxfoundation.org, palmer@dabbelt.com, andrew@lunn.ch,
-        thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org
-In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-References: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-Subject: Re: (subset) [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
-Message-Id: <160744749760.30021.12384107049854621023.b4-ty@kernel.org>
-Date:   Tue, 08 Dec 2020 17:11:37 +0000
+        id S1730894AbgLHSZ7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 8 Dec 2020 13:25:59 -0500
+IronPort-SDR: 5sgTmod8iM96yqqHy4/Usu9Tdum4V03fpGJON0fzUftpYHy9AHgFkDnFPt5tNhtmCq8zU7CB8b
+ dGkcO/4t1LHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="153183549"
+X-IronPort-AV: E=Sophos;i="5.78,403,1599548400"; 
+   d="scan'208";a="153183549"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 10:24:13 -0800
+IronPort-SDR: v0S3v6Yga9o1183zujV7MH05G5qiacc+9MRWqqY2fIAAik0tZNtsAMZIKZSF1lQDIZOrWuPjGZ
+ 0Vw4wCSx1tPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,403,1599548400"; 
+   d="scan'208";a="367875071"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Dec 2020 10:24:12 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5E07A14B; Tue,  8 Dec 2020 20:24:11 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2] pinctrl: intel: Actually disable Tx and Rx buffers on GPIO request
+Date:   Tue,  8 Dec 2020 20:24:03 +0200
+Message-Id: <20201208182403.40435-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 8 Dec 2020 10:25:32 +0530, Yash Shah wrote:
-> Start board support by adding initial support for the SiFive FU740 SoC
-> and the first development board that uses it, the SiFive HiFive
-> Unmatched A00.
-> 
-> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
-> U-boot and OpenSBI.
-> 
-> [...]
+Mistakenly the buffers (input and output) become enabled together for a short
+period of time during GPIO request. This is problematic, because instead of
+initial motive to disable them in the commit af7e3eeb84e2
+("pinctrl: intel: Disable input and output buffer when switching to GPIO"),
+the driven value on the pin, which might be used as an IRQ line, brings
+firmwares of some touch pads to an awkward state that needs a full power off
+to recover. Fix this, as stated in the culprit commit, by disabling the buffers.
 
-Applied to
+Fixes: af7e3eeb84e2 ("pinctrl: intel: Disable input and output buffer when switching to GPIO")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210497
+Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2: added tags, cosmetic fixes in the commit message
+ drivers/pinctrl/intel/pinctrl-intel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index e77145e3b31b..5cd720f5b0e1 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -452,8 +452,8 @@ static void intel_gpio_set_gpio_mode(void __iomem *padcfg0)
+ 	value |= PADCFG0_PMODE_GPIO;
+ 
+ 	/* Disable input and output buffers */
+-	value &= ~PADCFG0_GPIORXDIS;
+-	value &= ~PADCFG0_GPIOTXDIS;
++	value |= PADCFG0_GPIORXDIS;
++	value |= PADCFG0_GPIOTXDIS;
+ 
+ 	/* Disable SCI/SMI/NMI generation */
+ 	value &= ~(PADCFG0_GPIROUTIOXAPIC | PADCFG0_GPIROUTSCI);
+-- 
+2.29.2
 
-Thanks!
-
-[2/9] dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
-      commit: 76347344c522da78be29403dda81463ffae2bc99
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
