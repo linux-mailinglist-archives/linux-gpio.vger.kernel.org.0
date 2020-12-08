@@ -2,85 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1B4A2D2826
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB6642D282E
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Dec 2020 10:53:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgLHJvl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Dec 2020 04:51:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50962 "EHLO
+        id S1728781AbgLHJwx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Dec 2020 04:52:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728658AbgLHJvk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 04:51:40 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B931C061749
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Dec 2020 01:50:54 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id bo9so23646230ejb.13
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Dec 2020 01:50:54 -0800 (PST)
+        with ESMTP id S1726226AbgLHJwx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Dec 2020 04:52:53 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2CF7C0613D6;
+        Tue,  8 Dec 2020 01:52:12 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id u4so1039836plr.12;
+        Tue, 08 Dec 2020 01:52:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=10M18cVAuscOUxDbYGRHkvB3zRG0OEfv/jnc8FTzxqc=;
-        b=0mvZiavMpbegbyJwQjflRyNIpoDJ73hHK7WJBJ6gAqNazVCc+Mcoe8fXxAWVSVTf5V
-         nAXV3S2ckKzjmQfpQU0fSpm5md+DitG0bpxILVYKScJbgMVRlqUGwzN38sX7ie7cYOrI
-         rCyaNr5URFjC6+hUj+XzaFgl3Kh7pbE6GRyEztzk+AiVUePpGr1meHD4KtScGfrzNt0B
-         elBOLIDeg87fdA7m47w8EdIEFh+1MbTFwJbRw6jBsVekeSYzTHPdTetOMddPiSCQVxYj
-         KpdxT8PgjspEftwMwB7RpnzgNW+szamL1h30h6cW2GHOlJnTMQQ6BIzxrYzyXyEyr/Tc
-         QVpQ==
+        bh=Tu5f42FGkL63/oJc2oNpZ8jvsMbbUvgh7uOvdJ/2Mek=;
+        b=O7vNJwjOBJLI/9pJalAjLlx1Q4MCCW+ytfnG6xPDQezI3jsNBzKKCBKBKFitUgyUI7
+         0yebXvOBDt1XJv24WfW4lwiYtPmzuQarlAitAK2MX6oaCLcyEwN2gPJKizGkoVbPkKtE
+         b8FsXyh7AmFWVYxGEJ7xq5ZVxu4aJWWmVqvHIaMJWFI3Nct3aGXAtmV6UCKYZzu84M4T
+         HbGRvBAvuBgHGeeZBLHBGOLM5A8g2REVnwxhg63yXAQRJXV7a/UigX0/XMaxolxEgi0V
+         9E+S5RJrO0KiPjzm3tFiUGTPXozwQHfGHJtCDV14Mm1Sfh3Dl9fdhfFNvihmq5UElmGK
+         drIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=10M18cVAuscOUxDbYGRHkvB3zRG0OEfv/jnc8FTzxqc=;
-        b=YSlPkgGdRZUQVC24ihvm8jP6eBVZflCsKP17U7KWMgF6yiS5mpIMdPV7y+h9YAvZ5N
-         TCRSwX0gSBXWmDFJk16z6VLHHsuz6wX3yUvqgPWn9tXweV9YXC//8bXyf0VTPxZhFdB/
-         ZHARweDy+BBunSiCWzCUOL2YT2UQ3V7widigxaEJxLygxotaKf0aDa8uphWuQxSFCBzz
-         D7I3/gBh3Qdt6hnXml+XN0+FSJQ6J5s5ecVgNIv8916wOzy0bt572+4jTuPbOY6w6TWh
-         dQFfZpuRlfJsIDWgtgiMEkMGPOfEJ3Dxw9noClS8L0NXFZ92LBUP4XrBrzlK61YNnTKp
-         q+2A==
-X-Gm-Message-State: AOAM531iVn/cU+++lVo71R3lGZi7TTkdS+FkJcsUyaqnrvELKmfwfDls
-        tKWXNpRSB2McQ+HwtAbuix7fsjimcAMB9YmMaxDbB8YD3hQ=
-X-Google-Smtp-Source: ABdhPJzNtD4WQ/Xm+ojAxbBmrEYphGTPDBm/F4wJmiTlnsWbAIPBGceR5zEP7TdKDCcbFi2JJuvGseVZknVEMMqe97Q=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr21798676ejd.363.1607421053288;
- Tue, 08 Dec 2020 01:50:53 -0800 (PST)
+        bh=Tu5f42FGkL63/oJc2oNpZ8jvsMbbUvgh7uOvdJ/2Mek=;
+        b=DlrLoNvhwvMeHZ8UJ3SJSwcb7LXxjEe46b+bxgLds2heymPnh78OMC0NyRbbODak42
+         /U/jjq3vMWFH+pNq0NYDqxJq85bku9V/GI3DbtLnkhZ5qSEYjqF30uRBY2iG8l+L9IDE
+         EhDvj3vY1UEVSM30+j3kwLW6XV0N8kEKsSpQQ0LNF0NK7Msl6sAdv1QMaR8BKgfGlrqA
+         mosv1tt/0UvGdkmkg1N1NZFykYui1GELovqobHTOR0rqrwWR+1frB+e3eCHD6ndsMOUK
+         fCuHM9deAQI7WGcV/SVNvCRQNn3Sw4eVH+3G+Mht8wVGWF3SAQYl3EzhE7O8BQCZLQVo
+         fIvQ==
+X-Gm-Message-State: AOAM531TO94R4SAOj06QHVmiTif1Sa7B/31zsN3EBRpH44Ay2+jhJEN4
+        B9Cezl+WfILpNDeYBqe4Cg/jZ5j3xdfyfr3unAM=
+X-Google-Smtp-Source: ABdhPJx0d1JklE1Vd5ITwO8oE46AnRWfLpDTYmYnoabHNCJZDnHAjT7z3hgt5nf/R8+qSvWNWTt29A+AUBeOTql9nJA=
+X-Received: by 2002:a17:902:e98c:b029:da:cb88:f11d with SMTP id
+ f12-20020a170902e98cb02900dacb88f11dmr20789829plb.17.1607421132501; Tue, 08
+ Dec 2020 01:52:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20201207203816.18269-1-info@metux.net> <CAMpxmJWinRPUrmpcqsLaE62uAQpZ3Cb1ys3s7oHmeKM6rUUqQg@mail.gmail.com>
- <c839fa75-80ee-31e6-2ccb-87155281e1d4@metux.net>
-In-Reply-To: <c839fa75-80ee-31e6-2ccb-87155281e1d4@metux.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 8 Dec 2020 10:50:42 +0100
-Message-ID: <CAMpxmJX2RN7N8h+KeMpb6Zmj6Uh5sHEAWObK+kRVcB4H6XXbpg@mail.gmail.com>
-Subject: Re: [PATCH v3] drivers: gpio: put virtual gpio device into their own submenu
+References: <20201207112354.13884-1-info@metux.net> <CAHp75Vd_iiqTYvgD59C7j+btx70s_Ge0UC4JU2uPa33enFW08w@mail.gmail.com>
+ <0a04718c-4201-1d04-7ca1-6c2ddf1b26d9@metux.net>
+In-Reply-To: <0a04718c-4201-1d04-7ca1-6c2ddf1b26d9@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Dec 2020 11:53:01 +0200
+Message-ID: <CAHp75VdvpJYEKmG51Egwats9p7=aB5OeOkJ71PqmQv4Evn5u4A@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers: gpio: put virtual gpio device into their own submenu
 To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 10:40 AM Enrico Weigelt, metux IT consult
+On Mon, Dec 7, 2020 at 10:12 PM Enrico Weigelt, metux IT consult
 <lkml@metux.net> wrote:
->
-> On 08.12.20 10:15, Bartosz Golaszewski wrote:
-> > On Mon, Dec 7, 2020 at 9:38 PM Enrico Weigelt, metux IT consult
+> On 07.12.20 16:42, Andy Shevchenko wrote:
+> > On Mon, Dec 7, 2020 at 1:29 PM Enrico Weigelt, metux IT consult
 > > <info@metux.net> wrote:
 > >>
 > >> Since we already have a few virtual GPIO drivers, and more to come,
 > >> this category deserves its own submenu.
 > >>
-> >> changes v2: fixed menu title (replaced "devices" by "drivers")
-> >> changes v3: added patch changelog
+> >> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> >> ---
 > >
-> > This should be below the --- under all tags because we don't want this
-> > in the actual log that goes into git.
+> > You are not a first day contributor, where is the changelog?
 >
->
-> Sorry, wasn't aware of that. Does git-am automatically cut it off ?
->
+> grmpf, didn't expect this is also needed in such a trivial case :o
 
-Yes, everything between the --- and the actual diff is dropped.
+My point here is that I have commented on this but it is possible (and
+actually has occurred) that others may comment on it and you combined
+all changes and I have no idea what the result is.
 
-Bartosz
+-- 
+With Best Regards,
+Andy Shevchenko
