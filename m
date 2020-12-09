@@ -2,87 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 676FA2D3E2C
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:09:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E9532D3E88
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:23:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgLIJFj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 04:05:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
+        id S1728717AbgLIJVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 04:21:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728427AbgLIJFh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:05:37 -0500
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C91C061793
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:04:56 -0800 (PST)
-Received: by mail-qt1-x841.google.com with SMTP id 7so447654qtp.1
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:04:56 -0800 (PST)
+        with ESMTP id S1727904AbgLIJVb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:21:31 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D12C0613CF
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:20:51 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id y22so1408452ljn.9
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:20:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=O5Au1r0JB92szpdfLXxfIJFgMxDBXlqcxXRXrgoKoak=;
-        b=hXPxEy1Fd4ytFb8I3vUcyDQOwT5UU2UR11PuxEkEEld6y851jD8189CTdjN21qIp9G
-         /VcxJUSv1jYly8MwTikVorDbJ5qbwAu48bUyv+Ha0LQGbSx2GTklHlo53qOqTNyTyCqj
-         O/OF9o0aoopEUArxO+OS1k3CES4m5JW/lZJqiUSVkP4tFRrW1Z8XrjFdmdFr9V/plQL0
-         QwLe9qiaN2UL3MF8Yq7a2HaWnqRMTeA04Mleu1bTDPghE7uIfUcRhHvkiy2y/K3KWEtv
-         +3TdyMCuOO6aEwQIeemTMqO0rXw8DCwlGMfnwU0WTg5Gqc9XPY2BLBSqISgSuu7ZxO5q
-         ivwQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1mr09ffXdVmc89p6dDRlCyEcatrToejix5SUivzuIsk=;
+        b=axTtZsMbIWlnygCChz8g7xt2gAeXugayM40N/ag0rKiUwvn83qmt+qsPuXls5upxmu
+         3qBtic4iapQFl7fhO8ICfG2eGCtKBz8ZuR86zE6Jf/O19m3X/NESm2UaHFr8vQm6lz99
+         nL2LFqsJLJNwlcLW/Ortk8aJT1fe+N62rIvQTdl3VCZGaAxxg0ZDsahdwDz8Bv4rbrIB
+         tVoAav+6gJBEI42Rc1iJJF/AAAVXsMVDLYp1BvT+XqF08AGxMa5Qhe/mgIkAI/6pz2I2
+         6z4CyvrbVeScRKYO1wkUxKCDJo7dnZFQWkW/jlez9ychli6QTYEM8SrA26t9VNupVheq
+         oGiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=O5Au1r0JB92szpdfLXxfIJFgMxDBXlqcxXRXrgoKoak=;
-        b=SeDfzO+4AwZnXgIoSN9iKoMqpQPfHn6oWy9B3zi5bcF4hnwuLh6dybeYoEwvnn8OBo
-         7OKyyo9w7abS0IsHs2IJKMBuHcsnhz8PTbWyD4JxictgrV7D4daDsC2kYbCaKk04+N1e
-         2gwMhWUq+eA51WegxeypW60HJsEHrEUtYorSsSVg6ye6u5Lzv7z8fACBTEgVlDPETepk
-         XIt/fYREEoJ9r1K/H0PaxuKk8dTC2S0n7sJTlKMyMbggfuGeSD3h7DGsWp8RIHpeIBZC
-         CJ04+s5KQD6oyDuIjpllMNsOKxWEi+13gluJTg8/ixdA1ENIgTGL2At2TGgDPPItyJZo
-         2osA==
-X-Gm-Message-State: AOAM532yCp3WbWT7EQ+4ZedEAeihsYo6pUFCZn2BFw+uNKbM9pzHm3F6
-        pTNgRSVXgW1/7+JyKmunzsooGSRFax8AZYKxfLU=
-X-Google-Smtp-Source: ABdhPJwajAEZmym9kB9zCDq2Lxpok109FH0Yy6X0oi5mKO+3t8VV4PKowuSSBDm1assnE31ISQKI3+aGiq9lFHwQHCY=
-X-Received: by 2002:ac8:120d:: with SMTP id x13mr2069810qti.141.1607504695881;
- Wed, 09 Dec 2020 01:04:55 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1mr09ffXdVmc89p6dDRlCyEcatrToejix5SUivzuIsk=;
+        b=KNdTw4KY2JnfHw/KZHVgATFB5BymDPjW5tXuHwd88i5/e1gXLX5TZFfSElovq6QkHV
+         N9jWrw3/e12AzbQf3G+0EVc9ecOglMBbWMGnWSumwZ9njhubxXjxizucT5YKLjIm1Fc1
+         diKbZ1hI8CMB4kSQDIzCCAEKKu6MRl3QDQpOOw16RdojcWY6BHnonWi1DaAmlHZiD1iV
+         nYQAOuTDr/ecTR93F89hbe5yq/Ta8UWRhr1MqGm6TUemn0rHndyi1Egq90jjrO+ISmd9
+         tqepFdVQ0zHmo3ZsHYUHxnx1YihSAAZOJAYM77nrQqAq8w18ipR4rp5nKczwIBVhZmBl
+         tHEA==
+X-Gm-Message-State: AOAM532HoZ7g+ywVpgWruT/mlslv1/jR7+wqOBkAh3nBFa1FqEoycPF0
+        KCQSa2wx9pNOQF1DSLWce9NUBcxj61cjF4k/vIh9xg==
+X-Google-Smtp-Source: ABdhPJyzvFZ5i/+cIo/v7GMXy5y7QF210K4A/VhM09QlXGBziof1oFuyBn/PxeMLTnvBvuKpDbiZHch59dU8k5OOBXk=
+X-Received: by 2002:a05:651c:29c:: with SMTP id b28mr697854ljo.368.1607505649530;
+ Wed, 09 Dec 2020 01:20:49 -0800 (PST)
 MIME-Version: 1.0
-Sender: ifeanyiomaka1@gmail.com
-Received: by 2002:aed:3bee:0:0:0:0:0 with HTTP; Wed, 9 Dec 2020 01:04:55 -0800 (PST)
-From:   Donna Louise <donnamcinneslouise@gmail.com>
-Date:   Tue, 8 Dec 2020 21:04:55 -1200
-X-Google-Sender-Auth: AMn-JQmP9mRVThnd0pnfH6zuONY
-Message-ID: <CAO-KV1-kFgduN=ykFqcUgcOCqXZ9d4R+hiyR-5dFzpo3uMtuVQ@mail.gmail.com>
-Subject: Hello,
-To:     undisclosed-recipients:;
+References: <20201204164739.781812-1-maz@kernel.org> <X841xwCChUEqi5Ad@localhost>
+ <73d57fe9fefe50955771846ea52004fb@kernel.org> <X85FVc07Hc7LQQU8@localhost>
+ <d5fa2065009d5854b4c719003ebcb255@kernel.org> <X85O9GoDcbiDp97j@localhost>
+In-Reply-To: <X85O9GoDcbiDp97j@localhost>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Dec 2020 10:20:38 +0100
+Message-ID: <CACRpkdZ06vWY+mqR7bYd_WcEM6+N6v5GgTAYhr0p0KkNLa3Qnw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello My Dear,
+On Mon, Dec 7, 2020 at 4:48 PM Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Dec 07, 2020 at 03:34:23PM +0000, Marc Zyngier wrote:
 
- I am sending the same message to you. My names are Mrs. Donna Louise
-McInnes, a widow diagnosed with brain tumor disease which has gotten
-to a very bad stage, Please I want you to understand the most
-important reason why I am contacting you through this medium is
-because I need your sincerity and ability to carry out this
-transaction and fulfill my final wish in implementing the charitable
-investment project in your country as it requires absolute trust and
-devotion without any failure, which i believe that you will not expose
-this to anyone or betray this trust and confident that I am about to
-entrust on you for the mutual benefit of the orphans and the less
-privileges ones. I have some funds I inherited from my late husband,
-the sum of ($ 11,000,000.00) deposited with the Bank. Having known my
-present health condition, I decided to entrust this fund to you
-believing that you will utilize it the way i am going to instruct
-herein.
-It will be my pleasure to compensate you as my Investment
-Manager/Partner with 35% percent of the total money for your effort in
-handling the transaction, 5% percent for any expenses or processing
-charges fee that will involve during this process while 60% of the
-fund will be Invested into the charity project there in your country.
-Therefore I am waiting for your prompt respond, if only you are
-interested in this humanitarian project for further details of the
-transaction and execution of this charitable project for the glory and
-honor of God the merciful compassionate. Your urgent reply will be
-appreciated.
+> > If they claim that their lines are available, and then refuse to
+> > let the user play with it, that's just a bug willing to be fixed.
+>
+> My point was that this is how *all* gpio drivers work, and that muxing
+> is somewhat orthogonal to the gpio controller implementation.
 
-God bless you.
-Sincerely Sister in Christ Mrs. Donna Louise McInnes.
+This is true. It's because it is orthogonal that the separate subsystem
+for pin control including pin muxing exists.
+
+Should I be really overly picky, the drivers that can mux lines like
+this should be implementing the pin control mux driver side as
+well just to make Linux aware of this. But if the muxing cannot
+be changed by the kernel (albeit with special tools) then it would
+be pretty overengineered for this case. Things would be much
+easier if this wasn't some flashing configuration but more of a
+runtime thing (which is kind of the implicit assumption in pin
+control land).
+
+We don't really have many drivers that are "muxable by
+(intrusive) flashing" as opposed to "muxable by setting some
+bits" so in that way these FTDI drivers and siblings are special.
+
+So this needs some special considerations to become user
+friendly I think.
+
+Yours,
+Linus Walleij
