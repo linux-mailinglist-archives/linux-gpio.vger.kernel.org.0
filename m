@@ -2,118 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAC1B2D3EEC
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:39:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FFA62D3F35
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:53:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbgLIJgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 04:36:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47692 "EHLO
+        id S1728883AbgLIJxd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 04:53:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbgLIJgq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:36:46 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33EDC0613CF
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:36:05 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id a9so2212087lfh.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:36:05 -0800 (PST)
+        with ESMTP id S1728739AbgLIJxd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:53:33 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA56DC0613CF
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:52:52 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id t4so1001541wrr.12
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:52:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7HVozN5AHG/Y9Pr4H7WM0Q2+ceA7g7F5TP2nZ6SuOwI=;
-        b=hh/+pNwH+UZekebc+079X4G8sJsk4E1IMIIKvCXtTDxOynqA8XqfknGLh1g0ZQWbVN
-         KZUmsn6DE6UvJRP0XyVij32ntRHKdtlSx9uBCn7Q39ikz/xCg8uXFGjE1SJ0Nln/2C/7
-         yGSZZybbXFAt/g+yH+kaB29rWONoXd5m/08qc2o7AdCNJmrbINdbuQQZFWKkBZhOA2ze
-         4YhG73RxDPBCTMBozrA29lz/VeyB7P8eZbuK0eyWFj9ATQRX8irHV6rkWzj7Fkl+ULx1
-         UbDpbkeiT4tEV8hjdgzaSADvb2YnoKNMRWOqUPETj7ZgDRtQrIEDVZrQ5AcrKIv8ls0A
-         EzxQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B3sd9mFkwtlJz1bMC4aKy7JUgsdUK35uJBW0lV0ddyE=;
+        b=Ofg7TCLRNZYTdwKs9qqBQqiBhOC0FXRwgsNjumnKeRygEOWTU6glq12VOebCg9Ee6R
+         c00DRNdb2dsq6gTJDt91bakxb6MDWpPcOPyOXUL+lqEJLjUe/v4XJlH2NkBNjgTrLPfz
+         /dBXEBdAtaGCfd2nXUVby/jf4JVvexBhIwGqkGVZ05a1ozqb2CJvh6lE9yuUfjycOs3x
+         +FWKNgmFJwBTPbtt5mmqMptrJguWsqdf3u7c3Z0YFgpb0uazxoPfKos2BbV4UFlpHPl6
+         8K/Tm1qbAPlIf5kw5c2Eg4LmiIhePrqY2xqh/xA7XILNmRU+2PHvPXTajF03/HIJDKs5
+         uKJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HVozN5AHG/Y9Pr4H7WM0Q2+ceA7g7F5TP2nZ6SuOwI=;
-        b=Ysef7sdbJvwsSqMI/J3cdo8I0CBpMAUv5tyzWICn3BywYEd+LIv6WUH8NjjMEuI8SF
-         gAjU1PhA+/9oMcTRGNqJzV7TfzPrA2dUcuf2XqjOLat5UWeode688FFPFoBRJ0WN8NEa
-         QisH+NHEAyzv7guf+uMDISdmFXe/fK3+1uDH2f1t7Dj76xDFqIQBHFiToEc7RTVRCfh5
-         0GtRhm/VXkpr4ZTYubjzAd4TP0dFs7X2PajSP0LHKhD3HF7XnFV3D30302IT9qpSeamy
-         1Dl48rgaX74kNc5oCI0K0/D9dE92mgcSEFR5wMBddbGxK1vu1elNGVLsr17vvpTHF6VH
-         gHpw==
-X-Gm-Message-State: AOAM532NUTM7exx/DACHgxgzjxHH9xz4Z7N1tOEURX3bEF25KFbDjXkP
-        Z2sJG6itHsXveisPjzdOTGU2FJiIldG/woz6I3uEUA==
-X-Google-Smtp-Source: ABdhPJzoXcb7GFOWYSpMVM71M9A5Q12QNayCfIfDT2VAFUEWJ7wnbIRD/8Jwbm5Vt8NPCvdqrkAQdTP8gpuuKstvH3U=
-X-Received: by 2002:a19:8384:: with SMTP id f126mr657330lfd.649.1607506564366;
- Wed, 09 Dec 2020 01:36:04 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B3sd9mFkwtlJz1bMC4aKy7JUgsdUK35uJBW0lV0ddyE=;
+        b=Bd/x7AIHe2dl9L09IVc6STps/QQLjeIrspBJ3dxLZpbs2dBXuDi5DpZP7v0ocNbLHr
+         RRN7FzF8qO0UdkF/GrIHS53thHTFgpPzbVT6HaeOeSWlaV7cK+6aXJD8fReuxZ6tHzo0
+         yYLmyznDq9t3HDdj/a/7Q2Nzf7PMYi3JajHHsMPOFiJNgpBZNdKzaiENCdHYPlviCt8c
+         8QWFf5yM8tOGJQnZ6KoxkT0V10+ViMlVSuLqpLMiVHJsFguIgNKOD1wRerZtj3UZUHpK
+         XEqHXPzKN7z0cKYvKi2GaW0A77IjZJLe4YU9p/hXulZz7QA+LI/AaAdeuO5nOrXMHh/6
+         8nHg==
+X-Gm-Message-State: AOAM530szjPDWZS2x/7Bov0qEDZ6uOdc8fPtq6vQq1wmoTvg8Jmdaxv+
+        qBtzh2mRvmyrpMIaQcC92pOGhg==
+X-Google-Smtp-Source: ABdhPJwMeHKqCiNpLmGX/GoAEu0njXZmkCFQ4fHnGM8Wse1eJjSKqZkyBqMYUQvPt3nzuiyhWagMRQ==
+X-Received: by 2002:adf:eecc:: with SMTP id a12mr1712610wrp.312.1607507571596;
+        Wed, 09 Dec 2020 01:52:51 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id m21sm2228192wml.13.2020.12.09.01.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Dec 2020 01:52:50 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: updates for v5.11-rc1
+Date:   Wed,  9 Dec 2020 10:52:48 +0100
+Message-Id: <20201209095248.22408-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-References: <20201204164739.781812-1-maz@kernel.org> <20201204164739.781812-4-maz@kernel.org>
- <X848LXNv3GRmmSXA@localhost> <02b461244a33d5eb0620cfaa13c2b03e@kernel.org> <X85IC5NvcWikXfZY@localhost>
-In-Reply-To: <X85IC5NvcWikXfZY@localhost>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Dec 2020 10:35:53 +0100
-Message-ID: <CACRpkda+JJ9ZMmwPcA_Rc0tgqKQw+VTgfVyp8PsZG55VM82uzg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] USB: serial: ftdi_sio: Log the CBUS GPIO validity
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 7, 2020 at 4:19 PM Johan Hovold <johan@kernel.org> wrote:
-> On Mon, Dec 07, 2020 at 03:00:37PM +0000, Marc Zyngier wrote:
-> > On 2020-12-07 14:29, Johan Hovold wrote:
-> > > On Fri, Dec 04, 2020 at 04:47:38PM +0000, Marc Zyngier wrote:
->
-> > >> +  if (!bitmap_full(valid_mask, ngpios))
-> > >> +          dev_warn_once(&port->dev, "Consider using a tool such as ftx-prog
-> > >> to enable GPIOs if required\n");
-> > >> +
-> > >
-> > > And again, this is not something that belongs in the logs of just about
-> > > every system with an attached ftdi device.
-> >
-> > Fine by me, this patch can be dropped without issue. After all,
-> > I now know how to deal with these chips.
-> >
-> > > While not possible to combine with the valid_mask approach, this is
-> > > something which we could otherwise add to the request() callback for
-> > > the
-> > > first request that fails due to the mux configuration.
-> >
-> > That was Linus' initial suggestion. But I think a consistent user
-> > API is more important than free advise in the kernel log.
->
-> I tend to agree. So since your valid-mask approach clearly has some
-> merit in that it marks the lines in use when using the new cdev
-> interface, perhaps we should stick with that.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-It sounds like we agree that this patch sans prints is acceptable.
+Linus,
 
-It makes things better so let's go with that.
+These are the patches I collected over this release cycle. Nothing all
+too exciting - mainly just updates to drivers and refactoring of the
+core code. Please pull.
 
-The problem for the user is that the line looks to be
-"used by the kernel" (true in some sense) but they have no
-idea what to do about it and that the ftx-prog will solve
-their hacking problem.
+Bartosz
 
-It's a matter of taste admittedly, I have noticed that some
-subsystem maintainers are "dmesg minimalists" and want
-as little as possible in dmesg while some are "dmesg maximalists"
-and want as much messages and help as possible for
-users in dmesg. I tend toward the latter but it's not like
-I don't see the beauty and feeling of control that comes
-with a clean dmesg.
+The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
 
-My usual argument is that different loglevels exist for a
-reason and those who don't want advice can just filter out
-anything but errors or worse. But it seems they don't really wanna
-hear that because on their pet systems KERN_INFO it is on
-by default so it bothers them.
+  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
 
-Yours,
-Linus Walleij
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.11
+
+for you to fetch changes up to b5252196d08abd82f3b21532354f71a40dd2801d:
+
+  gpio: put virtual gpio device into their own submenu (2020-12-08 10:13:51 +0100)
+
+----------------------------------------------------------------
+gpio updates for v5.11-rc1
+
+- several refactoring patches of the core gpiolib code
+- add support for NXP PCAL9554B/C to gpio-pca953x
+- allow probing mockup devices from device tree
+- refactoring and improvements to gpio-rcar
+- improvements to locking in gpio-tegra
+- code shrink in gpiolib devres
+- get the irq offset from device tree in gpio-sifive
+- major refactoring of gpio-exar
+- convert gpio-mvebu pwm access to regmap
+- create a new submenu for virtual GPIO drivers
+- fix clang fall-through warnings treewide
+- minor driver refactoring and tweaks sprinkled all over
+
+----------------------------------------------------------------
+Alexandru Ardelean (1):
+      gpio: xra1403: remove unneeded spi_set_drvdata()
+
+Andy Shevchenko (4):
+      gpiolib: Extract gpiod_not_found() helper
+      gpiolib: of: Use named item for enum gpiod_flags variable
+      gpiolib: Unify expectations about ->request() returned value
+      gpiolib: split error path in gpiod_request_commit()
+
+Bartosz Golaszewski (8):
+      gpiolib: devres: shrink devm_gpiochip_add_data_with_key()
+      gpio: exar: add a newline after the copyright notice
+      gpio: exar: include idr.h
+      gpio: exar: switch to a simpler IDA interface
+      gpio: exar: use a helper variable for &pdev->dev
+      gpio: exar: unduplicate address and offset computation
+      gpio: exar: switch to using regmap
+      gpio: exar: use devm action for freeing the IDA and drop remove()
+
+Baruch Siach (2):
+      gpio: mvebu: update Armada XP per-CPU comment
+      gpio: mvebu: switch pwm duration registers to regmap
+
+Damien Le Moal (1):
+      gpio: dwapb: Remove unnecessary error message
+
+Dmitry Osipenko (2):
+      gpio: tegra: Add lockdep class
+      gpio: tegra: Use raw_spinlock
+
+Enrico Weigelt, metux IT consult (1):
+      gpio: put virtual gpio device into their own submenu
+
+Geert Uytterhoeven (4):
+      gpio: rcar: Cache gpiochip_get_data() return value
+      gpio: rcar: Align register offsets
+      gpio: rcar: Rework hardware features handling
+      gpio: rcar: Implement gpio_chip.get_multiple()
+
+Greentime Hu (1):
+      gpio: sifive: To get gpio irq offset from device tree data
+
+Grygorii Strashko (2):
+      gpio: omap: handle deferred probe with dev_err_probe() for gpiochip_add_data()
+      gpiolib: do not print err message for EPROBE_DEFER
+
+Gustavo A. R. Silva (2):
+      gpiolib: acpi: Fix fall-through warnings for Clang
+      gpio: ath79: Fix fall-through warning for Clang
+
+Kent Gibson (2):
+      gpiolib: cdev: document that line eflags are shared
+      gpiolib: cdev: add GPIO_V2_LINE_FLAG_EDGE_BOTH and use it in edge_irq_thread()
+
+Mike Looijmans (1):
+      dt-bindings: gpio: pca953x: Add support for the NXP PCAL9554B/C
+
+Vincent Whitchurch (1):
+      gpio: mockup: Allow probing from device tree
+
+ .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |   1 +
+ drivers/gpio/Kconfig                               |   5 +
+ drivers/gpio/gpio-ath79.c                          |   1 +
+ drivers/gpio/gpio-dwapb.c                          |   7 +-
+ drivers/gpio/gpio-exar.c                           | 155 ++++++++++-----------
+ drivers/gpio/gpio-mockup.c                         |  11 +-
+ drivers/gpio/gpio-mvebu.c                          |  71 +++++-----
+ drivers/gpio/gpio-omap.c                           |   7 +-
+ drivers/gpio/gpio-rcar.c                           |  87 ++++++++----
+ drivers/gpio/gpio-sifive.c                         |  14 +-
+ drivers/gpio/gpio-tegra.c                          |  22 ++-
+ drivers/gpio/gpio-xra1403.c                        |  10 +-
+ drivers/gpio/gpiolib-acpi.c                        |   1 +
+ drivers/gpio/gpiolib-cdev.c                        |  33 +++--
+ drivers/gpio/gpiolib-devres.c                      |  27 +---
+ drivers/gpio/gpiolib-of.c                          |  14 +-
+ drivers/gpio/gpiolib-sysfs.c                       |   2 +-
+ drivers/gpio/gpiolib.c                             |  39 +++---
+ drivers/gpio/gpiolib.h                             |   2 +
+ 19 files changed, 280 insertions(+), 229 deletions(-)
