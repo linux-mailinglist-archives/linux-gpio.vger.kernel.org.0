@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD812D3A9D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 06:36:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 767C12D3AB2
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 06:37:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbgLIFgn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 00:36:43 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15280 "EHLO
+        id S1727473AbgLIFgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 00:36:46 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15290 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727475AbgLIFgn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 00:36:43 -0500
+        with ESMTP id S1727475AbgLIFgp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 00:36:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1607492202; x=1639028202;
+  t=1607492204; x=1639028204;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EAsgY70FjzgQvwdP24wPIY3ZkM4SKpRDXaMvRy+2s84=;
-  b=EmEX5As2B0bscdOFLwszCt/iVV01o9tIhhvni6tVApwjg8byNULy6Lvr
-   beH04scaKapX3QPcTzZXRIIMcG9HVfHfQAZQr2FGrdExqddbZr0wPMkXO
-   XShjZY5mKjAACaJPmdryawJTKwdZheVhe3RpQ0ZnotRV8jcOW7DiCY4nG
-   UDvPtBPQK4ZuopgMb5qwIYGu7gMBh41Cpjyr5SZ+NxrFKEdlaO5///mEl
-   ZHwlQsd9GiDgVWJFETOrK30R6u2jM+dWfn55UJYOhNITCOSOPfcMAmxUw
-   SlgGbPqtIn65KV+HmVBZP1lIRZs0Op+xd2Zu58A4VArdYTEiNBt0U38Ai
+  bh=ah0+1mEnJdX05Q2mVPorPQhcLW5wBEGXXNi04bnk03g=;
+  b=h1X8M06RL527dRmdGeI57gTs3obF3j9273t8pBsAZfhXzDOQpGVYNb9M
+   vGDtxJWe1O9Q9DjUk38506AWg8BAzL60XjeCq/dz+fdTnUXg/uhjbaijQ
+   LuZ0Z5C//r0FJa823VeTdSYkjDQLwBzX6MYZZyx2x1n0jbUhfRFHNoSIs
+   r+I16h6fiFTITZGJkMQY5L72H/hz3L/9wEuNUGql04Re2BO7CBO4jcj0X
+   CWzbkbzFYQCMZ2js/I5RmKJGV2TU2xkhFAE+rp88yMr6ENuAiILwPxN34
+   sjsYeRsIaBHOgstuBQQL1q4PleXNnTaS5W9V/xkebhIYzGJsCo/3sPW2Z
    Q==;
-IronPort-SDR: ZE7pdEaUVB3uWK+HWrJ8QeG9ZXUrZdfpnZfhkskoia4dVzRPJj/3H/M0r7d6qAesYhvjxKXeKm
- MkwwWaRth25vACcN4xWYKqB6XL+ezBsKlFDDk7MgmEHVaix93iZlWPPZHop3UlIebgvhvar7aZ
- gBl+M66OLhwHA3s7CKNuvGU92RsN4rl8lU70djCCNw5XUDsaxZb8zap1RxnlSkknErXOcVYeg9
- Tly0/tnbT0yt9RTMN8VHV58GQuOEmDMp8a5tLMnqqPxv+tbkXqmx49m3DofCg1BMIoLd0HI6tF
- 7Os=
+IronPort-SDR: iOnUIzhtCFnWhxaTYQ3+7709PKT5qk13LizUTAXB3Q8+wUzvVTQFm3V1qtb+KPjPSQcdMm3P/G
+ 5UmFlRq2efbBGVLarNUBtnfPSAIU7ZnsWdhrUACMapBkeSnoKWd3FSxjZ2u2y+vXJ+GqS8Eh1f
+ /ZaLvrtqt4KQMkxDgM7eQQ8xmT+2iIE7v5qTAxqOrljFsXL+lkgmic3QwdlY1pS9kBctPvdFUq
+ uAtI/kubgPwPg7SPxgvivc+nRFzC3/xkRF/YO+X5GeO4hqnbfuwzZml3j91f1HuYvU6AZV5lq8
+ crA=
 X-IronPort-AV: E=Sophos;i="5.78,404,1599494400"; 
-   d="scan'208";a="154735877"
+   d="scan'208";a="154735879"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Dec 2020 13:35:13 +0800
-IronPort-SDR: Zs+6jRV7JXj5FjQoPePRVRQDYoJ4RY9Fgc5pPrijGX0boXv1tC7gHHXFRiMQKVLHjK7cEpjJUd
- jI3VjmDbkRvaGEZt3lb7FaMBOovoSZpV0=
+  by ob1.hgst.iphmx.com with ESMTP; 09 Dec 2020 13:35:15 +0800
+IronPort-SDR: toM2LW7PW64K1YDzYaXO+lBX/29Zev+M41WC9GxAcY8isX/5mtfxlNHaNeIt6JoWTcU1kl68Mw
+ 0fkP2eW0LFq1aJXQmHlPwNoQFSLqKkfGw=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 21:20:39 -0800
-IronPort-SDR: 4uVy4+tmfwhiyOcJGoLJ2t844A1lXmKlNHQYogYXcY0+htmUicyDEHGhihOFKRXtUX72PQt70q
- Ng//O7QT68IQ==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 21:20:41 -0800
+IronPort-SDR: 15cYU6A2oRjFuy3GCprP+FCHXABwML/5n5KQefjjThFxQaJZQ2FX23SertLS+fiBV6pV1g4ASx
+ iu4r2H31itWw==
 WDCIronportException: Internal
 Received: from wdapacbjl0003.my.asia.wdc.com (HELO twashi.fujisawa.hgst.com) ([10.84.71.173])
-  by uls-op-cesaip02.wdc.com with ESMTP; 08 Dec 2020 21:35:11 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 08 Dec 2020 21:35:13 -0800
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
@@ -50,9 +50,9 @@ To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v6 01/22] riscv: Fix kernel time_init()
-Date:   Wed,  9 Dec 2020 14:34:45 +0900
-Message-Id: <20201209053506.122582-2-damien.lemoal@wdc.com>
+Subject: [PATCH v6 02/22] riscv: Fix sifive serial driver
+Date:   Wed,  9 Dec 2020 14:34:46 +0900
+Message-Id: <20201209053506.122582-3-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201209053506.122582-1-damien.lemoal@wdc.com>
 References: <20201209053506.122582-1-damien.lemoal@wdc.com>
@@ -62,40 +62,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If of_clk_init() is not called in time_init(), clock providers defined
-in the system device tree are not initialized, resulting in failures for
-other devices to initialize due to missing clocks.
-Similarly to other architectures and to the default kernel time_init()
-implementation, call of_clk_init() before executing timer_probe() in
-time_init().
+Setup the port uartclk in sifive_serial_probe() so that the base baud
+rate is correctly printed during device probe instead of always showing
+"0".  I.e. the probe message is changed from
+
+38000000.serial: ttySIF0 at MMIO 0x38000000 (irq = 1,
+base_baud = 0) is a SiFive UART v0
+
+to the correct:
+
+38000000.serial: ttySIF0 at MMIO 0x38000000 (irq = 1,
+base_baud = 115200) is a SiFive UART v0
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- arch/riscv/kernel/time.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/sifive.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-index 4d3a1048ad8b..8a5cf99c0776 100644
---- a/arch/riscv/kernel/time.c
-+++ b/arch/riscv/kernel/time.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2017 SiFive
-  */
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 13eadcb8aec4..214bf3086c68 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -999,6 +999,7 @@ static int sifive_serial_probe(struct platform_device *pdev)
+ 	/* Set up clock divider */
+ 	ssp->clkin_rate = clk_get_rate(ssp->clk);
+ 	ssp->baud_rate = SIFIVE_DEFAULT_BAUD_RATE;
++	ssp->port.uartclk = ssp->baud_rate * 16;
+ 	__ssp_update_div(ssp);
  
-+#include <linux/of_clk.h>
- #include <linux/clocksource.h>
- #include <linux/delay.h>
- #include <asm/sbi.h>
-@@ -24,6 +25,8 @@ void __init time_init(void)
- 	riscv_timebase = prop;
- 
- 	lpj_fine = riscv_timebase / HZ;
-+
-+	of_clk_init(NULL);
- 	timer_probe();
- }
- 
+ 	platform_set_drvdata(pdev, ssp);
 -- 
 2.28.0
 
