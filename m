@@ -2,112 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48F1A2D469E
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 17:22:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FC662D46B9
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 17:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgLIQVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 11:21:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53688 "EHLO
+        id S1731947AbgLIQ0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 11:26:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731867AbgLIQVG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 11:21:06 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78918C061794
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 08:20:25 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id a9so3902057lfh.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 08:20:25 -0800 (PST)
+        with ESMTP id S1729938AbgLIQ0q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 11:26:46 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDBCC0617A6
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 08:25:45 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id a8so3912558lfb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 08:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m7X9rUZ65w07hA71iqsnhuPeCNSTLCg8P+q1cHZKW2Q=;
-        b=h4Euud5GoxgAedvtzBu4G/WaLolf/rxJa1S+tSdLI5Y7pyz4M3gJMad6SCoZx6dszC
-         /xsSoHOAF9YrXl0OG1Ye3VpkiAVfrtnWtYFwZnTQHsYu01Y5ein8VZhOw5aWACpHm+ZP
-         VmuqoAu6yS7dbpZz5mWEGOgFjB89e7FfKXDjqgz5OYzgzqXaZyh2A1d2dw8Mv8jbAZWg
-         +/1m2TJw9ou4ZbT3WCeKDLwwMDSryICzpzTkUzgMY5beXjyURLjICfUcCY8NpVn2vhOJ
-         a6bAOmMEm8V2xTSiixn12AX/2rSv0XQIP23Y6W2D9jH7fkuRlWHamu3EPFBbOnxbZ9C3
-         u/1A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0xBrb97lTo75kGlgbY3m4XgGoTI/1jjRhlZu6u72rgk=;
+        b=sDY9A2yMs122aEwsLRiAxNJUtdIrEVy+tAylzLcqgQaLuQgU/13aH4FcCdVRF72Jlj
+         LJA7Cg1tkp04n8g6ckBSaSu8dClDZS51O9wMdZR95qKqxdFjS0zeyQ32gK7SFeivKv1l
+         fQq+d+qR9qMZG3/dy8/V5wi8n7koeX96Aj/no3Ia7FmwUUuz1ElPhUTW9RYM5RPzOZiR
+         2HqlpVHvlMEmmq/BBkVh8BppZTUEWYqEATUK7bngOERX58IbWU9Ma82eT+QH0QZfTtOh
+         GE5Y6UII6VLYGWmuvwZNzo/gbjskQCe/VW+ilicVTjCSt5I1qVyySwWiDo/fYmXF69SG
+         u3iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m7X9rUZ65w07hA71iqsnhuPeCNSTLCg8P+q1cHZKW2Q=;
-        b=iwuzLAmc5uxWPtgMpI3tbYRW4yRYp/pRu7H2Lnh5SW8yTyDOIlJUPKtPFJh5DKQFZJ
-         wYJlGxwHFgcrbCEZaKjabUzqrXEDlvxAaaSlWN4g0BlBZoWvuHDDC6uMbd/UZXFQR5XS
-         croNvwaHDizy2zS7S0rAS8ytfAnk4Qd6W9/Q0fGVQsOXw75l6Tx4uUpqEtiTY8n7KeRE
-         DGDk6LdiTlEY06nubtUA70szqUNaw3c5RCEqf0iKzP1SOROJl6xhYzkPDRxqPAUY9DTx
-         ENRjKBUhvH5bHRaC1co2ZBCa42xP5k1g0rC66NBrSdPvwMOuBklz63c8zBW4/Q1SgZZn
-         Chtg==
-X-Gm-Message-State: AOAM533EyqNOLJCErvYKTRwoNNPPHc+DQKUcunMGI/wlgOm1OoCQBf4u
-        +YIFz9t7Wmyo+IuEC7jOu/bCFkZ4jCfs7NfL
-X-Google-Smtp-Source: ABdhPJziA0wKD8Vjt2vPji0tvCLEOO+FEzlwqgJ/b0dkGrm7AHVzeC8WwM8PV1Cv2xqYahz/o2PFJA==
-X-Received: by 2002:ac2:4576:: with SMTP id k22mr1256188lfm.110.1607530823854;
-        Wed, 09 Dec 2020 08:20:23 -0800 (PST)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id c6sm216301lfi.301.2020.12.09.08.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 08:20:23 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH] gpio: sysfs: Try numbered exports if symbolic names fail
-Date:   Wed,  9 Dec 2020 17:18:21 +0100
-Message-Id: <20201209161821.92931-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0xBrb97lTo75kGlgbY3m4XgGoTI/1jjRhlZu6u72rgk=;
+        b=FJCOBJHIcSPcszw9T22Wgat3M64PMJl+mlKC9/qto/dRx0wf+2dhaXmRo8kx9q6xEP
+         P9bv9NpsQYKmhT3HTuf+oP4D6+mKaWVyRzurE9VigpZe5Y/V6N86qe1Q9b52wNimyWPm
+         c5D1ycZ0FY+O1iwK0zynQ/07OE2iRcjqlUoomirF1RyZhev0pEdzjy6XkpZjU4kXZsfJ
+         goE6GY7GpidBma3Q2KIpNWHTRxvYIjG3PONnZpMf0zu32CeUw5JJZX7E2Sd5Xn+8e3WA
+         wvKRnn/5LgB7FX+yE7l6Oo/KD6iD4l2L4Raopd4wFUwMY5E8MqyzFW/w6waUCQ2z9rVy
+         tQ3Q==
+X-Gm-Message-State: AOAM532tzN6858JRKObTVPLbrOtK5Ybgy5E0tUvRPWwP9x3RQ5UsrASn
+        2ITtDEdevY+1tPlEBbgNRCQDRieXo+8N410qhir+fQ==
+X-Google-Smtp-Source: ABdhPJyxNPa05kQBjmuwAnqODtgRKeoAKxynoWMj82Ul7NTn1ySYz/7hhIr7hEH0i6mj5ZwJrr98/n4mwkbSGi63eg4=
+X-Received: by 2002:a19:8384:: with SMTP id f126mr1133455lfd.649.1607531143780;
+ Wed, 09 Dec 2020 08:25:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201122170822.21715-1-mani@kernel.org> <20201122170822.21715-3-mani@kernel.org>
+ <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
+ <X8ZmfbQp7/BGgxec@localhost> <CACRpkdZJdxqxUEQaKUHctHRSQAUpYZJtuxonwVd_ZFAsLBbKrA@mail.gmail.com>
+ <X89OOUOG0x0SSxXA@localhost> <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
+ <X9DsWahl6UDwZwBn@localhost>
+In-Reply-To: <X9DsWahl6UDwZwBn@localhost>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Dec 2020 17:25:32 +0100
+Message-ID: <CACRpkdYm-j9QcK8hgNrC33KruWE17Q0F4+T=UanE7PCEZEtu6w@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
+To:     Johan Hovold <johan@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If a GPIO line cannot be exported using a symbolic name from
-the .names array in the gpiochip, fall back to using the
-"gpioN" naming system instead of just failing.
+On Wed, Dec 9, 2020 at 4:24 PM Johan Hovold <johan@kernel.org> wrote:
+> On Tue, Dec 08, 2020 at 01:41:52PM +0100, Linus Walleij wrote:
 
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Suggested-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpiolib-sysfs.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+> > depends on !GPIO_SYSFS
+> >
+> > so it can't even be compiled in if someone is using the sysfs.
+> >
+> > That should solve the situation where people are (ab)using
+> > the sysfs and getting name collisions as a result.
+>
+> Would it possible to set a flag to suppress just the sysfs entry
+> renaming instead?
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 728f6c687182..a5a0e9238217 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -627,10 +627,24 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	if (chip->names && chip->names[offset])
- 		ioname = chip->names[offset];
- 
--	dev = device_create_with_groups(&gpio_class, &gdev->dev,
--					MKDEV(0, 0), data, gpio_groups,
--					ioname ? ioname : "gpio%u",
--					desc_to_gpio(desc));
-+	/*
-+	 * If we have a symbolic name for the GPIO we try to use that
-+	 * for the exported sysfs device/file, as legacy scripts depend
-+	 * on it. If we don't have a symbolic name or if there is a
-+	 * namespace collision, we stick with the "gpioN" name.
-+	 */
-+	dev = NULL;
-+	if (ioname)
-+		dev = device_create_with_groups(&gpio_class, &gdev->dev,
-+						MKDEV(0, 0), data, gpio_groups,
-+						ioname,
-+						desc_to_gpio(desc));
-+	if (IS_ERR_OR_NULL(dev))
-+		dev = device_create_with_groups(&gpio_class, &gdev->dev,
-+						MKDEV(0, 0), data, gpio_groups,
-+						"gpio%u",
-+						desc_to_gpio(desc));
-+
- 	if (IS_ERR(dev)) {
- 		status = PTR_ERR(dev);
- 		goto err_free_data;
--- 
-2.28.0
+Hm you mean that when a GPIO is "exported" in sysfs
+it should not get a symbolic name from the names but instead
+just the number?
 
+I bet someone has written their scripts to take advantage of
+the symbolic names so I suspect the task becomes bigger
+like suppress the sysfs entry renaming if and only if there is
+a namespace collision.
+
+But I think we can do that, doesn't seem too hard?
+
+I just hacked up this:
+https://lore.kernel.org/linux-gpio/20201209161821.92931-1-linus.walleij@linaro.org/T/#u
+
+> Despite its flaws the sysfs interface is still very convenient and I'd
+> prefer not to disable it just because of the line names.
+
+Would these conveniences be identical to those listed
+in my recent TODO entry?
+https://lore.kernel.org/linux-gpio/20201204083533.65830-1-linus.walleij@linaro.org/
+
+There are several other issues with the sysfs, so making it conflict
+with other drivers is almost  plus in the direction of discouragement
+from the GPIO submaintainer point of view, but I do see that
+people like it for the reasons in the TODO. :/
+
+I am strongly encouraging any developer with a few spare cycles
+on their hands to go and implement the debugfs facility because
+we can make it so much better than the sysfs, easier and
+more convenient for testing etc.
+
+> > Then it should be fine for any driver to provide a names array
+> > provided all the names are unique on that gpiochip.
+>
+> So it sounds like there's nothing preventing per-chip-unique names in
+> the rest of gpiolib and the new chardev interface then? Are the
+> user-space libraries able to cope with it, etc?
+
+Yes the documentation refers to libgpiod a very well maintained
+library:
+https://www.kernel.org/doc/html/latest/driver-api/gpio/using-gpio.html
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
+
+Then there are the the example tools included with the kernel
+that provide a second implementation for the same interfaces
+using just the C standard library:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio
+
+I usually use the tools myself.
+
+Yours,
+Linus Walleij
