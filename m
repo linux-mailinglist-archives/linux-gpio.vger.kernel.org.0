@@ -2,110 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 209632D4B42
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 21:09:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB1652D4B72
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 21:18:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgLIUIe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 15:08:34 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:32891 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgLIUId (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 15:08:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1607544339;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:From:
-        Subject:Sender;
-        bh=kAc/V5WPeRumZiIL2C7//K0I/ag/3WCMLZkC6BLUYIY=;
-        b=tnN7fzM2sHaoRsjb6kd5YC4nSvZyYh+2wNJp1HWOjmlzWWEcAW5n6FmAPu13bk5z5Q
-        qvt4r9ji543zqihPd9srP18YijIbM///g6yetmY+beKKCdM7KH+yHq1Hnkd2BQBt3ldj
-        1z+IHyg/pUVwJ8xr1eU2IQxPtpuPftD5ekq8qUz+8b5iwkeGXK0/w1gupIgTJ/NduzYs
-        qTXalCN7L5drpsBjmByj2+Z5Iu9hLfTx3n+Wl9DUu3z6qv5NHI/IH/Z2LsoiNeo9Eba0
-        4bwnenL9wr/FGtrrFVaHk0P8sy903uS7eGcvJ+Q9vSNnEAKs2XqXsV19gAqhvF6R+Ajq
-        vr6g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAoNHQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 47.6.2 DYNA|AUTH)
-        with ESMTPSA id 908871wB9K5P8MV
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 9 Dec 2020 21:05:25 +0100 (CET)
-Subject: Re: [PATCH] spi: dt-bindings: clarify CS behavior for spi-cs-high and gpio descriptors
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        id S2388179AbgLIUPd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 15:15:33 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29158 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388171AbgLIUPa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 9 Dec 2020 15:15:30 -0500
+IronPort-SDR: gw1f6D+H5fhqZvy2GqHAfRH6my4tHe8g1YXrsi5HbrmWUHUj4fQoJ0IIkqRGPg/smZxzprPLge
+ lZAbBR+Z7uoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9830"; a="235738980"
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="235738980"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 12:14:41 -0800
+IronPort-SDR: kJPbJe9FGeXnLoSrAtKD/7DsbIhKuhN5bvSzoDWUvqVeixyHEWevyiy+0/bnp52AfeFz/XvKkd
+ nzq4VyksPf6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="348489479"
+Received: from lkp-server01.sh.intel.com (HELO 2bbb63443648) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 09 Dec 2020 12:14:40 -0800
+Received: from kbuild by 2bbb63443648 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kn5rD-0000Qq-Bj; Wed, 09 Dec 2020 20:14:39 +0000
+Date:   Thu, 10 Dec 2020 04:14:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 274380f9eb09fa49cd4fda83f438f5c8366b13ec
+Message-ID: <5fd13012.7P2XhVrkzR4fwIru%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20201209210133.44ab9c97@aktux>
-Date:   Wed, 9 Dec 2020 21:05:24 +0100
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <09D41BD9-F6BA-4566-8151-ACB3B2274B52@goldelico.com>
-References: <3bed61807fff6268789e7d411412fbc5cd6ffe2a.1607507863.git.hns@goldelico.com> <CAGngYiVKHoXPGxmScCnb-R6xoo9GNw5pG8V8Cpyk3meoJbskiw@mail.gmail.com> <3FA1D050-3BD5-4A97-9D83-520CCF75D147@goldelico.com> <CAGngYiVL9M72hFRWnmT_8RRX9pUTSLsNuYz6mUo0Be4Vivk7Xw@mail.gmail.com> <20201209210133.44ab9c97@aktux>
-To:     Andreas Kemnade <andreas@kemnade.info>
-X-Mailer: Apple Mail (2.3124)
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andreas,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
+branch HEAD: 274380f9eb09fa49cd4fda83f438f5c8366b13ec  Merge branch 'devel' into for-next
 
-> Am 09.12.2020 um 21:01 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> On Wed, 9 Dec 2020 14:04:26 -0500
-> Sven Van Asbroeck <thesven73@gmail.com> wrote:
->=20
->> On Wed, Dec 9, 2020 at 1:16 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>=20
->>> This is also what made me wonder if that is really intended because =
-then
->>> the whole discussion about the cs-gpio-flags and inversion and the =
-fixes
->>> would not have been needed. The current code and fixes are all about
->>> not ignoring the flags... =20
->>=20
->> The inversion you witnessed was a bug caused by spi client drivers =
-that
->> simply "plow over" the SPI_CS_HIGH mode flag. This includes the panel =
-driver
->> you're using, see:
->> =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/gpu/drm/panel/panel-tpo-td028ttec1.c?h=3Dv5.10-rc6#n337
->>=20
-> ah, it would be set in spi->mode and is cleared by
->=20
-> spi->mode =3D SPI_MODE_3;
->=20
->=20
-> Hmm, but we have
->                      spi-cpol;
->                        spi-cpha;
-> in devicetree. Why do we need that spi->mode line at all?
+elapsed time: 722m
 
-Because it is there in almost all or at least many drivers.
+configs tested: 131
+configs skipped: 2
 
-But I have tested with=20
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> spi->mode |=3D SPI_MODE_3;
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+m68k                       m5475evb_defconfig
+m68k                        m5407c3_defconfig
+sh                            titan_defconfig
+powerpc                     redwood_defconfig
+arc                 nsimosci_hs_smp_defconfig
+sh                              ul2_defconfig
+ia64                             alldefconfig
+sh                          lboxre2_defconfig
+mips                           gcw0_defconfig
+sh                          kfr2r09_defconfig
+sh                           se7724_defconfig
+arm                           viper_defconfig
+arm                     davinci_all_defconfig
+powerpc                      mgcoge_defconfig
+mips                         bigsur_defconfig
+powerpc                      ppc64e_defconfig
+sh                            shmin_defconfig
+mips                         tb0226_defconfig
+powerpc                   motionpro_defconfig
+mips                           ip28_defconfig
+arc                           tb10x_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                     sequoia_defconfig
+c6x                              alldefconfig
+arm                          ixp4xx_defconfig
+sh                                  defconfig
+arm                       imx_v6_v7_defconfig
+arm                            mmp2_defconfig
+alpha                            allyesconfig
+mips                      pistachio_defconfig
+sh                           se7751_defconfig
+powerpc                       holly_defconfig
+arm                           h5000_defconfig
+sh                            migor_defconfig
+mips                        bcm63xx_defconfig
+powerpc                    socrates_defconfig
+powerpc                    klondike_defconfig
+riscv                             allnoconfig
+arm                           tegra_defconfig
+powerpc                     tqm8541_defconfig
+m68k                             alldefconfig
+arm                          ep93xx_defconfig
+arm                        cerfcube_defconfig
+arm                       multi_v4t_defconfig
+arm                        vexpress_defconfig
+arm                          pxa168_defconfig
+riscv                    nommu_k210_defconfig
+powerpc                 mpc8540_ads_defconfig
+sh                             shx3_defconfig
+powerpc                      pmac32_defconfig
+mips                          ath79_defconfig
+powerpc                 xes_mpc85xx_defconfig
+m68k                       bvme6000_defconfig
+sh                           se7619_defconfig
+sparc                               defconfig
+openrisc                            defconfig
+m68k                           sun3_defconfig
+arm                        multi_v7_defconfig
+powerpc                 mpc85xx_cds_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20201209
+i386                 randconfig-a005-20201209
+i386                 randconfig-a001-20201209
+i386                 randconfig-a002-20201209
+i386                 randconfig-a006-20201209
+i386                 randconfig-a003-20201209
+x86_64               randconfig-a016-20201209
+x86_64               randconfig-a012-20201209
+x86_64               randconfig-a013-20201209
+x86_64               randconfig-a014-20201209
+x86_64               randconfig-a015-20201209
+x86_64               randconfig-a011-20201209
+i386                 randconfig-a013-20201209
+i386                 randconfig-a014-20201209
+i386                 randconfig-a011-20201209
+i386                 randconfig-a015-20201209
+i386                 randconfig-a012-20201209
+i386                 randconfig-a016-20201209
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-which should keep the mode intact. Right? That did not work either.
+clang tested configs:
+x86_64               randconfig-a004-20201209
+x86_64               randconfig-a006-20201209
+x86_64               randconfig-a005-20201209
+x86_64               randconfig-a001-20201209
+x86_64               randconfig-a002-20201209
+x86_64               randconfig-a003-20201209
 
-So let's not derail the discussion by moving to the code of some
-specific driver. Even if that is wrong it does not solve what
-this patch wants to solve.
-
-BR and thanks,
-Nikolaus
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
