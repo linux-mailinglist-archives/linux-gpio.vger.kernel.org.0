@@ -2,118 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5112D45AB
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 16:45:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D9B72D45A6
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 16:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgLIPnG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 10:43:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgLIPnD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 10:43:03 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DFF9C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 07:42:23 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 69so1410938pgg.8
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 07:42:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=94s+C2pgmg1Kx2RBwDa9+UTBPP6bm4dJfGR23kr5sZk=;
-        b=uGHjrqjWL9vz7tktfiebAc65UK8Kab97bY7c6i8Fczp4ook/Cj6aSkoknPy1cfMGeb
-         7KKCGYrIlw4SqJVzJDNZ8BS45Ys6ytrCFUQ7aEeoW+ze1nl4tdOJ5YhLyjWer1iICJca
-         zeXcBMQWKSj+5ug9fMa5Q+dzxATyQS19rxiaW2eBy/JrZgABYBJAwz8wgvfjzwzmU4eJ
-         KBamfgv861SZxKVAMmjiQFzOQFl/VltB1+DNovvShSEri2PK6TDroVtIb77pi0Re0o6P
-         oXApYEKzTLPA/3Q8pkCup0kUFajDcqhErz9Idje2dG+DaHvm5ubcd9LBFWqqM3tgEHd+
-         kksw==
+        id S1729997AbgLIPmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 10:42:31 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39344 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbgLIPmX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 10:42:23 -0500
+Received: by mail-lf1-f67.google.com with SMTP id a12so3699769lfl.6;
+        Wed, 09 Dec 2020 07:42:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=94s+C2pgmg1Kx2RBwDa9+UTBPP6bm4dJfGR23kr5sZk=;
-        b=K4ywBDsWZrvV1Lrwp0NFVJEhlguYmUY3iUa65OzIrNILb2y8BWtFnUo0XorKYGIBrJ
-         2ao+F/Gh/6jViKP322QFY73Tq+4ezixiNZDVVi7NNfCkhv9UxuyqPwzSpLYRp5jyp0jg
-         CMVLy/ne0x6SfDnGR+xHbECeqHFzaY9bi1yFtWDY4+5834SQJ6U8YvRAOOUlYWJ4gpGX
-         gjg8Wfql5UfnYU7W5g1UjHBRrrZRh/eRB1HEmEN3XzX5L/GofbNmHmQ6v6Zi4/gGYyKK
-         eQd7wq4AeqDsekVpmXN2xGlCI7/Euchpj5SMFl0dr2yeHClNkpaiai130kAwN33uh59P
-         SBug==
-X-Gm-Message-State: AOAM530jtiXSlfLnGxjeMDy+s1o27Nj8QGjkCk2w12b+j5hkSYGneUsI
-        r+LS63N2wV+izmwSZIsX1NZlOfjAeod1Fw==
-X-Google-Smtp-Source: ABdhPJyRHdoNYpSeFoVGvYR8O11U5ODJFjERoCHTl8UM9iYGmw853QgxEdyWH+ZuhUNq2gmAAwjJSw==
-X-Received: by 2002:a63:c407:: with SMTP id h7mr2518634pgd.150.1607528542276;
-        Wed, 09 Dec 2020 07:42:22 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id 22sm2919323pfn.190.2020.12.09.07.42.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xHtJdl5wRPnIFMBx2cuWtaxIr4kDVs8SuLeP7y0WSmY=;
+        b=DLW3pn/5TdXySKs2PgdPIVarz/4hvE9vvRUBkhMLSp3HD3m/i16tAv0aPyZSO216Gk
+         oZ6gWEgEceuQjnW8EYUiajCJyWWbqHTd2zZgE/69fvcvrQPhAJ0KDhTuuhHSxjLHg0Yd
+         EZ0DqgQ5GcJzUECr0a3AhJp5/0W0x9GAi8XHYACNtMhNjQQ/ghEw1c1FE9oZT7vLaETX
+         PxEj54Mm2jfTmxJZPGMGI6jSArHN1d+tdodSPaF0SlEPa6qGry4gaoaZUPsnO0ejDs7J
+         NFcrMSsnpY9VhPgMCwcFfC3GBr1ph7MUVOXIpo8qJlwj2py8KLZPq9NuVl2ctExCOx2g
+         voDA==
+X-Gm-Message-State: AOAM531NBhFqU0RmvifMOKPtFyROvE/3b5wszkPp7xahCSZpJmd2vMRg
+        Cf/rKuNEHhpOeKCXbXI/X3Y=
+X-Google-Smtp-Source: ABdhPJw9ljZ7MRhYTQbmC7vjfq9B+Ozu4VAas+KoVlY+wzQhnTq7ZPUTzns8ekRUWpKUG+89P88iuw==
+X-Received: by 2002:a19:8c0f:: with SMTP id o15mr1261240lfd.126.1607528501264;
+        Wed, 09 Dec 2020 07:41:41 -0800 (PST)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id x20sm208612lfq.86.2020.12.09.07.41.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 07:42:21 -0800 (PST)
-Message-ID: <5fd0f05d.1c69fb81.b5716.551f@mx.google.com>
-Date:   Wed, 09 Dec 2020 07:42:21 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 09 Dec 2020 07:41:40 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kn1bh-0005bT-5o; Wed, 09 Dec 2020 16:42:21 +0100
+Date:   Wed, 9 Dec 2020 16:42:21 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Johan Hovold <johan@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH 0/4] USB: ftdio_sio: GPIO validity fixes
+Message-ID: <X9DwXS2xaiOs033B@localhost>
+References: <20201204164739.781812-1-maz@kernel.org>
+ <X841xwCChUEqi5Ad@localhost>
+ <73d57fe9fefe50955771846ea52004fb@kernel.org>
+ <X85FVc07Hc7LQQU8@localhost>
+ <d5fa2065009d5854b4c719003ebcb255@kernel.org>
+ <X85O9GoDcbiDp97j@localhost>
+ <CACRpkdZ06vWY+mqR7bYd_WcEM6+N6v5GgTAYhr0p0KkNLa3Qnw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.10-rc4-85-g40b37008eb5a
-X-Kernelci-Report-Type: test
-Subject: linusw/devel baseline: 120 runs,
- 1 regressions (v5.10-rc4-85-g40b37008eb5a)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ06vWY+mqR7bYd_WcEM6+N6v5GgTAYhr0p0KkNLa3Qnw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel baseline: 120 runs, 1 regressions (v5.10-rc4-85-g40b37008eb5a)
+On Wed, Dec 09, 2020 at 10:20:38AM +0100, Linus Walleij wrote:
+> On Mon, Dec 7, 2020 at 4:48 PM Johan Hovold <johan@kernel.org> wrote:
+> > On Mon, Dec 07, 2020 at 03:34:23PM +0000, Marc Zyngier wrote:
+> 
+> > > If they claim that their lines are available, and then refuse to
+> > > let the user play with it, that's just a bug willing to be fixed.
+> >
+> > My point was that this is how *all* gpio drivers work, and that muxing
+> > is somewhat orthogonal to the gpio controller implementation.
+> 
+> This is true. It's because it is orthogonal that the separate subsystem
+> for pin control including pin muxing exists.
+> 
+> Should I be really overly picky, the drivers that can mux lines like
+> this should be implementing the pin control mux driver side as
+> well just to make Linux aware of this. But if the muxing cannot
+> be changed by the kernel (albeit with special tools) then it would
+> be pretty overengineered for this case. Things would be much
+> easier if this wasn't some flashing configuration but more of a
+> runtime thing (which is kind of the implicit assumption in pin
+> control land).
 
-Regressions Summary
--------------------
+We'd still have problem of how to configure these hot-pluggable devices
+at runtime, so it's not necessarily easier.
 
-platform   | arch  | lab     | compiler | defconfig | regressions
------------+-------+---------+----------+-----------+------------
-imx8mp-evk | arm64 | lab-nxp | gcc-8    | defconfig | 1          =
+If I remember correctly the xr_serial driver under review is doing
+something like muxing at runtime, but by simply having whichever
+interface (tty or gpio) that claims the resource first implicitly set
+the mux configuration. I have to revisit that.
 
+> We don't really have many drivers that are "muxable by
+> (intrusive) flashing" as opposed to "muxable by setting some
+> bits" so in that way these FTDI drivers and siblings are special.
 
-  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.10-=
-rc4-85-g40b37008eb5a/plan/baseline/
+Yeah, but the gpio-reserved-range (valid-mask) feature which Marc used
+comes close here.
 
-  Test:     baseline
-  Tree:     linusw
-  Branch:   devel
-  Describe: v5.10-rc4-85-g40b37008eb5a
-  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
-io.git/
-  SHA:      40b37008eb5a300ea35aa83432c213b6028313d5 =
-
-
-
-Test Regressions
----------------- =
-
-
-
-platform   | arch  | lab     | compiler | defconfig | regressions
------------+-------+---------+----------+-----------+------------
-imx8mp-evk | arm64 | lab-nxp | gcc-8    | defconfig | 1          =
-
-
-  Details:     https://kernelci.org/test/plan/id/5fd0e600b945a87662c94cc5
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-85-g40b=
-37008eb5a/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.txt
-  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-85-g40b=
-37008eb5a/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
-
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5fd0e600b945a87662c94=
-cc6
-        failing since 3 days (last pass: v5.10-rc4-34-g0f2c7af45d7ee, first=
- fail: v5.10-rc4-47-gc47d9e1b7343) =
-
- =20
+Johan
