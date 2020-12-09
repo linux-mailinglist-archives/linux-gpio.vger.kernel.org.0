@@ -2,122 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05EAF2D3FCA
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 11:22:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A4892D3FD6
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 11:26:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgLIKVo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 05:21:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgLIKVo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 05:21:44 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85852C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 02:21:03 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id m19so2382739lfb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 02:21:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rMI0CECIyqD9vuxo9krnxs3PVgofv8jhd/MMB9ewq5k=;
-        b=TLqBgEsNohNpt3Wb719mQpnFGgMlv4h9kpqYTR/fYCbzd+VQMd6hg83tdJrtuxVWj5
-         JezvRM+xm8I4O3gHT67YijOfo8mzpzFK+Dc6tmkJjUt3zjXeqnLUPaxc91CSiP9xcbyp
-         gX53vtXolVZSUtUQXQXCoRAUuBt3Mt9dFv/pShpv9kMZ1qDHeGs/6/Gwg+kuqHiUtMMo
-         vFxHLr5aioHsW7B9S+e1G/iYUMQttYmOJzzvFkuy364ch3KuvMKs3JedcPnLyB1x5FFt
-         QtcY7KjyZqRL1XjQx0fblGmOLwySZZSKmLh1TtVw0OupoyVx16Iuoh4O5PJejuIuKk2J
-         NG+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rMI0CECIyqD9vuxo9krnxs3PVgofv8jhd/MMB9ewq5k=;
-        b=ptQC4FZGuCMGdyTtk1RkH+Qb9i+SPrZSp9JI9UMtz1e0n5QT2hrtH4QHLfYSl2nPFr
-         vLwPJNQU6vPWwmAwOAuzsngo+GXZDq5CTUFEBW7RY7T/nSY2PPoT1GC7DMDx+ng8j5Ez
-         b4nHX1gLRpTfoAwrthY7AavU+7fWM6U3HVJJsGXUQ+baZpSJ4zoV/4RU9FDGu37H2wMo
-         eiuoJO0fSEQ2f4fjWx1fDzzFTXgtq+LyscIsQIDTjBwm3QvRc9LlXPCf3EsCRrcNSKm9
-         L0thhCyqeI6vmV2VblstOCAfhuY382N2Ig7Cnu8ntL+emUW1RLRpATWpFbXX9snaF5JX
-         u0tw==
-X-Gm-Message-State: AOAM5334kjeYqOHGJu9WM7Rb6IfzeC5LH0EcRwQR/CR7Msf7Odg18Oog
-        /cjGK9MmkBTgbSU2v6I1BQoPqBDkHGju+iS8LnsuZHjNxrbnSA==
-X-Google-Smtp-Source: ABdhPJyWiG9LyXUa3QjRS3OqJcU1ciTbPmP4fQ7GteSGxpcEQecOpVlXes7j1IOg9ZBCnKjq1DfsveEuiC0lt8WaS0w=
-X-Received: by 2002:a19:ee1a:: with SMTP id g26mr735609lfb.465.1607509261981;
- Wed, 09 Dec 2020 02:21:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20201209095248.22408-1-brgl@bgdev.pl> <CACRpkdZgK3dmjM32BYAWFvHOhBUsQbNbCSNMaebvRr+Jnes=Ww@mail.gmail.com>
- <CAMRc=Mdq7LBTAbUguuLH=f5_vfo5pc95BCveqSvApBTC26aNQQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdq7LBTAbUguuLH=f5_vfo5pc95BCveqSvApBTC26aNQQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Dec 2020 11:20:51 +0100
-Message-ID: <CACRpkdYM2knogZLRp+AAdE5ssvhULDZ6xr8yGrO8rvSMrZuScw@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.11-rc1
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1729777AbgLIK0L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 05:26:11 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:40611 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgLIK0L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 05:26:11 -0500
+Received: from [192.168.1.155] ([77.2.91.93]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MLyzP-1kVgl53LKj-00I0YQ; Wed, 09 Dec 2020 11:23:18 +0100
+Subject: Re: [RFC PATCH] RFC: drivers: gpio: helper for generic pin IRQ
+ handling
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        joyce.ooi@intel.com, Andrew Jeffery <andrew@aj.id.au>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>, orsonzhai@gmail.com,
+        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        Andy Shevchenko <andy@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+References: <20201208141429.8836-1-info@metux.net>
+ <CAHp75VfMKmJ074R2-04be0Ag6OuKcY=_xhhbRKsL2D0H8hZZLg@mail.gmail.com>
+ <CAHp75VfOjb4Rfo9yPmwEYUDbaPXNjfGs6goM27ZnLdAMtiU+jA@mail.gmail.com>
+ <0c16ab33-f87f-b32d-53d0-a44a5fecd6dc@ti.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <710efa0f-063e-8a9e-1c3f-49337506b044@metux.net>
+Date:   Wed, 9 Dec 2020 11:23:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <0c16ab33-f87f-b32d-53d0-a44a5fecd6dc@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:EfePztOrymHKfYxNnLFVD8MbCqHmMYcSjnD/zRYzwOVK50PaTDO
+ V16L1ULFXQ8mFROXQORa51saqagaRj87zvo+tqf9TrXBvhhqerIr9nW39zr18JXrhWrrq9F
+ /g4k+ySn0i/LI9LrCSEb14O0Yp1PDmhhhQeUjyekHFqYY4CrmtWz6c0IuepbOjPEU/7wnGU
+ 3g/e8ENQ+K2rHKNG1DWRg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BNgWdIM3ZTw=:BDjkTcychAye7DhF3ue5DL
+ l5rChA9jUpaOxlxRC2BB4JwAQ25N88VnNyrLsh+VGdOyEfCU7M2weQuQCPg6LLDVG93Z7OrHb
+ JZ2XRMSIRbFXyD8IG1rXnfQrd/fhrYKL8ChQLOofoPXz9ZHD2upIJN3b2k8W2hqtFmzHC0Foy
+ Scv6TPvDXeUQzhH4kAYZh0mQb26QHXX39eUbopKRPptcqETtWd96FGoxaVMOAm7uXoX9qj9RP
+ /XIgNfpv7mOaRachs05+cg5wXTBXnBAhNHlOME5EC1E99V04hWO9aSwlCNYhP0Akf+8pFppwx
+ 1YCljurh8GWwIao/VXO5KiniQtBqqpizxzNd5lZQGmcprKoLQgZ/jBI2ai55wSMsx4lz3aPea
+ GgGTjupmD9KNiKq7DCBQNYi8BIA3lBzq6XYxmZbhA4aPVpSLejLksZdiBOfEO/ABI4EDA7CeX
+ 313QpFPGDZ9byhZo9dycobO/QMLuU2hWJbdTi445uQaejdyafS8I
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 11:13 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Wed, Dec 9, 2020 at 11:07 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Dec 9, 2020 at 10:52 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > > These are the patches I collected over this release cycle. Nothing all
-> > > too exciting - mainly just updates to drivers and refactoring of the
-> > > core code. Please pull.
-> >
-> > Nice!
-> >
-> > But I get a merge conflict in gpiolib-acpi.c! Since I said Andy should
-> > be maintaining that file it makes me a bit nervous.
-> >
-> > It looks like this:
-> >
-> > index 6cc5f91bfe2e,23fa9df8241d..000000000000
-> > --- a/drivers/gpio/gpiolib-acpi.c
-> > +++ b/drivers/gpio/gpiolib-acpi.c
-> > @@@ -586,6 -526,40 +586,43 @@@ static bool acpi_get_driver_gpio_data(s
-> >         return false;
-> >   }
->
-> Strange, I didn't see any conflicts in next...
->
-> >
-> > ++<<<<<<< HEAD
-> > ++=======
-> > + static enum gpiod_flags
-> > + acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio)
-> > + {
-> > +       switch (agpio->io_restriction) {
-> > +       case ACPI_IO_RESTRICT_INPUT:
-> > +               return GPIOD_IN;
-> > +       case ACPI_IO_RESTRICT_OUTPUT:
-> > +               /*
-> > +                * ACPI GPIO resources don't contain an initial value for the
-> > +                * GPIO. Therefore we deduce that value from the pull field
-> > +                * instead. If the pin is pulled up we assume default to be
-> > +                * high, if it is pulled down we assume default to be low,
-> > +                * otherwise we leave pin untouched.
-> > +                */
-> > +               switch (agpio->pin_config) {
-> > +               case ACPI_PIN_CONFIG_PULLUP:
-> > +                       return GPIOD_OUT_HIGH;
-> > +               case ACPI_PIN_CONFIG_PULLDOWN:
-> > +                       return GPIOD_OUT_LOW;
-> > +               default:
-> > +                       break;
-> > +               }
-> > +               break;
->
-> This break is the only thing I have in my tree. Andy told me to take
-> that patch with his ack. It seems you don't have this function in your
-> tree - was it moved at some point?
+On 08.12.20 17:18, Grygorii Strashko wrote:
 
-Hm yeah I have a bunch of ACPI things I pulled from Andy in my tree.
+>>>> Having all GPIO drivers doing their IRQ management entirely through the
+>>>> GPIO subsystem (eg. never calling generic_handle_irq() and using the
+>>>> builtin
+>>>> IRQ handling) would also allow a more direct (eg. callback-based)
+>>>> pin change
+>>>> notification for GPIO consumers, that doesn't involve registering
+>>>> them as
+>>>> generic IRQ handlers.
+> 
+> Above part makes me worry - why?
 
-I can try just -3 I guess. I assume the function shall be there.
+Why so ?
 
-Yours,
-Linus Walleij
+Little clarification, in case i've been a bit confusion - there're two
+separate topics:
+
+a) consolidating repeated patterns (eg. calling the actual irq handling)
+   into gpiolib, (and later possibly use more fields already existing in
+   struct gpio_chip for irq handling)
+
+b) a direct consumer callback for change, where the consumer doesn't
+   have to care about IRQs at all (some drivers could even do polling,
+   when hw doesn't have IRQs). This is for consumers that don't use
+   GPIOs as interrupt source, but more more like a very raw serial port,
+   eg. bitbanging of other interfaces (maybe an gpio bus type ? ;-))
+
+The above paragraph just outlines that b) might be much easier to
+implement, once the suggested refactoring is done and no driver would
+call irq handlers directly anymore. But this hasn't much to do with
+the proposal itself, just an idea for future use.
+
+--mtx
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
