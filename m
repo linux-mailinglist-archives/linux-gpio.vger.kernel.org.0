@@ -2,102 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC4362D3E25
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:05:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 676FA2D3E2C
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:09:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgLIJEy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 04:04:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42662 "EHLO
+        id S1728631AbgLIJFj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 04:05:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgLIJEw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:04:52 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC11CC0613D6
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:04:11 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id m25so2047388lfc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:04:11 -0800 (PST)
+        with ESMTP id S1728427AbgLIJFh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:05:37 -0500
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C91C061793
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:04:56 -0800 (PST)
+Received: by mail-qt1-x841.google.com with SMTP id 7so447654qtp.1
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:04:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u8KKN6kEP37Zb7PmsnDAFaBNjQZ74PfUTCo3xpIHe+4=;
-        b=tjbgpYtBD9Cp3oZ/+ZqVBgK6uC90kg/92F0++7454fg6X8Y045ejX12IJi61RR56Tn
-         CSR2t9R1X3AqFKJ5434ULkCLTHbcDD9pJTJudwHZdYfCIGntqZx13i38HAnQmDCw/5ep
-         0GAnISEMnHP26rv0VZkfAcbZW3CFFErixasIE+i6SQQ6HINGDEKY5sWz/cjrlRHseQK/
-         TybZFQwME9Ej/CANfPWjJabsFL3zHvJyzfmMbVT6efU7iFMWW43/ldBZ0K2GjnbH/zi9
-         AwN44apWWTMptUo6wJak/8T3RnkS3mZWJScdeCj/Zm9HYSoXlkTnG1kA/r1UGLcosH58
-         c1EQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=O5Au1r0JB92szpdfLXxfIJFgMxDBXlqcxXRXrgoKoak=;
+        b=hXPxEy1Fd4ytFb8I3vUcyDQOwT5UU2UR11PuxEkEEld6y851jD8189CTdjN21qIp9G
+         /VcxJUSv1jYly8MwTikVorDbJ5qbwAu48bUyv+Ha0LQGbSx2GTklHlo53qOqTNyTyCqj
+         O/OF9o0aoopEUArxO+OS1k3CES4m5JW/lZJqiUSVkP4tFRrW1Z8XrjFdmdFr9V/plQL0
+         QwLe9qiaN2UL3MF8Yq7a2HaWnqRMTeA04Mleu1bTDPghE7uIfUcRhHvkiy2y/K3KWEtv
+         +3TdyMCuOO6aEwQIeemTMqO0rXw8DCwlGMfnwU0WTg5Gqc9XPY2BLBSqISgSuu7ZxO5q
+         ivwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u8KKN6kEP37Zb7PmsnDAFaBNjQZ74PfUTCo3xpIHe+4=;
-        b=NX13c8RxoNEwasL5A75fzdP2Rb9BtW96Bla+a+PqCMgHV2XsVYBCzOteh2u95mSSCH
-         QYGPtgz0ifKy98ycomlTxQ8LDrhCaiXZw8ZTJo92suqTY+Zist4vghQxmZl+pQG4ZXWb
-         mQfwA+BebxGUvrUPZhDrQhc6bkcD9+4+5Kp9zzoYy8ubVXqYkWrC/YxaQgTmCg1WKnd+
-         DY0p6+tIBNozljRyqakD/UTOWmEJTY+kZ7iV8D5kjdlGzru6cnMzQCcppxDCl+bS8Lmb
-         hq3bm8sIFwQNj7F2yJ3AinuhJFsn2W8ke5kad9Wt5oH2CDH3aVXcx9jkpAGg/QpVeZDE
-         Ym7w==
-X-Gm-Message-State: AOAM530/ItsNr2r3DGkTPmLUSmTHLdL4YEKP/l0yuRMqGZ/WtycrWug4
-        tqvqht3zYqN5dnFsKj5Qc8ieIsCWvs0HUA1sUcN8Rw==
-X-Google-Smtp-Source: ABdhPJwuKkyip48lpOSEFICnOa696vlq3QGttzrv7MSDYITrNbVRdD+irJ6V6I1ixXgelIrnyZ0MGPhltSqo1zq38bI=
-X-Received: by 2002:a19:6557:: with SMTP id c23mr633204lfj.157.1607504650310;
- Wed, 09 Dec 2020 01:04:10 -0800 (PST)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=O5Au1r0JB92szpdfLXxfIJFgMxDBXlqcxXRXrgoKoak=;
+        b=SeDfzO+4AwZnXgIoSN9iKoMqpQPfHn6oWy9B3zi5bcF4hnwuLh6dybeYoEwvnn8OBo
+         7OKyyo9w7abS0IsHs2IJKMBuHcsnhz8PTbWyD4JxictgrV7D4daDsC2kYbCaKk04+N1e
+         2gwMhWUq+eA51WegxeypW60HJsEHrEUtYorSsSVg6ye6u5Lzv7z8fACBTEgVlDPETepk
+         XIt/fYREEoJ9r1K/H0PaxuKk8dTC2S0n7sJTlKMyMbggfuGeSD3h7DGsWp8RIHpeIBZC
+         CJ04+s5KQD6oyDuIjpllMNsOKxWEi+13gluJTg8/ixdA1ENIgTGL2At2TGgDPPItyJZo
+         2osA==
+X-Gm-Message-State: AOAM532yCp3WbWT7EQ+4ZedEAeihsYo6pUFCZn2BFw+uNKbM9pzHm3F6
+        pTNgRSVXgW1/7+JyKmunzsooGSRFax8AZYKxfLU=
+X-Google-Smtp-Source: ABdhPJwajAEZmym9kB9zCDq2Lxpok109FH0Yy6X0oi5mKO+3t8VV4PKowuSSBDm1assnE31ISQKI3+aGiq9lFHwQHCY=
+X-Received: by 2002:ac8:120d:: with SMTP id x13mr2069810qti.141.1607504695881;
+ Wed, 09 Dec 2020 01:04:55 -0800 (PST)
 MIME-Version: 1.0
-References: <1606901543-8957-1-git-send-email-luojiaxing@huawei.com>
- <1606901543-8957-2-git-send-email-luojiaxing@huawei.com> <CACRpkdbodato7AL4xv-oEO9+-Mo9fDaH+jZh+6T=3urE0tbULw@mail.gmail.com>
- <5955bd97-046c-8ac3-f66e-ea967e8f9128@huawei.com>
-In-Reply-To: <5955bd97-046c-8ac3-f66e-ea967e8f9128@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Dec 2020 10:03:59 +0100
-Message-ID: <CACRpkdZPmVWHV9Rbpfma3gDic=fmQQ9B0oQ0HsqwnJ0EpoGENA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: gpio-hisi: Add HiSilicon GPIO support
-To:     luojiaxing <luojiaxing@huawei.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
+Sender: ifeanyiomaka1@gmail.com
+Received: by 2002:aed:3bee:0:0:0:0:0 with HTTP; Wed, 9 Dec 2020 01:04:55 -0800 (PST)
+From:   Donna Louise <donnamcinneslouise@gmail.com>
+Date:   Tue, 8 Dec 2020 21:04:55 -1200
+X-Google-Sender-Auth: AMn-JQmP9mRVThnd0pnfH6zuONY
+Message-ID: <CAO-KV1-kFgduN=ykFqcUgcOCqXZ9d4R+hiyR-5dFzpo3uMtuVQ@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jiaxing,
+Hello My Dear,
 
-thanks! waiting for the new patch!
+ I am sending the same message to you. My names are Mrs. Donna Louise
+McInnes, a widow diagnosed with brain tumor disease which has gotten
+to a very bad stage, Please I want you to understand the most
+important reason why I am contacting you through this medium is
+because I need your sincerity and ability to carry out this
+transaction and fulfill my final wish in implementing the charitable
+investment project in your country as it requires absolute trust and
+devotion without any failure, which i believe that you will not expose
+this to anyone or betray this trust and confident that I am about to
+entrust on you for the mutual benefit of the orphans and the less
+privileges ones. I have some funds I inherited from my late husband,
+the sum of ($ 11,000,000.00) deposited with the Bank. Having known my
+present health condition, I decided to entrust this fund to you
+believing that you will utilize it the way i am going to instruct
+herein.
+It will be my pleasure to compensate you as my Investment
+Manager/Partner with 35% percent of the total money for your effort in
+handling the transaction, 5% percent for any expenses or processing
+charges fee that will involve during this process while 60% of the
+fund will be Invested into the charity project there in your country.
+Therefore I am waiting for your prompt respond, if only you are
+interested in this humanitarian project for further details of the
+transaction and execution of this charitable project for the glory and
+honor of God the merciful compassionate. Your urgent reply will be
+appreciated.
 
-On Wed, Dec 9, 2020 at 9:19 AM luojiaxing <luojiaxing@huawei.com> wrote:
-
-> >> +static void hisi_gpio_irq_disable(struct irq_data *d)
-> >> +{
-> >> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> >> +
-> >> +       hisi_gpio_irq_set_mask(d);
-> >> +       hisi_gpio_write_reg(chip, HISI_GPIO_INTEN_CLR_WX, BIT(irqd_to_hwirq(d)));
-> >> +}
-> >
-> > Interesting with a GPIO hardware that both as enable and mask
-> > bits. I can't see why, usually they just have masks but I suppose
-> > there is some reason.
->
-> I see gpio-dwapb.c distinguishes between enable and mask too.
->
-> In my opinion, enable indicates that the user uses the GPIO line as the
-> interrupt trigger source,
->
-> and mask indicates that the user does not want to see an interrupts for
-> a while.
->
-> The difference between the two types of flag is that interrupts
-> generated during masking are recorded but not lost,
->
-> however, if interrupts are disabled, interrupts will lost.
-
-Ah, that makes perfect sense! Thanks for explaining.
-
-Yours,
-Linus Walleij
+God bless you.
+Sincerely Sister in Christ Mrs. Donna Louise McInnes.
