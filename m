@@ -2,106 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 258C12D3EDE
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:35:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC1B2D3EEC
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 10:39:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgLIJdi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 04:33:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44091 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729348AbgLIJd2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:33:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607506322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W6cW4CaC6vRkex8b1uivDQizxuPVFLQvTcxdJxTGoT8=;
-        b=deHDM0ijhpV3OkJR/4d/wPKnEiV5EtZooLGT5bWxKyjKG6D/hFo9Fd1woCmumn+WPvLuyA
-        a8kgE2jFlZKzixHbC1YaNhjrVR2yKFusXNEN/CrvaEcUddh5wN6gRn7t+A+77hLlXXAj3B
-        0qA5A/ToYjknbMvHDTvhmxAXm3f3tj4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-mt-nlmTxMZmaliXtXLKgmg-1; Wed, 09 Dec 2020 04:31:58 -0500
-X-MC-Unique: mt-nlmTxMZmaliXtXLKgmg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A079802B40;
-        Wed,  9 Dec 2020 09:31:56 +0000 (UTC)
-Received: from [10.72.12.31] (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 89EBE5275D;
-        Wed,  9 Dec 2020 09:31:42 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org, stefanha@redhat.com,
-        msuchanek@suse.de
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
- <96aca1e6-2d5a-deb1-2444-88f938c7a9de@metux.net>
- <20201205142218-mutt-send-email-mst@kernel.org>
- <842519cc-94ca-3c11-ddd6-543e5a89c998@redhat.com>
- <20201207085247-mutt-send-email-mst@kernel.org>
- <0a9c19bd-0d25-1035-57e3-b1f5f204c309@redhat.com>
- <500d0c68-0c6d-f5fb-665b-74aec6d59f99@metux.net>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9e11f1ab-6b7c-d50e-d7db-633ebc3d358c@redhat.com>
-Date:   Wed, 9 Dec 2020 17:31:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729155AbgLIJgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 04:36:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728957AbgLIJgq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 04:36:46 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33EDC0613CF
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 01:36:05 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id a9so2212087lfh.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 01:36:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7HVozN5AHG/Y9Pr4H7WM0Q2+ceA7g7F5TP2nZ6SuOwI=;
+        b=hh/+pNwH+UZekebc+079X4G8sJsk4E1IMIIKvCXtTDxOynqA8XqfknGLh1g0ZQWbVN
+         KZUmsn6DE6UvJRP0XyVij32ntRHKdtlSx9uBCn7Q39ikz/xCg8uXFGjE1SJ0Nln/2C/7
+         yGSZZybbXFAt/g+yH+kaB29rWONoXd5m/08qc2o7AdCNJmrbINdbuQQZFWKkBZhOA2ze
+         4YhG73RxDPBCTMBozrA29lz/VeyB7P8eZbuK0eyWFj9ATQRX8irHV6rkWzj7Fkl+ULx1
+         UbDpbkeiT4tEV8hjdgzaSADvb2YnoKNMRWOqUPETj7ZgDRtQrIEDVZrQ5AcrKIv8ls0A
+         EzxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7HVozN5AHG/Y9Pr4H7WM0Q2+ceA7g7F5TP2nZ6SuOwI=;
+        b=Ysef7sdbJvwsSqMI/J3cdo8I0CBpMAUv5tyzWICn3BywYEd+LIv6WUH8NjjMEuI8SF
+         gAjU1PhA+/9oMcTRGNqJzV7TfzPrA2dUcuf2XqjOLat5UWeode688FFPFoBRJ0WN8NEa
+         QisH+NHEAyzv7guf+uMDISdmFXe/fK3+1uDH2f1t7Dj76xDFqIQBHFiToEc7RTVRCfh5
+         0GtRhm/VXkpr4ZTYubjzAd4TP0dFs7X2PajSP0LHKhD3HF7XnFV3D30302IT9qpSeamy
+         1Dl48rgaX74kNc5oCI0K0/D9dE92mgcSEFR5wMBddbGxK1vu1elNGVLsr17vvpTHF6VH
+         gHpw==
+X-Gm-Message-State: AOAM532NUTM7exx/DACHgxgzjxHH9xz4Z7N1tOEURX3bEF25KFbDjXkP
+        Z2sJG6itHsXveisPjzdOTGU2FJiIldG/woz6I3uEUA==
+X-Google-Smtp-Source: ABdhPJzoXcb7GFOWYSpMVM71M9A5Q12QNayCfIfDT2VAFUEWJ7wnbIRD/8Jwbm5Vt8NPCvdqrkAQdTP8gpuuKstvH3U=
+X-Received: by 2002:a19:8384:: with SMTP id f126mr657330lfd.649.1607506564366;
+ Wed, 09 Dec 2020 01:36:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <500d0c68-0c6d-f5fb-665b-74aec6d59f99@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20201204164739.781812-1-maz@kernel.org> <20201204164739.781812-4-maz@kernel.org>
+ <X848LXNv3GRmmSXA@localhost> <02b461244a33d5eb0620cfaa13c2b03e@kernel.org> <X85IC5NvcWikXfZY@localhost>
+In-Reply-To: <X85IC5NvcWikXfZY@localhost>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Dec 2020 10:35:53 +0100
+Message-ID: <CACRpkda+JJ9ZMmwPcA_Rc0tgqKQw+VTgfVyp8PsZG55VM82uzg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] USB: serial: ftdi_sio: Log the CBUS GPIO validity
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 2020/12/8 下午3:02, Enrico Weigelt, metux IT consult wrote:
-> On 08.12.20 03:36, Jason Wang wrote:
+On Mon, Dec 7, 2020 at 4:19 PM Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Dec 07, 2020 at 03:00:37PM +0000, Marc Zyngier wrote:
+> > On 2020-12-07 14:29, Johan Hovold wrote:
+> > > On Fri, Dec 04, 2020 at 04:47:38PM +0000, Marc Zyngier wrote:
 >
-> Hi,
+> > >> +  if (!bitmap_full(valid_mask, ngpios))
+> > >> +          dev_warn_once(&port->dev, "Consider using a tool such as ftx-prog
+> > >> to enable GPIOs if required\n");
+> > >> +
+> > >
+> > > And again, this is not something that belongs in the logs of just about
+> > > every system with an attached ftdi device.
+> >
+> > Fine by me, this patch can be dropped without issue. After all,
+> > I now know how to deal with these chips.
+> >
+> > > While not possible to combine with the valid_mask approach, this is
+> > > something which we could otherwise add to the request() callback for
+> > > the
+> > > first request that fails due to the mux configuration.
+> >
+> > That was Linus' initial suggestion. But I think a consistent user
+> > API is more important than free advise in the kernel log.
 >
->> So we endup with two solutions (without a prompt):
->>
->> 1) using select, user may end up with driver without transport
-> IMHO not an entirely unusual situation in other places of the kernel,
-> eg. one can enable USB devices, w/o having an usb host adapter enabled.
->
-> And even if some USB-HA driver is enabled, the actualy machine doesn't
-> necessarily have the corresponding device.
+> I tend to agree. So since your valid-mask approach clearly has some
+> merit in that it marks the lines in use when using the new cdev
+> interface, perhaps we should stick with that.
 
+It sounds like we agree that this patch sans prints is acceptable.
 
-Ok, then select works for me.
+It makes things better so let's go with that.
 
+The problem for the user is that the line looks to be
+"used by the kernel" (true in some sense) but they have no
+idea what to do about it and that the ftx-prog will solve
+their hacking problem.
 
->
->> 2) using depends, user need to enable at least one transport
->>
->> 2) looks a little bit better I admit.
-> So, all virtio devices should depend on TRANSPORT_A || TRANSPORT_B ||
-> TRANSPORT_C || ... ? (and also change all these places if another
-> transport is added) ?
+It's a matter of taste admittedly, I have noticed that some
+subsystem maintainers are "dmesg minimalists" and want
+as little as possible in dmesg while some are "dmesg maximalists"
+and want as much messages and help as possible for
+users in dmesg. I tend toward the latter but it's not like
+I don't see the beauty and feeling of control that comes
+with a clean dmesg.
 
+My usual argument is that different loglevels exist for a
+reason and those who don't want advice can just filter out
+anything but errors or worse. But it seems they don't really wanna
+hear that because on their pet systems KERN_INFO it is on
+by default so it bothers them.
 
-I think not. The idea is, if none of the transport (select VIRTIO) is 
-enabled, user can not enable any virtio drivers (depends on VIRTIO).
-
-Thanks
-
-
->
-> --mtx
->
-
+Yours,
+Linus Walleij
