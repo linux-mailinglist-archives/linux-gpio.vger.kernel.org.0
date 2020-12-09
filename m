@@ -2,83 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7B4E2D4642
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 17:03:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48F1A2D469E
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 17:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgLIQDF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 11:03:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
+        id S1729938AbgLIQVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 11:21:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbgLIQDF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 11:03:05 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800AAC0613CF
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 08:02:25 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id f9so1277582pfc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 08:02:25 -0800 (PST)
+        with ESMTP id S1731867AbgLIQVG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 11:21:06 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78918C061794
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 08:20:25 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id a9so3902057lfh.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 08:20:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VQAQ2J6LbV3gszHKeOVHEcsMGoc7/0iCrJQJ/rSIwdY=;
-        b=R0gt3ItnqniRhw7aQYymhT8ObGWHPuSWf1gEpXTsdNV3duXkIpWAdJ85ItSGb0cABr
-         O7PhSdxmqCD59qPbsL7cd2SMIap5DxNEbUh5PCAerM9mKq4kZCClkUTM4FRhnXrp067R
-         447RfFYRYoRZML4LSJt8IUKJrQcXWO9hN0OVxO86N52BtYxcRiVhU2pncZx5O3i1YTpw
-         QG/eXM7il9HcaALtE85kwbvAhBH5w2HBPCKrIGdrozETxdgj+gkKcu9xtG2CJ39L7res
-         sZV9Cq4+6AwIbidbIT5S0qHqXVYxg/ZImWQ1uMraH6BHgtxuPh+hMYa6Q3X9qdIU1Zty
-         ctjw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m7X9rUZ65w07hA71iqsnhuPeCNSTLCg8P+q1cHZKW2Q=;
+        b=h4Euud5GoxgAedvtzBu4G/WaLolf/rxJa1S+tSdLI5Y7pyz4M3gJMad6SCoZx6dszC
+         /xsSoHOAF9YrXl0OG1Ye3VpkiAVfrtnWtYFwZnTQHsYu01Y5ein8VZhOw5aWACpHm+ZP
+         VmuqoAu6yS7dbpZz5mWEGOgFjB89e7FfKXDjqgz5OYzgzqXaZyh2A1d2dw8Mv8jbAZWg
+         +/1m2TJw9ou4ZbT3WCeKDLwwMDSryICzpzTkUzgMY5beXjyURLjICfUcCY8NpVn2vhOJ
+         a6bAOmMEm8V2xTSiixn12AX/2rSv0XQIP23Y6W2D9jH7fkuRlWHamu3EPFBbOnxbZ9C3
+         u/1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VQAQ2J6LbV3gszHKeOVHEcsMGoc7/0iCrJQJ/rSIwdY=;
-        b=lBw82z63mINWjOJ5lcodH3Fu6xQhtZTShQRNc7OzTgpXkgbyhVsnUgBPleJ9z4UUkd
-         o5ksH6yvVrOa5b7Qrtm3tWa4ZNwTh279NyC9O8xjIWfkOGkLgOdslUSD3mX+PZhVW0kH
-         UcP6+fB6rLA1yEcHiKr4DiO1SToW/9ra3t+FoYMfp3vTUDrhj2qrbq9PbvyoDShIsyYZ
-         kclt3/Pmp7IDIwZBe3nNxSU/pdr/narhqCDwKckn4jdq8NxeJoUFBF4lTgwr3bNdFmcM
-         k3BtpUNmbCY3WlspbWpTYua+FuNOdcxh2RWHFOkgIFJyUD0/cR3cSbVrhgQXr7Ny9IwM
-         8Emg==
-X-Gm-Message-State: AOAM533AZc7glOF7uMXbN/PSh0Z6SNJpKK0Jq8dbVM6dm9ISPv9ZwZWV
-        bE0JrfmxFprbEkhfjkJrEtvG6ZAOilLnzRs+9YY=
-X-Google-Smtp-Source: ABdhPJy/wApaXKX9jrNfIf67ronwPYtl+kP65NpKmwSC9zUC28XMVPj39AHMj3ILh9Rgbs3/J9xTpH+ud8o20z8NewU=
-X-Received: by 2002:a63:4002:: with SMTP id n2mr2582063pga.4.1607529744948;
- Wed, 09 Dec 2020 08:02:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m7X9rUZ65w07hA71iqsnhuPeCNSTLCg8P+q1cHZKW2Q=;
+        b=iwuzLAmc5uxWPtgMpI3tbYRW4yRYp/pRu7H2Lnh5SW8yTyDOIlJUPKtPFJh5DKQFZJ
+         wYJlGxwHFgcrbCEZaKjabUzqrXEDlvxAaaSlWN4g0BlBZoWvuHDDC6uMbd/UZXFQR5XS
+         croNvwaHDizy2zS7S0rAS8ytfAnk4Qd6W9/Q0fGVQsOXw75l6Tx4uUpqEtiTY8n7KeRE
+         DGDk6LdiTlEY06nubtUA70szqUNaw3c5RCEqf0iKzP1SOROJl6xhYzkPDRxqPAUY9DTx
+         ENRjKBUhvH5bHRaC1co2ZBCa42xP5k1g0rC66NBrSdPvwMOuBklz63c8zBW4/Q1SgZZn
+         Chtg==
+X-Gm-Message-State: AOAM533EyqNOLJCErvYKTRwoNNPPHc+DQKUcunMGI/wlgOm1OoCQBf4u
+        +YIFz9t7Wmyo+IuEC7jOu/bCFkZ4jCfs7NfL
+X-Google-Smtp-Source: ABdhPJziA0wKD8Vjt2vPji0tvCLEOO+FEzlwqgJ/b0dkGrm7AHVzeC8WwM8PV1Cv2xqYahz/o2PFJA==
+X-Received: by 2002:ac2:4576:: with SMTP id k22mr1256188lfm.110.1607530823854;
+        Wed, 09 Dec 2020 08:20:23 -0800 (PST)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id c6sm216301lfi.301.2020.12.09.08.20.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Dec 2020 08:20:23 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH] gpio: sysfs: Try numbered exports if symbolic names fail
+Date:   Wed,  9 Dec 2020 17:18:21 +0100
+Message-Id: <20201209161821.92931-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20201209095248.22408-1-brgl@bgdev.pl> <CACRpkdZgK3dmjM32BYAWFvHOhBUsQbNbCSNMaebvRr+Jnes=Ww@mail.gmail.com>
- <CAMRc=Mdq7LBTAbUguuLH=f5_vfo5pc95BCveqSvApBTC26aNQQ@mail.gmail.com>
- <CACRpkdYM2knogZLRp+AAdE5ssvhULDZ6xr8yGrO8rvSMrZuScw@mail.gmail.com>
- <CAHp75VefreUB1KvdPGYUqmd7jq+hEWuPoq7nRG4RxLP6YpPRLA@mail.gmail.com>
- <CAHp75Vebqe2ndfAx5b_awLnjM7UCh2bmcdJBEakVZL3hSQhRQA@mail.gmail.com> <CACRpkdYbANG6GCYPrUus0k_wnEzF-6rkE1GMRLc3-nvqja=73w@mail.gmail.com>
-In-Reply-To: <CACRpkdYbANG6GCYPrUus0k_wnEzF-6rkE1GMRLc3-nvqja=73w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 9 Dec 2020 18:03:13 +0200
-Message-ID: <CAHp75VeGoFurUzUvKLLDhF7Mb9T2H9oqV_fVgTcAEvknBjBH3g@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.11-rc1
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 4:39 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Dec 9, 2020 at 11:39 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->
-> > Manually I did the following:
-> > - removed the conflicting hunk entirely
-> > - added 'break;' to the existing function in 'case
-> > ACPI_IO_RESTRICT_OUTPUT:' case
->
-> OK I did the same and merged in Bartosz branch exactly like that,
-> let's hope it works!
+If a GPIO line cannot be exported using a symbolic name from
+the .names array in the gpiochip, fall back to using the
+"gpioN" naming system instead of just failing.
 
-I just have checked your devel branch and it looks okay to me, thanks!
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
+Suggested-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib-sysfs.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 728f6c687182..a5a0e9238217 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -627,10 +627,24 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	if (chip->names && chip->names[offset])
+ 		ioname = chip->names[offset];
+ 
+-	dev = device_create_with_groups(&gpio_class, &gdev->dev,
+-					MKDEV(0, 0), data, gpio_groups,
+-					ioname ? ioname : "gpio%u",
+-					desc_to_gpio(desc));
++	/*
++	 * If we have a symbolic name for the GPIO we try to use that
++	 * for the exported sysfs device/file, as legacy scripts depend
++	 * on it. If we don't have a symbolic name or if there is a
++	 * namespace collision, we stick with the "gpioN" name.
++	 */
++	dev = NULL;
++	if (ioname)
++		dev = device_create_with_groups(&gpio_class, &gdev->dev,
++						MKDEV(0, 0), data, gpio_groups,
++						ioname,
++						desc_to_gpio(desc));
++	if (IS_ERR_OR_NULL(dev))
++		dev = device_create_with_groups(&gpio_class, &gdev->dev,
++						MKDEV(0, 0), data, gpio_groups,
++						"gpio%u",
++						desc_to_gpio(desc));
++
+ 	if (IS_ERR(dev)) {
+ 		status = PTR_ERR(dev);
+ 		goto err_free_data;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
