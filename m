@@ -2,119 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C290A2D4462
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 15:32:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C8A42D4484
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 15:40:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbgLIO3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 09:29:53 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:13758 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730096AbgLIO3u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 09:29:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1607524191; x=1639060191;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mS54WkIx0/Otie3EKGgQJvF/hN9NwPNndxKOsMXjpRI=;
-  b=SuVGH+rwXjwvZRMedz1UR1FkSlOuji68KPu9zD/GPdL1DrwX2KSJ18+3
-   4waun2Id5luQ6x7pWdsloYy7duwZVLqyMo14w/esf3SLHg3VyPKI/N0n+
-   /XUx+Xmqmdr+UuLWwNrEppmmQYfPGkBwvIqphL9H9iSOD3y205S09og/j
-   h7uX5LuncNBWjEf7Fih0iEtHgIlfYHHGjUSi4IWLTdsNH78FvkmcfJTpc
-   eDFle8meoh83EvTSeLEkiTia/t0Ab97nIQlU8bmEWp8baBHUubsc/OtTA
-   Wbtyt0vgnoscr/8Gw5X5zDEHrpNUgxHrNC46+zooCZ8bim51V8MDLQrfa
-   g==;
-IronPort-SDR: POpRHDGbTGiQBzzOtUaSd/N4rYawl+pre6aYmBSoYhsA/vYp5d4/1Qnm5wuxp4rFIJzgLl+BM/
- xCttMzV+G0nh0wu1xobUF5Tvb0MmalWN8Ockm4BEoZeDNUSDJdZy9tYj0IEDbPmigxSDAsUQGb
- IJsLPG6oEsqzCNiRQL6frfae3fBJLOEkV/JwNkDJIG+pKfeYRrdN/bAZUerysJnBLAzle+evFR
- eBkIDroYOJgRDewuoHxKVw/QGW7Q/FfBmOT99KlnyMdfx2BwRsCARZqAbbDfu0o7X9piRQeQC6
- K/Q=
-X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
-   d="scan'208";a="101529705"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Dec 2020 07:28:35 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 9 Dec 2020 07:28:34 -0700
-Received: from soft-dev10.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 9 Dec 2020 07:28:32 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH -next 3/3] arm64: dts: sparx5: Add SGPIO irq support
-Date:   Wed, 9 Dec 2020 15:27:53 +0100
-Message-ID: <20201209142753.683208-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201209142753.683208-1-lars.povlsen@microchip.com>
-References: <20201209142753.683208-1-lars.povlsen@microchip.com>
+        id S1732608AbgLIOkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 09:40:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732444AbgLIOkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 09:40:08 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25ADBC0613D6
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 06:39:28 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id x23so2613786lji.7
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 06:39:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R0601a1e5i5xQevieU2LxvDwqpa0dOWVpQhaCRkw0Vo=;
+        b=IFXRcCxd4CuhNpRr72muJpAWBVSjOebg8dPIkZ7SIzJp7QLqOKa7uBk5TxBQ1+opSD
+         1W3EXTDUdesLmOkv35ZEKBVz79MLKnDaLtRw4wivuveU3qRlaG/MXJlvS7q83EPq1tEL
+         MPVLIt/yZzbqaAgpOFwXhypjwc3/EZTfCLN5lwXoujJfnPv/YhGPftJ0aFT0AWZhekqY
+         ZN9IiW353/KazBqZAmD+uUK8tq/ZufVcWX6iUzceNNoSeB3i5rXsZ9zsOqfTOImbhoKh
+         zALegOOHG+2GAh3bM4c2c5J+Ih7LEYoXFBLvAUMFIU8ByDBd9LkZMNbayA14ywCk2zWc
+         Conw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R0601a1e5i5xQevieU2LxvDwqpa0dOWVpQhaCRkw0Vo=;
+        b=hJTJhqoWCV9qwwj3xQEmJzXJvVZQyQbOe5XYZYKiG25+b1aRXMSTgZl5yy09Y77LQ4
+         Nz8Ub56mEXEAW/wqJIEI9aYw9vld5PpFpG/eg+x1Owjh20o/rhSf7zRHu3Mohpp9IbZh
+         MgM4HOFELrmKNrhLn4paWq7SrH86UpitUBiG/qHKO4lCFi3wpBzYhCTBiS/GZUKhtMR+
+         Nqxths8UCV5wKl3wCbS1jgmUN4Nb4pFmDtGnfSPC866hEL40vIOjyUXCHURTF8mib9o3
+         Vpw+57qivxjDD/k2GZK5HD7/QJsQolPtbYG9SuxPGcUPv6gmUnhgZJkWZruEmMHMp22j
+         MNSA==
+X-Gm-Message-State: AOAM5330FhZOZ6TiXhetXb+AO3iwfVrsfg+rgjUgE3+CiAA7P6EDg0H0
+        7ndbTS7xVdkXvmczu6xQrLetWYC2kx5AOfFKepucQA==
+X-Google-Smtp-Source: ABdhPJyTI7HysoChY+T7gr1dArxZrgIiylfceG+FBFsZEG3FCOT7vVTd8pkZwlDDgswP9Yi7rk41vkFPAYDy6rGL50s=
+X-Received: by 2002:a2e:3503:: with SMTP id z3mr300158ljz.74.1607524765766;
+ Wed, 09 Dec 2020 06:39:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20201209095248.22408-1-brgl@bgdev.pl> <CACRpkdZgK3dmjM32BYAWFvHOhBUsQbNbCSNMaebvRr+Jnes=Ww@mail.gmail.com>
+ <CAMRc=Mdq7LBTAbUguuLH=f5_vfo5pc95BCveqSvApBTC26aNQQ@mail.gmail.com>
+ <CACRpkdYM2knogZLRp+AAdE5ssvhULDZ6xr8yGrO8rvSMrZuScw@mail.gmail.com>
+ <CAHp75VefreUB1KvdPGYUqmd7jq+hEWuPoq7nRG4RxLP6YpPRLA@mail.gmail.com> <CAHp75Vebqe2ndfAx5b_awLnjM7UCh2bmcdJBEakVZL3hSQhRQA@mail.gmail.com>
+In-Reply-To: <CAHp75Vebqe2ndfAx5b_awLnjM7UCh2bmcdJBEakVZL3hSQhRQA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Dec 2020 15:39:14 +0100
+Message-ID: <CACRpkdYbANG6GCYPrUus0k_wnEzF-6rkE1GMRLc3-nvqja=73w@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: updates for v5.11-rc1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This enables irq support for the SGPIO input banks, allowing SGPIO
-control signals to generate interrupts based on the signal state.
+On Wed, Dec 9, 2020 at 11:39 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-This f.ex. allows the SFP driver to avoid polling of module detect, tx
-fault, loss of signal etc. control signals that may be connected via
-the SGPIO controller.
+> Manually I did the following:
+> - removed the conflicting hunk entirely
+> - added 'break;' to the existing function in 'case
+> ACPI_IO_RESTRICT_OUTPUT:' case
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+OK I did the same and merged in Bartosz branch exactly like that,
+let's hope it works!
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 3bb4755e9f87..044063a9beae 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -277,13 +277,16 @@ sgpio0: gpio@61101036c {
- 			clocks = <&sys_clk>;
- 			pinctrl-0 = <&sgpio0_pins>;
- 			pinctrl-names = "default";
--			reg = <0x6 0x1101036c 0x100>;
-+			reg = <0x6 0x1101036c 0x118>;
- 			sgpio_in0: gpio@0 {
- 				compatible = "microchip,sparx5-sgpio-bank";
- 				reg = <0>;
- 				gpio-controller;
- 				#gpio-cells = <3>;
- 				ngpios = <96>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
- 			};
- 			sgpio_out0: gpio@1 {
- 				compatible = "microchip,sparx5-sgpio-bank";
-@@ -309,6 +312,9 @@ sgpio_in1: gpio@0 {
- 				gpio-controller;
- 				#gpio-cells = <3>;
- 				ngpios = <96>;
-+				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
- 			};
- 			sgpio_out1: gpio@1 {
- 				compatible = "microchip,sparx5-sgpio-bank";
-@@ -334,6 +340,9 @@ sgpio_in2: gpio@0 {
- 				gpio-controller;
- 				#gpio-cells = <3>;
- 				ngpios = <96>;
-+				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
- 			};
- 			sgpio_out2: gpio@1 {
- 				compatible = "microchip,sparx5-sgpio-bank";
--- 
-2.25.1
-
+Yours,
+Linus Walleij
