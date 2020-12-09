@@ -2,76 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4B182D40F9
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 12:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B882D411E
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 12:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgLILVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 06:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbgLILUH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 9 Dec 2020 06:20:07 -0500
-X-Gm-Message-State: AOAM532+D1hj72eNWbigRJ36XrBNtiQmRz5DI82g8Yf9iTfbpsBahqes
-        ErwYIaeDpOESo7af9GUCqOGwN8m9PPUD1sC8EYc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607512766;
-        bh=U8CiCE+927eWk1WjnrHEeDDVKhi+XWJxlcOhS4QhpHE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CZbfYp5eMW4vCNbBV9SJiILwyOwti8/kZsAVsYvK2NDemL3iD6lIVzx6OIJEzAsWN
-         K7x05Wm2fieBTM1ho1osVEiUn4PDp5UA/CU+Z08ZXp4Zz0dKo11UaIjzG6QhQ0V8kk
-         PtKS7Mx+K8wZf/TTtpqjFwiyKbSmLsa5ATNjqokNb/UtL8Te498LaiXp/3Sv+J7B0+
-         fEyxHwC6s2/HAlh66Tv3eglhNIQdcjWYfLF610MdIfaY8OjsdW/JTUqSY3wvAtnGAl
-         7QogIuRU22jLlxkLW6zhhTRccEomhcXrCKo8BJhDFfjA3QRJ48x00BzLy2atC0/7rv
-         gm5xle3EZOSYA==
-X-Google-Smtp-Source: ABdhPJy+RZN5YZE70pJEXGADA4yibSdAI8aJxjowtgSH9QR1iHKhytI8wUUYsRy7Qa7sG+nxaBUGbjy4r0F/blrkE+c=
-X-Received: by 2002:a9d:6317:: with SMTP id q23mr1277831otk.251.1607512765731;
- Wed, 09 Dec 2020 03:19:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20201203191135.21576-1-info@metux.net> <20201203191135.21576-2-info@metux.net>
- <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net> <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
- <51d3efb7-b7eb-83d7-673a-308dd51616d3@metux.net> <CACRpkdbqVoT56H88hoZwDqV0kW_8XTaE5TkMQsg-RRrPqgF=cQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbqVoT56H88hoZwDqV0kW_8XTaE5TkMQsg-RRrPqgF=cQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 9 Dec 2020 12:19:09 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1PRQGUXkjdSmqxXSONX_ZoCgsfx8hJBUdBUk14tyzErA@mail.gmail.com>
-Message-ID: <CAK8P3a1PRQGUXkjdSmqxXSONX_ZoCgsfx8hJBUdBUk14tyzErA@mail.gmail.com>
-Subject: Re: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
- drivers: gpio: add virtio-gpio guest driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
+        id S1729130AbgLILak convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 9 Dec 2020 06:30:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730763AbgLILaf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 06:30:35 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E75C0613D6
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 03:29:55 -0800 (PST)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kmxfG-0004Pq-QY; Wed, 09 Dec 2020 12:29:46 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kmxfF-0001N1-Jx; Wed, 09 Dec 2020 12:29:45 +0100
+Message-ID: <a168ae4fdf17e2f9e422354f5dadc62bcad3e4d8.camel@pengutronix.de>
+Subject: Re: [PATCH v5 12/21] riscv: Add Canaan Kendryte K210 reset
+ controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc:     "seanga2@gmail.com" <seanga2@gmail.com>
+Date:   Wed, 09 Dec 2020 12:29:45 +0100
+In-Reply-To: <57d4ae6e06551a56e41a4d50078ef51cbad67083.camel@wdc.com>
+References: <20201208073355.40828-1-damien.lemoal@wdc.com>
+         <20201208073355.40828-13-damien.lemoal@wdc.com>
+         <4d0a0c80e57b156b7d86dfca250285048ab30825.camel@pengutronix.de>
+         <57d4ae6e06551a56e41a4d50078ef51cbad67083.camel@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 9:51 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Dec 8, 2020 at 3:07 PM Enrico Weigelt, metux IT consult <lkml@metux.net> wrote:
+Hi Damien,
 
-> What we need to understand is if your new usecase is an outlier
-> so it is simplest modeled by a "mock" irq_chip or we have to design
-> something new altogether like notifications on changes. I suspect
-> irq_chip would be best because all drivers using GPIOs for interrupts
-> are expecting interrupts, and it would be an enormous task to
-> change them all and really annoying to create a new mechanism
-> on the side.
+On Wed, 2020-12-09 at 05:26 +0000, Damien Le Moal wrote:
+[...]
+> I added COMPILE_TEST. I also removed the RISCV dependency since SOC_CANAAN
+> already depend on it (due to the SOC_EARLY_INIT_DECLARE() use in the sysctl
+> driver). Stricktly speaking, I think we could also remove the SOC_CANAAN
+> dependency for the reset driver, but I do not really see the point since it is
+> cannot be used for any other SoC.
 
-I would expect the platform abstraction to actually be close enough
-to a chained irqchip that it actually works: the notification should
-come in via vring_interrupt(), which is a normal interrupt handler
-that calls vq->vq.callback(), calling generic_handle_irq() (and
-possibly chained_irq_enter()/chained_irq_exit() around it) like the
-other gpio drivers do should just work here I think, and if it did
-not, then I would expect this to be just a bug in the driver rather
-than something missing in the gpio framework.
+Thank you, this is fine. Depending on SOC_CANAAN is nice for users of
+other SoCs, as they aren't shown this option to enable a kernel driver
+that we know they don't need.
 
-       Arnd
+regards
+Philipp
