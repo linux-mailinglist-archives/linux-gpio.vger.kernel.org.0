@@ -2,55 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6A142D5D70
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 15:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B14F22D5F82
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 16:22:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbgLJOWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 09:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59538 "EHLO
+        id S1733200AbgLJPVw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 10:21:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbgLJOWy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 09:22:54 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64352C0613CF;
-        Thu, 10 Dec 2020 06:22:14 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id s21so4192510pfu.13;
-        Thu, 10 Dec 2020 06:22:14 -0800 (PST)
+        with ESMTP id S2391562AbgLJPVq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 10:21:46 -0500
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677C9C0613D6
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:21:05 -0800 (PST)
+Received: by mail-qk1-x743.google.com with SMTP id h4so172533qkk.4
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:21:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7gvh3enTyM7r16asGFsXp25EQVi9nM03JLF3FLpI4e8=;
-        b=g8KiW139pOV2susxo8HdW/YCjk7r0bCJ4v1VqLcaQGdS+kugolJyuTrKNLYE02M5Oy
-         hwO0pFh3VRMHS9xsoL4zKAssx6DcQGdsUPQWjDb8Ms2QdI/RaFjWvBMAs3LlajEYLm7B
-         E/A2Nm7BKrKcghKE4sxxyC17d2pz3yJPxpj7vgNOtGlyOeLGfWzS+Yh+MQnFrYW4XKPv
-         Et7xQ/S87ZeU5xl/3i8CHeYDwkhdvTgBFJG+CL1zBOYmJ35bV5D/W9PFODHWO9hTZGHF
-         +ffG/RBD1oTr9lZrJf6/aM81EXYASfnDpjNY7jdq5a4j15se5zsQCeoNQNwtCZaeEsNH
-         DC2w==
+        bh=lzQQMikD25mHaOvU70fXFtFueunUhFhKwR7BFI8Wd2E=;
+        b=qv6OHjvyatbf9wKTVaFQva3h+iUSafbS8ijuZeLyhKbykf4t6BnP+haSBQApyYmukP
+         H+6pdEm9J76xjjxiqX2zzaNFJeKxUke42FfgngvNFw8n3PKxtI1fMdpC5/hg6m4SuP03
+         DbtLskqJ+Y62beHrt6KZB0tysLwvUe+SQ+0TI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7gvh3enTyM7r16asGFsXp25EQVi9nM03JLF3FLpI4e8=;
-        b=RxNOZ8c2DaW7OAjXAX4uI0VkrK2w73os6XVXydFmlRywHnvJLlXEGAKL7e8unjb/g5
-         1dE6LEZsIyjiQM44dxi6imrY0RyKRXnM5OA++HnrI0Z9IRCYahE6NTEBI45yB+xu85Vb
-         3qrCcDJ3DLwtSZW8QRF6YlfoVeYluMoIOs95oonsQ9GV+zRyA04+fA78NjCkGWXvIZ8n
-         DeLlXDulxdHNGwf8l3R7v9xIv4zkMEZrZ7gy6ijhaXK/nMrW//IgtR6o3Rjv91uL2lWm
-         7Wo5qnbc/h5bYVoaMO9KlaxNieApy9mrFE1SXzOO8NKQQgPKfr4diQUR2447fCAPcLBi
-         gOQg==
-X-Gm-Message-State: AOAM533/AF1mlq4+McGx7acs5oB96QqnR5CHy67AwLd3W0Iqj0AzXF3h
-        IJOY8udV9/MmewAvBoxRP03yjADHdCPgsSxCToA=
-X-Google-Smtp-Source: ABdhPJxVp8EjIZlO70I74O7fyXpVy6WLFzWzXDg3HsS2ENh9tXjZCbb5x1gDs1oxITNXtrQMaWhjZVC5PijATGv5ts4=
-X-Received: by 2002:a63:4002:: with SMTP id n2mr6926113pga.4.1607610133882;
- Thu, 10 Dec 2020 06:22:13 -0800 (PST)
+        bh=lzQQMikD25mHaOvU70fXFtFueunUhFhKwR7BFI8Wd2E=;
+        b=Z6GRaZqCPCe75t7OR2O8z23UoxzSMYUXMsTC1PjXld7pdocUm4O3PC+dadKqdOliuT
+         0UoW+SbvWVgUOOP+PlCM6UIKFQvseTbKGrnyic+0Qh0fak2QBdu4Qqr1z1j5wc5v/Tfm
+         PG/4tDLhZL4DzMWg8l1vHmMzu4qB4+6lOa7gRtxymIPdIhVjO9FXJeufuosfiBQ6wQqH
+         6XdF6GwbM8n2XJaN/Ds0cP4Or6P9RMJf6ORWp/dN5NndHblqLsZ71iKwQYUgrX1BdJKd
+         rCpfNvodud/NkBLOuRS3rsxVqoRv+lNwq5CyIfiFz1zJfY65TKOteVhFb1Zz38ba+vJB
+         PLIg==
+X-Gm-Message-State: AOAM533aDtFc91FQlNO8k/0isRHkdv8z/uUbu15LOboFEVBW2uHC0y3k
+        UCmgS8W7rwlVxxtiSP/vbITYfL+l2sKDZp/TaHg8TA==
+X-Google-Smtp-Source: ABdhPJxPU/4SCy7/rE3UgsP7U/aCV3swWmca2vtLjkgy3KaDHEnkpgdsyXm48xf4KUJ4++imK7n8+UBiYOo9V42wb9w=
+X-Received: by 2002:ae9:e219:: with SMTP id c25mr1251874qkc.443.1607613664449;
+ Thu, 10 Dec 2020 07:21:04 -0800 (PST)
 MIME-Version: 1.0
 References: <20201129110803.2461700-1-daniel@0x0f.com> <20201129110803.2461700-4-daniel@0x0f.com>
-In-Reply-To: <20201129110803.2461700-4-daniel@0x0f.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Dec 2020 16:23:02 +0200
-Message-ID: <CAHp75Vdy9rBgJhyYXjUKapYdeMfsNhbX9Zi3Jtxb4H8H279V-A@mail.gmail.com>
+ <CAHp75Vdy9rBgJhyYXjUKapYdeMfsNhbX9Zi3Jtxb4H8H279V-A@mail.gmail.com>
+In-Reply-To: <CAHp75Vdy9rBgJhyYXjUKapYdeMfsNhbX9Zi3Jtxb4H8H279V-A@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Fri, 11 Dec 2020 00:21:44 +0900
+Message-ID: <CAFr9PX=GTHQvwkCMU6ocK+5=QoEGXK6UAFH4ZUF4zq19ds06wQ@mail.gmail.com>
 Subject: Re: [PATCH v4 3/5] gpio: msc313: MStar MSC313 GPIO driver
-To:     Daniel Palmer <daniel@0x0f.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     SoC Team <soc@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
@@ -63,122 +61,110 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 29, 2020 at 1:10 PM Daniel Palmer <daniel@0x0f.com> wrote:
+Hi Andy,
+
+On Thu, 10 Dec 2020 at 23:22, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > +#include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
 >
-> This adds a driver that supports the GPIO block found in
-> MStar/SigmaStar ARMv7 SoCs.
+> Perhaps ordered?
+
+Ok. I did try to find some rules on includes, mainly what should be
+included even though it's included in another include, but couldn't
+find anything really.
+If you have a link that would be helpful. So I could track what
+includes I actually needed I went for order they are used in the code.
+
+> > +       if (offset >= OFF_SPI0_CZ && offset <= OFF_SPI0_DO) {
 >
-> The controller seems to have enough register for 128 lines
-> but where they are wired up differs between chips and
-> no currently known chip uses anywhere near 128 lines so there
-> needs to be some per-chip data to collect together what lines
-> actually have physical pins attached and map the right names to them.
+> Why not traditional pattern, i.e.
 >
-> The core peripherals seem to use the same lines on the
-> currently known chips but the lines used for the sensor
-> interface, lcd controller etc pins seem to be totally
-> different between the infinity and mercury chips
+> if (...)
+>   return -EINVAL;
+> ...
+
+You mean check if the offset is not in the interrupt capable range,
+returning -EINVAL if so, and then having the interrupt mapping code?
+
+> > +       ret = devm_gpiochip_add_data(dev, gpiochip, gpio);
+> > +       return ret;
 >
-> The code tries to collect all of the re-usable names,
-> offsets etc together so that it's easy to build the extra
-> per-chip data for other chips in the future.
+> Purpose?
+
+Sorry I think that is probably an artefact of splitting the driver
+apart to extract just the msc313 support.
+The current version of this driver supports more chips but those
+aren't completely reverse engineered yet so I've been constantly
+switching back and forth.
+
+> return devm_...(...);
 >
-> So far this only supports the MSC313 and MSC313E chips.
+> ...
 >
-> Support for the SSC8336N (mercury5) is trivial to add once
-> all of the lines have been mapped out.
+> > +static int msc313_gpio_remove(struct platform_device *pdev)
+> > +{
+> > +       return 0;
+> > +}
+>
+> Purpose?
+>
 
-...
+None that I can think of. I think I was under the impression that a
+remove callback was needed even if it did nothing.
 
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
+>
+> > +static const struct of_device_id msc313_gpio_of_match[] = {
+>
+> > +#ifdef CONFIG_MACH_INFINITY
+>
+> What's the point? Are you expecting two drivers for the same IP?
 
-Perhaps ordered?
+This will make more sense when the support for CONFIG_MACH_MERCURY is added.
+infinity and mercury are very very close but have slightly different
+pinouts, slightly different tables for clks, pin mux etc.
+These chips only have 64MB of DRAM and it's embedded into the chip so
+you probably don't want to include all the baggage for the whole
+family in your kernel if you possibly can. Also the kernel only has a
+few megabytes to fit into on the SPI NOR it's loaded from. Something
+similar is going on for the ingenic pinctrl and I thought maybe
+wrapping of_device_ids in #ifdefs was a no no and asked [0].
+Arguably this is "peeing into the ocean" for a driver like this
+because the difference is going to be tiny but I think I'm probably
+tens of kilobytes away from my kernel not fitting anymore :).
 
-...
+> > +       {
+> > +               .compatible = "mstar,msc313-gpio",
+> > +               .data = &msc313_data,
+> > +       },
+> > +#endif
+> > +       { }
+> > +};
+>
+> ...
+>
+> > +static struct platform_driver msc313_gpio_driver = {
+> > +       .driver = {
+> > +               .name = DRIVER_NAME,
+> > +               .of_match_table = msc313_gpio_of_match,
+> > +               .pm = &msc313_gpio_ops,
+> > +       },
+> > +       .probe = msc313_gpio_probe,
+> > +       .remove = msc313_gpio_remove,
+> > +};
 
-> +       /*
-> +        * only the spi0 pins have interrupts on the parent
-> +        * on all of the known chips and so far they are all
-> +        * mapped to the same place
-> +        */
+For the fixes to the above should I send another series just to fix
+these up or can it wait a little while?
+I'm pretty close to having all of the registers mapped out for another
+chip that'll go into this driver so I could send these small changes
+as part of that series.
 
-You have a different comment style here (no capital letter, no period).
+Thanks,
 
-> +       if (offset >= OFF_SPI0_CZ && offset <= OFF_SPI0_DO) {
+Daniel
 
-Why not traditional pattern, i.e.
-
-if (...)
-  return -EINVAL;
-...
-
-?
-
-> +               *parent_type = child_type;
-> +               *parent = ((offset - OFF_SPI0_CZ) >> 2) + 28;
-> +               return 0;
-> +       }
-> +
-> +       return -EINVAL;
-
-...
-
-> +       ret = devm_gpiochip_add_data(dev, gpiochip, gpio);
-> +       return ret;
-
-Purpose?
-
-return devm_...(...);
-
-...
-
-> +static int msc313_gpio_remove(struct platform_device *pdev)
-> +{
-> +       return 0;
-> +}
-
-Purpose?
-
-...
-
-> +static const struct of_device_id msc313_gpio_of_match[] = {
-
-> +#ifdef CONFIG_MACH_INFINITY
-
-What's the point? Are you expecting two drivers for the same IP?
-
-> +       {
-> +               .compatible = "mstar,msc313-gpio",
-> +               .data = &msc313_data,
-> +       },
-> +#endif
-> +       { }
-> +};
-
-...
-
-> +static struct platform_driver msc313_gpio_driver = {
-> +       .driver = {
-> +               .name = DRIVER_NAME,
-> +               .of_match_table = msc313_gpio_of_match,
-> +               .pm = &msc313_gpio_ops,
-> +       },
-> +       .probe = msc313_gpio_probe,
-> +       .remove = msc313_gpio_remove,
-> +};
-
-> +
-
-Redundant blank line.
-
-> +builtin_platform_driver(msc313_gpio_driver);
-
--- 
-With Best Regards,
-Andy Shevchenko
+0 - https://lore.kernel.org/linux-arm-kernel/CAFr9PX=EgQSXeATLn++DSHkkQar35rpLGh978J5Lnw9jS8XMrw@mail.gmail.com/
