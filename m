@@ -2,79 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D0BE2D545F
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 08:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 355F92D5583
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 09:34:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgLJHOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 02:14:52 -0500
-Received: from forward106p.mail.yandex.net ([77.88.28.109]:60851 "EHLO
-        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgLJHOp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Dec 2020 02:14:45 -0500
-X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Dec 2020 02:14:38 EST
-Received: from myt6-9be80d028464.qloud-c.yandex.net (myt6-9be80d028464.qloud-c.yandex.net [IPv6:2a02:6b8:c12:5219:0:640:9be8:d02])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id 8DC261C83CF3;
-        Thu, 10 Dec 2020 10:06:19 +0300 (MSK)
-Received: from iva8-b81aeb0c8234.qloud-c.yandex.net (iva8-b81aeb0c8234.qloud-c.yandex.net [2a02:6b8:c0c:da9:0:640:b81a:eb0c])
-        by myt6-9be80d028464.qloud-c.yandex.net (mxback/Yandex) with ESMTP id VgOqERvMqT-6JDCaftZ;
-        Thu, 10 Dec 2020 10:06:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1607583979;
-        bh=AI5SeoejacCczgdU2/tvz99VlW6LkUVH+Sr2RwGLWJU=;
-        h=Date:Subject:To:From:Message-Id:Cc;
-        b=g/bl7xl5/6VCSn2OV5r88PPvdnECzRtjR4ByUoBQBlB4EM140e0PiB4Y8eZ3nCTl1
-         HLlcWBs2bmSANoCvuD/F/CSTf9r05OeCYkCWw9QuGVPaSOtNivjZub0cQIF8s0hOgQ
-         LoIVv8dONfI4EgW/HCU27qUR4BvH1m6nHUR1fTFc=
-Authentication-Results: myt6-9be80d028464.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by iva8-b81aeb0c8234.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id WTdnBhyMCe-6InWjpBE;
-        Thu, 10 Dec 2020 10:06:18 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S2387534AbgLJIeH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 03:34:07 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33711 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbgLJIeH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 03:34:07 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l11so7045236lfg.0;
+        Thu, 10 Dec 2020 00:33:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jAON2kq3zokNG8Def9vd/T7luvfb8gVQ6Uv3JRflpcw=;
+        b=kxfTgsmWNDtivt33CEl+cYbZ2ZBp1+zfFwuimpe3S73nOS0Rswa+Zl7Y98GVAFWdIK
+         Tfhj06QFq5wm6BVRFQ/O/8edhcVO7Cb9lUwiR34gAZDLij78+k10Bw4UQGCjhiIldk4V
+         Ftwa22sQ5ygUYQkKVqjBGn3PqbxAvDkmVyEPJK9mRu69ZxQTiXYXpyT4q2W6g3eqfnEV
+         9r9dHcovTTLHlifbPf5b9LMRWTUAbeRWnfkuALEufAmYbC3lWfEohJDDxsKiXYFsZlxf
+         9GISeJ8RXbEbiFMLfWIJeYpSHoveNtt/xxlxrbm5kaZoeJEwlpck5mtY+BijxzCWglh/
+         3keA==
+X-Gm-Message-State: AOAM530ApqSFIfBjqwtj6mYmfPPQZiFKacwIOlze80HLtM31t+ugCFMc
+        T3tdUe4nsR56NXiCE97kYXE=
+X-Google-Smtp-Source: ABdhPJwgYeAzn97Wh/VFIJ+wzZO9vzzpT0a9nbhd5x08Oee4wHa/jYaWst+KWsWEKTNDBBURoQp7Eg==
+X-Received: by 2002:a19:5512:: with SMTP id n18mr215152lfe.270.1607589205114;
+        Thu, 10 Dec 2020 00:33:25 -0800 (PST)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id y25sm436475lfl.108.2020.12.10.00.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 00:33:24 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1knHOm-0007y8-WB; Thu, 10 Dec 2020 09:34:05 +0100
+Date:   Thu, 10 Dec 2020 09:34:04 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: irq hooks: fix recursion in gpiochip_irq_unmask
-Date:   Thu, 10 Dec 2020 10:05:14 +0300
-Message-Id: <20201210070514.13238-1-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.26.2
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sysfs: Try numbered exports if symbolic names fail
+Message-ID: <X9HdfKxuUD3CZGNP@localhost>
+References: <20201209161821.92931-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201209161821.92931-1-linus.walleij@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-irqchip shared with multiple gpiochips, leads to recursive call of
-gpiochip_irq_mask/gpiochip_irq_unmask which was assigned to
-rqchip->irq_mask/irqchip->irq_unmask, these happens becouse of
-only irqchip->irq_enable == gpiochip_irq_enable is checked.
+On Wed, Dec 09, 2020 at 05:18:21PM +0100, Linus Walleij wrote:
+> If a GPIO line cannot be exported using a symbolic name from
+> the .names array in the gpiochip, fall back to using the
+> "gpioN" naming system instead of just failing.
+> 
+> Cc: Manivannan Sadhasivam <mani@kernel.org>
+> Cc: Johan Hovold <johan@kernel.org>
+> Suggested-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-sysfs.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+> index 728f6c687182..a5a0e9238217 100644
+> --- a/drivers/gpio/gpiolib-sysfs.c
+> +++ b/drivers/gpio/gpiolib-sysfs.c
+> @@ -627,10 +627,24 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+>  	if (chip->names && chip->names[offset])
+>  		ioname = chip->names[offset];
+>  
+> -	dev = device_create_with_groups(&gpio_class, &gdev->dev,
+> -					MKDEV(0, 0), data, gpio_groups,
+> -					ioname ? ioname : "gpio%u",
+> -					desc_to_gpio(desc));
+> +	/*
+> +	 * If we have a symbolic name for the GPIO we try to use that
+> +	 * for the exported sysfs device/file, as legacy scripts depend
+> +	 * on it. If we don't have a symbolic name or if there is a
+> +	 * namespace collision, we stick with the "gpioN" name.
+> +	 */
+> +	dev = NULL;
+> +	if (ioname)
+> +		dev = device_create_with_groups(&gpio_class, &gdev->dev,
+> +						MKDEV(0, 0), data, gpio_groups,
+> +						ioname,
+> +						desc_to_gpio(desc));
+> +	if (IS_ERR_OR_NULL(dev))
+> +		dev = device_create_with_groups(&gpio_class, &gdev->dev,
+> +						MKDEV(0, 0), data, gpio_groups,
+> +						"gpio%u",
+> +						desc_to_gpio(desc));
 
-Let's add an additional check to make sure shared irqchip is detected
-even if irqchip->irq_enable wasn't defined.
+I suggested having the driver set a flag which determines whether to use
+the line names in sysfs or not.
 
-Fixes: a8173820f441 ("gpio: gpiolib: Allow GPIO IRQs to lazy disable")
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- drivers/gpio/gpiolib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The above will trigger a bunch of nasty warnings and backtraces in the
+sysfs code (for every gpio line!), which is not something we want for
+normal operation. Having the sysfs interface for the same USB device
+depend on probe order is not very nice either.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 589eceecf374..5ce0c14c637b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1419,7 +1419,8 @@ static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
- 	if (WARN_ON(gc->irq.irq_enable))
- 		return;
- 	/* Check if the irqchip already has this hook... */
--	if (irqchip->irq_enable == gpiochip_irq_enable) {
-+	if (irqchip->irq_enable == gpiochip_irq_enable ||
-+		irqchip->irq_mask == gpiochip_irq_mask) {
- 		/*
- 		 * ...and if so, give a gentle warning that this is bad
- 		 * practice.
--- 
-2.26.2
+Since the USB GPIO controller do not register any names today (as
+gpiolib currently require a flat name space), there's no need to worry
+about legacy scripts depending on those either (or rather, the argument
+goes the other way since adding names now could break a functioning
+script).
 
+Just add a flag to suppress the renaming and we can safely start adding
+names to hotpluggable controllers (if the rest of gpiolib can handle
+non-unique names).
+
+Johan
