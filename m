@@ -2,244 +2,270 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E85B32D5CEC
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 15:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF7BE2D5CC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 15:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389671AbgLJNyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 08:54:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45184 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729554AbgLJNxh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:53:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id f132so5745693oib.12;
-        Thu, 10 Dec 2020 05:53:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y32G0SiLzhGje+fPfkVUVVtOO584HQjIsyYAUWwTj50=;
-        b=SknIROBPEv1ctbTWfnHo2zuUqg8FtufqEE1nX9afgV603pvZFtNpMlAw5YejykAngI
-         KgRDsw+EioGbuVUdZcuh0agaWZpw0uTMmxwtmJ+s/RUw7kA8ERoZ9UAZleFVmYKBSJjd
-         j5HHYRRsN0Qdd+JtcqV5P7wtxJenHNycN2huEPHvVvhCMcK3gdL/1l2WUzs1t3dJEmlB
-         qdklxbiCHRnljkiBoRXOgXBtKV8xByT3WhmObRyhWeXsCSh5yxkts77EF5TlCb8GI0uX
-         tYpM2mxoIICgQ+MvZfWNcq4Rx31yKfN3WtXyrgYzKKZLNnhuCWj9wornQ0i2TrRNyuQb
-         +BOA==
-X-Gm-Message-State: AOAM533cQG77t5LLebD79SgNB5ucn1jGOJYPA9R3JOCEoi8q8EuzJg6U
-        TgU6xFJOpf8YwQGZHPGHxw==
-X-Google-Smtp-Source: ABdhPJxBLv9CccTXi1it7qPV/oi4RQ+kwEjh9YL8f8mNtRRmjN3LYbkfkvUIWuHcSETrhvDQxMzIOA==
-X-Received: by 2002:aca:f289:: with SMTP id q131mr5346313oih.159.1607608375805;
-        Thu, 10 Dec 2020 05:52:55 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t26sm422964otm.17.2020.12.10.05.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 05:52:54 -0800 (PST)
-Received: (nullmailer pid 2411367 invoked by uid 1000);
-        Thu, 10 Dec 2020 13:52:53 -0000
-Date:   Thu, 10 Dec 2020 07:52:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: Add SM8350 pinctrl
- bindings
-Message-ID: <20201210135253.GA2405508@robh.at.kernel.org>
-References: <20201208085748.3684670-1-vkoul@kernel.org>
+        id S2389911AbgLJOFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 09:05:10 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:5144 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389838AbgLJOEY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 09:04:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1607609064; x=1639145064;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8YqlVgE9UrWkdGpSvU+bpCUOcSamHZbDGGV/K1ygqpU=;
+  b=STiuXoqjKG2JwhRWdNUkj8W8qyIK2u5k5JevVGdOyuLLXs/f6CQY16zm
+   /XrFU1xmOw3rR56zHS+/EbGrOXSAiDAF4yahC4DLmLlelW7Ax1hsedrOG
+   B1b2omjhzjxlgTfbGNfei3gHam4tfKNZUzGUcZPDjpbtqbMjczJ/wyha1
+   WGZ3t1BTmCpYI49CT2Bkn9x13/t1/8aRtse0FZTapHFDEFUwgA62JUJfk
+   u6DPpycsp7xdqJ8L3P2o6xJObiAShV/7819PcjWUyv8rx+EU7YiGYin1j
+   D4rlzY/HrXx9qQkqGl9FaJuoO82xgXGAyQzdlRmtQ2zLocFkJeE5y7OFu
+   w==;
+IronPort-SDR: RK+Ln3+Y8TOExLv713NUThOWL084PykvRdlYj8m8B0e+kPuwW3di8NDS6EPh+mPdole1rWDqPV
+ M5972KUWzZ3wUgDkFoUPwAs8sRBFR8guz+Si2Q8mPOYxWxbtB1f0wNHpHIyHfLNfXnuN7DYBCL
+ Jn4cF+kZGZizOq2Z2hO9Op0maf91tf7JQaDtx2Gfk3cC30UVkIggh/SPzhAH9+BlowoMEfiSWh
+ BeWBrlRqX3c8yHMkCVeOl7Km+lEJjX24lPMfdubadxG63bB+KrhtaKFPIqBs//4n3RY9vK7Sn2
+ ogA=
+X-IronPort-AV: E=Sophos;i="5.78,408,1599494400"; 
+   d="scan'208";a="159316676"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Dec 2020 22:03:18 +0800
+IronPort-SDR: 8YIpVNDBX3yH9VhOtKB9CKJ8cu8ZTHEgm8y5i3VrXzLtTgUdZSxMEo6TiGJGz3PL7XPIUjdNCq
+ SZIefTzH4aVpFR+ijtSf+zaK+/OP/DOCg=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 05:47:10 -0800
+IronPort-SDR: SzuH83XpSF9jJooiytzm0PJ2l9XZRARZweWH2Ezm8u2jqYwtSPhuUX3smOSmdsKY5mqtacHw93
+ 5c/DrhMeSDgA==
+WDCIronportException: Internal
+Received: from wdapacbjl0003.my.asia.wdc.com (HELO twashi.fujisawa.hgst.com) ([10.84.71.173])
+  by uls-op-cesaip02.wdc.com with ESMTP; 10 Dec 2020 06:03:17 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Sean Anderson <seanga2@gmail.com>
+Subject: [PATCH v8 00/22] RISC-V Kendryte K210 support improvements
+Date:   Thu, 10 Dec 2020 23:02:51 +0900
+Message-Id: <20201210140313.258739-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201208085748.3684670-1-vkoul@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 02:27:47PM +0530, Vinod Koul wrote:
-> Add device tree binding Documentation details for Qualcomm SM8350
-> pinctrl driver.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
-> 
-> Changes since v1:
->   - Fix pins pattern
->   - Fix example indent
-> 
->  .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 151 ++++++++++++++++++
->  1 file changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..8ddb347c43da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> @@ -0,0 +1,151 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8350-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SM8350 TLMM block
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  SM8350 platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm8350-pinctrl
+This series of patches improves support for boards based on the Canaan
+Kendryte K210 RISC-V dual core SoC. Minimal support for this SoC is
+already included in the kernel. These patches complete it, enabling
+support for most peripherals present on the SoC as well as introducing
+device trees for the various K210 boards available on the market today
+from SiPeed and Kendryte.
 
-If this block is called TLMM, then I'd expect that to be in the 
-compatible string. But I guess this is consistent with the others.
+Pathes 1 to 4 are various fixes for riscv arch code and riscv
+dependent devices. Of note here is patch 3 which fix system calls
+execution in the no MMU case, and patch 4 which simplifies DTB builtin
+handling.
 
-> +
-> +  reg:
-> +    description: Specifies the base address and size of the TLMM register space
+Patch 5 fixes naming of directories and configuration options to use the
+K210 SoC vendor name (Canaan) instead of its branding name (Kendryte).
 
-Drop.
+Patch 6 is a preparatory patch cleaning up the K210 system controller
+driver to facilitate introducing the SoC clock driver.
 
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Specifies the TLMM summary IRQ
+The following patches 7 to 11 document device tree bindings for the SoC
+drivers. The implementation of these drivers is provided in patches 12,
+13 and 14, respectively implementing the SoC clock driver, reset
+controller and SOC pin function control.
 
-Drop.
+Patches 15 to 20 update the existing K210 device tree and add new
+device tree files for several K210 based boards: MAIX Bit, MAIXDUINO,
+MAIX Dock and MAIX Go boards from SiPeed and the KD233 development
+board from Canaan.
 
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    description: Specifies the PIN numbers and Flags, as defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  gpio-reserved-ranges:
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
-> +
+Finally the last two patches updates the k210 nommu defconfig to include
+the newly implemented drivers and provide a new default configuration
+file enabling SD card support.
 
-Don't you need mux and config nodes in here? 
+A lot of the work on the device tree and on the K210 drivers come from
+the work by Sean Anderson for the U-Boot project support of the K210
+SoC. Sean also helped with debugging many aspects of this series.
 
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-3])$"
-> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
-> +        minItems: 1
-> +        maxItems: 36
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins. Functions are only valid for gpio pins.
-> +        enum: [ atest_char, atest_usb, audio_ref, cam_mclk, cci_async,
-> +                cci_i2c, cci_timer, cmu_rng, coex_uart1, coex_uart2, cri_trng,
-> +                cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> +                ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3,
-> +                gpio, ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
-> +                mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
-> +                mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck,
-> +                mi2s1_ws, mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws,
-> +                mss_grfc0, mss_grfc1, mss_grfc10, mss_grfc11, mss_grfc12,
-> +                mss_grfc2, mss_grfc3, mss_grfc4, mss_grfc5, mss_grfc6,
-> +                mss_grfc7, mss_grfc8, mss_grfc9, nav_gpio, pa_indicator,
-> +                pcie0_clkreqn, pcie1_clkreqn, phase_flag, pll_bist, pll_clk,
-> +                pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qlink0_enable,
-> +                qlink0_request, qlink0_wmss, qlink1_enable, qlink1_request,
-> +                qlink1_wmss, qlink2_enable, qlink2_request, qlink2_wmss, qspi0,
-> +                qspi1, qspi2, qspi3, qspi_clk, qspi_cs, qup0, qup1, qup10,
-> +                qup11, qup12, qup13, qup14, qup15, qup16, qup17, qup18, qup19,
-> +                qup2, qup3, qup4, qup5, qup6, qup7, qup8, qup9, qup_l4, qup_l5,
-> +                qup_l6, sd_write, sdc40, sdc41, sdc42, sdc43, sdc4_clk,
-> +                sdc4_cmd, sec_mi2s, tb_trig, tgu_ch0, tgu_ch1, tgu_ch2,
-> +                tgu_ch3, tsense_pwm1, tsense_pwm2, uim0_clk, uim0_data,
-> +                uim0_present, uim0_reset, uim1_clk, uim1_data, uim1_present,
-> +                uim1_reset, usb2phy_ac, usb_phy, vfr_0, vfr_1, vsense_trigger ]
-> +
-> +
-> +      drive-strength:
-> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +        default: 2
-> +        description:
-> +          Selects the drive strength for the specified pins, in mA.
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      bias-disable: true
-> +
-> +      output-high: true
-> +
-> +      output-low: true
-> +
-> +    required:
-> +      - pins
-> +      - function
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        tlmm: pinctrl@f000000 {
-> +          compatible = "qcom,sm8350-pinctrl";
-> +          reg = <0x0f100000 0x300000>;
-> +          interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +          gpio-controller;
-> +          #gpio-cells = <2>;
-> +          interrupt-controller;
-> +          #interrupt-cells = <2>;
-> +          gpio-ranges = <&tlmm 0 0 203>;
-> +          serial-pins {
-> +            pins = "gpio18", "gpio19";
-> +            function = "qup3";
-> +            drive-strength = <8>;
-> +            bias-disable;
-> +          };
-> +        };
-> +
-> +...
-> -- 
-> 2.26.2
-> 
+A tree with all patches applied is available here:
+https://github.com/damien-lemoal/linux, k210-sysctl-v20 branch.
+A demonstration of this series used on a SiPeed MAIX Dock
+board together with an I2C servo controller can be seen here:
+https://damien-lemoal.github.io/linux-robot-arm/#example
+
+This tree was used to build userspace busybox environment image that is
+then copied onto an SD card formatted with ext2:
+https://github.com/damien-lemoal/buildroot
+Of note is that running this userspace environment requires a revert of
+commit 2217b982624680d19a80ebb4600d05c8586c4f96 introduced during the
+5.9 development cycle. Without this revert, execution of the init
+process fails. A problem with the riscv port of elf2flt is suspected but
+not confirmed. I am now starting to investigate this problem.
+
+Reviews and comments are as always much welcome.
+
+Changes from v7:
+* Removed the __init annotation for the drivers reset, pinctrl and
+  sysctl drivers probe functions as suggested by Geert. Also removed
+  the __refdata annotation for the struct platform_driver variables of
+  these drivers.
+
+Changes from v6:
+* Annotate struct platform_driver variables with __refdata to avoid
+  section mismatch compilation errors
+* Add empty sentinel entry to of_device_id tables of the sysctl, reset
+  and pinctrl drivers.
+
+Changes from v5:
+* Addressed Philipp's comment on the reset controller driver
+* Added patch 6 to reduce the size of the clock driver patch
+  (now patch 12).
+
+Changes from v4:
+* Simplified reset controller driver using of_xlate callback as
+  suggested by Philipp
+* Fixed compilation error when using other configs than one of the
+  nommu_k210 defconfigs.
+* Addressed most clock driver comments from Stephen.
+* Removed CONFIG_GPIO_SYSFS from defconfigs
+* Rebased on 5.10-rc7
+
+Changes from V3:
+* Add one entry per driver in MAINTAINERS file
+
+Changes from V2:
+* Add MAINTAINERS file entry for the SoC support, listing myself as
+  maintainer.
+* Removed use of postcore_initcall() for declaring the drivers, using
+  the regular builtin_platform_driver() instead.
+* Fixed fpio pinctrl driver bindings documentation as commented by
+  Geert: removed input-schmitt and added input-schmitt-disable, fixed
+  typo and added input-disable and output-disable.
+* Fixed device tree to have cs-gpios active low, as per the default, as
+  active high necessity was an artifact of the gpio level double
+  inversion bug fixed recently.
+* Removed CONFIG_VT from defconfigs to reduce the kernel image size as
+  suggested by Geert.
+
+Changes from v1:
+* Improved DT bindings documentation
+* SPI and GPIO patches removed from this series (and being processed
+  directly through the relevant subsystems directly)
+* Improved device trees
+* Various cleanup and improvments of the drivers
+
+Damien Le Moal (22):
+  riscv: Fix kernel time_init()
+  riscv: Fix sifive serial driver
+  riscv: Enable interrupts during syscalls with M-Mode
+  riscv: Fix builtin DTB handling
+  riscv: Use vendor name for K210 SoC support
+  riscv: cleanup Canaan Kendryte K210 sysctl driver
+  dt-bindings: Add Canaan vendor prefix
+  dt-binding: clock: Document canaan,k210-clk bindings
+  dt-bindings: reset: Document canaan,k210-rst bindings
+  dt-bindings: pinctrl: Document canaan,k210-fpioa bindings
+  dt-binding: mfd: Document canaan,k210-sysctl bindings
+  riscv: Add Canaan Kendryte K210 clock driver
+  riscv: Add Canaan Kendryte K210 reset controller
+  riscv: Add Canaan Kendryte K210 FPIOA driver
+  riscv: Update Canaan Kendryte K210 device tree
+  riscv: Add SiPeed MAIX BiT board device tree
+  riscv: Add SiPeed MAIX DOCK board device tree
+  riscv: Add SiPeed MAIX GO board device tree
+  riscv: Add SiPeed MAIXDUINO board device tree
+  riscv: Add Kendryte KD233 board device tree
+  riscv: Update Canaan Kendryte K210 defconfig
+  riscv: Add Canaan Kendryte K210 SD card defconfig
+
+ .../bindings/clock/canaan,k210-clk.yaml       |   54 +
+ .../bindings/mfd/canaan,k210-sysctl.yaml      |  116 ++
+ .../bindings/pinctrl/canaan,k210-fpioa.yaml   |  171 +++
+ .../bindings/reset/canaan,k210-rst.yaml       |   40 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ MAINTAINERS                                   |   23 +
+ arch/riscv/Kconfig.socs                       |   33 +-
+ arch/riscv/Makefile                           |    2 +-
+ arch/riscv/boot/dts/Makefile                  |    2 +-
+ arch/riscv/boot/dts/canaan/Makefile           |    5 +
+ arch/riscv/boot/dts/canaan/k210.dtsi          |  622 ++++++++++
+ arch/riscv/boot/dts/canaan/k210_generic.dts   |   46 +
+ arch/riscv/boot/dts/canaan/k210_kd233.dts     |  178 +++
+ arch/riscv/boot/dts/canaan/k210_maix_bit.dts  |  227 ++++
+ arch/riscv/boot/dts/canaan/k210_maix_dock.dts |  229 ++++
+ arch/riscv/boot/dts/canaan/k210_maix_go.dts   |  237 ++++
+ arch/riscv/boot/dts/canaan/k210_maixduino.dts |  201 ++++
+ arch/riscv/boot/dts/kendryte/Makefile         |    4 -
+ arch/riscv/boot/dts/kendryte/k210.dts         |   23 -
+ arch/riscv/boot/dts/kendryte/k210.dtsi        |  125 --
+ arch/riscv/configs/nommu_k210_defconfig       |   39 +-
+ .../riscv/configs/nommu_k210_sdcard_defconfig |   93 ++
+ arch/riscv/include/asm/soc.h                  |   38 -
+ arch/riscv/kernel/entry.S                     |    9 +
+ arch/riscv/kernel/soc.c                       |   27 -
+ arch/riscv/kernel/time.c                      |    3 +
+ arch/riscv/mm/init.c                          |    6 +-
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-k210.c                        | 1005 +++++++++++++++++
+ drivers/pinctrl/Kconfig                       |   13 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-k210.c                |  985 ++++++++++++++++
+ drivers/reset/Kconfig                         |   10 +
+ drivers/reset/Makefile                        |    1 +
+ drivers/reset/reset-k210.c                    |  131 +++
+ drivers/soc/Kconfig                           |    2 +-
+ drivers/soc/Makefile                          |    2 +-
+ drivers/soc/canaan/Kconfig                    |   12 +
+ drivers/soc/canaan/Makefile                   |    3 +
+ drivers/soc/canaan/k210-sysctl.c              |   78 ++
+ drivers/soc/kendryte/Kconfig                  |   14 -
+ drivers/soc/kendryte/Makefile                 |    3 -
+ drivers/soc/kendryte/k210-sysctl.c            |  260 -----
+ drivers/tty/serial/sifive.c                   |    1 +
+ include/dt-bindings/clock/k210-clk.h          |   55 +-
+ include/dt-bindings/pinctrl/k210-fpioa.h      |  276 +++++
+ include/dt-bindings/reset/k210-rst.h          |   42 +
+ include/soc/canaan/k210-sysctl.h              |   43 +
+ 49 files changed, 4970 insertions(+), 531 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/canaan,k210-sysctl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+ create mode 100644 Documentation/devicetree/bindings/reset/canaan,k210-rst.yaml
+ create mode 100644 arch/riscv/boot/dts/canaan/Makefile
+ create mode 100644 arch/riscv/boot/dts/canaan/k210.dtsi
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_generic.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_kd233.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_bit.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_dock.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_go.dts
+ create mode 100644 arch/riscv/boot/dts/canaan/k210_maixduino.dts
+ delete mode 100644 arch/riscv/boot/dts/kendryte/Makefile
+ delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dts
+ delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dtsi
+ create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig
+ create mode 100644 drivers/clk/clk-k210.c
+ create mode 100644 drivers/pinctrl/pinctrl-k210.c
+ create mode 100644 drivers/reset/reset-k210.c
+ create mode 100644 drivers/soc/canaan/Kconfig
+ create mode 100644 drivers/soc/canaan/Makefile
+ create mode 100644 drivers/soc/canaan/k210-sysctl.c
+ delete mode 100644 drivers/soc/kendryte/Kconfig
+ delete mode 100644 drivers/soc/kendryte/Makefile
+ delete mode 100644 drivers/soc/kendryte/k210-sysctl.c
+ create mode 100644 include/dt-bindings/pinctrl/k210-fpioa.h
+ create mode 100644 include/dt-bindings/reset/k210-rst.h
+ create mode 100644 include/soc/canaan/k210-sysctl.h
+
+-- 
+2.29.2
+
