@@ -2,103 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C5BF2D6069
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 16:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BEE92D60C4
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 17:01:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391210AbgLJPtS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 10:49:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        id S2390903AbgLJQAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 11:00:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392003AbgLJPtF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 10:49:05 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5D2C0613CF
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:48:25 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id 1so5176973qka.0
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:48:25 -0800 (PST)
+        with ESMTP id S2392116AbgLJQAd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 11:00:33 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A42FC0613CF
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:59:53 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id t37so4593069pga.7
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:59:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jg21SZZlFp2nXg015Qdy7Ey+4o9sWgsPDLbyCKehNlo=;
-        b=dy5DU5wCTwtfk7ljGOi1L73ppuP+Z+I6LgYKef020Y7kmWfzLih5jpQXgRkzcM0eqY
-         AcUP1c3cS2dG0/ibj39VhwpX3gtu8+jhhJMSKjm3C8NqCP+cW0QlR7Oi/KKcRFSqZz1I
-         Lb5iRPAYHYA243SA+1PdA/xrMKPBCb3rr28pI=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=37jd6dDlFZ0FtOT7hpVyZM2/D02By4B+sVM7kzHyGUo=;
+        b=MWuujoSGk4peEKzynZFRPFoyGH19IBZVRPEAsgk28Yoc5K33qhzPD52IvKgUGA3CEA
+         yXJj55ZyOTQuKIj0oivtOjqsRa0y43lhTiDRFnfHmIsDgplSKDPVEBR/m2lj9U8WnOKe
+         /8/fxKq7dVl6MnNqXRubT3sHl1oJqaSDP93tVQgECo464FSPGt1oYyhcmhv7SOZEUlbO
+         wSoLiOC8UFqdPjNi5GtcTq5JcKdm5IIZD7jjsM0b7IHyqVdxaJmNCZklX9tWzAC5w1VG
+         cW0G66b6QYOlLXcmmzySjYk91AARRZkyZxyowKqIY1WKD8f8NJ+mLIdm1P+xeCdmVne7
+         wTUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jg21SZZlFp2nXg015Qdy7Ey+4o9sWgsPDLbyCKehNlo=;
-        b=GPNBpMIzbCBeqdu6qNZ8avybpT8Jb/r1iVgFlNCPZ+ePZSJLHJX9Li2atjJ/P+yk7i
-         HjCpDr/KDAmT0rgpHDGPU3BR2kYosM5/fjeJ6/5trHwsSq8343nYB0N2Hc/91JVjNWNP
-         EHzv4KxRykRN5WktGyrlG5HvQw8k/x585mjcqBWp9N8Pf8tRFo5jmmBKpX03uNfqQWUt
-         rRz8GBpD2oNjgMtNR3z15TtHjYzng58cfC3akDy1OzzGrzqBZVpaLJ5n55P5BLlR+8Jq
-         KD1coLCLqxD4KDXStjEl7fh/iXvJxM7PlPymr01jR01QVKHoEKljYvq32OhTKcWcbYDc
-         330g==
-X-Gm-Message-State: AOAM533hbk9kL5NeLuN8gAiS64p34KJlW4E76RzXzitSdnu0w/csVDDN
-        XR0Ekn/tZ82kHNiI5xvPa50lYnnAARDIJ8ARIOCcGg==
-X-Google-Smtp-Source: ABdhPJyGA4IsN0DyvYeav6TuGz8fI63Z8eB2r82GLqP6jFmdsiKRYyqDFTZHzh4jhRC0raXKyTa1O58NpDKhOQ1MMqM=
-X-Received: by 2002:a37:2742:: with SMTP id n63mr5466883qkn.390.1607615304710;
- Thu, 10 Dec 2020 07:48:24 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=37jd6dDlFZ0FtOT7hpVyZM2/D02By4B+sVM7kzHyGUo=;
+        b=N9XjEnp3+I02KQ3V2lUCNuHZioW+cq1SnQ7Uo2j8W1EFYKw5DvtruNHKUMEvejHW7/
+         t2Ny608Btao10Cd8zajTGjevq9a2bo8+4sC9cUsZcyUviqEgRZUQigl+xaTUU5lbR4vp
+         ZHmjZHW9apMdRui8dX6Em27PCxus6+fAdwIoLvaxe5DB9Dkp3xBTL/77T2KQ7tUTtoiu
+         +PVx/S4uRA51Jk18ghPbuz40LpDocZU8W4lLxoTnNgj038yoNDBhUWPJb0707VY4B/VM
+         CDsJXQ0m44d3zPL4jKQATRIqoC1bR6Qj26JFA4IsTvLl3XXzwQDWVxjWOV2J+C89yuem
+         cQUQ==
+X-Gm-Message-State: AOAM531yzvOXtX9G2gfjWZPGPxIPPkc0KVyg2hTlTSdqgwiaFfvm1tQD
+        3hgmHb735x0VVABPL0HdGSl8Nw==
+X-Google-Smtp-Source: ABdhPJz921FqDmPeIxZhrD4LCEmyv9upRImAS9aQrg23lfpVzNs/aHKkONoTMZLLVHDQ2aBd301d0w==
+X-Received: by 2002:a17:90a:4042:: with SMTP id k2mr8511128pjg.160.1607615992813;
+        Thu, 10 Dec 2020 07:59:52 -0800 (PST)
+Received: from localhost ([122.172.20.109])
+        by smtp.gmail.com with ESMTPSA id m14sm6383060pgu.0.2020.12.10.07.59.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Dec 2020 07:59:51 -0800 (PST)
+Date:   Thu, 10 Dec 2020 21:29:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     vireshk@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] pinctrl/spear: simplify the return expression of
+ spear300_pinctrl_probe()
+Message-ID: <20201210155949.thezgn2drwuur5sm@vireshk-i7>
+References: <20201210135746.1492-1-zhengyongjun3@huawei.com>
 MIME-Version: 1.0
-References: <20201129110803.2461700-1-daniel@0x0f.com> <20201129110803.2461700-4-daniel@0x0f.com>
- <CAK8P3a2DGLfkOEm3JeXN-jWvDfxberaXXqOtu4wKdtYzqDWiNQ@mail.gmail.com>
- <CAFr9PX=fhKiZF80iKaGeBWOONm3VpwtzgbB+yBHk8MHdTotaHg@mail.gmail.com> <CAK8P3a0zCa0Dq8uUDoSbu64sGLeNWrSk=6i4pKzgwerRseXfnA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0zCa0Dq8uUDoSbu64sGLeNWrSk=6i4pKzgwerRseXfnA@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Fri, 11 Dec 2020 00:49:04 +0900
-Message-ID: <CAFr9PXnGF1PV8vnCpdCuSB-z9ns5BPDjhJvPg7b+rUC0GrjhqQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] gpio: msc313: MStar MSC313 GPIO driver
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     SoC Team <soc@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201210135746.1492-1-zhengyongjun3@huawei.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Arnd,
+On 10-12-20, 21:57, Zheng Yongjun wrote:
+> Simplify the return expression.
+> 
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/pinctrl/spear/pinctrl-spear300.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/spear/pinctrl-spear300.c b/drivers/pinctrl/spear/pinctrl-spear300.c
+> index e39913a18139..d53a04597cbe 100644
+> --- a/drivers/pinctrl/spear/pinctrl-spear300.c
+> +++ b/drivers/pinctrl/spear/pinctrl-spear300.c
+> @@ -654,8 +654,6 @@ static const struct of_device_id spear300_pinctrl_of_match[] = {
+>  
+>  static int spear300_pinctrl_probe(struct platform_device *pdev)
+>  {
+> -	int ret;
+> -
+>  	spear3xx_machdata.groups = spear300_pingroups;
+>  	spear3xx_machdata.ngroups = ARRAY_SIZE(spear300_pingroups);
+>  	spear3xx_machdata.functions = spear300_functions;
+> @@ -669,11 +667,7 @@ static int spear300_pinctrl_probe(struct platform_device *pdev)
+>  
+>  	pmx_init_addr(&spear3xx_machdata, PMX_CONFIG_REG);
+>  
+> -	ret = spear_pinctrl_probe(pdev, &spear3xx_machdata);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> +	return spear_pinctrl_probe(pdev, &spear3xx_machdata);
+>  }
+>  
+>  static struct platform_driver spear300_pinctrl_driver = {
 
-On Thu, 10 Dec 2020 at 23:28, Arnd Bergmann <arnd@kernel.org> wrote:
-> > I did think about this and I did this with the clk mux driver I
-> > haven't pushed yet. In that case there is a random lump of registers
-> > with some muxes mixed into it so I decided to make the lump a syscon
-> > and then have a node for each clk mux in the lump and some properties
-> > for the muxes within. The driver is certainly less complex but the
-> > device tree is pretty unmanageable as there are probably 30 or more
-> > muxes.
->
-> Right, for clk drivers, the trade-off is often different, it's not
-> unusual that they are a bit of a mess and require a separate driver for
-> each cheap.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I will try to clean up the additions for the ssd202 (the smp enabled
-chip) this weekend and send a series for that.
-If it still seems wrong after adding that I will can that series and
-refactor this before lumping more on top of it.
-
-> > > It would be helpful here to replace all the readb_relaxed/writeb_relaxed()
-> > > with normal readb()/writeb(). Don't use _relaxed() unless there is a strong
-> > > reason why you have to do it, and if you do, explain it in a comment what
-> > > the reason is.
-> >
-> > The reason is that readb()/writeb() will invoke the heavy memory
-> > barrier even though it's not needed for peripheral registers.
-> > I guess it doesn't actually make all that much difference in reality.
->
-> Ah, I forgot you had that heavy barrier. It depends a bit on what you
-> use the GPIOs for then. For most uses I think the overhead does not
-> matter, but if there is any bit-banged I/O it might make a difference.
-
-Bit-banged buses are likely to happen I think as there is a lot of
-gpio compared to hardware peripherals.
-Anyhow, I'll add a comment for the readb_relaxed()/writeb_relaxed() usage.
-
-Cheers,
-
-Daniel
+-- 
+viresh
