@@ -2,103 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A7892D530B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 06:10:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 039692D542B
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 07:51:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgLJFJu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 00:09:50 -0500
-Received: from smtp.rcn.com ([69.168.97.78]:7528 "EHLO smtp.rcn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgLJFJu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Dec 2020 00:09:50 -0500
-DKIM-Signature: v=1; a=rsa-sha1; d=rcn.com; s=20180516; c=relaxed/simple;
-        q=dns/txt; i=@rcn.com; t=1607576948;
-        h=From:Subject:Date:To:MIME-Version:Content-Type;
-        bh=odeKY/tl3iMKFk/KlO+XzJYR/yI=;
-        b=ldL4wvHunN67gVBK0+PLvVFJV3csOqAJfeRREJlaxsBnES+Jp8IEYbmP3iDSj7P4
-        GrZEhHYbcqqmQpjT+/Hcrmv7O6jna9GMqXF3/D8joO524UrPLKcEDsDoYi0XdPxh
-        4ZLTkwRTexMeakHBA7O4RMjXBbrM6w2MCIHoEaie1soswkDns3Uwve7LDDQPZKs7
-        q6JY0Jc9GTUJjaqaAWEsUoeKHzSC88RakVMYmQuWA/mTlBMP3n7B3oMDWyFvW/I8
-        LvzW5YMtRvPh8//QA1vUGb/oKrlPmjiiGCKMLgB5ejbOukumTgPb4yVO/YXhvs6Q
-        n1H16ScFBo+N2X3hl7m9KQ==;
-X_CMAE_Category: , ,
-X-CNFS-Analysis: v=2.3 cv=aa4fYigt c=1 sm=1 tr=0 cx=a_idp_x a=azu/70XvI2yunv2iXFxgGQ==:117 a=KGjhK52YXX0A:10 a=FKkrIqjQGGEA:10 a=ECXDSLCRY80A:10 a=Y_bJZinwUj8A:10 a=IkcTkHD0fZMA:10 a=zTNgK-yGK50A:10 a=0xrwlLTa3iUA:10 a=r2-rni_QWC0A:10 a=x7bEGLp0ZPQA:10 a=OJMTuxAOzMXqgD5_NpgA:9 a=QEXdDO2ut3YA:10 a=XnaHCcwGIfFTUiYrL0LO:22
-X-CM-Score: 0
-X-Scanned-by: Cloudmark Authority Engine
-X-Authed-Username: bnV0aG91c2UxMDMwNUByY24uY29t
-Authentication-Results: smtp02.rcn.cmh.synacor.com header.from=nuthouse10305@rcn.com; sender-id=softfail
-Authentication-Results: smtp02.rcn.cmh.synacor.com smtp.mail=nuthouse10305@rcn.com; spf=softfail; sender-id=softfail
-Received: from [10.33.66.1] ([10.33.66.1:52524] helo=md10.rcn.cmh.synacor.com)
-        by smtp.rcn.com (envelope-from <nuthouse10305@rcn.com>)
-        (ecelerity 3.6.25.56547 r(Core:3.6.25.0)) with ESMTP
-        id C1/8D-20784-37DA1DF5; Thu, 10 Dec 2020 00:09:08 -0500
-Date:   Thu, 10 Dec 2020 00:09:07 -0500 (EST)
-From:   dr rani gupta spatu <nuthouse10305@rcn.com>
-Reply-To: dr rani gupta spatu <drgpsptu876@gmail.com>
-To:     dr rani gupta spatu <drgpsptu876@gmail.com>
-Message-ID: <642094963.16977984.1607576947441.JavaMail.root@rcn.com>
-In-Reply-To: <1390007391.16974413.1607576575493.JavaMail.root@rcn.com>
-Subject: Re: hi ??
+        id S1730829AbgLJGt7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 01:49:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730804AbgLJGt7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 01:49:59 -0500
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3209CC0613CF;
+        Wed,  9 Dec 2020 22:49:19 -0800 (PST)
+Received: by mail-ot1-x341.google.com with SMTP id d8so3938857otq.6;
+        Wed, 09 Dec 2020 22:49:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GpLHl8aI+wmgxv0hazRZPDJI4LNA3P1gAIF5pSq6p6Y=;
+        b=KD3X5V20NWATnMDZqY1vtwyVJUOg0NRR1hdRGaLIDsJJZEpoPXsA3V4Smer6/6zBuR
+         C7t7pkG/o/pAVc6wbHuddSRNTFOWuMXs/zUgmyWJKBu6UzCDN6lkjTaFzX0wqNNTC2rc
+         YZQEA3TqVQWPTg5BP6kaf4uxgzKUQh0KgDA0t4EGJcY/aTPXlSvB63yQyXSiVoXXtHzO
+         LGjbpt2CPx+3PTM/pW4qvqsf4u8ZSZzi++cd8gMglgiQkCHtv3DE5FoYeNv+Y6IVAC9l
+         5/D//6m97hLaJNghfr4hJBIDQHHFvYo8XCWLN6FIEtMlIUSLMXKGQTJ9kG2O2q5NwzBm
+         GOzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GpLHl8aI+wmgxv0hazRZPDJI4LNA3P1gAIF5pSq6p6Y=;
+        b=JV1OMol6rtgMoPm0QtVN8W0TOIf26TIlCNjgioHrKa7J752uR8OJZg2nW/EQLAiOjz
+         X4ikIzPsu4VNWDCg+EjPa1IfOTH7TsXofyEhYLr0mhVMeKfeS/fLfPUC6pgwtCkgJtzc
+         lPzv8rTdLDGVzfPY1KOp7MfaNznumj0XS0bR9VrTvnmRRWjzwbkU3fZo/oBM0XTplONI
+         by7wxncBlqDFec4za+TSsr2mMUKCKF2uf/cmiUuTg/1kgwYVYl66PI6pNvcKfiyByMQI
+         s/BJ3CFxS9OCVWJbKjIurYQAy54e6YXJTysIbk7QlwTv7bXGSlYNtey4Kr96HV40NJd8
+         XYlw==
+X-Gm-Message-State: AOAM531f6dpCmxhcGtG52dMdcHKce7E52GvRbuuu6y4LH2tFTI/TDiZk
+        96JXza4XP53HC9ejmE84mmzYrOu66e6rh4IgY62B0Ym2
+X-Google-Smtp-Source: ABdhPJx3GmmPLYce7Q7MbSvoY73AdVSTZAg5Z4f8b87slKZJ/tUFYD/TvNj0jR6sWXX8CcQgic49Wwcj637RG6EfdoA=
+X-Received: by 2002:a05:6830:2371:: with SMTP id r17mr4923392oth.236.1607582958667;
+ Wed, 09 Dec 2020 22:49:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [185.246.209.150]
-X-Mailer: Zimbra 7.2.7_GA_2942 (zclient/7.2.7_GA_2942)
+References: <20201207081151.7489-1-sergio.paracuellos@gmail.com> <20201210021353.GA1495778@robh.at.kernel.org>
+In-Reply-To: <20201210021353.GA1495778@robh.at.kernel.org>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 10 Dec 2020 07:49:07 +0100
+Message-ID: <CAMhs-H_bzC1XLDnZQOKim0baFdM9Fe1_x7kDDjSbMSrw04XKXA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mt7621-gpio: convert bindings to YAML format
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
+On Thu, Dec 10, 2020 at 3:13 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, 07 Dec 2020 09:11:51 +0100, Sergio Paracuellos wrote:
+> > Convert the mt7621-gpio device tree bindings to the new YAML format.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  .../bindings/gpio/mediatek,mt7621-gpio.txt    | 35 ---------
+> >  .../bindings/gpio/mediatek,mt7621-gpio.yaml   | 72 +++++++++++++++++++
+> >  2 files changed, 72 insertions(+), 35 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.yaml
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Thanks!
 
+Linus, is this patch going in your tree?
 
-gmning...........
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Thanks
-dr rani gupta saptu
-23, 1, Arcot Rd, Ottagapalayam, 
-Kannika Puram, Vadapalani, 
-Chennai, Tamil Nadu 600026, 
-India
-
-
+Best regards,
+    Sergio Paracuellos
