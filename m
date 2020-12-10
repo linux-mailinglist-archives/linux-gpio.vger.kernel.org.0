@@ -2,138 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D40D2D6023
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 16:43:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C5BF2D6069
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 16:50:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391281AbgLJPmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 10:42:09 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51246 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391442AbgLJPmG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 10:42:06 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BAFeD31120985;
-        Thu, 10 Dec 2020 09:40:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607614813;
-        bh=XO9fpkCxzX/zoFu+ZhwYzR7BVeSXJTzwpURR5r4FuyY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FekUCvFIyna43CWWR4J1FEsApW/8X/X2wb55sCCZVc2HWKgJ6EbXb0Ej4bIRqzEIS
-         jQnrdPqGEIF6dBe46VoAZ8gTa0/ZXF+7NTPub6N05HlBLCr0PJgerKhBgLgOBi2v+L
-         6KYupciPMuf+UG/O3f/2O64yDZcaFhW4UcAj2afw=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BAFeDZ7079260
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Dec 2020 09:40:13 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Dec 2020 09:40:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Dec 2020 09:40:12 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BAFe5A3042208;
-        Thu, 10 Dec 2020 09:40:07 -0600
-Subject: Re: [RFC PATCH] RFC: drivers: gpio: helper for generic pin IRQ
- handling
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <joyce.ooi@intel.com>, Andrew Jeffery <andrew@aj.id.au>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>, <orsonzhai@gmail.com>,
-        <baolin.wang7@gmail.com>, <zhang.lyra@gmail.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-References: <20201208141429.8836-1-info@metux.net>
- <CAHp75VfMKmJ074R2-04be0Ag6OuKcY=_xhhbRKsL2D0H8hZZLg@mail.gmail.com>
- <CAHp75VfOjb4Rfo9yPmwEYUDbaPXNjfGs6goM27ZnLdAMtiU+jA@mail.gmail.com>
- <0c16ab33-f87f-b32d-53d0-a44a5fecd6dc@ti.com>
- <710efa0f-063e-8a9e-1c3f-49337506b044@metux.net>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <ff1dcd9a-eb83-2cb5-30d3-b25976a227ab@ti.com>
-Date:   Thu, 10 Dec 2020 17:40:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2391210AbgLJPtS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 10:49:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392003AbgLJPtF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 10:49:05 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5D2C0613CF
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:48:25 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id 1so5176973qka.0
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 07:48:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jg21SZZlFp2nXg015Qdy7Ey+4o9sWgsPDLbyCKehNlo=;
+        b=dy5DU5wCTwtfk7ljGOi1L73ppuP+Z+I6LgYKef020Y7kmWfzLih5jpQXgRkzcM0eqY
+         AcUP1c3cS2dG0/ibj39VhwpX3gtu8+jhhJMSKjm3C8NqCP+cW0QlR7Oi/KKcRFSqZz1I
+         Lb5iRPAYHYA243SA+1PdA/xrMKPBCb3rr28pI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jg21SZZlFp2nXg015Qdy7Ey+4o9sWgsPDLbyCKehNlo=;
+        b=GPNBpMIzbCBeqdu6qNZ8avybpT8Jb/r1iVgFlNCPZ+ePZSJLHJX9Li2atjJ/P+yk7i
+         HjCpDr/KDAmT0rgpHDGPU3BR2kYosM5/fjeJ6/5trHwsSq8343nYB0N2Hc/91JVjNWNP
+         EHzv4KxRykRN5WktGyrlG5HvQw8k/x585mjcqBWp9N8Pf8tRFo5jmmBKpX03uNfqQWUt
+         rRz8GBpD2oNjgMtNR3z15TtHjYzng58cfC3akDy1OzzGrzqBZVpaLJ5n55P5BLlR+8Jq
+         KD1coLCLqxD4KDXStjEl7fh/iXvJxM7PlPymr01jR01QVKHoEKljYvq32OhTKcWcbYDc
+         330g==
+X-Gm-Message-State: AOAM533hbk9kL5NeLuN8gAiS64p34KJlW4E76RzXzitSdnu0w/csVDDN
+        XR0Ekn/tZ82kHNiI5xvPa50lYnnAARDIJ8ARIOCcGg==
+X-Google-Smtp-Source: ABdhPJyGA4IsN0DyvYeav6TuGz8fI63Z8eB2r82GLqP6jFmdsiKRYyqDFTZHzh4jhRC0raXKyTa1O58NpDKhOQ1MMqM=
+X-Received: by 2002:a37:2742:: with SMTP id n63mr5466883qkn.390.1607615304710;
+ Thu, 10 Dec 2020 07:48:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <710efa0f-063e-8a9e-1c3f-49337506b044@metux.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20201129110803.2461700-1-daniel@0x0f.com> <20201129110803.2461700-4-daniel@0x0f.com>
+ <CAK8P3a2DGLfkOEm3JeXN-jWvDfxberaXXqOtu4wKdtYzqDWiNQ@mail.gmail.com>
+ <CAFr9PX=fhKiZF80iKaGeBWOONm3VpwtzgbB+yBHk8MHdTotaHg@mail.gmail.com> <CAK8P3a0zCa0Dq8uUDoSbu64sGLeNWrSk=6i4pKzgwerRseXfnA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0zCa0Dq8uUDoSbu64sGLeNWrSk=6i4pKzgwerRseXfnA@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Fri, 11 Dec 2020 00:49:04 +0900
+Message-ID: <CAFr9PXnGF1PV8vnCpdCuSB-z9ns5BPDjhJvPg7b+rUC0GrjhqQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] gpio: msc313: MStar MSC313 GPIO driver
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Arnd,
 
+On Thu, 10 Dec 2020 at 23:28, Arnd Bergmann <arnd@kernel.org> wrote:
+> > I did think about this and I did this with the clk mux driver I
+> > haven't pushed yet. In that case there is a random lump of registers
+> > with some muxes mixed into it so I decided to make the lump a syscon
+> > and then have a node for each clk mux in the lump and some properties
+> > for the muxes within. The driver is certainly less complex but the
+> > device tree is pretty unmanageable as there are probably 30 or more
+> > muxes.
+>
+> Right, for clk drivers, the trade-off is often different, it's not
+> unusual that they are a bit of a mess and require a separate driver for
+> each cheap.
 
-On 09/12/2020 12:23, Enrico Weigelt, metux IT consult wrote:
-> On 08.12.20 17:18, Grygorii Strashko wrote:
-> 
->>>>> Having all GPIO drivers doing their IRQ management entirely through the
->>>>> GPIO subsystem (eg. never calling generic_handle_irq() and using the
->>>>> builtin
->>>>> IRQ handling) would also allow a more direct (eg. callback-based)
->>>>> pin change
->>>>> notification for GPIO consumers, that doesn't involve registering
->>>>> them as
->>>>> generic IRQ handlers.
->>
->> Above part makes me worry - why?
-> 
-> Why so ?
-> 
-> Little clarification, in case i've been a bit confusion - there're two
-> separate topics:
-> 
-> a) consolidating repeated patterns (eg. calling the actual irq handling)
->     into gpiolib, (and later possibly use more fields already existing in
->     struct gpio_chip for irq handling)
+I will try to clean up the additions for the ssd202 (the smp enabled
+chip) this weekend and send a series for that.
+If it still seems wrong after adding that I will can that series and
+refactor this before lumping more on top of it.
 
-Even if there is some pattern It doesn't mean consolidation is always reasonable.
-one of the things to think about is compiler optimization and will/will not this change
-add additional
+> > > It would be helpful here to replace all the readb_relaxed/writeb_relaxed()
+> > > with normal readb()/writeb(). Don't use _relaxed() unless there is a strong
+> > > reason why you have to do it, and if you do, explain it in a comment what
+> > > the reason is.
+> >
+> > The reason is that readb()/writeb() will invoke the heavy memory
+> > barrier even though it's not needed for peripheral registers.
+> > I guess it doesn't actually make all that much difference in reality.
+>
+> Ah, I forgot you had that heavy barrier. It depends a bit on what you
+> use the GPIOs for then. For most uses I think the overhead does not
+> matter, but if there is any bit-banged I/O it might make a difference.
 
-> 
-> b) a direct consumer callback for change, where the consumer doesn't
->     have to care about IRQs at all (some drivers could even do polling,
->     when hw doesn't have IRQs). This is for consumers that don't use
->     GPIOs as interrupt source, but more more like a very raw serial port,
->     eg. bitbanging of other interfaces (maybe an gpio bus type ? ;-))
+Bit-banged buses are likely to happen I think as there is a lot of
+gpio compared to hardware peripherals.
+Anyhow, I'll add a comment for the readb_relaxed()/writeb_relaxed() usage.
 
-in his case they do polling, so what's the issue with this?
+Cheers,
 
-or you want gpio-controller to do polling for you?
-
-Actually there are few types of consumers:
-- gpio users, no irq
-- irq users, no gpio
-- gpio users and irq users
-- and finally (only few) use the same gpio as gpio and as an irq,
-   including dynamic direction change.
-
-> 
-> The above paragraph just outlines that b) might be much easier to
-> implement, once the suggested refactoring is done and no driver would
-> call irq handlers directly anymore. But this hasn't much to do with
-> the proposal itself, just an idea for future use.
-> 
-> --mtx
-> 
-
--- 
-Best regards,
-grygorii
+Daniel
