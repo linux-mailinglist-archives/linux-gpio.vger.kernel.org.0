@@ -2,29 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB092D5C9A
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:59:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3624E2D5C9E
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 15:00:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgLJN6j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 08:58:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9154 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389789AbgLJN6H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:58:07 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CsFpB1fntz15ZG0;
-        Thu, 10 Dec 2020 21:56:50 +0800 (CST)
+        id S2389652AbgLJN7c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 08:59:32 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9591 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbgLJN70 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:59:26 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4CsFqZ02DNzM2qB;
+        Thu, 10 Dec 2020 21:58:02 +0800 (CST)
 Received: from ubuntu.network (10.175.138.68) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 10 Dec 2020 21:57:17 +0800
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 10 Dec 2020 21:58:33 +0800
 From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <vireshk@kernel.org>, <linus.walleij@linaro.org>,
+To:     <sean.wang@kernel.org>, <linus.walleij@linaro.org>,
+        <matthias.bgg@gmail.com>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        <linux-kernel@vger.kernel.org>
 CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH -next] pinctrl/spear: simplify the return expression of spear300_pinctrl_probe()
-Date:   Thu, 10 Dec 2020 21:57:46 +0800
-Message-ID: <20201210135746.1492-1-zhengyongjun3@huawei.com>
+Subject: [PATCH -next] pinctrl/mediatek: simplify the return expression of mtk_pinconf_bias_disable_set_rev1()
+Date:   Thu, 10 Dec 2020 21:59:02 +0800
+Message-ID: <20201210135902.1548-1-zhengyongjun3@huawei.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -39,35 +40,30 @@ Simplify the return expression.
 
 Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 ---
- drivers/pinctrl/spear/pinctrl-spear300.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pinctrl/spear/pinctrl-spear300.c b/drivers/pinctrl/spear/pinctrl-spear300.c
-index e39913a18139..d53a04597cbe 100644
---- a/drivers/pinctrl/spear/pinctrl-spear300.c
-+++ b/drivers/pinctrl/spear/pinctrl-spear300.c
-@@ -654,8 +654,6 @@ static const struct of_device_id spear300_pinctrl_of_match[] = {
- 
- static int spear300_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 7e950f5d62d0..7aeb552d16ce 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -488,14 +488,8 @@ EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get);
+ int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
+ 				      const struct mtk_pin_desc *desc)
  {
--	int ret;
+-	int err;
 -
- 	spear3xx_machdata.groups = spear300_pingroups;
- 	spear3xx_machdata.ngroups = ARRAY_SIZE(spear300_pingroups);
- 	spear3xx_machdata.functions = spear300_functions;
-@@ -669,11 +667,7 @@ static int spear300_pinctrl_probe(struct platform_device *pdev)
- 
- 	pmx_init_addr(&spear3xx_machdata, PMX_CONFIG_REG);
- 
--	ret = spear_pinctrl_probe(pdev, &spear3xx_machdata);
--	if (ret)
--		return ret;
+-	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PULLEN,
+-			       MTK_DISABLE);
+-	if (err)
+-		return err;
 -
 -	return 0;
-+	return spear_pinctrl_probe(pdev, &spear3xx_machdata);
++	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PULLEN,
++				MTK_DISABLE);
  }
+ EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set_rev1);
  
- static struct platform_driver spear300_pinctrl_driver = {
 -- 
 2.22.0
 
