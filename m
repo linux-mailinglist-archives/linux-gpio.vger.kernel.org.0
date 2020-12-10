@@ -2,96 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A10E52D6597
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 19:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A822D671F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 20:43:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390631AbgLJSxg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 13:53:36 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46226 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgLJSxY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 13:53:24 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k2so6846899oic.13;
-        Thu, 10 Dec 2020 10:53:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X+VtpZS1e75YA7Ec0/B1orp2GIzvdOi0H1A+93dXCqY=;
-        b=tRr8WrvVVvuL6YzhO305G5qrOTb6CBRKZJI36qTRxcycgWF9IQeSsJoUEuda1LlxZT
-         Du8diJ48SPmvgLE2EvFE+id3btQ/VTL8LDbYhy1bHfRuRpvJC3yeS+sx+NO8XoOHJRoj
-         fTl3HC6nJ51tqPeStkCOMvr5bB3vsoZ5biBJcQyX1zTMo7PDsCMY5GSDhbEEUZ5HOpqZ
-         OWJLVn+Afc55lkQQBDR6Etp5EnKMiw8Ps4RyRQPjhpBfz23J7c//Qq5/ftywVCiV8/ej
-         1Ig5BCYB6j36WcEw8bUpWcIsTqv7zBhL++93BvAk+Zd+hI7bhakjbjCTT6ejrADR+Ihn
-         5xHw==
-X-Gm-Message-State: AOAM532/Udu5lohHw3Oj8Vzv6rYWESylKQ/EhSoAF29iMIHo2+rUFttu
-        Z8HnoDQivdByd4XOsYEr6KNgcZ4AL8fxfJW8wC5xRV37
-X-Google-Smtp-Source: ABdhPJwwCUyiGYofyWRLE6tTBc1GNLHpjFHWlhRODc6u/IqEwfkcbl7SVMuOUg/07s5pM138CMDNPZtLNeeOhfSnlic=
-X-Received: by 2002:aca:4b16:: with SMTP id y22mr6398880oia.148.1607626363574;
- Thu, 10 Dec 2020 10:52:43 -0800 (PST)
+        id S2390132AbgLJTnD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 14:43:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393473AbgLJTnB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 14:43:01 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C7EC061793;
+        Thu, 10 Dec 2020 11:42:21 -0800 (PST)
+Message-Id: <20201210194042.967177918@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1607629339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=gYsowh6i1mqGXNg6FrEIlf+Px9WkTuZjYPGZA4AoQf4=;
+        b=gQRR2ovC6G1wG0/hHfvHA26mBklNiMZtkvMBYZWjgQshlf7o+cIXoD11qJjLT48W0LHgJA
+        5Zvfg1News0uQs48erbM5kmDtHengxfmuqG2DKGnaIJ04vg1FJ7jnVpZXG8cNwMy19OeFP
+        iPFhPWqfd87RfMeVK3ZgF11+LhI8jQI6rRQAPId6pBGrjdbz5+dRwipziIghpyTp0+nYcu
+        /rMQolvJykCdajiQdhpg5/73/PAnO6jEv3XXq/Rv9w9yxTGzkAvSFeWdlWRlX1S05CmH1R
+        pxA14gUUPV2LrG7qMC56g75TqBVjQeX4kqlFmRI413CglTnFsrbWRi0PstpOew==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1607629339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=gYsowh6i1mqGXNg6FrEIlf+Px9WkTuZjYPGZA4AoQf4=;
+        b=rxr0RqK5G71Mdyjh0pmNkfya7BLBal4i+pBNw5B4iIspa3uaIBOFXW7QFkpv0Ae/Yof/mz
+        NtSLBAk6jBeGNuDQ==
+Date:   Thu, 10 Dec 2020 20:25:40 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Subject: [patch 04/30] genirq: Provide irq_get_effective_affinity()
+References: <20201210192536.118432146@linutronix.de>
 MIME-Version: 1.0
-References: <X9JcUZCLh3WjV7Bw@manjaro>
-In-Reply-To: <X9JcUZCLh3WjV7Bw@manjaro>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Dec 2020 19:52:32 +0100
-Message-ID: <CAMuHMdXbF_AVhx86xO9DJy1+MGwAHSJ3OpCn-DErj=+xAyxJUQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: remove empty lines in pinctrl subsystem
-To:     Zhaoyu Liu <zackary.liu.pro@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Andy Gross <agross@kernel.org>,
-        =?UTF-8?Q?Bj=C3=B6rn_Andersson?= <bjorn.andersson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 6:35 PM Zhaoyu Liu <zackary.liu.pro@gmail.com> wrote:
-> Remove all empty lines at the end of functions in pinctrl subsystem,
-> make the code neat.
-> Target files: grep -nwR -B1 ^} drivers/pinctrl/* | grep '[0-9]-$' | less
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Zhaoyu Liu <zackary.liu.pro@gmail.com>
+Provide an accessor to the effective interrupt affinity mask. Going to be
+used to replace open coded fiddling with the irq descriptor.
 
-Thanks for your patch!
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/irq.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
->  drivers/pinctrl/renesas/pfc-r8a77950.c        | 1 -
->  drivers/pinctrl/renesas/pfc-r8a77951.c        | 3 ---
->  drivers/pinctrl/renesas/pfc-r8a7796.c         | 1 -
->  drivers/pinctrl/renesas/pfc-r8a77965.c        | 1 -
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -907,6 +907,13 @@ struct cpumask *irq_data_get_effective_a
+ }
+ #endif
+ 
++static inline struct cpumask *irq_get_effective_affinity_mask(unsigned int irq)
++{
++	struct irq_data *d = irq_get_irq_data(irq);
++
++	return d ? irq_data_get_effective_affinity_mask(d) : NULL;
++}
++
+ unsigned int arch_dynirq_lower_bound(unsigned int from);
+ 
+ int __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
