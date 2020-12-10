@@ -2,97 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA17B2D57DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 11:07:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B5212D5840
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 11:31:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgLJKFp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 05:05:45 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38978 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgLJKFp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 05:05:45 -0500
-Received: by mail-ot1-f65.google.com with SMTP id d8so4329605otq.6;
-        Thu, 10 Dec 2020 02:05:30 -0800 (PST)
+        id S1728117AbgLJKaR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 05:30:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732060AbgLJKaC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 05:30:02 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E668DC061793
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 02:29:20 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id d14so3579173qkc.13
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 02:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b0knabE4pLiyMjkoiksYG/IB8kMycYTPeC8EyBeBTFk=;
+        b=miRhMRcVYRU8W2s9H83rcF+aFhaacPuIK1msFRh8h6eJwvU0WCRwa9ZzdaBW9vYaSM
+         5XrEfOOQ5WKR+Vi4i3eQCuBJOhhTI4d+IymcP5l/zOl4TfKm6+/MK8E1yiXqqFv+VhNz
+         gc7Zw1UEvharuOq3E/DRhmUxt30EVJiLe85UY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DAZ8PgYzvtbc3rL4ZfV3e1oM3SXylqOqHN7opQzLty8=;
-        b=AlI5QLktMa/66fdGZpy4r2X9ShhLR0vB0CcEeYdBroV7Q9kJ+nKezLbVWKGWRK0bB6
-         RIx2Ku8mfEEuDFbVg4gfT07uYMYQ/Q075Nlj1zo9lY/lyc1OKy6FvxBzk//z4RDKDmJn
-         R0pFRGMrc/o5wz8C03471FxdllGZqzIZAWFH4IPt99N5f5Bok61kmcgVEBS0179DEVGi
-         hEqW/Eq5FKK+AlBBlGpLpalNBi/ej3eVTzgrHR8mDworKAWjpBNs0mL6021nGyyj5ztR
-         Y1WZc6yzxgnd60PNcovZX1hGrsf2e7xi89NkfZD8eBwTAri7fEQOyzKgX21ifa/B076T
-         lilA==
-X-Gm-Message-State: AOAM531VCzgeF+6tXj3rpQZrUcKa+D2OImukTnD4+UCCTfTLb3bvx5Ao
-        b8rOnHQZ8nOpZC5U8nert0MqCd87Dyw+maDBrBo=
-X-Google-Smtp-Source: ABdhPJyZli++OabJZH6oIk+doFCPUSskqqsQBvXQPxaex8q/acKKJGdIBrCVdCFmU/ZT7NKzZrrVrWx4c80BaVxZYR8=
-X-Received: by 2002:a9d:2203:: with SMTP id o3mr5253404ota.107.1607594704647;
- Thu, 10 Dec 2020 02:05:04 -0800 (PST)
+        bh=b0knabE4pLiyMjkoiksYG/IB8kMycYTPeC8EyBeBTFk=;
+        b=sjq/RL6GmVRhrA6wt7z0khEQUg8kPfRQTY/gephhv8alXNYKDtN0aibDJD4yfvyWU6
+         CabaI5cH759fLKSDvQX/YXvHbPt05xFBg7rjqFpEo/2KgxCl8T6B/8/B4BgqiFe39tP5
+         CCGuNTpENfGovwcEn+OeqVLJ5OOBQw2iSOPRk6V+TFI3ps2NrZpVI06dW4kkmc+WFRE9
+         r8PgltfdntgRNZ5xJLjB8H66PX9/Bxbk7QfcrHeXwsbhIvli02qPmHE26V1lj6Y+zkx5
+         8uGvw3dJgtlWQeVmW09l8ZAsgZ3Jtrfkyc5IrS4BbVNyJyZpEbvUZKD86Z9AojOreXmw
+         Gxbg==
+X-Gm-Message-State: AOAM531llKFgbIsOpbp9URFOoTsF2QSWn5vTgh15i1FHIJ7+lHmXtdsy
+        hUBuZJMqEfLTSKAz+/kMYY7cJg6sNKWl0S1Sex/UdeFJAuo=
+X-Google-Smtp-Source: ABdhPJwOZUi2Sl1Yd/f5v6x5SU7/RnsNHC6u16neZmVHJ04GokosGXeljSbqswV/Mein4PrK5Or0sFRoiVO0l3ifl/U=
+X-Received: by 2002:a37:8681:: with SMTP id i123mr7867752qkd.54.1607596159936;
+ Thu, 10 Dec 2020 02:29:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20201210034003.222297-1-damien.lemoal@wdc.com>
-In-Reply-To: <20201210034003.222297-1-damien.lemoal@wdc.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Dec 2020 11:04:53 +0100
-Message-ID: <CAMuHMdVbU2kjKU3EVN5kszPc=VQcgzYLemV6AOyg+YyZBfc31Q@mail.gmail.com>
-Subject: Re: [PATCH v7 00/22] RISC-V Kendryte K210 support improvements
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20201129110803.2461700-1-daniel@0x0f.com> <20201129110803.2461700-4-daniel@0x0f.com>
+ <CAK8P3a2DGLfkOEm3JeXN-jWvDfxberaXXqOtu4wKdtYzqDWiNQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2DGLfkOEm3JeXN-jWvDfxberaXXqOtu4wKdtYzqDWiNQ@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Thu, 10 Dec 2020 19:29:09 +0900
+Message-ID: <CAFr9PX=fhKiZF80iKaGeBWOONm3VpwtzgbB+yBHk8MHdTotaHg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] gpio: msc313: MStar MSC313 GPIO driver
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Anderson <seanga2@gmail.com>
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, Willy Tarreau <w@1wt.eu>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Damien,
+Hi Arnd,
 
-On Thu, Dec 10, 2020 at 4:41 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
-> Changes from v6:
-> * Annotate struct platform_driver variables with __refdata to avoid
->   section mismatch compilation errors
+On Thu, 10 Dec 2020 at 06:58, Arnd Bergmann <arnd@kernel.org> wrote:
+> These seem to just be contiguous ranges, so I probably would have
+> suggested describing them as separate gpio controllers to avoid
+> all the complexity with the names. As Linus already merged the
+> driver into the gpio tree, I won't complain too much about it.
+>
+> Maybe you can do that for the other chips though and have one
+> implementation that works for all others, leaving only the msc313
+> as the one with the extra complexity.
 
-Blindly following the advice from kernel test robot <lkp@intel.com> is
-not always a good idea:
+I'll have a think about that. The other chips I'm aiming to support
+(the mercury5 ssc8336 and infinity2m ssd202) currently reuse most of
+the msc313 bits with a few extras for the differences.
+i.e. the ssc8336 reuses most of the tables for the msc313 with some
+additions. Adding new chips hasn't been too bad so far.
 
-    The variable k210_rst_driver references
-    the function __init set_reset_devices()
-    If the reference is valid then annotate the
-    variable with or __refdata (see linux/init.h) or name the variable:
+> > +#define MSC313_GPIO_CHIPDATA(_chip) \
+> > static const struct msc313_gpio_data _chip##_data = { \
+> > +       .names = _chip##_names, \
+> > +       .offsets = _chip##_offsets, \
+> > +       .num = ARRAY_SIZE(_chip##_offsets), \
+> > +}
+>
+> > +#ifdef CONFIG_MACH_INFINITY
+> > +static const char * const msc313_names[] = {
+> > +       FUART_NAMES,
+> > +       SR_NAMES,
+>
+> I would try to avoid the #ifdefs and the macros here, don't overthink
+> it. The macro really hurts readability with the ## concatenation
+> making it impossible to grep for where things are defined, and
+> the #ifdef means you get worse compile test coverage compared
+> to an if(IS_ENABLED()) check in the place where the identifiers
+> are actually used.
 
-If your driver's probe function is annotated with __init, you cannot
-have a pointer to it in the driver structure, as any binding done after
-the freeing of initmem will cause a crash.  Adding the __refdata merely
-suppresses the warning, and won't avoid the crash.
+Ok. I was really just trying to enforce some sort of pattern there so
+that each chip that gets added follows the same convention.
 
-There are two solutions for this:
-  1. Remove the .probe pointer, and use platform_driver_probe() instead
-     of platform_driver_register().
-     This guarantees the probe method will be called only once, before
-     initmem is freed, but does mean that probe deferral cannot work.
-  2. Drop the __init annotation.
-     This means the probe method can be called anytime, and supports
-     both probe deferral and driver unbind/rebind cycles.
+> Even better would be to completely avoid the lookup tables here,
+> and have one driver that is instantiated based on settings from
+> the DT.
 
-Given the limited amount of RAM on k210, I think option 1 is preferred,
-but may require careful tuning of the initialization order using
-*_initcall*(), to make sure probe deferral won't ever be needed.
+I did think about this and I did this with the clk mux driver I
+haven't pushed yet. In that case there is a random lump of registers
+with some muxes mixed into it so I decided to make the lump a syscon
+and then have a node for each clk mux in the lump and some properties
+for the muxes within. The driver is certainly less complex but the
+device tree is pretty unmanageable as there are probably 30 or more
+muxes.
 
-Gr{oetje,eeting}s,
+> > +static void msc313_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> > +{
+> > +       struct msc313_gpio *gpio = gpiochip_get_data(chip);
+> > +       u8 gpioreg = readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]);
+> > +
+> > +       if (value)
+> > +               gpioreg |= MSC313_GPIO_OUT;
+> > +       else
+> > +               gpioreg &= ~MSC313_GPIO_OUT;
+> > +
+> > +       writeb_relaxed(gpioreg, gpio->base + gpio->gpio_data->offsets[offset]);
+> > +}
+>
+> It would be helpful here to replace all the readb_relaxed/writeb_relaxed()
+> with normal readb()/writeb(). Don't use _relaxed() unless there is a strong
+> reason why you have to do it, and if you do, explain it in a comment what
+> the reason is.
 
-                        Geert
+The reason is that readb()/writeb() will invoke the heavy memory
+barrier even though it's not needed for peripheral registers.
+I guess it doesn't actually make all that much difference in reality.
 
+> > +static int msc313_gpio_direction_output(struct gpio_chip *chip, unsigned int offset, int value)
+> > +{
+> > +       struct msc313_gpio *gpio = gpiochip_get_data(chip);
+> > +       u8 gpioreg = readb_relaxed(gpio->base + gpio->gpio_data->offsets[offset]);
+> > +
+> > +       gpioreg &= ~MSC313_GPIO_OEN;
+> > +       if (value)
+> > +               gpioreg |= MSC313_GPIO_OUT;
+> > +       else
+> > +               gpioreg &= ~MSC313_GPIO_OUT;
+> > +       writeb_relaxed(gpioreg, gpio->base + gpio->gpio_data->offsets[offset]);
+>
+> These look like they also need a spinlock to avoid races between concurrent
+> read-modify-write cycles on the same register.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Noted. I'll fix this and the readb and send a patch at some point.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > +builtin_platform_driver(msc313_gpio_driver);
+>
+> There is a trend to make all drivers optionally loadable modules these days.
+> Is there a reason this has to be built-in?
+
+This was discussed and I think Linus said it was ok.
+
+Thanks,
+
+Daniel
