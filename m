@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E8B2D696E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 22:08:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B3AF2D697D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 22:14:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391632AbgLJVHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 16:07:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
+        id S1726878AbgLJVMC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 16:12:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393935AbgLJVHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 16:07:24 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4406CC0613D6
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 13:06:44 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id w5so4625730pgj.3
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 13:06:44 -0800 (PST)
+        with ESMTP id S2393911AbgLJVLz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 16:11:55 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E76C0613D3
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 13:11:14 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id j1so3438693pld.3
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 13:11:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=sOXhUWYSO+7Ec2yrlVOKodV7VJPSDj5oaxzwn+tEHKw=;
-        b=b/OBsaxyIhb4UxzGUoqUGRgM9AhFLZKn6suNn+TyZmbe4lwHMV1RyxJjIKoh0TKBh7
-         k7begKjj3oAumNmQFzfJkxSXAkouZM9qkzHZUDXM4rBphWcr/DpgeasP5xdadHRiZl47
-         /VUuMAr3i4BvFUn9impJznb+b4pMXo5RHp1Bk=
+        bh=VwbWtl7I5SNOkqfVgZBMF+Ns0M8yx5wYS1SIU5pQb/U=;
+        b=ihZj7nSGjap4zuU1cvocTPMsVzAcVG+c8r27U7BIAQsJIhQGJHahvDA7mml1atoWOv
+         /6jBRBLriIzcyBSmYNt6aY8R8HPhAApld6H74D7uqotaqUmELwXOZ5NsIkMwUdOtee+f
+         wb0vVvm2PsSsJQL5NkYzczgswgPD46/5/lE4w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=sOXhUWYSO+7Ec2yrlVOKodV7VJPSDj5oaxzwn+tEHKw=;
-        b=XNVq3XBY8VhQ4toE5LN4GywFyquTqRs6BTCaUYyPWqb6sTCgY8l2PrFq5qQ0/zg7XK
-         q/3Stol5t7DuuIfIRyVGDD8S7pXbqq5ZNuLW9EUU1yCITaKAylm7mxIOnryWH7LX9vq5
-         BMNZaGQYlxssop22k6Jx6VRGEzKOrTE+E8yHJEdW2TQp2V4oVmiRZHx7HH/5YkI4XD30
-         yqy241MemfdkHvHoNiTynpB8BgH8OrTXEHrPHc7fpvDXSIAkMsuE8lGoXMNk8nflZG2/
-         KGNQcgRx6HbGFdpef/0nSxXDVfc9LZMEMlOUBLcYYuP5t7WX5gAqoZj347aIqbzxZAK+
-         yhWQ==
-X-Gm-Message-State: AOAM532xTCDTswtLL4Y5+8+iZiFoxtVHWlxskolgIO0KWNQLkUB3KrlG
-        IUJC2vqYk3giCUDIo0t+wOoHPA==
-X-Google-Smtp-Source: ABdhPJxeBjsKUmXUisDH7bsUh2rRFNSNmUNxpcMeRJM44Tz2B1oI1xfP7Iz1ngC8AwIRiEaH3LOLxw==
-X-Received: by 2002:a17:90a:dac2:: with SMTP id g2mr5799573pjx.17.1607634403856;
-        Thu, 10 Dec 2020 13:06:43 -0800 (PST)
+        bh=VwbWtl7I5SNOkqfVgZBMF+Ns0M8yx5wYS1SIU5pQb/U=;
+        b=OjrXdOFJjlZz48GZ5MuIkImjS5DBdTY+79ptlSaCqk8CwFveabkWnfndQo6M7ZsA8N
+         q3hYiPETcRYIP9s87Z9kLi+eI7oTdDtRcCZ2vvMX0eWT9ZObsXT79HuWhxTbARQlf8Tu
+         zI6PVfUxMKr2PkuU6v40Mno96bs8wBAQT4zhWeWFvrRj4zag+shSuKs1UcAjYhWzIBBq
+         UgUWcpVmMxtB/foNVGVgUpqsyQktVNXN+geYwBS1OzU8OXQ7EDr3Gk9LxvsN82aT7oY1
+         i01wfBM6d7cKveSu7AdaVJytzkXg2vQLhXLHanqj5DXJR4qfkTceoj8TEDgR61+Bjw8q
+         ci/w==
+X-Gm-Message-State: AOAM532Fcb1tWavcWzhqEX0vV/sxOsog1F7ooSSKMhB+it6jDcoLj0An
+        q9qaVJhJtxpGHu3PnrFJrYOfpQ==
+X-Google-Smtp-Source: ABdhPJzsLWN8oF/VACejoWTnJtiUEsk4HkfSyYbFZKn2e+Y4Twinla4wH0SCKzt/mRNZ986H55DXVQ==
+X-Received: by 2002:a17:902:aa84:b029:da:f114:6022 with SMTP id d4-20020a170902aa84b02900daf1146022mr8011396plr.46.1607634674333;
+        Thu, 10 Dec 2020 13:11:14 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:201:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id a19sm7097407pfi.130.2020.12.10.13.06.43
+        by smtp.gmail.com with ESMTPSA id d4sm7171879pfo.127.2020.12.10.13.11.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 13:06:43 -0800 (PST)
+        Thu, 10 Dec 2020 13:11:13 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20201209163818.v3.2.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
-References: <20201209163818.v3.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid> <20201209163818.v3.2.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
-Subject: Re: [PATCH v3 2/3] pinctrl: qcom: Allow SoCs to specify a GPIO function that's not 0
+In-Reply-To: <20201209163818.v3.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+References: <20201209163818.v3.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+Subject: Re: [PATCH v3 1/3] irqchip: qcom-pdc: Fix phantom irq when changing between rising/falling
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -60,27 +60,61 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-gpio@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
+        Andy Gross <agross@kernel.org>,
+        Archana Sathyakumar <asathyak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, linux-kernel@vger.kernel.org
 To:     Douglas Anderson <dianders@chromium.org>,
         Jason Cooper <jason@lakedaemon.net>,
         Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Date:   Thu, 10 Dec 2020 13:06:41 -0800
-Message-ID: <160763440177.1580929.656020512153968577@swboyd.mtv.corp.google.com>
+Date:   Thu, 10 Dec 2020 13:11:12 -0800
+Message-ID: <160763467203.1580929.264104038298819006@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Douglas Anderson (2020-12-09 16:41:02)
-> There's currently a comment in the code saying function 0 is GPIO.
-> Instead of hardcoding it, let's add a member where an SoC can specify
-> it.  No known SoCs use a number other than 0, but this just makes the
-> code clearer.  NOTE: no SoC code needs to be updated since we can rely
-> on zero-initialization.
+Quoting Douglas Anderson (2020-12-09 16:41:01)
+> We have a problem if we use gpio-keys and configure wakeups such that
+> we only want one edge to wake us up.  AKA:
+>   wakeup-event-action =3D <EV_ACT_DEASSERTED>;
+>   wakeup-source;
 >=20
+> Specifically we end up with a phantom interrupt that blocks suspend if
+> the line was already high and we want wakeups on rising edges (AKA we
+> want the GPIO to go low and then high again before we wake up).  The
+> opposite is also problematic.
+>=20
+> Specifically, here's what's happening today:
+> 1. Normally, gpio-keys configures to look for both edges.  Due to the
+>    current workaround introduced in commit c3c0c2e18d94 ("pinctrl:
+>    qcom: Handle broken/missing PDC dual edge IRQs on sc7180"), if the
+>    line was high we'd configure for falling edges.
+> 2. At suspend time, we change to look for rising edges.
+> 3. After qcom_pdc_gic_set_type() runs, we get a phantom interrupt.
+>=20
+> We can solve this by just clearing the phantom interrupt.
+>=20
+> NOTE: it is possible that this could cause problems for a client with
+> very specific needs, but there's not much we can do with this
+> hardware.  As an example, let's say the interrupt signal is currently
+> high and the client is looking for falling edges.  The client now
+> changes to look for rising edges.  The client could possibly expect
+> that if the line has a short pulse low (and back high) that it would
+> always be detected.  Specifically no matter when the pulse happened,
+> it should either have tripped the (old) falling edge trigger or the
+> (new) rising edge trigger.  We will simply not trip it.  We could
+> narrow down the race a bit by polling our parent before changing
+> types, but no matter what we do there will still be a period of time
+> where we can't tell the difference between a real transition (or more
+> than one transition) and the phantom.
+>=20
+> Fixes: f55c73aef890 ("irqchip/pdc: Add PDC interrupt controller for QCOM =
+SoCs")
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+> Tested-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
 
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
