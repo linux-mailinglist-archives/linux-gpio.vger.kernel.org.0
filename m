@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65B3F2D5B98
+	by mail.lfdr.de (Postfix) with ESMTP id D949F2D5B99
 	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:25:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbgLJNYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1732914AbgLJNYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 10 Dec 2020 08:24:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50494 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732941AbgLJNYJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:24:09 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB5FC0617A6
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:28 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id a6so4644865wmc.2
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:28 -0800 (PST)
+        with ESMTP id S1733074AbgLJNYK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:24:10 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3217C0617A7
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:29 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id k14so5480979wrn.1
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HrigySWoPLF+8s6ayGXgi4TAQuMuX/SPIQ5//z+/jHs=;
-        b=ux55E9ubBwM7xvJdkWZdBDFSkk6QzRlDjqoIxTfNjgvZFMnzKZ+s0dFKmBfqTfzCJi
-         MuR7MQNgkQlWA5cO+JtOJP87mMQHWGO/EylTs/skpiuxfPDtByGmbQjbqTdsKG7biW0d
-         0baXwisWQb6lryrWsaEHTiHJjckUXKgfnj5qFiN1OIVM6fJKQH/xDuZrlqqG0cWSHM3F
-         ldKuUGyFlyPM96PGraQZHnsc7WNzznNOaScaieZu5BXcGC+5h6qfzwkIe3m8YYvmBnZs
-         TPc6J1WErV2tDOq5XY+5WaJurq/IEMTNfm01IZimt1ukTQ0RFUjy37My56vz3/d2IBBM
-         /cZA==
+        bh=vOGlzMPIkgetG0wbLb8mZEk+sOsOaWxp0Id3Kbs2DfE=;
+        b=WGk3WGmxwvblt78Pq4sqq8E53mcjG8G3hhBVFLCnL6Nvp6F8TyI37YXRw+wnQktfqD
+         A/fp7tnqenyitOi3dQBORGNpNRF+hh8aRuy32nzuHOlADIPDBsbOPiW9GUy+J4IMpYyO
+         Wdswcg4jFK/ost7piIHTaAT0nVotlUkOMAbXfIhrZDXSbRN/P07ApNxoXhVKy7qU1h6A
+         6Jo4CubmlxVYZAEgxOxIKddhqaUTBS2n71+Bbh1d2FuVwiCS0/Hk9oMNgZ4lgI7bHdur
+         z9o1k9pE2CU5daEzBTEJxzoCAJMbCI62EmfQdUzq/6H36yJimLJC196rStTsMlmAq3U4
+         04Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HrigySWoPLF+8s6ayGXgi4TAQuMuX/SPIQ5//z+/jHs=;
-        b=Da/pTnhKbNH9O2xBkC2OM/d4jURjAXc4ifzh6G9y5abk+zkV+obaqr8A9mgvwsTD9+
-         woGoAuKpl55J3aGmCNWuKiPjh9Cv+f9jQIxU4BIF+s1fpVNW0Dw7n6Yxu6BltWUFtqPi
-         9DXyBmrO4H2n9h7IqxDLER5yLZO8Ub8tGwSPDC1mLQOMSdFSJHSHNfsQ1oNeSOkecp3A
-         /vPaH1ihUV4RKtazfS1EDm2ST48MSiT1jjBveRIr9Hu6c1BAWvm3TErLZo8PQEoaXRes
-         6FDaP0CGhyXuJIogEnEzLUf/iczLtuu0IvWbR9fs+bTeyZ2IwxvLr7h0naA1DgK4thso
-         SVlA==
-X-Gm-Message-State: AOAM530yG0/Y9lDKPB6nBNmWot2RFS0sy9Em+n9oXeRQYbRP1IpXR9jF
-        DAh5oLAsdJzyvEY6s3aD2moarQ==
-X-Google-Smtp-Source: ABdhPJxbpCLv+cugayOMHb91aEODaoloDclzUoLQ0xSCvre5GrTnqfYfXrSm3daI41a+k1UFFSJVqw==
-X-Received: by 2002:a1c:80c3:: with SMTP id b186mr8000914wmd.20.1607606607419;
-        Thu, 10 Dec 2020 05:23:27 -0800 (PST)
+        bh=vOGlzMPIkgetG0wbLb8mZEk+sOsOaWxp0Id3Kbs2DfE=;
+        b=XZb+qNyZPpk0gJL1lMgHn4hwqo1/R89qg4VxKMB5ANS+L9SsfOeUY0jBoh0EFe5JPh
+         /sAQUPXXU437uKsAv5w+6vHmJuvu25zV7OSKRGGzLz4iQaYjFUMSKh9UHaFcEx7l+9yd
+         LKfty1LREIO65y9xU5emzfbNY1vo/iIjWXH4agLyIYHn/+2Wc3HmlD34tKNTc91zjEmk
+         70SogOvdrkuuj0OGss/BFZI7NNG39vK9KhQ86Glpjkg2WvLAqe5ypqh4xZanYQcGqW70
+         koSU83Vo/1dfS0xghROSFMFXnFfF+QelcDapSGblbd99ASc44diPcR6pb5jhVdURDL4O
+         g5BQ==
+X-Gm-Message-State: AOAM532fixreXtMGw6xzfp0aca+kajUTFVhwCZU7EY22lUhJUpcXWXHn
+        kEO8LcyJOYIeNQX2RGTOpWO5ug==
+X-Google-Smtp-Source: ABdhPJwPIon8PttvbrGnrhmcI42QFzkBcETsicq2Uw//Mpqq3olkm7O3n/mv+C3RZEQnpWS52Rex7Q==
+X-Received: by 2002:adf:ffc8:: with SMTP id x8mr8182147wrs.158.1607606608667;
+        Thu, 10 Dec 2020 05:23:28 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id n14sm9444811wmi.1.2020.12.10.05.23.26
+        by smtp.gmail.com with ESMTPSA id n14sm9444811wmi.1.2020.12.10.05.23.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 05:23:26 -0800 (PST)
+        Thu, 10 Dec 2020 05:23:27 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -56,9 +56,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [libgpiod][PATCH 04/14] bulk: drop the limit on the max number of lines
-Date:   Thu, 10 Dec 2020 14:23:05 +0100
-Message-Id: <20201210132315.5785-5-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 05/14] core: drop line iterators
+Date:   Thu, 10 Dec 2020 14:23:06 +0100
+Message-Id: <20201210132315.5785-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.29.1
 In-Reply-To: <20201210132315.5785-1-brgl@bgdev.pl>
 References: <20201210132315.5785-1-brgl@bgdev.pl>
@@ -70,205 +70,421 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The limit of 64 lines max per bulk object is wrong. We may want to
-retrieve all lines from a chip exporting more than 64. We'll be reducing
-the role of bulk objects soon so drop this limit now.
+Hand-crafted iterators don't make much sense in C and impose an
+additional layer of memory allocation and resource releasing. Remove
+the line iterators from the core C library.
+
+We're leaving the iterators where they make sense: in C++ and Python
+bindings but we convert them to using other means of keeping track of
+lines.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- bindings/cxx/line_bulk.cpp    |  2 +-
- bindings/python/gpiodmodule.c | 14 ++++++++------
- include/gpiod.h               |  7 -------
- lib/core.c                    |  8 +++++---
- tests/tests-bulk.c            |  9 ---------
- tools/gpiomon.c               |  5 ++++-
- 6 files changed, 18 insertions(+), 27 deletions(-)
+ bindings/cxx/gpiod.hpp        |  1 -
+ bindings/cxx/iter.cpp         | 28 +++++---------------
+ bindings/python/gpiodmodule.c | 21 +++++----------
+ include/gpiod.h               | 36 --------------------------
+ lib/helpers.c                 | 32 ++++++++++-------------
+ lib/iter.c                    | 48 -----------------------------------
+ tests/gpiod-test.h            |  2 --
+ tests/tests-iter.c            | 23 -----------------
+ tools/gpioinfo.c              | 14 ++++------
+ 9 files changed, 33 insertions(+), 172 deletions(-)
 
-diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-index 1de90eb..6e88d21 100644
---- a/bindings/cxx/line_bulk.cpp
-+++ b/bindings/cxx/line_bulk.cpp
-@@ -48,7 +48,7 @@ const ::std::map<::std::bitset<32>, int, bitset_cmp> reqflag_mapping = {
+diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
+index 8c8e6c9..0f1d9b2 100644
+--- a/bindings/cxx/gpiod.hpp
++++ b/bindings/cxx/gpiod.hpp
+@@ -1083,7 +1083,6 @@ public:
  
- } /* namespace */
+ private:
  
--const unsigned int line_bulk::MAX_LINES = GPIOD_LINE_BULK_MAX_LINES;
-+const unsigned int line_bulk::MAX_LINES = 64;
+-	::std::shared_ptr<::gpiod_line_iter> _m_iter;
+ 	line _m_current;
+ };
  
- line_bulk::line_bulk(const ::std::vector<line>& lines)
- 	: _m_bulk()
-diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index b5e69a5..b9b5770 100644
---- a/bindings/python/gpiodmodule.c
-+++ b/bindings/python/gpiodmodule.c
-@@ -8,6 +8,8 @@
- #include <Python.h>
- #include <gpiod.h>
- 
-+#define LINE_REQUEST_MAX_LINES 64
-+
- typedef struct {
- 	PyObject_HEAD
- 	struct gpiod_chip *chip;
-@@ -1138,7 +1140,7 @@ static int gpiod_LineBulk_init(gpiod_LineBulkObject *self,
- 				"Argument must be a non-empty sequence");
- 		return -1;
- 	}
--	if (self->num_lines > GPIOD_LINE_BULK_MAX_LINES) {
-+	if (self->num_lines > LINE_REQUEST_MAX_LINES) {
- 		PyErr_SetString(PyExc_TypeError,
- 				"Too many objects in the sequence");
- 		return -1;
-@@ -1334,7 +1336,7 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
- 				  NULL };
- 
- 	int rv, type = gpiod_LINE_REQ_DIR_AS_IS, flags = 0,
--	    default_vals[GPIOD_LINE_BULK_MAX_LINES], val;
-+	    default_vals[LINE_REQUEST_MAX_LINES], val;
- 	PyObject *def_vals_obj = NULL, *iter, *next;
- 	struct gpiod_line_request_config conf;
- 	struct gpiod_line_bulk *bulk;
-@@ -1413,7 +1415,7 @@ PyDoc_STRVAR(gpiod_LineBulk_get_values_doc,
- static PyObject *gpiod_LineBulk_get_values(gpiod_LineBulkObject *self,
- 					   PyObject *Py_UNUSED(ignored))
- {
--	int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-+	int rv, vals[LINE_REQUEST_MAX_LINES];
- 	struct gpiod_line_bulk *bulk;
- 	PyObject *val_list, *val;
- 	Py_ssize_t i;
-@@ -1506,7 +1508,7 @@ PyDoc_STRVAR(gpiod_LineBulk_set_values_doc,
- static PyObject *gpiod_LineBulk_set_values(gpiod_LineBulkObject *self,
- 					   PyObject *args)
- {
--	int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-+	int rv, vals[LINE_REQUEST_MAX_LINES];
- 	struct gpiod_line_bulk *bulk;
- 	PyObject *val_list;
- 
-@@ -1556,7 +1558,7 @@ PyDoc_STRVAR(gpiod_LineBulk_set_config_doc,
- static PyObject *gpiod_LineBulk_set_config(gpiod_LineBulkObject *self,
- 					   PyObject *args)
- {
--	int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-+	int rv, vals[LINE_REQUEST_MAX_LINES];
- 	struct gpiod_line_bulk *bulk;
- 	PyObject *val_list;
- 	const int *valp;
-@@ -1672,7 +1674,7 @@ static PyObject *gpiod_LineBulk_set_direction_output(
- 				gpiod_LineBulkObject *self,
- 				PyObject *args)
- {
--	int rv, vals[GPIOD_LINE_BULK_MAX_LINES];
-+	int rv, vals[LINE_REQUEST_MAX_LINES];
- 	struct gpiod_line_bulk *bulk;
- 	PyObject *val_list;
- 	const int *valp;
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 742dfc2..9ffb446 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -225,17 +225,10 @@ gpiod_chip_find_lines(struct gpiod_chip *chip, const char **names) GPIOD_API;
-  * on multiple lines at once.
-  */
- 
--/**
-- * @brief Maximum number of GPIO lines that can be requested at once or stored
-- *        in a line bulk object at the same time.
-- */
--#define GPIOD_LINE_BULK_MAX_LINES	64
--
- /**
-  * @brief Allocate and initialize a new line bulk object.
-  * @param max_lines Maximum number of lines this object can hold.
-  * @return New line bulk object or NULL on error.
-- * @note max_lines must not exceed ::GPIOD_LINE_BULK_MAX_LINES.
-  */
- struct gpiod_line_bulk *gpiod_line_bulk_new(unsigned int max_lines) GPIOD_API;
- 
-diff --git a/lib/core.c b/lib/core.c
-index efba959..d96e6cf 100644
---- a/lib/core.c
-+++ b/lib/core.c
-@@ -22,6 +22,8 @@
- #include <sys/types.h>
- #include <unistd.h>
- 
-+#define LINE_REQUEST_MAX_LINES	64
-+
- enum {
- 	LINE_FREE = 0,
- 	LINE_REQUESTED_VALUES,
-@@ -94,7 +96,7 @@ struct gpiod_line_bulk *gpiod_line_bulk_new(unsigned int max_lines)
- 	struct gpiod_line_bulk *bulk;
- 	size_t size;
- 
--	if (max_lines < 1 || max_lines > GPIOD_LINE_BULK_MAX_LINES) {
-+	if (max_lines == 0) {
- 		errno = EINVAL;
- 		return NULL;
- 	}
-@@ -1066,7 +1068,7 @@ int gpiod_line_set_flags(struct gpiod_line *line, int flags)
- int gpiod_line_set_flags_bulk(struct gpiod_line_bulk *bulk, int flags)
- {
- 	struct gpiod_line *line;
--	int values[GPIOD_LINE_BULK_MAX_LINES];
-+	int values[LINE_REQUEST_MAX_LINES];
- 	unsigned int i;
- 	int direction;
- 
-@@ -1129,7 +1131,7 @@ int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
- 			       const struct timespec *timeout,
- 			       struct gpiod_line_bulk *event_bulk)
- {
--	struct pollfd fds[GPIOD_LINE_BULK_MAX_LINES];
-+	struct pollfd fds[LINE_REQUEST_MAX_LINES];
- 	unsigned int off, num_lines;
- 	struct gpiod_line *line;
- 	int rv;
-diff --git a/tests/tests-bulk.c b/tests/tests-bulk.c
-index e2520fc..22cae84 100644
---- a/tests/tests-bulk.c
-+++ b/tests/tests-bulk.c
-@@ -20,15 +20,6 @@ GPIOD_TEST_CASE(alloc_zero_lines, 0, { 1 })
- 	g_assert_cmpint(errno, ==, EINVAL);
+diff --git a/bindings/cxx/iter.cpp b/bindings/cxx/iter.cpp
+index 7985910..15c3925 100644
+--- a/bindings/cxx/iter.cpp
++++ b/bindings/cxx/iter.cpp
+@@ -17,23 +17,6 @@ void chip_iter_deleter(::gpiod_chip_iter* iter)
+ 	::gpiod_chip_iter_free_noclose(iter);
  }
  
--GPIOD_TEST_CASE(alloc_too_many_lines, 0, { 1 })
+-void line_iter_deleter(::gpiod_line_iter* iter)
 -{
--	struct gpiod_line_bulk *bulk;
--
--	bulk = gpiod_line_bulk_new(GPIOD_LINE_BULK_MAX_LINES + 1);
--	g_assert_null(bulk);
--	g_assert_cmpint(errno, ==, EINVAL);
+-	::gpiod_line_iter_free(iter);
 -}
 -
- GPIOD_TEST_CASE(add_too_many_lines, 0, { 8 })
+-::gpiod_line_iter* make_line_iter(::gpiod_chip* chip)
+-{
+-	::gpiod_line_iter* iter;
+-
+-	iter = ::gpiod_line_iter_new(chip);
+-	if (!iter)
+-		throw ::std::system_error(errno, ::std::system_category(),
+-					  "error creating GPIO line iterator");
+-
+-	return iter;
+-}
+-
+ } /* namespace */
+ 
+ chip_iter make_chip_iter(void)
+@@ -105,17 +88,20 @@ line_iter end(const line_iter&) noexcept
+ }
+ 
+ line_iter::line_iter(const chip& owner)
+-	: _m_iter(make_line_iter(owner._m_chip.get()), line_iter_deleter),
+-	  _m_current(line(::gpiod_line_iter_next(this->_m_iter.get()), owner))
++	: _m_current(owner.get_line(0))
  {
- 	g_autoptr(gpiod_line_bulk_struct) bulk = NULL;
-diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index 44fb431..c271913 100644
---- a/tools/gpiomon.c
-+++ b/tools/gpiomon.c
-@@ -157,7 +157,7 @@ static void handle_signal(int signum UNUSED)
+ 
+ }
+ 
+ line_iter& line_iter::operator++(void)
+ {
+-	::gpiod_line* next = ::gpiod_line_iter_next(this->_m_iter.get());
++	unsigned int offset = this->_m_current.offset() + 1;
++	chip owner = this->_m_current.get_chip();
+ 
+-	this->_m_current = next ? line(next, this->_m_current._m_owner) : line();
++	if (offset == owner.num_lines())
++		this->_m_current = line(); /* Last element */
++	else
++		this->_m_current = owner.get_line(offset);
+ 
+ 	return *this;
+ }
+diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
+index b9b5770..11d1407 100644
+--- a/bindings/python/gpiodmodule.c
++++ b/bindings/python/gpiodmodule.c
+@@ -41,7 +41,7 @@ typedef struct {
+ 
+ typedef struct {
+ 	PyObject_HEAD
+-	struct gpiod_line_iter *iter;
++	unsigned int offset;
+ 	gpiod_ChipObject *owner;
+ } gpiod_LineIterObject;
+ 
+@@ -2621,14 +2621,7 @@ static int gpiod_LineIter_init(gpiod_LineIterObject *self,
+ 	if (gpiod_ChipIsClosed(chip_obj))
+ 		return -1;
+ 
+-	Py_BEGIN_ALLOW_THREADS;
+-	self->iter = gpiod_line_iter_new(chip_obj->chip);
+-	Py_END_ALLOW_THREADS;
+-	if (!self->iter) {
+-		PyErr_SetFromErrno(PyExc_OSError);
+-		return -1;
+-	}
+-
++	self->offset = 0;
+ 	self->owner = chip_obj;
+ 	Py_INCREF(chip_obj);
+ 
+@@ -2637,9 +2630,6 @@ static int gpiod_LineIter_init(gpiod_LineIterObject *self,
+ 
+ static void gpiod_LineIter_dealloc(gpiod_LineIterObject *self)
+ {
+-	if (self->iter)
+-		gpiod_line_iter_free(self->iter);
+-
+ 	PyObject_Del(self);
+ }
+ 
+@@ -2647,10 +2637,13 @@ static gpiod_LineObject *gpiod_LineIter_next(gpiod_LineIterObject *self)
+ {
+ 	struct gpiod_line *line;
+ 
+-	line = gpiod_line_iter_next(self->iter);
+-	if (!line)
++	if (self->offset == gpiod_chip_num_lines(self->owner->chip))
+ 		return NULL; /* Last element. */
+ 
++	line = gpiod_chip_get_line(self->owner->chip, self->offset++);
++	if (!line)
++		return (gpiod_LineObject *)PyErr_SetFromErrno(PyExc_OSError);
++
+ 	return gpiod_MakeLineObject(self->owner, line);
+ }
+ 
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 9ffb446..b5965ed 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -40,7 +40,6 @@ extern "C" {
+ struct gpiod_chip;
+ struct gpiod_line;
+ struct gpiod_chip_iter;
+-struct gpiod_line_iter;
+ struct gpiod_line_bulk;
+ 
+ /**
+@@ -1202,41 +1201,6 @@ gpiod_chip_iter_next_noclose(struct gpiod_chip_iter *iter) GPIOD_API;
+ 	     (chip);							\
+ 	     (chip) = gpiod_chip_iter_next_noclose(iter))
+ 
+-/**
+- * @brief Create a new line iterator.
+- * @param chip Active gpiochip handle over the lines of which we want
+- *             to iterate.
+- * @return New line iterator or NULL if an error occurred.
+- */
+-struct gpiod_line_iter *
+-gpiod_line_iter_new(struct gpiod_chip *chip) GPIOD_API;
+-
+-/**
+- * @brief Free all resources associated with a GPIO line iterator.
+- * @param iter Line iterator object.
+- */
+-void gpiod_line_iter_free(struct gpiod_line_iter *iter) GPIOD_API;
+-
+-/**
+- * @brief Get the next GPIO line handle.
+- * @param iter The GPIO line iterator object.
+- * @return Pointer to the next GPIO line handle or NULL if there are no more
+- *         lines left.
+- */
+-struct gpiod_line *
+-gpiod_line_iter_next(struct gpiod_line_iter *iter) GPIOD_API;
+-
+-/**
+- * @brief Iterate over all GPIO lines of a single chip.
+- * @param iter An initialized GPIO line iterator.
+- * @param line Pointer to a GPIO line handle - on each iteration, the
+- *             next GPIO line will be assigned to this argument.
+- */
+-#define gpiod_foreach_line(iter, line)					\
+-	for ((line) = gpiod_line_iter_next(iter);			\
+-	     (line);							\
+-	     (line) = gpiod_line_iter_next(iter))
+-
+ /**
+  * @}
+  *
+diff --git a/lib/helpers.c b/lib/helpers.c
+index a343f71..3b7428b 100644
+--- a/lib/helpers.c
++++ b/lib/helpers.c
+@@ -124,24 +124,23 @@ gpiod_chip_get_lines(struct gpiod_chip *chip,
+ 
+ struct gpiod_line_bulk *gpiod_chip_get_all_lines(struct gpiod_chip *chip)
+ {
+-	struct gpiod_line_iter *iter;
+ 	struct gpiod_line_bulk *bulk;
+ 	struct gpiod_line *line;
++	unsigned int offset;
+ 
+ 	bulk = gpiod_line_bulk_new(gpiod_chip_num_lines(chip));
+ 	if (!bulk)
+ 		return NULL;
+ 
+-	iter = gpiod_line_iter_new(chip);
+-	if (!iter) {
+-		gpiod_line_bulk_free(bulk);
+-		return NULL;
+-	}
++	for (offset = 0; offset < gpiod_chip_num_lines(chip); offset++) {
++		line = gpiod_chip_get_line(chip, offset);
++		if (!line) {
++			gpiod_line_bulk_free(bulk);
++			return NULL;
++		}
+ 
+-	gpiod_foreach_line(iter, line)
+ 		gpiod_line_bulk_add_line(bulk, line);
+-
+-	gpiod_line_iter_free(iter);
++	}
+ 
+ 	return bulk;
+ }
+@@ -149,24 +148,21 @@ struct gpiod_line_bulk *gpiod_chip_get_all_lines(struct gpiod_chip *chip)
+ struct gpiod_line *
+ gpiod_chip_find_line(struct gpiod_chip *chip, const char *name)
+ {
+-	struct gpiod_line_iter *iter;
+ 	struct gpiod_line *line;
++	unsigned int offset;
+ 	const char *tmp;
+ 
+-	iter = gpiod_line_iter_new(chip);
+-	if (!iter)
+-		return NULL;
++	for (offset = 0; offset < gpiod_chip_num_lines(chip); offset++) {
++		line = gpiod_chip_get_line(chip, offset);
++		if (!line)
++			return NULL;
+ 
+-	gpiod_foreach_line(iter, line) {
+ 		tmp = gpiod_line_name(line);
+-		if (tmp && strcmp(tmp, name) == 0) {
+-			gpiod_line_iter_free(iter);
++		if (tmp && strcmp(tmp, name) == 0)
+ 			return line;
+-		}
+ 	}
+ 
+ 	errno = ENOENT;
+-	gpiod_line_iter_free(iter);
+ 
+ 	return NULL;
+ }
+diff --git a/lib/iter.c b/lib/iter.c
+index bfd2852..2ff767c 100644
+--- a/lib/iter.c
++++ b/lib/iter.c
+@@ -17,12 +17,6 @@ struct gpiod_chip_iter {
+ 	unsigned int offset;
+ };
+ 
+-struct gpiod_line_iter {
+-	struct gpiod_line **lines;
+-	unsigned int num_lines;
+-	unsigned int offset;
+-};
+-
+ static int dir_filter(const struct dirent *dir)
+ {
+ 	return !strncmp(dir->d_name, "gpiochip", 8);
+@@ -127,45 +121,3 @@ struct gpiod_chip *gpiod_chip_iter_next_noclose(struct gpiod_chip_iter *iter)
+ 	return iter->offset < (iter->num_chips)
+ 					? iter->chips[iter->offset++] : NULL;
+ }
+-
+-struct gpiod_line_iter *gpiod_line_iter_new(struct gpiod_chip *chip)
+-{
+-	struct gpiod_line_iter *iter;
+-	unsigned int i;
+-
+-	iter = malloc(sizeof(*iter));
+-	if (!iter)
+-		return NULL;
+-
+-	iter->num_lines = gpiod_chip_num_lines(chip);
+-	iter->offset = 0;
+-
+-	iter->lines = calloc(iter->num_lines, sizeof(*iter->lines));
+-	if (!iter->lines) {
+-		free(iter);
+-		return NULL;
+-	}
+-
+-	for (i = 0; i < iter->num_lines; i++) {
+-		iter->lines[i] = gpiod_chip_get_line(chip, i);
+-		if (!iter->lines[i]) {
+-			free(iter->lines);
+-			free(iter);
+-			return NULL;
+-		}
+-	}
+-
+-	return iter;
+-}
+-
+-void gpiod_line_iter_free(struct gpiod_line_iter *iter)
+-{
+-	free(iter->lines);
+-	free(iter);
+-}
+-
+-struct gpiod_line *gpiod_line_iter_next(struct gpiod_line_iter *iter)
+-{
+-	return iter->offset < (iter->num_lines)
+-					? iter->lines[iter->offset++] : NULL;
+-}
+diff --git a/tests/gpiod-test.h b/tests/gpiod-test.h
+index a43109a..df9f0c7 100644
+--- a/tests/gpiod-test.h
++++ b/tests/gpiod-test.h
+@@ -26,12 +26,10 @@
+ typedef struct gpiod_chip gpiod_chip_struct;
+ typedef struct gpiod_line_bulk gpiod_line_bulk_struct;
+ typedef struct gpiod_chip_iter gpiod_chip_iter_struct;
+-typedef struct gpiod_line_iter gpiod_line_iter_struct;
+ 
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_chip_struct, gpiod_chip_close);
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_bulk_struct, gpiod_line_bulk_free);
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_chip_iter_struct, gpiod_chip_iter_free);
+-G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_iter_struct, gpiod_line_iter_free);
+ 
+ /* These are private definitions and should not be used directly. */
+ typedef void (*_gpiod_test_func)(void);
+diff --git a/tests/tests-iter.c b/tests/tests-iter.c
+index 8deee8e..163a820 100644
+--- a/tests/tests-iter.c
++++ b/tests/tests-iter.c
+@@ -98,26 +98,3 @@ GPIOD_TEST_CASE(chip_iter_break, 0, { 8, 8, 8, 8, 8 })
+ 
+ 	g_assert_cmpuint(i, ==, 3);
+ }
+-
+-GPIOD_TEST_CASE(line_iter, 0, { 8 })
+-{
+-	g_autoptr(gpiod_line_iter_struct) iter = NULL;
+-	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct gpiod_line *line;
+-	guint i = 0;
+-
+-	chip = gpiod_chip_open(gpiod_test_chip_path(0));
+-	g_assert_nonnull(chip);
+-	gpiod_test_return_if_failed();
+-
+-	iter = gpiod_line_iter_new(chip);
+-	g_assert_nonnull(iter);
+-	gpiod_test_return_if_failed();
+-
+-	gpiod_foreach_line(iter, line) {
+-		g_assert_cmpuint(i, ==, gpiod_line_offset(line));
+-		i++;
+-	}
+-
+-	g_assert_cmpuint(i, ==, 8);
+-}
+diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+index 67be379..dd4a388 100644
+--- a/tools/gpioinfo.c
++++ b/tools/gpioinfo.c
+@@ -116,22 +116,20 @@ static PRINTF(3, 4) void prinfo(bool *of,
+ 
+ static void list_lines(struct gpiod_chip *chip)
+ {
+-	struct gpiod_line_iter *iter;
+ 	int direction, active_state;
+ 	const char *name, *consumer;
+ 	struct gpiod_line *line;
+ 	unsigned int i, offset;
+ 	bool flag_printed, of;
+ 
+-	iter = gpiod_line_iter_new(chip);
+-	if (!iter)
+-		die_perror("error creating line iterator");
+-
+ 	printf("%s - %u lines:\n",
+ 	       gpiod_chip_name(chip), gpiod_chip_num_lines(chip));
+ 
+-	gpiod_foreach_line(iter, line) {
+-		offset = gpiod_line_offset(line);
++	for (offset = 0; offset < gpiod_chip_num_lines(chip); offset++) {
++		line = gpiod_chip_get_line(chip, offset);
++		if (!line)
++			die_perror("unable to retrieve the line object from chip");
++
+ 		name = gpiod_line_name(line);
+ 		consumer = gpiod_line_consumer(line);
+ 		direction = gpiod_line_direction(line);
+@@ -178,8 +176,6 @@ static void list_lines(struct gpiod_chip *chip)
+ 
+ 		printf("\n");
+ 	}
+-
+-	gpiod_line_iter_free(iter);
+ }
  
  int main(int argc, char **argv)
- {
--	unsigned int offsets[GPIOD_LINE_BULK_MAX_LINES], num_lines = 0, offset,
-+	unsigned int offsets[64], num_lines = 0, offset,
- 		     events_wanted = 0, events_done = 0, x;
- 	bool watch_rising = false, watch_falling = false;
- 	int flags = 0;
-@@ -241,6 +241,9 @@ int main(int argc, char **argv)
- 	if (argc < 2)
- 		die("at least one GPIO line offset must be specified");
- 
-+	if (argc > 65)
-+		die("too many offsets given");
-+
- 	for (i = 1; i < argc; i++) {
- 		offset = strtoul(argv[i], &end, 10);
- 		if (*end != '\0' || offset > INT_MAX)
 -- 
 2.29.1
 
