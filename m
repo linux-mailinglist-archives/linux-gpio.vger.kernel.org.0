@@ -2,141 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EAC42D4D50
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Dec 2020 23:08:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5669B2D4FCE
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 01:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388559AbgLIWHm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Dec 2020 17:07:42 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:30939 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388326AbgLIWHm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 17:07:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1607551487;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:From:
-        Subject:Sender;
-        bh=gqm/9MTwR8OFWYxZA+wFt1gJnEsBRn4X7ntuVOAfVyw=;
-        b=HJICz6E8ejwopvkqMVHVVQwUVfNgiEG/u0wR0I6b6dgOdEDrlXNXzbBlgWmB9kUjgI
-        BOcQvSIGuEneqCfJhRrhoJbqcIr00CTAe/IpQdFuAOXW48VPI6TKglKh8dOTjQnU1YRk
-        ZbnWuB3HNn2ejg/bVtoHto2QlPDxDBvsJRG+/5XaEFQXl59CXVnz7bpTXchOSqH0B20h
-        j+t7zq1QWUCd89C0wBIEiuibFGmE2IxYIfVlTwhSNf+kGHs9BtDpzrNmgzfbbb2svXRZ
-        oPDiiSnNJyNBiO8/QZOWU1mqghj4qwFu50jctUBX6pRypcyI2Qf/FjK9tA4wZeN3BDhU
-        s2FA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAoNHQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 47.6.2 DYNA|AUTH)
-        with ESMTPSA id 908871wB9M4a8bd
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 9 Dec 2020 23:04:36 +0100 (CET)
-Subject: Re: [PATCH] spi: dt-bindings: clarify CS behavior for spi-cs-high and gpio descriptors
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAGngYiU3DptnURBH=xf0eO4ZtKMH1sd2qWQqfBNbDkXDpzwGeg@mail.gmail.com>
-Date:   Wed, 9 Dec 2020 23:04:36 +0100
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        id S1730336AbgLJAn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Dec 2020 19:43:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbgLJAn0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Dec 2020 19:43:26 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119E8C0617A6
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Dec 2020 16:42:46 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id e2so2560967pgi.5
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Dec 2020 16:42:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OtKKHM+lfVGS9aSA9NCqh5kpYArg50M6MIVfsP4DbfQ=;
+        b=DoaBAJQ7EGMFD6ylzp7C1r8x2quZTXePKc5Ilus12x834dc1Fr7hUBP0QhAzXwy76c
+         SmyajWzfrejfbwKrMWd63+kLMLd2jLxHoQbKRoEPUki8KnuXSQK7+XhRLDGOGFSugntr
+         NPzqKcRJK/GO+29Fm3Q/WMUK/x3q/6PMknJ9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OtKKHM+lfVGS9aSA9NCqh5kpYArg50M6MIVfsP4DbfQ=;
+        b=ZcxfKaqIC9vIqol80tImMuYbXAkiiMGupdztspegtFwN5aGQ86X07NLuoOT1VDKsdR
+         AdJBoPKdb/OlapO96yzG7kU+lYjgVhek1iGaSjSRBf/YfKlrC57uj2O2A723bBpRNIRU
+         hSsVmyxK8HeyCngpa06J0jVuXPcebb2mdLo0RRVqGrXHiiqYbFt7m937I4UJej7JgbEB
+         teVg5ZS/WQEo0CqmX1masdwbqNY591c5yEPyP1+LfKoaAeAytStvWrzY1pbH9FLDTjz0
+         09p1XMWYwzOOO+3q9GBq8K8/Fa96/43wstTZlDSvETidnyytW/irR8KLDZpynWH27kJQ
+         YWwQ==
+X-Gm-Message-State: AOAM533kEOnWZNbq4El7P8nXY+MpqISrSsIlVbU4I3y6MX3pv0No5dGj
+        VA+3sYYU16FMTQ8ACARs0L16zw==
+X-Google-Smtp-Source: ABdhPJxYE8ouDzBhahQvEhvQ1Ha8ojf7CZnkTDciqw7fzGdD6qRxxK+IKnGeWSDFYMsGcId/2+ahzg==
+X-Received: by 2002:a17:90a:be17:: with SMTP id a23mr4616028pjs.236.1607560965560;
+        Wed, 09 Dec 2020 16:42:45 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id l23sm3690430pgm.22.2020.12.09.16.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Dec 2020 16:42:44 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
         linux-gpio@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BC1AFCEC-DE7D-4135-81DC-1B20CC662917@goldelico.com>
-References: <3bed61807fff6268789e7d411412fbc5cd6ffe2a.1607507863.git.hns@goldelico.com> <CAGngYiVKHoXPGxmScCnb-R6xoo9GNw5pG8V8Cpyk3meoJbskiw@mail.gmail.com> <3FA1D050-3BD5-4A97-9D83-520CCF75D147@goldelico.com> <CAGngYiVL9M72hFRWnmT_8RRX9pUTSLsNuYz6mUo0Be4Vivk7Xw@mail.gmail.com> <20201209210133.44ab9c97@aktux> <09D41BD9-F6BA-4566-8151-ACB3B2274B52@goldelico.com> <CAGngYiU3DptnURBH=xf0eO4ZtKMH1sd2qWQqfBNbDkXDpzwGeg@mail.gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Archana Sathyakumar <asathyak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/3] irqchip: qcom-pdc: Fix phantom irq when changing between rising/falling
+Date:   Wed,  9 Dec 2020 16:41:01 -0800
+Message-Id: <20201209163818.v3.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+X-Mailer: git-send-email 2.29.2.576.ga3fc446d84-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+We have a problem if we use gpio-keys and configure wakeups such that
+we only want one edge to wake us up.  AKA:
+  wakeup-event-action = <EV_ACT_DEASSERTED>;
+  wakeup-source;
 
-> Am 09.12.2020 um 22:28 schrieb Sven Van Asbroeck =
-<thesven73@gmail.com>:
->=20
-> On Wed, Dec 9, 2020 at 3:08 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->> But I have tested with
->>=20
->>> spi->mode |=3D SPI_MODE_3;
->>=20
->> which should keep the mode intact. Right? That did not work either.
->>=20
->=20
-> - make sure ("spi: fix client driver breakages when using GPIO =
-descriptors")
->  is in your tree
+Specifically we end up with a phantom interrupt that blocks suspend if
+the line was already high and we want wakeups on rising edges (AKA we
+want the GPIO to go low and then high again before we wake up).  The
+opposite is also problematic.
 
-Well, if you remember, the panel did work *before* this patch was in my =
-tree
-and I found this patch as the reason of the break...
+Specifically, here's what's happening today:
+1. Normally, gpio-keys configures to look for both edges.  Due to the
+   current workaround introduced in commit c3c0c2e18d94 ("pinctrl:
+   qcom: Handle broken/missing PDC dual edge IRQs on sc7180"), if the
+   line was high we'd configure for falling edges.
+2. At suspend time, we change to look for rising edges.
+3. After qcom_pdc_gic_set_type() runs, we get a phantom interrupt.
 
-> - your panel's CS is active-low, so 'spi-cs-high' should be removed =
-from its
->  devicetree entry. In accordance with the rules as explained in commit
->  message of 6953c57ab172. Also in accordance with the table you posted
->  in this patch.
+We can solve this by just clearing the phantom interrupt.
 
-It could not have been different because the table was the result of
-experimentally checking all possible combinations...
+NOTE: it is possible that this could cause problems for a client with
+very specific needs, but there's not much we can do with this
+hardware.  As an example, let's say the interrupt signal is currently
+high and the client is looking for falling edges.  The client now
+changes to look for rising edges.  The client could possibly expect
+that if the line has a short pulse low (and back high) that it would
+always be detected.  Specifically no matter when the pulse happened,
+it should either have tripped the (old) falling edge trigger or the
+(new) rising edge trigger.  We will simply not trip it.  We could
+narrow down the race a bit by polling our parent before changing
+types, but no matter what we do there will still be a period of time
+where we can't tell the difference between a real transition (or more
+than one transition) and the phantom.
 
->=20
-> When these two changes in place, your panel should work. I have tested =
-this
-> by mirroring your setup on my board:
->=20
-> spi5-gpio {
->       compatible =3D "spi-gpio";
->       #address-cells =3D <0x1>;
->       #size-cells =3D <0x0>;
->       pinctrl-names =3D "default";
->       pinctrl-0 =3D <&...>;
->=20
->       sck-gpios =3D <&gpio... GPIO_ACTIVE_HIGH>;
->       miso-gpios =3D <&gpio... GPIO_ACTIVE_HIGH>;
->       mosi-gpios =3D <&gpio... GPIO_ACTIVE_HIGH>;
->       cs-gpios =3D <&gpio... GPIO_ACTIVE_HIGH>;
+Fixes: f55c73aef890 ("irqchip/pdc: Add PDC interrupt controller for QCOM SoCs")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+Tested-by: Maulik Shah <mkshah@codeaurora.org>
+---
+There are no dependencies between this patch and patch #2/#3.  It can
+go in by itself.  Patches are only grouped together in one series
+because they address similar issues.
 
-BTW: exactly this choice is questionable ^^^ if you have an active low =
-CS
-and it needs an explanation.
+Maulik has got confirmation from hardware guys and understands the
+problem.  This patch is ready to land.
 
->       num-chipselects =3D <1>;
->=20
->       ethernet-switch@0 { /* active low cs */
->               compatible =3D "micrel,ksz8795";
->               spi-max-frequency =3D <1000000>;
->               reg =3D <0>;
->       };
-> };
->=20
-> If this does not work for you, then what are we missing?
+Changes in v3:
+- Adjusted the comment as per Maulik.
 
-I am missing that you notice that we are not discussing what I should
-do with the panel driver or my device tree. I have these patches laying =
-around
-for a while (which exactly do what you try to convince me about - except =
-that
-I would apply an GPIO_ACTIVE_LOW). Just not submitted because I want to
-have a clear definition agreed on first. For a simple reason: reviewers
-of my patch should know what to check for.
+Changes in v2:
+- 0 => false
+- If irq_chip_set_type_parent() fails don't bother clearing.
+- Add Fixes tag.
 
-In this thread we discuss a patch for the SPI bindings documentation =
-which
-is something different. See subject and the file the patch affects.
+ drivers/irqchip/qcom-pdc.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-And I am looking for an ack and merge by maintainers of the affected =
-subsystems
-that the table is ok. Nothing else.
-
-Please let's stay on topic and please cooperate.
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index bd39e9de6ecf..5dc63c20b67e 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -159,6 +159,8 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	int pin_out = d->hwirq;
+ 	enum pdc_irq_config_bits pdc_type;
++	enum pdc_irq_config_bits old_pdc_type;
++	int ret;
+ 
+ 	if (pin_out == GPIO_NO_WAKE_IRQ)
+ 		return 0;
+@@ -187,9 +189,26 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
+ 		return -EINVAL;
+ 	}
+ 
++	old_pdc_type = pdc_reg_read(IRQ_i_CFG, pin_out);
+ 	pdc_reg_write(IRQ_i_CFG, pin_out, pdc_type);
+ 
+-	return irq_chip_set_type_parent(d, type);
++	ret = irq_chip_set_type_parent(d, type);
++	if (ret)
++		return ret;
++
++	/*
++	 * When we change types the PDC can give a phantom interrupt.
++	 * Clear it.  Specifically the phantom shows up when reconfiguring
++	 * polarity of interrupt without changing the state of the signal
++	 * but let's be consistent and clear it always.
++	 *
++	 * Doing this works because we have IRQCHIP_SET_TYPE_MASKED so the
++	 * interrupt will be cleared before the rest of the system sees it.
++	 */
++	if (old_pdc_type != pdc_type)
++		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, false);
++
++	return 0;
+ }
+ 
+ static struct irq_chip qcom_pdc_gic_chip = {
+-- 
+2.29.2.576.ga3fc446d84-goog
 
