@@ -2,36 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC032D6855
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 21:14:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F11D82D6824
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 21:10:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390381AbgLJUML (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 15:12:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56258 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393462AbgLJTnD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 14:43:03 -0500
-Message-Id: <20201210194042.860029489@linutronix.de>
+        id S2393423AbgLJTnF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 14:43:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393512AbgLJTnC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 14:43:02 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8125FC06179C;
+        Thu, 10 Dec 2020 11:42:22 -0800 (PST)
+Message-Id: <20201210194043.067097663@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607629338;
+        s=2020; t=1607629341;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=yFPV7W+/QqCKeqQACSJL6sxoKPc89zwgLkkLw3CK5Qw=;
-        b=b4xfy4bgyikTmVvFd1ABIiZ73tEfKizLVhR+VIJlwT2XXEhpCUYmv0T35kedPEaKJQVpyL
-        EZ6ZpzGOZ5IxdHU/m0CyhJdifeVKmZv6VHKNE7HVl9gYcZmfYEhjmMcUyrjO41XASIxwkE
-        9klGh5JDf3wOEU5Ed3lPXcLem5zy/i2BIvrR40gIEa/OR0IKxYWPTy1L0gdW4vYnASDXBG
-        oPlb3Y/UTUmNePPkOPES/7lQTGxRfLrcgjzM1Sg3uuPGxXkbOxvSMK9KGVtjMA1XVdJV0t
-        Q4ytattWGMjEx0ecdLFwT7qCkSF6HEiYjaunGW+F6+YzwXCTRCwunCHjVGEGUQ==
+        bh=an/0SlT10gC/rfGB9cofMBAbBc2y8gDRMVN0GHlSQuQ=;
+        b=4P4kE5RTAFQxk4E9p2NZ5tVZaT/fVdqT6FUBVR+n0VlRr8uKLCY6ouByJWK/y9MigmPqnb
+        tesyONzFlkjZdJe1WWdFvx3h+r+GXjLB7sIlmHBZwN8ZTN8764SDWmNv/29J0LI/juCzrG
+        5AR2DIz8iI4y5+WrS2Gk+rZPh543USYMAHoeudVHDJ9Wges2zOPIJ3rC2brtEkqswFGEBV
+        qoEKpCAHt2vMMptUuKRYjL5+zlSE91zw5P4yyaAjNJTKm8BCJhUlMmWxn/QqILbbs/4fJM
+        zRFVwll3IxpXJvkmkahKFPnuLZWACJTleFizSON231iYySZCGseiBRgkWQqHew==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607629338;
+        s=2020e; t=1607629341;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=yFPV7W+/QqCKeqQACSJL6sxoKPc89zwgLkkLw3CK5Qw=;
-        b=QKWQOIKE0SKfWygdsF0p53UAxVkxHrZRTXTSBAi/APvw0tfKjTWt41c59REi77MGE+SbMx
-        F6+minehzWx00+CA==
-Date:   Thu, 10 Dec 2020 20:25:39 +0100
+        bh=an/0SlT10gC/rfGB9cofMBAbBc2y8gDRMVN0GHlSQuQ=;
+        b=0D9iZlJLFfBnhtOaF8MIaZu0T6LGBg7Mhm2UH/Vr6qq568TJA8295HDu2RHkjE+w+f0eVZ
+        +xYpdmSgjdKynXCQ==
+Date:   Thu, 10 Dec 2020 20:25:41 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -77,7 +80,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         xen-devel@lists.xenproject.org
-Subject: [patch 03/30] genirq: Move irq_set_lockdep_class() to core
+Subject: [patch 05/30] genirq: Annotate irq stats data races
 References: <20201210192536.118432146@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -86,57 +89,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-irq_set_lockdep_class() is used from modules and requires irq_to_desc() to
-be exported. Move it into the core code which lifts another requirement for
-the export.
+Both the per cpu stats and the accumulated count are accessed lockless and
+can be concurrently modified. That's intentional and the stats are a rough
+estimate anyway. Annotate them with data_race().
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/irqdesc.h |   10 ++++------
- kernel/irq/irqdesc.c    |   14 ++++++++++++++
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ kernel/irq/irqdesc.c |    4 ++--
+ kernel/irq/proc.c    |    5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -240,16 +240,14 @@ static inline bool irq_is_percpu_devid(u
- 	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
- }
- 
-+void __irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
-+			     struct lock_class_key *request_class);
- static inline void
- irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
- 		      struct lock_class_key *request_class)
- {
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (desc) {
--		lockdep_set_class(&desc->lock, lock_class);
--		lockdep_set_class(&desc->request_mutex, request_class);
--	}
-+	if (IS_ENABLED(CONFIG_LOCKDEP))
-+		__irq_set_lockdep_class(irq, lock_class, request_class);
- }
- 
- #endif
 --- a/kernel/irq/irqdesc.c
 +++ b/kernel/irq/irqdesc.c
-@@ -968,3 +968,17 @@ unsigned int kstat_irqs_usr(unsigned int
- 	rcu_read_unlock();
+@@ -943,10 +943,10 @@ unsigned int kstat_irqs(unsigned int irq
+ 	if (!irq_settings_is_per_cpu_devid(desc) &&
+ 	    !irq_settings_is_per_cpu(desc) &&
+ 	    !irq_is_nmi(desc))
+-	    return desc->tot_count;
++		return data_race(desc->tot_count);
+ 
+ 	for_each_possible_cpu(cpu)
+-		sum += *per_cpu_ptr(desc->kstat_irqs, cpu);
++		sum += data_race(*per_cpu_ptr(desc->kstat_irqs, cpu));
  	return sum;
  }
-+
-+#ifdef CONFIG_LOCKDEP
-+void __irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
-+			     struct lock_class_key *request_class)
-+{
-+	struct irq_desc *desc = irq_to_desc(irq);
-+
-+	if (desc) {
-+		lockdep_set_class(&desc->lock, lock_class);
-+		lockdep_set_class(&desc->request_mutex, request_class);
+ 
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -488,9 +488,10 @@ int show_interrupts(struct seq_file *p,
+ 	if (!desc || irq_settings_is_hidden(desc))
+ 		goto outsparse;
+ 
+-	if (desc->kstat_irqs)
++	if (desc->kstat_irqs) {
+ 		for_each_online_cpu(j)
+-			any_count |= *per_cpu_ptr(desc->kstat_irqs, j);
++			any_count |= data_race(*per_cpu_ptr(desc->kstat_irqs, j));
 +	}
-+}
-+EXPORT_SYMBOL_GPL(irq_set_lockdep_class);
-+#endif
+ 
+ 	if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
+ 		goto outsparse;
 
