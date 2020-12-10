@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17A912D5BA4
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:25:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90F732D5BA1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:25:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389204AbgLJNYy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 08:24:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
+        id S2387422AbgLJNYq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 08:24:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389197AbgLJNY0 (ORCPT
+        with ESMTP id S2389202AbgLJNY0 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:24:26 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB78C061257
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:36 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id l9so5439416wrt.13
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:36 -0800 (PST)
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49633C0611C5
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:37 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id c5so1838304wrp.6
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 05:23:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KoQikLaDnqXNdr+Hv6sXOpa0WIf3E463cWrb5imytwI=;
-        b=TyRIErnegRJFAroWIe/cTUroaqNY2x/eSJuqenzRTb7u230i6UWdLLoc8nHBiYSdzY
-         zdRAO5BcGnA+zQEI7R0MSROiyyx4XVSDMK/L2t2SQav/zrDEkx5/vP4QJDuMYXnyBiZu
-         HbFPATbYsx16h+dHbycKCqxB/9a9d2SrkY2kp4PDij0b3zFQcFVKwK8lPNH7hZa2ytHJ
-         IJSNrnULSvhokwww9ciqmcq+YIwby+7lwjqX5PPEyuQIAVprBTuxZrbNv09Aajrgwhoj
-         ga1KuLtOkAZ4A+PUP3cQ3LZ+SOGKbs7857lWo1Ha65etG54RCJpD/YxQlhpwTCa6k+TN
-         81uA==
+        bh=18GNKU/1Y/+J0wgsbZwIm+cDoXVzxNcPRSVCNSeVXtQ=;
+        b=GUregJZf/3Q/aisrxlR2UkMosGEoB2U1L/eOl4IVmxbBZdpfeM312wT2teJYyF8v/F
+         VGWuhs5jbYRw+ky3MES10GTn9+amRvNuLYFCi4GqaQ+IzCUzItDj6ta8f071vFMOEKxW
+         ekYv3S2XC0vILMK3jyEcd6eRHMWYycVLDp5Chbcp/wb+JUuYvKHep4wyS3/d79O95tpz
+         n+WsmeN+rUytzZgcuZbLcDkwLRmFhSeCdepuuF4aD7eV+YXZHIPIDKKlLKDROxuqoruG
+         sRVanF71zEsETo9N52CD8hg6FymkNJfeRwYIvnX/3LUePHExS8KQy4at36roczR8sEnx
+         FfkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KoQikLaDnqXNdr+Hv6sXOpa0WIf3E463cWrb5imytwI=;
-        b=Lt2tUUf6x90uV2eMBoiNWjcEUQ9b9gr5LzXZgX3/lcjETN6J5LYeXB+tvAysYEXjLP
-         ZETiSTxlMTW6/r4/e87PSnnGeNQDZRnIIPCJS4sxH8RrNj28NW+cQ44Nc6FM5BOYCYgl
-         nua464l0MAisy+0H54f80lpa3BMvN/dRNt7J1k1SVN7tdkMPUPZoZsJoLVyMFbK479HX
-         gSC/vqvl7msy/kjWoh3N4qGHOMkCJajA4wdOgklhnAmUKbdUhUcdHr3dtw8hExG4p/1o
-         PKnE7ISSh3SfkuJ+M/QvYYpOsfJjUIIoqtD4qdCLNwjdY8PRs/2w9YBR2GDqviF4rRIU
-         xLAQ==
-X-Gm-Message-State: AOAM531qmYnsNlyEG9MV/W+e/SJEiNWioTvHkbhB59+9iAzkD+8hU8+7
-        s5WoCfrpusw6R96ABsjwNW3wTQ==
-X-Google-Smtp-Source: ABdhPJyfK/UM0WbXAASWZ5AP0vjDvbF57dSrKcmQIvWcVlm8mjiDxuknHcT8yll7RzGp4ABbTiYMgw==
-X-Received: by 2002:adf:e98b:: with SMTP id h11mr4393809wrm.21.1607606614954;
-        Thu, 10 Dec 2020 05:23:34 -0800 (PST)
+        bh=18GNKU/1Y/+J0wgsbZwIm+cDoXVzxNcPRSVCNSeVXtQ=;
+        b=gHLlMiw/UCYfDzrDeYQaeW2VIfjmh5/suUHcUm/SxGOF2hexYYnkB9FnhZxGkxtUr9
+         iduuDiofgF4ieuzW5REPCRgYSgEJKfg4ruS7IHP2d41JTDwk/edogkHHhuT6i3w9aKxP
+         b4B1XBDAj6Xx9despUeER5QbiH5fgyHFliaOdfRLyrdgJUVCU/pUo85A6BQdwnL8KpIo
+         qA6Sr/K+ftVrKUD7Hp/zeeB7+tPz04a3f8jbmowqk40k03BVXoEWCS/A+XzrEUr6kz6J
+         XWIZC1U2DrJsQT9tHBcrL8rhrhJgVLoeVOxj+/hrKVO6eoYk/ev1ak27gtf1awKmrraR
+         M/OQ==
+X-Gm-Message-State: AOAM531qB00nUNRGLEo2jSddLiJlC/Im4bR9bpskhrLlqAPEqVbg8WBK
+        XJvEGnf9jSNiMaAe1OP8pHgZTMcdEyHzQw==
+X-Google-Smtp-Source: ABdhPJzkAIou1IG/eP1RSOol0CPV7Ey33KQwhaZ6zAzaIOYLFqWerKZwUHap6gILyvM4Peru/frvBA==
+X-Received: by 2002:adf:dd09:: with SMTP id a9mr8226716wrm.90.1607606616040;
+        Thu, 10 Dec 2020 05:23:36 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id n14sm9444811wmi.1.2020.12.10.05.23.34
+        by smtp.gmail.com with ESMTPSA id n14sm9444811wmi.1.2020.12.10.05.23.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 05:23:34 -0800 (PST)
+        Thu, 10 Dec 2020 05:23:35 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -56,9 +56,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [libgpiod][PATCH 10/14] treewide: kill global line lookup
-Date:   Thu, 10 Dec 2020 14:23:11 +0100
-Message-Id: <20201210132315.5785-11-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 11/14] treewide: kill find_lines()
+Date:   Thu, 10 Dec 2020 14:23:12 +0100
+Message-Id: <20201210132315.5785-12-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.29.1
 In-Reply-To: <20201210132315.5785-1-brgl@bgdev.pl>
 References: <20201210132315.5785-1-brgl@bgdev.pl>
@@ -70,412 +70,379 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Global line lookup doesn't really work correctly because GPIO line names
-are not unique. We'd have to return a list of matching lines. Also: not
-all chips may be accessible by user in which case the chip iterator will
-fail. We'll soon be removing chip iterators entirely so for now drop the
-global line lookup and let users iterate over chips themselves.
+GPIO line names are not unique. Looking up multiple lines by names would
+require us to return a list of matching lines for every name. We're
+simplifying the library API so drop this interface treewide.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- bindings/cxx/examples/gpiofindcxx.cpp  | 14 ++---
- bindings/cxx/gpiod.hpp                 |  9 ----
- bindings/cxx/line.cpp                  | 15 ------
- bindings/cxx/tests/tests-line.cpp      | 19 -------
- bindings/python/gpiodmodule.c          | 75 --------------------------
- bindings/python/tests/gpiod_py_test.py | 18 -------
- include/gpiod.h                        | 24 ---------
- lib/helpers.c                          | 29 ----------
- tests/tests-line.c                     | 31 -----------
- tools/gpiofind.c                       | 31 ++++++-----
- 10 files changed, 26 insertions(+), 239 deletions(-)
+ bindings/cxx/chip.cpp                  | 18 ------
+ bindings/cxx/gpiod.hpp                 |  7 ---
+ bindings/cxx/tests/tests-chip.cpp      | 18 ------
+ bindings/python/gpiodmodule.c          | 86 --------------------------
+ bindings/python/tests/gpiod_py_test.py | 32 ----------
+ include/gpiod.h                        | 15 -----
+ lib/helpers.c                          | 28 ---------
+ tests/tests-chip.c                     | 49 ---------------
+ 8 files changed, 253 deletions(-)
 
-diff --git a/bindings/cxx/examples/gpiofindcxx.cpp b/bindings/cxx/examples/gpiofindcxx.cpp
-index aeba29d..e9ab64a 100644
---- a/bindings/cxx/examples/gpiofindcxx.cpp
-+++ b/bindings/cxx/examples/gpiofindcxx.cpp
-@@ -19,11 +19,13 @@ int main(int argc, char **argv)
- 		return EXIT_FAILURE;
- 	}
- 
--	auto ret = ::gpiod::find_line(argv[1]);
--	if (!ret.first)
--		return EXIT_FAILURE;
--
--	::std::cout << ret.second.name() << " " << ret.first.offset() << ::std::endl;
-+	for (auto& chip: ::gpiod::make_chip_iter()) {
-+		auto line = chip.find_line(argv[1]);
-+		if (line) {
-+			::std::cout << line.name() << " " << line.offset() << ::std::endl;
-+			return EXIT_SUCCESS;
-+		}
-+	}
- 
--	return EXIT_SUCCESS;
-+	return EXIT_FAILURE;
+diff --git a/bindings/cxx/chip.cpp b/bindings/cxx/chip.cpp
+index dffa7a2..ff35e53 100644
+--- a/bindings/cxx/chip.cpp
++++ b/bindings/cxx/chip.cpp
+@@ -154,24 +154,6 @@ line_bulk chip::get_all_lines(void) const
+ 	return lines;
  }
+ 
+-line_bulk chip::find_lines(const ::std::vector<::std::string>& names) const
+-{
+-	line_bulk lines;
+-	line line;
+-
+-	for (auto& it: names) {
+-		line = this->find_line(it);
+-		if (!line) {
+-			lines.clear();
+-			return lines;
+-		}
+-
+-		lines.append(line);
+-	}
+-
+-	return lines;
+-}
+-
+ bool chip::operator==(const chip& rhs) const noexcept
+ {
+ 	return this->_m_chip.get() == rhs._m_chip.get();
 diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index 0d443b0..b258730 100644
+index b258730..a16a27c 100644
 --- a/bindings/cxx/gpiod.hpp
 +++ b/bindings/cxx/gpiod.hpp
-@@ -548,15 +548,6 @@ private:
- 	friend line_iter;
- };
+@@ -146,13 +146,6 @@ public:
+ 	 */
+ 	GPIOD_API line_bulk get_all_lines(void) const;
  
--/**
-- * @brief Find a GPIO line by name. Search all GPIO chips present on the system.
-- * @param name Name of the line.
-- * @return Returns a <line, chip> pair where line is the line with given name
-- *         and chip is the line's owner. Both objects are empty if the line was
-- *         not found.
-- */
--GPIOD_API ::std::pair<line, chip> find_line(const ::std::string& name);
+-	/**
+-	 * @brief Get a set of lines exposed by this chip by their names.
+-	 * @param names Vector of line names.
+-	 * @return Set of lines held by a line_bulk object.
+-	 */
+-	GPIOD_API line_bulk find_lines(const ::std::vector<::std::string>& names) const;
 -
- /**
-  * @brief Describes a single GPIO line event.
-  */
-diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
-index 5589875..54382e2 100644
---- a/bindings/cxx/line.cpp
-+++ b/bindings/cxx/line.cpp
-@@ -343,19 +343,4 @@ line::chip_guard::chip_guard(const line& line)
- 	
+ 	/**
+ 	 * @brief Equality operator.
+ 	 * @param rhs Right-hand side of the equation.
+diff --git a/bindings/cxx/tests/tests-chip.cpp b/bindings/cxx/tests/tests-chip.cpp
+index 4c9f113..90ebc1b 100644
+--- a/bindings/cxx/tests/tests-chip.cpp
++++ b/bindings/cxx/tests/tests-chip.cpp
+@@ -191,17 +191,6 @@ TEST_CASE("Lines can be retrieved from chip objects", "[chip]")
+ 		REQUIRE(lines.get(2).name() == "gpio-mockup-B-3");
+ 		REQUIRE(lines.get(3).name() == "gpio-mockup-B-2");
+ 	}
+-
+-	SECTION("find multiple lines by names")
+-	{
+-		auto lines = chip.find_lines({ "gpio-mockup-B-2",
+-					       "gpio-mockup-B-5",
+-					       "gpio-mockup-B-6"});
+-		REQUIRE(lines.size() == 3);
+-		REQUIRE(lines.get(0).offset() == 2);
+-		REQUIRE(lines.get(1).offset() == 5);
+-		REQUIRE(lines.get(2).offset() == 6);
+-	}
  }
  
--::std::pair<line, chip> find_line(const ::std::string& name)
--{
--	::std::pair<line, chip> ret;
+ TEST_CASE("All lines can be retrieved from a chip at once", "[chip]")
+@@ -236,11 +225,4 @@ TEST_CASE("Errors occurring when retrieving lines are correctly reported", "[chi
+ 	{
+ 		REQUIRE_FALSE(chip.find_line("nonexistent-line"));
+ 	}
 -
--	for (auto& it: make_chip_iter()) {
--		ret.first = it.find_line(name);
--		if (ret.first) {
--			ret.second = it;
--			break;
--		}
--	}
--
--	return ret;
--}
--
- } /* namespace gpiod */
-diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-index 9841bea..a5499ac 100644
---- a/bindings/cxx/tests/tests-line.cpp
-+++ b/bindings/cxx/tests/tests-line.cpp
-@@ -18,25 +18,6 @@ const ::std::string consumer = "line-test";
- 
- } /* namespace */
- 
--TEST_CASE("Global find_line() function works", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8, 8, 8, 8, 8 }, mockup::FLAG_NAMED_LINES);
--
--	SECTION("line found")
+-	SECTION("line not found by name (multiple lines)")
 -	{
--		auto ret = ::gpiod::find_line("gpio-mockup-C-5");
--		REQUIRE(ret.first.offset() == 5);
--		REQUIRE(ret.first.name() == "gpio-mockup-C-5");
--		REQUIRE(ret.second.label() == "gpio-mockup-C");
+-		REQUIRE_FALSE(chip.find_lines({ "gpio-mockup-B-2",
+-						"nonexistent-line",
+-						"gpio-mockup-B-6"}));
 -	}
--
--	SECTION("line not found")
--	{
--		auto ret = ::gpiod::find_line("nonexistent-line");
--		REQUIRE_FALSE(ret.first);
--	}
--}
--
- TEST_CASE("Line information can be correctly retrieved", "[line]")
- {
- 	mockup::probe_guard mockup_chips({ 8 }, mockup::FLAG_NAMED_LINES);
+ }
 diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index 17a58b1..bcaae92 100644
+index bcaae92..4948d5d 100644
 --- a/bindings/python/gpiodmodule.c
 +++ b/bindings/python/gpiodmodule.c
-@@ -2671,80 +2671,6 @@ static PyTypeObject gpiod_LineIterType = {
- 	.tp_iternext = (iternextfunc)gpiod_LineIter_next,
- };
+@@ -2339,86 +2339,6 @@ gpiod_Chip_get_all_lines(gpiod_ChipObject *self, PyObject *Py_UNUSED(ignored))
+ 	return bulk_obj;
+ }
  
--PyDoc_STRVAR(gpiod_Module_find_line_doc,
--"find_line(name) -> gpiod.Line object or None\n"
+-PyDoc_STRVAR(gpiod_Chip_find_lines_doc,
+-"find_lines(names) -> gpiod.LineBulk object\n"
 -"\n"
--"Lookup a GPIO line by name. Search all gpiochips. Returns a gpiod.Line\n"
--"or None if a line with given name doesn't exist in the system.\n"
+-"Look up a set of lines by their names.\n"
 -"\n"
--"NOTE: the gpiod.Chip object owning the returned line must be closed\n"
--"by the caller.\n"
+-"  names\n"
+-"    Sequence of line names.\n"
 -"\n"
--"  name\n"
--"    Name of the line to find (string).");
+-"Unlike find_line(), this method raises an exception if at least one line\n"
+-"from the list doesn't exist.");
 -
--static gpiod_LineObject *gpiod_Module_find_line(PyObject *Py_UNUSED(self),
--						PyObject *args)
+-static gpiod_LineBulkObject *
+-gpiod_Chip_find_lines(gpiod_ChipObject *self, PyObject *args)
 -{
--	gpiod_LineObject *line_obj;
--	gpiod_ChipObject *chip_obj;
--	struct gpiod_chip *chip;
--	struct gpiod_line *line;
--	const char *name;
+-	PyObject *names, *lines, *iter, *next, *arg;
+-	gpiod_LineBulkObject *bulk;
+-	Py_ssize_t num_names, i;
+-	gpiod_LineObject *line;
 -	int rv;
 -
--	rv = PyArg_ParseTuple(args, "s", &name);
+-	rv = PyArg_ParseTuple(args, "O", &names);
 -	if (!rv)
 -		return NULL;
 -
--	Py_BEGIN_ALLOW_THREADS;
--	line = gpiod_line_find(name);
--	Py_END_ALLOW_THREADS;
--	if (!line) {
--		if (errno == ENOENT) {
--			Py_INCREF(Py_None);
--			return (gpiod_LineObject *)Py_None;
+-	num_names = PyObject_Size(names);
+-	if (num_names < 1) {
+-		PyErr_SetString(PyExc_TypeError,
+-				"Argument must be a non-empty sequence of names");
+-		return NULL;
+-	}
+-
+-	lines = PyList_New(num_names);
+-	if (!lines)
+-		return NULL;
+-
+-	iter = PyObject_GetIter(names);
+-	if (!iter) {
+-		Py_DECREF(lines);
+-		return NULL;
+-	}
+-
+-	for (i = 0;;) {
+-		next = PyIter_Next(iter);
+-		if (!next) {
+-			Py_DECREF(iter);
+-			break;
 -		}
 -
--		return (gpiod_LineObject *)PyErr_SetFromErrno(PyExc_OSError);
+-		arg = PyTuple_Pack(1, next);
+-		if (!arg) {
+-			Py_DECREF(iter);
+-			Py_DECREF(lines);
+-			return NULL;
+-		}
+-
+-		line = gpiod_Chip_find_line(self, arg);
+-		Py_DECREF(arg);
+-		if (!line || (PyObject *)line == Py_None) {
+-			Py_DECREF(iter);
+-			Py_DECREF(lines);
+-			if ((PyObject *)line == Py_None)
+-				PyErr_SetString(PyExc_TypeError,
+-						"Unable to find all lines from the list");
+-			return NULL;
+-		}
+-
+-		rv = PyList_SetItem(lines, i++, (PyObject *)line);
+-		if (rv < 0) {
+-			Py_DECREF(line);
+-			Py_DECREF(iter);
+-			Py_DECREF(lines);
+-			return NULL;
+-		}
 -	}
 -
--	chip = gpiod_line_get_chip(line);
--
--	chip_obj = PyObject_New(gpiod_ChipObject, &gpiod_ChipType);
--	if (!chip_obj) {
--		gpiod_chip_close(chip);
--		return NULL;
--	}
--
--	chip_obj->chip = chip;
--
--	line_obj = gpiod_MakeLineObject(chip_obj, line);
--	if (!line_obj)
--		return NULL;
--
--	/*
--	 * PyObject_New() set the reference count for the chip object at 1 and
--	 * the call to gpiod_MakeLineObject() increased it to 2. However when
--	 * we return the object to the line object to the python interpreter,
--	 * there'll be only a single reference holder to the chip - the line
--	 * object itself. Decrease the chip reference here manually.
--	 */
--	Py_DECREF(line_obj->owner);
--
--	return line_obj;
+-	bulk = gpiod_ListToLineBulk(lines);
+-	Py_DECREF(lines);
+-	return bulk;
 -}
 -
--static PyMethodDef gpiod_module_methods[] = {
+ static PyMethodDef gpiod_Chip_methods[] = {
+ 	{
+ 		.ml_name = "close",
+@@ -2480,12 +2400,6 @@ static PyMethodDef gpiod_Chip_methods[] = {
+ 		.ml_flags = METH_NOARGS,
+ 		.ml_doc = gpiod_Chip_get_all_lines_doc,
+ 	},
 -	{
--		.ml_name = "find_line",
--		.ml_meth = (PyCFunction)gpiod_Module_find_line,
+-		.ml_name = "find_lines",
+-		.ml_meth = (PyCFunction)gpiod_Chip_find_lines,
 -		.ml_flags = METH_VARARGS,
--		.ml_doc = gpiod_Module_find_line_doc,
+-		.ml_doc = gpiod_Chip_find_lines_doc,
 -	},
--	{ }
--};
--
- typedef struct {
- 	const char *name;
- 	PyTypeObject *typeobj;
-@@ -2850,7 +2776,6 @@ static PyModuleDef gpiod_Module = {
- 	.m_name = "gpiod",
- 	.m_doc = gpiod_Module_doc,
- 	.m_size = -1,
--	.m_methods = gpiod_module_methods,
+ 	{ }
  };
  
- typedef struct {
 diff --git a/bindings/python/tests/gpiod_py_test.py b/bindings/python/tests/gpiod_py_test.py
-index e4aaadc..8534ce9 100755
+index 8534ce9..6ee72a9 100755
 --- a/bindings/python/tests/gpiod_py_test.py
 +++ b/bindings/python/tests/gpiod_py_test.py
-@@ -234,24 +234,6 @@ class ChipGetLines(MockupTestCase):
- # Line test cases
- #
+@@ -182,30 +182,6 @@ class ChipGetLines(MockupTestCase):
+             self.assertEqual(lines[2].name(), 'gpio-mockup-B-6')
+             self.assertEqual(lines[3].name(), 'gpio-mockup-B-7')
  
--class LineGlobalFindLine(MockupTestCase):
+-    def test_find_multiple_lines_by_names_in_tuple(self):
+-        with gpiod.Chip(mockup.chip_name(1)) as chip:
+-            lines = chip.find_lines(( 'gpio-mockup-B-0',
+-                                      'gpio-mockup-B-3',
+-                                      'gpio-mockup-B-4',
+-                                      'gpio-mockup-B-6' )).to_list()
+-            self.assertEqual(len(lines), 4)
+-            self.assertEqual(lines[0].offset(), 0)
+-            self.assertEqual(lines[1].offset(), 3)
+-            self.assertEqual(lines[2].offset(), 4)
+-            self.assertEqual(lines[3].offset(), 6)
 -
--    chip_sizes = ( 4, 8, 16 )
--    flags = gpiomockup.Mockup.FLAG_NAMED_LINES
+-    def test_find_multiple_lines_by_names_in_list(self):
+-        with gpiod.Chip(mockup.chip_name(1)) as chip:
+-            lines = chip.find_lines([ 'gpio-mockup-B-0',
+-                                      'gpio-mockup-B-3',
+-                                      'gpio-mockup-B-4',
+-                                      'gpio-mockup-B-6' ]).to_list()
+-            self.assertEqual(len(lines), 4)
+-            self.assertEqual(lines[0].offset(), 0)
+-            self.assertEqual(lines[1].offset(), 3)
+-            self.assertEqual(lines[2].offset(), 4)
+-            self.assertEqual(lines[3].offset(), 6)
 -
--    def test_global_find_line_function(self):
--        line = gpiod.find_line('gpio-mockup-B-4')
--        self.assertNotEqual(line, None)
--        try:
--            self.assertEqual(line.owner().label(), 'gpio-mockup-B')
--            self.assertEqual(line.offset(), 4)
--        finally:
--            line.owner().close()
--
--    def test_global_find_line_function_nonexistent(self):
--        line = gpiod.find_line('nonexistent-line')
--        self.assertEqual(line, None)
--
- class LineInfo(MockupTestCase):
+     def test_get_multiple_lines_invalid_offset(self):
+         with gpiod.Chip(mockup.chip_name(1)) as chip:
+             with self.assertRaises(OSError) as err_ctx:
+@@ -213,14 +189,6 @@ class ChipGetLines(MockupTestCase):
  
-     chip_sizes = ( 8, )
+             self.assertEqual(err_ctx.exception.errno, errno.EINVAL)
+ 
+-    def test_find_multiple_lines_nonexistent(self):
+-        with gpiod.Chip(mockup.chip_name(1)) as chip:
+-            with self.assertRaises(TypeError):
+-                lines = chip.find_lines(( 'gpio-mockup-B-0',
+-                                          'nonexistent-line',
+-                                          'gpio-mockup-B-4',
+-                                          'gpio-mockup-B-6' )).to_list()
+-
+     def test_get_all_lines(self):
+         with gpiod.Chip(mockup.chip_name(2)) as chip:
+             lines = chip.get_all_lines().to_list()
 diff --git a/include/gpiod.h b/include/gpiod.h
-index c1113bf..5aeb7cc 100644
+index 5aeb7cc..34313ed 100644
 --- a/include/gpiod.h
 +++ b/include/gpiod.h
-@@ -1053,30 +1053,6 @@ int gpiod_line_event_read_fd(int fd, struct gpiod_line_event *event) GPIOD_API;
- int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
- 				      unsigned int num_events) GPIOD_API;
+@@ -184,21 +184,6 @@ gpiod_chip_get_all_lines(struct gpiod_chip *chip) GPIOD_API;
+ struct gpiod_line *
+ gpiod_chip_find_line(struct gpiod_chip *chip, const char *name) GPIOD_API;
  
 -/**
-- * @}
-- *
-- * @defgroup line_misc Misc line functions
-- * @{
-- *
-- * Functions that didn't fit anywhere else.
+- * @brief Find a set of GPIO lines by names among lines exposed by this chip.
+- * @param chip The GPIO chip object.
+- * @param names Array of pointers to C-strings containing the names of the
+- *              lines to lookup. Must end with a NULL-pointer.
+- * @return New line bulk object or NULL on error.
+- * @note If at least one line from the list could not be found among the lines
+- *       exposed by this chip, the function sets errno to ENOENT.
+- * @attention GPIO line names are not unique in the linux kernel, neither
+- *            globally nor within a single chip. This function finds the first
+- *            line with given name.
 - */
--
--/**
-- * @brief Find a GPIO line by its name.
-- * @param name Name of the GPIO line.
-- * @return Returns the GPIO line handle if the line exists in the system or
-- *         NULL if it couldn't be located or an error occurred.
-- * @attention GPIO lines are not unique in the linux kernel, neither globally
-- *            nor within a single chip. This function finds the first line with
-- *            given name.
-- *
-- * If this routine succeeds, the user must manually close the GPIO chip owning
-- * this line to avoid memory leaks. If the line could not be found, this
-- * functions sets errno to ENOENT.
-- */
--struct gpiod_line *gpiod_line_find(const char *name) GPIOD_API;
+-struct gpiod_line_bulk *
+-gpiod_chip_find_lines(struct gpiod_chip *chip, const char **names) GPIOD_API;
 -
  /**
   * @}
   *
 diff --git a/lib/helpers.c b/lib/helpers.c
-index 2063c3f..5a73736 100644
+index 5a73736..509a1c8 100644
 --- a/lib/helpers.c
 +++ b/lib/helpers.c
-@@ -377,32 +377,3 @@ int gpiod_line_request_bulk_both_edges_events_flags(
- 	return line_event_request_type_bulk(bulk, consumer, flags,
- 					GPIOD_LINE_REQUEST_EVENT_BOTH_EDGES);
+@@ -142,34 +142,6 @@ gpiod_chip_find_line(struct gpiod_chip *chip, const char *name)
+ 	return NULL;
  }
--
--struct gpiod_line *gpiod_line_find(const char *name)
+ 
+-struct gpiod_line_bulk *
+-gpiod_chip_find_lines(struct gpiod_chip *chip, const char **names)
 -{
--	struct gpiod_chip_iter *iter;
--	struct gpiod_chip *chip;
+-	struct gpiod_line_bulk *bulk;
 -	struct gpiod_line *line;
+-	unsigned int num_names;
+-	int i;
 -
--	iter = gpiod_chip_iter_new();
--	if (!iter)
+-	for (i = 0; names[i]; i++);
+-	num_names = i;
+-
+-	bulk = gpiod_line_bulk_new(num_names);
+-	if (!bulk)
 -		return NULL;
 -
--	gpiod_foreach_chip(iter, chip) {
--		line = gpiod_chip_find_line(chip, name);
--		if (line) {
--			gpiod_chip_iter_free_noclose(iter);
--			return line;
+-	for (i = 0; names[i]; i++) {
+-		line = gpiod_chip_find_line(chip, names[i]);
+-		if (!line) {
+-			gpiod_line_bulk_free(bulk);
+-			return NULL;
 -		}
 -
--		if (errno != ENOENT)
--			goto out;
+-		gpiod_line_bulk_add_line(bulk, line);
 -	}
 -
--	errno = ENOENT;
--
--out:
--	gpiod_chip_iter_free(iter);
--
--	return NULL;
+-	return bulk;
 -}
-diff --git a/tests/tests-line.c b/tests/tests-line.c
-index 235df0f..aee85fe 100644
---- a/tests/tests-line.c
-+++ b/tests/tests-line.c
-@@ -716,37 +716,6 @@ GPIOD_TEST_CASE(output_value_caching, 0, { 8 })
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
+-
+ int gpiod_line_request_input(struct gpiod_line *line, const char *consumer)
+ {
+ 	struct gpiod_line_request_config config = {
+diff --git a/tests/tests-chip.c b/tests/tests-chip.c
+index 0c2948a..543c103 100644
+--- a/tests/tests-chip.c
++++ b/tests/tests-chip.c
+@@ -264,52 +264,3 @@ GPIOD_TEST_CASE(find_line_not_found, GPIOD_TEST_FLAG_NAMED_LINES, { 8, 8, 8 })
+ 	g_assert_null(line);
+ 	g_assert_cmpint(errno, ==, ENOENT);
  }
- 
--GPIOD_TEST_CASE(find_good, GPIOD_TEST_FLAG_NAMED_LINES, { 16, 16, 32, 16 })
+-
+-GPIOD_TEST_CASE(find_lines_good, GPIOD_TEST_FLAG_NAMED_LINES, { 8, 8, 8 })
 -{
+-	static const gchar *names[] = { "gpio-mockup-B-3",
+-					"gpio-mockup-B-6",
+-					"gpio-mockup-B-7",
+-					NULL };
+-
+-	g_autoptr(gpiod_line_bulk_struct) bulk = NULL;
 -	g_autoptr(gpiod_chip_struct) chip = NULL;
--	struct gpiod_line *line;
+-	struct gpiod_line *line0, *line1, *line2;
 -
--	line = gpiod_line_find("gpio-mockup-C-12");
--	g_assert_nonnull(line);
+-	chip = gpiod_chip_open(gpiod_test_chip_path(1));
+-	g_assert_nonnull(chip);
 -	gpiod_test_return_if_failed();
--	chip = gpiod_line_get_chip(line);
--	g_assert_cmpint(gpiod_line_offset(line), ==, 12);
+-
+-	bulk = gpiod_chip_find_lines(chip, names);
+-	g_assert_nonnull(bulk);
+-	gpiod_test_return_if_failed();
+-	g_assert_cmpuint(gpiod_line_bulk_num_lines(bulk), ==, 3);
+-	gpiod_test_return_if_failed();
+-
+-	line0 = gpiod_line_bulk_get_line(bulk, 0);
+-	line1 = gpiod_line_bulk_get_line(bulk, 1);
+-	line2 = gpiod_line_bulk_get_line(bulk, 2);
+-
+-	g_assert_cmpuint(gpiod_line_offset(line0), ==, 3);
+-	g_assert_cmpuint(gpiod_line_offset(line1), ==, 6);
+-	g_assert_cmpuint(gpiod_line_offset(line2), ==, 7);
 -}
 -
--GPIOD_TEST_CASE(find_not_found,
--		GPIOD_TEST_FLAG_NAMED_LINES, { 16, 16, 32, 16 })
+-GPIOD_TEST_CASE(fine_lines_not_found, GPIOD_TEST_FLAG_NAMED_LINES, { 8, 8, 8 })
 -{
--	struct gpiod_line *line;
+-	static const gchar *names[] = { "gpio-mockup-B-3",
+-					"nonexistent",
+-					"gpio-mockup-B-7",
+-					NULL };
 -
--	line = gpiod_line_find("nonexistent");
--	g_assert_null(line);
+-	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct gpiod_line_bulk *bulk;
+-
+-	chip = gpiod_chip_open(gpiod_test_chip_path(1));
+-	g_assert_nonnull(chip);
+-	gpiod_test_return_if_failed();
+-
+-	bulk = gpiod_chip_find_lines(chip, names);
+-	g_assert_null(bulk);
 -	g_assert_cmpint(errno, ==, ENOENT);
 -}
--
--GPIOD_TEST_CASE(find_unnamed_lines, 0, { 16, 16, 32, 16 })
--{
--	struct gpiod_line *line;
--
--	line = gpiod_line_find("gpio-mockup-C-12");
--	g_assert_null(line);
--	g_assert_cmpint(errno, ==, ENOENT);
--}
--
- GPIOD_TEST_CASE(direction, 0, { 8 })
- {
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
-diff --git a/tools/gpiofind.c b/tools/gpiofind.c
-index 2138ebf..489cf33 100644
---- a/tools/gpiofind.c
-+++ b/tools/gpiofind.c
-@@ -34,9 +34,10 @@ static void print_help(void)
- 
- int main(int argc, char **argv)
- {
--	int optc, opti, ret = EXIT_SUCCESS;
-+	struct gpiod_chip_iter *iter;
- 	struct gpiod_chip *chip;
- 	struct gpiod_line *line;
-+	int optc, opti;
- 
- 	for (;;) {
- 		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-@@ -63,19 +64,23 @@ int main(int argc, char **argv)
- 	if (argc != 1)
- 		die("exactly one GPIO line name must be specified");
- 
--	line = gpiod_line_find(argv[0]);
--	if (!line) {
--		if (errno == ENOENT)
--			return EXIT_FAILURE;
-+	iter = gpiod_chip_iter_new();
-+	if (!iter)
-+		die_perror("unable to access GPIO chips");
- 
--		die_perror("error performing the line lookup");
--	}
--
--	chip = gpiod_line_get_chip(line);
--
--	printf("%s %u\n", gpiod_chip_name(chip), gpiod_line_offset(line));
-+	gpiod_foreach_chip(iter, chip) {
-+		line = gpiod_chip_find_line(chip, argv[0]);
-+		if (line) {
-+			printf("%s %u\n",
-+			       gpiod_chip_name(chip), gpiod_line_offset(line));
-+			gpiod_chip_iter_free(iter);
-+			return EXIT_SUCCESS;
-+		}
- 
--	gpiod_chip_close(chip);
-+		if (errno != ENOENT)
-+			die_perror("error performing the line lookup");
-+	}
- 
--	return ret;
-+	gpiod_chip_iter_free(iter);
-+	return EXIT_FAILURE;
- }
 -- 
 2.29.1
 
