@@ -2,130 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81C592D5BDC
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:34:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE842D5C18
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Dec 2020 14:39:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389114AbgLJNeJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 08:34:09 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46146 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728925AbgLJNeJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:34:09 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BADWMo0069011;
-        Thu, 10 Dec 2020 07:32:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607607142;
-        bh=JHpOR1kUHxtPaKlXFx+C7LrcNp8Gm/RDnhA8hMFAgg8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GPdRtkF9AvlLw0wgUNk/srZkBu3Y0K7BmILEkuCDUVeh8kicElCIfaxcEMJlhXUaB
-         eJIGd76HFFNBlbFLN1cGcaXZDyViSLqgUC1xPs1dkMQILvZf0aCGJECwoy9JiM6tUr
-         IyPrbq+GUGxWdBEDN+EtnUxv+gtVWJjJp+QSeMp4=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BADWMOw001270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Dec 2020 07:32:22 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Dec 2020 07:32:21 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Dec 2020 07:32:21 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BADWFuO013329;
-        Thu, 10 Dec 2020 07:32:17 -0600
-Subject: Re: Howto listen to/handle gpio state changes ? Re: [PATCH v2 2/2]
- drivers: gpio: add virtio-gpio guest driver
-To:     Arnd Bergmann <arnd@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <0080d492-2f07-d1c6-d18c-73d4204a5d40@metux.net>
- <CACRpkdb4R4yHcUV2KbGEC_RkU+QmH6Xg7X+qee8sEa9TURGr8A@mail.gmail.com>
- <51d3efb7-b7eb-83d7-673a-308dd51616d3@metux.net>
- <CACRpkdbqVoT56H88hoZwDqV0kW_8XTaE5TkMQsg-RRrPqgF=cQ@mail.gmail.com>
- <CAK8P3a1PRQGUXkjdSmqxXSONX_ZoCgsfx8hJBUdBUk14tyzErA@mail.gmail.com>
- <CACRpkdbNAeDsi9B14kbkAeoqX7NE_Ua_yOX1iNF75oNK0ELefQ@mail.gmail.com>
- <2827855a-dc4f-2e17-aca3-4b1b9f0d5084@ti.com>
- <CAK8P3a30=AcEZAZ2yNUgctj=4YM6FhS1ZXB4ts7a7WV=gBcatA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3e16d597-d1f6-f054-4523-a7a00c945618@ti.com>
-Date:   Thu, 10 Dec 2020 15:32:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2389439AbgLJNfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 08:35:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389404AbgLJNfa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 08:35:30 -0500
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC10C0613D6;
+        Thu, 10 Dec 2020 05:34:50 -0800 (PST)
+Received: by mail-yb1-xb41.google.com with SMTP id u203so4733283ybb.2;
+        Thu, 10 Dec 2020 05:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U/roqOTkuyKuA5LDRyyEuc0O+uuXLFYRIA0JUlY59Bk=;
+        b=I+i0gWaLA7UKfNFgJQDCwWrfCS9iCPpQ0A4zUjzU8Y4ZvassZGOITAyYroE6aiVQxp
+         3C7S5fsGAcLvMA+eO0LiCzFAgyULX0jvv67m3oN432kQWKEeC312EQnW9kOU3Nm7vWce
+         Ut5c1HlGF8+9XribssMqLCLY7I9i1aMW2lk0fCNwQphjzMxMT+gK001vflbpbYgzShJi
+         uDcK/EXnVddWy4lPExw0YitK4tkoB/hkd8bGOcAoimf6NKx1l9QZOa3CtXBOS8qL5eF1
+         IUJ/umFa6xMIOtZjhIlBnnFs/ayjL55MRiHZSmGPBddw+TYPs486F3uyhWOww9DiUad4
+         afHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U/roqOTkuyKuA5LDRyyEuc0O+uuXLFYRIA0JUlY59Bk=;
+        b=DQJCS0U535FpLdj0RiFfKZjpCA19ivlugstB7UBFtILVd3yI1enU3dsQgRmWVzDIne
+         RWXXACNBVJHeBDfO4giB1JexDQ2ftCKQnlVs7Gk3VshTR6U68N1TEtmXPgok/48ft1Vx
+         MkQ0i8GVeo17tydR0+jMBm8Zd+ejL+jg3QwyA4M93jpAqhnirNRDKSDzvgIMGqVqWbND
+         f8WUt+45Ml6hcT93Bphym6UkW9vMWQdlBJ4Tz8LrFfTC1PNNxbNnXWQ9uEHI3/rgBS8v
+         YfwRsxC/Vo0SHFlPXj8FSi7NvpEASSmtN1owKkr4RRe7YEC456KQPtzUZcX0uWS2uIMg
+         1rdQ==
+X-Gm-Message-State: AOAM533ISmZ8qDSjoS8jYaXJoCcko/P0mhd+dIuo9XIHKGizAQsNyciT
+        OArkVSp8Y4Qqnh1FTPqnEkdJW5xBtHq1MHjW7XA=
+X-Google-Smtp-Source: ABdhPJwOblTPqsGeuSVQCngMDfoO16GBD7DpLAVnesO53oahEPxk3iPPRkVlWRjT5EhD+gYUQuxuFgXEhYqvKK6vfrs=
+X-Received: by 2002:a25:690b:: with SMTP id e11mr10757041ybc.314.1607607289459;
+ Thu, 10 Dec 2020 05:34:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a30=AcEZAZ2yNUgctj=4YM6FhS1ZXB4ts7a7WV=gBcatA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1607403341-57214-1-git-send-email-yash.shah@sifive.com> <1607403341-57214-2-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1607403341-57214-2-git-send-email-yash.shah@sifive.com>
+From:   Bin Meng <bmeng.cn@gmail.com>
+Date:   Thu, 10 Dec 2020 21:34:37 +0800
+Message-ID: <CAEUhbmWVn=W7y+xFGrmpNhQUEqLP-SjKoqeWZ=xgeVaMo5qO=A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: riscv: Update DT binding docs to
+ support SiFive FU740 SoC
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        broonie@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Albert Ou <aou@eecs.berkeley.edu>, lee.jones@linaro.org,
+        u.kleine-koenig@pengutronix.de,
+        Thierry Reding <thierry.reding@gmail.com>, andrew@lunn.ch,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Dec 8, 2020 at 3:06 PM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> Add new compatible strings in cpus.yaml to support the E71 and U74 CPU
+> cores ("harts") that are present on FU740-C000 SoC.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/riscv/cpus.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
 
-
-On 09/12/2020 22:38, Arnd Bergmann wrote:
-> On Wed, Dec 9, 2020 at 9:22 PM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->> On 09/12/2020 14:53, Linus Walleij wrote:
->>> On Wed, Dec 9, 2020 at 12:19 PM Arnd Bergmann <arnd@kernel.org> wrote:
->>>> On Wed, Dec 9, 2020 at 9:51 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>> On Tue, Dec 8, 2020 at 3:07 PM Enrico Weigelt, metux IT consult <lkml@metux.net> wrote:
->>>>
->>>>> What we need to understand is if your new usecase is an outlier
->>>>> so it is simplest modeled by a "mock" irq_chip or we have to design
->>>>> something new altogether like notifications on changes. I suspect
->>>>> irq_chip would be best because all drivers using GPIOs for interrupts
->>>>> are expecting interrupts, and it would be an enormous task to
->>>>> change them all and really annoying to create a new mechanism
->>>>> on the side.
->>>>
->>>> I would expect the platform abstraction to actually be close enough
->>>> to a chained irqchip that it actually works: the notification should
->>>> come in via vring_interrupt(), which is a normal interrupt handler
->>>> that calls vq->vq.callback(), calling generic_handle_irq() (and
->>>> possibly chained_irq_enter()/chained_irq_exit() around it) like the
->>>> other gpio drivers do should just work here I think, and if it did
->>>> not, then I would expect this to be just a bug in the driver rather
->>>> than something missing in the gpio framework.
->>>
->>> Performance/latency-wise that would also be strongly encouraged.
->>>
->>> Tglx isn't super-happy about the chained interrupts at times, as they
->>> can create really nasty bugs, but a pure IRQ in fastpath of some
->>> kinde is preferable and intuitive either way.
->>
->> In my opinion the problem here is that proposed patch somehow describes Front end, but
->> says nothing about Backend and overall design.
->>
->> What is expected to be virtualized? whole GPIO chip? or set of GPIOs from different GPIO chips?
->> Most often nobody want to give Guest access to the whole GPIO chip, so, most probably, smth. similar to
->> GPIO Aggregator will be needed.
-> 
-> I would argue that it does not matter, the virtual GPIO chip could really
-> be anything. Certain functions such as a gpio based keyboard require
-> interrupts, so it sounds useful to make them work.
-
-Agree, and my point was not to discard IRQ support, but solve problem step by step.
-And existing Back end, in any form, may just help to understand virtio-gpio protocol spec and
-identify missed pieces.
-
-For example, should 'Configuration space' specify if IRQs are supported on not?
-
--- 
-Best regards,
-grygorii
+Reviewed-by: Bin Meng <bin.meng@windriver.com>
