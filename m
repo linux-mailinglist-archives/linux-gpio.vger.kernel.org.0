@@ -2,69 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49FA52D6EA7
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 04:34:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 175B62D6EE0
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 04:49:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395119AbgLKDbw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 22:31:52 -0500
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:45750 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395118AbgLKDbn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 22:31:43 -0500
-Received: by mail-oi1-f171.google.com with SMTP id f132so8331404oib.12;
-        Thu, 10 Dec 2020 19:31:28 -0800 (PST)
+        id S2395232AbgLKDsY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 22:48:24 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45383 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395229AbgLKDr4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 22:47:56 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h18so7081595otq.12;
+        Thu, 10 Dec 2020 19:47:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tPzs8wSBCqyhse1n/k2re/x+sNjYYy09CVQwRqHItwI=;
-        b=gQ/HNjI7icU+q5RfyyZQmcLWXOAylfZXZ8Q0a2ris4aNL+7/7MBoA6WFfrtLkzcPQ4
-         RylURrv4Z74vRE+4epcWfCyK1OE/msCr1dUqx0zbkXJ+pWaX7vVslhDY2iy3+N355I3r
-         iYuf3ozkOFQb+OAKLHBzDxU9FympkfAXuKzzsIXNFwCFyBHGaoyc2+2znQJWMAxUj3L6
-         TXVzSIW1fiNjOimaseejJBtbaA8M5ic0pmKh+aRrYpB6875aT2ftuOg/i3zQZVrlqdDN
-         HynRkXB0BValT41oiO0vyYNklXU/R1+8PtCpKWFy7+ghP1QJdiYMCwAXgw1VwG2xWb4Q
-         tFuw==
-X-Gm-Message-State: AOAM533Dh0E280vsx5aihl1Zx9OufPuyLehzt5+qp6YYk7t7tpPCN64C
-        aqOMkEybdPVQEkM+YlCT2g==
-X-Google-Smtp-Source: ABdhPJwPCuxaIFDkVuxjowHzrgvOOxjtSzFefQfi85WoIOFGCsidOK1LZhRoJTa/vgfpVMEGYSKEIQ==
-X-Received: by 2002:aca:c443:: with SMTP id u64mr7735487oif.117.1607657462747;
-        Thu, 10 Dec 2020 19:31:02 -0800 (PST)
+        bh=ZwzlRu7XT64jzkln5zNA8fU/0gIXgr88ZmNCsytqy8k=;
+        b=koIwS9rWqEn/kHlRLpoOiJJZMsKjvBYWD1QjDS84D5/U094L1g/YLN6dsVvEjV9xJ6
+         uQ8r+tmQq6/xr0lGOgSBjNvlNe44kwqgk7DvzgCZ0lvMzSJFXsMkindWC5tBA4nSk6tN
+         mZUw810i+Kvtl0EuVdZfHM6yrd3oBo4JQjq20hRABq9HfOpi2nkZep+nbf5qKE9J1YlS
+         id5TwARSyiZ1on8OYrAPEZCSZ+My8WAmLFh2Ilk3N5nrrG7O2Ds8IuLf0QrmMhFx3S1J
+         h/IWOMO2PnXkyDOrdx3JzxEptGnL3a4aPaSdyl2CMc/ximTDuJvwR6SkbgN78ZoNPjFc
+         Rb0A==
+X-Gm-Message-State: AOAM531WBCBNfljpavlbG/usVDRePB+yDFgfDV+uFTWkAWB8OLpDnWHW
+        L2nse1TT0C8Xpu3jtUpgDQ==
+X-Google-Smtp-Source: ABdhPJygjoh6SmZ/btWfAkyVXnqcEeardEM0RdNav2rSCXwN4/B/XBR7OLLAq9AjNOH8/HnTPoz85g==
+X-Received: by 2002:a9d:2de9:: with SMTP id g96mr8336782otb.209.1607658435276;
+        Thu, 10 Dec 2020 19:47:15 -0800 (PST)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l5sm1491453ooo.2.2020.12.10.19.31.01
+        by smtp.gmail.com with ESMTPSA id n16sm759177oov.23.2020.12.10.19.47.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 19:31:01 -0800 (PST)
-Received: (nullmailer pid 3581367 invoked by uid 1000);
-        Fri, 11 Dec 2020 03:31:01 -0000
-Date:   Thu, 10 Dec 2020 21:31:01 -0600
+        Thu, 10 Dec 2020 19:47:12 -0800 (PST)
+Received: (nullmailer pid 3603636 invoked by uid 1000);
+        Fri, 11 Dec 2020 03:47:10 -0000
+Date:   Thu, 10 Dec 2020 21:47:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH -next 2/3] dt-bindings: pinctrl: pinctrl-microchip-sgpio:
- Add irq support
-Message-ID: <20201211033101.GA3581336@robh.at.kernel.org>
-References: <20201209142753.683208-1-lars.povlsen@microchip.com>
- <20201209142753.683208-3-lars.povlsen@microchip.com>
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 3/3] dt-bindings: ap806: document marvell, gpio
+ pwm-offset property
+Message-ID: <20201211034710.GA3603606@robh.at.kernel.org>
+References: <cover.1607601615.git.baruch@tkos.co.il>
+ <5c2810b698c5099264b82a7f6fbed13e66062307.1607601615.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201209142753.683208-3-lars.povlsen@microchip.com>
+In-Reply-To: <5c2810b698c5099264b82a7f6fbed13e66062307.1607601615.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 09 Dec 2020 15:27:52 +0100, Lars Povlsen wrote:
-> This describe the new bindings for the added IRQ support in the
-> pinctrl-microchip-sgpio driver.
+On Thu, 10 Dec 2020 14:16:00 +0200, Baruch Siach wrote:
+> Update the example as well. Add the '#pwm-cells' and 'clocks' properties
+> for a complete working example.
 > 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
->  .../bindings/pinctrl/microchip,sparx5-sgpio.yaml | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  .../bindings/arm/marvell/ap80x-system-controller.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
