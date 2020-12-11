@@ -2,139 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEABA2D6D3B
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 02:22:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97FD12D6E00
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 03:11:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404908AbgLKBVA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 20:21:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:49374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404814AbgLKBUs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Dec 2020 20:20:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E858213D5;
-        Thu, 10 Dec 2020 17:20:02 -0800 (PST)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDB963F66B;
-        Thu, 10 Dec 2020 17:20:00 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Icenowy Zheng <icenowy@aosc.xyz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 04/21] pinctrl: sunxi: Add support for the Allwinner H616-R pin controller
-Date:   Fri, 11 Dec 2020 01:19:17 +0000
-Message-Id: <20201211011934.6171-5-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20201211011934.6171-1-andre.przywara@arm.com>
-References: <20201211011934.6171-1-andre.przywara@arm.com>
+        id S2389837AbgLKCKg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 21:10:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389853AbgLKCKU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 21:10:20 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6810EC0613D6
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 18:09:40 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id p6so3819368plo.6
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 18:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yVFozMuS5TpszRtC1MBvI/trOQ0D1L3gHa0W/ax0oOA=;
+        b=k8FJa4VDPQKIdEmftoL3n6FUAM5QMAocbXYJ/7Soloen2phJ6pJB4fzg50cLxSiXxU
+         4YUNAzAtglKo3O4Z41JfsSrtx1lyK5pJRXjCl4l2lgOP70ydco3CHVlneuIgbiyFo+To
+         PlmwRhOL88+KOSgfDt8GPZyrwDUKhG1mQUy5PBKZGoxAYEvC+F50Fh+jdgTyhqAbnN9D
+         ffGC9tqXaDiOwCzG7YTn7PJPpgElYpp1wJ4akk5JB+Mui9sjz5VSzsAmGcUzKeZiT7ED
+         MAKx/bcYm1XSz+GvNPFj8sXXCGs6X7RwxxThYThNLPOJgEkMq01lBQGTimEdnq2ia6Q6
+         OwtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=yVFozMuS5TpszRtC1MBvI/trOQ0D1L3gHa0W/ax0oOA=;
+        b=P8qDTs6U+nmebtvIh1CoO2ObzKnmRYfp4FaWG6uGFmgs+CMfCZcT2AFp+AvC95dpbI
+         F//RECuDoyJuTbFubxgZcZDiofrmUpvTeUeQov2antOrRaI9AgvO7f66YZw3mYrWgzsl
+         K7qYIq8fxNF1h23xpBPh0W7cS3QxC6wFYmSd9dz2ecqmFOXuDBQzm0iSr+0vrfY5fPTq
+         MgIhCLBkkazOtbuhx4DZ34CY/5chS0DQ/a9+bmN/xYO7g5VfOTwY47WQhulTF5X7ZQQo
+         cROwHH0QHSNybnJhKWsWKil+9LGTa8AhIAq7ya2v6CQhg4x7QTt2h2j/NkN+PSSCJ8oE
+         glXw==
+X-Gm-Message-State: AOAM531ZR+uoBPtv3DvFNJUXNqINdUvHZrrmTZZsQ9hNq1cI6x//PhDG
+        cVqujd1MBLGu5wNlG5gmmbGKCw==
+X-Google-Smtp-Source: ABdhPJw58HhmM/mjbuMOx2SsgiglRfhjytbaRsij/nVyvfyVpwwnqcvH6Tb/NnFTINsd934ZwIz2Bw==
+X-Received: by 2002:a17:902:ed14:b029:da:9da4:3091 with SMTP id b20-20020a170902ed14b02900da9da43091mr8810178pld.29.1607652579869;
+        Thu, 10 Dec 2020 18:09:39 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id u11sm7868211pjy.17.2020.12.10.18.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 18:09:39 -0800 (PST)
+Date:   Thu, 10 Dec 2020 18:09:39 -0800 (PST)
+X-Google-Original-Date: Thu, 10 Dec 2020 17:59:16 PST (-0800)
+Subject:     Re: [PATCH v8 01/22] riscv: Fix kernel time_init()
+In-Reply-To: <20201210140313.258739-2-damien.lemoal@wdc.com>
+CC:     linux-riscv@lists.infradead.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, p.zabel@pengutronix.de,
+        seanga2@gmail.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Message-ID: <mhng-755e4570-fc57-48b7-9ca9-e032c5de0dc1@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are only two pins left now, used to connect to the PMIC via I2C.
+On Thu, 10 Dec 2020 06:02:52 PST (-0800), Damien Le Moal wrote:
+> If of_clk_init() is not called in time_init(), clock providers defined
+> in the system device tree are not initialized, resulting in failures for
+> other devices to initialize due to missing clocks.
+> Similarly to other architectures and to the default kernel time_init()
+> implementation, call of_clk_init() before executing timer_probe() in
+> time_init().
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  arch/riscv/kernel/time.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+> index 4d3a1048ad8b..8a5cf99c0776 100644
+> --- a/arch/riscv/kernel/time.c
+> +++ b/arch/riscv/kernel/time.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>
+> +#include <linux/of_clk.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/delay.h>
+>  #include <asm/sbi.h>
+> @@ -24,6 +25,8 @@ void __init time_init(void)
+>  	riscv_timebase = prop;
+>
+>  	lpj_fine = riscv_timebase / HZ;
+> +
+> +	of_clk_init(NULL);
+>  	timer_probe();
+>  }
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/pinctrl/sunxi/Kconfig                 |  5 ++
- drivers/pinctrl/sunxi/Makefile                |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c | 54 +++++++++++++++++++
- 3 files changed, 60 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
-
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 73e88ce71a48..33751a6a0757 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -124,4 +124,9 @@ config PINCTRL_SUN50I_H616
- 	default ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN50I_H616_R
-+	bool "Support for the Allwinner H616 R-PIO"
-+	default ARM64 && ARCH_SUNXI
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 5359327a3c8f..d3440c42b9d6 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -24,5 +24,6 @@ obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
- obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
- obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616)	+= pinctrl-sun50i-h616.o
-+obj-$(CONFIG_PINCTRL_SUN50I_H616_R)	+= pinctrl-sun50i-h616-r.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
-new file mode 100644
-index 000000000000..52783dd98b18
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Allwinner H616 R_PIO pin controller driver
-+ *
-+ * Copyright (C) 2020 Arm Ltd.
-+ * Based on former work, which is:
-+ *   Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun50i_h616_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_i2c")),	/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_i2c")),	/* SDA */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun50i_h616_r_pinctrl_data = {
-+	.pins = sun50i_h616_r_pins,
-+	.npins = ARRAY_SIZE(sun50i_h616_r_pins),
-+	.pin_base = PL_BASE,
-+};
-+
-+static int sun50i_h616_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_init(pdev,
-+				  &sun50i_h616_r_pinctrl_data);
-+}
-+
-+static const struct of_device_id sun50i_h616_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-h616-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver sun50i_h616_r_pinctrl_driver = {
-+	.probe	= sun50i_h616_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-h616-r-pinctrl",
-+		.of_match_table	= sun50i_h616_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(sun50i_h616_r_pinctrl_driver);
--- 
-2.17.5
-
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
