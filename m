@@ -2,122 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCF262D80E3
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 22:17:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D43212D8120
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 22:30:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732606AbgLKVQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 16:16:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgLKVQT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 16:16:19 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7A0C0613D3;
-        Fri, 11 Dec 2020 13:15:39 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id t6so5228607plq.1;
-        Fri, 11 Dec 2020 13:15:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZAqTN7N4s0ZVaTdEPOvyAv38va5XxW6WW67wTQBqGtA=;
-        b=fh8vsjetqBmGgt2HnPCppc+aTWU9zdYuewDF62lfABoiTULIOgkY7VcNDHtzOc+yPu
-         X0+TbboHlf1+YHJu26LbOsmZoKwLD1Jdmo0lAwe1mvggIuxHgO2gB5IuzVg0D9OGtoJk
-         299rjy1oz5tCux8CmbrEQe7EkVd4bpUgmyUrepKTw+D3tZo/LDpvD0Tb0ZPh1Um7BM2W
-         XL3WJl0o4axyesDjSDopkI+l6UK9bZWpCmA+L2Poo3lde3ty4aNXu9IYgrujxcq7Nd65
-         P7hluddTs9WxONybduqmdr/93uvpDsEhyh7tzNBg6eJTydOyajsAJIDtgQeXiI5hC8vO
-         xLug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAqTN7N4s0ZVaTdEPOvyAv38va5XxW6WW67wTQBqGtA=;
-        b=c331EQZ20PMkZYROoVepXVyxmOjU66gwTPa3bkQ8LZiTUOg9EyZKUwiq1BWdRLC7P8
-         cedC9tKxMxRUU0+9k/nNUmHo4j9eKqNBZ/tCUg0eKaH5uPU6kdSskAe3WqB44kGqKf3v
-         9+aXthHqfYMgKgL1DKbd0KYSQG+ljjqt/DmyoeomtqlbC0thXzjQP9Aba/z+4EZyRvNz
-         fn8YopsnurPm3RAVTVznnhTab2h3TMpY8wxlX7NtRrq+EKata8zz2Kg/j62jANPRowDT
-         NuVMNE0/gniFfQfrwFgfhWAmyHD57e1xIGeaROzxkO01UhJOPcFcThqxrbo1jXLWfY+l
-         /PSQ==
-X-Gm-Message-State: AOAM532qxEYzIUzEp9noda0P+EQ4z8jeRWoURV+ENs/njolPQavopcrQ
-        FuBuN5naBhih32nZ0Y51JRiPeEnAxroMe00PUbc=
-X-Google-Smtp-Source: ABdhPJzmmKzahJ/XvSBVJsfd4c4acl75rWY0X7yiaQtx6soKBC6UxakhXag9pzCfAtRhiQk+Ji8Qn7i52iMN8ndGB9Y=
-X-Received: by 2002:a17:902:e98c:b029:da:cb88:f11d with SMTP id
- f12-20020a170902e98cb02900dacb88f11dmr12535178plb.17.1607721339002; Fri, 11
- Dec 2020 13:15:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20201211042625.129255-1-drew@beagleboard.org>
-In-Reply-To: <20201211042625.129255-1-drew@beagleboard.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 11 Dec 2020 23:15:21 +0200
-Message-ID: <CAHp75VcAbdrSnb_ag9Rc0tny3Vtqjs1if+ahk7U36V2eaKMpSw@mail.gmail.com>
-Subject: Re: [RFC PATCH] pinctrl: add helper to expose pinctrl state in debugfs
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pantelis Antoniou <panto@antoniou-consulting.com>,
+        id S2394839AbgLKV2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 16:28:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37802 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731564AbgLKV21 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 16:28:27 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1607722064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RPMMCIZpTkbwn/vpPbbWIvtIfsdUJZbFWGvj4XBXX/8=;
+        b=Kc/FVw++R6e2tySXtGXcjxUCfxzjuTQFTglr5qIAHuhSnqpTp+Ikj+7Hq7mXQTlJIhQso1
+        GzueGJq666vDoGnyl7z+R0hqgzUE1QvEz7r/C1zoUW/uJEMWoH29CdDJSk0WUoP2avCyFO
+        CRX7sZOyAR4dgW8urx4t099te3vzsLBebYBFzSZHvt/ir/v+j+DUtH3KLF65BJZt70WJkw
+        AE4vdTRQhanAKvsPxu5Ss601VFRMIT6sTuiXwTfT17QUlJMwNoTmBl7avya6WCOOi1pn/V
+        ZDVRxzcxQEEpw+Wd6+ymYN074dQBF+mj2DWvKS0m9PZ0lY8tuhofO6ggRZ9GJg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1607722064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RPMMCIZpTkbwn/vpPbbWIvtIfsdUJZbFWGvj4XBXX/8=;
+        b=tFwThmGQdDL1Ql7epJregGVf1InSk/8mJJwiaGupYZNmlO1tti86n4xUB3jqi7xZFrdYET
+        SNdr5SpWVlT7QnDA==
+To:     boris.ostrovsky@oracle.com,
+        =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu interrupts
+In-Reply-To: <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
+References: <20201210192536.118432146@linutronix.de> <20201210194045.250321315@linutronix.de> <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com> <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com> <871rfwiknd.fsf@nanos.tec.linutronix.de> <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
+Date:   Fri, 11 Dec 2020 22:27:43 +0100
+Message-ID: <877dpoghio.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 1:54 PM Drew Fustini <drew@beagleboard.org> wrote:
+On Fri, Dec 11 2020 at 09:29, boris ostrovsky wrote:
+
+> On 12/11/20 7:37 AM, Thomas Gleixner wrote:
+>> On Fri, Dec 11 2020 at 13:10, J=C3=BCrgen Gro=C3=9F wrote:
+>>> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
+>>>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
+>>>>> Change the implementation so that the channel is bound to CPU0 at the=
+ XEN
+>>>>> level and leave the affinity mask alone. At startup of the interrupt
+>>>>> affinity will be assigned out of the affinity mask and the XEN bindin=
+g will
+>>>>> be updated.
+>>>>
+>>>> If that's the case then I wonder whether we need this call at all and =
+instead bind at startup time.
+>>> After some discussion with Thomas on IRC and xen-devel archaeology the
+>>> result is: this will be needed especially for systems running on a
+>>> single vcpu (e.g. small guests), as the .irq_set_affinity() callback
+>>> won't be called in this case when starting the irq.
 >
-> BeagleBoard.org [0] currently uses an out-of-tree driver called
-> bone-pinmux-helper [1] developed by Pantelis Antoniou [2] back in 2013.
+> On UP are we not then going to end up with an empty affinity mask? Or
+> are we guaranteed to have it set to 1 by interrupt generic code?
 
-And it looks like it's still using APIs from 2013.
-Needs quite a clean up.
+An UP kernel does not ever look on the affinity mask. The
+chip::irq_set_affinity() callback is not invoked so the mask is
+irrelevant.
 
-> The driver assists users of our BeagleBone and PocketBeagle boards in
-> rapid prototyping by allowing them to change at run-time between defined
-> set of pinctrl states [3] for each pin on the expansion connectors [4].
-> This is achieved by exposing a 'state' file in sysfs for each pin which
-> is used by our 'config-pin' utility [5].
->
-> Our goal is to eliminate all out-of-tree drivers for BeagleBoard.org
-> boards and thus I have been working to replace bone-pinmux-helper with a
-> new driver that could be acceptable upstream. My understanding is that
-> debugfs, unlike sysfs, could be the appropriate mechanism to expose such
-> functionality.
+A SMP kernel on a UP machine sets CPU0 in the mask so all is good.
 
-Yeah, for debugfs we don't require too much and esp. there is no
-requirement to keep backward compatibility thru interface.
-I.o.w. it's *not* an ABI.
+> This is actually why I brought this up in the first place --- a
+> potential mismatch between the affinity mask and Xen-specific data
+> (e.g. info->cpu and then protocol-specific data in event channel
+> code). Even if they are re-synchronized later, at startup time (for
+> SMP).
 
-...
+Which is not a problem either. The affinity mask is only relevant for
+setting the affinity, but it's not relevant for delivery and never can
+be.
 
-> I used the compatible string "pinctrl,state-helper" but would appreciate
-> advice on how to best name this. Should I create a new vendor prefix?
+> I don't see anything that would cause a problem right now but I worry
+> that this inconsistency may come up at some point.
 
-Since it's BB specific, it should have file name and compatible string
-accordingly.
-But I'm wondering, why it requires this kind of thing and can't be
-simply always part of the kernel based on configuration option?
+As long as the affinity mask becomes not part of the event channel magic
+this should never matter.
 
-> The P9_14_pinmux entry would cause pinctrl-state-helper to be probed.
-> The driver would create the corresponding pinctrl state file in debugfs
-> for the pin.  Here is an example of how the state can be read and
-> written from userspace:
->
-> root@beaglebone:~# cat /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> default
-> root@beaglebone:~# echo pwm > /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> root@beaglebone:~# cat /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> pwm
+Look at it from hardware:
 
-Shouldn't it be rather a part of a certain pin control folder:
-debug/pinctrl/.../mux/...
-?
+interrupt is affine to CPU0
 
-> I would very much appreciate feedback on both this general concept, and
-> also specific areas in which the code should be changed to be acceptable
-> upstream.
+     CPU0 runs:
+=20=20=20=20=20
+     set_affinity(CPU0 -> CPU1)
+        local_irq_disable()
+=20=20=20=20=20=20=20=20
+ --> interrupt is raised in hardware and pending on CPU0
 
-I will give time for more discussion about concepts and so, because
-code (as stated above) is quite old and requires a lot of cleaning up.
+        irq hardware is reconfigured to be affine to CPU1
 
--- 
-With Best Regards,
-Andy Shevchenko
+        local_irq_enable()
+
+ --> interrupt is handled on CPU0
+
+the next interrupt will be raised on CPU1
+
+So info->cpu which is registered via the hypercall binds the 'hardware
+delivery' and whenever the new affinity is written it is rebound to some
+other CPU and the next interrupt is then raised on this other CPU.
+
+It's not any different from the hardware example at least not as far as
+I understood the code.
+
+Thanks,
+
+        tglx
