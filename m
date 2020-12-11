@@ -2,209 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66A892D81D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 23:19:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAE62D820E
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 23:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406768AbgLKWRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 17:17:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406796AbgLKWRJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 17:17:09 -0500
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C18C0613D3
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 14:15:49 -0800 (PST)
-Received: by mail-pj1-x1042.google.com with SMTP id hk16so3075470pjb.4
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 14:15:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y7sUikV/F7gNe5Jy42I6mRR8y7okTjvOyaqlUQve9s8=;
-        b=EYiob21Rk2nzqjeDbvTDWyfCsA5lwPGIN4WkDcg9WvyrIj+NdQqgSUBvcFUeMIaojD
-         Qreh8bkGQrrrOE40m5XF9N4P8r0PR6Cvk+j5LTDKEfe7GA9uwRzUwZFKxnBIpsgEP7l9
-         6SPjZnja/FHUJJmDxX+CKRlXiqeTiJFh4QCq4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y7sUikV/F7gNe5Jy42I6mRR8y7okTjvOyaqlUQve9s8=;
-        b=FmJMp9gj6rNO+2I6ukLcBGDcf6fuJo0yAhbQqcuHq441vAu/D7+FNEmCdHPXVHSS1d
-         8aLYSiUpuKpTyS87T86pf2cV4/anbGWb3qmQAQcb29kYMGRsb6TbNsn8iIfz7EVjlZEs
-         5ING1HfVHP26mEb5ynIJGdQADf0YQseGeB/HFep9zff5g+si/jgxphGKtDtfAH/xxH/i
-         +b57qHnt5IshzzEZkCv30M4d5rRotsR0zRB97uxTex2kcDjai5q3sjAQ4T4p9V1DgK7r
-         gTqZrIUHN5G65JwAyEfI4wLgVDZb0suqSEZwEuqQfI6Hv2H+eQDoWF9ZZ3ZBZpYcKNy+
-         6AgQ==
-X-Gm-Message-State: AOAM531tCqr3SUY6vfBF+UUNYxKF2Hcpdf3yq2UrU80GL4xEgn4oCbZa
-        392/cnxRNfkAbeWOTKYD0Ci6uw==
-X-Google-Smtp-Source: ABdhPJwQaEII/ZFOuv5w3ZNFYFqtSx7WMh6WT8IlI/wAmhJhldG2bz6rBTVow8GDJR+cKB3eYQkmrw==
-X-Received: by 2002:a17:902:5581:b029:da:a817:1753 with SMTP id g1-20020a1709025581b02900daa8171753mr12637716pli.76.1607724948477;
-        Fri, 11 Dec 2020 14:15:48 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id s21sm11832981pgk.52.2020.12.11.14.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 14:15:48 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        linux-gpio@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] pinctrl: qcom: Clear possible pending parent irq when remuxing GPIOs
-Date:   Fri, 11 Dec 2020 14:15:38 -0800
-Message-Id: <20201211141514.v4.4.I771b6594b2a4d5b7fe7e12a991a6640f46386e8d@changeid>
-X-Mailer: git-send-email 2.29.2.576.ga3fc446d84-goog
-In-Reply-To: <20201211141514.v4.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
-References: <20201211141514.v4.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+        id S2406849AbgLKW3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 17:29:07 -0500
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:11905 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406847AbgLKW2i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 17:28:38 -0500
+X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Fri, 11 Dec 2020 17:28:38 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1607725718;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=SlMSeRdV/lwxDX3djLyqBMWP9qBV06XtN2qLgsx2f6c=;
+  b=ZKTZR8+vX6fjYD72juCYm2Bp54JJnuY72Rq0HFPpTOB0rlO1GL7cCUkc
+   1gmoUMXRGTc3hZF2491UKx91IySc4a2/ih4R1Y8AyUpUtJOR6r7C2V+yK
+   /Hhf8UPnUAeCmRpD9awUzhzia6rt0mCQhE9JUT5tHvuCsImdF6RKNyQZ9
+   I=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: zxKa8rgyFeg2y8fCG3oi7VnW2gUpr9OYlkvCF/sBtRwerKcGUj3U846xesB6P0sd8TbXpQL30D
+ M+yqnl9FyOSn4AVTQICd1n20O7aUuBZJHO1hO49Y7WMuixViLEiIv7JOWQDh2eVZ9soCVAFoQW
+ vfrc7AECE95KCs5m0z0M9zvfWWGUs6ClwL+l6kwP1ibvxZE1mGugR63NagsSn+AjDypKzJbLJy
+ 9z6mlpc3fKmjPgHdEEba0IFcfG0cgQo5L6XZQsW65QXYXuCPJHzmXpVX8QCySh2BtbtSv6z0yL
+ eso=
+X-SBRS: 5.2
+X-MesageID: 33047865
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.78,412,1599537600"; 
+   d="scan'208";a="33047865"
+Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
+ interrupts
+To:     Thomas Gleixner <tglx@linutronix.de>, <boris.ostrovsky@oracle.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        <xen-devel@lists.xenproject.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "afzal mohammed" <afzal.mohd.ma@gmail.com>,
+        <linux-parisc@vger.kernel.org>,
+        "Russell King" <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        <linux-s390@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        "Tvrtko Ursulin" <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, <linux-ntb@googlegroups.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michal Simek" <michal.simek@xilinx.com>,
+        <linux-pci@vger.kernel.org>,
+        "Karthikeyan Mitran" <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
+        "Leon Romanovsky" <leon@kernel.org>
+References: <20201210192536.118432146@linutronix.de>
+ <20201210194045.250321315@linutronix.de>
+ <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
+ <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
+ <871rfwiknd.fsf@nanos.tec.linutronix.de>
+ <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
+ <877dpoghio.fsf@nanos.tec.linutronix.de>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
+Date:   Fri, 11 Dec 2020 22:21:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <877dpoghio.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ FTLPEX02CL03.citrite.net (10.13.108.165)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In commit 71266d9d3936 ("pinctrl: qcom: Move clearing pending IRQ to
-.irq_request_resources callback") we tried to make it so that the
-"enable" didn't clear pending interrupts for interrupts that were
-handled by our parent (the PDC).  Unfortunately that regressed things.
-After that patch we found that sc7180-trogdor based devices could no
-longer enter suspend.
+On 11/12/2020 21:27, Thomas Gleixner wrote:
+> On Fri, Dec 11 2020 at 09:29, boris ostrovsky wrote:
+>
+>> On 12/11/20 7:37 AM, Thomas Gleixner wrote:
+>>> On Fri, Dec 11 2020 at 13:10, Jürgen Groß wrote:
+>>>> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
+>>>>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
+>>>>>> Change the implementation so that the channel is bound to CPU0 at the XEN
+>>>>>> level and leave the affinity mask alone. At startup of the interrupt
+>>>>>> affinity will be assigned out of the affinity mask and the XEN binding will
+>>>>>> be updated.
+>>>>> If that's the case then I wonder whether we need this call at all and instead bind at startup time.
+>>>> After some discussion with Thomas on IRC and xen-devel archaeology the
+>>>> result is: this will be needed especially for systems running on a
+>>>> single vcpu (e.g. small guests), as the .irq_set_affinity() callback
+>>>> won't be called in this case when starting the irq.
+>> On UP are we not then going to end up with an empty affinity mask? Or
+>> are we guaranteed to have it set to 1 by interrupt generic code?
+> An UP kernel does not ever look on the affinity mask. The
+> chip::irq_set_affinity() callback is not invoked so the mask is
+> irrelevant.
+>
+> A SMP kernel on a UP machine sets CPU0 in the mask so all is good.
+>
+>> This is actually why I brought this up in the first place --- a
+>> potential mismatch between the affinity mask and Xen-specific data
+>> (e.g. info->cpu and then protocol-specific data in event channel
+>> code). Even if they are re-synchronized later, at startup time (for
+>> SMP).
+> Which is not a problem either. The affinity mask is only relevant for
+> setting the affinity, but it's not relevant for delivery and never can
+> be.
+>
+>> I don't see anything that would cause a problem right now but I worry
+>> that this inconsistency may come up at some point.
+> As long as the affinity mask becomes not part of the event channel magic
+> this should never matter.
+>
+> Look at it from hardware:
+>
+> interrupt is affine to CPU0
+>
+>      CPU0 runs:
+>      
+>      set_affinity(CPU0 -> CPU1)
+>         local_irq_disable()
+>         
+>  --> interrupt is raised in hardware and pending on CPU0
+>
+>         irq hardware is reconfigured to be affine to CPU1
+>
+>         local_irq_enable()
+>
+>  --> interrupt is handled on CPU0
+>
+> the next interrupt will be raised on CPU1
+>
+> So info->cpu which is registered via the hypercall binds the 'hardware
+> delivery' and whenever the new affinity is written it is rebound to some
+> other CPU and the next interrupt is then raised on this other CPU.
+>
+> It's not any different from the hardware example at least not as far as
+> I understood the code.
 
-Specifically in sc7180-trogdor.dtsi we configure the uart3 to have two
-pinctrl states, sleep and default, and mux between the two during
-runtime PM and system suspend (see geni_se_resources_{on,off}() for
-more details). The difference between the sleep and default state is
-that the RX pin is muxed to a GPIO during sleep and muxed to the UART
-otherwise.
+Xen's event channels do have a couple of quirks.
 
-As per Qualcomm, when we mux the pin over to the UART function the PDC
-is still watching it / latching edges.  These edges don't cause
-interrupts because the current code masks the interrupt unless we're
-entering suspend.  However, as soon as we enter suspend we unmask the
-interrupt and it's counted as a wakeup.
+Binding an event channel always results in one spurious event being
+delivered.  This is to cover notifications which can get lost during the
+bidirectional setup, or re-setups in certain configurations.
 
-Let's deal with the problem like this:
-* When we mux away, we'll mask our parent.  This isn't necessary in
-  the above case since the parent already masked us, but it's a good
-  idea in general.
-* When we mux back will clear any interrupts and unmask our parent if
-  needed.
+Binding an interdomain or pirq event channel always defaults to vCPU0. 
+There is no way to atomically set the affinity while binding.  I believe
+the API predates SMP guest support in Xen, and noone has fixed it up since.
 
-Fixes: 71266d9d3936 ("pinctrl: qcom: Move clearing pending IRQ to .irq_request_resources callback")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-This patch depends on #2/#3 in the series, but not #1.  #1 can land on
-its own and then #2/#3/#4 can land together even without #1.  The only
-reason patch #1 and #2/#3/#4 are together in one series is because
-they address similar issues.
+As a consequence, the guest will observe the event raised on vCPU0 as
+part of setting up the event, even if it attempts to set a different
+affinity immediately afterwards.  A little bit of care needs to be taken
+when binding an event channel on vCPUs other than 0, to ensure that the
+callback is safe with respect to any remaining state needing initialisation.
 
-I have done most of this patch testing on the Chrome OS 5.4 kernel
-tree (with many backports) but have sanity checked it on mainline.
+Beyond this, there is nothing magic I'm aware of.
 
-This patch definitely needs more testing / discussion, so please don't
-land without Qualcomm confirming that it looks OK in all the cases
-they are aware of.
+We have seen soft lockups before in certain scenarios, simply due to the
+quantity of events hitting vCPU0 before irqbalance gets around to
+spreading the load.  This is why there is an attempt to round-robin the
+userspace event channel affinities by default, but I still don't see why
+this would need custom affinity logic itself.
 
-Changes in v4:
-- Totally rewrote again with my new understanding of the world.
-- Split non-PDC fix and PDC fix in two.
+Thanks,
 
-Changes in v3:
-- Fixed bug in msm_gpio_direction_output() (s/oldval =/oldval = val =/)
-- Add back "if !skip_wake_irqs" test in msm_gpio_irq_enable()
-- For non-PDC, clear 1st interrupt in msm_gpio_irq_set_type()
-
-Changes in v2:
-- 0 => false
-- If skip_wake_irqs, don't need to clear normal intr.
-- Add comment about glitches in both output and input.
-
- drivers/pinctrl/qcom/pinctrl-msm.c | 42 +++++++++++++++++++++---------
- 1 file changed, 29 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index f785646d1df7..37fa95c5805c 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -171,7 +171,12 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 			      unsigned group)
- {
- 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct gpio_chip *gc = &pctrl->chip;
-+	unsigned int irq = irq_find_mapping(gc->irq.domain, group);
-+	struct irq_data *d = irq_get_irq_data(irq);
-+	unsigned int gpio_func = pctrl->soc->gpio_func;
- 	const struct msm_pingroup *g;
-+	bool should_manage_parent;
- 	unsigned long flags;
- 	u32 val, mask;
- 	int i;
-@@ -187,6 +192,23 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 	if (WARN_ON(i == g->nfuncs))
- 		return -EINVAL;
- 
-+	/*
-+	 * If an GPIO interrupt is setup on this pin and those interrupts are
-+	 * handled by our parent we need special handling.  Specifically the
-+	 * parent will still see the pin twiddle even when we're muxed away.
-+	 *
-+	 * If our GPIO was unmasked before muxing away from GPIO we need to
-+	 * mask our parent before switching so it doesn't see the twiddling.
-+	 *
-+	 * When we switch back we might need to clear any interrupts that were
-+	 * latched while were muxed away.
-+	 */
-+	should_manage_parent = d && d->parent_data &&
-+			       test_bit(d->hwirq, pctrl->skip_wake_irqs);
-+
-+	if (i != gpio_func && should_manage_parent && !irqd_irq_masked(d))
-+		irq_chip_mask_parent(d);
-+
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
- 	val = msm_readl_ctl(pctrl, g);
-@@ -196,6 +218,13 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-+	if (i == gpio_func && should_manage_parent) {
-+		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, false);
-+
-+		if (!irqd_irq_masked(d))
-+			irq_chip_unmask_parent(d);
-+	}
-+
- 	return 0;
- }
- 
-@@ -1093,19 +1122,6 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
- 		ret = -EINVAL;
- 		goto out;
- 	}
--
--	/*
--	 * Clear the interrupt that may be pending before we enable
--	 * the line.
--	 * This is especially a problem with the GPIOs routed to the
--	 * PDC. These GPIOs are direct-connect interrupts to the GIC.
--	 * Disabling the interrupt line at the PDC does not prevent
--	 * the interrupt from being latched at the GIC. The state at
--	 * GIC needs to be cleared before enabling.
--	 */
--	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
--		irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
--
- 	return 0;
- out:
- 	module_put(gc->owner);
--- 
-2.29.2.576.ga3fc446d84-goog
-
+~Andrew
