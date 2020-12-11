@@ -2,107 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC20A2D6CAB
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 01:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 532D92D6D3A
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 02:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394526AbgLKApo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 19:45:44 -0500
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:50822 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390106AbgLKApi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 19:45:38 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 0BB0hY8E006165; Fri, 11 Dec 2020 09:43:34 +0900
-X-Iguazu-Qid: 34trMRoISkACchRKde
-X-Iguazu-QSIG: v=2; s=0; t=1607647414; q=34trMRoISkACchRKde; m=tmCBBE/JMLe4wS1hi/XtcFrm8j5BY3+pNTVs07b8EC0=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1510) id 0BB0hXSb032364;
-        Fri, 11 Dec 2020 09:43:33 +0900
-Received: from enc01.toshiba.co.jp ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 0BB0hXOp001509;
-        Fri, 11 Dec 2020 09:43:33 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 0BB0hWbW012066;
-        Fri, 11 Dec 2020 09:43:33 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v4 4/4] arm: dts: visconti: Add DT support for Toshiba Visconti5 GPIO driver
-Date:   Fri, 11 Dec 2020 18:41:38 +0900
-X-TSB-HOP: ON
-Message-Id: <20201211094138.2863677-5-nobuhiro1.iwamatsu@toshiba.co.jp>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201211094138.2863677-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-References: <20201211094138.2863677-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2404827AbgLKBU5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 20:20:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:49320 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404739AbgLKBUn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 10 Dec 2020 20:20:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 571F41396;
+        Thu, 10 Dec 2020 17:19:58 -0800 (PST)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39CC73F66B;
+        Thu, 10 Dec 2020 17:19:56 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Icenowy Zheng <icenowy@aosc.xyz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 02/21] dt-bindings: pinctrl: Add Allwinner H616 compatible strings
+Date:   Fri, 11 Dec 2020 01:19:15 +0000
+Message-Id: <20201211011934.6171-3-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <20201211011934.6171-1-andre.przywara@arm.com>
+References: <20201211011934.6171-1-andre.przywara@arm.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the GPIO node in Toshiba Visconti5 SoC-specific DT file.
-And enable the GPIO node in TMPV7708 RM main board's board-specific DT file.
+A new SoC, a new compatible string.
+Also we were too miserly with just allowing seven interrupt banks.
 
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Reviewed-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../boot/dts/toshiba/tmpv7708-rm-mbrc.dts     |  4 +++
- arch/arm64/boot/dts/toshiba/tmpv7708.dtsi     | 27 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml   | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
-index ed0bf7f13f54..950010a290f0 100644
---- a/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
-+++ b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
-@@ -41,3 +41,7 @@ &uart1 {
- 	clocks = <&uart_clk>;
- 	clock-names = "apb_pclk";
- };
-+
-+&gpio {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/toshiba/tmpv7708.dtsi b/arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
-index 242f25f4e12a..ac9bddb35b0a 100644
---- a/arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
-+++ b/arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
-@@ -157,6 +157,33 @@ pmux: pmux@24190000 {
- 			reg = <0 0x24190000 0 0x10000>;
- 		};
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+index 5240487dfe50..292b05d9ed08 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+@@ -53,6 +53,8 @@ properties:
+       - allwinner,sun50i-h5-pinctrl
+       - allwinner,sun50i-h6-pinctrl
+       - allwinner,sun50i-h6-r-pinctrl
++      - allwinner,sun50i-h616-pinctrl
++      - allwinner,sun50i-h616-r-pinctrl
+       - allwinner,suniv-f1c100s-pinctrl
+       - nextthing,gr8-pinctrl
  
-+		gpio: gpio@28020000 {
-+			compatible = "toshiba,gpio-tmpv7708";
-+			reg = <0 0x28020000 0 0x1000>;
-+			#gpio-cells = <0x2>;
-+			gpio-ranges = <&pmux 0 0 32>;
-+			gpio-controller;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts =
-+				<GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+		};
+@@ -61,7 +63,7 @@ properties:
+ 
+   interrupts:
+     minItems: 1
+-    maxItems: 7
++    maxItems: 8
+     description:
+       One interrupt per external interrupt bank supported on the
+       controller, sorted by bank number ascending order.
+@@ -91,7 +93,7 @@ properties:
+       bank found in the controller
+     $ref: /schemas/types.yaml#/definitions/uint32-array
+     minItems: 1
+-    maxItems: 5
++    maxItems: 8
+ 
+ patternProperties:
+   # It's pretty scary, but the basic idea is that:
+@@ -145,6 +147,18 @@ allOf:
+   # boards are defining it at the moment so it would generate a lot of
+   # warnings.
+ 
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun50i-h616-pinctrl
 +
- 		uart0: serial@28200000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0 0x28200000 0 0x1000>;
++    then:
++      properties:
++        interrupts:
++          minItems: 8
++          maxItems: 8
++
+   - if:
+       properties:
+         compatible:
 -- 
-2.29.2
+2.17.5
 
