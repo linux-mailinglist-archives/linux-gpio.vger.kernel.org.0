@@ -2,95 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B2C2D71F9
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 09:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D58F62D7222
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 09:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436961AbgLKIk3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 03:40:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436918AbgLKIjg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 03:39:36 -0500
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60D4C0613D6
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 00:38:55 -0800 (PST)
-Received: by mail-io1-xd43.google.com with SMTP id i18so8679856ioa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 00:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VM08EE9RDtOdUiMXUT3EqoLQjyxJfZ4vlM5vBalhnzM=;
-        b=yp0MYUU21+Ovh7Z3QHECIId3LXrB3iW4nqNf+gEpEDbCHGCrXlZXtsWFoKjRRm/dFG
-         iIEtlnilj1/EgFH1fCP+NrA8HCKxdvL+7/Wxdp/EXNn2gwBwjNEC4Rm77TQrPfnMavNV
-         /JVQv7Md2v7H0cuZGZSYWaeKF7PEt5/d4bP0ziQNr2qa/NjluiKsaFL+/Q+DpzUmubyf
-         Z9T8nkIDtxK/0cxevRFQQxN80IgLUtCL0nUDV2jHtV5qQjXumUWZtUb8E7PYZlXRcpWQ
-         miOGQKMi8QAmNaxqzmIpQUQcdalL26O0PsvF0sZrgb2eWlwnUQxPjIgdGGVsn1NemvQZ
-         rCCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VM08EE9RDtOdUiMXUT3EqoLQjyxJfZ4vlM5vBalhnzM=;
-        b=ebErG3+dBJIT+twBxuEwXacog2YLB4uNxkfcPFEevcgObMn0GQ5G70pH18SA1bPUdB
-         6733/1So7YFv7T8CMejDHooeIrfCPRsgkRQQTZ19P8ZSilbLdyweGqjxyP0wea5iNdEV
-         l524H4+X0KTo86UkS+dZDpHInb3HgdB0HKqZ22ZnmtN4k/jZiDgFBv9CfJDwG99DyhdN
-         BN45jHWZDkK4dgmSUkbjm/nKDqUjhNKSjNjO+ohg7c8UTYP4WRCms6oPy7j4j5gd2j3h
-         GaZG1lreaym61s8dUnPfpry8pcH1zbDsdX8uSsA8ebLIGKCPKOnrpm4qIlHz63/IXzng
-         /+XQ==
-X-Gm-Message-State: AOAM533ab8+iKWibr8j02mOv9Tjgdoe3A8YJbToq3wFTeXx+4/dZwgz/
-        DiliFlYdDyz/88Oe8+NKJkwZYc5d4lS2Caiq8egBtQ==
-X-Google-Smtp-Source: ABdhPJwBqsvxK/zEYcNkQhUUee6G1jUTZJZCjqwCzRk+tzVTRkKeJMbBsKGkcHaSNg9/zIdbq9PlcKQHNCTHnCa18pk=
-X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr13675289iow.131.1607675935230;
- Fri, 11 Dec 2020 00:38:55 -0800 (PST)
+        id S2437082AbgLKIqV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 03:46:21 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9596 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437120AbgLKIqD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 03:46:03 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4CskqV4GQXzM31s;
+        Fri, 11 Dec 2020 16:44:38 +0800 (CST)
+Received: from ubuntu.network (10.175.138.68) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 11 Dec 2020 16:45:12 +0800
+From:   Zheng Yongjun <zhengyongjun3@huawei.com>
+To:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Subject: [PATCH -next] pinctrl/pinctrl-at91: convert comma to semicolon
+Date:   Fri, 11 Dec 2020 16:45:41 +0800
+Message-ID: <20201211084541.2318-1-zhengyongjun3@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20201210132315.5785-1-brgl@bgdev.pl> <20201210135627.GH4077@smile.fi.intel.com>
-In-Reply-To: <20201210135627.GH4077@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 11 Dec 2020 09:38:44 +0100
-Message-ID: <CAMRc=McJLC23-RcOH+EyCWiwhSjgwfjS4W=tCijBmqWUcqdVRg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 00/14] treewide: start shaving off cruft for v2.0
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.138.68]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 2:55 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 10, 2020 at 02:23:01PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The following series removes a lot of interfaces that were deemed overkill
-> > in libgpiod and the removal of which was suggested to me before proceeding
-> > with the new API.
-> >
-> > This leaves a couple holes in the library but we'll follow them up with
-> > more improvements all over the tree. We'll create a new object called
-> > gpiod_request for dealing with line requests of arbitrary size. We'll
-> > probably remove the the bulk objects from bindings and eventually we'll
-> > switch to using the v2 kernel uAPI.
-> >
-> > Andy - a note for you: I know you're always very thorough in your reviews
-> > but in this case let's consider this series preparing a construction zone
-> > for the new API. Please don't nitpick too much. :)
->
-> I don't know what you are talking about. The series looks nice, esp. taking
-> into account statistics! FWIW,
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> One side note, though. Are you already plan to support autotools-2.70?
->
+Replace a comma between expression statements by a semicolon.
 
-Isn't it already supported? 2.69 is the minimum version, 2.70 should just work.
+Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+---
+ drivers/pinctrl/pinctrl-at91.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bartosz
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 72edc675431c..47b19d3a48cf 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1742,7 +1742,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	gpio_irqchip->irq_disable = gpio_irq_mask;
+ 	gpio_irqchip->irq_mask = gpio_irq_mask;
+ 	gpio_irqchip->irq_unmask = gpio_irq_unmask;
+-	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
++	gpio_irqchip->irq_set_wake = gpio_irq_set_wake;
+ 	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
+ 
+ 	/* Disable irqs of this PIO controller */
+-- 
+2.22.0
+
