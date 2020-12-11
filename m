@@ -2,164 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03B762D77F3
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 15:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB3E82D77EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 15:35:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406275AbgLKOdN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 09:33:13 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44700 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406261AbgLKOcd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 09:32:33 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEK3q4153543;
-        Fri, 11 Dec 2020 14:29:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=XwmNJXsce0biO7XLe+zGaIsjtrmRfK/vTz0mYn6nQBU=;
- b=bR7yH4+1kTFS/uaRb9qwsHTyFm2EoNVmWnQB/6uOrO708u+eqNtBobFpmn1ttrRdH1ys
- eWZmcv+9rBDGS0S9dxVH7WJEjVIq3kan/8A2J+2JEfl4cmi6SdTHDxhFZ9FOjgghK0i/
- gSlqjyBs3FtwP3+ZAOMx//Xrh2s4GGZVNmZZvw8Dg7A8ucgqyFuZ1jZz6HYR0R/QX3KB
- jq1go8jZfLC3JdZILS9AqGFwicAYPALMmwsEwRd+5bZO9goG03a6o19lTH5pgGTEdXEs
- I4ECgSmCCiTYqeMDSavCaEpGT9QkWsYwEp7lVPsTzWiLDfHkK38lg3Q5ATAnYCJ8Q3TZ zQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3581mratkd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Dec 2020 14:29:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEPIII069767;
-        Fri, 11 Dec 2020 14:29:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 358kstfcjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Dec 2020 14:29:20 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BBETD7i006093;
-        Fri, 11 Dec 2020 14:29:13 GMT
-Received: from [10.39.222.144] (/10.39.222.144)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Dec 2020 06:29:13 -0800
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        id S2406263AbgLKOcl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 09:32:41 -0500
+Received: from mga18.intel.com ([134.134.136.126]:24406 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406239AbgLKOcQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 11 Dec 2020 09:32:16 -0500
+IronPort-SDR: o3OqOs9s4Yn9d8Bt7dmUs29RnbJ0IY4P/cfxTT2W3sjEaUwEeuy00DMq/sY58RlSCgb4RH7Ato
+ lcW/P1YRTuOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="162193959"
+X-IronPort-AV: E=Sophos;i="5.78,411,1599548400"; 
+   d="scan'208";a="162193959"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2020 06:30:29 -0800
+IronPort-SDR: iibC4NCEmIeEbfsdl6GPKiHLLORZejO7cN2t76hxFE7SeGuTb3uEJm6sWjExRYFxcyHBbK2SgY
+ LxM7Kx9JcT1g==
+X-IronPort-AV: E=Sophos;i="5.78,411,1599548400"; 
+   d="scan'208";a="409237892"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2020 06:30:27 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1knjSD-00Dfzl-G0; Fri, 11 Dec 2020 16:31:29 +0200
+Date:   Fri, 11 Dec 2020 16:31:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
- <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
- <871rfwiknd.fsf@nanos.tec.linutronix.de>
-From:   boris.ostrovsky@oracle.com
-Organization: Oracle Corporation
-Message-ID: <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
-Date:   Fri, 11 Dec 2020 09:29:09 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.5.1
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [libgpiod][PATCH 00/14] treewide: start shaving off cruft for
+ v2.0
+Message-ID: <20201211143129.GR4077@smile.fi.intel.com>
+References: <20201210132315.5785-1-brgl@bgdev.pl>
+ <20201210135627.GH4077@smile.fi.intel.com>
+ <CAMRc=McJLC23-RcOH+EyCWiwhSjgwfjS4W=tCijBmqWUcqdVRg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <871rfwiknd.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012110094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012110093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McJLC23-RcOH+EyCWiwhSjgwfjS4W=tCijBmqWUcqdVRg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Dec 11, 2020 at 09:38:44AM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 10, 2020 at 2:55 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Thu, Dec 10, 2020 at 02:23:01PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > The following series removes a lot of interfaces that were deemed overkill
+> > > in libgpiod and the removal of which was suggested to me before proceeding
+> > > with the new API.
+> > >
+> > > This leaves a couple holes in the library but we'll follow them up with
+> > > more improvements all over the tree. We'll create a new object called
+> > > gpiod_request for dealing with line requests of arbitrary size. We'll
+> > > probably remove the the bulk objects from bindings and eventually we'll
+> > > switch to using the v2 kernel uAPI.
+> > >
+> > > Andy - a note for you: I know you're always very thorough in your reviews
+> > > but in this case let's consider this series preparing a construction zone
+> > > for the new API. Please don't nitpick too much. :)
+> >
+> > I don't know what you are talking about. The series looks nice, esp. taking
+> > into account statistics! FWIW,
+> >
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > One side note, though. Are you already plan to support autotools-2.70?
+> >
+> 
+> Isn't it already supported? 2.69 is the minimum version, 2.70 should just work.
 
-On 12/11/20 7:37 AM, Thomas Gleixner wrote:
-> On Fri, Dec 11 2020 at 13:10, Jürgen Groß wrote:
->> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
->>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->>>> All event channel setups bind the interrupt on CPU0 or the target CPU for
->>>> percpu interrupts and overwrite the affinity mask with the corresponding
->>>> cpumask. That does not make sense.
->>>>
->>>> The XEN implementation of irqchip::irq_set_affinity() already picks a
->>>> single target CPU out of the affinity mask and the actual target is stored
->>>> in the effective CPU mask, so destroying the user chosen affinity mask
->>>> which might contain more than one CPU is wrong.
->>>>
->>>> Change the implementation so that the channel is bound to CPU0 at the XEN
->>>> level and leave the affinity mask alone. At startup of the interrupt
->>>> affinity will be assigned out of the affinity mask and the XEN binding will
->>>> be updated.
->>>
->>> If that's the case then I wonder whether we need this call at all and instead bind at startup time.
->> After some discussion with Thomas on IRC and xen-devel archaeology the
->> result is: this will be needed especially for systems running on a
->> single vcpu (e.g. small guests), as the .irq_set_affinity() callback
->> won't be called in this case when starting the irq.
+Have you read an article on LWN about changes [1]? There are a lot of
+incompatibilities (note between 2.69 and 2.70 _8_ years passed).
+
+[1]: https://lwn.net/Articles/839395/
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On UP are we not then going to end up with an empty affinity mask? Or are we guaranteed to have it set to 1 by interrupt generic code?
-
-
-This is actually why I brought this up in the first place --- a potential mismatch between the affinity mask and Xen-specific data (e.g. info->cpu and then protocol-specific data in event channel code). Even if they are re-synchronized later, at startup time (for SMP).
-
-
-I don't see anything that would cause a problem right now but I worry that this inconsistency may come up at some point.
-
-
--boris
-
-
-> That's right, but not limited to ARM. The same problem exists on x86 UP.
-> So yes, the call makes sense, but the changelog is not really useful.
-> Let me add a comment to this.
->
-> Thanks,
->
->         tglx
->
