@@ -2,77 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 557672D825E
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 23:52:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 078302D8283
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 00:00:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436815AbgLKWvf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 17:51:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436803AbgLKWvN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 17:51:13 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E04B5C06179C
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 14:50:19 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id m25so15466970lfc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 14:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCEgRFr6myAJoXKIh61RLSnwzrl9pjCHJsN5xjectg8=;
-        b=WGvdrxN0FmGW2nAkcfb9o44BNCy2Rd8T91o2JiIgrUgWgsOecyDoq9K0efN/yMvpz8
-         cKrzfCzhtNNNfmE1u664MpJyNnkGVnp/M5kQ7UWbqBZfinY+LIwnj7M+ZZGORAzu1ts3
-         xKgMznYxDBqmFHDwBTQxZeSyZCB1UnC8RVNQNWk3dhforiQGyMlcVxg7qG/IScV+91rX
-         399Uz8tDSWPJpS+MW5DhWuVTo0agGwtA/3JpbIGRlOo99HXUqCRtKxFzGv+7f75pQP+g
-         ytQdnV7MOmPTAOO48xaYYgnVE1oSQsVZj0basuYJEWN72r2xkeZs/PV9dfZu7wbcFlW+
-         uz0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCEgRFr6myAJoXKIh61RLSnwzrl9pjCHJsN5xjectg8=;
-        b=h3NuclnteNP5E8ebkGppa50BhqyDFmxrBC7ZNiskN0KmUdSyfmV2lxNuCmdnn85v+d
-         4acDOOmQbrvUAdXojSLdLVNSbyyWbVMrSqiUDHlLdx8MelZaARyt1X6UPX3v55P3Ic2m
-         GeIYSGBMojvU48wDiPcfqW/lqyZWAsF0VCZlN7QEnMk6RfteNFW6/RXa2iUjwg9o4fUG
-         uAInR6ZXYj7JNfRToA8zXYFWGqPn/Er/mKxyIX3dKAyt195neOlmj6X0OxSojCo7rpQq
-         0rtOckxoqiTfOwiGVd4AFQ/KU++A4f8x+uHa9w5JrY24Y7cT2gVIGE+OhZoWSd3CUKIr
-         l9eg==
-X-Gm-Message-State: AOAM530bgi8E11C38SF6NXMUPQmRcAUa6vLnJdC81wOA3g1cdyg0QckX
-        /iuQ3j6REpU6Or0j7qVPnUJgLQKbcyc8EOUuClcEvA==
-X-Google-Smtp-Source: ABdhPJyAHe0SLD0TGbDOC6+kq8t57i89K15Pf3SIBn9Ji8wdZCujZS3OXbeJ8D8n2RDoJlVz0LA8ztm6P7MUVtFBnrI=
-X-Received: by 2002:a05:6512:74e:: with SMTP id c14mr5510833lfs.529.1607727018445;
- Fri, 11 Dec 2020 14:50:18 -0800 (PST)
+        id S2436764AbgLKW57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 17:57:59 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38364 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407062AbgLKW5d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 17:57:33 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1607727400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMdJ5cNpvG94MqmN/2d6QVEWUP/YrLyBgV8MUkzsNlA=;
+        b=0WcDMUhLUE5DmQJjljMHI2zWwird6I5Vzppg/zn6AZ6e1OM3STU+JeGE05b5oqLFOvFfmh
+        CDXWZX+LKXvz41MQk+jw0mabsf/xLxFNSlsc7D+IqZgppXn+tyA6NewoUrmvCeXtmt2AST
+        EViRmHdbhCgpLeje9DpFYTQlqeoEtc+eq14ZwN+Y4G4vhAzpgACbffqabmLR4OWIgQ5TkH
+        0732UhUwEAjs3Gs9iSFScNlfSc9uVrpQKD7eElRAgICAQIyVgSIk6IrtHhKDjUooShlbLw
+        6lnH9jzEFDJiTz3F4zTjotppmf5h8vHSXnbS356QRRnsZMAn1kegUSilRX0RVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1607727400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMdJ5cNpvG94MqmN/2d6QVEWUP/YrLyBgV8MUkzsNlA=;
+        b=ljcajSXupjVbHPbFKhUP57PPTY2aSW+D5nnua5xYh57kSUlRXkx3yzKeC3jH07q5vSS64l
+        BGsVaGm3g05BhRAQ==
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        boris.ostrovsky@oracle.com,
+        =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu interrupts
+In-Reply-To: <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
+References: <20201210192536.118432146@linutronix.de> <20201210194045.250321315@linutronix.de> <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com> <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com> <871rfwiknd.fsf@nanos.tec.linutronix.de> <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com> <877dpoghio.fsf@nanos.tec.linutronix.de> <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
+Date:   Fri, 11 Dec 2020 23:56:40 +0100
+Message-ID: <87y2i4eytz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20201209142753.683208-1-lars.povlsen@microchip.com> <20201209142753.683208-3-lars.povlsen@microchip.com>
-In-Reply-To: <20201209142753.683208-3-lars.povlsen@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 11 Dec 2020 23:50:07 +0100
-Message-ID: <CACRpkdaunj_4FonRMdkQN9YYW46GY+9mdG8zvBauW48+hn0-ww@mail.gmail.com>
-Subject: Re: [PATCH -next 2/3] dt-bindings: pinctrl: pinctrl-microchip-sgpio:
- Add irq support
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 3:28 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+Andrew,
 
-> This describe the new bindings for the added IRQ support in the
-> pinctrl-microchip-sgpio driver.
+On Fri, Dec 11 2020 at 22:21, Andrew Cooper wrote:
+> On 11/12/2020 21:27, Thomas Gleixner wrote:
+>> It's not any different from the hardware example at least not as far as
+>> I understood the code.
 >
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Xen's event channels do have a couple of quirks.
 
-Patch applied.
+Why am I not surprised?
 
-Yours,
-Linus Walleij
+> Binding an event channel always results in one spurious event being
+> delivered.=C2=A0 This is to cover notifications which can get lost during=
+ the
+> bidirectional setup, or re-setups in certain configurations.
+>
+> Binding an interdomain or pirq event channel always defaults to vCPU0.=C2=
+=A0
+> There is no way to atomically set the affinity while binding.=C2=A0 I bel=
+ieve
+> the API predates SMP guest support in Xen, and noone has fixed it up
+> since.
+
+That's fine. I'm not changing that.
+
+What I'm changing is the unwanted and unnecessary overwriting of the
+actual affinity mask.
+
+We have a similar issue on real hardware where we can only target _one_
+CPU and not all CPUs in the affinity mask. So we still can preserve the
+(user) requested mask and just affine it to one CPU which is reflected
+in the effective affinity mask. This the right thing to do for two
+reasons:
+
+   1) It allows proper interrupt distribution
+
+   2) It does not break (user) requested affinity when the effective
+      target CPU goes offline and the affinity mask still contains
+      online CPUs. If you overwrite it you lost track of the requested
+      broader mask.
+
+> As a consequence, the guest will observe the event raised on vCPU0 as
+> part of setting up the event, even if it attempts to set a different
+> affinity immediately afterwards.=C2=A0 A little bit of care needs to be t=
+aken
+> when binding an event channel on vCPUs other than 0, to ensure that the
+> callback is safe with respect to any remaining state needing
+> initialisation.
+
+That's preserved for all non percpu interrupts. The percpu variant of
+VIRQ and IPIs did binding to vCPU !=3D 0 already before this change.
+
+> Beyond this, there is nothing magic I'm aware of.
+>
+> We have seen soft lockups before in certain scenarios, simply due to the
+> quantity of events hitting vCPU0 before irqbalance gets around to
+> spreading the load.=C2=A0 This is why there is an attempt to round-robin =
+the
+> userspace event channel affinities by default, but I still don't see why
+> this would need custom affinity logic itself.
+
+Just the previous attempt makes no sense for the reasons I outlined in
+the changelog. So now with this new spreading mechanics you get the
+distribution for all cases:
+
+  1) Post setup using and respecting the default affinity mask which can
+     be set as a kernel commandline parameter.
+
+  2) Runtime (user) requested affinity change with a mask which contains
+     more than one vCPU. The previous logic always chose the first one
+     in the mask.
+
+     So assume userspace affines 4 irqs to a CPU 0-3 and 4 irqs to CPU
+     4-7 then 4 irqs end up on CPU0 and 4 on CPU4
+
+     The new algorithm which is similar to what we have on x86 (minus
+     the vector space limitation) picks the CPU which has the least
+     number of channels affine to it at that moment. If e.g. all 8 CPUs
+     have the same number of vectors before that change then in the
+     example above the first 4 are spread to CPU0-3 and the second 4 to
+     CPU4-7
+
+Thanks,
+
+        tglx
+=20=20=20
