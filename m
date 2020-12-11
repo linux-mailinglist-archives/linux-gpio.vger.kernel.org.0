@@ -2,183 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 475652D7624
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 14:00:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB3C2D7670
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 14:20:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406037AbgLKM6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 07:58:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34750 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406014AbgLKM6d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 07:58:33 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607691469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JI1elAtJ+5DtZ6K623jhzzi7pTI2yY5tK5xHv6JaNRg=;
-        b=IsUihC8x41gfVuZ56mJpZCBvWH6AGSSnlAtCqFu+Y6vHBUWXmKQx9YvU5B8lrG6utDrQMP
-        8canZDEEsNDVhNNdoKfnFOQzTFOpz9W+psXaARAvFsUFtyOebsqoT9kLX8kBnNz5EacFR5
-        rK53uTCJCAI+CQzV9BLaBuU/gNEQZy9UASonSM4NSF0ZsDg2qgrh9flw6frSO8WIrRyHsw
-        fF1cIAuhmb0wJbfH0peqshua47BZpnwfG0pDc4EWPJORiwGLQuagVjgVxqHnf+tQ9+0hUT
-        H0SNNDNOI9Tui6mw4dUpmVwGgPTgPo14TX1s4jNlbb7LIWdUurk9RmWQuaaNkw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607691469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JI1elAtJ+5DtZ6K623jhzzi7pTI2yY5tK5xHv6JaNRg=;
-        b=9Ep94KYblAfQy2iSeDDH/NSIpD2gqoyh3N3s+6g4ZgyvdTP4pfDpIIp6ve3zDE8y9b1XGh
-        NoOqscBMvs3mS3Bw==
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
+        id S2404965AbgLKNTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 08:19:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404425AbgLKNS6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 11 Dec 2020 08:18:58 -0500
+Date:   Fri, 11 Dec 2020 13:18:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607692697;
+        bh=2E127mU5eJ6ue3tzTmMDUSWHAoCzUtkbINjTlopsJIA=;
+        h=From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PA8BFLEUlLmq/basaIXKyyzg6K1lX9Eygrt9+Kdw6TmDi7YEYc92Zl5c+Tag37uQZ
+         l97JGYpnkd1BbYjzdB0RTno6/PTh6r+AZKiY0Vg7Ae1pcsKQX09d1aYDGIg8h9HnBw
+         RdvCvH+Jp+1Wg8Ee5T9sDAzSN1VLrvsEWkhWyXj/PzBplt2/zOnRoejD1g4tj2/HFo
+         Jo/eAUwu+GMTyQ4GEnoiUiBM21pdVD1i/YWZG7EaQK2FbvzI9KDD50ImnKewK4fUQ/
+         Z0IoDweyxZZohS4++spkMSy+eEM4mSgQchrSzDxLlpG0ZbTLBJbrKhGW/6t2Bsfa0s
+         SBHkOgeAcG7/w==
+From:   Mark Brown <broonie@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [patch 14/30] drm/i915/pmu: Replace open coded kstat_irqs() copy
-In-Reply-To: <ad05af1a-5463-2a80-0887-7629721d6863@linux.intel.com>
-References: <20201210192536.118432146@linutronix.de> <20201210194043.957046529@linutronix.de> <ad05af1a-5463-2a80-0887-7629721d6863@linux.intel.com>
-Date:   Fri, 11 Dec 2020 13:57:49 +0100
-Message-ID: <87y2i4h54i.fsf@nanos.tec.linutronix.de>
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH] spi: dt-bindings: clarify CS behavior for spi-cs-high
+ and gpio descriptors
+Message-ID: <20201211131810.GB4929@sirena.org.uk>
+Mail-Followup-To: Sven Van Asbroeck <thesven73@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi <linux-spi@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        kernel@pyra-handheld.com, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andreas Kemnade <andreas@kemnade.info>
+References: <3bed61807fff6268789e7d411412fbc5cd6ffe2a.1607507863.git.hns@goldelico.com>
+ <CAGngYiVKHoXPGxmScCnb-R6xoo9GNw5pG8V8Cpyk3meoJbskiw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVKHoXPGxmScCnb-R6xoo9GNw5pG8V8Cpyk3meoJbskiw@mail.gmail.com>
+X-Cookie: Nostalgia isn't what it used to be.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 11 2020 at 10:13, Tvrtko Ursulin wrote:
-> On 10/12/2020 19:25, Thomas Gleixner wrote:
 
->> 
->> Aside of that the count is per interrupt line and therefore takes
->> interrupts from other devices into account which share the interrupt line
->> and are not handled by the graphics driver.
->> 
->> Replace it with a pmu private count which only counts interrupts which
->> originate from the graphics card.
->> 
->> To avoid atomics or heuristics of some sort make the counter field
->> 'unsigned long'. That limits the count to 4e9 on 32bit which is a lot and
->> postprocessing can easily deal with the occasional wraparound.
->
-> After my failed hasty sketch from last night I had a different one which 
-> was kind of heuristics based (re-reading the upper dword and retrying if 
-> it changed on 32-bit).
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The problem is that there will be two seperate modifications for the low
-and high word. Several ways how the compiler can translate this, but the
-problem is the same for all of them:
+On Wed, Dec 09, 2020 at 12:36:40PM -0500, Sven Van Asbroeck wrote:
+> On Wed, Dec 9, 2020 at 4:57 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-CPU 0                           CPU 1
-        load low
-        load high
-        add  low, 1
-        addc high, 0            
-        store low               load high
---> NMI                         load low
-                                load high and compare
-        store high
+> > +      device node     | cs-gpio       | CS pin state active | Note
+> > +      ================+===============+=====================+=====
+> > +      spi-cs-high     | -             | H                   |
+> > +      -               | -             | L                   |
+> > +      spi-cs-high     | ACTIVE_HIGH   | H                   |
+> > +      -               | ACTIVE_HIGH   | L                   | 1
+> > +      spi-cs-high     | ACTIVE_LOW    | H                   | 2
+> > +      -               | ACTIVE_LOW    | L                   |
+> > +
 
-You can't catch that. If this really becomes an issue you need a
-sequence counter around it.
-      
+> Doesn't this table simply say:
+> - specify   'spi-cs-high' for an active-high chip select
+> - leave out 'spi-cs-high' for an active-low  chip select
+> - the gpio active high/active low consumer flags are ignored
+> ?
 
-> But you are right - it is okay to at least start 
-> like this today and if later there is a need we can either do that or 
-> deal with wrap at PMU read time.
+It seems to, yes.
 
-Right.
+> If so, then I would simply document it that way.
+> Simple is beautiful.
 
->> +/*
->> + * Interrupt statistic for PMU. Increments the counter only if the
->> + * interrupt originated from the the GPU so interrupts from a device which
->> + * shares the interrupt line are not accounted.
->> + */
->> +static inline void pmu_irq_stats(struct drm_i915_private *priv,
->
-> We never use priv as a local name, it should be either i915 or
-> dev_priv.
+Yeah, it'd definitely be easier to read and clearer what people should
+actually do.  As Linus said it'd also be a good idea to explicitly say
+that this is not great design or particularly intentional since it could
+be pretty confusing for someone trying to understand why the bindings
+are the way they are.
 
-Sure, will fix.
+I'm going to apply this anyway to make sure we get this documentated but
+some incremental improvements along these lines would be good.
 
->> +	/*
->> +	 * A clever compiler translates that into INC. A not so clever one
->> +	 * should at least prevent store tearing.
->> +	 */
->> +	WRITE_ONCE(priv->pmu.irq_count, priv->pmu.irq_count + 1);
->
-> Curious, probably more educational for me - given x86_32 and x86_64, and 
-> the context of it getting called, what is the difference from just doing 
-> irq_count++?
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Several reasons:
+-----BEGIN PGP SIGNATURE-----
 
-    1) The compiler can pretty much do what it wants with cnt++
-       including tearing and whatever. https://lwn.net/Articles/816850/
-       for the full set of insanities.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/TcZEACgkQJNaLcl1U
+h9AhFggAgIvhGZX6g4DZGo69/v8qSfuNZJ8ZCbQTMs4G0PR/lhIG26joAjbftMvK
+zcxjD6svtCScdLgl3ES3AnmZYqUIy10wH6SGPd9XkpYwNRTHaGrLYsK59k//Luaq
+Qh3j7FtB42unAmTVI1rVA2KJac2FkvvNuBxNN8g75+95DXbtnvAkxbYTtFE0zit0
+q4jh58H0Zh24LpUhoZKZ2w6/Ra1XaqY1vkh0ys7tMTkShhs1LgSY8OzjDiZ36O1c
+JIlz5Fwn1uEkJhxwErccG3NYAdxOqiajOWZDM56ky4T1420W+MTwpux/YXfRWQTW
+X/ZvM2NIHyPr5ZnEfrYTVqp+uUKAqw==
+=bTcQ
+-----END PGP SIGNATURE-----
 
-       Not really a problem here, but
-
-    2) It's annotating the reader and the writer side and documenting
-       that this is subject to concurrency
-
-    3) It will prevent KCSAN to complain about the data race,
-       i.e. concurrent modification while reading.
-
-Thanks,
-
-        tglx
-
->> --- a/drivers/gpu/drm/i915/i915_pmu.c
->> +++ b/drivers/gpu/drm/i915/i915_pmu.c
->> @@ -423,22 +423,6 @@ static enum hrtimer_restart i915_sample(
->>   	return HRTIMER_RESTART;
->>   }
->
-> In this file you can also drop the #include <linux/irq.h> line.
-
-Indeed.
-
-Thanks,
-
-        tglx
+--TRYliJ5NKNqkz5bu--
