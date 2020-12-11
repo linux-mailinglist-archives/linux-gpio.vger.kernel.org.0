@@ -2,101 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65EEA2D6E08
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 03:12:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 774072D6E72
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Dec 2020 04:20:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbgLKCLI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Dec 2020 21:11:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389853AbgLKCLB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 21:11:01 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A7D2C06138C
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 18:09:43 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id x12so3349628plr.10
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Dec 2020 18:09:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YBlvYT4u5OxK5j8EJbV+g1HuI5bT3QSP3buVFiGA1os=;
-        b=ojGKW+CeYR5epryGbpALej+OHjrnYYY4F5AcYsJXq2QKzqeCscsKaThjnyeJ9Ylfqy
-         stNFexzvzSlxzo11CsCIrvXoot940KDLwNq6U8iyf6o2VVoJmXu5ZEkKzf0kZRN/XH4K
-         c5tUCpzDOXA7Qwj7udYJ0zJBRHGi1iHmlFcXB3SSu5MmB6K6QYJHE60hVdtnnFFfjJou
-         QdAUsr+MsXZjyQLPZzfO9RP8uOPeNbL+1RQZOuuOS0KF6mtZktlFReA0HtIO119vFWyv
-         IW4vS44VNOYcmqhfaGNCUzVPPSQDEa88yoo+n6tMPqyqdkQSNuqX75EHsGQJQxDMLzvr
-         UKkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=YBlvYT4u5OxK5j8EJbV+g1HuI5bT3QSP3buVFiGA1os=;
-        b=KjEcYulrXo79aZa5NV2/COa8BzZNet221vBbJgG6eb9lKWHZJzaZPgvXKqlFxV++HW
-         fyWJHxGkPXa4CMOBhFIWqXojiYsFGuxS3ep/35gX/TfDEuDneRzrE7QbFTmBga4ATqdw
-         iNMOlL9eckjvmGvavbJx3uAukh4PhzWfhZpQ0+Z9+O2zMfp6vDTlKt5sdl2IGdYHsryk
-         eabRr8eoddNraNhWP6JMRoCFh0ff+/TDuHc3L2lOyikfcMyi4tZ5FvTK7f6fXXL893uQ
-         aLkXp5OlGPDhUb/H0rZNdJCtn+PvZ7bhtIFG3fEGi/rC1+0ZIeiQX7+8A4Z5zQd4gTb3
-         L04w==
-X-Gm-Message-State: AOAM533n3kiuq4pXcMobolFGr3BJRQZ4LDwVbNrRy1OM+avcYihl7V3n
-        FhbUNjW/1cISwE8R0ehvQErGVQ==
-X-Google-Smtp-Source: ABdhPJzeGFWjq3hV8gFbllyK08YaWDVJZPTgEzBarNAGC/GyiCHgx9fKOPPu5k/w9L1BBKd6CjJLhw==
-X-Received: by 2002:a17:902:bf0b:b029:d8:f677:30f2 with SMTP id bi11-20020a170902bf0bb02900d8f67730f2mr8951276plb.25.1607652582712;
-        Thu, 10 Dec 2020 18:09:42 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id f126sm8252120pfg.153.2020.12.10.18.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 18:09:42 -0800 (PST)
-Date:   Thu, 10 Dec 2020 18:09:42 -0800 (PST)
-X-Google-Original-Date: Thu, 10 Dec 2020 18:05:22 PST (-0800)
-Subject:     Re: [PATCH v8 03/22] riscv: Enable interrupts during syscalls with M-Mode
-In-Reply-To: <20201210140313.258739-4-damien.lemoal@wdc.com>
-CC:     linux-riscv@lists.infradead.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, p.zabel@pengutronix.de,
-        seanga2@gmail.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Message-ID: <mhng-c9e2b17f-75ec-47d0-bfad-47b2ad1195dd@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S2405153AbgLKDTD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Dec 2020 22:19:03 -0500
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:49562 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389851AbgLKDSf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Dec 2020 22:18:35 -0500
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 0BB3EfHa057144;
+        Fri, 11 Dec 2020 11:14:41 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 11 Dec
+ 2020 11:17:39 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <andrew@aj.id.au>, <linus.walleij@linaro.org>, <joel@jms.id.au>,
+        <linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <BMC-SW@aspeedtech.com>
+Subject: [PATCH] driver: aspeed: g6: Fix PWMG0 pinctrl setting
+Date:   Fri, 11 Dec 2020 11:17:41 +0800
+Message-ID: <20201211031741.23711-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.2.149]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 0BB3EfHa057144
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 10 Dec 2020 06:02:54 PST (-0800), Damien Le Moal wrote:
-> When running is M-Mode (no MMU config), MPIE does not get set. This
-> results in all syscalls being executed with interrupts disabled as
-> handle_exception never sets SR_IE as it always sees SR_PIE being
-> cleared. Fix this by always force enabling interrupts in
-> handle_syscall when CONFIG_RISCV_M_MODE is enabled.
->
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->  arch/riscv/kernel/entry.S | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 524d918f3601..080eb8d78589 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -155,6 +155,15 @@ skip_context_tracking:
->  	tail do_trap_unknown
->
->  handle_syscall:
-> +#ifdef CONFIG_RISCV_M_MODE
-> +	/*
-> +	 * When running is M-Mode (no MMU config), MPIE does not get set.
-> +	 * As a result, we need to force enable interrupts here because
-> +	 * handle_exception did not do set SR_IE as it always sees SR_PIE
-> +	 * being cleared.
-> +	 */
-> +	csrs CSR_STATUS, SR_IE
-> +#endif
->  #if defined(CONFIG_TRACE_IRQFLAGS) || defined(CONFIG_CONTEXT_TRACKING)
->  	/* Recover a0 - a7 for system calls */
->  	REG_L a0, PT_A0(sp)
+The SCU offset for signal PWM8 in group PWM8G0 is wrong, fix it from
+SCU414 to SCU4B4.
+Besides that, When PWM8~15 of PWMG0 set it needs to clear SCU414 bits at
+the same time.
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 26 ++++++++++++++--------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 34803a6c7664..6e61f045936f 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -346,50 +346,58 @@ FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B26, B25,
+ FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
+ 
+ #define D22 40
+-SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
+-SIG_EXPR_LIST_DECL_SEMG(D22, PWM8, PWM8G0, PWM8, SIG_DESC_SET(SCU414, 8));
++SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8))
++SIG_EXPR_LIST_DECL_SEMG(D22, PWM8, PWM8G0, PWM8, SIG_DESC_SET(SCU4B4, 8),
++			SIG_DESC_CLEAR(SCU414, 8));
+ PIN_DECL_2(D22, GPIOF0, SD1CLK, PWM8);
+ GROUP_DECL(PWM8G0, D22);
+ 
+ #define E22 41
+ SIG_EXPR_LIST_DECL_SESG(E22, SD1CMD, SD1, SIG_DESC_SET(SCU414, 9));
+-SIG_EXPR_LIST_DECL_SEMG(E22, PWM9, PWM9G0, PWM9, SIG_DESC_SET(SCU4B4, 9));
++SIG_EXPR_LIST_DECL_SEMG(E22, PWM9, PWM9G0, PWM9, SIG_DESC_SET(SCU4B4, 9),
++			SIG_DESC_CLEAR(SCU414, 9));
+ PIN_DECL_2(E22, GPIOF1, SD1CMD, PWM9);
+ GROUP_DECL(PWM9G0, E22);
+ 
+ #define D23 42
+ SIG_EXPR_LIST_DECL_SESG(D23, SD1DAT0, SD1, SIG_DESC_SET(SCU414, 10));
+-SIG_EXPR_LIST_DECL_SEMG(D23, PWM10, PWM10G0, PWM10, SIG_DESC_SET(SCU4B4, 10));
++SIG_EXPR_LIST_DECL_SEMG(D23, PWM10, PWM10G0, PWM10, SIG_DESC_SET(SCU4B4, 10),
++			SIG_DESC_CLEAR(SCU414, 10));
+ PIN_DECL_2(D23, GPIOF2, SD1DAT0, PWM10);
+ GROUP_DECL(PWM10G0, D23);
+ 
+ #define C23 43
+ SIG_EXPR_LIST_DECL_SESG(C23, SD1DAT1, SD1, SIG_DESC_SET(SCU414, 11));
+-SIG_EXPR_LIST_DECL_SEMG(C23, PWM11, PWM11G0, PWM11, SIG_DESC_SET(SCU4B4, 11));
++SIG_EXPR_LIST_DECL_SEMG(C23, PWM11, PWM11G0, PWM11, SIG_DESC_SET(SCU4B4, 11),
++			SIG_DESC_CLEAR(SCU414, 11));
+ PIN_DECL_2(C23, GPIOF3, SD1DAT1, PWM11);
+ GROUP_DECL(PWM11G0, C23);
+ 
+ #define C22 44
+ SIG_EXPR_LIST_DECL_SESG(C22, SD1DAT2, SD1, SIG_DESC_SET(SCU414, 12));
+-SIG_EXPR_LIST_DECL_SEMG(C22, PWM12, PWM12G0, PWM12, SIG_DESC_SET(SCU4B4, 12));
++SIG_EXPR_LIST_DECL_SEMG(C22, PWM12, PWM12G0, PWM12, SIG_DESC_SET(SCU4B4, 12),
++			SIG_DESC_CLEAR(SCU414, 12));
+ PIN_DECL_2(C22, GPIOF4, SD1DAT2, PWM12);
+ GROUP_DECL(PWM12G0, C22);
+ 
+ #define A25 45
+ SIG_EXPR_LIST_DECL_SESG(A25, SD1DAT3, SD1, SIG_DESC_SET(SCU414, 13));
+-SIG_EXPR_LIST_DECL_SEMG(A25, PWM13, PWM13G0, PWM13, SIG_DESC_SET(SCU4B4, 13));
++SIG_EXPR_LIST_DECL_SEMG(A25, PWM13, PWM13G0, PWM13, SIG_DESC_SET(SCU4B4, 13),
++			SIG_DESC_CLEAR(SCU414, 13));
+ PIN_DECL_2(A25, GPIOF5, SD1DAT3, PWM13);
+ GROUP_DECL(PWM13G0, A25);
+ 
+ #define A24 46
+ SIG_EXPR_LIST_DECL_SESG(A24, SD1CD, SD1, SIG_DESC_SET(SCU414, 14));
+-SIG_EXPR_LIST_DECL_SEMG(A24, PWM14, PWM14G0, PWM14, SIG_DESC_SET(SCU4B4, 14));
++SIG_EXPR_LIST_DECL_SEMG(A24, PWM14, PWM14G0, PWM14, SIG_DESC_SET(SCU4B4, 14),
++			SIG_DESC_CLEAR(SCU414, 14));
+ PIN_DECL_2(A24, GPIOF6, SD1CD, PWM14);
+ GROUP_DECL(PWM14G0, A24);
+ 
+ #define A23 47
+ SIG_EXPR_LIST_DECL_SESG(A23, SD1WP, SD1, SIG_DESC_SET(SCU414, 15));
+-SIG_EXPR_LIST_DECL_SEMG(A23, PWM15, PWM15G0, PWM15, SIG_DESC_SET(SCU4B4, 15));
++SIG_EXPR_LIST_DECL_SEMG(A23, PWM15, PWM15G0, PWM15, SIG_DESC_SET(SCU4B4, 15),
++			SIG_DESC_CLEAR(SCU414, 15));
+ PIN_DECL_2(A23, GPIOF7, SD1WP, PWM15);
+ GROUP_DECL(PWM15G0, A23);
+ 
+-- 
+2.25.1
+
