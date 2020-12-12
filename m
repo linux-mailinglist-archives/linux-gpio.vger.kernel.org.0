@@ -2,91 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F4402D8679
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 13:53:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E4E2D86BF
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 14:10:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438879AbgLLMwx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Dec 2020 07:52:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438878AbgLLMww (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Dec 2020 07:52:52 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C920C0613CF
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Dec 2020 04:52:12 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id r24so18387492lfm.8
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Dec 2020 04:52:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vrw4A8+qU5SFd46mLOZmDzd5Ncb2O1fPpwc/d/T5jSo=;
-        b=k5s5T11KcOv+QsENv1AXN5Bbcl07KDzZ+ts4kG4qDaGkohzLXH2BAnb02ABeolPkzi
-         vP9UXKGSuZ6PRqSu7q82opl0Pe69yMTjrEYvknaMI1Ukh+eTkOFomyNi58M7wIJz1bNY
-         m1t/xCja+oGFHYGxdqEj2hTKlkLyNZ2JYbWwcEk9xyLMEYjvwbt6/qTXWdApgRraDFIB
-         Zw4H/ndkk6QABi08FjsUSQwTHkpZJ8BqyyXEo6dDNWtvd5Fd+nPyQI6llvE0kS0ulaK/
-         A1CTZ3ZxL/kTUccZkdfqSwgqVR8Ad9o7gr7VDuhDnbZmovqkAFJBxgfi6dpvIcbNY8So
-         o5Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vrw4A8+qU5SFd46mLOZmDzd5Ncb2O1fPpwc/d/T5jSo=;
-        b=ZEjPeEn3g6xPh5wa1aMc0T92+jrl/0Q7JJzgMGe4wB1Qf8OithhcbSXeYaBcZtshOY
-         WNbCDg3PUC1jx2mkIYMT1L6TE4iLyEK4qkW8XT4bJn9tOp6t3pm9VcFG6Zzn9ma7hekZ
-         kS1/priw2RC++TKmtEFec4/2l3NFP/VuiJAoJmCBBX86B+FE3Lki962wqOv+/UzLrry4
-         U3BDrj+K2P9jb94usg6Hb+jjdTbXrfSSgXg8RIRH359EsgmCJ2ZyCpRzrknFOzLAmPxK
-         NlmbRKJ+GA0KDwDDp0qRtxBzqx8lvPRf9/BjS8vEt3cdetg2WdsqDEnHJeYqG6eKdosq
-         aF4g==
-X-Gm-Message-State: AOAM530mlua8QuQ3kUlTLPSx+WfhiHZvGW+Zdyh61QObUFD+kpqJQCiz
-        WHkzCxav+6Z+YpbGd0h5EllirMfyXz6oT//Xb9vQCQ==
-X-Google-Smtp-Source: ABdhPJwVynjGPb6y+1O4DC9DGzEFv7nsD4Y+LCV6DGeOXdeIwhJMHEYE7hftP+r/8yNhJzn16XKORgWckoYY9FeMZL4=
-X-Received: by 2002:a19:8384:: with SMTP id f126mr5813971lfd.649.1607777530886;
- Sat, 12 Dec 2020 04:52:10 -0800 (PST)
+        id S2394160AbgLLNJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Dec 2020 08:09:44 -0500
+Received: from mga03.intel.com ([134.134.136.65]:41826 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439079AbgLLNJk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 12 Dec 2020 08:09:40 -0500
+IronPort-SDR: DYkxmNGKzq4CF3xEvE9Rs5GQqbMGIgyc4bb52Mkw6duovT8oFZVdcaBu6RxoZsRTYGNqSQeyzI
+ mAeLXXk3sAqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9832"; a="174658825"
+X-IronPort-AV: E=Sophos;i="5.78,414,1599548400"; 
+   d="scan'208";a="174658825"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2020 05:08:49 -0800
+IronPort-SDR: FaY5FOf+1mdLq4kRXsCzEBovVU+yr9gYJWZMhKvIGotqbq6JhVVnK8t2/T0OZnWttUAOPNMqhQ
+ aTWD3HOSRHUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,414,1599548400"; 
+   d="scan'208";a="334807188"
+Received: from lkp-server01.sh.intel.com (HELO ecc0cebe68d1) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2020 05:08:46 -0800
+Received: from kbuild by ecc0cebe68d1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1ko4dh-0001LB-Ds; Sat, 12 Dec 2020 13:08:45 +0000
+Date:   Sat, 12 Dec 2020 21:07:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ 9777d0bfdae796de3f8d73879a43bc00145dc8ee
+Message-ID: <5fd4c0a7.VSDKpw4KVadeheVr%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20201212003447.238474-1-linus.walleij@linaro.org> <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Dec 2020 13:51:59 +0100
-Message-ID: <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 10:23 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: 9777d0bfdae796de3f8d73879a43bc00145dc8ee  gpio: cs5535: Simplify the return expression of cs5535_gpio_probe()
 
-> As the names are specified in DT, I think the biggest "use case" for
-> collisions is GPIO chips on expansion boards, if multiple instances
-> of the same board can be connected.
+elapsed time: 721m
 
-The actual case that happens in reality is GPIO chips on USB.
-For example if you plug in two FTDI adapters (these have GPIOs)
-and they have named their lines statically in the driver.
+configs tested: 174
+configs skipped: 2
 
-This is what Johan points out and also what I find from Googling.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-So I would say hot-pluggable buses. Greybus would have the
-same issue I think.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+nios2                         3c120_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                          r7785rp_defconfig
+mips                             allmodconfig
+powerpc                     tqm8548_defconfig
+m68k                           sun3_defconfig
+openrisc                            defconfig
+arm                            pleb_defconfig
+arm                          collie_defconfig
+arm                           sunxi_defconfig
+parisc                generic-32bit_defconfig
+m68k                       m5275evb_defconfig
+arm                          exynos_defconfig
+sh                           se7343_defconfig
+arm                      integrator_defconfig
+arm                            qcom_defconfig
+sh                          rsk7264_defconfig
+mips                     cu1000-neo_defconfig
+powerpc                        cell_defconfig
+arm                      jornada720_defconfig
+powerpc                     tqm8541_defconfig
+sh                          landisk_defconfig
+powerpc                       holly_defconfig
+s390                                defconfig
+powerpc                 mpc832x_rdb_defconfig
+parisc                              defconfig
+xtensa                    smp_lx200_defconfig
+arm                        mvebu_v7_defconfig
+sh                             shx3_defconfig
+arm                          gemini_defconfig
+sh                          rsk7269_defconfig
+sh                        apsh4ad0a_defconfig
+m68k                        m5272c3_defconfig
+mips                   sb1250_swarm_defconfig
+arm                         socfpga_defconfig
+arm                          moxart_defconfig
+arc                                 defconfig
+arm                         s3c6400_defconfig
+arm                       aspeed_g4_defconfig
+arc                         haps_hs_defconfig
+powerpc                        warp_defconfig
+nios2                         10m50_defconfig
+parisc                generic-64bit_defconfig
+arm                        mvebu_v5_defconfig
+powerpc                      bamboo_defconfig
+powerpc                     ppa8548_defconfig
+riscv                               defconfig
+sh                             sh03_defconfig
+xtensa                generic_kc705_defconfig
+m68k                        mvme147_defconfig
+arm                        multi_v5_defconfig
+arm                          pxa910_defconfig
+nds32                               defconfig
+parisc                           alldefconfig
+ia64                                defconfig
+powerpc                    klondike_defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                         assabet_defconfig
+arm                     eseries_pxa_defconfig
+arm                         lubbock_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                         s3c2410_defconfig
+arm                       spear13xx_defconfig
+powerpc                        icon_defconfig
+s390                          debug_defconfig
+powerpc                    ge_imp3a_defconfig
+mips                      bmips_stb_defconfig
+xtensa                         virt_defconfig
+sparc                            allyesconfig
+powerpc                          g5_defconfig
+m68k                       bvme6000_defconfig
+xtensa                           allyesconfig
+arm                         mv78xx0_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                          simpad_defconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                      maltasmvp_defconfig
+powerpc                      makalu_defconfig
+riscv                    nommu_virt_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20201212
+i386                 randconfig-a004-20201212
+i386                 randconfig-a003-20201212
+i386                 randconfig-a002-20201212
+i386                 randconfig-a005-20201212
+i386                 randconfig-a006-20201212
+i386                 randconfig-a004-20201209
+i386                 randconfig-a005-20201209
+i386                 randconfig-a001-20201209
+i386                 randconfig-a002-20201209
+i386                 randconfig-a006-20201209
+i386                 randconfig-a003-20201209
+x86_64               randconfig-a016-20201209
+x86_64               randconfig-a012-20201209
+x86_64               randconfig-a013-20201209
+x86_64               randconfig-a014-20201209
+x86_64               randconfig-a015-20201209
+x86_64               randconfig-a011-20201209
+x86_64               randconfig-a016-20201212
+x86_64               randconfig-a012-20201212
+x86_64               randconfig-a013-20201212
+x86_64               randconfig-a015-20201212
+x86_64               randconfig-a014-20201212
+x86_64               randconfig-a011-20201212
+i386                 randconfig-a014-20201210
+i386                 randconfig-a013-20201210
+i386                 randconfig-a012-20201210
+i386                 randconfig-a011-20201210
+i386                 randconfig-a016-20201210
+i386                 randconfig-a015-20201210
+i386                 randconfig-a013-20201209
+i386                 randconfig-a014-20201209
+i386                 randconfig-a011-20201209
+i386                 randconfig-a015-20201209
+i386                 randconfig-a012-20201209
+i386                 randconfig-a016-20201209
+i386                 randconfig-a014-20201212
+i386                 randconfig-a013-20201212
+i386                 randconfig-a012-20201212
+i386                 randconfig-a011-20201212
+i386                 randconfig-a016-20201212
+i386                 randconfig-a015-20201212
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-> This is a bit similar to clock outputs, cfr. commit f491276a51685987
-> ("clk: vc5: Allow Versaclock driver to support multiple instances"), but
-> in the clock case, the name of the clock output is dictated by the
-> driver, not by DT.
+clang tested configs:
+x86_64               randconfig-a003-20201212
+x86_64               randconfig-a006-20201212
+x86_64               randconfig-a002-20201212
+x86_64               randconfig-a005-20201212
+x86_64               randconfig-a004-20201212
+x86_64               randconfig-a001-20201212
+x86_64               randconfig-a004-20201209
+x86_64               randconfig-a006-20201209
+x86_64               randconfig-a005-20201209
+x86_64               randconfig-a001-20201209
+x86_64               randconfig-a002-20201209
+x86_64               randconfig-a003-20201209
 
-Yeah actually the collisions we have seen in GPIO is the same
-type, where we assign the names in gc->names and not in the
-device tree (or ACPI).
-
-But I think it is good to establish this habit already so we don't
-end up depending on having to support flat namespaces with
-several lines on the same chip named the same at least.
-
-Yours,
-Linus Walleij
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
