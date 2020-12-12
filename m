@@ -2,146 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B01742D8332
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 01:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E262D8380
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 01:39:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394803AbgLLAEn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Dec 2020 19:04:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48642 "EHLO
+        id S1728503AbgLLAhx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Dec 2020 19:37:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391639AbgLLAEZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 19:04:25 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE38C061794
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 16:03:45 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id a9so15731914lfh.2
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 16:03:45 -0800 (PST)
+        with ESMTP id S2437765AbgLLAhc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Dec 2020 19:37:32 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E78C0613D3
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 16:36:51 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id 23so15847632lfg.10
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Dec 2020 16:36:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SfxY10PKBlgSw6/Fq87LV1LDFIW7NSQj7nViKjsG+no=;
-        b=Wv11Q6mHv1gO+UaNIbL3zUo9qxZ+sUkHbR3bPMfJXBP7hbTgQJTAEuD7NrSlyu5iSs
-         GZY1MvMu2QY+1vgHEbL861U/AW0MFtcrwrOHtO4nQCZsil9oq4+HwCAMi/NszMkxMXcs
-         ds5ydgWlDwUByKmBJHOLU77zHHsuw/a7lcOdiMC2bVLJETcemZlkqkrQWC2BWBZupm5O
-         Ue+0Yhb6R/g69gA0RI1FZdiQU9o4+4dZ9aLzJLwqSUtMbO2GDNouFSMO1ZXgWm0a7wqg
-         w8WCrN9NuJEg+zwXtoHzuXzhY2Q/8zobMukCOIfDB1fFkLkQvxoFPsZCgnjNzr+tEXJU
-         VaxA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ttjqXhxQi+pNizwAm4tpfBYhH9e2m0KKEEwUkI5pPkw=;
+        b=V4rIX9tGub7KABlVbhEWkOc8JyvTIimSGi9ZCxXgEZXicY8lL22Tl+8wTUixpT+KJd
+         MpCVltyw5Y6xAKfXa8Zn7UD78JWuknfQtyceOftl7xEY7r1HuFI5NrI1FW928ihY1onJ
+         +o24L3HgNMdhfBhCqY/9YAXGj0h1eFxHMXYpXxZie/Z0EOHV5IX/oF5qJEq2WOcV+OKN
+         XFE0Nn1DjkxIDVOgJZTGTuWi9Px2Pav3TIh9iVJjFweC6L3wke4qPCI02F9jztRcPEbK
+         pI4noO24N4EB+oqhpUgZ6Vys74oViN6siVIka5EoXXFK04XkQRnu9eVN1L9ICWxW+duT
+         xRgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfxY10PKBlgSw6/Fq87LV1LDFIW7NSQj7nViKjsG+no=;
-        b=NITdmjfKjoh2MYd5a2V3ehvzItFgmxGlT8L/7W2W7SdGjLP/6BIalkD3KheN0ZD37m
-         DAQ9Hoo0ftZx4vsFlU6gXBTcJw5kQOsGwzYlwNYJhG0kQG1so0BinEswKDfcxqBkz3kZ
-         TYIL6lRvFzkRa2aZ4WExw1NKow3j9c/z//hJCgv8cozuiVXMdWOB+0B8vyv9IunFS2dF
-         +KRoOS3nyHzqDC7mmiN4LzwAL2H8yE/J0jwoyJYpMOYhn2CV0sPgm5Z86gZhxRzGOJQC
-         X2iA5Cx/70mR1kmC1E+vIawZGj68f4Zbgr6vhMOUcVs9gXmmau0hiqP6B+iHhR+cSCgb
-         VAgg==
-X-Gm-Message-State: AOAM533B9gJhc1iyba5aqkS1S6VmB7vJyMgWvWxnhwSqPBTH687QBODB
-        3FSiecv7NpKBgrze4sh6ek80GGz+qu1mBeGzoR+tng==
-X-Google-Smtp-Source: ABdhPJx3IAmrcEpXXMHnifRqVgVvTeCANVyRGmMptZidgvCOnkz50UFCvqUVtOhvhNSlPjj6hHub2Zi1irgcEhjEmys=
-X-Received: by 2002:a2e:3503:: with SMTP id z3mr5506252ljz.74.1607731423405;
- Fri, 11 Dec 2020 16:03:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20201122170822.21715-1-mani@kernel.org> <20201122170822.21715-3-mani@kernel.org>
- <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
- <X8ZmfbQp7/BGgxec@localhost> <CACRpkdZJdxqxUEQaKUHctHRSQAUpYZJtuxonwVd_ZFAsLBbKrA@mail.gmail.com>
- <X89OOUOG0x0SSxXA@localhost> <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
- <X9DsWahl6UDwZwBn@localhost> <CACRpkdYm-j9QcK8hgNrC33KruWE17Q0F4+T=UanE7PCEZEtu6w@mail.gmail.com>
- <X9HiGaIzk4UaZG7i@localhost>
-In-Reply-To: <X9HiGaIzk4UaZG7i@localhost>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ttjqXhxQi+pNizwAm4tpfBYhH9e2m0KKEEwUkI5pPkw=;
+        b=WKGIFtRNgWAWEmqOUepc0QaYfR5fZuETDmiiwVyJu72ULUBncJHjFz0v2uVBsSXYJo
+         HFaN7BiU9MGxpeJKyOoRm/7+2bNJ8xIOe2WCsBBSE76Mc/PMPucf8O2uo+QNpcQYJH4W
+         9B9KEvy2D6zCHVEPJ0LClQvgDVQb8HLxMUvYqN2ASmFl7xx4+inj58kJHqh11ZkFeN/0
+         1WpyMMrmBwNtMbUcK/JrbQ2C1xefnQoLSnjOVgo7C2wgBZZeMKKTQIv3gXgAJ9eaE/la
+         84h4N9fmve7viZehyWi3lhQ+JnfihwjKH3QaJRpiyy9Yj5PEJunHYQZ7JQakONg+CYCR
+         W4uw==
+X-Gm-Message-State: AOAM530neryfCOiYtje8mBoyMg+ucggP/szA7T5DGldalRJgoxkNRsyD
+        HNSg+dfOikEHa3VlIOLIQpVQYJVY6YbbQMnw
+X-Google-Smtp-Source: ABdhPJygSLsOht2j04f7E6A/vo6z5NziyQvjseJAV15q87u5r/xVCGYHyTWqUaz6lKGMJpN+MZUNxg==
+X-Received: by 2002:a2e:5018:: with SMTP id e24mr6218830ljb.425.1607733410214;
+        Fri, 11 Dec 2020 16:36:50 -0800 (PST)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id i29sm1053519lfc.193.2020.12.11.16.36.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Dec 2020 16:36:49 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 12 Dec 2020 01:03:32 +0100
-Message-ID: <CACRpkdZ6MUzRe9m=NrqA_5orhZXDtWj+qoFMHX7v6Zjsx-rVGg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
-To:     Johan Hovold <johan@kernel.org>
+To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH] gpiolib: Disallow identical line names in the same chip
+Date:   Sat, 12 Dec 2020 01:34:47 +0100
+Message-Id: <20201212003447.238474-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 9:53 AM Johan Hovold <johan@kernel.org> wrote:
-> On Wed, Dec 09, 2020 at 05:25:32PM +0100, Linus Walleij wrote:
+We need to make this namespace hierarchical: at least do not
+allow two lines on the same chip to have the same name, this
+is just too much flexibility. If we name a line on a chip,
+name it uniquely on that chip.
 
-> I just replied to that thread, but to summarize, you can't rely on
-> having the sysfs code detect collisions since that will trigger a bunch
-> of nasty warnings and backtraces. We also don't want the sysfs interface
-> for a specific USB device to depend on probe order (only the first one
-> plugged in gets to use the line names). And adding line names now could
-> in fact be what breaks currently working scripts.
+I don't know what happens if we just apply this, I *hope* there
+are not a lot of systems out there breaking this simple and
+intuitive rule.
 
-Yes the sysfs ABI is very volatile and easy to break.
+As a side effect, this makes the device tree naming code
+scream a bit if names are not globally unique.
 
-As pointed out in the other reply, sysfs base GPIO number is all
-wibbly-wobbly on anything hot-pluggable so in a way I feel it
-is the right thing to disallow sysfs altogether on hotpluggable
-devices.
+I think there are not super-many device trees out there naming
+their lines so let's fix this before the problem becomes
+widespread.
 
-> > I am strongly encouraging any developer with a few spare cycles
-> > on their hands to go and implement the debugfs facility because
-> > we can make it so much better than the sysfs, easier and
-> > more convenient for testing etc.
->
-> Don't you run the risk of having people enable debugfs in production
-> systems now just so they can use the old-style interface?
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+This may be just the first step in tightening this up.
+Googling gives at hand that the colission warning doesn't
+happen much so we might go as far as to say the name can
+be required to be globally unique, but that creates a flat
+namespace so I don't know if that is desireable.
+---
+ drivers/gpio/gpiolib.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
-That risk always exist of course. For this and many other reasons.
-I just have to trust developers to understand that debugfs is named
-debugfs for a reason.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 5ce0c14c637b..be4b3e9032b2 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -330,11 +330,9 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ 
+ /*
+  * Take the names from gc->names and assign them to their GPIO descriptors.
+- * Warn if a name is already used for a GPIO line on a different GPIO chip.
+  *
+- * Note that:
+- *   1. Non-unique names are still accepted,
+- *   2. Name collisions within the same GPIO chip are not reported.
++ * - Fail if a name is already used for a GPIO line on the same chip.
++ * - Allow names to not be globally unique but warn about it.
+  */
+ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ {
+@@ -343,13 +341,19 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ 
+ 	/* First check all names if they are unique */
+ 	for (i = 0; i != gc->ngpio; ++i) {
+-		struct gpio_desc *gpio;
++		struct gpio_desc *gpiod;
+ 
+-		gpio = gpio_name_to_desc(gc->names[i]);
+-		if (gpio)
++		gpiod = gpio_name_to_desc(gc->names[i]);
++		if (gpiod) {
+ 			dev_warn(&gdev->dev,
+ 				 "Detected name collision for GPIO name '%s'\n",
+ 				 gc->names[i]);
++			if (gpiod->gdev == gdev) {
++				dev_err(&gdev->dev,
++					"GPIO name collision on the same chip, this is not allowed, fix all lines on the chip to have unique names\n");
++				return -EINVAL;
++			}
++		}
+ 	}
+ 
+ 	/* Then add all names to the GPIO descriptors */
+@@ -402,8 +406,22 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+ 		return ret;
+ 	}
+ 
+-	for (i = 0; i < count; i++)
++	for (i = 0; i < count; i++) {
++		struct gpio_desc *gpiod;
++
++		gpiod = gpio_name_to_desc(names[i]);
++		if (gpiod) {
++			dev_warn(&gdev->dev,
++                                 "Detected name collision for GPIO name '%s'\n",
++                                 names[i]);
++			if (gpiod->gdev == gdev) {
++				dev_err(&gdev->dev,
++					"GPIO name collision on the same chip, this is not allowed, fix all lines on the chip to have unique names\n");
++				return -EINVAL;
++			}
++		}
+ 		gdev->descs[i].name = names[i];
++	}
+ 
+ 	kfree(names);
+ 
+-- 
+2.28.0
 
-> Side note: if you skip the "export" part of the interface, how would you
-> indicate that a line is already in use or not available (e.g.
-> gpio-range-reserved)?
-
-The idea is that if you poke around there you know what you're
-doing or ready to face the consequences.
-
-I am thinking if people want to toggle LEDs and switches from
-debugfs for testing and hacking they'd be alright with corrupting
-the SPI interface if they make mistakes.
-
-The chardev ABI is the only thing which we really designed with
-some users, multiple users, compatibility and security in mind,
-yet we had to revamp it once from scratch...
-
-> Just did a super quick check and it seems libgpiod still assumes a flat
-> name space. For example, gpiod_chip_find_line() returns only the first
-> line found that matches a name. Shouldn't be impossible to extend, but
-> just want to make sure this flat namespace assumption hasn't been to
-> heavily relied upon.
-
-The unique way to identify a GPIO is gpiochip instance (with
-topology from sysfs) and then a line number on that chip.
-This is done e.g. in the example tool
-tools/gpio/gpio-hammer.c
-
-As you can see the tool doesn't use these line names.
-
-The line names are really like symbolic links or something.
-But they are indeed in a flat namespace so we should try to
-at least make them unique if it turns out people love to use
-these.
-
-As it is now system designers mostly use device tree to assign
-line names and they try to make these unique because they don't
-like the nasty warnings from gpiolib.
-
-If I google for the phrase "Detected name collision for GPIO name"
-I just find the code, our discussions and some USB serial devices
-warning about this so far.
-
-Maybe we should just make a patch to disallow it?
-
-Yours,
-Linus Walleij
