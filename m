@@ -2,78 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB3F02D860C
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 11:52:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4402D8679
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Dec 2020 13:53:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437288AbgLLKuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Dec 2020 05:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405700AbgLLKty (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 12 Dec 2020 05:49:54 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B592184D;
-        Sat, 12 Dec 2020 10:49:13 +0000 (UTC)
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=localhost.localdomain)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1ko2Sd-000gY5-1w; Sat, 12 Dec 2020 10:49:11 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Archana Sathyakumar <asathyak@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>
-Subject: Re: (subset) [PATCH v4 1/4] irqchip: qcom-pdc: Fix phantom irq when changing between rising/falling
-Date:   Sat, 12 Dec 2020 10:48:55 +0000
-Message-Id: <160777008910.485613.16353166280006901459.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201211141514.v4.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
-References: <20201211141514.v4.1.I2702919afc253e2a451bebc3b701b462b2d22344@changeid>
+        id S2438879AbgLLMwx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Dec 2020 07:52:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438878AbgLLMww (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Dec 2020 07:52:52 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C920C0613CF
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Dec 2020 04:52:12 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id r24so18387492lfm.8
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Dec 2020 04:52:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vrw4A8+qU5SFd46mLOZmDzd5Ncb2O1fPpwc/d/T5jSo=;
+        b=k5s5T11KcOv+QsENv1AXN5Bbcl07KDzZ+ts4kG4qDaGkohzLXH2BAnb02ABeolPkzi
+         vP9UXKGSuZ6PRqSu7q82opl0Pe69yMTjrEYvknaMI1Ukh+eTkOFomyNi58M7wIJz1bNY
+         m1t/xCja+oGFHYGxdqEj2hTKlkLyNZ2JYbWwcEk9xyLMEYjvwbt6/qTXWdApgRraDFIB
+         Zw4H/ndkk6QABi08FjsUSQwTHkpZJ8BqyyXEo6dDNWtvd5Fd+nPyQI6llvE0kS0ulaK/
+         A1CTZ3ZxL/kTUccZkdfqSwgqVR8Ad9o7gr7VDuhDnbZmovqkAFJBxgfi6dpvIcbNY8So
+         o5Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vrw4A8+qU5SFd46mLOZmDzd5Ncb2O1fPpwc/d/T5jSo=;
+        b=ZEjPeEn3g6xPh5wa1aMc0T92+jrl/0Q7JJzgMGe4wB1Qf8OithhcbSXeYaBcZtshOY
+         WNbCDg3PUC1jx2mkIYMT1L6TE4iLyEK4qkW8XT4bJn9tOp6t3pm9VcFG6Zzn9ma7hekZ
+         kS1/priw2RC++TKmtEFec4/2l3NFP/VuiJAoJmCBBX86B+FE3Lki962wqOv+/UzLrry4
+         U3BDrj+K2P9jb94usg6Hb+jjdTbXrfSSgXg8RIRH359EsgmCJ2ZyCpRzrknFOzLAmPxK
+         NlmbRKJ+GA0KDwDDp0qRtxBzqx8lvPRf9/BjS8vEt3cdetg2WdsqDEnHJeYqG6eKdosq
+         aF4g==
+X-Gm-Message-State: AOAM530mlua8QuQ3kUlTLPSx+WfhiHZvGW+Zdyh61QObUFD+kpqJQCiz
+        WHkzCxav+6Z+YpbGd0h5EllirMfyXz6oT//Xb9vQCQ==
+X-Google-Smtp-Source: ABdhPJwVynjGPb6y+1O4DC9DGzEFv7nsD4Y+LCV6DGeOXdeIwhJMHEYE7hftP+r/8yNhJzn16XKORgWckoYY9FeMZL4=
+X-Received: by 2002:a19:8384:: with SMTP id f126mr5813971lfd.649.1607777530886;
+ Sat, 12 Dec 2020 04:52:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: dianders@chromium.org, tglx@linutronix.de, linus.walleij@linaro.org, bjorn.andersson@linaro.org, ilina@codeaurora.org, linux-arm-msm@vger.kernel.org, asathyak@codeaurora.org, mkshah@codeaurora.org, neeraju@codeaurora.org, sramana@codeaurora.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, swboyd@chromium.org, linux-gpio@vger.kernel.org, agross@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20201212003447.238474-1-linus.walleij@linaro.org> <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 12 Dec 2020 13:51:59 +0100
+Message-ID: <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 11 Dec 2020 14:15:35 -0800, Douglas Anderson wrote:
-> We have a problem if we use gpio-keys and configure wakeups such that
-> we only want one edge to wake us up.  AKA:
->   wakeup-event-action = <EV_ACT_DEASSERTED>;
->   wakeup-source;
-> 
-> Specifically we end up with a phantom interrupt that blocks suspend if
-> the line was already high and we want wakeups on rising edges (AKA we
-> want the GPIO to go low and then high again before we wake up).  The
-> opposite is also problematic.
-> 
-> [...]
+On Sat, Dec 12, 2020 at 10:23 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 
-Applied to irq/irqchip-next, thanks!
+> As the names are specified in DT, I think the biggest "use case" for
+> collisions is GPIO chips on expansion boards, if multiple instances
+> of the same board can be connected.
 
-[1/4] irqchip: qcom-pdc: Fix phantom irq when changing between rising/falling
-      commit: 2f5fbc4305d07725bfebaedb09e57271315691ef
+The actual case that happens in reality is GPIO chips on USB.
+For example if you plug in two FTDI adapters (these have GPIOs)
+and they have named their lines statically in the driver.
 
-Cheers,
+This is what Johan points out and also what I find from Googling.
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+So I would say hot-pluggable buses. Greybus would have the
+same issue I think.
 
+> This is a bit similar to clock outputs, cfr. commit f491276a51685987
+> ("clk: vc5: Allow Versaclock driver to support multiple instances"), but
+> in the clock case, the name of the clock output is dictated by the
+> driver, not by DT.
 
+Yeah actually the collisions we have seen in GPIO is the same
+type, where we assign the names in gc->names and not in the
+device tree (or ACPI).
+
+But I think it is good to establish this habit already so we don't
+end up depending on having to support flat namespaces with
+several lines on the same chip named the same at least.
+
+Yours,
+Linus Walleij
