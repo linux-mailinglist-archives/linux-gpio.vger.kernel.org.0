@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B992D8D6E
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 14:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 370822D8D71
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 14:53:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394751AbgLMNxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S2394752AbgLMNxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sun, 13 Dec 2020 08:53:15 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:35019 "EHLO
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:35021 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387999AbgLMNxO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 08:53:14 -0500
+        with ESMTP id S2387999AbgLMNxP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 08:53:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1607867594; x=1639403594;
+  t=1607867595; x=1639403595;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eeINbOnqE9Jv0U8jbtRISU/Rfa1oaopzr8SoCMB8Y6A=;
-  b=XrY/TcfYo4a64LckDrnLu5SZ13S4v8G24JfrVzU7DIa59/MhvJS+R7qL
-   bnltIiI41A8v2z5HH4yzaA8+JQ1Hmp6JczNltI7dET+Pd/cka5uYZ6n9Z
-   AGeYEJOF84+WyxXBIHjrk7bRzQG+eS+3VpTWZQp/hmI8L4th9UPTgXuSG
-   +Re6xzTgtBYZnGjA2OKDWErVNNf0Hn6mEk5poHCg2q/6Hx5tXfRpCygcV
-   ul1kAcwz5I7xL94hLpc8RDE5QvoqQYjPCnAFXhbyj4pEYOiPh7eNmO+j7
-   6v4X5S2MRGtYpZzL0rLq6MkDege8EF8+2o2jADRKZY9Bq3o0aOKW8oaYy
-   Q==;
-IronPort-SDR: OlLjWHAowu6NloIOJOGRKYI2lRHVNXCN4ZIvo3681z8Mf7ZcGSQaQYRoK96QzTq//7L4wzN7Es
- 1cUQOTkClPtprbPmx0xp3Bp3dLZ7ESneKf6dyAcXawscFQggq3z+Xc92zX+RHIMwpXtV9EfLoN
- wsv12rFWTaOfx8Nptiy+o1tNIYIfwUXufrzJXxKPoLP4HfDUFYYp1HDXKrioxfkAiZCnm6/2Nn
- iWzFNgUUs16ZpZ+rrv3hY4H23Vb8//uwblmMr5g8sNoNUW6SjeelrT4maAlJw6qFs+PXf9/sON
- Cp8=
+  bh=NMOaX7nnqHG5Nvk9gqNKok5Ph5Os8Tyr372uplmj7Zk=;
+  b=g04V3NFoD/xcJj4SnXGSsK4aSvfkYSWOfrHL5tDlXOknCQyy5FYbjwX4
+   4+DM1DpAHtGt/pwoW//1NnVhc+zAXQhl1hVVq7yle4/R+hdCxH98PI2Dx
+   kq4VR3KbC1LNMIVA3CwBY5citgsqhn/zne+3FxuT+DtRjpsXMlk5xyXUG
+   EGMiM6AeFjTLGUR6s2A7/NYSA8mz99/m9P55qPGPFPAnNIxv5uHkPXIiL
+   S0CTjurQtk4K6GuI+wynfCepFxsxl+0vzyqr1zc+dzw/XBtALYwAKClV7
+   c/p6U4ByI7tR9o0sIOEn4KwCAgPmSKtu3/2aw1yMBAPXPot+KGIycAGWq
+   g==;
+IronPort-SDR: 8TB03RabdsuC+82tAo7IbvgJ2vY9KK6v8lAvytgRMVDxMfynqO+VRRcvFd6XRapsaSmwcnA8aW
+ JaAziUpNEEmsk6CMFsG394VU2NIOXu30ajjxRtXp3sHCJxGXEKb2CoURijLKO2rZlJ/DJkFHAg
+ PCl9F6zuoyjuFb5XKWHa0OE2g1rfMHS51ohgkC6f/PrNhfmVI6rO80D3T+NBBbhz5MO/20z70Z
+ U8yQ1uUbv9JzmsR0IrKCz5Sb8jPoQ60rcpRIuW/ptY0Aq3KZAyqDdRiqlvfGlSW0H+ThXh2h94
+ fNg=
 X-IronPort-AV: E=Sophos;i="5.78,416,1599494400"; 
-   d="scan'208";a="159494588"
+   d="scan'208";a="159494592"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2020 21:51:10 +0800
-IronPort-SDR: eE1fLVqMoQy6U0aymq8zVKj1D26Pz8KZHnI4RI34ikiIFKxjwuANBvj4p/J+K+IL2Y4NDH6fIs
- XxYeewThrGYP6kUqgriZwzFTRmlQGk3wxHU0hGT/HanqXJT8/8YQbaIJNEGX/d73mhvIdRP7Ik
- 4kNAg5jwCdFY20R7VjDjLoVesX42DdqcPqpVTLne5bCnCjsz8VroO6s3Em9VTITImXA5wGx9ca
- NK7a8e1LVrrOw4+0CuAj68Mpl495pZnueFW2RAwm+Hc0dkL5HezYcVz+zNy466Rp9iTt6h7m3n
- SEU910F2lXgqtnKhb/Xyu6I+
+  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2020 21:51:12 +0800
+IronPort-SDR: 5CMG4gJ4x1IesKkyg8S93UJSFPO2640icsflHWFXX5luPTLoQl2XcoyEdFeqRUQljew1dk2c8E
+ LVcxnSvUFem2Zq9N74Z0D9Dkoq9yJORprpEQ/M9pQc9VF8UmrPCMKlWX1pnlqRgsoeeWgnoxOa
+ bYIAqAmm8GLuQN9otGOWX2x5E3+XIe5MPYdJmB34Xd6XyHEQhMpmrUF4JhtfWeBoBRaO4DJ5VZ
+ Af/xcsxZrWd5HyNYn/m1Qedz1X/2w7uwZucPfTVUmMrbVlfpsTbBBjwjzril+qW+3ZnDwof4Cx
+ GP6p7wkZren6tWkDWuZAX01/
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2020 05:34:55 -0800
-IronPort-SDR: RBka+Y2LSI5dj25JiaWvNsRYIUjvbv89Nizp4A1jdxkSvkMU2wwz1jw9FVyLCPZu6wor1ukQ+3
- IGow9VrQwkQdevCs8voEQrErX4lyHy1Rkp5XbaKoX5ih1LPUyo5gZyc2CsLKMvV026+tKmALL9
- j+SG5O5TArSUIov1aldrCBDWKFqT6ihbtuYIZbiCqUlpWnUsnmBINudhD1QfxF+mdYbPj4q5s2
- xru/iPR5yAir/TjtT2vf2U22XaqS1MFtxalrblivfbp2Upwl75IUeX00Z9srRzFFmkpKG/hoVC
- zaA=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2020 05:34:57 -0800
+IronPort-SDR: IJsD/MpnNU/E0sI0QTn7PtJBBa/rZb8u6wNxKXFJ6F1ldYnWc6CDAFDeSyF6RO0FTU95D5oay1
+ s4k12NUYqt89FnqwuvNGzfMsIC3aLf99HxB/FX6u7/DTXDSUyIWpf4vxdK9JctFR8xsISxjWTr
+ Kx1P8BsMbtVjJP7ljHDmGX7gclUxNN+oSX1RzKb7Rn7JGm8FdJhRjrtUf2I9ho1Znun+thNkus
+ 1X4MD5u4kcswGI7LJ76TDS+StijOK6DqcFoOgyWPeYg4nPVnQWH6yERhXAYQ2bZA1ZR1cHi4xX
+ qhM=
 WDCIronportException: Internal
 Received: from phd004806.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.197])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Dec 2020 05:51:08 -0800
+  by uls-op-cesaip01.wdc.com with ESMTP; 13 Dec 2020 05:51:10 -0800
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
@@ -56,9 +56,9 @@ To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v10 05/23] riscv: Use vendor name for K210 SoC support
-Date:   Sun, 13 Dec 2020 22:50:38 +0900
-Message-Id: <20201213135056.24446-6-damien.lemoal@wdc.com>
+Subject: [PATCH v10 06/23] riscv: Fix Canaan Kendryte K210 device tree
+Date:   Sun, 13 Dec 2020 22:50:39 +0900
+Message-Id: <20201213135056.24446-7-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201213135056.24446-1-damien.lemoal@wdc.com>
 References: <20201213135056.24446-1-damien.lemoal@wdc.com>
@@ -68,209 +68,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rename configuration options and directories related to the Kendryte
-K210 SoC to use the SoC vendor name (canaan) instead of the "kendryte"
-branding name.
+Remove the clocks property from the cpu and clint nodes as these are
+ignored. Also remove the clock-frequency property from the cpu nodes as
+riscv relies on the timebase-frequency property.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 ---
- arch/riscv/Kconfig.socs                       | 24 +++++++++----------
- arch/riscv/Makefile                           |  2 +-
- arch/riscv/boot/dts/Makefile                  |  2 +-
- arch/riscv/boot/dts/canaan/Makefile           |  5 ++++
- .../boot/dts/{kendryte => canaan}/k210.dts    |  0
- .../boot/dts/{kendryte => canaan}/k210.dtsi   |  0
- arch/riscv/boot/dts/kendryte/Makefile         |  5 ----
- arch/riscv/configs/nommu_k210_defconfig       |  2 +-
- drivers/soc/Kconfig                           |  2 +-
- drivers/soc/Makefile                          |  2 +-
- drivers/soc/{kendryte => canaan}/Kconfig      |  4 ++--
- drivers/soc/{kendryte => canaan}/Makefile     |  0
- .../soc/{kendryte => canaan}/k210-sysctl.c    |  0
- 13 files changed, 24 insertions(+), 24 deletions(-)
- create mode 100644 arch/riscv/boot/dts/canaan/Makefile
- rename arch/riscv/boot/dts/{kendryte => canaan}/k210.dts (100%)
- rename arch/riscv/boot/dts/{kendryte => canaan}/k210.dtsi (100%)
- delete mode 100644 arch/riscv/boot/dts/kendryte/Makefile
- rename drivers/soc/{kendryte => canaan}/Kconfig (79%)
- rename drivers/soc/{kendryte => canaan}/Makefile (100%)
- rename drivers/soc/{kendryte => canaan}/k210-sysctl.c (100%)
+ arch/riscv/boot/dts/canaan/k210.dtsi | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 0bc3e28581f2..88ac0d1a5da4 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -22,21 +22,21 @@ config SOC_VIRT
- 	help
- 	  This enables support for QEMU Virt Machine.
+diff --git a/arch/riscv/boot/dts/canaan/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
+index d2d0ff645632..354b263195a3 100644
+--- a/arch/riscv/boot/dts/canaan/k210.dtsi
++++ b/arch/riscv/boot/dts/canaan/k210.dtsi
+@@ -38,8 +38,6 @@ cpu0: cpu@0 {
+ 			i-cache-block-size = <64>;
+ 			d-cache-size = <0x8000>;
+ 			d-cache-block-size = <64>;
+-			clocks = <&sysctl K210_CLK_CPU>;
+-			clock-frequency = <390000000>;
+ 			cpu0_intc: interrupt-controller {
+ 				#interrupt-cells = <1>;
+ 				interrupt-controller;
+@@ -56,8 +54,6 @@ cpu1: cpu@1 {
+ 			i-cache-block-size = <64>;
+ 			d-cache-size = <0x8000>;
+ 			d-cache-block-size = <64>;
+-			clocks = <&sysctl K210_CLK_CPU>;
+-			clock-frequency = <390000000>;
+ 			cpu1_intc: interrupt-controller {
+ 				#interrupt-cells = <1>;
+ 				interrupt-controller;
+@@ -101,7 +97,6 @@ clint0: clint@2000000 {
+ 			reg = <0x2000000 0xC000>;
+ 			interrupts-extended =  <&cpu0_intc 3 &cpu0_intc 7
+ 						&cpu1_intc 3 &cpu1_intc 7>;
+-			clocks = <&sysctl K210_CLK_ACLK>;
+ 		};
  
--config SOC_KENDRYTE
--	bool "Kendryte K210 SoC"
-+config SOC_CANAAN
-+	bool "Canaan Kendryte K210 SoC"
- 	depends on !MMU
- 	select CLINT_TIMER if RISCV_M_MODE
- 	select SERIAL_SIFIVE if TTY
- 	select SERIAL_SIFIVE_CONSOLE if TTY
- 	select SIFIVE_PLIC
- 	help
--	  This enables support for Kendryte K210 SoC platform hardware.
-+	  This enables support for Canaan Kendryte K210 SoC platform hardware.
- 
--if SOC_KENDRYTE
-+if SOC_CANAAN
- 
--config SOC_KENDRYTE_K210_DTB_BUILTIN
--	bool "Builtin device tree for the Kendryte K210"
--	depends on SOC_KENDRYTE
-+config SOC_CANAAN_K210_DTB_BUILTIN
-+	bool "Builtin device tree for the Canaan Kendryte K210"
-+	depends on SOC_CANAAN
- 	default y
- 	select OF
- 	select BUILTIN_DTB
-@@ -45,13 +45,13 @@ config SOC_KENDRYTE_K210_DTB_BUILTIN
- 	  This option should be selected if no bootloader is being used.
- 	  If unsure, say Y.
- 
--config SOC_KENDRYTE_K210_DTB_SOURCE
--	string "Source file for the Kendryte K210 builtin DTB"
--	depends on SOC_KENDRYTE
--	depends on SOC_KENDRYTE_K210_DTB_BUILTIN
-+config SOC_CANAAN_K210_DTB_SOURCE
-+	string "Source file for the Canaan Kendryte K210 builtin DTB"
-+	depends on SOC_CANAAN
-+	depends on SOC_CANAAN_K210_DTB_BUILTIN
- 	default "k210"
- 	help
--	  Base name (without suffix, relative to arch/riscv/boot/dts/kendryte)
-+	  Base name (without suffix, relative to arch/riscv/boot/dts/canaan)
- 	  for the DTS file that will be used to produce the DTB linked into the
- 	  kernel.
- 
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 0289a97325d1..cd08dc40e8d8 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -83,7 +83,7 @@ PHONY += vdso_install
- vdso_install:
- 	$(Q)$(MAKE) $(build)=arch/riscv/kernel/vdso $@
- 
--ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_KENDRYTE),yy)
-+ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_CANAAN),yy)
- KBUILD_IMAGE := $(boot)/loader.bin
- else
- KBUILD_IMAGE := $(boot)/Image.gz
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index 21e3905f1c44..4da40691c55b 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- subdir-y += sifive
--subdir-$(CONFIG_SOC_KENDRYTE) += kendryte
-+subdir-$(CONFIG_SOC_CANAAN) += canaan
- 
- obj-$(CONFIG_BUILTIN_DTB) := $(addsuffix /, $(subdir-y))
-diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
-new file mode 100644
-index 000000000000..9ee7156c0c31
---- /dev/null
-+++ b/arch/riscv/boot/dts/canaan/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+ifneq ($(CONFIG_SOC_CANAAN_K210_DTB_SOURCE),"")
-+dtb-y += $(strip $(shell echo $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))).dtb
-+obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
-+endif
-diff --git a/arch/riscv/boot/dts/kendryte/k210.dts b/arch/riscv/boot/dts/canaan/k210.dts
-similarity index 100%
-rename from arch/riscv/boot/dts/kendryte/k210.dts
-rename to arch/riscv/boot/dts/canaan/k210.dts
-diff --git a/arch/riscv/boot/dts/kendryte/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
-similarity index 100%
-rename from arch/riscv/boot/dts/kendryte/k210.dtsi
-rename to arch/riscv/boot/dts/canaan/k210.dtsi
-diff --git a/arch/riscv/boot/dts/kendryte/Makefile b/arch/riscv/boot/dts/kendryte/Makefile
-deleted file mode 100644
-index 83636693166d..000000000000
---- a/arch/riscv/boot/dts/kendryte/Makefile
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--ifneq ($(CONFIG_SOC_KENDRYTE_K210_DTB_SOURCE),"")
--dtb-y += $(strip $(shell echo $(CONFIG_SOC_KENDRYTE_K210_DTB_SOURCE))).dtb
--obj-$(CONFIG_SOC_KENDRYTE_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
--endif
-diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
-index cd1df62b13c7..368a28cf1467 100644
---- a/arch/riscv/configs/nommu_k210_defconfig
-+++ b/arch/riscv/configs/nommu_k210_defconfig
-@@ -27,7 +27,7 @@ CONFIG_EMBEDDED=y
- CONFIG_SLOB=y
- # CONFIG_SLAB_MERGE_DEFAULT is not set
- # CONFIG_MMU is not set
--CONFIG_SOC_KENDRYTE=y
-+CONFIG_SOC_CANAAN=y
- CONFIG_MAXPHYSMEM_2GB=y
- CONFIG_SMP=y
- CONFIG_NR_CPUS=2
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index 425ab6f7e375..f43886fec32b 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -6,6 +6,7 @@ source "drivers/soc/amlogic/Kconfig"
- source "drivers/soc/aspeed/Kconfig"
- source "drivers/soc/atmel/Kconfig"
- source "drivers/soc/bcm/Kconfig"
-+source "drivers/soc/canaan/Kconfig"
- source "drivers/soc/fsl/Kconfig"
- source "drivers/soc/imx/Kconfig"
- source "drivers/soc/ixp4xx/Kconfig"
-@@ -22,6 +23,5 @@ source "drivers/soc/ux500/Kconfig"
- source "drivers/soc/versatile/Kconfig"
- source "drivers/soc/xilinx/Kconfig"
- source "drivers/soc/zte/Kconfig"
--source "drivers/soc/kendryte/Kconfig"
- 
- endmenu
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 36452bed86ef..dec90fca120b 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -28,4 +28,4 @@ obj-$(CONFIG_ARCH_U8500)	+= ux500/
- obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
- obj-y				+= xilinx/
- obj-$(CONFIG_ARCH_ZX)		+= zte/
--obj-$(CONFIG_SOC_KENDRYTE)	+= kendryte/
-+obj-$(CONFIG_SOC_CANAAN)	+= canaan/
-diff --git a/drivers/soc/kendryte/Kconfig b/drivers/soc/canaan/Kconfig
-similarity index 79%
-rename from drivers/soc/kendryte/Kconfig
-rename to drivers/soc/canaan/Kconfig
-index 49785b1b0217..5232d13f07e5 100644
---- a/drivers/soc/kendryte/Kconfig
-+++ b/drivers/soc/canaan/Kconfig
-@@ -1,9 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--if SOC_KENDRYTE
-+if SOC_CANAAN
- 
- config K210_SYSCTL
--	bool "Kendryte K210 system controller"
-+	bool "Canaan Kendryte K210 SoC system controller"
- 	default y
- 	depends on RISCV
- 	help
-diff --git a/drivers/soc/kendryte/Makefile b/drivers/soc/canaan/Makefile
-similarity index 100%
-rename from drivers/soc/kendryte/Makefile
-rename to drivers/soc/canaan/Makefile
-diff --git a/drivers/soc/kendryte/k210-sysctl.c b/drivers/soc/canaan/k210-sysctl.c
-similarity index 100%
-rename from drivers/soc/kendryte/k210-sysctl.c
-rename to drivers/soc/canaan/k210-sysctl.c
+ 		plic0: interrupt-controller@c000000 {
 -- 
 2.29.2
 
