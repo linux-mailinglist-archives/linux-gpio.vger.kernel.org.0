@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37FDE2D8D63
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 14:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBB6D2D8D62
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 14:52:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391635AbgLMNwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Dec 2020 08:52:34 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:35019 "EHLO
+        id S2394683AbgLMNwf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Dec 2020 08:52:35 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:35021 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgLMNwd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 08:52:33 -0500
+        with ESMTP id S2387999AbgLMNwf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 08:52:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1607867552; x=1639403552;
+  t=1607867554; x=1639403554;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0B+kwvrbaYpEs4CIb2Eoho1O+FgaDjaWqzP4OVlKPRk=;
-  b=HcAftB8/4CrzvBDo96RflDA4TBlASRjgqIjxQ43S2HBr08dY10g4gvTn
-   O3hEm5Xj78ZIVuvi8EkHLnVFbflWR4av3n4o6kiCRPwsPSe6sgII3t79+
-   ZemPn8SzsqtYadO1P8lW4mnz1dZ5FbsiQ7Ay2+QXVh2fk6FgBj0q6RDl/
-   3WZUKBT/FYejF3S4B9sP+DksnWiSfG2Jg/Sfm6QEUw1kZM+vRWfzBTrQS
-   05xeyoIVdeimEdNEkOg4meb4xJg7t4FiOwKMOBGmB47/9za/ndTkdPWv0
-   4FJmF/u/ATHBiFCN3CD0M07OiEtMDXzFJKKX7+7geUK+RgeoTsc/+Wz3q
-   w==;
-IronPort-SDR: xWDN4CcqTceHp0coXtPYfDitRzhcI1n/PhDOzaRt268V2J/aoFY63snfIahqY5UobgA9bPlOeS
- H8a8obRRdW2RG9G4MTJuhr+3YUMar9+fQsr5K/lQX/rBMryQTjIoy66SwiOAG8y/Sc1U0Wi5iZ
- W0qjg/C01fmHDk4JngS+4gzQiowGbsZJ1FZlL9dTIItK/5VNO0A/iNUh7lXQ7y9BT6+If1gM2g
- DyRu87QhZyQPVu5winWuxAxRd//EWjw/zA2ec0rs21vQggJaCtekFF6szbJWQAV2JocgfjYgGT
- Bjs=
+  bh=AeXALpcFI2zXhzG/wZi1dKZAPJWbKG/DcS+NIXfB8/U=;
+  b=h6e76/UJpaLhvqsKYkAsuiZ95WrahJdAM/RvDjCtdextfqm68ettZpLr
+   6faHFdLLjPAWizL5197FTjA6NVsQso8SYKR27V86vYodjQkVt/hB/MTwm
+   iDUFHfBEQirpXaXmr3yinJ9N6ywSFt1knFTiqmllZ/xAqwtEl0gIIrsH3
+   KLc1jzRm9xAD50SN8Uo8hVNfUJyx1p/8Vkys5NDfu7Qpa0qSvZAvH0d4I
+   i0KOBM5XyWr1MkE10tMfMYkluGTs4AFHtI39aK61EFhORTZkuhO/6+1Xw
+   YIYT83DsFL72THXVkNIoqLSy3GFBnNNObNkF+HzqBspSslBTVtuXom0Aa
+   A==;
+IronPort-SDR: LRYU4zc6IriCyEJSxHtSi2iGPB9KSgiHNmUR3xm0p2RiDHAIJnFzpWI+YGpii21Y9sd3NN7agm
+ MzBXjlF7GgRj6KQRKfUT4BfgZTVr9T5ShGUrcxea81zqYV4Ioy9M2vx9K6WqoZyKM/KEI5BTMi
+ UC/4fvUblSRmO/NcUtvgHM+zVAz7os0bpdD0jVoK2XGeqnKumndC4eRBD6v4GetZ6xX64ro0yr
+ S/Ct6CV2hVN0KFgYiw3vWioZwMgUbysPUDgS6iIVIs1bTc/VvTckFZ9GAb/9RnOecQ0BNl7jDK
+ P+k=
 X-IronPort-AV: E=Sophos;i="5.78,416,1599494400"; 
-   d="scan'208";a="159494572"
+   d="scan'208";a="159494576"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2020 21:51:02 +0800
-IronPort-SDR: hooZAUrY1VF1AGE1AwdufNLrGeSV6ImtsMdyv1sE/eK90YVW89G+lOYxnQYN6xRUGDq14Ceet9
- /eDmeI+OXzcXIkUINNEADLeCBa7+Qk9XAFCPS2Sy0mbEPX1hLjALv5xFeDvMMCxc4v7AhCa73R
- DPo49lvorhSLSMecZ7YAZ3RuKnOEER8bmxzeBrsJz9rjj/2MzIG6SOA8DepW4Ajs7Xr/frdi2U
- hc4lbJXbP9PhQYQqn5tIAm765EHmjUAEy0W9MCUa+pv30FwdsF9+QtECp6TT/k0S8zOJlCZK+B
- qLYLBH6dWXipT2QhQGXyfhjC
+  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2020 21:51:04 +0800
+IronPort-SDR: Ep7xFKEA1lU5SmvxlaumXXzAycC/tWM+KJT1nr7EkMz4SVI+Afc4PXBmgBTFADlkPOQ+zJfNvq
+ LOLoNeE3vwqGOsa27xTbQwulegY1P0oHu+/pySZg2ItXKCCOhPkZLBRDBDV2XyAMr9CgPebl85
+ pUMsr+JDsDL1r4mLVPgfD4bjxxeyIPy7n7Qp4Mvk23KE3ZcwwjPR+qdz4jRsMmGTMutDp6ExBX
+ PE3kr7ax0txa10NmbZ3CoK2VyiWaKL/QF9Jetxo8WnJUM3ZT0hUte6uhvM3vcgSP3apPVwfQVz
+ XbM8jddeASuW4oyoRd9Dt6NT
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2020 05:34:47 -0800
-IronPort-SDR: 0/LgnlutHKxtwb+pbBl3o7Ls1rFecKaGRoWvO0RKPF3+TFxWGaq0BBzTIVTYJ/BlZQa76Nj8Ff
- Ghz2Yp5unOhqlEKeg/LU1dqh1GiQLgFSHv4YUS925vBDOKOeb0V1mxkRZnVe7GYQ4lDDo7cjzr
- Oo9OqBoFpBTYrX79QHkNQAHdJvNnCZgQrF28rxxOuELpPyUFc1jKGzr9MPMWlY/OVcyu7EuaBl
- +L4joXnki/19If7Uqt4UwVCtxu+kFf0mWcWrcbGx7oQLhCOl1oY3nFi5arNrX9aZX+a2Dkviyu
- PKU=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2020 05:34:49 -0800
+IronPort-SDR: 1gUr4xZ26XKIGIcViBs1bDpgOXVGiLU09iNUovfjUS0XFMuIGuEK0TKWEtXCpZcr0wO8Au1tk2
+ NoTjEOYPwSOM+YA0ANBvVS+lVrh9bRddCzC5hRCvgQQKh9NW3P2rzXa1piT4Dk0T9eMIYgaLcY
+ sBPz12BeZ/0Cd2bCoN9yupyeBKrm9rO3MQD2vs9atpCpYyOTVYEJAZXYUngHg78rTmNkSKGWGW
+ jBdUN/F3l94N/PZZB2B13mE9JcydffqxZT1KtEjGNFd6IGrBPAYzsB+99emhafBtmBUiVC+p3R
+ dXA=
 WDCIronportException: Internal
 Received: from phd004806.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.197])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Dec 2020 05:51:00 -0800
+  by uls-op-cesaip01.wdc.com with ESMTP; 13 Dec 2020 05:51:02 -0800
 From:   Damien Le Moal <damien.lemoal@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
@@ -56,9 +56,9 @@ To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v10 01/23] riscv: Fix kernel time_init()
-Date:   Sun, 13 Dec 2020 22:50:34 +0900
-Message-Id: <20201213135056.24446-2-damien.lemoal@wdc.com>
+Subject: [PATCH v10 02/23] riscv: Fix sifive serial driver
+Date:   Sun, 13 Dec 2020 22:50:35 +0900
+Message-Id: <20201213135056.24446-3-damien.lemoal@wdc.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201213135056.24446-1-damien.lemoal@wdc.com>
 References: <20201213135056.24446-1-damien.lemoal@wdc.com>
@@ -68,41 +68,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If of_clk_init() is not called in time_init(), clock providers defined
-in the system device tree are not initialized, resulting in failures for
-other devices to initialize due to missing clocks.
-Similarly to other architectures and to the default kernel time_init()
-implementation, call of_clk_init() before executing timer_probe() in
-time_init().
+Setup the port uartclk in sifive_serial_probe() so that the base baud
+rate is correctly printed during device probe instead of always showing
+"0".  I.e. the probe message is changed from
+
+38000000.serial: ttySIF0 at MMIO 0x38000000 (irq = 1,
+base_baud = 0) is a SiFive UART v0
+
+to the correct:
+
+38000000.serial: ttySIF0 at MMIO 0x38000000 (irq = 1,
+base_baud = 115200) is a SiFive UART v0
 
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- arch/riscv/kernel/time.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/sifive.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-index 4d3a1048ad8b..8a5cf99c0776 100644
---- a/arch/riscv/kernel/time.c
-+++ b/arch/riscv/kernel/time.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2017 SiFive
-  */
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 13eadcb8aec4..214bf3086c68 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -999,6 +999,7 @@ static int sifive_serial_probe(struct platform_device *pdev)
+ 	/* Set up clock divider */
+ 	ssp->clkin_rate = clk_get_rate(ssp->clk);
+ 	ssp->baud_rate = SIFIVE_DEFAULT_BAUD_RATE;
++	ssp->port.uartclk = ssp->baud_rate * 16;
+ 	__ssp_update_div(ssp);
  
-+#include <linux/of_clk.h>
- #include <linux/clocksource.h>
- #include <linux/delay.h>
- #include <asm/sbi.h>
-@@ -24,6 +25,8 @@ void __init time_init(void)
- 	riscv_timebase = prop;
- 
- 	lpj_fine = riscv_timebase / HZ;
-+
-+	of_clk_init(NULL);
- 	timer_probe();
- }
- 
+ 	platform_set_drvdata(pdev, ssp);
 -- 
 2.29.2
 
