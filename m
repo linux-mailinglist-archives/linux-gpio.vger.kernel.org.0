@@ -2,66 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 901832D8B67
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 06:15:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6739E2D8BEE
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 07:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgLMFOn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Dec 2020 00:14:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34184 "EHLO mail.kernel.org"
+        id S1729131AbgLMGFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Dec 2020 01:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgLMFOn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 13 Dec 2020 00:14:43 -0500
+        id S1726369AbgLMGFJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 13 Dec 2020 01:05:09 -0500
 Content-Type: text/plain; charset="utf-8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607836443;
-        bh=VaeAUus1rNjDVdpneM1XXAW2srOZQ+w5dltPlY5NNS0=;
+        s=k20201202; t=1607839469;
+        bh=LCpwKqKHTHHHvvyHULcS2y/ZP4zP3djjGqSTEFIFQjw=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=TVSR2uV8fXibrDJR0JsFRK2z5DyNUykiQtSg7rHx7t60763vOPg5/eidNeG8tT1zW
-         u9zOoF1TQi0lCyDjSJ3GSUHjq44LtCbqOB34mPkWM+k2NbMWZH3KaqGhbF4o780yQY
-         6PNWK+rWJ8rCKerWpESwn7BlzoSFe4gv17J2aEVa3OUqvSVfgCLLdWiRu+pK4xkWzg
-         WAmafQpCldA8y/U4XSsZD02KWyOhiXyxGsWMQh5qnbTlKd8kxYpHQ3mmH+bBmc2y/A
-         v0Gfbv3pUnNrlJsqBY9oNZB4BbXCSU2SIt8hICHfLSKvYpYwqnB751wqsXTZxeeJsU
-         1SSrLT9hUv3Sg==
+        b=IGtnnN11+DiOFmkQQeuT41MCzHczfjD/A9JZU5jEqOaFskVIKj8Y3TUGl9YqqqbGI
+         q6CrHvEphxiBt5Y4FmQwAmlIdouEB24LC1bmtASRhEBhCikcXFDLX8BaK6acgYI84F
+         CLtGY8OB61UASBG0zzUwYVwaP6YpO2Kj5msfNd0EuHukWD56HM7oPTKVE+Bp4/OkO0
+         1g8n2GnKyoLEDnof8YQlMXrhar7xwS+OYe7Gryj9sVj0LZ/kcsyE0WT2lApahYk5s1
+         yN2b9sSdnfMpObT+MYjLeY7fFvlunir8BUFZtV98tz1V9sp32T/EQ3pqQ16Z26JHGz
+         N+koZn4OfqlGA==
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20201211164801.7838-2-nsaenzjulienne@suse.de>
-References: <20201211164801.7838-1-nsaenzjulienne@suse.de> <20201211164801.7838-2-nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v6 01/11] firmware: raspberrypi: Keep count of all consumers
+In-Reply-To: <20201210140313.258739-1-damien.lemoal@wdc.com>
+References: <20201210140313.258739-1-damien.lemoal@wdc.com>
+Subject: Re: [PATCH v8 00/22] RISC-V Kendryte K210 support improvements
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, wahrenst@gmx.net,
-        linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
-Date:   Sat, 12 Dec 2020 21:14:01 -0800
-Message-ID: <160783644171.1580929.15619962172135112128@swboyd.mtv.corp.google.com>
+Cc:     Sean Anderson <seanga2@gmail.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Date:   Sat, 12 Dec 2020 22:04:27 -0800
+Message-ID: <160783946780.1580929.13355022541956430021@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Nicolas Saenz Julienne (2020-12-11 08:47:50)
-> When unbinding the firmware device we need to make sure it has no
-> consumers left. Otherwise we'd leave them with a firmware handle
-> pointing at freed memory.
+Quoting Damien Le Moal (2020-12-10 06:02:51)
 >=20
-> Keep a reference count of all consumers and introduce rpi_firmware_put()
-> which will permit automatically decrease the reference count upon
-> unbinding consumer drivers.
+> Finally the last two patches updates the k210 nommu defconfig to include
+> the newly implemented drivers and provide a new default configuration
+> file enabling SD card support.
 >=20
-> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> A lot of the work on the device tree and on the K210 drivers come from
+> the work by Sean Anderson for the U-Boot project support of the K210
+> SoC. Sean also helped with debugging many aspects of this series.
 >=20
-> ---
+> A tree with all patches applied is available here:
+> https://github.com/damien-lemoal/linux, k210-sysctl-v20 branch.
+> A demonstration of this series used on a SiPeed MAIX Dock
+> board together with an I2C servo controller can be seen here:
+> https://damien-lemoal.github.io/linux-robot-arm/#example
+>=20
+> This tree was used to build userspace busybox environment image that is
+> then copied onto an SD card formatted with ext2:
+> https://github.com/damien-lemoal/buildroot
+> Of note is that running this userspace environment requires a revert of
+> commit 2217b982624680d19a80ebb4600d05c8586c4f96 introduced during the
+> 5.9 development cycle. Without this revert, execution of the init
+> process fails. A problem with the riscv port of elf2flt is suspected but
+> not confirmed. I am now starting to investigate this problem.
+>=20
+> Reviews and comments are as always much welcome.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+What's the merge plan for this series? I'd like to apply the clk patches
+but they're combined with the sysctl driver so I guess I can't?
