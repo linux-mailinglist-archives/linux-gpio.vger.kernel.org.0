@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6892D8E9F
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 17:19:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 739442D8EA1
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 17:19:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391457AbgLMQSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S2395443AbgLMQSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sun, 13 Dec 2020 11:18:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38626 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbgLMQSH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 11:18:07 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8779CC0613D3;
-        Sun, 13 Dec 2020 08:17:26 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id w206so7602904wma.0;
-        Sun, 13 Dec 2020 08:17:26 -0800 (PST)
+        with ESMTP id S2389237AbgLMQSI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 11:18:08 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA32DC0613D6;
+        Sun, 13 Dec 2020 08:17:27 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id c5so10352167wrp.6;
+        Sun, 13 Dec 2020 08:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CeBzPvaH2BmMiS1XJWfNJWyku+o1XcRpDrN+C7/T/zw=;
-        b=VAWweM3+ov0cPIIXWg4XQzEshPzG+LF65DgTY+5tiTgb6aI7RRJDBoGtJd7m+SX1f5
-         YpbL8O2EhZ/o3FFobdfXZrxfo7Op/b1xHfFb88QWLAjT14SbqPyYDQOqXGLqcCYCmTjy
-         0+tjSSSqXDH1P1A/5bCCccJPy3O3neWfUWqFZA4QDncGbNKN4UvzHVqb6fkPb6vkRHy7
-         fjL/n/m9UXkS9lFTR/29Xg1R5snt3CwzHf8dXxzNdZ14WtiHDIhutCfUqtaNGg11kzPe
-         QuUOxslf/b2sFHIDklWCrcNt7SMFIp7UWT4k98I+d4lAvWvyfHQohEMw5hZ8Sr1PMS67
-         Rmmg==
+        bh=4FZ3cP1OuTxfK0gwz1Y/PUWxvlvZu7xp+4Ek4N5jpDQ=;
+        b=WMlym3iS2H3oTcuHjFDLF3LoK1fESINRLhLoCueruLA3MTGES9p1UuprnXuoa3aqCf
+         zgrAfrYESj5m/bSI5idH7XeazTPaWQG+/hNq63BG0zYyOYmm03m1P5a/G8aSwG1wS9Gv
+         r7LSqmpVREu5vVRbrq8NqABd6b7dNMtnTu9OHDnbs6N4t566G8mJ/ppaOlLlb/4KQ1e7
+         nywJy0lPIctVGUch1+0EFrApiRLCtBHgVjup/EHVna10mbGHTgXJV8wYJ/AI0FFaE3wI
+         G0uTmULKxVdlUq5EYzV99jnwuI6PyJLiYNlZYlYwb+kvLMG+LpXvbCTqbRgcWswBCNWC
+         a+1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CeBzPvaH2BmMiS1XJWfNJWyku+o1XcRpDrN+C7/T/zw=;
-        b=PDL804MiIt1iLhRaVjyQH+XoCQoHtbzCV1ozNjqBjngi3VarGKIA0xPgrVNghLS/kw
-         wq/CDB4GJ0Uomar1BzByjSUw5YPDfBuswRZ37PvTaa13TKgmHCi7ED2UUNCR+JSA19z9
-         Vv7p456Q347XDB48nEExeEWVkgiel12dYNovFMAHUcze24xJZib7n0G+3ySbRJ9SUxNV
-         hk4IUBlbuXw2qhWufwray3xH+RdXcjsXYC4idEqGX4i0aX9Ek/CkimT7YPFy+ZSThbHY
-         FtEm8pGG1uGDBc195bt2aODGBJkyHhQlRMgmWvb/shBvW9UTuvqPNQkyS1psxhp1YAYs
-         Gw5g==
-X-Gm-Message-State: AOAM532weugr1D3E1T0n/M2YtL4/NKnCNeRO6IZsAUZjvjuii2H/iXG1
-        Y6ZPzmWjXS2kGP29qxVFUeQ=
-X-Google-Smtp-Source: ABdhPJwCwhl2HdjA+r2aIj1VSzrGG67fSP+EeVqErQC4WLHJA2pMWwd/PpL1GDJybr0L+ekxtWaTTw==
-X-Received: by 2002:a1c:8016:: with SMTP id b22mr23591015wmd.135.1607876245340;
-        Sun, 13 Dec 2020 08:17:25 -0800 (PST)
+        bh=4FZ3cP1OuTxfK0gwz1Y/PUWxvlvZu7xp+4Ek4N5jpDQ=;
+        b=rGodeef+e8c1drLgtMcihXyQFsE4mL5YjxLs0nFzFxkDlO2g34UQWcY/MRNd0+JGAG
+         nKT6ijcZCzNg63QQSLHQmbi9cl+ngktaf1aFzvup46TIqbw0VE0AwHvop1b3c3R6LkoJ
+         2KFjYvb99gpX1LBiylh6dFRe1N50p1gVQFPZjUXA7gGsJ/xmPOgfqQcIp4nQwXtylckI
+         eWMEvEXG/mphCxefeSCoPZH/bGJPnzFK+VDatRvfJdTMbPDkskv/gmBWpFjI/jzWLuHr
+         4b6hLhZipm6CC7e4lcIi9lYTiS93qM5NzzTqwVUUdmGN084xVnFJY45rsWtvS93/uJXk
+         4tmA==
+X-Gm-Message-State: AOAM531s1sqVrmG2bJ4bw59PreUdp8I7G5ycQjRKAX+pwvapgCKOsVn+
+        sQOnzmuuRkx0ZaF4bumUehs=
+X-Google-Smtp-Source: ABdhPJxtjsFp2GSspK6oOC9bf01KY9OFbN+m8KcBkj2GKuSkZQkFIpskgiaBW6McDgPFQQ4NVLybEg==
+X-Received: by 2002:adf:a745:: with SMTP id e5mr24596097wrd.366.1607876246435;
+        Sun, 13 Dec 2020 08:17:26 -0800 (PST)
 Received: from localhost.localdomain (188.red-81-44-87.dynamicip.rima-tde.net. [81.44.87.188])
-        by smtp.gmail.com with ESMTPSA id 64sm27102073wmd.12.2020.12.13.08.17.24
+        by smtp.gmail.com with ESMTPSA id 64sm27102073wmd.12.2020.12.13.08.17.25
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 13 Dec 2020 08:17:24 -0800 (PST)
+        Sun, 13 Dec 2020 08:17:25 -0800 (PST)
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
         yanaijie@huawei.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 1/8] dt-bindings: pinctrl: rt2880: properly redo bindings
-Date:   Sun, 13 Dec 2020 17:17:14 +0100
-Message-Id: <20201213161721.6514-2-sergio.paracuellos@gmail.com>
+        devicetree@vger.kernel.org, devel@driverdev.osuosl.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 2/8] pinctrl: ralink: rt2880: avoid double pointer to simplify code
+Date:   Sun, 13 Dec 2020 17:17:15 +0100
+Message-Id: <20201213161721.6514-3-sergio.paracuellos@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201213161721.6514-1-sergio.paracuellos@gmail.com>
 References: <20201213161721.6514-1-sergio.paracuellos@gmail.com>
@@ -64,108 +65,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When this bindings where applied there weren't already
-reviewed and some old hacks was being used to properly
-pass the schemas checks. This commits fix them up:
- - Instead of using 'if-then' clause use '-pins$'.
- - 'groups' and 'function' are included inside a new
-   '^(.*-)?pinmux$' node.
- - compatible string is not an 'enum' but a 'const'.
- - 'pinctrl-0' and 'pinctrl-names' removed since they are
-    used in consumer nodes.
+Double pointer is being used and assigned in a bit dirty way to
+assign functions in pinctrl. Instead of doing this just avoid it
+and use directly 'p->func' instead.
 
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 ---
- .../pinctrl/ralink,rt2880-pinmux.yaml         | 62 +++++++++----------
- 1 file changed, 28 insertions(+), 34 deletions(-)
+ drivers/pinctrl/ralink/pinctrl-rt2880.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-index 7dea3e26d99e..b32f2676cab5 100644
---- a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-@@ -15,39 +15,38 @@ description:
+diff --git a/drivers/pinctrl/ralink/pinctrl-rt2880.c b/drivers/pinctrl/ralink/pinctrl-rt2880.c
+index 42b1c6cecb57..c933e1a1d4fa 100644
+--- a/drivers/pinctrl/ralink/pinctrl-rt2880.c
++++ b/drivers/pinctrl/ralink/pinctrl-rt2880.c
+@@ -193,7 +193,6 @@ static struct rt2880_pmx_func gpio_func = {
  
- properties:
-   compatible:
--    enum:
--      - ralink,rt2880-pinmux
-+    const: ralink,rt2880-pinmux
+ static int rt2880_pinmux_index(struct rt2880_priv *p)
+ {
+-	struct rt2880_pmx_func **f;
+ 	struct rt2880_pmx_group *mux = p->groups;
+ 	int i, j, c = 0;
  
--  pinctrl-0:
--    description:
--      A phandle to the node containing the subnodes containing default
--      configurations. This is for pinctrl hogs.
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    patternProperties:
-+      '^(.*-)?pinmux$':
-+        type: object
-+        description: node for pinctrl.
-+        $ref: pinmux-node.yaml#
-+
-+        properties:
-+          groups:
-+            description: Name of the pin group to use for the functions.
-+            enum: [i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2, mdio,
-+                   pcie, sdhci]
-+          function:
-+            description: The mux function to select
-+            enum: [gpio, i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2,
-+                   mdio, nand1, nand2, sdhci]
-+
-+        required:
-+          - groups
-+          - function
-+
-+        additionalProperties: false
+@@ -218,31 +217,29 @@ static int rt2880_pinmux_index(struct rt2880_priv *p)
+ 	p->func_count++;
  
--  pinctrl-names:
--    description:
--      A pinctrl state named "default" can be defined.
--    const: default
-+    additionalProperties: false
+ 	/* allocate our function and group mapping index buffers */
+-	f = p->func = devm_kcalloc(p->dev,
+-				   p->func_count,
+-				   sizeof(*p->func),
+-				   GFP_KERNEL);
++	p->func = devm_kcalloc(p->dev, p->func_count,
++			       sizeof(*p->func), GFP_KERNEL);
+ 	gpio_func.groups = devm_kcalloc(p->dev, p->group_count, sizeof(int),
+ 					GFP_KERNEL);
+-	if (!f || !gpio_func.groups)
+-		return -1;
++	if (!p->func || !gpio_func.groups)
++		return -ENOMEM;
  
- required:
-   - compatible
+ 	/* add a backpointer to the function so it knows its group */
+ 	gpio_func.group_count = p->group_count;
+ 	for (i = 0; i < gpio_func.group_count; i++)
+ 		gpio_func.groups[i] = i;
  
--patternProperties:
--  '[a-z0-9_-]+':
--    if:
--      type: object
--      description: node for pinctrl.
--      $ref: "pinmux-node.yaml"
--    then:
--      properties:
--        groups:
--          description: Name of the pin group to use for the functions.
--          enum: [i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2, mdio,
--                 pcie, sdhci]
--        function:
--          description: The mux function to select
--          enum: [gpio, i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2,
--                 mdio, nand1, nand2, sdhci]
--
- additionalProperties: false
+-	f[c] = &gpio_func;
++	p->func[c] = &gpio_func;
+ 	c++;
  
- examples:
-@@ -55,14 +54,9 @@ examples:
-   - |
-     pinctrl {
-       compatible = "ralink,rt2880-pinmux";
--      pinctrl-names = "default";
--      pinctrl-0 = <&state_default>;
--
--      state_default: pinctrl0 {
--      };
- 
--      i2c_pins: i2c0 {
--        i2c0 {
-+      i2c_pins: i2c0-pins {
-+        pinmux {
-           groups = "i2c";
-           function = "i2c";
-         };
+ 	/* add remaining functions */
+ 	for (i = 0; i < p->group_count; i++) {
+ 		for (j = 0; j < p->groups[i].func_count; j++) {
+-			f[c] = &p->groups[i].func[j];
+-			f[c]->groups = devm_kzalloc(p->dev, sizeof(int),
++			p->func[c] = &p->groups[i].func[j];
++			p->func[c]->groups = devm_kzalloc(p->dev, sizeof(int),
+ 						    GFP_KERNEL);
+-			f[c]->groups[0] = i;
+-			f[c]->group_count = 1;
++			p->func[c]->groups[0] = i;
++			p->func[c]->group_count = 1;
+ 			c++;
+ 		}
+ 	}
 -- 
 2.25.1
 
