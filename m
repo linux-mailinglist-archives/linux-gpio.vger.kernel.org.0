@@ -2,201 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C728D2D8DA6
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 14:56:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B19DC2D8E0F
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 15:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407076AbgLMN4N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Dec 2020 08:56:13 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:1980 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729616AbgLMN4M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 08:56:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1607867772; x=1639403772;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=moBcdpuy4NeYf+AnACShneSMBmwdX94fTn4G4UmmMMY=;
-  b=N7mJcO4rww2ofgnN88mwUl1rR36el1roU9JGFUeBOfHiZuYTianbuygX
-   9y4Goyo+ImkgUsBbv16ISd8FLLP5OjuZRAtDme9MR80W3iJV5TJLFwYB6
-   4dQK1M14N/RUZGkt2V04o7lk9Wzao9gIsiVV5Xv+fXkeBXZEyuY1Bv6Ta
-   VGu7YMlt2bxJOHMujhoE6SK4WaF+XaiP7eLpz3OfExcAULo1WK2eLtq8g
-   Bxuy8vGg0EK63P3AyyF+0Y392K84HC34YlnO9Fnqsy3H8D2iqfxkPaG+9
-   PFOKlG3k1zjX7E0PyOwy28qG2sSqiiOxXJuQf3DjGlQjAKchq+SyZksq6
-   g==;
-IronPort-SDR: 6yU2iOxPLUVwhiEw910PPpiJAzFejnVf8zJwzWx/cm37PCqf5psxQAVWBpUBxvRvA4V1G89krG
- Ka1LygqYtODZ4ZsqGlUEkZDu9Ue1ITWrMfAh0b5hxPrvK73EsbIbIEvv9mkL++yHB9jLCoD8or
- /2hnlcb/9m+sFw2tot0hAF/cGABJhkMeIqmXV9y3Dj9azQhiDgspcd2rriYSVUbCZKT9AZB1ga
- EyS9J4DvnIgRrBKaDbe3vOfgVo2DzaF3nSTYWbzAQaOOh3C7OOdIR2RdTRYV15I/2XkqmW2i0g
- bOk=
-X-IronPort-AV: E=Sophos;i="5.78,416,1599494400"; 
-   d="scan'208";a="159494653"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2020 21:51:47 +0800
-IronPort-SDR: H6lp42BCgm9IeoakPOIy56Y2MSia4E3gaLs6LSUTjk62kv8GdEP4Q+fpqHNHBRHVtZPa982wov
- 8Lc6uhee8COLNMJs8cf4T59PVHHG42gY2hLufSBxokpow379HOT6mVWTzkiT+d15r2Q5jpP/EX
- ZidEMoBG8swrIhmv6p4cIflUTutNWt2O009Zpf+gVZb9Duby7NkwG3edwSu13yKB9dkd69USfX
- Dw/M16sl5ToxJw1m5nO9HfuTZpZqvp/kv1ayyalKavHOHLj/YjnRl49tYXDmeI2jystWdQH7GB
- acxiuTYo3PNWCz7fCVBzyFJs
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2020 05:35:33 -0800
-IronPort-SDR: Ha+U+uwONCiXepilon25PlhE/jUzEIV95N7rsiDHl2wrn8OPVv+G5AT0yJ8WKEXY2kXZLW0fo0
- +rdlJcXP1lP6OTLuBFl5rLYMcezzU026fp9zt5IYZSJfmA3fKtNRHd7d7V2t+yxJFNa8bTHSmJ
- xYR3eocc3fLvLsRHkvICaWaA+6Me3W+wcjd4L8KUJENATYfRR4U4LP8OgozgVzi6tl+6cJnc8D
- qohjBnd1yJPgvU4xUZOMM0eC2aijqeGoislzZgCJEo2hKv1yrlaq8ikK3ZBoj6D0jbk4dteXNn
- lp4=
-WDCIronportException: Internal
-Received: from phd004806.ad.shared (HELO twashi.fujisawa.hgst.com) ([10.84.71.197])
-  by uls-op-cesaip01.wdc.com with ESMTP; 13 Dec 2020 05:51:46 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH v10 23/23] riscv: Add Canaan Kendryte K210 SD card defconfig
-Date:   Sun, 13 Dec 2020 22:50:56 +0900
-Message-Id: <20201213135056.24446-24-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201213135056.24446-1-damien.lemoal@wdc.com>
-References: <20201213135056.24446-1-damien.lemoal@wdc.com>
+        id S2391778AbgLMO4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Dec 2020 09:56:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729813AbgLMO4x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 09:56:53 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB8FC0613CF;
+        Sun, 13 Dec 2020 06:56:13 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id m6so653439pfm.6;
+        Sun, 13 Dec 2020 06:56:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3GVFJG5+b4wwaYZGJY5Q+Ty6yteB44I1X0LEyJpOD4Q=;
+        b=GQo8nLjwy/A+Xg4osxyLYZrO41bSCW7aCe+uxkuHo9PGo+M0tWYbKc6bxIYPizyS7J
+         juIeeq/7CO8m/xfEpcWNZz39mf5LauZ2R3bAxoGjyyrdpVA4rSEcYEpU/JdfDwP/1G+k
+         KY2595tBSlNf2HLzMdrabbvmr0S4Qalr/IjpBZVlDtpMWbSXu3vC5wFzOaMWgXY8gacy
+         PJriOKpHfdn3eLCHFLgIIiZzuw2TIi1bjREXPFIvRsV2yDY888gAlfZok/r5diHJ2r78
+         SStpmIAx39oRh98debp8Qce656veGXmBj8zjOM8klMCHFLiCDgXoja8XHicnrA3Uk5fr
+         Hpfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3GVFJG5+b4wwaYZGJY5Q+Ty6yteB44I1X0LEyJpOD4Q=;
+        b=cIc8vZeMEZVNRrg/jLG/KexPxo5ZFIQjsTcQGHbUhJPQmi2RUrhxsAJB5xqCk5lbHc
+         pnd+QsbS87juUscZQshljBksqRj2HIf4tTpw/53rdkxbveNnm8zW2jKhcy7UHd2K4iSq
+         hSsNy9J8XtMhOm7GYNCwQhUB1ft4nBtD2WVPSMX1dcWZEhFnh6NWOdq8I0GCUNFEbIQw
+         qEeDMMvBvbFqg9RErYytlhWc/UUc/XEq5OOY6vAM1V+KWJX7nEMSa/re9j4KJxW+uuJL
+         j0hyR3jq2K4o0DII0zkxtvOCgE/4xrVhIIbXPnxPzvUKbDL+ikTBibMxe2T5A4sW/hWF
+         YN3w==
+X-Gm-Message-State: AOAM532JDn9fi0+527gu4/GcB61wpjzV5WI7pZjGfW7AFy/Enw9heJsi
+        /YSUhO9weiaHe7Go5xjtx1cktiIPBoOWHo7Id0A=
+X-Google-Smtp-Source: ABdhPJyHCjy5gjCeZf12NOQT17rVqbmsRh+vBivyM/+Ci93YR1wXBbG3c7sP9pW22RPlYkg5PP+otes6jmJuO6o0IMM=
+X-Received: by 2002:a62:445:0:b029:19c:162b:bbef with SMTP id
+ 66-20020a6204450000b029019c162bbbefmr20182418pfe.40.1607871372903; Sun, 13
+ Dec 2020 06:56:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1607765147.git.syednwaris@gmail.com> <20268bfeb500ad8819e3a11aa1bea27eade4fd39.1607765147.git.syednwaris@gmail.com>
+In-Reply-To: <20268bfeb500ad8819e3a11aa1bea27eade4fd39.1607765147.git.syednwaris@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 13 Dec 2020 16:55:56 +0200
+Message-ID: <CAHp75Vef2WDjD=DkoTV13Akk9yxwbF1oJH-=O4Kg_uxtY1qOdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] bitmap: Modify bitmap_set_value() to check bitmap length
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The nommu_k210_defconfig default configuration allows booting a Canaan
-Kendryte K210 SoC based boards using an embedded intramfs cpio file.
-Modifying this configuration to enable support for the board SD card is
-not trivial for all users. To help beginners getting started with these
-boards, add the nommu_k210_sdcard_defconfig default configuration file
-to set all configuration options necessary to use the board mmc-spi sd
-card for the root file system.
+On Sun, Dec 13, 2020 at 4:24 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> Add explicit check to see if the value being written into the bitmap
+> does not fall outside the bitmap.
+> The situation that it is falling outside would never be possible in the
+> code because the boundaries are required to be correct before the
+> function is called. The responsibility is on the caller for ensuring the
+> boundaries are correct.
+> The code change is simply to silence the GCC warning messages
+> because GCC is not aware that the boundaries have already been checked.
+> As such, we're better off using __builtin_unreachable() here because we
+> can avoid the latency of the conditional check entirely.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+>
+> lib/test_bitmap.c: Modify for_each_set_clump test
+>
+> Modify the test where bitmap_set_value() is called. bitmap_set_value()
+> now takes an extra bitmap-width as second argument and the width of
+> value is now present as the fourth argument.
+>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+>
+> gpio: xilinx: Modify bitmap_set_value() calls
+>
+> Modify the bitmap_set_value() calls. bitmap_set_value()
+> now takes an extra bitmap width as second argument and the width of
+> value is now present as the fourth argument.
+>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
 
-This new configuration adds support for the block layer, the mmc-spi
-driver and modifies the boot options to specify the rootfs device as
-mmcblk0p1 (first partition of the sd card block device). The ext2 file
-system is selected by default to encourage its use as that results in
-only about 4KB added to the kernel image size. As ext2 does not have
-journaling, the boot options specify a read-only mount of the file
-system. Similarly to the smaller nommu_k210_defconfig, this new default
-configuration disables virtual terminal support to reduce the kernel
-image size.
+Commit message here definitely needs more work.
+First of all, it's now quite awkward to see this squashed stuff like this.
+Second, it misses the warning examples it's talking about.
+Third, it repeats some tags.
+Fourth, it misses the Fixes tag.
 
-The default device tree selected is unchanged, specifying the simple
-"k210_generic" device tree file. The user must change this setting to
-specify the device tree suitable for the board being used
-(k210_maix_bit, k210_maix_dock, k210_maix_go, k210_maixduino or
-k210_kd233).
+Please, redone it correctly (one commit message with clear purpose and
+example of warnings followed by Fixes tag) and resend a v3.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
----
- .../riscv/configs/nommu_k210_sdcard_defconfig | 93 +++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig
+You may mention in the cover letter that this is squashed of three
+patches from v1 (and give a link to lore.kernel.org).
 
-diff --git a/arch/riscv/configs/nommu_k210_sdcard_defconfig b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-new file mode 100644
-index 000000000000..a75388defd44
---- /dev/null
-+++ b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-@@ -0,0 +1,93 @@
-+# CONFIG_CPU_ISOLATION is not set
-+CONFIG_LOG_BUF_SHIFT=13
-+CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+# CONFIG_SYSFS_SYSCALL is not set
-+# CONFIG_FHANDLE is not set
-+# CONFIG_BASE_FULL is not set
-+# CONFIG_FUTEX is not set
-+# CONFIG_EPOLL is not set
-+# CONFIG_SIGNALFD is not set
-+# CONFIG_TIMERFD is not set
-+# CONFIG_EVENTFD is not set
-+# CONFIG_AIO is not set
-+# CONFIG_IO_URING is not set
-+# CONFIG_ADVISE_SYSCALLS is not set
-+# CONFIG_MEMBARRIER is not set
-+# CONFIG_KALLSYMS is not set
-+CONFIG_EMBEDDED=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLOB=y
-+# CONFIG_MMU is not set
-+CONFIG_SOC_CANAAN=y
-+CONFIG_SOC_CANAAN_K210_DTB_SOURCE="k210_generic"
-+CONFIG_MAXPHYSMEM_2GB=y
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
-+CONFIG_CMDLINE="earlycon console=ttySIF0 rootdelay=2 root=/dev/mmcblk0p1 ro"
-+CONFIG_CMDLINE_FORCE=y
-+# CONFIG_SECCOMP is not set
-+# CONFIG_STACKPROTECTOR is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_MQ_IOSCHED_DEADLINE is not set
-+# CONFIG_MQ_IOSCHED_KYBER is not set
-+CONFIG_BINFMT_FLAT=y
-+# CONFIG_COREDUMP is not set
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_FW_LOADER is not set
-+# CONFIG_ALLOW_DEV_COREDUMP is not set
-+# CONFIG_BLK_DEV is not set
-+# CONFIG_INPUT_LEDS is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_UNIX98_PTYS is not set
-+# CONFIG_LEGACY_PTYS is not set
-+# CONFIG_LDISC_AUTOLOAD is not set
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_DEVMEM is not set
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=y
-+# CONFIG_I2C_HELPER_AUTO is not set
-+CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_SPI=y
-+# CONFIG_SPI_MEM is not set
-+CONFIG_SPI_DESIGNWARE=y
-+CONFIG_SPI_DW_MMIO=y
-+# CONFIG_GPIO_SYSFS is not set
-+# CONFIG_GPIO_CDEV_V1 is not set
-+CONFIG_GPIO_DWAPB=y
-+CONFIG_GPIO_SIFIVE=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
-+# CONFIG_HWMON is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+CONFIG_MMC=y
-+# CONFIG_PWRSEQ_EMMC is not set
-+# CONFIG_PWRSEQ_SIMPLE is not set
-+CONFIG_MMC_SPI=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_USER=y
-+# CONFIG_VIRTIO_MENU is not set
-+# CONFIG_VHOST_MENU is not set
-+CONFIG_EXT2_FS=y
-+# CONFIG_FILE_LOCKING is not set
-+# CONFIG_DNOTIFY is not set
-+# CONFIG_INOTIFY_USER is not set
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_LSM="[]"
-+CONFIG_PRINTK_TIME=y
-+# CONFIG_SYMBOLIC_ERRNAME is not set
-+# CONFIG_DEBUG_BUGVERBOSE is not set
-+# CONFIG_DEBUG_MISC is not set
-+CONFIG_PANIC_ON_OOPS=y
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_RCU_TRACE is not set
-+# CONFIG_FTRACE is not set
-+# CONFIG_RUNTIME_TESTING_MENU is not set
 -- 
-2.29.2
-
+With Best Regards,
+Andy Shevchenko
