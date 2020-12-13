@@ -2,121 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6482D90F7
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Dec 2020 23:49:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CCE92D913A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 00:47:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgLMWtZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Dec 2020 17:49:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgLMWtZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 17:49:25 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0202C0613CF;
-        Sun, 13 Dec 2020 14:48:44 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id y17so14592074wrr.10;
-        Sun, 13 Dec 2020 14:48:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/WorH3BnykMxRTvls0BDQbtEUswMG/rB3w2zpNBPDJ4=;
-        b=bVQjfb6v6Vmy52tG903p9j8aSsoKAVtCyvWNu6QxISsUzJkl3rhsxgTOdA91pbDdEx
-         6Dy5pGneJizXvZqR1n67PIm8/Gy4otg0Lp4y3oL7tO1lx18qLTgHD7guWfHNDrU3p+BQ
-         h/A1gd2+oQyR7UyZsEVXOzv/cXIIQKxq93wdcjYZqtx9haI3nFF4bQAiYKtEq8PLd/v5
-         KILnHmIp43IUhPSUno+kQgS6ppYOW3rO4t7E3PvQ6n4LkMSlu9MAh7yvd3UdnOrQIBsE
-         8yY7ZNMv8ZorlksHWrxJbWNep7u/dsMOTP47eDGrtClSdZJXhh6dUtFxxRM/pgFmo7DB
-         SdkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/WorH3BnykMxRTvls0BDQbtEUswMG/rB3w2zpNBPDJ4=;
-        b=osPqUES/GP8FjKyj0Lr9M4oPDa+tO9FAfU/tXKY6TOUEQADsWckQUidp87PPMqlwHM
-         RcXQ4CnsNEbA5MIAY7/YSB7afGzYlWmliXEqVvczIBVezAL/3adyC8bB2ZnefQa5yQ0J
-         iqgqIt1FMJCQZ2hoMnq217YD3AdCm+yLTjeeOgLqPe7qYMHEVNsHpSq0+8JNpQDosUFS
-         1G8eok1aZXcq/iHfVtseR3Mjo3Ie0TNkRgzFvZ1hBqiiO2QcE7/rAYIAsUr+f8Kfi42o
-         E2L3PXtr7PHRlSA68d3VIPse1LfpdkTfT0CunwUbsBHpfb7F8vcULbin9ApJckFSyHu5
-         H3xw==
-X-Gm-Message-State: AOAM533ITu4vXEdPdgHZWja9QFspZKh1cG0KEGPif3oSgAopQ2IJ/FZR
-        Y/wwUd+z0XUOl9fWPs2kOqs=
-X-Google-Smtp-Source: ABdhPJxd/kl+xA0aHJWlDHhHlvpnfNUYRoSkXF/Sx8DbHXoI/4Gr9adJHVY9orF5gWFX9kmMvGczRQ==
-X-Received: by 2002:adf:f605:: with SMTP id t5mr25416354wrp.39.1607899723586;
-        Sun, 13 Dec 2020 14:48:43 -0800 (PST)
-Received: from [192.168.1.158] ([2.29.208.56])
-        by smtp.gmail.com with ESMTPSA id y130sm29246086wmc.22.2020.12.13.14.48.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Dec 2020 14:48:42 -0800 (PST)
-Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
-        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
-        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
-        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-19-djrscally@gmail.com>
- <20201130200719.GB4077@smile.fi.intel.com>
- <20201130233232.GD25713@pendragon.ideasonboard.com>
- <20201201184925.GJ4077@smile.fi.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <6f3b0d7b-1ce7-aaf1-63c6-08a22dc77791@gmail.com>
-Date:   Sun, 13 Dec 2020 22:48:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201201184925.GJ4077@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1730510AbgLMXqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Dec 2020 18:46:35 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49315 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728889AbgLMXqe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 13 Dec 2020 18:46:34 -0500
+X-Greylist: delayed 402 seconds by postgrey-1.27 at vger.kernel.org; Sun, 13 Dec 2020 18:46:34 EST
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 884EF5802F6;
+        Sun, 13 Dec 2020 18:39:05 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Sun, 13 Dec 2020 18:39:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=4lHOpViz9Uk605e41Hrs+5fXfKYstr/
+        VFbQwhb8nXrg=; b=UbSlnCLDhANCg855IwkVcVmwuahAyDXV27svY2ihosz96I6
+        gK5fkE6GfHwOqm5splI79tFW5n23NQyUGo7w+TdYNp3QoG+hrta31NSTnzo+m6EO
+        NTfrQQNZQfHbrygy42U9ERoeAF1G/WX4lu9NZsLdIgDKkxcyPfddRV5TOkhYB3ms
+        8UhWBmMW2i7j/hxF25ge6NN8CBPXWe3HGpR5+9kVd+42Zo0VkKAHTOzoe3VNjRKZ
+        6fA+Yb9n0IdYp9VLwdKc3t2m8nL0wHBBDXT9UBFhAcHXofkGTH/vGdujuxtx8N+A
+        PcJz82QE2mo1XdmxR63mV0lSq71nnzViQ9ju51A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=4lHOpV
+        iz9Uk605e41Hrs+5fXfKYstr/VFbQwhb8nXrg=; b=Kq28aFtvvATd6Vay+s70mN
+        PGLpfc6Oq636taHkqOI8AZnP4LvAibjukn9GHz6eBEkSrEkr8bp2Lt1BU+9lyEG2
+        tnw0VsuY0YShAmV27Tt8HdCK2QKArm9ziIZV+HSi61bSmsjB6PM0QNiw0otIZflq
+        8YscBHKOjfFqZ2zLrvkX3CHnLFMvSyL/O0TIEBmmcyoTwEKSrKfzytGVlsHqdeZT
+        I/kcNRqeKGxNroNpGca8jIDqcm8RyTab4+cRijHigtU+Alj3/R8ioav36d+fTykT
+        ggByfpBhofiG8x4A84DttPURq2cVOsd1+D8ofY35y5Xq3hW8ik6b5M1qU8ZHF0gA
+        ==
+X-ME-Sender: <xms:GKbWXwbCHGIlrGcBhT6zGN_cUN0KbRyR_Vlerw2O3SweMTkSTxNPUw>
+    <xme:GKbWX7YcDvb2VIfFhQvBhjkSl2Ne83GmwDXDQT13szmb-nfq1De9p4S7uITWCNj6-
+    ty4LBfNOcttvsZ4IQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekiedgudejiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtf
+    frrghtthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedv
+    hefhveeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:GKbWX68V9rQifaf9__a2OrS4urq6q3qm_fUecZO5uHB0w-56aHsieg>
+    <xmx:GKbWX6rheSh73kaIFem1PCH1O2U2L5m3CkS6_RNYAh2dh21BwxJ_XA>
+    <xmx:GKbWX7qVn20PT3qolmXenLjjQlMMbrpjPXcopomhZ9c0yiDkMYwioQ>
+    <xmx:GabWX4gKXz2uVtLJJo1eG4_fHgkdLwppxEZfQ3SiR6cw0OEa7t6cCw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 1EB68E00B2; Sun, 13 Dec 2020 18:39:02 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.1-61-gb52c239-fm-20201210.001-gb52c2396
+Mime-Version: 1.0
+Message-Id: <5eec9b11-c0b7-4b77-8c03-ec2c7d52d828@www.fastmail.com>
+In-Reply-To: <CAHp75VcMuHiUFgSas26DA-Bh1gGA_G5FT+9cetK=En9Q_oMZtg@mail.gmail.com>
+References: <20201210065013.29348-1-troy_lee@aspeedtech.com>
+ <CAHp75VcMuHiUFgSas26DA-Bh1gGA_G5FT+9cetK=En9Q_oMZtg@mail.gmail.com>
+Date:   Mon, 14 Dec 2020 10:08:42 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+        "Troy Lee" <troy_lee@aspeedtech.com>
+Cc:     "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        "open list" <linux-kernel@vger.kernel.org>,
+        "Troy Lee" <leetroy@gmail.com>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
+Subject: Re: [PATCH] gpio: aspeed: Lock GPIO pin used as IRQ
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/12/2020 18:49, Andy Shevchenko wrote:
->>>> +	table_entry = (struct gpiod_lookup)GPIO_LOOKUP_IDX(acpi_dev_name(adev),
->>>> +							   ares->data.gpio.pin_table[0],
->>>> +							   func, 0, GPIO_ACTIVE_HIGH);
->>>
->>> You won't need this if you have regular INT3472 platform driver.
->>> Simple call there _DSM to map resources to the type and use devm_gpiod_get on
->>> consumer behalf. Thus, previous patch is not needed.
->>
->> How does the consumer (the camera sensor) retrieve the GPIO though ? The
->> _DSM is in the PMIC device object, while the real consumer is the camera
->> sensor.
-> 
-> 1. A GPIO proxy
-> 2. A custom GPIO lookup tables
-> 3. An fwnode passing to the sensor (via swnodes graph)
-> 
-> First may issue deferred probe, while second needs some ordering tricks I guess.
-> Third one should also provide an ACPI GPIO mapping table or so to make the
-> consumer rely on names rather than custom numbers.
-> 
-> Perhaps someone may propose other solutions.
 
-Hi Andy
 
-Sorry; some more clarification here if you have time please:
+On Fri, 11 Dec 2020, at 00:44, Andy Shevchenko wrote:
+> On Thu, Dec 10, 2020 at 9:36 AM Troy Lee <troy_lee@aspeedtech.com> wrote:
+> >
+> > GPIO pins can be used as IRQ indicators. When they do,
+> > those pins should be flaged with locks to avoid kernel
+> 
+> flagged
+> 
+> > warning message.
+> 
+> ...
+> 
+> > @@ -651,6 +651,13 @@ static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
+> 
+> > +       rc = gpiochip_lock_as_irq(&gpio->chip, d->hwirq);
+> > +       if (rc) {
+> > +               dev_err(gpio->chip.parent, "unable to lock GPIO %lu as IRQ\n",
+> > +                       d->hwirq);
+> > +               return rc;
+> > +       }
+> 
+> It's a copy'n'paste of generic code. Why do you need it in an unusual
+> place, i.e. ->irq_set_type() IIUC?
+> Can you elaborate about an issue, because this seems to be a hack?
 
-1. Do you mean here, register a new gpio_chip providing GPIOs to the
-sensors, and just have the .set() callback for that function set the
-corresponding line against the INT3472 device?
-2. I thought custom GPIO lookup tables was what I was doing, are you
-referring to something else?
-3. I guess you mean something like of_find_gpio() and acpi_find_gpio()
-here? As far as I can see there isn't currently a swnodes
-equivalent...we could just pass it via reference of course but it would
-mean the sensor drivers would all need to account for that.
+Yep - Troy please provide more information. What was the warning you saw? How
+were the GPIOs allocated on the system that triggered the warning? What did you
+do to trigger the warning?
+
+Andrew
