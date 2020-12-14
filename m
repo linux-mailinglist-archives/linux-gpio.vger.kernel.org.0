@@ -2,78 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4C82DA38E
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 23:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 359552DA3E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 00:04:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439546AbgLNWks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 17:40:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37324 "EHLO
+        id S2441119AbgLNXAg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 18:00:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439849AbgLNWkp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 17:40:45 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE8AC0613D3
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 14:40:03 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id g20so24914476ejb.1
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 14:40:03 -0800 (PST)
+        with ESMTP id S2441382AbgLNXA2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 18:00:28 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5753DC06179C
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 14:59:48 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id x20so14920527lfe.12
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 14:59:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BL39H/RUZTWrv2NxltTatWySwCecuBzAbL+C5wKmwX0=;
-        b=PDUvsntEZv2KZd4CVk0SjS+5BmBSe7BzVTu5kQ7ZWHyMm9dt/SZj5WX7DR4HIRkuA5
-         zvBglur/k2rxM//FscPd+DXmPfY0+ey39/XZ/OPW5nS7LzmRLeblq3Pd5Eany1D1sTkP
-         NadoU8OvvWQliIU+TUUbO2RGZAmfnRPTgkye/6NTijkujFQzzmpQXNpiG0Qg0UBSHvCe
-         AYGVBa7hz/e6hfNbPfioIwQrnrzyzn/ofiifROXT83WfcUkRBG61+tIesdbCBpp/hXCC
-         ohkOvosdPZzW7gq3AX2X4kdXGs0qxA3xXwhhEEp3D/X7/UrTfL3avzr27d4xsaw5ts55
-         z68Q==
+        bh=djP1cIFGNKx6l7Nlgqp0ZKpNw9S9LD7jiI9PWcz6Kdc=;
+        b=PJ4d01FMMdIJ9wg0E4hURfNRev8clAPOyiEAqeNtjwnCs9SMUclB7HE+PeDMfVS6KD
+         ogUCRGVFoWbjgJ+2jqSx6ejWfd/8nZ0gtWqhURGQHxmmVnHSwwUwNyi21T51wB6y6AVN
+         LdO3C2t2yU6PNkEYMtnyJIiOMyf3qNICAF3izYyXRPbjxc5dpy9eLsFrppg2He+omQ6p
+         d2SSE4Wk9xV2SDNzoKGIPBGSFdmIfG/E8s+VP/Syi00KdAJK57YDAxW3iHAu9OMpwEYc
+         /rsqWI1zn5Qa0w4r+cbSeGay2GYdOvL6LnqObA/p2pqLqUUFgFYnncu8NrijpItmqVUX
+         u5qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BL39H/RUZTWrv2NxltTatWySwCecuBzAbL+C5wKmwX0=;
-        b=OfqF/ER8jwNVI/vTe8xdvK3Y9pP2rpIF80DL0F/dgoc2vtwXZv6KvIZnaDNNpo+vMo
-         fkMerAaOzivKXsw23/9EK4AakKVpYf/1phGqKARht3wVG1+d3/HdoR+2OQhxGgrQ3VrW
-         kC+P7iar3PWaSU/2E1Z6+ybvIw+e+aQmxTvwE3lUzTNF4pB0Y383l/5rhqb3t06pfCC2
-         adzQssIr9W9pUqpbQZD+3/nJIXd6TlyO/mPvarOKth8kW5/IMHdA/KAemvxLz/7C9kni
-         ScIQL8InouzY8+pm/SldBdUFIv8c1i1G9sy0+mGXBCyrFYPz7RruhhMnekRNkbOBu/SW
-         4wzg==
-X-Gm-Message-State: AOAM5338w/+2G7KiTAtUPrPh8unfqRI63UWUbo+x5/tnLFbEHTx/qGZ9
-        9sFrBdsQuN8vcEWxH/CfUkcI8ZZ9BRthI8oJ37u49A==
-X-Google-Smtp-Source: ABdhPJxAQ6Y+c7ptp1jSAajW9pxcPIy8Vr46Vzr/TwP1M08bXsV4BpDxl8NSWinnZtnaDzuHUOy3/k1ky2TOXeLKAC0=
-X-Received: by 2002:a17:906:15c7:: with SMTP id l7mr481498ejd.226.1607985601905;
- Mon, 14 Dec 2020 14:40:01 -0800 (PST)
+        bh=djP1cIFGNKx6l7Nlgqp0ZKpNw9S9LD7jiI9PWcz6Kdc=;
+        b=H9t4+sCAh+Sz15CvwMOri0o5BVZo57B1+NmhHMJguuMzVb0DJpk7VI2dlOn7uWLUFC
+         8K5F+cWtpEcfKQed9nzQqKMcDXaY1QlwPiX0znJ9jK8jj2Of5QlsxsPTD1eijuwhBA0f
+         RD2LDWwlWKEnCVjottxrtJbnkdOcAI8nfG98gKXUb0c/Y0viGe6DHBEJIx2412k2AB9V
+         FZI4PSV7LixMGH3TlBZjOWy7QWyAac+Bu4cErEOU7wayLbEJXnoNv8ZxfnTSyzE5bBJY
+         OKmnsV0Gk32uXOrgiO8Hvwh6v6rE8VQLU9shmF336jjxKPFVioFFZOm0l+BPolE4mjCI
+         wQ4A==
+X-Gm-Message-State: AOAM531nWZOCSdx3aca3mgtPJ7V6qlmkLw2D+ZxTEGpB71t5k4g2vsev
+        y2y6LDaV2c3SIbq7hJfDnBziySoJM1MrbkH2AzUl0A==
+X-Google-Smtp-Source: ABdhPJyPZCaZYrTOX3XXkA3mrXLWyVqJ2GqQy9M0v+4KhyopHggdMWf8J1pDw8TGf+FeZZSaeHNreW8yMvZ6Da81Dfw=
+X-Received: by 2002:a05:651c:1312:: with SMTP id u18mr10565874lja.200.1607986786869;
+ Mon, 14 Dec 2020 14:59:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20201212003447.238474-1-linus.walleij@linaro.org> <X9cwahptmETQ5lkL@localhost>
-In-Reply-To: <X9cwahptmETQ5lkL@localhost>
+References: <20201214165524.43843-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201214165524.43843-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 14 Dec 2020 23:39:50 +0100
-Message-ID: <CACRpkda5_JwCAB2TisyzdJgb395JmU1AfuDDX0gWTvEj7-Mamw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Mon, 14 Dec 2020 23:59:36 +0100
+Message-ID: <CACRpkdY8xEK+Z6q6LiFt43qThutUx7-niFjGL+FA9RLymZ-XBg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpio: hisi: Do not require ACPI for COMPILE_TEST
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 10:29 AM Johan Hovold <johan@kernel.org> wrote:
+On Mon, Dec 14, 2020 at 5:55 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> As I mentioned earlier, the not-globally unique warning only makes sense
-> for cases where all names comes from something like devicetree, and we
-> shouldn't warn if we plug in two identical USB devices that provide
-> default line names.
+> Make it clear that ACPI needs to be present only to get driver functional.
+> It is not required for compilation.
 >
-> Not sure it's even warranted to warn even if those default names collide
-> with the names provided in devicetree. Perhaps best to just drop the
-> flat-namespace assumption entirely and make sure gpiolib and the
-> userspace library can handle that.
+> Fixes: 356b01a986a5 ("gpio: gpio-hisi: Add HiSilicon GPIO support")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-You're right. (As usual.)
-
-I dropped the global collision warning when applying.
+Both patches applied!
+Thanks!
 
 Yours,
 Linus Walleij
