@@ -2,87 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 730342D9565
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC8122D9574
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:48:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbgLNJku (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 04:40:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731293AbgLNJku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:40:50 -0500
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1ACC0613D6;
-        Mon, 14 Dec 2020 01:40:10 -0800 (PST)
-Received: by mail-oi1-x241.google.com with SMTP id l207so18572064oib.4;
-        Mon, 14 Dec 2020 01:40:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fqzM7e75UJFJjd3gnYlao0ic5zl7gtQUCIPOWPs96Ww=;
-        b=OkWVeO8TRWXdf1hoWatNgy9+nYBfbN/r+HTm6Z7zBn4HQYbhWJJPF5YjNH8ti+tGLM
-         WtcswV8KtWzaHZKgpXEwMhQpN1e9Oc59jT3oh/jIBqYGj+XWEO3fByV+lNGlon6jyLS/
-         jtE467MahuKhATMxQlqHSk5RjdeDLGbdGDAz7hkTx9XrWi4t1b5g1Vt/tNmHL8fF9wBU
-         hsv4o8xZtOmCmTfxxr34Rmlfvt4jGwGhc1HFffD48/7RF4b2PWGWDa1mtyD3Hw6au+vz
-         NiIkvZp4v8XIrJxWv3fdpBQYbRqJrLOZqdg2VExk2U8YYWWBlNljWpXB/l8pU5yiKTMs
-         3GrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fqzM7e75UJFJjd3gnYlao0ic5zl7gtQUCIPOWPs96Ww=;
-        b=iTpkDHuQk16NnJWdnfcf4ZLIRo//3XY8Egf0vwVN/a+R8XWmwSB3cWBY1Ww4ktVjOQ
-         up5S8FO2UqqqX3R9BIOtYnz+nqCO+hCZ9bzl3zsLE10HvEIAZ9tbO5q8PukFrhU+yz2C
-         OVTH0guUre2alQ0y8ZhP8eVB9edoaou4Si7kYrs8WV43xWsHy4xxB0aLeCvND+/PstNy
-         zvm/kkchj4DtarDCP+uhKAIWObUur09x6VMH6rD+wSp83d3gjUyEXgMch07rP7YSFpYA
-         ZtMWQTssvUQJBGYi7lOBWh78mx7lKlLpcGzfCJvOT62lAEZOMRTKayArrv6I1JoqyZKF
-         WH1g==
-X-Gm-Message-State: AOAM530wHiG06P+F34ZCAPLM0kmxp9LycwMipxajC0wo2DnW02UDuqH7
-        GIcoH8I3sDKvo4b0fls5IdQV8ElZ8r81Cfqfr1A=
-X-Google-Smtp-Source: ABdhPJyQx9ElRrEpYfu6YbyoM1UD/VmFNB/bMFmoavOcrHCFhmWvWa8WBDfsHoHEGu1WPZ8oql6XZd5h4Gp0AI9aG2s=
-X-Received: by 2002:aca:5a86:: with SMTP id o128mr17717137oib.23.1607938809521;
- Mon, 14 Dec 2020 01:40:09 -0800 (PST)
+        id S1726921AbgLNJpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 04:45:49 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57843 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725915AbgLNJpt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Dec 2020 04:45:49 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 23F5A5804ED;
+        Mon, 14 Dec 2020 04:44:43 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 14 Dec 2020 04:44:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=XKcGwNFJ8S2jYlC9CVP6MD9GTEJ
+        SheLjaMSdlnbXVRw=; b=kdr/nac+m4TY+HliojMi6gdQuCKSvWCeDrCHLDMbpgg
+        EV5DwbUuYWYNeKZM3kKOvcFOEeNuQGRpl1qA5O2H6qHIekW7nh5Oxal1W8sdAQA7
+        2TVFgRK2WluLWnT6mhcCWYp+sX57UaQJcl5f24205OY1SY4Vp64eNonNAmkvgj8E
+        dufOaefCHVFKkFNp/tTYmcZ/SasTtxYiuDmT2rIsff7Hqmr43qgbmx+pGWprx1s/
+        TccCtl3Lzcun7g3JMnQT9eQxOebC4ugchSyepcozK9i8e6bnhQXb7GRe9qmMPlEO
+        tR9l5baEviT66O9DTasffm0pZ1v1bZkkjiZqPaNE+gg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=XKcGwN
+        FJ8S2jYlC9CVP6MD9GTEJSheLjaMSdlnbXVRw=; b=AXr9SdKAyy8ApuBvKMC7xH
+        gqT/ZNkwPY1fZJCJFF5qGLZb5pWZikbN4wpiFu6f4un3dPMH55s4bnbdd3ULduQn
+        xPDCetDXkHpLLS+RgCWx5ohNgXaPve4Guq/UgHWopX+5YJwVy55j0ObmFsKWuQSi
+        dZuNsJN9WSDRTRCBAq93gQRlVKR/Lv5N2KN4820UDHS8wlQGULqaN/+HpzwJlMDP
+        J4KW3IsblO6cvq1nUl32LmxjovbTOLaEke40zjWQDv/OUlDsl0scLHBqW11PFqIP
+        ZNtVh0JmXzdRaoqJ+ZQBgY9DlFEWdR4pOAs0Y4nFDL1x8e8hB+cGSBE2O+TgQm6Q
+        ==
+X-ME-Sender: <xms:CjTXX3sTHK4PjgnyJAn796H_uLuUkBXRkzUWor6bKdObAhVviqnxGA>
+    <xme:CjTXXxYn1f6RVA6wSwOaxsNouaPsJCspehm7hNP_pIBzKYFIMsJSgmbHegDEIYqYN
+    Y1OW-LMotq0tp_kC-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekkedgtdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:CjTXX2WwYHSaQm5GlVoaXTDA6N6FOnMpK4eHTG9Yu8GdA0C12_Ytww>
+    <xmx:CjTXX2QaM5aRy-psgXYGDfwnkV-fPckzJT53U8-nJ5Hzmn6zsBhGjw>
+    <xmx:CjTXX0NvazIrkO-E2Gfr_jfltOynxz_K1jUQkzhUCdI-YlIQqY2qdQ>
+    <xmx:CzTXXzSV08L5O9GgIz2kZ8R-uSprqS5Dqbq6VXrO6DmY9jUV2BuChA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D39F0108006F;
+        Mon, 14 Dec 2020 04:44:41 -0500 (EST)
+Date:   Mon, 14 Dec 2020 10:44:30 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 03/21] pinctrl: sunxi: Add support for the Allwinner
+ H616 pin controller
+Message-ID: <20201214094430.m6h3pzhkm3kjl2cl@gilmour>
+References: <20201211011934.6171-1-andre.przywara@arm.com>
+ <20201211011934.6171-4-andre.przywara@arm.com>
 MIME-Version: 1.0
-References: <20201213161721.6514-1-sergio.paracuellos@gmail.com> <CACRpkdaAd-wJuqspYTuj4RGTyJgobX+6j=5ZWWSCtdLLMnPoYw@mail.gmail.com>
-In-Reply-To: <CACRpkdaAd-wJuqspYTuj4RGTyJgobX+6j=5ZWWSCtdLLMnPoYw@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Mon, 14 Dec 2020 10:39:58 +0100
-Message-ID: <CAMhs-H8HKU0Rw3tpnrEUie7S42pq5y8uhDqjSiJBLqAkMUQ4UA@mail.gmail.com>
-Subject: Re: [PATCH 0/8] pinctrl: ralink: rt2880: Some minimal clean ups
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jason Yan <yanaijie@huawei.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ddy7lofybnowtr2q"
+Content-Disposition: inline
+In-Reply-To: <20201211011934.6171-4-andre.przywara@arm.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 10:02 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Dec 13, 2020 at 5:17 PM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
->
-> > After this driver was moved from staging into pinctrl subsytems
-> > some reviews for bindigns and driver itself comes from Ron Herring
-> > and Dan Carpenter. Get rid of all the comments to properly be in
-> > a good shape before merge window.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> If Greg wants he can queue them last minute. Else I'll apply these
-> after the merge window, no big deal.
 
-Thanks, and sorry for the last minute.
+--ddy7lofybnowtr2q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> Yours,
-> Linus Walleij
+On Fri, Dec 11, 2020 at 01:19:16AM +0000, Andre Przywara wrote:
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 10),
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "h_i2s2"),	/* MCLK */
+> +		  SUNXI_FUNCTION(0x3, "clock"),		/* X32KFOUT */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 10)),	/* PG_EINT10 */
 
-Best regards,
-    Sergio Paracuellos
+It looks like there's no i2s vs h_i2s issue anymore? Maybe we can just
+do s/h_i2s/i2s
+
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(I, 3),
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac0"),		/* ERXD0 */
+> +		  SUNXI_FUNCTION(0x3, "dmic"),		/* DATA2 */
+> +		  SUNXI_FUNCTION(0x4, "h_i2s0"),	/* DO0 */
+> +		  SUNXI_FUNCTION(0x5, "h_i2s0_a"),	/* DI1 */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 7, 3)),	/* PI_EINT3 */
+
+The way we dealt with this for the A100 is that we put the function as a
+suffix which is more natural, so h_i2s0_dout0 and h_i2s0_din1
+
+Maxime
+
+--ddy7lofybnowtr2q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX9cz/gAKCRDj7w1vZxhR
+xZ4mAP0aOwSdv1t8DpTbKvaJdsEXW593SqrJq++ZdvC87hlg9AD/T8ZGrdPoyIW/
+FKHiOaYy/KAy7FaHa2u4GVKqxJRKowQ=
+=wnrZ
+-----END PGP SIGNATURE-----
+
+--ddy7lofybnowtr2q--
