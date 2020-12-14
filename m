@@ -2,235 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D44B2D9146
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 01:06:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC6EF2D9190
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 02:28:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406942AbgLNAGh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Dec 2020 19:06:37 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:48103 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727178AbgLNAGe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 13 Dec 2020 19:06:34 -0500
-X-Greylist: delayed 639 seconds by postgrey-1.27 at vger.kernel.org; Sun, 13 Dec 2020 19:06:33 EST
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3900758031E;
-        Sun, 13 Dec 2020 18:55:10 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Sun, 13 Dec 2020 18:55:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=Me9oM9C7gnSn/
-        bA00pvi332g4ULeBtBRmI4/Jx5+WEQ=; b=gXa30+dBr8ufc2i05s4lmoVnr2ywy
-        KbppxPWMHR4+KAiurzY5e/tUw/g7Os5y206E0tNeoOTCT5S4hKmomdOoQSAZwnzL
-        KA2i2gTAkeToLGK5dNfElkSwEzvElLKZK7c65R3cDvULSRDFJ6OcuDPvcewYkmoz
-        bixlShUDlz6afyf2ff2rp8KQegIg2jpBd4jh3SARGweRm+I5yFTNjqBdW1iXGgPe
-        SG/LIBR0nVueB21Jp8d1Xlrj5Z4kNUIBSkh0o8us2UwHcYy+wXAQ2OHJuPeqAVQv
-        HyJP0D+bGSvyxm7bLBCI5/iCQrFl/f/ZKBp7l6n3b7pksYy2uWFjOJu1g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=Me9oM9C7gnSn/bA00pvi332g4ULeBtBRmI4/Jx5+WEQ=; b=mDwfNPpT
-        LNtriOV2SrX4lcB0j0r7z4dQZ/BmLbYQbJDRoimbu+L1aPw3L6cIcEu9wzosaljm
-        AgyK1gEk3V9zFZdXHaUy1p0C816+7nKYvGBzHurHwwfA628nkBreA+d//WGXbOFs
-        u8a8MmjHiPYmZSFDfMqB7aMCdj8wssPuPdo96I19lrJLEU3DCjtBxyjrdQLQxZPr
-        4f83iHUPxV5M5QHKwFatmhqK3snr6TzybYL33Wp7fzKr92LZV9cu+Q7ArAeDFqOi
-        wvhWRGlHc4k7Wh6ekTyQoXfVlpJJz1WMgSU/oo1m+rc4X7ERRsFdNSg6Yy7M8uA9
-        ZwWyZQH/OoZxRw==
-X-ME-Sender: <xms:3qnWX7M0ruqg3dxx2gUCfHe55I6qaseudMGEJRi2VqMW3MjoT-IfHw>
-    <xme:3qnWX7LQx2YgkQw4jfLOIflPa3fkAPpUt2E3KUMN1lUrrsCd2Q8t6VgS2MkrWMj1b
-    rvwohUIF-IVsPgPDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekiedgudektdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepudfhjeefvdfhgfefheetgffhieeigfefhefgvddvveefgeejheej
-    vdfgjeehueeinecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:3qnWX7LFY-kwwbVukB4BRsZK8mBUFAoBrPwd_ClKvOVwyCpUPNMBsw>
-    <xmx:3qnWX15p9CHpn6VN-E39D-T4ridUKjjFDCfAzvV09oQEWDgT8ziKjQ>
-    <xmx:3qnWX1cxF-U8hUTSgwZ9D7aOf79EX34GekClvJ6ssoeUOVHDLo56JA>
-    <xmx:3qnWX1tviz8pX_qbDPqH6dDFkMnyivo_Xr6s3_WCKGOQ-0yytCk6bw>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8A12D1080057;
-        Sun, 13 Dec 2020 18:55:09 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection
-Date:   Sun, 13 Dec 2020 17:55:06 -0600
-Message-Id: <20201213235506.25201-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201213235506.25201-1-samuel@sholland.org>
-References: <20201213235506.25201-1-samuel@sholland.org>
+        id S1731697AbgLNB2K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Dec 2020 20:28:10 -0500
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:41784 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437697AbgLNB2A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Dec 2020 20:28:00 -0500
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 0BE1NtDr074558;
+        Mon, 14 Dec 2020 09:23:55 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from localhost.localdomain (192.168.10.9) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 14 Dec
+ 2020 09:27:05 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <andrew@aj.id.au>, <linus.walleij@linaro.org>, <joel@jms.id.au>,
+        <linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <BMC-SW@aspeedtech.com>
+Subject: [PATCH v2] driver: aspeed: g6: Fix PWMG0 pinctrl setting
+Date:   Mon, 14 Dec 2020 09:27:00 +0800
+Message-ID: <20201214012700.23560-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <D9745FBC-BEA7-421E-B56C-21EA9AAE094E@aspeedtech.com>
+References: <D9745FBC-BEA7-421E-B56C-21EA9AAE094E@aspeedtech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.10.9]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 0BE1NtDr074558
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On boards where the only peripheral connected to PL0/PL1 is an X-Powers
-PMIC, configure the connection to use the RSB bus rather than the I2C
-bus. Compared to the I2C controller that shares the pins, the RSB
-controller allows a higher bus frequency, and it is more CPU-efficient.
+The SCU offset for signal PWM8 in group PWM8G0 is wrong, fix it from
+SCU414 to SCU4B4.
+Besides that, When PWM8~15 of PWMG0 set it needs to clear SCU414 bits
+at the same time.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
- 3 files changed, 37 insertions(+), 37 deletions(-)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 416e0fa76ba7..8a95abfc2ebb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -158,12 +158,28 @@ &pio {
- 	vcc-pg-supply = <&reg_aldo1>;
- };
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index b673a44ffa3b..1dfb12a5b2ce 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -367,49 +367,57 @@ FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
  
--&r_i2c {
-+&r_ir {
-+	linux,rc-map-name = "rc-beelink-gs1";
-+	status = "okay";
-+};
-+
-+&r_pio {
-+	/*
-+	 * FIXME: We can't add that supply for now since it would
-+	 * create a circular dependency between pinctrl, the regulator
-+	 * and the RSB Bus.
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo1>;
-+	 */
-+	vcc-pm-supply = <&reg_aldo1>;
-+};
-+
-+&r_rsb {
- 	status = "okay";
+ #define D22 40
+ SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
+-SIG_EXPR_LIST_DECL_SEMG(D22, PWM8, PWM8G0, PWM8, SIG_DESC_SET(SCU414, 8));
++SIG_EXPR_LIST_DECL_SEMG(D22, PWM8, PWM8G0, PWM8, SIG_DESC_SET(SCU4B4, 8),
++			SIG_DESC_CLEAR(SCU414, 8));
+ PIN_DECL_2(D22, GPIOF0, SD1CLK, PWM8);
+ GROUP_DECL(PWM8G0, D22);
  
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -281,22 +297,6 @@ sw {
- 	};
- };
+ #define E22 41
+ SIG_EXPR_LIST_DECL_SESG(E22, SD1CMD, SD1, SIG_DESC_SET(SCU414, 9));
+-SIG_EXPR_LIST_DECL_SEMG(E22, PWM9, PWM9G0, PWM9, SIG_DESC_SET(SCU4B4, 9));
++SIG_EXPR_LIST_DECL_SEMG(E22, PWM9, PWM9G0, PWM9, SIG_DESC_SET(SCU4B4, 9),
++			SIG_DESC_CLEAR(SCU414, 9));
+ PIN_DECL_2(E22, GPIOF1, SD1CMD, PWM9);
+ GROUP_DECL(PWM9G0, E22);
  
--&r_ir {
--	linux,rc-map-name = "rc-beelink-gs1";
--	status = "okay";
--};
--
--&r_pio {
--	/*
--	 * PL0 and PL1 are used for PMIC I2C
--	 * don't enable the pl-supply else
--	 * it will fail at boot
--	 *
--	 * vcc-pl-supply = <&reg_aldo1>;
--	 */
--	vcc-pm-supply = <&reg_aldo1>;
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 8a8d1a608e30..e86360ea022e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -222,12 +222,16 @@ &pio {
- 	vcc-pg-supply = <&reg_vcc_wifi_io>;
- };
+ #define D23 42
+ SIG_EXPR_LIST_DECL_SESG(D23, SD1DAT0, SD1, SIG_DESC_SET(SCU414, 10));
+-SIG_EXPR_LIST_DECL_SEMG(D23, PWM10, PWM10G0, PWM10, SIG_DESC_SET(SCU4B4, 10));
++SIG_EXPR_LIST_DECL_SEMG(D23, PWM10, PWM10G0, PWM10, SIG_DESC_SET(SCU4B4, 10),
++			SIG_DESC_CLEAR(SCU414, 10));
+ PIN_DECL_2(D23, GPIOF2, SD1DAT0, PWM10);
+ GROUP_DECL(PWM10G0, D23);
  
--&r_i2c {
-+&r_ir {
-+	status = "okay";
-+};
-+
-+&r_rsb {
- 	status = "okay";
+ #define C23 43
+ SIG_EXPR_LIST_DECL_SESG(C23, SD1DAT1, SD1, SIG_DESC_SET(SCU414, 11));
+-SIG_EXPR_LIST_DECL_SEMG(C23, PWM11, PWM11G0, PWM11, SIG_DESC_SET(SCU4B4, 11));
++SIG_EXPR_LIST_DECL_SEMG(C23, PWM11, PWM11G0, PWM11, SIG_DESC_SET(SCU4B4, 11),
++			SIG_DESC_CLEAR(SCU414, 11));
+ PIN_DECL_2(C23, GPIOF3, SD1DAT1, PWM11);
+ GROUP_DECL(PWM11G0, C23);
  
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -339,10 +343,6 @@ sw {
- 	};
- };
+ #define C22 44
+ SIG_EXPR_LIST_DECL_SESG(C22, SD1DAT2, SD1, SIG_DESC_SET(SCU414, 12));
+-SIG_EXPR_LIST_DECL_SEMG(C22, PWM12, PWM12G0, PWM12, SIG_DESC_SET(SCU4B4, 12));
++SIG_EXPR_LIST_DECL_SEMG(C22, PWM12, PWM12G0, PWM12, SIG_DESC_SET(SCU4B4, 12),
++			SIG_DESC_CLEAR(SCU414, 12));
+ PIN_DECL_2(C22, GPIOF4, SD1DAT2, PWM12);
+ GROUP_DECL(PWM12G0, C22);
  
--&r_ir {
--	status = "okay";
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 0d5f9aeb96d0..96635588e9a6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -128,12 +128,20 @@ &pio {
- 	vcc-pg-supply = <&reg_aldo1>;
- };
+ #define A25 45
+ SIG_EXPR_LIST_DECL_SESG(A25, SD1DAT3, SD1, SIG_DESC_SET(SCU414, 13));
+-SIG_EXPR_LIST_DECL_SEMG(A25, PWM13, PWM13G0, PWM13, SIG_DESC_SET(SCU4B4, 13));
++SIG_EXPR_LIST_DECL_SEMG(A25, PWM13, PWM13G0, PWM13, SIG_DESC_SET(SCU4B4, 13),
++			SIG_DESC_CLEAR(SCU414, 13));
+ PIN_DECL_2(A25, GPIOF5, SD1DAT3, PWM13);
+ GROUP_DECL(PWM13G0, A25);
  
--&r_i2c {
-+&r_ir {
-+	status = "okay";
-+};
-+
-+&r_pio {
-+	vcc-pm-supply = <&reg_bldo3>;
-+};
-+
-+&r_rsb {
- 	status = "okay";
+ #define A24 46
+ SIG_EXPR_LIST_DECL_SESG(A24, SD1CD, SD1, SIG_DESC_SET(SCU414, 14));
+-SIG_EXPR_LIST_DECL_SEMG(A24, PWM14, PWM14G0, PWM14, SIG_DESC_SET(SCU4B4, 14));
++SIG_EXPR_LIST_DECL_SEMG(A24, PWM14, PWM14G0, PWM14, SIG_DESC_SET(SCU4B4, 14),
++			SIG_DESC_CLEAR(SCU414, 14));
+ PIN_DECL_2(A24, GPIOF6, SD1CD, PWM14);
+ GROUP_DECL(PWM14G0, A24);
  
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -248,14 +256,6 @@ sw {
- 	};
- };
+ #define A23 47
+ SIG_EXPR_LIST_DECL_SESG(A23, SD1WP, SD1, SIG_DESC_SET(SCU414, 15));
+-SIG_EXPR_LIST_DECL_SEMG(A23, PWM15, PWM15G0, PWM15, SIG_DESC_SET(SCU4B4, 15));
++SIG_EXPR_LIST_DECL_SEMG(A23, PWM15, PWM15G0, PWM15, SIG_DESC_SET(SCU4B4, 15),
++			SIG_DESC_CLEAR(SCU414, 15));
+ PIN_DECL_2(A23, GPIOF7, SD1WP, PWM15);
+ GROUP_DECL(PWM15G0, A23);
  
--&r_ir {
--	status = "okay";
--};
--
--&r_pio {
--	vcc-pm-supply = <&reg_bldo3>;
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
 -- 
-2.26.2
+2.17.1
 
