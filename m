@@ -2,132 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B3FC2D9478
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:00:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF642D9486
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:03:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439482AbgLNI7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 03:59:41 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46415 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439472AbgLNI73 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 03:59:29 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y19so28145310lfa.13;
-        Mon, 14 Dec 2020 00:59:11 -0800 (PST)
+        id S2439535AbgLNJCs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 04:02:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439533AbgLNJCq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:02:46 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CBBBC061793
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:02:06 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id u18so28211275lfd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:02:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h7gw/JKcedbcbsZwWfTxV9h1NBzBz2xSdjArgBt47FY=;
+        b=WIy+wdN5lxXjhzWSRCsGIRQ/FvjPCq2eE4e/RV8zdXhIGPEGF+/Dygqmnulqs2h0oy
+         N39B12UanCXacWSc66RvefD94HonfQ58k1NWUgKUKXAY4zpDQWmZvKBj2W5pKXwo6MnF
+         x5FPL/HMF/C854ApS3GWH+di2LmuWIV832VXVJxSVFqa3C18AkaomEYHXeXemsM3TPxS
+         taxqysgYJxMEsk+r+3hsfGMKVQZrkFWoWAA7Jpie9ACkrJQNQSOD704OWnUVXLMKGZsO
+         wLziKwG+kqLlPfC6UJiTmTvZ0hzRWRIMrj9nolAASDlfjotDFLZxTgOzrfJhpsSn5TEM
+         TqcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lr5XsBxGYGsi86hSbsch7/IRMB+x1iKvkn7GZc67tW8=;
-        b=O/lrdeQ/4pcwmhj+AhhM8qbzeJWbHRGr8mqP5WbAEis9xFgBAqKF3VIRdW5pc+a8v4
-         BcYdqsA1b/Bbf03Nm+DXdzAHkcovpL71i/fSwe7e8OFAG6dtQYsXXdX+dUfTU/Ol68Xf
-         LMctO9IStHOS0Q5202GB1jThJ1KNz38ZkTag07aduWu3EZo768vo9qCylMJ1Rape2HqM
-         PuOeOC8Zxp10Hjzh0Y6gpwYgozrXL/KyiaUGd8GwoE5ewsOjflnHOL2/x7lZa0mboWfw
-         VaSp0/RavASspoFAzn7t6CFDGH0z/SkbKhbak1cK91cgR5zfB3SwnoCcx7NweAyE78DA
-         QeZg==
-X-Gm-Message-State: AOAM532Z35Y9cKGvBUQ2JuJ22DMlYFp1vC45p6khnZg9Vcz0gAboRAZ8
-        k0ou/snzgqmeLZx1zx/Q84A=
-X-Google-Smtp-Source: ABdhPJyhhmDZ7vcuIblH29uJeGjTMhhbNEqXAoVlSXDhsWa+GIQSBCxgnnou7Fw/tJWAtPwTNKLsdA==
-X-Received: by 2002:a19:cb05:: with SMTP id b5mr8699978lfg.61.1607936326079;
-        Mon, 14 Dec 2020 00:58:46 -0800 (PST)
-Received: from xi.terra (c-b3cbe455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.203.179])
-        by smtp.gmail.com with ESMTPSA id e1sm1700092lfs.279.2020.12.14.00.58.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 00:58:44 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1kojgm-0006Sj-9M; Mon, 14 Dec 2020 09:58:40 +0100
-Date:   Mon, 14 Dec 2020 09:58:40 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
-Message-ID: <X9cpQO3IV4IgX1dh@localhost>
-References: <20201122170822.21715-3-mani@kernel.org>
- <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
- <X8ZmfbQp7/BGgxec@localhost>
- <CACRpkdZJdxqxUEQaKUHctHRSQAUpYZJtuxonwVd_ZFAsLBbKrA@mail.gmail.com>
- <X89OOUOG0x0SSxXA@localhost>
- <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
- <X9DsWahl6UDwZwBn@localhost>
- <CACRpkdYm-j9QcK8hgNrC33KruWE17Q0F4+T=UanE7PCEZEtu6w@mail.gmail.com>
- <X9HiGaIzk4UaZG7i@localhost>
- <CACRpkdZ6MUzRe9m=NrqA_5orhZXDtWj+qoFMHX7v6Zjsx-rVGg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h7gw/JKcedbcbsZwWfTxV9h1NBzBz2xSdjArgBt47FY=;
+        b=RpA77UPSB46G+IUuQfi1S7MZRnMx++3I6+XUtPEKsX7I5PRKorIWijxE0KUBSVe/Aq
+         /aSATMzsLR1hnSpjpDm7kP6rREqgluOCi3kkVleIpRzf8CEEViW6MbEoYKbDgyYHkJm5
+         0gn6h1eSVnYHpRExKXnv4ieRxu1gNAWDX9daeqZxFK/s5C+EyRLO4+4FGqpVafxTP4Es
+         Beym0cZxcYOiwei4TvC6UOrmBSzopxaWUGvjlKqo8s0LDKTKlpFjaqLFV7/bnJvn14WY
+         ktcD617KKqyCs+QVlkQQaXISI0CFgc32TOl48oGn4CfHcD/wTp2t/okriiT8SyYxWgIu
+         FIGA==
+X-Gm-Message-State: AOAM5327oTM4Rvi42Uk/Rhy4M9YaL9YQXm8O4z400pZMAcCzgTHvkreW
+        V6YWrcf4RGZnOk4cUXZZNX2HwHpW4Vk3N8NgYZ+4DJVxoVl97A==
+X-Google-Smtp-Source: ABdhPJzcfW5SBxLhGM7ZnE4/gbP2E/5QbU94LqpZXgLMKTebXCXYm5Ux1pgYsFxkEX42MlFg1Dig+zvDzSrCm3pQeTM=
+X-Received: by 2002:a05:6512:3f3:: with SMTP id n19mr1240953lfq.586.1607936524573;
+ Mon, 14 Dec 2020 01:02:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZ6MUzRe9m=NrqA_5orhZXDtWj+qoFMHX7v6Zjsx-rVGg@mail.gmail.com>
+References: <20201213161721.6514-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20201213161721.6514-1-sergio.paracuellos@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 14 Dec 2020 10:01:53 +0100
+Message-ID: <CACRpkdaAd-wJuqspYTuj4RGTyJgobX+6j=5ZWWSCtdLLMnPoYw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] pinctrl: ralink: rt2880: Some minimal clean ups
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jason Yan <yanaijie@huawei.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 01:03:32AM +0100, Linus Walleij wrote:
-> On Thu, Dec 10, 2020 at 9:53 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, Dec 09, 2020 at 05:25:32PM +0100, Linus Walleij wrote:
-> 
-> > I just replied to that thread, but to summarize, you can't rely on
-> > having the sysfs code detect collisions since that will trigger a bunch
-> > of nasty warnings and backtraces. We also don't want the sysfs interface
-> > for a specific USB device to depend on probe order (only the first one
-> > plugged in gets to use the line names). And adding line names now could
-> > in fact be what breaks currently working scripts.
-> 
-> Yes the sysfs ABI is very volatile and easy to break.
-> 
-> As pointed out in the other reply, sysfs base GPIO number is all
-> wibbly-wobbly on anything hot-pluggable so in a way I feel it
-> is the right thing to disallow sysfs altogether on hotpluggable
-> devices.
+On Sun, Dec 13, 2020 at 5:17 PM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
 
-No, the gpio numbers will of course vary, but since gpiolib exports the
-base number for the chip, a scripts can easily determine the right gpio
-number as base + offset.
+> After this driver was moved from staging into pinctrl subsytems
+> some reviews for bindigns and driver itself comes from Ron Herring
+> and Dan Carpenter. Get rid of all the comments to properly be in
+> a good shape before merge window.
 
-Having probe order break that by sometimes exporting the line using it's
-name is what would be a problem.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > Just did a super quick check and it seems libgpiod still assumes a flat
-> > name space. For example, gpiod_chip_find_line() returns only the first
-> > line found that matches a name. Shouldn't be impossible to extend, but
-> > just want to make sure this flat namespace assumption hasn't been to
-> > heavily relied upon.
-> 
-> The unique way to identify a GPIO is gpiochip instance (with
-> topology from sysfs) and then a line number on that chip.
-> This is done e.g. in the example tool
-> tools/gpio/gpio-hammer.c
-> 
-> As you can see the tool doesn't use these line names.
->
-> The line names are really like symbolic links or something.
-> But they are indeed in a flat namespace so we should try to
-> at least make them unique if it turns out people love to use
-> these.
+If Greg wants he can queue them last minute. Else I'll apply these
+after the merge window, no big deal.
 
-Not necessarily, they could be unique per chip as we're discussing here
-with respect to hotpluggable controllers. We just can't have it both
-ways.
-
-> As it is now system designers mostly use device tree to assign
-> line names and they try to make these unique because they don't
-> like the nasty warnings from gpiolib.
->
-> If I google for the phrase "Detected name collision for GPIO name"
-> I just find the code, our discussions and some USB serial devices
-> warning about this so far.
-> 
-> Maybe we should just make a patch to disallow it?
-
-That would make it impossible to provide name lines on hotpluggable
-controllers, which would be nice to support.
-
-Johan
+Yours,
+Linus Walleij
