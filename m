@@ -2,142 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3DF02D9E51
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 18:58:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DB832DA237
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 22:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502452AbgLNRz1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 12:55:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502436AbgLNRzE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 12:55:04 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5067DC0613D3;
-        Mon, 14 Dec 2020 09:54:24 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id p18so1396381pgm.11;
-        Mon, 14 Dec 2020 09:54:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y4OYtfMZ2K4JBiXVgvri6qdCRzrXhV7GNsl1P8DU6OY=;
-        b=EiicOxwiEwHVWdr7gf4zPmzQAO8KNK1cZoS4wLniUM+K7hPK7ptvrO8Ou4eXgvHmQk
-         dWvWqpo3IOx0Yp4GqJNB+7AMnm7tO/QlPhhPD36Yv1xb+qbQkz+BonbT9TAmvrdevolm
-         2NxSBrcIkuREzr9piI3iROS0meXenStOYMNYkRs9FwIBVkwSX3zFDc6zGOJ4vH5EMJb4
-         qs1CT44ohrLggc6RIyVsb3ONIaQPmXynSDpED5IiqMkb6DDsrHCEvSOeDXJXy0nqVw7f
-         OSD75fr3rm67onFok/tv07nym4qmoY0WtJAyPqncBt61bOylOyl+OxYJktbuAHBlcYvW
-         V1+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y4OYtfMZ2K4JBiXVgvri6qdCRzrXhV7GNsl1P8DU6OY=;
-        b=eUCqzCAKCvcGhTLPABtcGfrlFqhgQQv4BCpZ8XaPGLT50GU7TYpIo+7BWLxTreDodS
-         3+tutKH8igbj7Mbktydbx/gW8Sk6slFbCc1Fsli67xOW7jihzgwDxwlw40Zg7aqPJUzL
-         +4Zd4tgiMhuYmquAvyX0LEKvKDo2wVnKl+5bPYXdNtMKYyyEkoQ9+DskB7fEC/hUhPQ0
-         t9WaaQzHAmmGYtPIl/AvHvXVe+/+yYYLJ/IuvQY2SioZUv20CWk00d+7bcagP0OeKr2d
-         94sxF5FbmRy0W45lkN1BqP4seYTTohxLp0YjIhmbUDeAxRaR99bZhnLBG8FeCJ9maR74
-         sSjQ==
-X-Gm-Message-State: AOAM533rmB34eT+5QKtdBQsBFnwp5jiygcOvPFfgJE8s73ImzxHleeXN
-        P3ieFdZCBwBLIQii107yUd30XFhoFb+ebSly6BthxPsFY7A=
-X-Google-Smtp-Source: ABdhPJxWhrMA20bv+G9Pm0/5nVz3ofkooo6Xmq49SWViDFHg+N7BhSEuraHzjokkjvI3798fa9btDLQY/77VJip5SHU=
-X-Received: by 2002:a63:b1e:: with SMTP id 30mr25347309pgl.203.1607968463784;
- Mon, 14 Dec 2020 09:54:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20201211042625.129255-1-drew@beagleboard.org> <CAHp75VcAbdrSnb_ag9Rc0tny3Vtqjs1if+ahk7U36V2eaKMpSw@mail.gmail.com>
- <20201211234304.GA189853@x1>
-In-Reply-To: <20201211234304.GA189853@x1>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Dec 2020 19:55:12 +0200
-Message-ID: <CAHp75Vf-=nM-M2K-v_8iyME4t6ZF-gvSZ5ePsxQFhObJ_0YHsw@mail.gmail.com>
-Subject: Re: [RFC PATCH] pinctrl: add helper to expose pinctrl state in debugfs
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S2503558AbgLNVBc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 16:01:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503680AbgLNVBV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Dec 2020 16:01:21 -0500
+Message-ID: <8035075adf8738792f4fa39032eeeb997bc1e653.camel@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607979519;
+        bh=cldqRzZxWGs3Mp0GWam6BN3UIEF7254f3nfHMyN7cv4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Gtxqgx/zUgAV/HC4HUDaTWWErUYbIXoTgkKUYMD/ELlewv6ngbmFefFbLOnnQE37B
+         fwW9w8lNXB0jkS0zaOY6KiQuNNvzR6i/TAi+fgG1AW/EykMErJidLU/39fKuq2JQ6H
+         cYZqxR/cWcdcz2hfp8VGfziH+pOYPr8oSmVaMVsoIT/cKvofZxClMOcYe7qD5WQeeL
+         NIffLKExOZStE6EtkCW8G8ODK2nn1z9f76JCt7Kq0Z4tPHOOMdZSDtSFcABv2Uu75T
+         yhfntlEnCdaAYrYdYHk5OeIYZ35zyWy0f9d7SzNO3zktL7NiFTX5VRmoH1k+TTpoKc
+         hhNH7an3hKyYw==
+Subject: Re: [patch 23/30] net/mlx5: Use effective interrupt affinity
+From:   Saeed Mahameed <saeed@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Date:   Mon, 14 Dec 2020 12:58:36 -0800
+In-Reply-To: <20201210194044.876342330@linutronix.de>
+References: <20201210192536.118432146@linutronix.de>
+         <20201210194044.876342330@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 1:43 AM Drew Fustini <drew@beagleboard.org> wrote:
-> On Fri, Dec 11, 2020 at 11:15:21PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 11, 2020 at 1:54 PM Drew Fustini <drew@beagleboard.org> wrote:
-> > >
-> > > BeagleBoard.org [0] currently uses an out-of-tree driver called
-> > > bone-pinmux-helper [1] developed by Pantelis Antoniou [2] back in 2013.
-> >
-> > And it looks like it's still using APIs from 2013.
-> > Needs quite a clean up.
->
-> Thanks for taking a look at my RFC and responding. It is good to know
-> that it is using out-dated APIs. Would you be able to elaborate?
->
-> It interacts with pinctrl core through devm_pinctrl_get(),
-> pinctrl_lookup_state() and pinctrl_select_state(). Is there newer way of
-> doing that?
+On Thu, 2020-12-10 at 20:25 +0100, Thomas Gleixner wrote:
+> Using the interrupt affinity mask for checking locality is not really
+> working well on architectures which support effective affinity masks.
+> 
+> The affinity mask is either the system wide default or set by user
+> space,
+> but the architecture can or even must reduce the mask to the
+> effective set,
+> which means that checking the affinity mask itself does not really
+> tell
+> about the actual target CPUs.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Saeed Mahameed <saeedm@nvidia.com>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> 
 
-No. I'm talking mostly about FS callbacks where some relatively old
-new APIs can be used, such as kasprintf().
+Acked-by: Saeed Mahameed <saeedm@nvidia.com>
 
-...
-
-> > > I used the compatible string "pinctrl,state-helper" but would appreciate
-> > > advice on how to best name this. Should I create a new vendor prefix?
-> >
-> > Since it's BB specific, it should have file name and compatible string
-> > accordingly.
->
-> At first, I was thinking about this as a beaglebone specific solution
-> and had bone in the driver name and compatible string. But then I
-> realized it could used in other situations where it is beneficial to
-> to read and select a pinctrl state through debugfs.
->
-> I'm happy to rebrand the naming as beaglebone if that would be more
-> acceptable.
-
-See below.
-
-> > But I'm wondering, why it requires this kind of thing and can't be
-> > simply always part of the kernel based on configuration option?
->
-> Do you mean not having a new CONFIG option for this driver and just have
-> it be enabled by CONFIG_PINCTRL?
-
-No, configuration option stays, but no compatible strings no nothing
-like that. Just probed always when loaded.
-Actually not even sure we want to have it as a module.
-
-...
-
-> > > The P9_14_pinmux entry would cause pinctrl-state-helper to be probed.
-> > > The driver would create the corresponding pinctrl state file in debugfs
-> > > for the pin.  Here is an example of how the state can be read and
-> > > written from userspace:
-> > >
-> > > root@beaglebone:~# cat /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> > > default
-> > > root@beaglebone:~# echo pwm > /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> > > root@beaglebone:~# cat /sys/kernel/debug/ocp\:P9_14_pinmux/state
-> > > pwm
-> >
-> > Shouldn't it be rather a part of a certain pin control folder:
-> > debug/pinctrl/.../mux/...
-> > ?
->
-> Yes, I think that would make sense, but I was struggling to figure out
-> how to do that. pinctrl_init_debugfs() in pinctrl/core.c does create the
-> "pinctrl" directory, but I could not figure out how to use this as the
-> parent dir when calling debugfs_create_dir() in this driver's probe().
->
-> I thought there might be a way in debugfs API to use existing directory
-> path as a parent but I couldn't figure anything like that. I would
-> appreciate any advice.
-
-If the option is boolean from the beginning then you just call it from
-the corresponding pin control instantiation chain.
-
--- 
-With Best Regards,
-Andy Shevchenko
