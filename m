@@ -2,91 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B93CC2D950C
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:23:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF2722D9526
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:27:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgLNJUC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 04:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgLNJUA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:20:00 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FD5C0613D3
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:19:20 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id r24so28328604lfm.8
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2KiNFGuHRAngXU50uYN5PWqWRF/ruTUekfUrlri0CfQ=;
-        b=q4CcTX/QLO2V8+gRMKZ6WBTELmqzgjgvSoCKFoWlN76XMuPOfLR9SV36d5X1/2w2iS
-         0J6Qn32h7syXJNuhSOxptmpYKdV0RwCQl5LmpHJVCOtLR8APxnWawj1AqnRsSZFeCfOa
-         twdM4XmKyoQebBWA1YUR8J2zg6NtsPcoFR3jxPmorhpK2hFfhehb4uoMveR1D2EtmHgp
-         tvJsYp9xKPSKF5O1+rqXBDw3mz1uSODx+FzvRrOJUxiBk/lPupH//CNldZakk1Ed9dQf
-         lQJgGJ554qE47JsYzmiT7h0AM/JyJSZQ3d2vsBfJQRMx57PBo/+S0ledP049enSbxGPm
-         8Hnw==
+        id S1729232AbgLNJZD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 04:25:03 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35405 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390255AbgLNJYn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:24:43 -0500
+Received: by mail-lf1-f67.google.com with SMTP id a9so28376642lfh.2
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:24:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2KiNFGuHRAngXU50uYN5PWqWRF/ruTUekfUrlri0CfQ=;
-        b=ZcjYIaa+ZiE6hvZpYouYpqPan8GF4pUXGiBmQOQaE4CylQ0tFt0XsW/Qd2WpwOCtHN
-         Kbs5fevwHEScgwftcKaHjJEu2jK3tAVmvXnNdcAX/zav9NwMJdldz8/2Q+Yf4jt2iUlH
-         RDT1U9ximZ+90ZXIFHypMC10Vy0VtUQknA7wptVw0UxLwxEml4mpvPe/7ZX1U0v1vcHq
-         9gTInlz78dhcXdcv1y9Fz2VGDXcMMO+kYXJq083JLijOjo3nAizV0gGxfnLkw0+MkDXH
-         /A4eKC8HDWKASd7vBBLf/adLggsUnOpk+BHvINhBeL1Zrd5sACJ+FU7NhJX47vfZXGwb
-         eBRQ==
-X-Gm-Message-State: AOAM533V3QHNYjRraM+MsQJQvB9Bp8+K+b2oD9ewl5f5VVqOzIPQhfru
-        oE0ToJukHkHRriMYUda/LtEIbf5TIGAAi2kOZRki8w==
-X-Google-Smtp-Source: ABdhPJwhvfpGJx5eYW996f7rt6XIHNAUFvQqTPj+6iJ1YJaQVGYhhsnA8B0WVBteIZYui42JJ4uZaIpk2CKEHgPzgTA=
-X-Received: by 2002:a19:8384:: with SMTP id f126mr8561066lfd.649.1607937558820;
- Mon, 14 Dec 2020 01:19:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9123OAW5pYmjSDJewwPE10sYel6ybZNzWOIvx7/gACE=;
+        b=gjPxXYZM5nzwAlDv8KG77mMR5nH4pzgHHgIgtJCiyzZqY8p6PJX81Xd7CGtszsj/z+
+         +eMIIMYDZAtIfjHi+T/AGEEA4QRCcAKjw9v32+5uvKUL53UPp73dy1BOgF8MXBhx4ZcL
+         eNWTuR85VPTsN9wkSOtEC8cZMPfEomDiL8SR4uxbBwgVkddvdirtXJeita8MeeQyQStv
+         2xqlsWZkiH5+hPKgTDWKpVgKArq7YkjoepVPlLjHdm5HyGrkkHl6KZkGY+nApfe4NMj2
+         xsV1yXkwD3hvJ//iblH3PutzBxOnCx52+7SORl/5KPuwpV4a2QpWV12Td4yRAJiYdU+H
+         QxLw==
+X-Gm-Message-State: AOAM530szF2nEvKwJWV9j2Gl81yxaoVGnPKtRKdyWmznL/h/ZOfy11Gz
+        aiBHVRLvtgUOjm+V9KUU89A=
+X-Google-Smtp-Source: ABdhPJx4D5YkdwNqzZxM/Lp+ep5J9Jbq16aOX9lgeRugsO7INcCeVUorLjlgZH5B9/e4OWYODQZckQ==
+X-Received: by 2002:a2e:6c0f:: with SMTP id h15mr10791687ljc.305.1607937840674;
+        Mon, 14 Dec 2020 01:24:00 -0800 (PST)
+Received: from xi.terra (c-b3cbe455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.203.179])
+        by smtp.gmail.com with ESMTPSA id y9sm1049689ljy.37.2020.12.14.01.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Dec 2020 01:23:59 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kok5D-0006Xt-0M; Mon, 14 Dec 2020 10:23:55 +0100
+Date:   Mon, 14 Dec 2020 10:23:55 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
+Message-ID: <X9cvK3M20tAj3GwS@localhost>
+References: <20201212003447.238474-1-linus.walleij@linaro.org>
+ <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
+ <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20201122170822.21715-3-mani@kernel.org> <CACRpkdbY-aZB1BAD=JkZAHA+OQvpH12AD3tLAp6Nf1hwr74s9A@mail.gmail.com>
- <X8ZmfbQp7/BGgxec@localhost> <CACRpkdZJdxqxUEQaKUHctHRSQAUpYZJtuxonwVd_ZFAsLBbKrA@mail.gmail.com>
- <X89OOUOG0x0SSxXA@localhost> <CACRpkdavm7GG8HdV1xk0W_b1EzUmvF0kKAGnp0u6t42NAWa9iA@mail.gmail.com>
- <X9DsWahl6UDwZwBn@localhost> <CACRpkdYm-j9QcK8hgNrC33KruWE17Q0F4+T=UanE7PCEZEtu6w@mail.gmail.com>
- <X9HiGaIzk4UaZG7i@localhost> <CACRpkdZ6MUzRe9m=NrqA_5orhZXDtWj+qoFMHX7v6Zjsx-rVGg@mail.gmail.com>
- <X9cpQO3IV4IgX1dh@localhost>
-In-Reply-To: <X9cpQO3IV4IgX1dh@localhost>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 14 Dec 2020 10:19:07 +0100
-Message-ID: <CACRpkdaGWpk=hB6osfXDqx_aSx0aYDyqJRNtY3Gr8z4bLPxZcQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] usb: serial: xr_serial: Add gpiochip support
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 9:58 AM Johan Hovold <johan@kernel.org> wrote:
-> On Sat, Dec 12, 2020 at 01:03:32AM +0100, Linus Walleij wrote:
+On Sat, Dec 12, 2020 at 01:51:59PM +0100, Linus Walleij wrote:
+> On Sat, Dec 12, 2020 at 10:23 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> 
+> > As the names are specified in DT, I think the biggest "use case" for
+> > collisions is GPIO chips on expansion boards, if multiple instances
+> > of the same board can be connected.
+> 
+> The actual case that happens in reality is GPIO chips on USB.
+> For example if you plug in two FTDI adapters (these have GPIOs)
+> and they have named their lines statically in the driver.
+> 
+> This is what Johan points out and also what I find from Googling.
+> 
+> So I would say hot-pluggable buses. Greybus would have the
+> same issue I think.
 
-> > If I google for the phrase "Detected name collision for GPIO name"
-> > I just find the code, our discussions and some USB serial devices
-> > warning about this so far.
-> >
-> > Maybe we should just make a patch to disallow it?
->
-> That would make it impossible to provide name lines on hotpluggable
-> controllers, which would be nice to support.
+But it could be anything that provides default names, such as some
+controller connected over i2c.
 
-I merged a patch for this now, let's tighten this loose end up.
+Having the driver provide default names that then can (but does not have
+to be) overridden in devicetree if you really want to make sure the
+lines are unique (or just named for the particular application).
+ 
+> > This is a bit similar to clock outputs, cfr. commit f491276a51685987
+> > ("clk: vc5: Allow Versaclock driver to support multiple instances"), but
+> > in the clock case, the name of the clock output is dictated by the
+> > driver, not by DT.
+> 
+> Yeah actually the collisions we have seen in GPIO is the same
+> type, where we assign the names in gc->names and not in the
+> device tree (or ACPI).
+> 
+> But I think it is good to establish this habit already so we don't
+> end up depending on having to support flat namespaces with
 
-Also: thanks for poking me about this, I should have looked into
-this ages ago :/ focus you know...
+I think you meant non-flat here?
 
-Yours,
-Linus Walleij
+> several lines on the same chip named the same at least.
+
+Right, enforcing per-chip-unique names seems perfectly reasonable.
+
+The only "use case" of non-unique names that comes to mind would be to
+provide some kind of grouping like "input"/"output" but then the names
+can still be made unique by adding an index (e.g. "input0").
+
+Johan
