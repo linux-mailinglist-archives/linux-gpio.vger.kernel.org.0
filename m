@@ -2,196 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 507CD2D9867
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 13:57:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CFE12D99C0
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 15:23:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407501AbgLNM4B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 07:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439357AbgLNMzu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 07:55:50 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB66FC0613CF
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 04:55:09 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id g20so7732840plo.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 04:55:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=EWRXbZH3dM0IdM/2eDYXDAoWiBlrbOWKXB2umLBjYi0=;
-        b=Jd3GiGNSEa0WEEedgzFhU00kqCGv4BsQ7+ZqgJPlQ1w1jaq+ouJWBJ4B8RLK+Tuvek
-         gX7i92ZQhO05l1bmajCLBT51xcQXdC2fnHHJtEFhhHgf8KfCSxtXc664YRCBZauNvUXJ
-         /VQQ6uSE1YhNws8tkJnpKLjFmUURBD9RPnKxdzH4zxFp0FB4GJs+AUVhdZgXHlgrV7x+
-         7l75LdA3WpqD3vPIt/t5fNjFjK0OA6aAjqRUcmWkOsR6kv29pfQGYhrlQ/yfZwj4NxLp
-         Sr0EV9QpXriSN4CaWSmq41dWm+YwSYtC6S3ZxeLGp+CwL8shhBJKNY1HCmYbr5wKc2k/
-         nuhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=EWRXbZH3dM0IdM/2eDYXDAoWiBlrbOWKXB2umLBjYi0=;
-        b=KuCz4hT+csmn9m4tlSgv3mEL57JquSTp9LHeOQb+1/TZSPmApw5wXkdJRTLRtxXYAk
-         NpQ7FXAHHF7km2t0tErEzzVOaOKjfoczE3CXUAgY/MYObZ47KkSy+JgEzudyOqU2iq6o
-         RCQ7KP507XqzTNB+6LIqgLV/qbfd4f5e/uxHV2beh3s/bgmesdpX4SY/ULNBFP/iGxkB
-         rWSWuapcamhFF+cd9Gn7dzd5RYJt2Uwt2DFXSk+dZ0VbP9ioBvq2T4kLCltLu0vWdIPd
-         xLfj50a0zDL+WC+M12Suh+rQJHQGfwUSQdgFyhAJt1POXLLjISpEUC/U1Ombfq/cg9AF
-         IinQ==
-X-Gm-Message-State: AOAM532wbE//M2ejYO2iKAjgFI9vdj/WSl2XLfyfm+Q8HDUlD7o4E3Ex
-        Z1DfuTh+EeTU/sw+VKIA9AYTXVIO1UFdvA==
-X-Google-Smtp-Source: ABdhPJwyvXaRdYbGrrj9EPY7HYCCQY8DwE8YroxMEfNTE6T27gaRC12ihs9Zjybcj4c3y1i/iqS68Q==
-X-Received: by 2002:a17:902:7207:b029:da:fd0c:521a with SMTP id ba7-20020a1709027207b02900dafd0c521amr22568294plb.45.1607950508817;
-        Mon, 14 Dec 2020 04:55:08 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id y189sm19974549pfb.155.2020.12.14.04.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 04:55:08 -0800 (PST)
-Message-ID: <5fd760ac.1c69fb81.3a590.8581@mx.google.com>
-Date:   Mon, 14 Dec 2020 04:55:08 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1727209AbgLNOWO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 09:22:14 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:49457 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2440120AbgLNOWJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Dec 2020 09:22:09 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 5CF64560;
+        Mon, 14 Dec 2020 09:21:21 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 14 Dec 2020 09:21:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=BwtqYUjEM5HK5CeLB7QlKUDY+Fr
+        UbzjldMfZjsiMexA=; b=eijK8TGe+PD/AeF4enheqKELlzQdA4ELRqVUObxQ1yv
+        dVDm5kPRMy9ciR27jqEopK2YKIrAAnwhEW1lh/j3yzjeshaHFKuc9BWIaP2JRZ71
+        RJKs86OzYyNaLRVf/BW97s8G3EU78xh4hWEETtEokz5PjwRiy5UgS4f1/w//aDpP
+        IR3158yF6Wu2UkEU6pqG/3CPBOczsL9GHTG/g3Mde1SP/xEpZPDzeq2X6s6BhGv1
+        AzUL4ao5cIWXM6io9h+ybrkvNOu/vYUjlzeMcpS5CNPqokdkr0CXAvtvsHVmTox5
+        g1YkHIPaKuluDiW6hKS5F1YS/gNXGzvSyo/JM0D82dQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=BwtqYU
+        jEM5HK5CeLB7QlKUDY+FrUbzjldMfZjsiMexA=; b=mQTsI8adGoXRW6GXO/VD4k
+        bPUUj4XcctjHyjNJpfZUcSIPPAYtw41EZHsbKkeo0+F+2p1HrHOpKZmHwMNcn+eX
+        iOyKruAqDrte3wz97gMGyEBUYIkkriGkco0CAbfp97NaAuUg8AbX9mx1l6TwDRU+
+        pfqitCejj42CCqHPzu09DNpxUiLOB2Usxy3ZTXtcMHiIdAsPCFsC+QXkrcPJ/Hqj
+        tSPzdadniATteRpoiC9CVlGu5IfJOQeB77VsQH4Wx/edd+T6RrQHry2G+3avQHwx
+        RCAey9wqiVjQogiFcjG5/WIaCFxDSEnu05gKmdyl+TlKDSazzEqdtfE4gdkNjxNQ
+        ==
+X-ME-Sender: <xms:33TXX9q8krFw6mdnBjNcfOnqUytWTnxmahqajXgVTXKe33D0Ibo2kw>
+    <xme:33TXX_pgFN7U0c636kngd9U0eQqseThKFbxw_v_1H34IbEKTaDrBff5bLF9Bot8cM
+    EO1hR39ai-znuhsEqo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekkedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:33TXX6M-pgdX_ztFnNYd7sZ2wpXCWQzMCQ1XLiWrx7z96DBh7eLqew>
+    <xmx:33TXX46JNvt72XDoNi3Q9jDlAt2vUMIDSdzolyEiGe2wzK1c4665dw>
+    <xmx:33TXX87p-SRrT4lU7pYjpUXeZCD1bcrhZxQm-zK_9k-ywsJmn2_ffQ>
+    <xmx:4HTXX5sM8TnWGojtllc3Cua7IL1rPWjqbltcxR_BJ6LfF6CIg_D2Jg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9B2FA1080059;
+        Mon, 14 Dec 2020 09:21:19 -0500 (EST)
+Date:   Mon, 14 Dec 2020 15:21:18 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH 05/12] pinctrl: sunxi: add pinctrl driver for
+ V831/V833
+Message-ID: <20201214142118.bxdzu7z7cdomhgy7@gilmour>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+ <20201212040430.3640418-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.10-rc4-91-g65efb43ac94b
-X-Kernelci-Report-Type: test
-Subject: linusw/devel baseline: 104 runs,
- 3 regressions (v5.10-rc4-91-g65efb43ac94b)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rchau4rbhiwycv2k"
+Content-Disposition: inline
+In-Reply-To: <20201212040430.3640418-2-icenowy@aosc.io>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel baseline: 104 runs, 3 regressions (v5.10-rc4-91-g65efb43ac94b)
 
-Regressions Summary
--------------------
+--rchau4rbhiwycv2k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-platform                   | arch  | lab           | compiler | defconfig |=
- regressions
----------------------------+-------+---------------+----------+-----------+=
-------------
-imx8mp-evk                 | arm64 | lab-nxp       | gcc-8    | defconfig |=
- 1          =
+On Sat, Dec 12, 2020 at 12:04:23PM +0800, Icenowy Zheng wrote:
+> V831/V833 are new chips from Allwinner. They're the same die with
+> different package.
+>=20
+> Add a pinctrl driver for them.
+>=20
+> The difference between V831/V833 pinctrl is implemented based on the
+> user manual.
+>=20
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/pinctrl/sunxi/Kconfig              |   5 +
+>  drivers/pinctrl/sunxi/Makefile             |   1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c | 743 +++++++++++++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h      |   2 +
+>  4 files changed, 751 insertions(+)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c
+>=20
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index 593293584ecc..fc13335a3eda 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -73,6 +73,11 @@ config PINCTRL_SUN8I_V3S
+>  	default MACH_SUN8I
+>  	select PINCTRL_SUNXI
+> =20
+> +config PINCTRL_SUN8I_V83X
+> +	bool "Support for the Allwinner V831/V833 PIO"
+> +	default MACH_SUN8I
+> +	select PINCTRL_SUNXI
+> +
 
-meson-gxl-s905x-khadas-vim | arm64 | lab-baylibre  | gcc-8    | defconfig |=
- 1          =
+We're not using the wildcard much, and I'd rather be consistent with the
+name / Kconfig option scheme used for the clock driver (and the rest of
+the SoCs in a similar situation)
 
-mt8173-elm-hana            | arm64 | lab-collabora | gcc-8    | defconfig |=
- 1          =
+Maxime
 
+--rchau4rbhiwycv2k
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.10-=
-rc4-91-g65efb43ac94b/plan/baseline/
+-----BEGIN PGP SIGNATURE-----
 
-  Test:     baseline
-  Tree:     linusw
-  Branch:   devel
-  Describe: v5.10-rc4-91-g65efb43ac94b
-  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
-io.git/
-  SHA:      65efb43ac94bffeb652cddba4106817bb38c5e71 =
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX9d03gAKCRDj7w1vZxhR
+xbPvAQCq17o8gHL1yUSGIQCGeqX51CHQBMYjDd0RI8x/CV4EuAEA/opdKZPWikSe
+DNBii3EVWa8xj+3RRyjhq8gfj/VMwg4=
+=HJdK
+-----END PGP SIGNATURE-----
 
-
-
-Test Regressions
----------------- =
-
-
-
-platform                   | arch  | lab           | compiler | defconfig |=
- regressions
----------------------------+-------+---------------+----------+-----------+=
-------------
-imx8mp-evk                 | arm64 | lab-nxp       | gcc-8    | defconfig |=
- 1          =
-
-
-  Details:     https://kernelci.org/test/plan/id/5fd75aa2669cae3aa5c94cbe
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.txt
-  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
-
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5fd75aa2669cae3aa5c94=
-cbf
-        failing since 8 days (last pass: v5.10-rc4-34-g0f2c7af45d7ee, first=
- fail: v5.10-rc4-47-gc47d9e1b7343) =
-
- =
-
-
-
-platform                   | arch  | lab           | compiler | defconfig |=
- regressions
----------------------------+-------+---------------+----------+-----------+=
-------------
-meson-gxl-s905x-khadas-vim | arm64 | lab-baylibre  | gcc-8    | defconfig |=
- 1          =
-
-
-  Details:     https://kernelci.org/test/plan/id/5fd756ad0dc2ed18d1c94cf1
-
-  Results:     0 PASS, 1 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s905x-khada=
-s-vim.txt
-  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s905x-khada=
-s-vim.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
-
-
-
-  * baseline.login: https://kernelci.org/test/case/id/5fd756ad0dc2ed18d1c94=
-cf2
-        new failure (last pass: v5.10-rc4-88-g9777d0bfdae79) =
-
- =
-
-
-
-platform                   | arch  | lab           | compiler | defconfig |=
- regressions
----------------------------+-------+---------------+----------+-----------+=
-------------
-mt8173-elm-hana            | arm64 | lab-collabora | gcc-8    | defconfig |=
- 1          =
-
-
-  Details:     https://kernelci.org/test/plan/id/5fd756ba35dcd20ba0c94cc8
-
-  Results:     19 PASS, 9 FAIL, 0 SKIP
-  Full config: defconfig
-  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
-  Plain log:   https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.txt
-  HTML log:    https://storage.kernelci.org//linusw/devel/v5.10-rc4-91-g65e=
-fb43ac94b/arm64/defconfig/gcc-8/lab-collabora/baseline-mt8173-elm-hana.html
-  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
-.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
-
-
-
-  * baseline.bootrr.mediatek-mt8173-pinctrl-probed: https://kernelci.org/te=
-st/case/id/5fd756ba35dcd20ba0c94ce2
-        new failure (last pass: v5.10-rc4-88-g9777d0bfdae79)
-
-    2020-12-14 12:12:39.946000+00:00  /lava-2949520/1/../bin/lava-test-case
-    2020-12-14 12:12:39.955000+00:00  <8>[   26.305286] <LAVA_SIGNAL_TESTCA=
-SE TEST_CASE_ID=3Dmediatek-mt8173-pinctrl-probed RESULT=3Dfail>   =
-
- =20
+--rchau4rbhiwycv2k--
