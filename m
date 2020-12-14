@@ -2,104 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2722D9526
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:27:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89F682D953F
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Dec 2020 10:30:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgLNJZD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 04:25:03 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35405 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390255AbgLNJYn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:24:43 -0500
-Received: by mail-lf1-f67.google.com with SMTP id a9so28376642lfh.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 01:24:26 -0800 (PST)
+        id S1728694AbgLNJ1e convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 14 Dec 2020 04:27:34 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33302 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgLNJ10 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 04:27:26 -0500
+Received: by mail-lf1-f68.google.com with SMTP id l11so28424489lfg.0;
+        Mon, 14 Dec 2020 01:27:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9123OAW5pYmjSDJewwPE10sYel6ybZNzWOIvx7/gACE=;
-        b=gjPxXYZM5nzwAlDv8KG77mMR5nH4pzgHHgIgtJCiyzZqY8p6PJX81Xd7CGtszsj/z+
-         +eMIIMYDZAtIfjHi+T/AGEEA4QRCcAKjw9v32+5uvKUL53UPp73dy1BOgF8MXBhx4ZcL
-         eNWTuR85VPTsN9wkSOtEC8cZMPfEomDiL8SR4uxbBwgVkddvdirtXJeita8MeeQyQStv
-         2xqlsWZkiH5+hPKgTDWKpVgKArq7YkjoepVPlLjHdm5HyGrkkHl6KZkGY+nApfe4NMj2
-         xsV1yXkwD3hvJ//iblH3PutzBxOnCx52+7SORl/5KPuwpV4a2QpWV12Td4yRAJiYdU+H
-         QxLw==
-X-Gm-Message-State: AOAM530szF2nEvKwJWV9j2Gl81yxaoVGnPKtRKdyWmznL/h/ZOfy11Gz
-        aiBHVRLvtgUOjm+V9KUU89A=
-X-Google-Smtp-Source: ABdhPJx4D5YkdwNqzZxM/Lp+ep5J9Jbq16aOX9lgeRugsO7INcCeVUorLjlgZH5B9/e4OWYODQZckQ==
-X-Received: by 2002:a2e:6c0f:: with SMTP id h15mr10791687ljc.305.1607937840674;
-        Mon, 14 Dec 2020 01:24:00 -0800 (PST)
-Received: from xi.terra (c-b3cbe455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.203.179])
-        by smtp.gmail.com with ESMTPSA id y9sm1049689ljy.37.2020.12.14.01.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 01:23:59 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1kok5D-0006Xt-0M; Mon, 14 Dec 2020 10:23:55 +0100
-Date:   Mon, 14 Dec 2020 10:23:55 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
-Message-ID: <X9cvK3M20tAj3GwS@localhost>
-References: <20201212003447.238474-1-linus.walleij@linaro.org>
- <CAMuHMdXZft=w4JZz_xAJ2r3AVh1QS-OGrSuVjXd8mR8=Xhr+rA@mail.gmail.com>
- <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jo/1+FyF+IsssW4QTtp7VT7/1NWdibvPFQ9XrhExF8Q=;
+        b=EIQFkoMlAwqzxgVCMHCJRMYpOs+eNEArjJyDPOfeyNoQlyrqX1hFDcc40c1g18XWcJ
+         7T9qVgyaBRibf38ie7LeIK8r4KQjHJD4XYuATJvLL08UEgbQoqFwA71YV5hi5DEupkND
+         PSbd1PBG1MkopkOXULersDScbCs1ROeA+k1xSfi3iXhHRtDrztH+khVtpkyXy1Cz6kDA
+         yst01+hcDXyTZuYf9bg7sMceWRURLVqmbgDuHvKER/vPgxNqBNNts/fhHgYgOkzR7Uk8
+         WycOShHi4NRYsYjaR26fXZOY7dR1gbPXR5VUgCQga2dmZwHVNNkp1c2lO4DLd/N00zuK
+         e9ZA==
+X-Gm-Message-State: AOAM533O3tQ4STwH0QoRpaWbbFNEkGwAbWY7h7l+JTYGogoGxb9Vo4gp
+        2/cGVzc3HcKMiKKUA9lsEFZaI8IW8RN63w==
+X-Google-Smtp-Source: ABdhPJwhCq7dLa/57hd23oCtY9WoqeiiPRGrS7IB7zA9wbypY1uS1GMwwCSIqJuRwxyhq7PRgw34Gg==
+X-Received: by 2002:a2e:b8d3:: with SMTP id s19mr10152363ljp.35.1607938003377;
+        Mon, 14 Dec 2020 01:26:43 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id f2sm2249967ljc.118.2020.12.14.01.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Dec 2020 01:26:42 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id x20so8852902lfe.12;
+        Mon, 14 Dec 2020 01:26:42 -0800 (PST)
+X-Received: by 2002:a2e:6e06:: with SMTP id j6mr9929044ljc.282.1607938002616;
+ Mon, 14 Dec 2020 01:26:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaGQRHwVnXU6e9apKhxCFf_qWEfSF8ggodOCHjXDSCg1Q@mail.gmail.com>
+References: <20201202135409.13683-1-andre.przywara@arm.com>
+ <20201202135409.13683-3-andre.przywara@arm.com> <70df5b048c81485053df91a3e53dc840487677e3.camel@aosc.io>
+In-Reply-To: <70df5b048c81485053df91a3e53dc840487677e3.camel@aosc.io>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 14 Dec 2020 17:26:31 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65N9nn52tpgH3Jr_ndYO515bggvg+a3ON6ji12oZ-nX8Q@mail.gmail.com>
+Message-ID: <CAGb2v65N9nn52tpgH3Jr_ndYO515bggvg+a3ON6ji12oZ-nX8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/8] pinctrl: sunxi: Add support for the Allwinner H616
+ pin controller
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yangtao Li <frank@allwinnertech.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 01:51:59PM +0100, Linus Walleij wrote:
-> On Sat, Dec 12, 2020 at 10:23 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> 
-> > As the names are specified in DT, I think the biggest "use case" for
-> > collisions is GPIO chips on expansion boards, if multiple instances
-> > of the same board can be connected.
-> 
-> The actual case that happens in reality is GPIO chips on USB.
-> For example if you plug in two FTDI adapters (these have GPIOs)
-> and they have named their lines statically in the driver.
-> 
-> This is what Johan points out and also what I find from Googling.
-> 
-> So I would say hot-pluggable buses. Greybus would have the
-> same issue I think.
+On Mon, Dec 14, 2020 at 12:28 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> 在 2020-12-02星期三的 13:54 +0000，Andre Przywara写道：
+> > Port A is used for an internal connection to some analogue circuitry
+> > which looks like an AC200 IP (as in the H6), though this is not
+> > mentioned in the manual.
+>
+> When developing for V831, I found that PIO controller in H616 (and
+> V831) has the functionality of selecting IO voltage of PF bank (needed
+> to handle UHS-I).
+>
+> How should we model this in PIO driver?
 
-But it could be anything that provides default names, such as some
-controller connected over i2c.
+I suppose we could expose it as a regulator for the mmc node to consume
+as its vqmmc-supply?
 
-Having the driver provide default names that then can (but does not have
-to be) overridden in devicetree if you really want to make sure the
-lines are unique (or just named for the particular application).
- 
-> > This is a bit similar to clock outputs, cfr. commit f491276a51685987
-> > ("clk: vc5: Allow Versaclock driver to support multiple instances"), but
-> > in the clock case, the name of the clock output is dictated by the
-> > driver, not by DT.
-> 
-> Yeah actually the collisions we have seen in GPIO is the same
-> type, where we assign the names in gc->names and not in the
-> device tree (or ACPI).
-> 
-> But I think it is good to establish this habit already so we don't
-> end up depending on having to support flat namespaces with
-
-I think you meant non-flat here?
-
-> several lines on the same chip named the same at least.
-
-Right, enforcing per-chip-unique names seems perfectly reasonable.
-
-The only "use case" of non-unique names that comes to mind would be to
-provide some kind of grouping like "input"/"output" but then the names
-can still be made unique by adding an index (e.g. "input0").
-
-Johan
+ChenYu
