@@ -2,115 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE762DAD61
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 13:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C496A2DAE7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 15:03:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgLOMkk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Dec 2020 07:40:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
+        id S1729202AbgLOOBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Dec 2020 09:01:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgLOMkk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 07:40:40 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E16C06179C
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 04:39:59 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id o19so13293758lfo.1
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 04:39:59 -0800 (PST)
+        with ESMTP id S1728109AbgLOOAy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 09:00:54 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0642C06179C
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 06:00:14 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id b8so5089810plx.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 06:00:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2u+g101SrX2cbAexKAHiTmYjfJwI9XfuubnmRIODs2o=;
-        b=A6DUYu1KA4eS/fJx/o82Aq9L85RD5+0wgKBCCNrWsNcQszcQHP/sD6uM1gBgHOU7D4
-         Mj1kcTkqdL++H0LI2I0zXJoKBypOEJJns2XqnTprwSBfBvK7ktrRaWkU05RiKEQCOTFg
-         jl1LYXK4KUqfOxuHsrw3YwJGfSS/YRPy0aJTbUXte3qTS3ldyGQGB0GqeR2ytnO5R8SR
-         nRxKEE5rwBv0uuG6MYRT4llSTF0/lht3n8HvcdDnhc3CwiA+7BmgW14tCuemW/67vHrE
-         VinQ6LugDB6mNYYp6iPVkhUIblm0tpXt/nrf/FgfTTn6JZhGSiYJuvM6OJKBxgru2PGa
-         XtRw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Wyd8JLHuAcSYKDXXTCNoEjRsB5ODPMA+FdWkwvRFGi8=;
+        b=X2SxeyamGyW76xsS8n8D+qGtu2ih3SMOxxF2XxslkAf2PcQMt3cguSdEgI3P+AyhSl
+         DLejdsg9BSvsTh3eWNAwGPHuDldwh+jgMBDd2qiELM8WveAitDiCerXzJca9Gvv9DV+e
+         ViYMbmsZv5nYNYTvERtS9KExedYLp0r4NIgzIJijfD26H+tMDN0xq13r4M5YMH09vY/y
+         BaDyUJ5Lp4I2FgvhjkCH2BkumL6vc0JX5R+o0G/3m2d1QocinpLPz7XHCi/oWa8dbyGS
+         VglLT07VPduWUHfMON+v0nMBrL0m7czB8YHZjIBvyG3fRl5pnZbIaBLEQHfEdTmI9gKT
+         Jsjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2u+g101SrX2cbAexKAHiTmYjfJwI9XfuubnmRIODs2o=;
-        b=LiEesdEW6NHz3yjLpwaoMrja90U5MAJZg6fT2dZQFzqf0JvVsM72rZb1n6RyY9w0jl
-         HuuFSSWqdnAOWr8nTqEAIpd7jXLrsaIPf/2H89aSyeufuvV16LNt20lnsWZqy+3Tu2Mn
-         NeZQcw9GBdDZzSDLsv80PxypL+frcTVhSIrgvCznTi0mW3Zs+9z/CmVfInKgSncL0m1c
-         nIm0LQbKYqm7+UcTWLseeeh86ftMeaMI1cGeTby81kd3UlhltE6Eu+cuY6QghdaRwVeD
-         l+sdG4xLH3IMwQtlZcWc0lbMSdRYz1odHsPvHZfXnSv9SxCAr6P1c/iJ5QLBDKmtYeoE
-         /hDA==
-X-Gm-Message-State: AOAM5316wyl7mbC0+FvjQ6XGs3zaCuMvQOa25fY0vjqWqPSSU+Q/HUJP
-        /DZXBJ7+foOCjgtUk0u9lzImwAfeXFO3ynNm
-X-Google-Smtp-Source: ABdhPJxKiob/4LKHAnPv1rEv/CFDeOOZM+xmiVWz9Rv5EA3pcdqfl59f7Dim+FLC7uiuTAdKHaUtKQ==
-X-Received: by 2002:a2e:7212:: with SMTP id n18mr8704169ljc.399.1608035997937;
-        Tue, 15 Dec 2020 04:39:57 -0800 (PST)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id t28sm1918036ljo.45.2020.12.15.04.39.57
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Wyd8JLHuAcSYKDXXTCNoEjRsB5ODPMA+FdWkwvRFGi8=;
+        b=gEpVzliq0eU5Z9ZH/W6/NawoD6r5pa07Fvf7Khlis15udFPVNcwIeMGzVSxF2FEf/F
+         k0rNiHjLGYbi5P573aiHfwHe9QCGC9coMvEc9roGABvfKIjWmjSYXK4lsqLTwKlC25Me
+         S+pR5s4CYF66/lKvPb6UrP4v6m7O0/PSyucrIeosYtfJ4YQQON7gDvRwe3O3UvJhUTvf
+         TEyPYTJj2jjT8aA/fAykP8u4Z+qABPMXdI6b6ujvneImj4/mgDxMepRLGMyVEqclCJzN
+         QBPa2QgdYGW7fEorWaidGXW5pNZDM/QPQ+pJUyHKzIee6AKIt689SX7nE+WtKZeuNwhO
+         BYWA==
+X-Gm-Message-State: AOAM5320F0OYU1Ax/YXtbXsFUWfSg/Pmq4V9FoI6hRmVjDMViT5l8Rku
+        og7J0WDoEicxOicRKNcihOWzVbrHRXqGyw==
+X-Google-Smtp-Source: ABdhPJz2oJ2vYEO9PQj8SdQNnsRJR/AM6tEbs7xkVnj/psEdgmqhzwpYOv1vDWdM8pULHa/AQwSZ0w==
+X-Received: by 2002:a17:90b:1c10:: with SMTP id oc16mr30023193pjb.144.1608040813958;
+        Tue, 15 Dec 2020 06:00:13 -0800 (PST)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id o11sm22649540pjs.36.2020.12.15.06.00.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 04:39:57 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH] gpio: Skip over NULL and (empty string) line names
-Date:   Tue, 15 Dec 2020 13:37:55 +0100
-Message-Id: <20201215123755.438369-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.28.0
+        Tue, 15 Dec 2020 06:00:13 -0800 (PST)
+Message-ID: <5fd8c16d.1c69fb81.89d2d.ef86@mx.google.com>
+Date:   Tue, 15 Dec 2020 06:00:13 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.10-rc4-94-g3048c5493cd20
+X-Kernelci-Report-Type: build
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 11 warnings (v5.10-rc4-94-g3048c5493cd20)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The core will warn if we try to assign the name ''
-(empty string) to two lines. Actively ignore NULL
-and empty string in the name assignment loop.
+linusw/devel build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc4-94=
+-g3048c5493cd20)
 
-Reported-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.10-rc4-94-g3048c5493cd20/
+
+Tree: linusw
+Branch: devel
+Git Describe: v5.10-rc4-94-g3048c5493cd20
+Git Commit: 3048c5493cd208540252e6c78b2252fedf6f0ede
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
+
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 3 warnings
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #size-cells (1) differs from / (2)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #address-cells (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
+ (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
+lls (1) differs from / (2)
+    1    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
+: /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
+    1    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
+: /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
+    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
+iled prerequisite 'spi_bus_bridge'
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
+1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
+differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
+tion mismatches
+
+Warnings:
+    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
+c/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
+    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
+c/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
+    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
+prerequisite 'spi_bus_bridge'
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpiolib.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 26c75499d549..d07da3ffd140 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -343,6 +343,10 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	for (i = 0; i != gc->ngpio; ++i) {
- 		struct gpio_desc *gpiod;
- 
-+		/* Skip NULL or '(empty string)' names */
-+		if (!gc->names[i] || !strlen(gc->names[i]))
-+			continue;
-+
- 		gpiod = gpio_name_to_desc(gc->names[i]);
- 		if (gpiod && (gpiod->gdev == gdev)) {
- 			dev_err(&gdev->dev,
-@@ -352,8 +356,12 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	}
- 
- 	/* Then add all names to the GPIO descriptors */
--	for (i = 0; i != gc->ngpio; ++i)
-+	for (i = 0; i != gc->ngpio; ++i) {
-+		/* Skip NULL or '(empty string)' names */
-+		if (!gc->names[i] || !strlen(gc->names[i]))
-+			continue;
- 		gdev->descs[i].name = gc->names[i];
-+	}
- 
- 	return 0;
- }
-@@ -404,6 +412,9 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
- 	for (i = 0; i < count; i++) {
- 		struct gpio_desc *gpiod;
- 
-+		/* Skip NULL or '(empty string)' names */
-+		if (!names[i] || !strlen(names[i]))
-+			continue;
- 		gpiod = gpio_name_to_desc(names[i]);
- 		if (gpiod && (gpiod->gdev == gdev)) {
- 			dev_err(&gdev->dev,
--- 
-2.28.0
-
+For more info write to <info@kernelci.org>
