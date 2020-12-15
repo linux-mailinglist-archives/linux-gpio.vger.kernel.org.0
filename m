@@ -2,81 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF3F2DA921
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 09:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EBDC2DAA6B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 10:51:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgLOIZt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Dec 2020 03:25:49 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42447 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgLOIZj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 03:25:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 11so18557015oty.9
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 00:25:23 -0800 (PST)
+        id S1728494AbgLOJtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Dec 2020 04:49:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728492AbgLOJtD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 04:49:03 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EF4C0617A6;
+        Tue, 15 Dec 2020 01:48:17 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id e2so3574097plt.12;
+        Tue, 15 Dec 2020 01:48:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffzwJt/+wBy6lMGtbT+qsUuCwVx4/Ps6eQ4TPUtfj5w=;
+        b=NyCl81bipthfEmDO/eYeBRt+b0/Ae5P/69pNipdLzoA/yv7dK/Svbq5BSszLp6Lp6R
+         bkoJn4s8P1i8dT0xzPabvE5NsTaWBD7qPu6DybW6gLaId8uZ2Cp2HVCE17SfF0bRwhT6
+         LSWhi1tXZ5d3q8q/3kWti2WakSfSTqvJwz2OGqlkMcklTgzW2RlcgyNe8ifsdfCaEOU6
+         i+4ZUVB1mFuEvy9Kp7PR718GAZoc0S4M2Ws8bV5quGKoXfAM5gfslVgQx3pDaxE1bh8+
+         VsTg7fBLBE3HMH4j9p/IXb8SJsPMqqxP/+dEvsruI0HGCwgLfYAkdQp68NK+X0ZGqqc6
+         U7aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kmfGz0AeUWmSar/Ndhm4aNXLsVZ54KXJnm+EKBX/rtA=;
-        b=Qim84vzs2Iucl7X+EPg0b/OJobc2vcwOQ/fRjhokWkU2sZ7SX8TgR6IJ2uu9qaWOTx
-         1hSOiklM6AfXcUrExVi7x2mmQXXHNlkK+HbZvQamx+XAdFOShA1et+TE5Dm6W+toSOPx
-         Em2L/X0GmFy68coZuPwHgMXiNf7FpVrRkk321l8cIRS11Lenfnb57Egt8gLdy7AvXAM8
-         9awXcYbi6Q/AywklFoZIm1rPizVfo0nhn7G/UQoB0vhei5RkOlrLcQOONqvNl3H4+gf8
-         drhCyt7CVsWNyvD0r8ZOGW1i3oy+mfpVsGzfe8ijmEhcEeK1Nt+/kYjZtRPN49PcBR6G
-         jzXQ==
-X-Gm-Message-State: AOAM533X2meX5Lhyg642559ORL9oZA8t4mmOLaGiEjyBiWyR1iz/8mWD
-        tQ0RAloxBsRWTrNrcZ8NCm54W8Bcxqa5kZbICDczWGQG9oc=
-X-Google-Smtp-Source: ABdhPJyPswrjwuSCgdagEHIPKgl0mk8HXX8/6sX1ebxCN0CWmm4Ry6T3Spvt94EkXTL6hnPlZbRbe14LRuFyv7MmyYE=
-X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr22485760oth.250.1608020698076;
- Tue, 15 Dec 2020 00:24:58 -0800 (PST)
+        bh=ffzwJt/+wBy6lMGtbT+qsUuCwVx4/Ps6eQ4TPUtfj5w=;
+        b=OlslgY0e6UaXYlWjoHd4VKc4htgKr1BmuyUbCUJQ4vmwpifhTF1UTeXiQkToPNpF8g
+         GZ2lzP8uFV1AMD0atrCRJoRABMPriuiJwLkVBEp+EVaCmVqXeitBpDxcE1/lh9shUei/
+         3EaQSO/7qZBzoM83DTWg3Qbsz+MtSoIW6JHsap+CiMCcafe6rk9mwzKtkdROXQbn+tkI
+         HPDA1mbsBMgvp9Lm3kNvdfrfl1atuJ/lKxHhFnU3XR9FFc8BfYpVpbcCMZ+trrgnEySu
+         Luw9vVM0xv24K65Oee7pqRh6w/Y7WBEQEbN6HcL1InklATc5a+cb2A4/DCJRbESDf5H3
+         wtvQ==
+X-Gm-Message-State: AOAM530zu0Cz4a3lMfIWbD6euy7KUzeTp6Bz2xfZOGDrs1IX7WrNtvXE
+        RTGSrqpRrz4zUDVbmY+Ih4CfthbTxqT9NXpkM+I=
+X-Google-Smtp-Source: ABdhPJySHOXN1RWHB588qOl3V9AjE3NZWB+6fHDU9boPEkcrRnad9e7n/RaXj70QPinD/ydGzOqPy8v8rCrdQcAdT1I=
+X-Received: by 2002:a17:90b:a17:: with SMTP id gg23mr29917684pjb.129.1608025697388;
+ Tue, 15 Dec 2020 01:48:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20201212003447.238474-1-linus.walleij@linaro.org>
- <X9cwahptmETQ5lkL@localhost> <CACRpkda5_JwCAB2TisyzdJgb395JmU1AfuDDX0gWTvEj7-Mamw@mail.gmail.com>
-In-Reply-To: <CACRpkda5_JwCAB2TisyzdJgb395JmU1AfuDDX0gWTvEj7-Mamw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Dec 2020 09:24:46 +0100
-Message-ID: <CAMuHMdXkjtyUsehpx42k+TSzQN2MARsKbrdooGc9JjOc5P-E4A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Disallow identical line names in the same chip
+References: <1607934255-52544-1-git-send-email-luojiaxing@huawei.com>
+ <1607934255-52544-2-git-send-email-luojiaxing@huawei.com> <CACRpkdZSQSCO3dWcjUZtUMDK+Jjdnc9ORxpR9qiopgMk-o=Ryg@mail.gmail.com>
+ <20201214165812.GL4077@smile.fi.intel.com> <CACRpkdYvBrqHZt28fyHD6F6a4ecbzvfGknpfwr8HFdtYodaYgg@mail.gmail.com>
+In-Reply-To: <CACRpkdYvBrqHZt28fyHD6F6a4ecbzvfGknpfwr8HFdtYodaYgg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 15 Dec 2020 11:49:05 +0200
+Message-ID: <CAHp75VcN-_neGnO0U4eceLi40cAE5xVYe69AKy63sxZkU+WUdg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: gpio-hisi: Add HiSilicon GPIO support
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Johan Hovold <johan@kernel.org>,
+Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
-
-On Mon, Dec 14, 2020 at 11:40 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Dec 14, 2020 at 10:29 AM Johan Hovold <johan@kernel.org> wrote:
-> > As I mentioned earlier, the not-globally unique warning only makes sense
-> > for cases where all names comes from something like devicetree, and we
-> > shouldn't warn if we plug in two identical USB devices that provide
-> > default line names.
+On Tue, Dec 15, 2020 at 12:37 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Dec 14, 2020 at 5:57 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Dec 14, 2020 at 10:11:23AM +0100, Linus Walleij wrote:
+> > > On Mon, Dec 14, 2020 at 9:24 AM Luo Jiaxing <luojiaxing@huawei.com> wrote:
+> > >
+> > > > This GPIO driver is for HiSilicon's ARM SoC.
+> > >
+> > > Patch applied, any further issues can certainly be fixed in-tree.
 > >
-> > Not sure it's even warranted to warn even if those default names collide
-> > with the names provided in devicetree. Perhaps best to just drop the
-> > flat-namespace assumption entirely and make sure gpiolib and the
-> > userspace library can handle that.
+> > I just sent two :-)
 >
-> You're right. (As usual.)
+> Thanks Andy!
 >
-> I dropped the global collision warning when applying.
+> Actually I kind like this in a way because then you also get some
+> credit for the heavy review work that you do on new drivers and
+> so often go uncredited.
 
-Commit 2cd64ae98f352873 ("gpiolib: Disallow identical line
-names in the same chip") still mentions the global collision warning
-in the comments:
+You are welcome!
 
-    Allow names to not be globally unique but warn about it
+> I'm sometimes tempted to even add "Co-developed-by" for the
+> vast improvements you bring up. (Like on my YAS530 driver.)
 
-Gr{oetje,eeting}s,
-
-                        Geert
+With the CdB tag the SoB must go (per documentation) and I can't give
+you the latter one for your contribution for obvious reasons. OTOH
+feel free to give credit in a free form in the cover letter / commit
+message if you think it's good to have.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
