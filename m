@@ -2,73 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49C4B2DB220
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 18:06:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E4C42DB224
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 18:06:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbgLORD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Dec 2020 12:03:26 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33569 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730346AbgLORDS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 12:03:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b24so2554296otj.0;
-        Tue, 15 Dec 2020 09:03:02 -0800 (PST)
+        id S1730274AbgLORDw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Dec 2020 12:03:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730242AbgLORDA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 12:03:00 -0500
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F0EC0617A7
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 09:02:20 -0800 (PST)
+Received: by mail-oi1-x242.google.com with SMTP id d203so2901297oia.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Dec 2020 09:02:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xxFeUjonFw77THjceoCtcx/rMZ97apnNhN3IhCP1UQI=;
+        b=aue75vfYUzY/GfGESi3vMLtB76kOfdkcAR4gi8MefVNWtK2XuHIhcA7QGhMSo7HOVQ
+         ozgUxbh8LnJONkVBu25itSz8lO7J6r6UVRi4CXL1BmrgG4rNv2C0kX3eu9wBqc58/5gD
+         MvlXH1cVJYPxYNeX4QImasF/53U1iXEnCnLFfPz6UF2ZjmE527Un+/Osa/X5MciaBSz1
+         3rUCgkIwIVrm6Ug2YtAvqSTZyUnMJJEwj6IVGaDqur/hRgcBrOASovJzHFOZxnHXKKMC
+         yX1PIZ3IJOxIkTMv3nHxkxAzlBpIHYYSN1OIVG7akvXKpsTUhDGOQxFqBFIIpMqghThC
+         IBAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bt+H5jotseL1AMdWInj5OVTGOVxIaxj288Kg6674s+0=;
-        b=JAOCZLi/GBvfeG2Tl96rE9LEDT6UiiQFQITN8BpH3U4FbFvwqmUjRCYA17NxvfOjDM
-         E0M4+Lx1ElHRZfHFTrdSIuv3gDW7rkW0rRYDRUK5LyfBrbwBc3YUa54qOODrCiEeZQH1
-         xlRHEi4AwybQH15LJ8mYmwfJOcKCdzAAqAd33jbCzn1BE/UwKbladEEOI5kRUzCqwOaA
-         I9rC7wx1wL4TOgD17ZToxn7lxAuUF+NMaib1iKCxOIiMPKusSNzQrwvn+GnnWNWaRaPF
-         xi0PIiB90oYtgQJPSbs0OD74xQWee5gaPoGMFvyyNIjijeB63MCtWtw31cF495tthTIQ
-         NGkg==
-X-Gm-Message-State: AOAM531QckImphE3ZA77kTuiNfotvvyHh/p7sgsqqzLQXCRZ7/aKYRtt
-        ftKe6OiGk8oGFXqmfjRbzw==
-X-Google-Smtp-Source: ABdhPJyxCd7bd9Gq18Mbbvm1/TAg7/UUpYW0JRnqRHkfgcbPovkbKGBBqx/OLXC/5bbU0V+ADwhFtg==
-X-Received: by 2002:a05:6830:1bc6:: with SMTP id v6mr23482893ota.33.1608051756044;
-        Tue, 15 Dec 2020 09:02:36 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m47sm4712650ooi.12.2020.12.15.09.02.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xxFeUjonFw77THjceoCtcx/rMZ97apnNhN3IhCP1UQI=;
+        b=I29MErb/PYXBqlfqOjrBz2kkz8rdjOru+dDlHLuCsPFn5jLLYN8N2uArJS7JXUCrgR
+         jbsVkkxydb+7G/krjwua8ubDMh98dTqbuQK1foqin3R8ChU/AvZpWwagD5ucQN0kuzN2
+         deFv48kHtEBXIw0iT+XWzI3JYsKk5I5Lvg/TAqd1vJRtsCJ58UcQEWaulwMc1kcVHOzX
+         zhOR+8uFSlcEfw0NfHw9+6lCZ+FcDIh81nfaK+C42vSWDqLvaZ40QypJUAa3zhbqJ7rl
+         v94A4zVybQlFradWpApa80sLYTTYgX+eStfSy+6HbgyOohFaVECAVSgSJ/bxyPPhMvv0
+         Kl5g==
+X-Gm-Message-State: AOAM531PEofMIKFwytUq7r+HgCUPMh93d4yjKl/0AsxeF5gFLuqHh3mk
+        DW+POtSY8rM94J28O75XxONilw==
+X-Google-Smtp-Source: ABdhPJzIoeziRWYSinQSimU0cSGVxm1mRIUH9ZoqSvLiLUAOedJx9Yh2rnnfP37j0rzfRSMTZHjGeA==
+X-Received: by 2002:aca:4c4f:: with SMTP id z76mr22331736oia.1.1608051739520;
+        Tue, 15 Dec 2020 09:02:19 -0800 (PST)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id s139sm5152887oih.10.2020.12.15.09.02.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 09:02:35 -0800 (PST)
-Received: (nullmailer pid 4027620 invoked by uid 1000);
-        Tue, 15 Dec 2020 17:02:34 -0000
-Date:   Tue, 15 Dec 2020 11:02:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, devel@driverdev.osuosl.org,
-        linux-gpio@vger.kernel.org, yanaijie@huawei.com,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: rt2880: properly redo bindings
-Message-ID: <20201215170234.GA4027561@robh.at.kernel.org>
-References: <20201213161721.6514-1-sergio.paracuellos@gmail.com>
- <20201213161721.6514-2-sergio.paracuellos@gmail.com>
+        Tue, 15 Dec 2020 09:02:18 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] gpiolib: Allow name duplicates of "" and "NC"
+Date:   Tue, 15 Dec 2020 09:03:08 -0800
+Message-Id: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201213161721.6514-2-sergio.paracuellos@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 13 Dec 2020 17:17:14 +0100, Sergio Paracuellos wrote:
-> When this bindings where applied there weren't already
-> reviewed and some old hacks was being used to properly
-> pass the schemas checks. This commits fix them up:
->  - Instead of using 'if-then' clause use '-pins$'.
->  - 'groups' and 'function' are included inside a new
->    '^(.*-)?pinmux$' node.
->  - compatible string is not an 'enum' but a 'const'.
->  - 'pinctrl-0' and 'pinctrl-names' removed since they are
->     used in consumer nodes.
-> 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  .../pinctrl/ralink,rt2880-pinmux.yaml         | 62 +++++++++----------
->  1 file changed, 28 insertions(+), 34 deletions(-)
-> 
+Not all GPIO pins are exposed to the world and this is typically
+described by not giving these lines particular names, commonly "" or
+"NC".
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+With the recent introduction of '2cd64ae98f35 ("gpiolib: Disallow
+identical line names in the same chip")' any gpiochip with multiple such
+pins will refuse to probe.
+
+Fix this by treating "" and "NC" as "no name specified" in
+gpio_name_to_desc()
+
+Fixes: 2cd64ae98f35 ("gpiolib: Disallow identical line names in the same chip")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+The introduction of 2cd64ae98f35 breaks pretty much all Qualcomm boards and
+grepping the DT tree indicates that other vendors will have the same problem.
+
+In addition to this the am335x-* boards will also needs "[NC]", "[ethernet]",
+"[emmc"], "[i2c0]", "[SYSBOOT]" and "[JTAG]" added to this list to allow
+booting v5.11 with the past and present dtb/dts files.
+
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index b3340ba68471..407ba79ae571 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -302,7 +302,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ 	struct gpio_device *gdev;
+ 	unsigned long flags;
+ 
+-	if (!name)
++	if (!name || !strcmp(name, "") || !strcmp(name, "NC"))
+ 		return NULL;
+ 
+ 	spin_lock_irqsave(&gpio_lock, flags);
+-- 
+2.29.2
+
