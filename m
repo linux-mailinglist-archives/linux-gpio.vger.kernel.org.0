@@ -2,197 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B765F2DA485
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 01:05:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB4442DA48E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 01:14:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgLOAEd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 19:04:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgLOAEb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 19:04:31 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C54CC061793
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 16:03:51 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id i7so2301240pgc.8
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 16:03:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=Y6HRdYbsoa5PySdybyBfhCapCUVZ7l6dBcE0w3MGMOI=;
-        b=hADusF3oEMkUnar9izsTv/+VrYnGK90pnhxNBaMYk1VVpKeXgmHx7dpbi1+RdlbpjK
-         /UvMPyzpmcEse/v3r+a/dCOp8sm/o1Z0fauqxaj1t0anecod3jpISu4eIfpNoXhrubk3
-         +t7KGiUtOBj0TCxn1wpeibO0/eP3vbrwqxXcW/zN8awzDY4yNkcWr1FzOMgm74ML8Bw9
-         Uz6YPs2EJkiLv7S2cy8j06TK+c6pArkSZxJUKk3O8MaRZbBKN7Hyv5i8IXAyKrgHF8hX
-         olDI2mskRcIbX6+U6x4vkswbROASBcYUEgGgy/WB6SZcC0E/mNVLFsGeRwZ8uOQ3wJGf
-         97Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=Y6HRdYbsoa5PySdybyBfhCapCUVZ7l6dBcE0w3MGMOI=;
-        b=DsBr1yJPE6BV1yRzkroD8RISQQHJvrXZwQSk4FI/rqbcdn2Hfkx7Aj5gvrCiah5wU9
-         HpD1CvrBclQ6Ga4DNC/Xvit75WcgpLHoyjEvjh7+KStaxJQELDZbMmegUM7cHprhAySM
-         TlBPkxjJb9X+6lfR2B0hfC1wErYbYUIIPgIM0V1LVnhBQLdrEcUMCkk7sIzqmHLNz3f7
-         /49CPo1tkeg/tCVS+5Kdre3tCu0LMnZSrpOoEI51YrxD5utRrLuw3TQtFisxluPXskTg
-         lG2T5J5XmgyR9ez2IQzPJU8V0ZNGa8CjpNWr3P2/8HjiqPbQ4t8mb1kEC3k/QJZfcCSl
-         3VIg==
-X-Gm-Message-State: AOAM530Fh/oBBMuy8VMIKD30gW/KsBxwbL1aMSjeoO70mr3qDQll9DFg
-        jxR1RBC4H6FN8QeMgN+WCbEGz92Co5nghg==
-X-Google-Smtp-Source: ABdhPJzWb4FAqf2LmTU56tflOBFEneKKlSL3ivT0LZFtUl4ZbXSYwEnwANMaEhbM00sC9Fnnx2BNwQ==
-X-Received: by 2002:a63:7d47:: with SMTP id m7mr26272001pgn.405.1607990630352;
-        Mon, 14 Dec 2020 16:03:50 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id a17sm18917368pgw.80.2020.12.14.16.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 16:03:49 -0800 (PST)
-Message-ID: <5fd7fd65.1c69fb81.7c867.8116@mx.google.com>
-Date:   Mon, 14 Dec 2020 16:03:49 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.10-rc4-93-ga2e5f9277f66
-X-Kernelci-Report-Type: build
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc4-93-ga2e5f9277f66)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+        id S1727448AbgLOANb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 19:13:31 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33169 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727393AbgLOANb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Dec 2020 19:13:31 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7131F5801AF;
+        Mon, 14 Dec 2020 19:12:24 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Mon, 14 Dec 2020 19:12:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=dllxipO8JT/5qcBD2+BfCaHxR11sVzk
+        Jmb++D51EVso=; b=ewcTi76yr6ufVEf4Ui1plZqNsQbXiKjNqfw4fez/Oa5YN69
+        WtH9wxbpHdswK24M2QyXtAHt0UtbYVGHomcel9r1oZtEQa9ZDJLgf+uZYdGtASjC
+        Ia7wdzCur6+F3zWpJQHlEuOaP6oJA6dASZR48CL/aZtY1AOwohDBkPHHhnI4JfmQ
+        dc/bhZaAoYrkGZ5tJ0YUrURweXivm7+/xAd1nwYkpFOknXClJ4YwqA8HeCyWIe6S
+        mFW84IQmQLt395E4qoHVIQZ9Pl3CUnof6DYcjBUI8bHUH7I/6R6Spt6Y7ALFy6iX
+        Qco9z2VRlJQse+Xq5+t9uVXr8m0CmOQpCUxUn7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=dllxip
+        O8JT/5qcBD2+BfCaHxR11sVzkJmb++D51EVso=; b=civb3tWtoCoCXcgxgHpr76
+        QO3YQHdQqdhQsajmuqMzNrKJE3BJuPgOs2g/5KgtMy0gYvNdZvRCvNQtmtpvegq3
+        AE3kE1pHskTxXiQqo7C7SRATC1MqXQ0t1WHX1/y285yvtElfqZvVRnJpgcg/JdjP
+        Llwdjg37/3gZuf6rqPvP9slN+d+D88tZ/ieJLcyL4Gj2+qkd16XALX76Ic6KeNR5
+        7IGmo/qvfVcAI5YXthK+NUgqTG6+uZmJ8gRBe/eMfTcCfB96tgEGE65HI+69/DAt
+        WDFZ88HlDn72cwJmtLJ4HHpBRvfBBtY2eo3949kdUg1kVhqzgvelrnYY92eC6n8g
+        ==
+X-ME-Sender: <xms:Zv_XX57alwmXvBr4PmGzFaQs5RRYXjI9A5j4CeBg9cqnxGA2I-E8wQ>
+    <xme:Zv_XX24lsFkEEah4BVQe8dMW3VOF58F-ohlVQEPTMcxnDGztoVB82uf5cSFtxrgxT
+    MhjqkUhvmYfQDcUxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekledgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
+    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:Zv_XXwccaU6qC8132oJZvS6VloKzQ4dj5ioWn5T2mZ1D_PpH1XREYA>
+    <xmx:Zv_XXyKlRv8-WKBjV7B_OTLjt4IRms7qiSCScXkm-KF-cys-4S4ydA>
+    <xmx:Zv_XX9KfDB2e1udMs2qVu0nMoKkMeVp8O6S_Mj6I8t1_KUs7PWDk9Q>
+    <xmx:aP_XX3AW1lAtzdjKIVvaW1JaJFxebiuimlWurXr6eD-rGV0_NxbehA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2A6C0E010E; Mon, 14 Dec 2020 19:12:20 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.1-61-gb52c239-fm-20201210.001-gb52c2396
+Mime-Version: 1.0
+Message-Id: <d6f83615-c9d1-4906-81e7-10528e963c94@www.fastmail.com>
+In-Reply-To: <HK0PR06MB3779F5B4B9629909DDF441F091C70@HK0PR06MB3779.apcprd06.prod.outlook.com>
+References: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
+ <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
+ <2e2d3a02-6677-4b0e-b538-d3130a3b20d1@www.fastmail.com>
+ <HK0PR06MB3779F5B4B9629909DDF441F091C70@HK0PR06MB3779.apcprd06.prod.outlook.com>
+Date:   Tue, 15 Dec 2020 10:42:01 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
+        "Rob Herring" <robh+dt@kernel.org>, "Joel Stanley" <joel@jms.id.au>
+Cc:     "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Corey Minyard" <minyard@acm.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc4=
--93-ga2e5f9277f66)
+Hi Chiawei,
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc4-93-ga2e5f9277f66/
+On Mon, 14 Dec 2020, at 13:14, ChiaWei Wang wrote:
+> Hi Andrew & Rob,
+> 
+> Do you have any suggestion on this patch?
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc4-93-ga2e5f9277f66
-Git Commit: a2e5f9277f66a89e2237d8d7cf0e99a819304f58
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+Rob hasn't responded, but I think it will be easier to get an Ack out of him if 
+we do a v2 of the binding so we're not breaking backwards-compatibility with 
+the current definition. Concretely:
 
-Warnings Detected:
+- compatible:   One of:                                                         
+                "aspeed,ast2400-lpc", "simple-mfd"
+                "aspeed,ast2500-lpc", "simple-mfd"
 
-arc:
+Becomes something like:
 
-arm64:
-    defconfig (gcc-8): 8 warnings
+- compatible:   One of:                                                         
+                "aspeed,ast2400-lpc-v2", "simple-mfd"
+                "aspeed,ast2500-lpc-v2", "simple-mfd"
 
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
+We can convert the in-tree devicetrees, immediately drop support for the 
+current binding in the drivers, and _only_ support v2 of the binding going 
+forward. That way your patches stay largely the same, the binding isn't 
+hamstrung as it is currently, and we're not trying to maintain code to support 
+the current binding definition - but we're also not pretending that old 
+devicetrees will work with newer kernels that only support the new binding 
+definition (which is the problem with your current patch series).
 
-i386:
+How does that sound?
 
-mips:
+As to how to implement this, I think we'll need to add some 
+of_device_is_compatible() checks in the relevant drivers to make sure that 
+they're using the new LPC binding, such as in 
+drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c before we fetch the regmap on line 
+2657.
 
-riscv:
+Sorry that this is dragging out a bit (and for the mess I made).
 
-x86_64:
+Cheers,
 
-
-Warnings summary:
-
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #size-cells (1) differs from / (2)
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #address-cells (1) differs from / (2)
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
- (1) differs from / (2)
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
-lls (1) differs from / (2)
-    1    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
-: /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
-    1    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
-: /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
-    1    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
-1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
-differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
-c/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
-    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
-c/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Andrew
