@@ -2,98 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EBDC2DAA6B
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 10:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C6FD2DAAE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 11:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgLOJtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Dec 2020 04:49:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
+        id S1728103AbgLOKaB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Dec 2020 05:30:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbgLOJtD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 04:49:03 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EF4C0617A6;
-        Tue, 15 Dec 2020 01:48:17 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id e2so3574097plt.12;
-        Tue, 15 Dec 2020 01:48:17 -0800 (PST)
+        with ESMTP id S1727618AbgLOK3y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 05:29:54 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B39C06179C;
+        Tue, 15 Dec 2020 02:29:02 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id c5so15662732wrp.6;
+        Tue, 15 Dec 2020 02:29:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ffzwJt/+wBy6lMGtbT+qsUuCwVx4/Ps6eQ4TPUtfj5w=;
-        b=NyCl81bipthfEmDO/eYeBRt+b0/Ae5P/69pNipdLzoA/yv7dK/Svbq5BSszLp6Lp6R
-         bkoJn4s8P1i8dT0xzPabvE5NsTaWBD7qPu6DybW6gLaId8uZ2Cp2HVCE17SfF0bRwhT6
-         LSWhi1tXZ5d3q8q/3kWti2WakSfSTqvJwz2OGqlkMcklTgzW2RlcgyNe8ifsdfCaEOU6
-         i+4ZUVB1mFuEvy9Kp7PR718GAZoc0S4M2Ws8bV5quGKoXfAM5gfslVgQx3pDaxE1bh8+
-         VsTg7fBLBE3HMH4j9p/IXb8SJsPMqqxP/+dEvsruI0HGCwgLfYAkdQp68NK+X0ZGqqc6
-         U7aQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bEPk2uGzECYAQJ4oI/j29UH0rIRPTZKl5uP1+LSK3t0=;
+        b=XwsRumAI61dONDNOV52HiUwTKEmlpOmfropbwQKjP4fTAgS2/tpIpiPaeRQ7J7mBSx
+         uObBrIiZBVdHrzDlAkdubBcDmbYSa7RkYHC2s46lAIquWeF9IKQcZZHUuBmHkoQusOJL
+         iLMMKC23AnY9esp0GRoPCSGODkz1g9MsxTYVe35d5x0WqcBry8xN57fEhecqzfIurVT0
+         43GCCrHxpxaj1rWi0SV+Dvb7B6/pwJsT8ugxpuoXhhu6qxf7pRnPe0EdYv3KkyQOgTLi
+         ewZkCCIzt+uw/0vT8/LHNFABgp6sAwjr8yDrbmDv/L0OyDkhv37T16yzBZ6xC2HS4268
+         m2Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ffzwJt/+wBy6lMGtbT+qsUuCwVx4/Ps6eQ4TPUtfj5w=;
-        b=OlslgY0e6UaXYlWjoHd4VKc4htgKr1BmuyUbCUJQ4vmwpifhTF1UTeXiQkToPNpF8g
-         GZ2lzP8uFV1AMD0atrCRJoRABMPriuiJwLkVBEp+EVaCmVqXeitBpDxcE1/lh9shUei/
-         3EaQSO/7qZBzoM83DTWg3Qbsz+MtSoIW6JHsap+CiMCcafe6rk9mwzKtkdROXQbn+tkI
-         HPDA1mbsBMgvp9Lm3kNvdfrfl1atuJ/lKxHhFnU3XR9FFc8BfYpVpbcCMZ+trrgnEySu
-         Luw9vVM0xv24K65Oee7pqRh6w/Y7WBEQEbN6HcL1InklATc5a+cb2A4/DCJRbESDf5H3
-         wtvQ==
-X-Gm-Message-State: AOAM530zu0Cz4a3lMfIWbD6euy7KUzeTp6Bz2xfZOGDrs1IX7WrNtvXE
-        RTGSrqpRrz4zUDVbmY+Ih4CfthbTxqT9NXpkM+I=
-X-Google-Smtp-Source: ABdhPJySHOXN1RWHB588qOl3V9AjE3NZWB+6fHDU9boPEkcrRnad9e7n/RaXj70QPinD/ydGzOqPy8v8rCrdQcAdT1I=
-X-Received: by 2002:a17:90b:a17:: with SMTP id gg23mr29917684pjb.129.1608025697388;
- Tue, 15 Dec 2020 01:48:17 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bEPk2uGzECYAQJ4oI/j29UH0rIRPTZKl5uP1+LSK3t0=;
+        b=oxO/gZ9UrHaMNTNQ0i06o1l8AC+TcPzQdu4SKKMNCPwuFLAEm6YpljZeIQVBfWzNos
+         RBhrtw8Ws5W3ptQ4zQXimXmcYy5CoSqstGYsMludn0IBzvrfX+rfL+KQ4pvXnUx0x/oD
+         latTCGL9h1vWQ0LsBklAOZ5pr9Lck8sfNLsEDPx0ivesoPDLu7ZaJeBoFUI2qeSjnG90
+         rHL3VT9Bbq/m+xeZHGUzZKd5DSoLkaebEqmHyLkY/1iWcewA9hPRK8rsBikYx2sqoYdR
+         2KLgn3R4bhpnfDmo0kKfKhfIcsJO0Recuu5JXaq0xan5jEqiYRUa707vE9hxBmg87n3U
+         8uWA==
+X-Gm-Message-State: AOAM531USwUOlK/Gwfwxpt8lvGpe5qVsARxO+u4jwcM2c23Edu+STfn9
+        LLiU2jEl/qV3Y/xfiMdddIQ=
+X-Google-Smtp-Source: ABdhPJxqL2E61WJUkFapZMQ/brMjvDKVvba9iJH8655/cxH4Jg3M4Y54HtGk5DAJ3wrzoPm5ZzAIvg==
+X-Received: by 2002:a5d:4d50:: with SMTP id a16mr25426154wru.43.1608028141652;
+        Tue, 15 Dec 2020 02:29:01 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.56])
+        by smtp.gmail.com with ESMTPSA id q15sm36200111wrw.75.2020.12.15.02.28.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Dec 2020 02:29:00 -0800 (PST)
+Subject: Re: [PATCH 13/18] ipu3-cio2: Add functionality allowing software_node
+ connections to sensors on platforms designed for Windows
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
+        lenb@kernel.org, gregkh@linuxfoundation.org,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, yong.zhi@intel.com, sakari.ailus@linux.intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-14-djrscally@gmail.com>
+ <20201130203551.GP4351@valkosipuli.retiisi.org.uk>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <5238fc28-350b-a785-0a33-edeba9dfb096@gmail.com>
+Date:   Tue, 15 Dec 2020 10:28:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1607934255-52544-1-git-send-email-luojiaxing@huawei.com>
- <1607934255-52544-2-git-send-email-luojiaxing@huawei.com> <CACRpkdZSQSCO3dWcjUZtUMDK+Jjdnc9ORxpR9qiopgMk-o=Ryg@mail.gmail.com>
- <20201214165812.GL4077@smile.fi.intel.com> <CACRpkdYvBrqHZt28fyHD6F6a4ecbzvfGknpfwr8HFdtYodaYgg@mail.gmail.com>
-In-Reply-To: <CACRpkdYvBrqHZt28fyHD6F6a4ecbzvfGknpfwr8HFdtYodaYgg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Dec 2020 11:49:05 +0200
-Message-ID: <CAHp75VcN-_neGnO0U4eceLi40cAE5xVYe69AKy63sxZkU+WUdg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] gpio: gpio-hisi: Add HiSilicon GPIO support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201130203551.GP4351@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 12:37 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Dec 14, 2020 at 5:57 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Dec 14, 2020 at 10:11:23AM +0100, Linus Walleij wrote:
-> > > On Mon, Dec 14, 2020 at 9:24 AM Luo Jiaxing <luojiaxing@huawei.com> wrote:
-> > >
-> > > > This GPIO driver is for HiSilicon's ARM SoC.
-> > >
-> > > Patch applied, any further issues can certainly be fixed in-tree.
-> >
-> > I just sent two :-)
->
-> Thanks Andy!
->
-> Actually I kind like this in a way because then you also get some
-> credit for the heavy review work that you do on new drivers and
-> so often go uncredited.
+Morning Sakari
 
-You are welcome!
+On 30/11/2020 20:35, Sakari Ailus wrote:
+>> +/*
+>> + * Extend this array with ACPI Hardware ID's of devices known to be working.
+>> + * Do not add a HID for a sensor that is not actually supported.
+>> + */
+>> +static const char * const cio2_supported_devices[] = {
+>> +	"INT33BE",
+>> +	"OVTI2680",
+> 
+> I guess we don't have the known-good frequencies for the CSI-2 bus in
+> firmware?
+> 
+> One option would be to put there what the drivers currently use. This
+> assumes the support for these devices is, well, somewhat opportunistic but
+> I guess there's no way around that right now at least.
+> 
+> As the systems are laptops, they're likely somewhat less prone to EMI
+> issues to begin with than mobile phones anyway.
 
-> I'm sometimes tempted to even add "Co-developed-by" for the
-> vast improvements you bring up. (Like on my YAS530 driver.)
+Just looking at this; we're currently using this with the ov2680 driver
+that's in mainline currently (with very minor tweaks) plus a
+hacked-into-roughly-working version of the atomisp-ov5693 driver (ACPI
+ID INT33BE = ov5693 physical device). Neither of those drivers lists any
+link frequencies, nor provides a link frequency control for v4l2 to work
+with.
 
-With the CdB tag the SoB must go (per documentation) and I can't give
-you the latter one for your contribution for obvious reasons. OTOH
-feel free to give credit in a free form in the cover letter / commit
-message if you think it's good to have.
+On the other hand, the ov5648 [1] and ov8865 [2] drivers which Paul has
+submitted recently, which we also want to be able to support, _do_
+include that. I can register the frequencies Paul's defined there as a
+link-frequencies property but this gives rise to two questions:
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+1. Is this _mandatory_? Do I need to be finding the link-frequencies for
+the OV2680 and OV5693 drivers too? Or can I skip that property where the
+driver doesn't handle it anyway. Seems to be working fine without
+controlling it in driver.
+2. Can I trust all the values in the drivers to be available on each
+platform? For example for the ov5648 Paul lists these as available:
+
+ 938static const s64 ov5648_link_freq_menu[] = {
+
+
+ 939        210000000,
+
+
+ 940        168000000,
+
+
+ 941};
+
+But can I safely register a link-frequencies property for both of those
+and trust that that'll work on all IPU3 platforms with an ov5648 in them?
+
+Thanks
+Dan
