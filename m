@@ -2,174 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59DCF2DA625
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 03:21:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28A742DA6C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 04:28:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgLOCTO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 14 Dec 2020 21:19:14 -0500
-Received: from mail-eopbgr1300117.outbound.protection.outlook.com ([40.107.130.117]:8992
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725964AbgLOCTK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 14 Dec 2020 21:19:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dXkNSDFvjX2n1P/7afZESx7Ps1NnouDyhTwjyxp2EkkhCYd8BsnNyNBuBVDtfjS7n9c9x8kfbdgrRhdGuZvxzT7DXcErpjcoeGdW7kq/66cUebAo34XW8zAy1BsEC19kGkEt9Y1LwF+LMD2vbla2WfdrVZplpAqVDzeNTBX+gwGpAvQ8bpjGy1T/vlzxUb4SiIRnLSrR8orZX9QgOZuwFn8UCAmjgNLozimSIKg7kpJ4oNgVAmK03sOb7WQwSlpJhAuUF6LY61WensVsYmVft1OhDM+loO3zM2s5KmZTok3R5cVa7nrakepJjXRBlPXwJR8RM72nxoZLJJJkmTURyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W2JzpdwsQ+lymTROqoPmN4oGjYldJY2LJQchGDNxzlg=;
- b=JAihtzjFujwmsrHdZf3BHoyHHhDKj4l2+ofcjs/5WXqSOMpwgXPRBG2+Jg/uq5bFLRgs2IMnURfS6xsHEE8+brRCsZUVuY/hG+qc3O2EnoNdlF+C0iN3ENX+eNQA4V9yUAH5UQU02KGuEwfNNZ/xB2q9TxGSt+E36Nx408ydfB9Ia53qENEo9nCOIPvm0B4lZ+IjOzdA7pT+s3ICNjZm34YLpAAExLc9Bw9sogcadJLHQWyasFtuTehQEN44JYSK58ydf9g6Mo7yu70Y0lotiCja8jA7Pcro0N480sDF21A5ZGd1pTymjfhyFBddoOSwJKL4BJUARxhjwU5c0rQ8DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-Received: from HK0PR06MB3779.apcprd06.prod.outlook.com (2603:1096:203:b8::10)
- by HK0PR06MB2996.apcprd06.prod.outlook.com (2603:1096:203:8d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.20; Tue, 15 Dec
- 2020 02:17:35 +0000
-Received: from HK0PR06MB3779.apcprd06.prod.outlook.com
- ([fe80::7061:73d9:50ae:b35e]) by HK0PR06MB3779.apcprd06.prod.outlook.com
- ([fe80::7061:73d9:50ae:b35e%7]) with mapi id 15.20.3654.025; Tue, 15 Dec 2020
- 02:17:34 +0000
-From:   ChiaWei Wang <chiawei_wang@aspeedtech.com>
-To:     Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>
-CC:     Ryan Chen <ryan_chen@aspeedtech.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1726825AbgLOD0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 22:26:44 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:40889 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726763AbgLOD0e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 14 Dec 2020 22:26:34 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A2A2B5802DF;
+        Mon, 14 Dec 2020 22:25:44 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 14 Dec 2020 22:25:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        to:cc:references:from:subject:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=O
+        poyrMA4zzWiGVw4tBShJdXeoCCLGa06Rcef+QPxYI0=; b=VguYu0HA6agSgVHrD
+        kjbr/VlUuHVAtMvscYSs/eUs1vWzmG8p3MyLT5B8QbaPojVPy7HzLkW6xECKiHUw
+        v/V7UcxhvNgVUh+Azn7Ei7VwnBVrNalixDWOxcRQGJadjBMEgH2Lzx1lKNQzWAhO
+        aV04LQZ7rfVkbsZNOmBYJw7+jOGkG/0TSZbD/wzDSNJvjsLluN/hUNf22L5qnVqW
+        o5L/NVLbmmQS+gClya5Fw8w5x77hEM9bYxoYaZAhTKT0Ous9JYWGHHt5o6ocvSYu
+        dls0ptU+TpDqiqLzknwLqaZ4oTuPEwtBYdvdGIebGhWr9mc9okNZSjUpslIhxFL2
+        VFc1g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=OpoyrMA4zzWiGVw4tBShJdXeoCCLGa06Rcef+QPxY
+        I0=; b=Qr8PzC8J4l2KkMYmwJSjP0L/4KSSl2QY/ClAYD1LBAoMcaYJcZx0ZGml9
+        hBnapeNDpXrwCqDhv3GZvA7Y7u7O5QV6jpoqekWA8/Qoa15vLPG1vcYmJAdB0KYC
+        IOWoH672Ch05pFWUJHBBPPseGBnb+HiqotXlVNJW1P95W66YvT5B90Y4vo2FC2EU
+        9RkWZ+ZrBywGK1G2G3KzgWam2mBytGUir4uVIaRVCpS3xIfqJ7Xb+hP53kDGMRTJ
+        +1Eh0l/r2yh1grEUc/7g9HRWdU++GLPBG+FdE+Wheu/jVRxU4s/AzHNQstHtxYCQ
+        kwoaLCQJ1ri+DvvBVNmbwZU3LHeqA==
+X-ME-Sender: <xms:tizYX6wBs1N4Odm9rjkPQOHvxXAtUEFA-nqTZC1tkvrtXm647qFkOg>
+    <xme:tizYX2RaPnHRsxL-gvJkf0kKOk6V1rD66qK02pnGflPVETyKNnh0lbYX_g3tekaVe
+    dWdZXoKOhNE_8n2fg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekledgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepvfhfhffukffffgggjggtgfesthekredttdefheenucfhrhhomhepufgrmhhu
+    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
+    ftrfgrthhtvghrnhepheejgefhudeffeetleeigefgheetveeiteeuffehhfffkeeuvdff
+    veffveetudefnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
+    nhgurdhorhhg
+X-ME-Proxy: <xmx:tizYX8WsUkAX7TdatK5IZqvJMytwpttdrQkEE_HpXMWgXgCpKD4wBQ>
+    <xmx:tizYXwj66wp8-NQAv9E6vxnRxP-ibn5pata7rIqBYtMHjrvFH8Odww>
+    <xmx:tizYX8BpwFSIf7UZNiIClho1beloNiofPNvv8alk4oFGd-Rvql35eQ>
+    <xmx:uCzYX44Y1BqTOe3gh43joKQomdlGQ6sFr07GY_S3xc1ONQST69VXBA>
+Received: from [70.135.148.151] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E205324005A;
+        Mon, 14 Dec 2020 22:25:41 -0500 (EST)
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
-Thread-Topic: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
-Thread-Index: AQHWq0XpiGvCIQ3se0K0W53Se1w+kan2LtDggAFodoCAABp7gA==
-Date:   Tue, 15 Dec 2020 02:17:34 +0000
-Message-ID: <HK0PR06MB3779995E6FA5D6B2DE16F73D91C60@HK0PR06MB3779.apcprd06.prod.outlook.com>
-References: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
- <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
- <2e2d3a02-6677-4b0e-b538-d3130a3b20d1@www.fastmail.com>
- <HK0PR06MB3779F5B4B9629909DDF441F091C70@HK0PR06MB3779.apcprd06.prod.outlook.com>
- <d6f83615-c9d1-4906-81e7-10528e963c94@www.fastmail.com>
-In-Reply-To: <d6f83615-c9d1-4906-81e7-10528e963c94@www.fastmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: aj.id.au; dkim=none (message not signed)
- header.d=none;aj.id.au; dmarc=none action=none header.from=aspeedtech.com;
-x-originating-ip: [211.20.114.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b63b2cb-3fc0-48f4-6e10-08d8a09f95da
-x-ms-traffictypediagnostic: HK0PR06MB2996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0PR06MB2996DDF4AC793C7D0DFEF02B91C60@HK0PR06MB2996.apcprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eTLJCBKnWoFoQ2C2Qc6E+d2i4ueZnZeOJLqciWCiNTKaLGQLhspTtjsAEEPJOP1B9ZILEjEiY8JLuHkpmI1AHalV2SHgtUdz5zzwkhmjPkcnjPBEINkPU9LzdN9gmGHbGhfn38ipwZmzDZQQR/DZlcm1YLqQ4qhIR7E4HRrLlAISCbM+j4tiF+t4e3q8YG0YZ47H1vlTlTltIJ5ZU1wQv1nT71cbLxDa/4MAE2tSh4qJW/YL7tzmQRc41hrj9fAF+7YzRnOVThXBoG8P0/P/FXaPBHIeaxklKmFIUuvtQsYtwAsNXIDM4Yqff/hbwzq9Fzo4LPijkcfXo+q4EzkCLw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3779.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(39840400004)(346002)(136003)(376002)(7696005)(55016002)(478600001)(8936002)(110136005)(316002)(71200400001)(6506007)(9686003)(4326008)(76116006)(54906003)(2906002)(86362001)(53546011)(66446008)(186003)(66556008)(5660300002)(26005)(55236004)(66946007)(64756008)(66476007)(33656002)(52536014)(7416002)(83380400001)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?4lbLBdfw7UmF1iZadqdTk3ZK+/Y/TEeUDf1Z5wBsJDktUR/zHWX2cpBWCe9h?=
- =?us-ascii?Q?sxCz1mjsz/6RPPBZcCd2R/I3VT/bnBYDTCJ9pWtn5dZMWkHlQF0N0lXCYjlF?=
- =?us-ascii?Q?gQvovQ27cF+vcvcfajafErcNjXCMr3Ah2KidMsBah8P35fx4L53HeM84O8yG?=
- =?us-ascii?Q?exvUGX3nJZhKrdQN1LlV2h02a2/IH+3eddqQBx/WrJMFEN+e5SceNB8MU81g?=
- =?us-ascii?Q?rJNQJ+DFvuP0AF44sJKmdAPLjEBfOr/iZbIKVfGcnHFgI/BLLFy9COmdzX5I?=
- =?us-ascii?Q?/XRBWHx1eclgxqsy9lpHkwk5/vMTUU8vJgD1ZfeS7/WJZD7lFAC65/S5eBHY?=
- =?us-ascii?Q?PMbFAx/tdFcwfEvDPNUPIBora24SIvjkpIeQE1ZIx0upoguv68U0ucC4jt/z?=
- =?us-ascii?Q?sNE2gpgrZOyrj3otVL32i+olqWy3dHjUlU8io7bJXfvwnU1ZUKlgRK1gOFcZ?=
- =?us-ascii?Q?iQcmXN8rBRtnk7MaN19VtVH80xuE0RbzjKcJnR59keQc7TRKnxsd1T2k+cUr?=
- =?us-ascii?Q?Fv+yFDiMsB9q/8C2edhaMQ0Y796z5RVi1zWdV0TsvjndCMbT+CXSWKpFW+6A?=
- =?us-ascii?Q?cBeRwmNBCQ8s9Uz6F1bXhjMTAMbnh7a3+wu80DA+6t2YOkXnRCL+CgXsVg9k?=
- =?us-ascii?Q?GJmNtMPuIMzTecs3edJFGSL0XFS8kV80H5Rro4rjC9fNEc+piXDPoPMnVhMN?=
- =?us-ascii?Q?avE8h85K0pw6C3HNuHwQGOjqLCaA1FETVWPoWQh1Mu5+xyqrR6Vnm4CP7lA/?=
- =?us-ascii?Q?1D3QyUBnloE/b+FE4rtZZbgC/+u2ypiBTqT2/MyrBu5W8o8qDgJhFTkaWrBH?=
- =?us-ascii?Q?33G6cMM2WO7B2lw2C5R/1l4ej11IOjsdsABZhraGHTa0ivOyjUll/gbvwjZU?=
- =?us-ascii?Q?ywsrZctfplJpUc7ZueI2wTyBhgF0DpR02DQlmtpbglbxvumAgrja3pv0nRPS?=
- =?us-ascii?Q?TL2YFdC+QSxPcjQv2J0gtZwS9wVpb1bef0beAbvF8Fg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+References: <20201213235506.25201-1-samuel@sholland.org>
+ <20201213235506.25201-2-samuel@sholland.org>
+ <20201214145730.iz3tc4nasqwq6tym@gilmour>
+From:   Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: h6-r: Add R_APB2_RSB clock and reset
+Message-ID: <8de2e0dc-465f-b4a8-bec9-763f1dee06f1@sholland.org>
+Date:   Mon, 14 Dec 2020 21:25:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux ppc64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3779.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b63b2cb-3fc0-48f4-6e10-08d8a09f95da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2020 02:17:34.4741
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uqeRg7NZpe8ch3INpnUgmbC7UdNSbzH+YTjYkE1aBzQ5diaq+abROxkpPI+ef0N8PbAomSvh18jYi7oCmJQTII+VZ+nhyWc06biuGLaBk5Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB2996
+In-Reply-To: <20201214145730.iz3tc4nasqwq6tym@gilmour>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andrew,
+On 12/14/20 8:57 AM, Maxime Ripard wrote:
+> Hi Samuel,
+> 
+> On Sun, Dec 13, 2020 at 05:55:03PM -0600, Samuel Holland wrote:
+>> While no information about the H6 RSB controller is included in the
+>> datasheet or manual, the vendor BSP and power management blob both
+>> reference the RSB clock parent and register address. These values were
+>> verified by experimentation.
+>>
+>> Since this clock/reset are added late, the specifier is added at the end
+>> to maintain the existing DT binding. The code is kept in register order.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> ---
+>>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c      | 5 +++++
+>>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h      | 2 +-
+>>  include/dt-bindings/clock/sun50i-h6-r-ccu.h | 1 +
+>>  include/dt-bindings/reset/sun50i-h6-r-ccu.h | 1 +
+>>  4 files changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+>> index 50f8d1bc7046..56e351b513f3 100644
+>> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+>> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+>> @@ -91,6 +91,8 @@ static SUNXI_CCU_GATE(r_apb2_uart_clk,	"r-apb2-uart",	"r-apb2",
+>>  		      0x18c, BIT(0), 0);
+>>  static SUNXI_CCU_GATE(r_apb2_i2c_clk,	"r-apb2-i2c",	"r-apb2",
+>>  		      0x19c, BIT(0), 0);
+>> +static SUNXI_CCU_GATE(r_apb2_rsb_clk,	"r-apb2-rsb",	"r-apb2",
+>> +		      0x1bc, BIT(0), 0);
+>>  static SUNXI_CCU_GATE(r_apb1_ir_clk,	"r-apb1-ir",	"r-apb1",
+>>  		      0x1cc, BIT(0), 0);
+>>  static SUNXI_CCU_GATE(r_apb1_w1_clk,	"r-apb1-w1",	"r-apb1",
+>> @@ -130,6 +132,7 @@ static struct ccu_common *sun50i_h6_r_ccu_clks[] = {
+>>  	&r_apb1_pwm_clk.common,
+>>  	&r_apb2_uart_clk.common,
+>>  	&r_apb2_i2c_clk.common,
+>> +	&r_apb2_rsb_clk.common,
+>>  	&r_apb1_ir_clk.common,
+>>  	&r_apb1_w1_clk.common,
+>>  	&ir_clk.common,
+>> @@ -147,6 +150,7 @@ static struct clk_hw_onecell_data sun50i_h6_r_hw_clks = {
+>>  		[CLK_R_APB1_PWM]	= &r_apb1_pwm_clk.common.hw,
+>>  		[CLK_R_APB2_UART]	= &r_apb2_uart_clk.common.hw,
+>>  		[CLK_R_APB2_I2C]	= &r_apb2_i2c_clk.common.hw,
+>> +		[CLK_R_APB2_RSB]	= &r_apb2_rsb_clk.common.hw,
+>>  		[CLK_R_APB1_IR]		= &r_apb1_ir_clk.common.hw,
+>>  		[CLK_R_APB1_W1]		= &r_apb1_w1_clk.common.hw,
+>>  		[CLK_IR]		= &ir_clk.common.hw,
+>> @@ -161,6 +165,7 @@ static struct ccu_reset_map sun50i_h6_r_ccu_resets[] = {
+>>  	[RST_R_APB1_PWM]	=  { 0x13c, BIT(16) },
+>>  	[RST_R_APB2_UART]	=  { 0x18c, BIT(16) },
+>>  	[RST_R_APB2_I2C]	=  { 0x19c, BIT(16) },
+>> +	[RST_R_APB2_RSB]	=  { 0x1bc, BIT(16) },
+>>  	[RST_R_APB1_IR]		=  { 0x1cc, BIT(16) },
+>>  	[RST_R_APB1_W1]		=  { 0x1ec, BIT(16) },
+>>  };
+>> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
+>> index 782117dc0b28..7e290b840803 100644
+>> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
+>> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
+>> @@ -14,6 +14,6 @@
+>>  
+>>  #define CLK_R_APB2	3
+>>  
+>> -#define CLK_NUMBER	(CLK_W1 + 1)
+>> +#define CLK_NUMBER	(CLK_R_APB2_RSB + 1)
+>>  
+>>  #endif /* _CCU_SUN50I_H6_R_H */
+>> diff --git a/include/dt-bindings/clock/sun50i-h6-r-ccu.h b/include/dt-bindings/clock/sun50i-h6-r-ccu.h
+>> index 76136132a13e..f46ec03848ca 100644
+>> --- a/include/dt-bindings/clock/sun50i-h6-r-ccu.h
+>> +++ b/include/dt-bindings/clock/sun50i-h6-r-ccu.h
+>> @@ -15,6 +15,7 @@
+>>  #define CLK_R_APB1_PWM		6
+>>  #define CLK_R_APB2_UART		7
+>>  #define CLK_R_APB2_I2C		8
+>> +#define CLK_R_APB2_RSB		13
+>>  #define CLK_R_APB1_IR		9
+>>  #define CLK_R_APB1_W1		10
+>>  
+>> diff --git a/include/dt-bindings/reset/sun50i-h6-r-ccu.h b/include/dt-bindings/reset/sun50i-h6-r-ccu.h
+>> index 01c84dba49a4..6fe199a7969d 100644
+>> --- a/include/dt-bindings/reset/sun50i-h6-r-ccu.h
+>> +++ b/include/dt-bindings/reset/sun50i-h6-r-ccu.h
+>> @@ -11,6 +11,7 @@
+>>  #define RST_R_APB1_PWM		2
+>>  #define RST_R_APB2_UART		3
+>>  #define RST_R_APB2_I2C		4
+>> +#define RST_R_APB2_RSB		7
+>>  #define RST_R_APB1_IR		5
+>>  #define RST_R_APB1_W1		6
+> 
+> I think for the clock and reset binding, we'll want to sort by number.
+> It's fairly easy to miss otherwise and if we end up adding another one
+> it wouldn't be far fetched to assume the same indices would be used
 
-> -----Original Message-----
-> From: Andrew Jeffery <andrew@aj.id.au>
-> Sent: Tuesday, December 15, 2020 8:12 AM
-> To: ChiaWei Wang <chiawei_wang@aspeedtech.com>; Rob Herring
-> <robh+dt@kernel.org>; Joel Stanley <joel@jms.id.au>
-> Cc: Ryan Chen <ryan_chen@aspeedtech.com>; Lee Jones
-> <lee.jones@linaro.org>; Corey Minyard <minyard@acm.org>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Linus
-> Walleij <linus.walleij@linaro.org>; Haiyue Wang
-> <haiyue.wang@linux.intel.com>; linux-arm-kernel@lists.infradead.org;
-> linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org;
-> openbmc@lists.ozlabs.org; linux-gpio@vger.kernel.org
-> Subject: Re: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
-> 
-> Hi Chiawei,
-> 
-> On Mon, 14 Dec 2020, at 13:14, ChiaWei Wang wrote:
-> > Hi Andrew & Rob,
-> >
-> > Do you have any suggestion on this patch?
-> 
-> Rob hasn't responded, but I think it will be easier to get an Ack out of him if we
-> do a v2 of the binding so we're not breaking backwards-compatibility with the
-> current definition. Concretely:
-> 
-> - compatible:   One of:
->                 "aspeed,ast2400-lpc", "simple-mfd"
->                 "aspeed,ast2500-lpc", "simple-mfd"
-> 
-> Becomes something like:
-> 
-> - compatible:   One of:
->                 "aspeed,ast2400-lpc-v2", "simple-mfd"
->                 "aspeed,ast2500-lpc-v2", "simple-mfd"
-> 
-> We can convert the in-tree devicetrees, immediately drop support for the
-> current binding in the drivers, and _only_ support v2 of the binding going
-> forward. That way your patches stay largely the same, the binding isn't
-> hamstrung as it is currently, and we're not trying to maintain code to support
-> the current binding definition - but we're also not pretending that old
-> devicetrees will work with newer kernels that only support the new binding
-> definition (which is the problem with your current patch series).
-> 
-> How does that sound?
-Sounds good. The v2 binding string should be a notification to sync both the new device tree and the new drivers.
-I will prepare a v3 patch with this change and the commit reordering suggested.
+I think GCC would complain about the duplicate array initialization in
+the driver, but I can move them for v2.
 
-Thanks,
-Chiawei
-
-> 
-> As to how to implement this, I think we'll need to add some
-> of_device_is_compatible() checks in the relevant drivers to make sure that
-> they're using the new LPC binding, such as in
-> drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c before we fetch the regmap on line
-> 2657.
-> 
-> Sorry that this is dragging out a bit (and for the mess I made).
-> 
-> Cheers,
-> 
-> Andrew
+Cheers,
+Samuel
