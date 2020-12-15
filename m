@@ -2,99 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 363072DB0E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 17:08:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42ED02DB0E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 17:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbgLOQDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Dec 2020 11:03:35 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:41631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730564AbgLOQDd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 11:03:33 -0500
-Received: from [192.168.1.155] ([95.118.67.37]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MVNJ3-1kiIDQ2Tvr-00SNys; Tue, 15 Dec 2020 17:00:15 +0100
-Subject: Re: [RFC PATCH] RFC: drivers: gpio: helper for generic pin IRQ
- handling
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        joyce.ooi@intel.com, Andrew Jeffery <andrew@aj.id.au>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>, orsonzhai@gmail.com,
-        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        Andy Shevchenko <andy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-References: <20201208141429.8836-1-info@metux.net>
- <CAHp75VfMKmJ074R2-04be0Ag6OuKcY=_xhhbRKsL2D0H8hZZLg@mail.gmail.com>
- <CAHp75VfOjb4Rfo9yPmwEYUDbaPXNjfGs6goM27ZnLdAMtiU+jA@mail.gmail.com>
- <0c16ab33-f87f-b32d-53d0-a44a5fecd6dc@ti.com>
- <710efa0f-063e-8a9e-1c3f-49337506b044@metux.net>
- <ff1dcd9a-eb83-2cb5-30d3-b25976a227ab@ti.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <333a4bab-682c-6f5d-f24e-3f9ebe77f536@metux.net>
-Date:   Tue, 15 Dec 2020 17:00:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1730578AbgLOQDc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Dec 2020 11:03:32 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42091 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730563AbgLOQD2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Dec 2020 11:03:28 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l200so23812115oig.9;
+        Tue, 15 Dec 2020 08:03:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M74G11DG5L3kp728ftqWQrc2Nnwi3IabkdW+3k3DW4Y=;
+        b=sDvkOLTVh7UYViuerStexZ2BkXzafzQPv/Hhb6tX3tnVCy5G65r6ECHKpCJuqu5pJf
+         68XejS1xeZQ1t0sQvrZcjeRVzOkKWDp2Vyhx+paSZMDMIvv4fV4SUkc/HojeB8XN6qJQ
+         Wzn6oavAsg+oSJ2FCbESZf9KZik+4ZF8O1wnqR/6fHz3a2K3uLaA3To0smyBK6KFDwBZ
+         fstkupTrjx7wal+fPjO6y+WnY38kxXV1PN9MsqrFL61K8lWtkaLS+RRpClZCrFBeAIsT
+         ULScNg5XkqG4PictjO+BZqADknDZxcfHQXlK+XBURp6NBCtKmKC1BS0p5EWrUZWr8ApE
+         yXhQ==
+X-Gm-Message-State: AOAM532gaSCxbQcue3lX0MXb+ejN+P/adJqqGs7xXXKG17z/9E9Qdxfm
+        jHMP0JQjph5YKqjIVJziwCH7SCAySTGLI9BF1x0=
+X-Google-Smtp-Source: ABdhPJy9KYkFx5Xrnt2k21IcyubPxZNIw8seYfxIs/CHG8xTfxvbOStTR2z/tTjRoCKUFBg1/hmqno5aJD0Eii1/Zm0=
+X-Received: by 2002:aca:4b16:: with SMTP id y22mr21761923oia.148.1608048167393;
+ Tue, 15 Dec 2020 08:02:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ff1dcd9a-eb83-2cb5-30d3-b25976a227ab@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KaHnossIs7UrduZo3pjYr+NreicbYF1LWGdn05LD3iLKIC8rpr9
- +SdNCw4pc1hbvsh6MzkKKovEoq5d6zPPHmSC4kMUfQE/Ope6s9pDhsoAZJTSlDZZ2UTIOzQ
- JWmtqwyUGa2Wn0vi/8g40YdLuzqCnknada7G071RteFF9cBizKocLk/0udQ2CZl1BqoDcp3
- ZMh+9d2pJSDDrSTFDmS7A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZyuPSvaqdx4=:Nliv3YBphcN+6f7I458/jJ
- 2UXxp2WstEI39g22OXPrmkiT1tkd2DUgyCuzJXS/ljoFsSNYHPxrUCa0Ykv05itbb0o6vrPNq
- w8xju8TQzH5YnnPPpIXaHkZU+yOd0QWdSVemXhAodYLFBqv6xiaeR4Ri3U8ZBiHYQzstAbm5U
- m/d/JewQJiJZGg7onSjmZWRPUsS2bMDtqiOfIw8R+RF37E7smKg3JCt0mPvPNZcc1ne8F9xLs
- 272mc135uLUHcr63EVa1+7J5/P2YQ/ErzZj+STUtYBzRgTUbfdlr5+WFw3kYwsSB35xidPCnw
- xzhLJ//lxJC5I6r1qA0DZ44RgpPZNXl0OKhtNhAH5LGJ5BvGHWmXZRFI+NUnwqMtW4g9u5MR9
- X74WJL9U8TPj/yt/Rmd48SVeNLmAWQxCcsscZlzEyQ7huf+/7POner1UJ4q6H
+References: <1607686060-17448-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1607686060-17448-4-git-send-email-yoshihiro.shimoda.uh@renesas.com> <cbb8c9b1884ea5e535bcafda1218b941bd665c21.camel@fi.rohmeurope.com>
+In-Reply-To: <cbb8c9b1884ea5e535bcafda1218b941bd665c21.camel@fi.rohmeurope.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Dec 2020 17:02:36 +0100
+Message-ID: <CAMuHMdVgo1fuY9jPpxUJiCOmN4Ahs7YXddzUfKH+4106i1xiuA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] regulator: bd9571mwv: rid of using struct bd9571mwv
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "khiem.nguyen.xt@renesas.com" <khiem.nguyen.xt@renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10.12.20 16:40, Grygorii Strashko wrote:
+Hi Matti,
 
->> a) consolidating repeated patterns (eg. calling the actual irq handling)
->>     into gpiolib, (and later possibly use more fields already existing in
->>     struct gpio_chip for irq handling)
-> 
-> Even if there is some pattern It doesn't mean consolidation is always
-> reasonable.
-> one of the things to think about is compiler optimization and will/will
-> not this change
-> add additional
+On Fri, Dec 11, 2020 at 3:03 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> On Fri, 2020-12-11 at 20:27 +0900, Yoshihiro Shimoda wrote:
+> > To simplify this driver, use dev_get_regmap() and
+> > rid of using struct bd9571mwv.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  drivers/regulator/bd9571mwv-regulator.c | 49 +++++++++++++++++----
+> > ------------
+> >  1 file changed, 26 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/regulator/bd9571mwv-regulator.c
+> > b/drivers/regulator/bd9571mwv-regulator.c
+> > index e690c2c..02120b0 100644
+> > --- a/drivers/regulator/bd9571mwv-regulator.c
+> > +++ b/drivers/regulator/bd9571mwv-regulator.c
+> > @@ -17,7 +17,7 @@
+> >  #include <linux/mfd/bd9571mwv.h>
+> >
+> >  struct bd9571mwv_reg {
+> > -     struct bd9571mwv *bd;
+> > +     struct regmap *regmap;
+>
+> As a 'nit':
+> I might consider adding the dev pointer here to avoid extra argument
+> with all the bkup_mode functions below. (just pass this struct and
+> mode). But that's only my preference - feel free to ignore this comment
+> if patch is Ok to Mark, Marek & Others :)
 
-I dont think the compiler could optimize-out much of the replaced code.
-Yes, there's an additional call - but does it really matter so much ?
+Struct regmap already contains a struct device pointer, but that's internal
+to regmap.
 
-If we drop the dev_warn() call, the gpiochip_handle_irq() function can
-be made inline, so quite no extra costs.
+Perhaps adding a regmap_device() helper to retrieve the device pointer
+might be worthwhile?
+Or a regmap_err() helper to print error messages?
 
+>
+> Overall, looks good to me :)
+> Reviewed-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+>
+> >
+> >       /* DDR Backup Power */
+> >       u8 bkup_mode_cnt_keepon;        /* from "rohm,ddr-backup-power" */
+> > @@ -137,26 +137,30 @@ static const struct regulator_desc regulators[]
+> > = {
+> >  };
+> >
+> >  #ifdef CONFIG_PM_SLEEP
+> > -static int bd9571mwv_bkup_mode_read(struct bd9571mwv *bd, unsigned
+> > int *mode)
+> > +static int bd9571mwv_bkup_mode_read(struct device * dev,
+> > +                                 struct bd9571mwv_reg *bdreg,
+> > +                                 unsigned int *mode)
+> >  {
+> >       int ret;
+> >
+> > -     ret = regmap_read(bd->regmap, BD9571MWV_BKUP_MODE_CNT, mode);
+> > +     ret = regmap_read(bdreg->regmap, BD9571MWV_BKUP_MODE_CNT,
+> > mode);
+> >       if (ret) {
+> > -             dev_err(bd->dev, "failed to read backup mode (%d)\n",
+> > ret);
+> > +             dev_err(dev, "failed to read backup mode (%d)\n", ret);
+> >               return ret;
+> >       }
 
---mtx
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
