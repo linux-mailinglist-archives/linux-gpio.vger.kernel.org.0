@@ -2,128 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB4442DA48E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 01:14:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95D442DA50C
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Dec 2020 01:49:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgLOANb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Dec 2020 19:13:31 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33169 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727393AbgLOANb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 14 Dec 2020 19:13:31 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7131F5801AF;
-        Mon, 14 Dec 2020 19:12:24 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Mon, 14 Dec 2020 19:12:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=dllxipO8JT/5qcBD2+BfCaHxR11sVzk
-        Jmb++D51EVso=; b=ewcTi76yr6ufVEf4Ui1plZqNsQbXiKjNqfw4fez/Oa5YN69
-        WtH9wxbpHdswK24M2QyXtAHt0UtbYVGHomcel9r1oZtEQa9ZDJLgf+uZYdGtASjC
-        Ia7wdzCur6+F3zWpJQHlEuOaP6oJA6dASZR48CL/aZtY1AOwohDBkPHHhnI4JfmQ
-        dc/bhZaAoYrkGZ5tJ0YUrURweXivm7+/xAd1nwYkpFOknXClJ4YwqA8HeCyWIe6S
-        mFW84IQmQLt395E4qoHVIQZ9Pl3CUnof6DYcjBUI8bHUH7I/6R6Spt6Y7ALFy6iX
-        Qco9z2VRlJQse+Xq5+t9uVXr8m0CmOQpCUxUn7A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=dllxip
-        O8JT/5qcBD2+BfCaHxR11sVzkJmb++D51EVso=; b=civb3tWtoCoCXcgxgHpr76
-        QO3YQHdQqdhQsajmuqMzNrKJE3BJuPgOs2g/5KgtMy0gYvNdZvRCvNQtmtpvegq3
-        AE3kE1pHskTxXiQqo7C7SRATC1MqXQ0t1WHX1/y285yvtElfqZvVRnJpgcg/JdjP
-        Llwdjg37/3gZuf6rqPvP9slN+d+D88tZ/ieJLcyL4Gj2+qkd16XALX76Ic6KeNR5
-        7IGmo/qvfVcAI5YXthK+NUgqTG6+uZmJ8gRBe/eMfTcCfB96tgEGE65HI+69/DAt
-        WDFZ88HlDn72cwJmtLJ4HHpBRvfBBtY2eo3949kdUg1kVhqzgvelrnYY92eC6n8g
-        ==
-X-ME-Sender: <xms:Zv_XX57alwmXvBr4PmGzFaQs5RRYXjI9A5j4CeBg9cqnxGA2I-E8wQ>
-    <xme:Zv_XX24lsFkEEah4BVQe8dMW3VOF58F-ohlVQEPTMcxnDGztoVB82uf5cSFtxrgxT
-    MhjqkUhvmYfQDcUxg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudekledgvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
-    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:Zv_XXwccaU6qC8132oJZvS6VloKzQ4dj5ioWn5T2mZ1D_PpH1XREYA>
-    <xmx:Zv_XXyKlRv8-WKBjV7B_OTLjt4IRms7qiSCScXkm-KF-cys-4S4ydA>
-    <xmx:Zv_XX9KfDB2e1udMs2qVu0nMoKkMeVp8O6S_Mj6I8t1_KUs7PWDk9Q>
-    <xmx:aP_XX3AW1lAtzdjKIVvaW1JaJFxebiuimlWurXr6eD-rGV0_NxbehA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2A6C0E010E; Mon, 14 Dec 2020 19:12:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.1-61-gb52c239-fm-20201210.001-gb52c2396
-Mime-Version: 1.0
-Message-Id: <d6f83615-c9d1-4906-81e7-10528e963c94@www.fastmail.com>
-In-Reply-To: <HK0PR06MB3779F5B4B9629909DDF441F091C70@HK0PR06MB3779.apcprd06.prod.outlook.com>
-References: <20201005082806.28899-1-chiawei_wang@aspeedtech.com>
- <20201005082806.28899-6-chiawei_wang@aspeedtech.com>
- <2e2d3a02-6677-4b0e-b538-d3130a3b20d1@www.fastmail.com>
- <HK0PR06MB3779F5B4B9629909DDF441F091C70@HK0PR06MB3779.apcprd06.prod.outlook.com>
-Date:   Tue, 15 Dec 2020 10:42:01 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        "Rob Herring" <robh+dt@kernel.org>, "Joel Stanley" <joel@jms.id.au>
-Cc:     "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Corey Minyard" <minyard@acm.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: aspeed-lpc: Remove LPC partitioning
-Content-Type: text/plain
+        id S1726101AbgLOAtM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Dec 2020 19:49:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgLOAtL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Dec 2020 19:49:11 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C711EC061793
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 16:48:31 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id w5so13290064pgj.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Dec 2020 16:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=e0myrLJcQz7caqND4vbM9q9BCltIaFplPQDLKlpy3yU=;
+        b=zF0syr71iuUHGNgv1mXYN17AaS8L8yV7twus9+LtwXNA77xBmjOQUqze22+ae9NQUA
+         wIsaPQUCqKE8fqNOBd9jUjolzdDh9MLTmqp9V7K5glqGvQxA8AJ6rFmV6oi8wZ8QDOEw
+         xEEQaKWzDOmxr48Ck6cCHJKZQjJqyLrDdXg/LoZAt8lV9GRyM+ZXanerXOaidABL71qp
+         aLESCFhf+wQDoR84C/XI5UlDzCHFOSZFi9iR/ZkjFX/EFOUjZKJbJFkacuERixlREp/X
+         bTLyHr314W97EknMBtEJ8ylWb+elZqbGDjf/jT/yRGOML1NhO6dV89JZ3VdjdNPaLXB9
+         /h+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=e0myrLJcQz7caqND4vbM9q9BCltIaFplPQDLKlpy3yU=;
+        b=GeMPS1r8u4sw3LpyogGfTBW2pURfPA6gednuf+3G1OQt4NiBhEpgklq6RVEY6PHksS
+         muxJrASNN3MjDZvxe0dKQlwOge43xdfhpPBmMkd3aTwAY7CmtPdwC6RSJ1iKxvjhhuNm
+         2ZUQhdptMJd14zSQLsDOuk9Zy6VY2NBKZo1R2VpKdudC44dx1BygiFzSRNRPrDHMbZGH
+         rwKpEUsIFpHVOjr/RkR2jI3NpuTpwZ8dfurGlLW+b6OEibWShXuCbTwMZe9T2ubwtoLH
+         Yfs9MBw75Civ9wZlQ2OA2QVrihy1FQR2j22ZaG6XyIcz8A5iJ0JkUohNrBqIIUIs+hZR
+         TvDA==
+X-Gm-Message-State: AOAM531fyMCQQpebEKk4fIyYZT94nmT9d7sgzmqERYK8QTnnbaDDIapG
+        rsgU3BMys9G43Agt+YF/qPGdkfkZIyKs3w==
+X-Google-Smtp-Source: ABdhPJypr8TLSghXnYrUHpdiP7HnvdF3Ze7lRQYBtpYBtfhR0b0ghXgTla6AP/A/PvzDUbTx0q6PnA==
+X-Received: by 2002:a63:c20e:: with SMTP id b14mr7568460pgd.363.1607993311080;
+        Mon, 14 Dec 2020 16:48:31 -0800 (PST)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id w131sm22002221pfc.46.2020.12.14.16.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Dec 2020 16:48:30 -0800 (PST)
+Message-ID: <5fd807de.1c69fb81.bbcf9.d91c@mx.google.com>
+Date:   Mon, 14 Dec 2020 16:48:30 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.10-rc4-93-ga2e5f9277f66
+X-Kernelci-Report-Type: test
+Subject: linusw/for-next baseline: 74 runs,
+ 1 regressions (v5.10-rc4-93-ga2e5f9277f66)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Chiawei,
+linusw/for-next baseline: 74 runs, 1 regressions (v5.10-rc4-93-ga2e5f9277f6=
+6)
 
-On Mon, 14 Dec 2020, at 13:14, ChiaWei Wang wrote:
-> Hi Andrew & Rob,
-> 
-> Do you have any suggestion on this patch?
+Regressions Summary
+-------------------
 
-Rob hasn't responded, but I think it will be easier to get an Ack out of him if 
-we do a v2 of the binding so we're not breaking backwards-compatibility with 
-the current definition. Concretely:
+platform   | arch  | lab     | compiler | defconfig | regressions
+-----------+-------+---------+----------+-----------+------------
+imx8mp-evk | arm64 | lab-nxp | gcc-8    | defconfig | 1          =
 
-- compatible:   One of:                                                         
-                "aspeed,ast2400-lpc", "simple-mfd"
-                "aspeed,ast2500-lpc", "simple-mfd"
 
-Becomes something like:
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.=
+10-rc4-93-ga2e5f9277f66/plan/baseline/
 
-- compatible:   One of:                                                         
-                "aspeed,ast2400-lpc-v2", "simple-mfd"
-                "aspeed,ast2500-lpc-v2", "simple-mfd"
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: v5.10-rc4-93-ga2e5f9277f66
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      a2e5f9277f66a89e2237d8d7cf0e99a819304f58 =
 
-We can convert the in-tree devicetrees, immediately drop support for the 
-current binding in the drivers, and _only_ support v2 of the binding going 
-forward. That way your patches stay largely the same, the binding isn't 
-hamstrung as it is currently, and we're not trying to maintain code to support 
-the current binding definition - but we're also not pretending that old 
-devicetrees will work with newer kernels that only support the new binding 
-definition (which is the problem with your current patch series).
 
-How does that sound?
 
-As to how to implement this, I think we'll need to add some 
-of_device_is_compatible() checks in the relevant drivers to make sure that 
-they're using the new LPC binding, such as in 
-drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c before we fetch the regmap on line 
-2657.
+Test Regressions
+---------------- =
 
-Sorry that this is dragging out a bit (and for the mess I made).
 
-Cheers,
 
-Andrew
+platform   | arch  | lab     | compiler | defconfig | regressions
+-----------+-------+---------+----------+-----------+------------
+imx8mp-evk | arm64 | lab-nxp | gcc-8    | defconfig | 1          =
+
+
+  Details:     https://kernelci.org/test/plan/id/5fd7fec754b3a1bca8c94cb9
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/v5.10-rc4-93-g=
+a2e5f9277f66/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/v5.10-rc4-93-g=
+a2e5f9277f66/arm64/defconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
+
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5fd7fec754b3a1bca8c94=
+cba
+        failing since 0 day (last pass: v5.10-rc6-93-gb8fbfef1595c, first f=
+ail: v5.10-rc4-91-g65efb43ac94b) =
+
+ =20
