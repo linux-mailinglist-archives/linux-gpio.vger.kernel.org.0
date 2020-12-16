@@ -2,98 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1172DC076
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 13:47:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E63B12DC139
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 14:28:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgLPMrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 07:47:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgLPMrk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 07:47:40 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345AEC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:47:00 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id h205so4477047lfd.5
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:47:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VOVajqeL58osbRPPaomgTK8n6oUgfCbxRdg+Fy/mnXs=;
-        b=i4hQCSzgyarWqSRx8lwW55w7AT8SqV+QL34hqfbK2tNFgrtNkuHa4lUZ5EZtsUhapF
-         wBSlb1/HKs4lWTrub+/WG9KZYknYDRJ1tpNK4ysCbZrhEfB2ChKXyoOpgiNpcYgK9Lcz
-         qE7O6CpmzUPvK1X/riZptbyzZtI8f1EqX5+i/ebuyHXyfJPNRcRXyDTD788s9+9G035L
-         rnc1jLJ75WIbpFq817pOLonid0xYqguLJkrGOwU78TJj8DJz2UtX0OuxYo843MGQeGe1
-         by6jGqr1SImmXps3YZhXbI9pqWCmteSDK19Gn/BMgdqdwqM0j2Zx/iRvQ1qItoPCaphm
-         alCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VOVajqeL58osbRPPaomgTK8n6oUgfCbxRdg+Fy/mnXs=;
-        b=HuVxFxldlIWpvZAKT9FSczr8MNlRlLI9R2ICzQ8zyL8dPAKHwLsj6p08kxisbx36WX
-         7rxlzGgEzjqvwCcz8pbNegAHTO3AlIjdB0nbQIYFidnKOLx2xEe1R+WFovToVSYkLsl2
-         JijxRo8UIS3NXUnMS9kiFrcSuTrrlD2jRidV04DWXxIXi+ABZpz25MPNLJXIbzsC1a4F
-         /psEBQ1gAiTsc9MsKxDj7CkvBZfy/Aj9/tyMNxocnkqkyT02OfRg6dABIccxklMAw+0L
-         xr7DLjS4QHqkaYyyHLY+5ST0qBXO5PHPKurKQHIfsxlJ1RRNu4jRBh8f1h0t60W2HiSt
-         hSJA==
-X-Gm-Message-State: AOAM530glSZ1WJCVrkWVkhACume3y9k+N5K1hWdAlbUAY+7Ol4sWdYL/
-        zQqxGZ82CoIYsgjVxGlmx9VHh6DBqqCA/fq+OTk34g==
-X-Google-Smtp-Source: ABdhPJx/ESz87W3XJ6XGTijh+mpw6fi1H7wcl/u92ThLJDNcAiIGewSSl41QCClJfIgduJfJv7cNsCBzlSMsg4LFAMs=
-X-Received: by 2002:a19:8bc6:: with SMTP id n189mr2718938lfd.291.1608122818612;
- Wed, 16 Dec 2020 04:46:58 -0800 (PST)
+        id S1726143AbgLPN1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 08:27:18 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9219 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgLPN1S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 08:27:18 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CwwqZ53x5zkqKJ;
+        Wed, 16 Dec 2020 21:25:46 +0800 (CST)
+Received: from ubuntu.network (10.175.138.68) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 16 Dec 2020 21:26:25 +0800
+From:   Zheng Yongjun <zhengyongjun3@huawei.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Subject: [PATCH -next] gpio: convert comma to semicolon
+Date:   Wed, 16 Dec 2020 21:26:57 +0800
+Message-ID: <20201216132657.15582-1-zhengyongjun3@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Dec 2020 13:46:47 +0100
-Message-ID: <CACRpkdZKKetFFm8AanVnzV9SyZhuurLHT_ZTak27-vGEdqVgEw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Allow name duplicates of "" and "NC"
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.138.68]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 6:02 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+Replace a comma between expression statements by a semicolon.
 
-> Not all GPIO pins are exposed to the world and this is typically
-> described by not giving these lines particular names, commonly "" or
-> "NC".
->
-> With the recent introduction of '2cd64ae98f35 ("gpiolib: Disallow
-> identical line names in the same chip")' any gpiochip with multiple such
-> pins will refuse to probe.
->
-> Fix this by treating "" and "NC" as "no name specified" in
-> gpio_name_to_desc()
->
-> Fixes: 2cd64ae98f35 ("gpiolib: Disallow identical line names in the same chip")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> The introduction of 2cd64ae98f35 breaks pretty much all Qualcomm boards and
-> grepping the DT tree indicates that other vendors will have the same problem.
->
-> In addition to this the am335x-* boards will also needs "[NC]", "[ethernet]",
-> "[emmc"], "[i2c0]", "[SYSBOOT]" and "[JTAG]" added to this list to allow
-> booting v5.11 with the past and present dtb/dts files.
+Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+---
+ drivers/gpio/gpio-sl28cpld.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I pushed this patch yesterday that fixes the obvious "(empty string)" problem:
-https://lore.kernel.org/linux-gpio/20201215123755.438369-1-linus.walleij@linaro.org/T/#u
+diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
+index 889b8f5622c2..52404736ac86 100644
+--- a/drivers/gpio/gpio-sl28cpld.c
++++ b/drivers/gpio/gpio-sl28cpld.c
+@@ -65,13 +65,13 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
+ 	if (!irq_chip)
+ 		return -ENOMEM;
+ 
+-	irq_chip->name = "sl28cpld-gpio-irq",
++	irq_chip->name = "sl28cpld-gpio-irq";
+ 	irq_chip->irqs = sl28cpld_gpio_irqs;
+ 	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
+ 	irq_chip->num_regs = 1;
+ 	irq_chip->status_base = base + GPIO_REG_IP;
+ 	irq_chip->mask_base = base + GPIO_REG_IE;
+-	irq_chip->mask_invert = true,
++	irq_chip->mask_invert = true;
+ 	irq_chip->ack_base = base + GPIO_REG_IP;
+ 
+ 	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
+-- 
+2.22.0
 
-But I see this is for device tree line naming only, right?
-
-I think I will conjure a patch allowing identical naming only for
-device property naming (like from device tree) but emitting a
-warning so that people fix it to something unique moving
-forward.
-
-Yours,
-Linus Walleij
