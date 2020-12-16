@@ -2,145 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B05D2DBD4B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 10:10:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835612DBD5D
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 10:14:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgLPJKH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 04:10:07 -0500
-Received: from mail-eopbgr130049.outbound.protection.outlook.com ([40.107.13.49]:22244
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726216AbgLPJKG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Dec 2020 04:10:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hda/lfRsDg3d1K13uhKAmM3mNbA3PC6OhqJPvP9twxcsn2z5w3Q/4jqBDRxbGOWRg4IyXlcWaae2z02+I4G/sFwYwahAD8ev83Td4UVmG6353ErTMHGdLnf2m8FwEb5mhLs9jU4+AnGbhgPyIQDvtueFrSUEfy8Lf3pGkvTmA27lhVpOgSMOTily38kZ/OnE9EZz4kyXckR1hnjR25vrl1/vTA0ZM3ePvi2fDOEseejtbjlxMBUxPcWlemh0rw0ZO8TjPPqSLfcIs6Lwod6mIApMWLTzRTWK0NoXzyTL8FJEKKGAW5qPbdI6IXn5PCmTVuAPzh0BB0EdrWsK9rHfBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TVcR98yYWk91UrMdQtIyWgpWurmw8cJNaNsgKxBClQk=;
- b=gjm5d5s7spMIXQwsxVa8sgaGON/mS7jNKyjnMYG3lDbzf/bSL64+P8ibKccXqQ9BhSl3rIaxjHB/t/aPHNsG2nZysj8wkrPROUsrqI/vjprWc4hBTD90Jrnn5bT7MlHMzG4tR5btYeeQp358woQ6v4dGXBQIOcJjSQqtzJ8CcfzpBAi/8Y1nmxX1A0lbdftac8RUq9sbwE+c+v/d4KAFyCo0AHE5p0YOW294w7Cp6ACol91Uq08kHC1j2P8DLay90rEebPrhdgG04zlE9vBzThYtDAIXy9tYtyEo6soXXRHyTYeZBGaXOJIN7MlmBjEiE1lqIC9acvhNbBSOVnyChA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
- header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=rohmsemiconductoreurope.onmicrosoft.com;
- s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TVcR98yYWk91UrMdQtIyWgpWurmw8cJNaNsgKxBClQk=;
- b=f5irEMQXaWkCYaC4kUP+eg3odQvsYlsG0B6aOsNENSgElc967CqcNKhOL6mubLf+clqAfuh2Gu5KJr7TPATLOfUAzpOTqIy8aCLmA5wIy6clMcPIzS3NM0IeIwc5fF9KAK2ylWX5wswdYduVmSjIwZdhM9oe4/piVR8lSaD3Clo=
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
- HE1PR03MB3065.eurprd03.prod.outlook.com (2603:10a6:7:60::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3654.17; Wed, 16 Dec 2020 09:09:15 +0000
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::f1f1:eb1d:2bf5:eb87]) by HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::f1f1:eb1d:2bf5:eb87%7]) with mapi id 15.20.3654.025; Wed, 16 Dec 2020
- 09:09:15 +0000
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "khiem.nguyen.xt@renesas.com" <khiem.nguyen.xt@renesas.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 11/12] mfd: bd9571mwv: Make the driver more generic
-Thread-Topic: [PATCH v3 11/12] mfd: bd9571mwv: Make the driver more generic
-Thread-Index: AQHW035y6BNLGpWx2EuQSEwrpEd9qan5YvcAgAAJ7ICAAAJfAA==
-Date:   Wed, 16 Dec 2020 09:09:15 +0000
-Message-ID: <858768c6522e9a407617ef21d6c7793fd71964dc.camel@fi.rohmeurope.com>
-References: <1608104275-13174-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-         <1608104275-13174-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-         <4021c3f04bf8c4dcbcb015056455c4acf9e71b6b.camel@fi.rohmeurope.com>
-         <20201216090045.GA207743@dell>
-In-Reply-To: <20201216090045.GA207743@dell>
-Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none
- header.from=fi.rohmeurope.com;
-x-originating-ip: [62.78.225.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 985e3195-1fb1-4b4e-9bd2-08d8a1a24324
-x-ms-traffictypediagnostic: HE1PR03MB3065:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR03MB30653ECBC93FAA4F8EA3E6A8ADC50@HE1PR03MB3065.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fQiPVuG9x+mOhMVzV/fTEXNZaXUFxopeq/2luW6S3qz0aQv07bF6cNRCcWGKIeXKGgi0fr2mFluB5urw3rL313l8lZNI5m8bjrifR9hORKPmdleWoMh2XKZIrO7H1xKPmMsGF3PiYj4s3xR+48DS2vquxMBWS5CIGTCX4/UYFft9XPJiSSCfF+fyvZzdPcV1YsiF7qN8LQLPtW/JbO+0Ye7KWUgK5nt3bzMlbry00n8ToOaSdFRpHdlEAi7cm1A1C71olzyYdGu/PjAE5YLKqS0++0YWipo7KYuXZFzr4nBZ99xXgL5HQDLrQErgmufYi3kS4muLOh1WN1FIEfPJo+9KSNTdUGiV0o+OJm+k1ShdCFjuIpKVz136NtZgvA0k
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(39840400004)(376002)(366004)(8936002)(6486002)(66946007)(478600001)(26005)(5660300002)(8676002)(71200400001)(4326008)(83380400001)(6916009)(7416002)(316002)(54906003)(2616005)(64756008)(6512007)(3450700001)(66556008)(66476007)(66446008)(186003)(4001150100001)(76116006)(2906002)(86362001)(6506007)(41533002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?c2lWQThOQ1ZEYWZkQ29Dc3ovMm1LemttUVlhTGRjSlBBbnlWYVpHTFA1K1hr?=
- =?utf-8?B?MnZHTDFGYWwwM2ExNmFKQWYxM2o0WXFKM3Nyd3IyZUxDeFJoV2s4VDdaRXkx?=
- =?utf-8?B?ZTdTYURhd0tWQUtZV3ZtQVhSMURjU0JUTWJRVzVCSmdRSUNWc1I2OTltTDcv?=
- =?utf-8?B?RHZuQlZVVzVuaTVnem51ZU9ENWp0bFlScUdpWCtpSHFxYVViT1l2Y2c0V3NX?=
- =?utf-8?B?Rnp1NnFzR1JnRDZnK2JNSnJ5NXZKdGNvNVhFNFFMNU1BRlhqSnc1UWFXRzFH?=
- =?utf-8?B?UHlmck9UWk9Qbm50RWxEWjVBTTZyeTFPMUNsZGJlMThuVDN4NCs3elhHNlhR?=
- =?utf-8?B?cTREZjBuTy9PUUkvQm9COFJ3SCtYUHJUUUYxdTdLRi9ybkh1cG9ieGF5QWJz?=
- =?utf-8?B?bUExNmsrUVJHWlRNZWFLSVJZN3ZMNW1TSzBYSW5WRGUza0VEQ3lHZkVGYkVT?=
- =?utf-8?B?NVp2eElxbm1DeFk0bFFtMThGY0xiM1ZWQkJubjFKV3V2Skl4MVVUNnhiYnlJ?=
- =?utf-8?B?bjFlVWRqbzY0ZzhVdzFVdkZDSnFMVVRHaTFpUm8yQStFZkREalZ2TVdPYTJm?=
- =?utf-8?B?UklnVVJhLzJUWWpPYlNPRGxYdWhjRG52YVBIVTZTYmNZalNNS3VUaEYwTmpn?=
- =?utf-8?B?dmN6M1o5VEFqOS9hL1VYOEZLTVRySjdwQU5aQXh5VEoxWUIrZzlGTW05Vytw?=
- =?utf-8?B?UVl1dmNOQksyanp2R0pKM3g0VjExMWVQZTBlOU9ubFJ6VUNsUkJ3d3l6TUFr?=
- =?utf-8?B?TXM5QmdENzZEVFBTZUZ6VlBBdmJVQUF3QjdORFArTDFSOWcvRTdYYmNnYTY3?=
- =?utf-8?B?ekdCd2pNRFpiV0Y3NzFKSVhRYjYwSXdqVEpVcU9wem1nSWh6MUxsOFo3UkVC?=
- =?utf-8?B?OW5PRjJadEhXRG85SDA3NFVlYVNFWkk2YVFQVkF2cmpXK01PSkRma1A0MUNo?=
- =?utf-8?B?Q2RyWWRBNkpiNXU2NFlXdnB0eWlUNy9iR25LTUVGQkxWY1QzbXdEcVkyRVVZ?=
- =?utf-8?B?UUVlb0dRQ1poUnRtcTNVRXRlVldQS29xMStGZkl1VWFZbHlJUTZqUU9ERmN4?=
- =?utf-8?B?VG5pSnRxbDVUSWlkYmZPL2M1enJETitSV0grdFYvSTUwcmdhREtKM0NDTXUx?=
- =?utf-8?B?NDg0ZHo1N2ViMkR0N0ZGaFY3U3RYN1BjU2daRlhzR1I2alR4MmJqRUZmMzJU?=
- =?utf-8?B?ZnRUanMwS0tUNE9XZVhxcTFYd2FhYTRKNUFmWm5YVXlIVy9aTXZ6b2xTYzVX?=
- =?utf-8?B?WkMrR0FqQmRjb0Yrb0NDYU4vYnlxV3ZFU1NxVnNUR2JydXQ5NWtKZjVkYWp3?=
- =?utf-8?Q?d+NWUC/Wxr4aK8f7yYbYM/1NeXL8xz5C+v?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CCEAE8113C025D459DC0A6E938090FB0@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726197AbgLPJOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 04:14:19 -0500
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:51676 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgLPJOT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 04:14:19 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 0BG9BpDw006013; Wed, 16 Dec 2020 18:11:51 +0900
+X-Iguazu-Qid: 34tKHiA2wsjNFghN46
+X-Iguazu-QSIG: v=2; s=0; t=1608109911; q=34tKHiA2wsjNFghN46; m=MgklT305Ge9UZBU3EMVQtZH0PwxZoJlej00Mkpkh988=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1510) id 0BG9Bos2002451;
+        Wed, 16 Dec 2020 18:11:50 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 0BG9BodP016995;
+        Wed, 16 Dec 2020 18:11:50 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 0BG9Bo9n002730;
+        Wed, 16 Dec 2020 18:11:50 +0900
+Date:   Wed, 16 Dec 2020 18:11:48 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        yuji2.ishikawa@toshiba.co.jp,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/4] gpio: visconti: Add Toshiba Visconti GPIO support
+X-TSB-HOP: ON
+Message-ID: <20201216091148.vmriqt3vsg34pqhj@toshiba.co.jp>
+References: <20201211094138.2863677-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20201211094138.2863677-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <CACRpkdZ-umK4troerSA6S2rvyU5XV+KsFdxuWE5Sy0PCgdfT6A@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: fi.rohmeurope.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 985e3195-1fb1-4b4e-9bd2-08d8a1a24324
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2020 09:09:15.5232
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nTOfCFbpxfX7zcYlox0gAqQqeNvqaouXB48/vOIMrE5HKe9QYTzHwFmRtaeRLGvzl/7oNF7Y9wbt0kxQ3VOujO1CVmeFuOCt1llp+7rQE9JDmoG6rVdtxWjh0KlRvb1u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR03MB3065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ-umK4troerSA6S2rvyU5XV+KsFdxuWE5Sy0PCgdfT6A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMjAtMTItMTYgYXQgMDk6MDAgKzAwMDAsIExlZSBKb25lcyB3cm90ZToNCj4g
-T24gV2VkLCAxNiBEZWMgMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToNCj4gDQo+ID4gT24g
-V2VkLCAyMDIwLTEyLTE2IGF0IDE2OjM3ICswOTAwLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToN
-Cj4gPiA+IEZyb206IEtoaWVtIE5ndXllbiA8a2hpZW0ubmd1eWVuLnh0QHJlbmVzYXMuY29tPg0K
-PiA+ID4gDQo+ID4gPiBTaW5jZSB0aGUgZHJpdmVyIHN1cHBvcnRzIEJEOTU3MU1XViBQTUlDIG9u
-bHksDQo+ID4gPiB0aGlzIHBhdGNoIG1ha2VzIHRoZSBmdW5jdGlvbnMgYW5kIGRhdGEgc3RydWN0
-dXJlIGJlY29tZSBtb3JlDQo+ID4gPiBnZW5lcmljDQo+ID4gPiBzbyB0aGF0IGl0IGNhbiBzdXBw
-b3J0IG90aGVyIFBNSUMgdmFyaWFudHMgYXMgd2VsbC4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogS2hpZW0gTmd1eWVuIDxraGllbS5uZ3V5ZW4ueHRAcmVuZXNhcy5jb20+DQo+ID4gPiBb
-c2hpbW9kYTogcmViYXNlIGFuZCByZWZhY3Rvcl0NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hp
-aGlybyBTaGltb2RhIDwNCj4gPiA+IHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0K
-PiA+IA0KPiA+IFJldmlld2VkLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBm
-aS5yb2htZXVyb3BlLmNvbT4NCj4gDQo+IFBsZWFzZSBwbGFjZSBhbnkgKi1ieSB0YWdzICphZnRl
-ciogdGhlIG90aGVyIGNvbW1lbnRzLg0KPiANCj4gRm9ydHVuYXRlbHksIHRoZSBmaXJzdCBvbmUg
-YmVsb3cgd2FzIHN0aWxsIG9uIG15IHNjcmVlbiwgZWxzZSBJIHdvdWxkDQo+IGhhdmUgc3RvcHBl
-ZCByZWFkaW5nIGhlcmUuDQo+IA0KDQpHb29kIHBvaW50LiBJJ2QgYmV0dGVyIGtlZXAgdGhhdCBv
-biBtaW5kLiBBbHRob3VnaCBtaXNzaW5nIHN0dWZmIGFmdGVyDQphIFJldmlld2VkLWJ5IGlzIG5v
-dCB0aGF0IGZhdGFsIDspDQoNCg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJpdmVycy9tZmQvYmQ5NTcx
-bXd2LmMgICAgICAgfCA5NSArKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+IC0tLS0N
-Cj4gPiA+IC0tLS0tLS0tLS0tLQ0KPiA+ID4gIGluY2x1ZGUvbGludXgvbWZkL2JkOTU3MW13di5o
-IHwgMTggKystLS0tLS0NCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKyks
-IDUwIGRlbGV0aW9ucygtKQ0KDQo=
+Hi,
+
+Thanks for your review.
+
+On Sat, Dec 12, 2020 at 12:20:47AM +0100, Linus Walleij wrote:
+> On Fri, Dec 11, 2020 at 1:43 AM Nobuhiro Iwamatsu
+> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+> 
+> This iteration is looking really good, but we are not quite there yet,
+> because now that the driver looks so much better I can see that it
+> is a hierarchical interrupt controller.
+
+As you pointed out, this GPIO interrupt is directly linked to the GIC
+interrupt.
+As a function of the GPIO driver, there is a function (IRQ_DOMAIN_HIERARCHY)
+that can handle these as one-to-one, so it is pointed out that it is better
+to use this. Is this correct?
+
+> 
+> > Add the GPIO driver for Toshiba Visconti ARM SoCs.
+> >
+> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > Reviewed-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+> (...)
+> 
+> > +config GPIO_VISCONTI
+> > +       tristate "Toshiba Visconti GPIO support"
+> > +       depends on ARCH_VISCONTI || COMPILE_TEST
+> > +       depends on OF_GPIO
+> > +       select GPIOLIB_IRQCHIP
+> > +       select GPIO_GENERIC
+> > +       help
+> > +         Say yes here to support GPIO on Tohisba Visconti.
+> 
+> Add
+> select IRQ_DOMAIN_HIERARCHY
+
+OK, I will add this.
+
+> 
+> > +struct visconti_gpio {
+> > +       void __iomem *base;
+> > +       int *irq;
+> 
+> Don't keep these irqs around.
+>
+
+OK, I will remove this
+.
+> > +       ret = platform_irq_count(pdev);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       num_irq = ret;
+> > +
+> > +       priv->irq = devm_kcalloc(dev, num_irq, sizeof(priv->irq), GFP_KERNEL);
+> > +       if (!priv->irq)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i = 0; i < num_irq; i++) {
+> > +               priv->irq[i] = platform_get_irq(pdev, i);
+> > +               if (priv->irq[i] < 0) {
+> > +                       dev_err(dev, "invalid IRQ[%d]\n", i);
+> > +                       return priv->irq[i];
+> > +               }
+> > +       }
+> 
+> Instead of doing this, look in for example
+> drivers/gpio/gpio-ixp4xx.c
+> 
+> You need:
+> 
+> > +       girq = &priv->gpio_chip.irq;
+> > +       girq->chip = irq_chip;
+> 
+> girq->fwnode = fwnode;
+> girq->parent_domain = parent;
+> girq->child_to_parent_hwirq = visconti_gpio_child_to_parent_hwirq;
+> 
+
+
+I understood that the irq_domain specified by girq->parent_domain will be the
+GIC. Is this correct?
+
+
+> The mapping function will be something like this:
+> 
+> static int visconti_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+>                                              unsigned int child,
+>                                              unsigned int child_type,
+>                                              unsigned int *parent,
+>                                              unsigned int *parent_type)
+> {
+>         /* Interrupts 0..15 mapped to interrupts 24..39 on the GIC */
+>         if (child < 16) {
+>             /* All these interrupts are level high in the CPU */
+>             *parent_type = IRQ_TYPE_LEVEL_HIGH;
+>             *parent = child + 24;
+>             return 0;
+>         }
+>         return -EINVAL;
+> }
+>
+
+I see, I will add this function.
+
+> > +       priv->gpio_chip.irq.init_valid_mask = visconti_init_irq_valid_mask;
+> 
+> This will be set up by gpiolib when using hierarchical irqs.
+> 
+
+OK.
+
+> > +       /* This will let us handle the parent IRQ in the driver */
+> > +       girq->parent_handler = NULL;
+> > +       girq->num_parents = 0;
+> > +       girq->parents = NULL;
+> 
+> You don't need this.
+> 
+> > +       girq->default_type = IRQ_TYPE_NONE;
+> > +       girq->handler = handle_level_irq;
+> 
+> But this stays.
+> 
+
+OK, I will update to these.
+
+> > +       for (i = 0; i < num_irq; i++) {
+> > +               desc = irq_to_desc(priv->irq[i]);
+> > +               desc->status_use_accessors |= IRQ_NOAUTOEN;
+> > +               if (devm_request_irq(dev, priv->irq[i],
+> > +                                    visconti_gpio_irq_handler, 0, name, priv)) {
+> > +                       dev_err(dev, "failed to request IRQ[%d]\n", i);
+> > +                       return -ENOENT;
+> > +               }
+> > +       }
+> 
+> This should not be needed either when using hiearchical IRQs,
+> also the irqchip maintainers will beat us up for poking around in the
+> descs like this.
+
+I understand that the processing equivalent to request_irq() is processed
+by the irqchip frame work (or GIC driver). Is this correct?
+
+
+> 
+> The rest looks solid!
+> 
+
+Thank you.
+I will apply your point into the driver.
+
+Best regards,
+  Nobuhiro
