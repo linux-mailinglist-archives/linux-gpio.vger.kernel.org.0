@@ -2,126 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7982C2DC6A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 19:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 713D22DC76B
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 20:55:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgLPSk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 13:40:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
+        id S1727913AbgLPTyq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 14:54:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbgLPSk4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 13:40:56 -0500
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF8DC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 10:40:16 -0800 (PST)
-Received: by mail-oi1-x234.google.com with SMTP id s2so28639207oij.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 10:40:16 -0800 (PST)
+        with ESMTP id S1727125AbgLPTyp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 14:54:45 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551FAC06179C
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 11:54:05 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id cw27so26147808edb.5
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 11:54:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=HX05UPZbfakFNT6esS7y3dkO3JZ1/EyRxqvrW/rwkR0=;
-        b=Id04pE4Gmxa9hBuBqHwF8Xbry18NqejeslL5cyHb6hce0goJ400yI9vdlvE+V15keZ
-         WP2j2syjVqDSpvFPkcpTd/GoAMxvp+MX9muiMBc2qb1qToKQl6ziCmkN0epXCUlM+Z1m
-         Z43Dc7XI1U9P9jrmJq1c0cAX7tSgbappxv4JzElnZMNXObJPhftw2tJWP1Qx2pqmgoj/
-         1ciRv2EY1s7O1OIzspukAox5chn9O3pNeCBtEjG/rhj9U/KLcE/DzJbJFjMV4fcZql04
-         C7IPfm+ZY8YPPfjhkTxMjvCqRlyvtMO10XjIKda/6cgDY/tG5nT3LMIQ9HOzzrBE6Plo
-         tjyg==
+        bh=lEgdzUb4kSlkgADpRNG+q/tRgzSb8ZpRL/wEUP9L+VQ=;
+        b=imoloHBvtPrZY/JA9bQuXNXMr+rCClt7TQksZkIAcpdWZ512pJr4lDEzxizPLOZ3aQ
+         CltfgbXr67ahIti0psXtTQpHcbMsweSRbJM6kspQvENjs3dvVChWEZeBKMnkj4JYkhqa
+         zSoot57YFMCUHol/AjHgRqtX5mLVtT2vKmhbquwj18jJlKHt6HXSksiNWKikFe/QV+gG
+         Hqt5gZ2lMVl4P3ovyeIQ4T68sPESOXzMnaMODWbmrAb49cTz/veijtuqin0ZGC850IlR
+         MFBeCJX7Twevq5AqPYpegNWKpu1w1Y9vGoRiDa6+xR+O21g3z31x4NtoxYQ553X+pYca
+         n4Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HX05UPZbfakFNT6esS7y3dkO3JZ1/EyRxqvrW/rwkR0=;
-        b=ebFFohx8b8lbfy2gSMNw0O58E2qmsb24Q4wt9wTIUsn53d7zhoxVLla6S3iN2Jh4Hw
-         of4KL8iNc0RMRz3hgoz3dsBYNC2gHMb/fXDKLcDRdV4Ul1Hd8/yoa2COo3jkeu+d4m0+
-         DXWI7wh5mH5nEzg1FQ8GjduqgEJVJ+9Z1CFt04fzTM3cxqhE2TWPKct/uB1qsBt3uSvh
-         WlwFt4rfbU9xEhdMJuWLd8QylSqi63hT2o1kqbZ7/p/s49OxY+4d+Xuv9G3Nof4r18Pl
-         UUOSUL829S8ckcnvzSEYb4DEsjzg3zGioQoOQ+LssdY6fnl0XQwbgBfVsLmj30PdbcIR
-         Ru3A==
-X-Gm-Message-State: AOAM532d5OKWxPimaqYaofJY7etzdl5a4PXwA/SSYfeoBBMglAr2Thgy
-        7Ruv8cufhajfpNT+5SjbsmLMlg==
-X-Google-Smtp-Source: ABdhPJwCWVwMv4ymBqD9ZXT8j0l8JfNX+uns7F5dvspx+SMuq1kGfuY/gyqCID5dDV52iAV35xBF4w==
-X-Received: by 2002:aca:54d8:: with SMTP id i207mr2694795oib.101.1608144015474;
-        Wed, 16 Dec 2020 10:40:15 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id o135sm642714ooo.38.2020.12.16.10.40.14
+        bh=lEgdzUb4kSlkgADpRNG+q/tRgzSb8ZpRL/wEUP9L+VQ=;
+        b=h0QtIlFFObQPhI+NYBP8XSFoaXbtGOIrd9pSANqqqKgCMXl1rrQxB7+qjoYE8MPeE1
+         jdc50xwCHEu3Rwm7s1gBZZ2lApHw1p3V21yPh9Pzb7++hO+/pdiwW3tc3Jz/K13c2G/D
+         fuzLoWsNL8Sk5A4//UO6orgLdLIGSab9mNMbcT06ir5PKHR3DyRwdpcvRnkhe/sp4XrX
+         JNp70vxS6cMu5VV4EPzlo1Lr1MZwNf241w1PAB2Mc3LExywYVI66VUbRRm7Bp5nefmZi
+         6hiNySOfQM/+8xTB1BD0keidazeehgKka6RgNaSFRtvRK60yp+dpnt8HNqMM0RbHjC6t
+         3U5A==
+X-Gm-Message-State: AOAM5325bJZhwNuMPVpg+/24QWYS7OuwIQSKgME9lzlcbZGI1UmgHDdF
+        qtaOaa4WaELVSC7pt+iOnudwwA==
+X-Google-Smtp-Source: ABdhPJy6++UOacI85zTLwVjF/BdSq4wtOQ3wRw/BTSIuIuRY1RtTMMJJCFnNYFM4dAiuMJ+BdN4Uqg==
+X-Received: by 2002:a05:6402:139a:: with SMTP id b26mr35568051edv.47.1608148443877;
+        Wed, 16 Dec 2020 11:54:03 -0800 (PST)
+Received: from x1 ([143.244.37.47])
+        by smtp.gmail.com with ESMTPSA id i13sm2067327ejc.57.2020.12.16.11.54.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Dec 2020 10:40:14 -0800 (PST)
-Date:   Wed, 16 Dec 2020 12:40:13 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
+        Wed, 16 Dec 2020 11:54:03 -0800 (PST)
+Date:   Wed, 16 Dec 2020 11:53:57 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
 Subject: Re: [PATCH] gpiolib: Allow name duplicates of "" and "NC"
-Message-ID: <X9pUjU6hPI1cKS3H@builder.lan>
+Message-ID: <20201216195357.GA2583366@x1>
 References: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
- <CACRpkdZKKetFFm8AanVnzV9SyZhuurLHT_ZTak27-vGEdqVgEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZKKetFFm8AanVnzV9SyZhuurLHT_ZTak27-vGEdqVgEw@mail.gmail.com>
+In-Reply-To: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 16 Dec 06:46 CST 2020, Linus Walleij wrote:
-
-> On Tue, Dec 15, 2020 at 6:02 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
+On Tue, Dec 15, 2020 at 09:03:08AM -0800, Bjorn Andersson wrote:
+> Not all GPIO pins are exposed to the world and this is typically
+> described by not giving these lines particular names, commonly "" or
+> "NC".
 > 
-> > Not all GPIO pins are exposed to the world and this is typically
-> > described by not giving these lines particular names, commonly "" or
-> > "NC".
-> >
-> > With the recent introduction of '2cd64ae98f35 ("gpiolib: Disallow
-> > identical line names in the same chip")' any gpiochip with multiple such
-> > pins will refuse to probe.
-> >
-> > Fix this by treating "" and "NC" as "no name specified" in
-> > gpio_name_to_desc()
-> >
-> > Fixes: 2cd64ae98f35 ("gpiolib: Disallow identical line names in the same chip")
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >
-> > The introduction of 2cd64ae98f35 breaks pretty much all Qualcomm boards and
-> > grepping the DT tree indicates that other vendors will have the same problem.
-> >
-> > In addition to this the am335x-* boards will also needs "[NC]", "[ethernet]",
-> > "[emmc"], "[i2c0]", "[SYSBOOT]" and "[JTAG]" added to this list to allow
-> > booting v5.11 with the past and present dtb/dts files.
+> With the recent introduction of '2cd64ae98f35 ("gpiolib: Disallow
+> identical line names in the same chip")' any gpiochip with multiple such
+> pins will refuse to probe.
 > 
-> I pushed this patch yesterday that fixes the obvious "(empty string)" problem:
-> https://lore.kernel.org/linux-gpio/20201215123755.438369-1-linus.walleij@linaro.org/T/#u
+> Fix this by treating "" and "NC" as "no name specified" in
+> gpio_name_to_desc()
 > 
-
-Unfortunately we've almost consistently used "NC" for the Qualcomm
-platforms, so that seems to fix only a single platform :(
-
-> But I see this is for device tree line naming only, right?
+> Fixes: 2cd64ae98f35 ("gpiolib: Disallow identical line names in the same chip")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-
-Yes.
-
-> I think I will conjure a patch allowing identical naming only for
-> device property naming (like from device tree) but emitting a
-> warning so that people fix it to something unique moving
-> forward.
+> The introduction of 2cd64ae98f35 breaks pretty much all Qualcomm boards and
+> grepping the DT tree indicates that other vendors will have the same problem.
 > 
+> In addition to this the am335x-* boards will also needs "[NC]", "[ethernet]",
+> "[emmc"], "[i2c0]", "[SYSBOOT]" and "[JTAG]" added to this list to allow
+> booting v5.11 with the past and present dtb/dts files.
 
-I'm not against emitting a dev_err() when we hit duplicates, remove the
-return and then update the various dts files to use "" for things that
-doesn't have a name.
+I am the one who added the gpio line names to the am335x dts board
+files, and I am happy to change them if it will make unique line name
+logic simpler.
 
-Regarding special handling of the DT case, I think (beyond making all
-these boards boot again) it would be nice to make
-gpiochip_set_desc_names() take the list of names and a length and use
-the same function in both code paths...
+I used the notation of "[<non-gpio-functionality>]" to make it easy for
+the user to realize that the corresponding gpiolines could not be used
+on these boards (BeagleBone and PocketBeagle) for actual GPIO.  I used
+generic names like "[ethernet]" because I didn't think it made sense
+to confuse the user by using the precise name of the non-gpio function
+(such as "[gmii1_rxd0]").  I could post a patch for the dts files that
+restores unique names for "[ethernet]", "[emmc"], "[i2c0]",
+"[SYSBOOT]" and "[JTAG]".
+
+As for "[NC]", the BGA balls corresponding to these gpio lines are
+simply not connected to any circuits on the board.  I happy to change
+that to whatever name people prefer for a non-connected pin ("", "NC",
+etc).
+
+Thanks,
+Drew
 
 
-PS. strlen(names[i]) is O(N), strcmp(names[i], "") is O(1).
-
-Regards,
-Bjorn
