@@ -2,84 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FD52DC070
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 13:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D1172DC076
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 13:47:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgLPMmh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 07:42:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
+        id S1725954AbgLPMrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 07:47:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgLPMmg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 07:42:36 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67373C06179C
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:41:56 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id 23so47941623lfg.10
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:41:56 -0800 (PST)
+        with ESMTP id S1725913AbgLPMrk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 07:47:40 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345AEC061794
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:47:00 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id h205so4477047lfd.5
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 04:47:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JdWZ2Pk1OFPUwPBsoB678Mi8MqbdY4ggPgKtXlI/SK4=;
-        b=tmT2NwDjj8bfQbdMkIGY2YjDPKm0YLTfWJZk10f+bQMuSILDTxEAVs0VdfmbkUqMHC
-         Tjd1yn1ZkdF2HBjgzVPs1dz6rd4Aygot+krES5typbxrzS4egI/+z08allpO3l3TOeb+
-         RQLxJoPUyVfnJeoG7i3Q0r7saNMLmY5bPb3WqJ54uiBdCytn1MzufdJ0DLscPiHqKmAg
-         FJ4K+AYpxPJ3Hke98FrPCPIhGxC0fMCwko8Q0qlKApJP3bDLlGmtYhM/onpb95d6K9Mc
-         f3BUudJp4PQrUDe6crxuDhyR7vw7xiAk/j15gqvx57gDdNaGVMpKqBfrbgrIv6AKVrLm
-         NUCA==
+        bh=VOVajqeL58osbRPPaomgTK8n6oUgfCbxRdg+Fy/mnXs=;
+        b=i4hQCSzgyarWqSRx8lwW55w7AT8SqV+QL34hqfbK2tNFgrtNkuHa4lUZ5EZtsUhapF
+         wBSlb1/HKs4lWTrub+/WG9KZYknYDRJ1tpNK4ysCbZrhEfB2ChKXyoOpgiNpcYgK9Lcz
+         qE7O6CpmzUPvK1X/riZptbyzZtI8f1EqX5+i/ebuyHXyfJPNRcRXyDTD788s9+9G035L
+         rnc1jLJ75WIbpFq817pOLonid0xYqguLJkrGOwU78TJj8DJz2UtX0OuxYo843MGQeGe1
+         by6jGqr1SImmXps3YZhXbI9pqWCmteSDK19Gn/BMgdqdwqM0j2Zx/iRvQ1qItoPCaphm
+         alCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JdWZ2Pk1OFPUwPBsoB678Mi8MqbdY4ggPgKtXlI/SK4=;
-        b=rhPK41KPhrqGH6IHNfmCX+MMngGrbrCY8Mnd1Rdg8HQTNfbsv9jTYPYGHXt+gt2X3G
-         ScfPaui6FN05qF3GOvjUyuk1dDBMB+vJTNrGtAiNLn097r3yt/p8nr9kqMEz+i4Nfi3A
-         ddOy3X4S0Ahv12aluMq9doZHO64iSOAzEZjs88QpGaLCs435sHExIOPl7Qze/t97Qq4u
-         xwtbAiHkBsRRKw9iQoJ+MqsvPY8ZMYJgM+m0g1bKme+i4/1XTTvZoflJ0zUZPLaTgMXI
-         tHCbuHDapAjILeeyPZNH7NnQsWqy1GYh+nzHmQt7vDfRrm3UM05VH08i3EwNvuPKkZNK
-         W9xg==
-X-Gm-Message-State: AOAM532/ablpgSz0c+NW3fZPLH/XRFnRzs6LcRdX4owiYeIWM/QQpyVp
-        qDffhi57Hoa2i0x0rPaRQUqQ6Op14CRj5fzWVwXtkQ==
-X-Google-Smtp-Source: ABdhPJyZMYbSapCUAF75EOCuZAjdXjhZ+BEiBYaZzhIBzbUzf7PgwgU03PMTn0yH5XnqH4CgTnhtc/1VsDlALIWtp7Q=
-X-Received: by 2002:a2e:b047:: with SMTP id d7mr9572843ljl.467.1608122514851;
- Wed, 16 Dec 2020 04:41:54 -0800 (PST)
+        bh=VOVajqeL58osbRPPaomgTK8n6oUgfCbxRdg+Fy/mnXs=;
+        b=HuVxFxldlIWpvZAKT9FSczr8MNlRlLI9R2ICzQ8zyL8dPAKHwLsj6p08kxisbx36WX
+         7rxlzGgEzjqvwCcz8pbNegAHTO3AlIjdB0nbQIYFidnKOLx2xEe1R+WFovToVSYkLsl2
+         JijxRo8UIS3NXUnMS9kiFrcSuTrrlD2jRidV04DWXxIXi+ABZpz25MPNLJXIbzsC1a4F
+         /psEBQ1gAiTsc9MsKxDj7CkvBZfy/Aj9/tyMNxocnkqkyT02OfRg6dABIccxklMAw+0L
+         xr7DLjS4QHqkaYyyHLY+5ST0qBXO5PHPKurKQHIfsxlJ1RRNu4jRBh8f1h0t60W2HiSt
+         hSJA==
+X-Gm-Message-State: AOAM530glSZ1WJCVrkWVkhACume3y9k+N5K1hWdAlbUAY+7Ol4sWdYL/
+        zQqxGZ82CoIYsgjVxGlmx9VHh6DBqqCA/fq+OTk34g==
+X-Google-Smtp-Source: ABdhPJx/ESz87W3XJ6XGTijh+mpw6fi1H7wcl/u92ThLJDNcAiIGewSSl41QCClJfIgduJfJv7cNsCBzlSMsg4LFAMs=
+X-Received: by 2002:a19:8bc6:: with SMTP id n189mr2718938lfd.291.1608122818612;
+ Wed, 16 Dec 2020 04:46:58 -0800 (PST)
 MIME-Version: 1.0
-References: <5fd76cf2.1c69fb81.6f19b.b16a@mx.google.com> <483b08f2-09c3-e753-d2ce-4e34fee627f3@collabora.com>
- <CACRpkdbozXM3FHQB9+GcPJZdNT+Vi1223m2uEqqJ21ukY1A4Gw@mail.gmail.com> <8e5e0251-9450-5c93-cd2e-c44779a72b0c@collabora.com>
-In-Reply-To: <8e5e0251-9450-5c93-cd2e-c44779a72b0c@collabora.com>
+References: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20201215170308.2037624-1-bjorn.andersson@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Dec 2020 13:41:43 +0100
-Message-ID: <CACRpkdb8Bgie3dJME5qQwu_33b6zVYzAayJnHJUCzrkntpNNXw@mail.gmail.com>
-Subject: Re: linusw/devel bisection: baseline.bootrr.mediatek-mt8173-pinctrl-probed
- on mt8173-elm-hana
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Date:   Wed, 16 Dec 2020 13:46:47 +0100
+Message-ID: <CACRpkdZKKetFFm8AanVnzV9SyZhuurLHT_ZTak27-vGEdqVgEw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Allow name duplicates of "" and "NC"
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "kernelci-results@groups.io" <kernelci-results@groups.io>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Johan Hovold <johan@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 11:10 AM Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
+On Tue, Dec 15, 2020 at 6:02 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 
-> > It seems we need to teach the core to ignore the name (empty string).
+> Not all GPIO pins are exposed to the world and this is typically
+> described by not giving these lines particular names, commonly "" or
+> "NC".
 >
-> OK great, I see you've sent a patch for that.  I'll check if we
-> can confirm it fixes the issue (something I'd like to also
-> automate...).
+> With the recent introduction of '2cd64ae98f35 ("gpiolib: Disallow
+> identical line names in the same chip")' any gpiochip with multiple such
+> pins will refuse to probe.
+>
+> Fix this by treating "" and "NC" as "no name specified" in
+> gpio_name_to_desc()
+>
+> Fixes: 2cd64ae98f35 ("gpiolib: Disallow identical line names in the same chip")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> The introduction of 2cd64ae98f35 breaks pretty much all Qualcomm boards and
+> grepping the DT tree indicates that other vendors will have the same problem.
+>
+> In addition to this the am335x-* boards will also needs "[NC]", "[ethernet]",
+> "[emmc"], "[i2c0]", "[SYSBOOT]" and "[JTAG]" added to this list to allow
+> booting v5.11 with the past and present dtb/dts files.
 
-Yups would love to hear if this solves it, it should be in today's
--next.
+I pushed this patch yesterday that fixes the obvious "(empty string)" problem:
+https://lore.kernel.org/linux-gpio/20201215123755.438369-1-linus.walleij@linaro.org/T/#u
+
+But I see this is for device tree line naming only, right?
+
+I think I will conjure a patch allowing identical naming only for
+device property naming (like from device tree) but emitting a
+warning so that people fix it to something unique moving
+forward.
 
 Yours,
 Linus Walleij
