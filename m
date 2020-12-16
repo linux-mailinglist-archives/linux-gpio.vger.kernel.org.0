@@ -2,197 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB5202DC3D4
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 17:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3CF12DC561
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 18:31:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgLPQPY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 11:15:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgLPQPY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 11:15:24 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113FAC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 08:14:44 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id r4so13194787pls.11
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 08:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=sGkIg9+Dg0v4B/GcHlsnY0pMHYloPdvR8kDy40aS7jE=;
-        b=C+CBSU0gE3lb+Fd8UEtWN5dL8zKgQhWjhn/84r6YEleiWi5VcSjrMQe1xgSpkxlBn4
-         vGfWR2aUv+4jrut/FFM92bOHL07vSp9V5n6gQmYglNH71ntC386BeiEztUt/ZrnuCdQF
-         wTO0trUISq1/BI7vaM72uuS/LSIFKUNzoWNdHGvpDHuwfBQnRhqCnMXY7LnWQIJgpn4g
-         0ocJ+AZ/tRJFQ5qxqtudqbxiTsK9fpA66iawGMw3y59s0Chg6mZ4rJll4qPlh8t22duT
-         o34aQV4xT5tsYcx3b3yY5l6Rpd28XrAou9AA523BEN5cFAMEk6LioxeXUWamFtqXWCGW
-         EwOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=sGkIg9+Dg0v4B/GcHlsnY0pMHYloPdvR8kDy40aS7jE=;
-        b=lctYhc9Os9x/CoIZmDviJUUXCMSv3p/tdy8Xz+YvLCIKIY2lCfB72mQ2JMY6l4V4fS
-         pESo2O51MuJ97LjVicU/HRp5/bby9iAWIlaZwvmXEUaDT7j+2GkcdRGh4jNCZ95mVEsP
-         aGDosNQU1z7/53j5KT/LpkmrfDeFoa83Iwg/Mna6JUSHmjy8dBQF+ceTdUcLxEeb+Zxz
-         mPY1ar4REu9sgzmbhusWZD2kFEsrdfETRKZhgiVyDVUMaBi/CcJxcHOpp053tA2EICKj
-         ynYFXTROlSwnTW0IgwBURKa3gMCClOE0jn3lrv+2OLWfgkwrD4AtX61twIosesQDV8zr
-         CjtQ==
-X-Gm-Message-State: AOAM532bIo9uxS9ccT/4j8jrFm69BgSWK/VSE0GYTKUyt6uilhDsXqMK
-        zE1kyOHZnAicRfmEoxvLNqWA9058nKr0Og==
-X-Google-Smtp-Source: ABdhPJzDaNPicx5HoEfYC9ydStQzVlVaQK4p+6dMLD9cFOsk8Y4YIS+TN/QP6dQicSgrRkNyb43gMg==
-X-Received: by 2002:a17:90a:990f:: with SMTP id b15mr3608204pjp.166.1608135283230;
-        Wed, 16 Dec 2020 08:14:43 -0800 (PST)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id n5sm3024863pgm.29.2020.12.16.08.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Dec 2020 08:14:42 -0800 (PST)
-Message-ID: <5fda3272.1c69fb81.1baee.6899@mx.google.com>
-Date:   Wed, 16 Dec 2020 08:14:42 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726824AbgLPRb2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 12:31:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41228 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgLPRb2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 12:31:28 -0500
+Received: from [IPv6:2a00:5f00:102:0:b08e:75ff:fe3e:2a49] (unknown [IPv6:2a00:5f00:102:0:b08e:75ff:fe3e:2a49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3C2DD1F41293;
+        Wed, 16 Dec 2020 17:30:46 +0000 (GMT)
+Subject: Re: linusw/devel bisection:
+ baseline.bootrr.mediatek-mt8173-pinctrl-probed on mt8173-elm-hana
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "kernelci-results@groups.io" <kernelci-results@groups.io>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Johan Hovold <johan@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+References: <5fd76cf2.1c69fb81.6f19b.b16a@mx.google.com>
+ <483b08f2-09c3-e753-d2ce-4e34fee627f3@collabora.com>
+ <CACRpkdbozXM3FHQB9+GcPJZdNT+Vi1223m2uEqqJ21ukY1A4Gw@mail.gmail.com>
+ <8e5e0251-9450-5c93-cd2e-c44779a72b0c@collabora.com>
+ <CACRpkdb8Bgie3dJME5qQwu_33b6zVYzAayJnHJUCzrkntpNNXw@mail.gmail.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <600ff528-71b0-ac02-0266-ddc5e3b6fcf4@collabora.com>
+Date:   Wed, 16 Dec 2020 17:30:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.10-rc4-94-g3048c5493cd2
-X-Kernelci-Report-Type: build
-Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
- 11 warnings (v5.10-rc4-94-g3048c5493cd2)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+In-Reply-To: <CACRpkdb8Bgie3dJME5qQwu_33b6zVYzAayJnHJUCzrkntpNNXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 7 builds: 0 failed, 7 passed, 11 warnings (v5.10-rc4=
--94-g3048c5493cd2)
+On 16/12/2020 12:41, Linus Walleij wrote:
+> On Wed, Dec 16, 2020 at 11:10 AM Guillaume Tucker
+> <guillaume.tucker@collabora.com> wrote:
+> 
+>>> It seems we need to teach the core to ignore the name (empty string).
+>>
+>> OK great, I see you've sent a patch for that.  I'll check if we
+>> can confirm it fixes the issue (something I'd like to also
+>> automate...).
+> 
+> Yups would love to hear if this solves it, it should be in today's
+> -next.
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.10-rc4-94-g3048c5493cd2/
+Yes in fact it appears to be all fixed on your for-next branch:
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.10-rc4-94-g3048c5493cd2
-Git Commit: 3048c5493cd208540252e6c78b2252fedf6f0ede
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+  https://kernelci.org/test/case/id/5fda32f92738afa48dc94ce1/
 
-Warnings Detected:
+Today's linux-next was not tested in the Collabora lab because of
+some infrastructure problem, but that's resolved now so it should
+be in tomorrow's results.
 
-arc:
-
-arm64:
-    defconfig (gcc-8): 8 warnings
-
-arm:
-    multi_v7_defconfig (gcc-8): 3 warnings
-
-i386:
-
-mips:
-
-riscv:
-
-x86_64:
-
-
-Warnings summary:
-
-    6    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #size-cells (1) differs from / (2)
-    6    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #address-cells (1) differs from / (2)
-    2    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
- (1) differs from / (2)
-    2    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
-lls (1) differs from / (2)
-    2    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
-: /soc/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
-    2    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge)=
-: /soc/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
-    2    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Fa=
-iled prerequisite 'spi_bus_bridge'
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
-1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:185.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
-differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 3 warnings, 0 sec=
-tion mismatches
-
-Warnings:
-    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
-c/apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
-    arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /so=
-c/apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
-    arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed =
-prerequisite 'spi_bus_bridge'
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+Best wishes,
+Guillaume
