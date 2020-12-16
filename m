@@ -2,22 +2,22 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD1D82DBC04
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 08:39:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 500DD2DBC05
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 08:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgLPHi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726080AbgLPHi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 16 Dec 2020 02:38:56 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:48579 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgLPHi4 (ORCPT
+Received: from relmlor1.renesas.com ([210.160.252.171]:37257 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725914AbgLPHiz (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Dec 2020 02:38:56 -0500
+        Wed, 16 Dec 2020 02:38:55 -0500
 X-IronPort-AV: E=Sophos;i="5.78,423,1599490800"; 
-   d="scan'208";a="65934728"
+   d="scan'208";a="66149409"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 16 Dec 2020 16:38:20 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 16 Dec 2020 16:38:21 +0900
 Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id DA59B41F1D7E;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F388941F2CA9;
         Wed, 16 Dec 2020 16:38:20 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     marek.vasut+renesas@gmail.com, lee.jones@linaro.org,
@@ -28,9 +28,9 @@ Cc:     khiem.nguyen.xt@renesas.com, linux-power@fi.rohmeurope.com,
         linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 10/12] mfd: bd9571mwv: Use devm_regmap_add_irq_chip()
-Date:   Wed, 16 Dec 2020 16:37:53 +0900
-Message-Id: <1608104275-13174-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 11/12] mfd: bd9571mwv: Make the driver more generic
+Date:   Wed, 16 Dec 2020 16:37:54 +0900
+Message-Id: <1608104275-13174-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1608104275-13174-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1608104275-13174-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
@@ -38,63 +38,220 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use dev_regmap_add_irq_chip() to simplify the code.
+From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
 
+Since the driver supports BD9571MWV PMIC only,
+this patch makes the functions and data structure become more generic
+so that it can support other PMIC variants as well.
+
+Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+[shimoda: rebase and refactor]
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/mfd/bd9571mwv.c | 27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
+ drivers/mfd/bd9571mwv.c       | 95 +++++++++++++++++++++++++++----------------
+ include/linux/mfd/bd9571mwv.h | 18 ++------
+ 2 files changed, 63 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/mfd/bd9571mwv.c b/drivers/mfd/bd9571mwv.c
-index e68c3fa..49e968e 100644
+index 49e968e..ccf1a60 100644
 --- a/drivers/mfd/bd9571mwv.c
 +++ b/drivers/mfd/bd9571mwv.c
-@@ -170,31 +170,17 @@ static int bd9571mwv_probe(struct i2c_client *client,
- 	if (ret)
- 		return ret;
+@@ -3,6 +3,7 @@
+  * ROHM BD9571MWV-M MFD driver
+  *
+  * Copyright (C) 2017 Marek Vasut <marek.vasut+renesas@gmail.com>
++ * Copyright (C) 2020 Renesas Electronics Corporation
+  *
+  * Based on the TPS65086 driver
+  */
+@@ -14,6 +15,19 @@
  
--	ret = regmap_add_irq_chip(bd->regmap, bd->irq, IRQF_ONESHOT, 0,
--				  &bd9571mwv_irq_chip, &bd->irq_data);
-+	ret = devm_regmap_add_irq_chip(bd->dev, bd->regmap, bd->irq,
-+				       IRQF_ONESHOT, 0, &bd9571mwv_irq_chip,
-+				       &bd->irq_data);
+ #include <linux/mfd/bd9571mwv.h>
+ 
++/**
++ * struct bd957x_data - internal data for the bd957x driver
++ *
++ * Internal data to distinguish bd957x variants
++ */
++struct bd957x_data {
++	char *part_name;
++	const struct regmap_config *regmap_config;
++	const struct regmap_irq_chip *irq_chip;
++	const struct mfd_cell *cells;
++	int num_cells;
++};
++
+ static const struct mfd_cell bd9571mwv_cells[] = {
+ 	{ .name = "bd9571mwv-regulator", },
+ 	{ .name = "bd9571mwv-gpio", },
+@@ -102,13 +116,21 @@ static struct regmap_irq_chip bd9571mwv_irq_chip = {
+ 	.num_irqs	= ARRAY_SIZE(bd9571mwv_irqs),
+ };
+ 
+-static int bd9571mwv_identify(struct bd9571mwv *bd)
++static const struct bd957x_data bd9571mwv_data = {
++	.part_name = BD9571MWV_PART_NAME,
++	.regmap_config = &bd9571mwv_regmap_config,
++	.irq_chip = &bd9571mwv_irq_chip,
++	.cells = bd9571mwv_cells,
++	.num_cells = ARRAY_SIZE(bd9571mwv_cells),
++};
++
++static int bd9571mwv_identify(struct device *dev, struct regmap *regmap,
++			      const char *part_name)
+ {
+-	struct device *dev = bd->dev;
+ 	unsigned int value;
+ 	int ret;
+ 
+-	ret = regmap_read(bd->regmap, BD9571MWV_VENDOR_CODE, &value);
++	ret = regmap_read(regmap, BD9571MWV_VENDOR_CODE, &value);
  	if (ret) {
- 		dev_err(bd->dev, "Failed to register IRQ chip\n");
+ 		dev_err(dev, "Failed to read vendor code register (ret=%i)\n",
+ 			ret);
+@@ -121,27 +143,20 @@ static int bd9571mwv_identify(struct bd9571mwv *bd)
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = regmap_read(bd->regmap, BD9571MWV_PRODUCT_CODE, &value);
++	ret = regmap_read(regmap, BD9571MWV_PRODUCT_CODE, &value);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to read product code register (ret=%i)\n",
+ 			ret);
+ 		return ret;
+ 	}
+-
+-	if (value != BD9571MWV_PRODUCT_CODE_VAL) {
+-		dev_err(dev, "Invalid product code ID %02x (expected %02x)\n",
+-			value, BD9571MWV_PRODUCT_CODE_VAL);
+-		return -EINVAL;
+-	}
+-
+-	ret = regmap_read(bd->regmap, BD9571MWV_PRODUCT_REVISION, &value);
++	ret = regmap_read(regmap, BD9571MWV_PRODUCT_REVISION, &value);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to read revision register (ret=%i)\n",
+ 			ret);
  		return ret;
  	}
  
--	ret = devm_mfd_add_devices(bd->dev, PLATFORM_DEVID_AUTO,
--				   bd9571mwv_cells, ARRAY_SIZE(bd9571mwv_cells),
--				   NULL, 0, regmap_irq_get_domain(bd->irq_data));
--	if (ret) {
--		regmap_del_irq_chip(bd->irq, bd->irq_data);
--		return ret;
--	}
+-	dev_info(dev, "Device: BD9571MWV rev. %d\n", value & 0xff);
++	dev_info(dev, "Device: %s rev. %d\n", part_name, value & 0xff);
+ 
+ 	return 0;
+ }
+@@ -149,38 +164,48 @@ static int bd9571mwv_identify(struct bd9571mwv *bd)
+ static int bd9571mwv_probe(struct i2c_client *client,
+ 			  const struct i2c_device_id *ids)
+ {
+-	struct bd9571mwv *bd;
+-	int ret;
 -
--	return 0;
--}
+-	bd = devm_kzalloc(&client->dev, sizeof(*bd), GFP_KERNEL);
+-	if (!bd)
+-		return -ENOMEM;
 -
--static int bd9571mwv_remove(struct i2c_client *client)
--{
--	struct bd9571mwv *bd = i2c_get_clientdata(client);
--
--	regmap_del_irq_chip(bd->irq, bd->irq_data);
--
--	return 0;
-+	return devm_mfd_add_devices(bd->dev, PLATFORM_DEVID_AUTO,
-+				    bd9571mwv_cells, ARRAY_SIZE(bd9571mwv_cells),
-+				    NULL, 0, regmap_irq_get_domain(bd->irq_data));
+-	i2c_set_clientdata(client, bd);
+-	bd->dev = &client->dev;
+-	bd->irq = client->irq;
++	const struct bd957x_data *data;
++	struct device *dev = &client->dev;
++	struct regmap *regmap;
++	struct regmap_irq_chip_data *irq_data;
++	int ret, irq = client->irq;
++
++	/* Read the PMIC product code */
++	ret = i2c_smbus_read_byte_data(client, BD9571MWV_PRODUCT_CODE);
++	if (ret < 0) {
++		dev_err(dev, "failed reading at 0x%02x\n",
++			BD9571MWV_PRODUCT_CODE);
++		return ret;
++	}
++	switch (ret) {
++	case BD9571MWV_PRODUCT_CODE_VAL:
++		data = &bd9571mwv_data;
++		break;
++	default:
++		dev_err(dev, "Unsupported device 0x%x\n", ret);
++		return -ENOENT;
++	}
+ 
+-	bd->regmap = devm_regmap_init_i2c(client, &bd9571mwv_regmap_config);
+-	if (IS_ERR(bd->regmap)) {
+-		dev_err(bd->dev, "Failed to initialize register map\n");
+-		return PTR_ERR(bd->regmap);
++	regmap = devm_regmap_init_i2c(client, data->regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "Failed to initialize register map\n");
++		return PTR_ERR(regmap);
+ 	}
+ 
+-	ret = bd9571mwv_identify(bd);
++	ret = bd9571mwv_identify(dev, regmap, data->part_name);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_regmap_add_irq_chip(bd->dev, bd->regmap, bd->irq,
+-				       IRQF_ONESHOT, 0, &bd9571mwv_irq_chip,
+-				       &bd->irq_data);
++	ret = devm_regmap_add_irq_chip(dev, regmap, irq, IRQF_ONESHOT, 0,
++				       data->irq_chip, &irq_data);
+ 	if (ret) {
+-		dev_err(bd->dev, "Failed to register IRQ chip\n");
++		dev_err(dev, "Failed to register IRQ chip\n");
+ 		return ret;
+ 	}
+ 
+-	return devm_mfd_add_devices(bd->dev, PLATFORM_DEVID_AUTO,
+-				    bd9571mwv_cells, ARRAY_SIZE(bd9571mwv_cells),
+-				    NULL, 0, regmap_irq_get_domain(bd->irq_data));
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, data->cells,
++				    data->num_cells, NULL, 0,
++				    regmap_irq_get_domain(irq_data));
  }
  
  static const struct of_device_id bd9571mwv_of_match_table[] = {
-@@ -215,7 +201,6 @@ static struct i2c_driver bd9571mwv_driver = {
- 		.of_match_table = bd9571mwv_of_match_table,
- 	},
- 	.probe		= bd9571mwv_probe,
--	.remove		= bd9571mwv_remove,
- 	.id_table       = bd9571mwv_id_table,
+diff --git a/include/linux/mfd/bd9571mwv.h b/include/linux/mfd/bd9571mwv.h
+index bcc7092..5ab976a 100644
+--- a/include/linux/mfd/bd9571mwv.h
++++ b/include/linux/mfd/bd9571mwv.h
+@@ -3,6 +3,7 @@
+  * ROHM BD9571MWV-M driver
+  *
+  * Copyright (C) 2017 Marek Vasut <marek.vasut+renesas@gmail.com>
++ * Copyright (C) 2020 Renesas Electronics Corporation
+  *
+  * Based on the TPS65086 driver
+  */
+@@ -83,6 +84,8 @@
+ 
+ #define BD9571MWV_ACCESS_KEY			0xff
+ 
++#define BD9571MWV_PART_NAME			"BD9571MWV"
++
+ /* Define the BD9571MWV IRQ numbers */
+ enum bd9571mwv_irqs {
+ 	BD9571MWV_IRQ_MD1,
+@@ -94,19 +97,4 @@ enum bd9571mwv_irqs {
+ 	BD9571MWV_IRQ_WDT_OF,
+ 	BD9571MWV_IRQ_BKUP_TRG,
  };
- module_i2c_driver(bd9571mwv_driver);
+-
+-/**
+- * struct bd9571mwv - state holder for the bd9571mwv driver
+- *
+- * Device data may be used to access the BD9571MWV chip
+- */
+-struct bd9571mwv {
+-	struct device *dev;
+-	struct regmap *regmap;
+-
+-	/* IRQ Data */
+-	int irq;
+-	struct regmap_irq_chip_data *irq_data;
+-};
+-
+ #endif /* __LINUX_MFD_BD9571MWV_H */
 -- 
 2.7.4
 
