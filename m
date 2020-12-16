@@ -2,65 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E63B12DC139
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 14:28:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 860092DC2C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Dec 2020 16:09:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgLPN1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Dec 2020 08:27:18 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9219 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgLPN1S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 08:27:18 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CwwqZ53x5zkqKJ;
-        Wed, 16 Dec 2020 21:25:46 +0800 (CST)
-Received: from ubuntu.network (10.175.138.68) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 16 Dec 2020 21:26:25 +0800
-From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH -next] gpio: convert comma to semicolon
-Date:   Wed, 16 Dec 2020 21:26:57 +0800
-Message-ID: <20201216132657.15582-1-zhengyongjun3@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        id S1725905AbgLPPJe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Dec 2020 10:09:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgLPPJd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Dec 2020 10:09:33 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A40C0617A6
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 07:08:53 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id i9so23531356wrc.4
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Dec 2020 07:08:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=x22bCBMzRAxFz6sSBgolhRVuawQUHRVdIXtYqh/jdUI=;
+        b=XXoR12nJ/51Cdim76vK0ddjmXjI2P2QPShPNZJAD1L68GyLqMQ+x5KY7Z4ZiUGR4Eh
+         63fwF6dD1wegZWqANU6Q4TY36xZPy/+NsCxL99Wwj9TmX+W9HuK1eLXMQUBp8QsSj3Z5
+         mmBKV2NdOQ4ODcsojdjTNR+GmuJARx3mWE6r42cO/+aC9KK14D7Hlr4IN5LnALmkqmjP
+         6wuvgC+dzwzxjcll5T8pYAZRaEhnq4LOxr6snOHVzfRGFhPOmGuJCCtH7F8NNRE4J+Eo
+         rxd9Vb33IxAcqrTroVKqzpNN9Cpmel7w4fRS+42axL58mjVr3yinPEP9J9JhmvyZ2a2I
+         GuLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=x22bCBMzRAxFz6sSBgolhRVuawQUHRVdIXtYqh/jdUI=;
+        b=YKAEbz5nUDrsf8EgNkx3yu4o7Tp2EVG8bbn4l4F9nes1ljvTjFl8Gq+TZp4jvRF7l7
+         QsPrmmSCDp57EurLXTM+gVD7gikvBB3HbgCpFl4B4NDWE8zOohBwap0M/xAksOJNvCBq
+         GucVjWtr4Gk1CCmEWSmuTzXSa+FBWqQoHdxz2KFoqPatVqdMqNsYCHbZslw466DuomdE
+         2UHcNNTtDNybxko/Kq6WJpe31tvFszS+daHP5WcW/1vbVzQd2+mChcDozZwz6rBqkxQw
+         MufMAGkZ+axSck+Ia8WpRNEG8cUWwbyFaPx/GS7z6JvzQEnQbAlvKQOku0KTRO9307gJ
+         8HTw==
+X-Gm-Message-State: AOAM532tvXijdNZeaxTWGEVA3yCipPm7eYC8+H7xlvEkVhJfdbifLVRv
+        OTlIzIyE2mXEcFnu+8M8zbeo8Q==
+X-Google-Smtp-Source: ABdhPJyiTo068uJu57j2aTnPUqS3Rd6f/mMiS8boAbDC3unxQbp0sz3qKJbUoHZr6Tip0sLgPwYC8w==
+X-Received: by 2002:a5d:6a4f:: with SMTP id t15mr7763158wrw.62.1608131331785;
+        Wed, 16 Dec 2020 07:08:51 -0800 (PST)
+Received: from dell ([91.110.221.200])
+        by smtp.gmail.com with ESMTPSA id u7sm1846111wmu.47.2020.12.16.07.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Dec 2020 07:08:50 -0800 (PST)
+Date:   Wed, 16 Dec 2020 15:08:49 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     marek.vasut+renesas@gmail.com, matti.vaittinen@fi.rohmeurope.com,
+        lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, khiem.nguyen.xt@renesas.com,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/12] mfd: bd9571mwv: Use devm_mfd_add_devices()
+Message-ID: <20201216150849.GI207743@dell>
+References: <1608104275-13174-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1608104275-13174-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.138.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1608104275-13174-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace a comma between expression statements by a semicolon.
+On Wed, 16 Dec 2020, Yoshihiro Shimoda wrote:
 
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
----
- drivers/gpio/gpio-sl28cpld.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> To remove mfd devices when unload this driver, should use
+> devm_mfd_add_devices() instead.
+> 
+> Fixes: d3ea21272094 ("mfd: Add ROHM BD9571MWV-M MFD PMIC driver")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/mfd/bd9571mwv.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
-index 889b8f5622c2..52404736ac86 100644
---- a/drivers/gpio/gpio-sl28cpld.c
-+++ b/drivers/gpio/gpio-sl28cpld.c
-@@ -65,13 +65,13 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
- 	if (!irq_chip)
- 		return -ENOMEM;
- 
--	irq_chip->name = "sl28cpld-gpio-irq",
-+	irq_chip->name = "sl28cpld-gpio-irq";
- 	irq_chip->irqs = sl28cpld_gpio_irqs;
- 	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
- 	irq_chip->num_regs = 1;
- 	irq_chip->status_base = base + GPIO_REG_IP;
- 	irq_chip->mask_base = base + GPIO_REG_IE;
--	irq_chip->mask_invert = true,
-+	irq_chip->mask_invert = true;
- 	irq_chip->ack_base = base + GPIO_REG_IP;
- 
- 	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.22.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
