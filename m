@@ -2,198 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3426F2DD19F
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Dec 2020 13:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84E532DD2CA
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Dec 2020 15:19:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgLQMmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Dec 2020 07:42:52 -0500
-Received: from mga11.intel.com ([192.55.52.93]:42933 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbgLQMmw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Dec 2020 07:42:52 -0500
-IronPort-SDR: gISOv4Xga9NTTlddI02kjXVNmoq8Aqv+ATowoE3Hny5YtZe22UHT3cUWORLVr7hJYv4DQqA4Ys
- b69ZAwUkzbGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9837"; a="171738687"
-X-IronPort-AV: E=Sophos;i="5.78,428,1599548400"; 
-   d="scan'208";a="171738687"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2020 04:42:11 -0800
-IronPort-SDR: sv8BKDyRhN+tEMChF0QP9gSHRZED4ouTbiixwrnu1eRO9OOBpRC2pfv7dUIzh0aoDPR58g9QXo
- +Q8HmaqB7elA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,428,1599548400"; 
-   d="scan'208";a="387497935"
-Received: from lkp-server02.sh.intel.com (HELO 070e1a605002) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Dec 2020 04:42:10 -0800
-Received: from kbuild by 070e1a605002 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kpsbh-0001BY-J0; Thu, 17 Dec 2020 12:42:09 +0000
-Date:   Thu, 17 Dec 2020 20:41:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- 7ac554888233468a9fd7c4f28721396952dd9959
-Message-ID: <5fdb5216.1fwyzjQYIRUQPaQf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728080AbgLQOR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Dec 2020 09:17:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbgLQOR4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Dec 2020 09:17:56 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E32C061794;
+        Thu, 17 Dec 2020 06:17:16 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id c5so23100561wrp.6;
+        Thu, 17 Dec 2020 06:17:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RVg2KaUX9LtQiHzjB7xT37Qy3WEyf0tgr+9J0DJhh24=;
+        b=elLHsMhscHdpWReZCb0saZ18kXY3TQwyWKKjk4J/DDSkJEa6TEqF/R1VJ9cI8Du5n1
+         in7SwPFMnB072o0zodeRItpXzFA/gijJ3+s5fDtzqW8AY6NGcidWXLfTwlq9elhIq34Q
+         12wKCsmDUyjy+6KOHsUuj1S1IA3RjtffIje7f5kDp+QIoL6ds9lHwEWLDt076LkYaRr0
+         NIMtEk5ztziZL0+Gcx+VNfiPzPRF1I6xipCcXJ9kJADJWEsPJVxpELfzGt/OrMJRcqmu
+         FkNGbljp8D3PEE01W2eZLv+y0dTo3km34j1eK693igl080OWz249961mCS7bLLaWdwSe
+         jXgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RVg2KaUX9LtQiHzjB7xT37Qy3WEyf0tgr+9J0DJhh24=;
+        b=Hmj/QJ2lGBn5mFFfH1DcxJ6+2MjH3l9muXAqjHyEsCFgSaRfcmQUx7uWAqF9nTxvG1
+         S6KjKcKtyJt9wmZEo/ldwqHA+XlwGSUgOFw72KjVCKnnKJdrgupUoZLEhwpwJ9mc1gNg
+         yVbm9hx8VI40kpSFAlpFrEh1AWOPZ52RSBYCONpLp5ugkf/CF4Drxy/Re8eVaHn2Bvcc
+         0xQwQDgkIlqr6X9/g99BxaU/lsfD13XU/GIDMdEYvxiSXSbx0KDd22lK3+nnRTI110Mu
+         XmeRTzsWueU9CWZKlfYlMqtZr/6Cl0PipiVxDdrYEwI//P2wN/PXGV3ueKussOUxXZmG
+         Cc7w==
+X-Gm-Message-State: AOAM533/cMxeZmVhG1f5ievFHciRYSGYxbuAsObVcHc5OBa8Ch7ttIeC
+        5LssPQcloWmJrpQrt0Gc9N8=
+X-Google-Smtp-Source: ABdhPJxZvUwst1WZ0MrRvTXG9usPINfZ0wEuqEMsaqHc3yrKUJOq/opPYDvircGFa1Qjy5wmZfc4Uw==
+X-Received: by 2002:a5d:4905:: with SMTP id x5mr28326528wrq.75.1608214634962;
+        Thu, 17 Dec 2020 06:17:14 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.56])
+        by smtp.gmail.com with ESMTPSA id h98sm10253123wrh.69.2020.12.17.06.17.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Dec 2020 06:17:14 -0800 (PST)
+Subject: Re: [PATCH 13/18] ipu3-cio2: Add functionality allowing software_node
+ connections to sensors on platforms designed for Windows
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        gregkh@linuxfoundation.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
+        bingbu.cao@intel.com, tian.shu.qiu@intel.com, mchehab@kernel.org,
+        robert.moore@intel.com, erik.kaneda@intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk, kieran.bingham+renesas@ideasonboard.com,
+        jacopo+renesas@jmondi.org,
+        laurent.pinchart+renesas@ideasonboard.com,
+        jorhand@linux.microsoft.com, kitakar@gmail.com,
+        heikki.krogerus@linux.intel.com
+References: <20201130133129.1024662-1-djrscally@gmail.com>
+ <20201130133129.1024662-14-djrscally@gmail.com>
+ <20201130203551.GP4351@valkosipuli.retiisi.org.uk>
+ <5238fc28-350b-a785-0a33-edeba9dfb096@gmail.com>
+ <20201215220249.GG26370@paasikivi.fi.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <797dda65-aedd-6a83-3f36-0cba457e4570@gmail.com>
+Date:   Thu, 17 Dec 2020 14:17:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20201215220249.GG26370@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 7ac554888233468a9fd7c4f28721396952dd9959  MAINTAINERS: Remove reference to non-existing file
+Hi Sakari - sorry for delayed reply. I didn't get this email actually,
+just spotted it on the newsgroup by chance.
 
-elapsed time: 725m
+On 15/12/2020 22:02, Sakari Ailus wrote:
+> Hi Daniel,
+> 
+> On Tue, Dec 15, 2020 at 10:28:59AM +0000, Daniel Scally wrote:
+>> Morning Sakari
+>>
+>> On 30/11/2020 20:35, Sakari Ailus wrote:
+>>>> +/*
+>>>> + * Extend this array with ACPI Hardware ID's of devices known to be working.
+>>>> + * Do not add a HID for a sensor that is not actually supported.
+>>>> + */
+>>>> +static const char * const cio2_supported_devices[] = {
+>>>> +	"INT33BE",
+>>>> +	"OVTI2680",
+>>>
+>>> I guess we don't have the known-good frequencies for the CSI-2 bus in
+>>> firmware?
+>>>
+>>> One option would be to put there what the drivers currently use. This
+>>> assumes the support for these devices is, well, somewhat opportunistic but
+>>> I guess there's no way around that right now at least.
+>>>
+>>> As the systems are laptops, they're likely somewhat less prone to EMI
+>>> issues to begin with than mobile phones anyway.
+>>
+>> Just looking at this; we're currently using this with the ov2680 driver
+>> that's in mainline currently (with very minor tweaks) plus a
+>> hacked-into-roughly-working version of the atomisp-ov5693 driver (ACPI
+>> ID INT33BE = ov5693 physical device). Neither of those drivers lists any
+>> link frequencies, nor provides a link frequency control for v4l2 to work
+>> with.
+>>
+>> On the other hand, the ov5648 [1] and ov8865 [2] drivers which Paul has
+>> submitted recently, which we also want to be able to support, _do_
+>> include that. I can register the frequencies Paul's defined there as a
+>> link-frequencies property but this gives rise to two questions:
+>>
+>>
+>> 1. Is this _mandatory_? Do I need to be finding the link-frequencies for
+>> the OV2680 and OV5693 drivers too? Or can I skip that property where the
+>> driver doesn't handle it anyway. Seems to be working fine without
+>> controlling it in driver.
+> 
+> Receiver drivers generally need the information to program the receiver
+> timing. It may work for you without using the correct frequency, but the
+> risk of failure on another unit increases.
 
-configs tested: 136
-configs skipped: 4
+Hmm, ok. I'll see if I can find the correct values then to add to the
+existing drivers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>> 2. Can I trust all the values in the drivers to be available on each
+>> platform? For example for the ov5648 Paul lists these as available:
+>>
+>>  938static const s64 ov5648_link_freq_menu[] = {
+>>
+>>
+>>  939        210000000,
+>>
+>>
+>>  940        168000000,
+>>
+>>
+>>  941};
+>>
+>> But can I safely register a link-frequencies property for both of those
+>> and trust that that'll work on all IPU3 platforms with an ov5648 in them?
+> 
+> Ideally we'd know which frequency Windows uses, and use the same.
+> 
+> Using another frequency may have adverse effects elsewhere in the system.
+> AFAIU mostly this concerns radios of all sorts.
+> 
+> Now that this is in the kernel in any case, it can be fixed later on so I'm
+> not too worried about it. Having still a comment there that the
+> configuration is opportunistic would be nice.
+> 
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                      pcm030_defconfig
-um                           x86_64_defconfig
-powerpc                     sequoia_defconfig
-arm                         mv78xx0_defconfig
-riscv                             allnoconfig
-arm                            dove_defconfig
-mips                        workpad_defconfig
-mips                           jazz_defconfig
-powerpc                      arches_defconfig
-powerpc                   currituck_defconfig
-powerpc                mpc7448_hpc2_defconfig
-h8300                       h8s-sim_defconfig
-powerpc                      walnut_defconfig
-m68k                          amiga_defconfig
-m68k                          sun3x_defconfig
-arc                     nsimosci_hs_defconfig
-powerpc                      chrp32_defconfig
-sh                          landisk_defconfig
-powerpc               mpc834x_itxgp_defconfig
-powerpc                     taishan_defconfig
-arm                       multi_v4t_defconfig
-h8300                               defconfig
-sh                          rsk7264_defconfig
-alpha                            alldefconfig
-arm                         assabet_defconfig
-sh                            hp6xx_defconfig
-sh                     magicpanelr2_defconfig
-mips                           ip28_defconfig
-powerpc                    socrates_defconfig
-x86_64                           alldefconfig
-sh                           se7619_defconfig
-h8300                     edosk2674_defconfig
-sh                ecovec24-romimage_defconfig
-ia64                        generic_defconfig
-sh                           sh2007_defconfig
-c6x                        evmc6474_defconfig
-arm                         axm55xx_defconfig
-arm                             mxs_defconfig
-sh                         microdev_defconfig
-powerpc                  storcenter_defconfig
-ia64                            zx1_defconfig
-powerpc                   bluestone_defconfig
-mips                           mtx1_defconfig
-ia64                          tiger_defconfig
-powerpc                      ppc6xx_defconfig
-arm                            zeus_defconfig
-powerpc                 mpc8540_ads_defconfig
-c6x                                 defconfig
-arm                            pleb_defconfig
-arc                      axs103_smp_defconfig
-arm                       aspeed_g4_defconfig
-sh                         ap325rxa_defconfig
-mips                     decstation_defconfig
-arm                          badge4_defconfig
-h8300                    h8300h-sim_defconfig
-mips                   sb1250_swarm_defconfig
-powerpc                       maple_defconfig
-arm                         s3c6400_defconfig
-sh                          sdk7786_defconfig
-powerpc                     ppa8548_defconfig
-powerpc                      ppc44x_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20201217
-i386                 randconfig-a004-20201217
-i386                 randconfig-a003-20201217
-i386                 randconfig-a002-20201217
-i386                 randconfig-a006-20201217
-i386                 randconfig-a005-20201217
-i386                 randconfig-a014-20201217
-i386                 randconfig-a013-20201217
-i386                 randconfig-a012-20201217
-i386                 randconfig-a011-20201217
-i386                 randconfig-a015-20201217
-i386                 randconfig-a016-20201217
-x86_64               randconfig-a003-20201217
-x86_64               randconfig-a006-20201217
-x86_64               randconfig-a002-20201217
-x86_64               randconfig-a005-20201217
-x86_64               randconfig-a004-20201217
-x86_64               randconfig-a001-20201217
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Understood - I'll add in the ability to add the link-frequencies plus a
+comment explaining.
 
-clang tested configs:
-x86_64               randconfig-a016-20201217
-x86_64               randconfig-a012-20201217
-x86_64               randconfig-a013-20201217
-x86_64               randconfig-a015-20201217
-x86_64               randconfig-a014-20201217
-x86_64               randconfig-a011-20201217
+Thanks
+Dan
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
