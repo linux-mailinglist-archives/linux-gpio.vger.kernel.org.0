@@ -2,54 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25EF02DDE27
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Dec 2020 06:45:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E732DE4FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Dec 2020 15:38:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbgLRFo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Dec 2020 00:44:56 -0500
-Received: from smtp.rcn.com ([69.168.97.78]:19481 "EHLO smtp.rcn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732097AbgLRFo4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 18 Dec 2020 00:44:56 -0500
-DKIM-Signature: v=1; a=rsa-sha1; d=rcn.com; s=20180516; c=relaxed/simple;
-        q=dns/txt; i=@rcn.com; t=1608270254;
-        h=From:Subject:Date:To:MIME-Version:Content-Type;
-        bh=v8rdSJ9E/EFiyHVL0kFBlEoAMEA=;
-        b=qBrtGo1e2f2dsl4dMS6hm9GGn+YGZU44yD2hukeWYiinRfkKE9aNV5GZt2Nivb0/
-        F9gyMyCQSezSTChOa8vw7IKz3cVRKssXhmNriXncVbYt+muWnwlZL8tYmx5AjoYP
-        srBHJYgBTnlmIzV7O5yF3oM1i2amvLPL+umhicTk9zdBgjlZr1hULn11xDbVb0wc
-        1e7IfeumB9tOcSQhe2nescVP90+aBLgvvShL7VHcgbt30Fp6q2Wf1NUl3yWJIYHG
-        9MDkLH5JOfvh0YCn+2E9l/atPutbiqTMR/p4AG+8TmKfa7ZJjA2zEi0XWm6ot7Tv
-        yjJSmWvFtoa1UmUf8lQ9FA==;
-X_CMAE_Category: , ,
-X-CNFS-Analysis: v=2.3 cv=c4XVvi1l c=1 sm=1 tr=0 cx=a_idp_x a=mF7O8l8PDJd/8IVjN0ISTQ==:117 a=KGjhK52YXX0A:10 a=FKkrIqjQGGEA:10 a=wn7IheokR9sA:10 a=kCd0_J2oyA4A:10 a=IkcTkHD0fZMA:10 a=zTNgK-yGK50A:10 a=apPKO9e1l70A:10 a=txAzasSzzUgA:10 a=x7bEGLp0ZPQA:10 a=Vg88gn-oxILdDc7OZSEA:9 a=QEXdDO2ut3YA:10 a=Pdo7SA5YR0FpDfmiiQ_X:22
-X-CM-Score: 0
-X-Scanned-by: Cloudmark Authority Engine
-X-Authed-Username: anJhbmRhbGxAcmNuLmNvbQ==
-Authentication-Results: smtp01.rcn.cmh.synacor.com header.from=jrandall@rcn.com; sender-id=softfail
-Authentication-Results: smtp01.rcn.cmh.synacor.com smtp.mail=jrandall@rcn.com; spf=softfail; sender-id=softfail
-Received: from [10.33.66.5] ([10.33.66.5:37905] helo=md03.rcn.cmh.synacor.com)
-        by smtp.rcn.com (envelope-from <jrandall@rcn.com>)
-        (ecelerity 3.6.25.56547 r(Core:3.6.25.0)) with ESMTP
-        id BF/E6-41584-CA14CDF5; Fri, 18 Dec 2020 00:44:13 -0500
-Date:   Fri, 18 Dec 2020 00:44:12 -0500 (EST)
-From:   DEVI RAI EXIM <jrandall@rcn.com>
-Reply-To: DEVI RAI EXIM <drdemh7@gmail.com>
-To:     DEVI RAI EXIM <drdemh7@gmail.com>
-Message-ID: <1494295639.15678909.1608270252861.JavaMail.root@rcn.com>
-In-Reply-To: <552465722.15667584.1608269874635.JavaMail.root@rcn.com>
-Subject: Re: hi_?
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [89.187.171.159]
-X-Mailer: Zimbra 7.2.7_GA_2942 (zclient/7.2.7_GA_2942)
-X-Vade-Verditct: clean
-X-Vade-Analysis: gggruggvucftvghtrhhoucdtuddrgedujedrudelhedgkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuufgjpfetvefqtffnvggrrhhnihhnghdptfevpfdpqfgfvfenuceurghilhhouhhtmecufedtudenucenucfjughrpeffhfhrvffkjgfugggtgfhiofesthejtgdtredtjeenucfhrhhomhepfffgggfkucfttefkucfgigfkofcuoehjrhgrnhgurghllhesrhgtnhdrtghomheqnecuggftrfgrthhtvghrnhepkeevhfefueetfeekkedtuedukefgvdfhiedvvdfffefhveeugfejvdeffeekvedtnecukfhppedutddrfeefrdeiiedrhedpkeelrddukeejrddujedurdduheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddtrdeffedrieeirdehnedpmhgrihhlfhhrohhmpehjrhgrnhgurghllhesrhgtnhdrtghomhenpdhrtghpthhtoheplhhvshhsghhouggurgeshigrhhhoohdrtghomhen
+        id S1727871AbgLROfK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Dec 2020 09:35:10 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:46385 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbgLROfJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Dec 2020 09:35:09 -0500
+Received: from orion.localdomain ([95.115.54.243]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2wCi-1kmxPC1v92-003Pjz; Fri, 18 Dec 2020 15:31:38 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, msalter@redhat.com, jacquiot.aurelien@gmail.com,
+        gerg@linux-m68k.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
+        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        maz@kernel.org, tony@atomide.com, arnd@arndb.de,
+        linux-alpha@vger.kernel.org, linux-c6x-dev@linux-c6x.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: cleanup handling of bad IRQs
+Date:   Fri, 18 Dec 2020 15:30:59 +0100
+Message-Id: <20201218143122.19459-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:GCc9gbsI9eyOCfdNmRX4o9bXX1pOCTy0AyznDchDYs0oM1Puh0V
+ HaUshqI/aGp8nZ32pIa3W6umlwkDU/2qcylknjRG07xPj3Phd4Hi7sPh0w6jCYT7br8wP9r
+ fsQ6guhbrEZJsPZNI8LuMeU1nvpg4pLhQC4hxQMx4DspP5teK6wAXTnJgWzY/Mk0t7irqLX
+ kur37BKvbPWU7xvonpMrg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/sbNIRVafqs=:7E0S8ysTyADzbE8lkSM6eP
+ 3TWEq16dIlocEj3ixPEv4zX+3uTZPLFNfZxuuLVDe5vQethUoPCGbLrF+TJzqQS6i9ZiPDOWV
+ +MEyUwQsMabb9a7q9A0f4yZPbmnRvOUDPtXYvFQYiaQf8++meO3+CL9+AQCaHZpZU5Lu4zk3h
+ DHvOcIL0N3IkgsS8EOQdWctpP0notp1p3/QtKqWrA0uwnQO8udkYh4oSleqescXu70z7m0miq
+ aQx+1M87gYUAFYOUnCysSU1ZhyZRm3NivHaA+X1Bi0lbdEx0v1kCrv+PamjVlz+r4tOy1m2VO
+ 7GBJGicMrEiBxqRit0qr0sJg1PjhIfT/u0Up/KxPuvMs/TGlnv05ySaqY98K0u1+80NKHB60f
+ iftFYU5etid5UzRqKbNb+YFzN9b3C5t5lHQzh4h/GALhKjmHZEoAm9bm1bb//
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello friends,
 
 
-WHICH DISTRICT IS YOUR OFFICEE
+here's a patch queue for cleaning up the IRQ handling. Inspired by a
+discussion we had on a previous patch of mine:
+
+    "arch: fix 'unexpected IRQ trap at vector' warnings"
+    https://www.spinics.net/lists/kernel/msg3763137.html
+
+Turned out that the whole message, as it is right now, doesn't make much
+sense at at all - not just incorrect wording, but also not quite useful
+information. And the whole ack_bad_irq() thing deserves a cleanup anyways.
+
+So, I've had a closer look and came to these conclusions:
+
+1. The warning message doesn't need to be duplicated in the per architecture
+   ack_bad_irq() functions. All, but one callers already do their own warning.
+   Thus just adding a pr_warn() call there, printing out more useful data
+   like the hardware IRQ number, and dropping all warnings from all the
+   ack_bad_irq() functions.
+
+2. Many of the ack_bad_irq()'s count up the spurious interrupts - lots of
+   duplications over the various archs. Some of them using atomic_t, some
+   just plain ints. Consolidating this by introducing a global counter
+   with inline'd accessors and doing the upcounting in the (currently 3)
+   call sites of ack_bad_irq(). After that, step by step changing all
+   archs to use the new counter.
+
+3. For all but one arch (x86), ack_bad_irq() became a no-op.
+
+   On x86, it's just a call to ack_APIC_irq(), in order to prevent lockups
+   when IRQs missed to be ack'ed on the APIC. Could we perhaps do this in
+   some better place ? In that case, ack_bad_irq() could easily be removed
+   entirely.
+
+have fun,
+
+--mtx
+
+
