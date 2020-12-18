@@ -2,104 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6B12DE706
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Dec 2020 16:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8D662DE719
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Dec 2020 17:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725949AbgLRP4r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Dec 2020 10:56:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
+        id S1725797AbgLRQBr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Dec 2020 11:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgLRP4r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Dec 2020 10:56:47 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28006C0617A7;
-        Fri, 18 Dec 2020 07:56:07 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id n16so1591298pgm.0;
-        Fri, 18 Dec 2020 07:56:07 -0800 (PST)
+        with ESMTP id S1725792AbgLRQBr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Dec 2020 11:01:47 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61936C0617A7;
+        Fri, 18 Dec 2020 08:01:07 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id f17so1581907pge.6;
+        Fri, 18 Dec 2020 08:01:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=abkacR5EtfH7n3c7FX6aX1PPXUx2EG3knfWGOF7I8KQ=;
-        b=CBfVYlZ7drbVWtqD4bM3rkW3OWAqtTHQ4tOTswiI8hMNopfxOrNSevY5aJbqvp0mM5
-         TCt5A9KlDha/typLUMvAinFqZihBhKDs4BnfOvsBgN1UEuOfn2IctSX1c7RAJE00PX2w
-         n7klcFUYA8+Wh03OFueMg42mGZ0RkQcUL9Og1KFLwVu3sptluQTtOKanGWeSuBQ6+cvG
-         IQarphsJdlgszUZ2XFgxxcoIxIFcXYZtA7DiUUAY+OhzWh0reHMzfpVaZ6Tbo/44jQMr
-         d42Q7DDFcqvQMmrXsNBpvMeT3nysS6sMGtm6mQ7XQdIwUbkG3/ZAqQL4skrB49QcSHxQ
-         YUtg==
+        bh=DRM/wBZDVRUf6b3umPWfvNsEtcdrtOMQW/bD+f2otgU=;
+        b=KGL6XFshSDIGuPnWo+jL/LRsXLpvUktlDkWZfYWi1f4v3svvLiXJ8R1RZP8NGEADuR
+         H7CWqKSWQaOJD1avCfj0dCW2S83YVSUr4ruH8U3MWoCFCQCGALq5dKxJIiw7GNipHWId
+         HW6H8HT9O/75yzySCljS9Vb2rRxLMo6EfRyj4VTKaTTKkf6rjOtFAVt2oyJOsQMdOetF
+         6kFn9MYUFlB+D3UhbA821cB5uPwoYvNCVYPusAU4ehtLlxj0YCxUvZKbCSf7UgQw9kFN
+         RClczXzyx48+0MOH+eP7crd9TxYBJNlZ4doIYgNu3lDTvwkXbTuQfDuQblqzAYd9Uik4
+         TFNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=abkacR5EtfH7n3c7FX6aX1PPXUx2EG3knfWGOF7I8KQ=;
-        b=c/cqZzY4wqpKKkqKdHgyX4S3xg6deNWnLSVFQPtsPb8AwR6RuB6RLa4ecouD90os4O
-         2GSt6P1LZRf220aaKYHUfUL6uhmoAYRT9Sh0c0/uawl0vUDAgeZAHgx9NZpFYBwwMVFF
-         FQ0jrU1k6+AdenjeO4qLaNid17eDP4yISZn1oPo6GFjECc7VsCTtf57JW4dSpcTMLMBr
-         5eA6b5vEe+wEvdKELJElYKm8zXuPJP04ZgWm++vjzow4//9TH9BSyY2s1ElUNkXvnV7H
-         mUF1Twguozcq4Rk24I0wICZ6xIO9Uh781mcprCN3Dfu4b3rPsCaudi7nruYhdcQawAxB
-         7/aw==
-X-Gm-Message-State: AOAM532YaV5M8Qr692GEUlIfNqCbePWCm9v0zqJPzG0ljVRW99BXhYiu
-        Kh5JCfLCUEQnfPiiKTGXqN9dY/gnFJMQfoTE5fM=
-X-Google-Smtp-Source: ABdhPJx7CKHKNahHF7wOhrRaWmRijCkWWyTNv/8H9aIqR6dzxIZFoFPjsHMLJGY+VN1uh1mCeWPnu3uWBQAXjL7LLn4=
-X-Received: by 2002:a63:b1e:: with SMTP id 30mr4683229pgl.203.1608306966654;
- Fri, 18 Dec 2020 07:56:06 -0800 (PST)
+        bh=DRM/wBZDVRUf6b3umPWfvNsEtcdrtOMQW/bD+f2otgU=;
+        b=NrL2Sc0PtJfsUThNPAICuLTL0qCaDiYyt1KOpWChpoJ76YLXSEaJ9SFIOsWIl05QFq
+         SsANO+RbCtCwkbFceAu8Kkxrd/ffHKpurkbfWXJ6Pqf3DbRsDrF4mEGHdv1mvsAdJSHZ
+         oQMmfIR8n0YU7Q9v9ygeyzjy5JRiKqnKvS4XAdKr7k3dL3mIlP20zFSzzL2K8frbboL/
+         uouObV1HYOhGZ9c5rlVVjpBGoF8nlomAN6qJbmduv4dPXVL5oZwExbTJoSYYgId9ZRcN
+         vzYKBNSEz6mP5415DJP2EA32etYTEKm6Z3g5pnm0duSVI5gcS3ESKFA8yClA0iLJPzAu
+         7TuA==
+X-Gm-Message-State: AOAM531vpTuainLYiOqtZPG4zVXtum7bo/IHZHBz3fEokKU7VHo8pQ/H
+        PUgWVOIjLfJcoPJ6oMZScPeQx5Y0ru38NX+RYnY=
+X-Google-Smtp-Source: ABdhPJxDkK/OPlvT0Gz8glaf95BmqQokOcq7IqBqzVNc2OhKjypyZwk9RZpoxdqzfbFHqQlNoTWdBxfWAqVczvQvtd8=
+X-Received: by 2002:a63:74b:: with SMTP id 72mr4772037pgh.4.1608307266722;
+ Fri, 18 Dec 2020 08:01:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20201218143122.19459-1-info@metux.net> <20201218143122.19459-2-info@metux.net>
-In-Reply-To: <20201218143122.19459-2-info@metux.net>
+References: <20201211042625.129255-1-drew@beagleboard.org> <CAHp75VcAbdrSnb_ag9Rc0tny3Vtqjs1if+ahk7U36V2eaKMpSw@mail.gmail.com>
+ <20201211234304.GA189853@x1> <CAHp75Vf-=nM-M2K-v_8iyME4t6ZF-gvSZ5ePsxQFhObJ_0YHsw@mail.gmail.com>
+ <20201214214419.GA1196223@x1> <CAHp75VeN9xLUKFBXZfo=XzNkdv=BSRJW59=cUjyY0TekF1JONA@mail.gmail.com>
+ <CAHp75VdGEe9F69=uzaDiCf9C8byh6ThuCJLMch1dBXEH4MA2Sg@mail.gmail.com> <20201215224212.GB2086329@x1>
+In-Reply-To: <20201215224212.GB2086329@x1>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 18 Dec 2020 17:55:50 +0200
-Message-ID: <CAHp75VfYz_K2BYOxqmSx0q+1F2F9Lp1eb70RrNYzJHs3FX+quQ@mail.gmail.com>
-Subject: Re: [PATCH 01/23] kernel: irq: irqdescs: warn on spurious IRQ
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, msalter@redhat.com,
-        jacquiot.aurelien@gmail.com, gerg@linux-m68k.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+Date:   Fri, 18 Dec 2020 18:00:49 +0200
+Message-ID: <CAHp75VfbEE0t2g=uzux5=dhgAHwv15OKpVr+xrF19VskO7HnTw@mail.gmail.com>
+Subject: Re: [RFC PATCH] pinctrl: add helper to expose pinctrl state in debugfs
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org,
-        Linux-SH <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>
+        Tony Lindgren <tony@atomide.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 18, 2020 at 4:37 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On Wed, Dec 16, 2020 at 12:42 AM Drew Fustini <drew@beagleboard.org> wrote:
+> On Tue, Dec 15, 2020 at 09:39:18PM +0200, Andy Shevchenko wrote:
+> > On Tue, Dec 15, 2020 at 9:36 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Dec 14, 2020 at 11:44 PM Drew Fustini <drew@beagleboard.org> wrote:
+> > > > On Mon, Dec 14, 2020 at 07:55:12PM +0200, Andy Shevchenko wrote:
+> >
+> > ...
+> >
+> > > > With regards to parent directory, I did discover there is
+> > > > debugfs_lookup(), so I can get the dentry for "pinctrl" and create new
+> > > > subdirectory inside of it.  This is the structure now:
+> > > >
+> > > > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P2_35_pinmux/state
+> > > > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P2_34_pinmux/state
+> > > > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P2_33_pinmux/state
+> > > > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P2_32_pinmux/state
+> > > > etc..
+> >
+> > Missed part to comment.
+> >
+> > I was talking about
+> >
+> > /sys/kernel/debug/pinctrl/<$PINCTRL>/mux/<$PIN> (maybe folder, maybe node)
+>
+> Thanks for the example.
+>
+> What would the value be "<$PINCTRL>"?  The name of the driver?
 
-> +               if (printk_ratelimit())
-> +                       pr_warn("spurious IRQ: irq=%d hwirq=%d nr_irqs=%d\n",
-> +                               irq, hwirq, nr_irqs);
+The name of the device instance. This is already done in the pin control code.
 
-Perhaps you missed pr_warn_ratelimit() macro which is already in the
-kernel for a long time.
+> The "ocp:Px_yy_pinmux" directory name comes from dev_name(dev). Is that
+> the name you were referencing in "<$PIN>"?
+
+No, the <$PIN> is an actual pin on this controller. However, I think
+we probably don't need this, just supply it as tuple of the parameters
+to be set: like
+echo $PIN $STATE > .../<$PINCTRL>/mux or alike.
 
 -- 
 With Best Regards,
