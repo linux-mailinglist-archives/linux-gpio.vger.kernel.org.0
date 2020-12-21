@@ -2,100 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9322C2DF8E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Dec 2020 06:45:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00FBC2DF9E1
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Dec 2020 09:26:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgLUFpJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Dec 2020 00:45:09 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55417 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgLUFpJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 21 Dec 2020 00:45:09 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4CzpLk1qPgz9sVk;
-        Mon, 21 Dec 2020 16:44:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1608529465;
-        bh=8q8pjXmt3fb3/FcKFZZhBpNNcXsp66j8Isw1H4VoFss=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZnWF70NmUxyOGkj7ajnBegDo04rv8gH5Ux9NWJhGuiFgnNMVogs2qsK/JPPvTOxX3
-         hzwMtUhjiDSqvHc4ZZWFFrTwkUdkYXJq/1ML2X0U5qamtbWBfarkCtNAXDelPjKyYu
-         4R5GrwJUkFnZSYIfsBFzv3+C8RVv3a9uzsg9fDjFKnZkRtQDx75FnOmDIw99taeAnd
-         QCskX9h/ngj+6oMYoBPKKaJh3wx/SkbDouSAAbUuPyGD0ebzLrrNquc0B/69DXdzQf
-         fJmTp61f2fzdZls70bVcMCLTyxKnMkjf3NMjT+RK4eF560XOppbITSBixDl2QbJUdX
-         VnJ3dZzhE+mIA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt\, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, msalter@redhat.com,
-        jacquiot.aurelien@gmail.com, gerg@linux-m68k.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        "open list\:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org,
-        Linux-SH <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 01/23] kernel: irq: irqdescs: warn on spurious IRQ
-In-Reply-To: <CAHp75VfYz_K2BYOxqmSx0q+1F2F9Lp1eb70RrNYzJHs3FX+quQ@mail.gmail.com>
-References: <20201218143122.19459-1-info@metux.net> <20201218143122.19459-2-info@metux.net> <CAHp75VfYz_K2BYOxqmSx0q+1F2F9Lp1eb70RrNYzJHs3FX+quQ@mail.gmail.com>
-Date:   Mon, 21 Dec 2020 16:44:13 +1100
-Message-ID: <87ft3zyaqa.fsf@mpe.ellerman.id.au>
+        id S1726115AbgLUI0E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Dec 2020 03:26:04 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9233 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgLUI0E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Dec 2020 03:26:04 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Czsvc18RMzktNl;
+        Mon, 21 Dec 2020 16:24:28 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.498.0; Mon, 21 Dec 2020
+ 16:25:18 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <andriy.shevchenko@linux.intel.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1] gpio: hisi: delete some unused variables in hisi_gpio_probe()
+Date:   Mon, 21 Dec 2020 16:25:24 +0800
+Message-ID: <1608539124-4914-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> On Fri, Dec 18, 2020 at 4:37 PM Enrico Weigelt, metux IT consult
-> <info@metux.net> wrote:
->
->> +               if (printk_ratelimit())
->> +                       pr_warn("spurious IRQ: irq=%d hwirq=%d nr_irqs=%d\n",
->> +                               irq, hwirq, nr_irqs);
->
-> Perhaps you missed pr_warn_ratelimit() macro which is already in the
-> kernel for a long time.
+kernel test rebot report that dat, set and clr in hisi_gpio_probe() is
+unused variables. So delete it.
 
-pr_warn_ratelimited() which calls printk_ratelimited().
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+---
+ drivers/gpio/gpio-hisi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-And see the comment above printk_ratelimit():
+diff --git a/drivers/gpio/gpio-hisi.c b/drivers/gpio/gpio-hisi.c
+index a389780..d2971c9 100644
+--- a/drivers/gpio/gpio-hisi.c
++++ b/drivers/gpio/gpio-hisi.c
+@@ -254,7 +254,6 @@ static void hisi_gpio_get_pdata(struct device *dev,
+ static int hisi_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	void __iomem *dat, *set, *clr;
+ 	struct hisi_gpio *hisi_gpio;
+ 	int port_num;
+ 	int ret;
+-- 
+2.7.4
 
-/*
- * Please don't use printk_ratelimit(), because it shares ratelimiting state
- * with all other unrelated printk_ratelimit() callsites.  Instead use
- * printk_ratelimited() or plain old __ratelimit().
- */
-
-
-cheers
