@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 562E12E076D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 09:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1578D2E0778
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 09:54:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgLVIud (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Dec 2020 03:50:33 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:46977 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgLVIuc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 03:50:32 -0500
-Received: by mail-ot1-f44.google.com with SMTP id w3so11252186otp.13;
-        Tue, 22 Dec 2020 00:50:17 -0800 (PST)
+        id S1726033AbgLVIxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Dec 2020 03:53:43 -0500
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:35251 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgLVIxn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 03:53:43 -0500
+Received: by mail-ot1-f43.google.com with SMTP id i6so11338707otr.2;
+        Tue, 22 Dec 2020 00:53:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jY18YEcF5xOHELJM57FjJ/aGJT6euUtJ4hSpkcgklt4=;
-        b=VjfTXqPP0JLErDYpB82lzpD7YzdeV9RPFaqprNkaeLIkugBB4s2PyWisn1uM1eA1Aq
-         69U3GLr/uOdhEMpVwKU3yrv86wbGNdqAtMMdr3adZL5aXAkALLVjOwWTfKRXBQQz+FLL
-         r5/zZBDHFbKch31F2tX3T//me3ydfryXO2ICANt4ax1DRgydmwdurt5e6Js871u8viIJ
-         Hhy9de5I9TNHohZHfsoDBe1f6Wb8b7nt7AoFEoUpEOuAAqV3I8xAO7MOrQ+xKJgfb3dM
-         5iun4/yC4DQ3KxtVIjyAcUEdAjp7f/3gWHQkFW1ZXE1gz3i6j4SbGAGTUHuEUM9uvKyG
-         Dfdw==
-X-Gm-Message-State: AOAM531YSrNafH77PXPqKST2IZG37V7J7J7w+plcd1oDTWD7UpG5Zwcp
-        AZuSlBgUjki9y77KzV1l9eG0/GiM6N2uP8c2kc8=
-X-Google-Smtp-Source: ABdhPJxTemkIvaNdloVrP3Z3Q+MIjTq/I4aPxEec+ZcQBTwXd79keU9QscBGUx+ycOChoqCZs8tuTSiRtz2Im9uBTkw=
-X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr15041926otc.145.1608626991901;
- Tue, 22 Dec 2020 00:49:51 -0800 (PST)
+        bh=+CsslQAF3nPoofK3CBM0zYWDqQbC1If0S8clDu+Gzzw=;
+        b=GcPj80d5AMVM5nx4YB1/XRBhBjTKZloSmFqHRjLJnNCz7u3m4Iy8CuL2rhQr9aOv1m
+         LDNwsXdDbhei6OKM+s+vjsOQGk2YWXiCdYmKbUFtdRxArLqeJUTaKClukh49woTOkMXX
+         Vh0ceyKGWMTuHqGcsOtV4f5tl1vM5LWvUx2NNRTWam+3YdMTTdfxHG0p6QZSuZlgDTNi
+         0E3ECc+eoXCXPSa2C2Nhurm8mT+COtoCZpeB9N2kRbh03JWsqW2M3OZZPAauTj8ZJ3ly
+         yV4yi1fs/rOuT3JZXuIGDitn6FTvKE0S7bBBWo1Pqus6chvGjOQdGRVMijX0EEkVI9BZ
+         kTng==
+X-Gm-Message-State: AOAM532KLDffd1e/gm1ws+kZKdJprWQQVV9r/VLcQbhnoZVN7MpeeocQ
+        yuM6P0Tf7Y/VqutIjApwFiUX070bC8dXuqTv6fg=
+X-Google-Smtp-Source: ABdhPJzY0266Jvt9XWob4G/K1i1aS8Ec4otCu0hXywqpGPfIWSI5kW6hibscA8Ibs9fKornynX1adUX1Ub1y5LDHI30=
+X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr15005606oth.250.1608627182559;
+ Tue, 22 Dec 2020 00:53:02 -0800 (PST)
 MIME-Version: 1.0
 References: <1608519279-13341-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1608519279-13341-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1608519279-13341-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1608519279-13341-13-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1608519279-13341-13-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Dec 2020 09:49:40 +0100
-Message-ID: <CAMuHMdVw_+dj78oygsVFnc4j9sTj97h1Q0GBp7oGWzakxCPfQA@mail.gmail.com>
-Subject: Re: [PATCH v4 10/12] mfd: bd9571mwv: Use devm_regmap_add_irq_chip()
+Date:   Tue, 22 Dec 2020 09:52:51 +0100
+Message-ID: <CAMuHMdXkRUbjQk=1mqn0b7PeGX0ir=s4UwbCHfw_2mWaVEVPTg@mail.gmail.com>
+Subject: Re: [PATCH v4 12/12] mfd: bd9571mwv: Add support for BD9574MWF
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -55,14 +55,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 21, 2020 at 3:57 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Use dev_regmap_add_irq_chip() to simplify the code.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Hi Shimoda-san,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, Dec 21, 2020 at 3:56 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+>
+> The new PMIC BD9574MWF inherits features from BD9571MWV.
+> Add the support of new PMIC to existing bd9571mwv driver.
+>
+> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+> Co-developed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/mfd/bd9571mwv.c
+> +++ b/drivers/mfd/bd9571mwv.c
+
+> @@ -200,12 +277,14 @@ static int bd9571mwv_probe(struct i2c_client *client,
+>
+>  static const struct of_device_id bd9571mwv_of_match_table[] = {
+>         { .compatible = "rohm,bd9571mwv", },
+> +       { .compatible = "rohm,bd9574mwf", },
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, bd9571mwv_of_match_table);
+>
+>  static const struct i2c_device_id bd9571mwv_id_table[] = {
+> -       { "bd9571mwv", 0 },
+> +       { "bd9571mwv", ROHM_CHIP_TYPE_BD9571 },
+> +       { "bd9574mwf", ROHM_CHIP_TYPE_BD9574 },
+
+Why add the chip types?  These are unused, and the driver uses
+autodetection of the chip variant anyway.
 
 Gr{oetje,eeting}s,
 
