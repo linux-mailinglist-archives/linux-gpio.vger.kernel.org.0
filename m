@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 876C42E0760
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 09:43:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 562E12E076D
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 09:51:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgLVImb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Dec 2020 03:42:31 -0500
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:35420 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgLVIma (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 03:42:30 -0500
-Received: by mail-ot1-f43.google.com with SMTP id i6so11318408otr.2;
-        Tue, 22 Dec 2020 00:42:15 -0800 (PST)
+        id S1725854AbgLVIud (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Dec 2020 03:50:33 -0500
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:46977 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgLVIuc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 03:50:32 -0500
+Received: by mail-ot1-f44.google.com with SMTP id w3so11252186otp.13;
+        Tue, 22 Dec 2020 00:50:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1XpA44/7GWmNDj0l2VSHEVXeX5TKQoGtwuhl2k5PB7A=;
-        b=pjSlf/wF57sd9J74qbgnYSqrktOranfqT2GyBqh6GbZfrVw64hq89W5IGJQr4NPqst
-         X2t93fgKP2LdUx84fxCRjTRXEp5xT/Q1yIGa5nDmhEBy1FN1Omd3HEwDvOejbtAWMP3R
-         fh9ZOOCM9BIgeSkvzs2K1sdj7H6TokNcIh/bU42UWIxyEV24kago/xl4IhjAl9RB8SIm
-         COid/OyiDz3DkuNS9hs7yiKi3HzoVGF9YTDFpNqG+migsZr2lvy3VskP7iE0gxA1tbli
-         /hNYI4RRFDe7d9LMO6Nhs+fCtXqgPbPNW0XZEE/bBwkZ8JQoNeJjRadhWh6ltUfocE8M
-         0rag==
-X-Gm-Message-State: AOAM533WPH23wjyNzuPyuB5RC3b7o3YBNZGl1+5mC9fu5y/LaNOk+C+a
-        oLhmG2e6oxex/qx3D5Wlh/FJXf/G3wxeDk4Nv18=
-X-Google-Smtp-Source: ABdhPJwfiqOFSMZaFM8xBA2rS/jPzI8V4/5BltfMeSJZ46PzfvHc0PCC/KyWC/Rc5mvl6W7Bv/Ym6GJXKZG8z/nVquk=
-X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr14987627oth.250.1608626509823;
- Tue, 22 Dec 2020 00:41:49 -0800 (PST)
+        bh=jY18YEcF5xOHELJM57FjJ/aGJT6euUtJ4hSpkcgklt4=;
+        b=VjfTXqPP0JLErDYpB82lzpD7YzdeV9RPFaqprNkaeLIkugBB4s2PyWisn1uM1eA1Aq
+         69U3GLr/uOdhEMpVwKU3yrv86wbGNdqAtMMdr3adZL5aXAkALLVjOwWTfKRXBQQz+FLL
+         r5/zZBDHFbKch31F2tX3T//me3ydfryXO2ICANt4ax1DRgydmwdurt5e6Js871u8viIJ
+         Hhy9de5I9TNHohZHfsoDBe1f6Wb8b7nt7AoFEoUpEOuAAqV3I8xAO7MOrQ+xKJgfb3dM
+         5iun4/yC4DQ3KxtVIjyAcUEdAjp7f/3gWHQkFW1ZXE1gz3i6j4SbGAGTUHuEUM9uvKyG
+         Dfdw==
+X-Gm-Message-State: AOAM531YSrNafH77PXPqKST2IZG37V7J7J7w+plcd1oDTWD7UpG5Zwcp
+        AZuSlBgUjki9y77KzV1l9eG0/GiM6N2uP8c2kc8=
+X-Google-Smtp-Source: ABdhPJxTemkIvaNdloVrP3Z3Q+MIjTq/I4aPxEec+ZcQBTwXd79keU9QscBGUx+ycOChoqCZs8tuTSiRtz2Im9uBTkw=
+X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr15041926otc.145.1608626991901;
+ Tue, 22 Dec 2020 00:49:51 -0800 (PST)
 MIME-Version: 1.0
 References: <1608519279-13341-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1608519279-13341-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1608519279-13341-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1608519279-13341-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1608519279-13341-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Dec 2020 09:41:38 +0100
-Message-ID: <CAMuHMdXp8cuO8ppNbDTmt4aovDCvC9EG23NHoZNAZK5Y0eD4Ww@mail.gmail.com>
-Subject: Re: [PATCH v4 01/12] mfd: bd9571mwv: Use devm_mfd_add_devices()
+Date:   Tue, 22 Dec 2020 09:49:40 +0100
+Message-ID: <CAMuHMdVw_+dj78oygsVFnc4j9sTj97h1Q0GBp7oGWzakxCPfQA@mail.gmail.com>
+Subject: Re: [PATCH v4 10/12] mfd: bd9571mwv: Use devm_regmap_add_irq_chip()
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -57,10 +57,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Dec 21, 2020 at 3:57 AM Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> To remove mfd devices when unload this driver, should use
-> devm_mfd_add_devices() instead.
+> Use dev_regmap_add_irq_chip() to simplify the code.
 >
-> Fixes: d3ea21272094 ("mfd: Add ROHM BD9571MWV-M MFD PMIC driver")
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
