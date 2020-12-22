@@ -2,126 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1BD2E0570
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 05:39:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 876C42E0760
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 09:43:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbgLVEiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Dec 2020 23:38:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgLVEiu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Dec 2020 23:38:50 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AC9C0613D3
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id b8so6801029plx.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
-        b=f37eFkln4a/htDAWss+ZS1U+E4a3XjADVDLugAkDTqYfhz6h+hiYbGevReGFf4n1TK
-         3LcyVU0v8oEj/ldV2LwRorapAZA9fM+aEsLElWnlYinloCFhkUxXIG6IPajD8tgiJJea
-         DpV7MWDOXHzOuzTO/m9jSt14tPoJrM5KP18DX8I2/m7k1RJGMbdgBM9opD9aW4R0APi2
-         qwsxK5iRF4PUxhEWWnJeQbqIQ1L1pe/0UYpfefLQ75Em26FoNTFGgZaoz7DKALCRXLEX
-         ZOBQkG9jMif+c5JtWfTVjvIK0ay59QORO0oyT5r2YmuHYQtzadQyZ5I+40srrzB7gnDd
-         Pygw==
+        id S1725881AbgLVImb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Dec 2020 03:42:31 -0500
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:35420 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgLVIma (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 03:42:30 -0500
+Received: by mail-ot1-f43.google.com with SMTP id i6so11318408otr.2;
+        Tue, 22 Dec 2020 00:42:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
-        b=mpAv4gREf5qVu/1txbTJ3WiZmePRaDyidxbr1F8ew5kkaLLr80bslIGdTB0/a1LZHA
-         41wU0WhINqSfJE1ePYuKnJx3+0keqqSXuxMtl3NshKg7YpTUC/Bh4m9+htNwqr0c5xeC
-         RjmPlMofOSGPK5cLqyagMstq4QgDRe+/b4Achg7Jq+eVV2Lq8z7tKcQ6JsDNusU2SpPL
-         M+TokcU88wWzGWpdMXaNoKduaZalvSwnsXQxq/jcZTV4UZPY+++IPqijZAcmTcB2QV3a
-         jVnRr9vc4JC5tWSEnIK11EY4hqT1CStFUh/Uiv08arJvd6Wcj80XKCUYhZK5Is3En9RF
-         I+Hw==
-X-Gm-Message-State: AOAM530kYfyMj6La1MKnBiaGrFg1EIAspTZMIXpPKRsqWz8UqVrXMI5o
-        JIF+sfqzjSFTqmj+PQfpPo4x2Q==
-X-Google-Smtp-Source: ABdhPJxtuQf6v3NOjOt18j+2XE9PyJZOYNWFlG1D0U0wBxlkHbcyvIu7qM9Ho0qf5ZhZV4ECTna2pA==
-X-Received: by 2002:a17:902:694c:b029:da:afba:beab with SMTP id k12-20020a170902694cb02900daafbabeabmr19519669plt.32.1608611889761;
-        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id a136sm19619380pfd.149.2020.12.21.20.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-Date:   Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-X-Google-Original-Date: Mon, 21 Dec 2020 20:38:02 PST (-0800)
-Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
-In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        broonie@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        aou@eecs.berkeley.edu, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
-        andrew@lunn.ch, peter@korsgaard.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com, robh+dt@kernel.org
-Message-ID: <mhng-711b1a2e-46bd-4169-841d-f18fe4bba6bb@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1XpA44/7GWmNDj0l2VSHEVXeX5TKQoGtwuhl2k5PB7A=;
+        b=pjSlf/wF57sd9J74qbgnYSqrktOranfqT2GyBqh6GbZfrVw64hq89W5IGJQr4NPqst
+         X2t93fgKP2LdUx84fxCRjTRXEp5xT/Q1yIGa5nDmhEBy1FN1Omd3HEwDvOejbtAWMP3R
+         fh9ZOOCM9BIgeSkvzs2K1sdj7H6TokNcIh/bU42UWIxyEV24kago/xl4IhjAl9RB8SIm
+         COid/OyiDz3DkuNS9hs7yiKi3HzoVGF9YTDFpNqG+migsZr2lvy3VskP7iE0gxA1tbli
+         /hNYI4RRFDe7d9LMO6Nhs+fCtXqgPbPNW0XZEE/bBwkZ8JQoNeJjRadhWh6ltUfocE8M
+         0rag==
+X-Gm-Message-State: AOAM533WPH23wjyNzuPyuB5RC3b7o3YBNZGl1+5mC9fu5y/LaNOk+C+a
+        oLhmG2e6oxex/qx3D5Wlh/FJXf/G3wxeDk4Nv18=
+X-Google-Smtp-Source: ABdhPJwfiqOFSMZaFM8xBA2rS/jPzI8V4/5BltfMeSJZ46PzfvHc0PCC/KyWC/Rc5mvl6W7Bv/Ym6GJXKZG8z/nVquk=
+X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr14987627oth.250.1608626509823;
+ Tue, 22 Dec 2020 00:41:49 -0800 (PST)
+MIME-Version: 1.0
+References: <1608519279-13341-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1608519279-13341-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1608519279-13341-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 22 Dec 2020 09:41:38 +0100
+Message-ID: <CAMuHMdXp8cuO8ppNbDTmt4aovDCvC9EG23NHoZNAZK5Y0eD4Ww@mail.gmail.com>
+Subject: Re: [PATCH v4 01/12] mfd: bd9571mwv: Use devm_mfd_add_devices()
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Khiem Nguyen <khiem.nguyen.xt@renesas.com>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
-> Start board support by adding initial support for the SiFive FU740 SoC
-> and the first development board that uses it, the SiFive HiFive
-> Unmatched A00.
+On Mon, Dec 21, 2020 at 3:57 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> To remove mfd devices when unload this driver, should use
+> devm_mfd_add_devices() instead.
 >
-> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
-> U-boot and OpenSBI.
->
-> This patch series is dependent on Zong's Patchset[0]. The patchset also
-> adds two new nodes in dtsi file. The binding documentation patch
-> for these nodes are already posted on the mailing list[1][2].
->
-> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
-> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
-> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
->
-> Changes in v2:
-> - The dt bindings patch is split into several individual patches.
-> - Expand the full list for compatible strings in i2c-ocores.txt
->
-> Yash Shah (9):
->   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: serial: Update DT binding docs to support SiFive FU740
->     SoC
->   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
->   riscv: dts: add initial support for the SiFive FU740-C000 SoC
->   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
->     board
->   riscv: dts: add initial board data for the SiFive HiFive Unmatched
->
->  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
->  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
->  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
->  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
->  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
->  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
->  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
->  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
->  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
->  10 files changed, 590 insertions(+), 17 deletions(-)
->  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
->  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> Fixes: d3ea21272094 ("mfd: Add ROHM BD9571MWV-M MFD PMIC driver")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Aside from that question about the i2c bug these look good to me.  I don't see
-any Ack/Review on the DT side of things, though.  If you want to take them
-through a DT tree that's fine for me, I'll leave them in my inbox for now and
-if nobody says anything I'll look a bit more and take them for 5.12.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
