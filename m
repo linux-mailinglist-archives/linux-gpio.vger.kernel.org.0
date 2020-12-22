@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED3B82E04B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 04:24:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1BD2E0570
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 05:39:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgLVDYe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Dec 2020 22:24:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
+        id S1725972AbgLVEiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Dec 2020 23:38:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgLVDYd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Dec 2020 22:24:33 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E00C061793
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 19:23:47 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id t6so6721926plq.1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 19:23:47 -0800 (PST)
+        with ESMTP id S1725911AbgLVEiu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Dec 2020 23:38:50 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AC9C0613D3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id b8so6801029plx.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=Fml0HPxjeW3KlPkKcmTMycAdGJqoiBPdorZITHm27g0=;
-        b=t2Ihxv8CCjKXimsL3cXaHE5f4jZID8yHMHiPh2PSkXudjaAFnpGShEaw6VdhToOq7+
-         aNwOHfGCpikS0MrjzXMHXHuhzfy4RAbHzd19BZzm2VsL4iJnXjXSlCfSJwmqvSXD4RiR
-         9byzZOdm5eIJmeiWoEiYBI9x3xy5pbZYx01hE3mrNWQNLV7c7YHTv9dav+BLtG7HUt21
-         o4NMzKRpP7sncqtH19KvcsgIpOQRR+bQ8p0WatBuH4qkp/RtoYW4KHSvLTxOGFE6vpNf
-         qCUABT1NvZKEUoSWYxkYLcUUiHeyTlL8t7Gkol+C80Idj0+nPfIOahhErsc2O49n3lRr
-         QYwg==
+        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
+        b=f37eFkln4a/htDAWss+ZS1U+E4a3XjADVDLugAkDTqYfhz6h+hiYbGevReGFf4n1TK
+         3LcyVU0v8oEj/ldV2LwRorapAZA9fM+aEsLElWnlYinloCFhkUxXIG6IPajD8tgiJJea
+         DpV7MWDOXHzOuzTO/m9jSt14tPoJrM5KP18DX8I2/m7k1RJGMbdgBM9opD9aW4R0APi2
+         qwsxK5iRF4PUxhEWWnJeQbqIQ1L1pe/0UYpfefLQ75Em26FoNTFGgZaoz7DKALCRXLEX
+         ZOBQkG9jMif+c5JtWfTVjvIK0ay59QORO0oyT5r2YmuHYQtzadQyZ5I+40srrzB7gnDd
+         Pygw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=Fml0HPxjeW3KlPkKcmTMycAdGJqoiBPdorZITHm27g0=;
-        b=RHGYcvjg2ReF1+eC3NDocM9QgzqfKLk9M9gzBI4uKh599hfj0zUzi0XiPRVVKQs2Ak
-         FCuUBp4/XOvDFw1Jup9t9FbUofa9WFKCRx3Zy1dC82UYldEvSp/S8ivxNKcfr8lYNvBu
-         qpxzQ0ZXiH6GxtggklZX8RAt9TxMQk9SovfiI5oT5YbxLKtfjlhWWsW6/dAJQ6pgTR+W
-         pcQ87nn2/1qK1M6MKtknc0VfGCV4ue9oqvlZ4/ASMhy6mm7nuMiUWzPkT9WNCIBdctUU
-         hWj9B+fDM4nEh5H773vGncow4mO1a2ivHY8tp6l41vcIA+QZRSXiGwiLGCrUmJge2bmX
-         Cpdg==
-X-Gm-Message-State: AOAM531eeFMPVfrGJJ5EX6WkQMcBQM5dEpYtePEyrFi3o8zkCxYBcbkh
-        MC4HTMFjwkw3B/H0OF0xMkNI6Q==
-X-Google-Smtp-Source: ABdhPJxDXLKNIS+nAjmXcerR0lYz9gNHq8QC54QEIsJysxTCG2V28VwRupYxSkOil5ucyogRD7tvXw==
-X-Received: by 2002:a17:90a:3e4f:: with SMTP id t15mr20316849pjm.57.1608607427201;
-        Mon, 21 Dec 2020 19:23:47 -0800 (PST)
+        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
+        b=mpAv4gREf5qVu/1txbTJ3WiZmePRaDyidxbr1F8ew5kkaLLr80bslIGdTB0/a1LZHA
+         41wU0WhINqSfJE1ePYuKnJx3+0keqqSXuxMtl3NshKg7YpTUC/Bh4m9+htNwqr0c5xeC
+         RjmPlMofOSGPK5cLqyagMstq4QgDRe+/b4Achg7Jq+eVV2Lq8z7tKcQ6JsDNusU2SpPL
+         M+TokcU88wWzGWpdMXaNoKduaZalvSwnsXQxq/jcZTV4UZPY+++IPqijZAcmTcB2QV3a
+         jVnRr9vc4JC5tWSEnIK11EY4hqT1CStFUh/Uiv08arJvd6Wcj80XKCUYhZK5Is3En9RF
+         I+Hw==
+X-Gm-Message-State: AOAM530kYfyMj6La1MKnBiaGrFg1EIAspTZMIXpPKRsqWz8UqVrXMI5o
+        JIF+sfqzjSFTqmj+PQfpPo4x2Q==
+X-Google-Smtp-Source: ABdhPJxtuQf6v3NOjOt18j+2XE9PyJZOYNWFlG1D0U0wBxlkHbcyvIu7qM9Ho0qf5ZhZV4ECTna2pA==
+X-Received: by 2002:a17:902:694c:b029:da:afba:beab with SMTP id k12-20020a170902694cb02900daafbabeabmr19519669plt.32.1608611889761;
+        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id w27sm14448896pfq.104.2020.12.21.19.23.46
+        by smtp.gmail.com with ESMTPSA id a136sm19619380pfd.149.2020.12.21.20.38.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Dec 2020 19:23:46 -0800 (PST)
-Date:   Mon, 21 Dec 2020 19:23:46 -0800 (PST)
-X-Google-Original-Date: Mon, 21 Dec 2020 19:23:16 PST (-0800)
-Subject:     Re: [PATCH v2 6/9] dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
-In-Reply-To: <1607403341-57214-7-git-send-email-yash.shah@sifive.com>
+        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
+Date:   Mon, 21 Dec 2020 20:38:09 -0800 (PST)
+X-Google-Original-Date: Mon, 21 Dec 2020 20:38:02 PST (-0800)
+Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
+In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
 CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
@@ -59,12 +59,12 @@ CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
         aou@eecs.berkeley.edu, lee.jones@linaro.org,
         u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
         andrew@lunn.ch, peter@korsgaard.com,
-        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org,
         yash.shah@sifive.com
 From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-c1b8fc11-36ec-4143-846b-130086defe06@palmerdabbelt-glaptop>
+To:     yash.shah@sifive.com, robh+dt@kernel.org
+Message-ID: <mhng-711b1a2e-46bd-4169-841d-f18fe4bba6bb@palmerdabbelt-glaptop>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -72,35 +72,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 07 Dec 2020 20:55:38 PST (-0800), yash.shah@sifive.com wrote:
-> Add new compatible strings to the DT binding documents to support SiFive
-> FU740-C000.
+On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
+> Start board support by adding initial support for the SiFive FU740 SoC
+> and the first development board that uses it, the SiFive HiFive
+> Unmatched A00.
 >
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
+> U-boot and OpenSBI.
 >
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 6b25a80..a37c945 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -5,8 +5,12 @@ Required properties:
->                      "aeroflexgaisler,i2cmst"
->                      "sifive,fu540-c000-i2c", "sifive,i2c0"
->                      For Opencore based I2C IP block reimplemented in
-> -                    FU540-C000 SoC. Please refer to sifive-blocks-ip-versioning.txt
-> -                    for additional details.
-> +                    FU540-C000 SoC.
-> +                    "sifive,fu740-c000-i2c", "sifive,i2c0"
-> +                    For Opencore based I2C IP block reimplemented in
-> +                    FU740-C000 SoC.
-> +                    Please refer to sifive-blocks-ip-versioning.txt for
-> +                    additional details.
->  - reg             : bus address start and address range size of device
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
+> This patch series is dependent on Zong's Patchset[0]. The patchset also
+> adds two new nodes in dtsi file. The binding documentation patch
+> for these nodes are already posted on the mailing list[1][2].
+>
+> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
+> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
+> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
+>
+> Changes in v2:
+> - The dt bindings patch is split into several individual patches.
+> - Expand the full list for compatible strings in i2c-ocores.txt
+>
+> Yash Shah (9):
+>   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: serial: Update DT binding docs to support SiFive FU740
+>     SoC
+>   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
+>   riscv: dts: add initial support for the SiFive FU740-C000 SoC
+>   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
+>     board
+>   riscv: dts: add initial board data for the SiFive HiFive Unmatched
+>
+>  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
+>  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
+>  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
+>  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
+>  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
+>  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
+>  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
+>  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
+>  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
+>  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
+>  10 files changed, 590 insertions(+), 17 deletions(-)
+>  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
 
-Presumably this new one no longer has the interrupt bug?  The current
-implementation turns the errata off (it's only enabled for the fu540), so if
-that's the case we should be good to go.
+Aside from that question about the i2c bug these look good to me.  I don't see
+any Ack/Review on the DT side of things, though.  If you want to take them
+through a DT tree that's fine for me, I'll leave them in my inbox for now and
+if nobody says anything I'll look a bit more and take them for 5.12.
+
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
