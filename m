@@ -2,66 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B4F2E09BE
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 12:34:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F7CC2E0B37
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Dec 2020 14:58:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgLVLeo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Dec 2020 06:34:44 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10057 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgLVLeo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Dec 2020 06:34:44 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4D0Z2m0WCnzM7yQ;
-        Tue, 22 Dec 2020 19:33:04 +0800 (CST)
-Received: from [127.0.0.1] (10.40.192.131) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.498.0; Tue, 22 Dec 2020
- 19:33:53 +0800
-Subject: Re: [PATCH v1] gpio: hisi: delete some unused variables in
- hisi_gpio_probe()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1608539124-4914-1-git-send-email-luojiaxing@huawei.com>
- <CAHp75VcV2E+e9e_o7zwrL+gzZ3xUkZYOnTDACxH1j59bxTVifw@mail.gmail.com>
-From:   luojiaxing <luojiaxing@huawei.com>
-Message-ID: <5be97c5e-39fc-bf58-aee5-39438948b059@huawei.com>
-Date:   Tue, 22 Dec 2020 19:33:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1727141AbgLVN5d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Dec 2020 08:57:33 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:36882 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726868AbgLVN5d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 22 Dec 2020 08:57:33 -0500
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kri9e-00DO62-Dz; Tue, 22 Dec 2020 14:56:46 +0100
+Date:   Tue, 22 Dec 2020 14:56:46 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 3/3] arm64: dts: sparx5: Add SGPIO devices
+Message-ID: <20201222135646.GF3107610@lunn.ch>
+References: <20201113145151.68900-1-lars.povlsen@microchip.com>
+ <20201113145151.68900-4-lars.povlsen@microchip.com>
+ <20201220224804.GA3107610@lunn.ch>
+ <87eejip2xm.fsf@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcV2E+e9e_o7zwrL+gzZ3xUkZYOnTDACxH1j59bxTVifw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.40.192.131]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eejip2xm.fsf@microchip.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Dec 22, 2020 at 11:09:41AM +0100, Lars Povlsen wrote:
+> 
+> Andrew Lunn writes:
+> 
+> > On Fri, Nov 13, 2020 at 03:51:51PM +0100, Lars Povlsen wrote:
+> >> +             led@8 {
+> >> +                     label = "eth12:green";
+> >> +                     gpios = <&sgpio_out0 12 0 GPIO_ACTIVE_HIGH>;
+> >> +                     default-state = "off";
+> >> +             };
+> >> +             led@9 {
+> >> +                     label = "eth12:yellow";
+> >> +                     gpios = <&sgpio_out0 12 1 GPIO_ACTIVE_HIGH>;
+> >> +                     default-state = "off";
+> >> +             };
+> >
+> > Hi Lars
+> >
+> > I did not see these patches earlier, but i've been looking at the
+> > switch driver patches recently, so went digging.
+> >
+> > Can the Ethernet switch itself control these LEDs for indicating
+> > things like packet receive/transmit, link state, and link speed? Or
+> > are they purely software controlled?
+> >
+> >     Thanks
+> >         Andrew
+> 
+> Hi Andrew!
+> 
+> No, the SGPIO device is separate from the switch device as such. I was
+> planning to couple the two by means of "led events" in a later patch.
 
-On 2020/12/21 18:35, Andy Shevchenko wrote:
-> On Mon, Dec 21, 2020 at 10:25 AM Luo Jiaxing <luojiaxing@huawei.com> wrote:
->> kernel test rebot report that dat, set and clr in hisi_gpio_probe() is
->> unused variables. So delete it.
-> Fixes: tag?
+O.K, good.
 
+In the LED subsystem terminology, such an event would be a
+trigger. Link state, and copper speed should already be mostly covered
+by phylib triggers. What is missing is link activity.  Does the switch
+easily provide you with this information, or do you need to poll the
+switch statistics counters every 10ms to blink the LEDs?
 
-Fixes: 356b01a986a5 ("gpio: gpio-hisi: Add HiSilicon GPIO support")
-
-
-Should I send v2 to add this tag? or we can ask linus to help to add it 
-when apply this?
-
-
-Thanks
-
-Jiaxing
-
->
->> Reported-by: kernel test robot <lkp@intel.com>
->> Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-
+     Andrew
