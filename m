@@ -2,97 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AD882E258D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 09:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE5C52E2648
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 12:23:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgLXIwc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Dec 2020 03:52:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34174 "EHLO
+        id S1727880AbgLXLXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Dec 2020 06:23:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgLXIwb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Dec 2020 03:52:31 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C0DC06179C
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Dec 2020 00:51:51 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id r3so1555727wrt.2
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Dec 2020 00:51:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qP2XO0ngR1ghr+fNEQtPmScgoXBcnPP/lIItDhCDK2M=;
-        b=Iryp6kYWS3NXejOjSaJPJiIIH/0NoO/EHvJzVCFh0J8O+x0zDFnTSiuQnH/zFl7aP/
-         xYQyvKNouvqduGnBh1KNTvINHBT5gH8fo/ieCBq1tAORoDt+64+ZQJS3sXRQ7L3YaW+E
-         m0JA3O8kFRi4Q7gbDiakahTEejtUdVxrl3LTetORs8b4pQHaEQ740DUG3V8stdAFtw5f
-         JXTOHKYTA0AupqarG3Ju47KQrtW3gC5H5KaKvXPVU+Bzdr0/ZfzXtmv5NCuAQcNeSgWf
-         aRNYOxDnOFvu1x9nbZRFeOKSZIN0XWUJO3orCcHTnU+i6ywFuKki+XgVGfddShssVsLg
-         gRPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qP2XO0ngR1ghr+fNEQtPmScgoXBcnPP/lIItDhCDK2M=;
-        b=EZDrjsFQW3d9moHxTRQoqyOQR7xnnBSbQrpvD9TPbsV09OmLHc///gImdHv1gFyUiA
-         5B6ItvRCLE3/IhpSTiliU6InnwvVG1YOOAE86B5kL71xYE3gttZYNR0exRiSGpknTlzr
-         ksDVKsiGP3uywLHteJ9WSlZNMITJd9mWAbj6GBGBLM4JbNx05ItKVuZsBdbVz3moW82j
-         eEJh1mJcBDzF9Ex71GcuFX0/otnv2HrgeQPoN+dBlktEXfXxB+PpwMlYTp2TcixjscGC
-         3paS0qh/TSggJGiLEcT6uW8RJBX4rsuP8hgSU+wQ7jieqyGEmypL2lXrYwy8LyTCxPUh
-         4YgQ==
-X-Gm-Message-State: AOAM531k5DLWdFj7y0IomKXsk3B5syymfE/6WXEi5wA/Udxd/h1oZVwa
-        nILA0h4jgD+WMJBU3/nEwsT4AA==
-X-Google-Smtp-Source: ABdhPJwMWyYathVI8voQEL5w+ZGTezLUadtdsVtsEAYFpKlLaXykiPJDAwHZ0o6p8CQ/DkLr/RTVPg==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr32512895wrq.78.1608799909968;
-        Thu, 24 Dec 2020 00:51:49 -0800 (PST)
-Received: from dell ([91.110.221.181])
-        by smtp.gmail.com with ESMTPSA id w13sm37720655wrt.52.2020.12.24.00.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Dec 2020 00:51:49 -0800 (PST)
-Date:   Thu, 24 Dec 2020 08:51:47 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     marek.vasut+renesas@gmail.com, matti.vaittinen@fi.rohmeurope.com,
-        lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, khiem.nguyen.xt@renesas.com,
-        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 11/12] mfd: bd9571mwv: Make the driver more generic
-Message-ID: <20201224085147.GH681741@dell>
-References: <1608793457-11997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1608793457-11997-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S1727350AbgLXLXF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Dec 2020 06:23:05 -0500
+Received: from forward100j.mail.yandex.net (forward100j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79818C061794;
+        Thu, 24 Dec 2020 03:22:19 -0800 (PST)
+Received: from sas1-df919fd4523f.qloud-c.yandex.net (sas1-df919fd4523f.qloud-c.yandex.net [IPv6:2a02:6b8:c14:4495:0:640:df91:9fd4])
+        by forward100j.mail.yandex.net (Yandex) with ESMTP id 979E650E2CB6;
+        Thu, 24 Dec 2020 14:22:14 +0300 (MSK)
+Received: from sas2-1cbd504aaa99.qloud-c.yandex.net (sas2-1cbd504aaa99.qloud-c.yandex.net [2a02:6b8:c14:7101:0:640:1cbd:504a])
+        by sas1-df919fd4523f.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 2vadnpEcB2-MED09fQ9;
+        Thu, 24 Dec 2020 14:22:14 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1608808934;
+        bh=y6mk2zBD8MYVWui7XqHbjyYiQw5lzlDNfeUMx6JSjjU=;
+        h=Date:Subject:To:From:Message-Id:Cc;
+        b=KPQ/pdIUAsPINMAMhkXx5MytRNjsGurVCsbOoMxCOIxkIuSzJeK7rRyRjLTL4f9oF
+         JeBUO4Aq93SAeU1ZRTbijFH9wRM9nOvvl0Nstx8R8g3CEDNEDHNv74tu4WlJAjDdJ6
+         cSKp6Ftg742mPc3qcGdv+veaU0t+IQ3tkvdm/SSQ=
+Authentication-Results: sas1-df919fd4523f.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by sas2-1cbd504aaa99.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id wXm6oVjgK4-MDJe32ee;
+        Thu, 24 Dec 2020 14:22:13 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] gpio: ep93xx: convert to multi irqchips
+Date:   Thu, 24 Dec 2020 14:22:00 +0300
+Message-Id: <20201224112203.7174-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1608793457-11997-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 24 Dec 2020, Yoshihiro Shimoda wrote:
+I was lucky enough to became an owner of some splendid piece's of
+antiques called ts7250 based on the top of Cirrus Logic EP9302.
 
-> From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> 
-> Since the driver supports BD9571MWV PMIC only, this patch makes
-> the functions and data structure become more generic so that
-> it can support other PMIC variants as well. Also remove printing
-> part name which Lee Jones suggested.
-> 
-> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> Co-developed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/mfd/bd9571mwv.c       | 77 +++++++++++++++++++++++--------------------
->  include/linux/mfd/bd9571mwv.h | 18 ++--------
->  2 files changed, 43 insertions(+), 52 deletions(-)
+I don't know what fate expects this hardware (it's not EOL it's just Not
+recommended for new designs) but i wanted to share fixes in ep93xx gpio area.
 
-For my own reference (apply this as-is to your sign-off block):
+It seems ep93xx is deadly broken at current state usage of AB gpiochips
+interrupts leads to deadlocks coused by irq_unmask/irq_mask recursions.
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Port F is not working at all:
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-bash-5.0# gpio-event-mon -n gpiochip5 -o 0 -r -f
+------------[ cut here ]------------
+kernel BUG at drivers/gpio/gpio-ep93xx.c:64!
+Internal error: Oops - BUG: 0 [#1] ARM
+Modules linked in:
+CPU: 0 PID: 403 Comm: gpio-event-mon Not tainted 5.9.10-00011-ge93e9618628b-dirty #19
+Hardware name: Technologic Systems TS-72xx SBC
+PC is at ep93xx_gpio_update_int_params+0x1c/0x80
+LR is at ep93xx_gpio_update_int_params+0x14/0x80
+pc : [<c03abc44>]    lr : [<c03abc3c>]    psr: 20000093
+sp : c158de00  ip : 00000000  fp : 00000001
+r10: c44154d4  r9 : 00000000  r8 : c4415020
+r7 : c04ef884  r6 : c051c842  r5 : c4415020  r4 : 00000005
+r3 : 00000000  r2 : 00000000  r1 : c04eb768  r0 : 00000008
+Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 0000717f  Table: 01684000  DAC: 00000051
+Process gpio-event-mon (pid: 403, stack limit = 0x(ptrval))
+Stack: (0xc158de00 to 0xc158e000)
+de00: 00000005 00000002 c051c842 c0238dc0 c0238c98 c0238c98 c04ef874 00000000
+de20: 00000003 c04fcfcc 60000013 c04ef910 c04ef8d4 c00456f0 c04ef874 c15f1e00
+de40: 00000000 00000000 00000001 c0045d40 c15f1e00 c4400160 c0044ca8 c04ef8a8
+de60: 60000013 00000000 c15f1e00 c04ef874 c04ef884 00000001 c0235d70 c158b800
+de80: be825f0f c0045ec8 00000003 c158b800 c440aa00 be825bc8 00000003 00000001
+dea0: 00000000 c0236f00 c44ed3a0 c158b800 c45c2015 00000000 00000001 00000003
+dec0: 6f697067 6576652d 6d2d746e 00006e6f 00000000 00000000 00000000 00000000
+dee0: be825df4 c00abb0c c440c500 c00aabd4 c440c500 c528b840 c45c2010 c04e1228
+df00: 00000ff0 c4478d28 c030b404 be825bc8 c1550e20 00000003 c1550e20 c00c3388
+df20: c4478d28 c00c3d48 be825f0f c00abd00 c45c2000 c45c2000 c1550e20 c00bfea8
+df40: 00000003 c00b0714 00000000 c4450000 00000004 00000100 00000001 c04e1228
+df60: c158dfb0 ffffff9c 000231f8 00000003 00000142 c00b085c 00000000 c04e1228
+df80: 00000000 be825f0f 00000003 00000003 00000036 c00083c4 c158c000 00000000
+dfa0: be825f0f c00081e0 be825f0f 00000003 00000003 c030b404 be825bc8 00000000
+dfc0: be825f0f 00000003 00000003 00000036 00000001 00000000 00022070 be825f0f
+dfe0: b6f2e4e0 be825bac 00010acc b6f2e4ec 60000010 00000003 00000000 00000000
+[<c03abc44>] (ep93xx_gpio_update_int_params) from [<c0238dc0>] (ep93xx_gpio_irq_type+0x128/0x1c0)
+[<c0238dc0>] (ep93xx_gpio_irq_type) from [<c00456f0>] (__irq_set_trigger+0x6c/0x128)
+[<c00456f0>] (__irq_set_trigger) from [<c0045d40>] (__setup_irq+0x594/0x678)
+[<c0045d40>] (__setup_irq) from [<c0045ec8>] (request_threaded_irq+0xa4/0x128)
+[<c0045ec8>] (request_threaded_irq) from [<c0236f00>] (gpio_ioctl+0x300/0x4d8)
+[<c0236f00>] (gpio_ioctl) from [<c00c3388>] (vfs_ioctl+0x24/0x3c)
+[<c00c3388>] (vfs_ioctl) from [<c00c3d48>] (sys_ioctl+0xbc/0x768)
+[<c00c3d48>] (sys_ioctl) from [<c00081e0>] (ret_fast_syscall+0x0/0x50)
+Exception stack(0xc158dfa8 to 0xc158dff0)
+dfa0:                   be825f0f 00000003 00000003 c030b404 be825bc8 00000000
+dfc0: be825f0f 00000003 00000003 00000036 00000001 00000000 00022070 be825f0f
+dfe0: b6f2e4e0 be825bac 00010acc b6f2e4ec
+Code: e59f0060 ebfff3e1 e3540002 9a000000 (e7f001f2)
+---[ end trace 3f6544e133e9f5ae ]---
+
+These change requires your judgment.
