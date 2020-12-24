@@ -2,113 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D7F2E2589
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 09:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD882E258D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 09:52:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgLXIuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Dec 2020 03:50:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33924 "EHLO
+        id S1726958AbgLXIwc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Dec 2020 03:52:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbgLXIux (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Dec 2020 03:50:53 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6365AC061794;
-        Thu, 24 Dec 2020 00:50:13 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id h22so3366939lfu.2;
-        Thu, 24 Dec 2020 00:50:13 -0800 (PST)
+        with ESMTP id S1725950AbgLXIwb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Dec 2020 03:52:31 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C0DC06179C
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Dec 2020 00:51:51 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id r3so1555727wrt.2
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Dec 2020 00:51:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EqRKqZ1wKfeGOjhauO4d9amiV8Bp4L3OX2mE1+BC348=;
-        b=d2Ds7usvvNMSDVgFmTotvdD5YN5NYrE1RkyYcFLbtqSVbqRIzNYF0emr+VPWFKxXhs
-         hRoMOe/vZ6AqYi3vwx5WLSeKxspiK0RaaLAwTHjU3mWgYxGqm9S1H104Zh0vQYods53a
-         OUA1JoKzdFZ55deWbId8eDj957JcqDVEDriEvtSIL/OiMhin0p2Y+y07hMpecRWmKx9c
-         fN0E6/59MBgA8v+q5NaPzd4cnX+SfkNVzR4C5aC+g6iDds1kJomvUHr1A0mRJbi8SH05
-         9rRoydCqjqoY8/KX9yyfvLsGVWHpLxl0wLyCr3l6Uq93C8Grzx+yCWMQw897F/p9DQGA
-         L3Tw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qP2XO0ngR1ghr+fNEQtPmScgoXBcnPP/lIItDhCDK2M=;
+        b=Iryp6kYWS3NXejOjSaJPJiIIH/0NoO/EHvJzVCFh0J8O+x0zDFnTSiuQnH/zFl7aP/
+         xYQyvKNouvqduGnBh1KNTvINHBT5gH8fo/ieCBq1tAORoDt+64+ZQJS3sXRQ7L3YaW+E
+         m0JA3O8kFRi4Q7gbDiakahTEejtUdVxrl3LTetORs8b4pQHaEQ740DUG3V8stdAFtw5f
+         JXTOHKYTA0AupqarG3Ju47KQrtW3gC5H5KaKvXPVU+Bzdr0/ZfzXtmv5NCuAQcNeSgWf
+         aRNYOxDnOFvu1x9nbZRFeOKSZIN0XWUJO3orCcHTnU+i6ywFuKki+XgVGfddShssVsLg
+         gRPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EqRKqZ1wKfeGOjhauO4d9amiV8Bp4L3OX2mE1+BC348=;
-        b=b1Q8KfjtyiYwiSIoySo9hmWPGakYj/h5Me9SntAbqg58R+5s22cYJxMQx7s9rfnGcJ
-         74EGAygFzCsVHuyNgm+klUHL7F/oczjekC8e2ly6Lyv63Qt2TyUCeAHB+4eDVmH4GGdl
-         ttG4qrgV/Mj3JgNQ3RNsiMJ+BIvn3Udjz9F+7/hzdpRrwqtOoHzUlFIaP8qOSuX0Shw0
-         nLh4JVmLZ7v0wpe/6+mim4EC/wVuG8Bu4lkKo3pxcCrPuUlpkYGjDTfKjwytj3l9Jl6i
-         a7nl6jh1NIBkdE5bCLLPmUpRWmlSNskso7mgk9/QeVSY96mmuD/19Vvv5kHN3tlnVvd9
-         veKg==
-X-Gm-Message-State: AOAM533+t7u9IRLxxGCFogtCDvojNCe8Y4nX9l05a1ycaHjIaYOGAqoE
-        qmq8Lv5tMNffWf3fQOhihpL75hASSpYfnw==
-X-Google-Smtp-Source: ABdhPJy6EKy0yK6iLnjvV2Z0jWd+01GIHGWgaG702oarK+Lcn29IWiNZr2Q9u/bPdT/g46n6Z5nLIA==
-X-Received: by 2002:a05:6512:108b:: with SMTP id j11mr12833764lfg.44.1608799811725;
-        Thu, 24 Dec 2020 00:50:11 -0800 (PST)
-Received: from [192.168.1.100] ([31.173.81.247])
-        by smtp.gmail.com with ESMTPSA id z14sm3580731lfq.130.2020.12.24.00.50.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Dec 2020 00:50:11 -0800 (PST)
-Subject: Re: [PATCH v7 10/12] mfd: bd9571mwv: Use devm_regmap_add_irq_chip()
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        marek.vasut+renesas@gmail.com, lee.jones@linaro.org,
-        matti.vaittinen@fi.rohmeurope.com, lgirdwood@gmail.com,
-        broonie@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     khiem.nguyen.xt@renesas.com, linux-power@fi.rohmeurope.com,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qP2XO0ngR1ghr+fNEQtPmScgoXBcnPP/lIItDhCDK2M=;
+        b=EZDrjsFQW3d9moHxTRQoqyOQR7xnnBSbQrpvD9TPbsV09OmLHc///gImdHv1gFyUiA
+         5B6ItvRCLE3/IhpSTiliU6InnwvVG1YOOAE86B5kL71xYE3gttZYNR0exRiSGpknTlzr
+         ksDVKsiGP3uywLHteJ9WSlZNMITJd9mWAbj6GBGBLM4JbNx05ItKVuZsBdbVz3moW82j
+         eEJh1mJcBDzF9Ex71GcuFX0/otnv2HrgeQPoN+dBlktEXfXxB+PpwMlYTp2TcixjscGC
+         3paS0qh/TSggJGiLEcT6uW8RJBX4rsuP8hgSU+wQ7jieqyGEmypL2lXrYwy8LyTCxPUh
+         4YgQ==
+X-Gm-Message-State: AOAM531k5DLWdFj7y0IomKXsk3B5syymfE/6WXEi5wA/Udxd/h1oZVwa
+        nILA0h4jgD+WMJBU3/nEwsT4AA==
+X-Google-Smtp-Source: ABdhPJwMWyYathVI8voQEL5w+ZGTezLUadtdsVtsEAYFpKlLaXykiPJDAwHZ0o6p8CQ/DkLr/RTVPg==
+X-Received: by 2002:a5d:4491:: with SMTP id j17mr32512895wrq.78.1608799909968;
+        Thu, 24 Dec 2020 00:51:49 -0800 (PST)
+Received: from dell ([91.110.221.181])
+        by smtp.gmail.com with ESMTPSA id w13sm37720655wrt.52.2020.12.24.00.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Dec 2020 00:51:49 -0800 (PST)
+Date:   Thu, 24 Dec 2020 08:51:47 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     marek.vasut+renesas@gmail.com, matti.vaittinen@fi.rohmeurope.com,
+        lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, khiem.nguyen.xt@renesas.com,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 11/12] mfd: bd9571mwv: Make the driver more generic
+Message-ID: <20201224085147.GH681741@dell>
 References: <1608793457-11997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1608793457-11997-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <53d2129e-966d-d28e-625a-962b0e3d5d43@gmail.com>
-Date:   Thu, 24 Dec 2020 11:50:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ <1608793457-11997-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <1608793457-11997-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1608793457-11997-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello!
+On Thu, 24 Dec 2020, Yoshihiro Shimoda wrote:
 
-On 24.12.2020 10:04, Yoshihiro Shimoda wrote:
-
-> Use dev_regmap_add_irq_chip() to simplify the code.
-
-    devm_?
-
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   drivers/mfd/bd9571mwv.c | 27 ++++++---------------------
->   1 file changed, 6 insertions(+), 21 deletions(-)
+> From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
 > 
-> diff --git a/drivers/mfd/bd9571mwv.c b/drivers/mfd/bd9571mwv.c
-> index e68c3fa..49e968e 100644
-> --- a/drivers/mfd/bd9571mwv.c
-> +++ b/drivers/mfd/bd9571mwv.c
-> @@ -170,31 +170,17 @@ static int bd9571mwv_probe(struct i2c_client *client,
->   	if (ret)
->   		return ret;
->   
-> -	ret = regmap_add_irq_chip(bd->regmap, bd->irq, IRQF_ONESHOT, 0,
-> -				  &bd9571mwv_irq_chip, &bd->irq_data);
-> +	ret = devm_regmap_add_irq_chip(bd->dev, bd->regmap, bd->irq,
-> +				       IRQF_ONESHOT, 0, &bd9571mwv_irq_chip,
-> +				       &bd->irq_data);
->   	if (ret) {
->   		dev_err(bd->dev, "Failed to register IRQ chip\n");
->   		return ret;
->   	}
->   
-[...]
+> Since the driver supports BD9571MWV PMIC only, this patch makes
+> the functions and data structure become more generic so that
+> it can support other PMIC variants as well. Also remove printing
+> part name which Lee Jones suggested.
+> 
+> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+> Co-developed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/mfd/bd9571mwv.c       | 77 +++++++++++++++++++++++--------------------
+>  include/linux/mfd/bd9571mwv.h | 18 ++--------
+>  2 files changed, 43 insertions(+), 52 deletions(-)
 
-MBR, Sergei
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
