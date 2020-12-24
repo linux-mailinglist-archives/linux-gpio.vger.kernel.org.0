@@ -2,56 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8586F2E253F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 08:35:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 164282E2570
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Dec 2020 09:24:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgLXHfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Dec 2020 02:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgLXHfK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Dec 2020 02:35:10 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739C7C0617A7
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Dec 2020 23:34:30 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id q18so1406374wrn.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Dec 2020 23:34:30 -0800 (PST)
+        id S1726839AbgLXIY1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Dec 2020 03:24:27 -0500
+Received: from mail-eopbgr1410135.outbound.protection.outlook.com ([40.107.141.135]:28006
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726609AbgLXIY1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 24 Dec 2020 03:24:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U2LoFNyM5T8w0kjB4yW4kCC1Qw/lEMqKg7yasz9vbuhJ3Pw0Z+y3RMGjEE/Q9C+8PUTKjaiDi1o3yW6f5hwFSV99aAHRfrMmZWlOrEGLXLguS7AN6DHIB5uG/J/QxOXvxvXkZc2Nb/F5HTDKw/OwQePj+JEVKAU4PVTj8kSL6druEUCsnwLsCQIKJl/dw/VrQ+OViNDN6G4bW3yNzmGmVxe3gLxRAhz/9stdgLQKKjkpHxqIdxgHi8X5YhxBdo2HqT6il79wvp5uD07PT5+Haizb/4drpKTVcsSqRuElDg8c6KP5Zh7ZQNQc4IivoNf0aQTNNy3HwXr0AaBjgnSI5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ukfak/K5GDXCIxAhuwnCVXV1lY8OLi+oKVWhe8WsCrs=;
+ b=Req4MbnzDtqWlXbwO6EHc7b3epRxp2Nk/oKDDfcmrQcSpljSugxVrhcK8xog1mH0dhWQi6UViaoaVRrc5vjhSxBQgy0S8hXIQr7dyQMxpzYrdcOpcqpLl7WCQ3jHzB812GQUWYBin4coKhwJOxONPouIIlgwWj/hEasd8flB306VueueYTcC/hYzUXarNTsZpddJCBnkEEc+zeDHoRtasvijIekcRL7VGsTBOBSpH8hKKk7PxplGEo18LNE7suOAn9Djn/83JGg4cU9qEElLmrKFtMYHVYbl3rjIloXHuR/WEfk0MsCWg9Q4SrPzAUDf3boRiG4pEhW3VyoBlVs3MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=irTCI/vF0NkdBwIJVYrdKY08hhMbdCGPb63kIfO2o2A=;
-        b=R6zumxj5qvPbaQ4pMr1SUXVtsq99ZJmEEj4kGrQD/PJTM/EI2nIJySlp+8DHxbGSya
-         dSpv6/MBDLhv81xFenGB6ic+QB3FjIj4tUE2lU7mYqU8Md1NBpF3BHgIYeE+jodyoWuX
-         9cpCSF1GzKG3k/0wOLa00LPV/08zivvnLjhHEmx2/me+VVXK6fl9Tv6bh0MtiI8/ZEOd
-         KfWVgbw93zXAs3vCR6jSpwYaHCVbGmEONWCY0ngPDPZBbKQoCx+3oKVXuY0p+Px6e2sU
-         5DoOBYdfZISQMaaxxIm151sRu/O1XJInWx4OIVra3M6smOXrifJLA8oJjYme9O+FDTZ1
-         4lNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=irTCI/vF0NkdBwIJVYrdKY08hhMbdCGPb63kIfO2o2A=;
-        b=iJrGEH4jm0o+WPiy5pLtIgHESqs5MYQT3WrIlapkRpxNvyNfXBJsGNKScCTWlKX+P+
-         XSfpCL2WaPv7NReJMCH677+wIuP2Qy4lRJ5EtB9GYKgvaK8Uspqd0PfA2gDigGTxqA0f
-         vAN1HWj6mN2NBwsIhmR99FW2df7bhVa2BaSv1W/e7kN2zZhUad0Em4V+MH4ZB3qS7su1
-         yiqWWAb6Nmn5J3kki+bpFGucig2I5Ua/zDuKHr+wyMBulcY88ArNVbc4fwfbY+2UCWm2
-         EXM2huvG47+NTXRDlTyr6uaNmLVIZcJdaFk3x3FjGEu7zGLARAQfw0vK6vsu8zQ4xHB7
-         O6cQ==
-X-Gm-Message-State: AOAM531ix/lkBmzgMJx0KBAdf/fNjYOKgLxLXT0YvcDxDjMXh/UNuCFl
-        HLBNTa691gwGsi0UGQhWsOSfaA==
-X-Google-Smtp-Source: ABdhPJxO2aw2I+NqFLE1L/awTbwxiuesQi5naGzmXtMKXPnXTMsy2GU+91KE+f9Cs5zfvVpLSe1IZg==
-X-Received: by 2002:adf:b1ca:: with SMTP id r10mr33037021wra.252.1608795269049;
-        Wed, 23 Dec 2020 23:34:29 -0800 (PST)
-Received: from dell ([91.110.221.181])
-        by smtp.gmail.com with ESMTPSA id w18sm39857432wrn.2.2020.12.23.23.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Dec 2020 23:34:28 -0800 (PST)
-Date:   Thu, 24 Dec 2020 07:34:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ukfak/K5GDXCIxAhuwnCVXV1lY8OLi+oKVWhe8WsCrs=;
+ b=C82fLjpxD/zzEH3mKmowM9zr4Xh7EDEppELo6yUURNWHTX5jgMkrWrg94E/eoJyIj4VU6EH0yUOpfWxt9W4k+NQJdLvwLM5PY1FCY8qWh7HbLU1DqQN/HZqssWB6nq4cDypynIAFsfNV1esQV4DNnIjNhfG7HbbDPWpWnoZ3zJs=
+Received: from OSAPR01MB3683.jpnprd01.prod.outlook.com (2603:1096:604:33::12)
+ by OS3PR01MB5798.jpnprd01.prod.outlook.com (2603:1096:604:c3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3700.27; Thu, 24 Dec
+ 2020 08:23:37 +0000
+Received: from OSAPR01MB3683.jpnprd01.prod.outlook.com
+ ([fe80::7df8:3b7f:f3d7:b560]) by OSAPR01MB3683.jpnprd01.prod.outlook.com
+ ([fe80::7df8:3b7f:f3d7:b560%5]) with mapi id 15.20.3676.033; Thu, 24 Dec 2020
+ 08:23:37 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
         "matti.vaittinen@fi.rohmeurope.com" 
         <matti.vaittinen@fi.rohmeurope.com>,
         "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
@@ -64,126 +51,90 @@ Cc:     "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
         "linux-renesas-soc@vger.kernel.org" 
         <linux-renesas-soc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 11/12] mfd: bd9571mwv: Make the driver more generic
-Message-ID: <20201224073426.GD681741@dell>
+Subject: RE: [PATCH v6 11/12] mfd: bd9571mwv: Make the driver more generic
+Thread-Topic: [PATCH v6 11/12] mfd: bd9571mwv: Make the driver more generic
+Thread-Index: AQHW2RWSReZXi/5NNEyI3qMKK0VkFqoE0W0AgAD8NZCAAA6cAIAADPfw
+Date:   Thu, 24 Dec 2020 08:23:37 +0000
+Message-ID: <OSAPR01MB36837CEA1F92382007F3A5F6D8DD0@OSAPR01MB3683.jpnprd01.prod.outlook.com>
 References: <1608718963-21818-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1608718963-21818-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <20201223153928.GA681741@dell>
  <OSAPR01MB368360D8A4E3AD1E6F928271D8DD0@OSAPR01MB3683.jpnprd01.prod.outlook.com>
+ <20201224073426.GD681741@dell>
+In-Reply-To: <20201224073426.GD681741@dell>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:b0a7:a6bd:cb4a:efb1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e3334e1b-ffc2-441b-0b4e-08d8a7e53661
+x-ms-traffictypediagnostic: OS3PR01MB5798:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OS3PR01MB5798F50CA28223B267DA26A9D8DD0@OS3PR01MB5798.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lM/d8sRkKp0xKe/Gyo9xRr98WfiBKlQNUr2rhrADZUmpaxP6t9FYMHZrPQQvsfac4YH+kuu4OqR7o0C3bD+ILM0gIzxFGaY3Rz7AhqDERJL//3xcyLVJDwaYjCCAc2wqpQf9EeVnqp6b6OFsna3Wbdy8bk/eccwgegPWAsjuipHta4wPlrGQXUBtEmqvJJsOpyY8qQAUW5WqY82jfMYvcEQpXlX4hg/3BySZ2thRD+nyHyggpDMKCtUoc4uRWMQvJFSDJ2fs7iaZscCPrNGBZOcigASk3/YSGZnFTbEr/DyaYvz3T6Iz1FA7Rq6WNS88Z0zQXei42TSjlbGiu5oc9HMCwlMucq0eywaKp/ljQCTqp5q/4xZDlQI2WuOzOJCH6DTO8iQscGFS820Vdc+/J2D1xrPGfRip/wXpPdjfmlR9Uq09otfFkFyvSJMGWBmS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB3683.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(64756008)(66476007)(7416002)(4744005)(5660300002)(66446008)(86362001)(4326008)(2906002)(66946007)(478600001)(71200400001)(76116006)(33656002)(6506007)(66556008)(8676002)(316002)(54906003)(6916009)(9686003)(186003)(7696005)(52536014)(55016002)(8936002)(41533002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?WU1EWUU1T0NXMFdpSGx6OGxQTm5RY3dpSXQ1T0VTd2ZrQXZPd1QwU3BiZWRW?=
+ =?utf-8?B?azZKYStYd2VoRjVQNWt4YkhSVSt4bGx2ZzhsTldtSm1sVUlheFlrTWcxaHVT?=
+ =?utf-8?B?NUZSZFF0QnhiYU9keHlDOVJtWWpQVll2TFRXZTgrL2xxeFRraWpNNjNvZUww?=
+ =?utf-8?B?R3YvYnl6NGlTOTlmWEdoUkZ1MjFlM2hNTktjZmNZaE4vYk56aVdyc0NHMUNN?=
+ =?utf-8?B?c3hkS1gyNlV3NUNFMG9QMng1OGhpb0hQU0xlaXBveTVGSnA2aVBEbFIxWlZ6?=
+ =?utf-8?B?YzNoSHlrVk9razlrdmZOQjFlcktqVEdDTDV6R2ZIQXpvSEQ3a3IrSFJ4bXR4?=
+ =?utf-8?B?bmdVK05adC9zQlk1YjNzbE4zckRkaDkyVmVpeU5SaENvNUpPMGkram1tdmhZ?=
+ =?utf-8?B?YXpmc0g2MTFJRnJmZWZWK1NkYTZlVFJhWjBRL1MxeXRQMmFaZkREQ3NhV0RK?=
+ =?utf-8?B?cVRQVXFKUjhvNCtsYkZmeGFXS05TSlNwWWQvWTBEQXd3cGVCNmZuOHczTytI?=
+ =?utf-8?B?QVo0T3kvMHVQUHhkQVJla2ZtcDJ0Q3VqcEQvRmZMVUZxUHJYVGJNUVIrUm85?=
+ =?utf-8?B?U1A4YWs1UThPMElpTUFyRUp1TFdkRjhKZWdVY1g4V2VEU1VtZThVK0JZWGkx?=
+ =?utf-8?B?by9WMkprbTNBWk5wVXVOZHptMUxTbUVNMTlrdDNaREErUGozaXBtZTFuZkRm?=
+ =?utf-8?B?TmcyZnh3ZXRXU1JUWDVFMmhnLy9RTVhIYWgvbGd4aHhVV1IrQzJoMVZIU3Na?=
+ =?utf-8?B?bjFvcThUMlQ4eW4yU1phRGxjd1BGL255RW53cGxUTDlxZkppeS8vREN4RHJL?=
+ =?utf-8?B?MmVmNFk0aE5OZWE1UHRZclhUMWdwVWNuWUhhcm9PZXQ3MlB3MVNSOEpUTGJZ?=
+ =?utf-8?B?RUFXVTdkc1puL1lpTnZmdlRTQit6Q09xVkw5RnhWOTdHU1A1RUlhOXQ3N0Fz?=
+ =?utf-8?B?dnphbXFIb0dhL0RHa1EzTGZGL0V3aGZnT1phbXRhTTRzZE53bzNhblNZSDlu?=
+ =?utf-8?B?YWNkd2dDemdkQ0FIQWZQM3liYllKRDNXdCtoRjNkanNBTkJDKysyQys2bm1l?=
+ =?utf-8?B?eTlzL01GMGkxWThQVjExN2lxZXd6YlhaaUhGd3ZjQjUxb3Y2M3paRlNsa3F2?=
+ =?utf-8?B?Nmg2UGtGeEIrQXNRU2x4djJTanZuR1JDSmt0TnJJdWQydzBjWnBONitIRFhE?=
+ =?utf-8?B?b1F3NGl1b2k1cTVEWVQwaFVPYjZzYXRrUFRCazVRY1BVUXZuREpzVUNZL0tI?=
+ =?utf-8?B?MDg0Ulo1SXRaZGhVZU9wQ1lPRExoWWErZVRuR1UzakVTZzA4WkUxMnlqbU5O?=
+ =?utf-8?B?bU1tSUowN1dBVVc4SHZzSDU1K3VyRTdRNU5TYnRLcklDTXlnc1BOQmNsaFh5?=
+ =?utf-8?Q?1TiCnqxo215rkzaySNNylfTbxyI8g2Tg=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSAPR01MB368360D8A4E3AD1E6F928271D8DD0@OSAPR01MB3683.jpnprd01.prod.outlook.com>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB3683.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3334e1b-ffc2-441b-0b4e-08d8a7e53661
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2020 08:23:37.1306
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7yhZ4amX5QIXnEDUQ3MhSrus91TZScKB6zHW75n/x2lnklkE1AuNJQ3vIDZSBSlZnBPpCOKas9YNoUpWBxCDZ1+MEm/VOudnn2WcTdQO89vFQk7riUsLFDaeegXNGqS1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB5798
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 24 Dec 2020, Yoshihiro Shimoda wrote:
-
-> Hi Lee,
-> 
-> > From: Lee Jones, Sent: Thursday, December 24, 2020 12:39 AM
-> > On Wed, 23 Dec 2020, Yoshihiro Shimoda wrote:
-> > > From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> > >
-> > > Since the driver supports BD9571MWV PMIC only, this patch makes
-> > > the functions and data structure become more generic so that
-> > > it can support other PMIC variants as well. Also remove printing
-> > > part name which Lee Jones suggested.
-> > >
-> > > Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> > > Co-developed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Reviewed-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
-> > >  drivers/mfd/bd9571mwv.c       | 89 +++++++++++++++++++++++++------------------
-> > >  include/linux/mfd/bd9571mwv.h | 18 +--------
-> > >  2 files changed, 54 insertions(+), 53 deletions(-)
-> > 
-> > Couple of small points.
-> > 
-> > Remainder looks good.
-> 
-> Thank you for your review!
-> 
-> > > diff --git a/drivers/mfd/bd9571mwv.c b/drivers/mfd/bd9571mwv.c
-> > > index 49e968e..c905ab4 100644
-> > > --- a/drivers/mfd/bd9571mwv.c
-> > > +++ b/drivers/mfd/bd9571mwv.c
-> > > @@ -3,6 +3,7 @@
-> > >   * ROHM BD9571MWV-M MFD driver
-> > >   *
-> > >   * Copyright (C) 2017 Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > + * Copyright (C) 2020 Renesas Electronics Corporation
-> > >   *
-> > >   * Based on the TPS65086 driver
-> > >   */
-> > > @@ -14,6 +15,14 @@
-> > >
-> > >  #include <linux/mfd/bd9571mwv.h>
-> > >
-> > > +/* Driver data to distinguish bd957x variants */
-> > > +struct bd957x_ddata {
-> > > +	const struct regmap_config *regmap_config;
-> > > +	const struct regmap_irq_chip *irq_chip;
-> > 
-> > > +	const struct mfd_cell *cells;
-> > > +	int num_cells;
-> > 
-> > Are you using these post-probe?
-> > 
-> > If not, they're not ddata.
-> 
-> I'm not using all these members post-probe.
-> So, I'll remove ddata.
-> 
-> <snip>
-> > >  static int bd9571mwv_probe(struct i2c_client *client,
-> > > -			  const struct i2c_device_id *ids)
-> > > +			   const struct i2c_device_id *ids)
-> > >  {
-> > > -	struct bd9571mwv *bd;
-> > > -	int ret;
-> > > -
-> > > -	bd = devm_kzalloc(&client->dev, sizeof(*bd), GFP_KERNEL);
-> > > -	if (!bd)
-> > > -		return -ENOMEM;
-> > > -
-> > > -	i2c_set_clientdata(client, bd);
-> > > -	bd->dev = &client->dev;
-> > > -	bd->irq = client->irq;
-> > > +	const struct bd957x_ddata *ddata;
-> > > +	struct device *dev = &client->dev;
-> > > +	struct regmap *regmap;
-> > > +	struct regmap_irq_chip_data *irq_data;
-> > > +	int ret, irq = client->irq;
-> > > +
-> > > +	/* Read the PMIC product code */
-> > > +	ret = i2c_smbus_read_byte_data(client, BD9571MWV_PRODUCT_CODE);
-> > > +	if (ret < 0) {
-> > > +		dev_err(dev, "Failed to read product code\n");
-> > > +		return ret;
-> > > +	}
-> > 
-> > Nit: '\n' here.
-> 
-> I got it. I'll add a blank line here.
-> 
-> > > +	switch (ret) {
-> > > +	case BD9571MWV_PRODUCT_CODE_BD9571MWV:
-> > > +		ddata = &bd9571mwv_ddata;
-> > 
-> > Simply declare 'const struct mfd_cell *cells' locally in probe and
-> > assign it here instead.
-> 
-> I got it. I'll also add "const struct regmap_config *regmap_config;"
-> and "const struct regmap_irq_chip *irq_chip;" locally in probe.
-
-If you only use them there, then yes, that's correct.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGkgTGVlLA0KDQo+IEZyb206IExlZSBKb25lcywgU2VudDogVGh1cnNkYXksIERlY2VtYmVyIDI0
+LCAyMDIwIDQ6MzQgUE0NCj4gPiBIaSBMZWUsDQo+ID4NCj4gPiA+IEZyb206IExlZSBKb25lcywg
+U2VudDogVGh1cnNkYXksIERlY2VtYmVyIDI0LCAyMDIwIDEyOjM5IEFNDQo+ID4gPiBPbiBXZWQs
+IDIzIERlYyAyMDIwLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gPiA+ID4gRnJvbTogS2hp
+ZW0gTmd1eWVuIDxraGllbS5uZ3V5ZW4ueHRAcmVuZXNhcy5jb20+DQo8c25pcD4NCj4gPiA+ID4g
+Kwlzd2l0Y2ggKHJldCkgew0KPiA+ID4gPiArCWNhc2UgQkQ5NTcxTVdWX1BST0RVQ1RfQ09ERV9C
+RDk1NzFNV1Y6DQo+ID4gPiA+ICsJCWRkYXRhID0gJmJkOTU3MW13dl9kZGF0YTsNCj4gPiA+DQo+
+ID4gPiBTaW1wbHkgZGVjbGFyZSAnY29uc3Qgc3RydWN0IG1mZF9jZWxsICpjZWxscycgbG9jYWxs
+eSBpbiBwcm9iZSBhbmQNCj4gPiA+IGFzc2lnbiBpdCBoZXJlIGluc3RlYWQuDQo+ID4NCj4gPiBJ
+IGdvdCBpdC4gSSdsbCBhbHNvIGFkZCAiY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgKnJlZ21h
+cF9jb25maWc7Ig0KPiA+IGFuZCAiY29uc3Qgc3RydWN0IHJlZ21hcF9pcnFfY2hpcCAqaXJxX2No
+aXA7IiBsb2NhbGx5IGluIHByb2JlLg0KPiANCj4gSWYgeW91IG9ubHkgdXNlIHRoZW0gdGhlcmUs
+IHRoZW4geWVzLCB0aGF0J3MgY29ycmVjdC4NCg0KVGhhbmsgeW91IGZvciB0aGUgcmVwbHkuIFll
+cywgSSBvbmx5IHVzZSB0aGVtIHRoZXJlLg0KU28sIEkgaGF2ZSBzdWJtaXR0ZWQgdjcgcGF0Y2hl
+cyB3aGljaCBoYXZlIHN1Y2ggaW1wbGVtZW50YXRpb24uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hp
+aGlybyBTaGltb2RhDQoNCg==
