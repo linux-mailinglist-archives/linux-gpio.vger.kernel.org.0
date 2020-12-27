@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC3AF2E32EB
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Dec 2020 22:22:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A4112E32ED
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Dec 2020 22:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgL0VWO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Dec 2020 16:22:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
+        id S1726293AbgL0VXg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Dec 2020 16:23:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgL0VWO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Dec 2020 16:22:14 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4945C061795
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Dec 2020 13:21:33 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id m12so20052643lfo.7
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Dec 2020 13:21:33 -0800 (PST)
+        with ESMTP id S1726105AbgL0VXf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Dec 2020 16:23:35 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAC9C061794
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Dec 2020 13:22:55 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id o13so20089003lfr.3
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Dec 2020 13:22:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S705wJ8jeaSFVbMX7bL0WkIpIJX6/PwuZQDPsUKEpLs=;
-        b=npHMd4OCN05Aebn/ekZGqwFyJ1W9GvnSHfl8tutjfMfvJndFGLG23HGXzPHJNsTix/
-         2W2teMq12gH0ym4ssei9zcu8+07nbjToAS5I/g/DRlt98SjP9QzlkF5gLRbU0NGP1NPk
-         gkJoWn1KPRUvtySlLhmsyabmwH+prgFWVsR0xUT64NWbJi0ZkVNj95WH4vvfPYEohweO
-         Ssxm6v4jVu39NV0o9hthCfLIgDZ38kO3ibXLG+ZdtFJecbPPRbU+c+NphExJDywi4xVr
-         jBwoYuV0dFxvlcROwZXEnpcq2BAICNYmQ+t+1apyvHszRbV2vjbauJC3E5pnL34C0yOI
-         7aoA==
+        bh=QWNvqT718TtFHxxL1hVou0I3CjOu5jdAB/yTtW9J2ac=;
+        b=Qj1Y7TvpDFDZOd7YVj9PzhP38t+aoI+cYPF0ZIcFaRId6RMD8qDrMj4k5lp1vjTCFd
+         VRxTyfnsiolX+d6zJekiX6uEgXrHMzZFULyePSvS/a+PO6RDIixGXjtyD6wFDccRXnmJ
+         3beoeQTsQT//OecH1tCf9I+AZwnaWhGFODhEH8qrkiHXzpcYxUO0jIQfNLDf8ayhPXes
+         WYxjiku0ut/LlFMhjaFLPT8cGXP4jLnXEIlHOiRWMNpaSGA1FVygjdJXMuJQV/jVIxCo
+         slxjaFCpWJkafsLrUVZjvBR4AjigxgK8/+nwm3So3zsiGY0nmKJ4pKJlW/N1em39VR2F
+         a5hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S705wJ8jeaSFVbMX7bL0WkIpIJX6/PwuZQDPsUKEpLs=;
-        b=HdDWpi2+96p9hHYUDdmjxjY1fmELntOc/Qd6tiUgeEm7MDlx0qfuNRuGILxFQ9xiAC
-         GuQKyU7+wf2hzXCOlGSGeeL01RnEUMu0IdsLSEf4JvYR8RQZRizh9nfRM1gggPmmrlZI
-         YL3dpY0sTdsyIvMhzdzppiWdajvYo61i2U+OCqSex9eRx2pOBvEjwun0ISZF1xn8gawl
-         uvaZW2FOGNSc6dRtDqHf1sEDHTKwXJfnkzGsKFFW6mNA+JRyhX+b/t9hAu9hCfqKKnJj
-         EYIrIQXM1M9fUuZkLJGPxF9h+zm1vban91FpJQM/bU2+/DZv+v6oonhSQM0Bmx5U8xQV
-         DuzQ==
-X-Gm-Message-State: AOAM533emfxIXfp1skdMxyVnyhxa7EFzVTwLHUPnjJc+v99Rq9ldCQEO
-        G9U5e3nR4nXy9zR4Lrum3BdbIUz0KydjIJAsNEzwEw==
-X-Google-Smtp-Source: ABdhPJyc5EvZMaXo9k3+9/F9vBkhZsYE4IIEsTdjHaoNVq54awShCgL52rci+fH6v5fD8AHlPDiRrxBtX7V1KO90xyk=
-X-Received: by 2002:a2e:3503:: with SMTP id z3mr21635698ljz.74.1609104092057;
- Sun, 27 Dec 2020 13:21:32 -0800 (PST)
+        bh=QWNvqT718TtFHxxL1hVou0I3CjOu5jdAB/yTtW9J2ac=;
+        b=CCZry25iu7+u8iAu4Cs09Hu1BSSmfK0SruOu+Ne6n85l52i+nXZfrizxvw6m83WGve
+         PmtpfbVBSpKsv38uXjmxPpwSxST9Hpyhh9AzWyl8NNd76GJch+9Fk80X4Kz9guYu40r1
+         bTlymABnnEQDmG5eAjjq4b4yn2TXHl9pINmBE3Erm8qqo74LRVhQW7R5buOorxMpu9iU
+         S3kVD0HRu5fxGU339KMUoAb3bcHnL1Yt9FwcKBgmOYMWq07BsYGtnrfeqnkDmsNxQbHm
+         24XMXg9PYvFqOaO+S9gAuqfUCVwH6zhde11d7KJqi00d4rmEeC2XaMSKv3qcrf4yicHC
+         YgMg==
+X-Gm-Message-State: AOAM532FiuG5M/S8z3oJPSeeZucikLGBF5qXkNoisfiOZ0mcOO77+9vx
+        qRWftffezGCxOASaB9jRaScbYerLUsf5yTHuxr9uUw==
+X-Google-Smtp-Source: ABdhPJw7AJsmxtGqtNjd1OluKJUYV+CiQlo3p+CbhgWibggLiv2sZvQOt2AiqsV3sbfqS/R4yPu+yV4pxMlSXJKtj+I=
+X-Received: by 2002:a05:6512:3238:: with SMTP id f24mr17645305lfe.29.1609104174071;
+ Sun, 27 Dec 2020 13:22:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20201224112203.7174-1-nikita.shubin@maquefel.me> <20201224112203.7174-3-nikita.shubin@maquefel.me>
-In-Reply-To: <20201224112203.7174-3-nikita.shubin@maquefel.me>
+References: <20201224112203.7174-1-nikita.shubin@maquefel.me> <20201224112203.7174-4-nikita.shubin@maquefel.me>
+In-Reply-To: <20201224112203.7174-4-nikita.shubin@maquefel.me>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 27 Dec 2020 22:21:21 +0100
-Message-ID: <CACRpkdadUVHefag4d42BJiOraAmHrXDcK7gzjZrLXn371rMwOA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] gpio: ep93xx: drop to_irq binding
+Date:   Sun, 27 Dec 2020 22:22:43 +0100
+Message-ID: <CACRpkdaB2OXrVo+8cEMY_vLODnQXsuv72bu12qBusxFj++H9HA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] gpio: ep93xx: specify gpio_irq_chip->first
 To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -62,24 +62,21 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Dec 24, 2020 at 12:22 PM Nikita Shubin
 <nikita.shubin@maquefel.me> wrote:
 
-> As ->to_irq is redefined in gpiochip_add_irqchip, having it defined in
-> driver is useless, so let's drop it.
+> Port F irq's should be statically mapped to EP93XX_GPIO_F_IRQ_BASE.
 >
-> Also i think it is worth to give a gentle warning in
-> gpiochip_add_irqchip, to prevent people relying on to_irq.
+> So we need to specify girq->first otherwise:
 >
-> For example
+> "If device tree is used, then first_irq will be 0 and
+> irqs get mapped dynamically on the fly"
 >
-> WARN_ON_ONCE(gc->to_irq,
-> "to_irq is redefined in gpiochip_add_irqchip" \
-> "and you shouldn't rely on it\n");
+> And that's not the thing we want.
 >
 > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Take out the suggestion in the commit message and implement it,
-but I think WARN_ON is too nasty, just use dev_err().
+We can only fix this properly once we convert the platform
+to device tree. (Along with making the irqchip hierarchical.)
 
 Yours,
 Linus Walleij
