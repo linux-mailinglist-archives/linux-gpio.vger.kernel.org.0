@@ -2,284 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0169B2E31C4
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Dec 2020 17:12:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7FD32E328D
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Dec 2020 20:21:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgL0QLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Dec 2020 11:11:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
+        id S1726328AbgL0TVe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Dec 2020 14:21:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgL0QLw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Dec 2020 11:11:52 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363B7C061794;
-        Sun, 27 Dec 2020 08:11:12 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id lj6so4703070pjb.0;
-        Sun, 27 Dec 2020 08:11:12 -0800 (PST)
+        with ESMTP id S1726188AbgL0TVd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Dec 2020 14:21:33 -0500
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E0AC061794;
+        Sun, 27 Dec 2020 11:20:53 -0800 (PST)
+Received: by mail-ot1-x332.google.com with SMTP id j20so7597805otq.5;
+        Sun, 27 Dec 2020 11:20:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i6p2UW6EU9A0PrBwXfl5XYJJzkMNaCXZS8epnLsn3ok=;
-        b=RYuHqlL0dFX9Qh6WEEygfDRzTxRVDmehq6WmSzRP/vuxtuaXlci0wWT336CqG8GHXz
-         XBIcGxAcIvgehUbX040bEHqMoipoPYJ+KDQxSxSRjgU46hdZB6bLFOAF/VQW5D5X3zav
-         9N3lRcJUzuKqE1Jk6+1F/rDz4u66dpqzbcG0Krnj6pHniA3DNX4nQihtlr9hLYkM5v6R
-         n4CneO+4tH+GNhRHhCYHuzdyVg16d6eVdBKsWuKxDZO27UPuwJgAfdfc+AAHO0LEYo+j
-         0p9wjQJGH4iTe4phWzqqMWcH7KeZ9cU+EKi0qkg+QYr63zc7I7IPAU3BV01WGbQphTGg
-         VJaQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0sVC8j/qFLW+R/BiCcbxfbFuWt0QadRRyfbTVS1VwHY=;
+        b=snNRM2UJuxFlYbt0opdNq/Km+jTrugWz+XCv9dvNVL/debD4RiSNjJuvvfbPHP8li7
+         KIhX0/QgOmUeidxtdeZSEin831Gb4MPxK/Nsdy82P6kpVKu6N4Nc/2a1j/rhKSYYtPfM
+         OdujcskdH0zj17962B4EA6DAWt+WbPQDoOQkCV+q0RBuHOc2AwsMveKzxEy1LnZjcBm6
+         WwVaL7EiOv3pK+MmaGP2Q6W+EWp/A0H6XAJ9Sli5mcOq3SMT90MXTM6BUD6s+YNQPnp0
+         3oKuBMFCRu9MNXQfN7PDX/uDAX7jwXSxxMeoGH5bWQ0ZYiFJh6LgmVaIuZavb11TOu03
+         Stkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i6p2UW6EU9A0PrBwXfl5XYJJzkMNaCXZS8epnLsn3ok=;
-        b=WZ3N1NU6ddNi65chrO9qeCPwfnSuCQyr2G3v45zwJ25h4o4aTJ99WTjcpJyp8bv4np
-         Uk398Szqx0my60bsO7mE7K2D5Jyk1WXVY6XuA09RPN4sl3e+wdnkYEiKImtpEeg3KPij
-         TrZp/1mjhV5CdEEIJxRZot4+0ai5QD0z2k0kzLY70JCASLH+ybHusZ46P5HG1UXeTvEo
-         L9/HKQHZQciBuoCp6qCAkJBynIyX2AmxUAW5o8OZbCzCU2NwEHttkea+OwB3IhshYmJG
-         a9rpWDP9Ba6dTF3kd959lMg6M5vqKjRkJrFPlPyrEQ+FPc5+QWcvIfndOTA1e8QG3jc9
-         ghJQ==
-X-Gm-Message-State: AOAM530sVt4JCCujCCNuUbnRpzNvrUUQ1xOy8Aw1Ftv4R9HPE7vVFF+U
-        x2pPlauddz3taOtZuyleh0ngyOrkNRV/Qw==
-X-Google-Smtp-Source: ABdhPJySr4lDS7f9d3hG5U784+2D6SIId6P08R5eULUhqSQuzxhPHBBS4cPCAirC+/rK8Ma02D6NFQ==
-X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr17099366pjx.0.1609085470981;
-        Sun, 27 Dec 2020 08:11:10 -0800 (PST)
-Received: from sol.lan (106-69-181-20.dyn.iinet.net.au. [106.69.181.20])
-        by smtp.gmail.com with ESMTPSA id t7sm33801507pfe.179.2020.12.27.08.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Dec 2020 08:11:10 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] gpiolib: cdev: fix frame size warning in gpio_ioctl()
-Date:   Mon, 28 Dec 2020 00:10:40 +0800
-Message-Id: <20201227161040.1645545-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0sVC8j/qFLW+R/BiCcbxfbFuWt0QadRRyfbTVS1VwHY=;
+        b=baA1JgZfuXDUP0wIGaf/e/J2QAvhQ1W8cBsVUUJKgN3YSDDUVya7ZRWr42nn5BH4xI
+         56Zgb2WI310CDR2BHisVc244/JfSC0nrQ/NcE9enBxBMZOV/VmlcsF+bp/0GvWU7kIUT
+         C8sOUBx8iO+e8biI5IrNRe2Suto5ok3/OHP4MgjzYTny3K67EzCZembfXwtnV63dH+vo
+         f67r1w6MTMzwdPw0GQhgVwJaLPOGE3aZn25d8DlVQk4bxaMmvDIlq6N+7yMgYjn4CT0/
+         HL5lETj3wUdzaTmQUgwRiQKwq3CAhk0+GVXBprwznOZ3tNJ4wpnK4fSeOEw9ISCMwZP+
+         bc8w==
+X-Gm-Message-State: AOAM532RadgU6GulQv36XZyn62JXa+xh84zQcs14GK1DF5NwFkCDvv8V
+        iXYgSOZ/jATNZGcDser//GM=
+X-Google-Smtp-Source: ABdhPJy5MA8pTqBMHg7t7kC9SkPKcTOcLW8SMiIKlPFipG2wn4l5044FI2Bd1WiObQwt+tJVlAueHQ==
+X-Received: by 2002:a05:6830:cf:: with SMTP id x15mr30498943oto.55.1609096852047;
+        Sun, 27 Dec 2020 11:20:52 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v17sm8555011oou.41.2020.12.27.11.20.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 27 Dec 2020 11:20:50 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Sun, 27 Dec 2020 11:20:49 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-s390@vger.kernel.org,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
+        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Airlie <airlied@linux.ie>, linux-gpio@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        linux-parisc@vger.kernel.org,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
+        linux-ntb@googlegroups.com, intel-gfx@lists.freedesktop.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [patch 02/30] genirq: Move status flag checks to core
+Message-ID: <20201227192049.GA195845@roeck-us.net>
+References: <20201210192536.118432146@linutronix.de>
+ <20201210194042.703779349@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201210194042.703779349@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The kernel test robot reports the following warning in [1]:
+On Thu, Dec 10, 2020 at 08:25:38PM +0100, Thomas Gleixner wrote:
+> These checks are used by modules and prevent the removal of the export of
+> irq_to_desc(). Move the accessor into the core.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
- drivers/gpio/gpiolib-cdev.c: In function 'gpio_ioctl':
- >>drivers/gpio/gpiolib-cdev.c:1437:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+Yes, but that means that irq_check_status_bit() may be called from modules,
+but it is not exported, resulting in build errors such as the following.
 
-Refactor gpio_ioctl() to handle each ioctl in its own helper function
-and so reduce the variables stored on the stack to those explicitly
-required to service the ioctl at hand.
+arm64:allmodconfig:
 
-The lineinfo_get_v1() helper handles both the GPIO_GET_LINEINFO_IOCTL
-and GPIO_GET_LINEINFO_WATCH_IOCTL, as per the corresponding v2
-implementation - lineinfo_get().
+ERROR: modpost: "irq_check_status_bit" [drivers/perf/arm_spe_pmu.ko] undefined!
 
-[1] https://lore.kernel.org/lkml/202012270910.VW3qc1ER-lkp@intel.com/
+Guenter
 
-Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 145 ++++++++++++++++++------------------
- 1 file changed, 73 insertions(+), 72 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 12b679ca552c..1a7b51163528 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1979,6 +1979,21 @@ struct gpio_chardev_data {
- #endif
- };
- 
-+static int chipinfo_get(struct gpio_chardev_data *cdev, void __user *ip)
-+{
-+	struct gpio_device *gdev = cdev->gdev;
-+	struct gpiochip_info chipinfo;
-+
-+	memset(&chipinfo, 0, sizeof(chipinfo));
-+
-+	strscpy(chipinfo.name, dev_name(&gdev->dev), sizeof(chipinfo.name));
-+	strscpy(chipinfo.label, gdev->label, sizeof(chipinfo.label));
-+	chipinfo.lines = gdev->ngpio;
-+	if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
-+		return -EFAULT;
-+	return 0;
-+}
-+
- #ifdef CONFIG_GPIO_CDEV_V1
- /*
-  * returns 0 if the versions match, else the previously selected ABI version
-@@ -1993,6 +2008,41 @@ static int lineinfo_ensure_abi_version(struct gpio_chardev_data *cdata,
- 
- 	return abiv;
- }
-+
-+static int lineinfo_get_v1(struct gpio_chardev_data *cdev, void __user *ip,
-+			   bool watch)
-+{
-+	struct gpio_desc *desc;
-+	struct gpioline_info lineinfo;
-+	struct gpio_v2_line_info lineinfo_v2;
-+
-+	if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
-+		return -EFAULT;
-+
-+	/* this doubles as a range check on line_offset */
-+	desc = gpiochip_get_desc(cdev->gdev->chip, lineinfo.line_offset);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+
-+	if (watch) {
-+		if (lineinfo_ensure_abi_version(cdev, 1))
-+			return -EPERM;
-+
-+		if (test_and_set_bit(lineinfo.line_offset, cdev->watched_lines))
-+			return -EBUSY;
-+	}
-+
-+	gpio_desc_to_lineinfo(desc, &lineinfo_v2);
-+	gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
-+
-+	if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
-+		if (watch)
-+			clear_bit(lineinfo.line_offset, cdev->watched_lines);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
- #endif
- 
- static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
-@@ -2030,6 +2080,22 @@ static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
- 	return 0;
- }
- 
-+static int lineinfo_unwatch(struct gpio_chardev_data *cdev, void __user *ip)
-+{
-+	__u32 offset;
-+
-+	if (copy_from_user(&offset, ip, sizeof(offset)))
-+		return -EFAULT;
-+
-+	if (offset >= cdev->gdev->ngpio)
-+		return -EINVAL;
-+
-+	if (!test_and_clear_bit(offset, cdev->watched_lines))
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+
- /*
-  * gpio_ioctl() - ioctl handler for the GPIO chardev
-  */
-@@ -2037,80 +2103,24 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct gpio_chardev_data *cdev = file->private_data;
- 	struct gpio_device *gdev = cdev->gdev;
--	struct gpio_chip *gc = gdev->chip;
- 	void __user *ip = (void __user *)arg;
--	__u32 offset;
- 
- 	/* We fail any subsequent ioctl():s when the chip is gone */
--	if (!gc)
-+	if (!gdev->chip)
- 		return -ENODEV;
- 
- 	/* Fill in the struct and pass to userspace */
- 	if (cmd == GPIO_GET_CHIPINFO_IOCTL) {
--		struct gpiochip_info chipinfo;
--
--		memset(&chipinfo, 0, sizeof(chipinfo));
--
--		strscpy(chipinfo.name, dev_name(&gdev->dev),
--			sizeof(chipinfo.name));
--		strscpy(chipinfo.label, gdev->label,
--			sizeof(chipinfo.label));
--		chipinfo.lines = gdev->ngpio;
--		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
--			return -EFAULT;
--		return 0;
-+		return chipinfo_get(cdev, ip);
- #ifdef CONFIG_GPIO_CDEV_V1
--	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
--		struct gpio_desc *desc;
--		struct gpioline_info lineinfo;
--		struct gpio_v2_line_info lineinfo_v2;
--
--		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
--			return -EFAULT;
--
--		/* this doubles as a range check on line_offset */
--		desc = gpiochip_get_desc(gc, lineinfo.line_offset);
--		if (IS_ERR(desc))
--			return PTR_ERR(desc);
--
--		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
--		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
--
--		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
--			return -EFAULT;
--		return 0;
- 	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
- 		return linehandle_create(gdev, ip);
- 	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
- 		return lineevent_create(gdev, ip);
--	} else if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
--		struct gpio_desc *desc;
--		struct gpioline_info lineinfo;
--		struct gpio_v2_line_info lineinfo_v2;
--
--		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
--			return -EFAULT;
--
--		/* this doubles as a range check on line_offset */
--		desc = gpiochip_get_desc(gc, lineinfo.line_offset);
--		if (IS_ERR(desc))
--			return PTR_ERR(desc);
--
--		if (lineinfo_ensure_abi_version(cdev, 1))
--			return -EPERM;
--
--		if (test_and_set_bit(lineinfo.line_offset, cdev->watched_lines))
--			return -EBUSY;
--
--		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
--		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
--
--		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
--			clear_bit(lineinfo.line_offset, cdev->watched_lines);
--			return -EFAULT;
--		}
--
--		return 0;
-+	} else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
-+		   cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
-+		return lineinfo_get_v1(cdev, ip,
-+				       cmd == GPIO_GET_LINEINFO_WATCH_IOCTL);
- #endif /* CONFIG_GPIO_CDEV_V1 */
- 	} else if (cmd == GPIO_V2_GET_LINEINFO_IOCTL ||
- 		   cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL) {
-@@ -2119,16 +2129,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	} else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
- 		return linereq_create(gdev, ip);
- 	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
--		if (copy_from_user(&offset, ip, sizeof(offset)))
--			return -EFAULT;
--
--		if (offset >= cdev->gdev->ngpio)
--			return -EINVAL;
--
--		if (!test_and_clear_bit(offset, cdev->watched_lines))
--			return -EBUSY;
--
--		return 0;
-+		return lineinfo_unwatch(cdev, ip);
- 	}
- 	return -EINVAL;
- }
--- 
-2.29.2
-
+> ---
+>  include/linux/irqdesc.h |   17 +++++------------
+>  kernel/irq/manage.c     |   17 +++++++++++++++++
+>  2 files changed, 22 insertions(+), 12 deletions(-)
+> 
+> --- a/include/linux/irqdesc.h
+> +++ b/include/linux/irqdesc.h
+> @@ -223,28 +223,21 @@ irq_set_chip_handler_name_locked(struct
+>  	data->chip = chip;
+>  }
+>  
+> +bool irq_check_status_bit(unsigned int irq, unsigned int bitmask);
+> +
+>  static inline bool irq_balancing_disabled(unsigned int irq)
+>  {
+> -	struct irq_desc *desc;
+> -
+> -	desc = irq_to_desc(irq);
+> -	return desc->status_use_accessors & IRQ_NO_BALANCING_MASK;
+> +	return irq_check_status_bit(irq, IRQ_NO_BALANCING_MASK);
+>  }
+>  
+>  static inline bool irq_is_percpu(unsigned int irq)
+>  {
+> -	struct irq_desc *desc;
+> -
+> -	desc = irq_to_desc(irq);
+> -	return desc->status_use_accessors & IRQ_PER_CPU;
+> +	return irq_check_status_bit(irq, IRQ_PER_CPU);
+>  }
+>  
+>  static inline bool irq_is_percpu_devid(unsigned int irq)
+>  {
+> -	struct irq_desc *desc;
+> -
+> -	desc = irq_to_desc(irq);
+> -	return desc->status_use_accessors & IRQ_PER_CPU_DEVID;
+> +	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
+>  }
+>  
+>  static inline void
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -2769,3 +2769,23 @@ bool irq_has_action(unsigned int irq)
+>  	return res;
+>  }
+>  EXPORT_SYMBOL_GPL(irq_has_action);
+> +
+> +/**
+> + * irq_check_status_bit - Check whether bits in the irq descriptor status are set
+> + * @irq:	The linux irq number
+> + * @bitmask:	The bitmask to evaluate
+> + *
+> + * Returns: True if one of the bits in @bitmask is set
+> + */
+> +bool irq_check_status_bit(unsigned int irq, unsigned int bitmask)
+> +{
+> +	struct irq_desc *desc;
+> +	bool res = false;
+> +
+> +	rcu_read_lock();
+> +	desc = irq_to_desc(irq);
+> +	if (desc)
+> +		res = !!(desc->status_use_accessors & bitmask);
+> +	rcu_read_unlock();
+> +	return res;
+> +}
