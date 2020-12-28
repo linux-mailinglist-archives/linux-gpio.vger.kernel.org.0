@@ -2,169 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72BDB2E36FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Dec 2020 13:11:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFAFE2E3703
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Dec 2020 13:13:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgL1MLq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Dec 2020 07:11:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
+        id S1727189AbgL1MMV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Dec 2020 07:12:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgL1MLp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Dec 2020 07:11:45 -0500
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953B3C06179B;
-        Mon, 28 Dec 2020 04:10:59 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id p14so8587860qke.6;
-        Mon, 28 Dec 2020 04:10:59 -0800 (PST)
+        with ESMTP id S1727449AbgL1MMV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Dec 2020 07:12:21 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74B6C061795
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Dec 2020 04:11:40 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id l11so23497272lfg.0
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Dec 2020 04:11:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=n3AT6TDkcYOgoqXitcYuftfnSMBgPOjVyKdhjDG6q98=;
-        b=J1zm2pYkcwwgV3idpyV51/hd6OLd3cUy1dOzgyZLHS+FqU6Zp9Z7IP4KCwC0pyefgF
-         +F8Ua+oVw5ubQlnsCWMOUEdVg6txT62/4DgMs0TyjA/sRNmq7risll2xB6UOF5H5/ICW
-         eQ37vjgb0rObWr5xKSgO+8j/aH57V6hjKkMOPxfseNLl0yNnD89Iq5esifqFqeTKYTal
-         khpreON5T50lGDPsmPqHQ+WhIDjaT36oOqAiGqnQEA+Qer5DzUCHnqUWGdw1NjWjQ1ZA
-         2dF4FIP9TPbwmBZIGP/syv560pQsbvZcOgPFPkEPjscLxqMR4cKfldLuZzlRllycsLdH
-         XI4w==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CULhUkBRiYm29lhM3YLs6YEHIN3sTkHriHdcNuafJOs=;
+        b=ExHBslTf3V8vx0fIsjeihfj3WigPPCykwxPcTcS4wvt9GpAyg2eXu+N6yd70VGjWxw
+         qkRpPFUWem3RcL7gqnTo72lLTJzm5P+t24LcYfpr9qP+HeMTPHNz0/z5cmmsHYsYnX9G
+         UC1JAaleyjV7oPyB5TX/h/Ro0sMXBVqZUgCC1BTQQ42A8m4yjDHLonbq6k9jJTQ1kt/g
+         3b7goIqdEYJbbp8ekS8cpDm+bvH/fP6nTGuKBxXuBH71ziXq0e0oF3lYM05AuffVCL8R
+         Vv9tdh67MKp1giF3EjExi1KwytKNmphEOg4T6SSXgF5z0W3bFV1L3q526svITPjHx6YK
+         YOdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n3AT6TDkcYOgoqXitcYuftfnSMBgPOjVyKdhjDG6q98=;
-        b=iG5Z2lJZhHEKFknoRJNDzsRGJujLYNMpWn3kbc1Dz07AY3/fR5lmtZJNzV4cLMaUrO
-         MGGR3GytTKWeNALrniEhoKMS7n2oGYbhgxOJzIf7vJ6yjLJfT03NcsG1dYGnL9tFuMlu
-         NFhmEzVVOJjVUYoIrfFumiR0GWv4BeC+m9J/hHH9Si++fEesUFtImJ5ApMHuzO17ETqA
-         4CmWQczPbljcTLZ9WgOhIY7nLHOrMwKIFkXaAfeqXVQ+zjZCN8fy1YowqgygORA5KZ1i
-         ateQEZXtZYhstshr0aWU8RAOw1oabjO4FG52CpKG0q/nL7ogMcLmO9whQMfAV2cPU8sZ
-         UKLA==
-X-Gm-Message-State: AOAM531ivykVyR4Vdcew1PwjgGMiswpOEjtZjdDDt0hVVTSH0NA2vVmi
-        /n6B1C0PCUj7rrOoAM4mynw=
-X-Google-Smtp-Source: ABdhPJwxg0ALuDYcBPG8okEWFoPmRVsrFJu61+U6tOu14LDoApF+Zy919bFYomUc2jGdbbUFdQA67w==
-X-Received: by 2002:a37:73c6:: with SMTP id o189mr44162144qkc.169.1609157458688;
-        Mon, 28 Dec 2020 04:10:58 -0800 (PST)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id z15sm23611656qkz.103.2020.12.28.04.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Dec 2020 04:10:57 -0800 (PST)
-Date:   Mon, 28 Dec 2020 07:10:55 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 1/5] clump_bits: Introduce the for_each_set_clump macro
-Message-ID: <X+nLT8bMsKJb7nug@shinobu>
-References: <cover.1608963094.git.syednwaris@gmail.com>
- <bc7bf5556fce464179550c67fbec121626d08e85.1608963095.git.syednwaris@gmail.com>
- <CAK8P3a35N1TvRQsGt+G52XSx0N4FQe_76pU4sf4EiH3Gq=s66A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CULhUkBRiYm29lhM3YLs6YEHIN3sTkHriHdcNuafJOs=;
+        b=iQdVaiSvT8D2sWwcf5GEaCs4sc/bpEfGs2N2Cnya6WKB4cP30UJyDi5H6AVt4Gd3NB
+         LUZ0iu1QKk4ITmKVJ7cPkc8h4GwbwV1C8Msx+5q/fYCjlqUw9QHanZDXFDOSFLGenDYB
+         Dom5+yCJBelmOoJywMS0p8RNFJ4Z1NYDoc7BwG6GzvJE/0PaaNAYWF9icGQDlmArROG7
+         HzoZP+g+yFrjtI5sgd3yfvUxMNdiNQ8NZvCmDS63DN4vW1yeOvnenV+mKjzOm1W4WnIg
+         A6ybkJLs+Gpr8SATuBR6Pih5cSvR6St8jNU3ZRxrHxRMzHELNA+5iLbbzWmS0u96MHD/
+         Pc+w==
+X-Gm-Message-State: AOAM530fSSqJQKGOM/RUFENEFfqXEfqIfvutxpD4uvpba/IQNOlcLNGK
+        yXmTZMWv4Eme8nx2yef993cBiiYGaGqfM7ejDTMjQQ==
+X-Google-Smtp-Source: ABdhPJwr3NT9vaFwrYG933RnTHu0NlgOn0Z2UNFeEZUmVQokVV9uUNdeAdJlcRmCRiFkACaZ1ffz1pL0fQaFtZDDwdg=
+X-Received: by 2002:ac2:43ce:: with SMTP id u14mr20295131lfl.369.1609157499370;
+ Mon, 28 Dec 2020 04:11:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jvtA3Yi9DvLrtiYs"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a35N1TvRQsGt+G52XSx0N4FQe_76pU4sf4EiH3Gq=s66A@mail.gmail.com>
+References: <20201213135056.24446-1-damien.lemoal@wdc.com> <20201213135056.24446-23-damien.lemoal@wdc.com>
+In-Reply-To: <20201213135056.24446-23-damien.lemoal@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 28 Dec 2020 17:41:27 +0530
+Message-ID: <CAAhSdy2JLerbQpm1Vb-CAhSN90VYGrbqyr50p5zMKG+59_Uozw@mail.gmail.com>
+Subject: Re: [PATCH v10 22/23] riscv: Update Canaan Kendryte K210 defconfig
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Dec 13, 2020 at 7:22 PM Damien Le Moal <damien.lemoal@wdc.com> wrote:
+>
+> Update the Kendryte k210 nommu default configuration file
+> (nommu_k210_defconfig) to include device drivers for reset, reboot,
+> I2C, SPI, gpio and LEDs support. Virtual Terminal support is also
+> disabled as no terminal devices are supported and enabled. Disabling
+> CONFIG_VT (removing the no longer needed override for
+> CONFIG_VGA_CONSOLE) reduces the kernel image size by about 65 KB.
+>
+> This default configuration remains suitable for a system using an
+> initramfs cpio file linked into the kernel image.
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> ---
+>  arch/riscv/configs/nommu_k210_defconfig | 37 +++++++++++++++++++++----
+>  1 file changed, 32 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
+> index 368a28cf1467..a099c29b4b14 100644
+> --- a/arch/riscv/configs/nommu_k210_defconfig
+> +++ b/arch/riscv/configs/nommu_k210_defconfig
+> @@ -1,17 +1,19 @@
+>  # CONFIG_CPU_ISOLATION is not set
+> -CONFIG_LOG_BUF_SHIFT=15
+> +CONFIG_LOG_BUF_SHIFT=13
+>  CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
+>  CONFIG_BLK_DEV_INITRD=y
+> -CONFIG_INITRAMFS_FORCE=y
+> +# CONFIG_RD_GZIP is not set
+>  # CONFIG_RD_BZIP2 is not set
+>  # CONFIG_RD_LZMA is not set
+>  # CONFIG_RD_XZ is not set
+>  # CONFIG_RD_LZO is not set
+>  # CONFIG_RD_LZ4 is not set
+> +# CONFIG_RD_ZSTD is not set
+>  CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+>  # CONFIG_SYSFS_SYSCALL is not set
+>  # CONFIG_FHANDLE is not set
+>  # CONFIG_BASE_FULL is not set
+> +# CONFIG_FUTEX is not set
+>  # CONFIG_EPOLL is not set
+>  # CONFIG_SIGNALFD is not set
+>  # CONFIG_TIMERFD is not set
+> @@ -25,15 +27,16 @@ CONFIG_EMBEDDED=y
+>  # CONFIG_VM_EVENT_COUNTERS is not set
+>  # CONFIG_COMPAT_BRK is not set
+>  CONFIG_SLOB=y
+> -# CONFIG_SLAB_MERGE_DEFAULT is not set
+>  # CONFIG_MMU is not set
+>  CONFIG_SOC_CANAAN=y
+> +CONFIG_SOC_CANAAN_K210_DTB_SOURCE="k210_generic"
+>  CONFIG_MAXPHYSMEM_2GB=y
+>  CONFIG_SMP=y
+>  CONFIG_NR_CPUS=2
+>  CONFIG_CMDLINE="earlycon console=ttySIF0"
+>  CONFIG_CMDLINE_FORCE=y
+> -CONFIG_JUMP_LABEL=y
+> +# CONFIG_SECCOMP is not set
+> +# CONFIG_STACKPROTECTOR is not set
+>  # CONFIG_BLOCK is not set
+>  CONFIG_BINFMT_FLAT=y
+>  # CONFIG_COREDUMP is not set
+> @@ -41,23 +44,47 @@ CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  # CONFIG_FW_LOADER is not set
+>  # CONFIG_ALLOW_DEV_COREDUMP is not set
+> +# CONFIG_INPUT_LEDS is not set
+>  # CONFIG_INPUT_KEYBOARD is not set
+>  # CONFIG_INPUT_MOUSE is not set
+>  # CONFIG_SERIO is not set
+> +# CONFIG_VT is not set
+> +# CONFIG_UNIX98_PTYS is not set
+>  # CONFIG_LEGACY_PTYS is not set
+>  # CONFIG_LDISC_AUTOLOAD is not set
+>  # CONFIG_HW_RANDOM is not set
+>  # CONFIG_DEVMEM is not set
+> +CONFIG_I2C=y
+> +CONFIG_I2C_CHARDEV=y
+> +# CONFIG_I2C_HELPER_AUTO is not set
+> +CONFIG_I2C_DESIGNWARE_PLATFORM=y
+> +CONFIG_SPI=y
+> +# CONFIG_SPI_MEM is not set
+> +CONFIG_SPI_DESIGNWARE=y
+> +CONFIG_SPI_DW_MMIO=y
+> +# CONFIG_GPIO_SYSFS is not set
+> +# CONFIG_GPIO_CDEV_V1 is not set
+> +CONFIG_GPIO_DWAPB=y
+> +CONFIG_GPIO_SIFIVE=y
+> +CONFIG_POWER_RESET=y
+> +CONFIG_POWER_RESET_SYSCON=y
+>  # CONFIG_HWMON is not set
+> -# CONFIG_VGA_CONSOLE is not set
+>  # CONFIG_HID is not set
+>  # CONFIG_USB_SUPPORT is not set
+> +CONFIG_NEW_LEDS=y
+> +CONFIG_LEDS_CLASS=y
+> +CONFIG_LEDS_GPIO=y
+> +CONFIG_LEDS_USER=y
+>  # CONFIG_VIRTIO_MENU is not set
+> +# CONFIG_VHOST_MENU is not set
+> +# CONFIG_FILE_LOCKING is not set
+>  # CONFIG_DNOTIFY is not set
+>  # CONFIG_INOTIFY_USER is not set
+>  # CONFIG_MISC_FILESYSTEMS is not set
+>  CONFIG_LSM="[]"
+>  CONFIG_PRINTK_TIME=y
+> +# CONFIG_SYMBOLIC_ERRNAME is not set
+> +# CONFIG_DEBUG_BUGVERBOSE is not set
+>  # CONFIG_DEBUG_MISC is not set
+>  CONFIG_PANIC_ON_OOPS=y
+>  # CONFIG_SCHED_DEBUG is not set
+> --
+> 2.29.2
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
---jvtA3Yi9DvLrtiYs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me.
 
-On Sun, Dec 27, 2020 at 11:03:06PM +0100, Arnd Bergmann wrote:
-> On Sat, Dec 26, 2020 at 7:42 AM Syed Nayyar Waris <syednwaris@gmail.com> =
-wrote:
-> >
-> > This macro iterates for each group of bits (clump) with set bits,
-> > within a bitmap memory region. For each iteration, "start" is set to
-> > the bit offset of the found clump, while the respective clump value is
-> > stored to the location pointed by "clump". Additionally, the
-> > bitmap_get_value() and bitmap_set_value() functions are introduced to
-> > respectively get and set a value of n-bits in a bitmap memory region.
-> > The n-bits can have any size from 1 to BITS_PER_LONG. size less
-> > than 1 or more than BITS_PER_LONG causes undefined behaviour.
-> > Moreover, during setting value of n-bit in bitmap, if a situation arise
-> > that the width of next n-bit is exceeding the word boundary, then it
-> > will divide itself such that some portion of it is stored in that word,
-> > while the remaining portion is stored in the next higher word. Similar
-> > situation occurs while retrieving the value from bitmap.
-> >
-> > GCC gives warning in bitmap_set_value(): https://godbolt.org/z/rjx34r
-> > Add explicit check to see if the value being written into the bitmap
-> > does not fall outside the bitmap.
-> > The situation that it is falling outside would never be possible in the
-> > code because the boundaries are required to be correct before the
-> > function is called. The responsibility is on the caller for ensuring the
-> > boundaries are correct.
-> > The code change is simply to silence the GCC warning messages
-> > because GCC is not aware that the boundaries have already been checked.
-> > As such, we're better off using __builtin_unreachable() here because we
-> > can avoid the latency of the conditional check entirely.
->=20
-> Didn't the __builtin_unreachable() end up leading to an objtool
-> warning about incorrect stack frames for the code path that leads
-> into the undefined behavior? I thought I saw a message from the 0day
-> build bot about that and didn't expect to see it again after that.
->=20
-> Can you actually measure any performance difference compared
-> to BUG_ON() that avoids the undefined behavior? Practically
-> all CPUs from the past 20 years have branch predictors that should
-> completely hide measurable overhead from this.
->=20
->       Arnd
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-When I initially recommended using __builtin_unreachable(), I was
-anticipating the use of bitmap_set_value() in kernel at large -- so the
-possible performance hit from a conditional check was a concern for me.
-However, now that we're restricting the scope of bitmap_set_value() to
-only the GPIO subsystem, such optimization is no longer a major concern
-I feel: gpio-xilinx is the only driver utilizing bitmap_set_value() --
-and we know it won't be called in a loop -- so whatever hypothetical
-performance hit there might be is inconsequential in the end.
-
-Instead, we should focus on code clarity now. I believe it makes sense
-given the new scope of this function to revert back to the earlier
-suggestion of passing in and checking the boundary explicitly, and to
-remove the __builtin_unreachable() call for now. If bitmap_set_value()
-becomes available to the rest of the kernel in the future, we can
-reconsider whether or not to use __builtin_unreachable().
-
-William Breathitt Gray
-
---jvtA3Yi9DvLrtiYs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl/py08ACgkQhvpINdm7
-VJJdtA//cR1YiOviFw5k9cxcAoNFUWhX1LfFPSZzBwGgXnPNVUeQDxCYt9Zo7m48
-bEcIumIHZBm0W8tySv4BlQBBSTEiiBFOWKfNHRpLJES2oVBXaYJppe6nMMjHcb0v
-5gZKxeFTC+51ZZKw238Csned7xNCUDiYDOjwvFCWuccF0tadOWWKNLqWYpl2LlwX
-VcOe64W7/N7Wd2X7zCg/6jwIEu5RNR7I1oSt5DMNCraQjwBBRpKxoTRwb5sT/60x
-xWQCJYA7qg3jseisk0n2xyAAh3nA8JWCDx/XF7qnt0+vz37Q7sia3mJKZiL3j2Ad
-yTgBDbddWPn2f4qEMpFijgfRRFzJ1jKHwwWG4n086aeC3Ql608QEMU4arJInAzgK
-3NxrdoY01mKqNye7dSac9JyvGu1KZLc6QPiZ5//sxdYG91yEnaqf9xpHgft8wobp
-5/C2dMFbZjktcFNuepxgLjPNuB+J202lEifiwAMI2sL8h9hCfyWi/U8O9WDuFosY
-9KChwHyjV4eG2GMqnIhxAG0bA94xuJNp8avH3+8CAB5mc+05RFw3nwS4fFG4YsbS
-a4XY1+wtAkyI2aqpoRa606RlaVvoBRzMWt0LEc2+Fy6Ab/98svG26coD8GcZ/RUN
-/ElXNOM7mq1Jl2utzF5v86oTEtK0K1cvz+XDrRqYsYObM1yC+ts=
-=uoh3
------END PGP SIGNATURE-----
-
---jvtA3Yi9DvLrtiYs--
+Regards,
+Anup
