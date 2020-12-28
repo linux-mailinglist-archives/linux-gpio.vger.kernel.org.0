@@ -2,141 +2,284 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2743E2E36CC
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Dec 2020 12:59:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A1D02E36E1
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Dec 2020 13:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgL1L6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Dec 2020 06:58:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        id S1727224AbgL1MEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Dec 2020 07:04:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbgL1L6v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Dec 2020 06:58:51 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFA4C061794;
-        Mon, 28 Dec 2020 03:58:11 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id g24so6666927qtq.12;
-        Mon, 28 Dec 2020 03:58:11 -0800 (PST)
+        with ESMTP id S1727234AbgL1MEI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Dec 2020 07:04:08 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEC9C061796
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Dec 2020 04:03:28 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id s26so23360712lfc.8
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Dec 2020 04:03:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U8Y4zcff79mAAXHxbU1KUQj6tU5Sz/KA9ZIKQ+FBrS0=;
-        b=R80QhhwAtEWUlOyeF1If1yXZDKXFaGqMPnmNpny40ZnjbrG3DwetkpnrbDBh6kRKqy
-         YYFKfrdl+NpNYQOhxhS8Vjccmt8MMpSSBDxFSpctTglMi6fI+rrpQa8K8sR9EVTqRUC5
-         VaRgB60sQg1ZCp2OkLz9ro0mH/1GTY17dIG4N91dxb5iB8JDwN1/vV38c87pIna5hGex
-         x3cjauJwSipdXQRC2+5VBfMPplkZS/hVur0cpNYtHzVmxT0pJ6h4hhoKg3V6fzfNa1cd
-         EcgC+d2aLQW788RIoKFF6UfSCnKcvqcaWAiJ+YXFkFN5fBlJyGIKgWqvzqWQ/SC88nNh
-         UcrQ==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n8o8T3KVh3sa6mcSr6R2U8aovfr4NzRDU/oLbZ8tRzs=;
+        b=BxWuYZNEjzULKdz3w08WrP75HZ0C4feGV0J16+bqN5c1tyIP32zRFmKfi+IfJt56C5
+         u4V6G5VaJC2Ko4pL6CXqq0w8ozEePcTp+x07lEylf4pUn6hGAboTA0oHWhrDUGoqX06X
+         hO7lmE66HpJqxB55NpepHPRmjOWkYaqAVxndLHS5ufIHX5RAnt3odDD04GBLvviQgzhP
+         NrrikVvZ/V9Mzf3HNrhe+ORwqE7l6oWqMSpIlC31uHAlRluhoMfE1mibm7yh8DsQ2GuA
+         qde4sKC2IwQqG7vRZH6PuEduQlejqT+IOIQOkQ0imM/s3rY5Xd1i8BX3CS0BkDxaZln0
+         ci0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U8Y4zcff79mAAXHxbU1KUQj6tU5Sz/KA9ZIKQ+FBrS0=;
-        b=Bq2pFtQBWVs3Rmo265gENEsLNUM7oyEX7P297I7j+1WiMRty4GVcQ40ZncaHMcu8WO
-         uXpBbcplX5mYIHaKlzDWYr/HePfyiEmnHYg2ChNoSxpEzPkIzAM8tGruye5uSn2ZAytp
-         Ka457SGkUSK9UOADrHlHjNUXeG1wjnEUyQbEdNwKUtEvrYZnIolY7mSkDTVpbIGO9nc5
-         pDZ4Rh/rpJ8zvSHRMwiwbAiw7/QUzj8TGbWrshvospLgq77+6KlnkW3oaAjEcl6xD4QJ
-         +lxPRXQyE7YxYtYpmvlgRVtZBY6q8msnYORxfv0fe5oBj4ntIReqDUsoz7gTCPDaB5me
-         NdHg==
-X-Gm-Message-State: AOAM530Tj19VnWZXOxYy3tFFEqiJIKbCd7y1NDBbpqxfZzKDIi2Rj8OQ
-        tdVn9ONMKtA4Az0aemaracFEY58JFDXwSw==
-X-Google-Smtp-Source: ABdhPJw8iEqOCUKzf/9ZHD87vCS6FtjwSGDcYNSThtu35ycaTW2YZotStOfFgcVAt4u/iaw9q1oVSA==
-X-Received: by 2002:ac8:6b59:: with SMTP id x25mr43733692qts.301.1609156690714;
-        Mon, 28 Dec 2020 03:58:10 -0800 (PST)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id a3sm22982781qtp.63.2020.12.28.03.58.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Dec 2020 03:58:09 -0800 (PST)
-Date:   Mon, 28 Dec 2020 06:58:02 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        bgolaszewski@baylibre.com, yamada.masahiro@socionext.com,
-        akpm@linux-foundation.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 5/5] gpio: xilinx: Add extra check if sum of widths
- exceed 64
-Message-ID: <X+nISkkcqyHf2fTE@shinobu>
-References: <cover.1608963094.git.syednwaris@gmail.com>
- <fd642c0843d59a0091931fcf9baa19a9dbb6e2e7.1608963095.git.syednwaris@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n8o8T3KVh3sa6mcSr6R2U8aovfr4NzRDU/oLbZ8tRzs=;
+        b=cqTPiJ8G33cAp5PUQ2WSeXf9GEQKSjMCE68C2Zob00MLqwD7Mjd7YpQ6iYo1/yFUR8
+         JD1JIysV9yVk9/pXpiovz5GrDAcWO/0jkIOHVH5D5aLRISP+CERNJI8QWwx0HOTxTr8y
+         DaWaug7q8LGQGPbvJbYeXRBt8ZoEOKs6icqPiTLzoVW/JIIEJuLHaJAz5wbPGP6gJyLU
+         LzNVI3FnCGgCZTgID5LI6sBKKYjmJno9NllisV8+9TkO9uvjFCfbQ7QdoM5JhlZCq8DN
+         CrnvL1bT1IT5p3htCzej5gmchVm/wCbvPGkZ/cV4b6Jd3rhrWIZn2VD+/XmwDKqEyvk0
+         bMKQ==
+X-Gm-Message-State: AOAM531HIDlbNE+gY/v8+A0R+pTeI9e2wMLSRwCz0IkgnKFcdV51ADVC
+        TBCDrcD7yEoQxfFedSl87zjw8OzbyFDJdNrjVXg/3Q==
+X-Google-Smtp-Source: ABdhPJy37oMJnWmRUoaMefyxJgkvsoqTDECwz6LV6L44JqwTjBjpF0QcWrJEn9WEibSn0th61vq+Y46YsUtgF3WywaU=
+X-Received: by 2002:a19:2c4:: with SMTP id 187mr18233308lfc.391.1609157006318;
+ Mon, 28 Dec 2020 04:03:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="z/sB3ZR0Cgnq1Jxg"
-Content-Disposition: inline
-In-Reply-To: <fd642c0843d59a0091931fcf9baa19a9dbb6e2e7.1608963095.git.syednwaris@gmail.com>
+References: <20201213135056.24446-1-damien.lemoal@wdc.com> <20201213135056.24446-6-damien.lemoal@wdc.com>
+In-Reply-To: <20201213135056.24446-6-damien.lemoal@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 28 Dec 2020 17:33:15 +0530
+Message-ID: <CAAhSdy3Wfc5M=y1bQ=ZVdSuDtH8B1-=3gFaaanmm0CET=btCwQ@mail.gmail.com>
+Subject: Re: [PATCH v10 05/23] riscv: Use vendor name for K210 SoC support
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sean Anderson <seanga2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---z/sB3ZR0Cgnq1Jxg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Dec 26, 2020 at 12:15:20PM +0530, Syed Nayyar Waris wrote:
-> Add extra check to see if sum of widths does not exceed 64. If it
-> exceeds then return -EINVAL alongwith appropriate error message.
->=20
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-
-Hello Syed,
-
-This change is independent from the rest of this patchset so I recommend
-dropping this patch and instead resubmitting it separately as an
-independent patch submission.
-
-William Breathitt Gray
-
+On Sun, Dec 13, 2020 at 7:21 PM Damien Le Moal <damien.lemoal@wdc.com> wrote:
+>
+> Rename configuration options and directories related to the Kendryte
+> K210 SoC to use the SoC vendor name (canaan) instead of the "kendryte"
+> branding name.
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 > ---
->  drivers/gpio/gpio-xilinx.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index d565fbf128b7..c9d740ac711b 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -319,6 +319,12 @@ static int xgpio_probe(struct platform_device *pdev)
-> =20
->  	chip->gc.base =3D -1;
->  	chip->gc.ngpio =3D chip->gpio_width[0] + chip->gpio_width[1];
-> +
-> +	if (chip->gc.ngpio > 64) {
-> +		dev_err(&pdev->dev, "invalid configuration: number of GPIO is greater =
-than 64");
-> +			return -EINVAL;
-> +	}
-> +
->  	chip->gc.parent =3D &pdev->dev;
->  	chip->gc.direction_input =3D xgpio_dir_in;
->  	chip->gc.direction_output =3D xgpio_dir_out;
-> --=20
-> 2.29.0
->=20
+>  arch/riscv/Kconfig.socs                       | 24 +++++++++----------
+>  arch/riscv/Makefile                           |  2 +-
+>  arch/riscv/boot/dts/Makefile                  |  2 +-
+>  arch/riscv/boot/dts/canaan/Makefile           |  5 ++++
+>  .../boot/dts/{kendryte => canaan}/k210.dts    |  0
+>  .../boot/dts/{kendryte => canaan}/k210.dtsi   |  0
+>  arch/riscv/boot/dts/kendryte/Makefile         |  5 ----
+>  arch/riscv/configs/nommu_k210_defconfig       |  2 +-
+>  drivers/soc/Kconfig                           |  2 +-
+>  drivers/soc/Makefile                          |  2 +-
+>  drivers/soc/{kendryte => canaan}/Kconfig      |  4 ++--
+>  drivers/soc/{kendryte => canaan}/Makefile     |  0
+>  .../soc/{kendryte => canaan}/k210-sysctl.c    |  0
+>  13 files changed, 24 insertions(+), 24 deletions(-)
+>  create mode 100644 arch/riscv/boot/dts/canaan/Makefile
+>  rename arch/riscv/boot/dts/{kendryte => canaan}/k210.dts (100%)
+>  rename arch/riscv/boot/dts/{kendryte => canaan}/k210.dtsi (100%)
+>  delete mode 100644 arch/riscv/boot/dts/kendryte/Makefile
+>  rename drivers/soc/{kendryte => canaan}/Kconfig (79%)
+>  rename drivers/soc/{kendryte => canaan}/Makefile (100%)
+>  rename drivers/soc/{kendryte => canaan}/k210-sysctl.c (100%)
+>
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> index 0bc3e28581f2..88ac0d1a5da4 100644
+> --- a/arch/riscv/Kconfig.socs
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -22,21 +22,21 @@ config SOC_VIRT
+>         help
+>           This enables support for QEMU Virt Machine.
+>
+> -config SOC_KENDRYTE
+> -       bool "Kendryte K210 SoC"
+> +config SOC_CANAAN
+> +       bool "Canaan Kendryte K210 SoC"
+>         depends on !MMU
+>         select CLINT_TIMER if RISCV_M_MODE
+>         select SERIAL_SIFIVE if TTY
+>         select SERIAL_SIFIVE_CONSOLE if TTY
+>         select SIFIVE_PLIC
+>         help
+> -         This enables support for Kendryte K210 SoC platform hardware.
+> +         This enables support for Canaan Kendryte K210 SoC platform hardware.
+>
+> -if SOC_KENDRYTE
+> +if SOC_CANAAN
+>
+> -config SOC_KENDRYTE_K210_DTB_BUILTIN
+> -       bool "Builtin device tree for the Kendryte K210"
+> -       depends on SOC_KENDRYTE
+> +config SOC_CANAAN_K210_DTB_BUILTIN
+> +       bool "Builtin device tree for the Canaan Kendryte K210"
+> +       depends on SOC_CANAAN
+>         default y
+>         select OF
+>         select BUILTIN_DTB
+> @@ -45,13 +45,13 @@ config SOC_KENDRYTE_K210_DTB_BUILTIN
+>           This option should be selected if no bootloader is being used.
+>           If unsure, say Y.
+>
+> -config SOC_KENDRYTE_K210_DTB_SOURCE
+> -       string "Source file for the Kendryte K210 builtin DTB"
+> -       depends on SOC_KENDRYTE
+> -       depends on SOC_KENDRYTE_K210_DTB_BUILTIN
+> +config SOC_CANAAN_K210_DTB_SOURCE
+> +       string "Source file for the Canaan Kendryte K210 builtin DTB"
+> +       depends on SOC_CANAAN
+> +       depends on SOC_CANAAN_K210_DTB_BUILTIN
+>         default "k210"
+>         help
+> -         Base name (without suffix, relative to arch/riscv/boot/dts/kendryte)
+> +         Base name (without suffix, relative to arch/riscv/boot/dts/canaan)
+>           for the DTS file that will be used to produce the DTB linked into the
+>           kernel.
+>
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index 0289a97325d1..cd08dc40e8d8 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -83,7 +83,7 @@ PHONY += vdso_install
+>  vdso_install:
+>         $(Q)$(MAKE) $(build)=arch/riscv/kernel/vdso $@
+>
+> -ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_KENDRYTE),yy)
+> +ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_CANAAN),yy)
+>  KBUILD_IMAGE := $(boot)/loader.bin
+>  else
+>  KBUILD_IMAGE := $(boot)/Image.gz
+> diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+> index 21e3905f1c44..4da40691c55b 100644
+> --- a/arch/riscv/boot/dts/Makefile
+> +++ b/arch/riscv/boot/dts/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  subdir-y += sifive
+> -subdir-$(CONFIG_SOC_KENDRYTE) += kendryte
+> +subdir-$(CONFIG_SOC_CANAAN) += canaan
+>
+>  obj-$(CONFIG_BUILTIN_DTB) := $(addsuffix /, $(subdir-y))
+> diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
+> new file mode 100644
+> index 000000000000..9ee7156c0c31
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/canaan/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +ifneq ($(CONFIG_SOC_CANAAN_K210_DTB_SOURCE),"")
+> +dtb-y += $(strip $(shell echo $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))).dtb
+> +obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
+> +endif
+> diff --git a/arch/riscv/boot/dts/kendryte/k210.dts b/arch/riscv/boot/dts/canaan/k210.dts
+> similarity index 100%
+> rename from arch/riscv/boot/dts/kendryte/k210.dts
+> rename to arch/riscv/boot/dts/canaan/k210.dts
+> diff --git a/arch/riscv/boot/dts/kendryte/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
+> similarity index 100%
+> rename from arch/riscv/boot/dts/kendryte/k210.dtsi
+> rename to arch/riscv/boot/dts/canaan/k210.dtsi
+> diff --git a/arch/riscv/boot/dts/kendryte/Makefile b/arch/riscv/boot/dts/kendryte/Makefile
+> deleted file mode 100644
+> index 83636693166d..000000000000
+> --- a/arch/riscv/boot/dts/kendryte/Makefile
+> +++ /dev/null
+> @@ -1,5 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> -ifneq ($(CONFIG_SOC_KENDRYTE_K210_DTB_SOURCE),"")
+> -dtb-y += $(strip $(shell echo $(CONFIG_SOC_KENDRYTE_K210_DTB_SOURCE))).dtb
+> -obj-$(CONFIG_SOC_KENDRYTE_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
+> -endif
+> diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
+> index cd1df62b13c7..368a28cf1467 100644
+> --- a/arch/riscv/configs/nommu_k210_defconfig
+> +++ b/arch/riscv/configs/nommu_k210_defconfig
+> @@ -27,7 +27,7 @@ CONFIG_EMBEDDED=y
+>  CONFIG_SLOB=y
+>  # CONFIG_SLAB_MERGE_DEFAULT is not set
+>  # CONFIG_MMU is not set
+> -CONFIG_SOC_KENDRYTE=y
+> +CONFIG_SOC_CANAAN=y
+>  CONFIG_MAXPHYSMEM_2GB=y
+>  CONFIG_SMP=y
+>  CONFIG_NR_CPUS=2
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index 425ab6f7e375..f43886fec32b 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -6,6 +6,7 @@ source "drivers/soc/amlogic/Kconfig"
+>  source "drivers/soc/aspeed/Kconfig"
+>  source "drivers/soc/atmel/Kconfig"
+>  source "drivers/soc/bcm/Kconfig"
+> +source "drivers/soc/canaan/Kconfig"
+>  source "drivers/soc/fsl/Kconfig"
+>  source "drivers/soc/imx/Kconfig"
+>  source "drivers/soc/ixp4xx/Kconfig"
+> @@ -22,6 +23,5 @@ source "drivers/soc/ux500/Kconfig"
+>  source "drivers/soc/versatile/Kconfig"
+>  source "drivers/soc/xilinx/Kconfig"
+>  source "drivers/soc/zte/Kconfig"
+> -source "drivers/soc/kendryte/Kconfig"
+>
+>  endmenu
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 36452bed86ef..dec90fca120b 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -28,4 +28,4 @@ obj-$(CONFIG_ARCH_U8500)      += ux500/
+>  obj-$(CONFIG_PLAT_VERSATILE)   += versatile/
+>  obj-y                          += xilinx/
+>  obj-$(CONFIG_ARCH_ZX)          += zte/
+> -obj-$(CONFIG_SOC_KENDRYTE)     += kendryte/
+> +obj-$(CONFIG_SOC_CANAAN)       += canaan/
+> diff --git a/drivers/soc/kendryte/Kconfig b/drivers/soc/canaan/Kconfig
+> similarity index 79%
+> rename from drivers/soc/kendryte/Kconfig
+> rename to drivers/soc/canaan/Kconfig
+> index 49785b1b0217..5232d13f07e5 100644
+> --- a/drivers/soc/kendryte/Kconfig
+> +++ b/drivers/soc/canaan/Kconfig
+> @@ -1,9 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> -if SOC_KENDRYTE
+> +if SOC_CANAAN
+>
+>  config K210_SYSCTL
+> -       bool "Kendryte K210 system controller"
+> +       bool "Canaan Kendryte K210 SoC system controller"
+>         default y
+>         depends on RISCV
+>         help
+> diff --git a/drivers/soc/kendryte/Makefile b/drivers/soc/canaan/Makefile
+> similarity index 100%
+> rename from drivers/soc/kendryte/Makefile
+> rename to drivers/soc/canaan/Makefile
+> diff --git a/drivers/soc/kendryte/k210-sysctl.c b/drivers/soc/canaan/k210-sysctl.c
+> similarity index 100%
+> rename from drivers/soc/kendryte/k210-sysctl.c
+> rename to drivers/soc/canaan/k210-sysctl.c
+> --
+> 2.29.2
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
---z/sB3ZR0Cgnq1Jxg
-Content-Type: application/pgp-signature; name="signature.asc"
+Looks good to me.
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl/pyEAACgkQhvpINdm7
-VJLsGw/8Cv3JQXOVSwstx+cGE1n13j0ohOymx/WpFxbkcaN/HaqAcR3gV2DD56YG
-7UPGf1n5YSUr4JTgfBWq0J475/dk6Q+sPZeOdIcm9sRBHPEdR6ag2C0BqIWSIL+x
-bs9k7R2Ar+ctEWyegUD35gTYFbsay3Xapoa+4TLv136Q0WS6+ryyTmokZuqThvxz
-qp3gzBWDctL+8TUKnglpVg3Vj2JWn3/11Jo7/cR1QohDMIVH3VB2FRCwJ5kcS/9+
-i2lCrziMRzFy6317zHwG5ezb6+BgFy5wiRUtfv1WSC9cV+bLhrclX/Ym1VAO+DBF
-ucIv5pLzRkQPd9GwHpQTzrU3OV5dr709TAvByotoyfUKjCEByPM1n4mwuO/7wC4L
-DjbBr6nYGY56ZucJkg2dumemG79QFlYbYLLL9bquYCHnyJ1uKFt96cqcMsogA2n0
-Jpnla4Ve7JblToYf+FTiPvx0oObTZwL0pjs7sVniWxfSDqRcaIS+adMOrHRoWJD+
-mPQ1M1k9e5COTw354uALzkmoWD5sz2VZid2BxBtGxu/fuZE9KvdspvdoXXKFSfWB
-VvUaolYVp6PQDQgJdJd7JOLxOuOsZMAF0j00iFH8UfymKNUb50THcCc7RlwJCRyr
-Z19eyPdogHQ3ugmC24PddWmzz+RuXQJ/SrMTzNI6JUeodiuHZVA=
-=WBuc
------END PGP SIGNATURE-----
-
---z/sB3ZR0Cgnq1Jxg--
+Regards,
+Anup
