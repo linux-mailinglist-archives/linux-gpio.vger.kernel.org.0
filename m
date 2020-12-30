@@ -2,98 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52BB32E7A86
+	by mail.lfdr.de (Postfix) with ESMTP id BE4762E7A87
 	for <lists+linux-gpio@lfdr.de>; Wed, 30 Dec 2020 16:43:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgL3PnO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Dec 2020 10:43:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
+        id S1726323AbgL3PnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Dec 2020 10:43:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgL3PnN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 10:43:13 -0500
+        with ESMTP id S1726293AbgL3PnQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 10:43:16 -0500
 Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8530BC06179B;
-        Wed, 30 Dec 2020 07:42:33 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id 2so11130929qtt.10;
-        Wed, 30 Dec 2020 07:42:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD55C06179C;
+        Wed, 30 Dec 2020 07:42:36 -0800 (PST)
+Received: by mail-qt1-x830.google.com with SMTP id g24so11113255qtq.12;
+        Wed, 30 Dec 2020 07:42:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gksk1aXwxYA/bWUDFXmTOZvpRAh0XcLj+0G7pkJFM9o=;
-        b=auFWZBuWXjWKK4/q2IWjWYwMgtDLGLAh8xteNOxEyqu63aPirwQJC53hwiXt/yTeGB
-         ZkS+aCUY71NA2ElYRqYYd2b8anOofopb0I+Vig0FAY62DMMD1L0R758nEEzfZUnTv/mi
-         ypn8vCNzto65JyanZEN1sbqCMqxsZYt99axyZsTw1EirUctTaZvlJhqGIj3gu+f6pqhf
-         NeaVlCV6eCiWzHwMuQS0st5dptiYD76TCnVwN9yx/M1sVWN1d3pPk59Kei/BjdeC0cTd
-         bk1MtGSKb7onotyxWAvMVTyRtxBODql2f1g2gRBCUqmPCB6Aw05dCz4VkpUSpspEPsaQ
-         /2mw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=N4Z6AhJilnlXeLxA+iKYxp/M8/ETHwPd3nAZGuYmO/s=;
+        b=Qh3jayu1EDCyj1NDcIhdiMYAFauCpIi72rDar6XiBey1YDB3kZGayzwkgNVsgqygVC
+         +txHiPGc+U0PkyZmX9TXFUj168YPbQL63vPavBfuyPBFynfu0YH7qRlJ1Ib3AQnL/p9Q
+         pneFrTb9LusyZvNyI73rdkfvgesM0Lg8tZPxzo24o1+FM/xntFDBXcKsdd/QAPnuA1kR
+         TpSwXYx6/1eq6HGPv0xhrNuXwDmOpUB/yHI/rUzeUwuF5Xcq2R95KBMVjUozpnn2gXcj
+         /BVE0jaiK1Or0wAI5IIykWTg4ZqHhrE4Qqu8hc4Kxl7rF4pxKlgFvaRuXGOi9VRTjo2k
+         BzEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gksk1aXwxYA/bWUDFXmTOZvpRAh0XcLj+0G7pkJFM9o=;
-        b=CmD384E/ACBrsZKyz+tH0CB85GZ3OIDBOp4Ar2tM3gBDl0qE1p5VxMkc+GDT4Gv/g0
-         DUtw5Rt07AKrAIgJkH70y8e3HnG8jDiAKcG29HpbRb8KQYey+mjUQDlJ77DKc0n5Boty
-         tAeV5zsOfuW4qu0FS2nkKpCjIKJ0JbbXdTca2aSkd8cO4a40qtXhgVB5lDFX0ds57qXa
-         6L1fMW5RHuM28CLsf47rJlIHP1m105rBf6gCj1zVHWUQbS8OtKEwcC5Ayp+OVjKTijlP
-         m6cE0Mn2Ulqlfb+p/cRsbppmsXhP4vi71L5IFcz5SGjDF4ptiwin/VriB671jTTiNhxE
-         99eQ==
-X-Gm-Message-State: AOAM532AMEDC5im6ccQioFlgPOcJHHUEqUStL09CMVtG6TdjeMruM0r1
-        djy8YjFZZoE2lyJBwMcsrs0=
-X-Google-Smtp-Source: ABdhPJzli+ijWqt6AUY6Ku1LH4/Im0AGcU2ccMRaiWuOL7+UkyH4ELDkjYWWIkJdevVYxuE10rZ8Ig==
-X-Received: by 2002:ac8:6bc2:: with SMTP id b2mr53980683qtt.286.1609342952638;
-        Wed, 30 Dec 2020 07:42:32 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=N4Z6AhJilnlXeLxA+iKYxp/M8/ETHwPd3nAZGuYmO/s=;
+        b=d02TockTmSEBw5Txcvq1H5T4d0njCX+NMT0IZI07nbG2TtMUUyZ95jYWWl4fARHzjB
+         4e/PUKn4iv+crUVLbDiE8MeIxy99i0eHoG3aY0Quo3RcKp9nR6v5bPeyZz67b33G+N1O
+         zu4tWi0zB+TEOYntrWcn3BUnWayAavXEQWVPoRDg4RvzPLJ/z3DT7QVKRRqE79t62la/
+         LuQhb3CRMNAkDQx5kvfP1RlPuV34Xh0jMvyV/8gfi/WvtdldHqsPiGogukPTd3VHvdr3
+         dzyCujQXf6+qIIpMNKlLARQQds4zJ0V6sZR69YY3XtxT8DNtw3qAX/piP8hVoLUGHeAC
+         orhA==
+X-Gm-Message-State: AOAM532in2GL75Rz60LBeKCrJHRMqFlek60oMDAROJo0zLxI57d9c61g
+        YWiYY90L6AWobIyiaTnnZEA=
+X-Google-Smtp-Source: ABdhPJwLzrAA8bfqbq7xJ5AdFzGW25KDDu80eJT2wAHRDXJp3zApbSftBMYNsESHMCu7I2PX5Ul0nQ==
+X-Received: by 2002:ac8:4545:: with SMTP id z5mr52269936qtn.356.1609342955645;
+        Wed, 30 Dec 2020 07:42:35 -0800 (PST)
 Received: from localhost.localdomain ([2804:14c:482:a80:d66:6051:ad08:aa32])
-        by smtp.gmail.com with ESMTPSA id o4sm26694832qta.26.2020.12.30.07.42.29
+        by smtp.gmail.com with ESMTPSA id o4sm26694832qta.26.2020.12.30.07.42.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Dec 2020 07:42:31 -0800 (PST)
+        Wed, 30 Dec 2020 07:42:34 -0800 (PST)
 From:   Fabio Estevam <festevam@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     robh+dt@kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, sandor.yu@nxp.com,
+        Sandor Yu <Sandor.yu@nxp.com>,
         Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: gpio: 74x164: Introduce the 'registers-default' property
-Date:   Wed, 30 Dec 2020 12:41:06 -0300
-Message-Id: <20201230154107.4151-1-festevam@gmail.com>
+Subject: [PATCH 2/2] gpio: 74x164: Introduce the 'registers-default' property
+Date:   Wed, 30 Dec 2020 12:41:07 -0300
+Message-Id: <20201230154107.4151-2-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201230154107.4151-1-festevam@gmail.com>
+References: <20201230154107.4151-1-festevam@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are cases where a certain default output value in the 74x164
-output is needed.
+From: Sandor Yu <Sandor.yu@nxp.com>
 
-For example: the imx6ul-evk board has the Ethernet PHY reset controlled
-by the 74x164 chip.
+On the imx7d-sdb board, there is one output pin of the 74x164 that
+controls all peripherals power supply (PERI_3V).
 
-After enabling the OE pin, the output pins of the 74x164 chip go to
-zero by default, which makes the Ethernet PHY not to be detected.
+This pin should be at high voltage level when the 74x164 is probed,
+otherwise the modules dependent on PERI_3V3 will not be powered.
 
 Add a new optional property called 'registers-default' that allows
 describing the default output value for each shift register.
 
+Signed-off-by: Sandor Yu <sandor.yu@nxp.com>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 3 +++
+ drivers/gpio/gpio-74x164.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-index 2a97553d8d76..bf8f45896018 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-@@ -14,6 +14,8 @@ Required properties:
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index 05637d585152..4be51ee4d44c 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -141,6 +141,9 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 	chip->registers = nregs;
+ 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
  
- Optional properties:
- - enable-gpios: GPIO connected to the OE (Output Enable) pin.
-+- registers-default: An array of 8-bit values describing the default output
-+value of each shift registers.
- 
- Example:
- 
-@@ -24,4 +26,5 @@ gpio5: gpio5@0 {
- 	#gpio-cells = <2>;
- 	registers-number = <4>;
- 	spi-max-frequency = <100000>;
-+	registers-default = /bits/ 8 <0x57 0xF0 0xFF 0xF0>;
- };
++	of_property_read_u8_array(spi->dev.of_node, "registers-default",
++				  chip->buffer, chip->registers);
++
+ 	chip->gpio_chip.can_sleep = true;
+ 	chip->gpio_chip.parent = &spi->dev;
+ 	chip->gpio_chip.owner = THIS_MODULE;
 -- 
 2.17.1
 
