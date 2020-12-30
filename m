@@ -2,100 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D8402E73FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Dec 2020 21:49:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52BB32E7A86
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Dec 2020 16:43:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgL2UsD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Dec 2020 15:48:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59960 "EHLO
+        id S1726317AbgL3PnO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Dec 2020 10:43:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgL2UsD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Dec 2020 15:48:03 -0500
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0122BC061574;
-        Tue, 29 Dec 2020 12:47:23 -0800 (PST)
-Received: by mail-qv1-xf2c.google.com with SMTP id h16so6882418qvu.8;
-        Tue, 29 Dec 2020 12:47:22 -0800 (PST)
+        with ESMTP id S1726293AbgL3PnN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 10:43:13 -0500
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8530BC06179B;
+        Wed, 30 Dec 2020 07:42:33 -0800 (PST)
+Received: by mail-qt1-x830.google.com with SMTP id 2so11130929qtt.10;
+        Wed, 30 Dec 2020 07:42:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y+rG0GxaF7x1wXd8TaaHi/8Xfv1oonAYxPZa52+iv1g=;
-        b=VbPKpHSd6tZDH2zm47wqbko1A0NgXSGNZkyRuWT0E2sm0HTfdFGyHB/RCpWIrj7w6K
-         6n3mAJ2YuIkUF8tc/Vwb7YU3jzqAvQ2K6gMG6pw9rwMinOmto/FfSwtx3dEuJVqwnIJK
-         nJ0oxhLGzqgHFkd/VxDZ25QH9kktVZZZG2zzfsYFgUC3h3471N3WWeDrlbOJrLxhFyKb
-         DB4DGheTESkWASZV2gKyaTv9HKFUbvDmwZo1pGfdaxr6PaTv8s8/Fem2m2YLZt6RMK7v
-         BthRbKXKTbOpr1mRPdPglD+3dbyVjIDJgve7+rr+6hEi2O4dHkip7cTrYSKDpbCTN/1h
-         siuA==
+        h=from:to:cc:subject:date:message-id;
+        bh=gksk1aXwxYA/bWUDFXmTOZvpRAh0XcLj+0G7pkJFM9o=;
+        b=auFWZBuWXjWKK4/q2IWjWYwMgtDLGLAh8xteNOxEyqu63aPirwQJC53hwiXt/yTeGB
+         ZkS+aCUY71NA2ElYRqYYd2b8anOofopb0I+Vig0FAY62DMMD1L0R758nEEzfZUnTv/mi
+         ypn8vCNzto65JyanZEN1sbqCMqxsZYt99axyZsTw1EirUctTaZvlJhqGIj3gu+f6pqhf
+         NeaVlCV6eCiWzHwMuQS0st5dptiYD76TCnVwN9yx/M1sVWN1d3pPk59Kei/BjdeC0cTd
+         bk1MtGSKb7onotyxWAvMVTyRtxBODql2f1g2gRBCUqmPCB6Aw05dCz4VkpUSpspEPsaQ
+         /2mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y+rG0GxaF7x1wXd8TaaHi/8Xfv1oonAYxPZa52+iv1g=;
-        b=t7rWJhUuud2TATO+kc5vRrFDczRk2Ntxos8k4+MeCr9FBx3+MqTv4wGrncumg9At3x
-         z2omKgq/Olmhg68sS9ShJ/oS4zr30Vmequw9TmBLQy0riIvZ5x21BsMjbDdylVN3Df8F
-         PCUWgtc+gw9bkKgRd3Tdkfb9W86VImd1lplqnUVAPTqXgIx++FVqbbb/nSQRcb3Vks9l
-         7NghPHe7uLKICLtWBdth6FPzK1s2j0C5fLXAH3eUUTuG3UyAeEi3cJwRn+eQ3aGyvOzz
-         rfxMKgyw+tAUg3sk3wmN8h/m7blTlhSgybSvFAWKOMGDQQargTvr7dC88pr6hl/PgUcL
-         NFnA==
-X-Gm-Message-State: AOAM5307ycM5qk8CLyaleJCeTDvFpcNsNWPPtyDG7C/NEnS5RBwFa1mY
-        IefjigR5c05QvUrH8fITMcU=
-X-Google-Smtp-Source: ABdhPJx/7QCz1uzdmG7N+yZpMXQZ01RrfD1TOA7M0mU/tmv2rVqr45+D6n3cQ9hHWlePDfPWlfO3pA==
-X-Received: by 2002:a0c:f690:: with SMTP id p16mr5946583qvn.58.1609274842134;
-        Tue, 29 Dec 2020 12:47:22 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:45f1:1d00::1])
-        by smtp.gmail.com with ESMTPSA id w8sm27667541qts.50.2020.12.29.12.47.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gksk1aXwxYA/bWUDFXmTOZvpRAh0XcLj+0G7pkJFM9o=;
+        b=CmD384E/ACBrsZKyz+tH0CB85GZ3OIDBOp4Ar2tM3gBDl0qE1p5VxMkc+GDT4Gv/g0
+         DUtw5Rt07AKrAIgJkH70y8e3HnG8jDiAKcG29HpbRb8KQYey+mjUQDlJ77DKc0n5Boty
+         tAeV5zsOfuW4qu0FS2nkKpCjIKJ0JbbXdTca2aSkd8cO4a40qtXhgVB5lDFX0ds57qXa
+         6L1fMW5RHuM28CLsf47rJlIHP1m105rBf6gCj1zVHWUQbS8OtKEwcC5Ayp+OVjKTijlP
+         m6cE0Mn2Ulqlfb+p/cRsbppmsXhP4vi71L5IFcz5SGjDF4ptiwin/VriB671jTTiNhxE
+         99eQ==
+X-Gm-Message-State: AOAM532AMEDC5im6ccQioFlgPOcJHHUEqUStL09CMVtG6TdjeMruM0r1
+        djy8YjFZZoE2lyJBwMcsrs0=
+X-Google-Smtp-Source: ABdhPJzli+ijWqt6AUY6Ku1LH4/Im0AGcU2ccMRaiWuOL7+UkyH4ELDkjYWWIkJdevVYxuE10rZ8Ig==
+X-Received: by 2002:ac8:6bc2:: with SMTP id b2mr53980683qtt.286.1609342952638;
+        Wed, 30 Dec 2020 07:42:32 -0800 (PST)
+Received: from localhost.localdomain ([2804:14c:482:a80:d66:6051:ad08:aa32])
+        by smtp.gmail.com with ESMTPSA id o4sm26694832qta.26.2020.12.30.07.42.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Dec 2020 12:47:21 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] pinctrl: nomadik: Remove unused variable in nmk_gpio_dbg_show_one
-Date:   Tue, 29 Dec 2020 13:47:10 -0700
-Message-Id: <20201229204710.1129033-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.30.0
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Dec 2020 07:42:31 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, sandor.yu@nxp.com,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: gpio: 74x164: Introduce the 'registers-default' property
+Date:   Wed, 30 Dec 2020 12:41:06 -0300
+Message-Id: <20201230154107.4151-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Clang warns:
+There are cases where a certain default output value in the 74x164
+output is needed.
 
-drivers/pinctrl/nomadik/pinctrl-nomadik.c:952:8: warning: unused
-variable 'wake' [-Wunused-variable]
-                bool wake;
-                     ^
-1 warning generated.
+For example: the imx6ul-evk board has the Ethernet PHY reset controlled
+by the 74x164 chip.
 
-There were two wake declarations added to nmk_gpio_dbg_show_one when
-converting it to use irq_has_action but only one is used within its
-scope. Remove the unused one so there is no more warning.
+After enabling the OE pin, the output pins of the 74x164 chip go to
+zero by default, which makes the Ethernet PHY not to be detected.
 
-Fixes: f3925032d7fd ("pinctrl: nomadik: Use irq_has_action()")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Add a new optional property called 'registers-default' that allows
+describing the default output value for each shift register.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index d4ea10803fd9..abfe11c7b49f 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -949,7 +949,6 @@ static void nmk_gpio_dbg_show_one(struct seq_file *s,
- 	} else {
- 		int irq = chip->to_irq(chip, offset);
- 		const int pullidx = pull ? 1 : 0;
--		bool wake;
- 		int val;
- 		static const char * const pulls[] = {
- 			"none        ",
-
-base-commit: 5c8fe583cce542aa0b84adc939ce85293de36e5e
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+index 2a97553d8d76..bf8f45896018 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+@@ -14,6 +14,8 @@ Required properties:
+ 
+ Optional properties:
+ - enable-gpios: GPIO connected to the OE (Output Enable) pin.
++- registers-default: An array of 8-bit values describing the default output
++value of each shift registers.
+ 
+ Example:
+ 
+@@ -24,4 +26,5 @@ gpio5: gpio5@0 {
+ 	#gpio-cells = <2>;
+ 	registers-number = <4>;
+ 	spi-max-frequency = <100000>;
++	registers-default = /bits/ 8 <0x57 0xF0 0xFF 0xF0>;
+ };
 -- 
-2.30.0
+2.17.1
 
