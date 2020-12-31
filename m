@@ -2,112 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E34E2E7D51
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Dec 2020 01:16:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 052272E7DA5
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Dec 2020 03:10:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgLaAQB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Dec 2020 19:16:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
+        id S1726302AbgLaCKB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Dec 2020 21:10:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgLaAQB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 19:16:01 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B43C061573;
-        Wed, 30 Dec 2020 16:15:20 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id x16so23778995ejj.7;
-        Wed, 30 Dec 2020 16:15:20 -0800 (PST)
+        with ESMTP id S1726289AbgLaCKB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 21:10:01 -0500
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE349C061573;
+        Wed, 30 Dec 2020 18:09:20 -0800 (PST)
+Received: by mail-qv1-xf2d.google.com with SMTP id a13so8535109qvv.0;
+        Wed, 30 Dec 2020 18:09:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UvoSlfKOzR9aXfOXBsJ3GswM+8uOh9HphZSo/bhng8w=;
-        b=bvKYG0KdYqYIkJ1r680vMvyx7fx2qEYMXWN0/N9RhRGWeQNhC/O9N5KguxoLJlk8zv
-         ZGcV6SfiJ2qw+foQq3MtDJYXKfmNNK/6OdYAnB4r4YkddVSRbDch1R0v6mgBV53KccxZ
-         FYOSrd+Ipsaq55fseR2FSmEF8uJ+svXVsW4GZkfwEIfPBmorV0+vjQq2ubveZE3RHVsZ
-         L37trk87jql5wejgQUy3mB/KPJZ6V2io2xgWYRvkLw39FtKaXbCb5YxoAKvw6qOtEIPl
-         Av3ZjkqFZjTIHlgMN52IBy9QbjCrMjh2+cmmlKZoc2ejnXm6oeoPMVjBMRYs1p4Jax6h
-         81ng==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QovwV2L0UMEd26xUOh5iY0A9BQ0S+3zOullG0T4ZOPw=;
+        b=jG/zA9gr14gYEU7RcfEASC3XPerOE8ewIyEIonYkp2niGKc9uX7C+F9sosc+NBUJlx
+         ht5zQTeglhqFmPKMFd5WJJ4gCeA4QNYQ8iwBlRT+d+mveZyZLWaQ7FAazlNjGA+2S6O6
+         86x6lLQbglg+lRAkWLrlXn+6Ry94K8TBrkpJMPo4nahpnA9ABpMJoG3VX0RwBpzZAGmb
+         iVhfpQQcuRkDrRyRugsk2o5VsdkzKx+I+Ja0ss0IQFC59DGLtfWvifA01Mbk4ppedMde
+         bov10Td8QuHD2nW/HloO8+Y4vcui0MfFm4KJGO/qonbxRb9VBDsa1+EA2eSJGk0MLHjT
+         eg8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UvoSlfKOzR9aXfOXBsJ3GswM+8uOh9HphZSo/bhng8w=;
-        b=sDa/mpE4japMGwQyHvNZ0V1nbaj0dx1gMo2QiOu1XxaHQroKCgyoqRxtJGrSpZqW7D
-         nrd8y/ONHxevVaCmhA+tdmf3tS79mTFFlSC9Fd18Ha6WTJU8McaL1tG4J3TupaAct45K
-         k0cBeippgHLKW/+S42hALgWTUAImvTzAuN1QxrRgxhZMTrTRgetTQbCQqZJahPfKEmZW
-         p6iwnFLk6hTWXplMi3fRdXawqVHw0Oe+UbShv73Fjs85qEbAgwmlI4K8pWili0B/sGJ/
-         zv1ILEPPUKgMQFSYjNPUT5mCdI9pznyEl7445DN006c+vQ7sJLzv1Kwah+GpuBWORePG
-         Va9Q==
-X-Gm-Message-State: AOAM530NaWTBRMoM+Dyqb7oHLCQ2zGc8xJ12aKabqfBwW83dTsohG1qk
-        dGxklBSdKNz0ckcg1l67ifDjPaBZYOxgwVpQP1W1uiOtpmQ=
-X-Google-Smtp-Source: ABdhPJxb748s3jA7OM4MHs5iwBkFjZbItUx/Lu8HznegChgjdipD9BsFFy2yu4F2Cr4zjR0SwZf8mS7qLieMUFj76ZQ=
-X-Received: by 2002:a17:906:4050:: with SMTP id y16mr49846386ejj.537.1609373719461;
- Wed, 30 Dec 2020 16:15:19 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QovwV2L0UMEd26xUOh5iY0A9BQ0S+3zOullG0T4ZOPw=;
+        b=cKCm0r1PWrIm4vie0a6M/L3UfMu5/TjMXg71yBu2eYcXMEMZIWtMoQd0KeaJFW2cXc
+         kTGcBRybwAFCbE7Fl+CraMyHMOxUnGGUumo+ip36YSDWuM65rSitSfCzwoISysOexdfI
+         HUFZLeaqNQfyp/h8c3jVBVTxIX/1jfBnFsWctP68KS5HzDDrgiAPLkK/wn7n0GWiueBW
+         CZJiY161WAiLHE+2K2p5zjeqlZq2nRYGqA/aXad0o15az8JN7MNLv4Z6NxXWIR1/SlsV
+         BLxSjLT9MY9DZHtqvTp6VLmiGk/v06RQkN0l2Hgqp4LQHuB0xy/efdcB1xd7VHBITURz
+         pzbg==
+X-Gm-Message-State: AOAM5324LPqjLr+b/vTI4lA1gxXOMQXkIpDXN7pmt69jEnSMOJrV7HEY
+        XNxEwA7AojUdGvPGyquYx2Q=
+X-Google-Smtp-Source: ABdhPJxH9FJ11CtyboV6HCmPpD29FSDJ9y7WwwxElHrSK3EpnB/0olYZM90pMNS7x/153lBSp5m9mg==
+X-Received: by 2002:a0c:ac44:: with SMTP id m4mr59433000qvb.45.1609380560017;
+        Wed, 30 Dec 2020 18:09:20 -0800 (PST)
+Received: from localhost (097-091-201-069.res.spectrum.com. [97.91.201.69])
+        by smtp.gmail.com with ESMTPSA id b6sm28586075qkc.128.2020.12.30.18.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Dec 2020 18:09:19 -0800 (PST)
+Date:   Wed, 30 Dec 2020 20:07:07 -0600
+From:   Andrew Halaney <ajhalaney@gmail.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: nomadik: remove an unused variable
+Message-ID: <20201231020707.sob7kttbv42h7432@halaney-zenbook14.lan>
+References: <20201230154624.714388-1-arnd@kernel.org>
 MIME-Version: 1.0
-References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
- <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
- <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
- <CAFBinCCLubmDvxfabQHx2-ucgAsm1NArMUrtPx-UA2nX5xoFFA@mail.gmail.com> <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
-In-Reply-To: <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 31 Dec 2020 01:15:08 +0100
-Message-ID: <CAFBinCAYGZC0jXPozScJugsX+8P_BOm1Zj8+f+RE9fMjhbKbJw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-usb <linux-usb@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201230154624.714388-1-arnd@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 30, 2020 at 04:46:17PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> A recent patch added a local variable twice:
+> 
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c:953:8: error: unused variable 'wake' [-Werror,-Wunused-variable]
+> 
+> Remove the unused outer declaration
+> 
+> Fixes: f3925032d7fd ("pinctrl: nomadik: Use irq_has_action()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/pinctrl/nomadik/pinctrl-nomadik.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> index d4ea10803fd9..abfe11c7b49f 100644
+> --- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> +++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+> @@ -949,7 +949,6 @@ static void nmk_gpio_dbg_show_one(struct seq_file *s,
+>  	} else {
+>  		int irq = chip->to_irq(chip, offset);
+>  		const int pullidx = pull ? 1 : 0;
+> -		bool wake;
+>  		int val;
+>  		static const char * const pulls[] = {
+>  			"none        ",
+> -- 
+> 2.29.2
+> 
 
-On Mon, Dec 21, 2020 at 4:28 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Linus,
->
-> On Wed, Oct 7, 2020 at 9:44 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> [...]
-> > > As noted on the earlier patches I think this should be folded into the
-> > > existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
-> > > gets messy, as a separate bolt-on, something like
-> > > xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
-> > > You can use a Kconfig symbol for the GPIO portions or not.
-> > OK, I will do that if there are no objections from other developers
-> > I am intending to place the relevant code in xhci-pci-etron.c, similar
-> > to what we already have with xhci-pci-renesas.c
-> I tried this and unfortunately there's a catch.
-> the nice thing about having a separate GPIO driver means that the
-> xhci-pci driver doesn't need to know about it.
->
-> I implemented xhci-pci-etron.c and gave it a Kconfig option.
-> xhci-pci is then calling into xhci-pci-etron (through some
-> etron_xhci_pci_probe function).
-> unfortunately this means that xhci-pci now depends on xhci-pci-etron.
-> for xhci-pci-renesas this is fine (I think) because that part of the
-> code is needed to get the xHCI controller going
-> but for xhci-pci-etron this is a different story: the GPIO controller
-> is entirely optional and only used on few devices
->
-> my goal is (at some point in the future) to have the GPIO driver in OpenWrt.
-> I am not sure if they would accept a patch where xhci-pci would then
-> pull in the dependencies for that Etron controller, even though most
-> boards don't need it.
->
-> Please let me know if you have any idea on how to solve this.
-next week I have some free time to work on this
-I am still interested in any ideas that you have about this
+Got rid of the warning for me, I don't have hardware to test on but I
+don't think that's necessary for this.
 
+Tested-by: Andrew Halaney <ajhalaney@gmail.com>
+Reviewed-by: Andrew Halaney <ajhalaney@gmail.com>
 
-Best regards,
-Martin
+Thanks,
+Andrew
