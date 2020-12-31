@@ -2,99 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64BC52E7CDE
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Dec 2020 22:50:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E34E2E7D51
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Dec 2020 01:16:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgL3VuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Dec 2020 16:50:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36280 "EHLO
+        id S1726499AbgLaAQB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Dec 2020 19:16:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgL3VuN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 16:50:13 -0500
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D695C061575;
-        Wed, 30 Dec 2020 13:49:33 -0800 (PST)
-Received: by mail-qt1-x82c.google.com with SMTP id j26so11821431qtq.8;
-        Wed, 30 Dec 2020 13:49:33 -0800 (PST)
+        with ESMTP id S1726492AbgLaAQB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Dec 2020 19:16:01 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B43C061573;
+        Wed, 30 Dec 2020 16:15:20 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id x16so23778995ejj.7;
+        Wed, 30 Dec 2020 16:15:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZClGJsDfX7YB10TwVOzt3CEzn7hkyHKuqXbXszdr9pM=;
-        b=e/5GHwLIUsaNDt68gR5NPnHiheOxpWZhJoEQ4F3j1tXXLMzs2phkSeoibhkCZC0AdW
-         YgbWSuzkZjQJIUxaoEH9IlX1ccYM15+iBmZwUIKwzuZZ6bm7gWqYBvZs8MT+5vpbwnwZ
-         eR52R87ypI5Cpy+sP05zuz/2fkZ5yq1iwAHUeT2ezJ27orcrKZVKhoKYC3tB4Z460Dke
-         +LKR4OchIyfSKjid/9xUtxOduBUndwzYvgweCs8Yi7Pm9DVgX8Fd8lvTH7vMR3fBmEye
-         E09Tmtml4GRHtssbeBC8Cbehrcr6ZvQbGWM8tgKsA1JO3GBsSgrn26qviZiR4q2e6Ruh
-         t5Kg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UvoSlfKOzR9aXfOXBsJ3GswM+8uOh9HphZSo/bhng8w=;
+        b=bvKYG0KdYqYIkJ1r680vMvyx7fx2qEYMXWN0/N9RhRGWeQNhC/O9N5KguxoLJlk8zv
+         ZGcV6SfiJ2qw+foQq3MtDJYXKfmNNK/6OdYAnB4r4YkddVSRbDch1R0v6mgBV53KccxZ
+         FYOSrd+Ipsaq55fseR2FSmEF8uJ+svXVsW4GZkfwEIfPBmorV0+vjQq2ubveZE3RHVsZ
+         L37trk87jql5wejgQUy3mB/KPJZ6V2io2xgWYRvkLw39FtKaXbCb5YxoAKvw6qOtEIPl
+         Av3ZjkqFZjTIHlgMN52IBy9QbjCrMjh2+cmmlKZoc2ejnXm6oeoPMVjBMRYs1p4Jax6h
+         81ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZClGJsDfX7YB10TwVOzt3CEzn7hkyHKuqXbXszdr9pM=;
-        b=Jpylwvi+yOdc/lnV3yk43Q94eeG/ygNhb/pI6f96jD4eo557OVr49g6+TaGr9qCwrg
-         zKYDSXvcYw93uLXUV2VjqCilKy6Kh8csZWjmplx4+Se8W9Gk18WwPxOZEYHjbUGNfIEF
-         9cICphw9uMB4lHHk+jArZq7uflCuNHZds1cz7jTBx0137d5fRddHbIxdxLehGPlVZQml
-         B7oSqFi4/WSfCJdxMYUljTL7foWIiJTFYm7+nw/RLLwym7n2uu1yuFYY+dssH8YWHDMx
-         9j88S2uBIwVtm5qxBz28YfR9NJ4PPpM05QaPi+kjES+JliHgESX+9BAMyA+zDdPAKu8N
-         dikA==
-X-Gm-Message-State: AOAM533xdmjM2gH3zx37Ko89iy+fN5nrLfxO2PB1zr+mDHu47wqrm3Xt
-        A6NG0+Hr/OtnuaFvX6HoOtMe6N6dtc43dw==
-X-Google-Smtp-Source: ABdhPJwN6Um4Rx6SlCPijT281NmeeZPoM4WoUUAnmE7bpS7j0Oz6N/i5tUfXoxSNl1UALTWEyGAVIA==
-X-Received: by 2002:ac8:71c7:: with SMTP id i7mr53655034qtp.47.1609364972278;
-        Wed, 30 Dec 2020 13:49:32 -0800 (PST)
-Received: from localhost.localdomain ([2804:14c:482:a80:d66:6051:ad08:aa32])
-        by smtp.gmail.com with ESMTPSA id k26sm28973590qtb.41.2020.12.30.13.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Dec 2020 13:49:31 -0800 (PST)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     robh+dt@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, sandor.yu@nxp.com,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v3 2/2] gpio: 74x164: Introduce the 'registers-default' property
-Date:   Wed, 30 Dec 2020 18:49:18 -0300
-Message-Id: <20201230214918.17133-2-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201230214918.17133-1-festevam@gmail.com>
-References: <20201230214918.17133-1-festevam@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UvoSlfKOzR9aXfOXBsJ3GswM+8uOh9HphZSo/bhng8w=;
+        b=sDa/mpE4japMGwQyHvNZ0V1nbaj0dx1gMo2QiOu1XxaHQroKCgyoqRxtJGrSpZqW7D
+         nrd8y/ONHxevVaCmhA+tdmf3tS79mTFFlSC9Fd18Ha6WTJU8McaL1tG4J3TupaAct45K
+         k0cBeippgHLKW/+S42hALgWTUAImvTzAuN1QxrRgxhZMTrTRgetTQbCQqZJahPfKEmZW
+         p6iwnFLk6hTWXplMi3fRdXawqVHw0Oe+UbShv73Fjs85qEbAgwmlI4K8pWili0B/sGJ/
+         zv1ILEPPUKgMQFSYjNPUT5mCdI9pznyEl7445DN006c+vQ7sJLzv1Kwah+GpuBWORePG
+         Va9Q==
+X-Gm-Message-State: AOAM530NaWTBRMoM+Dyqb7oHLCQ2zGc8xJ12aKabqfBwW83dTsohG1qk
+        dGxklBSdKNz0ckcg1l67ifDjPaBZYOxgwVpQP1W1uiOtpmQ=
+X-Google-Smtp-Source: ABdhPJxb748s3jA7OM4MHs5iwBkFjZbItUx/Lu8HznegChgjdipD9BsFFy2yu4F2Cr4zjR0SwZf8mS7qLieMUFj76ZQ=
+X-Received: by 2002:a17:906:4050:: with SMTP id y16mr49846386ejj.537.1609373719461;
+ Wed, 30 Dec 2020 16:15:19 -0800 (PST)
+MIME-Version: 1.0
+References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
+ <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
+ <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
+ <CAFBinCCLubmDvxfabQHx2-ucgAsm1NArMUrtPx-UA2nX5xoFFA@mail.gmail.com> <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
+In-Reply-To: <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 31 Dec 2020 01:15:08 +0100
+Message-ID: <CAFBinCAYGZC0jXPozScJugsX+8P_BOm1Zj8+f+RE9fMjhbKbJw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Sandor Yu <sandor.yu@nxp.com>
+Hi Linus,
 
-On the imx7d-sdb board, there is one output pin of the 74x164 that
-controls all peripherals power supply (PERI_3V).
+On Mon, Dec 21, 2020 at 4:28 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Linus,
+>
+> On Wed, Oct 7, 2020 at 9:44 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> [...]
+> > > As noted on the earlier patches I think this should be folded into the
+> > > existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
+> > > gets messy, as a separate bolt-on, something like
+> > > xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
+> > > You can use a Kconfig symbol for the GPIO portions or not.
+> > OK, I will do that if there are no objections from other developers
+> > I am intending to place the relevant code in xhci-pci-etron.c, similar
+> > to what we already have with xhci-pci-renesas.c
+> I tried this and unfortunately there's a catch.
+> the nice thing about having a separate GPIO driver means that the
+> xhci-pci driver doesn't need to know about it.
+>
+> I implemented xhci-pci-etron.c and gave it a Kconfig option.
+> xhci-pci is then calling into xhci-pci-etron (through some
+> etron_xhci_pci_probe function).
+> unfortunately this means that xhci-pci now depends on xhci-pci-etron.
+> for xhci-pci-renesas this is fine (I think) because that part of the
+> code is needed to get the xHCI controller going
+> but for xhci-pci-etron this is a different story: the GPIO controller
+> is entirely optional and only used on few devices
+>
+> my goal is (at some point in the future) to have the GPIO driver in OpenWrt.
+> I am not sure if they would accept a patch where xhci-pci would then
+> pull in the dependencies for that Etron controller, even though most
+> boards don't need it.
+>
+> Please let me know if you have any idea on how to solve this.
+next week I have some free time to work on this
+I am still interested in any ideas that you have about this
 
-This pin should be at high voltage level when the 74x164 is probed,
-otherwise the modules dependent on PERI_3V3 will not be powered.
 
-Add a new optional property called 'registers-default' that allows
-describing the default output value for each shift register.
-
-Signed-off-by: Sandor Yu <sandor.yu@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
-Changes since v2:
--Add Sandor's Signed-off-by tag.
-
- drivers/gpio/gpio-74x164.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index 05637d585152..a11637518774 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -141,6 +141,9 @@ static int gen_74x164_probe(struct spi_device *spi)
- 	chip->registers = nregs;
- 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
- 
-+	device_property_read_u8_array(&spi->dev, "registers-default",
-+				      chip->buffer, chip->registers);
-+
- 	chip->gpio_chip.can_sleep = true;
- 	chip->gpio_chip.parent = &spi->dev;
- 	chip->gpio_chip.owner = THIS_MODULE;
--- 
-2.17.1
-
+Best regards,
+Martin
