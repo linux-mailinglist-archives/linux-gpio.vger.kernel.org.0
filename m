@@ -2,100 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E7FD2E8790
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jan 2021 15:08:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE7B2E8833
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jan 2021 19:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbhABOIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Jan 2021 09:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbhABOID (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jan 2021 09:08:03 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B094C061573;
-        Sat,  2 Jan 2021 06:07:23 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id n10so15862203pgl.10;
-        Sat, 02 Jan 2021 06:07:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zODgmMsUo4/IIJyoPsklfStQhpL3NQIU7j98XxEPRak=;
-        b=X+82N45w2/VfcpYrHtsCrFjjjQTFyiJvLbtJOnINmulPaxl65y5Bjq4hM7A6N7AVKM
-         elCiZsNrN3rzPHqhOA7egWNn2dSA4lnKOjRz39hiixUWM/dCfwm/eIwuCiT5Lr8McrGu
-         Anrk1JdZCVH0JkN5faR+f/naq9CTKbwRi9sTaQEmjxHkFj1YGq/zpTptWztP9yZFBCnU
-         5IinbcZ0xDAaM6f9G+aQkGyjWmMckUvd+ooOdk6ZB5fRUSSP3bYClk0HI/KeXqFOdfHc
-         ueDrG0sm0AO1nQjkInfBk+1OsjvpgWW+NiyLCNjlv08WMU9Fh8LAwyPC1BXTKFugEtPO
-         Cq+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zODgmMsUo4/IIJyoPsklfStQhpL3NQIU7j98XxEPRak=;
-        b=d11pcQBwx6KUOymFMFGZPndhqrCEV2cGA3ptF1KlgcwewVgzIfO875itkrgHN09QpN
-         1zv/3lSNs23wAGmePxemeGqyuhCA1XFJ0qelACNUg1bQjtFTIjSLwtHGm4cDP1ezwsTb
-         IDYCvqOxyOy3MZGZFRd20pERB7EiiCzRjloo2Dl0+BjEVoiRCLmBvF3BNJpZdcIn9IA0
-         lF7XnX5ZwLyFUSBi9EPb+tnv0z+NO8KHPG59XYSUezogLVw1xCRgcHkJUH35+1QH0RNe
-         1VCe2P+2qAm0us1sEy865832ob7j1ltwaf0qpBdy0YOq7T2nLglivnzMS/4qywP5tj+m
-         Yf5g==
-X-Gm-Message-State: AOAM5335TZw9xPW9wsT7AY7OPFX+0KMxUfizfCfUuMcbneXIR4b2Kjwe
-        j3YWc44oE/3NfJNMA0yGTutpM+FIB10Cjg==
-X-Google-Smtp-Source: ABdhPJz5H/NWMPUOymjzil2ZXW5N+axc2TBrCqPhT8eA+XVzWX2LPPOrwDfjKXHvRhK0ARh33SfNjQ==
-X-Received: by 2002:a62:fc4f:0:b029:19d:d060:27ca with SMTP id e76-20020a62fc4f0000b029019dd06027camr35332157pfh.66.1609596442480;
-        Sat, 02 Jan 2021 06:07:22 -0800 (PST)
-Received: from sol (106-69-181-20.dyn.iinet.net.au. [106.69.181.20])
-        by smtp.gmail.com with ESMTPSA id jx4sm15729119pjb.24.2021.01.02.06.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Jan 2021 06:07:21 -0800 (PST)
-Date:   Sat, 2 Jan 2021 22:07:16 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "bamv2005@gmail.com" <bamv2005@gmail.com>
-Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test
- implementation
-Message-ID: <20210102140716.GA1624076@sol>
-References: <20210102022949.92304-1-warthog618@gmail.com>
- <20210102022949.92304-2-warthog618@gmail.com>
- <CAHp75VdPdRRm+YQ-FzcFV5=XcNL6dXHDROutkgUbPLbj4xa8SQ@mail.gmail.com>
+        id S1726619AbhABSSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Jan 2021 13:18:34 -0500
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:44574 "EHLO
+        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbhABSSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jan 2021 13:18:33 -0500
+X-Greylist: delayed 1117 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Jan 2021 13:18:33 EST
+Received: from erwin.inf.tu-dresden.de ([141.76.48.80] helo=l4re.org)
+        by os.inf.tu-dresden.de with esmtp (Exim 4.94)
+        id 1kvlB9-0007bz-Co; Sat, 02 Jan 2021 18:59:03 +0100
+From:   Adam Lackorzynski <adam@l4re.org>
+To:     maz@kernel.org, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, linusw@kernel.org,
+        kaloz@openwrt.org, khalasa@piap.pl, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Subject: [PATCH 1/6] irqchip/bcm2836: Fix return check in IPI alloc
+Date:   Sat,  2 Jan 2021 18:58:54 +0100
+Message-Id: <20210102175859.335447-1-adam@l4re.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdPdRRm+YQ-FzcFV5=XcNL6dXHDROutkgUbPLbj4xa8SQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 02, 2021 at 03:52:32PM +0200, Andy Shevchenko wrote:
-> On Saturday, January 2, 2021, Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > The GPIO mockup selftests are overly complicated with separate
-> > implementations of the tests for sysfs and cdev uAPI, and with the cdev
-> > implementation being dependent on tools/gpio and libmount.
-> >
-> > Rework the test implementation to provide a common test suite with a
-> > simplified pluggable uAPI interface.  The cdev implementation utilises
-> > the GPIO uAPI directly to remove the dependence on tools/gpio.
-> > The simplified uAPI interface removes the need for any file system mount
-> > checks in C, and so removes the dependence on libmount.
-> >
-> > The rework also fixes the sysfs test implementation which has been broken
-> > since the device created in the multiple gpiochip case was split into
-> > separate devices.
-> >
-> >
-> 
-> I briefly looked at code in shell below... there are places to improve
-> (useless use of: cat, test, negation, etc).
-> 
+__irq_domain_alloc_irqs returns a negative error
+code upon failure, not only 0. Also use irq_domain_alloc_irqs
+to require less default arguments.
 
-My shell is clearly pretty poor, so I would really appreciate a pointer
-to an example of each, and I'll then hunt down the rest.
+Signed-off-by: Adam Lackorzynski <adam@l4re.org>
+---
+ drivers/irqchip/irq-bcm2836.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Thanks,
-Kent.
+diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
+index 5f5eb8877c41..e5878eadf90b 100644
+--- a/drivers/irqchip/irq-bcm2836.c
++++ b/drivers/irqchip/irq-bcm2836.c
+@@ -268,11 +268,10 @@ static void __init bcm2836_arm_irqchip_smp_init(void)
+ 	ipi_domain->flags |= IRQ_DOMAIN_FLAG_IPI_SINGLE;
+ 	irq_domain_update_bus_token(ipi_domain, DOMAIN_BUS_IPI);
+ 
+-	base_ipi = __irq_domain_alloc_irqs(ipi_domain, -1, BITS_PER_MBOX,
+-					   NUMA_NO_NODE, NULL,
+-					   false, NULL);
++	base_ipi = irq_domain_alloc_irqs(ipi_domain, BITS_PER_MBOX,
++					 NUMA_NO_NODE, NULL);
+ 
+-	if (WARN_ON(!base_ipi))
++	if (WARN_ON(base_ipi <= 0))
+ 		return;
+ 
+ 	set_smp_ipi_range(base_ipi, BITS_PER_MBOX);
+-- 
+2.30.0.rc2
+
