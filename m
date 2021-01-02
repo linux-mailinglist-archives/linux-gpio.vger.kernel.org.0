@@ -2,103 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2022F2E859A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jan 2021 21:47:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07DB42E860D
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jan 2021 03:01:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbhAAUpT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jan 2021 15:45:19 -0500
-Received: from mout.gmx.net ([212.227.17.21]:54237 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727345AbhAAUpT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 1 Jan 2021 15:45:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1609533823;
-        bh=o8W97Be/ykZnAzyMvVqtdQHDaTrw9TAT29KA6tDK23I=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=QgEOIEAhZxzaEDO1UGqNyjD86vOF2K+m5aOhlC3SDQ8ip6Fj/bu2kNPJ6Xq+Fjogc
-         wIzRTS7R1RQZa6gOGy5lSnnMKRRIJQnP1KBKcSY9MaIwfVoQkTl7ZLM1bcsvIIuj8t
-         Na283rc41BToHptZ4kavZf33wH2QrsymF5Yl3Cfk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.215.57]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mkpex-1k9D8q2LMN-00mLYj; Fri, 01
- Jan 2021 21:43:43 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726424AbhABCBE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jan 2021 21:01:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbhABCBE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jan 2021 21:01:04 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399F9C0613C1
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jan 2021 18:00:24 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id l200so25799656oig.9
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jan 2021 18:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AfjOmrg7iUeYMXTyqaD20ilxGzURQEdJ0+CNnRFVMGU=;
+        b=iI/XEOg7PaaIOrNsAsAEEKkj3XEhE3doW4phRnw41BmNpXiGegHbJw+dUKlBAY6TMj
+         6R6+oaOPGgD+YGJDtV++B9D00PHR96KYErCUdRcT4f4XVqc1vgPOHn/NrDZ4PrJ8SgSa
+         8o6jFWIclVSIxWCg7LVr5QoFUinUBnBGwTAqs9qec26MBo7UdR9rLpD5ZvvOxPSxiYNe
+         Rj3Q3VffwK//4GY+a24Xain8SiMn4OJTdeISaUX6Opq2Az4vx5TUlGo4cQDlTLzcV4EN
+         jzTf1cMR9aYTA+qu1RdF+MZit5Qq6O/JPSHV5g2S6RjnDo+gTg5ZRpDcb6US7DVJiP1F
+         5iDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AfjOmrg7iUeYMXTyqaD20ilxGzURQEdJ0+CNnRFVMGU=;
+        b=AueiVcaTHhUVIZKr5s1JmyE8idhcb8t6Kikmv1qflGM6B4g2e33htmf5D89S4BEOgF
+         7daoP4U8Y3AfKWvkWdo15AqwimaWhepO/SWMXwfNTpYmQyc2NTrQg1xWINU45KA0UVQG
+         ZQb/SmRcjX+OUKVtN8CCoCqdD/2wqZQgmHFW6BgvtuyHHkMk36xS3xQU+LBWA4AkJvxa
+         bE7KZRC1YSV8Am6qH/OIHKDTiiRZZpeVDG/bCc8C5/Gl2EDWeBpJM8kEaQoV5yB+O7zF
+         LA9O2UFTMq4ZtqO0eowBxWt8ie2zJoGEGPGfhGCV5L8jS1o6yktZWOquv/9nLb77l6B1
+         L8FA==
+X-Gm-Message-State: AOAM531COwo33VS7A0Jlalz/6Phkq2Hw3P0MMGeHPrn6zV3Xvg5hVKLm
+        2qqd3/3BO7STo1zhDOQSbbHeQAg6oTKGgyd5
+X-Google-Smtp-Source: ABdhPJwlv05rQ4HGDJHa6LYbIvb7NZ459hQbcT8g8xZQj/pqgdMMmh7CSGdpHXYidsAxMSmTSUA2rw==
+X-Received: by 2002:aca:cc89:: with SMTP id c131mr11403395oig.2.1609552823285;
+        Fri, 01 Jan 2021 18:00:23 -0800 (PST)
+Received: from [192.168.86.56] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id m3sm12899049ots.72.2021.01.01.18.00.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Jan 2021 18:00:21 -0800 (PST)
+Subject: Re: [PATCH v1] sh: Drop ARCH_NR_GPIOS definition
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: gpio: intro: Improve HTML formatting
-Date:   Fri,  1 Jan 2021 21:43:25 +0100
-Message-Id: <20210101204325.998256-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.29.2
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20201012154050.68039-1-andriy.shevchenko@linux.intel.com>
+ <20201109121333.GC4077@smile.fi.intel.com>
+ <10b4dc8e-db87-3f78-3ab7-e08469b9fe55@landley.net>
+ <20201228213615.GF4077@smile.fi.intel.com>
+ <3a20bc0f-cbdf-6498-5527-e7fd53c3b84d@physik.fu-berlin.de>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <65ae5b43-d98c-8acf-8324-f83b8abbfa15@landley.net>
+Date:   Fri, 1 Jan 2021 20:12:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SVNAo+wQIW7ce7SfiBlJZAfjfyEWJGCSSaJ4Zv2QFZi3tYkBleh
- uoMA/0Gh96VJMKUoF+tXMEBhC7QXvIgMe8JGSr7bOWA/oUvcdfSm/V8g4DrTJMq829acLpl
- acGMB2Dve63tny12FMQHlvT+96C/rz0+mbTWn2Tm4IJvIsyVJeh918BiKB4alTc2FIUeSbB
- hXFnZ5EgaMxK4HG1Y9a3w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vKUjyiX+a0c=:JoXGkyBCflpttYhKrsUudn
- rPIO6oRzvZOEPfJ6Lo1FKMDOksSSQwMJNDfgnOWEpb+cLgala1lZxOYjnHRHcHX0Y180oscWm
- 9oHEiZNF+RCS90JLKHfjRrVlfc0qUqvSqbxfTuZv/cYc1W8DYA2qzjyxSVrfNqHIJxoxq5UJB
- AI+xl247Pxsaz72d/7OAcmYLjho6IgtHik4hh2xXiLDG+gTIMpdIr3sCaT6Frht/FkRtSsL35
- 6qBbkj1T3RMd2TnMPTA+8/MkOI3S6hc9Tl0nwGJ5aB/xM0SF/yVAU7Q4PK7Xe3i9a+o96K/YS
- ragwLjdh0KpRF6N4h+H0J6MdcDD/nk1d02DzEv+jsFF72gj2TMtp9RmXyu6Ao+uR7HZEjlhd2
- 3eH6WY9UPFVYosubIvB9lCpGJUSLjZPLagbiEALd+66b0ts1Mspn45uFKU0f1ZlLvURX+QPDo
- Y/RqmEFS3k9Z6PJ0U65xyN2ZgqW3mvJZXIpQfKGnHrx+NE/fCjrmYKHPHV+R9ViGanMM6Sng1
- 5/tjCM0NXhbNFFYurTvBb93A7pPsyvLiu6cSZEzpqr8THB425tvYOmpjcR2NL+vntZqg9fkG+
- AxXK9rjTAG6TaY9zLPIa2fG7t0/n7IV+0NY3SmAsGkeL122deo1a0bTQfudxvSTIGB2cPLxc0
- J+Pp/DLV/8OTUw3Zd9Qj+Qw2eBu3orAFgc4Zpqaj/pQZo/0kgkx2DtrcNjv1RAPEB1i8JC3X6
- drFZsXqG7vrGGbm+QMDFzTHd+87R/B1uyV9sYX3nqdFaFyyRO5pfpjj3a4Vin9ShIAtChtX82
- jbQj/j7q3YZ3n72lzwZJZ260GSaQwe/tXB38G/9eZ+YhTq3blpEp7jQ/XoXRMx6ZEtWS1Xmy1
- 38XCO1lPDoXGbgRQ61cg==
+In-Reply-To: <3a20bc0f-cbdf-6498-5527-e7fd53c3b84d@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently the HTML output for Documentation/driver-api/gpio/intro.rst
-doesn't look right. The lines that start with LOW or HIGH are formatted
-in bold, while the next line after each is not bold.
+On 1/1/21 7:51 AM, John Paul Adrian Glaubitz wrote:
+> Hi Andy!
+> 
+> On 12/28/20 10:36 PM, Andy Shevchenko wrote:
+>> On Wed, Nov 11, 2020 at 10:45:38AM -0600, Rob Landley wrote:
+>>> On 11/9/20 6:13 AM, Andy Shevchenko wrote:
+>>>> On Mon, Oct 12, 2020 at 06:40:50PM +0300, Andy Shevchenko wrote:
+>>>>> The default by generic header is the same, hence drop unnecessary definition.
+>>>>
+>>>> Any comment on this?
+>>>
+>>> Acked-by: Rob Landley <rob@landley.net>
+>>
+>> Thanks!
+>>
+>>> It's in the stack I forwarded to Rich to look at this weekend.
+>>
+>> Unfortunately I still do not see this in the latest Linux Next.
+> 
+> Rich already mentioned that he planned to pick up any patches the next
+> weeks/days.
+> 
+> I'm currently testing all the patches recently posted for any regressions.
 
-With this patch, the HTML looks better.
+I spoke to him on wednesday and he said he was working on it.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/driver-api/gpio/intro.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/driver-api/gpio/intro.rst b/Documentation/drive=
-r-api/gpio/intro.rst
-index 74591489d0b55..94dd7185e76eb 100644
-=2D-- a/Documentation/driver-api/gpio/intro.rst
-+++ b/Documentation/driver-api/gpio/intro.rst
-@@ -106,11 +106,11 @@ don't. When you need open drain signaling but your h=
-ardware doesn't directly
- support it, there's a common idiom you can use to emulate it with any GPI=
-O pin
- that can be used as either an input or an output:
-
-- LOW:	gpiod_direction_output(gpio, 0) ... this drives the signal and over=
-rides
--	the pullup.
-+ **LOW**: ``gpiod_direction_output(gpio, 0)`` ... this drives the signal =
-and
-+ overrides the pullup.
-
-- HIGH:	gpiod_direction_input(gpio) ... this turns off the output, so the =
-pullup
--	(or some other device) controls the signal.
-+ **HIGH**: ``gpiod_direction_input(gpio)`` ... this turns off the output,=
- so
-+ the pullup (or some other device) controls the signal.
-
- The same logic can be applied to emulate open source signaling, by drivin=
-g the
- high signal and configuring the GPIO as input for low. This open drain/op=
-en
-=2D-
-2.29.2
-
+Rob
