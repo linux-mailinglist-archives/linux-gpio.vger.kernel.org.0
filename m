@@ -2,265 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2865E2E88F3
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jan 2021 23:21:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF0A2E895D
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 00:44:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbhABWVY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Jan 2021 17:21:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
+        id S1726766AbhABXoD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Jan 2021 18:44:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbhABWVX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jan 2021 17:21:23 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3078FC061573;
-        Sat,  2 Jan 2021 14:20:43 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id w6so14080691pfu.1;
-        Sat, 02 Jan 2021 14:20:43 -0800 (PST)
+        with ESMTP id S1726822AbhABXoC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jan 2021 18:44:02 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99D9C0613C1
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Jan 2021 15:43:22 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id o11so22791834ote.4
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Jan 2021 15:43:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cvj3QNWHvPAoiZHUm6pmC1Sy91xyP79X8SDuYQJzgjs=;
-        b=SbRW4nQJDrxVtZcl9m4Q4u/0cnkmNuCQWvVhaNEW0BqwmuFS8rFuAzyU7SLVX8qwuo
-         s082AgB0zJXDbmwbYNHlLdWU3Hri58F5AZix2XsJCBhaAb55XGlDYPYQFuND/X1v1TFJ
-         6tl195/4os951gX3hebYjvF7bgmk7xaL1S5g21+SrFY51DM00cN4KnR8vNR14wiVtUNB
-         RDHhxTBQAyV8VibMqhE/l922uPlMXSavFkSwPSHDRdv2aENNGWG75xLwrhhQZa27qQP7
-         JEiWGc1hTUkjOLnRNPmgWs9/bNhKMwCtGdsQXgtaY5TvFT6+s8sSzkKd+1CNFGFnc+hA
-         z1EA==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gfK59qElpmcMSWiFsxzdYlNuH1Et8G2dRjUlpzcjxEE=;
+        b=hPwVzGWryfetS/nJ55hzTzoh/4Ax1bO0LTnU1aOxzVvlgsL3x7MuiWTK/i7iVu9y99
+         IHLQms1Xvx0GpADVuPUoh6qn0PBteWloXncQgiQiufhHw8hrgib50XQSLfxDxBNvbJ4V
+         t13OsjsjTN/TRE1j5zCTNEgWWIW4MgPOFirUtqMXGGVslqsolFioaVTuFftEmD1MIK9J
+         6MSsm6RGaEaB2CZylA64XcCor0APrbEW821OWMoJ04L+CyWoktP41qvqCWPqpTw5YPNU
+         kp1hLERBswRAuhd+fuR/6bptSyq/nARX6L5XVN32leshKb+ntspJst6sTR/ccXjHsXoq
+         70pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cvj3QNWHvPAoiZHUm6pmC1Sy91xyP79X8SDuYQJzgjs=;
-        b=cVOcHRohzqI0xAX3bX5Lk9XDnX+j/NcXCh2wnmwhCRC5bVDvDVEtTnpVzquZgTt69j
-         s59yTE9yPZiZjzKc8E6dYUS+PYSiqpXFZOYFhtxMmfc1cLCImOCgNTVNWV/v7//TIvs2
-         jVbsftVbcZSlABtHT1yWjXDOek/0F7MhtDNK5mLAOSSp+3o7oJNK0177XfbyAsA+SPz6
-         kHKM0uuKW6pDyP0GnNom9RCPnVb2LLaFiO2xMmQkrc+am1NhZne443aBsRtycLyoYmyO
-         UzeK+ukd5tOxmJhZxI5+tFY58fNWaCWsQuZafJxG7AvPVODIZD4RbT2UAMTohaAE4Fyn
-         Pvvw==
-X-Gm-Message-State: AOAM531ys0630dptWIZVDp1rvWRmDC/5vuv+RtW7mV6qlWy6yKbgbSam
-        8ag2QAOpnvANVS6vrXU9j68YOmtR0brb2ykNnH8=
-X-Google-Smtp-Source: ABdhPJxRqyW/F6qI9+WasE44zZR90C2fNeYtoTeV9v8EdiZBjT3kVXZQaxzHkhZvkD44Q9+lRR16QFHAsd/XD9WHLkI=
-X-Received: by 2002:a05:6a00:170a:b029:19d:afca:4704 with SMTP id
- h10-20020a056a00170ab029019dafca4704mr39254027pfc.7.1609626042415; Sat, 02
- Jan 2021 14:20:42 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gfK59qElpmcMSWiFsxzdYlNuH1Et8G2dRjUlpzcjxEE=;
+        b=CJj9xsB6i0UuZHFxVnm4aPqcLy3AQDqfCJVSI0cth5+Jbwd4YRWBF5ndrOj4shEz9W
+         7wEUV4iMoMScZsqI8uEnI0hsm9wEef2gv7foUw6q8gS3+Dhk0IlL4zBZ5NJEl2BpWtf0
+         KbHshYyuzu5clrBfUGN/Tsml8+Ja0NQwHovaWY2vj+X9a6cPaKCqHJJtLb54MtXcjgux
+         llfc2YnyICFJ+3zeVNPLr03AI732giNhTlrtVTstnxtgvXo99BEGmrPCQNw3leBWWSU7
+         TbQN3L+mpAi25rxhXglGMkbBgCNN1Bpozqykv937ulohWOjO/+0p5gsj2Q1yQOAJ0I9t
+         fCnQ==
+X-Gm-Message-State: AOAM533JmGXQy7uHKCF5XT0aRDq3KiCuanT/7shppmkuuTRS5tZLo53H
+        RO15l/0RnXrQrq0rAmgps70IsI19ynopaAyDFM4=
+X-Google-Smtp-Source: ABdhPJxHgkIyI6H3/mUZbvYU5xBaoYUT/af9Au504rZ5fhu/Eexy37Rqyw7i9Wvgiq3JhUScJo++awM1ZL6KivR9f2A=
+X-Received: by 2002:a05:6830:20d5:: with SMTP id z21mr47649733otq.310.1609631001458;
+ Sat, 02 Jan 2021 15:43:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20210102022949.92304-1-warthog618@gmail.com> <20210102022949.92304-2-warthog618@gmail.com>
-In-Reply-To: <20210102022949.92304-2-warthog618@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 3 Jan 2021 00:20:26 +0200
-Message-ID: <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test implementation
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
+Received: by 2002:a05:6808:614:0:0:0:0 with HTTP; Sat, 2 Jan 2021 15:43:20
+ -0800 (PST)
+Reply-To: hs8qfc11@gmail.com
+From:   Mr Bill T Winters <ptsd383@gmail.com>
+Date:   Sun, 3 Jan 2021 00:43:20 +0100
+Message-ID: <CAPdjYafbw2ANX1js5+wi1-NkbOrgtYvrUuW8NoQwbQasJV0MRw@mail.gmail.com>
+Subject: Good Morning,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 2, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> The GPIO mockup selftests are overly complicated with separate
-> implementations of the tests for sysfs and cdev uAPI, and with the cdev
-> implementation being dependent on tools/gpio and libmount.
->
-> Rework the test implementation to provide a common test suite with a
-> simplified pluggable uAPI interface.  The cdev implementation utilises
-> the GPIO uAPI directly to remove the dependence on tools/gpio.
-> The simplified uAPI interface removes the need for any file system mount
-> checks in C, and so removes the dependence on libmount.
->
-> The rework also fixes the sysfs test implementation which has been broken
-> since the device created in the multiple gpiochip case was split into
-> separate devices.
-
-Okay, I commented something, not sure if everything is correct, needs
-double checking.
-Shell is quite a hard programming language. Everyday I found something
-new about it.
-
-...
-
-> +#include <linux/gpio.h>
-
-Perhaps include it after system headers?
-
-> +#include <signal.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +#include <unistd.h>
-
-...
-
-> +SYSFS=`mount -t sysfs | head -1 | awk '{ print $3 }'`
-
-Oh, would below be better?
-  grep -w sysfs /proc/mounts | cut -f2 -d' '
-
-...
-
-> +[ ! -d "$SYSFS" ] && skip "sysfs is not mounted"
-
-[ -d ... ] || skip "..."
-
-...
-
-> +[ ! -d "$GPIO_SYSFS" ] && skip "CONFIG_GPIO_SYSFS is not selected"
-
-Ditto.
-
-...
-
-> +       local platform=`cat $SYSFS/kernel/debug/gpio | grep "$chip:" | tr -d ',' | awk '{print $5}'`
-
-Besides useless use of cat (and tr + awk can be simplified) why are
-you simply not using
-/sys/bus/gpio/devices/$chip ?
-
-> +       # e.g. /sys/class/gpio/gpiochip508/device/gpiochip0/dev
-> +       local syschip=`ls -d $GPIO_SYSFS/gpiochip*/device/$chip/dev`
-
-ls -d is fragile, better to use `find ...`
-
-> +       syschip=${syschip#$GPIO_SYSFS}
-> +       syschip=${syschip%/device/$chip/dev}
-
-How does this handle more than one gpiochip listed?
-Also, can you consider optimizing these to get whatever you want easily?
-
-> +       sysfs_nr=`cat $SYSFS/devices/$platform/gpio/$syschip/base`
-
-(It's probably fine here, but this doesn't work against PCI bus, for
-example, see above for the fix)
-
-> +       sysfs_nr=$(($sysfs_nr + $offset))
-> +       sysfs_ldir=$GPIO_SYSFS/gpio$sysfs_nr
->  }
-
-...
-
-> +set_line()
->  {
-> +       if [ -z "$sysfs_nr" ]; then
-> +               find_sysfs_nr
-> +               echo $sysfs_nr > $GPIO_SYSFS/export
->         fi
-
-It sounds like a separate function (you have release_line(), perhaps
-acquire_line() is good to have).
-
-> +release_line()
->  {
-> +       [ -z "$sysfs_nr" ] && return
-> +       echo $sysfs_nr > $GPIO_SYSFS/unexport
-> +       sysfs_nr=
-> +       sysfs_ldir=
->  }
-
-...
-
-> +BASE=`dirname $0`
-
-Can be used via shell substitutions.
-
-...
-
-> +skip()
->  {
-
-> +       echo $* >&2
-
-In all cases better to use "$*" (note surrounding double quotes).
-
-> +       echo GPIO $module test SKIP
-> +       exit $ksft_skip
->  }
-
-...
-
-> +        [ ! which modprobe > /dev/null 2>&1 ] && skip "need modprobe installed"
-
-AFAIR `which` can be optional on some systems.
-
-...
-
-> +       DEBUGFS=`mount -t debugfs | head -1 | awk '{ print $3 }'`
-> +       [ ! -d "$DEBUGFS" ] && skip "debugfs is not mounted"
-
-Same as per sysfs in another script.
-
-...
-
-> +try_insert_module()
-> +{
-> +       modprobe -q $module $1
-> +       err=$?
-> +       [ $err -ne 0 ] && fail "insert $module failed with error $err"
-
-I guess it's as simple as `modprobe ... || fail "... $?"
-
-> +}
-
-...
-
-> +       [ ! -e "$mock_line" ] && fail "missing line $chip:$offset"
-
-[ -e ... ] || ...
-
-...
-
-> +       local ranges=$1
-> +       local gc=
-> +       shift
-
-I found that combination
-       local ranges=$1; shift
-is better to read.
-
-...
-
-> +       gpiochip=`ls -d $DEBUGFS/$module/gpiochip* 2>/dev/null`
-
-`find ...` is a better choice.
-
-> +       for chip in $gpiochip; do
-> +               gc=`basename $chip`
-> +               [ -z "$1" ] && fail "unexpected chip - $gc"
-> +               test_line $gc 0
-
-> +               if [ "$random" ] && [ $1 -gt 2 ]; then
-
-You call the test twice, while you may do it in one go.
-
-> +                       test_line $gc $((( RANDOM % ($1 - 2) + 1)))
-> +               fi
-> +               test_line $gc $(($1 - 1))
-> +               test_no_line $gc $1
->                 shift
-> +       done
-> +       [ "$1" ] && fail "missing expected chip of width $1"
-
-...
-
-> +# manual gpio allocation tests fail if a physical chip already exists
-> +[ "$full_test" ] && [ -e "/dev/gpiochip0" ] && skip "full tests conflict with gpiochip0"
-
-I guess it should be rather something like
-
-[ "$full_test" = "true" -a -e "/dev/gpiochip0" ]
-
-P.S. Also you may use `#!/bin/sh -efu` as shebang and fix other problems.
-
---
-With Best Regards,
-Andy Shevchenko
+-- 
+I Mr Bill T, did you Receive the (FUND), that was paid to you? please,
+do not hesitate to Let me know with your full name:.. for immediate
+verification notice,
+
+Sincerely Yours, Respectfully,
+
+Mr Bill T Winters,
+Group Chief Executive Officer & Executive Director,
