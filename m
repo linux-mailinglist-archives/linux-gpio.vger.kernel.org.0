@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 818352E8B95
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 11:03:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B28392E8B8F
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 11:03:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbhACKBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 05:01:22 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47227 "EHLO
+        id S1726563AbhACKBS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 05:01:18 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53895 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbhACKBR (ORCPT
+        by vger.kernel.org with ESMTP id S1726072AbhACKBR (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 05:01:17 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 063BE5803E6;
-        Sun,  3 Jan 2021 05:00:11 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id C63375803E4;
+        Sun,  3 Jan 2021 05:00:10 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 03 Jan 2021 05:00:11 -0500
+  by compute5.internal (MEProxy); Sun, 03 Jan 2021 05:00:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=guJpiRmPNmpuay60jtLre2M1kZ
-        YS531pnroQeqKbbp8=; b=YLDuPULraX09Gwh5S9275jKOlHpmSStsqW94OkeYxn
-        Hh6Qil1iiurLo+nuzPV4bEpVKpyQJLUsWse5NAy8dmdCsct9RkzYP03e4kVJts/T
-        LaYfuqps8v+rZpM7oZPdjf0ypbWbYTjZlnu/RG0UDxfjrsPD5OjhIcn5RVH3nu+X
-        D8mMtSdrhMW3cbog1JF4CzfTxKAV1xuJOLpQkIa5WGQwO3fJTT+jAbLaHn27ix3c
-        wYwrGZD3qeSRSuwO862por3DxlXosye3jxCkm2pYfGz3JGEyRz6Hy+NkxxSm44Wv
-        HQl2LfXspvALgsknS2uFwbJWCYgqre8++bvqDBh2jSfQ==
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=LZ7PuAqRkqcLx
+        40eoM2uefOkifLs8JNhxV9A8QPxP/0=; b=fkNKL5ZoE/Cj3CQAk53oc4NRdSb0t
+        4xKxYppsh5EgqY4nqlsj06FlgjXEZC8VQrvQvYYbMRIkpjjPYOr4RTJ+KUYMcwyE
+        69vbFXf50cxS2aygdW9fzHICwViJy0j9McvQeugD3GKdfdDmkp/wHa5kUTqWW1KK
+        1qroOAoQj8Z5xraKxvvFJaMUr08LcnClOcBRm+Jle9Px70HvbfhyK4ewX6YvdcYU
+        lBlPMvhDYHbMPzjOf65Yb6LJAIud+7MdgunGYF9c23ZcvTN/y5qX+ayb94IXj3U7
+        c5nks4ef98z9xkA4fzQr1ed+4mvM8JtK9e+x58UGRgwbvm8Vd73y2mifw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=guJpiRmPNmpuay60j
-        tLre2M1kZYS531pnroQeqKbbp8=; b=XqukjVFBhkXyrlYdkIfVHin2RGLB+4Xrp
-        5kCugZ3nr/hjQUb4ulN0voovduXwX8ulsZ8nHcNGHKRFdHMPxPvA3apRc1fiZ4o2
-        AyZjnUNup7eG03QXH5nUwwO+MU/3Iz7X1ynoAQmbRjtL5+RSLXvzyvReXfgLk5iI
-        lg2qmy2zJ5kUvP86Qa3jNEQm8dwi6CfYDUBRYNuVSytb9JLaBsePz11gjfDbola7
-        OfFviaN/DQr0AlNAtGpHnz4ozkuJFRHciLNvYFKnYwYkbdPe4ptr7Lg0Lbyed72K
-        tL+BkAZjmaDWT53tQKYWWBby1ei+YZUw8z0oKaV11tXjnUo8r5Acg==
-X-ME-Sender: <xms:qZXxX0phcwZrR8dRkK3P7v8ZrkTS3YVxss9LyeYLCIiTaHzA2boatQ>
-    <xme:qZXxX6oEt4wmoX6PEIoRaNly11DRrzVkBLjfuLra6Z_so6q8If2H-p8AyrD51IQex
-    L9GfhxvMQsy79miqA>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=LZ7PuAqRkqcLx40eoM2uefOkifLs8JNhxV9A8QPxP/0=; b=BmcjSj5H
+        /r5Ate/o9E6JNzOPHXFf/U2svgoGcj+OIxQG16M+thKS440S++pV0q8z/7JmNQxI
+        4bKBcmtmdE7e4S/LQrTthZMXC3CaFr8+x85gE3634vYJr1a3IMLdLff+A/Cca4y/
+        boeHwXyWp4w96fUNGpRhBbJRlZyUlU02XLHZvA9AOEGCuYF+ZLE5Q9q5Iw6HFv0M
+        hJR7f1B/N+FRxaNi/k//ftMm3cPUSBusIuoiGXgKLN55JLwiFU5FuK5WowPyElcz
+        FYcqEYVwotellvHvYUutqeGmBKeliup8n5qsBlWiGZB9p19iI2c/Ed/SQNRpasNq
+        DL76hAh+r+dxTg==
+X-ME-Sender: <xms:qZXxX9yNoW-MAInC0Trxp4Cq5lUbPC3JtHRt1nwTXt-WpQEGbn1hpw>
+    <xme:qZXxX9QqA4SImw4oy-9YOhxXuh_WPRKPS_qnhltlqivq8ih_mJdKXC9dxFLuUexb9
+    Lr8670V2Glyh7rdUg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefuddguddtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
-    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtffrrg
-    htthgvrhhnpeeiteekhfehuddugfeltddufeejjeefgeevheekueffhffhjeekheeiffdt
-    vedtveenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdr
-    ohhrgh
-X-ME-Proxy: <xmx:qZXxX5MQNgi5QNT9nVQ-OM0WoSlteqazr5vufWThLufZAOB9WCP9wQ>
-    <xmx:qZXxX76MUBgCyU2tuM0GBzX5yp7WlXtI9DvgRr92WAkmlo9C1a5Hlg>
-    <xmx:qZXxXz5lKngfOPJnYJ_3JpD8YHZD10fH6P3gX3j0dNFqBp5SGj1Gjg>
-    <xmx:qpXxX6L9aMUoSmBILSK09FG75vCLdiXSlGuLRfc9mHgBaO1FMMDAfA>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
+    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:qZXxX3UMpFhf7t1qcNTh0XCQghdZOHHCxRoMNmWSNSGD4GssDr6IKA>
+    <xmx:qZXxX_jXyVd_y-5BL1XOmvh9H71sX_mu2br56raij5MaTyOWyDZGsw>
+    <xmx:qZXxX_CI3R2Mzebbq-5alv4NsKiZitijKURjfPCSBLNbxD6nco3QHw>
+    <xmx:qpXxX_xsTDNNcC_W3PEcHSkz3QZa_O8GVtUynyo1NZ3HRnl_mw1mqA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 82CD11080059;
-        Sun,  3 Jan 2021 05:00:08 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 264591080057;
+        Sun,  3 Jan 2021 05:00:09 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -67,48 +68,105 @@ Cc:     Andre Przywara <andre.przywara@arm.com>,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 0/4] Allwinner H6 RSB support
-Date:   Sun,  3 Jan 2021 04:00:03 -0600
-Message-Id: <20210103100007.32867-1-samuel@sholland.org>
+Subject: [PATCH v2 1/4] clk: sunxi-ng: h6-r: Add R_APB2_RSB clock and reset
+Date:   Sun,  3 Jan 2021 04:00:04 -0600
+Message-Id: <20210103100007.32867-2-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20210103100007.32867-1-samuel@sholland.org>
+References: <20210103100007.32867-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Allwinner H6 SoC contains an RSB controller. It is almost completely
-undocumented, so it was missed when doing the initial SoC bringup.
+While no information about the H6 RSB controller is included in the
+datasheet or manual, the vendor BSP and power management blob both
+reference the RSB clock parent and register address. These values were
+verified by experimentation.
 
-This series adds the clock/reset, pin configuration, and device tree
-node needed to use the RSB controller. Since RSB is faster, simpler, and
-generally more reliable than the I2C controller IP in the SoC, switch to
-using it where possible.
+Since this clock/reset are added late, the specifier is added at the end
+to maintain the existing DT binding. The code is kept in register order.
 
-This was tested on an Orange Pi 3 and a Pine H64 model B. This series
-does not switch the Pine H64 to use RSB, as doing so would prevent
-accessing the external RTC that shares the I2C bus.
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c      | 5 +++++
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h      | 2 +-
+ include/dt-bindings/clock/sun50i-h6-r-ccu.h | 2 ++
+ include/dt-bindings/reset/sun50i-h6-r-ccu.h | 1 +
+ 4 files changed, 9 insertions(+), 1 deletion(-)
 
-Changes v1->v2:
-  - Put the new values at the end of the DT binding headers
-
-Samuel Holland (4):
-  clk: sunxi-ng: h6-r: Add R_APB2_RSB clock and reset
-  pinctrl: sunxi: h6-r: Add s_rsb pin functions
-  arm64: dts: allwinner: h6: Add RSB controller node
-  arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection
-
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++++++++
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c        |  5 +++
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h        |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c   |  2 +
- include/dt-bindings/clock/sun50i-h6-r-ccu.h   |  2 +
- include/dt-bindings/reset/sun50i-h6-r-ccu.h   |  1 +
- 9 files changed, 67 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 50f8d1bc7046..56e351b513f3 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -91,6 +91,8 @@ static SUNXI_CCU_GATE(r_apb2_uart_clk,	"r-apb2-uart",	"r-apb2",
+ 		      0x18c, BIT(0), 0);
+ static SUNXI_CCU_GATE(r_apb2_i2c_clk,	"r-apb2-i2c",	"r-apb2",
+ 		      0x19c, BIT(0), 0);
++static SUNXI_CCU_GATE(r_apb2_rsb_clk,	"r-apb2-rsb",	"r-apb2",
++		      0x1bc, BIT(0), 0);
+ static SUNXI_CCU_GATE(r_apb1_ir_clk,	"r-apb1-ir",	"r-apb1",
+ 		      0x1cc, BIT(0), 0);
+ static SUNXI_CCU_GATE(r_apb1_w1_clk,	"r-apb1-w1",	"r-apb1",
+@@ -130,6 +132,7 @@ static struct ccu_common *sun50i_h6_r_ccu_clks[] = {
+ 	&r_apb1_pwm_clk.common,
+ 	&r_apb2_uart_clk.common,
+ 	&r_apb2_i2c_clk.common,
++	&r_apb2_rsb_clk.common,
+ 	&r_apb1_ir_clk.common,
+ 	&r_apb1_w1_clk.common,
+ 	&ir_clk.common,
+@@ -147,6 +150,7 @@ static struct clk_hw_onecell_data sun50i_h6_r_hw_clks = {
+ 		[CLK_R_APB1_PWM]	= &r_apb1_pwm_clk.common.hw,
+ 		[CLK_R_APB2_UART]	= &r_apb2_uart_clk.common.hw,
+ 		[CLK_R_APB2_I2C]	= &r_apb2_i2c_clk.common.hw,
++		[CLK_R_APB2_RSB]	= &r_apb2_rsb_clk.common.hw,
+ 		[CLK_R_APB1_IR]		= &r_apb1_ir_clk.common.hw,
+ 		[CLK_R_APB1_W1]		= &r_apb1_w1_clk.common.hw,
+ 		[CLK_IR]		= &ir_clk.common.hw,
+@@ -161,6 +165,7 @@ static struct ccu_reset_map sun50i_h6_r_ccu_resets[] = {
+ 	[RST_R_APB1_PWM]	=  { 0x13c, BIT(16) },
+ 	[RST_R_APB2_UART]	=  { 0x18c, BIT(16) },
+ 	[RST_R_APB2_I2C]	=  { 0x19c, BIT(16) },
++	[RST_R_APB2_RSB]	=  { 0x1bc, BIT(16) },
+ 	[RST_R_APB1_IR]		=  { 0x1cc, BIT(16) },
+ 	[RST_R_APB1_W1]		=  { 0x1ec, BIT(16) },
+ };
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
+index 782117dc0b28..7e290b840803 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h
+@@ -14,6 +14,6 @@
+ 
+ #define CLK_R_APB2	3
+ 
+-#define CLK_NUMBER	(CLK_W1 + 1)
++#define CLK_NUMBER	(CLK_R_APB2_RSB + 1)
+ 
+ #endif /* _CCU_SUN50I_H6_R_H */
+diff --git a/include/dt-bindings/clock/sun50i-h6-r-ccu.h b/include/dt-bindings/clock/sun50i-h6-r-ccu.h
+index 76136132a13e..890368d252c4 100644
+--- a/include/dt-bindings/clock/sun50i-h6-r-ccu.h
++++ b/include/dt-bindings/clock/sun50i-h6-r-ccu.h
+@@ -21,4 +21,6 @@
+ #define CLK_IR			11
+ #define CLK_W1			12
+ 
++#define CLK_R_APB2_RSB		13
++
+ #endif /* _DT_BINDINGS_CLK_SUN50I_H6_R_CCU_H_ */
+diff --git a/include/dt-bindings/reset/sun50i-h6-r-ccu.h b/include/dt-bindings/reset/sun50i-h6-r-ccu.h
+index 01c84dba49a4..7950e799c76d 100644
+--- a/include/dt-bindings/reset/sun50i-h6-r-ccu.h
++++ b/include/dt-bindings/reset/sun50i-h6-r-ccu.h
+@@ -13,5 +13,6 @@
+ #define RST_R_APB2_I2C		4
+ #define RST_R_APB1_IR		5
+ #define RST_R_APB1_W1		6
++#define RST_R_APB2_RSB		7
+ 
+ #endif /* _DT_BINDINGS_RST_SUN50I_H6_R_CCU_H_ */
 -- 
 2.26.2
 
