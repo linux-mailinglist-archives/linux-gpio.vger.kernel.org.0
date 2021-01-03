@@ -2,329 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1A0C2E8D25
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 17:29:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD0692E8E0F
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 21:24:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbhACQ3h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 11:29:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
+        id S1726662AbhACUYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 15:24:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbhACQ3h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 11:29:37 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDDAC061573;
-        Sun,  3 Jan 2021 08:28:56 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id q22so14847124pfk.12;
-        Sun, 03 Jan 2021 08:28:56 -0800 (PST)
+        with ESMTP id S1726563AbhACUYD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 15:24:03 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D757AC0613C1
+        for <linux-gpio@vger.kernel.org>; Sun,  3 Jan 2021 12:23:22 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id t8so15076612pfg.8
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Jan 2021 12:23:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=YHn1ABpSIMNNKM9C0iM0nClJPobmJUK657K7NVHO9W4=;
-        b=vCSXiw+g5ITtj8oA63vl0JrNxihfa6Sxu/iT9VyMfgZSSLfjnBDUyhJ0JDff+kj8CA
-         xzD8w91sZS4peVCmAg8Wo5x/nZu4PaOCqQotyig7ioe+DAFTMIA8bZu4SdKEJ+gp7NYW
-         pTdRlQ6wxg+Tbf2/G64Ez5kq40Oxwxs54r0bFLP8k2ZxdtnsFYANE+A0qQq/3Ea6JQou
-         WDOdrAgq9MOQDJLTnWhGIfAdzrr6UBLZqr0NEdcgYWLDVA5MGQrbuzJH+7cyX34uPEme
-         F507mtr36gJlKjJglicZrURk/zquEvSDWmWLQNPWOWt21IZeKj8upla/OKY6nLkno/7C
-         CK2A==
+        bh=e1xBR8UornTwqH6fVhOXEbzOOGDBOFbaaWz/gve1ZB4=;
+        b=eAgQ/Hy8aNE92XFuJLB7JF8fLfZAZWcsb1P42ypm9pIxHWcoYtjFeKB37vbO8VcEn4
+         7HN0q0c1G3HlSehM17AyTtNaovhaG5sSNkpHiaLUIkNG8Vi4PUImFdEvRPCCUF1jMyiq
+         +SLSThbytPByKI0BBl5AQlTaPbghPdmOIUArRzEhwvebCJD3LCN7G4LmCNQeSi9tad57
+         b8RJ3bGT/k64ySODuPRP96JdK9RaX58RxytLfu+n2P5RKTPSCuM3LllyUdiB/5d+soN9
+         ZJ+5mciEhiSKW6obZ9B2qeMA1LE2Wmrk2M/Nbk99CNgSLyEMsBQJyUHhfROE577xpkyy
+         HVDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YHn1ABpSIMNNKM9C0iM0nClJPobmJUK657K7NVHO9W4=;
-        b=krDvFru4PiROorKnYIiMrs0ZpWcgrLoLwFbhqdRZJ6PgIgTxtPy5g787HZL3kHiPi3
-         nIyasWCmt+pxKuRiLQi4X8dKZ8qtYIZ7dJmZLzxudxSOZwmZ7fvlm+Ov4nRml70VfLQG
-         Ur6uNNPNo2zp/Hh2MYBQ87dY+q6MeFgYwYpP3kmTSZv2an+NRV0b8i0/k4mB7hksq5Qr
-         uQyGVL0JTfqFKPJJBWxVKD/p1yy6cr+PZ/QeeuV+Bd9l8VRS8RjZlYBA8Z5/GX51xV/x
-         Ff/B9qB1bfXXuJFiwmha2EU5TntZNuFXiI43MwF+n37mwPN/9+aX6jYAn7AI2jAa1UuG
-         Q6rA==
-X-Gm-Message-State: AOAM5300j3Eef/jM/ghChWYpPlScg038eJ9XqoyAWm1SONDpMYGm1K4z
-        BNGeErBt0/OGX+Xk3J+yxORpj0c5HtiO9w==
-X-Google-Smtp-Source: ABdhPJyi/YBVX8JkNUkZgxAvDMm5uJ7ePypeGlPMv0YzD0LmBlDQ4gyHZ9Epyele+wnBpcZ5zmQCGg==
-X-Received: by 2002:a65:5209:: with SMTP id o9mr25272144pgp.34.1609691336344;
-        Sun, 03 Jan 2021 08:28:56 -0800 (PST)
-Received: from sol (106-69-181-20.dyn.iinet.net.au. [106.69.181.20])
-        by smtp.gmail.com with ESMTPSA id x21sm29992840pgi.75.2021.01.03.08.28.51
+        bh=e1xBR8UornTwqH6fVhOXEbzOOGDBOFbaaWz/gve1ZB4=;
+        b=R90V99MD0UFsAx9BggfyeFV2h4lMW0oJ9g/eTI+H+OVcTNmBLGkS5L3L/bCqXfTnGC
+         3E51kq+uFyueELMySMfqtpqPjxUirsr5dgPJmI+Dt2YRCK8fpPmg+mHXZBnkREJILUyW
+         HdFO6Cq1UEdZgfBYRt6gAsiEglOvJxb5yqOiaECUrd0lmqpcmffUMab4sQnEqD3N70ui
+         N+Phf+UeOoCFXU0rnnPHrSdJF/+/W9inFNy++R2zxAh2owVZXNqcMPG+xmY5aR1RVxhk
+         QkUs0AYm+KndEfXza9ppvtRGoRVL7ejJzvI5zHeE3mSUuiIXsDnApsaVeASKXN0+mFoz
+         Ksjw==
+X-Gm-Message-State: AOAM5328bgKC2os/hi5UudgJy5s45rl6jFZaGArOVJAKmgUUv4gVjPST
+        vtLYNULX0zll6LIGX1eWQMBONg==
+X-Google-Smtp-Source: ABdhPJyqVu2NCWCxorYPgh0U50FWU5nfkQ2WUDd8qg3Vg0EVXFLQgx70XG5MzHhfqblZyUpOxcBwvQ==
+X-Received: by 2002:a63:520e:: with SMTP id g14mr20496306pgb.378.1609705402142;
+        Sun, 03 Jan 2021 12:23:22 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:8efb:42a0:32b:a51d])
+        by smtp.gmail.com with ESMTPSA id p9sm19446293pjb.3.2021.01.03.12.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Jan 2021 08:28:55 -0800 (PST)
-Date:   Mon, 4 Jan 2021 00:28:49 +0800
-From:   Kent Gibson <warthog618@gmail.com>
+        Sun, 03 Jan 2021 12:23:21 -0800 (PST)
+Date:   Sun, 3 Jan 2021 12:23:19 -0800
+From:   Drew Fustini <drew@beagleboard.org>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Pantelis Antoniou <pantelis.antoniou@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
-Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test
- implementation
-Message-ID: <20210103162849.GA308445@sol>
-References: <20210102022949.92304-1-warthog618@gmail.com>
- <20210102022949.92304-2-warthog618@gmail.com>
- <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com>
- <20210103021725.GA6622@sol>
- <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
+        Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH v2] pinctrl: add helper to expose pinctrl state in
+ debugfs
+Message-ID: <20210103202319.GA973266@x1>
+References: <20201218045134.4158709-1-drew@beagleboard.org>
+ <CAHp75Vfwb+f3k2+mAj+jB=XsKFX-hCxx61A_PCmwz6y-YKHMcg@mail.gmail.com>
+ <20201224203603.GA59600@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
+In-Reply-To: <20201224203603.GA59600@x1>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 03, 2021 at 05:10:10PM +0200, Andy Shevchenko wrote:
-> On Sun, Jan 3, 2021 at 4:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Sun, Jan 03, 2021 at 12:20:26AM +0200, Andy Shevchenko wrote:
-> > > On Sat, Jan 2, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> ...
-> 
-> > > > +#include <linux/gpio.h>
+On Thu, Dec 24, 2020 at 02:36:03PM -0600, Drew Fustini wrote:
+> On Fri, Dec 18, 2020 at 06:01:25PM +0200, Andy Shevchenko wrote:
+> > On Fri, Dec 18, 2020 at 6:52 AM Drew Fustini <drew@beagleboard.org> wrote:
 > > >
-> > > Perhaps include it after system headers?
-> >
-> > hehe, I blindly sorted them.
-> > Should it matter?
-> 
-> I would include more particular headers later.
-> Btw system headers can not always be in order because of dependencies.
-> 
-> ...
-> 
-> > > > +       local platform=`cat $SYSFS/kernel/debug/gpio | grep "$chip:" | tr -d ',' | awk '{print $5}'`
+> > > BeagleBoard.org [0] currently uses an out-of-tree driver called
+> > > bone-pinmux-helper [1] developed by Pantelis Antoniou [2] back in 2013.
+> > > The driver assists users of our BeagleBone and PocketBeagle boards in
+> > > rapid prototyping by allowing them to change at run-time between defined
+> > > set of pinctrl states [3] for each pin on the expansion connectors [4].
+> > > This is achieved by exposing a 'state' file in sysfs for each pin which
+> > > is used by our 'config-pin' utility [5].
 > > >
-> > > Besides useless use of cat (and tr + awk can be simplified) why are
-> >
-> > What do you suggest for the tr/awk simplification?
+> > > Our goal is to eliminate all out-of-tree drivers for BeagleBoard.org
+> > > boards and thus I have been working to replace bone-pinmux-helper with a
+> > > new driver that could be acceptable upstream. My understanding is that
+> > > debugfs, unlike sysfs, could be the appropriate mechanism to expose such
+> > > functionality.
+> > 
+> > No objections here.
+> > 
+> > > I used the compatible string "pinctrl,state-helper" but would appreciate
+> > > advice on how to best name this. Should I create a new vendor prefix?
+> > 
+> > Here is the first concern. Why does this require to be a driver with a
+> > compatible string?
 > 
-> You have `awk`, you can easily switch the entire pipeline to a little
-> awk scriptlet.
+> I have not been able to figure out how to have different active pinctrl
+> states for each header pins (for example P2 header pin 3) unless they
+> are represented as DT nodes with their own compatible for this helper
+> driver such as:
 > 
-
-Ah ok - I was actually going the other way to do away with the awk, so
-had replaced it with a pair of cuts, though I'm still looking for better
-alternatives for the whole gpiochipN:offset -> sysfs_nr mapping problem
-- see below.
-
-> > > you simply not using
-> > > /sys/bus/gpio/devices/$chip ?
-> >
-> > Cos that shows all the gpiochips, not just the ones created by gpio-mockup.
+> &ocp {
+> 	P2_03_pinmux {
+> 		compatible = "pinctrl,state-helper";
+> 		pinctrl-names = "default", "gpio", "gpio_pu", "gpio_pd", "gpio_input", "pwm";
+> 		pinctrl-0 = <&P2_03_default_pin>;
+> 		pinctrl-1 = <&P2_03_gpio_pin>;
+> 		pinctrl-2 = <&P2_03_gpio_pu_pin>;
+> 		pinctrl-3 = <&P2_03_gpio_pd_pin>;
+> 		pinctrl-4 = <&P2_03_gpio_input_pin>;
+> 		pinctrl-5 = <&P2_03_pwm_pin>;
+> 	};
+> }
 > 
-> I didn't get this. What is the content of $chip in your case?
+> I can assign pinctrl states in the pin controller DT node which has
+> compatible pinctrl-single (line 301 arch/arm/boot/dts/am33xx-l4.dtsi):
 > 
-
-$chip is the gpiochipN name, so gpiochip0, gpiochip1 etc.
-
-What we are trying to find here is the base of the GPIO numbering for
-the chip so we can export/unexport them to sysfs (after adding the
-offset for the particular line).
-
-> > And I certainly don't want to go messing with real hardware.
-> > The default tests should still run on real hardware - but only
-> > accessing the mockup devices.
-> >
-> > Got a better way to filter out real hardware?
+> &am33xx_pinmux {
 > 
-> I probably have to understand what is the input and what is the
-> expected output. It's possible I missed something here.
+>         pinctrl-names = "default", "gpio", "pwm";
+>         pinctrl-0 =   < &P2_03_default_pin &P1_34_default_pin &P2_19_default_pin &P2_24_default_pin
+>                         &P2_33_default_pin &P2_22_default_pin &P2_18_default_pin &P2_10_default_pin
+>                         &P2_06_default_pin &P2_04_default_pin &P2_02_default_pin &P2_08_default_pin
+>                         &P2_17_default_pin >;
+>         pinctrl-1 =   < &P2_03_gpio_pin &P1_34_gpio_pin &P2_19_gpio_pin &P2_24_gpio_pin
+>                         &P2_33_gpio_pin &P2_22_gpio_pin &P2_18_gpio_pin &P2_10_gpio_pin
+>                         &P2_06_gpio_pin &P2_04_gpio_pin &P2_02_gpio_pin &P2_08_gpio_pin
+>                         &P2_17_gpio_pin >;
+>         pinctrl-2 =   < &P2_03_pwm &P1_34_pwm &P2_19_pwm &P2_24_pwm
+>                         &P2_33_pwm &P2_22_pwm &P2_18_pwm &P2_10_pwm
+>                         &P2_06_pwm &P2_04_pwm &P2_02_pwm &P2_08_pwm
+>                         &P2_17_pwm >;
 > 
-> > > > +       # e.g. /sys/class/gpio/gpiochip508/device/gpiochip0/dev
-> > > > +       local syschip=`ls -d $GPIO_SYSFS/gpiochip*/device/$chip/dev`
+> }
+> 
+> However, there is no way to later select "gpio" for P2.03 and select
+> "pwm" for P1.34 at the same time.  Thus, I can not figure out a way to
+> select independent states per pin unless I make a node for each pin that
+> binds to a helper driver.
+> 
+> It feels like there may be a simpler soluation but I can't see to figure
+> it out.  Suggestions welcome!
+> 
+> > 
+> > > The P9_14_pinmux entry would cause pinctrl-state-helper to be probed.
+> > > The driver would create the corresponding pinctrl state file in debugfs
+> > > for the pin.  Here is an example of how the state can be read and
+> > > written from userspace:
 > > >
-> > > ls -d is fragile, better to use `find ...`
-> >
-> > OK
-> >
-> > > > +       syschip=${syschip#$GPIO_SYSFS}
-> > > > +       syschip=${syschip%/device/$chip/dev}
+> > > root@beaglebone:~# cat /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
+> > > default
+> > > root@beaglebone:~# echo pwm > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
+> > > root@beaglebone:~# cat /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
+> > > pwm
 > > >
-> > > How does this handle more than one gpiochip listed?
-> >
-> > It is filtered by $chip so there can only be one.
-> > Or is that a false assumption?
+> > > I would very much appreciate feedback on both this general concept, and
+> > > also specific areas in which the code should be changed to be acceptable
+> > > upstream.
+> > 
+> > Two more concerns:
+> >  - why is it OF only?
 > 
-> When you have glob() in use it may return any number of results
-> (starting from 0) and your script should be prepared for that.
+> I am open to figuring out a more general solution but I am really only
+> familiar with Device Tree.  Is there a way to represent the possible
+> pinctrl states in ACPI?
 > 
+> >  - why has it been separated from pin control per device debug folder?
+> 
+> >From the v1 thread, I see what you mean that there could be a combined
+> state file for each pinctrl device where one would echo '<pin>
+> <state-name>' such as 'P2_03 pwm'.  I will attempt to implement that.
 
-Yeah, we really don't want to be using globs at all.
+I have tried creating a single state file:
+/sys/kernel/debug/pinctrl/pinctrl_state
 
-> > > Also, can you consider optimizing these to get whatever you want easily?
-> >
-> > Sadly that IS my optimized way - I don't know of an easier way to find
-> > the sysfs GPIO number given the gpiochip and offset :-(.
-> > Happy to learn of any alternative.
-> 
-> I'm talking about getting $syschip. I think there is a way to get it
-> without all those shell substitutions from somewhere else.
-> 
+where one can write into it:
 
-$syschip is just an intermediate that I'm not really interested in - it
-just helps find the base, and so the nr.
+<device-name> <pinctrl-state-name>
 
-I've been playing with alternatives and my current one is:
+such as:
 
-	# e.g. /sys/devices/platform/gpio-mockup.1/gpiochip1
-	local platform=$(find $SYSFS/devices/platform/ -name $chip -type d -maxdepth 2)
-	[ "$platform" ] || fail "can't find platform of $chip"
-	# e.g. /sys/devices/platform/gpio-mockup.1/gpio/gpiochip508/base
-	local base=$(find $(dirname $platform)/gpio/ -name base -type f -maxdepth 2)
-	[ "$base" ] || fail "can't find base of $chip"
-	sysfs_nr=$(< $base)
-	sysfs_nr=$(($sysfs_nr + $offset))
+ocp:P9_14_pinmux gpio
 
-which works, though still doesn't handle the possibility of multiple
-matches returned by the finds.
+However, I can not figure out a way for this to work.
 
-> > > > +       sysfs_nr=`cat $SYSFS/devices/$platform/gpio/$syschip/base`
-> > >
-> > > (It's probably fine here, but this doesn't work against PCI bus, for
-> > > example, see above for the fix)
-> >
-> > Not sure what you mean here.
-> 
-> When GPIO is a PCI device the above won't give a proper path.
-> If we wish to give an example to somebody, it would be better to have
-> it good enough.
-> 
+I create the pinctrl_state file in pinctrl_state_helper_init() and store
+the dentry in a global variable.
 
-How would it appear for PCI bus?
+pinctrl_state_helper_probe() still runs for each Px_0y_pinmux device
+tree entry with compatible "pinctrl,state-helper" but there is no
+per-device file created.
 
-> > > > +       sysfs_nr=$(($sysfs_nr + $offset))
-> > > > +       sysfs_ldir=$GPIO_SYSFS/gpio$sysfs_nr
-> > > >  }
-> 
-> ...
-> 
-> > > > +set_line()
-> > > >  {
-> > > > +       if [ -z "$sysfs_nr" ]; then
-> > > > +               find_sysfs_nr
-> > > > +               echo $sysfs_nr > $GPIO_SYSFS/export
-> > > >         fi
-> > >
-> > > It sounds like a separate function (you have release_line(), perhaps
-> > > acquire_line() is good to have).
-> > >
-> >
-> > The cdev implementation has to release and re-acquire in the background
-> > as there is no simple way to perform a set_config on a requested line
-> > from shell - just holding the requested line for a set is painful enough,
-> > and the goal here was to keep the tests simple.
-> >
-> > I didn't want to make line acquisition/release explicit in the gpio-mockup
-> > tests, as that would make them needlessly complicated, so the acquire is
-> > bundled into the set_line - and anywhere else the uAPI implementation
-> > needs it.  There is an implicit assumption that a set_line will always
-> > be called before a get_line, but that is always true - there is no
-> > "as-is" being tested here.
-> >
-> > Of course you still need the release_line at the end of the test, so
-> > that is still there.
-> 
-> Yes and to me logically correct to distinguish acquire_line() with set_line().
-> Then wherever you need to set_line(), you may call acquire_line()
-> which should be idempotent (the same way as release_line() call).
-> 
+The problem comes in pinctrl_state_write().  I use this to extract the
+device_name and state_name:
 
-Oh, ok - it would only be called from set_line - I thought you meant
-expose it as part of the uAPI test interface (currently
-get_line/set_line/release_line).
+	ret = sscanf(buf, "%s %s", device_name, state_name);
 
-> > > > +release_line()
-> > > >  {
-> > > > +       [ -z "$sysfs_nr" ] && return
-> > > > +       echo $sysfs_nr > $GPIO_SYSFS/unexport
-> > > > +       sysfs_nr=
-> > > > +       sysfs_ldir=
-> > > >  }
-> 
-> ...
-> 
-> > > > +skip()
-> > > >  {
-> > >
-> > > > +       echo $* >&2
-> > >
-> > > In all cases better to use "$*" (note surrounding double quotes).
-> > >
-> >
-> > Agreed - except where
-> >
-> >         for option in $*; do
-> >
-> > is used to parse parameters.
-> 
-> Exactly! And "" helps with that.
-> 
-> If I put parameters as `a b c "d e"`, your case will take them wrongly.
-> 
-> > > > +       echo GPIO $module test SKIP
-> > > > +       exit $ksft_skip
-> > > >  }
-> > >
-> > > ...
-> > >
-> > > > +        [ ! which modprobe > /dev/null 2>&1 ] && skip "need modprobe installed"
-> > >
-> > > AFAIR `which` can be optional on some systems.
-> > >
-> >
-> > That is how other selftests check for availability of modprobe.
-> > e.g. selftests/kmod/kmod.sh and selftests/vm/test_hmm.sh, so I assumed
-> > it was acceptable.
-> >
-> > Is there an alternative?
-> 
-> OK. Just replace it with a dropped useless test call.
-> which ... || skip ...
-> 
+This does work okay but I don't know what to do with the device_name
+string, such as "ocp:P9_14_pinmux".  Previously, the device was saved
+in the private info:
 
-Yup - I've since replaced it with a test call to modprobe -h, so no
-`which` required.
+        sfile = file->private_data;
+        priv = sfile->private;
+        p = devm_pinctrl_get(priv->dev); // use device_name instead?
+	state = pinctrl_lookup_state(p, state_name);
 
-> ...
-> 
-> > > P.S. Also you may use `#!/bin/sh -efu` as shebang and fix other problems.
-> >
-> > A shebang or a `set -efu`?
-> 
-> Shebang. The difference is that with shebang you don't need to edit
-> the script each time you want to change that.
-> sh -x /path/to/the/script will give different results.
-> 
+But I don't know how to look up a device based on its name.
 
-OK, didn't consider that.
-Have got the scripts running with the -efu flags set - that was entertaining.
+Any suggestions as to how to handle that?
 
-> > I don't see shebang options used anywhere in the selftest scripts, but I
-> > agree with a set.
-> 
-> Because shell scripts in the kernel are really badly written (so does
-> Python ones).
-> Again, even senior developers can't get shell right (including me).
-> 
-> > Either way I am unsure what the shebang should be.
-> > The majority of the selftest scripts use bash as the shebang, with the
-> > remainder using plain sh.
-> > These scripts do use some bash extensions, and it was originally bash, so
-> > I left it as that.
-> > My test setups mainly use busybox, and don't have bash, so they complain
-> > about the bash shebang - though the ash(??) busybox is using still runs
-> > the script fine.
-> 
-> I'm using busybox on an everyday basis and mentioned shebang works
-> there if I'm not mistaken.
-> Because all flags are listed in the standard.
-> https://pubs.opengroup.org/onlinepubs/007904875/utilities/sh.html
-> 
 
-I meant the actual /bin/bash, not the flags.
-Though I now build bash in my buildroots, so I don't get that warning
-anymore.
+Thanks and happy new year!
+Drew
 
-Cheers,
-Kent.
+> 
+> > 
+> > 
+> > > [0] http://beagleboard.org/latest-images
+> > > [1] https://github.com/beagleboard/linux/blob/5.4/drivers/misc/cape/beaglebone/bone-pinmux-helper.c
+> > > [2] https://github.com/RobertCNelson/linux-dev/blob/master/patches/drivers/ti/gpio/0001-BeagleBone-pinmux-helper.patch
+> > > [3] https://github.com/beagleboard/BeagleBoard-DeviceTrees/blob/v5.4.x-ti-overlays/src/arm/am335x-bone-common-univ.dtsi#L2084
+> > > [4] https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual#section-7-1
+> > > [5] https://github.com/beagleboard/bb.org-overlays/blob/master/tools/beaglebone-universal-io/config-pin
+> > 
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+> 
+> Thanks for reviewing,
+> Drew
