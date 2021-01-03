@@ -2,267 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A1E42E8CC5
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 16:11:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5FC2E8CC6
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 16:11:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbhACPLI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 10:11:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42054 "EHLO
+        id S1727270AbhACPLD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 10:11:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbhACPLH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 10:11:07 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAB2C0613D3;
-        Sun,  3 Jan 2021 07:10:27 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id g3so13073917plp.2;
-        Sun, 03 Jan 2021 07:10:27 -0800 (PST)
+        with ESMTP id S1727265AbhACPLC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 10:11:02 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FEFC0613CF
+        for <linux-gpio@vger.kernel.org>; Sun,  3 Jan 2021 07:10:22 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id w1so33509645ejf.11
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Jan 2021 07:10:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8/hDJ6nVM+7UzPC808WfJ3MnlE/12HzLh4p00BC3vEk=;
-        b=RFsVnd7sXoYfWdzPGejWjOF0J809wJQTaS0TiXYmTI+MAMcFQv+rV8769H5Gj20yfi
-         2yjkVRsGMeTIOg0DB/+8jKr9EjbpsajsCXvf9PHFt//OgCPM79+48LxQrZqE4hz2Iruu
-         5mifkkL3sIvrDVMZspMk5Zs8t3touy57BtLJgWDzOPbE0XWuwgxNaoGNMY0uq+cViYzL
-         HGmJlzVJcIrUMEOnp3tDOvG45chd8K7OkD0FVINTqdwCxisL7C64TdOXeN7T+RlazMdq
-         ZIXncnsDDm4rHs/BsCV4iflslkimJLp+eZVR3KBWgDfPTCoJbIIVFnMbZAQ8MixgjoP1
-         JEjQ==
+        bh=v2eCTCh3sPSKxbmVYCA5K6gAkjTyl0RABNT20hQRB1w=;
+        b=cqNsyGqfm8I+yIFTmAdF1+5+wGWsQoUYoiDvkS9lXRxpEm1uE1YR1udoBls+yh0DT1
+         WiqgRUVwOC3IjBPimP2ReALvuwA1q6VS+E/APj5r8mDbyPKCbTGQCuqwi3b9XEH+ZUBZ
+         tmX+DohA9lN4yAjYXQkyG/0xpjXFNeeGdFPBDdS3DgiwHR7TAEOlQeSDtn63TLzNvPao
+         gWKr41G8z/sHpPvHTVbPNKr4tEl4HXZEiHz6nCTf69bfRrikZd1ggj80jwv7tt28MlGC
+         OE29GW67Nqkneq/uPsIkkXwT6HZ58Q7Oevs046zE0YasliUMtpNHZYkqQ1MHJNPe3n5Q
+         jeaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8/hDJ6nVM+7UzPC808WfJ3MnlE/12HzLh4p00BC3vEk=;
-        b=OifI03JCeWkQB/6G5x/HH/QBbBsOenafubiiNmNDemqW2eiqJy9GKTDUl/NinKXiuk
-         cTvwbT5GJFTtG41n4i8Yh87tNtsZ5g4VpkMobuaFk1a2OFuXtzA/9LLAzp5+SRFuDJ4s
-         jZOgLWJZ44c9AGQyoJaQW4h3X/mfPxdvkVZNWJ3A+CrE/+JmJqY9V+9YsS96HyB2eB/M
-         u1YdeEnuBfq8dK5XiSdlBRt+ClM6t4gV8VHImYfDUnl//2Ymr03ip41HDQSMp4qs1acl
-         kDdfAsHHntMxrF7gi2JqiiyMR+ZoHDmOp516TakuZxyBeSTHQJ4oIl9/xsQnjyxqDLHx
-         lb7A==
-X-Gm-Message-State: AOAM532KyEU+gc8FquiFsG5Ce/UG2x/6pgRo60RJHh2q9E4ZaSw33Zid
-        5sUHnlxMlTSXN1e8TLAvcs9ycR0dK6Xh9DSEITgDioEoLxDc0S/H
-X-Google-Smtp-Source: ABdhPJwzmRYfgxGWTQVdJRv4F1eTZZjRAEcNsniv9bvSpkEgWc7sXLE91cpD2Mgs+i8K47srpqaSKVG7GNKuIV3m09s=
-X-Received: by 2002:a17:90a:1050:: with SMTP id y16mr26299767pjd.181.1609686627086;
- Sun, 03 Jan 2021 07:10:27 -0800 (PST)
+        bh=v2eCTCh3sPSKxbmVYCA5K6gAkjTyl0RABNT20hQRB1w=;
+        b=S4pTmKfhG2Nsy1TwTREbEjx+56WGqVXfzfhTJPHLhHHaN1oKerX8D+XyIdlEilqg8c
+         pq/dvkHUxAdIB1in65hWUfiesXVb+y6kDdF7h015P90nNq75NlLRE8jED6Kg6csRNMgZ
+         /lzB83c4fkE5OZlQlNAgrtckrtpiD0NjF5Nj6UNbNFa+48E7Yzo/lDMryU/pxWI25reK
+         DYZx9AQCRMP9+Cj53VZe86jtanhfn3sZqO5XMMTRWtvhvMWVICyKwqVlXyZfVk0t9h4g
+         cKRzBIyirluggRdWFsqNFlbscZDK8vYYU9Jp5ePoANLlWi52niYqFy+UK50q/c30FR5W
+         EqQg==
+X-Gm-Message-State: AOAM532kRbZL1B+ehnWIq2EZyeDknTr9L4ZkpBHT9pjLFeuhlj0iccA6
+        yjLsMc/2FrsP8obno4e5NhFYvFmm5fneeIVeJRElITba3uM=
+X-Google-Smtp-Source: ABdhPJzTHwRUSjjsGeIvxDbiBU4vFEXApfPchE6luAXuLhygbX6laFnr14wtoWa5iw5TZstkQFQpgpWw9LzpUQH25Vc=
+X-Received: by 2002:a17:906:8594:: with SMTP id v20mr63112642ejx.470.1609686620644;
+ Sun, 03 Jan 2021 07:10:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20210102022949.92304-1-warthog618@gmail.com> <20210102022949.92304-2-warthog618@gmail.com>
- <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com> <20210103021725.GA6622@sol>
-In-Reply-To: <20210103021725.GA6622@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 3 Jan 2021 17:10:10 +0200
-Message-ID: <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test implementation
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
+References: <20201215105329.138193-1-colin.king@canonical.com>
+In-Reply-To: <20201215105329.138193-1-colin.king@canonical.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sun, 3 Jan 2021 16:10:10 +0100
+Message-ID: <CAMpxmJVQb0Rh2kkVwAgmEvFzxckTUr4HANp_XUkWq8EC88TV=A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix spelling mistake in Kconfig "supprot" -> "support"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 3, 2021 at 4:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Sun, Jan 03, 2021 at 12:20:26AM +0200, Andy Shevchenko wrote:
-> > On Sat, Jan 2, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
-
-...
-
-> > > +#include <linux/gpio.h>
-> >
-> > Perhaps include it after system headers?
+On Tue, Dec 15, 2020 at 11:53 AM Colin King <colin.king@canonical.com> wrote:
 >
-> hehe, I blindly sorted them.
-> Should it matter?
-
-I would include more particular headers later.
-Btw system headers can not always be in order because of dependencies.
-
-...
-
-> > > +       local platform=`cat $SYSFS/kernel/debug/gpio | grep "$chip:" | tr -d ',' | awk '{print $5}'`
-> >
-> > Besides useless use of cat (and tr + awk can be simplified) why are
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> What do you suggest for the tr/awk simplification?
-
-You have `awk`, you can easily switch the entire pipeline to a little
-awk scriptlet.
-
-> > you simply not using
-> > /sys/bus/gpio/devices/$chip ?
+> There is a spelling mistake in the Kconfig help text. Fix it.
 >
-> Cos that shows all the gpiochips, not just the ones created by gpio-mockup.
-
-I didn't get this. What is the content of $chip in your case?
-
-> And I certainly don't want to go messing with real hardware.
-> The default tests should still run on real hardware - but only
-> accessing the mockup devices.
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpio/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Got a better way to filter out real hardware?
-
-I probably have to understand what is the input and what is the
-expected output. It's possible I missed something here.
-
-> > > +       # e.g. /sys/class/gpio/gpiochip508/device/gpiochip0/dev
-> > > +       local syschip=`ls -d $GPIO_SYSFS/gpiochip*/device/$chip/dev`
-> >
-> > ls -d is fragile, better to use `find ...`
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c70f46e80a3b..f58e46ec1c96 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -666,7 +666,7 @@ config GPIO_WCD934X
+>         tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
+>         depends on MFD_WCD934X && OF_GPIO
+>         help
+> -         This driver is to supprot GPIO block found on the Qualcomm Technologies
+> +         This driver is to support GPIO block found on the Qualcomm Technologies
+>          Inc WCD9340/WCD9341 Audio Codec.
 >
-> OK
+>  config GPIO_XGENE
+> --
+> 2.29.2
 >
-> > > +       syschip=${syschip#$GPIO_SYSFS}
-> > > +       syschip=${syschip%/device/$chip/dev}
-> >
-> > How does this handle more than one gpiochip listed?
->
-> It is filtered by $chip so there can only be one.
-> Or is that a false assumption?
 
-When you have glob() in use it may return any number of results
-(starting from 0) and your script should be prepared for that.
+Applied, thanks!
 
-> > Also, can you consider optimizing these to get whatever you want easily?
->
-> Sadly that IS my optimized way - I don't know of an easier way to find
-> the sysfs GPIO number given the gpiochip and offset :-(.
-> Happy to learn of any alternative.
-
-I'm talking about getting $syschip. I think there is a way to get it
-without all those shell substitutions from somewhere else.
-
-> > > +       sysfs_nr=`cat $SYSFS/devices/$platform/gpio/$syschip/base`
-> >
-> > (It's probably fine here, but this doesn't work against PCI bus, for
-> > example, see above for the fix)
->
-> Not sure what you mean here.
-
-When GPIO is a PCI device the above won't give a proper path.
-If we wish to give an example to somebody, it would be better to have
-it good enough.
-
-> > > +       sysfs_nr=$(($sysfs_nr + $offset))
-> > > +       sysfs_ldir=$GPIO_SYSFS/gpio$sysfs_nr
-> > >  }
-
-...
-
-> > > +set_line()
-> > >  {
-> > > +       if [ -z "$sysfs_nr" ]; then
-> > > +               find_sysfs_nr
-> > > +               echo $sysfs_nr > $GPIO_SYSFS/export
-> > >         fi
-> >
-> > It sounds like a separate function (you have release_line(), perhaps
-> > acquire_line() is good to have).
-> >
->
-> The cdev implementation has to release and re-acquire in the background
-> as there is no simple way to perform a set_config on a requested line
-> from shell - just holding the requested line for a set is painful enough,
-> and the goal here was to keep the tests simple.
->
-> I didn't want to make line acquisition/release explicit in the gpio-mockup
-> tests, as that would make them needlessly complicated, so the acquire is
-> bundled into the set_line - and anywhere else the uAPI implementation
-> needs it.  There is an implicit assumption that a set_line will always
-> be called before a get_line, but that is always true - there is no
-> "as-is" being tested here.
->
-> Of course you still need the release_line at the end of the test, so
-> that is still there.
-
-Yes and to me logically correct to distinguish acquire_line() with set_line().
-Then wherever you need to set_line(), you may call acquire_line()
-which should be idempotent (the same way as release_line() call).
-
-> > > +release_line()
-> > >  {
-> > > +       [ -z "$sysfs_nr" ] && return
-> > > +       echo $sysfs_nr > $GPIO_SYSFS/unexport
-> > > +       sysfs_nr=
-> > > +       sysfs_ldir=
-> > >  }
-
-...
-
-> > > +skip()
-> > >  {
-> >
-> > > +       echo $* >&2
-> >
-> > In all cases better to use "$*" (note surrounding double quotes).
-> >
->
-> Agreed - except where
->
->         for option in $*; do
->
-> is used to parse parameters.
-
-Exactly! And "" helps with that.
-
-If I put parameters as `a b c "d e"`, your case will take them wrongly.
-
-> > > +       echo GPIO $module test SKIP
-> > > +       exit $ksft_skip
-> > >  }
-> >
-> > ...
-> >
-> > > +        [ ! which modprobe > /dev/null 2>&1 ] && skip "need modprobe installed"
-> >
-> > AFAIR `which` can be optional on some systems.
-> >
->
-> That is how other selftests check for availability of modprobe.
-> e.g. selftests/kmod/kmod.sh and selftests/vm/test_hmm.sh, so I assumed
-> it was acceptable.
->
-> Is there an alternative?
-
-OK. Just replace it with a dropped useless test call.
-which ... || skip ...
-
-...
-
-> > P.S. Also you may use `#!/bin/sh -efu` as shebang and fix other problems.
->
-> A shebang or a `set -efu`?
-
-Shebang. The difference is that with shebang you don't need to edit
-the script each time you want to change that.
-sh -x /path/to/the/script will give different results.
-
-> I don't see shebang options used anywhere in the selftest scripts, but I
-> agree with a set.
-
-Because shell scripts in the kernel are really badly written (so does
-Python ones).
-Again, even senior developers can't get shell right (including me).
-
-> Either way I am unsure what the shebang should be.
-> The majority of the selftest scripts use bash as the shebang, with the
-> remainder using plain sh.
-> These scripts do use some bash extensions, and it was originally bash, so
-> I left it as that.
-> My test setups mainly use busybox, and don't have bash, so they complain
-> about the bash shebang - though the ash(??) busybox is using still runs
-> the script fine.
-
-I'm using busybox on an everyday basis and mentioned shebang works
-there if I'm not mistaken.
-Because all flags are listed in the standard.
-https://pubs.opengroup.org/onlinepubs/007904875/utilities/sh.html
-
-> Thanks again for the review - always a learning experience.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Bart
