@@ -2,233 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E85402E8B8B
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 11:03:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E8F32E8C94
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 15:22:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbhACKBF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 05:01:05 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56391 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbhACKA6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 05:00:58 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9B6895803E8;
-        Sun,  3 Jan 2021 05:00:11 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 03 Jan 2021 05:00:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=nVjtQEK9XaBpR
-        QQ15wkj2tc7GfDi4X4brxsvTseHVaQ=; b=gGVCtJkoVvQNimG4iaMquEqwuuliD
-        qu4pkYH5Rb8trCBAqbYv3Bt+pCh2iHFXPTIQY6wrJIP0DM7LPCmOiIX4eajjUVO7
-        eLgEoJsvtyfRbgxSVctzNFvjDMxgf4PjM86pGEdRuzRolv1JSKD6sJSUPglvcFUX
-        bCJW5Q1tnbGSo5QtdjVEa4ojAylhs2OUK+x7eFeZQMOa8KhQeMivpPZNkyAwD8Gc
-        LW5geK1QXAIHzXm3p9V4uqcYRZeYK3TB627LtgkrqImJdfF7j+rX4Nspg5LJdS1I
-        bzcd454qlv8freCrYwBcaRBuqlJaZWRWAp3nXqAUdRYeCTr9J096ahx1A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=nVjtQEK9XaBpRQQ15wkj2tc7GfDi4X4brxsvTseHVaQ=; b=dohiBUMJ
-        3NSkS1dRew3RGn54/7yz6k1tuYN9I5sn4Gh1UqmLCRAdb5KLR5mVNMHYI3oxmkdB
-        bpEHqq0+PmWUtfdw7Dewi916Dpj02Bgrz8JfqZOP8Uv4efXNH4R2mcQw3lUH3FmE
-        AwAlJloOmkfR1ico4uG8WwBjmVW3ar4woM4LKbSftrUFwbAOTlz2FboL762lcTpW
-        8d8QVIagd7KJGLUZ7XutBlR1NHUfgi+ZLEKEgy3hFoA4wvbZW/5cAawx7eWNxjZf
-        ZjBKmLVzII62qZo6aE7ijeauVauBaPKNIruMCkuRRPS0GFUy1orUVkb8khmuOJja
-        rmprdfaxrF6zlw==
-X-ME-Sender: <xms:q5XxX3vMXMUK9H_vCUiz7DzsCHJWDBynJ4y6Qp5l6wV9fm2lPS4AsQ>
-    <xme:q5XxX44FSMdmZsbecLeilc9_r4gEE2fsFbOzxeyKZYlZi6thUSuH-bn9AxBrG_CEV
-    lim5Wd29yP1gh4UIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefuddguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
-    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
-    ugdrohhrgh
-X-ME-Proxy: <xmx:q5XxX6hhczK25a-TBfIZo9fZIVBBtAmI04ljXMqY28l7PyDg--U8vQ>
-    <xmx:q5XxXylUTzJgo5r9SdTKojocCd2IOE3rNZkmnZTCzhCAuwLVs6bLZw>
-    <xmx:q5XxXxu22u9nyPDH4RTWm9erkNSyfGa302ctbw8qZpbG5dY5sdGXYg>
-    <xmx:q5XxX2u8wBGyCNRzdU3WmSJAKz3YikbeXYCnDOXgTwMn6ZD1u2cs4A>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F1864108005F;
-        Sun,  3 Jan 2021 05:00:10 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        id S1726019AbhACOUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 09:20:40 -0500
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:43683 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbhACOUj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 09:20:39 -0500
+Received: by mail-lf1-f52.google.com with SMTP id 23so58495556lfg.10;
+        Sun, 03 Jan 2021 06:20:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lyRDga/P88nXpUNSjHBPV4V01nLvTjv4Bg0ZMq7KWiw=;
+        b=Cs3qe7Y3sa+2q2LMYf0Bm7gIHJuTwHz6MmY4eRtwFa9XsmZNSFuNVrEackUJmhBlCY
+         PwhEHiZqJLiA3wwYy+AHKCXDsq7w/lvANqWtKWrDTbIUAEFo+XXFqmBxkSOEC8CGacmO
+         H2RDTHzEf9uAMy5Xz0AVd54y5PuqXgFPhkHyOUX8PVZvlHqBPNoWY6b9Ex8SlZ5Cen6x
+         9uQk/fIM/SyrojJgPswp5a3ZuHHt/XbPScYV7tZdLYm6T2IPkgJtEFVpZYEgNlJgx5My
+         Thf3kQnL5Y23KYjwxYOQVBo4hszTMDHSFpcOTyYzlAL15nMjJYdPgtOPn4zl6H0EGS5E
+         N/rA==
+X-Gm-Message-State: AOAM531YXMoc+jQ3/eKKoQ2GI3nqSmtj4K1QyWy1rne3R2vdh2awrWdH
+        L5nQLQuFO46DQOcymOKZo4atiyE6zkXQ1Q==
+X-Google-Smtp-Source: ABdhPJwqtCL2WZR2lgnS6qNkJmmik9smGPVjF1BAIHsjdmh83+L3Lk9l+Ce1n8Nn8PS141lKdVuKAA==
+X-Received: by 2002:ac2:430a:: with SMTP id l10mr10776662lfh.22.1609683596842;
+        Sun, 03 Jan 2021 06:19:56 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id c16sm7006237lfb.236.2021.01.03.06.19.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Jan 2021 06:19:56 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id a12so58583911lfl.6;
+        Sun, 03 Jan 2021 06:19:56 -0800 (PST)
+X-Received: by 2002:a19:810:: with SMTP id 16mr33000667lfi.233.1609683595991;
+ Sun, 03 Jan 2021 06:19:55 -0800 (PST)
+MIME-Version: 1.0
+References: <20210103100007.32867-1-samuel@sholland.org> <20210103100007.32867-3-samuel@sholland.org>
+In-Reply-To: <20210103100007.32867-3-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Sun, 3 Jan 2021 22:19:44 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64KioyzGK0uLTVNyhc38fH2A8DWRYc8FVkEVZDjVwr6RA@mail.gmail.com>
+Message-ID: <CAGb2v64KioyzGK0uLTVNyhc38fH2A8DWRYc8FVkEVZDjVwr6RA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 2/4] pinctrl: sunxi: h6-r: Add s_rsb pin functions
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection
-Date:   Sun,  3 Jan 2021 04:00:07 -0600
-Message-Id: <20210103100007.32867-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210103100007.32867-1-samuel@sholland.org>
-References: <20210103100007.32867-1-samuel@sholland.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On boards where the only peripheral connected to PL0/PL1 is an X-Powers
-PMIC, configure the connection to use the RSB bus rather than the I2C
-bus. Compared to the I2C controller that shares the pins, the RSB
-controller allows a higher bus frequency, and it is more CPU-efficient.
+On Sun, Jan 3, 2021 at 6:00 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> As there is an RSB controller in the H6 SoC, there should be some pin
+> configuration for it. While no such configuration is documented, the
+> "s_i2c" pins are suspiciously on the "alternate" function 3, with no
+> primary function 2 given. This suggests the primary function for these
+> pins is actually RSB, and that is indeed the case.
+>
+> Add the "s_rsb" pin functions so the RSB controller can be used.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
- 3 files changed, 37 insertions(+), 37 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 7c9dbde645b5..3452add30cc4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -150,12 +150,28 @@ &pio {
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
--&r_i2c {
-+&r_ir {
-+	linux,rc-map-name = "rc-beelink-gs1";
-+	status = "okay";
-+};
-+
-+&r_pio {
-+	/*
-+	 * FIXME: We can't add that supply for now since it would
-+	 * create a circular dependency between pinctrl, the regulator
-+	 * and the RSB Bus.
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo1>;
-+	 */
-+	vcc-pm-supply = <&reg_aldo1>;
-+};
-+
-+&r_rsb {
- 	status = "okay";
- 
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -273,22 +289,6 @@ sw {
- 	};
- };
- 
--&r_ir {
--	linux,rc-map-name = "rc-beelink-gs1";
--	status = "okay";
--};
--
--&r_pio {
--	/*
--	 * PL0 and PL1 are used for PMIC I2C
--	 * don't enable the pl-supply else
--	 * it will fail at boot
--	 *
--	 * vcc-pl-supply = <&reg_aldo1>;
--	 */
--	vcc-pm-supply = <&reg_aldo1>;
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 15c9dd8c4479..16702293ac0b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -175,12 +175,16 @@ &pio {
- 	vcc-pg-supply = <&reg_vcc_wifi_io>;
- };
- 
--&r_i2c {
-+&r_ir {
-+	status = "okay";
-+};
-+
-+&r_rsb {
- 	status = "okay";
- 
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -291,10 +295,6 @@ sw {
- 	};
- };
- 
--&r_ir {
--	status = "okay";
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index ebc120a9232f..23e3cb2ffd8d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -112,12 +112,20 @@ &pio {
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
--&r_i2c {
-+&r_ir {
-+	status = "okay";
-+};
-+
-+&r_pio {
-+	vcc-pm-supply = <&reg_bldo3>;
-+};
-+
-+&r_rsb {
- 	status = "okay";
- 
--	axp805: pmic@36 {
-+	axp805: pmic@745 {
- 		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
-+		reg = <0x745>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-@@ -232,14 +240,6 @@ sw {
- 	};
- };
- 
--&r_ir {
--	status = "okay";
--};
--
--&r_pio {
--	vcc-pm-supply = <&reg_bldo3>;
--};
--
- &rtc {
- 	clocks = <&ext_osc32k>;
- };
--- 
-2.26.2
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
