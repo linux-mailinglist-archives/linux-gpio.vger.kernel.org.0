@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95FA02E8B88
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 11:03:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 151562E8B94
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 11:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbhACKA6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 05:00:58 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:37569 "EHLO
+        id S1726625AbhACKBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 05:01:22 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:36159 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725829AbhACKA5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 05:00:57 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EC58F5803E5;
-        Sun,  3 Jan 2021 05:00:10 -0500 (EST)
+        by vger.kernel.org with ESMTP id S1726558AbhACKBR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 05:01:17 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 12F625803E7;
+        Sun,  3 Jan 2021 05:00:11 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 03 Jan 2021 05:00:10 -0500
+  by compute1.internal (MEProxy); Sun, 03 Jan 2021 05:00:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=S4M8YzkmuoPmt
-        oCAT9vras7auucOpjrunI951DT0nOI=; b=Vq4OIzHGe8RbP6Qf2UhN3PHPti2vz
-        2CtW7XMQKTmOKhTMJpjOe79SJIYIhF6vy9lqPclO1CerBSfNFipQqxWMd47yE7+o
-        o5oXVbyWnOfrMB1yHT28ivo7WREP8CW6AwI07Ccn1WBnoXHUkMOCxDXEnFzEas2+
-        HxloF/8o/pF+9oPXxBe3hzOofOcgIJmCLQcdzBJEAuJt1klIMaerP/8tXBMOGYDa
-        h32sthnq23+PA5R5/mpB1BFpSWIStjVQuwgZyX7V3wxNTUxfLQwKnti7pCgTPDC8
-        oMFqc7r+ZHM+CkBem2tQ5cajpIgWk4hper8BHPIU/sDCnQwW4K4Jvcj8Q==
+        :mime-version:content-transfer-encoding; s=fm1; bh=8gRIQ3rwm89lT
+        cTKGKWdo9Q4TRYPDRi0xY9xLkajhkc=; b=DOgJ2do/aDDye7zZ3X7g0v4f3Bifs
+        LBspmVwqThEMPHPVmrM/cgrOSaugJXi10Hur4qD98ZBE84rsriLs1HDFPwTm0nNG
+        vkL4OPvYF6YwX8jdJ25qxltOkE2gdeQfKbMFBGPrh09vJ9INfsQ6b07o8ZwTcDnT
+        e5MojGZua07QLY5pBDILaw/8ZsJErjrIOY/NcwnT2iHa081ymSPu7PPyG35zSfn7
+        bBqP8PNlzl49wY53O3dh9fR8ji4EgeIHdMY+Q+ynx4+2+MSqKCf0ohC7D6dkPMpe
+        4CJIHrcHlGLUMe70CO8SeUkkOIhVw7ri4qlK/NP4cqCtgyeWnYpAAvRHg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=S4M8YzkmuoPmtoCAT9vras7auucOpjrunI951DT0nOI=; b=a5hoAGWU
-        KEpH1Hugtbz/YkhV+1NE78QSqV7eT+DJYBMnUp5MfrDjVPXspHgSTkiVONp6fQSX
-        vivAkVvm+R90+vEyEamD3mmL8mnCf4casbIDBpSkTPukrg4q1BSwWNaajAyIDkdN
-        7UVhh2FqQTIViAYqWKgO/m69Hd5UYMv9YsUdNmnrE+NJnOLS+2ZqfpUzkG1gjHZA
-        0ayKH/AozmFNYPeugcE9LoGCqNJjjYwk+M1JW/P5C4QrJbDhfZoTPdbYiTNumgQQ
-        wTt6yA40icd1FajPSGmFxjYNNUroqGLo0JLCNkArI6NM9Pwm3py+Q2JFwZFUGlG4
-        XwcVrR1STvqCng==
-X-ME-Sender: <xms:qpXxXyQkO40_-7cC7i_btswRlR7QIbDvHxiQlzZ9VGC_edU9zmQ59Q>
-    <xme:qpXxXzkmCIt6xXwWDwhTKNFfCmN2WIdUa44YAl-B943LYLSdXr3-Uds2F1wWDFZ_0
-    dpOFxB43i_CwdTp9w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefuddguddtucetufdoteggodetrfdotf
+        fm1; bh=8gRIQ3rwm89lTcTKGKWdo9Q4TRYPDRi0xY9xLkajhkc=; b=Jd20DFu6
+        0gVWRjd1VVHf9DslCWmXN93t8ALbCI4qXbQCTfbdh08m6Pe0pj6iVje8/Wh3Ahgb
+        sWlNGG0A4kEEOuJmzhVUotIJQJNml3XOTeyOpKyOXyZhwtcVlhx57z7W02JLa+1o
+        MXnZIA2Kf0LNrY6mHX8E3BAV19z/FBPp9h8wCp2LhGyZIh9qillH4nFYx8U5orFC
+        9DiQIf73Y5D74f3h6OSQYtH4ZXensQPuuU52QTRsyQOLroUZxKU1qPI+TYCf7YTY
+        xmHyD+skpWOYf3qD/6OU9AiGL6DtHY9WIu1Z4R+UWXv8OkV7pvGwYwhO4HfhoJi0
+        LxXWknDkGprzVg==
+X-ME-Sender: <xms:qpXxXyDOH2oBm1d3DdrwJ4SYoiQTp8I2dbCazuHp0pHcZfEUV43xwg>
+    <xme:qpXxX8cEsfAa8o3Xilr6-z2S2Oi01nNNyvPjOagFS1EC6P3N9i1UWm-hQ0UCgiHTv
+    8O1hWI7WqRSW8o_Sg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefuddgudduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
@@ -48,13 +48,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefuddguddtucetufdoteggod
     gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
     iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
     ugdrohhrgh
-X-ME-Proxy: <xmx:qpXxX7O1rPfgMcMQk48ACVH18g95U8WMwjnGTbOsUnXS6GSGhab_wg>
-    <xmx:qpXxX3hseo2T2EiO0JH5TumdyM5z1joryRHlUsUPF0w16bwcBY4aZQ>
-    <xmx:qpXxX5iVvo8wInBWkDOOJeL-X0ZQGDZSb8ajdhtC2sxh0XlDf7HmpA>
-    <xmx:qpXxX3QWvMIGWdc6XWFPa0kViiH26_1OjXknIci0_z9ejny9ECDKtA>
+X-ME-Proxy: <xmx:qpXxXyfIQiBJbe4EYVX-QfLG2Gk4FhAMf45aWrHDAboRyeDXt_ZMBw>
+    <xmx:qpXxX4gv4dOtGnYq2ukBJdJXkcBWjHVHYssegBKpg3MjvtXxPAiP7w>
+    <xmx:qpXxX2R29Fdc1bkBPG3ZGLJnpBjcLXPpJmwSEF-0pLhAPisUrtdXSg>
+    <xmx:q5XxXxH66vDGT4WKaepdyQMAWGQGXCuUpGsn7---WpPUfg-R0Vlhow>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BAD29108005C;
-        Sun,  3 Jan 2021 05:00:09 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5AAE7108005B;
+        Sun,  3 Jan 2021 05:00:10 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -68,9 +68,9 @@ Cc:     Andre Przywara <andre.przywara@arm.com>,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 2/4] pinctrl: sunxi: h6-r: Add s_rsb pin functions
-Date:   Sun,  3 Jan 2021 04:00:05 -0600
-Message-Id: <20210103100007.32867-3-samuel@sholland.org>
+Subject: [PATCH v2 3/4] arm64: dts: allwinner: h6: Add RSB controller node
+Date:   Sun,  3 Jan 2021 04:00:06 -0600
+Message-Id: <20210103100007.32867-4-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210103100007.32867-1-samuel@sholland.org>
 References: <20210103100007.32867-1-samuel@sholland.org>
@@ -80,37 +80,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As there is an RSB controller in the H6 SoC, there should be some pin
-configuration for it. While no such configuration is documented, the
-"s_i2c" pins are suspiciously on the "alternate" function 3, with no
-primary function 2 given. This suggests the primary function for these
-pins is actually RSB, and that is indeed the case.
-
-Add the "s_rsb" pin functions so the RSB controller can be used.
+The H6 SoC contains an undocumented but fully functional RSB controller.
+Add support for it. The MMIO register address matches other SoCs of the
+same generation, and the IRQ matches a hole in the documented IRQ list.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c
-index 4557e18d5989..c7d90c44e87a 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c
-@@ -24,11 +24,13 @@ static const struct sunxi_desc_pin sun50i_h6_r_pins[] = {
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
- 		  SUNXI_FUNCTION(0x0, "gpio_in"),
- 		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SCK */
- 		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SCK */
- 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
- 		  SUNXI_FUNCTION(0x0, "gpio_in"),
- 		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SDA */
- 		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SDA */
- 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 8a62a9fbe347..b043beea8e6e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -949,6 +949,11 @@ r_ir_rx_pin: r-ir-rx-pin {
+ 				pins = "PL9";
+ 				function = "s_cir_rx";
+ 			};
++
++			r_rsb_pins: r-rsb-pins {
++				pins = "PL0", "PL1";
++				function = "s_rsb";
++			};
+ 		};
+ 
+ 		r_ir: ir@7040000 {
+@@ -979,6 +984,20 @@ r_i2c: i2c@7081400 {
+ 			#size-cells = <0>;
+ 		};
+ 
++		r_rsb: rsb@7083000 {
++			compatible = "allwinner,sun8i-a23-rsb";
++			reg = <0x07083000 0x400>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&r_ccu CLK_R_APB2_RSB>;
++			clock-frequency = <3000000>;
++			resets = <&r_ccu RST_R_APB2_RSB>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&r_rsb_pins>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		ths: thermal-sensor@5070400 {
+ 			compatible = "allwinner,sun50i-h6-ths";
+ 			reg = <0x05070400 0x100>;
 -- 
 2.26.2
 
