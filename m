@@ -2,89 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70AD52E957E
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 14:04:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA6072E9664
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 14:52:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbhADND6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 08:03:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
+        id S1726303AbhADNwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 08:52:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbhADND5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 08:03:57 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45ADFC061794
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 05:03:17 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id d17so36610456ejy.9
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 05:03:17 -0800 (PST)
+        with ESMTP id S1725889AbhADNwl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 08:52:41 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A94DC061574;
+        Mon,  4 Jan 2021 05:52:01 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id h186so16495489pfe.0;
+        Mon, 04 Jan 2021 05:52:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8O+ttpYkwTO3a0EGi2ouz131vv9Xb7LUAbH0VJvMp/w=;
-        b=Qa/zdwZB4u4GydjyhxJ6EJJs65+9OE3RBuQ+xSsK7JAyNX/ihvkMUuGHAXtbKuq7Ya
-         +/AAQYMJpuNgpQkfOXLKoIr0VV+g/LP6UbokXZwzpTRkhYXSgO5uKdqxcF2iHCmcTEG/
-         4FoOmo/wzDQ6YbFjIQM7zrSAVZlLh3sKxscgAIjFIdafJURjPpehFd1CNQgJk8mxKATb
-         Eioo0H6uEFVOWKsGrpQMhCqVWEgnnIcLkNxx01QPLFNr9Vf3SCaF/oT/rEtQ1nsgnpcu
-         aGlZOvza2bbg2frEUEgYmYFuMHRIhVonE7lETCWAxQRW3eJBxXf5BjMHiI6T6AH3K4+o
-         9ykg==
+        bh=ZbriYaIoB2gZ7KJStemV7yd1FR7KiYHvNufspjX4Jwo=;
+        b=BgnsVUosO0vjAtrbET+oqFJlIZZj+E8h4z6p2o0QsdvjoItoxN81Rqf7/JBCx4H35q
+         OFhwR/oLTcU5L+n2F3VduB4n2vcEmysZuPoAtvSy54hKhulCCe426+P1yb+JLuOFI4Rg
+         3ban+hudPMNqe7XcCZ/iRKdmzoYMiA0pqq8zUteoUFj9v4zl8R52y54xZVsqmXB4yyA/
+         SlCrey0KOcfbnisL2WE7G0l6VhpP2qLTdz0TzeD6uqc5jHoO0fbzrO1CcwygMeCeC+UJ
+         Nivlt0FLz8RmcnenxqC+X0F1Ep72YsGdU5qgaUtQqXqCwEutP/T67ypdWYCV1HHEq+Gn
+         cbgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8O+ttpYkwTO3a0EGi2ouz131vv9Xb7LUAbH0VJvMp/w=;
-        b=rr0oP1vgo8mfT5oEXl4vMJ2yX0RZPiGw3rjoH43BjukUc3DIcnedM+0pQgS5lLyvYC
-         ea70bWTzez2o19+/A9H78/9iEmgZ9FoKU8Gwk3Uv5AVFeytdOpxiMQGWIMzZ6mOhuQkl
-         z5HiVOfYIRRJcnxAY2m362ivqkdoN2qz+9OoNQ9MTyV8pjsCKT8LvMgo4d1Z08MgtfC8
-         FpU7GBZEOgFrcJJbHE9auezrzTYlSpAE+tmBuuApQPsnZkOHh5h2wYAMznVJoQzJiyRP
-         AzHYVA9DY2dTnB1a2q/S6XN+ILcWCJ9gntfTKplQfj+bsncvLTEieAVJZR2Em0Nutyy+
-         dhrQ==
-X-Gm-Message-State: AOAM531iQmwg4BsJJRm2fDYXbgckvL5YeC7lCRmw98/nO1n38dujvS0E
-        0RDzDIQAZhBsAjHg3sE79SQ0oxMISt5Xg2YX94XpygmltlA=
-X-Google-Smtp-Source: ABdhPJwr5lLCVjK6e9Pw6KsJU/cwudyOoPfv8XRSmtlIh96BT0DX0v+BhJ0xDE/2FnS2Tt+ywwIWk1/doOOJsutdGi0=
-X-Received: by 2002:a17:906:3953:: with SMTP id g19mr65713000eje.429.1609765395934;
- Mon, 04 Jan 2021 05:03:15 -0800 (PST)
+        bh=ZbriYaIoB2gZ7KJStemV7yd1FR7KiYHvNufspjX4Jwo=;
+        b=cRLG7bcTWD1PDHhJV3t2INWTr2oyfGZ84EVuZAuGh46U1gXSdQdcCTA+OTbKyWTFPg
+         pqkRXHoSARArLwVH5zpHC/IJjX2bwODLEnomrUXFUjTSoFO3sYa/c4QHT9TV8LgwuEAl
+         JUQyIITEfWiUxagDtDANwbib8AeWlnuVe65SXurg2aGlTHgRWrJQJeoPwQhXMX+ow9Oz
+         M9xy+u/EiKhofSnhrMo/NebsurIDjWj/cPKaf+fz/xeEYk+XyN+m1kcIRJtEKuDUOiHj
+         FxqAzPhD6i1Jx9Na/QdSN6wjAv6aG0VeUo6gIMP+P+ix6E20TQbktN153778bgdyMrRp
+         mfrw==
+X-Gm-Message-State: AOAM532a79S9kXV+aqe6vsc2wtir/fnEmJ3aWEljIsxzuEO8QrNaPFl1
+        06LOCz0AcqDHZJR9mkxFl9KBuoRfmXcqHVvLYYg=
+X-Google-Smtp-Source: ABdhPJzeJE1s5+lD8qK/cO6QfdppxqAMocPdroUzpVX6DJFhF5TYYx6n2Dr/rkDLfvKkezFWN9YJedSTGC9q/fmtcW8=
+X-Received: by 2002:a63:74b:: with SMTP id 72mr71354571pgh.4.1609768320749;
+ Mon, 04 Jan 2021 05:52:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20210104113744.10681-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVFZsKb7=z4NJAbgHY9fEL-cNQqahEpoynjeMG7-wAuiQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVFZsKb7=z4NJAbgHY9fEL-cNQqahEpoynjeMG7-wAuiQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Jan 2021 14:03:04 +0100
-Message-ID: <CAMpxmJUGfbMbuKYpwoqojoxjNX_XAV2A-1NuxHoFzm-Z0Q_J=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: Kconfig: Update help description for GPIO_RCAR config
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20210102022949.92304-1-warthog618@gmail.com> <20210102022949.92304-2-warthog618@gmail.com>
+ <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com>
+ <20210103021725.GA6622@sol> <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
+ <20210104015129.GA4939@sol>
+In-Reply-To: <20210104015129.GA4939@sol>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 4 Jan 2021 15:52:49 +0200
+Message-ID: <CAHp75Vdd6yC=j+m7OOdP=M1j8Eoaayq8HSLF2fjVXcA0wiu9kQ@mail.gmail.com>
+Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test implementation
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 4, 2021 at 1:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> On Mon, Jan 4, 2021 at 12:37 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > The gpio-rcar driver also supports RZ/G SoC's, update the description to
-> > reflect this.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+On Mon, Jan 4, 2021 at 3:51 AM Kent Gibson <warthog618@gmail.com> wrote:
+> On Sun, Jan 03, 2021 at 05:10:10PM +0200, Andy Shevchenko wrote:
 
-Patch applied, thanks!
+...
 
-Bartosz
+> In this example it is the 508:
+>
+> # e.g. gpiochip0: GPIOs 508-511, parent: platform/gpio-mockup.0, gpio-mockup-A:
+>
+> So I'll use that - unless it is unreliable for some reason?
+
+debugfs is not an ABI and tomorrow this can be changed without notice.
+
+-- 
+With Best Regards,
+Andy Shevchenko
