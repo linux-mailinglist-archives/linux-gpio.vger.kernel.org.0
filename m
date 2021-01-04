@@ -2,215 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E29112E93C4
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 11:56:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66EA82E93E9
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 12:06:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbhADKzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 05:55:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:58888 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbhADKzb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 4 Jan 2021 05:55:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07EDDED1;
-        Mon,  4 Jan 2021 02:54:45 -0800 (PST)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DA843F70D;
-        Mon,  4 Jan 2021 02:54:43 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC
- connection
-To:     Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20210103100007.32867-1-samuel@sholland.org>
- <20210103100007.32867-5-samuel@sholland.org>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <a6c2eac4-7e98-ecb4-ee8a-d67a7f1b6871@arm.com>
-Date:   Mon, 4 Jan 2021 10:54:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726306AbhADLGN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 06:06:13 -0500
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:46683 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbhADLGN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 06:06:13 -0500
+Received: by mail-ot1-f46.google.com with SMTP id w3so25626794otp.13;
+        Mon, 04 Jan 2021 03:05:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LIpUYrX61nfFsDoXO/L4lmaf9qz5QXsNQIcHRlMJgwY=;
+        b=Qze3xvn8y3473oauRuzsSddQu7VL+jdR0WXDRp8lsTWvJc0XHfSxuGjEER5q9OeBct
+         u2sOZVsc6O9FCXYbSXFJuPWoQMNbKts+KEdoXfpkR+mg3lhkSKJrhQELp3XnlCFZAbeg
+         lsZZgpMcl0Uo2gb2tsOvtOrebop+5d1iMDks3eOGDXha0imAmBxjnh1YPSmE4SgTeWQ7
+         aHJElZ8w+Iq/G7wiWuyNBt4llSEP0a7EwIBkl8qV2joomgEWX25yhvvn56qOqYmkxc8Z
+         uHnbEMFnEr38t0g6j8ARzr/RyuSdXp3rz3Au5pvPDrYj3GFvI6mgc3SnKTup6PhI5kYS
+         8wbg==
+X-Gm-Message-State: AOAM533feV4hojqVmOJlnqn0wYoGHTG+qs01wdi4eCI3F5KWnThku0Z1
+        dX0hAA/hVKRtiLwZCJ9psZEb0ScckqCwvHtaEKJFz7mudas=
+X-Google-Smtp-Source: ABdhPJyX3fUxxR29uM9FkfmYEjAWFurR6x4X2ZT1ujGcW3N/3qakSojQiH6oqMJHjTcpo9rVpuk8vKKxah9Bz9tugkU=
+X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr52447483oth.250.1609758332259;
+ Mon, 04 Jan 2021 03:05:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210103100007.32867-5-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20201231153842.25782-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYBPR01MB53095D8BBF8E17AB824243F786D50@TYBPR01MB5309.jpnprd01.prod.outlook.com>
+ <CAMpxmJVBAE=mh+ZapJ430sYjnwNh-kyMt0P=FjQ=vqjozb7zVA@mail.gmail.com>
+In-Reply-To: <CAMpxmJVBAE=mh+ZapJ430sYjnwNh-kyMt0P=FjQ=vqjozb7zVA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Jan 2021 12:05:21 +0100
+Message-ID: <CAMuHMdXWCdKu4HwzyCta4fO0+kbG2HmuZ826DiNsMn5M6+2Ojg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Kconfig: Update help description for GPIO_RCAR
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/01/2021 10:00, Samuel Holland wrote:
-> On boards where the only peripheral connected to PL0/PL1 is an X-Powers
-> PMIC, configure the connection to use the RSB bus rather than the I2C
-> bus. Compared to the I2C controller that shares the pins, the RSB
-> controller allows a higher bus frequency, and it is more CPU-efficient.
+Hi Bartosz et al,
 
-But is it really necessary to change the DTs for those boards in this
-way? It means those newer DTs now become incompatible with older
-kernels, and I don't know if those reasons above really justify this.
+On Sun, Jan 3, 2021 at 4:29 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> On Fri, Jan 1, 2021 at 6:07 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > > -----Original Message-----
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Sent: 31 December 2020 15:39
+> > > To: Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski
+> > > <bgolaszewski@baylibre.com>; Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Cc: linux-gpio@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > > renesas-soc@vger.kernel.org; Prabhakar <prabhakar.csengg@gmail.com>;
+> > > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Subject: [PATCH] gpio: Kconfig: Update help description for GPIO_RCAR
+> > >
+> > > The gpio-rcar driver supports R-Car Gen{1,2,3} and RZ/G{1,2} SoC's, update
+> > > the description to reflect this.
+> >
+> > Not sure we need to make this generic by  dropping {1,2,3}/{1,2} and use R-Car and RZ/G SoC's instead ???
+> >
+>
+> This looks better IMO - if Geert is OK with that, then let's change it.
 
-I understand that we officially don't care about "newer DTs on older
-kernels", but do we really need to break this deliberately, for no
-pressing reasons?
+"R-Car and RZ/G" sounds better to me, as it is present on all known
+R-Car and RZ/G SoCs. We can change the help text if that ever changes.
 
-Cheers,
-Andre
+> > > --- a/drivers/gpio/Kconfig
+> > > +++ b/drivers/gpio/Kconfig
+> > > @@ -486,11 +486,12 @@ config GPIO_PXA
+> > >         Say yes here to support the PXA GPIO device
+> > >
+> > >  config GPIO_RCAR
+> > > -     tristate "Renesas R-Car GPIO"
+> > > +     tristate "Renesas R-Car Gen{1,2,3} and RZ/G{1,2} GPIO support"
+> > >       depends on ARCH_RENESAS || COMPILE_TEST
+> > >       select GPIOLIB_IRQCHIP
+> > >       help
+> > > -       Say yes here to support GPIO on Renesas R-Car SoCs.
+> > > +       Say yes here to support GPIO on Renesas R-Car Gen{1,2,3} and
+> > > +       RZ/G{1,2} SoCs.
+> > >
+> > >  config GPIO_RDA
+> > >       bool "RDA Micro GPIO controller support"
 
-P.S. I am fine with supporting RSB on H6, and even using it on new DTs,
-just want to avoid breaking existing ones.
+Gr{oetje,eeting}s,
 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
->  3 files changed, 37 insertions(+), 37 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> index 7c9dbde645b5..3452add30cc4 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -150,12 +150,28 @@ &pio {
->  	vcc-pg-supply = <&reg_aldo1>;
->  };
->  
-> -&r_i2c {
-> +&r_ir {
-> +	linux,rc-map-name = "rc-beelink-gs1";
-> +	status = "okay";
-> +};
-> +
-> +&r_pio {
-> +	/*
-> +	 * FIXME: We can't add that supply for now since it would
-> +	 * create a circular dependency between pinctrl, the regulator
-> +	 * and the RSB Bus.
-> +	 *
-> +	 * vcc-pl-supply = <&reg_aldo1>;
-> +	 */
-> +	vcc-pm-supply = <&reg_aldo1>;
-> +};
-> +
-> +&r_rsb {
->  	status = "okay";
->  
-> -	axp805: pmic@36 {
-> +	axp805: pmic@745 {
->  		compatible = "x-powers,axp805", "x-powers,axp806";
-> -		reg = <0x36>;
-> +		reg = <0x745>;
->  		interrupt-parent = <&r_intc>;
->  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> @@ -273,22 +289,6 @@ sw {
->  	};
->  };
->  
-> -&r_ir {
-> -	linux,rc-map-name = "rc-beelink-gs1";
-> -	status = "okay";
-> -};
-> -
-> -&r_pio {
-> -	/*
-> -	 * PL0 and PL1 are used for PMIC I2C
-> -	 * don't enable the pl-supply else
-> -	 * it will fail at boot
-> -	 *
-> -	 * vcc-pl-supply = <&reg_aldo1>;
-> -	 */
-> -	vcc-pm-supply = <&reg_aldo1>;
-> -};
-> -
->  &rtc {
->  	clocks = <&ext_osc32k>;
->  };
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> index 15c9dd8c4479..16702293ac0b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -175,12 +175,16 @@ &pio {
->  	vcc-pg-supply = <&reg_vcc_wifi_io>;
->  };
->  
-> -&r_i2c {
-> +&r_ir {
-> +	status = "okay";
-> +};
-> +
-> +&r_rsb {
->  	status = "okay";
->  
-> -	axp805: pmic@36 {
-> +	axp805: pmic@745 {
->  		compatible = "x-powers,axp805", "x-powers,axp806";
-> -		reg = <0x36>;
-> +		reg = <0x745>;
->  		interrupt-parent = <&r_intc>;
->  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> @@ -291,10 +295,6 @@ sw {
->  	};
->  };
->  
-> -&r_ir {
-> -	status = "okay";
-> -};
-> -
->  &rtc {
->  	clocks = <&ext_osc32k>;
->  };
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> index ebc120a9232f..23e3cb2ffd8d 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> @@ -112,12 +112,20 @@ &pio {
->  	vcc-pg-supply = <&reg_aldo1>;
->  };
->  
-> -&r_i2c {
-> +&r_ir {
-> +	status = "okay";
-> +};
-> +
-> +&r_pio {
-> +	vcc-pm-supply = <&reg_bldo3>;
-> +};
-> +
-> +&r_rsb {
->  	status = "okay";
->  
-> -	axp805: pmic@36 {
-> +	axp805: pmic@745 {
->  		compatible = "x-powers,axp805", "x-powers,axp806";
-> -		reg = <0x36>;
-> +		reg = <0x745>;
->  		interrupt-parent = <&r_intc>;
->  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> @@ -232,14 +240,6 @@ sw {
->  	};
->  };
->  
-> -&r_ir {
-> -	status = "okay";
-> -};
-> -
-> -&r_pio {
-> -	vcc-pm-supply = <&reg_bldo3>;
-> -};
-> -
->  &rtc {
->  	clocks = <&ext_osc32k>;
->  };
-> 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
