@@ -2,234 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD0692E8E0F
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jan 2021 21:24:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2130A2E8F4A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 02:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbhACUYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 15:24:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        id S1727737AbhADBwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jan 2021 20:52:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbhACUYD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 15:24:03 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D757AC0613C1
-        for <linux-gpio@vger.kernel.org>; Sun,  3 Jan 2021 12:23:22 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id t8so15076612pfg.8
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Jan 2021 12:23:22 -0800 (PST)
+        with ESMTP id S1727709AbhADBwQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 20:52:16 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4E2C061574;
+        Sun,  3 Jan 2021 17:51:36 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id l23so9537520pjg.1;
+        Sun, 03 Jan 2021 17:51:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=e1xBR8UornTwqH6fVhOXEbzOOGDBOFbaaWz/gve1ZB4=;
-        b=eAgQ/Hy8aNE92XFuJLB7JF8fLfZAZWcsb1P42ypm9pIxHWcoYtjFeKB37vbO8VcEn4
-         7HN0q0c1G3HlSehM17AyTtNaovhaG5sSNkpHiaLUIkNG8Vi4PUImFdEvRPCCUF1jMyiq
-         +SLSThbytPByKI0BBl5AQlTaPbghPdmOIUArRzEhwvebCJD3LCN7G4LmCNQeSi9tad57
-         b8RJ3bGT/k64ySODuPRP96JdK9RaX58RxytLfu+n2P5RKTPSCuM3LllyUdiB/5d+soN9
-         ZJ+5mciEhiSKW6obZ9B2qeMA1LE2Wmrk2M/Nbk99CNgSLyEMsBQJyUHhfROE577xpkyy
-         HVDg==
+        bh=1AL0gob55MTxZAza4QeD6DkjcRHthg4y8NwY/c0Om5s=;
+        b=m+wOmn+brmVAZuJkULfAwK+1sB8yJEYEbp8KCIxvdv8o6BSmOWQcY/hy4cPMFn465d
+         nkuqQ2E1WZMaKyUgbDe3MRuz2ntEbVlCVBb9zi5fCLSn3i50PTGLm5mHrF+acuMlpB7a
+         0eIQJO2JTUMmxSEVvE7eRctjb6ujeeJflARMTk8kLfvJnkr/UUPW+vBEQcFEcGzQ2X07
+         Pqpc5tUw1lSHAIOsUCwvrpFUmUELyMjRKhZUYNiUnDuYygk793YjAwPyoWsVb3F4boja
+         LDXVolVzfnOT/eDQGX70bbfnA3UAWN2975oPxYwxEDUJ2S8CCTOWVhgmuvo41NrKhMyw
+         BGXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=e1xBR8UornTwqH6fVhOXEbzOOGDBOFbaaWz/gve1ZB4=;
-        b=R90V99MD0UFsAx9BggfyeFV2h4lMW0oJ9g/eTI+H+OVcTNmBLGkS5L3L/bCqXfTnGC
-         3E51kq+uFyueELMySMfqtpqPjxUirsr5dgPJmI+Dt2YRCK8fpPmg+mHXZBnkREJILUyW
-         HdFO6Cq1UEdZgfBYRt6gAsiEglOvJxb5yqOiaECUrd0lmqpcmffUMab4sQnEqD3N70ui
-         N+Phf+UeOoCFXU0rnnPHrSdJF/+/W9inFNy++R2zxAh2owVZXNqcMPG+xmY5aR1RVxhk
-         QkUs0AYm+KndEfXza9ppvtRGoRVL7ejJzvI5zHeE3mSUuiIXsDnApsaVeASKXN0+mFoz
-         Ksjw==
-X-Gm-Message-State: AOAM5328bgKC2os/hi5UudgJy5s45rl6jFZaGArOVJAKmgUUv4gVjPST
-        vtLYNULX0zll6LIGX1eWQMBONg==
-X-Google-Smtp-Source: ABdhPJyqVu2NCWCxorYPgh0U50FWU5nfkQ2WUDd8qg3Vg0EVXFLQgx70XG5MzHhfqblZyUpOxcBwvQ==
-X-Received: by 2002:a63:520e:: with SMTP id g14mr20496306pgb.378.1609705402142;
-        Sun, 03 Jan 2021 12:23:22 -0800 (PST)
-Received: from x1 ([2601:1c0:4701:ae70:8efb:42a0:32b:a51d])
-        by smtp.gmail.com with ESMTPSA id p9sm19446293pjb.3.2021.01.03.12.23.20
+        bh=1AL0gob55MTxZAza4QeD6DkjcRHthg4y8NwY/c0Om5s=;
+        b=Yy4Ri7HszNws9XoibyS+dnKZnpdr26b8ulaGPFi0Y4IIHlx3HJ9Rg+ja3VstD8rUlN
+         kCduafGiz9QhDfUtg2/kb0YVE8d9wbdNeoF7m6Kfi5qtfMR4tHvY0Cx4P/UDOr/nAaIW
+         1YBQc3Ebz6lI7Cpfftv/ELz4+oyCTiLPEKgGe71o5HD6A1e6MnRfOTNyBiMOPsUVOq24
+         2yYTdrhsnGytNqAklKi3/+vspjcuUK1iy1IhIjMOWEGDQmuLYxuNDNt8YvgqYKvXcmiZ
+         4rzR/FHYT9SW0++I7ewefKrltEeCAk/UNufbPt9K2osMdJome58qnkydIh8CcJbNXowu
+         7wsg==
+X-Gm-Message-State: AOAM532Vy62w00q7SwSVk9qR49hxWREZgyFgAQXyivPEZDzPc4A+8S7A
+        xZUrrz7Rn1NIxnMLLiVWn5I=
+X-Google-Smtp-Source: ABdhPJyGDYAK8fT2HPn1J5t4u7rkCEixCw5D5wmT3JkEUsURQUO+0oE56aYZZPAbMpftM38J6B8Q3w==
+X-Received: by 2002:a17:90a:1bc7:: with SMTP id r7mr28551548pjr.33.1609725096193;
+        Sun, 03 Jan 2021 17:51:36 -0800 (PST)
+Received: from sol (106-69-181-20.dyn.iinet.net.au. [106.69.181.20])
+        by smtp.gmail.com with ESMTPSA id y27sm54600750pfr.78.2021.01.03.17.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Jan 2021 12:23:21 -0800 (PST)
-Date:   Sun, 3 Jan 2021 12:23:19 -0800
-From:   Drew Fustini <drew@beagleboard.org>
+        Sun, 03 Jan 2021 17:51:35 -0800 (PST)
+Date:   Mon, 4 Jan 2021 09:51:29 +0800
+From:   Kent Gibson <warthog618@gmail.com>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Pantelis Antoniou <pantelis.antoniou@linaro.org>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH v2] pinctrl: add helper to expose pinctrl state in
- debugfs
-Message-ID: <20210103202319.GA973266@x1>
-References: <20201218045134.4158709-1-drew@beagleboard.org>
- <CAHp75Vfwb+f3k2+mAj+jB=XsKFX-hCxx61A_PCmwz6y-YKHMcg@mail.gmail.com>
- <20201224203603.GA59600@x1>
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test
+ implementation
+Message-ID: <20210104015129.GA4939@sol>
+References: <20210102022949.92304-1-warthog618@gmail.com>
+ <20210102022949.92304-2-warthog618@gmail.com>
+ <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com>
+ <20210103021725.GA6622@sol>
+ <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201224203603.GA59600@x1>
+In-Reply-To: <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 24, 2020 at 02:36:03PM -0600, Drew Fustini wrote:
-> On Fri, Dec 18, 2020 at 06:01:25PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 18, 2020 at 6:52 AM Drew Fustini <drew@beagleboard.org> wrote:
+On Sun, Jan 03, 2021 at 05:10:10PM +0200, Andy Shevchenko wrote:
+> On Sun, Jan 3, 2021 at 4:17 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Sun, Jan 03, 2021 at 12:20:26AM +0200, Andy Shevchenko wrote:
+> > > On Sat, Jan 2, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+> 
+[snip]
+> 
+> ...
+> 
+> > > > +       local platform=`cat $SYSFS/kernel/debug/gpio | grep "$chip:" | tr -d ',' | awk '{print $5}'`
 > > >
-> > > BeagleBoard.org [0] currently uses an out-of-tree driver called
-> > > bone-pinmux-helper [1] developed by Pantelis Antoniou [2] back in 2013.
-> > > The driver assists users of our BeagleBone and PocketBeagle boards in
-> > > rapid prototyping by allowing them to change at run-time between defined
-> > > set of pinctrl states [3] for each pin on the expansion connectors [4].
-> > > This is achieved by exposing a 'state' file in sysfs for each pin which
-> > > is used by our 'config-pin' utility [5].
-> > >
-> > > Our goal is to eliminate all out-of-tree drivers for BeagleBoard.org
-> > > boards and thus I have been working to replace bone-pinmux-helper with a
-> > > new driver that could be acceptable upstream. My understanding is that
-> > > debugfs, unlike sysfs, could be the appropriate mechanism to expose such
-> > > functionality.
-> > 
-> > No objections here.
-> > 
-> > > I used the compatible string "pinctrl,state-helper" but would appreciate
-> > > advice on how to best name this. Should I create a new vendor prefix?
-> > 
-> > Here is the first concern. Why does this require to be a driver with a
-> > compatible string?
+> > > Besides useless use of cat (and tr + awk can be simplified) why are
+> >
+> > What do you suggest for the tr/awk simplification?
 > 
-> I have not been able to figure out how to have different active pinctrl
-> states for each header pins (for example P2 header pin 3) unless they
-> are represented as DT nodes with their own compatible for this helper
-> driver such as:
+> You have `awk`, you can easily switch the entire pipeline to a little
+> awk scriptlet.
 > 
-> &ocp {
-> 	P2_03_pinmux {
-> 		compatible = "pinctrl,state-helper";
-> 		pinctrl-names = "default", "gpio", "gpio_pu", "gpio_pd", "gpio_input", "pwm";
-> 		pinctrl-0 = <&P2_03_default_pin>;
-> 		pinctrl-1 = <&P2_03_gpio_pin>;
-> 		pinctrl-2 = <&P2_03_gpio_pu_pin>;
-> 		pinctrl-3 = <&P2_03_gpio_pd_pin>;
-> 		pinctrl-4 = <&P2_03_gpio_input_pin>;
-> 		pinctrl-5 = <&P2_03_pwm_pin>;
-> 	};
-> }
-> 
-> I can assign pinctrl states in the pin controller DT node which has
-> compatible pinctrl-single (line 301 arch/arm/boot/dts/am33xx-l4.dtsi):
-> 
-> &am33xx_pinmux {
-> 
->         pinctrl-names = "default", "gpio", "pwm";
->         pinctrl-0 =   < &P2_03_default_pin &P1_34_default_pin &P2_19_default_pin &P2_24_default_pin
->                         &P2_33_default_pin &P2_22_default_pin &P2_18_default_pin &P2_10_default_pin
->                         &P2_06_default_pin &P2_04_default_pin &P2_02_default_pin &P2_08_default_pin
->                         &P2_17_default_pin >;
->         pinctrl-1 =   < &P2_03_gpio_pin &P1_34_gpio_pin &P2_19_gpio_pin &P2_24_gpio_pin
->                         &P2_33_gpio_pin &P2_22_gpio_pin &P2_18_gpio_pin &P2_10_gpio_pin
->                         &P2_06_gpio_pin &P2_04_gpio_pin &P2_02_gpio_pin &P2_08_gpio_pin
->                         &P2_17_gpio_pin >;
->         pinctrl-2 =   < &P2_03_pwm &P1_34_pwm &P2_19_pwm &P2_24_pwm
->                         &P2_33_pwm &P2_22_pwm &P2_18_pwm &P2_10_pwm
->                         &P2_06_pwm &P2_04_pwm &P2_02_pwm &P2_08_pwm
->                         &P2_17_pwm >;
-> 
-> }
-> 
-> However, there is no way to later select "gpio" for P2.03 and select
-> "pwm" for P1.34 at the same time.  Thus, I can not figure out a way to
-> select independent states per pin unless I make a node for each pin that
-> binds to a helper driver.
-> 
-> It feels like there may be a simpler soluation but I can't see to figure
-> it out.  Suggestions welcome!
-> 
-> > 
-> > > The P9_14_pinmux entry would cause pinctrl-state-helper to be probed.
-> > > The driver would create the corresponding pinctrl state file in debugfs
-> > > for the pin.  Here is an example of how the state can be read and
-> > > written from userspace:
-> > >
-> > > root@beaglebone:~# cat /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
-> > > default
-> > > root@beaglebone:~# echo pwm > /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
-> > > root@beaglebone:~# cat /sys/kernel/debug/pinctrl/pinctrl_state/ocp:P9_14_pinmux/state
-> > > pwm
-> > >
-> > > I would very much appreciate feedback on both this general concept, and
-> > > also specific areas in which the code should be changed to be acceptable
-> > > upstream.
-> > 
-> > Two more concerns:
-> >  - why is it OF only?
-> 
-> I am open to figuring out a more general solution but I am really only
-> familiar with Device Tree.  Is there a way to represent the possible
-> pinctrl states in ACPI?
-> 
-> >  - why has it been separated from pin control per device debug folder?
-> 
-> >From the v1 thread, I see what you mean that there could be a combined
-> state file for each pinctrl device where one would echo '<pin>
-> <state-name>' such as 'P2_03 pwm'.  I will attempt to implement that.
 
-I have tried creating a single state file:
-/sys/kernel/debug/pinctrl/pinctrl_state
+Baah, the number that I'm after is in the $SYSFS/kernel/debug/gpio that I
+was pulling the platform from, so I can just pull it directly from there.
 
-where one can write into it:
+No need to go hunting through the file system for the base file - the
+range of GPIOs assigned to the chip is right there.
 
-<device-name> <pinctrl-state-name>
+In this example it is the 508:
 
-such as:
+# e.g. gpiochip0: GPIOs 508-511, parent: platform/gpio-mockup.0, gpio-mockup-A:
 
-ocp:P9_14_pinmux gpio
+So I'll use that - unless it is unreliable for some reason?
 
-However, I can not figure out a way for this to work.
+Cheers,
+Kent.
 
-I create the pinctrl_state file in pinctrl_state_helper_init() and store
-the dentry in a global variable.
-
-pinctrl_state_helper_probe() still runs for each Px_0y_pinmux device
-tree entry with compatible "pinctrl,state-helper" but there is no
-per-device file created.
-
-The problem comes in pinctrl_state_write().  I use this to extract the
-device_name and state_name:
-
-	ret = sscanf(buf, "%s %s", device_name, state_name);
-
-This does work okay but I don't know what to do with the device_name
-string, such as "ocp:P9_14_pinmux".  Previously, the device was saved
-in the private info:
-
-        sfile = file->private_data;
-        priv = sfile->private;
-        p = devm_pinctrl_get(priv->dev); // use device_name instead?
-	state = pinctrl_lookup_state(p, state_name);
-
-But I don't know how to look up a device based on its name.
-
-Any suggestions as to how to handle that?
-
-
-Thanks and happy new year!
-Drew
-
-> 
-> > 
-> > 
-> > > [0] http://beagleboard.org/latest-images
-> > > [1] https://github.com/beagleboard/linux/blob/5.4/drivers/misc/cape/beaglebone/bone-pinmux-helper.c
-> > > [2] https://github.com/RobertCNelson/linux-dev/blob/master/patches/drivers/ti/gpio/0001-BeagleBone-pinmux-helper.patch
-> > > [3] https://github.com/beagleboard/BeagleBoard-DeviceTrees/blob/v5.4.x-ti-overlays/src/arm/am335x-bone-common-univ.dtsi#L2084
-> > > [4] https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual#section-7-1
-> > > [5] https://github.com/beagleboard/bb.org-overlays/blob/master/tools/beaglebone-universal-io/config-pin
-> > 
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> 
-> Thanks for reviewing,
-> Drew
