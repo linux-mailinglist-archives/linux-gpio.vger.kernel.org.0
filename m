@@ -2,99 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81BC62E9323
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 11:13:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1521B2E9375
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 11:38:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbhADKMs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 05:12:48 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:59298 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbhADKMs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 4 Jan 2021 05:12:48 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 52E89440AEE;
-        Mon,  4 Jan 2021 12:12:05 +0200 (IST)
-References: <cover.1607601615.git.baruch@tkos.co.il>
- <20210104092449.GA1551@shell.armlinux.org.uk>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        linux-pwm@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 0/3] gpio: mvebu: Armada 8K/7K PWM support
-In-reply-to: <20210104092449.GA1551@shell.armlinux.org.uk>
-Date:   Mon, 04 Jan 2021 12:12:04 +0200
-Message-ID: <87mtxp9fkb.fsf@tarshish>
+        id S1725616AbhADKhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 05:37:17 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:41025 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbhADKhR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 05:37:17 -0500
+Received: by mail-ot1-f48.google.com with SMTP id x13so25548008oto.8;
+        Mon, 04 Jan 2021 02:37:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FQobp1YZSgBfFcc2U/JI4fMyV/LH2Dew/2DTROwwSdI=;
+        b=FpiXyOelkJpPhnNCLa5Fpz7on54yuTGWMV1DYjCVhKAl3O1rTQpEzJ7/7uMZotrbsY
+         AJVD7APBshQCjE3YXrFyo9fZREMjkCr+0tItrJhlMNXIzcmkfbIBK1Zp3ioWuC8imDTN
+         RecttCWE2VINnO6bnGbIupgRPRKCKzKrWuP0DYyewIIPhXcPM92PxeNcoeh/hhb8now/
+         K+1BkLqhdJe84+gGi/ssnc5Y0q2dxn1+vNsB/tGnpHv+5PHG9eZxv2X3+5GdZ3Sx5Zza
+         Zmpht+NPTg5gPeQO2g6glPVUMDKrpdFvKkyDrNY3ANJPJSdLON+MBEz6phhCo7l5ag+m
+         o3GQ==
+X-Gm-Message-State: AOAM533rLDqOfPji6KJl2xjHecNhs36a41e2nXqzpFnGGCMjJubQF93k
+        rZ+6qv7gFfbJRquqbTGMt6LfkIghNjpyjv4DcgU=
+X-Google-Smtp-Source: ABdhPJyNChEcpd/4Th2nJuUwm0YBaNjtSXdkDzVV3UFJNxT0D3F7zukRzsHMwDkLRI09DZNHpizafws2GzEViQibBe8=
+X-Received: by 2002:a9d:c01:: with SMTP id 1mr37111244otr.107.1609756596601;
+ Mon, 04 Jan 2021 02:36:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20201231153141.25525-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20201231153141.25525-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Jan 2021 11:36:25 +0100
+Message-ID: <CAMuHMdWs2sy9kwbyvw=Xe9rT9vynKb+hzzSSdniosfsiMEpFhA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: rcar: Remove redundant compatible values
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Russell,
+Hi Prabhakar,
 
-On Mon, Jan 04 2021, Russell King - ARM Linux admin wrote:
-> On Thu, Dec 10, 2020 at 02:15:57PM +0200, Baruch Siach wrote:
->> This series makes two changes to v3:
->> 
->>   * Remove patches that are in LinusW linux-gpio for-next and fixes
->> 
->>   * Rename the 'pwm-offset' property to 'marvell,pwm-offset' as suggested by 
->>     Rob Herring
->> 
->> The original cover letter follows (with DT property name updated).
->> 
->> The gpio-mvebu driver supports the PWM functionality of the GPIO block for
->> earlier Armada variants like XP, 370 and 38x. This series extends support to
->> newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
->> 
->> This series adds adds the 'marvell,pwm-offset' property to DT binding. 
->> 'marvell,pwm-offset' points to the base of A/B counter registers that 
->> determine the PWM period and duty cycle.
->> 
->> The existing PWM DT binding reflects an arbitrary decision to allocate the A
->> counter to the first GPIO block, and B counter to the other one. In attempt to
->> provide better future flexibility, the new 'marvell,pwm-offset' property 
->> always points to the base address of both A/B counters. The driver code still 
->> allocates the counters in the same way, but this might change in the future 
->> with no change to the DT.
->> 
->> Tested AP806 and CP110 (both) on Armada 8040 based system.
+On Thu, Dec 31, 2020 at 4:31 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> The mandatory compatible values 'renesas,rcar-gen{1,2,3}-gpio' have been
+> already added to all the respective R-Car Gen{1,2,3} SoC DTSI files,
+> remove the redundant device specific values from the driver.
 >
-> Did you see the patches I sent during the last year doing this and
-> adding support for the fan on the GT-8k?
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-You refer to the series linked below, right?
+Thanks for your patch!
 
-  https://lore.kernel.org/linux-pwm/20200329104549.GX25745@shell.armlinux.org.uk/
+> --- a/drivers/gpio/gpio-rcar.c
+> +++ b/drivers/gpio/gpio-rcar.c
+> @@ -392,33 +392,6 @@ static const struct gpio_rcar_info gpio_rcar_info_gen2 = {
+>
+>  static const struct of_device_id gpio_rcar_of_table[] = {
+>         {
+> -               .compatible = "renesas,gpio-r8a7743",
+> -               /* RZ/G1 GPIO is identical to R-Car Gen2. */
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7790",
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7791",
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7792",
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7793",
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7794",
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7795",
+> -               /* Gen3 GPIO is identical to Gen2. */
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+> -               .compatible = "renesas,gpio-r8a7796",
+> -               /* Gen3 GPIO is identical to Gen2. */
+> -               .data = &gpio_rcar_info_gen2,
+> -       }, {
+>                 .compatible = "renesas,rcar-gen1-gpio",
+>                 .data = &gpio_rcar_info_gen1,
+>         }, {
 
-(For some reason the LAKM archive is missing two years, including this
-time frame)
+The reason the driver matches on these SoC-specific compatible values is
+that originally the family-specific compatible values did not exist, and
+the device nodes in the initial DTS files thus did not use them.  The
+family-specific compatible values were added to the DTS files in v4.15.
+However, as this was backported to all v4.14-based R-Car BSP releases
+(3.6.0 and later), I think it is safe to apply this.
 
-I now remember that series. I even archived it locally. But then I
-forgot about it, so I ended up recreating Armada 8K PWM support from
-scratch. Sorry about that.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Any comment on this series?
+Gr{oetje,eeting}s,
 
-baruch
+                        Geert
 
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
