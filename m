@@ -2,97 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9475C2E9736
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 15:27:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB3EB2E974C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 15:32:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbhADOZk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 09:25:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59076 "EHLO
+        id S1727181AbhADOaj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 09:30:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbhADOZk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 09:25:40 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936DDC061574
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 06:24:59 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id ce23so36994833ejb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 06:24:59 -0800 (PST)
+        with ESMTP id S1727175AbhADOaj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 09:30:39 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB078C061793
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 06:29:58 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id h22so64805495lfu.2
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 06:29:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4scUl+v1YCwqYmVFgc2jCG9+0jKzLGv9/Z+7azrVSwo=;
-        b=OxccHzdQ6u6qzbh6bnVx7QmVNm6exXTbdiF1dcALyxUqhOiPHdzBCRkptNKVmRMfww
-         DsU+s7XsoDjtfyviLxtyaTGI1nR2uhmmTqBt6VpZPxjCSecNLJ0TQxluJAQgY8RcYDRg
-         mlFsQrA6WOnXi3Us/j9UD+4W7DsoT7R36aFQfXXwJbkIW3fXSlWEjpdWaSoRUg4bGZKn
-         hRQDBvlyPwc5ihYlkeOth2snjjgsUq/XDxnoNMAGU4aizR8CLw7twDzYicuCyjDd/WfP
-         ZNGRWCwdmN5GQuGWo9eNaKDxASPw35JJ+dWopkq5nnXSB0hFV7gZ5XCKGeBT1KlxYTOf
-         zPhg==
+        bh=SfZPAjnuJrUl8K10B63FjuUD62a6oBY/w9PLuYoOe+8=;
+        b=EJQs+uOYf6CD8NokGZJY1K8XQFXN+5SfqUhwkl14ZcbkNhMJZrdTLgLKf766mzWB0a
+         /DrA5Kl3xG1unxJPDnN+Br2rhXuKkUV8fGevo4wEtaV/9S/x0pZszyjL+ZR0Mw63nQwn
+         W9VXgffKRybKyWAh7tE1hMK8TDJ02JJzIutU0dRCqGWFQCRUStEV75lgXlseVAmkfZ6K
+         y8l5IsjFqpY1PBypvkUKb1qLfuDLdRhcRhqQTQ0QUnBwc/KrM61k29jp6RF9gCQbloaw
+         SBiXcAMiJVs7haFrLtimMnvGP0o9Ni56dXt8nwpNOOGb5QMkXGZsvO+KzNpkoW7JHkUh
+         PUWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4scUl+v1YCwqYmVFgc2jCG9+0jKzLGv9/Z+7azrVSwo=;
-        b=XmSXAZZuESCpUl3/f0GGzC9uvTLdosRhoS1/WCCWwb95ASueYOuRhxQWdYQ6jEF6iH
-         uiBKMMDP6NIljEEgTnpJK+PG62fkRKcjvSQyr0IK2etbIQ4vE2u3iltvUJtFwTN0RKFk
-         2sRtxvj14DqJfkiGZbSAD/DTbLNQi8Qn/qlxIONiW8CHJx6yvnSYIaSJWV5mJrdGFe0G
-         ybA8vZD4ljBbhjr5jraRHRJDCaq9ONiFS3WuLU195+OgKDtdzLLZMv1Iv2PrGZYfuktq
-         3Yi+T+aBC/iBzKBVv++rK9qMF5gm7WgdTruHjQFUivPjw9PUNzdbQ73G975PDyUtVEFj
-         4vaA==
-X-Gm-Message-State: AOAM530L5j5f+PvyiW6L6k+JSaCZs36DawQwJX/1EHWQzgcxfdBBK2FB
-        HfzYagiwtlm9HtIIMplwgCg5EzZZGsxmJWEHLudj8A==
-X-Google-Smtp-Source: ABdhPJzioyMsB10+vLhwAQq20lTzns1T/xeSxZ2nxgtRBwL2/NZe2Pr982OHigNu3SwcBnsqGPSLAW9hL5N2bLHXXO4=
-X-Received: by 2002:a17:906:3146:: with SMTP id e6mr52348053eje.363.1609770298370;
- Mon, 04 Jan 2021 06:24:58 -0800 (PST)
+        bh=SfZPAjnuJrUl8K10B63FjuUD62a6oBY/w9PLuYoOe+8=;
+        b=Dpk+pZHCgUAV8VnVeLoExHQ3FQ3Vaa60MVHs0vpbkaL6o02r4Mq/VVvjhJ7K4m0eSZ
+         asvCvTzC17jjVnHI3DvZ7NrWRumQyz8Ykvigis1q/C940Vrj4Gzolmh8U1msZBcVXBJw
+         Cv22cohP5hKYltN0E3aAU4kFM2s/oEPwB3tG+hH/yn9vD64yswEpcRsT3+Gq0IL1ERhh
+         MKdZvkT1IMoIgaBR8eUw68mdrbi7sdiNz2t3b0hQUIYST1N1nHwPLnM1GKD/pCl0/9oo
+         xZJXMmkPV0b/nFA5EZkC6+f1NjI6IO2M8LfWWSfzYFs8Dz9bz8ztSmD4j/0CXUTTdxAV
+         DcbQ==
+X-Gm-Message-State: AOAM531APLBUgaBH/0b1X7oTwZ6rADcVAP2P8x0o2xxFaOGCDZkPdUDI
+        Ahu7/BddaIaZM2lpT9sPMKNAnYastwr0CjvZ7qsb2w==
+X-Google-Smtp-Source: ABdhPJx5c9nYTmCfGqr8Cx5BLwvCeDwET2wp+fGhwHM+T5DI/+OoyBU5IEuD6xRkd5eJ5Je5V1KY6JoUvatHv7EMt6k=
+X-Received: by 2002:a05:6512:3f3:: with SMTP id n19mr34324695lfq.586.1609770597495;
+ Mon, 04 Jan 2021 06:29:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20201228200618.58716-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20201228200618.58716-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Jan 2021 15:24:47 +0100
-Message-ID: <CAMpxmJUM-6p_V5c6y+7kzhx92V1qEYC5xNS_PNDLcQYTOzHA2A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpiolib: Follow usual pattern for
- gpiod_remove_lookup_table() call
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+References: <20201211084717.2371-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20201211084717.2371-1-zhengyongjun3@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Jan 2021 15:29:46 +0100
+Message-ID: <CACRpkda4FuiP6x7mzgB-c_8DjOhzBtfiV46yQYzA9natp81MDQ@mail.gmail.com>
+Subject: Re: [PATCH -next] mediatek/pinctrl-paris: convert comma to semicolon
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 28, 2020 at 9:06 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The usual pattern for the remove calls, like gpiod_remove_lookup_table(),
-> is to be NULL-aware, i.o.w. become a no-op whenever parameter is NULL.
-> Update gpiod_remove_lookup_table() call to follow this pattern.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index b02cc2abd3b6..611d6ea82d75 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3460,6 +3460,10 @@ EXPORT_SYMBOL_GPL(gpiod_add_lookup_table);
->   */
->  void gpiod_remove_lookup_table(struct gpiod_lookup_table *table)
->  {
-> +       /* Nothing to remove */
-> +       if (!table)
-> +               return;
-> +
->         mutex_lock(&gpio_lookup_lock);
->
->         list_del(&table->list);
-> --
-> 2.29.2
->
+On Fri, Dec 11, 2020 at 9:46 AM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
 
-Applied, thanks!
+> Replace a comma between expression statements by a semicolon.
+>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 
-Bart
+Patch applied.
+
+Yours,
+Linus Walleij
