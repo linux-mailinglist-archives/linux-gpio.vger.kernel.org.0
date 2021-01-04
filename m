@@ -2,109 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2130A2E8F4A
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 02:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D19912E91C3
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 09:32:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbhADBwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jan 2021 20:52:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbhADBwQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jan 2021 20:52:16 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4E2C061574;
-        Sun,  3 Jan 2021 17:51:36 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id l23so9537520pjg.1;
-        Sun, 03 Jan 2021 17:51:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1AL0gob55MTxZAza4QeD6DkjcRHthg4y8NwY/c0Om5s=;
-        b=m+wOmn+brmVAZuJkULfAwK+1sB8yJEYEbp8KCIxvdv8o6BSmOWQcY/hy4cPMFn465d
-         nkuqQ2E1WZMaKyUgbDe3MRuz2ntEbVlCVBb9zi5fCLSn3i50PTGLm5mHrF+acuMlpB7a
-         0eIQJO2JTUMmxSEVvE7eRctjb6ujeeJflARMTk8kLfvJnkr/UUPW+vBEQcFEcGzQ2X07
-         Pqpc5tUw1lSHAIOsUCwvrpFUmUELyMjRKhZUYNiUnDuYygk793YjAwPyoWsVb3F4boja
-         LDXVolVzfnOT/eDQGX70bbfnA3UAWN2975oPxYwxEDUJ2S8CCTOWVhgmuvo41NrKhMyw
-         BGXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1AL0gob55MTxZAza4QeD6DkjcRHthg4y8NwY/c0Om5s=;
-        b=Yy4Ri7HszNws9XoibyS+dnKZnpdr26b8ulaGPFi0Y4IIHlx3HJ9Rg+ja3VstD8rUlN
-         kCduafGiz9QhDfUtg2/kb0YVE8d9wbdNeoF7m6Kfi5qtfMR4tHvY0Cx4P/UDOr/nAaIW
-         1YBQc3Ebz6lI7Cpfftv/ELz4+oyCTiLPEKgGe71o5HD6A1e6MnRfOTNyBiMOPsUVOq24
-         2yYTdrhsnGytNqAklKi3/+vspjcuUK1iy1IhIjMOWEGDQmuLYxuNDNt8YvgqYKvXcmiZ
-         4rzR/FHYT9SW0++I7ewefKrltEeCAk/UNufbPt9K2osMdJome58qnkydIh8CcJbNXowu
-         7wsg==
-X-Gm-Message-State: AOAM532Vy62w00q7SwSVk9qR49hxWREZgyFgAQXyivPEZDzPc4A+8S7A
-        xZUrrz7Rn1NIxnMLLiVWn5I=
-X-Google-Smtp-Source: ABdhPJyGDYAK8fT2HPn1J5t4u7rkCEixCw5D5wmT3JkEUsURQUO+0oE56aYZZPAbMpftM38J6B8Q3w==
-X-Received: by 2002:a17:90a:1bc7:: with SMTP id r7mr28551548pjr.33.1609725096193;
-        Sun, 03 Jan 2021 17:51:36 -0800 (PST)
-Received: from sol (106-69-181-20.dyn.iinet.net.au. [106.69.181.20])
-        by smtp.gmail.com with ESMTPSA id y27sm54600750pfr.78.2021.01.03.17.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Jan 2021 17:51:35 -0800 (PST)
-Date:   Mon, 4 Jan 2021 09:51:29 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1726303AbhADIcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 03:32:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbhADIcb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 4 Jan 2021 03:32:31 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C3C9A20798;
+        Mon,  4 Jan 2021 08:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609749110;
+        bh=/l4LNgcZQuQKp8LjOcoiZ+3D5i2u+KxinFDst/ZT+Xw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bH9nLgUy6rQaKDLX1sw1beUf9Aq83lpTkkF5ADT9W2qKlL12x7qcISW2nja3aqI1Y
+         WzpG1HIteKGSrWtfL4/MJWWFZPBQZigPtLn7owPGJgh1SKwM/Z0NWd4326bSyG2UVp
+         cbtkAJ/BJ+ksAQAWS715qAMvFPntnXind4CHexEHnKoDA38+VGZGUq5N3KFvPcQKRJ
+         umggJKKxXJrxQebYyCNBK4D1yb/2Cva4LLilwnlwEgsxwCT0/1TdV5UeDY3sdvXAvG
+         TRTNprpXnycMUQpKcKL+L1jkCD7tuLfQvRYX6/z0/rd93m1CzYF32NtvmESwNcScE6
+         VCK/MmB55ljqQ==
+Received: by wens.tw (Postfix, from userid 1000)
+        id A190F5F823; Mon,  4 Jan 2021 16:31:48 +0800 (CST)
+Date:   Mon, 4 Jan 2021 16:31:48 +0800
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
-Subject: Re: [PATCH 1/7] selftests: gpio: rework and simplify test
- implementation
-Message-ID: <20210104015129.GA4939@sol>
-References: <20210102022949.92304-1-warthog618@gmail.com>
- <20210102022949.92304-2-warthog618@gmail.com>
- <CAHp75VdMs1mP7pK46qKqJbjfyrcKhSGvtyzQpTRsehMz6o=Jpg@mail.gmail.com>
- <20210103021725.GA6622@sol>
- <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH v2 0/4] Allwinner H6 RSB support
+Message-ID: <X/LSdICpXl6vT65y@wens.csie.org>
+References: <20210103100007.32867-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfONKY7VS0q=GkSX14i--g0=jfBg4RFBoMk4DxJPMHJFg@mail.gmail.com>
+In-Reply-To: <20210103100007.32867-1-samuel@sholland.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 03, 2021 at 05:10:10PM +0200, Andy Shevchenko wrote:
-> On Sun, Jan 3, 2021 at 4:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Sun, Jan 03, 2021 at 12:20:26AM +0200, Andy Shevchenko wrote:
-> > > On Sat, Jan 2, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+Hi,
+
+On Sun, Jan 03, 2021 at 04:00:03AM -0600, Samuel Holland wrote:
+> The Allwinner H6 SoC contains an RSB controller. It is almost completely
+> undocumented, so it was missed when doing the initial SoC bringup.
 > 
-[snip]
+> This series adds the clock/reset, pin configuration, and device tree
+> node needed to use the RSB controller. Since RSB is faster, simpler, and
+> generally more reliable than the I2C controller IP in the SoC, switch to
+> using it where possible.
 > 
-> ...
+> This was tested on an Orange Pi 3 and a Pine H64 model B. This series
+> does not switch the Pine H64 to use RSB, as doing so would prevent
+> accessing the external RTC that shares the I2C bus.
 > 
-> > > > +       local platform=`cat $SYSFS/kernel/debug/gpio | grep "$chip:" | tr -d ',' | awk '{print $5}'`
-> > >
-> > > Besides useless use of cat (and tr + awk can be simplified) why are
-> >
-> > What do you suggest for the tr/awk simplification?
+> Changes v1->v2:
+>   - Put the new values at the end of the DT binding headers
 > 
-> You have `awk`, you can easily switch the entire pipeline to a little
-> awk scriptlet.
+> Samuel Holland (4):
+>   clk: sunxi-ng: h6-r: Add R_APB2_RSB clock and reset
+>   pinctrl: sunxi: h6-r: Add s_rsb pin functions
+>   arm64: dts: allwinner: h6: Add RSB controller node
+>   arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection
+
+I queued up patches 1, 3, and 4 locally for v5.12. Obviously this won't
+work unless the pinctrl patch is also queued up, so they won't be pushed
+out until that happens.
+
+Regarding patch 3, I replaced the clock and reset macros with raw
+numbers to get rid of cross-tree dependencies. The following fix
+will be posted for v5.12 later on during its RC cycle.
+
+------------------------ >8 ------------------------
+
+commit 0b4781666adc5e19c4d4fb4a2bff33883181cc39
+Author: Chen-Yu Tsai <wens@csie.org>
+Date:   Mon Jan 4 16:19:17 2021 +0800
+
+    arm64: dts: allwinner: h6: Switch to macros for RSB clock/reset indices
+    
+    The macros for the clock and reset indices for the RSB hardware block
+    were replaced with raw numbers when the RSB controller node was added.
+    This was done to avoid cross-tree dependencies.
+    
+    Now that both the clk and DT changes have been merged, we can switch
+    back to using the macros.
+    
+    Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index d897697849d6..b043beea8e6e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -988,9 +988,9 @@ r_rsb: rsb@7083000 {
+ 			compatible = "allwinner,sun8i-a23-rsb";
+ 			reg = <0x07083000 0x400>;
+ 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&r_ccu 13>;
++			clocks = <&r_ccu CLK_R_APB2_RSB>;
+ 			clock-frequency = <3000000>;
+-			resets = <&r_ccu 7>;
++			resets = <&r_ccu RST_R_APB2_RSB>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&r_rsb_pins>;
+ 			status = "disabled";
+------------------------ >8 ------------------------
+
 > 
-
-Baah, the number that I'm after is in the $SYSFS/kernel/debug/gpio that I
-was pulling the platform from, so I can just pull it directly from there.
-
-No need to go hunting through the file system for the base file - the
-range of GPIOs assigned to the chip is right there.
-
-In this example it is the 508:
-
-# e.g. gpiochip0: GPIOs 508-511, parent: platform/gpio-mockup.0, gpio-mockup-A:
-
-So I'll use that - unless it is unreliable for some reason?
-
-Cheers,
-Kent.
-
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c        |  5 +++
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6-r.h        |  2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c   |  2 +
+>  include/dt-bindings/clock/sun50i-h6-r-ccu.h   |  2 +
+>  include/dt-bindings/reset/sun50i-h6-r-ccu.h   |  1 +
+>  9 files changed, 67 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.26.2
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20210103100007.32867-1-samuel%40sholland.org.
