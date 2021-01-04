@@ -2,137 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20CCD2E93FF
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 12:21:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ED452E940B
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 12:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbhADLUy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 06:20:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58586 "EHLO
+        id S1726485AbhADLXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 06:23:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbhADLUx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 06:20:53 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72775C061574
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 03:20:13 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id g24so26926497edw.9
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 03:20:13 -0800 (PST)
+        with ESMTP id S1726308AbhADLXG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 06:23:06 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18F7C061794
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 03:22:25 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id t16so6754256ejf.13
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 03:22:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zokJI9v7bqGjxuN6FEkYnPOsXyma07z3X0FpcfMT+d0=;
-        b=iJJw9lxV9NGp+WOO5GbSZFd0sMseyIUhXbeRaJNjf4oysH5X1ARm/mxS0VyN4zT2af
-         ATt70lKD+K5THDvmypY710wfigodOEtl4rDAe8UI5ZE8XFDkyWfSCrE+JQU4GRb5Iy6i
-         ykioiwo+BDbuLLhj61m+8bpP4KZcPtR/pD+UvIF1MDgNnPLFDKme1kYRp66L9rNanqXa
-         pTY4SSAzaJUFdRvrynU61pgqwAHAADgrOVflDMt4IqB+y5gQskCAHfdDTXfaXqnC8/1k
-         gslesTrHrCRIKLu1VHlUSuuYEaEq6SlK0pfyBfcuaN97Xk0YnORy3y2dtCSWLJc2eQ5E
-         0qWQ==
+        bh=cjnWB/LtdlT+UGT85qWZFN60XbZuT4lCuZerawVF/Xc=;
+        b=CyW+ImSVfjlMexvn3IgKs3J4TmHhwAgUcb7SuxsPv7n4NdhR1VyBTeSEUwRbandZe5
+         JCxsCckwgAg7+NpCH47pepJl+esJUn6eRvRN2+WftDniWEL3axOiuMLULv7XWbseT99Q
+         4inWzIUuPQhOzBhgsimV9k1kXEj8jflpsy0G+DqLxFlukIV4u8X+IgVQI888IZnU+xYo
+         KTMHEUNkSDdZ8zzdV2sK/s0dbHgsZLKMa/hYLSyBXy3pmUnTGOGEqdsieM8P+lvbEHiM
+         SxS1WriwZ5EuNPlAWufmNpYVu83QWVCdfk+0I2iHfjjip4Lead2YWdGwtR1fFITO/SMF
+         J/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zokJI9v7bqGjxuN6FEkYnPOsXyma07z3X0FpcfMT+d0=;
-        b=OoCswP8skzuwQMBkFTZYYs4Rl+Mew3EKrdiChshEoSe7Z3nTkU2X11kyvuadgD8qxB
-         C4KgcmvePkvJ/FTrpbMAlgZt+VoEnzSf0t/SFySqp/a60TI9ggCKp/Rm0dXC8SzqFzgp
-         beAYNHOVdADG8uwqiG83IMokaFZoGF1NRrsC6WIz5bfe4Gyv1Op1fDg2ZO5F/ENa6pJ2
-         m9zfbRUGvwyMmmzKoBWmWtJjDE+0u0AXm/wt53gSO4I2vdko+HW/ghwgas4Pl/RFAAIV
-         r8tHjcfdvFZbw0hD0cHhGHvEZaCun+MQsCaM/w4uAVBrKe6nmN8tjgxEgkRfEA9oGaxY
-         hxIw==
-X-Gm-Message-State: AOAM533NfMkgWlNR7agQ08zFjHVKCPDJmKLCWjDnRRUq2e+XX3F7fJYN
-        plp0ehXptr6ftKfrU2YT2mW4lCRbskdH+/e8pzHFwTLapLg=
-X-Google-Smtp-Source: ABdhPJwnOtddilnv/GpQJf2I545mP0u4FrJ9Bj0LcUzUVpLO67OEv3/9lrJABwlJrTpaAQv0nK711kGjl5yrvcggYrI=
-X-Received: by 2002:aa7:cc15:: with SMTP id q21mr70622702edt.213.1609759212168;
- Mon, 04 Jan 2021 03:20:12 -0800 (PST)
+        bh=cjnWB/LtdlT+UGT85qWZFN60XbZuT4lCuZerawVF/Xc=;
+        b=gzSvEPVg7u235xIfHqOYMBSB1YmzzTGOBcrDzbqXtl1gn3r/HqZOIHkJPsp6Ifj0R7
+         aS0blIijLDzN7qBBzA3ddMxHHeYUFXWmxmAEQFVJ54KIHRcYQel3SaN7INhAG3KeVXoe
+         TY6jRWXOBtMEprxcrBDj94FjlSzSQv5mFMBc+DxztcQVAip1JHprktgia2jKm4aIDY/u
+         f9bv9VGsfYQWVKwlWNuPayoS4r4eTJGxaBOtj7MrMTJ2xxsdcKwpytAJdIa3ATyDh6/a
+         I+cvtKNa6Ot5S56R8LXYRLLK1h2xVkMOrOF0x73HtoRGQMFgZ0TbUHs+a4LDf8wIFfIY
+         MZfQ==
+X-Gm-Message-State: AOAM530Bbe5lJ7Sm6T2gGFwW9wT4/KeesAq4iENBqEjmlY9XR0fUIXsa
+        WlW+ROVDTtFVW+34dgNRL7L94gfVElWgiORyPFYxiRuRQOE=
+X-Google-Smtp-Source: ABdhPJzsQl9Iiwof9GaC1C0Eu7oMHdOtbj1F9oyIs15bKx0N7zJSNXpIinwhPPSLXk5wufkmla/qUDdkc5w60sgnY68=
+X-Received: by 2002:a17:906:3953:: with SMTP id g19mr65406701eje.429.1609759344440;
+ Mon, 04 Jan 2021 03:22:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20201231153141.25525-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWs2sy9kwbyvw=Xe9rT9vynKb+hzzSSdniosfsiMEpFhA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWs2sy9kwbyvw=Xe9rT9vynKb+hzzSSdniosfsiMEpFhA@mail.gmail.com>
+References: <20201216132657.15582-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20201216132657.15582-1-zhengyongjun3@huawei.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Jan 2021 12:20:01 +0100
-Message-ID: <CAMpxmJV1-+7B_8PE+MX+a7vFRzjJ6Uukhw09E5YL1y+k6ozq6w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: Remove redundant compatible values
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+Date:   Mon, 4 Jan 2021 12:22:13 +0100
+Message-ID: <CAMpxmJXhidxE+it8rFG86Y1T2TL1FkUoTKQYQHwrwzexirSjig@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: convert comma to semicolon
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 4, 2021 at 11:36 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, Dec 16, 2020 at 2:26 PM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
 >
-> Hi Prabhakar,
+> Replace a comma between expression statements by a semicolon.
 >
-> On Thu, Dec 31, 2020 at 4:31 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > The mandatory compatible values 'renesas,rcar-gen{1,2,3}-gpio' have been
-> > already added to all the respective R-Car Gen{1,2,3} SoC DTSI files,
-> > remove the redundant device specific values from the driver.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/gpio/gpio-sl28cpld.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> Thanks for your patch!
+> diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
+> index 889b8f5622c2..52404736ac86 100644
+> --- a/drivers/gpio/gpio-sl28cpld.c
+> +++ b/drivers/gpio/gpio-sl28cpld.c
+> @@ -65,13 +65,13 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
+>         if (!irq_chip)
+>                 return -ENOMEM;
 >
-> > --- a/drivers/gpio/gpio-rcar.c
-> > +++ b/drivers/gpio/gpio-rcar.c
-> > @@ -392,33 +392,6 @@ static const struct gpio_rcar_info gpio_rcar_info_gen2 = {
-> >
-> >  static const struct of_device_id gpio_rcar_of_table[] = {
-> >         {
-> > -               .compatible = "renesas,gpio-r8a7743",
-> > -               /* RZ/G1 GPIO is identical to R-Car Gen2. */
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7790",
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7791",
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7792",
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7793",
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7794",
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7795",
-> > -               /* Gen3 GPIO is identical to Gen2. */
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> > -               .compatible = "renesas,gpio-r8a7796",
-> > -               /* Gen3 GPIO is identical to Gen2. */
-> > -               .data = &gpio_rcar_info_gen2,
-> > -       }, {
-> >                 .compatible = "renesas,rcar-gen1-gpio",
-> >                 .data = &gpio_rcar_info_gen1,
-> >         }, {
+> -       irq_chip->name = "sl28cpld-gpio-irq",
+> +       irq_chip->name = "sl28cpld-gpio-irq";
+>         irq_chip->irqs = sl28cpld_gpio_irqs;
+>         irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
+>         irq_chip->num_regs = 1;
+>         irq_chip->status_base = base + GPIO_REG_IP;
+>         irq_chip->mask_base = base + GPIO_REG_IE;
+> -       irq_chip->mask_invert = true,
+> +       irq_chip->mask_invert = true;
+>         irq_chip->ack_base = base + GPIO_REG_IP;
 >
-> The reason the driver matches on these SoC-specific compatible values is
-> that originally the family-specific compatible values did not exist, and
-> the device nodes in the initial DTS files thus did not use them.  The
-> family-specific compatible values were added to the DTS files in v4.15.
-> However, as this was backported to all v4.14-based R-Car BSP releases
-> (3.6.0 and later), I think it is safe to apply this.
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
+>         ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 2.22.0
 >
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
 
-Patch applied, thanks!
+Applied with a fixed commit message.
 
 Bartosz
