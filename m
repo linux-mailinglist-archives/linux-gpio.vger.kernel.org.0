@@ -2,81 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACCBD2E97EF
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 16:02:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A87E2E9804
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 16:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbhADPBB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 10:01:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36500 "EHLO
+        id S1727032AbhADPD4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 10:03:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727276AbhADPBB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 10:01:01 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C5FC061798
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 07:00:04 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id iq13so10235537pjb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 07:00:04 -0800 (PST)
+        with ESMTP id S1726663AbhADPD4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 10:03:56 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B940DC061574
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 07:03:15 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id h22so65071427lfu.2
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 07:03:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=h5UdJjQc0UZ2A5YydAq7QM0JpsrBvPlx4ee1JuFyPwU=;
-        b=rLhIkyp0pG7Mr3vALYs/5t76IX82MStmw6hNhaMnSz2DL5PxXTuXQu54MyTV95wjPe
-         f6s7TVfjxqbOO0cHnnz8EnAaorgW/phN7jBfiBXOybxSC6GyZ2tnS3gb8tfms4jS/chb
-         119Iqn51nxMVvOgGVB5LmMwfVAYk+GLQ0Q8gkWnvJ9JyD4+oyPwXz9h5HvQQqNzaSB3l
-         NyXDXfvlqmEbh3H2RhXq6UKLOPl5dJFIIOGplEEuoLKuD4w/3DC4KxflbRKi9u6w0Zw1
-         kCQ0SEAi/gbnPU7Tv7j35Mg+5YdC6RkOetQAD/dtGO2Oy6L8UvEJrKyjZ7iQowKFWFxl
-         cnBA==
+        bh=J5beBNHMdA1gHacbQ7KCPabulppTZo/UkkRxhQq//fY=;
+        b=jURit9OvneWs286wGYUSCwSZ1SOW+Vz2YfUKezNZ/KZnM4F4Hey7qTMZl+Pj6sDy0W
+         MOtVRCWuRQqeS3YExg4Rn6SjbIh172IEEGNzyFw7K8BB0lh4Xf3qsk/fwQ096OKPjAJD
+         Hu+Xsb3BslA1XieKFl8l78GSqIaG8Zg5LHvOI+o/bK4HJAV8brnBQN419hQFenE/kZKB
+         L1nIZXIZhm/Fm2vxnrGctwsWKJu7Eic3nf72YJ5dqb0fX90oSeKIys/ufXlsy6tEJKt5
+         qC1j6VWnGVAcAZDCDUdqa3oMvpkpJlViZTqmPg5l16Q6+W9d5v7iNdfOyuy2QM8TJwUU
+         1bqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=h5UdJjQc0UZ2A5YydAq7QM0JpsrBvPlx4ee1JuFyPwU=;
-        b=azKG9+mB40EEm+/c8KroYkIYwxmcGChOBjTp7LUTAI3MkOp4c0ukmoVguB9GJeYvry
-         sGshTY/OtT4sNSImJXIUvLp+R/JrPaI8LPmQKOCEpFLD9/ZwoC/az5ES1jNt66ZOnonU
-         AtxufsEfDfjKw8uZDD1BBRn/PChE86Okmjh5pHF0T4q8hBmGBAsGjEEIu51NXaIbyX3K
-         Xxvp7HQjkWaJOhIrKyMrpdG4kzV1z+bNa/UByB/JeB5qG4Vn2uMFf9TkLEpuHqSrcJ2Y
-         NdFG9IbSSfX+3fCg9n3frSw4jxhkql8X/pVanE6obyoOS5kCQ2evoKawsWQZ7Yei2gKm
-         tCdw==
-X-Gm-Message-State: AOAM532hXLZNRsPxkv8CXILms4FJlwOHf3uNap5Eq35iU+8FZaDCpBd7
-        qJNMEuRzAtuBzDHpeQC2rMJpIxuuMQT2Zelw6qY=
-X-Google-Smtp-Source: ABdhPJzc+q1AS5qWwrv1jveupEYxlc4MyAGVYhGJp7tE4AOx0AXVSpM6wirfEDjx4tfHLxhoRdRbNnZ2QloNjYi5A+0=
-X-Received: by 2002:a17:902:e98c:b029:da:cb88:f11d with SMTP id
- f12-20020a170902e98cb02900dacb88f11dmr51812952plb.17.1609772403955; Mon, 04
- Jan 2021 07:00:03 -0800 (PST)
+        bh=J5beBNHMdA1gHacbQ7KCPabulppTZo/UkkRxhQq//fY=;
+        b=cRFbNYZKbnHYjloqPfCvyl3zy+FkdSH+4grCCk34ww5z3mNu6HLErubwNWrLktrtIn
+         uYZ+nPU1GhpORJErA/LQ8xDxhw3KCCCIe7+CuICRFN6SRgmAh071STjoOvk2oZnGsuP/
+         xwg9hZ7XbCHvhOinqrGVMNyWmx3glkir3HOQ0lpuH1Lgu0x8wAnlZ+6HFZFhxf7P/EIx
+         LE7HN3wFrknkTbC5cFyTCMhEArYBK6Y/BReYsZqxlzFCr+dB9peT9+IKRZbYAzFiz5A6
+         J0ZePh0+nZgO3CWL28VJR76/cggutuMn9XHWLXLPyuniTgkwFYQY/oT6TK9qj6QbWUOx
+         gpMQ==
+X-Gm-Message-State: AOAM530IT7YPqnf4qZcLbJOpgosP8cCbuQe0kWnyoekRiqVRGO/wbMkE
+        G4o4eDP7OJUy+K6euS9s8RH5F/DuWb6WyKatXToUYg==
+X-Google-Smtp-Source: ABdhPJyZSo2vs0ioHFInq7433TP/qFV0Cym97cE+YK8oE3Vt6dU5J9kjlu2ZUe6YMN1vnxvH5jtR/kIkKY9sn+ZeSec=
+X-Received: by 2002:a2e:b047:: with SMTP id d7mr34335495ljl.467.1609772593270;
+ Mon, 04 Jan 2021 07:03:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20210102175859.335447-1-adam@l4re.org> <20210102175859.335447-5-adam@l4re.org>
-In-Reply-To: <20210102175859.335447-5-adam@l4re.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Jan 2021 17:00:52 +0200
-Message-ID: <CAHp75VcszX_zXpFcNFHXzCFwWdhQHFvYKre=UUMUVjdfyrBwrA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] gpiolib: Fix return check of __irq_domain_alloc_irqs
-To:     Adam Lackorzynski <adam@l4re.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linusw@kernel.org>, kaloz@openwrt.org,
-        khalasa@piap.pl, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+References: <1e823780-b1ef-42dd-bb60-321b4d482d31@www.fastmail.com> <20201217024912.3198-1-billy_tsai@aspeedtech.com>
+In-Reply-To: <20201217024912.3198-1-billy_tsai@aspeedtech.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Jan 2021 16:03:02 +0100
+Message-ID: <CACRpkdbLG5Sc8JjonGjDdJraStoz7PfQxBEb5ai_gktV4whzdQ@mail.gmail.com>
+Subject: Re: [PATCH v3] driver: aspeed: g6: Fix PWMG0 pinctrl setting
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        BMC-SW@aspeedtech.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 2, 2021 at 8:24 PM Adam Lackorzynski <adam@l4re.org> wrote:
+On Thu, Dec 17, 2020 at 3:50 AM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+
+> The SCU offset for signal PWM8 in group PWM8G0 is wrong, fix it from
+> SCU414 to SCU4B4.
 >
-> 0 is not a proper IRQ number and also indicates failure.
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 
-Hmm... While in this case it's perhaps okay, this does not work in
-general since the function can take irq_base == 0 and realloc == true.
-So if we want to have a code that somebody may reuse better not to do
-this (we never get 0 from this function).
+Patch applied for fixes.
 
-In my humble opinion NAK.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
