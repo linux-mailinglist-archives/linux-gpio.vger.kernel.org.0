@@ -2,69 +2,215 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66D7B2E9378
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 11:38:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E29112E93C4
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jan 2021 11:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbhADKiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jan 2021 05:38:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbhADKiL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jan 2021 05:38:11 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5051C061793
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jan 2021 02:37:30 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id x20so63148589lfe.12
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jan 2021 02:37:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Irv4bODSEyX5XuG9TV4/17jq5rkGQP+jA8EeoSsmog0=;
-        b=yM/HspTPWUOUdDtGnjbz69E6rk8+MvJdzll4p3tIgPVeMhh46SvXxLeMZbDKiKHQAq
-         aWwOynY75uJHaxml4DYcMpEOav2D/ifRbOwPnCi1InYMRMBTlR5nZCSD8xuXs2GrueHo
-         cQ5Fw9+ypOODVbrOwTwgjg/Z6UZ+Jm7jIUX10Wwq0jtVYmhQz9PQ9tuD498wJSCaDCcR
-         NKSFfBl7OYIQMP3G8v8mJtv/lZp7DWHDTvrIT3OOMOB5Pbirxv+oqg86hQCyl1z7stKv
-         L2Bgo40CIw3cQCMl7Gf0T+WMDFdd//OmSgxeJ1c1JZctF6oOHd9167p+a1pFwDp1KYIm
-         U2eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Irv4bODSEyX5XuG9TV4/17jq5rkGQP+jA8EeoSsmog0=;
-        b=UGM/R/PKyl2qGkeZhZWSL2O3A2sJWJ24ZCn708/ZkMdIkyVcSh6bKHOxL7aVSdOSVF
-         LTJent7gcyW9tZc9/jx2btorha79fg2WZxxYKEwMr+DHvyahS50u4RQsqj6kRjsfQM0Q
-         mM6nLciiWUhuAZakjV2gxO1S6oRNbyYCT9IV65UJNc1uYo4bJ58mm4VsccBGy0uuxa5O
-         JESEf2oep5LUUThzMX9reTKa8us46ActtShNmBfpmuxbRnIuMGkxuAVCIwcI7peCYwHQ
-         nV8ryrsq0TSiaAsLTlokG8W9y985mEEQ8j7Mh4NQ1r0otPftEsIz9dt455I76JYgscbl
-         MV0Q==
-X-Gm-Message-State: AOAM533QVmpVQX0nMKb6JI6LvETpaZq8z6TC+PwV9gBQEZocUG+Yq47V
-        dn6AoAZnx7XjujK16UC4itImONlZB4xS9ps+Ra8jRA==
-X-Google-Smtp-Source: ABdhPJyCnxVWy/iIBCxCsmDOVLxJmjJwlmPAsbExyn0NTrsorfovm2BiIrmx2Nh9utTkaKG/wOKDmRD7Leg6ZImBQQI=
-X-Received: by 2002:a2e:586:: with SMTP id 128mr37945106ljf.273.1609756649236;
- Mon, 04 Jan 2021 02:37:29 -0800 (PST)
+        id S1726785AbhADKzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jan 2021 05:55:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:58888 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbhADKzb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 4 Jan 2021 05:55:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07EDDED1;
+        Mon,  4 Jan 2021 02:54:45 -0800 (PST)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DA843F70D;
+        Mon,  4 Jan 2021 02:54:43 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC
+ connection
+To:     Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+References: <20210103100007.32867-1-samuel@sholland.org>
+ <20210103100007.32867-5-samuel@sholland.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <a6c2eac4-7e98-ecb4-ee8a-d67a7f1b6871@arm.com>
+Date:   Mon, 4 Jan 2021 10:54:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20201211084541.2318-1-zhengyongjun3@huawei.com>
-In-Reply-To: <20201211084541.2318-1-zhengyongjun3@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Jan 2021 11:37:18 +0100
-Message-ID: <CACRpkda9NMy9vPnnxQm-go+hK1D_JbiK0RJ3iLYnULnpV63GqA@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl/pinctrl-at91: convert comma to semicolon
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210103100007.32867-5-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 9:45 AM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
+On 03/01/2021 10:00, Samuel Holland wrote:
+> On boards where the only peripheral connected to PL0/PL1 is an X-Powers
+> PMIC, configure the connection to use the RSB bus rather than the I2C
+> bus. Compared to the I2C controller that shares the pins, the RSB
+> controller allows a higher bus frequency, and it is more CPU-efficient.
 
-> Replace a comma between expression statements by a semicolon.
->
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+But is it really necessary to change the DTs for those boards in this
+way? It means those newer DTs now become incompatible with older
+kernels, and I don't know if those reasons above really justify this.
 
-Patch applied.
+I understand that we officially don't care about "newer DTs on older
+kernels", but do we really need to break this deliberately, for no
+pressing reasons?
 
-Yours,
-Linus Walleij
+Cheers,
+Andre
+
+P.S. I am fine with supporting RSB on H6, and even using it on new DTs,
+just want to avoid breaking existing ones.
+
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   | 38 +++++++++----------
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 14 +++----
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 22 +++++------
+>  3 files changed, 37 insertions(+), 37 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> index 7c9dbde645b5..3452add30cc4 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> @@ -150,12 +150,28 @@ &pio {
+>  	vcc-pg-supply = <&reg_aldo1>;
+>  };
+>  
+> -&r_i2c {
+> +&r_ir {
+> +	linux,rc-map-name = "rc-beelink-gs1";
+> +	status = "okay";
+> +};
+> +
+> +&r_pio {
+> +	/*
+> +	 * FIXME: We can't add that supply for now since it would
+> +	 * create a circular dependency between pinctrl, the regulator
+> +	 * and the RSB Bus.
+> +	 *
+> +	 * vcc-pl-supply = <&reg_aldo1>;
+> +	 */
+> +	vcc-pm-supply = <&reg_aldo1>;
+> +};
+> +
+> +&r_rsb {
+>  	status = "okay";
+>  
+> -	axp805: pmic@36 {
+> +	axp805: pmic@745 {
+>  		compatible = "x-powers,axp805", "x-powers,axp806";
+> -		reg = <0x36>;
+> +		reg = <0x745>;
+>  		interrupt-parent = <&r_intc>;
+>  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>  		interrupt-controller;
+> @@ -273,22 +289,6 @@ sw {
+>  	};
+>  };
+>  
+> -&r_ir {
+> -	linux,rc-map-name = "rc-beelink-gs1";
+> -	status = "okay";
+> -};
+> -
+> -&r_pio {
+> -	/*
+> -	 * PL0 and PL1 are used for PMIC I2C
+> -	 * don't enable the pl-supply else
+> -	 * it will fail at boot
+> -	 *
+> -	 * vcc-pl-supply = <&reg_aldo1>;
+> -	 */
+> -	vcc-pm-supply = <&reg_aldo1>;
+> -};
+> -
+>  &rtc {
+>  	clocks = <&ext_osc32k>;
+>  };
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> index 15c9dd8c4479..16702293ac0b 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -175,12 +175,16 @@ &pio {
+>  	vcc-pg-supply = <&reg_vcc_wifi_io>;
+>  };
+>  
+> -&r_i2c {
+> +&r_ir {
+> +	status = "okay";
+> +};
+> +
+> +&r_rsb {
+>  	status = "okay";
+>  
+> -	axp805: pmic@36 {
+> +	axp805: pmic@745 {
+>  		compatible = "x-powers,axp805", "x-powers,axp806";
+> -		reg = <0x36>;
+> +		reg = <0x745>;
+>  		interrupt-parent = <&r_intc>;
+>  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>  		interrupt-controller;
+> @@ -291,10 +295,6 @@ sw {
+>  	};
+>  };
+>  
+> -&r_ir {
+> -	status = "okay";
+> -};
+> -
+>  &rtc {
+>  	clocks = <&ext_osc32k>;
+>  };
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> index ebc120a9232f..23e3cb2ffd8d 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> @@ -112,12 +112,20 @@ &pio {
+>  	vcc-pg-supply = <&reg_aldo1>;
+>  };
+>  
+> -&r_i2c {
+> +&r_ir {
+> +	status = "okay";
+> +};
+> +
+> +&r_pio {
+> +	vcc-pm-supply = <&reg_bldo3>;
+> +};
+> +
+> +&r_rsb {
+>  	status = "okay";
+>  
+> -	axp805: pmic@36 {
+> +	axp805: pmic@745 {
+>  		compatible = "x-powers,axp805", "x-powers,axp806";
+> -		reg = <0x36>;
+> +		reg = <0x745>;
+>  		interrupt-parent = <&r_intc>;
+>  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>  		interrupt-controller;
+> @@ -232,14 +240,6 @@ sw {
+>  	};
+>  };
+>  
+> -&r_ir {
+> -	status = "okay";
+> -};
+> -
+> -&r_pio {
+> -	vcc-pm-supply = <&reg_bldo3>;
+> -};
+> -
+>  &rtc {
+>  	clocks = <&ext_osc32k>;
+>  };
+> 
+
