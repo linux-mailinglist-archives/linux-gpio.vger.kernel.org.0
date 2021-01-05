@@ -2,85 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC0B12EA6C8
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 09:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CDC2EA748
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 10:28:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbhAEI4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 03:56:19 -0500
-Received: from m43-15.mailgun.net ([69.72.43.15]:40554 "EHLO
-        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbhAEI4S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 03:56:18 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1609836960; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=KuJNnND9gNxn87Ys5RVKbNSQ/froZkWCUykAcB4+ZmA=; b=VER/6SgbdPFc27ziWZG0Y+lhqq+POXSd9hy6e5iXCs6C+ZitNp1X1jikHmW0B2RGwJJOtxE6
- EG/8DML409zmNCyXq1Ry5LEDpO4Mw4X6QlxGcBvmfOeWYQAxtoCbxQZGtCDvTwUu1srVAjf8
- infUuQdSKP9RzoGTg+bzjB2q2/4=
-X-Mailgun-Sending-Ip: 69.72.43.15
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5ff42980b73be0303d4c5429 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 05 Jan 2021 08:55:28
- GMT
-Sender: varada=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 37917C43464; Tue,  5 Jan 2021 08:55:28 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
-        autolearn=no autolearn_force=no version=3.4.0
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: varada)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A7D5C433C6;
-        Tue,  5 Jan 2021 08:55:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A7D5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=varada@codeaurora.org
-Date:   Tue, 5 Jan 2021 14:25:16 +0530
-From:   Varadarajan Narayanan <varada@codeaurora.org>
-To:     Konrad Dybcio <konrad.dybcio@somainline.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, nsekar@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        sricharan@codeaurora.org
-Subject: Re: [PATCH 1/7] clk: qcom: clk-alpha-pll: Add support for Stromer
- PLLs
-Message-ID: <20210105085515.GA30147@codeaurora.org>
-References: <1601270140-4306-1-git-send-email-varada@codeaurora.org>
- <1601270140-4306-2-git-send-email-varada@codeaurora.org>
- <51544129-a04e-16a2-64e5-e004ea19bf8c@somainline.org>
+        id S1727985AbhAEJ2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 04:28:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727755AbhAEJ2L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 04:28:11 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886F9C061574
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 01:27:31 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id z21so20904782pgj.4
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 01:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=Lv2Hrxl3LwDxTEsmz+QcMAuuteEiuFPDvjHpBRCpE4g=;
+        b=A0cuzO65oNW+aXMto24poswWiHCwFYFSPpIzTHjrDzyJjv3w7n7XIV41D52Uy0MGQY
+         7aObXGmqmVjsMbuuBcMWCmnhmsRIVervifgvZeD8NkQArGHdQAwNmspi61QrCgwpVlNs
+         WZ6GM109hC13jh0BlZ9/R7xeh6qPX2CAVdJKtwU8Gb1VYcA4MyysyGvl/1idMyYK7pr9
+         qMloLPyPmjKGNjehJC8DViM6T3MqJBB+1xUc8u8PyLuogrO6kktNb1ogcv31jXeClA5l
+         gVoxHFmcjWGQUYr3xNF0KgquphYwohfeB6KY5R4cY8zbJ70dzuPxN3z/2Dtxemnl5VpT
+         DLjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=Lv2Hrxl3LwDxTEsmz+QcMAuuteEiuFPDvjHpBRCpE4g=;
+        b=Q0yqWK43CY4v12djLPW203Ts/zJf68RoVvGAgzc5aBVbvj6Me2dskr54Jb26WyGQq5
+         TSVccy+mBhoTcZozWlt/JpBY/FIRaKqKIlYovS3q3clSWuJWl1L3oHpGDTn8TYJ92AhO
+         fXLZiVIM2UnntzZ7ypw1o7MriKZt9XwpfHvA7CVQDoCxsQAfKbaYXi3vI1vuT4veR3q6
+         JMW+5hTeG7zxs5h7oFqNm3a4NFq+MCCFbqIli1fL35ib4vscvQ0QfiCIx4czVNqO2QDr
+         m1LVsipxqY9WjyItZsUUPcb/3oT7Vl68GUWHeH60RzzCXLuIp8ZKfbB1q+7qRS9x+h3a
+         lNSw==
+X-Gm-Message-State: AOAM533fmUh4I3cc87MnyXa0Q4JnalAXzZw1isuZx3fALvVIDBaCiLZ0
+        Q4jZnpiZUYuZ41P3DbQEJomBYPmw3ie+ag==
+X-Google-Smtp-Source: ABdhPJzS0QRuqT734uqlwIUWwsRzuPaXBgm6aRHTWbwkKn9dFxnbOzJz6A+LaJ44XW1VgLVIucQvDQ==
+X-Received: by 2002:a63:c702:: with SMTP id n2mr28011041pgg.382.1609838850758;
+        Tue, 05 Jan 2021 01:27:30 -0800 (PST)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id m26sm58289101pfo.123.2021.01.05.01.27.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jan 2021 01:27:30 -0800 (PST)
+Message-ID: <5ff43102.1c69fb81.af7e0.4dab@mx.google.com>
+Date:   Tue, 05 Jan 2021 01:27:30 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51544129-a04e-16a2-64e5-e004ea19bf8c@somainline.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.11-rc1
+X-Kernelci-Report-Type: build
+Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
+ 2 warnings (v5.11-rc1)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 26, 2020 at 01:51:28AM +0100, Konrad Dybcio wrote:
+linusw/devel build: 7 builds: 0 failed, 7 passed, 2 warnings (v5.11-rc1)
 
-Konrad,
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.11-rc1/
 
-> Hi, are you going to resubmit this patch? Looks like
-> MDM9607 uses Stromer PLL for its CPU clocks and could
-> benefit from it.
+Tree: linusw
+Branch: devel
+Git Describe: v5.11-rc1
+Git Commit: 5c8fe583cce542aa0b84adc939ce85293de36e5e
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
 
-Yes. But will take some time since we are held up with
-additional activities.
+Warnings Detected:
 
-Thanks
-Varada
+arc:
 
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+arm64:
+    defconfig (gcc-8): 1 warning
+
+arm:
+    multi_v7_defconfig (gcc-8): 1 warning
+
+i386:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    1    drivers/pinctrl/nomadik/pinctrl-nomadik.c:952:8: warning: unused v=
+ariable =E2=80=98wake=E2=80=99 [-Wunused-variable]
+    1    arch/arm64/kernel/smp.c:810:16: warning: unused variable =E2=80=98=
+irq=E2=80=99 [-Wunused-variable]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
+matches
+
+Warnings:
+    arch/arm64/kernel/smp.c:810:16: warning: unused variable =E2=80=98irq=
+=E2=80=99 [-Wunused-variable]
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
+ion mismatches
+
+Warnings:
+    drivers/pinctrl/nomadik/pinctrl-nomadik.c:952:8: warning: unused variab=
+le =E2=80=98wake=E2=80=99 [-Wunused-variable]
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
