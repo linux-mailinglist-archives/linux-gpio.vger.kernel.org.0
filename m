@@ -2,116 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F5BB2EA9B4
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 12:19:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5712F2EAB07
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 13:43:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbhAELSy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 06:18:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbhAELSy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Jan 2021 06:18:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 736B5229C5;
-        Tue,  5 Jan 2021 11:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609845492;
-        bh=GDmYQRHGn/AcnFt3hdxGi1mf2d4j0SgudD/3lB6HiLU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MGoc1AfjFEcjnH2LG9n6lBEYoM6Ri+jtRDQ3pMETkgkS4xWatgY5WzBCv7tGFTTX4
-         9deGZUIgeLAhm1VPGBdYES++ZORJDj29LOoOSG8tACOto7uS1nWJwFUZ5fw3Q/9+7t
-         9Rnjcz0F86y/qp986vAfUr6GinSVP0XwPgyXu3vSEN7cNL4OxE10chjJdGA85/nxVF
-         lPpoMqPvAHjIz+Tazlv2fQtQtSQARqHG/OYlCfxgVMRWyanIC2bLCSGkFIWiXyTy98
-         QR/IH6Kj4pkkDkHe387Q3RpA+JZkCdNIme8yoaM7itWnaNn71YrIoqeYgceFoOyLsB
-         SI0+F1HbHOM4g==
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4BD5B3C0C94; Tue,  5 Jan 2021 12:18:10 +0100 (CET)
-Date:   Tue, 5 Jan 2021 12:18:10 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        id S1729090AbhAEMn0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 07:43:26 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:34594 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729087AbhAEMn0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 Jan 2021 07:43:26 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 1FB0444064A;
+        Tue,  5 Jan 2021 14:42:38 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Add missing array size constraints
-Message-ID: <20210105111810.5sdfmjga5in5wgvx@earth.universe>
-References: <20210104230253.2805217-1-robh@kernel.org>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v5 0/4] gpio: mvebu: Armada 8K/7K PWM support
+Date:   Tue,  5 Jan 2021 14:42:27 +0200
+Message-Id: <cover.1609849176.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vyuzhxvp4ms2cjlb"
-Content-Disposition: inline
-In-Reply-To: <20210104230253.2805217-1-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Changes in v5:
 
---vyuzhxvp4ms2cjlb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  * Add a fix for get_state
 
-Hi Rob,
+  * Fix typo in patch #4 subject line
 
-On Mon, Jan 04, 2021 at 04:02:53PM -0700, Rob Herring wrote:
-> DT properties which can have multiple entries need to specify what the
-> entries are and define how many entries there can be. In the case of
-> only a single entry, just 'maxItems: 1' is sufficient.
->=20
-> Add the missing entry constraints. These were found with a modified
-> meta-schema. Unfortunately, there are a few cases where the size
-> constraints are not defined such as common bindings, so the meta-schema
-> can't be part of the normal checks.
->=20
-> [...]
->  .../bindings/power/supply/bq25980.yaml        |  1 +
-> [...]
+  * Add Rob's review tag on the binding documentation patch
 
-Acked-by: Sebastian Reichel <sre@kernel.org>
+Changes in v4:
 
--- Sebastian
+  * Remove patches that are in LinusW linux-gpio for-next and fixes
 
---vyuzhxvp4ms2cjlb
-Content-Type: application/pgp-signature; name="signature.asc"
+  * Rename the 'pwm-offset' property to 'marvell,pwm-offset' as suggested by 
+    Rob Herring
 
------BEGIN PGP SIGNATURE-----
+The original cover letter follows (with DT property name updated).
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl/0SucACgkQ2O7X88g7
-+ppIAQ/8CwCUtes2Mr7K09stdBuNtR3gBayMxcQnnIM6AQvBexKzq6gM2xpDIPB8
-YVpTjaGQkOcwS3BMu7BsRT4t2s3KXy9lVS5jkChykskjyAyr9a7QPsK7MVZVRh2Q
-U896qS+zI2nsNdeX6+kT10+29b7PcoEvTJRtEPEFlsq4UoFbMAsdJhtHBo9v1oUP
-cJMT7NSkqtcHM9HeSPZFCTLyAsoGFPYMTneKdN9ZVlPHoQRkCH0k3vyHMmKKPWAQ
-uafDLlP+nvs9Ug/FSsFsoaLcixHHAI+GkVj48muZL7EVAygGTbrRA27r0txduvfj
-DOxfT7BdNOMkmDge0RR2vk29V/2WYsEg4vwi3uyP2BDQsdXEYpwTn00IJ5IJgcqE
-EAjq7hWsSo7zd8VkMc/CLN1a1W+PEpIJ0CGfS4cLtAMwRLNLdPA+FS4UaBCAoS4k
-T9AZGFXABwtQQHyOAHD8/Hjs5vexDnWdvcRyCuDqgt6YeUX6Lu8pRTWx5lkWPkLy
-GZf/jppVAnP/gtnsOOJnPL37jxbOpelu+4UopYZ/j9YLJb+M7P2xYhsYuRlnKn0r
-aAgoNpEXu3TNpex2apw+Cm70EiidWAGcWqvrOCWhdqWBulGJ+O4v1DYe536LLoZN
-rdX4Hbkx7kBMNJ1ZZVIA3x9YzLwGKo/1nnV2q7fUdTzUEobcJWQ=
-=gWL0
------END PGP SIGNATURE-----
+The gpio-mvebu driver supports the PWM functionality of the GPIO block for
+earlier Armada variants like XP, 370 and 38x. This series extends support to
+newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
 
---vyuzhxvp4ms2cjlb--
+This series adds adds the 'marvell,pwm-offset' property to DT binding. 
+'marvell,pwm-offset' points to the base of A/B counter registers that 
+determine the PWM period and duty cycle.
+
+The existing PWM DT binding reflects an arbitrary decision to allocate the A
+counter to the first GPIO block, and B counter to the other one. In attempt to
+provide better future flexibility, the new 'marvell,pwm-offset' property 
+always points to the base address of both A/B counters. The driver code still 
+allocates the counters in the same way, but this might change in the future 
+with no change to the DT.
+
+Tested AP806 and CP110 (both) on Armada 8040 based system.
+
+Baruch Siach (4):
+  gpio: mvebu: fix pwm get_state period calculation
+  gpio: mvebu: add pwm support for Armada 8K/7K
+  arm64: dts: armada: add pwm offsets for ap/cp gpios
+  dt-bindings: ap806: document gpio marvell,pwm-offset property
+
+ .../arm/marvell/ap80x-system-controller.txt   |   8 ++
+ arch/arm64/boot/dts/marvell/armada-ap80x.dtsi |   3 +
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi |  10 ++
+ drivers/gpio/gpio-mvebu.c                     | 117 +++++++++++-------
+ 4 files changed, 95 insertions(+), 43 deletions(-)
+
+-- 
+2.29.2
+
