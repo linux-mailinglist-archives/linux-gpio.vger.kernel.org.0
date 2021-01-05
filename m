@@ -2,81 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98AE12EB3B7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 20:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9A872EB46F
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 21:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbhAETwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 14:52:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
+        id S1727304AbhAEUtN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 15:49:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbhAETwn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 14:52:43 -0500
-Received: from kelvin.aketzu.net (kelvin.aketzu.net [IPv6:2a04:3540:1000:310:284f:63ff:fefd:69b4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA07C061574
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 11:52:02 -0800 (PST)
-Received: by kelvin.aketzu.net (Postfix, from userid 1000)
-        id 336F146179; Tue,  5 Jan 2021 21:52:00 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aketzu.net; s=202002;
-        t=1609876320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hFxOv3OUCqso8kwMAQtGvY6CFeXLRdXc94oaar7k/1s=;
-        b=Jb8oo48AmInSiierq7bBcmjEq6Oe677KQLXGYqk1QVJLo6dV9AzXkd4uKyJ99J/jnVISFw
-        4TP6av/xKfn8LHmZIKh0XYJFkgVklS0BOLIyt5RgmfbrciQCiIFOeJeeqlW8XyQHimOZi8
-        m92K5v3F9BJXC/3HRl6oRGor1bhXgbE=
-Date:   Tue, 5 Jan 2021 21:52:00 +0200
-From:   Anssi Kolehmainen <anssi@aketzu.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] AC_FUNC_MALLOC cross-compile failure
-Message-ID: <X/TDYJYMRo7hEAoR@kelvin.aketzu.net>
-References: <X/RzBqyV4hCdmrBy@kelvin.aketzu.net>
- <CAHp75VeuMfA4ojn7xDEKx6zbn7VZzYrcHMtjnC6_-j-wJhY=+w@mail.gmail.com>
+        with ESMTP id S1729094AbhAEUtK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 15:49:10 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD69EC061796;
+        Tue,  5 Jan 2021 12:48:29 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id o13so1666280lfr.3;
+        Tue, 05 Jan 2021 12:48:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=VI6nFNhOrDBsKOeartd6J0bcnx10OA5inX4UBRpL4qE=;
+        b=XMzvAK1uTDP9sqD7pLv4Wz7WB5ahyaA4m6Kusb5//KKj6ORucbf4DEkHedVG2WYchx
+         ww5E+S2pe/MVFqDwCWn3GDiS2f5riKTPoV75h71RVrW0K2vBiy9ckj/U7dA9PWNjyCNI
+         nX5bomPKCcbVJeOgp/Cj7QeOBmzBoXkvbgT+W8lDuSsHgW8SMCpsK5rlGY82XsKP7qkx
+         a29IAV41Ls1xim5un7jcVMha0ymLBu7etMhtRuauiNm4Zo6NPbxuUdxGaFB5dXcGICKr
+         V9gREmCqoUjAr+3BJU51evd6QVFkDSbGIsK3A3GwKvAN8OhPsBEmC8Moy5N8LCKzSIDI
+         qz8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=VI6nFNhOrDBsKOeartd6J0bcnx10OA5inX4UBRpL4qE=;
+        b=FG6SNthz8P94I2FoXGzya5sRVgOPbypbkHtVdcNSFG+DgmibLQoPKra/TvrVh2Vdv2
+         leFN9mNc/tZ6Z4UUKldJnV85Us0eDPB13bP3XeE9gH/lmc3DkevR11UZd9LSJoXTffDe
+         RyicTBGoSPEGcw2FX1g47y0pym2m16A6Qx0hlHeuo0U5WFKzIdNGhGe/qLvRnC93YuOh
+         Eydg2fpeDYwxsB8C0dPUirx7huBeiVBTxGmuuB6L3ChsVSv84N7XjF602qo0pRsH0O6q
+         hli3IB4JvZYYOMjNrjEOHG/depgPQofXFEsga2m4M0bdWml3wvU2pnUloW3Zd9iOnjsZ
+         ux9g==
+X-Gm-Message-State: AOAM5305RrdE0AAtjoTNIhMuTR3cWMeBHvXkoyTtwcA7X2xnyV0sBVOx
+        5IzuPqY/Y3bZU7VBY3YC8bLFZ/Ojoxos58UUjcE=
+X-Google-Smtp-Source: ABdhPJxu0obS2EF+VNsGTCaRCOLzZxvocXJO+DOkx1q/eD1CrMCNDr6ayRfy6f/783TFKHGmdZ4OqMWe5HwKjoHK0HI=
+X-Received: by 2002:a2e:8084:: with SMTP id i4mr635086ljg.291.1609879708350;
+ Tue, 05 Jan 2021 12:48:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeuMfA4ojn7xDEKx6zbn7VZzYrcHMtjnC6_-j-wJhY=+w@mail.gmail.com>
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=aketzu.net;
-        s=202002; t=1609876320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hFxOv3OUCqso8kwMAQtGvY6CFeXLRdXc94oaar7k/1s=;
-        b=XLRptRD6eu29d7ViirPQPUke/W/sK8vTSDyur+YliSM5jfV8PG0km0m1bBsSvF6+12ihO9
-        JM89L95Y8piSw8+zf+hw5FzKInJmuMPH8bPqQOqR8EPO1BgKSV0l3Q/C3gvjGkVE9e97jx
-        bQCFqwvGk76QW8ZHgjOSiS7PX6VCn98=
-ARC-Seal: i=1; s=202002; d=aketzu.net; t=1609876320; a=rsa-sha256;
-        cv=none;
-        b=ZX5hhuwvYG3FY92kAiU+g9VyNw0gBy40rIeoslGMmxBZctWh0DOzWibtgzlfuge8H6LRvA
-        PQGV9hBTkJjXjrjEA67qrgDG3pj1uwPQ1hi9cK+9wWbJUg068cm6bdfZ8rnbYGMp55WY7b
-        fDt1YdjzSmb+Pq2tFpMBPAnTiGI/4FE=
-ARC-Authentication-Results: i=1;
-        kelvin.aketzu.net;
-        none
+References: <20210104230253.2805217-1-robh@kernel.org>
+In-Reply-To: <20210104230253.2805217-1-robh@kernel.org>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Wed, 6 Jan 2021 05:47:51 +0900
+Message-ID: <CAGTfZH11n8cRbrNB6XbzCydR4387d7V-gmRWou8hFFXbFBgvHQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Add missing array size constraints
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-usb@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-ide@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        netdev@vger.kernel.org, linux-clk@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Marc Zyngier <maz@kernel.org>, linux-riscv@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, linux-media@vger.kernel.org,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-mmc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 05, 2021 at 07:24:46PM +0200, Andy Shevchenko wrote:
->On Tue, Jan 5, 2021 at 4:17 PM Anssi Kolehmainen <anssi@aketzu.net> wrote:
->>
->> When libgpiod is cross-compiled it will use rpl_malloc instead malloc which then
->> causes linking failure at later stage.
->>
->> This happens because AC_FUNC_MALLOC wants to execute malloc() in a live system
->> and thus cannot be run at cross-compilation time. libgpiod should just do
->> AC_CHECK_FUNC instead.
+Hi Rob,
+
+On Tue, Jan 5, 2021 at 8:03 AM Rob Herring <robh@kernel.org> wrote:
 >
->Which version of aufotools you tried? (2.69?)
->Btw, have you tried autotools-2.70?
+> DT properties which can have multiple entries need to specify what the
+> entries are and define how many entries there can be. In the case of
+> only a single entry, just 'maxItems: 1' is sufficient.
+>
+> Add the missing entry constraints. These were found with a modified
+> meta-schema. Unfortunately, there are a few cases where the size
+> constraints are not defined such as common bindings, so the meta-schema
+> can't be part of the normal checks.
+>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Ohad Ben-Cohen <ohad@wizery.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ide@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> ---
+>  .../socionext,uniphier-system-cache.yaml      |  4 ++--
+>  .../bindings/ata/sata_highbank.yaml           |  1 +
+>  .../bindings/clock/canaan,k210-clk.yaml       |  1 +
+>  .../bindings/display/brcm,bcm2711-hdmi.yaml   |  1 +
+>  .../bindings/display/brcm,bcm2835-hdmi.yaml   |  1 +
+>  .../display/panel/jdi,lt070me05000.yaml       |  1 +
+>  .../display/panel/mantix,mlaf057we51-x.yaml   |  3 ++-
+>  .../display/panel/novatek,nt36672a.yaml       |  1 +
+>  .../devicetree/bindings/dsp/fsl,dsp.yaml      |  2 +-
+>  .../devicetree/bindings/eeprom/at25.yaml      |  3 +--
+>  .../bindings/extcon/extcon-ptn5150.yaml       |  2 ++
 
-I have autoconf 2.69 from Debian testing.
+For extcon part,
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Quick testing with 2.70 looks good.
-Apparently fixed in 7fbb55372 in May 2012... And 2.69 is from April 2012.
+(snip)
 
-I don't know which kind of facepalm would be suitable for this.
-
--- 
-Anssi Kolehmainen
+Best Regards,
+Chanwoo Choi
