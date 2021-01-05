@@ -2,159 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A872EB46F
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 21:50:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 989822EB553
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 23:24:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbhAEUtN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 15:49:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
+        id S1729631AbhAEWYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 17:24:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729094AbhAEUtK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 15:49:10 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD69EC061796;
-        Tue,  5 Jan 2021 12:48:29 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id o13so1666280lfr.3;
-        Tue, 05 Jan 2021 12:48:29 -0800 (PST)
+        with ESMTP id S1729815AbhAEWYg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 17:24:36 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C2CC061798
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 14:23:55 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id o19so2248896lfo.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 14:23:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=VI6nFNhOrDBsKOeartd6J0bcnx10OA5inX4UBRpL4qE=;
-        b=XMzvAK1uTDP9sqD7pLv4Wz7WB5ahyaA4m6Kusb5//KKj6ORucbf4DEkHedVG2WYchx
-         ww5E+S2pe/MVFqDwCWn3GDiS2f5riKTPoV75h71RVrW0K2vBiy9ckj/U7dA9PWNjyCNI
-         nX5bomPKCcbVJeOgp/Cj7QeOBmzBoXkvbgT+W8lDuSsHgW8SMCpsK5rlGY82XsKP7qkx
-         a29IAV41Ls1xim5un7jcVMha0ymLBu7etMhtRuauiNm4Zo6NPbxuUdxGaFB5dXcGICKr
-         V9gREmCqoUjAr+3BJU51evd6QVFkDSbGIsK3A3GwKvAN8OhPsBEmC8Moy5N8LCKzSIDI
-         qz8g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T4sAiyArUy52pWcai1J+mIoA8s+FFE+f9MM1+ahYCSU=;
+        b=gSstDj7kJ/OpDFDoqs1xPxaHEMvZpCbZScFn/j+wkKEi4397BOHzU/7uJJX7lav6Yp
+         9ujkJ1wuM6Kyj+DydTSui7f6ypRH4cbI8xcoUhuClYmgbFhcM2ODIzJO/ehvDuzYO8v4
+         5/eWwAW9lom4PDt7sp9cFxmXO3QlkfVhvgK5wsdxSMS0x1xyDoUbDMvp7UpAKoBv4MXQ
+         p9AUri7MKrrGYZI45OByNHyEzeh0imrWTVYiXc2E/Z2MrvVJJPS1ByEHNFqG1T1wJ6Ur
+         oUQBGk6HWzotNKjBzWK6ItnX0fnM5EL6LLGFhk4+uf2Ehuf+d8Ig/021w5EX2/+cCF7T
+         95BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=VI6nFNhOrDBsKOeartd6J0bcnx10OA5inX4UBRpL4qE=;
-        b=FG6SNthz8P94I2FoXGzya5sRVgOPbypbkHtVdcNSFG+DgmibLQoPKra/TvrVh2Vdv2
-         leFN9mNc/tZ6Z4UUKldJnV85Us0eDPB13bP3XeE9gH/lmc3DkevR11UZd9LSJoXTffDe
-         RyicTBGoSPEGcw2FX1g47y0pym2m16A6Qx0hlHeuo0U5WFKzIdNGhGe/qLvRnC93YuOh
-         Eydg2fpeDYwxsB8C0dPUirx7huBeiVBTxGmuuB6L3ChsVSv84N7XjF602qo0pRsH0O6q
-         hli3IB4JvZYYOMjNrjEOHG/depgPQofXFEsga2m4M0bdWml3wvU2pnUloW3Zd9iOnjsZ
-         ux9g==
-X-Gm-Message-State: AOAM5305RrdE0AAtjoTNIhMuTR3cWMeBHvXkoyTtwcA7X2xnyV0sBVOx
-        5IzuPqY/Y3bZU7VBY3YC8bLFZ/Ojoxos58UUjcE=
-X-Google-Smtp-Source: ABdhPJxu0obS2EF+VNsGTCaRCOLzZxvocXJO+DOkx1q/eD1CrMCNDr6ayRfy6f/783TFKHGmdZ4OqMWe5HwKjoHK0HI=
-X-Received: by 2002:a2e:8084:: with SMTP id i4mr635086ljg.291.1609879708350;
- Tue, 05 Jan 2021 12:48:28 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T4sAiyArUy52pWcai1J+mIoA8s+FFE+f9MM1+ahYCSU=;
+        b=rcE5Qy6yp83V7ekIbe4Z2n7ZkEziLmk7UBSTpjwn8j8RoUKVqPCfE+tvvAVu2wlaRD
+         l0yESxG0LSZki4P40EUF6hP4PcYKJYH7mT1Sm5kUAxJIK2/GfrnxSL7VV4ijUrOFlcJI
+         H/aY9JmSliqauXtizQbWV5G3aQ+FMIRN92ONBh1gXTGF4Fj4oSZba2vpN64NXzMLR6d9
+         KYDOmZZDU+KimQXdarM2Qg/msvcplEByVd0oLeMhSFqrZCCbaB5WRb7qHx/ZTUbpiZ+F
+         Fg25k0FDCMQIbDRyVtjhwo5hul0/GPV0JiVqPpueSsIosCGeZ+LcmCznnzF38e8MqNAa
+         Fq5w==
+X-Gm-Message-State: AOAM531IjfVIWwReVOs9kFbarIt3XUqsRyO8m1i/Wgwk35PAD4pEcC/w
+        5L7uwJu+YIANZPJYkrs6/E8ffTm8U3/clsoe1Uh6kQ==
+X-Google-Smtp-Source: ABdhPJxO4Z9b+ShG5jTz0D26Lj9xrsPscyospToUwxd20F05ow49opQ6EQWGJlHtNr59vnokxZTG9VLesox0NFc/mxg=
+X-Received: by 2002:a05:6512:74e:: with SMTP id c14mr627702lfs.529.1609885434234;
+ Tue, 05 Jan 2021 14:23:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20210104230253.2805217-1-robh@kernel.org>
-In-Reply-To: <20210104230253.2805217-1-robh@kernel.org>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Wed, 6 Jan 2021 05:47:51 +0900
-Message-ID: <CAGTfZH11n8cRbrNB6XbzCydR4387d7V-gmRWou8hFFXbFBgvHQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add missing array size constraints
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-usb@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-ide@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        netdev@vger.kernel.org, linux-clk@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Marc Zyngier <maz@kernel.org>, linux-riscv@lists.infradead.org,
+References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
+ <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
+ <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
+ <CAFBinCCLubmDvxfabQHx2-ucgAsm1NArMUrtPx-UA2nX5xoFFA@mail.gmail.com> <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
+In-Reply-To: <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Jan 2021 23:23:43 +0100
+Message-ID: <CACRpkdbKQaT61w6r9Hx40Qvy+7qyLNm-fx-BpL_wdGcB=tmcqQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>, linux-media@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-mmc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Jan 5, 2021 at 8:03 AM Rob Herring <robh@kernel.org> wrote:
+On Mon, Dec 21, 2020 at 4:28 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> On Wed, Oct 7, 2020 at 9:44 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> [...]
+> > > As noted on the earlier patches I think this should be folded into the
+> > > existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
+> > > gets messy, as a separate bolt-on, something like
+> > > xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
+> > > You can use a Kconfig symbol for the GPIO portions or not.
+> > OK, I will do that if there are no objections from other developers
+> > I am intending to place the relevant code in xhci-pci-etron.c, similar
+> > to what we already have with xhci-pci-renesas.c
 >
-> DT properties which can have multiple entries need to specify what the
-> entries are and define how many entries there can be. In the case of
-> only a single entry, just 'maxItems: 1' is sufficient.
->
-> Add the missing entry constraints. These were found with a modified
-> meta-schema. Unfortunately, there are a few cases where the size
-> constraints are not defined such as common bindings, so the meta-schema
-> can't be part of the normal checks.
->
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ide@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> ---
->  .../socionext,uniphier-system-cache.yaml      |  4 ++--
->  .../bindings/ata/sata_highbank.yaml           |  1 +
->  .../bindings/clock/canaan,k210-clk.yaml       |  1 +
->  .../bindings/display/brcm,bcm2711-hdmi.yaml   |  1 +
->  .../bindings/display/brcm,bcm2835-hdmi.yaml   |  1 +
->  .../display/panel/jdi,lt070me05000.yaml       |  1 +
->  .../display/panel/mantix,mlaf057we51-x.yaml   |  3 ++-
->  .../display/panel/novatek,nt36672a.yaml       |  1 +
->  .../devicetree/bindings/dsp/fsl,dsp.yaml      |  2 +-
->  .../devicetree/bindings/eeprom/at25.yaml      |  3 +--
->  .../bindings/extcon/extcon-ptn5150.yaml       |  2 ++
+> I tried this and unfortunately there's a catch.
+> the nice thing about having a separate GPIO driver means that the
+> xhci-pci driver doesn't need to know about it.
 
-For extcon part,
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Since PCI devices have device-wide power management and things
+like that I think that is a really dangerous idea.
 
-(snip)
+What if the GPIO driver starts poking around in this PCI device
+when the main driver is also probed and has put the device
+into sleep state?
 
-Best Regards,
-Chanwoo Choi
+This type of set-up needs to be discussed with
+the PCI maintainer to make sure it is safe.
+
+> I implemented xhci-pci-etron.c and gave it a Kconfig option.
+> xhci-pci is then calling into xhci-pci-etron (through some
+> etron_xhci_pci_probe function).
+
+This sounds about right.
+
+> unfortunately this means that xhci-pci now depends on xhci-pci-etron.
+> for xhci-pci-renesas this is fine (I think) because that part of the
+> code is needed to get the xHCI controller going
+> but for xhci-pci-etron this is a different story: the GPIO controller
+> is entirely optional and only used on few devices
+
+I might be naive but should it not be the other way around?
+That xhci-pci-etron is dependent on xhci-pci? I imagine
+it would be an optional add-on.
+
+> my goal is (at some point in the future) to have the GPIO driver in OpenWrt.
+> I am not sure if they would accept a patch where xhci-pci would then
+> pull in the dependencies for that Etron controller, even though most
+> boards don't need it.
+
+Make sure the etron part is an additional module that can be
+loaded after xhci-pci.
+
+OpenWrt support optional modules to be compiled per-system.
+
+Yours,
+Linus Walleij
