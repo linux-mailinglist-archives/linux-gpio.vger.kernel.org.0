@@ -2,72 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E138A2EB150
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 18:25:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA38B2EB167
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 18:31:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbhAERYj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 12:24:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
+        id S1727665AbhAER3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 12:29:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbhAERYi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 12:24:38 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C31CC061574
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 09:23:58 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id m6so126513pfm.6
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 09:23:58 -0800 (PST)
+        with ESMTP id S1726151AbhAER3I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 12:29:08 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45BAC061793
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 09:28:27 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id 4so75423plk.5
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 09:28:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4+hqT07JH1bpJ/0U8h3HC2S3NcqQzDs9Op7M4OqqYpA=;
-        b=UbGqK+BwencdBGSuXDoXWS1qOQPft4l1vgnHHGWe8M5+a1b+Oauu7QCcuofDWSFuWp
-         QK5rE9AgQODn+i6idVKG4N+rsr+J2tLw9XjtLu4xqqaTj1WO2oLex4OuuIIdJHkxR0Yf
-         iPjiMg64vetzonm1t6WIhV63D40AYqbSGUqX4fLEiv7WIfwUMyFADZVt4fsi9bluP8Kv
-         N3Ku62GEtru0ShWy/qJ4QsFQM1kuhE+LM9o+7kVbgVbbKhebFMfznvJKHPxtPbSyhvW9
-         2d+KGMezH4vuCYkUQrtWJr905LJRNPaaIevlMMaZFtJI9m6VEeZO8aD3egJzdlowP7Ml
-         txQA==
+        bh=vY/Y9aMYaN0wsHleTVP3/xP8BLngL2dDCR0I1xMkN3k=;
+        b=MmrG5k/ZrQ/7VaOiFPe04Q436FnyRHrTdARPR4KL3386eDPyuThCG+FLqEhzI2I2ZY
+         Q/B7KRd7cu8TiAbPVU9qnd/eN+knfmZj7HBruWsnXBg9G8t/kiRiuGMSWa+4eBvw/tNS
+         r+w8CQmNNfRHxU6JeBBkYfUaZmVV7gUjVcD59lDMN7gqnpFWfY3KYjLV6k8jAOjddHdd
+         tq5QPdP9aoYIbvIcI8Hzjio+pbygNzL1daf+nKv3Qi0p9OhkzLs8Ur4wnYGHe/lUGvKq
+         LUAzUihT0QyXtHwK+CkL1T8xmWOapnVw0Gv/9T5fhbwVtwjPUFWa/TaoGODCCfNxF3Vu
+         FW3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4+hqT07JH1bpJ/0U8h3HC2S3NcqQzDs9Op7M4OqqYpA=;
-        b=uZPhzGrAvyukmXlA74INvUr3r/2H3Xx77rkNPLzJ7A5yFu7gWGq5eeOCJrWLd9zPy0
-         fxCbRE+wFbrfTeY8R/tbYNq3Vn1evMeEgUSu+5wOGljX1YxfENIgaRhPgUwhtPUvgrz6
-         PSNYIXzqwGOxeKV5TjDYGfpMlaN6vM+eBXEbcBr/u7TJbqvDKv2ZooRlwxKyOKa1wQm9
-         fx14xOUKB/oMIhdN4sdc53BXQOq9o8Rn9j2FO4uZ07Ib05cCNXyMvlxa2gIjxpx+aTG2
-         Vh1MibhMiBcn++Irt4wIbOEQnBrNf9dyMmKBuUIeTjA2iKKKlMIw470XAaJZT+uaBHb5
-         /SwQ==
-X-Gm-Message-State: AOAM531fb+VFy1o0SXENn1g6MUqXWCWeT3yRqBzzifI6Z7NY5Q9YdoVt
-        tXyrpFLy0C3Q+1PiC7SGunKU07ztBLnwAS569D3r70Vhkvc=
-X-Google-Smtp-Source: ABdhPJwGpqghvkGAL1meJr2hzzSpUF7TE+Pg4/zFBfCxsFhoiOnodrOw0ZBEbXxtDg9Di121FsE1Pl/DxU1xcVH/Xvg=
-X-Received: by 2002:a63:4b16:: with SMTP id y22mr343550pga.203.1609867438109;
- Tue, 05 Jan 2021 09:23:58 -0800 (PST)
+        bh=vY/Y9aMYaN0wsHleTVP3/xP8BLngL2dDCR0I1xMkN3k=;
+        b=JoUChxsb0Qh/QQs5tQAMODAh8WDlbltvlsl1X0uKtUOP0BmQ3kZv98M5pGNcvYGNT6
+         k1ycS+8ReOVeFWjBtzjMflfW6J62JYH9kJ6QNyebyIAcjYDJo5abQYLkaGLBZIIH4JrZ
+         PbunC3jKyyYXx3mCj189TLCggf6/sucP+MNSQ5rcho8h4dUUjEng2zDMjS+kmHCNzL6c
+         v/cuZoYrRglWhWqoRcRXoxHMuD8Oa1UksKmwbs72FOg3kwHzgnPaSO1astTaW/0GktqU
+         hQp5YQO8jxwUXnlDu4TSqEkthZIIgG0eO0ah23MGUvjRPe33nlkecKE8saPYneLZfJf2
+         pLtA==
+X-Gm-Message-State: AOAM5309QTatazdOaqFWv0+NZu8Ms6rL6ilkindefVhE81SrwaKVWHGV
+        dirKC+pvBm+iEqX+++UxCpnrgR7/IcYXDQYmDujakZ/6IBc=
+X-Google-Smtp-Source: ABdhPJx66hQzH5nOab/t6kDMJFRM6Pn+r9ZZC6/dwsdpXEYOq2AhNx8mWLI8wry57sfPhn2Yci69zHcH4O4YRol5fZQ=
+X-Received: by 2002:a17:902:e98c:b029:da:cb88:f11d with SMTP id
+ f12-20020a170902e98cb02900dacb88f11dmr367761plb.17.1609867707277; Tue, 05 Jan
+ 2021 09:28:27 -0800 (PST)
 MIME-Version: 1.0
-References: <X/RzBqyV4hCdmrBy@kelvin.aketzu.net>
-In-Reply-To: <X/RzBqyV4hCdmrBy@kelvin.aketzu.net>
+References: <20210105082758.77762-1-linus.walleij@linaro.org>
+In-Reply-To: <20210105082758.77762-1-linus.walleij@linaro.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 Jan 2021 19:24:46 +0200
-Message-ID: <CAHp75VeuMfA4ojn7xDEKx6zbn7VZzYrcHMtjnC6_-j-wJhY=+w@mail.gmail.com>
-Subject: Re: [libgpiod] AC_FUNC_MALLOC cross-compile failure
-To:     Anssi Kolehmainen <anssi@aketzu.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Tue, 5 Jan 2021 19:29:15 +0200
+Message-ID: <CAHp75VeXC26KxxhrSbtae2_v4Zqnaaia3nV_1sxY07uUEt3U7g@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: Disallow identical line names in the same chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Johan Hovold <johan@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 5, 2021 at 4:17 PM Anssi Kolehmainen <anssi@aketzu.net> wrote:
+On Tue, Jan 5, 2021 at 10:31 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> We need to make this namespace hierarchical: at least do not
+> allow two lines on the same chip to have the same name, this
+> is just too much flexibility. If we name a line on a chip,
+> name it uniquely on that chip.
 >
-> When libgpiod is cross-compiled it will use rpl_malloc instead malloc which then
-> causes linking failure at later stage.
->
-> This happens because AC_FUNC_MALLOC wants to execute malloc() in a live system
-> and thus cannot be run at cross-compilation time. libgpiod should just do
-> AC_CHECK_FUNC instead.
+> This does not affect device tree and other gpiochips that
+> get named from device properties: the uniqueness
+> per-chip however affect all hotplugged devices such as
+> GPIO expanders on USB.
 
-Which version of aufotools you tried? (2.69?)
-Btw, have you tried autotools-2.70?
+...
+
+> [Dropped warning for globally unique]
+
+> + * - Allow names to not be globally unique but warn about it.
+
+Is the second part of this sentence still ture?
+Maybe I missed a warning we are talking about here?
 
 -- 
 With Best Regards,
