@@ -2,156 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11CDC2EA748
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 10:28:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA492EA851
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 11:14:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbhAEJ2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 04:28:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
+        id S1728074AbhAEKMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 05:12:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727755AbhAEJ2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 04:28:11 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886F9C061574
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 01:27:31 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id z21so20904782pgj.4
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 01:27:31 -0800 (PST)
+        with ESMTP id S1727243AbhAEKMw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 05:12:52 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13689C061794
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 02:12:12 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id h186so18115593pfe.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 02:12:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=Lv2Hrxl3LwDxTEsmz+QcMAuuteEiuFPDvjHpBRCpE4g=;
-        b=A0cuzO65oNW+aXMto24poswWiHCwFYFSPpIzTHjrDzyJjv3w7n7XIV41D52Uy0MGQY
-         7aObXGmqmVjsMbuuBcMWCmnhmsRIVervifgvZeD8NkQArGHdQAwNmspi61QrCgwpVlNs
-         WZ6GM109hC13jh0BlZ9/R7xeh6qPX2CAVdJKtwU8Gb1VYcA4MyysyGvl/1idMyYK7pr9
-         qMloLPyPmjKGNjehJC8DViM6T3MqJBB+1xUc8u8PyLuogrO6kktNb1ogcv31jXeClA5l
-         gVoxHFmcjWGQUYr3xNF0KgquphYwohfeB6KY5R4cY8zbJ70dzuPxN3z/2Dtxemnl5VpT
-         DLjg==
+        bh=9T5heFasP6GdSI0JOfW3kJxvkt3tkvCQFRqpJPskOtQ=;
+        b=Ug6vVDudVEYM+uuH9qoSoR6ej4vEYJqgwjZZrESqgtT49pwLBKPGJuvX0JdveGRwd6
+         ko0LvxJ5l1IOw/EZuhUstp3jSBKqxR/jJuVU8NlvXe7/AvitCOzMnKOb5MDug9J9uliQ
+         IIGwwLkuMl1cFtARCvVIghHsbFtBYyGSQdKht9g8LOQV1XaMaazoEbdkq8zY5EUIH3FP
+         jIYfOvKJGf+ocxxdHBgnWMh5sJgQ2eMUshefUo1r8e/SK7upFKWBUTzorjuLftbcFVN+
+         /hctAW506/671NLVEfEeTNxyPZJTUVgsz4Yk3L8qx4pvoke2qNBRgc0HZ1siQ0Rf7ep8
+         gd7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=Lv2Hrxl3LwDxTEsmz+QcMAuuteEiuFPDvjHpBRCpE4g=;
-        b=Q0yqWK43CY4v12djLPW203Ts/zJf68RoVvGAgzc5aBVbvj6Me2dskr54Jb26WyGQq5
-         TSVccy+mBhoTcZozWlt/JpBY/FIRaKqKIlYovS3q3clSWuJWl1L3oHpGDTn8TYJ92AhO
-         fXLZiVIM2UnntzZ7ypw1o7MriKZt9XwpfHvA7CVQDoCxsQAfKbaYXi3vI1vuT4veR3q6
-         JMW+5hTeG7zxs5h7oFqNm3a4NFq+MCCFbqIli1fL35ib4vscvQ0QfiCIx4czVNqO2QDr
-         m1LVsipxqY9WjyItZsUUPcb/3oT7Vl68GUWHeH60RzzCXLuIp8ZKfbB1q+7qRS9x+h3a
-         lNSw==
-X-Gm-Message-State: AOAM533fmUh4I3cc87MnyXa0Q4JnalAXzZw1isuZx3fALvVIDBaCiLZ0
-        Q4jZnpiZUYuZ41P3DbQEJomBYPmw3ie+ag==
-X-Google-Smtp-Source: ABdhPJzS0QRuqT734uqlwIUWwsRzuPaXBgm6aRHTWbwkKn9dFxnbOzJz6A+LaJ44XW1VgLVIucQvDQ==
-X-Received: by 2002:a63:c702:: with SMTP id n2mr28011041pgg.382.1609838850758;
-        Tue, 05 Jan 2021 01:27:30 -0800 (PST)
+        bh=9T5heFasP6GdSI0JOfW3kJxvkt3tkvCQFRqpJPskOtQ=;
+        b=La6zaMcilel+7Rh1HddpOa9FRPiY39yPmqhU4DS8nAsfUbVGLv1ctpmjWfX/m4q2Y9
+         1a2sYLodFWWDJnZMlz4365eLUqAV6Ml2DB+IWvA57PfGbUfR754+5A9s5Mcd8/JZjLQ2
+         dUkjMNxuR7GajGaP9kiolsTJoMm9kwa2OCFWpAGkzuj6J0KWPRJ4h1l7U11hrz0PrwCw
+         DqIsWhAuyQwhWZGVmjiueQSk1K35mfLXz0LbLzN7CqqQ1o4u0hQW80M9euMdwO8gYM95
+         dbvUxGatmYUaHpHVEb0BX8bfC2vgGssiMqjscBPsQXGh5rKK2Jr9D7xUiozsHcSJpWGG
+         9VZA==
+X-Gm-Message-State: AOAM531q2dheVQXR/5jm5mWhx5BqKxj9Be6X16J4S5c1+u0mPDd61dhO
+        zX6GoOUMWeTQgcsc2LkNAgeYsDDCTfYitw==
+X-Google-Smtp-Source: ABdhPJw1ba621KJTWA18glkDSOUZQ4FHXfpINGbaxp+3EbjdBWh6Y0QTO5gDzTvawO6Fv8S7t1Y8KQ==
+X-Received: by 2002:aa7:8159:0:b029:1a5:929b:16b6 with SMTP id d25-20020aa781590000b02901a5929b16b6mr68210026pfn.12.1609841531318;
+        Tue, 05 Jan 2021 02:12:11 -0800 (PST)
 Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id m26sm58289101pfo.123.2021.01.05.01.27.29
+        by smtp.gmail.com with ESMTPSA id u68sm20897983pfb.70.2021.01.05.02.12.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jan 2021 01:27:30 -0800 (PST)
-Message-ID: <5ff43102.1c69fb81.af7e0.4dab@mx.google.com>
-Date:   Tue, 05 Jan 2021 01:27:30 -0800 (PST)
+        Tue, 05 Jan 2021 02:12:10 -0800 (PST)
+Message-ID: <5ff43b7a.1c69fb81.443ac.e62a@mx.google.com>
+Date:   Tue, 05 Jan 2021 02:12:10 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Branch: devel
 X-Kernelci-Tree: linusw
 X-Kernelci-Kernel: v5.11-rc1
-X-Kernelci-Report-Type: build
-Subject: linusw/devel build: 7 builds: 0 failed, 7 passed,
- 2 warnings (v5.11-rc1)
+X-Kernelci-Report-Type: test
+Subject: linusw/devel baseline: 112 runs, 3 regressions (v5.11-rc1)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 7 builds: 0 failed, 7 passed, 2 warnings (v5.11-rc1)
+linusw/devel baseline: 112 runs, 3 regressions (v5.11-rc1)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.11-rc1/
+Regressions Summary
+-------------------
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.11-rc1
-Git Commit: 5c8fe583cce542aa0b84adc939ce85293de36e5e
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 7 unique architectures
+platform                   | arch  | lab          | compiler | defconfig   =
+       | regressions
+---------------------------+-------+--------------+----------+-------------=
+-------+------------
+imx6sx-sdb                 | arm   | lab-nxp      | gcc-8    | multi_v7_def=
+config | 1          =
 
-Warnings Detected:
+imx8mp-evk                 | arm64 | lab-nxp      | gcc-8    | defconfig   =
+       | 1          =
 
-arc:
-
-arm64:
-    defconfig (gcc-8): 1 warning
-
-arm:
-    multi_v7_defconfig (gcc-8): 1 warning
-
-i386:
-
-mips:
-
-riscv:
-
-x86_64:
+meson-gxl-s905x-khadas-vim | arm64 | lab-baylibre | gcc-8    | defconfig   =
+       | 1          =
 
 
-Warnings summary:
+  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.11-=
+rc1/plan/baseline/
 
-    1    drivers/pinctrl/nomadik/pinctrl-nomadik.c:952:8: warning: unused v=
-ariable =E2=80=98wake=E2=80=99 [-Wunused-variable]
-    1    arch/arm64/kernel/smp.c:810:16: warning: unused variable =E2=80=98=
-irq=E2=80=99 [-Wunused-variable]
+  Test:     baseline
+  Tree:     linusw
+  Branch:   devel
+  Describe: v5.11-rc1
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      5c8fe583cce542aa0b84adc939ce85293de36e5e =
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
 
-Detailed per-defconfig build reports:
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
+Test Regressions
+---------------- =
 
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
 
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
-matches
 
-Warnings:
-    arch/arm64/kernel/smp.c:810:16: warning: unused variable =E2=80=98irq=
-=E2=80=99 [-Wunused-variable]
+platform                   | arch  | lab          | compiler | defconfig   =
+       | regressions
+---------------------------+-------+--------------+----------+-------------=
+-------+------------
+imx6sx-sdb                 | arm   | lab-nxp      | gcc-8    | multi_v7_def=
+config | 1          =
 
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
 
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
+  Details:     https://kernelci.org/test/plan/id/5ff43207b85a29b3b6c94cce
 
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sect=
-ion mismatches
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm/mul=
+ti_v7_defconfig/gcc-8/lab-nxp/baseline-imx6sx-sdb.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm/mul=
+ti_v7_defconfig/gcc-8/lab-nxp/baseline-imx6sx-sdb.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/armel/baseline/rootfs.cpio.gz =
 
-Warnings:
-    drivers/pinctrl/nomadik/pinctrl-nomadik.c:952:8: warning: unused variab=
-le =E2=80=98wake=E2=80=99 [-Wunused-variable]
 
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
 
----
-For more info write to <info@kernelci.org>
+  * baseline.login: https://kernelci.org/test/case/id/5ff43207b85a29b3b6c94=
+ccf
+        new failure (last pass: v5.10-rc4-92-g7ac554888233) =
+
+ =
+
+
+
+platform                   | arch  | lab          | compiler | defconfig   =
+       | regressions
+---------------------------+-------+--------------+----------+-------------=
+-------+------------
+imx8mp-evk                 | arm64 | lab-nxp      | gcc-8    | defconfig   =
+       | 1          =
+
+
+  Details:     https://kernelci.org/test/plan/id/5ff432f8a9b9126583c94cc1
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm64/d=
+efconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm64/d=
+efconfig/gcc-8/lab-nxp/baseline-imx8mp-evk.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
+
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5ff432f8a9b9126583c94=
+cc2
+        failing since 19 days (last pass: v5.10-rc4-94-g3048c5493cd20, firs=
+t fail: v5.10-rc4-92-g7ac554888233) =
+
+ =
+
+
+
+platform                   | arch  | lab          | compiler | defconfig   =
+       | regressions
+---------------------------+-------+--------------+----------+-------------=
+-------+------------
+meson-gxl-s905x-khadas-vim | arm64 | lab-baylibre | gcc-8    | defconfig   =
+       | 1          =
+
+
+  Details:     https://kernelci.org/test/plan/id/5ff43190dfd4ee57b9c94cb9
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm64/d=
+efconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s905x-khadas-vim.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.11-rc1/arm64/d=
+efconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s905x-khadas-vim.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05-4-g97706c5d9567/arm64/baseline/rootfs.cpio.gz =
+
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5ff43190dfd4ee57b9c94=
+cba
+        new failure (last pass: v5.10-rc4-92-g7ac554888233) =
+
+ =20
