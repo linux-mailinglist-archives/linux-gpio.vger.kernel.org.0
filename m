@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C12CE2EAEA8
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 16:36:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2AAC2EAEF1
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 16:42:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbhAEPfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 10:35:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
+        id S1728901AbhAEPlR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 10:41:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbhAEPfu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 10:35:50 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FD1C061574
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 07:35:09 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id o19so73577797lfo.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 07:35:09 -0800 (PST)
+        with ESMTP id S1728882AbhAEPlQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 10:41:16 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23648C061795
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 07:40:36 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id y19so73368853lfa.13
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 07:40:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=n9ywhnkKl+8ibGFk6x/w4vD3KrzTNdzxRk/xz3CiXrI=;
-        b=G5INoog9FncFklZTcFfFeYnQ953tRmn/YZ5304migaJ7GQECN5N5BHIEPH+5+8UkwW
-         zjA+UnVa/n7UWLVM6jvtgXx63iWz4Kgtdf2zsV8LFUwGL5jgWQ7JGjuU/PQysJRvVL9z
-         2g0N8tn7FpNXXXXcj2e+W4AHYWfaQeAIsodH7vOBWAwES7nxLn8799VrbaI/iHHRX5x7
-         CjT2xD5fzjBTffFmgtpwY2SkpU+/w7gVl2SYy2sEkZs/AM6sORbT0YZSt3I0vzIhmlgA
-         IX+lwh+7Wzq6UM3750IyW1UhcnEgv4+MzRWZSff7zYglzHhUKC767vM1Flop91YW0Q0y
-         nzJw==
+        bh=8Izau05cqCVuspLwen2iXN40K1vFFwnjcmg+GBN87/4=;
+        b=n4aOGrqLYsUxHvSNfaVQ0n17PnnxNEO3CyeRdPHqF3WaAzn2l3eHx0rdg4pHSYpacS
+         sK3xG+7yZvT8JmUbiaaaIJcJ8tPZc+AjCWFoIKM71arnkQTEs3YzZZUu0VedvRSe5DDQ
+         jRPqXC5dOB6jhlxKgVJDX8NXW3IrU2DHHddugkKcnHCAKmXX41qg5v2fVkbumQ5QEZpR
+         56yhijf05Ugp5A2d4VJ0VQxwD1LDjTnR3B5cdB964NZx1tnaBbcIjl1KcYbnTzZ9eZda
+         BQ/s5UHM6nw2KysL6ud6BMSgNIQsKsaTh+yCWUW2JoiGMr3jYTVrbSJRaQ2KYP+N9RQo
+         juIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=n9ywhnkKl+8ibGFk6x/w4vD3KrzTNdzxRk/xz3CiXrI=;
-        b=h9IZTzESuH6bcYa5HgZUBQcWK7IpnQ49PkapLZ7II1CDlCVenkc5Q5t8xqksYYsTvA
-         TxvLtWklpAB3TzdT72mbN1m19pk8OPyildF0Woja4nF8nyqfGSVjU4ssy3asQdG5xY7Q
-         4f3zv4OXn7Xfq1RTLjvex1TlaLlDSztEC07e9NLjWHcr4zl/OcaHNj3BBYh9G5++qj7i
-         8Ai2NeHxRzfGAEpZb+a8YWEVlyCVLTaRjltp47YteEfyhEdVoVqLMoM8Kaswk3IwLien
-         A1LEOSudUVw3HegQuoOgIYUfgbf+qErVDwfq6ZeNnMHHvXwZ8QcJ8BOo30lxKU8Penbr
-         d9AQ==
-X-Gm-Message-State: AOAM531SxVI/tAVUHn/FpHnwbqizwCEGlT/CCQxxBG5nhOOfmCI/QF4B
-        KKJvSE3mJSeMmE8uZ8l65nGFWFUCm6x3nWsiuWHcjiq3G2cF7A==
-X-Google-Smtp-Source: ABdhPJwS/ugJjp0NHwgEkQVOeiSMidQXGzCH5Ti61fwr4Um/lKyqn1LqGe7XzDjRgvV/2fVh3MubVhgBUOT/Q68yrDk=
-X-Received: by 2002:a05:6512:74e:: with SMTP id c14mr37687128lfs.529.1609860908349;
- Tue, 05 Jan 2021 07:35:08 -0800 (PST)
+        bh=8Izau05cqCVuspLwen2iXN40K1vFFwnjcmg+GBN87/4=;
+        b=ROPvfZPQlhs0ha5ry6UCVOq9ZmRnrnKBakYwVtaYy1/AJvHMfMdJ/cXX5ozJJ47G0U
+         VeM2WfVmhe/kgcUHvyZcaakYByvw5UCCBVZtXYSLidAxBnaIibWoeBLzRUqoAvn5eNRt
+         oN0KSx86vkMp5fV3+6q1zL7QYvuo+i22jW5OH+FBwlM/5qUcwp4SH5iXAG+pksjDtdAw
+         mGP1a/tOGEhrmaV/A7hbA0N2eajcTB9f4zI5dbLuSmuf/VuDKE8Jkn7XwOkL5sAFGXUl
+         JmgXIttDbiRZot6mUDSMaJSZt0ZU3Y2VsdswHANdy5cQtX840XbP8lmCEuuLTaqIUAgE
+         DdJQ==
+X-Gm-Message-State: AOAM533oEUIdmkj8RdeNW0BG/jwQi+DSPrQ8140zHuoIuygnXmIeJqWD
+        JnQ1jq+XIilHAzPjsZ9WJ1IIgmUb0dkLgX/rxhrt/j0YQuP9uQ==
+X-Google-Smtp-Source: ABdhPJyrHSZvc9Zm994DoD7/LF3CdtsRP5OW7X7zvRIRc8zB9qsQVSjTN8n4X4p8c31MzoIh8MZJCoXrXLt3QL6qXOY=
+X-Received: by 2002:a05:6512:3f3:: with SMTP id n19mr37174018lfq.586.1609861234575;
+ Tue, 05 Jan 2021 07:40:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20201230214918.17133-1-festevam@gmail.com>
-In-Reply-To: <20201230214918.17133-1-festevam@gmail.com>
+References: <20201230214918.17133-1-festevam@gmail.com> <20201230214918.17133-2-festevam@gmail.com>
+In-Reply-To: <20201230214918.17133-2-festevam@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Jan 2021 16:34:57 +0100
-Message-ID: <CACRpkdatsW79FMfN2qZQdYSrz1wmHz82zSLZwxrh5am1pWgebg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: 74x164: Introduce the
- 'registers-default' property
+Date:   Tue, 5 Jan 2021 16:40:23 +0100
+Message-ID: <CACRpkdZvOcQ3Xcxa-iguHhamh5KZWtrobhhcsYe_fA499LfUpg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: 74x164: Introduce the 'registers-default' property
 To:     Fabio Estevam <festevam@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -63,57 +62,43 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, Dec 30, 2020 at 10:49 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-> There are cases where a certain default output value in the 74x164
-> output is needed.
+> From: Sandor Yu <sandor.yu@nxp.com>
 >
-> For example: the imx6ul-evk board has the Ethernet PHY reset controlled
-> by the 74x164 chip.
+> On the imx7d-sdb board, there is one output pin of the 74x164 that
+> controls all peripherals power supply (PERI_3V).
 >
-> After enabling the OE pin, the output pins of the 74x164 chip go to
-> zero by default, which makes the Ethernet PHY not to be detected.
+> This pin should be at high voltage level when the 74x164 is probed,
+> otherwise the modules dependent on PERI_3V3 will not be powered.
 
-So should the ethernet PHY not just have some reset-gpios
-that it obtain and de-assert as part of probing?
-
-For example drivers/net/phy/mdio_bus.c has this:
-
-        /* de-assert bus level PHY GPIO reset */
-        gpiod = devm_gpiod_get_optional(&bus->dev, "reset", GPIOD_OUT_LOW);
-
-Other drivers can do the same.
-
-Deferred probe should ascertain that this GPIO driver gets
-loaded before the ethernet phy driver.
+This seems like a usecase for a fixed GPIO regulator.
+Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+drivers/regulator/fixed.c
 
 > Add a new optional property called 'registers-default' that allows
 > describing the default output value for each shift register.
 >
+> Signed-off-by: Sandor Yu <sandor.yu@nxp.com>
 > Signed-off-by: Fabio Estevam <festevam@gmail.com>
-(...)
->  Optional properties:
->  - enable-gpios: GPIO connected to the OE (Output Enable) pin.
-> +- registers-default: An array of 8-bit values describing the default output
-> +value of each shift registers.
+> ---
+> Changes since v2:
+> -Add Sandor's Signed-off-by tag.
 
-What this does is to set up several of the GPIO lines to default
-values, right?
+Again while poking some defaults into some registers does indeed
+solve the problem, what we really want is to assign initial values
+to GPIO lines for cases where there are no consumers.
 
-I think this is a hack, there have again and again been proposed
-to have a way to set up initial values of GPIO lines. I think we
-need to fix that instead.
+If there are actually no device drivers on the GPIO line you can
+use GPIO hogs.
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-I am sorry that initial values just stalemate all the time.
+Otherwise e.g. properly obtain reset or GPIO regulator etc.
 
-I imagine that codewise it should just be some lines in
-of_gpiochip_scan_gpios() in gpiolib-of.c (which can later be
-made into generic device properties if ACPI needs this too).
+Deferred probe will sort things out,
 
-The format of the OF bindings is what people have been
-discussing for too long, whether gpio-initial-values, etc.
-I would just implement what the DT people want and will ACK
-so it solves your problem.
-
-I will try to look up references to earlier discussions on this.
+If you just need the line to go to a certain level for the short
+period between initializing the GPIO driver and the proper device
+driver taking control of the line, we need initial GPIO line
+values, which was discussed in my previous mail.
 
 Yours,
 Linus Walleij
