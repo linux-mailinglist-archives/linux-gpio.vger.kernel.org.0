@@ -2,75 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1B82EB564
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 23:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 687432EB56E
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jan 2021 23:36:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbhAEWbz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 17:31:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47798 "EHLO
+        id S1726469AbhAEWgM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 17:36:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbhAEWby (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 17:31:54 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C5BC061793
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 14:31:14 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id a12so2208699lfl.6
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 14:31:14 -0800 (PST)
+        with ESMTP id S1730727AbhAEWgM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 17:36:12 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C9B1C061798
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 14:35:26 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id h205so2237605lfd.5
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 14:35:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EgWaHtbTUAeR2bQoeG/I6X+g25dLoH+Ve/eNWw0Mabs=;
-        b=L6uJNwRsmyaYznnTWDT+A31utq8iL5LGUf0Z3dojlGv45h4Udyqbama8qRSakwybEs
-         gh4l0Yftqio4i0/wsM1FjBBBvWcMBWfWdSNI3fwEqZH8axklBLuRGlRjgyVOMmoJAipR
-         CdIbewVoOGVL8CeRN4mYqVyP50+aR0M1NfHHW3dxz11aAoXb4DYNdqp9Pkk0OUFjgmXE
-         DfV0S1vVFGd9mvKXBJIovbRn+nikuCq5ZKvMCi6vg8kBfRAS6m7DOQzOLXOZA4SToxsG
-         heGmdj46Mn0W7H6YSzjEoNJN2RgKWFKL/eLafV++suT/Owui7mXmTuJCGgb4jlp5UFC/
-         Vn8w==
+        bh=ahZlAn0+MJ2JO85Il4zqrFNJA3yrxvXOMtixl0o8ZDM=;
+        b=xuV05iXPoA0k4FUH7uDKhum9x67A5+g0WrawAcxr+1nwNNKfzDFFhw6RcXhGVjrdAG
+         DIPpNcT0tMeqTolY+1UHSqvl7wF97ndSycgqsK5KNZXYOFouXEAZcmV0db14uxPi/xTw
+         fkiZrDeIfCVzxFPh/s6f5MjQjTE3FbzD//H1CaneHnQ65EKqNmVFIkbD/Q8s3qRbnfpF
+         oeHplvWvkyArKkqqQjholOIaGROH0SMwCIhye89WnfvVn9lg7Rsy+dje5qrZY0xghJSO
+         IVRZp+VQXtSVeFeCiWvHmfOs8HhPvx9IfbltAGF1/00sbuHYdVKbwxTKfWFe05h5vvVQ
+         dbQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EgWaHtbTUAeR2bQoeG/I6X+g25dLoH+Ve/eNWw0Mabs=;
-        b=GvZoQMf9eVCo8pWDetV2MHzh587J1A7l7CWFSA/fOIGO//Wfo+6Ao56ks20c+Ok08o
-         eus/m+P9tEh5aFXAK8UKnZbd8RHboPyrv1zuxGVcK6nt+2fnFUXqkTKpneRkejdEmkvB
-         rxPU/ptGN+3NeE7IMpM/RJGaRM1hKxQYJFzEbxiGvPTuDw2CoU+17JzX3wGFknjlyd+v
-         ctV7w2+ZaL7P9EKSylpjllRV8r/fb9CYH3TkJAC47BLZHW2wxTFAnkv1jnt/I0RsnpKd
-         9/rH7PnD/o4S869tsVInOvhl0DMisKQz6dScdce2qyvYq7wwKR9vTSyBekUHVh2nMaxE
-         /LjQ==
-X-Gm-Message-State: AOAM533AZ+Rx4wUX/CiDIb79t7u/y/Q1EkGT4BPyTaihmZadxecOIxna
-        oH21dUCfTk7G5uzTlPhNThqhYIvWdWbm5ZzuF1zcbQ==
-X-Google-Smtp-Source: ABdhPJw3DTVMcCy8yC9MZcxKB5U7rWF5RRzcr7NBwVvDjB4RL0LkiQ7+AvfoKBAazUqY3amsZR0MzKTOhKQYpfGR7Z0=
-X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr795059ljj.326.1609885872751;
- Tue, 05 Jan 2021 14:31:12 -0800 (PST)
+        bh=ahZlAn0+MJ2JO85Il4zqrFNJA3yrxvXOMtixl0o8ZDM=;
+        b=kwsiLfoYDk37c4uVROZcRtr1FggQuOtcgc1zFgPBa07zVa+mwmnhV322m1Hbm3fie3
+         +ZeD8R5An6sC6M4X6hyRJ5LzETmNVt28mGRHKaC8zwYJjVvXz9qMcXRWeyQRA9CYe6gW
+         QH73ZqtMo/upi0Dr5CiiZaSyfPGv2kE2nk5RyVvqaCq9sFsyT4uFidNsDBmi5TR3HmWX
+         n3ti3uY14jy339QQHjVXiDuQU1wl8d6yRtH4qo7i1G9lxTuS1fXRroPpUvye3QOpYCCx
+         bodDOWvzlOYqnJHlk+0PxRuayQz1ro3rvxgnm9klEcfyFbxMRWRRfLshrZJhK+gZxIAI
+         EK7g==
+X-Gm-Message-State: AOAM530qZB17vJACtzokVZXFu0J08VIEwRH+0d8wYC0uAN4HwY85nLqE
+        NlkndDXu7uY/wJC72ouGrUIX9lSpiDsU84szJoBBEA==
+X-Google-Smtp-Source: ABdhPJzKIX1tyqxO7DBuxtMjhEds0Yt3Gvxf2kvrIu6dSu4kg7r3sapM7iAm3kjKr+iyrDzk5lF6EH5VLy/XUJEFifg=
+X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr800336ljj.326.1609886124436;
+ Tue, 05 Jan 2021 14:35:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20210102022949.92304-1-warthog618@gmail.com>
-In-Reply-To: <20210102022949.92304-1-warthog618@gmail.com>
+References: <20210103100007.32867-1-samuel@sholland.org> <20210103100007.32867-3-samuel@sholland.org>
+In-Reply-To: <20210103100007.32867-3-samuel@sholland.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Jan 2021 23:31:02 +0100
-Message-ID: <CACRpkdZ_drnFeaRtxeRT1J6cSLoRy=9r132HBFq3kKP7XQyeHQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] selftests: gpio: rework and port to GPIO uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Date:   Tue, 5 Jan 2021 23:35:13 +0100
+Message-ID: <CACRpkdZbNUxizfV5Oo8F8b0bsjNcBF6JfP=ufykNLeqErvU-ug@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] pinctrl: sunxi: h6-r: Add s_rsb pin functions
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        shuah@kernel.org, Bamvor Jian Zhang <bamv2005@gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 2, 2021 at 3:30 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sun, Jan 3, 2021 at 11:00 AM Samuel Holland <samuel@sholland.org> wrote:
 
-> Initially I just wanted to port the selftests to the latest GPIO uAPI,
-> but on finding that, due to dependency issues, the selftests are not built
-> for the buildroot environments that I do most of my GPIO testing in, I
-> decided to take a closer look.
+> As there is an RSB controller in the H6 SoC, there should be some pin
+> configuration for it. While no such configuration is documented, the
+> "s_i2c" pins are suspiciously on the "alternate" function 3, with no
+> primary function 2 given. This suggests the primary function for these
+> pins is actually RSB, and that is indeed the case.
+>
+> Add the "s_rsb" pin functions so the RSB controller can be used.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-All patches look good to me, I see Andy is helping you to hash out
-some shell script, anyway:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Is it OK if I just apply this patch to the pinctrl tree?
 
 Yours,
 Linus Walleij
