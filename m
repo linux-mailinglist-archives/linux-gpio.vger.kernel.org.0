@@ -2,105 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 620C32EBA78
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 08:29:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E63CD2EBA8F
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 08:40:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725837AbhAFH2g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jan 2021 02:28:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbhAFH2g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 02:28:36 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD09C06134D
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jan 2021 23:27:55 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id ga15so3838700ejb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jan 2021 23:27:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xGW/hKcgThQrkDmp4/Nq73y8NgwE8XDkGF7zvIldMrM=;
-        b=A2KNk3AHTmJlI18STPME1Sa6t9gc1Ftvw7b31H8Vj39YjusgeaU0c1ypsqit52yWFF
-         3eQGLVMgPfhF0tcCbEJmm3HsNCJ0zZ8NG3JRTyPKW7OXNUZNMMniS0bT/7ndVqBa7b3q
-         FNEjNtzso2oFjWRDBWdctZ8/UBVolbVcrg/o27xs67qQd0Kl0+7v6and6KXS4zT0IDGo
-         L8nHoW7UNQO5cliDlHgM3DAezmy7JMyVE7cZk2uzueStSK5Zefr34N8UH/sgVW6YOIjG
-         mkROA3nUh248uHrjhIU+cLDXpa2DbIJKN7YqY8L5/rgwpwStSYsD7b1Mvy7MEYO2VlnD
-         LaHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xGW/hKcgThQrkDmp4/Nq73y8NgwE8XDkGF7zvIldMrM=;
-        b=Yg3GQduzrrUIYv1Ab/yuBrgtDsoiX5t/zPr7ZS9sqZPdzNMIi1T4pr2CsYk7sZzn4H
-         ThMyJII6E5gOVMFMrA4xsSTDIwkDSFKycneVwM10SBbVFryVko2+b8Ag+D9mJ27XtGna
-         rahYHrO2Q9u9ipdV9g/jDlM+PjYFtz9hcz+y92+voA/N9LiYbXgkudr5QbTUdS9tufFg
-         8wXLU+SHOjZRUzM5GN9dyUKV0sbW/4GEHCuexaK59UHWmM40Mg+E46LZ7RePDEEhjVtr
-         vUt6M7Ox9a/tuo0a9xwG0lzOsQXI1lYkQ/r4YHXg5TX0NF1SOU9bmxAFm7OMuRLxpqOy
-         0oyw==
-X-Gm-Message-State: AOAM532Z2tK7JTKAItFSmfOiiRY3C7IhaHJPg/LQqh4KRxGjLbZSjm63
-        btkfD6OFQsPHXqQo6gPEsXBXaFLydUK8DYdQXORLIw==
-X-Google-Smtp-Source: ABdhPJwYjz8N2N+aC7hTbxtGQy//7rOVk9vuZpXjappd1ywiMkx0G+q8sv1KN8h2TqqcyRgEkKycqJpY3pGZKSJx6nY=
-X-Received: by 2002:a17:906:3a55:: with SMTP id a21mr2057000ejf.516.1609918074173;
- Tue, 05 Jan 2021 23:27:54 -0800 (PST)
+        id S1726359AbhAFHid (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jan 2021 02:38:33 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:36271 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbhAFHid (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 6 Jan 2021 02:38:33 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 2925244071F;
+        Wed,  6 Jan 2021 09:37:48 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v6 0/4] gpio: mvebu: Armada 8K/7K PWM support
+Date:   Wed,  6 Jan 2021 09:37:36 +0200
+Message-Id: <cover.1609917364.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <cover.1608963094.git.syednwaris@gmail.com> <CACRpkdYZwMy5faNhUyiNnvdnMOf4ac7XWqjnf3f4jCJeE=p2Lw@mail.gmail.com>
- <CAMpxmJW46Oh2h7RrBNo5vACfYnWy63rZOO=Va=ppUDeaj5GpBg@mail.gmail.com> <20210105143921.GL4077@smile.fi.intel.com>
-In-Reply-To: <20210105143921.GL4077@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 6 Jan 2021 08:27:43 +0100
-Message-ID: <CAMpxmJXX5tPBvHRBkgCBK22vUc_FOo2ENUagqOF-opzakkyjrA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Introduce the for_each_set_clump macro
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "(Exiting) Amit Kucheria" <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 5, 2021 at 3:38 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Jan 05, 2021 at 03:19:13PM +0100, Bartosz Golaszewski wrote:
-> > On Sun, Dec 27, 2020 at 10:27 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >
-> > > On Sat, Dec 26, 2020 at 7:41 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > >
-> > > > Since this patchset primarily affects GPIO drivers, would you like
-> > > > to pick it up through your GPIO tree?
-> > >
-> > > Actually Bartosz is handling the GPIO patches for v5.12.
-> > > I tried to merge the patch series before but failed for
-> > > various reasons.
->
-> > My info on this is a bit outdated - didn't Linus Torvalds reject these
-> > patches from Andrew Morton's PR? Or am I confusing this series with
-> > something else?
->
-> Linus T. told that it can be done inside GPIO realm. This version tries
-> (badly in my opinion) to achieve that.
->
+Changes in v6:
 
-I'm seeing William and Arnd have some unaddressed issues with patch 1
-(with using __builtin_unreachable()).
+  * Reduce rounding error in the get_state fix (RMK)
 
-Admittedly I didn't follow the previous iterations too much so I may
-miss some history behind it. Why do the first two patches go into lib
-if this is supposed to be gpiolib-only?
+Changes in v5:
 
-Bartosz
+  * Add a fix for get_state
+
+  * Fix typo in patch #4 subject line
+
+  * Add Rob's review tag on the binding documentation patch
+
+Changes in v4:
+
+  * Remove patches that are in LinusW linux-gpio for-next and fixes
+
+  * Rename the 'pwm-offset' property to 'marvell,pwm-offset' as suggested by 
+    Rob Herring
+
+The original cover letter follows (with DT property name updated).
+
+The gpio-mvebu driver supports the PWM functionality of the GPIO block for
+earlier Armada variants like XP, 370 and 38x. This series extends support to
+newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
+
+This series adds adds the 'marvell,pwm-offset' property to DT binding. 
+'marvell,pwm-offset' points to the base of A/B counter registers that 
+determine the PWM period and duty cycle.
+
+The existing PWM DT binding reflects an arbitrary decision to allocate the A
+counter to the first GPIO block, and B counter to the other one. In attempt to
+provide better future flexibility, the new 'marvell,pwm-offset' property 
+always points to the base address of both A/B counters. The driver code still 
+allocates the counters in the same way, but this might change in the future 
+with no change to the DT.
+
+Tested AP806 and CP110 (both) on Armada 8040 based system.
+
+Baruch Siach (4):
+  gpio: mvebu: fix pwm get_state period calculation
+  gpio: mvebu: add pwm support for Armada 8K/7K
+  arm64: dts: armada: add pwm offsets for ap/cp gpios
+  dt-bindings: ap806: document gpio marvell,pwm-offset property
+
+ .../arm/marvell/ap80x-system-controller.txt   |   8 ++
+ arch/arm64/boot/dts/marvell/armada-ap80x.dtsi |   3 +
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi |  10 ++
+ drivers/gpio/gpio-mvebu.c                     | 120 +++++++++++-------
+ 4 files changed, 97 insertions(+), 44 deletions(-)
+
+-- 
+2.29.2
+
