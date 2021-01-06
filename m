@@ -2,123 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C976D2EBCEB
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 12:00:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98CD02EBCF3
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 12:05:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbhAFK75 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jan 2021 05:59:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbhAFK75 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 05:59:57 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DE2C06134D
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jan 2021 02:59:16 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id qw4so4371894ejb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Jan 2021 02:59:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWlXC8BKh3+3Bf8ABIpEApZGEjbSGt1OiJ8+9qOElDc=;
-        b=zOmew6x2ZlKTmlzIVqwS1pcjwTh4Q/9TFnuqzgM4uKEiBk+w9FFvoWvQmMNGE7yXDK
-         O3QapFHHWHlAXMAGqttPSaU75GZta3YnC1+k0w4gAxpKd5kmMAEk4jrSE4wO1LwpPl+o
-         vKr8OjtdGLffWrsCCzlyXpuXqY0jaHHsgZXGNsXHPM9mqOD+P7roi0Xpn1ulyqOZDYgi
-         AU17Qu+HN9YVc3jNv1CkmdugvOzT4jnMPchUCwjhv/hm2C0rB6flyfPM+RHEQStwf6UG
-         2pz77HxsldXqq5DDVHesDMy9Kd3MlESF42RUR6/pvwLWfgs46zdX4VcDu6hH/iKCvpup
-         cwAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWlXC8BKh3+3Bf8ABIpEApZGEjbSGt1OiJ8+9qOElDc=;
-        b=G/bAAqTNrVjA13TuXHWVP/fB+qZfsd535E3dkUW+PCEFSjLDqc8jmy5frHfwRekCE7
-         t7pkjwhzX3CjXfkDhjhf1I7oOqXYWsWB4C06VHadJA81Zgaw5SShwJhC+SjrcNyRVMnz
-         FQvTBav9RBrdIbX8lfyrI2Dio31znkR5mfYptvKP/7DinCHeRj09Jcf4rOQR8C25VrgF
-         P6tPZNVocV69MDxDXnq9Zz3IIdFBac9Zv5UEPqf82Di8NKqsnJ7E1p2SyMWxDN0nHkIj
-         Lg7XJCl/tIo2zTAKYSa4OP/9N6Q4IYpDLwUo8rVhLKzwDw4KTsD9r+QLTB3qzHlxSXem
-         fd1Q==
-X-Gm-Message-State: AOAM533JThkqxLtfOHL9CKvV5e6xQYcaw+ly6EKcOahC+bSjtMLrqhsa
-        E/Yktk5016YGDQQackLg8iV3gxk7i68UsFaVlitomg==
-X-Google-Smtp-Source: ABdhPJxVX0BETaULoe3F/yF8NkEDm2PKPRl8Y0HNy9lmSf+rq0gc/lGchEhWtjWAw7gf1ZxEqJhwqkUGoHg2vtD+dYE=
-X-Received: by 2002:a17:906:3953:: with SMTP id g19mr2415252eje.429.1609930755657;
- Wed, 06 Jan 2021 02:59:15 -0800 (PST)
+        id S1725792AbhAFLEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jan 2021 06:04:51 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50679 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725822AbhAFLEv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 06:04:51 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 87F0A580055;
+        Wed,  6 Jan 2021 06:04:04 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 06 Jan 2021 06:04:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=SG0jngfQb86fRNUTTrwZ6PDjCut
+        dxkonMnVRfFVhezw=; b=pIHOT/0WmC9nD1USAxUNB7b1LMUjHaOcQt1j1aPM78X
+        +as8WpDs8IP30nbAqM4Y37TmkxYl/E4EV1vIdyhFmN5wrWsqjAEDP+xRCVGSPz12
+        d7K+BqHKO1hsWKaWxDCmdQIQ/Rw4y/IVzLu14g1K4Scze6Xgy2M60HC/ICADj+dx
+        JFWZW8yW+c7bCBS5Rr+P2fSWgc0wGEsUl/S+Yu2VSf86HYJgNUrw/nsf0e96PAlS
+        hTJvLHs+jFEgDz7cLZ6eeJrm9m7Kyov2AV1OtC0xXw8QjOevf6CSY11PKKlqbDH8
+        /0whRrslw51+Cc4zBxGxmtS4hBMctSkIMCP+hYlKu/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=SG0jng
+        fQb86fRNUTTrwZ6PDjCutdxkonMnVRfFVhezw=; b=UQC2yPXQw+pTC+6NnJF9Y3
+        XlRT2wfF6j+eQbuVE6KWJHvok/u/DUQmNGIII/qLNvXNy3RpoW3l8K5x7t9SGvxf
+        R61GGGE6FnX3g1evbqfYcF46JDrtD+3w1qAZvmlTjWq5qYsoIiP991Jr7B9K86W7
+        znmK0P6Qm3hDtlW2AeI3HDy7ZyQ9AfAWBSLEfwTpbbT7wqgIiROlC8nNT5kTfzAr
+        P35sitIxILptqsy7pDgaay/bZjOCqEpHigraLBUjQ0w6VhlwFPlg4vYWI6QfLq1O
+        Iow2J9AOG3aRh0ydSYhLi0p63b4gRJnoGNqjZ4LFPVPtG3j0KtgjRJ7W+K152/EQ
+        ==
+X-ME-Sender: <xms:Ipn1XwZ70NTBxx38-HZ7wTlqwgfix_y-vkP-9RwO8Y8iSN6sVTa6gA>
+    <xme:Ipn1X7bhydC36R-7bNyjuCb9AoAaKBJTfoHTt8u386SfVB8YLv3BwRE5fGfLmsYad
+    FkVRQbq4ej3f0WD2_c>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefledgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:Ipn1X6_25iVF8WOEMgP5uyUzkntj1w0LHwIS5Sxi4r4VCS6C6sNzqQ>
+    <xmx:Ipn1X6quLxXu_B7DyE1XN7m-r_R1P_r7_L4SlbWgwRSGUsqPEuUsYg>
+    <xmx:Ipn1X7reNYk5c8tB38NY8jO6QSbUAqOvnepAfVrcOPkcdBxViCLO2g>
+    <xmx:JJn1X5iNBw9Lxke0lHuRVQXaq5f5U00IEwwP5-FKlc6s9_fguwxIfA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2E6E924005A;
+        Wed,  6 Jan 2021 06:04:02 -0500 (EST)
+Date:   Wed, 6 Jan 2021 12:04:00 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 0/4] Allwinner H6 RSB support
+Message-ID: <20210106110400.kjy2zjxgakpgya7z@gilmour>
+References: <20210103100007.32867-1-samuel@sholland.org>
 MIME-Version: 1.0
-References: <20201127140852.123192-1-thierry.reding@gmail.com>
- <20201127140852.123192-3-thierry.reding@gmail.com> <CACRpkdZ3Krgsjyc3-NU0pmYkzFPue_-1VWqkdNvxoG2c6OF7aQ@mail.gmail.com>
- <X9zBeEDO8uTOCyxw@ulmo>
-In-Reply-To: <X9zBeEDO8uTOCyxw@ulmo>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 6 Jan 2021 11:59:04 +0100
-Message-ID: <CAMpxmJUyX_6FJ_04N-XXoJKJp-N_Ui0j7jg0=bp04F-ns6zk0g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: tegra: Convert to gpio_irq_chip
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="la7j4ywkx3wucev4"
+Content-Disposition: inline
+In-Reply-To: <20210103100007.32867-1-samuel@sholland.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 18, 2020 at 3:49 PM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> >
-> > I don't quite get this. This makes sense if there is one parent IRQ
-> > per interrupt, but if one of the users of a GPIO in a bank sets the
-> > IRQ type to edge and then another one comes in and set another
-> > of the lines to level and then the function comes here, what type
-> > gets set on the parent? Whichever comes last?
-> >
-> > Normally with banked GPIOs collecting several lines in a cascaded
-> > fashion, the GPIO out of the bank toward the GIC is level triggered.
-> >
-> > I don't understand how this GPIO controller can be hierarchical,
-> > it looks cascaded by the definition of the document
-> > Documentation/driver-api/gpio/driver.rst
->
-> This is basically the same implementation that we've used in the
-> gpio-tegra186 driver. The goal here is to support wake events, which are
-> a mechanism for the PMC (which, among other things control wakeup of the
-> CPU complex from sleep). Wake events are a somewhat non-trivial concept
-> and I keep second-guessing this myself everytime I look at it...
->
-> So basically with these wake events we have a selected number of GPIOs
-> that are routed to the PMC and which can wake the system from sleep. To
-> make this work, the PMC IRQ domain becomes the parent of the GPIO IRQ
-> domain, so what we're forwarding the ->set_type() and ->set_wake()
-> operations to here is the PMC parent, rather than the parent IRQs which
-> are, I suppose, somewhat unfortunately named for this particular use-
-> case.
->
-> I suppose given the definition in the documentation the GPIO controller
-> is both hierarchical (it's a child of the PMC IRQ domain) and cascaded
-> (sets of GPIOs routed to a number of "parent" interrupts).
->
-> What usually helps me in understanding this better is to look at GPIO
-> and IRQ functionality as separate things. The GPIO controller is
-> cascaded from the point of view of the GPIOs and how the Linux virtual
-> interrupts are mapped to physical interrupts. On the other hand the GPIO
-> controller is hierarchical from an IRQ domain point of view because some
-> of the GPIO interrupts also have a parent interrupt in the PMC.
->
-> I hope that clarifies things a little bit. More specifically the
-> irq_chip_set_type_parent() isn't actually going to cause the type to be
-> set on the cascaded interrupts that go to the GIC, but on the parent
-> interrupts within the PMC (i.e. the wake events) which have separate
-> registers to program the type and wake enables.
->
-> Note that because not all GPIOs may have a corresponding wake event
-> (i.e. no parent, hierarchically speaking) that's also why we first
-> check for data->parent_data. See this email thread for a bit more
-> background information from Marc, who added proper support for this
-> recently:
->
 
-It's clear to me that I need to finally educate myself more on
-hierarchical IRQs. I don't want to block this patch though until that
-happens. I trust that Thierry knows what he's doing here and so I've
-applied it for next.
+--la7j4ywkx3wucev4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+On Sun, Jan 03, 2021 at 04:00:03AM -0600, Samuel Holland wrote:
+> The Allwinner H6 SoC contains an RSB controller. It is almost completely
+> undocumented, so it was missed when doing the initial SoC bringup.
+>=20
+> This series adds the clock/reset, pin configuration, and device tree
+> node needed to use the RSB controller. Since RSB is faster, simpler, and
+> generally more reliable than the I2C controller IP in the SoC, switch to
+> using it where possible.
+>=20
+> This was tested on an Orange Pi 3 and a Pine H64 model B. This series
+> does not switch the Pine H64 to use RSB, as doing so would prevent
+> accessing the external RTC that shares the I2C bus.
+>=20
+> Changes v1->v2:
+>   - Put the new values at the end of the DT binding headers
+>=20
+> Samuel Holland (4):
+>   clk: sunxi-ng: h6-r: Add R_APB2_RSB clock and reset
+>   pinctrl: sunxi: h6-r: Add s_rsb pin functions
+>   arm64: dts: allwinner: h6: Add RSB controller node
+>   arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection
+
+For the whole series,
+
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
+
+--la7j4ywkx3wucev4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX/WZIAAKCRDj7w1vZxhR
+xYQfAP0d0eZgjSBWZRWwRpGm3npd9OZT4IBHcLq5qGPlR+h4WwEAjcQnNk4svGm7
+TgMNdaPKl4FKMqLUEGlbQ2VA7vMmCQw=
+=ENtI
+-----END PGP SIGNATURE-----
+
+--la7j4ywkx3wucev4--
