@@ -2,89 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 722F32EBC33
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 11:15:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC91D2EBC40
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 11:21:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbhAFKOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jan 2021 05:14:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45432 "EHLO
+        id S1726631AbhAFKUG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jan 2021 05:20:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbhAFKOT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 05:14:19 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7179EC06135A
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jan 2021 02:13:28 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id c7so3902144edv.6
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Jan 2021 02:13:28 -0800 (PST)
+        with ESMTP id S1726390AbhAFKUF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 05:20:05 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F0FC06134D
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jan 2021 02:19:25 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id n26so4325550eju.6
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Jan 2021 02:19:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u9+zWz1kXRm/cG2cWAgMkQ3WnJC2Q0wvNPxDG1IsJRY=;
-        b=t0i1tE0VsgVWdosywvgtuPJTw8ZFzWEFB563jvDU1p+PQAzzjCn6kSbLa8DCY9lfVa
-         MtX5wlfGKFEnx6zXlF5k02QFLgLFL/tvtous90FlA1Uxk1QgdvHg6PV+pJFwKwUKYWmf
-         bWbPzkMJucAWMH3x2i499LokFG5k5nPFo6OWluYr/OPQJrLMPhbjXJPvJJgGaXK684f1
-         Xt67vZNGlIb2zfnFuw5TdYTfsbBuUe/xTKmCKLtBISpqUmSxb119vfBEvCHpHFyLmKLJ
-         lv/uqze5LePeLQG36N/wyzjqKkW4HKhCcL2tcxaUNJEi0AE5A2HeHeQmMbKzIbNoPsns
-         j9fg==
+        bh=RfZtGQOi+5ktSfM/61J9fTw+YXtvZLAc0qQROTziMcg=;
+        b=KGcqmOxid4eoEJ+pZnFPmnA4x82JGwICQnalxD1np2003L3BY1Fv6DEOfsx5LlJ2WW
+         A05W3e8TzJu00JCsmnF1i7hfrBxSNdzhL810cP+7XGSGXmIWuzWGHJGPOB0zVf8uWOEx
+         CnGn93JrTkN+qjLtGe+t7Se5h29RYirTKVXT0IN7nljlxesacJx0mKl0VTGZNJD1Mqpo
+         Lp35sDNY7FmRX6uOidtzCiUNcD0ZicbcEacQkiaGosNFAdoplq8NRTq4gSMKJaFifYv7
+         twzAJJ7EpkchymQY/ksgakKTiNnH5+y/+vnttzwOkgomI8F8SGggCi0PkNpizW1EBJ60
+         5RbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u9+zWz1kXRm/cG2cWAgMkQ3WnJC2Q0wvNPxDG1IsJRY=;
-        b=Xs3XKxZFiQXoJVuXmfyP9SwtQVq/V2QUg4syo6PF3xZfDx9jaCUSw3MOf5xh33Wcxk
-         NEeDoC6Phc8PIGwdjIpsU7CUl8lJHvqktuAwljOK7D3KXxYO0XDw/6B5M0R1oM9yVYqG
-         0Jct82mgOumWRNpoqSi2QWxCrSSHHQwbMYQVk9umZEM3PhifFb0zH1mgFQ10iSCiAypt
-         aoodBxEEkIdIPUvFONlgnf5gHdhV0FrC3BgAy0Qw4HwfbGhqaydQ6kbMUA41/uiuF6k5
-         TkytJ2KIUqAkrj2MM1g2AI/aN9qsnYeD6y8gzY71bjJuBguSxlSq8IywR41VzjiBXEuh
-         jg6Q==
-X-Gm-Message-State: AOAM531cx5wmhZJjac+wZi60uDAK4KGbib8MA19l8d6WEdJ3GRCM61SZ
-        ocYajdaN9LtPPcYrzN+yiQ97F+v8GIm/O+kNbFGNWQ==
-X-Google-Smtp-Source: ABdhPJy9vQU5trn9/gA9F9gMhDlU7Llm1TbqOosLtrOozkoW63EjRjx7GOmQkTWN8hpszTJK2fWQ6766sBY+W/AT+kg=
-X-Received: by 2002:aa7:cc15:: with SMTP id q21mr3484642edt.213.1609928007198;
- Wed, 06 Jan 2021 02:13:27 -0800 (PST)
+        bh=RfZtGQOi+5ktSfM/61J9fTw+YXtvZLAc0qQROTziMcg=;
+        b=c6GO6ZUz5ebJfX6Qodq7uYRjOWZBXRYJAmfr4wwQwPyFLswGxS6aQB90SWgD6Hrtzs
+         rwmdPAdns0sEm3lHmlY25kzBXbZ92+v9hJahJQIA66bsb/h65pvyDZ6cjqOFHeV/qSgN
+         +7d9dDdsT0jaoAZvoteglUhwh7efewbWYhHTNN3RhwYxD6Zpd2V68gZEp0tULo6smdeZ
+         1XQJ/91RyfGKNr/TR80FcpFjkZOBEU+hBINPhszaWGCAcZ+kpM5ENgPmgfmRjXfHSLfQ
+         yGiSBVJhrm8FFORY5g2renhw4SvelNj9yABp6rrr3qHYYrwKsVYYV2fPtrZJcqwqrL+5
+         CgsA==
+X-Gm-Message-State: AOAM530FmurhAZAHnngTWcyTWmcdr9K+PF0knVZJNotPF/+xyr2fsVhx
+        vhoybwHs8vSpJTTIo3KsXMSB8DQu99p3zxzR6Ws98w==
+X-Google-Smtp-Source: ABdhPJzFL62QFK60+hdZhAbcob4Oy0iqPN0jL/7rw1dMuYWKmsX2ysMroEHDd8HZ8dnKB/aM7ZHeLBjaxG9IzDmF7HI=
+X-Received: by 2002:a17:906:d8dc:: with SMTP id re28mr2413800ejb.168.1609928363766;
+ Wed, 06 Jan 2021 02:19:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20201217144338.3129140-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20201217144338.3129140-3-nobuhiro1.iwamatsu@toshiba.co.jp> <CACRpkdZeqqH_tev3USrC5BzX_w1rsjFQA=uGDZLPXZDG6jooKg@mail.gmail.com>
-In-Reply-To: <CACRpkdZeqqH_tev3USrC5BzX_w1rsjFQA=uGDZLPXZDG6jooKg@mail.gmail.com>
+References: <20201209165733.8204-1-a-govindraju@ti.com>
+In-Reply-To: <20201209165733.8204-1-a-govindraju@ti.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 6 Jan 2021 11:13:16 +0100
-Message-ID: <CAMpxmJUuby1ujg6WeO=4A483_GbyCSGL3aQ6m==oUFxSykQ+0w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] gpio: visconti: Add Toshiba Visconti GPIO support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+Date:   Wed, 6 Jan 2021 11:19:13 +0100
+Message-ID: <CAMpxmJWKzd4DLjp54PN0Wojc+twyMfnKMhmnxf+hT_xuiLDaYA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: Add compatible string for AM64 SoC
+To:     Aswath Govindraju <a-govindraju@ti.com>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        yuji2.ishikawa@toshiba.co.jp,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 4, 2021 at 3:58 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Wed, Dec 9, 2020 at 5:57 PM Aswath Govindraju <a-govindraju@ti.com> wrote:
 >
-> On Thu, Dec 17, 2020 at 6:45 AM Nobuhiro Iwamatsu
-> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+> Add compatible string for AM64 SoC in device tree binding of davinci GPIO
+> modules as the same IP is used.
 >
-> > Add the GPIO driver for Toshiba Visconti ARM SoCs.
-> >
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > Reviewed-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> This version is perfect!
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index cd91d61eac31..696ea46227d1 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -7,6 +7,7 @@ Required Properties:
+>                         "ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
+>                         "ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
+>                         "ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
+> +                       "ti,am64-gpio", "ti,keystone-gpio": for AM64 SoCs
 >
-> Bartosz: this hits pinctrl but it's fine to merge to the GPIO tree, should
-> not cause any problems.
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> --
+> 2.17.1
 >
-> Yours,
-> Linus Walleij
 
-I would have seen this series before had I not been ignored by the author... :(
+Patch applied with Rob's Ack.
 
-Bart
+Thanks!
+Bartosz
