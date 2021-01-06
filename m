@@ -2,60 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A17392EBE82
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 14:23:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 076EF2EBE96
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 14:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbhAFNTj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jan 2021 08:19:39 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10554 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbhAFNTj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 08:19:39 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4D9qfg06khzMFTr;
-        Wed,  6 Jan 2021 21:17:47 +0800 (CST)
-Received: from ubuntu.network (10.175.138.68) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 6 Jan 2021 21:18:48 +0800
-From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <andy@kernel.org>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH -next] gpio: wcove: use resource_size
-Date:   Wed, 6 Jan 2021 21:19:32 +0800
-Message-ID: <20210106131932.774-1-zhengyongjun3@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        id S1727172AbhAFN0N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jan 2021 08:26:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbhAFN0M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 08:26:12 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49836C06134C;
+        Wed,  6 Jan 2021 05:25:32 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id t6so1557961plq.1;
+        Wed, 06 Jan 2021 05:25:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rfSaaKFPCsYTMKsjFLgb3PFNNPkndz/7XIsR9mU4RAc=;
+        b=GTlDexopRbKwOa+ypeSiLjjyE8zwQquIDctLHgca8vAQm1SRUs823w6TlQY15E5LQs
+         RtJjhiY+fbzXELiUkaQs9I0FimvmjxAI7R0ybH04bJDymL1wRi5tsfXzsvJqry97BlXY
+         aPMUk8OeLmzttl/1gHfwBU8jczaV3h3sD3T5mf7F7weo7f461oVQ+B/5kktHYTxWyxvh
+         skAKkQ0ZcH2NK4IKolmAjMWWNJHDnv/2vdlKT/qNHdK6usElk12N5L+lMxOHj5A25K5u
+         oPCshmYSzgdy0/n/BLBkEgXR/01JdSh5FOqLNE2jsquIn6v+OeyAGaTlddEtP+smEj9v
+         g+8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rfSaaKFPCsYTMKsjFLgb3PFNNPkndz/7XIsR9mU4RAc=;
+        b=Z7Nbz5/iNN9u9AUEmjnLg5E2DugR40ZAxNZszcPvo2SZHtVO+2vnhdcDerp/sNdUdJ
+         aJCDYsYoU0f4vAEaqSF/x2dJtQFhAoOR49fWb1U4lEINpeIL2RDClO5YoZ/nyuYtQ/D4
+         m4XFW+2yMmKFIgbPneM2LNfnzIR+/oiCPgXjAH4vnum665YZHHo1HjdD/OKZsdbR0atN
+         uh7DgeXwWp0LUhTG6VEkOlXZ99CIGcXpZxrVNlfYOQ2zqeHzASkR3wfCXZPxnknpQj50
+         GF94MeH0eb0PdZcRSnBMu7f3qByhD2+whkkZCsAKIj+hnLFkdp4ZzBla3+W7dtNxN7Ot
+         dOmQ==
+X-Gm-Message-State: AOAM533SbpPqTtZuGTWTYfUQKnB2ZzNU7kpzZQwF7jiVxhjjtvHCOHd8
+        dP93VQiX726lC4Nn5aHgHroAgntokzVs07v1Bko=
+X-Google-Smtp-Source: ABdhPJy0QSxbDksTicF54QIKxE4nVtTb7NqYcG/EoK3gOoKqzHtI0LBY1KG4w+K3hjjFWLCC+ppAdbbcbcOGwfKtig8=
+X-Received: by 2002:a17:902:e98c:b029:da:cb88:f11d with SMTP id
+ f12-20020a170902e98cb02900dacb88f11dmr4265530plb.17.1609939531800; Wed, 06
+ Jan 2021 05:25:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.138.68]
-X-CFilter-Loop: Reflected
+References: <20210106131932.774-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20210106131932.774-1-zhengyongjun3@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Jan 2021 15:25:15 +0200
+Message-ID: <CAHp75VeihR0kDy0dW4d=bwykFkS8+G3=u_yjS-SFU74C=i6z9g@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: wcove: use resource_size
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use resource_size rather than a verbose computation on
-the end and start fields.
+On Wed, Jan 6, 2021 at 3:19 PM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
+>
+> Use resource_size rather than a verbose computation on
+> the end and start fields.
 
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
----
- drivers/gpio/gpio-wcove.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Wrong commit message (or the code).
 
-diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
-index b5fbba5a783a..97c5f1d01b62 100644
---- a/drivers/gpio/gpio-wcove.c
-+++ b/drivers/gpio/gpio-wcove.c
-@@ -434,7 +434,7 @@ static int wcove_gpio_probe(struct platform_device *pdev)
- 	wg->chip.get_direction = wcove_gpio_get_direction;
- 	wg->chip.get = wcove_gpio_get;
- 	wg->chip.set = wcove_gpio_set;
--	wg->chip.set_config = wcove_gpio_set_config,
-+	wg->chip.set_config = wcove_gpio_set_config;
- 	wg->chip.base = -1;
- 	wg->chip.ngpio = WCOVE_VGPIO_NUM;
- 	wg->chip.can_sleep = true;
+> -       wg->chip.set_config = wcove_gpio_set_config,
+> +       wg->chip.set_config = wcove_gpio_set_config;
+
+
 -- 
-2.22.0
-
+With Best Regards,
+Andy Shevchenko
