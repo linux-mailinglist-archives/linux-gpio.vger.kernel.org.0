@@ -2,97 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 460DF2EB7DA
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 02:59:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEC32EB82E
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 03:42:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbhAFB4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jan 2021 20:56:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbhAFB4R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 20:56:17 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227A9C061382;
-        Tue,  5 Jan 2021 17:55:37 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id b5so770884pjk.2;
-        Tue, 05 Jan 2021 17:55:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M2SnuavxPcXUJasCexKnjXWwhRBi46twzYFZCFVtxIA=;
-        b=jaDmkjxUvv933vnXaE4le+w+4C0Bd4foHxhGcP6dcW/tNQyBdvdC1uMwWxXqUJtanL
-         h/JnWWeoprKpQ5HR8NxHvwUySBVL7w0jELn2jUrKjC7FlK89tbyez+y1IiScIIvPhxc8
-         AiXvSOYqXH3Np15o8MSmUnThKxABfQxLT4vZq83I3lWVJISw1kh2vfPKoNvJc1xvaOJB
-         fEPXTm6XgOztjw7QJS08uxTdw6zqn8T3nnquHMHqFjI5ukqv+HRTwSJmCpQOx1bV3Xkd
-         NG2cHtrZOP+7buEgNt6n5rNGFG8hzxitWbJV1V3FRmCJPCs/DS99SJmJmqTU06qHid4e
-         DJsw==
+        id S1725822AbhAFCk7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jan 2021 21:40:59 -0500
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45029 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbhAFCk7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jan 2021 21:40:59 -0500
+Received: by mail-lf1-f53.google.com with SMTP id m25so3226296lfc.11;
+        Tue, 05 Jan 2021 18:40:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M2SnuavxPcXUJasCexKnjXWwhRBi46twzYFZCFVtxIA=;
-        b=Gm4NK1HjAkIyZFrndQ4RKI0zXoUbRudM6Lpluk6pub1t8h/Vq6MjsNUKWhXzdb/k4i
-         fgUDbhR12HmfZB5qdgRnEIf8lqAV3+m3ywDb1jda2G5wuo2jRUQTG3dgUuhUitJsm2h7
-         O2wTqqrcizMbELImebwFqAWTn8qL052zC0zIgnvMpyXc01XRGyTpvbj7Wtzm23AXqVjq
-         rBqHMChSQlG4zwzoz/V8QfhwLUN8cz32BmLUOhXFbKcJerrajq8PHPd3qbwHO+P3Fmbj
-         gpIAySaZ8EUdr5+qKPYV1vXxSAxuJqE897Rt9papNXkiuWTUCUinzqu8UwH9rSbeFbZl
-         j2jQ==
-X-Gm-Message-State: AOAM5335hddFYcwt693gwDcgKmDbd9S+lEdw6CiNR0Y3lo5vJe4R8b/+
-        Sf/5sOuuL5PjHb5t9X2s9JfibKu+uNA=
-X-Google-Smtp-Source: ABdhPJyBKCiWl8KqpA3d/9qhuLzYJM2/8URZ+PH/AyWme2ojcsE4nRsA6SZa1w/6+Y6vqjUiBP87Hg==
-X-Received: by 2002:a17:902:6e02:b029:dc:8e14:a928 with SMTP id u2-20020a1709026e02b02900dc8e14a928mr1938073plk.24.1609898136435;
-        Tue, 05 Jan 2021 17:55:36 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id gm18sm425052pjb.55.2021.01.05.17.55.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jan 2021 17:55:35 -0800 (PST)
-Date:   Tue, 5 Jan 2021 17:55:31 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Add missing array size constraints
-Message-ID: <X/UYk4RESSfjCIPI@google.com>
-References: <20210104230253.2805217-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IvJTvH2rimxkqnfQ5FUZB8oT8Z78yOSFzTFON7khOFQ=;
+        b=p1NmxS5JsMiQRdm8dGjgW98QQiYznBL/k7RVJ8wN+1yWiEs4Td7CrMm5lOcam6BFBB
+         Wm8UPdimTaInYpJEWad8QqKEEW+RtVUlf9dOW11LcGzUZqd8zb89kdRWDqNJobjIuNqi
+         +ms9mUuXpg0KWFCwzEf5BoXFI1UKmsivv80MXENZxaZaXg1CFs6VInIuhKKn7F8hLs8P
+         OfJ9rkl4Y71QMXP+vdBfmNu4FvMKVkd1WmzR2SW4bMY1DKCGhixqj4FjB32YC7Q/1QPv
+         qRX4+pptHxITjGVwFp05Boqz7tRvXNZo77Z5gw/WP1R3RGRCq/jD7D4RjHrZndFtZg/F
+         fcqA==
+X-Gm-Message-State: AOAM532i4EDAPpBhjnf4wfOiFAQfosfvqldk48Og+ggkb/BMGymjo+IK
+        bXz7//MULp3Wb3XJjwWLbz57hMmUwA1RvQ==
+X-Google-Smtp-Source: ABdhPJys+8HE8MK92sM4I1Wf7hppX7XzJHemG9lARoJLI+3b+ySXw/a5EHDfvCHGEDdxwfLZ5CcIJg==
+X-Received: by 2002:a2e:b80d:: with SMTP id u13mr1084797ljo.143.1609900816240;
+        Tue, 05 Jan 2021 18:40:16 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id b207sm109074lfg.94.2021.01.05.18.40.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Jan 2021 18:40:15 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id m25so3226217lfc.11;
+        Tue, 05 Jan 2021 18:40:15 -0800 (PST)
+X-Received: by 2002:a19:c783:: with SMTP id x125mr914598lff.303.1609900815227;
+ Tue, 05 Jan 2021 18:40:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210104230253.2805217-1-robh@kernel.org>
+References: <20210103100007.32867-1-samuel@sholland.org> <20210103100007.32867-3-samuel@sholland.org>
+ <CACRpkdZbNUxizfV5Oo8F8b0bsjNcBF6JfP=ufykNLeqErvU-ug@mail.gmail.com>
+In-Reply-To: <CACRpkdZbNUxizfV5Oo8F8b0bsjNcBF6JfP=ufykNLeqErvU-ug@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 6 Jan 2021 10:39:59 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64MmtmpYiLjV_3H_K3i9FVEqmj2jp02HD1FBVzqK1N=eg@mail.gmail.com>
+Message-ID: <CAGb2v64MmtmpYiLjV_3H_K3i9FVEqmj2jp02HD1FBVzqK1N=eg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] pinctrl: sunxi: h6-r: Add s_rsb pin functions
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 04, 2021 at 04:02:53PM -0700, Rob Herring wrote:
->  .../input/touchscreen/elan,elants_i2c.yaml    |  1 +
+On Wed, Jan 6, 2021 at 6:35 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Sun, Jan 3, 2021 at 11:00 AM Samuel Holland <samuel@sholland.org> wrote:
+>
+> > As there is an RSB controller in the H6 SoC, there should be some pin
+> > configuration for it. While no such configuration is documented, the
+> > "s_i2c" pins are suspiciously on the "alternate" function 3, with no
+> > primary function 2 given. This suggests the primary function for these
+> > pins is actually RSB, and that is indeed the case.
+> >
+> > Add the "s_rsb" pin functions so the RSB controller can be used.
+> >
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
+>
+> Is it OK if I just apply this patch to the pinctrl tree?
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Please do.
 
--- 
-Dmitry
+Thanks
+ChenYu
