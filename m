@@ -2,112 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 439D62ED139
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 14:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB5692ED1E0
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 15:21:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbhAGN4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jan 2021 08:56:44 -0500
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:36973 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbhAGN4o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 08:56:44 -0500
-Received: by mail-oi1-f171.google.com with SMTP id l207so7441421oib.4
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 05:56:28 -0800 (PST)
+        id S1729386AbhAGOSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jan 2021 09:18:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729366AbhAGOSr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 09:18:47 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05965C0612F6
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jan 2021 06:18:06 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id b26so14865794lff.9
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 06:18:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WWdGOoyElKTAIa/MsUJRr8gfTIrASkheJYHyIrrUlZU=;
+        b=Y7xvknu3uIQbVmMO/lfSBQwQJvR8qyy2EJr2uGB7oXxD84HpEYu3BEwSE3FEh6uysa
+         2luFHBLbyOffWvRJAn+BvvVuzQKUvlEJRGpqnwTKraPOVc/1iGFx4S0c2fVuaHcqVlh5
+         raVYWSZZ7M3Yq+xs+aEVEyIjKN30OHW11XF7G6OyC8U+eYUZ695RE0NnbKQSdVUq7Fo5
+         N8UHJSolOE/7ReESAmJ6fqWxGgCAOCXpL8NDSCIdlmwFXopmk46ip8gSTQWmT8V2OhRd
+         lWCIE0Jg24P4TTEpWdhCopEJyAdNZ7AJIEjcbIgawQp95lQsaPFiB4Iu8ZHHgdVTJnf5
+         axVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x1e0WNL2sMMQ2ZL+0N5MeOWKVquIYgOlSUwbGEFP2y4=;
-        b=MuURypB5F13IoiGcvLnST+yQHAZdqrQzb7CP0xeobgGb6hoXKKxBE3Q1L3CVAIuRi3
-         rnJTrgv7D/OQMlPiHJh1B3DOd6EM42tegmSKs9SIXtUWHKVVsmaqdOEVpUqmEw2eAsgv
-         VHLjZ/UiLzmYjfeh/YelPt5DYj5NIxAZwu0mQ786L835QI2Yb1Gf4JmZhQSVQD8zOVEC
-         2UNOV5vWOK0fzyIunn+tA4y8q/2LEV5NnXJtaIolF/9n2NIiuJuzkVIqBUVE3ywublCj
-         q7PY4bQCh7Q8I6mBKM8yB3hkoFUjtMAEKqivqvA1yDMkKTmQnkPu9vk7ppGIkG0XSVKF
-         DjRQ==
-X-Gm-Message-State: AOAM533VprTNsmHEt5UmrInCLmSouLTr3ivTs4+SOxqQEbZtOoSTMMq3
-        zUBRtqUyTA/7rM2tSsAY8QRQPBok0rwpHjx2008=
-X-Google-Smtp-Source: ABdhPJzhHT90woLzalGYLXytIeOG7bYU3YN6Qil916gRjj/ERGJMrUcbb/2hiowBSG/HtuFVi3h5CRMHd+vD+k1yEdo=
-X-Received: by 2002:aca:3cc5:: with SMTP id j188mr1425058oia.54.1610027763424;
- Thu, 07 Jan 2021 05:56:03 -0800 (PST)
+        bh=WWdGOoyElKTAIa/MsUJRr8gfTIrASkheJYHyIrrUlZU=;
+        b=CT26WfgASNGG0mAOzv3POHK0wayDxkQwSKAfoTA9p817qROo014cKML+FDlv96s20r
+         zeSXigaFPFrDREZV1Q4RNymTWqYvp2rO07pe52+xWNcq79/EcfsxRzuWrBC7Wwd7EPVa
+         WhSKBASj3PW3Vkr635lg+Gz8GAfeCXNfBqqJ68SJMmdxIw9bK8CnpdpRy3QzHi/c3cpH
+         cX6IWHggeV/WEL2rnpBhnWk29Q8SMOF/9pv3GpxgulRJrHLgVqavN8+kr0AaIiQhv4GO
+         gZk1qjh+4J8PZoYL24+xd/8Uga4z/M4bef2z6I0aGpA96fcwmHa4KnBuff2EMbJj7ZlB
+         TcLg==
+X-Gm-Message-State: AOAM533DsteFthVfRl304vjaYhTDx4zrIaALxSDvAOCQHpGh+Z0rugnU
+        MV4xF3rE0FTsNBD+FAib4v6vKDsw4WcSxjJW46f8aA==
+X-Google-Smtp-Source: ABdhPJw0vT/va3bVsMxFijWgSTwF09HnaC5Sdtu2dTbMahKK0smI1io+PZxPmKfjl63eZqv2CkBfba+WbrxfH3DaZJU=
+X-Received: by 2002:a05:651c:1312:: with SMTP id u18mr4250570lja.200.1610029085432;
+ Thu, 07 Jan 2021 06:18:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20210105082758.77762-1-linus.walleij@linaro.org>
- <CAHp75VeXC26KxxhrSbtae2_v4Zqnaaia3nV_1sxY07uUEt3U7g@mail.gmail.com>
- <CACRpkdYixhB6rTw=DK7CetExsXSH4czVzysynZas07OTuQi0vA@mail.gmail.com>
- <CAMpxmJUJnhc9HrZnb=qE5fpZ9e0Xo7VP-hTjdK-LHk0w6n3cMQ@mail.gmail.com>
- <CACRpkdZVw53K26hOQMfqfC+3=wdqm8kUDPdWrz-KRj1rh9ijYQ@mail.gmail.com> <63d69976687846c6a50e904b913bd235@asem.it>
-In-Reply-To: <63d69976687846c6a50e904b913bd235@asem.it>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 7 Jan 2021 14:55:52 +0100
-Message-ID: <CAMuHMdW=TMbBUYVd0XVT88F+wDZ09F_WTB=f50eyRSire7TWSg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Disallow identical line names in the same chip
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+References: <20201230214918.17133-1-festevam@gmail.com> <CACRpkdatsW79FMfN2qZQdYSrz1wmHz82zSLZwxrh5am1pWgebg@mail.gmail.com>
+ <CAOMZO5C3mSbOV_4MOUQb30SofF2tdCue+-yhSf3gJPHncXZF+A@mail.gmail.com>
+In-Reply-To: <CAOMZO5C3mSbOV_4MOUQb30SofF2tdCue+-yhSf3gJPHncXZF+A@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Jan 2021 15:17:54 +0100
+Message-ID: <CACRpkdYtjXMOv+G3_hXAiS4J51FKC4kcuDCmqr_kivuh61udPw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: 74x164: Introduce the
+ 'registers-default' property
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sandor Yu <sandor.yu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Flavio,
+On Thu, Jan 7, 2021 at 1:16 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-On Thu, Jan 7, 2021 at 2:49 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
-> > On Wed, Jan 6, 2021 at 11:09 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > I can do it alright. But in the context of user-space I think this
-> > > doesn't really change anything. DT users still can use non-unique
-> > > names and libgpiod still has to account for that if the API is to be
-> > > considered correct. Is this change really useful? How does it affect
-> > > ACPI users that already define non-unique names?
-> >
-> > For hardware description instances the problem remains: device tree
-> > line-names and device properties can be non-unique.
-> >
-> > What it solves is to enforce unique line names for gpio chips with
-> > the struct gpio_chip .names array set to some names, that each
-> > name in this array must be unique.
-> >
-> > This happens for example when two USB FTDI converters
-> > with the same GPIO lines are plugged in. Each chip can have a
-> > "TX" line but it can no longer have two "TX" lines.
-> >
-> > Yours,
-> > Linus Walleij
+> The driver drivers/net/phy/mdio_bus.c and the yaml description says
+> that it only supports one bus level PHY GPIO reset via reset-gpios
+> property.
+
+I suppose it's this binding:
+Documentation/devicetree/bindings/net/ethernet-phy.yaml
+
+> On the imx6ul-evk, there are two KSZ8081 PHYs in the same mdio bus, so
+> this is how I described it in dts:
 >
-> about the duplicate line names, what do you think
-> about adding to the command "gpiofind" of libgpiod tools,
-> the possibility to discover all the duplicate gpio lines?
+> https://pastebin.com/raw/xLjYUHdN
 >
-> For example, something like the following:
->
-> # gpiofind button_1
-> gpiochip0 20
-> gpiochip0 22 (duplicate)
+> but the 'reset-gpios' properties are not found in this case. I think
+> we need to let drivers/net/phy/mdio_bus.c to search for 'reset-gpios'
+> also inside the mdio children.
 
-This cannot happen, as the duplicate is on the same gpiochip.
+This driver gives me headache.
 
-> gpiochip2 12 (duplicate)
-> #
+The bindings say that it should populate devices from the compatible
+of the subnodes with names like "ethernet-phy-id0141.0e90"
+and stuff like that.
 
-I don't like the "(duplicate)" suffix.  It makes scripting harder (and
-more unsafe).
-What about outputting only the first one, unless "-a" is specified?
+Indeed, but I don't understand why the phy in this example does not
+have a compatible string?
 
-# gpiofind -a button_1
-gpiochip0 20
-gpiochip1 22
-gpiochip2 12
-#
+There is some hackery going on to probe the driver from the bus
+level since
+commit 46abc02175b3c246dd5141d878f565a8725060c9
+"phylib: give mdio buses a device tree presence"
 
-Gr{oetje,eeting}s,
+But as far as I read the code this driver should be probing
+devices inidividually for ther reset-gpios, I think the problem is
+maybe that no proper devices (mdiodev) are added for these
+devices, does mdiobus_register_device() even get called
+for them? Does of_mdiobus_register_phy() get called?
+If this is the problem I think you need to add
+compatible for your phy devices and make sure there is
+some code to probe them as well?
 
-                        Geert
+of_mdiobus_register() must be called by the MDIO bus master/host
+driver. This is what traverses the children with
+for_each_available_child_of_node().
+Does your host driver properly call this function?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Sorry if I sound a bit confused.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
