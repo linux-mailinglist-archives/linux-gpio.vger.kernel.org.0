@@ -2,87 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF842EC484
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jan 2021 21:12:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 467042EC75D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 01:36:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbhAFULZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jan 2021 15:11:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbhAFULY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 15:11:24 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191FCC06134C
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jan 2021 12:10:44 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id x20so9296114lfe.12
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Jan 2021 12:10:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5fTYl7dFnUNDY76/N/FBKgt5PJcqYVGl1YeIAp29Cb4=;
-        b=Qbc+93ieH0Q8qihFPzMggAa8SmXbcWkUTomxAJiIG6B/pDM/RLyfRbEoarG3AzELxh
-         ac30doK/+KYIllKtltVEdgGmnZKW+ZjWJxWDXlbsBugbUU+UuX0QC0rY29Z+787Ph3CT
-         U2kc1mjPOoxCMRFPNVPNkm5RwMWfF/QpOMoLuBo2IiKQFv8qyOqizq+T7yCZ1urOntmR
-         ri1Az6AjLSp3G98+YHSP07VY0oSRQyOJvzCOLyHehs4ef5aALgU1KwDLwVNHdP6u0yVy
-         4UzmdtSmfQD/5+7pA36yDyzmXqYw3DhndSkgqu3YcYcWmAJRv+tanx03kFiRManEoxja
-         YH0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5fTYl7dFnUNDY76/N/FBKgt5PJcqYVGl1YeIAp29Cb4=;
-        b=XXrNK5i+hI7auDQtkXfxfBMj8c8LnS11Dj4xXA5bDdKql4o+hRj9aRLn9YpZXXVfNl
-         51BLM2zyS5aVw43fl0IWmv928v/aqpWrvTXr8RKAxQ7u0uakJwZfkwmii7MctvA0GzRV
-         FIrmnV6H4S1jCevclBzgfGzeJ8/qs+FE6yF5dgqu0H+9oX/ZpBC4aQt4RQ7o5X5dwfNU
-         L6JdZep8pPJJhoXshWcqlQYQnrlCoqJhi9H11VedY278vKw6xTopCEKo15A/3XVnB8HI
-         A2RyimS/iphPGKN5onJpXpIghCAHJKgKida7bLfx2UOga4UHdF3YLT2S1Z3O9xkQc4lm
-         JZCg==
-X-Gm-Message-State: AOAM532qjbgKdSD1yOhbVUjPUTe3l//PdP0TxLKB11Vqar0TmAGBeauY
-        D2rk2zvPW41wIZs3hJcI8R9KInftQ0TPW+nMuOmLoQ==
-X-Google-Smtp-Source: ABdhPJyMV/qRlwhsED4wqR63/+mBwb2d/XZZAMB8W7cpRjr16ansOu5Csx6k8LuW95AIPpjuzVysr5H9Fl1Aln+7iaU=
-X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr2776550ljo.368.1609963842431;
- Wed, 06 Jan 2021 12:10:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20210103100007.32867-1-samuel@sholland.org> <20210103100007.32867-3-samuel@sholland.org>
-In-Reply-To: <20210103100007.32867-3-samuel@sholland.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 6 Jan 2021 21:10:31 +0100
-Message-ID: <CACRpkdagu9Sj9AEcGQYrnAAxUJWZKGZ2zina4XWubQ7WXYU-0A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] pinctrl: sunxi: h6-r: Add s_rsb pin functions
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andre Przywara <andre.przywara@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        id S1725922AbhAGAga (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jan 2021 19:36:30 -0500
+Received: from mo-csw1114.securemx.jp ([210.130.202.156]:56018 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbhAGAga (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jan 2021 19:36:30 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 1070Y2wf017046; Thu, 7 Jan 2021 09:34:02 +0900
+X-Iguazu-Qid: 2wHHcVEABewtERwmYc
+X-Iguazu-QSIG: v=2; s=0; t=1609979642; q=2wHHcVEABewtERwmYc; m=5gtMXf5aLkUuriQQt8s5+yfCz8lBKP4ioKHpSxI6VE0=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1112) id 1070Y0qC028747;
+        Thu, 7 Jan 2021 09:34:01 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 1070Y0IO015064;
+        Thu, 7 Jan 2021 09:34:00 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 1070Y0tr015175;
+        Thu, 7 Jan 2021 09:34:00 +0900
+Date:   Thu, 7 Jan 2021 09:33:58 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        punit1.agrawal@toshiba.co.jp,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>, yuji2.ishikawa@toshiba.co.jp,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 0/4] gpio: visconti: Add Toshiba Visconti GPIO support
+X-TSB-HOP: ON
+Message-ID: <20210107003358.rlwdta7jkkyyzbzu@toshiba.co.jp>
+References: <20201201181406.2371881-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <CAMRc=MeV8+rpoLkdbqzsqOmcsTY1g++B+cqDmSAWQP=gGGduWQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeV8+rpoLkdbqzsqOmcsTY1g++B+cqDmSAWQP=gGGduWQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 3, 2021 at 11:00 AM Samuel Holland <samuel@sholland.org> wrote:
+Hi Bartosz,
 
-> As there is an RSB controller in the H6 SoC, there should be some pin
-> configuration for it. While no such configuration is documented, the
-> "s_i2c" pins are suspiciously on the "alternate" function 3, with no
-> primary function 2 given. This suggests the primary function for these
-> pins is actually RSB, and that is indeed the case.
->
-> Add the "s_rsb" pin functions so the RSB controller can be used.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On Wed, Jan 06, 2021 at 11:33:49AM +0100, Bartosz Golaszewski wrote:
+> On Tue, Dec 1, 2020 at 10:16 AM Nobuhiro Iwamatsu
+> <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+> >
+> > Hi,
+> >
+> > This series is the GPIO driver for Toshiba's ARM SoC, Visconti[0].
+> > This provides DT binding documentation, device driver, MAINTAINER files, and updates to DT files.
+> >
+> > Update:
+> >
+> >   dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller:
+> >     v2 -> v3: Fix dtschema/dtc warnings.
+> >       dtschema/dtc warnings/errors:
+> >         Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.example.dt.yaml: gpio@28020000: interrupts: [[0, 24, 4], [0, 25, 4], [0, 26, 4], [0, 27, 4], [0, 28, 4], [0, 29, 4], [0, 30, 4], [0, 31, 4], [0, 32, 4], [0, 33, 4], [0, 34, 4], [0, 35, 4], [0, 36, 4], [0, 37, 4], [0, 38, 4], [0, 39, 4]] is too short
+> >           From schema: Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> >     v1 -> v2: Fix typo.
+> >
+> >   gpio: visoconti: Add Toshiba Visconti GPIO support:
+> >     v2 -> v3: Add select GPIO_GENERIC
+> >               Use genric MMIO GPIO library
+> >               Use bgpio_init() as initialized the generic helpers.
+> >               Use irqchip template instead of gpiochip_irqchip_add().
+> >     v1 -> v2: No update
+> >
+> >   MAINTAINERS: Add entries for Toshiba Visconti GPIO controller:
+> >     v2 -> v3: No update
+> >     v1 -> v2: No update
+> >
+> >   arm: dts: visconti: Add DT support for Toshiba Visconti5 GPIO driver:
+> >     v2 -> v3: Fix compatible string.
+> >     v1 -> v2: No update
+> >
+> > Best regards,
+> >   Nobuhiro
+> >
+> 
+> Nobuhiro,
+> 
+> In the future please use the get_maintainers.pl script - I have never
+> been Cc'ed on this series and I would have ignored it if Linus W
+> hadn't brought it to my attention.
+> 
 
-This patch applied to the pinctrl tree.
+Sorry, I'll use it next time.
 
-Yours,
-Linus Walleij
+Best regards,
+  Nobuhiro
