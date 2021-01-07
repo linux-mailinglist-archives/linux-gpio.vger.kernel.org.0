@@ -2,155 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2DA2ECDC6
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 11:28:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E1F2ECDD0
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 11:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbhAGK2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jan 2021 05:28:24 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47183 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726541AbhAGK2Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 05:28:24 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id CDBB3581F10;
-        Thu,  7 Jan 2021 05:27:17 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 07 Jan 2021 05:27:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        to:cc:references:from:subject:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=X
-        gj/I97/wjHFqvQLCUga9SEfpGNGvWYOpUvSqDwlGKw=; b=lsPbzT8iNHeD6MyzN
-        VMOCR86cJmbWeaiEbAHmcEh2PkJ3dQOKNszI94re5RhvY5Dw0Cbdp+K1ivQ7Ywho
-        FxWKDlFiR8BlLw7w0UEXWnELmeYu47TUidpMpAzMfxRVSuT7PmM9i+Gsn9YUZiTn
-        QpJXd6yzq4cKWkT/FgXCcvj7WoWYGSB8BjnZJyUxweYTbaPK2QJDuV3YcGipqtd1
-        uW6ZWP8vu6ZEaYG52MxoZVXMa/O8XQpvBtkL68+bX5ywBaoAKaKiHwwWiSisdQa6
-        NaZMue5N8C9CQFJ3f4OG9MYG6TLEeFqkbUdpSiK5u/52G5JGR0E7CsFvUso20d92
-        +P9Lg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=Xgj/I97/wjHFqvQLCUga9SEfpGNGvWYOpUvSqDwlG
-        Kw=; b=IinqHH8Hp+zXWXTXPhaFNDMR4nZeR9qqmwb4zxGJ+Xndfw+JlT5DqAY/c
-        fFLPTKbjhSFfjFUvrQoqc6fwJ836+CWPwWG8+AHjl2DW8nozQ8OnYM+ZVnqtI47+
-        B2CGOB59NgVII7quW7m9n4msX554Ndo3TdVo+RXsq1eNCwiGpdtNdkllsTHXidY8
-        85vwOJUEC3uCJusVhrf8GhqHPy8hW/TV5OJzXOKBOWl7P6GDzIu6XdUxF/uFsqcz
-        sUUnRgVaSJxMdW+b+meyZsAUJf9uR76HyLq+UgdVROx4ZJ9soYRuHjotYgw8X3XI
-        G7sJ4fMyX1E3vTn/97IBenwIoRwZw==
-X-ME-Sender: <xms:BOL2XwvLpbuwfmF0DYaN4nYaEAWt2Kj6gktHcwCPjsAErUBCMyesOw>
-    <xme:BOL2X9dxHdoNEl8aWh7ZNkHk-jKLT9v8I63-5hF3ZTfoSYntQUOmbM6ZRRcn_p6TA
-    YoQhtHmS2-hN-Sabw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdegvddgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepvfhfhffukffffgggjggtgfesthekredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepfeduhfegiefhffefleefhfffjeeuueehleeitefhkeehleehkeef
-    heejvdegvdeunecuffhomhgrihhnpehtrhhushhtvggufhhirhhmfigrrhgvrdhorhhgne
-    cukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:BOL2X7z6ZK77f05GWuSSInyjxz675s1tNvu6dVzjd50AMLojkOYPaw>
-    <xmx:BOL2XzMWd2ytUQG_-SdNE_rnI8o6mzUbChBB8zolwatPGvhSO4Xovg>
-    <xmx:BOL2Xw8K7hlpj82EkXeunQ0CTM-VUyxQXVO0_pYkRViDKIEOx0cjbw>
-    <xmx:BeL2X7VWPM30rSlOZIuNCHHXYdYS3OddI433Et9vC6Ac4XFn2Yi0rg>
-Received: from [70.135.148.151] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9C6B8108005F;
-        Thu,  7 Jan 2021 05:27:15 -0500 (EST)
-To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        id S1726436AbhAGKaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jan 2021 05:30:23 -0500
+Received: from mail-bn8nam11on2065.outbound.protection.outlook.com ([40.107.236.65]:10337
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbhAGKaX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 7 Jan 2021 05:30:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wb/hHb8skURvbXmF9JjHNWQXe/aSPZGGkCfXrXi+8igk9uoDcaVsTAFS4Hn8u2MvBCB1YGdM+1YdFRaR07e7GY3JasRPYXfiVQo00pbsgkwL4XrY2vx5XFtQVYhjjQA+lIcIuJ2aA4J0Y4+sqyCmccd0xzIxO/0uzXxCtM9i7/DzyViHbaXNrbS4vpXX9BPZdsnlgcreAHpP1y1EQ7uEXfRPn8aJkepncJRdjJdmRDGpa0Wprs7JD7bpU6P/QIVEzNx0vL6Zv8addq6idgKezBJ9szl6g73MJieaZAhVtrQtwq6w8hekqS5NSLAnbbjtft3N66kN9Cv4BQSqVJa76w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4FnbczL2GW0LJk5saROEKpy5sZmwuMkfktorlTYWgFI=;
+ b=CnyBDNHpnzEVCCuOHPHRz+lmo4ZRoXWas7ozmOxyhyuTQNf8GVeV9uNp6RepWd5H4y3ww781kMBRLNLkI024Hqv3Nf7Okm78D6QnYMfnEOEF908xMmN73VvIE9sXjqJK0h1ltgxNYt6rTQK+mGUJJze4+Ps+UFiMKa7APBOGBHzCv58z18uuAyw4wEheUskFuIs8aQ11SyS/MQuvhd9KszWks0/TIDN1dLwysEmq0ajPZcW3KynMWipT4HSM8cIwOBiPvC231jbFzApqShuAW+RRXiKgtrvSznGvmPBE/CvSN+WTMKKXOSbYp9EZ3IYMGVGatAlsWmyRUCHG1ZNLkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4FnbczL2GW0LJk5saROEKpy5sZmwuMkfktorlTYWgFI=;
+ b=r1mggCDQnzLUIpt4zHpaVQtkGMLXh4AL9EcmsElH2hmzDyYvQ5HJrnNV2g+0fYuzVugd3jHPtbrC60U27ipwb0Ui1v9qVpbBgdJtG299Ut1/e4UR6/VimaclMXIFAiXZ1yCHp9ZW0OV4TpZh5Ke9kNPdbcHLeTniz+TrXYPO3H0=
+Received: from DM6PR02CA0165.namprd02.prod.outlook.com (2603:10b6:5:332::32)
+ by BY5PR02MB6834.namprd02.prod.outlook.com (2603:10b6:a03:211::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Thu, 7 Jan
+ 2021 10:29:30 +0000
+Received: from CY1NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:332:cafe::9e) by DM6PR02CA0165.outlook.office365.com
+ (2603:10b6:5:332::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend
+ Transport; Thu, 7 Jan 2021 10:29:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ CY1NAM02FT016.mail.protection.outlook.com (10.152.75.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3742.6 via Frontend Transport; Thu, 7 Jan 2021 10:29:29 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 7 Jan 2021 02:29:13 -0800
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Thu, 7 Jan 2021 02:29:13 -0800
+Envelope-to: git@xilinx.com,
+ michal.simek@xilinx.com,
+ linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org,
+ syednwaris@gmail.com,
+ vilhelm.gray@gmail.com,
+ hancock@sedsystems.ca,
+ bgolaszewski@baylibre.com,
+ linus.walleij@linaro.org
+Received: from [172.30.17.109] (port=46548)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1kxSXY-0000oQ-Mf; Thu, 07 Jan 2021 02:29:12 -0800
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        <sgoud@xilinx.com>, Robert Hancock <hancock@sedsystems.ca>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20210103100007.32867-1-samuel@sholland.org>
- <20210103100007.32867-5-samuel@sholland.org>
- <a6c2eac4-7e98-ecb4-ee8a-d67a7f1b6871@arm.com>
- <20210106110643.agq3mjyhgvg3w4i6@gilmour>
- <CAGb2v64mcLogZax8vVJJxG9feBzmGc8VyazTvp7XkBAoLXw9JA@mail.gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC
- connection
-Message-ID: <bc95a8d2-ebec-489c-10af-fd5a80ea1276@sholland.org>
-Date:   Thu, 7 Jan 2021 04:27:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux ppc64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <git@xilinx.com>
+References: <1609936000-28378-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1609936000-28378-6-git-send-email-srinivas.neeli@xilinx.com>
+ <CACRpkdZrBXJSo_kicWKQ_wtFTZvkOUNyjP6UHZfY7xwRSNZBRw@mail.gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH V4 5/5] gpio: gpio-xilinx: Add check if width exceeds 32
+Message-ID: <11abb0f7-407a-3509-ad50-cc7698147ee5@xilinx.com>
+Date:   Thu, 7 Jan 2021 11:29:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v64mcLogZax8vVJJxG9feBzmGc8VyazTvp7XkBAoLXw9JA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CACRpkdZrBXJSo_kicWKQ_wtFTZvkOUNyjP6UHZfY7xwRSNZBRw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 295dfdc6-b3f2-41ef-b19a-08d8b2f71d96
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6834:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB68344B0889EF4DD43924345CC6AF0@BY5PR02MB6834.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jWIYWwpdWLRV3WYx1RON3H17NJD5g593VZn+VnfB8TfgAs0hBSjGexRsDTe5CwCbUiHxDEIyoCSv6uzFDYM+KQWQx0SUqF1dsAJqmE26FCKBVyOtjz90ISE41N+pwddpZGDUkjYjts82DbIjwABOezBCLdLw+jVLVCO3ukZCpZMQHKMg6BXM/icKgS4na6/iQsA6CWRgeGGQ3i5wQN8lRN+CVSLOjeM3Wt5viZjqqrJlG4mldmRN7iaZ7DJfW71fKYruGLOF20TSEsxLtNT6e13F0CEaR+lAof8bwmqTrcnvxGe/vmMPoKF5vKUTpCYho112CZUOhpghQjME3SZVcDWMevPTFIgrjMzQGlvw7PNRfnuHiAEIHpHxwTy0N61RhLHcX5b4X7UwwzSmnscSgVr3fFwJ7ChPwcng84Ly5BiHiEr79Fr76q+9Nv0E60XoUYlCCE7VN0sQtGKCZzHwQBvPrAujmcDwLcO2PzyiGzVQhes9bqAhz0qZb151qiCxXJRpYcXq/zRvkvV7IVbZBNqtuRM9gFQj9uej0vgWDeY=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(136003)(396003)(346002)(39860400002)(46966006)(8676002)(31686004)(8936002)(6666004)(5660300002)(36906005)(47076005)(70586007)(426003)(44832011)(186003)(83380400001)(26005)(336012)(107886003)(53546011)(356005)(316002)(2616005)(82310400003)(478600001)(31696002)(2906002)(82740400003)(36756003)(4326008)(34070700002)(6636002)(54906003)(110136005)(7636003)(9786002)(70206006)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2021 10:29:29.5386
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 295dfdc6-b3f2-41ef-b19a-08d8b2f71d96
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT016.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6834
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/6/21 5:38 AM, Chen-Yu Tsai wrote:
-> On Wed, Jan 6, 2021 at 7:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
+
+
+On 07. 01. 21 11:17, Linus Walleij wrote:
+> On Wed, Jan 6, 2021 at 1:27 PM Srinivas Neeli <srinivas.neeli@xilinx.com> wrote:
+> 
+>> Add check to see if gpio-width property does not exceed 32.
+>> If it exceeds then return -EINVAL.
 >>
->> On Mon, Jan 04, 2021 at 10:54:19AM +0000, André Przywara wrote:
->>> On 03/01/2021 10:00, Samuel Holland wrote:
->>>> On boards where the only peripheral connected to PL0/PL1 is an X-Powers
->>>> PMIC, configure the connection to use the RSB bus rather than the I2C
->>>> bus. Compared to the I2C controller that shares the pins, the RSB
->>>> controller allows a higher bus frequency, and it is more CPU-efficient.
->>>
->>> But is it really necessary to change the DTs for those boards in this
->>> way? It means those newer DTs now become incompatible with older
->>> kernels, and I don't know if those reasons above really justify this.
->>>
->>> I understand that we officially don't care about "newer DTs on older
->>> kernels", but do we really need to break this deliberately, for no
->>> pressing reasons?
->>>
->>> P.S. I am fine with supporting RSB on H6, and even using it on new DTs,
->>> just want to avoid breaking existing ones.
->>
->> Doing so would also introduce some inconsistencies, one more thing to
->> consider during reviews, and would require more testing effort.
->>
->> I'm not sure that stretching our - already fairly sparse - resources
->> thin would be very wise here, especially for something that we don't
->> have to do and for a setup that isn't really used that much.
+>> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 > 
-> As soon as some software component starts running RSB, (which I assume
-> is what Samuel is planning to do in Crust?), there's a chance that it
-> doesn't switch the chip back to I2C. And then Linux won't be able to
-> access it.
-
-Crust can handle either way via a config option, which currently
-defaults to I2C for H6. It must use the same selection as Linux, not
-only because of the PMIC mode, but also because of the pinctrl.
-
-TF-A is already converted to use RSB[1], and it does switch the PMIC
-back to I2C before handing off to U-Boot[2]. So new TF-A + old Linux is
-fine. However, Linux currently does not switch the PMIC back. So the
-most likely problem from this patch is that, with new Linux + old TF-A,
-TF-A will be unable to power down the board or access regulators after
-an SoC reset.
-
-I expect there will be a TF-A release between now and when 5.12 hits
-stable, but people tend not upgrade their U-Boot/TF-A very often.
-
-We could solve this by having the Linux RSB driver switch all child
-devices back to I2C in .shutdown, or by dropping this patch and only
-using RSB for new boards (which would also address Andre's concern).
-
-Cheers,
-Samuel
-
-[1]: https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/7576
-[2]: https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/7575
-
-> So I'm for keeping things consistent and converting all users to RSB.
+> Aha
 > 
+>> @@ -591,6 +591,9 @@ static int xgpio_probe(struct platform_device *pdev)
+>>         if (of_property_read_u32(np, "xlnx,gpio-width", &chip->gpio_width[0]))
+>>                 chip->gpio_width[0] = 32;
 > 
-> ChenYu
+> This xlnx,gpio-width seems very much like the standard ngpios property
+> from Documentation/devicetree/bindings/gpio/gpio.txt
+> but I guess not much to do about that now. :/
 > 
+> Do you think you can add support for both?
 
+support for both is definitely possible but we need to handle also gpio
+width for second channel referenced by xlnx,gpio2-widht now.
+
+It means we could end up in situation which can be misleading for users
+where ngpios will be 10 and xlnx,gpio2-width another 10 and in total we
+have 20 gpios.
+
+I think that it is better not to start to mess with ngpios property not
+to confuse people which are coming from other SOCs because ngpios can
+suggest all gpios assigned to this controller.
+
+And in second case where ngpios is total number of gpios and if
+xlnx,gpio2-width is defined you can find width for first bank.
+But it is questionable if this improve situation here.
+
+Please correct me if my logic is not correct.
+Definitely this should be done separately out of this patch.
+
+> 
+>> +       if (chip->gpio_width[0] > 32)
+>> +               return -EINVAL;
+> 
+> This looks OK.
+
+Does it mean ack for this patch?
+
+Thanks,
+Michal
