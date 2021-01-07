@@ -2,126 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85282ECD16
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 10:48:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D1A92ECD6A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jan 2021 11:04:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbhAGJro (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jan 2021 04:47:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbhAGJro (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 04:47:44 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52FACC0612F6
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jan 2021 01:47:03 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id h22so13243276lfu.2
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 01:47:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G7NaTlfrTJWUXaJilppzFOMdooG1dXbh0X2tc9uYq8I=;
-        b=LCI0f0rY6PkEMU9S/IavbvrPp/OFZ8yVpLwgKYUZirUIaQrAwYTdI/PePfSJfsQs7P
-         YXZcN3WMAtpmVzNOa1+n6iR6qDMVVF0ukoOMOV0sw5iiXeh+4EL/A+fhISbywyKea7KE
-         zvbMuMGEbgo32Fhp9bSQXFegMX+tD6G7e/IzFSVsgrnE/uXXEsaunvygj0w8PNCti5xi
-         vhruJX9S+lTkcQrAXdhKe1As5OObtP5nXVnzbsPxMAACiur+IvXmUbXsj/4dsJdWr4Q1
-         0yuWWNji7ArQ2izpnAPO4Rd9sOXlAePwXlrlHyNGC/eSW+6JILadizCTH8NpReZXe7/e
-         3RZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G7NaTlfrTJWUXaJilppzFOMdooG1dXbh0X2tc9uYq8I=;
-        b=JNdXGrKp2oMJkxZ8OGt8q9RyHVWPkumlIkNRxA1OOlwtUJEwOwJiyLcwwyMBoXwq2n
-         76NAL4GYsBwLvyxjdkzsps3ASUgq8aqLHeSiVZAlVSckV7g09awbLdsh5v49VOMTSEr+
-         5m/PxS3OONJVC6m4wpScfj2CnIH22UnKIgoFM39wQ8vMJTQvoRqtc8cb8UQ64U4i1Td2
-         5aylOYG51ogTmnYtovptdFWA+gVz85Watjg1xqFig9Gr8B5mgItOGKZvUATvXZrq1sAx
-         yB5O81ZBeE4QTNk+M+Q7ziOInBxUD44w+vWf//5+wwNs15y2ynf5kId1jMyqDEcO6Txd
-         nUEA==
-X-Gm-Message-State: AOAM5337ihKdeJmowaBZo+e6YDhPEpdLDMK9qjyz1i06WWnCb2NViGOB
-        zZ34EkpB9V50ld3jR1zBOq5f0qr/6a8hRKyIFNyN3w==
-X-Google-Smtp-Source: ABdhPJyQBSxHaR6UnF6GTmWO2HCJ6YwoFxMYYd9E080KXVWwBZDt8H1Rl/oeOTyutVVocPigqgYIaY4dC0/E8aocHvs=
-X-Received: by 2002:a19:495d:: with SMTP id l29mr3445703lfj.465.1610012821860;
- Thu, 07 Jan 2021 01:47:01 -0800 (PST)
-MIME-Version: 1.0
-References: <1609936000-28378-1-git-send-email-srinivas.neeli@xilinx.com> <1609936000-28378-5-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1609936000-28378-5-git-send-email-srinivas.neeli@xilinx.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Jan 2021 10:46:51 +0100
-Message-ID: <CACRpkdYLp0uuB-QO5HvLH222TkCjk54JmftveHgpiW1JExF7DQ@mail.gmail.com>
-Subject: Re: [PATCH V4 4/5] gpio: gpio-xilinx: Add support for suspend and resume
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        sgoud@xilinx.com, Robert Hancock <hancock@sedsystems.ca>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
+        id S1726254AbhAGKDw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jan 2021 05:03:52 -0500
+Received: from smtp.asem.it ([151.1.184.197]:52696 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbhAGKDw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 7 Jan 2021 05:03:52 -0500
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000696439.MSG 
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 11:03:09 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 Jan
+ 2021 11:03:07 +0100
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Thu, 7 Jan 2021 11:03:07 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Johan Hovold <johan@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: R: [PATCH v2] gpiolib: Disallow identical line names in the same chip
+Thread-Topic: [PATCH v2] gpiolib: Disallow identical line names in the same
+ chip
+Thread-Index: AQHW5DC+EYQ7RQ5jYUeg211EwFA6Oaob7+Gg
+Date:   Thu, 7 Jan 2021 10:03:07 +0000
+Message-ID: <d04ed4ea7bfe4438947e05c86f031ed4@asem.it>
+References: <20210105082758.77762-1-linus.walleij@linaro.org>
+ <CAHp75VeXC26KxxhrSbtae2_v4Zqnaaia3nV_1sxY07uUEt3U7g@mail.gmail.com>
+ <CACRpkdYixhB6rTw=DK7CetExsXSH4czVzysynZas07OTuQi0vA@mail.gmail.com>
+ <CAMpxmJUJnhc9HrZnb=qE5fpZ9e0Xo7VP-hTjdK-LHk0w6n3cMQ@mail.gmail.com>
+ <CAHp75VcVN5Af3t-OYdO9MOXk14LV+zYQtusqft8twi_u83yZ6g@mail.gmail.com>
+In-Reply-To: <CAHp75VcVN5Af3t-OYdO9MOXk14LV+zYQtusqft8twi_u83yZ6g@mail.gmail.com>
+Accept-Language: it-IT, en-US
+Content-Language: it-IT
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A782F1D.5FF6DC5C.0040,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 6, 2021 at 1:27 PM Srinivas Neeli <srinivas.neeli@xilinx.com> wrote:
-
-> Add support for suspend and resume, pm runtime suspend and resume.
-> Added free and request calls.
->
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-(...)
-
-> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       int ret;
-> +
-> +       ret = pm_runtime_get_sync(chip->parent);
-> +       /*
-> +        * If the device is already active pm_runtime_get() will return 1 on
-> +        * success, but gpio_request still needs to return 0.
-> +        */
-> +       return ret < 0 ? ret : 0;
-> +}
-
-That's clever. I think more GPIO drivers should be doing it like this,
-today I think most just ignore the return code.
-
-> +static int __maybe_unused xgpio_suspend(struct device *dev)
-> +static int __maybe_unused xgpio_resume(struct device *dev)
-
-Those look good.
-
-
->  /**
->   * xgpio_remove - Remove method for the GPIO device.
->   * @pdev: pointer to the platform device
-> @@ -289,7 +323,10 @@ static int xgpio_remove(struct platform_device *pdev)
->  {
->         struct xgpio_instance *gpio = platform_get_drvdata(pdev);
->
-> -       clk_disable_unprepare(gpio->clk);
-> +       if (!pm_runtime_suspended(&pdev->dev))
-> +               clk_disable_unprepare(gpio->clk);
-> +
-> +       pm_runtime_disable(&pdev->dev);
-
-This looks complex and racy. What if the device is resumed after you
-executed the
-first part of the statement.
-
-The normal sequence is:
-
-pm_runtime_get_sync(dev);
-pm_runtime_put_noidle(dev);
-pm_runtime_disable(dev);
-
-This will make sure the clock is enabled and pm runtime is disabled.
-After this you can unconditionally call clk_disable_unprepare(gpio->clk);
-
-It is what you are doing on the errorpath of probe().
-
-Yours,
-Linus Walleij
+SGkgQW5keSwNCg0KPiBGbGF2aW8sIHBlcmhhcHMgb25lIG1vcmUgcnVsZSB0byB0aGUgZ3Bpby1s
+aW5lLW5hbWVzIHByb3BlcnR5IGhhcyB0bw0KPiBiZSBhZGRlZCBpbnRvIGRvY3VtZW50YXRpb24g
+KEJhcnQsIHNhbWUgdG8gRFQgZG9jcz8pOg0KPiAgLSBuYW1lcyBpbnNpZGUgb25lIGNoaXAgbXVz
+dCBiZSB1bmlxdWUNCg0Kb2ssIEknbGwgYWRkIHRoaXMgcnVsZQ0KDQo+IC0tDQo+IFdpdGggQmVz
+dCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg0KQmVzdCByZWdhcmRzLA0KRmxhdmlvIFN1
+bGlnb2kNCg==
