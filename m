@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FE72EF316
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 14:34:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CBFB2EF31F
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 14:36:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbhAHNdj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 08:33:39 -0500
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:33251 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbhAHNdi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 08:33:38 -0500
-Received: by mail-lf1-f41.google.com with SMTP id l11so23021563lfg.0;
-        Fri, 08 Jan 2021 05:33:21 -0800 (PST)
+        id S1726220AbhAHNfn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 08:35:43 -0500
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:35162 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbhAHNfn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 08:35:43 -0500
+Received: by mail-lf1-f48.google.com with SMTP id u25so2182504lfc.2;
+        Fri, 08 Jan 2021 05:35:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qSLE7h9zoKQSOWFNe8fkmQbWcGg/f0KBYVoFpdlwRRA=;
-        b=SQW2+SfsPZq0iuoMb0Sq1OywabeayckX4zodF+hIymlmltgNOgAgAd4s0xJR7AJzWX
-         ZxZXUxgZJBNHDH6/VOlAf7iCdCRbqpzIUC2MgDTPcbnB+UVqcpPWNbnusif7srcpESVV
-         jBMz1pE95vqn03sHPotr5Q5a0U+Nm2ZUXHQJWQgj76oOY04EvFn0Zmxi1J/XPoFr6TPq
-         Cqg+l9GicX9e8c/oIA8qKUeW40ohUvO253RWeQghc9n8szQeBGMW7JY0dMj13CnvmMHV
-         zXgSzJ1pTaY8dqgQk2LbGjerIljxL7xe4gIUdPbIbCshhjQ/LY2TE5ArIcKC9Tg90fV4
-         +YEA==
-X-Gm-Message-State: AOAM5336wCIGml6LNCSce6n6kvTCWFfNRubSoefY97W19OnV1PuZ8ybj
-        9gW1vLPbzsKgkcPA1WbSsjhtYUjeom8=
-X-Google-Smtp-Source: ABdhPJyBy4PBxEppKCr4W06SxdnTdtW5h2wd0dIUln/hk3vCZ/tbnbk0MS+Y1+NKj02XMeSOxf3qfQ==
-X-Received: by 2002:a2e:80d4:: with SMTP id r20mr1492800ljg.495.1610112775697;
-        Fri, 08 Jan 2021 05:32:55 -0800 (PST)
+        bh=i+jY1fwogGurOEMqIxMp7dXBTnuBJpYfoJrcycCD6yI=;
+        b=lyROpLocr5jeAHMMVF8zZtxRczbM2uvB6VvLGL6YkE5Bb6RQVR3lsjwwAOFoEtmWiQ
+         6bk7upQL+/OhdwKVE+jFW9JsOlS44S1uI5WKa55p5F2LES+hNAGH3SOaO6Ttn6NwjOcH
+         lV+SeR4wT5zPxri7boKQpWdMEtzHAmuqnOyOuL8QgItfTtVN/pxNUtkGVF0zCU6BV/+w
+         09l98mxgWRR42brWXd7YirT8adSBdCePf0zDzBKD0qR5R5Y0LwDlsTguZrBSZQVj8HZT
+         WDiNVGzULyt/6EPeSiBsAnXdEa5gcIinFQm8MAZMG1ERF9g+BfK7aNHXvFODTsh7ltE/
+         e8Nw==
+X-Gm-Message-State: AOAM532PRpQd10Wa5Og4ix+OK7CYtCST/coSK1OTX8QLKnaV9ofZSJUb
+        OqgWpaxwROsKGirKtlnIW7o=
+X-Google-Smtp-Source: ABdhPJydhJ0u3HgQzgnmAwHpQY/7TCLtlgNLAh/H6lW0mQ2Yl7awh1qkewA43GxfRQxfXs4x13Zv0Q==
+X-Received: by 2002:a2e:b80c:: with SMTP id u12mr1479153ljo.490.1610112899852;
+        Fri, 08 Jan 2021 05:34:59 -0800 (PST)
 Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id w15sm1960553lfd.95.2021.01.08.05.32.54
+        by smtp.gmail.com with ESMTPSA id w23sm1158426lff.84.2021.01.08.05.34.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jan 2021 05:32:55 -0800 (PST)
-Date:   Fri, 8 Jan 2021 15:32:47 +0200
+        Fri, 08 Jan 2021 05:34:59 -0800 (PST)
+Date:   Fri, 8 Jan 2021 15:34:52 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +49,8 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-power@fi.rohmeurope.com, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH 03/15] mfd: bd718x7: simplify by cleaning unnecessary device
- data
-Message-ID: <2860acdbecf91bfac83ab98f589bc6e861d212ff.1610110144.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 05/15] dt_bindings: mfd: Add ROHM BD71815 PMIC
+Message-ID: <4b3a868c07312d630de32e85d31dee7501627b73.1610110144.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1610110144.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,152 +60,224 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Most ROHM PMIC sub-devices only use the regmap pointer from
-parent device. They can obtain this by dev_get_regamap so in
-most cases the MFD device does not need to allocate and populate
-the driver data. Simplify drivers by removing this.
+Document DT bindings for ROHM BD71815.
 
-The BD70528 still needs the access to watchdog mutex so keep
-rohm_regmap_dev in use on BD70528 RTC and WDG drivers for now.
+BD71815 is a single-chip power management IC mainly for battery-powered
+portable devices. The IC integrates 5 bucks, 7 LDOs, a boost driver for
+LED, a battery charger with a Coulomb counter, a real-time clock, a 32kHz
+clock and two general-purpose outputs although only one is documented by
+the data-sheet.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/mfd/rohm-bd718x7.c       | 43 ++++++++++++--------------------
- include/linux/mfd/rohm-bd718x7.h | 13 ----------
- 2 files changed, 16 insertions(+), 40 deletions(-)
+ .../bindings/mfd/rohm,bd71815-pmic.yaml       | 198 ++++++++++++++++++
+ 1 file changed, 198 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71815-pmic.yaml
 
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index c32c1b6c98fa..bfd81f78beae 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -91,9 +91,9 @@ static const struct regmap_config bd718xx_regmap_config = {
- 	.cache_type = REGCACHE_RBTREE,
- };
- 
--static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
-+static int bd718xx_init_press_duration(struct regmap *regmap,
-+				       struct device *dev)
- {
--	struct device* dev = bd718xx->chip.dev;
- 	u32 short_press_ms, long_press_ms;
- 	u32 short_press_value, long_press_value;
- 	int ret;
-@@ -102,8 +102,7 @@ static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
- 				   &short_press_ms);
- 	if (!ret) {
- 		short_press_value = min(15u, (short_press_ms + 250) / 500);
--		ret = regmap_update_bits(bd718xx->chip.regmap,
--					 BD718XX_REG_PWRONCONFIG0,
-+		ret = regmap_update_bits(regmap, BD718XX_REG_PWRONCONFIG0,
- 					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 					 short_press_value);
- 		if (ret) {
-@@ -116,8 +115,7 @@ static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
- 				   &long_press_ms);
- 	if (!ret) {
- 		long_press_value = min(15u, (long_press_ms + 500) / 1000);
--		ret = regmap_update_bits(bd718xx->chip.regmap,
--					 BD718XX_REG_PWRONCONFIG1,
-+		ret = regmap_update_bits(regmap, BD718XX_REG_PWRONCONFIG1,
- 					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 					 long_press_value);
- 		if (ret) {
-@@ -132,7 +130,8 @@ static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
- static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
--	struct bd718xx *bd718xx;
-+	struct regmap *regmap;
-+	struct regmap_irq_chip_data *irq_data;
- 	int ret;
- 	unsigned int chip_type;
- 	struct mfd_cell *mfd;
-@@ -142,13 +141,6 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		dev_err(&i2c->dev, "No IRQ configured\n");
- 		return -EINVAL;
- 	}
--
--	bd718xx = devm_kzalloc(&i2c->dev, sizeof(struct bd718xx), GFP_KERNEL);
--
--	if (!bd718xx)
--		return -ENOMEM;
--
--	bd718xx->chip_irq = i2c->irq;
- 	chip_type = (unsigned int)(uintptr_t)
- 		    of_device_get_match_data(&i2c->dev);
- 	switch (chip_type) {
-@@ -164,29 +156,26 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		dev_err(&i2c->dev, "Unknown device type");
- 		return -EINVAL;
- 	}
--	bd718xx->chip.dev = &i2c->dev;
--	dev_set_drvdata(&i2c->dev, bd718xx);
- 
--	bd718xx->chip.regmap = devm_regmap_init_i2c(i2c,
--						    &bd718xx_regmap_config);
--	if (IS_ERR(bd718xx->chip.regmap)) {
-+	regmap = devm_regmap_init_i2c(i2c, &bd718xx_regmap_config);
-+	if (IS_ERR(regmap)) {
- 		dev_err(&i2c->dev, "regmap initialization failed\n");
--		return PTR_ERR(bd718xx->chip.regmap);
-+		return PTR_ERR(regmap);
- 	}
- 
--	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->chip.regmap,
--				       bd718xx->chip_irq, IRQF_ONESHOT, 0,
--				       &bd718xx_irq_chip, &bd718xx->irq_data);
-+	ret = devm_regmap_add_irq_chip(&i2c->dev, regmap, i2c->irq,
-+				       IRQF_ONESHOT, 0, &bd718xx_irq_chip,
-+				       &irq_data);
- 	if (ret) {
- 		dev_err(&i2c->dev, "Failed to add irq_chip\n");
- 		return ret;
- 	}
- 
--	ret = bd718xx_init_press_duration(bd718xx);
-+	ret = bd718xx_init_press_duration(regmap, &i2c->dev);
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_irq_get_virq(bd718xx->irq_data, BD718XX_INT_PWRBTN_S);
-+	ret = regmap_irq_get_virq(irq_data, BD718XX_INT_PWRBTN_S);
- 
- 	if (ret < 0) {
- 		dev_err(&i2c->dev, "Failed to get the IRQ\n");
-@@ -195,9 +184,9 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 
- 	button.irq = ret;
- 
--	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
-+	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   mfd, cells, NULL, 0,
--				   regmap_irq_get_domain(bd718xx->irq_data));
-+				   regmap_irq_get_domain(irq_data));
- 	if (ret)
- 		dev_err(&i2c->dev, "Failed to create subdevices\n");
- 
-diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
-index bee2474a8f9f..df2918198d37 100644
---- a/include/linux/mfd/rohm-bd718x7.h
-+++ b/include/linux/mfd/rohm-bd718x7.h
-@@ -310,17 +310,4 @@ enum {
- 	BD718XX_PWRBTN_LONG_PRESS_15S
- };
- 
--struct bd718xx {
--	/*
--	 * Please keep this as the first member here as some
--	 * drivers (clk) supporting more than one chip may only know this
--	 * generic struct 'struct rohm_regmap_dev' and assume it is
--	 * the first chunk of parent device's private data.
--	 */
--	struct rohm_regmap_dev chip;
--
--	int chip_irq;
--	struct regmap_irq_chip_data *irq_data;
--};
--
- #endif /* __LINUX_MFD_BD718XX_H__ */
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71815-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71815-pmic.yaml
+new file mode 100644
+index 000000000000..2206b2008acd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71815-pmic.yaml
+@@ -0,0 +1,198 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd71815-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71815 Power Management Integrated Circuit bindings
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  BD71815AGW is a single-chip power management ICs for battery-powered
++  portable devices. It integrates 5 buck converters, 8 LDOs, a boost driver
++  for LED and a 500 mA single-cell linear charger. Also included is a Coulomb
++  counter, a real-time clock (RTC), and a 32.768 kHz clock gate and two GPOs.
++
++properties:
++  compatible:
++    const: rohm,bd71815
++
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  gpio-controller: true
++  "#gpio-cells":
++    const: 2
++    description: |
++      The first cell is the pin number and the second cell is used to specify
++      flags. See ../gpio/gpio.txt for more information.
++
++  clocks:
++    maxItems: 1
++  "#clock-cells":
++    const: 0
++  clock-output-names:
++    const: bd71815-32k-out
++
++  rohm,clkout-mode:
++    description: clk32kout mode. Can be set to "open-drain" or "cmos".
++    $ref: "/schemas/types.yaml#/definitions/string"
++    enum:
++      - open-drain
++      - cmos
++
++  rohm,charger-sense-resistor-ohms:
++    minimum: 10000000
++    maximum: 50000000
++    description: |
++      BD71827 and BD71828 have SAR ADC for measuring charging currents.
++      External sense resistor (RSENSE in data sheet) should be used. If some
++      other but 30MOhm resistor is used the resistance value should be given
++      here in Ohms.
++
++  regulators:
++    $ref: ../regulator/rohm,bd71815-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
++
++  gpio-reserved-ranges:
++    description: |
++      Usage of BD71828 GPIO pins can be changed via OTP. This property can be
++      used to mark the pins which should not be configured for GPIO. Please see
++      the ../gpio/gpio.txt for more information.
++
++  rohm,enable-hidden-gpo:
++    description: |
++      The BD71815 has undocumented GPO at pin E5. Pin is marked as GND at the
++      data-sheet as it's location in the middle of GND pins makes it hard to
++      use on PCB. If your board has managed to use this pin you can enable the
++      second GPO by defining this property. Dont enable this if you are unsure
++      about how the E5 pin is connected on your board.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#clock-cells"
++  - regulators
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pmic: pmic@4b {
++            compatible = "rohm,bd71815";
++            reg = <0x4b>;
++
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++
++            clocks = <&osc 0>;
++            #clock-cells = <0>;
++            clock-output-names = "bd71815-32k-out";
++
++            gpio-controller;
++            #gpio-cells = <2>;
++
++            rohm,charger-sense-resistor-ohms = <10000000>;
++
++            regulators {
++                buck1: buck1 {
++                    regulator-name = "buck1";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <2000000>;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1150000>;
++                    rohm,dvs-suspend-voltage = <950000>;
++                };
++                buck2: buck2 {
++                    regulator-name = "buck2";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <2000000>;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1150000>;
++                    rohm,dvs-suspend-voltage = <950000>;
++                };
++                buck3: buck3 {
++                    regulator-name = "buck3";
++                    regulator-min-microvolt = <1200000>;
++                    regulator-max-microvolt = <2700000>;
++                    regulator-always-on;
++                };
++                buck4: buck4 {
++                    regulator-name = "buck4";
++                    regulator-min-microvolt = <1100000>;
++                    regulator-max-microvolt = <1850000>;
++                    regulator-always-on;
++                };
++                buck5: buck5 {
++                    regulator-name = "buck5";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo1: ldo1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo2: ldo2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo3: ldo3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo4: ldo4 {
++                    regulator-name = "ldo4";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo5: ldo5 {
++                    regulator-name = "ldo5";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++                ldo6: ldodvref {
++                    regulator-name = "ldodvref";
++                    regulator-always-on;
++                };
++                ldo7: ldolpsr {
++                    regulator-name = "ldolpsr";
++                    regulator-always-on;
++                };
++
++                boost: wled {
++                    regulator-name = "wled";
++                    regulator-min-microamp = <10>;
++                    regulator-max-microamp = <25000>;
++                };
++            };
++        };
++    };
 -- 
 2.25.4
 
