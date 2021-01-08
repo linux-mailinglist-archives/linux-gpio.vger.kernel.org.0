@@ -2,137 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 584222EEBBC
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 04:13:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E012EEDAA
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 08:01:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbhAHDNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jan 2021 22:13:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbhAHDNI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 22:13:08 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5528C0612F4
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jan 2021 19:12:27 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id q20so2071937pfu.8
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 19:12:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
-        b=h2ktI7s4n8xCoqkoSVH4EHqwEk9bp/enKaHzfXG4daTjSVem3smhzGjWZOERytTBt1
-         uct1LT+TzDwe1P+tWsKICLXw/a9f1Y5NGttqGWBIlq7W0terFsRHlavDYV15Cf8egItt
-         ssfplpyFYDBmZLa4Bss7IeleNkqZcrj7JtyEEWkZPzvoHbtHiUCt9ectPN4fr1muZPpM
-         ywgRFdcUijDEgD1cnBXSpdui63N7Pur/ocDaLM3e7YxpSFI76doqdNO0TUcSv7NbVbUQ
-         egGDX7XIhDuYYpHZ5nnBoNW06xDqi3t8gF0kGVKM7WpiLVNcmrFR1T8datur+4zctrQd
-         fHgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
-        b=rR4Me5kdV5/JtQ3fSv7dHJT9Jtjrnf/YLIv3XnrCIMKL+lqa90dmk5NVX7iZbhqOZC
-         wYGlr+vUSjGEYCKS8qp6f66F7nT/X8PVyo0TTd4ZlYR38iyYlZpUJsSUki7JE87idK5Q
-         XDR+9GhEdQaUkHsO5Dd6uDY8lcZQFjQqd/XzNEBX+SIyz8/VqbG0ajd2VpJOEydm3YgE
-         GpJlPEMl9nmqzjoldVmJwGwgzmgb9w1TQhDJ3fV2G56ZNpqp48WxSAbBMiTsycewBWbt
-         n9rLqcuqQojEo8ywmO0Wgg6ku+M/+ZDZkGwkE0vvQNAADgM+8Y+sFUGW5W5MU0qkC4K4
-         1QtQ==
-X-Gm-Message-State: AOAM532YeLdIrByB7zc8aHOEZyON3SqOAd5UNK66y2h415/4ZR5st8kY
-        +YdXPfNHO43kX6F08V/VLyzH3w==
-X-Google-Smtp-Source: ABdhPJxeTiUgNKGaw5qtkvFU0vf1c4xAKljKlMnfqJb88DCjQRxBowLvlBQ4gqSHPM+ucT8Xlx08sQ==
-X-Received: by 2002:a63:1f47:: with SMTP id q7mr4962672pgm.10.1610075547296;
-        Thu, 07 Jan 2021 19:12:27 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id r185sm6938981pfc.53.2021.01.07.19.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jan 2021 19:12:26 -0800 (PST)
-Date:   Thu, 07 Jan 2021 19:12:26 -0800 (PST)
-X-Google-Original-Date: Thu, 07 Jan 2021 17:52:56 PST (-0800)
-Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
-In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        broonie@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        aou@eecs.berkeley.edu, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
-        andrew@lunn.ch, peter@korsgaard.com,
-        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-abbd57b3-7d81-4c66-9883-67bc11f1f3a3@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1726763AbhAHHAp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 02:00:45 -0500
+Received: from mga06.intel.com ([134.134.136.31]:33156 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbhAHHAp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 8 Jan 2021 02:00:45 -0500
+IronPort-SDR: ZaZELB/2ReKRkb/V5WCbMPHGRHpuzOu5OWBW50sr1ILk2tMDGrLIDmvfFtrntxM1QCieY/RZhe
+ +T2nfu2U0M5g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9857"; a="239104736"
+X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
+   d="scan'208";a="239104736"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 22:58:59 -0800
+IronPort-SDR: ibRKqGiVlKKNg1hf1/oFe/omWCAoQFqYRIuDSTXgtx5s1Z7l41ZVN0HOpL8pM6RV1OAYywl2sS
+ pEBl8oZU609A==
+X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
+   d="scan'208";a="380021991"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 22:58:57 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 08 Jan 2021 08:58:55 +0200
+Date:   Fri, 8 Jan 2021 08:58:55 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1] pinctrl: tigerlake: Add Alder Lake-P ACPI ID
+Message-ID: <20210108065855.GV968855@lahna.fi.intel.com>
+References: <20210107185406.40415-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210107185406.40415-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
-> Start board support by adding initial support for the SiFive FU740 SoC
-> and the first development board that uses it, the SiFive HiFive
-> Unmatched A00.
->
-> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
-> U-boot and OpenSBI.
->
-> This patch series is dependent on Zong's Patchset[0]. The patchset also
-> adds two new nodes in dtsi file. The binding documentation patch
-> for these nodes are already posted on the mailing list[1][2].
->
-> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
-> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
-> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
->
-> Changes in v2:
-> - The dt bindings patch is split into several individual patches.
-> - Expand the full list for compatible strings in i2c-ocores.txt
->
-> Yash Shah (9):
->   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: serial: Update DT binding docs to support SiFive FU740
->     SoC
->   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
->   riscv: dts: add initial support for the SiFive FU740-C000 SoC
->   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
->     board
->   riscv: dts: add initial board data for the SiFive HiFive Unmatched
->
->  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
->  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
->  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
->  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
->  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
->  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
->  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
->  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
->  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
->  10 files changed, 590 insertions(+), 17 deletions(-)
->  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
->  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+On Thu, Jan 07, 2021 at 08:54:06PM +0200, Andy Shevchenko wrote:
+> Intel Alder Lake-P PCH has the same GPIO hardware than Tiger Lake-LP
+> PCH but the ACPI ID is different. Add this new ACPI ID to the list of
+> supported devices.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks, these are on for-next.  There was one checkpatch warning about the
-missing ISSI device tree entry, but we already had that in the FU540 so I'm OK
-letting it slide.
-
-I'm also not really sure this is the right way to do this sort of thing: most
-of the patches here really aren't RISC-V things, they're SiFive SOC things.
-Some of these patches have been picked up by other trees, but I just took the
-rest.  I'm not all that happy about taking DT bindings for things like GPIO or
-PWM bindings, but as they're pretty small I'm OK doing it in this instance.
-
-In the future it would really be better to split these up and land them via
-their respectitve trees, rather than trying to do all the SOC stuff over here.
-I know that can be a headache, but we have that SOC group for this purpose to
-try and keep things a bit more together -- I know it was a while ago and there
-really hasn't been much SOC activity on the RISC-V side of things so maybe it
-hasn't been that widley discussed, but that was really designed to solve these
-sorts of problems.
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
