@@ -2,170 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 210892EF189
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 12:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 628BB2EF255
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 13:19:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbhAHLmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 06:42:11 -0500
-Received: from mail-bn8nam11on2048.outbound.protection.outlook.com ([40.107.236.48]:8929
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725791AbhAHLmL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 Jan 2021 06:42:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mvc+iz19ZAFQ6OE1BCsMotuWDfYLgtOiurrXusbOM2RAPqsb5Un/9SuigyF31xXbJE94ERuVMORUBYUqJ6m9qfHgK4JEP9IN5UaEut+TzxMPseez/cyvJwcrs+RDke6GzwCBBtogFFaKX8MIoJQjfSM7Y/yygTrI4kHrk5TISfzwMDlMqZB3Pl0QITfY/ud7m+Y0nzTWxqA36VVPhHf0ftTIDXpbIiuzrhSmJRQ6X/cJ+yMDJevBS8czSbBviIm3zice5WXzLXiVbHQn+lWouZJTwulrWFeyk5oP/41j5caLdOGez+85LBf2jjhWsggqXHCZgc3e22Q0qeHT0iQfwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=muLcSyP+18BD25AL7apsd+fRZ9yrnKn4DryLjglLXwI=;
- b=cmeqZJkuR25dChX2b6OaRTfS9I70PuJjBuRRdcrPuGheQJHQIh/eHjR/9N3Kbc5jt00nPcsajghD92GnApIzW82LNDd91y66nXNPDdYDuivAjtZ2+PXpgTwcu7DpG6pfeD4/3uG8EjRGA6FJTNZUTZR2B98BXUXFqa8m7JUzcf5LXxpKUX0MiyaDeJDfXFcqvy9KajXInYlZI/z2VBXOzQ3qtBVmn+SjSMj8om2zKR68fnQSWlRHtl7MCWY0uZjAA+l4C9JjXAeCw9VWH0ihGs79IZdDOJnN2d0wa2VktLMO4bwkE+S7/Gw4f092h96xtyXnoM1t4FYz127deoe/vA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        id S1725828AbhAHMRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 07:17:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbhAHMRn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 07:17:43 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B17C0612FA;
+        Fri,  8 Jan 2021 04:17:01 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id z12so3552078pjn.1;
+        Fri, 08 Jan 2021 04:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=muLcSyP+18BD25AL7apsd+fRZ9yrnKn4DryLjglLXwI=;
- b=VmCCnUaJMFzO+I/TOim1kvoQz4TLLPlnFj4zaQSpLQCIXvdPFqrKBUyfOVexiAPjacW2mkjn3LFb2trXPGaSSRSiNiPERohbCR1/tlVTgE7DeUDwoCdf7zMVbPGS8x+pNkvchUJZEzfq9XSc0R7rCq7XD4ITdYgVYWlIs+qMn74=
-Received: from DM6PR02MB5386.namprd02.prod.outlook.com (2603:10b6:5:75::25) by
- DM6PR02MB5180.namprd02.prod.outlook.com (2603:10b6:5:4e::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3721.23; Fri, 8 Jan 2021 11:41:15 +0000
-Received: from DM6PR02MB5386.namprd02.prod.outlook.com
- ([fe80::c43b:55a6:66e1:b771]) by DM6PR02MB5386.namprd02.prod.outlook.com
- ([fe80::c43b:55a6:66e1:b771%6]) with mapi id 15.20.3742.006; Fri, 8 Jan 2021
- 11:41:15 +0000
-From:   Srinivas Neeli <sneeli@xilinx.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michals@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        Srinivas Goud <sgoud@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>
-Subject: RE: [PATCH V4 4/5] gpio: gpio-xilinx: Add support for suspend and
- resume
-Thread-Topic: [PATCH V4 4/5] gpio: gpio-xilinx: Add support for suspend and
- resume
-Thread-Index: AQHW5CdOeyF82PxTQ0Kuh1KKVm8QZqob672AgAGsVIA=
-Date:   Fri, 8 Jan 2021 11:41:15 +0000
-Message-ID: <DM6PR02MB538673699067F89F6F167121AFAE0@DM6PR02MB5386.namprd02.prod.outlook.com>
-References: <1609936000-28378-1-git-send-email-srinivas.neeli@xilinx.com>
- <1609936000-28378-5-git-send-email-srinivas.neeli@xilinx.com>
- <CACRpkdYLp0uuB-QO5HvLH222TkCjk54JmftveHgpiW1JExF7DQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYLp0uuB-QO5HvLH222TkCjk54JmftveHgpiW1JExF7DQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f8b2bdc3-fc32-497f-53c9-08d8b3ca4e8f
-x-ms-traffictypediagnostic: DM6PR02MB5180:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB51807617C9597D645FB0B21AAFAE0@DM6PR02MB5180.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1HgVBb5gsa37h9RJlQQb9JEuQChAkRsJ9xTkJmHZK8diebR2BryOLWCCx1ZtqC7nq9ZptQTtnrN69Qyhba+/BkgSQpmoGKECwFVTUwVMV4E+DPKE8ahQoRbK4UrzjJe7qQQ+Rf8pKQBeWKic3XoieEnND8VjiQRuJLaIRnFxKjq14+AOgtNND/u/U171lozaVemaXQYsOYsQY+SqmAwBYLGIkFcpBWiCNxhirkrnvYIvYbS50zgB8q6bjPecqfOeXjQxcQep9LRDdcMfbzB3H8+8kBAtZKhS6YxCZ8y5aEUUYC7Mnrou1PBkXr6DDKIf0Wc+BOnpIwNzKilZl+sFyyrQM1Ij6qXoKvnfRZ4J+M7TESJHQeEQ70UdiVU2lpOVpnwtFtW7bc+UZeGjG46JFw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB5386.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(6506007)(54906003)(15650500001)(9686003)(55016002)(5660300002)(71200400001)(66476007)(52536014)(316002)(7696005)(26005)(66556008)(478600001)(2906002)(86362001)(8676002)(66446008)(66946007)(6916009)(186003)(4326008)(53546011)(107886003)(64756008)(83380400001)(76116006)(8936002)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?UHgxOTJ6NHRCcUFrd2ZRUldJOVN1ZFdERllWRVQ4Mm1QaU56TzZRRUtZdnpE?=
- =?utf-8?B?MzJMQTFPajVQcHdqWlo1bGRwL0UzcWIzSURvNEhmcDM5amlac01ORXB4VjhF?=
- =?utf-8?B?TEwxMWFoanVmemVtNVBUOWhVWWxFdFZqMGlTSEtNSFJCUEl1VWJoZVcwYmVT?=
- =?utf-8?B?MVYycXhqU0lacWlJOTRUMEJEVTdRN3JDNXZuVURZcm5wWDV5bDJUeXVBMEdC?=
- =?utf-8?B?ODFUMGFycnl3UHdtajdTSTVOYTZMMzM2cDYwb0oxYWo2azNTN3dNVTlTRFRw?=
- =?utf-8?B?cVEzZ3RUanBxRUI2cVR1bkdOV1BnWjJvdjJzOEx4dzE5V2xIODk1bkM5bEha?=
- =?utf-8?B?c2MwQzNrZ3pFekZodGpCQklZMU1Ebng4STNxdm5IblJZSTlxQjhqalNsRHVU?=
- =?utf-8?B?MzVDajYrTjFGdkVGMkVQNjFPVWxmMW0yTXlGalJuSkxVU25OeExWR2RwcW80?=
- =?utf-8?B?N1Vtc0gvZnFPalZEaFlPMzJGbVJPMVAyOWJRaVNKM3dJc2cwOHNFNjBINnZn?=
- =?utf-8?B?S1oxeWpwRWRwNldyUnlKVTZ2YWVId2VNRXVZVXN0UWFQSnZudXpNbnlpaGZX?=
- =?utf-8?B?NVBweU1ZUFRjNUVTbEV2a2NSRHFaWktLSVJMR2t4L0tkc2todHgrd0Q2bTRW?=
- =?utf-8?B?YWFnU2dXUkdmZTB4VllhRFo1Q2VteXRpSmJxcG42REN1KzAwOFErV1RaQTk5?=
- =?utf-8?B?cGJQYUw3bjNRTU1tZkJMRW9veC9TcGhNS1RGZ2szWTlDTXh4K05CWEs0UCti?=
- =?utf-8?B?RXdRYktGT3NqLzNPcTJoVGFXQlh1RUhjMUU0aGpwN0lQNnZQdkRUdVBNUWd0?=
- =?utf-8?B?MCtDeW1xeFpPTmJMTUlIbTVlWllmMlh5K0lVODF2MU5GZVZIU05MOW9acFNs?=
- =?utf-8?B?TFVzTFpuc3VlTXdVaGpONE13YVhCQ0dZOTd0RVQ5bXVHbWlxV0tNcU42eWhU?=
- =?utf-8?B?dVB3Y1NMcHlrRm5JNG1oWHdqN25vNW5lcnRYMjl2YVpCUlp5ZVAwOWpacEhp?=
- =?utf-8?B?ZUNSSUpwVjNmeXdXSDRkMS9Wb3l5Y0lNQmF4cS91bkQ3MFp1c1UwVHJ4dy9C?=
- =?utf-8?B?aDU1UXU2Z0RVZEZtcG9RZVlCMU4yREdNMGN2S3pZZGxpSWtYSiswazgrckgz?=
- =?utf-8?B?OEpFSERRRFB4UVJUSTlLKzdybHlOa0VvWElLb2hrY0dNTHdpTEZiYzdoWnF0?=
- =?utf-8?B?QXlVWlMvYU5VaVJQZDBTY0VZZEorTmtEQUVGMXR3c2dEQXp4NWkweHVaeWxV?=
- =?utf-8?B?ZFd3a2RCVmhjZkU5cFVueTRzQk5oQjZSRDRjc2xib1BQTlRYRFNQUVdTajAw?=
- =?utf-8?Q?iKU9F3hhNjTZw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QJpmPSXBMkDyRpOAie8nEtiKxW2diZukk9pipJ57ovs=;
+        b=APSTOjBSR9NIMt2G+tAKvfWj2tZ4hY4e3e1aiF7JekWmZUQuDSiZ5IbRXu1/KhIooQ
+         J/HcWQyXi3KQ8+D3KlBShkw+3DV6P4O1wxDFt0b6FOjSvZOjWafWoGAE5gPV76cBRJEm
+         Trby4n2kGLMcOmuVcRt+XtceGuTyFfThWFR/vn0PxK22wx1n4JN5HZUiXRxrbyd94B1R
+         vwNFtlu1wjAJNAzTBHWOysPbZxTNUDeohmI4FYAlxbyEXEsJR4qwQI7U+VJiK8rIce49
+         UCcCgQVlofROPknaFgODvIv6KE0B/8oLY3ZGWbI6odx41TeD/9kCPg7pBagojBWs0pX9
+         gmyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QJpmPSXBMkDyRpOAie8nEtiKxW2diZukk9pipJ57ovs=;
+        b=kzWJdXbWtSVdYF6un2pC2l5x5uFmu+iPWhmo4sNz5Ad5uIB7syYNEMUVHno8CSedOQ
+         s5Re3PrCE2EXBrz+vl8Mvq7v5+iPL23Ilx4BXYhaMzSHQZVTxErhaHsYO2eE/93ATJQe
+         JLWkKnodJ8HWtqW1AToeCE66JfK2mGGYQXslo/cO7NDKCfxxS8SETU1obiEtY06/iZhX
+         2fQB4bfNaa7iwHpyUa3Be7Cmz2SIRgJC8xYPVJjx1OxMZiP1GfQR10NYs2lKx7ZQiEHA
+         XgzM8UT0edGCs+aIsn4YC5SVb5ucidiLKTvwUnJ9BqTLQz9W/H6ZQ1pIxgeqDvSJzAEl
+         ZYZA==
+X-Gm-Message-State: AOAM531yOEuXnIZwoycRCf0pjkNvWPzX+lXiQPOyUTXSUBQ+3M0eQtUv
+        HC4ZhwlTMDqxJRnzf6XuRRRlz2cEUJbJf0odauw=
+X-Google-Smtp-Source: ABdhPJyldR1piNAeKj9uIZ1Le/5wxh9TOr537qIrpxGvyxjo1onN4F4oe8SR/CXSTDkdvSzMQ7bZigw9hkKUqlRE4vo=
+X-Received: by 2002:a17:90a:c592:: with SMTP id l18mr3486365pjt.228.1610108221001;
+ Fri, 08 Jan 2021 04:17:01 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR02MB5386.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8b2bdc3-fc32-497f-53c9-08d8b3ca4e8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2021 11:41:15.4557
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: N/IgKwKfAIivGjdPD6crBdXQibOweVt6uNWVf9UYqLd8h7zQBpK56rJYuO3BeMbX754DHxGJeYVI3ZTxcz9/8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5180
+References: <20201130133129.1024662-1-djrscally@gmail.com> <20201130133129.1024662-19-djrscally@gmail.com>
+ <20201130200719.GB4077@smile.fi.intel.com> <778f23fc-b99c-33a2-642d-ca0e47fd4ed5@gmail.com>
+In-Reply-To: <778f23fc-b99c-33a2-642d-ca0e47fd4ed5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 Jan 2021 14:17:49 +0200
+Message-ID: <CAHp75VeYOqJt9iKaGPA4=dkb2kYUbqUV4PGTn8uSsnUt_kSGSw@mail.gmail.com>
+Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@acpica.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Yong Zhi <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Tian Shu Qiu <tian.shu.qiu@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        kieran.bingham+renesas@ideasonboard.com,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgTGludXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMg
-V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgSmFu
-dWFyeSA3LCAyMDIxIDM6MTcgUE0NCj4gVG86IFNyaW5pdmFzIE5lZWxpIDxzbmVlbGlAeGlsaW54
-LmNvbT4NCj4gQ2M6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5j
-b20+OyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IFNodWJocmFqeW90aSBE
-YXR0YSA8c2h1YmhyYWpAeGlsaW54LmNvbT47IFNyaW5pdmFzDQo+IEdvdWQgPHNnb3VkQHhpbGlu
-eC5jb20+OyBSb2JlcnQgSGFuY29jayA8aGFuY29ja0BzZWRzeXN0ZW1zLmNhPjsNCj4gV2lsbGlh
-bSBCcmVhdGhpdHQgR3JheSA8dmlsaGVsbS5ncmF5QGdtYWlsLmNvbT47IFN5ZWQgTmF5eWFyIFdh
-cmlzDQo+IDxzeWVkbndhcmlzQGdtYWlsLmNvbT47IG9wZW4gbGlzdDpHUElPIFNVQlNZU1RFTSA8
-bGludXgtDQo+IGdwaW9Admdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBnaXQgPGdpdEB4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDQvNV0gZ3Bp
-bzogZ3Bpby14aWxpbng6IEFkZCBzdXBwb3J0IGZvciBzdXNwZW5kIGFuZA0KPiByZXN1bWUNCj4g
-DQo+IE9uIFdlZCwgSmFuIDYsIDIwMjEgYXQgMToyNyBQTSBTcmluaXZhcyBOZWVsaSA8c3Jpbml2
-YXMubmVlbGlAeGlsaW54LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IEFkZCBzdXBwb3J0IGZvciBz
-dXNwZW5kIGFuZCByZXN1bWUsIHBtIHJ1bnRpbWUgc3VzcGVuZCBhbmQgcmVzdW1lLg0KPiA+IEFk
-ZGVkIGZyZWUgYW5kIHJlcXVlc3QgY2FsbHMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBTcmlu
-aXZhcyBOZWVsaSA8c3Jpbml2YXMubmVlbGlAeGlsaW54LmNvbT4NCj4gKC4uLikNCj4gDQo+ID4g
-K3N0YXRpYyBpbnQgeGdwaW9fcmVxdWVzdChzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25l
-ZCBpbnQgb2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+ICsNCj4gPiAr
-ICAgICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoY2hpcC0+cGFyZW50KTsNCj4gPiArICAg
-ICAgIC8qDQo+ID4gKyAgICAgICAgKiBJZiB0aGUgZGV2aWNlIGlzIGFscmVhZHkgYWN0aXZlIHBt
-X3J1bnRpbWVfZ2V0KCkgd2lsbCByZXR1cm4gMSBvbg0KPiA+ICsgICAgICAgICogc3VjY2Vzcywg
-YnV0IGdwaW9fcmVxdWVzdCBzdGlsbCBuZWVkcyB0byByZXR1cm4gMC4NCj4gPiArICAgICAgICAq
-Lw0KPiA+ICsgICAgICAgcmV0dXJuIHJldCA8IDAgPyByZXQgOiAwOw0KPiA+ICt9DQo+IA0KPiBU
-aGF0J3MgY2xldmVyLiBJIHRoaW5rIG1vcmUgR1BJTyBkcml2ZXJzIHNob3VsZCBiZSBkb2luZyBp
-dCBsaWtlIHRoaXMsIHRvZGF5IEkNCj4gdGhpbmsgbW9zdCBqdXN0IGlnbm9yZSB0aGUgcmV0dXJu
-IGNvZGUuDQo+IA0KPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIHhncGlvX3N1c3BlbmQo
-c3RydWN0IGRldmljZSAqZGV2KSBzdGF0aWMNCj4gPiAraW50IF9fbWF5YmVfdW51c2VkIHhncGlv
-X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+IA0KPiBUaG9zZSBsb29rIGdvb2QuDQo+IA0K
-PiANCj4gPiAgLyoqDQo+ID4gICAqIHhncGlvX3JlbW92ZSAtIFJlbW92ZSBtZXRob2QgZm9yIHRo
-ZSBHUElPIGRldmljZS4NCj4gPiAgICogQHBkZXY6IHBvaW50ZXIgdG8gdGhlIHBsYXRmb3JtIGRl
-dmljZSBAQCAtMjg5LDcgKzMyMywxMCBAQCBzdGF0aWMNCj4gPiBpbnQgeGdwaW9fcmVtb3ZlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpICB7DQo+ID4gICAgICAgICBzdHJ1Y3QgeGdwaW9f
-aW5zdGFuY2UgKmdwaW8gPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPg0KPiA+IC0g
-ICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGdwaW8tPmNsayk7DQo+ID4gKyAgICAgICBpZiAo
-IXBtX3J1bnRpbWVfc3VzcGVuZGVkKCZwZGV2LT5kZXYpKQ0KPiA+ICsgICAgICAgICAgICAgICBj
-bGtfZGlzYWJsZV91bnByZXBhcmUoZ3Bpby0+Y2xrKTsNCj4gPiArDQo+ID4gKyAgICAgICBwbV9y
-dW50aW1lX2Rpc2FibGUoJnBkZXYtPmRldik7DQo+IA0KPiBUaGlzIGxvb2tzIGNvbXBsZXggYW5k
-IHJhY3kuIFdoYXQgaWYgdGhlIGRldmljZSBpcyByZXN1bWVkIGFmdGVyIHlvdQ0KPiBleGVjdXRl
-ZCB0aGUgZmlyc3QgcGFydCBvZiB0aGUgc3RhdGVtZW50Lg0KDQpDb3VsZCB5b3UgcGxlYXNlIGV4
-cGxhaW4gbW9yZSBvbiB0aGlzLg0KV2hhdCBpcyB0aGUgbmVlZCB0byBjYWxsIHBtX3J1bnRpbWVf
-Z2V0X3N5bmMoKTsgaW4gcmVtb3ZlIEFQSSA/DQoNCj4gDQo+IFRoZSBub3JtYWwgc2VxdWVuY2Ug
-aXM6DQo+IA0KPiBwbV9ydW50aW1lX2dldF9zeW5jKGRldik7DQo+IHBtX3J1bnRpbWVfcHV0X25v
-aWRsZShkZXYpOw0KPiBwbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsNCj4gDQo+IFRoaXMgd2lsbCBt
-YWtlIHN1cmUgdGhlIGNsb2NrIGlzIGVuYWJsZWQgYW5kIHBtIHJ1bnRpbWUgaXMgZGlzYWJsZWQu
-DQo+IEFmdGVyIHRoaXMgeW91IGNhbiB1bmNvbmRpdGlvbmFsbHkgY2FsbCBjbGtfZGlzYWJsZV91
-bnByZXBhcmUoZ3Bpby0+Y2xrKTsNCj4gDQo+IEl0IGlzIHdoYXQgeW91IGFyZSBkb2luZyBvbiB0
-aGUgZXJyb3JwYXRoIG9mIHByb2JlKCkuDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+On Fri, Jan 8, 2021 at 1:56 AM Daniel Scally <djrscally@gmail.com> wrote:
+> On 30/11/2020 20:07, Andy Shevchenko wrote:
+> > On Mon, Nov 30, 2020 at 01:31:29PM +0000, Daniel Scally wrote:
+
+...
+
+> > It's solely Windows driver design...
+> > Luckily I found some information and can clarify above table:
+> >
+> > 0x00 Reset
+> > 0x01 Power down
+> > 0x0b Power enable
+> > 0x0c Clock enable
+> > 0x0d LED (active high)
+> >
+> > The above text perhaps should go somewhere under Documentation.
+>
+> Coming back to this; there's a bit of an anomaly with the 0x01 Power
+> Down pin for at least one platform.  As listed above, the OV2680 on one
+> of my platforms has 3 GPIOs defined, and the table above gives them as
+> type Reset, Power down and Clock enable. I'd assumed from this table
+> that "power down" meant a powerdown GPIO (I.E. the one usually called
+> PWDNB in Omnivision datasheets and "powerdown" in drivers), but the
+> datasheet for the OV2680 doesn't list a separate reset and powerdown
+> pin, but rather a single pin that performs both functions.
+
+All of them are GPIOs, the question here is how they are actually
+connected on PCB level and I have no answer to that. You have to find
+schematics somewhere.
+
+> Am I wrong to treat that as something that ought to be mapped as a
+> powerdown GPIO to the sensors? Or do you know of any other way to
+> reconcile that discrepancy?
+
+The GPIOs can go directly to the sensors or be a control pin for
+separate discrete power gates.
+So, we can do one of the following:
+ a) present PD GPIO as fixed regulator;
+ b) present PD & Reset GPIOs as regulator;
+ c) provide them as is to the sensor and sensor driver must do what it
+considers right.
+
+Since we don't have schematics (yet?) and we have plenty of variations
+of sensors, I would go to c) and update the driver of the affected
+sensor as needed. Because even if you have separate discrete PD for
+one sensor on one platform there is no guarantee that it will be the
+same on another. Providing a "virtual" PD in a sensor that doesn't
+support it is the best choice I think. Let's hear what Sakari and
+other experienced camera sensor developers say.
+
+My vision is purely based on electrical engineering background,
+experience with existing (not exactly camera) sensor drivers and
+generic cases.
+
+> Failing that; the only way I can think to handle this is to register
+> proxy GPIO pins assigned to the sensors as you suggested previously, and
+> have them toggle the GPIO's assigned to the INT3472 based on platform
+> specific mapping data (I.E. we register a pin called "reset", which on
+> most platforms just toggles the 0x00 pin, but on this specific platform
+> would drive both 0x00 and 0x01 together. We're already heading that way
+> for the regulator consumer supplies so it's sort of nothing new, but I'd
+> still rather not if it can be avoided.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
