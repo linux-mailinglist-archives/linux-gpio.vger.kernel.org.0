@@ -2,59 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D2F42EEF84
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 10:25:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC76B2EF099
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 11:23:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbhAHJYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 04:24:19 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9727 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728097AbhAHJYT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 04:24:19 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DByL81gdKzl2Bt;
-        Fri,  8 Jan 2021 17:22:24 +0800 (CST)
-Received: from ubuntu.network (10.175.138.68) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.498.0; Fri, 8 Jan 2021 17:23:29 +0800
-From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <andy@kernel.org>,
-        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH v2 -next] gpio: wcove: convert comma to semicolon
-Date:   Fri, 8 Jan 2021 17:24:13 +0800
-Message-ID: <20210108092413.19354-1-zhengyongjun3@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        id S1727401AbhAHKVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 05:21:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbhAHKVx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 05:21:53 -0500
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0769C0612FF
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jan 2021 02:20:31 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by michel.telenet-ops.be with bizsmtp
+        id EALU2400K4C55Sk06ALU7V; Fri, 08 Jan 2021 11:20:29 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kxosd-001zdj-TC; Fri, 08 Jan 2021 11:20:27 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kxosd-008Ufg-CK; Fri, 08 Jan 2021 11:20:27 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 0/3] gpio: rcar: Add R-Car V3U support
+Date:   Fri,  8 Jan 2021 11:20:23 +0100
+Message-Id: <20210108102026.2024478-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.138.68]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace a comma between expression statements by a semicolon.
+	Hi Linus, Bartosz, Rob,
 
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
----
- drivers/gpio/gpio-wcove.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series adds support for GPIOs on the R-Car V3U (r8a779a0)
+SoC, to both DT bindings and the gpio-rcar driver.
 
-diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
-index b5fbba5a783a..97c5f1d01b62 100644
---- a/drivers/gpio/gpio-wcove.c
-+++ b/drivers/gpio/gpio-wcove.c
-@@ -434,7 +434,7 @@ static int wcove_gpio_probe(struct platform_device *pdev)
- 	wg->chip.get_direction = wcove_gpio_get_direction;
- 	wg->chip.get = wcove_gpio_get;
- 	wg->chip.set = wcove_gpio_set;
--	wg->chip.set_config = wcove_gpio_set_config,
-+	wg->chip.set_config = wcove_gpio_set_config;
- 	wg->chip.base = -1;
- 	wg->chip.ngpio = WCOVE_VGPIO_NUM;
- 	wg->chip.can_sleep = true;
+Changes compared to v2:
+  - Add Reviewed-by, Tested-by,
+  - Fix SoC part number in oneline summary,
+  - Reformat comment block to match coding style,
+  - Rebase on top of commit 3a57026a83ba363e ("gpio: rcar: Remove
+    redundant compatible values"),
+
+Changes compared to v1:
+  - Optimize GPIO pin state read on R-Car Gen3,
+  - Enable input unconditionally in probe and resume, instead of during
+    GPIO line configuration and depending on GPIO line direction,
+  - Assumed authorship, as this patch is very different from v1, written
+    by Phong Hoang,
+  - Add Reviewed-by.
+
+Thanks!
+
+Geert Uytterhoeven (3):
+  dt-bindings: gpio: rcar: Add r8a779a0 support
+  gpio: rcar: Optimize GPIO pin state read on R-Car Gen3
+  gpio: rcar: Add R-Car V3U (R8A779A0) support
+
+ .../bindings/gpio/renesas,rcar-gpio.yaml      |  3 +
+ drivers/gpio/gpio-rcar.c                      | 60 +++++++++++++++++--
+ 2 files changed, 58 insertions(+), 5 deletions(-)
+
 -- 
-2.22.0
+2.25.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
