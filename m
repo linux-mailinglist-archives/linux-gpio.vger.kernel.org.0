@@ -2,222 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0CDF2EEA06
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 00:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 584222EEBBC
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 04:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbhAGXz5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jan 2021 18:55:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60554 "EHLO
+        id S1727236AbhAHDNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jan 2021 22:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbhAGXz5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 18:55:57 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7725C0612F4;
-        Thu,  7 Jan 2021 15:55:16 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id q75so6969348wme.2;
-        Thu, 07 Jan 2021 15:55:16 -0800 (PST)
+        with ESMTP id S1726851AbhAHDNI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jan 2021 22:13:08 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5528C0612F4
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jan 2021 19:12:27 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id q20so2071937pfu.8
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Jan 2021 19:12:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ZncM7JH6Ki9FcKPmGbPeUTYbtASY1HLiha8VMirLUHY=;
-        b=mMyXEhd1cUGjWTGi0vOP8/6X+t+zUyEBQASUR6Ru0sHOF52lbgJQrX8BQjrmJpl9RH
-         IInQNx9iicLUum5zdjbNgCRCPPZ/Aaa/8NKFSc6btEfsOnMb1t6jV1mvOiEHeg212mwn
-         C+V483iiw42ts69wgoOvjRtaknBVVTEo0NvaUGZTl6tdIsMvRQssSBf7uD6xWpp9rRNV
-         uith9x4ogywuYCApBR0HU3WHFFgDeta5T5zc9tw1jHz4YaAj8CxVBUoVSqZUq1aUU96D
-         DXsCxTaGpca/JhJgoFlwM/+DOPu+jNec7sZoz+shzN7xqwWc7WrukuNptry77lKDBn+z
-         CoDg==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
+        b=h2ktI7s4n8xCoqkoSVH4EHqwEk9bp/enKaHzfXG4daTjSVem3smhzGjWZOERytTBt1
+         uct1LT+TzDwe1P+tWsKICLXw/a9f1Y5NGttqGWBIlq7W0terFsRHlavDYV15Cf8egItt
+         ssfplpyFYDBmZLa4Bss7IeleNkqZcrj7JtyEEWkZPzvoHbtHiUCt9ectPN4fr1muZPpM
+         ywgRFdcUijDEgD1cnBXSpdui63N7Pur/ocDaLM3e7YxpSFI76doqdNO0TUcSv7NbVbUQ
+         egGDX7XIhDuYYpHZ5nnBoNW06xDqi3t8gF0kGVKM7WpiLVNcmrFR1T8datur+4zctrQd
+         fHgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ZncM7JH6Ki9FcKPmGbPeUTYbtASY1HLiha8VMirLUHY=;
-        b=QZiHkg7nbcsuA5n14HaWfBOLHTYr7Ye16O5ygeVq8X48yq1QkfnFvM50fUqI04tajv
-         qjYetAFMNH7UveTrwCjHw7uWrIyfRf0kwjN6zNfRgj8GFb4op8bdHBno2Afui5SZBhTo
-         hrXpBYUoeSlwIpDYfvce2mGx1nuubQQDeQm216DjjptJD0yI23rWlZ3qR1jPy6o9jhw8
-         XoBbBfXZwLcJIwBeYyyvLvHfuSQkk28En9QSXi/BWfOmXst4Q2gYiLg5REjWS3vJ/EGZ
-         sRQil2xudU8i9DxfjiFqa7WC4efJ0UZOWGLbXAgUkw6qgbDc6Ai+c997JrV57hfyT0SB
-         Azdg==
-X-Gm-Message-State: AOAM533nxT+LFqqjVQAJRHxm304Kk2xS9u1uKhu43MlhEZfgh9BOo5Ig
-        F9WmaPBT71GTyZYvBFDhlWJ8niJScUP4I8YD
-X-Google-Smtp-Source: ABdhPJwaqtio3vX4piZLRmmLcmP6Vxg8q/YXAaanNNYcOSEMk1p6rpteK4dG6OqK3aUCUmJVOBuuXw==
-X-Received: by 2002:a1c:63d4:: with SMTP id x203mr704864wmb.28.1610063715330;
-        Thu, 07 Jan 2021 15:55:15 -0800 (PST)
-Received: from [192.168.1.211] ([2.29.208.120])
-        by smtp.gmail.com with ESMTPSA id v189sm10471673wmg.14.2021.01.07.15.55.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Jan 2021 15:55:14 -0800 (PST)
-Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@acpica.org, rjw@rjwysocki.net,
-        lenb@kernel.org, gregkh@linuxfoundation.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, yong.zhi@intel.com,
-        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org, robert.moore@intel.com,
-        erik.kaneda@intel.com, pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
-        kieran.bingham+renesas@ideasonboard.com, jacopo+renesas@jmondi.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        jorhand@linux.microsoft.com, kitakar@gmail.com,
-        heikki.krogerus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20201130133129.1024662-1-djrscally@gmail.com>
- <20201130133129.1024662-19-djrscally@gmail.com>
- <20201130200719.GB4077@smile.fi.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <778f23fc-b99c-33a2-642d-ca0e47fd4ed5@gmail.com>
-Date:   Thu, 7 Jan 2021 23:55:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201130200719.GB4077@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
+        b=rR4Me5kdV5/JtQ3fSv7dHJT9Jtjrnf/YLIv3XnrCIMKL+lqa90dmk5NVX7iZbhqOZC
+         wYGlr+vUSjGEYCKS8qp6f66F7nT/X8PVyo0TTd4ZlYR38iyYlZpUJsSUki7JE87idK5Q
+         XDR+9GhEdQaUkHsO5Dd6uDY8lcZQFjQqd/XzNEBX+SIyz8/VqbG0ajd2VpJOEydm3YgE
+         GpJlPEMl9nmqzjoldVmJwGwgzmgb9w1TQhDJ3fV2G56ZNpqp48WxSAbBMiTsycewBWbt
+         n9rLqcuqQojEo8ywmO0Wgg6ku+M/+ZDZkGwkE0vvQNAADgM+8Y+sFUGW5W5MU0qkC4K4
+         1QtQ==
+X-Gm-Message-State: AOAM532YeLdIrByB7zc8aHOEZyON3SqOAd5UNK66y2h415/4ZR5st8kY
+        +YdXPfNHO43kX6F08V/VLyzH3w==
+X-Google-Smtp-Source: ABdhPJxeTiUgNKGaw5qtkvFU0vf1c4xAKljKlMnfqJb88DCjQRxBowLvlBQ4gqSHPM+ucT8Xlx08sQ==
+X-Received: by 2002:a63:1f47:: with SMTP id q7mr4962672pgm.10.1610075547296;
+        Thu, 07 Jan 2021 19:12:27 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r185sm6938981pfc.53.2021.01.07.19.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jan 2021 19:12:26 -0800 (PST)
+Date:   Thu, 07 Jan 2021 19:12:26 -0800 (PST)
+X-Google-Original-Date: Thu, 07 Jan 2021 17:52:56 PST (-0800)
+Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
+In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
+CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        broonie@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        aou@eecs.berkeley.edu, lee.jones@linaro.org,
+        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
+        andrew@lunn.ch, peter@korsgaard.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        yash.shah@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     yash.shah@sifive.com
+Message-ID: <mhng-abbd57b3-7d81-4c66-9883-67bc11f1f3a3@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy, all
-
-On 30/11/2020 20:07, Andy Shevchenko wrote:
-> On Mon, Nov 30, 2020 at 01:31:29PM +0000, Daniel Scally wrote:
->> On platforms where ACPI is designed for use with Windows, resources
->> that are intended to be consumed by sensor devices are sometimes in
->> the _CRS of a dummy INT3472 device upon which the sensor depends. This
->> driver binds to the dummy acpi device (which does not represent a
-> acpi device -> acpi_device
+On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
+> Start board support by adding initial support for the SiFive FU740 SoC
+> and the first development board that uses it, the SiFive HiFive
+> Unmatched A00.
 >
->> physical PMIC) and maps them into GPIO lines and regulators for use by
->> the sensor device instead.
-> ...
+> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
+> U-boot and OpenSBI.
 >
->> This patch contains the bits of this process that we're least sure about.
->> The sensors in scope for this work are called out as dependent (in their
->> DSDT entry's _DEP) on a device with _HID INT3472. These come in at least
->> 2 kinds; those with an I2cSerialBusV2 entry (which we presume therefore
->> are legitimate tps68470 PMICs that need handling by those drivers - work
->> on that in the future). And those without an I2C device. For those without
->> an I2C device they instead have an array of GPIO pins defined in _CRS. So
->> for example, my Lenovo Miix 510's OVTI2680 sensor is dependent on one of
->> the _latter_ kind of INT3472 devices, with this _CRS:
->>
->> Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->> {
->>     Name (SBUF, ResourceTemplate ()
->>     {
->>         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
->> 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
->> 	    0x00, ResourceConsumer, ,
->>             )
->>             {   // Pin list
->>                 0x0079
->>             }
->>         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
->> 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
->> 	    0x00, ResourceConsumer, ,
->>             )
->>             {   // Pin list
->>                 0x007A
->>             }
->>         GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
->> 	    IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
->> 	    0x00, ResourceConsumer, ,
->>             )
->>             {   // Pin list
->>                 0x008F
->>             }
->>     })
->>     Return (SBUF) /* \_SB_.PCI0.PMI1._CRS.SBUF */
->> }
->>
->> and the same device has a _DSM Method, which returns 32-bit ints where
->> the second lowest byte we noticed to match the pin numbers of the GPIO
->> lines:
->>
->> Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
->> {
->>     If ((Arg0 == ToUUID ("79234640-9e10-4fea-a5c1-b5aa8b19756f")))
->>     {
->>         If ((Arg2 == One))
->>         {
->>             Return (0x03)
->>         }
->>
->>         If ((Arg2 == 0x02))
->>         {
->>             Return (0x01007900)
->>         }
->>
->>         If ((Arg2 == 0x03))
->>         {
->>             Return (0x01007A0C)
->>         }
->>
->>         If ((Arg2 == 0x04))
->>         {
->>             Return (0x01008F01)
->>         }
->>     }
->>
->>     Return (Zero)
->> }
->>
->> We know that at least some of those pins have to be toggled active for the
->> sensor devices to be available in i2c, so the conclusion we came to was
->> that those GPIO entries assigned to the INT3472 device actually represent
->> GPIOs and regulators to be consumed by the sensors themselves. Tsuchiya
->> noticed that the lowest byte in the return values of the _DSM method
->> seemed to represent the type or function of the GPIO line, and we
->> confirmed that by testing on each surface device that GPIO lines where the
->> low byte in the _DSM entry for that pin was 0x0d controlled the privacy
->> LED of the cameras.
->>
->> We're guessing as to the exact meaning of the function byte, but I
->> conclude they're something like this:
->>
->> 0x00 - probably a reset GPIO
->> 0x01 - regulator for the sensor
->> 0x0c - regulator for the sensor
->> 0x0b - regulator again, but for a VCM or EEPROM
->> 0x0d - privacy led (only one we're totally confident of since we can see
->>        it happen!)
-> It's solely Windows driver design...
-> Luckily I found some information and can clarify above table:
+> This patch series is dependent on Zong's Patchset[0]. The patchset also
+> adds two new nodes in dtsi file. The binding documentation patch
+> for these nodes are already posted on the mailing list[1][2].
 >
-> 0x00 Reset
-> 0x01 Power down
-> 0x0b Power enable
-> 0x0c Clock enable
-> 0x0d LED (active high)
+> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
+> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
+> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
 >
-> The above text perhaps should go somewhere under Documentation.
+> Changes in v2:
+> - The dt bindings patch is split into several individual patches.
+> - Expand the full list for compatible strings in i2c-ocores.txt
+>
+> Yash Shah (9):
+>   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: serial: Update DT binding docs to support SiFive FU740
+>     SoC
+>   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
+>   riscv: dts: add initial support for the SiFive FU740-C000 SoC
+>   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
+>     board
+>   riscv: dts: add initial board data for the SiFive HiFive Unmatched
+>
+>  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
+>  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
+>  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
+>  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
+>  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
+>  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
+>  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
+>  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
+>  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
+>  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
+>  10 files changed, 590 insertions(+), 17 deletions(-)
+>  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
 
-Coming back to this; there's a bit of an anomaly with the 0x01 Power
-Down pin for at least one platform.  As listed above, the OV2680 on one
-of my platforms has 3 GPIOs defined, and the table above gives them as
-type Reset, Power down and Clock enable. I'd assumed from this table
-that "power down" meant a powerdown GPIO (I.E. the one usually called
-PWDNB in Omnivision datasheets and "powerdown" in drivers), but the
-datasheet for the OV2680 doesn't list a separate reset and powerdown
-pin, but rather a single pin that performs both functions.
+Thanks, these are on for-next.  There was one checkpatch warning about the
+missing ISSI device tree entry, but we already had that in the FU540 so I'm OK
+letting it slide.
 
+I'm also not really sure this is the right way to do this sort of thing: most
+of the patches here really aren't RISC-V things, they're SiFive SOC things.
+Some of these patches have been picked up by other trees, but I just took the
+rest.  I'm not all that happy about taking DT bindings for things like GPIO or
+PWM bindings, but as they're pretty small I'm OK doing it in this instance.
 
-Am I wrong to treat that as something that ought to be mapped as a
-powerdown GPIO to the sensors? Or do you know of any other way to
-reconcile that discrepancy?
-
-
-Failing that; the only way I can think to handle this is to register
-proxy GPIO pins assigned to the sensors as you suggested previously, and
-have them toggle the GPIO's assigned to the INT3472 based on platform
-specific mapping data (I.E. we register a pin called "reset", which on
-most platforms just toggles the 0x00 pin, but on this specific platform
-would drive both 0x00 and 0x01 together. We're already heading that way
-for the regulator consumer supplies so it's sort of nothing new, but I'd
-still rather not if it can be avoided.
-
+In the future it would really be better to split these up and land them via
+their respectitve trees, rather than trying to do all the SOC stuff over here.
+I know that can be a headache, but we have that SOC group for this purpose to
+try and keep things a bit more together -- I know it was a while ago and there
+really hasn't been much SOC activity on the RISC-V side of things so maybe it
+hasn't been that widley discussed, but that was really designed to solve these
+sorts of problems.
