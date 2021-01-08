@@ -2,153 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 628BB2EF255
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 13:19:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 597352EF278
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 13:22:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbhAHMRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 07:17:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
+        id S1727611AbhAHMWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 07:22:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728156AbhAHMRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 07:17:43 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B17C0612FA;
-        Fri,  8 Jan 2021 04:17:01 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id z12so3552078pjn.1;
-        Fri, 08 Jan 2021 04:17:01 -0800 (PST)
+        with ESMTP id S1727425AbhAHMWE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 07:22:04 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B705EC0612F4
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jan 2021 04:21:23 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id 11so6135587pfu.4
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jan 2021 04:21:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QJpmPSXBMkDyRpOAie8nEtiKxW2diZukk9pipJ57ovs=;
-        b=APSTOjBSR9NIMt2G+tAKvfWj2tZ4hY4e3e1aiF7JekWmZUQuDSiZ5IbRXu1/KhIooQ
-         J/HcWQyXi3KQ8+D3KlBShkw+3DV6P4O1wxDFt0b6FOjSvZOjWafWoGAE5gPV76cBRJEm
-         Trby4n2kGLMcOmuVcRt+XtceGuTyFfThWFR/vn0PxK22wx1n4JN5HZUiXRxrbyd94B1R
-         vwNFtlu1wjAJNAzTBHWOysPbZxTNUDeohmI4FYAlxbyEXEsJR4qwQI7U+VJiK8rIce49
-         UCcCgQVlofROPknaFgODvIv6KE0B/8oLY3ZGWbI6odx41TeD/9kCPg7pBagojBWs0pX9
-         gmyw==
+        bh=iQcNdHnFUOsq5eBkFBOzj7p7zC5/tI9mSquB8RyNl7M=;
+        b=QjNYs1THEq2wRE4ngdZTW/S2LhlSRdKabJ8q6sN2s1n2swlU8rPjYywDFyQZLrvJlM
+         9ZBQ41r8YIH4EH0Mc/eRsZVmHu18LnkF/l8izq0zvMrNaGjHoxxtbKwegs0aJ0IE8p94
+         vAgrPujRX1HUAW0kJNm6Rd2JZMJz+6FJ2x0fiBTOzf8gtcXoJTbLy47j8roPcLgdCpGB
+         USSwCMwNaKC8Qt8b6nsCTG/VYqKsHLhd+8cyWZVFyv9mJwHwgGoChbbvSZQAJcOtujfH
+         4TBEnh2v4UJlaVtLTL56B70JCApp6KONScyB/3bY5sPJrql82i3TqcbrMZCqEgx7Pcqv
+         2gig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QJpmPSXBMkDyRpOAie8nEtiKxW2diZukk9pipJ57ovs=;
-        b=kzWJdXbWtSVdYF6un2pC2l5x5uFmu+iPWhmo4sNz5Ad5uIB7syYNEMUVHno8CSedOQ
-         s5Re3PrCE2EXBrz+vl8Mvq7v5+iPL23Ilx4BXYhaMzSHQZVTxErhaHsYO2eE/93ATJQe
-         JLWkKnodJ8HWtqW1AToeCE66JfK2mGGYQXslo/cO7NDKCfxxS8SETU1obiEtY06/iZhX
-         2fQB4bfNaa7iwHpyUa3Be7Cmz2SIRgJC8xYPVJjx1OxMZiP1GfQR10NYs2lKx7ZQiEHA
-         XgzM8UT0edGCs+aIsn4YC5SVb5ucidiLKTvwUnJ9BqTLQz9W/H6ZQ1pIxgeqDvSJzAEl
-         ZYZA==
-X-Gm-Message-State: AOAM531yOEuXnIZwoycRCf0pjkNvWPzX+lXiQPOyUTXSUBQ+3M0eQtUv
-        HC4ZhwlTMDqxJRnzf6XuRRRlz2cEUJbJf0odauw=
-X-Google-Smtp-Source: ABdhPJyldR1piNAeKj9uIZ1Le/5wxh9TOr537qIrpxGvyxjo1onN4F4oe8SR/CXSTDkdvSzMQ7bZigw9hkKUqlRE4vo=
-X-Received: by 2002:a17:90a:c592:: with SMTP id l18mr3486365pjt.228.1610108221001;
- Fri, 08 Jan 2021 04:17:01 -0800 (PST)
+        bh=iQcNdHnFUOsq5eBkFBOzj7p7zC5/tI9mSquB8RyNl7M=;
+        b=FisWCIWgWSqoYGl8rLZ45W9eYZwLLtFcm8FACGZfrP/ijI/KyoXtRzbWSzYIyypgln
+         CzVtZ3Ec5/LKbfQWzVzELgdplCrH47onEQx214NSzUSc5VV/IMp+Y0iGQ3u3N8BeZ8hG
+         60oSBE76sbVSx/rpQgW3JjzdxMieSwc9oCgyheQz+YccdX7mwBMWAQAt5WNXMmri+oKe
+         z4zbp7VAFOeiu6dVk2exKLenyoX52LCnQzLbUSFmt+EnezwutwkxHsLgpHyVJNpnRoE2
+         0k7G3kGB4Es54VL2uStETj8P9l1D0ecoh4HOO8qwyivNl1L/+GyfoE9JzLhVD2HvTuFp
+         zJHQ==
+X-Gm-Message-State: AOAM533vA/w3Cwl8WY8MpeUtfNo/5RV55s2Qllea4N/CsvpfV1TALMQm
+        KQqVmarX1tmuo7NErUSDMCX+zCo6vls5WQ4PzKY=
+X-Google-Smtp-Source: ABdhPJwVigst/dmMLGlvtuRXkdak3wUfkJApj+JAnFW66qUwNE9FxwppcJAxA22KIbhLdL19H8csPsq+bWgyL0bslIw=
+X-Received: by 2002:a62:445:0:b029:19c:162b:bbef with SMTP id
+ 66-20020a6204450000b029019c162bbbefmr3550782pfe.40.1610108483267; Fri, 08 Jan
+ 2021 04:21:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20201130133129.1024662-1-djrscally@gmail.com> <20201130133129.1024662-19-djrscally@gmail.com>
- <20201130200719.GB4077@smile.fi.intel.com> <778f23fc-b99c-33a2-642d-ca0e47fd4ed5@gmail.com>
-In-Reply-To: <778f23fc-b99c-33a2-642d-ca0e47fd4ed5@gmail.com>
+References: <20210107190200.41221-1-andriy.shevchenko@linux.intel.com>
+ <20210107190200.41221-4-andriy.shevchenko@linux.intel.com> <20210108070722.GX968855@lahna.fi.intel.com>
+In-Reply-To: <20210108070722.GX968855@lahna.fi.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 Jan 2021 14:17:49 +0200
-Message-ID: <CAHp75VeYOqJt9iKaGPA4=dkb2kYUbqUV4PGTn8uSsnUt_kSGSw@mail.gmail.com>
-Subject: Re: [PATCH 18/18] ipu3: Add driver for dummy INT3472 ACPI device
-To:     Daniel Scally <djrscally@gmail.com>
+Date:   Fri, 8 Jan 2021 14:22:12 +0200
+Message-ID: <CAHp75Vcckax+HYH1aYDG0tsgiL_1xXLqRW-8Xjq4+-OhLWXaLA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] pinctrl: intel: Convert capability list to features
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@acpica.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>, Yong Zhi <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Tian Shu Qiu <tian.shu.qiu@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 8, 2021 at 1:56 AM Daniel Scally <djrscally@gmail.com> wrote:
-> On 30/11/2020 20:07, Andy Shevchenko wrote:
-> > On Mon, Nov 30, 2020 at 01:31:29PM +0000, Daniel Scally wrote:
+On Fri, Jan 8, 2021 at 9:09 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Thu, Jan 07, 2021 at 09:02:00PM +0200, Andy Shevchenko wrote:
+> > Communities can have features provided in the capability list.
+> > Traverse the list and convert to respective features.
 
 ...
 
-> > It's solely Windows driver design...
-> > Luckily I found some information and can clarify above table:
-> >
-> > 0x00 Reset
-> > 0x01 Power down
-> > 0x0b Power enable
-> > 0x0c Clock enable
-> > 0x0d LED (active high)
-> >
-> > The above text perhaps should go somewhere under Documentation.
+> > +             /* Determine community features based on the capabilities */
+> > +             offset = CAPLIST;
+> > +             do {
+> > +                     value = readl(regs + offset);
+> > +                     switch ((value & CAPLIST_ID_MASK) >> CAPLIST_ID_SHIFT) {
+> > +                     case CAPLIST_ID_GPIO_HW_INFO:
+> > +                             community->features |= PINCTRL_FEATURE_GPIO_HW_INFO;
+> > +                             break;
+> > +                     case CAPLIST_ID_PWM:
+> > +                             community->features |= PINCTRL_FEATURE_PWM;
+> > +                             break;
+> > +                     case CAPLIST_ID_BLINK:
+> > +                             community->features |= PINCTRL_FEATURE_BLINK;
+> > +                             break;
+> > +                     case CAPLIST_ID_EXP:
+> > +                             community->features |= PINCTRL_FEATURE_EXP;
+> > +                             break;
+> > +                     default:
+> > +                             break;
+> > +                     }
+> > +                     offset = (value & CAPLIST_NEXT_MASK) >> CAPLIST_NEXT_SHIFT;
 >
-> Coming back to this; there's a bit of an anomaly with the 0x01 Power
-> Down pin for at least one platform.  As listed above, the OV2680 on one
-> of my platforms has 3 GPIOs defined, and the table above gives them as
-> type Reset, Power down and Clock enable. I'd assumed from this table
-> that "power down" meant a powerdown GPIO (I.E. the one usually called
-> PWDNB in Omnivision datasheets and "powerdown" in drivers), but the
-> datasheet for the OV2680 doesn't list a separate reset and powerdown
-> pin, but rather a single pin that performs both functions.
+> I suggest adding some check, like that we visited the previous offset
+> already, so that we do not loop here forever if we find wrongly
+> formatted capability list.
 
-All of them are GPIOs, the question here is how they are actually
-connected on PCB level and I have no answer to that. You have to find
-schematics somewhere.
+I don't see how it could be achieved (offsets can be unordered). If
+there is such an issue it will mean a silicon bug.
+I never heard that we have similar checks in the PCI or xHCI code.
+Maybe it's something new, do you know if it has similar code to see?
 
-> Am I wrong to treat that as something that ought to be mapped as a
-> powerdown GPIO to the sensors? Or do you know of any other way to
-> reconcile that discrepancy?
+> Otherwise looks good.
+>
+> > +             } while (offset);
 
-The GPIOs can go directly to the sensors or be a control pin for
-separate discrete power gates.
-So, we can do one of the following:
- a) present PD GPIO as fixed regulator;
- b) present PD & Reset GPIOs as regulator;
- c) provide them as is to the sensor and sensor driver must do what it
-considers right.
-
-Since we don't have schematics (yet?) and we have plenty of variations
-of sensors, I would go to c) and update the driver of the affected
-sensor as needed. Because even if you have separate discrete PD for
-one sensor on one platform there is no guarantee that it will be the
-same on another. Providing a "virtual" PD in a sensor that doesn't
-support it is the best choice I think. Let's hear what Sakari and
-other experienced camera sensor developers say.
-
-My vision is purely based on electrical engineering background,
-experience with existing (not exactly camera) sensor drivers and
-generic cases.
-
-> Failing that; the only way I can think to handle this is to register
-> proxy GPIO pins assigned to the sensors as you suggested previously, and
-> have them toggle the GPIO's assigned to the INT3472 based on platform
-> specific mapping data (I.E. we register a pin called "reset", which on
-> most platforms just toggles the 0x00 pin, but on this specific platform
-> would drive both 0x00 and 0x01 together. We're already heading that way
-> for the regulator consumer supplies so it's sort of nothing new, but I'd
-> still rather not if it can be avoided.
 
 
 -- 
