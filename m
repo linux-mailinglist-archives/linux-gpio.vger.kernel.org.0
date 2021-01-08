@@ -2,176 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4F82EF09A
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 11:23:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 280802EF0C9
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jan 2021 11:41:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbhAHKVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 05:21:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbhAHKVx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 05:21:53 -0500
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98FDC0612FE
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jan 2021 02:20:31 -0800 (PST)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by albert.telenet-ops.be with bizsmtp
-        id EALU2400H4C55Sk06ALUtb; Fri, 08 Jan 2021 11:20:29 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kxose-001zdm-4B; Fri, 08 Jan 2021 11:20:28 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kxosd-008Ufu-FB; Fri, 08 Jan 2021 11:20:27 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
+        id S1727474AbhAHKk7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 05:40:59 -0500
+Received: from smtp.asem.it ([151.1.184.197]:51105 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727471AbhAHKk6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 8 Jan 2021 05:40:58 -0500
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000698777.MSG 
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jan 2021 11:40:15 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 Jan
+ 2021 11:40:14 +0100
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1979.003; Fri, 8 Jan 2021 11:40:14 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH v3 3/3] gpio: rcar: Add R-Car V3U (R8A779A0) support
-Date:   Fri,  8 Jan 2021 11:20:26 +0100
-Message-Id: <20210108102026.2024478-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210108102026.2024478-1-geert+renesas@glider.be>
-References: <20210108102026.2024478-1-geert+renesas@glider.be>
+        Johan Hovold <johan@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: R: [PATCH v2] gpiolib: Disallow identical line names in the same chip
+Thread-Topic: [PATCH v2] gpiolib: Disallow identical line names in the same
+ chip
+Thread-Index: AQHW5DC+EYQ7RQ5jYUeg211EwFA6Oaodigsg
+Date:   Fri, 8 Jan 2021 10:40:14 +0000
+Message-ID: <4a7c2f63ec2c4cde9742603e3cbbaee8@asem.it>
+References: <20210105082758.77762-1-linus.walleij@linaro.org>
+ <CAHp75VeXC26KxxhrSbtae2_v4Zqnaaia3nV_1sxY07uUEt3U7g@mail.gmail.com>
+ <CACRpkdYixhB6rTw=DK7CetExsXSH4czVzysynZas07OTuQi0vA@mail.gmail.com>
+ <CAMpxmJUJnhc9HrZnb=qE5fpZ9e0Xo7VP-hTjdK-LHk0w6n3cMQ@mail.gmail.com>
+ <CAHp75VcVN5Af3t-OYdO9MOXk14LV+zYQtusqft8twi_u83yZ6g@mail.gmail.com>
+In-Reply-To: <CAHp75VcVN5Af3t-OYdO9MOXk14LV+zYQtusqft8twi_u83yZ6g@mail.gmail.com>
+Accept-Language: it-IT, en-US
+Content-Language: it-IT
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A782F17.5FF8368F.003D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for the GPIO controller block in the R-Car V3U (R8A779A0)
-SoC, which is very similar to the block found on other R-Car Gen3 SoCs.
-However, this block has a new General Input Enable Register (INEN),
-whose reset state is to have all inputs disabled.
-
-Enable input for all available pins in probe and resume, to support the
-use of the General Input Register (INDT) for reading pin state at all
-times.  This preserves backwards compatibility with other R-Car Gen3
-SoCs, as recommended by the Hardware Manual.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-v3:
-  - Add Reviewed-by, Tested-by,
-  - Fix SoC part number in oneline summary,
-  - Rebase on top of commit 3a57026a83ba363e ("gpio: rcar: Remove
-    redundant compatible values"),
-
-v2:
-  - Enable input unconditionally in probe and resume, instead of during
-    GPIO line configuration and depending on GPIO line direction,
-  - Assumed authorship, as this patch is very different from v1, written
-    by Phong Hoang.
----
- drivers/gpio/gpio-rcar.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index edded6478792f7b8..e7092d5fe700d2ce 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -36,6 +36,7 @@ struct gpio_rcar_info {
- 	bool has_outdtsel;
- 	bool has_both_edge_trigger;
- 	bool has_always_in;
-+	bool has_inen;
- };
- 
- struct gpio_rcar_priv {
-@@ -63,6 +64,7 @@ struct gpio_rcar_priv {
- #define FILONOFF	0x28	/* Chattering Prevention On/Off Register */
- #define OUTDTSEL	0x40	/* Output Data Select Register */
- #define BOTHEDGE	0x4c	/* One Edge/Both Edge Select Register */
-+#define INEN		0x50	/* General Input Enable Register */
- 
- #define RCAR_MAX_GPIO_PER_BANK		32
- 
-@@ -392,22 +394,35 @@ static const struct gpio_rcar_info gpio_rcar_info_gen1 = {
- 	.has_outdtsel = false,
- 	.has_both_edge_trigger = false,
- 	.has_always_in = false,
-+	.has_inen = false,
- };
- 
- static const struct gpio_rcar_info gpio_rcar_info_gen2 = {
- 	.has_outdtsel = true,
- 	.has_both_edge_trigger = true,
- 	.has_always_in = false,
-+	.has_inen = false,
- };
- 
- static const struct gpio_rcar_info gpio_rcar_info_gen3 = {
- 	.has_outdtsel = true,
- 	.has_both_edge_trigger = true,
- 	.has_always_in = true,
-+	.has_inen = false,
-+};
-+
-+static const struct gpio_rcar_info gpio_rcar_info_v3u = {
-+	.has_outdtsel = true,
-+	.has_both_edge_trigger = true,
-+	.has_always_in = true,
-+	.has_inen = true,
- };
- 
- static const struct of_device_id gpio_rcar_of_table[] = {
- 	{
-+		.compatible = "renesas,gpio-r8a779a0",
-+		.data = &gpio_rcar_info_v3u,
-+	}, {
- 		.compatible = "renesas,rcar-gen1-gpio",
- 		.data = &gpio_rcar_info_gen1,
- 	}, {
-@@ -448,6 +463,17 @@ static int gpio_rcar_parse_dt(struct gpio_rcar_priv *p, unsigned int *npins)
- 	return 0;
- }
- 
-+static void gpio_rcar_enable_inputs(struct gpio_rcar_priv *p)
-+{
-+	u32 mask = GENMASK(p->gpio_chip.ngpio - 1, 0);
-+
-+	/* Select "Input Enable" in INEN */
-+	if (p->gpio_chip.valid_mask)
-+		mask &= p->gpio_chip.valid_mask[0];
-+	if (mask)
-+		gpio_rcar_write(p, INEN, gpio_rcar_read(p, INEN) | mask);
-+}
-+
- static int gpio_rcar_probe(struct platform_device *pdev)
- {
- 	struct gpio_rcar_priv *p;
-@@ -537,6 +563,12 @@ static int gpio_rcar_probe(struct platform_device *pdev)
- 		goto err1;
- 	}
- 
-+	if (p->info.has_inen) {
-+		pm_runtime_get_sync(p->dev);
-+		gpio_rcar_enable_inputs(p);
-+		pm_runtime_put(p->dev);
-+	}
-+
- 	dev_info(dev, "driving %d GPIOs\n", npins);
- 
- 	return 0;
-@@ -612,6 +644,9 @@ static int gpio_rcar_resume(struct device *dev)
- 		}
- 	}
- 
-+	if (p->info.has_inen)
-+		gpio_rcar_enable_inputs(p);
-+
- 	return 0;
- }
- #endif /* CONFIG_PM_SLEEP*/
--- 
-2.25.1
-
+SGkgQW5keSwNCiANCj4gRmxhdmlvLCBwZXJoYXBzIG9uZSBtb3JlIHJ1bGUgdG8gdGhlIGdwaW8t
+bGluZS1uYW1lcyBwcm9wZXJ0eSBoYXMgdG8NCj4gYmUgYWRkZWQgaW50byBkb2N1bWVudGF0aW9u
+IChCYXJ0LCBzYW1lIHRvIERUIGRvY3M/KToNCj4gIC0gbmFtZXMgaW5zaWRlIG9uZSBjaGlwIG11
+c3QgYmUgdW5pcXVlDQogDQpKdXN0IGEgcXVlc3Rpb246IHdoeSAiaW5zaWRlIG9uZSBjaGlwIiBv
+bmx5Pw0KVGhlIG5hbWUgc2hvdWxkIGJlIHVuaXF1ZSBmb3IgYWxsIGdwaW9jaGlwcywgc2luY2Ug
+ImdwaW9maW5kIg0Kc3RvcHMgYXQgdGhlIGZpcnN0IG5hbWUgbWF0Y2gsIGFuZCBkb2Vzbid0IHNo
+b3cgb3RoZXIgZ3Bpb3MNCm5hbWVzLCBldmVuIGlmIHRoZXkgZXhpc3QsIHdpdGggdGhlIHNhbWUg
+bmFtZSwgaW4gb3RoZXIgZ3Bpb2NoaXAuDQoNCkkgdGhpbmsgdGhhdCBhIHJ1bGUgYXM6DQoNCi0g
+bmFtZXMgbXVzdCBiZSB1bmlxdWUgKGF2b2lkIGR1cGxpY2F0ZXMgaW4gYW55IGdwaW9jaGlwcykg
+DQoNCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KDQpCZXN0
+IHJlZ2FyZHMsDQpGbGF2aW8gU3VsaWdvaQ0K
