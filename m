@@ -2,131 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37CB52EFC4F
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jan 2021 01:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8DE62EFCAF
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jan 2021 02:24:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbhAIAqo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jan 2021 19:46:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
+        id S1726608AbhAIBXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jan 2021 20:23:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbhAIAqn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 19:46:43 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC38C061574
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jan 2021 16:46:03 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id m12so27179342lfo.7
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jan 2021 16:46:03 -0800 (PST)
+        with ESMTP id S1725836AbhAIBXA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jan 2021 20:23:00 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331F7C061573
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jan 2021 17:22:20 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id 23so27249473lfg.10
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jan 2021 17:22:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Mw14YzBgd2f4GqS6Ml6tp0mY465YwbvUOhYSkNusrc4=;
-        b=u4AGIsz2ZIrp2McYVYJX3vPXdnObweHDpRO5EPmrHdnCSByUodK5p7mw4rmYQt11wl
-         yDCeUyreJB8kFyzDyHME2Jus+TYq2cJ3EjqT9ImGXC82ZUe9P0vFNih8X1pbq+GlKQbr
-         GxpLHMyV/OpTVnYkw0wzdBfQKBDCcug2bmn70c1KST92CienIY8HMXF8+KOqGcKl3y8+
-         KcNLF43pg6A+9KDn7tF+MrADNgK7Sx6R838fK1Vv9bMTt0uvYgdRCgT04W+7ptKKE6hn
-         AZtXMq4Qf1KvllXvZapyYldiis/g2KpwDfMDVWzcNj1Iserq8GEafATWocPOEb5hpfCP
-         fOQQ==
+        bh=P7K4KwoyoMC1EHC74ArNpJ8GH0eAGxVDT4lx8rL5k2k=;
+        b=qSdoP74JG7n1KT2X+r7FEOV1BJ9c8yNMdLxzu4ZCkkBzR8AuRy8mRFp7kZNr4bBYQN
+         yxecIqCmOcgPpVGJcMxl70RZS517tOJnV07kvDb8X9gJQyvqYwifsJORHcfgaPDdjLoI
+         pXLj8xo88O6+uO36AgfaQf+LahG81TvRjcAuSg/6/GEj8C5i5oy2r297z3dxJae0vjf2
+         hUVRnmhCgmRc9eTbpq3X+yZ6wYSz+xjSqA6BFpd+TX5G7REXISpppVY0kiZ37aNEO3Ve
+         i+Z+/uVoPSWkYvIk7lt9npNBgG9Bioc+5m4carm+Fctpsxu4SSWMDlesZ2svxlZWX5eF
+         4kdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Mw14YzBgd2f4GqS6Ml6tp0mY465YwbvUOhYSkNusrc4=;
-        b=g9KRVzkAxA4gepwoEsu/YfZZ/CgIhplFfa497v9TAci7DpCITHH/yIS7Dd6j1sC1AU
-         5qlNizmj89xL5f0InWYfTzsogc5QM2VxS9PAxBOg5ecAKRtSxpmQ0qWXEgmN5nqcICsk
-         u97cs81UtvgtFONZctnHtHppVkwZkgf+y7hQ7qK/ypk9AEt7lrAGT0jU1GrR9TJjuoTM
-         S8yUcSwhz3o9Q4qzgtiXRuoh2MEa8G7taM4DaBIaoh9Eh5aE/RJAyxbW5TbrwzPfvdy5
-         gttKoSbd/EhKojEJjQW5WyawYb3vHr7ZCdOs7WYlz5ZXN7X6EyppptcNqOyQh8h7BRPR
-         Jx1g==
-X-Gm-Message-State: AOAM533Q6ZU5i7IS8zjeDBUxWZUiAq2Jnx494Edd9zqqI5RNqlKcz+6o
-        ikT4KGb9EeOjXgZ6E82H/OdB5KYb946O84D7NYIGaQ==
-X-Google-Smtp-Source: ABdhPJxwbE4VMpwSQLOWkl1Ft/NOE4pAAt9s9j7XhgGCTf2jDv5iWwn6iR9DxhOtxZYEUXwockdfw27lp4/vbPA96u4=
-X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr2698689ljj.326.1610153161636;
- Fri, 08 Jan 2021 16:46:01 -0800 (PST)
+        bh=P7K4KwoyoMC1EHC74ArNpJ8GH0eAGxVDT4lx8rL5k2k=;
+        b=k1vVoKPCwDfBvuuXgVxYkqEzus7HjtZs/Wi5qz1HZf+QRutbU924zcm0EdD+rqsJ0M
+         jPWlvhCyKFHuyfkgbP7ZhK8sKl9PzF5vxmw+jMrac8r3Rta4xZgB7PBOfLZvSk6dFUrI
+         KLaBX9qXoCZ4vqInSv4UG1SxNTp54PBD5Ibd4tWRwthuiMm4OTUufxJ9oQMMKQVFTD71
+         BfR4eUT/RafmnBxjrgCnq3sESxdv9DpYnkVN+MePTspP6FO6cRkJ/ZCwLW9s87GVeWQu
+         9CIg12PgDB8lLgJrUT4w9u5/EatBia1bc9Yh0covVRTNLga5euT+Sn/dV8TSBRTWe1oI
+         fX+A==
+X-Gm-Message-State: AOAM532ebTk4MHtwQnFHjVAXKV5Ixb94/BpbV+Q0XncyMNoQKweDd/vJ
+        9qMF4PvODWDhuaM4CoduEfp4Kb+qcLLg0wOUevK6HA==
+X-Google-Smtp-Source: ABdhPJwTgthk+MVK7vW7yJpfvbi1p9U6DTD2CXyKcAwRu1k3bxg6CqKGGouPRYcyTSvdVYfnVSVhaL0O9/G+NX15fl8=
+X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr2729651ljo.368.1610155338714;
+ Fri, 08 Jan 2021 17:22:18 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1610110144.git.matti.vaittinen@fi.rohmeurope.com> <e7c5919cc0d95aca09807a828fe3c0018af8828b.1610110144.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <e7c5919cc0d95aca09807a828fe3c0018af8828b.1610110144.git.matti.vaittinen@fi.rohmeurope.com>
+References: <20201218045134.4158709-1-drew@beagleboard.org>
+ <CAHp75Vfwb+f3k2+mAj+jB=XsKFX-hCxx61A_PCmwz6y-YKHMcg@mail.gmail.com> <20201224203603.GA59600@x1>
+In-Reply-To: <20201224203603.GA59600@x1>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 9 Jan 2021 01:45:50 +0100
-Message-ID: <CACRpkdb4CW0D86dmEOjtuFpTcO2oUZC50MhNQQtfoEQT7G_PFQ@mail.gmail.com>
-Subject: Re: [PATCH 09/15] gpio: support ROHM BD71815 GPOs
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-power@fi.rohmeurope.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sat, 9 Jan 2021 02:22:07 +0100
+Message-ID: <CACRpkdb9RnGJbct+D-88JPDSbaVp1XS8vjhhHYosy20EPkLjaw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] pinctrl: add helper to expose pinctrl state in debugfs
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Pantelis Antoniou <pantelis.antoniou@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 8, 2021 at 2:39 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+Hi Drew,
 
-> Support GPO(s) found from ROHM BD71815 power management IC. The IC has two
-> GPO pins but only one is properly documented in data-sheet. The driver
-> exposes by default only the documented GPO. The second GPO is connected to
-> E5 pin and is marked as GND in data-sheet. Control for this undocumented
-> pin can be enabled using a special DT property.
+sorry for belated review. The approach is so uncommon so it had me
+confused.
+
+On Thu, Dec 24, 2020 at 9:36 PM Drew Fustini <drew@beagleboard.org> wrote:
+
+> > > I used the compatible string "pinctrl,state-helper" but would appreciate
+> > > advice on how to best name this. Should I create a new vendor prefix?
+> >
+> > Here is the first concern. Why does this require to be a driver with a
+> > compatible string?
 >
-> This driver is derived from work by Peter Yang <yanglsh@embest-tech.com>
-> although not so much of original is left.
+> I have not been able to figure out how to have different active pinctrl
+> states for each header pins (for example P2 header pin 3) unless they
+> are represented as DT nodes with their own compatible for this helper
+> driver such as:
 >
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> &ocp {
+>         P2_03_pinmux {
+>                 compatible = "pinctrl,state-helper";
+>                 pinctrl-names = "default", "gpio", "gpio_pu", "gpio_pd", "gpio_input", "pwm";
+>                 pinctrl-0 = <&P2_03_default_pin>;
+>                 pinctrl-1 = <&P2_03_gpio_pin>;
+>                 pinctrl-2 = <&P2_03_gpio_pu_pin>;
+>                 pinctrl-3 = <&P2_03_gpio_pd_pin>;
+>                 pinctrl-4 = <&P2_03_gpio_input_pin>;
+>                 pinctrl-5 = <&P2_03_pwm_pin>;
+>         };
+> }
 
-Overall this looks good!
+I do not think the DT people are going to appreciate this pseudo-device.
 
-> +       depends on MFD_ROHM_BD71828
+Can you not just represent them as pin control hogs and have the debugfs
+code with the other debugfs code in drivers/pinctrl/core.c?
 
-I suppose this makes i possible to merge out-of-order with the
-core patches actually.
+Normal drivers cannot play around with the state assigned to a
+hog, but debugfs can certainly do that so go ahead and patch
+the core.
 
-> +#define DEBUG
+> I can assign pinctrl states in the pin controller DT node which has
+> compatible pinctrl-single (line 301 arch/arm/boot/dts/am33xx-l4.dtsi):
+>
+> &am33xx_pinmux {
+>
+>         pinctrl-names = "default", "gpio", "pwm";
+>         pinctrl-0 =   < &P2_03_default_pin &P1_34_default_pin &P2_19_default_pin &P2_24_default_pin
+>                         &P2_33_default_pin &P2_22_default_pin &P2_18_default_pin &P2_10_default_pin
+>                         &P2_06_default_pin &P2_04_default_pin &P2_02_default_pin &P2_08_default_pin
+>                         &P2_17_default_pin >;
+>         pinctrl-1 =   < &P2_03_gpio_pin &P1_34_gpio_pin &P2_19_gpio_pin &P2_24_gpio_pin
+>                         &P2_33_gpio_pin &P2_22_gpio_pin &P2_18_gpio_pin &P2_10_gpio_pin
+>                         &P2_06_gpio_pin &P2_04_gpio_pin &P2_02_gpio_pin &P2_08_gpio_pin
+>                         &P2_17_gpio_pin >;
+>         pinctrl-2 =   < &P2_03_pwm &P1_34_pwm &P2_19_pwm &P2_24_pwm
+>                         &P2_33_pwm &P2_22_pwm &P2_18_pwm &P2_10_pwm
+>                         &P2_06_pwm &P2_04_pwm &P2_02_pwm &P2_08_pwm
+>                         &P2_17_pwm >;
+>
+> }
+>
+> However, there is no way to later select "gpio" for P2.03 and select
+> "pwm" for P1.34 at the same time.  Thus, I can not figure out a way to
+> select independent states per pin unless I make a node for each pin that
+> binds to a helper driver.
+>
+> It feels like there may be a simpler soluation but I can't see to figure
+> it out.  Suggestions welcome!
 
-Why? Development artifact?
-
-> +#include <linux/kthread.h>
-
-You certainly do not need this.
-
-> +#include <linux/mfd/rohm-bd71815.h>
-> +#include <linux/mfd/rohm-generic.h>
-
-I guess registers come from these? Do you need both?
-Add a comment about what they provide.
-
-> +       g->chip.ngpio = 1;
-> +       if (g->e5_pin_is_gpo)
-> +               g->chip.ngpio = 2;
-
-Overwriting value, how not elegant.
-
-if (g->e5_pin_is_gpo)
-  g->chip.ngpio = 2;
-else
-  g->chip.ngpio = 1;
-
-> +       g->chip.parent = pdev->dev.parent;
-> +       g->chip.of_node = pdev->dev.parent->of_node;
-> +       g->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +       g->dev = &pdev->dev;
-> +
-> +       ret = devm_gpiochip_add_data(&pdev->dev, &g->chip, g);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "could not register gpiochip, %d\n", ret);
-> +               return ret;
-> +       }
-
-It's a bit confusing how you use pdev->dev.parent for some stuff
-and &pdev->dev for some.
-
-What about assinging
-
-struct device *dev = pdev->dev.parent;
-
-and use dev for all the calls, it looks like it'd work fine.
+I think maybe there is no solution because you are solving a problem
+that only pinctrl-single while trying to stay generic? The single
+driver is special in that it requires all states of pins to be encoded
+into the device tree, but for debugging that is kind of unfriendly
+which was mentioned in its inception. For deep debugging it is good
+to let the core know of all available functions and groups and
+single does not IIUC.
 
 Yours,
 Linus Walleij
