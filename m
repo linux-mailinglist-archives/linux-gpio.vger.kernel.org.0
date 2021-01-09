@@ -2,563 +2,353 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE0CD2F022F
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jan 2021 18:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2207B2F024D
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jan 2021 18:34:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbhAIRZI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Jan 2021 12:25:08 -0500
-Received: from mga02.intel.com ([134.134.136.20]:26848 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbhAIRZI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 9 Jan 2021 12:25:08 -0500
-IronPort-SDR: ESXUWlD5vos+Ig8WjTtdRd6Zz3qLC+7CFFgSqjvjUBjCinq6DUQcIHLh+h/SqqdjnCnNpgf+3x
- 5ZNGN9j5wQgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9859"; a="164795417"
-X-IronPort-AV: E=Sophos;i="5.79,334,1602572400"; 
-   d="gz'50?scan'50,208,50";a="164795417"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2021 09:24:25 -0800
-IronPort-SDR: aagmoVyijsdTHS2bXg+MkJpiNvXmTpYokrlu9TfsCRD4QBMWZkNxr5YFewp6B2d7B9YoWEQ8Fu
- 5b/uHlhuYGrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,334,1602572400"; 
-   d="gz'50?scan'50,208,50";a="403661457"
-Received: from lkp-server01.sh.intel.com (HELO 412602b27703) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jan 2021 09:24:22 -0800
-Received: from kbuild by 412602b27703 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kyHyQ-00019L-0P; Sat, 09 Jan 2021 17:24:22 +0000
-Date:   Sun, 10 Jan 2021 01:24:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        linux-gpio@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, konrad.dybcio@somainline.org,
-        marijn.suijten@somainline.org, martin.botka@somainline.org,
-        phone-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-Subject: Re: [PATCH 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
- Expander
-Message-ID: <202101100151.3ojnIrPg-lkp@intel.com>
-References: <20210109140204.151340-2-angelogioacchino.delregno@somainline.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="cNdxnHkX5QqsyA0e"
-Content-Disposition: inline
-In-Reply-To: <20210109140204.151340-2-angelogioacchino.delregno@somainline.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726260AbhAIRdB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Jan 2021 12:33:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbhAIRdB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Jan 2021 12:33:01 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED59C0617A3
+        for <linux-gpio@vger.kernel.org>; Sat,  9 Jan 2021 09:32:15 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id t22so8329549pfl.3
+        for <linux-gpio@vger.kernel.org>; Sat, 09 Jan 2021 09:32:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iPSaE+gTppr+0al+ZRJA/OKK8abbifI8OoOStZ7kwOE=;
+        b=xpKTkIOr2wtvZeExypOk/J7yPBmvPH2jnbjh8LMjzPR7SEZ+pOqUC+c+rlS1cY/2F6
+         NA2JH3IuDe/bFTv22p5GkuGFNm96cXfgeDPj5WeV4FlNf2reANgEXIE+WqJUJuwPWm6P
+         pNdiVpQxOloZyHTvd4t7XOQuitEWeR9tZVQ9djBEczdJtvJPcwgto32iSc+vekzUzcw4
+         XZL/F/+MtXOex/DmVhy+oXNAdoXQQtZdK7jxPElApTNvyGvS5MuogvSbYaCoVrU3tFNn
+         YQW0RHTn+tJPnba37MPmAVCm8kYnyOc4G9iY7K0XyQilZwBnxyVMLTCnGPlCi7WAjV4r
+         UlbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iPSaE+gTppr+0al+ZRJA/OKK8abbifI8OoOStZ7kwOE=;
+        b=uDoM4a/RAVKtfAKICf1xNsrkDXHqigwhyS4+Y3i6VIN3/ZW5982OFaWUWxgcyM1wZC
+         gER3aM8wS2C3XeHQq0fRfHd1uBzBmyh8gPIIFNdQtWu0mue3Wd7dNmwjqYPukMJtZD0r
+         RY3lX+K0YR5oJhF+Z6tqQlC4U50tAjvRbC0WLmvvs7lG5O5dj5RP/dDca5BWDe0cRRPP
+         MCxsJ11rGZVd91u/wdv8bXA/OLbdCBcuGRs9J4mNnPf+B9h2tXW14hcllXALskUwkrak
+         R3ZQMJT6oUZGE97FF3K14Kb+I2zoxp4jSI4135XApSo+5DPhlyynFsvioxkIQnYRA49f
+         HKKQ==
+X-Gm-Message-State: AOAM530PkTuwr3Y7REySZ2dDGUut3oCOypEJAOmpI4DpeR+f9Wy8/lT4
+        BcPcqPeZHr0BBd1LFsIa07b+tg==
+X-Google-Smtp-Source: ABdhPJzjYXJ8uXMFZioJ/gLOSW/KhJTUSY4+HcyL4aaCKdDsPeqcZpZ9MqWfG0Sx4tgYsTM+p0He9Q==
+X-Received: by 2002:a65:6405:: with SMTP id a5mr12344109pgv.389.1610213534771;
+        Sat, 09 Jan 2021 09:32:14 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id f64sm13444672pfb.146.2021.01.09.09.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Jan 2021 09:32:13 -0800 (PST)
+Date:   Sat, 09 Jan 2021 09:32:13 -0800 (PST)
+X-Google-Original-Date: Sat, 09 Jan 2021 09:32:10 PST (-0800)
+Subject:     Re: [PATCH v10 00/23] RISC-V Kendryte K210 support improvements
+In-Reply-To: <20201213135056.24446-1-damien.lemoal@wdc.com>
+CC:     linux-riscv@lists.infradead.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, p.zabel@pengutronix.de,
+        seanga2@gmail.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Message-ID: <mhng-a7443f7f-42ff-4835-9b25-be8f91884e04@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, 13 Dec 2020 05:50:33 PST (-0800), Damien Le Moal wrote:
+> This series of patches improves support for boards based on the Canaan
+> Kendryte K210 RISC-V dual core SoC. Minimal support for this SoC is
+> already included in the kernel. These patches complete it, enabling
+> support for most peripherals present on the SoC as well as introducing
+> device trees for the various K210 boards available on the market today
+> from SiPeed and Kendryte.
 
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Putting everything together like this makes it overly difficult to get things
+merged: there's some actual fixes, some new arch/riscv stuff, and a handful of
+drivers.  I know we've been kind of mixing up the SiFive and RISC-V trees, but
+that's largely because things have been pretty quiet and it's the same people
+working on everything.  That'll probably change at some point, but it doesn't
+mean we can just start mixing up everything in here -- even for the SiFive
+stuff, we usulaly try to do it in the relevant subsystem tree.
 
-Hi AngeloGioacchino,
+> Pathes 1 to 4 are various fixes for riscv arch code and riscv
+> dependent devices. Of note here is patch 3 which fix system calls
+> execution in the no MMU case, and patch 4 which simplifies DTB builtin
+> handling.
 
-Thank you for the patch! Yet something to improve:
+The first three are on fixes, but the fourth isn't a fix: it's a fairly
+significant change to how portable our kernels can be.  The old scheme allows
+vendors the option of building systems with M-mode compatibility, this new one
+doesn't.  That said, I don't think anyone is actually going to build systems
+this way -- we really should have had some sort of mboardid, but that was shot
+down in favor of some sort of platform thing and it's unlikely we get that far
+over there.
 
-[auto build test ERROR on pinctrl/devel]
-[also build test ERROR on v5.11-rc2 next-20210108]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+I'm not really sure I'm ready to throw in the towel on binary compatibility
+between vendors yet, at least in general.  In this specific case it seems fine,
+though -- accross the board we're just spending way too much time worrying
+about the small things while we have way bigger problems to deal with.
+Obviously it would be better if we had some scheme to handle this here, but I'd
+much rather focus on the basics.
 
-url:    https://github.com/0day-ci/linux/commits/AngeloGioacchino-Del-Regno/Add-Awinic-AW9523-B-I2C-GPIO-Expander-driver/20210109-220525
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: sparc-randconfig-r025-20210110 (attached as .config)
-compiler: sparc64-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/9cf5980cd08c30aec01a24e284a0553396a1fa64
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review AngeloGioacchino-Del-Regno/Add-Awinic-AW9523-B-I2C-GPIO-Expander-driver/20210109-220525
-        git checkout 9cf5980cd08c30aec01a24e284a0553396a1fa64
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sparc 
+I still hope we get to the point where we can have binary compatibility between
+systems from various vendors, while still having reasonably useful systems.
+Unfortunately we're quite far away from anything like that, so I'm fine taking
+this sort of thing as that's as good as we can do for the forseeable future.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+This is on for-next.
 
-All errors (new ones prefixed by >>):
+> Patch 5 fixes naming of directories and configuration options to use the
+> K210 SoC vendor name (Canaan) instead of its branding name (Kendryte).
+>
+> Patch 6 is a preparatory patch cleaning up the K210 system controller
+> driver to facilitate introducing the SoC clock driver.
 
-   drivers/pinctrl/pinctrl-aw9523.c: In function 'aw9523_pconf_get':
-   drivers/pinctrl/pinctrl-aw9523.c:292:11: error: implicit declaration of function 'FIELD_GET'; did you mean 'FOLL_GET'? [-Werror=implicit-function-declaration]
-     292 |    val = !FIELD_GET(AW9523_GCR_GPOMD_MASK, val);
-         |           ^~~~~~~~~
-         |           FOLL_GET
-   drivers/pinctrl/pinctrl-aw9523.c: In function 'aw9523_init_irq':
->> drivers/pinctrl/pinctrl-aw9523.c:880:9: error: 'struct gpio_irq_chip' has no member named 'parent_domain'
-     880 |  gpioirq->parent_domain = NULL;
-         |         ^~
-   cc1: some warnings being treated as errors
+These are also on for-next.
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for FRAME_POINTER
-   Depends on DEBUG_KERNEL && (M68K || UML || SUPERH) || ARCH_WANT_FRAME_POINTERS || MCOUNT
-   Selected by
-   - LOCKDEP && DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT && !MIPS && !PPC && !ARM && !S390 && !MICROBLAZE && !ARC && !X86
-   - FAULT_INJECTION_STACKTRACE_FILTER && FAULT_INJECTION_DEBUG_FS && STACKTRACE_SUPPORT && !X86_64 && !MIPS && !PPC && !S390 && !MICROBLAZE && !ARM && !ARC && !X86
+> The following patches 7 to 11 document device tree bindings for the SoC
+> drivers. The implementation of these drivers is provided in patches 12,
+> 13 and 14, respectively implementing the SoC clock driver, reset
+> controller and SOC pin function control.
 
+The numbering is off a bit here.  The clock stuff has gone in through that tree
+and I'm fine  taking the reset controller as that's been reviewed, but I don't
+see any review on the pinctl driver so I haven't taken that yet.
 
-vim +880 drivers/pinctrl/pinctrl-aw9523.c
+I'm happy to re-send that patch (likely with a more appropriate subject line,
+as it's a pinctl driver not a riscv patch).
 
-   832	
-   833	static int aw9523_init_irq(struct aw9523 *awi, int irq)
-   834	{
-   835		struct device *dev = awi->dev;
-   836		struct gpio_irq_chip *gpioirq;
-   837		struct irq_chip *irqchip;
-   838		int i, ret;
-   839	
-   840		if (!device_property_read_bool(dev, "interrupt-controller"))
-   841			return 0;
-   842	
-   843		irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
-   844		if (!irqchip)
-   845			return -ENOMEM;
-   846	
-   847		awi->irq = devm_kzalloc(dev, sizeof(*awi->irq), GFP_KERNEL);
-   848		if (!awi->irq)
-   849			return -ENOMEM;
-   850	
-   851		irqchip->name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-   852		if (!irqchip->name)
-   853			return -ENOMEM;
-   854	
-   855		irqchip->irq_mask = aw9523_irq_mask;
-   856		irqchip->irq_unmask = aw9523_irq_unmask;
-   857		irqchip->irq_bus_lock = aw9523_irq_bus_lock;
-   858		irqchip->irq_bus_sync_unlock = aw9523_irq_bus_sync_unlock;
-   859		irqchip->irq_set_type = aw9523_gpio_irq_type;
-   860	
-   861		for (i = 0; i < AW9523_NUM_PORTS; i++) {
-   862			bitmap_fill(awi->irq->masked[i], AW9523_PINS_PER_PORT);
-   863			bitmap_fill(awi->irq->old_masked[i], AW9523_PINS_PER_PORT);
-   864		}
-   865		awi->irq->irqchip = irqchip;
-   866		mutex_init(&awi->irq->lock);
-   867	
-   868		ret = devm_request_threaded_irq(dev, irq, NULL, aw9523_irq_thread_func,
-   869						IRQF_ONESHOT, dev_name(dev), awi);
-   870		if (ret) {
-   871			dev_err(dev, "Failed to request irq %d\n", irq);
-   872			return ret;
-   873		}
-   874	
-   875		gpioirq = &awi->gpio.irq;
-   876		gpioirq->chip = irqchip;
-   877		gpioirq->parent_handler = NULL;
-   878		gpioirq->num_parents = 0;
-   879		gpioirq->parents = NULL;
- > 880		gpioirq->parent_domain = NULL;
-   881		gpioirq->default_type = IRQ_TYPE_NONE;
-   882		gpioirq->handler = handle_simple_irq;
-   883		gpioirq->threaded = true;
-   884		gpioirq->first = 0;
-   885	
-   886		return 0;
-   887	}
-   888	
+> Patches 15 to 20 update the existing K210 device tree and add new
+> device tree files for several K210 based boards: MAIX Bit, MAIXDUINO,
+> MAIX Dock and MAIX Go boards from SiPeed and the KD233 development
+> board from Canaan.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+There are tons of checkpatch warnings in these, mostly related to compat
+strings that don't have binding definitions.  It looks like there's just a lot
+of stuff in there that doesn't have any support on the Linux side, my guess
+would be that the best thing to do is to drop those until they're defined.
 
---cNdxnHkX5QqsyA0e
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+> Finally the last two patches updates the k210 nommu defconfig to include
+> the newly implemented drivers and provide a new default configuration
+> file enabling SD card support.
 
-H4sICD7g+V8AAy5jb25maWcAnFxbc+O2kn4/v4KVVG0lDzOR5MvYteUHiARFRARBE6Qu84JS
-ZM2MKh7bK8nJzL/fbvAGgJBndk9Vcszuxq3R6P66AeXX//wakNfT89fNab/dPD5+Dz7vnnaH
-zWn3EHzaP+7+O4hEkIkyoBEr34Nwun96/fbH8WVz2AZX78fj96N3h+04mO8OT7vHIHx++rT/
-/Art989P//n1P6HIYjZTYagWtJBMZKqkq/LuF93++vLdI/b27vN2G/w2C8Pfg9v3F+9HvxjN
-mFTAuPvekmZ9V3e3o4vRqGWkUUefXFyO9P+6flKSzTp238RoMzLGTIhURHI1E6XoRzYYLEtZ
-Rg2WyGRZVGEpCtlTWXGvlqKYAwU08Wsw04p9DI670+tLr5tpIeY0U6AayXOjdcZKRbOFIgXM
-lHFW3l1MoJduSJ6zlII6ZRnsj8HT8wk77pYmQpK2a/vll76dyVCkKoWn8bRioBlJ0hKbNsSI
-xqRKSz0vDzkRsswIp3e//Pb0/LT7vROQa7lgubGDuZBspfh9RStDhUtSholyiGEhpFScclGs
-FSlLEiY9s5I0ZVP47tZGKrBRz3oSsqCgRuhfS8CMQAdpuy2wTcHx9a/j9+Np97XflhnNaMFC
-vYsyEUt7XyPBCctsmmS8J8icFJIi3Zyh2WlEp9UsluZ8fw12Tw/B8ydnTm2fegkh7OBciqoI
-qYpISYyj0XReMk7Vol+lw9Yd0AXNStmqoNx/3R2OPi0kH1UOrUTEQnMdmUAOi1LqUbdmmtIJ
-myWqoFLPrPCveDCFzlwKSnleQq/6xHWdtvSFSKusJMXa7taWMnl6xWFe/VFujn8HJxg32MAc
-jqfN6Rhsttvn16fT/ulzr4OShXMFDRQJQwFjsWxmTmTBitJho649iskls1YgWXd8IibJNKWR
-Vzc/MVm9qCKsAjncQ5jRWgHPHBs+FV3B1vrOi6yFzeYOici51H00RuVhDUhVRH30siAh7abX
-rNheST9tNq//8EyazRNKImo64FSgL4vh+LK4vBt/6E2KZeUcHFxMXZmLWpNy+2X38Pq4OwSf
-dpvT62F31ORmdh6uEySg//HkxnBks0JUuTR3ALxa6FtHLapkmNCo7yAmrFBeThhLNSVZtGRR
-aXhHsElbvI8cNT1nkfQemYZfRJy8xY/hZH2kxVsiEV2wkL4lAZYNp6Z8SwRsNH6LP83j81rU
-PtZwygJPcsOqfWffXULDeS5g59BVQST3uTatTB02dSdGz2sJ+xBR8DchKW2Fuzy1mHgXVNCU
-rH3hOJ2jKnXkLYyd19+EQ991OLDifBGp2UeWe7oDzhQ4E8sdRCr9aO93z1l9HIj6UINmXBoW
-GKmPsjTmOxWiVPXfFqoSOcQF9pGqWBR6u0XBSRZa3t4Vk/DHuUhfsWh8bW1NWKbg7UIKPSAC
-RY9jTCuP+4/aJ1rnFNwzA6zht3Q5oyUHP6aacOsX0gbgkWgPdwLnN7WjmwZJw3hpeTADU9Ue
-LePMWJdp+TSNQfWFNcaUAECJqzOTjitA6l4OzYV3GZLNMpLGlu3rFcSRvx/EIGd4MgH/6BmD
-MAORM6Gqoo7GLTtaMFhUo2ojFEBvU1IUjBY9bY4iay6HFGUBp46qFYantGQL24DUAG2hxXAB
-IS8qQLiwpcETpIJYikJ5DQXOKYtPaRTZAME0ejw3qkN1rVkgEXpWCw6TExaEy8Px6HKAi5o0
-Lt8dPj0fvm6etruA/rN7ArBBIPaFCDcApvXYwjus9rr+wZsI+pPDtB0ueD2G0gCrjvFWJkRK
-SKPmfktKyfQMo5r6rDgVVlKB7cF8ihltwdoZg63iGPKxnICgXi+BGOLrfy1LynX4weSTxQwk
-MUszDrOIWdqizEZjdvLYil5fTllpJx2h83ltuGSdQED3oZqjM6hz8d4VA4adoqllESOZ04qU
-BnKTkInNa+AmqzwXhdELZhcQ64YM3U3CprTI9ILRx0k2TY2TpNMzLdjTtHVLWtZQoAbaBTXS
-noxCSG1Z+piomBUSjCWpsvkZOb1NXjHOjYXmsxJhuUrB/MCdXFpraVYoVQUqndIum8oPz9vd
-8fh8CE7fX2q8bqHIVok891oSJFbj0egca3I18rmAj+piNLJyLt2LX/bOKJu0WWGypJClGdvV
-pYsEsuwCcAuYP+ATZz85WTf+J1RxZDkYSop0HU8HLgbUH8SH3f+87p6234PjdvNoZVu4O4At
-7227RIqaiQVWAQo0hzNscAbcPEsdE0zWCusdo83AsLUBPvyQ09tILMEjgQ5+vgk6ezic/5dR
-RBZRmJjP/3vlgQeDLJxQZenKhlpeiXZpZ/jdOrya/dlpe6bbGcon11CCh8P+HysEgVi9etsm
-GprKIVwDena8Ikz9opUasibU4JlpuMdwzRB+oXjoAy3aW+iCEOAQ8K/E9no2u9lFI/cTWOvh
-ZKU+ioyKApJcTFT7SM79ZsQjrFIi7HYQXrOet/yU3oDp6zF4fsFK7jH4LQ9ZsDtt3//ea15O
-KyPq41eYEAPqyCpTaSRMhIUkkdMMPCYkLqZ2zwzWl1gxyluoHsuKPV3PmO+P26ZCrffSsJbe
-7xpTYL5ERkwhu02JNIJQSSIAvRAw5Xg0UVVYFqlp8gJCYYrluJVX0WdnZZWFN4ftl/1pt8UN
-ePewe4HGgIhanRhap6WKDZWKGi8YBqUdskHu5vlnxXMFeIb64LtupQEF4BeA8pjohiGV0ul4
-3kU7i1rQ0suwcpK+EqvRQyKEEXnbiAOBUZcWVZlAoI/c1pIrANZNCdsdraAzQO9ZVEOUZgGK
-5O4cYFZ1yTkSM9/0ek25AKZtratHIc9XYTJzZJYEoCoaZ10DbsvwHqEGu/6UrEgjQ943aUlD
-FDAOiUvQsvA3Aj+9BXMrfdLsksUqE7qCa5LPlDnP7G2Gho6IPalmFMGWAbBEVKVU6tQA01JM
-qJxe6AqM0N19EUVY1YIsk4Q2YEbNAFlWEo61WRqrtdWwu1Zu5nAxQZvHTPVMlMqEojHgdIYL
-imMr+0C4ayYnvmzdRotNdgQ6adOi2g2EYvHur81x9xD8XWdHL4fnT3sbHKGQmgOCpqmVHLzV
-1s0gfuBnjAIixxKAeaB1AiwxnbsbGxWSekM9C2+3uiwoVlrFXJfM+gIEKs+nL5mNjUw6q6/b
-IESyDL6wkRs8W91CzsXBgxR86UigsenLpUh3o+9QzosUy1ZAbw39ttu+njZ/Pe70lWigc9aT
-4ZKnLIt5idY8MD4fCz6aWkwnC8lYhC6nhXB4MAb17KYvGRYsLwdkzmRod4k9mmZybh116Nx9
-fT58D/jmafN599UfeVqMYiOmBtWsYJc59bEW8C9O8gHwGUiYrBTOZF7q4wVn0Mi9tGIHZ1kn
-dAVFMwDP5LNFNivcRDtZg8lEUaHKLpPuOpxLX/2p3R+9Hg72iM3vLke31x1UeNP5+bgQbpdk
-bXkVrxivq1u+GzcztZ0b2wOoBOA9CRMboZ+p7H/MHajY0qeV4VU/yq6e41DaJKsh6xiuZz6M
-NHFB8JKS4pW5Va/CFWA3htnPIPXHa+5BJJZgIOgWaMiI5Q/P23KvsQ4zZrvTv8+HvzG3GFg8
-GNrczDXrbxUxYl0Bgovyl0pXUa4vHWjpv2sBt+a7gAMqPhzA+M1JYdUw8FDk+KBBShavLY5u
-AjatQxnokOfOTSXIACIsz5SySekzeFkap3JasGhm15A1RfHCd9PQMMOYm00WKcnUzWgyvvee
-r7Demk68pqhCVM7E2wCcGpYIH9a9BilJ6i8LriZXXnpKcn+5ME+Es1n9LlJKcUFXl142Tl9f
-HHm5UeirQkaZxGsokda1Y6NmX0I6jXVuT6NFY2q9PlpKa7EuGWJyPiVmPEWYx4SvK5sxqLTA
-KiFKz52ReG5W4VETSFEzKWxqZmZbibTWfF+Uvo1v7vH0kSj0tYB7NYis+qT46g/aqlYKsta1
-whsNw8zvU8c5BKfdsXkU0DmZActhmA7FqMsRXpDIzjv7eRPfs4GpdR6mWOqmkf8MA9P7JEPT
-IxNKwEbI2K7/Aq15k+KMJwGNuO+MTH5MSVkhgsHWg3rf9PF1d3p+Pn0JHnb/7Lc7X04OnSQh
-i8p07J88MKflRWjNFWlpRUNi3onW9AX8Y6+1WKTOong5r0jhrKmtRZybctvlkkHWYqXGYTxD
-FzC2/G2qSTp44V2Qf8+bhnjFS1OBUXxJCsC8Mx+i7qRDCsexvTtQIqs8cwEPcl/BTPXNHMJa
-OoumHjFEvnVSUYvAx9rXHUI80otErLCunI1h4YOmaZWSQiXMnxRZ0pgDrjDPYoVn3BZ05b5J
-9SY7UFEREeMaYjjPJSzIuyechFrCByMbFoIUhCCJLszhdfTdyLgkj+fszL0qup1bX7QMCTPT
-B/hyny9oGrS3ypmaWEljX7M4tD7AJc9YSawDgOQsZP4ZAi+xeY0v3ByCeL97xBu6r19fn/Zb
-/cwz+A1a/N4cFQM8YT/Wmzgk5NnVxYU7E01UbOIrnrb8icLjaqK8n5yPEcIlYKLUfwxxW1js
-853psqyyzCwExYSlwrrUpWVSAnZug6BbzsA73z9Zhzij2qlEbiW7uUixH4nZG9FRbbeXhxww
-sN0OKQqvmVXI5GAz8/DddnN4CP467B8+613ri5H7bTO3QHSAuMe6dbEjoWnuxWNgnCXP7RjS
-0hTHEokXZZIsIunwiZ8eK2aQ0EMyVD9MHSwl3h++/rs57ILH583D7tDrM17q9Zsb1ZF0YhLh
-0y9jF7V/a0czHrn2rfDGo1m7r1ODDVaSpg226h9VdJKYxQLA8z+GdFdkAFrIs5b6NVCb4Hu3
-ACtM7sODhkoXBXU2B+kYo5om4I25WPiOQs7VvZBqXuHbZDslq2lNBzl1uODjrfS+/sYTP6DJ
-lHHrXqGl52YhuSEuxwMS5+YTkXag4n5IM/FExCFUJLDr2iRiS2/AimkW0u7hkF1SG56W7vJk
-4BJ5wpS1uIbQeXrrOqTzYK2rF+CHmozZOCSQeNcvMLyObZZJb2lOv8yqXcHmcNprx/myORwt
-jwRSkGx/wOK0mQsgub1eall98ASmiGu6f2DYgUg/BvN027IAXOilrusq4d27sT2C1QUk4M2T
-C+8DmaE8VpZFlq5NjQ/VoLVTwZ8Bf8b3nvXrlPKweTo+1pEm3Xwf6AtSKmdNOCZDnAbWxYks
-tXXVL3YJ/6MQ/I/4cXP8Emy/7F+G95ta2TFzVfwnhcxY37icWfGMZkrznX2LGaaP+jldfX9i
-dYvsTMgl8TmWVmAKrniNpZclyX0dpAb/jW5mVHBaFmu3CzydUwK5pH7TqrwwbCg2+UE3/uTc
-I3jzs4Lj65+b2cVkuAVs7KH55C59CmY3Z0YWZrmmk85KyFbMVK8zBB5ZTzRbOsRjMqRWJUud
-00q4QxDcnS+ZSpr586w3zL+uSW9eXow7fyxY11KbLd5cO2dEILhbofKx8OWewWQt+dBaG3JT
-rT+j1FZIxOea47UdZGLe3NuUm1HOMuadmZrlTNTlZJs9gHY9VZFMZGsAVeccLT5+qPeor43+
-QKf1+/fd46d32+en02b/tHsIoKs3knccSKYwzNnFD8wE/nFp8K1KAWlKnUyZJfWGSwt9/YTc
-8eSmgdL749/vxNO7EFcwwNXWFCMRzi68Zvjj1db5D2BU2+SQouyrHH0IM4qcQVCsyfWrv7Va
-Fqz05yKmcHMpfu64N1KDY98yJiuMAbPhOSVL1cyxDkSbf/+AsLd5fNw96oUGn+ozCVo5PAPV
-jUi69wgGSR1zNhjWk5yOx1f2b4k6Bh6AM+vUfDRmfLDkbRwCqnaebbkiBOzHfNfYMbR/VOmM
-3xnPSDzLxX9ZCW2/XibnIgsTlr/JrOMxhl98dBX9nGyEaYJZXDgvjD+0eksDRoPptNQG2C6Z
-hiEch89wAILj68vL8+HkUQA1f4lpUiHSY2WTW3c8ZwSU5P79b8SmYeI9pb4ZdqUAPJp6HWkO
-Cgv+q/7/CaS5PPha3wad8Vx1A9+AP+7KXGk1dQ4CENQy1c8YZCLSyHVpWmBKp82POyfODiM3
-BrDIz0IolJilFXUHTtaQflpZhojNv9FYOF7JW8S5mP5pEZx7GKBgzcP5iYpx/1pgnW1YNFpw
-GsjOovodM+n9261BxgTYQYpCgpLkRboYTSyvSqKrydVKRbnwhW7Ijvna/QUmC+XtxURejsbe
-ZYAPSYXEYjY+R2Qh9SdVJI/k7c1oQlJf5GUyndyORlaZq6ZNfA9y2yWWIHJ1Zb3ibVnTZPzh
-g/9NcCuip3Q7WnkGSHh4fXFl4eNIjq9v/D9Dkv5IvsIn6Sslo5javyNY5CTzBqhw0lReawdD
-0eyGzqWmK1JOjIfqDTGlMxKuB2ROVtc3H64G9NuLcHU9oAIEVze3SU7lypx3w6V0PBpd+h2O
-PeP6l7K7b5tjwJ6Op8PrV/2DheOXzQFAwwmzQpQLHtFDPYAx71/wT9Po/x+tfefArpsQvNEl
-CNlzq8RLw0R412UdNKv2yKIuHshQshYFDfYMmfi4x8SVvgZdDVfXrPE0WZVfvJ7z/86OFM01
-sPWtxpPReEgcXVm3Lg0ZEM7ZjgEt5IN+IAW4HX37do5u3zC2gzCwL7+H6BpPRv5jX1f4dcHM
-/j0L0hPp71Yz66tYv/8qE7zI8blDyDPq38u3m7gEijlwSiNVFmw2wwpe4vslYsxWVCcsHVBi
-LEDRQXLQaoG34p3HZplDua9IVkIu48yGrG5uPtxeT92pGE8PBIlAv+cFQn51Ob4cnVkMsD+s
-Vit7NkC8uby5GQ+pHzyi9eWzo9eQARYltmyonyU5xIjAkajn3xNZmKeVtGnpqnSENGBdLcna
-EYRjScvxaDwObQYnxYKmqavjljwezc5qkbOwoOmbbFFD0B9KlOMzW6FFJOTG7gTrXwqRwfCt
-jZQ3owtnW+6NfhpSQdFHzl1iRiVxNA0TnbeLMU4Kl6E7M1lC4Fj5oBl6Y7ALABrOduc3FzeT
-yZBYhjfjsdu/lr68ObNwzb3+4Bng+tYmLgDjS0ibLWITy2dwfCcF/tuwlIiJ5ofbDtFBlJo4
-bFeY70XrdqycEisv0FQ4PVXGOAkdBmaBDilhYNcxHcrCvoRgPMxOCZEjwpIK32MKzWX5PQDA
-W6c3oN6M9M/lat+GrzT46+MJIvHum50AN/pQvFoNtYRU3zJalv5FMZaq7Kc9tgxnEBmHjyny
-UL5RiQGuWqGI9+cew6ZdaMiNcAgfaioj++E4EiMaQwZu39AB+Y0nZcjmee6vcmgmqgJvTH3x
-Ks+F+Vg0Tbq30snz8fTuuH/YBZWctmhDd7HbPeB/uOj5oDntEx3ysHk57Q4GkOlmsUztNzc9
-4wwdXX57AezF/pH5n4WBLwQb5gGzJfQnwPHcJaVjoasJerJfkRQAVnzQ14L91tf/BZunl9f/
-ZexKmuPGkfVf0a3nRUxHc18OfWCRrBJH3EywFvWlQi2r24qRLYctz+t5v/4hAS5IIEH1wUvl
-l0zsSwKZiTfrZq1q+yPS5ARB2ANR+Rfgfg8e09jCRSLSZvcO3eZJpMn45uEyIcvVyQu4FT2D
-O+8fD0ixmz7qjqyU9gxa/mYEbu2PlFajsTG+TJXt9fKr63jBNs/9r3GUYJZ/dffIqkJSyxOZ
-tfJE2TnJVrDd7csv78r7XYdu7mcK3xnlJLUPQ8+xIUliRVI13ys23u1oO8SF5QPfQJBOpogj
-pvL0YfTciAKKyTRwiJKQzFd9926+LMeDCBeGfCVVvWOeRYEaFkJFksClKlL2aAKom8T3fLog
-HPL97ZJw/TX2w/QdppwanivcD67nEnlry/OITeMXCLzeQOHaFMyyhh3V5Xqt4K4u9hW7Xf39
-zSTY2J2zMxnGZOU5tryxLZ83PaUPrkXg00tANqLPuzzVVmPjXcfumN9yCgWf68DxqT57GWUu
-dTqfzl33QiXF9zSWecxi/D3NPAwiTFlnOOGBrujC8jecT1V8Y3zO+EIdmMmKIsv5biNx8Bkh
-Eh6aKjDChQiiZqOFQdZQpswC2ovTMI0iytBpdK+Yzjp0ftc1KJ5O8R0jx3s/sGbKz3QBYWBQ
-wmXXMS+/1S/dDayx6JgSlUT6xoND/eIdr3GIn9cqcQJPJ3JtsmcGdcjOOmk6+ZHMyoEgYJzY
-WGNVyK+HHLi2OPrdNoOcci0sR8FD1P0ha0ocGmKmXFvGVy6CXgfqURPVEEvkPGovJDd8fPv0
-8AjbwPWQecnsOFJT1jTGYOuAtJ+q5yqmDNozaFS4pNLi8kk6HJLKmZNE2Dho3hoClJqYUPiH
-fUbebwk+VmlSwT1EI5n+rjJ9cPLv9ph7Z6S8wrdn3hnbAt/0L0QZ8qfqtPg9BOMuC3z6FH7l
-ab2B9OZaOeRhGJG7a56PA67SFbtU/S0fO4R+BffqN49EX5lkgOEluGBAiFHlgGehBvgAPx+8
-gPYKtya16PPlSfraqXaUd7Z6HXP+p7ec3Nf3qP/OFM2iISsqMqfmyFmmyKnJhyMbRXyvxd5S
-bon5amHqI+rhNf9xFYtn1e47TNY9/gXtlrOifTonSiVc6uyrui4SF2YBVA747LeT0xcXybeM
-LXZrmsTa9pwrLNM2vqvHPPAdyjxo5ujzLA0Dl/pYQn/Ry/bMU7UQhGCTRzs/QHhRWqRoMpr6
-kvc1OujfrGOcymQJawkzCxxssvVcukv28ufrt+e3T5+/a+1VHzrNQ3Mm9zkVAXBFMzX3WhpL
-usuaAoaXa49Zu7EIRXnzO5hlTpYz//j8+v3t5b83T59/f/oIxw6/TFw/v375GUxq/gcXIYcR
-h8+FZFOAe4awb8amJBrIahSIRUMp4whgKZvSEm4QUL1/I7Cz6QoA8mpV01SQ4c6/YAqrmhFf
-GgJVHkIaM3D5F59ovjy8QK3/wrsHr/CH6fhGO/bo3j7JLjixKW2DK34/xV1VugDZ3CjPZm0L
-0nRvqBdGYmD0DHbQljqTltb6vnpFoLtujFhg2R0tAYOVmXZJUjVwzsGjkFNWA9R5TTmT5Kbq
-KwHcYn8E1lP+CNg4+5bhH2iGl1tpVmmmRSv55RluRtXNGYiAmZ88JER6KP9peqGtR3djDxzm
-os9pU7LmYgEi81qEfrgTWxv1UHSBpmG9iJuCqL9+MyaTfux5Yq+P/0ankfOewACXtORUreyN
-p2gpE3BdIsyuH6DTaYUfJvb9sc1HHEAFJPH/0UkgYAphoWdpzkp26T0nJejnNPR8k15kqRN5
-Jr3Je89nToK3DDpqIozvpNU4Awv94oYOWq8XZGz2tAf3zNHlZU1amSzZWa65mNoZBt4Rvj98
-v/n6/OXx7dsLOrWfrWAtLHoKNRffZgc1wtKSOOy6MpOesyCu3dACJDYgdWyA0kpQSnTxORGE
-1RLfud1Ohk2h680c3V5b/+ZPquEDNp6TPWxiXn0ZYMMmoqnSrg5iP8f3h5TSCZgRrVpQxXGc
-s+4hpY3X54evX/maLlZIY1UR38XB5aK5m0gbXqGWa8TJPlGjFmeuYxsl3I/wj+NSh7BqOYgF
-WMKDWcvX2/pcaKS6O1T5KTfSb3ZJxGLqzF3CZfub68WaMJY1WVh4vL90u6OOVd1FJ92zHB9T
-CvI5L1I/sCYt9wx6fTfFdS9CRuoBIKg2XHZ0gvr019eHLx/NtjVO11UqdieakLbXW+F8lTtn
-s685ZpUD3bOWW6gE/sX4bKJDhjY/VU/rJ+o+CWNT4NhXuZe4jnWTodWaHDH7wqxNLHe6x7Bl
-Mhuq37pWHzO7InZCT28ETnUTgwprSBjqHbxPYl/vLkAMo5BogkI7ETCbKI7ImxGBD3k4homv
-93M40TarWR5X20SNPeMJJZEmS5A9cVWhtxoHUvt8YRxyy7HWJL5rdgEg20vJ0TRFp3FE64vm
-Pz1/e/vB9/EbM2h2OHAlNUMxYGRdd/kcK2pKhZQ2f6O6AZ7dq5xYRCbcn//3edrlNw/fcexi
-zil3vdeCeUHiIRkL4p4bCsAz7EpnB6RrEOmr+WIvD//BB5Fc0qRL3JYDfdKzsDA6RvaCQ7Ec
-1NExRDkRIQ7Xt39MHW4gDnWnpwKJE9JAoPZQDLg2wJ5B37/mA3W5gbkSWrLcJxJAnFgyGSeu
-LS9JqVuYkkxuTM66uKsoO1M4t4UgMbS1n0Ah+kGN7IpU+oaq1IMFG7BS88C0+8iKHOLR8F6P
-LM0uSeqF8mOlpsRccwV/aBwDbgKMtBBD6GwwCM9lW16n/F2TpG+SSG1UUCjB0hFWJidCbTd/
-lJ89xw03pEKzq/fdKj2x0V0L3TPpbMfMDCNik3GNYCEaJdh98MDGcasIWYpWhjkVTndDqgga
-Xeh6F725gcr3SftjyRXT7KhGQJsF8Y7ixtppuYZ5G/kWLJ57MQVPix2s57lZLntH4Fsi3hF8
-35Q4XELX5Bc9Xb3WnAFjtZ0B2Hmo++aZjteSVb5oWkLM6EfY5FnJkhuEcUzU29Ku5Sj8qiVv
-FEYWObatzszCe1bghkQ1CiB1KLEAeWFMjmKVJ/apQadwhLaU+aaKqHcA0oTMEmt2fkDV19z2
-ovfCeb6XBsTInW0iiE4zhg5enuY0hzENwq0SHnPmOo5HFGTZEJv1VqRpGpJX3W04Rm6yDFHl
-NqwhTSTFziNTznUmghLdZJ18JwhC9lVgx0CdF89MpXhGoc3vlztHGVP+2iD/tpm9o9/9mWFw
-XxPB+ceh6reSVcOi8z1afz1XrKQKoTKKB5dERIjNTOhR3a/2sO7zJ3bpBONmfoEBTGvFX++m
-+U72ivIkQqZPn2yKK5tjLSyzN7maxnK5IM/7qJSIHYbRG81r7Jmi3Z8s5LY7Z/cdNoJcQHmN
-Lx8nkgFKqRASCzvYUIkrbpDnEPKM4ymxuz8/vD1++vj6503/7QlecXv98XZzeOVKzJdXpJLM
-UvqhnBKBtiPKhBkgRNv7TG3X9e9zCXsEsqoURrXfg9itKrN8NqeD68dmP8m6/Ug0PSIrKSnz
-sZwziW/lkYEFiHwV0LvuDFm1ZEMmIkv7IHi/Cz8aBCdrTpRSXVxuk2mAb4+pvE5W/lReF57f
-qmoABWSjQAJnPZH2dKZJ1eCZIM4LkYnMWzYTAVc//0IVnDf1keoQY99UuUuJ4gM38ziieqWv
-w/bYBuojEWxHvE/D1DBrgkXYcMDbpyr3elmGWKh7M84wxUzCm8Bd3mREBoCsMYnEGX7bSQBM
-vGFAbW0AnVNtsvyaN63xtZIrq4gpZtFqefHHjy+PIi6OzR+s2RfG/SfQsnxM+KaIeoBOwMyP
-cWjFmepROgL0AMVyGn+UjV4SOzbHQ8EyNlxt2dflJe9UZ/8Fuq1zVbUAAHzNUudy0ZPj27Iw
-dpszdSUhBAr1SUtEqlTo0gvo+iXPSjN514sflB1BJnfXC6peCi1EdVe9EtUrO6hyoUsaVSCm
-Wc8S3W9h0FLVrwQXmm/Q3NBo5EM2lhANGQLN0vaqou5y1wcHQHvOmt6LvFSXfltFAZ9HoMiU
-ZdoIbzmwKkd7f6DydPqaNnIHsdUHFnn0JSTAd2Wjfa2AQqt1jHqQZFtzm6qw7FFSh9RlSZ2Q
-PMJf4dAxhHFqEtHCUtpOfmFIgk0GrutRmtuCekb3F+R086M00UowRn5kVCxQU1qRFXDZ7j13
-Rz4GBDisXTgZ8/BhpmDHkIWq+ZeB0FnhVGnLnQTK33CXkIe/ApOrNJbDypyct1kVxNHFmEwx
-TxNagi0I9O4+4f2NNlHKdpfQ2Zyr5+sV6bM+Ns+P316fXp4e3769fnl+/H4jHQqq2f+Iig0k
-WEzD9tmt/e/LRPmarzcV2gjxtnw/vFxHlmf4sTTA695PN3o8nB4llthkUnrdHK1wn9VNRmrJ
-PYtcJ0TTtrx/Iu+TJBRrk4ZyYYUzJegpHbliYfBc25CEQml3eApZ3uKZ0hIyG0lEnYMucOoa
-o3yiG2uXzsRnXp8KUjdva6mRM2Pw5CGtJXOOyAk2e/+5dr3YJ+XXjR9iPyQ18cVbBufpQ3NJ
-yJh2INC0PhGbFf3mViFatiVeoCd8bkLXoaeAGdavpBG8MakL0OgQnBqQjyNOoO9qPW7Sv4wC
-SfWLopG88upUnW2720beaF8uNIJvwPE3OjIpPzqx2eulkVYWijI16XhLT1JtfW27+lUTO8Bx
-EA5LuhDNSyaDQ4aVOHX1iN5KWRnAxv+Y1eKVwCMywVt5lrcIN7n4nufAJwI6p9MuiuxoGlfk
-0Kv/ygYqTRJRey+Fpwh9dcOhILPGYyKaxrAilA6ioLIrbeZn7VS0AOil7xRb6gB/gymk39/A
-TJHtpXTERK+ZiMn16C0IYvLIFU9jIRtln7WhH4YhXXMCTZL3OpZF114ZKlanvnp7jqDIi92M
-wtSZm0gWth0xtXxpLB4pG660LD1OrtzvCOarOFkgwkpHAeUCti2a80RxRMlWVBwSCxPbZ5qK
-g7AkClI6uwKMtvvWqrHQEA7fpYHp9rCmtDANTSzLr87mUdsDhSnvXV5DZFdp+lA6YFPC+yQJ
-t9sTWCJy3mv6D3Hq0c3C9TR8cISxdxoFbOcCusEVhY2Q3e+TC7m/UFmOv0HsMYuAE58v3ssd
-8CR07gBKaUi1Z1rJHyAS0WTGT+RHwEe2u54MDwSDd8hYvyuH4b6vVDdkeLq5aik3S+VT3YZO
-gXS9VIH4hoikj0HikPO1riurSHOi+xLzmj5zLJ0JQOa+t8awsEniiNqqKjz1IXSRb6GCLfs7
-SjhXpJ2INmBEXIlHGthqPHFL5YBrO6Eb+ZbJaNYlN6UDk+dHZAGlvuhZRtWse74rXldFNdT1
-35vsZkXy/ZQ0tVFBpYK3KeGE/SdWwDTNxBhpmoFYZiNNeiTX2a7akc765jnPAM5B9FP1dTVY
-wgGAv1LewfOVdCJrOMCJVsFLQZfwtlDXjpx4oKwaJoP6Cu1n4D5deGsT6QGGHhZaT7Nmpags
-qkzQh5yirq8IqSJuY9/zdHaDFZGnaEkmuiuGk3CUZGVd5uuD1k8fnx9mxQue6cbxa2UGs0YE
-gJQpUEqtYMvarO4O1/FEvYkkWaaHghQeWukWzOIZs3dTZcVgq5LZe8GeH2HaR+ZksfM3qmdO
-41QVpYhIZrRn144DhIlZ3JRPzx+fXgPxQLf5BKSUcwpqpaVXGtbyFTq0aHmaXp5eiiUZ4PkF
-u+ml5JE6cVO1YkFtD5ZAtCItcdEnwjeK1+6ItpBs57YrkHpPFVzpdquHnlItWt0TPGrHxR6b
-xRxz/vnl7Qninj5857mEo1X4/9vNT3sB3HxWP/5Ja4vdce9pw3elE+0k6E3ZoGc5VgSed4Eu
-UR1IefpbpzyBteMS0Ttl69mjkU89gPVlWZjfNWSkK4npvi8q9ZqzyhsuTC/hDI+9XroZOY1a
-4XhNefAkr7VsC0MpYkPUNoMiGPl6TW0NYvTwgyA9fHl8fnl5QLG7pfvOIHxRJPXm4cfb689L
-N/r9vzc/ZZwiCaYMvTvB6iAHsRCd/fj4/MpnlMdX8GT4JzykDc8igCMnRDL7/PyXdn0ghYwn
-4yAX40UWB74xhXBymgSOQS4hWFVozCyCju+0pzZhvU8faE79kfm+6ik5U0M/CClq7XuZmcpY
-n3zPyarc8+k3UiXbschcnzTelTjfncSxkSxQ/dSYS3svZk1vdHvWtffX3bi/SmzpS3+v+aRn
-ZsEWRr1PsCyLpPvX6qWpsq/LhirCnOZj13Lqo3JQp/QrHiQXcgWJI4ey9lzxJPDoDzkA+5eN
-fO3GxKW08QUNI71BODGKzPTumON6lMIz9ds6iXhJotj8kjdBbDv1VznsE6Y4JOKjjujIE/JO
-NYynPnRJXUnBQ3P0nvoYme9O5LOXOAGRmXOaOvQRpsJAnbussGtk4tRf+OaUmiqyS+rhWx6l
-N8MgeUBjyOzXot5JLWyaQC5emEyG/epGgxw+T1+sIzCWTqZU6gl1rq6MqdioD0k2Zh0g+4FP
-klOSHOLzJATo/UnjSf0k3Rky75LENea38ZYlnkPU4VJfSh0+f+bT3H/kQ+cQd8SozGNfRFwZ
-VY+HVWAyEEDpmDLX5fEXyfL4ynn45ApXQ2SyMIvGoXfLjBnaKkHe4xfDzduPL0/fFrFoU8F7
-sMebkr6u1z5dXpZ44puAL0+vP77ffHp6+aqI1qs99h1ixmhCL07t6yuhBbBRxNAoHE8t/UZW
-ZNH7Ss/gWjYdw3rNeGxXlSb/8f3t9fPz/z3djCdZIaoV3soPsVl6bLSoonx/4iYeedqgsSUe
-shHTQWQwYCQQu1Y0TZLYmrsyC+PIYlti8JE3xApXM3q6AZ+GkuexBpNPl4VjXhRZMde31AEE
-W3UtVXvJPQfdASMsRKeIGJuil9FFvdT805BWOE3G2K78T2x5ELAEjyqEw3iO6OtAs6+Qh3Iq
-2z53HNdSmQIzjmwUzNJ4U9KWL8vAWtP7nK+FFqxJkoFF/FPjZGRK9JilDj5wxiPXc8P3OnU1
-pq5vGXsDX2GoQ5e5bX3HHajIWqh3Nm7h8ooLLFUj8B0vI3IZJ2cnrA6aup+Y1w7fHr5+AiMs
-IpR3gf2l5XrFaWq4x3kRUsiCvv/28Pnp5vcff/zBZ9dCj/m3383Pna6l5LS2G6v9vUpSa3N5
-tZhXB2W3CUL5n31V14M88cNA3vX3/PPMAKomO5S7usKfsHtGywKAlAWAKmvNOc9VN5TVob2W
-LW9LyklsThGdquwhbOS+HOAZXdU8kdPhELeGgKhaQk1XlFOcOHrC4TzwsCLkcaxaM+w2ajki
-Qroq6DCcDvQFCQePp5JZQbYj31jkyOU0uNpkyqlboZZBHB8VYHusfVXtmuvhMgYhqcpDAQx3
-Q06crGMQDd5V7dquKbUU5HJvyRTjmXJidaCSw0JU6u7h8d8vz39+eoMH0vLCjD6/XhLk07nk
-dOhPJL50DsSoZn3luBsLL6TVpZWpP1OBEVbctFRfsekmfvN7cYlyRpHGV9C8vFkxexwUxJMk
-2K0cQbFDy57tuTeFU17OM1Y3fuQ7GS1dgHTMcoWpT0Ly+k/JAIQMHSyJSLOnze81P5k16ROv
-17juKWxXRK4TkxU65Je8bSlosokj0ypRRMx3xsL8/W2Bb9frTg/3Nz8rri9yswTWHVuly4mf
-144x484OI+AXxwdWRY0JhgS2xVWLcQekPm8wgZUfjDdigD5k56YqKkzkuQB/UUxsqgvfHXTq
-gfWUkpV47evjocIvVs+wyDRdumtx32bgnSLuUjTRfKyL0L3sV9/DUuf7Oj7hwiWORfapHHYd
-vK4zVO14h2WvT7rrxPkz+tgcHjMd6+spq6vCcLLFjXCES4aBaBt4+dAgS26zfuELaDY9OrWK
-GeUwz/NlBMfiZ6Hgq5uthaYKvoUAI/AwU93l8k3fKDDaFeIjWwrfZ0OuZ4odWwgGFqfktfvM
-kbPAU5WtmV7sBqOYrMvNIvLdnBElkhPVb/nPNYjHOJTtYaQ88TgbCut+lGIUIWvEOnk88PXp
-8fnhReTBcK4D/iwYy/wWy8jyQQ0EuZCuasxvQe171dlQkI7QRpi2K+u7qsW0/BYMfnRaxX/d
-6/WSd8dDRodyAbjJwCeWMhMCtB+6oror75khVWgdlq/y+35Ab9kAkVf9oWsHzbd+pfLqsYgr
-GybrDuUA7u07aooV4G/o+QnZtM2uGoxuc9hbwj4JsO6Gin7uG+BTxWcNPFiBzJMWdliWr+7u
-tUY/Z/WoeopL0eWZdZpnuMjS/WCbpQCGx/A08fLVYYXwr2yn+jUCaTxX7W3WmiVpIbjnaE2u
-zrVINIJYGrVcl233/5RdS3PjtrLen1+hyiqpSk5EUtRjcRcQSUmMSZEmKFmeDUtjKx5VbMlX
-lutkzq+/aIAPNNDU5G5mrO4mCOLRaADdX2/puAvJzpYxTKSet4hNUxzIxB5mualouqIHF0Hx
-H62wXCQgtk5yBPaXIHPlZQvaNUNKZHAvG/VNIZlzS44H3ErrMsYEsfxFd5gkjDfAYxCjELWo
-RjZmDapYHpUseVyTKWqBLdSFMJ+MNyqi2lsTdHJfqQv05LnSRYLYGDB5wsBHRIx2S8+IlV4Y
-DT0FcharJkOP1Bl1+p4BT4AaVkUnlxFLrZLKKErAzanHG0TKbNaQQbLnbUVqdPISXDMZj5FB
-3hL7dSBPWVH+kT3Cu9CqqdFvjYUy3lK35ZKV5TyKjHFQrsS8T00a5B0wkat1KqGmN7DkVjmn
-t5BS/cVxmpXUPhW4u3idZrgeX6Iiq9uhpjYUa4n98hiKtTczVk+V8KZabeYkPRDfA965Rloc
-uT4nObpdoQyEDuMeWS6d6xwg9cdGYLKOla4/1hp1GrE1X/i8ylZBXMFZTRLVh0d6B4DETc8y
-OmRWLLiQIgmfVSqa7Uilgfjy6/HpLzLxe/P0Zs3ZIgIUvU0a3SwFcg4Ogs7byUIoWUcPUtl0
-HQS/1IkGRVNuW2hD2PGkkhbaKaN2NVJOWKtC662FWQNpTYIV+IiFjZ0IIDbEZ8sHbxwTSD5j
-peNiAC9FX3tD15/RR2RKgntjGsRBsQFOzzOaYh6kY0+/w+iovkmVMY1DiujaxDF2f2jJMxJl
-t2UP8cmNpAuVuoh7IpylgILhpTxeJNuEsVYvg2hfyoOj5frEB+T+kITza7j+DqKx01TXMC1P
-zxfXEc0eAeKYevXUiOM2uOjIqmsW327Pmt6ffaKVGveEkkmBOiYToMfI9a4V8s2Ktcd/6H16
-YISkkIGNanyGrhExgxqj9PyZZ0+g3rM/yYYMhb5+SqWoSeDPULo5SbZjkdrJ4P9tEOHEdDyz
-ezTmnrNIPIfEIdYl3N3OViwyyerX1+Ppr5+dX2S21WI5H9ToWZ+AA0wtRoOfu8VcS4+iGhWs
-ILMPbJxw9f3Jzkhvo3MhFtR6RAXI17OjtxO6aHhUi2XqOdKlpW2F8nJ8eUELgCpAJVA3NX6T
-V705XTOqVnMzoc5XGb00IsG0pHFEkNAqEqbYPGLU/SwSJG1oJBHkNLIAEmKBMOpiMpEaksMn
-uIjV4IN1AM7H9+v+6+vhY3BV7d2NrvXhqvyIwQf5z+PL4Gfoluv+8nK4mkOrbf6CiQ0kOuXC
-3yld6XubIQfIsh83xDoq6SQERmFwPmTq6bYxNyFeNFgQRAAHFSd0ExdlUKF0DEBIA2c0njpT
-m2OYJUBaBWXGH2lic9z70+X6NPxJFxDMMlsF+Kma2P+UdTgKxPXWALRWfpplgBMIo2fidbmw
-MfdMARQGoFOrTRxV9fE0KhfCMSD8wKoOWMRQJev4rXnKhtVBHJyApGGx+dz/EnHKFbQTibIv
-M/rh3ZS05xqBkLcXeySnCsSU2BR9w6oRnIzsb1L0GlSNKn48odbJRmD1mE593WWmYQDw2wxF
-wXUME9oHsWY0RIomI2Nhb9Sp4H7goXDnmhHzxHF1N2rMcHsfccc2Zyfovk2WiRmMADidZUS7
-UyIe1Z6S08uYUj0wckoMmos50Oc3qmJBV7SMe8+9s8kWanLL6MLszI6y0Y101tihrysbGS42
-DrMhtV1pJBZi1aeqVIj5RlZoJ5rSoeVdorOjVGypJoT81htSTQd0jxhlBYT7El3I/ZQghmLG
-T5v1FZwKe9WZzKEnb1tiXR6chH+oBkPuuVRdxXhzDcde9Nmz4Ja+KHZjx2ntsPx1fxVm6Nvt
-mgRpxqnXCeXk3lQEQsB3iO4Euk80N2i7qV8tWBonj33sPjU5vT1YhcjEnfZgZmgyo38gMyXd
-p1EpRMfJrA8jsvoWnAchMCbnKS/vnEnJyEDbVttMyymhQIHuEZMK6P6MoPN07FIfNr8fTYfU
-rMr9YEh0P4xSYvITMbsah47Y7eaEDSZQ8748ru/T3DJDzqffwCi/OfANTNOuzVkB5xk2x0pS
-1SrCUvxFq7yJJ9uovRrlh9OH2Bniillf1TgyEY0SAqalER3c0VrL0eZsESCpYNiOfBDsF62X
-yJEPaC3A0Iqt11GC36yy5DZmuMq5nfJlqEOxhg8V28UgjS7IFjypIqiJ/ZkQPJdUsWCONbOq
-jspTnV6FOXqJ9DpawSNVukxLiqG/XNQJ6kNdhS+quuS2qYI27WLzofxxHVTlrsLfmTKwinH7
-qBatChaHWpHzzcKOppWFLmIDJvdB0umxIIqp0mwbWd6WNY9HyQKqxC2O2P/i7JA6XW5RzFTK
-9dm2Ufm2RTa7MOZ5wrRKAPw+vrMKR6PJdGgdwtX0jhCn0MZBHFf4+dIZ32FNIPgutbsRu9Eo
-qU9+q1RsDhF6luJKWPOG99NPXaF1xas54OzT1zS6CHVgovGto+xNTyxkUWqBpRoV73UVBWA0
-N1QpYa4Hsohf4NZoU2AfrlElUHKclcncJJqZ1xXVfHsdSvJ0OX+c/7wOVt/fD5fftoOXz8PH
-lcrl+SPRpg7LIqqzc3cTomTLmLwxtB1AG0qVx7nujrWRWdvbCFzd+QEc24JEs8HFD9gLJ1mm
-svMYguCokzN9wVCj2yikpVkIehqLwiLC7FmfCaOJ8dj3RnTghyHl/xMphzqHxyKjEfk5gqPH
-mmmcIAyiybDvO4FLO5nqQtwdAvxp3lPILdAZTazF/7r9NnX+TRWwDX7YIQQ4nC1UYxqkeLKv
-HsSeYi0qeWfNtkCmwuXnz8sT6dLd5VzN43I8mpPanCykqV3K4mSe4ZywTcx6uqK0T2MAzPWU
-lnUxVb02dler4uM31I1nnRv27Xw9QIgyaSpFcAudFxkNTEs8rAp9f/t4IWzCXJgsyL4EQl9a
-ZcXUkwMrijQ0lthbweQAweRqKr6pPqpmq7XAb/VB2aZqu3n+PD0/QP6zzpZTDNEsP3OVlD07
-yST0vww+4MLhz+OTdjmrokDeXs8vgszP2ChtokEItnJyv5z3z0/nt74HSb4UWO/y3xeXw+Hj
-af96GNyfL/F9XyE/ElXH4P9Od30FWDzJjE5wbj5IjteD4s4/j69wbt42kjVGkriM9JsP+Aku
-kBgypX3vP3+DrND95/5VtFVvY5L8bmAIW7Q9hNgdX4+nv42CsAW9DTZ6XaknWp+JfzSUWrsq
-bVLltLau+onyuXQ2Z51WRyZpkcEXwpgKo5St6RscXT6PClBEjEYSQZLg9MZVxnqyqBYd9UcF
-Mc7jbWR+GgGb3bWD8hsmCo52ZdDd5ER/X5/Op94EL0pYpvz5AwE+1YwFZ8IyGFp083K9Jt9I
-hdZJeJ4OPlnT83LtGzkFak5RTmcTj3aAqEV46vvkxXDNBwcYfP/VMcQIF/96LgoXTDPdrTbW
-n4whGe5msdCdnzpaFcxJMtrOYbq5M9a44GJiweoC/24RL6QUJtfXWGK5p2qo/lxw8hlLVL6V
-w2xoRVxdRGwfzWCEmkyW2FWt8XdXa8TT0+H1cDm/HXCWWBbuEoSSUhPqmO/ufg7Ik748F/OU
-OSgjZMpGQ+s3jiOfp4EYh/LiL6GpWD5kLj6vD5lHBtOIri7CoXakpggzg4CR7TR/NPVuj1Zg
-dzseUtghd7vgjztniFPKpoHnks76acomI5QURBEMVG1BHBvZGVI2NdIJdJyZ7zs2Wrqi9z6h
-hwTLwGkfEcauXk1e3omtD/K1ANKc+UPSijNGnRqJp72wRwbX8+D5+HK87l/hglsoy6uhgVk4
-Gc6cgtpECJY7c/DwnIyH4ypWm0JWMLGaU1h5Qm422+mjPZYnW0a+gjpHjaCSg6DO/2mwmx1B
-AAGTDk5soRK5CN1ovChab6Mky6M2cSXllrkzsgPFa+burNo1Zk0ZuCMdcUAS9LQ3kjDT7mVg
-MUG3arBNHaMg8yD3Ri7qdxmQUEZ3NdBsT20gK9UXR7UVelqmnult4DXbmJi9NUca4ltYRs0j
-qBbitYqNl3WcLV3LTkDw9TP3OqUX6koeylU8zcLWe6qdCpBqAwmXssjh1DFpXOgKdFnSpc+g
-60jnfZVZFLxuYNXk7WLsDHFNasNx17RNM0NvzUZ9vi4u59NVGMXP2uIB600R8YAlEVGm9kS9
-TXl/FTanMc1XaTByabQT7QH1xLfD21FsI+pDeH0VKxMmltCV5USsGNGXzOLM02iMlyz4bS57
-QcCnPUcQMbvvyV0h9oSToX5hyYOwy5OBaEjfK5LC+dSoEBRSxGB9LXP9upbn3MMISF+msx3Z
-klbLqfuM43NznyF6chCI3cn5hAOu6iVRmSrGkS9md8ZI50RNlq8PnpTXRXAdpI7zvHmurVO3
-nbGYyCoqjQJpXt0VahNQj/srwEPJgYvWo3ah8If6TQbkNtCHj/g9Go3Rb3/mgvMZjwyqVyDC
-eIofG8/GhuGTZxDSrVP4aOTqqTbGrodBi4UG982E6xpr6pIGQZCPJvpFvtBJ4r2+ry8nSrWE
-DGmRm22o/IrEAHj+fHtrAC+wEqm3jk1gZzfHDJ6yaenoEEtWmea0379Zmxpr4fC/n4fT0/cB
-/366fjt8HP8LPp1hyH/Pk6Q5bVEHbsvD6XDZX8+X38Pjx/Vy/PoJtyn6QL0pp+73v+0/Dr8l
-QuzwPEjO5/fBz+I9vwz+bOvxodVDL/v/+2QHeHDzC9F8ePl+OX88nd8PoukMdTtPlw6K4Je/
-8ahd7Bh3Ic8zScOymipZPhaZsL21sZ1vvCHKQaMI5PxWTwuDjtMs8Pgw2eXSM6DI+ltAqc3D
-/vX6TVuEGurlOij218MgPZ+OV+OghC2i0QhDGuoz0hs6PZlZaqZLjmPypRpTr6eq5efb8fl4
-/a71aVfF1PUcytwOV6VuDK5CsHDRobIgucMeNEMUAQTB1qR/56rkru7Ar34bw6Tc6CI8nqDd
-Cvx2UUdaX6tUkZiRV3DcfjvsPz4vCgTuU7QeGuGxMcLjboR399+7jE8namNL7QnT3Virb7ze
-VnGQjtyxvjXWqcaYFhwx2MdysKOTEZ1BzIKEp+OQ7/rot56pYg8p9httpVzFJS6EpSBY+Ifo
-dE8fNSzc7JwhhmxkAMJE7Y8FA6BYtafzkM88vd0kZab3EeMTDyWwma+cia454Le+ZgepkNcd
-2oCgO3WJ3x52Vgwghoa81xKMsa+Vtcxdlg+HaFVWNPFhwyEVeNhaLjxxZ0M9GQTm4BRGkuaY
-JrQ9+VhyI6pSieRFRgek/MGZ4zqk51peDHHkTVn4ultRshVdPMKRpkKnjQBUrE/hAZP2F1tn
-zPHIDsjy0jPgxHJRaXcIVKqxY8fRcWLg9wgfdXgePiMS02SzjTl5r1kG3Bs5mk0mCRN8VFL3
-Yil6zCcdXSVH91YFwkR31hWEka/jO2y470xdbcHcBusEI7Ypiu5Mto1SuW80KQhYNBmjM70v
-ooVFczq6esDTX7kQ7F9Oh6s68SFXmbvpbEJdSEsG2hKzu+FsRuPlqFPClC11bJuOaJyjsaXn
-6N5d2pAH6ajM0gjCaZHdkQae7+rg1bWmlOXTNkbz6pZtdb3Y7frTkdezYDRSReo5egdiersK
-NZ4YVIv/q81a/f56+BttZeTGa4NwpZFgvUg+vR5PVjcSe791kMRrogE1GXV+XRVZKbEU8AJD
-vEfWoIlAGvw2+LjuT89iW3E64K9YFTLgiD4Il/DtxSYv0dZUEyghJggycDQClBsbdCyEX1D7
-W7qG9bp4EqaZwhs+vXy+ir/fzx9HmWdQnxTtPPqxODLO389XsRIfieN839XVRcgd5DoNm7+R
-sVUUu76h05N5VfB8OvlnnoBVSpnNRt3Ieov20s2tJM1nLcxcT3HqEbVxAlRdYY2Q+mWeD8fD
-lE4+MU9ztweyPExWQgFSSIZhzr0e7WHiruR6W8dBDtimaOuSOI5v/jaUVZ54WIj7YyM7vKT0
-JfYWTG9ijnWhnGRdqZ70R3qtV7k7HGv1+ZIzYRONLYKphaw+6ezD0/H0Qo96k1n37vnv4xuY
-7TAfno8wt56IXag0fLCtEYeskBf71VZH7Jw7yKzLlUNcY8EswslkhA01Xix69mp8N/NIk1Uw
-fKSzRRF6SgKxBmPH6m3ie8lwZ7fjza+vPWs+zq8QpNp/idK60dyUVIr28PYOZxR4QtmDvYxS
-zXsuTXaz4Vi3eBQFK5cyFTbwmGxJyaIusEuhcLEhJykuDeFA1b7taD3mWfxQqhyTDIdrILEy
-jZJqlQRhYLqNdewyoBJMAR+8ohel9ZgM+O7x/ZN1k3m3+7jlQ3KLV9WRyTiWr7iXUNoUKgYT
-dYxJ/cFCcAATz6Jl2iyqnYQ5C+6quY4OIvRMVJpONYg3L4KUl/P67oAO6JCCyot8+XBDpIzr
-IGrr8/PV44B/fv2Qri/diK4xxyrB1nZrHVHimgulr7PnQVrdQcrnDZ+7+El4og4sqMqsKFD0
-rc6sS+x6TuPxWJgqlBs9EmLJNsNlw1CL0900vYeamaUDCmHSfQ49foRcvmOVO12n1YrH9H0c
-koI26KlqFkRJBsfsRRgh4BbcF+0j4NcTMF2r6G4d4keV5O21QH64QDSUVIdv6rSLcky+JdYO
-UcabUtnp+XI+PqO5sQ6LrAcxphHXDAcSL0kG+3afIn+26qfbzioy3DzykFHoak3q6ghcJdOm
-0quHwfWyf5JLpz23hSbpjcgoNd/qhlItSWrKNwQ113G0WmoX8Nwcvdk11M7N8iU12BdcK1r8
-kJgz4LndJvbSeDUCUi/Ihiaz2tD5fDQRlbGKrlMltIvWlRK7Jk+iXZeOQNs+2R57YqslzPLl
-ZIZzDgG5JyUysFo3YnuHZnkP5mmV5dok4rHuvAu/QEEbjlk8iVPTL1+Q1F04JG7sGUKF+HuN
-QLiDbLMusZoXy191v2FhSCYM6fyaxSIq1FteblC2wkyPwIFfVaAi3Lu9AfayU7c3x1dhAUgF
-oye+UDijkehI8Avh+i4RSBmPRfcE2n1rtANvZjxPG1o1B0du0dok8HWcROCNfmfEW4AzJDgK
-PCKJnhFZCVVfPOYm5KAusRUrFXmGvuBtEFGnnRSJ7EzJadBEmjKYXcb9RmzcaUeYTZkt+Kgi
-4QkUs9INrsUGgCc1QrDhKNGdDIzRBbIt5GB77KEBnmAMkPBViPNlUiIseWAS0z1JMtqi0J6K
-12FE6XVNZCdaUH4kWbM0Khng0jc6Itg/fUOg+8L0CVY64r4i2Kq0flKtgR+Hz+czZBg8dEO9
-W6bFtDL6AvPEpEtCYaJQlxVRsdYb2VqrVptlVCZzuquLYFWtmNAx8ZKtSzCkULSW+q8ZDN1S
-bX+NNm1irmLpVCgb/VXrqHzIirsfy/Ucfm/WMeRxpaZHVj0gExjpF+WncHj6vMBOzYoDNCFc
-4bcYiPcbyPgpu5kyoKKCx+IT1iXIQ9QW1kFKMUQS8JT+GsGowhWg8yvQUqqrQEZO8ThQMviY
-MtiAcqnCNOLSwi6FVUw5PzeSeIwAWJXofFApkPlAJT4gfbIVEE73Pt29IeHp//wEt+fP5/+c
-fv2+f9v/+nreP78fT79+7P88iHKOz78CZsoLtP6vX9///El1yN3hcjq8yjQJB3mu0HXMvzrA
-u8FRGIXH/evxv/v6zr7ViHEJnyA0/DpDnsLAAO9tCeeMUHwMiUURRVhAS/xBvrxh99e99Xwx
-h1s7u2BcZK2iuXx/v0LyKbEhFqavSqnUfaQSFp+yVMlbKbJr0yMWkkRblN8Fcb7S1xSDYT+y
-YnrIn0a0RQv96KajkYJNR9gV760J66v8XZ7b0ne61dWUIOwnQlQYAWxJlFvT7QfwsoylxWrH
-2VzYEkZkcC21XDjuFGHS14z1JqGJ6Mympsv/KJO4+dBNuRI6ySqvDhJTy9Xn19fj029/Hb4P
-nuSwfAHs/+/WaCw4s8oJ7SERBfbrooAULEKiSJ7a7SwU0DZyfd+ZtTvCz+s3OHF+2kPC1egk
-aw4n8f85Xr8N2MfH+ekoWeH+urc+JdCzCTQdQtCClVgGmDvMs+QRrjSJHmDRMgYQDzo6sf6k
-6D6msLjahlgxoZu2zbfNpVPS2/lZN0WaGs3t1g10YOKGVtoDMyCGYRTMiY9Kiof+6mYL6pFc
-1OxWG+x6PMKaWRo9PhQ4xbsxA1ZaJxhdABCv5cbuPgAra1t1tf/41teoKbNbdUURd6r9zdpv
-DYyD5jrl8HG1X1YEnkt0oiSrpALjETnVA8+92cK7FSPRLGr+PGF3kUv1neJQhkj37tIZhvHC
-njXkstDbVWk4ImiUnH+jKcTedPV/lR3Jcty47ldynMN7KTvP8UwOOVASu1tpbdbibvuichw/
-T1fGjstL1Xz+YNECklAnc3DZBkCK4oKNEGDIa3Z0y9V58pODiRTn+lXTTPHho5agZ8Y7X0uN
-J35jTlWgeKsA+UGWtHXAx1p9PFXEO4GPtfpfCMwVWAuqUlSulTVo1/XpJ83FOOB3FQ+M1Z3D
-05+Ov2ViniFHAljfKkoPgJd3BJj8Oz+XS3CATG6zTC3Q4FEsTlxs0DTwYqwFLtzICD1XBpyo
-Zblm5JF3XdHvo/LGZI1Rs7x6ck3pHTSaSv+Ucton4byAfedmhHDh85TxbphLrkrDeHr5VWbU
-1OejcLougwd5haYnSjWpwoTcaLz8umnDW5r65vHbj4d3xdvD17vnMV7YsUvGbVo0aR9Xmgac
-1BF9a9PpGFXeMEZjsYTRpDwiAuCXFBN9Wrztqa4CLKqxvWZpjIhxCP5cTfjRbFie7om0LjR2
-ItFwaC6PaAIT6WDvLHZlC9K/y6gpM9vq13YTozPtkQOJrw/m48q33/46fH3G+pDPP95eD4+K
-ZpGl0cDkgr0JmJ/KXSTisyqq8CyR6KhJcz7eg1SwQ3Si8GmEj3IebAMsn3R6jOTY4xf1hfnt
-HCU8JFoQn5udynsv+yLFbCTmiABDKr5FThV1bcayvaM9g/E4spMz3TUriNmtenw4WCdgz1/i
-al3EMUjrnz3H5FhYJu7Xe/XTy+Yqx7qNQIA+qPZK5vMRyKqLsoGm6SKXbP/x5FMf23pwX9nA
-pV9t4+YPrGJyiVjsQ6P4fcwZNWNnPynh0YjF5mrg6LqwWO2F3fnojR99adMRxqDp/5MB+UKJ
-xF8O948conD7593t98Pj/Xyc2W3Zt1jWg517tROfEuIbTHXlYu2+rY2cmaB9QMFlyc5OPp07
-/r+ySEx95Q9Hj4XhnoHVYILtptWJRy/2L8zJEDK0xPiwQq2p+xozgskoDjNeuQyAKAXdEpNw
-iVkYL/hB7Szi6qpf1WXu+VgkSWaLBWxh275r08xlvGWdqNEUWE/H9kWXR05OMHbPyq/8pgCE
-OMW0OsZxLMVw/kDKOqDTc5ciNKLiPm273m3lRLfjv1OCOffgEwaOoY2utOSVDsGZ0tTUO7Mo
-FpEC1mgJe65rVrGjG8aykkAahZZvLIKv2HyVw6yxTGcuXl95JCh+qF16MX4ITWwIv0ZRAXI8
-cw7fNYs4DwpqptIzQrWeSZtU6c/0kYCWqSL21wiW08CQfq/miR2QFKRRac1Sc64HyQ14U2tx
-CDOy3cC58Ic31T50oVH8RRnBwsrNL99H16n0xgrM/loFw6yqcJxVcYCtxfKJWemYaxKKbeUZ
-jWIvxqK+NFmPRrB4V1PX5oojDKRsbMo4BY5xaXsimFF45QbcQkaaMIiKezpcBOF+rsveKW9d
-0OgZkVFNRw9HmTlNRRqtlN14+Yc4kyR13/bnZ5FbcJtwGITk1zISeOw3skUMpkotK42uM751
-EXNHScf4akm8zYVgpgUcN8d8ya771siEMfUFKoaiSV6lThGBkorVrUGqyQQ1dDmU2KqUdURb
-lHkuH50CXD1R5t5SjYoAQZ+eD4+v3zno8+Hu5T68VOQqrFRjQwg/BmJRSee+oCzQMsFKfxmI
-wmy6Cvl9keKiS237+WyakEFDCnqYKCj55vD8xHLe0HnNh7K0i2su8WGB36s8KlELtHUNdHpa
-J2wIP0O1WTnvi3M5+QgOf9399/XwMOgeL0R6y/BnMfPz69DT0ExThjIYg3mHHpyNldmdVjWM
-vt+ZuvgMmvofcs9UcLAxJCx3s3eD4Um9AVL/XMtigCYGKMBmzDRFm8cKqhzqGHiNnptWMh8f
-Q8PryyJzF5B6WZV1DIpuV3ATk6X48csHLfSVX7Uq08KpVyf72VmzpURHceWkL/vlFaElIRfJ
-4XY8R8nd17f7e7wxTR9fXp/fHtxEv1TMElVVCmgNgdNtLa/i55O/TzUqPytDiJtqEAvtfHj5
-RpnYhvjarvfWMCTDuz6izDHOanG9pw7dq2tKckocertOBH8L/5suE+dwggmKV9t43PWoAyTb
-Jtqe6KLGq5CHAKxTozphYpJSTBNhrkQhnY5Bce8uoJpNumrDESTpJVUxXBpz3xVwEuMNbQm/
-SzYAMdZnBRMeDrHMfJgtujwcBJ2m3POIzmXSf2Wbu3sAY3hcE57hGEoT+B2HeISpXyFokO+D
-vYiJR9ziVNwd4kkoawYPti13hWdUk61dplhiV038yx2X0Rcbt8ppGRDHtHWXcOXoVS6Ovhlr
-lrAYTrQ8gDruiAP/dADA5YDJidhIlWqQHKNoPXVO7bCmoN1lwDfDMY2YI+yDg1k6FOSaJwOE
-VTLQ2CLxZddQzD0Pn3yZ07WkH8cUUtUaU5iw1RrsonWwEpwVkEJqhELDvGFr8OCE/j7G4tqh
-LlaUQJW26bUlnZSNID8QZ974waxt8HOH4M4V6d+VP55e/vMOM2+8PbGQ2tw83kstDYtoIb8s
-HeXaAWNUaid8mozEfVl27eeTycAr421XTanBhAQvV+0iEvk0ZkDLJRk94VdopqGJOcEn9JsO
-JrY1zVZZ0d0F6BCgSSSlE7h4fMY4hA6k/bc3Kjgq+NAc8qSg3c2Ck7a1dvikix1IGOIws8vf
-Xp4Ojxj2AKN4eHu9+/sO/rh7vX3//r2so1aOxVbXpM1zTmOHh9WYpl+J3pU9oGnk72e0xLrW
-7m2w08fM0MEJmMi9nbnbMa5vQPBUptUvJYfH7hovGtJB03A90wphYN0EACx7nClyZUAfGYRp
-S9Tym8xaTeLP3eCk022PqHcw9UVjhU2OceJLNv88NbMhNvG5ldNa8I0m4c53Jm3DyNt/s5Mc
-ExEUHJmvkxRsmEGsxwuGNDBd9j/5675lubAABtsA2H3jK3eKIST41XfWHr7dvN68Q7XhFj2u
-immD/tvFBaoQG2zetQ/hsFKWrVP3JO5A4TKtQTMPP8gOYtsdfrEwYvdRcQ3TWLSgdk8f8oBo
-1pQZfeFRjlPeOgW+3KK2q+VWw5LPlhwA7UUTWsDzx5nOiN0XBJbKNlM9WktyzSeDjJ5aL2HX
-oGdvdJrR/l55W5U7IGCfk/YCb43ubY8Ev7nDHU2UZPQFJRiGhtzLjOS+Y5fvkQvFz6UrgINt
-0+ykSwt7WmDW/Ab6rYXBHGFNIN9fnm6eb9UdRAMGlYC0Fe1pvGRJvMo6P05kWGq/c+kIau9e
-XpG9oGiMMcn2zb3Ic7DtCtebRgB+pBqLz3h3gzLM7unVgzT+jKXVRM6rB9APZxs9MpT14Qt7
-ETRHAJnTE4WzLCbN2BhYsh+8xnQJEzuBBT6FsLEXKGaWjFd2jjo+KI6gLsbl5bDSlaz2CVsX
-b3BwYnCruTEW2TZpBROnS0O6CGt4g0h4nhZUmkdOByEar3bCyDenMaNAC9asjtB1HAhD4UcS
-rugFkel4oYMnsOg+PztmdNELbOw+6eSn4fxa7BZlP20TvnVbN3Gl3a/y1SvgW/kVG0HJ2bgK
-+orSNje6FkL4rvM/5pRYdrov40c7f2moNd4tta6jgOfFu3MiYJqoXz6mYH7BazgucLfhKq1z
-0CM0Ow4awtHMkpBXgOlTdihFZqag2YHAy9tMZRx8rSsRs1Imb2OXuo7zBOnUvmHYjQfi5Rqd
-yc7xsXlsYAcoG4muf9PF7QktU29aeEJx0yMv0pgoNPKd+Ue5dfAVB/v2/wFsU6bdfzoBAA==
+I'm also going to just leave these out for now, until we sort out the above
+issues.  Let me know if you're going to send another patch set, or 
 
---cNdxnHkX5QqsyA0e--
+> A lot of the work on the device tree and on the K210 drivers come from
+> the work by Sean Anderson for the U-Boot project support of the K210
+> SoC. Sean also helped with debugging many aspects of this series.
+>
+> A tree with all patches applied is available here:
+> https://github.com/damien-lemoal/linux, k210-sysctl-v22 branch.
+> A demonstration of this series used on a SiPeed MAIX Dock
+> board together with an I2C servo controller can be seen here:
+> https://damien-lemoal.github.io/linux-robot-arm/#example
+>
+> This tree was used to build userspace busybox environment image that is
+> then copied onto an SD card formatted with ext2:
+> https://github.com/damien-lemoal/buildroot
+> Of note is that running this userspace environment requires a revert of
+> commit 2217b982624680d19a80ebb4600d05c8586c4f96 introduced during the
+> 5.9 development cycle. Without this revert, execution of the init
+> process fails. A problem with the riscv port of elf2flt is suspected but
+> not confirmed. I am now starting to investigate this problem.
+>
+> Reviews and comments are as always much welcome.
+>
+> Changes from v9:
+> * Added patch 6 to avoid DTS compilation errors after patch 9 is
+>   applied and until patch 16 is applied.
+>
+> Changes from v8:
+> * Addressed Rob's comments on the sysctl driver bindings documentation
+> * Fixed a typo in the fpios driver bindings documentation
+>
+> Changes from v7:
+> * Removed the __init annotation for the drivers reset, pinctrl and
+>   sysctl drivers probe functions as suggested by Geert. Also removed
+>   the __refdata annotation for the struct platform_driver variables of
+>   these drivers.
+>
+> Changes from v6:
+> * Annotate struct platform_driver variables with __refdata to avoid
+>   section mismatch compilation errors
+> * Add empty sentinel entry to of_device_id tables of the sysctl, reset
+>   and pinctrl drivers.
+>
+> Changes from v5:
+> * Addressed Philipp's comment on the reset controller driver
+> * Added patch 6 to reduce the size of the clock driver patch
+>   (now patch 12).
+>
+> Changes from v4:
+> * Simplified reset controller driver using of_xlate callback as
+>   suggested by Philipp
+> * Fixed compilation error when using other configs than one of the
+>   nommu_k210 defconfigs.
+> * Addressed most clock driver comments from Stephen.
+> * Removed CONFIG_GPIO_SYSFS from defconfigs
+> * Rebased on 5.10-rc7
+>
+> Changes from V3:
+> * Add one entry per driver in MAINTAINERS file
+>
+> Changes from V2:
+> * Add MAINTAINERS file entry for the SoC support, listing myself as
+>   maintainer.
+> * Removed use of postcore_initcall() for declaring the drivers, using
+>   the regular builtin_platform_driver() instead.
+> * Fixed fpio pinctrl driver bindings documentation as commented by
+>   Geert: removed input-schmitt and added input-schmitt-disable, fixed
+>   typo and added input-disable and output-disable.
+> * Fixed device tree to have cs-gpios active low, as per the default, as
+>   active high necessity was an artifact of the gpio level double
+>   inversion bug fixed recently.
+> * Removed CONFIG_VT from defconfigs to reduce the kernel image size as
+>   suggested by Geert.
+>
+> Changes from v1:
+> * Improved DT bindings documentation
+> * SPI and GPIO patches removed from this series (and being processed
+>   directly through the relevant subsystems directly)
+> * Improved device trees
+> * Various cleanup and improvments of the drivers
+>
+> Damien Le Moal (22):
+>   riscv: Fix kernel time_init()
+>   riscv: Fix sifive serial driver
+>   riscv: Enable interrupts during syscalls with M-Mode
+>   riscv: Fix builtin DTB handling
+>   riscv: Use vendor name for K210 SoC support
+>   riscv: cleanup Canaan Kendryte K210 sysctl driver
+>   dt-bindings: Add Canaan vendor prefix
+>   dt-binding: clock: Document canaan,k210-clk bindings
+>   dt-bindings: reset: Document canaan,k210-rst bindings
+>   dt-bindings: pinctrl: Document canaan,k210-fpioa bindings
+>   dt-binding: mfd: Document canaan,k210-sysctl bindings
+>   riscv: Add Canaan Kendryte K210 clock driver
+>   riscv: Add Canaan Kendryte K210 reset controller
+>   riscv: Add Canaan Kendryte K210 FPIOA driver
+>   riscv: Update Canaan Kendryte K210 device tree
+>   riscv: Add SiPeed MAIX BiT board device tree
+>   riscv: Add SiPeed MAIX DOCK board device tree
+>   riscv: Add SiPeed MAIX GO board device tree
+>   riscv: Add SiPeed MAIXDUINO board device tree
+>   riscv: Add Kendryte KD233 board device tree
+>   riscv: Update Canaan Kendryte K210 defconfig
+>   riscv: Add Canaan Kendryte K210 SD card defconfig
+>
+> Damien Le Moal (23):
+>   riscv: Fix kernel time_init()
+>   riscv: Fix sifive serial driver
+>   riscv: Enable interrupts during syscalls with M-Mode
+>   riscv: Fix builtin DTB handling
+>   riscv: Use vendor name for K210 SoC support
+>   riscv: Fix Canaan Kendryte K210 device tree
+>   riscv: cleanup Canaan Kendryte K210 sysctl driver
+>   dt-bindings: Add Canaan vendor prefix
+>   dt-binding: clock: Document canaan,k210-clk bindings
+>   dt-bindings: reset: Document canaan,k210-rst bindings
+>   dt-bindings: pinctrl: Document canaan,k210-fpioa bindings
+>   dt-binding: mfd: Document canaan,k210-sysctl bindings
+>   riscv: Add Canaan Kendryte K210 clock driver
+>   riscv: Add Canaan Kendryte K210 reset controller
+>   riscv: Add Canaan Kendryte K210 FPIOA driver
+>   riscv: Update Canaan Kendryte K210 device tree
+>   riscv: Add SiPeed MAIX BiT board device tree
+>   riscv: Add SiPeed MAIX DOCK board device tree
+>   riscv: Add SiPeed MAIX GO board device tree
+>   riscv: Add SiPeed MAIXDUINO board device tree
+>   riscv: Add Kendryte KD233 board device tree
+>   riscv: Update Canaan Kendryte K210 defconfig
+>   riscv: Add Canaan Kendryte K210 SD card defconfig
+>
+>  .../bindings/clock/canaan,k210-clk.yaml       |   54 +
+>  .../bindings/mfd/canaan,k210-sysctl.yaml      |  109 ++
+>  .../bindings/pinctrl/canaan,k210-fpioa.yaml   |  171 +++
+>  .../bindings/reset/canaan,k210-rst.yaml       |   40 +
+>  .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+>  MAINTAINERS                                   |   23 +
+>  arch/riscv/Kconfig.socs                       |   33 +-
+>  arch/riscv/Makefile                           |    2 +-
+>  arch/riscv/boot/dts/Makefile                  |    2 +-
+>  arch/riscv/boot/dts/canaan/Makefile           |    5 +
+>  arch/riscv/boot/dts/canaan/k210.dtsi          |  621 ++++++++++
+>  arch/riscv/boot/dts/canaan/k210_generic.dts   |   46 +
+>  arch/riscv/boot/dts/canaan/k210_kd233.dts     |  178 +++
+>  arch/riscv/boot/dts/canaan/k210_maix_bit.dts  |  227 ++++
+>  arch/riscv/boot/dts/canaan/k210_maix_dock.dts |  229 ++++
+>  arch/riscv/boot/dts/canaan/k210_maix_go.dts   |  237 ++++
+>  arch/riscv/boot/dts/canaan/k210_maixduino.dts |  201 ++++
+>  arch/riscv/boot/dts/kendryte/Makefile         |    4 -
+>  arch/riscv/boot/dts/kendryte/k210.dts         |   23 -
+>  arch/riscv/boot/dts/kendryte/k210.dtsi        |  125 --
+>  arch/riscv/configs/nommu_k210_defconfig       |   39 +-
+>  .../riscv/configs/nommu_k210_sdcard_defconfig |   93 ++
+>  arch/riscv/include/asm/soc.h                  |   38 -
+>  arch/riscv/kernel/entry.S                     |    9 +
+>  arch/riscv/kernel/soc.c                       |   27 -
+>  arch/riscv/kernel/time.c                      |    3 +
+>  arch/riscv/mm/init.c                          |    6 +-
+>  drivers/clk/Kconfig                           |    8 +
+>  drivers/clk/Makefile                          |    1 +
+>  drivers/clk/clk-k210.c                        | 1005 +++++++++++++++++
+>  drivers/pinctrl/Kconfig                       |   13 +
+>  drivers/pinctrl/Makefile                      |    1 +
+>  drivers/pinctrl/pinctrl-k210.c                |  985 ++++++++++++++++
+>  drivers/reset/Kconfig                         |   10 +
+>  drivers/reset/Makefile                        |    1 +
+>  drivers/reset/reset-k210.c                    |  131 +++
+>  drivers/soc/Kconfig                           |    2 +-
+>  drivers/soc/Makefile                          |    2 +-
+>  drivers/soc/canaan/Kconfig                    |   12 +
+>  drivers/soc/canaan/Makefile                   |    3 +
+>  drivers/soc/canaan/k210-sysctl.c              |   78 ++
+>  drivers/soc/kendryte/Kconfig                  |   14 -
+>  drivers/soc/kendryte/Makefile                 |    3 -
+>  drivers/soc/kendryte/k210-sysctl.c            |  260 -----
+>  drivers/tty/serial/sifive.c                   |    1 +
+>  include/dt-bindings/clock/k210-clk.h          |   55 +-
+>  include/dt-bindings/pinctrl/k210-fpioa.h      |  276 +++++
+>  include/dt-bindings/reset/k210-rst.h          |   42 +
+>  include/soc/canaan/k210-sysctl.h              |   43 +
+>  49 files changed, 4962 insertions(+), 531 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/canaan,k210-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/canaan,k210-sysctl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+>  create mode 100644 Documentation/devicetree/bindings/reset/canaan,k210-rst.yaml
+>  create mode 100644 arch/riscv/boot/dts/canaan/Makefile
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210.dtsi
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_generic.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_kd233.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_bit.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_dock.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_maix_go.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k210_maixduino.dts
+>  delete mode 100644 arch/riscv/boot/dts/kendryte/Makefile
+>  delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dts
+>  delete mode 100644 arch/riscv/boot/dts/kendryte/k210.dtsi
+>  create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig
+>  create mode 100644 drivers/clk/clk-k210.c
+>  create mode 100644 drivers/pinctrl/pinctrl-k210.c
+>  create mode 100644 drivers/reset/reset-k210.c
+>  create mode 100644 drivers/soc/canaan/Kconfig
+>  create mode 100644 drivers/soc/canaan/Makefile
+>  create mode 100644 drivers/soc/canaan/k210-sysctl.c
+>  delete mode 100644 drivers/soc/kendryte/Kconfig
+>  delete mode 100644 drivers/soc/kendryte/Makefile
+>  delete mode 100644 drivers/soc/kendryte/k210-sysctl.c
+>  create mode 100644 include/dt-bindings/pinctrl/k210-fpioa.h
+>  create mode 100644 include/dt-bindings/reset/k210-rst.h
+>  create mode 100644 include/soc/canaan/k210-sysctl.h
