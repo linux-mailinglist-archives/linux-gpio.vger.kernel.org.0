@@ -2,110 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC3DE2F08A0
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 18:22:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1663B2F095A
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 20:36:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbhAJRTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 10 Jan 2021 12:19:35 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:36562 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbhAJRTd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 12:19:33 -0500
-Received: by mail-oi1-f176.google.com with SMTP id 9so17703953oiq.3;
-        Sun, 10 Jan 2021 09:19:17 -0800 (PST)
+        id S1726494AbhAJTfx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 10 Jan 2021 14:35:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbhAJTfx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 14:35:53 -0500
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C312FC061794
+        for <linux-gpio@vger.kernel.org>; Sun, 10 Jan 2021 11:35:12 -0800 (PST)
+Received: by mail-lj1-x235.google.com with SMTP id f11so1231750ljm.8
+        for <linux-gpio@vger.kernel.org>; Sun, 10 Jan 2021 11:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I52KVXRoRWFS2xNuCU7qX07YCV30BYynTAgvK65w47Y=;
+        b=et1XkaMavR3Kce8/efo37RhnUGmzWg+sVQi824OfRYkwwwKFEOEJge1k0p9oh38A95
+         2nvHjNnvKieqfblT4P1iFKj050qgYyVNfNYM7Vs7Qpaj1hL+1gU3MKBLJrt5VYld2lgQ
+         Y9ySV4YzAYu8WT3nHbbCwY37TOmsmZyxU6fqlLA8C/LQC8bnvFyAaiU5FdzmWru7SOY9
+         htzFYs52udpNP8JciP4o3u5uDXETgiCqEJs+HPK99uU1rHHRlLdaQpdYUUrohL9MvN6m
+         ymBMyFmXNDg6rHtX/K+z9BeWNLD2cXorThk9OxnxCYZbDHTJVpYo+TkFeHHatWFugyWb
+         KAFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=gGLZSHHlGA1PUUYqmOxNID2/4S4mZUn+8nzQlPpNCuA=;
-        b=hkfz1/IOfwdhFP/6RWe6Ju2Zt9Yn7ZdtLvlyIBNJrIc6sf8litNdHJ+gyI4btIvGHE
-         zP0O08L29YT0GtvO+PGFh+6DlX+0lhV/8EyVMJbgtmdSnmyLCE97rQc8JGq3lkEQZmCD
-         0hFrCrldxCc2PPHH3OMh3+WRRK5ZDFH42+YZ6NPaT24XafEXtiK5bm3t5rKB5AXxZAf/
-         RK0lCf/+P2QW6YSulTydY0G6UWL6i6FVLgY8Waft+dTo/hrLL5kXkYABtP7hR1Ig9vI0
-         zz8M3TrBcnuxa1TIhVG3JpuWNheG5aCDFtWOi855SXmapMJZMdr0x2xrewEnf2Mui9sD
-         Kr0w==
-X-Gm-Message-State: AOAM530QOhtni0NlS+sDkAuzKNP6zfLPNcq3zHW9BgK0IAm9KxQhi12B
-        E3YeCK304f2ic+xYaXUxbg==
-X-Google-Smtp-Source: ABdhPJyQrkmoBVKuplZ3vDcBNz2G3gF2OijsJ1+7LAIA/WCgpI94hj1rsqSLFXCbwri5tVWbkmB65Q==
-X-Received: by 2002:aca:ab8c:: with SMTP id u134mr8468312oie.15.1610299131979;
-        Sun, 10 Jan 2021 09:18:51 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 63sm3042386otx.2.2021.01.10.09.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 09:18:51 -0800 (PST)
-Received: (nullmailer pid 785281 invoked by uid 1000);
-        Sun, 10 Jan 2021 17:18:46 -0000
-From:   Rob Herring <robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I52KVXRoRWFS2xNuCU7qX07YCV30BYynTAgvK65w47Y=;
+        b=j0PqmfHlQP9AkCQmWOlrVOYNskqXh+oCb2BbJ6Lc510u9tDPXdnEuR2tf2DZPfbz05
+         Dv4uFBlKVLVRJ7lFDVqpYJgRGNTP+L8JHa7XY2Pwccxmebx9ZH50xOtKlNcPySBmgKj5
+         yeFtZC5/+hVrOc/dut7EfgB+s1bXZ6Oxs6VdHob/KD4IcIf9iNsrqwRpHg0zJ4y08oqM
+         UNo9ZpmyjitPkd3eVsGU4Yas8lhzpTqmEYIgmdbbHnCOj/VyGcYvxJjoevjVYaUEtKgk
+         vqvYO9VcPuF4zUnaWqfPbTdBPjGm+pkuT9fP9fuYIwE95JrPOVkprfFYg56Py8mWjHA6
+         asHQ==
+X-Gm-Message-State: AOAM5301SNCZkz8+qA2T7s9vSJhVQcQpkv6+ar6jJwIVIPX/JV6Our4g
+        KJINqZM0fdsYmXrhJlXfrjz2lD3bkre+jjJGO50neg==
+X-Google-Smtp-Source: ABdhPJyV0+I3TSxXiainTzHb4F0+/RU6U5onC7zlRc56humnIx8ItDkCN/DWSBdUQhyalpv+uHUyQDPKQavccEBA4nI=
+X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr6154964ljo.368.1610307311065;
+ Sun, 10 Jan 2021 11:35:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20210109140204.151340-1-angelogioacchino.delregno@somainline.org>
+ <20210109140204.151340-2-angelogioacchino.delregno@somainline.org>
+ <CACRpkdbETKnhgR2-T+s3ChY4v-C5ErdPEp2WcMSZHzJ=O-fHig@mail.gmail.com>
+ <111b918d-2b43-be81-2dbf-e984750b0ef7@somainline.org> <CACRpkdZXgN91jKBDvf=P5_6ObOaacQa2PGL3-jP1gBW__ZyOaA@mail.gmail.com>
+ <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
+In-Reply-To: <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 10 Jan 2021 20:35:00 +0100
+Message-ID: <CACRpkdYmVpEZMruu3UcqiGr2q7xSdTQKmwnu7eq2-MPJte8ATA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@somainline.org>
-Cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        martin.botka@somainline.org, marijn.suijten@somainline.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        phone-devel@vger.kernel.org, konrad.dybcio@somainline.org,
-        linux-gpio@vger.kernel.org
-In-Reply-To: <20210109140204.151340-3-angelogioacchino.delregno@somainline.org>
-References: <20210109140204.151340-1-angelogioacchino.delregno@somainline.org> <20210109140204.151340-3-angelogioacchino.delregno@somainline.org>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
-Date:   Sun, 10 Jan 2021 11:18:46 -0600
-Message-Id: <1610299126.040526.785280.nullmailer@robh.at.kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
+        martin.botka@somainline.org, phone-devel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 09 Jan 2021 15:02:04 +0100, AngeloGioacchino Del Regno wrote:
-> Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-> ---
->  .../pinctrl/awinic,aw9523-pinctrl.yaml        | 111 ++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
-> 
+On Sun, Jan 10, 2021 at 3:32 PM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@somainline.org> wrote:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> So, I've retried some basic usage of the regcache, relevant snippets here:
+> static bool aw9523_volatile_reg(struct device *dev, unsigned int reg)
+> {
+>
+>         return reg == AW9523_REG_IN_STATE(0) ||
+>                reg == AW9523_REG_IN_STATE(AW9523_PINS_PER_PORT) ||
+>                reg == AW9523_REG_CHIPID;
+> }
+(...)
+> Since REG_IN_STATE is used to read the GPIO input level, it's not
+> cacheable,
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:102:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
+Fair enough.
 
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:  while scanning a block scalar
-  in "<unicode string>", line 94, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 102, column 1
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
-Traceback (most recent call last):
-  File "/usr/local/bin/dt-extract-example", line 45, in <module>
-    binding = yaml.load(open(args.yamlfile, encoding='utf-8').read())
-  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/main.py", line 343, in load
-    return constructor.get_single_data()
-  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/constructor.py", line 111, in get_single_data
-    node = self.composer.get_single_node()
-  File "_ruamel_yaml.pyx", line 706, in _ruamel_yaml.CParser.get_single_node
-  File "_ruamel_yaml.pyx", line 724, in _ruamel_yaml.CParser._compose_document
-  File "_ruamel_yaml.pyx", line 775, in _ruamel_yaml.CParser._compose_node
-  File "_ruamel_yaml.pyx", line 889, in _ruamel_yaml.CParser._compose_mapping_node
-  File "_ruamel_yaml.pyx", line 773, in _ruamel_yaml.CParser._compose_node
-  File "_ruamel_yaml.pyx", line 848, in _ruamel_yaml.CParser._compose_sequence_node
-  File "_ruamel_yaml.pyx", line 904, in _ruamel_yaml.CParser._parse_next_event
-ruamel.yaml.scanner.ScannerError: while scanning a block scalar
-  in "<unicode string>", line 94, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 102, column 1
-make[1]: *** [Documentation/devicetree/bindings/Makefile:20: Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts] Error 1
-make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts'
-make: *** [Makefile:1370: dt_binding_check] Error 2
+> then CHIPID was set as not cacheable for safety: that may be
+> avoided, but that may make no sense.. since it's a one-time readout for
+> init putposes, it'd be useless to keep it cached.
 
-See https://patchwork.ozlabs.org/patch/1424120
+I guess.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+> Then, the set_bit/clear_bit in aw9523_irq_mask(), aw9523_irq_unmask were
+> replaced with calls to regmap_update_bits_async, example:
+>
+>         regmap_update_bits_async(awi->regmap,
+>                                  AW9523_REG_INTR_DIS(d->hwirq),
+>                                  BIT(n), BIT(n));
+>
+> Where of course the value is either BIT(n) or 0 for mask and unmask
+> respectively.
+> Also, the bus_sync_unlock callback was changed as follows:
+>
+> static void aw9523_irq_bus_sync_unlock(struct irq_data *d)
+>
+> {
+>       struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
+>       regcache_mark_dirty(awi->regmap);
+>       regcache_sync_region(awi->regmap, AW9523_REG_INTR_DIS(0),
+>                            AW9523_REG_INTR_DIS(AW9523_PINS_PER_PORT));
+>        mutex_unlock(&awi->irq->lock);
+(...)
+> One of the biggest / oddest issues that I get when trying to use
+> regcache is that I'm getting badbadbad scheduling while atomic warnings
+> all over and I don't get why, since regcache_default_sync is just
+> calling _regmap_write, which is exactly what (non _prefix) regmap_write
+> also calls...
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+OK that is the real problem to solve then.
 
-pip3 install dtschema --upgrade
+> As a reference, this is one out of "many" (as you can imagine) stacktraces:
+>
+> <3>[    1.061428] BUG: scheduling while atomic: kworker/3:1/119/0x00000000
+(...)
+> <4>[    1.063134]  wait_for_completion_timeout+0x8c/0x110
+> <4>[    1.063257]  qup_i2c_wait_for_complete.isra.18+0x1c/0x80
+> <4>[    1.063429]  qup_i2c_xfer_v2_msg+0x2d4/0x3f0
+> <4>[    1.063543]  qup_i2c_xfer_v2+0x290/0xa28
+> <4>[    1.063652]  __i2c_transfer+0x16c/0x380
+> <4>[    1.063798]  i2c_transfer+0x5c/0x138
+> <4>[    1.063903]  i2c_transfer_buffer_flags+0x58/0x80
+> <4>[    1.064060]  regmap_i2c_write+0x1c/0x50
+> <4>[    1.064168]  _regmap_raw_write_impl+0x35c/0x688
+> <4>[    1.064285]  _regmap_bus_raw_write+0x64/0x80
+> <4>[    1.064440]  _regmap_write+0x58/0xa8
+> <4>[    1.064545]  regcache_default_sync+0xcc/0x1a0
+> <4>[    1.064660]  regcache_sync_region+0xdc/0xe8
+> <4>[    1.064811]  aw9523_irq_bus_sync_unlock+0x30/0x48
+> <4>[    1.064931]  __setup_irq+0x798/0x890
+> <4>[    1.065034]  request_threaded_irq+0xe0/0x198
+> <4>[    1.065188]  devm_request_threaded_irq+0x78/0xf8
+> <4>[    1.065311]  gpio_keyboard_probe+0x2a8/0x468
 
-Please check and re-submit.
+scheduling while atomic happens when this trace gets called with interrupts
+disabled, usually because someone has taken a spinlock.
 
+Looking in __setup_irq() it looks safe.
+
+I would turn on lock debugging (lockdep) and see if I can find it that way.
+
+Yours,
+Linus Walleij
