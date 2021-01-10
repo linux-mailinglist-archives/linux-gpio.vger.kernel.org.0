@@ -2,150 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B642F0895
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 18:16:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3DE2F08A0
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 18:22:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbhAJRPC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 10 Jan 2021 12:15:02 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:42430 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbhAJRPB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 10 Jan 2021 12:15:01 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id DD3584400C5;
-        Sun, 10 Jan 2021 19:14:17 +0200 (IST)
-References: <cover.1609917364.git.baruch@tkos.co.il>
- <22d1fe7b2137e3a2660ab2e6f1f127d41493fb16.1609917364.git.baruch@tkos.co.il>
- <20210107142953.ifg5yuy3dsblgsju@pengutronix.de>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/4] gpio: mvebu: fix pwm get_state period calculation
-In-reply-to: <20210107142953.ifg5yuy3dsblgsju@pengutronix.de>
-Date:   Sun, 10 Jan 2021 19:14:17 +0200
-Message-ID: <87wnwkyas6.fsf@tarshish>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        id S1726821AbhAJRTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 10 Jan 2021 12:19:35 -0500
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:36562 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbhAJRTd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 12:19:33 -0500
+Received: by mail-oi1-f176.google.com with SMTP id 9so17703953oiq.3;
+        Sun, 10 Jan 2021 09:19:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=gGLZSHHlGA1PUUYqmOxNID2/4S4mZUn+8nzQlPpNCuA=;
+        b=hkfz1/IOfwdhFP/6RWe6Ju2Zt9Yn7ZdtLvlyIBNJrIc6sf8litNdHJ+gyI4btIvGHE
+         zP0O08L29YT0GtvO+PGFh+6DlX+0lhV/8EyVMJbgtmdSnmyLCE97rQc8JGq3lkEQZmCD
+         0hFrCrldxCc2PPHH3OMh3+WRRK5ZDFH42+YZ6NPaT24XafEXtiK5bm3t5rKB5AXxZAf/
+         RK0lCf/+P2QW6YSulTydY0G6UWL6i6FVLgY8Waft+dTo/hrLL5kXkYABtP7hR1Ig9vI0
+         zz8M3TrBcnuxa1TIhVG3JpuWNheG5aCDFtWOi855SXmapMJZMdr0x2xrewEnf2Mui9sD
+         Kr0w==
+X-Gm-Message-State: AOAM530QOhtni0NlS+sDkAuzKNP6zfLPNcq3zHW9BgK0IAm9KxQhi12B
+        E3YeCK304f2ic+xYaXUxbg==
+X-Google-Smtp-Source: ABdhPJyQrkmoBVKuplZ3vDcBNz2G3gF2OijsJ1+7LAIA/WCgpI94hj1rsqSLFXCbwri5tVWbkmB65Q==
+X-Received: by 2002:aca:ab8c:: with SMTP id u134mr8468312oie.15.1610299131979;
+        Sun, 10 Jan 2021 09:18:51 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 63sm3042386otx.2.2021.01.10.09.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Jan 2021 09:18:51 -0800 (PST)
+Received: (nullmailer pid 785281 invoked by uid 1000);
+        Sun, 10 Jan 2021 17:18:46 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        martin.botka@somainline.org, marijn.suijten@somainline.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        phone-devel@vger.kernel.org, konrad.dybcio@somainline.org,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <20210109140204.151340-3-angelogioacchino.delregno@somainline.org>
+References: <20210109140204.151340-1-angelogioacchino.delregno@somainline.org> <20210109140204.151340-3-angelogioacchino.delregno@somainline.org>
+Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
+Date:   Sun, 10 Jan 2021 11:18:46 -0600
+Message-Id: <1610299126.040526.785280.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
+On Sat, 09 Jan 2021 15:02:04 +0100, AngeloGioacchino Del Regno wrote:
+> Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> ---
+>  .../pinctrl/awinic,aw9523-pinctrl.yaml        | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+> 
 
-Thanks for your review comments.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-On Thu, Jan 07 2021, Uwe Kleine-König wrote:
-> On Wed, Jan 06, 2021 at 09:37:37AM +0200, Baruch Siach wrote:
->> The period is the sum of on and off values.
->> 
->> Reported-by: Russell King <linux@armlinux.org.uk>
->> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->> ---
->> v6: divide (on + off) sum to reduce rounding error (RMK)
->> ---
->>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
->>  1 file changed, 8 insertions(+), 11 deletions(-)
->> 
->> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
->> index 672681a976f5..a912a8fed197 100644
->> --- a/drivers/gpio/gpio-mvebu.c
->> +++ b/drivers/gpio/gpio-mvebu.c
->> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
->>  	else
->>  		state->duty_cycle = 1;
->>  
->> +	val = (unsigned long long) u; /* on duration */
->>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
->> -	val = (unsigned long long) u * NSEC_PER_SEC;
->> +	val += (unsigned long long) u; /* period = on + off duration */
->> +	val *= NSEC_PER_SEC;
->>  	do_div(val, mvpwm->clk_rate);
->> -	if (val < state->duty_cycle) {
->> +	if (val > UINT_MAX)
->> +		state->period = UINT_MAX;
->
-> state->period is an u64, so there is no reason to not use values greater
-> than UINT_MAX.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:102:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
 
-I'll post a patch for that.
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:  while scanning a block scalar
+  in "<unicode string>", line 94, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 102, column 1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-extract-example", line 45, in <module>
+    binding = yaml.load(open(args.yamlfile, encoding='utf-8').read())
+  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/constructor.py", line 111, in get_single_data
+    node = self.composer.get_single_node()
+  File "_ruamel_yaml.pyx", line 706, in _ruamel_yaml.CParser.get_single_node
+  File "_ruamel_yaml.pyx", line 724, in _ruamel_yaml.CParser._compose_document
+  File "_ruamel_yaml.pyx", line 775, in _ruamel_yaml.CParser._compose_node
+  File "_ruamel_yaml.pyx", line 889, in _ruamel_yaml.CParser._compose_mapping_node
+  File "_ruamel_yaml.pyx", line 773, in _ruamel_yaml.CParser._compose_node
+  File "_ruamel_yaml.pyx", line 848, in _ruamel_yaml.CParser._compose_sequence_node
+  File "_ruamel_yaml.pyx", line 904, in _ruamel_yaml.CParser._parse_next_event
+ruamel.yaml.scanner.ScannerError: while scanning a block scalar
+  in "<unicode string>", line 94, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 102, column 1
+make[1]: *** [Documentation/devicetree/bindings/Makefile:20: Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts] Error 1
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts'
+make: *** [Makefile:1370: dt_binding_check] Error 2
 
->> +	else if (val)
->> +		state->period = val;
->> +	else
->>  		state->period = 1;
->
-> This case assigning 1 looks strange. An explanation in a comment would
-> be great. I wonder if this is a hardware property or if it is only used
-> to not report 0 in case that mvpwm->clk_rate is high.
+See https://patchwork.ozlabs.org/patch/1424120
 
-I guess that this is because 0 period does not make sense for pwm. It is
-like a zero divisor. What is the common behavior?
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-> I found a few further shortcommings in the mvebu_pwm implementation while
-> looking through it:
->
->  a) The rounding problem that RMK found is also present in .apply
->
->     There we have:
->
->     	val = clk_rate * (period - duty_cycle) / NSEC_PER_SEC
->
->     while
->
->     	val = clk_rate * period / NSEC_PER_SEC - on
->
->     would be more exact.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-I'll post a patch for that.
+pip3 install dtschema --upgrade
 
->  b) To make
->
->  	pwm_get_state(pwm, &state);
-> 	pwm_apply_state(pwm, &state);
->
->     idempotent .get_state should round up the division results.
+Please check and re-submit.
 
-I'll post a patch for that as well.
-
->  c) .apply also has a check for val being zero and configures at least 1
->     cycle for the on and off intervals. Is this a hardware imposed
->     limitation? 
-
-Not sure what was the original intention. Maybe Andrew can explain.
-
-On my hardware (Armada 8040), zero 'on' value does not work as
-expected. There is a blink once in a long while. Maybe this is the
-reason?
-
-As I understand, all these issues should not block this patch, right?
-
-BTW, the key you used to sign your message is expired since 2020-01-10
-on the key server I use (keys.gnupg.net). Where can I find your updated
-key?
-
-Thanks,
-baruch
-
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
