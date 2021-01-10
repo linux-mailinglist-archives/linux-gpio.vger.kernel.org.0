@@ -2,268 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA5F42F07A7
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 15:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94B642F0895
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jan 2021 18:16:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbhAJO5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 10 Jan 2021 09:57:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbhAJO5h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 09:57:37 -0500
-Received: from relay05.th.seeweb.it (relay05.th.seeweb.it [IPv6:2001:4b7a:2000:18::166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B333FC061786;
-        Sun, 10 Jan 2021 06:56:41 -0800 (PST)
-Received: from IcarusMOD.eternityproject.eu (unknown [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S1726768AbhAJRPC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 10 Jan 2021 12:15:02 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:42430 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbhAJRPB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 10 Jan 2021 12:15:01 -0500
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 5CC693F0B0;
-        Sun, 10 Jan 2021 15:56:39 +0100 (CET)
-Subject: Re: [PATCH 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
- Expander
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
-        martin.botka@somainline.org, phone-devel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-References: <20210109140204.151340-1-angelogioacchino.delregno@somainline.org>
- <20210109140204.151340-2-angelogioacchino.delregno@somainline.org>
- <CACRpkdbETKnhgR2-T+s3ChY4v-C5ErdPEp2WcMSZHzJ=O-fHig@mail.gmail.com>
- <111b918d-2b43-be81-2dbf-e984750b0ef7@somainline.org>
- <CACRpkdZXgN91jKBDvf=P5_6ObOaacQa2PGL3-jP1gBW__ZyOaA@mail.gmail.com>
- <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
-Message-ID: <8d9d5710-88a9-56af-9dd3-58478e8b2c7c@somainline.org>
-Date:   Sun, 10 Jan 2021 15:56:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        by mx.tkos.co.il (Postfix) with ESMTPS id DD3584400C5;
+        Sun, 10 Jan 2021 19:14:17 +0200 (IST)
+References: <cover.1609917364.git.baruch@tkos.co.il>
+ <22d1fe7b2137e3a2660ab2e6f1f127d41493fb16.1609917364.git.baruch@tkos.co.il>
+ <20210107142953.ifg5yuy3dsblgsju@pengutronix.de>
+User-agent: mu4e 1.4.13; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] gpio: mvebu: fix pwm get_state period calculation
+In-reply-to: <20210107142953.ifg5yuy3dsblgsju@pengutronix.de>
+Date:   Sun, 10 Jan 2021 19:14:17 +0200
+Message-ID: <87wnwkyas6.fsf@tarshish>
 MIME-Version: 1.0
-In-Reply-To: <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 10/01/21 15:32, AngeloGioacchino Del Regno ha scritto:
-> Il 10/01/21 01:24, Linus Walleij ha scritto:
->> On Sun, Jan 10, 2021 at 12:11 AM AngeloGioacchino Del Regno
->> <angelogioacchino.delregno@somainline.org> wrote:
->>> Il 09/01/21 23:11, Linus Walleij ha scritto:
->>
->>>> The major review comment is that it'd be nice if you look into
->>>> using regmaps register cache instead of rolling your own,
->>>> and also possibly using regmaps locking rather than your own
->>>> as a result of that.
->>>>
->>> Actually, I really tried to use regmap's FLAT register cache and after
->>> many, many tries... I had to give up. I just couldn't get it working. :(
->>
->> This needs to be root-caused. The register cache in regmap is for
->> using not for decoration.
->>
->> What is the problems you are seeing?
->>
->> If it is fundamentally so that regmap has limitations that is one thing,
->> but I want to rule out that we're just not using it wrong or that there
->> is a bug in it that we should fix.
->>
->> Looping in Mark Brown the regmap maintainer.
->>
->> Yours,
->> Linus Walleij
->>
-> 
-> Oh don't misunderstand me, I would really be happy to make use of the 
-> regmap register cache, it's a nice one.
-> 
-> So, I've retried some basic usage of the regcache, relevant snippets here:
-> static bool aw9523_volatile_reg(struct device *dev, unsigned int reg)
-> 
-> {
-> 
->      return reg == AW9523_REG_IN_STATE(0) ||
-> 
->             reg == AW9523_REG_IN_STATE(AW9523_PINS_PER_PORT) ||
-> 
->             reg == AW9523_REG_CHIPID;
-> 
-> }
-> 
-> static const struct regmap_config aw9523_regmap = {
-> 
-> ....
->      .volatile_reg = aw9523_volatile_reg,
-> 
-> 
->      .cache_type = REGCACHE_FLAT,
-> 
-> ....
-> 
-> }
-> 
-> Since REG_IN_STATE is used to read the GPIO input level, it's not 
-> cacheable, then CHIPID was set as not cacheable for safety: that may be 
-> avoided, but that may make no sense.. since it's a one-time readout for 
-> init putposes, it'd be useless to keep it cached.
-> 
-> Then, the set_bit/clear_bit in aw9523_irq_mask(), aw9523_irq_unmask were 
-> replaced with calls to regmap_update_bits_async, example:
-> 
->      regmap_update_bits_async(awi->regmap,
-> 
->                   AW9523_REG_INTR_DIS(d->hwirq),
-> 
->                   BIT(n), BIT(n));
-> 
-> 
-> 
-> Where of course the value is either BIT(n) or 0 for mask and unmask 
-> respectively.
-> Also, the bus_sync_unlock callback was changed as follows:
-> 
-> static void aw9523_irq_mask(struct irq_data *d)
-> 
-> {
-> 
->      struct aw9523 *awi =
->          gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> 
->      unsigned int n = d->hwirq % AW9523_PINS_PER_PORT;
-> 
-> 
-> 
->      regmap_update_bits_async(awi->regmap,
-> 
->                   AW9523_REG_INTR_DIS(d->hwirq),
-> 
->                   BIT(n), BIT(n));
-> 
-> }
-Sorry, wrong paste! This is the right one:
-static void aw9523_irq_bus_sync_unlock(struct irq_data *d)
+Hi Uwe,
 
-{
+Thanks for your review comments.
 
-	struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
+On Thu, Jan 07 2021, Uwe Kleine-König wrote:
+> On Wed, Jan 06, 2021 at 09:37:37AM +0200, Baruch Siach wrote:
+>> The period is the sum of on and off values.
+>> 
+>> Reported-by: Russell King <linux@armlinux.org.uk>
+>> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
+>> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+>> ---
+>> v6: divide (on + off) sum to reduce rounding error (RMK)
+>> ---
+>>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
+>>  1 file changed, 8 insertions(+), 11 deletions(-)
+>> 
+>> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+>> index 672681a976f5..a912a8fed197 100644
+>> --- a/drivers/gpio/gpio-mvebu.c
+>> +++ b/drivers/gpio/gpio-mvebu.c
+>> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
+>>  	else
+>>  		state->duty_cycle = 1;
+>>  
+>> +	val = (unsigned long long) u; /* on duration */
+>>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
+>> -	val = (unsigned long long) u * NSEC_PER_SEC;
+>> +	val += (unsigned long long) u; /* period = on + off duration */
+>> +	val *= NSEC_PER_SEC;
+>>  	do_div(val, mvpwm->clk_rate);
+>> -	if (val < state->duty_cycle) {
+>> +	if (val > UINT_MAX)
+>> +		state->period = UINT_MAX;
+>
+> state->period is an u64, so there is no reason to not use values greater
+> than UINT_MAX.
 
+I'll post a patch for that.
 
+>> +	else if (val)
+>> +		state->period = val;
+>> +	else
+>>  		state->period = 1;
+>
+> This case assigning 1 looks strange. An explanation in a comment would
+> be great. I wonder if this is a hardware property or if it is only used
+> to not report 0 in case that mvpwm->clk_rate is high.
 
-	regcache_mark_dirty(awi->regmap);
+I guess that this is because 0 period does not make sense for pwm. It is
+like a zero divisor. What is the common behavior?
 
-	regcache_sync_region(awi->regmap, AW9523_REG_INTR_DIS(0),
+> I found a few further shortcommings in the mvebu_pwm implementation while
+> looking through it:
+>
+>  a) The rounding problem that RMK found is also present in .apply
+>
+>     There we have:
+>
+>     	val = clk_rate * (period - duty_cycle) / NSEC_PER_SEC
+>
+>     while
+>
+>     	val = clk_rate * period / NSEC_PER_SEC - on
+>
+>     would be more exact.
 
-			     AW9523_REG_INTR_DIS(AW9523_PINS_PER_PORT));
+I'll post a patch for that.
 
-	mutex_unlock(&awi->irq->lock);
+>  b) To make
+>
+>  	pwm_get_state(pwm, &state);
+> 	pwm_apply_state(pwm, &state);
+>
+>     idempotent .get_state should round up the division results.
 
-}
+I'll post a patch for that as well.
 
-> 
-> One of the biggest / oddest issues that I get when trying to use 
-> regcache is that I'm getting badbadbad scheduling while atomic warnings 
-> all over and I don't get why, since regcache_default_sync is just 
-> calling _regmap_write, which is exactly what (non _prefix) regmap_write 
-> also calls...
-> 
-> As a reference, this is one out of "many" (as you can imagine) stacktraces:
-> 
-> <3>[    1.061428] BUG: scheduling while atomic: kworker/3:1/119/0x00000000
-> 
-> <4>[    1.061575] Modules linked in:
-> 
-> <4>[    1.061716] CPU: 3 PID: 119 Comm: kworker/3:1 Tainted: G        W 
->          5.10.0-rc3-31949-ge1680e3101bc-dirty #1162
-> 
-> <4>[    1.061956] Hardware name: F(x)tec Pro1 (QX1000) (DT)
-> 
-> <4>[    1.062081] Workqueue: events deferred_probe_work_func
-> 
-> <4>[    1.062205] Call trace:
-> 
-> <4>[    1.062333]  dump_backtrace+0x0/0x1e0
-> 
-> <4>[    1.062439]  show_stack+0x14/0x60
-> 
-> <4>[    1.062539]  dump_stack+0xd4/0x12c
-> 
-> <4>[    1.062680]  __schedule_bug+0x50/0x70
-> 
-> <4>[    1.062785]  __schedule+0x618/0x650
-> 
-> <4>[    1.062888]  schedule+0x6c/0xf8
-> 
-> <4>[    1.062985]  schedule_timeout+0x1d0/0x260
-> 
-> <4>[    1.063134]  wait_for_completion_timeout+0x8c/0x110
-> 
-> <4>[    1.063257]  qup_i2c_wait_for_complete.isra.18+0x1c/0x80
-> 
-> <4>[    1.063429]  qup_i2c_xfer_v2_msg+0x2d4/0x3f0
-> 
-> <4>[    1.063543]  qup_i2c_xfer_v2+0x290/0xa28
-> 
-> <4>[    1.063652]  __i2c_transfer+0x16c/0x380
-> 
-> <4>[    1.063798]  i2c_transfer+0x5c/0x138
-> 
-> <4>[    1.063903]  i2c_transfer_buffer_flags+0x58/0x80
-> 
-> <4>[    1.064060]  regmap_i2c_write+0x1c/0x50
-> 
-> <4>[    1.064168]  _regmap_raw_write_impl+0x35c/0x688
-> 
-> <4>[    1.064285]  _regmap_bus_raw_write+0x64/0x80
-> 
-> <4>[    1.064440]  _regmap_write+0x58/0xa8
-> 
-> <4>[    1.064545]  regcache_default_sync+0xcc/0x1a0
-> 
-> <4>[    1.064660]  regcache_sync_region+0xdc/0xe8
-> 
-> <4>[    1.064811]  aw9523_irq_bus_sync_unlock+0x30/0x48
-> 
-> <4>[    1.064931]  __setup_irq+0x798/0x890
-> 
-> <4>[    1.065034]  request_threaded_irq+0xe0/0x198
-> 
-> <4>[    1.065188]  devm_request_threaded_irq+0x78/0xf8
-> 
-> <4>[    1.065311]  gpio_keyboard_probe+0x2a8/0x468
-> 
-> <4>[    1.065465]  platform_drv_probe+0x50/0xa0
-> 
-> <4>[    1.065576]  really_probe+0x290/0x4e8
-> 
-> <4>[    1.065682]  driver_probe_device+0xf4/0x160
-> 
-> <4>[    1.065834]  __device_attach_driver+0x98/0x110
-> 
-> <4>[    1.065950]  bus_for_each_drv+0x64/0xc8
-> 
-> <4>[    1.066063]  __device_attach+0xe4/0x168
-> 
-> <4>[    1.066211]  device_initial_probe+0x10/0x18
-> 
-> <4>[    1.066325]  bus_probe_device+0x90/0x98
-> 
-> <4>[    1.066434]  deferred_probe_work_func+0x88/0xe0
-> 
-> <4>[    1.066591]  process_one_work+0x1e4/0x358
-> 
-> <4>[    1.066702]  worker_thread+0x208/0x478
-> 
-> <4>[    1.073273]  kthread+0x14c/0x150
-> 
-> <4>[    1.079858]  ret_from_fork+0x10/0x18
-> 
-> 
-> 
-> P.S.: Infinite thanks for being so nice and helpful!
+>  c) .apply also has a check for val being zero and configures at least 1
+>     cycle for the on and off intervals. Is this a hardware imposed
+>     limitation? 
 
+Not sure what was the original intention. Maybe Andrew can explain.
+
+On my hardware (Armada 8040), zero 'on' value does not work as
+expected. There is a blink once in a long while. Maybe this is the
+reason?
+
+As I understand, all these issues should not block this patch, right?
+
+BTW, the key you used to sign your message is expired since 2020-01-10
+on the key server I use (keys.gnupg.net). Where can I find your updated
+key?
+
+Thanks,
+baruch
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
