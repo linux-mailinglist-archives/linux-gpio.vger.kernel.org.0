@@ -2,92 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 022E42F1FD0
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 20:50:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBCBF2F208E
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 21:18:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391011AbhAKTug (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 14:50:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
+        id S2391356AbhAKUS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 15:18:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389440AbhAKTug (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 14:50:36 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77517C061794;
-        Mon, 11 Jan 2021 11:49:56 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id u4so178761pjn.4;
-        Mon, 11 Jan 2021 11:49:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=741uIlaM+L6ylxc+uAOdXhR3kYtdAb4UvuQ94fHQepo=;
-        b=aP6A8sUWaXVFsDzILQMZ1aPTLFknhADj/0e2OOG6ryR+r22atiDU77YF2gRV5ndZUr
-         qwotiHS5pMecv/S5J5t7225T5IH9hsBf4HszIasLHLeNMqL0E/q21brtorbBrvED0UtP
-         PaCemmqtLPwUqynpWU2Y1DEo9qqUpOWcdT5KJTTAhh66Fqk4TrJEXf/uuaJ0VOF2Xcwb
-         rnSwB9/U/hBnTGiUpVp28n2p1AjKExYngyKw+yJEr3dUH3xR5Je2X8CnYDQ0Ca/JShQE
-         jBv0h6VuzNnCWU7lECznRJQLXBfXCfq8UylTJ5RrtVGsNe1c1KRfz7CQXByesKzDXzYU
-         QDIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=741uIlaM+L6ylxc+uAOdXhR3kYtdAb4UvuQ94fHQepo=;
-        b=IUhd0CTv6725DXf9Si78MVGWj8lbBamSSaxZgPhPJWJmy+PJvTWQRzW3Zj3vNq9OAF
-         XRvTEBpwgjrCkh0J1itx44Cqy/ETHDtV3+mjLAywIAOh2bcTKhArAEoJjJQP6WItj/6X
-         4REDBW8szMgMce9zpMamjr14CuCF5LsR4aNOkZBcR/KpuyxLyWOQEVaGs0ZdYkxkCZ1j
-         N9iQSFv1XmsIVE2SBufGfveO46vzMeA32i51oMY8wvWN68cufQbya7UIS2cE7M9I1dlo
-         +IEBP8VnaJ+JbLB7z/RH7oCIoc6y3bOJf4auLbULCfCNiLZQOw0j/QIlyM6tOWucoAuE
-         ROSw==
-X-Gm-Message-State: AOAM533P+GUkTC/9ara9ZDaTDyW2MHO+/238uxGuzJ08RcHbzZepQrgv
-        AiLHaD5uuzI1nG7KGFJsHGY=
-X-Google-Smtp-Source: ABdhPJyfVK18/6yrrQ66nM2v8wGA4z6kjwfI8eTV8ur+CN039Vc3UYQZGBGlvS6aY5xntsYFXHXoAg==
-X-Received: by 2002:a17:902:42:b029:da:e72b:fe9e with SMTP id 60-20020a1709020042b02900dae72bfe9emr882551pla.31.1610394595901;
-        Mon, 11 Jan 2021 11:49:55 -0800 (PST)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.179.121.136])
-        by smtp.gmail.com with ESMTPSA id f64sm420628pfb.146.2021.01.11.11.49.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Jan 2021 11:49:54 -0800 (PST)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     linus.walleij@linaro.org, grandmaster@al2klimov.de,
-        zhengyongjun3@huawei.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] pinctrl: ti :iodelay: Fixed inconsistent indenting
-Date:   Tue, 12 Jan 2021 01:19:45 +0530
-Message-Id: <1610394585-4296-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        with ESMTP id S2390481AbhAKUS2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 15:18:28 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E1FC061794
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 12:17:48 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kz3d5-0006pf-QB; Mon, 11 Jan 2021 21:17:31 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kz3cm-0001oG-1F; Mon, 11 Jan 2021 21:17:12 +0100
+Date:   Mon, 11 Jan 2021 21:17:11 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Baruch Siach <baruch@tkos.co.il>, g@pengutronix.de
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] gpio: mvebu: fix pwm get_state period calculation
+Message-ID: <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
+References: <cover.1610362661.git.baruch@tkos.co.il>
+ <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sbfrqob34qguvdht"
+Content-Disposition: inline
+In-Reply-To: <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Kernel test robot throws below warning ->
 
-smatch warnings:
-drivers/pinctrl/ti/pinctrl-ti-iodelay.c:708
-ti_iodelay_pinconf_group_dbg_show() warn: inconsistent indenting
+--sbfrqob34qguvdht
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixed the inconsistent indenting.
+Hello Baruch,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+$Subject ~=3D s/get_state/.get_state/ ?
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index ae91559..60a6713 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -705,9 +705,8 @@ static void ti_iodelay_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
- 
- 		cfg = &group->cfg[i];
- 		regmap_read(iod->regmap, cfg->offset, &reg);
--			seq_printf(s, "\n\t0x%08x = 0x%08x (%3d, %3d)",
--				   cfg->offset, reg, cfg->a_delay,
--				   cfg->g_delay);
-+		seq_printf(s, "\n\t0x%08x = 0x%08x (%3d, %3d)",
-+			cfg->offset, reg, cfg->a_delay, cfg->g_delay);
- 	}
- }
- #endif
--- 
-1.9.1
+On Mon, Jan 11, 2021 at 01:17:02PM +0200, Baruch Siach wrote:
+> The period is the sum of on and off values.
+>=20
+> Reported-by: Russell King <linux@armlinux.org.uk>
+> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 672681a976f5..a912a8fed197 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *ch=
+ip,
+>  	else
+>  		state->duty_cycle =3D 1;
+> =20
+> +	val =3D (unsigned long long) u; /* on duration */
+>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
+> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
+> +	val +=3D (unsigned long long) u; /* period =3D on + off duration */
+> +	val *=3D NSEC_PER_SEC;
+>  	do_div(val, mvpwm->clk_rate);
+> -	if (val < state->duty_cycle) {
+> +	if (val > UINT_MAX)
+> +		state->period =3D UINT_MAX;
+> +	else if (val)
+> +		state->period =3D val;
+> +	else
+>  		state->period =3D 1;
+> -	} else {
+> -		val -=3D state->duty_cycle;
+> -		if (val > UINT_MAX)
+> -			state->period =3D UINT_MAX;
+> -		else if (val)
+> -			state->period =3D val;
+> -		else
+> -			state->period =3D 1;
+> -	}
 
+The patch looks good, the patch description could be a bit more verbose.
+Something like:
+
+	Calculate the period as
+
+		($on + $off) / clkrate
+
+	instead of
+
+		$off / clkrate - $on / clkrate
+
+	.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--sbfrqob34qguvdht
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/8skQACgkQwfwUeK3K
+7Alzogf+KPPg546GsrokpTE2wlvllmFTgHygaAWs0ZXan8lWTdaN0bFHLvt1FF24
+f8b8auIDDRkqJjkATM7hByvyU8Dh7JKG9Uc4/YJ0Fba6t9bdRZFjJRE4rCycgcK1
++8PmLZFgx4YA9h7qcNJm3te7Q1JOuZigmQffuxbzlVc0/q5kKkbtkhIbCY0dpGvH
+ShuxJo3Rz4vdq6lnyaT1oadkz6kVfAj3BTtpAbUAx4/O8cwnQOtIZTeQCCMuFqDG
+ms+vCmfNgQ6pMxFz51i+XNLNbrk54Dq/9HcnJ2oD6KWR/aG0tmYPWVcjIqEBwwpN
+Dqii+4ngHXKSJEsdnIJnSdjdkzfU7w==
+=iOoM
+-----END PGP SIGNATURE-----
+
+--sbfrqob34qguvdht--
