@@ -2,91 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C2B02F0FBA
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 11:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C45A2F0FBF
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 11:13:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbhAKKJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 05:09:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
+        id S1728766AbhAKKMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 05:12:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbhAKKJw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 05:09:52 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47367C061786
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:09:12 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id b2so18194274edm.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:09:12 -0800 (PST)
+        with ESMTP id S1728690AbhAKKMN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 05:12:13 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8387DC061786
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:11:32 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id ga15so23905851ejb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:11:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3K0MpZVfZ4qA+deXtIfoeZlGXrSGVuIknlVGq29zqxQ=;
-        b=JlIVTeLfWTLcy1lOjF8lhG+U2nO45hk96tlPN2muNjc18yd9pXXvCcIvGZTA64u2S9
-         hao2vyhCFvg+gQQUz7p7z1O7/SmuEsbv5iRLQwsGqXLUMUfyUTGuV6tL1aodjwHdxaBm
-         5k6Y1kgy0aQ6bxyjK+FYPWltKXUWmVKaeds/xLfkhJ/C3dFor4hl7SAv2/PvLM4enQiX
-         bllQyG/kW6kn93uKa43F08JSe6XqpEbM6VFAiituDHdbeozxgXW5L1vBijbTLDSHy8po
-         J08Q7DxTg4ctb4qFUewoOTCb6sLbyjqTaaO0Gul1y0hGwKrGzmwsfasz0AnSWWdUQRKg
-         mzsQ==
+        bh=DzSq10+w9uGbouK/0N/k/Vyq9HI+oX+c5Bfx1maAHnk=;
+        b=brKNTh29fweEfuS7wgq5tVU7Zox/66VxMuF0fPbTJ6B0iOTekE8JiQ0ChdjK165R8S
+         1Ku+FXvjag1mGTx5kLLtuq+6JZ+5VEKaReKXGtiYYwAoe69Tz3rkaq9Xn6R3zhEYMFkB
+         2JzuJJOQUU7LyUTdENSO6Pi3mkDQMGc/cpoD3r+bJo9Rx16iin6ZScdkBgRfnXTHuiWv
+         rIrEgzKkLKL98GGxdFiMri/U3KQmi49J700/znPeKpI1VIwD3Xu9idqOuYQAjHB78UtO
+         5FNRTglPy3U5YF/iFswc3yeMpRGPasK4Vb8vgdKF33I7Nf1Ie07zsDwCReqW58APyFOE
+         9uqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3K0MpZVfZ4qA+deXtIfoeZlGXrSGVuIknlVGq29zqxQ=;
-        b=sUXd7iZcyrXRDnDRX6v46867CHA2H2HOII9bkHQEJEWLT40PIqHueRIXvKX0AI89qG
-         /VJjUipVO8tMjCkhzCj/LrBI4sK+xY0DhS/X4OFLV98+M6uD4AptezkfhwpJnk7tW8vb
-         n90iTynWNVv8UBRhlHCG5NHpyPySS3bLsSng+CIgndRMVy6aQEFSKKGlburFAGkWGxNQ
-         BkK0wYbw20mhOuyR7W8yjlFFlPSj2NgdfUkxOdTkvPmY+ksLAul3OymgHg5J/kDrCck8
-         n3Z1B53ZXfFr65rpK77JqZsQ5+XqH7ffZkgiRbSTrIVBn8DaAwgR0ccyCy+N6attmsTe
-         SrpA==
-X-Gm-Message-State: AOAM533XdVqSZKCX0bys2xtNH908YqQE0gOUhmgOarl1FNhZHcLBtzE+
-        mlozk06VKKiIlmnhUGU4oayL90QJ+wTtI9g35L1qMQ==
-X-Google-Smtp-Source: ABdhPJwD7a4C5TCwgNuaYm1Y3CaAEaB74ZsK7DSwWR6bjHtbH4dP04JQh/VEKHHOxR3bV1VGcgOfJU9w8Y+Czx3SFTk=
-X-Received: by 2002:a05:6402:307c:: with SMTP id bs28mr13630886edb.186.1610359751075;
- Mon, 11 Jan 2021 02:09:11 -0800 (PST)
+        bh=DzSq10+w9uGbouK/0N/k/Vyq9HI+oX+c5Bfx1maAHnk=;
+        b=KajvniCfd78T8jtjsm6i+ttrQeMs7ysKwCGp8kkSJ45Taj500gvHjXK6UG9qF6JDoF
+         PdlI7wFP2Mz3hy5RF38frZDvWxrUzkyLxig23anyDMN/QMo/m2u+Zu0fP2lJ2WXCR/YO
+         GYpJ4+dn1RSrwMcTaxdpsU4Uys37cqRCBCoCl1qaPntj5xB/iCkXlp1uxbDWXxUYm+yP
+         7VPAeHu1KM+/AlegnDyBim1cN/JQQ8VhdXjjkKcDG6pr+b0BtM48spWAxnoM8txLtV6t
+         mIr1nWFOSUjxhF1x2hDuelm6IiUayULTcCgVB3QXQfnfIUGSze1tYLU4ZOWsis4Obswd
+         GnrQ==
+X-Gm-Message-State: AOAM530NgdnGsCA7PklYtHIOJCcTibAriwE4Swf1it4U9VOrytcrNYIG
+        a7gpiUWhYYQQ0Mhw33NBTTjRH18CjVyM/msTT9rRDutaxqQ=
+X-Google-Smtp-Source: ABdhPJy6BAGaxo9ow37JgvNCEtTIWZ6DevYVOAPVrh5msYMf4oLqwqvTx+sKPHhMSvbD1Yo57et1/lMYJHV8uQwa0FY=
+X-Received: by 2002:a17:906:3513:: with SMTP id r19mr10055190eja.445.1610359891259;
+ Mon, 11 Jan 2021 02:11:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20210108102026.2024478-1-geert+renesas@glider.be>
-In-Reply-To: <20210108102026.2024478-1-geert+renesas@glider.be>
+References: <20210108092334.19101-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20210108092334.19101-1-zhengyongjun3@huawei.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 11 Jan 2021 11:09:00 +0100
-Message-ID: <CAMpxmJXagq7X5_CdB3XfGzr7roSYDHPEzJNb7e4G2b9YFAFKDw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] gpio: rcar: Add R-Car V3U support
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Mon, 11 Jan 2021 11:11:20 +0100
+Message-ID: <CAMpxmJV=k7bWC5xNNmk1rHXwCQUX=c1qEQ6gm6xU24zE70Hymg@mail.gmail.com>
+Subject: Re: [PATCH v2 -next] gpio: convert comma to semicolon
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 8, 2021 at 11:20 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Fri, Jan 8, 2021 at 10:23 AM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
 >
->         Hi Linus, Bartosz, Rob,
+> Replace a comma between expression statements by a semicolon.
 >
-> This patch series adds support for GPIOs on the R-Car V3U (r8a779a0)
-> SoC, to both DT bindings and the gpio-rcar driver.
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/gpio/gpio-mc33880.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Changes compared to v2:
->   - Add Reviewed-by, Tested-by,
->   - Fix SoC part number in oneline summary,
->   - Reformat comment block to match coding style,
->   - Rebase on top of commit 3a57026a83ba363e ("gpio: rcar: Remove
->     redundant compatible values"),
+> diff --git a/drivers/gpio/gpio-mc33880.c b/drivers/gpio/gpio-mc33880.c
+> index f8194f7c6186..704cd4e6171f 100644
+> --- a/drivers/gpio/gpio-mc33880.c
+> +++ b/drivers/gpio/gpio-mc33880.c
+> @@ -99,7 +99,7 @@ static int mc33880_probe(struct spi_device *spi)
 >
-> Changes compared to v1:
->   - Optimize GPIO pin state read on R-Car Gen3,
->   - Enable input unconditionally in probe and resume, instead of during
->     GPIO line configuration and depending on GPIO line direction,
->   - Assumed authorship, as this patch is very different from v1, written
->     by Phong Hoang,
->   - Add Reviewed-by.
+>         mc->spi = spi;
 >
-> Thanks!
+> -       mc->chip.label = DRIVER_NAME,
+> +       mc->chip.label = DRIVER_NAME;
+>         mc->chip.set = mc33880_set;
+>         mc->chip.base = pdata->base;
+>         mc->chip.ngpio = PIN_NUMBER;
+> --
+> 2.22.0
 >
 
-All three applied, thanks!
+Why does the tag mention -next when this has been like this for a long
+time? The subject should also be: gpio: <driver name>: something
+something.
 
 Bartosz
