@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 546BE2F1A48
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 16:58:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACD7A2F1A51
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 16:59:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbhAKP5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 10:57:32 -0500
-Received: from m43-15.mailgun.net ([69.72.43.15]:13648 "EHLO
-        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388005AbhAKP5c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 10:57:32 -0500
+        id S2388435AbhAKP7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 10:59:00 -0500
+Received: from so254-31.mailgun.net ([198.61.254.31]:34513 "EHLO
+        so254-31.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731804AbhAKP7A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 10:59:00 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1610380628; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1610380721; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rpUhQsbkZqOoeekzL8PjncrrfDvQYa9XwRlpvRyebcY=; b=F+pQzTl5mvy7vddLAWQ8ewrrDdaz42IrDgL3v609Vqg8hScR/KCs+6ut7fFwRxzPd+smWA99
- EFixKFcN2Ezj/Obq9xEFtFPuvQvA26NtW+fua80b7w4bqlVJZBysFUB1iI7QGLL8dnr8fp7P
- yFDey8us2l4DDhY2moNz0/Fr4HA=
-X-Mailgun-Sending-Ip: 69.72.43.15
+ Subject: Sender; bh=Rv8Ae9G9a0YvS21zbU6dOKG+esLbKOGZK6eFqISPatk=; b=I32F8m3mAqRyuePfFN9tVyWBRTAXmz0/HjWc7vLpbaW3StEvDg3DL3SXHXwVhRbxU949ohDK
+ alWvQVvFFz2XrB7ZpAGueZiNJ2O4yLj5HXuutHytacj8ISSw43dSSaqViESWB7iGb1KGtEbZ
+ EgbAEslzdmFVNnwYjZsxeIDhtec=
+X-Mailgun-Sending-Ip: 198.61.254.31
 X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5ffc75318fb3cda82f37df61 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 11 Jan 2021 15:56:33
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5ffc75919dddba11a671f2eb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 11 Jan 2021 15:58:09
  GMT
 Sender: mkshah=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 15C47C433CA; Mon, 11 Jan 2021 15:56:32 +0000 (UTC)
+        id 97367C43464; Mon, 11 Jan 2021 15:58:09 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
@@ -38,13 +38,13 @@ Received: from [192.168.29.129] (unknown [49.36.75.31])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4671AC433C6;
-        Mon, 11 Jan 2021 15:56:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4671AC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6448DC433ED;
+        Mon, 11 Jan 2021 15:58:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6448DC433ED
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v5 1/4] pinctrl: qcom: Allow SoCs to specify a GPIO
- function that's not 0
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: No need to read-modify-write the
+ interrupt status
 To:     Douglas Anderson <dianders@chromium.org>,
         Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -58,13 +58,14 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-kernel@vger.kernel.org
 References: <20210108093339.v5.1.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
+ <20210108093339.v5.2.I3635de080604e1feda770591c5563bd6e63dd39d@changeid>
 From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <3aaf589e-ece1-1b9c-52fd-f7e8274b4938@codeaurora.org>
-Date:   Mon, 11 Jan 2021 21:26:23 +0530
+Message-ID: <aa84c8e0-3922-cc59-7c11-663bde0d2ed8@codeaurora.org>
+Date:   Mon, 11 Jan 2021 21:28:01 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <20210108093339.v5.1.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
+In-Reply-To: <20210108093339.v5.2.I3635de080604e1feda770591c5563bd6e63dd39d@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-GB
@@ -81,57 +82,85 @@ Thanks,
 Maulik
 
 On 1/8/2021 11:05 PM, Douglas Anderson wrote:
-> There's currently a comment in the code saying function 0 is GPIO.
-> Instead of hardcoding it, let's add a member where an SoC can specify
-> it.  No known SoCs use a number other than 0, but this just makes the
-> code clearer.  NOTE: no SoC code needs to be updated since we can rely
-> on zero-initialization.
+> When the Qualcomm pinctrl driver wants to Ack an interrupt, it does a
+> read-modify-write on the interrupt status register.  On some SoCs it
+> makes sure that the status bit is 1 to "Ack" and on others it makes
+> sure that the bit is 0 to "Ack".  Presumably the first type of
+> interrupt controller is a "write 1 to clear" type register and the
+> second just let you directly set the interrupt status register.
+>
+> As far as I can tell from scanning structure definitions, the
+> interrupt status bit is always in a register by itself.  Thus with
+> both types of interrupt controllers it is safe to "Ack" interrupts
+> without doing a read-modify-write.  We can do a simple write.
+>
+> It should be noted that if the interrupt status bit _was_ ever in a
+> register with other things (like maybe status bits for other GPIOs):
+> a) For "write 1 clear" type controllers then read-modify-write would
+>     be totally wrong because we'd accidentally end up clearing
+>     interrupts we weren't looking at.
+> b) For "direct set" type controllers then read-modify-write would also
+>     be wrong because someone setting one of the other bits in the
+>     register might accidentally clear (or set) our interrupt.
+> I say this simply to show that the current read-modify-write doesn't
+> provide any sort of "future proofing" of the code.  In fact (for
+> "write 1 clear" controllers) the new code is slightly more "future
+> proof" since it would allow more than one interrupt status bits to
+> share a register.
+>
+> NOTE: this code fixes no bugs--it simply avoids an extra register
+> read.
 >
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
 >
-> (no changes since v1)
+> Changes in v5:
+> - ("pinctrl: qcom: No need to read-modify-write the ...") new for v5.
 >
->   drivers/pinctrl/qcom/pinctrl-msm.c | 4 ++--
->   drivers/pinctrl/qcom/pinctrl-msm.h | 2 ++
->   2 files changed, 4 insertions(+), 2 deletions(-)
+>   drivers/pinctrl/qcom/pinctrl-msm.c | 23 ++++++++---------------
+>   1 file changed, 8 insertions(+), 15 deletions(-)
 >
 > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index e051aecf95c4..1d2a78452c2d 100644
+> index 1d2a78452c2d..1787ada6bfab 100644
 > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
 > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -210,8 +210,8 @@ static int msm_pinmux_request_gpio(struct pinctrl_dev *pctldev,
->   	if (!g->nfuncs)
->   		return 0;
+> @@ -792,16 +792,13 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
 >   
-> -	/* For now assume function 0 is GPIO because it always is */
-> -	return msm_pinmux_set_mux(pctldev, g->funcs[0], offset);
-> +	return msm_pinmux_set_mux(pctldev,
-> +				  g->funcs[pctrl->soc->gpio_func], offset);
->   }
+>   	raw_spin_lock_irqsave(&pctrl->lock, flags);
 >   
->   static const struct pinmux_ops msm_pinmux_ops = {
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 333f99243c43..e31a5167c91e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -118,6 +118,7 @@ struct msm_gpio_wakeirq_map {
->    * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
->    *                            to be aware that their parent can't handle dual
->    *                            edge interrupts.
-> + * @gpio_func: Which function number is GPIO (usually 0).
->    */
->   struct msm_pinctrl_soc_data {
->   	const struct pinctrl_pin_desc *pins;
-> @@ -134,6 +135,7 @@ struct msm_pinctrl_soc_data {
->   	const struct msm_gpio_wakeirq_map *wakeirq_map;
->   	unsigned int nwakeirq_map;
->   	bool wakeirq_dual_edge_errata;
-> +	unsigned int gpio_func;
->   };
+> -	if (status_clear) {
+> -		/*
+> -		 * clear the interrupt status bit before unmask to avoid
+> -		 * any erroneous interrupts that would have got latched
+> -		 * when the interrupt is not in use.
+> -		 */
+> -		val = msm_readl_intr_status(pctrl, g);
+> -		val &= ~BIT(g->intr_status_bit);
+> -		msm_writel_intr_status(val, pctrl, g);
+> -	}
+> +	/*
+> +	 * clear the interrupt status bit before unmask to avoid
+> +	 * any erroneous interrupts that would have got latched
+> +	 * when the interrupt is not in use.
+> +	 */
+> +	if (status_clear)
+> +		msm_writel_intr_status(0, pctrl, g);
 >   
->   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+>   	val = msm_readl_intr_cfg(pctrl, g);
+>   	val |= BIT(g->intr_raw_status_bit);
+> @@ -906,11 +903,7 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+>   
+>   	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>   
+> -	val = msm_readl_intr_status(pctrl, g);
+> -	if (g->intr_ack_high)
+> -		val |= BIT(g->intr_status_bit);
+> -	else
+> -		val &= ~BIT(g->intr_status_bit);
+> +	val = (g->intr_ack_high) ? BIT(g->intr_status_bit) : 0;
+>   	msm_writel_intr_status(val, pctrl, g);
+>   
+>   	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
