@@ -2,128 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3D02F1958
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 16:17:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 546BE2F1A48
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 16:58:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbhAKPQP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 10:16:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbhAKPQO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 10:16:14 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4635CC061795
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 07:15:34 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id j16so126607edr.0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 07:15:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FzgkbHegdCA7K9vj/qbXflU/kxCPdWZspabIYz0ksp8=;
-        b=fN2EnYW78nETiDKQSfDMzwFQN858zm9HhmnN5km6Y//JYD/jqupaNBCupQqGdZLeRv
-         mBxeAQNMJ1asf/fgzJ9FIPnAHOocNKEUct9talZPd7uyIaViS18UR/pHTfbxIdlHziit
-         FdWgrWIxHg+44dnG8/SwmSNZFe+tbiZzbMrxfgeaKv44dFg8ZNruHrSQBgumASWuBTCY
-         othHI/1z4GqgThXI7yGfogwqIJJwO9ISeQNB3qGcC5x4XExsbZkRCEV+scIEWCHWPqaI
-         Cd6DsqrAcOE+Yg7jxzzUybsHOLxxfS+4wuk6jOX58O0lqWkme/mPDyPW7clmLB0AUSOj
-         DlbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FzgkbHegdCA7K9vj/qbXflU/kxCPdWZspabIYz0ksp8=;
-        b=LvXJxAH3MpK/fNniQJwIDoS4b2fIwL7B6ASACb3TMheD45dtohLfv0BODza8m+5k2h
-         VhdkkvAlgoOL8ouP3fWLSwJd203f30VGecG9n8wqdVH4ppd2/PurDtBKX1Jp5CePEHjW
-         o7Lj/CJn/42Ak6bfNjsEv0ZySTJePtnBvh1s2qENvoOGZYubgiu6AtKQZu+BQXV/pidi
-         GoLK+t9qAbcAt7ARbQEiPiTNUKSFRVh0OC1QsN4pADMqqXLj+iSZfaSo6D7RUVOJIgqg
-         LfMegKFX3zv4ybyT0Ezk1CHEZzXrA0AQ8FUUU09kmu8hKafatNhvBLbweBvwshuoS973
-         KpMw==
-X-Gm-Message-State: AOAM532XB+JEqeDNQexP+fWPMn5qqx3dRcvHNn2PvBcWHYRdytT7b2Dj
-        kgjMslNco6Chi37Pwf7D4di2hBPW9ZQgktIP3bL64A==
-X-Google-Smtp-Source: ABdhPJyNiQWhYoNCf0F3oJHP1AZp6amVsA1Phbu8FglhJ4UxC5vdDHJpB6hZBnzxR6SKH//NpurnxcA9Rb97IyN/4kM=
-X-Received: by 2002:a05:6402:14c5:: with SMTP id f5mr14192172edx.232.1610378132983;
- Mon, 11 Jan 2021 07:15:32 -0800 (PST)
+        id S2388054AbhAKP5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 10:57:32 -0500
+Received: from m43-15.mailgun.net ([69.72.43.15]:13648 "EHLO
+        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388005AbhAKP5c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 10:57:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1610380628; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=rpUhQsbkZqOoeekzL8PjncrrfDvQYa9XwRlpvRyebcY=; b=F+pQzTl5mvy7vddLAWQ8ewrrDdaz42IrDgL3v609Vqg8hScR/KCs+6ut7fFwRxzPd+smWA99
+ EFixKFcN2Ezj/Obq9xEFtFPuvQvA26NtW+fua80b7w4bqlVJZBysFUB1iI7QGLL8dnr8fp7P
+ yFDey8us2l4DDhY2moNz0/Fr4HA=
+X-Mailgun-Sending-Ip: 69.72.43.15
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5ffc75318fb3cda82f37df61 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 11 Jan 2021 15:56:33
+ GMT
+Sender: mkshah=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15C47C433CA; Mon, 11 Jan 2021 15:56:32 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.75.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4671AC433C6;
+        Mon, 11 Jan 2021 15:56:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4671AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v5 1/4] pinctrl: qcom: Allow SoCs to specify a GPIO
+ function that's not 0
+To:     Douglas Anderson <dianders@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20210108093339.v5.1.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <3aaf589e-ece1-1b9c-52fd-f7e8274b4938@codeaurora.org>
+Date:   Mon, 11 Jan 2021 21:26:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-References: <20210111133426.22040-1-brgl@bgdev.pl> <20210111133426.22040-7-brgl@bgdev.pl>
- <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
- <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com> <20210111144647.GY4077@smile.fi.intel.com>
-In-Reply-To: <20210111144647.GY4077@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 11 Jan 2021 16:15:21 +0100
-Message-ID: <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the repository
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210108093339.v5.1.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 3:45 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Jan 11, 2021 at 03:06:28PM +0100, Bartosz Golaszewski wrote:
-> > On Mon, Jan 11, 2021 at 2:45 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Mon, Jan 11, 2021 at 3:37 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > >
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > In order to avoid any problems with symbols missing from the host linux
-> > > > kernel headers (for example: if current version of libgpiod supports
-> > > > features that were added recently to the kernel but the host headers are
-> > > > outdated and don't export required symbols) let's add the uapi header to
-> > > > the repository and include it instead of the one in /usr/include/linux.
-> > >
-> > > I doubt this is a good decision. First of all if the host (or rather
-> > > target, because host should not influence build of libgpiod) has
-> >
-> > I meant the host as in: the machine on which you build and which
-> > contains the headers for the target as well but I see what you mean.
-> >
-> > > outdated header it may be for a reason (it runs old kernel).
-> > > When you run new library on outdated kernel it might produce various
-> > > of interesting errors (in general, I haven't investigated libgpiod
-> > > case).
-> > > On top of that you make a copy'n'paste source code which is against
-> > > the Unix way.
-> > >
-> > > Sorry, but I'm in favour of dropping this one.
-> > >
-> >
-> > Cc: Thomas
-> >
-> > This problem has been raised by the buildroot people when we started
-> > requiring different versions of kernel headers to build v1.4 and v1.6.
-> > It turns out most projects simply package the uapi headers together
-> > with their sources (e.g. wpa_supplicant, libnl, iproute2) to avoid
-> > complicated dependencies. It's true that now the library can fail at
-> > runtime but I'm fine with that. Also: if we add new features between
-> > two kernel versions, we still allow to build the new library version
-> > except that these new features won't work on older kernels.
->
-> I see.
->
-> So known ways to solve this are
->  - provide a header with source tree (see above)
->  - modify code with ifdeffery against specific kernel versions
->  - ...something else... ?
->
-> Second item is what ALSA used (not sure if they provide a standalone driver
-> anymore). Ugly, but won't require header which may be staled.
->
-> Any other solutions in mind?
->
+Hi Doug,
 
-I tried to go the third way and just ignore the problem but I've
-received too many emails about that. :)
+Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+Tested-by: Maulik Shah <mkshah@codeaurora.org>
 
-I don't like the ifdef hell so I prefer to bundle the header. I'm open
-to other suggestions, although I can't come up with anything else.
+Thanks,
+Maulik
 
-Bart
+On 1/8/2021 11:05 PM, Douglas Anderson wrote:
+> There's currently a comment in the code saying function 0 is GPIO.
+> Instead of hardcoding it, let's add a member where an SoC can specify
+> it.  No known SoCs use a number other than 0, but this just makes the
+> code clearer.  NOTE: no SoC code needs to be updated since we can rely
+> on zero-initialization.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> (no changes since v1)
+>
+>   drivers/pinctrl/qcom/pinctrl-msm.c | 4 ++--
+>   drivers/pinctrl/qcom/pinctrl-msm.h | 2 ++
+>   2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index e051aecf95c4..1d2a78452c2d 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -210,8 +210,8 @@ static int msm_pinmux_request_gpio(struct pinctrl_dev *pctldev,
+>   	if (!g->nfuncs)
+>   		return 0;
+>   
+> -	/* For now assume function 0 is GPIO because it always is */
+> -	return msm_pinmux_set_mux(pctldev, g->funcs[0], offset);
+> +	return msm_pinmux_set_mux(pctldev,
+> +				  g->funcs[pctrl->soc->gpio_func], offset);
+>   }
+>   
+>   static const struct pinmux_ops msm_pinmux_ops = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+> index 333f99243c43..e31a5167c91e 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+> @@ -118,6 +118,7 @@ struct msm_gpio_wakeirq_map {
+>    * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
+>    *                            to be aware that their parent can't handle dual
+>    *                            edge interrupts.
+> + * @gpio_func: Which function number is GPIO (usually 0).
+>    */
+>   struct msm_pinctrl_soc_data {
+>   	const struct pinctrl_pin_desc *pins;
+> @@ -134,6 +135,7 @@ struct msm_pinctrl_soc_data {
+>   	const struct msm_gpio_wakeirq_map *wakeirq_map;
+>   	unsigned int nwakeirq_map;
+>   	bool wakeirq_dual_edge_errata;
+> +	unsigned int gpio_func;
+>   };
+>   
+>   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
