@@ -2,91 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C45A2F0FBF
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 11:13:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E28F12F0FD7
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 11:15:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbhAKKMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 05:12:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
+        id S1728929AbhAKKPV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 05:15:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbhAKKMN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 05:12:13 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8387DC061786
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:11:32 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id ga15so23905851ejb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 02:11:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DzSq10+w9uGbouK/0N/k/Vyq9HI+oX+c5Bfx1maAHnk=;
-        b=brKNTh29fweEfuS7wgq5tVU7Zox/66VxMuF0fPbTJ6B0iOTekE8JiQ0ChdjK165R8S
-         1Ku+FXvjag1mGTx5kLLtuq+6JZ+5VEKaReKXGtiYYwAoe69Tz3rkaq9Xn6R3zhEYMFkB
-         2JzuJJOQUU7LyUTdENSO6Pi3mkDQMGc/cpoD3r+bJo9Rx16iin6ZScdkBgRfnXTHuiWv
-         rIrEgzKkLKL98GGxdFiMri/U3KQmi49J700/znPeKpI1VIwD3Xu9idqOuYQAjHB78UtO
-         5FNRTglPy3U5YF/iFswc3yeMpRGPasK4Vb8vgdKF33I7Nf1Ie07zsDwCReqW58APyFOE
-         9uqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DzSq10+w9uGbouK/0N/k/Vyq9HI+oX+c5Bfx1maAHnk=;
-        b=KajvniCfd78T8jtjsm6i+ttrQeMs7ysKwCGp8kkSJ45Taj500gvHjXK6UG9qF6JDoF
-         PdlI7wFP2Mz3hy5RF38frZDvWxrUzkyLxig23anyDMN/QMo/m2u+Zu0fP2lJ2WXCR/YO
-         GYpJ4+dn1RSrwMcTaxdpsU4Uys37cqRCBCoCl1qaPntj5xB/iCkXlp1uxbDWXxUYm+yP
-         7VPAeHu1KM+/AlegnDyBim1cN/JQQ8VhdXjjkKcDG6pr+b0BtM48spWAxnoM8txLtV6t
-         mIr1nWFOSUjxhF1x2hDuelm6IiUayULTcCgVB3QXQfnfIUGSze1tYLU4ZOWsis4Obswd
-         GnrQ==
-X-Gm-Message-State: AOAM530NgdnGsCA7PklYtHIOJCcTibAriwE4Swf1it4U9VOrytcrNYIG
-        a7gpiUWhYYQQ0Mhw33NBTTjRH18CjVyM/msTT9rRDutaxqQ=
-X-Google-Smtp-Source: ABdhPJy6BAGaxo9ow37JgvNCEtTIWZ6DevYVOAPVrh5msYMf4oLqwqvTx+sKPHhMSvbD1Yo57et1/lMYJHV8uQwa0FY=
-X-Received: by 2002:a17:906:3513:: with SMTP id r19mr10055190eja.445.1610359891259;
- Mon, 11 Jan 2021 02:11:31 -0800 (PST)
+        with ESMTP id S1725843AbhAKKPU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 05:15:20 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513DEC061786;
+        Mon, 11 Jan 2021 02:14:40 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1610360078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
+        b=UnYkeRyOrRU1KtT5e+L+fQ3h1X+pI6IQmvvPVQCyBzb6fOAslMZh9kmf6riX6Uc0jR5HAW
+        kLM9jzvLqGc+Imjy/0I2rAsMH2VpuQIdJ98CwfEhcoTYCCXiQ/XwFpRt6Jep7zrPxwT0va
+        Xwof1xtTH5Z/PeoiWTuI7XI6GZ2R5aGzpohXNnayNbUAXzj5+Rf7t2lNRSQCuUkrunBvvh
+        E6YQGrr8aPBg88a1jm3tkQeNaO9yiXQdYW2cQM+bbmj0FEDrh39+sh5VynpFZhESsKImAx
+        DwV8ajINKrlorxI1UlTNWgwAXJMXRe809J7/lTBl2XxW6BUf7G/4P1Qx4lUTcA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1610360078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
+        b=X4gUVuzYQlznnJ4rBpJlj0pVo1A0rJo22Rpjt8+XaTFqV54Id4MU7M5oqDy1KDl8a6a4jG
+        +hpoSFj00cPTvyCg==
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-s390@vger.kernel.org,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
+        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Airlie <airlied@linux.ie>, linux-gpio@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        linux-parisc@vger.kernel.org,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
+        linux-ntb@googlegroups.com, intel-gfx@lists.freedesktop.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [patch 02/30] genirq: Move status flag checks to core
+In-Reply-To: <20201227192049.GA195845@roeck-us.net>
+References: <20201210192536.118432146@linutronix.de> <20201210194042.703779349@linutronix.de> <20201227192049.GA195845@roeck-us.net>
+Date:   Mon, 11 Jan 2021 11:14:38 +0100
+Message-ID: <87im837pbl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20210108092334.19101-1-zhengyongjun3@huawei.com>
-In-Reply-To: <20210108092334.19101-1-zhengyongjun3@huawei.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 11 Jan 2021 11:11:20 +0100
-Message-ID: <CAMpxmJV=k7bWC5xNNmk1rHXwCQUX=c1qEQ6gm6xU24zE70Hymg@mail.gmail.com>
-Subject: Re: [PATCH v2 -next] gpio: convert comma to semicolon
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 8, 2021 at 10:23 AM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
+On Sun, Dec 27 2020 at 11:20, Guenter Roeck wrote:
+> On Thu, Dec 10, 2020 at 08:25:38PM +0100, Thomas Gleixner wrote:
+> Yes, but that means that irq_check_status_bit() may be called from modules,
+> but it is not exported, resulting in build errors such as the following.
 >
-> Replace a comma between expression statements by a semicolon.
+> arm64:allmodconfig:
 >
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
-> ---
->  drivers/gpio/gpio-mc33880.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-mc33880.c b/drivers/gpio/gpio-mc33880.c
-> index f8194f7c6186..704cd4e6171f 100644
-> --- a/drivers/gpio/gpio-mc33880.c
-> +++ b/drivers/gpio/gpio-mc33880.c
-> @@ -99,7 +99,7 @@ static int mc33880_probe(struct spi_device *spi)
->
->         mc->spi = spi;
->
-> -       mc->chip.label = DRIVER_NAME,
-> +       mc->chip.label = DRIVER_NAME;
->         mc->chip.set = mc33880_set;
->         mc->chip.base = pdata->base;
->         mc->chip.ngpio = PIN_NUMBER;
-> --
-> 2.22.0
->
+> ERROR: modpost: "irq_check_status_bit" [drivers/perf/arm_spe_pmu.ko] undefined!
 
-Why does the tag mention -next when this has been like this for a long
-time? The subject should also be: gpio: <driver name>: something
-something.
+Duh. Yes, that lacks an export obviously.
 
-Bartosz
+Thanks,
+
+        tglx
