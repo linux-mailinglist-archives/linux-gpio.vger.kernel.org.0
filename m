@@ -2,251 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 069AB2F0ADF
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 02:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4EC2F0B0E
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 03:35:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbhAKB57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 10 Jan 2021 20:57:59 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:42670 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbhAKB56 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 20:57:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1610330979; x=1641866979;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=f0rPh6Pd9jRXtjlqWo9vX6T4minD5LjxUw3tpOChkMI=;
-  b=rjr7freLgHaR8Zy9aEjqRnBjEWZHrSlkMYyZCqKMX7aJCRDqWfmxwSYN
-   z3cfJFY8DLFmrn7ee7cpxMlSSbgB7NIvyzJRtpAZIXJxByLNFLDAvbviH
-   hrg83nYg8GQXhnL2kAQr4SUAVDtNEsXH5tPJGSTjkVyKy/QUuAiQOHH5O
-   CeusjSRH7fVw9ngQoVHi9Z4J0hzlByCZ+0hzOpXUWz9p23HZErXdG12jO
-   gIJKBWJWqx06rMiwim4JCe7wwD/JIh2Ijs/fgt3q2W0+PmZUsrid2tqxZ
-   oGnB00Muz6RdpETEnfufGzRwlpxG62B5URNfCvch/p0v9YVLDVvfIK6GM
-   A==;
-IronPort-SDR: fh9O0W+mqQw3xsDISlAHy6gNckxLCYQxMoJm8vjzMlyG61bLaBy5Dnyhg3QQPmxRAx097/5Xzt
- 0lp3HlV3qNWv7BRb2EB+FS2sdMKqNUEXJOCBX4baH3jIUgImlbsY8+Mg/n/1lUO2MzWvh3udwk
- szo8ao2sYUka1iW23CHCnwLkSSYAu0fyl75eZoBb3f7vfE5GgK9RJcDK7lwwNtZa4bhpiyGfj1
- /9Br7iQ/afke14POixhLIHC8bi5JZHwoz7IVdDWaA/w5U2BXuFuMXAfX6IEE/agO33+rkltkb2
- yPI=
-X-IronPort-AV: E=Sophos;i="5.79,337,1602518400"; 
-   d="scan'208";a="260991677"
-Received: from mail-mw2nam12lp2041.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.41])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Jan 2021 10:07:56 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WuiWksjs68by85LpjnZTHIL5sRnFSO/z1Y/T4UkfhXiV8RsxZ4drbCLnRmpLTrQIaE9zWj0A97EOOM6DKc6zjfwo66RPD36SwC15BdSa2Uyoq/9rrfInbvdglYVuCMJVwanWWJs/k41SryKdaSX4vmk9MCNEk4JQuKWsTeCy87NTlymkNG54Y3/rQqGbyhQRraOmnzhGsCw+AHB0H2cSiR1gewUex09XAMLr+qrgNWMS3AxlCQvy4iNjhJCr7RcvDX4vGyL2/UIqFGDJY6y2KmPbx2nl302i66otMAeYLIRahi4xmsPUl7PQUr/jK+Jb2LEjYoVdEnqvczoKaQTsMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f0rPh6Pd9jRXtjlqWo9vX6T4minD5LjxUw3tpOChkMI=;
- b=Au2C771Swylff38SGKaoZ24C1ZYZq2jpurUaHihJyB4/Ob0aTlJWRNeMDy7ToQ3MjxllYcM2EUotqR5TtnL58XhnIFpvWm4wqp9AdL9hr8OQGHSMWEApjUTdex/ONqh1nyZwo3hZzZ21XPZDipfZMpS3fEGTJflZ8LLACBBlYlQ1XiZxCAFR4tB8ZJiVhl/K5Qiq/SkFILMqXaCxwk1kklI6VTszYWUX4EdU/njUggf3GVn+MR7s5xUfhLBVtquRpjc2NUMeA94aHLFhmqiGsDjCdcajO+fLVKyzJf5isAp0lO4bfPY82uuEpBskkafdQ4t4mTMXn66Oi76dfgzrBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        id S1726391AbhAKCfN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 10 Jan 2021 21:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbhAKCfN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Jan 2021 21:35:13 -0500
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD06FC061786;
+        Sun, 10 Jan 2021 18:34:32 -0800 (PST)
+Received: by mail-qt1-x82c.google.com with SMTP id z20so10403061qtq.3;
+        Sun, 10 Jan 2021 18:34:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f0rPh6Pd9jRXtjlqWo9vX6T4minD5LjxUw3tpOChkMI=;
- b=h4drj8DakahnJQqGw6GgQK9//LxD5VNQZRXclcjIxJr6biuebiLda8Y+NG+2uMZ9hon19jO+k60pl7DbNjmK3icMvo+zJjEnGuBMbjKwtzTQUbPt8ExSiAtwJb/A0pIxVoCeIquTzPcTLyb6T2mu4+4FrotrmBZR7DxTK7zqqok=
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com (2603:10b6:208:1ca::23)
- by BL0PR04MB4979.namprd04.prod.outlook.com (2603:10b6:208:5e::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.12; Mon, 11 Jan
- 2021 01:56:46 +0000
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::2dbb:7e01:f076:eca0]) by BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::2dbb:7e01:f076:eca0%9]) with mapi id 15.20.3742.012; Mon, 11 Jan 2021
- 01:56:46 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     "palmer@dabbelt.com" <palmer@dabbelt.com>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Wgjy9xILhvZ1iGkvuXUiXzK4vCg0w/7IKELJ+lduWIc=;
+        b=QYmUTLCYB0E/lwQuvxm9Ux4O3HkdgZVLu4O56Q//wzRVqfwDksRwGrJZnedcMJtVIb
+         VawlEZ1qir++uU0vDYN1RATdk6WyzcBZMURfuj12mZo4S3JQ3MgmpH4iIA+smDEIpHxc
+         8qcd/WWVSURL7e6E7UtEL9xnFy+kBA4NBrU+iF7fhKKrcPX5f6L5IwpguJRo6T4/SMpU
+         j1gcZI+pj3unKoP4apxCQQfzM0+j2VORqKcJGXXv+Pgb6gIwpTUEHNTMmdF9SK0qAuM3
+         RhQcwScHbY7kl/aGMo0hxmdG8XGca8jDqq7jKPUi7J1sJjVi8/+yjjwgCzHc0cypzH/v
+         yV/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Wgjy9xILhvZ1iGkvuXUiXzK4vCg0w/7IKELJ+lduWIc=;
+        b=VkrWUv3+M5eDtjO7FJosYTx1NK8a5d8LlJ34invitTr6Rc7EpaNu75tKroUwNvfpk5
+         /Swy3ipLbwp1EK9f3rVMVVmaUzKccUjDESwcLd7otY9iETBXEuLHjguvvesqPsItqXb6
+         8UsAKaEhHOytlFIwI52VZgqiFki/l/b/eZOyMQkrVSB8TPtduca6HFvUaxjAJ36Werx2
+         jKQm8u7cgRstxRpA4ZXCbZtxE2lR+7FZlrXFXY+n8/e26qq2UMa1AIlUNhGA+1JSzC2N
+         dvIlHitUMFFLPkty0n58s7gMboY6bJoCtPiYFl8v+KGlLb9UmZPvF59IYJuDHgNqHzoI
+         AYNQ==
+X-Gm-Message-State: AOAM533ZY/wsjq0yPXKZwqOVfb6uN3d08syByQUQrt35IGUp3VqxXsV4
+        QhoeVXhB+VgVEcuxQkJvnsM/tOTTmpk=
+X-Google-Smtp-Source: ABdhPJxKKb4fY63zjcoGGFJFqxO0kzVbWfdFvLQ7FkjBLGoAd/Wmu0WylPj7mcZlThsQ6JbhgHFv6Q==
+X-Received: by 2002:ac8:5acb:: with SMTP id d11mr13776541qtd.269.1610332472005;
+        Sun, 10 Jan 2021 18:34:32 -0800 (PST)
+Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
+        by smtp.googlemail.com with ESMTPSA id g3sm3179121qtc.3.2021.01.10.18.34.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 Jan 2021 18:34:31 -0800 (PST)
+Subject: Re: [PATCH v10 00/23] RISC-V Kendryte K210 support improvements
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>
+Cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "seanga2@gmail.com" <seanga2@gmail.com>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: Re: [PATCH v10 00/23] RISC-V Kendryte K210 support improvements
-Thread-Topic: [PATCH v10 00/23] RISC-V Kendryte K210 support improvements
-Thread-Index: AQHW0VcBx/1WqOKLiUuqE6/7D5Ba7qofuA2AgAIfSwA=
-Date:   Mon, 11 Jan 2021 01:56:45 +0000
-Message-ID: <7e0b4efd305d2c5deeff7dd263234a32aa093f58.camel@wdc.com>
 References: <mhng-a7443f7f-42ff-4835-9b25-be8f91884e04@palmerdabbelt-glaptop>
-In-Reply-To: <mhng-a7443f7f-42ff-4835-9b25-be8f91884e04@palmerdabbelt-glaptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.38.2 (3.38.2-1.fc33) 
-authentication-results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2400:2411:43c0:6000:8d3e:27aa:85c2:44b5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c52a4ad5-0dd5-42ff-3918-08d8b5d426b8
-x-ms-traffictypediagnostic: BL0PR04MB4979:
-x-microsoft-antispam-prvs: <BL0PR04MB4979FD0A95E90F02743882C4E7AB0@BL0PR04MB4979.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kt9V5y3K9Sj0/s6NcbVcYpxGs1wZg4nj5ijMTqDZDIMAVrYQUEQPaiQt/9/8CKEF9UQJ0dpFoxD6fE4Qk9dkF5/5GZXdcFrCm8LS0mRrRdz+TqbnO8Jtfd3rUE0ZN4dfNEYnL8UaGWBw/WbW3pTubP4YBlier3jN2v6njM6ToKqnJMyHGWkf1PACr/icHw5RyQ807ZYigd4xRuGoupOLr3gg7W2cPrAaiwpiGQvsu9gdkPOQbeFQAIXl7FThtYqKpbBsXyJZZGT6WaLurhBO6OY1Tt+dJpqUXC5thTY+/r7vTZaeq/8UF1NAVzMavUu2vjMkbml/JLoPatOf2xPorWsGOEUJC1gk3PFoLteW/Lqe3AHc2fNE2oJN4YT89RWZ7WVAwQ9J7V0I9so02znIWg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR04MB6514.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(66446008)(2616005)(64756008)(5660300002)(8676002)(66556008)(86362001)(6916009)(66946007)(4326008)(66476007)(71200400001)(54906003)(316002)(6512007)(8936002)(83380400001)(76116006)(91956017)(6486002)(36756003)(2906002)(6506007)(186003)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?UUE1bEtCRDZDSWNYUC9UYkJENkNWMXlFODFEZkIwYnlmZTRHaWNMUk1BOXNr?=
- =?utf-8?B?SzZVd0k5c0h3Um5WZFpxR2JUcHZMSHRuOFBsQUNzMVhSN2JlUTB3OTdnYW1t?=
- =?utf-8?B?cVhJWlFqNEJhYmVxQWZOR3pyWVVCYlFrT21VMVZYcE1vOEhaMzlGODNqZjh5?=
- =?utf-8?B?QmltVzdBT3ozYlNBTk1hbkFVZG1ER1hrbnYrb2RQN0lyMkFYbFEzTWN5N1RR?=
- =?utf-8?B?RnJYVDRxdy9majAzMGlNK0tFeC9YdU5veWZrSzMxemZhajE4Mm9OV2J4OXFQ?=
- =?utf-8?B?bW4rTE5HL21ybjFKaUgrenVuZ3IxSm5Obi9URzUxT3doQWZScHlzZXdLQkRY?=
- =?utf-8?B?ekd4blJuMnZzZ3JacGtURWIxL3ZLWWFEblBJcEJLaXZXTDRVTVlHelNLeHFD?=
- =?utf-8?B?MTVVN2tFbW1SY2N6dWJ3LzJPZ2NnMjdYVFc1bVBZWnI1ZEFYa2RIYitXSWg3?=
- =?utf-8?B?c3M3Y0gwU1BuMWJaN05iOUZIeSswNTB3NmU4djdMc0Jab2lBWkJ3L1ZtRlA3?=
- =?utf-8?B?aFIxK2J2MHFFL0ZuU0xpdk9QZnhDSkJwcnYwUEFhR2FRakhqSW9wYi9zRVg3?=
- =?utf-8?B?Y3ZnTEgwNVptVlBxeFh3RGtveFhkUTRnZGxDVWo1MFRHbXdGeGxsaVJTa1Vo?=
- =?utf-8?B?T1dPYmVabW9YSmtQMWNtdTNWaFoxMGZaTCtQSk9od2d0djN2VDBsZWc4bWND?=
- =?utf-8?B?L205OGFaZ3BKWnErdy9NaXQyd1lRVFZpQldPSUpIOTlBR1RwK3htVkVaTHV3?=
- =?utf-8?B?dDZpbE80Q2gvUnBnR2xuR2EyYWVyN00xUmF2QlBMaVlraDhJcEU3NUdPeWU1?=
- =?utf-8?B?MGxUU3Izak1wZE5HU1lzYzZvejI4QURTK1Bmc3FXdCtBNFhRblZMRVlpWTBG?=
- =?utf-8?B?VmdXc2xRYVA2NHAvTW0wcmVZTWxUMktYT3AxZXh1eFlpUXA0NGZWdU82MkE4?=
- =?utf-8?B?ZU5VbkZ3bVk0THVhVEFIb0hpcVpxdEpTQThGODU2eGVlREdYa003UVBzTlhP?=
- =?utf-8?B?SXU1ZkRWVk5iUVViYlJ6N2w3NmV4ZW9pSFE1VmRwNlpFY2dDaEFBb2xnZVpU?=
- =?utf-8?B?cFZwMXpodHZKVFFEMmh4Tmw5Yjc1d0pOT3VEMzhhamZxQTR6UmVkWUdzWXBQ?=
- =?utf-8?B?MnVKSkd3N0xrOTVHTVF5N2dsUjVaNG84QXpheEZkVXphcU03a1VQcFIxMW1s?=
- =?utf-8?B?a1ZjMjdhbE1IVTZoYm1OQXRFWFE2WTk4SjZQTjg2bWFhWCtsSzlKU21PVGdz?=
- =?utf-8?B?RlBKNG8wSStUdmdoL0hjZG9JVCtJc2IrS1JBYkl4NUFuMmVvM3cra2dXMmtw?=
- =?utf-8?B?cHNSMGZ3d3VScVgzVHJzRmF5WVdSeUN6cEF3ampPVmtpTTNuaDFBb2VnUmFZ?=
- =?utf-8?B?c1hRMXhjUEl6c1o3SHFqTFFiN2F4VWozam0vY1dwMk5lTVVKZnRzUk9lNnBZ?=
- =?utf-8?Q?duExwech?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3BE20E3766420C4A934C78CD1FEE4B6C@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <7e0b4efd305d2c5deeff7dd263234a32aa093f58.camel@wdc.com>
+From:   Sean Anderson <seanga2@gmail.com>
+Message-ID: <03fb06e8-d587-3cf2-9b66-bf31449e7b8a@gmail.com>
+Date:   Sun, 10 Jan 2021 21:34:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR04MB6514.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c52a4ad5-0dd5-42ff-3918-08d8b5d426b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jan 2021 01:56:45.9012
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t+ho4B7nj/lK1In3NI4OMRTr2iFc3NbCwfZiB27PtaAdg2UIPbaSLP/iwuK74fG75ls67mTJWnukvIuiSnniFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4979
+In-Reply-To: <7e0b4efd305d2c5deeff7dd263234a32aa093f58.camel@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gU2F0LCAyMDIxLTAxLTA5IGF0IDA5OjMyIC0wODAwLCBQYWxtZXIgRGFiYmVsdCB3cm90ZToN
-Cj4gT24gU3VuLCAxMyBEZWMgMjAyMCAwNTo1MDozMyBQU1QgKC0wODAwKSwgRGFtaWVuIExlIE1v
-YWwgd3JvdGU6DQo+ID4gVGhpcyBzZXJpZXMgb2YgcGF0Y2hlcyBpbXByb3ZlcyBzdXBwb3J0IGZv
-ciBib2FyZHMgYmFzZWQgb24gdGhlIENhbmFhbg0KPiA+IEtlbmRyeXRlIEsyMTAgUklTQy1WIGR1
-YWwgY29yZSBTb0MuIE1pbmltYWwgc3VwcG9ydCBmb3IgdGhpcyBTb0MgaXMNCj4gPiBhbHJlYWR5
-IGluY2x1ZGVkIGluIHRoZSBrZXJuZWwuIFRoZXNlIHBhdGNoZXMgY29tcGxldGUgaXQsIGVuYWJs
-aW5nDQo+ID4gc3VwcG9ydCBmb3IgbW9zdCBwZXJpcGhlcmFscyBwcmVzZW50IG9uIHRoZSBTb0Mg
-YXMgd2VsbCBhcyBpbnRyb2R1Y2luZw0KPiA+IGRldmljZSB0cmVlcyBmb3IgdGhlIHZhcmlvdXMg
-SzIxMCBib2FyZHMgYXZhaWxhYmxlIG9uIHRoZSBtYXJrZXQgdG9kYXkNCj4gPiBmcm9tIFNpUGVl
-ZCBhbmQgS2VuZHJ5dGUuDQo+IA0KPiBQdXR0aW5nIGV2ZXJ5dGhpbmcgdG9nZXRoZXIgbGlrZSB0
-aGlzIG1ha2VzIGl0IG92ZXJseSBkaWZmaWN1bHQgdG8gZ2V0IHRoaW5ncw0KPiBtZXJnZWQ6IHRo
-ZXJlJ3Mgc29tZSBhY3R1YWwgZml4ZXMsIHNvbWUgbmV3IGFyY2gvcmlzY3Ygc3R1ZmYsIGFuZCBh
-IGhhbmRmdWwgb2YNCj4gZHJpdmVycy4gIEkga25vdyB3ZSd2ZSBiZWVuIGtpbmQgb2YgbWl4aW5n
-IHVwIHRoZSBTaUZpdmUgYW5kIFJJU0MtViB0cmVlcywgYnV0DQo+IHRoYXQncyBsYXJnZWx5IGJl
-Y2F1c2UgdGhpbmdzIGhhdmUgYmVlbiBwcmV0dHkgcXVpZXQgYW5kIGl0J3MgdGhlIHNhbWUgcGVv
-cGxlDQo+IHdvcmtpbmcgb24gZXZlcnl0aGluZy4gIFRoYXQnbGwgcHJvYmFibHkgY2hhbmdlIGF0
-IHNvbWUgcG9pbnQsIGJ1dCBpdCBkb2Vzbid0DQo+IG1lYW4gd2UgY2FuIGp1c3Qgc3RhcnQgbWl4
-aW5nIHVwIGV2ZXJ5dGhpbmcgaW4gaGVyZSAtLSBldmVuIGZvciB0aGUgU2lGaXZlDQo+IHN0dWZm
-LCB3ZSB1c3VsYWx5IHRyeSB0byBkbyBpdCBpbiB0aGUgcmVsZXZhbnQgc3Vic3lzdGVtIHRyZWUu
-DQoNCkkga25vdyB0aGF0LCBidXQgZm9yIHNvbWUgZHJpdmVycyAoZS5nLiBjbG9jayksIHRoZXJl
-IGlzIG92ZXJsYXAgdGhhdCB3b3VsZA0KcHJldmVudCBjb21waWxpbmcgaWYgbm90IGFsbCBwYXRj
-aGVzIGdvIHRvIHRoZSBzYW1lIHRyZWUuIEFuZCBmb3IgcGVvcGxlIHRvDQp0ZXN0LCBpZiBub3Qg
-YWxsIGRyaXZlcnMgYXJlIGluIHRoZSBzYW1lIHRyZWUsIG5vdGhpbmcgd2lsbCB3b3JrIChlLmcu
-IHdpdGhvdXQNCnRoZSBwaW5jdHJsIGRyaXZlciwgbm90aGluZyBkZXZpY2Ugd2lsbCB3b3JrLCBl
-dmVuIGJvb3Rpbmcgd2lsbCBmYWlsKS4gVGhhdCBpcw0Kd2h5IEkga2VwdCBzZW5kaW5nIGV2ZXJ5
-dGhpbmcgdG9nZXRoZXIuDQoNCldpdGggd2hhdCB5b3UgYXBwbGllZCwgb25seSB0aGUgY2xvY2sg
-ZHJpdmVyIGFuZCB0aGUgZnBpb2EgZHJpdmVyIGRvIG5vdCByZWFsbHkNCmJlbG9uZyB0byB0aGUg
-cmlzY3YgdHJlZS4gQnV0IHNpbmNlIHlvdSBxdWV1ZWQgdGhlIGR0LWJpbmRpbmdzIGRvYyBwYXRj
-aGVzDQp3aGljaCBhZGQgdGhlIGhlYWRlcnMgZm9yIHRoZXNlIGRyaXZlcnMsIGl0IG1heSBiZSBu
-ZWNlc3NhcnkgdG8ga2VlcCB0aGVtIGluDQp0aGUgcmlzY3YgdHJlZSB0byBhdm9pZCBjb21waWxh
-dGlvbiBmYWlsdXJlcy4NCg0KU3RlcGhlbiwgTGludXMsIGlzIHRoYXQgT0sgPw0KDQo+ID4gUGF0
-aGVzIDEgdG8gNCBhcmUgdmFyaW91cyBmaXhlcyBmb3IgcmlzY3YgYXJjaCBjb2RlIGFuZCByaXNj
-dg0KPiA+IGRlcGVuZGVudCBkZXZpY2VzLiBPZiBub3RlIGhlcmUgaXMgcGF0Y2ggMyB3aGljaCBm
-aXggc3lzdGVtIGNhbGxzDQo+ID4gZXhlY3V0aW9uIGluIHRoZSBubyBNTVUgY2FzZSwgYW5kIHBh
-dGNoIDQgd2hpY2ggc2ltcGxpZmllcyBEVEIgYnVpbHRpbg0KPiA+IGhhbmRsaW5nLg0KPiANCj4g
-VGhlIGZpcnN0IHRocmVlIGFyZSBvbiBmaXhlcywgYnV0IHRoZSBmb3VydGggaXNuJ3QgYSBmaXg6
-IGl0J3MgYSBmYWlybHkNCj4gc2lnbmlmaWNhbnQgY2hhbmdlIHRvIGhvdyBwb3J0YWJsZSBvdXIg
-a2VybmVscyBjYW4gYmUuICBUaGUgb2xkIHNjaGVtZSBhbGxvd3MNCj4gdmVuZG9ycyB0aGUgb3B0
-aW9uIG9mIGJ1aWxkaW5nIHN5c3RlbXMgd2l0aCBNLW1vZGUgY29tcGF0aWJpbGl0eSwgdGhpcyBu
-ZXcgb25lDQo+IGRvZXNuJ3QuICBUaGF0IHNhaWQsIEkgZG9uJ3QgdGhpbmsgYW55b25lIGlzIGFj
-dHVhbGx5IGdvaW5nIHRvIGJ1aWxkIHN5c3RlbXMNCj4gdGhpcyB3YXkgLS0gd2UgcmVhbGx5IHNo
-b3VsZCBoYXZlIGhhZCBzb21lIHNvcnQgb2YgbWJvYXJkaWQsIGJ1dCB0aGF0IHdhcyBzaG90DQo+
-IGRvd24gaW4gZmF2b3Igb2Ygc29tZSBzb3J0IG9mIHBsYXRmb3JtIHRoaW5nIGFuZCBpdCdzIHVu
-bGlrZWx5IHdlIGdldCB0aGF0IGZhcg0KPiBvdmVyIHRoZXJlLg0KPiANCj4gSSdtIG5vdCByZWFs
-bHkgc3VyZSBJJ20gcmVhZHkgdG8gdGhyb3cgaW4gdGhlIHRvd2VsIG9uIGJpbmFyeSBjb21wYXRp
-YmlsaXR5DQo+IGJldHdlZW4gdmVuZG9ycyB5ZXQsIGF0IGxlYXN0IGluIGdlbmVyYWwuICBJbiB0
-aGlzIHNwZWNpZmljIGNhc2UgaXQgc2VlbXMgZmluZSwNCj4gdGhvdWdoIC0tIGFjY3Jvc3MgdGhl
-IGJvYXJkIHdlJ3JlIGp1c3Qgc3BlbmRpbmcgd2F5IHRvbyBtdWNoIHRpbWUgd29ycnlpbmcNCj4g
-YWJvdXQgdGhlIHNtYWxsIHRoaW5ncyB3aGlsZSB3ZSBoYXZlIHdheSBiaWdnZXIgcHJvYmxlbXMg
-dG8gZGVhbCB3aXRoLg0KPiBPYnZpb3VzbHkgaXQgd291bGQgYmUgYmV0dGVyIGlmIHdlIGhhZCBz
-b21lIHNjaGVtZSB0byBoYW5kbGUgdGhpcyBoZXJlLCBidXQgSSdkDQo+IG11Y2ggcmF0aGVyIGZv
-Y3VzIG9uIHRoZSBiYXNpY3MuDQo+IA0KPiBJIHN0aWxsIGhvcGUgd2UgZ2V0IHRvIHRoZSBwb2lu
-dCB3aGVyZSB3ZSBjYW4gaGF2ZSBiaW5hcnkgY29tcGF0aWJpbGl0eSBiZXR3ZWVuDQo+IHN5c3Rl
-bXMgZnJvbSB2YXJpb3VzIHZlbmRvcnMsIHdoaWxlIHN0aWxsIGhhdmluZyByZWFzb25hYmx5IHVz
-ZWZ1bCBzeXN0ZW1zLg0KPiBVbmZvcnR1bmF0ZWx5IHdlJ3JlIHF1aXRlIGZhciBhd2F5IGZyb20g
-YW55dGhpbmcgbGlrZSB0aGF0LCBzbyBJJ20gZmluZSB0YWtpbmcNCj4gdGhpcyBzb3J0IG9mIHRo
-aW5nIGFzIHRoYXQncyBhcyBnb29kIGFzIHdlIGNhbiBkbyBmb3IgdGhlIGZvcnNlZWFibGUgZnV0
-dXJlLg0KDQpZZXMsIEkgYWdyZWUgdGhhdCB3b3JraW5nIG9uIGltcHJvdmluZyBiaW5hcnkgcG9y
-dGFiaWxpdHkgaXMgdmVyeSBpbXBvcnRhbnQuDQpIb3dldmVyLCBJIGFtIG5vdCBjb252aW5jZWQg
-YXQgYWxsIHRoYXQgdHJ5aW5nIHRvIGRvIHNvIHVzaW5nIGEgZGV2aWNlLXRyZWUNCmJhc2VkIGVu
-dmlyb25tZW50IGlzIHZpYWJsZSwgb3IgZXZlbiBkZXNpcmVkLiBJIHRoaW5rIHRoYXQgdHJ1ZSBw
-b3J0YWJpbGl0eSBjYW4NCm9ubHkgYmUgYWNoaWV2ZWQgdXNpbmcgc29tZXRoaW5nIGxpa2UgQUNQ
-SSBvciBlcXVpdmFsZW50IGFsbG93aW5nIHJ1bi10aW1lDQpkZXZpY2UgZGlzY292ZXJ5LiBCdXQg
-dGhhdCBpcyBhIGRpc2N1c3Npb24gZm9yIGFub3RoZXIgdGhyZWFkLg0KDQo+IFRoaXMgaXMgb24g
-Zm9yLW5leHQuDQoNClRoYW5rcy4NCg0KPiA+IFRoZSBmb2xsb3dpbmcgcGF0Y2hlcyA3IHRvIDEx
-IGRvY3VtZW50IGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU29DDQo+ID4gZHJpdmVycy4g
-VGhlIGltcGxlbWVudGF0aW9uIG9mIHRoZXNlIGRyaXZlcnMgaXMgcHJvdmlkZWQgaW4gcGF0Y2hl
-cyAxMiwNCj4gPiAxMyBhbmQgMTQsIHJlc3BlY3RpdmVseSBpbXBsZW1lbnRpbmcgdGhlIFNvQyBj
-bG9jayBkcml2ZXIsIHJlc2V0DQo+ID4gY29udHJvbGxlciBhbmQgU09DIHBpbiBmdW5jdGlvbiBj
-b250cm9sLg0KPiANCj4gVGhlIG51bWJlcmluZyBpcyBvZmYgYSBiaXQgaGVyZS4gIFRoZSBjbG9j
-ayBzdHVmZiBoYXMgZ29uZSBpbiB0aHJvdWdoIHRoYXQgdHJlZQ0KPiBhbmQgSSdtIGZpbmUgIHRh
-a2luZyB0aGUgcmVzZXQgY29udHJvbGxlciBhcyB0aGF0J3MgYmVlbiByZXZpZXdlZCwgYnV0IEkg
-ZG9uJ3QNCj4gc2VlIGFueSByZXZpZXcgb24gdGhlIHBpbmN0bCBkcml2ZXIgc28gSSBoYXZlbid0
-IHRha2VuIHRoYXQgeWV0Lg0KPiANCj4gSSdtIGhhcHB5IHRvIHJlLXNlbmQgdGhhdCBwYXRjaCAo
-bGlrZWx5IHdpdGggYSBtb3JlIGFwcHJvcHJpYXRlIHN1YmplY3QgbGluZSwNCj4gYXMgaXQncyBh
-IHBpbmN0bCBkcml2ZXIgbm90IGEgcmlzY3YgcGF0Y2gpLg0KDQpJIHJlYmFzZWQgdGhlIHNlcmll
-cyBvbiB0aGUgcmlzY3YgdHJlZSBmaXhlcytmb3ItbmV4dCBicmFuY2hlcyBhbmQgY2hhbmdlZCB0
-aGUNCnN1YmplY3QgbGluZSBvZiB0aGVzZSAyIHBhdGNoZXMuIEkgYW0gdGVzdGluZyB0aGF0IG5v
-dyBhbmQgd2lsbCByZXNlbmQgc29vbi4NCkJ1dCBzbyBmYXIgc28gZ29vZC4gQWxsIGlzIHdvcmtp
-bmcgZmluZS4NCg0KPiA+IFBhdGNoZXMgMTUgdG8gMjAgdXBkYXRlIHRoZSBleGlzdGluZyBLMjEw
-IGRldmljZSB0cmVlIGFuZCBhZGQgbmV3DQo+ID4gZGV2aWNlIHRyZWUgZmlsZXMgZm9yIHNldmVy
-YWwgSzIxMCBiYXNlZCBib2FyZHM6IE1BSVggQml0LCBNQUlYRFVJTk8sDQo+ID4gTUFJWCBEb2Nr
-IGFuZCBNQUlYIEdvIGJvYXJkcyBmcm9tIFNpUGVlZCBhbmQgdGhlIEtEMjMzIGRldmVsb3BtZW50
-DQo+ID4gYm9hcmQgZnJvbSBDYW5hYW4uDQo+IA0KPiBUaGVyZSBhcmUgdG9ucyBvZiBjaGVja3Bh
-dGNoIHdhcm5pbmdzIGluIHRoZXNlLCBtb3N0bHkgcmVsYXRlZCB0byBjb21wYXQNCj4gc3RyaW5n
-cyB0aGF0IGRvbid0IGhhdmUgYmluZGluZyBkZWZpbml0aW9ucy4gIEl0IGxvb2tzIGxpa2UgdGhl
-cmUncyBqdXN0IGEgbG90DQo+IG9mIHN0dWZmIGluIHRoZXJlIHRoYXQgZG9lc24ndCBoYXZlIGFu
-eSBzdXBwb3J0IG9uIHRoZSBMaW51eCBzaWRlLCBteSBndWVzcw0KPiB3b3VsZCBiZSB0aGF0IHRo
-ZSBiZXN0IHRoaW5nIHRvIGRvIGlzIHRvIGRyb3AgdGhvc2UgdW50aWwgdGhleSdyZSBkZWZpbmVk
-Lg0KDQpZZXMsIEkgYW0gYXdhcmUgb2YgdGhlc2Ugd2FybmluZ3MuIERlc3BpdGUgdGhhdCwgSSBr
-ZXB0IHRoZSB1bmRvY3VtZW50ZWQgYW5kDQp1bnN1cHBvcnRlZCBEVCBub2RlcyBhcyBoYXZpbmcg
-dGhlIGNvbXBsZXRlIGRldmljZS10cmVlcyAoc29jIGsyMTAuZHRzaSBwYXJ0DQphbmQgYm9hcmRz
-IGR0cykgY29uc3RpdHV0ZSB0aGUgYmVzdCBkb2N1bWVudGF0aW9uIGV2ZXIgZm9yIHRoZSBTb0Mg
-YW5kIHRoZQ0KYm9hcmRzLiBNb3N0IG9mIHRoaXMgd29yayBjb21lIGZyb20gU2VhbiAod2l0aCBz
-b21lIGNvcnJlY3Rpb25zIGZyb20gbWUpIGFuZA0KZXh0cmFjdGVkIGFsbCB0aGlzIGluZm9ybWF0
-aW9uIGZyb20gdGhlIGFsbW9zdCBub24tZXhpc3RlbnQgZG9jdW1lbnRhdGlvbg0KKGJhc2ljYWxs
-eSBvbmx5IGJvYXJkIGxheW91dCBkb2MgaXMgYXZhaWxhYmxlKSB1c2luZyBtb3N0bHkgb25seSB0
-aGUgS2VuZHJ5dGUNClNESyBpcyByZWFsbHkgaGFyZC4gU28gZGVzcGl0ZSB0aGUgd2FybmluZywg
-SSB3b3VsZCByZWFsbHkgcHJlZmVyIHRoYXQgd2Uga2VlcA0KdGhlIERUcyBhcyBjb21wbGV0ZSBh
-cyB0aGV5IGFyZSBub3cuIFRoaXMgd291bGQgYWxzbyBhbGxvdyB1cyB0byBwb2ludCB0bw0Kc3Bl
-Y2lmaWMgbm9kZXMgdGhhdCBuZWVkIHN1cHBvcnQgZm9yIG5ldyBkZXZlbG9wZXJzIHRoYXQgd2Fu
-dCB0byBnZXQgaW52b2x2ZWQNCndpdGggcmlzY3YgKG1lbnRvcmluZyBwcm9ncmFtIG9mIHRoZSBm
-b3VuZGF0aW9uKS4gVGhlc2UgYm9hcmRzIGJlaW5nIGV4dHJlbWVseQ0KY2hlYXAgYXJlIHRoZSBw
-ZXJmZWN0IHBsYXRmb3JtIGZvciBzdHVkZW50cyBhbmQgaG9iYnlpc3QgdG8gZ2V0IGludm9sdmVk
-Lg0KDQpTbyB1bmxlc3MgeW91IGluc2lzdCwgSSBhbSBnb2luZyB0byByZXNlbmQgdGhlIERUcyBh
-cy1pcy4NCg0KPiANCj4gPiBGaW5hbGx5IHRoZSBsYXN0IHR3byBwYXRjaGVzIHVwZGF0ZXMgdGhl
-IGsyMTAgbm9tbXUgZGVmY29uZmlnIHRvIGluY2x1ZGUNCj4gPiB0aGUgbmV3bHkgaW1wbGVtZW50
-ZWQgZHJpdmVycyBhbmQgcHJvdmlkZSBhIG5ldyBkZWZhdWx0IGNvbmZpZ3VyYXRpb24NCj4gPiBm
-aWxlIGVuYWJsaW5nIFNEIGNhcmQgc3VwcG9ydC4NCj4gDQo+IEknbSBhbHNvIGdvaW5nIHRvIGp1
-c3QgbGVhdmUgdGhlc2Ugb3V0IGZvciBub3csIHVudGlsIHdlIHNvcnQgb3V0IHRoZSBhYm92ZQ0K
-PiBpc3N1ZXMuICBMZXQgbWUga25vdyBpZiB5b3UncmUgZ29pbmcgdG8gc2VuZCBhbm90aGVyIHBh
-dGNoIHNldCwgb3IgDQoNClRoYW5rcy4NCg0KLS0gDQpEYW1pZW4gTGUgTW9hbA0KV2VzdGVybiBE
-aWdpdGFsDQo=
+On 1/10/21 8:56 PM, Damien Le Moal wrote:
+> On Sat, 2021-01-09 at 09:32 -0800, Palmer Dabbelt wrote:
+>> On Sun, 13 Dec 2020 05:50:33 PST (-0800), Damien Le Moal wrote:
+>>> This series of patches improves support for boards based on the Canaan
+>>> Kendryte K210 RISC-V dual core SoC. Minimal support for this SoC is
+>>> already included in the kernel. These patches complete it, enabling
+>>> support for most peripherals present on the SoC as well as introducing
+>>> device trees for the various K210 boards available on the market today
+>>> from SiPeed and Kendryte.
+>>
+>> Putting everything together like this makes it overly difficult to get things
+>> merged: there's some actual fixes, some new arch/riscv stuff, and a handful of
+>> drivers.  I know we've been kind of mixing up the SiFive and RISC-V trees, but
+>> that's largely because things have been pretty quiet and it's the same people
+>> working on everything.  That'll probably change at some point, but it doesn't
+>> mean we can just start mixing up everything in here -- even for the SiFive
+>> stuff, we usulaly try to do it in the relevant subsystem tree.
+> 
+> I know that, but for some drivers (e.g. clock), there is overlap that would
+> prevent compiling if not all patches go to the same tree. And for people to
+> test, if not all drivers are in the same tree, nothing will work (e.g. without
+> the pinctrl driver, nothing device will work, even booting will fail). That is
+> why I kept sending everything together.
+> 
+> With what you applied, only the clock driver and the fpioa driver do not really
+> belong to the riscv tree. But since you queued the dt-bindings doc patches
+> which add the headers for these drivers, it may be necessary to keep them in
+> the riscv tree to avoid compilation failures.
+> 
+> Stephen, Linus, is that OK ?
+> 
+>>> Pathes 1 to 4 are various fixes for riscv arch code and riscv
+>>> dependent devices. Of note here is patch 3 which fix system calls
+>>> execution in the no MMU case, and patch 4 which simplifies DTB builtin
+>>> handling.
+>>
+>> The first three are on fixes, but the fourth isn't a fix: it's a fairly
+>> significant change to how portable our kernels can be.  The old scheme allows
+>> vendors the option of building systems with M-mode compatibility, this new one
+>> doesn't.  That said, I don't think anyone is actually going to build systems
+>> this way -- we really should have had some sort of mboardid, but that was shot
+>> down in favor of some sort of platform thing and it's unlikely we get that far
+>> over there.
+>>
+>> I'm not really sure I'm ready to throw in the towel on binary compatibility
+>> between vendors yet, at least in general.  In this specific case it seems fine,
+>> though -- accross the board we're just spending way too much time worrying
+>> about the small things while we have way bigger problems to deal with.
+>> Obviously it would be better if we had some scheme to handle this here, but I'd
+>> much rather focus on the basics.
+>>
+>> I still hope we get to the point where we can have binary compatibility between
+>> systems from various vendors, while still having reasonably useful systems.
+>> Unfortunately we're quite far away from anything like that, so I'm fine taking
+>> this sort of thing as that's as good as we can do for the forseeable future.
+> 
+> Yes, I agree that working on improving binary portability is very important.
+> However, I am not convinced at all that trying to do so using a device-tree
+> based environment is viable, or even desired. I think that true portability can
+> only be achieved using something like ACPI or equivalent allowing run-time
+> device discovery. But that is a discussion for another thread.
+> 
+>> This is on for-next.
+> 
+> Thanks.
+> 
+>>> The following patches 7 to 11 document device tree bindings for the SoC
+>>> drivers. The implementation of these drivers is provided in patches 12,
+>>> 13 and 14, respectively implementing the SoC clock driver, reset
+>>> controller and SOC pin function control.
+>>
+>> The numbering is off a bit here.  The clock stuff has gone in through that tree
+>> and I'm fine  taking the reset controller as that's been reviewed, but I don't
+>> see any review on the pinctl driver so I haven't taken that yet.
+>>
+>> I'm happy to re-send that patch (likely with a more appropriate subject line,
+>> as it's a pinctl driver not a riscv patch).
+> 
+> I rebased the series on the riscv tree fixes+for-next branches and changed the
+> subject line of these 2 patches. I am testing that now and will resend soon.
+> But so far so good. All is working fine.
+> 
+>>> Patches 15 to 20 update the existing K210 device tree and add new
+>>> device tree files for several K210 based boards: MAIX Bit, MAIXDUINO,
+>>> MAIX Dock and MAIX Go boards from SiPeed and the KD233 development
+>>> board from Canaan.
+>>
+>> There are tons of checkpatch warnings in these, mostly related to compat
+>> strings that don't have binding definitions.  It looks like there's just a lot
+>> of stuff in there that doesn't have any support on the Linux side, my guess
+>> would be that the best thing to do is to drop those until they're defined.
+> 
+> Yes, I am aware of these warnings. Despite that, I kept the undocumented and
+> unsupported DT nodes as having the complete device-trees (soc k210.dtsi part
+> and boards dts) constitute the best documentation ever for the SoC and the
+> boards. Most of this work come from Sean (with some corrections from me) and
+> extracted all this information from the almost non-existent documentation
+> (basically only board layout doc is available) using mostly only the Kendryte
+> SDK is really hard. So despite the warning, I would really prefer that we keep
+> the DTs as complete as they are now. This would also allow us to point to
+> specific nodes that need support for new developers that want to get involved
+> with riscv (mentoring program of the foundation). These boards being extremely
+> cheap are the perfect platform for students and hobbyist to get involved.
+> 
+> So unless you insist, I am going to resend the DTs as-is.
+
+Just a note, everything which isn't supported has been left disabled
+(usually implicitly). It could be possible to remove unsupported nodes,
+but I would like to keep the Linux and U-Boot device trees in-sync.
+
+--Sean
+
+> 
+>>
+>>> Finally the last two patches updates the k210 nommu defconfig to include
+>>> the newly implemented drivers and provide a new default configuration
+>>> file enabling SD card support.
+>>
+>> I'm also going to just leave these out for now, until we sort out the above
+>> issues.  Let me know if you're going to send another patch set, or
+> 
+> Thanks.
+> 
+
