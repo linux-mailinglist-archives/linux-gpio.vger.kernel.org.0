@@ -2,127 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4660D2F18AC
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 15:50:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3D02F1958
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 16:17:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbhAKOtb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 09:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        id S1730307AbhAKPQP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 10:16:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbhAKOtb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 09:49:31 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85559C061794
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 06:48:50 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id c7so19074428edv.6
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 06:48:50 -0800 (PST)
+        with ESMTP id S1728048AbhAKPQO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 10:16:14 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4635CC061795
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 07:15:34 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id j16so126607edr.0
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 07:15:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=X6tdCKto1G6o6iDKf5iwoDBGp8ivvffSHXL5ugy1NWE=;
-        b=oKnZmubgjmbNVtOb9bHYtt41r7i4zTAG03FYfkSnZyd7WTyb5np1yHu+l9wk6BkpA5
-         06XYjBaIA73M0Obu50KFlX4Xl1nFJpnQJdwxoUUaVrgCv25di9KTfmXOjUZcq2yCiEnl
-         YE70CaDRpUneBca02zdtYu/pRP4yBjK8N5eqSwx+/lFEe1DtOz23gLNvQ+t50qDurXxB
-         +zjci80965QyrbkD0k3BRcLqv/zF3rTslYAYcDH4H4yBjoaH+r0t/2YohCpePiqwDMLD
-         zzoZy8adedhYehmo6kFbOar1iUsq/KpzBU/z9IRH7Tpptyzv3+z+8/5dYcDoxMvhm+C0
-         9iSQ==
+        bh=FzgkbHegdCA7K9vj/qbXflU/kxCPdWZspabIYz0ksp8=;
+        b=fN2EnYW78nETiDKQSfDMzwFQN858zm9HhmnN5km6Y//JYD/jqupaNBCupQqGdZLeRv
+         mBxeAQNMJ1asf/fgzJ9FIPnAHOocNKEUct9talZPd7uyIaViS18UR/pHTfbxIdlHziit
+         FdWgrWIxHg+44dnG8/SwmSNZFe+tbiZzbMrxfgeaKv44dFg8ZNruHrSQBgumASWuBTCY
+         othHI/1z4GqgThXI7yGfogwqIJJwO9ISeQNB3qGcC5x4XExsbZkRCEV+scIEWCHWPqaI
+         Cd6DsqrAcOE+Yg7jxzzUybsHOLxxfS+4wuk6jOX58O0lqWkme/mPDyPW7clmLB0AUSOj
+         DlbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X6tdCKto1G6o6iDKf5iwoDBGp8ivvffSHXL5ugy1NWE=;
-        b=dyxX5kVVCS7CG6vGQ1gxTdNOYHDUEXY8sN/qHZpiJ0RInUBI2X9JWMeFUyiarhrNU1
-         xFnz9j8hqSv0U46VyqZBNlYB5xAF6jL6Xe6fPMfQbm//zZD7S+2TIKz2YU77ZWbo/9b7
-         wi/tl+4SARtpEC/pbmw6DIUZyMK5o8EriiioH+nEPDwBTA2G3/PnTkc0YRQpwEpX/8d9
-         wjq5w9ce75SNFcgOTDyrX9+1rK3XWpvaZoWtNpfT1aDYNjxkgX/RzSNFljz9mg4lxrV0
-         R0t92/rya+jAFb0ZyH8sr3ph4SbKCUX/CPknSKTfaT0EbWtF+VVBTSbFZK9QAiK44ifZ
-         x9zA==
-X-Gm-Message-State: AOAM530hn4c5ljGc7gOAsiGLJRwGZUH1Tw1rX3/u2XpRQzzANdVkWsFN
-        mU1UPFL2dsWelqeqbRtohWyCN9nuUOIdUiF1hr2nmQ==
-X-Google-Smtp-Source: ABdhPJzA5bkob3nenMs+OffUikD7tIi0aduIz7/eXSUjAZ3meub0znvzOY7/zOsouqvFMRsRs7UQzbEJxGbXiwEJoqU=
-X-Received: by 2002:aa7:d485:: with SMTP id b5mr13840443edr.214.1610376529301;
- Mon, 11 Jan 2021 06:48:49 -0800 (PST)
+        bh=FzgkbHegdCA7K9vj/qbXflU/kxCPdWZspabIYz0ksp8=;
+        b=LvXJxAH3MpK/fNniQJwIDoS4b2fIwL7B6ASACb3TMheD45dtohLfv0BODza8m+5k2h
+         VhdkkvAlgoOL8ouP3fWLSwJd203f30VGecG9n8wqdVH4ppd2/PurDtBKX1Jp5CePEHjW
+         o7Lj/CJn/42Ak6bfNjsEv0ZySTJePtnBvh1s2qENvoOGZYubgiu6AtKQZu+BQXV/pidi
+         GoLK+t9qAbcAt7ARbQEiPiTNUKSFRVh0OC1QsN4pADMqqXLj+iSZfaSo6D7RUVOJIgqg
+         LfMegKFX3zv4ybyT0Ezk1CHEZzXrA0AQ8FUUU09kmu8hKafatNhvBLbweBvwshuoS973
+         KpMw==
+X-Gm-Message-State: AOAM532XB+JEqeDNQexP+fWPMn5qqx3dRcvHNn2PvBcWHYRdytT7b2Dj
+        kgjMslNco6Chi37Pwf7D4di2hBPW9ZQgktIP3bL64A==
+X-Google-Smtp-Source: ABdhPJyNiQWhYoNCf0F3oJHP1AZp6amVsA1Phbu8FglhJ4UxC5vdDHJpB6hZBnzxR6SKH//NpurnxcA9Rb97IyN/4kM=
+X-Received: by 2002:a05:6402:14c5:: with SMTP id f5mr14192172edx.232.1610378132983;
+ Mon, 11 Jan 2021 07:15:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20210111133426.22040-1-brgl@bgdev.pl> <20210111133426.22040-5-brgl@bgdev.pl>
- <20210111143951.GB1036910@sol>
-In-Reply-To: <20210111143951.GB1036910@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Jan 2021 15:48:38 +0100
-Message-ID: <CAMRc=Mcr-8Cts29bTREvZa-BAjKTDdxXLGQqA4ZLam0APV13Kg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 4/6] treewide: make drive settings an enum
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20210111133426.22040-1-brgl@bgdev.pl> <20210111133426.22040-7-brgl@bgdev.pl>
+ <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
+ <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com> <20210111144647.GY4077@smile.fi.intel.com>
+In-Reply-To: <20210111144647.GY4077@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 11 Jan 2021 16:15:21 +0100
+Message-ID: <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the repository
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 3:39 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Mon, Jan 11, 2021 at 3:45 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Mon, Jan 11, 2021 at 02:34:24PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Mon, Jan 11, 2021 at 03:06:28PM +0100, Bartosz Golaszewski wrote:
+> > On Mon, Jan 11, 2021 at 2:45 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Mon, Jan 11, 2021 at 3:37 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > In order to avoid any problems with symbols missing from the host linux
+> > > > kernel headers (for example: if current version of libgpiod supports
+> > > > features that were added recently to the kernel but the host headers are
+> > > > outdated and don't export required symbols) let's add the uapi header to
+> > > > the repository and include it instead of the one in /usr/include/linux.
+> > >
+> > > I doubt this is a good decision. First of all if the host (or rather
+> > > target, because host should not influence build of libgpiod) has
 > >
-> > Open-source and open-drain drive settings are mutually exclusive just like
-> > the bias settings. Make them into an enum so that becomes clear.
+> > I meant the host as in: the machine on which you build and which
+> > contains the headers for the target as well but I see what you mean.
 > >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  bindings/cxx/gpiod.hpp                 | 24 +++++----
-> >  bindings/cxx/line.cpp                  | 18 +++----
-> >  bindings/cxx/tests/tests-line.cpp      | 45 ++++++----------
-> >  bindings/python/gpiodmodule.c          | 73 ++++++++++++++------------
-> >  bindings/python/tests/gpiod_py_test.py | 18 +++----
-> >  include/gpiod.h                        | 26 +++++----
-> >  lib/core.c                             | 12 ++---
-> >  tests/tests-line.c                     | 36 ++++++-------
-> >  tools/gpioinfo.c                       | 14 ++++-
-> >  9 files changed, 134 insertions(+), 132 deletions(-)
+> > > outdated header it may be for a reason (it runs old kernel).
+> > > When you run new library on outdated kernel it might produce various
+> > > of interesting errors (in general, I haven't investigated libgpiod
+> > > case).
+> > > On top of that you make a copy'n'paste source code which is against
+> > > the Unix way.
+> > >
+> > > Sorry, but I'm in favour of dropping this one.
+> > >
 > >
-> > diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-> > index fb675fc..f9c341d 100644
-> > --- a/bindings/cxx/gpiod.hpp
-> > +++ b/bindings/cxx/gpiod.hpp
-> > @@ -332,16 +332,10 @@ public:
-> >       GPIOD_API bool is_used(void) const;
+> > Cc: Thomas
 > >
-> >       /**
-> > -      * @brief Check if this line represents an open-drain GPIO.
-> > -      * @return True if the line is an open-drain GPIO, false otherwise.
-> > +      * @brief Get current drive setting of this line.
-> > +      * @return Current drive setting.
-> >        */
-> > -     GPIOD_API bool is_open_drain(void) const;
-> > -
-> > -     /**
-> > -      * @brief Check if this line represents an open-source GPIO.
-> > -      * @return True if the line is an open-source GPIO, false otherwise.
-> > -      */
-> > -     GPIOD_API bool is_open_source(void) const;
-> > +     GPIOD_API int drive(void) const;
-> >
-> >       /**
-> >        * @brief Request this line.
-> > @@ -482,6 +476,18 @@ public:
-> >               /**< Line's direction setting is output. */
-> >       };
-> >
-> > +     /**
-> > +      * @brief Possible drive settings.
-> > +      */
-> > +     enum : int {
-> > +             DRIVE_NONE = 1,
-> > +             /**< Drive setting is unknown. */
+> > This problem has been raised by the buildroot people when we started
+> > requiring different versions of kernel headers to build v1.4 and v1.6.
+> > It turns out most projects simply package the uapi headers together
+> > with their sources (e.g. wpa_supplicant, libnl, iproute2) to avoid
+> > complicated dependencies. It's true that now the library can fail at
+> > runtime but I'm fine with that. Also: if we add new features between
+> > two kernel versions, we still allow to build the new library version
+> > except that these new features won't work on older kernels.
 >
-> Unlike bias, the drive setting is never unknown - if zero the pin is
-> assumed push-pull.
+> I see.
 >
-> And to me DRIVE_NONE implies a high impedance state.
+> So known ways to solve this are
+>  - provide a header with source tree (see above)
+>  - modify code with ifdeffery against specific kernel versions
+>  - ...something else... ?
+>
+> Second item is what ALSA used (not sure if they provide a standalone driver
+> anymore). Ugly, but won't require header which may be staled.
+>
+> Any other solutions in mind?
 >
 
-Indeed, I'll change it to DRIVE_PUSH_PULL then.
+I tried to go the third way and just ignore the problem but I've
+received too many emails about that. :)
+
+I don't like the ifdef hell so I prefer to bundle the header. I'm open
+to other suggestions, although I can't come up with anything else.
 
 Bart
