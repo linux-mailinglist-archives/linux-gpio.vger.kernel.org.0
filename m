@@ -2,100 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A59822F139C
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 14:12:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E45EC2F1514
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jan 2021 14:35:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbhAKNLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 08:11:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730752AbhAKNLy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 11 Jan 2021 08:11:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E240122AAB;
-        Mon, 11 Jan 2021 13:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610370673;
-        bh=AmODotHhHqE5rQ7jrjw/zpMa0EF2YxLtNlbdQq2dKFY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jPsLXfVKxGo3XvOdA/kWPru4HQo3uHlHD7WTD7Z+jg4EeHklB+xudWVRvumR8ZEjp
-         IH1MR0hhEoUQeQCROZC/qInMMcaTVRe39vLogAayU40d8kFEh0Hr0KdmxxiZHciE8i
-         Bi+Bvg0z4iUKqYnCcxQrtOE0mairMCBQ3xKaMgTVQQg/kxtVMx5oS28GgyURVl45Ry
-         ih7dP2NS4jhasdDwjWmdGYfRc84rctt53Ae9aTrlN3GsatNGHdETOt26lJljgOY0Rg
-         xfTX0bdwO3EZqK7i5iS4JI8GqCQIsDfGYFK3iW5wLuh9f8E2VkF0kncAL6/yZzU6gm
-         X9FeLFZdmtlWA==
-Date:   Mon, 11 Jan 2021 13:10:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
-        martin.botka@somainline.org, phone-devel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
- Expander
-Message-ID: <20210111131040.GA4728@sirena.org.uk>
-References: <20210109140204.151340-1-angelogioacchino.delregno@somainline.org>
- <20210109140204.151340-2-angelogioacchino.delregno@somainline.org>
- <CACRpkdbETKnhgR2-T+s3ChY4v-C5ErdPEp2WcMSZHzJ=O-fHig@mail.gmail.com>
- <111b918d-2b43-be81-2dbf-e984750b0ef7@somainline.org>
- <CACRpkdZXgN91jKBDvf=P5_6ObOaacQa2PGL3-jP1gBW__ZyOaA@mail.gmail.com>
- <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
+        id S1732093AbhAKNfN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 08:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731259AbhAKNfL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 08:35:11 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322E6C061786
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 05:34:31 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id y17so16423177wrr.10
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jan 2021 05:34:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7t04GSheOQRVVcWG8j8bszkBKGmuW9GgLM9ZzWToJtQ=;
+        b=kU2GLLLWA/Onhu5+ZM+h7CjAWv4doxg60fgLsMjB1Uvj99xmx5xfdq0IEd9d03hpDW
+         SrBL/hM6su34OZ8OYU64sir10YpVR9VbR5a8F4NbY1yVUdgss32YnNK45B05I8xuwYaz
+         ypYpnND7GCn+OXih02iTIfiMb1uQAIrf0z6NBCqeOn/UXY0Ya2FYGWXqEqlJkUSekKMY
+         VtSunWm4eKxaeB3QOTGcdYoHQp448eHhd5CJdvmMkMyC7QugzGpOLGIpV7vJZRbKkx0D
+         yLTUVsbmXNdvqv+yLLUs8nGJPySgbmQq1KTWFWSq9kshkbljwrhMsDUQ4WYh7HPxhOft
+         yKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7t04GSheOQRVVcWG8j8bszkBKGmuW9GgLM9ZzWToJtQ=;
+        b=kENGC5csz/bahZxCUFOl5s9kQ9+h7clFuVJX1XpJxvZ43WE5RQkLsiaCUN0RFhCc9Q
+         9897rT1pYtFff078dBGqtvMK8cRUsRV9Cf2o6SQ/8jlhKewXd718Ooh8WQcInxp5xcWW
+         YvmU5x7QQtlIdyC/Lmsx5bsqkTTwxQUzXtlO50YnZfMLXZgXDCEyFQn5pYgB1PYCpbIr
+         nqB+D0kFEHeqgCb/RKL5q6lxpLE+UtqlRbasZnyPkZAz/0FFVJbxmEzJmaSpL939TKHo
+         E9lJi+/0snhmTOLc/yrp1OrHudSmUX/2mo8quWSQSIfHsVlbKzYLkBP5XRQZchW/dDxd
+         RtLA==
+X-Gm-Message-State: AOAM531gY9fYz1uXLwfcuHNlxCixEN6OsVerX5A9zaBdIS2ewckLNCfF
+        AdJKvLO8vMQy/dbG1I2PySeybg==
+X-Google-Smtp-Source: ABdhPJxtv4KXLEbVBE+A3naBUw+pHH7EHlgrCcJOAa8NZr9vUvtP/rJwv1iHyoeIP9unz8YdL6Z9eQ==
+X-Received: by 2002:adf:f58a:: with SMTP id f10mr17049958wro.338.1610372070002;
+        Mon, 11 Jan 2021 05:34:30 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id m11sm21456741wmi.16.2021.01.11.05.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jan 2021 05:34:29 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [libgpiod][PATCH 0/6] treewide: remove more cruft and 
+Date:   Mon, 11 Jan 2021 14:34:20 +0100
+Message-Id: <20210111133426.22040-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
-Content-Disposition: inline
-In-Reply-To: <744125a7-ffb6-a3f5-70cb-2ab48fcf31b8@somainline.org>
-X-Cookie: Too much is not enough.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is another batch of improvements to libgpiod before we overhaul the
+data structure model.
 
-On Sun, Jan 10, 2021 at 03:32:47PM +0100, AngeloGioacchino Del Regno wrote:
+The last patch adds the kernel uapi header to the repository so that we
+no longer depend on its presence on the host system.
 
-> Then, the set_bit/clear_bit in aw9523_irq_mask(), aw9523_irq_unmask were
-> replaced with calls to regmap_update_bits_async, example:
+Bartosz Golaszewski (6):
+  treewide: remove helpers for opening chips by name & number
+  treewide: simplify the active-low line property
+  treewide: rename BIAS_AS_IS to BIAS_NONE
+  treewide: make drive settings an enum
+  bindings: cxx: line: reorder bias mapping entries
+  core: add the kernel uapi header to the repository
 
-Why are you trying to use the _async() versions here?  Don't you need
-the I/O to complete synchronously, and what would be the benefit of
-dealing with the complexity of making things async?  The genirq
-framework is definitely going to expect things to be complete before you
-return to it...
+ bindings/cxx/chip.cpp                  |  41 +-
+ bindings/cxx/examples/gpioinfocxx.cpp  |   3 +-
+ bindings/cxx/gpiod.hpp                 |  57 +--
+ bindings/cxx/line.cpp                  |  28 +-
+ bindings/cxx/tests/tests-chip.cpp      |  97 +----
+ bindings/cxx/tests/tests-event.cpp     |  14 +-
+ bindings/cxx/tests/tests-iter.cpp      |   2 +-
+ bindings/cxx/tests/tests-line.cpp      |  93 ++---
+ bindings/python/examples/gpioinfo.py   |   4 +-
+ bindings/python/gpiodmodule.c          | 167 +++-----
+ bindings/python/tests/gpiod_py_test.py | 173 ++++----
+ configure.ac                           |  12 +-
+ include/gpiod.h                        |  65 +--
+ lib/Makefile.am                        |   2 +-
+ lib/core.c                             |  29 +-
+ lib/helpers.c                          |  57 ---
+ lib/uapi/gpio.h                        | 522 +++++++++++++++++++++++++
+ tests/tests-chip.c                     |  41 --
+ tests/tests-line.c                     | 100 ++---
+ tools/gpiodetect.c                     |   2 +-
+ tools/gpiofind.c                       |   2 +-
+ tools/gpioget.c                        |   2 +-
+ tools/gpioinfo.c                       |  28 +-
+ tools/gpiomon.c                        |   2 +-
+ tools/gpioset.c                        |   2 +-
+ tools/tools-common.c                   |  57 +++
+ tools/tools-common.h                   |   3 +
+ 27 files changed, 903 insertions(+), 702 deletions(-)
+ create mode 100644 lib/uapi/gpio.h
 
-Note also that this only really does anything for SPI, I2C doesn't offer
-an aynchronous API.
+-- 
+2.29.1
 
-> <4>[    1.064060]  regmap_i2c_write+0x1c/0x50
-
-regmap will only use spinlocks if you explictly ask it to do so by
-setting fast_io.  You can't use spinlock based locking for your register
-cache if your device is attached via I2C, I2C is a very slow bus and I2C
-controllers will need to sleep.  I'd be very surprised if there were any
-benefit from using a flat cache with such a device frankly, the I/O is
-going to be so slow that any performance gain from using a flat cache is
-lost in the noise.
-
---cNdxnHkX5QqsyA0e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/8TlAACgkQJNaLcl1U
-h9By5gf9GtyGBDOfQulWOZeMoyUphHU9j0RN7pN2FPc5guPc3ihmcnQMo0qTp5MD
-+Kt5kV85ysVR/vwhrMyGkfKuvh8mAqXxYxSzPruo6Iy23c2YPasuIGqhJEILrfB4
-sB5JYtsjDXrWqwaFk3jnhmRljiyG6QIeXoQwc9bGmXsV6lcYkFN/WP/w1zUo9j2t
-NfNQ4ao/O1hpRY1+2pgoZ0bjPeo8ck4kow8sDl2KKnNDudJZcTiHLswOQ+rkwrhE
-ekktFQknw8BaqGRFpyxJgM822hHKtKROIIE9u+L/wiDp2d5+RDkVCGw7XLzU6Wcm
-U3XKnRsGfi2xxnO2VzInFjWfAqv6uQ==
-=6nWa
------END PGP SIGNATURE-----
-
---cNdxnHkX5QqsyA0e--
