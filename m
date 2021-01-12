@@ -2,183 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CAF2F2CFF
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 11:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 434722F31C0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 14:31:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbhALKh1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 05:37:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        id S1727305AbhALNbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 08:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbhALKh0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 05:37:26 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2188C061575;
-        Tue, 12 Jan 2021 02:36:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I1TOZTlIyWpJo6t+ktfKEwi2Grwz2ejbXpCqmeiGeoo=; b=bWaGhBd8PtoP/cQ7GvkqD3iEH
-        vbtnhNtL3/0sktfKOgWpaPiT+pa4W7eLRYzfxQVhYuklWvXGb+53tLKrcz+lKUW0XtbvUUWb5WUAl
-        Sij2k3/WNcOvU84Vyalstmgvz24Xij+13atBb0OhLQqE7zA7+n9T6Lda4J/jo6H599SLyMA3L7cL5
-        PdmqKfrR8d+Z4+6y6PWKp5Ar0Ppyi/3eVTl+mBqufomfvlF4fllM8k4QFD6QvswBusmlPLWAqm9nG
-        NP0SEHTXHAtAPTUp+YwEmsda2jvDNe/sWgNjvO8tJusxfBlibf0TJ4X7xq3dkRJC1/9Z5DKbw5DDU
-        tE5m40bzQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46984)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1kzH2J-000813-Ox; Tue, 12 Jan 2021 10:36:27 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1kzH2A-0006CA-6h; Tue, 12 Jan 2021 10:36:18 +0000
-Date:   Tue, 12 Jan 2021 10:36:18 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, linux-pwm@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S1727203AbhALNbB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 08:31:01 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C71C061575;
+        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id f11so2821236ljm.8;
+        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tBrEmrNL7DhkzlrYoGObtf/1sHRg3FkyKyrUC6Mlec=;
+        b=tC2QrZ2mPJ1t4HmltKvpezHworgWx1ZN/BlpudndmQGANsBsqf0vCHDIHIoyZ7/NpN
+         yv/EBupfZ+WI0lm53cjUdPX3oYNAze8FYqH99SmJUF4MPymZHM/zt/liVFvkSOOyCI9Y
+         NMR7VWNouxmt8r6BFbiYhxgdLhpo8yq8LOhcnuSbJq4HHhZkuSvw/rYc79tEmeR1rbUV
+         fmicVyDnm1buO2MED3mbIAIfHK2sPKtKo9tjsviM5NIDCzAY2A8Nc/daKmNGMt1Le64l
+         AdIZI1Qawz5vSwgKAurBQ/9JDzOwisv4VqUIaaDT++tuch0nrU2cPqcwRDR7KxRQc64d
+         o0sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tBrEmrNL7DhkzlrYoGObtf/1sHRg3FkyKyrUC6Mlec=;
+        b=ow9KHeQm7aLLiEyVXxicMUoy5BGBzmAcfBbUyqv49/vz44lMSeUWkShiMVY1tE1Nhd
+         Tyn+WgwJEt23y5PiIve2JfsAeL0wDLIrdHEh3KtJq27aJI0Jb4OMDymce5YJvMR8WmUh
+         sONgh16wB+wrdZzgmeLHeHtuI5ah0+Tps9YP0kkA5wwTZbsp4pZ339ZiS43hb0+1lNqm
+         iOhA6RJ1jM/RPrbgwo+TBlFUdFS+SNOZzbRcIWJ0sTjN8Z1kNsbDy3pP4nfnb9aoV9X9
+         VUeC8UFEaQrVeFvydRrFZDqrVVM4hiA2/GfYoIErfho4Zb9acBPQGhdjfbF0PmNai8Lv
+         5Abw==
+X-Gm-Message-State: AOAM532PNMFTjSRVqMVKDVd5zH8k2e+imDvh75JklxNf4jz2RQyavukq
+        3WuddZhqxh779s05drKq54E=
+X-Google-Smtp-Source: ABdhPJz9QWQQq6DpILyijCAdUx7IVDkQtqMZzfZ9zygtaSOVDlZ5mbUnFtx9IyCp7dzoUvt5cUeM7w==
+X-Received: by 2002:a2e:9847:: with SMTP id e7mr2056825ljj.388.1610458219308;
+        Tue, 12 Jan 2021 05:30:19 -0800 (PST)
+Received: from localhost.localdomain (109-252-192-57.dynamic.spd-mgts.ru. [109.252.192.57])
+        by smtp.gmail.com with ESMTPSA id u30sm394042lfc.238.2021.01.12.05.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jan 2021 05:30:18 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7 3/3] dt-bindings: ap806: document gpio
- marvell,pwm-offset property
-Message-ID: <20210112103617.GB1551@shell.armlinux.org.uk>
-References: <cover.1610364681.git.baruch@tkos.co.il>
- <5e1b119a51df19ead32561e87ce2ee1441b67154.1610364681.git.baruch@tkos.co.il>
- <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matt Merhar <mattmerhar@protonmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] gpio: tegra: Fix wake interrupt
+Date:   Tue, 12 Jan 2021 16:30:09 +0300
+Message-Id: <20210112133010.21397-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 09:49:16AM +0100, Linus Walleij wrote:
-> Hi Baruch,
-> 
-> this caught my eye:
-> 
-> On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
-> 
-> > Update the example as well. Add the '#pwm-cells' and 'clocks' properties
-> > for a complete working example.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> 
-> (...)
-> > +Optional properties:
-> > +
-> > +- marvell,pwm-offset: offset address of PWM duration control registers inside
-> > +  the syscon block
-> (...)
-> >  ap_syscon: system-controller@6f4000 {
-> >         compatible = "syscon", "simple-mfd";
-> > @@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
-> >                 gpio-controller;
-> >                 #gpio-cells = <2>;
-> >                 gpio-ranges = <&ap_pinctrl 0 0 19>;
-> > +               marvell,pwm-offset = <0x10c0>;
-> 
-> This seems to be one of those cases where we start to encode things related
-> to the hardware variant into the device tree.
-> 
-> Is this just documenting ABI that was introduced in the past and we can not
-> do anything about now? In that case it is OK I suppose.
-> 
-> For a new binding we would certainly require that the system controller
-> provide a specific tertiary compatible string for this, lest we disguise
-> the not-so-simple system controller as "simple-mfd" so:
-> 
-> compatible = "syscon", "simple-mfd", "my-silicon-id";
-> 
-> Then detect the PWM offset by using
-> if(of_device_is_compatibe(np, "my-silicon-id"))
-> in the code rather than parsing any marvell,pwm-offset property.
+The GPIO bank wake interrupt setting was erroneously removed after
+conversion to gpio_irq_chip, thus the wake interrupt programming is
+broken now. Secondly, the wake_enb of the GPIO driver should be changed
+only after the successful toggling of the IRQ wake-state. Restore the wake
+interrupt setting and the programming order.
 
-I think it would be a good idea to describe the hardware more fully.
-For the CP110 and AP80x dies on Armada 8040:
+Fixes: efcdca286eef ("gpio: tegra: Convert to gpio_irq_chip")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpio/gpio-tegra.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-CP110	AP80x
-Offset	Offset
-00/40	5040	Data Out
-04/44	5044	Data Out Enable
-08/48	5048	Blink Enable
-0c/4c	504c	Data In polarity
-10/50	5050	Data In
-14/54	5054	IRQ Cause
-18/58	5058	IRQ Mask
-1c/5c	505c	IRQ Level mask
-20/60	5060	Blink Counter Select
-28/68	5068	Control Set
-2c/6c	506c	Control Clear
-30/70	5070	Data Out Set
-34/74	5074	Data Out Clear
-f0	50c0	Blink Counter A ON duration
-f4	50c4	Blink Counter A OFF duration
-f8	50c8	Blink Counter B ON duration
-fc	50cc	Blink Counter B OFF duration
-
-We identify both of these using a compatible of "marvell,armada-8k-gpio"
-which really only describes the first 64 bytes of the register set:
-
-			ap_gpio: gpio@1040 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x1040>;
-				...
-			};
-
-			CP11X_LABEL(gpio1): gpio@100 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x100>;
-				...
-			};
-
-			CP11X_LABEL(gpio2): gpio@140 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x140>;
-				...
-			};
-
-Note that on the CP11x dies, there are two GPIO controllers sharing the
-same set of blink counter registers - one at offset 0 the other at
-offset 0x40.
-
-However, the pwm-offset is the offset in the regmap of the parent node.
-
-It is possible to use a more specific compatible that would describe
-the PWM offset for the CP11x and AP806 (which would need two different
-ones) but that starts getting messy when you consider that we already
-describe an offset in regmap for the first 64 registers, and encoding
-the blink register offset in a compatible would partially end up
-encoding the "offset" we already have.
-
-In any case, these offsets are a function of how it was originally
-chosen to describe the hardware in DT, rather than anything about the
-hardware itself. The choice to use a syscon/regmap is purely an
-implementation decision rather than something from the hardware, so
-this DT description is already based around describing what is required
-for the Linux implementation, rather than purely being a hardware
-description.
-
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index b8a4fd07c559..6c79e9d2f932 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -541,6 +541,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	struct tegra_gpio_bank *bank;
+ 	unsigned int gpio = d->hwirq;
+ 	u32 port, bit, mask;
++	int err;
+ 
+ 	bank = &tgi->bank_info[GPIO_BANK(d->hwirq)];
+ 
+@@ -548,14 +549,23 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	bit = GPIO_BIT(gpio);
+ 	mask = BIT(bit);
+ 
++	err = irq_set_irq_wake(tgi->irqs[bank->bank], enable);
++	if (err)
++		return err;
++
++	if (d->parent_data) {
++		err = irq_chip_set_wake_parent(d, enable);
++		if (err) {
++			irq_set_irq_wake(tgi->irqs[bank->bank], !enable);
++			return err;
++		}
++	}
++
+ 	if (enable)
+ 		bank->wake_enb[port] |= mask;
+ 	else
+ 		bank->wake_enb[port] &= ~mask;
+ 
+-	if (d->parent_data)
+-		return irq_chip_set_wake_parent(d, enable);
+-
+ 	return 0;
+ }
+ #endif
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.29.2
+
