@@ -2,93 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 966B42F31C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 14:31:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 314D72F3DE9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 01:44:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbhALNbD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 08:31:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbhALNbC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 08:31:02 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B6BC061786;
-        Tue, 12 Jan 2021 05:30:22 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id f11so2821296ljm.8;
-        Tue, 12 Jan 2021 05:30:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WkBi8cOfZJevANkTdRqj8Ub33blmw4LwonV+ywbCBD4=;
-        b=VPUjr2+c+aN/sO0xt17qQm/yoYDf4HILMa/C6SU7PP04xVsUTwlnBuyUzA/dRY0knq
-         X7z4igyL3kW+TdjFWUbRqziOR1T+TpoAKPp4SAhKXJFfGFUqGv9+L/ZN6/zm9szGW+XH
-         KoQayPNLvEfU0hMykKnvgE0su6/VChiC9zFNlD2v5KOW7vKA+ORjkNNeYAJ/vEtM3O+P
-         w8L91gGTBYnQvpL4GYVC8PgqzL1lOklOyJyPi7/gmc8dg1BlYu3mCFgxcKkR6Pzv7VeP
-         ET9xWTexpp3k22gghMeQZXQ05b6/4ssBBoYQxPJP8Ckhxx3MWkrDFOV211W0jVombvYv
-         yWDg==
+        id S1732333AbhALVxp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 16:53:45 -0500
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:44997 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbhALVxk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 16:53:40 -0500
+Received: by mail-oi1-f171.google.com with SMTP id d189so3954141oig.11;
+        Tue, 12 Jan 2021 13:53:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WkBi8cOfZJevANkTdRqj8Ub33blmw4LwonV+ywbCBD4=;
-        b=mfWTT0cxh/90TGfpE8RMjr6eQT5wEl1m0V4ODOIBu9jDPN0EtTNb1xpczmCoR62aD5
-         Pa5Jd/rSGH4Wlnjp8xNQacfBoJJWkH5fFart++FoxzSrCLQZI2xH1mTP6xKeYhsz2ryR
-         U63QWlsqbDyXaGrhxISFTXmE7JePWsb2+dnHoXpPh9mwnl+02NUW3ewk1ksvwE5IRYsm
-         NT5p+K/j4xJxE2atm8uGQf3U8FAaREWgvRHzDqTBrHlIgyYLUievUcFt7CXXFetYzIE6
-         Z5IXeTicdaIKe+uBnloYoxXVnQ+bqrpq1Y85le0n/jq9QAzovxwpe/FXhyvlItmKUv0T
-         UBEw==
-X-Gm-Message-State: AOAM532ke7IYQ2iTnjUk90+2+T7s5QAGcFRAt2gu0CS7j7pcAzqAToGR
-        KpeSMG3isPxLRcSLrjXaHpU=
-X-Google-Smtp-Source: ABdhPJwOTt8krhzfLzRMUPS6kcJGfq1RYandMhb74Bc5pqMIZzs5jbU504/XB06qBd8TD54m+TMn1A==
-X-Received: by 2002:a2e:a364:: with SMTP id i4mr2055546ljn.426.1610458220149;
-        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
-Received: from localhost.localdomain (109-252-192-57.dynamic.spd-mgts.ru. [109.252.192.57])
-        by smtp.gmail.com with ESMTPSA id u30sm394042lfc.238.2021.01.12.05.30.19
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=ngbxvbs9Rj1earjppnfOPpPMVrmf1dzRw0Kyw1CoJEk=;
+        b=Rla/h2rBLLWLLF5ao66IH9OMMGUfdZwdUjT89DfMdrlTxW8QqhzY4gLtgQG0+RYaLS
+         6NJZhGi8un46J2NbZBrXfqajP/5uXStRzPg3VnmajuG0X62c6DzjorePlOg1UGOMpWrQ
+         tLNBKvSWF8tmBzsDhCh2But0i/iYte3AMTX2TjlyL+WJ9IL8JRoUDTY8GaaW19F9UI9B
+         U9Ple/QX1tkPnHXoLqBEECZCjY8k9Ul+hZPeniZ6uzSXzFDgD3t2YZqKJKHk8Gj6Vefp
+         5+G3ttWiFjBTr1+Yhb8dKLuYWuo/oilP6qOqMnr/smhuP59juNSKOdGX9kPZi+PgMUnu
+         Dwfw==
+X-Gm-Message-State: AOAM530zwCDhMBEevGNe1knu/idfN+fXzTJRkSbOOC0trIBTN61UcaqJ
+        XqLQMGwlMhA+IdCzfiut9mcXkoo9tg==
+X-Google-Smtp-Source: ABdhPJw5qFKjKiuF5jl8AImxNuNfc8/UkpJDKdATyLyXBwQFhEavjlqrxbEsTxjgXYJm3KcYv3TU8w==
+X-Received: by 2002:aca:df0b:: with SMTP id w11mr719128oig.111.1610488378965;
+        Tue, 12 Jan 2021 13:52:58 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h2sm842833ooa.25.2021.01.12.13.52.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jan 2021 05:30:19 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] gpio: tegra: Add dependency on GPIOLIB_IRQCHIP
-Date:   Tue, 12 Jan 2021 16:30:10 +0300
-Message-Id: <20210112133010.21397-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210112133010.21397-1-digetx@gmail.com>
-References: <20210112133010.21397-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Jan 2021 13:52:58 -0800 (PST)
+Received: (nullmailer pid 1037769 invoked by uid 1000);
+        Tue, 12 Jan 2021 21:52:56 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Cc:     martin.botka@somainline.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        marijn.suijten@somainline.org, linux-gpio@vger.kernel.org,
+        robh+dt@kernel.org, phone-devel@vger.kernel.org,
+        konrad.dybcio@somainline.org
+In-Reply-To: <20210111182928.587285-2-angelogioacchino.delregno@somainline.org>
+References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org> <20210111182928.587285-2-angelogioacchino.delregno@somainline.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
+Date:   Tue, 12 Jan 2021 15:52:56 -0600
+Message-Id: <1610488376.946823.1037768.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add dependency on GPIOLIB_IRQCHIP in order to fix driver compilation.
+On Mon, 11 Jan 2021 19:29:28 +0100, AngeloGioacchino Del Regno wrote:
+> Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> ---
+>  .../pinctrl/awinic,aw9523-pinctrl.yaml        | 112 ++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+> 
 
-Fixes: efcdca286eef ("gpio: tegra: Convert to gpio_irq_chip")
-Reported-by: Matt Merhar <mattmerhar@protonmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 75f6c37620ea..0cd1f91e4a19 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -597,6 +597,7 @@ config GPIO_TEGRA
- 	default ARCH_TEGRA
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on OF_GPIO
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to support GPIO pins on NVIDIA Tegra SoCs.
- 
--- 
-2.29.2
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts:25.21-34: Warning (reg_format): /example-0/i2c_node/gpio-expander@58:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts:23.30-34.15: Warning (avoid_default_addr_size): /example-0/i2c_node/gpio-expander@58: Relying on default #address-cells value
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dts:23.30-34.15: Warning (avoid_default_addr_size): /example-0/i2c_node/gpio-expander@58: Relying on default #size-cells value
+Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+
+See https://patchwork.ozlabs.org/patch/1424757
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
