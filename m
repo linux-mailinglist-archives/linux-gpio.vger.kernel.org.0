@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 434722F31C0
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 14:31:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 966B42F31C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 14:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbhALNbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 08:31:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
+        id S1728068AbhALNbD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 08:31:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727203AbhALNbB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 08:31:01 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C71C061575;
-        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id f11so2821236ljm.8;
-        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
+        with ESMTP id S1730216AbhALNbC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 08:31:02 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B6BC061786;
+        Tue, 12 Jan 2021 05:30:22 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id f11so2821296ljm.8;
+        Tue, 12 Jan 2021 05:30:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1tBrEmrNL7DhkzlrYoGObtf/1sHRg3FkyKyrUC6Mlec=;
-        b=tC2QrZ2mPJ1t4HmltKvpezHworgWx1ZN/BlpudndmQGANsBsqf0vCHDIHIoyZ7/NpN
-         yv/EBupfZ+WI0lm53cjUdPX3oYNAze8FYqH99SmJUF4MPymZHM/zt/liVFvkSOOyCI9Y
-         NMR7VWNouxmt8r6BFbiYhxgdLhpo8yq8LOhcnuSbJq4HHhZkuSvw/rYc79tEmeR1rbUV
-         fmicVyDnm1buO2MED3mbIAIfHK2sPKtKo9tjsviM5NIDCzAY2A8Nc/daKmNGMt1Le64l
-         AdIZI1Qawz5vSwgKAurBQ/9JDzOwisv4VqUIaaDT++tuch0nrU2cPqcwRDR7KxRQc64d
-         o0sg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WkBi8cOfZJevANkTdRqj8Ub33blmw4LwonV+ywbCBD4=;
+        b=VPUjr2+c+aN/sO0xt17qQm/yoYDf4HILMa/C6SU7PP04xVsUTwlnBuyUzA/dRY0knq
+         X7z4igyL3kW+TdjFWUbRqziOR1T+TpoAKPp4SAhKXJFfGFUqGv9+L/ZN6/zm9szGW+XH
+         KoQayPNLvEfU0hMykKnvgE0su6/VChiC9zFNlD2v5KOW7vKA+ORjkNNeYAJ/vEtM3O+P
+         w8L91gGTBYnQvpL4GYVC8PgqzL1lOklOyJyPi7/gmc8dg1BlYu3mCFgxcKkR6Pzv7VeP
+         ET9xWTexpp3k22gghMeQZXQ05b6/4ssBBoYQxPJP8Ckhxx3MWkrDFOV211W0jVombvYv
+         yWDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1tBrEmrNL7DhkzlrYoGObtf/1sHRg3FkyKyrUC6Mlec=;
-        b=ow9KHeQm7aLLiEyVXxicMUoy5BGBzmAcfBbUyqv49/vz44lMSeUWkShiMVY1tE1Nhd
-         Tyn+WgwJEt23y5PiIve2JfsAeL0wDLIrdHEh3KtJq27aJI0Jb4OMDymce5YJvMR8WmUh
-         sONgh16wB+wrdZzgmeLHeHtuI5ah0+Tps9YP0kkA5wwTZbsp4pZ339ZiS43hb0+1lNqm
-         iOhA6RJ1jM/RPrbgwo+TBlFUdFS+SNOZzbRcIWJ0sTjN8Z1kNsbDy3pP4nfnb9aoV9X9
-         VUeC8UFEaQrVeFvydRrFZDqrVVM4hiA2/GfYoIErfho4Zb9acBPQGhdjfbF0PmNai8Lv
-         5Abw==
-X-Gm-Message-State: AOAM532PNMFTjSRVqMVKDVd5zH8k2e+imDvh75JklxNf4jz2RQyavukq
-        3WuddZhqxh779s05drKq54E=
-X-Google-Smtp-Source: ABdhPJz9QWQQq6DpILyijCAdUx7IVDkQtqMZzfZ9zygtaSOVDlZ5mbUnFtx9IyCp7dzoUvt5cUeM7w==
-X-Received: by 2002:a2e:9847:: with SMTP id e7mr2056825ljj.388.1610458219308;
-        Tue, 12 Jan 2021 05:30:19 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WkBi8cOfZJevANkTdRqj8Ub33blmw4LwonV+ywbCBD4=;
+        b=mfWTT0cxh/90TGfpE8RMjr6eQT5wEl1m0V4ODOIBu9jDPN0EtTNb1xpczmCoR62aD5
+         Pa5Jd/rSGH4Wlnjp8xNQacfBoJJWkH5fFart++FoxzSrCLQZI2xH1mTP6xKeYhsz2ryR
+         U63QWlsqbDyXaGrhxISFTXmE7JePWsb2+dnHoXpPh9mwnl+02NUW3ewk1ksvwE5IRYsm
+         NT5p+K/j4xJxE2atm8uGQf3U8FAaREWgvRHzDqTBrHlIgyYLUievUcFt7CXXFetYzIE6
+         Z5IXeTicdaIKe+uBnloYoxXVnQ+bqrpq1Y85le0n/jq9QAzovxwpe/FXhyvlItmKUv0T
+         UBEw==
+X-Gm-Message-State: AOAM532ke7IYQ2iTnjUk90+2+T7s5QAGcFRAt2gu0CS7j7pcAzqAToGR
+        KpeSMG3isPxLRcSLrjXaHpU=
+X-Google-Smtp-Source: ABdhPJwOTt8krhzfLzRMUPS6kcJGfq1RYandMhb74Bc5pqMIZzs5jbU504/XB06qBd8TD54m+TMn1A==
+X-Received: by 2002:a2e:a364:: with SMTP id i4mr2055546ljn.426.1610458220149;
+        Tue, 12 Jan 2021 05:30:20 -0800 (PST)
 Received: from localhost.localdomain (109-252-192-57.dynamic.spd-mgts.ru. [109.252.192.57])
-        by smtp.gmail.com with ESMTPSA id u30sm394042lfc.238.2021.01.12.05.30.18
+        by smtp.gmail.com with ESMTPSA id u30sm394042lfc.238.2021.01.12.05.30.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jan 2021 05:30:18 -0800 (PST)
+        Tue, 12 Jan 2021 05:30:19 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -56,67 +56,39 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Matt Merhar <mattmerhar@protonmail.com>
 Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] gpio: tegra: Fix wake interrupt
-Date:   Tue, 12 Jan 2021 16:30:09 +0300
-Message-Id: <20210112133010.21397-1-digetx@gmail.com>
+Subject: [PATCH v1 2/2] gpio: tegra: Add dependency on GPIOLIB_IRQCHIP
+Date:   Tue, 12 Jan 2021 16:30:10 +0300
+Message-Id: <20210112133010.21397-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210112133010.21397-1-digetx@gmail.com>
+References: <20210112133010.21397-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The GPIO bank wake interrupt setting was erroneously removed after
-conversion to gpio_irq_chip, thus the wake interrupt programming is
-broken now. Secondly, the wake_enb of the GPIO driver should be changed
-only after the successful toggling of the IRQ wake-state. Restore the wake
-interrupt setting and the programming order.
+Add dependency on GPIOLIB_IRQCHIP in order to fix driver compilation.
 
 Fixes: efcdca286eef ("gpio: tegra: Convert to gpio_irq_chip")
+Reported-by: Matt Merhar <mattmerhar@protonmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpio-tegra.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index b8a4fd07c559..6c79e9d2f932 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -541,6 +541,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- 	struct tegra_gpio_bank *bank;
- 	unsigned int gpio = d->hwirq;
- 	u32 port, bit, mask;
-+	int err;
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 75f6c37620ea..0cd1f91e4a19 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -597,6 +597,7 @@ config GPIO_TEGRA
+ 	default ARCH_TEGRA
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	depends on OF_GPIO
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to support GPIO pins on NVIDIA Tegra SoCs.
  
- 	bank = &tgi->bank_info[GPIO_BANK(d->hwirq)];
- 
-@@ -548,14 +549,23 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- 	bit = GPIO_BIT(gpio);
- 	mask = BIT(bit);
- 
-+	err = irq_set_irq_wake(tgi->irqs[bank->bank], enable);
-+	if (err)
-+		return err;
-+
-+	if (d->parent_data) {
-+		err = irq_chip_set_wake_parent(d, enable);
-+		if (err) {
-+			irq_set_irq_wake(tgi->irqs[bank->bank], !enable);
-+			return err;
-+		}
-+	}
-+
- 	if (enable)
- 		bank->wake_enb[port] |= mask;
- 	else
- 		bank->wake_enb[port] &= ~mask;
- 
--	if (d->parent_data)
--		return irq_chip_set_wake_parent(d, enable);
--
- 	return 0;
- }
- #endif
 -- 
 2.29.2
 
