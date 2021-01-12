@@ -2,312 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2CB62F2545
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 02:18:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE9C2F273D
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 05:44:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbhALBIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jan 2021 20:08:45 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:32849 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731459AbhALBIp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jan 2021 20:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1610414460; x=1641950460;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=g4DY/f4bAaHbSwR3imj3xvIgHAl4vMLVMk3x/d6Iodo=;
-  b=fSbGVPr+KqdUFA2INmZgZd2rqd1Q5ChOUr4vRLJSe9SRXGPLwr+Yc9JG
-   LgxWuaSId5qfO1FQvwRKm/qj7eSn5zC1C8penmsWDGRMtm0tUwJT8otNc
-   f52tHMc37EdATXm4Y0LQSvgWEWnVPNeegVkn0Oso7iSjX42E2c5cVSqOu
-   tnrKR2Pt9Pmt3aHvVGRaj/bmeztyJjHRHBmcjNJJuGlrWidthd5X0f8ws
-   eg55uv+oMb6ThHS++S/Xnq6u3wJxx4xqPR41RamqWt5G8nTlkbZKhdYdS
-   FPKD/Z+gfcZ5D9sxNiEbyJxN6pm9hURPdd+brqRj5EdPIyGh/tNNprbUE
-   A==;
-IronPort-SDR: 4ZGsue3tJEKeljAjXIR/FUmiJBwi5HoCHh4NuwUp4XkTD0CHRLUBJIOLqo0Zlmk9MkM4vyxmVu
- yCyg3ZcNj3aDJcUylCF5yzrefYPvxIPsoGaffNkw402Tgc0rmiXrf2q2o8cwUiIhDMwTL1ARXT
- uLOFkBBSguen3fm0gZTFUmNE+MosCG5XPqmEhHyNLsfq7x9a3HWBK77VUNCsr2ZxxZ08byzcgk
- hQr1A2XMo/5rdAzVk8Tmom6GtCOD3Kl4GEofcHfxHsFOAyuFIBY9Lw69s3Ag7PkxkNqjISRDTa
- 4mA=
-X-IronPort-AV: E=Sophos;i="5.79,340,1602518400"; 
-   d="scan'208";a="261085984"
-Received: from mail-bn8nam12lp2176.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.176])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Jan 2021 09:19:20 +0800
+        id S1731027AbhALEnz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jan 2021 23:43:55 -0500
+Received: from mail-eopbgr1410117.outbound.protection.outlook.com ([40.107.141.117]:34057
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730310AbhALEny (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 11 Jan 2021 23:43:54 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dj2ThM/K5tksIRazraQMT670b7WQLa3S0kXJgahZY8iYVfOgxswj0zJoipAMNUZfpwJyIk+0WzMA9yI6LCzzzz//q9Y1uWQ61J8Z5SgPv2nYsgC7htjPHQky5+SWXkGlpq2ccQIT9j/yCtCGAm058QfnoEye0y6rrP6WPVI/MyEW22dw9pRNTva8v938P2Hv5KkxjzSkCjBSkKNTE6Rc/ltQMVFw/PP277wY9+xc3vQhYMD/eFfBxRIS/nG9OGPiDBBLfpihDLMXvKYdWdou9/EwipORh6KTjfEN61guUcA7f+YleXy/d1VBo8tHHrsdeLhfQCYO+4Webp+93SR2hQ==
+ b=Qn8qL/q449fNQD2rClsrAiKT8u4bEZcemzfmffWqaStMq8jmcAtldTjig9NmXlTA+KoZUCAMDeQAc4qcfB29gGRuxxpDNRQ6IeinAi92lurf58m5RYwbdhe66pyruofHwUkCSRhQG/6daNvaZ3TOequORCqQjetQBHa1dIwPyHo5WdaMWtxrLCEXlePdtlkI+L2AVBLEqTzlvI1bc/Pxc2sK9aC6HXkl4mfVfBThjwd8hvsku0FPQvTnqVdfYEgN0zrx7MtltIjm1bns5vTnAUk0Af4jiQzrG46r7gI17tmOF0n5IP2WwmLuaHJeNYmI18KBTCLNtGGLBZ+FM1CoPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8wTOo/BEO1SmiI3pAUoYCi5B1IHqwgP8WblquMoIhM=;
- b=Yu7/5dP16Cgyz7mHdxMd04otmtzdpQyFOXorLYdzbRSgUNiRkbH2XSUfAPfvq5a6T3/7dNgd9PPT9ACbSGVSwb1dPev7WzLUr/XglAmQZWUXjbxmu1yECcyUTnhYZ7JojzHdbv3M9m2zWL7qz0z1kqc1niDSuGazCTCZGlQflxokXyIVu32IsvixWuGVeYGaJjIfiEORJVuJ3oINRgGcEutCqgkH3MUtRckaEjyHF+W7SFWxthSm2Br8rFm8hUXgmhc1DavSfXzLNBbSXj2wSuFZxKTRTa1QLmyILuK2KyPi/QlvAP3vnytquyOfzzOEK7aH4Il1mUWFeesA+76tcA==
+ bh=63B1jCEkSnTGL88Bp67Pew+h8/hNIqxuNkeOKCNXMoE=;
+ b=FSSNQZ13vMQGAlWAHvJyCXsE2TgjWws1eQmW8jXEeHdaBQK94MKnOIUW1QQ10ol6Uln2NxVicPlYQzgciGOffcXgaHd/aGZPkPrcjfZKF4xCDWzeRGnRx8l2WzPyIZn0XdpF8EC7mAGzlh0buHOnX0GCWIKCVp6d+jU4BViquVI6CIgmGYnxmj2m9AKsHgpCvsqLGKCRBwIvOfQXkW9sxpHRO4Vpj/+I7DvMYbwKaQS/DBgp6GHRN6IGx+4Y3UHLP//0FYKxMOWQdcJK1EL+NNglcj2rWQMHcw7a7r/frQHvE14e8Su1eA0u73uJIANCvIkGLknBETzeeQTJ2l5g3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8wTOo/BEO1SmiI3pAUoYCi5B1IHqwgP8WblquMoIhM=;
- b=jh1x1J+8AXwmad8JLeLB3zL8nQw5KTkjO6ZyESnOU62mk1kpVrQ/Z3Cf8aeL9Ipx25AQM0Hso3E7YGITdp3PTwe3hrdZLMI0PvfCLAAWAUNaXp7he4hTEujxR9HVtgmrM/BI8du9nr4BwtIJAgisZDXQ2YlbdkfcTPuuFllNXE8=
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com (2603:10b6:208:1ca::23)
- by BL0PR04MB4641.namprd04.prod.outlook.com (2603:10b6:208:26::17) with
+ bh=63B1jCEkSnTGL88Bp67Pew+h8/hNIqxuNkeOKCNXMoE=;
+ b=AW0jfUHjBc67IjhKPqLy6nlZDgiuxv7Y8M511rOGODDQnHUvE/TIQSUPUtWGbj5MU4Nu0YX6g6w8yzAcxqCpM2Lh4IbAi648TC8xYMsLUdLwwn9izFfU242WyEOLGkuORAlYrKHI21iwZRaewRlXwT+BxtoLWL+UaggL5LqU9BE=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY1PR01MB1530.jpnprd01.prod.outlook.com (2603:1096:403:3::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.7; Tue, 12 Jan
- 2021 01:07:34 +0000
-Received: from BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::2dbb:7e01:f076:eca0]) by BL0PR04MB6514.namprd04.prod.outlook.com
- ([fe80::2dbb:7e01:f076:eca0%9]) with mapi id 15.20.3742.012; Tue, 12 Jan 2021
- 01:07:34 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-CC:     Sean Anderson <seanga2@gmail.com>, Stephen Boyd <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v11 00/10] RISC-V Kendryte K210 support improvements
-Thread-Topic: [PATCH v11 00/10] RISC-V Kendryte K210 support improvements
-Thread-Index: AQHW6H4YA3l8oMWx7kmMNP0/pgzYLQ==
-Date:   Tue, 12 Jan 2021 01:07:34 +0000
-Message-ID: <BL0PR04MB65148451DF93AB82F79BB320E7AA0@BL0PR04MB6514.namprd04.prod.outlook.com>
-References: <20210112005848.199951-1-damien.lemoal@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.8; Tue, 12 Jan
+ 2021 04:43:06 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2023:7ed1:37c3:8037]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2023:7ed1:37c3:8037%5]) with mapi id 15.20.3742.012; Tue, 12 Jan 2021
+ 04:43:06 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Khiem Nguyen <khiem.nguyen.xt@renesas.com>,
+        "linux-power@fi.rohmeurope.com" <linux-power@fi.rohmeurope.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 08/12] gpio: bd9571mwv: Add BD9574MWF support
+Thread-Topic: [PATCH v6 08/12] gpio: bd9571mwv: Add BD9574MWF support
+Thread-Index: AQHW2RWRDefQuJbQhk63Y/3Ij1nfPqoLeOeAgBgOyLA=
+Date:   Tue, 12 Jan 2021 04:43:06 +0000
+Message-ID: <TY2PR01MB36928A24EB009F309B35B4F3D8AA0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1608718963-21818-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1608718963-21818-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CACRpkdaDFgoaLnqmPFSnXe3KyNrGnpQObb0t7d2X_btU7VWD5w@mail.gmail.com>
+In-Reply-To: <CACRpkdaDFgoaLnqmPFSnXe3KyNrGnpQObb0t7d2X_btU7VWD5w@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2400:2411:43c0:6000:5cb8:2b48:5f8c:2c03]
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [124.210.22.195]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 59f2eac0-cbab-48c7-9550-08d8b6967203
-x-ms-traffictypediagnostic: BL0PR04MB4641:
-x-microsoft-antispam-prvs: <BL0PR04MB46412041155B26B88BE02942E7AA0@BL0PR04MB4641.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-ms-office365-filtering-correlation-id: 7ab2dde4-900c-44c0-247f-08d8b6b48dde
+x-ms-traffictypediagnostic: TY1PR01MB1530:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB1530746B3304970D92943F34D8AA0@TY1PR01MB1530.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gOeod7CJ3VcmvcZYeK7k2y4SuKd5P0+hkSBM7SNCOuGgpAeJ/667wbUexTKjE4g+zlPCYeIkFQ7m3ffMGHyNXZ7ayoJb+rZSGLAmhqtQYsrvJpNm7jQqk5+QyZYy192Ubv57edCsbYY9vUXUV61ZTkrfKJdXjD+58GD6h41XBAcBsByBauUk2GFxlMbkmB0HXm8XCZ95brYSigZxikpFVJEX/Zz8XWZTzgFFc4LeJIRlyKPD+V4CaYdQI2ctFot7a07hSxzWjE/+7TbIcXrkOWq6kNChGcIf8ta5MuyfpuWpc5CtbLWc197p1sDFAviaZQDkYreQF8MadljT8iXYg7+Mi7E0+ZboMNNRJoRXYsgBjNbG470fBKNb3ABW4atycyP3iswUphfeQEJii+Na4wo1V3YGLNkVgfnqQd3NrNKCsEmwvCXQIm+F7qpQtfXQr3VXXPx/MaRs++C1L51Olw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR04MB6514.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(366004)(376002)(346002)(186003)(71200400001)(33656002)(86362001)(83380400001)(6506007)(66556008)(53546011)(76116006)(66446008)(52536014)(4326008)(5660300002)(91956017)(66946007)(55016002)(7696005)(66476007)(8936002)(54906003)(110136005)(316002)(966005)(478600001)(9686003)(2906002)(8676002)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?Bh2ZPUKccppBgvG0RblZj5RueX+NNQmbYO2/G7ck6OO8J+vGEn8BxJ7rrFoG?=
- =?us-ascii?Q?GAxwxp/DTxSfTz0iycOKcFHm9n/lcmcEpjYuW9p5qxQ0fita96ppneEANOwT?=
- =?us-ascii?Q?ueBxOm80Yq0/m6p8QAYdaJheK6oXdfKapgoTY0+Bnsz8jdTzAdaPOKteyiqf?=
- =?us-ascii?Q?WH6XfnLqPndbU7m9wq6jGzqi4kMhBHRUr95sIPb94BhCl02MWzkq7H5U//J/?=
- =?us-ascii?Q?A6XLdBPZwDGDopoNxXqjyb0hxtbG7ogcbcACurf8EHRGt2RF/7VLgz3FPj/E?=
- =?us-ascii?Q?3IrGxxMeR5g49Ko+Isnt0duMHTWtjjJu7i8eAUtoShKhpxrsIQa5nzSmAtNe?=
- =?us-ascii?Q?e3bO1/K1IQL21oJqftEK76EztseepMH1Uq/R1CEWQdYYiebD4QuhKTi7avhi?=
- =?us-ascii?Q?nXw+rH6RHvd1epTRfMOcp6rh8ApBQoKDI7vr84U1+AYhxcyuXfu128RPVFEh?=
- =?us-ascii?Q?ZtR6yL18tAf4oZPGtBsmmfDDCF2pkphliddJl/+iXzadhKZMA3ndxTHKisLf?=
- =?us-ascii?Q?eXivkHKI5TDnFB6HvtZ5kyJp1IR+HnJ/G1v5H+BBzRtvFuNgolb0wVBfc+v4?=
- =?us-ascii?Q?cUzG6iXu1H6/gi5qkbyN5hsjsnmAaBVBqNGz+HvSu/zKQjtBGg/U0/zAujr+?=
- =?us-ascii?Q?EQGJELfaCsSsOFEAPlFeqZ+C3H0envXte0eRRNhe2bEoRf/Gh5UJZOkj2t+L?=
- =?us-ascii?Q?qbZNCdKoh6s99cnH2GbNggbv2jqMAycHeSUYhqPWXLHZ/tWE+wCVZNuwVI0N?=
- =?us-ascii?Q?2VZCweXhDW6trEI//ZDi5S+t2LPY9Jqd59XZSaSwFZZbFRc4gU2Z4HIgRKqi?=
- =?us-ascii?Q?vK7F3IKKxMWNu7T5LhDl8pMq65FTJbFcSDFxPG56ZY98CdtXTXtYdCNi2nlB?=
- =?us-ascii?Q?NUB9SRoa1iJA3BFVsgYMn7be+Wh04guExGhTtD7udbB+VMP7AH8E04VGIROU?=
- =?us-ascii?Q?29I9RNNabnr4opUdYbe7u/HnQloOGBzkzfKv/6TT+3tCXxPkVKKZp8/zE3ZM?=
- =?us-ascii?Q?wHZ5ZzhUzxWdKUO1r0MG+H5f5Lk0TeN+caQ0BHOyhEah0gF9En90h1k23vaG?=
- =?us-ascii?Q?LrU7ec+V?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: NDob52TdGcc21h/SAxHZf2afdMUiW0PS2Ca/kgJmgIugz+Wdz5V2VfMwVsxGp5Nh2oZieAVfho+FctwmFuUtBsMyF1LaMQzGKqhn3ufFQ1qE3DB20KtcknzTlIpzjfVeohzjGyRFaUXSuU6RkCwtiL494LTpdJRJYpTSXyLSthPcUKdZdbEZYON3GY9uRUaXi5iLJlu0rPbY0YjpBFnBnjm3m+6/IHPVrEkmLvsmO/E9kOZQGACHv7gDyeXXqMqBW1+F41s5Ag3AZ7s94yoQIKMz4xAViE00ZIAQna5W4QCwXItPW/OUWMIVvuSXrNA41kaGt10N+v+9PY09QYT9NhepMrgdpU+nOsDt3cxRYdckeKaD0mj3BCzNRaJ1MOEycpqzk+P1fWwfobVcyrRJIQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(66476007)(316002)(186003)(66946007)(76116006)(52536014)(54906003)(66446008)(5660300002)(66556008)(7696005)(478600001)(4744005)(7416002)(8676002)(6916009)(2906002)(55016002)(4326008)(64756008)(9686003)(33656002)(71200400001)(6506007)(8936002)(55236004)(86362001)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?UFByS2p1OXpIbm5FZzh0Z0ZSc0Q1WCtiTHFPWU1OS2tRd3NyTGh2N1RYaTlM?=
+ =?utf-8?B?VzhJcW9aQlJNUU93WEl0bXJEUjlvOVZZdlBsUWY3cml1eHRVdGdQT09sMUxD?=
+ =?utf-8?B?blpsRWdxZkoyVDBBSW1qOTFMdG5KTjlQY1Ric0pUcDdhUFNYS3hHbWw2dUhU?=
+ =?utf-8?B?RnFpNi9sTTFBUXlYaHU4TCswNjRRUjFqbUgxYWNrR3diZ3FJU0w0TEZUTGlh?=
+ =?utf-8?B?eFpsQWdCdmNUb0ppYlRabnZhSkY4b21nWGpqOUV0MmUyalhZT3dEdWpaOFE2?=
+ =?utf-8?B?ekhFcnpwSVA4NUdUblFyM21xcS9ra0NYV0VUdDVOWlBaZnNnNFZ6c1RWbnE5?=
+ =?utf-8?B?bG96dzZkS3hIRzhoQk0vUUswMUlKTVJXK2FRbVpSdTZoVHJMQm56OUlUN3U4?=
+ =?utf-8?B?QjRaSFVCSE8vL1VZTGRxKzhteHYyQ3ltdzVsMFZpbXBvYW5Qb0RRL1dSVUxG?=
+ =?utf-8?B?WGdJT2lwSWZjbHpsZFh5VE5mdm81SWNaMDFxQ0R6M1E4M3BpU05yVTAvd0dU?=
+ =?utf-8?B?WTFrR1k2dWpuY0FZUER3OGJJQm13cHUwU1JKK2p2bnNYU0JkUTVjRHVYSktJ?=
+ =?utf-8?B?OWswMnlqVzljQTFnWWlwVjdSMDRtTFRGaDZ0UVFCV0F1ZmJWY3owMWExQm1R?=
+ =?utf-8?B?ekNHdi9RaVZUb1kyeFp6cFRseHlZdytVSHFkcnV2VnBYVS83R1hibEhYUDZG?=
+ =?utf-8?B?Q2dzNS9KK1ZUMGhqenZlbHRHY01hS00vWnVJR1lod1pxaDF0ajdzUThZME9h?=
+ =?utf-8?B?dmRlTUVGWnZwZFBDSHFWa2RFbUVhaWkyNXlvV3hTa2JqK0xQQmY5ZzN2c01I?=
+ =?utf-8?B?SDRDajJwQmR1MG9PL2JZR0ZJN2NxcEhNU3pmTUR1dXJhcTg4QWJXeTJKdklP?=
+ =?utf-8?B?MHAvbzNTUHMwWWl3d3ExRU9ERUpuTFZBZ0pMYUFMTHhVRUlLNkkzQ0dZb24w?=
+ =?utf-8?B?MkdybkhZcmJoT0NrYUloc2JDTnJrTGROTklIKzRmK0xIS0VnMVVUR2JHZWpS?=
+ =?utf-8?B?aVpabUV2ZXBOZXFrczduVVZxY1pFYWlyeEJpZW5sMVROeHc0YmRlNG0zMzh2?=
+ =?utf-8?B?R3lteGhYRkZ3cVdKLzdHY3NWRlVrMUQ2MVB1YTRRRG53WDVCTHF4UW01NVRn?=
+ =?utf-8?B?SXZmODhNWWsvVmRBdWJaNk9valcyTUN6QzEwUU5sZkpWQXg0aDBmQkl1aG9W?=
+ =?utf-8?B?cy93OFA5RGhkWDlNTXVSRmNvNXBraU9vamNYMVZzWlY0YXkrNTRoeGltL0NB?=
+ =?utf-8?B?cEhrYWczN3N0aHZ5c1A0eDdtSzVWYjY1emZnZVZTdmswMDlTYkplVUtLbGgy?=
+ =?utf-8?Q?5AWtXNI7H1b2c=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR04MB6514.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59f2eac0-cbab-48c7-9550-08d8b6967203
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2021 01:07:34.5798
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ab2dde4-900c-44c0-247f-08d8b6b48dde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2021 04:43:06.2500
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IPQ4HUgReltF8TODZM1I7sF1H/ZXO0CW3AuqwRGlEsrNyMEbk+830UAXSqcDJosHLVCKmp4i/kxDu+/iS/SX1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4641
+X-MS-Exchange-CrossTenant-userprincipalname: QPtLH4JCcTJqqse7aOct8UfwxJYeN44Ld1Zb/vRGPLeKKJXMD3oE7cjVsR3dHbPWzbHSeDqDP7eSMJ4T+aBMQRs7P+SQqDkX6GjzDHfC2RRzwDelXhGaeR+k5KAiJ0i3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1530
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021/01/12 9:58, Damien Le Moal wrote:=0A=
-> This series of patches improves support for boards based on the Canaan=0A=
-> Kendryte K210 RISC-V dual core SoC. Minimal support for this SoC is=0A=
-> already included in the kernel. These patches complete it, enabling=0A=
-> support for most peripherals present on the SoC as well as introducing=0A=
-> device trees for the various K210 boards available on the market today=0A=
-> from SiPeed and Kendryte.=0A=
-> =0A=
-> The patches here are the remaining patches of the series not applied=0A=
-> yet. Patch 1 adds the SoC clock driver and patch 2 adds the pinctrl=0A=
-> driver.=0A=
-=0A=
-I screwed up with my git-send-email setup and patch 1 and 2 went only to Pa=
-lmer=0A=
-and the riscv list. I resent these eparately to Stephen/linux-clk and=0A=
-Linus/linux-gpio respectively (suppress-cc and other related cc&to control=
-=0A=
-options interactions are a bit obscure to me...).=0A=
-=0A=
-My apologies for the mess. Please let me know if I should resend correctly =
-the=0A=
-entire series.=0A=
-=0A=
-> =0A=
-> Patches 3 to 8 update the existing K210 device tree and add new=0A=
-> device tree files for several K210 based boards: MAIX Bit, MAIXDUINO,=0A=
-> MAIX Dock and MAIX Go boards from SiPeed and the KD233 development=0A=
-> board from Canaan.=0A=
-> =0A=
-> Finally the last two patches updates the k210 nommu defconfig to include=
-=0A=
-> the newly implemented drivers and provide a new default configuration=0A=
-> file enabling SD card support.=0A=
-> =0A=
-> A lot of the work on the device tree and on the K210 drivers come from=0A=
-> the work by Sean Anderson for the U-Boot project support of the K210=0A=
-> SoC. Sean also helped with debugging many aspects of this series.=0A=
-> =0A=
-> A tree with all patches applied is available here:=0A=
-> https://github.com/damien-lemoal/linux, k210-sysctl-v24 branch.=0A=
-> A demonstration of this series used on a SiPeed MAIX Dock=0A=
-> board together with an I2C servo controller can be seen here:=0A=
-> https://damien-lemoal.github.io/linux-robot-arm/#example=0A=
-> =0A=
-> This tree was used to build userspace busybox environment image that is=
-=0A=
-> then copied onto an SD card formatted with ext2:=0A=
-> https://github.com/damien-lemoal/buildroot=0A=
-> Of note is that running this userspace environment requires a revert of=
-=0A=
-> commit 2217b982624680d19a80ebb4600d05c8586c4f96 introduced during the=0A=
-> 5.9 development cycle. Without this revert, execution of the init=0A=
-> process fails. A problem with the riscv port of elf2flt is suspected but=
-=0A=
-> not confirmed. I am now starting to investigate this problem.=0A=
-> =0A=
-> Reviews and comments are as always much welcome.=0A=
-> =0A=
-> Changes from v10:=0A=
-> * Rebased on riscv tree fixes+for-next branches. Patches already applied=
-=0A=
->   to these branches were removed from this series.=0A=
-> * Fixed the clock driver and pinctrl driver patch titles to indicate the=
-=0A=
->   correct target sub-components.=0A=
-> * Applied reviewed-by tags from Anup.=0A=
-> =0A=
-> Changes from v9:=0A=
-> * Added patch 6 to avoid DTS compilation errors after patch 9 is=0A=
->   applied and until patch 16 is applied.=0A=
-> =0A=
-> Changes from v8:=0A=
-> * Addressed Rob's comments on the sysctl driver bindings documentation=0A=
-> * Fixed a typo in the fpios driver bindings documentation=0A=
-> =0A=
-> Changes from v7:=0A=
-> * Removed the __init annotation for the drivers reset, pinctrl and=0A=
->   sysctl drivers probe functions as suggested by Geert. Also removed=0A=
->   the __refdata annotation for the struct platform_driver variables of=0A=
->   these drivers.=0A=
-> =0A=
-> Changes from v6:=0A=
-> * Annotate struct platform_driver variables with __refdata to avoid=0A=
->   section mismatch compilation errors=0A=
-> * Add empty sentinel entry to of_device_id tables of the sysctl, reset=0A=
->   and pinctrl drivers.=0A=
-> =0A=
-> Changes from v5:=0A=
-> * Addressed Philipp's comment on the reset controller driver=0A=
-> * Added patch 6 to reduce the size of the clock driver patch=0A=
->   (now patch 12).=0A=
-> =0A=
-> Changes from v4:=0A=
-> * Simplified reset controller driver using of_xlate callback as=0A=
->   suggested by Philipp=0A=
-> * Fixed compilation error when using other configs than one of the=0A=
->   nommu_k210 defconfigs.=0A=
-> * Addressed most clock driver comments from Stephen.=0A=
-> * Removed CONFIG_GPIO_SYSFS from defconfigs=0A=
-> * Rebased on 5.10-rc7=0A=
-> =0A=
-> Changes from V3:=0A=
-> * Add one entry per driver in MAINTAINERS file=0A=
-> =0A=
-> Changes from V2:=0A=
-> * Add MAINTAINERS file entry for the SoC support, listing myself as=0A=
->   maintainer.=0A=
-> * Removed use of postcore_initcall() for declaring the drivers, using=0A=
->   the regular builtin_platform_driver() instead.=0A=
-> * Fixed fpio pinctrl driver bindings documentation as commented by=0A=
->   Geert: removed input-schmitt and added input-schmitt-disable, fixed=0A=
->   typo and added input-disable and output-disable.=0A=
-> * Fixed device tree to have cs-gpios active low, as per the default, as=
-=0A=
->   active high necessity was an artifact of the gpio level double=0A=
->   inversion bug fixed recently.=0A=
-> * Removed CONFIG_VT from defconfigs to reduce the kernel image size as=0A=
->   suggested by Geert.=0A=
-> =0A=
-> Changes from v1:=0A=
-> * Improved DT bindings documentation=0A=
-> * SPI and GPIO patches removed from this series (and being processed=0A=
->   directly through the relevant subsystems directly)=0A=
-> * Improved device trees=0A=
-> * Various cleanup and improvments of the drivers=0A=
-> =0A=
-> Damien Le Moal (10):=0A=
->   clk: Add RISC-V Canaan Kendryte K210 clock driver=0A=
->   pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver=0A=
->   riscv: Update Canaan Kendryte K210 device tree=0A=
->   riscv: Add SiPeed MAIX BiT board device tree=0A=
->   riscv: Add SiPeed MAIX DOCK board device tree=0A=
->   riscv: Add SiPeed MAIX GO board device tree=0A=
->   riscv: Add SiPeed MAIXDUINO board device tree=0A=
->   riscv: Add Kendryte KD233 board device tree=0A=
->   riscv: Update Canaan Kendryte K210 defconfig=0A=
->   riscv: Add Canaan Kendryte K210 SD card defconfig=0A=
-> =0A=
->  MAINTAINERS                                   |    8 +=0A=
->  arch/riscv/Kconfig.socs                       |    3 +-=0A=
->  arch/riscv/boot/dts/canaan/canaan_kd233.dts   |  178 +++=0A=
->  arch/riscv/boot/dts/canaan/k210.dts           |   23 -=0A=
->  arch/riscv/boot/dts/canaan/k210.dtsi          |  551 ++++++++-=0A=
->  arch/riscv/boot/dts/canaan/k210_generic.dts   |   46 +=0A=
->  .../riscv/boot/dts/canaan/sipeed_maix_bit.dts |  227 ++++=0A=
->  .../boot/dts/canaan/sipeed_maix_dock.dts      |  229 ++++=0A=
->  arch/riscv/boot/dts/canaan/sipeed_maix_go.dts |  237 ++++=0A=
->  .../boot/dts/canaan/sipeed_maixduino.dts      |  201 ++++=0A=
->  arch/riscv/configs/nommu_k210_defconfig       |   44 +-=0A=
->  .../riscv/configs/nommu_k210_sdcard_defconfig |   92 ++=0A=
->  drivers/clk/Kconfig                           |    8 +=0A=
->  drivers/clk/Makefile                          |    1 +=0A=
->  drivers/clk/clk-k210.c                        | 1005 +++++++++++++++++=
-=0A=
->  drivers/pinctrl/Kconfig                       |   13 +=0A=
->  drivers/pinctrl/Makefile                      |    1 +=0A=
->  drivers/pinctrl/pinctrl-k210.c                |  985 ++++++++++++++++=0A=
->  drivers/soc/canaan/Kconfig                    |   18 +-=0A=
->  drivers/soc/canaan/Makefile                   |    2 +-=0A=
->  drivers/soc/canaan/k210-sysctl.c              |  205 +---=0A=
->  include/dt-bindings/clock/k210-clk.h          |    1 -=0A=
->  include/soc/canaan/k210-sysctl.h              |    2 +=0A=
->  23 files changed, 3844 insertions(+), 236 deletions(-)=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/canaan_kd233.dts=0A=
->  delete mode 100644 arch/riscv/boot/dts/canaan/k210.dts=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/k210_generic.dts=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/sipeed_maix_bit.dts=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/sipeed_maix_dock.dts=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/sipeed_maix_go.dts=0A=
->  create mode 100644 arch/riscv/boot/dts/canaan/sipeed_maixduino.dts=0A=
->  create mode 100644 arch/riscv/configs/nommu_k210_sdcard_defconfig=0A=
->  create mode 100644 drivers/clk/clk-k210.c=0A=
->  create mode 100644 drivers/pinctrl/pinctrl-k210.c=0A=
-> =0A=
-> Cc: Stephen Boyd <sboyd@kernel.org>=0A=
-> Cc: Michael Turquette <mturquette@baylibre.com>=0A=
-> Cc: linux-clk@vger.kernel.org=0A=
-> Cc: Linus Walleij <linus.walleij@linaro.org>=0A=
-> Cc: linux-gpio@vger.kernel.org=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+SGkgTGludXMsDQoNCj4gRnJvbTogTGludXMgV2FsbGVpaiwgU2VudDogTW9uZGF5LCBEZWNlbWJl
+ciAyOCwgMjAyMCA2OjE2IEFNDQo+IA0KPiA+IEFkZCBzdXBwb3J0IGZvciBCRDk1NzRNV0Ygd2hp
+Y2ggaXMgc2ltaWxhciBjaGlwIHdpdGggQkQ5NTcxTVdWLg0KPiA+IE5vdGUgdGhhdCBCRDk1NzRN
+V0YgaGFzIGFkZGl0aW9uYWwgZmVhdHVyZXMgIlJFQ09WX0dQT1VUIiwNCj4gPiAiRlJFUVNFTCIg
+YW5kICJSVENfSU4iLCBidXQgc3VwcG9ydHMgR1BJTyBmdW5jdGlvbiBvbmx5Lg0KPiA+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVoQHJl
+bmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0
+aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gDQo+IEFja2VkLWJ5OiBMaW51cyBXYWxsZWlqIDxs
+aW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQoNClRoYW5rIHlvdSBmb3IgeW91ciBBY2tlZC1ieSEg
+SSdsbCBhZGQgeW91ciBBY2tlZC1ieSBpbiB0aGUgbmV4dCBwYXRjaCB2ZXJzaW9uIGFzIHY5Lg0K
+DQo+IFRoaXMgbG9va3MgbGlrZSBpdCBjb21waWxlLXRpbWUgZGVwZW5kcyBvbiB0aGUgb3RoZXIg
+cGF0Y2hlcyByaWdodD8NCg0KWW91J3JlIGNvcnJlY3QuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hp
+aGlybyBTaGltb2RhDQoNCg==
