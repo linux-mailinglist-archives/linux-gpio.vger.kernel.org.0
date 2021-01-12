@@ -2,119 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 317B62F2A53
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 09:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 675882F2A5E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 09:54:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392421AbhALIuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 03:50:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        id S2392402AbhALIx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 03:53:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbhALIuK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 03:50:10 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CED7C061794
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:49:29 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id a12so2160155lfl.6
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:49:29 -0800 (PST)
+        with ESMTP id S1731617AbhALIx5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 03:53:57 -0500
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC73BC0617A4
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:52:54 -0800 (PST)
+Received: by mail-lj1-x22c.google.com with SMTP id u21so2012803lja.0
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FO2rHm6UIMBu9Ki7Nf6OHymZ0+n2eoWJ/J9V6P3/8h8=;
-        b=Gltf9TvRNOY0tSXrxiA4//zhOlERkD6r2FC2saFGS8t3sVaO5mcxegCfTZD0F5W+Ts
-         8jcW3Nn/LZYgx7pT9L5qHEYSn+ZgO8cjuieFlIfq/7Fw9l6Ycc68mGr+U9mSVfennApU
-         QHG6BQH6tL/5exf95jdd5lx+1pIc1Y8TSffGP+JxkGa0a7ZRAVklVOdGlHOXBlPIz6E/
-         tnuzBJzCPgW7gkttsauSu26m+t2ixMU8Qn/fmAlctF8UbDwkJl0P65oBiS99ZahFXu8F
-         gPDE+2CqbYla3vIJU4tbLTB1a4ckbCNhONdSmNqCHzc9jckjH45DzyQqd+Vlz1CSUMap
-         C5uw==
+        bh=JsEm4I1NOjMflpIR4jGgdH1VuxMujPdLvKb9dS5688I=;
+        b=Q91v3fKmkv7yHp1jk+4mrPGmxbo1mWWCFs3xqcg8gV6QkcBpp7MYlMrLJMzA6sAk3V
+         +oxxHVrn2m9yBMl4cBHI/AtzRTMwdyn5YfhGjKZOcqvX353YR3GlZO3wOkqqoDu84OHp
+         UtKzUTaQ3c9AurzzutPndd4sWUqZoDXDNZd+/S/fFRANW38PzxnDJtJxYfj1fA1L8pAp
+         3ROnz5lQOdpGRyugwbAyMVZMu0e0vBWa+ogqp/NR40TBd3ZrwcemjrL5HVTHESrkrfzA
+         CxE3a+YKPsNMNt8oHMV2Olajf4EUW+eIIVbM5Ohmqil0m/pTkn8loynxCUkWS849IJCu
+         lHLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FO2rHm6UIMBu9Ki7Nf6OHymZ0+n2eoWJ/J9V6P3/8h8=;
-        b=a63odqKRjaYL+idpg3vS+CwzmYwQqoPXXeL1VW5eroJp0WXdveZWcvo/W+E9haK3lC
-         BDfy93agj7xo64LD89poeiBpwImU2iesKkA48MpkH8ec72uK6iBNEr65jLDwisSejeo7
-         woOJ1LFDpwCB3K/powxYGGRQ0BZcbaXAxJ5UhoWICaUHlrqNP/UtTGSW2WWZbXq4iboE
-         AKEAf9tejW4gynGnoJ54U2K/D8AXqHAs88nVw2cQ+0PeofGuGRcub3nZEDEhC9zLa37g
-         zhGwIDQOsq5d+IbuuK5R/xQhpbt2yLeazpx0ZJlHOpmt4rP0QCMTexcG8IvrwJopP64m
-         07RQ==
-X-Gm-Message-State: AOAM530TJtEbbIqqb6joBBQt58zYuao5zbYiaCFx9Bp73e8GTUktH+cM
-        CnTJXkMjaI1eh/EVTMUHTj7wmfua08MstaWyVAVnrg==
-X-Google-Smtp-Source: ABdhPJx8LV4CvQbya9pzC+Y865mc9FHowA10/ILhkSPbVdtQrtK5X8N9YI7+9he1ztb2VQ2P7WL2X6F4KIkvfb6LwpQ=
-X-Received: by 2002:ac2:5597:: with SMTP id v23mr1601550lfg.649.1610441367919;
- Tue, 12 Jan 2021 00:49:27 -0800 (PST)
+        bh=JsEm4I1NOjMflpIR4jGgdH1VuxMujPdLvKb9dS5688I=;
+        b=PQMt1M5p5q8dxSG3uMXPlvbdvyvZpmuzv4btk1KqdfqnUM4JgRx3mPq0HZf3YxEv3A
+         K4yooPnLbi6osIRvvnEUUHNjcGGuL1hEwA31HoxJzLISm2HpzTv9mqBJqA1/TG0C+eBi
+         kFgoW9SlCurHlWOrMN5n1esi33YFU/4KLCo7h2tM37ygrdilS/wpBv6AZvNC9r2Vc4Dj
+         dzYQo0Nj4a7Ys0ZE0+2v13m37wPFJeTB8gAOFv+WtCRpsRVLwHt04WG3ujA5ix1kj1D3
+         IGxQfS24I2ZU6PGdPg1faIof41ZiVdebBjkrP14BlE6A6qRQFrZJWdc+uzJa//RgQaiP
+         S/zA==
+X-Gm-Message-State: AOAM530P0obtBa6rYeEgxU/Q7KgGzuoANUyUU6MTc6xqv/pzp/GjWTG+
+        n10/6zWm1XHVs6DZ9pgQKI+wb6tpdQ+LtHF6pq9CAA==
+X-Google-Smtp-Source: ABdhPJxOVHEfMGqQL+Ee1Z/8lgjxVni/8qnA2F4LQjPU+qNuigb/gJQdyNRG9FDpz+vW65Ij7oQxSE3HlbzgqvVsz7Q=
+X-Received: by 2002:a05:651c:1312:: with SMTP id u18mr1556193lja.200.1610441573181;
+ Tue, 12 Jan 2021 00:52:53 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1610364681.git.baruch@tkos.co.il> <5e1b119a51df19ead32561e87ce2ee1441b67154.1610364681.git.baruch@tkos.co.il>
-In-Reply-To: <5e1b119a51df19ead32561e87ce2ee1441b67154.1610364681.git.baruch@tkos.co.il>
+References: <20201211164801.7838-1-nsaenzjulienne@suse.de> <47b4dbc7a70d8f900789608e753be6faa36cebeb.camel@suse.de>
+In-Reply-To: <47b4dbc7a70d8f900789608e753be6faa36cebeb.camel@suse.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Jan 2021 09:49:16 +0100
-Message-ID: <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] dt-bindings: ap806: document gpio
- marvell,pwm-offset property
-To:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+Date:   Tue, 12 Jan 2021 09:52:42 +0100
+Message-ID: <CACRpkdZCR=_KpPpb2o4e_OvQtJPYZ5qwcxa8MOC7UFvcjm6FUw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/11] Raspberry Pi PoE HAT fan support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         linux-pwm@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Eric Anholt <eric@anholt.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Baruch,
+On Mon, Jan 11, 2021 at 10:02 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 
-this caught my eye:
+> I'd say at this point the series is pretty clean and, AFAIK, there aren't any
+> objections. I'm not so sure who should take it, given that it covers numerous
+> subsystems. Any suggestions on how to handle it?
 
-On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
-
-> Update the example as well. Add the '#pwm-cells' and 'clocks' properties
-> for a complete working example.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-
-(...)
-> +Optional properties:
-> +
-> +- marvell,pwm-offset: offset address of PWM duration control registers inside
-> +  the syscon block
-(...)
->  ap_syscon: system-controller@6f4000 {
->         compatible = "syscon", "simple-mfd";
-> @@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
->                 gpio-controller;
->                 #gpio-cells = <2>;
->                 gpio-ranges = <&ap_pinctrl 0 0 19>;
-> +               marvell,pwm-offset = <0x10c0>;
-
-This seems to be one of those cases where we start to encode things related
-to the hardware variant into the device tree.
-
-Is this just documenting ABI that was introduced in the past and we can not
-do anything about now? In that case it is OK I suppose.
-
-For a new binding we would certainly require that the system controller
-provide a specific tertiary compatible string for this, lest we disguise
-the not-so-simple system controller as "simple-mfd" so:
-
-compatible = "syscon", "simple-mfd", "my-silicon-id";
-
-Then detect the PWM offset by using
-if(of_device_is_compatibe(np, "my-silicon-id"))
-in the code rather than parsing any marvell,pwm-offset property.
+This is one of those cases where I would suggest collect ACKs
+from affected subsystem maintainers and send a pull request
+to the SoC tree for this hairy bundle.
 
 Yours,
 Linus Walleij
