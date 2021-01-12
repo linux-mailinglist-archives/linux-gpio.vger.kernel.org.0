@@ -2,91 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 675882F2A5E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 09:54:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC6A2F2A79
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jan 2021 10:02:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392402AbhALIx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 03:53:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731617AbhALIx5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 03:53:57 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC73BC0617A4
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:52:54 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id u21so2012803lja.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jan 2021 00:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JsEm4I1NOjMflpIR4jGgdH1VuxMujPdLvKb9dS5688I=;
-        b=Q91v3fKmkv7yHp1jk+4mrPGmxbo1mWWCFs3xqcg8gV6QkcBpp7MYlMrLJMzA6sAk3V
-         +oxxHVrn2m9yBMl4cBHI/AtzRTMwdyn5YfhGjKZOcqvX353YR3GlZO3wOkqqoDu84OHp
-         UtKzUTaQ3c9AurzzutPndd4sWUqZoDXDNZd+/S/fFRANW38PzxnDJtJxYfj1fA1L8pAp
-         3ROnz5lQOdpGRyugwbAyMVZMu0e0vBWa+ogqp/NR40TBd3ZrwcemjrL5HVTHESrkrfzA
-         CxE3a+YKPsNMNt8oHMV2Olajf4EUW+eIIVbM5Ohmqil0m/pTkn8loynxCUkWS849IJCu
-         lHLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JsEm4I1NOjMflpIR4jGgdH1VuxMujPdLvKb9dS5688I=;
-        b=PQMt1M5p5q8dxSG3uMXPlvbdvyvZpmuzv4btk1KqdfqnUM4JgRx3mPq0HZf3YxEv3A
-         K4yooPnLbi6osIRvvnEUUHNjcGGuL1hEwA31HoxJzLISm2HpzTv9mqBJqA1/TG0C+eBi
-         kFgoW9SlCurHlWOrMN5n1esi33YFU/4KLCo7h2tM37ygrdilS/wpBv6AZvNC9r2Vc4Dj
-         dzYQo0Nj4a7Ys0ZE0+2v13m37wPFJeTB8gAOFv+WtCRpsRVLwHt04WG3ujA5ix1kj1D3
-         IGxQfS24I2ZU6PGdPg1faIof41ZiVdebBjkrP14BlE6A6qRQFrZJWdc+uzJa//RgQaiP
-         S/zA==
-X-Gm-Message-State: AOAM530P0obtBa6rYeEgxU/Q7KgGzuoANUyUU6MTc6xqv/pzp/GjWTG+
-        n10/6zWm1XHVs6DZ9pgQKI+wb6tpdQ+LtHF6pq9CAA==
-X-Google-Smtp-Source: ABdhPJxOVHEfMGqQL+Ee1Z/8lgjxVni/8qnA2F4LQjPU+qNuigb/gJQdyNRG9FDpz+vW65Ij7oQxSE3HlbzgqvVsz7Q=
-X-Received: by 2002:a05:651c:1312:: with SMTP id u18mr1556193lja.200.1610441573181;
- Tue, 12 Jan 2021 00:52:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20201211164801.7838-1-nsaenzjulienne@suse.de> <47b4dbc7a70d8f900789608e753be6faa36cebeb.camel@suse.de>
-In-Reply-To: <47b4dbc7a70d8f900789608e753be6faa36cebeb.camel@suse.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Jan 2021 09:52:42 +0100
-Message-ID: <CACRpkdZCR=_KpPpb2o4e_OvQtJPYZ5qwcxa8MOC7UFvcjm6FUw@mail.gmail.com>
-Subject: Re: [PATCH v6 00/11] Raspberry Pi PoE HAT fan support
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eric Anholt <eric@anholt.net>
-Content-Type: text/plain; charset="UTF-8"
+        id S2389031AbhALJBu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 04:01:50 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:61665 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388357AbhALJBu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 12 Jan 2021 04:01:50 -0500
+X-IronPort-AV: E=Sophos;i="5.79,340,1602514800"; 
+   d="scan'208";a="68731765"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 12 Jan 2021 18:01:18 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 39A9340062D6;
+        Tue, 12 Jan 2021 18:01:18 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     marek.vasut+renesas@gmail.com, lee.jones@linaro.org,
+        matti.vaittinen@fi.rohmeurope.com, lgirdwood@gmail.com,
+        broonie@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     khiem.nguyen.xt@renesas.com, linux-power@fi.rohmeurope.com,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v9 00/12] treewide: bd9571mwv: Add support for BD9574MWF
+Date:   Tue, 12 Jan 2021 18:00:55 +0900
+Message-Id: <1610442067-7446-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 10:02 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+Add BD9574MWF support into bd9571mwv gpio, mfd and regulator drivers.
+Latest Ebisu-4D boards has this chip instead of BD9571MWV so that
+we need this patch series to detect this chip at runtime.
 
-> I'd say at this point the series is pretty clean and, AFAIK, there aren't any
-> objections. I'm not so sure who should take it, given that it covers numerous
-> subsystems. Any suggestions on how to handle it?
+Note that the patch [1/12] is a bug-fix patch for mfd driver.
 
-This is one of those cases where I would suggest collect ACKs
-from affected subsystem maintainers and send a pull request
-to the SoC tree for this hairy bundle.
+Hello Lee,
 
-Yours,
-Linus Walleij
+Now I got Acked-by from maintainers of gpio and regulator. So,
+would you apply this series to your repo?
+
+Changes from v8:
+ - Add Acked-by from maintainers of regulator and gpio in patch 4 to 8.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=406323
+
+Changes from v7:
+ - Fix typo in the patch 10.
+ - Add "Acked-for-MFD-by" in patch 2 and 11.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=406091
+
+Changes from v6:
+ - Remove "struct bd957x_ddata" because this is not used after probed.
+ - Add "Acked-for-MFD-by" in patch 12.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=405725
+
+Changes from v5:
+ - Fix typo in the patch 5 and 8.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=405263
+
+Changes from v4:
+ - Add Reviwed-by in patch 1, 10, 11 and 12.
+ - Keep bd9571mwv_id_table[] as-is because unused in patch 12.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=404657
+
+Changes from v3:
+ - Add "Acked-for-MFD-by" in patch 1, 3, 9 and 10.
+ - Use "Co-developed-by" instead in patch 11.
+ - In patch 11:
+ -- Remove abusing kernel-doc formatting in patch.
+ -- Rename bd957x_data with bd957x_ddata in patch.
+ -- Remove product name printk.
+ -- Rename bd9571mwv_identify() with bd957x_identify().
+ -- Remove argument "part_name" from bd957x_identify().
+ -- Modify dev_err() string.
+ -- Rename BD9571MWV_PRODUCT_CODE_VAL with BD9571MWV_PRODUCT_CODE_BD9571MWV.
+ -- Fix errno from -ENOENT to -ENODEV.
+ - In patch 12:
+ -- Rename "MFD driver" to "core driver".
+ -- Remove unnecessary comments.
+ -- Rename BD9574MWF_PRODUCT_CODE_VAL with BD9571MWV_PRODUCT_CODE_BD9574MWF.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=402719
+
+Changes from v2:
+ - Use devm_mfd_add_devices() to remove the mfd device in unload.
+ - Update commit descriptions in patch 4 and 8.
+ - Use regmap_get_device() to simplify in patch 4.
+ - Remove "struct bd9571mwv" and bd9571mwv_remove().
+ - Add Reviewed-by in patch 3 to 9.
+ - Use devm_regmap_add_irq_chip() to simplify in patch 10.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=400477
+
+Changes from v1:
+ - Document BD9574MWF on the dt-binding.
+ - Add ROHM_CHIP_TYPE_BD957[14] into rohm-generic.h.
+ - To simplify gpio and regulator drivers, using regmap instead of
+   using struct bd9571mwv.
+ - Remove BD9574MWF definitions to make gpio and regulator driver
+   simple to support for BD9574MWF.
+ - Add BD9574MWF support for gpio and regulator drivers.
+ - Add missing regmap ranges for BD9574MWF.
+ - Rename "part_number" with "part_name".
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=398059
+
+
+Khiem Nguyen (2):
+  mfd: bd9571mwv: Make the driver more generic
+  mfd: bd9571mwv: Add support for BD9574MWF
+
+Yoshihiro Shimoda (10):
+  mfd: bd9571mwv: Use devm_mfd_add_devices()
+  dt-bindings: mfd: bd9571mwv: Document BD9574MWF
+  mfd: rohm-generic: Add BD9571 and BD9574
+  regulator: bd9571mwv: rid of using struct bd9571mwv
+  regulator: bd9571mwv: Add BD9574MWF support
+  gpio: bd9571mwv: Use the SPDX license identifier
+  gpio: bd9571mwv: rid of using struct bd9571mwv
+  gpio: bd9571mwv: Add BD9574MWF support
+  mfd: bd9571mwv: Use the SPDX license identifier
+  mfd: bd9571mwv: Use devm_regmap_add_irq_chip()
+
+ .../devicetree/bindings/mfd/bd9571mwv.txt          |   4 +-
+ drivers/gpio/gpio-bd9571mwv.c                      |  35 ++--
+ drivers/mfd/bd9571mwv.c                            | 178 ++++++++++++++-------
+ drivers/regulator/bd9571mwv-regulator.c            |  59 ++++---
+ include/linux/mfd/bd9571mwv.h                      |  45 ++----
+ include/linux/mfd/rohm-generic.h                   |   2 +
+ 6 files changed, 186 insertions(+), 137 deletions(-)
+
+-- 
+2.7.4
+
