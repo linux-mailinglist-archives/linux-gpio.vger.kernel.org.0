@@ -2,171 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 524D62F4003
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 01:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C47E2F4168
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 02:56:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbhALXNg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 18:13:36 -0500
-Received: from m-r1.th.seeweb.it ([5.144.164.170]:50495 "EHLO
-        m-r1.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbhALXNg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 18:13:36 -0500
-Received: from IcarusMOD.eternityproject.eu (unknown [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 133FB1F698;
-        Wed, 13 Jan 2021 00:12:38 +0100 (CET)
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, konrad.dybcio@somainline.org,
-        marijn.suijten@somainline.org, martin.botka@somainline.org,
-        phone-devel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-Subject: [PATCH v3 2/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
-Date:   Wed, 13 Jan 2021 00:12:36 +0100
-Message-Id: <20210112231236.585632-2-angelogioacchino.delregno@somainline.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210112231236.585632-1-angelogioacchino.delregno@somainline.org>
-References: <20210112231236.585632-1-angelogioacchino.delregno@somainline.org>
+        id S1727090AbhAMB4X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jan 2021 20:56:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbhAMB4X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jan 2021 20:56:23 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED823C061786;
+        Tue, 12 Jan 2021 17:55:42 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id j12so455112ota.7;
+        Tue, 12 Jan 2021 17:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vi9vBEa9pJQcyGzap+t16sV/0A2eRr6OduWFyN0i+JE=;
+        b=qH3yK4ajUVncbkZLmND9vGggon72FVjiS/3pC5Ki1JdK0sFSWXVn2xH5mxqfsR8X2K
+         gBbHjBYdJlqq/pJL73mnQTBYsxCeOZ0Px2UdXCgdJNk5QvNRhdzcLREijckZUkbgp6e9
+         MP6XBPpd80NEGK8Te/cZdf0kUjqTuJA+/yW5yHuLbyW7/RrzXPIzIOiWPGVMR2203PsW
+         ht4L9SSh8qUQdbz06FMgBFKI3b7snU1zPdsdZppr6K0Pj/DgavFTz9uI1gzQTSEVsuxe
+         Q0pcUJT/915b6qZegaVnC3rB2I/gdFMMT1ltMD+V8tVpLoE56j5SJZdOeqfXf+OzOFEE
+         qEqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vi9vBEa9pJQcyGzap+t16sV/0A2eRr6OduWFyN0i+JE=;
+        b=KSGw8M1mdeIUYX1PmcigemYakyZvgGUPzNYFXNnaiYh1lI7EUgVr5CwNUYkhU9IocK
+         PddHXxOG9PMQJc4CQWqhGHfIjJ4KTklZBBNnklc7t/4cI4EyZOnCSLfWSqCfxAZRQ7Xf
+         hBvjNplKvvHmmZ2ge8pFl3ZYGUOYPCHZIMEpTRnZby/G6isKBMquDmXo+2RSpJ0xoZE+
+         O1W0RmclVCQjgb2Y0VFNINjFbKrEeTOB3ALenxOkIEKJqtWBGQDmu9r8hf6h61Zfzt5W
+         ZFu1bhlXMw9fz9BmuorFNM3lqrs2D6pajzxsXV4OBw3Kr6/OqJWYgRrr3EXR1jwphRgn
+         pYEQ==
+X-Gm-Message-State: AOAM532aoSvkYA59Z+9pC48Iw6g0kygC64wta8CCt2l4IcJXY/zIHsrU
+        Lh0zGEO3vQcbuFZu3Bx2+aXMIlkMdQiXhMt1/HY=
+X-Google-Smtp-Source: ABdhPJwWhcclT4lGSlNLczythqwnb86JQUvlAErggsPh3BipYFo8PGtwuZMomcEfLUmzcCdaWDsBx20Ct1dXwc/D+nM=
+X-Received: by 2002:a9d:2f67:: with SMTP id h94mr1487955otb.238.1610502942404;
+ Tue, 12 Jan 2021 17:55:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+In-Reply-To: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 13 Jan 2021 09:55:35 +0800
+Message-ID: <CADBw62oXzk8fyCt+gFOH9+8zXenDXrQ14H7nPC3xVbfCKOU4DA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sprd: style: Simplify bool comparison
+To:     YANG LI <abaci-bugfix@linux.alibaba.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linhua.xu@unisoc.com,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
+On Tue, Jan 12, 2021 at 4:28 PM YANG LI <abaci-bugfix@linux.alibaba.com> wrote:
+>
+> Fix the following coccicheck warning:
+> ./drivers/pinctrl/sprd/pinctrl-sprd.c:690:8-23: WARNING: Comparison to
+> bool
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: YANG LI <abaci-bugfix@linux.alibaba.com>
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
----
- .../pinctrl/awinic,aw9523-pinctrl.yaml        | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+The subject line should be "pinctrl: sprd: Simplify xxx", otherwise
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
-new file mode 100644
-index 000000000000..3c14e7f55726
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/awinic,aw9523-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Awinic AW9523/AW9523B I2C GPIO Expander
-+
-+maintainers:
-+  - AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-+
-+description: |
-+  The Awinic AW9523/AW9523B I2C GPIO Expander featuring 16 multi-function
-+  I/O, 256 steps PWM mode and interrupt support.
-+
-+properties:
-+  compatible:
-+    const: awinic,aw9523-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#gpio-cells':
-+    description: |
-+      Specifying the pin number and flags, as defined in
-+      include/dt-bindings/gpio/gpio.h
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Specifies the INTN pin IRQ.
-+
-+  '#interrupt-cells':
-+    description:
-+      Specifies the PIN numbers and Flags, as defined in defined in
-+      include/dt-bindings/interrupt-controller/irq.h
-+    const: 2
-+
-+#PIN CONFIGURATION NODES
-+patternProperties:
-+  '^.*$':
-+    if:
-+      type: object
-+      $ref: "/schemas/pinctrl/pincfg-node.yaml"
-+    then:
-+      properties:
-+        pins:
-+          description:
-+            List of gpio pins affected by the properties specified in
-+            this subnode.
-+          items:
-+            pattern: "^gpio([0-9]|1[0-5])$"
-+          minItems: 1
-+          maxItems: 16
-+
-+        function:
-+          description:
-+            Specify the alternative function to be configured for the
-+            specified pins.
-+
-+          enum: [ gpio, pwm ]
-+
-+        bias-disable: true
-+        bias-pull-down: true
-+        bias-pull-up: true
-+        drive-open-drain: true
-+        drive-push-pull: true
-+        input-enable: true
-+        output-high: true
-+        output-low: true
-+
-+      required:
-+        - pins
-+        - function
-+
-+      additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - gpio-ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        aw9523: gpio-expander@58 {
-+                compatible = "awinic,aw9523-pinctrl";
-+                reg = <0x58>;
-+                interrupt-parent = <&tlmm>;
-+                interrupts = <50 IRQ_TYPE_EDGE_FALLING>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                gpio-ranges = <&tlmm 0 0 16>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+                reset-gpios = <&tlmm 51 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
+> ---
+>  drivers/pinctrl/sprd/pinctrl-sprd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> index 08dc193..dca7a50 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd.c
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> @@ -687,7 +687,7 @@ static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
+>                                 shift = INPUT_SCHMITT_SHIFT;
+>                                 break;
+>                         case PIN_CONFIG_BIAS_PULL_UP:
+> -                               if (is_sleep_config == true) {
+> +                               if (is_sleep_config) {
+>                                         val |= SLEEP_PULL_UP;
+>                                         mask = SLEEP_PULL_UP_MASK;
+>                                         shift = SLEEP_PULL_UP_SHIFT;
+> --
+> 1.8.3.1
+>
+
+
 -- 
-2.29.2
-
+Baolin Wang
