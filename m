@@ -2,162 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF5632F464B
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 09:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADB0E2F475D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 10:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbhAMISs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jan 2021 03:18:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbhAMISs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 03:18:48 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA96FC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jan 2021 00:18:07 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzbLg-00046N-Tq; Wed, 13 Jan 2021 09:17:48 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzbLV-0006Pt-Si; Wed, 13 Jan 2021 09:17:37 +0100
-Date:   Wed, 13 Jan 2021 09:17:23 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     g@pengutronix.de, Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] gpio: mvebu: fix pwm get_state period calculation
-Message-ID: <20210113081723.mdd3dlvskrbmbb6t@pengutronix.de>
-References: <cover.1610362661.git.baruch@tkos.co.il>
- <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
- <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
- <87ft35xs0z.fsf@tarshish>
+        id S1727702AbhAMJRq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 13 Jan 2021 04:17:46 -0500
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:39920 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbhAMJRm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 04:17:42 -0500
+Received: by mail-lf1-f51.google.com with SMTP id a12so1703483lfl.6;
+        Wed, 13 Jan 2021 01:17:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PL83MRTZmSl5in+hjwvHUEdnS7fuD7aTllMQF6TPQJw=;
+        b=To2PeUjCYja5GfpSI5cn2aPh0tn3r5X2Uro2mtMGtDuKZiVqooEivUKHtgyplplANi
+         jOwNTAGj2Dl3Dei4iH0t4EsGO37+Mn7KkF50U3RJTcLDi7FpUtALqhi6kSTjEOSNMYB4
+         NnsvmvPT64QlZgJtZGMsedr5aQ0U/NRVBo4T9f5VexJ50qTpqkXkCWv0uPHU41QIUsXx
+         W3PvDn5Uq09nosUFjbmjkMy1HSCgDbKLAGn1uv0fnyxa2id2cBPVhNusVn5HITtDmm0D
+         CuVt+Bj19rZQ/HDuy2AWISBoxxsShniK2F4+n9h8NaCNCd701KwDx9oT8kxVr24YBYFI
+         vLCA==
+X-Gm-Message-State: AOAM5301FXWPum0hqHklIp8a1Ue4AUBZuEmRV5ZLkk8jWqZdNSHWCzOk
+        ujf+udmF8PtONvDhIfj7eGr5FiaDbSejUg==
+X-Google-Smtp-Source: ABdhPJxMs8TGw/WO/U6CBuzxxYeCb6wQJSZv+knK+N/KsCy1J9DWa22BPpVXxArcWcE95V5xJKQUOA==
+X-Received: by 2002:ac2:498f:: with SMTP id f15mr489815lfl.60.1610529419373;
+        Wed, 13 Jan 2021 01:16:59 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id f7sm122179ljk.4.2021.01.13.01.16.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Jan 2021 01:16:58 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id m25so1667861lfc.11;
+        Wed, 13 Jan 2021 01:16:58 -0800 (PST)
+X-Received: by 2002:ac2:5979:: with SMTP id h25mr453376lfp.57.1610529418335;
+ Wed, 13 Jan 2021 01:16:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ywgutydfbazompzo"
-Content-Disposition: inline
-In-Reply-To: <87ft35xs0z.fsf@tarshish>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20210103100007.32867-1-samuel@sholland.org> <20210103100007.32867-5-samuel@sholland.org>
+ <a6c2eac4-7e98-ecb4-ee8a-d67a7f1b6871@arm.com> <20210106110643.agq3mjyhgvg3w4i6@gilmour>
+ <CAGb2v64mcLogZax8vVJJxG9feBzmGc8VyazTvp7XkBAoLXw9JA@mail.gmail.com> <bc95a8d2-ebec-489c-10af-fd5a80ea1276@sholland.org>
+In-Reply-To: <bc95a8d2-ebec-489c-10af-fd5a80ea1276@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 13 Jan 2021 17:16:46 +0800
+X-Gmail-Original-Message-ID: <CAGb2v679L8fDbaE6dpEdo2q=fJdF=e6AfzOXvHLBuwZ_5YbDeQ@mail.gmail.com>
+Message-ID: <CAGb2v679L8fDbaE6dpEdo2q=fJdF=e6AfzOXvHLBuwZ_5YbDeQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use
+ RSB for AXP805 PMIC connection
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---ywgutydfbazompzo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 13, 2021 at 08:36:12AM +0200, Baruch Siach wrote:
-> Hi Uwe,
->=20
-> On Mon, Jan 11 2021, Uwe Kleine-K=F6nig wrote:
-> > $Subject ~=3D s/get_state/.get_state/ ?
->=20
-> Ack.
->=20
-> > On Mon, Jan 11, 2021 at 01:17:02PM +0200, Baruch Siach wrote:
-> >> The period is the sum of on and off values.
-> >>=20
-> >> Reported-by: Russell King <linux@armlinux.org.uk>
-> >> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
-> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> >> ---
-> >>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
-> >>  1 file changed, 8 insertions(+), 11 deletions(-)
-> >>=20
-> >> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> >> index 672681a976f5..a912a8fed197 100644
-> >> --- a/drivers/gpio/gpio-mvebu.c
-> >> +++ b/drivers/gpio/gpio-mvebu.c
-> >> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip =
-*chip,
-> >>  	else
-> >>  		state->duty_cycle =3D 1;
-> >> =20
-> >> +	val =3D (unsigned long long) u; /* on duration */
-> >>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
-> >> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
-> >> +	val +=3D (unsigned long long) u; /* period =3D on + off duration */
-> >> +	val *=3D NSEC_PER_SEC;
-> >>  	do_div(val, mvpwm->clk_rate);
-> >> -	if (val < state->duty_cycle) {
-> >> +	if (val > UINT_MAX)
-> >> +		state->period =3D UINT_MAX;
-> >> +	else if (val)
-> >> +		state->period =3D val;
-> >> +	else
-> >>  		state->period =3D 1;
-> >> -	} else {
-> >> -		val -=3D state->duty_cycle;
-> >> -		if (val > UINT_MAX)
-> >> -			state->period =3D UINT_MAX;
-> >> -		else if (val)
-> >> -			state->period =3D val;
-> >> -		else
-> >> -			state->period =3D 1;
-> >> -	}
+On Thu, Jan 7, 2021 at 6:27 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> On 1/6/21 5:38 AM, Chen-Yu Tsai wrote:
+> > On Wed, Jan 6, 2021 at 7:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> >>
+> >> On Mon, Jan 04, 2021 at 10:54:19AM +0000, André Przywara wrote:
+> >>> On 03/01/2021 10:00, Samuel Holland wrote:
+> >>>> On boards where the only peripheral connected to PL0/PL1 is an X-Powers
+> >>>> PMIC, configure the connection to use the RSB bus rather than the I2C
+> >>>> bus. Compared to the I2C controller that shares the pins, the RSB
+> >>>> controller allows a higher bus frequency, and it is more CPU-efficient.
+> >>>
+> >>> But is it really necessary to change the DTs for those boards in this
+> >>> way? It means those newer DTs now become incompatible with older
+> >>> kernels, and I don't know if those reasons above really justify this.
+> >>>
+> >>> I understand that we officially don't care about "newer DTs on older
+> >>> kernels", but do we really need to break this deliberately, for no
+> >>> pressing reasons?
+> >>>
+> >>> P.S. I am fine with supporting RSB on H6, and even using it on new DTs,
+> >>> just want to avoid breaking existing ones.
+> >>
+> >> Doing so would also introduce some inconsistencies, one more thing to
+> >> consider during reviews, and would require more testing effort.
+> >>
+> >> I'm not sure that stretching our - already fairly sparse - resources
+> >> thin would be very wise here, especially for something that we don't
+> >> have to do and for a setup that isn't really used that much.
 > >
-> > The patch looks good, the patch description could be a bit more verbose.
-> > Something like:
+> > As soon as some software component starts running RSB, (which I assume
+> > is what Samuel is planning to do in Crust?), there's a chance that it
+> > doesn't switch the chip back to I2C. And then Linux won't be able to
+> > access it.
+>
+> Crust can handle either way via a config option, which currently
+> defaults to I2C for H6. It must use the same selection as Linux, not
+> only because of the PMIC mode, but also because of the pinctrl.
+
+Could Crust be made to also handle pinctrl?
+
+> TF-A is already converted to use RSB[1], and it does switch the PMIC
+> back to I2C before handing off to U-Boot[2]. So new TF-A + old Linux is
+> fine. However, Linux currently does not switch the PMIC back. So the
+> most likely problem from this patch is that, with new Linux + old TF-A,
+> TF-A will be unable to power down the board or access regulators after
+> an SoC reset.
+>
+> I expect there will be a TF-A release between now and when 5.12 hits
+> stable, but people tend not upgrade their U-Boot/TF-A very often.
+>
+> We could solve this by having the Linux RSB driver switch all child
+> devices back to I2C in .shutdown, or by dropping this patch and only
+> using RSB for new boards (which would also address Andre's concern).
+
+This will work for most cases, except in a kernel panic or IIRC direct
+reboot using sysrq. So it's not robust as we'd like it to be.
+
+ChenYu
+
+> Cheers,
+> Samuel
+>
+> [1]: https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/7576
+> [2]: https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/7575
+>
+> > So I'm for keeping things consistent and converting all users to RSB.
 > >
-> > 	Calculate the period as
 > >
-> > 		($on + $off) / clkrate
+> > ChenYu
 > >
-> > 	instead of
-> >
-> > 		$off / clkrate - $on / clkrate
-> >
-> > 	.
->=20
-> I take this to refer to the next patch (2/5). This patch changes from
-> buggy
->=20
->   $on / clkrate
-
-No, the previous calculation had
-
--		val -=3D state->duty_cycle;
-
-which accounts for "- $on / clkrate".
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ywgutydfbazompzo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/+rJEACgkQwfwUeK3K
-7Anjygf/faMPolAodZOGsp+6XqGwafR+N/b6zcBQg9nYke6vKN9qMu2JpJ6QdNpR
-3mDWIC151XibEiMQ5Z+6eWULOYSv3TcC3OikvLKycUGCoyVJEtoHuevBB6o0nTNP
-pQ8+7xgeEhju5Rjppq1Av6I1d9wBZMwmXhR2rJKBBnuyhtLSnF1wM/tMtTdeDEcz
-q5xx8EqKE2/xORN+Xj6tVlC86X35kU3dbfnjlw2gHOf2yPlTRHemR3clLsBoMN/m
-U8r5yGx32WjMzrt00HAJ+tl4u+FAGOqyEDVAA04ZlIBYiy1hnpCpf7Cmf9dCjD3b
-xLb8DlVnbQ2yolV/AHsyIvy+QPNBhg==
-=6Ymi
------END PGP SIGNATURE-----
-
---ywgutydfbazompzo--
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/bc95a8d2-ebec-489c-10af-fd5a80ea1276%40sholland.org.
