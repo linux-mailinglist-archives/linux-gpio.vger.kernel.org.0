@@ -2,60 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C3B2F42A3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 04:45:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B0D2F4498
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 07:36:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725747AbhAMDo1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jan 2021 22:44:27 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47021 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbhAMDo1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 Jan 2021 22:44:27 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=abaci-bugfix@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0ULZwgN0_1610509396;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:abaci-bugfix@linux.alibaba.com fp:SMTPD_---0ULZwgN0_1610509396)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Jan 2021 11:43:38 +0800
-From:   Yang Li <abaci-bugfix@linux.alibaba.com>
-To:     baolin.wang7@gmail.com
-Cc:     orsonzhai@gmail.com, linus.walleij@linaro.org,
-        zhang.lyra@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Yang Li <abaci-bugfix@linux.alibaba.com>
-Subject: [PATCH v2] pinctrl: sprd: Simplify bool comparison
-Date:   Wed, 13 Jan 2021 11:43:15 +0800
-Message-Id: <1610509395-107554-1-git-send-email-abaci-bugfix@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726244AbhAMGg5 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 13 Jan 2021 01:36:57 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:45552 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbhAMGg5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 Jan 2021 01:36:57 -0500
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id B346E440045;
+        Wed, 13 Jan 2021 08:36:12 +0200 (IST)
+References: <cover.1610362661.git.baruch@tkos.co.il>
+ <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
+ <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
+User-agent: mu4e 1.4.13; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     g@pengutronix.de, Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] gpio: mvebu: fix pwm get_state period calculation
+In-reply-to: <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
+Date:   Wed, 13 Jan 2021 08:36:12 +0200
+Message-ID: <87ft35xs0z.fsf@tarshish>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix the following coccicheck warning:
-./drivers/pinctrl/sprd/pinctrl-sprd.c:690:8-23: WARNING: Comparison to
-bool
+Hi Uwe,
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Yang Li <abaci-bugfix@linux.alibaba.com>
----
-Changes in v2:
-    - make "pinctrl: sprd:" as subject prefix
+On Mon, Jan 11 2021, Uwe Kleine-König wrote:
+> $Subject ~= s/get_state/.get_state/ ?
 
- drivers/pinctrl/sprd/pinctrl-sprd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ack.
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 08dc193..dca7a50 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -687,7 +687,7 @@ static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 				shift = INPUT_SCHMITT_SHIFT;
- 				break;
- 			case PIN_CONFIG_BIAS_PULL_UP:
--				if (is_sleep_config == true) {
-+				if (is_sleep_config) {
- 					val |= SLEEP_PULL_UP;
- 					mask = SLEEP_PULL_UP_MASK;
- 					shift = SLEEP_PULL_UP_SHIFT;
+> On Mon, Jan 11, 2021 at 01:17:02PM +0200, Baruch Siach wrote:
+>> The period is the sum of on and off values.
+>> 
+>> Reported-by: Russell King <linux@armlinux.org.uk>
+>> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
+>> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+>> ---
+>>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
+>>  1 file changed, 8 insertions(+), 11 deletions(-)
+>> 
+>> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+>> index 672681a976f5..a912a8fed197 100644
+>> --- a/drivers/gpio/gpio-mvebu.c
+>> +++ b/drivers/gpio/gpio-mvebu.c
+>> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
+>>  	else
+>>  		state->duty_cycle = 1;
+>>  
+>> +	val = (unsigned long long) u; /* on duration */
+>>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
+>> -	val = (unsigned long long) u * NSEC_PER_SEC;
+>> +	val += (unsigned long long) u; /* period = on + off duration */
+>> +	val *= NSEC_PER_SEC;
+>>  	do_div(val, mvpwm->clk_rate);
+>> -	if (val < state->duty_cycle) {
+>> +	if (val > UINT_MAX)
+>> +		state->period = UINT_MAX;
+>> +	else if (val)
+>> +		state->period = val;
+>> +	else
+>>  		state->period = 1;
+>> -	} else {
+>> -		val -= state->duty_cycle;
+>> -		if (val > UINT_MAX)
+>> -			state->period = UINT_MAX;
+>> -		else if (val)
+>> -			state->period = val;
+>> -		else
+>> -			state->period = 1;
+>> -	}
+>
+> The patch looks good, the patch description could be a bit more verbose.
+> Something like:
+>
+> 	Calculate the period as
+>
+> 		($on + $off) / clkrate
+>
+> 	instead of
+>
+> 		$off / clkrate - $on / clkrate
+>
+> 	.
+
+I take this to refer to the next patch (2/5). This patch changes from
+buggy
+
+  $on / clkrate
+
+to
+
+  ($on + $off) / clkrate
+
+baruch
+
 -- 
-1.8.3.1
-
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
