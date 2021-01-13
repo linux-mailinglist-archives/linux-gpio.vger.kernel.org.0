@@ -2,103 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B6D2F47E8
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 10:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 901332F4868
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 11:15:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbhAMJnO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jan 2021 04:43:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbhAMJnO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 04:43:14 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5BBC061794
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jan 2021 01:42:33 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzcfa-0006Js-N5; Wed, 13 Jan 2021 10:42:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzcfL-0002YO-A8; Wed, 13 Jan 2021 10:42:11 +0100
-Date:   Wed, 13 Jan 2021 10:42:07 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/5] gpio: mvebu: make pwm .get_state closer to
- idempotent
-Message-ID: <20210113094207.rh4u7zo7wf64p7uw@pengutronix.de>
-References: <cover.1610529002.git.baruch@tkos.co.il>
- <1d376a3500e11d8fd2ecaf9ca345977f011079af.1610529002.git.baruch@tkos.co.il>
+        id S1726781AbhAMKPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jan 2021 05:15:00 -0500
+Received: from mail.saocarlos.sp.gov.br ([187.103.149.63]:40570 "EHLO
+        webmail.saocarlos.sp.gov.br" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726645AbhAMKPA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 Jan 2021 05:15:00 -0500
+Received: from webmail.saocarlos.sp.gov.br (unknown [187.103.149.63])
+        (Authenticated sender: joao.guedes@saocarlos.sp.gov.br)
+        by webmail.saocarlos.sp.gov.br (webmail.saocarlos.sp.gov.br) with ESMTPSA id 4BC4F22319;
+        Wed, 13 Jan 2021 07:14:13 -0300 (-03)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yhwbnicy5okq5jkw"
-Content-Disposition: inline
-In-Reply-To: <1d376a3500e11d8fd2ecaf9ca345977f011079af.1610529002.git.baruch@tkos.co.il>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Date:   Wed, 13 Jan 2021 11:14:13 +0100
+From:   Lee Young <jao.guedes@saocarlos.sp.gov.br>
+To:     undisclosed-recipients:;
+Subject: @Covid-19 Relief Fund 2021
+Reply-To: leeyoung.wbg@gmail.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <f99ebda81b2ba0860503903c528f885f@saocarlos.sp.gov.br>
+X-Sender: jao.guedes@saocarlos.sp.gov.br
+Organization: Lee Young
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---yhwbnicy5okq5jkw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 13, 2021 at 11:22:43AM +0200, Baruch Siach wrote:
-> Round up the result of division in period/duty_cycle calculation to make
-> the result closer to idempotent.
+-- 
+Dear Beneficiary,
 
-Maybe:
+You have been selected by the WORLD BANK GROUP to receive a Covid-19 
+Relief
+Fund sum of $850,000.00 USD.
 
-Round up the divisions in .get_state() to make applying the read out
-configuration idempotent in most cases as .apply rounds down.
+For more details, please email directly to (cckong804@protonmail.ch)
 
-> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Your Ref #: WBGUTB1920.
 
-Other than that:
-
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---yhwbnicy5okq5jkw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/+wGwACgkQwfwUeK3K
-7AnWIQf/Qx8t1FUfpewVasD2TqeWdPKyYDLuPplQjt7C2YXvER+xYusEERrV7zth
-zNZ+1RYWJkNo+tpIKCH74kmm0qXm6aKauNB1L3Fb0j+lybDyKmwuu8iCXPo1ZTQJ
-/BqqGepqDHEG45U73KwbplTZ6OI95R4XRSmft9rr6AqmWQ27SQI98wGd8UYDxjZy
-LBHSERJ47bXJFVFVPbAzssFROuB6G7/LX9Orae7e6xkqElOfqyM8Mw8sC2d9zYXd
-qOGeYHeXiKGVsAhWv512YzI0zqas/mgMPbBsHZlTgzY6W6a26ysC1PbHctPNmgMX
-eKuO20tEcltYiPmxMW0iryzrwgYJcw==
-=JPRR
------END PGP SIGNATURE-----
-
---yhwbnicy5okq5jkw--
+Dr. Cheong Kong
+Notification Officer
