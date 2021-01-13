@@ -2,58 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE2A2F4ABB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 12:57:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 413ED2F4B4D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jan 2021 13:32:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbhAMLxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jan 2021 06:53:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbhAMLxK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 06:53:10 -0500
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA25C061786
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jan 2021 03:52:30 -0800 (PST)
-Received: by mail-ot1-x343.google.com with SMTP id x5so1599858otp.9
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jan 2021 03:52:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=5lD39euqnLLWALUOK+cga3/qrcq4Set5HCzS7aBLz9o=;
-        b=eXGpB7zY38RdQ29se2wLOK2a/4rYbp+T5Nss/i7vEZ9xrbhTrWIYu2c8rsbY4p6hEQ
-         33ApVAHGJlRyHvVo5NiyMtR6KVAOHVlf4XoZZjnBvmMpogZMvx3DMYGkg/061jOnkzfI
-         r1+nKYJz6CAuUEr8xBtnLTt7415hU+eQeodEPPgUaFWl1PonXroT/Wqt6OBqBOLUfXeO
-         r6o0uxGLcRopgn5FPaHCRIZUtcewf2/V7yv5O0AzAlqPU1F0Us5sSS1esoGyGfkUNo/G
-         2mQrlWXgN9rlhT9fq6xL15ZXm74Rtj6a6KeeEW1qu7EFRNT6GpN4vd7189yn3HxU64ER
-         S0rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=5lD39euqnLLWALUOK+cga3/qrcq4Set5HCzS7aBLz9o=;
-        b=PMF9I3jJKnHtCzhJJ+EXqe+RsREDXCks9U2hHOL9QsfjY73EqFY86Z8ds2adqrfejf
-         q4lTYZ6j5MakJ/VhQbCp/9TFHZXCwglwECMbU7OEmI1fRvwKjjDTA/w7EALpRUCNTy55
-         LGr7L/Px015e4zIjzddFy8YsaMgMDQZyyQgnYaMLvmcFD+1QPdCrIgbcnSY5qijqhFsR
-         CxlvLKowttHGnv6bJSIrsmuM4wqhTJczbIgcuphc/ZX3iivmXJN7xciHe4atpe9zVw87
-         ygrB/bsh7TN1JjqQnJDlmEJ3ecVHYSFvaqfTtnTSSSDAydIEgN/FjNsPMI0HHosnF2JB
-         PhXA==
-X-Gm-Message-State: AOAM531+q7xnxkEL3q8ix5i5R57/sFyaWsE9ggByl4NMZvWjmyZJ6xJW
-        7Ya1pAAWIqfSVeMWVUZ8a8UMdP22m0G2KzX+Hn1nQ/2Lk+Sx5g==
-X-Google-Smtp-Source: ABdhPJyzJLXslTZtJCT+WbKUX/v7uV34Fmo5Bk0JeHnphGeCNhGXBh2qI6d23tfzkzEOsa35NNQ+bbQFS0aUD9cdrhM=
-X-Received: by 2002:a9d:2663:: with SMTP id a90mr908606otb.218.1610538742186;
- Wed, 13 Jan 2021 03:52:22 -0800 (PST)
+        id S1726510AbhAMMbe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jan 2021 07:31:34 -0500
+Received: from m-r2.th.seeweb.it ([5.144.164.171]:56559 "EHLO
+        m-r2.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbhAMMbe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 07:31:34 -0500
+Received: from IcarusMOD.eternityproject.eu (unknown [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 519F53EF18;
+        Wed, 13 Jan 2021 13:30:51 +0100 (CET)
+Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: Add bindings for Awinic
+ AW9523/AW9523B
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
+        martin.botka@somainline.org, phone-devel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org>
+ <20210111182928.587285-2-angelogioacchino.delregno@somainline.org>
+ <20210113024118.GA1404906@robh.at.kernel.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Message-ID: <3857e97d-2505-6a93-03cd-c36562035445@somainline.org>
+Date:   Wed, 13 Jan 2021 13:30:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Received: by 2002:a05:6830:1bcc:0:0:0:0 with HTTP; Wed, 13 Jan 2021 03:52:21
- -0800 (PST)
-Reply-To: nascointt@hotmail.com
-From:   Nayef Abu Sakran <rev.fatherpaulmartinsparish@gmail.com>
-Date:   Wed, 13 Jan 2021 12:52:21 +0100
-Message-ID: <CAL4kdXcW4ZsxjMBABXTueT+op3Tah76VG4wYGcDhKx7ArL6bBg@mail.gmail.com>
-Subject: pls thanks
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210113024118.GA1404906@robh.at.kernel.org>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Did you received the mail i send to you?
+Il 13/01/21 03:41, Rob Herring ha scritto:
+> On Mon, Jan 11, 2021 at 07:29:28PM +0100, AngeloGioacchino Del Regno wrote:
+>> Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+>> ---
+>>   .../pinctrl/awinic,aw9523-pinctrl.yaml        | 112 ++++++++++++++++++
+>>   1 file changed, 112 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+>> new file mode 100644
+>> index 000000000000..a705c05bb5a2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+>> @@ -0,0 +1,112 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/awinic,aw9523-pinctrl.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Awinic AW9523/AW9523B I2C GPIO Expander
+>> +
+>> +maintainers:
+>> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+>> +
+>> +description: |
+>> +  The Awinic AW9523/AW9523B I2C GPIO Expander featuring 16 multi-function
+>> +  I/O, 256 steps PWM mode and interrupt support.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: awinic,aw9523-pinctrl
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  '#gpio-cells':
+>> +    description: |
+>> +      Specifying the pin number and flags, as defined in
+>> +      include/dt-bindings/gpio/gpio.h
+>> +    const: 2
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  gpio-ranges:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: Specifies the INTN pin IRQ.
+>> +
+>> +  '#interrupt-cells':
+>> +    description:
+>> +      Specifies the PIN numbers and Flags, as defined in defined in
+>> +      include/dt-bindings/interrupt-controller/irq.h
+>> +    const: 2
+>> +
+>> +#PIN CONFIGURATION NODES
+>> +patternProperties:
+>> +  '^.*$':
+>> +    if:
+>> +      type: object
+>> +      $ref: "/schemas/pinctrl/pincfg-node.yaml"
+>> +    then:
+> 
+> I wish people would stop copying this if/then hack...
+> 
+> For new bindings, just name your nodes something sensible you can match
+> on like '-pins$'.
+> 
+I always check the newest available yaml that I can find in the same 
+folder before writing mine... in this case, it was sm8250-pinctrl.yaml
+and I thought that this was the accepted way, since.. that's.. the 
+newest one.
+
+By the way, I've fixed it now. I'll send V4 in the evening!
+Thank you!
+
+>> +      properties:
+>> +        pins:
+>> +          description:
+>> +            List of gpio pins affected by the properties specified in
+>> +            this subnode.
+>> +          items:
+>> +            pattern: "^gpio([0-9]|1[0-5])$"
+>> +          minItems: 1
+>> +          maxItems: 16
+>> +
+>> +        function:
+>> +          description:
+>> +            Specify the alternative function to be configured for the
+>> +            specified pins.
+>> +
+>> +          enum: [ gpio, pwm ]
+>> +
+>> +        bias-disable: true
+>> +        bias-pull-down: true
+>> +        bias-pull-up: true
+>> +        drive-open-drain: true
+>> +        drive-push-pull: true
+>> +        input-enable: true
+>> +        output-high: true
+>> +        output-low: true
+>> +
+>> +      required:
+>> +        - pins
+>> +        - function
+>> +
+>> +      additionalProperties: false
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - gpio-controller
+>> +  - '#gpio-cells'
+>> +  - gpio-ranges
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    i2c_node {
+>> +        gpio-expander@58 {
+>> +                compatible = "awinic,aw9523-pinctrl";
+>> +                reg = <0x58>;
+>> +                interrupt-parent = <&tlmm>;
+>> +                interrupts = <50 IRQ_TYPE_EDGE_FALLING>;
+>> +                gpio-controller;
+>> +                #gpio-cells = <2>;
+>> +                gpio-ranges = <&tlmm 0 0 16>;
+>> +                interrupt-controller;
+>> +                #interrupt-cells = <2>;
+>> +                reset-gpios = <&tlmm 51 GPIO_ACTIVE_HIGH>;
+>> +        };
+>> +    };
+>> -- 
+>> 2.29.2
+>>
+
