@@ -2,132 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B762F6E30
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 23:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BC522F6E6A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 23:45:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbhANW3C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jan 2021 17:29:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729586AbhANW3C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jan 2021 17:29:02 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C6EC061757;
-        Thu, 14 Jan 2021 14:28:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+c27JvaG+gyEJ2essLvjqsTpAebaaMjXRpDRTZS4lnw=; b=YxlVRLcvHz4lnPRWymzjv3YzN
-        iKbQBygqTA+prJsHeB+ccZVZ2dPnxs4bcbW6RbH1oY/O36r8+aqboK6nynPAfRwZHhKI/OTfGZXrN
-        uDzQEzDKhMQxjK0pAaaGySnKWg0PAZpKY7Q75O5tAA/jYd/BVheHORO16oT41bH1I9or543fMgQHz
-        8FRz8nF2oH4cFIwqYN/vbpKCWeJvLnWOf4a5AA8gKxkKHjI7LqRELWx4qoIiGWTab6OWdJL8ycAVA
-        jc6TYc2ZBGBl3wzDH8FhijlVlD1XCW74O0Ql4BuK7NL4I53g6McEB6jgUmXbaHy8z4PMhLUQz3nTX
-        DQ6cCBg1Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48046)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1l0B6A-00030H-QS; Thu, 14 Jan 2021 22:28:10 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1l0B62-0000Ha-LP; Thu, 14 Jan 2021 22:28:02 +0000
-Date:   Thu, 14 Jan 2021 22:28:02 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-pwm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-gpio@vger.kernel.org,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 5/5] gpio: mvebu: document zero pwm duty cycle
- limitation
-Message-ID: <20210114222802.GY1551@shell.armlinux.org.uk>
-References: <cover.1610628807.git.baruch@tkos.co.il>
- <7c18dd67d3bf3e3ed9a8efa2edd33e8f29f09a7a.1610628807.git.baruch@tkos.co.il>
- <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
+        id S1730665AbhANWnp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jan 2021 17:43:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbhANWnp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 Jan 2021 17:43:45 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D19C23977;
+        Thu, 14 Jan 2021 22:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610664184;
+        bh=qZ/MNWQydkUDlIXZVZ6/n8TRZAwyFdzsMQwirrjnwqg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uXi0wsURRyW96Ia0XZFtD90Th4/U5vBJcmFnHbz7JtRMhSIF8BsKA2t60WnJSd5vW
+         XsLysC2M4Y+2uJoq5j3Sbwk2pxe69+CS9bFqbfevBo/DnnP1MqRIZCdtBEQk/V0BFh
+         Satflho+t/kbS48q0pLfiLSvj8FykKhbaU2w3uWGQQW7WsHHVLI66ey5RZLtnzx5S5
+         OnkTpXwFW5toZYBdNkq0IDo2PmNV44o69xKCVV243epTvVQJSp5OX5a18VEJxWbj6Z
+         +vUni3uKQ6gT6065hdOSP/CiSv3msLTl/TuLXhX5WMSkt0exAt/vmYK+k88ZMEYrKh
+         eCYt6jjyF72lw==
+Received: by mail-ej1-f42.google.com with SMTP id d17so10575111ejy.9;
+        Thu, 14 Jan 2021 14:43:04 -0800 (PST)
+X-Gm-Message-State: AOAM533v3yKaUhEOMW81J8TEpupWzunW22bIZgv/np0d2CFvwappAvRc
+        Lp/8s0F96ZlL6YVy+c7u2qrLX/YirJj5hXx3zA==
+X-Google-Smtp-Source: ABdhPJycUNMxM59kfx7C+D7nZiNTZvcRLWLTpIbtqYITZAWtuPES6DqIj+XHr5HIDaFEUrPXVXNKrgkhBjPZuzwV3vY=
+X-Received: by 2002:a17:906:25c4:: with SMTP id n4mr6691033ejb.359.1610664182813;
+ Thu, 14 Jan 2021 14:43:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org>
+ <20210111182928.587285-2-angelogioacchino.delregno@somainline.org>
+ <20210113024118.GA1404906@robh.at.kernel.org> <3857e97d-2505-6a93-03cd-c36562035445@somainline.org>
+In-Reply-To: <3857e97d-2505-6a93-03cd-c36562035445@somainline.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 Jan 2021 16:42:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL4nbF_gfkN9KYvQ6Je_xiPLfQg9-bP9nsnsjtv8PvRYg@mail.gmail.com>
+Message-ID: <CAL_JsqL4nbF_gfkN9KYvQ6Je_xiPLfQg9-bP9nsnsjtv8PvRYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
+        martin.botka@somainline.org, phone-devel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 09:25:45PM +0100, Uwe Kleine-König wrote:
-> Hello Baruch,
-> 
-> On Thu, Jan 14, 2021 at 08:57:37PM +0200, Baruch Siach wrote:
-> > Add a comment on why the code never sets on/off registers to zero.
-> > 
-> > Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Analyzed-by: Russell King <linux@armlinux.org.uk>
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> >  drivers/gpio/gpio-mvebu.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > index 6b017854ce61..09780944bef9 100644
-> > --- a/drivers/gpio/gpio-mvebu.c
-> > +++ b/drivers/gpio/gpio-mvebu.c
-> > @@ -706,6 +706,10 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> >  	do_div(val, NSEC_PER_SEC);
-> >  	if (val > UINT_MAX)
-> >  		return -EINVAL;
-> > +	/*
-> > +	 * Zero on/off values don't work as expected. Experimentation shows
-> > +	 * that zero value is treated as 2^32. This behavior is not documented.
-> > +	 */
-> 
-> This is too easy. The right thing to do is to adapt .apply and
-> .get_state to use this new information.
+On Wed, Jan 13, 2021 at 6:30 AM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@somainline.org> wrote:
+>
+> Il 13/01/21 03:41, Rob Herring ha scritto:
+> > On Mon, Jan 11, 2021 at 07:29:28PM +0100, AngeloGioacchino Del Regno wrote:
+> >> Add bindings for the Awinic AW9523/AW9523B I2C GPIO Expander driver.
+> >>
+> >> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> >> ---
+> >>   .../pinctrl/awinic,aw9523-pinctrl.yaml        | 112 ++++++++++++++++++
+> >>   1 file changed, 112 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+> >> new file mode 100644
+> >> index 000000000000..a705c05bb5a2
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml
+> >> @@ -0,0 +1,112 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/pinctrl/awinic,aw9523-pinctrl.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Awinic AW9523/AW9523B I2C GPIO Expander
+> >> +
+> >> +maintainers:
+> >> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> >> +
+> >> +description: |
+> >> +  The Awinic AW9523/AW9523B I2C GPIO Expander featuring 16 multi-function
+> >> +  I/O, 256 steps PWM mode and interrupt support.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: awinic,aw9523-pinctrl
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  '#gpio-cells':
+> >> +    description: |
+> >> +      Specifying the pin number and flags, as defined in
+> >> +      include/dt-bindings/gpio/gpio.h
+> >> +    const: 2
+> >> +
+> >> +  gpio-controller: true
+> >> +
+> >> +  gpio-ranges:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupt-controller: true
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +    description: Specifies the INTN pin IRQ.
+> >> +
+> >> +  '#interrupt-cells':
+> >> +    description:
+> >> +      Specifies the PIN numbers and Flags, as defined in defined in
+> >> +      include/dt-bindings/interrupt-controller/irq.h
+> >> +    const: 2
+> >> +
+> >> +#PIN CONFIGURATION NODES
+> >> +patternProperties:
+> >> +  '^.*$':
+> >> +    if:
+> >> +      type: object
+> >> +      $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> >> +    then:
+> >
+> > I wish people would stop copying this if/then hack...
+> >
+> > For new bindings, just name your nodes something sensible you can match
+> > on like '-pins$'.
+> >
+> I always check the newest available yaml that I can find in the same
+> folder before writing mine... in this case, it was sm8250-pinctrl.yaml
+> and I thought that this was the accepted way, since.. that's.. the
+> newest one.
 
-What exactly do you expect the changes to be?
+Normally, that's a good strategy. Unfortunately, this one went in
+without my review. There was supposed to be a follow-up to fix some of
+the issues, but seems that never happened.
 
-Bear in mind that the hardware is not capable of atomically updating
-e.g. the duty cycle without affecting the period, because any change
-in duty cycle needs the "on" and "off" durations to be separately
-programmed, and there's a chance that the hardware could start using
-either value mid-update.
-
-Also, disabling "blink" mode to achieve a steady output (for 0% or 100%
-duty cycle) would require further investigation to find out how the
-hardware behaves at the moment where blink mode is disabled: does the
-output retain its current state (does the bit in the output register
-toggle with the blink) or does it revert to the value in the output
-register that was programmed before blink mode was enabled.
-
-Again, none of that is documented, so would need experimentation with
-the hardware to work out how to achieve it.
-
-And then if you want even more complexity, I suppose we could try and
-read the current state of the pin, add a delay, recheck it and try and
-work out the optimal place to disable the blink mode.
-
-Exactly how far do you want to go with this?
-
-All of this is likely getting rediculously complicated for the use
-cases of it today that don't need it. Yes, it's annoying that we can't
-achieve 0% or 100% duty cycle with this hardware that was never
-designed as a PWM without jumping through a lot of hoops but currently
-settle for a minimum pulse width of 4ns at each end of the range.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Rob
