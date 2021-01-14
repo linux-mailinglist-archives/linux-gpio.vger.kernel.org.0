@@ -2,210 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C3742F6CD2
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 22:06:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B762F6E30
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 23:29:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbhANVFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jan 2021 16:05:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37604 "EHLO
+        id S1730265AbhANW3C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jan 2021 17:29:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbhANVFd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jan 2021 16:05:33 -0500
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450D3C0613C1
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Jan 2021 13:04:50 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id x126so4099025pfc.7
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Jan 2021 13:04:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=HCwJT/QMqfx+uDi/P3LEr4w8M6Oze0j6kQUUwP5NA1U=;
-        b=jrhN8QQKoBt+WKlIvufKWhZT/TQ1ksEv0c6S5ZBuUGCfQC7x2zb2UaR5q+Z4XbB/Bw
-         AthQhMwQNFbbohSkAgCOhIUtAQqr2UXbYA/5lRwpa2sEY6fqzga5bxHfQ8yzMv0F/Vui
-         TX+E3OhTngwV87ENkCV1a+SqIcb1WvyV9oQ20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=HCwJT/QMqfx+uDi/P3LEr4w8M6Oze0j6kQUUwP5NA1U=;
-        b=ia1OXB+NAAgQSTsEz5AwweqyhTTV3F4A5WNqPJVPEBBlv4/x7BYoaTA3mWNVYoI2vj
-         XmuT426nxknjh+XhNiHxnrvkzKn/dOOucjsmabziXHwj7td8pzhmeongEmeA2eqaFX3y
-         674CLGJ7hjlu0//Xyoip/0Ki60Y5sywlJ01XWv1YEZfoeU65yQCuidswPaWJGm9mvN0e
-         mv4ogSuwIbP/LRkz5NpVI2y9BnooPKeQMUKPZmVDgMOQMerNTOHwzF4yM+fsKHgkP4G6
-         mJlQZ+Z1YujNjt+OSLvRMb11fiC754s6x2FBdP98mzn9zp/PPJbpuW0HDs1BzwNupxfa
-         reLA==
-X-Gm-Message-State: AOAM533f5akUq78COPbXy9gJzOE1chzoCMpWxEHy7xO7p0aMouRuUSYb
-        ch+29S8LQw9NnFzO3jyS6rYngw==
-X-Google-Smtp-Source: ABdhPJyJzhU+dVXlPTEbmGOg7/qVxhzjIm/Rz0sWGXZAIhlpI0s/hJlQGZeE614rRs4vIzz3k2vSuw==
-X-Received: by 2002:aa7:9388:0:b029:19e:648:6480 with SMTP id t8-20020aa793880000b029019e06486480mr9392833pfe.21.1610658289583;
-        Thu, 14 Jan 2021 13:04:49 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:201:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id o32sm6895357pgm.10.2021.01.14.13.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jan 2021 13:04:48 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAD=FV=Vg1PNVPhCH9GPX=F9-EHhSGF9NaXfui+rM4SQEtA=ZMA@mail.gmail.com>
-References: <20210108093339.v5.1.I3ad184e3423d8e479bc3e86f5b393abb1704a1d1@changeid> <20210108093339.v5.4.I7cf3019783720feb57b958c95c2b684940264cd1@changeid> <161060848425.3661239.17417977666663714149@swboyd.mtv.corp.google.com> <CAD=FV=Vg1PNVPhCH9GPX=F9-EHhSGF9NaXfui+rM4SQEtA=ZMA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] pinctrl: qcom: Don't clear pending interrupts when enabling
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
+        with ESMTP id S1729586AbhANW3C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jan 2021 17:29:02 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C6EC061757;
+        Thu, 14 Jan 2021 14:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+c27JvaG+gyEJ2essLvjqsTpAebaaMjXRpDRTZS4lnw=; b=YxlVRLcvHz4lnPRWymzjv3YzN
+        iKbQBygqTA+prJsHeB+ccZVZ2dPnxs4bcbW6RbH1oY/O36r8+aqboK6nynPAfRwZHhKI/OTfGZXrN
+        uDzQEzDKhMQxjK0pAaaGySnKWg0PAZpKY7Q75O5tAA/jYd/BVheHORO16oT41bH1I9or543fMgQHz
+        8FRz8nF2oH4cFIwqYN/vbpKCWeJvLnWOf4a5AA8gKxkKHjI7LqRELWx4qoIiGWTab6OWdJL8ycAVA
+        jc6TYc2ZBGBl3wzDH8FhijlVlD1XCW74O0Ql4BuK7NL4I53g6McEB6jgUmXbaHy8z4PMhLUQz3nTX
+        DQ6cCBg1Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48046)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1l0B6A-00030H-QS; Thu, 14 Jan 2021 22:28:10 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1l0B62-0000Ha-LP; Thu, 14 Jan 2021 22:28:02 +0000
+Date:   Thu, 14 Jan 2021 22:28:02 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-pwm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>, open list:
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, ;
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     ;
-                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
-To:     Doug Anderson <dianders@chromium.org>
-Date:   Thu, 14 Jan 2021 13:04:47 -0800
-Message-ID: <161065828717.3661239.13961295387211584079@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-gpio@vger.kernel.org,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 5/5] gpio: mvebu: document zero pwm duty cycle
+ limitation
+Message-ID: <20210114222802.GY1551@shell.armlinux.org.uk>
+References: <cover.1610628807.git.baruch@tkos.co.il>
+ <7c18dd67d3bf3e3ed9a8efa2edd33e8f29f09a7a.1610628807.git.baruch@tkos.co.il>
+ <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Doug Anderson (2021-01-14 09:58:55)
-> Hi,
->=20
-> On Wed, Jan 13, 2021 at 11:14 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > > @@ -195,6 +201,20 @@ static int msm_pinmux_set_mux(struct pinctrl_dev=
- *pctldev,
-> > >         if (WARN_ON(i =3D=3D g->nfuncs))
-> > >                 return -EINVAL;
-> > >
-> > > +       /*
-> > > +        * If an GPIO interrupt is setup on this pin then we need spe=
-cial
-> > > +        * handling.  Specifically interrupt detection logic will sti=
-ll see
-> > > +        * the pin twiddle even when we're muxed away.
-> > > +        *
-> > > +        * When we see a pin with an interrupt setup on it then we'll=
- disable
-> > > +        * (mask) interrupts on it when we mux away until we mux back=
-.  Note
-> > > +        * that disable_irq() refcounts and interrupts are disabled a=
-s long as
-> > > +        * at least one disable_irq() has been called.
-> > > +        */
-> > > +       if (d && i !=3D gpio_func &&
-> > > +           !test_and_set_bit(d->hwirq, pctrl->disabled_for_mux))
-> > > +               disable_irq(irq);
-> >
-> > Does it need to be forced non-lazy so that it is actually disabled at
-> > the GIC?
->=20
-> Yes, I think non-lazy is important.  Specifically at the end I assume
-> that I can clear the interrupt in hardware and it will go away and
-> Linux never saw it.  If it was lazy, it's possible Linux saw the
-> interrupt and has it marked with IRQS_PENDING.
->=20
-> Right now we get non-lazy because we have "disable" implemented, so it
-> works fine.  I can be explicit.  Do I add a call to
-> msm_gpio_irq_reqres() like:
->=20
->   irq_set_status_flags(d->irq, IRQ_DISABLE_UNLAZY);
+On Thu, Jan 14, 2021 at 09:25:45PM +0100, Uwe Kleine-König wrote:
+> Hello Baruch,
+> 
+> On Thu, Jan 14, 2021 at 08:57:37PM +0200, Baruch Siach wrote:
+> > Add a comment on why the code never sets on/off registers to zero.
+> > 
+> > Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Analyzed-by: Russell King <linux@armlinux.org.uk>
+> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > ---
+> >  drivers/gpio/gpio-mvebu.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> > index 6b017854ce61..09780944bef9 100644
+> > --- a/drivers/gpio/gpio-mvebu.c
+> > +++ b/drivers/gpio/gpio-mvebu.c
+> > @@ -706,6 +706,10 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	do_div(val, NSEC_PER_SEC);
+> >  	if (val > UINT_MAX)
+> >  		return -EINVAL;
+> > +	/*
+> > +	 * Zero on/off values don't work as expected. Experimentation shows
+> > +	 * that zero value is treated as 2^32. This behavior is not documented.
+> > +	 */
+> 
+> This is too easy. The right thing to do is to adapt .apply and
+> .get_state to use this new information.
 
-Yes that should be done explicitly. I suppose when the irq is requested
-the first time is when we should do it. Or we can add a flag to gpiolib
-to do that all the time for the irq domain? Basically make it so
-gpiochip_hierarchy_irq_domain_alloc() sets the flag.
+What exactly do you expect the changes to be?
 
->=20
-> I'll wait for feedback if you think this is the right way to go before
-> sending the next version.
->=20
->=20
-> > I'm trying to understand how the lazy irq disabling plays into
-> > this. I think it's a don't care situation because if the line twiddles
-> > and triggers an irq then we'll actually disable it at the GIC in the
-> > genirq core and mark it pending for resend.
->=20
-> I think the marking as pending is a problem.  When we finally mux back
-> to GPIO we want to clear out anything that showed up while it was
-> muxed away and I'm not aware of a way to clear "IRQS_PENDING".
+Bear in mind that the hardware is not capable of atomically updating
+e.g. the duty cycle without affecting the period, because any change
+in duty cycle needs the "on" and "off" durations to be separately
+programmed, and there's a chance that the hardware could start using
+either value mid-update.
 
-Ok.
+Also, disabling "blink" mode to achieve a steady output (for 0% or 100%
+duty cycle) would require further investigation to find out how the
+hardware behaves at the moment where blink mode is disabled: does the
+output retain its current state (does the bit in the output register
+toggle with the blink) or does it revert to the value in the output
+register that was programmed before blink mode was enabled.
 
->=20
->=20
-> > I wonder if we wouldn't have
-> > to undo the pending state if we actually ignored it at the GIC
-> > forcefully. And I also worry that it may cause a random wakeup if the
-> > line twiddles, becomes pending at GIC and thus blocks the CPU from
-> > running a WFI but it isn't an irq that Linux cares about because it's
-> > muxed to UART, and then lazy handling runs and shuts it down. Is that
-> > possible?
->=20
-> I believe if the interrupt is masked at the GIC then it won't cause
-> wakeups.  Specifically to get wakeup stuff working we had to unmask
-> the interrupt at the GIC level.
+Again, none of that is documented, so would need experimentation with
+the hardware to work out how to achieve it.
 
-If I understand correctly, the lazy and non-lazy cases will masked at
-the GIC either after the line twiddles or immediately here respectfully.
-So either way we should be OK because it will be masked, but I'm still
-unsure about the lazy case where we are in the process of suspending and
-then the line twiddles. That would cause the irq to block suspend,
-possibly really late if the CPU is running trusted firmware. So we
-really need to make sure that it is non-lazy so this can't happen.
+And then if you want even more complexity, I suppose we could try and
+read the current state of the pin, add a delay, recheck it and try and
+work out the optimal place to disable the blink mode.
 
->=20
->=20
-> > > +
-> > >         raw_spin_lock_irqsave(&pctrl->lock, flags);
-> > >
-> > >         val =3D msm_readl_ctl(pctrl, g);
-> > > @@ -204,6 +224,20 @@ static int msm_pinmux_set_mux(struct pinctrl_dev=
- *pctldev,
-> > >
-> > >         raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> > >
-> > > +       if (d && i =3D=3D gpio_func &&
-> > > +           test_and_clear_bit(d->hwirq, pctrl->disabled_for_mux)) {
-> > > +               /*
-> > > +                * Clear interrupts detected while not GPIO since we =
-only
-> > > +                * masked things.
-> > > +                */
-> > > +               if (d->parent_data && test_bit(d->hwirq, pctrl->skip_=
-wake_irqs))
-> > > +                       irq_chip_set_parent_state(d, IRQCHIP_STATE_PE=
-NDING, false);
-> >
-> > So if not lazy this could go away?
->=20
-> I don't think so.  If lazy we could have a pending interrupt tracked
-> in two places: in Linux and in the parent if this happened:
-> * disable_irq() - do nothing except mark that IRQ is disalbed.
-> * IRQ happened - track in Linux and actually disable (mask) the interrupt
-> * IRQ happened again - still tracked in Linux but now also latched in
-> hardware (but masked)
->=20
-> ...so if it was lazy we'd need to clear the interrupt in two places.
-> With non-lazy we only have to clear the latch that happened in
-> hardware, right?
+Exactly how far do you want to go with this?
 
-Yes makes sense.
+All of this is likely getting rediculously complicated for the use
+cases of it today that don't need it. Yes, it's annoying that we can't
+achieve 0% or 100% duty cycle with this hardware that was never
+designed as a PWM without jumping through a lot of hoops but currently
+settle for a minimum pulse width of 4ns at each end of the range.
 
->=20
-> > Although I think this is to clear out
-> > the pending state in the GIC and not the PDC which is the parent.
->=20
-> Yeah, it clears the state that was latched in the GIC.  It just passes
-> through the PDC code on the way there.
-
-Got it. I'm happy with this patch once it explicitly disables the lazy
-mode of the gpio irqs.
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
