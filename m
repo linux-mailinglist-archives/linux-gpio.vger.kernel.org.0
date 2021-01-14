@@ -2,128 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AF692F69E1
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 19:50:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C1C2F6A38
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 20:00:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbhANSpb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jan 2021 13:45:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39726 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbhANSpa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 14 Jan 2021 13:45:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 248D5B77E;
-        Thu, 14 Jan 2021 18:44:48 +0000 (UTC)
-Message-ID: <99a7d6e80646ff7ac6c1fc615146fc4ad1428552.camel@suse.de>
-Subject: Re: [PATCH v6 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, f.fainelli@gmail.com,
-        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com
-Date:   Thu, 14 Jan 2021 19:44:46 +0100
-In-Reply-To: <20210112091842.3th64ardbqjafvuq@pengutronix.de>
-References: <20201211164801.7838-1-nsaenzjulienne@suse.de>
-         <20201211164801.7838-12-nsaenzjulienne@suse.de>
-         <20210112091842.3th64ardbqjafvuq@pengutronix.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Gc66jpwjN4JFK05BfjVR"
-User-Agent: Evolution 3.38.2 
+        id S1727017AbhANS6b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jan 2021 13:58:31 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:47395 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbhANS6a (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 Jan 2021 13:58:30 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id C2045440458;
+        Thu, 14 Jan 2021 20:57:45 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/5] gpio: mvebu: pwm fixes and improvements
+Date:   Thu, 14 Jan 2021 20:57:32 +0200
+Message-Id: <cover.1610628807.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This series adds a few related fixes to the pwm .apply and .get_state 
+callbacks.
 
---=-Gc66jpwjN4JFK05BfjVR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The first patch was originally part of the series adding Armada 8K/7K pwm 
+support. I split it out to a separate series following review comments from 
+Uwe Kleine-König who spotted a few more issues. There is no dependency between 
+this and the Armada 8K/7K series.
 
-Hi Uwe, thanks for the review.
+v3:
 
-On Tue, 2021-01-12 at 10:18 +0100, Uwe Kleine-K=C3=B6nig wrote:
+  * Improve patch 3/5 description (Uwe)
 
-[...]
+  * Add more Reviewed-by tags from Uwe
 
-> > +                duty_cycle =3D DIV_ROUND_CLOSEST_ULL(state->duty_cycle=
- * RPI_PWM_MAX_DUTY,
-> > +					           RPI_PWM_PERIOD_NS);
->=20
-> ... and round down here.
->=20
-> Just to be sure: writing RPI_PWM_MAX_DUTY (i.e. 255) yields 100% duty
-> cycle, right?
+v2:
 
-Yes, at 255 the signal is flat.
+Address Uwe Kleine-König comments.
 
-> > +        else
-> > +                duty_cycle =3D RPI_PWM_MAX_DUTY;
-> > +
-> > +	if (duty_cycle =3D=3D rpipwm->duty_cycle)
-> > +		return 0;
-> > +
-> > +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DU=
-TY_REG,
-> > +					   duty_cycle);
-> > +	if (ret) {
-> > +		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	 * This sets the default duty cycle after resetting the board, we
-> > +	 * updated it every time to mimic Raspberry Pi's downstream's driver
-> > +	 * behaviour.
-> > +	 */
-> > +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DU=
-TY_REG,
-> > +					   duty_cycle);
-> > +	if (ret) {
-> > +		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +        rpipwm->duty_cycle =3D duty_cycle;
->=20
-> Please use tabs for indention. (The general hint is to use checkpatch
-> which (I hope) tells you about problems like this.)
+  * Improve patch 1/5 summary line
 
-Sorry for that.
+  * Add more information to patch 1/5 description
 
-I took note of the rest of comments and will update the code.
+  * Add more information to patch 2/5 description
 
-Regards,
-Nicolas
+  * Don't round period/duty_cycle up in .apply (patch 3/5)
 
+  * Expand the comment in path 5/5 based on RMK's analysis of hardware 
+    behaviour
 
+  * Add Uwe's Reviewed-by tags
 
---=-Gc66jpwjN4JFK05BfjVR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Baruch Siach (5):
+  gpio: mvebu: fix pwm .get_state period calculation
+  gpio: mvebu: improve pwm period calculation accuracy
+  gpio: mvebu: make pwm .get_state closer to idempotent
+  gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
+  gpio: mvebu: document zero pwm duty cycle limitation
 
------BEGIN PGP SIGNATURE-----
+ drivers/gpio/gpio-mvebu.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmAAkR4ACgkQlfZmHno8
-x/7WpAf+OcmBebYI8HGJFfpFhX3gBSdN6587Todi3RNaMrm6loRFFbe3HDS3rO0u
-pv9Zl7lrjVKV1+Fug2/3rTL4Kh0/w98EZJ5mpf6n5k0EG+EoMqGqfqElaLL0mvW9
-7NpiNF15W4/v/U22BH3jtFUkt0PpjN1J2WPclOl+ZPEe31vjdiEauq7zAhRT9Gpr
-XHH9ZbY9f4oXR2s91ZaYGdni3ikxxB4cG/aS50GAM019KW/RIkEibfYpDjrCNOml
-M4Z4Y15Mqi8aouumlLNKiuxNmNhtyCilx3jHPeNm+2b5GeBp/S9jtAVkVaUaYQ9I
-N8qh4QzVUk4qMeucxLeRRemzuIWCOw==
-=pJN/
------END PGP SIGNATURE-----
-
---=-Gc66jpwjN4JFK05BfjVR--
+-- 
+2.29.2
 
