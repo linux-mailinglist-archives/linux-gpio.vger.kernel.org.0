@@ -2,105 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BFB32F5DDA
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 10:39:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85F5A2F60A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 12:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbhANJhQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jan 2021 04:37:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727634AbhANJhP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jan 2021 04:37:15 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFDAC06179F
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Jan 2021 01:36:34 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id l9so1473520ejx.3
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Jan 2021 01:36:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4WPhESZ2Ino1UQ+7G+F0v8AM8oEjEHY5bkl74A+HS9U=;
-        b=SHJ9j/iZ90wmHmG96hK7ogsn+S7r1luxoBa6keVoDk4NWbSCNnoALijDtih8olEzBp
-         eDDDm4LvTYIbIOa9nrF326FdHiHrMyGHEI0TXd3HrkbhFqbAVtF/7e5WQUgCknaSHz2x
-         oaFoSLatWj55lgEdC8DqqwywnwvJxqk6B9c+akWMvuSp2zsd7hpbZ5o5I5aijPmm7V6s
-         zwK4nJ3wNqC2p35i6MuadpL+gY2FguImFJ1W8Ikba4vihJrR/AQPmBP33UibkinQaJwF
-         Qv9v/EYxpCWlszMU3oHqnTK2fSoOvRL037tvswAb4X2vqXIa3f/aG5y1lQsta3pccOjm
-         akZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4WPhESZ2Ino1UQ+7G+F0v8AM8oEjEHY5bkl74A+HS9U=;
-        b=oxu9Yl9uyN/3KbsrTjedX3HLAMSWEDHS6TH6CUAjIfUU+tP5ZWQ97wkzsqvTmK42Fx
-         PT3KyFZ5Dfu0LQ2365t4ZwNvGZme99nQE9ouj1zDkASq5bVkJXRxDhe1lt9/kAPmeIL1
-         N93s12CDILtUjf8Bawn61P3IdHEHG8aTvcMqvtgMyTrZgxWkfLWU93lyI8yvrpbIMlpo
-         MxCDxtgy9YEnIQ4zX7YvQD3f+9D+5NeuA0qfOGW1Py+DpwtAZbNdcziarsjOc8VJ/pxc
-         eEQXvslo/YkrSJu0S+fOkchJu0iJLehq2y+Y56MD61hbufr4aAj8p6AGx1mJjblFqKux
-         4Ctg==
-X-Gm-Message-State: AOAM533Z/BAw0kQCAcH7b7jkLYPdoLTLRWMWF0aIJMgv4HoXxoVEaIXR
-        0hE8z93dBVNUglo1DcmNyAHpjfmQEpU7rv/TltcSog==
-X-Google-Smtp-Source: ABdhPJyrveNlmYlJtZwqPTnLW1uRvgk2qAwIeuLIPI8/FEwrO+3RCMe8L28l1DrM60nxOvEbNEfYmHp69hbWY7kCXSc=
-X-Received: by 2002:a17:906:19c3:: with SMTP id h3mr4605167ejd.429.1610616993048;
- Thu, 14 Jan 2021 01:36:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20210111054428.3273-1-dqfext@gmail.com> <20210111134349.vdhyebdllbaakukk@skbuf>
-In-Reply-To: <20210111134349.vdhyebdllbaakukk@skbuf>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 14 Jan 2021 10:36:22 +0100
-Message-ID: <CAMpxmJWi=BPvXyE_m0dyfmhuK76wYjVTtmvVEk7xSfPcaTYbkA@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/2] dsa: add MT7530 GPIO support
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     DENG Qingfang <dqfext@gmail.com>,
+        id S1728801AbhANL6g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jan 2021 06:58:36 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58693 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728761AbhANL6f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 Jan 2021 06:58:35 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 082675805E8;
+        Thu, 14 Jan 2021 06:57:49 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 14 Jan 2021 06:57:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=pIhvASRgvoG2sgYrbHtOgU5UtLU
+        uQKvIS/YboGlCm8E=; b=WpG29/sMUYehR6h3Q8PCye+zfhICMLVSDCU+0B6Aw7P
+        wctjuuCpH7kwHQJ5psIdNpJoj0211klif24tIAHYgag2Ou20xD7qW71JCldRSDsQ
+        kFrBzzRQnREpoBVatypDKydicwRqO+/KMjQoYLvbOE1c9i51zDHfFnLwANadGw9U
+        yaoijP99PeC31tBDwjNzeyBla9eaYQEk6RdNAmBPq9e9384DQTtPu+dUoVpfspt+
+        k6U4nKFNv3AgBHs0N+FCijgQKpFvnUx+Kv2kLyQkl5LmVtDTb2NO+bcCWjhe2J6j
+        GCAF6XSshT4D8ebL2OG5KYWi50XbI9g4vX+/jE9lCSw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=pIhvAS
+        RgvoG2sgYrbHtOgU5UtLUuQKvIS/YboGlCm8E=; b=ZY7bDwADVqWQf5WhAlb1yb
+        +Ocm2EtWzWfp7X291fCRbVaqtt5o+9qNQpzTy9y1C0d4HrbgAWpTptpu+aOAUjnc
+        RthgCUjb49pMfSGdx8A1rdo0dI697edZ8VSjNn8ssG5W4uxPsoptK67K0/k91ap3
+        jK14dzObuMe9Qg3AWzwCy80f0dL9WocfMc+AQAkxxatDGU2u8oTKZkQAUOowG4t5
+        rh50dZmDkZoIQ4QNBxrDVWh/GiOBA3CBFDr/J10tNjBFl8CBmxMkPVhpvbV8bfDz
+        Laz9hTqeFG7XLpdDwIHjqA06jgbM6aTJn0qMALeNd60zj9o50cc0s39240Ky3PWQ
+        ==
+X-ME-Sender: <xms:uzEAYIFRSCo-WfycmpCmqVlP6gJFCIjEz0DlquEr8-cLLyX7yup07Q>
+    <xme:uzEAYBW25kIDcsMjWFGgi_hkmSOHYr08n_Tql1PBybYKeo8nY-2DQv1Mw8Oe3ZALg
+    qo7BlmZu0PVtne8oyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtddtgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeevgeduteektefhtefggfdtkeekgfehhffffeegudelheegheeiueevfeegvdei
+    geenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrje
+    einecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgr
+    gihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:uzEAYCK9jsyc4gd4k1Nd5WaLLBeeo0ulDFP_NvPe-u_r9IxTGjcOKA>
+    <xmx:uzEAYKF_7nKrUdhgBiaRfi1GpCsYxdNOprruIkpAat442yNfUjeFZQ>
+    <xmx:uzEAYOXB5rhbQA6cXMZQHUch3HnK-xewKb7G9HU1yKaMS0m6NFxwsg>
+    <xmx:vDEAYFPWNExPiGzUd5DTTLga4gJJ702PTMJsg3Rx3ynNRVjbvA0u5g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CE48B108005B;
+        Thu, 14 Jan 2021 06:57:46 -0500 (EST)
+Date:   Thu, 14 Jan 2021 12:57:45 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        netdev <netdev@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh@kernel.org>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 02/21] dt-bindings: pinctrl: Add Allwinner H616
+ compatible strings
+Message-ID: <20210114115745.x5cuxmxqllu7b6zl@gilmour>
+References: <20201211011934.6171-1-andre.przywara@arm.com>
+ <20201211011934.6171-3-andre.przywara@arm.com>
+ <20201214093728.ehd2362jzclbxwp5@gilmour>
+ <20210114004512.6cc7bd10@slackpad.fritz.box>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mbsziskqq433z3de"
+Content-Disposition: inline
+In-Reply-To: <20210114004512.6cc7bd10@slackpad.fritz.box>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 2:43 PM Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Mon, Jan 11, 2021 at 01:44:26PM +0800, DENG Qingfang wrote:
-> > MT7530's LED controller can be used as GPIO controller. Add support for
-> > it.
-> >
-> > DENG Qingfang (2):
-> >   dt-bindings: net: dsa: add MT7530 GPIO controller binding
-> >   drivers: net: dsa: mt7530: MT7530 optional GPIO support
-> >
-> >  .../devicetree/bindings/net/dsa/mt7530.txt    |  6 ++
-> >  drivers/net/dsa/mt7530.c                      | 96 +++++++++++++++++++
-> >  drivers/net/dsa/mt7530.h                      | 20 ++++
-> >  3 files changed, 122 insertions(+)
-> >
-> > --
-> > 2.25.1
->
-> Adding GPIO and LED maintainers to also have a look.
-> https://patchwork.kernel.org/project/netdevbpf/cover/20210111054428.3273-1-dqfext@gmail.com/
 
-Can you resend the series with GPIO maintainers in CC?
+--mbsziskqq433z3de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+On Thu, Jan 14, 2021 at 12:45:12AM +0000, Andre Przywara wrote:
+> On Mon, 14 Dec 2020 10:37:28 +0100
+> Maxime Ripard <maxime@cerno.tech> wrote:
+>=20
+> > On Fri, Dec 11, 2020 at 01:19:15AM +0000, Andre Przywara wrote:
+> > > A new SoC, a new compatible string.
+> > > Also we were too miserly with just allowing seven interrupt banks.
+> > >=20
+> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > > ---
+> > >  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml   | 18
+> > > ++++++++++++++++-- 1 file changed, 16 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinct=
+rl.yaml
+> > > b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinct=
+rl.yaml
+> > > index 5240487dfe50..292b05d9ed08 100644 ---
+> > > a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinct=
+rl.yaml
+> > > +++
+> > > b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinct=
+rl.yaml
+> > > @@ -53,6 +53,8 @@ properties:
+> > >        - allwinner,sun50i-h5-pinctrl
+> > >        - allwinner,sun50i-h6-pinctrl
+> > >        - allwinner,sun50i-h6-r-pinctrl
+> > > +      - allwinner,sun50i-h616-pinctrl
+> > > +      - allwinner,sun50i-h616-r-pinctrl
+> > >        - allwinner,suniv-f1c100s-pinctrl
+> > >        - nextthing,gr8-pinctrl
+> > > =20
+> > > @@ -61,7 +63,7 @@ properties:
+> > > =20
+> > >    interrupts:
+> > >      minItems: 1
+> > > -    maxItems: 7
+> > > +    maxItems: 8
+> > >      description:
+> > >        One interrupt per external interrupt bank supported on the
+> > >        controller, sorted by bank number ascending order.
+> > > @@ -91,7 +93,7 @@ properties:
+> > >        bank found in the controller
+> > >      $ref: /schemas/types.yaml#/definitions/uint32-array
+> > >      minItems: 1
+> > > -    maxItems: 5
+> > > +    maxItems: 8
+> > > =20
+> > >  patternProperties:
+> > >    # It's pretty scary, but the basic idea is that:
+> > > @@ -145,6 +147,18 @@ allOf:
+> > >    # boards are defining it at the moment so it would generate a
+> > > lot of # warnings.
+> > > =20
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          enum:
+> > > +            - allwinner,sun50i-h616-pinctrl
+> > > +
+> > > +    then:
+> > > +      properties:
+> > > +        interrupts:
+> > > +          minItems: 8
+> > > +          maxItems: 8
+> > > + =20
+> >=20
+> > You don't need to have both if they are equals, and in this particular
+>=20
+> Mmh, but all the other compatibles have both equal, so what would be
+> the recommended way to describe this? Just minItems? I don't find a
+> good explanation at the moment how to handle an explicit number, other
+> than by enumerating the items explicitly.
+
+This is where the magic happens:
+https://github.com/devicetree-org/dt-schema/blob/master/dtschema/lib.py#L258
+
+So, if there's an items property, it will expand minItems and maxItems
+according to the length of the list. Else, it will see if there's either
+minItems and maxItems and set the other one if it's missing.
+
+In this case, minItems and maxItems are equals, so you could just fill
+one of them
+
+> > case we already check that the maximum is 8 so there's no need to
+> > repeat that check here.
+>=20
+> Are you referring to the overall "maxItems: 8" above, in the 2nd hunk?
+> While this will become redundant, this is apparently prone to changes
+> (as only "7" would be redundant at the moment), so I would rather not
+> rely on a global limit.
+
+Yeah, my point was that since the upper schema checks for the interrupts
+array length to be between 1 and 8, there's no need to specify a max of
+8, the upper schema has it covered.
+
+You're right that the max is increased regularly, however we can still
+rely on the above logic to fill maxItems to 8 anyway
+
+Maxime
+
+--mbsziskqq433z3de
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYAAxuQAKCRDj7w1vZxhR
+xYH3AP4t/ykPC9xzwyQNNiNXKT3Ylna5bt6AAlTx88OYiEV8VAD9Hx/d1DVaUJpt
+G7j6/tDOrfuHVA0D/O5NN23sozmD9gY=
+=OD7z
+-----END PGP SIGNATURE-----
+
+--mbsziskqq433z3de--
