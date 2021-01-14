@@ -2,90 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A0B42F5699
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 02:58:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DB22F5697
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jan 2021 02:58:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbhANBtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jan 2021 20:49:49 -0500
-Received: from atlmailgw1.ami.com ([63.147.10.40]:61942 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbhANA3Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jan 2021 19:29:24 -0500
-X-AuditID: ac1060b2-a7dff700000017ec-b8-5fff765d82bc
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 05.B8.06124.D567FFF5; Wed, 13 Jan 2021 17:38:21 -0500 (EST)
-Received: from ami-us-wk.us.megatrends.com (172.16.98.207) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 13 Jan 2021 17:38:20 -0500
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <openbmc@lists.ozlabs.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>
-Subject: [PATCH, v1 1/1] gpio: aspeed: Add gpio base address reading
-Date:   Wed, 13 Jan 2021 17:38:08 -0500
-Message-ID: <20210113223808.31626-2-hongweiz@ami.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210113223808.31626-1-hongweiz@ami.com>
+        id S1728009AbhANBtk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jan 2021 20:49:40 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:41917 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729877AbhANAaQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 Jan 2021 19:30:16 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 843DE5C00F7;
+        Wed, 13 Jan 2021 19:27:50 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Wed, 13 Jan 2021 19:27:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to
+        :subject:content-type; s=fm1; bh=ryfvk2k2wQcDt6+nGId872DiRJw7DhY
+        PHXP5E70CfEg=; b=A+n0WcIoUsUZSSwJUDKSbWQjSV7hDEsBdKGPqEMOSbD1aes
+        P3BMm4GcyKY5AK9gUv52XevM83JAHapiK1DMgw4zfFNfrqCLJHzZ/Xr8Q1cvGQnf
+        diKmIp7Cime5HAlcEETnADT1n5kOvctuR+N73ASsnq0Ha6Fzk7sUNLFQuCOsywFq
+        GgLXWUcGYTwqKydEekggjJ/fbyTMSqIUJ3ueNSMJthizOp2raeg2+qtAUnFRLVda
+        8bC6IMlp9nQ+ZfHSIrMxtZF2GpOUcloIKsh9QB2VC6KeqSZZI5Lk2kAHqRvhoKfW
+        W/x5vhCgWvyBHX6cm1mJdL4GUiIIVsxyo8bo4dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ryfvk2
+        k2wQcDt6+nGId872DiRJw7DhYPHXP5E70CfEg=; b=RiHIcnZNDLtKSJfO8saxuB
+        DpiQGP/R2rvSnHDSmOEp+fvNUObV143TtRu4+59Rq7uTz+iDmuj+6dcTrTx5s2Xw
+        JZijcKbhJPYqLBNXmp+YwHnRZVaOwY0LCBCHuWbyoVT+Z4qL3Pn5Pw3iRDQwoM7h
+        oujOIsCjnyfZS4B0m8GEB6BWO8oI9xj3M/lsGawrJ+fF+bcIzcpYKqDG0QwzN53r
+        o1W/X9njVgtZ01tr/qp0uhYIjEKqJRcxpzACWQDB4M03kIQPjwdyo8GW/s10UNgq
+        rEKiNdAavpYE/SxBhQ2qwfW1NfGcXJYYHnMzPuAPhTVR/qSOYbBOn2Ys6dZT+BHQ
+        ==
+X-ME-Sender: <xms:BZD_X7RtUYaQz6-LoWQbxRXbaTf2BAutei71F7-kjApGRU8V5gl3XQ>
+    <xme:BZD_X8yJIdv1xt-BwbmV87_iutieNA_I5Pc3AkQwzSlD0PVUfrPTI6JmUNp_rDzLj
+    2U9mBFIEyjHddnZTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedukedrtdeggddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:BZD_Xw1MhVYhL264TpIwMA7sI5eqWEac-LoUJ9M0vCknH1-gAgkFvQ>
+    <xmx:BZD_X7B79D8DU7PMiwMBtOLQ7w1kv74ihVbtLYPp4DdaHf5Ab5BF0g>
+    <xmx:BZD_X0iOvMQ9qIsssRY-0CrJbl9ZauOsgr9AK0WbUzCK84kqnh8xAQ>
+    <xmx:BpD_X_WnhZ7DjubPmiT3g9ToPhwrDuZ-pPV-V55xjxZvP6Y7aL31MQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 943F9E00C9; Wed, 13 Jan 2021 19:27:49 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-45-g4839256-fm-20210104.001-g48392560
+Mime-Version: 1.0
+Message-Id: <775b31f0-c74c-4ebe-9588-bca3ee423383@www.fastmail.com>
+In-Reply-To: <20210113223808.31626-2-hongweiz@ami.com>
 References: <20210113223808.31626-1-hongweiz@ami.com>
-MIME-Version: 1.0
+ <20210113223808.31626-2-hongweiz@ami.com>
+Date:   Thu, 14 Jan 2021 10:57:13 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Hongwei Zhang" <hongweiz@ami.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH, v1 1/1] gpio: aspeed: Add gpio base address reading
 Content-Type: text/plain
-X-Originating-IP: [172.16.98.207]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWyRiBhgm5s2f94g8dvdS12Xeaw+DL3FIvF
-        7/N/mS2m/FnOZLHp8TVWi+bV55gtNs//w2hxedccNotTLS9YHDg9rrbvYvd4f6OV3ePix2PM
-        Hneu7WHz2Lyk3uP8jIWMHp83yQWwR3HZpKTmZJalFunbJXBlnHs2lbmgi6tizwP9BsatHF2M
-        HBwSAiYShzYldTFycQgJ7GKSeH+xnQnKYZQ4uOMBYxcjJwebgJrE3s1zwBIiAieZJGbt/sUE
-        kmAWUJH4sfoaK4gtLOAisfrXezaQqSwCqhIn1uaDhHkFTCUapu9iAbElBOQlVm84wAxicwqY
-        SbxquAY2XwioZkP7LHaIekGJkzOfsECMl5A4+OIFM0SNrMStQ4+ZIOYoSjz49Z11AqPALCQt
-        s5C0LGBkWsUolFiSk5uYmZNebqiXmJupl5yfu4kREuibdjC2XDQ/xMjEwXiIUYKDWUmEt6j7
-        b7wQb0piZVVqUX58UWlOavEhRmkOFiVx3lXuR+OFBNITS1KzU1MLUotgskwcnFINjA4Cfs/+
-        h7F+/rd2tcJJtvVL9m3atPe+yN2rpdnXlraL57qlHaniva/hrXr8cd0KK5ltDd1X7pWtaayx
-        jnz8kdNx27K/mdHJKdw7HjnUvN+151Pc3EChrgKWuYuXN9YxbZFrzDF/113F/n8HX1FJ0q1t
-        x/S2Shyx+C0oeun8zYXXHyW9LVT690OJpTgj0VCLuag4EQBg8FzCYgIAAA==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add gpio base address reading in the driver; in old code, it just
-returns -1 to gpio->chip.base.
+Hello,
 
-Fixes: 7ee2d5b4d4340353 ("ARM: dts: nuvoton: Add Fii Kudo system")
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- drivers/gpio/gpio-aspeed.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Thu, 14 Jan 2021, at 09:08, Hongwei Zhang wrote:
+> Add gpio base address reading in the driver; in old code, it just
+> returns -1 to gpio->chip.base.
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index d07bf2c3f136..4ebe4c40154c 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -1140,7 +1140,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 	const struct of_device_id *gpio_id;
- 	struct aspeed_gpio *gpio;
- 	int rc, i, banks, err;
--	u32 ngpio;
-+	u32 ngpio, base;
- 
- 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
- 	if (!gpio)
-@@ -1179,7 +1179,10 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 	gpio->chip.set = aspeed_gpio_set;
- 	gpio->chip.set_config = aspeed_gpio_set_config;
- 	gpio->chip.label = dev_name(&pdev->dev);
--	gpio->chip.base = -1;
-+	err = of_property_read_u32(pdev->dev.of_node, "base", &base);
-+	gpio->chip.base = (u16) base;
-+	if (err)
-+		gpio->chip.base = -1;
- 
- 	/* Allocate a cache of the output registers */
- 	banks = DIV_ROUND_UP(gpio->chip.ngpio, 32);
--- 
-2.17.1
+Why do you want to do this? It feels hacky. The base address only affects the 
+legacy sysfs number-space, and even then if you're using the sysfs interface 
+you can discover the base address for a specific gpiochip via the associated 
+attribute. For example:
 
+# cat /sys/bus/platform/devices/1e780000.gpio/gpio/gpiochip*/base
+816
+
+I feel that you should instead be changing your userspace not to assume a fixed 
+value.
+
+Finally, the base value is a linux-specific thing and doesn't belong in the 
+devicetree, and if it did, you would also need to update the devicetree binding 
+in Documentation/.
+
+Cheers,
+
+Andrew
