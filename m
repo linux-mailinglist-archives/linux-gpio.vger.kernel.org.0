@@ -2,148 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 429C42F770F
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 11:56:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43EEA2F774D
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 12:15:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbhAOKyp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jan 2021 05:54:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
+        id S1725880AbhAOLOF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jan 2021 06:14:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731851AbhAOKyo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 05:54:44 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7D6C0613C1
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 02:54:03 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l0Mjl-0004qr-2U; Fri, 15 Jan 2021 11:53:49 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l0MjG-0005DQ-Sc; Fri, 15 Jan 2021 11:53:18 +0100
-Date:   Fri, 15 Jan 2021 11:53:18 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-pwm@vger.kernel.org,
+        with ESMTP id S1725831AbhAOLOE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 06:14:04 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322ACC061794
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:13:24 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id a9so5407200wrt.5
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AzKJj5cWWWzT2QsZ3EiZy4sHjArPM4im2MxI1O0nfxw=;
+        b=VSvr1WXOO/bS3bGoS0n6UE30Sg/QE6lORSIzky+Rytn5X7UhhtpOJzt+/SSPiVob7V
+         ryBXFKSqe7J3JQ+dfAwjza5rwkjO9haSltGJB/MlgQh1xyOXfy7k9izBWyFnJYZtc+tc
+         OKJY5Vu9NqgMV5O6nI+1CsDNXtBMz8D2kQ8oDQ3XxOPA4XlHlVcGX98KHeyCHSK6LRNq
+         7Wx14zIN1iHezkqGjlg4xGhv1U19xmG0IO8guubzT9gbyIhkCswlStKvZ0Fu+nf+045K
+         7HO+0LTbdGKT7gyludHx6hyk7FFYhz4eG5pk1xk2cOeN3iXwvfzlX5zQDfmlez1K/Zru
+         WXZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AzKJj5cWWWzT2QsZ3EiZy4sHjArPM4im2MxI1O0nfxw=;
+        b=fPmsR9N7bPRB++8iWqlLjW8bKMVAYOJtPqCgaIeUh2k7cbeOcB4P4ys9fTVbyBETMb
+         EG0mPBfsacaR+pjakZ1xhHW2T5YRbEKG/h5BVt/FalTpSderltR8UEGvy+0a/yoS1SBD
+         XDCtFCUbdWm4ns/pqji3U860s8bsox4cFOau+fNUk50IVmJOYLfe6gblLBteLJGLNw3/
+         ZEzf+B2C0KGs07sckZiQMH7emRSeVklS3pIvU8atV7UKBrrqLUbgojJTDEwLKHZwwWcJ
+         9r3DJHyuEOWrwoNvnKZ64Q6KZe3PZDovRsRxWgXDo++mriQKQsGJ7I2rktl2elcjHopE
+         QZGw==
+X-Gm-Message-State: AOAM530dlDg4LF6txL9L868X6dtTNk2fhUbPYaqhVcf4VduyOhtTq6aU
+        FcTCertvp6tfEL4WOOLYC3KiKA==
+X-Google-Smtp-Source: ABdhPJyhBXMiPWKIgbr0iq5QdMjou/MQ7iAM41aneGWcb2yruo7x+Ys0kzN4llFLX3BZGDPTmTrEGw==
+X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr12239477wru.321.1610709202937;
+        Fri, 15 Jan 2021 03:13:22 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id l1sm15048822wrq.64.2021.01.15.03.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Jan 2021 03:13:22 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 5/5] gpio: mvebu: document zero pwm duty cycle
- limitation
-Message-ID: <20210115105318.n2vov4gw6ohv4rxp@pengutronix.de>
-References: <cover.1610628807.git.baruch@tkos.co.il>
- <7c18dd67d3bf3e3ed9a8efa2edd33e8f29f09a7a.1610628807.git.baruch@tkos.co.il>
- <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
- <20210114222802.GY1551@shell.armlinux.org.uk>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 0/4] configfs: implement committable items and add sample code
+Date:   Fri, 15 Jan 2021 12:13:07 +0100
+Message-Id: <20210115111311.31601-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="w5umzkznxwn4gsq5"
-Content-Disposition: inline
-In-Reply-To: <20210114222802.GY1551@shell.armlinux.org.uk>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---w5umzkznxwn4gsq5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Committable items in configfs are well defined and documented but unfortunately
+so far never implemented.
 
-On Thu, Jan 14, 2021 at 10:28:02PM +0000, Russell King - ARM Linux admin wr=
-ote:
-> On Thu, Jan 14, 2021 at 09:25:45PM +0100, Uwe Kleine-K=F6nig wrote:
-> > Hello Baruch,
-> >=20
-> > On Thu, Jan 14, 2021 at 08:57:37PM +0200, Baruch Siach wrote:
-> > > Add a comment on why the code never sets on/off registers to zero.
-> > >=20
-> > > Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > Analyzed-by: Russell King <linux@armlinux.org.uk>
-> > > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > > ---
-> > >  drivers/gpio/gpio-mvebu.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > index 6b017854ce61..09780944bef9 100644
-> > > --- a/drivers/gpio/gpio-mvebu.c
-> > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > @@ -706,6 +706,10 @@ static int mvebu_pwm_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> > >  	do_div(val, NSEC_PER_SEC);
-> > >  	if (val > UINT_MAX)
-> > >  		return -EINVAL;
-> > > +	/*
-> > > +	 * Zero on/off values don't work as expected. Experimentation shows
-> > > +	 * that zero value is treated as 2^32. This behavior is not documen=
-ted.
-> > > +	 */
-> >=20
-> > This is too easy. The right thing to do is to adapt .apply and
-> > .get_state to use this new information.
->=20
-> What exactly do you expect the changes to be?
+The use-case we have over at the GPIO subsystem is using configfs in
+conjunction with sysfs to replace our current gpio-mockup testing module
+with one that will be much more flexible and will allow complete coverage
+of the GPIO uAPI.
 
-What I expect is:
+The current gpio-mockup module is controlled using module parameters which
+forces the user to reload it everytime they need to change the chip
+configuration or layout and makes it difficult to extend its functionality.
 
- - let .apply() write 0 if the intention is to configure 2^32 clock
-   steps for the on or off register; and symmetrically
- - let .get_state report 2^32 * NSEC_PER_SEC / clk_rate if the register
-   value is 0.
-=20
-> Bear in mind that the hardware is not capable of atomically updating
-> e.g. the duty cycle without affecting the period, because any change
-> in duty cycle needs the "on" and "off" durations to be separately
-> programmed, and there's a chance that the hardware could start using
-> either value mid-update.
->=20
-> Also, disabling "blink" mode to achieve a steady output (for 0% or 100%
-> duty cycle) would require further investigation to find out how the
-> hardware behaves at the moment where blink mode is disabled: does the
-> output retain its current state (does the bit in the output register
-> toggle with the blink) or does it revert to the value in the output
-> register that was programmed before blink mode was enabled.
+Testing module based on configfs would allow fine-grained control over dummy
+GPIO chips but since GPIO devices must be configured before they are
+instantiated, we need committable items.
 
-I have some plans here about what is the right behaviour, but this needs
-some preparatory work that I didn't do yet. I'll come back to this
-eventually.
+This implements them and adds code examples to configfs_sample module. The
+first two patches are just cosmetic.
 
-Best regards
-Uwe
+v1 -> v2:
+- fix a 'set but not used' build warning reported by kernel test robot
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+v2 -> v3:
+- use (1UL << bit) instead of BIT() in patch 2/4
+- extend configfs_dump_one() to make it print the new flags
+- clear the CONFIGFS_USET_DIR bit on the live group dirent
 
---w5umzkznxwn4gsq5
-Content-Type: application/pgp-signature; name="signature.asc"
+v3 -> v4:
+- relax the attribute handling for the 'live' group: don't make all attributes
+  read-only once their group is committed
+- don't allow to change the dirent name of committable groups when renaming
 
------BEGIN PGP SIGNATURE-----
+Rebased on top of v5.11-rc3.
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmABdBsACgkQwfwUeK3K
-7AmSbQf/b6xusBmeJVR8LHLl4M8AVis579GcNw//cubD6SzItF6Vz9ziSM9zs2hG
-vWEf6U3UzCn/27oHJTPD6/xBqVV85rE+qUkRv7zZ2zps+foAIQkZlRYa+nkj3WT9
-dUVKSwuDRZ+8W0yqbBsqzbwxqdscM+CicuIsIWtOC1lN8e/0aSwkmVYQpHMpUeRn
-jTI+GgKxjiHyy1S4ahuAAcXcZgPVwrqPdJ+vRQdFX/RsOiTAQBCuWoAhRWq6lZB8
-y51xCo3AhtTYLzooES4emK33NYRtSbISNiUFDk3UlpKhUioGoo3cPtmY+atrgV3/
-x+WeYEG8t6xmCC+rJxa8LpQi4s+rcw==
-=6hbj
------END PGP SIGNATURE-----
+Bartosz Golaszewski (4):
+  configfs: increase the item name length
+  configfs: use (1UL << bit) for internal flags
+  configfs: implement committable items
+  samples: configfs: add a committable group
 
---w5umzkznxwn4gsq5--
+ Documentation/filesystems/configfs.rst |   6 +-
+ fs/configfs/configfs_internal.h        |  22 ++-
+ fs/configfs/dir.c                      | 244 ++++++++++++++++++++++++-
+ include/linux/configfs.h               |   3 +-
+ samples/configfs/configfs_sample.c     | 153 ++++++++++++++++
+ 5 files changed, 408 insertions(+), 20 deletions(-)
+
+-- 
+2.29.1
+
