@@ -2,254 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2FE82F7759
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 12:15:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A5D2F7761
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 12:16:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbhAOLOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jan 2021 06:14:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        id S1726286AbhAOLQF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jan 2021 06:16:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbhAOLOp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 06:14:45 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF269C06179C
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:13:27 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id a12so8838845wrv.8
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:13:27 -0800 (PST)
+        with ESMTP id S1726278AbhAOLQF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 06:16:05 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A11C0613C1
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:15:24 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id h16so9089226edt.7
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 03:15:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TDB5szcqlcCXwZI0QnUXTFV9ZQzED5fqjVoMB5Cr/nI=;
-        b=aS8l0JDCTL2NZRL+TZeWFzLmqoP4h+BZfb0Y4Dw02SQsZ8B1Tj86PaBCBeQQ4jdv+S
-         V5wX+wyRNbkGiZjmvXmrtzYjbb811gAPssqhKGY5jh8AYkZJCFq4/Av+hQVP1BM+uyQx
-         pnJwhwZJoyH+zeQfDmPOJI0Tux9gv715MLyGS02ARsOTUcTlJ+8n6KARYe4GhcI9ojp4
-         8EmyWvITl08XM0kV8/ycRm3rhHf56cUIhZUFvLMHqU2zG3wagv3UQhwAdKfnSudrzo8N
-         hsjtScB2DgFGt/0g2tpcLg71bLIwOrgiO7ar/2lB6vDtuHXT/SXJNbZ2i6QKb6B+hDDg
-         GrEw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V3jqJmaCcX5IsJBQx6umjI2NW+YvABykmMz+qlqbkqg=;
+        b=de91hk7XW2RthcW/6uJXj5/Dv9wrxG0da3c/0XKYUtXhwvC4DFW/DuSyemHj5ir25b
+         oL/7A+XRPRNiYPScwkk1C/+0w36NVdlPnVQpJQAnoKFejrl/69ekgiAM7va2h2MoCEtN
+         /gE2bgvpG5mch238bjGUp6ZLhTSSA3/LvIS+W8n+9/AhFpsQMRro5+dp4FF4DCpm3mFV
+         TkDn7wbodFdyshUYv1H60YdV2uqJVJkGdX7v1o1073zUsQmi13Z7hhifuy6UG7IyAa0d
+         QZFWePIYFv9iK7MmngnZ8+3H+HeY2fvNTRUFenGOYgyIej02eNyE40ger1HJrI+YLEPF
+         LB2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TDB5szcqlcCXwZI0QnUXTFV9ZQzED5fqjVoMB5Cr/nI=;
-        b=darnZ+0cxXPDyCHOUDSL9m1jDEd60nKS99Z7BP0E1dIEaM1R9APSh6Xc8Cep+R8v8k
-         b+xKJu3B4DKpZ33ZdBkXz5SSTKrfsKWhvX3TOe8EboKBdSdkdtjU/Ub+9WNOqiqSwI8J
-         4n2+C9k/wE9n4zow73xBzRehzg4ywWAuCqIIY8TPF8/0W2AhIOhVNZyqIbuxlD+2SZDF
-         kOkMKkV3M0n3cXzQilk/Ds1k0HWmtQpWjXYkhOzYqn5w36hvlR/sWOdF3p2UitH05G7q
-         JenpHPI7LRfQf34/b4jfpWXCvcNBV8Rsh5TI8bu/m1Fc0YZ8foxxcAlEmK5BatiR8c5n
-         K6Qw==
-X-Gm-Message-State: AOAM533ghB/AwVeOTmP6guYGmWXfbGDsbCSKXiD9E8o5n2CrfJbPBcu7
-        JhI35aCuZ5dR6ix9DcYDsM8aWg==
-X-Google-Smtp-Source: ABdhPJyu5s7qiByOputlrlfGxuBJ9K3excZDYhzaaOZ32OvpjzHa5dShedfu6+qNOiJSlSSvbF0f4w==
-X-Received: by 2002:a5d:62c8:: with SMTP id o8mr12846525wrv.51.1610709206500;
-        Fri, 15 Jan 2021 03:13:26 -0800 (PST)
-Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
-        by smtp.gmail.com with ESMTPSA id l1sm15048822wrq.64.2021.01.15.03.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jan 2021 03:13:26 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V3jqJmaCcX5IsJBQx6umjI2NW+YvABykmMz+qlqbkqg=;
+        b=i5P5QEibwSnUZLfqjYMqIeQ15GMW3Qpx+cszyrNUo2dHouv/cmv+LFLaouI6LLinv6
+         G3sHUprqts9rh5Ol7eyZrYH201rz1OAkyjgHIwSGhqVNG2BiWp7F1ae+CQEAFVnjhvxR
+         ZQFaS0Tnq4CIR2z5j4o+MpP1lmERIh5xPNAjkt6XVG0BU+0xEa0f/I1j1uQOkO4QS5Bv
+         j+pxsOPEN9Y4iMrB/HZtm83vr55ubgi9IGNJ4qB8OmLQ2RVkIiD/KsDRvgjS3f3x3hMV
+         sRbYq4/dl3wB6l4uI07RIqhQrtL50wgFQM4CxtHql2yHMm2QW7nR9EdzR5FYiy6Cf3CV
+         6DkA==
+X-Gm-Message-State: AOAM531UbRykF2ivU5LZ7ZzLMElZnxS1SAl5x8yXHtrMtcb0ppUDkCuB
+        GClz7jDONiplAC/Hln1Zs/Z5aC8vQUNgOLB1wV9FSA==
+X-Google-Smtp-Source: ABdhPJwkl8q54wo3u7lYIDIzreVmV8Ba+6cC4hgrMB+rkVbUCwH2GynXVEEKCSAy/UeDGhtsje3MjtAFUmIA42r7Ihs=
+X-Received: by 2002:aa7:dacf:: with SMTP id x15mr8983802eds.134.1610709323372;
+ Fri, 15 Jan 2021 03:15:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20210115111311.31601-1-brgl@bgdev.pl>
+In-Reply-To: <20210115111311.31601-1-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 15 Jan 2021 12:15:12 +0100
+Message-ID: <CAMRc=MegcWNzhQ+6pxa2dgREG-Y_SBEGZfuXS1oz1xnduBKgHQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] configfs: implement committable items and add
+ sample code
 To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 4/4] samples: configfs: add a committable group
-Date:   Fri, 15 Jan 2021 12:13:11 +0100
-Message-Id: <20210115111311.31601-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.29.1
-In-Reply-To: <20210115111311.31601-1-brgl@bgdev.pl>
-References: <20210115111311.31601-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Jan 15, 2021 at 12:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Committable items in configfs are well defined and documented but unfortunately
+> so far never implemented.
+>
+> The use-case we have over at the GPIO subsystem is using configfs in
+> conjunction with sysfs to replace our current gpio-mockup testing module
+> with one that will be much more flexible and will allow complete coverage
+> of the GPIO uAPI.
+>
+> The current gpio-mockup module is controlled using module parameters which
+> forces the user to reload it everytime they need to change the chip
+> configuration or layout and makes it difficult to extend its functionality.
+>
+> Testing module based on configfs would allow fine-grained control over dummy
+> GPIO chips but since GPIO devices must be configured before they are
+> instantiated, we need committable items.
+>
+> This implements them and adds code examples to configfs_sample module. The
+> first two patches are just cosmetic.
+>
+> v1 -> v2:
+> - fix a 'set but not used' build warning reported by kernel test robot
+>
+> v2 -> v3:
+> - use (1UL << bit) instead of BIT() in patch 2/4
+> - extend configfs_dump_one() to make it print the new flags
+> - clear the CONFIGFS_USET_DIR bit on the live group dirent
+>
+> v3 -> v4:
+> - relax the attribute handling for the 'live' group: don't make all attributes
+>   read-only once their group is committed
+> - don't allow to change the dirent name of committable groups when renaming
+>
+> Rebased on top of v5.11-rc3.
+>
+> Bartosz Golaszewski (4):
+>   configfs: increase the item name length
+>   configfs: use (1UL << bit) for internal flags
+>   configfs: implement committable items
+>   samples: configfs: add a committable group
+>
+>  Documentation/filesystems/configfs.rst |   6 +-
+>  fs/configfs/configfs_internal.h        |  22 ++-
+>  fs/configfs/dir.c                      | 244 ++++++++++++++++++++++++-
+>  include/linux/configfs.h               |   3 +-
+>  samples/configfs/configfs_sample.c     | 153 ++++++++++++++++
+>  5 files changed, 408 insertions(+), 20 deletions(-)
+>
+> --
+> 2.29.1
+>
 
-Add an example of using committable items to configfs samples. Each
-config item has two attributes: read-write 'storeme' which works
-similarly to other examples in this file and a read-only 'committed'
-attribute which changes its value between false and true depending on
-whether it's committed or not at the moment.
+Ah cr*p I now noticed Linus W had left his Ack on the previous version
+and I forgot to collect it...
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- samples/configfs/configfs_sample.c | 153 +++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
-
-diff --git a/samples/configfs/configfs_sample.c b/samples/configfs/configfs_sample.c
-index f9008be7a8a1..9bef74e4369d 100644
---- a/samples/configfs/configfs_sample.c
-+++ b/samples/configfs/configfs_sample.c
-@@ -315,6 +315,158 @@ static struct configfs_subsystem group_children_subsys = {
- 
- /* ----------------------------------------------------------------- */
- 
-+/*
-+ * 04-committable-children
-+ *
-+ * This is an example of a committable group.  It's similar to the simple
-+ * children example but each config_item has an additional 'committed'
-+ * attribute which is read-only and is only modified when the config_item
-+ * is moved from the 'pending' to the 'live' directory.
-+ */
-+
-+struct committable_child {
-+	struct config_item item;
-+	int storeme;
-+	bool committed;
-+};
-+
-+static inline struct committable_child *
-+to_committable_child(struct config_item *item)
-+{
-+	return container_of(item, struct committable_child, item);
-+}
-+
-+static ssize_t
-+committable_child_storeme_show(struct config_item *item, char *page)
-+{
-+	return sprintf(page, "%d\n", to_committable_child(item)->storeme);
-+}
-+
-+static ssize_t committable_child_storeme_store(struct config_item *item,
-+					       const char *page, size_t count)
-+{
-+	struct committable_child *child = to_committable_child(item);
-+	int ret;
-+
-+	if (child->committed)
-+		return -EPERM;
-+
-+	ret = kstrtoint(page, 10, &child->storeme);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(committable_child_, storeme);
-+
-+static ssize_t
-+committable_child_committed_show(struct config_item *item, char *page)
-+{
-+	return sprintf(page, "%s\n",
-+		to_committable_child(item)->committed ? "true" : "false");
-+}
-+
-+CONFIGFS_ATTR_RO(committable_child_, committed);
-+
-+static struct configfs_attribute *committable_child_attrs[] = {
-+	&committable_child_attr_storeme,
-+	&committable_child_attr_committed,
-+	NULL,
-+};
-+
-+static void committable_child_release(struct config_item *item)
-+{
-+	kfree(to_committable_child(item));
-+}
-+
-+static struct configfs_item_operations committable_child_item_ops = {
-+	.release	= committable_child_release,
-+};
-+
-+static const struct config_item_type committable_child_type = {
-+	.ct_item_ops	= &committable_child_item_ops,
-+	.ct_attrs	= committable_child_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+struct committable_children {
-+	struct config_group group;
-+};
-+
-+static struct config_item *
-+committable_children_make_item(struct config_group *group, const char *name)
-+{
-+	struct committable_child *child;
-+
-+	child = kzalloc(sizeof(*child), GFP_KERNEL);
-+	if (!child)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_item_init_type_name(&child->item, name, &committable_child_type);
-+
-+	return &child->item;
-+}
-+
-+static ssize_t
-+committable_children_description_show(struct config_item *item, char *page)
-+{
-+	return sprintf(page,
-+"[04-committable-children]\n"
-+"\n"
-+"This subsystem allows creation of committable config_items.  The subsystem\n"
-+"has two subdirectories: pending and live.  New config_items can only be\n"
-+"created in pending/ and they have one writable and readable attribute as\n"
-+"well as a single read-only attribute.  The latter is only changed once the\n"
-+"item is 'committed'.  This is done by moving the config_item (using\n"
-+"rename()) to the live/ directory.  In this example, the storeme attribute\n"
-+"becomes 'read-only' once committed.\n");
-+}
-+
-+CONFIGFS_ATTR_RO(committable_children_, description);
-+
-+static struct configfs_attribute *committable_children_attrs[] = {
-+	&committable_children_attr_description,
-+	NULL,
-+};
-+
-+static int committable_children_commit_item(struct config_item *item)
-+{
-+	to_committable_child(item)->committed = true;
-+
-+	return 0;
-+}
-+
-+static int committable_children_uncommit_item(struct config_item *item)
-+{
-+	to_committable_child(item)->committed = false;
-+
-+	return 0;
-+}
-+
-+static struct configfs_group_operations committable_children_group_ops = {
-+	.make_item	= committable_children_make_item,
-+	.commit_item	= committable_children_commit_item,
-+	.uncommit_item	= committable_children_uncommit_item,
-+};
-+
-+static const struct config_item_type committable_children_type = {
-+	.ct_group_ops	= &committable_children_group_ops,
-+	.ct_attrs	= committable_children_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct configfs_subsystem committable_children_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf = "04-committable-children",
-+			.ci_type = &committable_children_type,
-+		},
-+	},
-+};
-+
-+/* ----------------------------------------------------------------- */
-+
- /*
-  * We're now done with our subsystem definitions.
-  * For convenience in this module, here's a list of them all.  It
-@@ -326,6 +478,7 @@ static struct configfs_subsystem *example_subsys[] = {
- 	&childless_subsys.subsys,
- 	&simple_children_subsys,
- 	&group_children_subsys,
-+	&committable_children_subsys,
- 	NULL,
- };
- 
--- 
-2.29.1
-
+Bart
