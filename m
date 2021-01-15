@@ -2,100 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97E962F8293
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 18:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F7C32F8351
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 19:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbhAORcV convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 15 Jan 2021 12:32:21 -0500
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:37015 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbhAORcV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 12:32:21 -0500
-Received: by mail-ot1-f43.google.com with SMTP id o11so9270003ote.4
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 09:32:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1KIWWC3aVuEV/Qa/g8YlCZhQBQv/QC2H1jHUD7cBkhw=;
-        b=Dnb807jj479+19PY1EVQ+LouTSe2RX2Aru7iZ5bZYt2etjWhOKg4GnL/5UdjTPY3Ru
-         l9z2IP7X/avveQXGn5RIPnuPSNym88V5nTUIRwInb3QCK2PNeAL2fB5NLbE5RbDjvZEz
-         rQojaafGpVH4Fr7lATK7VNWQKWkwd+X+ds2Xpp/e3Ek7l7UnEI8XJbK4nV4TjHES0I0p
-         5hSCIfb+H/d9pJDQBEjSRVxiUwA6WB0qHz1oUV1SM3D2w+vzqmBDibe8oBRzwM27/jZB
-         cLRXTDbyZOQV0yv6cPYk7VPrc9M9uzgPpcUz+7IiHHw6tdGS3nCBOOs92bJ/KEITVkQw
-         a/2A==
-X-Gm-Message-State: AOAM532XrRwjfoZyBSveMlIlS/orxmZnLFhqGXLdWxaGNlq+DkEVBkSC
-        P1o9onic4qv86377w0CyMy3rgINkaHuw+s3C8Tg=
-X-Google-Smtp-Source: ABdhPJzuawCA4NeP2wKZjZSrNb+ETGaeSMZ/72wlC4yEqWJDtw8niG5HP0fJvI8AJcfUqIynQp1B/849qHs0NLdmKG4=
-X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr9049427otc.145.1610731900623;
- Fri, 15 Jan 2021 09:31:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20210105082758.77762-1-linus.walleij@linaro.org>
- <CAHp75VeXC26KxxhrSbtae2_v4Zqnaaia3nV_1sxY07uUEt3U7g@mail.gmail.com>
- <CACRpkdYixhB6rTw=DK7CetExsXSH4czVzysynZas07OTuQi0vA@mail.gmail.com>
- <CAMpxmJUJnhc9HrZnb=qE5fpZ9e0Xo7VP-hTjdK-LHk0w6n3cMQ@mail.gmail.com>
- <CACRpkdZVw53K26hOQMfqfC+3=wdqm8kUDPdWrz-KRj1rh9ijYQ@mail.gmail.com>
- <63d69976687846c6a50e904b913bd235@asem.it> <CAMuHMdW=TMbBUYVd0XVT88F+wDZ09F_WTB=f50eyRSire7TWSg@mail.gmail.com>
- <860764e8df53481bb43c79560b859979@asem.it> <CAHp75Vdy4c4j2k8LWL_5s3KvGXPL2Zystfqb1+vcpBJzdmuNnw@mail.gmail.com>
- <CAMpxmJVEEPU44=sHUZSPtS9-zM-De=JppUkhDVLne3sCmGc70A@mail.gmail.com> <CAHp75Vd017YY8HU-Ai7jnQEJ4PEgiU4VXn-jhLBKwERmsG_5MA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd017YY8HU-Ai7jnQEJ4PEgiU4VXn-jhLBKwERmsG_5MA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Jan 2021 18:31:29 +0100
-Message-ID: <CAMuHMdWJeYhGEA9dLfG9uVY9Byhy+KUfmTCnCaE++OzgJyTneg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Disallow identical line names in the same chip
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Flavio Suligoi <f.suligoi@asem.it>,
+        id S1728155AbhAOSJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jan 2021 13:09:25 -0500
+Received: from mx.blih.net ([212.83.155.74]:46812 "EHLO mx.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbhAOSJZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 Jan 2021 13:09:25 -0500
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Jan 2021 13:09:23 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
+        s=mx; t=1610733721;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/ukk1KmMKOjY989GVPIe8alQEeaLXXaWWupQX1f4jk4=;
+        b=fI90d3/3h1q91CxwjnZxFLdnBD8nAaoOfyiAg+keL20VrXYOgJ24HaPHb2lrecBjOqU9pT
+        OqdDrnBC2O6divMS/3ZjgATR9MnlTQ0uLYpFSj3jwYz3ky0lpa4zsqfN79jeImfHz/0aF+
+        /3oA5rXvBDodNhSbCJaanO7u0ClqEL8=
+Received: from skull.home.blih.net (lfbn-idf2-1-745-114.w86-247.abo.wanadoo.fr [86.247.192.114])
+        by mx.blih.net (OpenSMTPD) with ESMTPSA id e912b7b2 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Fri, 15 Jan 2021 18:02:01 +0000 (UTC)
+Date:   Fri, 15 Jan 2021 19:02:01 +0100
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from
+ 1 to 2
+Message-Id: <20210115190201.9273b637a7f967e7e55bc740@bidouilliste.com>
+In-Reply-To: <20200701013320.130441-3-drew@beagleboard.org>
+References: <20200701013320.130441-1-drew@beagleboard.org>
+        <20200701013320.130441-3-drew@beagleboard.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 5:48 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Friday, January 15, 2021, Bartosz Golaszewski <bgolaszewski@baylibre.com> wrote:
->> On Fri, Jan 8, 2021 at 4:04 PM Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->> > On Fri, Jan 8, 2021 at 4:39 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->> >
->> > ...
->> >
->> > > > > For example, something like the following:
->> > > > >
->> > > > > # gpiofind button_1
->> > > > > gpiochip0 20
->> > > > > gpiochip0 22 (duplicate)
->> > > >
->> > > > This cannot happen, as the duplicate is on the same gpiochip.
->> > >
->> > > Just a question:  I think that a duplicate name can be present
->> > > both in the same gpiochip
->> >
->> > No. This is against common sense. Can you have the same pin numbers on one chip?
->> >
->>
->> You're correct logically but technically this definitely can happen.
->> As the DT examples from qualcomm show: you can have multiple pins
->> being called "nc" for "not connected". I'm still not sure what
->> assumptions user-space can make in this case. Should we have a list of
->> unsupported or illegal names to look up? Sounds sketchy.
->>
->
-> NC or “” or something like that should be done solely by framework (or at least be reserved by framework), otherwise it makes no sense to me at all.
 
-To be ignored due to gpio_chip.valid_mask?
+ Hello Drew,
 
-Gr{oetje,eeting}s,
+On Wed,  1 Jul 2020 03:33:20 +0200
+Drew Fustini <drew@beagleboard.org> wrote:
 
-                        Geert
+> Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
+> requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
+> conf and pin mux values separate.
+> 
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>  arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
+>  include/dt-bindings/pinctrl/omap.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> index a9cbefc80c0c..3141590e5889 100644
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -278,7 +278,7 @@ scm: scm@0 {
+>  				am33xx_pinmux: pinmux@800 {
+>  					compatible = "pinctrl-single";
+>  					reg = <0x800 0x238>;
+> -					#pinctrl-cells = <1>;
+> +					#pinctrl-cells = <2>;
+>  					pinctrl-single,register-width = <32>;
+>  					pinctrl-single,function-mask = <0x7f>;
+>  				};
+> diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+> index 625718042413..2d2a8c737822 100644
+> --- a/include/dt-bindings/pinctrl/omap.h
+> +++ b/include/dt-bindings/pinctrl/omap.h
+> @@ -65,7 +65,7 @@
+>  #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+>  #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+>  #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> -#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
+> +#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+>  
+>  /*
+>   * Macros to allow using the offset from the padconf physical address
+> -- 
+> 2.25.1
+
+ Based on the bindings doc a value of 2 is only acceptable if one uses
+pinctrl-single,bits but all the am33xx pins still uses
+pinctrl-single,pins.
+ I noticed this because this breaks FreeBSD when I tried with 5.9 dts.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
