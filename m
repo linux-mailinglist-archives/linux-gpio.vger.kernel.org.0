@@ -2,211 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3983A2F870D
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 22:03:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C80402F87C6
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 22:43:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbhAOVBz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jan 2021 16:01:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        id S1726059AbhAOVlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jan 2021 16:41:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728805AbhAOVBx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 16:01:53 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392E5C061793
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 13:01:13 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id k7so8094142ybm.13
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 13:01:13 -0800 (PST)
+        with ESMTP id S1725878AbhAOVlD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 16:41:03 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4AF3C061757
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 13:40:22 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id e9so1211007plh.3
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 13:40:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=19u5OiX4KBPBwY3Y98L9C8EI52RTKEJcpug2/sxV07E=;
-        b=NRd4zE6hHYhy8MQG2tBqbhyKMolpMBaToG/3TeC2H71bdGpFtxHlEcibYPFqHFnuQ8
-         35w0D5ujJ9EM76nrYYrRNYt1plla+o+Z5/SJe994kzPjdqjpnHE2cyErw2RpuRt/uzOp
-         YxcWTxykXF+evZE7CeAgt9f7RaOWl+AxQEUgk4Rr08zdjUHi6g9Yh2i9A1XtfBebkdEg
-         TED53iZt7QY+0L3py+vRxf00Lg4VWs/Uex4CnyBsVtxKPiY11xO+6SXp8vTLoxrL0ZcA
-         LZzRtQ/rKItZehyTmUO/2BdFA4bSEDxQL5urIXEHNBuVeP24j/+ZN/k3Okoa6R1nfxNj
-         bm1g==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n0vrgI0v5AqdqRBlnR2zrY3ADnVU6Fc4aa8ej4oQxWI=;
+        b=ikcuoSYxk+o95pgvXIejJia6Wa7r/h9H62sZs/9Cpe0sUYFhlD4wlTCAyWvkqgnFeR
+         b7uz4pJ+VSk13U7/kgu/HN1fbjzCSiL1Fr0tHbBdEWI44HuPCaufm4EjQCvtNWcFY6+/
+         h95/5c9l7eYKlBEOHbNdaa2yfxd3eC8jF8lwQpuB1SvDRSoI2oxkC+6E8vKloU9c86LN
+         IuNA0+P1JPndHgec5mX3JNo4ycRIS4mRaYQDTuy9Zq2PWmpA0bgKE+73iqWJ1AIXZ/J7
+         6pMr0mOQacx5TQxTFcRF6X8aapFgYLuxV1FzvvJ7e/IztP5mDs0dHeu+8yUz7dw4VE2m
+         TDAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=19u5OiX4KBPBwY3Y98L9C8EI52RTKEJcpug2/sxV07E=;
-        b=U4f4I0IGvX9dRQpzPJiLnDhxC0cA+QLD828eJO9aNP2Q9G5AaTegcsaiI6gfXKiH5k
-         wgDAhl8KH1Pr9VBPfoDw8amF6+ipVxBnzaKPwygVLO8UqLX3MLL/RrWTG2W8zyHbBQWX
-         BDpQryTP8qsDhgQBzi7/bGqdHHO5MXvGlewHHXyWbRNFlc63DPTWHaii8R9d8/obJ19w
-         Rmhgu9t6j33itGTrL2pqnqFPZqnR9BL7P68BeXKXtlh793P+H/SUgMwOYwfwBWq00c0F
-         W1Z5dSgLowtUOiWKVWF1iScB3MmNI3HbRRoox7RkFfmO5bibNWaSyFecfkBeJWUJCHHF
-         L/+g==
-X-Gm-Message-State: AOAM530ffgtrp25qbJGMVkW20zoTAOzrufWII9fpfX+P1Mb5CsdI7qws
-        1/1f8ws7XRgcPY+R30LQ8f1ExtH9Ag+l03I=
-X-Google-Smtp-Source: ABdhPJy9JEJYku0CW7gLgs1pDRQsm+DFskGChpIP1Qy/G83tI9nezCpBRsDOYFKqX5htz4CyURoDbjxHNNar+04=
-Sender: "saravanak via sendgmr" <saravanak@saravanak.san.corp.google.com>
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:7220:84ff:fe09:fedc])
- (user=saravanak job=sendgmr) by 2002:a25:23ca:: with SMTP id
- j193mr7219826ybj.16.1610744472390; Fri, 15 Jan 2021 13:01:12 -0800 (PST)
-Date:   Fri, 15 Jan 2021 13:01:07 -0800
-Message-Id: <20210115210107.3087548-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.30.0.284.gd98b1dd5eaa7-goog
-Subject: [PATCH v1] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-From:   Saravana Kannan <saravanak@google.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        kernel-team@android.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n0vrgI0v5AqdqRBlnR2zrY3ADnVU6Fc4aa8ej4oQxWI=;
+        b=ggSyzN0iTe/Q9le00z2QQdZZ29An4sr6MVcs6RDkEkI53dGOywB+wNUA9EAcsvlLIl
+         zSNaFRUA4eCzvZc7k+lvrxsJ2s6vlzn/gjetP/r5EBrIDn4ZrREeflcNpazWp4TnGH95
+         u4Er5Iob+jD1tZvQK6nhJhL2f5Lq+mNq0leJmp3sFe9QP/tfA5tQ59VipChiEoz/NoHY
+         XpFHqzMCJbfyJBqbdH09zoFBE25ihGL1F6mrCbOGJ6WhgwbFJDH4Yh+Q/+9THkVkn3vC
+         ov1oekJ+4NxAXvZJlp6NNYAC7jAyAAPA09pRGyG1q0SbqVXKymfci49e1nbTI5sQhWcg
+         T+Dw==
+X-Gm-Message-State: AOAM531EI3ae1bn13agYHXjY5A4DpyK/YokDg06Xigwutm+xUGHq+KAw
+        4/bGccWPnomMdrtj6Opr0fHMkg==
+X-Google-Smtp-Source: ABdhPJyON92K2TmcPW2QR85yuolP22tM0R4t7l3u4HZpjfPFf8vlelLyS2GSnGt/ynZIDrLg6P8b7Q==
+X-Received: by 2002:a17:902:8216:b029:dc:1e79:e74c with SMTP id x22-20020a1709028216b02900dc1e79e74cmr14532231pln.5.1610746821003;
+        Fri, 15 Jan 2021 13:40:21 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:1a90:2b4:7e34:6b31])
+        by smtp.gmail.com with ESMTPSA id e5sm8744463pfc.76.2021.01.15.13.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Jan 2021 13:40:20 -0800 (PST)
+Date:   Fri, 15 Jan 2021 13:40:18 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Emmanuel Vadot <manu@bidouilliste.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1
+ to 2
+Message-ID: <20210115214018.GA554007@x1>
+References: <20200701013320.130441-1-drew@beagleboard.org>
+ <20200701013320.130441-3-drew@beagleboard.org>
+ <20210115190201.9273b637a7f967e7e55bc740@bidouilliste.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210115190201.9273b637a7f967e7e55bc740@bidouilliste.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are multiple instances of GPIO devictree nodes of the form:
+On Fri, Jan 15, 2021 at 07:02:01PM +0100, Emmanuel Vadot wrote:
+> 
+>  Hello Drew,
+> 
+> On Wed,  1 Jul 2020 03:33:20 +0200
+> Drew Fustini <drew@beagleboard.org> wrote:
+> 
+> > Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
+> > requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
+> > conf and pin mux values separate.
+> > 
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> > ---
+> >  arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
+> >  include/dt-bindings/pinctrl/omap.h | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> > index a9cbefc80c0c..3141590e5889 100644
+> > --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> > @@ -278,7 +278,7 @@ scm: scm@0 {
+> >  				am33xx_pinmux: pinmux@800 {
+> >  					compatible = "pinctrl-single";
+> >  					reg = <0x800 0x238>;
+> > -					#pinctrl-cells = <1>;
+> > +					#pinctrl-cells = <2>;
+> >  					pinctrl-single,register-width = <32>;
+> >  					pinctrl-single,function-mask = <0x7f>;
+> >  				};
+> > diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+> > index 625718042413..2d2a8c737822 100644
+> > --- a/include/dt-bindings/pinctrl/omap.h
+> > +++ b/include/dt-bindings/pinctrl/omap.h
+> > @@ -65,7 +65,7 @@
+> >  #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> >  #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> >  #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> > -#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
+> > +#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+> >  
+> >  /*
+> >   * Macros to allow using the offset from the padconf physical address
+> > -- 
+> > 2.25.1
+> 
+>  Based on the bindings doc a value of 2 is only acceptable if one uses
+> pinctrl-single,bits but all the am33xx pins still uses
+> pinctrl-single,pins.
+>  I noticed this because this breaks FreeBSD when I tried with 5.9 dts.
+> 
+> -- 
+> Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
 
-foo {
-	compatible = "acme,foo";
-	...
+Hello Emmanuel,
 
-	gpio0: gpio0@xxxxxxxx {
-		compatible = "acme,bar";
-		...
-		gpio-controller;
-	};
+Sorry to hear about that. This change was made based on discussion with
+Tony Lindgren this past July. Trent Piepho later pointed out issues wtih
+the change including the binding documentation. I had tried to fix
+the documentation in September [1]. However, I notice that it seems I
+missed changing the lines near the top of pinctrl-single.txt [2]:
 
-	gpio1: gpio1@xxxxxxxx {
-		compatible = "acme,bar";
-		...
-		gpio-controller;
-	};
+- #pinctrl-cells : number of cells in addition to the index, set to 1
+  for pinctrl-single,pins and 2 for pinctrl-single,bits
 
-	...
-}
+I am thinking that should be re-written as:
 
-bazz {
-	my-gpios = <&gpio0 ...>;
-}
+- #pinctrl-cells : number of cells in addition to the index, this value
+  can be 1 or 2 for pinctrl-single,pins and must be 2 for pinctrl-single,bits
 
-Case 1: The driver for "foo" populates struct device for these gpio*
-nodes and then probes them using a driver that binds with "acme,bar".
-This lines up with how DT nodes with the "compatible" property are
-generally converted to struct devices and then registered with driver
-core to probe them. This also allows the gpio* devices to hook into all
-the driver core capabilities like runtime PM, probe deferral,
-suspend/resume ordering, device links, etc.
+Tony - what do you think?
 
-Case 2: The driver for "foo" doesn't populate its child device nodes
-with "compatible" property and instead just loops through its child
-nodes and directly registers the GPIOs with gpiolib without ever
-populating a struct device or binding a driver to it.
 
-Drivers that follow the case 2 cause problems with fw_devlink=on.  This
-is because fw_devlink will prevent bazz from probing until there's a
-struct device that has gpio0 as its fwnode (because bazz lists gpio0 as
-a GPIO supplier). Once the struct device is available, fw_devlink will
-create a device link between with gpio0 as the supplier and bazz as the
-consumer. After this point, the device link will prevent bazz from
-probing until its supplier (the gpio0 device) has bound to a driver.
-Once the supplier is bound to a driver, the probe of bazz is triggered
-automatically.
+Thanks,
+Drew
 
-Finding and refactoring all the instances of drivers that follow case 2
-will cause a lot of code churn and it not something that can be done in
-one shot. Examples of such instances are [1] [2].
-
-This patch works around this problem and avoids all the code churn by
-simply creating a stub driver to bind to the gpio_device. Since the
-gpio_device already points to the GPIO device tree node, this allows all
-the consumers to continue probing when the driver follows case 2.
-
-If/when all the old drivers are refactored, we can revert this patch.
-
-[1] - https://lore.kernel.org/lkml/20201014191235.7f71fcb4@xhacker.debian/
-[2] - https://lore.kernel.org/lkml/e28e1f38d87c12a3c714a6573beba6e1@kernel.org/
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Kever Yang <kever.yang@rock-chips.com>
-Fixes: e590474768f1 ("driver core: Set fw_devlink=on by default")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/gpio/gpiolib.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b02cc2abd3b6..36f0af42e203 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -574,6 +574,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	unsigned	i;
- 	int		base = gc->base;
- 	struct gpio_device *gdev;
-+	struct device_node *of_node;
-+	struct fwnode_handle *fwnode;
-+	struct device *fwnode_dev;
- 
- 	/*
- 	 * First: allocate and populate the internal stat container, and
-@@ -596,6 +599,22 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		gdev->dev.of_node = gc->of_node;
- 	else
- 		gc->of_node = gdev->dev.of_node;
-+
-+	of_node = gdev->dev.of_node;
-+	fwnode = of_fwnode_handle(of_node);
-+	fwnode_dev = get_dev_from_fwnode(fwnode);
-+
-+	/*
-+	 * If your driver hits this warning, it's because you are directly
-+	 * parsing a device tree node with "compatible" property and
-+	 * initializing it instead of using the standard DT + device driver
-+	 * model of creating a struct device and then initializing it in the
-+	 * probe function. Please refactor your driver.
-+	 */
-+	if (!fwnode_dev && of_find_property(gdev->dev.of_node, "compatible")) {
-+		chip_warn(gc, "Create a real device for %pOF\n" of_node);
-+		gdev->dev.fwnode = fwnode;
-+	}
- #endif
- 
- 	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
-@@ -4202,6 +4221,17 @@ void gpiod_put_array(struct gpio_descs *descs)
- }
- EXPORT_SYMBOL_GPL(gpiod_put_array);
- 
-+static int gpio_drv_probe(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static struct device_driver gpio_drv = {
-+	.name = "gpio_drv",
-+	.bus = &gpio_bus_type,
-+	.probe = gpio_drv_probe,
-+};
-+
- static int __init gpiolib_dev_init(void)
- {
- 	int ret;
-@@ -4213,9 +4243,16 @@ static int __init gpiolib_dev_init(void)
- 		return ret;
- 	}
- 
-+	if (driver_register(&gpio_drv) < 0) {
-+		pr_err("gpiolib: could not register GPIO stub driver\n");
-+		bus_unregister(&gpio_bus_type);
-+		return ret;
-+	}
-+
- 	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, GPIOCHIP_NAME);
- 	if (ret < 0) {
- 		pr_err("gpiolib: failed to allocate char dev region\n");
-+		driver_unregister(&gpio_drv);
- 		bus_unregister(&gpio_bus_type);
- 		return ret;
- 	}
--- 
-2.30.0.284.gd98b1dd5eaa7-goog
-
+[1] https://lore.kernel.org/linux-gpio/20200919200836.3218536-1-drew@beagleboard.org/
+[2] https://www.kernel.org/doc/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
