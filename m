@@ -2,94 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8223C2F75F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 10:54:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB45C2F764A
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jan 2021 11:13:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbhAOJyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jan 2021 04:54:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbhAOJyA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jan 2021 04:54:00 -0500
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C182C0613D3
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jan 2021 01:53:21 -0800 (PST)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by andre.telenet-ops.be with bizsmtp
-        id GxtK2400Q4C55Sk01xtKPt; Fri, 15 Jan 2021 10:53:19 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1l0LnD-003j2D-4Q; Fri, 15 Jan 2021 10:53:19 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1l0LnC-009nN7-K5; Fri, 15 Jan 2021 10:53:18 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.12
-Date:   Fri, 15 Jan 2021 10:53:13 +0100
-Message-Id: <20210115095313.2334693-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1729295AbhAOKKE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jan 2021 05:10:04 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54795 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728287AbhAOKKD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 Jan 2021 05:10:03 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=abaci-bugfix@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0ULo2FI1_1610705350;
+Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:abaci-bugfix@linux.alibaba.com fp:SMTPD_---0ULo2FI1_1610705350)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 15 Jan 2021 18:09:14 +0800
+From:   Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
+To:     rjui@broadcom.com
+Cc:     sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
+Subject: [PATCH] drivers/pinctrl/bcm: Simplify bool comparison
+Date:   Fri, 15 Jan 2021 18:09:09 +0800
+Message-Id: <1610705349-24310-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+Fix the follow coccicheck warnings:
 
-The following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
+./drivers/pinctrl/bcm/pinctrl-ns2-mux.c:856:29-38: WARNING:
+Comparison to bool.
 
-  Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
+---
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+index 57044ab..0fe4a1f 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+@@ -853,7 +853,7 @@ static int ns2_pin_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
+ 		ns2_pin_get_pull(pctldev, pin, &pull_up, &pull_down);
+-		if ((pull_up == false) && (pull_down == false))
++		if (!pull_up && !pull_down)
+ 			return 0;
+ 		else
+ 			return -EINVAL;
+-- 
+1.8.3.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.12-tag1
-
-for you to fetch changes up to a5cda861ed57710837bc560a3c715160da710555:
-
-  pinctrl: renesas: r8a779a0: Add TPU pins, groups and functions (2021-01-14 12:06:16 +0100)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.12
-
-  - Restrict debug runtime-checks to Renesas platforms,
-  - Initial support for the R-Car V3U SoC.
-
-Thanks for pulling!
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      pinctrl: renesas: checker: Restrict checks to Renesas platforms
-
-Ulrich Hecht (18):
-      dt-bindings: pinctrl: renesas,pfc: Document r8a779a0 PFC support
-      pinctrl: renesas: Implement unlock register masks
-      pinctrl: renesas: Add I/O voltage level flag
-      pinctrl: renesas: Add PORT_GP_CFG_{2,31} macros
-      pinctrl: renesas: Initial R8A779A0 (V3U) PFC support
-      pinctrl: renesas: r8a779a0: Add SCIF pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add I2C pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add EtherAVB pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add CANFD pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add DU pins, groups and function
-      pinctrl: renesas: r8a779a0: Add HSCIF pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add INTC-EX pins, groups and function
-      pinctrl: renesas: r8a779a0: Add MMC pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add MSIOF pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add PWM pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add QSPI pins, groups, and functions
-      pinctrl: renesas: r8a779a0: Add TMU pins, groups and functions
-      pinctrl: renesas: r8a779a0: Add TPU pins, groups and functions
-
- .../devicetree/bindings/pinctrl/renesas,pfc.yaml   |    3 +-
- drivers/pinctrl/renesas/Kconfig                    |    5 +
- drivers/pinctrl/renesas/Makefile                   |    1 +
- drivers/pinctrl/renesas/core.c                     |   38 +-
- drivers/pinctrl/renesas/pfc-r8a779a0.c             | 4460 ++++++++++++++++++++
- drivers/pinctrl/renesas/pinctrl.c                  |   16 +-
- drivers/pinctrl/renesas/sh_pfc.h                   |   28 +-
- 7 files changed, 4533 insertions(+), 18 deletions(-)
- create mode 100644 drivers/pinctrl/renesas/pfc-r8a779a0.c
