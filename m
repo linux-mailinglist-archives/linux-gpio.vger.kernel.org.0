@@ -2,79 +2,266 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AADA62F8F41
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jan 2021 21:38:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D8F52F9235
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jan 2021 13:03:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbhAPUie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Jan 2021 15:38:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbhAPUia (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Jan 2021 15:38:30 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2371C061573;
-        Sat, 16 Jan 2021 12:37:49 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id md11so7000825pjb.0;
-        Sat, 16 Jan 2021 12:37:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W4LZHeYhMSwXOoFtnoqyYzOTzcNb7/z3BzpfRHAYl4U=;
-        b=AbVQZeaGTQZPOm6/Tkyv2qAiuVCtaKS3OjKaee8txBtHazejtQvqEg07Sre2J90Y++
-         38sE8BzEQBGAOgPn15atmpm5v+Wa3Cdg7P6Dd4ED6EL7OTV9jgnGuvEaN2PFMYcwtal9
-         OWleqneQhsVBjjI0SGjxGtwVPnD5ArbumxaGRMFWiKHyl6NKB1zwloiPET3/8meLQ3Wq
-         ZOBQTY/twv/3DPC+oBFF23wmk78pTb0CceFlFGA/9InWUJnSwsHw6XrX+4dHLExGdLc9
-         oGoz9A8bbTMtvVPjaLYJ4W4R7YxB9iD1pDEJVTWa+k/xJ+7Lmyu4SRXjCmHsY8YHVY9T
-         1rog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W4LZHeYhMSwXOoFtnoqyYzOTzcNb7/z3BzpfRHAYl4U=;
-        b=IKKpZCwk/jD5UYTABi+QtuHDiT0Wxtj3CTwhkepwvaQ+P5HO52mKrWICYGt10J/m/g
-         Q3OVLKmmK3WbYFIR1Ffmvh5VBtEXkisP2VaWZto990kWTCkUZT7gP4hpBFE4Ts/YcGFA
-         j/xCnNlkjIa2PAaXud4nzbs2QoKz2S4QjIZRaBj6B/UJ4wpyNEVwobsWG/NOM6LHngRI
-         YclhWVpeKTauA42qp7h3h5NoqyITZ/KnaJ6MjgjexDZhVhSYlgZjZhZLJHGH84bbcA7V
-         MRmxq3jLRsODR29ovv9w/ArV2Ojz01ogAvRIH+CcEAt2ptYPGbzCOOLcA7EuZbOFr81E
-         248Q==
-X-Gm-Message-State: AOAM533KflK1IpODB9L4GdVfdHB4PxLDOSo6sqFIIMzPZtmcNZjFbog6
-        aDuxoXzEzP75UxTlhGHfgwgOu10QvPeYFD2lCVU=
-X-Google-Smtp-Source: ABdhPJw1VWvqWMXY73Do1StrgoqHlDIeQAC+szJA1f9C5Ez1tHYHDs7vhlfb75VodwT7ZdxyqLfgjxtZbXkUPLFHksA=
-X-Received: by 2002:a17:902:7b96:b029:de:7ae6:b8db with SMTP id
- w22-20020a1709027b96b02900de7ae6b8dbmr7534407pll.0.1610829469554; Sat, 16 Jan
- 2021 12:37:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20210116011412.3211292-1-saravanak@google.com>
-In-Reply-To: <20210116011412.3211292-1-saravanak@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 16 Jan 2021 22:37:33 +0200
-Message-ID: <CAHp75Vdrio-sdvHuqV4GrUQe3=6HaAV_ZTh3_Od974DpDty_cw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
+        id S1728452AbhAQMCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Jan 2021 07:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728181AbhAQMCo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 17 Jan 2021 07:02:44 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5DE208A9;
+        Sun, 17 Jan 2021 12:02:03 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1l16kq-008JBt-UZ; Sun, 17 Jan 2021 12:02:01 +0000
+Date:   Sun, 17 Jan 2021 12:02:00 +0000
+Message-ID: <87r1mjkc07.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
 To:     Saravana Kannan <saravanak@google.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
         Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         Kever Yang <kever.yang@rock-chips.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        kernel-team@android.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default
+In-Reply-To: <20210116011412.3211292-1-saravanak@google.com>
+References: <20210116011412.3211292-1-saravanak@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: saravanak@google.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, gregkh@linuxfoundation.org, Jisheng.Zhang@synaptics.com, kever.yang@rock-chips.com, kernel-team@android.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 16, 2021 at 3:15 AM Saravana Kannan <saravanak@google.com> wrote:
+Hi Saravana,
 
+Thanks for posting this, much appreciated.
+
+On Sat, 16 Jan 2021 01:14:11 +0000,
+Saravana Kannan <saravanak@google.com> wrote:
+> 
+> There are multiple instances of GPIO devictree nodes of the form:
+> 
+> foo {
+> 	compatible = "acme,foo";
+> 	...
+> 
+> 	gpio0: gpio0@xxxxxxxx {
+> 		compatible = "acme,bar";
+> 		...
+> 		gpio-controller;
+> 	};
+> 
+> 	gpio1: gpio1@xxxxxxxx {
+> 		compatible = "acme,bar";
+> 		...
+> 		gpio-controller;
+> 	};
+> 
+> 	...
+> }
+> 
+> bazz {
+> 	my-gpios = <&gpio0 ...>;
+> }
+> 
+> Case 1: The driver for "foo" populates struct device for these gpio*
+> nodes and then probes them using a driver that binds with "acme,bar".
+> This lines up with how DT nodes with the "compatible" property are
+> generally converted to struct devices and then registered with driver
+> core to probe them. This also allows the gpio* devices to hook into all
+> the driver core capabilities like runtime PM, probe deferral,
+> suspend/resume ordering, device links, etc.
+> 
+> Case 2: The driver for "foo" doesn't populate its child device nodes
+> with "compatible" property and instead just loops through its child
+> nodes and directly registers the GPIOs with gpiolib without ever
+> populating a struct device or binding a driver to it.
+
+That's not quite an accurate description. The gpiolib subsystem does
+create a struct device. It doesn't register a driver though, which is
+what causes the issue with fr_devlink (more on that below).
+
+> 
+> Drivers that follow the case 2 cause problems with fw_devlink=on.  This
+> is because fw_devlink will prevent bazz from probing until there's a
+> struct device that has gpio0 as its fwnode (because bazz lists gpio0 as
+> a GPIO supplier). Once the struct device is available, fw_devlink will
+> create a device link between with gpio0 as the supplier and bazz as the
+> consumer. After this point, the device link will prevent bazz from
+> probing until its supplier (the gpio0 device) has bound to a driver.
+> Once the supplier is bound to a driver, the probe of bazz is triggered
+> automatically.
+> 
+> Finding and refactoring all the instances of drivers that follow case 2
+> will cause a lot of code churn and it not something that can be done in
+> one shot. Examples of such instances are [1] [2].
+> 
+> This patch works around this problem and avoids all the code churn by
+> simply creating a stub driver to bind to the gpio_device. Since the
+> gpio_device already points to the GPIO device tree node, this allows all
+> the consumers to continue probing when the driver follows case 2.
+> 
+> If/when all the old drivers are refactored, we can revert this
+> patch.
+
+My personal gripe with this approach is that it is an abrupt change in
+the way DT and device model are mapped onto each other.
+
+As far as I know (and someone please correct me if I am wrong), there
+is zero expectation that a device/subdevice/random IP block described
+by a node with a "compatible" property will end-up being managed by a
+driver that is bound to that particular node.
+
+The node/subnode division is a good way to express some HW boundaries,
+but doesn't say anything about the way this should be handled in the
+kernel. Assuming that everything containing a "compatible" string will
+eventually be bound to a driver is IMO pretty limiting.
+
+> 
+> [1] - https://lore.kernel.org/lkml/20201014191235.7f71fcb4@xhacker.debian/
+> [2] - https://lore.kernel.org/lkml/e28e1f38d87c12a3c714a6573beba6e1@kernel.org/
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Fixes: e590474768f1 ("driver core: Set fw_devlink=on by default")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
 > v1 -> v2:
 > - Fixed up compilation errors that were introduced accidentally
 > - Fixed a missing put_device()
+> 
+>  drivers/gpio/gpiolib.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index b02cc2abd3b6..12c579a953b0 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -574,6 +574,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	unsigned	i;
+>  	int		base = gc->base;
+>  	struct gpio_device *gdev;
+> +	struct device_node *of_node;
+> +	struct fwnode_handle *fwnode;
+> +	struct device *fwnode_dev;
+>  
+>  	/*
+>  	 * First: allocate and populate the internal stat container, and
+> @@ -596,6 +599,22 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  		gdev->dev.of_node = gc->of_node;
+>  	else
+>  		gc->of_node = gdev->dev.of_node;
+> +
+> +	of_node = gdev->dev.of_node;
+> +	fwnode = of_fwnode_handle(of_node);
+> +	fwnode_dev = get_dev_from_fwnode(fwnode);
+> +	/*
+> +	 * If your driver hits this warning, it's because you are directly
+> +	 * parsing a device tree node with "compatible" property and
+> +	 * initializing it instead of using the standard DT + device driver
+> +	 * model of creating a struct device and then initializing it in the
+> +	 * probe function. Please refactor your driver.
+> +	 */
+> +	if (!fwnode_dev && of_find_property(of_node, "compatible", NULL)) {
+> +		chip_warn(gc, "Create a real device for %pOF\n", of_node);
 
-See my comments as per v1 and address.
+chip_warn() is not a good idea here, as gc->dev hasn't been
+initialised yet, and results in the following output:
+
+[    0.113996] gpio (null): (gpio0): Create a real device for /pinctrl/gpio0@ff720000
+[    0.114727] gpio (null): (gpio1): Create a real device for /pinctrl/gpio1@ff730000
+[    0.115340] gpio (null): (gpio2): Create a real device for /pinctrl/gpio2@ff780000
+[    0.115912] gpio (null): (gpio3): Create a real device for /pinctrl/gpio3@ff788000
+[    0.116437] gpio (null): (gpio4): Create a real device for /pinctrl/gpio4@ff790000
+
+> +		gdev->dev.fwnode = fwnode;
+> +	}
+> +	put_device(fwnode_dev);
+>  #endif
+>  
+>  	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+> @@ -4202,6 +4221,17 @@ void gpiod_put_array(struct gpio_descs *descs)
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_put_array);
+>  
+> +static int gpio_drv_probe(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static struct device_driver gpio_drv = {
+> +	.name = "gpio_drv",
+> +	.bus = &gpio_bus_type,
+> +	.probe = gpio_drv_probe,
+> +};
+> +
+>  static int __init gpiolib_dev_init(void)
+>  {
+>  	int ret;
+> @@ -4213,9 +4243,16 @@ static int __init gpiolib_dev_init(void)
+>  		return ret;
+>  	}
+>  
+> +	if (driver_register(&gpio_drv) < 0) {
+> +		pr_err("gpiolib: could not register GPIO stub driver\n");
+> +		bus_unregister(&gpio_bus_type);
+> +		return ret;
+> +	}
+> +
+>  	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, GPIOCHIP_NAME);
+>  	if (ret < 0) {
+>  		pr_err("gpiolib: failed to allocate char dev region\n");
+> +		driver_unregister(&gpio_drv);
+>  		bus_unregister(&gpio_bus_type);
+>  		return ret;
+>  	}
+
+On the positive side, this patch brings my RK3399 system back to life.
+However, on a system that doesn't suffer from this problem, I end-up
+with the following issue:
+
+$ ls -l /sys/bus/platform/drivers/mb86s70-gpio/51000000.gpio/of_node
+lrwxrwxrwx 1 root root 0 Jan 17 11:15 /sys/bus/platform/drivers/mb86s70-gpio/51000000.gpio/of_node -> ../../../firmware/devicetree/base/gpio@51000000
+$ ls -l /sys/bus/gpio/drivers/gpio_drv/gpiochip0/of_node
+lrwxrwxrwx 1 root root 0 Jan 16 18:30 /sys/bus/gpio/drivers/gpio_drv/gpiochip0/of_node -> ../../../../firmware/devicetree/base/gpio@51000000
+
+where two drivers are now handling the same of_node. Somehow, I don't
+think this is a good idea, even if I didn't spot anything problematic
+yet (maybe because there isn't anything useful hanging off the GPIOs
+on this particular machine).
+
+Overall, I'm concerned that this is a change in semantics that affects
+the whole device model, and I wonder whether forcing everyone in the
+same mould is the right approach.
+
+An alternative I've been thinking about is to flag the device as
+"satisfying existing dependencies" at the point where it is
+registered. Because at the end of the day, we don't really care for
+the *driver* part of it (case in point, the stub driver you introduced
+doesn't do anything). We only care about *someone* saying "this device
+is ready to be used".
+
+So how about cutting the middleman?
+
+Thanks,
+
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Without deviation from the norm, progress is not possible.
