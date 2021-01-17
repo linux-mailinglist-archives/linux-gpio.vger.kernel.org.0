@@ -2,111 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA37B2F9559
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jan 2021 22:07:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CFC72F9672
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 00:55:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbhAQVHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jan 2021 16:07:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56500 "EHLO
+        id S1728042AbhAQXzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Jan 2021 18:55:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbhAQVHE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jan 2021 16:07:04 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1E6C061574;
-        Sun, 17 Jan 2021 13:06:24 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id u17so29154337iow.1;
-        Sun, 17 Jan 2021 13:06:24 -0800 (PST)
+        with ESMTP id S1726785AbhAQXzY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jan 2021 18:55:24 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B3AC061573;
+        Sun, 17 Jan 2021 15:54:44 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id s15so7661214plr.9;
+        Sun, 17 Jan 2021 15:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cZ5CzqR6FHC8SFBm9OPNqcdI+zSFrw+LNNyzBre+mNw=;
-        b=lGrsv+fAWJAiFARhfVtpuwrmv5paBIcu/pnVy6Khbm4A3sazKaaroxX0KsBXqi/Pw2
-         s1VWSXFdF0fJqZhxAcU+R3ldDE4lB8vQqTjnr9kgOGHxRNZq9fVeBVkVrdYquijD7krQ
-         XGWLSUunmMOvbZ+8PO9MImmgVouvi7/QnziGuaYdtQpqq/FnlVut4WY2GYOZA/mxvNO8
-         MopVBfn5IBgvOAd26YgJTWs9bEHStZ+AvVd0JkAOo8YXeL1W3PH0v41nA0mIOpowdltq
-         wgxFGjF+mDE1sjWUFrgHmJfgwe42nghl+zvpktaezSaNuSkpKYVfJ5Sp17vc853ea4H/
-         epFQ==
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LmlVmr5QZIAuFyhAzTMtvc0ZpiTTs7C1V/Whdgh2hgY=;
+        b=NSDhOJH1IF0DMEv9C6jyJuFO25nj0Tc3RYbK7HP/Vfwt6QN8Nh92s1aJIc8byDsixl
+         1DoO23LH7OtXeCle5o6ochEmi8aWZOuHibBD7rNCeXqP26Pr0wxv2eWcth9/+KXpN1u4
+         w53+hlkr5jjSu+mRPOekDg74fpFiVE+0EBfBdyHWml58afKSjnQWaTr2TjrkULMSmp69
+         ORD6Nl3ryWGzFNLaoAIRbTY5vjoKZ9Txh1h155ocdBgbfJuqbHaFKVReGG4M3SQgEllN
+         9Iy1eHLNt9IO7Ajxwl/4fpl0MEmzo1YaSXrqXStLdbXwAqqkvaSzQk9OJr7Z+6eEzOLO
+         fogw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cZ5CzqR6FHC8SFBm9OPNqcdI+zSFrw+LNNyzBre+mNw=;
-        b=jpgcQEFs8pxMnDPHI2yJr5tqYmCfV7/K3tkf2wQmV0KXYa8armK8HV0J0bUqpwEHpm
-         H5AqLk2YrgVf9JBDZISMZpjxZIQDHT7/X3GzQgzB4ZCp4kj14A3XKWuvr7jONcBkVboW
-         ceZWCRB9bcV57g5WoVIzbEJ5tDBk4CyeOcGa/LGcI+teTMtCXIQzlictoIlzDLkKN8JZ
-         sEIyLJ9CSwDpVdWZWkeU+HMev5nI/4xgZ1XGkpKAMHiVxJU65NFK0txRLEQC0s6qQStE
-         GrWYapkhrmjTues4AZfbZCf3VcF/inoK/Zv6M04z50uqCrPXmzdmyErt4E35T62w7BvH
-         o5qA==
-X-Gm-Message-State: AOAM531rzF1ZQfGfxzUUEpxJlKIP38aQXqHrTHIbgByBhu7IDd2tFIi+
-        nFA8IjWADgJUxMhoRw2Ay1tb9Z6dQyr6cw==
-X-Google-Smtp-Source: ABdhPJwOvMykMbuKTMebYd1ePJZmIm78C9XrvCq4JCcIcHXlAPZNTQPgSUrYChJBm1LrcgbXK6OvDA==
-X-Received: by 2002:a02:1d0a:: with SMTP id 10mr9356430jaj.122.1610917583539;
-        Sun, 17 Jan 2021 13:06:23 -0800 (PST)
-Received: from einstein.dilieto.eu (smtp.dilieto.eu. [188.68.43.228])
-        by smtp.gmail.com with ESMTPSA id f19sm3011475ioc.51.2021.01.17.13.06.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Jan 2021 13:06:22 -0800 (PST)
-Date:   Sun, 17 Jan 2021 22:06:18 +0100
-From:   Nicola Di Lieto <nicola.dilieto@gmail.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de>
- <20210117135803.gt2zgta5pv7o6t6t@einstein.dilieto.eu>
- <20210117184556.7huqlkxykjwionok@pengutronix.de>
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LmlVmr5QZIAuFyhAzTMtvc0ZpiTTs7C1V/Whdgh2hgY=;
+        b=U9UsbZpY11PoOTdPE3kebznHCLiTnciRFUp4KpNYCBfHgm4lki3qYa1SfCHVTvE4ri
+         MHZkl212BDa//qMBRU+prq/ZIUvTJvOwxuWjQyghzYRsbefcGhhrz83UFOGt0VqGjqdd
+         4tTdOn0QbnlklEA2Np7z/5/S12w494/vHZO3mc4YlnVe+7dKj5z1ZCcqMsXO4ujgFqmq
+         Pr78jwkk+fcRa9R18fR3GV8Is1+OTf+m50Cvmgs2WJr40CmxXAktIYP1YDyEOCGKvvXr
+         KEvsU1jNPjvDEneI67h+fzzqdc6H6+sEmh5eSlp7fx3spGJT58/0M6KJF20GtdhjTP81
+         E+8Q==
+X-Gm-Message-State: AOAM530cgLgy7I+ESVK99Jp5ROJ/y6o+WW2+5GJftS0huVy++qHvIMKh
+        IBQR6EgAQTCsy+SddFGKsXnQmsClc+A=
+X-Google-Smtp-Source: ABdhPJxOwST6O0eP6JbE8aOvb/Gk7fiF9noRUF63dyqYx3BwAhYIx8PTQveV0TD5wbMfO62e4OWw2g==
+X-Received: by 2002:a17:90a:8e84:: with SMTP id f4mr23427129pjo.129.1610927683402;
+        Sun, 17 Jan 2021 15:54:43 -0800 (PST)
+Received: from sol (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
+        by smtp.gmail.com with ESMTPSA id t6sm14245537pjg.49.2021.01.17.15.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Jan 2021 15:54:42 -0800 (PST)
+Date:   Mon, 18 Jan 2021 07:54:37 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, shuah@kernel.org, bamv2005@gmail.com
+Subject: Re: [PATCH v2 1/7] selftests: gpio: rework and simplify test
+ implementation
+Message-ID: <20210117235437.GA6841@sol>
+References: <20210107025731.226017-1-warthog618@gmail.com>
+ <20210107025731.226017-2-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210117184556.7huqlkxykjwionok@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20210107025731.226017-2-warthog618@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Uwe,
+On Thu, Jan 07, 2021 at 10:57:25AM +0800, Kent Gibson wrote:
+> The GPIO mockup selftests are overly complicated with separate
+> implementations of the tests for sysfs and cdev uAPI, and with the cdev
+> implementation being dependent on tools/gpio and libmount.
+> 
+> Rework the test implementation to provide a common test suite with a
+> simplified pluggable uAPI interface.  The cdev implementation utilises
+> the GPIO uAPI directly to remove the dependence on tools/gpio.
+> The simplified uAPI interface removes the need for any file system mount
+> checks in C, and so removes the dependence on libmount.
+> 
+> The rework also fixes the sysfs test implementation which has been broken
+> since the device created in the multiple gpiochip case was split into
+> separate devices.
+> 
+> Fixes: commit 8a39f597bcfd ("gpio: mockup: rework device probing")
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-On Sun, Jan 17, 2021 at 07:45:56PM +0100, Uwe Kleine-König wrote:
->> > > +	pwm_gpio->output = pwm_gpio->state ^ pwm_gpio->cur.invert;
->
->So far I understood also only comment. What wasn't obvious immediately
->is the state member.
+Just a note that the 'commit' should be removed from the Fixes tag.
 
-Would it become clear enough by adding: "state is the logical PWM 
-output; the actual PIN output level is inverted by XORing with 
-cur.invert when the latter is true" ?
+That will be fixed in v3.
 
->> Would it be ok to cancel the timer first and then "return
->> pwmchip_remove(...)"?
->
->No. The PWM must stay functional until pwmchip_remove() returns.
->
+The patches have been reviewed from the gpio side - any feedback from the
+selftest side?
 
-Could you please clarify what I should do when pwmchip_remove returns 
-non-zero? In my original implementation
-
-- if pwmchip_remove returns a non-zero error code, I return it to the 
-  caller and do not cancel the timer.
-- if pwmchip_remove returns zero, I cancel the timer and return zero to 
-  the caller
-
-So under no circumstance I return a different code from what 
-pwmchip_remove does...
-
-Best regards,
-Nicola
-
+Cheers,
+Kent.
