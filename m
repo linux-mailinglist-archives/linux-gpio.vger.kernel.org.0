@@ -2,100 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 537CE2FA543
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 16:56:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7DDA2FA4C5
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 16:32:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393437AbhARPY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 10:24:26 -0500
-Received: from mga02.intel.com ([134.134.136.20]:63424 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393430AbhARPYW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 10:24:22 -0500
-IronPort-SDR: Hv8o6MDNpH3eIOv5DJb4r+7EmlxDHLm/vU0tf2uMYcJbl5q+5PfMVdltcof77mrC/vMDFhQa5E
- 8GDHxS8wujQA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="165905457"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="165905457"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 07:22:28 -0800
-IronPort-SDR: ey9MYaovfO4Cxa0p3PXuW/Ij57ursllGF9zE68jwOIjMt8T1cdZfRTVNo5ok9NGulZeFPoWuG6
- Dj026CjwSatw==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="350241206"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 07:22:21 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1WNH-002Hbm-Ex; Mon, 18 Jan 2021 17:23:23 +0200
-Date:   Mon, 18 Jan 2021 17:23:23 +0200
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "andy@kernel.org" <andy@kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.kaneda@intel.com" <erik.kaneda@intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <20210118152323.GV4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-7-djrscally@gmail.com>
- <-GKrxu8GJvGe-PlKkLpblw9N-DtVtS7i87BOCLgJR72yf4hUFpUgiOlGcFero_gqgUxJrX2gxtLOnz_31hJugfam0SXXmXxIzGIhS162mhI=@protonmail.com>
- <20210118135121.GM4077@smile.fi.intel.com>
- <w3qrFtorGLZ_wMnr_Mi7cltli9g8jsMtiQ7Z1Usnj2IKfJ1MJz6-wxlIAEQ-ErgU1x6IBxdAIHBHtQ3OOT_FJOuUYheILlUc20ysNL_zroo=@protonmail.com>
+        id S2405764AbhARPcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 10:32:01 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41273 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405747AbhARP0v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Jan 2021 10:26:51 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2BA0F580759;
+        Mon, 18 Jan 2021 10:26:05 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 18 Jan 2021 10:26:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=LK5udVspjHQLZOBPj3AOvghu8IB
+        7IXzpfmX+3iA0yyM=; b=JUXw6fSJLyuqzUlgdPryxxbBmVR97uUZeEu/DqXnYuQ
+        AzPbEFMtfObcCGSi9mha9wJ7c0G0tSRLn+kBA3WFlxO9OAI0+fnCQLY8jQkHXIn8
+        8RDrZb1L/JEX5hgv49rJtJU0Rn7xGHhF+i5+5J6lwr2YCs9EqX78NPc0EEHDrE6+
+        lCs4+01gYKwpd5hYCd7QuD1TeMOk7HL1wFqnBeBajmijcv55Wm/HLJNaIlNRTthz
+        TnzUD9pIRC9kvh/tc2QxODdQYKqpXM6QXymcee2BngqBPp4mPiIb/IGlqFae/kjt
+        eRU8JSw5lz0tWobbrs1A52b3qHxarFxFjcPDzlTuWLw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=LK5udV
+        spjHQLZOBPj3AOvghu8IB7IXzpfmX+3iA0yyM=; b=OrDv6EJMxZ8zZSQnaEkBw1
+        z/+g0CPgCISMzkLD4SDEwCPa//yimGgSWOyCrVA8uKiNKd4TI4qOIq/1zRSrRLTU
+        HkIHRLSZuFFo7yQA1JbxEj+Hg3my0g8KUyDAWGw0xV4bCgl3sOmGMcwglD0KPonu
+        ykHpSrPU5Y/gk6UZzS+7HWkX/EnanKkKOcc73PeLkeBKDdbB8QRkhSGnIwC+XUk8
+        dk0Ju7zXeMHQtfG7enar56SncOfdk7lcv8Q05l31QmTtUOnoTB7biSzMtma3mH65
+        EzPEUHr3mnz9oeCzEgkp7X3KlTklDCAgtyDCqGUKR5SSSPuWkZ2mRr2fV90kKgFQ
+        ==
+X-ME-Sender: <xms:i6gFYE2EtQxPEONHcpCoOcYQhoaT5ytVahUSen5Eh5Z_0WC7BjORMg>
+    <xme:i6gFYPGeGIOHIebhtRJRtuYtaisjsa6bKjSMsSGQPxWGEjrPZNcgV1rSXcRY8UFC_
+    lzQ1NWN2Zk3akGp81w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtdekgdejiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:jKgFYM6K1GvqDmNIz05stVJ0mzkLYuZyGBZc87nT3OvDHq9_xXhF-g>
+    <xmx:jKgFYN2Z_7yNjXrzgHaldcjZCCOChIsF86VQaP3Pz78_B9fioTMEag>
+    <xmx:jKgFYHHVENeUFZCQRz3Hw6a9bUq7yuh3hyV1FmwVNLBZ6u93tu7ckQ>
+    <xmx:jagFYO_PKqT9sXh6FheJh6mTE8Zqg2VYuRPlB06nCN93EuITw79jUQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B093524005A;
+        Mon, 18 Jan 2021 10:26:03 -0500 (EST)
+Date:   Mon, 18 Jan 2021 16:26:01 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 04/21] pinctrl: sunxi: Add support for the Allwinner
+ H616 pin controller
+Message-ID: <20210118152601.j4dn27zzhuzds2ya@gilmour>
+References: <20210118020848.11721-1-andre.przywara@arm.com>
+ <20210118020848.11721-5-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3df5e5hjreiqauet"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <w3qrFtorGLZ_wMnr_Mi7cltli9g8jsMtiQ7Z1Usnj2IKfJ1MJz6-wxlIAEQ-ErgU1x6IBxdAIHBHtQ3OOT_FJOuUYheILlUc20ysNL_zroo=@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210118020848.11721-5-andre.przywara@arm.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 02:51:30PM +0000, Barnabás Pőcze wrote:
-> 2021. január 18., hétfő 14:51 keltezéssel, Andy Shevchenko írta:
-> 
-> > On Mon, Jan 18, 2021 at 11:12:34AM +0000, Barnabás Pőcze wrote:
-> > > 2021. január 18., hétfő 1:34 keltezéssel, Daniel Scally írta:
-> >
-> > > Have you considered putting the source (and header) files into a dedicated
-> > > folder? I think it'd help manageability in the long run, and it'd be immediately
-> > > obvious that these source files form a single "unit".
-> >
-> > What would be the folder name? Because, for example, intel_cht_int33fe* have no
-> > folder (yet?) and here it's kinda similar case when HID describes something
-> > else than just one IP.
-> 
-> I think "intel_skl_int3472" would not be a bad name for the folder. And I believe
-> "intel_cht_int33fe" could be given its own folder as well.
 
-I;m not objecting (at some point in the past I had proposed moving Intel stuff
-to a separate folder, but at that time PDx86 has no folders at all and Darren
-was kinda not in favour of creating ones, but things changed), just let's hear
-Hans on this.
+--3df5e5hjreiqauet
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Jan 18, 2021 at 02:08:31AM +0000, Andre Przywara wrote:
+> Port A is used for an internal connection to some analogue circuitry
+> which looks like an AC200 IP (as in the H6), though this is not
+> mentioned in the manual.
+>=20
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
+Thanks!
+Maxime
+
+--3df5e5hjreiqauet
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYAWohQAKCRDj7w1vZxhR
+xWwgAQDzUsiSsvVWmGYKTIjfAvDSb4cyvKqd41IRoxEonfT0PgEAsDfaZINzDpAE
+5B80+1Z81y4fyQd1D7swQqnjvF4/JA0=
+=81EK
+-----END PGP SIGNATURE-----
+
+--3df5e5hjreiqauet--
