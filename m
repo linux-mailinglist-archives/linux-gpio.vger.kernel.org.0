@@ -2,98 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A02A2FACB8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 22:34:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE5822FAD52
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 23:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438099AbhARVcw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 16:32:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        id S1727015AbhARWaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 17:30:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438090AbhARVct (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 16:32:49 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0638C061573;
-        Mon, 18 Jan 2021 13:32:08 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id 6so10516757wri.3;
-        Mon, 18 Jan 2021 13:32:08 -0800 (PST)
+        with ESMTP id S1726540AbhARWaD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 17:30:03 -0500
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A637CC061575
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 14:29:22 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id j3so104543ljb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 14:29:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3IxsDslcDpReoCownP1xCxAE8Z7K7L8fc04mjObgzts=;
-        b=LiHdyuMRtxwFFN85BRDfMqn42rOOx2PQnpqXHn+wCW6txvyR484QC77Fo3yc9GtjJC
-         JZgHnAanhhU0/wc5ytc8KoEZA0Oaef2TUx0BIe/JPBhQ0q64uDigP6NIWLmWAf1csPaV
-         IV1DM3h7In/OiD8NcRLfWjI91EoPQfO6GR6MBfdmjhSbdFZaziwAZRDofdNpuv3Hiu8L
-         XJnvx1JCzhS/K+rL698xb3V0WR7v6Mt31XD1ZHXc3lPv0lTO+xPgzAZEU3aO2IRVSBQn
-         mJ62u+jhTuCNwYnmrHldNpE2mQ6kNN9x1C79nMuo9EC2e78wCxEmOmKw13Mc8DicbCTO
-         k/Yg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bUoyIwualxmCOZc7fLaBimHoQ2673QVgFv+KTluFbL0=;
+        b=Y1xzqd2qTqin1Srx9hlZn6IdHLtP5a9Gdnopbgx8Nx/aCHDdkptz0KPQ5niknZeX6W
+         TaFNLy72Z09WgagzvTcm0pDCGEDI5bvTYUDrkUI72babUOtYIv7zTPLwi5dPkf7ph7g3
+         w/10z85fs63jQ2mLvqQKJTm454mOM+YjBEvLyFIuPjNS6rDSqjVvH6mJ3QFH77IoX2pz
+         1+ep7j9nFvfeIRhDiM/+54XUizWWkzCORpG5hdZkgUMIuLJoOUKG3JByBgTI68o+Vwi0
+         Rqh3vbJo7nleHFzyOoVOFXH31Tu9SjGH++HspYfZrg6qWBsnGr3lN76lqoHKEUWcYNp5
+         m51g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3IxsDslcDpReoCownP1xCxAE8Z7K7L8fc04mjObgzts=;
-        b=hacC5/xxx9wG6f8bLy3J6BJ1bhdg0d8jPKUHqNfdCSvRn2OomgMf41Ug0e9/BrmFWF
-         LRiq8uIeNojIzCsjkHuxaC8FpDjsJ0UyFO1bNWXEkJz1T2rypM+ll4AP5+R4w6ONS2eM
-         TqFcpNA4RXO7MWGViz2bHS9WK6WIVAzVtjt72js+cEwaC09OY8uhFcB59asD0oOhkZ74
-         d8do7oAyE8bRZseCZX/WfCFFfIWFl9PpaA8+ujtO/laUNt8rcXS9ktKf9oo0Em12S6ux
-         qu9ZMHppMMV7Uh4CVBJPWM5N266k3HwQwN6Y/x0kmJUs4Ik59ODzV7IVje7xSCr1A4K5
-         GRPA==
-X-Gm-Message-State: AOAM531v4e0pdergupoGKX3eUSfubrabjqMn2OyBdQPQoMwxxJffWcXu
-        SrG8F8cz/AbhYMopVAXCozQ=
-X-Google-Smtp-Source: ABdhPJz2/YugJp7o0rq4nt9EWaD5osgjh0JyF/0i0c/fHNpFEwSdbLrHbtCXK7w/ze+rNwL0pFiC5A==
-X-Received: by 2002:adf:d085:: with SMTP id y5mr1309658wrh.41.1611005527636;
-        Mon, 18 Jan 2021 13:32:07 -0800 (PST)
-Received: from [192.168.1.158] ([2.29.208.120])
-        by smtp.gmail.com with ESMTPSA id m82sm1113425wmf.29.2021.01.18.13.32.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Jan 2021 13:32:07 -0800 (PST)
-Subject: Re: [PATCH v2 5/7] gpio: gpiolib-acpi: Export acpi_get_gpiod()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org,
-        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        robert.moore@intel.com, erik.kaneda@intel.com,
-        sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com,
-        kieran.bingham@ideasonboard.com
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-6-djrscally@gmail.com>
- <20210118134502.GK4077@smile.fi.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <dc79f590-bbca-0eba-7d50-538f2b9ec42b@gmail.com>
-Date:   Mon, 18 Jan 2021 21:32:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bUoyIwualxmCOZc7fLaBimHoQ2673QVgFv+KTluFbL0=;
+        b=sfm+UfQ1q9nv0VhrSOSLcE0qwvb/yfDTgW6y70shWGORDi2giVbhxvf5UVTj9sowFP
+         6t4mbMWBD0ENfg5xsqOlKjkmQQmPBi0SRC9SL+7CMzTyM4Io6nJxNWHMd8PlGJtkd89r
+         qfzsNYZUxQGFWjlld7PAkCm287XPex7sR8kyTae0WqBVy92c1SfnIjdzmU2Sb8nwEXiq
+         ApDTft06m8ExGLZb8aSPSV2XZIz2mRZEU+TcD8ed0oftRqU5JqxCcQwik4Kd9J35BIvF
+         MMeMzNjQCEovt68R3INOY9XIOJ8jOha54VlhonkAU1tqEFI2egCWJhwSSoEBFuv5xuz7
+         TM3Q==
+X-Gm-Message-State: AOAM531V0kT3um8l40XOGw5npSTX78jL3mUNB6w6dO7ZTWjFhxlaSqXf
+        7wXjxL7Og8mAH+dXHDfedyfKVGViK+kxxfWs+09a+Q==
+X-Google-Smtp-Source: ABdhPJyi+yigw+zM8wEJDU+Me9gCw1yphmZyfKy2OAIuMKbAVJK4rhZggmQflYmvIPx0+jbtea2fym6hW4NW8R8z9rA=
+X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr659935ljo.368.1611008961014;
+ Mon, 18 Jan 2021 14:29:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210118134502.GK4077@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210116015350.3501927-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20210116015350.3501927-1-j.neuschaefer@gmx.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 Jan 2021 23:29:10 +0100
+Message-ID: <CACRpkdZ+Vp3Jq+vZavVwGrbahbqytuPQRASKHf0yC-c_NFk0-Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: pinctrl-microchip-sgpio: Fix indentation
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18/01/2021 13:45, Andy Shevchenko wrote:
-> On Mon, Jan 18, 2021 at 12:34:26AM +0000, Daniel Scally wrote:
->> I need to be able to translate GPIO resources in an acpi_device's _CRS
-> 
-> ACPI device's
-> 
->> into gpio_descs. Those are represented in _CRS as a pathname to a GPIO
-> 
-> into GPIO descriptor array
-> 
->> device plus the pin's index number: this function is perfect for that
->> purpose.
-> 
-> ...
-> 
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> 
-> Wrong header. Please use gpio/consumer.h.
-> 
-Ack to all - thanks.
+On Sat, Jan 16, 2021 at 2:54 AM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+
+> yamllint warns:
+> ./Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
+>   102:10  error   wrong indentation: expected 10 but found 9 (indentation=
+)
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+
+Patch applied.
+
+Yours,
+Linus Walleij
