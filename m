@@ -2,95 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFC72F9672
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 00:55:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE5032F9682
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 01:08:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbhAQXzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jan 2021 18:55:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
+        id S1728543AbhARAIZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Jan 2021 19:08:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbhAQXzY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jan 2021 18:55:24 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B3AC061573;
-        Sun, 17 Jan 2021 15:54:44 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id s15so7661214plr.9;
-        Sun, 17 Jan 2021 15:54:44 -0800 (PST)
+        with ESMTP id S1726785AbhARAIY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jan 2021 19:08:24 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C28C061573
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Jan 2021 16:07:44 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id b8so7667684plh.12
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Jan 2021 16:07:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=LmlVmr5QZIAuFyhAzTMtvc0ZpiTTs7C1V/Whdgh2hgY=;
-        b=NSDhOJH1IF0DMEv9C6jyJuFO25nj0Tc3RYbK7HP/Vfwt6QN8Nh92s1aJIc8byDsixl
-         1DoO23LH7OtXeCle5o6ochEmi8aWZOuHibBD7rNCeXqP26Pr0wxv2eWcth9/+KXpN1u4
-         w53+hlkr5jjSu+mRPOekDg74fpFiVE+0EBfBdyHWml58afKSjnQWaTr2TjrkULMSmp69
-         ORD6Nl3ryWGzFNLaoAIRbTY5vjoKZ9Txh1h155ocdBgbfJuqbHaFKVReGG4M3SQgEllN
-         9Iy1eHLNt9IO7Ajxwl/4fpl0MEmzo1YaSXrqXStLdbXwAqqkvaSzQk9OJr7Z+6eEzOLO
-         fogw==
+        bh=+s48l+utKXWQZEo/TGVb6I7KsEo167Yvd6SvpU8kR70=;
+        b=VBSmQm530yzieOSWtgBBvTGnVJmzzvRWgE90BqI1ctC/UATwL0IhZNQ9tAWMoFEugj
+         Tk57XESv98CGiXfQ092HOuMqa2RVF1LkTISvv+c7KOzYJ8I6BiyHGz/jLZe5iA/W1wJv
+         F6sUOd+3CNWbyS9ZmrdA4rHTx9U9Ry4cZdd7KOLs4X4QJ3d9lbrVUroEyy6nM408/zdW
+         8PwenFMFS7mOo/m+M5Iea/4XjzjMvdBSaaXJhJnFK45nIlthi9CjCvwKJBYo8BWB8Xxh
+         Ed2hAJfAwz5A8bi7zhIDzYjVN+3Lz26VVL29b0eJOyRI60N4hNQkMP3/vVJ07z8RFsgI
+         Hnfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LmlVmr5QZIAuFyhAzTMtvc0ZpiTTs7C1V/Whdgh2hgY=;
-        b=U9UsbZpY11PoOTdPE3kebznHCLiTnciRFUp4KpNYCBfHgm4lki3qYa1SfCHVTvE4ri
-         MHZkl212BDa//qMBRU+prq/ZIUvTJvOwxuWjQyghzYRsbefcGhhrz83UFOGt0VqGjqdd
-         4tTdOn0QbnlklEA2Np7z/5/S12w494/vHZO3mc4YlnVe+7dKj5z1ZCcqMsXO4ujgFqmq
-         Pr78jwkk+fcRa9R18fR3GV8Is1+OTf+m50Cvmgs2WJr40CmxXAktIYP1YDyEOCGKvvXr
-         KEvsU1jNPjvDEneI67h+fzzqdc6H6+sEmh5eSlp7fx3spGJT58/0M6KJF20GtdhjTP81
-         E+8Q==
-X-Gm-Message-State: AOAM530cgLgy7I+ESVK99Jp5ROJ/y6o+WW2+5GJftS0huVy++qHvIMKh
-        IBQR6EgAQTCsy+SddFGKsXnQmsClc+A=
-X-Google-Smtp-Source: ABdhPJxOwST6O0eP6JbE8aOvb/Gk7fiF9noRUF63dyqYx3BwAhYIx8PTQveV0TD5wbMfO62e4OWw2g==
-X-Received: by 2002:a17:90a:8e84:: with SMTP id f4mr23427129pjo.129.1610927683402;
-        Sun, 17 Jan 2021 15:54:43 -0800 (PST)
+        bh=+s48l+utKXWQZEo/TGVb6I7KsEo167Yvd6SvpU8kR70=;
+        b=pjx/AbFbYb+jopsz/4fwKPqJNVPEYutAMHT3Pd4MnwSLnJlUT3A4oQ0vp+ATwQFtLr
+         XWFbgass2xNbJufthAuPIOdFA6pDSzQMeU375xwMcHDqfM3c5hY9DkSyVMbrIdRVAY2q
+         FETzlZk8Rwri6xh+kvmSn+Wfe8UYtn31U+WXqMcuZ4fkk/8Re0ePofJeGrSr+FCXYIoD
+         XlzFJSei1cbRSYR9vebSEOFSGER/BJDBBgvxNa/RoSVZC4R+wh4kRi75f4aLiUswQo5q
+         GlqYxsSU2KxClr8teFyT+/Ob1GwKQgiFx2vLPyYAf3a5OIXl7gIIPoIR9VwMfypyTucq
+         iOGQ==
+X-Gm-Message-State: AOAM53345Z+hqkhC7T+FGbiyd/RuKAlYiLsmFtkQkhk11Aqcbrc0qRG8
+        dQ6iTftjnAkZrusQw85mjuw=
+X-Google-Smtp-Source: ABdhPJw0q+ZghjdEYcFYMYSYD8hNxLZ7/i9E1SMqDX3mwl/rtzZvR+Er65e9SgklRLOQpEK1o+fjGw==
+X-Received: by 2002:a17:90a:df84:: with SMTP id p4mr22972616pjv.81.1610928463607;
+        Sun, 17 Jan 2021 16:07:43 -0800 (PST)
 Received: from sol (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
-        by smtp.gmail.com with ESMTPSA id t6sm14245537pjg.49.2021.01.17.15.54.39
+        by smtp.gmail.com with ESMTPSA id gg22sm1701521pjb.24.2021.01.17.16.07.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 15:54:42 -0800 (PST)
-Date:   Mon, 18 Jan 2021 07:54:37 +0800
+        Sun, 17 Jan 2021 16:07:43 -0800 (PST)
+Date:   Mon, 18 Jan 2021 08:07:38 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, shuah@kernel.org, bamv2005@gmail.com
-Subject: Re: [PATCH v2 1/7] selftests: gpio: rework and simplify test
- implementation
-Message-ID: <20210117235437.GA6841@sol>
-References: <20210107025731.226017-1-warthog618@gmail.com>
- <20210107025731.226017-2-warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [libgpiod][PATCH v2 3/7] treewide: rename BIAS_AS_IS to
+ BIAS_UNKNOWN
+Message-ID: <20210118000738.GB6841@sol>
+References: <20210115103018.27704-1-brgl@bgdev.pl>
+ <20210115103018.27704-4-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210107025731.226017-2-warthog618@gmail.com>
+In-Reply-To: <20210115103018.27704-4-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 10:57:25AM +0800, Kent Gibson wrote:
-> The GPIO mockup selftests are overly complicated with separate
-> implementations of the tests for sysfs and cdev uAPI, and with the cdev
-> implementation being dependent on tools/gpio and libmount.
+On Fri, Jan 15, 2021 at 11:30:14AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Rework the test implementation to provide a common test suite with a
-> simplified pluggable uAPI interface.  The cdev implementation utilises
-> the GPIO uAPI directly to remove the dependence on tools/gpio.
-> The simplified uAPI interface removes the need for any file system mount
-> checks in C, and so removes the dependence on libmount.
+> When inspecting the current bias setting of a GPIO line, the AS_IS name
+> of one of the possible values really means that the kernel uAPI can't
+> determine the bias setting because it didn't set it itself. In this case
+> it's better to change the name to BIAS_UNKNOWN to reflect that.
 > 
-> The rework also fixes the sysfs test implementation which has been broken
-> since the device created in the multiple gpiochip case was split into
-> separate devices.
-> 
-> Fixes: commit 8a39f597bcfd ("gpio: mockup: rework device probing")
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
 
-Just a note that the 'commit' should be removed from the Fixes tag.
+Your checkin comment incorporates some of my review comments, which were
+actually a bit sloppy.  While I didn't bother to correct myself for that
+email, I'd rather the checkin comment be more precise.
 
-That will be fixed in v3.
+Specifically, I was conflating gpiolib and the cdev uAPI.  If the bias
+is set via gpiolib then the uAPI will report it correctly.  If it is set
+otherwise then the setting is unknown to gpiolib and therefore the uAPI.
 
-The patches have been reviewed from the gpio side - any feedback from the
-selftest side?
+And I'm not sure if the DT example that I used in that email was a good
+one. But say the hardware initialises with pull-up enabled.  If it hasn't
+also been set via gpiolib then it will be reported as unknown.
 
 Cheers,
 Kent.
