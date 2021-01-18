@@ -2,77 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8556F2FA1F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 390EC2FA215
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:49:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404662AbhARNnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 08:43:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404771AbhARNnf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 08:43:35 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7277C061573
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:42:54 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id m13so18211124ljo.11
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:42:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjAbOdlgo9FDkSJLOMR1xs2vpDAbpOPnLP1xRILckhg=;
-        b=pvP8y7dPdgXUcANy1K8PfZ+1uoR/B4sfCUvMFHaLyYe/keXJEu2M17I78vHGEfEKBf
-         1Q8Z6v2U5meI9+u8PnYjGGKgMkKI6GzHZF8k97FVPn4dNvisu6B1HndqTDEt3qT7dAEi
-         sW8ApdPdc5ZfAqy95dmSrr2OxlIjBSeyxK5e3mvcyh2Lv9tQRzy+Hj43h3d5j0xNKlq6
-         Hjr1Mv7wtm3FM7FwgyTfkjDVb1Kmfgvo8zdCoZDop/LhhZ5dnU57C3PimcrV58uzvFwf
-         ZtqEGJ3TNfO033Y9P9mDi4hXQTZwCN8vJUFrWg7yJCQjpHR3p93gLJfSRghYtbwyBGgw
-         MwKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjAbOdlgo9FDkSJLOMR1xs2vpDAbpOPnLP1xRILckhg=;
-        b=R3J3CL/2xpJ77mdWSXUnLyNyFy+mqwjIisb/5WN3wZO1ANo2NCjjq26PyRwBLvpE5q
-         n6w1ZF4a7tGii8hKXkPfWLctoyOropkmVjdlfUdkeXk05DIiZ1M5Vh1OueK+PWn6UFkz
-         f98HNVMW55jnIoSbmV+o4dXfu67xZ9IIuXr9T0ET/vEsJFf7yb0IYIeEk2fo4XHnCreP
-         bAM509xgGUssudH3DE3IzMu6Lc2+RY/xd0S5XjL6ZQrY3oHmBFemrDOk2MRB1Xd16SaL
-         9eTXINi1sVOuzICQ5N/7yeuWbVmEYYftO2b1q2yWD9S9l+KziOr++CLVorKRrMUOCjot
-         Z50w==
-X-Gm-Message-State: AOAM531wNahTyGcmh1zBEFa0ZlpbVYxXIuAOsK9+4NT0WTgdDeXD+/Hh
-        1DlpqkPRKJf39kapVh4uCpCQnQC7YjunrdkH1iP+LA==
-X-Google-Smtp-Source: ABdhPJyEgZIiDxXymUPdwUgxEJxJ6JpmtdC2klx+vAcVOvbWq4CDOq+Ue7khu+rZk7m73bkgeZza6B+NITQiBmSebro=
-X-Received: by 2002:a2e:586:: with SMTP id 128mr10793860ljf.273.1610977373236;
- Mon, 18 Jan 2021 05:42:53 -0800 (PST)
+        id S2392282AbhARNq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 08:46:29 -0500
+Received: from mga11.intel.com ([192.55.52.93]:58227 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404811AbhARNpx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Jan 2021 08:45:53 -0500
+IronPort-SDR: YVKC/RrNayi3QTgOns1OXrPKeJqrorlG9bcC4oxrVWB0BKdozmyse2/jzYyuz318kLCPlYf4pt
+ me6GLoDNLVzA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="175299744"
+X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
+   d="scan'208";a="175299744"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 05:44:04 -0800
+IronPort-SDR: TPsyVrYJR9OGHy5R0vjWblow2vDgGF86pUVmq7voWqOMcO93kUOG/n+IiOYzumPmj0D/Rgw5Zg
+ 9aaSA5sDg2MA==
+X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
+   d="scan'208";a="402051887"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 05:44:00 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l1Uq6-002BtL-2N; Mon, 18 Jan 2021 15:45:02 +0200
+Date:   Mon, 18 Jan 2021 15:45:02 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 5/7] gpio: gpiolib-acpi: Export acpi_get_gpiod()
+Message-ID: <20210118134502.GK4077@smile.fi.intel.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-6-djrscally@gmail.com>
 MIME-Version: 1.0
-References: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
-In-Reply-To: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jan 2021 14:42:41 +0100
-Message-ID: <CACRpkdY5xLHQuLjXuZvzN76eMKAHkU70yLm9XBrHLLDvncSWdw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sprd: style: Simplify bool comparison
-To:     YANG LI <abaci-bugfix@linux.alibaba.com>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>, linhua.xu@unisoc.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210118003428.568892-6-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 9:28 AM YANG LI <abaci-bugfix@linux.alibaba.com> wrote:
+On Mon, Jan 18, 2021 at 12:34:26AM +0000, Daniel Scally wrote:
+> I need to be able to translate GPIO resources in an acpi_device's _CRS
 
-> Fix the following coccicheck warning:
-> ./drivers/pinctrl/sprd/pinctrl-sprd.c:690:8-23: WARNING: Comparison to
-> bool
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: YANG LI <abaci-bugfix@linux.alibaba.com>
+ACPI device's
 
-Patch applied, fixing subject as indicated by Baolin.
+> into gpio_descs. Those are represented in _CRS as a pathname to a GPIO
 
-First fix I get from Alibabas robot :)
+into GPIO descriptor array
 
-Yours,
-Linus Walleij
+> device plus the pin's index number: this function is perfect for that
+> purpose.
+
+...
+
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+
+Wrong header. Please use gpio/consumer.h.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
