@@ -2,142 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E546F2F97C4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 03:16:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3892F9A75
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:26:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbhARCOt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jan 2021 21:14:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:48632 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731074AbhARCLA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 17 Jan 2021 21:11:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6204011D4;
-        Sun, 17 Jan 2021 18:09:38 -0800 (PST)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 634153F719;
-        Sun, 17 Jan 2021 18:09:36 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 05/21] pinctrl: sunxi: Add support for the Allwinner H616-R pin controller
-Date:   Mon, 18 Jan 2021 02:08:32 +0000
-Message-Id: <20210118020848.11721-6-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20210118020848.11721-1-andre.przywara@arm.com>
-References: <20210118020848.11721-1-andre.przywara@arm.com>
+        id S1731069AbhARHZN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 02:25:13 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54760 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbhARHZL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 02:25:11 -0500
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7F85C2BB;
+        Mon, 18 Jan 2021 08:24:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1610954666;
+        bh=3qJSoCI7SF2zDdQCUq9GpIdMp5rLrOkUptxbBj0SSQ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aBbUiscUC4/ZHLO0Sc0JgDQilr6aGaDNhgS4lshSSxtLCpufsRCQmqxmFFA0bq71x
+         HXYNQGvqeogfMJ4PA84AZJ7VBZB/k4eiUbhHtAmvaBhIRFwZ6ImrQRe8SGX9p9vI6L
+         etCnn6p18UuW2No7VkqY5OlwOGODEVvlk043aY9c=
+Date:   Mon, 18 Jan 2021 09:24:10 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
+Message-ID: <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-2-djrscally@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210118003428.568892-2-djrscally@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There are only two pins left now, used to connect to the PMIC via I2C.
+Hi Daniel,
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/pinctrl/sunxi/Kconfig                 |  5 ++
- drivers/pinctrl/sunxi/Makefile                |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c | 56 +++++++++++++++++++
- 3 files changed, 62 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
+Thank you for the patch.
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 73e88ce71a48..33751a6a0757 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -124,4 +124,9 @@ config PINCTRL_SUN50I_H616
- 	default ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN50I_H616_R
-+	bool "Support for the Allwinner H616 R-PIO"
-+	default ARM64 && ARCH_SUNXI
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 5359327a3c8f..d3440c42b9d6 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -24,5 +24,6 @@ obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
- obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
- obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616)	+= pinctrl-sun50i-h616.o
-+obj-$(CONFIG_PINCTRL_SUN50I_H616_R)	+= pinctrl-sun50i-h616-r.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
-new file mode 100644
-index 000000000000..8e4f10ab96ce
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616-r.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Allwinner H616 R_PIO pin controller driver
-+ *
-+ * Copyright (C) 2020 Arm Ltd.
-+ * Based on former work, which is:
-+ *   Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun50i_h616_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_i2c")),	/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_i2c")),	/* SDA */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun50i_h616_r_pinctrl_data = {
-+	.pins = sun50i_h616_r_pins,
-+	.npins = ARRAY_SIZE(sun50i_h616_r_pins),
-+	.pin_base = PL_BASE,
-+};
-+
-+static int sun50i_h616_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_init(pdev,
-+				  &sun50i_h616_r_pinctrl_data);
-+}
-+
-+static const struct of_device_id sun50i_h616_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-h616-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver sun50i_h616_r_pinctrl_driver = {
-+	.probe	= sun50i_h616_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-h616-r-pinctrl",
-+		.of_match_table	= sun50i_h616_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(sun50i_h616_r_pinctrl_driver);
+On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+> I need to be able to identify devices which declare themselves to be
+> dependent on other devices through _DEP; add this function to utils.c
+> and export it to the rest of the ACPI layer.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes in v2:
+> 	- Introduced
+> 
+>  drivers/acpi/acpi_lpss.c | 24 ------------------------
+>  drivers/acpi/internal.h  |  1 +
+>  drivers/acpi/utils.c     | 24 ++++++++++++++++++++++++
+>  3 files changed, 25 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+> index be73974ce449..70c7d9a3f715 100644
+> --- a/drivers/acpi/acpi_lpss.c
+> +++ b/drivers/acpi/acpi_lpss.c
+> @@ -543,30 +543,6 @@ static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
+>  	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
+>  }
+>  
+> -static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+> -{
+> -	struct acpi_handle_list dep_devices;
+> -	acpi_status status;
+> -	int i;
+> -
+> -	if (!acpi_has_method(adev->handle, "_DEP"))
+> -		return false;
+> -
+> -	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+> -					 &dep_devices);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+> -		return false;
+> -	}
+> -
+> -	for (i = 0; i < dep_devices.count; i++) {
+> -		if (dep_devices.handles[i] == handle)
+> -			return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+>  static void acpi_lpss_link_consumer(struct device *dev1,
+>  				    const struct lpss_device_links *link)
+>  {
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index cb229e24c563..ee62c0973576 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -79,6 +79,7 @@ static inline void acpi_lpss_init(void) {}
+>  #endif
+>  
+>  void acpi_apd_init(void);
+> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
+
+"lpss" stands for low power subsystem, an Intel device within the PCH
+that handles I2C, SPI, UART, ... I think the function should be renamed,
+as it's now generic. acpi_dev_has_dep() is a potential candidate, I'm
+sure better ones exist. A bit of kerneldoc would also not hurt.
+
+>  
+>  acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src);
+>  bool acpi_queue_hotplug_work(struct work_struct *work);
+> diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+> index ddca1550cce6..78b38775f18b 100644
+> --- a/drivers/acpi/utils.c
+> +++ b/drivers/acpi/utils.c
+> @@ -807,6 +807,30 @@ static int acpi_dev_match_cb(struct device *dev, const void *data)
+>  	return hrv == match->hrv;
+>  }
+>  
+> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+> +{
+> +	struct acpi_handle_list dep_devices;
+> +	acpi_status status;
+> +	int i;
+> +
+> +	if (!acpi_has_method(adev->handle, "_DEP"))
+> +		return false;
+> +
+> +	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+> +					 &dep_devices);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+> +		return false;
+> +	}
+> +
+> +	for (i = 0; i < dep_devices.count; i++) {
+> +		if (dep_devices.handles[i] == handle)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /**
+>   * acpi_dev_present - Detect that a given ACPI device is present
+>   * @hid: Hardware ID of the device.
+
 -- 
-2.17.5
+Regards,
 
+Laurent Pinchart
