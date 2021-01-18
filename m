@@ -2,123 +2,255 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA782F9AB2
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAD952F9ABC
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:44:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732719AbhARHlr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 02:41:47 -0500
-Received: from muru.com ([72.249.23.125]:55324 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730272AbhARHlq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 02:41:46 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 382D680AE;
-        Mon, 18 Jan 2021 07:41:03 +0000 (UTC)
-Date:   Mon, 18 Jan 2021 09:41:00 +0200
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Emmanuel Vadot <manu@bidouilliste.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1
- to 2
-Message-ID: <YAU7jHQv8E5ln5zS@atomide.com>
-References: <20200701013320.130441-1-drew@beagleboard.org>
- <20200701013320.130441-3-drew@beagleboard.org>
- <20210115190201.9273b637a7f967e7e55bc740@bidouilliste.com>
- <20210115214018.GA554007@x1>
+        id S1732982AbhARHnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 02:43:18 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54976 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732724AbhARHnS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 02:43:18 -0500
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E4CA2BB;
+        Mon, 18 Jan 2021 08:42:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1610955755;
+        bh=Vnby0mwsCmasS2TI5LzaiZyTwN99T+ncYSU29OFGRgA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MRImOa7E95Lr11SFTvPZORP2Sje7v1eiGCMqLXkzTQUOFWyWkOXCojNci/WVTDiv/
+         2Rwybse2XO+tIVEheqljj7mJvtqC0W9NzFnSUVsbtcCCDTF3xkCd38u3Krfaakze16
+         iGG/lUeq1XtCAhZUHTEZRfw6uWYA/bD7Mpfpzr24=
+Date:   Mon, 18 Jan 2021 09:42:19 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 7/7] mfd: Remove tps68470 MFD driver
+Message-ID: <YAU726t7zz9k22YT@pendragon.ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-8-djrscally@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210115214018.GA554007@x1>
+In-Reply-To: <20210118003428.568892-8-djrscally@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Drew Fustini <drew@beagleboard.org> [210115 21:40]:
-> On Fri, Jan 15, 2021 at 07:02:01PM +0100, Emmanuel Vadot wrote:
-> > 
-> >  Hello Drew,
-> > 
-> > On Wed,  1 Jul 2020 03:33:20 +0200
-> > Drew Fustini <drew@beagleboard.org> wrote:
-> > 
-> > > Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
-> > > requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
-> > > conf and pin mux values separate.
-> > > 
-> > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > > ---
-> > >  arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
-> > >  include/dt-bindings/pinctrl/omap.h | 2 +-
-> > >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > index a9cbefc80c0c..3141590e5889 100644
-> > > --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > @@ -278,7 +278,7 @@ scm: scm@0 {
-> > >  				am33xx_pinmux: pinmux@800 {
-> > >  					compatible = "pinctrl-single";
-> > >  					reg = <0x800 0x238>;
-> > > -					#pinctrl-cells = <1>;
-> > > +					#pinctrl-cells = <2>;
-> > >  					pinctrl-single,register-width = <32>;
-> > >  					pinctrl-single,function-mask = <0x7f>;
-> > >  				};
-> > > diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-> > > index 625718042413..2d2a8c737822 100644
-> > > --- a/include/dt-bindings/pinctrl/omap.h
-> > > +++ b/include/dt-bindings/pinctrl/omap.h
-> > > @@ -65,7 +65,7 @@
-> > >  #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
-> > >  #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
-> > >  #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
-> > > -#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
-> > > +#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
-> > >  
-> > >  /*
-> > >   * Macros to allow using the offset from the padconf physical address
-> > > -- 
-> > > 2.25.1
-> > 
-> >  Based on the bindings doc a value of 2 is only acceptable if one uses
-> > pinctrl-single,bits but all the am33xx pins still uses
-> > pinctrl-single,pins.
-> >  I noticed this because this breaks FreeBSD when I tried with 5.9 dts.
-> > 
-> > -- 
-> > Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
-> 
-> Hello Emmanuel,
-> 
-> Sorry to hear about that. This change was made based on discussion with
-> Tony Lindgren this past July. Trent Piepho later pointed out issues wtih
-> the change including the binding documentation. I had tried to fix
-> the documentation in September [1]. However, I notice that it seems I
-> missed changing the lines near the top of pinctrl-single.txt [2]:
-> 
-> - #pinctrl-cells : number of cells in addition to the index, set to 1
->   for pinctrl-single,pins and 2 for pinctrl-single,bits
-> 
-> I am thinking that should be re-written as:
-> 
-> - #pinctrl-cells : number of cells in addition to the index, this value
->   can be 1 or 2 for pinctrl-single,pins and must be 2 for pinctrl-single,bits
-> 
-> Tony - what do you think?
+Hi Daniel,
 
-Sounds good to me.
+Thank you for the patch.
 
+On Mon, Jan 18, 2021 at 12:34:28AM +0000, Daniel Scally wrote:
+> This driver only covered one scenario in which ACPI devices with _HID
+> INT3472 are found, and its functionality has been taken over by the
+> intel-skl-int3472 module, so remove it.
+> 
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes in v2:
+> 
+> 	- Introduced
+> 
+>  drivers/acpi/pmic/Kconfig |  1 -
+>  drivers/gpio/Kconfig      |  1 -
+>  drivers/mfd/Kconfig       | 18 --------
+>  drivers/mfd/Makefile      |  1 -
+>  drivers/mfd/tps68470.c    | 97 ---------------------------------------
+>  5 files changed, 118 deletions(-)
+>  delete mode 100644 drivers/mfd/tps68470.c
+> 
+> diff --git a/drivers/acpi/pmic/Kconfig b/drivers/acpi/pmic/Kconfig
+> index 56bbcb2ce61b..e27d8ef3a32c 100644
+> --- a/drivers/acpi/pmic/Kconfig
+> +++ b/drivers/acpi/pmic/Kconfig
+> @@ -52,7 +52,6 @@ endif	# PMIC_OPREGION
+>  
+>  config TPS68470_PMIC_OPREGION
+>  	bool "ACPI operation region support for TPS68470 PMIC"
+> -	depends on MFD_TPS68470
+
+Should this now depend on INTEL_SKL_INT3472 ?
+
+>  	help
+>  	  This config adds ACPI operation region support for TI TPS68470 PMIC.
+>  	  TPS68470 device is an advanced power management unit that powers
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c70f46e80a3b..07ff8f24b0d9 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1343,7 +1343,6 @@ config GPIO_TPS65912
+>  
+>  config GPIO_TPS68470
+>  	bool "TPS68470 GPIO"
+> -	depends on MFD_TPS68470
+
+Same here.
+
+This won't deal with the case where th TPS68470 is instantiated through
+DT, but that's not supported yet, so it can be dealt with it later when
+the need arises.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  	help
+>  	  Select this option to enable GPIO driver for the TPS68470
+>  	  chip family.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index bdfce7b15621..9a1f648efde0 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1520,24 +1520,6 @@ config MFD_TPS65217
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called tps65217.
+>  
+> -config MFD_TPS68470
+> -	bool "TI TPS68470 Power Management / LED chips"
+> -	depends on ACPI && PCI && I2C=y
+> -	depends on I2C_DESIGNWARE_PLATFORM=y
+> -	select MFD_CORE
+> -	select REGMAP_I2C
+> -	help
+> -	  If you say yes here you get support for the TPS68470 series of
+> -	  Power Management / LED chips.
+> -
+> -	  These include voltage regulators, LEDs and other features
+> -	  that are often used in portable devices.
+> -
+> -	  This option is a bool as it provides an ACPI operation
+> -	  region, which must be available before any of the devices
+> -	  using this are probed. This option also configures the
+> -	  designware-i2c driver to be built-in, for the same reason.
+> -
+>  config MFD_TI_LP873X
+>  	tristate "TI LP873X Power Management IC"
+>  	depends on I2C
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 14fdb188af02..5994e812f479 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -105,7 +105,6 @@ obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
+>  obj-$(CONFIG_MFD_TPS65912)	+= tps65912-core.o
+>  obj-$(CONFIG_MFD_TPS65912_I2C)	+= tps65912-i2c.o
+>  obj-$(CONFIG_MFD_TPS65912_SPI)  += tps65912-spi.o
+> -obj-$(CONFIG_MFD_TPS68470)	+= tps68470.o
+>  obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
+>  obj-$(CONFIG_MENELAUS)		+= menelaus.o
+>  
+> diff --git a/drivers/mfd/tps68470.c b/drivers/mfd/tps68470.c
+> deleted file mode 100644
+> index 4a4df4ffd18c..000000000000
+> --- a/drivers/mfd/tps68470.c
+> +++ /dev/null
+> @@ -1,97 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * TPS68470 chip Parent driver
+> - *
+> - * Copyright (C) 2017 Intel Corporation
+> - *
+> - * Authors:
+> - *	Rajmohan Mani <rajmohan.mani@intel.com>
+> - *	Tianshu Qiu <tian.shu.qiu@intel.com>
+> - *	Jian Xu Zheng <jian.xu.zheng@intel.com>
+> - *	Yuning Pu <yuning.pu@intel.com>
+> - */
+> -
+> -#include <linux/acpi.h>
+> -#include <linux/delay.h>
+> -#include <linux/i2c.h>
+> -#include <linux/init.h>
+> -#include <linux/mfd/core.h>
+> -#include <linux/mfd/tps68470.h>
+> -#include <linux/regmap.h>
+> -
+> -static const struct mfd_cell tps68470s[] = {
+> -	{ .name = "tps68470-gpio" },
+> -	{ .name = "tps68470_pmic_opregion" },
+> -};
+> -
+> -static const struct regmap_config tps68470_regmap_config = {
+> -	.reg_bits = 8,
+> -	.val_bits = 8,
+> -	.max_register = TPS68470_REG_MAX,
+> -};
+> -
+> -static int tps68470_chip_init(struct device *dev, struct regmap *regmap)
+> -{
+> -	unsigned int version;
+> -	int ret;
+> -
+> -	/* Force software reset */
+> -	ret = regmap_write(regmap, TPS68470_REG_RESET, TPS68470_REG_RESET_MASK);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = regmap_read(regmap, TPS68470_REG_REVID, &version);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to read revision register: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	dev_info(dev, "TPS68470 REVID: 0x%x\n", version);
+> -
+> -	return 0;
+> -}
+> -
+> -static int tps68470_probe(struct i2c_client *client)
+> -{
+> -	struct device *dev = &client->dev;
+> -	struct regmap *regmap;
+> -	int ret;
+> -
+> -	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
+> -	if (IS_ERR(regmap)) {
+> -		dev_err(dev, "devm_regmap_init_i2c Error %ld\n",
+> -			PTR_ERR(regmap));
+> -		return PTR_ERR(regmap);
+> -	}
+> -
+> -	i2c_set_clientdata(client, regmap);
+> -
+> -	ret = tps68470_chip_init(dev, regmap);
+> -	if (ret < 0) {
+> -		dev_err(dev, "TPS68470 Init Error %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, tps68470s,
+> -			      ARRAY_SIZE(tps68470s), NULL, 0, NULL);
+> -	if (ret < 0) {
+> -		dev_err(dev, "devm_mfd_add_devices failed: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct acpi_device_id tps68470_acpi_ids[] = {
+> -	{"INT3472"},
+> -	{},
+> -};
+> -
+> -static struct i2c_driver tps68470_driver = {
+> -	.driver = {
+> -		   .name = "tps68470",
+> -		   .acpi_match_table = tps68470_acpi_ids,
+> -	},
+> -	.probe_new = tps68470_probe,
+> -};
+> -builtin_i2c_driver(tps68470_driver);
+
+-- 
 Regards,
 
-Tony
-
-> [1] https://lore.kernel.org/linux-gpio/20200919200836.3218536-1-drew@beagleboard.org/
-> [2] https://www.kernel.org/doc/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+Laurent Pinchart
