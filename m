@@ -2,94 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCAE2F9BB3
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 10:03:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 637312F9C73
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 11:35:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388234AbhARJCz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 04:02:55 -0500
-Received: from www.zeus03.de ([194.117.254.33]:33814 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388241AbhARJCo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 04:02:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=sr3wPtySxQZ9UKbwTXISYdT8cfkn
-        nni3gqbD6XC81yk=; b=R+0itXAvQSnr82ghkhBVIrcHldOhKEfQ223x5NGBmXxx
-        x4rk3Dx62/yzrmZrFhHcq7RKuRomk/gq1nzOsFBGmaNyur74jWNtB7Xp/S8ovB0R
-        2ITxznfWGuWu9dnN7mlCp8u4In93G/rWoBlmpGX4JW+GyWFK1k8x5VL+A45cH6A=
-Received: (qmail 631839 invoked from network); 18 Jan 2021 10:02:02 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Jan 2021 10:02:02 +0100
-X-UD-Smtp-Session: l3s3148p1@s8ez+Si5poYgAwDPXwacAOByz8F9Mgm1
-Date:   Mon, 18 Jan 2021 10:02:02 +0100
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] Documentation: gpio: Fix typo
-Message-ID: <20210118090202.GB1018@ninjato>
-References: <20201214155440.2950-1-wsa+renesas@sang-engineering.com>
+        id S2387994AbhARJZW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 04:25:22 -0500
+Received: from forward103p.mail.yandex.net ([77.88.28.106]:40335 "EHLO
+        forward103p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388277AbhARJH1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Jan 2021 04:07:27 -0500
+Received: from myt6-5578c6b2b9c3.qloud-c.yandex.net (myt6-5578c6b2b9c3.qloud-c.yandex.net [IPv6:2a02:6b8:c12:37a8:0:640:5578:c6b2])
+        by forward103p.mail.yandex.net (Yandex) with ESMTP id 8A37F18C17B1;
+        Mon, 18 Jan 2021 12:05:22 +0300 (MSK)
+Received: from myt6-9bdf92ffd111.qloud-c.yandex.net (myt6-9bdf92ffd111.qloud-c.yandex.net [2a02:6b8:c12:468a:0:640:9bdf:92ff])
+        by myt6-5578c6b2b9c3.qloud-c.yandex.net (mxback/Yandex) with ESMTP id dLSFXTknEI-5MDO4bZ5;
+        Mon, 18 Jan 2021 12:05:22 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1610960722;
+        bh=eae+71nwdCl87dQPfVh8jK749vbX5rWsf1eR+dT00F0=;
+        h=In-Reply-To:References:Date:Subject:To:From:Message-Id:Cc;
+        b=p2LDhD9WmMAGk9IAIwWMUC73UpO78OT1UkOm6yWt+eFHRUNBmyIj/wHhmqtRxKoW1
+         Zd9ll/JSQEsieEzp+/FgZq69gZ41+AA9fB5PrPKQZxEjkBy/C8kwAXwgCbTPVXWMeP
+         4HK9TLwpufKDgQLlB0+cMBJSSzo6eNM5Yv/So8UI=
+Authentication-Results: myt6-5578c6b2b9c3.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt6-9bdf92ffd111.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id mPweMU6MOS-5LIeMc8N;
+        Mon, 18 Jan 2021 12:05:21 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] gpiolib: warning on gpiochip->to_irq defined
+Date:   Mon, 18 Jan 2021 12:05:08 +0300
+Message-Id: <20210118090508.21686-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201228150052.2633-1-nikita.shubin@maquefel.me>
+References: <20201228150052.2633-1-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Content-Disposition: inline
-In-Reply-To: <20201214155440.2950-1-wsa+renesas@sang-engineering.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+gpiochip->to_irq method is redefined in gpiochip_add_irqchip.
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A lot of gpiod driver's still define ->to_irq method, let's give
+a gentle warning that they can no longer rely on it, so they can remove
+it on ocassion.
 
-On Mon, Dec 14, 2020 at 04:54:40PM +0100, Wolfram Sang wrote:
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
+Fixes: e0d8972898139 ("gpio: Implement tighter IRQ chip integration")
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+---
+v1->v2:
+- Change chip_err to chip_warn
+---
+ drivers/gpio/gpiolib.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Does this go via doc or gpio?
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 5ce0c14c637b..5a9410c2537d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1489,6 +1489,9 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 		type = IRQ_TYPE_NONE;
+ 	}
+ 
++	if (gc->to_irq)
++		chip_warn(gc, "to_irq is redefined in %s and you shouldn't rely on it\n", __func__);
++
+ 	gc->to_irq = gpiochip_to_irq;
+ 	gc->irq.default_type = type;
+ 	gc->irq.lock_key = lock_key;
+-- 
+2.29.2
 
->  Documentation/driver-api/gpio/consumer.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/d=
-river-api/gpio/consumer.rst
-> index 423492d125b9..86e7676c5f0d 100644
-> --- a/Documentation/driver-api/gpio/consumer.rst
-> +++ b/Documentation/driver-api/gpio/consumer.rst
-> @@ -110,7 +110,7 @@ For a function using multiple GPIOs all of those can =
-be obtained with one call::
-> =20
->  This function returns a struct gpio_descs which contains an array of
->  descriptors.  It also contains a pointer to a gpiolib private structure =
-which,
-> -if passed back to get/set array functions, may speed up I/O proocessing::
-> +if passed back to get/set array functions, may speed up I/O processing::
-> =20
->  	struct gpio_descs {
->  		struct gpio_array *info;
-> --=20
-> 2.28.0
->=20
-
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmAFTooACgkQFA3kzBSg
-KbZnfxAArATWuEwUGzQauV4T5ndWfdvsLC5DzvhpY20z3gyn81ZtlbZjQajeU3rN
-D4Du3xcxIq0tLnmWZ9BgisFshoUhhomFzLfDgsbCdz5iWJ8+dVFj8JSSSNj/mrx0
-tFWtRGEb92OhvnHPOqbT8Ypjy0bXE1uLelSiVpvfp1gnhW7GYAsgtDo7hbPUXhRt
-wIkhf+L7az6Y7HsiQK4jLFGAFAQdrD6O2AUqzE8FPiS0fdajrZ+QFlfO1OkcWeoa
-z9MwkHQ8aHBwJZI2X/gwdpPLvaLCexHqOTHxPPGsNVM+hfhmIw4J1MxEE3krockU
-+0jBqsGeKerwbqM0Lc+8ViEfU+o6IunnII1tqeglbt9Ay04DWK/SAVflaONGMuN5
-yqgkQuRU0ynMNecx1GkFYVIMY1OBXKZyUuTeBzgBTcIssraH/N9bs7qLP7lbCwUE
-jftzArKNqp9WMBOXY0QUyE1M8uU+aFQvYGroKq4eId/DyDjnGBLqiUe3rIXZei5+
-XK3z66E+DjcY5OlzddYCHY4ZSslOfad01bfhJqhkZrf5rzre53Ed+6u5NkXLNwGG
-3ADsgthJFQ9kiaIfz+BKJUVesrihjj5LLyvzHj64CsmOsd2cxxdKtG0YSPKKkAvc
-JFw5qX7mvUdNA5kgn7QPNcEW14iv5obUA0DYmarKYFAcBm6Z3LY=
-=REJe
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
